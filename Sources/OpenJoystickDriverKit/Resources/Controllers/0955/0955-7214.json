@@ -1,0 +1,8 @@
+{
+  "$schema": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/controller.schema.json",
+  "vendorID": 2389,
+  "productID": 29204,
+  "protocol": {
+    "family": "vendor.nvidia-shield"
+  }
+}

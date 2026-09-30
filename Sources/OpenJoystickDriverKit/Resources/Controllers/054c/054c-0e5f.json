@@ -1,0 +1,8 @@
+{
+  "$schema": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/controller.schema.json",
+  "vendorID": 1356,
+  "productID": 3679,
+  "protocol": {
+    "family": "sony.dualsense"
+  }
+}
