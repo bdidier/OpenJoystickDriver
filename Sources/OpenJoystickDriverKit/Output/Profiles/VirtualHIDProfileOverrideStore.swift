@@ -53,7 +53,7 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
   }
 
   /// A controller model, or one unit of it when `unit` is set.
-  private struct Model: Hashable {
+  struct Model: Hashable {
     let vendorID: UInt16
     let productID: UInt16
     var unit: String?
@@ -66,6 +66,8 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
   private struct Found {
     let persona: VirtualPersona
     let url: URL
+    /// Whether an installed package holds the file. A package file is never written or removed.
+    var fromPackage = false
   }
 
   private struct Loaded {
@@ -74,8 +76,16 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
   }
 
   private let directory: URL
+  private let packages: ModPackageStore
 
-  public init(directory: URL = Self.userDirectory) { self.directory = directory }
+  /// The store of `directory`, with the personas of the packages installed in the `Packages`
+  /// folder beside it, or in `packagesDirectory`, under it.
+  public init(directory: URL = Self.userDirectory, packagesDirectory: URL? = nil) {
+    self.directory = directory
+    packages = ModPackageStore(
+      directory: packagesDirectory ?? ModPackageStore.directory(besides: directory)
+    )
+  }
 
   /// Why the directory cannot be read; nil when it is absent or readable.
   public var loadError: VirtualHIDProfileOverrideError? {
@@ -157,7 +167,8 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
         options: [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
       )
       try data.write(
-        to: existing?.url ?? directory.appendingPathComponent(model.fileName),
+        to: existing.flatMap { $0.fromPackage ? nil : $0.url }
+          ?? directory.appendingPathComponent(model.fileName),
         options: .atomic
       )
     } catch { throw .unreadableDirectory(error.localizedDescription) }
@@ -175,7 +186,7 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
   ) throws(VirtualHIDProfileOverrideError) {
     let loaded = try load().get()
     guard let found = loaded.personas[Model(vendorID: vendorID, productID: productID, unit: unit)],
-      found.persona.identity == nil
+      found.persona.identity == nil, !found.fromPackage
     else { return }
     do { try FileManager.default.removeItem(at: found.url) } catch {
       throw .unreadableDirectory(error.localizedDescription)
@@ -186,12 +197,43 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
   /// skipped stay.
   public func resetAll() {
     guard case .success(let loaded) = load() else { return }
-    for found in loaded.personas.values where found.persona.identity == nil {
+    for found in loaded.personas.values where found.persona.identity == nil && !found.fromPackage {
       try? FileManager.default.removeItem(at: found.url)
     }
   }
 
   private func load() -> Result<Loaded, VirtualHIDProfileOverrideError> {
+    loadUserFiles().map { user in
+      var loaded = user
+      addPackageFiles(to: &loaded)
+      return loaded
+    }
+  }
+
+  /// Adds the personas of the installed packages, in package-name order. A persona whose match a
+  /// user file or an earlier package already holds is skipped and listed with that reason.
+  private func addPackageFiles(to loaded: inout Loaded) {
+    for package in packages.list() {
+      for file in package.manifest?.personas.sorted() ?? [] {
+        let url = package.directory.appendingPathComponent("Personas/\(file)")
+        do {
+          let (model, persona) = try Self.parse(Data(contentsOf: url))
+          if let first = loaded.personas[model] {
+            let owner = first.fromPackage ? "package file " : "user file "
+            throw ControllerRecordProblem("same match as \(owner)\(first.url.lastPathComponent)")
+          }
+          loaded.personas[model] = Found(persona: persona, url: url, fromPackage: true)
+          loaded.files.append(VirtualPersonaFile(url: url, problem: nil))
+        } catch {
+          loaded.files.append(
+            VirtualPersonaFile(url: url, problem: ControllerRecordSet.problemDescription(error))
+          )
+        }
+      }
+    }
+  }
+
+  private func loadUserFiles() -> Result<Loaded, VirtualHIDProfileOverrideError> {
     let urls: [URL]
     do {
       urls = try FileManager.default.contentsOfDirectory(
@@ -221,7 +263,7 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
   }
 
   /// Decodes one `persona.schema.json` document.
-  private static func parse(_ data: Data) throws -> (Model, VirtualPersona) {
+  static func parse(_ data: Data) throws -> (Model, VirtualPersona) {
     guard let object = try? JSONSerialization.jsonObject(with: data),
       let document = object as? [String: Any]
     else { throw ControllerRecordProblem("the file is not a JSON object") }

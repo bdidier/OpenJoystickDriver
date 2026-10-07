@@ -177,9 +177,14 @@ package final class ApplicationServiceRuntime {
   /// changes its identity. A missing directory is watched once it exists.
   private func startPersonaWatcher() {
     let applicationServiceServer = applicationServiceServer
+    let packages = ModPackageStore.rootDirectory
+    try? FileManager.default.createDirectory(at: packages, withIntermediateDirectories: true)
     let personaWatcher = FileChangeWatcher(
-      directories: [VirtualHIDProfileOverrideStore.userDirectory],
-      watchesFile: { $0.pathExtension == "json" },
+      directories: [VirtualHIDProfileOverrideStore.userDirectory, packages],
+      watchesFile: {
+        $0.pathExtension == "json"
+          || $0.deletingLastPathComponent().standardizedFileURL == packages.standardizedFileURL
+      },
       onChange: { Task { await applicationServiceServer.reloadPersonas() } }
     )
     self.personaWatcher = personaWatcher

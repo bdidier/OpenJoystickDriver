@@ -40,6 +40,7 @@ SCHEMA_PATHS = (
     SCHEMAS / "error-codes.schema.json",
     SCHEMAS / "defaults.schema.json",
     SCHEMAS / "persona.schema.json",
+    SCHEMAS / "mod-package.schema.json",
 )
 
 

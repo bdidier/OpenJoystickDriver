@@ -66,12 +66,21 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
   case motionGyroNotSelected = "E3026"
   case motionProfileInactive = "E3027"
   case motionSessionChanged = "E3028"
+  case invalidManifest = "E4001"
+  case requiresExcludesVersion = "E4002"
+  case invalidPackageContent = "E4003"
+  case packageClash = "E4004"
+  case packageAlreadyInstalled = "E4005"
+  case packageNotInstalled = "E4006"
+  case packageReadOnly = "E4007"
+  case packageStoreUnwritable = "E4008"
 
   /// The part of the product that raises a code; the first digit of the number.
   public enum Domain: String, Sendable {
     case endpoint
     case commandLine = "cli"
     case remapping
+    case mod
   }
 
   public var domain: Domain {
@@ -94,6 +103,9 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
       .remappingUnexpected, .profileProducesNoOutput, .motionGyroNotSelected,
       .motionProfileInactive, .motionSessionChanged:
       .remapping
+    case .invalidManifest, .requiresExcludesVersion, .invalidPackageContent, .packageClash,
+      .packageAlreadyInstalled, .packageNotInstalled, .packageReadOnly, .packageStoreUnwritable:
+      .mod
     }
   }
 

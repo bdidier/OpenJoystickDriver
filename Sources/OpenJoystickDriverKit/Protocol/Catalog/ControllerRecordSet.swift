@@ -9,6 +9,8 @@ public enum ControllerRecordLayer: String, Codable, CaseIterable, Sendable {
   case global
   /// The signed catalog in the app bundle.
   case bundled
+  /// A file of an installed mod package.
+  case package
   /// A file in the user's controller-record directory.
   case user
   /// The active remapping profile.
@@ -37,6 +39,9 @@ public struct ControllerRecord: Sendable {
   public let tuningLayers: [String: ControllerRecordLayer]
   /// The user file that adds or patches this record, or nil for a bundled record.
   public let userFile: URL?
+  /// The file of an installed package that adds or patches this record, or nil when no package
+  /// does. A user file over it wins, and ``layer`` names the user.
+  public let packageFile: URL?
   /// The protocol family, such as `xbox.gip`.
   public let family: String
   /// The tuning keys this record's family reads.
@@ -61,6 +66,7 @@ public struct ControllerRecord: Sendable {
       fieldLayers: fieldLayers,
       tuningLayers: layers,
       userFile: userFile,
+      packageFile: packageFile,
       family: family,
       tuningScope: tuningScope,
       profile: profile
@@ -77,8 +83,14 @@ public struct ControllerRecord: Sendable {
       && profile.bluetoothLEVibrationCharacteristic == nil
   }
 
-  /// `user` when a user file adds or patches the record, `bundled` otherwise.
-  public var layer: ControllerRecordLayer { userFile == nil ? .bundled : .user }
+  /// The file of the highest layer that adds or patches this record, or nil for a bundled one.
+  public var file: URL? { userFile ?? packageFile }
+
+  /// `user` when a user file adds or patches the record, else `package` when a package does,
+  /// `bundled` otherwise.
+  public var layer: ControllerRecordLayer {
+    userFile != nil ? .user : packageFile != nil ? .package : .bundled
+  }
 }
 
 /// One file in the user's controller-record directory, or the directory itself when it cannot be
@@ -122,7 +134,8 @@ public struct ControllerRecordSet: Sendable {
 
   /// The effective record of every identity.
   public let records: [ControllerIdentity: ControllerRecord]
-  /// Every `.json` file in the user directory, in file-name order.
+  /// Every `.json` file in the user directory, in file-name order, then the record files of the
+  /// installed packages in package-name order.
   public let userFiles: [ControllerRecordFile]
   /// The global defaults under every record's tuning; none for the bundled catalog alone.
   public let defaults: ControllerDefaults?
@@ -196,6 +209,7 @@ public struct ControllerRecordSet: Sendable {
   }
 
   private static func loadRecords(userDirectory directory: URL) -> Self {
+    var packaged = packageRecords(in: ModPackageStore.directory(besides: directory))
     let urls: [URL]
     do {
       urls = try FileManager.default.contentsOfDirectory(
@@ -212,9 +226,9 @@ public struct ControllerRecordSet: Sendable {
         operation: nil,
         problem: "cannot read the directory: \(error.localizedDescription)"
       )
-      return Self(records: bundled.records, userFiles: [file])
+      return Self(records: packaged.records, userFiles: [file] + packaged.files)
     }
-    var records = bundled.records
+    var records = packaged.records
     var files: [ControllerRecordFile] = []
     for url in urls {
       let file: ControllerRecordFile
@@ -223,6 +237,7 @@ public struct ControllerRecordSet: Sendable {
         let expected = fileName(for: validated.record.identity)
         if url.lastPathComponent == expected {
           records[validated.record.identity] = validated.record
+          packaged.overridden(validated.record.identity, by: url)
           file = ControllerRecordFile(
             url: url,
             identity: validated.record.identity,
@@ -247,13 +262,18 @@ public struct ControllerRecordSet: Sendable {
       }
       files.append(file)
     }
-    return Self(records: records, userFiles: files)
+    return Self(records: records, userFiles: files + packaged.files)
   }
 
   /// Validates one user record against the bundled catalog: the override schema's shape, the
   /// controller contract and its cross-field checks, and the operation's fit with the catalog.
-  /// `file` becomes the record's ``ControllerRecord/userFile``.
-  public static func validate(_ data: Data, file: URL? = nil) throws -> ValidatedControllerRecord {
+  /// `file` becomes the record's ``ControllerRecord/userFile``, or its
+  /// ``ControllerRecord/packageFile`` when `layer` is `package`.
+  public static func validate(
+    _ data: Data,
+    file: URL? = nil,
+    layer: ControllerRecordLayer = .user
+  ) throws -> ValidatedControllerRecord {
     guard let object = try? JSONSerialization.jsonObject(with: data),
       let document = object as? [String: Any]
     else { throw ControllerRecordProblem("the file is not a JSON object") }
@@ -276,11 +296,11 @@ public struct ControllerRecordSet: Sendable {
         )
       }
       let layers = Dictionary(
-        uniqueKeysWithValues: fieldNames(of: record).map { ($0, ControllerRecordLayer.user) }
+        uniqueKeysWithValues: fieldNames(of: record).map { ($0, layer) }
       )
       return ValidatedControllerRecord(
         operation: .add,
-        record: try makeRecord(record, layers: layers, userFile: file)
+        record: try makeRecord(record, layers: layers, file: file, layer: layer)
       )
     case ControllerRecordOperation.patch.rawValue:
       try requireKeys(document, ["$schema", "operation", "vendorID", "productID", "set"])
@@ -330,16 +350,17 @@ public struct ControllerRecordSet: Sendable {
           != JSONSerialization.data(withJSONObject: base, options: .sortedKeys)
       else { throw ControllerRecordProblem("the patch changes nothing in the bundled record") }
       var layers = upstream.fieldLayers
-      for key in fields.keys { layers[key] = .user }
+      for key in fields.keys { layers[key] = layer }
       var tuningLayers = upstream.tuningLayers
-      for key in (fields["tuning"] as? [String: Any] ?? [:]).keys { tuningLayers[key] = .user }
+      for key in (fields["tuning"] as? [String: Any] ?? [:]).keys { tuningLayers[key] = layer }
       return ValidatedControllerRecord(
         operation: .patch,
         record: try makeRecord(
           merged,
           layers: layers,
           tuningLayers: tuningLayers,
-          userFile: file
+          file: file,
+          layer: layer
         )
       )
     default: throw ControllerRecordProblem("operation must be add or patch")
@@ -363,7 +384,7 @@ public struct ControllerRecordSet: Sendable {
         let layers = Dictionary(
           uniqueKeysWithValues: fieldNames(of: document).map { ($0, ControllerRecordLayer.bundled) }
         )
-        let record = try makeRecord(document, layers: layers, userFile: nil)
+        let record = try makeRecord(document, layers: layers, file: nil, layer: .bundled)
         guard url.lastPathComponent == fileName(for: record.identity) else {
           throw ControllerRecordProblem("filename must be \(fileName(for: record.identity))")
         }
@@ -398,7 +419,8 @@ public struct ControllerRecordSet: Sendable {
     _ record: [String: Any],
     layers: [String: ControllerRecordLayer],
     tuningLayers: [String: ControllerRecordLayer]? = nil,
-    userFile: URL?
+    file: URL?,
+    layer: ControllerRecordLayer
   ) throws -> ControllerRecord {
     let decoded = try decode(record)
     let set = decoded.document.tuning.setKeys
@@ -413,7 +435,8 @@ public struct ControllerRecordSet: Sendable {
         ?? Dictionary(
           uniqueKeysWithValues: set.map { ($0.rawValue, layers["tuning"] ?? .bundled) }
         ),
-      userFile: userFile,
+      userFile: layer == .user ? file : nil,
+      packageFile: layer == .package ? file : nil,
       family: decoded.document.protocolInfo.protocolID.rawValue,
       tuningScope: Set(
         ControllerTuning.Key.allCases.filter { decoded.document.tuningScopeViolation($0) == nil }

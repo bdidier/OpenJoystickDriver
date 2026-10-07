@@ -91,7 +91,7 @@ struct ControllerShowReport: Encodable, Equatable {
 
     init(_ record: ControllerRecord) {
       layer = record.layer.rawValue
-      file = record.userFile?.path
+      file = record.file?.path
     }
   }
 

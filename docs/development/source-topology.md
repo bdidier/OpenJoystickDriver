@@ -48,6 +48,7 @@ Sources/OpenJoystickDriverKit/
   HID/                 availability-selected physical HID access
   Localization/        string lookup over the bundled locale tables
   Output/              availability-selected virtual HID, backends, reports, formats, and profiles
+  Packages/            mod package manifest, validation, and the installed-package store
   Permissions/         app permission policy
   Process/             bounded external process runner
   Protocol/            catalog, GIP, parsers, drivers, classification, and physical-output

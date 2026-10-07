@@ -1542,7 +1542,8 @@
 "cli.explain.area.endpoint" = "Ponto de acesso";
 "cli.explain.area.cli" = "Linha de comando";
 "cli.explain.area.remapping" = "Remapeamento";
-"cli.explain.exit_code" = "Código de saída: %@";
+"cli.explain.area.mod" = "Pacotes de mods";
+"cli.explain.exit_code" ="Código de saída: %@";
 "cli.explain.wire" = "Valor de transmissão: %@";
 "cli.error.stale_installation" = "O OpenJoystickDriver.app instalado é mais antigo que estas fontes do repositório. Execute «./Scripts/ojd build install-fast dev» ou defina OJD_RUN_REPOSITORY_CLI=1 para executar esta compilação.";
 "cli.error.forwarder_allocation" = "Não foi possível reservar os argumentos do ojd instalado. Execute o comando novamente.";
@@ -1596,4 +1597,12 @@
 "error.E3026" = "O perfil do par de Joy-Con usa o giroscópio do outro Joy-Con. Calibre o movimento do controle que o perfil seleciona para o giroscópio.";
 "error.E3027" = "Nenhum perfil de remapeamento está ativo para o controle, então ele não processa movimento. Ative um perfil para ele, traga o app de destino para a frente e tente novamente.";
 "error.E3028" = "A sessão de remapeamento do controle mudou enquanto a solicitação era executada. Tente novamente.";
-"error.withCode" = "%@ (%@)";
+"error.E4001" = "O manifesto do pacote mod.json está ausente ou é inválido. Verifique-o com o esquema mod-package e execute o comando novamente.";
+"error.E4002" = "O pacote exige uma versão do OpenJoystickDriver diferente da que está em execução. Instale uma versão do pacote compatível com esta versão ou atualize o OpenJoystickDriver.";
+"error.E4003" = "Um arquivo do pacote é inválido, está ausente ou não consta em mod.json. Corrija o arquivo indicado pelo comando e execute-o novamente.";
+"error.E4004" = "O pacote abrange um controle, uma persona ou um perfil que seus próprios arquivos ou outro pacote instalado já possuem. Remova o arquivo ou pacote em conflito, ou altere o pacote, e execute o comando novamente.";
+"error.E4005" = "Já existe um pacote instalado com este nome. Execute o comando com --force para substituí-lo.";
+"error.E4006" = "Nenhum pacote instalado tem este nome. Execute ojd mod list para ver os pacotes instalados.";
+"error.E4007" = "Um perfil de um pacote instalado não pode ser alterado. Duplique o perfil e altere a cópia.";
+"error.E4008" = "Não foi possível alterar a pasta de pacotes. Verifique o espaço livre em disco e as permissões da pasta.";
+"error.withCode" ="%@ (%@)";

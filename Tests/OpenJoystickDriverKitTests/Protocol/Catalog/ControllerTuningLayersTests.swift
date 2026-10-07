@@ -130,6 +130,8 @@ struct ControllerTuningLayersTests {
 
   @Test
   func layersAreOrderedLowestFirst() {
-    #expect(ControllerRecordLayer.allCases == [.driver, .global, .bundled, .user, .profile])
+    #expect(
+      ControllerRecordLayer.allCases == [.driver, .global, .bundled, .package, .user, .profile]
+    )
   }
 }

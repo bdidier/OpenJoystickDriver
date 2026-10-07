@@ -1542,7 +1542,8 @@
 "cli.explain.area.endpoint" = "Điểm cuối";
 "cli.explain.area.cli" = "Dòng lệnh";
 "cli.explain.area.remapping" = "Ánh xạ lại";
-"cli.explain.exit_code" = "Mã thoát: %@";
+"cli.explain.area.mod" = "Gói mod";
+"cli.explain.exit_code" ="Mã thoát: %@";
 "cli.explain.wire" = "Giá trị truyền: %@";
 "cli.error.stale_installation" = "OpenJoystickDriver.app đã cài đặt cũ hơn các nguồn kho mã này. Hãy chạy “./Scripts/ojd build install-fast dev”, hoặc đặt OJD_RUN_REPOSITORY_CLI=1 để chạy bản dựng này.";
 "cli.error.forwarder_allocation" = "Không thể cấp phát đối số cho ojd đã cài đặt. Hãy thử lại lệnh.";
@@ -1596,4 +1597,12 @@
 "error.E3026" = "Cấu hình của cặp Joy-Con lấy con quay hồi chuyển từ Joy-Con còn lại. Hãy hiệu chỉnh chuyển động của bộ điều khiển mà cấu hình chọn cho con quay hồi chuyển.";
 "error.E3027" = "Không có cấu hình ánh xạ lại nào đang hoạt động cho bộ điều khiển, nên nó không xử lý chuyển động. Hãy kích hoạt một cấu hình cho nó, đưa ứng dụng đích lên trước, rồi thử lại.";
 "error.E3028" = "Phiên ánh xạ lại của bộ điều khiển đã thay đổi khi yêu cầu đang chạy. Hãy thử lại.";
-"error.withCode" = "%@ (%@)";
+"error.E4001" = "Tệp kê khai gói mod.json bị thiếu hoặc không hợp lệ. Hãy kiểm tra nó theo lược đồ mod-package rồi chạy lại lệnh.";
+"error.E4002" = "Gói yêu cầu phiên bản OpenJoystickDriver khác với phiên bản đang chạy. Hãy cài phiên bản gói hỗ trợ phiên bản này hoặc cập nhật OpenJoystickDriver.";
+"error.E4003" = "Một tệp của gói không hợp lệ, bị thiếu hoặc không được liệt kê trong mod.json. Hãy sửa tệp mà lệnh nêu rồi chạy lại.";
+"error.E4004" = "Gói bao gồm một tay cầm, persona hoặc hồ sơ mà tệp của chính bạn hoặc một gói đã cài khác đã có. Hãy xóa tệp hoặc gói xung đột, hoặc sửa gói, rồi chạy lại lệnh.";
+"error.E4005" = "Đã cài một gói có tên này. Hãy chạy lệnh với --force để thay thế.";
+"error.E4006" = "Không có gói đã cài nào có tên này. Hãy chạy ojd mod list để xem các gói đã cài.";
+"error.E4007" = "Không thể thay đổi hồ sơ đến từ một gói đã cài. Hãy nhân bản hồ sơ rồi sửa bản sao.";
+"error.E4008" = "Không thể thay đổi thư mục gói. Hãy kiểm tra dung lượng đĩa trống và quyền của thư mục.";
+"error.withCode" ="%@ (%@)";

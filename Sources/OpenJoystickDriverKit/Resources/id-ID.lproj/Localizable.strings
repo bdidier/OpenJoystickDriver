@@ -1542,7 +1542,8 @@
 "cli.explain.area.endpoint" = "Endpoint";
 "cli.explain.area.cli" = "Baris perintah";
 "cli.explain.area.remapping" = "Pemetaan ulang";
-"cli.explain.exit_code" = "Kode keluar: %@";
+"cli.explain.area.mod" = "Paket mod";
+"cli.explain.exit_code" ="Kode keluar: %@";
 "cli.explain.wire" = "Nilai wire: %@";
 "cli.error.stale_installation" = "OpenJoystickDriver.app yang terinstal lebih lama daripada sumber repositori ini. Jalankan “./Scripts/ojd build install-fast dev”, atau atur OJD_RUN_REPOSITORY_CLI=1 untuk menjalankan build ini.";
 "cli.error.forwarder_allocation" = "Tidak dapat mengalokasikan argumen untuk ojd yang terinstal. Coba perintah lagi.";
@@ -1596,4 +1597,12 @@
 "error.E3026" = "Profil pasangan Joy-Con mengambil giroskop dari Joy-Con lainnya. Kalibrasi gerak pengontrol yang dipilih profil untuk giroskop.";
 "error.E3027" = "Tidak ada profil pemetaan ulang yang aktif untuk pengontrol, sehingga gerak tidak diproses. Aktifkan profil untuknya, bawa app target ke depan, lalu coba lagi.";
 "error.E3028" = "Sesi pemetaan ulang pengontrol berubah saat permintaan berjalan. Coba lagi.";
-"error.withCode" = "%@ (%@)";
+"error.E4001" = "Manifes paket mod.json hilang atau tidak valid. Periksa dengan skema mod-package lalu jalankan perintah lagi.";
+"error.E4002" = "Paket memerlukan versi OpenJoystickDriver yang berbeda dari yang sedang berjalan. Pasang versi paket yang mendukung versi ini atau perbarui OpenJoystickDriver.";
+"error.E4003" = "Sebuah berkas paket tidak valid, hilang, atau tidak tercantum di mod.json. Perbaiki berkas yang disebut perintah, lalu jalankan lagi.";
+"error.E4004" = "Paket mencakup pengontrol, persona, atau profil yang sudah ada di berkas Anda sendiri atau di paket terpasang lain. Hapus berkas atau paket yang bentrok, atau ubah paket, lalu jalankan perintah lagi.";
+"error.E4005" = "Paket dengan nama ini sudah terpasang. Jalankan perintah dengan --force untuk menggantinya.";
+"error.E4006" = "Tidak ada paket terpasang dengan nama ini. Jalankan ojd mod list untuk melihat paket yang terpasang.";
+"error.E4007" = "Profil dari paket terpasang tidak dapat diubah. Duplikasi profil dan ubah salinannya.";
+"error.E4008" = "Folder paket tidak dapat diubah. Periksa ruang disk yang tersisa dan izin folder.";
+"error.withCode" ="%@ (%@)";

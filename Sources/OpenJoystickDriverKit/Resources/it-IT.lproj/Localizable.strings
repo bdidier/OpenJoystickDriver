@@ -1542,7 +1542,8 @@
 "cli.explain.area.endpoint" = "Punto di accesso";
 "cli.explain.area.cli" = "Riga di comando";
 "cli.explain.area.remapping" = "Rimappatura";
-"cli.explain.exit_code" = "Codice di uscita: %@";
+"cli.explain.area.mod" = "Pacchetti mod";
+"cli.explain.exit_code" ="Codice di uscita: %@";
 "cli.explain.wire" = "Valore di trasmissione: %@";
 "cli.error.stale_installation" = "L’app OpenJoystickDriver.app installata è più vecchia di questi sorgenti del repository. Esegui «./Scripts/ojd build install-fast dev» oppure imposta OJD_RUN_REPOSITORY_CLI=1 per eseguire questa build.";
 "cli.error.forwarder_allocation" = "Impossibile riservare gli argomenti per l’ojd installato. Esegui di nuovo il comando.";
@@ -1596,4 +1597,12 @@
 "error.E3026" = "Il profilo della coppia di Joy-Con prende il giroscopio dall’altro Joy-Con. Calibra il movimento del controller che il profilo seleziona per il giroscopio.";
 "error.E3027" = "Nessun profilo di rimappatura è attivo per il controller, quindi non elabora il movimento. Attiva un profilo per il controller, porta in primo piano l’app di destinazione e riprova.";
 "error.E3028" = "La sessione di rimappatura del controller è cambiata mentre la richiesta era in corso. Riprova.";
-"error.withCode" = "%@ (%@)";
+"error.E4001" = "Il manifesto del pacchetto mod.json è mancante o non valido. Controllalo con lo schema mod-package ed esegui di nuovo il comando.";
+"error.E4002" = "Il pacchetto richiede una versione di OpenJoystickDriver diversa da quella in esecuzione. Installa una versione del pacchetto compatibile con questa versione oppure aggiorna OpenJoystickDriver.";
+"error.E4003" = "Un file del pacchetto non è valido, manca o non è elencato in mod.json. Correggi il file indicato dal comando ed eseguilo di nuovo.";
+"error.E4004" = "Il pacchetto copre un controller, una persona o un profilo già presenti nei tuoi file o in un altro pacchetto installato. Rimuovi il file o il pacchetto in conflitto, oppure modifica il pacchetto, ed esegui di nuovo il comando.";
+"error.E4005" = "Un pacchetto con questo nome è già installato. Esegui il comando con --force per sostituirlo.";
+"error.E4006" = "Nessun pacchetto installato ha questo nome. Esegui ojd mod list per vedere i pacchetti installati.";
+"error.E4007" = "Un profilo proveniente da un pacchetto installato non può essere modificato. Duplica il profilo e modifica la copia.";
+"error.E4008" = "Non è stato possibile modificare la cartella dei pacchetti. Controlla lo spazio libero su disco e i permessi della cartella.";
+"error.withCode" ="%@ (%@)";

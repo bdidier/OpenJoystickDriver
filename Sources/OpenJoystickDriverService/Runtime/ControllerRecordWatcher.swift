@@ -1,7 +1,8 @@
 import Foundation
 import OpenJoystickDriverKit
 
-/// Applies the user's controller records at start and again whenever their directory changes.
+/// Applies the user's controller records and the installed packages' at start and again whenever
+/// their directories change.
 ///
 /// A change is a file added, removed, renamed, or rewritten in place, which covers
 /// `ojd record install`, `ojd record remove`, editors that save by replacing the file, and
@@ -32,16 +33,23 @@ final class ControllerRecordWatcher {
   /// is watched once it exists; until then the bundled catalog and any records already read apply.
   func start() {
     guard watcher == nil else { return }
-    do {
-      try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-    } catch {
-      fputs("[Records] Cannot create \(directory.path): \(error.localizedDescription)\n", stderr)
+    let packages = ModPackageStore.directory(besides: directory)
+    for folder in [directory, packages] {
+      do {
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+      } catch {
+        fputs("[Records] Cannot create \(folder.path): \(error.localizedDescription)\n", stderr)
+      }
     }
     apply()
-    // The parent folder holds `Defaults.json`, which sits under every record's tuning.
+    // The parent folder holds `Defaults.json`, which sits under every record's tuning. A package
+    // is installed, replaced, and removed as a folder of `Packages`, and each folder is watched.
     let watcher = FileChangeWatcher(
-      directories: [directory, directory.deletingLastPathComponent()],
-      watchesFile: { $0.pathExtension == "json" },
+      directories: [directory, directory.deletingLastPathComponent(), packages],
+      watchesFile: {
+        $0.pathExtension == "json"
+          || $0.deletingLastPathComponent().standardizedFileURL == packages.standardizedFileURL
+      },
       onChange: { [weak self] in
         guard let self else { return }
         let changed = self.apply()

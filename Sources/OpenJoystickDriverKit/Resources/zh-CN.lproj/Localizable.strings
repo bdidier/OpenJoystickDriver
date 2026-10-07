@@ -1542,7 +1542,8 @@
 "cli.explain.area.endpoint" = "端点";
 "cli.explain.area.cli" = "命令行";
 "cli.explain.area.remapping" = "重新映射";
-"cli.explain.exit_code" = "退出码：%@";
+"cli.explain.area.mod" = "Mod 包";
+"cli.explain.exit_code" ="退出码：%@";
 "cli.explain.wire" = "传输值：%@";
 "cli.error.stale_installation" = "已安装的 OpenJoystickDriver.app 比这些仓库源码更旧。请运行“./Scripts/ojd build install-fast dev”，或设置 OJD_RUN_REPOSITORY_CLI=1 来运行此构建。";
 "cli.error.forwarder_allocation" = "无法为已安装的 ojd 预留参数。请重新运行该命令。";
@@ -1596,4 +1597,12 @@
 "error.E3026" = "Joy-Con 配对配置文件使用另一只 Joy-Con 的陀螺仪。请校准该配置文件为陀螺仪所选的控制器的体感。";
 "error.E3027" = "该控制器没有已激活的重新映射配置文件，因此不会处理体感数据。请为其激活一个配置文件，将目标 App 切换到前台，然后重试。";
 "error.E3028" = "请求运行期间，该控制器的重新映射会话发生了变化。请重试。";
-"error.withCode" = "%@ (%@)";
+"error.E4001" = "缺少包清单 mod.json，或它无效。请对照 mod-package 架构检查，然后重新运行该命令。";
+"error.E4002" = "此包需要与当前运行版本不同的 OpenJoystickDriver 版本。请安装支持当前版本的包版本，或更新 OpenJoystickDriver。";
+"error.E4003" = "包中的某个文件无效、缺失或未在 mod.json 中列出。请修复命令指出的文件，然后重新运行。";
+"error.E4004" = "此包涵盖的控制器、角色配置或配置文件已存在于你自己的文件或另一个已安装的包中。请删除冲突的文件或包，或修改此包，然后重新运行该命令。";
+"error.E4005" = "已安装同名的包。请使用 --force 运行该命令以替换它。";
+"error.E4006" = "没有已安装的包使用此名称。请运行 ojd mod list 查看已安装的包。";
+"error.E4007" = "来自已安装包的配置文件无法更改。请复制该配置文件并更改副本。";
+"error.E4008" = "无法更改包文件夹。请检查磁盘可用空间和文件夹权限。";
+"error.withCode" ="%@ (%@)";

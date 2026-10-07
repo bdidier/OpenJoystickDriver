@@ -390,7 +390,7 @@
 							},
 							"layer": {
 								"description": "The layer that set the value, lowest first.",
-								"enum": ["driver", "global", "bundled", "user", "profile"]
+								"enum": ["driver", "global", "bundled", "package", "user", "profile"]
 							},
 							"value": {
 								"description": "Absent while only the driver default applies.",
@@ -855,7 +855,7 @@
 									"type": "string"
 								},
 								"layer": {
-									"enum": ["bundled", "user"]
+									"enum": ["bundled", "package", "user"]
 								}
 							}
 						},
@@ -1698,7 +1698,7 @@
 								"pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
 							},
 							"layer": {
-								"enum": ["bundled", "user"]
+								"enum": ["bundled", "package", "user"]
 							},
 							"productID": {
 								"type": "integer",
@@ -1759,7 +1759,7 @@
 				"fields": {
 					"type": "object",
 					"additionalProperties": {
-						"enum": ["bundled", "user"]
+						"enum": ["bundled", "package", "user"]
 					}
 				},
 				"file": {
@@ -1770,7 +1770,7 @@
 					"pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
 				},
 				"layer": {
-					"enum": ["bundled", "user"]
+					"enum": ["bundled", "package", "user"]
 				},
 				"record": {
 					"description": "The merged controller record.",

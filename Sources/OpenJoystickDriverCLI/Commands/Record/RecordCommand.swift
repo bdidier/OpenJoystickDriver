@@ -121,7 +121,7 @@ struct RecordShowCommand: AsyncParsableCommand {
             identity: identity.text,
             family: record.family,
             layer: record.layer.rawValue,
-            file: record.userFile?.path,
+            file: record.file?.path,
             transport: RecordTransport(record),
             usbExtension: RecordUSBExtension(record),
             fields: fields,
@@ -130,7 +130,7 @@ struct RecordShowCommand: AsyncParsableCommand {
         )
       case .plain: CLIOutput.plain(fields.sorted { $0.key < $1.key }.map { [$0.key, $0.value] })
       case .human:
-        let file = record.userFile.map { " (\($0.path))" } ?? ""
+        let file = record.file.map { " (\($0.path))" } ?? ""
         CLIOutput.stdout("\(identity.text)  \(record.family)  \(record.layer.rawValue)\(file)")
         if let note = RecordValidation.bluetoothLENote(record) { CLIOutput.stdout(note) }
         let width = fields.keys.map(\.count).max() ?? 0

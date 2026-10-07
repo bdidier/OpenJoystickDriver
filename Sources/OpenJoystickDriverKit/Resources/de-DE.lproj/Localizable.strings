@@ -1542,7 +1542,8 @@
 "cli.explain.area.endpoint" = "Endpunkt";
 "cli.explain.area.cli" = "Befehlszeile";
 "cli.explain.area.remapping" = "Neuzuordnung";
-"cli.explain.exit_code" = "Exit-Code: %@";
+"cli.explain.area.mod" = "Mod-Pakete";
+"cli.explain.exit_code" ="Exit-Code: %@";
 "cli.explain.wire" = "Wire-Wert: %@";
 "cli.error.stale_installation" = "Die installierte OpenJoystickDriver.app ist älter als diese Repository-Quellen. Führe „./Scripts/ojd build install-fast dev“ aus oder setze OJD_RUN_REPOSITORY_CLI=1, um diesen Build auszuführen.";
 "cli.error.forwarder_allocation" = "Für das installierte ojd konnten keine Argumente reserviert werden. Wiederhole den Befehl.";
@@ -1596,4 +1597,12 @@
 "error.E3026" = "Das Profil des Joy-Con-Paars bezieht das Gyroskop vom anderen Joy-Con. Kalibriere die Bewegung des Controllers, den das Profil für das Gyroskop auswählt.";
 "error.E3027" = "Für den Controller ist kein Neuzuordnungsprofil aktiv, daher verarbeitet er keine Bewegung. Aktiviere ein Profil dafür, bringe die Ziel-App in den Vordergrund und versuche es noch einmal.";
 "error.E3028" = "Die Neuzuordnungssitzung des Controllers hat sich während der Anfrage geändert. Versuche es noch einmal.";
-"error.withCode" = "%@ (%@)";
+"error.E4001" = "Das Paketmanifest mod.json fehlt oder ist ungültig. Prüfe es anhand des mod-package-Schemas und führe den Befehl erneut aus.";
+"error.E4002" = "Das Paket benötigt eine andere Version von OpenJoystickDriver als die laufende. Installiere eine Paketversion, die diese Version unterstützt, oder aktualisiere OpenJoystickDriver.";
+"error.E4003" = "Eine Datei des Pakets ist ungültig, fehlt oder ist in mod.json nicht aufgeführt. Korrigiere die im Befehl genannte Datei und führe ihn erneut aus.";
+"error.E4004" = "Das Paket deckt einen Controller, eine Persona oder ein Profil ab, das bereits in deinen eigenen Dateien oder einem anderen installierten Paket vorhanden ist. Entferne die kollidierende Datei oder das Paket oder ändere das Paket und führe den Befehl erneut aus.";
+"error.E4005" = "Ein Paket mit diesem Namen ist bereits installiert. Führe den Befehl mit --force aus, um es zu ersetzen.";
+"error.E4006" = "Kein installiertes Paket hat diesen Namen. Führe ojd mod list aus, um die installierten Pakete anzuzeigen.";
+"error.E4007" = "Ein Profil aus einem installierten Paket kann nicht geändert werden. Dupliziere das Profil und ändere die Kopie.";
+"error.E4008" = "Der Paketordner konnte nicht geändert werden. Prüfe den freien Speicherplatz und die Ordnerberechtigungen.";
+"error.withCode" ="%@ (%@)";

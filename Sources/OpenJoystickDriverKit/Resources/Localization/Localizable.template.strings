@@ -1544,6 +1544,7 @@
 "cli.explain.area.endpoint" = "Endpoint";
 "cli.explain.area.cli" = "Command line";
 "cli.explain.area.remapping" = "Remapping";
+"cli.explain.area.mod" = "Mod packages";
 "cli.explain.exit_code" = "Exit code: %@";
 "cli.explain.wire" = "Wire value: %@";
 "cli.error.stale_installation" = "The installed OpenJoystickDriver.app is older than these repository sources. Run './Scripts/ojd build install-fast dev', or set OJD_RUN_REPOSITORY_CLI=1 to run this build.";
@@ -1599,4 +1600,12 @@
 "error.E3026" = "The Joy-Con pair profile takes its gyro from the other Joy-Con. Calibrate the motion of the controller that the profile selects for the gyro.";
 "error.E3027" = "No remapping profile is active for the controller, so it does not process motion. Activate a profile for it, bring its target app to the front, and try again.";
 "error.E3028" = "The remapping session of the controller changed while the request ran. Try again.";
+"error.E4001" = "The package manifest mod.json is missing or invalid. Check it against the mod-package schema and run the command again.";
+"error.E4002" = "The package requires a different version of OpenJoystickDriver than the one that runs. Install a package version that supports this version, or update OpenJoystickDriver.";
+"error.E4003" = "A file of the package is invalid, missing, or not listed in mod.json. Fix the file that the command names and run it again.";
+"error.E4004" = "The package covers a controller, persona, or profile that your own files or another installed package already hold. Remove the clashing file or package, or change the package, and run the command again.";
+"error.E4005" = "A package with this name is already installed. Run the command with --force to replace it.";
+"error.E4006" = "No installed package has this name. Run 'ojd mod list' to see the installed packages.";
+"error.E4007" = "A profile that comes from an installed package cannot be changed. Duplicate the profile and change the copy.";
+"error.E4008" = "The package folder could not be changed. Check the free disk space and the folder permissions.";
 "error.withCode" = "%@ (%@)";

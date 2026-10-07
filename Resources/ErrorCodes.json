@@ -404,6 +404,54 @@
 			"name": "motionSessionChanged",
 			"status": "active",
 			"wire": "motion_session_changed"
+		},
+		{
+			"code": "E4001",
+			"domain": "mod",
+			"name": "invalidManifest",
+			"status": "active"
+		},
+		{
+			"code": "E4002",
+			"domain": "mod",
+			"name": "requiresExcludesVersion",
+			"status": "active"
+		},
+		{
+			"code": "E4003",
+			"domain": "mod",
+			"name": "invalidPackageContent",
+			"status": "active"
+		},
+		{
+			"code": "E4004",
+			"domain": "mod",
+			"name": "packageClash",
+			"status": "active"
+		},
+		{
+			"code": "E4005",
+			"domain": "mod",
+			"name": "packageAlreadyInstalled",
+			"status": "active"
+		},
+		{
+			"code": "E4006",
+			"domain": "mod",
+			"name": "packageNotInstalled",
+			"status": "active"
+		},
+		{
+			"code": "E4007",
+			"domain": "mod",
+			"name": "packageReadOnly",
+			"status": "active"
+		},
+		{
+			"code": "E4008",
+			"domain": "mod",
+			"name": "packageStoreUnwritable",
+			"status": "active"
 		}
 	]
 }

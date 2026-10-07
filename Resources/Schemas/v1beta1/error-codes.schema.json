@@ -25,11 +25,11 @@
 			"properties": {
 				"code": {
 					"type": "string",
-					"pattern": "^E[1-3][0-9]{3}$",
-					"description": "E1xxx is endpoint, E2xxx is cli, and E3xxx is remapping."
+					"pattern": "^E[1-4][0-9]{3}$",
+					"description": "E1xxx is endpoint, E2xxx is cli, E3xxx is remapping, and E4xxx is mod."
 				},
 				"domain": {
-					"enum": ["endpoint", "cli", "remapping"]
+					"enum": ["endpoint", "cli", "remapping", "mod"]
 				},
 				"name": {
 					"type": "string",

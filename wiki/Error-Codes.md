@@ -9,6 +9,7 @@ Each code has the form `E` and four digits. The first digit gives the area:
 - `E1xxx` is the endpoint. A client of the endpoint gets the code in the `code` field of a `Status` line, whose `status` is `Failure`.
 - `E2xxx` is the command line.
 - `E3xxx` is remapping.
+- `E4xxx` is mod packages.
 
 A code never changes its meaning. When OJD stops using a code, the code is retired. OJD never gives a retired code to a different error.
 
@@ -83,6 +84,14 @@ The table is generated from the code catalog and the English text of OJD. The ta
 | E3026 | Remapping | The Joy-Con pair profile takes its gyro from the other Joy-Con. Calibrate the motion of the controller that the profile selects for the gyro. Wire value `motion_gyro_not_selected`. |
 | E3027 | Remapping | No remapping profile is active for the controller, so it does not process motion. Activate a profile for it, bring its target app to the front, and try again. Wire value `motion_profile_inactive`. |
 | E3028 | Remapping | The remapping session of the controller changed while the request ran. Try again. Wire value `motion_session_changed`. |
+| E4001 | Mod | The package manifest mod.json is missing or invalid. Check it against the mod-package schema and run the command again. |
+| E4002 | Mod | The package requires a different version of OpenJoystickDriver than the one that runs. Install a package version that supports this version, or update OpenJoystickDriver. |
+| E4003 | Mod | A file of the package is invalid, missing, or not listed in mod.json. Fix the file that the command names and run it again. |
+| E4004 | Mod | The package covers a controller, persona, or profile that your own files or another installed package already hold. Remove the clashing file or package, or change the package, and run the command again. |
+| E4005 | Mod | A package with this name is already installed. Run the command with --force to replace it. |
+| E4006 | Mod | No installed package has this name. Run 'ojd mod list' to see the installed packages. |
+| E4007 | Mod | A profile that comes from an installed package cannot be changed. Duplicate the profile and change the copy. |
+| E4008 | Mod | The package folder could not be changed. Check the free disk space and the folder permissions. |
 <!-- END GENERATED: error-codes -->
 
 ## Further reading

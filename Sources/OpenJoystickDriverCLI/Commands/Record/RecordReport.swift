@@ -131,7 +131,7 @@ struct RecordEntry: Encodable, Equatable {
     productID = Int(record.identity.productID)
     family = record.family
     layer = record.layer.rawValue
-    file = record.userFile?.path
+    file = record.file?.path
   }
 }
 

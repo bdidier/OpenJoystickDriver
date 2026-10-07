@@ -39,11 +39,16 @@ TEMPLATE = Path(
 )
 BEGIN = "<!-- BEGIN GENERATED: error-codes -->"
 END = "<!-- END GENERATED: error-codes -->"
-DOMAIN_PREFIX = {"endpoint": "E1", "cli": "E2", "remapping": "E3"}
+DOMAIN_PREFIX = {"endpoint": "E1", "cli": "E2", "remapping": "E3", "mod": "E4"}
 # The failure exit codes of ojd, as the wiki page Command-Line documents them. 0 is success and
 # 130 is an interrupt, which prints nothing and has no code.
 CLI_EXIT_CODES = frozenset({1, 64, 69, 77, 127})
-DOMAIN_AREA = {"endpoint": "Endpoint", "cli": "Command line", "remapping": "Remapping"}
+DOMAIN_AREA = {
+    "endpoint": "Endpoint",
+    "cli": "Command line",
+    "remapping": "Remapping",
+    "mod": "Mod",
+}
 STRING_LINE = re.compile(r'^"([^"]+)" = "(.*)";$')
 STRING_ESCAPE = re.compile(r"\\(.)")
 STRING_ESCAPES = {"n": "\n", "t": "\t"}

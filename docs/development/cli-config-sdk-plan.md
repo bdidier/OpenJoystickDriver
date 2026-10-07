@@ -83,6 +83,16 @@ The maintainer approves each commit.
      OJD refuses a package whose range excludes the running version.
    - `ojd mod validate|install|list|remove`, with `--dry-run`, `--force`, and `--json` as in the other commands.
      A package is installed into its own folder, so `remove` takes out only its files.
+   - Design (maintainer decisions, 2026-10-07):
+     - A package is a folder: `mod.json` (schema `mod-package.schema.json`) and the subfolders `Controllers/`, `Profiles/`, and `Personas/`, whose files follow the record, profile, and persona schemas and the file-name rules of the user folders.
+     - The manifest holds `name` (lowercase letters, digits, and hyphens), `version` (SemVer), `author`, `requires` as `{"minimum": "0.6.0-alpha.1", "below": "0.7.0"}` with `below` optional and SemVer prerelease ordering, and the file names it holds in `records`, `profiles`, and `personas`; a missing or unlisted file refuses the package.
+     - `install` copies the folder to `~/Library/Application Support/OpenJoystickDriver/Packages/<name>/` and swaps it in atomically; the running service watches `Packages/` and reloads.
+     - Packages are a read-only layer between the bundled catalog and the user's files: precedence is driver default, global file, bundled record, package record, user record, active profile.
+       Package profiles can be activated but not changed; a change is refused.
+     - `install` and `validate` refuse a package whose record or persona covers an identity, or whose profile has the UUID or name, that the user's files or another package already hold; `--force` does not override this.
+       If a clash appears later, the user's file wins, and among packages the first by name wins; the loser is listed with its reason.
+     - `--force` replaces an installed package of the same name without a prompt; it never overrides `requires`.
+     - Errors use the new `mod` domain, `E4xxx`.
    - `ojd record test RECORD --packets CAPTURE --expect STATE`: replays captured reports through the record's parser and compares the parsed state.
      It uses the packet capture that `record draft` already reads.
    - Versioned schemas, as Kubernetes versions its APIs (maintainer decision, 2026-10-06): each schema's path and `$id` carry its version, `Resources/Schemas/v1beta1/<name>.schema.json`.

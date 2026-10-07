@@ -1,0 +1,86 @@
+import Foundation
+import OpenJoystickDriverTestSupport
+import Testing
+
+@testable import OpenJoystickDriverKit
+
+/// The Swift manifest decoder and `mod-package.schema.json` must accept and reject the same
+/// manifests.
+struct ModPackageManifestSchemaTests {
+  /// A valid manifest with `changes` applied. A nil value removes the key.
+  private static func manifest(_ changes: [String: Any?]) -> [String: Any] {
+    var document: [String: Any] = [
+      "$schema": ModPackageManifest.knownSchemaIDs.sorted()[0], "name": "arcade-pack",
+      "version": "1.0.0", "author": "Tester", "requires": ["minimum": "0.6.0"],
+      "records": ["1234-abcd.json"],
+    ]
+    for (key, value) in changes { document[key] = value }
+    return document
+  }
+
+  private static func accepted() -> [[String: Any]] {
+    let unit = "1234-abcd-U-abcdefghijklmnop.json"
+    return [
+      manifest([:]),
+      manifest(["version": "1.0.0-rc.1", "requires": ["minimum": "0.6.0", "below": "1.0.0"]]),
+      manifest(["records": nil, "profiles": ["My-profile.json"]]),
+      manifest(["records": nil, "personas": ["1234-abcd.json", unit]]),
+      manifest(["profiles": ["a.json"], "personas": ["ffff-0000.json"]]),
+    ]
+  }
+
+  private static func rejected() -> [[String: Any]] {
+    let unit = "1234-abcd-U-abcdefghijklmnop.json"
+    return [
+      manifest(["records": [String]()]),
+      manifest(["records": nil, "profiles": [String]()]),
+      manifest(["records": nil]),
+      manifest(["version": "1.0.0+build.5"]),
+      manifest(["version": "v1.0.0"]),
+      manifest(["version": "01.0.0"]),
+      manifest(["requires": ["minimum": "1.0.0+x"]]),
+      manifest(["requires": ["minimum": "1.0.0", "below": "2"]]),
+      manifest(["requires": [String: String]()]),
+      manifest(["records": ["Profile.json"]]),
+      manifest(["records": ["1234-ABCD.json"]]),
+      manifest(["records": [unit]]),
+      manifest(["records": nil, "personas": ["1234-abcd-U-short.json"]]),
+      manifest(["records": nil, "personas": ["x.json"]]),
+      manifest(["records": nil, "profiles": [".hidden.json"]]),
+      manifest(["records": ["1234-abcd.json", "1234-abcd.json"]]),
+      manifest(["name": "Bad"]),
+      manifest(["name": "a--b"]),
+      manifest(["name": ""]),
+      manifest(["author": ""]),
+      manifest(["extra": 1]),
+      manifest(["$schema": "https://example.com/mod-package.schema.json"]),
+    ]
+  }
+
+  private func swiftAccepts(_ document: [String: Any]) throws -> Bool {
+    let data = try JSONSerialization.data(withJSONObject: document)
+    return (try? ModPackageManifest.parse(data)) != nil
+  }
+
+  private func schemaAccepts(_ document: [String: Any]) throws -> Bool {
+    let data = try JSONSerialization.data(withJSONObject: document)
+    let text = try #require(String(bytes: data, encoding: .utf8))
+    return try JSONSchemaFiles.issues(in: text, against: "mod-package.schema.json").isEmpty
+  }
+
+  @Test
+  func theSchemaAndTheDecoderAcceptTheSameManifests() throws {
+    for document in Self.accepted() {
+      #expect(try schemaAccepts(document), "schema: \(document)")
+      #expect(try swiftAccepts(document), "swift: \(document)")
+    }
+  }
+
+  @Test
+  func theSchemaAndTheDecoderRejectTheSameManifests() throws {
+    for document in Self.rejected() {
+      #expect(try !schemaAccepts(document), "schema: \(document)")
+      #expect(try !swiftAccepts(document), "swift: \(document)")
+    }
+  }
+}
