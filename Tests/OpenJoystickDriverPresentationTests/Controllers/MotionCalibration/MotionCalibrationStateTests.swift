@@ -26,6 +26,40 @@
       )
     }
 
+    @Test(arguments: [
+      ApplicationServiceRemappingRPCError.Code.motionGyroNotSelected,
+      .motionProfileInactive,
+      .motionSessionChanged,
+    ])
+    func serviceRefusalShowsTheExplanationOfItsCode(
+      code: ApplicationServiceRemappingRPCError.Code
+    ) async {
+      let gateway = DelayedMotionCalibrationGateway()
+      let model = MotionCalibrationViewModel(gateway: gateway)
+      model.select(RuntimeDeviceSelector(vendorID: 1, productID: 2, runtimeIdentifier: "first"))
+      let request = Task { await model.refresh() }
+      await gateway.waitForRequest()
+      await gateway.fail(ApplicationServiceRemappingRPCError(code: code, message: "service text"))
+      await request.value
+      #expect(model.errorMessage == code.errorCode.localizedExplanation)
+    }
+
+    @Test
+    func serviceMotionUnavailableGivesTheRecoveryGuidance() async {
+      let gateway = DelayedMotionCalibrationGateway()
+      let model = MotionCalibrationViewModel(gateway: gateway)
+      model.select(RuntimeDeviceSelector(vendorID: 1, productID: 2, runtimeIdentifier: "first"))
+      let request = Task { await model.refresh() }
+      await gateway.waitForRequest()
+      await gateway.fail(
+        ApplicationServiceRemappingRPCError(code: .motionUnavailable, message: "service text")
+      )
+      await request.value
+      #expect(
+        model.errorMessage == OJDLocalized.string("motion.calibration.motionUnavailable")
+      )
+    }
+
     @Test
     func discardedSelectionIgnoresLateCalibrationResult() async throws {
       let gateway = DelayedMotionCalibrationGateway()
@@ -97,8 +131,8 @@
       pending = nil
     }
 
-    func fail() {
-      pending?.resume(throwing: RemappingMotionCalibrationError.motionUnavailable)
+    func fail(_ error: any Error = RemappingMotionCalibrationError.motionUnavailable) {
+      pending?.resume(throwing: error)
       pending = nil
     }
   }

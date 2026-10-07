@@ -53,7 +53,20 @@
       isBusy = false
     }
 
+    /// The service sends its refusals as remapping RPC errors; the gateway throws
+    /// `controllerUnavailable` itself when the selector no longer resolves.
     private static func calibrationError(_ error: any Error) -> String {
+      if let rejection = error as? ApplicationServiceRemappingRPCError {
+        switch rejection.code {
+        case .controllerUnavailable:
+          return calibrationError(RemappingMotionCalibrationError.controllerUnavailable)
+        case .motionUnavailable:
+          return calibrationError(RemappingMotionCalibrationError.motionUnavailable)
+        case .motionGyroNotSelected, .motionProfileInactive, .motionSessionChanged:
+          return rejection.code.errorCode.localizedExplanation
+        default: break
+        }
+      }
       switch error as? RemappingMotionCalibrationError {
       case .controllerUnavailable:
         return OJDLocalized.string(

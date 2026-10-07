@@ -34,6 +34,37 @@ struct ControllerRemappingCommandTests {
     #expect(sent.runtimeIdentifier == "pad-1")
   }
 
+  @Test(arguments: [
+    ApplicationServiceRemappingRPCError.Code.motionGyroNotSelected,
+    .motionProfileInactive,
+    .motionSessionChanged,
+  ])
+  func calibrateExplainsEachServiceRefusalByItsOwnCode(
+    code: ApplicationServiceRemappingRPCError.Code
+  ) {
+    let error = ApplicationServiceRemappingRPCError(code: code, message: "service text")
+
+    let failure =
+      ControllerCalibrateCommand.failure(error, device: .fixture(id: "pad-1")) as? CLIFailure
+
+    #expect(failure?.id == code.errorCode)
+    #expect(failure?.message == code.errorCode.localizedExplanation)
+  }
+
+  @Test
+  func calibrateNamesTheControllerWhenTheServiceCannotReachIt() {
+    let device = ApplicationServiceDeviceDescription.fixture(id: "pad-1")
+    let error = ApplicationServiceRemappingRPCError(
+      code: .controllerUnavailable,
+      message: "The selected controller is unavailable."
+    )
+
+    let failure = ControllerCalibrateCommand.failure(error, device: device) as? CLIFailure
+
+    #expect(failure?.id == .controllerUnavailable)
+    #expect(failure?.message.contains(device.name) == true)
+  }
+
   @Test
   func pairAndUnpairJoinAndSeparateTwoJoyCons() async throws {
     let library = FakeProfileLibrary([FakeProfileLibrary.profile("Pair")])

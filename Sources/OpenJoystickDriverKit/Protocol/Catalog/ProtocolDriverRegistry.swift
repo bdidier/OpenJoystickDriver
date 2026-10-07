@@ -27,6 +27,11 @@ public final class ProtocolDriverRegistry: Sendable {
   ///
   /// No device is observed, so a family whose variant follows the host transport is
   /// described by its USB variant; the transport variant does not change capabilities.
+  ///
+  /// The physical outputs are the driver's full set and are not narrowed to `MacOSOwnedOutput`:
+  /// whether macOS serves the controller (`GCController.supportsHIDDevice`) is known only for a
+  /// live device, and a profile also runs where OJD owns output. A connected controller reports
+  /// its narrowed outputs, and the profile editor uses those instead.
   public func profileCapabilities(
     for identifier: DeviceIdentifier
   ) -> ControllerProfileCapabilities? {

@@ -56,7 +56,7 @@ struct ControllerCalibrateCommand: AsyncParsableCommand {
               command: action
             )
           )
-        } catch let error as RemappingMotionCalibrationError {
+        } catch let error as ApplicationServiceRemappingRPCError {
           throw Self.failure(error, device: device)
         }
       }
@@ -97,27 +97,33 @@ struct ControllerCalibrateCommand: AsyncParsableCommand {
     }
   }
 
+  /// The service's calibration refusals, named for the controller; other rejections keep the
+  /// shared service-failure text.
   static func failure(
-    _ error: RemappingMotionCalibrationError,
+    _ error: ApplicationServiceRemappingRPCError,
     device: ApplicationServiceDeviceDescription
-  ) -> CLIFailure {
-    switch error {
+  ) -> any Error {
+    let id = error.code.errorCode
+    switch error.code {
     case .controllerUnavailable:
-      CLIFailure(
-        ApplicationServiceRemappingRPCError.Code.controllerUnavailable.errorCode,
+      return CLIFailure(
+        id,
         CLILocalized.format(
           "cli.controller.calibrate.unavailable",
           device.name
         )
       )
     case .motionUnavailable:
-      CLIFailure(
-        ApplicationServiceRemappingRPCError.Code.motionUnavailable.errorCode,
+      return CLIFailure(
+        id,
         CLILocalized.format(
           "cli.controller.calibrate.no_motion",
           device.name
         )
       )
+    case .motionGyroNotSelected, .motionProfileInactive, .motionSessionChanged:
+      return CLIFailure(id, id.localizedExplanation)
+    default: return ServiceConnection.failure(for: error)
     }
   }
 }

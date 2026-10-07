@@ -176,6 +176,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The pr
 - `./Scripts/ojd release bump-version` (`just release-bump-version`) no longer fails looking for README version patterns that were removed, and no longer requires a dated `CHANGELOG.md` heading, so the app `Info.plist` version can be bumped at the start of a cycle. The missing heading had left beta.5 development builds reporting `0.5.0-beta.4`.
 - Restore prompt controller inventory updates, cancel stale HID initialization after removal, keep suspended controllers out of compatibility identity transitions, and preserve backend failure details when an identity change rolls back.
 - Show why disconnecting, resuming, or wirelessly disconnecting a controller failed in that controller's details. The failure was recorded but never displayed.
+- Explain a refused motion calibration in the user's language in `ojd controller calibrate` and the app: E3026–E3028 show their own explanation, and E3003 and an unavailable controller name the fix. The service's refusals previously reached both only as a generic or English service message.
 - Release a Bluetooth controller's HID claim before disconnecting it, confirm the physical link closed, and restore the prior active session when disconnection fails or times out.
 - Report typed HID, Bluetooth, and disconnect-stage failures instead of reducing them to generic Boolean or unavailable results.
 - Restore the authenticated GitHub fallback when raw catalog source downloads are rate limited.
