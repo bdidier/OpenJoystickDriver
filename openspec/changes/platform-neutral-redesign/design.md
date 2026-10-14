@@ -149,10 +149,10 @@ The `SdlCompatible` persona needs a hardware-evidenced fix so SDL's HIDAPI Xbox 
 | Wine and CrossOver | Seen as a generic HID joystick (task: hardware check, not claimed here). | Seen as Xbox-class where Wine's SDL path lists it. |
 | Browsers | W3C Gamepad API non-standard mapping unless the browser has a rule for the ID; OJD publishes a W3C-style description. | Standard mapping expected through the Xbox ID. |
 
-The browser and Wine rows are expectations to verify by the hardware checks, not facts. The mapping line (live-verified to apply) is:
+The browser and Wine rows are expectations to verify by the hardware checks, not facts. The mapping line follows the published button usages pinned by `GenericGamepadHIDTests.normalizedButtonsSerializeToTheirPublishedUsages`; SDL accepted the format live, and the button order awaits a hardware re-check:
 
 ```text
-03000000091200004f4a000008040000,OpenJoystickDriver Generic HID Gamepad,a:b0,b:b1,x:b2,y:b3,leftshoulder:b4,rightshoulder:b5,leftstick:b6,rightstick:b7,start:b8,back:b9,guide:b10,dpup:b11,dpdown:b12,dpleft:b13,dpright:b14,misc1:b15,leftx:a0,lefty:a1,rightx:a2,righty:a3,lefttrigger:+a4,righttrigger:+a5,platform:Mac OS X,
+03000000091200004f4a000008040000,OpenJoystickDriver Generic HID Gamepad,a:b0,b:b1,x:b2,y:b3,leftshoulder:b4,rightshoulder:b5,back:b6,start:b7,leftstick:b8,rightstick:b9,dpup:b10,dpdown:b11,dpleft:b12,dpright:b13,guide:b14,misc1:b15,leftx:a0,lefty:a1,rightx:a2,righty:a3,lefttrigger:+a4,righttrigger:+a5,platform:Mac OS X,
 ```
 
 `ojd virtual show --json` gains `sdl: { guid, mapping }` and `w3c: { ... }`; `ojd virtual export-mapping --format sdl|w3c` writes them. Submitting the mapping to SDL_GameControllerDB or upstream is an outward-facing decision of the user and is not in tasks. A new pid.codes entry for a layout that matches the W3C standard mapping directly is an open question.
