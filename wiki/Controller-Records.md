@@ -33,6 +33,8 @@ A record has one of two operations:
 - `add`: a complete record for a model that has no bundled record.
 - `patch`: new values for the `protocol`, `usb`, `ownership`, `output`, `input`, `tuning`, or `bluetoothLE` fields of a bundled record. The other fields stay bundled. A field you set replaces the bundled field whole, except `tuning`, which merges per value, and `protocol`: when it names the bundled family, OJD keeps the bundled protocol values you leave out, and the `quirks` you list are added to the bundled quirks. A patch cannot remove a bundled quirk. A `protocol` with a different family replaces the bundled one whole, with its quirks.
 
+A record can also come from an installed [mod package](Writing-Controller-Mods.md). A package record sits between the bundled record and yours: your record wins over it. A `patch` record of yours for a model that only a package defines applies over the package record. If you remove the package later, OJD lists your patch as a problem and skips it.
+
 A record for a model that uses raw USB works only when macOS lets OpenJoystickDriver open the device directly. The Xbox USB part of the [OJD driver extension](Connecting-Controllers.md#xbox-usb-driver-extension) claims only the Xbox models in its signed product list, and your record cannot add a model to that list. `ojd record validate` says when this applies.
 
 ## Choose Who Drives the Controller
@@ -42,7 +44,9 @@ macOS serves some controllers natively through the Game Controller framework. Op
 - `macos`: macOS drives the controller when it can. This is the default.
 - `ojd`: OpenJoystickDriver opens the controller exclusively even when macOS supports it, and drives it like a controller macOS does not know.
 
-A raw-USB family, such as `xbox.gip`, has no `ownership` field, because macOS cannot serve those controllers. A new `ownership` value applies when the running service connects the controller again after the record changes. You do not need to unplug it.
+A raw-USB family, such as `xbox.gip`, has no `ownership` field, because macOS cannot serve those controllers. A new `ownership` value applies to a connected controller as soon as the running service reloads the records. You do not need to unplug the controller.
+
+To change `ownership` without editing the file, run `ojd controller ownership CONTROLLER native|virtual`. `native` sets `macos`, and `virtual` sets `ojd`. The command writes the value to your record for the model, and creates a `patch` record when you have none. It refuses a raw-USB family, and a controller that macOS does not serve natively, with the code E2023. `ojd controller show` names the choice and the layer it comes from.
 
 ## Describe a Controller's Input Reports
 
@@ -233,7 +237,7 @@ The running service applies the record when the folder changes. It connects each
 
 ## Check Which Records Apply
 
-Run `ojd record list`. Each line shows a model, its protocol family, and its layer: `bundled` or `user`.
+Run `ojd record list`. Each line shows a model, its protocol family, and its layer: `bundled`, `package`, or `user`.
 
 Run `ojd record show VVVV:PPPP` to see one model's effective record and the layer of each field.
 
@@ -259,5 +263,6 @@ The `--json` output schema has its own release check: within a major version, or
 ## Further Reading
 
 - [Command reference](Command-Reference.md)
+- [Writing controller mods](Writing-Controller-Mods.md)
 - [Supported controllers](Supported-Controllers.md)
 - [Generic HID controllers](Supported-Controllers.md#generic-hid-controllers)

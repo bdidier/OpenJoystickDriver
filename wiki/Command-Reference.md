@@ -12,6 +12,7 @@ This page lists every `ojd` command. Every command also accepts the global optio
 - [binding](#binding)
 - [virtual](#virtual)
 - [record](#record)
+- [mod](#mod)
 - [service](#service)
 - [permission](#permission)
 - [extension](#extension)
@@ -64,6 +65,7 @@ ojd controller capture CONTROLLER [--duration SECONDS]
 ojd controller rumble CONTROLLER [--left N] [--right N] [--left-trigger N] [--right-trigger N] [--duration SECONDS]
 ojd controller light CONTROLLER [--color RRGGBB] [--brightness N]
 ojd controller player CONTROLLER 1|2|3|4|off
+ojd controller ownership CONTROLLER native|virtual [--dry-run]
 ojd controller suspend CONTROLLER
 ojd controller resume CONTROLLER
 ojd controller disconnect CONTROLLER
@@ -81,6 +83,7 @@ ojd controller unpair PAIR
 - `controller rumble`: Run the rumble motors. `--left`, `--right`, `--left-trigger`, and `--right-trigger` set each motor's intensity from 0 to 255. With none of them, both main motors run at 180. `--duration` is in seconds, above 0 and at most 5, and is 0.45 by default. Set every intensity to 0 to stop the motors.
 - `controller light`: Set the lightbar color with `--color`, as hex such as `FF8000`, or the LED brightness with `--brightness`, from 0 to 255.
 - `controller player`: Set the player indicator lights to 1 to 4, or turn them off with `off`.
+- `controller ownership`: Choose whether macOS (`native`) or OpenJoystickDriver (`virtual`) serves the controller's model. It sets `ownership` in your record for the model, `vvvv-pppp.json`, and creates a patch record when you have none. It keeps the other fields of the record. The choice applies to every controller of the model, and the running service applies it without a replug. `--dry-run` (`-n`) writes nothing. It exits with code 1 and E2023 for a controller that uses raw USB, or that macOS does not serve natively. `controller show` names the choice and the layer it comes from. With `--json`, it prints the `controller`, `identity`, `ownership` and `previous` (`native` or `virtual`), `file`, `created`, and `dryRun`. For more information, see [Choose who drives the controller](Controller-Records.md#choose-who-drives-the-controller).
 - `controller suspend`: Stop OpenJoystickDriver from driving the controller until you resume it.
 - `controller resume`: Let OpenJoystickDriver drive a suspended controller again.
 - `controller disconnect`: Close a Bluetooth controller's connection. The controller stays paired and reconnects when you turn it on again. The command waits at least 6 seconds for Bluetooth to confirm.
@@ -207,7 +210,7 @@ ojd record test VVVV:PPPP --packets CAPTURE --expect STATE
 `FILE` is a record file. Use `-` to read the record from stdin.
 
 - `record draft`: Read a connected controller's HID report descriptor, capture its input reports for `--duration` seconds (10 by default) while you press each control, and print a record to start from. The record is an `add` for a model without a bundled record and a `patch` otherwise. It maps the buttons, sticks, triggers, and hat that the descriptor states plainly, with the `hid.report-layout` family, or names `hid.descriptor` when nothing maps. Each report byte that changed during the capture is listed on stderr with its lowest and highest value. It exits with code 1 when nothing maps for a model with a bundled record.
-- `record list`: List every controller record, with its model, protocol family, layer (`bundled` or `user`), and file. It names each of your files that OpenJoystickDriver skipped, and why, on stderr, also with `--json`. `--bundled` lists the bundled records alone.
+- `record list`: List every controller record, with its model, protocol family, layer (`bundled`, `package`, or `user`), and file. It names each of your files that OpenJoystickDriver skipped, and why, on stderr, also with `--json`. `--bundled` lists the bundled records alone.
 - `record show`: Show one model's effective record and the layer of each top-level field. It exits with code 1 when no record exists for the model.
 - `record validate`: Check a record without installing it. It shows the operation (`add` or `patch`), the model, the family, the file name, and whether the USB driver extension can claim the controller. It exits with code 1 when the record is not valid.
 - `record install`: Check a record and write it to your record folder as `vvvv-pppp.json`. To replace the record already installed for that model, it asks first on a terminal and needs `--force` otherwise. `--dry-run` (`-n`) checks the record and prints where it would go, and writes nothing. It exits with code 1 and writes nothing when the record is not valid.
@@ -216,6 +219,22 @@ ojd record test VVVV:PPPP --packets CAPTURE --expect STATE
 - `record test`: Replay captured reports through a model's record and compare the parsed controller state with the state you expect. It needs no service. `CAPTURE` is a file of the lines that `ojd controller capture --json` prints, one packet per line, and only received packets count. `STATE` is a JSON file in the shape of one line of `ojd controller watch --json`. The `connection` field is not compared. The state after the last report that carried input is the one compared. On a match it exits with code 0. On a mismatch it prints each field that differs, with its expected and parsed value, and exits with code 1 and error `E2022`. It exits with code 1 and error `E2011` when the capture or the state is not valid, no report in the capture carries input, the parser rejects a report, or the record has no parser that runs without a device. It exits with code 64 when a file cannot be read.
 
 With `--json`, `record test` prints a `RecordTestResult` with `identity`, `matches`, `inputReports`, and `differences`, each with `field`, `expected`, and `actual`. `record draft` prints a `RecordDraft` with `identity`, `name`, `operation`, `family`, `report` (`id` and `length`, absent when no report was chosen), `capturedReports`, `changedBytes`, each with `byte`, `minimum`, and `maximum`, and `record`. With `--plain`, it prints one line for each changed byte: its offset, lowest value, and highest value. `record list` prints a `ControllerRecordList` with `items`, each with `identity`, `vendorID`, `productID`, `family`, `layer`, and `file`, and an empty `metadata`. `record show` prints a `ControllerRecord` with `identity`, `family`, `layer`, `file`, `transport` (`hid` or `usb`), `usbExtension` (`claims` or `doesNotClaim`, for `usb` only), `fields`, and `record`. `record validate` prints a `RecordValidation` with `valid`, and `problem` or the record's `operation`, `identity`, `family`, `fileName`, `transport`, and `usbExtension`. `record install` prints a `ControllerRecord` with `installed`, `replaced`, `dryRun`, and `record`, and `record remove` prints a `Status`, with `removed` and `dryRun` in `details`.
+
+## mod
+
+Validate, install, list, or remove mod packages. A package is a folder with a `mod.json` manifest. None of these commands needs the service. For more information, see [Writing controller mods](Writing-Controller-Mods.md).
+
+```text
+ojd mod validate FOLDER
+ojd mod install FOLDER [--force] [--dry-run]
+ojd mod list
+ojd mod remove NAME [--force] [--dry-run]
+```
+
+- `mod validate`: Check a package folder without installing it: the manifest, whether `requires` includes this version, the listed files, and clashes with your files and other packages. It exits with code 1 and the `E4xxx` code when the package is refused.
+- `mod install`: Check the package and install it to `Packages/NAME` in the OpenJoystickDriver folder. The running service applies it. A package of the same name that is installed is refused with E4005 unless you pass `--force`. `--force` never overrides `requires`, a clash, or an invalid file. `--dry-run` (`-n`) checks the package and writes nothing.
+- `mod list`: List each installed package with its version, author, and files. A package that OpenJoystickDriver does not use, such as one whose `requires` leaves out this version, shows the reason and its code.
+- `mod remove`: Delete one installed package. It asks first on a terminal and needs `--force` otherwise. `--dry-run` (`-n`) changes nothing. It exits with code 1 and E4006 when the package is not installed.
 
 ## service
 

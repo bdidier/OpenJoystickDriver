@@ -15,6 +15,7 @@ OpenJoystickDriver (OJD) lets you use game controllers on macOS that macOS does 
 - [Supported controllers](Supported-Controllers.md): See which controllers people tested, what each tier means, and how OJD treats clone and generic HID controllers.
 - [Connecting controllers](Connecting-Controllers.md): Learn how USB, Bluetooth, and dongle connections differ, find the VID:PID of your controller, and use the Xbox USB driver extension.
 - [Controller records](Controller-Records.md): Add a controller that OJD does not know, or change how OJD drives a known one.
+- [Writing controller mods](Writing-Controller-Mods.md): Package controller records, profiles, and personas in a folder, and install it with `ojd mod`.
 
 ## Games
 

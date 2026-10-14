@@ -4,7 +4,7 @@ All notable project changes are recorded here.
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.6.0-alpha.1] - 2026-10-14
 
 ### Added
 
@@ -48,6 +48,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The pr
 - Endpoint tokens and WebSocket: `ojd access grant --token NAME [--origin URL]...` creates a token that a client signs the service's challenge with in its `hello`, without sending the token, instead of being checked by its signature, and `ojd access revoke token:NAME` removes it. `ojd access web enable [--port PORT]` adds a WebSocket on `127.0.0.1`, on a free port that the system picks the first time and the service saves, for pages from the origins a token is granted for, and serves the `Overlays` folder on the same port. The WebSocket has its own limit of 8 connections, apart from the socket's 8. It is off by default. `AccessGrants.json` holds the keys that sign challenges, so keep it out of anything you share, such as reports, exports, and backups. See [Automating OpenJoystickDriver](wiki/Automating-OpenJoystickDriver.md#use-the-websocket).
 - `OJD_NO_INPUT`, `OJD_TIMEOUT`, and `OJD_COLOR` (`auto`, `always`, or `never`) stand in for `--no-input`, `--timeout`, and the color options; a flag beats its variable, and an invalid value exits with code 64. `ojd --help` gains a Start here list, examples, the variables, the shell completion command, and exit code 127, and the help of `controller watch|rumble|light`, `profile create|set`, `binding set`, `record install`, and `access grant` gains examples. See [Using the command line](wiki/Command-Line.md#environment-variables).
 - `ojd controller show` and its `--json` output report the effective `tuning` (stick deadzone, input liveness timeout, and the HID intervals) and an `outputOwner` of `macos` or `ojd`; when macOS owns output, the output capabilities say so. The JSON change is additive.
+- Mod packages: a folder with a `mod.json` manifest and `Controllers/`, `Profiles/`, and `Personas/` files that `ojd mod validate|install|list|remove` manages in `~/Library/Application Support/OpenJoystickDriver/Packages`. A package record sits between the bundled record and yours, and the runtime skips a package whose `requires` leaves out the running version. See [Writing controller mods](wiki/Writing-Controller-Mods.md).
+- `E3029`: a profile that comes from an installed mod package is read-only, and a change to it is refused. Duplicate the profile and change the copy. See [Error codes](wiki/Error-Codes.md).
+- `E4001` to `E4007`: the new `mod` error domain for `ojd mod` (invalid manifest, `requires` excludes the version, invalid package content, clash, already installed, not installed, store not writable). See [Error codes](wiki/Error-Codes.md).
+- `ojd controller ownership CONTROLLER native|virtual [--dry-run]` chooses whether macOS or OpenJoystickDriver serves a controller model. It sets `ownership` in your record, the running service applies it without a replug, and a raw-USB controller or one that macOS does not serve natively is refused with the new error `E2023`. See the [command reference](wiki/Command-Reference.md#controller).
 
 ### Changed
 
@@ -170,6 +174,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The pr
 
 ### Fixed
 
+- Merge the stick reports that queue behind a slow virtual-gamepad publication to the newest state while keeping every button edge, so sticks no longer stutter. A remapping route's controller still gets every queued report, and ending a session drops held input. Not verified on hardware.
+- List an Xbox One controller (`045E:02D1`) in `ojd controller list` while the XboxUSBDevice extension is active ([issue #18](https://github.com/xsyetopz/OpenJoystickDriver/issues/18)): the extension route reads the vendor, product, location, and name from the parent USB device. Not verified on hardware.
 - Stop a USB pipeline that a detach stopped before admission started it from opening a session that nothing closed.
 - Accept a report descriptor that ends with zero padding after its last End Collection, as the Xbox One S Bluetooth descriptors do. The HID descriptor contract previously rejected those controllers.
 - The DragonRise generic USB PCB (`0079:0006`) no longer reads its face buttons one position off or its digital L2 and R2 as View and Menu. The descriptor fallback now uses the button order shared by SDL's two mappings for this ID, with Z and Rz as the right stick. Not hardware-verified.
@@ -440,7 +446,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The pr
 - Fix an output-dispatcher race when creating virtual devices.
 - Keep the menu-bar app alive after launch.
 
-[Unreleased]: https://github.com/xsyetopz/OpenJoystickDriver/compare/0.5.0-beta.4...HEAD
+[0.6.0-alpha.1]: https://github.com/xsyetopz/OpenJoystickDriver/compare/0.5.0-beta.4...0.6.0-alpha.1
 [0.5.0-beta.3]: https://github.com/xsyetopz/OpenJoystickDriver/compare/0.5.0-beta.2...0.5.0-beta.3
 [0.5.0-beta.2]: https://github.com/xsyetopz/OpenJoystickDriver/compare/0.5.0-beta.1...0.5.0-beta.2
 [0.5.0-beta.1]: https://github.com/xsyetopz/OpenJoystickDriver/releases/tag/0.5.0-beta.1

@@ -633,14 +633,14 @@ Context:
 - The `ojd mod` help text from P3 and `docs/sdk/sample/` from P5.
 - `CHANGELOG.md` `[Unreleased]` section.
 
-- [ ] 12.1 Write `wiki/Writing-Controller-Mods.md`. Its first statement after the H1 says that the product list of the USB extension is Apple-signed and cannot be extended by a package. Then cover layout, `mod.json`, precedence, clashes, read-only profiles, and the `ojd mod` commands, with the sample package as the example.
-- [ ] 12.2 Add the page to `wiki/Home.md` and `wiki/_Sidebar.md` in the same group.
-- [ ] 12.3 Update `Command-Line.md`, `Command-Reference.md`, and `Controller-Records.md` with what ships.
-- [ ] 12.4 In `CHANGELOG.md` `[Unreleased]`, add one line each: mod packages and `ojd mod` (with the runtime skip of a package that `requires` excludes), E3029, E4001-E4007.
-- [ ] 12.5 Also add one `[Unreleased]` line each for the native/virtual ownership toggle (`ojd controller ownership`, the app picker, E2023), the stick stutter fix that P9 reports, and the issue #18 result that P10 reports. In `Command-Reference.md` add `controller ownership`; in `Controller-Records.md` replace the claim of line 45 with what P11 ships. If P10 found the cause outside OJD, add its line to `wiki/Known-Issues.md`.
-- [ ] 12.6 Rename `## [Unreleased]` to `## [0.6.0-alpha.1] - <date>` with `date -u +%F` of the day the package runs, and add a compare link if the file has link references (maintainer decision D3).
+- [x] 12.1 Write `wiki/Writing-Controller-Mods.md`. Its first statement after the H1 says that the product list of the USB extension is Apple-signed and cannot be extended by a package. Then cover layout, `mod.json`, precedence, clashes, read-only profiles, and the `ojd mod` commands, with the sample package as the example.
+- [x] 12.2 Add the page to `wiki/Home.md` and `wiki/_Sidebar.md` in the same group.
+- [x] 12.3 Update `Command-Line.md`, `Command-Reference.md`, and `Controller-Records.md` with what ships.
+- [x] 12.4 In `CHANGELOG.md` `[Unreleased]`, add one line each: mod packages and `ojd mod` (with the runtime skip of a package that `requires` excludes), E3029, E4001-E4007.
+- [ ] 12.5 Also add one `[Unreleased]` line each for the native/virtual ownership toggle (`ojd controller ownership`, the app picker, E2023), the stick stutter fix that P9 reports, and the issue #18 result that P10 reports. In `Command-Reference.md` add `controller ownership`; in `Controller-Records.md` replace the claim of line 45 with what P11 ships. If P10 found the cause outside OJD, add its line to `wiki/Known-Issues.md`. Open: done except the app picker, which P12 builds after P6; the CHANGELOG ownership line names only the CLI and E2023 until then
+- [x] 12.6 Rename `## [Unreleased]` to `## [0.6.0-alpha.1] - <date>` with `date -u +%F` of the day the package runs, and add a compare link if the file has link references (maintainer decision D3).
   The report names the date, so the maintainer can correct it in the release commit if the approval falls on another day.
-- [ ] 12.7 Verify: the `verify` command above exits 0. Acceptance: The verify command passes. Each new wiki paragraph and CHANGELOG entry is one line.
+- [x] 12.7 Verify: the `verify` command above exits 0. Acceptance: The verify command passes. Each new wiki paragraph and CHANGELOG entry is one line.
 - [ ] 12.8 Review: a fresh reviewer agent approves the diff
 - [ ] 12.9 Merge `spec/0.6.0-alpha.1-P6` into `feat/0.6.0-alpha.1`
 
