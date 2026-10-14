@@ -31,7 +31,7 @@ extension DeviceManager {
       else { continue }
       let suspended = keepsSuspension && suspendedControllerIdentities.contains(identifier)
       await tearDownHIDDevice(identifier: identifier, connection: connection)
-      if suspended { suspendedControllerIdentities.insert(identifier) }
+      if suspended, !isStopping { suspendedControllerIdentities.insert(identifier) }
     }
   }
 
