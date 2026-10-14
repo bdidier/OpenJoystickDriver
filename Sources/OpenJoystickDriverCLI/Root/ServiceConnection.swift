@@ -66,6 +66,14 @@ enum ServiceConnection {
           "cli.error.duplicate_profile_name"
         )
       )
+    case let rejection as ApplicationServiceRemappingRPCError
+    where rejection.code == .packageProfileReadOnly:
+      CLIFailure(
+        rejection.code.errorCode,
+        CLILocalized.text(
+          "error.E3029"
+        )
+      )
     case let rejection as ApplicationServiceRemappingRPCError:
       CLIFailure.serviceRequestFailed(rejection.localizedDescription, id: rejection.code.errorCode)
     default: CLIFailure.serviceRequestFailed(error.localizedDescription)
