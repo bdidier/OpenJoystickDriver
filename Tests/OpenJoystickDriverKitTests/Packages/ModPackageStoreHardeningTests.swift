@@ -177,7 +177,7 @@ struct ModPackageStoreHardeningTests {
   }
 
   @Test
-  func aStoreThatCannotBeWrittenIsE4008AndKeepsTheInstalledPackage() throws {
+  func aStoreThatCannotBeWrittenIsE4007AndKeepsTheInstalledPackage() throws {
     try Fixture.with { fixture in
       let store = fixture.store()
       try store.install(plainPackage(fixture))

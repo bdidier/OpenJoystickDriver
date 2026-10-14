@@ -1597,12 +1597,12 @@
 "error.E3026" = "Le profil de la paire de Joy-Con prend le gyroscope de l’autre Joy-Con. Calibrez le mouvement de la manette que le profil sélectionne pour le gyroscope.";
 "error.E3027" = "Aucun profil de remappage n’est actif pour la manette, elle ne traite donc pas le mouvement. Activez un profil pour elle, amenez l’app cible au premier plan et réessayez.";
 "error.E3028" = "La session de remappage de la manette a changé pendant la requête. Réessayez.";
+"error.E3029" = "Un profil provenant d’un paquet installé ne peut pas être modifié. Dupliquez le profil et modifiez la copie.";
 "error.E4001" = "Le manifeste du paquet mod.json est absent ou invalide. Vérifiez-le avec le schéma mod-package et relancez la commande.";
 "error.E4002" = "Le paquet exige une autre version d’OpenJoystickDriver que celle qui s’exécute. Installez une version du paquet compatible avec cette version ou mettez OpenJoystickDriver à jour.";
 "error.E4003" = "Un fichier du paquet est invalide, absent ou non listé dans mod.json. Corrigez le fichier indiqué par la commande et relancez-la.";
 "error.E4004" = "Le paquet couvre une manette, une persona ou un profil que vos propres fichiers ou un autre paquet installé contiennent déjà. Supprimez le fichier ou le paquet en conflit, ou modifiez le paquet, puis relancez la commande.";
 "error.E4005" = "Un paquet portant ce nom est déjà installé. Lancez la commande avec --force pour le remplacer.";
 "error.E4006" = "Aucun paquet installé ne porte ce nom. Lancez ojd mod list pour voir les paquets installés.";
-"error.E4007" = "Un profil provenant d’un paquet installé ne peut pas être modifié. Dupliquez le profil et modifiez la copie.";
-"error.E4008" = "Le dossier des paquets n’a pas pu être modifié. Vérifiez l’espace disque libre et les autorisations du dossier.";
+"error.E4007" = "Le dossier des paquets n’a pas pu être modifié. Vérifiez l’espace disque libre et les autorisations du dossier.";
 "error.withCode" ="%@ (%@)";

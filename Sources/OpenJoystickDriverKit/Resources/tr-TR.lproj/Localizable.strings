@@ -1597,12 +1597,12 @@
 "error.E3026" = "Joy-Con çiftinin profili jiroskopu diğer Joy-Con’dan alır. Profilin jiroskop için seçtiği kontrolcünün hareketini kalibre edin.";
 "error.E3027" = "Kontrolcü için etkin bir yeniden atama profili yok, bu yüzden hareketi işlemiyor. Kontrolcü için bir profil etkinleştirin, hedef uygulamayı öne getirin ve yeniden deneyin.";
 "error.E3028" = "İstek çalışırken kontrolcünün yeniden atama oturumu değişti. Yeniden deneyin.";
+"error.E3029" = "Kurulu bir paketten gelen profil değiştirilemez. Profili çoğaltın ve kopyayı değiştirin.";
 "error.E4001" = "mod.json paket bildirimi eksik veya geçersiz. Bunu mod-package şemasına göre kontrol edin ve komutu yeniden çalıştırın.";
 "error.E4002" = "Paket, çalışandan farklı bir OpenJoystickDriver sürümü gerektiriyor. Bu sürümü destekleyen bir paket sürümü kurun veya OpenJoystickDriver'ı güncelleyin.";
 "error.E4003" = "Paketin bir dosyası geçersiz, eksik veya mod.json içinde listelenmemiş. Komutun belirttiği dosyayı düzeltin ve yeniden çalıştırın.";
 "error.E4004" = "Paket, kendi dosyalarınızda veya kurulu başka bir pakette zaten bulunan bir denetleyiciyi, personayı veya profili kapsıyor. Çakışan dosyayı veya paketi kaldırın ya da paketi değiştirin ve komutu yeniden çalıştırın.";
 "error.E4005" = "Bu ada sahip bir paket zaten kurulu. Değiştirmek için komutu --force ile çalıştırın.";
 "error.E4006" = "Kurulu hiçbir paketin adı bu değil. Kurulu paketleri görmek için ojd mod list çalıştırın.";
-"error.E4007" = "Kurulu bir paketten gelen profil değiştirilemez. Profili çoğaltın ve kopyayı değiştirin.";
-"error.E4008" = "Paket klasörü değiştirilemedi. Boş disk alanını ve klasör izinlerini kontrol edin.";
+"error.E4007" = "Paket klasörü değiştirilemedi. Boş disk alanını ve klasör izinlerini kontrol edin.";
 "error.withCode" ="%@ (%@)";

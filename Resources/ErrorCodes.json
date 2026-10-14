@@ -406,6 +406,13 @@
 			"wire": "motion_session_changed"
 		},
 		{
+			"code": "E3029",
+			"domain": "remapping",
+			"name": "packageProfileReadOnly",
+			"status": "active",
+			"wire": "package_profile_read_only"
+		},
+		{
 			"code": "E4001",
 			"domain": "mod",
 			"name": "invalidManifest",
@@ -443,12 +450,6 @@
 		},
 		{
 			"code": "E4007",
-			"domain": "mod",
-			"name": "packageReadOnly",
-			"status": "active"
-		},
-		{
-			"code": "E4008",
 			"domain": "mod",
 			"name": "packageStoreUnwritable",
 			"status": "active"

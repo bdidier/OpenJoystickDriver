@@ -371,6 +371,7 @@ public struct ApplicationServiceRemappingRPCError: Error, Codable, Equatable, Lo
     case motionGyroNotSelected = "motion_gyro_not_selected"
     case motionProfileInactive = "motion_profile_inactive"
     case motionSessionChanged = "motion_session_changed"
+    case packageProfileReadOnly = "package_profile_read_only"
 
     /// The stable error code of this failure, listed in `Resources/ErrorCodes.json`.
     public var errorCode: ErrorCode {
@@ -403,6 +404,7 @@ public struct ApplicationServiceRemappingRPCError: Error, Codable, Equatable, Lo
       case .motionGyroNotSelected: .motionGyroNotSelected
       case .motionProfileInactive: .motionProfileInactive
       case .motionSessionChanged: .motionSessionChanged
+      case .packageProfileReadOnly: .packageProfileReadOnly
       }
     }
   }

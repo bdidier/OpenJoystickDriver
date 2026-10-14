@@ -8,6 +8,7 @@ extension RemappingProfileLibrary {
   func loadIfNeeded() throws -> RemappingProfileLibraryState {
     if let library { return library }
     var issues: [RecoveryIssue] = []
+    let packaged = loadPackageProfiles()
     var profiles: [RemappingProfile] = []
     for url in try profileFileURLs() {
       let data = try Self.read(url)
@@ -27,7 +28,12 @@ extension RemappingProfileLibrary {
       if data.count <= Self.maximumEncodedBytes,
         let decoded = try? JSONDecoder().decode([RemappingPersistedActiveProfile].self, from: data)
       {
-        let profilesByID = Dictionary(uniqueKeysWithValues: profiles.map { ($0.id, $0) })
+        let profilesByID = Dictionary(
+          uniqueKeysWithValues: allProfiles(
+            RemappingProfileLibraryState(profiles: profiles),
+            packageProfiles: packaged
+          ).map { ($0.id, $0) }
+        )
         activeProfiles = Self.normalizedActiveProfiles(
           decoded.filter { active in
             guard let profile = profilesByID[active.profileID] else { return false }
@@ -42,6 +48,7 @@ extension RemappingProfileLibrary {
 
     let loaded = RemappingProfileLibraryState(profiles: profiles, activeProfiles: activeProfiles)
     setIssues(issues)
+    packageProfiles = packaged
     library = loaded
     return loaded
   }
@@ -141,7 +148,7 @@ extension RemappingProfileLibrary {
       }
       try validate(profile, in: library.profiles.filter { $0.id != profile.id })
     }
-    let profilesByID = Dictionary(uniqueKeysWithValues: library.profiles.map { ($0.id, $0) })
+    let profilesByID = Dictionary(uniqueKeysWithValues: allProfiles(library).map { ($0.id, $0) })
     // Each active profile entry must reference a real profile with a matching device model.
     // Multiple active profiles per model are allowed (per-app auto-switch).
     var seenActiveKeys: Set<String> = []

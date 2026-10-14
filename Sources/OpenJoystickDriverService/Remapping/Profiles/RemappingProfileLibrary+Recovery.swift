@@ -53,13 +53,13 @@ extension RemappingProfileLibrary {
     return RemappingProfileMutationImpact(modelsNeedingRefresh: [])
   }
 
-  /// Discards the cached library and reads the files again.
+  /// Discards the cached library and reads the profile files and the installed packages again.
   ///
   /// Returns the models whose active profiles, resolved to their content, changed.
   func reload() throws -> Set<RemappingProfileModel> {
-    let previous = library.map(Self.resolvedSelections) ?? [:]
+    let previous = library.map { resolvedSelections($0) } ?? [:]
     library = nil
-    let current = Self.resolvedSelections(try loadIfNeeded())
+    let current = resolvedSelections(try loadIfNeeded())
     return Set(previous.keys).union(current.keys).filter { previous[$0] != current[$0] }
   }
 
@@ -131,10 +131,10 @@ extension RemappingProfileLibrary {
     let profile: RemappingProfile?
   }
 
-  private static func resolvedSelections(
+  private func resolvedSelections(
     _ state: RemappingProfileLibraryState
   ) -> [RemappingProfileModel: [ResolvedSelection]] {
-    let profilesByID = Dictionary(uniqueKeysWithValues: state.profiles.map { ($0.id, $0) })
+    let profilesByID = Dictionary(uniqueKeysWithValues: allProfiles(state).map { ($0.id, $0) })
     return Dictionary(grouping: state.activeProfiles, by: \.model).mapValues { entries in
       entries.map {
         ResolvedSelection(

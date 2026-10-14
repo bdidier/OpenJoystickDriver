@@ -3,13 +3,13 @@ import OpenJoystickDriverKit
 
 extension RemappingProfileLibrary {
   func profiles() throws -> [RemappingProfile] {
-    try loadIfNeeded().profiles.sorted(by: Self.profileOrder)
+    try allProfiles(loadIfNeeded()).sorted(by: Self.profileOrder)
   }
 
   func snapshot() throws -> RemappingProfileLibrarySnapshot {
     let loaded = try loadIfNeeded()
     return RemappingProfileLibrarySnapshot(
-      profiles: loaded.profiles.sorted(by: Self.profileOrder),
+      profiles: allProfiles(loaded).sorted(by: Self.profileOrder),
       activeProfiles: loaded.activeProfiles.map {
         RemappingActiveProfileSelection(
           model: $0.model,
@@ -37,17 +37,18 @@ extension RemappingProfileLibrary {
   func profile(id: UUID) throws -> RemappingProfile? {
     let loaded = try loadIfNeeded()
     try requireUsableLibrary()
-    return loaded.profiles.first { $0.id == id }
+    return allProfiles(loaded).first { $0.id == id }
   }
 
   @discardableResult
   func create(_ profile: RemappingProfile) throws -> RemappingProfileMutationImpact {
     var proposed = try loadIfNeeded()
+    try requireNotPackageProfile(id: profile.id, in: proposed)
     try requireRecoveredLibrary()
     guard !proposed.profiles.contains(where: { $0.id == profile.id }) else {
       throw RemappingProfileLibraryError.profileAlreadyExists(profile.id)
     }
-    try validate(profile, in: proposed.profiles)
+    try requireNameAvailable(profile, among: proposed.profiles, in: proposed)
     proposed.profiles.append(profile)
     try replace(with: proposed)
     return RemappingProfileMutationImpact(modelsNeedingRefresh: [])
@@ -58,6 +59,7 @@ extension RemappingProfileLibrary {
       throw RemappingProfileLibraryError.profileUpdateConflict(profileID)
     }
     let loaded = try loadIfNeeded()
+    try requireNotPackageProfile(id: profileID, in: loaded)
     guard let current = loaded.profiles.first(where: { $0.id == profileID }) else {
       throw RemappingProfileLibraryError.profileNotFound(profileID)
     }
@@ -72,6 +74,7 @@ extension RemappingProfileLibrary {
     expectedCurrent: RemappingProfile
   ) throws -> RemappingProfileMutationImpact {
     var proposed = try loadIfNeeded()
+    try requireNotPackageProfile(id: profile.id, in: proposed)
     try requireRecoveredLibrary()
     guard let index = proposed.profiles.firstIndex(where: { $0.id == profile.id }) else {
       throw RemappingProfileLibraryError.profileNotFound(profile.id)
@@ -81,7 +84,7 @@ extension RemappingProfileLibrary {
     }
     var peers = proposed.profiles
     peers.remove(at: index)
-    try validate(profile, in: peers)
+    try requireNameAvailable(profile, among: peers, in: proposed)
     let previousModel = RemappingProfileModel(proposed.profiles[index].device)
     let wasActive = proposed.activeProfiles.contains { $0.profileID == profile.id }
     proposed.profiles[index] = profile
@@ -99,12 +102,13 @@ extension RemappingProfileLibrary {
   @discardableResult
   func importProfile(_ profile: RemappingProfile) throws -> RemappingProfileMutationImpact {
     var proposed = try loadIfNeeded()
+    try requireNotPackageProfile(id: profile.id, in: proposed)
     try requireRecoveredLibrary()
     var modelsNeedingRefresh: Set<RemappingProfileModel> = []
     if let index = proposed.profiles.firstIndex(where: { $0.id == profile.id }) {
       var peers = proposed.profiles
       peers.remove(at: index)
-      try validate(profile, in: peers)
+      try requireNameAvailable(profile, among: peers, in: proposed)
       let previousModel = RemappingProfileModel(proposed.profiles[index].device)
       let currentModel = RemappingProfileModel(profile.device)
       if proposed.activeProfiles.contains(where: { $0.profileID == profile.id }) {
@@ -116,7 +120,7 @@ extension RemappingProfileLibrary {
         proposed.activeProfiles.removeAll { $0.profileID == profile.id }
       }
     } else {
-      try validate(profile, in: proposed.profiles)
+      try requireNameAvailable(profile, among: proposed.profiles, in: proposed)
       proposed.profiles.append(profile)
     }
     try replace(with: proposed)
@@ -126,6 +130,7 @@ extension RemappingProfileLibrary {
   @discardableResult
   func delete(id: UUID) throws -> RemappingProfileMutationImpact {
     var proposed = try loadIfNeeded()
+    try requireNotPackageProfile(id: id, in: proposed)
     try requireRecoveredLibrary()
     guard let index = proposed.profiles.firstIndex(where: { $0.id == id }) else {
       throw RemappingProfileLibraryError.profileNotFound(id)
@@ -145,7 +150,8 @@ extension RemappingProfileLibrary {
   {
     var proposed = try loadIfNeeded()
     try requireRecoveredLibrary()
-    guard let profile = proposed.profiles.first(where: { $0.id == profileID }) else {
+    let known = allProfiles(proposed)
+    guard let profile = known.first(where: { $0.id == profileID }) else {
       throw RemappingProfileLibraryError.profileNotFound(profileID)
     }
     guard profile.joyConPair == nil else {
@@ -155,7 +161,7 @@ extension RemappingProfileLibrary {
       throw RemappingProfileLibraryError.profileProducesNoOutput(profileID)
     }
     let model = RemappingProfileModel(profile.device)
-    let units = Dictionary(uniqueKeysWithValues: proposed.profiles.map { ($0.id, $0.device.unit) })
+    let units = Dictionary(uniqueKeysWithValues: known.map { ($0.id, $0.device.unit) })
     // Replace any active entry for this profile or for the same model, unit, and application
     // scope. Multiple profiles per device are allowed — one per unit and application scope.
     proposed.activeProfiles.removeAll {
@@ -220,7 +226,7 @@ extension RemappingProfileLibrary {
     let loaded = try loadIfNeeded()
     try requireUsableLibrary()
     let model = RemappingProfileModel(vendorID: vendorID, productID: productID)
-    let profilesByID = Dictionary(uniqueKeysWithValues: loaded.profiles.map { ($0.id, $0) })
+    let profilesByID = Dictionary(uniqueKeysWithValues: allProfiles(loaded).map { ($0.id, $0) })
     let candidates = loaded.activeProfiles.compactMap {
       entry -> (scope: RemappingApplicationScope?, profile: RemappingProfile)? in
       guard entry.model == model, let profile = profilesByID[entry.profileID] else { return nil }

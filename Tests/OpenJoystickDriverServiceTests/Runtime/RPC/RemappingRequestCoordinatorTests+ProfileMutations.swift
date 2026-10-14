@@ -346,4 +346,15 @@ extension RemappingRequestCoordinatorTests {
     #expect(try await harness.coordinator.profile(id: original.id).get() == original)
   }
 
+  @Test
+  func aPackageProfileRefusalReachesRPCClientsAsE3029() {
+    let error = RemappingRequestCoordinator.rpcError(
+      RemappingProfileLibraryError.packageProfileReadOnly
+    )
+
+    #expect(error.code == .packageProfileReadOnly)
+    #expect(error.code.rawValue == "package_profile_read_only")
+    #expect(error.code.errorCode.rawValue == "E3029")
+  }
+
 }

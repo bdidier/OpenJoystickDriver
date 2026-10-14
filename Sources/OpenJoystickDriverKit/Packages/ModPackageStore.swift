@@ -80,7 +80,7 @@ public struct ModPackageStore: Sendable {
   /// - Parameter replace: Replaces an installed package of the same name. It does not override a
   ///   clash or `requires`.
   /// - Throws: ``ModPackageError``. A package file that cannot be read is E4003. A failure to
-  ///   create the store or the staging folder, or to swap the package in, is E4008.
+  ///   create the store or the staging folder, or to swap the package in, is E4007.
   @discardableResult
   public func install(_ folder: URL, replace: Bool = false) throws -> ModPackage {
     let manager = FileManager.default
@@ -141,7 +141,7 @@ public struct ModPackageStore: Sendable {
     }
   }
 
-  /// Runs `body`, a write to the store, and reports its failure as E4008 with `failure` and the
+  /// Runs `body`, a write to the store, and reports its failure as E4007 with `failure` and the
   /// file system's reason.
   private static func write(_ failure: String, _ body: () throws -> Void) throws {
     do { try body() } catch {

@@ -80,6 +80,7 @@ extension RemappingRequestCoordinator {
     case .unreadableLibrary: code = .unreadableLibrary
     case .unwritableLibrary: code = .unwritableLibrary
     case .profileRecoveryRequired, .profileIssueNotFound: code = .profileRecoveryRequired
+    case .packageProfileReadOnly: code = .packageProfileReadOnly
     }
     return ApplicationServiceRemappingRPCError(code: code, message: error.localizedDescription)
   }

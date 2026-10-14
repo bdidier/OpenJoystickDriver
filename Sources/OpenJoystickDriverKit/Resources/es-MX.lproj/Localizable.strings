@@ -1597,12 +1597,12 @@
 "error.E3026" = "El perfil del par de Joy-Con toma el giroscopio del otro Joy-Con. Calibra el movimiento del control que el perfil selecciona para el giroscopio.";
 "error.E3027" = "Ningún perfil de reasignación está activo para el control, así que no procesa movimiento. Activa un perfil para él, trae la app de destino al primer plano e inténtalo de nuevo.";
 "error.E3028" = "La sesión de reasignación del control cambió mientras se ejecutaba la solicitud. Inténtalo de nuevo.";
+"error.E3029" = "Un perfil de un paquete instalado no se puede modificar. Duplica el perfil y modifica la copia.";
 "error.E4001" = "Falta el manifiesto del paquete mod.json o no es válido. Revísalo con el esquema mod-package y vuelve a ejecutar el comando.";
 "error.E4002" = "El paquete requiere una versión de OpenJoystickDriver distinta de la que se está ejecutando. Instala una versión del paquete compatible con esta versión o actualiza OpenJoystickDriver.";
 "error.E4003" = "Un archivo del paquete no es válido, falta o no aparece en mod.json. Corrige el archivo que indica el comando y vuelve a ejecutarlo.";
 "error.E4004" = "El paquete abarca un control, una persona o un perfil que ya existen en tus propios archivos o en otro paquete instalado. Elimina el archivo o paquete en conflicto, o modifica el paquete, y vuelve a ejecutar el comando.";
 "error.E4005" = "Ya hay instalado un paquete con este nombre. Ejecuta el comando con --force para reemplazarlo.";
 "error.E4006" = "Ningún paquete instalado tiene este nombre. Ejecuta ojd mod list para ver los paquetes instalados.";
-"error.E4007" = "Un perfil de un paquete instalado no se puede modificar. Duplica el perfil y modifica la copia.";
-"error.E4008" = "No se pudo modificar la carpeta de paquetes. Revisa el espacio libre en disco y los permisos de la carpeta.";
+"error.E4007" = "No se pudo modificar la carpeta de paquetes. Revisa el espacio libre en disco y los permisos de la carpeta.";
 "error.withCode" ="%@ (%@)";

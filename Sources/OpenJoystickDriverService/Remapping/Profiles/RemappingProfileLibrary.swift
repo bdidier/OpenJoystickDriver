@@ -16,6 +16,7 @@ enum RemappingProfileLibraryError: Error, Equatable, LocalizedError, Sendable {
   case unwritableLibrary
   case profileRecoveryRequired
   case profileIssueNotFound(UUID)
+  case packageProfileReadOnly
 
   var errorDescription: String? {
     switch self {
@@ -37,6 +38,9 @@ enum RemappingProfileLibraryError: Error, Equatable, LocalizedError, Sendable {
     case .profileRecoveryRequired:
       "Repair or remove the damaged profile files before changing profiles."
     case .profileIssueNotFound: "The selected damaged profile is no longer current."
+    case .packageProfileReadOnly:
+      "A profile that comes from an installed package cannot be changed. Duplicate the profile "
+        + "and change the copy."
     }
   }
 }
@@ -44,7 +48,9 @@ enum RemappingProfileLibraryError: Error, Equatable, LocalizedError, Sendable {
 /// The single application-service writer for locally authored remapping profiles.
 ///
 /// Each profile is its own `Profiles/<id>.json` file in the profile-file format, and the active
-/// selections are `ActiveProfiles.json`, both under `directory`.
+/// selections are `ActiveProfiles.json`, both under `directory`. The profiles of the installed
+/// packages in `Packages/` are served read-only beside them; they are never written, counted
+/// against the profile limit, or deleted.
 actor RemappingProfileLibrary {
   static let maximumProfileCount = RemappingPayloadLimits.maximumProfileCount
   static let maximumEncodedBytes = RemappingPayloadLimits.maximumEncodedBytes
@@ -54,6 +60,8 @@ actor RemappingProfileLibrary {
   let directory: URL
   var library: RemappingProfileLibraryState?
   var profileIssues: [UUID: RecoveryIssue] = [:]
+  /// The profiles of the installed packages, read with the library and never written.
+  var packageProfiles: [PackageProfile] = []
 
   init(directory: URL = RemappingProfileLibrary.defaultDirectory) { self.directory = directory }
 

@@ -1597,12 +1597,12 @@
 "error.E3026" = "Het profiel van het Joy-Con-paar haalt de gyro van de andere Joy-Con. Kalibreer de beweging van de controller die het profiel voor de gyro kiest.";
 "error.E3027" = "Er is geen hertoewijzingsprofiel actief voor de controller, dus hij verwerkt geen beweging. Activeer een profiel ervoor, breng de doel-app naar voren en probeer het opnieuw.";
 "error.E3028" = "De hertoewijzingssessie van de controller is gewijzigd tijdens het verzoek. Probeer het opnieuw.";
+"error.E3029" = "Een profiel uit een geïnstalleerd pakket kan niet worden gewijzigd. Dupliceer het profiel en wijzig de kopie.";
 "error.E4001" = "Het pakketmanifest mod.json ontbreekt of is ongeldig. Controleer het aan de hand van het mod-package-schema en voer de opdracht opnieuw uit.";
 "error.E4002" = "Het pakket vereist een andere versie van OpenJoystickDriver dan die nu draait. Installeer een pakketversie die deze versie ondersteunt of werk OpenJoystickDriver bij.";
 "error.E4003" = "Een bestand van het pakket is ongeldig, ontbreekt of staat niet in mod.json. Herstel het bestand dat de opdracht noemt en voer de opdracht opnieuw uit.";
 "error.E4004" = "Het pakket omvat een controller, persona of profiel dat je eigen bestanden of een ander geïnstalleerd pakket al bevatten. Verwijder het botsende bestand of pakket, of wijzig het pakket, en voer de opdracht opnieuw uit.";
 "error.E4005" = "Er is al een pakket met deze naam geïnstalleerd. Voer de opdracht uit met --force om het te vervangen.";
 "error.E4006" = "Geen geïnstalleerd pakket heeft deze naam. Voer ojd mod list uit om de geïnstalleerde pakketten te zien.";
-"error.E4007" = "Een profiel uit een geïnstalleerd pakket kan niet worden gewijzigd. Dupliceer het profiel en wijzig de kopie.";
-"error.E4008" = "De pakketmap kon niet worden gewijzigd. Controleer de vrije schijfruimte en de maprechten.";
+"error.E4007" = "De pakketmap kon niet worden gewijzigd. Controleer de vrije schijfruimte en de maprechten.";
 "error.withCode" ="%@ (%@)";

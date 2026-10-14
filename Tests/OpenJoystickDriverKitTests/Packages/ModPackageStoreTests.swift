@@ -18,7 +18,7 @@ struct ModPackageStoreTests {
   func theErrorCodesBelongToTheModDomain() {
     let codes: [ErrorCode] = [
       .invalidManifest, .requiresExcludesVersion, .invalidPackageContent, .packageClash,
-      .packageAlreadyInstalled, .packageNotInstalled, .packageReadOnly,
+      .packageAlreadyInstalled, .packageNotInstalled,
     ]
     #expect(codes.allSatisfy { $0.domain == .mod && $0.rawValue.hasPrefix("E4") })
     #expect(codes.allSatisfy { !$0.localizedExplanation.isEmpty })

@@ -9,8 +9,13 @@ glossaries/
 
 # Internal planning and evidence (local only)
 /.claude/handoff.md
+/.dotclaude/
 # Regenerate with `./Scripts/ojd docs export-external-issues`.
 /docs/external/
+
+# Session exports of `/export` (YYYY-MM-DD-HHMMSS-<slug>.txt)
+/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9][0-9]-*.txt
+
 
 # macOS
 
