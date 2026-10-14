@@ -18,16 +18,29 @@ struct EquivalenceSnapshotSDLMappingTests {
   }
 
   private static let sdlNames: [String: String] = [
-    "faceSouth": "a", "faceEast": "b", "faceWest": "x", "faceNorth": "y",
-    "leftShoulder": "leftshoulder", "rightShoulder": "rightshoulder", "view": "back",
-    "menu": "start", "guide": "guide", "leftStickClick": "leftstick",
-    "rightStickClick": "rightstick", "share": "misc1", "paddleRight1": "paddle1",
-    "paddleLeft1": "paddle2", "paddleRight2": "paddle3", "paddleLeft2": "paddle4",
-    "touchpadClick": "touchpad", "leftStickX": "leftx", "leftStickY": "lefty",
-    "rightStickX": "rightx", "rightStickY": "righty", "leftTrigger": "lefttrigger",
-    "rightTrigger": "righttrigger", "dpadNorth": "dpup", "dpadEast": "dpright",
+    "face-south": "a", "face-east": "b", "face-west": "x", "face-north": "y",
+    "left-shoulder": "leftshoulder", "right-shoulder": "rightshoulder", "view": "back",
+    "menu": "start", "guide": "guide", "left-stick-click": "leftstick",
+    "right-stick-click": "rightstick", "share": "misc1", "paddle-right-1": "paddle1",
+    "paddle-left-1": "paddle2", "paddle-right-2": "paddle3", "paddle-left-2": "paddle4",
+    "touchpad-click": "touchpad", "left-stick-x": "leftx", "left-stick-y": "lefty",
+    "right-stick-x": "rightx", "right-stick-y": "righty", "left-trigger": "lefttrigger",
+    "right-trigger": "righttrigger", "dpadNorth": "dpup", "dpadEast": "dpright",
     "dpadSouth": "dpdown", "dpadWest": "dpleft",
   ]
+
+  /// SDL's canonical field order in a mapping string.
+  private static let sdlFieldOrder = [
+    "a", "b", "x", "y", "back", "guide", "start", "leftstick", "rightstick", "leftshoulder",
+    "rightshoulder", "dpup", "dpdown", "dpleft", "dpright", "misc1", "paddle1", "paddle2",
+    "paddle3", "paddle4", "touchpad", "leftx", "lefty", "rightx", "righty", "lefttrigger",
+    "righttrigger",
+  ]
+
+  private static func order(of entry: String) -> Int {
+    let name = String(entry.prefix { $0 != ":" })
+    return sdlFieldOrder.firstIndex(of: name) ?? sdlFieldOrder.count
+  }
 
   private static func probes(for controls: Set<ControlID>) -> [Probe] {
     var result: [Probe] = []
@@ -35,7 +48,7 @@ struct EquivalenceSnapshotSDLMappingTests {
       .dpad, .leftStickX, .leftStickY, .rightStickX, .rightStickY, .leftTrigger, .rightTrigger,
     ])
     for control in digital.sorted(by: { $0.rawValue < $1.rawValue }) {
-      result.append(Probe(control: "\(control)", state: ControllerState(pressed: [control])))
+      result.append(Probe(control: control.rawValue, state: ControllerState(pressed: [control])))
     }
     let analog: [(ControlID, ControllerState)] = [
       (.leftStickX, ControllerState(leftStick: StickPosition(x: .max, y: .center))),
@@ -46,7 +59,7 @@ struct EquivalenceSnapshotSDLMappingTests {
       (.rightTrigger, ControllerState(rightTrigger: .max)),
     ]
     for (control, state) in analog where controls.contains(control) {
-      result.append(Probe(control: "\(control)", state: state))
+      result.append(Probe(control: control.rawValue, state: state))
     }
     if controls.contains(.dpad) {
       let hats: [(String, HatDirection)] = [
@@ -132,12 +145,13 @@ struct EquivalenceSnapshotSDLMappingTests {
       let fields = changed.map { "\($0.usagePage):\($0.usage)" }.joined(separator: "+")
       lines.append("probe \(probe.control) fields=[\(fields)] -> \(binding ?? "none")")
       if let binding, let name = Self.sdlNames[probe.control] {
-        entries.append("\(name):\(binding)")
+        let isTrigger = name == "lefttrigger" || name == "righttrigger"
+        entries.append("\(name):\(isTrigger && binding.hasPrefix("a") ? "+" : "")\(binding)")
       } else {
         unmapped.append(probe.control)
       }
     }
-    let bindings = entries.sorted().joined(separator: ",")
+    let bindings = entries.sorted { order(of: $0) < order(of: $1) }.joined(separator: ",")
     lines.append(
       "mapping=\(Self.guid(identity)),\(identity.productName),\(bindings),platform:Mac OS X,"
     )
@@ -148,7 +162,14 @@ struct EquivalenceSnapshotSDLMappingTests {
   @Test
   func sdlMappingsMatchSnapshot() throws {
     let sections = try VirtualHIDProfileID.allCases.map(Self.section)
-    let rendered = EquivalenceSnapshotStore.render(sections)
+    let header = """
+      # Derived drift detector, not a shipped mapping: OJD ships no SDL mapping text. Each line
+      # is derived by driving one control through the virtual profile's report codec and reading
+      # the HID fields it changes. Entries follow SDL's field order; analog triggers carry the
+      # + half-axis prefix SDL expects for 0..max axes.
+
+      """
+    let rendered = EquivalenceSnapshotStore.render(sections, header: header)
     #expect(try EquivalenceSnapshotStore.verify(rendered, named: "sdl-mappings.txt") == nil)
   }
 }
