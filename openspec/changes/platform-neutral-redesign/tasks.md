@@ -46,10 +46,10 @@ Owns: `Tests/` fixtures and a snapshot of current behavior.
 Depends: none.
 Verify: `swift test`, `.build/schema-validator/bin/python -m unittest discover -s Tests/RepositoryScripts`.
 
-- [ ] 1.1 Snapshot, for every current record, the parsed output of its recorded sample reports as canonical frames. Verify: the snapshot test passes on the unchanged tree with `swift test`.
-- [ ] 1.2 Snapshot the generated DriverKit match list, the catalog index and the per-record route (extension, raw access, system) as fixture files. Verify: the tests pass on the unchanged tree.
-- [ ] 1.3 Snapshot the effective SDL mapping text for each persona on the current tree. Verify: the test passes.
-- [ ] 1.4 Add a helper that compares a refactored build to the snapshots and prints a diff of changed records. Verify: it reports zero diffs now, and one diff after a deliberate local change that is then reverted.
+- [x] 1.1 Snapshot, for every current record, the parsed output of its recorded sample reports as canonical frames. Verify: the snapshot test passes on the unchanged tree with `swift test`.
+- [x] 1.2 Snapshot the generated DriverKit match list, the catalog index and the per-record route (extension, raw access, system) as fixture files. Verify: the tests pass on the unchanged tree.
+- [x] 1.3 Snapshot the effective SDL mapping text for each persona on the current tree. Verify: the test passes.
+- [x] 1.4 Add a helper that compares a refactored build to the snapshots and prints a diff of changed records. Verify: it reports zero diffs now, and one diff after a deliberate local change that is then reverted.
 
 ## 2. Generator tables become data (old WP11)
 
