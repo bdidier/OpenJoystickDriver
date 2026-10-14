@@ -274,11 +274,11 @@ _require_signed_host_access() {
     || die "Could not read signed app entitlements"
   decode_provisioning_profile "$profile" > "$decoded_profile" \
     || die "Could not decode GUI provisioning profile for signed entitlement validation"
-  python3 - "$decoded" "$decoded_profile" "$OJD_HOST_USERCLIENT" <<'PY'
+  python3 - "$decoded" "$decoded_profile" "$OJD_HOST_USERCLIENT" "$DRIVERKIT_BUNDLE_ID" <<'PY'
 import plistlib
 import sys
 
-signed_path, profile_path, granted = sys.argv[1:]
+signed_path, profile_path, granted, bundle_id = sys.argv[1:]
 signed = plistlib.loads(open(signed_path, "rb").read())
 profile = plistlib.loads(open(profile_path, "rb").read()).get("Entitlements", {})
 key = "com.apple.developer.driverkit.userclient-access"
@@ -288,9 +288,10 @@ if granted != "1":
             f"signed host has {key} but the profile does not grant the DEXT: "
             f"signed={signed.get(key)!r}"
         )
-elif signed.get(key) != profile.get(key):
+# The host signs only the DEXT from Host.entitlements; the profile may grant more bundle IDs.
+elif signed.get(key) != [bundle_id] or bundle_id not in (profile.get(key) or []):
     raise SystemExit(
-        f"signed host {key} does not match the selected profile: "
+        f"signed host {key} must be [{bundle_id!r}] and granted by the selected profile: "
         f"signed={signed.get(key)!r}, profile={profile.get(key)!r}"
     )
 if signed.get("com.apple.developer.driverkit.allow-any-userclient-access"):
