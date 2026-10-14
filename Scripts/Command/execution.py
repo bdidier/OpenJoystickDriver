@@ -104,11 +104,24 @@ HOOK_FILES = ("commit-msg", "pre-commit", "pre-push")
 
 
 def install_hooks() -> int:
-    """`bun install` runs the `prepare` script, which runs husky and sets core.hooksPath."""
+    """`bun install` runs the `prepare` script: husky, then pin-hooks-path.sh."""
     return run_commands([["bun", "install"]])
 
 
+def main_checkout_dir() -> Path:
+    """The checkout that owns the shared Git directory, also when run from a worktree."""
+    result = subprocess.run(
+        ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
+        cwd=PROJECT_DIR,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    return Path(result.stdout.strip()).parent
+
+
 def validate_hooks() -> int:
+    """Hooks must come from the main checkout, so every worktree runs them."""
     result = subprocess.run(
         ["git", "config", "--get", "core.hooksPath"],
         cwd=PROJECT_DIR,
@@ -117,20 +130,17 @@ def validate_hooks() -> int:
         check=False,
     )
     configured = result.stdout.strip()
-    expected = (PROJECT_DIR / HOOKS_PATH).resolve()
-    if configured != HOOKS_PATH and (
-        not configured or (PROJECT_DIR / configured).resolve() != expected
-    ):
+    expected = main_checkout_dir() / HOOKS_PATH
+    if configured != str(expected):
         print(
-            f"error: core.hooksPath is {configured or 'unset'}, expected {HOOKS_PATH}; "
+            f"error: core.hooksPath is {configured or 'unset'}, expected {expected}; "
             "run `./Scripts/ojd hooks install`",
             file=sys.stderr,
         )
         return 1
     if not expected.is_dir():
         print(
-            f"error: {HOOKS_PATH} does not exist in this checkout; "
-            "run `./Scripts/ojd hooks install`",
+            f"error: {expected} does not exist; run `./Scripts/ojd hooks install`",
             file=sys.stderr,
         )
         return 1

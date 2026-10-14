@@ -41,7 +41,7 @@ Change one tool route or gate, cover it with a Python unit test, and keep the di
 - Script tests are Python `unittest` tests in `Tests/RepositoryScripts/`. There is no `Tests/Scripts`, and no Swift test runs shell or Python.
 - Tests assert on exit codes, parsed data, and forwarded arguments. Help text and prose change freely, so a test that asserts on them breaks for no reason.
 - Homebrew `python3` lacks `jsonschema`, so tests that import it fail with `ModuleNotFoundError`. Run the suite with `uv run --no-project --with jsonschema`, or through `.build/schema-validator`.
-- Hooks are managed by husky (`bun install` runs `prepare` and sets `core.hooksPath=.husky/_`). Edit the files in `.husky/` and the scripts they run, never `.git/hooks/`. `commit-msg` runs commitlint with `commitlint.config.mjs` (config-conventional). `ojd hooks install` runs `bun install`; `ojd hooks validate` checks `core.hooksPath` and the three hook files.
+- Hooks are managed by husky (`bun install` runs `prepare`: husky, then `Scripts/Quality/pin-hooks-path.sh`, which sets `core.hooksPath` to the main checkout's absolute `.husky/_` so worktrees run the hooks too). Edit the files in `.husky/` and the scripts they run, never `.git/hooks/`. `commit-msg` runs commitlint with `commitlint.config.mjs` (config-conventional). `ojd hooks install` runs `bun install`; `ojd hooks validate` checks that `core.hooksPath` is that absolute path, that it exists, and the three hook files.
 - Scripts contain no secrets, Team IDs, or signing identities. Those values come from the environment (`docs/development/environment.md`).
 
 ## References
