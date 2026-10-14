@@ -97,11 +97,11 @@ swift run OpenJoystickDriverHIDTool --monitor --vid 0x28de --pid 0x1142 --second
 During the 60 second monitor run:
 
 1. Leave the controller off for a few seconds.
-1. Turn it on and wait for connection.
-1. Press and release A once.
-1. Turn the controller off or disconnect it.
-1. Wait 10 seconds.
-1. Turn it back on without restarting the monitor.
+2. Turn it on and wait for connection.
+3. Press and release A once.
+4. Turn the controller off or disconnect it.
+5. Wait 10 seconds.
+6. Turn it back on without restarting the monitor.
 
 Paste all `REPORT ... bytes=...` lines around connect and disconnect. Check these source-backed cases:
 
@@ -116,30 +116,30 @@ Also say whether Controller Settings lists the controller only after connect, cl
 OJD runs one controller per Steam interface whose HID report descriptor has a Feature item, as Linux `hid-steam.c` does; other interfaces are not controllers. Per `hid-steam.c`, the wired controller exposes mouse 0, keyboard 1 and gamepad 2, and the dongle exposes keyboard 0 and slots 1–4. None of this has been verified on macOS hardware yet.
 
 1. For each path, run `ioreg -r -c IOHIDDevice -l -w0` and paste, for every `28de` entry, the parent `IOUSBHostInterface` `bInterfaceNumber` and the `ReportDescriptor` bytes. Say which descriptors contain a Feature item (item prefix byte `0xB0`–`0xB3`).
-1. Start OJD and run (`ojd` is the [command-line tool](../../wiki/Command-Line.md)):
+2. Start OJD and run (`ojd` is the [command-line tool](../../wiki/Command-Line.md)):
 
    ```bash
    ojd controller list --json
    ```
 
    Expect one entry with `protocol` `valve.steam-controller` per Feature interface: wired `interfaceNumber` 2; dongle up to four entries for interfaces 1 to 4. `ojd controller show <ID> --json` gives each entry's `interfaceNumber`. Paste the output and any interfaces that `ojd status` lists as unbound.
-1. Dongle only: pair controllers one at a time and record which interface's entry receives input. Power one off and confirm only its entry reports disconnected.
+3. Dongle only: pair controllers one at a time and record which interface's entry receives input. Power one off and confirm only its entry reports disconnected.
 
 ## 6. Bluetooth LE
 
 Over Bluetooth LE the controller sends its state as 20-byte report `0x03` segments. OJD joins the segments into one packet, as SDL `SteamControllerPacketAssembler` does. A packet carries only the chunks that changed, and OJD keeps the last value of every chunk that is not in the packet. Settings travel as report `0x03` segments too. Startup also selects wireless packet version 2, as SDL `ResetSteamController` does.
 
 1. Pair the controller in System Settings > Bluetooth. Hold Steam and Y while you turn it on to start Bluetooth mode.
-1. Run `ioreg -r -c IOHIDDevice -l -w0` and paste the `28de` entry with its `Transport` and `ReportDescriptor`.
-1. Run the HID monitor with the PID that `ioreg` shows:
+2. Run `ioreg -r -c IOHIDDevice -l -w0` and paste the `28de` entry with its `Transport` and `ReportDescriptor`.
+3. Run the HID monitor with the PID that `ioreg` shows:
 
    ```bash
    swift run OpenJoystickDriverHIDTool --monitor --vid 0x28de --pid 0x1106 --seconds 30
    ```
 
-1. Capture the same actions as in section 3. Paste the `REPORT` lines. Say whether one action gives one report or several short reports.
-1. Start OJD and check that Controller Settings Live shows the controller as Bluetooth LE and that buttons, sticks, triggers and trackpads move.
-1. Hold one button and move one stick. Check that the held button stays pressed while only the stick changes.
+4. Capture the same actions as in section 3. Paste the `REPORT` lines. Say whether one action gives one report or several short reports.
+5. Start OJD and check that Controller Settings Live shows the controller as Bluetooth LE and that buttons, sticks, triggers and trackpads move.
+6. Hold one button and move one stick. Check that the held button stays pressed while only the stick changes.
 
 ## 7. Lizard Mode
 
