@@ -11,17 +11,17 @@ Use this procedure after the release commit and changelog are complete. The GitH
 ## Before Publication
 
 1. Check out the exact release commit and run `just check`.
-1. Confirm `git status --short` is empty and run `git diff --check`.
-1. Generate or preview GitHub's release notes for the intended tag and previous tag.
-1. Reconcile closed or unmerged contributions that are integrated in the release but omitted by GitHub. Confirm each contribution in source, tests, the changelog, or recorded hardware evidence.
+2. Confirm `git status --short` is empty and run `git diff --check`.
+3. Generate or preview GitHub's release notes for the intended tag and previous tag.
+4. Reconcile closed or unmerged contributions that are integrated in the release but omitted by GitHub. Confirm each contribution in source, tests, the changelog, or recorded hardware evidence.
 
 ## Reconcile the Body
 
 Preserve GitHub's standard sections and order:
 
 1. `What's Changed` lists each credited item, author, and hosted link.
-1. `New Contributors` lists only accounts making their first credited contribution. Check earlier releases before adding an account.
-1. `Full Changelog` compares the previous release tag with the new tag.
+2. `New Contributors` lists only accounts making their first credited contribution. Check earlier releases before adding an account.
+3. `Full Changelog` compares the previous release tag with the new tag.
 
 Use a UTF-8 body file rather than shell interpolation. Read the hosted release back immediately after editing and compare every line with the intended body.
 
