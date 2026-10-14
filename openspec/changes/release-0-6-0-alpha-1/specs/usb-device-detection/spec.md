@@ -6,14 +6,15 @@ Controllers served by the XboxUSBDevice DriverKit extension are found and bound 
 
 ### Requirement: REQ-24 Original Xbox One controller is listed
 
-An original Xbox One controller (`045E:02D1`, model 1537) MUST be listed by `ojd controller list` and bound to `xbox.gip` when the XboxUSBDevice extension is active, or the cause MUST be recorded with evidence in `docs/testing/` and in `wiki/Known-Issues.md` when it is outside OJD's code.
+The USB transport adapter MUST take the identity of an XboxUSBDevice service (`idVendor`, `idProduct`, `locationID`, and the strings) from its parent `IOUSBHostDevice`, so that an original Xbox One controller (`045E:02D1`, model 1537) is listed by `ojd controller list` and bound to `xbox.gip` when the extension is active. `docs/testing/xbox-one-02d1.md` MUST record the evidence and say that the fix is not verified on hardware.
 
 #### Scenario: Extension active
 
 - **WHEN** a `045E:02D1` controller is connected and the XboxUSBDevice extension is active
-- **THEN** `ojd controller list` lists it bound to `xbox.gip`
+- **THEN** the transport reads its identity from the parent `IOUSBHostDevice` and `DeviceManager` claims it on interface 0 for `xbox.gip` (`dextServiceTakesIdentityFromParentUSBDevice`, `dextRouteServiceIsClaimedOnInterfaceZero`)
+- **AND** the listing is not confirmed on hardware
 
-#### Scenario: Cause outside OJD
+#### Scenario: Service without a parent
 
-- **WHEN** the cause is outside OJD's code
-- **THEN** `docs/testing/` and `wiki/Known-Issues.md` record it with evidence
+- **WHEN** an extension service has no parent `IOUSBHostDevice` and no scalar `idVendor` and `idProduct` of its own
+- **THEN** the transport lists no device for it (`dextServiceWithoutParentYieldsNoDevice`)
