@@ -57,8 +57,8 @@ Owns: generator inputs under `Scripts/` and authored inputs for the catalog.
 Depends: 1.
 Verify: `./Scripts/ojd catalog regenerate --check`, `ruff format --check Scripts Tests/RepositoryScripts`, `ruff check Scripts Tests/RepositoryScripts`, `pyright`, the repository script unit tests.
 
-- [ ] 2.1 Move tables hard-coded in the generators (family lists, route lists, name maps) into authored data files. Verify: `./Scripts/ojd catalog regenerate --write` then `--check` give no diff against the 1.2 snapshots.
-- [ ] 2.2 Remove the duplicate tables from generator code. Verify: `grep` finds none of the moved literals in `Scripts/`, and the unit tests pass.
+- [x] 2.1 Move tables hard-coded in the generators (family lists, route lists, name maps) into authored data files. Verify: `./Scripts/ojd catalog regenerate --write` then `--check` give no diff against the 1.2 snapshots.
+- [x] 2.2 Remove the duplicate tables from generator code. Verify: `grep` finds none of the moved literals in `Scripts/`, and the unit tests pass.
 
 ## 3. ControllerModelID (old WP1)
 
