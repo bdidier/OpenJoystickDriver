@@ -744,7 +744,7 @@ Boundaries:
 
 ## 15. P8: Full check list
 
-- dotclaude status: `planned`
+- dotclaude status: `in review` (checks run at `5b43e065`; 15.5 open: `just check` stops at `ojd check tools`, owner: environment; approved; merged at `856a5cdf`)
 - Wave: 6; deps: P1 (group 1), P2 (group 6), P3 (group 9), P4 (group 2), P5 (group 10), P6 (group 12), P7 (group 13), P9 (group 3), P10 (group 4), P11 (group 11), P12 (group 14), P13 (group 7), P14 (group 5); satisfies: REQ-16; agent: `implementer`
 - Branch: `spec/0.6.0-alpha.1-P8`; worktree: `.claude/worktrees/spec-P8`
 - Owns: no file
@@ -766,7 +766,7 @@ Context:
 - [x] 15.4 If `./Scripts/ojd check schemas` fails only with the user toolchain first on `PATH`, record both runs.
 - [ ] 15.5 Verify: the `verify` command above exits 0. Acceptance: Each command exits 0, or the report lists each failure with its owner package.
 - [x] 15.6 Review: a fresh reviewer agent approves the diff
-- [ ] 15.7 Merge `spec/0.6.0-alpha.1-P8` into `feat/0.6.0-alpha.1`
+- [x] 15.7 Merge `spec/0.6.0-alpha.1-P8` into `feat/0.6.0-alpha.1`
 
 Boundaries:
 
