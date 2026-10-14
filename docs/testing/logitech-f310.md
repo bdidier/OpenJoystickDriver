@@ -29,12 +29,12 @@ Set the F310 switch to X. Quit Steam and any controller utilities, then run:
 Press and release one control at a time in this order:
 
 1. A, B, X, Y
-1. LB, RB
-1. Back, Start, Guide
-1. Left-stick click, right-stick click
-1. Every D-pad direction
-1. Both triggers from rest to fully pressed
-1. Both sticks through their full range
+2. LB, RB
+3. Back, Start, Guide
+4. Left-stick click, right-stick click
+5. Every D-pad direction
+6. Both triggers from rest to fully pressed
+7. Both sticks through their full range
 
 Verify that each `USB_RX` packet produces only the matching `EVENT` output. If the interface is unavailable, capture `./Scripts/ojd diagnose dext`; there is no detach fallback.
 
