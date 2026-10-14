@@ -4,7 +4,7 @@ All notable project changes are recorded here.
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.6.0-alpha.1] - 2026-10-14
+## [Unreleased]
 
 ### Added
 
@@ -446,7 +446,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The pr
 - Fix an output-dispatcher race when creating virtual devices.
 - Keep the menu-bar app alive after launch.
 
-[0.6.0-alpha.1]: https://github.com/xsyetopz/OpenJoystickDriver/compare/0.5.0-beta.4...0.6.0-alpha.1
+[Unreleased]: https://github.com/xsyetopz/OpenJoystickDriver/compare/0.5.0-beta.4...HEAD
 [0.5.0-beta.3]: https://github.com/xsyetopz/OpenJoystickDriver/compare/0.5.0-beta.2...0.5.0-beta.3
 [0.5.0-beta.2]: https://github.com/xsyetopz/OpenJoystickDriver/compare/0.5.0-beta.1...0.5.0-beta.2
 [0.5.0-beta.1]: https://github.com/xsyetopz/OpenJoystickDriver/releases/tag/0.5.0-beta.1
