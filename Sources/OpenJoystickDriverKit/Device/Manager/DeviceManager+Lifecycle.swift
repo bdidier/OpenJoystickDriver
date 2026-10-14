@@ -97,10 +97,24 @@ extension DeviceManager {
   /// A device whose native pass-through changed with the records is first admitted again by the
   /// HID backend, which seizes or releases it, and is left out here so it is not admitted twice.
   func readmitHIDConnections(changing changed: Set<[UInt16]>) async {
+    let suspendedConnections = Set(
+      suspendedControllerIdentities.compactMap { identifier -> UUID? in
+        let identity = identifier.controllerIdentity
+        guard changed.contains([identity.vendorID, identity.productID]) else { return nil }
+        return deviceInfos[identifier]?.hidConnectionID
+      }
+    )
+    ownershipCycledHIDConnections.formUnion(suspendedConnections)
     let reevaluated = await hidManager.reevaluateOwnership(
       of: Set(changed.map { ControllerIdentity(vendorID: $0[0], productID: $0[1]) })
     )
-    guard let snapshots = await hidManager.currentConnectionSnapshots() else { return }
+    let current = await hidManager.currentConnectionSnapshots()
+    // A connection that is still current was not admitted again, so its next disconnect is
+    // physical. Without snapshots, no connection can be told apart, so every mark is dropped.
+    ownershipCycledHIDConnections.subtract(
+      current.map { $0.map(\.connection.connectionID) } ?? Array(suspendedConnections)
+    )
+    guard let snapshots = current else { return }
     for snapshot in snapshots {
       let connection = snapshot.connection
       guard !isStopping, let vendorID = connection.physicalDevice.vendorID,

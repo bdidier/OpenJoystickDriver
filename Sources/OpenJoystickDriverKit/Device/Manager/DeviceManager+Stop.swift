@@ -10,6 +10,7 @@ extension DeviceManager {
     // Sleep is system state; a stopped manager still waits for wake before a new start() runs.
     isStarted = false
     suspendedControllerIdentities.removeAll()
+    ownershipCycledHIDConnections.removeAll()
     guard !isStopping else { return }
     isStopping = true
     await tearDownControllerSessions()

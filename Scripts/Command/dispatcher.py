@@ -368,13 +368,15 @@ def dispatch(argv: list[str]) -> int:
                 exec_target("Build/driverkit.sh", ["validate"])
             if sub == "tools":
                 require("check tools", tail, count=0)
+                # xmake's clang finds no SDK on its own; environment.sh exports SDKROOT.
                 return subprocess.run(
                     [
-                        "xmake",
-                        "build",
-                        "-P",
+                        "/bin/bash",
+                        "-c",
+                        'source "$1"; exec xmake build -P "$2" SDLGamepadProbe',
+                        "ojd",
+                        str(ENVIRONMENT),
                         str(PROJECT_DIR / "Tools/SDLGamepadProbe"),
-                        "SDLGamepadProbe",
                     ],
                     cwd=PROJECT_DIR,
                     env=env_with(),

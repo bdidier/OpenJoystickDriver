@@ -12,6 +12,16 @@ extension DeviceManager {
     }
     // A role's disconnect ends only that role; its siblings at the location keep running.
     let role = hidRoleConnections.removeValue(forKey: connection.connectionID)
+    // A record reload, not a physical disconnect, removed this connection; a suspension carries
+    // over to the connection that replaces it, while the backend still lists one at the location.
+    var keepsSuspension = ownershipCycledHIDConnections.remove(connection.connectionID) != nil
+    if keepsSuspension {
+      let current = await hidManager.currentConnectionSnapshots() ?? []
+      keepsSuspension = current.contains {
+        $0.connection.connectionID != connection.connectionID
+          && $0.connection.routingLocationID == locationID
+      }
+    }
 
     let identifiers = deviceInfos.keys.filter { $0.locationID == locationID }
     for identifier in identifiers {
@@ -19,7 +29,9 @@ extension DeviceManager {
         case .hid = info.discoverySource, info.hidConnectionID == connection.connectionID,
         info.physicalDevice == connection.physicalDevice
       else { continue }
+      let suspended = keepsSuspension && suspendedControllerIdentities.contains(identifier)
       await tearDownHIDDevice(identifier: identifier, connection: connection)
+      if suspended, !isStopping { suspendedControllerIdentities.insert(identifier) }
     }
   }
 

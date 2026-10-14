@@ -788,9 +788,11 @@ Boundaries:
   - `Sources/OpenJoystickDriverKit/Device/Manager/DeviceManager.swift`
   - `Sources/OpenJoystickDriverKit/Device/Manager/DeviceManager+Lifecycle.swift`
   - `Sources/OpenJoystickDriverKit/Device/Discovery/HID/DeviceManager+HIDTeardown.swift`
+  - `Sources/OpenJoystickDriverKit/Device/Manager/DeviceManager+Stop.swift` (added after the 16.7 review: `stop()` clears the new set)
   - `Tests/OpenJoystickDriverKitTests/Device/Manager/OwnershipSuspensionTests.swift` (new)
   - `Sources/OpenJoystickDriverPresentation/Runtime/RuntimeViewModel+ControllerActions.swift`
   - `Sources/OpenJoystickDriverPresentation/Runtime/LabelsAndDetection.swift`
+  - `Sources/OpenJoystickDriverPresentation/Runtime/RuntimeStatusPresentation+Messages.swift` (added during 16.3: the status equality ignored `recordOwnership`, so a refresh never showed the new value)
   - `Tests/OpenJoystickDriverPresentationTests/Controllers/ControllerOwnershipPickerTests.swift` (the maintainer allowed one change, 2026-10-14: `aRefusalShowsE2023WithTheServiceDetail` expects the new invalid-record text)
   - `Tests/OpenJoystickDriverPresentationTests/Controllers/ControllerOwnershipFeedbackTests.swift` (new)
   - `Sources/OpenJoystickDriverKit/Resources/*.lproj/Localizable.strings` and `Sources/OpenJoystickDriverKit/Resources/Localization/Localizable.template.strings`, for three `controllers.ownership.*` keys
@@ -801,13 +803,13 @@ Goal:
 
 Resolve the open items that the maintainer asked to fix (2026-10-14).
 
-- [ ] 16.1 `ojd check tools` runs xmake with the SDK of the selected Xcode: it sources `Scripts/Platform/environment.sh`, which exports `SDKROOT`. A new dispatcher test covers it.
-- [ ] 16.2 An ownership toggle keeps the suspension of a suspended controller that the HID backend admits again; a physical disconnect still ends it. A new Kit test covers both.
-- [ ] 16.3 After a successful toggle, the app polls the inventory until the model's `recordOwnership` matches the request, for at most 2 seconds. A new test covers it.
-- [ ] 16.4 `noRecord`, `invalidRecord`, and `persistenceFailed` show their own `controllers.ownership.*` texts in every locale; `rawUSB` and `notNative` keep `error.E2023`.
-- [ ] 16.5 `docs/testing/xbox-one-02d1.md` "Result" says the parent-device fix landed in P15 and is not verified on hardware.
-- [ ] 16.6 Verify: every check above exits 0.
-- [ ] 16.7 Review: a fresh reviewer agent approves the diff
+- [x] 16.1 `ojd check tools` runs xmake with the SDK of the selected Xcode: it sources `Scripts/Platform/environment.sh`, which exports `SDKROOT`. A new dispatcher test covers it.
+- [x] 16.2 An ownership toggle keeps the suspension of a suspended controller that the HID backend admits again; a physical disconnect still ends it. A new Kit test covers both.
+- [x] 16.3 After a successful toggle, the app polls the inventory until the model's `recordOwnership` matches the request, for at most 2 seconds, and the status equality compares `recordOwnership`. A new test covers it.
+- [x] 16.4 `noRecord`, `invalidRecord`, and `persistenceFailed` show their own `controllers.ownership.*` texts in every locale; `rawUSB` and `notNative` keep `error.E2023`.
+- [x] 16.5 `docs/testing/xbox-one-02d1.md` "Result" says the parent-device fix landed in P15 and is not verified on hardware.
+- [x] 16.6 Verify: every check above exits 0.
+- [x] 16.7 Review: a fresh reviewer agent approves the diff. Verdict `APPROVE` (2026-10-14) with one non-blocking finding (a suspension re-added when `stop()` runs during the teardown await), fixed in 77b58203
 - [ ] 16.8 Merge `spec/0.6.0-alpha.1-P16` into `feat/0.6.0-alpha.1`
 
 ## Hardware checks (maintainer)

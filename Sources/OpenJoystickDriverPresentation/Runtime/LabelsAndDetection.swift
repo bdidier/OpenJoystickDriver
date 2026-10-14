@@ -102,6 +102,22 @@ enum RuntimePresentation {
     }
   }
 
+  /// A refused controller ownership change, followed by the service's detail text when it has one.
+  static func controllerOwnershipFailure(
+    _ failure: ControllerOwnershipFailure,
+    detail: String?
+  ) -> String {
+    let message: String
+    switch failure {
+    case .rawUSB, .notNative: message = OJDLocalized.string("error.E2023")
+    case .noRecord: message = OJDLocalized.string("controllers.ownership.noRecord")
+    case .invalidRecord: message = OJDLocalized.string("controllers.ownership.invalidRecord")
+    case .persistenceFailed:
+      message = OJDLocalized.string("controllers.ownership.persistenceFailed")
+    }
+    return [message, detail].compactMap { $0 }.joined(separator: " ")
+  }
+
   static func sourceLabel(_ source: RemappingSource) -> String {
     switch source {
     case .button(let button): return buttonLabel(button)

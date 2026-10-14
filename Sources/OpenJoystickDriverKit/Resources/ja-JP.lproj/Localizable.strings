@@ -174,6 +174,9 @@
 "controllers.ownership.native" = "macOS（ネイティブ）";
 "controllers.ownership.virtual" = "OpenJoystickDriver（仮想）";
 "controllers.ownership.refused" = "このコントローラは切り替えられません。Raw USB を使っているか、macOS がネイティブに扱わないためです。";
+"controllers.ownership.noRecord" = "このコントローラを記述するコントローラレコードがないため、変更するものはありません。";
+"controllers.ownership.invalidRecord" = "コントローラレコードが無効です。何も変更されていません。";
+"controllers.ownership.persistenceFailed" = "コントローラレコードを保存できませんでした。何も変更されていません。";
 "virtualProfile.advanced" = "詳細";
 "virtualProfile.title" = "仮想HIDプロファイル";
 "virtualProfile.modelScope" = "このモデルの接続中のすべてのコントローラに適用されます。";

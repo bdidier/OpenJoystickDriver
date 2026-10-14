@@ -82,6 +82,6 @@ struct ControllerOwnershipPickerTests {
     await viewModel.setControllerOwnership(.ojd, for: device)
 
     let message = viewModel.controllerActionFailures[device.runtimeIdentifier]
-    #expect(message == OJDLocalized.string("error.E2023") + " bad record")
+    #expect(message == OJDLocalized.string("controllers.ownership.invalidRecord") + " bad record")
   }
 }
