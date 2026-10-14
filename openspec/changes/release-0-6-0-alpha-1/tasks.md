@@ -67,6 +67,11 @@ Harness notes from the handoff:
 - `docs/testing/xbox-one-02d1.md` "Result" still says the fix is outside this package; no group owns the page.
 - P7 reviewer nits, not taken: `error.E2023` translates "native and virtual" as prose; hi-IN ownership `dry_run` could use the passive; zh-TW/zh-HK 發佈 vs 發布; ar-SA مثبتة without shadda. Rejected: zh-TW/zh-HK 虛擬遊戲控制器 is the files' own term (33 uses); the vi-VN `cli.profile.*.examples` "hồ sơ" is outside P7's keys.
 - The left-over worktree `.claude/worktrees/agent-a7460c9a8d6f138cc` is also undecided.
+- P12 reviewer findings, none blocking:
+  - Should-fix: after a toggle the app refreshes the inventory once, right after the RPC returns, while the record watcher re-admits the controller later; the picker can show the old value until the next refresh. The maintainer's manual check confirms whether it settles; the fix would be a short re-poll.
+  - Should-fix: every `ControllerOwnershipFailure` shows the `error.E2023` text, which names raw USB and native support; `noRecord`, `invalidRecord`, and `persistenceFailed` append the service's detail instead of a text of their own.
+  - Accepted: `GatewayStub` gained a call recorder and a failure knob beside the method, mirroring the override stub; the protocol default of `setControllerOwnership` returns `.noRecord` for test conformers, like the suspend/resume defaults.
+- P12 decision: its Owns gained three Kit files and a Kit test (2026-10-14), so the device payload carries `recordOwnership`, the effective layered ownership, decoded as `.macOS` when absent.
 
 ## 1. P1: B2 review fixes and requires at runtime
 
@@ -696,7 +701,7 @@ Boundaries:
 
 ## 14. P12: Ownership toggle in the app
 
-- dotclaude status: `planned`
+- dotclaude status: `done` (verify passed at `eeab0f8a`; approved; merged at `5a886f11`)
 - Wave: 5; deps: P11 (group 11); satisfies: REQ-19; agent: `implementer`
 - Branch: `spec/0.6.0-alpha.1-P12`; worktree: `.claude/worktrees/spec-P12`
 - Owns: `Sources/OpenJoystickDriverPresentation/Controllers/Inventory/ControllerOwnershipPicker.swift`, `Sources/OpenJoystickDriverPresentation/Controllers/Inventory/ControllerDetailView+Facts.swift`, `Sources/OpenJoystickDriverPresentation/Runtime/ApplicationServiceGateway.swift`, `Sources/OpenJoystickDriverPresentation/Runtime/ApplicationServiceClientGateway+Requests.swift`, `Sources/OpenJoystickDriverPresentation/Runtime/RuntimeViewModel+ControllerActions.swift`, `Tests/OpenJoystickDriverPresentationTests/Support/GatewayStub.swift`, `Tests/OpenJoystickDriverPresentationTests/Controllers/ControllerOwnershipPickerTests.swift`, `Sources/OpenJoystickDriverKit/ApplicationService/Payloads/ApplicationServiceDeviceDescription.swift`, `Sources/OpenJoystickDriverKit/Device/Manager/ConnectedDeviceSnapshot.swift`, `Sources/OpenJoystickDriverKit/Device/Manager/DeviceManager+Queries.swift`, `Tests/OpenJoystickDriverKitTests/Device/Manager/RecordOwnershipReportTests.swift` (the Kit files joined on 2026-10-14: the app has no record ownership, so a model switched to Virtual would lose its picker; the device payload gains the effective record ownership)
@@ -720,7 +725,7 @@ Context:
 - [x] 14.5 Test the visibility rule and that a change calls the gateway with the right identity and value, with `GatewayStub`.
 - [x] 14.6 Verify: the `verify` command above exits 0. Acceptance: The verify command passes; `python3 Scripts/Quality/check_localization_keys.py` passes. The report lists the maintainer's manual check: open a native controller's detail, switch to Virtual, and see the virtual gamepad in a game.
 - [x] 14.7 Review: a fresh reviewer agent approves the diff
-- [ ] 14.8 Merge `spec/0.6.0-alpha.1-P12` into `feat/0.6.0-alpha.1`
+- [x] 14.8 Merge `spec/0.6.0-alpha.1-P12` into `feat/0.6.0-alpha.1`
 
 Boundaries:
 
