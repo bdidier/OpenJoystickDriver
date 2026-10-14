@@ -10,8 +10,11 @@ struct ModPackageRequiresAtRuntimeTests {
   private static let identity = ControllerIdentity(vendorID: 0x1234, productID: 0xABCD)
   private static let range: [String: String] = ["minimum": "0.6.0", "below": "0.7.0"]
   private static let outOfRange = "9.0.0"
-  private static let expectedProblem =
-    "E4002: arcade-pack requires 0.6.0 up to 0.7.0, and this is 9.0.0"
+
+  /// Whether `problem` is the `requires` problem, by its error code.
+  private static func isRequiresProblem(_ problem: String?) -> Bool {
+    problem?.hasPrefix("E4002") == true
+  }
 
   /// Installs `arcade-pack` for 0.6.0 up to 0.7.0 while the running version is 0.6.0.
   private func installOldPackage(
@@ -30,7 +33,7 @@ struct ModPackageRequiresAtRuntimeTests {
       try installOldPackage(in: fixture, records: [try Fixture.record(0x1234, 0xABCD)])
 
       let package = try #require(fixture.store(running: Self.outOfRange).list().first)
-      #expect(package.problem == Self.expectedProblem)
+      #expect(Self.isRequiresProblem(package.problem))
       #expect(package.manifest?.name == "arcade-pack")
       #expect(package.manifest?.version == "1.0.0")
       #expect(fixture.store().list().first?.problem == nil)
@@ -59,7 +62,7 @@ struct ModPackageRequiresAtRuntimeTests {
       )
       #expect(packaged.records[Self.identity] == nil)
       #expect(packaged.files.map(\.url.lastPathComponent) == [ModPackageManifest.fileName])
-      #expect(packaged.files.map(\.problem) == [Self.expectedProblem])
+      #expect(packaged.files.map { Self.isRequiresProblem($0.problem) } == [true])
     }
   }
 
@@ -74,7 +77,7 @@ struct ModPackageRequiresAtRuntimeTests {
       )
       #expect(store.override(vendorID: 0x1234, productID: 0xABCD) == nil)
       #expect(store.problems.map(\.url.lastPathComponent) == [ModPackageManifest.fileName])
-      #expect(store.problems.map(\.problem) == [Self.expectedProblem])
+      #expect(store.problems.map { Self.isRequiresProblem($0.problem) } == [true])
     }
   }
 

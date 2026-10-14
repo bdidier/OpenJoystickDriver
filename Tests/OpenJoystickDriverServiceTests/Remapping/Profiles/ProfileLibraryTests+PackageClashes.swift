@@ -89,7 +89,11 @@ extension ProfileLibraryTests {
       )
 
       #expect(try await library.profiles() == [first, last])
-      #expect(try await library.packageProfileSources() == [first.id: "arcade-pack", last.id: "arcade-pack"])
+      #expect(
+        try await library.packageProfileSources() == [
+          first.id: "arcade-pack", last.id: "arcade-pack",
+        ]
+      )
     }
   }
 
@@ -133,7 +137,9 @@ extension ProfileLibraryTests {
     requires: [String: Any] = ["minimum": "0.6.0"],
     in directory: URL
   ) throws {
-    let files = try profiles.enumerated().map { ("profile-\($0.offset).json", try profileData($0.element)) }
+    let files = try profiles.enumerated().map {
+      ("profile-\($0.offset).json", try profileData($0.element))
+    }
     try writePackage(name, files: files, listing: files.map(\.0), requires: requires, in: directory)
   }
 
@@ -149,7 +155,9 @@ extension ProfileLibraryTests {
     let folder = directory.appendingPathComponent("Packages/\(name)", isDirectory: true)
     let profileFolder = folder.appendingPathComponent("Profiles", isDirectory: true)
     try FileManager.default.createDirectory(at: profileFolder, withIntermediateDirectories: true)
-    for (fileName, data) in files { try data.write(to: profileFolder.appendingPathComponent(fileName)) }
+    for (fileName, data) in files {
+      try data.write(to: profileFolder.appendingPathComponent(fileName))
+    }
     let manifest: [String: Any] = [
       "$schema": ModPackageManifest.knownSchemaIDs.sorted()[0], "name": name,
       "version": "1.0.0", "author": "Tester", "requires": requires, "profiles": listing,
