@@ -63,14 +63,14 @@ The `mod.json` file names the package and lists every file it holds. This is the
 
 A file that is in a subfolder but not in the manifest, or in the manifest but not in the folder, makes OJD refuse the package. Each listed file must be valid for its kind.
 
-OJD does not use a package whose `requires` leaves out the running version. It skips the package and lists the reason. `ojd mod list` shows it with the code E4002.
+OJD does not use a package whose `requires` leaves out the running version. It skips the package and lists the reason. `ojd mod list` shows it with the code E4002. A development build, whose version is not a SemVer version, uses every package, but `ojd mod validate` and `ojd mod install` refuse every package on it.
 
 ## Precedence and Clashes
 
-A package is a read-only layer between the bundled catalog and your own files. A value takes the first layer that sets it, in this order: your record, a package record, the bundled record. A package record is an `add` for a model that has no bundled record, or a `patch` of a bundled one. A package cannot `add` a model that has a bundled record.
+A package is a read-only layer between the bundled catalog and your own files. When you and a package have a record for the same model, OJD uses your record and ignores the package record. Your `patch` of a bundled model applies over the bundled record only. A package record is an `add` for a model that has no bundled record, or a `patch` of a bundled one. A package cannot `add` a model that has a bundled record.
 
 - `ojd mod install` and `ojd mod validate` refuse a package whose record or persona covers a model that your files or another package already hold. They also refuse a profile that has the ID or the name of one that you or another package already hold. The code is E4004. `--force` does not override this.
-- A clash can also appear after the install, for example when you add a record later. Your file then wins. Among packages, the first by package name wins. `ojd record list` and `ojd mod list` name each loser and the reason.
+- A clash can also appear after the install, for example when you add a record later. Your file then wins. Among packages, the first by package name wins. `ojd record list` names each package record that OJD ignores and the reason. For a profile or a persona that OJD ignores, the service writes the reason to its standard error output.
 - A patch record of yours for a model that only a package defines applies over the package record. If you remove the package later, OJD lists the patch as a problem and skips it.
 
 ## Package Profiles Are Read-Only
@@ -95,7 +95,7 @@ ojd mod remove NAME [--force] [--dry-run]
 
 To try the sample package:
 
-1. Run `ojd mod validate` with the path of a copy of the sample folder.
+1. Run `ojd mod validate` with the path of the sample folder.
 1. Run `ojd mod install` with the same path.
 1. Run `ojd mod list` to see the files it holds.
 1. Run `ojd mod remove ojd-sample` to remove it.

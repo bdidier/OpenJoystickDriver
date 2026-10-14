@@ -6,6 +6,19 @@ Use `ojd`, the OpenJoystickDriver command line, to check status, start or stop t
 
 This page explains how to run `ojd`, which options apply to every command, how to read its output, and what its exit codes mean.
 
+## Contents
+
+- [Run a Command](#run-a-command)
+- [Shell Completion](#shell-completion)
+- [Global Options](#global-options)
+- [Environment Variables](#environment-variables)
+- [The Service](#the-service)
+- [Configuration](#configuration)
+- [Mod Packages](#mod-packages)
+- [Output](#output)
+- [Exit Codes](#exit-codes)
+- [Further Reading](#further-reading)
+
 ## Run a Command
 
 The command-line tool is named `ojd`. It is the app's own executable: when it runs under the name `ojd`, it acts as the command line, and under any other name it opens the app.
