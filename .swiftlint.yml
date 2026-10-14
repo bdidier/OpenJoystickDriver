@@ -125,4 +125,5 @@ implicit_getter:
 excluded:
   - .build
   - .swiftpm
+  - .claude/worktrees
   - "**/Generated"
