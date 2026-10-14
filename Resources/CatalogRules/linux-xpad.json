@@ -1,0 +1,106 @@
+{
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "LinuxXpadRules",
+  "driverHandledDeviceFlags": [
+    {
+      "flag": "FLAG_DELAY_INIT",
+      "xtype": "XTYPE_XBOXONE",
+      "note": "FLAG_DELAY_INIT holds the GIP init sequence until the pad's announce packet; GIPDriver resends its startup sequence on the announces before the first input"
+    }
+  ],
+  "mappingQuirks": [
+    {
+      "flag": "MAP_SHARE_OFFSET",
+      "quirk": "share-offset",
+      "family": "xbox.gip"
+    }
+  ],
+  "capabilityAbsences": [
+    {
+      "flag": "MAP_STICKS_TO_NULL",
+      "controls": [
+        "left-stick-x",
+        "left-stick-y",
+        "right-stick-x",
+        "right-stick-y"
+      ]
+    },
+    {
+      "flag": "MAP_TRIGGERS_TO_BUTTONS",
+      "controls": [
+        "left-trigger",
+        "right-trigger"
+      ]
+    }
+  ],
+  "representationFlags": [
+    "MAP_DPAD_TO_BUTTONS"
+  ],
+  "presenceFlags": [
+    "MAP_PADDLES",
+    "MAP_PROFILE_BUTTON",
+    "MAP_SHARE_BUTTON"
+  ],
+  "dancepadFlags": [
+    "MAP_DPAD_TO_BUTTONS",
+    "MAP_STICKS_TO_NULL",
+    "MAP_TRIGGERS_TO_BUTTONS"
+  ],
+  "initPacketNames": {
+    "xboxone_power_on": "xbox.gip/power-on",
+    "xboxone_s_init": "xbox.gip/s-init",
+    "extra_input_packet_init": "xbox.gip/enable-extra-input",
+    "xboxone_hori_ack_id": "xbox.gip/hori-ack",
+    "xboxone_led_on": "xbox.gip/led-on",
+    "xboxone_auth_done": "xbox.gip/auth-done",
+    "xboxone_rumblebegin_init": "xbox.gip/rumble-begin",
+    "xboxone_rumbleend_init": "xbox.gip/rumble-end"
+  },
+  "defaultInitialization": [
+    "xbox.gip/power-on",
+    "xbox.gip/led-on",
+    "xbox.gip/auth-done"
+  ],
+  "types": [
+    {
+      "xtype": "XTYPE_XBOX",
+      "family": "xbox.xid",
+      "variant": "gamepad"
+    },
+    {
+      "xtype": "XTYPE_XBOX360",
+      "family": "xbox.xusb",
+      "variant": "wired"
+    },
+    {
+      "xtype": "XTYPE_XBOX360W",
+      "family": "xbox.xusb",
+      "variant": "receiver"
+    },
+    {
+      "xtype": "XTYPE_XBOXONE",
+      "family": "xbox.gip"
+    }
+  ],
+  "typeFilters": [
+    {
+      "name": "all"
+    },
+    {
+      "name": "xbox.xid",
+      "xtype": "XTYPE_XBOX"
+    },
+    {
+      "name": "xbox.xusb:wired",
+      "xtype": "XTYPE_XBOX360"
+    },
+    {
+      "name": "xbox.xusb:receiver",
+      "xtype": "XTYPE_XBOX360W"
+    },
+    {
+      "name": "xbox.gip",
+      "xtype": "XTYPE_XBOXONE"
+    }
+  ]
+}
