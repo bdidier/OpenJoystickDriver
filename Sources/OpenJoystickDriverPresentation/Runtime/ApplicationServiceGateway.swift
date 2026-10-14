@@ -65,6 +65,10 @@ protocol VirtualOutputGateway: Sendable {
   func resetVirtualHIDProfileOverride(
     for selector: RuntimeDeviceSelector
   ) async throws -> VirtualHIDProfileOverrideResult
+  func setControllerOwnership(
+    identity: ControllerIdentity,
+    ownership: ControllerOwnership
+  ) async throws -> ControllerOwnershipResult
   func suspendController(_ selector: RuntimeDeviceSelector) async throws -> ControllerSuspendResult
   func resumeController(_ selector: RuntimeDeviceSelector) async throws -> ControllerResumeResult
   func disconnectWirelessController(
@@ -73,6 +77,19 @@ protocol VirtualOutputGateway: Sendable {
 }
 
 extension VirtualOutputGateway {
+  func setControllerOwnership(
+    identity: ControllerIdentity,
+    ownership: ControllerOwnership
+  ) throws -> ControllerOwnershipResult {
+    ControllerOwnershipResult(
+      ownership: ownership,
+      previous: .macOS,
+      file: nil,
+      created: false,
+      failure: .noRecord
+    )
+  }
+
   func suspendController(_ selector: RuntimeDeviceSelector) throws -> ControllerSuspendResult {
     ControllerSuspendResult(state: .active, failure: .notFound)
   }

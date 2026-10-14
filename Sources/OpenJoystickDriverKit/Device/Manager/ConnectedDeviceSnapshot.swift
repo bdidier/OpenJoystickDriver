@@ -45,6 +45,8 @@ public struct ConnectedDeviceSnapshot: Sendable {
   /// Who drives the controller's output: `macOS` when it serves the controller natively, so
   /// ``physicalOutputCapabilities`` holds only what macOS leaves undone.
   public let physicalOutputOwner: ControllerOwnership
+  /// Who the record the controller bound with says serves the model; `macOS` when it sets none.
+  public let recordOwnership: ControllerOwnership
   /// The record's timing and deadzone values as applied to this controller.
   public let tuning: ControllerTuning
   /// Normalized controls and sample formats the active parser emits for this record.
