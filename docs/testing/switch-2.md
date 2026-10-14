@@ -39,7 +39,7 @@ The right Joy-Con 2 reads its calibration from the primary flash slot, as SDL do
 ## Checks
 
 1. Run `ioreg -r -c IOUSBHostInterface -l -w0` and paste every `057e` entry with its `bInterfaceNumber`, `bInterfaceClass` and endpoint addresses.
-1. Run the HID monitor and press each button once:
+2. Run the HID monitor and press each button once:
 
    ```bash
    swift run OpenJoystickDriverHIDTool --monitor --vid 0x057e --pid 0x2069 --seconds 30
@@ -47,8 +47,8 @@ The right Joy-Con 2 reads its calibration from the primary flash slot, as SDL do
 
    Use `0x2066`, `0x2067` or `0x2073` for the other controllers.
 
-1. Start OJD. Check in Controller Settings Live that every button, the sticks and, on the GameCube controller, the triggers move. Check that a centered stick reads center.
-1. Check that the player LED shows the slot OJD assigned.
-1. Run a rumble from Controller Settings. Check that it starts and that it stops at the end.
-1. Paste the OJD log lines that name the controller, including any `USB command` errors.
-1. Unplug the controller and press its sync button. Allow Bluetooth access when macOS asks. Repeat checks 3 to 6 over Bluetooth, and note how long the controller took to appear.
+3. Start OJD. Check in Controller Settings Live that every button, the sticks and, on the GameCube controller, the triggers move. Check that a centered stick reads center.
+4. Check that the player LED shows the slot OJD assigned.
+5. Run a rumble from Controller Settings. Check that it starts and that it stops at the end.
+6. Paste the OJD log lines that name the controller, including any `USB command` errors.
+7. Unplug the controller and press its sync button. Allow Bluetooth access when macOS asks. Repeat checks 3 to 6 over Bluetooth, and note how long the controller took to appear.
