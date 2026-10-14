@@ -20,19 +20,19 @@ Evidence class: source (read at `1178ab9d` and SwifterKit `0.3.0`, `0e0b4b8`).
 
 1. The extension lists seven Microsoft products, `02D1` first
    (`Sources/OpenJoystickDriverUSB/Configuration.swift`).
-1. SwifterKit `USBDeviceConfiguration.matchingProperties` writes a scalar `idProduct` only for
+2. SwifterKit `USBDeviceConfiguration.matchingProperties` writes a scalar `idProduct` only for
    one product. For seven it writes `idProductArray` (`DriverKit/USB/USBTypes.swift:178-184`).
    The generator copies these keys into the personality (`DriverExtensionGenerator.swift:374-376`).
-1. `IOKitDriverTransport.services(matching:)` reads the properties of the DEXT service itself,
+3. `IOKitDriverTransport.services(matching:)` reads the properties of the DEXT service itself,
    matched by `CFBundleIdentifier` and `IOUserClass`. The USB runtime sources set no `idProduct`
    or `locationID` on that service.
-1. `USBDriverKitTransportProvider.device(_:)`
+4. `USBDriverKitTransportProvider.device(_:)`
    (`Sources/OpenJoystickDriverUSB/Transport/USBDriverKitTransport.swift:71-74`) returns `nil`
    when the service has no scalar `idProduct`. The DEXT route then lists no device.
-1. `OpenJoystickDriverUSBTransportProvider.selectDevices` (`TransportFacade.swift:271-289`)
+5. `OpenJoystickDriverUSBTransportProvider.selectDevices` (`TransportFacade.swift:271-289`)
    drops a direct IOUSBHost device whose model is in `requiredDriverKitModels`, which holds all
    seven products. With no DEXT device, `02D1` reaches no route.
-1. `DeviceManager+USBDetection.swift` claims a DEXT-route `02D1` service on interface 0 when one
+6. `DeviceManager+USBDetection.swift` claims a DEXT-route `02D1` service on interface 0 when one
    is given to it. Detection is not the defect.
 
 `Tests/OpenJoystickDriverKitTests/Device/Discovery/USB/XboxOne02D1DetectionTests.swift` pins
