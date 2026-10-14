@@ -56,11 +56,11 @@ ojd controller watch <controller>
 Check these points:
 
 1. Push each stick fully right and fully up, and confirm positive X and negative Y.
-1. Press every button, including QAM, the four rear buttons and both trackpads. Confirm that the reported control matches the button.
-1. Touch each trackpad and confirm that the contact moves with your finger and reports pressure.
-1. Rotate the controller and confirm motion samples.
-1. Send a rumble for 2 s and confirm that it runs for the full 2 s and then stops.
-1. Leave the controller idle for 10 s and confirm that it does not return to mouse (lizard) mode.
-1. With the dongle, turn the controller off and on, and confirm that the controller disconnects and reconnects.
+2. Press every button, including QAM, the four rear buttons and both trackpads. Confirm that the reported control matches the button.
+3. Touch each trackpad and confirm that the contact moves with your finger and reports pressure.
+4. Rotate the controller and confirm motion samples.
+5. Send a rumble for 2 s and confirm that it runs for the full 2 s and then stops.
+6. Leave the controller idle for 10 s and confirm that it does not return to mouse (lizard) mode.
+7. With the dongle, turn the controller off and on, and confirm that the controller disconnects and reconnects.
 
 Report the result in a new issue with the VID:PID and the link.
