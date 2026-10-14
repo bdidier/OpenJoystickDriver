@@ -62,6 +62,11 @@ Harness notes from the handoff:
   - P13 has an empty "Owns" list; it was run without an agent because it changes no file.
   - Whether P15 needs an update of `docs/testing/xbox-one-02d1.md` "Result"; P6 or the maintainer owns that page.
   - What to do with the left-over worktrees `.claude/worktrees/agent-a6ec4211cf41e0912` and `agent-adfb7ffcf65ee534f` (on `origin/main`, with deletions under `.agents/skills/` that are not from this change).
+- P5 reviewer nits: the sample-package test fixture covers 2 of 8 buttons and no negative axes; the `#filePath` path chains repeat.
+- P6: approved by the fifth reviewer and ticked through 12.8. 12.9 waits: P6 changes `wiki/Controller-Records.md`, which has uncommitted maintainer edits in the main checkout, so the maintainer chose to merge P6 at the end (2026-10-14). 12.5 stays open until P12 adds the app picker to the CHANGELOG ownership line. P6 found that OJD does not report a package profile that it ignores because of a clash, and the wiki says so.
+- `docs/testing/xbox-one-02d1.md` "Result" still says the fix is outside this package; no group owns the page.
+- P7 reviewer nits, not taken: `error.E2023` translates "native and virtual" as prose; hi-IN ownership `dry_run` could use the passive; zh-TW/zh-HK 發佈 vs 發布; ar-SA مثبتة without shadda. Rejected: zh-TW/zh-HK 虛擬遊戲控制器 is the files' own term (33 uses); the vi-VN `cli.profile.*.examples` "hồ sơ" is outside P7's keys.
+- The left-over worktree `.claude/worktrees/agent-a7460c9a8d6f138cc` is also undecided.
 
 ## 1. P1: B2 review fixes and requires at runtime
 
@@ -655,7 +660,7 @@ Boundaries:
 
 ## 13. P7: l10n review of mod strings
 
-- dotclaude status: `planned`
+- dotclaude status: `done` (verify passed at `735dda2c`; approved; merged at `57a461ff`)
 - Wave: 5; deps: P3 (group 9), P11 (group 11); satisfies: REQ-12, REQ-18, REQ-19; agent: `implementer`
 - Branch: `spec/0.6.0-alpha.1-P7`; worktree: `.claude/worktrees/spec-P7`
 - Owns: `Sources/OpenJoystickDriverKit/Resources/Localization/Localizable.template.strings`, `Sources/OpenJoystickDriverKit/Resources/C.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/en-US.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/ar-SA.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/de-DE.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/es-ES.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/es-MX.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/fr-CA.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/fr-FR.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/hi-IN.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/id-ID.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/it-IT.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/ja-JP.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/ko-KR.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/nl-NL.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/pt-BR.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/ru-RU.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/th-TH.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/tr-TR.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/vi-VN.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/zh-CN.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/zh-HK.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/zh-TW.lproj/Localizable.strings`
@@ -678,7 +683,7 @@ Context:
 - [x] 13.4 Keep keys and the key order unchanged.
 - [x] 13.5 Verify: the `verify` command above exits 0. Acceptance: The verify command passes. The report lists each changed value by locale and key.
 - [x] 13.6 Review: a fresh reviewer agent approves the diff
-- [ ] 13.7 Merge `spec/0.6.0-alpha.1-P7` into `feat/0.6.0-alpha.1`
+- [x] 13.7 Merge `spec/0.6.0-alpha.1-P7` into `feat/0.6.0-alpha.1`
 
 Boundaries:
 
