@@ -9,10 +9,10 @@ Report issues in the [issue tracker](https://github.com/xsyetopz/OpenJoystickDri
 ## What To Include
 
 1. The controller model, the connection (USB, Bluetooth, or dongle), and the VID:PID. For more information, see [Finding your controller ID](Connecting-Controllers.md).
-1. The macOS version and the OJD version.
-1. What you did, what you expected, and what happened.
-1. A support report.
-1. Logs, if the app crashed or showed an error.
+2. The macOS version and the OJD version.
+3. What you did, what you expected, and what happened.
+4. A support report.
+5. Logs, if the app crashed or showed an error.
 
 If you use a tester build, attach `OpenJoystickDriver-TESTER-BUILD.txt` from the DMG. Say which build you tested. If a newer build fixed the problem, name that build.
 
