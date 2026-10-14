@@ -79,9 +79,9 @@ Do not put refresh, profile editing, logs, reports, packet streams, raw identifi
 Use one visible native `NSToolbarItemGroup` for the four panes. The selected pane and window geometry persist across launches. Dirty profile edits intercept pane changes and offer Cancel or Discard.
 
 1. **Overview:** readiness, controller count, and the Access & readiness summary. Input Monitoring, controller publication, and Keyboard & pointer each have an explicit request action.
-1. **Controllers:** friendly names, connection state, selected profile, controller identity, and technical identifiers in the selected-device detail.
-1. **Profiles:** profile list and the selected profile's Assignments editor.
-1. **Debug:** typed runtime/controller details, diagnostics collection, Save report, and Save logs. Raw packet, watch, and catalog workflows remain CLI-only.
+2. **Controllers:** friendly names, connection state, selected profile, controller identity, and technical identifiers in the selected-device detail.
+3. **Profiles:** profile list and the selected profile's Assignments editor.
+4. **Debug:** typed runtime/controller details, diagnostics collection, Save report, and Save logs. Raw packet, watch, and catalog workflows remain CLI-only.
 
 The resizable window opens at its initial size and reuses one controller. Profile rows use native list/table controls, not a bitmap or coordinate hit map.
 
