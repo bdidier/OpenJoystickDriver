@@ -20,14 +20,20 @@ struct ControllerPackageRecords {
 }
 
 extension ControllerRecordSet {
-  /// The records of the packages in `directory`, in package-name order. A package record that
-  /// fails validation, has the wrong file name, or repeats the identity of an earlier package's
-  /// record is skipped and listed with its reason.
-  static func packageRecords(in directory: URL) -> ControllerPackageRecords {
+  /// The records of the packages in `directory`, in package-name order. A package that cannot be
+  /// used, such as one whose `requires` leaves out the running version, is skipped and its
+  /// `mod.json` is listed with the reason. A package record that fails validation, has the wrong
+  /// file name, or repeats the identity of an earlier package's record is skipped and listed with
+  /// its reason. `runningVersion` is the OJD version that the
+  /// `requires` of a package is checked against; nil means the running one.
+  static func packageRecords(
+    in directory: URL,
+    runningVersion: String? = nil
+  ) -> ControllerPackageRecords {
     var packaged = ControllerPackageRecords(records: bundled.records)
     var owners: [ControllerIdentity: String] = [:]
-    for package in ModPackageStore(directory: directory).list() {
-      guard let manifest = package.manifest else {
+    for package in ModPackageStore(directory: directory, runningVersion: runningVersion).list() {
+      guard let manifest = package.manifest, package.problem == nil else {
         packaged.files.append(
           ControllerRecordFile(
             url: package.directory.appendingPathComponent(ModPackageManifest.fileName),

@@ -15,22 +15,39 @@ extension RemappingProfileLibrary {
 
   /// The profiles of the installed packages, which the library serves read-only.
   ///
-  /// Only packages with a valid manifest count. A listed file that cannot be loaded is skipped
-  /// without an issue, because the install checked it and the issue kinds of the library only
-  /// describe the user's files. When two package profiles share an id or a name (ignoring case),
-  /// the first one wins, in package-name order and then manifest order.
+  /// Only packages that can be used count: a package with an invalid manifest, or one whose
+  /// `requires` leaves out the running version, is skipped with a `[Profiles]` line on standard
+  /// error. A listed file that cannot be read, decoded, or validated is skipped with the same kind
+  /// of line, because the issue kinds of the library only describe the user's files. When two
+  /// package profiles share an id or a name (ignoring case), the first one wins, in package-name
+  /// order and then manifest order.
   func loadPackageProfiles() -> [PackageProfile] {
     var served: [PackageProfile] = []
     var ids: Set<UUID> = []
     var names: Set<String> = []
-    for package in ModPackageStore(directory: packagesDirectory).list() {
-      guard let manifest = package.manifest else { continue }
+    let store = ModPackageStore(directory: packagesDirectory, runningVersion: runningVersion)
+    for package in store.list() {
+      guard let manifest = package.manifest, package.problem == nil else {
+        let reason = package.problem ?? "the manifest cannot be used"
+        fputs("[Profiles] Skipped the package \(package.name): \(reason)\n", stderr)
+        continue
+      }
       for fileName in manifest.profiles {
         let url = package.directory.appendingPathComponent("Profiles", isDirectory: true)
           .appendingPathComponent(fileName, isDirectory: false)
-        guard let data = try? Data(contentsOf: url),
-          let profile = try? RemappingProfileFileStore.load(from: data),
-          !ids.contains(profile.id), !names.contains(Self.normalizedName(profile.name))
+        let profile: RemappingProfile
+        do {
+          // `load(from:)` decodes the file and runs `RemappingProfile.validate()`.
+          profile = try RemappingProfileFileStore.load(from: Data(contentsOf: url))
+        } catch {
+          fputs(
+            "[Profiles] Skipped Profiles/\(fileName) of the package \(package.name): "
+              + "\(error)\n",
+            stderr
+          )
+          continue
+        }
+        guard !ids.contains(profile.id), !names.contains(Self.normalizedName(profile.name))
         else { continue }
         ids.insert(profile.id)
         names.insert(Self.normalizedName(profile.name))
