@@ -38,12 +38,12 @@ Each controller control can appear in only one assignment in a profile.
 ### Add an Assignment In the App
 
 1. Select the profile and open the **Assignments** section.
-1. Click **Add assignment**.
-1. In the **Press a controller control** sheet, select a control in the **Controller control** list. Or click **Listen for control** and press the control on the controller.
-1. Select a **Destination**.
-1. If the destination is a key, click **Capture key** and press the key with any modifiers. Press <kbd>Escape</kbd> to cancel the capture.
-1. Click **Add assignment**.
-1. Click **Save**.
+2. Click **Add assignment**.
+3. In the **Press a controller control** sheet, select a control in the **Controller control** list. Or click **Listen for control** and press the control on the controller.
+4. Select a **Destination**.
+5. If the destination is a key, click **Capture key** and press the key with any modifiers. Press <kbd>Escape</kbd> to cancel the capture.
+6. Click **Add assignment**.
+7. Click **Save**.
 
 The section groups assignments as **Face buttons**, **Shoulders**, **D-pad**, **Sticks**, **Triggers**, **Stick clicks**, **Touch**, **Motion**, and **System controls**. To remove an assignment, use its **Remove assignment** button.
 
@@ -80,8 +80,8 @@ To remove an assignment, run `ojd binding clear PROFILE SOURCE`. To list the ass
 The behavior decides how a press turns into output.
 
 1. Click **Behavior...** on the assignment row.
-1. In the **Assignment behavior** sheet, select a behavior.
-1. Click **Apply**, then click **Save**.
+2. In the **Assignment behavior** sheet, select a behavior.
+3. Click **Apply**, then click **Save**.
 
 | Behavior | Result |
 | --- | --- |
@@ -145,13 +145,13 @@ Create a profile and open it. For more information, see [Creating a profile](Rem
 ### Add a Chord
 
 1. Open the **Combinations** section.
-1. In **Chords**, click **Add chord**.
-1. Select the first control in **Control 1**.
-1. Click **Add control** and select at least one more control.
-1. Select a **Chord mode**: **Modifier** or **Simultaneous**.
-1. Set the **Press window**. The default is 50 ms and the range is 1 to 1000 ms.
-1. Select a **Destination**.
-1. Confirm the sheet, then click **Save**.
+2. In **Chords**, click **Add chord**.
+3. Select the first control in **Control 1**.
+4. Click **Add control** and select at least one more control.
+5. Select a **Chord mode**: **Modifier** or **Simultaneous**.
+6. Set the **Press window**. The default is 50 ms and the range is 1 to 1000 ms.
+7. Select a **Destination**.
+8. Confirm the sheet, then click **Save**.
 
 The sheet shows this hint: "The destination fires while all selected controls are pressed."
 
@@ -160,23 +160,23 @@ To add or delete a chord with the command line, run `ojd profile edit PROFILE`, 
 ### Add a Sequence
 
 1. Open the **Combinations** section.
-1. In **Sequences**, click **Add sequence**.
-1. Add at least two controls in the order that you press them.
-1. Set the **Completion window**. The range is 200 to 10000 ms.
-1. Select a **Destination**.
-1. Confirm the sheet, then click **Save**.
+2. In **Sequences**, click **Add sequence**.
+3. Add at least two controls in the order that you press them.
+4. Set the **Completion window**. The range is 200 to 10000 ms.
+5. Select a **Destination**.
+6. Confirm the sheet, then click **Save**.
 
 To add or delete a sequence with the command line, run `ojd profile edit PROFILE`, then add or change the entry in `sequences` in the profile file. For the file format, see [Profile file reference](Profile-File-Reference.md).
 
 ### Add a Layer
 
 1. Open the **Layers** section.
-1. Click **Add layer**.
-1. Enter a **Layer name** (1 to 40 characters).
-1. Select the **Activator**. The activator is a button or a D-pad direction.
-1. Select the **Activation**: **Hold** or **Toggle**.
-1. Confirm the sheet, then click **Save**.
-1. In the layer, click **Add assignment** to add assignments that work while the layer is active.
+2. Click **Add layer**.
+3. Enter a **Layer name** (1 to 40 characters).
+4. Select the **Activator**. The activator is a button or a D-pad direction.
+5. Select the **Activation**: **Hold** or **Toggle**.
+6. Confirm the sheet, then click **Save**.
+7. In the layer, click **Add assignment** to add assignments that work while the layer is active.
 
 **Hold** keeps the layer active while you hold the activator. **Toggle** switches the layer on or off each time you press the activator. The activator cannot also be an assignment in the profile.
 
