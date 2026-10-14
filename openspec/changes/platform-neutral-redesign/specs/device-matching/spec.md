@@ -9,6 +9,15 @@ The service SHALL turn an observed device into a link (kind, access, address) an
 - **WHEN** the same model attaches once through a dongle and once through USB
 - **THEN** each attachment gets its own link and selects the mode that matches its kind
 
+### Requirement: Interface signature binds a device without a record
+
+A device whose VID:PID has no record SHALL still bind to a protocol when one of its interfaces matches that protocol's interface signature (class, subclass, protocol, required interface number, endpoint set). The signatures SHALL live in the protocol description data, not in code. The binding SHALL carry no record.
+
+#### Scenario: Unlisted GIP controller
+
+- **WHEN** a USB device with no record exposes interface 0 as `FF/47/D0` with an interrupt IN and OUT endpoint pair
+- **THEN** it binds to the GIP protocol by interface signature, with no record and no source edit
+
 ### Requirement: Read-only behavioral probes
 
 A mode SHALL be able to require a probe: a read of a named feature report whose answer, stall or byte pattern must match. A probe SHALL NOT write to the device. A failed or inconclusive probe SHALL select the model's default mode and SHALL NOT disable the controller.
