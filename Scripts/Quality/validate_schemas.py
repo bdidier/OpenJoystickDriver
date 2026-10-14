@@ -7,6 +7,7 @@ import sys
 import tempfile
 from pathlib import Path
 
+from ..Command.execution import swift_command
 from .schema_compatibility import IncompatibleSchemaError
 from .schema_compatibility import check as check_compatibility
 
@@ -92,14 +93,14 @@ def validate_documents(
 
 def swift_binary_path() -> Path:
     subprocess.run(
-        ["swift", "build", "--product", "OpenJoystickDriver"],
+        swift_command(["build", "--product", "OpenJoystickDriver"]),
         cwd=ROOT,
         check=True,
         capture_output=True,
         text=True,
     )
     bin_path = subprocess.run(
-        ["swift", "build", "--show-bin-path"],
+        swift_command(["build", "--show-bin-path"]),
         cwd=ROOT,
         check=True,
         capture_output=True,

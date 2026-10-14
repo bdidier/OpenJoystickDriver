@@ -25,6 +25,18 @@ def env_with(overrides: dict[str, str] | None = None) -> dict[str, str]:
     return env
 
 
+def swift_command(args: list[str]) -> list[str]:
+    """`swift <args>` run with environment.sh's SWIFT_BIN and the SDKROOT it can read."""
+    return [
+        "/bin/bash",
+        "-c",
+        'source "$1"; exec "$SWIFT_BIN" "${@:2}"',
+        "ojd",
+        str(ENVIRONMENT),
+        *args,
+    ]
+
+
 def run_record(args: list[str]) -> int:
     if not args:
         die("diagnose record requires a canonical controller JSON path")
