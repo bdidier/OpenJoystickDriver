@@ -165,6 +165,7 @@ let package = Package(
         .product(name: "ArgumentParser", package: "swift-argument-parser"),
       ],
       path: "Tests/OpenJoystickDriverCLITests",
+      exclude: ["Fixtures"],
       swiftSettings: [.unsafeFlags(["-target", testTargetTriple])],
       linkerSettings: [.unsafeFlags(["-target", testTargetTriple])]
     ),

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/mod-package.schema.json",
+  "name": "ojd-sample",
+  "version": "1.0.0",
+  "author": "OpenJoystickDriver",
+  "requires": {
+    "minimum": "0.6.0-alpha.1",
+    "below": "0.7.0"
+  },
+  "records": ["1209-0001.json"],
+  "profiles": ["sample-pad.json"],
+  "personas": ["1209-0001.json"]
+}

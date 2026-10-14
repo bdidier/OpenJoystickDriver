@@ -1,0 +1,15 @@
+{
+  "$schema": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/persona.schema.json",
+  "match": {
+    "vendorID": 4617,
+    "productID": 1
+  },
+  "descriptor": "hid-generic",
+  "identity": {
+    "vendorID": 4617,
+    "productID": 1,
+    "productName": "OJD Sample Pad",
+    "manufacturer": "OpenJoystickDriver",
+    "glyphFamily": "generic"
+  }
+}
