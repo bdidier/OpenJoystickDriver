@@ -14,7 +14,7 @@ extension TransportFacadeTests {
       OpenJoystickDriverUSBTransportProvider.selectDevices(
         direct: [direct],
         driverKit: [],
-        supportedRawUSBModels: [USBTransportModel(direct)],
+        supportedRawUSBModels: [ControllerModelID(direct)],
         requiredDriverKitModels: []
       ) == [direct]
     )
@@ -28,8 +28,8 @@ extension TransportFacadeTests {
       OpenJoystickDriverUSBTransportProvider.selectDevices(
         direct: [direct],
         driverKit: [],
-        supportedRawUSBModels: [USBTransportModel(direct)],
-        requiredDriverKitModels: [USBTransportModel(vendorID: 0x045E, productID: 0x0B12)]
+        supportedRawUSBModels: [ControllerModelID(direct)],
+        requiredDriverKitModels: [ControllerModelID(vendorID: 0x045E, productID: 0x0B12)]
       ).isEmpty
     )
   }
@@ -61,7 +61,7 @@ extension TransportFacadeTests {
     let selected = OpenJoystickDriverUSBTransportProvider.selectDevices(
       direct: [directClaimed, anotherDirect],
       driverKit: [driverKit],
-      supportedRawUSBModels: [USBTransportModel(directClaimed)],
+      supportedRawUSBModels: [ControllerModelID(directClaimed)],
       requiredDriverKitModels: []
     )
 
@@ -76,7 +76,7 @@ extension TransportFacadeTests {
     let provider = OpenJoystickDriverUSBTransportProvider(
       ioUSBHostProvider: direct,
       usbDriverKitProvider: unavailable,
-      supportedRawUSBModels: [USBTransportModel(directDevice)],
+      supportedRawUSBModels: [ControllerModelID(directDevice)],
       requiredDriverKitModels: []
     )
 
@@ -90,7 +90,7 @@ extension TransportFacadeTests {
     let provider = OpenJoystickDriverUSBTransportProvider(
       ioUSBHostProvider: direct,
       usbDriverKitProvider: driverKit,
-      supportedRawUSBModels: [USBTransportModel(vendorID: 0x1234, productID: 0x5678)],
+      supportedRawUSBModels: [ControllerModelID(vendorID: 0x1234, productID: 0x5678)],
       requiredDriverKitModels: []
     )
 

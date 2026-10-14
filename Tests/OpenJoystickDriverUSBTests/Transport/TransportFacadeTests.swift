@@ -125,7 +125,7 @@ struct TransportFacadeTests {
     let provider = OpenJoystickDriverUSBTransportProvider(
       ioUSBHostProvider: direct,
       usbDriverKitProvider: driverKit,
-      supportedRawUSBModels: [USBTransportModel(device)],
+      supportedRawUSBModels: [ControllerModelID(device)],
       requiredDriverKitModels: []
     ) { _ in
       directProbeCalls.increment()
@@ -164,7 +164,7 @@ struct TransportFacadeTests {
         devices: [device],
         observations: [mismatchedObservation]
       ),
-      supportedRawUSBModels: [USBTransportModel(device)],
+      supportedRawUSBModels: [ControllerModelID(device)],
       requiredDriverKitModels: []
     ) { _ in
       directProbeCalls.increment()

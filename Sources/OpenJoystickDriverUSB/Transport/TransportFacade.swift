@@ -12,9 +12,9 @@ public actor OpenJoystickDriverUSBTransportProvider: USBTransportProvider,
   private let ioUSBHostProvider: any USBTransportProvider
   private let usbDriverKitProvider: any USBTransportProvider
   /// Reads the catalog's raw-USB models; the service changes them when user records change.
-  private let rawUSBModels: @Sendable () -> Set<USBTransportModel>
-  private var supportedRawUSBModels: Set<USBTransportModel> { rawUSBModels() }
-  private let requiredDriverKitModels: Set<USBTransportModel>
+  private let rawUSBModels: @Sendable () -> Set<ControllerModelID>
+  private var supportedRawUSBModels: Set<ControllerModelID> { rawUSBModels() }
+  private let requiredDriverKitModels: Set<ControllerModelID>
   private let ioUSBHostObservation: @Sendable (USBTransportDevice) throws -> PhysicalDevice?
   private var signatureAdmissions: [UInt64: Bool] = [:]
   private let ioUSBHostConfigurationObservation:
@@ -23,7 +23,7 @@ public actor OpenJoystickDriverUSBTransportProvider: USBTransportProvider,
   /// The models OJD's restricted entitlement covers, which only the DEXT route may serve.
   static let driverKitRequiredModels = Set(
     USBDriverKitExtensionConfiguration.microsoftProductIDs.map {
-      USBTransportModel(
+      ControllerModelID(
         vendorID: USBDriverKitExtensionConfiguration.microsoftVendorID,
         productID: $0
       )
@@ -34,7 +34,7 @@ public actor OpenJoystickDriverUSBTransportProvider: USBTransportProvider,
     ioUSBHostProvider = IOUSBHostTransportProvider()
     usbDriverKitProvider = USBDriverKitTransportProvider()
     let registry = ProtocolDriverRegistry()
-    rawUSBModels = { Set(registry.rawUSBModels.map(USBTransportModel.init)) }
+    rawUSBModels = { Set(registry.rawUSBModels) }
     requiredDriverKitModels = Self.driverKitRequiredModels
     ioUSBHostObservation = { try PassiveUSBDescriptorProbe.physicalDeviceObservation(for: $0) }
     ioUSBHostConfigurationObservation = Self.readConfigurationObservation
@@ -43,8 +43,8 @@ public actor OpenJoystickDriverUSBTransportProvider: USBTransportProvider,
   init(
     ioUSBHostProvider: any USBTransportProvider,
     usbDriverKitProvider: any USBTransportProvider,
-    supportedRawUSBModels: Set<USBTransportModel>,
-    requiredDriverKitModels: Set<USBTransportModel>,
+    supportedRawUSBModels: Set<ControllerModelID>,
+    requiredDriverKitModels: Set<ControllerModelID>,
     ioUSBHostObservation: @escaping @Sendable (USBTransportDevice) throws -> PhysicalDevice? = {
       try PassiveUSBDescriptorProbe.physicalDeviceObservation(for: $0)
     },
@@ -127,7 +127,7 @@ public actor OpenJoystickDriverUSBTransportProvider: USBTransportProvider,
     var admitted: Set<UInt64> = []
     let supportedRawUSBModels = supportedRawUSBModels
     for device in direct {
-      let model = USBTransportModel(device)
+      let model = ControllerModelID(device)
       guard !supportedRawUSBModels.contains(model), !requiredDriverKitModels.contains(model) else {
         continue
       }
@@ -274,19 +274,19 @@ public actor OpenJoystickDriverUSBTransportProvider: USBTransportProvider,
   static func selectDevices(
     direct: [USBTransportDevice],
     driverKit: [USBTransportDevice],
-    supportedRawUSBModels: Set<USBTransportModel>,
-    requiredDriverKitModels: Set<USBTransportModel>,
+    supportedRawUSBModels: Set<ControllerModelID>,
+    requiredDriverKitModels: Set<ControllerModelID>,
     signatureServiceIDs: Set<UInt64> = []
   ) -> [USBTransportDevice] {
     let observedDriverKitLocations = Set(driverKit.map(USBTransportLocation.init))
     let selectedDirect = direct.filter { device in
-      (supportedRawUSBModels.contains(USBTransportModel(device))
+      (supportedRawUSBModels.contains(ControllerModelID(device))
         || signatureServiceIDs.contains(device.serviceID))
-        && !requiredDriverKitModels.contains(USBTransportModel(device))
+        && !requiredDriverKitModels.contains(ControllerModelID(device))
         && !observedDriverKitLocations.contains(USBTransportLocation(device))
     }
     let selectedDriverKit = driverKit.filter {
-      supportedRawUSBModels.contains(USBTransportModel($0))
+      supportedRawUSBModels.contains(ControllerModelID($0))
     }
     return (selectedDriverKit + selectedDirect).sorted(by: deviceOrder)
   }
@@ -298,21 +298,10 @@ public actor OpenJoystickDriverUSBTransportProvider: USBTransportProvider,
   }
 }
 
-struct USBTransportModel: Hashable, Sendable {
-  let vendorID: UInt16
-  let productID: UInt16
-
-  init(vendorID: UInt16, productID: UInt16) {
-    self.vendorID = vendorID
-    self.productID = productID
-  }
-
+extension ControllerModelID {
+  /// The model of a USB device.
   init(_ device: USBTransportDevice) {
     self.init(vendorID: device.vendorID, productID: device.productID)
-  }
-
-  init(_ model: ControllerModelID) {
-    self.init(vendorID: model.vendorID, productID: model.productID)
   }
 }
 

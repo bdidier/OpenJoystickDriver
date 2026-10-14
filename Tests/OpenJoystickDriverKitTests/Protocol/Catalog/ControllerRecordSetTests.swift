@@ -219,7 +219,8 @@ struct ControllerRecordSetTests {
       (#"{"$schema":"\#(Self.overrideSchema)","operation":"patch","vendorID":13932,"#
         + #""productID":5,"set":{"protocol":{"family":"xbox.gip","keepAlive":false}}}"#).utf8
     )
-    try current.write(to: directory.appendingPathComponent("366c-0005.json"))
+    let currentURL = directory.appendingPathComponent("366c-0005.json")
+    try current.write(to: currentURL)
     // An add in the 0.5.0-beta.4 schema, whose `$schema` has no version directory.
     let released = Data(
       (#"{"$schema":"https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/"#
@@ -239,6 +240,7 @@ struct ControllerRecordSetTests {
     #expect(set.problems.map(\.url.lastPathComponent) == ["1234-abcd.json"])
     #expect(set.problems.first?.problem == "$schema must be one of \(Self.overrideSchema)")
     #expect(try Data(contentsOf: releasedURL) == released)
+    #expect(try Data(contentsOf: currentURL) == current)
   }
 
   @Test

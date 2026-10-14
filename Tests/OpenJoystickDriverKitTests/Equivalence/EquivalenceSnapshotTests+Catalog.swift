@@ -33,7 +33,7 @@ struct EquivalenceSnapshotCatalogTests {
   /// raw-USB provider would list on the IOUSBHost route is `raw-access`, one it would leave to
   /// the signed USB extension is `extension`, and anything else stays with the system HID stack.
   private static func route(_ record: ControllerRecord) -> String {
-    let models = Set(ProtocolDriverRegistry().rawUSBModels.map(USBTransportModel.init))
+    let models = Set(ProtocolDriverRegistry().rawUSBModels)
     let model = record.model
     func selects(_ route: USBTransportRoute) -> Bool {
       let device = USBTransportDevice(

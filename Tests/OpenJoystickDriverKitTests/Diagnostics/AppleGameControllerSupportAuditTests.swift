@@ -57,8 +57,8 @@ struct AppleGameControllerSupportAuditTests {
     let audit = AppleGameControllerSupportAuditor.audit(
       snapshot: snapshot,
       records: [
-        OJDControllerRecordIdentity(vendorID: 1, productID: 2, name: "Listed"),
-        OJDControllerRecordIdentity(vendorID: 1, productID: 3, name: "Not listed"),
+        ControllerModelID(vendorID: 1, productID: 2),
+        ControllerModelID(vendorID: 1, productID: 3),
       ]
     )
 
