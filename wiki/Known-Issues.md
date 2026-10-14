@@ -9,8 +9,8 @@ If two profiles with global scope are active for the same controller model, OJD 
 To recover:
 
 1. Quit OJD.
-1. Move `~/Library/Application Support/OpenJoystickDriver/ActiveProfiles.json` to another folder.
-1. Open OJD.
+2. Move `~/Library/Application Support/OpenJoystickDriver/ActiveProfiles.json` to another folder.
+3. Open OJD.
 
 OJD then opens with your profiles and none of them active. Do not activate a second global profile for a model that already has one. For more information, see [App crashes or does not start](Troubleshooting.md#app-crashes-or-does-not-start).
 
