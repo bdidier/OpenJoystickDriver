@@ -12,6 +12,8 @@ import sys
 from dataclasses import dataclass
 from typing import Any
 
+from Scripts.Catalog.catalog_rules import load_rules
+
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 PROFILE_DIR = ROOT / "Sources" / "OpenJoystickDriverKit" / "Resources" / "Controllers"
 SCHEMA_ID = (
@@ -39,63 +41,55 @@ INIT_PATTERN = re.compile(
     r"(0x[0-9a-fA-F]+)\s*,\s*([A-Za-z0-9_]+)\s*\)"
 )
 
-# xpad device flags whose behavior the family's driver already performs for every row.
-# `FLAG_DELAY_INIT` holds the GIP init sequence until the pad's announce packet; GIPDriver
-# resends its startup sequence on the announces before the first input.
-DRIVER_HANDLED_DEVICE_FLAGS = {("FLAG_DELAY_INIT", "XTYPE_XBOXONE")}
+# Rule tables from `Resources/CatalogRules/linux-xpad.json`.
+_XPAD_RULES = load_rules(
+    "linux-xpad.json",
+    "LinuxXpadRules",
+    frozenset(
+        {
+            "driverHandledDeviceFlags",
+            "mappingQuirks",
+            "capabilityAbsences",
+            "representationFlags",
+            "presenceFlags",
+            "dancepadFlags",
+            "initPacketNames",
+            "defaultInitialization",
+            "types",
+            "typeFilters",
+        }
+    ),
+)
+
+# xpad device flags whose behavior the family's driver already performs for every row, as
+# (flag, xtype).
+DRIVER_HANDLED_DEVICE_FLAGS = {
+    (entry["flag"], entry["xtype"]) for entry in _XPAD_RULES["driverHandledDeviceFlags"]
+}
 # xpad mapping macros that select a driver-declared quirk, and the one protocol
 # family declaring it; rows needing a quirk their driver does not declare are skipped.
-MAPPING_ORDER = (("MAP_SHARE_OFFSET", "share-offset", "xbox.gip"),)
+MAPPING_ORDER = tuple(
+    (entry["flag"], entry["quirk"], entry["family"])
+    for entry in _XPAD_RULES["mappingQuirks"]
+)
 # xpad mapping macros that remove analog controls, as capability absences in
 # ControlID order. Buttons and stick clicks stay.
-CAPABILITY_ABSENCES = (
-    (
-        "MAP_STICKS_TO_NULL",
-        ("left-stick-x", "left-stick-y", "right-stick-x", "right-stick-y"),
-    ),
-    ("MAP_TRIGGERS_TO_BUTTONS", ("left-trigger", "right-trigger")),
+CAPABILITY_ABSENCES = tuple(
+    (entry["flag"], tuple(entry["controls"]))
+    for entry in _XPAD_RULES["capabilityAbsences"]
 )
-# xpad reports these D-pad bits as buttons instead of hat axes; the wire bits
-# are unchanged and OJD parsers decode them as the D-pad either way.
-REPRESENTATION_MAPPING_FLAGS = {"MAP_DPAD_TO_BUTTONS"}
-PRESENCE_MAPPING_FLAGS = {
-    "MAP_SHARE_BUTTON",
-    "MAP_PADDLES",
-    "MAP_PROFILE_BUTTON",
-}
-DANCEPAD_FLAGS = {
-    "MAP_DPAD_TO_BUTTONS",
-    "MAP_TRIGGERS_TO_BUTTONS",
-    "MAP_STICKS_TO_NULL",
-}
-INIT_PACKET_NAMES = {
-    "xboxone_power_on": "xbox.gip/power-on",
-    "xboxone_s_init": "xbox.gip/s-init",
-    "extra_input_packet_init": "xbox.gip/enable-extra-input",
-    "xboxone_hori_ack_id": "xbox.gip/hori-ack",
-    "xboxone_led_on": "xbox.gip/led-on",
-    "xboxone_auth_done": "xbox.gip/auth-done",
-    "xboxone_rumblebegin_init": "xbox.gip/rumble-begin",
-    "xboxone_rumbleend_init": "xbox.gip/rumble-end",
-}
-DEFAULT_INITIALIZATION = [
-    "xbox.gip/power-on",
-    "xbox.gip/led-on",
-    "xbox.gip/auth-done",
-]
+REPRESENTATION_MAPPING_FLAGS = set(_XPAD_RULES["representationFlags"])
+PRESENCE_MAPPING_FLAGS = set(_XPAD_RULES["presenceFlags"])
+DANCEPAD_FLAGS = set(_XPAD_RULES["dancepadFlags"])
+INIT_PACKET_NAMES: dict[str, str] = dict(_XPAD_RULES["initPacketNames"])
+DEFAULT_INITIALIZATION: list[str] = list(_XPAD_RULES["defaultInitialization"])
 # xpad type -> protocol family and stored variant (None when transport decides it).
 SUPPORTED_TYPES: dict[str, tuple[str, str | None]] = {
-    "XTYPE_XBOX": ("xbox.xid", "gamepad"),
-    "XTYPE_XBOX360": ("xbox.xusb", "wired"),
-    "XTYPE_XBOX360W": ("xbox.xusb", "receiver"),
-    "XTYPE_XBOXONE": ("xbox.gip", None),
+    entry["xtype"]: (entry["family"], entry.get("variant"))
+    for entry in _XPAD_RULES["types"]
 }
-TYPE_FILTERS = {
-    "all": None,
-    "xbox.xid": "XTYPE_XBOX",
-    "xbox.xusb:wired": "XTYPE_XBOX360",
-    "xbox.xusb:receiver": "XTYPE_XBOX360W",
-    "xbox.gip": "XTYPE_XBOXONE",
+TYPE_FILTERS: dict[str, str | None] = {
+    entry["name"]: entry.get("xtype") for entry in _XPAD_RULES["typeFilters"]
 }
 
 

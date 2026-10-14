@@ -16,6 +16,7 @@ import urllib.error
 import urllib.request
 from typing import Any
 
+from Scripts.Catalog.catalog_rules import load_rules, parse_id, parse_identity
 from Scripts.Catalog.xpad_io import json_text, run_gh
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
@@ -32,106 +33,22 @@ PATCH_FIELDS = frozenset(
 )
 
 
-# DualSense Edge function buttons and back paddles, present beyond the DualSense
-# family defaults (Linux hid-playstation registers the Edge separately).
-DUALSENSE_EDGE_CAPABILITIES: dict[str, Any] = {
-    "present": ["paddle-left-1", "paddle-right-1", "auxiliary-1", "auxiliary-2"]
-}
-
-# (source, vendor macro, product macro, family, stored variant, quirks, capabilities)
+# Linux HID records from `Resources/CatalogRules/linux-hid.json`: (source, vendor macro,
+# product macro, family, stored variant, quirks, capabilities).
+_HID_RULES = load_rules("linux-hid.json", "LinuxHidRules", frozenset({"records"}))
 HID_RECORDS: tuple[
     tuple[str, str, str, str, str | None, list[str], dict[str, Any] | None], ...
-] = (
+] = tuple(
     (
-        "hid_sony",
-        "USB_VENDOR_ID_SONY",
-        "USB_DEVICE_ID_SONY_PS3_CONTROLLER",
-        "sony.sixaxis",
-        None,
-        [],
-        None,
-    ),
-    (
-        "hid_playstation",
-        "USB_VENDOR_ID_SONY",
-        "USB_DEVICE_ID_SONY_PS4_CONTROLLER",
-        "sony.dualshock4",
-        None,
-        [],
-        None,
-    ),
-    (
-        "hid_playstation",
-        "USB_VENDOR_ID_SONY",
-        "USB_DEVICE_ID_SONY_PS4_CONTROLLER_2",
-        "sony.dualshock4",
-        None,
-        [],
-        None,
-    ),
-    (
-        "hid_playstation",
-        "USB_VENDOR_ID_SONY",
-        "USB_DEVICE_ID_SONY_PS5_CONTROLLER",
-        "sony.dualsense",
-        None,
-        [],
-        None,
-    ),
-    (
-        "hid_playstation",
-        "USB_VENDOR_ID_SONY",
-        "USB_DEVICE_ID_SONY_PS5_CONTROLLER_2",
-        "sony.dualsense",
-        None,
-        [],
-        DUALSENSE_EDGE_CAPABILITIES,
-    ),
-    (
-        "hid_nintendo",
-        "USB_VENDOR_ID_NINTENDO",
-        "USB_DEVICE_ID_NINTENDO_PROCON",
-        "nintendo.switch1",
-        None,
-        [],
-        None,
-    ),
-    (
-        "hid_nintendo",
-        "USB_VENDOR_ID_NINTENDO",
-        "USB_DEVICE_ID_NINTENDO_JOYCONL",
-        "nintendo.switch1",
-        None,
-        ["joy-con-left"],
-        None,
-    ),
-    (
-        "hid_nintendo",
-        "USB_VENDOR_ID_NINTENDO",
-        "USB_DEVICE_ID_NINTENDO_JOYCONR",
-        "nintendo.switch1",
-        None,
-        ["joy-con-right"],
-        None,
-    ),
-    (
-        "hid_steam",
-        "USB_VENDOR_ID_VALVE",
-        "USB_DEVICE_ID_STEAM_CONTROLLER",
-        "valve.steam-controller",
-        "wired",
-        [],
-        None,
-    ),
-    (
-        "hid_steam",
-        "USB_VENDOR_ID_VALVE",
-        "USB_DEVICE_ID_STEAM_CONTROLLER_WIRELESS",
-        "valve.steam-controller",
-        "dongle",
-        [],
-        None,
-    ),
+        entry["source"],
+        entry["vendorMacro"],
+        entry["productMacro"],
+        entry["family"],
+        entry.get("variant"),
+        list(entry.get("quirks", [])),
+        entry.get("capabilities"),
+    )
+    for entry in _HID_RULES["records"]
 )
 
 
@@ -230,147 +147,99 @@ def build_hid_records(sources: dict[str, str]) -> list[dict[str, Any]]:
     return records
 
 
-SONY_VENDOR_ID = 0x054C
-MICROSOFT_VENDOR_ID = 0x045E
-NVIDIA_VENDOR_ID = 0x0955
-# Microsoft Xbox 360 product IDs (wired pad, receivers, Big Button IR, Windows
-# driver identity). Third-party XBoxOneController rows reuse them.
-MICROSOFT_XBOX_360_PRODUCT_IDS = frozenset(
-    {0x028E, 0x0291, 0x02A0, 0x02A1, 0x02A9, 0x0719}
-)
-
-# SDL controller type -> (family, stored variant). Types absent here have no
-# implemented family and are skipped. Steam rows take their variant from
-# STEAM_VARIANTS, because one SDL type covers wired pads, dongles and Bluetooth LE links.
-# Non-Sony PS3Controller rows take THIRD_PARTY_PS3_FAMILY, as SDL routes them to
-# HIDAPI_DriverPS3ThirdParty.
-SDL_FAMILIES: dict[str, tuple[str, str | None]] = {
-    "PS3Controller": ("sony.sixaxis", None),
-    "PS4Controller": ("sony.dualshock4", None),
-    "PS5Controller": ("sony.dualsense", None),
-    "SwitchProController": ("nintendo.switch1", None),
-    "SwitchJoyConLeft": ("nintendo.switch1", None),
-    "SwitchJoyConRight": ("nintendo.switch1", None),
-    "XBox360Controller": ("xbox.xusb", "wired"),
-    "XBoxOneController": ("xbox.gip", None),
-    "SteamController": ("valve.steam-controller", None),
-    "SteamControllerV2": ("valve.steam-controller", None),
-    "SteamControllerNeptune": ("valve.steam-controller", None),
-    "SwitchInputOnlyController": ("nintendo.switch1", None),
-    "SteamControllerTriton": ("valve.steam-controller", None),
-}
-THIRD_PARTY_PS3_FAMILY = "vendor.ps3-third-party"
-
-# Rows that get no record because `ProtocolClassifier` binds them by USB interface signature
-# when no record exists: XUSB (class 0xFF, subclass 0x5D) or GIP (subclass 0x47). A record
-# would pin one protocol on a pad whose firmware mode decides it. SDL's XInput types are pads
-# that switch to Xbox 360 mode on PC; their console mode has no such interface and falls to
-# `hid.descriptor`.
 INTERFACE_SIGNATURE_BUCKET = "interface-signature"
-SDL_INTERFACE_SIGNATURE_TYPES = frozenset(
-    {"XInputPS4Controller", "XInputSwitchController"}
+
+# SDL rule tables from `Resources/CatalogRules/sdl.json`. Every identity-keyed table is
+# keyed by (vendor ID, product ID).
+_SDL_RULES = load_rules(
+    "sdl.json",
+    "SdlRules",
+    frozenset(
+        {
+            "vendorIDs",
+            "microsoftXbox360ProductIDs",
+            "controllerTypeFamilies",
+            "thirdPartyPS3Family",
+            "interfaceSignatureTypes",
+            "xboxUsbTypes",
+            "identityFamilies",
+            "steamVariants",
+            "controllerTypeQuirks",
+            "switch2Identities",
+            "bluetoothOnlyIdentities",
+            "exclusions",
+        }
+    ),
 )
-# An identity SDL lists under several of these types speaks XUSB or GIP, so the interface
-# signature also resolves it.
-SDL_XBOX_USB_TYPES = SDL_INTERFACE_SIGNATURE_TYPES | {
-    "XBox360Controller",
-    "XBoxOneController",
+
+SONY_VENDOR_ID = parse_id(_SDL_RULES["vendorIDs"]["sony"])
+MICROSOFT_VENDOR_ID = parse_id(_SDL_RULES["vendorIDs"]["microsoft"])
+NVIDIA_VENDOR_ID = parse_id(_SDL_RULES["vendorIDs"]["nvidia"])
+# Microsoft Xbox 360 product IDs; third-party XBoxOneController rows reuse them.
+MICROSOFT_XBOX_360_PRODUCT_IDS = frozenset(
+    parse_id(text) for text in _SDL_RULES["microsoftXbox360ProductIDs"]
+)
+
+# SDL controller type -> (family, stored variant). Types absent here have no implemented
+# family and are skipped.
+SDL_FAMILIES: dict[str, tuple[str, str | None]] = {
+    controller_type: (entry["family"], entry.get("variant"))
+    for controller_type, entry in _SDL_RULES["controllerTypeFamilies"].items()
 }
+# Family of non-Sony PS3Controller rows.
+THIRD_PARTY_PS3_FAMILY: str = _SDL_RULES["thirdPartyPS3Family"]
+
+# SDL types whose rows get no record because `ProtocolClassifier` binds them by USB interface
+# signature. SDL_XBOX_USB_TYPES adds the types an identity may also be listed under while the
+# interface signature still resolves it.
+SDL_INTERFACE_SIGNATURE_TYPES = frozenset(_SDL_RULES["interfaceSignatureTypes"])
+SDL_XBOX_USB_TYPES = SDL_INTERFACE_SIGNATURE_TYPES | frozenset(
+    _SDL_RULES["xboxUsbTypes"]
+)
 
 # Identities whose SDL driver differs from the one their SDL type implies:
 # (identity) -> (expected SDL type, family, stored variant). Each entry must still be
 # listed with that type at the pinned commit.
 SDL_IDENTITY_FAMILIES: dict[tuple[int, int], tuple[str, str, str | None]] = {
-    # SDL `HIDAPI_DriverPS3_IsSupportedDevice` claims USB_VENDOR_SHANWAN /
-    # USB_PRODUCT_SHANWAN_DS3 for the DualShock 3 driver; its `is_shanwan` flag only skips
-    # the one-byte 0xF5 echo write, which OJD does not send.
-    (0x2563, 0x0523): ("PS3Controller", "sony.sixaxis", None),
-    # SDL `controller_list.h`: "Uses the Xbox 360 protocol, but has PS3 buttons".
-    (0x0F0D, 0x0086): ("PS3Controller", "xbox.xusb", "wired"),
-    # SDL `HIDAPI_DriverPS5_IsSupportedDevice` rejects USB_PRODUCT_BACKBONE_ONE_PS5_V2:
-    # "This product doesn't appear to use the DualSense protocol".
-    (0x358A, 0x0304): ("PS5Controller", "hid.descriptor", None),
-    # Xbox One S, Elite 2 and Series pads over Bluetooth (SDL `SDL_IsJoystickBluetoothXboxOne`)
-    # send standard HID reports, not GIP; the descriptor driver maps both firmware layouts
-    # (xpadneo `docs/descriptors/xb1s_linux.md`, `xb1s_windows.md`, `xbxs.md`).
-    (0x045E, 0x02E0): ("XBoxOneController", "hid.descriptor", None),
-    (0x045E, 0x02FD): ("XBoxOneController", "hid.descriptor", None),
-    (0x045E, 0x0B05): ("XBoxOneController", "hid.descriptor", None),
-    (0x045E, 0x0B0C): ("XBoxOneController", "hid.descriptor", None),
-    (0x045E, 0x0B13): ("XBoxOneController", "hid.descriptor", None),
-    (0x045E, 0x0B20): ("XBoxOneController", "hid.descriptor", None),
-    (0x045E, 0x0B21): ("XBoxOneController", "hid.descriptor", None),
-    (0x045E, 0x0B22): ("XBoxOneController", "hid.descriptor", None),
-    # SDL `controller_list.h`: "DragonRise Generic USB PCB"; a standard HID gamepad whose layout
-    # `HIDDescriptorDriver` recognizes.
-    (0x0079, 0x0006): ("UnknownNonSteamController", "hid.descriptor", None),
-    # SDL `HIDAPI_DriverXbox360_IsSupportedDevice`: "the NVIDIA Shield controller which doesn't
-    # talk Xbox controller protocol"; `SDL_hidapi_shield.c` drives it.
-    (0x0955, 0x7210): ("XBox360Controller", "vendor.nvidia-shield", None),
+    parse_identity(entry["identity"]): (
+        entry["sdlType"],
+        entry["family"],
+        entry.get("variant"),
+    )
+    for entry in _SDL_RULES["identityFamilies"]
 }
 
-# Stored variant of each Valve Steam identity, from the per-row comments in SDL
-# `controller_list.h` ("wired", "Bluetooth", "BLE", "Dongle") and SDL `IsDongle` /
-# `IsProteusDongle`. A Steam row missing here fails generation instead of guessing.
+# Stored variant of each Valve Steam identity. A Steam row missing here fails generation
+# instead of guessing.
 STEAM_VARIANTS: dict[tuple[int, int], str] = {
-    (0x28DE, 0x1101): "wired",  # Legacy Steam Controller (CHELL)
-    (0x28DE, 0x1102): "wired",  # wired Steam Controller (D0G)
-    (0x28DE, 0x1105): "bluetooth-le",  # Bluetooth Steam Controller (D0G)
-    (0x28DE, 0x1106): "bluetooth-le",  # Bluetooth Steam Controller (D0G)
-    (0x28DE, 0x1142): "dongle",  # wireless Steam Controller
-    (0x28DE, 0x1201): "wired",  # wired Steam Controller (HEADCRAB)
-    (0x28DE, 0x1202): "bluetooth-le",  # Bluetooth Steam Controller (HEADCRAB)
-    (0x28DE, 0x1205): "wired",  # Steam Deck built-in controller
-    (0x28DE, 0x1302): "wired",  # Steam Triton Controller
-    (0x28DE, 0x1303): "bluetooth-le",  # Steam Triton Controller (BLE)
-    (0x28DE, 0x1304): "dongle",  # Steam Proteus Dongle
-    (0x28DE, 0x1305): "dongle",  # Steam Nereid Dongle
+    parse_identity(entry["identity"]): entry["variant"]
+    for entry in _SDL_RULES["steamVariants"]
 }
 
-# SDL controller type -> quirks its rows carry. SwitchInputOnlyController pads send one fixed HID
-# report and take no Switch subcommands; SteamControllerTriton selects the Triton driver and
-# SteamControllerNeptune the Steam Deck driver. The Joy-Con types select the Joy-Con side.
+# SDL controller type -> quirks its rows carry.
 SDL_QUIRKS: dict[str, list[str]] = {
-    "SwitchJoyConLeft": ["joy-con-left"],
-    "SwitchJoyConRight": ["joy-con-right"],
-    "SwitchInputOnlyController": ["input-only"],
-    "SteamControllerTriton": ["triton"],
-    "SteamControllerNeptune": ["neptune"],
+    controller_type: list(quirks)
+    for controller_type, quirks in _SDL_RULES["controllerTypeQuirks"].items()
 }
 
-# Nintendo Switch 2 identities, from the SDL `USB_PRODUCT_NINTENDO_SWITCH2_*` IDs that
-# `SDL_hidapi_switch2.c` claims. SDL lists them under the Switch 1 types, so their rows also
-# carry the Switch 2 quirk before any Joy-Con side quirk.
-SWITCH_2_IDENTITIES = frozenset({(0x057E, 0x2066), (0x057E, 0x2067), (0x057E, 0x2069)})
+# Nintendo Switch 2 identities; their rows also carry the Switch 2 quirk before any Joy-Con
+# side quirk.
+SWITCH_2_IDENTITIES = frozenset(
+    parse_identity(text) for text in _SDL_RULES["switch2Identities"]
+)
 
 # Identities that get no record: (identity) -> (expected SDL type, skip reason). Each entry
 # must still be listed with that type at the pinned commit and must not already be catalogued.
-# `virtual-identity` rows name no USB device a host enumerates (SDL comments at the pinned
-# commit): Apple's generic MFi entries for iOS/tvOS, the Joy-Con pair SDL assembles from two
-# Joy-Cons (OJD pairs the two Joy-Con records itself), Steam's virtual gamepad and NVIDIA's
-# streaming controller (SDL `HIDAPI_IsDeviceTypePresent` special-cases 0955:b400). Windows
-# driver identities are the IDs the Windows XUSB and XBOXGIP drivers report. The
-# interface-signature rows have no protocol evidence beyond SDL's type, so no record pins one;
-# the XUSB or GIP interface signature binds them, and otherwise the HID descriptor contract.
+# A reason of `interface-signature` means the XUSB or GIP interface signature binds the pad.
 SDL_EXCLUSIONS: dict[tuple[int, int], tuple[str, str]] = {
-    (0x045E, 0x02A0): ("XBox360Controller", INTERFACE_SIGNATURE_BUCKET),
-    (0x045E, 0x02A1): ("XBox360Controller", "windows-driver-identity"),
-    (0x045E, 0x02FF): ("XBoxOneController", "windows-driver-identity"),
-    (0x045E, 0x0867): ("XBoxOneController", INTERFACE_SIGNATURE_BUCKET),
-    (0x057E, 0x2008): ("SwitchJoyConPair", "virtual-identity"),
-    (0x057E, 0x2068): ("SwitchJoyConPair", "virtual-identity"),
-    (0x05AC, 0x0001): ("AppleController", "virtual-identity"),
-    (0x05AC, 0x0002): ("AppleController", "virtual-identity"),
-    (0x0955, 0xB400): ("XBox360Controller", "virtual-identity"),
-    (0x1038, 0xB360): ("XBox360Controller", INTERFACE_SIGNATURE_BUCKET),
-    (0x28DE, 0x11FF): ("UnknownNonSteamController", "virtual-identity"),
+    parse_identity(entry["identity"]): (entry["sdlType"], entry["reason"])
+    for entry in _SDL_RULES["exclusions"]
 }
 
-# Switch pads whose USB link only charges them: SDL `HIDAPI_DriverSwitch_IsSupportedDevice`
-# ("HORI Wireless Switch Pad ... doesn't actually support communication over USB") and its
-# `controller_list.h` PDP row ("USB is for charging only"); Linux `hid-nintendo.c` binds the
-# HORI pad only as HID_BLUETOOTH_DEVICE.
-BLUETOOTH_ONLY_IDENTITIES = frozenset({(0x0E6F, 0x0186), (0x0F0D, 0x00F6)})
+# Switch pads whose USB link only charges them.
+BLUETOOTH_ONLY_IDENTITIES = frozenset(
+    parse_identity(text) for text in _SDL_RULES["bluetoothOnlyIdentities"]
+)
 
 SDL_ARRAY_PATTERN = re.compile(
     r"arrControllers\[\]\s*=\s*\{(?P<body>.*?)^\};", re.DOTALL | re.MULTILINE
