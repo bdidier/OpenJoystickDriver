@@ -50,7 +50,7 @@ Harness notes from the handoff:
   - Nit: the ja-JP `cli.mod.install.dry_run` and `cli.mod.remove.dry_run` read "will" instead of "would"; for P7.
 - P9 reviewer nits: a suspend during `await retireOutputAfterLivenessLoss()` can let held input replay after resume (`DevicePipeline+InputEvents.swift:25`; fix: re-check `sessionState == .active` after the await); the new `visible.touch` comparison (`:90`) has no test.
 - P11 reviewer findings, none blocking:
-  - Should-fix: toggling the ownership of a suspended controller ends its suspension. `reevaluateOwnership` sends a removed event, and `tearDownHIDDevice` clears `suspendedControllerIdentities` (`DeviceManager+HIDTeardown.swift:61`), although the `reloadControllerRecords` comment says the suspension is kept. The fix belongs in `DeviceManager+HIDTeardown.swift`, outside P11's Owns.
+  - Should-fix: toggling the ownership of a suspended controller ends its suspension. `reevaluateOwnership` sends a removed event, and `tearDownHIDDevice` clears `suspendedControllerIdentities` (`DeviceManager+HIDTeardown.swift:61`), although the `reloadControllerRecords` comment says the suspension is kept. The fix belongs in `DeviceManager+HIDTeardown.swift`, outside P11's Owns. Resolved by P16 (16.2).
   - Should-fix, checked and not a defect: `previous` in `ControllerOwnershipRequests.swift` reads `records.records`, which already holds package records (`ControllerRecordSet.swift:234`).
   - Nit: concurrent toggles from the CLI and the app are last-writer-wins; each write is atomic.
 - P11 decisions and follow-ups:
@@ -60,16 +60,16 @@ Harness notes from the handoff:
   - The app keys `controllers.ownership.*` stay unused until P12; P7 reviews the new ownership translations.
   - Follow-up: `ojd record install` and `record validate` (`RecordFileCommands.swift:44`) still validate a patch without a package base.
   - P13 has an empty "Owns" list; it was run without an agent because it changes no file.
-  - Whether P15 needs an update of `docs/testing/xbox-one-02d1.md` "Result"; P6 or the maintainer owns that page.
-  - What to do with the left-over worktrees `.claude/worktrees/agent-a6ec4211cf41e0912` and `agent-adfb7ffcf65ee534f` (on `origin/main`, with deletions under `.agents/skills/` that are not from this change).
+  - Whether P15 needs an update of `docs/testing/xbox-one-02d1.md` "Result"; resolved by P16 (16.5).
+  - The left-over worktrees `.claude/worktrees/agent-a6ec4211cf41e0912` and `agent-adfb7ffcf65ee534f` (on `origin/main`, with deletions under `.agents/skills/` that are not from this change) and their branches were removed on 2026-10-14; neither had a commit ahead of `feat/0.6.0-alpha.1`.
 - P5 reviewer nits: the sample-package test fixture covers 2 of 8 buttons and no negative axes; the `#filePath` path chains repeat.
 - P6: approved by the fifth reviewer. After P12, `8fd7bdba` named the app picker in the CHANGELOG and `Controller-Records.md` and ticked 12.5; a sixth reviewer approved, and `05199978` took its should-fix (the picker shows for any record that gives a model to OJD). The maintainer chose to merge P6 at the end (2026-10-14); their uncommitted `wiki/Controller-Records.md` edit was saved as a patch, the file restored, P6 merged at `53acb754`, and the patch applied again. P6 found that OJD does not report a package profile that it ignores because of a clash, and the wiki says so.
-- `docs/testing/xbox-one-02d1.md` "Result" still says the fix is outside this package; no group owns the page.
+- `docs/testing/xbox-one-02d1.md` "Result" now says the parent-device fix landed in P15 and is not verified on hardware (P16, 16.5).
 - P7 reviewer nits, not taken: `error.E2023` translates "native and virtual" as prose; hi-IN ownership `dry_run` could use the passive; zh-TW/zh-HK 發佈 vs 發布; ar-SA مثبتة without shadda. Rejected: zh-TW/zh-HK 虛擬遊戲控制器 is the files' own term (33 uses); the vi-VN `cli.profile.*.examples` "hồ sơ" is outside P7's keys.
-- The left-over worktree `.claude/worktrees/agent-a7460c9a8d6f138cc` is also undecided.
+- The left-over worktree `.claude/worktrees/agent-a7460c9a8d6f138cc` and its branch were removed on 2026-10-14; it had no commit ahead of `feat/0.6.0-alpha.1`.
 - P12 reviewer findings, none blocking:
-  - Should-fix: after a toggle the app refreshes the inventory once, right after the RPC returns, while the record watcher re-admits the controller later; the picker can show the old value until the next refresh. The maintainer's manual check confirms whether it settles; the fix would be a short re-poll.
-  - Should-fix: every `ControllerOwnershipFailure` shows the `error.E2023` text, which names raw USB and native support; `noRecord`, `invalidRecord`, and `persistenceFailed` append the service's detail instead of a text of their own.
+  - Should-fix: after a toggle the app refreshes the inventory once, right after the RPC returns, while the record watcher re-admits the controller later; the picker can show the old value until the next refresh. The maintainer's manual check confirms whether it settles; the fix would be a short re-poll. Resolved by P16 (16.3): the status equality ignored `recordOwnership`, and the app now polls up to 2 seconds.
+  - Should-fix: every `ControllerOwnershipFailure` shows the `error.E2023` text, which names raw USB and native support; `noRecord`, `invalidRecord`, and `persistenceFailed` append the service's detail instead of a text of their own. Resolved by P16 (16.4).
   - Accepted: `GatewayStub` gained a call recorder and a failure knob beside the method, mirroring the override stub; the protocol default of `setControllerOwnership` returns `.noRecord` for test conformers, like the suspend/resume defaults.
 - P12 decision: its Owns gained three Kit files and a Kit test (2026-10-14), so the device payload carries `recordOwnership`, the effective layered ownership, decoded as `.macOS` when absent.
 - P8 report (2026-10-14, commit `5b43e065`, worktree `.claude/worktrees/spec-P8`):
@@ -77,6 +77,7 @@ Harness notes from the handoff:
   - Each command of the `CLAUDE.md` Checks list exited 0, run one at a time, and so did `./Scripts/ojd test parsers-macos14`: `swift test` ran 2555 tests in 352 suites, the repository unittest ran 180 tests (1 skipped), markdownlint linted 110 files, swiftlint linted 1083 files.
   - `./Scripts/ojd check schemas` exits 0 with the Xcode toolchain and exits 1 with the user-installed 6.3.3 toolchain (`~/Library/Developer/Toolchains/swift-6.3.3-RELEASE.xctoolchain`, through swiftly) first on `PATH`: compiling `Package.swift` against the CommandLineTools SDK fails with `unknown argument: '-target-arch-variant'`.
   - The `verify` command exits 255: `just check` runs `./Scripts/ojd check tools`, which is not in the Checks list, and xmake picks `/Applications/Xcode-27.0.0.app` (SDK 27.0) instead of `DEVELOPER_DIR`; compiling `Tools/SDLGamepadProbe/main.m` fails with `/opt/homebrew/include/SDL3/SDL_platform_defines.h:146:10: fatal error: 'AvailabilityMacros.h' file not found`. The same command fails the same way on `main`, so no package of this change owns it (owner: environment); it looks like the machine's Xcode selection for xmake, not tested with xmake forced to Xcode 26.6. The steps of `just check` after it passed when run alone: `check driverkit`, `test parsers-macos14`, and `swift test --no-parallel` (2555 tests). 15.5 stays open until the maintainer accepts this or fixes the xmake Xcode selection.
+  - Root cause (P16, 16.1): xmake's `clang` toolchain got no `SDKROOT`, so it fell back to another SDK; it was not the Xcode 27 selection. `ojd check tools` now sources `Scripts/Platform/environment.sh`. On 2026-10-14 the `verify` command exited 0 on `b325ff96` in a clean worktree (`swift test` ran 2563 tests). In the main checkout it exits 1 at markdownlint, because the maintainer's uncommitted `.markdownlint.jsonc` sets MD029 to `ordered` and `wiki/Writing-Controller-Mods.md` lines 99-101 still use `1.`.
 
 ## 1. P1: B2 review fixes and requires at runtime
 
@@ -744,7 +745,7 @@ Boundaries:
 
 ## 15. P8: Full check list
 
-- dotclaude status: `in review` (checks run at `5b43e065`; 15.5 open: `just check` stops at `ojd check tools`, owner: environment; approved; merged at `856a5cdf`)
+- dotclaude status: `done` (checks run at `5b43e065`; approved; merged at `856a5cdf`; 15.5 verified at `b325ff96` after P16 fixed `ojd check tools`)
 - Wave: 6; deps: P1 (group 1), P2 (group 6), P3 (group 9), P4 (group 2), P5 (group 10), P6 (group 12), P7 (group 13), P9 (group 3), P10 (group 4), P11 (group 11), P12 (group 14), P13 (group 7), P14 (group 5); satisfies: REQ-16; agent: `implementer`
 - Branch: `spec/0.6.0-alpha.1-P8`; worktree: `.claude/worktrees/spec-P8`
 - Owns: no file
@@ -764,7 +765,7 @@ Context:
 - [x] 15.2 Run each command of the `CLAUDE.md` Checks list one at a time, then `./Scripts/ojd test parsers-macos14`.
 - [x] 15.3 Report each failure with its command and first error. Do not fix code; a failure goes back to the package that owns the file.
 - [x] 15.4 If `./Scripts/ojd check schemas` fails only with the user toolchain first on `PATH`, record both runs.
-- [ ] 15.5 Verify: the `verify` command above exits 0. Acceptance: Each command exits 0, or the report lists each failure with its owner package.
+- [x] 15.5 Verify: the `verify` command above exits 0. Acceptance: Each command exits 0, or the report lists each failure with its owner package.
 - [x] 15.6 Review: a fresh reviewer agent approves the diff
 - [x] 15.7 Merge `spec/0.6.0-alpha.1-P8` into `feat/0.6.0-alpha.1`
 
@@ -779,7 +780,7 @@ Boundaries:
 
 ## 16. P16: Open-item fixes
 
-- dotclaude status: `planned`
+- dotclaude status: `done` (verified; approved; merged at `b325ff96`)
 - Wave: 7; deps: P8 (group 15), P11 (group 11), P12 (group 14), P15 (group 8); satisfies: the open items of P8, P11, P12, and P15; agent: main session
 - Branch: `spec/0.6.0-alpha.1-P16`; worktree: `.claude/worktrees/spec-P16`
 - Owns:
@@ -810,7 +811,7 @@ Resolve the open items that the maintainer asked to fix (2026-10-14).
 - [x] 16.5 `docs/testing/xbox-one-02d1.md` "Result" says the parent-device fix landed in P15 and is not verified on hardware.
 - [x] 16.6 Verify: every check above exits 0.
 - [x] 16.7 Review: a fresh reviewer agent approves the diff. Verdict `APPROVE` (2026-10-14) with one non-blocking finding (a suspension re-added when `stop()` runs during the teardown await), fixed in 77b58203
-- [ ] 16.8 Merge `spec/0.6.0-alpha.1-P16` into `feat/0.6.0-alpha.1`
+- [x] 16.8 Merge `spec/0.6.0-alpha.1-P16` into `feat/0.6.0-alpha.1`
 
 ## Hardware checks (maintainer)
 
@@ -818,7 +819,7 @@ These need physical controllers and are left to the maintainer at the end:
 
 - P9: stick stutter in a GameController game, CrossOver, and a browser; if needed, timestamps at dispatch and at `IOHIDUserDeviceHandleReport` with a game open.
 - P10 and P15: `045E:02D1` is listed on the DEXT route with the XboxUSBDevice extension active (risk H1 in `design.md`).
-- P11 and P12: toggle a connected 8BitDo `2DC8:301B` to virtual, run `ojd --headless test`, and see the virtual gamepad in a game.
+- P11 and P12: toggle a connected 8BitDo `2DC8:301B` to virtual, run `ojd --headless test`, and see the virtual gamepad in a game. In the app, switch "Served by" back to Native: the picker stays and settles on the new value. Suspend the controller, toggle it, and see that it stays suspended (P16).
 - P13: `./Scripts/ojd signing doctor` outside the sandbox prints `[OK] host profile grants user-client access to com.openjoystickdriver.XboxUSBDevice` and exits 0.
 
 ## Workflow follow-up
