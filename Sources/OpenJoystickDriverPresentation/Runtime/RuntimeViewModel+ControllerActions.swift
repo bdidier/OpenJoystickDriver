@@ -133,7 +133,7 @@ extension RuntimeViewModel {
     var accepted = false
     await performControllerAction(device) {
       let result = try await gateway.setControllerOwnership(
-        identity: ControllerIdentity(vendorID: device.vendorID, productID: device.productID),
+        model: ControllerModelID(vendorID: device.vendorID, productID: device.productID),
         ownership: ownership
       )
       guard let failure = result.failure else {

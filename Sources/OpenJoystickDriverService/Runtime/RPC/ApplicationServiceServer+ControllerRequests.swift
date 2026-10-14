@@ -47,9 +47,9 @@ extension ApplicationServiceServer {
     guard let vendor = UInt16(exactly: vendorID), let product = UInt16(exactly: productID) else {
       return nil
     }
-    let identifier = DeviceIdentifier(vendorID: vendor, productID: product)
+    let model = ControllerModelID(vendorID: vendor, productID: product)
     let state = await deviceManager.controllerState(
-      for: identifier,
+      for: model,
       runtimeIdentifier: runtimeIdentifier
     )
     return try? JSONEncoder().encode(state)
@@ -64,7 +64,7 @@ extension ApplicationServiceServer {
   ) async -> Data? {
     guard let vendor = UInt16(exactly: vendorID), let product = UInt16(exactly: productID),
       let state = await automaticUserSpaceDispatcher()?.virtualOutputState(
-        matching: DeviceIdentifier(vendorID: vendor, productID: product),
+        matching: ControllerModelID(vendorID: vendor, productID: product),
         runtimeIdentifier: runtimeIdentifier
       )
     else { return nil }
@@ -77,8 +77,8 @@ extension ApplicationServiceServer {
     guard let vendor = UInt16(exactly: vendorID), let product = UInt16(exactly: productID) else {
       return Data()
     }
-    let identifier = DeviceIdentifier(vendorID: vendor, productID: product)
-    let log = await deviceManager.packetLog(for: identifier, runtimeIdentifier: runtimeIdentifier)
+    let model = ControllerModelID(vendorID: vendor, productID: product)
+    let log = await deviceManager.packetLog(for: model, runtimeIdentifier: runtimeIdentifier)
     do { return try JSONEncoder().encode(log) } catch {
       print("[ApplicationServiceServer] getPacketLog encode error: \(error)")
       return Data()
@@ -95,7 +95,7 @@ extension ApplicationServiceServer {
   ) async -> ControllerOutputResult {
     await deviceManager.sendControllerOutput(
       command,
-      for: DeviceIdentifier(vendorID: vendorID, productID: productID),
+      for: ControllerModelID(vendorID: vendorID, productID: productID),
       runtimeIdentifier: runtimeIdentifier
     )
   }

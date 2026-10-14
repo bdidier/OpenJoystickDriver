@@ -114,11 +114,11 @@ extension ModPackageStore {
       let record = try content(url, "Controllers/\(file)") {
         try ControllerRecordSet.validate($0, file: url, layer: .package).record
       }
-      guard file == ControllerRecordSet.fileName(for: record.identity) else {
+      guard file == ControllerRecordSet.fileName(for: record.model) else {
         throw ModPackageError(
           .invalidPackageContent,
           "Controllers/\(file): the file name must be "
-            + ControllerRecordSet.fileName(for: record.identity)
+            + ControllerRecordSet.fileName(for: record.model)
         )
       }
       claims.records.insert(file)

@@ -3,7 +3,7 @@ import OpenJoystickDriverKit
 
 /// The USB DualShock 4 driver the registry binds for the catalog record of `productID`.
 private func dualShock4Driver(vendorID: UInt16 = 0x054C, _ productID: UInt16) -> DualShock4Driver {
-  let quirks = catalogRecord(DeviceIdentifier(vendorID: vendorID, productID: productID)).quirks
+  let quirks = catalogRecord(ControllerModelID(vendorID: vendorID, productID: productID)).quirks
   return DualShock4Driver(
     usesFactoryCalibration: quirks.contains(.factoryCalibration),
     model: DualShock4Model(quirks: quirks)
@@ -12,7 +12,7 @@ private func dualShock4Driver(vendorID: UInt16 = 0x054C, _ productID: UInt16) ->
 
 /// The SHIELD driver the registry binds for the catalog record of `productID`.
 private func shieldDriver(_ productID: UInt16) -> NVIDIAShieldDriver {
-  let quirks = catalogRecord(DeviceIdentifier(vendorID: 0x0955, productID: productID)).quirks
+  let quirks = catalogRecord(ControllerModelID(vendorID: 0x0955, productID: productID)).quirks
   return NVIDIAShieldDriver(isShield2015: quirks.contains(.shield2015))
 }
 
@@ -112,7 +112,7 @@ func runShieldRecordQuirkChecks() throws {
 /// The 11C1:5600 record carries the stick deadzone the output dispatcher applies.
 func runStickDeadzoneTuningCheck() {
   require(
-    catalogRecord(DeviceIdentifier(vendorID: 0x11C1, productID: 0x5600)).tuning.stickDeadzone
+    catalogRecord(ControllerModelID(vendorID: 0x11C1, productID: 0x5600)).tuning.stickDeadzone
       == 0.02,
     "11C1:5600 should tune a 0.02 stick deadzone"
   )

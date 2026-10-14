@@ -126,7 +126,7 @@ struct ControllerShowCommand: AsyncParsableCommand {
       }
       let device = try selector.resolve(in: devices)
       let record = RecordStore.load().records[
-        ControllerIdentity(vendorID: device.vendorID, productID: device.productID)
+        ControllerModelID(vendorID: device.vendorID, productID: device.productID)
       ]
       let sharesModel =
         devices.filter { $0.vendorID == device.vendorID && $0.productID == device.productID }

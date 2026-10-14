@@ -183,14 +183,14 @@ extension ApplicationServiceClient {
   /// Sets who serves the controller model, macOS or OJD, in the user's record for it; the service
   /// applies it to every connected controller of the model without a replug.
   public func setControllerOwnership(
-    identity: ControllerIdentity,
+    model: ControllerModelID,
     ownership: ControllerOwnership
   ) async throws -> ControllerOwnershipResult {
     try await call(
       .setControllerOwnership,
       LocalServiceRPCControllerOwnershipArguments(
-        vendorID: Int(identity.vendorID),
-        productID: Int(identity.productID),
+        vendorID: Int(model.vendorID),
+        productID: Int(model.productID),
         ownership: ownership
       )
     )

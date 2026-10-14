@@ -9,7 +9,7 @@ import Foundation
 public enum ControllerOwnershipWriter {
   /// One planned change, before ``write(_:)`` stores it.
   public struct Change: Sendable {
-    public let identity: ControllerIdentity
+    public let model: ControllerModelID
     public let ownership: ControllerOwnership
     /// The effective ownership before the change; `macos` when no layer sets it.
     public let previous: ControllerOwnership
@@ -33,15 +33,15 @@ public enum ControllerOwnershipWriter {
     case invalidResult(String)
   }
 
-  /// The change that sets `ownership` for `identity` in `directory`. `records` is the loaded
+  /// The change that sets `ownership` for `model` in `directory`. `records` is the loaded
   /// record set, which gives the effective ownership before the change.
   public static func change(
-    _ identity: ControllerIdentity,
+    _ model: ControllerModelID,
     to ownership: ControllerOwnership,
     records: ControllerRecordSet,
     directory: URL = ControllerRecordSet.userDirectory
   ) throws(Failure) -> Change {
-    let file = directory.appendingPathComponent(ControllerRecordSet.fileName(for: identity))
+    let file = directory.appendingPathComponent(ControllerRecordSet.fileName(for: model))
     let packages = ControllerRecordSet.packageRecords(
       in: ModPackageStore.directory(besides: directory)
     ).records
@@ -50,10 +50,10 @@ public enum ControllerOwnershipWriter {
     if let existing {
       document = try updated(existing, file: file, ownership: ownership, packages: packages)
     } else {
-      guard packages[identity] != nil else { throw .noRecord }
+      guard packages[model] != nil else { throw .noRecord }
       document = [
         "$schema": ControllerRecordSet.overrideSchemaID, "operation": "patch",
-        "vendorID": Int(identity.vendorID), "productID": Int(identity.productID),
+        "vendorID": Int(model.vendorID), "productID": Int(model.productID),
         "set": ["ownership": ownership.rawValue],
       ]
     }
@@ -66,9 +66,9 @@ public enum ControllerOwnershipWriter {
       _ = try ControllerRecordSet.validate(data, file: file, packages: packages)
     } catch { throw .invalidResult(ControllerRecordSet.problemDescription(error)) }
     return Change(
-      identity: identity,
+      model: model,
       ownership: ownership,
-      previous: (records.records[identity] ?? packages[identity])?.profile.ownership ?? .macOS,
+      previous: (records.records[model] ?? packages[model])?.profile.ownership ?? .macOS,
       file: file,
       created: existing == nil,
       data: data
@@ -89,7 +89,7 @@ public enum ControllerOwnershipWriter {
     _ data: Data,
     file: URL,
     ownership: ControllerOwnership,
-    packages: [ControllerIdentity: ControllerRecord]
+    packages: [ControllerModelID: ControllerRecord]
   ) throws(Failure) -> [String: Any] {
     let operation: ControllerRecordOperation
     do {

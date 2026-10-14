@@ -33,45 +33,38 @@ public final class HIDDeviceStream: @unchecked Sendable {
   let eventAdapter = SynchronizedPhysicalHIDBackendEventAdapter()
   /// Models whose family declares HID protocol roles; each of their devices disconnects on its
   /// own removal instead of when its location empties. Set by each `deviceEvents()`.
-  var roleModels: Set<PhysicalHIDIdentity> = []
-  private let additionalProfileIdentifiers: @Sendable () -> [DeviceIdentifier]
-  private let roleProfileIdentifiers: @Sendable () -> [DeviceIdentifier]
+  var roleModels: Set<ControllerModelID> = []
+  private let additionalProfileModels: @Sendable () -> [ControllerModelID]
+  private let roleProfileModels: @Sendable () -> [ControllerModelID]
 
   /// Creates a new stream that matches HID gamepad devices.
   ///
-  /// The identifier providers are read by each `deviceEvents()`, so a stream started again after
+  /// The model providers are read by each `deviceEvents()`, so a stream started again after
   /// the controller records change matches the new records.
   @preconcurrency
   public init(
-    additionalProfileIdentifiers: @escaping @Sendable () -> [DeviceIdentifier] = { [] },
-    roleProfileIdentifiers: @escaping @Sendable () -> [DeviceIdentifier] = { [] }
+    additionalProfileModels: @escaping @Sendable () -> [ControllerModelID] = { [] },
+    roleProfileModels: @escaping @Sendable () -> [ControllerModelID] = { [] }
   ) {
-    self.additionalProfileIdentifiers = additionalProfileIdentifiers
-    self.roleProfileIdentifiers = roleProfileIdentifiers
+    self.additionalProfileModels = additionalProfileModels
+    self.roleProfileModels = roleProfileModels
   }
 
   /// Reads the current models into ``roleModels`` and returns the matching to apply. Applied by
   /// each `deviceEvents()`, not at init: setting matching makes IOKit create a device object, and
   /// load its plug-in, for every attached match.
   func currentDeviceMatching() -> CFArray {
-    roleModels = Set(
-      roleProfileIdentifiers().compactMap {
-        PhysicalHIDIdentity(
-          vendorID: UInt64($0.controllerIdentity.vendorID),
-          productID: UInt64($0.controllerIdentity.productID)
-        )
-      }
-    )
+    roleModels = Set(roleProfileModels())
     var matches: [[String: Any]] = [
       [
         kIOHIDDeviceUsagePageKey: kHIDPage_GenericDesktop,
         kIOHIDDeviceUsageKey: kHIDUsage_GD_GamePad,
       ]
     ]
-    matches += additionalProfileIdentifiers().map {
+    matches += additionalProfileModels().map {
       [
-        kIOHIDVendorIDKey: Int($0.controllerIdentity.vendorID),
-        kIOHIDProductIDKey: Int($0.controllerIdentity.productID),
+        kIOHIDVendorIDKey: Int($0.vendorID),
+        kIOHIDProductIDKey: Int($0.productID),
       ]
     }
     return matches.map { AppleGameControllerSyntheticHID.ioHIDMatchingExcludingSynthetics($0) }

@@ -67,11 +67,11 @@ struct RecordDraftCommand: AsyncParsableCommand {
           )
         }
         let reports = try await capture(client, device)
-        let identity = ControllerIdentity(vendorID: device.vendorID, productID: device.productID)
+        let model = ControllerModelID(vendorID: device.vendorID, productID: device.productID)
         guard
           let draft = ControllerRecordDraft(
-            identity: identity,
-            bundled: ControllerRecordSet.bundled.records[identity] != nil,
+            model: model,
+            bundled: ControllerRecordSet.bundled.records[model] != nil,
             descriptor: Self.descriptor(Int(device.vendorID), Int(device.productID)),
             reports: reports
           )

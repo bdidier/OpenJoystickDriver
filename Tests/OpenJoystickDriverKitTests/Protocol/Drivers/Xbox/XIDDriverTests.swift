@@ -42,7 +42,7 @@ struct XIDDriverTests {
   func rumbleUsesXIDBigEndianFullRangeMotorsAndCatalogEndpoint() throws {
     let parser = XIDDriver(outEndpoint: 0x07)
     let catalogParser = try #require(
-      try catalogParser(DeviceIdentifier(vendorID: 0x045E, productID: 0x0202)) as? XIDDriver
+      try catalogParser(ControllerModelID(vendorID: 0x045E, productID: 0x0202)) as? XIDDriver
     )
 
     #expect(parser.outputCapabilities.rumbleMotors == [.leftMain, .rightMain])

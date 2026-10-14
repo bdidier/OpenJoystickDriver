@@ -26,7 +26,7 @@ struct DriverLifecycleCharacterizationTests {
   static let receivedAt: UInt64 = 1_000_000_000
 
   struct Subject: Sendable {
-    let identifier: DeviceIdentifier
+    let model: ControllerModelID
     let host: PhysicalTransport
     let protocolID: PhysicalProtocolID
     let variant: PhysicalProtocolVariantID?
@@ -42,17 +42,17 @@ struct DriverLifecycleCharacterizationTests {
 
   /// Builds the subject's driver the way discovery does: classify, then `makeDriver`.
   func driver(_ subject: Subject) throws -> any PhysicalProtocolDriver {
-    try catalogParser(subject.identifier, host: subject.host, registry: Self.registry)
+    try catalogParser(subject.model, host: subject.host, registry: Self.registry)
   }
 
   /// The subject's driver bound over the IOHID `transport` property, or nil when classification
   /// rejects that transport.
   func driver(_ subject: Subject, transport: String?) throws -> (any PhysicalProtocolDriver)? {
-    let record = try #require(Self.registry.record(for: subject.identifier))
+    let record = try #require(Self.registry.record(for: subject.model))
     let host = HIDDeviceStream.hostTransport(forTransportProperty: transport)
     let device = PhysicalDevice(
-      vendorID: subject.identifier.controllerIdentity.vendorID,
-      productID: subject.identifier.controllerIdentity.productID,
+      vendorID: subject.model.vendorID,
+      productID: subject.model.productID,
       interfaces: record.usesRawUSB ? nil : [gamepadHIDInterface(host: host)]
     )
     let backend: DeviceAccessBackend = record.usesRawUSB ? .ioUSBHost : .ioHID
@@ -61,7 +61,7 @@ struct DriverLifecycleCharacterizationTests {
     }
     return try Self.registry.makeDriver(
       for: binding,
-      identifier: subject.identifier,
+      model: subject.model,
       claimed: record.usesRawUSB ? USBTransportResolution(profile: record.transportProfile) : nil
     ).get()
   }

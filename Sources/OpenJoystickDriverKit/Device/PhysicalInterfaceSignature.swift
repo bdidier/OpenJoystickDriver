@@ -51,20 +51,6 @@ public enum DeviceAccessBackend: String, Codable, Equatable, Sendable {
   }
 }
 
-/// The required VID/PID pair after validating values reported by a HID API.
-struct PhysicalHIDIdentity: Hashable, Sendable {
-  let vendorID: UInt16
-  let productID: UInt16
-
-  init?(vendorID: UInt64?, productID: UInt64?) {
-    guard let vendorID, let productID, let representableVendorID = UInt16(exactly: vendorID),
-      let representableProductID = UInt16(exactly: productID)
-    else { return nil }
-    self.vendorID = representableVendorID
-    self.productID = representableProductID
-  }
-}
-
 public enum USBEndpointTransferType: String, Equatable, Sendable {
   case control
   case isochronous

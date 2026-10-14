@@ -34,10 +34,7 @@ extension ControllerRecord {
         protocolID: profile.physicalProtocolID,
         variant: variant,
         record: profile,
-        identifier: DeviceIdentifier(
-          vendorID: identity.vendorID,
-          productID: identity.productID
-        ),
+        model: model,
         transportProfile: profile.transportProfile
       )
     else { throw ControllerRecordReplayError.noParser }

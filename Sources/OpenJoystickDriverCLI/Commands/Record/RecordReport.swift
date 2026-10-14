@@ -54,16 +54,10 @@ enum RecordStore {
 }
 
 /// The `VVVV:PPPP` operand of `record show` and `record remove`.
-struct RecordIdentity: ExpressibleByArgument, Equatable, Sendable {
-  let identity: ControllerIdentity
-
-  init?(argument: String) {
+extension ControllerModelID: ExpressibleByArgument {
+  public init?(argument: String) {
     guard let (vendorID, productID) = ControllerSelection.model(argument) else { return nil }
-    identity = ControllerIdentity(vendorID: vendorID, productID: productID)
-  }
-
-  var text: String {
-    deviceIdentity(vendorID: Int(identity.vendorID), productID: Int(identity.productID))
+    self.init(vendorID: vendorID, productID: productID)
   }
 }
 
@@ -84,8 +78,8 @@ enum RecordUSBExtension: String, Encodable, Equatable {
   init?(_ record: ControllerRecord) {
     guard record.usesRawUSB else { return nil }
     let claimed =
-      record.identity.vendorID == USBDriverKitExtensionConfiguration.microsoftVendorID
-      && USBDriverKitExtensionConfiguration.microsoftProductIDs.contains(record.identity.productID)
+      record.model.vendorID == USBDriverKitExtensionConfiguration.microsoftVendorID
+      && USBDriverKitExtensionConfiguration.microsoftProductIDs.contains(record.model.productID)
     self = claimed ? .claims : .doesNotClaim
   }
 }
@@ -124,11 +118,11 @@ struct RecordEntry: Encodable, Equatable {
 
   init(_ record: ControllerRecord) {
     identity = deviceIdentity(
-      vendorID: Int(record.identity.vendorID),
-      productID: Int(record.identity.productID)
+      vendorID: Int(record.model.vendorID),
+      productID: Int(record.model.productID)
     )
-    vendorID = Int(record.identity.vendorID)
-    productID = Int(record.identity.productID)
+    vendorID = Int(record.model.vendorID)
+    productID = Int(record.model.productID)
     family = record.family
     layer = record.layer.rawValue
     file = record.file?.path

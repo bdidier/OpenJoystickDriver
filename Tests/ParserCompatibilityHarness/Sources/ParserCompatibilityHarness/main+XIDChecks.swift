@@ -2,7 +2,7 @@ import Foundation
 import OpenJoystickDriverKit
 
 func runXIDInputChecks() throws {
-  let profile = catalogRecord(DeviceIdentifier(vendorID: 0x045E, productID: 0x0202))
+  let profile = catalogRecord(ControllerModelID(vendorID: 0x045E, productID: 0x0202))
   require(
     profile.physicalProtocolID == .xboxXID && profile.physicalProtocolVariant == .gamepad,
     "Original Xbox pad should bind XID"

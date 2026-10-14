@@ -98,26 +98,26 @@ protocol HIDAccessBackend: Sendable {
   /// Re-runs the seize of a location's devices whose earlier attempt was refused or failed.
   func retryInputClaim(locationID: UInt32) async
   func routeElementValues(connection: HIDDeviceConnection) async
-  /// Admits again each device of a model in `identities` whose native pass-through changed with
+  /// Admits again each device of a model in `models` whose native pass-through changed with
   /// the current records, and returns the connections it admitted.
-  func reevaluateOwnership(of identities: Set<ControllerIdentity>) async -> Set<UUID>
+  func reevaluateOwnership(of models: Set<ControllerModelID>) async -> Set<UUID>
 }
 
 extension HIDAccessBackend {
   /// A backend whose devices never pass through to macOS has nothing to re-evaluate.
-  func reevaluateOwnership(of _: Set<ControllerIdentity>) -> Set<UUID> { [] }
+  func reevaluateOwnership(of _: Set<ControllerModelID>) -> Set<UUID> { [] }
 }
 
 private final class IOHIDAccessBackend: HIDAccessBackend, Sendable {
   private let stream: HIDDeviceStream
 
   init(
-    additionalProfileIdentifiers: @escaping @Sendable () -> [DeviceIdentifier],
-    roleProfileIdentifiers: @escaping @Sendable () -> [DeviceIdentifier]
+    additionalProfileModels: @escaping @Sendable () -> [ControllerModelID],
+    roleProfileModels: @escaping @Sendable () -> [ControllerModelID]
   ) {
     stream = HIDDeviceStream(
-      additionalProfileIdentifiers: additionalProfileIdentifiers,
-      roleProfileIdentifiers: roleProfileIdentifiers
+      additionalProfileModels: additionalProfileModels,
+      roleProfileModels: roleProfileModels
     )
   }
 
@@ -190,8 +190,8 @@ private final class IOHIDAccessBackend: HIDAccessBackend, Sendable {
     await stream.routeElementValues(connection: connection)
   }
 
-  func reevaluateOwnership(of identities: Set<ControllerIdentity>) async -> Set<UUID> {
-    await MainActor.run { stream.reevaluateOwnership(of: identities) }
+  func reevaluateOwnership(of models: Set<ControllerModelID>) async -> Set<UUID> {
+    await MainActor.run { stream.reevaluateOwnership(of: models) }
   }
 }
 
@@ -203,19 +203,19 @@ public final class HIDManager: Sendable {
 
   init(backend: any HIDAccessBackend) { self.backend = backend }
 
-  /// `additionalProfileIdentifiers` are the catalog's HID models, which may not advertise GamePad
-  /// usage; `roleProfileIdentifiers` are the models whose family declares HID protocol roles.
+  /// `additionalProfileModels` are the catalog's HID models, which may not advertise GamePad
+  /// usage; `roleProfileModels` are the models whose family declares HID protocol roles.
   /// Both are read each time detection starts. `bluetoothLEHub` adds the Switch 2 controllers
   /// connected over Bluetooth LE GATT.
   @preconcurrency
   public init(
-    additionalProfileIdentifiers: @escaping @Sendable () -> [DeviceIdentifier] = { [] },
-    roleProfileIdentifiers: @escaping @Sendable () -> [DeviceIdentifier] = { [] },
+    additionalProfileModels: @escaping @Sendable () -> [ControllerModelID] = { [] },
+    roleProfileModels: @escaping @Sendable () -> [ControllerModelID] = { [] },
     bluetoothLEHub: Switch2BluetoothLEHub? = nil
   ) {
     let ioHID = IOHIDAccessBackend(
-      additionalProfileIdentifiers: additionalProfileIdentifiers,
-      roleProfileIdentifiers: roleProfileIdentifiers
+      additionalProfileModels: additionalProfileModels,
+      roleProfileModels: roleProfileModels
     )
     backend =
       bluetoothLEHub.map { BluetoothLECompositeHIDBackend(primary: ioHID, hub: $0) } ?? ioHID
@@ -294,10 +294,10 @@ public final class HIDManager: Sendable {
     await backend.routeElementValues(connection: connection)
   }
 
-  /// Admits again each device of a model in `identities` whose native pass-through changed with
+  /// Admits again each device of a model in `models` whose native pass-through changed with
   /// the current records, so a changed `ownership` seizes or releases it without a replug.
   /// Returns the connections it admitted; their `.connected` events are already queued.
-  func reevaluateOwnership(of identities: Set<ControllerIdentity>) async -> Set<UUID> {
-    await backend.reevaluateOwnership(of: identities)
+  func reevaluateOwnership(of models: Set<ControllerModelID>) async -> Set<UUID> {
+    await backend.reevaluateOwnership(of: models)
   }
 }

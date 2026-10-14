@@ -19,7 +19,7 @@ struct ControllerTuningLayersTests {
       try Data(json.utf8).write(to: defaultsFile)
     }
 
-    func writePatch(_ set: String, for identity: ControllerIdentity) throws {
+    func writePatch(_ set: String, for identity: ControllerModelID) throws {
       try FileManager.default.createDirectory(at: controllers, withIntermediateDirectories: true)
       let json =
         #"{"$schema":"\#(ControllerRecordSet.overrideSchemaID)","operation":"patch","#
@@ -46,7 +46,7 @@ struct ControllerTuningLayersTests {
   @Test
   func withoutAFileEveryKeyIsADriverDefault() throws {
     let root = Root()
-    let record = try #require(root.load().records[try bareRecord().identity])
+    let record = try #require(root.load().records[try bareRecord().model])
 
     #expect(record.tuning.stickDeadzone == nil)
     #expect(record.tuningLayers["stickDeadzone"] == nil)
@@ -59,7 +59,7 @@ struct ControllerTuningLayersTests {
     try root.writeDefaults(#"{"stickDeadzone":0.2}"#)
     let bare = try bareRecord()
 
-    let record = try #require(root.load().records[bare.identity])
+    let record = try #require(root.load().records[bare.model])
 
     #expect(record.tuning.stickDeadzone == 0.2)
     #expect(record.tuningLayers["stickDeadzone"] == .global)
@@ -70,9 +70,9 @@ struct ControllerTuningLayersTests {
     let root = Root()
     let bare = try bareRecord()
     try root.writeDefaults(#"{"stickDeadzone":0.2}"#)
-    try root.writePatch(#"{"tuning":{"stickDeadzone":0.3}}"#, for: bare.identity)
+    try root.writePatch(#"{"tuning":{"stickDeadzone":0.3}}"#, for: bare.model)
 
-    let record = try #require(root.load().records[bare.identity])
+    let record = try #require(root.load().records[bare.model])
 
     #expect(record.tuning.stickDeadzone == 0.3)
     #expect(record.tuningLayers["stickDeadzone"] == .user)
@@ -82,7 +82,7 @@ struct ControllerTuningLayersTests {
   func aUserPatchOfOneTuningKeyKeepsTheBundledOthers() throws {
     let root = Root()
     // The bundled HID record 11C1:5600 sets `stickDeadzone` to 0.02.
-    let identity = ControllerIdentity(vendorID: 0x11C1, productID: 0x5600)
+    let identity = ControllerModelID(vendorID: 0x11C1, productID: 0x5600)
     let bundled = try #require(ControllerRecordSet.bundled.records[identity])
     try root.writePatch(#"{"tuning":{"hidStartupIntervalMs":20}}"#, for: identity)
 
@@ -100,7 +100,7 @@ struct ControllerTuningLayersTests {
     try root.writeDefaults(#"{"inputLivenessTimeoutMs":2500}"#)
     let bare = try bareRecord()
 
-    let record = try #require(root.load().records[bare.identity])
+    let record = try #require(root.load().records[bare.model])
 
     #expect(record.tuning.inputLivenessTimeoutMilliseconds == nil)
     #expect(record.tuningLayers["inputLivenessTimeoutMs"] == nil)
@@ -117,7 +117,7 @@ struct ControllerTuningLayersTests {
     let set = root.load()
 
     #expect(set.defaults?.problem != nil)
-    #expect(set.records[bare.identity]?.tuning.stickDeadzone == nil)
+    #expect(set.records[bare.model]?.tuning.stickDeadzone == nil)
   }
 
   @Test

@@ -7,23 +7,23 @@ struct ControllerRecordSetTests {
   private static let recordSchema = ControllerRecordDocument.schemaID
   private static let overrideSchema = ControllerRecordSet.overrideSchemaID
   /// A bundled `xbox.gip` record with no protocol options.
-  private static let bundledGIP = ControllerIdentity(vendorID: 0x366C, productID: 0x0005)
+  private static let bundledGIP = ControllerModelID(vendorID: 0x366C, productID: 0x0005)
   /// A bundled `sony.dualshock4` record, a HID family.
-  private static let bundledHID = ControllerIdentity(vendorID: 0x2C22, productID: 0x2000)
-  private static let unbundled = ControllerIdentity(vendorID: 0x1234, productID: 0xABCD)
+  private static let bundledHID = ControllerModelID(vendorID: 0x2C22, productID: 0x2000)
+  private static let unbundled = ControllerModelID(vendorID: 0x1234, productID: 0xABCD)
 
   private static func json(_ object: [String: Any]) throws -> Data {
     try JSONSerialization.data(withJSONObject: object)
   }
 
-  private static func patch(_ identity: ControllerIdentity, set: [String: Any]) throws -> Data {
+  private static func patch(_ identity: ControllerModelID, set: [String: Any]) throws -> Data {
     try json([
       "$schema": overrideSchema, "operation": "patch", "vendorID": Int(identity.vendorID),
       "productID": Int(identity.productID), "set": set,
     ])
   }
 
-  private static func add(_ identity: ControllerIdentity, family: String) throws -> Data {
+  private static func add(_ identity: ControllerModelID, family: String) throws -> Data {
     try json([
       "$schema": overrideSchema, "operation": "add",
       "record": [
@@ -59,7 +59,7 @@ struct ControllerRecordSetTests {
   /// replaces the block, because every protocol field belongs to its family.
   @Test
   func protocolPatchKeepsUnnamedFieldsOnlyWithinTheFamily() throws {
-    let shareOffsetGIP = ControllerIdentity(vendorID: 0x045E, productID: 0x0B12)
+    let shareOffsetGIP = ControllerModelID(vendorID: 0x045E, productID: 0x0B12)
     let kept = try ControllerRecordSet.validate(
       Self.patch(shareOffsetGIP, set: ["protocol": ["family": "xbox.gip", "keepAlive": false]])
     )
@@ -74,7 +74,7 @@ struct ControllerRecordSetTests {
   /// A same-family patch adds its quirks to the bundled quirks instead of replacing them.
   @Test
   func protocolPatchAddsItsQuirksToTheBundledQuirks() throws {
-    let dualShock4 = ControllerIdentity(vendorID: 0x054C, productID: 0x09CC)
+    let dualShock4 = ControllerModelID(vendorID: 0x054C, productID: 0x09CC)
     let patched = try ControllerRecordSet.validate(
       Self.patch(
         dualShock4,
@@ -99,7 +99,7 @@ struct ControllerRecordSetTests {
   func addForANewIdentityIsAUserRecord() throws {
     let validated = try ControllerRecordSet.validate(Self.add(Self.unbundled, family: "xbox.gip"))
     #expect(validated.operation == .add)
-    #expect(validated.record.identity == Self.unbundled)
+    #expect(validated.record.model == Self.unbundled)
     #expect(validated.record.fieldLayers == ["protocol": .user])
     #expect(validated.record.family == "xbox.gip")
   }
@@ -195,11 +195,11 @@ struct ControllerRecordSetTests {
     #expect(set.records.count == ControllerRecordSet.bundled.records.count + 1)
 
     let catalog = DeviceCatalog(records: set)
-    let identifier = DeviceIdentifier(vendorID: 0x1234, productID: 0xABCD, serialNumber: "S")
-    #expect(catalog.record(for: identifier)?.physicalProtocolID == .xboxGIP)
+    let unit = DeviceIdentifier(vendorID: 0x1234, productID: 0xABCD, serialNumber: "S")
+    #expect(catalog.record(for: unit.model)?.physicalProtocolID == .xboxGIP)
     #expect(
-      catalog.rawUSBProfileIdentifiers.contains(
-        DeviceIdentifier(vendorID: 0x1234, productID: 0xABCD)
+      catalog.rawUSBModels.contains(
+        ControllerModelID(vendorID: 0x1234, productID: 0xABCD)
       )
     )
   }

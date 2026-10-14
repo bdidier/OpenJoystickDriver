@@ -6,41 +6,35 @@ struct DeviceCatalog: Sendable {
   /// controller records change.
   static let current = Locked(Self())
 
-  private let profiles: [ControllerIdentity: DeviceRuntimeProfile]
+  private let profiles: [ControllerModelID: DeviceRuntimeProfile]
   /// Each record's merged document, to tell whether a new record set changes anything.
-  let documents: [ControllerIdentity: Data]
-  let rawUSBProfileIdentifiers: [DeviceIdentifier]
-  let hidProfileIdentifiers: [DeviceIdentifier]
+  let documents: [ControllerModelID: Data]
+  let rawUSBModels: [ControllerModelID]
+  let hidModels: [ControllerModelID]
 
   init(records: ControllerRecordSet = .bundled) {
-    var hid: [DeviceIdentifier] = []
-    var rawUSB: [DeviceIdentifier] = []
-    for identity in records.records.keys.sorted(by: {
-      ($0.vendorID, $0.productID) < ($1.vendorID, $1.productID)
-    }) {
-      let identifier = DeviceIdentifier(vendorID: identity.vendorID, productID: identity.productID)
-      if records.records[identity]?.usesRawUSB == true {
-        rawUSB.append(identifier)
+    var hid: [ControllerModelID] = []
+    var rawUSB: [ControllerModelID] = []
+    for model in records.records.keys.sorted() {
+      if records.records[model]?.usesRawUSB == true {
+        rawUSB.append(model)
       } else {
-        hid.append(identifier)
+        hid.append(model)
       }
     }
     profiles = records.records.mapValues(\.profile)
     documents = records.records.mapValues(\.document)
-    rawUSBProfileIdentifiers = rawUSB
-    hidProfileIdentifiers = hid
+    rawUSBModels = rawUSB
+    hidModels = hid
   }
 
-  /// The exact catalog record for this identity; there is no default record.
-  func record(for identifier: DeviceIdentifier) -> DeviceRuntimeProfile? {
-    let identity = identifier.controllerIdentity
-    return profiles[ControllerIdentity(vendorID: identity.vendorID, productID: identity.productID)]
-  }
+  /// The exact catalog record for this model; there is no default record.
+  func record(for model: ControllerModelID) -> DeviceRuntimeProfile? { profiles[model] }
 
   /// Whether the record sets `ownership: ojd`, so OJD seizes the controller even when macOS
   /// serves it natively. The stream reads it when a device is added.
-  func takesOwnership(of identifier: DeviceIdentifier) -> Bool {
-    record(for: identifier)?.ownership == .ojd
+  func takesOwnership(of model: ControllerModelID) -> Bool {
+    record(for: model)?.ownership == .ojd
   }
 
   /// The runtime profile for one decoded record; the record probe plan builds on it too.

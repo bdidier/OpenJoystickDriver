@@ -29,13 +29,13 @@ public struct ControllerRecordDraft: Sendable {
   /// The override document, as `ojd record install` reads it.
   public let document: Data
 
-  /// Builds the draft for `identity`. `reports` are the captured input reports as macOS
+  /// Builds the draft for `model`. `reports` are the captured input reports as macOS
   /// delivered them, with the report ID in byte 0 of a numbered report.
   ///
   /// Returns nil for a model with a bundled record when no control mapped, because a patch
   /// that only names `hid.descriptor` would replace the bundled family with nothing better.
   public init?(
-    identity: ControllerIdentity,
+    model: ControllerModelID,
     bundled: Bool,
     descriptor: [UInt8]?,
     reports: [[UInt8]]
@@ -70,12 +70,12 @@ public struct ControllerRecordDraft: Sendable {
     if bundled {
       body = [
         "$schema": ControllerRecordSet.overrideSchemaID, "operation": "patch",
-        "vendorID": Int(identity.vendorID), "productID": Int(identity.productID), "set": fields,
+        "vendorID": Int(model.vendorID), "productID": Int(model.productID), "set": fields,
       ]
     } else {
       fields["$schema"] = ControllerRecordDocument.schemaID
-      fields["vendorID"] = Int(identity.vendorID)
-      fields["productID"] = Int(identity.productID)
+      fields["vendorID"] = Int(model.vendorID)
+      fields["productID"] = Int(model.productID)
       body = [
         "$schema": ControllerRecordSet.overrideSchemaID, "operation": "add", "record": fields,
       ]

@@ -1,17 +1,17 @@
 import Foundation
 
 extension DeviceManager {
-  /// Sends one output command to the connected controller that `identifier` (and
-  /// `runtimeIdentifier`, when given) selects exactly once. The command is admitted against the
+  /// Sends one output command to the connected controller of `model` that `runtimeIdentifier`
+  /// (when given) selects exactly once. The command is admitted against the
   /// pipeline's (native-narrowed) capabilities, then its values are checked, then it is recorded
   /// as the manual claim and the effective output of its channel is written. A failed command
   /// withdraws only its own claim.
   public func sendControllerOutput(
     _ command: ControllerOutputCommand,
-    for identifier: DeviceIdentifier,
+    for model: ControllerModelID,
     runtimeIdentifier: String? = nil
   ) async -> ControllerOutputResult {
-    guard let key = connectedIdentifier(matching: identifier, runtimeIdentifier: runtimeIdentifier),
+    guard let key = connectedIdentifier(matching: model, runtimeIdentifier: runtimeIdentifier),
       let pipeline = pipelines[key]
     else { return ControllerOutputResult(.notFound) }
     let admission: (command: ControllerOutputCommand, droppedRumbleChannels: [PhysicalRumbleMotor])

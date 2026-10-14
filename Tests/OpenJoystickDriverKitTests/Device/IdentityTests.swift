@@ -19,17 +19,6 @@ struct DeviceIdentifierTests {
   }
 
   @Test
-  func modelMatchesIgnoresSerialAndRejectsDifferentIdentities() {
-    let first = DeviceIdentifier(vendorID: 1, productID: 2, serialNumber: "ABC123")
-    let second = DeviceIdentifier(vendorID: 1, productID: 2, serialNumber: "XYZ789")
-    let other = DeviceIdentifier(vendorID: 3, productID: 4)
-
-    #expect(first.modelMatches(second))
-    #expect(!first.modelMatches(other))
-    #expect(first.controllerIdentity != second.controllerIdentity)
-  }
-
-  @Test
   func controllerIdentityIgnoresLocationAndInterface() {
     let first = DeviceIdentifier(
       vendorID: 0x045E,

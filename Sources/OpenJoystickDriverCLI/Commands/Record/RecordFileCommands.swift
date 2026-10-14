@@ -18,8 +18,8 @@ struct RecordValidation: Encodable, Equatable {
     problem = nil
     operation = validated.operation.rawValue
     identity = deviceIdentity(
-      vendorID: Int(validated.record.identity.vendorID),
-      productID: Int(validated.record.identity.productID)
+      vendorID: Int(validated.record.model.vendorID),
+      productID: Int(validated.record.model.productID)
     )
     family = validated.record.family
     fileName = validated.fileName
@@ -247,7 +247,7 @@ struct RecordRemoveCommand: AsyncParsableCommand {
       valueName: "VVVV:PPPP"
     )
   )
-  var identity: RecordIdentity
+  var model: ControllerModelID
 
   @Flag(
     name: [.short, .long],
@@ -269,14 +269,14 @@ struct RecordRemoveCommand: AsyncParsableCommand {
   func run() async throws {
     try await global.run {
       let target = RecordStore.directory.appendingPathComponent(
-        ControllerRecordSet.fileName(for: identity.identity)
+        ControllerRecordSet.fileName(for: model)
       )
       guard FileManager.default.fileExists(atPath: target.path) else {
         throw CLIFailure(
           .notFound,
           CLILocalized.format(
             "cli.record.remove.not_found",
-            identity.text
+            model.description
           )
         )
       }

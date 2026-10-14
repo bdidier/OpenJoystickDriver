@@ -92,11 +92,11 @@ struct EquivalenceSnapshotParsedFramesTests {
     let parse = Parse()
     var sections: [(title: String, lines: [String])] = []
     for entry in Self.entries {
-      let identifier = entry.subject.identifier.controllerIdentity
+      let model = entry.subject.model
       let title =
         EquivalenceSnapshotStore.recordTitle(
-          vendorID: identifier.vendorID,
-          productID: identifier.productID
+          vendorID: model.vendorID,
+          productID: model.productID
         )
         + " host=\(entry.subject.host) steps=\(entry.steps)"
       sections.append((title, try parse.transcript(entry.subject, entry.reports)))

@@ -38,7 +38,7 @@ struct RecordTestCommand: AsyncParsableCommand {
       valueName: "VVVV:PPPP"
     )
   )
-  var identity: RecordIdentity
+  var model: ControllerModelID
 
   @Option(
     help: ArgumentHelp(
@@ -59,11 +59,11 @@ struct RecordTestCommand: AsyncParsableCommand {
   func run() async throws {
     try await global.run {
       let set = RecordStore.load()
-      RecordStore.warn(set.problems.filter { $0.identity == identity.identity })
-      guard let record = set.records[identity.identity] else {
+      RecordStore.warn(set.problems.filter { $0.model == model })
+      guard let record = set.records[model] else {
         throw CLIFailure(
           .notFound,
-          CLILocalized.format("cli.record.show.not_found", identity.text)
+          CLILocalized.format("cli.record.show.not_found", model.description)
         )
       }
       let reports = try Self.receivedReports(in: RecordStore.read(packets), path: packets)
@@ -71,7 +71,7 @@ struct RecordTestCommand: AsyncParsableCommand {
       let replay = try replay(record, reports: reports)
       let differences = try Self.differences(expected: expected, actual: replay.state)
       let result = Result(
-        identity: identity.text,
+        identity: model.description,
         matches: differences.isEmpty,
         inputReports: replay.inputReports,
         differences: differences
@@ -82,7 +82,7 @@ struct RecordTestCommand: AsyncParsableCommand {
           .recordTestMismatch,
           CLILocalized.format(
             "cli.record.test.mismatch",
-            identity.text,
+            model.description,
             expect,
             differences.count
           )
@@ -102,17 +102,17 @@ struct RecordTestCommand: AsyncParsableCommand {
       case .noParser:
         throw CLIFailure(
           .invalidInputFile,
-          CLILocalized.format("cli.record.test.no_parser", identity.text)
+          CLILocalized.format("cli.record.test.no_parser", model.description)
         )
       case .invalidReport(let index):
         throw CLIFailure(
           .invalidInputFile,
-          CLILocalized.format("cli.record.test.parse_failed", identity.text, index + 1, packets)
+          CLILocalized.format("cli.record.test.parse_failed", model.description, index + 1, packets)
         )
       case .noInput:
         throw CLIFailure(
           .invalidInputFile,
-          CLILocalized.format("cli.record.test.no_input", packets, identity.text)
+          CLILocalized.format("cli.record.test.no_input", packets, model.description)
         )
       }
     }

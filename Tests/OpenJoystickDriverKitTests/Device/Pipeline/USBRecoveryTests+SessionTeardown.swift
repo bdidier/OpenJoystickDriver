@@ -185,12 +185,12 @@ extension USBPipelineRecoveryTests {
     let second = RecoveryUSBSession(readError: .timeout)
     let provider = RecoveryUSBProvider(sessions: [first, second], devices: [device])
     let manager = makeManager(using: provider)
-    await manager.reloadControllerRecords(changing: [identifier.controllerIdentity])
+    await manager.reloadControllerRecords(changing: [identifier.model])
     #expect(await manager.detectionTasks.isEmpty)
 
     await manager.start()
     #expect(await waitUntil(timeout: .seconds(5)) { await first.writeCount > 0 })
-    await manager.reloadControllerRecords(changing: [identifier.controllerIdentity])
+    await manager.reloadControllerRecords(changing: [identifier.model])
     #expect(await first.closeCount == 1)
     #expect(await waitUntil(timeout: .seconds(5)) { await second.writeCount > 0 })
     #expect(await manager.connectedDeviceIdentifiers() == [identifier])
@@ -222,7 +222,7 @@ extension USBPipelineRecoveryTests {
     let changedSession = sessions[try #require(opened.firstIndex(of: device))]
     let otherSession = sessions[try #require(opened.firstIndex(of: other))]
 
-    await manager.reloadControllerRecords(changing: [identifier.controllerIdentity])
+    await manager.reloadControllerRecords(changing: [identifier.model])
     #expect(await waitUntil(timeout: .seconds(5)) { await provider.openCount == 3 })
     #expect(await changedSession.closeCount == 1)
     #expect(await otherSession.closeCount == 0)
@@ -242,7 +242,7 @@ extension USBPipelineRecoveryTests {
     #expect(await waitUntil(timeout: .seconds(5)) { await first.writeCount > 0 })
 
     await manager.reloadControllerRecords(changing: [
-      ControllerIdentity(vendorID: 0x1234, productID: 0xabcd)
+      ControllerModelID(vendorID: 0x1234, productID: 0xabcd)
     ])
     #expect(await first.closeCount == 0)
     #expect(await manager.connectedDeviceIdentifiers() == [identifier])

@@ -8,8 +8,8 @@ import Testing
 /// Consumer Record (Series), and Guide on Consumer AC Home in report 2. Windows mode puts the
 /// right stick on Rx/Ry, the triggers on Z/Rz, and Guide on System Main Menu in report 2.
 struct XboxBluetoothDescriptorLayoutTests {
-  private static let xboxOneS = DeviceIdentifier(vendorID: 0x045E, productID: 0x02FD)
-  private static let xboxSeries = DeviceIdentifier(vendorID: 0x045E, productID: 0x0B13)
+  private static let xboxOneS = ControllerModelID(vendorID: 0x045E, productID: 0x02FD)
+  private static let xboxSeries = ControllerModelID(vendorID: 0x045E, productID: 0x0B13)
 
   @Test(arguments: [
     RecordedHIDDescriptors.xboxOneSLinux, RecordedHIDDescriptors.xboxOneSWindows,
@@ -24,7 +24,7 @@ struct XboxBluetoothDescriptorLayoutTests {
   @Test
   func oneSLinuxModeMapsZRzStickAndSimulationTriggers() {
     let parser = HIDDescriptorDriver(
-      identifier: Self.xboxOneS,
+      model: Self.xboxOneS,
       reportDescriptor: RecordedHIDDescriptors.xboxOneSLinux
     )
     #expect(parse(parser, axis(usage: 0x32, integer: 65535)).contains(.rightStick(x: 1, y: 0)))
@@ -37,7 +37,7 @@ struct XboxBluetoothDescriptorLayoutTests {
   @Test
   func oneSLinuxModeMapsConsumerViewAndGuide() {
     let parser = HIDDescriptorDriver(
-      identifier: Self.xboxOneS,
+      model: Self.xboxOneS,
       reportDescriptor: RecordedHIDDescriptors.xboxOneSLinux
     )
     #expect(parse(parser, button(page: 0x0C, usage: 0x224, reportID: 1)).contains(.press(.view)))
@@ -49,7 +49,7 @@ struct XboxBluetoothDescriptorLayoutTests {
   @Test
   func seriesMapsRecordAsShareAndButton13AsGuide() {
     let parser = HIDDescriptorDriver(
-      identifier: Self.xboxSeries,
+      model: Self.xboxSeries,
       reportDescriptor: RecordedHIDDescriptors.xboxSeries
     )
     #expect(parser.capabilities.controls.contains(.share))
@@ -61,7 +61,7 @@ struct XboxBluetoothDescriptorLayoutTests {
   @Test
   func oneSWindowsModeMapsRxRyStickZRzTriggersAndSystemMainMenuGuide() {
     let parser = HIDDescriptorDriver(
-      identifier: Self.xboxOneS,
+      model: Self.xboxOneS,
       reportDescriptor: RecordedHIDDescriptors.xboxOneSWindows
     )
     #expect(parse(parser, axis(usage: 0x33, integer: 65535)).contains(.rightStick(x: 1, y: 0)))

@@ -107,7 +107,7 @@ extension ApplicationServiceServer {
     case .reset: requested = nil
     }
     guard let target else { return result(requested, .controllerNotFound) }
-    var scope = OverrideScope(model: target.controllerIdentity, unit: nil)
+    var scope = OverrideScope(model: target.model, unit: nil)
     if unit {
       guard let unitIdentifier = target.unitIdentifier else {
         return result(requested, .controllerNotFound)
@@ -201,7 +201,7 @@ extension ApplicationServiceServer {
 
   /// The stored override a change writes: a controller model's, or one unit's of it.
   private struct OverrideScope {
-    let model: ControllerIdentity
+    let model: ControllerModelID
     var unit: String?
   }
 
@@ -230,8 +230,8 @@ extension ApplicationServiceServer {
     guard let vendor = UInt16(exactly: vendorID), let product = UInt16(exactly: productID) else {
       return []
     }
-    let model = DeviceIdentifier(vendorID: vendor, productID: product)
-    let matches = await connectedIdentifierProvider().filter { $0.modelMatches(model) }
+    let model = ControllerModelID(vendorID: vendor, productID: product)
+    let matches = await connectedIdentifierProvider().filter { $0.model == model }
     return matches.sorted { $0.runtimeIdentifier < $1.runtimeIdentifier }
   }
 

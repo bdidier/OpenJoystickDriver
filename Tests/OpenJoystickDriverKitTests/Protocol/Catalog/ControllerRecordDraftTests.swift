@@ -17,7 +17,7 @@ struct ControllerRecordDraftTests {
     0xC0,
   ]
   /// A model without a bundled record.
-  private static let unbundled = ControllerIdentity(vendorID: 0x1234, productID: 0x5678)
+  private static let unbundled = ControllerModelID(vendorID: 0x1234, productID: 0x5678)
   private static let reports: [[UInt8]] = [
     [1, 0, 8, 128, 128, 0], [1, 1, 8, 128, 128, 0], [1, 0, 0, 200, 128, 0],
     [2, 9, 9, 9, 9, 9], [1, 0],
@@ -27,7 +27,7 @@ struct ControllerRecordDraftTests {
   func mapsTheControlsTheDescriptorStates() throws {
     let draft = try #require(
       ControllerRecordDraft(
-        identity: Self.unbundled,
+        model: Self.unbundled,
         bundled: false,
         descriptor: Self.descriptor,
         reports: Self.reports
@@ -63,7 +63,7 @@ struct ControllerRecordDraftTests {
   func reportsTheBytesThatChanged() throws {
     let draft = try #require(
       ControllerRecordDraft(
-        identity: Self.unbundled,
+        model: Self.unbundled,
         bundled: false,
         descriptor: Self.descriptor,
         reports: Self.reports
@@ -85,7 +85,7 @@ struct ControllerRecordDraftTests {
     )
     let draft = try #require(
       ControllerRecordDraft(
-        identity: bundled.identity,
+        model: bundled.model,
         bundled: true,
         descriptor: Self.descriptor,
         reports: []
@@ -102,7 +102,7 @@ struct ControllerRecordDraftTests {
     let reports: [[UInt8]] = [[0, 1, 2], [0, 1, 3], [0, 1, 2], [7]]
     let draft = try #require(
       ControllerRecordDraft(
-        identity: Self.unbundled,
+        model: Self.unbundled,
         bundled: false,
         descriptor: descriptor,
         reports: reports
@@ -114,7 +114,7 @@ struct ControllerRecordDraftTests {
     #expect(try ControllerRecordSet.validate(draft.document).record.family == "hid.descriptor")
     #expect(
       ControllerRecordDraft(
-        identity: Self.unbundled,
+        model: Self.unbundled,
         bundled: true,
         descriptor: descriptor,
         reports: reports

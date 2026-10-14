@@ -7,16 +7,8 @@ struct HIDProfileDiscoveryTests {
   @Test
   func hidAndRawUSBCatalogPartitionsAreDisjoint() {
     let registry = ProtocolDriverRegistry()
-    let hid = Set(
-      registry.hidIdentifiers.map {
-        "\($0.controllerIdentity.vendorID):\($0.controllerIdentity.productID)"
-      }
-    )
-    let rawUSB = Set(
-      registry.rawUSBIdentifiers.map {
-        "\($0.controllerIdentity.vendorID):\($0.controllerIdentity.productID)"
-      }
-    )
+    let hid = Set(registry.hidModels)
+    let rawUSB = Set(registry.rawUSBModels)
 
     #expect(!hid.isEmpty)
     #expect(!rawUSB.isEmpty)

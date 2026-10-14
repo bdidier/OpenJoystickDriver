@@ -30,7 +30,7 @@ private let probeWithoutReportID = PhysicalHIDFeatureReadRequest(reportID: 0x00,
 
 /// A third-party identity that SDL claims only after the feature probe.
 private func probedDriver() -> PS3ThirdPartyDriver {
-  PS3ThirdPartyDriver(identifier: DeviceIdentifier(vendorID: 0x0E8F, productID: 0x3075))
+  PS3ThirdPartyDriver(model: ControllerModelID(vendorID: 0x0E8F, productID: 0x3075))
 }
 
 private func acceptedDriver() -> PS3ThirdPartyDriver {
@@ -287,7 +287,7 @@ struct PS3ThirdPartyDriverTests {
   @Test
   func cyborgV3ReadsTheHatFromAnyDpadPressure() throws {
     let driver = PS3ThirdPartyDriver(
-      identifier: DeviceIdentifier(vendorID: 0x06A3, productID: 0xF622),
+      model: ControllerModelID(vendorID: 0x06A3, productID: 0xF622),
       hatFromPressureOnly: true
     )
     _ = driver.consumeFeatureReply(
@@ -296,7 +296,7 @@ struct PS3ThirdPartyDriverTests {
     )
     #expect(try driver.parseReport(ThirdPartyReport.standard([2: 0x02]))?.state == .neutral)
     #expect(try driver.parseReport(ThirdPartyReport.standard([7: 0x01])).contains(.hat(.east)))
-    let record = DeviceCatalog().record(for: DeviceIdentifier(vendorID: 0x06A3, productID: 0xF622))
+    let record = DeviceCatalog().record(for: ControllerModelID(vendorID: 0x06A3, productID: 0xF622))
     #expect(record?.physicalProtocolID == .vendorPS3ThirdParty)
     #expect(record?.quirks == [.dpadPressure])
   }

@@ -7,7 +7,7 @@ import Testing
 struct ModPackageRequiresAtRuntimeTests {
   private typealias Fixture = ModPackageFixture
 
-  private static let identity = ControllerIdentity(vendorID: 0x1234, productID: 0xABCD)
+  private static let identity = ControllerModelID(vendorID: 0x1234, productID: 0xABCD)
   private static let range: [String: String] = ["minimum": "0.6.0", "below": "0.7.0"]
   private static let outOfRange = "9.0.0"
 

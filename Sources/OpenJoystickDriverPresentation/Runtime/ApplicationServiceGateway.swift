@@ -66,7 +66,7 @@ protocol VirtualOutputGateway: Sendable {
     for selector: RuntimeDeviceSelector
   ) async throws -> VirtualHIDProfileOverrideResult
   func setControllerOwnership(
-    identity: ControllerIdentity,
+    model: ControllerModelID,
     ownership: ControllerOwnership
   ) async throws -> ControllerOwnershipResult
   func suspendController(_ selector: RuntimeDeviceSelector) async throws -> ControllerSuspendResult
@@ -78,7 +78,7 @@ protocol VirtualOutputGateway: Sendable {
 
 extension VirtualOutputGateway {
   func setControllerOwnership(
-    identity: ControllerIdentity,
+    model: ControllerModelID,
     ownership: ControllerOwnership
   ) throws -> ControllerOwnershipResult {
     ControllerOwnershipResult(

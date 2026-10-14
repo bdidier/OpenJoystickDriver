@@ -130,7 +130,7 @@ extension StartupLifetimeTests {
   @Test
   func pipelinePlanAppliesTheRecordTuning() async throws {
     let identifier = DeviceIdentifier(vendorID: 0x057E, productID: 0x2009)
-    let record = try #require(ProtocolDriverRegistry().record(for: identifier))
+    let record = try #require(ProtocolDriverRegistry().record(for: identifier.model))
     let tuning = ControllerTuning(
       hidStartupIntervalMilliseconds: 40,
       minimumHIDOutputIntervalMilliseconds: 10,

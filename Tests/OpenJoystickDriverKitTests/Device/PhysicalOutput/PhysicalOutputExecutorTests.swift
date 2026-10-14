@@ -73,7 +73,7 @@ struct PhysicalOutputExecutorTests {
       await withTaskGroup(of: Bool.self) { group in
         for _ in 0..<16 {
           group.addTask(priority: .high) {
-            _ = await manager.controllerState(for: identifier)
+            _ = await manager.controllerState(for: identifier.model)
             return true
           }
         }

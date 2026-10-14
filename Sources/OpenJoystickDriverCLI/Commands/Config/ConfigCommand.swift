@@ -44,7 +44,7 @@ struct ConfigShowCommand: AsyncParsableCommand {
     name: .customLong("controller"),
     help: ArgumentHelp(CLILocalized.text("cli.config.show.controller"), valueName: "VVVV:PPPP")
   )
-  var controller: RecordIdentity?
+  var controller: ControllerModelID?
 
   @OptionGroup(visibility: GlobalOptions.subcommandVisibility)
   var global: GlobalOptions
@@ -106,15 +106,15 @@ struct ConfigShowCommand: AsyncParsableCommand {
     }
   }
 
-  /// The profile that is active for `identity`, or nil without `--controller`, without a running
+  /// The profile that is active for `model`, or nil without `--controller`, without a running
   /// service, or without an active profile for that model. The service is optional here, so
   /// `config show` keeps working offline and then shows no profile rows.
-  private static func activeProfile(for identity: RecordIdentity?) async -> RemappingProfile? {
-    guard let identity,
+  private static func activeProfile(for model: ControllerModelID?) async -> RemappingProfile? {
+    guard let model,
       let snapshot = try? await ServiceConnection.request({ try await $0.getRemappingSnapshot() }),
       let active = snapshot.activeProfiles.routingActiveProfile(
-        vendorID: identity.identity.vendorID,
-        productID: identity.identity.productID
+        vendorID: model.vendorID,
+        productID: model.productID
       )
     else { return nil }
     return snapshot.profiles.first { $0.id == active.profileID }
@@ -157,7 +157,7 @@ struct ConfigShowCommand: AsyncParsableCommand {
     connected: [ApplicationServiceDeviceDescription]
   ) -> [ControllerTuning.Key] {
     let records = connected.compactMap {
-      set.records[ControllerIdentity(vendorID: $0.vendorID, productID: $0.productID)]
+      set.records[ControllerModelID(vendorID: $0.vendorID, productID: $0.productID)]
     }
     return keys.filter { key in !records.contains { $0.reads(key) } }
   }
@@ -167,7 +167,7 @@ struct ConfigShowCommand: AsyncParsableCommand {
   /// `profile` row for each stick mapping's `innerDeadzone`, keyed as `profile get` names it.
   /// The profile value calibrates that mapping's output and does not override `stickDeadzone`.
   static func result(
-    for identity: RecordIdentity?,
+    for model: ControllerModelID?,
     in set: ControllerRecordSet,
     activeProfile: RemappingProfile? = nil
   ) throws -> Result {
@@ -175,9 +175,12 @@ struct ConfigShowCommand: AsyncParsableCommand {
     var tuning = defaults?.tuning ?? .none
     var layers: [String: ControllerRecordLayer] = [:]
     for key in tuning.setKeys { layers[key.rawValue] = .global }
-    if let identity {
-      guard let record = set.records[identity.identity] else {
-        throw CLIFailure(.notFound, CLILocalized.format("cli.record.show.not_found", identity.text))
+    if let model {
+      guard let record = set.records[model] else {
+        throw CLIFailure(
+          .notFound,
+          CLILocalized.format("cli.record.show.not_found", model.description)
+        )
       }
       tuning = record.tuning
       layers = record.tuningLayers
@@ -187,7 +190,7 @@ struct ConfigShowCommand: AsyncParsableCommand {
         key: key.rawValue,
         value: tuning.text(of: key).flatMap(Double.init),
         layer: (layers[key.rawValue] ?? .driver).rawValue,
-        families: identity == nil ? Self.families(reading: key, in: set) : nil
+        families: model == nil ? Self.families(reading: key, in: set) : nil
       )
     }
     let profileValues = (activeProfile?.stickMappings ?? []).enumerated().map { index, mapping in
@@ -199,7 +202,7 @@ struct ConfigShowCommand: AsyncParsableCommand {
       )
     }
     return Result(
-      controller: identity?.text,
+      controller: model?.description,
       profile: activeProfile?.name,
       defaultsFile: (defaults?.url ?? ControllerDefaults.userFile).path,
       defaultsProblem: defaults?.problem,

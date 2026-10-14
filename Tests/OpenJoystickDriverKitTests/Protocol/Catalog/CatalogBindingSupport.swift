@@ -51,26 +51,26 @@ func defaultHost(of record: DeviceRuntimeProfile) -> PhysicalTransport {
 /// driver the runtime would construct. A HID row is observed over `host`, or its default host;
 /// a raw-USB row claims `transportProfile`, or the record's profile, without interface facts.
 func catalogParser(
-  _ identifier: DeviceIdentifier,
+  _ model: ControllerModelID,
   host: PhysicalTransport? = nil,
   transportProfile: DeviceTransportProfile? = nil,
   registry: ProtocolDriverRegistry = ProtocolDriverRegistry()
 ) throws -> any PhysicalProtocolDriver {
-  let record = try #require(registry.record(for: identifier))
+  let record = try #require(registry.record(for: model))
   let isRawUSB = record.usesRawUSB
   let device = PhysicalDevice(
-    vendorID: identifier.controllerIdentity.vendorID,
-    productID: identifier.controllerIdentity.productID,
+    vendorID: model.vendorID,
+    productID: model.productID,
     interfaces: isRawUSB ? nil : [gamepadHIDInterface(host: host ?? defaultHost(of: record))]
   )
   let classification = registry.classify(device, backend: isRawUSB ? .ioUSBHost : .ioHID)
   guard case .bound(let binding) = classification else {
-    Issue.record("\(identifier) did not bind: \(classification)")
+    Issue.record("\(model) did not bind: \(classification)")
     throw CatalogBindingFailure()
   }
   return try registry.makeDriver(
     for: binding,
-    identifier: identifier,
+    model: model,
     claimed: isRawUSB
       ? USBTransportResolution(profile: transportProfile ?? record.transportProfile) : nil
   ).get()

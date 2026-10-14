@@ -19,7 +19,7 @@ public enum ControllerRecordLayer: String, Codable, CaseIterable, Sendable {
 
 /// The operation of a user controller record, from `controller-override.schema.json`.
 public enum ControllerRecordOperation: String, Codable, Sendable {
-  /// A record for an identity the bundled catalog does not have.
+  /// A record for a model the bundled catalog does not have.
   case add
   /// Fields that replace the same fields of a bundled record.
   case patch
@@ -28,7 +28,7 @@ public enum ControllerRecordOperation: String, Codable, Sendable {
 /// One effective controller record: a bundled record, a user `add`, or a bundled record with a
 /// user `patch` applied.
 public struct ControllerRecord: Sendable {
-  public let identity: ControllerIdentity
+  public let model: ControllerModelID
   /// The merged record as a `controller.schema.json` document, with sorted keys.
   public let document: Data
   /// The layer of each top-level field of `document`, except `$schema`, `vendorID`, and
@@ -61,7 +61,7 @@ public struct ControllerRecord: Sendable {
     var profile = profile
     profile.tuning = defaults.keeping(keys).overlaid(by: profile.tuning)
     return Self(
-      identity: identity,
+      model: model,
       document: document,
       fieldLayers: fieldLayers,
       tuningLayers: layers,
@@ -100,8 +100,8 @@ public struct ControllerRecord: Sendable {
 /// read, and whether OJD could apply it.
 public struct ControllerRecordFile: Sendable {
   public let url: URL
-  /// The identity the file names, when it could be read.
-  public let identity: ControllerIdentity?
+  /// The model the file names, when it could be read.
+  public let model: ControllerModelID?
   public let operation: ControllerRecordOperation?
   /// Why OJD skipped the file, or nil when it applied it.
   public let problem: String?
@@ -113,7 +113,7 @@ public struct ValidatedControllerRecord: Sendable {
   public let record: ControllerRecord
 
   /// The file name the record must have in the user directory, such as `045e-028e.json`.
-  public var fileName: String { ControllerRecordSet.fileName(for: record.identity) }
+  public var fileName: String { ControllerRecordSet.fileName(for: record.model) }
 }
 
 /// Why a user controller record is invalid, in words for the person who wrote it.
@@ -135,8 +135,8 @@ public struct ControllerRecordSet: Sendable {
   /// The `$schema` values OJD accepts in a user record. A version that is not here is rejected.
   public static let knownOverrideSchemaIDs: Set<String> = [overrideSchemaID]
 
-  /// The effective record of every identity.
-  public let records: [ControllerIdentity: ControllerRecord]
+  /// The effective record of every model.
+  public let records: [ControllerModelID: ControllerRecord]
   /// Every `.json` file in the user directory, in file-name order, then the record files of the
   /// installed packages in package-name order.
   public let userFiles: [ControllerRecordFile]
@@ -144,7 +144,7 @@ public struct ControllerRecordSet: Sendable {
   public let defaults: ControllerDefaults?
 
   init(
-    records: [ControllerIdentity: ControllerRecord],
+    records: [ControllerModelID: ControllerRecord],
     userFiles: [ControllerRecordFile],
     defaults: ControllerDefaults? = nil
   ) {
@@ -175,21 +175,21 @@ public struct ControllerRecordSet: Sendable {
 
   /// Makes these records the ones every ``ProtocolDriverRegistry`` binds with.
   ///
-  /// Returns the identities whose effective record changed, added, or went away. Devices that
+  /// Returns the models whose effective record changed, added, or went away. Devices that
   /// are already bound keep the record they bound with until they are admitted again.
   @discardableResult
-  public func activate() -> Set<ControllerIdentity> {
+  public func activate() -> Set<ControllerModelID> {
     let catalog = DeviceCatalog(records: self)
     return DeviceCatalog.current.withLock { current in
       defer { current = catalog }
-      let identities = Set(current.documents.keys).union(catalog.documents.keys)
-      return identities.filter { current.documents[$0] != catalog.documents[$0] }
+      let models = Set(current.documents.keys).union(catalog.documents.keys)
+      return models.filter { current.documents[$0] != catalog.documents[$0] }
     }
   }
 
-  /// `vvvv-pppp.json`, the file name of a record for `identity`.
-  public static func fileName(for identity: ControllerIdentity) -> String {
-    String(format: "%04x-%04x.json", identity.vendorID, identity.productID)
+  /// `vvvv-pppp.json`, the file name of a record for `model`.
+  public static func fileName(for model: ControllerModelID) -> String {
+    String(format: "%04x-%04x.json", model.vendorID, model.productID)
   }
 
   /// The bundled catalog with every valid `.json` file in `directory` applied. A missing
@@ -225,7 +225,7 @@ public struct ControllerRecordSet: Sendable {
     } catch {
       let file = ControllerRecordFile(
         url: directory,
-        identity: nil,
+        model: nil,
         operation: nil,
         problem: "cannot read the directory: \(error.localizedDescription)"
       )
@@ -241,24 +241,24 @@ public struct ControllerRecordSet: Sendable {
           file: url,
           packages: packaged.records
         )
-        let identity = validated.record.identity
-        let expected = fileName(for: identity)
+        let model = validated.record.model
+        let expected = fileName(for: model)
         if url.lastPathComponent == expected {
-          records[identity] = validated.record
+          records[model] = validated.record
           // A patch of a package-only model applies over the package record and keeps it.
-          if validated.operation == .add || bundled.records[identity] != nil {
-            packaged.overridden(identity, by: url)
+          if validated.operation == .add || bundled.records[model] != nil {
+            packaged.overridden(model, by: url)
           }
           file = ControllerRecordFile(
             url: url,
-            identity: validated.record.identity,
+            model: validated.record.model,
             operation: validated.operation,
             problem: nil
           )
         } else {
           file = ControllerRecordFile(
             url: url,
-            identity: validated.record.identity,
+            model: validated.record.model,
             operation: validated.operation,
             problem: "the file name must be \(expected)"
           )
@@ -266,7 +266,7 @@ public struct ControllerRecordSet: Sendable {
       } catch {
         file = ControllerRecordFile(
           url: url,
-          identity: nil,
+          model: nil,
           operation: nil,
           problem: problemDescription(error)
         )
@@ -285,7 +285,7 @@ public struct ControllerRecordSet: Sendable {
     _ data: Data,
     file: URL? = nil,
     layer: ControllerRecordLayer = .user,
-    packages: [ControllerIdentity: ControllerRecord] = [:]
+    packages: [ControllerModelID: ControllerRecord] = [:]
   ) throws -> ValidatedControllerRecord {
     guard let object = try? JSONSerialization.jsonObject(with: data),
       let document = object as? [String: Any]
@@ -303,9 +303,9 @@ public struct ControllerRecordSet: Sendable {
         throw ControllerRecordProblem("record must be an object")
       }
       let decoded = try decode(record)
-      guard bundled.records[decoded.identity] == nil else {
+      guard bundled.records[decoded.model] == nil else {
         throw ControllerRecordProblem(
-          "\(identityText(decoded.identity)) is a bundled controller; use a patch to change it"
+          "\(decoded.model) is a bundled controller; use a patch to change it"
         )
       }
       let layers = Dictionary(
@@ -320,7 +320,7 @@ public struct ControllerRecordSet: Sendable {
       guard let vendorID = integer(document["vendorID"]).flatMap(UInt16.init(exactly:)),
         vendorID >= 1, let productID = integer(document["productID"]).flatMap(UInt16.init(exactly:))
       else { throw ControllerRecordProblem("vendorID must be 1...65535 and productID 0...65535") }
-      let identity = ControllerIdentity(vendorID: vendorID, productID: productID)
+      let model = ControllerModelID(vendorID: vendorID, productID: productID)
       guard let fields = document["set"] as? [String: Any], !fields.isEmpty,
         Set(fields.keys).isSubset(of: [
           "protocol", "usb", "bluetoothLE", "ownership", "output", "input", "tuning",
@@ -330,11 +330,11 @@ public struct ControllerRecordSet: Sendable {
           "set must hold protocol, usb, bluetoothLE, ownership, output, input, or tuning"
         )
       }
-      guard let upstream = bundled.records[identity] ?? packages[identity],
+      guard let upstream = bundled.records[model] ?? packages[model],
         let base = try JSONSerialization.jsonObject(with: upstream.document) as? [String: Any]
       else {
         throw ControllerRecordProblem(
-          "\(identityText(identity)) is not a bundled controller; use an add record"
+          "\(model) is not a bundled controller; use an add record"
         )
       }
       var merged = base.merging(fields) { _, patched in patched }
@@ -387,7 +387,7 @@ public struct ControllerRecordSet: Sendable {
         $0.lastPathComponent < $1.lastPathComponent
       }
     guard !urls.isEmpty else { throw ControllerRecordProblem("controller catalog is empty") }
-    var records: [ControllerIdentity: ControllerRecord] = [:]
+    var records: [ControllerModelID: ControllerRecord] = [:]
     for url in urls {
       do {
         guard
@@ -398,13 +398,13 @@ public struct ControllerRecordSet: Sendable {
           uniqueKeysWithValues: fieldNames(of: document).map { ($0, ControllerRecordLayer.bundled) }
         )
         let record = try makeRecord(document, layers: layers, file: nil, layer: .bundled)
-        guard url.lastPathComponent == fileName(for: record.identity) else {
-          throw ControllerRecordProblem("filename must be \(fileName(for: record.identity))")
+        guard url.lastPathComponent == fileName(for: record.model) else {
+          throw ControllerRecordProblem("filename must be \(fileName(for: record.model))")
         }
-        guard records[record.identity] == nil else {
+        guard records[record.model] == nil else {
           throw ControllerRecordProblem("duplicate controller identity")
         }
-        records[record.identity] = record
+        records[record.model] = record
       } catch { throw ControllerRecordProblem("\(url.path): \(problemDescription(error))") }
     }
     return Self(records: records, userFiles: [])
@@ -419,13 +419,13 @@ public struct ControllerRecordSet: Sendable {
 
   private static func decode(
     _ record: [String: Any]
-  ) throws -> (identity: ControllerIdentity, document: ControllerRecordDocument) {
+  ) throws -> (model: ControllerModelID, document: ControllerRecordDocument) {
     let data = try JSONSerialization.data(withJSONObject: record)
     let document = try JSONDecoder().decode(ControllerRecordDocument.self, from: data)
     guard let vendorID = UInt16(exactly: document.vendorID),
       let productID = UInt16(exactly: document.productID)
     else { throw ControllerRecordProblem("vendorID must be 1...65535 and productID 0...65535") }
-    return (ControllerIdentity(vendorID: vendorID, productID: productID), document)
+    return (ControllerModelID(vendorID: vendorID, productID: productID), document)
   }
 
   private static func makeRecord(
@@ -438,7 +438,7 @@ public struct ControllerRecordSet: Sendable {
     let decoded = try decode(record)
     let set = decoded.document.tuning.setKeys
     return ControllerRecord(
-      identity: decoded.identity,
+      model: decoded.model,
       document: try JSONSerialization.data(
         withJSONObject: record,
         options: [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
@@ -481,10 +481,6 @@ public struct ControllerRecordSet: Sendable {
       let integer = Int(exactly: number.doubleValue)
     else { return nil }
     return integer
-  }
-
-  private static func identityText(_ identity: ControllerIdentity) -> String {
-    String(format: "%04X:%04X", identity.vendorID, identity.productID)
   }
 
   /// A one-line reason for a decoding or file error, with the JSON path of the field.

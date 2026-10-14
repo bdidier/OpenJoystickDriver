@@ -126,7 +126,7 @@ final class VirtualOutputFeedbackGate: Sendable {
       // The exact runtime identifier: the model alone is ambiguous when two controllers match.
       _ = await deviceManager.sendControllerOutput(
         command,
-        for: identifier,
+        for: identifier.model,
         runtimeIdentifier: identifier.runtimeIdentifier
       )
     }

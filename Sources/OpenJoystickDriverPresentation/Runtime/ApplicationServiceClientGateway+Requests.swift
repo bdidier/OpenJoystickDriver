@@ -172,11 +172,11 @@ extension ApplicationServiceClientGateway {
   }
 
   func setControllerOwnership(
-    identity: ControllerIdentity,
+    model: ControllerModelID,
     ownership: ControllerOwnership
   ) async throws -> ControllerOwnershipResult {
     await ensureConnection()
-    return try await client.setControllerOwnership(identity: identity, ownership: ownership)
+    return try await client.setControllerOwnership(model: model, ownership: ownership)
   }
 
   func suspendController(_ selector: RuntimeDeviceSelector) async throws -> ControllerSuspendResult

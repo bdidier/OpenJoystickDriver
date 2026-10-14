@@ -33,7 +33,7 @@ extension StartupLifetimeTests {
     let otherPipeline = try #require(await manager.pipelines[otherID])
 
     await manager.reloadControllerRecords(
-      changing: [ControllerIdentity(vendorID: 0x3537, productID: 0x100B)]
+      changing: [ControllerModelID(vendorID: 0x3537, productID: 0x100B)]
     )
     try await Self.waitForHIDInitializations(of: manager)
 

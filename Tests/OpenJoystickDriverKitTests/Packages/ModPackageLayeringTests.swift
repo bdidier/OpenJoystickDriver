@@ -6,7 +6,7 @@ import Testing
 struct ModPackageLayeringTests {
   private typealias Fixture = ModPackageFixture
 
-  private static let identity = ControllerIdentity(vendorID: 0x1234, productID: 0xABCD)
+  private static let identity = ControllerModelID(vendorID: 0x1234, productID: 0xABCD)
 
   /// Installs the package by copying it, so the test does not depend on the version check.
   private func install(_ folder: URL, in fixture: Fixture) throws {

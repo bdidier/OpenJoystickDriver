@@ -43,7 +43,7 @@ struct SteamTritonDriverTests {
     ]
     for (productID, variant) in rows {
       let record = try #require(
-        registry.record(for: DeviceIdentifier(vendorID: 0x28DE, productID: productID))
+        registry.record(for: ControllerModelID(vendorID: 0x28DE, productID: productID))
       )
       #expect(record.quirks == [.triton])
       #expect(record.physicalProtocolVariant == variant)

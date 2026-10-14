@@ -5,10 +5,10 @@ extension DeviceManager {
   ///
   /// Returns nil if no pipeline is active for the device.
   public func controllerState(
-    for identifier: DeviceIdentifier,
+    for model: ControllerModelID,
     runtimeIdentifier: String? = nil
   ) async -> ControllerState? {
-    guard let key = connectedIdentifier(matching: identifier, runtimeIdentifier: runtimeIdentifier)
+    guard let key = connectedIdentifier(matching: model, runtimeIdentifier: runtimeIdentifier)
     else { return nil }
     return await pipelines[key]?.inputState()
   }
@@ -24,10 +24,10 @@ extension DeviceManager {
   ///
   /// Returns an empty array if no pipeline is active for the device.
   public func packetLog(
-    for identifier: DeviceIdentifier,
+    for model: ControllerModelID,
     runtimeIdentifier: String? = nil
   ) async -> [PacketLogEntry] {
-    guard let key = connectedIdentifier(matching: identifier, runtimeIdentifier: runtimeIdentifier)
+    guard let key = connectedIdentifier(matching: model, runtimeIdentifier: runtimeIdentifier)
     else { return [] }
     return await pipelines[key]?.getPacketLog() ?? []
   }

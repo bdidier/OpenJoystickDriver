@@ -66,7 +66,7 @@
     var diagnosticRecipeAvailable: Bool {
       guard let device = selectedDevice else { return false }
       return ProtocolDriverRegistry().record(
-        for: DeviceIdentifier(vendorID: device.vendorID, productID: device.productID)
+        for: ControllerModelID(vendorID: device.vendorID, productID: device.productID)
       )?.gipStartupPackets.contains(where: \.isDiagnosticRecipe) == true
     }
 

@@ -33,7 +33,7 @@ public enum JoyConHalf: Equatable, Sendable {
   public init?(vendorID: UInt16, productID: UInt16) {
     let quirks =
       DeviceCatalog.current.withLock { $0 }
-      .record(for: DeviceIdentifier(vendorID: vendorID, productID: productID))?.quirks ?? []
+      .record(for: ControllerModelID(vendorID: vendorID, productID: productID))?.quirks ?? []
     if quirks.contains(.joyConLeft) {
       self = .left
     } else if quirks.contains(.joyConRight) {
@@ -47,22 +47,20 @@ public enum JoyConHalf: Equatable, Sendable {
   /// same vendor and the same Switch 2 membership. Empty when no record declares a left half.
   public static func generationProductIDs(forLeft productID: UInt16) -> [UInt16] {
     let catalog = DeviceCatalog.current.withLock { $0 }
-    let halves = catalog.hidProfileIdentifiers.compactMap { identifier in
-      catalog.record(for: identifier).map {
-        (identity: identifier.controllerIdentity, quirks: $0.quirks)
-      }
+    let halves = catalog.hidModels.compactMap { model in
+      catalog.record(for: model).map { (model: model, quirks: $0.quirks) }
     }
     let lefts = halves.filter {
-      $0.identity.productID == productID && $0.quirks.contains(.joyConLeft)
+      $0.model.productID == productID && $0.quirks.contains(.joyConLeft)
     }
     guard !lefts.isEmpty else { return [] }
     let rights = halves.filter { right in
       right.quirks.contains(.joyConRight)
         && lefts.contains {
-          $0.identity.vendorID == right.identity.vendorID
+          $0.model.vendorID == right.model.vendorID
             && $0.quirks.contains(.switch2) == right.quirks.contains(.switch2)
         }
     }
-    return [productID] + rights.map(\.identity.productID)
+    return [productID] + rights.map(\.model.productID)
   }
 }

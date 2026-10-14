@@ -10,18 +10,18 @@ extension DriverLifecycleCharacterizationTests {
   /// capability is absent. A row whose family and variant has no subject fails.
   @Test
   func advertisedOutputCapabilitiesHaveEncoders() throws {
-    let identifiers = Self.registry.rawUSBIdentifiers + Self.registry.hidIdentifiers
+    let models = Self.registry.rawUSBModels + Self.registry.hidModels
     var checked = 0
-    for identifier in identifiers {
-      let record = try #require(Self.registry.record(for: identifier))
+    for model in models {
+      let record = try #require(Self.registry.record(for: model))
       let hosts: [PhysicalTransport] =
         record.usesRawUSB
         ? [.usb]
         : record.quirks.contains(.switch2) ? [.usb, .bluetoothLE] : [.usb, .bluetoothClassic]
       for host in hosts {
         let device = PhysicalDevice(
-          vendorID: identifier.controllerIdentity.vendorID,
-          productID: identifier.controllerIdentity.productID,
+          vendorID: model.vendorID,
+          productID: model.productID,
           interfaces: record.usesRawUSB ? nil : [gamepadHIDInterface(host: host)]
         )
         let backend: DeviceAccessBackend = record.usesRawUSB ? .ioUSBHost : .ioHID
@@ -38,17 +38,17 @@ extension DriverLifecycleCharacterizationTests {
           let subject = family.first(where: { Set($0.quirks) == Set(record.quirks) })
             ?? family.first
         else {
-          Issue.record("\(identifier) binds \(binding.protocolID) with no subject")
+          Issue.record("\(model) binds \(binding.protocolID) with no subject")
           continue
         }
         let driver = try Self.registry.makeDriver(
           for: binding,
-          identifier: identifier,
+          model: model,
           claimed: record.usesRawUSB
             ? USBTransportResolution(profile: record.transportProfile) : nil
         ).get()
         feed(driver, subject.readyingInput)
-        expectEncoders(driver, match: driver.outputCapabilities, "\(identifier) \(host)")
+        expectEncoders(driver, match: driver.outputCapabilities, "\(model) \(host)")
         checked += 1
       }
     }

@@ -48,19 +48,19 @@ extension DualShock4DriverTests {
   func bundledRecordsSelectSDLModelsAndCalibration() {
     let catalog = DeviceCatalog()
     func quirks(_ productID: UInt16) -> [ControllerQuirk]? {
-      catalog.record(for: DeviceIdentifier(vendorID: 0x054C, productID: productID))?.quirks
+      catalog.record(for: ControllerModelID(vendorID: 0x054C, productID: productID))?.quirks
     }
     #expect(quirks(0x0BA0).map(DualShock4Model.init(quirks:)) == .wirelessAdapter)
     #expect(quirks(0x05C5).map(DualShock4Model.init(quirks:)) == .strikePad)
     #expect(quirks(0x09CC).map(DualShock4Model.init(quirks:)) == .standard)
-    for identifier in catalog.hidProfileIdentifiers {
-      guard let record = catalog.record(for: identifier),
+    for model in catalog.hidModels {
+      guard let record = catalog.record(for: model),
         record.physicalProtocolID == .sonyDualShock4
       else { continue }
       #expect(
         record.quirks.contains(.factoryCalibration)
-          == (identifier.controllerIdentity.vendorID == 0x054C),
-        "\(identifier)"
+          == (model.vendorID == 0x054C),
+        "\(model)"
       )
     }
   }

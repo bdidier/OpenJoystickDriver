@@ -31,16 +31,16 @@ func hidReports(_ writes: [PhysicalOutputWrite]) -> [PhysicalHIDOutputReport] {
   }
 }
 
-func catalogRecord(_ identifier: DeviceIdentifier) -> DeviceRuntimeProfile {
-  guard let record = ProtocolDriverRegistry().record(for: identifier) else {
-    fputs("FAIL: \(identifier) should have a catalog record\n", stderr)
+func catalogRecord(_ model: ControllerModelID) -> DeviceRuntimeProfile {
+  guard let record = ProtocolDriverRegistry().record(for: model) else {
+    fputs("FAIL: \(model) should have a catalog record\n", stderr)
     exit(1)
   }
   return record
 }
 
 func runProfileMetadataChecks() {
-  let ds3Profile = catalogRecord(DeviceIdentifier(vendorID: 1356, productID: 616))
+  let ds3Profile = catalogRecord(ControllerModelID(vendorID: 1356, productID: 616))
   require(
     ds3Profile.physicalProtocolID == .sonySixaxis && ds3Profile.physicalProtocolVariant == nil,
     "DS3 profile should bind Sixaxis"
@@ -51,8 +51,8 @@ func runProfileMetadataChecks() {
   )
 
   for id in [
-    DeviceIdentifier(vendorID: 1356, productID: 3302),
-    DeviceIdentifier(vendorID: 1356, productID: 3570),
+    ControllerModelID(vendorID: 1356, productID: 3302),
+    ControllerModelID(vendorID: 1356, productID: 3570),
   ] {
     let profile = catalogRecord(id)
     require(
@@ -62,13 +62,13 @@ func runProfileMetadataChecks() {
     require(profile.quirks.isEmpty, "DualSense profile should declare no quirks")
     require(
       profile.capabilityDelta.presentControls
-        == (id.controllerIdentity.productID == 3570
+        == (id.productID == 3570
           ? [.paddleLeft1, .paddleRight1, .auxiliary1, .auxiliary2] : []),
       "Only the DualSense Edge profile should declare its function buttons and paddles"
     )
   }
 
-  let steamWiredProfile = catalogRecord(DeviceIdentifier(vendorID: 10462, productID: 4354))
+  let steamWiredProfile = catalogRecord(ControllerModelID(vendorID: 10462, productID: 4354))
   require(
     steamWiredProfile.physicalProtocolID == .valveSteamController
       && steamWiredProfile.physicalProtocolVariant == .wired,
@@ -76,7 +76,7 @@ func runProfileMetadataChecks() {
   )
   require(steamWiredProfile.quirks.isEmpty, "Steam wired profile should declare no quirks")
 
-  let steamWirelessProfile = catalogRecord(DeviceIdentifier(vendorID: 10462, productID: 4418))
+  let steamWirelessProfile = catalogRecord(ControllerModelID(vendorID: 10462, productID: 4418))
   require(
     steamWirelessProfile.physicalProtocolID == .valveSteamController
       && steamWirelessProfile.physicalProtocolVariant == .dongle,
@@ -84,7 +84,7 @@ func runProfileMetadataChecks() {
   )
   require(steamWirelessProfile.quirks.isEmpty, "Steam dongle profile should declare no quirks")
 
-  let switchProfile = catalogRecord(DeviceIdentifier(vendorID: 1406, productID: 8201))
+  let switchProfile = catalogRecord(ControllerModelID(vendorID: 1406, productID: 8201))
   require(
     switchProfile.physicalProtocolID == .nintendoSwitch1
       && switchProfile.physicalProtocolVariant == nil,

@@ -18,7 +18,7 @@ extension HIDDeviceStream {
     guard !AppleGameControllerSyntheticHID.isSynthetic(device: device) else { return nil }
     let deviceID = trackingID(for: device)
     guard
-      let identity = PhysicalHIDIdentity(
+      let model = ControllerModelID(
         vendorID: unsignedProperty(device, kIOHIDVendorIDKey),
         productID: unsignedProperty(device, kIOHIDProductIDKey)
       )
@@ -46,8 +46,8 @@ extension HIDDeviceStream {
     else { return nil }
     let nativePassThrough = Self.nativePassThrough(
       device,
-      vendorID: identity.vendorID,
-      productID: identity.productID
+      vendorID: model.vendorID,
+      productID: model.productID
     )
     guard
       eventAdapter.add(
@@ -56,7 +56,7 @@ extension HIDDeviceStream {
         syntheticProperty: syntheticProperty,
         serviceID: registryEntryID(for: device),
         nativePassThrough: nativePassThrough,
-        disconnectsIndividually: roleModels.contains(identity)
+        disconnectsIndividually: roleModels.contains(model)
       )
     else { return nil }
     // The shared open keeps input flowing while the seize is released for another client.
@@ -71,8 +71,8 @@ extension HIDDeviceStream {
     }
     let physicalDevice = physicalDeviceObservation(
       for: device,
-      vendorID: identity.vendorID,
-      productID: identity.productID,
+      vendorID: model.vendorID,
+      productID: model.productID,
       transportProperty: transport.isEmpty ? nil : transport,
       nativePassThrough: nativePassThrough
     )
@@ -96,16 +96,16 @@ extension HIDDeviceStream {
   {
     GCController.supportsHIDDevice(device)
       && !DeviceCatalog.current.withLock {
-        $0.takesOwnership(of: DeviceIdentifier(vendorID: vendorID, productID: productID))
+        $0.takesOwnership(of: ControllerModelID(vendorID: vendorID, productID: productID))
       }
   }
 
-  /// Admits again each tracked device of a model in `identities` whose native pass-through no
+  /// Admits again each tracked device of a model in `models` whose native pass-through no
   /// longer matches the current records, so a changed `ownership` seizes or releases it without a
   /// replug. Every tracked interface at an affected location is removed before any is added, so no
   /// sibling keeps the old native flag. Returns the connections it admitted.
   @MainActor
-  func reevaluateOwnership(of identities: Set<ControllerIdentity>) -> Set<UUID> {
+  func reevaluateOwnership(of models: Set<ControllerModelID>) -> Set<UUID> {
     guard let manager, let devices = IOHIDManagerCopyDevices(manager) as? Set<IOHIDDevice> else {
       return []
     }
@@ -113,7 +113,7 @@ extension HIDDeviceStream {
     let tracked = seizeLock.withLock { connectionsByDeviceID }
     let cycled = Self.ownershipReevaluation(
       tracked: tracked.filter { devicesByID[$0.key] != nil },
-      identities: identities
+      models: models
     ) { deviceID, connection in
       guard let device = devicesByID[deviceID], let vendorID = connection.physicalDevice.vendorID,
         let productID = connection.physicalDevice.productID
@@ -129,18 +129,15 @@ extension HIDDeviceStream {
   }
 
   /// The tracked device IDs to admit again: every device at a location where a device of a model
-  /// in `identities` has a recomputed native pass-through that differs from its connection's.
+  /// in `models` has a recomputed native pass-through that differs from its connection's.
   static func ownershipReevaluation(
     tracked: [UInt64: HIDDeviceConnection],
-    identities: Set<ControllerIdentity>,
+    models: Set<ControllerModelID>,
     nativePassThrough: (UInt64, HIDDeviceConnection) -> Bool
   ) -> Set<UInt64> {
-    let models = Set(identities.map { [$0.vendorID, $0.productID] })
     let changedLocations = Set(
       tracked.compactMap { deviceID, connection -> UInt32? in
-        guard let vendorID = connection.physicalDevice.vendorID,
-          let productID = connection.physicalDevice.productID,
-          models.contains([vendorID, productID]),
+        guard let model = connection.physicalDevice.model, models.contains(model),
           nativePassThrough(deviceID, connection) != connection.physicalDevice.nativePassThrough
         else { return nil }
         return connection.routingLocationID

@@ -77,14 +77,14 @@ public final class PS3ThirdPartyDriver: PhysicalProtocolDriver {
   private(set) var decodesRawReports: Bool
   private var state = ControllerState.neutral
 
-  /// Creates a driver for the controller at `identifier`. `rumbleTemplate` and
+  /// Creates a driver for a controller of `model`. `rumbleTemplate` and
   /// `hatFromPressureOnly` (quirk `dpad-pressure`) come from its record.
   public init(
-    identifier: DeviceIdentifier,
+    model: ControllerModelID,
     rumbleTemplate: RumbleOutputTemplate? = nil,
     hatFromPressureOnly: Bool = false
   ) {
-    descriptorFallback = HIDDescriptorDriver(identifier: identifier)
+    descriptorFallback = HIDDescriptorDriver(model: model)
     self.hatFromPressureOnly = hatFromPressureOnly
     self.rumbleTemplate = rumbleTemplate
     decodesRawReports = false

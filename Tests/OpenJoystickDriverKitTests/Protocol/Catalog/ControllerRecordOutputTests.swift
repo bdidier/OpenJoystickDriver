@@ -131,7 +131,7 @@ struct ControllerRecordOutputTests {
 
     #expect(MacOSOwnedOutput.allowance(for: .hidReportLayout, record: nil) == .none)
     let gp100 = try #require(
-      DeviceCatalog().record(for: DeviceIdentifier(vendorID: 0x2563, productID: 0x0575))
+      DeviceCatalog().record(for: ControllerModelID(vendorID: 0x2563, productID: 0x0575))
     )
     let allowance = MacOSOwnedOutput.allowance(for: .hidReportLayout, record: gp100)
     let rumble = PhysicalHIDOutputReport(reportID: 2, bytes: [2, 0, 0, 0, 0, 0, 0, 0])

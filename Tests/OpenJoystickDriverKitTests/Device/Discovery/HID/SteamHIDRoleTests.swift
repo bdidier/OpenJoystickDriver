@@ -151,12 +151,12 @@ struct SteamHIDRoleTests {
   func onlyTheSteamFamilyDeclaresRoles() throws {
     let registry = ProtocolDriverRegistry()
     #expect(
-      Set(registry.hidRoleIdentifiers)
+      Set(registry.hidRoleModels)
         == Set(
           [
             0x1101, 0x1102, 0x1105, 0x1106, 0x1142, 0x1201, 0x1202, 0x1205, 0x1302, 0x1303, 0x1304,
             0x1305,
-          ].map { DeviceIdentifier(vendorID: 0x28DE, productID: $0) }
+          ].map { ControllerModelID(vendorID: 0x28DE, productID: $0) }
         )
     )
     let slot = Self.dongle(interface: 1).physicalDevice

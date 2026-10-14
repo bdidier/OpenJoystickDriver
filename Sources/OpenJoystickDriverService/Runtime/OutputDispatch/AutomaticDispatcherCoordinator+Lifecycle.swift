@@ -124,7 +124,7 @@ extension AutomaticDispatcherCoordinator {
 
   /// The installed backend of the one controller matching `model` and `runtimeIdentifier`.
   func installedBackend(
-    matching model: DeviceIdentifier,
+    matching model: ControllerModelID,
     runtimeIdentifier: String?
   ) -> (controller: DeviceIdentifier, backend: any VirtualOutputDispatching)? {
     guard

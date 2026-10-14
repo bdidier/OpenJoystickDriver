@@ -71,10 +71,10 @@ struct DS4CalibrationTests {
   @Test
   func registryInstallsFactoryCalibrationOnlyForSonyVendorID() throws {
     let sony = try #require(
-      try catalogParser(DeviceIdentifier(vendorID: 0x054C, productID: 0x05C4)) as? DualShock4Driver
+      try catalogParser(ControllerModelID(vendorID: 0x054C, productID: 0x05C4)) as? DualShock4Driver
     )
     let hori = try #require(
-      try catalogParser(DeviceIdentifier(vendorID: 0x0F0D, productID: 0x0055)) as? DualShock4Driver
+      try catalogParser(ControllerModelID(vendorID: 0x0F0D, productID: 0x0055)) as? DualShock4Driver
     )
     #expect(sony.usesFactoryCalibration)
     #expect(!hori.usesFactoryCalibration)

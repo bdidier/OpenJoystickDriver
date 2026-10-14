@@ -11,7 +11,7 @@ struct SCUFEnvisionParserTests {
 
   private func parser() -> HIDDescriptorDriver {
     HIDDescriptorDriver(
-      identifier: DeviceIdentifier(vendorID: 0x2E95, productID: 0x434D),
+      model: ControllerModelID(vendorID: 0x2E95, productID: 0x434D),
       quirks: [.scufEnvision]
     )
   }
@@ -85,7 +85,7 @@ struct SCUFEnvisionParserTests {
 
   @Test
   func ordinaryGenericControllerStillUsesDescriptorDefaults() {
-    let parser = HIDDescriptorDriver(identifier: DeviceIdentifier(vendorID: 1, productID: 2))
+    let parser = HIDDescriptorDriver(model: ControllerModelID(vendorID: 1, productID: 2))
     #expect(
       parse(parser, value(usage: 0x32, integer: 255, minimum: 0, maximum: 255, reportID: nil))
         .contains(.leftTrigger(1))

@@ -14,12 +14,12 @@ extension ApplicationServiceServer {
     guard let red = UInt8(exactly: red), let green = UInt8(exactly: green),
       let blue = UInt8(exactly: blue)
     else { return false }
-    let identifier = DeviceIdentifier(
+    let model = ControllerModelID(
       vendorID: UInt16(clamping: vendorID),
       productID: UInt16(clamping: productID)
     )
     return await deviceManager.previewPhysicalColor(
-      for: identifier,
+      for: model,
       runtimeIdentifier: runtimeIdentifier,
       token: token,
       red: red,
@@ -34,12 +34,12 @@ extension ApplicationServiceServer {
     runtimeIdentifier: String?,
     token: UUID
   ) async -> Bool {
-    let identifier = DeviceIdentifier(
+    let model = ControllerModelID(
       vendorID: UInt16(clamping: vendorID),
       productID: UInt16(clamping: productID)
     )
     return await deviceManager.releasePhysicalColorPreview(
-      for: identifier,
+      for: model,
       runtimeIdentifier: runtimeIdentifier,
       token: token
     )

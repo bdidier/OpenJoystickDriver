@@ -6,38 +6,38 @@ import Testing
 
 // Subjects, inputs, and the binding pins every transcript relies on.
 extension DriverLifecycleCharacterizationTests {
-  static func identifier(_ vendorID: UInt16, _ productID: UInt16) -> DeviceIdentifier {
-    DeviceIdentifier(vendorID: vendorID, productID: productID)
+  static func model(_ vendorID: UInt16, _ productID: UInt16) -> ControllerModelID {
+    ControllerModelID(vendorID: vendorID, productID: productID)
   }
 
   static let gipUSB = Subject(
-    identifier: identifier(0x045E, 0x02D1),
+    model: model(0x045E, 0x02D1),
     host: .usb,
     protocolID: .xboxGIP,
     variant: .usb,
     input: [gipAnnounceRequestingAcknowledgement]
   )
   static let gipKeepAliveDisabled = Subject(
-    identifier: identifier(0x3285, 0x0634),
+    model: model(0x3285, 0x0634),
     host: .usb,
     protocolID: .xboxGIP,
     variant: .usb,
     input: [gipAnnounceRequestingAcknowledgement]
   )
   static let xidGamepad = Subject(
-    identifier: identifier(0x0738, 0x4530),
+    model: model(0x0738, 0x4530),
     host: .usb,
     protocolID: .xboxXID,
     variant: .gamepad
   )
   static let xusbWired = Subject(
-    identifier: identifier(0x045E, 0x028E),
+    model: model(0x045E, 0x028E),
     host: .usb,
     protocolID: .xboxXUSB,
     variant: .wired
   )
   static let xusbReceiver = Subject(
-    identifier: identifier(0x045E, 0x0719),
+    model: model(0x045E, 0x0719),
     host: .usb,
     protocolID: .xboxXUSB,
     variant: .receiver,
@@ -47,19 +47,19 @@ extension DriverLifecycleCharacterizationTests {
     ]
   )
   static let sixaxisUSB = Subject(
-    identifier: identifier(0x054C, 0x0268),
+    model: model(0x054C, 0x0268),
     host: .usb,
     protocolID: .sonySixaxis,
     variant: .usb
   )
   static let sixaxisBluetooth = Subject(
-    identifier: identifier(0x054C, 0x0268),
+    model: model(0x054C, 0x0268),
     host: .bluetoothClassic,
     protocolID: .sonySixaxis,
     variant: .bluetoothClassic
   )
   static let dualShock4USB = Subject(
-    identifier: identifier(0x054C, 0x09CC),
+    model: model(0x054C, 0x09CC),
     host: .usb,
     protocolID: .sonyDualShock4,
     variant: .usb,
@@ -67,7 +67,7 @@ extension DriverLifecycleCharacterizationTests {
     input: [dualShock4Report(timestamp: 1), dualShock4Report(timestamp: 2)]
   )
   static let dualShock4Bluetooth = Subject(
-    identifier: identifier(0x054C, 0x09CC),
+    model: model(0x054C, 0x09CC),
     host: .bluetoothClassic,
     protocolID: .sonyDualShock4,
     variant: .bluetoothClassic,
@@ -75,37 +75,37 @@ extension DriverLifecycleCharacterizationTests {
     input: [dualShock4Report(timestamp: 1), dualShock4Report(timestamp: 2)]
   )
   static let dualSenseUSB = Subject(
-    identifier: identifier(0x054C, 0x0CE6),
+    model: model(0x054C, 0x0CE6),
     host: .usb,
     protocolID: .sonyDualSense,
     variant: .usb
   )
   static let dualSenseBluetooth = Subject(
-    identifier: identifier(0x054C, 0x0CE6),
+    model: model(0x054C, 0x0CE6),
     host: .bluetoothClassic,
     protocolID: .sonyDualSense,
     variant: .bluetoothClassic
   )
   static let switchUSB = Subject(
-    identifier: identifier(0x057E, 0x2009),
+    model: model(0x057E, 0x2009),
     host: .usb,
     protocolID: .nintendoSwitch1,
     variant: .usb
   )
   static let switchBluetooth = Subject(
-    identifier: identifier(0x057E, 0x2009),
+    model: model(0x057E, 0x2009),
     host: .bluetoothClassic,
     protocolID: .nintendoSwitch1,
     variant: .bluetoothClassic
   )
   static let steamWired = Subject(
-    identifier: identifier(0x28DE, 0x1102),
+    model: model(0x28DE, 0x1102),
     host: .usb,
     protocolID: .valveSteamController,
     variant: .wired
   )
   static let steamDongle = Subject(
-    identifier: identifier(0x28DE, 0x1142),
+    model: model(0x28DE, 0x1142),
     host: .usb,
     protocolID: .valveSteamController,
     variant: .dongle,
@@ -116,33 +116,33 @@ extension DriverLifecycleCharacterizationTests {
     readyingInput: [ProtocolPacketFixtures.Steam.wirelessReport(status: 0x02)]
   )
   static let flydigi = Subject(
-    identifier: identifier(0xD7D7, 0x0041),
+    model: model(0xD7D7, 0x0041),
     host: .usb,
     protocolID: .vendorFlydigi,
     variant: nil
   )
   static let ps3ThirdParty = Subject(
-    identifier: identifier(0x06A3, 0xF622),
+    model: model(0x06A3, 0xF622),
     host: .usb,
     protocolID: .vendorPS3ThirdParty,
     variant: nil,
     quirks: [.dpadPressure]
   )
   static let reportLayout = Subject(
-    identifier: identifier(0x2563, 0x0575),
+    model: model(0x2563, 0x0575),
     host: .usb,
     protocolID: .hidReportLayout,
     variant: nil
   )
   static let nvidiaShield = Subject(
-    identifier: identifier(0x0955, 0x7210),
+    model: model(0x0955, 0x7210),
     host: .usb,
     protocolID: .vendorNVIDIAShield,
     variant: nil,
     quirks: [.shield2015]
   )
   static let gameSirUSB = Subject(
-    identifier: identifier(0x3537, 0x1003),
+    model: model(0x3537, 0x1003),
     host: .usb,
     protocolID: .vendorGameSir,
     variant: .usb,
@@ -150,7 +150,7 @@ extension DriverLifecycleCharacterizationTests {
     readyingInput: gameSirUSBReadiness
   )
   static let gameSirEnhancedHID = Subject(
-    identifier: identifier(0x3537, 0x100B),
+    model: model(0x3537, 0x100B),
     host: .usb,
     protocolID: .vendorGameSir,
     variant: .enhancedHID,
@@ -159,7 +159,7 @@ extension DriverLifecycleCharacterizationTests {
     readyingInput: gameSirEnhancedReadiness
   )
   static let gameSirEnhancedHID8K = Subject(
-    identifier: identifier(0x3537, 0x10C7),
+    model: model(0x3537, 0x10C7),
     host: .usb,
     protocolID: .vendorGameSir,
     variant: .enhancedHID,
@@ -168,7 +168,7 @@ extension DriverLifecycleCharacterizationTests {
     readyingInput: gameSirEnhancedReadiness
   )
   static let hidDescriptor = Subject(
-    identifier: identifier(0x3537, 0x100A),
+    model: model(0x3537, 0x100A),
     host: .usb,
     protocolID: .hidDescriptor,
     variant: nil
@@ -177,7 +177,7 @@ extension DriverLifecycleCharacterizationTests {
   /// Catalog rows whose driver a family and variant alone does not select. Only the output
   /// capability sweep uses them, so the transcripts over ``subjects`` stay unchanged.
   static let tritonDongle = Subject(
-    identifier: identifier(0x28DE, 0x1304),
+    model: model(0x28DE, 0x1304),
     host: .usb,
     protocolID: .valveSteamController,
     variant: .dongle,
@@ -185,13 +185,13 @@ extension DriverLifecycleCharacterizationTests {
     readyingInput: [Data([0x79, 0x02])]
   )
   static let steamBluetoothLE = Subject(
-    identifier: identifier(0x28DE, 0x1106),
+    model: model(0x28DE, 0x1106),
     host: .bluetoothLE,
     protocolID: .valveSteamController,
     variant: .bluetoothLE
   )
   static let switch2BluetoothLE = Subject(
-    identifier: identifier(0x057E, 0x2069),
+    model: model(0x057E, 0x2069),
     host: .bluetoothLE,
     protocolID: .nintendoSwitch1,
     variant: .bluetoothLE
@@ -207,25 +207,25 @@ extension DriverLifecycleCharacterizationTests {
   @Test
   func everySubjectBindsItsFamilyAndVariantThroughTheRegistry() throws {
     for subject in Self.subjects {
-      let record = try #require(Self.registry.record(for: subject.identifier))
+      let record = try #require(Self.registry.record(for: subject.model))
       let device = PhysicalDevice(
-        vendorID: subject.identifier.controllerIdentity.vendorID,
-        productID: subject.identifier.controllerIdentity.productID,
+        vendorID: subject.model.vendorID,
+        productID: subject.model.productID,
         interfaces: record.usesRawUSB ? nil : [gamepadHIDInterface(host: subject.host)]
       )
       let backend: DeviceAccessBackend = record.usesRawUSB ? .ioUSBHost : .ioHID
       guard case .bound(let binding) = Self.registry.classify(device, backend: backend) else {
-        Issue.record("\(subject.identifier) did not bind")
+        Issue.record("\(subject.model) did not bind")
         continue
       }
-      #expect(binding.protocolID == subject.protocolID, "\(subject.identifier)")
-      #expect(binding.variant == subject.variant, "\(subject.identifier)")
-      #expect(record.quirks == subject.quirks, "\(subject.identifier)")
+      #expect(binding.protocolID == subject.protocolID, "\(subject.model)")
+      #expect(binding.variant == subject.variant, "\(subject.model)")
+      #expect(record.quirks == subject.quirks, "\(subject.model)")
     }
-    let gip = try #require(Self.registry.record(for: Self.gipUSB.identifier))
+    let gip = try #require(Self.registry.record(for: Self.gipUSB.model))
     #expect(gip.gipKeepAlivePolicy == .enabled)
     #expect(gip.gipStartupPackets == GIPStartupPacket.defaultSequence)
-    let disabled = try #require(Self.registry.record(for: Self.gipKeepAliveDisabled.identifier))
+    let disabled = try #require(Self.registry.record(for: Self.gipKeepAliveDisabled.model))
     #expect(disabled.gipKeepAlivePolicy == .disabled)
     #expect(disabled.gipStartupPackets == GIPStartupPacket.defaultSequence)
   }

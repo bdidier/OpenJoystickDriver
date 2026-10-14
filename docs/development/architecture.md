@@ -105,7 +105,7 @@ One physical device can expose several protocol roles, each its own pipeline and
 
 ### Identity
 
-`ControllerIdentity` (`Device/Identity.swift`) is the product and physical identity: VID, PID and serial number, with an empty serial stored as nil. `DeviceIdentifier` is the logical-controller key: a `ControllerIdentity` plus `locationID` and `interfaceNumber`. The interface number is part of equality, the runtime token and `description` (`if=N`). Raw USB keys carry the claimed interface; HID keys carry one only for a HID role; Bluetooth keys carry none.
+`ControllerModelID` (`Device/ControllerModelID.swift`) is the model: VID and PID, and nothing that tells two units apart. Every unit of one model has the same model ID, and a controller record is found by it. `ControllerIdentity` (`Device/Identity.swift`) is the product and physical identity: VID, PID and serial number, with an empty serial stored as nil. `DeviceIdentifier` is the logical-controller key: a `ControllerIdentity` plus `locationID` and `interfaceNumber`. The interface number is part of equality, the runtime token and `description` (`if=N`). Raw USB keys carry the claimed interface; HID keys carry one only for a HID role; Bluetooth keys carry none.
 
 `UserSpaceVirtualDeviceConstants.stableKey` (`HID/PhysicalHIDTrackingStateMachine.swift`) hashes `VID:PID:serial:location:interface` with FNV-1a to derive the virtual serial and OJD-namespace LocationID, so each role gets its own virtual identity without exposing the hardware serial.
 

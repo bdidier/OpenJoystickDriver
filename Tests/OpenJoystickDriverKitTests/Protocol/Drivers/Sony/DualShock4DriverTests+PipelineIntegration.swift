@@ -65,10 +65,10 @@ extension DualShock4DriverTests {
 
   @Test
   func testRegistryMapsDS4V2IdentityToDualShock4Driver() throws {
-    let identifier = DeviceIdentifier(vendorID: 1356, productID: 2508)
-    let profile = try #require(ProtocolDriverRegistry().record(for: identifier))
+    let model = ControllerModelID(vendorID: 1356, productID: 2508)
+    let profile = try #require(ProtocolDriverRegistry().record(for: model))
 
     #expect(profile.physicalProtocolID == .sonyDualShock4 && profile.physicalProtocolVariant == nil)
-    #expect(try catalogParser(identifier) is DualShock4Driver)
+    #expect(try catalogParser(model) is DualShock4Driver)
   }
 }

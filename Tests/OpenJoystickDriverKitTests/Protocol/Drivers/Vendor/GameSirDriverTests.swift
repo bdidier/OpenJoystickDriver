@@ -270,7 +270,7 @@ struct GameSirCatalogTests {
     _ vendorID: UInt16,
     _ productID: UInt16
   ) -> PhysicalProtocolID? {
-    registry.record(for: DeviceIdentifier(vendorID: vendorID, productID: productID))?
+    registry.record(for: ControllerModelID(vendorID: vendorID, productID: productID))?
       .physicalProtocolID
   }
 
@@ -280,9 +280,9 @@ struct GameSirCatalogTests {
     let g7: [UInt16] = [0x1003, 0x105D, 0x105E, 0x109B, 0x109C, 0x10BA]
     let enhanced: [UInt16] = [0x0575, 0x100B, 0x1053, 0x10C5, 0x10C6, 0x10C7, 0x10C8]
     for productID in g7 + enhanced {
-      let identifier = DeviceIdentifier(vendorID: 0x3537, productID: productID)
-      #expect(registry.record(for: identifier)?.physicalProtocolID == .vendorGameSir)
-      #expect(try catalogParser(identifier, registry: registry) is GameSirDriver)
+      let model = ControllerModelID(vendorID: 0x3537, productID: productID)
+      #expect(registry.record(for: model)?.physicalProtocolID == .vendorGameSir)
+      #expect(try catalogParser(model, registry: registry) is GameSirDriver)
     }
     #expect(protocolID(registry, 0x3537, 0x1004) == .xboxXUSB)
     #expect(protocolID(registry, 0x3537, 0x100F) == .xboxXUSB)
@@ -295,8 +295,8 @@ struct GameSirCatalogTests {
   @Test
   func inputOnlyIdentitiesDoNotExposeConfigurationOutputs() throws {
     let registry = ProtocolDriverRegistry()
-    let transition = DeviceIdentifier(vendorID: 0x3537, productID: 0x100A)
-    let native = DeviceIdentifier(vendorID: 0x3537, productID: 0x1022)
+    let transition = ControllerModelID(vendorID: 0x3537, productID: 0x100A)
+    let native = ControllerModelID(vendorID: 0x3537, productID: 0x1022)
     #expect(try catalogParser(transition, registry: registry) is HIDDescriptorDriver)
     #expect(
       (try catalogParser(native, registry: registry) as? GIPDriver)?.outputCapabilities.rumbleMotors

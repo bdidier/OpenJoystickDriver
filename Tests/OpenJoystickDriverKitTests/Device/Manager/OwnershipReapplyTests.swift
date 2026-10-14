@@ -6,7 +6,7 @@ import Testing
 /// A changed `ownership` reaches a connected controller without a replug. The GameSir connections
 /// are synthetic, as in `HIDLocationRoutingTests`.
 struct OwnershipReapplyTests {
-  private static let changedModel = ControllerIdentity(vendorID: 0x3537, productID: 0x100B)
+  private static let changedModel = ControllerModelID(vendorID: 0x3537, productID: 0x100B)
 
   /// Only the locations where a listed model's native flag changed are cycled, siblings included.
   @Test
@@ -21,7 +21,7 @@ struct OwnershipReapplyTests {
 
     let cycled = HIDDeviceStream.ownershipReevaluation(
       tracked: tracked,
-      identities: [Self.changedModel]
+      models: [Self.changedModel]
     ) { deviceID, connection in
       deviceID == 10 ? false : connection.physicalDevice.nativePassThrough
     }
@@ -76,10 +76,10 @@ struct OwnershipReapplyTests {
   func anOJDOwnedNativeModelDispatchesEachChangedReportWithoutARoute() async throws {
     let records = try Self.recordsOwningTheChangedModel()
     let catalog = DeviceCatalog(records: records)
-    #expect(catalog.takesOwnership(of: DeviceIdentifier(vendorID: 0x3537, productID: 0x100B)))
+    #expect(catalog.takesOwnership(of: Self.changedModel))
     // `HIDDeviceStream.nativePassThrough` for a model that GameController supports.
     let nativePassThrough =
-      !catalog.takesOwnership(of: DeviceIdentifier(vendorID: 0x3537, productID: 0x100B))
+      !catalog.takesOwnership(of: Self.changedModel)
     let owned = try await Self.dispatchedReports(nativePassThrough: nativePassThrough)
     #expect(owned.observedGate == false)
     #expect(owned.dispatched == 2)
@@ -216,7 +216,7 @@ private actor OwnershipReapplyBackend: HIDAccessBackend {
   private weak var manager: DeviceManager?
   private var snapshots: [HIDDeviceConnection] = []
   private var replacements: [UUID: HIDDeviceConnection] = [:]
-  private var calls: [Set<ControllerIdentity>] = []
+  private var calls: [Set<ControllerModelID>] = []
   private var admitted: [DeviceIdentifier: DevicePipeline] = [:]
 
   init(_ scripted: ScriptedHIDAccessBackend) { self.scripted = scripted }
@@ -234,13 +234,13 @@ private actor OwnershipReapplyBackend: HIDAccessBackend {
     replacements[connection.connectionID] = replacement
   }
 
-  func reevaluated() -> [Set<ControllerIdentity>] { calls }
+  func reevaluated() -> [Set<ControllerModelID>] { calls }
 
   /// The manager's pipelines once the admissions this backend sent have finished.
   func admittedPipelines() -> [DeviceIdentifier: DevicePipeline] { admitted }
 
-  func reevaluateOwnership(of identities: Set<ControllerIdentity>) async -> Set<UUID> {
-    calls.append(identities)
+  func reevaluateOwnership(of models: Set<ControllerModelID>) async -> Set<UUID> {
+    calls.append(models)
     let cycled = snapshots.filter { replacements[$0.connectionID] != nil }
     for old in cycled { await manager?.handleHIDEvent(.disconnected(connection: old)) }
     var admittedIDs: Set<UUID> = []

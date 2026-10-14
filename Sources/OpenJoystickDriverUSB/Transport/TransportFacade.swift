@@ -34,7 +34,7 @@ public actor OpenJoystickDriverUSBTransportProvider: USBTransportProvider,
     ioUSBHostProvider = IOUSBHostTransportProvider()
     usbDriverKitProvider = USBDriverKitTransportProvider()
     let registry = ProtocolDriverRegistry()
-    rawUSBModels = { Set(registry.rawUSBIdentifiers.map(USBTransportModel.init)) }
+    rawUSBModels = { Set(registry.rawUSBModels.map(USBTransportModel.init)) }
     requiredDriverKitModels = Self.driverKitRequiredModels
     ioUSBHostObservation = { try PassiveUSBDescriptorProbe.physicalDeviceObservation(for: $0) }
     ioUSBHostConfigurationObservation = Self.readConfigurationObservation
@@ -311,11 +311,8 @@ struct USBTransportModel: Hashable, Sendable {
     self.init(vendorID: device.vendorID, productID: device.productID)
   }
 
-  init(_ identifier: DeviceIdentifier) {
-    self.init(
-      vendorID: identifier.controllerIdentity.vendorID,
-      productID: identifier.controllerIdentity.productID
-    )
+  init(_ model: ControllerModelID) {
+    self.init(vendorID: model.vendorID, productID: model.productID)
   }
 }
 

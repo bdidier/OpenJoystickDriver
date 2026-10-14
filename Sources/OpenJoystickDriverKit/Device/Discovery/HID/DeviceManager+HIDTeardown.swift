@@ -187,7 +187,7 @@ extension DeviceManager {
     else { return }
     _ = await sendControllerOutput(
       .setPlayerIndicator(indicator),
-      for: key,
+      for: key.model,
       runtimeIdentifier: key.runtimeIdentifier
     )
   }

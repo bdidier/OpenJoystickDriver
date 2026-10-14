@@ -5,7 +5,7 @@ import Testing
 struct DeviceManagerIdentitySelectionTests {
   @Test
   func opaqueIdentifierMustBelongToRequestedModel() {
-    let requestedModel = DeviceIdentifier(vendorID: 1, productID: 2)
+    let requestedModel = ControllerModelID(vendorID: 1, productID: 2)
     let requestedDevice = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 1)
     let otherModelDevice = DeviceIdentifier(vendorID: 3, productID: 4, locationID: 2)
 
@@ -20,7 +20,7 @@ struct DeviceManagerIdentitySelectionTests {
 
   @Test
   func opaqueIdentifierSelectsExactDeviceWithinRequestedModel() {
-    let model = DeviceIdentifier(vendorID: 1, productID: 2)
+    let model = ControllerModelID(vendorID: 1, productID: 2)
     let first = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 1)
     let second = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 2)
 
@@ -42,7 +42,7 @@ struct DeviceManagerIdentitySelectionTests {
     #expect(
       DeviceManager.connectedIdentifier(
         among: [first, second],
-        matching: first,
+        matching: first.model,
         runtimeIdentifier: nil
       ) == nil
     )
@@ -50,7 +50,7 @@ struct DeviceManagerIdentitySelectionTests {
       #expect(
         DeviceManager.connectedIdentifier(
           among: [first, second],
-          matching: owner,
+          matching: owner.model,
           runtimeIdentifier: owner.runtimeIdentifier
         ) == owner
       )

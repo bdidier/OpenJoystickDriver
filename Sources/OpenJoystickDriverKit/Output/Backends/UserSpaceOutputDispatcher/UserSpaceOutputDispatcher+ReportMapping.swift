@@ -8,7 +8,7 @@ extension UserSpaceOutputDispatcher {
 
   static func stickTransfer(for identifier: DeviceIdentifier) -> StickTransfer {
     let catalog = DeviceCatalog.current.withLock { $0 }
-    if let deadzone = catalog.record(for: identifier)?.tuning.stickDeadzone {
+    if let deadzone = catalog.record(for: identifier.model)?.tuning.stickDeadzone {
       return StickTransfer(deadzone: deadzone, rescalesDeadzone: true)
     }
     return StickTransfer(deadzone: 0, rescalesDeadzone: false)

@@ -152,7 +152,7 @@ enum ProtocolClassifier {
       )
     }
     if let vendorID = device.vendorID, let productID = device.productID,
-      let record = catalog.record(for: DeviceIdentifier(vendorID: vendorID, productID: productID))
+      let record = catalog.record(for: ControllerModelID(vendorID: vendorID, productID: productID))
     {
       return otherXboxFamilyBinding(for: record, interfaces: interfaces, backend: backend)
         ?? bind(record, interfaces: interfaces, backend: backend)

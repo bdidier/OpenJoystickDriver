@@ -27,8 +27,8 @@ extension DriverLifecycleCharacterizationTests {
     await backend.enableFeatureReports()
     let connection = HIDDeviceConnection(
       physicalDevice: PhysicalDevice(
-        vendorID: subject.identifier.controllerIdentity.vendorID,
-        productID: subject.identifier.controllerIdentity.productID,
+        vendorID: subject.model.vendorID,
+        productID: subject.model.productID,
         productName: "Characterized controller",
         transportProperty: transport,
         physicalLocationIdentifier: locationID,

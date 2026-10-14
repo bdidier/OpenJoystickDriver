@@ -175,7 +175,7 @@ struct USBStartupOutputPolicyTests {
 
   @Test
   func preservesNotFoundForOtherStartupPacketsAndParsers() {
-    let genericParser = HIDDescriptorDriver(identifier: DeviceIdentifier(vendorID: 1, productID: 2))
+    let genericParser = HIDDescriptorDriver(model: ControllerModelID(vendorID: 1, productID: 2))
 
     #expect(!isIgnorableUSBStartupOutputError(Self.write([0x00, 0x01]), error: .notFound))
     #expect(!isIgnorableUSBStartupOutputError(Self.write([0x01, 0x03, 0x06]), error: .notFound))
@@ -184,7 +184,7 @@ struct USBStartupOutputPolicyTests {
 
   @Test
   func preservesIOErrorForOtherStartupPacketsAndParsers() {
-    let genericParser = HIDDescriptorDriver(identifier: DeviceIdentifier(vendorID: 1, productID: 2))
+    let genericParser = HIDDescriptorDriver(model: ControllerModelID(vendorID: 1, productID: 2))
     let error = USBTransportError.inputOutput
 
     #expect(!isIgnorableUSBStartupOutputError(Self.write([0x00, 0x01]), error: error))
