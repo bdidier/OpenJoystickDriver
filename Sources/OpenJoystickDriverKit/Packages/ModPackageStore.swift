@@ -1,11 +1,12 @@
 import Foundation
 
-/// One folder of the package store: its manifest, or why the manifest cannot be used.
+/// One folder of the package store: its manifest, and why the package cannot be used.
 public struct ModPackage: Equatable, Sendable {
   public let directory: URL
   /// Nil when `mod.json` is missing or invalid.
   public let manifest: ModPackageManifest?
-  /// Why the manifest cannot be used, or nil when it can.
+  /// Why the package cannot be used, or nil when it can. A package whose `requires` does not
+  /// admit the running version keeps its manifest and has this E4002 problem.
   public let problem: String?
 
   /// The folder name, which is the package name.
@@ -38,6 +39,10 @@ public struct ModPackageStore: Sendable {
   }
 
   /// Every folder of the store in name order, with the packages that cannot be used included.
+  ///
+  /// A package whose `requires` does not admit the running version gets the E4002 problem. A
+  /// running version that is not a SemVer version is a development build, which admits every
+  /// package here; ``validate(_:)`` and ``install(_:replace:)`` still refuse it.
   public func list() -> [ModPackage] {
     let folders =
       (try? FileManager.default.contentsOfDirectory(
@@ -59,7 +64,8 @@ public struct ModPackageStore: Sendable {
               + "folder is \(folder.lastPathComponent)"
           )
         }
-        return ModPackage(directory: folder, manifest: manifest, problem: nil)
+        let excluded = SemanticVersion(runningVersion) == nil ? nil : requiresProblem(of: manifest)
+        return ModPackage(directory: folder, manifest: manifest, problem: excluded.map { "\($0)" })
       } catch {
         return ModPackage(directory: folder, manifest: nil, problem: "\(error)")
       }

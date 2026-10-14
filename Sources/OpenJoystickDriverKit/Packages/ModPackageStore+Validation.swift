@@ -40,27 +40,15 @@ extension ModPackageStore {
   public func validate(_ folder: URL) throws -> ModPackageManifest {
     try Self.checkLayout(of: folder)
     let manifest = try Self.manifest(in: folder)
-    guard let running = SemanticVersion(runningVersion) else {
-      throw ModPackageError(
-        .requiresExcludesVersion,
-        "the running version \(runningVersion) is not a SemVer version"
-      )
-    }
-    guard manifest.requires.admits(running) else {
-      let range =
-        "\(manifest.requires.minimum)"
-        + (manifest.requires.below.map { " up to \($0)" } ?? " or later")
-      throw ModPackageError(
-        .requiresExcludesVersion,
-        "\(manifest.name) requires \(range), and this is \(runningVersion)"
-      )
-    }
+    if let problem = requiresProblem(of: manifest) { throw problem }
     let claims = try Self.checkedClaims(of: folder, manifest)
     let user = userRoot
     var holders: [(label: String, claims: ModPackageClaims)] = [
       ("your own files", Self.userClaims(user))
     ]
-    for other in list() where other.name != manifest.name {
+    // A package that cannot be used, such as one whose `requires` leaves out this version, holds
+    // nothing, so it does not block its replacement or another package.
+    for other in list() where other.name != manifest.name && other.problem == nil {
       if let held = other.manifest {
         holders.append(("package \(other.name)", Self.claims(of: other.directory, held)))
       }
@@ -74,6 +62,27 @@ extension ModPackageStore {
   }
 
   private var userRoot: URL { directory.deletingLastPathComponent() }
+
+  /// The E4002 refusal of `manifest` on the running version, or nil when its `requires` admits
+  /// that version. A running version that is not a SemVer version is refused.
+  func requiresProblem(of manifest: ModPackageManifest) -> ModPackageError? {
+    guard let running = SemanticVersion(runningVersion) else {
+      return ModPackageError(
+        .requiresExcludesVersion,
+        "the running version \(runningVersion) is not a SemVer version"
+      )
+    }
+    guard manifest.requires.admits(running) else {
+      let range =
+        "\(manifest.requires.minimum)"
+        + (manifest.requires.below.map { " up to \($0)" } ?? " or later")
+      return ModPackageError(
+        .requiresExcludesVersion,
+        "\(manifest.name) requires \(range), and this is \(runningVersion)"
+      )
+    }
+    return nil
+  }
 
   /// The claims of `folder`, after every listed file is present and valid and no file is unlisted.
   private static func checkedClaims(

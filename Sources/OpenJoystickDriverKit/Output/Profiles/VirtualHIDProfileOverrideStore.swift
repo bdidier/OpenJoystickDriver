@@ -79,11 +79,17 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
   private let packages: ModPackageStore
 
   /// The store of `directory`, with the personas of the packages installed in the `Packages`
-  /// folder beside it, or in `packagesDirectory`, under it.
-  public init(directory: URL = Self.userDirectory, packagesDirectory: URL? = nil) {
+  /// folder beside it, or in `packagesDirectory`, under it. `runningVersion` is the OJD version
+  /// that the `requires` of a package is checked against; nil means the running one.
+  public init(
+    directory: URL = Self.userDirectory,
+    packagesDirectory: URL? = nil,
+    runningVersion: String? = nil
+  ) {
     self.directory = directory
     packages = ModPackageStore(
-      directory: packagesDirectory ?? ModPackageStore.directory(besides: directory)
+      directory: packagesDirectory ?? ModPackageStore.directory(besides: directory),
+      runningVersion: runningVersion
     )
   }
 
@@ -210,10 +216,21 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
     }
   }
 
-  /// Adds the personas of the installed packages, in package-name order. A persona whose match a
-  /// user file or an earlier package already holds is skipped and listed with that reason.
+  /// Adds the personas of the installed packages, in package-name order. A package that cannot be
+  /// used, such as one whose `requires` leaves out the running version, adds none, and its
+  /// `mod.json` is listed with the reason. A persona whose match a user file or an earlier package
+  /// already holds is skipped and listed with that reason.
   private func addPackageFiles(to loaded: inout Loaded) {
     for package in packages.list() {
+      if let problem = package.problem {
+        loaded.files.append(
+          VirtualPersonaFile(
+            url: package.directory.appendingPathComponent(ModPackageManifest.fileName),
+            problem: problem
+          )
+        )
+        continue
+      }
       for file in package.manifest?.personas.sorted() ?? [] {
         let url = package.directory.appendingPathComponent("Personas/\(file)")
         do {

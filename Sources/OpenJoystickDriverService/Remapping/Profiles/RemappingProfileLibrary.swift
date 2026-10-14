@@ -62,8 +62,13 @@ actor RemappingProfileLibrary {
   var profileIssues: [UUID: RecoveryIssue] = [:]
   /// The profiles of the installed packages, read with the library and never written.
   var packageProfiles: [PackageProfile] = []
+  /// The OJD version that the `requires` of a package is checked against; nil for the running one.
+  let runningVersion: String?
 
-  init(directory: URL = RemappingProfileLibrary.defaultDirectory) { self.directory = directory }
+  init(directory: URL = RemappingProfileLibrary.defaultDirectory, runningVersion: String? = nil) {
+    self.directory = directory
+    self.runningVersion = runningVersion
+  }
 
   static var defaultDirectory: URL {
     let manager = FileManager.default
