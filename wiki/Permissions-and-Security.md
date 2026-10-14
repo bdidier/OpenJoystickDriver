@@ -73,17 +73,17 @@ OJD does not use camera, microphone, or Full Disk Access permissions. It reads B
 ### Grant Input Monitoring and Accessibility
 
 1. Open the **Overview** pane, or click the menu-bar icon.
-1. Click **Request...** on the **Input Monitoring** card, or click **Request Access...** in the menu.
-1. Allow **OpenJoystickDriver** in **System Settings** > **Privacy & Security** > **Input Monitoring**.
-1. Repeat for **System Settings** > **Privacy & Security** > **Accessibility**.
-1. Click **Restart OpenJoystickDriver** on the **Overview** pane if it appears.
+2. Click **Request...** on the **Input Monitoring** card, or click **Request Access...** in the menu.
+3. Allow **OpenJoystickDriver** in **System Settings** > **Privacy & Security** > **Input Monitoring**.
+4. Repeat for **System Settings** > **Privacy & Security** > **Accessibility**.
+5. Click **Restart OpenJoystickDriver** on the **Overview** pane if it appears.
 
 Without **Input Monitoring**, Input Test shows **Input Monitoring permission required**. Without **Accessibility**, the virtual controller does not work.
 
 ### Grant Notifications
 
 1. Open **Settings** and turn on a notification toggle, or click **Send Test Notification**.
-1. Allow the macOS prompt.
+2. Allow the macOS prompt.
 
 If you denied notifications before, click **Open Notification Settings**. The **Notifications** card shows **Banners off** or **Sound off** when macOS turns those parts off.
 
