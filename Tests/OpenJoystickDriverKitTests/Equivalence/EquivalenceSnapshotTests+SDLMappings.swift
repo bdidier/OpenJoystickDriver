@@ -98,10 +98,11 @@ struct EquivalenceSnapshotSDLMappingTests {
       parsed.fields.filter { $0.usagePage == 1 && (0x30...0x35).contains($0.usage) }.map(\.usage)
     ).sorted()
     let neutral = profile.inputReport(for: .neutral)
+    let identity = profile.identity
     var lines = [
-      "profile=\(id.rawValue) vendor=\(profile.identity.vendorID) product=\(profile.identity.productID)"
-        + " version=\(profile.identity.versionNumber) name=\(profile.identity.productName)",
-      "guid=\(guid(profile.identity))",
+      "profile=\(id.rawValue) vendor=\(identity.vendorID) product=\(identity.productID)"
+        + " version=\(identity.versionNumber) name=\(identity.productName)",
+      "guid=\(guid(identity))",
       "report length=\(neutral.count) descriptorBytes=\(profile.descriptor.count)",
     ]
     var entries: [String] = []
@@ -136,9 +137,9 @@ struct EquivalenceSnapshotSDLMappingTests {
         unmapped.append(probe.control)
       }
     }
-    let identity = profile.identity
+    let bindings = entries.sorted().joined(separator: ",")
     lines.append(
-      "mapping=\(Self.guid(identity)),\(identity.productName),\(entries.sorted().joined(separator: ",")),platform:Mac OS X,"
+      "mapping=\(Self.guid(identity)),\(identity.productName),\(bindings),platform:Mac OS X,"
     )
     lines.append("unmapped=\(unmapped.sorted().joined(separator: ","))")
     return (id.rawValue, lines)
