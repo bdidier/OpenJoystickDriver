@@ -212,6 +212,7 @@ from .execution import (
     run_commands,
     run_record,
     run_usb_passive,
+    swift_command,
 )
 
 
@@ -391,7 +392,7 @@ def dispatch(argv: list[str]) -> int:
                     f"Unknown: test {rest[0] if rest else ''} (expected: parsers-macos14)"
                 )
             return subprocess.run(
-                ["swift", "run", "ParserCompatibilityHarness"],
+                swift_command(["run", "ParserCompatibilityHarness"]),
                 cwd=PROJECT_DIR,
                 env=env_with(),
                 check=False,
