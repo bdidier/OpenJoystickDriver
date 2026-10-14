@@ -280,12 +280,25 @@ public struct ApplicationServiceRemappingRoutePayload: Codable, Equatable, Senda
   }
 }
 
+/// A profile a mod package serves, and the package that serves it.
+public struct ApplicationServiceRemappingPackageProfile: Codable, Equatable, Sendable {
+  public let profileID: UUID
+  public let package: String
+
+  public init(profileID: UUID, package: String) {
+    self.profileID = profileID
+    self.package = package
+  }
+}
+
 public struct ApplicationServiceRemappingSnapshotPayload: Codable, Equatable, Sendable {
   public let profiles: [RemappingProfile]
   public let activeProfiles: [ApplicationServiceRemappingActiveProfilePayload]
   public let routes: [ApplicationServiceRemappingRoutePayload]
   public let joyConPairs: [ApplicationServiceJoyConPairPayload]
   public let profileIssues: [ApplicationServiceRemappingProfileIssue]
+  /// The profiles in `profiles` that a package serves, sorted by profile id.
+  public let packageProfiles: [ApplicationServiceRemappingPackageProfile]
   public let postEventAccess: RemappingPostEventAccessState
 
   public init(
@@ -294,6 +307,7 @@ public struct ApplicationServiceRemappingSnapshotPayload: Codable, Equatable, Se
     routes: [ApplicationServiceRemappingRoutePayload],
     joyConPairs: [ApplicationServiceJoyConPairPayload] = [],
     profileIssues: [ApplicationServiceRemappingProfileIssue] = [],
+    packageProfiles: [ApplicationServiceRemappingPackageProfile] = [],
     postEventAccess: RemappingPostEventAccessState
   ) {
     self.profiles = profiles
@@ -301,6 +315,7 @@ public struct ApplicationServiceRemappingSnapshotPayload: Codable, Equatable, Se
     self.routes = routes
     self.joyConPairs = joyConPairs
     self.profileIssues = profileIssues
+    self.packageProfiles = packageProfiles
     self.postEventAccess = postEventAccess
   }
 
@@ -310,6 +325,7 @@ public struct ApplicationServiceRemappingSnapshotPayload: Codable, Equatable, Se
     case routes
     case joyConPairs
     case profileIssues
+    case packageProfiles
     case postEventAccess
   }
 
@@ -330,6 +346,11 @@ public struct ApplicationServiceRemappingSnapshotPayload: Codable, Equatable, Se
       try container.decodeIfPresent(
         [ApplicationServiceRemappingProfileIssue].self,
         forKey: .profileIssues
+      ) ?? []
+    packageProfiles =
+      try container.decodeIfPresent(
+        [ApplicationServiceRemappingPackageProfile].self,
+        forKey: .packageProfiles
       ) ?? []
     postEventAccess = try container.decode(
       RemappingPostEventAccessState.self,
