@@ -1,0 +1,1423 @@
+## 045E:028E host=usb steps=xusbWiredSteps
+neutral [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b2.4 [menu] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b2.5 [view] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b2.6 [left-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b2.7 [right-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b3.0 [left-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b3.1 [right-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b3.2 [guide] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b3.3 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b3.4 [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b3.5 [face-east] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b3.6 [face-west] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b3.7 [face-north] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+h1 [] hat=north ls=0,0 rs=0,0 lt=0 rt=0
+h9 [] hat=northEast ls=0,0 rs=0,0 lt=0 rt=0
+h8 [] hat=east ls=0,0 rs=0,0 lt=0 rt=0
+ha [] hat=southEast ls=0,0 rs=0,0 lt=0 rt=0
+h2 [] hat=south ls=0,0 rs=0,0 lt=0 rt=0
+h6 [] hat=southWest ls=0,0 rs=0,0 lt=0 rt=0
+h4 [] hat=west ls=0,0 rs=0,0 lt=0 rt=0
+h5 [] hat=northWest ls=0,0 rs=0,0 lt=0 rt=0
+h3 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+h0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+t4=80 [] hat=neutral ls=0,0 rs=0,0 lt=32896 rt=0
+t4=ff [] hat=neutral ls=0,0 rs=0,0 lt=65535 rt=0
+t4=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+t5=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=32896
+t5=ff [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=65535
+t5=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s6=8000 [] hat=neutral ls=-32767,0 rs=0,0 lt=0 rt=0
+s6=8001 [] hat=neutral ls=-32767,0 rs=0,0 lt=0 rt=0
+s6=7fff [] hat=neutral ls=32767,0 rs=0,0 lt=0 rt=0
+s6=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s8=8000 [] hat=neutral ls=0,32767 rs=0,0 lt=0 rt=0
+s8=8001 [] hat=neutral ls=0,32767 rs=0,0 lt=0 rt=0
+s8=7fff [] hat=neutral ls=0,-32767 rs=0,0 lt=0 rt=0
+s8=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s10=8000 [] hat=neutral ls=0,0 rs=-32767,0 lt=0 rt=0
+s10=8001 [] hat=neutral ls=0,0 rs=-32767,0 lt=0 rt=0
+s10=7fff [] hat=neutral ls=0,0 rs=32767,0 lt=0 rt=0
+s10=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s12=8000 [] hat=neutral ls=0,0 rs=0,32767 lt=0 rt=0
+s12=8001 [] hat=neutral ls=0,0 rs=0,32767 lt=0 rt=0
+s12=7fff [] hat=neutral ls=0,0 rs=0,-32767 lt=0 rt=0
+s12=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+repeat [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+short [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+len=13 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+
+## 045E:02D1 host=usb steps=gipSplitSteps
+neutral [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+head [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+tail [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+
+## 045E:02D1 host=usb steps=gipSteps
+neutral [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b0.0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b0.1 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b0.2 [menu] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b0.3 [view] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b0.4 [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b0.5 [face-east] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b0.6 [face-west] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b0.7 [face-north] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b1.4 [left-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b1.5 [right-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b1.6 [left-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b1.7 [right-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b14.0 [share] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b14.1 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b14.2 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b14.3 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b14.4 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b14.5 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b14.6 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b14.7 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+h1 [] hat=north ls=0,0 rs=0,0 lt=0 rt=0
+h9 [] hat=northEast ls=0,0 rs=0,0 lt=0 rt=0
+h8 [] hat=east ls=0,0 rs=0,0 lt=0 rt=0
+ha [] hat=southEast ls=0,0 rs=0,0 lt=0 rt=0
+h2 [] hat=south ls=0,0 rs=0,0 lt=0 rt=0
+h6 [] hat=southWest ls=0,0 rs=0,0 lt=0 rt=0
+h4 [] hat=west ls=0,0 rs=0,0 lt=0 rt=0
+h5 [] hat=northWest ls=0,0 rs=0,0 lt=0 rt=0
+h3 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+h0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+lt=1ff [] hat=neutral ls=0,0 rs=0,0 lt=32735 rt=0
+lt=3ff [] hat=neutral ls=0,0 rs=0,0 lt=65535 rt=0
+lt=400 [] hat=neutral ls=0,0 rs=0,0 lt=65535 rt=0
+lt=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+rt=1ff [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=32735
+rt=3ff [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=65535
+rt=400 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=65535
+rt=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s6=8000 [] hat=neutral ls=-32767,0 rs=0,0 lt=0 rt=0
+s6=8001 [] hat=neutral ls=-32767,0 rs=0,0 lt=0 rt=0
+s6=7fff [] hat=neutral ls=32767,0 rs=0,0 lt=0 rt=0
+s6=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s8=8000 [] hat=neutral ls=0,32767 rs=0,0 lt=0 rt=0
+s8=8001 [] hat=neutral ls=0,32767 rs=0,0 lt=0 rt=0
+s8=7fff [] hat=neutral ls=0,-32767 rs=0,0 lt=0 rt=0
+s8=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s10=8000 [] hat=neutral ls=0,0 rs=-32767,0 lt=0 rt=0
+s10=8001 [] hat=neutral ls=0,0 rs=-32767,0 lt=0 rt=0
+s10=7fff [] hat=neutral ls=0,0 rs=32767,0 lt=0 rt=0
+s10=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s12=8000 [] hat=neutral ls=0,0 rs=0,32767 lt=0 rt=0
+s12=8001 [] hat=neutral ls=0,0 rs=0,32767 lt=0 rt=0
+s12=7fff [] hat=neutral ls=0,0 rs=0,-32767 lt=0 rt=0
+s12=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+repeat [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+guide [guide] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+guide-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+short [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+ack-req [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+ack [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+chunk [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+status [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+
+## 045E:0719 host=usb steps=xusbReceiverSteps
+early-a [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+connect [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+neutral [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+a [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+lsx=max [] hat=neutral ls=32767,0 rs=0,0 lt=0 rt=0
+a+up [face-south] hat=north ls=0,0 rs=0,0 lt=0 rt=0
+disconnect [face-south] hat=north ls=0,0 rs=0,0 lt=0 rt=0
+late-b [face-south] hat=north ls=0,0 rs=0,0 lt=0 rt=0
+short [face-south] hat=north ls=0,0 rs=0,0 lt=0 rt=0
+
+## 054C:0268 host=bluetoothClassic steps=sixaxisSteps.prefix(4)
+neutral [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b2.0 [view] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b2.1 [left-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b2.2 [right-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+
+## 054C:0268 host=usb steps=capturedSixaxis
+cap0 [] hat=neutral ls=-1279,258 rs=258,0 lt=0 rt=0
+cap1 [] hat=neutral ls=-1023,258 rs=258,0 lt=0 rt=0
+cap2 [] hat=neutral ls=-1279,258 rs=258,0 lt=0 rt=0
+
+## 054C:0268 host=usb steps=sixaxisSteps
+neutral [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b2.0 [view] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b2.1 [left-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b2.2 [right-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b2.3 [menu] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b3.0 [left-trigger-button] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b3.1 [right-trigger-button] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b3.2 [left-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b3.3 [right-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b3.4 [face-north] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b3.5 [face-east] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b3.6 [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b3.7 [face-west] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b4.0 [guide] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b4.1 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b4.2 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b4.3 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b4.4 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b4.5 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b4.6 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b4.7 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+h10 [] hat=north ls=0,0 rs=0,0 lt=0 rt=0
+h30 [] hat=northEast ls=0,0 rs=0,0 lt=0 rt=0
+h20 [] hat=east ls=0,0 rs=0,0 lt=0 rt=0
+h60 [] hat=southEast ls=0,0 rs=0,0 lt=0 rt=0
+h40 [] hat=south ls=0,0 rs=0,0 lt=0 rt=0
+hc0 [] hat=southWest ls=0,0 rs=0,0 lt=0 rt=0
+h80 [] hat=west ls=0,0 rs=0,0 lt=0 rt=0
+h90 [] hat=northWest ls=0,0 rs=0,0 lt=0 rt=0
+h50 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+h0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s6=0 [] hat=neutral ls=-32767,0 rs=0,0 lt=0 rt=0
+s6=7f [] hat=neutral ls=-255,0 rs=0,0 lt=0 rt=0
+s6=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s6=81 [] hat=neutral ls=258,0 rs=0,0 lt=0 rt=0
+s6=ff [] hat=neutral ls=32767,0 rs=0,0 lt=0 rt=0
+s7=0 [] hat=neutral ls=0,-32767 rs=0,0 lt=0 rt=0
+s7=7f [] hat=neutral ls=0,-255 rs=0,0 lt=0 rt=0
+s7=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s7=81 [] hat=neutral ls=0,258 rs=0,0 lt=0 rt=0
+s7=ff [] hat=neutral ls=0,32767 rs=0,0 lt=0 rt=0
+s8=0 [] hat=neutral ls=0,0 rs=-32767,0 lt=0 rt=0
+s8=7f [] hat=neutral ls=0,0 rs=-255,0 lt=0 rt=0
+s8=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s8=81 [] hat=neutral ls=0,0 rs=258,0 lt=0 rt=0
+s8=ff [] hat=neutral ls=0,0 rs=32767,0 lt=0 rt=0
+s9=0 [] hat=neutral ls=0,0 rs=0,-32767 lt=0 rt=0
+s9=7f [] hat=neutral ls=0,0 rs=0,-255 lt=0 rt=0
+s9=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s9=81 [] hat=neutral ls=0,0 rs=0,258 lt=0 rt=0
+s9=ff [] hat=neutral ls=0,0 rs=0,32767 lt=0 rt=0
+t18=80 [] hat=neutral ls=0,0 rs=0,0 lt=32896 rt=0
+t18=ff [] hat=neutral ls=0,0 rs=0,0 lt=65535 rt=0
+t18=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+t19=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=32896
+t19=ff [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=65535
+t19=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+repeat [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+byte1=ff [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+short [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+
+## 054C:09CC host=bluetoothClassic steps=dualShock4BluetoothSteps
+neutral [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=1 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  battery 0-9% discharging wired-power=no
+b5.4 [face-west] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=2 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b5.5 [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=3 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b5.6 [face-east] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=4 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b5.7 [face-north] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=5 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b6.0 [left-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=6 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b6.1 [right-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=7 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b6.2 [left-trigger-button] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=8 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b6.3 [right-trigger-button] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=9 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b6.4 [view] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=10 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b6.5 [menu] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=11 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b6.6 [left-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=12 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b6.7 [right-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=13 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b7.0 [guide] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=14 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b7.1 [touchpad-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=15 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b7.2 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=16 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b7.3 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=17 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b7.4 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=18 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b7.5 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=19 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b7.6 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=20 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b7.7 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=21 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+h0 [] hat=north ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=22 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+h1 [] hat=northEast ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=23 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+h2 [] hat=east ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=24 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+h3 [] hat=southEast ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=25 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+h4 [] hat=south ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=26 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+h5 [] hat=southWest ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=27 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+h6 [] hat=west ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=28 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+h7 [] hat=northWest ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=29 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+hf [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=30 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+h8 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=31 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s1=0 [] hat=neutral ls=-32767,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=32 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s1=7f [] hat=neutral ls=-255,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=33 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s1=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=34 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s1=81 [] hat=neutral ls=255,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=35 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s1=ff [] hat=neutral ls=32511,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=36 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s2=0 [] hat=neutral ls=0,-32767 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=37 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s2=7f [] hat=neutral ls=0,-255 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=38 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s2=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=39 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s2=81 [] hat=neutral ls=0,255 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=40 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s2=ff [] hat=neutral ls=0,32511 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=41 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s3=0 [] hat=neutral ls=0,0 rs=-32767,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=42 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s3=7f [] hat=neutral ls=0,0 rs=-255,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=43 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s3=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=44 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s3=81 [] hat=neutral ls=0,0 rs=255,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=45 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s3=ff [] hat=neutral ls=0,0 rs=32511,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=46 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s4=0 [] hat=neutral ls=0,0 rs=0,-32767 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=47 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s4=7f [] hat=neutral ls=0,0 rs=0,-255 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=48 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s4=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=49 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s4=81 [] hat=neutral ls=0,0 rs=0,255 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=50 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s4=ff [] hat=neutral ls=0,0 rs=0,32511 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=51 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+t8=80 [] hat=neutral ls=0,0 rs=0,0 lt=32896 rt=0 motion=1 touch=0 fresh
+  motion n=52 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+t8=ff [] hat=neutral ls=0,0 rs=0,0 lt=65535 rt=0 motion=1 touch=0 fresh
+  motion n=53 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+t8=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=54 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+t9=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=32896 motion=1 touch=0 fresh
+  motion n=55 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+t9=ff [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=65535 motion=1 touch=0 fresh
+  motion n=56 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+t9=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=57 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+touch [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1 fresh
+  motion n=58 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:18032,47010 1:1:27320,23679]
+battery [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=59 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  battery 100% full wired-power=yes
+repeat [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 stale
+  motion n=59 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+bad-crc [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 stale threw=invalidBluetoothCRC
+short [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 stale threw=invalidReportFraming
+
+## 054C:09CC host=usb steps=capturedDualShock4
+cap0 [] hat=neutral ls=-1279,-1023 rs=767,0 lt=0 rt=0 motion=1 touch=1 fresh
+  motion n=12705 w=-0.0076,0.0164,0.0076 a=-0.0204,-2.1452,9.3182
+  touch primary [0:0:53002,6755 1:0:0,0]
+  battery 100% full wired-power=yes
+cap1 [] hat=neutral ls=-255,-1023 rs=511,0 lt=0 rt=0 motion=1 touch=1 fresh
+  motion n=13448 w=-0.0087,0.0175,0.0076 a=-0.0287,-2.1632,9.3075
+  touch primary [0:0:53002,6755 1:0:0,0]
+cap2 [] hat=neutral ls=-1279,-1023 rs=511,0 lt=0 rt=0 motion=1 touch=1 fresh
+  motion n=14191 w=-0.0087,0.0164,0.0076 a=-0.0263,-2.1512,9.3230
+  touch primary [0:0:53002,6755 1:0:0,0]
+
+## 054C:09CC host=usb steps=dualShock4USBSteps
+neutral [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=1 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  battery 0-9% discharging wired-power=no
+b5.4 [face-west] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=2 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b5.5 [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=3 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b5.6 [face-east] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=4 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b5.7 [face-north] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=5 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b6.0 [left-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=6 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b6.1 [right-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=7 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b6.2 [left-trigger-button] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=8 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b6.3 [right-trigger-button] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=9 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b6.4 [view] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=10 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b6.5 [menu] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=11 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b6.6 [left-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=12 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b6.7 [right-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=13 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b7.0 [guide] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=14 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b7.1 [touchpad-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=15 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b7.2 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=16 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b7.3 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=17 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b7.4 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=18 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b7.5 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=19 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b7.6 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=20 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+b7.7 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=21 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+h0 [] hat=north ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=22 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+h1 [] hat=northEast ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=23 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+h2 [] hat=east ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=24 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+h3 [] hat=southEast ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=25 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+h4 [] hat=south ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=26 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+h5 [] hat=southWest ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=27 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+h6 [] hat=west ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=28 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+h7 [] hat=northWest ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=29 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+hf [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=30 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+h8 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=31 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s1=0 [] hat=neutral ls=-32767,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=32 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s1=7f [] hat=neutral ls=-255,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=33 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s1=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=34 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s1=81 [] hat=neutral ls=255,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=35 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s1=ff [] hat=neutral ls=32511,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=36 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s2=0 [] hat=neutral ls=0,-32767 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=37 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s2=7f [] hat=neutral ls=0,-255 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=38 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s2=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=39 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s2=81 [] hat=neutral ls=0,255 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=40 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s2=ff [] hat=neutral ls=0,32511 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=41 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s3=0 [] hat=neutral ls=0,0 rs=-32767,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=42 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s3=7f [] hat=neutral ls=0,0 rs=-255,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=43 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s3=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=44 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s3=81 [] hat=neutral ls=0,0 rs=255,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=45 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s3=ff [] hat=neutral ls=0,0 rs=32511,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=46 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s4=0 [] hat=neutral ls=0,0 rs=0,-32767 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=47 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s4=7f [] hat=neutral ls=0,0 rs=0,-255 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=48 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s4=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=49 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s4=81 [] hat=neutral ls=0,0 rs=0,255 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=50 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+s4=ff [] hat=neutral ls=0,0 rs=0,32511 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=51 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+t8=80 [] hat=neutral ls=0,0 rs=0,0 lt=32896 rt=0 motion=1 touch=0 fresh
+  motion n=52 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+t8=ff [] hat=neutral ls=0,0 rs=0,0 lt=65535 rt=0 motion=1 touch=0 fresh
+  motion n=53 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+t8=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=54 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+t9=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=32896 motion=1 touch=0 fresh
+  motion n=55 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+t9=ff [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=65535 motion=1 touch=0 fresh
+  motion n=56 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+t9=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=57 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+touch [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1 fresh
+  motion n=58 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:18032,47010 1:1:27320,23679]
+battery [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 fresh
+  motion n=59 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  battery 100% full wired-power=yes
+repeat [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=0 stale
+  motion n=59 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+short [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 stale threw=invalidReportFraming
+minimal [left-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 fresh
+
+## 054C:0CE6 host=bluetoothClassic steps=dualSenseBluetoothSteps
+neutral [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b8.4 [face-west] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b8.5 [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b8.6 [face-east] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b8.7 [face-north] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b9.0 [left-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b9.1 [right-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b9.2 [left-trigger-button] hat=neutral ls=0,0 rs=0,0 lt=65535 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b9.3 [right-trigger-button] hat=neutral ls=0,0 rs=0,0 lt=0 rt=65535 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b9.4 [view] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b9.5 [menu] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b9.6 [left-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b9.7 [right-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b10.0 [guide] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b10.1 [touchpad-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b10.2 [microphone] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b10.3 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b10.4 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b10.5 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b10.6 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b10.7 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+h0 [] hat=north ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+h1 [] hat=northEast ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+h2 [] hat=east ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+h3 [] hat=southEast ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+h4 [] hat=south ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+h5 [] hat=southWest ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+h6 [] hat=west ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+h7 [] hat=northWest ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+hf [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+h8 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s1=0 [] hat=neutral ls=-32767,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s1=7f [] hat=neutral ls=-255,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s1=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s1=81 [] hat=neutral ls=258,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s1=ff [] hat=neutral ls=32767,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s2=0 [] hat=neutral ls=0,-32767 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s2=7f [] hat=neutral ls=0,-255 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s2=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s2=81 [] hat=neutral ls=0,258 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s2=ff [] hat=neutral ls=0,32767 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s3=0 [] hat=neutral ls=0,0 rs=-32767,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s3=7f [] hat=neutral ls=0,0 rs=-255,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s3=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s3=81 [] hat=neutral ls=0,0 rs=258,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s3=ff [] hat=neutral ls=0,0 rs=32767,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s4=0 [] hat=neutral ls=0,0 rs=0,-32767 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s4=7f [] hat=neutral ls=0,0 rs=0,-255 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s4=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s4=81 [] hat=neutral ls=0,0 rs=0,258 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s4=ff [] hat=neutral ls=0,0 rs=0,32767 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+t5=80 [] hat=neutral ls=0,0 rs=0,0 lt=32896 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+t5=ff [] hat=neutral ls=0,0 rs=0,0 lt=65535 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+t5=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+t6=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=32896 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+t6=ff [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=65535 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+t6=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+repeat [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+bad-crc [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 threw=invalidBluetoothCRC
+short [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+
+## 054C:0CE6 host=usb steps=dualSenseUSBSteps
+neutral [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b8.4 [face-west] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b8.5 [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b8.6 [face-east] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b8.7 [face-north] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b9.0 [left-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b9.1 [right-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b9.2 [left-trigger-button] hat=neutral ls=0,0 rs=0,0 lt=65535 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b9.3 [right-trigger-button] hat=neutral ls=0,0 rs=0,0 lt=0 rt=65535 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b9.4 [view] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b9.5 [menu] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b9.6 [left-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b9.7 [right-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b10.0 [guide] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b10.1 [touchpad-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b10.2 [microphone] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b10.3 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b10.4 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b10.5 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b10.6 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+b10.7 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+h0 [] hat=north ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+h1 [] hat=northEast ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+h2 [] hat=east ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+h3 [] hat=southEast ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+h4 [] hat=south ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+h5 [] hat=southWest ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+h6 [] hat=west ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+h7 [] hat=northWest ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+hf [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+h8 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s1=0 [] hat=neutral ls=-32767,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s1=7f [] hat=neutral ls=-255,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s1=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s1=81 [] hat=neutral ls=258,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s1=ff [] hat=neutral ls=32767,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s2=0 [] hat=neutral ls=0,-32767 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s2=7f [] hat=neutral ls=0,-255 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s2=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s2=81 [] hat=neutral ls=0,258 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s2=ff [] hat=neutral ls=0,32767 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s3=0 [] hat=neutral ls=0,0 rs=-32767,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s3=7f [] hat=neutral ls=0,0 rs=-255,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s3=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s3=81 [] hat=neutral ls=0,0 rs=258,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s3=ff [] hat=neutral ls=0,0 rs=32767,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s4=0 [] hat=neutral ls=0,0 rs=0,-32767 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s4=7f [] hat=neutral ls=0,0 rs=0,-255 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s4=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s4=81 [] hat=neutral ls=0,0 rs=0,258 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+s4=ff [] hat=neutral ls=0,0 rs=0,32767 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+t5=80 [] hat=neutral ls=0,0 rs=0,0 lt=32896 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+t5=ff [] hat=neutral ls=0,0 rs=0,0 lt=65535 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+t5=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+t6=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=32896 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+t6=ff [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=65535 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+t6=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+repeat [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=1
+  motion n=0 w=0.0011,-0.0033,-0.0022 a=4.9033,-0.0383,-4.9033
+  touch primary [0:0:0,0 1:0:0,0]
+short [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+
+## 057E:2009 host=bluetoothClassic steps=switchSteps.prefix(3)
+neutral [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+b3.0 [face-west] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+b3.1 [face-north] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+
+## 057E:2009 host=usb steps=switchSteps
+neutral [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+b3.0 [face-west] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+b3.1 [face-north] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+b3.2 [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+b3.3 [face-east] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+b3.4 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+b3.5 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+b3.6 [right-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+b3.7 [right-trigger-button] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+b4.0 [view] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+b4.1 [menu] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+b4.2 [right-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+b4.3 [left-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+b4.4 [guide] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+b4.5 [capture] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+b4.6 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+b4.7 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+b5.4 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+b5.5 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+b5.6 [left-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+b5.7 [left-trigger-button] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+h2 [] hat=north ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+h6 [] hat=northEast ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+h4 [] hat=east ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+h5 [] hat=southEast ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+h1 [] hat=south ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+h9 [] hat=southWest ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+h8 [] hat=west ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+ha [] hat=northWest ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+h3 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+h0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+lx=0 [] hat=neutral ls=-32767,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+ly=0 [] hat=neutral ls=0,32767 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+rx=0 [] hat=neutral ls=0,0 rs=-32767,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+ry=0 [] hat=neutral ls=0,0 rs=0,32767 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+lx=1 [] hat=neutral ls=-32767,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+ly=1 [] hat=neutral ls=0,32767 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+rx=1 [] hat=neutral ls=0,0 rs=-32767,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+ry=1 [] hat=neutral ls=0,0 rs=0,32767 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+lx=4095 [] hat=neutral ls=32767,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+ly=4095 [] hat=neutral ls=0,-32767 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+rx=4095 [] hat=neutral ls=0,0 rs=32767,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+ry=4095 [] hat=neutral ls=0,0 rs=0,-32767 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+lx=2048 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+ly=2048 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+rx=2048 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+ry=2048 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+repeat [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+short [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+reply [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+
+## 0738:4530 host=usb steps=xidSteps
+neutral [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b2.4 [menu] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b2.5 [view] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b2.6 [left-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b2.7 [right-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+h1 [] hat=north ls=0,0 rs=0,0 lt=0 rt=0
+h9 [] hat=northEast ls=0,0 rs=0,0 lt=0 rt=0
+h8 [] hat=east ls=0,0 rs=0,0 lt=0 rt=0
+ha [] hat=southEast ls=0,0 rs=0,0 lt=0 rt=0
+h2 [] hat=south ls=0,0 rs=0,0 lt=0 rt=0
+h6 [] hat=southWest ls=0,0 rs=0,0 lt=0 rt=0
+h4 [] hat=west ls=0,0 rs=0,0 lt=0 rt=0
+h5 [] hat=northWest ls=0,0 rs=0,0 lt=0 rt=0
+h3 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+h0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+k4=1 [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+k4=ff [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+k4=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+k5=1 [face-east] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+k5=ff [face-east] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+k5=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+k6=1 [face-west] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+k6=ff [face-west] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+k6=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+k7=1 [face-north] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+k7=ff [face-north] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+k7=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+k8=1 [left-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+k8=ff [left-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+k8=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+k9=1 [right-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+k9=ff [right-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+k9=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+t10=80 [] hat=neutral ls=0,0 rs=0,0 lt=32896 rt=0
+t10=ff [] hat=neutral ls=0,0 rs=0,0 lt=65535 rt=0
+t10=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+t11=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=32896
+t11=ff [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=65535
+t11=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s12=8000 [] hat=neutral ls=-32767,0 rs=0,0 lt=0 rt=0
+s12=8001 [] hat=neutral ls=-32767,0 rs=0,0 lt=0 rt=0
+s12=7fff [] hat=neutral ls=32767,0 rs=0,0 lt=0 rt=0
+s12=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s14=8000 [] hat=neutral ls=0,32767 rs=0,0 lt=0 rt=0
+s14=8001 [] hat=neutral ls=0,32767 rs=0,0 lt=0 rt=0
+s14=7fff [] hat=neutral ls=0,-32767 rs=0,0 lt=0 rt=0
+s14=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s16=8000 [] hat=neutral ls=0,0 rs=-32767,0 lt=0 rt=0
+s16=8001 [] hat=neutral ls=0,0 rs=-32767,0 lt=0 rt=0
+s16=7fff [] hat=neutral ls=0,0 rs=32767,0 lt=0 rt=0
+s16=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s18=8000 [] hat=neutral ls=0,0 rs=0,32767 lt=0 rt=0
+s18=8001 [] hat=neutral ls=0,0 rs=0,32767 lt=0 rt=0
+s18=7fff [] hat=neutral ls=0,0 rs=0,-32767 lt=0 rt=0
+s18=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+repeat [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+short [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+
+## 1532:0A15 host=usb steps=capturedRazerStatus
+cap0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+input-a [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+cap1 [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+
+## 28DE:1102 host=usb steps=steamSteps
+neutral [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=2
+  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000
+  touch left [0:0:32768,32767]
+  touch right [0:0:32768,32767]
+b8.0 [right-trigger-button] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b8.1 [left-trigger-button] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b8.2 [right-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b8.3 [left-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b8.4 [face-north] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b8.5 [face-east] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b8.6 [face-west] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b8.7 [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b9.4 [view] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b9.5 [guide] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b9.6 [menu] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b9.7 [paddle-left-2] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b10.0 [paddle-right-2] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b10.1 [left-trackpad-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b10.2 [right-trackpad-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b10.3 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b10.4 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b10.5 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b10.6 [left-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b10.7 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+h1 [] hat=north ls=0,0 rs=0,0 lt=0 rt=0
+h3 [] hat=northEast ls=0,0 rs=0,0 lt=0 rt=0
+h2 [] hat=east ls=0,0 rs=0,0 lt=0 rt=0
+ha [] hat=southEast ls=0,0 rs=0,0 lt=0 rt=0
+h8 [] hat=south ls=0,0 rs=0,0 lt=0 rt=0
+hc [] hat=southWest ls=0,0 rs=0,0 lt=0 rt=0
+h4 [] hat=west ls=0,0 rs=0,0 lt=0 rt=0
+h5 [] hat=northWest ls=0,0 rs=0,0 lt=0 rt=0
+h9 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+h0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+t11=80 [] hat=neutral ls=0,0 rs=0,0 lt=32896 rt=0
+t11=ff [] hat=neutral ls=0,0 rs=0,0 lt=65535 rt=0
+t11=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+t12=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=32896
+t12=ff [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=65535
+t12=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s16=8000 [] hat=neutral ls=-32767,0 rs=0,0 lt=0 rt=0
+s16=8001 [] hat=neutral ls=-32767,0 rs=0,0 lt=0 rt=0
+s16=7fff [] hat=neutral ls=32767,0 rs=0,0 lt=0 rt=0
+s16=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s18=8000 [] hat=neutral ls=0,32767 rs=0,0 lt=0 rt=0
+s18=8001 [] hat=neutral ls=0,32767 rs=0,0 lt=0 rt=0
+s18=7fff [] hat=neutral ls=0,-32767 rs=0,0 lt=0 rt=0
+s18=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s20=8000 [] hat=neutral ls=0,0 rs=-32767,0 lt=0 rt=0
+s20=8001 [] hat=neutral ls=0,0 rs=-32767,0 lt=0 rt=0
+s20=7fff [] hat=neutral ls=0,0 rs=32767,0 lt=0 rt=0
+s20=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s22=8000 [] hat=neutral ls=0,0 rs=0,32767 lt=0 rt=0
+s22=8001 [] hat=neutral ls=0,0 rs=0,32767 lt=0 rt=0
+s22=7fff [] hat=neutral ls=0,0 rs=0,-32767 lt=0 rt=0
+s22=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+repeat [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+status [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+short [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+
+## 3537:1003 host=usb steps=gameSirUSBSteps
+neutral [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b2.4 [menu] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b2.5 [view] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b2.6 [left-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b2.7 [right-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b3.0 [left-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b3.1 [right-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b3.2 [guide] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b3.3 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b3.4 [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b3.5 [face-east] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b3.6 [face-west] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b3.7 [face-north] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+h1 [] hat=north ls=0,0 rs=0,0 lt=0 rt=0
+h9 [] hat=northEast ls=0,0 rs=0,0 lt=0 rt=0
+h8 [] hat=east ls=0,0 rs=0,0 lt=0 rt=0
+ha [] hat=southEast ls=0,0 rs=0,0 lt=0 rt=0
+h2 [] hat=south ls=0,0 rs=0,0 lt=0 rt=0
+h6 [] hat=southWest ls=0,0 rs=0,0 lt=0 rt=0
+h4 [] hat=west ls=0,0 rs=0,0 lt=0 rt=0
+h5 [] hat=northWest ls=0,0 rs=0,0 lt=0 rt=0
+h3 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+h0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+t4=80 [] hat=neutral ls=0,0 rs=0,0 lt=32896 rt=0
+t4=ff [] hat=neutral ls=0,0 rs=0,0 lt=65535 rt=0
+t4=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+t5=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=32896
+t5=ff [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=65535
+t5=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s6=8000 [] hat=neutral ls=-32767,0 rs=0,0 lt=0 rt=0
+s6=8001 [] hat=neutral ls=-32767,0 rs=0,0 lt=0 rt=0
+s6=7fff [] hat=neutral ls=32767,0 rs=0,0 lt=0 rt=0
+s6=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s8=8000 [] hat=neutral ls=0,32767 rs=0,0 lt=0 rt=0
+s8=8001 [] hat=neutral ls=0,32767 rs=0,0 lt=0 rt=0
+s8=7fff [] hat=neutral ls=0,-32767 rs=0,0 lt=0 rt=0
+s8=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s10=8000 [] hat=neutral ls=0,0 rs=-32767,0 lt=0 rt=0
+s10=8001 [] hat=neutral ls=0,0 rs=-32767,0 lt=0 rt=0
+s10=7fff [] hat=neutral ls=0,0 rs=32767,0 lt=0 rt=0
+s10=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s12=8000 [] hat=neutral ls=0,0 rs=0,32767 lt=0 rt=0
+s12=8001 [] hat=neutral ls=0,0 rs=0,32767 lt=0 rt=0
+s12=7fff [] hat=neutral ls=0,0 rs=0,-32767 lt=0 rt=0
+s12=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+xusb-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+telemetry [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+  battery 73% discharging wired-power=unknown
+b60.0 [guide] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b60.1 [share] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b60.2 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b60.3 [paddle-left-1] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b60.4 [paddle-right-1] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b60.5 [auxiliary-1] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b60.6 [paddle-left-2] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b60.7 [paddle-right-2] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+charging [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+  battery 100% charging wired-power=yes
+short [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+
+## 3537:100A host=usb steps=hidDescriptorSteps
+report [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+btn1 [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+btn1-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+btn2 [face-east] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+btn2-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+btn3 [face-west] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+btn3-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+btn4 [face-north] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+btn4-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+btn5 [left-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+btn5-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+btn6 [right-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+btn6-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+btn7 [view] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+btn7-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+btn8 [menu] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+btn8-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+btn9 [left-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+btn9-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+btn10 [right-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+btn10-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+btn11 [guide] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+btn11-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+btn12 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+btn12-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+u30=0 [] hat=neutral ls=-32767,0 rs=0,0 lt=0 rt=0
+u30=127 [] hat=neutral ls=-128,0 rs=0,0 lt=0 rt=0
+u30=128 [] hat=neutral ls=128,0 rs=0,0 lt=0 rt=0
+u30=255 [] hat=neutral ls=32767,0 rs=0,0 lt=0 rt=0
+u31=0 [] hat=neutral ls=32767,-32767 rs=0,0 lt=0 rt=0
+u31=127 [] hat=neutral ls=32767,-128 rs=0,0 lt=0 rt=0
+u31=128 [] hat=neutral ls=32767,128 rs=0,0 lt=0 rt=0
+u31=255 [] hat=neutral ls=32767,32767 rs=0,0 lt=0 rt=0
+u32=0 [] hat=neutral ls=32767,32767 rs=0,0 lt=0 rt=0
+u32=127 [] hat=neutral ls=32767,32767 rs=0,0 lt=32639 rt=0
+u32=128 [] hat=neutral ls=32767,32767 rs=0,0 lt=32896 rt=0
+u32=255 [] hat=neutral ls=32767,32767 rs=0,0 lt=65535 rt=0
+u33=0 [] hat=neutral ls=32767,32767 rs=-32767,0 lt=65535 rt=0
+u33=127 [] hat=neutral ls=32767,32767 rs=-128,0 lt=65535 rt=0
+u33=128 [] hat=neutral ls=32767,32767 rs=128,0 lt=65535 rt=0
+u33=255 [] hat=neutral ls=32767,32767 rs=32767,0 lt=65535 rt=0
+u34=0 [] hat=neutral ls=32767,32767 rs=32767,-32767 lt=65535 rt=0
+u34=127 [] hat=neutral ls=32767,32767 rs=32767,-128 lt=65535 rt=0
+u34=128 [] hat=neutral ls=32767,32767 rs=32767,128 lt=65535 rt=0
+u34=255 [] hat=neutral ls=32767,32767 rs=32767,32767 lt=65535 rt=0
+u35=0 [] hat=neutral ls=32767,32767 rs=32767,32767 lt=65535 rt=0
+u35=127 [] hat=neutral ls=32767,32767 rs=32767,32767 lt=65535 rt=32639
+u35=128 [] hat=neutral ls=32767,32767 rs=32767,32767 lt=65535 rt=32896
+u35=255 [] hat=neutral ls=32767,32767 rs=32767,32767 lt=65535 rt=65535
+h0 [] hat=north ls=32767,32767 rs=32767,32767 lt=65535 rt=65535
+h1 [] hat=northEast ls=32767,32767 rs=32767,32767 lt=65535 rt=65535
+h2 [] hat=east ls=32767,32767 rs=32767,32767 lt=65535 rt=65535
+h3 [] hat=southEast ls=32767,32767 rs=32767,32767 lt=65535 rt=65535
+h4 [] hat=south ls=32767,32767 rs=32767,32767 lt=65535 rt=65535
+h5 [] hat=southWest ls=32767,32767 rs=32767,32767 lt=65535 rt=65535
+h6 [] hat=west ls=32767,32767 rs=32767,32767 lt=65535 rt=65535
+h7 [] hat=northWest ls=32767,32767 rs=32767,32767 lt=65535 rt=65535
+h8 [] hat=neutral ls=32767,32767 rs=32767,32767 lt=65535 rt=65535
+h15 [] hat=neutral ls=32767,32767 rs=32767,32767 lt=65535 rt=65535
+repeat [] hat=neutral ls=32767,32767 rs=32767,32767 lt=65535 rt=65535
+span0 [] hat=neutral ls=0,32767 rs=32767,32767 lt=65535 rt=65535
+accel [] hat=neutral ls=0,32767 rs=32767,32767 lt=65535 rt=65535
+page7 [] hat=neutral ls=0,32767 rs=32767,32767 lt=65535 rt=65535
+
+## 3537:100B host=usb steps=gameSirEnhancedSteps
+neutral [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+  battery 84% discharging wired-power=unknown
+b5.4 [face-west] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b5.5 [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b5.6 [face-east] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b5.7 [face-north] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b6.0 [left-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b6.1 [right-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b6.2 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b6.3 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b6.4 [view] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b6.5 [menu] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b6.6 [left-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b6.7 [right-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b60.0 [guide] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b60.1 [share] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b60.2 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b60.3 [paddle-left-1] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b60.4 [paddle-right-1] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b60.5 [auxiliary-1] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b60.6 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b60.7 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+h0 [] hat=north ls=0,0 rs=0,0 lt=0 rt=0
+h1 [] hat=northEast ls=0,0 rs=0,0 lt=0 rt=0
+h2 [] hat=east ls=0,0 rs=0,0 lt=0 rt=0
+h3 [] hat=southEast ls=0,0 rs=0,0 lt=0 rt=0
+h4 [] hat=south ls=0,0 rs=0,0 lt=0 rt=0
+h5 [] hat=southWest ls=0,0 rs=0,0 lt=0 rt=0
+h6 [] hat=west ls=0,0 rs=0,0 lt=0 rt=0
+h7 [] hat=northWest ls=0,0 rs=0,0 lt=0 rt=0
+hf [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+h8 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s1=0 [] hat=neutral ls=-32767,0 rs=0,0 lt=0 rt=0
+s1=7f [] hat=neutral ls=-255,0 rs=0,0 lt=0 rt=0
+s1=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s1=81 [] hat=neutral ls=258,0 rs=0,0 lt=0 rt=0
+s1=ff [] hat=neutral ls=32767,0 rs=0,0 lt=0 rt=0
+s2=0 [] hat=neutral ls=0,32767 rs=0,0 lt=0 rt=0
+s2=7f [] hat=neutral ls=0,255 rs=0,0 lt=0 rt=0
+s2=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s2=81 [] hat=neutral ls=0,-258 rs=0,0 lt=0 rt=0
+s2=ff [] hat=neutral ls=0,-32767 rs=0,0 lt=0 rt=0
+s3=0 [] hat=neutral ls=0,0 rs=-32767,0 lt=0 rt=0
+s3=7f [] hat=neutral ls=0,0 rs=-255,0 lt=0 rt=0
+s3=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s3=81 [] hat=neutral ls=0,0 rs=258,0 lt=0 rt=0
+s3=ff [] hat=neutral ls=0,0 rs=32767,0 lt=0 rt=0
+s4=0 [] hat=neutral ls=0,0 rs=0,32767 lt=0 rt=0
+s4=7f [] hat=neutral ls=0,0 rs=0,255 lt=0 rt=0
+s4=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s4=81 [] hat=neutral ls=0,0 rs=0,-258 lt=0 rt=0
+s4=ff [] hat=neutral ls=0,0 rs=0,-32767 lt=0 rt=0
+t8=80 [] hat=neutral ls=0,0 rs=0,0 lt=32896 rt=0
+t8=ff [] hat=neutral ls=0,0 rs=0,0 lt=65535 rt=0
+t8=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+t9=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=32896
+t9=ff [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=65535
+t9=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+charge=1 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+  battery 84% charging wired-power=yes
+repeat [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+short [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+
+## 3537:1010 host=usb steps=capturedG7SEStatus
+cap0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+input-a [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+cap1 [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+
+## D7D7:0041 host=usb steps=flydigiSteps
+neutral [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b9.4 [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b9.5 [face-east] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b9.6 [face-west] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b9.7 [face-north] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b10.0 [left-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b10.1 [right-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b10.2 [left-trigger-button] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b10.3 [right-trigger-button] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b10.4 [view] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b10.5 [menu] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b10.6 [left-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b10.7 [right-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b11.0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b11.1 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b11.2 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b11.3 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b11.4 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b11.5 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b11.6 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b11.7 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b12.0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b12.1 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b12.2 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b12.3 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b12.4 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b12.5 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b12.6 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+b12.7 [guide] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+h1 [] hat=north ls=0,0 rs=0,0 lt=0 rt=0
+h2 [] hat=northEast ls=0,0 rs=0,0 lt=0 rt=0
+h3 [] hat=east ls=0,0 rs=0,0 lt=0 rt=0
+h4 [] hat=southEast ls=0,0 rs=0,0 lt=0 rt=0
+h5 [] hat=south ls=0,0 rs=0,0 lt=0 rt=0
+h6 [] hat=southWest ls=0,0 rs=0,0 lt=0 rt=0
+h7 [] hat=west ls=0,0 rs=0,0 lt=0 rt=0
+h8 [] hat=northWest ls=0,0 rs=0,0 lt=0 rt=0
+h9 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+h0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s1=80 [] hat=neutral ls=-32767,0 rs=0,0 lt=0 rt=0
+s1=81 [] hat=neutral ls=-32767,0 rs=0,0 lt=0 rt=0
+s1=ff [] hat=neutral ls=-258,0 rs=0,0 lt=0 rt=0
+s1=7f [] hat=neutral ls=32767,0 rs=0,0 lt=0 rt=0
+s1=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s2=80 [] hat=neutral ls=0,-32767 rs=0,0 lt=0 rt=0
+s2=81 [] hat=neutral ls=0,-32767 rs=0,0 lt=0 rt=0
+s2=ff [] hat=neutral ls=0,-258 rs=0,0 lt=0 rt=0
+s2=7f [] hat=neutral ls=0,32767 rs=0,0 lt=0 rt=0
+s2=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s3=80 [] hat=neutral ls=0,0 rs=-32767,0 lt=0 rt=0
+s3=81 [] hat=neutral ls=0,0 rs=-32767,0 lt=0 rt=0
+s3=ff [] hat=neutral ls=0,0 rs=-258,0 lt=0 rt=0
+s3=7f [] hat=neutral ls=0,0 rs=32767,0 lt=0 rt=0
+s3=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+s4=80 [] hat=neutral ls=0,0 rs=0,-32767 lt=0 rt=0
+s4=81 [] hat=neutral ls=0,0 rs=0,-32767 lt=0 rt=0
+s4=ff [] hat=neutral ls=0,0 rs=0,-258 lt=0 rt=0
+s4=7f [] hat=neutral ls=0,0 rs=0,32767 lt=0 rt=0
+s4=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+t13=80 [] hat=neutral ls=0,0 rs=0,0 lt=32896 rt=0
+t13=ff [] hat=neutral ls=0,0 rs=0,0 lt=65535 rt=0
+t13=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+t14=80 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=32896
+t14=ff [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=65535
+t14=0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+repeat [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
+short [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0
