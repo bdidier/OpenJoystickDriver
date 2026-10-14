@@ -14,6 +14,14 @@ import Foundation
 ///   Bytes 10–11: Left Trigger  (Int16 LE, 0...32767) — Usage: Ry (0x34)
 ///   Bytes 12–13: Right Trigger (Int16 LE, 0...32767) — Usage: Rz (0x35)
 ///
+/// Button usages in standard gamepad order (``OJDGenericGamepadFormat`` maps ``ButtonBit`` onto
+/// them): 1 A, 2 B, 3 X, 4 Y, 5 LB, 6 RB, 9 Back/View, 10 Start/Menu, 11 L3, 12 R3, 13 D-pad up,
+/// 14 D-pad down, 15 D-pad left, 16 D-pad right, 17 Guide, 18 Share. A host that numbers the
+/// buttons in usage order sees indices 0–15, so the matching SDL mapping is:
+/// a:b0, b:b1, x:b2, y:b3, leftshoulder:b4, rightshoulder:b5, back:b6, start:b7,
+/// leftstick:b8, rightstick:b9, dpup:b10, dpdown:b11, dpleft:b12, dpright:b13, guide:b14,
+/// misc1:b15, leftx:a0, lefty:a1, rightx:a2, righty:a3, lefttrigger:+a4, righttrigger:+a5
+///
 /// The device is input-only: the descriptor declares no output or feature report, so no
 /// consumer output (rumble or otherwise) reaches the controller through it.
 ///
@@ -94,12 +102,11 @@ public enum GamepadHIDDescriptor {
 
   // MARK: - Button bit indices (0-based)
 
-  /// Button bit assignments matching Xbox One S Bluetooth HID order.
+  /// Bit positions in ``VirtualGamepadState/buttons``.
   ///
-  /// SDL 2/3 mapping for 045E:02EA:
-  /// a:b0, b:b1, x:b2, y:b3, leftshoulder:b4, rightshoulder:b5,
-  /// leftstick:b6, rightstick:b7, start:b8, back:b9, guide:b10,
-  /// dpup:b11, dpdown:b12, dpleft:b13, dpright:b14, misc1:b15
+  /// This is internal state order, not a host-visible button order: each report format maps
+  /// these bits onto its own layout. The generic `1209:4A4F` order is in the
+  /// ``GamepadHIDDescriptor`` documentation.
   public enum ButtonBit: Int {
     case a = 0  // Xbox A
     case b = 1  // Xbox B
