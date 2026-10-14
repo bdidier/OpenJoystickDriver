@@ -126,3 +126,21 @@ class DispatcherTests(unittest.TestCase):
         ):
             with self.subTest(arguments=arguments):
                 self.assertEqual(self.run_ojd(*arguments).returncode, 2)
+
+    def test_check_tools_runs_xmake_with_the_environment(self) -> None:
+        completed = subprocess.CompletedProcess(args=[], returncode=0)
+        with patch.object(
+            dispatcher.subprocess, "run", return_value=completed
+        ) as run_command:
+            self.assertEqual(dispatcher.dispatch(["check", "tools"]), 0)
+        command = run_command.call_args.args[0]
+        self.assertEqual(command[:2], ["/bin/bash", "-c"])
+        self.assertIn('source "$1"', command[2])
+        self.assertIn("exec xmake build", command[2])
+        self.assertEqual(
+            command[4:],
+            [
+                str(dispatcher.ENVIRONMENT),
+                str(dispatcher.PROJECT_DIR / "Tools/SDLGamepadProbe"),
+            ],
+        )
