@@ -57,15 +57,15 @@ OJD runs one pipeline per receiver slot: each interface with triple FF/5D/81 and
    ```
 
    Paste every `IOUSBHostInterface` under the receiver with its `bInterfaceNumber`, `bInterfaceClass`, `bInterfaceSubClass` and `bInterfaceProtocol`, plus `kUSBCurrentConfiguration` on the device before and after OJD starts.
-1. Start OJD and list controllers (`ojd` is the [command-line tool](../../wiki/Command-Line.md)):
+2. Start OJD and list controllers (`ojd` is the [command-line tool](../../wiki/Command-Line.md)):
 
    ```bash
    ojd controller list --json
    ```
 
    Expect four entries with `protocol` `xbox.xusb:receiver`, one per slot. `ojd controller show <ID> --json` gives each entry's `interfaceNumber` (`N`) for a FF/5D/81 interface. Paste the output.
-1. Pair one controller at a time. For each, record which interface's entry receives input and which ring-light quadrant lights. Slot order is interface order: the lowest interface is player 1.
-1. With controllers paired on slot 0 and a later slot, restart OJD without unplugging the receiver. The device is already configured, so no slot, including slot 0, should send SET_CONFIGURATION. Confirm every paired slot resumes input. If slot 0 alone reconnects during a run (for example after a transfer error), confirm the later slots keep their input.
-1. Power off one controller. Confirm only its slot reports disconnected.
+3. Pair one controller at a time. For each, record which interface's entry receives input and which ring-light quadrant lights. Slot order is interface order: the lowest interface is player 1.
+4. With controllers paired on slot 0 and a later slot, restart OJD without unplugging the receiver. The device is already configured, so no slot, including slot 0, should send SET_CONFIGURATION. Confirm every paired slot resumes input. If slot 0 alone reconnects during a run (for example after a transfer error), confirm the later slots keep their input.
+5. Power off one controller. Confirm only its slot reports disconnected.
 
 After input passes, use the app or the output checks from `ojd controller show` to verify both rumble motors and all four ring-light player patterns. Mark records hardware-verified only after physical receiver presence, input, reconnect, rumble, and LED checks pass.
