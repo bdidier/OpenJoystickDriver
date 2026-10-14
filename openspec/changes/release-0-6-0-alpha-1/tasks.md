@@ -719,7 +719,7 @@ Context:
 - [x] 14.4 Place it in `ControllerDetailView+Facts.swift` beside `VirtualHIDProfileOverrideView` (`:30`).
 - [x] 14.5 Test the visibility rule and that a change calls the gateway with the right identity and value, with `GatewayStub`.
 - [x] 14.6 Verify: the `verify` command above exits 0. Acceptance: The verify command passes; `python3 Scripts/Quality/check_localization_keys.py` passes. The report lists the maintainer's manual check: open a native controller's detail, switch to Virtual, and see the virtual gamepad in a game.
-- [ ] 14.7 Review: a fresh reviewer agent approves the diff
+- [x] 14.7 Review: a fresh reviewer agent approves the diff
 - [ ] 14.8 Merge `spec/0.6.0-alpha.1-P12` into `feat/0.6.0-alpha.1`
 
 Boundaries:
