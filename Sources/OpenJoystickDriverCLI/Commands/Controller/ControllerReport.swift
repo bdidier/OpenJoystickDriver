@@ -8,6 +8,11 @@ struct ControllerShowReport: Encodable, Equatable {
     let physical: String
     let hidInput: String
     let duplicateExposureRisk: String
+    /// Who the record lets serve the model: `native` (macOS) or `virtual` (OJD).
+    let choice: OwnershipChoice
+    /// The record layer that sets the choice: `bundled`, `package`, or `user`; `default` when no
+    /// layer sets it.
+    let choiceSource: String
   }
 
   struct InputHealth: Encodable, Equatable {
@@ -166,7 +171,9 @@ struct ControllerShowReport: Encodable, Equatable {
         discoverySource: device.discoverySource.rawValue,
         physical: device.physicalOwnership.rawValue,
         hidInput: device.hidInputOwnership.rawValue,
-        duplicateExposureRisk: device.duplicateExposureRisk.rawValue
+        duplicateExposureRisk: device.duplicateExposureRisk.rawValue,
+        choice: OwnershipChoice(record?.ownership ?? .macOS),
+        choiceSource: record?.fieldLayers["ownership"]?.rawValue ?? "default"
       ),
       quirks: device.quirks,
       record: record.map(Record.init),

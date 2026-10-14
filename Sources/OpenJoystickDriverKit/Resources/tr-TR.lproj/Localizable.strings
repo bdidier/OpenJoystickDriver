@@ -170,6 +170,10 @@
 "controllers.accessibilityDetails" = "%@. %@. Protokol: %@. Ayrıştırıcı: %@. Seri numarası: %@. USB VID/PID: %@. Giriş uç noktası: %@. Çıkış uç noktası: %@.";
 "controllers.publishedAs" = "Şu Olarak Yayımlandı";
 "controllers.nativeGamepadNotPublished" = "Yerel macOS Oyun Kontrolcüsü Yayımlanmadı";
+"controllers.ownership.label" = "Hizmet veren";
+"controllers.ownership.native" = "macOS (yerel)";
+"controllers.ownership.virtual" = "OpenJoystickDriver (sanal)";
+"controllers.ownership.refused" = "Bu kumanda geçiş yapamaz: ham USB kullanıyor ya da macOS ona yerel olarak hizmet vermiyor.";
 "virtualProfile.advanced" = "İleri Düzey";
 "virtualProfile.title" = "Sanal HID Profili";
 "virtualProfile.modelScope" = "Bu modelin bağlı her kontrolcüsüne uygulanır.";
@@ -1206,6 +1210,15 @@
 "cli.controller.output.not_ready" = "%@ henüz çıkış için hazır değil. Biraz sonra tekrar deneyin.";
 "cli.controller.output.sent" = "%@, %@ kontrolcüsüne gönderildi.";
 "cli.controller.output.unsupported" = "%@ kontrolcüsünde %@ yok. Nelerin desteklendiğini görmek için “ojd controller show %@” komutunu çalıştırın.";
+"cli.controller.ownership.abstract" = "Bir kumanda modeline macOS'un mu yoksa OpenJoystickDriver'ın mı hizmet vereceğini seçin.";
+"cli.controller.ownership.choice" = "native (kumandaya macOS hizmet verir) veya virtual (OpenJoystickDriver hizmet verir).";
+"cli.controller.ownership.discussion" = "native kumandayı macOS'a bırakır, macOS ona oyun kumandası olarak hizmet verir; virtual ise OpenJoystickDriver'ın onu devralıp sanal oyun kumandasını yayımlamasını sağlar. Seçim modelin her kumandası için geçerlidir: kayıt dizininizdeki model kaydınızda, VVVV-PPPP.json, ownership değerini ayarlar ve kaydın diğer alanlarını korur. Çalışan servis bunu yeniden takmadan uygular. Kumandayı bulmak için servise ihtiyaç duyar. --dry-run hiçbir şey yazmaz. Ham USB kullanan ve OpenJoystickDriver'ın her zaman hizmet verdiği bir kumanda için ya da macOS'un yerel olarak hizmet vermediği bir kumanda için E2023 ile 1 koduyla çıkar.";
+"cli.controller.ownership.dry_run" = "%@, %@ olarak ayarlanırdı (%@).";
+"cli.controller.ownership.invalid" = "%@ değiştirilemiyor: %@";
+"cli.controller.ownership.no_record" = "%@ için değiştirilecek bir kumanda kaydı yok. 'ojd record draft %@' ile bir tane başlatın.";
+"cli.controller.ownership.not_native" = "macOS %@ için yerel olarak hizmet vermez, bu yüzden ona her zaman OpenJoystickDriver hizmet verir.";
+"cli.controller.ownership.raw_usb" = "%@ ham USB kullanır, bu yüzden ona her zaman OpenJoystickDriver hizmet verir.";
+"cli.controller.ownership.success" = "%@, %@ olarak ayarlandı (%@). Çalışan servis bunu şimdi uygular.";
 "cli.controller.player.abstract" = "Bir kontrolcünün oyuncu göstergesi ışıklarını ayarlar.";
 "cli.controller.player.number" = "Oyuncu numarası, 1 ile 4 arası veya off.";
 "cli.controller.resume.abstract" = "OpenJoystickDriver’ın askıdaki bir kontrolcüyü yeniden yönetmesine izin verir.";
@@ -1240,6 +1253,8 @@
 "cli.controller.show.label.output_checks" = "Çıkış Denetimleri";
 "cli.controller.show.label.ownership" = "Sahiplik";
 "cli.controller.show.ownership" = "yol %@, fiziksel %@, HID girdisi %@";
+"cli.controller.show.label.ownership_choice" = "Hizmet veren";
+"cli.controller.show.ownershipChoice" = "%@ (%@ kaynağından)";
 "cli.controller.show.label.protocol" = "Protokol";
 "cli.controller.show.label.record" = "Kayıt";
 "cli.controller.show.label.rumble" = "Titreşim";
@@ -1379,6 +1394,7 @@
 "cli.record.test.packets" = "“ojd controller capture --json” çıktısının JSON satırları olarak bir paket yakalaması.";
 "cli.record.test.parse_failed" = "%@ ayrıştırıcısı, alınan %lld. paketi (%@) reddetti.";
 "error.E2022" = "Kaydın ayrıştırıcısının yakalanan raporlardan ürettiği durum beklenen durumdan farklı. Komutun listelediği alanları okuyun.";
+"error.E2023" = "Bu kumanda yerel ve sanal arasında geçiş yapamaz: protokol ailesi ham USB kullanıyor ya da macOS onu yerel olarak desteklemiyor. İleti nedenini belirtir.";
 "cli.record.usb_not_claimed" = "Bu aile ham USB kullanır ve ürün listesi Apple tarafından imzalandığı için USB uzantısı bu kontrolcüyü sahiplenemez. OJD ona yalnızca macOS izin verdiğinde doğrudan USB erişimiyle ulaşır.";
 "cli.record.usb_only_switch2" = "Yalnızca USB: Kontrolcüyü Bluetooth LE üzerinden bağlamak için bu Switch 2 kaydına bluetoothLE.vibrationCharacteristic ekleyin.";
 "cli.record.validate.abstract" = "Bir kontrolcü kaydını yüklemeden denetler.";

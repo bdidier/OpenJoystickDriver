@@ -180,6 +180,22 @@ extension ApplicationServiceClient {
     )
   }
 
+  /// Sets who serves the controller model, macOS or OJD, in the user's record for it; the service
+  /// applies it to every connected controller of the model without a replug.
+  public func setControllerOwnership(
+    identity: ControllerIdentity,
+    ownership: ControllerOwnership
+  ) async throws -> ControllerOwnershipResult {
+    try await call(
+      .setControllerOwnership,
+      LocalServiceRPCControllerOwnershipArguments(
+        vendorID: Int(identity.vendorID),
+        productID: Int(identity.productID),
+        ownership: ownership
+      )
+    )
+  }
+
   /// Returns the selected controller's model, or that unit only when `unit` is true, to automatic
   /// virtual HID profile selection.
   public func resetVirtualHIDProfileOverride(

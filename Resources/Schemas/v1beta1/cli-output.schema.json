@@ -583,6 +583,53 @@
 				}
 			}
 		},
+		"controllerOwnership": {
+			"type": "object",
+			"required": [
+				"apiVersion",
+				"kind",
+				"controller",
+				"created",
+				"dryRun",
+				"file",
+				"identity",
+				"ownership",
+				"previous"
+			],
+			"additionalProperties": false,
+			"properties": {
+				"apiVersion": {
+					"$ref": "#/$defs/sharedAPIVersion"
+				},
+				"kind": {
+					"const": "ControllerOwnership"
+				},
+				"controller": {
+					"type": "string"
+				},
+				"created": {
+					"description": "Whether the change creates the user record file.",
+					"type": "boolean"
+				},
+				"dryRun": {
+					"type": "boolean"
+				},
+				"file": {
+					"description": "The user record file the change writes.",
+					"type": "string"
+				},
+				"identity": {
+					"type": "string",
+					"pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
+				},
+				"ownership": {
+					"$ref": "#/$defs/sharedOwnershipChoice"
+				},
+				"previous": {
+					"$ref": "#/$defs/sharedOwnershipChoice"
+				}
+			}
+		},
 		"controllerPair": {
 			"required": ["apiVersion", "kind"],
 			"properties": {
@@ -759,6 +806,8 @@
 						"ownership": {
 							"type": "object",
 							"required": [
+								"choice",
+								"choiceSource",
 								"discoverySource",
 								"duplicateExposureRisk",
 								"hidInput",
@@ -766,6 +815,13 @@
 							],
 							"additionalProperties": false,
 							"properties": {
+								"choice": {
+									"$ref": "#/$defs/sharedOwnershipChoice"
+								},
+								"choiceSource": {
+									"description": "The record layer that sets the choice, or default when no layer sets it and macOS serves the controller.",
+									"enum": ["bundled", "package", "user", "default"]
+								},
 								"discoverySource": {
 									"enum": ["hid", "rawUSB"]
 								},
@@ -2549,6 +2605,10 @@
 					"type": "string"
 				}
 			}
+		},
+		"sharedOwnershipChoice": {
+			"description": "Who serves the controller: native leaves it to macOS, virtual lets OpenJoystickDriver seize it and publish a virtual gamepad.",
+			"enum": ["native", "virtual"]
 		},
 		"sharedPermissions": {
 			"type": "object",

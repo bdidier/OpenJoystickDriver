@@ -93,13 +93,20 @@ extension DeviceManager {
 
   /// Tears down and admits again each current HID connection that OJD tracks and whose vendor and
   /// product ID pair is in `changed`, including one that yielded to raw USB.
+  ///
+  /// A device whose native pass-through changed with the records is first admitted again by the
+  /// HID backend, which seizes or releases it, and is left out here so it is not admitted twice.
   func readmitHIDConnections(changing changed: Set<[UInt16]>) async {
+    let reevaluated = await hidManager.reevaluateOwnership(
+      of: Set(changed.map { ControllerIdentity(vendorID: $0[0], productID: $0[1]) })
+    )
     guard let snapshots = await hidManager.currentConnectionSnapshots() else { return }
     for snapshot in snapshots {
       let connection = snapshot.connection
       guard !isStopping, let vendorID = connection.physicalDevice.vendorID,
         let productID = connection.physicalDevice.productID,
-        changed.contains([vendorID, productID]), tracksHIDConnection(connection.connectionID)
+        changed.contains([vendorID, productID]), !reevaluated.contains(connection.connectionID),
+        tracksHIDConnection(connection.connectionID)
       else { continue }
       clearUnboundDevice(.hid(connection.connectionID))
       clearPassThroughDevice(connection.connectionID)

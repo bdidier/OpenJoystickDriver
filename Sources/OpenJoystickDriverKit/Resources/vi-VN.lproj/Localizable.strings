@@ -170,6 +170,10 @@
 "controllers.accessibilityDetails" = "%@. %@. Giao thức: %@. Trình phân tích: %@. Số sê-ri: %@. USB VID/PID: %@. Điểm cuối đầu vào: %@. Điểm cuối đầu ra: %@.";
 "controllers.publishedAs" = "Cung cấp dưới dạng";
 "controllers.nativeGamepadNotPublished" = "Tay cầm gốc của macOS, không được cung cấp";
+"controllers.ownership.label" = "Phục vụ bởi";
+"controllers.ownership.native" = "macOS (gốc)";
+"controllers.ownership.virtual" = "OpenJoystickDriver (ảo)";
+"controllers.ownership.refused" = "Tay cầm này không thể chuyển: nó dùng USB thô, hoặc macOS không phục vụ nó một cách gốc.";
 "virtualProfile.advanced" = "Nâng cao";
 "virtualProfile.title" = "Cấu hình HID ảo";
 "virtualProfile.modelScope" = "Áp dụng cho mọi bộ điều khiển đã kết nối thuộc kiểu máy này.";
@@ -1206,6 +1210,15 @@
 "cli.controller.output.not_ready" = "%@ chưa sẵn sàng cho đầu ra. Hãy thử lại sau giây lát.";
 "cli.controller.output.sent" = "Đã gửi %@ đến %@.";
 "cli.controller.output.unsupported" = "%@ không có %@. Hãy chạy “ojd controller show %@” để xem nó hỗ trợ gì.";
+"cli.controller.ownership.abstract" = "Chọn macOS hay OpenJoystickDriver phục vụ một mẫu tay cầm.";
+"cli.controller.ownership.choice" = "native (macOS phục vụ tay cầm) hoặc virtual (OpenJoystickDriver phục vụ nó).";
+"cli.controller.ownership.discussion" = "native để tay cầm cho macOS, hệ thống phục vụ nó như một tay cầm chơi game; virtual cho phép OpenJoystickDriver tiếp quản và cung cấp tay cầm ảo của nó. Lựa chọn áp dụng cho mọi tay cầm của mẫu: nó đặt ownership trong bản ghi của bạn cho mẫu, VVVV-PPPP.json trong thư mục bản ghi, và giữ các trường khác của bản ghi. Dịch vụ đang chạy áp dụng nó mà không cần cắm lại. Cần dịch vụ để tìm tay cầm. --dry-run không ghi gì. Thoát với mã 1 và E2023 cho tay cầm dùng USB thô, luôn do OpenJoystickDriver phục vụ, hoặc tay cầm macOS không phục vụ một cách gốc.";
+"cli.controller.ownership.dry_run" = "Sẽ đặt %@ thành %@ trong %@.";
+"cli.controller.ownership.invalid" = "Không thể thay đổi %@: %@";
+"cli.controller.ownership.no_record" = "%@ không có bản ghi tay cầm để thay đổi. Hãy bắt đầu một bản ghi bằng 'ojd record draft %@'.";
+"cli.controller.ownership.not_native" = "macOS không phục vụ %@ một cách gốc, nên OpenJoystickDriver luôn phục vụ nó.";
+"cli.controller.ownership.raw_usb" = "%@ dùng USB thô, nên OpenJoystickDriver luôn phục vụ nó.";
+"cli.controller.ownership.success" = "Đã đặt %@ thành %@ trong %@. Dịch vụ đang chạy áp dụng nó ngay bây giờ.";
 "cli.controller.player.abstract" = "Đặt đèn chỉ báo người chơi của bộ điều khiển.";
 "cli.controller.player.number" = "Số người chơi, từ 1 đến 4, hoặc off.";
 "cli.controller.resume.abstract" = "Để OpenJoystickDriver điều khiển lại một bộ điều khiển đã tạm ngưng.";
@@ -1240,6 +1253,8 @@
 "cli.controller.show.label.output_checks" = "Kiểm tra đầu ra";
 "cli.controller.show.label.ownership" = "Quyền sở hữu";
 "cli.controller.show.ownership" = "tuyến %@, vật lý %@, đầu vào HID %@";
+"cli.controller.show.label.ownership_choice" = "Phục vụ bởi";
+"cli.controller.show.ownershipChoice" = "%@ (từ %@)";
 "cli.controller.show.label.protocol" = "Giao thức";
 "cli.controller.show.label.record" = "Bản ghi";
 "cli.controller.show.label.rumble" = "Rung";
@@ -1379,6 +1394,7 @@
 "cli.record.test.packets" = "Một nội dung ghi gói tin, dưới dạng các dòng JSON của “ojd controller capture --json”.";
 "cli.record.test.parse_failed" = "Trình phân tích của %@ đã từ chối gói tin đã nhận thứ %lld của %@.";
 "error.E2022" = "Trạng thái mà trình phân tích của bản ghi tạo ra từ các báo cáo đã ghi khác với trạng thái mong đợi. Hãy đọc các trường mà lệnh liệt kê.";
+"error.E2023" = "Tay cầm này không thể chuyển giữa gốc và ảo: họ giao thức của nó dùng USB thô, hoặc macOS không hỗ trợ nó một cách gốc. Thông báo nêu lý do.";
 "cli.record.usb_not_claimed" = "Họ thiết bị này dùng USB thô, và phần mở rộng USB không thể chiếm bộ điều khiển này, vì danh sách sản phẩm của nó do Apple ký. OJD chỉ truy cập được nó qua truy cập USB trực tiếp, khi macOS cho phép.";
 "cli.record.usb_only_switch2" = "Chỉ USB: thêm bluetoothLE.vibrationCharacteristic vào bản ghi Switch 2 này để kết nối bộ điều khiển qua Bluetooth LE.";
 "cli.record.validate.abstract" = "Kiểm tra một bản ghi bộ điều khiển mà không cài đặt.";

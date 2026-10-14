@@ -210,6 +210,13 @@
 			"exitCode": 1
 		},
 		{
+			"code": "E2023",
+			"domain": "cli",
+			"name": "ownershipToggleUnsupported",
+			"status": "active",
+			"exitCode": 1
+		},
+		{
 			"code": "E3001",
 			"domain": "remapping",
 			"name": "controllerUnavailable",

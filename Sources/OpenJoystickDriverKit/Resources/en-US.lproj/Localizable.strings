@@ -170,6 +170,10 @@
 "controllers.accessibilityDetails" = "%@. %@. Protocol: %@. Parser: %@. Serial number: %@. USB VID/PID: %@. Input endpoint: %@. Output endpoint: %@.";
 "controllers.publishedAs" = "Published as";
 "controllers.nativeGamepadNotPublished" = "Native macOS gamepad, not published";
+"controllers.ownership.label" = "Served by";
+"controllers.ownership.native" = "macOS (native)";
+"controllers.ownership.virtual" = "OpenJoystickDriver (virtual)";
+"controllers.ownership.refused" = "This controller cannot switch: it uses raw USB, or macOS does not serve it natively.";
 "virtualProfile.advanced" = "Advanced";
 "virtualProfile.title" = "Virtual HID profile";
 "virtualProfile.modelScope" = "Applies to every connected controller of this model.";
@@ -1206,6 +1210,15 @@
 "cli.controller.output.not_ready" = "%@ is not ready for output yet. Retry in a moment.";
 "cli.controller.output.sent" = "Sent %@ to %@.";
 "cli.controller.output.unsupported" = "%@ has no %@. Run 'ojd controller show %@' to see what it supports.";
+"cli.controller.ownership.abstract" = "Choose whether macOS or OpenJoystickDriver serves a controller model.";
+"cli.controller.ownership.choice" = "native (macOS serves the controller) or virtual (OpenJoystickDriver serves it).";
+"cli.controller.ownership.discussion" = "native leaves the controller to macOS, which serves it as a game controller; virtual lets OpenJoystickDriver take it over and publish its virtual gamepad. The choice applies to every controller of the model: it sets ownership in your record for the model, VVVV-PPPP.json in your record directory, and keeps the record's other fields. The running service applies it without a replug. Needs the service to find the controller. --dry-run writes nothing. Exits 1 with E2023 for a controller that uses raw USB, which OpenJoystickDriver always serves, or that macOS does not serve natively.";
+"cli.controller.ownership.dry_run" = "Would set %@ to %@ in %@.";
+"cli.controller.ownership.invalid" = "Cannot change %@: %@";
+"cli.controller.ownership.no_record" = "%@ has no controller record to change. Start one with 'ojd record draft %@'.";
+"cli.controller.ownership.not_native" = "macOS does not serve %@ natively, so OpenJoystickDriver always serves it.";
+"cli.controller.ownership.raw_usb" = "%@ uses raw USB, so OpenJoystickDriver always serves it.";
+"cli.controller.ownership.success" = "Set %@ to %@ in %@. The running service applies it now.";
 "cli.controller.player.abstract" = "Set a controller's player indicator lights.";
 "cli.controller.player.number" = "The player number, 1 to 4, or off.";
 "cli.controller.resume.abstract" = "Let OpenJoystickDriver drive a suspended controller again.";
@@ -1240,6 +1253,8 @@
 "cli.controller.show.label.output_checks" = "Output checks";
 "cli.controller.show.label.ownership" = "Ownership";
 "cli.controller.show.ownership" = "route %@, physical %@, HID input %@";
+"cli.controller.show.label.ownership_choice" = "Served by";
+"cli.controller.show.ownershipChoice" = "%@ (from %@)";
 "cli.controller.show.label.protocol" = "Protocol";
 "cli.controller.show.label.record" = "Record";
 "cli.controller.show.label.rumble" = "Rumble";
@@ -1592,6 +1607,7 @@
 "error.E2020" = "The installed OpenJoystickDriver app is older than this ojd. Run './Scripts/ojd build install-fast dev', or set OJD_RUN_REPOSITORY_CLI=1 to run this build.";
 "error.E2021" = "A repository build of ojd could not hand the command to the installed app. Reinstall OpenJoystickDriver.app and run the command again.";
 "error.E2022" = "The state that the record's parser produced from the captured reports differs from the expected state. Read the fields that the command lists.";
+"error.E2023" = "This controller cannot switch between native and virtual: its protocol family uses raw USB, or macOS does not serve it natively. The message names the reason.";
 "error.E3001" = "The controller is not connected or not ready for remapping. Reconnect it and try again.";
 "error.E3002" = "The selected Joy-Cons could not be paired. Refresh the connected controllers and try again.";
 "error.E3003" = "The controller does not report motion data. Choose a controller with motion sensors, or leave motion options off.";

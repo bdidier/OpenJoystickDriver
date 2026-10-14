@@ -170,6 +170,10 @@
 "controllers.accessibilityDetails" = "%@. %@. Protocolo: %@. Analizador: %@. Número de serie: %@. USB VID/PID: %@. Endpoint de entrada: %@. Endpoint de salida: %@.";
 "controllers.publishedAs" = "Publicado como";
 "controllers.nativeGamepadNotPublished" = "Control nativo de macOS, no publicado";
+"controllers.ownership.label" = "Manejado por";
+"controllers.ownership.native" = "macOS (nativo)";
+"controllers.ownership.virtual" = "OpenJoystickDriver (control virtual)";
+"controllers.ownership.refused" = "Este control no puede cambiar: usa USB sin procesar, o macOS no lo maneja de forma nativa.";
 "virtualProfile.advanced" = "Avanzado";
 "virtualProfile.title" = "Perfil HID virtual";
 "virtualProfile.modelScope" = "Se aplica a todos los controles conectados de este modelo.";
@@ -1206,6 +1210,15 @@
 "cli.controller.output.not_ready" = "%@ aún no está listo para la salida. Inténtalo de nuevo en un momento.";
 "cli.controller.output.sent" = "Se envió %@ a %@.";
 "cli.controller.output.unsupported" = "%@ no tiene %@. Ejecuta «ojd controller show %@» para ver qué admite.";
+"cli.controller.ownership.abstract" = "Elige si macOS u OpenJoystickDriver maneja un modelo de control.";
+"cli.controller.ownership.choice" = "native (macOS maneja el control) o virtual (OpenJoystickDriver lo maneja).";
+"cli.controller.ownership.discussion" = "native deja el control a macOS, que lo maneja como control de juego; virtual permite que OpenJoystickDriver lo tome y publique su control virtual. La elección se aplica a todos los controles del modelo: establece ownership en tu registro del modelo, VVVV-PPPP.json en tu carpeta de registros, y conserva los demás campos del registro. El servicio en ejecución la aplica sin volver a conectar. Necesita el servicio para encontrar el control. --dry-run no escribe nada. Sale con 1 y E2023 para un control que usa USB sin procesar, que OpenJoystickDriver siempre maneja, o que macOS no maneja de forma nativa.";
+"cli.controller.ownership.dry_run" = "Establecería %@ en %@ en %@.";
+"cli.controller.ownership.invalid" = "No se puede cambiar %@: %@";
+"cli.controller.ownership.no_record" = "%@ no tiene un registro de control que cambiar. Crea uno con 'ojd record draft %@'.";
+"cli.controller.ownership.not_native" = "macOS no maneja %@ de forma nativa, así que OpenJoystickDriver siempre lo maneja.";
+"cli.controller.ownership.raw_usb" = "%@ usa USB sin procesar, así que OpenJoystickDriver siempre lo maneja.";
+"cli.controller.ownership.success" = "%@ quedó establecido en %@ en %@. El servicio en ejecución lo aplica ahora.";
 "cli.controller.player.abstract" = "Establece las luces indicadoras de jugador de un control.";
 "cli.controller.player.number" = "El número de jugador, de 1 a 4, u off.";
 "cli.controller.resume.abstract" = "Deja que OpenJoystickDriver vuelva a manejar un control suspendido.";
@@ -1240,6 +1253,8 @@
 "cli.controller.show.label.output_checks" = "Comprobaciones de salida";
 "cli.controller.show.label.ownership" = "Propiedad";
 "cli.controller.show.ownership" = "ruta %@, físico %@, entrada HID %@";
+"cli.controller.show.label.ownership_choice" = "Manejado por";
+"cli.controller.show.ownershipChoice" = "%@ (de %@)";
 "cli.controller.show.label.protocol" = "Protocolo";
 "cli.controller.show.label.record" = "Registro";
 "cli.controller.show.label.rumble" = "Vibración";
@@ -1379,6 +1394,7 @@
 "cli.record.test.packets" = "Una captura de paquetes, como las líneas JSON de «ojd controller capture --json».";
 "cli.record.test.parse_failed" = "El analizador de %@ rechazó el paquete recibido %lld de %@.";
 "error.E2022" = "El estado que el analizador del registro produjo a partir de los reportes capturados difiere del estado esperado. Lee los campos que enumera el comando.";
+"error.E2023" = "Este control no puede cambiar entre nativo y virtual: su familia de protocolo usa USB sin procesar, o macOS no lo admite de forma nativa. El mensaje indica el motivo.";
 "cli.record.usb_not_claimed" = "La familia usa USB sin procesar, y la extensión USB no puede reclamar este control, porque su lista de productos está firmada por Apple. OJD solo llega a él mediante acceso USB directo, cuando macOS lo permite.";
 "cli.record.usb_only_switch2" = "Solo USB: agrega bluetoothLE.vibrationCharacteristic a este registro de Switch 2 para conectar el control por Bluetooth LE.";
 "cli.record.validate.abstract" = "Comprueba un registro de control sin instalarlo.";
