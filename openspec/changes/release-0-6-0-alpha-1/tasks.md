@@ -809,7 +809,7 @@ Resolve the open items that the maintainer asked to fix (2026-10-14).
 - [x] 16.4 `noRecord`, `invalidRecord`, and `persistenceFailed` show their own `controllers.ownership.*` texts in every locale; `rawUSB` and `notNative` keep `error.E2023`.
 - [x] 16.5 `docs/testing/xbox-one-02d1.md` "Result" says the parent-device fix landed in P15 and is not verified on hardware.
 - [x] 16.6 Verify: every check above exits 0.
-- [ ] 16.7 Review: a fresh reviewer agent approves the diff
+- [x] 16.7 Review: a fresh reviewer agent approves the diff. Verdict `APPROVE` (2026-10-14) with one non-blocking finding (a suspension re-added when `stop()` runs during the teardown await), fixed in 77b58203
 - [ ] 16.8 Merge `spec/0.6.0-alpha.1-P16` into `feat/0.6.0-alpha.1`
 
 ## Hardware checks (maintainer)
