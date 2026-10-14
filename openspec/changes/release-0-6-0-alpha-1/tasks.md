@@ -476,7 +476,7 @@ History (from `events.jsonl`):
 
 ## 9. P3: ojd mod validate|install|list|remove
 
-- dotclaude status: `verified` (verify passed at `24656cbf`; a reviewer agent approved; the verdict is not recorded and the branch is not merged)
+- dotclaude status: `done` (verify passed at `24656cbf`; approved; merged at `910e5b54`)
 - Wave: 3; deps: P2 (group 6); satisfies: REQ-6, REQ-7, REQ-8, REQ-9, REQ-10, REQ-17; agent: `implementer`
 - Branch: `spec/0.6.0-alpha.1-P3`; worktree: `.claude/worktrees/spec-P3`
 - Owns: `Sources/OpenJoystickDriverCLI/Commands/Mod/ModCommand.swift`, `Sources/OpenJoystickDriverCLI/Commands/Mod/ModFileCommands.swift`, `Sources/OpenJoystickDriverCLI/Commands/Mod/ModReport.swift`, `Sources/OpenJoystickDriverCLI/CLI+OutputKind.swift`, `Sources/OpenJoystickDriverCLI/CLI.swift`, `Sources/OpenJoystickDriverCLI/Root/OJDCommand.swift`, `Resources/Schemas/v1beta1/cli-output.schema.json`, `Tests/OpenJoystickDriverCLITests/Commands/ModCommandTests.swift`, `Tests/OpenJoystickDriverCLITests/Root/CLIOutputSchemaTests.swift`, `Tests/OpenJoystickDriverCLITests/Support/CLIRun.swift`, `Resources/ErrorCodes.json`, `Sources/OpenJoystickDriverKit/Errors/ErrorCode.swift`, `wiki/Error-Codes.md`, `Sources/OpenJoystickDriverKit/Resources/Localization/Localizable.template.strings`, `Sources/OpenJoystickDriverKit/Resources/C.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/en-US.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/ar-SA.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/de-DE.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/es-ES.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/es-MX.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/fr-CA.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/fr-FR.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/hi-IN.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/id-ID.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/it-IT.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/ja-JP.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/ko-KR.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/nl-NL.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/pt-BR.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/ru-RU.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/th-TH.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/tr-TR.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/vi-VN.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/zh-CN.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/zh-HK.lproj/Localizable.strings`, `Sources/OpenJoystickDriverKit/Resources/zh-TW.lproj/Localizable.strings`
@@ -504,8 +504,8 @@ Context:
 - [x] 9.6 Add every `cli.mod.*` key to the template and all 22 catalogs (English text in `en-US` and `C`; other locales get a translation for P7 to review).
 - [x] 9.7 Tests with a temporary store: each command, `--json` output against the schema, `--force` refused on clash and on `requires`, `--dry-run` writes nothing, `remove` of a missing name is E4006.
 - [x] 9.8 Verify: the `verify` command above exits 0. Acceptance: The verify command passes. `./Scripts/ojd check schemas` and `python3 Scripts/Quality/check_localization_keys.py` pass.
-- [ ] 9.9 Review: a fresh reviewer agent approves the diff. A reviewer agent returned `VERDICT P3: approve` on 2026-10-14 with one should-fix and two nits (see Open items). The verdict is not recorded: the auto-mode classifier blocked `dotclaude-spec review P3 approve` from the main session
-- [ ] 9.10 Merge `spec/0.6.0-alpha.1-P3` into `feat/0.6.0-alpha.1`. Branch head `24656cbf` on base `9608bebc`
+- [x] 9.9 Review: a fresh reviewer agent approves the diff. Verdict `VERDICT P3: approve` (2026-10-14) with one should-fix and two nits (see Open items); recorded here on 2026-10-14 after the move to OpenSpec
+- [x] 9.10 Merge `spec/0.6.0-alpha.1-P3` into `feat/0.6.0-alpha.1`. Merged at `910e5b54`; the `verify` command passed on the merged tree (25 tests in 3 suites)
 
 Boundaries:
 
@@ -520,6 +520,8 @@ History (from `events.jsonl`):
 
 - 2026-10-14T03:17:09.223Z `doing` at `9608bebc`
 - 2026-10-14T03:28:50.940Z `verified` at `24656cbf`, verify exit 0
+- 2026-10-14 `approved` at `24656cbf`, verdict `approve` (recorded in OpenSpec)
+- 2026-10-14 `done`, merged at `910e5b54`
 
 ## 10. P5: Sample package and its test
 
