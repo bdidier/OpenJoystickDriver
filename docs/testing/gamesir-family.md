@@ -133,10 +133,10 @@ Install Wireshark and USBPcap, the Windows USB capture driver; the Wireshark ins
 ### Scenarios
 
 1. With no GameSir app running, plug in the controller, leave it idle, then press each button and move each axis.
-1. Repeat with GameSir Nexus or Connect running.
-1. Toggle each app feature (gyro, back-button mapping, mode, polling rate) and note the timestamp of each click.
-1. Capture a firmware update only after the owner explicitly decides to update that controller's firmware; the update is a real write to the device.
-1. For motion calibration, lay the controller flat and still, rest it on each edge, then rotate it 360° about each axis.
+2. Repeat with GameSir Nexus or Connect running.
+3. Toggle each app feature (gyro, back-button mapping, mode, polling rate) and note the timestamp of each click.
+4. Capture a firmware update only after the owner explicitly decides to update that controller's firmware; the update is a real write to the device.
+5. For motion calibration, lay the controller flat and still, rest it on each edge, then rotate it 360° about each axis.
 
 Save each capture as `.pcapng`, named by model, mode, and scenario. Captures contain the device serial; the owner decides before sharing them publicly.
 
