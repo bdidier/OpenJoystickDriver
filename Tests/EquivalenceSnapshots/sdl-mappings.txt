@@ -1,0 +1,79 @@
+# Derived drift detector, not a shipped mapping: OJD ships no SDL mapping text. Each line
+# is derived by driving one control through the virtual profile's report codec and reading
+# the HID fields it changes. Entries follow SDL's field order; analog triggers carry the
+# + half-axis prefix SDL expects for 0..max axes.
+## hid-generic
+profile=hid-generic vendor=4617 product=19023 version=1032 name=OpenJoystickDriver Generic HID Gamepad
+guid=03000000091200004f4a000008040000
+report length=14 descriptorBytes=60
+probe auxiliary-1 fields=[] -> none
+probe auxiliary-2 fields=[] -> none
+probe auxiliary-3 fields=[] -> none
+probe auxiliary-4 fields=[] -> none
+probe auxiliary-5 fields=[] -> none
+probe auxiliary-6 fields=[] -> none
+probe auxiliary-7 fields=[] -> none
+probe auxiliary-8 fields=[] -> none
+probe capture fields=[9:18] -> b15
+probe face-east fields=[9:2] -> b1
+probe face-north fields=[9:4] -> b3
+probe face-south fields=[9:1] -> b0
+probe face-west fields=[9:3] -> b2
+probe guide fields=[9:17] -> b14
+probe left-shoulder fields=[9:5] -> b4
+probe left-stick-click fields=[9:11] -> b8
+probe left-stick-touch fields=[] -> none
+probe left-trackpad-click fields=[] -> none
+probe left-trigger-button fields=[1:52] -> a4
+probe menu fields=[9:10] -> b7
+probe paddle-left-1 fields=[] -> none
+probe paddle-left-2 fields=[] -> none
+probe paddle-right-1 fields=[] -> none
+probe paddle-right-2 fields=[] -> none
+probe right-shoulder fields=[9:6] -> b5
+probe right-stick-click fields=[9:12] -> b9
+probe right-stick-touch fields=[] -> none
+probe right-trackpad-click fields=[9:12] -> b9
+probe right-trigger-button fields=[1:53] -> a5
+probe share fields=[9:18] -> b15
+probe touchpad-click fields=[] -> none
+probe view fields=[9:9] -> b6
+probe left-stick-x fields=[1:48] -> a0
+probe left-stick-y fields=[1:49] -> a1
+probe right-stick-x fields=[1:50] -> a2
+probe right-stick-y fields=[1:51] -> a3
+probe left-trigger fields=[1:52] -> a4
+probe right-trigger fields=[1:53] -> a5
+probe dpadNorth fields=[9:13] -> b10
+probe dpadEast fields=[9:16] -> b13
+probe dpadSouth fields=[9:14] -> b11
+probe dpadWest fields=[9:15] -> b12
+mapping=03000000091200004f4a000008040000,OpenJoystickDriver Generic HID Gamepad,a:b0,b:b1,x:b2,y:b3,back:b6,guide:b14,start:b7,leftstick:b8,rightstick:b9,leftshoulder:b4,rightshoulder:b5,dpup:b10,dpdown:b11,dpleft:b12,dpright:b13,misc1:b15,leftx:a0,lefty:a1,rightx:a2,righty:a3,lefttrigger:+a4,righttrigger:+a5,platform:Mac OS X,
+unmapped=auxiliary-1,auxiliary-2,auxiliary-3,auxiliary-4,auxiliary-5,auxiliary-6,auxiliary-7,auxiliary-8,capture,left-stick-touch,left-trackpad-click,left-trigger-button,paddle-left-1,paddle-left-2,paddle-right-1,paddle-right-2,right-stick-touch,right-trackpad-click,right-trigger-button,touchpad-click
+
+## hid-xbox-one-s-bt
+profile=hid-xbox-one-s-bt vendor=1118 product=765 version=0 name=Xbox Wireless Controller
+guid=050000005e040000fd02000000000000
+report length=16 descriptorBytes=306
+probe face-east fields=[9:2] -> b1
+probe face-north fields=[9:4] -> b3
+probe face-south fields=[9:1] -> b0
+probe face-west fields=[9:3] -> b2
+probe left-shoulder fields=[9:5] -> b4
+probe left-stick-click fields=[9:9] -> b8
+probe menu fields=[9:8] -> b7
+probe right-shoulder fields=[9:6] -> b5
+probe right-stick-click fields=[9:10] -> b9
+probe view fields=[9:7] -> b6
+probe left-stick-x fields=[1:48+1:133+6:32] -> a0
+probe left-stick-y fields=[1:49] -> a1
+probe right-stick-x fields=[1:51] -> a3
+probe right-stick-y fields=[1:52] -> a4
+probe left-trigger fields=[1:50] -> a2
+probe right-trigger fields=[1:53] -> a5
+probe dpadNorth fields=[1:57] -> h0.1
+probe dpadEast fields=[1:57] -> h0.2
+probe dpadSouth fields=[1:57] -> h0.4
+probe dpadWest fields=[1:57] -> h0.8
+mapping=050000005e040000fd02000000000000,Xbox Wireless Controller,a:b0,b:b1,x:b2,y:b3,back:b6,start:b7,leftstick:b8,rightstick:b9,leftshoulder:b4,rightshoulder:b5,dpup:h0.1,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,leftx:a0,lefty:a1,rightx:a3,righty:a4,lefttrigger:+a2,righttrigger:+a5,platform:Mac OS X,
+unmapped=

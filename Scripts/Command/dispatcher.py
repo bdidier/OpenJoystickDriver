@@ -87,6 +87,8 @@ COMMAND_HELP = """Commands:
   check driverkit             Verify generated DriverKit reproducibility and build
   check tools                 Build the SDL gamepad probe
   test parsers-macos14        Run focused parser regressions without Swift Testing
+  snapshots check             Diff the tree against the equivalence snapshots, per record
+  snapshots write             Rewrite the equivalence snapshots from the tree
   launch sdl-gamecontroller <app>
                               Launch an SDL app through GameController/MFI rumble route
 
@@ -386,6 +388,12 @@ def dispatch(argv: list[str]) -> int:
             die(
                 f"Unknown: check {sub} (expected: profiles | schemas | driverkit | tools)"
             )
+        case "snapshots":
+            if rest not in (["check"], ["write"]):
+                die(
+                    f"Unknown: snapshots {rest[0] if rest else ''} (expected: check | write)"
+                )
+            exec_target("Quality/equivalence_snapshots.py", rest, python=True)
         case "test":
             if rest != ["parsers-macos14"]:
                 die(
