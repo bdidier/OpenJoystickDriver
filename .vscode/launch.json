@@ -79,6 +79,26 @@
 			"target": "DriverKitGenerator",
 			"configuration": "release",
 			"preLaunchTask": "swift: Build Release DriverKitGenerator"
+		},
+		{
+			"type": "swift",
+			"request": "launch",
+			"args": [],
+			"cwd": "${workspaceFolder:OpenJoystickDriver}",
+			"name": "Debug ParserCompatibilityHarness",
+			"target": "ParserCompatibilityHarness",
+			"configuration": "debug",
+			"preLaunchTask": "swift: Build Debug ParserCompatibilityHarness"
+		},
+		{
+			"type": "swift",
+			"request": "launch",
+			"args": [],
+			"cwd": "${workspaceFolder:OpenJoystickDriver}",
+			"name": "Release ParserCompatibilityHarness",
+			"target": "ParserCompatibilityHarness",
+			"configuration": "release",
+			"preLaunchTask": "swift: Build Release ParserCompatibilityHarness"
 		}
 	]
 }
