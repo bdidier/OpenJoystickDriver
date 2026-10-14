@@ -77,13 +77,13 @@ The Developer ID profiles are installed separately as `OpenJoystickDriver_DevID.
 USB and PCI DEXT distribution export is the exception to Xcode's normal automatic flow. For every distribution environment:
 
 1. Build the final DEXT.
-1. Generate and download separate app and DEXT profiles for that environment.
-1. Rename the DEXT profile to `embedded.provisionprofile` and replace the profile inside the built DEXT.
-1. Re-sign the DEXT with the distribution identity, timestamp, hardened runtime, and the production canonical entitlement plist.
-1. Configure the app archive for manual signing with its separate app profile.
-1. Embed the already signed DEXT using the System Extensions copy phase.
-1. Archive and export for the same environment.
-1. Compare the signed entitlements of both code items with their decoded profiles exactly.
+2. Generate and download separate app and DEXT profiles for that environment.
+3. Rename the DEXT profile to `embedded.provisionprofile` and replace the profile inside the built DEXT.
+4. Re-sign the DEXT with the distribution identity, timestamp, hardened runtime, and the production canonical entitlement plist.
+5. Configure the app archive for manual signing with its separate app profile.
+6. Embed the already signed DEXT using the System Extensions copy phase.
+7. Archive and export for the same environment.
+8. Compare the signed entitlements of both code items with their decoded profiles exactly.
 
 Representative DEXT signing command:
 
