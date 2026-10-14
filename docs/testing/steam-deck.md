@@ -13,13 +13,13 @@ The Steam Deck's built-in controller is `0x28de:0x1205`, an internal USB device.
 ## Checks
 
 1. Run `ioreg -r -c IOHIDDevice -l -w0` and paste every `28de` entry with its parent `bInterfaceNumber` and `ReportDescriptor`.
-1. Run the HID monitor and press each button once:
+2. Run the HID monitor and press each button once:
 
    ```bash
    swift run OpenJoystickDriverHIDTool --monitor --vid 0x28de --pid 0x1205 --seconds 30
    ```
 
-1. Start OJD. Check in Controller Settings Live that buttons, sticks, triggers and trackpads move, and that the trackpads stop moving the cursor.
-1. Leave OJD running for two minutes without Steam. Check that the trackpads do not start to move the cursor again.
-1. Quit OJD. Check that the trackpads move the cursor again.
-1. Motion: lay the Deck flat, screen up, then tilt its right edge down and hold. Paste the motion values that `ojd controller watch 28DE:1205` prints (`ojd` is the [command-line tool](../../wiki/Command-Line.md)). This checks the axis signs, which come from SDL only.
+3. Start OJD. Check in Controller Settings Live that buttons, sticks, triggers and trackpads move, and that the trackpads stop moving the cursor.
+4. Leave OJD running for two minutes without Steam. Check that the trackpads do not start to move the cursor again.
+5. Quit OJD. Check that the trackpads move the cursor again.
+6. Motion: lay the Deck flat, screen up, then tilt its right edge down and hold. Paste the motion values that `ojd controller watch 28DE:1205` prints (`ojd` is the [command-line tool](../../wiki/Command-Line.md)). This checks the axis signs, which come from SDL only.
