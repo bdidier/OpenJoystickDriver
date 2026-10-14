@@ -16,4 +16,6 @@ To test a connected controller for 10 seconds:
 ./Scripts/ojd diagnose sdl3 --seconds 10
 ```
 
-Expected result: the probe lists SDL gamepad events and exits after 10 seconds. Add `--rumble` only when you intend to activate output on every SDL gamepad.
+`--seconds` takes a whole number from 1 to 3600 and defaults to 10; other values exit with code 2.
+
+Expected result: the probe lists SDL gamepad events and exits after 10 seconds. Axis events print once per excursion for each gamepad and axis: `GAMEPAD_AXIS which=3 axis=4 left-rest value=8006` when the axis passes 8000, then `GAMEPAD_AXIS which=3 axis=4 rest value=0 peak=32767` when it falls below 2000, with the signed value of largest magnitude as `peak`. Add `--rumble` only when you intend to activate output on every SDL gamepad.
