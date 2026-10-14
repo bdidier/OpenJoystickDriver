@@ -49,9 +49,9 @@ Install OpenJoystickDriver in the Applications folder, start it, and check the l
 ### Install the App
 
 1. Open the OpenJoystickDriver disk image (`.dmg`).
-1. Drag **OpenJoystickDriver.app** onto the **Applications** shortcut in the same window.
-1. Eject the disk image.
-1. Open **OpenJoystickDriver** from the Applications folder.
+2. Drag **OpenJoystickDriver.app** onto the **Applications** shortcut in the same window.
+3. Eject the disk image.
+4. Open **OpenJoystickDriver** from the Applications folder.
 
 Release builds use the name `OpenJoystickDriver-VERSION-macOS.dmg`. Tester builds also contain the file `OpenJoystickDriver-TESTER-BUILD.txt` that lists the build details.
 
@@ -84,17 +84,17 @@ Install the app first. For more information, see [Installing OpenJoystickDriver]
 ### Steps
 
 1. Install and open OpenJoystickDriver from the Applications folder.
-1. Grant access.
+2. Grant access.
    1. Click the controller icon in the menu bar.
-   1. If the menu shows **Request Access...**, click it. Allow OpenJoystickDriver in the **Input Monitoring** and **Accessibility** lists.
-   1. Open the app window. On the **Overview** pane, click **Restart OpenJoystickDriver** if it appears.
-1. Connect your controller with USB, Bluetooth, or a 2.4 GHz dongle.
-1. Check the controller.
+   2. If the menu shows **Request Access...**, click it. Allow OpenJoystickDriver in the **Input Monitoring** and **Accessibility** lists.
+   3. Open the app window. On the **Overview** pane, click **Restart OpenJoystickDriver** if it appears.
+3. Connect your controller with USB, Bluetooth, or a 2.4 GHz dongle.
+4. Check the controller.
    1. Open the **Controllers** pane.
-   1. Select your controller.
-   1. Click **Open Input Test...**.
-   1. Press buttons and move sticks. The **Live input** group shows each control.
-1. Play a game. The game reads the virtual controller that OJD publishes.
+   2. Select your controller.
+   3. Click **Open Input Test...**.
+   4. Press buttons and move sticks. The **Live input** group shows each control.
+5. Play a game. The game reads the virtual controller that OJD publishes.
 
 If step 4 shows no input, see [Controller not detected](Troubleshooting.md). If the game shows no input, see [Game does not see the controller](Troubleshooting.md).
 
