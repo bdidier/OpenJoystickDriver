@@ -55,9 +55,9 @@ just package-tester
 The command performs these operations:
 
 1. It builds the Developer ID app.
-1. It builds and embeds the DriverKit extension.
-1. It checks versions, signatures, entitlements, notarization, stapling, and Gatekeeper acceptance.
-1. It creates and checks the tester DMG.
+2. It builds and embeds the DriverKit extension.
+3. It checks versions, signatures, entitlements, notarization, stapling, and Gatekeeper acceptance.
+4. It creates and checks the tester DMG.
 
 Notarization time depends on Apple. A repeated submission usually takes minutes. A first submission can take hours.
 
