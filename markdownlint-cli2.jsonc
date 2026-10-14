@@ -1,5 +1,6 @@
 {
 	"$schema": "https://raw.githubusercontent.com/DavidAnson/markdownlint-cli2/main/schema/markdownlint-cli2-config-schema.json",
+	"globs": ["**/*.md"],
 	"config": { "extends": "./.markdownlint.jsonc" },
-	"ignores": ["**/.agents/**"]
+	"ignores": [".agents/skills/openspec-*/**", ".claude/skills/openspec-*.md"]
 }
