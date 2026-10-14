@@ -173,7 +173,7 @@
 "controllers.ownership.label" = "担当";
 "controllers.ownership.native" = "macOS（ネイティブ）";
 "controllers.ownership.virtual" = "OpenJoystickDriver（仮想）";
-"controllers.ownership.refused" = "このコントローラは切り替えられません。Raw USB を使うか、macOS がネイティブに扱いません。";
+"controllers.ownership.refused" = "このコントローラは切り替えられません。Raw USB を使っているか、macOS がネイティブに扱わないためです。";
 "virtualProfile.advanced" = "詳細";
 "virtualProfile.title" = "仮想HIDプロファイル";
 "virtualProfile.modelScope" = "このモデルの接続中のすべてのコントローラに適用されます。";
@@ -1215,7 +1215,7 @@
 "cli.controller.ownership.discussion" = "native はコントローラを macOS に任せ、macOS がゲームコントローラとして扱います。virtual は OpenJoystickDriver がコントローラを引き継ぎ、仮想ゲームパッドを公開します。この選択はそのモデルのすべてのコントローラに適用されます。レコードディレクトリにあるモデルのレコード VVVV-PPPP.json の ownership を設定し、レコードのほかのフィールドは保持します。実行中のサービスが再接続なしで適用します。コントローラを見つけるためにサービスが必要です。--dry-run は何も書き込みません。Raw USB を使うコントローラ（常に OpenJoystickDriver が扱います）や、macOS がネイティブに扱わないコントローラでは E2023 とともに 1 で終了します。";
 "cli.controller.ownership.dry_run" = "実行した場合、%@ を %@ に設定します（%@）。";
 "cli.controller.ownership.invalid" = "%@ を変更できません: %@";
-"cli.controller.ownership.no_record" = "%@ には変更できるコントローラのレコードがありません。「ojd record draft %@」 で作成してください。";
+"cli.controller.ownership.no_record" = "%@ には変更できるコントローラのレコードがありません。「ojd record draft %@」で作成してください。";
 "cli.controller.ownership.not_native" = "macOS は %@ をネイティブに扱わないため、常に OpenJoystickDriver が扱います。";
 "cli.controller.ownership.raw_usb" = "%@ は Raw USB を使うため、常に OpenJoystickDriver が扱います。";
 "cli.controller.ownership.success" = "%@ を %@ に設定しました（%@）。実行中のサービスが今すぐ適用します。";

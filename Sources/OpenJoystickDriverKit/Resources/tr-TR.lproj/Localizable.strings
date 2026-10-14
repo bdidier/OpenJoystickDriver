@@ -1302,7 +1302,7 @@
 "cli.mod.install.abstract" = "Bir mod paketini denetle ve kullanıcınız için yükle.";
 "cli.mod.install.discussion" = "Paketi Packages/NAME içine kopyalar ve bir anda yerine koyar; çalışan servis onu uygular. Aynı adlı yüklü bir paket, --force vermedikçe reddedilir. --force, requires’ı, kimlik çakışmasını veya profil kimliği ya da adı çakışmasını asla aşmaz. --dry-run paketi denetler ve hiçbir şey yazmaz.";
 "cli.mod.install.force" = "Aynı adlı yüklü bir paketi değiştir.";
-"cli.mod.install.dry_run" = "%@ yüklenecekti.";
+"cli.mod.install.dry_run" = "%@ yüklenirdi.";
 "cli.mod.install.success" = "%@ yüklendi. Çalışan servis şimdi uyguluyor.";
 "cli.mod.list.abstract" = "Yüklü mod paketlerini ve her birinin dosyalarını listele.";
 "cli.mod.list.discussion" = "Her paketi sürümü, yazarı ve dosyalarıyla listeler. OJD’nin kullanmadığı bir paket, örneğin requires’ı bu sürümü dışarıda bırakan, nedenini E4xxx koduyla gösterir.";
@@ -1310,7 +1310,7 @@
 "cli.mod.remove.abstract" = "Yüklü bir mod paketini kaldır.";
 "cli.mod.remove.discussion" = "Yalnızca Packages/NAME dizinini siler. Terminalde onay ister; aksi halde --force gerekir. --dry-run paketin yüklü olduğunu denetler ve hiçbir şeyi değiştirmez. Yüklü değilse 1 ve E4006 ile çıkar.";
 "cli.mod.remove.confirm" = "%@ silinsin mi?";
-"cli.mod.remove.dry_run" = "%@ silinecekti.";
+"cli.mod.remove.dry_run" = "%@ silinirdi.";
 "cli.mod.remove.success" = "%@ silindi.";
 "cli.option.dry_run" = "Nelerin değişeceğini yazdırır, hiçbir şeyi değiştirmez.";
 "cli.option.force" = "Onay istemez.";

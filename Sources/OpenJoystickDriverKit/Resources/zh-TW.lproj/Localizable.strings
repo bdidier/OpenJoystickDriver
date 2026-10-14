@@ -1215,7 +1215,7 @@
 "cli.controller.ownership.discussion" = "native 將控制器交給 macOS，由其作為遊戲控制器處理；virtual 讓 OpenJoystickDriver 接管控制器並發佈其虛擬遊戲控制器。此選擇適用於該型號的所有控制器：它會在你的記錄目錄中該型號的記錄 VVVV-PPPP.json 裡設定 ownership，並保留記錄的其他欄位。執行中的服務無需重新插拔即可套用。需要服務來找到控制器。--dry-run 不會寫入任何內容。對於使用原始 USB 的控制器（一律由 OpenJoystickDriver 處理）或 macOS 不原生處理的控制器，會以結束代碼 1 和 E2023 結束。";
 "cli.controller.ownership.dry_run" = "如果執行，將會把 %@ 設為 %@（%@）。";
 "cli.controller.ownership.invalid" = "無法變更 %@：%@";
-"cli.controller.ownership.no_record" = "%@ 沒有可變更的控制器記錄。請用 「ojd record draft %@」 建立一個。";
+"cli.controller.ownership.no_record" = "%@ 沒有可變更的控制器記錄。請用「ojd record draft %@」建立一個。";
 "cli.controller.ownership.not_native" = "macOS 不原生處理 %@，因此一律由 OpenJoystickDriver 處理。";
 "cli.controller.ownership.raw_usb" = "%@ 使用原始 USB，因此一律由 OpenJoystickDriver 處理。";
 "cli.controller.ownership.success" = "已把 %@ 設為 %@（%@）。執行中的服務現在會套用它。";
