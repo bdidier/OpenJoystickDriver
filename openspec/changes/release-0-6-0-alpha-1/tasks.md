@@ -525,7 +525,7 @@ History (from `events.jsonl`):
 
 ## 10. P5: Sample package and its test
 
-- dotclaude status: `planned`
+- dotclaude status: `done` (verify passed at `a73e4201`; approved; merged at `158b23d5`)
 - Wave: 4; deps: P3 (group 9); satisfies: REQ-13; agent: `implementer`
 - Branch: `spec/0.6.0-alpha.1-P5`; worktree: `.claude/worktrees/spec-P5`
 - Owns: `docs/sdk/sample/mod.json`, `docs/sdk/sample/Controllers/`, `docs/sdk/sample/Profiles/`, `docs/sdk/sample/Personas/`, `Tests/OpenJoystickDriverCLITests/Commands/SampleModPackageTests.swift`, `Tests/OpenJoystickDriverCLITests/Fixtures/SampleModPackage/`, `Package.swift` (exclude `Fixtures` from the CLI test target)
@@ -544,13 +544,13 @@ Context:
 - `Sources/OpenJoystickDriverCLI/Commands/Record/RecordTestCommand.swift`.
 - `Package.swift`, to check how test fixtures are found (resources or `#filePath`).
 
-- [ ] 10.1 Write `mod.json` with `name` `ojd-sample`, `version` `1.0.0`, `requires` `{"minimum": "0.6.0-alpha.1", "below": "0.7.0"}`, and the three file lists.
-- [ ] 10.2 Write one record whose VID:PID is not in the bundled catalog, one profile for it, and one persona, each valid under its schema and file-name rule. Use decimal JSON.
-- [ ] 10.3 Put the `record test` capture and expected state in the fixture folder, not in the package.
-- [ ] 10.4 Write `SampleModPackageTests`: run `ojd mod validate docs/sdk/sample --json` and `ojd record test` on the record with the fixture, both through `CLIRun`, with a temporary store.
-- [ ] 10.5 Verify: the `verify` command above exits 0. Acceptance: The verify command passes. `./Scripts/ojd check schemas` and `./Scripts/ojd check profiles` pass.
-- [ ] 10.6 Review: a fresh reviewer agent approves the diff
-- [ ] 10.7 Merge `spec/0.6.0-alpha.1-P5` into `feat/0.6.0-alpha.1`
+- [x] 10.1 Write `mod.json` with `name` `ojd-sample`, `version` `1.0.0`, `requires` `{"minimum": "0.6.0-alpha.1", "below": "0.7.0"}`, and the three file lists.
+- [x] 10.2 Write one record whose VID:PID is not in the bundled catalog, one profile for it, and one persona, each valid under its schema and file-name rule. Use decimal JSON.
+- [x] 10.3 Put the `record test` capture and expected state in the fixture folder, not in the package.
+- [x] 10.4 Write `SampleModPackageTests`: run `ojd mod validate docs/sdk/sample --json` and `ojd record test` on the record with the fixture, both through `CLIRun`, with a temporary store.
+- [x] 10.5 Verify: the `verify` command above exits 0. Acceptance: The verify command passes. `./Scripts/ojd check schemas` and `./Scripts/ojd check profiles` pass. Passed: 2 tests in 1 suite; `check schemas` and `check profiles` exit 0. `Package.swift` now excludes `Fixtures` from the CLI test target to silence the unhandled-files warning
+- [x] 10.6 Review: a fresh reviewer agent approves the diff. Verdict `VERDICT P5: approve` (2026-10-14), no blocking or should-fix findings; two nits: the fixture covers 2 of 8 buttons and no negative axes, and the `#filePath` chains in `SampleModPackageTests.swift:8-16` repeat
+- [x] 10.7 Merge `spec/0.6.0-alpha.1-P5` into `feat/0.6.0-alpha.1`. Merged at `158b23d5`; the `verify` command passed on the merged tree (2 tests in 1 suite)
 
 Boundaries:
 
