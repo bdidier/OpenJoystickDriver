@@ -20,19 +20,22 @@ public actor OpenJoystickDriverUSBTransportProvider: USBTransportProvider,
   private let ioUSBHostConfigurationObservation:
     @Sendable (USBTransportDevice, UInt8) throws -> PhysicalDevice?
 
+  /// The models OJD's restricted entitlement covers, which only the DEXT route may serve.
+  static let driverKitRequiredModels = Set(
+    USBDriverKitExtensionConfiguration.microsoftProductIDs.map {
+      USBTransportModel(
+        vendorID: USBDriverKitExtensionConfiguration.microsoftVendorID,
+        productID: $0
+      )
+    }
+  )
+
   public init() {
     ioUSBHostProvider = IOUSBHostTransportProvider()
     usbDriverKitProvider = USBDriverKitTransportProvider()
     let registry = ProtocolDriverRegistry()
     rawUSBModels = { Set(registry.rawUSBIdentifiers.map(USBTransportModel.init)) }
-    requiredDriverKitModels = Set(
-      USBDriverKitExtensionConfiguration.microsoftProductIDs.map {
-        USBTransportModel(
-          vendorID: USBDriverKitExtensionConfiguration.microsoftVendorID,
-          productID: $0
-        )
-      }
-    )
+    requiredDriverKitModels = Self.driverKitRequiredModels
     ioUSBHostObservation = { try PassiveUSBDescriptorProbe.physicalDeviceObservation(for: $0) }
     ioUSBHostConfigurationObservation = Self.readConfigurationObservation
   }

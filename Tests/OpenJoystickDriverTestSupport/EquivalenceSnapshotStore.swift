@@ -23,16 +23,35 @@ package enum EquivalenceSnapshotStore {
     return "\(hex(vendorID)):\(hex(productID))"
   }
 
-  /// Renders sections as `## title` followed by their lines, sorted by title.
-  package static func render(_ sections: [(title: String, lines: [String])]) -> String {
-    sections.sorted { $0.title < $1.title }
+  /// Renders sections as `## title` followed by their lines, sorted by title, after `header`
+  /// (`# ` comment lines and a blank line, which the comparison script ignores).
+  package static func render(
+    _ sections: [(title: String, lines: [String])],
+    header: String = ""
+  ) -> String {
+    header
+      + sections.sorted { $0.title < $1.title }
       .map { "## \($0.title)\n" + $0.lines.map { $0 + "\n" }.joined() }
       .joined(separator: "\n")
   }
 
   /// Returns nil when the snapshot matches or was written; otherwise a message for the failure.
   package static func verify(_ rendered: String, named name: String) throws -> String? {
-    let environment = ProcessInfo.processInfo.environment
+    try verify(
+      rendered,
+      named: name,
+      in: directory,
+      environment: ProcessInfo.processInfo.environment
+    )
+  }
+
+  /// `verify(_:named:)` against an explicit snapshot directory and environment.
+  package static func verify(
+    _ rendered: String,
+    named name: String,
+    in directory: URL,
+    environment: [String: String]
+  ) throws -> String? {
     let file = directory.appendingPathComponent(name)
     if let actual = environment["OJD_SNAPSHOT_ACTUAL_DIR"] {
       let target = URL(fileURLWithPath: actual, isDirectory: true)
