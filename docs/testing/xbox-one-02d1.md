@@ -44,10 +44,11 @@ Hypothesis 2 holds in a narrower form: the defect is in the USB transport adapte
 `DeviceManager+USBDetection.swift`. The idProductArray lead from the thread holds by source.
 It is not confirmed on hardware: no registry dump of the active extension exists.
 
-Proposed fix, outside this package: in `USBDriverKitTransportProvider.devices()`, read
-`idVendor`, `idProduct`, `locationID`, and the strings from the ancestor `IOUSBHostDevice` of
-each DEXT service, and keep the DEXT service ID for the user-client open. When that lands,
-change `dextServiceWithPersonalityPropertiesYieldsNoDevice` to expect a device.
+The fix landed in P15: `Sources/OpenJoystickDriverUSB/Transport/USBDriverKitTransport.swift`
+now reads `idVendor`, `idProduct`, `locationID`, and the strings from the parent
+`IOUSBHostDevice` of each DEXT service, and keeps the DEXT service ID for the user-client open.
+`dextServiceTakesIdentityFromParentUSBDevice` and `dextServiceWithoutParentYieldsNoDevice` in
+`XboxOne02D1DetectionTests.swift` cover it. The fix is not verified on hardware.
 
 Hypothesis 1 (`userclient-access`) can still block the open after the fix. Hypothesis 3 (GIP
 startup) is unlikely: cooltune's capture shows the classic startup works.
