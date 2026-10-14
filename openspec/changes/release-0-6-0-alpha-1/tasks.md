@@ -72,11 +72,11 @@ Harness notes from the handoff:
   - Should-fix: every `ControllerOwnershipFailure` shows the `error.E2023` text, which names raw USB and native support; `noRecord`, `invalidRecord`, and `persistenceFailed` append the service's detail instead of a text of their own.
   - Accepted: `GatewayStub` gained a call recorder and a failure knob beside the method, mirroring the override stub; the protocol default of `setControllerOwnership` returns `.noRecord` for test conformers, like the suspend/resume defaults.
 - P12 decision: its Owns gained three Kit files and a Kit test (2026-10-14), so the device payload carries `recordOwnership`, the effective layered ownership, decoded as `.macOS` when absent.
-- P8 report (2026-10-14, tree `5b43e065`, worktree `.claude/worktrees/spec-P8`):
+- P8 report (2026-10-14, commit `5b43e065`, worktree `.claude/worktrees/spec-P8`):
   - Toolchain: `/Applications/Xcode-26.6.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift`, `Apple Swift version 6.3.3 (swiftlang-6.3.3.1.3 clang-2100.1.1.101)`, with the environment of `design.md` "Full check". The Python checks used the main checkout's `.build/schema-validator/bin/python`, because the worktree has no `.build`.
   - Each command of the `CLAUDE.md` Checks list exited 0, run one at a time, and so did `./Scripts/ojd test parsers-macos14`: `swift test` ran 2555 tests in 352 suites, the repository unittest ran 180 tests (1 skipped), markdownlint linted 110 files, swiftlint linted 1083 files.
-  - `./Scripts/ojd check schemas` exits 0 with the Xcode toolchain and exits 1 with the swiftly 6.3.3 toolchain first on `PATH`: compiling `Package.swift` against the CommandLineTools SDK fails with `unknown argument: '-target-arch-variant'`.
-  - The `verify` command exits 255: `just check` runs `./Scripts/ojd check tools`, which is not in the Checks list, and xmake picks `/Applications/Xcode-27.0.0.app` (SDK 27.0) instead of `DEVELOPER_DIR`; compiling `Tools/SDLGamepadProbe/main.m` fails with `/opt/homebrew/include/SDL3/SDL_platform_defines.h:146:10: fatal error: 'AvailabilityMacros.h' file not found`. The same command fails the same way on `main`, so no package of this change owns it; it is the machine's Xcode selection for xmake. The steps of `just check` after it passed when run alone: `check driverkit`, `test parsers-macos14`, and `swift test --no-parallel` (2555 tests). 15.5 stays open until the maintainer accepts this or fixes the xmake Xcode selection.
+  - `./Scripts/ojd check schemas` exits 0 with the Xcode toolchain and exits 1 with the user-installed 6.3.3 toolchain (`~/Library/Developer/Toolchains/swift-6.3.3-RELEASE.xctoolchain`, through swiftly) first on `PATH`: compiling `Package.swift` against the CommandLineTools SDK fails with `unknown argument: '-target-arch-variant'`.
+  - The `verify` command exits 255: `just check` runs `./Scripts/ojd check tools`, which is not in the Checks list, and xmake picks `/Applications/Xcode-27.0.0.app` (SDK 27.0) instead of `DEVELOPER_DIR`; compiling `Tools/SDLGamepadProbe/main.m` fails with `/opt/homebrew/include/SDL3/SDL_platform_defines.h:146:10: fatal error: 'AvailabilityMacros.h' file not found`. The same command fails the same way on `main`, so no package of this change owns it (owner: environment); it looks like the machine's Xcode selection for xmake, not tested with xmake forced to Xcode 26.6. The steps of `just check` after it passed when run alone: `check driverkit`, `test parsers-macos14`, and `swift test --no-parallel` (2555 tests). 15.5 stays open until the maintainer accepts this or fixes the xmake Xcode selection.
 
 ## 1. P1: B2 review fixes and requires at runtime
 
@@ -765,7 +765,7 @@ Context:
 - [x] 15.3 Report each failure with its command and first error. Do not fix code; a failure goes back to the package that owns the file.
 - [x] 15.4 If `./Scripts/ojd check schemas` fails only with the user toolchain first on `PATH`, record both runs.
 - [ ] 15.5 Verify: the `verify` command above exits 0. Acceptance: Each command exits 0, or the report lists each failure with its owner package.
-- [ ] 15.6 Review: a fresh reviewer agent approves the diff
+- [x] 15.6 Review: a fresh reviewer agent approves the diff
 - [ ] 15.7 Merge `spec/0.6.0-alpha.1-P8` into `feat/0.6.0-alpha.1`
 
 Boundaries:
