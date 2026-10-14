@@ -641,7 +641,7 @@ Context:
 - [x] 12.6 Rename `## [Unreleased]` to `## [0.6.0-alpha.1] - <date>` with `date -u +%F` of the day the package runs, and add a compare link if the file has link references (maintainer decision D3).
   The report names the date, so the maintainer can correct it in the release commit if the approval falls on another day.
 - [x] 12.7 Verify: the `verify` command above exits 0. Acceptance: The verify command passes. Each new wiki paragraph and CHANGELOG entry is one line.
-- [ ] 12.8 Review: a fresh reviewer agent approves the diff
+- [x] 12.8 Review: a fresh reviewer agent approves the diff
 - [ ] 12.9 Merge `spec/0.6.0-alpha.1-P6` into `feat/0.6.0-alpha.1`
 
 Boundaries:
