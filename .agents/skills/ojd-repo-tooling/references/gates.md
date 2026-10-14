@@ -28,7 +28,7 @@
 
 ## Index-Snapshot Hook
 
-**Definition.** `lefthook.yml` `pre-commit` runs `Scripts/Quality/check-index-snapshot.sh`. The script commits the index to a temporary commit, checks it out in a temporary worktree, and runs `just check-hook` there. As a result, the hook checks exactly what is being committed, and ignores unstaged edits. `pre-push` runs `Scripts/Quality/check-pushed-tips.sh` on the pushed refs.
+**Definition.** `.husky/pre-commit` runs `bash Scripts/Quality/check-index-snapshot.sh`. The script commits the index to a temporary commit, checks it out in a temporary worktree, and runs `just check-hook` there. As a result, the hook checks exactly what is being committed, and ignores unstaged edits. `.husky/pre-push` runs `bash Scripts/Quality/check-pushed-tips.sh` on the pushed refs.
 
 **Use when.** Changing what runs at commit or push time.
 

@@ -18,7 +18,7 @@
 | Platform | `Scripts/Platform/` | The capability model, the route requirements, and `environment.sh` (Xcode and SDK resolution) |
 | Feature groups | `Scripts/{Build,Catalog,Diagnostics,Documentation,Quality,Release,Signing}/` | One narrow implementation each |
 | Orchestration | `justfile` | Recipes that chain standard tools and `./Scripts/ojd` routes |
-| Hooks | `lefthook.yml` | `pre-commit` and `pre-push` commands |
+| Hooks | `.husky/` | `pre-commit`, `pre-push` and `commit-msg` (commitlint) hooks |
 | CI | `.github/workflows/ci.yml`, `release.yml` | The hosted gate and release jobs |
 
 **Use when.** Deciding where a new behavior goes.

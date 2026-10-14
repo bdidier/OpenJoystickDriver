@@ -2,7 +2,7 @@
 name: ojd-repo-tooling
 description: >-
   Changes OpenJoystickDriver repository tooling: the ./Scripts/ojd dispatcher
-  and its Python and shell targets under Scripts/, justfile recipes, lefthook
+  and its Python and shell targets under Scripts/, justfile recipes, husky + commitlint
   Git hooks, GitHub Actions workflows, quality gates such as the Swift
   file-length and naming checker, and their unittest coverage in
   Tests/RepositoryScripts. Use when adding or changing an ojd route, a just
@@ -17,7 +17,7 @@ Change one tool route or gate, cover it with a Python unit test, and keep the di
 
 ## Workflow
 
-1. Read `Scripts/README.md`, `AGENTS.md` (the check list), the `justfile`, `lefthook.yml`, and `.github/workflows/ci.yml`, plus the target script and its test in `Tests/RepositoryScripts/`.
+1. Read `Scripts/README.md`, `AGENTS.md` (the check list), the `justfile`, `.husky/`, `commitlint.config.mjs`, `package.json`, and `.github/workflows/ci.yml`, plus the target script and its test in `Tests/RepositoryScripts/`.
 1. Pick the layer with the [layer card](references/layers.md#which-layer-owns-it).
 1. Write the unittest first and watch it fail ([script tests](references/layers.md#script-tests)).
 1. Make the change. For a new or changed route, apply every edit in the [route change card](references/layers.md#adding-an-ojd-route).
@@ -41,7 +41,7 @@ Change one tool route or gate, cover it with a Python unit test, and keep the di
 - Script tests are Python `unittest` tests in `Tests/RepositoryScripts/`. There is no `Tests/Scripts`, and no Swift test runs shell or Python.
 - Tests assert on exit codes, parsed data, and forwarded arguments. Help text and prose change freely, so a test that asserts on them breaks for no reason.
 - Homebrew `python3` lacks `jsonschema`, so tests that import it fail with `ModuleNotFoundError`. Run the suite with `uv run --no-project --with jsonschema`, or through `.build/schema-validator`.
-- Hooks are managed by lefthook. Edit `lefthook.yml` and the scripts it runs, never `.git/hooks/`. `ojd hooks install` rewrites that directory.
+- Hooks are managed by husky (`bun install` runs `prepare` and sets `core.hooksPath=.husky/_`). Edit the files in `.husky/` and the scripts they run, never `.git/hooks/`. `commit-msg` runs commitlint with `commitlint.config.mjs` (config-conventional). `ojd hooks install` runs `bun install`; `ojd hooks validate` checks `core.hooksPath` and the three hook files.
 - Scripts contain no secrets, Team IDs, or signing identities. Those values come from the environment (`docs/development/environment.md`).
 
 ## References
