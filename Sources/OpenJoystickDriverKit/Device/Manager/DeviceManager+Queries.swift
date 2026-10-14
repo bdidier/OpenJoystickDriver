@@ -105,6 +105,7 @@ extension DeviceManager {
       preferredBackends: record?.preferredBackends.map(\.rawValue) ?? [],
       physicalOutputCapabilities: await pipeline.physicalOutputCapabilities(),
       physicalOutputOwner: pipeline.macOSOwnedOutput == nil ? .ojd : .macOS,
+      recordOwnership: record?.ownership ?? .macOS,
       tuning: record?.tuning ?? .none,
       capabilities: protocolDriverRegistry.capabilities(
         await pipeline.capabilities(),

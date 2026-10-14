@@ -49,6 +49,10 @@ public struct ApplicationServiceDeviceDescription: Codable, Sendable {
   /// Who drives the controller's output: `macOS` when it serves the controller natively, so
   /// ``physicalOutputCapabilities`` holds only what macOS leaves undone.
   public let physicalOutputOwner: ControllerOwnership
+  /// Who the controller record says serves the model after the bundled, package, and user layers:
+  /// `ojd` when a layer sets it, `macOS` otherwise. Unlike ``physicalOutputOwner``, it stays `ojd`
+  /// while OJD serves a model that macOS also supports.
+  public let recordOwnership: ControllerOwnership
   /// The record's timing and deadzone values as applied to this controller.
   public let tuning: ControllerTuning
   /// Normalized controls and sample formats the active parser emits for this record.
@@ -89,6 +93,7 @@ public struct ApplicationServiceDeviceDescription: Codable, Sendable {
     preferredBackends: [String] = [],
     physicalOutputCapabilities: PhysicalControllerOutputCapabilities = .none,
     physicalOutputOwner: ControllerOwnership = .ojd,
+    recordOwnership: ControllerOwnership = .macOS,
     tuning: ControllerTuning = .none,
     capabilities: ControllerCapabilities = ControllerCapabilities(controls: []),
     connectionState: ControllerConnectionState? = nil,
@@ -120,6 +125,7 @@ public struct ApplicationServiceDeviceDescription: Codable, Sendable {
     self.preferredBackends = preferredBackends
     self.physicalOutputCapabilities = physicalOutputCapabilities
     self.physicalOutputOwner = physicalOutputOwner
+    self.recordOwnership = recordOwnership
     self.tuning = tuning
     self.capabilities = capabilities
     self.connectionState = connectionState
@@ -170,6 +176,9 @@ public struct ApplicationServiceDeviceDescription: Codable, Sendable {
       ControllerOwnership.self,
       forKey: .physicalOutputOwner
     )
+    // A service older than this field sends none; the record then serves the model to macOS.
+    self.recordOwnership =
+      try container.decodeIfPresent(ControllerOwnership.self, forKey: .recordOwnership) ?? .macOS
     self.tuning = try container.decode(ControllerTuning.self, forKey: .tuning)
     self.capabilities = try container.decode(ControllerCapabilities.self, forKey: .capabilities)
     self.connectionState = try container.decodeIfPresent(
@@ -215,6 +224,7 @@ public struct ApplicationServiceDeviceDescription: Codable, Sendable {
     case preferredBackends
     case physicalOutputCapabilities
     case physicalOutputOwner
+    case recordOwnership
     case tuning
     case capabilities
     case connectionState
@@ -250,6 +260,7 @@ extension ApplicationServiceDeviceDescription {
       preferredBackends: snapshot.preferredBackends,
       physicalOutputCapabilities: snapshot.physicalOutputCapabilities,
       physicalOutputOwner: snapshot.physicalOutputOwner,
+      recordOwnership: snapshot.recordOwnership,
       tuning: snapshot.tuning,
       capabilities: snapshot.capabilities,
       connectionState: snapshot.connectionState,

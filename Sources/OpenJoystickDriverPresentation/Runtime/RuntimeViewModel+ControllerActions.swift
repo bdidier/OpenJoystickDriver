@@ -123,6 +123,25 @@ extension RuntimeViewModel {
     }
   }
 
+  /// Makes `ownership` serve `device`'s model: macOS natively, or OpenJoystickDriver as a virtual
+  /// controller. A refusal shows as E2023 in the controller's detail, with the service's detail
+  /// text for a record that is invalid or cannot be written.
+  func setControllerOwnership(
+    _ ownership: ControllerOwnership,
+    for device: ApplicationServiceDeviceDescription
+  ) async {
+    await performControllerAction(device) {
+      let result = try await gateway.setControllerOwnership(
+        identity: ControllerIdentity(vendorID: device.vendorID, productID: device.productID),
+        ownership: ownership
+      )
+      guard result.failure != nil else { return nil }
+      return [OJDLocalized.string("error.E2023"), result.detail].compactMap { $0 }.joined(
+        separator: " "
+      )
+    }
+  }
+
   func suspendController(_ device: ApplicationServiceDeviceDescription) async {
     await performControllerAction(device) {
       let result = try await gateway.suspendController(RuntimeDeviceSelector(device: device))

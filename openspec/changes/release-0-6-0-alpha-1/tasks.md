@@ -699,7 +699,7 @@ Boundaries:
 - dotclaude status: `planned`
 - Wave: 5; deps: P11 (group 11); satisfies: REQ-19; agent: `implementer`
 - Branch: `spec/0.6.0-alpha.1-P12`; worktree: `.claude/worktrees/spec-P12`
-- Owns: `Sources/OpenJoystickDriverPresentation/Controllers/Inventory/ControllerOwnershipPicker.swift`, `Sources/OpenJoystickDriverPresentation/Controllers/Inventory/ControllerDetailView+Facts.swift`, `Sources/OpenJoystickDriverPresentation/Runtime/ApplicationServiceGateway.swift`, `Sources/OpenJoystickDriverPresentation/Runtime/ApplicationServiceClientGateway+Requests.swift`, `Sources/OpenJoystickDriverPresentation/Runtime/RuntimeViewModel+ControllerActions.swift`, `Tests/OpenJoystickDriverPresentationTests/Support/GatewayStub.swift`, `Tests/OpenJoystickDriverPresentationTests/Controllers/ControllerOwnershipPickerTests.swift`
+- Owns: `Sources/OpenJoystickDriverPresentation/Controllers/Inventory/ControllerOwnershipPicker.swift`, `Sources/OpenJoystickDriverPresentation/Controllers/Inventory/ControllerDetailView+Facts.swift`, `Sources/OpenJoystickDriverPresentation/Runtime/ApplicationServiceGateway.swift`, `Sources/OpenJoystickDriverPresentation/Runtime/ApplicationServiceClientGateway+Requests.swift`, `Sources/OpenJoystickDriverPresentation/Runtime/RuntimeViewModel+ControllerActions.swift`, `Tests/OpenJoystickDriverPresentationTests/Support/GatewayStub.swift`, `Tests/OpenJoystickDriverPresentationTests/Controllers/ControllerOwnershipPickerTests.swift`, `Sources/OpenJoystickDriverKit/ApplicationService/Payloads/ApplicationServiceDeviceDescription.swift`, `Sources/OpenJoystickDriverKit/Device/Manager/ConnectedDeviceSnapshot.swift`, `Sources/OpenJoystickDriverKit/Device/Manager/DeviceManager+Queries.swift`, `Tests/OpenJoystickDriverKitTests/Device/Manager/RecordOwnershipReportTests.swift` (the Kit files joined on 2026-10-14: the app has no record ownership, so a model switched to Virtual would lose its picker; the device payload gains the effective record ownership)
 - Verify: `grep -q ControllerOwnershipPicker Sources/OpenJoystickDriverPresentation/Controllers/Inventory/ControllerDetailView+Facts.swift && env -u TOOLCHAINS DEVELOPER_DIR=/Applications/Xcode-26.6.0.app/Contents/Developer OJD_USE_LOCAL_SWIFTERKIT=0 PATH=/Applications/Xcode-26.6.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin:$PATH swift test --filter ControllerOwnershipPicker`
 
 Goal:
@@ -713,13 +713,13 @@ Context:
 - The call chain for `setVirtualHIDProfileOverride`: `Runtime/ApplicationServiceGateway.swift:91`, `Runtime/ApplicationServiceClientGateway+Requests.swift`, `Runtime/RuntimeViewModel+ControllerActions.swift`, and the test stub `Tests/OpenJoystickDriverPresentationTests/Support/GatewayStub.swift:31`.
 - `ApplicationServiceClient+Requests.swift` (`setControllerOwnership`, added by P11, read only); `controllers.ownership.*` and `error.E2023` keys added by P11.
 
-- [ ] 14.1 Add `setControllerOwnership(identity:ownership:)` to `ApplicationServiceGateway`, implement it in `ApplicationServiceClientGateway+Requests.swift`, and add the view-model action in `RuntimeViewModel+ControllerActions.swift`, following `setVirtualHIDProfileOverride`.
-- [ ] 14.2 Add the matching method to `GatewayStub.swift` so it records the call; change nothing else in that file.
-- [ ] 14.3 Write `ControllerOwnershipPicker` (a two-value picker, Native / Virtual): shown only when the device's `physicalOwnership` is `nativeGamepad`, or its record ownership is `ojd`, and its family is not raw-USB. On change it calls the view-model action and shows E2023 with its localized text.
-- [ ] 14.4 Place it in `ControllerDetailView+Facts.swift` beside `VirtualHIDProfileOverrideView` (`:30`).
-- [ ] 14.5 Test the visibility rule and that a change calls the gateway with the right identity and value, with `GatewayStub`.
-- [ ] 14.6 Verify: the `verify` command above exits 0. Acceptance: The verify command passes; `python3 Scripts/Quality/check_localization_keys.py` passes. The report lists the maintainer's manual check: open a native controller's detail, switch to Virtual, and see the virtual gamepad in a game.
-- [ ] 14.7 Review: a fresh reviewer agent approves the diff
+- [x] 14.1 Add `setControllerOwnership(identity:ownership:)` to `ApplicationServiceGateway`, implement it in `ApplicationServiceClientGateway+Requests.swift`, and add the view-model action in `RuntimeViewModel+ControllerActions.swift`, following `setVirtualHIDProfileOverride`.
+- [x] 14.2 Add the matching method to `GatewayStub.swift` so it records the call; change nothing else in that file.
+- [x] 14.3 Write `ControllerOwnershipPicker` (a two-value picker, Native / Virtual): shown only when the device's `physicalOwnership` is `nativeGamepad`, or its record ownership is `ojd`, and its family is not raw-USB. On change it calls the view-model action and shows E2023 with its localized text.
+- [x] 14.4 Place it in `ControllerDetailView+Facts.swift` beside `VirtualHIDProfileOverrideView` (`:30`).
+- [x] 14.5 Test the visibility rule and that a change calls the gateway with the right identity and value, with `GatewayStub`.
+- [x] 14.6 Verify: the `verify` command above exits 0. Acceptance: The verify command passes; `python3 Scripts/Quality/check_localization_keys.py` passes. The report lists the maintainer's manual check: open a native controller's detail, switch to Virtual, and see the virtual gamepad in a game.
+- [x] 14.7 Review: a fresh reviewer agent approves the diff
 - [ ] 14.8 Merge `spec/0.6.0-alpha.1-P12` into `feat/0.6.0-alpha.1`
 
 Boundaries:

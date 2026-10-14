@@ -24,6 +24,10 @@
             )
             Divider()
             inputTestAction
+            if ControllerOwnershipPicker.isShown(for: device) {
+              Divider()
+              ControllerOwnershipPicker(viewModel: viewModel, device: device)
+            }
             if device.physicalOwnership != .nativeGamepad {
               Divider()
               // A per-controller identity collapses Advanced again on a new selection.

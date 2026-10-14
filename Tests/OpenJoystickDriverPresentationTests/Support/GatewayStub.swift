@@ -62,6 +62,8 @@ actor GatewayStub: ApplicationServiceGateway {
   var statusCallWaiters: [(count: Int, continuation: CheckedContinuation<Void, Never>)] = []
   var remappingSnapshotCallCount = 0
   var overrideRequests: [(profile: VirtualHIDProfileID?, selector: RuntimeDeviceSelector)] = []
+  var ownershipRequests: [(identity: ControllerIdentity, ownership: ControllerOwnership)] = []
+  var ownershipFailure: (failure: ControllerOwnershipFailure, detail: String?)?
   var overrideRequestsAreGated = false
   var overrideContinuations: [CheckedContinuation<Void, Never>] = []
 
@@ -331,6 +333,25 @@ actor GatewayStub: ApplicationServiceGateway {
       source: "automatic",
       failure: overrideFailure
     )
+  }
+
+  func setControllerOwnership(
+    identity: ControllerIdentity,
+    ownership: ControllerOwnership
+  ) throws -> ControllerOwnershipResult {
+    ownershipRequests.append((identity, ownership))
+    return ControllerOwnershipResult(
+      ownership: ownership,
+      previous: .macOS,
+      file: nil,
+      created: false,
+      failure: ownershipFailure?.failure,
+      detail: ownershipFailure?.detail
+    )
+  }
+
+  func setOwnershipFailure(_ failure: ControllerOwnershipFailure?, detail: String? = nil) {
+    ownershipFailure = failure.map { ($0, detail) }
   }
 
   func setOverrideFailure(_ failure: VirtualHIDProfileOverrideFailure?) {
