@@ -100,6 +100,9 @@ public actor DeviceManager {
   /// Controllers the user suspended; a pipeline for one of these identities starts suspended.
   /// Resume, physical disconnect, and `stop()` remove entries; sleep keeps them.
   var suspendedControllerIdentities: Set<DeviceIdentifier> = []
+  /// HID connections of suspended controllers that a record reload may admit again through the HID
+  /// backend; their disconnect keeps the suspension for the connection that replaces them.
+  var ownershipCycledHIDConnections: Set<UUID> = []
   var externalOutputAllowed = true
   var lastPhysicalHIDOutputNanoseconds: [DeviceIdentifier: UInt64] = [:]
   var rumbleStopTasks: [DeviceIdentifier: Task<Void, Never>] = [:]
