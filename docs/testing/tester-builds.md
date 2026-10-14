@@ -7,8 +7,8 @@ A tester build is a notarized DMG of an unpublished build, made by the maintaine
 The maintainer sends you the DMG. Do not change its contents.
 
 1. Open the DMG and drag `OpenJoystickDriver.app` to `/Applications`.
-1. Open the app and approve the macOS permissions it asks for, in the order in [Install](../../wiki/Getting-Started.md#installing-openjoystickdriver). Approve the driver extension only if your controller is one of the [seven Microsoft models](../../wiki/Supported-Controllers.md#supported-controllers).
-1. Reproduce the problem with the packaged app.
+2. Open the app and approve the macOS permissions it asks for, in the order in [Install](../../wiki/Getting-Started.md#installing-openjoystickdriver). Approve the driver extension only if your controller is one of the [seven Microsoft models](../../wiki/Supported-Controllers.md#supported-controllers).
+3. Reproduce the problem with the packaged app.
 
 ## What Is In the DMG
 
