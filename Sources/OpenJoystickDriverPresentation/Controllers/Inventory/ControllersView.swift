@@ -256,25 +256,38 @@
     /// The identity of the virtual HID profile this controller publishes; nil when none is live.
     var publishedVirtualProfile: VirtualDeviceProfile? { virtualHIDProfile?.profile?.identity }
 
-    /// Glyph presentation of the published identity when a virtual device is published, else of
-    /// the physical protocol family.
-    var publishedIdentityPresentation: VirtualIdentityPresentation {
+    /// The identity shown for this controller, computed once so icon and caption always agree.
+    var presentedIdentity: PresentedControllerIdentity {
       guard publication?.state == .published else {
-        return protocolBinding.protocolID.physicalPresentation
-      }
-      return (publishedVirtualProfile ?? VirtualHIDProfileID.generic.identity).presentation
-    }
-
-    /// The virtual identity published for this controller; macOS serves a native gamepad itself.
-    var publishedIdentityLabel: String {
-      guard physicalOwnership != .nativeGamepad else {
-        return OJDLocalized.string(
-          "controllers.nativeGamepadNotPublished"
+        return PresentedControllerIdentity(
+          publishesVirtualDevice: false,
+          presentation: protocolBinding.protocolID.physicalPresentation,
+          label: physicalOwnership.isServedBySystem
+            ? OJDLocalized.string("controllers.nativeGamepadNotPublished")
+            : RuntimePresentation.noVirtualHIDProfileLabel
         )
       }
-      return publishedVirtualProfile?.publishedUSBIdentityLabel
-        ?? RuntimePresentation.noVirtualHIDProfileLabel
+      let identity = publishedVirtualProfile ?? VirtualHIDProfileID.generic.identity
+      return PresentedControllerIdentity(
+        publishesVirtualDevice: true,
+        presentation: identity.presentation,
+        label: identity.publishedUSBIdentityLabel
+      )
     }
+
+    var publishedIdentityPresentation: VirtualIdentityPresentation {
+      presentedIdentity.presentation
+    }
+
+    var publishedIdentityLabel: String { presentedIdentity.label }
+  }
+
+  /// Icon and caption of one controller: the virtual identity when OJD publishes a virtual
+  /// device for it, else the physical family.
+  struct PresentedControllerIdentity: Equatable {
+    let publishesVirtualDevice: Bool
+    let presentation: VirtualIdentityPresentation
+    let label: String
   }
 
 #endif

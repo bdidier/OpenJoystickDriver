@@ -11,15 +11,18 @@ struct VirtualHIDProfileOverrideTests {
 
   private static func device(
     runtimeIdentifier: String = "session-device-override",
-    profile: ApplicationServiceVirtualHIDProfileStatus? = nil
+    profile: ApplicationServiceVirtualHIDProfileStatus? = nil,
+    protocolBinding: ProtocolBindingID = ProtocolBindingID(.hidDescriptor),
+    ownership: ControllerOwnershipObservation = .unknown
   ) -> ApplicationServiceDeviceDescription {
     var device = ApplicationServiceDeviceDescription(
       name: "Test Pad",
       vendorID: 0x1234,
       productID: 0x5678,
-      protocolBinding: ProtocolBindingID(.hidDescriptor),
+      protocolBinding: protocolBinding,
       connection: "USB",
       discoverySource: .rawUSB,
+      physicalOwnership: ownership,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
       runtimeIdentifier: runtimeIdentifier
@@ -304,5 +307,48 @@ struct VirtualHIDProfileOverrideTests {
 
     #expect(sixaxis.publishedIdentityPresentation == .playstation)
     #expect(sixaxis.publishedIdentityPresentation.glyphFamily != .xbox)
+  }
+
+  @Test
+  func iconAndLabelComeFromOnePresentedIdentity() {
+    let profile = ApplicationServiceVirtualHIDProfileStatus(
+      profile: .xboxOneSBluetooth,
+      source: "automatic",
+      override: nil,
+      unavailable: false
+    )
+    let cases: [(ApplicationServicePublicationStatus?, published: Bool)] = [
+      (nil, false),
+      (ApplicationServicePublicationStatus(state: .notPublished, reason: "noInputYet"), false),
+      (ApplicationServicePublicationStatus(state: .failed, reason: "send failed"), false),
+      (ApplicationServicePublicationStatus(state: .published, target: .xboxOneSBluetooth), true),
+    ]
+    for (publication, published) in cases {
+      for ownership in ControllerOwnershipObservation.allCases {
+        var pad = Self.device(
+          profile: profile,
+          protocolBinding: ProtocolBindingID(.sonySixaxis, variant: .usb),
+          ownership: ownership
+        )
+        pad.publication = publication
+        let identity = pad.presentedIdentity
+
+        #expect(identity.publishesVirtualDevice == published)
+        #expect(pad.publishedIdentityPresentation == identity.presentation)
+        #expect(pad.publishedIdentityLabel == identity.label)
+        if published {
+          #expect(identity.presentation.glyphFamily == .xbox)
+          #expect(identity.label.contains("045E:02FD"))
+        } else {
+          #expect(identity.presentation == .playstation)
+          #expect(!identity.label.contains("045E:02FD"))
+          let expected =
+            ownership.isServedBySystem
+            ? OJDLocalized.string("controllers.nativeGamepadNotPublished")
+            : RuntimePresentation.noVirtualHIDProfileLabel
+          #expect(identity.label == expected)
+        }
+      }
+    }
   }
 }
