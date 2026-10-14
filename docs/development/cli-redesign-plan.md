@@ -1,6 +1,6 @@
 # CLI Redesign Plan
 
-Status: proposed. Breaking changes are allowed, with no migration and no aliases for old command names.
+Status: implemented; this plan records the design and the state before it. Breaking changes are allowed, with no migration and no aliases for old command names.
 
 ## Goal
 

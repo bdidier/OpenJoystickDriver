@@ -27,3 +27,9 @@ The signing checks and the DriverKit build accept the provisioning profiles that
 
 - **WHEN** the host profile's value is `"*"`, holds a non-string item, or the profile uses `allow-any-userclient-access`
 - **THEN** the checks refuse it
+
+#### Scenario: Development profile without the grant
+
+- **WHEN** a development host profile has no `userclient-access` for `com.openjoystickdriver.XboxUSBDevice`, or lists only other bundle IDs
+- **THEN** `signing configure` and `signing doctor` accept it, `signing doctor` prints `[SKIP]`, and the development build omits the extension
+- **AND** a release host profile without the grant is refused

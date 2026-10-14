@@ -6,12 +6,17 @@ What a release must hold before it is tagged: a dated CHANGELOG section and a pa
 
 ### Requirement: REQ-15 Release CHANGELOG section
 
-`CHANGELOG.md` MUST list the mod package feature, E3029, and E4001-E4007 on one line each, and its `[Unreleased]` section MUST become `[0.6.0-alpha.1]` with the release date.
+`CHANGELOG.md` MUST list the mod package feature, E3029, and E4001-E4007 on one line each in its `[Unreleased]` section, and the release commit MUST rename that section `[0.6.0-alpha.1]` with the release date.
 
 #### Scenario: Release commit
 
-- **WHEN** the release commit is approved
+- **WHEN** the release commit is made
 - **THEN** `CHANGELOG.md` has `## [0.6.0-alpha.1] - <date>` with one line each for mod packages, E3029, and E4001-E4007
+
+#### Scenario: Before the release commit
+
+- **WHEN** the release commit is not yet made
+- **THEN** those three lines are in `## [Unreleased]`
 
 ### Requirement: REQ-16 Full check list
 

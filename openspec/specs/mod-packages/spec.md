@@ -1,8 +1,10 @@
+# mod-packages Specification
+
 ## Purpose
 
 Mod packages let users install controller records, remapping profiles, and personas as one folder under `Packages/`, served read-only beside their own files and managed with `ojd mod`.
 
-## ADDED Requirements
+## Requirements
 
 ### Requirement: REQ-1 Read-only package profiles
 
@@ -21,12 +23,17 @@ The service MUST load the profiles of installed packages read-only: a package pr
 
 ### Requirement: REQ-2 Profile clash rule
 
-When a package profile has the id or the case-insensitive name of a user profile, the user profile MUST win, and among packages the first by package name and then by manifest order MUST win.
+When a package profile has the id or the case-insensitive name of a user profile, the user profile MUST win, and among packages the first by package name and then by manifest order MUST win. The library MUST refuse with `duplicateName` to create, update, or import a user profile whose name is that of a served package profile.
 
 #### Scenario: User profile shadows a package profile by name only
 
 - **WHEN** a user profile has the case-insensitive name of a package profile and a different id
 - **THEN** the service serves the user profile and not the package profile
+
+#### Scenario: User profile takes a served package profile's name
+
+- **WHEN** a client creates, updates, or imports a user profile whose case-insensitive name is that of a served package profile
+- **THEN** the call fails with `duplicateName` and the library is unchanged
 
 #### Scenario: Two packages share a profile name
 
@@ -63,7 +70,7 @@ When a package profile has the id or the case-insensitive name of a user profile
 
 ### Requirement: REQ-5 Service reloads package profiles
 
-The running service MUST reload the remapping profiles within its watcher debounce when a package folder is installed, replaced, or removed under `Packages/`.
+The running service MUST reload the remapping profiles within its watcher debounce (300 ms, `FileChangeWatcher.swift`) when a package folder is installed, replaced, or removed under `Packages/`.
 
 #### Scenario: Package installed while the service runs
 
@@ -110,7 +117,7 @@ The running service MUST reload the remapping profiles within its watcher deboun
 
 ### Requirement: REQ-8 `ojd mod list`
 
-`ojd mod list` MUST list each installed package with its name, version, author, and the files it holds.
+`ojd mod list` MUST list each installed package with its name, version, author, and the files it holds, and MUST show the `problem` of a package that cannot be used, such as a missing or invalid `mod.json`.
 
 #### Scenario: List installed packages
 
@@ -119,7 +126,7 @@ The running service MUST reload the remapping profiles within its watcher deboun
 
 ### Requirement: REQ-9 `ojd mod remove`
 
-`ojd mod remove NAME` MUST remove only `Packages/<NAME>/`, fail with an E4xxx code when no such package is installed, and change nothing with `--dry-run`.
+`ojd mod remove NAME` MUST remove only `Packages/<NAME>/`, fail with E4006 `packageNotInstalled` when no such package is installed, and change nothing with `--dry-run`. Without `--force` (`-f`) or `--dry-run` it MUST ask for confirmation first. A name that is empty, starts with `.`, or contains `/` MUST fail like a missing package.
 
 #### Scenario: Remove an installed package
 
@@ -129,7 +136,7 @@ The running service MUST reload the remapping profiles within its watcher deboun
 #### Scenario: Missing package
 
 - **WHEN** no package named NAME is installed
-- **THEN** the command fails with an E4xxx code
+- **THEN** the command fails with E4006 `packageNotInstalled`
 
 #### Scenario: Dry run
 
@@ -138,7 +145,7 @@ The running service MUST reload the remapping profiles within its watcher deboun
 
 ### Requirement: REQ-17 Out-of-range packages are skipped at runtime
 
-When an installed package's `requires` does not admit the running version, the record, persona, and profile layers MUST skip all of its files, and `ojd mod list`, `ojd status`, and `ojd record list` MUST name the package with the E4002 reason.
+When an installed package's `requires` does not admit the running version, the record, persona, and profile layers MUST skip all of its files, and `ojd mod list`, `ojd status`, and `ojd record list` MUST name the package with the E4002 reason. A running version that is not a semantic version, such as a development build, is admitted by every package at runtime, while `validate` and `install` still check `requires`.
 
 #### Scenario: OJD update leaves a package's range
 

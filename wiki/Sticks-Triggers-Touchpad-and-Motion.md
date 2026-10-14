@@ -79,7 +79,7 @@ A dual-stage trigger has a soft stage and a full stage. You can assign each stag
 
 The soft threshold range is 0.01 to 0.95 (default 0.1). The full threshold range is 0.05 to 1 (default 0.95). The soft threshold must be less than the full threshold. The **Quick-pull window (ms)** range is 1 to 1000 (default 150). **Keep analog trigger passthrough** keeps the analog trigger in the passthrough output.
 
-The command line options start with `--trigger-`, for example `--trigger-source left --trigger-mode prefer_full`.
+On the command line, the settings are the `triggerMappings` entries of the profile. Change one with `ojd profile set`, for example `ojd profile set Racing triggerMappings.0.mode prefer_full`, or open the profile with `ojd profile edit`.
 
 ## Set Touch Mapping
 
@@ -94,7 +94,7 @@ The command line options start with `--trigger-`, for example `--trigger-source 
 
 You can also use touch contact, touch grid, and touch swipe as assignment sources. A grid has 1 to 16 columns and rows. A swipe has a minimum distance from 0.01 to 1 (default 0.2). For the source syntax, see [Assigning buttons and actions](Bindings-and-Actions.md#assigning-buttons-and-actions).
 
-The command line options start with `--touch-`, for example `--touch-surface primary --touch-mode pointer`.
+On the command line, the settings are the `touchMappings` entries of the profile. Change one with `ojd profile set`, for example `ojd profile set Racing touchMappings.0.mode pointer`, or open the profile with `ojd profile edit`.
 
 ## Set Motion Tuning and Gyro Output
 
