@@ -187,10 +187,10 @@ Symptom: games that read through GameController, CrossOver, and browsers see sti
 Hypotheses, most likely first (all from reading, none measured):
 
 1. Dedup of identical reports (`InputReportState.swift:49-55`) and dispatch-on-change (`DevicePipeline+InputEvents.swift:61`): when a stick rests at a value, no report is sent, and some readers infer hold or need repeats. Distinguish: count reports per second at the `IOHIDUserDevice` with a held stick vs. a moving stick.
-1. Upstream backlog (review finding, most likely): `deliver` awaits `.value()` (`UserSpaceOutputDispatcher+Delivery.swift:42-55`) and `dispatch` awaits `deliver` (`AutomaticUserSpaceOutputDispatcher.swift:188`), so the sender holds at most one report per pipeline and an overflow closes the entry (`:57-63`) rather than dropping silently; but the HID event streams are unbounded (`HIDDeviceStream+EventStreamAndReports.swift:12`, `Switch2BluetoothLERouting.swift:20`), so input reports queue behind each awaited send, and the virtual stick shows stale values, then snaps. Distinguish: a unit test with a slow fake send that counts stale reports delivered before the newest.
-1. Per-event async hops (`UserSpaceOutputDispatcher+Delivery.swift:21-27`) reorder or delay reports. Distinguish: timestamps at pipeline dispatch and at `IOHIDUserDeviceHandleReport`; check order and latency.
-1. Swallowed send errors (`AutomaticUserSpaceOutputDispatcher.swift:188`) and the 2 s deadline hide stalls. Distinguish: count errors and deadline hits.
-1. `ForegroundInputMask` hides a stick until neutral after focus changes (`ForegroundInputMask.swift`, `DevicePipeline+InputEvents.swift:49-53`). Distinguish: does the stutter follow app focus changes.
+2. Upstream backlog (review finding, most likely): `deliver` awaits `.value()` (`UserSpaceOutputDispatcher+Delivery.swift:42-55`) and `dispatch` awaits `deliver` (`AutomaticUserSpaceOutputDispatcher.swift:188`), so the sender holds at most one report per pipeline and an overflow closes the entry (`:57-63`) rather than dropping silently; but the HID event streams are unbounded (`HIDDeviceStream+EventStreamAndReports.swift:12`, `Switch2BluetoothLERouting.swift:20`), so input reports queue behind each awaited send, and the virtual stick shows stale values, then snaps. Distinguish: a unit test with a slow fake send that counts stale reports delivered before the newest.
+3. Per-event async hops (`UserSpaceOutputDispatcher+Delivery.swift:21-27`) reorder or delay reports. Distinguish: timestamps at pipeline dispatch and at `IOHIDUserDeviceHandleReport`; check order and latency.
+4. Swallowed send errors (`AutomaticUserSpaceOutputDispatcher.swift:188`) and the 2 s deadline hide stalls. Distinguish: count errors and deadline hits.
+5. `ForegroundInputMask` hides a stick until neutral after focus changes (`ForegroundInputMask.swift`, `DevicePipeline+InputEvents.swift:49-53`). Distinguish: does the stutter follow app focus changes.
 
 Buttons are fine and sticks are not, which fits 2 (a backlog of stale values hurts a continuous value and only delays a button edge) more than 1 or 3.
 P9 (`agent: debugger`) measures with unit tests, finds the cause, makes the smallest fix (for 2: coalesce input reports to the latest state per device before the awaited send, keeping every button edge), adds a regression test, and stops to report when the cause needs hardware timing.
@@ -201,8 +201,8 @@ Facts: `045E:02D1` with the XboxUSBDevice extension active is not in `controller
 Hypotheses, most likely first:
 
 1. The host profiles lack `com.apple.developer.driverkit.userclient-access` (`Host.entitlements:16-20`), and `Scripts/Signing/configure.py:261-291` and `Scripts/Build/driverkit.sh:178-229` then omit the extension, so the shipped host cannot open the extension's user client and the controller never binds. Distinguish: `codesign -d --entitlements -` on a tester build and the service log's user-client open result.
-1. The extension matches 02D1 but the USB detection path (`DeviceManager+USBDetection.swift`) does not bind it to `xbox.gip` (record or product list). Distinguish: `ojd record show 045e:02d1`, `ioreg -l -w0 -r -c IOUSBHostDevice` for the extension's match, and the service log on attach.
-1. The first-generation 02D1 needs a different GIP startup than later models. Distinguish: a capture with `ojd controller capture` after binding.
+2. The extension matches 02D1 but the USB detection path (`DeviceManager+USBDetection.swift`) does not bind it to `xbox.gip` (record or product list). Distinguish: `ojd record show 045e:02d1`, `ioreg -l -w0 -r -c IOUSBHostDevice` for the extension's match, and the service log on attach.
+3. The first-generation 02D1 needs a different GIP startup than later models. Distinguish: a capture with `ojd controller capture` after binding.
 
 P10 (`agent: debugger`) reads the thread, tests 2 offline (records, product list, detection path), and writes evidence to `docs/testing/xbox-one-02d1.md`. If the cause is 1 or needs hardware, it stops and reports; P6 adds the `wiki/Known-Issues.md` line when the cause is outside the code.
 
