@@ -293,9 +293,11 @@ extension ApplicationServiceServer {
           vendorID: device.vendorID,
           productID: device.productID
         )
+      // macOS serves a native gamepad itself, so a selection left from an earlier session is stale.
+      let selection = device.physicalOwnership == .nativeGamepad ? nil : state?.selection
       described.virtualHIDProfile = ApplicationServiceVirtualHIDProfileStatus(
-        profile: state?.selection?.profileID,
-        source: state?.selection?.source.wireName,
+        profile: selection?.profileID,
+        source: selection?.source.wireName,
         override: override,
         overrideScope: override == nil ? nil : unitOverride == nil ? "model" : "unit",
         unavailable: state?.unavailable ?? false

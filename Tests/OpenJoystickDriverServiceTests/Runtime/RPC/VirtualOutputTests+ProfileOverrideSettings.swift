@@ -155,6 +155,33 @@ extension VirtualOutputTests {
   }
 
   @Test
+  func statusReportsNoProfileForANativeGamepadWithAStaleSelection() async throws {
+    let id = DeviceIdentifier(vendorID: 1, productID: 2)
+    let fixture = try await profileOverrideServer([id])
+    _ = await fixture.change(.set("hid-generic"))
+    let native = ApplicationServiceDeviceDescription(
+      name: "probe",
+      vendorID: id.controllerIdentity.vendorID,
+      productID: id.controllerIdentity.productID,
+      protocolBinding: ProtocolBindingID(.sonySixaxis, variant: .usb),
+      connection: "USB",
+      discoverySource: .hid,
+      physicalOwnership: .nativeGamepad,
+      serialNumber: nil,
+      bindingResult: .hidDescriptorFixture,
+      runtimeIdentifier: id.runtimeIdentifier
+    )
+
+    let described = fixture.server.describingVirtualHIDProfiles([native, description(id)])
+
+    #expect(described[0].virtualHIDProfile?.profile == nil)
+    #expect(described[0].virtualHIDProfile?.source == nil)
+    #expect(described[0].virtualHIDProfile?.override == .generic)
+    #expect(described[1].virtualHIDProfile?.profile == .generic)
+    await fixture.tearDown()
+  }
+
+  @Test
   func statusSurfacesUnreadableOverrides() async throws {
     // A regular file where the persona directory belongs cannot be listed.
     let fixture = try await profileOverrideServer { try? Data().write(to: $0) }
