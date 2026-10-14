@@ -174,12 +174,14 @@ class DispatcherTests(unittest.TestCase):
 
     def test_hooks_validate_checks_hooks_path_and_hook_files(self) -> None:
         all_files = ("commit-msg", "pre-commit", "pre-push")
+        main = "<main>/.husky/_"
         for configured, generated, files, expected in (
-            (".husky/_", True, all_files, 0),
+            (main, True, all_files, 0),
+            (".husky/_", True, all_files, 1),
             ("", True, all_files, 1),
             ("legacy/hooks", True, all_files, 1),
-            (".husky/_", False, all_files, 1),
-            (".husky/_", True, ("pre-commit", "pre-push"), 1),
+            (main, False, all_files, 1),
+            (main, True, ("pre-commit", "pre-push"), 1),
         ):
             with (
                 self.subTest(configured=configured, generated=generated, files=files),
@@ -191,9 +193,14 @@ class DispatcherTests(unittest.TestCase):
                     (root / ".husky" / "_").mkdir()
                 for name in files:
                     (root / ".husky" / name).write_text("")
-                completed = subprocess.CompletedProcess([], 0, configured + "\n", "")
+                value = configured.replace("<main>", str(root))
+                completed = subprocess.CompletedProcess([], 0, value + "\n", "")
                 with (
                     patch("Scripts.Command.execution.PROJECT_DIR", root),
+                    patch(
+                        "Scripts.Command.execution.main_checkout_dir",
+                        return_value=root,
+                    ),
                     patch(
                         "Scripts.Command.execution.subprocess.run",
                         return_value=completed,
