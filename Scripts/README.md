@@ -24,6 +24,6 @@ swiftlint lint --no-cache --strict
 swift test --no-parallel
 ```
 
-`snapshots check` runs the equivalence snapshot tests and prints the changed, added, and removed records against the files in `Tests/EquivalenceSnapshots/` (parsed frames, catalog index, record routes, DriverKit match list, SDL mappings); it exits non-zero on any difference. `snapshots write` rewrites those files from the current tree, so run it after an intended behavior change, such as the hid-generic button order fix.
+`snapshots check` runs the equivalence snapshot tests and prints the changed, added, and removed records against the files in `Tests/EquivalenceSnapshots/` (parsed frames, catalog index, record routes, DriverKit match list, SDL mappings); it exits non-zero on any difference. `snapshots write` rewrites those files from the current tree, so run it after any intended behavior change and review the resulting diff.
 
 `catalog regenerate --write` writes generated controller records. DriverKit project generation writes DriverKit output. All other commands retain their documented route-specific effects and requirements.

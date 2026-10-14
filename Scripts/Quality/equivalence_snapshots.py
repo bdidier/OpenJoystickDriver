@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import difflib
 import os
 import subprocess
 import sys
@@ -42,12 +43,12 @@ def diff_sections(expected: str, actual: str) -> list[str]:
             lines.append(f"  changed {title}")
             old = before[title].splitlines()
             new = after[title].splitlines()
-            for line in old:
-                if line not in new:
-                    lines.append(f"    - {line}")
-            for line in new:
-                if line not in old:
-                    lines.append(f"    + {line}")
+            matcher = difflib.SequenceMatcher(a=old, b=new, autojunk=False)
+            for tag, i1, i2, j1, j2 in matcher.get_opcodes():
+                if tag == "equal":
+                    continue
+                lines.extend(f"    - {line}" for line in old[i1:i2])
+                lines.extend(f"    + {line}" for line in new[j1:j2])
     return lines
 
 
