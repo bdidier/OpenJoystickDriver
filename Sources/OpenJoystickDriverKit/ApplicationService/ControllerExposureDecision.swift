@@ -1,5 +1,5 @@
 /// How OJD owns or observes the physical controller input path.
-public enum ControllerOwnershipObservation: String, Codable, Equatable, Sendable {
+public enum ControllerOwnershipObservation: String, Codable, CaseIterable, Equatable, Sendable {
   case exclusiveHID
   case exclusiveRawUSB
   case driverKitOwnedUSB
@@ -8,6 +8,16 @@ public enum ControllerOwnershipObservation: String, Codable, Equatable, Sendable
   case nativeGamepad
   case upstreamVirtualDevice
   case unknown
+
+  /// Whether the system serves the controller itself, so OJD publishes no virtual device for it.
+  /// The decision depends on who serves the input, not on which OS does.
+  public var isServedBySystem: Bool {
+    switch self {
+    case .nativeGamepad, .nativeHIDVisible: true
+    case .exclusiveHID, .exclusiveRawUSB, .driverKitOwnedUSB, .upstreamVirtualDevice, .unknown:
+      false
+    }
+  }
 }
 
 /// The non-persisted virtual output request used by the policy layer.
