@@ -204,6 +204,43 @@ struct ControllerRecordSetTests {
     )
   }
 
+  /// The stored-file rule: OJD does not migrate a stored file. A file it can read keeps working;
+  /// a file it cannot read is dropped, reported with its reason, and left as it was.
+  @Test
+  func aStoredFileKeepsWorkingOrIsDroppedUnchanged() throws {
+    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
+      "ojd-stored-records-\(UUID().uuidString)",
+      isDirectory: true
+    )
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: directory) }
+    // A patch as written before `ControllerModelID`: the model is its vendorID and productID.
+    let current = Data(
+      (#"{"$schema":"\#(Self.overrideSchema)","operation":"patch","vendorID":13932,"#
+        + #""productID":5,"set":{"protocol":{"family":"xbox.gip","keepAlive":false}}}"#).utf8
+    )
+    try current.write(to: directory.appendingPathComponent("366c-0005.json"))
+    // An add in the 0.5.0-beta.4 schema, whose `$schema` has no version directory.
+    let released = Data(
+      (#"{"$schema":"https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/"#
+        + #"Resources/Schemas/controller-override.schema.json","operation":"add","record":{"#
+        + #""$schema":"\#(Self.recordSchema)","vendorID":4660,"productID":43981,"#
+        + #""protocol":{"family":"xbox.gip"}}}"#).utf8
+    )
+    let releasedURL = directory.appendingPathComponent("1234-abcd.json")
+    try released.write(to: releasedURL)
+
+    let set = ControllerRecordSet.load(userDirectory: directory)
+
+    let kept = try #require(set.records[ControllerModelID(vendorID: 0x366C, productID: 0x0005)])
+    #expect(kept.fieldLayers["protocol"] == .user)
+    #expect(kept.profile.gipKeepAlivePolicy == .disabled)
+    #expect(set.records[Self.unbundled] == nil)
+    #expect(set.problems.map(\.url.lastPathComponent) == ["1234-abcd.json"])
+    #expect(set.problems.first?.problem == "$schema must be one of \(Self.overrideSchema)")
+    #expect(try Data(contentsOf: releasedURL) == released)
+  }
+
   @Test
   func aMissingDirectoryHoldsNoRecords() {
     let set = ControllerRecordSet.load(

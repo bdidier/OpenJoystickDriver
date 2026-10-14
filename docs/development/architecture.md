@@ -111,6 +111,8 @@ One physical device can expose several protocol roles, each its own pipeline and
 
 `DeviceManager.isSamePhysicalController` decides whether two keys reached through different services are one controller: the same `ControllerIdentity`, and either a serial number or the same location. A raw-USB admission conflicts when its exact key already runs, or when the same physical controller runs through another service (another route, location, or HID). Roles of one service never conflict with each other.
 
+Stored files are not migrated. A stored file either keeps working as written, or OJD drops it: it skips the file, reports the file and the reason, and leaves the bytes unchanged. A change to an identity type does not change what a stored file holds. User records name a model by `vendorID` and `productID` and are named `vvvv-pppp.json`, which is the `ControllerModelID`, so a record written before the type existed keeps working. A record whose `$schema` OJD does not accept, such as the 0.5.0-beta.4 ID without a version directory, is dropped. `ControllerRecordSetTests.aStoredFileKeepsWorkingOrIsDroppedUnchanged` checks both results.
+
 ### Raw-USB Roles
 
 `ProtocolDriverRegistry.roleProfiles(for:resolution:)` returns the roles of one claim. An `xbox.xusb:receiver` binding whose row pins no interface or endpoint gets one role per observed alternate-setting-0 interface with triple FF/5D/81 and one interrupt IN and one interrupt OUT endpoint, as `xpad_probe` checks. Roles are sorted by interface number, capped at four, and a role's index is its slot ordinal. Every other family, a pinned receiver row, and a receiver with no qualifying interface run the claim as their single role.
