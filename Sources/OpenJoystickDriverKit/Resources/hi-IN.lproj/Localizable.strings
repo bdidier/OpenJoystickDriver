@@ -1218,7 +1218,7 @@
 "cli.controller.ownership.discussion" = "native कंट्रोलर को macOS पर छोड़ता है, जो उसे गेम कंट्रोलर के रूप में चलाता है; virtual OpenJoystickDriver को उसे संभालने और उसका वर्चुअल गेमपैड प्रकाशित करने देता है। यह चुनाव मॉडल के हर कंट्रोलर पर लागू होता है: यह मॉडल के आपके रिकॉर्ड में ownership सेट करता है, जो आपकी रिकॉर्ड डायरेक्टरी में VVVV-PPPP.json है, और रिकॉर्ड के बाकी फ़ील्ड रखता है। चल रही सेवा इसे दोबारा प्लग किए बिना लागू करती है। कंट्रोलर ढूँढने के लिए सेवा चाहिए। --dry-run कुछ नहीं लिखता। ऐसे कंट्रोलर के लिए E2023 के साथ 1 पर बाहर निकलता है जो रॉ USB का उपयोग करता है, जिसे OpenJoystickDriver हमेशा चलाता है, या जिसे macOS नेटिव रूप से नहीं चलाता।";
 "cli.controller.ownership.dry_run" = "%@ को %@ पर सेट कर देता (%@)।";
 "cli.controller.ownership.invalid" = "%@ बदला नहीं जा सकता: %@";
-"cli.controller.ownership.no_record" = "%@ का बदलने लायक कोई कंट्रोलर रिकॉर्ड नहीं है। “ojd record draft %@” से एक शुरू करें।";
+"cli.controller.ownership.no_record" = "%@ का बदलने लायक कोई कंट्रोलर रिकॉर्ड नहीं है। “ojd record draft %@” से एक बनाएँ।";
 "cli.controller.ownership.not_native" = "macOS %@ को नेटिव रूप से नहीं चलाता, इसलिए OpenJoystickDriver उसे हमेशा चलाता है।";
 "cli.controller.ownership.raw_usb" = "%@ रॉ USB का उपयोग करता है, इसलिए OpenJoystickDriver उसे हमेशा चलाता है।";
 "cli.controller.ownership.success" = "%@ को %@ पर सेट किया गया (%@)। चल रही सेवा अब उसे लागू करती है।";

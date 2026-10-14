@@ -1302,7 +1302,7 @@
 "cli.mod.validate.abstract" = "MODパッケージのフォルダをインストールせずに確認します。";
 "cli.mod.validate.discussion" = "マニフェスト、このバージョンで動作すること、ファイルが記載どおりで有効であること、ファイルがあなたのファイルや他のパッケージと衝突しないことを確認します。パッケージが拒否された場合は、終了コード1とE4xxxコードで終了します。";
 "cli.mod.validate.valid" = "%@は有効なパッケージです: %@ %@。「ojd mod install」でインストールします。";
-"cli.mod.install.abstract" = "MODパッケージを確認し、あなたのユーザー用にインストールします。";
+"cli.mod.install.abstract" = "MODパッケージを確認し、現在のユーザー用にインストールします。";
 "cli.mod.install.discussion" = "パッケージをPackages/NAMEにコピーし、一度に入れ替えます。実行中のサービスがそれを反映します。同じ名前のパッケージがすでにインストールされている場合は、--forceを付けない限り拒否されます。--forceは、requires、識別情報の衝突、プロファイルIDまたは名前の衝突を上書きしません。--dry-runはパッケージを確認し、何も書き込みません。";
 "cli.mod.install.force" = "同じ名前のインストール済みパッケージを置き換えます。";
 "cli.mod.install.dry_run" = "実行した場合、%@をインストールします。";

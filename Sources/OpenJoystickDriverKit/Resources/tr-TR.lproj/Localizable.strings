@@ -1218,7 +1218,7 @@
 "cli.controller.ownership.discussion" = "native kontrolcüyü macOS’a bırakır, macOS ona oyun kontrolcüsü olarak hizmet verir; virtual ise OpenJoystickDriver’ın onu devralıp sanal oyun kontrolcüsünü yayımlamasını sağlar. Seçim modelin her kontrolcüsü için geçerlidir: kayıt dizininizdeki model kaydınızda, VVVV-PPPP.json, ownership değerini ayarlar ve kaydın diğer alanlarını korur. Çalışan servis bunu yeniden takmadan uygular. Kontrolcüyü bulmak için servise ihtiyaç duyar. --dry-run hiçbir şey yazmaz. Ham USB kullanan ve OpenJoystickDriver’ın her zaman hizmet verdiği bir kontrolcü için ya da macOS’un yerel olarak hizmet vermediği bir kontrolcü için E2023 ile 1 koduyla çıkar.";
 "cli.controller.ownership.dry_run" = "%@, %@ olarak ayarlanırdı (%@).";
 "cli.controller.ownership.invalid" = "%@ değiştirilemiyor: %@";
-"cli.controller.ownership.no_record" = "%@ için değiştirilecek bir kontrolcü kaydı yok. “ojd record draft %@” ile bir tane başlatın.";
+"cli.controller.ownership.no_record" = "%@ için değiştirilecek bir kontrolcü kaydı yok. “ojd record draft %@” ile bir tane oluşturun.";
 "cli.controller.ownership.not_native" = "macOS %@ için yerel olarak hizmet vermez, bu yüzden ona her zaman OpenJoystickDriver hizmet verir.";
 "cli.controller.ownership.raw_usb" = "%@ ham USB kullanır, bu yüzden ona her zaman OpenJoystickDriver hizmet verir.";
 "cli.controller.ownership.success" = "%@, %@ olarak ayarlandı (%@). Çalışan servis bunu şimdi uygular.";

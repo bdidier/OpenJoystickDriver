@@ -1218,7 +1218,7 @@
 "cli.controller.ownership.discussion" = "native menyerahkan pengontrol ke macOS, yang melayaninya sebagai pengontrol game; virtual membiarkan OpenJoystickDriver mengambil alih dan memublikasikan gamepad virtualnya. Pilihan berlaku untuk setiap pengontrol dari model tersebut: pilihan ini menetapkan ownership di catatan Anda untuk model, VVVV-PPPP.json di direktori catatan Anda, dan mempertahankan kolom lain catatan. Layanan yang berjalan menerapkannya tanpa menyambungkan ulang. Memerlukan layanan untuk menemukan pengontrol. --dry-run tidak menulis apa pun. Keluar dengan 1 dan E2023 untuk pengontrol yang memakai USB mentah, yang selalu dilayani OpenJoystickDriver, atau yang tidak dilayani macOS secara native.";
 "cli.controller.ownership.dry_run" = "Jika dijalankan, %@ akan ditetapkan ke %@ di %@.";
 "cli.controller.ownership.invalid" = "Tidak dapat mengubah %@: %@";
-"cli.controller.ownership.no_record" = "%@ tidak memiliki catatan pengontrol untuk diubah. Mulai satu dengan “ojd record draft %@”.";
+"cli.controller.ownership.no_record" = "%@ tidak memiliki catatan pengontrol untuk diubah. Buat satu dengan “ojd record draft %@”.";
 "cli.controller.ownership.not_native" = "macOS tidak melayani %@ secara native, jadi OpenJoystickDriver selalu melayaninya.";
 "cli.controller.ownership.raw_usb" = "%@ memakai USB mentah, jadi OpenJoystickDriver selalu melayaninya.";
 "cli.controller.ownership.success" = "%@ ditetapkan ke %@ di %@. Layanan yang berjalan menerapkannya sekarang.";

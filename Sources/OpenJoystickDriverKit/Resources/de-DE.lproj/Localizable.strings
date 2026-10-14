@@ -174,9 +174,9 @@
 "controllers.ownership.native" = "macOS (nativ)";
 "controllers.ownership.virtual" = "OpenJoystickDriver (virtuell)";
 "controllers.ownership.refused" = "Dieser Controller kann nicht wechseln: Er nutzt rohes USB, oder macOS bedient ihn nicht nativ.";
-"controllers.ownership.noRecord" = "Kein Controller-Datensatz beschreibt diesen Controller, daher gibt es nichts zu ändern.";
-"controllers.ownership.invalidRecord" = "Der Controller-Datensatz ist ungültig. Es wurde nichts geändert.";
-"controllers.ownership.persistenceFailed" = "Der Controller-Datensatz konnte nicht gespeichert werden. Es wurde nichts geändert.";
+"controllers.ownership.noRecord" = "Kein Controller-Eintrag beschreibt diesen Controller, daher gibt es nichts zu ändern.";
+"controllers.ownership.invalidRecord" = "Der Controller-Eintrag ist ungültig. Es wurde nichts geändert.";
+"controllers.ownership.persistenceFailed" = "Der Controller-Eintrag konnte nicht gespeichert werden. Es wurde nichts geändert.";
 "virtualProfile.advanced" = "Erweitert";
 "virtualProfile.title" = "Virtuelles HID-Profil";
 "virtualProfile.modelScope" = "Gilt für jeden verbundenen Controller dieses Modells.";
@@ -1218,7 +1218,7 @@
 "cli.controller.ownership.discussion" = "native überlässt den Controller macOS, das ihn als Gamecontroller bedient; virtual lässt OpenJoystickDriver ihn übernehmen und sein virtuelles Gamepad veröffentlichen. Die Wahl gilt für jeden Controller des Modells: Sie setzt ownership in deinem Eintrag für das Modell, VVVV-PPPP.json in deinem Eintragsordner, und behält die anderen Felder des Eintrags. Der laufende Dienst wendet sie ohne erneutes Einstecken an. Braucht den Dienst, um den Controller zu finden. --dry-run schreibt nichts. Endet mit 1 und E2023 für einen Controller, der rohes USB nutzt und den OpenJoystickDriver immer bedient, oder den macOS nicht nativ bedient.";
 "cli.controller.ownership.dry_run" = "Würde %@ auf %@ setzen, in %@.";
 "cli.controller.ownership.invalid" = "%@ kann nicht geändert werden: %@";
-"cli.controller.ownership.no_record" = "%@ hat keinen Controller-Eintrag, der sich ändern lässt. Beginne einen mit „ojd record draft %@“.";
+"cli.controller.ownership.no_record" = "%@ hat keinen Controller-Eintrag, der sich ändern lässt. Erstelle einen mit „ojd record draft %@“.";
 "cli.controller.ownership.not_native" = "macOS bedient %@ nicht nativ, daher bedient OpenJoystickDriver ihn immer.";
 "cli.controller.ownership.raw_usb" = "%@ nutzt rohes USB, daher bedient OpenJoystickDriver ihn immer.";
 "cli.controller.ownership.success" = "%@ wurde auf %@ gesetzt, in %@. Der laufende Dienst wendet es jetzt an.";

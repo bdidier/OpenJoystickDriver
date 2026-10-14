@@ -1218,7 +1218,7 @@
 "cli.controller.ownership.discussion" = "native laat de controller aan macOS over, dat hem als gamecontroller bedient; virtual laat OpenJoystickDriver hem overnemen en zijn virtuele gamepad publiceren. De keuze geldt voor elke controller van het model: ze zet ownership in je record voor het model, VVVV-PPPP.json in je recordmap, en behoudt de andere velden van het record. De draaiende service past haar toe zonder opnieuw aan te sluiten. Heeft de service nodig om de controller te vinden. --dry-run schrijft niets. Stopt met 1 en E2023 voor een controller die ruwe USB gebruikt, die OpenJoystickDriver altijd bedient, of die macOS niet native bedient.";
 "cli.controller.ownership.dry_run" = "Zou %@ op %@ zetten in %@.";
 "cli.controller.ownership.invalid" = "Kan %@ niet wijzigen: %@";
-"cli.controller.ownership.no_record" = "%@ heeft geen controllerrecord om te wijzigen. Begin er een met ‘ojd record draft %@’.";
+"cli.controller.ownership.no_record" = "%@ heeft geen controllerrecord om te wijzigen. Maak er een aan met ‘ojd record draft %@’.";
 "cli.controller.ownership.not_native" = "macOS bedient %@ niet native, dus OpenJoystickDriver bedient hem altijd.";
 "cli.controller.ownership.raw_usb" = "%@ gebruikt ruwe USB, dus OpenJoystickDriver bedient hem altijd.";
 "cli.controller.ownership.success" = "%@ op %@ gezet in %@. De draaiende service past het nu toe.";
