@@ -80,18 +80,23 @@ struct ControllerOwnershipFeedbackTests {
 
   @Test(
     arguments: [
-      (ControllerOwnershipFailure.rawUSB, String?.none, "error.E2023", ""),
-      (.notNative, nil, "error.E2023", ""),
-      (.noRecord, nil, "controllers.ownership.noRecord", ""),
-      (.invalidRecord, "bad record", "controllers.ownership.invalidRecord", " bad record"),
-      (.persistenceFailed, "disk full", "controllers.ownership.persistenceFailed", " disk full"),
+      (ControllerOwnershipFailure.rawUSB, String?.none, OJDLocalized.string("error.E2023")),
+      (.notNative, nil, OJDLocalized.string("error.E2023")),
+      (.noRecord, nil, OJDLocalized.string("controllers.ownership.noRecord")),
+      (
+        .invalidRecord, "bad record",
+        OJDLocalized.string("controllers.ownership.invalidRecord") + " bad record"
+      ),
+      (
+        .persistenceFailed, "disk full",
+        OJDLocalized.string("controllers.ownership.persistenceFailed") + " disk full"
+      ),
     ]
   )
   func eachRefusalShowsItsOwnText(
     failure: ControllerOwnershipFailure,
     detail: String?,
-    key: String,
-    suffix: String
+    expected: String
   ) async {
     let gateway = GatewayStub()
     await gateway.setOwnershipFailure(failure, detail: detail)
@@ -101,14 +106,23 @@ struct ControllerOwnershipFeedbackTests {
     await viewModel.setControllerOwnership(.ojd, for: device)
 
     let message = viewModel.controllerActionFailures[device.runtimeIdentifier]
-    #expect(message == OJDLocalized.string(key) + suffix)
+    #expect(message == expected)
   }
 
-  @Test(arguments: [
-    "controllers.ownership.noRecord", "controllers.ownership.invalidRecord",
-    "controllers.ownership.persistenceFailed",
-  ])
-  func eachNewTextIsLocalized(_ key: String) {
-    #expect(OJDLocalized.string(key) != key)
+  @Test(
+    arguments: [
+      ("controllers.ownership.noRecord", OJDLocalized.string("controllers.ownership.noRecord")),
+      (
+        "controllers.ownership.invalidRecord",
+        OJDLocalized.string("controllers.ownership.invalidRecord")
+      ),
+      (
+        "controllers.ownership.persistenceFailed",
+        OJDLocalized.string("controllers.ownership.persistenceFailed")
+      ),
+    ]
+  )
+  func eachNewTextIsLocalized(key: String, text: String) {
+    #expect(text != key)
   }
 }
