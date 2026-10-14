@@ -528,7 +528,7 @@ History (from `events.jsonl`):
 - dotclaude status: `planned`
 - Wave: 4; deps: P3 (group 9); satisfies: REQ-13; agent: `implementer`
 - Branch: `spec/0.6.0-alpha.1-P5`; worktree: `.claude/worktrees/spec-P5`
-- Owns: `docs/sdk/sample/mod.json`, `docs/sdk/sample/Controllers/`, `docs/sdk/sample/Profiles/`, `docs/sdk/sample/Personas/`, `Tests/OpenJoystickDriverCLITests/Commands/SampleModPackageTests.swift`, `Tests/OpenJoystickDriverCLITests/Fixtures/SampleModPackage/`
+- Owns: `docs/sdk/sample/mod.json`, `docs/sdk/sample/Controllers/`, `docs/sdk/sample/Profiles/`, `docs/sdk/sample/Personas/`, `Tests/OpenJoystickDriverCLITests/Commands/SampleModPackageTests.swift`, `Tests/OpenJoystickDriverCLITests/Fixtures/SampleModPackage/`, `Package.swift` (exclude `Fixtures` from the CLI test target)
 - Verify: `env -u TOOLCHAINS DEVELOPER_DIR=/Applications/Xcode-26.6.0.app/Contents/Developer OJD_USE_LOCAL_SWIFTERKIT=0 PATH=/Applications/Xcode-26.6.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin:$PATH swift test --filter SampleModPackageTests`
 
 Goal:
