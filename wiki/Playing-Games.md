@@ -29,8 +29,8 @@ The `hid-xbox-one-s-bt` profile is an approximation of an Xbox controller. It is
 OJD picks a profile for each controller model in this order:
 
 1. The override that you set for the model, if the profile fits the controller.
-1. The `hid-xbox-one-s-bt` profile, if it fits the main controls of the controller.
-1. The `hid-generic` profile.
+2. The `hid-xbox-one-s-bt` profile, if it fits the main controls of the controller.
+3. The `hid-generic` profile.
 
 The choice does not depend on the game, the macOS version, or the vendor. In current builds, the code suggests that OJD chooses the Xbox profile for most controllers. Not verified for every model.
 
@@ -41,9 +41,9 @@ OJD does not publish a virtual controller if macOS already handles the controlle
 OJD is designed to choose the profile for you. You do not need a different setting for each game. Change the profile only to test a problem, and report the result so that the automatic choice can improve. For more information, see [Reporting a bug](Reporting-a-Bug.md).
 
 1. Open the **Controllers** pane.
-1. Select your controller.
-1. Expand **Advanced**.
-1. In **Virtual HID profile**, select a profile.
+2. Select your controller.
+3. Expand **Advanced**.
+4. In **Virtual HID profile**, select a profile.
 
 Select **Automatic** to remove the override. The override applies to every connected controller of the same model. For more information, see [Controllers pane](Using-the-App.md).
 
