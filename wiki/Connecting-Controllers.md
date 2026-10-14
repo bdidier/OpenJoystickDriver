@@ -40,10 +40,10 @@ The VID:PID is the vendor ID and product ID that identify one controller model. 
 ### Read the ID For a USB Controller
 
 1. Connect the controller by USB.
-1. Open **System Information**.
-1. Select **USB** in the sidebar.
-1. Select your controller.
-1. Read **Vendor ID** and **Product ID**.
+2. Open **System Information**.
+3. Select **USB** in the sidebar.
+4. Select your controller.
+5. Read **Vendor ID** and **Product ID**.
 
 The values appear with a `0x` prefix. For example, `0x045e` and `0x02d1` mean `045E:02D1`.
 
@@ -58,10 +58,10 @@ system_profiler SPUSBDataType
 Use this method for a Bluetooth controller. Bluetooth controllers do not appear in the USB list.
 
 1. Open the OJD settings window.
-1. Open **Settings**.
-1. Turn on **Enable Developer Tools**.
-1. Open the **Developer Tools** pane.
-1. Select your controller.
+2. Open **Settings**.
+3. Turn on **Enable Developer Tools**.
+4. Open the **Developer Tools** pane.
+5. Select your controller.
 
 The pane shows the controller details, including its USB ID, connection type, and endpoints.
 
@@ -86,10 +86,10 @@ A build whose app profile has no `userclient-access` grant for the extension has
 Do these steps only if you use one of the controllers above.
 
 1. Open the OJD settings window.
-1. Open the **Overview** pane.
-1. Find the **Xbox USB Driver** card. It shows **Approval needed** until you approve the extension.
-1. Click **Open System Settings**. OJD opens the **Login Items & Extensions** settings.
-1. Approve the OpenJoystickDriver extension in **System Settings** > **General** > **Login Items & Extensions** > **Driver Extensions**.
+2. Open the **Overview** pane.
+3. Find the **Xbox USB Driver** card. It shows **Approval needed** until you approve the extension.
+4. Click **Open System Settings**. OJD opens the **Login Items & Extensions** settings.
+5. Approve the OpenJoystickDriver extension in **System Settings** > **General** > **Login Items & Extensions** > **Driver Extensions**.
 
 When the card shows **Ready**, the extension is active. If the card shows **Needs attention**, click **Repair Xbox USB Driver** when that button appears.
 
