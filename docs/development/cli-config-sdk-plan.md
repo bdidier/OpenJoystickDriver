@@ -51,7 +51,7 @@ The maintainer approves each commit.
    - one VID/PID selector in Kit for the six copies outside Presentation (`ControllerSelector.swift`, `ControllerCommand.swift`, `AutomationService.swift`, `RemappingRoutingCore.swift`, `ApplicationServiceRemappingRPC.swift`, `Identity.swift`).
    The two Presentation copies stay, because Presentation does not change in this beta.
    Behavior does not change; existing CLI tests must pass unchanged.
-1. **CLI usability.**
+2. **CLI usability.**
    - EXAMPLES in the help of the root command, `controller watch`, `controller rumble`, `controller light`, `profile create`, `profile set`, `binding set`, `record install`, and `access grant`.
    - A "Start here" path (`status`, then `diagnose`, then `controller list`) in the root help, exit code 127 in the exit-code list, and the shell-completion command in help and on `wiki/Command-Line.md`.
    - The six global options shown once in the root help, not in the USAGE line of every command.
@@ -59,7 +59,7 @@ The maintainer approves each commit.
    - `--plain` works or is rejected with exit 64 in `ProfileActivationCommands.swift` and `VirtualFeedCommand.swift`.
    - Environment fallbacks `OJD_NO_INPUT`, `OJD_TIMEOUT`, and `OJD_COLOR`, where a flag beats the variable; `OJD_RUN_REPOSITORY_CLI` documented for contributors.
    - `--version` checked in a release build.
-1. **Per-controller constants into records.**
+3. **Per-controller constants into records.**
    Add fields to `controller-override.schema.json` and `controller.schema.json`, move the values into `Resources/ControllerOverrides/`, regenerate the catalog, and delete the identity checks:
    - the `11C1:5600` stick deadzone (`UserSpaceOutputDispatcher+ReportMapping.swift`);
    - DualShock 4 factory calibration by vendor (`ProtocolDriverRegistry.swift`) and `DualShock4Model` by VID:PID (`DualShock4Driver+Models.swift`, `DualShock4Driver.swift`);
@@ -71,14 +71,14 @@ The maintainer approves each commit.
    A `patch` of `protocol` that keeps the bundled family merges into the bundled block (RFC 7396), and its `quirks` join the bundled quirks (maintainer decision, 2026-10-06), so a user patch cannot drop the quirks that now carry DualShock 4 calibration and Shield rumble.
    A user patch can set `tuning`, which merges per key into the bundled `tuning` (changed in slice 4, so each key reports its own layer).
    The `hid.descriptor` axis layouts and the third-party DualSense model values are record quirks; a non-Sony vendor ID still selects third-party DualSense mode.
-1. **Configuration layer.**
+4. **Configuration layer.**
    - A global defaults file, `~/Library/Application Support/OpenJoystickDriver/Defaults.json`, for deadzone and timing defaults.
      Precedence, lowest first: driver default, global file, bundled record, user record, active profile.
    - Persona overrides move from the `VirtualHIDProfileOverrides` user default (`VirtualHIDProfileOverrideStore.swift`) to `Personas/<id>.json` files with a schema.
      Users can define a persona: identity strings, VID, PID, and glyph family over one of the built-in report descriptors.
      The old user default is deleted, not migrated, as with the old profile library and the no-shim rule in `Resources/Schemas/AGENTS.md`; users recreate their overrides.
    - `ojd config show` prints each effective value and the layer that set it.
-1. **Mod packages.**
+5. **Mod packages.**
    - A package manifest schema: name, version, author, `requires` (an OJD version range), and the records, profiles, and personas it holds.
      OJD refuses a package whose range excludes the running version.
    - `ojd mod validate|install|list|remove`, with `--dry-run`, `--force`, and `--json` as in the other commands.
@@ -103,7 +103,7 @@ The maintainer approves each commit.
      The compatibility policy is on the wiki.
    - A sample package in `docs/sdk/sample/` and an authoring guide, `wiki/Writing-Controller-Mods.md`, that states first that the USB extension's product list is Apple-signed and cannot be extended.
    - Fix `public-endpoint-design.md`, which says the endpoint supports a range of protocol versions; the code accepts only version 1 (`EndpointServer.swift`).
-1. **Repository dispatcher (if time allows).**
+6. **Repository dispatcher (if time allows).**
    `Scripts/ojd` gets `--help` and `--version` from `argparse`, `error:` messages, and a note that it is not the product `ojd`.
 
 Slices 1 and 2 are the CLI; slices 3 to 5 depend on each other in order, because the defaults file and packages carry the fields slice 3 adds.
