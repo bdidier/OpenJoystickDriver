@@ -14,6 +14,15 @@ package enum EquivalenceSnapshotStore {
     .deletingLastPathComponent()  // Tests
     .appendingPathComponent("EquivalenceSnapshots", isDirectory: true)
 
+  /// `vvvv:pppp` in upper-case hexadecimal, the section title of a record.
+  package static func recordTitle(vendorID: UInt16, productID: UInt16) -> String {
+    func hex(_ value: UInt16) -> String {
+      let digits = String(value, radix: 16, uppercase: true)
+      return String(repeating: "0", count: 4 - digits.count) + digits
+    }
+    return "\(hex(vendorID)):\(hex(productID))"
+  }
+
   /// Renders sections as `## title` followed by their lines, sorted by title.
   package static func render(_ sections: [(title: String, lines: [String])]) -> String {
     sections.sorted { $0.title < $1.title }

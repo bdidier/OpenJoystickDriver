@@ -87,11 +87,6 @@ struct EquivalenceSnapshotParsedFramesTests {
     ]
   }
 
-  private static func hex(_ value: UInt16) -> String {
-    let digits = String(value, radix: 16, uppercase: true)
-    return String(repeating: "0", count: 4 - digits.count) + digits
-  }
-
   @Test
   func parsedFramesMatchSnapshot() throws {
     let parse = Parse()
@@ -99,7 +94,10 @@ struct EquivalenceSnapshotParsedFramesTests {
     for entry in Self.entries {
       let identifier = entry.subject.identifier.controllerIdentity
       let title =
-        "\(Self.hex(identifier.vendorID)):\(Self.hex(identifier.productID))"
+        EquivalenceSnapshotStore.recordTitle(
+          vendorID: identifier.vendorID,
+          productID: identifier.productID
+        )
         + " host=\(entry.subject.host) steps=\(entry.steps)"
       sections.append((title, try parse.transcript(entry.subject, entry.reports)))
     }
@@ -113,7 +111,8 @@ struct EquivalenceSnapshotParsedFramesTests {
         labels: .standard,
         steps
       )
-      sections.append(("\(Self.hex(vendor)):\(Self.hex(product)) host=usb steps=\(name)", lines))
+      let title = EquivalenceSnapshotStore.recordTitle(vendorID: vendor, productID: product)
+      sections.append(("\(title) host=usb steps=\(name)", lines))
     }
     let rendered = EquivalenceSnapshotStore.render(sections)
     #expect(try EquivalenceSnapshotStore.verify(rendered, named: "parsed-frames.txt") == nil)
