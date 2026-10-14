@@ -63,6 +63,6 @@ Capability messages describe the controller or active protocol, not a permanent 
 Put the language first in macOS to try it.
 
 ```bash
-export DEVELOPER_DIR=/Applications/Xcode-26.6.0.app/Contents/Developer
+export DEVELOPER_DIR=/Applications/Xcode-27.0.0.app/Contents/Developer
 swift test --filter OpenJoystickDriverKitTests.LocalizationTests
 ```
