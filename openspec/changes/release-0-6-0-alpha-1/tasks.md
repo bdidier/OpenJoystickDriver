@@ -677,7 +677,7 @@ Context:
 - [x] 13.3 Review the toggle keys of P11 the same way; keep `native`, `virtual`, and `ojd controller ownership` as the CLI spells them where they are command values.
 - [x] 13.4 Keep keys and the key order unchanged.
 - [x] 13.5 Verify: the `verify` command above exits 0. Acceptance: The verify command passes. The report lists each changed value by locale and key.
-- [ ] 13.6 Review: a fresh reviewer agent approves the diff
+- [x] 13.6 Review: a fresh reviewer agent approves the diff
 - [ ] 13.7 Merge `spec/0.6.0-alpha.1-P7` into `feat/0.6.0-alpha.1`
 
 Boundaries:
