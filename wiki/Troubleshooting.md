@@ -30,18 +30,18 @@ This section explains what to check when OJD does not list your controller or sh
 ### Check the Basics
 
 1. Make sure OJD runs. Look for the menu bar item.
-1. Open **Overview** and check **Input Monitoring**. OJD cannot read a controller without it. For more information, see [Permissions](Permissions-and-Security.md).
-1. If **Input Monitoring** needs attention, click **Request...**.
-1. Allow it in **System Settings**.
-1. Click **Restart OpenJoystickDriver**.
-1. Reconnect the controller. OJD never reconnects a Bluetooth controller by itself.
+2. Open **Overview** and check **Input Monitoring**. OJD cannot read a controller without it. For more information, see [Permissions](Permissions-and-Security.md).
+3. If **Input Monitoring** needs attention, click **Request...**.
+4. Allow it in **System Settings**.
+5. Click **Restart OpenJoystickDriver**.
+6. Reconnect the controller. OJD never reconnects a Bluetooth controller by itself.
 
 ### Check the Controller ID
 
 Each connection mode has its own VID:PID. A controller in USB mode and the same controller in Bluetooth mode look like different devices. A dongle has its own ID too.
 
 1. Find the VID:PID of your controller. For more information, see [Finding your controller ID](Connecting-Controllers.md).
-1. Look for it in [Supported controllers](Supported-Controllers.md).
+2. Look for it in [Supported controllers](Supported-Controllers.md).
 
 The built-in catalog has 696 records. A record without a physical test is unverified. An unverified controller may work, may partly work, or may not work.
 
@@ -74,8 +74,8 @@ This section explains what to check when a controller works in OJD but not in a 
 ### Check OJD First
 
 1. Open the **Input Test** window for the controller. For more information, see [Testing a controller](Testing-a-Controller.md).
-1. Press buttons. If **Input Test** shows no input, see [Controller is not detected](#controller-is-not-detected).
-1. In **Overview**, check **Accessibility**. OJD needs it to publish the virtual controller.
+2. Press buttons. If **Input Test** shows no input, see [Controller is not detected](#controller-is-not-detected).
+3. In **Overview**, check **Accessibility**. OJD needs it to publish the virtual controller.
 
 ### Understand Why Apps Differ
 
@@ -97,9 +97,9 @@ One tester saw these results with the Xbox virtual profile. This is not a guaran
 The design of OJD is to pick the virtual profile by itself. Use this step only to find out whether the profile is the cause. If a profile fixes a game, report it.
 
 1. In **Controllers**, select the controller.
-1. In **Advanced**, find **Virtual HID profile**. It appears only for controllers that OJD publishes.
-1. Choose **Automatic** or one of the two profiles.
-1. Test the game again.
+2. In **Advanced**, find **Virtual HID profile**. It appears only for controllers that OJD publishes.
+3. Choose **Automatic** or one of the two profiles.
+4. Test the game again.
 
 OpenEmu worked with the `hid-generic` profile in the same test. Steam with that profile was erratic and slow to respond. The override applies to every controller of that model.
 
@@ -121,8 +121,8 @@ This section explains what to do when OJD crashes, does not start, or reports a 
    ojd log show --lines 200
    ```
 
-1. Note what you did before the crash.
-1. Report it. For more information, see [Reporting a bug](Reporting-a-Bug.md).
+2. Note what you did before the crash.
+3. Report it. For more information, see [Reporting a bug](Reporting-a-Bug.md).
 
 OJD clears its log files at each start. Copy the logs before you start OJD again.
 
@@ -131,8 +131,8 @@ OJD clears its log files at each start. Copy the logs before you start OJD again
 If OJD crashes at every start, two global profiles may be active for one controller model. This is a known issue.
 
 1. Quit OJD.
-1. Move `~/Library/Application Support/OpenJoystickDriver/ActiveProfiles.json` to another folder.
-1. Open OJD.
+2. Move `~/Library/Application Support/OpenJoystickDriver/ActiveProfiles.json` to another folder.
+3. Open OJD.
 
 ### Crash When You Unplug a Controller
 
@@ -149,8 +149,8 @@ OJD shows two kinds of damage in the **Profiles** pane. To repair both from the 
 OJD keeps the valid profiles and marks the damaged profile **Needs attention**.
 
 1. Select the damaged profile.
-1. Click **Delete Damaged Profile...**.
-1. In the alert, click **Delete**.
+2. Click **Delete Damaged Profile...**.
+3. In the alert, click **Delete**.
 
 OJD saves a backup before it changes the file.
 
@@ -159,7 +159,7 @@ OJD saves a backup before it changes the file.
 If OJD cannot read `ActiveProfiles.json`, the pane shows **Damaged active profile list**, and no profile is active.
 
 1. Click **Back Up & Reset Active Profiles...**.
-1. In the alert, click **Back Up & Reset**.
+2. In the alert, click **Back Up & Reset**.
 
 OJD saves a backup and then writes an empty list. Your profiles are kept, and none of them is active after this step.
 
