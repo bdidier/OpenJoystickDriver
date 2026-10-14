@@ -62,10 +62,10 @@ class EquivalenceSnapshotTests(unittest.TestCase):
             ["  changed A", "    + x"],
         )
 
-    def test_header_before_first_section_is_ignored(self) -> None:
+    def test_header_before_first_section_is_compared(self) -> None:
         self.assertEqual(
             snapshots.diff_sections("# note\n\n## A\nx\n", "# other\n\n## A\nx\n"),
-            [],
+            ["  changed header", "    - # note", "    + # other"],
         )
 
 
