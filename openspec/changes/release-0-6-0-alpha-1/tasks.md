@@ -63,7 +63,7 @@ Harness notes from the handoff:
   - Whether P15 needs an update of `docs/testing/xbox-one-02d1.md` "Result"; P6 or the maintainer owns that page.
   - What to do with the left-over worktrees `.claude/worktrees/agent-a6ec4211cf41e0912` and `agent-adfb7ffcf65ee534f` (on `origin/main`, with deletions under `.agents/skills/` that are not from this change).
 - P5 reviewer nits: the sample-package test fixture covers 2 of 8 buttons and no negative axes; the `#filePath` path chains repeat.
-- P6: approved by the fifth reviewer and ticked through 12.8. 12.9 waits: P6 changes `wiki/Controller-Records.md`, which has uncommitted maintainer edits in the main checkout, so the maintainer chose to merge P6 at the end (2026-10-14). 12.5 stays open until P12 adds the app picker to the CHANGELOG ownership line. P6 found that OJD does not report a package profile that it ignores because of a clash, and the wiki says so.
+- P6: approved by the fifth reviewer. After P12, `8fd7bdba` named the app picker in the CHANGELOG and `Controller-Records.md` and ticked 12.5; a sixth reviewer approved, and `05199978` took its should-fix (the picker shows for any record that gives a model to OJD). The maintainer chose to merge P6 at the end (2026-10-14); their uncommitted `wiki/Controller-Records.md` edit was saved as a patch, the file restored, P6 merged at `53acb754`, and the patch applied again. P6 found that OJD does not report a package profile that it ignores because of a clash, and the wiki says so.
 - `docs/testing/xbox-one-02d1.md` "Result" still says the fix is outside this package; no group owns the page.
 - P7 reviewer nits, not taken: `error.E2023` translates "native and virtual" as prose; hi-IN ownership `dry_run` could use the passive; zh-TW/zh-HK 發佈 vs 發布; ar-SA مثبتة without shadda. Rejected: zh-TW/zh-HK 虛擬遊戲控制器 is the files' own term (33 uses); the vi-VN `cli.profile.*.examples` "hồ sơ" is outside P7's keys.
 - The left-over worktree `.claude/worktrees/agent-a7460c9a8d6f138cc` is also undecided.
@@ -625,7 +625,7 @@ Boundaries:
 
 ## 12. P6: Mod docs and CHANGELOG
 
-- dotclaude status: `planned`
+- dotclaude status: `done` (verify passed at `05199978`; approved; merged at `53acb754`)
 - Wave: 5; deps: P3 (group 9), P5 (group 10), P9 (group 3), P10 (group 4), P11 (group 11); satisfies: REQ-14, REQ-15, REQ-24; agent: `implementer`
 - Branch: `spec/0.6.0-alpha.1-P6`; worktree: `.claude/worktrees/spec-P6`
 - Owns: `wiki/Writing-Controller-Mods.md`, `wiki/Command-Line.md`, `wiki/Command-Reference.md`, `wiki/Controller-Records.md`, `wiki/_Sidebar.md`, `wiki/Home.md`, `wiki/Known-Issues.md`, `CHANGELOG.md`
@@ -652,7 +652,7 @@ Context:
   The report names the date, so the maintainer can correct it in the release commit if the approval falls on another day.
 - [x] 12.7 Verify: the `verify` command above exits 0. Acceptance: The verify command passes. Each new wiki paragraph and CHANGELOG entry is one line.
 - [x] 12.8 Review: a fresh reviewer agent approves the diff
-- [ ] 12.9 Merge `spec/0.6.0-alpha.1-P6` into `feat/0.6.0-alpha.1`
+- [x] 12.9 Merge `spec/0.6.0-alpha.1-P6` into `feat/0.6.0-alpha.1`
 
 Boundaries:
 
