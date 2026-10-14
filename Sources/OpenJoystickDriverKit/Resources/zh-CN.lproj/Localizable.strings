@@ -1213,9 +1213,9 @@
 "cli.controller.ownership.abstract" = "选择由 macOS 还是 OpenJoystickDriver 处理某个控制器型号。";
 "cli.controller.ownership.choice" = "native（由 macOS 处理控制器）或 virtual（由 OpenJoystickDriver 处理）。";
 "cli.controller.ownership.discussion" = "native 将控制器交给 macOS，由其作为游戏控制器处理；virtual 让 OpenJoystickDriver 接管控制器并发布其虚拟游戏手柄。此选择适用于该型号的所有控制器：它在你的记录目录中该型号的记录 VVVV-PPPP.json 里设置 ownership，并保留记录的其他字段。运行中的服务无需重新插拔即可应用。需要服务来找到控制器。--dry-run 不写入任何内容。对于使用原始 USB 的控制器（始终由 OpenJoystickDriver 处理）或 macOS 不原生处理的控制器，以退出码 1 和 E2023 退出。";
-"cli.controller.ownership.dry_run" = "将会把 %@ 设为 %@（%@）。";
+"cli.controller.ownership.dry_run" = "如果运行，将会把 %@ 设为 %@（%@）。";
 "cli.controller.ownership.invalid" = "无法更改 %@：%@";
-"cli.controller.ownership.no_record" = "%@ 没有可更改的控制器记录。请用 'ojd record draft %@' 创建一个。";
+"cli.controller.ownership.no_record" = "%@ 没有可更改的控制器记录。请用 “ojd record draft %@” 创建一个。";
 "cli.controller.ownership.not_native" = "macOS 不原生处理 %@，因此始终由 OpenJoystickDriver 处理。";
 "cli.controller.ownership.raw_usb" = "%@ 使用原始 USB，因此始终由 OpenJoystickDriver 处理。";
 "cli.controller.ownership.success" = "已把 %@ 设为 %@（%@）。运行中的服务现在会应用它。";
@@ -1302,7 +1302,7 @@
 "cli.mod.install.abstract" = "检查模组包并为你的用户安装。";
 "cli.mod.install.discussion" = "将包复制到 Packages/NAME 并一次性替换；运行中的服务会应用它。已安装同名包时会被拒绝，除非使用 --force。--force 不会绕过 requires、身份冲突，或配置文件 ID 或名称冲突。--dry-run 检查包，不写入任何内容。";
 "cli.mod.install.force" = "替换已安装的同名包。";
-"cli.mod.install.dry_run" = "将安装 %@。";
+"cli.mod.install.dry_run" = "如果运行，将安装 %@。";
 "cli.mod.install.success" = "已安装 %@。运行中的服务现在会应用它。";
 "cli.mod.list.abstract" = "列出已安装的模组包及每个包的文件。";
 "cli.mod.list.discussion" = "列出每个包的版本、作者和文件。OJD 不使用的包，例如其 requires 不包含此版本的包，会连同 E4xxx 代码显示原因。";
@@ -1310,7 +1310,7 @@
 "cli.mod.remove.abstract" = "移除一个已安装的模组包。";
 "cli.mod.remove.discussion" = "仅删除 Packages/NAME。在终端中会请求确认，否则需要 --force。--dry-run 检查包是否已安装，不更改任何内容。未安装时以退出码 1 和 E4006 退出。";
 "cli.mod.remove.confirm" = "删除 %@？";
-"cli.mod.remove.dry_run" = "将删除 %@。";
+"cli.mod.remove.dry_run" = "如果运行，将删除 %@。";
 "cli.mod.remove.success" = "已删除 %@。";
 "cli.option.dry_run" = "打印将要更改的内容，但不做任何更改。";
 "cli.option.force" = "不要求确认。";
@@ -1581,7 +1581,7 @@
 "cli.explain.area.endpoint" = "端点";
 "cli.explain.area.cli" = "命令行";
 "cli.explain.area.remapping" = "重新映射";
-"cli.explain.area.mod" = "Mod 包";
+"cli.explain.area.mod" = "模组包";
 "cli.explain.exit_code" ="退出码：%@";
 "cli.explain.wire" = "传输值：%@";
 "cli.error.stale_installation" = "已安装的 OpenJoystickDriver.app 比这些仓库源码更旧。请运行“./Scripts/ojd build install-fast dev”，或设置 OJD_RUN_REPOSITORY_CLI=1 来运行此构建。";
@@ -1640,7 +1640,7 @@
 "error.E4001" = "缺少包清单 mod.json，或它无效。请对照 mod-package 架构检查，然后重新运行该命令。";
 "error.E4002" = "此包需要与当前运行版本不同的 OpenJoystickDriver 版本。请安装支持当前版本的包版本，或更新 OpenJoystickDriver。";
 "error.E4003" = "包中的某个文件无效、缺失或未在 mod.json 中列出。请修复命令指出的文件，然后重新运行。";
-"error.E4004" = "此包涵盖的控制器、角色配置或配置文件已存在于你自己的文件或另一个已安装的包中。请删除冲突的文件或包，或修改此包，然后重新运行该命令。";
+"error.E4004" = "此包涵盖的控制器、人设或配置文件已存在于你自己的文件或另一个已安装的包中。请删除冲突的文件或包，或修改此包，然后重新运行该命令。";
 "error.E4005" = "已安装同名的包。请使用 --force 运行该命令以替换它。";
 "error.E4006" = "没有已安装的包使用此名称。请运行 ojd mod list 查看已安装的包。";
 "error.E4007" = "无法更改包文件夹。请检查磁盘可用空间和文件夹权限。";

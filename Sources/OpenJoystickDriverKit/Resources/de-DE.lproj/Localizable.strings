@@ -1215,7 +1215,7 @@
 "cli.controller.ownership.discussion" = "native überlässt den Controller macOS, das ihn als Gamecontroller bedient; virtual lässt OpenJoystickDriver ihn übernehmen und sein virtuelles Gamepad veröffentlichen. Die Wahl gilt für jeden Controller des Modells: Sie setzt ownership in deinem Eintrag für das Modell, VVVV-PPPP.json in deinem Eintragsordner, und behält die anderen Felder des Eintrags. Der laufende Dienst wendet sie ohne erneutes Einstecken an. Braucht den Dienst, um den Controller zu finden. --dry-run schreibt nichts. Endet mit 1 und E2023 für einen Controller, der rohes USB nutzt und den OpenJoystickDriver immer bedient, oder den macOS nicht nativ bedient.";
 "cli.controller.ownership.dry_run" = "Würde %@ auf %@ setzen, in %@.";
 "cli.controller.ownership.invalid" = "%@ kann nicht geändert werden: %@";
-"cli.controller.ownership.no_record" = "%@ hat keinen Controller-Eintrag, der sich ändern lässt. Beginne einen mit 'ojd record draft %@'.";
+"cli.controller.ownership.no_record" = "%@ hat keinen Controller-Eintrag, der sich ändern lässt. Beginne einen mit „ojd record draft %@“.";
 "cli.controller.ownership.not_native" = "macOS bedient %@ nicht nativ, daher bedient OpenJoystickDriver ihn immer.";
 "cli.controller.ownership.raw_usb" = "%@ nutzt rohes USB, daher bedient OpenJoystickDriver ihn immer.";
 "cli.controller.ownership.success" = "%@ wurde auf %@ gesetzt, in %@. Der laufende Dienst wendet es jetzt an.";
@@ -1297,12 +1297,12 @@
 "cli.mod.already_installed" = "%@ ist bereits installiert. Mit --force ersetzen.";
 "cli.mod.not_installed" = "%@ ist nicht installiert. „ojd mod list“ zeigt die installierten Pakete.";
 "cli.mod.validate.abstract" = "Einen Mod-Paketordner prüfen, ohne ihn zu installieren.";
-"cli.mod.validate.discussion" = "Prüft das Manifest, ob das Paket mit dieser Version läuft, ob seine Dateien die aufgelisteten und gültig sind und ob keine mit Ihren Dateien oder einem anderen Paket kollidiert. Endet mit 1 und dem E4xxx-Code, wenn das Paket abgelehnt wird.";
+"cli.mod.validate.discussion" = "Prüft das Manifest, ob das Paket mit dieser Version läuft, ob seine Dateien die aufgelisteten und gültig sind und ob keine mit deinen Dateien oder einem anderen Paket kollidiert. Endet mit 1 und dem E4xxx-Code, wenn das Paket abgelehnt wird.";
 "cli.mod.validate.valid" = "%@ ist ein gültiges Paket: %@ %@. Mit „ojd mod install“ installieren.";
-"cli.mod.install.abstract" = "Ein Mod-Paket prüfen und für Ihren Benutzer installieren.";
-"cli.mod.install.discussion" = "Kopiert das Paket nach Packages/NAME und tauscht es sofort ein; der laufende Dienst übernimmt es. Ein bereits installiertes Paket gleichen Namens wird abgelehnt, außer Sie geben --force an. --force überschreibt nie requires, eine Identitätskollision oder eine Kollision von Profil-ID oder -Name. --dry-run prüft das Paket und schreibt nichts.";
+"cli.mod.install.abstract" = "Ein Mod-Paket prüfen und für dein Konto installieren.";
+"cli.mod.install.discussion" = "Kopiert das Paket nach Packages/NAME und tauscht es sofort ein; der laufende Dienst übernimmt es. Ein bereits installiertes Paket gleichen Namens wird abgelehnt, außer du gibst --force an. --force überschreibt nie requires, eine Identitätskollision oder eine Kollision von Profil-ID oder -Name. --dry-run prüft das Paket und schreibt nichts.";
 "cli.mod.install.force" = "Ein installiertes Paket gleichen Namens ersetzen.";
-"cli.mod.install.dry_run" = "%@ würde installiert.";
+"cli.mod.install.dry_run" = "%@ würde installiert werden.";
 "cli.mod.install.success" = "%@ installiert. Der laufende Dienst übernimmt es jetzt.";
 "cli.mod.list.abstract" = "Die installierten Mod-Pakete und ihre Dateien auflisten.";
 "cli.mod.list.discussion" = "Listet jedes Paket mit Version, Autor und Dateien auf. Ein Paket, das OJD nicht verwendet, etwa weil requires diese Version ausschließt, zeigt den Grund mit seinem E4xxx-Code.";
@@ -1310,7 +1310,7 @@
 "cli.mod.remove.abstract" = "Ein installiertes Mod-Paket entfernen.";
 "cli.mod.remove.discussion" = "Löscht nur Packages/NAME. Fragt im Terminal nach Bestätigung, sonst ist --force nötig. --dry-run prüft, ob das Paket installiert ist, und ändert nichts. Endet mit 1 und E4006, wenn es nicht installiert ist.";
 "cli.mod.remove.confirm" = "%@ löschen?";
-"cli.mod.remove.dry_run" = "%@ würde gelöscht.";
+"cli.mod.remove.dry_run" = "%@ würde gelöscht werden.";
 "cli.mod.remove.success" = "%@ gelöscht.";
 "cli.option.dry_run" = "Ausgeben, was sich ändern würde, und nichts ändern.";
 "cli.option.force" = "Nicht um Bestätigung bitten.";

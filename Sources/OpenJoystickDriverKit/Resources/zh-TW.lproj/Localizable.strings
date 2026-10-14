@@ -1213,9 +1213,9 @@
 "cli.controller.ownership.abstract" = "選擇由 macOS 還是 OpenJoystickDriver 處理某個控制器型號。";
 "cli.controller.ownership.choice" = "native（由 macOS 處理控制器）或 virtual（由 OpenJoystickDriver 處理）。";
 "cli.controller.ownership.discussion" = "native 將控制器交給 macOS，由其作為遊戲控制器處理；virtual 讓 OpenJoystickDriver 接管控制器並發佈其虛擬遊戲控制器。此選擇適用於該型號的所有控制器：它會在你的記錄目錄中該型號的記錄 VVVV-PPPP.json 裡設定 ownership，並保留記錄的其他欄位。執行中的服務無需重新插拔即可套用。需要服務來找到控制器。--dry-run 不會寫入任何內容。對於使用原始 USB 的控制器（一律由 OpenJoystickDriver 處理）或 macOS 不原生處理的控制器，會以結束代碼 1 和 E2023 結束。";
-"cli.controller.ownership.dry_run" = "將會把 %@ 設為 %@（%@）。";
+"cli.controller.ownership.dry_run" = "如果執行，將會把 %@ 設為 %@（%@）。";
 "cli.controller.ownership.invalid" = "無法變更 %@：%@";
-"cli.controller.ownership.no_record" = "%@ 沒有可變更的控制器記錄。請用 'ojd record draft %@' 建立一個。";
+"cli.controller.ownership.no_record" = "%@ 沒有可變更的控制器記錄。請用 「ojd record draft %@」 建立一個。";
 "cli.controller.ownership.not_native" = "macOS 不原生處理 %@，因此一律由 OpenJoystickDriver 處理。";
 "cli.controller.ownership.raw_usb" = "%@ 使用原始 USB，因此一律由 OpenJoystickDriver 處理。";
 "cli.controller.ownership.success" = "已把 %@ 設為 %@（%@）。執行中的服務現在會套用它。";
@@ -1302,7 +1302,7 @@
 "cli.mod.install.abstract" = "檢查模組套件並為你的使用者安裝。";
 "cli.mod.install.discussion" = "將套件複製到 Packages/NAME 並一次性替換；執行中的服務會套用它。已安裝同名套件時會被拒絕，除非使用 --force。--force 不會略過 requires、身分衝突，或設定檔 ID 或名稱衝突。--dry-run 檢查套件，不寫入任何內容。";
 "cli.mod.install.force" = "取代已安裝的同名套件。";
-"cli.mod.install.dry_run" = "將安裝 %@。";
+"cli.mod.install.dry_run" = "如果執行，將安裝 %@。";
 "cli.mod.install.success" = "已安裝 %@。執行中的服務現在會套用它。";
 "cli.mod.list.abstract" = "列出已安裝的模組套件及每個套件的檔案。";
 "cli.mod.list.discussion" = "列出每個套件的版本、作者和檔案。OJD 不使用的套件，例如其 requires 不包含此版本的套件，會連同 E4xxx 代碼顯示原因。";
@@ -1310,7 +1310,7 @@
 "cli.mod.remove.abstract" = "移除一個已安裝的模組套件。";
 "cli.mod.remove.discussion" = "僅刪除 Packages/NAME。在終端機中會要求確認，否則需要 --force。--dry-run 檢查套件是否已安裝，不更改任何內容。未安裝時以結束碼 1 和 E4006 結束。";
 "cli.mod.remove.confirm" = "刪除 %@？";
-"cli.mod.remove.dry_run" = "將刪除 %@。";
+"cli.mod.remove.dry_run" = "如果執行，將刪除 %@。";
 "cli.mod.remove.success" = "已刪除 %@。";
 "cli.option.dry_run" = "顯示將會變更的內容，但不做任何變更。";
 "cli.option.force" = "不要求確認。";
@@ -1581,7 +1581,7 @@
 "cli.explain.area.endpoint" = "端點";
 "cli.explain.area.cli" = "命令列";
 "cli.explain.area.remapping" = "重新對應";
-"cli.explain.area.mod" = "Mod 套件";
+"cli.explain.area.mod" = "模組套件";
 "cli.explain.exit_code" ="結束碼：%@";
 "cli.explain.wire" = "傳輸值：%@";
 "cli.error.stale_installation" = "已安裝的 OpenJoystickDriver.app 比這些儲存庫原始碼更舊。請執行「./Scripts/ojd build install-fast dev」，或設定 OJD_RUN_REPOSITORY_CLI=1 來執行此建置。";
@@ -1640,7 +1640,7 @@
 "error.E4001" = "缺少套件資訊清單 mod.json，或其無效。請對照 mod-package 結構描述檢查，然後重新執行指令。";
 "error.E4002" = "此套件需要與目前執行版本不同的 OpenJoystickDriver 版本。請安裝支援目前版本的套件版本，或更新 OpenJoystickDriver。";
 "error.E4003" = "套件中的某個檔案無效、遺失或未列於 mod.json。請修正指令指出的檔案，然後重新執行。";
-"error.E4004" = "此套件涵蓋的控制器、角色設定或設定檔已存在於你自己的檔案或另一個已安裝的套件中。請移除衝突的檔案或套件，或修改此套件，然後重新執行指令。";
+"error.E4004" = "此套件涵蓋的控制器、人設或設定檔已存在於你自己的檔案或另一個已安裝的套件中。請移除衝突的檔案或套件，或修改此套件，然後重新執行指令。";
 "error.E4005" = "已安裝同名的套件。請以 --force 執行指令以取代它。";
 "error.E4006" = "沒有已安裝的套件使用此名稱。請執行 ojd mod list 查看已安裝的套件。";
 "error.E4007" = "無法變更套件資料夾。請檢查磁碟可用空間和資料夾權限。";

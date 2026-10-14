@@ -1215,7 +1215,7 @@
 "cli.controller.ownership.discussion" = "native laat de controller aan macOS over, dat hem als gamecontroller bedient; virtual laat OpenJoystickDriver hem overnemen en zijn virtuele gamepad publiceren. De keuze geldt voor elke controller van het model: ze zet ownership in je record voor het model, VVVV-PPPP.json in je recordmap, en behoudt de andere velden van het record. De draaiende service past haar toe zonder opnieuw aan te sluiten. Heeft de service nodig om de controller te vinden. --dry-run schrijft niets. Stopt met 1 en E2023 voor een controller die ruwe USB gebruikt, die OpenJoystickDriver altijd bedient, of die macOS niet native bedient.";
 "cli.controller.ownership.dry_run" = "Zou %@ op %@ zetten in %@.";
 "cli.controller.ownership.invalid" = "Kan %@ niet wijzigen: %@";
-"cli.controller.ownership.no_record" = "%@ heeft geen controllerrecord om te wijzigen. Begin er een met 'ojd record draft %@'.";
+"cli.controller.ownership.no_record" = "%@ heeft geen controllerrecord om te wijzigen. Begin er een met ‘ojd record draft %@’.";
 "cli.controller.ownership.not_native" = "macOS bedient %@ niet native, dus OpenJoystickDriver bedient hem altijd.";
 "cli.controller.ownership.raw_usb" = "%@ gebruikt ruwe USB, dus OpenJoystickDriver bedient hem altijd.";
 "cli.controller.ownership.success" = "%@ op %@ gezet in %@. De draaiende service past het nu toe.";
@@ -1295,10 +1295,10 @@
 "cli.mod.name" = "De naam van het pakket.";
 "cli.mod.refused" = "%@ wordt geweigerd: %@";
 "cli.mod.already_installed" = "%@ is al geïnstalleerd. Gebruik --force om het te vervangen.";
-"cli.mod.not_installed" = "%@ is niet geïnstalleerd. 'ojd mod list' toont de geïnstalleerde pakketten.";
+"cli.mod.not_installed" = "%@ is niet geïnstalleerd. ‘ojd mod list’ toont de geïnstalleerde pakketten.";
 "cli.mod.validate.abstract" = "De map van een modpakket controleren zonder te installeren.";
 "cli.mod.validate.discussion" = "Controleert het manifest, of het pakket op deze versie werkt, of de bestanden de vermelde en geldige zijn en of geen ervan botst met je bestanden of een ander pakket. Eindigt met 1 en de E4xxx-code als het pakket wordt geweigerd.";
-"cli.mod.validate.valid" = "%@ is een geldig pakket: %@ %@. Installeer het met 'ojd mod install'.";
+"cli.mod.validate.valid" = "%@ is een geldig pakket: %@ %@. Installeer het met ‘ojd mod install’.";
 "cli.mod.install.abstract" = "Een modpakket controleren en voor jouw gebruiker installeren.";
 "cli.mod.install.discussion" = "Kopieert het pakket naar Packages/NAME en wisselt het in één keer in; de actieve service past het toe. Een al geïnstalleerd pakket met dezelfde naam wordt geweigerd, tenzij je --force opgeeft. --force omzeilt nooit requires, een identiteitsbotsing of een botsing van profiel-id of -naam. --dry-run controleert het pakket en schrijft niets.";
 "cli.mod.install.force" = "Een geïnstalleerd pakket met dezelfde naam vervangen.";

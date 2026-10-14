@@ -1215,7 +1215,7 @@
 "cli.controller.ownership.discussion" = "native कंट्रोलर को macOS पर छोड़ता है, जो उसे गेम कंट्रोलर के रूप में चलाता है; virtual OpenJoystickDriver को उसे संभालने और उसका वर्चुअल गेमपैड प्रकाशित करने देता है। यह चुनाव मॉडल के हर कंट्रोलर पर लागू होता है: यह मॉडल के आपके रिकॉर्ड में ownership सेट करता है, जो आपकी रिकॉर्ड डायरेक्टरी में VVVV-PPPP.json है, और रिकॉर्ड के बाकी फ़ील्ड रखता है। चल रही सेवा इसे दोबारा प्लग किए बिना लागू करती है। कंट्रोलर ढूँढने के लिए सेवा चाहिए। --dry-run कुछ नहीं लिखता। ऐसे कंट्रोलर के लिए E2023 के साथ 1 पर बाहर निकलता है जो रॉ USB का उपयोग करता है, जिसे OpenJoystickDriver हमेशा चलाता है, या जिसे macOS नेटिव रूप से नहीं चलाता।";
 "cli.controller.ownership.dry_run" = "%@ को %@ पर सेट कर देता (%@)।";
 "cli.controller.ownership.invalid" = "%@ बदला नहीं जा सकता: %@";
-"cli.controller.ownership.no_record" = "%@ का बदलने लायक कोई कंट्रोलर रिकॉर्ड नहीं है। 'ojd record draft %@' से एक शुरू करें।";
+"cli.controller.ownership.no_record" = "%@ का बदलने लायक कोई कंट्रोलर रिकॉर्ड नहीं है। “ojd record draft %@” से एक शुरू करें।";
 "cli.controller.ownership.not_native" = "macOS %@ को नेटिव रूप से नहीं चलाता, इसलिए OpenJoystickDriver उसे हमेशा चलाता है।";
 "cli.controller.ownership.raw_usb" = "%@ रॉ USB का उपयोग करता है, इसलिए OpenJoystickDriver उसे हमेशा चलाता है।";
 "cli.controller.ownership.success" = "%@ को %@ पर सेट किया गया (%@)। चल रही सेवा अब उसे लागू करती है।";
@@ -1295,10 +1295,10 @@
 "cli.mod.name" = "पैकेज का नाम।";
 "cli.mod.refused" = "%@ अस्वीकार किया गया: %@";
 "cli.mod.already_installed" = "%@ पहले से इंस्टॉल है। बदलने के लिए --force का उपयोग करें।";
-"cli.mod.not_installed" = "%@ इंस्टॉल नहीं है। 'ojd mod list' इंस्टॉल किए गए पैकेज दिखाता है।";
+"cli.mod.not_installed" = "%@ इंस्टॉल नहीं है। “ojd mod list” इंस्टॉल किए गए पैकेज दिखाता है।";
 "cli.mod.validate.abstract" = "मॉड पैकेज फ़ोल्डर को इंस्टॉल किए बिना जाँचें।";
 "cli.mod.validate.discussion" = "मैनिफ़ेस्ट, पैकेज इस संस्करण पर चलता है या नहीं, उसकी फ़ाइलें सूचीबद्ध और मान्य हैं या नहीं, और कोई फ़ाइल आपकी फ़ाइलों या किसी दूसरे पैकेज से टकराती है या नहीं, यह जाँचता है। पैकेज अस्वीकार होने पर कोड 1 और E4xxx कोड के साथ समाप्त होता है।";
-"cli.mod.validate.valid" = "%@ मान्य पैकेज है: %@ %@। इसे 'ojd mod install' से इंस्टॉल करें।";
+"cli.mod.validate.valid" = "%@ मान्य पैकेज है: %@ %@। इसे “ojd mod install” से इंस्टॉल करें।";
 "cli.mod.install.abstract" = "मॉड पैकेज जाँचें और अपने उपयोगकर्ता के लिए इंस्टॉल करें।";
 "cli.mod.install.discussion" = "पैकेज को Packages/NAME में कॉपी करता है और एक साथ बदल देता है; चालू सेवा उसे लागू करती है। उसी नाम का पहले से इंस्टॉल पैकेज --force के बिना अस्वीकार होता है। --force कभी requires, पहचान के टकराव, या प्रोफ़ाइल id या नाम के टकराव को नहीं लाँघता। --dry-run पैकेज जाँचता है और कुछ नहीं लिखता।";
 "cli.mod.install.force" = "उसी नाम का इंस्टॉल किया पैकेज बदलें।";
