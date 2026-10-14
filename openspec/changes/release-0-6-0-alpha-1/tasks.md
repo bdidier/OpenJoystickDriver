@@ -791,6 +791,7 @@ Boundaries:
   - `Tests/OpenJoystickDriverKitTests/Device/Manager/OwnershipSuspensionTests.swift` (new)
   - `Sources/OpenJoystickDriverPresentation/Runtime/RuntimeViewModel+ControllerActions.swift`
   - `Sources/OpenJoystickDriverPresentation/Runtime/LabelsAndDetection.swift`
+  - `Sources/OpenJoystickDriverPresentation/Runtime/RuntimeStatusPresentation+Messages.swift` (added during 16.3: the status equality ignored `recordOwnership`, so a refresh never showed the new value)
   - `Tests/OpenJoystickDriverPresentationTests/Controllers/ControllerOwnershipPickerTests.swift` (the maintainer allowed one change, 2026-10-14: `aRefusalShowsE2023WithTheServiceDetail` expects the new invalid-record text)
   - `Tests/OpenJoystickDriverPresentationTests/Controllers/ControllerOwnershipFeedbackTests.swift` (new)
   - `Sources/OpenJoystickDriverKit/Resources/*.lproj/Localizable.strings` and `Sources/OpenJoystickDriverKit/Resources/Localization/Localizable.template.strings`, for three `controllers.ownership.*` keys
@@ -803,7 +804,7 @@ Resolve the open items that the maintainer asked to fix (2026-10-14).
 
 - [ ] 16.1 `ojd check tools` runs xmake with the SDK of the selected Xcode: it sources `Scripts/Platform/environment.sh`, which exports `SDKROOT`. A new dispatcher test covers it.
 - [ ] 16.2 An ownership toggle keeps the suspension of a suspended controller that the HID backend admits again; a physical disconnect still ends it. A new Kit test covers both.
-- [ ] 16.3 After a successful toggle, the app polls the inventory until the model's `recordOwnership` matches the request, for at most 2 seconds. A new test covers it.
+- [ ] 16.3 After a successful toggle, the app polls the inventory until the model's `recordOwnership` matches the request, for at most 2 seconds, and the status equality compares `recordOwnership`. A new test covers it.
 - [ ] 16.4 `noRecord`, `invalidRecord`, and `persistenceFailed` show their own `controllers.ownership.*` texts in every locale; `rawUSB` and `notNative` keep `error.E2023`.
 - [ ] 16.5 `docs/testing/xbox-one-02d1.md` "Result" says the parent-device fix landed in P15 and is not verified on hardware.
 - [ ] 16.6 Verify: every check above exits 0.

@@ -174,6 +174,9 @@
 "controllers.ownership.native" = "macOS (أصلي)";
 "controllers.ownership.virtual" = "OpenJoystickDriver (افتراضي)";
 "controllers.ownership.refused" = "لا يمكن لوحدة التحكم هذه التبديل: فهي تستخدم USB الخام، أو أن macOS لا يخدمها أصليًا.";
+"controllers.ownership.noRecord" = "لا يوجد سجل وحدة تحكم يصف وحدة التحكم هذه، لذا لا يوجد ما يمكن تغييره.";
+"controllers.ownership.invalidRecord" = "سجل وحدة التحكم غير صالح. لم يتغير شيء.";
+"controllers.ownership.persistenceFailed" = "تعذر حفظ سجل وحدة التحكم. لم يتغير شيء.";
 "virtualProfile.advanced" = "متقدم";
 "virtualProfile.title" = "ملف تعريف HID الافتراضي";
 "virtualProfile.modelScope" = "ينطبق على كل وحدة تحكم متصلة من هذا الطراز.";

@@ -174,6 +174,9 @@
 "controllers.ownership.native" = "macOS (เนทีฟ)";
 "controllers.ownership.virtual" = "OpenJoystickDriver (เสมือน)";
 "controllers.ownership.refused" = "คอนโทรลเลอร์นี้สลับไม่ได้ เพราะใช้ USB แบบดิบ หรือ macOS ไม่ดูแลแบบเนทีฟ";
+"controllers.ownership.noRecord" = "ไม่มีระเบียนคอนโทรลเลอร์ที่อธิบายคอนโทรลเลอร์นี้ จึงไม่มีอะไรให้เปลี่ยน";
+"controllers.ownership.invalidRecord" = "ระเบียนคอนโทรลเลอร์ไม่ถูกต้อง ไม่มีการเปลี่ยนแปลงใดๆ";
+"controllers.ownership.persistenceFailed" = "ไม่สามารถบันทึกระเบียนคอนโทรลเลอร์ได้ ไม่มีการเปลี่ยนแปลงใดๆ";
 "virtualProfile.advanced" = "ขั้นสูง";
 "virtualProfile.title" = "โปรไฟล์ HID เสมือน";
 "virtualProfile.modelScope" = "ใช้กับคอนโทรลเลอร์ทุกตัวที่เชื่อมต่อของรุ่นนี้";

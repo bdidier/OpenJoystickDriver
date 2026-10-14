@@ -124,21 +124,45 @@ extension RuntimeViewModel {
   }
 
   /// Makes `ownership` serve `device`'s model: macOS natively, or OpenJoystickDriver as a virtual
-  /// controller. A refusal shows as E2023 in the controller's detail, with the service's detail
-  /// text for a record that is invalid or cannot be written.
+  /// controller. A refusal shows in the controller's detail, with the service's detail text for a
+  /// record that is invalid or cannot be written.
   func setControllerOwnership(
     _ ownership: ControllerOwnership,
     for device: ApplicationServiceDeviceDescription
   ) async {
+    var accepted = false
     await performControllerAction(device) {
       let result = try await gateway.setControllerOwnership(
         identity: ControllerIdentity(vendorID: device.vendorID, productID: device.productID),
         ownership: ownership
       )
-      guard result.failure != nil else { return nil }
-      return [OJDLocalized.string("error.E2023"), result.detail].compactMap { $0 }.joined(
-        separator: " "
-      )
+      guard let failure = result.failure else {
+        accepted = true
+        return nil
+      }
+      return RuntimePresentation.controllerOwnershipFailure(failure, detail: result.detail)
+    }
+    guard accepted else { return }
+    await waitForRecordOwnership(ownership, of: RuntimeControllerModel(device))
+  }
+
+  /// Refreshes the inventory every 200 ms, for at most 2 seconds, until a controller of `model`
+  /// reports `ownership`. The service reloads the records after it answers, so the first refresh
+  /// can still carry the old value.
+  private func waitForRecordOwnership(
+    _ ownership: ControllerOwnership,
+    of model: RuntimeControllerModel
+  ) async {
+    for _ in 0..<10 {
+      if case .available(let status) = statusState,
+        status.devices.contains(where: {
+          RuntimeControllerModel($0) == model && $0.recordOwnership == ownership
+        })
+      {
+        return
+      }
+      do { try await Task.sleep(nanoseconds: 200_000_000) } catch { return }
+      await refreshControllerInventory()
     }
   }
 

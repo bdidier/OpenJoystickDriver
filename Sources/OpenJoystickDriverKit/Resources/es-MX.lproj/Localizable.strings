@@ -174,6 +174,9 @@
 "controllers.ownership.native" = "macOS (nativo)";
 "controllers.ownership.virtual" = "OpenJoystickDriver (control virtual)";
 "controllers.ownership.refused" = "Este control no puede cambiar: usa USB sin procesar, o macOS no lo maneja de forma nativa.";
+"controllers.ownership.noRecord" = "Ningún registro de control describe este control, así que no hay nada que cambiar.";
+"controllers.ownership.invalidRecord" = "El registro del control no es válido. No se cambió nada.";
+"controllers.ownership.persistenceFailed" = "No se pudo guardar el registro del control. No se cambió nada.";
 "virtualProfile.advanced" = "Avanzado";
 "virtualProfile.title" = "Perfil HID virtual";
 "virtualProfile.modelScope" = "Se aplica a todos los controles conectados de este modelo.";
