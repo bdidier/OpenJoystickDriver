@@ -45,8 +45,8 @@ A profile does nothing until you activate it. One controller model can have seve
 OJD picks the profile for a controller in this order:
 
 1. The most recently activated profile whose application scope matches the front app.
-1. The most recently activated global profile.
-1. The most recently activated profile for the model, even if its scope is an app that is not in front.
+2. The most recently activated global profile.
+3. The most recently activated profile for the model, even if its scope is an app that is not in front.
 
 If no profile is active, OJD passes the controller through to the virtual controller. An app-scoped profile picked by rule 3 does not work until its app is in front.
 
@@ -84,10 +84,10 @@ This section explains how to create, activate, rename, duplicate, and delete a p
 ### Create a Profile In the App
 
 1. In the **Profiles** pane, click the **New profile** button.
-1. In the **New profile** sheet, enter a name. The default name is `My controller`.
-1. Select the controller from the **Controller** list.
-1. Select the application scope. For more information, see [About profiles](#about-profiles).
-1. Click **Create**.
+2. In the **New profile** sheet, enter a name. The default name is `My controller`.
+3. Select the controller from the **Controller** list.
+4. Select the application scope. For more information, see [About profiles](#about-profiles).
+5. Click **Create**.
 
 The new profile has no assignments. It appears in the list with the label **Not active**.
 
@@ -104,7 +104,7 @@ Add `--app BUNDLE-ID` to limit the profile to one app. The new profile is inacti
 ### Activate a Profile
 
 1. Select the profile in the list.
-1. Click **Set active**.
+2. Click **Set active**.
 
 If the profile produces no output, so that the controller does nothing while it is active, the app shows the alert **Activate profile with no controller input?**. Click **Set active** only if you want that result. To restore default input, click **Restore default input** first.
 
@@ -128,34 +128,34 @@ If another process changes the profile, the app shows **This profile changed els
 ### Rename Or Change the Controller and Scope
 
 1. Select the profile.
-1. Click the pencil button, **Profile details**.
-1. Change **Profile name**, **Vendor ID**, **Product ID**, or **Target**.
-1. If you select **One application**, enter the **Bundle identifier**. The app has no running-app picker.
-1. Click **Apply**, then click **Save**.
+2. Click the pencil button, **Profile details**.
+3. Change **Profile name**, **Vendor ID**, **Product ID**, or **Target**.
+4. If you select **One application**, enter the **Bundle identifier**. The app has no running-app picker.
+5. Click **Apply**, then click **Save**.
 
 To rename a profile on the command line, run `ojd profile rename PROFILE NEW-NAME`. To change the controller model or the app, run `ojd profile edit PROFILE` and change `device` or `applicationScope` in the profile file, or run `ojd profile set PROFILE applicationScope '{"type":"global"}'`.
 
 ### Duplicate a Profile
 
 1. Select the profile.
-1. Open the **Profile actions** menu.
-1. Select **Duplicate**.
+2. Open the **Profile actions** menu.
+3. Select **Duplicate**.
 
 The copy is named `NAME Copy`. Profile names must be unique. The command line equivalent is `ojd profile duplicate PROFILE NEW-NAME`.
 
 ### Delete a Profile
 
 1. Select the profile.
-1. Click the red **Delete** button at the bottom of the editor.
-1. In the alert **Delete profile?**, click **Delete**.
+2. Click the red **Delete** button at the bottom of the editor.
+3. In the alert **Delete profile?**, click **Delete**.
 
 The command line equivalent is `ojd profile delete PROFILE`.
 
 ### Clear All Assignments
 
 1. Open the **Profile actions** menu.
-1. Select **Clear all inputs**.
-1. Confirm the alert **Clear all inputs?**.
+2. Select **Clear all inputs**.
+3. Confirm the alert **Clear all inputs?**.
 
 This clears all assignments and input processing from the profile. To return to pass-through, select **Restore default input**.
 
@@ -170,10 +170,10 @@ Use export and import to keep a copy of a profile, to share it, or to move it to
 ### Export a Profile
 
 1. Open the **Profiles** pane.
-1. Select the profile.
-1. Click **Profile actions**, then select **Export**.
-1. Select a folder and a file name. The default name is `PROFILE-NAME.json`.
-1. Click **Save**.
+2. Select the profile.
+3. Click **Profile actions**, then select **Export**.
+4. Select a folder and a file name. The default name is `PROFILE-NAME.json`.
+5. Click **Save**.
 
 The command line equivalent prints the profile JSON, or writes it to a file. The examples use the `ojd` alias. For more information, see [Using the command line](Command-Line.md).
 
@@ -184,9 +184,9 @@ ojd profile export PROFILE --output FILE.json
 ### Import a Profile
 
 1. Open the **Profiles** pane.
-1. Click **Import profile**.
-1. Select a JSON file.
-1. Click **Open**.
+2. Click **Import profile**.
+3. Select a JSON file.
+4. Click **Open**.
 
 The command line equivalent is:
 
@@ -210,9 +210,9 @@ A new imported profile is not active until you activate it. For more information
 OJD skips a profile file that it cannot read, and it reports the file in Settings and in `ojd profile list`. A damaged active profile list is reported the same way. For more information, see [Profile file reference](Profile-File-Reference.md#damaged-files).
 
 1. Run `ojd profile list` to see each damaged file.
-1. Run `ojd profile recover --dry-run` to see what the command would change. This changes nothing.
-1. Run `ojd profile recover`.
-1. If the command asks for confirmation, confirm it.
+2. Run `ojd profile recover --dry-run` to see what the command would change. This changes nothing.
+3. Run `ojd profile recover`.
+4. If the command asks for confirmation, confirm it.
 
 The command removes each damaged profile file and resets a damaged active profile list. Before it removes or resets a file, the service saves a backup beside the original, under a name that contains `.backup-`. The command asks for confirmation on a terminal. Without a terminal, add `--force`.
 
