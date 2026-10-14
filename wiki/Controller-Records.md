@@ -46,7 +46,7 @@ macOS serves some controllers natively through the Game Controller framework. Op
 
 A raw-USB family, such as `xbox.gip`, has no `ownership` field, because macOS cannot serve those controllers. A new `ownership` value applies to a connected controller as soon as the running service reloads the records. You do not need to unplug the controller.
 
-To change `ownership` without editing the file, run `ojd controller ownership CONTROLLER native|virtual`. `native` sets `macos`, and `virtual` sets `ojd`. The command writes the value to your record for the model, and creates a `patch` record when you have none. It refuses a raw-USB family, and a controller that macOS does not serve natively, with the code E2023. `ojd controller show` names the choice and the layer it comes from.
+To change `ownership` without editing the file, run `ojd controller ownership CONTROLLER native|virtual`. `native` sets `macos`, and `virtual` sets `ojd`. The command writes the value to your record for the model, and creates a `patch` record when you have none and the bundled catalog or an installed package has a record of the model. It refuses a raw-USB family, a controller that macOS does not serve natively, and a model that has no record at all, with the code E2023. For a model with no record, run `ojd record draft` to start one. `ojd controller show` names the choice and the layer it comes from.
 
 ## Describe a Controller's Input Reports
 
