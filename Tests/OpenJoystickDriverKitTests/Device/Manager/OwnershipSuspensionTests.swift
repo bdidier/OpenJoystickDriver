@@ -51,6 +51,25 @@ struct OwnershipSuspensionTests {
     await manager.stop()
   }
 
+  /// A controller unplugged while the reload cycles it is gone from the backend, so its suspension
+  /// ends and its next plug-in starts active.
+  @Test
+  func aControllerUnpluggedDuringTheReloadLosesItsSuspension() async throws {
+    let (manager, backend, old) = try await Self.suspendedController()
+    await backend.remove(old)
+
+    await manager.reloadControllerRecords(changing: [Self.model])
+    await manager.handleHIDEvent(.disconnected(connection: old))
+
+    #expect(await !manager.suspendedControllerIdentities.contains(Self.identifier))
+    let new = Self.gameSir()
+    await backend.setSnapshots([new])
+    await manager.handleHIDEvent(.connected(connection: new, ownership: .exclusive))
+    let pipeline = try #require(await manager.pipelines[Self.identifier])
+    #expect(await pipeline.controllerSessionState() == .active)
+    await manager.stop()
+  }
+
   /// A suspended GameSir on a started manager whose backend reports it as the only connection.
   private static func suspendedController() async throws -> (
     DeviceManager, ReplacingHIDBackend, HIDDeviceConnection
@@ -109,11 +128,12 @@ struct OwnershipSuspensionTests {
 }
 
 /// Forwards to the scripted fake. Its ownership re-evaluation swaps each replaced connection in
-/// the snapshots and returns the new connections, without sending events.
+/// the snapshots, drops each removed one, and returns the new connections, without sending events.
 private actor ReplacingHIDBackend: HIDAccessBackend {
   private let scripted: ScriptedHIDAccessBackend
   private var snapshots: [HIDDeviceConnection] = []
   private var replacements: [UUID: HIDDeviceConnection] = [:]
+  private var removals: Set<UUID> = []
 
   init(_ scripted: ScriptedHIDAccessBackend) { self.scripted = scripted }
 
@@ -128,8 +148,14 @@ private actor ReplacingHIDBackend: HIDAccessBackend {
     replacements[connection.connectionID] = replacement
   }
 
+  func remove(_ connection: HIDDeviceConnection) {
+    removals.insert(connection.connectionID)
+  }
+
   func reevaluateOwnership(of _: Set<ControllerIdentity>) async -> Set<UUID> {
-    let swapped = snapshots.map { replacements.removeValue(forKey: $0.connectionID) ?? $0 }
+    let swapped = snapshots.filter { removals.remove($0.connectionID) == nil }.map {
+      replacements.removeValue(forKey: $0.connectionID) ?? $0
+    }
     let admitted = Set(swapped.map(\.connectionID)).subtracting(snapshots.map(\.connectionID))
     await setSnapshots(swapped)
     return admitted

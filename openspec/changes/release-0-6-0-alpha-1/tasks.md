@@ -788,6 +788,7 @@ Boundaries:
   - `Sources/OpenJoystickDriverKit/Device/Manager/DeviceManager.swift`
   - `Sources/OpenJoystickDriverKit/Device/Manager/DeviceManager+Lifecycle.swift`
   - `Sources/OpenJoystickDriverKit/Device/Discovery/HID/DeviceManager+HIDTeardown.swift`
+  - `Sources/OpenJoystickDriverKit/Device/Manager/DeviceManager+Stop.swift` (added after the 16.7 review: `stop()` clears the new set)
   - `Tests/OpenJoystickDriverKitTests/Device/Manager/OwnershipSuspensionTests.swift` (new)
   - `Sources/OpenJoystickDriverPresentation/Runtime/RuntimeViewModel+ControllerActions.swift`
   - `Sources/OpenJoystickDriverPresentation/Runtime/LabelsAndDetection.swift`

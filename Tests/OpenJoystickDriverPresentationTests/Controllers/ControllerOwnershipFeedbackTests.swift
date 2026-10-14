@@ -53,7 +53,7 @@ struct ControllerOwnershipFeedbackTests {
     await toggle.value
 
     #expect(Self.shownOwnership(viewModel) == .ojd)
-    #expect(await gateway.statusCallCount < 11)
+    #expect(await gateway.statusCallCount <= 4)
   }
 
   @Test

@@ -110,7 +110,7 @@ extension DeviceManager {
     )
     let current = await hidManager.currentConnectionSnapshots()
     // A connection that is still current was not admitted again, so its next disconnect is
-    // physical.
+    // physical. Without snapshots, no connection can be told apart, so every mark is dropped.
     ownershipCycledHIDConnections.subtract(
       current.map { $0.map(\.connection.connectionID) } ?? Array(suspendedConnections)
     )
