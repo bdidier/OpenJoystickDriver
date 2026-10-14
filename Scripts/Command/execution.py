@@ -127,6 +127,13 @@ def validate_hooks() -> int:
             file=sys.stderr,
         )
         return 1
+    if not expected.is_dir():
+        print(
+            f"error: {HOOKS_PATH} does not exist in this checkout; "
+            "run `./Scripts/ojd hooks install`",
+            file=sys.stderr,
+        )
+        return 1
     missing = [
         name for name in HOOK_FILES if not (PROJECT_DIR / ".husky" / name).is_file()
     ]
