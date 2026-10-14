@@ -154,8 +154,10 @@ extension VirtualOutputTests {
     await fixture.tearDown()
   }
 
-  @Test
-  func statusReportsNoProfileForANativeGamepadWithAStaleSelection() async throws {
+  @Test(arguments: ControllerOwnershipObservation.allCases)
+  func statusDropsAStaleSelectionExactlyWhenTheSystemServesTheController(
+    ownership: ControllerOwnershipObservation
+  ) async throws {
     let id = DeviceIdentifier(vendorID: 1, productID: 2)
     let fixture = try await profileOverrideServer([id])
     _ = await fixture.change(.set("hid-generic"))
@@ -166,7 +168,7 @@ extension VirtualOutputTests {
       protocolBinding: ProtocolBindingID(.sonySixaxis, variant: .usb),
       connection: "USB",
       discoverySource: .hid,
-      physicalOwnership: .nativeGamepad,
+      physicalOwnership: ownership,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
       runtimeIdentifier: id.runtimeIdentifier
@@ -174,9 +176,13 @@ extension VirtualOutputTests {
 
     let described = fixture.server.describingVirtualHIDProfiles([native, description(id)])
 
-    #expect(described[0].virtualHIDProfile?.profile == nil)
-    #expect(described[0].virtualHIDProfile?.source == nil)
     #expect(described[0].virtualHIDProfile?.override == .generic)
+    if ownership.isServedBySystem {
+      #expect(described[0].virtualHIDProfile?.profile == nil)
+      #expect(described[0].virtualHIDProfile?.source == nil)
+    } else {
+      #expect(described[0].virtualHIDProfile?.profile == .generic)
+    }
     #expect(described[1].virtualHIDProfile?.profile == .generic)
     await fixture.tearDown()
   }

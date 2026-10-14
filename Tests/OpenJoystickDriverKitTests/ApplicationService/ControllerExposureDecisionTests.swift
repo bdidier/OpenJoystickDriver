@@ -89,4 +89,18 @@ struct ControllerExposureDecisionTests {
     #expect(first == second)
     #expect(first.eligibility == .eligible)
   }
+
+  @Test
+  func systemServedOwnershipsAreExactlyThoseWhereOJDPublishesNothingForThem() {
+    let served: Set<ControllerOwnershipObservation> = [.nativeGamepad, .nativeHIDVisible]
+    for ownership in ControllerOwnershipObservation.allCases {
+      let suppressed =
+        ControllerExposureDecision.decide(ownership: ownership, intent: .profile(.generic))
+        .eligibility == .suppressedNativeHIDPassThrough
+
+      #expect(ownership.isServedBySystem == served.contains(ownership), "\(ownership)")
+      #expect(ownership.isServedBySystem == suppressed, "\(ownership)")
+    }
+    #expect(!ControllerOwnershipObservation.exclusiveHID.isServedBySystem)
+  }
 }
