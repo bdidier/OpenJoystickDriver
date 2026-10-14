@@ -1379,6 +1379,7 @@
 "cli.record.test.packets" = "패킷 캡처(‘ojd controller capture --json’의 JSON 줄)입니다.";
 "cli.record.test.parse_failed" = "%@의 파서가 수신 패킷 %lld(%@)을(를) 거부했습니다.";
 "error.E2022" = "레코드의 파서가 캡처한 리포트로 만든 상태가 예상 상태와 다릅니다. 명령이 나열한 필드를 확인하세요.";
+"error.E2023" = "이 컨트롤러는 네이티브와 가상 사이를 전환할 수 없습니다. 프로토콜 계열이 원시 USB를 사용하거나 macOS가 기본적으로 지원하지 않습니다. 메시지에 이유가 표시됩니다.";
 "cli.record.usb_not_claimed" = "이 제품군은 원시 USB를 사용하며, 제품 목록이 Apple에서 서명되어 있으므로 USB 확장 프로그램이 이 컨트롤러를 점유할 수 없습니다. OJD는 macOS가 허용하는 경우에만 직접 USB 접근으로 이 컨트롤러에 도달합니다.";
 "cli.record.usb_only_switch2" = "USB 전용: 컨트롤러를 Bluetooth LE로 연결하려면 이 Switch 2 레코드에 bluetoothLE.vibrationCharacteristic을 추가하십시오.";
 "cli.record.validate.abstract" = "컨트롤러 레코드를 설치하지 않고 확인합니다.";

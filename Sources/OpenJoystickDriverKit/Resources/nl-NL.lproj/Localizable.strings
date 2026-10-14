@@ -1379,6 +1379,7 @@
 "cli.record.test.packets" = "Een pakketopname, als de JSON-regels van ‘ojd controller capture --json’.";
 "cli.record.test.parse_failed" = "De parser van %@ heeft ontvangen pakket %lld van %@ geweigerd.";
 "error.E2022" = "De status die de parser van het record uit de vastgelegde rapporten opleverde, wijkt af van de verwachte status. Lees de velden die de opdracht toont.";
+"error.E2023" = "Deze controller kan niet wisselen tussen native en virtueel: de protocolfamilie gebruikt ruwe USB, of macOS ondersteunt hem niet native. Het bericht noemt de reden.";
 "cli.record.usb_not_claimed" = "De familie gebruikt onbewerkte USB en de USB-extensie kan deze controller niet claimen, omdat de productlijst door Apple is ondertekend. OJD bereikt hem alleen via directe USB-toegang, wanneer macOS dat toestaat.";
 "cli.record.usb_only_switch2" = "Alleen USB: voeg bluetoothLE.vibrationCharacteristic toe aan dit Switch 2-record om de controller via Bluetooth LE te verbinden.";
 "cli.record.validate.abstract" = "Controleert een controllerrecord zonder het te installeren.";

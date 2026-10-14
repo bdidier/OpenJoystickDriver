@@ -1379,6 +1379,7 @@
 "cli.record.test.packets" = "Tangkapan paket, berupa baris JSON dari “ojd controller capture --json”.";
 "cli.record.test.parse_failed" = "Parser %@ menolak paket yang diterima ke-%lld dari %@.";
 "error.E2022" = "Status yang dihasilkan parser catatan dari laporan yang ditangkap berbeda dari status yang diharapkan. Baca kolom yang ditampilkan perintah.";
+"error.E2023" = "Kontroler ini tidak dapat beralih antara native dan virtual: keluarga protokolnya memakai USB mentah, atau macOS tidak melayaninya secara native. Pesan menyebutkan alasannya.";
 "cli.record.usb_not_claimed" = "Famili ini menggunakan USB mentah, dan ekstensi USB tidak dapat mengklaim pengontrol ini, karena daftar produknya ditandatangani Apple. OJD hanya menjangkaunya melalui akses USB langsung, jika macOS mengizinkan.";
 "cli.record.usb_only_switch2" = "Hanya USB: tambahkan bluetoothLE.vibrationCharacteristic ke catatan Switch 2 ini untuk menghubungkan pengontrol melalui Bluetooth LE.";
 "cli.record.validate.abstract" = "Periksa catatan pengontrol tanpa menginstalnya.";

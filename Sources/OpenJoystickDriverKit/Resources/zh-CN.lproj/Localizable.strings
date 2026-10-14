@@ -1379,6 +1379,7 @@
 "cli.record.test.packets" = "数据包捕获文件，即 “ojd controller capture --json” 输出的 JSON 行。";
 "cli.record.test.parse_failed" = "%@ 的解析器拒绝了收到的第 %lld 个数据包（%@）。";
 "error.E2022" = "记录的解析器根据已捕获报告生成的状态与期望状态不同。请查看命令列出的字段。";
+"error.E2023" = "此控制器无法在原生和虚拟之间切换：其协议系列使用原始 USB，或 macOS 不原生支持它。消息会说明原因。";
 "cli.record.usb_not_claimed" = "该系列使用原始 USB，USB 扩展无法接管此控制器，因为其产品列表由 Apple 签名。只有在 macOS 允许时，OJD 才能通过直接 USB 访问使用它。";
 "cli.record.usb_only_switch2" = "仅限 USB：要通过低功耗蓝牙连接控制器，请将 bluetoothLE.vibrationCharacteristic 添加到此 Switch 2 记录。";
 "cli.record.validate.abstract" = "检查控制器记录，但不安装。";

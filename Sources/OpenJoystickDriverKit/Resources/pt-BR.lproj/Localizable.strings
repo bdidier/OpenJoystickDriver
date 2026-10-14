@@ -1379,6 +1379,7 @@
 "cli.record.test.packets" = "Uma captura de pacotes, como as linhas JSON de «ojd controller capture --json».";
 "cli.record.test.parse_failed" = "O analisador de %@ rejeitou o pacote recebido %lld de %@.";
 "error.E2022" = "O estado que o analisador do registro produziu a partir dos relatórios capturados difere do estado esperado. Leia os campos que o comando lista.";
+"error.E2023" = "Este controle não pode alternar entre nativo e virtual: sua família de protocolo usa USB bruto, ou o macOS não o atende nativamente. A mensagem informa o motivo.";
 "cli.record.usb_not_claimed" = "A família usa USB bruto, e a extensão USB não consegue assumir este controle, porque a lista de produtos dela é assinada pela Apple. O OJD só o alcança por acesso USB direto, quando o macOS permite.";
 "cli.record.usb_only_switch2" = "Somente USB: adicione bluetoothLE.vibrationCharacteristic a este registro do Switch 2 para conectar o controle por Bluetooth LE.";
 "cli.record.validate.abstract" = "Verificar um registro de controle sem instalá-lo.";

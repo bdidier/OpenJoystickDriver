@@ -1379,6 +1379,7 @@
 "cli.record.test.packets" = "التقاط حزم، كأسطر JSON الناتجة عن «ojd controller capture --json».";
 "cli.record.test.parse_failed" = "رفض محلل %@ الحزمة المستلمة رقم %lld من %@.";
 "error.E2022" = "الحالة التي أنتجها محلل السجل من التقارير الملتقطة تختلف عن الحالة المتوقعة. اقرأ الحقول التي يسردها الأمر.";
+"error.E2023" = "لا يمكن لوحدة التحكم هذه التبديل بين الوضع الأصلي والافتراضي: عائلة بروتوكولها تستخدم USB الخام، أو أن macOS لا يخدمها أصليًا. توضح الرسالة السبب.";
 "cli.record.usb_not_claimed" = "تستخدم العائلة USB الخام، ولا يمكن لامتداد USB الاستحواذ على وحدة التحكم هذه لأن قائمة منتجاته موقّعة من Apple. لا يصل OJD إليها إلا عبر الوصول المباشر إلى USB، عندما يسمح macOS بذلك.";
 "cli.record.usb_only_switch2" = "USB فقط: أضف bluetoothLE.vibrationCharacteristic إلى سجل Switch 2 هذا لتوصيل وحدة التحكم عبر Bluetooth LE.";
 "cli.record.validate.abstract" = "افحص سجل وحدة تحكم دون تثبيته.";

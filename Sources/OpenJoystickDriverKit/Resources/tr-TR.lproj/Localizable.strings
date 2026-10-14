@@ -1379,6 +1379,7 @@
 "cli.record.test.packets" = "“ojd controller capture --json” çıktısının JSON satırları olarak bir paket yakalaması.";
 "cli.record.test.parse_failed" = "%@ ayrıştırıcısı, alınan %lld. paketi (%@) reddetti.";
 "error.E2022" = "Kaydın ayrıştırıcısının yakalanan raporlardan ürettiği durum beklenen durumdan farklı. Komutun listelediği alanları okuyun.";
+"error.E2023" = "Bu kumanda yerel ve sanal arasında geçiş yapamaz: protokol ailesi ham USB kullanıyor ya da macOS onu yerel olarak desteklemiyor. İleti nedenini belirtir.";
 "cli.record.usb_not_claimed" = "Bu aile ham USB kullanır ve ürün listesi Apple tarafından imzalandığı için USB uzantısı bu kontrolcüyü sahiplenemez. OJD ona yalnızca macOS izin verdiğinde doğrudan USB erişimiyle ulaşır.";
 "cli.record.usb_only_switch2" = "Yalnızca USB: Kontrolcüyü Bluetooth LE üzerinden bağlamak için bu Switch 2 kaydına bluetoothLE.vibrationCharacteristic ekleyin.";
 "cli.record.validate.abstract" = "Bir kontrolcü kaydını yüklemeden denetler.";

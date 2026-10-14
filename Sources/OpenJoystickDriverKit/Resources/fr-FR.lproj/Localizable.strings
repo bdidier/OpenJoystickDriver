@@ -1379,6 +1379,7 @@
 "cli.record.test.packets" = "Une capture de paquets, sous forme de lignes JSON de « ojd controller capture --json ».";
 "cli.record.test.parse_failed" = "L’analyseur de %@ a rejeté le paquet reçu %lld de %@.";
 "error.E2022" = "L’état que l’analyseur de la fiche a produit à partir des rapports capturés diffère de l’état attendu. Lisez les champs que la commande liste.";
+"error.E2023" = "Cette manette ne peut pas basculer entre natif et virtuel : sa famille de protocole utilise l’USB brut, ou macOS ne la prend pas en charge nativement. Le message en indique la raison.";
 "cli.record.usb_not_claimed" = "La famille utilise l’USB brut, et l’extension USB ne peut pas prendre en charge cette manette, car sa liste de produits est signée par Apple. OJD ne l’atteint que par un accès USB direct, lorsque macOS l’autorise.";
 "cli.record.usb_only_switch2" = "USB uniquement. Ajoutez bluetoothLE.vibrationCharacteristic à cette fiche Switch 2 pour connecter la manette en Bluetooth LE.";
 "cli.record.validate.abstract" = "Vérifier une fiche de manette sans l’installer.";

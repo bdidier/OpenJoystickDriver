@@ -1379,6 +1379,7 @@
 "cli.record.test.packets" = "Một nội dung ghi gói tin, dưới dạng các dòng JSON của “ojd controller capture --json”.";
 "cli.record.test.parse_failed" = "Trình phân tích của %@ đã từ chối gói tin đã nhận thứ %lld của %@.";
 "error.E2022" = "Trạng thái mà trình phân tích của bản ghi tạo ra từ các báo cáo đã ghi khác với trạng thái mong đợi. Hãy đọc các trường mà lệnh liệt kê.";
+"error.E2023" = "Tay cầm này không thể chuyển giữa gốc và ảo: họ giao thức của nó dùng USB thô, hoặc macOS không hỗ trợ nó một cách gốc. Thông báo nêu lý do.";
 "cli.record.usb_not_claimed" = "Họ thiết bị này dùng USB thô, và phần mở rộng USB không thể chiếm bộ điều khiển này, vì danh sách sản phẩm của nó do Apple ký. OJD chỉ truy cập được nó qua truy cập USB trực tiếp, khi macOS cho phép.";
 "cli.record.usb_only_switch2" = "Chỉ USB: thêm bluetoothLE.vibrationCharacteristic vào bản ghi Switch 2 này để kết nối bộ điều khiển qua Bluetooth LE.";
 "cli.record.validate.abstract" = "Kiểm tra một bản ghi bộ điều khiển mà không cài đặt.";
