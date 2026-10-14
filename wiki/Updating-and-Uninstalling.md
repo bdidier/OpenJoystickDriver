@@ -41,9 +41,9 @@ An update check does not find tester builds. The maintainer sends them directly.
 ### Check For Updates
 
 1. Open OJD.
-1. Open **Settings**.
-1. In **Updates**, click **Check Now**.
-1. If the result is **Update available**, click **View Update**.
+2. Open **Settings**.
+3. In **Updates**, click **Check Now**.
+4. If the result is **Update available**, click **View Update**.
 
 To check from the terminal, run the following command. Add `--prerelease` to include prerelease versions.
 
@@ -54,9 +54,9 @@ ojd update check
 ### Install a New Version
 
 1. Quit OJD.
-1. Open the new DMG.
-1. Drag **OpenJoystickDriver** to **Applications**. Replace the old app when macOS asks.
-1. Open OJD.
+2. Open the new DMG.
+3. Drag **OpenJoystickDriver** to **Applications**. Replace the old app when macOS asks.
+4. Open OJD.
 
 Your profiles stay in place because they are stored outside the app.
 
@@ -83,14 +83,14 @@ Removing the app alone leaves a login item, privacy entries, a system extension,
    ojd setting set launch-at-login false
    ```
 
-1. If you approved the OJD driver extension, remove it. In **Overview**, on the **Xbox USB Driver** card, click **Uninstall**. Or run the following command.
+2. If you approved the OJD driver extension, remove it. In **Overview**, on the **Xbox USB Driver** card, click **Uninstall**. Or run the following command.
 
    ```shell
    ojd extension deactivate
    ```
 
-1. Quit OJD from the menu bar item.
-1. Move **OpenJoystickDriver** from **Applications** to the Trash.
+3. Quit OJD from the menu bar item.
+4. Move **OpenJoystickDriver** from **Applications** to the Trash.
 
 Both commands work only from the copy in `/Applications`.
 
@@ -111,14 +111,14 @@ Each profile is a file in `Profiles/`, and `ActiveProfiles.json` lists the activ
 ### Remove the Data
 
 1. Remove the folder `~/Library/Application Support/OpenJoystickDriver`.
-1. Remove the folder `~/Library/Logs/OpenJoystickDriver`.
-1. Remove the settings. Run the following command.
+2. Remove the folder `~/Library/Logs/OpenJoystickDriver`.
+3. Remove the settings. Run the following command.
 
    ```shell
    defaults delete com.openjoystickdriver
    ```
 
-1. In **System Settings** > **Privacy & Security**, remove **OpenJoystickDriver** from **Input Monitoring** and **Accessibility**. Select the entry and click the minus button.
+4. In **System Settings** > **Privacy & Security**, remove **OpenJoystickDriver** from **Input Monitoring** and **Accessibility**. Select the entry and click the minus button.
 
 > [!NOTE]
 > Export the profiles you want to keep before you remove the data. For more information, see [Importing and exporting profiles](Remapping-Profiles.md).
