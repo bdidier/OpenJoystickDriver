@@ -36,7 +36,7 @@ struct ControllerOwnershipRequestsTests {
 
   private static func loadedOwnership(in directory: URL) -> ControllerOwnership? {
     ControllerRecordSet.load(userDirectory: directory)
-      .records[ControllerIdentity(vendorID: 0x2C22, productID: 0x2000)]?.ownership
+      .records[ControllerModelID(vendorID: 0x2C22, productID: 0x2000)]?.ownership
   }
 
   @Test

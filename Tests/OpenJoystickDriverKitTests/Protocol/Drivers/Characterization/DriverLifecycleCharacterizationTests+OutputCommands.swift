@@ -72,9 +72,9 @@ extension DriverLifecycleCharacterizationTests {
 
   /// The representative all-channel request to each Joy-Con side, bound through the catalog.
   func joyConSideLines() throws -> [String] {
-    try [("left", Self.identifier(0x057E, 0x2006)), ("right", Self.identifier(0x057E, 0x2007))]
-      .flatMap { side, identifier in
-        let driver = try catalogParser(identifier, host: .bluetoothClassic, registry: Self.registry)
+    try [("left", Self.model(0x057E, 0x2006)), ("right", Self.model(0x057E, 0x2007))]
+      .flatMap { side, model in
+        let driver = try catalogParser(model, host: .bluetoothClassic, registry: Self.registry)
         let motors = names(driver.outputCapabilities.rumbleMotors)
         return rumbleLines(
           driver,

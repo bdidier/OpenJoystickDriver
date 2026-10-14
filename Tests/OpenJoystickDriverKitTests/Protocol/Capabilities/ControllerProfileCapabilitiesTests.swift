@@ -7,13 +7,13 @@ struct ControllerProfileCapabilitiesTests {
   func exactCatalogLookupDistinguishesKnownAndUnknownControllers() {
     let registry = ProtocolDriverRegistry()
     let dualShock4 = registry.profileCapabilities(
-      for: DeviceIdentifier(vendorID: 0x054C, productID: 0x05C4)
+      for: ControllerModelID(vendorID: 0x054C, productID: 0x05C4)
     )
 
     #expect(dualShock4?.physicalInput.motion == true)
     #expect(dualShock4?.physicalInput.touchContactCount == 2)
     #expect(
-      registry.profileCapabilities(for: DeviceIdentifier(vendorID: 0xFFFF, productID: 0xFFFF))
+      registry.profileCapabilities(for: ControllerModelID(vendorID: 0xFFFF, productID: 0xFFFF))
         == nil
     )
   }

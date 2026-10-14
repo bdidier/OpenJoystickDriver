@@ -8,18 +8,18 @@ struct SteamControllerDriverTests {
   @Test
   func testSteamControllerProfilesExposeOperationalFlags() throws {
     let registry = ProtocolDriverRegistry()
-    let identifiers = [
-      DeviceIdentifier(vendorID: 10462, productID: 4354),
-      DeviceIdentifier(vendorID: 10462, productID: 4418),
+    let models = [
+      ControllerModelID(vendorID: 10462, productID: 4354),
+      ControllerModelID(vendorID: 10462, productID: 4418),
     ]
 
-    let wired = try #require(registry.record(for: identifiers[0]))
+    let wired = try #require(registry.record(for: models[0]))
     #expect(
       wired.physicalProtocolID == .valveSteamController && wired.physicalProtocolVariant == .wired
     )
     #expect(wired.quirks.isEmpty)
 
-    let wireless = try #require(registry.record(for: identifiers[1]))
+    let wireless = try #require(registry.record(for: models[1]))
     #expect(
       wireless.physicalProtocolID == .valveSteamController
         && wireless.physicalProtocolVariant == .dongle
@@ -29,7 +29,7 @@ struct SteamControllerDriverTests {
 
   @Test
   func testSteamControllerReportParsesPrimaryControls() throws {
-    let parser = try catalogParser(DeviceIdentifier(vendorID: 10462, productID: 4354))
+    let parser = try catalogParser(ControllerModelID(vendorID: 10462, productID: 4354))
     _ = try parser.parseReport(ProtocolPacketFixtures.Steam.inputReport())
 
     let events = try parser.parseReport(

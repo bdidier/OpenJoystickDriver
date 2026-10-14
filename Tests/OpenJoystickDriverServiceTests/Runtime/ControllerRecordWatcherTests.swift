@@ -28,7 +28,7 @@ struct ControllerRecordWatcherTests {
       directory: directory,
       activate: { records in
         applied.append(records.userFiles.count)
-        return [ControllerIdentity(vendorID: 0x1234, productID: 0xabcd)]
+        return [ControllerModelID(vendorID: 0x1234, productID: 0xabcd)]
       },
       onChange: { _ in changes += 1 }
     )
@@ -63,7 +63,7 @@ struct ControllerRecordWatcherTests {
       directory: directory,
       activate: { _ in
         applied += 1
-        return [ControllerIdentity(vendorID: 0x1234, productID: 0xabcd)]
+        return [ControllerModelID(vendorID: 0x1234, productID: 0xabcd)]
       },
       onChange: { _ in changes += 1 }
     )
@@ -93,7 +93,7 @@ struct ControllerRecordWatcherTests {
       directory: directory,
       activate: { records in
         applied.append(records.userFiles.count)
-        return [ControllerIdentity(vendorID: 0x1234, productID: 0xabcd)]
+        return [ControllerModelID(vendorID: 0x1234, productID: 0xabcd)]
       },
       onChange: { _ in }
     )
@@ -131,7 +131,7 @@ struct ControllerRecordWatcherTests {
       activate: { records in
         // The unreadable directory is a problem entry in `userFiles`; count only valid records.
         applied.append(records.userFiles.count - records.problems.count)
-        return [ControllerIdentity(vendorID: 0x1234, productID: 0xabcd)]
+        return [ControllerModelID(vendorID: 0x1234, productID: 0xabcd)]
       },
       onChange: { _ in changes += 1 }
     )

@@ -15,7 +15,7 @@ extension ProtocolDriverRegistry {
   /// out, because it terminates every open interface of the device.
   ///
   /// Every other family, and a receiver whose claim observed no qualifying interface, runs the
-  /// claim itself as its one role, which ``makeDriver(for:identifier:claimed:slotOrdinal:)``
+  /// claim itself as its one role, which ``makeDriver(for:model:claimed:slotOrdinal:)``
   /// validates as before. So does a receiver whose catalog row pins its interface or endpoints:
   /// a pin names one interface, so it stays authoritative as that single role and is validated
   /// against the observed interface like any pinned claim.

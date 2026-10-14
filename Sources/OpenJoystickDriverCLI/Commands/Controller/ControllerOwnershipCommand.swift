@@ -58,10 +58,10 @@ struct ControllerOwnershipCommand: AsyncParsableCommand {
     try await global.run {
       let selector = controller
       let device = try await ServiceConnection.request { try await selector.resolve(with: $0) }
-      let identity = ControllerIdentity(vendorID: device.vendorID, productID: device.productID)
+      let model = ControllerModelID(vendorID: device.vendorID, productID: device.productID)
       let records = RecordStore.load()
-      try Self.checkSupported(device, record: records.records[identity])
-      let change = try Self.change(identity, to: choice.ownership, records: records, device: device)
+      try Self.checkSupported(device, record: records.records[model])
+      let change = try Self.change(model, to: choice.ownership, records: records, device: device)
       if !dryRun { try Self.write(change) }
       let result = Result(
         controller: device.runtimeIdentifier,
@@ -121,14 +121,14 @@ struct ControllerOwnershipCommand: AsyncParsableCommand {
   }
 
   private static func change(
-    _ identity: ControllerIdentity,
+    _ model: ControllerModelID,
     to ownership: ControllerOwnership,
     records: ControllerRecordSet,
     device: ApplicationServiceDeviceDescription
   ) throws -> ControllerOwnershipWriter.Change {
     do {
       return try ControllerOwnershipWriter.change(
-        identity,
+        model,
         to: ownership,
         records: records,
         directory: RecordStore.directory
@@ -150,7 +150,7 @@ struct ControllerOwnershipCommand: AsyncParsableCommand {
           CLILocalized.format(
             "cli.controller.ownership.invalid",
             RecordStore.directory.appendingPathComponent(
-              ControllerRecordSet.fileName(for: identity)
+              ControllerRecordSet.fileName(for: model)
             ).path,
             problem
           )

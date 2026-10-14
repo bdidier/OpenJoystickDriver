@@ -4,7 +4,7 @@ import Testing
 
 struct InterfaceSignatureBindingTests {
   private let registry = ProtocolDriverRegistry()
-  private let uncatalogued = DeviceIdentifier(vendorID: 0x1234, productID: 0x5678)
+  private let uncatalogued = ControllerModelID(vendorID: 0x1234, productID: 0x5678)
 
   @Test(arguments: [
     (UInt8(0x58), UInt8(0x42), UInt8(0x00), "xbox.xid:gamepad"),
@@ -36,7 +36,7 @@ struct InterfaceSignatureBindingTests {
     )
     let driver = try registry.makeDriver(
       for: binding,
-      identifier: uncatalogued,
+      model: uncatalogued,
       claimed: try descriptorClaim(for: binding, interfaceClass, subclass, interfaceProtocol)
     ).get()
     switch binding.protocolID {
@@ -63,7 +63,7 @@ struct InterfaceSignatureBindingTests {
     #expect(
       try registry.makeDriver(
         for: binding,
-        identifier: uncatalogued,
+        model: uncatalogued,
         claimed: try descriptorClaim(for: binding, 0xFF, 0x47, 0xD0)
       ).get() is GIPDriver
     )
@@ -139,7 +139,7 @@ struct InterfaceSignatureBindingTests {
   func gipSignatureRunsWithTheProfileOfAFamilyOnlyGIPRow() throws {
     let binding = try bound(observed(interfaces: [registryInterface(0, 0xFF, 0x47, 0xD0)]))
     // 3537:1010 (GameSir G7 SE) names only the GIP family and set-configuration-before-claim.
-    let g7SE = registry.record(for: DeviceIdentifier(vendorID: 0x3537, productID: 0x1010))
+    let g7SE = registry.record(for: ControllerModelID(vendorID: 0x3537, productID: 0x1010))
     #expect(g7SE?.recordID == "3537-1010")
     #expect(registry.runtimeProfile(for: binding) == g7SE?.withRecordID(nil))
     let xusb = try bound(observed(interfaces: [registryInterface(0, 0xFF, 0x5D, 0x01)]))
@@ -165,7 +165,7 @@ struct InterfaceSignatureBindingTests {
       )
     }
     #expect(
-      registry.makeDriver(for: binding, identifier: uncatalogued, claimed: nil).failureReason
+      registry.makeDriver(for: binding, model: uncatalogued, claimed: nil).failureReason
         == .interfaceContractMismatch
     )
     #expect(violation(nil) == .interfaceContractMismatch)
@@ -201,7 +201,7 @@ struct InterfaceSignatureBindingTests {
   func catalogEndpointPinsStayAuthoritativeOverTheObservedDescriptor() throws {
     // 1532:0A29 pins 129/1; a descriptor naming 0x82/0x02 does not override it.
     let record = try #require(
-      registry.record(for: DeviceIdentifier(vendorID: 0x1532, productID: 0x0A29))
+      registry.record(for: ControllerModelID(vendorID: 0x1532, productID: 0x0A29))
     )
     let observedDefaults = PhysicalDevice(interfaces: [
       PhysicalInterfaceSignature(
@@ -223,8 +223,8 @@ struct InterfaceSignatureBindingTests {
 
   private func observed(interfaces: [PhysicalInterfaceSignature]) -> PhysicalDevice {
     PhysicalDevice(
-      vendorID: uncatalogued.controllerIdentity.vendorID,
-      productID: uncatalogued.controllerIdentity.productID,
+      vendorID: uncatalogued.vendorID,
+      productID: uncatalogued.productID,
       configurationValue: 1,
       interfaces: interfaces
     )
@@ -235,7 +235,7 @@ struct InterfaceSignatureBindingTests {
     of binding: ProtocolBinding,
     _ claimed: USBTransportResolution
   ) -> ProtocolBindingReason? {
-    registry.makeDriver(for: binding, identifier: uncatalogued, claimed: claimed).failureReason
+    registry.makeDriver(for: binding, model: uncatalogued, claimed: claimed).failureReason
   }
 
   /// A claim from the device's own configuration descriptor: the bound interface with the

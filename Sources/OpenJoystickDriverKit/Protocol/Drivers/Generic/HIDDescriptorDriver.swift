@@ -37,7 +37,7 @@ public final class HIDDescriptorDriver: PhysicalProtocolDriver {
     var zRzIsRightStick: Bool { self == .wr007 || self == .zRzBrakeLeft || self == .dragonRise }
   }
 
-  private let identifier: DeviceIdentifier
+  private let model: ControllerModelID
   private var state = ControllerState.neutral
   /// Stick axes as decoded. HID Generic Desktop Y and Ry (and a Z/Rz layout's right-stick Rz) put
   /// the logical minimum up, so the decoded value is already Y down. An element carries one axis,
@@ -51,7 +51,7 @@ public final class HIDDescriptorDriver: PhysicalProtocolDriver {
   /// Share over Bluetooth.
   private let hasShareButton: Bool
 
-  /// Creates a new HIDDescriptorDriver for the given device identifier.
+  /// Creates a new HIDDescriptorDriver for a controller of `model`.
   ///
   /// `reportDescriptor` is the bound interface's HID report descriptor, when observed. `quirks`
   /// are the record's layout quirks; a record selects at most one. Without one, a descriptor with
@@ -61,11 +61,11 @@ public final class HIDDescriptorDriver: PhysicalProtocolDriver {
   /// `docs/descriptors/xb1s_linux.md`, `xbxs.md`) and the GameSir G7 SE
   /// (`incompat/gamesir_g7_se.md`) have that shape.
   public init(
-    identifier: DeviceIdentifier,
+    model: ControllerModelID,
     reportDescriptor: Data? = nil,
     quirks: [ControllerQuirk] = []
   ) {
-    self.identifier = identifier
+    self.model = model
     let fields =
       reportDescriptor.flatMap { HIDReportDescriptorParser.parse(descriptor: Array($0))?.fields }
       ?? []
@@ -84,7 +84,7 @@ public final class HIDDescriptorDriver: PhysicalProtocolDriver {
     } else {
       axisLayout = .standard
     }
-    print("[HIDDescriptorDriver] Unrecognized controller \(identifier), using HID descriptors")
+    print("[HIDDescriptorDriver] Unrecognized controller \(model), using HID descriptors")
   }
 
   private static func usage(_ page: UInt32, _ usage: UInt32) -> HIDUsage {

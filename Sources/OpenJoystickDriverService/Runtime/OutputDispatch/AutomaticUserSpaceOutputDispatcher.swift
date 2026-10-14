@@ -364,7 +364,7 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
   /// The values the matching controller's virtual gamepad last reported; nil when no user-space
   /// virtual gamepad publishes it.
   func virtualOutputState(
-    matching model: DeviceIdentifier,
+    matching model: ControllerModelID,
     runtimeIdentifier: String?
   ) async -> VirtualGamepadState? {
     guard

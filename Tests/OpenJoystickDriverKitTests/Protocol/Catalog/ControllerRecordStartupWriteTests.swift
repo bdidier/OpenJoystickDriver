@@ -93,7 +93,7 @@ struct ControllerRecordStartupWriteTests {
   func sixaxisRecordsEnableBluetooth(productID: UInt16) throws {
     let vendorID: UInt16 = productID == 0x0268 ? 0x054C : 0x2563
     let record = try #require(
-      DeviceCatalog().record(for: DeviceIdentifier(vendorID: vendorID, productID: productID))
+      DeviceCatalog().record(for: ControllerModelID(vendorID: vendorID, productID: productID))
     )
     #expect(record.physicalProtocolID == .sonySixaxis)
     #expect(record.startupWrites.map(\.transport) == [.bluetoothClassic])

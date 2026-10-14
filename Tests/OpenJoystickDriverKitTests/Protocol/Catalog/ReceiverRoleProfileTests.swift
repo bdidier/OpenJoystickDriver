@@ -9,7 +9,7 @@ import Testing
 /// captured; 0/2/4/6 with a second triple on 1/3/5/7 only exercises the interface walk.
 struct ReceiverRoleProfileTests {
   private let registry = ProtocolDriverRegistry()
-  private let receiver = DeviceIdentifier(vendorID: 0x045E, productID: 0x0719, locationID: 7)
+  private let receiver = ControllerModelID(vendorID: 0x045E, productID: 0x0719)
 
   @Test
   func eachReceiverInterfaceIsOneSlotInInterfaceOrder() throws {
@@ -26,7 +26,7 @@ struct ReceiverRoleProfileTests {
     for (ordinal, role) in roles.enumerated() {
       let driver = try registry.makeDriver(
         for: binding,
-        identifier: receiver,
+        model: receiver,
         claimed: role,
         slotOrdinal: ordinal
       ).get()
@@ -104,7 +104,7 @@ struct ReceiverRoleProfileTests {
 
     #expect(registry.roleProfiles(for: binding, resolution: pinned) == [pinned])
     #expect(
-      registry.makeDriver(for: binding, identifier: receiver, claimed: pinned).failureReason == nil
+      registry.makeDriver(for: binding, model: receiver, claimed: pinned).failureReason == nil
     )
   }
 

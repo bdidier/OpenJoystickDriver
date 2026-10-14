@@ -67,7 +67,7 @@ struct ControllerOwnershipPickerTests {
 
     let requests = await gateway.ownershipRequests
     #expect(requests.count == 1)
-    #expect(requests.first?.identity == ControllerIdentity(vendorID: 0x3537, productID: 0x100B))
+    #expect(requests.first?.model == ControllerModelID(vendorID: 0x3537, productID: 0x100B))
     #expect(requests.first?.ownership == ownership)
     #expect(viewModel.controllerActionFailures[device.runtimeIdentifier] == nil)
   }

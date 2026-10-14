@@ -7,7 +7,7 @@ import Testing
 /// The status reports the record's ownership of each controller, so the app can offer the
 /// Native / Virtual choice for a model that OJD serves although macOS supports it.
 struct RecordOwnershipReportTests {
-  private static let gameSir = DeviceIdentifier(vendorID: 0x3537, productID: 0x100B)
+  private static let gameSir = ControllerModelID(vendorID: 0x3537, productID: 0x100B)
 
   /// The value `DeviceManager.deviceDescription` reports comes from the catalog that the
   /// bundled, package, and user layers produce, so a user patch shows as `ojd`.

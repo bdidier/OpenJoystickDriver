@@ -22,12 +22,12 @@ private func chillStreamReport(_ bytes: [Int: UInt8] = [:]) -> Data {
   return Data(report)
 }
 
-private let gp100Identifier = DeviceIdentifier(vendorID: 0x2563, productID: 0x0575)
-private let chillStreamIdentifier = DeviceIdentifier(vendorID: 0x046D, productID: 0xCAD1)
+private let gp100Model = ControllerModelID(vendorID: 0x2563, productID: 0x0575)
+private let chillStreamModel = ControllerModelID(vendorID: 0x046D, productID: 0xCAD1)
 
 /// The driver the registry builds from a bundled record.
-private func catalogDriver(_ identifier: DeviceIdentifier) throws -> ReportLayoutDriver {
-  try #require(try catalogParser(identifier) as? ReportLayoutDriver)
+private func catalogDriver(_ model: ControllerModelID) throws -> ReportLayoutDriver {
+  try #require(try catalogParser(model) as? ReportLayoutDriver)
 }
 
 /// A layout decoded from an `input` section.
@@ -40,12 +40,12 @@ struct ReportLayoutDriverTests {
 
   // MARK: - Catalog rows
 
-  @Test(arguments: [gp100Identifier, chillStreamIdentifier])
-  func probeFreePadsBindTheReportLayoutFamily(identifier: DeviceIdentifier) throws {
-    let record = try #require(DeviceCatalog().record(for: identifier))
+  @Test(arguments: [gp100Model, chillStreamModel])
+  func probeFreePadsBindTheReportLayoutFamily(model: ControllerModelID) throws {
+    let record = try #require(DeviceCatalog().record(for: model))
     #expect(record.physicalProtocolID == .hidReportLayout)
     #expect(record.inputLayout != nil)
-    let driver = try catalogDriver(identifier)
+    let driver = try catalogDriver(model)
     #expect(driver.startupFeatureReads().isEmpty)
   }
 
@@ -59,7 +59,7 @@ struct ReportLayoutDriverTests {
       16: .rightShoulder,
     ]
     for (offset, control) in controls {
-      let driver = try catalogDriver(gp100Identifier)
+      let driver = try catalogDriver(gp100Model)
       #expect(
         try driver.parseReport(gp100Report([offset: 0xFF]))?.state == snapshot(.press(control))
       )
@@ -69,7 +69,7 @@ struct ReportLayoutDriverTests {
 
   @Test
   func gp100IgnoresByteZeroAndTheHatNibble() throws {
-    let driver = try catalogDriver(gp100Identifier)
+    let driver = try catalogDriver(gp100Model)
     // PR #42 reads byte 0 as a report ID and byte 2 as unused; neither is verified as input.
     #expect(try driver.parseReport(gp100Report([0: 0xFF, 2: 0x01]))?.state == .neutral)
     #expect(try driver.parseReport(gp100Report([2: 0x00]))?.state == .neutral)
@@ -78,7 +78,7 @@ struct ReportLayoutDriverTests {
 
   @Test
   func gp100IgnoresShortReports() throws {
-    let driver = try catalogDriver(gp100Identifier)
+    let driver = try catalogDriver(gp100Model)
     #expect(try driver.parseReport(Data(gp100Report([11: 0xFF]).prefix(18))) == nil)
   }
 
@@ -90,7 +90,7 @@ struct ReportLayoutDriverTests {
       RumbleIntensities(leftMain: UnipolarValue(byte: 0x40), rightMain: UnipolarValue(byte: 0xC0)),
       duration: .held
     )
-    let driver = try catalogDriver(gp100Identifier)
+    let driver = try catalogDriver(gp100Model)
     let plan = try driver.encode(command)
     #expect(plan.writes.hidOutputs.map(\.reportID) == [0x02])
     #expect(plan.writes.hidOutputs.map(\.bytes) == [[0x02, 0x00, 0xC0, 0x40, 0, 0, 0, 0]])
@@ -106,7 +106,7 @@ struct ReportLayoutDriverTests {
 
   @Test
   func chillStreamMovesHatAndShiftsBytes() throws {
-    let driver = try catalogDriver(chillStreamIdentifier)
+    let driver = try catalogDriver(chillStreamModel)
     #expect(try driver.parseReport(chillStreamReport())?.state == .neutral)
     let event = try driver.parseReport(
       chillStreamReport([0: 0x04, 1: 0x21, 2: 0xFF, 5: 0x00, 12: 0x80, 16: 0xFF])
@@ -127,7 +127,7 @@ struct ReportLayoutDriverTests {
 
   @Test
   func chillStreamHasNoGuideOrDigitalTriggers() throws {
-    let event = try catalogDriver(chillStreamIdentifier).parseReport(
+    let event = try catalogDriver(chillStreamModel).parseReport(
       chillStreamReport([0: 0xC0, 1: 0xF0 | 0x10])
     )
     #expect(event?.state == .neutral)
@@ -135,7 +135,7 @@ struct ReportLayoutDriverTests {
 
   @Test
   func chillStreamHatOfZeroIsIgnoredUntilTheHatMoves() throws {
-    let driver = try catalogDriver(chillStreamIdentifier)
+    let driver = try catalogDriver(chillStreamModel)
     // SDL only decodes the hat when it changes from zero, so a constant 0 never reads as north.
     #expect(try driver.parseReport(chillStreamReport([1: 0x00]))?.state == .neutral)
     #expect(try driver.parseReport(chillStreamReport([1: 0xF0]))?.state == .neutral)
@@ -146,7 +146,7 @@ struct ReportLayoutDriverTests {
 
   @Test
   func chillStreamCenteredHatFallsBackToDpadPressure() throws {
-    let driver = try catalogDriver(chillStreamIdentifier)
+    let driver = try catalogDriver(chillStreamModel)
     // Pressure bytes 6–9 are right, left, up, down.
     #expect(try driver.parseReport(chillStreamReport([8: 0xFF])).contains(.hat(.north)))
     #expect(
@@ -157,7 +157,7 @@ struct ReportLayoutDriverTests {
 
   @Test
   func chillStreamFaceButtonsReadFromBitsOrPressure() throws {
-    let driver = try catalogDriver(chillStreamIdentifier)
+    let driver = try catalogDriver(chillStreamModel)
     #expect(
       try driver.parseReport(chillStreamReport([0: 0x08]))?.state == snapshot(.press(.faceNorth))
     )

@@ -12,18 +12,18 @@ public final class ProtocolDriverRegistry: Sendable {
   public init() {}
 
   /// Exact catalog models whose records declare raw USB access, read when called.
-  public var rawUSBIdentifiers: [DeviceIdentifier] { catalog.rawUSBProfileIdentifiers }
+  public var rawUSBModels: [ControllerModelID] { catalog.rawUSBModels }
 
   /// Exact catalog models whose records declare HID access; they may not advertise
   /// GamePad usage.
-  public var hidIdentifiers: [DeviceIdentifier] { catalog.hidProfileIdentifiers }
+  public var hidModels: [ControllerModelID] { catalog.hidModels }
 
-  /// The exact catalog record for this identity, or nil for an uncatalogued model.
-  public func record(for identifier: DeviceIdentifier) -> DeviceRuntimeProfile? {
-    catalog.record(for: identifier)
+  /// The exact catalog record for this model, or nil for an uncatalogued model.
+  public func record(for model: ControllerModelID) -> DeviceRuntimeProfile? {
+    catalog.record(for: model)
   }
 
-  /// Profile-editor capabilities for an exact catalog identity.
+  /// Profile-editor capabilities for an exact catalog model.
   ///
   /// No device is observed, so a family whose variant follows the host transport is
   /// described by its USB variant; the transport variant does not change capabilities.
@@ -33,9 +33,9 @@ public final class ProtocolDriverRegistry: Sendable {
   /// live device, and a profile also runs where OJD owns output. A connected controller reports
   /// its narrowed outputs, and the profile editor uses those instead.
   public func profileCapabilities(
-    for identifier: DeviceIdentifier
+    for model: ControllerModelID
   ) -> ControllerProfileCapabilities? {
-    guard let record = catalog.record(for: identifier) else { return nil }
+    guard let record = catalog.record(for: model) else { return nil }
     let variant =
       record.physicalProtocolVariant
       ?? (record.physicalProtocolID.variants.contains(.usb) ? .usb : nil)
@@ -44,7 +44,7 @@ public final class ProtocolDriverRegistry: Sendable {
         protocolID: record.physicalProtocolID,
         variant: variant,
         record: record,
-        identifier: identifier,
+        model: model,
         transportProfile: record.transportProfile
       )
     else { return nil }
@@ -111,7 +111,7 @@ public final class ProtocolDriverRegistry: Sendable {
   /// HID interface's report descriptor; only `hid.descriptor` reads it, to choose its layout.
   func makeDriver(
     for binding: ProtocolBinding,
-    identifier: DeviceIdentifier,
+    model: ControllerModelID,
     claimed: USBTransportResolution?,
     slotOrdinal: Int = 0,
     reportDescriptor: Data? = nil
@@ -119,7 +119,7 @@ public final class ProtocolDriverRegistry: Sendable {
     guard let record = runtimeProfile(for: binding) else {
       guard binding.protocolID == .hidDescriptor else { return .failure(.noProtocolMatch) }
       return .success(
-        HIDDescriptorDriver(identifier: identifier, reportDescriptor: reportDescriptor)
+        HIDDescriptorDriver(model: model, reportDescriptor: reportDescriptor)
       )
     }
     var transportProfile = record.transportProfile
@@ -138,7 +138,7 @@ public final class ProtocolDriverRegistry: Sendable {
       protocolID: binding.protocolID,
       variant: binding.variant,
       record: record,
-      identifier: identifier,
+      model: model,
       transportProfile: transportProfile,
       slotOrdinal: slotOrdinal,
       reportDescriptor: reportDescriptor
@@ -147,12 +147,12 @@ public final class ProtocolDriverRegistry: Sendable {
 
   /// Builds the driver for one family, variant and record without checking any observed
   /// interface. Not a runtime path: profile capabilities and record rendering have no device,
-  /// and ``makeDriver(for:identifier:claimed:)`` calls it only after validation.
+  /// and ``makeDriver(for:model:claimed:)`` calls it only after validation.
   static func makeUnobservedDriver(
     protocolID: PhysicalProtocolID,
     variant: PhysicalProtocolVariantID?,
     record: DeviceRuntimeProfile,
-    identifier: DeviceIdentifier,
+    model: ControllerModelID,
     transportProfile: DeviceTransportProfile,
     slotOrdinal: Int = 0,
     reportDescriptor: Data? = nil
@@ -166,7 +166,7 @@ public final class ProtocolDriverRegistry: Sendable {
     case .hidDescriptor:
       return .success(
         HIDDescriptorDriver(
-          identifier: identifier,
+          model: model,
           reportDescriptor: reportDescriptor,
           quirks: record.quirks
         )
@@ -255,7 +255,7 @@ public final class ProtocolDriverRegistry: Sendable {
     case .vendorPS3ThirdParty:
       return .success(
         PS3ThirdPartyDriver(
-          identifier: identifier,
+          model: model,
           rumbleTemplate: record.rumbleTemplate,
           hatFromPressureOnly: record.quirks.contains(.dpadPressure)
         )

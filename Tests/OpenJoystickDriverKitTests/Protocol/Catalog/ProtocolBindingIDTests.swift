@@ -32,13 +32,13 @@ struct ProtocolBindingIDTests {
   func rawUSBRowsReportTheirResolvedBinding() throws {
     let registry = ProtocolDriverRegistry()
     let gip = try #require(
-      registry.record(for: DeviceIdentifier(vendorID: 0x045E, productID: 0x02EA))
+      registry.record(for: ControllerModelID(vendorID: 0x045E, productID: 0x02EA))
     )
     let receiver = try #require(
-      registry.record(for: DeviceIdentifier(vendorID: 0x045E, productID: 0x0719))
+      registry.record(for: ControllerModelID(vendorID: 0x045E, productID: 0x0719))
     )
     let dualSense = try #require(
-      registry.record(for: DeviceIdentifier(vendorID: 0x054C, productID: 0x0CE6))
+      registry.record(for: ControllerModelID(vendorID: 0x054C, productID: 0x0CE6))
     )
     #expect(gip.rawUSBBinding?.rawValue == "xbox.gip:usb")
     #expect(receiver.rawUSBBinding?.rawValue == "xbox.xusb:receiver")

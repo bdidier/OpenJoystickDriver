@@ -42,7 +42,7 @@ extension DeviceManager {
       guard
         case .success(let driver) = protocolDriverRegistry.makeDriver(
           for: binding,
-          identifier: role.identifier,
+          model: role.identifier.model,
           claimed: role.resolution,
           slotOrdinal: role.slotOrdinal
         )

@@ -7,8 +7,8 @@ import Testing
 struct SixaxisDriverTests {
   @Test
   func testDS3ProfileIsExperimentalAndUnverified() throws {
-    let identifier = DeviceIdentifier(vendorID: 1356, productID: 616)
-    let profile = try #require(ProtocolDriverRegistry().record(for: identifier))
+    let model = ControllerModelID(vendorID: 1356, productID: 616)
+    let profile = try #require(ProtocolDriverRegistry().record(for: model))
 
     #expect(profile.physicalProtocolID == .sonySixaxis && profile.physicalProtocolVariant == nil)
     #expect(profile.quirks.isEmpty)

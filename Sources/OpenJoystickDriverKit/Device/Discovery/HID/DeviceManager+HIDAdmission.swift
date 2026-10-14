@@ -117,7 +117,7 @@ extension DeviceManager {
       }?.hidLayout?.reportDescriptor
       switch protocolDriverRegistry.makeDriver(
         for: bound,
-        identifier: identifier,
+        model: identifier.model,
         claimed: nil,
         reportDescriptor: reportDescriptor
       ) {

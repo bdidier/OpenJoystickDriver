@@ -81,7 +81,7 @@ public enum USBControllerScanner {
     registry: ProtocolDriverRegistry
   ) -> USBControllerDescription {
     let record = registry.record(
-      for: DeviceIdentifier(vendorID: device.vendorID, productID: device.productID)
+      for: ControllerModelID(vendorID: device.vendorID, productID: device.productID)
     )
     // An uncatalogued model is admitted by its passive facts, and runtime binding classifies
     // exactly those facts, so its classification needs no completeness gate.

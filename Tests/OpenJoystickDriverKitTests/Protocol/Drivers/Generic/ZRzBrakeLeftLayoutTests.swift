@@ -8,16 +8,16 @@ import Testing
 /// (`2DC8:301C`) is assumed to match. The GameSir is not listed by identity; its recorded
 /// descriptor selects the layout.
 struct ZRzBrakeLeftLayoutTests {
-  static let identifiers = [
-    DeviceIdentifier(vendorID: 0x3537, productID: 0x1082),
-    DeviceIdentifier(vendorID: 0x2DC8, productID: 0x301B),
-    DeviceIdentifier(vendorID: 0x2DC8, productID: 0x301C),
+  static let models = [
+    ControllerModelID(vendorID: 0x3537, productID: 0x1082),
+    ControllerModelID(vendorID: 0x2DC8, productID: 0x301B),
+    ControllerModelID(vendorID: 0x2DC8, productID: 0x301C),
   ]
 
-  private func makeParser(_ identifier: DeviceIdentifier) -> HIDDescriptorDriver {
-    let isGameSir = identifier.controllerIdentity.vendorID == 0x3537
+  private func makeParser(_ model: ControllerModelID) -> HIDDescriptorDriver {
+    let isGameSir = model.vendorID == 0x3537
     return HIDDescriptorDriver(
-      identifier: identifier,
+      model: model,
       reportDescriptor: isGameSir ? RecordedHIDDescriptors.gameSirG7SE : nil,
       quirks: isGameSir ? [] : [.zRzBrakeLeft]
     )
@@ -30,9 +30,9 @@ struct ZRzBrakeLeftLayoutTests {
     parser.parse(elementValue: elementValue, receivedAt: MonotonicTimestamp(nanoseconds: 0))
   }
 
-  @Test(arguments: identifiers)
-  func mapsRecordedButtonsAndIgnoresDigitalTriggerBits(identifier: DeviceIdentifier) {
-    let parser = makeParser(identifier)
+  @Test(arguments: models)
+  func mapsRecordedButtonsAndIgnoresDigitalTriggerBits(model: ControllerModelID) {
+    let parser = makeParser(model)
     let buttons: [UInt32: ControlID] = [
       1: .faceSouth, 2: .faceEast, 4: .faceWest, 5: .faceNorth, 7: .leftShoulder, 8: .rightShoulder,
       11: .view, 12: .menu, 13: .guide, 14: .leftStickClick, 15: .rightStickClick,
@@ -47,9 +47,9 @@ struct ZRzBrakeLeftLayoutTests {
     }
   }
 
-  @Test(arguments: identifiers)
-  func zAndRzAreTheRightStick(identifier: DeviceIdentifier) {
-    let parser = makeParser(identifier)
+  @Test(arguments: models)
+  func zAndRzAreTheRightStick(model: ControllerModelID) {
+    let parser = makeParser(model)
     #expect(parse(parser, value(usage: 0x32, integer: 255)).contains(.rightStick(x: 1, y: 0)))
     let down = parse(parser, value(usage: 0x35, integer: 255))
     #expect(down.contains(.rightStick(x: 1, y: 1)))
@@ -57,9 +57,9 @@ struct ZRzBrakeLeftLayoutTests {
     #expect(down?.state.rightTrigger == UnipolarValue(normalized: 0))
   }
 
-  @Test(arguments: identifiers)
-  func brakeIsLeftTriggerAndAcceleratorIsRightTrigger(identifier: DeviceIdentifier) {
-    let parser = makeParser(identifier)
+  @Test(arguments: models)
+  func brakeIsLeftTriggerAndAcceleratorIsRightTrigger(model: ControllerModelID) {
+    let parser = makeParser(model)
     #expect(parse(parser, value(page: 2, usage: 0xC5, integer: 255)).contains(.leftTrigger(1)))
     #expect(
       parse(parser, value(page: 2, usage: 0xC4, integer: 128)).contains(

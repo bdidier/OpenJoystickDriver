@@ -22,8 +22,8 @@ struct ProtocolClassifierTests {
 
   @Test
   func everyCatalogRecordDecodesToAnImplementedFamilyVariant() throws {
-    for identifier in Self.catalog.rawUSBProfileIdentifiers + Self.catalog.hidProfileIdentifiers {
-      let record = try #require(Self.catalog.record(for: identifier))
+    for model in Self.catalog.rawUSBModels + Self.catalog.hidModels {
+      let record = try #require(Self.catalog.record(for: model))
       if let variant = record.physicalProtocolVariant {
         #expect(record.physicalProtocolID.variants.contains(variant))
         // GameSir's `usb` names its vendor USB protocol, not the host transport.
@@ -48,7 +48,7 @@ struct ProtocolClassifierTests {
       #expect(binding.interfaceNumber == 0)
       #expect(binding.rule == .catalogRecord)
       #expect(binding.matchedPredicates == [.catalogIdentity, .catalogAccessPath])
-      #expect(binding.record == Self.catalog.record(for: identifier(0x045E, 0x028E)))
+      #expect(binding.record == Self.catalog.record(for: model(0x045E, 0x028E)))
     }
   }
 
@@ -194,7 +194,7 @@ struct ProtocolClassifierTests {
 
   @Test(arguments: [(0x3537, 0x100A), (0x11C1, 0x5600), (0x2E95, 0x434D)] as [(UInt16, UInt16)])
   func singleContractHIDRecordsNeedNoTransportVariant(identity: (UInt16, UInt16)) throws {
-    let record = try #require(Self.catalog.record(for: identifier(identity.0, identity.1)))
+    let record = try #require(Self.catalog.record(for: model(identity.0, identity.1)))
     #expect(record.physicalProtocolID == .hidDescriptor)
     let generic = try bound(
       classify(
@@ -296,8 +296,8 @@ struct ProtocolClassifierTests {
 
   private struct BindingMissing: Error {}
 
-  private func identifier(_ vendorID: UInt16, _ productID: UInt16) -> DeviceIdentifier {
-    DeviceIdentifier(vendorID: vendorID, productID: productID)
+  private func model(_ vendorID: UInt16, _ productID: UInt16) -> ControllerModelID {
+    ControllerModelID(vendorID: vendorID, productID: productID)
   }
 
   private func device(
@@ -309,7 +309,7 @@ struct ProtocolClassifierTests {
   }
 
   func unknownDevice(_ interfaces: [PhysicalInterfaceSignature]) -> PhysicalDevice {
-    #expect(Self.catalog.record(for: identifier(0x1234, 0x5678)) == nil)
+    #expect(Self.catalog.record(for: model(0x1234, 0x5678)) == nil)
     return device(0x1234, 0x5678, interfaces: interfaces)
   }
 

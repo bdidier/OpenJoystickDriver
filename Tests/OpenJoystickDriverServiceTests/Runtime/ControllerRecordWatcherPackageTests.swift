@@ -45,7 +45,7 @@ struct ControllerRecordWatcherPackageTests {
       directory: root.appendingPathComponent("Controllers", isDirectory: true),
       activate: { records in
         applied.append(records.userFiles.count)
-        return [ControllerIdentity(vendorID: 0x1234, productID: 0xabcd)]
+        return [ControllerModelID(vendorID: 0x1234, productID: 0xabcd)]
       },
       onChange: { _ in changes += 1 }
     )

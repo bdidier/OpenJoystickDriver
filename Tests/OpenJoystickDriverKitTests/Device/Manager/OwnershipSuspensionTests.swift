@@ -7,7 +7,7 @@ import Testing
 /// again; a physical disconnect still ends it. The GameSir connections are synthetic, as in
 /// `OwnershipReapplyTests`.
 struct OwnershipSuspensionTests {
-  private static let model = ControllerIdentity(vendorID: 0x3537, productID: 0x100B)
+  private static let model = ControllerModelID(vendorID: 0x3537, productID: 0x100B)
   private static let locationID: UInt32 = 0x0021_0000
   private static let identifier = DeviceIdentifier(
     vendorID: 0x3537,
@@ -152,7 +152,7 @@ private actor ReplacingHIDBackend: HIDAccessBackend {
     removals.insert(connection.connectionID)
   }
 
-  func reevaluateOwnership(of _: Set<ControllerIdentity>) async -> Set<UUID> {
+  func reevaluateOwnership(of _: Set<ControllerModelID>) async -> Set<UUID> {
     let swapped = snapshots.filter { removals.remove($0.connectionID) == nil }.map {
       replacements.removeValue(forKey: $0.connectionID) ?? $0
     }

@@ -35,8 +35,8 @@ struct ConfigCommandTests {
       }
     )
     return deviceIdentity(
-      vendorID: Int(record.identity.vendorID),
-      productID: Int(record.identity.productID)
+      vendorID: Int(record.model.vendorID),
+      productID: Int(record.model.productID)
     )
   }
 
@@ -148,8 +148,8 @@ struct ConfigCommandTests {
   private func connected(_ record: ControllerRecord) -> ApplicationServiceDeviceDescription {
     .fixture(
       id: "pad-1",
-      vendorID: record.identity.vendorID,
-      productID: record.identity.productID
+      vendorID: record.model.vendorID,
+      productID: record.model.productID
     )
   }
 

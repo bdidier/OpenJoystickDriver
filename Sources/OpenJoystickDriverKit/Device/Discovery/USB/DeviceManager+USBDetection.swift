@@ -161,7 +161,7 @@ extension DeviceManager {
     let changed = pendingRecordReloads
     pendingRecordReloads = []
     let devices = enumeration.acknowledgedDevices.values.filter {
-      changed.contains([$0.vendorID, $0.productID])
+      changed.contains(ControllerModelID(vendorID: $0.vendorID, productID: $0.productID))
     }
     for device in devices {
       let suspended = suspendedControllerIdentities.intersection(
@@ -315,7 +315,7 @@ extension DeviceManager {
       }
       switch protocolDriverRegistry.makeDriver(
         for: binding,
-        identifier: identifier,
+        model: identifier.model,
         claimed: role,
         slotOrdinal: slotOrdinal
       ) {
@@ -362,7 +362,7 @@ extension DeviceManager {
     let identity = PhysicalDevice(vendorID: device.vendorID, productID: device.productID)
     guard
       protocolDriverRegistry.record(
-        for: DeviceIdentifier(vendorID: device.vendorID, productID: device.productID)
+        for: ControllerModelID(vendorID: device.vendorID, productID: device.productID)
       ) == nil, let observed = await provider.physicalDeviceObservation(for: device)
     else { return (protocolDriverRegistry.classify(identity, backend: backend), identity) }
     return (protocolDriverRegistry.classify(observed, backend: backend), observed)

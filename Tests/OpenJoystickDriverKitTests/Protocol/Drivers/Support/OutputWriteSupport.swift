@@ -81,7 +81,7 @@ extension DeviceManager {
     for identifier: DeviceIdentifier,
     runtimeIdentifier: String? = nil
   ) async -> Bool {
-    await sendControllerOutput(command, for: identifier, runtimeIdentifier: runtimeIdentifier)
+    await sendControllerOutput(command, for: identifier.model, runtimeIdentifier: runtimeIdentifier)
       .isDelivered
   }
 

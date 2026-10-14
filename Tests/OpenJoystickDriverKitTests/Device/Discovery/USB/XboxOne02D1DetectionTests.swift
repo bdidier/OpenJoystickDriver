@@ -141,7 +141,7 @@ struct XboxOne02D1DetectionTests {
       productID: Self.productID,
       locationID: Self.parentLocationID
     )
-    let model = USBTransportModel(direct)
+    let model = ControllerModelID(direct)
     #expect(
       OpenJoystickDriverUSBTransportProvider.selectDevices(
         direct: [direct],
@@ -161,7 +161,7 @@ struct XboxOne02D1DetectionTests {
       productID: Self.productID,
       locationID: 42
     )
-    let model = USBTransportModel(direct)
+    let model = ControllerModelID(direct)
     #expect(
       OpenJoystickDriverUSBTransportProvider.selectDevices(
         direct: [direct],

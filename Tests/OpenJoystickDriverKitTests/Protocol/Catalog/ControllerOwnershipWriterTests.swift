@@ -5,10 +5,10 @@ import Testing
 
 struct ControllerOwnershipWriterTests {
   /// A bundled `sony.dualshock4` record, a HID family.
-  private static let bundledHID = ControllerIdentity(vendorID: 0x2C22, productID: 0x2000)
+  private static let bundledHID = ControllerModelID(vendorID: 0x2C22, productID: 0x2000)
   /// A bundled `xbox.gip` record, a raw-USB family.
-  private static let bundledGIP = ControllerIdentity(vendorID: 0x366C, productID: 0x0005)
-  private static let unbundled = ControllerIdentity(vendorID: 0x1234, productID: 0xABCD)
+  private static let bundledGIP = ControllerModelID(vendorID: 0x366C, productID: 0x0005)
+  private static let unbundled = ControllerModelID(vendorID: 0x1234, productID: 0xABCD)
 
   /// Runs `body` with the `Controllers` folder of a temporary application-support folder, whose
   /// `Packages` store is empty unless the test installs a package.
@@ -23,7 +23,7 @@ struct ControllerOwnershipWriterTests {
   }
 
   private static func change(
-    _ identity: ControllerIdentity,
+    _ identity: ControllerModelID,
     to ownership: ControllerOwnership,
     in directory: URL
   ) throws -> ControllerOwnershipWriter.Change {

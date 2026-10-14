@@ -103,14 +103,6 @@ public struct DeviceIdentifier: Hashable, Sendable {
     self.interfaceNumber = interfaceNumber
   }
 
-  /// Returns true when both identifiers have the same vendor and product ID.
-  ///
-  /// Regardless of serial number or location. Used for model-level profile matching.
-  public func modelMatches(_ other: Self) -> Bool {
-    controllerIdentity.vendorID == other.controllerIdentity.vendorID
-      && controllerIdentity.productID == other.controllerIdentity.productID
-  }
-
   /// Opaque, session-stable selector used by the local application-service API.
   ///
   /// Exact selectors are authenticated with a process-local, non-persisted key,

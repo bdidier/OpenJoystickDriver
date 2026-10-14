@@ -49,7 +49,7 @@ public struct ControllerRecordProbePlan: Equatable, Sendable {
       protocolID: profile.physicalProtocolID,
       variant: variant,
       record: profile,
-      identifier: DeviceIdentifier(vendorID: vendorID, productID: productID),
+      model: ControllerModelID(vendorID: vendorID, productID: productID),
       transportProfile: transportProfile
     )
     guard case .success(let driver) = result else {
@@ -76,12 +76,7 @@ public struct ControllerRecordProbePlan: Equatable, Sendable {
     )
     return ProtocolDriverRegistry().makeDriver(
       for: binding,
-      identifier: DeviceIdentifier(
-        vendorID: device.vendorID,
-        productID: device.productID,
-        serialNumber: device.serialNumber,
-        locationID: device.locationID
-      ),
+      model: ControllerModelID(vendorID: device.vendorID, productID: device.productID),
       claimed: claimed
     )
   }

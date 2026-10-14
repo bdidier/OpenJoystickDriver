@@ -25,7 +25,7 @@ public enum Switch2BluetoothLEProfile {
   /// declares in its `bluetoothLE` section; nil for a product without one.
   public static func vibrationUUID(productID: UInt16) -> String? {
     DeviceCatalog.current.withLock { $0 }
-      .record(for: DeviceIdentifier(vendorID: nintendoVendorID, productID: productID))?
+      .record(for: ControllerModelID(vendorID: nintendoVendorID, productID: productID))?
       .bluetoothLEVibrationCharacteristic
   }
 

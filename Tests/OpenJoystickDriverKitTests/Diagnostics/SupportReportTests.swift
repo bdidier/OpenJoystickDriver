@@ -103,7 +103,7 @@ struct SupportReportTests {
         ]
       ),
       records: [
-        OJDControllerRecordIdentity(vendorID: 1_234, productID: 5_678, name: "Test Controller")
+        ControllerModelID(vendorID: 1_234, productID: 5_678)
       ]
     )
     let report = SupportReport(

@@ -7,8 +7,8 @@ import Testing
 struct Switch1DriverTests {
   @Test
   func testSwitchProProfileIsExperimentalAndUnverified() throws {
-    let identifier = DeviceIdentifier(vendorID: 1406, productID: 8201)
-    let profile = try #require(ProtocolDriverRegistry().record(for: identifier))
+    let model = ControllerModelID(vendorID: 1406, productID: 8201)
+    let profile = try #require(ProtocolDriverRegistry().record(for: model))
 
     #expect(
       profile.physicalProtocolID == .nintendoSwitch1 && profile.physicalProtocolVariant == nil

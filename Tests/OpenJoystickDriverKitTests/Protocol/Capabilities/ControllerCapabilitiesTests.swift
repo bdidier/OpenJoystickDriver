@@ -114,8 +114,8 @@ struct ControllerCapabilitiesTests {
     productID: UInt16,
     expected: ControllerCapabilities
   ) throws {
-    let identifier = DeviceIdentifier(vendorID: vendorID, productID: productID)
-    let capabilities = try #require(ProtocolDriverRegistry().profileCapabilities(for: identifier))
+    let model = ControllerModelID(vendorID: vendorID, productID: productID)
+    let capabilities = try #require(ProtocolDriverRegistry().profileCapabilities(for: model))
     #expect(capabilities.physicalInput == expected, "\(name)")
     let data = try JSONEncoder().encode(capabilities.physicalInput)
     #expect(try JSONDecoder().decode(ControllerCapabilities.self, from: data) == expected)

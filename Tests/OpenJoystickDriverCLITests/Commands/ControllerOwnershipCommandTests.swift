@@ -54,7 +54,7 @@ struct ControllerOwnershipCommandTests {
 
   private static func ownership(in directory: Directory) -> ControllerOwnership? {
     ControllerRecordSet.load(userDirectory: directory.controllers)
-      .records[ControllerIdentity(vendorID: 0x2C22, productID: 0x2000)]?.ownership
+      .records[ControllerModelID(vendorID: 0x2C22, productID: 0x2000)]?.ownership
   }
 
   @Test

@@ -74,10 +74,6 @@ extension EquivalenceSnapshotCatalogTests {
 
   private static func driverLines(_ record: ControllerRecord) -> [String] {
     let profile = record.profile
-    let identifier = DeviceIdentifier(
-      vendorID: record.identity.vendorID,
-      productID: record.identity.productID
-    )
     let variant =
       profile.physicalProtocolVariant
       ?? (profile.physicalProtocolID.variants.contains(.usb) ? .usb : nil)
@@ -86,7 +82,7 @@ extension EquivalenceSnapshotCatalogTests {
         protocolID: profile.physicalProtocolID,
         variant: variant,
         record: profile,
-        identifier: identifier,
+        model: record.model,
         transportProfile: profile.transportProfile
       )
     else { return ["driver none"] }

@@ -7,23 +7,23 @@ struct ControllerRecordSetTests {
   private static let recordSchema = ControllerRecordDocument.schemaID
   private static let overrideSchema = ControllerRecordSet.overrideSchemaID
   /// A bundled `xbox.gip` record with no protocol options.
-  private static let bundledGIP = ControllerIdentity(vendorID: 0x366C, productID: 0x0005)
+  private static let bundledGIP = ControllerModelID(vendorID: 0x366C, productID: 0x0005)
   /// A bundled `sony.dualshock4` record, a HID family.
-  private static let bundledHID = ControllerIdentity(vendorID: 0x2C22, productID: 0x2000)
-  private static let unbundled = ControllerIdentity(vendorID: 0x1234, productID: 0xABCD)
+  private static let bundledHID = ControllerModelID(vendorID: 0x2C22, productID: 0x2000)
+  private static let unbundled = ControllerModelID(vendorID: 0x1234, productID: 0xABCD)
 
   private static func json(_ object: [String: Any]) throws -> Data {
     try JSONSerialization.data(withJSONObject: object)
   }
 
-  private static func patch(_ identity: ControllerIdentity, set: [String: Any]) throws -> Data {
+  private static func patch(_ identity: ControllerModelID, set: [String: Any]) throws -> Data {
     try json([
       "$schema": overrideSchema, "operation": "patch", "vendorID": Int(identity.vendorID),
       "productID": Int(identity.productID), "set": set,
     ])
   }
 
-  private static func add(_ identity: ControllerIdentity, family: String) throws -> Data {
+  private static func add(_ identity: ControllerModelID, family: String) throws -> Data {
     try json([
       "$schema": overrideSchema, "operation": "add",
       "record": [
@@ -59,7 +59,7 @@ struct ControllerRecordSetTests {
   /// replaces the block, because every protocol field belongs to its family.
   @Test
   func protocolPatchKeepsUnnamedFieldsOnlyWithinTheFamily() throws {
-    let shareOffsetGIP = ControllerIdentity(vendorID: 0x045E, productID: 0x0B12)
+    let shareOffsetGIP = ControllerModelID(vendorID: 0x045E, productID: 0x0B12)
     let kept = try ControllerRecordSet.validate(
       Self.patch(shareOffsetGIP, set: ["protocol": ["family": "xbox.gip", "keepAlive": false]])
     )
@@ -74,7 +74,7 @@ struct ControllerRecordSetTests {
   /// A same-family patch adds its quirks to the bundled quirks instead of replacing them.
   @Test
   func protocolPatchAddsItsQuirksToTheBundledQuirks() throws {
-    let dualShock4 = ControllerIdentity(vendorID: 0x054C, productID: 0x09CC)
+    let dualShock4 = ControllerModelID(vendorID: 0x054C, productID: 0x09CC)
     let patched = try ControllerRecordSet.validate(
       Self.patch(
         dualShock4,
@@ -99,7 +99,7 @@ struct ControllerRecordSetTests {
   func addForANewIdentityIsAUserRecord() throws {
     let validated = try ControllerRecordSet.validate(Self.add(Self.unbundled, family: "xbox.gip"))
     #expect(validated.operation == .add)
-    #expect(validated.record.identity == Self.unbundled)
+    #expect(validated.record.model == Self.unbundled)
     #expect(validated.record.fieldLayers == ["protocol": .user])
     #expect(validated.record.family == "xbox.gip")
   }
@@ -195,13 +195,52 @@ struct ControllerRecordSetTests {
     #expect(set.records.count == ControllerRecordSet.bundled.records.count + 1)
 
     let catalog = DeviceCatalog(records: set)
-    let identifier = DeviceIdentifier(vendorID: 0x1234, productID: 0xABCD, serialNumber: "S")
-    #expect(catalog.record(for: identifier)?.physicalProtocolID == .xboxGIP)
+    let unit = DeviceIdentifier(vendorID: 0x1234, productID: 0xABCD, serialNumber: "S")
+    #expect(catalog.record(for: unit.model)?.physicalProtocolID == .xboxGIP)
     #expect(
-      catalog.rawUSBProfileIdentifiers.contains(
-        DeviceIdentifier(vendorID: 0x1234, productID: 0xABCD)
+      catalog.rawUSBModels.contains(
+        ControllerModelID(vendorID: 0x1234, productID: 0xABCD)
       )
     )
+  }
+
+  /// The stored-file rule: OJD does not migrate a stored file. A file it can read keeps working;
+  /// a file it cannot read is dropped, reported with its reason, and left as it was.
+  @Test
+  func aStoredFileKeepsWorkingOrIsDroppedUnchanged() throws {
+    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
+      "ojd-stored-records-\(UUID().uuidString)",
+      isDirectory: true
+    )
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: directory) }
+    // A patch as written before `ControllerModelID`: the model is its vendorID and productID.
+    let current = Data(
+      (#"{"$schema":"\#(Self.overrideSchema)","operation":"patch","vendorID":13932,"#
+        + #""productID":5,"set":{"protocol":{"family":"xbox.gip","keepAlive":false}}}"#).utf8
+    )
+    let currentURL = directory.appendingPathComponent("366c-0005.json")
+    try current.write(to: currentURL)
+    // An add in the 0.5.0-beta.4 schema, whose `$schema` has no version directory.
+    let released = Data(
+      (#"{"$schema":"https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/"#
+        + #"Resources/Schemas/controller-override.schema.json","operation":"add","record":{"#
+        + #""$schema":"\#(Self.recordSchema)","vendorID":4660,"productID":43981,"#
+        + #""protocol":{"family":"xbox.gip"}}}"#).utf8
+    )
+    let releasedURL = directory.appendingPathComponent("1234-abcd.json")
+    try released.write(to: releasedURL)
+
+    let set = ControllerRecordSet.load(userDirectory: directory)
+
+    let kept = try #require(set.records[ControllerModelID(vendorID: 0x366C, productID: 0x0005)])
+    #expect(kept.fieldLayers["protocol"] == .user)
+    #expect(kept.profile.gipKeepAlivePolicy == .disabled)
+    #expect(set.records[Self.unbundled] == nil)
+    #expect(set.problems.map(\.url.lastPathComponent) == ["1234-abcd.json"])
+    #expect(set.problems.first?.problem == "$schema must be one of \(Self.overrideSchema)")
+    #expect(try Data(contentsOf: releasedURL) == released)
+    #expect(try Data(contentsOf: currentURL) == current)
   }
 
   @Test

@@ -43,14 +43,14 @@ extension DeviceManager {
   }
 
   public func previewPhysicalColor(
-    for identifier: DeviceIdentifier,
+    for model: ControllerModelID,
     runtimeIdentifier: String? = nil,
     token: UUID,
     red: UInt8,
     green: UInt8,
     blue: UInt8
   ) async -> Bool {
-    guard let key = connectedIdentifier(matching: identifier, runtimeIdentifier: runtimeIdentifier),
+    guard let key = connectedIdentifier(matching: model, runtimeIdentifier: runtimeIdentifier),
       let pipeline = pipelines[key],
       await pipeline.physicalOutputCapabilities().lightingFeatures.contains(.programmableColor)
     else { return false }
@@ -67,11 +67,11 @@ extension DeviceManager {
   }
 
   public func releasePhysicalColorPreview(
-    for identifier: DeviceIdentifier,
+    for model: ControllerModelID,
     runtimeIdentifier: String? = nil,
     token: UUID
   ) async -> Bool {
-    guard let key = connectedIdentifier(matching: identifier, runtimeIdentifier: runtimeIdentifier)
+    guard let key = connectedIdentifier(matching: model, runtimeIdentifier: runtimeIdentifier)
     else { return true }
     physicalOutputOwnership.releaseTemporaryColor(token: token, for: key)
     guard let pipeline = pipelines[key] else { return true }

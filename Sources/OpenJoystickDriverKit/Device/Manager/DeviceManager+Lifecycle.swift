@@ -66,48 +66,43 @@ extension DeviceManager {
     print("[DeviceManager] Suspended for system sleep")
   }
 
-  /// Re-admits each connected controller with a vendor and product ID in `identities`, whose
-  /// records changed, so it binds with the current controller records. Other controllers keep
-  /// their sessions.
+  /// Re-admits each connected controller of a model in `models`, whose records changed, so it
+  /// binds with the current controller records. Other controllers keep their sessions.
   ///
   /// Each affected connection is torn down as for a detach and admitted again, but keeps the
   /// user's suspension. With raw-USB detection running, its next poll does this for USB and HID
   /// connections together, so a controller reachable by both picks its route again, and this
   /// returns once they are torn down. Does nothing while stopped or asleep; a later start or wake
   /// reads the current records anyway.
-  public func reloadControllerRecords(changing identities: Set<ControllerIdentity>) async {
+  public func reloadControllerRecords(changing models: Set<ControllerModelID>) async {
     guard isStarted, !isStopping, !isSystemSleeping else { return }
-    guard seesController(in: identities) else {
+    guard seesController(in: models) else {
       print("[DeviceManager] Controller records changed - no connected controller affected")
       return
     }
     print("[DeviceManager] Controller records changed - re-admitting affected controllers")
-    let changed = Set(identities.map { [$0.vendorID, $0.productID] })
     if usbTransportProvider != nil, !detectionTasks.isEmpty {
-      pendingRecordReloads.formUnion(changed)
+      pendingRecordReloads.formUnion(models)
       await withCheckedContinuation { recordReloadWaiters.append($0) }
     } else {
-      await readmitHIDConnections(changing: changed)
+      await readmitHIDConnections(changing: models)
     }
   }
 
-  /// Tears down and admits again each current HID connection that OJD tracks and whose vendor and
-  /// product ID pair is in `changed`, including one that yielded to raw USB.
+  /// Tears down and admits again each current HID connection that OJD tracks and whose model is in
+  /// `changed`, including one that yielded to raw USB.
   ///
   /// A device whose native pass-through changed with the records is first admitted again by the
   /// HID backend, which seizes or releases it, and is left out here so it is not admitted twice.
-  func readmitHIDConnections(changing changed: Set<[UInt16]>) async {
+  func readmitHIDConnections(changing changed: Set<ControllerModelID>) async {
     let suspendedConnections = Set(
       suspendedControllerIdentities.compactMap { identifier -> UUID? in
-        let identity = identifier.controllerIdentity
-        guard changed.contains([identity.vendorID, identity.productID]) else { return nil }
+        guard changed.contains(identifier.model) else { return nil }
         return deviceInfos[identifier]?.hidConnectionID
       }
     )
     ownershipCycledHIDConnections.formUnion(suspendedConnections)
-    let reevaluated = await hidManager.reevaluateOwnership(
-      of: Set(changed.map { ControllerIdentity(vendorID: $0[0], productID: $0[1]) })
-    )
+    let reevaluated = await hidManager.reevaluateOwnership(of: changed)
     let current = await hidManager.currentConnectionSnapshots()
     // A connection that is still current was not admitted again, so its next disconnect is
     // physical. Without snapshots, no connection can be told apart, so every mark is dropped.
@@ -117,9 +112,8 @@ extension DeviceManager {
     guard let snapshots = current else { return }
     for snapshot in snapshots {
       let connection = snapshot.connection
-      guard !isStopping, let vendorID = connection.physicalDevice.vendorID,
-        let productID = connection.physicalDevice.productID,
-        changed.contains([vendorID, productID]), !reevaluated.contains(connection.connectionID),
+      guard !isStopping, let model = connection.physicalDevice.model, changed.contains(model),
+        !reevaluated.contains(connection.connectionID),
         tracksHIDConnection(connection.connectionID)
       else { continue }
       clearUnboundDevice(.hid(connection.connectionID))
@@ -151,18 +145,20 @@ extension DeviceManager {
       || hidInitializationTasks.values.contains { $0.connection.connectionID == connectionID }
   }
 
-  private func seesController(in identities: Set<ControllerIdentity>) -> Bool {
-    let changed = Set(identities.map { [$0.vendorID, $0.productID] })
-    let seen = pipelines.keys.map(\.controllerIdentity) + deviceInfos.keys.map(\.controllerIdentity)
-    return seen.contains { changed.contains([$0.vendorID, $0.productID]) }
-      || unboundDevices.values.contains { changed.contains([$0.vendorID, $0.productID]) }
+  private func seesController(in models: Set<ControllerModelID>) -> Bool {
+    let seen = pipelines.keys.map(\.model) + deviceInfos.keys.map(\.model)
+    return seen.contains { models.contains($0) }
+      || unboundDevices.values.contains {
+        models.contains(ControllerModelID(vendorID: $0.vendorID, productID: $0.productID))
+      }
       || passThroughDevices.values.contains {
-        changed.contains([$0.description.vendorID, $0.description.productID])
+        models.contains(
+          ControllerModelID(vendorID: $0.description.vendorID, productID: $0.description.productID)
+        )
       }
       || hidInitializationTasks.values.contains {
-        let device = $0.connection.physicalDevice
-        guard let vendorID = device.vendorID, let productID = device.productID else { return true }
-        return changed.contains([vendorID, productID])
+        guard let model = $0.connection.physicalDevice.model else { return true }
+        return models.contains(model)
       }
   }
 

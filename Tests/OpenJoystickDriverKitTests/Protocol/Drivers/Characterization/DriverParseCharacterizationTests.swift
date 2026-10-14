@@ -54,7 +54,7 @@ struct DriverParseCharacterizationTests {
     _ subject: DriverLifecycleCharacterizationTests.Subject
   ) throws -> any PhysicalProtocolDriver {
     try catalogParser(
-      subject.identifier,
+      subject.model,
       host: subject.host,
       registry: DriverLifecycleCharacterizationTests.registry
     )

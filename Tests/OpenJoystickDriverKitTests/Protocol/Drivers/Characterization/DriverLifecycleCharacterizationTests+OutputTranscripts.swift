@@ -57,10 +57,10 @@ extension DriverLifecycleCharacterizationTests {
     await deliver(subject.readyingInput, to: recording, locationID: locationID)
     await stopKeepAlive(recording)
     let counts = await recordedCounts(recording)
-    let identity = subject.identifier.controllerIdentity
+    let model = subject.model
     let result = await recording.manager.suspendController(
-      vendorID: identity.vendorID,
-      productID: identity.productID,
+      vendorID: model.vendorID,
+      productID: model.productID,
       runtimeIdentifier: nil
     )
     let steps = await recordedSteps(recording, since: counts)
@@ -71,7 +71,7 @@ extension DriverLifecycleCharacterizationTests {
 
   /// A never-seized native pad on USB, recorded like a catalog controller.
   func startNativeController(
-    _ identifier: DeviceIdentifier,
+    _ model: ControllerModelID,
     locationID: UInt32
   ) async -> HIDStartupRecording {
     let backend = ScriptedHIDAccessBackend()
@@ -79,8 +79,8 @@ extension DriverLifecycleCharacterizationTests {
     await backend.enableFeatureReports()
     let connection = HIDDeviceConnection(
       physicalDevice: PhysicalDevice(
-        vendorID: identifier.controllerIdentity.vendorID,
-        productID: identifier.controllerIdentity.productID,
+        vendorID: model.vendorID,
+        productID: model.productID,
         productName: "Native controller",
         transportProperty: "USB",
         physicalLocationIdentifier: locationID,
@@ -115,7 +115,7 @@ extension DriverLifecycleCharacterizationTests {
 
   /// Native Sixaxis: rumble, a stop-rumble, then teardown, which neutralizes and deactivates.
   func nativeSixaxisOutputSteps() async throws -> [String] {
-    let recording = await startNativeController(Self.identifier(0x054C, 0x0268), locationID: 310)
+    let recording = await startNativeController(Self.model(0x054C, 0x0268), locationID: 310)
     let identifier = try await connectedIdentifier(recording)
     var lines = [await capabilityLine(recording)]
     var counts = await recordedCounts(recording)
@@ -138,7 +138,7 @@ extension DriverLifecycleCharacterizationTests {
 
   /// Native DualShock 4: every manual and mapping output request, then teardown.
   func nativeDualShock4OutputSteps() async throws -> [String] {
-    let recording = await startNativeController(Self.identifier(0x054C, 0x09CC), locationID: 311)
+    let recording = await startNativeController(Self.model(0x054C, 0x09CC), locationID: 311)
     let identifier = try await connectedIdentifier(recording)
     let manager = recording.manager
     let counts = await recordedCounts(recording)

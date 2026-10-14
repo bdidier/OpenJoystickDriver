@@ -46,11 +46,7 @@ struct RecordListCommand: AsyncParsableCommand {
   func run() async throws {
     try await global.run {
       let set = bundled ? ControllerRecordSet.bundled : RecordStore.load()
-      let records = set.records.values.sorted {
-        ($0.identity.vendorID, $0.identity.productID) < (
-          $1.identity.vendorID, $1.identity.productID
-        )
-      }.map(RecordEntry.init)
+      let records = set.records.values.sorted { $0.model < $1.model }.map(RecordEntry.init)
       switch CLIContext.current.format {
       case .json:
         try CLIOutput.json(CLIList(items: records))
@@ -95,7 +91,7 @@ struct RecordShowCommand: AsyncParsableCommand {
       valueName: "VVVV:PPPP"
     )
   )
-  var identity: RecordIdentity
+  var model: ControllerModelID
 
   @OptionGroup(visibility: GlobalOptions.subcommandVisibility)
   var global: GlobalOptions
@@ -103,13 +99,13 @@ struct RecordShowCommand: AsyncParsableCommand {
   func run() async throws {
     try await global.run {
       let set = RecordStore.load()
-      RecordStore.warn(set.problems.filter { $0.identity == identity.identity })
-      guard let record = set.records[identity.identity] else {
+      RecordStore.warn(set.problems.filter { $0.model == model })
+      guard let record = set.records[model] else {
         throw CLIFailure(
           .notFound,
           CLILocalized.format(
             "cli.record.show.not_found",
-            identity.text
+            model.description
           )
         )
       }
@@ -118,7 +114,7 @@ struct RecordShowCommand: AsyncParsableCommand {
       case .json:
         try CLIOutput.json(
           Result(
-            identity: identity.text,
+            identity: model.description,
             family: record.family,
             layer: record.layer.rawValue,
             file: record.file?.path,
@@ -131,7 +127,7 @@ struct RecordShowCommand: AsyncParsableCommand {
       case .plain: CLIOutput.plain(fields.sorted { $0.key < $1.key }.map { [$0.key, $0.value] })
       case .human:
         let file = record.file.map { " (\($0.path))" } ?? ""
-        CLIOutput.stdout("\(identity.text)  \(record.family)  \(record.layer.rawValue)\(file)")
+        CLIOutput.stdout("\(model.description)  \(record.family)  \(record.layer.rawValue)\(file)")
         if let note = RecordValidation.bluetoothLENote(record) { CLIOutput.stdout(note) }
         let width = fields.keys.map(\.count).max() ?? 0
         for (field, layer) in fields.sorted(by: { $0.key < $1.key }) {

@@ -8,58 +8,58 @@ struct ProtocolDriverRegistryTests {
 
   @Test
   func everyRawUSBRowBindsItsFamilyParserOnBothRawBackends() throws {
-    #expect(!registry.rawUSBIdentifiers.isEmpty)
-    for identifier in registry.rawUSBIdentifiers {
-      let record = try #require(registry.record(for: identifier))
+    #expect(!registry.rawUSBModels.isEmpty)
+    for model in registry.rawUSBModels {
+      let record = try #require(registry.record(for: model))
       for backend in [DeviceAccessBackend.ioUSBHost, .usbDriverKit] {
-        let binding = try bound(identityOnly(identifier), backend: backend)
-        #expect(binding.protocolID == record.physicalProtocolID, "\(identifier)")
+        let binding = try bound(identityOnly(model), backend: backend)
+        #expect(binding.protocolID == record.physicalProtocolID, "\(model)")
         let driver = try registry.makeDriver(
           for: binding,
-          identifier: identifier,
+          model: model,
           claimed: USBTransportResolution(profile: record.transportProfile)
         ).get()
-        #expect(Self.driver(driver, belongsTo: binding.protocolID), "\(identifier)")
+        #expect(Self.driver(driver, belongsTo: binding.protocolID), "\(model)")
       }
     }
   }
 
   @Test
   func rawUSBIdentityFactsClassifyLikeFullInterfaceFacts() throws {
-    for identifier in registry.rawUSBIdentifiers {
+    for model in registry.rawUSBModels {
       let full = PhysicalDevice(
-        vendorID: identifier.controllerIdentity.vendorID,
-        productID: identifier.controllerIdentity.productID,
+        vendorID: model.vendorID,
+        productID: model.productID,
         interfaces: [PhysicalInterfaceSignature(accessBackend: .ioUSBHost)]
       )
       #expect(
-        registry.classify(identityOnly(identifier), backend: .ioUSBHost)
+        registry.classify(identityOnly(model), backend: .ioUSBHost)
           == registry.classify(full, backend: .ioUSBHost),
-        "\(identifier)"
+        "\(model)"
       )
     }
   }
 
   @Test
   func everyHIDRowBindsItsFamilyParserOverItsDefaultHost() throws {
-    #expect(!registry.hidIdentifiers.isEmpty)
-    for identifier in registry.hidIdentifiers {
-      let record = try #require(registry.record(for: identifier))
+    #expect(!registry.hidModels.isEmpty)
+    for model in registry.hidModels {
+      let record = try #require(registry.record(for: model))
       let binding = try bound(
-        hidDevice(identifier, gamepadHIDInterface(host: defaultHost(of: record)))
+        hidDevice(model, gamepadHIDInterface(host: defaultHost(of: record)))
       )
-      #expect(binding.protocolID == record.physicalProtocolID, "\(identifier)")
-      let driver = try registry.makeDriver(for: binding, identifier: identifier, claimed: nil).get()
-      #expect(Self.driver(driver, belongsTo: binding.protocolID), "\(identifier)")
+      #expect(binding.protocolID == record.physicalProtocolID, "\(model)")
+      let driver = try registry.makeDriver(for: binding, model: model, claimed: nil).get()
+      #expect(Self.driver(driver, belongsTo: binding.protocolID), "\(model)")
     }
   }
 
   @Test(arguments: [(0x054C, 0x09CC), (0x054C, 0x0CE6), (0x057E, 0x2009)])
   func sonyAndNintendoRowsTakeTheirVariantFromTheHostTransport(vendorID: Int, productID: Int) throws
   {
-    let identifier = DeviceIdentifier(vendorID: UInt16(vendorID), productID: UInt16(productID))
-    let usb = try bound(hidDevice(identifier, gamepadHIDInterface(host: .usb)))
-    let bluetooth = try bound(hidDevice(identifier, gamepadHIDInterface(host: .bluetoothClassic)))
+    let model = ControllerModelID(vendorID: UInt16(vendorID), productID: UInt16(productID))
+    let usb = try bound(hidDevice(model, gamepadHIDInterface(host: .usb)))
+    let bluetooth = try bound(hidDevice(model, gamepadHIDInterface(host: .bluetoothClassic)))
     #expect(usb.variant == .usb)
     #expect(bluetooth.variant == .bluetoothClassic)
   }
@@ -67,25 +67,25 @@ struct ProtocolDriverRegistryTests {
   @Test
   func catalogGenericHIDRowsBindOnlyWithAContractDescriptor() throws {
     let rows = [(0x3537, 0x100A), (0x11C1, 0x5600), (0x2E95, 0x434D)].map {
-      DeviceIdentifier(vendorID: UInt16($0.0), productID: UInt16($0.1))
+      ControllerModelID(vendorID: UInt16($0.0), productID: UInt16($0.1))
     }
-    for identifier in rows {
+    for model in rows {
       #expect(
-        registry.classify(hidDevice(identifier, hostHIDInterface(.usb)), backend: .ioHID)
+        registry.classify(hidDevice(model, hostHIDInterface(.usb)), backend: .ioHID)
           == rejection(
             .descriptorContractMismatch,
             .hidDescriptor,
             record: recordID(
-              identifier.controllerIdentity.vendorID,
-              identifier.controllerIdentity.productID
+              model.vendorID,
+              model.productID
             )
           ),
-        "\(identifier)"
+        "\(model)"
       )
-      let binding = try bound(hidDevice(identifier, gamepadHIDInterface(host: .usb)))
+      let binding = try bound(hidDevice(model, gamepadHIDInterface(host: .usb)))
       #expect(binding.protocolID == .hidDescriptor)
       #expect(
-        try registry.makeDriver(for: binding, identifier: identifier, claimed: nil).get()
+        try registry.makeDriver(for: binding, model: model, claimed: nil).get()
           is HIDDescriptorDriver
       )
     }
@@ -93,19 +93,19 @@ struct ProtocolDriverRegistryTests {
 
   @Test
   func rawUSBRowObservedThroughHIDIsAnUnsupportedTransportVariant() {
-    let identifier = DeviceIdentifier(vendorID: 0x045E, productID: 0x02EA)
+    let model = ControllerModelID(vendorID: 0x045E, productID: 0x02EA)
     #expect(
-      registry.classify(hidDevice(identifier, gamepadHIDInterface(host: .usb)), backend: .ioHID)
+      registry.classify(hidDevice(model, gamepadHIDInterface(host: .usb)), backend: .ioHID)
         == rejection(.unsupportedTransportVariant, .xboxGIP, record: "045e-02ea")
     )
   }
 
   @Test
   func sonyRowOverBluetoothLEIsAnUnsupportedTransportVariant() {
-    let identifier = DeviceIdentifier(vendorID: 0x054C, productID: 0x09CC)
+    let model = ControllerModelID(vendorID: 0x054C, productID: 0x09CC)
     #expect(
       registry.classify(
-        hidDevice(identifier, gamepadHIDInterface(host: .bluetoothLE)),
+        hidDevice(model, gamepadHIDInterface(host: .bluetoothLE)),
         backend: .ioHID
       ) == rejection(.unsupportedTransportVariant, .sonyDualShock4, record: "054c-09cc")
     )
@@ -113,25 +113,25 @@ struct ProtocolDriverRegistryTests {
 
   @Test
   func uncataloguedRawUSBHasNoProtocolMatch() {
-    let identifier = DeviceIdentifier(vendorID: 0x1234, productID: 0x5678)
+    let model = ControllerModelID(vendorID: 0x1234, productID: 0x5678)
     #expect(
-      registry.classify(identityOnly(identifier), backend: .ioUSBHost)
+      registry.classify(identityOnly(model), backend: .ioUSBHost)
         == .unsupported(.noProtocolMatch)
     )
   }
 
   @Test
   func uncataloguedHIDBindsOnlyWhenTheDescriptorPassesTheContract() throws {
-    let identifier = DeviceIdentifier(vendorID: 0x1234, productID: 0x5678)
+    let model = ControllerModelID(vendorID: 0x1234, productID: 0x5678)
     #expect(
-      registry.classify(hidDevice(identifier, hostHIDInterface(.usb)), backend: .ioHID)
+      registry.classify(hidDevice(model, hostHIDInterface(.usb)), backend: .ioHID)
         == .unsupported(.descriptorContractMismatch)
     )
-    let binding = try bound(hidDevice(identifier, gamepadHIDInterface(host: .usb)))
+    let binding = try bound(hidDevice(model, gamepadHIDInterface(host: .usb)))
     #expect(binding.protocolID == .hidDescriptor)
     #expect(binding.record == nil)
     #expect(
-      try registry.makeDriver(for: binding, identifier: identifier, claimed: nil).get()
+      try registry.makeDriver(for: binding, model: model, claimed: nil).get()
         is HIDDescriptorDriver
     )
   }
@@ -139,26 +139,26 @@ struct ProtocolDriverRegistryTests {
   @Test
   func storedAndTransportVariantsConfigureTheirParsers() throws {
     let receiver = try #require(
-      try catalogParser(DeviceIdentifier(vendorID: 0x045E, productID: 0x0719)) as? XUSBDriver
+      try catalogParser(ControllerModelID(vendorID: 0x045E, productID: 0x0719)) as? XUSBDriver
     )
     let wired = try #require(
-      try catalogParser(DeviceIdentifier(vendorID: 0x045E, productID: 0x028E)) as? XUSBDriver
+      try catalogParser(ControllerModelID(vendorID: 0x045E, productID: 0x028E)) as? XUSBDriver
     )
     #expect(receiver.sessionPlan.requiresInputConnectionBeforeOutput)
     #expect(!wired.sessionPlan.requiresInputConnectionBeforeOutput)
 
     let dongle = try #require(
-      try catalogParser(DeviceIdentifier(vendorID: 0x28DE, productID: 0x1142))
+      try catalogParser(ControllerModelID(vendorID: 0x28DE, productID: 0x1142))
         as? SteamControllerDriver
     )
     let steam = try #require(
-      try catalogParser(DeviceIdentifier(vendorID: 0x28DE, productID: 0x1102))
+      try catalogParser(ControllerModelID(vendorID: 0x28DE, productID: 0x1102))
         as? SteamControllerDriver
     )
     #expect(dongle.isWirelessReceiver)
     #expect(!steam.isWirelessReceiver)
 
-    let ds4 = DeviceIdentifier(vendorID: 0x054C, productID: 0x09CC)
+    let ds4 = ControllerModelID(vendorID: 0x054C, productID: 0x09CC)
     let ds4Bluetooth = try #require(
       try catalogParser(ds4, host: .bluetoothClassic) as? DualShock4Driver
     )
@@ -172,7 +172,7 @@ struct ProtocolDriverRegistryTests {
   func recordQuirksConfigureTheirDrivers() throws {
     func ds4(_ vendorID: UInt16, _ productID: UInt16) throws -> DualShock4Driver {
       try #require(
-        try catalogParser(DeviceIdentifier(vendorID: vendorID, productID: productID))
+        try catalogParser(ControllerModelID(vendorID: vendorID, productID: productID))
           as? DualShock4Driver
       )
     }
@@ -187,7 +187,7 @@ struct ProtocolDriverRegistryTests {
 
     func shield(_ productID: UInt16) throws -> NVIDIAShieldDriver {
       try #require(
-        try catalogParser(DeviceIdentifier(vendorID: 0x0955, productID: productID))
+        try catalogParser(ControllerModelID(vendorID: 0x0955, productID: productID))
           as? NVIDIAShieldDriver
       )
     }
@@ -208,7 +208,7 @@ struct ProtocolDriverRegistryTests {
     layout: HIDDescriptorDriver.AxisLayout
   ) throws {
     let driver = try #require(
-      try catalogParser(DeviceIdentifier(vendorID: vendorID, productID: productID))
+      try catalogParser(ControllerModelID(vendorID: vendorID, productID: productID))
         as? HIDDescriptorDriver
     )
     #expect(driver.axisLayout == layout)
@@ -232,7 +232,7 @@ struct ProtocolDriverRegistryTests {
     isDongle: Bool
   ) throws {
     let driver = try #require(
-      try catalogParser(DeviceIdentifier(vendorID: vendorID, productID: productID))
+      try catalogParser(ControllerModelID(vendorID: vendorID, productID: productID))
         as? DualSenseDriver
     )
     let model = try #require(driver.thirdParty)
@@ -246,7 +246,7 @@ struct ProtocolDriverRegistryTests {
   func sonyDualSenseRecordsRunInSonyMode() throws {
     for productID: UInt16 in [0x0CE6, 0x0DF2, 0x0E5F] {
       let driver = try #require(
-        try catalogParser(DeviceIdentifier(vendorID: 0x054C, productID: productID))
+        try catalogParser(ControllerModelID(vendorID: 0x054C, productID: productID))
           as? DualSenseDriver
       )
       #expect(driver.thirdParty == nil)
@@ -256,32 +256,32 @@ struct ProtocolDriverRegistryTests {
   @Test
   func everyFamilyAndVariantBuildsThroughTheValidatingFactory() throws {
     var built: Set<String> = []
-    for identifier in registry.rawUSBIdentifiers {
-      let record = try #require(registry.record(for: identifier))
+    for model in registry.rawUSBModels {
+      let record = try #require(registry.record(for: model))
       let device = PhysicalDevice(
-        vendorID: identifier.controllerIdentity.vendorID,
-        productID: identifier.controllerIdentity.productID,
+        vendorID: model.vendorID,
+        productID: model.productID,
         configurationValue: 1,
         interfaces: [claimedInterface(record)]
       )
       let binding = try bound(device, backend: .ioUSBHost)
       let driver = try registry.makeDriver(
         for: binding,
-        identifier: identifier,
+        model: model,
         claimed: USBTransportResolution(profile: record.transportProfile, physicalDevice: device)
       ).get()
-      #expect(Self.driver(driver, belongsTo: binding.protocolID), "\(identifier)")
+      #expect(Self.driver(driver, belongsTo: binding.protocolID), "\(model)")
       built.insert(binding.id.rawValue)
     }
-    for identifier in registry.hidIdentifiers {
+    for model in registry.hidModels {
       for host in [PhysicalTransport.usb, .bluetoothClassic, .bluetoothLE] {
-        let device = hidDevice(identifier, gamepadHIDInterface(host: host))
+        let device = hidDevice(model, gamepadHIDInterface(host: host))
         guard case .bound(let binding) = registry.classify(device, backend: .ioHID) else {
           continue
         }
-        let driver = try registry.makeDriver(for: binding, identifier: identifier, claimed: nil)
+        let driver = try registry.makeDriver(for: binding, model: model, claimed: nil)
           .get()
-        #expect(Self.driver(driver, belongsTo: binding.protocolID), "\(identifier)")
+        #expect(Self.driver(driver, belongsTo: binding.protocolID), "\(model)")
         built.insert(binding.id.rawValue)
       }
     }
@@ -295,10 +295,10 @@ struct ProtocolDriverRegistryTests {
 
   @Test
   func catalogRawUSBRowWithoutAClaimHasNoDriver() throws {
-    let identifier = DeviceIdentifier(vendorID: 0x045E, productID: 0x02EA)
-    let binding = try bound(identityOnly(identifier), backend: .ioUSBHost)
+    let model = ControllerModelID(vendorID: 0x045E, productID: 0x02EA)
+    let binding = try bound(identityOnly(model), backend: .ioUSBHost)
     #expect(binding.rule == .catalogRecord)
-    let result = registry.makeDriver(for: binding, identifier: identifier, claimed: nil)
+    let result = registry.makeDriver(for: binding, model: model, claimed: nil)
     guard case .failure(let reason) = result else {
       Issue.record("built a driver without claimed facts")
       return
@@ -310,12 +310,12 @@ struct ProtocolDriverRegistryTests {
   /// check and builds on the record's profile. Only the record vouches for the interface there.
   @Test
   func driverKitClaimWithoutObservedFactsBuildsACatalogRow() throws {
-    let identifier = DeviceIdentifier(vendorID: 0x045E, productID: 0x02EA)
-    let record = try #require(registry.record(for: identifier))
-    let binding = try bound(identityOnly(identifier), backend: .usbDriverKit)
+    let model = ControllerModelID(vendorID: 0x045E, productID: 0x02EA)
+    let record = try #require(registry.record(for: model))
+    let binding = try bound(identityOnly(model), backend: .usbDriverKit)
     let unobserved = USBTransportResolution(profile: record.transportProfile)
     #expect(
-      try registry.makeDriver(for: binding, identifier: identifier, claimed: unobserved).get()
+      try registry.makeDriver(for: binding, model: model, claimed: unobserved).get()
         is GIPDriver
     )
     let limited = USBTransportResolution(
@@ -325,7 +325,7 @@ struct ProtocolDriverRegistryTests {
       ])
     )
     #expect(
-      try registry.makeDriver(for: binding, identifier: identifier, claimed: limited).get()
+      try registry.makeDriver(for: binding, model: model, claimed: limited).get()
         is GIPDriver
     )
   }
@@ -359,20 +359,20 @@ struct ProtocolDriverRegistryTests {
     )
   }
 
-  private func identityOnly(_ identifier: DeviceIdentifier) -> PhysicalDevice {
+  private func identityOnly(_ model: ControllerModelID) -> PhysicalDevice {
     PhysicalDevice(
-      vendorID: identifier.controllerIdentity.vendorID,
-      productID: identifier.controllerIdentity.productID
+      vendorID: model.vendorID,
+      productID: model.productID
     )
   }
 
   private func hidDevice(
-    _ identifier: DeviceIdentifier,
+    _ model: ControllerModelID,
     _ interface: PhysicalInterfaceSignature
   ) -> PhysicalDevice {
     PhysicalDevice(
-      vendorID: identifier.controllerIdentity.vendorID,
-      productID: identifier.controllerIdentity.productID,
+      vendorID: model.vendorID,
+      productID: model.productID,
       interfaces: [interface]
     )
   }

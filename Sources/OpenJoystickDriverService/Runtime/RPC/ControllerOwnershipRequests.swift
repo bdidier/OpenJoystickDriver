@@ -49,15 +49,15 @@ extension ApplicationServiceServer {
     guard let vendor = UInt16(exactly: vendorID), let product = UInt16(exactly: productID) else {
       return refused(.noRecord)
     }
-    let identity = ControllerIdentity(vendorID: vendor, productID: product)
-    let record = records.records[identity]
+    let model = ControllerModelID(vendorID: vendor, productID: product)
+    let record = records.records[model]
     let previous = record?.ownership ?? .macOS
     if record?.usesRawUSB == true { return refused(.rawUSB, previous) }
     guard nativeGamepadConnected || previous == .ojd else { return refused(.notNative, previous) }
     let change: ControllerOwnershipWriter.Change
     do {
       change = try ControllerOwnershipWriter.change(
-        identity,
+        model,
         to: ownership,
         records: records,
         directory: directory

@@ -6,7 +6,7 @@ extension DeviceManager {
     productID: UInt16,
     runtimeIdentifier: String?
   ) async -> ControllerSuspendResult {
-    let model = DeviceIdentifier(vendorID: vendorID, productID: productID)
+    let model = ControllerModelID(vendorID: vendorID, productID: productID)
     guard
       let identifier = connectedIdentifier(matching: model, runtimeIdentifier: runtimeIdentifier),
       let pipeline = pipelines[identifier]
@@ -28,7 +28,7 @@ extension DeviceManager {
     productID: UInt16,
     runtimeIdentifier: String?
   ) async -> ControllerResumeResult {
-    let model = DeviceIdentifier(vendorID: vendorID, productID: productID)
+    let model = ControllerModelID(vendorID: vendorID, productID: productID)
     guard
       let identifier = connectedIdentifier(matching: model, runtimeIdentifier: runtimeIdentifier),
       let pipeline = pipelines[identifier], let info = deviceInfos[identifier]
@@ -88,7 +88,7 @@ extension DeviceManager {
     runtimeIdentifier: String?,
     timeoutNanoseconds: UInt64 = UInt64(ServiceTimeouts.bluetoothDisconnect * 1_000_000_000)
   ) async -> WirelessControllerDisconnectResult {
-    let model = DeviceIdentifier(vendorID: vendorID, productID: productID)
+    let model = ControllerModelID(vendorID: vendorID, productID: productID)
     guard
       let identifier = connectedIdentifier(matching: model, runtimeIdentifier: runtimeIdentifier),
       let pipeline = pipelines[identifier], let info = deviceInfos[identifier]

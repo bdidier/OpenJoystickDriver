@@ -45,7 +45,7 @@ extension DeviceManager {
   }
 
   internal func connectedIdentifier(
-    matching model: DeviceIdentifier,
+    matching model: ControllerModelID,
     runtimeIdentifier: String?
   ) -> DeviceIdentifier? {
     guard !isStopping else { return nil }
@@ -58,11 +58,11 @@ extension DeviceManager {
 
   package static func connectedIdentifier<Identifiers: Sequence>(
     among identifiers: Identifiers,
-    matching model: DeviceIdentifier,
+    matching model: ControllerModelID,
     runtimeIdentifier: String?
   ) -> DeviceIdentifier? where Identifiers.Element == DeviceIdentifier {
     let matches = identifiers.filter {
-      $0.modelMatches(model)
+      $0.model == model
         && (runtimeIdentifier == nil || $0.runtimeIdentifier == runtimeIdentifier)
     }
     return matches.count == 1 ? matches.first : nil

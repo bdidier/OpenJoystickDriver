@@ -7,8 +7,8 @@ struct TouchSurfaceCapabilityTests {
   @Test(arguments: [UInt16(0x05C4), UInt16(0x0CE6), UInt16(0x0DF2), UInt16(0x1102)])
   func advertisedSurfacesMatchDecodedFrames(_ productID: UInt16) throws {
     let steam = productID == 0x1102
-    let identifier = DeviceIdentifier(vendorID: steam ? 0x28DE : 0x054C, productID: productID)
-    let parser = try catalogParser(identifier)
+    let model = ControllerModelID(vendorID: steam ? 0x28DE : 0x054C, productID: productID)
+    let parser = try catalogParser(model)
     var report = [UInt8](repeating: 0, count: 64)
     report[0] = 1
     if steam {

@@ -14,8 +14,8 @@ enum HIDConnectionRole: Equatable {
 extension ProtocolDriverRegistry {
   /// Exact catalog models whose family declares HID roles. The HID backend reports each
   /// connection of these models as disconnected on its own, not only once its location empties.
-  public var hidRoleIdentifiers: [DeviceIdentifier] {
-    hidIdentifiers.filter { record(for: $0).map(Self.declaresHIDRoles) == true }
+  public var hidRoleModels: [ControllerModelID] {
+    hidModels.filter { record(for: $0).map(Self.declaresHIDRoles) == true }
   }
 
   /// The role one observed HID connection plays.
@@ -55,7 +55,7 @@ extension ProtocolDriverRegistry {
 
   private func hidRoleRecord(of device: PhysicalDevice) -> DeviceRuntimeProfile? {
     guard let vendorID = device.vendorID, let productID = device.productID,
-      let record = record(for: DeviceIdentifier(vendorID: vendorID, productID: productID)),
+      let record = record(for: ControllerModelID(vendorID: vendorID, productID: productID)),
       Self.declaresHIDRoles(record)
     else { return nil }
     return record

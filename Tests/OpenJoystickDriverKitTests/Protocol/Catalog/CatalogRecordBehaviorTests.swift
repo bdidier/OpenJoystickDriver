@@ -41,7 +41,7 @@ struct CatalogRecordBehaviorTests {
     expected: [[UInt8]]
   ) throws {
     let parser = try #require(
-      try catalogParser(DeviceIdentifier(vendorID: vendorID, productID: productID)) as? GIPDriver
+      try catalogParser(ControllerModelID(vendorID: vendorID, productID: productID)) as? GIPDriver
     )
     #expect(parser.startupWrites().usbBytes == expected)
   }
@@ -50,15 +50,15 @@ struct CatalogRecordBehaviorTests {
   /// name declared controls, presences are controls the configured parser emits.
   @Test
   func everyCapabilityDeltaMatchesItsConfiguredParser() throws {
-    for identifier in registry.rawUSBIdentifiers + registry.hidIdentifiers {
-      let delta = try #require(registry.record(for: identifier)).capabilityDelta
-      let parser = try catalogParser(identifier, registry: registry)
-      #expect(delta.absentControls.isSubset(of: parser.capabilities.controls), "\(identifier)")
-      #expect(delta.presentControls.isSubset(of: parser.capabilities.controls), "\(identifier)")
+    for model in registry.rawUSBModels + registry.hidModels {
+      let delta = try #require(registry.record(for: model)).capabilityDelta
+      let parser = try catalogParser(model, registry: registry)
+      #expect(delta.absentControls.isSubset(of: parser.capabilities.controls), "\(model)")
+      #expect(delta.presentControls.isSubset(of: parser.capabilities.controls), "\(model)")
       if delta.rumbleAbsent {
         #expect(
           (parser as? GIPDriver)?.outputCapabilities.rumbleMotors.isEmpty == true,
-          "\(identifier)"
+          "\(model)"
         )
       }
     }
@@ -73,7 +73,7 @@ struct CatalogRecordBehaviorTests {
       + [0x10C5, 0x10C6, 0x10C7, 0x10C8].map { ($0, .enhancedHID, true, false) }
     for (productID, gameSirProtocol, innerGrips, lightingSlots) in expectations {
       let parser = try #require(
-        try catalogParser(DeviceIdentifier(vendorID: 0x3537, productID: productID))
+        try catalogParser(ControllerModelID(vendorID: 0x3537, productID: productID))
           as? GameSirDriver
       )
       #expect(parser.gameSirProtocol == gameSirProtocol, "\(productID)")
@@ -85,10 +85,10 @@ struct CatalogRecordBehaviorTests {
   @Test
   func gipRumbleFollowsTheRow() throws {
     let inputOnly = try #require(
-      try catalogParser(DeviceIdentifier(vendorID: 0x3537, productID: 0x1022)) as? GIPDriver
+      try catalogParser(ControllerModelID(vendorID: 0x3537, productID: 0x1022)) as? GIPDriver
     )
     let standard = try #require(
-      try catalogParser(DeviceIdentifier(vendorID: 0x045E, productID: 0x0B12)) as? GIPDriver
+      try catalogParser(ControllerModelID(vendorID: 0x045E, productID: 0x0B12)) as? GIPDriver
     )
     #expect(inputOnly.outputCapabilities.rumbleMotors.isEmpty)
     #expect(
@@ -101,10 +101,10 @@ struct CatalogRecordBehaviorTests {
   @Test
   func dualSenseEdgeButtonsFollowTheRow() throws {
     let edge = try #require(
-      try catalogParser(DeviceIdentifier(vendorID: 0x054C, productID: 0x0DF2)) as? DualSenseDriver
+      try catalogParser(ControllerModelID(vendorID: 0x054C, productID: 0x0DF2)) as? DualSenseDriver
     )
     let standard = try #require(
-      try catalogParser(DeviceIdentifier(vendorID: 0x054C, productID: 0x0CE6)) as? DualSenseDriver
+      try catalogParser(ControllerModelID(vendorID: 0x054C, productID: 0x0CE6)) as? DualSenseDriver
     )
     #expect(edge.hasEdgeButtons)
     #expect(!standard.hasEdgeButtons)
@@ -117,7 +117,7 @@ struct CatalogRecordBehaviorTests {
     ]
     for (productID, layout) in layouts {
       let parser = try #require(
-        try catalogParser(DeviceIdentifier(vendorID: 0x057E, productID: productID))
+        try catalogParser(ControllerModelID(vendorID: 0x057E, productID: productID))
           as? Switch1Driver
       )
       #expect(parser.layout == layout, "\(productID)")
@@ -128,8 +128,8 @@ struct CatalogRecordBehaviorTests {
   func switchInputOnlyRowsBindTheFixedReportDriver() throws {
     // HORIPAD for Nintendo Switch and PowerA Wired Controller Plus (SDL SwitchInputOnlyController).
     for (vendorID, productID) in [(UInt16(0x0F0D), UInt16(0x00C1)), (0x20D6, 0xA711)] {
-      let identifier = DeviceIdentifier(vendorID: vendorID, productID: productID)
-      #expect(try catalogParser(identifier) is SwitchInputOnlyDriver, "\(identifier)")
+      let model = ControllerModelID(vendorID: vendorID, productID: productID)
+      #expect(try catalogParser(model) is SwitchInputOnlyDriver, "\(model)")
     }
   }
 
@@ -139,8 +139,8 @@ struct CatalogRecordBehaviorTests {
     var payload = Data(repeating: 0, count: 44)
     payload[18] = 1
     let packet = ProtocolPacketFixtures.GIP.inputPacket(payload: payload)
-    let seriesX = try catalogParser(DeviceIdentifier(vendorID: 0x045E, productID: 0x0B12))
-    let standard = try catalogParser(DeviceIdentifier(vendorID: 0x045E, productID: 0x02EA))
+    let seriesX = try catalogParser(ControllerModelID(vendorID: 0x045E, productID: 0x0B12))
+    let standard = try catalogParser(ControllerModelID(vendorID: 0x045E, productID: 0x02EA))
     #expect(try seriesX.parseReport(packet).contains(.press(.share)))
     #expect(try !standard.parseReport(packet).contains(.press(.share)))
   }

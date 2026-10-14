@@ -128,7 +128,7 @@ struct InputCapabilitiesTests {
 
   @Test
   func unsupportedParserDoesNotAdvertiseRawSamples() {
-    let parser = HIDDescriptorDriver(identifier: DeviceIdentifier(vendorID: 1, productID: 2))
+    let parser = HIDDescriptorDriver(model: ControllerModelID(vendorID: 1, productID: 2))
     #expect(!parser.capabilities.motion)
     #expect(parser.capabilities.touchContactCount == 0)
   }

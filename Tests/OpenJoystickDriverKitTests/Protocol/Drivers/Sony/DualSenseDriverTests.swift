@@ -7,8 +7,8 @@ import Testing
 struct DualSenseDriverTests {
   @Test
   func testDualSenseUSBReportParsesPrimaryControls() throws {
-    let identifier = DeviceIdentifier(vendorID: 1356, productID: 3302)
-    let parser = try catalogParser(identifier)
+    let model = ControllerModelID(vendorID: 1356, productID: 3302)
+    let parser = try catalogParser(model)
     _ = try parser.parseReport(ProtocolPacketFixtures.DualSense.usbInputReport())
 
     let events = try parser.parseReport(
@@ -97,20 +97,20 @@ struct DualSenseDriverTests {
   @Test
   func testDualSenseProfilesAreExperimentalAndUnverified() throws {
     let registry = ProtocolDriverRegistry()
-    let identifiers = [
-      DeviceIdentifier(vendorID: 1356, productID: 3302),
-      DeviceIdentifier(vendorID: 1356, productID: 3570),
+    let models = [
+      ControllerModelID(vendorID: 1356, productID: 3302),
+      ControllerModelID(vendorID: 1356, productID: 3570),
     ]
 
-    for identifier in identifiers {
-      let profile = try #require(registry.record(for: identifier))
+    for model in models {
+      let profile = try #require(registry.record(for: model))
       #expect(
         profile.physicalProtocolID == .sonyDualSense && profile.physicalProtocolVariant == nil
       )
       #expect(profile.quirks.isEmpty)
       #expect(
         profile.capabilityDelta.presentControls
-          == (identifier.controllerIdentity.productID == 3570 ? DualSenseDriver.edgeControls : [])
+          == (model.productID == 3570 ? DualSenseDriver.edgeControls : [])
       )
     }
   }
@@ -153,7 +153,7 @@ extension DualSenseDriverTests {
   ) throws {
     for bluetooth in [false, true] {
       let identifier = DeviceIdentifier(vendorID: 0x054C, productID: 0x0DF2)
-      let parser = try catalogParser(identifier)
+      let parser = try catalogParser(identifier.model)
       let report =
         bluetooth
         ? ProtocolPacketFixtures.DualSense.bluetoothInputReport(buttons: (0x08, 0, mask))
@@ -198,8 +198,8 @@ extension DualSenseDriverTests {
 
   @Test
   func ordinaryDualSenseDoesNotDecodeEdgeButtonBits() throws {
-    let identifier = DeviceIdentifier(vendorID: 0x054C, productID: 0x0CE6)
-    let parser = try catalogParser(identifier)
+    let model = ControllerModelID(vendorID: 0x054C, productID: 0x0CE6)
+    let parser = try catalogParser(model)
     let events = try parser.parseReport(
       ProtocolPacketFixtures.DualSense.usbInputReport(buttons: (0x08, 0, 0xF0))
     )

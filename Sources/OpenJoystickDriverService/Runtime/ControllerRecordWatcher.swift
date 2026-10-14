@@ -10,19 +10,19 @@ import OpenJoystickDriverKit
 @MainActor
 final class ControllerRecordWatcher {
   private let directory: URL
-  private let onChange: @MainActor (Set<ControllerIdentity>) -> Void
-  private let activate: @MainActor (ControllerRecordSet) -> Set<ControllerIdentity>
+  private let onChange: @MainActor (Set<ControllerModelID>) -> Void
+  private let activate: @MainActor (ControllerRecordSet) -> Set<ControllerModelID>
   private var watcher: FileChangeWatcher?
 
-  /// `onChange` runs with the identities whose effective record a change to the directory
+  /// `onChange` runs with the models whose effective record a change to the directory
   /// changed, when there are any. `activate` makes a loaded set current and returns those
-  /// identities.
+  /// models.
   init(
     directory: URL = ControllerRecordSet.userDirectory,
-    activate: @escaping @MainActor (ControllerRecordSet) -> Set<ControllerIdentity> = {
+    activate: @escaping @MainActor (ControllerRecordSet) -> Set<ControllerModelID> = {
       $0.activate()
     },
-    onChange: @escaping @MainActor (Set<ControllerIdentity>) -> Void
+    onChange: @escaping @MainActor (Set<ControllerModelID>) -> Void
   ) {
     self.directory = directory
     self.activate = activate
@@ -65,9 +65,9 @@ final class ControllerRecordWatcher {
     watcher = nil
   }
 
-  /// Loads and activates the records; returns the identities whose effective record changed.
+  /// Loads and activates the records; returns the models whose effective record changed.
   @discardableResult
-  private func apply() -> Set<ControllerIdentity> {
+  private func apply() -> Set<ControllerModelID> {
     let records = ControllerRecordSet.load(userDirectory: directory)
     for file in records.problems {
       fputs("[Records] Skipped \(file.url.path): \(file.problem ?? "")\n", stderr)

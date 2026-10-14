@@ -14,7 +14,7 @@ struct ApplicationServiceWatchSource: ControllerWatchSource {
 
   func state(of device: ApplicationServiceDeviceDescription) async throws -> ControllerState? {
     await server?.deviceManager.controllerState(
-      for: DeviceIdentifier(vendorID: device.vendorID, productID: device.productID),
+      for: ControllerModelID(vendorID: device.vendorID, productID: device.productID),
       runtimeIdentifier: device.runtimeIdentifier
     )
   }
@@ -26,7 +26,7 @@ struct ApplicationServiceWatchSource: ControllerWatchSource {
   {
     guard
       let state = await server?.automaticUserSpaceDispatcher()?.virtualOutputState(
-        matching: DeviceIdentifier(vendorID: device.vendorID, productID: device.productID),
+        matching: ControllerModelID(vendorID: device.vendorID, productID: device.productID),
         runtimeIdentifier: device.runtimeIdentifier
       )
     else { return nil }

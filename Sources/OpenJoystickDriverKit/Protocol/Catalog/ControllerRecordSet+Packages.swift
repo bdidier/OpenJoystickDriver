@@ -2,16 +2,16 @@ import Foundation
 
 /// The bundled records with the records of the installed packages applied, and the package files.
 struct ControllerPackageRecords {
-  var records: [ControllerIdentity: ControllerRecord]
+  var records: [ControllerModelID: ControllerRecord]
   var files: [ControllerRecordFile] = []
 
-  /// Lists the package file of `identity` as skipped, because the user's file `url` replaces it.
-  mutating func overridden(_ identity: ControllerIdentity, by url: URL) {
+  /// Lists the package file of `model` as skipped, because the user's file `url` replaces it.
+  mutating func overridden(_ model: ControllerModelID, by url: URL) {
     files = files.map { file in
-      guard file.identity == identity, file.problem == nil else { return file }
+      guard file.model == model, file.problem == nil else { return file }
       return ControllerRecordFile(
         url: file.url,
-        identity: identity,
+        model: model,
         operation: file.operation,
         problem: "replaced by your file \(url.lastPathComponent)"
       )
@@ -23,7 +23,7 @@ extension ControllerRecordSet {
   /// The records of the packages in `directory`, in package-name order. A package that cannot be
   /// used, such as one whose `requires` leaves out the running version, is skipped and its
   /// `mod.json` is listed with the reason. A package record that fails validation, has the wrong
-  /// file name, or repeats the identity of an earlier package's record is skipped and listed with
+  /// file name, or repeats the model of an earlier package's record is skipped and listed with
   /// its reason. `runningVersion` is the OJD version that the
   /// `requires` of a package is checked against; nil means the running one.
   static func packageRecords(
@@ -31,13 +31,13 @@ extension ControllerRecordSet {
     runningVersion: String? = nil
   ) -> ControllerPackageRecords {
     var packaged = ControllerPackageRecords(records: bundled.records)
-    var owners: [ControllerIdentity: String] = [:]
+    var owners: [ControllerModelID: String] = [:]
     for package in ModPackageStore(directory: directory, runningVersion: runningVersion).list() {
       guard let manifest = package.manifest, package.problem == nil else {
         packaged.files.append(
           ControllerRecordFile(
             url: package.directory.appendingPathComponent(ModPackageManifest.fileName),
-            identity: nil,
+            model: nil,
             operation: nil,
             problem: package.problem
           )
@@ -49,25 +49,25 @@ extension ControllerRecordSet {
         let file: ControllerRecordFile
         do {
           let validated = try validate(Data(contentsOf: url), file: url, layer: .package)
-          let identity = validated.record.identity
-          if name != fileName(for: identity) {
-            throw ControllerRecordProblem("the file name must be \(fileName(for: identity))")
+          let model = validated.record.model
+          if name != fileName(for: model) {
+            throw ControllerRecordProblem("the file name must be \(fileName(for: model))")
           }
-          if let owner = owners[identity] {
+          if let owner = owners[model] {
             throw ControllerRecordProblem("same controller as package \(owner)")
           }
-          owners[identity] = package.name
-          packaged.records[identity] = validated.record
+          owners[model] = package.name
+          packaged.records[model] = validated.record
           file = ControllerRecordFile(
             url: url,
-            identity: identity,
+            model: model,
             operation: validated.operation,
             problem: nil
           )
         } catch {
           file = ControllerRecordFile(
             url: url,
-            identity: nil,
+            model: nil,
             operation: nil,
             problem: problemDescription(error)
           )

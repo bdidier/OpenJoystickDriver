@@ -121,8 +121,8 @@ final class BluetoothLECompositeHIDBackend: HIDAccessBackend {
   }
 
   /// Switch 2 Bluetooth LE controllers are never native gamepads, so only IOHID devices change.
-  func reevaluateOwnership(of identities: Set<ControllerIdentity>) async -> Set<UUID> {
-    await primary.reevaluateOwnership(of: identities)
+  func reevaluateOwnership(of models: Set<ControllerModelID>) async -> Set<UUID> {
+    await primary.reevaluateOwnership(of: models)
   }
 }
 

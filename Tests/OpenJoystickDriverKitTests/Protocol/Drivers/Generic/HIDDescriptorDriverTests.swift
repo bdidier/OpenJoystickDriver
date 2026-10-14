@@ -4,14 +4,14 @@ import Testing
 @testable import OpenJoystickDriverKit
 
 struct HIDDescriptorDriverTests {
-  private let identifier = DeviceIdentifier(vendorID: 65_534, productID: 1)
+  private let model = ControllerModelID(vendorID: 65_534, productID: 1)
 
   private func parse(_ parser: HIDDescriptorDriver, _ element: HIDElementValue) -> ControllerEvent?
   { parser.parse(elementValue: element, receivedAt: MonotonicTimestamp(nanoseconds: 0)) }
 
   @Test
   func mapsButtonsAndRepeatsUnchangedStates() {
-    let parser = HIDDescriptorDriver(identifier: identifier)
+    let parser = HIDDescriptorDriver(model: model)
     let pressed = value(page: 0x09, usage: 1, minimum: 0, maximum: 1, integer: 1)
     let released = value(page: 0x09, usage: 1, minimum: 0, maximum: 1, integer: 0)
 
@@ -24,7 +24,7 @@ struct HIDDescriptorDriverTests {
 
   @Test
   func normalizesAndPairsStandardStickAxes() {
-    let parser = HIDDescriptorDriver(identifier: identifier)
+    let parser = HIDDescriptorDriver(model: model)
 
     #expect(parse(parser, axis(usage: 0x30, integer: 255)).contains(.leftStick(x: 1, y: 0)))
     #expect(parse(parser, axis(usage: 0x31, integer: 0)).contains(.leftStick(x: 1, y: -1)))
@@ -49,7 +49,7 @@ struct HIDDescriptorDriverTests {
     ]
     let fields = HIDReportDescriptorParser.parse(descriptor: descriptor)?.fields ?? []
     #expect(fields.count == 12)
-    let parser = HIDDescriptorDriver(identifier: identifier)
+    let parser = HIDDescriptorDriver(model: model)
     func stick(_ usage: Int, atLogicalMinimum: Bool) -> ControllerState? {
       guard let field = fields.first(where: { $0.usagePage == 0x01 && $0.usage == usage }) else {
         return nil
@@ -76,7 +76,7 @@ struct HIDDescriptorDriverTests {
 
   @Test
   func mapsTriggersHatAndIgnoresUnknownUsages() {
-    let parser = HIDDescriptorDriver(identifier: identifier)
+    let parser = HIDDescriptorDriver(model: model)
 
     #expect(parse(parser, axis(usage: 0x32, integer: 128)).contains(.leftTrigger(Float(128) / 255)))
     #expect(parse(parser, axis(usage: 0x35, integer: 255)).contains(.rightTrigger(1)))
@@ -100,7 +100,7 @@ struct HIDDescriptorDriverTests {
   @Test
   func dragonRiseUsesItsButtonOrderAndZRzRightStick() {
     let parser = HIDDescriptorDriver(
-      identifier: DeviceIdentifier(vendorID: 0x0079, productID: 6),
+      model: ControllerModelID(vendorID: 0x0079, productID: 6),
       quirks: [.dragonRise]
     )
     let buttons: [ControlID] = [
@@ -122,7 +122,7 @@ struct HIDDescriptorDriverTests {
 
   @Test
   func sessionResetReturnsElementStateToNeutral() {
-    let parser = HIDDescriptorDriver(identifier: identifier)
+    let parser = HIDDescriptorDriver(model: model)
     #expect(parse(parser, axis(usage: 0x30, integer: 255)).contains(.leftStick(x: 1, y: 0)))
     #expect(
       parse(parser, value(page: 0x09, usage: 1, minimum: 0, maximum: 1, integer: 1)).contains(
@@ -138,7 +138,7 @@ struct HIDDescriptorDriverTests {
 
   @Test
   func rawReportsRemainUnusedForDescriptorDrivenFallback() throws {
-    let parser = HIDDescriptorDriver(identifier: identifier)
+    let parser = HIDDescriptorDriver(model: model)
     #expect(try parser.parseReport(Data([1, 2, 3])) == nil)
   }
 

@@ -15,7 +15,7 @@ enum ProfileCapabilityResolver {
     guard profile.joyConPair != nil, let resolved else { return resolved }
     let halves = JoyConHalf.generationProductIDs(forLeft: profile.device.productID).compactMap {
       registry.profileCapabilities(
-        for: DeviceIdentifier(vendorID: profile.device.vendorID, productID: $0)
+        for: ControllerModelID(vendorID: profile.device.vendorID, productID: $0)
       )
     }
     let pairInput = halves.map(\.physicalInput).reduce(resolved.physicalInput) { $0.union($1) }
@@ -41,7 +41,7 @@ enum ProfileCapabilityResolver {
       }
     }
     return registry.profileCapabilities(
-      for: DeviceIdentifier(vendorID: profile.device.vendorID, productID: profile.device.productID)
+      for: ControllerModelID(vendorID: profile.device.vendorID, productID: profile.device.productID)
     )
   }
 

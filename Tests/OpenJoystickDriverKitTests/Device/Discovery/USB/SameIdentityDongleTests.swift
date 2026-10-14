@@ -64,7 +64,7 @@ struct SameIdentityDongleTests {
       let identifier = Self.identifier(pad.device)
       let result = await manager.sendControllerOutput(
         rumble,
-        for: identifier,
+        for: identifier.model,
         runtimeIdentifier: identifier.runtimeIdentifier
       )
       #expect(result == ControllerOutputResult(.delivered))
@@ -96,7 +96,7 @@ struct SameIdentityDongleTests {
           ),
           duration: .milliseconds(5_000)
         ),
-        for: identifier,
+        for: identifier.model,
         runtimeIdentifier: identifier.runtimeIdentifier
       )
       #expect(result == ControllerOutputResult(.delivered))
@@ -122,7 +122,7 @@ struct SameIdentityDongleTests {
         RumbleIntensities(leftMain: UnipolarValue(byte: 0x80)),
         duration: .milliseconds(5_000)
       ),
-      for: identifier,
+      for: identifier.model,
       runtimeIdentifier: identifier.runtimeIdentifier
     )
 

@@ -9,13 +9,13 @@ import Testing
 /// behavior and the route that reaches its controller.
 struct EquivalenceSnapshotCatalogTests {
   static let records = ControllerRecordSet.bundled.records.values.sorted {
-    ($0.identity.vendorID, $0.identity.productID) < ($1.identity.vendorID, $1.identity.productID)
+    $0.model < $1.model
   }
 
   static func title(_ record: ControllerRecord) -> String {
     EquivalenceSnapshotStore.recordTitle(
-      vendorID: record.identity.vendorID,
-      productID: record.identity.productID
+      vendorID: record.model.vendorID,
+      productID: record.model.productID
     )
   }
 
@@ -33,14 +33,14 @@ struct EquivalenceSnapshotCatalogTests {
   /// raw-USB provider would list on the IOUSBHost route is `raw-access`, one it would leave to
   /// the signed USB extension is `extension`, and anything else stays with the system HID stack.
   private static func route(_ record: ControllerRecord) -> String {
-    let models = Set(ProtocolDriverRegistry().rawUSBIdentifiers.map(USBTransportModel.init))
-    let identity = record.identity
+    let models = Set(ProtocolDriverRegistry().rawUSBModels)
+    let model = record.model
     func selects(_ route: USBTransportRoute) -> Bool {
       let device = USBTransportDevice(
         route: route,
         serviceID: 1,
-        vendorID: identity.vendorID,
-        productID: identity.productID,
+        vendorID: model.vendorID,
+        productID: model.productID,
         locationID: 1
       )
       return !OpenJoystickDriverUSBTransportProvider.selectDevices(

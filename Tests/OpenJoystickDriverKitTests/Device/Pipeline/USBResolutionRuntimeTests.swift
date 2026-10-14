@@ -236,7 +236,7 @@ struct USBResolutionRuntimeTests {
       locationID: 8
     )
     let provider = USBRuntimeRecordingProvider()
-    let parser = try catalogParser(identifier, transportProfile: resolved)
+    let parser = try catalogParser(identifier.model, transportProfile: resolved)
     let pipeline = DevicePipeline(
       identifier: identifier,
       transport: .usb(device: device),

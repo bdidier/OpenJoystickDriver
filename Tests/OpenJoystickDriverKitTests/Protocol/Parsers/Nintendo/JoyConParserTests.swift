@@ -7,11 +7,11 @@ struct JoyConParserTests {
   @Test(arguments: [UInt16(0x2006), UInt16(0x2007)])
   func catalogSelectsSideAndIgnoresTheAbsentStick(_ productID: UInt16) throws {
     let registry = ProtocolDriverRegistry()
-    let identifier = DeviceIdentifier(vendorID: 0x057E, productID: productID)
-    let parser = try #require(try catalogParser(identifier, registry: registry) as? Switch1Driver)
+    let model = ControllerModelID(vendorID: 0x057E, productID: productID)
+    let parser = try #require(try catalogParser(model, registry: registry) as? Switch1Driver)
     let isLeft = productID == 0x2006
     #expect(parser.layout == (isLeft ? .leftJoyCon : .rightJoyCon))
-    #expect(registry.hidIdentifiers.contains(identifier))
+    #expect(registry.hidModels.contains(model))
     #expect(parser.capabilities.motion)
     #expect(parser.outputCapabilities.rumbleMotors == (isLeft ? [.leftMain] : [.rightMain]))
     var report = [UInt8](repeating: 0, count: 49)

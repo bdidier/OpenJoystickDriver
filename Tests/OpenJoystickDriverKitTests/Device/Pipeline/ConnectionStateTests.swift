@@ -64,7 +64,7 @@ struct ConnectionStateTests {
     let pipeline = DevicePipeline(
       identifier: DeviceIdentifier(vendorID: 1, productID: 2),
       transport: .hid(locationID: 1),
-      driver: HIDDescriptorDriver(identifier: DeviceIdentifier(vendorID: 1, productID: 2)),
+      driver: HIDDescriptorDriver(model: ControllerModelID(vendorID: 1, productID: 2)),
       dispatcher: CapturingOutputDispatcher()
     )
     let binding = ProtocolBinding(

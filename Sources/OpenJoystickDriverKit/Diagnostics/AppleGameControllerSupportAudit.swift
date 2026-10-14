@@ -59,19 +59,6 @@ public struct AppleGameControllerCatalogSnapshot: Codable, Sendable {
   }
 }
 
-/// Lightweight identity from an OJD runtime controller record.
-public struct OJDControllerRecordIdentity: Codable, Hashable, Sendable {
-  public let vendorID: UInt16
-  public let productID: UInt16
-  public let name: String
-
-  public init(vendorID: UInt16, productID: UInt16, name: String) {
-    self.vendorID = vendorID
-    self.productID = productID
-    self.name = name
-  }
-}
-
 /// Exact current-system Apple catalog evidence for one OJD controller record.
 public struct AppleGameControllerRecordAudit: Codable, Hashable, Sendable {
   public let vendorID: UInt16
@@ -99,11 +86,6 @@ public struct AppleGameControllerSupportAudit: Codable, Sendable {
 /// Deserializes Apple's private mapping plists, extracting only selected
 /// redacted keys without treating the asset as a supported API.
 public enum AppleGameControllerSupportAuditor {
-  private struct DeviceKey: Hashable {
-    let vendorID: UInt16
-    let productID: UInt16
-  }
-
   private struct EntryAccumulator {
     var identifiers: Set<String> = []
     var transports: Set<String> = []
@@ -157,29 +139,23 @@ public enum AppleGameControllerSupportAuditor {
     )
   }
 
-  public static func bundledOJDRecords() -> [OJDControllerRecordIdentity] {
+  public static func bundledOJDRecords() -> [ControllerModelID] {
     let urls = Bundle.module.urls(forResourcesWithExtension: "json", subdirectory: nil) ?? []
     let decoder = JSONDecoder()
-    var profiles: [DeviceKey: OJDControllerRecordIdentity] = [:]
+    var models: Set<ControllerModelID> = []
     for url in urls where isControllerRecordFilename(url.lastPathComponent) {
       guard let data = try? Data(contentsOf: url),
         let document = try? decoder.decode(ProfileDocument.self, from: data),
         (1...65_535).contains(document.vendorID), (0...65_535).contains(document.productID)
       else { continue }
-      let key = DeviceKey(
-        vendorID: UInt16(document.vendorID),
-        productID: UInt16(document.productID)
-      )
-      profiles[key] = OJDControllerRecordIdentity(
-        vendorID: key.vendorID,
-        productID: key.productID,
-        name: String(format: "Controller %04x:%04x", key.vendorID, key.productID)
+      models.insert(
+        ControllerModelID(
+          vendorID: UInt16(document.vendorID),
+          productID: UInt16(document.productID)
+        )
       )
     }
-    return profiles.values.sorted {
-      if $0.vendorID != $1.vendorID { return $0.vendorID < $1.vendorID }
-      return $0.productID < $1.productID
-    }
+    return models.sorted()
   }
 
   private static func isControllerRecordFilename(_ name: String) -> Bool {
@@ -191,11 +167,11 @@ public enum AppleGameControllerSupportAuditor {
 
   public static func audit(
     snapshot: AppleGameControllerCatalogSnapshot,
-    records: [OJDControllerRecordIdentity]
+    records: [ControllerModelID]
   ) -> AppleGameControllerSupportAudit {
-    var appleByKey: [DeviceKey: AppleGameControllerCatalogEntry] = [:]
+    var appleByKey: [ControllerModelID: AppleGameControllerCatalogEntry] = [:]
     for entry in snapshot.entries {
-      let key = DeviceKey(vendorID: entry.vendorID, productID: entry.productID)
+      let key = ControllerModelID(vendorID: entry.vendorID, productID: entry.productID)
       guard let existing = appleByKey[key] else {
         appleByKey[key] = entry
         continue
@@ -209,12 +185,12 @@ public enum AppleGameControllerSupportAuditor {
       )
     }
 
-    let rows = records.map { profile in
-      let entry = appleByKey[DeviceKey(vendorID: profile.vendorID, productID: profile.productID)]
+    let rows = records.map { model in
+      let entry = appleByKey[model]
       return AppleGameControllerRecordAudit(
-        vendorID: profile.vendorID,
-        productID: profile.productID,
-        name: profile.name,
+        vendorID: model.vendorID,
+        productID: model.productID,
+        name: String(format: "Controller %04x:%04x", model.vendorID, model.productID),
         catalogListed: entry != nil,
         appleIdentifiers: entry?.identifiers ?? [],
         transportConstraints: entry?.transports ?? [],
@@ -245,7 +221,7 @@ public enum AppleGameControllerSupportAuditor {
     bundleInfoData: [Data],
     source: AppleGameControllerCatalogSource
   ) -> AppleGameControllerCatalogSnapshot {
-    var accumulators: [DeviceKey: EntryAccumulator] = [:]
+    var accumulators: [ControllerModelID: EntryAccumulator] = [:]
     var versions: Set<String> = []
     var skippedDeviceCount = 0
     var malformedBundleCount = 0
@@ -279,7 +255,7 @@ public enum AppleGameControllerSupportAuditor {
           continue
         }
 
-        let key = DeviceKey(vendorID: UInt16(vendor), productID: UInt16(product))
+        let key = ControllerModelID(vendorID: UInt16(vendor), productID: UInt16(product))
         var accumulator = accumulators[key] ?? EntryAccumulator()
         if let identifier = device["Identifier"] as? String, !identifier.isEmpty {
           accumulator.identifiers.insert(identifier)

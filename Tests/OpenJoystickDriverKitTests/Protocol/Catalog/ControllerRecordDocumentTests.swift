@@ -224,8 +224,8 @@ struct ControllerRecordDocumentTests {
   @Test
   func noCatalogRowNamesAnAssemblyPolicy() {
     let registry = ProtocolDriverRegistry()
-    for identifier in registry.hidIdentifiers + registry.rawUSBIdentifiers {
-      let record = registry.record(for: identifier)
+    for model in registry.hidModels + registry.rawUSBModels {
+      let record = registry.record(for: model)
       #expect(record?.assemblyPolicy == nil)
       let binding = ProtocolBinding(
         protocolID: record?.physicalProtocolID ?? .hidDescriptor,

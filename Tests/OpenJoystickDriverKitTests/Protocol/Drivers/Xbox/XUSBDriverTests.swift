@@ -276,7 +276,7 @@ struct XUSBDriverTests {
     #expect(parser.sessionPlan.assignsStartupPlayerIndicator)
     #expect(XUSBDriver(isWirelessReceiver: true).sessionPlan.assignsStartupPlayerIndicator)
     #expect(
-      HIDDescriptorDriver(identifier: DeviceIdentifier(vendorID: 1, productID: 2)).startupWrites()
+      HIDDescriptorDriver(model: ControllerModelID(vendorID: 1, productID: 2)).startupWrites()
         .isEmpty
     )
   }

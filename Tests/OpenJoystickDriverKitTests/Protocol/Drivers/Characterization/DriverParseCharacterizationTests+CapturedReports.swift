@@ -82,7 +82,7 @@ extension DriverParseCharacterizationTests {
   static func captured(_ vendorID: UInt16, _ productID: UInt16) throws -> any PhysicalProtocolDriver
   {
     try catalogParser(
-      DeviceIdentifier(vendorID: vendorID, productID: productID),
+      ControllerModelID(vendorID: vendorID, productID: productID),
       registry: Subjects.registry
     )
   }
