@@ -71,7 +71,7 @@ Each controller model (vendor/product) has a virtual HID profile: `hid-xbox-one-
 
 ## Responsiveness
 
-The signed application host and headless commands must not wait indefinitely for system tools, login registration, permission APIs, or live-runtime calls.
+The signed application host and CLI commands must not wait indefinitely for system tools, login registration, permission APIs, or live-runtime calls.
 
 - System commands use `BoundedProcessRunner` off the main actor.
 - Headless live-state calls use framed local RPC with connect, send, and receive deadlines.

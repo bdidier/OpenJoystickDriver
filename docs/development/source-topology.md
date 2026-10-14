@@ -41,10 +41,12 @@ GameControllerProbe       -> Kit
 ```text
 Sources/OpenJoystickDriverKit/
   ApplicationService/  shared client, RPC, payload, lifecycle, and remapping contracts
+  Bluetooth/           Switch 2 Bluetooth LE routing
   Concurrency/         locking and blocking-work helpers
   Device/              controller identity, Manager, Discovery (HID, USB), input state,
                        PhysicalOutput, Pipeline
   Diagnostics/         support reports, probes, health, build identity, and packet logs
+  Errors/              the `ErrorCode` catalog
   HID/                 availability-selected physical HID access
   Localization/        string lookup over the bundled locale tables
   Output/              availability-selected virtual HID, backends, reports, formats, and profiles
@@ -63,16 +65,17 @@ Sources/OpenJoystickDriverUSB/
   Transport/           IOUSBHost and USBDriverKit transports
 
 Sources/OpenJoystickDriverService/
-  Diagnostics/         runtime controller-input diagnostics
   Remapping/           Profiles (library and persistence), Routing, SystemEvents
                        (CoreGraphics adaptation)
-  Runtime/             runtime composition, ForegroundOutput, OutputDispatch,
-                       authenticated RPC server
-  Status/              RuntimeSnapshot and SystemExtension status
+  Runtime/             runtime composition, Automation, Endpoint, OutputDispatch, RPC, file
+                       watchers, and virtual device diagnostics
+  Status/              SystemExtension status
 
 Sources/OpenJoystickDriverCLI/
-  Catalog/             command catalog and help text
-  Commands/            Controller, Diagnostics, Installation, Mapping, Settings
+  Commands/            one directory per command group: Access, Binding, Config, Controller,
+                       Diagnose, Explain, Extension, Log, Mod, Permission, Profile, Record,
+                       Service, Setting, Status, Update, Virtual
+  Root/                global options, failure and terminal handling, service connection
 
 Sources/OpenJoystickDriverPresentation/
   Components/  Controllers/  InputCapture/  MenuBar/  Profiles/  Runtime/  Settings/
@@ -81,7 +84,7 @@ Sources/OpenJoystickDriver/
   main.swift, App/ (headless host, Info.plist, Host.entitlements), Resources/
 ```
 
-Kit `Diagnostics/` holds reports and health types that both the CLI and app read; Service `Diagnostics/` holds diagnostics that need the running runtime.
+Kit `Diagnostics/` holds reports and health types that both the CLI and app read.
 
 ## Tests
 

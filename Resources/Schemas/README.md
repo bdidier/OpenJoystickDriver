@@ -6,6 +6,9 @@
 
 - `controller.schema.json`: generated runtime controller records.
 - `controller-override.schema.json`: authored additions and factual patches.
+- `defaults.schema.json`: `Defaults.json`, the `tuning` defaults for every controller.
+- `persona.schema.json`: a persona file, which matches a controller and gives the descriptor and HID identity its virtual gamepad publishes.
+- `mod-package.schema.json`: the `mod.json` manifest of a mod package folder.
 - `report.schema.json`: the CloudEvents 1.0 support-report envelope and payload.
 - `cli-output.schema.json`: the `--json` output of each `ojd` command. The CLI tests check every `--json` document they print against it.
 - `profile.schema.json`: the remapping profile file that `ojd profile export` writes and `ojd profile import` reads. Cross-field rules stay in the strict decoder, and a test keeps the schema enums equal to the Swift cases.
@@ -43,7 +46,7 @@ CloudEvents owns `specversion`, `id`, `source`, `type`, `time`, `datacontenttype
 git diff --check
 ```
 
-`check schemas` validates all schemas, every generated controller record, every override, OJD-owned Swift `CodingKeys`, and one live support report.
+`check schemas` validates all schemas, every generated controller record, every override, the error code catalog, and one live support report.
 It also compares `cli-output.schema.json` with its copy at the last release tag, and fails when a change would break a program that reads that release's `--json` output; see [Using the command line](../../wiki/Command-Line.md). Generate an intentional catalog change only through:
 
 ```bash
