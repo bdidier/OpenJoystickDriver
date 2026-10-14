@@ -102,7 +102,7 @@ def requirements_for(argv: list[str]) -> tuple[Capability, ...]:
             Capability.FULL_XCODE,
             Capability.DEVELOPMENT_SIGNING,
         )
-    if route == ("test", "parsers-macos14"):
+    if route[:1] == ("snapshots",) or route == ("test", "parsers-macos14"):
         return (Capability.SWIFT_TOOLCHAIN, Capability.FULL_XCODE)
     if route[:2] == ("hooks", "install") or route[:2] == ("hooks", "validate"):
         return (Capability.LEFTHOOK,)

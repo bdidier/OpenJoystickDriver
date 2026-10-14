@@ -109,6 +109,24 @@ class DispatcherTests(unittest.TestCase):
                     env=environment,
                 )
 
+    def test_snapshots_routes_forward_to_the_comparison_script(self) -> None:
+        for argument in ("check", "write"):
+            with self.subTest(argument=argument):
+                with (
+                    patch.object(
+                        dispatcher,
+                        "exec_target",
+                        side_effect=TargetInvoked,
+                    ) as execute,
+                    self.assertRaises(TargetInvoked),
+                ):
+                    dispatcher.dispatch(["snapshots", argument])
+                execute.assert_called_once_with(
+                    "Quality/equivalence_snapshots.py",
+                    [argument],
+                    python=True,
+                )
+
     def test_unknown_route_fails_with_usage_status(self) -> None:
         self.assertEqual(self.run_ojd("unknown").returncode, 2)
 

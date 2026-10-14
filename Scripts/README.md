@@ -11,6 +11,7 @@ Use `./Scripts/ojd --help` for supported routes and `./Scripts/ojd --version` fo
 ./Scripts/ojd check schemas
 ./Scripts/ojd check tools
 ./Scripts/ojd test parsers-macos14
+./Scripts/ojd snapshots check
 ruff format --check Scripts Tests/RepositoryScripts
 ruff check Scripts Tests/RepositoryScripts
 pyright
@@ -22,5 +23,7 @@ swiftlint lint --no-cache --strict
 .build/schema-validator/bin/python -m unittest discover -s Tests/RepositoryScripts
 swift test --no-parallel
 ```
+
+`snapshots check` runs the equivalence snapshot tests and prints the changed, added, and removed records against the files in `Tests/EquivalenceSnapshots/` (parsed frames, catalog index, record routes, DriverKit match list, SDL mappings); it exits non-zero on any difference. `snapshots write` rewrites those files from the current tree, so run it after an intended behavior change, such as the hid-generic button order fix.
 
 `catalog regenerate --write` writes generated controller records. DriverKit project generation writes DriverKit output. All other commands retain their documented route-specific effects and requirements.
