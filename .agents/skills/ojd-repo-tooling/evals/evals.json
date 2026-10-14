@@ -16,7 +16,7 @@
 			"prompt": "The commit hook passed but CI failed on the length checker.",
 			"expected_output": "Explains the index-snapshot hook and gate sync; compares hook and CI commands.",
 			"assertions": [
-				"Reads lefthook.yml and Scripts/Quality/check-index-snapshot.sh",
+				"Reads .husky/pre-commit and Scripts/Quality/check-index-snapshot.sh",
 				"Does not edit .git/hooks directly"
 			]
 		},

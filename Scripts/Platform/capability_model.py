@@ -15,7 +15,7 @@ class Capability(Enum):
     FULL_XCODE = "full Xcode"
     SWIFTLINT = "SwiftLint"
     SHELLCHECK = "ShellCheck"
-    LEFTHOOK = "Lefthook"
+    BUN = "Bun"
     JUST = "Just"
     PKG_CONFIG = "pkg-config"
     SDL3 = "SDL3"
@@ -55,7 +55,7 @@ class CapabilityError(RuntimeError):
 FORMULAS: dict[Capability, tuple[str, str]] = {
     Capability.SWIFTLINT: ("swiftlint", "swiftlint"),
     Capability.SHELLCHECK: ("shellcheck", "shellcheck"),
-    Capability.LEFTHOOK: ("lefthook", "lefthook"),
+    Capability.BUN: ("bun", "bun"),
     Capability.JUST: ("just", "just"),
     Capability.PKG_CONFIG: ("pkg-config", "pkg-config"),
     Capability.SDL3: ("sdl3", "sdl3"),

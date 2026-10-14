@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import subprocess
+import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -162,3 +163,42 @@ class DispatcherTests(unittest.TestCase):
                 str(dispatcher.PROJECT_DIR / "Tools/SDLGamepadProbe"),
             ],
         )
+
+    def test_hooks_install_runs_bun_install(self) -> None:
+        completed = subprocess.CompletedProcess([], 0)
+        with patch(
+            "Scripts.Command.execution.subprocess.run", return_value=completed
+        ) as run:
+            self.assertEqual(dispatcher.dispatch(["hooks", "install"]), 0)
+        self.assertEqual(run.call_args.args[0], ["bun", "install"])
+
+    def test_hooks_validate_checks_hooks_path_and_hook_files(self) -> None:
+        all_files = ("commit-msg", "pre-commit", "pre-push")
+        for configured, generated, files, expected in (
+            (".husky/_", True, all_files, 0),
+            ("", True, all_files, 1),
+            ("legacy/hooks", True, all_files, 1),
+            (".husky/_", False, all_files, 1),
+            (".husky/_", True, ("pre-commit", "pre-push"), 1),
+        ):
+            with (
+                self.subTest(configured=configured, generated=generated, files=files),
+                tempfile.TemporaryDirectory() as directory,
+            ):
+                root = Path(directory)
+                (root / ".husky").mkdir()
+                if generated:
+                    (root / ".husky" / "_").mkdir()
+                for name in files:
+                    (root / ".husky" / name).write_text("")
+                completed = subprocess.CompletedProcess([], 0, configured + "\n", "")
+                with (
+                    patch("Scripts.Command.execution.PROJECT_DIR", root),
+                    patch(
+                        "Scripts.Command.execution.subprocess.run",
+                        return_value=completed,
+                    ),
+                ):
+                    self.assertEqual(
+                        dispatcher.dispatch(["hooks", "validate"]), expected
+                    )
