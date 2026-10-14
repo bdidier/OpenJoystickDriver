@@ -221,17 +221,17 @@ A Switch 2 record without `bluetoothLE` connects over USB only, and `ojd record 
 `ojd record draft CONTROLLER` builds a starting record for a connected controller. The service must be running.
 
 1. Run `ojd record draft CONTROLLER > record.json`, where `CONTROLLER` is an ID from `ojd controller list` or the controller's VID:PID.
-1. For 10 seconds, press every button and move each stick, trigger, and the D-pad. `--duration SECONDS` changes the time.
-1. Read the bytes that changed. For each report byte that took more than one value, the command prints its offset and its lowest and highest value on stderr.
+2. For 10 seconds, press every button and move each stick, trigger, and the D-pad. `--duration SECONDS` changes the time.
+3. Read the bytes that changed. For each report byte that took more than one value, the command prints its offset and its lowest and highest value on stderr.
 
 The record maps what the HID report descriptor states plainly: buttons 1 to 11 in the order the `hid.descriptor` family reads them, X, Y, Rx, and Ry sticks, Z and Rz triggers, and the hat, with the `hid.report-layout` family. When nothing maps, it names `hid.descriptor` instead. Check every control against the changed bytes and correct the record before you install it. The record is a `patch` for a model with a bundled record and an `add` otherwise.
 
 ## Install a Record
 
 1. Find the VID:PID of your controller. For more information, see [Finding your controller ID](Connecting-Controllers.md#finding-your-controller-id).
-1. Write the record file. Set `$schema` to `https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/controller-override.schema.json`.
-1. Check the file. Run `ojd record validate FILE`.
-1. Install the file. Run `ojd record install FILE`.
+2. Write the record file. Set `$schema` to `https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/controller-override.schema.json`.
+3. Check the file. Run `ojd record validate FILE`.
+4. Install the file. Run `ojd record install FILE`.
 
 The running service applies the record when the folder changes. It connects each connected controller of that model again with the new record, and leaves other controllers connected. A controller that you disconnected stays disconnected. You do not need to restart the service or unplug the controller.
 
@@ -246,7 +246,7 @@ OpenJoystickDriver skips a file that is not valid and uses the bundled record fo
 ## Remove a Record
 
 1. Run `ojd record remove VVVV:PPPP`.
-1. Confirm the deletion.
+2. Confirm the deletion.
 
 A bundled model then goes back to its bundled record.
 
