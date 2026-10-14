@@ -190,20 +190,16 @@ entitlements = plistlib.loads(open(profile, "rb").read()).get("Entitlements", {}
 if entitlements.get("com.apple.developer.driverkit.allow-any-userclient-access"):
     raise SystemExit("GUI provisioning profile grants forbidden allow-any DriverKit access")
 value = entitlements.get("com.apple.developer.driverkit.userclient-access")
-expected = [bundle_id]
-ungranted = value is None or (
-    isinstance(value, list)
-    and all(isinstance(item, str) for item in value)
-    and bundle_id not in value
-)
+string_list = isinstance(value, list) and all(isinstance(item, str) for item in value)
+ungranted = value is None or (string_list and bundle_id not in value)
 if ungranted and environment != "release":
     print(0)
-elif value == expected:
+elif string_list and bundle_id in value:
     print(1)
 else:
     raise SystemExit(
         "GUI provisioning profile has an incorrect DriverKit user-client value: "
-        f"expected {expected!r}, got {value!r}"
+        f"expected a list of bundle IDs that includes {bundle_id!r}, got {value!r}"
     )
 PY
 )" || exit 1

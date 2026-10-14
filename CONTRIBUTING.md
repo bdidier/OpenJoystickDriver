@@ -61,7 +61,7 @@ GUI and CLI copy: `LOCALIZATION.md`. Tests check codes, routes, identifiers, pat
 - Deployment floor: macOS 12. Future iOS and iPadOS companion apps: iOS 15 and iPadOS 15.
 - Kit has no SwifterKit. USB adapter: `Sources/OpenJoystickDriverUSB/`. Generator: `Sources/DriverKitGenerator/` and `Scripts/Build/driverkit.sh`.
 - No manual DriverKit build or post-generation patch. `./Scripts/ojd check driverkit`.
-- Host `com.apple.developer.driverkit.userclient-access` must be exactly `com.openjoystickdriver.XboxUSBDevice`.
+- The host profile's `com.apple.developer.driverkit.userclient-access` list must include `com.openjoystickdriver.XboxUSBDevice` and may name other bundle IDs; `Host.entitlements` claims exactly `com.openjoystickdriver.XboxUSBDevice`.
 - `com.openjoystickdriver.XboxUSBDevice` is the only DEXT. It has one personality, `XboxUSB` (Microsoft GIP USB interfaces), and only the `com.apple.developer.driverkit` and `com.apple.developer.driverkit.transport.usb` entitlements. `./Scripts/ojd driverkit generate [path]` generates it. The app and service publish virtual gamepads through `IOHIDUserDevice`, which needs `com.apple.developer.hid.virtual.device` on the app profile; that entitlement never goes in the DEXT.
 
 ## Pull Requests

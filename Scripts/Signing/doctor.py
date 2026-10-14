@@ -200,15 +200,28 @@ def userclient_ungranted(value: object) -> bool:
     )
 
 
+def includes_dext_grant(value: object) -> bool:
+    """True when the value is a list of bundle IDs that includes this DEXT. The list may
+    name other bundle IDs."""
+    return (
+        isinstance(value, list)
+        and all(isinstance(item, str) for item in value)
+        and DEXT_BUNDLE_ID in value
+    )
+
+
 def userclient_access_errors(
     label: str, profile: dict, *, allow_ungranted: bool = False
 ) -> list[str]:
     value = profile.get("Entitlements", {}).get(USERCLIENT_ACCESS)
     if allow_ungranted and userclient_ungranted(value):
         return []
-    if value != [DEXT_BUNDLE_ID]:
-        expected = [DEXT_BUNDLE_ID]
-        return [f"{label}: {USERCLIENT_ACCESS} is {value!r}; expected {expected!r}"]
+    if not includes_dext_grant(value):
+        message = (
+            f"{label}: {USERCLIENT_ACCESS} is {value!r}; "
+            f"expected a list of bundle IDs that includes {DEXT_BUNDLE_ID!r}"
+        )
+        return [message]
     return []
 
 

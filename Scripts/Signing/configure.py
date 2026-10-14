@@ -270,6 +270,16 @@ def userclient_ungranted(value: object) -> bool:
     )
 
 
+def includes_dext_grant(value: object) -> bool:
+    """True when the value is a list of bundle IDs that includes this DEXT. The list may
+    name other bundle IDs."""
+    return (
+        isinstance(value, list)
+        and all(isinstance(item, str) for item in value)
+        and dext_bundle_id in value
+    )
+
+
 def require_host_profile(
     path: str, label: str, *, allow_ungranted_userclient: bool = False
 ) -> None:
@@ -283,18 +293,22 @@ def require_host_profile(
         "com.apple.developer.system-extension.install": True,
         hid_entitlement: True,
     }
-    userclient = "com.apple.developer.driverkit.userclient-access"
-    if not (
-        allow_ungranted_userclient
-        and userclient_ungranted(entitlements.get(userclient))
-    ):
-        expected[userclient] = [dext_bundle_id]
     for key, value in expected.items():
         if entitlements.get(key) != value:
             raise SystemExit(
                 f"ERROR: {label} entitlement mismatch for {key}: "
                 f"expected {value!r}, got {entitlements.get(key)!r}"
             )
+    userclient = "com.apple.developer.driverkit.userclient-access"
+    granted = entitlements.get(userclient)
+    if not includes_dext_grant(granted) and not (
+        allow_ungranted_userclient and userclient_ungranted(granted)
+    ):
+        raise SystemExit(
+            f"ERROR: {label} entitlement mismatch for {userclient}: "
+            f"expected a list of bundle IDs that includes {dext_bundle_id!r}, "
+            f"got {granted!r}"
+        )
     if entitlements.get("com.apple.developer.driverkit.allow-any-userclient-access"):
         raise SystemExit(
             f"ERROR: {label} grants allow-any DriverKit user-client access"

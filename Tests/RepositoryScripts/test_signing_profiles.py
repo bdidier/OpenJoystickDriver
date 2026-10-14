@@ -17,6 +17,8 @@ FORBIDDEN_DEXT_KEYS = (
     "com.apple.developer.driverkit.allow-any-userclient-access",
 )
 USERCLIENT = "com.apple.developer.driverkit.userclient-access"
+ALLOW_ANY = "com.apple.developer.driverkit.allow-any-userclient-access"
+VIRTUAL_HID = "com.openjoystickdriver.VirtualHIDDevice"
 HOST = {
     "com.apple.developer.system-extension.install": True,
     "com.apple.developer.hid.virtual.device": True,
@@ -74,7 +76,12 @@ class ConfigureProfileTests(unittest.TestCase):
             {**HOST, USERCLIENT: ["com.example.OldDriver"]},
             allow_ungranted_userclient=True,
         )
-        for value in ([DEXT, "other"], "*"):
+        self.check(
+            configure.require_host_profile,
+            {**HOST, USERCLIENT: [DEXT, "other"]},
+            allow_ungranted_userclient=True,
+        )
+        for value in ("*", [DEXT, 1]):
             with self.subTest(value=value), self.assertRaises(SystemExit):
                 self.check(
                     configure.require_host_profile,
@@ -82,12 +89,27 @@ class ConfigureProfileTests(unittest.TestCase):
                     allow_ungranted_userclient=True,
                 )
 
+    def test_host_profile_accepts_grant_that_includes_virtual_hid(self) -> None:
+        self.check(
+            configure.require_host_profile, {**HOST, USERCLIENT: [DEXT, VIRTUAL_HID]}
+        )
+
+    def test_host_profile_refuses_allow_any_userclient_access(self) -> None:
+        with self.assertRaises(SystemExit):
+            self.check(configure.require_host_profile, {**HOST, ALLOW_ANY: True})
+
+    def test_release_host_profile_without_dext_grant_is_refused(self) -> None:
+        for value in (None, [VIRTUAL_HID]):
+            entitlements = {**HOST, USERCLIENT: value}
+            with self.subTest(value=value), self.assertRaises(SystemExit):
+                self.check(configure.require_host_profile, entitlements)
+
 
 class DoctorProfileTests(unittest.TestCase):
     def test_userclient_access_states(self) -> None:
         granted = {"Entitlements": HOST}
         absent = {"Entitlements": without(HOST, USERCLIENT)}
-        wrong = {"Entitlements": {**HOST, USERCLIENT: [DEXT, "other"]}}
+        wider = {"Entitlements": {**HOST, USERCLIENT: [DEXT, "other"]}}
         self.assertEqual(doctor.userclient_access_errors("host", granted), [])
         self.assertEqual(
             doctor.userclient_access_errors("host", absent, allow_ungranted=True), []
@@ -98,8 +120,25 @@ class DoctorProfileTests(unittest.TestCase):
         )
         self.assertEqual(len(doctor.userclient_access_errors("host", absent)), 1)
         self.assertEqual(
-            len(doctor.userclient_access_errors("host", wrong, allow_ungranted=True)), 1
+            doctor.userclient_access_errors("host", wider, allow_ungranted=True), []
         )
+
+    def test_userclient_access_accepts_grant_that_includes_virtual_hid(self) -> None:
+        profile = {"Entitlements": {**HOST, USERCLIENT: [DEXT, VIRTUAL_HID]}}
+        self.assertEqual(doctor.userclient_access_errors("host", profile), [])
+
+    def test_userclient_access_refuses_wildcard_and_non_string_items(self) -> None:
+        for value in ("*", [DEXT, 1]):
+            profile = {"Entitlements": {**HOST, USERCLIENT: value}}
+            with self.subTest(value=value):
+                errors = doctor.userclient_access_errors(
+                    "host", profile, allow_ungranted=True
+                )
+                self.assertEqual(len(errors), 1)
+
+    def test_userclient_access_refuses_release_grant_without_dext(self) -> None:
+        profile = {"Entitlements": {**HOST, USERCLIENT: [VIRTUAL_HID]}}
+        self.assertEqual(len(doctor.userclient_access_errors("host", profile)), 1)
 
     def test_dext_profile_accepts_exact_usb_grant(self) -> None:
         self.assertEqual(
