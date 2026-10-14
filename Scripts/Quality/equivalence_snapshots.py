@@ -29,11 +29,27 @@ def parse_sections(text: str) -> dict[str, str]:
     return {key: "\n".join(lines).strip("\n") for key, lines in sections.items()}
 
 
+def parse_header(text: str) -> str:
+    """Return the text before the first `## ` section line."""
+    lines: list[str] = []
+    for line in text.splitlines():
+        if line.startswith("## "):
+            break
+        lines.append(line)
+    return "\n".join(lines).strip("\n")
+
+
 def diff_sections(expected: str, actual: str) -> list[str]:
     """Describe the records that were changed, added, or removed."""
     before = parse_sections(expected)
     after = parse_sections(actual)
     lines: list[str] = []
+    old_header = parse_header(expected)
+    new_header = parse_header(actual)
+    if old_header != new_header:
+        lines.append("  changed header")
+        lines.extend(f"    - {line}" for line in old_header.splitlines())
+        lines.extend(f"    + {line}" for line in new_header.splitlines())
     for title in sorted(before.keys() | after.keys()):
         if title not in after:
             lines.append(f"  removed {title}")
