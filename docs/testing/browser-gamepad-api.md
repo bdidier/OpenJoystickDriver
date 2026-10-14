@@ -7,14 +7,14 @@ Manual protocol for Plan 06. **ControllerTest.io is the canonical external manua
 Run every row independently.
 
 1. Record OJD commit/build, macOS version, publication backend, exact browser version, GameSir G7 SE firmware/physical mode, connection path, and selected OJD identity.
-1. Stop the prior test and close all Gamepad API pages.
-1. Restart OJD for the initial baseline; confirm one physical device and one intended virtual backend in diagnostics.
-1. Select exactly one identity and wait for its committed transition result.
-1. Open a fresh private browser window or otherwise establish a fresh Gamepad document lifecycle.
-1. Open ControllerTest.io and activate the controller as required by browser gesture policy.
-1. Use the canonical page to record slot/count, `id`, `mapping`, all buttons, axes, timestamps, connection events, and actuator presence/result.
-1. Close the page, stop OJD output, and verify no stale browser entries/callbacks before the next row.
-1. Repeat once after a deliberate identity switch. A difference from the clean-start result is classified as identity-transition contamination until lifecycle integrity is established.
+2. Stop the prior test and close all Gamepad API pages.
+3. Restart OJD for the initial baseline; confirm one physical device and one intended virtual backend in diagnostics.
+4. Select exactly one identity and wait for its committed transition result.
+5. Open a fresh private browser window or otherwise establish a fresh Gamepad document lifecycle.
+6. Open ControllerTest.io and activate the controller as required by browser gesture policy.
+7. Use the canonical page to record slot/count, `id`, `mapping`, all buttons, axes, timestamps, connection events, and actuator presence/result.
+8. Close the page, stop OJD output, and verify no stale browser entries/callbacks before the next row.
+9. Repeat once after a deliberate identity switch. A difference from the clean-start result is classified as identity-transition contamination until lifecycle integrity is established.
 
 Virtual controllers are published only through `IOHIDUserDevice`. Record the macOS version for each run; mark untested macOS versions explicitly unverified and do not infer parity.
 
