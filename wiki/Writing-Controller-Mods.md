@@ -96,9 +96,9 @@ ojd mod remove NAME [--force] [--dry-run]
 To try the sample package:
 
 1. Run `ojd mod validate` with the path of the sample folder.
-1. Run `ojd mod install` with the same path.
-1. Run `ojd mod list` to see the files it holds.
-1. Run `ojd mod remove ojd-sample` to remove it.
+2. Run `ojd mod install` with the same path.
+3. Run `ojd mod list` to see the files it holds.
+4. Run `ojd mod remove ojd-sample` to remove it.
 
 [Error codes](Error-Codes.md) lists E4001 to E4007. Use `ojd explain E4004` to read what a code means.
 
