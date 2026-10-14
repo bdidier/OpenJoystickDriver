@@ -119,6 +119,11 @@ final class BluetoothLECompositeHIDBackend: HIDAccessBackend {
     guard !hub.owns(locationID: connection.routingLocationID) else { return }
     await primary.routeElementValues(connection: connection)
   }
+
+  /// Switch 2 Bluetooth LE controllers are never native gamepads, so only IOHID devices change.
+  func reevaluateOwnership(of identities: Set<ControllerIdentity>) async -> Set<UUID> {
+    await primary.reevaluateOwnership(of: identities)
+  }
 }
 
 /// Opens a Switch 2 Bluetooth LE controller's command channel over GATT, and every other device

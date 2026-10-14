@@ -233,11 +233,19 @@ public struct ControllerRecordSet: Sendable {
     for url in urls {
       let file: ControllerRecordFile
       do {
-        let validated = try validate(Data(contentsOf: url), file: url)
-        let expected = fileName(for: validated.record.identity)
+        let validated = try validate(
+          Data(contentsOf: url),
+          file: url,
+          packages: packaged.records
+        )
+        let identity = validated.record.identity
+        let expected = fileName(for: identity)
         if url.lastPathComponent == expected {
-          records[validated.record.identity] = validated.record
-          packaged.overridden(validated.record.identity, by: url)
+          records[identity] = validated.record
+          // A patch of a package-only model applies over the package record and keeps it.
+          if validated.operation == .add || bundled.records[identity] != nil {
+            packaged.overridden(identity, by: url)
+          }
           file = ControllerRecordFile(
             url: url,
             identity: validated.record.identity,
@@ -268,11 +276,13 @@ public struct ControllerRecordSet: Sendable {
   /// Validates one user record against the bundled catalog: the override schema's shape, the
   /// controller contract and its cross-field checks, and the operation's fit with the catalog.
   /// `file` becomes the record's ``ControllerRecord/userFile``, or its
-  /// ``ControllerRecord/packageFile`` when `layer` is `package`.
+  /// ``ControllerRecord/packageFile`` when `layer` is `package`. A patch of a model with no
+  /// bundled record applies over its record in `packages`, the installed package records.
   public static func validate(
     _ data: Data,
     file: URL? = nil,
-    layer: ControllerRecordLayer = .user
+    layer: ControllerRecordLayer = .user,
+    packages: [ControllerIdentity: ControllerRecord] = [:]
   ) throws -> ValidatedControllerRecord {
     guard let object = try? JSONSerialization.jsonObject(with: data),
       let document = object as? [String: Any]
@@ -317,7 +327,7 @@ public struct ControllerRecordSet: Sendable {
           "set must hold protocol, usb, bluetoothLE, ownership, output, input, or tuning"
         )
       }
-      guard let upstream = bundled.records[identity],
+      guard let upstream = bundled.records[identity] ?? packages[identity],
         let base = try JSONSerialization.jsonObject(with: upstream.document) as? [String: Any]
       else {
         throw ControllerRecordProblem(

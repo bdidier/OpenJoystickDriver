@@ -98,6 +98,14 @@ protocol HIDAccessBackend: Sendable {
   /// Re-runs the seize of a location's devices whose earlier attempt was refused or failed.
   func retryInputClaim(locationID: UInt32) async
   func routeElementValues(connection: HIDDeviceConnection) async
+  /// Admits again each device of a model in `identities` whose native pass-through changed with
+  /// the current records, and returns the connections it admitted.
+  func reevaluateOwnership(of identities: Set<ControllerIdentity>) async -> Set<UUID>
+}
+
+extension HIDAccessBackend {
+  /// A backend whose devices never pass through to macOS has nothing to re-evaluate.
+  func reevaluateOwnership(of _: Set<ControllerIdentity>) -> Set<UUID> { [] }
 }
 
 private final class IOHIDAccessBackend: HIDAccessBackend, Sendable {
@@ -180,6 +188,10 @@ private final class IOHIDAccessBackend: HIDAccessBackend, Sendable {
 
   func routeElementValues(connection: HIDDeviceConnection) async {
     await stream.routeElementValues(connection: connection)
+  }
+
+  func reevaluateOwnership(of identities: Set<ControllerIdentity>) async -> Set<UUID> {
+    await MainActor.run { stream.reevaluateOwnership(of: identities) }
   }
 }
 
@@ -280,5 +292,12 @@ public final class HIDManager: Sendable {
   /// Delivers a connection's decoded element values, for a driver that parses them.
   public func routeElementValues(connection: HIDDeviceConnection) async {
     await backend.routeElementValues(connection: connection)
+  }
+
+  /// Admits again each device of a model in `identities` whose native pass-through changed with
+  /// the current records, so a changed `ownership` seizes or releases it without a replug.
+  /// Returns the connections it admitted; their `.connected` events are already queued.
+  func reevaluateOwnership(of identities: Set<ControllerIdentity>) async -> Set<UUID> {
+    await backend.reevaluateOwnership(of: identities)
   }
 }

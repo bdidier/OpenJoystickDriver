@@ -1,0 +1,325 @@
+import Foundation
+import Testing
+
+@testable import OpenJoystickDriverKit
+
+/// A changed `ownership` reaches a connected controller without a replug. The GameSir connections
+/// are synthetic, as in `HIDLocationRoutingTests`.
+struct OwnershipReapplyTests {
+  private static let changedModel = ControllerIdentity(vendorID: 0x3537, productID: 0x100B)
+
+  /// Only the locations where a listed model's native flag changed are cycled, siblings included.
+  @Test
+  func reevaluationCyclesEveryDeviceAtALocationWhoseNativeFlagChanged() {
+    let changed = Self.gameSir(productID: 0x100B, locationID: 1, native: true)
+    let sibling = Self.gameSir(productID: 0x100B, locationID: 1, native: true, interface: 1)
+    let unchanged = Self.gameSir(productID: 0x100B, locationID: 2, native: false)
+    let unlisted = Self.gameSir(productID: 0x1053, locationID: 3, native: true)
+    let tracked: [UInt64: HIDDeviceConnection] = [
+      10: changed, 11: sibling, 20: unchanged, 30: unlisted,
+    ]
+
+    let cycled = HIDDeviceStream.ownershipReevaluation(
+      tracked: tracked,
+      identities: [Self.changedModel]
+    ) { deviceID, connection in
+      deviceID == 10 ? false : connection.physicalDevice.nativePassThrough
+    }
+
+    #expect(cycled == [10, 11])
+  }
+
+  /// A record reload lets the HID backend admit a changed model again with its new native flag,
+  /// and `readmitHIDConnections` does not admit it a second time. Other models keep their
+  /// sessions.
+  @Test
+  func recordReloadReadmitsTheChangedModelOnceWithItsNewNativeFlag() async throws {
+    let scripted = ScriptedHIDAccessBackend()
+    await scripted.enableOutputReports()
+    await scripted.enableFeatureReports()
+    let backend = OwnershipReapplyBackend(scripted)
+    let manager = DeviceManager(
+      dispatcher: HIDRoleEventRecorder(),
+      hidManager: HIDManager(backend: backend)
+    )
+    await backend.attach(manager)
+    await manager.markStartedForTest()
+    let native = Self.gameSir(productID: 0x100B, locationID: 0x0021_0000, native: true)
+    let other = Self.gameSir(productID: 0x1053, locationID: 0x0022_0000, native: false)
+    let seized = Self.gameSir(productID: 0x100B, locationID: 0x0021_0000, native: false)
+    await backend.setSnapshots([native, other])
+    await backend.replace(native, with: seized)
+    await manager.handleHIDEvent(.connected(connection: native, ownership: .unknown))
+    await manager.handleHIDEvent(.connected(connection: other, ownership: .exclusive))
+    let changedID = DeviceIdentifier(vendorID: 0x3537, productID: 0x100B, locationID: 0x0021_0000)
+    let otherID = DeviceIdentifier(vendorID: 0x3537, productID: 0x1053, locationID: 0x0022_0000)
+    let otherPipeline = try #require(await manager.pipelines[otherID])
+
+    await manager.reloadControllerRecords(changing: [Self.changedModel])
+    try await Self.waitForHIDInitializations(of: manager)
+
+    #expect(await backend.reevaluated() == [[Self.changedModel]])
+    #expect(Set(await manager.pipelines.keys) == [changedID, otherID])
+    #expect(await manager.deviceInfos[changedID]?.hidConnectionID == seized.connectionID)
+    #expect(await manager.deviceInfos[changedID]?.physicalDevice?.nativePassThrough == false)
+    let readmitted = try #require(await backend.admittedPipelines()[changedID])
+    #expect(await readmitted.observedInputDemand == nil)
+    // A second admission by `readmitHIDConnections` would replace the backend's pipeline.
+    #expect(try #require(await manager.pipelines[changedID]) === readmitted)
+    #expect(try #require(await manager.pipelines[otherID]) === otherPipeline)
+    await manager.stop()
+  }
+
+  /// A model that GameController supports, set to `ownership: ojd`, is seized, so its pipeline has
+  /// no observed-input gate and dispatches each changed report even with no remapping route.
+  @Test
+  func anOJDOwnedNativeModelDispatchesEachChangedReportWithoutARoute() async throws {
+    let records = try Self.recordsOwningTheChangedModel()
+    let catalog = DeviceCatalog(records: records)
+    #expect(catalog.takesOwnership(of: DeviceIdentifier(vendorID: 0x3537, productID: 0x100B)))
+    // `HIDDeviceStream.nativePassThrough` for a model that GameController supports.
+    let nativePassThrough =
+      !catalog.takesOwnership(of: DeviceIdentifier(vendorID: 0x3537, productID: 0x100B))
+    let owned = try await Self.dispatchedReports(nativePassThrough: nativePassThrough)
+    #expect(owned.observedGate == false)
+    #expect(owned.dispatched == 2)
+    // The same controller left to macOS is gated, so the test depends on the flag.
+    let native = try await Self.dispatchedReports(nativePassThrough: true)
+    #expect(native.observedGate)
+    #expect(native.dispatched == 0)
+  }
+
+  /// Sends a pressed report and then a neutral one through a GameSir with `nativePassThrough`, to
+  /// a dispatcher whose remapping wants no observed input, the passthrough profile.
+  private static func dispatchedReports(
+    nativePassThrough: Bool
+  ) async throws -> (observedGate: Bool, dispatched: Int) {
+    let backend = ScriptedHIDAccessBackend()
+    await backend.enableOutputReports()
+    await backend.enableFeatureReports()
+    let dispatcher = UnroutedDispatcher()
+    let manager = DeviceManager(dispatcher: dispatcher, hidManager: HIDManager(backend: backend))
+    await manager.markStartedForTest()
+    let locationID: UInt32 = 0x0021_0000
+    let connection = gameSir(
+      productID: 0x100B,
+      locationID: locationID,
+      native: nativePassThrough
+    )
+    let ownership: HIDInputOwnership = nativePassThrough ? .unknown : .exclusive
+    await backend.setConnectionSnapshots([
+      HIDDeviceConnectionSnapshot(connection: connection, ownership: ownership)
+    ])
+    await manager.handleHIDEvent(.connected(connection: connection, ownership: ownership))
+    let pipeline = try #require(await manager.pipelines.values.first)
+    let neutral = Data([0x12, 0x80, 0x80, 0x80, 0x80] + [UInt8](repeating: 0, count: 59))
+    let before = dispatcher.count
+    for report in [HIDLocationRoutingTests.aPressed, neutral] {
+      await manager.handleHIDEvent(
+        .inputReport(
+          locationID: locationID,
+          connectionID: connection.connectionID,
+          reportID: 0x12,
+          data: report
+        )
+      )
+    }
+    let result = (await pipeline.observedInputDemand != nil, dispatcher.count - before)
+    await manager.stop()
+    return result
+  }
+
+  /// The bundled records with a user `patch` that sets `ownership: ojd` for the changed model.
+  private static func recordsOwningTheChangedModel() throws -> ControllerRecordSet {
+    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
+      "ojd-ownership-\(UUID().uuidString)",
+      isDirectory: true
+    )
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: directory) }
+    try JSONSerialization.data(withJSONObject: [
+      "$schema": ControllerRecordSet.overrideSchemaID, "operation": "patch",
+      "vendorID": 0x3537, "productID": 0x100B, "set": ["ownership": "ojd"],
+    ])
+    .write(to: directory.appendingPathComponent("3537-100b.json"))
+    let records = ControllerRecordSet.load(userDirectory: directory)
+    #expect(records.problems.isEmpty)
+    return records
+  }
+
+  private static func waitForHIDInitializations(of manager: DeviceManager) async throws {
+    for _ in 0..<400 where await !manager.hidInitializationTasks.isEmpty {
+      try await Task.sleep(for: .milliseconds(5))
+    }
+    #expect(await manager.hidInitializationTasks.isEmpty)
+  }
+
+  private static func gameSir(
+    productID: UInt16,
+    locationID: UInt32,
+    native: Bool,
+    interface: UInt8 = 0
+  ) -> HIDDeviceConnection {
+    HIDDeviceConnection(
+      physicalDevice: PhysicalDevice(
+        vendorID: 0x3537,
+        productID: productID,
+        productName: "GameSir",
+        transportProperty: "USB",
+        physicalLocationIdentifier: locationID,
+        interfaces: [
+          PhysicalInterfaceSignature(
+            interfaceNumber: interface,
+            hostTransport: .usb,
+            accessBackend: .ioHID,
+            hidLayout: HIDLayoutSummary(reportDescriptor: Data(GamepadHIDDescriptor.descriptor))
+          )
+        ],
+        nativePassThrough: native
+      ),
+      routingLocationID: locationID
+    )
+  }
+}
+
+/// Counts dispatched events and, like a remapping router with no route for any controller, wants
+/// no observed input.
+private final class UnroutedDispatcher: OutputDispatcher, ObservedInputDemand,
+  @unchecked Sendable
+{
+  private let lock = NSLock()
+  private var dispatched = 0
+  private var suppressed = false
+
+  var suppressOutput: Bool {
+    get { lock.withLock { suppressed } }
+    set { lock.withLock { suppressed = newValue } }
+  }
+
+  var count: Int { lock.withLock { dispatched } }
+
+  func dispatch(
+    _: ControllerEvent,
+    labels _: ControllerButtonLabels,
+    from _: DeviceIdentifier
+  ) { lock.withLock { dispatched += 1 } }
+
+  func activateOutput(for _: DeviceIdentifier) {}
+
+  func wantsObservedInput(from _: DeviceIdentifier) -> Bool { false }
+}
+
+/// Forwards to the scripted fake and, like `HIDDeviceStream`, admits a changed model again by
+/// sending its disconnect and its replacement connection to the manager.
+private actor OwnershipReapplyBackend: HIDAccessBackend {
+  private let scripted: ScriptedHIDAccessBackend
+  private weak var manager: DeviceManager?
+  private var snapshots: [HIDDeviceConnection] = []
+  private var replacements: [UUID: HIDDeviceConnection] = [:]
+  private var calls: [Set<ControllerIdentity>] = []
+  private var admitted: [DeviceIdentifier: DevicePipeline] = [:]
+
+  init(_ scripted: ScriptedHIDAccessBackend) { self.scripted = scripted }
+
+  func attach(_ manager: DeviceManager) { self.manager = manager }
+
+  func setSnapshots(_ connections: [HIDDeviceConnection]) async {
+    snapshots = connections
+    await scripted.setConnectionSnapshots(
+      connections.map { HIDDeviceConnectionSnapshot(connection: $0, ownership: .exclusive) }
+    )
+  }
+
+  func replace(_ connection: HIDDeviceConnection, with replacement: HIDDeviceConnection) {
+    replacements[connection.connectionID] = replacement
+  }
+
+  func reevaluated() -> [Set<ControllerIdentity>] { calls }
+
+  /// The manager's pipelines once the admissions this backend sent have finished.
+  func admittedPipelines() -> [DeviceIdentifier: DevicePipeline] { admitted }
+
+  func reevaluateOwnership(of identities: Set<ControllerIdentity>) async -> Set<UUID> {
+    calls.append(identities)
+    let cycled = snapshots.filter { replacements[$0.connectionID] != nil }
+    for old in cycled { await manager?.handleHIDEvent(.disconnected(connection: old)) }
+    var admittedIDs: Set<UUID> = []
+    for old in cycled {
+      guard let new = replacements.removeValue(forKey: old.connectionID) else { continue }
+      await setSnapshots(snapshots.map { $0.connectionID == old.connectionID ? new : $0 })
+      await manager?.handleHIDEvent(.connected(connection: new, ownership: .exclusive))
+      admittedIDs.insert(new.connectionID)
+    }
+    if let manager {
+      for _ in 0..<400 where await !manager.hidInitializationTasks.isEmpty {
+        try? await Task.sleep(for: .milliseconds(5))
+      }
+      admitted = await manager.pipelines
+    }
+    return admittedIDs
+  }
+
+  func deviceEvents() async -> AsyncStream<HIDDeviceEvent> { await scripted.deviceEvents() }
+
+  func currentConnectionSnapshots() async -> [HIDDeviceConnectionSnapshot]? {
+    await scripted.currentConnectionSnapshots()
+  }
+
+  func setOutputReport(
+    locationID: UInt32,
+    report: PhysicalHIDOutputReport
+  ) async -> PhysicalHIDReportResult<Void> {
+    await scripted.setOutputReport(locationID: locationID, report: report)
+  }
+
+  func setOutputReport(
+    connection: HIDDeviceConnection,
+    report: PhysicalHIDOutputReport
+  ) async -> PhysicalHIDReportResult<Void> {
+    await scripted.setOutputReport(connection: connection, report: report)
+  }
+
+  func setFeatureReport(
+    locationID: UInt32,
+    report: PhysicalHIDOutputReport
+  ) async -> PhysicalHIDReportResult<Void> {
+    await scripted.setFeatureReport(locationID: locationID, report: report)
+  }
+
+  func setFeatureReport(
+    connection: HIDDeviceConnection,
+    report: PhysicalHIDOutputReport
+  ) async -> PhysicalHIDReportResult<Void> {
+    await scripted.setFeatureReport(connection: connection, report: report)
+  }
+
+  func getFeatureReport(
+    locationID: UInt32,
+    request: PhysicalHIDFeatureReadRequest
+  ) async -> PhysicalHIDReportResult<Data> {
+    await scripted.getFeatureReport(locationID: locationID, request: request)
+  }
+
+  func getFeatureReport(
+    connection: HIDDeviceConnection,
+    request: PhysicalHIDFeatureReadRequest
+  ) async -> PhysicalHIDReportResult<Data> {
+    await scripted.getFeatureReport(connection: connection, request: request)
+  }
+
+  func releaseInputClaim(locationID: UInt32) async -> PhysicalHIDClaimResult {
+    await scripted.releaseInputClaim(locationID: locationID)
+  }
+
+  func reacquireInputClaim(locationID: UInt32) async -> PhysicalHIDClaimResult {
+    await scripted.reacquireInputClaim(locationID: locationID)
+  }
+
+  func retryInputClaim(locationID: UInt32) async {
+    await scripted.retryInputClaim(locationID: locationID)
+  }
+
+  func routeElementValues(connection: HIDDeviceConnection) async {
+    await scripted.routeElementValues(connection: connection)
+  }
+}

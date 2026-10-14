@@ -44,15 +44,11 @@ extension HIDDeviceStream {
         syntheticProperty: syntheticProperty
       )
     else { return nil }
-    // macOS already serves a native gamepad, so OJD only observes its input and never seizes it,
-    // unless the controller's record takes ownership for OJD.
-    let nativePassThrough =
-      GCController.supportsHIDDevice(device)
-      && !DeviceCatalog.current.withLock {
-        $0.takesOwnership(
-          of: DeviceIdentifier(vendorID: identity.vendorID, productID: identity.productID)
-        )
-      }
+    let nativePassThrough = Self.nativePassThrough(
+      device,
+      vendorID: identity.vendorID,
+      productID: identity.productID
+    )
     guard
       eventAdapter.add(
         deviceID: deviceID,
@@ -92,6 +88,65 @@ extension HIDDeviceStream {
     // Attach input only after `.connected` is queued so no report precedes its connection.
     if openKr == kIOReturnSuccess { attachInput(device, deviceID: deviceID) }
     return nil
+  }
+
+  /// macOS already serves a native gamepad, so OJD only observes its input and never seizes it,
+  /// unless the controller's record takes ownership for OJD.
+  static func nativePassThrough(_ device: IOHIDDevice, vendorID: UInt16, productID: UInt16) -> Bool
+  {
+    GCController.supportsHIDDevice(device)
+      && !DeviceCatalog.current.withLock {
+        $0.takesOwnership(of: DeviceIdentifier(vendorID: vendorID, productID: productID))
+      }
+  }
+
+  /// Admits again each tracked device of a model in `identities` whose native pass-through no
+  /// longer matches the current records, so a changed `ownership` seizes or releases it without a
+  /// replug. Every tracked interface at an affected location is removed before any is added, so no
+  /// sibling keeps the old native flag. Returns the connections it admitted.
+  @MainActor
+  func reevaluateOwnership(of identities: Set<ControllerIdentity>) -> Set<UUID> {
+    guard let manager, let devices = IOHIDManagerCopyDevices(manager) as? Set<IOHIDDevice> else {
+      return []
+    }
+    let devicesByID = Dictionary(devices.map { (trackingID(for: $0), $0) }) { first, _ in first }
+    let tracked = seizeLock.withLock { connectionsByDeviceID }
+    let cycled = Self.ownershipReevaluation(
+      tracked: tracked.filter { devicesByID[$0.key] != nil },
+      identities: identities
+    ) { deviceID, connection in
+      guard let device = devicesByID[deviceID], let vendorID = connection.physicalDevice.vendorID,
+        let productID = connection.physicalDevice.productID
+      else { return connection.physicalDevice.nativePassThrough }
+      return Self.nativePassThrough(device, vendorID: vendorID, productID: productID)
+    }
+    let cycledDevices = cycled.sorted().compactMap { devicesByID[$0] }
+    for device in cycledDevices { handleDeviceRemoved(device) }
+    for device in cycledDevices { handleDeviceAdded(device) }
+    return seizeLock.withLock {
+      Set(cycled.compactMap { connectionsByDeviceID[$0]?.connectionID })
+    }
+  }
+
+  /// The tracked device IDs to admit again: every device at a location where a device of a model
+  /// in `identities` has a recomputed native pass-through that differs from its connection's.
+  static func ownershipReevaluation(
+    tracked: [UInt64: HIDDeviceConnection],
+    identities: Set<ControllerIdentity>,
+    nativePassThrough: (UInt64, HIDDeviceConnection) -> Bool
+  ) -> Set<UInt64> {
+    let models = Set(identities.map { [$0.vendorID, $0.productID] })
+    let changedLocations = Set(
+      tracked.compactMap { deviceID, connection -> UInt32? in
+        guard let vendorID = connection.physicalDevice.vendorID,
+          let productID = connection.physicalDevice.productID,
+          models.contains([vendorID, productID]),
+          nativePassThrough(deviceID, connection) != connection.physicalDevice.nativePassThrough
+        else { return nil }
+        return connection.routingLocationID
+      }
+    )
+    return Set(tracked.filter { changedLocations.contains($0.value.routingLocationID) }.keys)
   }
 
   /// Seizes a shared-open device and records whether isolation was acquired; a failed seize keeps

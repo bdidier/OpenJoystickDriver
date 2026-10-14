@@ -3,8 +3,9 @@ import Foundation
 /// Sets the `ownership` of one controller model in the user's controller-record directory.
 ///
 /// An existing user file keeps every other key; only `ownership` is set or replaced. A missing
-/// file becomes a `patch` record when the bundled catalog has the model, because a `patch`
-/// applies only over a bundled record. The record watcher of the service applies the change.
+/// file becomes a `patch` record when the bundled catalog or an installed package has the model,
+/// because a `patch` applies over one of their records. The record watcher of the service applies
+/// the change.
 public enum ControllerOwnershipWriter {
   /// One planned change, before ``write(_:)`` stores it.
   public struct Change: Sendable {
@@ -22,8 +23,9 @@ public enum ControllerOwnershipWriter {
 
   /// Why the change was refused. The file stays as it was.
   public enum Failure: Error, Equatable, Sendable {
-    /// The user directory has no file for the model and the bundled catalog has no record of
-    /// it, so there is nothing to patch. `ojd record draft` starts an `add` record.
+    /// The user directory has no file for the model and neither the bundled catalog nor an
+    /// installed package has a record of it, so there is nothing to patch. `ojd record draft`
+    /// starts an `add` record.
     case noRecord
     /// The existing user file is invalid, with its problem.
     case invalidFile(String)
@@ -40,12 +42,15 @@ public enum ControllerOwnershipWriter {
     directory: URL = ControllerRecordSet.userDirectory
   ) throws(Failure) -> Change {
     let file = directory.appendingPathComponent(ControllerRecordSet.fileName(for: identity))
+    let packages = ControllerRecordSet.packageRecords(
+      in: ModPackageStore.directory(besides: directory)
+    ).records
     let existing = try? Data(contentsOf: file)
     let document: [String: Any]
     if let existing {
-      document = try updated(existing, file: file, ownership: ownership)
+      document = try updated(existing, file: file, ownership: ownership, packages: packages)
     } else {
-      guard ControllerRecordSet.bundled.records[identity] != nil else { throw .noRecord }
+      guard packages[identity] != nil else { throw .noRecord }
       document = [
         "$schema": ControllerRecordSet.overrideSchemaID, "operation": "patch",
         "vendorID": Int(identity.vendorID), "productID": Int(identity.productID),
@@ -58,13 +63,12 @@ public enum ControllerOwnershipWriter {
         withJSONObject: document,
         options: [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
       )
-      _ = try ControllerRecordSet.validate(data, file: file)
+      _ = try ControllerRecordSet.validate(data, file: file, packages: packages)
     } catch { throw .invalidResult(ControllerRecordSet.problemDescription(error)) }
-    let effective = records.records[identity] ?? ControllerRecordSet.bundled.records[identity]
     return Change(
       identity: identity,
       ownership: ownership,
-      previous: effective?.profile.ownership ?? .macOS,
+      previous: (records.records[identity] ?? packages[identity])?.profile.ownership ?? .macOS,
       file: file,
       created: existing == nil,
       data: data
@@ -84,11 +88,12 @@ public enum ControllerOwnershipWriter {
   private static func updated(
     _ data: Data,
     file: URL,
-    ownership: ControllerOwnership
+    ownership: ControllerOwnership,
+    packages: [ControllerIdentity: ControllerRecord]
   ) throws(Failure) -> [String: Any] {
     let operation: ControllerRecordOperation
     do {
-      operation = try ControllerRecordSet.validate(data, file: file).operation
+      operation = try ControllerRecordSet.validate(data, file: file, packages: packages).operation
     } catch { throw .invalidFile(ControllerRecordSet.problemDescription(error)) }
     guard var document = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] else {
       throw .invalidFile("the file is not a JSON object")
