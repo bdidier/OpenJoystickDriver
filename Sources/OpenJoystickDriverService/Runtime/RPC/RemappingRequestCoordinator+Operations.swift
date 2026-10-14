@@ -210,6 +210,11 @@ extension RemappingRequestCoordinator {
         applicationScope: active.applicationScope ?? profile.applicationScope
       )
     }
+    // Only the package profiles this snapshot lists, should a reload land between the two reads.
+    let packageProfiles = try await library.packageProfileSources()
+      .filter { profilesByID[$0.key] != nil }
+      .map { ApplicationServiceRemappingPackageProfile(profileID: $0.key, package: $0.value) }
+      .sorted { $0.profileID.uuidString < $1.profileID.uuidString }
     let routerSnapshot = await router.statusSnapshot()
     let routes = routerSnapshot.routes.map(Self.routePayload)
     let payload = ApplicationServiceRemappingSnapshotPayload(
@@ -218,6 +223,7 @@ extension RemappingRequestCoordinator {
       routes: routes,
       joyConPairs: routerSnapshot.joyConPairs,
       profileIssues: librarySnapshot.issues,
+      packageProfiles: packageProfiles,
       postEventAccess: routerSnapshot.postEventAccessState
     )
     if validateResponse { try ensurePayloadFits(payload) }

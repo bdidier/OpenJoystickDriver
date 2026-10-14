@@ -152,25 +152,38 @@ package final class ApplicationServiceRuntime {
   private func startProfileWatcher() {
     let library = remappingProfileLibrary
     library.discardLegacyLibrary()
-    let profilesDirectory = library.profilesDirectory
-    for directory in [library.directory, profilesDirectory] {
+    let targets = Self.profileWatchTargets(for: library)
+    for directory in targets.directories {
       do { try RemappingProfileLibrary.createPrivateDirectory(directory) } catch {
         serviceError("[Profiles] Cannot create \(directory.path): \(error.localizedDescription)")
       }
     }
-    let selectionsURL = library.selectionsURL
     let applicationServiceServer = applicationServiceServer
     let profileWatcher = FileChangeWatcher(
-      directories: [library.directory, profilesDirectory],
-      watchesFile: {
-        $0.standardizedFileURL == selectionsURL.standardizedFileURL
-          || $0.deletingLastPathComponent().standardizedFileURL
-            == profilesDirectory.standardizedFileURL
-      },
-      onChange: { Task { await applicationServiceServer.reloadRemappingProfiles() } }
-    )
+      directories: targets.directories,
+      watchesFile: targets.watchesFile
+    ) { Task { await applicationServiceServer.reloadRemappingProfiles() } }
     self.profileWatcher = profileWatcher
     profileWatcher.start()
+  }
+
+  /// What the profile watcher watches: the library folder for its selections file, `Profiles/`
+  /// for each profile file, and `Packages/`, where installing, replacing, or removing a mod
+  /// package renames or deletes the package's folder.
+  static func profileWatchTargets(
+    for library: RemappingProfileLibrary
+  ) -> (directories: [URL], watchesFile: (URL) -> Bool) {
+    let selectionsURL = library.selectionsURL.standardizedFileURL
+    let profilesDirectory = library.profilesDirectory.standardizedFileURL
+    let packagesDirectory = library.packagesDirectory.standardizedFileURL
+    return (
+      [library.directory, library.profilesDirectory, library.packagesDirectory],
+      { url in
+        let parent = url.deletingLastPathComponent().standardizedFileURL
+        return url.standardizedFileURL == selectionsURL || parent == profilesDirectory
+          || parent == packagesDirectory
+      }
+    )
   }
 
   /// Re-creates a connected controller's virtual device when a change to the persona files
