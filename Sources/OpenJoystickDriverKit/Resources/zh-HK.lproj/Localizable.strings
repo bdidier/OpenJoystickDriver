@@ -170,6 +170,10 @@
 "controllers.accessibilityDetails" = "%@。%@。協定：%@。解析器：%@。序號：%@。USB VID/PID：%@。輸入端點：%@。輸出端點：%@。";
 "controllers.publishedAs" = "發佈為";
 "controllers.nativeGamepadNotPublished" = "macOS 原生遊戲控制器，未發佈";
+"controllers.ownership.label" = "處理方";
+"controllers.ownership.native" = "macOS（原生）";
+"controllers.ownership.virtual" = "OpenJoystickDriver（虛擬）";
+"controllers.ownership.refused" = "此控制器無法切換：它使用原始 USB，或 macOS 不原生處理它。";
 "virtualProfile.advanced" = "進階";
 "virtualProfile.title" = "虛擬 HID 設定檔";
 "virtualProfile.modelScope" = "套用至此型號的所有已連接控制器。";
@@ -1206,6 +1210,15 @@
 "cli.controller.output.not_ready" = "%@ 尚未準備好輸出。請稍後再試。";
 "cli.controller.output.sent" = "已將 %@ 傳送到 %@。";
 "cli.controller.output.unsupported" = "%@ 沒有%@。執行 「ojd controller show %@」 查看它支援什麼。";
+"cli.controller.ownership.abstract" = "選擇由 macOS 還是 OpenJoystickDriver 處理某個控制器型號。";
+"cli.controller.ownership.choice" = "native（由 macOS 處理控制器）或 virtual（由 OpenJoystickDriver 處理）。";
+"cli.controller.ownership.discussion" = "native 將控制器交給 macOS，由其作為遊戲控制器處理；virtual 讓 OpenJoystickDriver 接管控制器並發佈其虛擬遊戲控制器。此選擇適用於該型號的所有控制器：它會在你的記錄目錄中該型號的記錄 VVVV-PPPP.json 裡設定 ownership，並保留記錄的其他欄位。執行中的服務無需重新插拔即可套用。需要服務來找到控制器。--dry-run 不會寫入任何內容。對於使用原始 USB 的控制器（一律由 OpenJoystickDriver 處理）或 macOS 不原生處理的控制器，會以結束代碼 1 和 E2023 結束。";
+"cli.controller.ownership.dry_run" = "將會把 %@ 設為 %@（%@）。";
+"cli.controller.ownership.invalid" = "無法變更 %@：%@";
+"cli.controller.ownership.no_record" = "%@ 沒有可變更的控制器記錄。請用 'ojd record draft %@' 建立一個。";
+"cli.controller.ownership.not_native" = "macOS 不原生處理 %@，因此一律由 OpenJoystickDriver 處理。";
+"cli.controller.ownership.raw_usb" = "%@ 使用原始 USB，因此一律由 OpenJoystickDriver 處理。";
+"cli.controller.ownership.success" = "已把 %@ 設為 %@（%@）。執行中的服務現在會套用它。";
 "cli.controller.player.abstract" = "設定控制器的玩家指示燈。";
 "cli.controller.player.number" = "玩家編號，1 至 4，或 off。";
 "cli.controller.resume.abstract" = "讓 OpenJoystickDriver 再次驅動已暫停的控制器。";
@@ -1240,6 +1253,8 @@
 "cli.controller.show.label.output_checks" = "輸出檢查";
 "cli.controller.show.label.ownership" = "擁有者";
 "cli.controller.show.ownership" = "路徑 %@，實體 %@，HID 輸入 %@";
+"cli.controller.show.label.ownership_choice" = "處理方";
+"cli.controller.show.ownershipChoice" = "%@（來自 %@）";
 "cli.controller.show.label.protocol" = "通訊協定";
 "cli.controller.show.label.record" = "記錄";
 "cli.controller.show.label.rumble" = "震動";

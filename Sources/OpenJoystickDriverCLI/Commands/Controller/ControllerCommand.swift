@@ -19,7 +19,7 @@ struct ControllerCommand: AsyncParsableCommand {
       ControllerCaptureCommand.self, ControllerRumbleCommand.self, ControllerLightCommand.self,
       ControllerPlayerCommand.self, ControllerSuspendCommand.self, ControllerResumeCommand.self,
       ControllerDisconnectCommand.self, ControllerCalibrateCommand.self, ControllerPairCommand.self,
-      ControllerUnpairCommand.self,
+      ControllerUnpairCommand.self, ControllerOwnershipCommand.self,
     ]
   )
 
@@ -157,6 +157,7 @@ struct ControllerShowCommand: AsyncParsableCommand {
     rows += [
       ["input-health", detail.inputHealth.state],
       ["ownership", detail.ownership.physical],
+      ["ownership-choice", detail.ownership.choice.rawValue, detail.ownership.choiceSource],
       ["controls", detail.capabilities.controls.joined(separator: ",")],
       ["rumble-motors", detail.capabilities.rumbleMotors.joined(separator: ",")],
       ["lighting", detail.capabilities.lightingFeatures.joined(separator: ",")],
@@ -242,6 +243,14 @@ struct ControllerShowCommand: AsyncParsableCommand {
           kebabCase(detail.ownership.discoverySource),
           kebabCase(detail.ownership.physical),
           kebabCase(detail.ownership.hidInput)
+        )
+      ),
+      (
+        CLILocalized.text("cli.controller.show.label.ownership_choice"),
+        CLILocalized.format(
+          "cli.controller.show.ownershipChoice",
+          detail.ownership.choice.rawValue,
+          detail.ownership.choiceSource
         )
       ),
       (CLILocalized.text("cli.controller.show.label.record"), recordText(detail.record)),

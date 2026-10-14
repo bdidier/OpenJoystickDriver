@@ -164,6 +164,15 @@ extension ApplicationServiceServer {
           unit: value.unit
         )
       )
+    case .setControllerOwnership:
+      let value = try decode(LocalServiceRPCControllerOwnershipArguments.self)
+      return try send(
+        await setControllerOwnership(
+          vendorID: value.vendorID,
+          productID: value.productID,
+          ownership: value.ownership
+        )
+      )
     case .openVirtualFeed:
       let value = try decode(LocalServiceRPCVirtualFeedOpenArguments.self)
       return try send(try await virtualFeeds.open(profile: value.profile))

@@ -170,6 +170,10 @@
 "controllers.accessibilityDetails" = "%@। %@। प्रोटोकॉल: %@। Parser: %@। सीरियल नंबर: %@। USB VID/PID: %@। इनपुट एंडपॉइंट: %@। आउटपुट एंडपॉइंट: %@।";
 "controllers.publishedAs" = "इस रूप में प्रकाशित";
 "controllers.nativeGamepadNotPublished" = "macOS का नेटिव गेमपैड, प्रकाशित नहीं";
+"controllers.ownership.label" = "चलाने वाला";
+"controllers.ownership.native" = "macOS (नेटिव)";
+"controllers.ownership.virtual" = "OpenJoystickDriver (वर्चुअल)";
+"controllers.ownership.refused" = "यह कंट्रोलर स्विच नहीं कर सकता: यह रॉ USB का उपयोग करता है, या macOS इसे नेटिव रूप से नहीं चलाता।";
 "virtualProfile.advanced" = "उन्नत";
 "virtualProfile.title" = "वर्चुअल HID प्रोफ़ाइल";
 "virtualProfile.modelScope" = "इस मॉडल के हर कनेक्टेड कंट्रोलर पर लागू होता है।";
@@ -1206,6 +1210,15 @@
 "cli.controller.output.not_ready" = "%@ अभी आउटपुट के लिए तैयार नहीं है। थोड़ी देर बाद फिर कोशिश करें।";
 "cli.controller.output.sent" = "%@ को %@ भेजा गया।";
 "cli.controller.output.unsupported" = "%@ में %@ नहीं है। यह देखने के लिए कि वह क्या सपोर्ट करता है, “ojd controller show %@” चलाएँ।";
+"cli.controller.ownership.abstract" = "चुनें कि कंट्रोलर मॉडल को macOS चलाए या OpenJoystickDriver।";
+"cli.controller.ownership.choice" = "native (macOS कंट्रोलर को चलाता है) या virtual (OpenJoystickDriver उसे चलाता है)।";
+"cli.controller.ownership.discussion" = "native कंट्रोलर को macOS पर छोड़ता है, जो उसे गेम कंट्रोलर के रूप में चलाता है; virtual OpenJoystickDriver को उसे संभालने और उसका वर्चुअल गेमपैड प्रकाशित करने देता है। यह चुनाव मॉडल के हर कंट्रोलर पर लागू होता है: यह मॉडल के आपके रिकॉर्ड में ownership सेट करता है, जो आपकी रिकॉर्ड डायरेक्टरी में VVVV-PPPP.json है, और रिकॉर्ड के बाकी फ़ील्ड रखता है। चल रही सेवा इसे दोबारा प्लग किए बिना लागू करती है। कंट्रोलर ढूँढने के लिए सेवा चाहिए। --dry-run कुछ नहीं लिखता। ऐसे कंट्रोलर के लिए E2023 के साथ 1 पर बाहर निकलता है जो रॉ USB का उपयोग करता है, जिसे OpenJoystickDriver हमेशा चलाता है, या जिसे macOS नेटिव रूप से नहीं चलाता।";
+"cli.controller.ownership.dry_run" = "%@ को %@ पर सेट कर देता (%@)।";
+"cli.controller.ownership.invalid" = "%@ बदला नहीं जा सकता: %@";
+"cli.controller.ownership.no_record" = "%@ का बदलने लायक कोई कंट्रोलर रिकॉर्ड नहीं है। 'ojd record draft %@' से एक शुरू करें।";
+"cli.controller.ownership.not_native" = "macOS %@ को नेटिव रूप से नहीं चलाता, इसलिए OpenJoystickDriver उसे हमेशा चलाता है।";
+"cli.controller.ownership.raw_usb" = "%@ रॉ USB का उपयोग करता है, इसलिए OpenJoystickDriver उसे हमेशा चलाता है।";
+"cli.controller.ownership.success" = "%@ को %@ पर सेट किया गया (%@)। चल रही सेवा अब उसे लागू करती है।";
 "cli.controller.player.abstract" = "कंट्रोलर की प्लेयर इंडिकेटर लाइट सेट करें।";
 "cli.controller.player.number" = "प्लेयर संख्या, 1 से 4, या off।";
 "cli.controller.resume.abstract" = "OpenJoystickDriver को निलंबित कंट्रोलर फिर से चलाने दें।";
@@ -1240,6 +1253,8 @@
 "cli.controller.show.label.output_checks" = "आउटपुट जाँच";
 "cli.controller.show.label.ownership" = "स्वामित्व";
 "cli.controller.show.ownership" = "रूट %@, भौतिक %@, HID इनपुट %@";
+"cli.controller.show.label.ownership_choice" = "चलाने वाला";
+"cli.controller.show.ownershipChoice" = "%@ (%@ से)";
 "cli.controller.show.label.protocol" = "प्रोटोकॉल";
 "cli.controller.show.label.record" = "रिकॉर्ड";
 "cli.controller.show.label.rumble" = "रंबल";

@@ -12,6 +12,7 @@ package enum ApplicationServiceRPCMethod: String, CaseIterable, Sendable {
   case getVirtualDeviceDiagnostics
   case setVirtualHIDProfileOverride
   case resetVirtualHIDProfileOverride
+  case setControllerOwnership
   case openVirtualFeed
   case exchangeVirtualFeed
   case closeVirtualFeed

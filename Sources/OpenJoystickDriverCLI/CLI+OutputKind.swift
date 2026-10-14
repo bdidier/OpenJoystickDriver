@@ -22,6 +22,7 @@ extension CLI {
       (ControllerPlayerCommand.self, "Status"),
       (ControllerPairCommand.self, "JoyConPair"),
       (ControllerUnpairCommand.self, "JoyConPair"),
+      (ControllerOwnershipCommand.self, "ControllerOwnership"),
       (AccessEnableCommand.self, "EndpointAccess"),
       (AccessDisableCommand.self, "EndpointAccess"),
       (AccessStatusCommand.self, "EndpointAccess"),

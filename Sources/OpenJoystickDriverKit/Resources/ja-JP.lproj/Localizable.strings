@@ -170,6 +170,10 @@
 "controllers.accessibilityDetails" = "%@。%@。プロトコル: %@。パーサー: %@。シリアル番号: %@。USB VID/PID: %@。入力エンドポイント: %@。出力エンドポイント: %@。";
 "controllers.publishedAs" = "公開名";
 "controllers.nativeGamepadNotPublished" = "macOS ネイティブのゲームパッド、公開なし";
+"controllers.ownership.label" = "担当";
+"controllers.ownership.native" = "macOS（ネイティブ）";
+"controllers.ownership.virtual" = "OpenJoystickDriver（仮想）";
+"controllers.ownership.refused" = "このコントローラーは切り替えられません。Raw USB を使うか、macOS がネイティブに扱いません。";
 "virtualProfile.advanced" = "詳細";
 "virtualProfile.title" = "仮想HIDプロファイル";
 "virtualProfile.modelScope" = "このモデルの接続中のすべてのコントローラに適用されます。";
@@ -1206,6 +1210,15 @@
 "cli.controller.output.not_ready" = "%@ はまだ出力の準備ができていません。しばらくしてからやり直してください。";
 "cli.controller.output.sent" = "%@ を %@ に送信しました。";
 "cli.controller.output.unsupported" = "%@ には %@ がありません。対応している機能は「ojd controller show %@」で確認できます。";
+"cli.controller.ownership.abstract" = "コントローラーのモデルを macOS と OpenJoystickDriver のどちらが扱うかを選びます。";
+"cli.controller.ownership.choice" = "native（macOS がコントローラーを扱う）または virtual（OpenJoystickDriver が扱う）。";
+"cli.controller.ownership.discussion" = "native はコントローラーを macOS に任せ、macOS がゲームコントローラーとして扱います。virtual は OpenJoystickDriver がコントローラーを引き継ぎ、仮想ゲームパッドを公開します。この選択はそのモデルのすべてのコントローラーに適用されます。レコードディレクトリにあるモデルのレコード VVVV-PPPP.json の ownership を設定し、レコードのほかのフィールドは保持します。実行中のサービスが再接続なしで適用します。コントローラーを見つけるためにサービスが必要です。--dry-run は何も書き込みません。Raw USB を使うコントローラー（常に OpenJoystickDriver が扱います）や、macOS がネイティブに扱わないコントローラーでは E2023 とともに 1 で終了します。";
+"cli.controller.ownership.dry_run" = "%@ を %@ に設定します（%@）。";
+"cli.controller.ownership.invalid" = "%@ を変更できません: %@";
+"cli.controller.ownership.no_record" = "%@ には変更できるコントローラーレコードがありません。'ojd record draft %@' で作成してください。";
+"cli.controller.ownership.not_native" = "macOS は %@ をネイティブに扱わないため、常に OpenJoystickDriver が扱います。";
+"cli.controller.ownership.raw_usb" = "%@ は Raw USB を使うため、常に OpenJoystickDriver が扱います。";
+"cli.controller.ownership.success" = "%@ を %@ に設定しました（%@）。実行中のサービスが今すぐ適用します。";
 "cli.controller.player.abstract" = "コントローラのプレイヤーインジケータライトを設定します。";
 "cli.controller.player.number" = "プレイヤー番号 (1 から 4)、または off。";
 "cli.controller.resume.abstract" = "一時停止中のコントローラを OpenJoystickDriver が再び制御できるようにします。";
@@ -1240,6 +1253,8 @@
 "cli.controller.show.label.output_checks" = "出力チェック";
 "cli.controller.show.label.ownership" = "所有状態";
 "cli.controller.show.ownership" = "経路 %@、物理 %@、HID 入力 %@";
+"cli.controller.show.label.ownership_choice" = "担当";
+"cli.controller.show.ownershipChoice" = "%@（%@ から）";
 "cli.controller.show.label.protocol" = "プロトコル";
 "cli.controller.show.label.record" = "レコード";
 "cli.controller.show.label.rumble" = "振動";

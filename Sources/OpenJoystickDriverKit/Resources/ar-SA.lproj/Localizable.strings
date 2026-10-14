@@ -170,6 +170,10 @@
 "controllers.accessibilityDetails" = "%@. %@. البروتوكول: %@. المحلّل: %@. الرقم التسلسلي: %@. USB VID/PID: %@. نقطة نهاية الإدخال: %@. نقطة نهاية الإخراج: %@.";
 "controllers.publishedAs" = "منشور باسم";
 "controllers.nativeGamepadNotPublished" = "وحدة تحكم macOS أصلية، غير منشورة";
+"controllers.ownership.label" = "يخدمه";
+"controllers.ownership.native" = "macOS (أصلي)";
+"controllers.ownership.virtual" = "OpenJoystickDriver (افتراضي)";
+"controllers.ownership.refused" = "لا يمكن لوحدة التحكم هذه التبديل: فهي تستخدم USB الخام، أو أن macOS لا يخدمها أصليًا.";
 "virtualProfile.advanced" = "متقدم";
 "virtualProfile.title" = "ملف تعريف HID الافتراضي";
 "virtualProfile.modelScope" = "ينطبق على كل وحدة تحكم متصلة من هذا الطراز.";
@@ -1206,6 +1210,15 @@
 "cli.controller.output.not_ready" = "%@ ليست جاهزة للإخراج بعد. حاول مرة أخرى بعد قليل.";
 "cli.controller.output.sent" = "تم إرسال %@ إلى %@.";
 "cli.controller.output.unsupported" = "%@ ليس لديها %@. شغّل «ojd controller show %@» لمعرفة ما تدعمه.";
+"cli.controller.ownership.abstract" = "اختر ما إذا كان macOS أو OpenJoystickDriver يخدم طراز وحدة التحكم.";
+"cli.controller.ownership.choice" = "native (يخدم macOS وحدة التحكم) أو virtual (يخدمها OpenJoystickDriver).";
+"cli.controller.ownership.discussion" = "يترك native وحدة التحكم لـ macOS، الذي يخدمها كوحدة تحكم ألعاب؛ ويتيح virtual لـ OpenJoystickDriver تولّيها ونشر وحدة التحكم الافتراضية الخاصة بها. ينطبق الاختيار على كل وحدة تحكم من الطراز: فهو يضبط ownership في سجلك للطراز، VVVV-PPPP.json في دليل السجلات، ويحتفظ بحقول السجل الأخرى. تطبّقه الخدمة العاملة دون إعادة توصيل. يحتاج إلى الخدمة للعثور على وحدة التحكم. لا يكتب --dry-run أي شيء. يخرج بالرمز 1 مع E2023 لوحدة تحكم تستخدم USB الخام، التي يخدمها OpenJoystickDriver دائمًا، أو التي لا يخدمها macOS أصليًا.";
+"cli.controller.ownership.dry_run" = "سيتم ضبط %@ على %@ في %@.";
+"cli.controller.ownership.invalid" = "تعذّر تغيير %@: %@";
+"cli.controller.ownership.no_record" = "لا يوجد لـ %@ سجل وحدة تحكم لتغييره. ابدأ واحدًا باستخدام 'ojd record draft %@'.";
+"cli.controller.ownership.not_native" = "لا يخدم macOS %@ أصليًا، لذا يخدمه OpenJoystickDriver دائمًا.";
+"cli.controller.ownership.raw_usb" = "يستخدم %@ USB الخام، لذا يخدمه OpenJoystickDriver دائمًا.";
+"cli.controller.ownership.success" = "تم ضبط %@ على %@ في %@. تطبّقه الخدمة العاملة الآن.";
 "cli.controller.player.abstract" = "اضبط أضواء مؤشر اللاعب في وحدة التحكم.";
 "cli.controller.player.number" = "رقم اللاعب من 1 إلى 4، أو off.";
 "cli.controller.resume.abstract" = "اسمح لـ OpenJoystickDriver بالتحكم في وحدة تحكم معلّقة مرة أخرى.";
@@ -1240,6 +1253,8 @@
 "cli.controller.show.label.output_checks" = "فحوص الإخراج";
 "cli.controller.show.label.ownership" = "الملكية";
 "cli.controller.show.ownership" = "المسار \U2068%@\U2069، المادي \U2068%@\U2069، إدخال HID \U2068%@\U2069";
+"cli.controller.show.label.ownership_choice" = "يخدمه";
+"cli.controller.show.ownershipChoice" = "%@ (من %@)";
 "cli.controller.show.label.protocol" = "البروتوكول";
 "cli.controller.show.label.record" = "السجل";
 "cli.controller.show.label.rumble" = "الاهتزاز";

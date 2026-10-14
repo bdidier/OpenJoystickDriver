@@ -76,6 +76,9 @@ public struct ControllerRecord: Sendable {
   /// Whether the family reaches the controller through raw USB rather than HID.
   public var usesRawUSB: Bool { profile.usesRawUSB }
 
+  /// Who serves the controller: `macos` unless a layer sets `ojd`.
+  public var ownership: ControllerOwnership { profile.ownership }
+
   /// Whether the record is a Switch 2 controller without `bluetoothLE`, which OJD reaches only
   /// over USB, because the Bluetooth LE central needs the vibration characteristic.
   public var isSwitch2WithoutBluetoothLE: Bool {

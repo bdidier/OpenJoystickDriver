@@ -170,6 +170,10 @@
 "controllers.accessibilityDetails" = "%@. %@. Protokoll: %@. Parser: %@. Seriennummer: %@. USB VID/PID: %@. Eingabeendpunkt: %@. Ausgabeendpunkt: %@.";
 "controllers.publishedAs" = "Veröffentlicht als";
 "controllers.nativeGamepadNotPublished" = "Natives macOS-Gamepad, nicht veröffentlicht";
+"controllers.ownership.label" = "Bedient von";
+"controllers.ownership.native" = "macOS (nativ)";
+"controllers.ownership.virtual" = "OpenJoystickDriver (virtuell)";
+"controllers.ownership.refused" = "Dieser Controller kann nicht wechseln: Er nutzt rohes USB, oder macOS bedient ihn nicht nativ.";
 "virtualProfile.advanced" = "Erweitert";
 "virtualProfile.title" = "Virtuelles HID-Profil";
 "virtualProfile.modelScope" = "Gilt für jeden verbundenen Controller dieses Modells.";
@@ -1206,6 +1210,15 @@
 "cli.controller.output.not_ready" = "%@ ist noch nicht bereit für die Ausgabe. Versuche es gleich noch einmal.";
 "cli.controller.output.sent" = "%@ an %@ gesendet.";
 "cli.controller.output.unsupported" = "%@ hat kein %@. Führe „ojd controller show %@“ aus, um zu sehen, was er unterstützt.";
+"cli.controller.ownership.abstract" = "Festlegen, ob macOS oder OpenJoystickDriver ein Controller-Modell bedient.";
+"cli.controller.ownership.choice" = "native (macOS bedient den Controller) oder virtual (OpenJoystickDriver bedient ihn).";
+"cli.controller.ownership.discussion" = "native überlässt den Controller macOS, das ihn als Gamecontroller bedient; virtual lässt OpenJoystickDriver ihn übernehmen und sein virtuelles Gamepad veröffentlichen. Die Wahl gilt für jeden Controller des Modells: Sie setzt ownership in deinem Eintrag für das Modell, VVVV-PPPP.json in deinem Eintragsordner, und behält die anderen Felder des Eintrags. Der laufende Dienst wendet sie ohne erneutes Einstecken an. Braucht den Dienst, um den Controller zu finden. --dry-run schreibt nichts. Endet mit 1 und E2023 für einen Controller, der rohes USB nutzt und den OpenJoystickDriver immer bedient, oder den macOS nicht nativ bedient.";
+"cli.controller.ownership.dry_run" = "Würde %@ auf %@ setzen, in %@.";
+"cli.controller.ownership.invalid" = "%@ kann nicht geändert werden: %@";
+"cli.controller.ownership.no_record" = "%@ hat keinen Controller-Eintrag, der sich ändern lässt. Beginne einen mit 'ojd record draft %@'.";
+"cli.controller.ownership.not_native" = "macOS bedient %@ nicht nativ, daher bedient OpenJoystickDriver ihn immer.";
+"cli.controller.ownership.raw_usb" = "%@ nutzt rohes USB, daher bedient OpenJoystickDriver ihn immer.";
+"cli.controller.ownership.success" = "%@ wurde auf %@ gesetzt, in %@. Der laufende Dienst wendet es jetzt an.";
 "cli.controller.player.abstract" = "Die Spieleranzeige-Lichter eines Controllers einstellen.";
 "cli.controller.player.number" = "Die Spielernummer, 1 bis 4, oder off.";
 "cli.controller.resume.abstract" = "OpenJoystickDriver einen pausierten Controller wieder ansteuern lassen.";
@@ -1240,6 +1253,8 @@
 "cli.controller.show.label.output_checks" = "Ausgabeprüfungen";
 "cli.controller.show.label.ownership" = "Zuständigkeit";
 "cli.controller.show.ownership" = "Zugriffsweg %@, physisch %@, HID-Eingabe %@";
+"cli.controller.show.label.ownership_choice" = "Bedient von";
+"cli.controller.show.ownershipChoice" = "%@ (aus %@)";
 "cli.controller.show.label.protocol" = "Protokoll";
 "cli.controller.show.label.record" = "Eintrag";
 "cli.controller.show.label.rumble" = "Vibration";

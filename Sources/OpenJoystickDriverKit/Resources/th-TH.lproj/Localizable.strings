@@ -170,6 +170,10 @@
 "controllers.accessibilityDetails" = "%@ %@ โปรโตคอล: %@ ตัวแยกวิเคราะห์: %@ เลขประจำเครื่อง: %@ USB VID/PID: %@ เอนด์พอยต์อินพุต: %@ เอนด์พอยต์เอาต์พุต: %@";
 "controllers.publishedAs" = "เผยแพร่เป็น";
 "controllers.nativeGamepadNotPublished" = "เกมแพดดั้งเดิมของ macOS ไม่ได้เผยแพร่";
+"controllers.ownership.label" = "ดูแลโดย";
+"controllers.ownership.native" = "macOS (เนทีฟ)";
+"controllers.ownership.virtual" = "OpenJoystickDriver (เสมือน)";
+"controllers.ownership.refused" = "คอนโทรลเลอร์นี้สลับไม่ได้ เพราะใช้ USB แบบดิบ หรือ macOS ไม่ดูแลแบบเนทีฟ";
 "virtualProfile.advanced" = "ขั้นสูง";
 "virtualProfile.title" = "โปรไฟล์ HID เสมือน";
 "virtualProfile.modelScope" = "ใช้กับคอนโทรลเลอร์ทุกตัวที่เชื่อมต่อของรุ่นนี้";
@@ -1206,6 +1210,15 @@
 "cli.controller.output.not_ready" = "%@ ยังไม่พร้อมสำหรับเอาต์พุต ลองอีกครั้งในอีกสักครู่";
 "cli.controller.output.sent" = "ส่ง %@ ไปยัง %@ แล้ว";
 "cli.controller.output.unsupported" = "%@ ไม่มี %@ เรียกใช้ “ojd controller show %@” เพื่อดูสิ่งที่รองรับ";
+"cli.controller.ownership.abstract" = "เลือกว่าจะให้ macOS หรือ OpenJoystickDriver ดูแลรุ่นคอนโทรลเลอร์";
+"cli.controller.ownership.choice" = "native (macOS ดูแลคอนโทรลเลอร์) หรือ virtual (OpenJoystickDriver ดูแล)";
+"cli.controller.ownership.discussion" = "native ปล่อยคอนโทรลเลอร์ให้ macOS ซึ่งดูแลในฐานะคอนโทรลเลอร์เกม ส่วน virtual ให้ OpenJoystickDriver รับช่วงและเผยแพร่เกมแพดเสมือน ตัวเลือกนี้ใช้กับคอนโทรลเลอร์ทุกตัวของรุ่น โดยตั้งค่า ownership ในระเบียนของรุ่นนั้น คือ VVVV-PPPP.json ในไดเรกทอรีระเบียน และคงฟิลด์อื่นของระเบียนไว้ บริการที่ทำงานอยู่จะใช้ค่านี้โดยไม่ต้องเสียบใหม่ ต้องใช้บริการเพื่อค้นหาคอนโทรลเลอร์ --dry-run จะไม่เขียนอะไร ออกด้วย 1 และ E2023 สำหรับคอนโทรลเลอร์ที่ใช้ USB แบบดิบ ซึ่ง OpenJoystickDriver ดูแลเสมอ หรือที่ macOS ไม่ดูแลแบบเนทีฟ";
+"cli.controller.ownership.dry_run" = "จะตั้งค่า %@ เป็น %@ ใน %@";
+"cli.controller.ownership.invalid" = "เปลี่ยน %@ ไม่ได้: %@";
+"cli.controller.ownership.no_record" = "%@ ไม่มีระเบียนคอนโทรลเลอร์ให้เปลี่ยน เริ่มสร้างด้วย 'ojd record draft %@'";
+"cli.controller.ownership.not_native" = "macOS ไม่ดูแล %@ แบบเนทีฟ ดังนั้น OpenJoystickDriver จะดูแลเสมอ";
+"cli.controller.ownership.raw_usb" = "%@ ใช้ USB แบบดิบ ดังนั้น OpenJoystickDriver จะดูแลเสมอ";
+"cli.controller.ownership.success" = "ตั้งค่า %@ เป็น %@ ใน %@ แล้ว บริการที่ทำงานอยู่จะใช้ตอนนี้";
 "cli.controller.player.abstract" = "ตั้งค่าไฟแสดงผู้เล่นของคอนโทรลเลอร์";
 "cli.controller.player.number" = "หมายเลขผู้เล่น 1 ถึง 4 หรือ off";
 "cli.controller.resume.abstract" = "ให้ OpenJoystickDriver ควบคุมคอนโทรลเลอร์ที่ถูกระงับอีกครั้ง";
@@ -1240,6 +1253,8 @@
 "cli.controller.show.label.output_checks" = "การตรวจสอบเอาต์พุต";
 "cli.controller.show.label.ownership" = "การครอบครอง";
 "cli.controller.show.ownership" = "เส้นทาง %@, ทางกายภาพ %@, อินพุต HID %@";
+"cli.controller.show.label.ownership_choice" = "ดูแลโดย";
+"cli.controller.show.ownershipChoice" = "%@ (จาก %@)";
 "cli.controller.show.label.protocol" = "โปรโตคอล";
 "cli.controller.show.label.record" = "ระเบียน";
 "cli.controller.show.label.rumble" = "แรงสั่น";
