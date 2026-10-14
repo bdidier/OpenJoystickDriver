@@ -3,9 +3,9 @@
 A safe published virtual profile needs more than a product name:
 
 1. an exact virtual VID/PID;
-1. the matching descriptor and report bytes;
-1. a live `GCController.supportsHIDDevice` result where GameController.framework matters;
-1. hardware evidence for GameController.framework claims.
+2. the matching descriptor and report bytes;
+3. a live `GCController.supportsHIDDevice` result where GameController.framework matters;
+4. hardware evidence for GameController.framework claims.
 
 OJD publishes exactly two virtual HID profiles, `hid-xbox-one-s-bt` and `hid-generic`; `VirtualHIDProfileSelector` picks `hid-xbox-one-s-bt` when a controller's declared controls fit it, otherwise `hid-generic`. See [CLI and Application Runtime](cli-and-runtime.md) for the selection and override contract.
 
