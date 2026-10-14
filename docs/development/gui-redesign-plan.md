@@ -165,13 +165,13 @@ Each candidate is classified in its slice with the `remove-unneeded-compatibilit
 Each slice is one change with its tests, docs, and checks. Slices after slice 2 start only when their CLI commands exist.
 
 1. **Model target.** Create `OpenJoystickDriverModel` and `OJDOperations`, and move view models onto them. Classify the existing `#available` checks.
-1. **App shell.** The AppKit shell: menu bar extra, main window with split view and inspector pane, Settings window, menus, and the Dock icon switch. Delete the `NavigationView` sidebar and the Settings sidebar item.
-1. **Controllers.** The area, the diagram, the inspector, output tests, and the setup empty state.
-1. **Profiles.** The area and the binding editor with Undo.
-1. **Records.** The area, validation, install and remove, drafts, Reveal in Finder, and Open in the user's editor.
-1. **Activity.** The log view and the support bundle.
-1. **Accessibility and localization pass.** Largest text size, VoiceOver, keyboard-only use, Reduce Motion, increased contrast, and every supported language.
-1. **iPadOS and iOS companion.** A later release.
+2. **App shell.** The AppKit shell: menu bar extra, main window with split view and inspector pane, Settings window, menus, and the Dock icon switch. Delete the `NavigationView` sidebar and the Settings sidebar item.
+3. **Controllers.** The area, the diagram, the inspector, output tests, and the setup empty state.
+4. **Profiles.** The area and the binding editor with Undo.
+5. **Records.** The area, validation, install and remove, drafts, Reveal in Finder, and Open in the user's editor.
+6. **Activity.** The log view and the support bundle.
+7. **Accessibility and localization pass.** Largest text size, VoiceOver, keyboard-only use, Reduce Motion, increased contrast, and every supported language.
+8. **iPadOS and iOS companion.** A later release.
 
 ## Checks
 
