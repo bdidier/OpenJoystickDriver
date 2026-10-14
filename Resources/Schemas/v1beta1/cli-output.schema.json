@@ -1207,6 +1207,103 @@
 				}
 			]
 		},
+		"modInstall": {
+			"type": "object",
+			"required": ["apiVersion", "kind", "dryRun", "installed", "package", "replaced"],
+			"additionalProperties": false,
+			"properties": {
+				"apiVersion": {
+					"$ref": "#/$defs/sharedAPIVersion"
+				},
+				"kind": {
+					"const": "ModPackage"
+				},
+				"dryRun": {
+					"type": "boolean"
+				},
+				"installed": {
+					"type": "string"
+				},
+				"package": {
+					"$ref": "#/$defs/sharedModPackageValidation"
+				},
+				"replaced": {
+					"type": "boolean"
+				}
+			}
+		},
+		"modList": {
+			"type": "object",
+			"required": ["apiVersion", "kind", "metadata", "items"],
+			"additionalProperties": false,
+			"properties": {
+				"apiVersion": {
+					"$ref": "#/$defs/sharedAPIVersion"
+				},
+				"kind": {
+					"const": "ModPackageList"
+				},
+				"metadata": {
+					"type": "object",
+					"additionalProperties": false
+				},
+				"items": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"required": ["files", "name"],
+						"additionalProperties": false,
+						"properties": {
+							"author": {
+								"type": "string"
+							},
+							"files": {
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							},
+							"name": {
+								"type": "string"
+							},
+							"problem": {
+								"type": "string"
+							},
+							"version": {
+								"type": "string"
+							}
+						}
+					}
+				}
+			}
+		},
+		"modRemove": {
+			"$ref": "#/$defs/sharedStatus",
+			"properties": {
+				"details": {
+					"type": "object",
+					"required": ["dryRun", "removed"],
+					"additionalProperties": false,
+					"properties": {
+						"dryRun": {
+							"type": "boolean"
+						},
+						"removed": {
+							"type": "string"
+						}
+					}
+				}
+			}
+		},
+		"modValidate": {
+			"required": ["apiVersion", "kind"],
+			"properties": {
+				"kind": {
+					"const": "ModPackageValidation"
+				}
+			},
+			"$ref": "#/$defs/sharedModPackageValidation"
+		},
 		"permissionList": {
 			"type": "object",
 			"required": ["apiVersion", "kind", "metadata", "items"],
@@ -2412,6 +2509,44 @@
 				"session": {
 					"type": "string",
 					"pattern": "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$"
+				}
+			}
+		},
+		"sharedModPackageValidation": {
+			"type": "object",
+			"required": ["valid"],
+			"additionalProperties": false,
+			"properties": {
+				"apiVersion": {
+					"$ref": "#/$defs/sharedAPIVersion"
+				},
+				"kind": {
+					"type": "string"
+				},
+				"author": {
+					"type": "string"
+				},
+				"code": {
+					"type": "string",
+					"pattern": "^E4[0-9]{3}$"
+				},
+				"files": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"name": {
+					"type": "string"
+				},
+				"problem": {
+					"type": "string"
+				},
+				"valid": {
+					"type": "boolean"
+				},
+				"version": {
+					"type": "string"
 				}
 			}
 		},

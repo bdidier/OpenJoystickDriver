@@ -1,0 +1,223 @@
+import ArgumentParser
+import Foundation
+import OpenJoystickDriverKit
+
+/// The `FOLDER` operand of `mod validate` and `mod install`.
+private func modFolderHelp() -> ArgumentHelp {
+  ArgumentHelp(CLILocalized.text("cli.mod.folder"), valueName: "FOLDER")
+}
+
+struct ModValidateCommand: AsyncParsableCommand {
+  static let configuration = CommandConfiguration(
+    commandName: "validate",
+    abstract: CLILocalized.text("cli.mod.validate.abstract"),
+    discussion: CLILocalized.text("cli.mod.validate.discussion")
+  )
+
+  @Argument(help: modFolderHelp())
+  var folder: String
+
+  @OptionGroup(visibility: GlobalOptions.subcommandVisibility)
+  var global: GlobalOptions
+
+  func run() async throws {
+    try await global.run {
+      let manifest = try ModPackageValidation.check(folder)
+      let result = ModPackageValidation(manifest)
+      switch CLIContext.current.format {
+      case .json: try CLIOutput.json(result)
+      case .plain:
+        CLIOutput.plain([[manifest.name, manifest.version, manifest.author]])
+      case .human:
+        CLIOutput.stdout(
+          CLILocalized.format(
+            "cli.mod.validate.valid",
+            folder,
+            manifest.name,
+            manifest.version
+          )
+        )
+      }
+    }
+  }
+}
+
+struct ModInstallCommand: AsyncParsableCommand {
+  static let configuration = CommandConfiguration(
+    commandName: "install",
+    abstract: CLILocalized.text("cli.mod.install.abstract"),
+    discussion: CLILocalized.text("cli.mod.install.discussion")
+  )
+
+  /// The `--json` result.
+  struct Result: Encodable, Equatable {
+    let installed: String
+    let replaced: Bool
+    let dryRun: Bool
+    let package: ModPackageValidation
+  }
+
+  @Argument(help: modFolderHelp())
+  var folder: String
+
+  @Flag(
+    name: [.short, .long],
+    help: ArgumentHelp(CLILocalized.text("cli.mod.install.force"))
+  )
+  var force = false
+
+  @Flag(
+    name: [.customShort("n"), .long],
+    help: ArgumentHelp(CLILocalized.text("cli.option.dry_run"))
+  )
+  var dryRun = false
+
+  @OptionGroup(visibility: GlobalOptions.subcommandVisibility)
+  var global: GlobalOptions
+
+  func run() async throws {
+    try await global.run {
+      // Validation never depends on `--force`, so `requires` and clashes always refuse.
+      let manifest = try ModPackageValidation.check(folder)
+      let destination = ModStore.directory.appendingPathComponent(
+        manifest.name,
+        isDirectory: true
+      )
+      let replaced = (try? FileManager.default.attributesOfItem(atPath: destination.path)) != nil
+      if replaced && !force {
+        throw CLIFailure(
+          .packageAlreadyInstalled,
+          CLILocalized.format("cli.mod.already_installed", manifest.name)
+        )
+      }
+      if !dryRun {
+        do { try ModStore.store.install(ModStore.folder(folder), replace: force) } catch let error
+          as ModPackageError
+        {
+          throw ModStore.failure(error, subject: folder)
+        }
+      }
+      switch CLIContext.current.format {
+      case .json:
+        try CLIOutput.json(
+          Result(
+            installed: destination.path,
+            replaced: replaced,
+            dryRun: dryRun,
+            package: ModPackageValidation(manifest)
+          )
+        )
+      case .plain: CLIOutput.plain([[destination.path]])
+      case .human:
+        if dryRun {
+          CLIOutput.stdout(CLILocalized.format("cli.mod.install.dry_run", destination.path))
+        } else {
+          CLIOutput.success(CLILocalized.format("cli.mod.install.success", destination.path))
+        }
+      }
+    }
+  }
+}
+
+struct ModListCommand: AsyncParsableCommand {
+  static let configuration = CommandConfiguration(
+    commandName: "list",
+    abstract: CLILocalized.text("cli.mod.list.abstract"),
+    discussion: CLILocalized.text("cli.mod.list.discussion")
+  )
+
+  @OptionGroup(visibility: GlobalOptions.subcommandVisibility)
+  var global: GlobalOptions
+
+  func run() async throws {
+    try await global.run {
+      let entries = ModStore.store.list().map(ModPackageEntry.init)
+      switch CLIContext.current.format {
+      case .json: try CLIOutput.json(CLIList(items: entries))
+      case .plain:
+        CLIOutput.plain(
+          entries.map {
+            [
+              $0.name, $0.version ?? "", $0.author ?? "", $0.files.joined(separator: ","),
+              $0.problem ?? "",
+            ]
+          }
+        )
+      case .human:
+        for entry in entries {
+          CLIOutput.stdout(
+            [entry.name, entry.version, entry.author].compactMap { $0 }.joined(separator: "  ")
+          )
+          for file in entry.files { CLIOutput.stdout("  \(file)") }
+          if let problem = entry.problem {
+            CLIOutput.stdout(CLILocalized.format("cli.mod.list.problem", problem))
+          }
+        }
+      }
+    }
+  }
+}
+
+struct ModRemoveCommand: AsyncParsableCommand {
+  static let configuration = CommandConfiguration(
+    commandName: "remove",
+    abstract: CLILocalized.text("cli.mod.remove.abstract"),
+    discussion: CLILocalized.text("cli.mod.remove.discussion")
+  )
+
+  /// The `--json` result.
+  struct Result: Encodable, Equatable {
+    let removed: String
+    let dryRun: Bool
+  }
+
+  @Argument(help: ArgumentHelp(CLILocalized.text("cli.mod.name"), valueName: "NAME"))
+  var name: String
+
+  @Flag(
+    name: [.short, .long],
+    help: ArgumentHelp(CLILocalized.text("cli.option.force"))
+  )
+  var force = false
+
+  @Flag(
+    name: [.customShort("n"), .long],
+    help: ArgumentHelp(CLILocalized.text("cli.option.dry_run"))
+  )
+  var dryRun = false
+
+  @OptionGroup(visibility: GlobalOptions.subcommandVisibility)
+  var global: GlobalOptions
+
+  func run() async throws {
+    try await global.run {
+      let target = ModStore.directory.appendingPathComponent(name, isDirectory: true)
+      // The name rules of `ModPackageStore.remove`: a name with a separator or a leading dot
+      // names no entry. The check comes first, so a missing package is E4006 in every mode.
+      let named = !name.isEmpty && !name.hasPrefix(".") && !name.contains("/")
+      guard named, (try? FileManager.default.attributesOfItem(atPath: target.path)) != nil else {
+        throw CLIFailure(.packageNotInstalled, CLILocalized.format("cli.mod.not_installed", name))
+      }
+      if !dryRun {
+        try CLITerminal.confirm(
+          CLILocalized.format("cli.mod.remove.confirm", target.path),
+          force: force
+        )
+        do { try ModStore.store.remove(name) } catch let error as ModPackageError {
+          throw ModStore.failure(error, subject: name)
+        }
+      }
+      switch CLIContext.current.format {
+      case .json:
+        try CLIOutput.json(CLIStatus(details: Result(removed: target.path, dryRun: dryRun)))
+      case .plain: CLIOutput.plain([[target.path]])
+      case .human:
+        if dryRun {
+          CLIOutput.stdout(CLILocalized.format("cli.mod.remove.dry_run", target.path))
+        } else {
+          CLIOutput.success(CLILocalized.format("cli.mod.remove.success", target.path))
+        }
+      }
+    }
+  }
+}
