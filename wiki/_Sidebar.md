@@ -7,6 +7,7 @@
   - [Supported controllers](Supported-Controllers.md)
   - [Connecting controllers](Connecting-Controllers.md)
   - [Controller records](Controller-Records.md)
+  - [Writing controller mods](Writing-Controller-Mods.md)
 - **Games**
   - [Playing games](Playing-Games.md)
 - **Remapping**

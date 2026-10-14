@@ -6,6 +6,19 @@ Use `ojd`, the OpenJoystickDriver command line, to check status, start or stop t
 
 This page explains how to run `ojd`, which options apply to every command, how to read its output, and what its exit codes mean.
 
+## Contents
+
+- [Run a Command](#run-a-command)
+- [Shell Completion](#shell-completion)
+- [Global Options](#global-options)
+- [Environment Variables](#environment-variables)
+- [The Service](#the-service)
+- [Configuration](#configuration)
+- [Mod Packages](#mod-packages)
+- [Output](#output)
+- [Exit Codes](#exit-codes)
+- [Further Reading](#further-reading)
+
 ## Run a Command
 
 The command-line tool is named `ojd`. It is the app's own executable: when it runs under the name `ojd`, it acts as the command line, and under any other name it opens the app.
@@ -77,6 +90,10 @@ A command that needs the service exits with code 69 when the service is not runn
 
 `ojd config show` prints each effective tuning value and the layer that set it: the driver default, `Defaults.json`, the bundled record, or your record. It reads the files directly, so it works without the service. With `--controller` and the service running, it also lists the active profile's stick deadzones in the `profile` layer. See [Controller records](Controller-Records.md#set-a-default-for-every-controller).
 
+## Mod Packages
+
+`ojd mod` validates, installs, lists, and removes mod packages. It reads and writes files directly, so it works without the service. A running service applies a change to the installed packages without a restart. See [Writing controller mods](Writing-Controller-Mods.md).
+
 ## Output
 
 - Data goes to standard output. Progress messages, warnings, and errors go to standard error.
@@ -85,7 +102,7 @@ A command that needs the service exits with code 69 when the service is not runn
   A program that reads one release's output keeps working with later releases of the same major version.
   Because a later release can add keys and values, validate output against the schema from the same release.
 - `--plain` output has one record per line, with tab-separated fields. The first field names the kind of record. Fields are stable identifiers and are never translated.
-- Errors use one format: `error[E2004]: WHAT FAILED. HOW TO FIX IT.` The code in the brackets is stable, so a script can branch on it. An error that the service reports for remapping carries an `E3xxx` code. `ojd explain E2004` prints what a code means, and [Error codes](Error-Codes.md) lists them all.
+- Errors use one format: `error[E2004]: WHAT FAILED. HOW TO FIX IT.` The code in the brackets is stable, so a script can branch on it. An error that the service reports for remapping carries an `E3xxx` code, and an error of `ojd mod` carries an `E4xxx` code. `ojd explain E2004` prints what a code means, and [Error codes](Error-Codes.md) lists them all.
 - Color appears only on a terminal. `NO_COLOR`, `TERM=dumb`, `--no-color`, and `OJD_COLOR=never` turn it off. `OJD_COLOR=always` turns it on anywhere, except under `--no-color`.
 
 ## Exit Codes
@@ -104,5 +121,6 @@ A command that needs the service exits with code 69 when the service is not runn
 ## Further Reading
 
 - [Command reference](Command-Reference.md)
+- [Writing controller mods](Writing-Controller-Mods.md)
 - [Automating OpenJoystickDriver](Automating-OpenJoystickDriver.md)
 - [Reporting a bug](Reporting-a-Bug.md)
