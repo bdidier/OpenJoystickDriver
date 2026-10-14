@@ -20,7 +20,7 @@ The user-facing setting SHALL be `server: system | ojd`. Records, CLI and GUI SH
 
 #### Scenario: CLI toggle
 
-- **WHEN** the user runs `ojd controller server <ref> ojd`
+- **WHEN** the user runs `ojd controller claim <ref>`
 - **THEN** the setting is stored and the route is re-evaluated without reconnecting
 
 ### Requirement: Suspension survives route changes

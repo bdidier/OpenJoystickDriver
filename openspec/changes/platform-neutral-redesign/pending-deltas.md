@@ -41,7 +41,7 @@ Requirement names below are those of the old change (`REQ-n ...`).
 
 ## virtual-ownership
 
-- REQ-18 Ownership toggle on the command line: MODIFIED. New text: "`ojd controller server CONTROLLER system|ojd [--dry-run] [--json]` MUST set who serves a controller model that the system supports natively: `system` leaves it to the system, `ojd` makes OJD seize it and publish its own virtual gamepad, with the same effect as a record `server` of `system` or `ojd`." Scenarios use the new words.
+- REQ-18 Ownership toggle on the command line: MODIFIED. New text: "`ojd controller claim CONTROLLER [--dry-run] [--json]` and `ojd controller release CONTROLLER [--dry-run] [--json]` MUST set who serves a controller model that the system supports natively: `release` leaves it to the system, `claim` makes OJD seize it and publish its own virtual gamepad, with the same effect as a record `server` of `system` or `ojd`." Scenarios use the new words.
 - REQ-19 Ownership toggle in the app: MODIFIED. Words become "Served by: System / OpenJoystickDriver"; the control is in the Controllers area detail.
 - REQ-20 Virtual ownership publishes a virtual gamepad: MODIFIED. The gamepad uses the chosen persona, `Generic` by default.
 - REQ-21 Ownership persists and applies without replugging: MODIFIED. The route is re-evaluated by the single serving policy; a suspended controller stays suspended.

@@ -25,7 +25,7 @@ Command names, flags, output fields and enum values SHALL use OS-neutral words (
 
 ### Requirement: Command tree
 
-The groups SHALL be `status`, `permission`, `transport-extension`, `service`, `controller`, `virtual`, `profile`, `binding`, `config`, `record`, `mod`, `access`, `setting`, `update`, `log`, `diagnose`, `explain`. `virtual` SHALL include `export-mapping`. `controller` SHALL include `server <ref> system|ojd` in place of `ownership`.
+The groups SHALL be `status`, `permission`, `transport-extension`, `service`, `controller`, `virtual`, `profile`, `binding`, `config`, `record`, `mod`, `access`, `setting`, `update`, `log`, `diagnose`, `explain`. `virtual` SHALL include `export-mapping`. `controller` SHALL include `claim <ref>` and `release <ref>` in place of `ownership`.
 
 #### Scenario: Removed command
 
