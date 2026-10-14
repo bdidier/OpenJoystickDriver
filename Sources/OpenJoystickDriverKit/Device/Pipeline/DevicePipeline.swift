@@ -88,6 +88,8 @@ actor DevicePipeline {
   /// The state last sent to the dispatcher, without connection; neutral once the dispatcher was
   /// told the controller stopped.
   var lastDispatchedState = ControllerState.neutral
+  /// The newest input left undispatched because a later report already waited behind it.
+  var coalescedInput: ControllerEvent?
   /// Hides input held across a lifted foreground gate until it changes.
   var foregroundMask: ForegroundInputMask?
   let maxPacketLogEntries = 200

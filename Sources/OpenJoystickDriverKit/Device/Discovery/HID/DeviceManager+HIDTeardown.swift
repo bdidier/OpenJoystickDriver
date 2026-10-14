@@ -141,7 +141,14 @@ extension DeviceManager {
     await pipeline.feedHIDElementValue(value)
   }
 
-  func routeHIDInputReport(locationID: UInt32, connectionID: UUID, data: Data) async {
+  /// Feeds one input report to its pipeline; `laterReportQueued` tells that a later report of
+  /// the same connection already waits behind it.
+  func routeHIDInputReport(
+    locationID: UInt32,
+    connectionID: UUID,
+    data: Data,
+    laterReportQueued: Bool = false
+  ) async {
     guard let key = hidPipelineKey(forInputFrom: connectionID, locationID: locationID),
       let pipeline = pipelines[key], let info = deviceInfos[key], case .hid = info.discoverySource,
       let physicalDevice = info.physicalDevice, let boundConnectionID = info.hidConnectionID
@@ -151,7 +158,7 @@ extension DeviceManager {
       physicalDevice: physicalDevice,
       routingLocationID: locationID
     )
-    let connectionWrites = await pipeline.feedHIDData(data)
+    let connectionWrites = await pipeline.feedHIDData(data, laterReportQueued: laterReportQueued)
     guard pipelines[key] === pipeline,
       isCurrentHIDStartupConnection(pipeline, connection: connection)
     else { return }

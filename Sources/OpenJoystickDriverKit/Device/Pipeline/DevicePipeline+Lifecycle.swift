@@ -74,21 +74,26 @@ extension DevicePipeline {
   }
 
   /// Feed HID input report data (called by DeviceManager for class 0x03 devices).
+  ///
+  /// `laterReportQueued` tells that a later report of this controller already waits; an input
+  /// that changes only analog controls is then left for that report to publish.
   @discardableResult
-  func feedHIDData(_ data: Data) async -> [PhysicalOutputWrite] {
+  func feedHIDData(_ data: Data, laterReportQueued: Bool = false) async -> [PhysicalOutputWrite] {
     guard isActive else { return [] }
     appendToPacketLog(bytes: Array(data), direction: .received)
+    var connectionWrites: [PhysicalOutputWrite] = []
     do {
       let receivedAt = uptimeNanoseconds()
       let event = try parseReport(data, receivedAt: receivedAt)
-      let connectionWrites = await handleInputConnectionStateChangeIfNeeded()
-      guard inputConnectionActive else { return connectionWrites }
-      await handleParsedEvent(event, now: receivedAt)
-      return connectionWrites
+      connectionWrites = await handleInputConnectionStateChangeIfNeeded()
+      if inputConnectionActive {
+        await handleParsedEvent(event, now: receivedAt, laterReportQueued: laterReportQueued)
+      }
     } catch {
       print("[DevicePipeline] Parse error" + " for \(identifier): \(error)")
-      return []
     }
+    if !laterReportQueued { await dispatchCoalescedInput() }
+    return connectionWrites
   }
 
   /// Whether the native startup player indicator is due, true once. The caller asks after an
