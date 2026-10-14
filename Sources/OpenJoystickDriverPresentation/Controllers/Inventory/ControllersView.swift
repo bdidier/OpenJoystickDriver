@@ -256,9 +256,13 @@
     /// The identity of the virtual HID profile this controller publishes; nil when none is live.
     var publishedVirtualProfile: VirtualDeviceProfile? { virtualHIDProfile?.profile?.identity }
 
-    /// Glyph presentation of the published identity, generic when no profile is live.
+    /// Glyph presentation of the published identity when a virtual device is published, else of
+    /// the physical protocol family.
     var publishedIdentityPresentation: VirtualIdentityPresentation {
-      (publishedVirtualProfile ?? VirtualHIDProfileID.generic.identity).presentation
+      guard publication?.state == .published else {
+        return protocolBinding.protocolID.physicalPresentation
+      }
+      return (publishedVirtualProfile ?? VirtualHIDProfileID.generic.identity).presentation
     }
 
     /// The virtual identity published for this controller; macOS serves a native gamepad itself.

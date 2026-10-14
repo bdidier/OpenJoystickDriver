@@ -38,4 +38,12 @@ struct VirtualIdentityPresentationTests {
     #expect(xboxOneS.presentation.glyphFamily == .xbox)
     #expect(xboxOneS.presentation.controllerSymbolName == "xbox.logo")
   }
+
+  @Test
+  func physicalFamiliesMapToTheirOwnGlyphs() {
+    #expect(PhysicalProtocolID.sonySixaxis.physicalPresentation == .playstation)
+    #expect(PhysicalProtocolID.sonyDualSense.physicalPresentation == .playstation)
+    #expect(PhysicalProtocolID.xboxGIP.physicalPresentation == .xbox)
+    #expect(PhysicalProtocolID.hidDescriptor.physicalPresentation == .generic)
+  }
 }

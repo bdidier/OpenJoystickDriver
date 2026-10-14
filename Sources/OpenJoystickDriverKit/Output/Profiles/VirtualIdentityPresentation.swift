@@ -25,6 +25,11 @@ public struct VirtualIdentityPresentation: Equatable, Hashable, Sendable {
   public static let xbox = Self(glyphFamily: .xbox, controllerSymbolName: "xbox.logo")
   public static let generic = Self(glyphFamily: .generic, controllerSymbolName: "gamecontroller")
 
+  public static let playstation = Self(
+    glyphFamily: .generic,
+    controllerSymbolName: "logo.playstation"
+  )
+
   public static func forProfile(_ profile: VirtualDeviceProfile) -> Self {
     switch profile.glyphFamily {
     case .xbox: .xbox
@@ -41,5 +46,19 @@ extension VirtualDeviceProfile {
   /// Official USB product string plus published VID/PID, not the physical pad name.
   public var publishedUSBIdentityLabel: String {
     "\(productName) (\(String(format: "%04X:%04X", vendorID, productID)))"
+  }
+}
+
+extension PhysicalProtocolID {
+  /// Glyph presentation of the physical controller family, for a controller that publishes no
+  /// virtual device.
+  public var physicalPresentation: VirtualIdentityPresentation {
+    switch self {
+    case .xboxXID, .xboxXUSB, .xboxGIP: .xbox
+    case .sonySixaxis, .sonyDualShock4, .sonyDualSense, .vendorPS3ThirdParty: .playstation
+    case .hidDescriptor, .hidReportLayout, .nintendoSwitch1, .valveSteamController,
+      .vendorFlydigi, .vendorGameSir, .vendorNVIDIAShield:
+      .generic
+    }
   }
 }
