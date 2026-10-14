@@ -140,11 +140,11 @@ Each candidate is classified in its slice with the `remove-unneeded-compatibilit
 Each slice is one change with its tests, docs, and checks.
 
 1. **Parser and skeleton.** Add `swift-argument-parser`, `argv[0]` dispatch, global flags, output and error helpers, exit codes, and color and terminal detection. Move `status` and `service`. Tests for streams, exit codes, flag position, and `--help` on every command.
-1. **Controllers.** `controller`, `virtual`, and the controller selector.
-1. **Records.** `record` commands, built on this parser, as slice 1 of the Controller Configuration Plan.
-1. **Profiles and bindings.** `profile` and `binding`. Deletes `map`.
-1. **System.** `permission`, `extension`, `setting`, `log`, `diagnose`, `update`. The Install Command-Line Tool action.
-1. **Output schemas.** Schemas for every `--json` type and a test that validates each command's output against its schema.
+2. **Controllers.** `controller`, `virtual`, and the controller selector.
+3. **Records.** `record` commands, built on this parser, as slice 1 of the Controller Configuration Plan.
+4. **Profiles and bindings.** `profile` and `binding`. Deletes `map`.
+5. **System.** `permission`, `extension`, `setting`, `log`, `diagnose`, `update`. The Install Command-Line Tool action.
+6. **Output schemas.** Schemas for every `--json` type and a test that validates each command's output against its schema.
 
 Slice 1 lands before the Controller Configuration Plan adds any command, so no command is written twice.
 
