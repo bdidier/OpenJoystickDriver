@@ -85,6 +85,10 @@ Admitted third-party DualShock 4 rows keep the nominal motion scale: like SDL, O
 
 `regenerate` prints the parsed, mapped, added, duplicate, conflict, and interface-signature counts and every skip bucket.
 
+## Generator Rule Tables
+
+The generators read their family lists, flag sets, name maps and exclusions from `Resources/CatalogRules/` (`linux-xpad.json`, `linux-hid.json`, `sdl.json`). Each file carries `apiVersion` and `kind`, and the loader rejects missing or unexpected keys. Change these files, not generator code, to adjust a table; then run `./Scripts/ojd catalog regenerate --write`.
+
 ## Local Source Overrides
 
 Override inputs live at:

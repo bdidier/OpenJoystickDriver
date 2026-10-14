@@ -1,0 +1,82 @@
+{
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "LinuxHidRules",
+  "records": [
+    {
+      "source": "hid_sony",
+      "vendorMacro": "USB_VENDOR_ID_SONY",
+      "productMacro": "USB_DEVICE_ID_SONY_PS3_CONTROLLER",
+      "family": "sony.sixaxis"
+    },
+    {
+      "source": "hid_playstation",
+      "vendorMacro": "USB_VENDOR_ID_SONY",
+      "productMacro": "USB_DEVICE_ID_SONY_PS4_CONTROLLER",
+      "family": "sony.dualshock4"
+    },
+    {
+      "source": "hid_playstation",
+      "vendorMacro": "USB_VENDOR_ID_SONY",
+      "productMacro": "USB_DEVICE_ID_SONY_PS4_CONTROLLER_2",
+      "family": "sony.dualshock4"
+    },
+    {
+      "source": "hid_playstation",
+      "vendorMacro": "USB_VENDOR_ID_SONY",
+      "productMacro": "USB_DEVICE_ID_SONY_PS5_CONTROLLER",
+      "family": "sony.dualsense"
+    },
+    {
+      "source": "hid_playstation",
+      "vendorMacro": "USB_VENDOR_ID_SONY",
+      "productMacro": "USB_DEVICE_ID_SONY_PS5_CONTROLLER_2",
+      "family": "sony.dualsense",
+      "capabilities": {
+        "present": [
+          "paddle-left-1",
+          "paddle-right-1",
+          "auxiliary-1",
+          "auxiliary-2"
+        ]
+      }
+    },
+    {
+      "source": "hid_nintendo",
+      "vendorMacro": "USB_VENDOR_ID_NINTENDO",
+      "productMacro": "USB_DEVICE_ID_NINTENDO_PROCON",
+      "family": "nintendo.switch1"
+    },
+    {
+      "source": "hid_nintendo",
+      "vendorMacro": "USB_VENDOR_ID_NINTENDO",
+      "productMacro": "USB_DEVICE_ID_NINTENDO_JOYCONL",
+      "family": "nintendo.switch1",
+      "quirks": [
+        "joy-con-left"
+      ]
+    },
+    {
+      "source": "hid_nintendo",
+      "vendorMacro": "USB_VENDOR_ID_NINTENDO",
+      "productMacro": "USB_DEVICE_ID_NINTENDO_JOYCONR",
+      "family": "nintendo.switch1",
+      "quirks": [
+        "joy-con-right"
+      ]
+    },
+    {
+      "source": "hid_steam",
+      "vendorMacro": "USB_VENDOR_ID_VALVE",
+      "productMacro": "USB_DEVICE_ID_STEAM_CONTROLLER",
+      "family": "valve.steam-controller",
+      "variant": "wired"
+    },
+    {
+      "source": "hid_steam",
+      "vendorMacro": "USB_VENDOR_ID_VALVE",
+      "productMacro": "USB_DEVICE_ID_STEAM_CONTROLLER_WIRELESS",
+      "family": "valve.steam-controller",
+      "variant": "dongle"
+    }
+  ]
+}
