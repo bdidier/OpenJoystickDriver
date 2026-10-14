@@ -58,6 +58,10 @@ extension RuntimePresentation {
         return OJDLocalized.string(
           "error.joyConPairUnavailable"
         )
+      case .packageProfileReadOnly:
+        return OJDLocalized.string(
+          "error.E3029"
+        )
       case .routerEngineUnavailable, .routerLibraryUnavailable, .routerLibraryAndEngineUnavailable,
         .routerShutDown:
         return OJDLocalized.string(
