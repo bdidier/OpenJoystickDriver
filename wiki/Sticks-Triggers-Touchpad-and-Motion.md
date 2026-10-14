@@ -27,11 +27,11 @@ A profile can have one stick mapping for each stick, one trigger mapping for eac
 ## Set a Stick Mode
 
 1. In the **Controller** section, click **Adjust** in the **Stick modes** group.
-1. Select **Left stick** or **Right stick**.
-1. Select **Enable pointer output**.
-1. Select a **Stick mode**.
-1. Change the settings for that mode.
-1. Click **Save**.
+2. Select **Left stick** or **Right stick**.
+3. Select **Enable pointer output**.
+4. Select a **Stick mode**.
+5. Change the settings for that mode.
+6. Click **Save**.
 
 | Stick mode | Result | Main settings |
 | --- | --- | --- |
@@ -61,12 +61,12 @@ To change these settings with the command line, run `ojd profile edit PROFILE` a
 A dual-stage trigger has a soft stage and a full stage. You can assign each stage to a different destination.
 
 1. In the **Controller** section, click **Adjust** in the **Trigger stages** group.
-1. Select **Left trigger** or **Right trigger**.
-1. Select **Enable dual-stage trigger**.
-1. Select a **Stage interaction**.
-1. Set the thresholds and **Release hysteresis**.
-1. Click **Save**.
-1. In the **Assignments** section, assign the `trigger:SIDE:soft` and `trigger:SIDE:full` controls.
+2. Select **Left trigger** or **Right trigger**.
+3. Select **Enable dual-stage trigger**.
+4. Select a **Stage interaction**.
+5. Set the thresholds and **Release hysteresis**.
+6. Click **Save**.
+7. In the **Assignments** section, assign the `trigger:SIDE:soft` and `trigger:SIDE:full` controls.
 
 | Stage interaction | CLI value |
 | --- | --- |
@@ -84,11 +84,11 @@ On the command line, the settings are the `triggerMappings` entries of the profi
 ## Set Touch Mapping
 
 1. In the **Controller** section, click **Adjust** in the **Touch mappings** group.
-1. Select the **Surface**: **Primary surface**, **Left surface**, or **Right surface**.
-1. Select **Enable continuous touch output**.
-1. Select a **Touch mode**: **Pointer**, **Left stick**, or **Right stick**.
-1. Set the sensitivity, radius, or deadzone.
-1. Click **Save**.
+2. Select the **Surface**: **Primary surface**, **Left surface**, or **Right surface**.
+3. Select **Enable continuous touch output**.
+4. Select a **Touch mode**: **Pointer**, **Left stick**, or **Right stick**.
+5. Set the sensitivity, radius, or deadzone.
+6. Click **Save**.
 
 **Pointer points per surface** ranges from 1 to 5000 (default 1000). **Full stick radius (surface fraction)** ranges from 0.01 to 1 (default 0.25). **Stick deadzone** ranges from 0 to 0.95 (default 0.1).
 
@@ -99,9 +99,9 @@ On the command line, the settings are the `touchMappings` entries of the profile
 ## Set Motion Tuning and Gyro Output
 
 1. In the **Controller** section, click **Adjust** in the **Motion tuning** group.
-1. Select the **Coordinate space**.
-1. Set the sensitivity and other values.
-1. Click **Save**. To go back to the profile values in a layer, click **Use profile tuning**.
+2. Select the **Coordinate space**.
+3. Set the sensitivity and other values.
+4. Click **Save**. To go back to the profile values in a layer, click **Use profile tuning**.
 
 Motion tuning has these values. The ranges come from the profile validation.
 
@@ -126,10 +126,10 @@ Motion sources need a controller with motion sensors. Some controllers provide n
 A paired Joy-Con profile combines a left and a right Joy-Con. The profile must target the Nintendo left Joy-Con model `057E:2006`.
 
 1. Create a profile. In **Profile details**, select **Paired Joy-Con profile**.
-1. Select the **Pair gyro source**: **Disabled**, **Left Joy-Con**, or **Right Joy-Con**.
-1. Connect both Joy-Con controllers.
-1. Click **Pair connected Joy-Cons...**.
-1. When the label **Pair active** appears, the pair works. Click **Unpair** to end it.
+2. Select the **Pair gyro source**: **Disabled**, **Left Joy-Con**, or **Right Joy-Con**.
+3. Connect both Joy-Con controllers.
+4. Click **Pair connected Joy-Cons...**.
+5. When the label **Pair active** appears, the pair works. Click **Unpair** to end it.
 
 A paired Joy-Con profile has no **Set active** button. The gyro setting works only after OJD pairs two exact Joy-Con controllers. The command line equivalents are `ojd controller pair LEFT RIGHT --profile PROFILE` and `ojd controller unpair PAIR`. Hardware behavior of Joy-Con pairing is not verified.
 
