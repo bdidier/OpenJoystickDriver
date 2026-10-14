@@ -8,6 +8,7 @@ import unittest
 from pathlib import Path
 
 from Scripts.Platform.capabilities import (
+    FORMULAS,
     Capability,
     CapabilityError,
     OutcomeKind,
@@ -210,6 +211,12 @@ class CapabilityResolverTests(unittest.TestCase):
 
     def test_setup_includes_shellcheck(self) -> None:
         self.assertIn(Capability.SHELLCHECK, requirements_for(["setup"]))
+
+    def test_setup_and_hooks_require_bun_with_formula(self) -> None:
+        self.assertIn(Capability.BUN, requirements_for(["setup"]))
+        self.assertEqual(requirements_for(["hooks", "install"]), (Capability.BUN,))
+        self.assertEqual(requirements_for(["hooks", "validate"]), (Capability.BUN,))
+        self.assertEqual(FORMULAS[Capability.BUN], ("bun", "bun"))
 
     def test_ci_notary_secrets_need_no_keychain_repair(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

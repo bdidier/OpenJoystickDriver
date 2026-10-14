@@ -97,3 +97,43 @@ def repair_swiftpm_cache() -> int:
     return subprocess.run(
         [swift_package, "clean"], cwd=PROJECT_DIR, check=False
     ).returncode
+
+
+HOOKS_PATH = ".husky/_"
+HOOK_FILES = ("commit-msg", "pre-commit", "pre-push")
+
+
+def install_hooks() -> int:
+    """`bun install` runs the `prepare` script, which runs husky and sets core.hooksPath."""
+    return run_commands([["bun", "install"]])
+
+
+def validate_hooks() -> int:
+    result = subprocess.run(
+        ["git", "config", "--get", "core.hooksPath"],
+        cwd=PROJECT_DIR,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    configured = result.stdout.strip()
+    expected = (PROJECT_DIR / HOOKS_PATH).resolve()
+    if configured != HOOKS_PATH and (
+        not configured or (PROJECT_DIR / configured).resolve() != expected
+    ):
+        print(
+            f"error: core.hooksPath is {configured or 'unset'}, expected {HOOKS_PATH}; "
+            "run `./Scripts/ojd hooks install`",
+            file=sys.stderr,
+        )
+        return 1
+    missing = [
+        name for name in HOOK_FILES if not (PROJECT_DIR / ".husky" / name).is_file()
+    ]
+    if missing:
+        print(
+            f"error: missing hook files: {', '.join(f'.husky/{name}' for name in missing)}",
+            file=sys.stderr,
+        )
+        return 1
+    return 0

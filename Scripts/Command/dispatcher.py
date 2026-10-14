@@ -210,11 +210,12 @@ def exec_python_with_environment(relative: str, args: list[str]) -> NoReturn:
 
 
 from .execution import (
+    install_hooks,
     repair_swiftpm_cache,
-    run_commands,
     run_record,
     run_usb_passive,
     swift_command,
+    validate_hooks,
 )
 
 
@@ -425,10 +426,10 @@ def dispatch(argv: list[str]) -> int:
                 die(
                     f"Unknown: hooks {rest[0] if rest else ''} (expected: install | validate)"
                 )
-            os.execvpe("lefthook", ["lefthook", rest[0]], env_with())
+            return install_hooks() if rest[0] == "install" else validate_hooks()
         case "setup":
             require("setup", rest, count=0)
-            return run_commands([["lefthook", "validate"], ["lefthook", "install"]])
+            return install_hooks() or validate_hooks()
         case "package":
             sub, tail = (rest[0], rest[1:]) if rest else ("", [])
             if sub in {"", "-h", "--help", "help"}:
