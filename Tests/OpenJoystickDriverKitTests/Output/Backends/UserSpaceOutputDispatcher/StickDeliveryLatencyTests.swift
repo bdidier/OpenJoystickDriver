@@ -358,6 +358,59 @@ struct StickDeliveryLatencyTests {
     #expect(events.last?.motion == samples)
   }
 
+  /// A controller a remapping route consumes gets every queued report, since its bindings derive
+  /// button edges from analog thresholds that a merged report would skip.
+  @Test
+  func remappedControllerReceivesEveryQueuedStickReport() async {
+    let recorder = NativeEventRecorder()
+    let pipeline = DevicePipeline(
+      identifier: Self.identifier,
+      transport: .hid(locationID: 1),
+      driver: OutputCharacterizationTests.ScriptedBatches([
+        [.leftStick(x: 0.1, y: 0)], [.leftStick(x: 0.9, y: 0)], [.leftStick(x: 0.1, y: 0)],
+      ]),
+      dispatcher: recorder,
+      idleTimeoutNanoseconds: 5_000_000_000,
+      idleMonitorIntervalNanoseconds: 5_000_000_000
+    )
+    await pipeline.start()
+    _ = await pipeline.feedHIDData(Data([0]))
+    _ = await pipeline.feedHIDData(Data([1]), laterReportQueued: true)
+    _ = await pipeline.feedHIDData(Data([2]))
+    let xs = recorder.states.map(\.leftStick.x.rawValue)
+    await pipeline.stop()
+
+    #expect(xs.prefix(3) == [3_276, 29_490, 3_276], "left stick X per dispatch: \(xs)")
+  }
+
+  /// An input held for a later report is dropped when the session is suspended, so a report with
+  /// no input after the resume does not replay the stick position from before it.
+  @Test
+  func suspendDropsTheHeldInput() async {
+    let recorder = FirstStickDispatchHeldRecorder()
+    let pipeline = DevicePipeline(
+      identifier: Self.identifier,
+      transport: .hid(locationID: 1),
+      driver: OutputCharacterizationTests.ScriptedBatches([
+        [.leftStick(x: 0.1, y: 0)], [.leftStick(x: 0.9, y: 0)],
+      ]),
+      dispatcher: recorder,
+      idleTimeoutNanoseconds: 5_000_000_000,
+      idleMonitorIntervalNanoseconds: 5_000_000_000
+    )
+    await recorder.openHeldDispatch()
+    await pipeline.start()
+    _ = await pipeline.feedHIDData(Data([0]))
+    _ = await pipeline.feedHIDData(Data([1]), laterReportQueued: true)
+    #expect(await pipeline.suspendControllerSession())
+    #expect(await pipeline.resumeControllerSession())
+    _ = await pipeline.feedHIDData(Data())
+    let xs = recorder.stickEvents().map(\.state.leftStick.x.rawValue)
+    await pipeline.stop()
+
+    #expect(xs == [3_276], "left stick X per dispatch: \(xs)")
+  }
+
   /// The service's detection loop, fed by a HID backend, publishes only the newest of the stick
   /// reports queued behind a slow dispatch.
   @Test
@@ -396,7 +449,8 @@ struct StickDeliveryLatencyTests {
     await manager.stop()
 
     #expect(xs.count == 2, "left stick X per dispatch: \(xs)")
-    #expect(xs.first.map { $0 < xs.last ?? $0 } == true, "left stick X per dispatch: \(xs)")
+    // 0xF0, the newest queued report: (0xF0 - 0x80) * 258.
+    #expect(xs.last == 28_896, "left stick X per dispatch: \(xs)")
   }
 
   /// Finishing wakes a waiting consumer with nil, and so does cancelling it.

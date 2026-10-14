@@ -113,8 +113,13 @@ actor DevicePipeline {
   /// stays unresponsive after the reset is not reset again by the same pipeline.
   var usbDeviceResetAttempted = false
   var lastUSBIOErrorLogNs: UInt64 = 0
-  var inputConnectionActive: Bool
-  var sessionState: ControllerSessionState
+  /// Ending the connection or the session drops the held input, so it is never replayed later.
+  var inputConnectionActive: Bool {
+    didSet { if !inputConnectionActive { coalescedInput = nil } }
+  }
+  var sessionState: ControllerSessionState {
+    didSet { if sessionState != .active { coalescedInput = nil } }
+  }
   var acceptsOnlyTeardownOutput = false
   var lastLiveInputReportNanoseconds: UInt64?
   var inputHealthMonitoringStartedNanoseconds: UInt64?

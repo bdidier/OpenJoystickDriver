@@ -85,14 +85,21 @@ extension DevicePipeline {
     )
     // A slow publication must not replay stale stick positions from the reports queued behind
     // it, but every button, hat, and touch change still reaches output in order.
-    if laterReportQueued, event.touchFrames.isEmpty, visible.pressed == lastDispatchedState.pressed,
-      visible.hat == lastDispatchedState.hat
+    if laterReportQueued, !inputFeedsRemapping, event.touchFrames.isEmpty,
+      visible.pressed == lastDispatchedState.pressed, visible.hat == lastDispatchedState.hat,
+      visible.touch == lastDispatchedState.touch
     {
       coalescedInput = output
       return
     }
     lastDispatchedState = visible
     await dispatch(output)
+  }
+
+  /// Whether a remapping route consumes this controller's input. Its bindings derive button edges
+  /// from analog thresholds, so it must see every report, and no report is merged for it.
+  var inputFeedsRemapping: Bool {
+    (dispatcher as? any ObservedInputDemand)?.wantsObservedInput(from: identifier) == true
   }
 
   /// Dispatches the input an earlier report left for a later one that published nothing, such as
