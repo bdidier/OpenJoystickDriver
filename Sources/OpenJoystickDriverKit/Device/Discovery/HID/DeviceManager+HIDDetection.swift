@@ -34,29 +34,127 @@ extension DeviceManager {
     print("[DeviceManager] HID detection started" + " (class 0x03)")
     let events = await hidManager.deviceEvents()
     guard hidDetectionSessionID == sessionID, !isStopping, !Task.isCancelled else { return }
-    for await event in events {
-      guard hidDetectionSessionID == sessionID, !Task.isCancelled else { return }
-      // Teardown sends neutral and shutdown reports through this still-open session, then cancels
-      // the task; returning here instead would close the session under those writes.
-      guard !isStopping else { continue }
-      switch event {
-      case .connected(let connection, _) where connection.physicalDevice.nativePassThrough:
-        // A native connection binds inline, so a later sibling's initialization at its location
-        // cannot cancel it; it sends no startup output to wait on.
-        await handleHIDEvent(event)
-      case .connected(let connection, let ownership):
-        scheduleHIDDeviceInitialization(connection: connection, ownership: ownership)
-      case .disconnected(let connection):
-        let key = hidInitializationKey(for: connection)
-        if hidInitializationTasks[key]?.connection.connectionID == connection.connectionID {
-          hidInitializationTasks.removeValue(forKey: key)?.task.cancel()
+    // Events that arrive while one is handled are taken together, so an input report that a later
+    // report of its controller already follows is known before its slow publication starts.
+    let batches = EventBatches<HIDDeviceEvent>()
+    let reader = Task.detached {
+      for await event in events { batches.append(event) }
+      batches.finish()
+    }
+    defer {
+      reader.cancel()
+      batches.finish()
+    }
+    while let batch = await batches.next() {
+      let followed = Self.inputReportsFollowedByLaterReport(in: batch)
+      for (index, event) in batch.enumerated() {
+        guard hidDetectionSessionID == sessionID, !Task.isCancelled else { return }
+        // Teardown sends neutral and shutdown reports through this still-open session, then
+        // cancels the task; returning here instead would close the session under those writes.
+        guard !isStopping else { continue }
+        switch event {
+        case .connected(let connection, _) where connection.physicalDevice.nativePassThrough:
+          // A native connection binds inline, so a later sibling's initialization at its location
+          // cannot cancel it; it sends no startup output to wait on.
+          await handleHIDEvent(event)
+        case .connected(let connection, let ownership):
+          scheduleHIDDeviceInitialization(connection: connection, ownership: ownership)
+        case .disconnected(let connection):
+          let key = hidInitializationKey(for: connection)
+          if hidInitializationTasks[key]?.connection.connectionID == connection.connectionID {
+            hidInitializationTasks.removeValue(forKey: key)?.task.cancel()
+          }
+          await handleHIDEvent(event)
+        case .inputReport(let locationID, let connectionID, _, let data):
+          await routeHIDInputReport(
+            locationID: locationID,
+            connectionID: connectionID,
+            data: data,
+            laterReportQueued: followed.contains(index)
+          )
+        case .ownershipChanged, .inputValue: await handleHIDEvent(event)
+        case .accessFailure:
+          await handleHIDEvent(event)
+          return
         }
-        await handleHIDEvent(event)
-      case .ownershipChanged, .inputReport, .inputValue: await handleHIDEvent(event)
-      case .accessFailure:
-        await handleHIDEvent(event)
-        return
       }
+    }
+  }
+
+  /// The indices of the input reports in `batch` that a later report of the same connection
+  /// follows, with no other event between them.
+  static func inputReportsFollowedByLaterReport(in batch: [HIDDeviceEvent]) -> Set<Int> {
+    struct Source: Hashable {
+      let locationID: UInt32
+      let connectionID: UUID
+    }
+    var laterReports: Set<Source> = []
+    var followed: Set<Int> = []
+    for (index, event) in batch.enumerated().reversed() {
+      guard case .inputReport(let locationID, let connectionID, _, _) = event else {
+        laterReports.removeAll()
+        continue
+      }
+      let source = Source(locationID: locationID, connectionID: connectionID)
+      if !laterReports.insert(source).inserted { followed.insert(index) }
+    }
+    return followed
+  }
+
+  /// Holds the events that arrive while their consumer is busy, so it takes them all at once and
+  /// in order.
+  final class EventBatches<Element: Sendable>: Sendable {
+    private struct State: Sendable {
+      var pending: [Element] = []
+      var finished = false
+      var waiter: CheckedContinuation<[Element]?, Never>?
+    }
+
+    private let state = Locked(State())
+
+    /// The events appended since the last call, waiting while there are none; nil once
+    /// `finish()` ran and every event was taken. Cancelling the calling task finishes the batches.
+    func next() async -> [Element]? {
+      await withTaskCancellationHandler {
+        await withCheckedContinuation { continuation in
+          let ready = state.withLock { state -> [Element]?? in
+            if !state.pending.isEmpty {
+              defer { state.pending.removeAll() }
+              return .some(state.pending)
+            }
+            if state.finished { return .some(nil) }
+            state.waiter = continuation
+            return nil
+          }
+          if let ready { continuation.resume(returning: ready) }
+        }
+      } onCancel: {
+        finish()
+      }
+    }
+
+    /// Adds `event` after every pending one; ignored once finished.
+    func append(_ event: Element) {
+      let waiter = state.withLock { state -> CheckedContinuation<[Element]?, Never>? in
+        guard !state.finished else { return nil }
+        guard let waiter = state.waiter else {
+          state.pending.append(event)
+          return nil
+        }
+        state.waiter = nil
+        return waiter
+      }
+      waiter?.resume(returning: [event])
+    }
+
+    /// Ends the batches: `next()` returns the pending events, then nil.
+    func finish() {
+      let waiter = state.withLock { state -> CheckedContinuation<[Element]?, Never>? in
+        state.finished = true
+        defer { state.waiter = nil }
+        return state.waiter
+      }
+      waiter?.resume(returning: nil)
     }
   }
 

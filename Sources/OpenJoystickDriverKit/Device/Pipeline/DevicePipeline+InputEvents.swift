@@ -4,8 +4,18 @@ extension DevicePipeline {
 
   /// Takes the snapshot of one parsed input, or nil for a frame that carried no input, normalizes
   /// it, and dispatches it when output may see it and it differs from the last dispatched state.
-  func handleParsedEvent(_ parsed: ControllerEvent?, now: UInt64) async {
+  /// With `laterReportQueued`, an input that changes no button, hat, or touch frame is kept in
+  /// `coalescedInput` for the later report instead.
+  func handleParsedEvent(
+    _ parsed: ControllerEvent?,
+    now: UInt64,
+    laterReportQueued: Bool = false
+  ) async {
     guard sessionState == .active else { return }
+    // This report's state supersedes the input an earlier report left; that input's motion
+    // samples still go out with this one.
+    let held = coalescedInput
+    coalescedInput = nil
     let event = parsed.map(normalized)
     if event != nil { lastObservedInputReportNanoseconds = now }
     if let timeout = plan.inputReportLivenessTimeoutNanoseconds {
@@ -25,7 +35,11 @@ extension DevicePipeline {
         return
       }
     }
-    guard let event else { return }
+    guard let event else {
+      // A report with no input leaves the held input for `dispatchCoalescedInput()`.
+      coalescedInput = held
+      return
+    }
     let previousInput = currentInputState
     currentInputState = event.state
 
@@ -58,18 +72,47 @@ extension DevicePipeline {
       lastDispatchedState = .neutral
       return
     }
-    guard visible != lastDispatchedState || !event.motion.isEmpty || !event.touchFrames.isEmpty
-    else { return }
-    lastDispatchedState = visible
-    await dispatch(
-      ControllerEvent(
-        timestamp: event.timestamp,
-        state: visible,
-        motion: event.motion,
-        touchFrames: event.touchFrames,
-        isFresh: event.isFresh
-      )
+    let motion = (held?.motion ?? []) + event.motion
+    guard visible != lastDispatchedState || !motion.isEmpty || !event.touchFrames.isEmpty else {
+      return
+    }
+    let output = ControllerEvent(
+      timestamp: event.timestamp,
+      state: visible,
+      motion: motion,
+      touchFrames: event.touchFrames,
+      isFresh: event.isFresh
     )
+    // A slow publication must not replay stale stick positions from the reports queued behind
+    // it, but every button, hat, and touch change still reaches output in order.
+    if laterReportQueued, !inputFeedsRemapping, event.touchFrames.isEmpty,
+      visible.pressed == lastDispatchedState.pressed, visible.hat == lastDispatchedState.hat,
+      visible.touch == lastDispatchedState.touch
+    {
+      coalescedInput = output
+      return
+    }
+    lastDispatchedState = visible
+    await dispatch(output)
+  }
+
+  /// Whether a remapping route consumes this controller's input. Its bindings derive button edges
+  /// from analog thresholds, so it must see every report, and no report is merged for it.
+  var inputFeedsRemapping: Bool {
+    (dispatcher as? any ObservedInputDemand)?.wantsObservedInput(from: identifier) == true
+  }
+
+  /// Dispatches the input an earlier report left for a later one that published nothing, such as
+  /// a last queued report that carried no input.
+  func dispatchCoalescedInput() async {
+    guard let pending = coalescedInput else { return }
+    coalescedInput = nil
+    guard sessionState == .active, inputConnectionActive, externalOutputAllowed,
+      !waitingForExternalNeutral, !awaitingNeutralAfterLivenessLoss,
+      pending.state != lastDispatchedState || !pending.motion.isEmpty
+    else { return }
+    lastDispatchedState = pending.state
+    await dispatch(pending)
   }
 
   /// Applies the normalization a driver leaves to the pipeline: each trigger button the driver's
