@@ -66,6 +66,50 @@ GUI and CLI copy: `LOCALIZATION.md`. Tests check codes, routes, identifiers, pat
 
 ## Pull Requests
 
-Submit one logical change. List checks run and whether you tested on your own hardware.
+Submit one logical change. Fill every section of the pull request template. List checks run and whether you tested on your own hardware.
+
+## Issues and Pull Requests
+
+Use the issue forms. Each form has a human variant and an **(AI Agent)** variant with the same fields. Pull requests have one template with an **AI Agent** section.
+
+Write exact values. Vague or missing details get the issue sent back. A bot closes an issue whose version field does not name an exact build, and reopens it when you correct the field.
+
+- Version: the whole line from **About OpenJoystickDriver**, for example `0.6.0-alpha.1+build.1.8.74.sha.08bc747d93f6.dirty (1.8.74)`. Not `alpha`, `beta`, or `latest`.
+- macOS: version and build from `sw_vers`, for example `15.6.1 (24G90)`.
+- Controller: model name, VID:PID, and connection.
+- Steps: numbered, one action each.
+- Results: what you saw, with error text and codes copied exactly. Not "doesn't work".
+- Anything nobody checked: `Not checked`.
+
+## AI Agents
+
+A human operator stands behind every issue, comment, and pull request an agent writes. The operator reads it before it is posted, and the form names them.
+
+Attribution:
+
+- Keep the attribution your harness adds to commits and pull requests. Do not remove or change it.
+- If the harness adds none, end each commit message with a trailer that names the model, such as `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
+- The human operator stays the commit author.
+
+Writing:
+
+- Say it plainly and briefly. Use the words a user would use. Do not use jargon to sound exact.
+- No preamble, recap, extra headings, or emoji. Fill the fields and stop.
+- State only what a command, the source, or the operator showed. Do not guess. Write `Not checked` instead.
+
+A fix that the operator tried and tested on their hardware comes with a prompt for the maintainer's agent. Put it in a code block. Use numbered steps that another agent can follow without guessing: each file, the exact change, each check to run, and the result to expect.
+
+```text
+Fix: <what is wrong, for which controller, VID:PID, and connection>.
+Tested by @<operator> on OpenJoystickDriver <full version>, macOS <version and build>.
+
+1. In <path>, in <function or type>, replace <exact old code> with <exact new code>.
+2. Run <command>. Expect <result>.
+3. Change nothing else.
+```
+
+These rules draw on GitHub's [issue form syntax](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-githubs-form-schema), the [Ghostty AI policy](https://github.com/ghostty-org/ghostty/blob/main/AI_POLICY.md), the Linux kernel's [AI coding assistants guide](https://docs.kernel.org/process/coding-assistants.html), and the [KubeVirt AI contribution policy](https://github.com/kubevirt/community/blob/main/ai-contribution-policy.md).
+
+Report security problems privately, as [`SECURITY.md`](SECURITY.md) describes.
 
 Layout: `docs/development/source-topology.md`. RPC payloads: `Sources/OpenJoystickDriverKit/ApplicationService/`. CLI help: the `CommandConfiguration` of each command under `Sources/OpenJoystickDriverCLI/Commands/`, with its text in the localization strings. `OpenJoystickDriverHIDTool` is internal.

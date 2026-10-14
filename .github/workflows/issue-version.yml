@@ -1,0 +1,55 @@
+name: Issue version
+
+on:
+  issues:
+    types:
+      - opened
+      - edited
+      - reopened
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: issue-version-${{ github.event.issue.number }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Check the reported version
+    if: ${{ !contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.issue.author_association) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Close or reopen the issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          ISSUE: ${{ github.event.issue.number }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_STATE: ${{ github.event.issue.state }}
+          HAS_LABEL: ${{ contains(github.event.issue.labels.*.name, 'needs exact version') }}
+        run: |
+          if python3 -m Scripts.Documentation.issues.version_check > problem.txt; then
+            if [ "$HAS_LABEL" = true ]; then
+              gh issue edit "$ISSUE" --remove-label "needs exact version"
+              if [ "$ISSUE_STATE" = closed ]; then gh issue reopen "$ISSUE"; fi
+            fi
+            exit 0
+          fi
+          if [ "$HAS_LABEL" != true ]; then
+            gh label create "needs exact version" --color FBCA04 \
+              --description "The issue does not name the exact build" --force
+            gh issue edit "$ISSUE" --add-label "needs exact version"
+            {
+              cat problem.txt
+              echo
+              echo "Edit the issue and put that line in the OpenJoystickDriver version field. The issue reopens when the version is correct."
+            } > comment.md
+            gh issue comment "$ISSUE" --body-file comment.md
+          fi
+          if [ "$ISSUE_STATE" = open ]; then gh issue close "$ISSUE" --reason "not planned"; fi
