@@ -67,5 +67,5 @@ The normalized batch is delivered to one persistent virtual-HID device per physi
 Before marking a mapping verified, check the exact app and mode:
 
 1. SDL2/3: `A2` and `A5` idle at zero, D-pad releases cleanly.
-1. Parsec macOS to Windows: D-pad and A/B/X/Y stay stable on the Windows host.
-1. Rumble: app output report reaches the physical controller if the controller supports rumble.
+2. Parsec macOS to Windows: D-pad and A/B/X/Y stay stable on the Windows host.
+3. Rumble: app output report reaches the physical controller if the controller supports rumble.
