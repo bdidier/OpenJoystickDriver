@@ -2,23 +2,62 @@ import IOKit
 import OpenJoystickDriverKit
 import SwifterKit
 
+/// The identity of the `IOUSBHostDevice` a DEXT service sits on, read from the IORegistry.
+struct USBDriverKitParentDevice: Sendable, Hashable {
+  var vendorID: UInt16
+  var productID: UInt16
+  var locationID: UInt32?
+  var productName: String?
+  var serialNumber: String?
+}
+
 /// Host adapter for services owned by OJD's restricted USBDriverKit extension.
 public actor USBDriverKitTransportProvider: USBPhysicalDeviceObservationProvider {
   private let client: DriverClient
+  private let parentDevice: @Sendable (UInt64) -> USBDriverKitParentDevice?
   private var servicesByID: [UInt64: DriverService] = [:]
+  private var parentsByID: [UInt64: USBDriverKitParentDevice] = [:]
+  /// DEXT services the latest `devices()` could not identify, so each is logged once.
+  private var unlistedServiceIDs: Set<UInt64> = []
 
-  public init(client: DriverClient = DriverClient()) { self.client = client }
+  public init(client: DriverClient = DriverClient()) {
+    self.init(client: client, parentDevice: Self.registryParentDevice(serviceID:))
+  }
+
+  init(
+    client: DriverClient,
+    parentDevice: @escaping @Sendable (UInt64) -> USBDriverKitParentDevice?
+  ) {
+    self.client = client
+    self.parentDevice = parentDevice
+  }
 
   public func devices() async throws -> [USBTransportDevice] {
     let services = try await client.services(
       matching: USBDriverKitExtensionConfiguration.driver.serviceMatch
     )
     servicesByID = Dictionary(uniqueKeysWithValues: services.map { ($0.id, $0) })
-    return services.compactMap(Self.device)
+    parentsByID = services.reduce(into: [:]) { parents, service in
+      parents[service.id] = parentDevice(service.id)
+    }
+    let devices = services.map { ($0.id, Self.device($0, parent: parentsByID[$0.id])) }
+    // The facade keeps a DEXT model off direct IOUSBHost, so an unlisted service hides its
+    // controller entirely; say so once per service rather than on every poll.
+    let unlisted = Set(devices.compactMap { $0.1 == nil ? $0.0 : nil })
+    for serviceID in unlisted.subtracting(unlistedServiceIDs).sorted() {
+      print(
+        "[USBDriverKitTransport] DEXT service \(serviceID) not listed: neither a parent "
+          + "IOUSBHostDevice nor the service itself has a scalar idVendor and idProduct"
+      )
+    }
+    unlistedServiceIDs = unlisted
+    return devices.compactMap(\.1)
   }
 
   public func physicalDeviceObservations() throws -> [PhysicalDevice] {
-    servicesByID.values.sorted { $0.id < $1.id }.compactMap(Self.physicalDeviceObservation(from:))
+    servicesByID.values.sorted { $0.id < $1.id }.compactMap {
+      Self.physicalDeviceObservation(from: $0, parent: parentsByID[$0.id])
+    }
   }
 
   public func open(
@@ -68,12 +107,20 @@ public actor USBDriverKitTransportProvider: USBPhysicalDeviceObservationProvider
     } catch { throw Self.transportError(error) }
   }
 
-  static func device(_ service: DriverService) -> USBTransportDevice? {
-    guard let vendorID = uint16Property(service.properties["idVendor"]),
-      let productID = uint16Property(service.properties["idProduct"])
+  /// The device a DEXT service drives, identified by the parent `IOUSBHostDevice` first and the
+  /// service's own properties second. The service carries its personality, which lists the
+  /// products as `idProductArray` when the extension matches more than one, so without a parent
+  /// it has no scalar `idProduct` and yields nil.
+  static func device(
+    _ service: DriverService,
+    parent: USBDriverKitParentDevice? = nil
+  ) -> USBTransportDevice? {
+    guard let vendorID = parent?.vendorID ?? uint16Property(service.properties["idVendor"]),
+      let productID = parent?.productID ?? uint16Property(service.properties["idProduct"])
     else { return nil }
     let observedPhysicalLocationIdentifier =
-      uint32Property(service.properties["locationID"])
+      parent?.locationID
+      ?? uint32Property(service.properties["locationID"])
       ?? uint32Property(service.properties["LocationID"])
     let locationID = observedPhysicalLocationIdentifier ?? UInt32(truncatingIfNeeded: service.id)
     return USBTransportDevice(
@@ -83,17 +130,23 @@ public actor USBDriverKitTransportProvider: USBPhysicalDeviceObservationProvider
       productID: productID,
       locationID: locationID,
       observedPhysicalLocationIdentifier: observedPhysicalLocationIdentifier,
-      productName: stringProperty(
-        service.properties["USB Product Name"] ?? service.properties["Product Name"]
-      ),
-      serialNumber: stringProperty(
-        service.properties["USB Serial Number"] ?? service.properties["Serial Number"]
-      )
+      productName: parent?.productName
+        ?? stringProperty(
+          service.properties["USB Product Name"] ?? service.properties["Product Name"]
+        ),
+      serialNumber: parent?.serialNumber
+        ?? stringProperty(
+          service.properties["USB Serial Number"] ?? service.properties["Serial Number"]
+        )
     )
   }
 
-  static func physicalDeviceObservation(from service: DriverService) -> PhysicalDevice? {
-    guard let device = device(service) else { return nil }
+  /// The observation of the device `device(_:parent:)` lists for a DEXT service.
+  static func physicalDeviceObservation(
+    from service: DriverService,
+    parent: USBDriverKitParentDevice? = nil
+  ) -> PhysicalDevice? {
+    guard let device = device(service, parent: parent) else { return nil }
     return PhysicalDevice(
       serviceIdentity: device.serviceIdentity,
       vendorID: device.vendorID,
@@ -108,6 +161,46 @@ public actor USBDriverKitTransportProvider: USBPhysicalDeviceObservationProvider
           usbRoute: .usbDriverKit
         )
       ]
+    )
+  }
+
+  /// The identity of the nearest `IOUSBHostDevice` among the service-plane parents of the
+  /// IORegistry entry `serviceID`, at most 8 levels up. Nil when there is no such parent or it
+  /// has no `idVendor` and `idProduct`.
+  static func registryParentDevice(serviceID: UInt64) -> USBDriverKitParentDevice? {
+    var entry = IOServiceGetMatchingService(
+      kIOMainPortDefault,
+      IORegistryEntryIDMatching(serviceID)
+    )
+    guard entry != 0 else { return nil }
+    var depth = 0
+    while IOObjectConformsTo(entry, "IOUSBHostDevice") == 0 {
+      var parent: io_registry_entry_t = 0
+      let result = IORegistryEntryGetParentEntry(entry, kIOServicePlane, &parent)
+      IOObjectRelease(entry)
+      depth += 1
+      guard result == KERN_SUCCESS else { return nil }
+      entry = parent
+      guard depth <= 8 else {
+        IOObjectRelease(entry)
+        return nil
+      }
+    }
+    defer { IOObjectRelease(entry) }
+    func value(_ key: String) -> Any? {
+      IORegistryEntryCreateCFProperty(entry, key as CFString, kCFAllocatorDefault, 0)?
+        .takeRetainedValue()
+    }
+    func string(_ keys: [String]) -> String? { keys.lazy.compactMap { value($0) as? String }.first }
+    guard let vendorID = (value("idVendor") as? UInt64).flatMap(UInt16.init(exactly:)),
+      let productID = (value("idProduct") as? UInt64).flatMap(UInt16.init(exactly:))
+    else { return nil }
+    return USBDriverKitParentDevice(
+      vendorID: vendorID,
+      productID: productID,
+      locationID: (value("locationID") as? UInt64).flatMap(UInt32.init(exactly:)),
+      productName: string(["USB Product Name", "Product Name"]),
+      serialNumber: string(["USB Serial Number", "Serial Number"])
     )
   }
 
