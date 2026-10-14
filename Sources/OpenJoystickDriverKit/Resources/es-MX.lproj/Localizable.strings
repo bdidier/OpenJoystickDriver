@@ -1215,7 +1215,7 @@
 "cli.controller.ownership.discussion" = "native deja el control a macOS, que lo maneja como control de juego; virtual permite que OpenJoystickDriver lo tome y publique su control virtual. La elección se aplica a todos los controles del modelo: establece ownership en tu registro del modelo, VVVV-PPPP.json en tu carpeta de registros, y conserva los demás campos del registro. El servicio en ejecución la aplica sin volver a conectar. Necesita el servicio para encontrar el control. --dry-run no escribe nada. Sale con 1 y E2023 para un control que usa USB sin procesar, que OpenJoystickDriver siempre maneja, o que macOS no maneja de forma nativa.";
 "cli.controller.ownership.dry_run" = "Establecería %@ en %@ en %@.";
 "cli.controller.ownership.invalid" = "No se puede cambiar %@: %@";
-"cli.controller.ownership.no_record" = "%@ no tiene un registro de control que cambiar. Crea uno con 'ojd record draft %@'.";
+"cli.controller.ownership.no_record" = "%@ no tiene un registro de control que cambiar. Crea uno con «ojd record draft %@».";
 "cli.controller.ownership.not_native" = "macOS no maneja %@ de forma nativa, así que OpenJoystickDriver siempre lo maneja.";
 "cli.controller.ownership.raw_usb" = "%@ usa USB sin procesar, así que OpenJoystickDriver siempre lo maneja.";
 "cli.controller.ownership.success" = "%@ quedó establecido en %@ en %@. El servicio en ejecución lo aplica ahora.";

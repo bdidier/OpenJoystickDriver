@@ -672,12 +672,12 @@ Context:
 - `git diff` of the 22 catalogs for the B1 renumbering.
 - The call sites of `cli.mod.*` in `Sources/OpenJoystickDriverCLI/Commands/Mod/`.
 
-- [ ] 13.1 For each locale, check that `error.E3029` holds the old E4007 sense and `error.E4007` the old E4008 sense.
-- [ ] 13.2 Read each value back against `en-US`. Fix the sense, punctuation (native quotes and ellipsis, no ASCII `"`), and terms (package, profile). Keep `mod.json`, `ojd mod list`, `--force`, and placeholders.
-- [ ] 13.3 Review the toggle keys of P11 the same way; keep `native`, `virtual`, and `ojd controller ownership` as the CLI spells them where they are command values.
-- [ ] 13.4 Keep keys and the key order unchanged.
-- [ ] 13.5 Verify: the `verify` command above exits 0. Acceptance: The verify command passes. The report lists each changed value by locale and key.
-- [ ] 13.6 Review: a fresh reviewer agent approves the diff
+- [x] 13.1 For each locale, check that `error.E3029` holds the old E4007 sense and `error.E4007` the old E4008 sense.
+- [x] 13.2 Read each value back against `en-US`. Fix the sense, punctuation (native quotes and ellipsis, no ASCII `"`), and terms (package, profile). Keep `mod.json`, `ojd mod list`, `--force`, and placeholders.
+- [x] 13.3 Review the toggle keys of P11 the same way; keep `native`, `virtual`, and `ojd controller ownership` as the CLI spells them where they are command values.
+- [x] 13.4 Keep keys and the key order unchanged.
+- [x] 13.5 Verify: the `verify` command above exits 0. Acceptance: The verify command passes. The report lists each changed value by locale and key.
+- [x] 13.6 Review: a fresh reviewer agent approves the diff
 - [ ] 13.7 Merge `spec/0.6.0-alpha.1-P7` into `feat/0.6.0-alpha.1`
 
 Boundaries:
