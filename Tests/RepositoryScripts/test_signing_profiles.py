@@ -2,7 +2,12 @@
 
 from __future__ import annotations
 
+import plistlib
+import subprocess
+import sys
+import tempfile
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
 from Scripts.Signing import configure, doctor
@@ -164,3 +169,42 @@ class DoctorProfileTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+DRIVERKIT_SCRIPT = Path(__file__).resolve().parents[2] / "Scripts/Build/driverkit.sh"
+DEXT = "com.openjoystickdriver.XboxUSBDevice"
+VIRTUAL_HID = "com.openjoystickdriver.VirtualHIDDevice"
+
+
+def _signed_host_access_check() -> str:
+    """The Python that `_require_signed_host_access` in driverkit.sh runs."""
+    body = DRIVERKIT_SCRIPT.read_text().split("_require_signed_host_access() {", 1)[1]
+    return body.split("<<'PY'\n", 1)[1].split("\nPY\n", 1)[0]
+
+
+class SignedHostAccessTests(unittest.TestCase):
+    def _check(self, signed: object, profile: object) -> int:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            script = root / "check.py"
+            script.write_text(_signed_host_access_check())
+            signed_path = root / "signed.plist"
+            signed_path.write_bytes(
+                plistlib.dumps({} if signed is None else {USERCLIENT: signed})
+            )
+            profile_path = root / "profile.plist"
+            entitlements = {} if profile is None else {USERCLIENT: profile}
+            profile_path.write_bytes(plistlib.dumps({"Entitlements": entitlements}))
+            command = [sys.executable, script, signed_path, profile_path, "1", DEXT]
+            return subprocess.run(command, capture_output=True, check=False).returncode
+
+    def test_host_signed_for_the_dext_passes_with_a_profile_that_also_grants_virtual_hid(
+        self,
+    ) -> None:
+        self.assertEqual(self._check([DEXT], [DEXT, VIRTUAL_HID]), 0)
+        self.assertEqual(self._check([DEXT], [DEXT]), 0)
+
+    def test_host_must_claim_only_a_dext_the_profile_grants(self) -> None:
+        self.assertNotEqual(self._check([DEXT, VIRTUAL_HID], [DEXT, VIRTUAL_HID]), 0)
+        self.assertNotEqual(self._check([DEXT], [VIRTUAL_HID]), 0)
+        self.assertNotEqual(self._check(None, [DEXT]), 0)
