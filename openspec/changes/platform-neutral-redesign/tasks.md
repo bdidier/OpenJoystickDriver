@@ -66,9 +66,9 @@ Owns: the model identifier type and its use in stores.
 Depends: 1.
 Verify: `swift test`, `swift-format lint --recursive --strict Package.swift Sources Tests`, `swiftlint lint --no-cache --strict`.
 
-- [ ] 3.1 Introduce `ControllerModelID` as the key of a record kind of controller. Verify: unit test that two physical units of one model share one ID.
-- [ ] 3.2 Replace the uses of the overloaded identifier that mean "model". Verify: build passes and 1.1 to 1.3 show zero diffs.
-- [ ] 3.3 Write the rule that a stored file keeps working or is dropped with no migration (assumption: no migration). Verify: a test loads an old stored file and reports the documented result.
+- [x] 3.1 Introduce `ControllerModelID` as the key of a record kind of controller. Verify: unit test that two physical units of one model share one ID.
+- [x] 3.2 Replace the uses of the overloaded identifier that mean "model". Verify: build passes and 1.1 to 1.3 show zero diffs.
+- [x] 3.3 Write the rule that a stored file keeps working or is dropped with no migration (assumption: no migration). Verify: a test loads an old stored file and reports the documented result.
 
 ## 4. Session, port and reference (old WP3)
 
