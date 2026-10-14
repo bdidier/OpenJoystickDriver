@@ -11,6 +11,7 @@ Before editing, read `CONTRIBUTING.md`, `wiki/Home.md`, `LOCALIZATION.md`, and `
 - Generate DriverKit files with `./Scripts/ojd driverkit generate`.
 - Do not add SVGs or secrets.
 - Confirm destructive writes and publication before running them.
+- Issues, comments, and pull requests follow `CONTRIBUTING.md#ai-agents`.
 
 ## Checks
 
