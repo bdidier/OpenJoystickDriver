@@ -13,9 +13,9 @@ The Swift package `OpenJoystickDriverKit` has an `ApplicationServiceClient`, but
 ## Write a Script
 
 1. Start the service and wait until it accepts requests: `ojd service start`.
-1. Add `--no-input` to each command, so that a command fails instead of asking a question.
-1. Add `--json` to each command whose output you read.
-1. Check the exit code of each command. Code 69 means that the service is not running.
+2. Add `--no-input` to each command, so that a command fails instead of asking a question.
+3. Add `--json` to each command whose output you read.
+4. Check the exit code of each command. Code 69 means that the service is not running.
 
 Commands that delete or reset data ask first on a terminal. In a script, they need `--force`. Run them first with `--dry-run` to see what they change.
 
@@ -63,18 +63,18 @@ The service is polled every 16 ms for input, and every 250 ms for connected cont
 A program that runs all the time can read controller events from the endpoint, a local socket, instead of running `ojd controller watch`. The endpoint is off by default, and it serves only the programs that you grant:
 
 1. Turn on the endpoint: `ojd access enable`.
-1. Grant your program: `ojd access grant /Applications/Reader.app`. To find the ID of a program that the endpoint refused, run `ojd access list`.
-1. Read the socket path: `ojd --json access status | jq -r .socketPath`. It is in your user's temporary folder, and it exists only while the endpoint is on.
+2. Grant your program: `ojd access grant /Applications/Reader.app`. To find the ID of a program that the endpoint refused, run `ojd access list`.
+3. Read the socket path: `ojd --json access status | jq -r .socketPath`. It is in your user's temporary folder, and it exists only while the endpoint is on.
 
 The program sends and receives JSON objects, one per line, each at most 64 KiB:
 
 Each line except a watch line has `apiVersion`, which is `openjoystickdriver.io/v1beta1`, and a `kind`:
 
 1. The endpoint sends `{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"Challenge","nonce":"…"}` first. A granted program can ignore it; a [token](#use-a-token) client signs it.
-1. Within 5 seconds, the program sends `{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"Hello","scopes":["read"]}`.
-1. The endpoint answers a `Welcome`, with `version` and the granted `scopes`, or a `Status` with `status` `Failure`, `code`, and `message`, and closes the connection. A `Hello` with another `apiVersion` gets `E1003`.
-1. The program sends `{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"Subscription","stream":"controllers"}`. Add `"output":true` for the values of the virtual gamepad.
-1. The endpoint sends the same `ADDED`, `MODIFIED`, and `DELETED` watch lines as `ojd controller watch --all --json`.
+2. Within 5 seconds, the program sends `{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"Hello","scopes":["read"]}`.
+3. The endpoint answers a `Welcome`, with `version` and the granted `scopes`, or a `Status` with `status` `Failure`, `code`, and `message`, and closes the connection. A `Hello` with another `apiVersion` gets `E1003`.
+4. The program sends `{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"Subscription","stream":"controllers"}`. Add `"output":true` for the values of the virtual gamepad.
+5. The endpoint sends the same `ADDED`, `MODIFIED`, and `DELETED` watch lines as `ojd controller watch --all --json`.
 
 ```python
 import json
@@ -104,9 +104,9 @@ with socket.socket(socket.AF_UNIX) as endpoint:
 A program that cannot be granted by its signature, such as a script, can use a token instead. The program does not send the token. It proves that it has the token by signing the challenge:
 
 1. Create the token: `ojd access grant --token reader`. The command prints the token once, and the service keeps only its SHA-256 hash.
-1. Join four lines, each ending with a newline: `OpenJoystickDriver endpoint hello 1`, the challenge's `nonce`, the page's origin, and the WebSocket's port. On the socket, the origin and port lines are empty.
-1. Compute the HMAC-SHA256 of those lines, keyed with the SHA-256 of the token, and write it as lowercase hex.
-1. Send the token's name and the HMAC in the `Hello`: `{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"Hello","scopes":["read"],"tokenName":"reader","proof":"…"}`.
+2. Join four lines, each ending with a newline: `OpenJoystickDriver endpoint hello 1`, the challenge's `nonce`, the page's origin, and the WebSocket's port. On the socket, the origin and port lines are empty.
+3. Compute the HMAC-SHA256 of those lines, keyed with the SHA-256 of the token, and write it as lowercase hex.
+4. Send the token's name and the HMAC in the `Hello`: `{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"Hello","scopes":["read"],"tokenName":"reader","proof":"…"}`.
 
 ```python
 import hashlib
@@ -140,9 +140,9 @@ Any program that reads the token can use it, so store it like a password. Remove
 A web page, such as a stream overlay, can read the endpoint through a WebSocket:
 
 1. Turn on the WebSocket: `ojd access web enable`. It listens on `127.0.0.1`. The first time, the system picks a free port, and the service saves it, so the port stays the same. Choose a port with `--port`. `ojd access status` shows the port. The WebSocket is separate from `ojd access enable`, which turns on only the socket.
-1. Grant a token for the page's origin, with the port from `ojd access status`: `ojd access grant --token overlay --origin http://127.0.0.1:PORT`.
-1. Put the page in the `Overlays` folder that `ojd access status` shows. The WebSocket's port serves the folder at `http://127.0.0.1:PORT/`, and a folder serves its `index.html`.
-1. The page connects to `ws://127.0.0.1:PORT/endpoint` and exchanges the same messages, one JSON object per text message. It signs the challenge with its [token](#use-a-token), its origin, and the port.
+2. Grant a token for the page's origin, with the port from `ojd access status`: `ojd access grant --token overlay --origin http://127.0.0.1:PORT`.
+3. Put the page in the `Overlays` folder that `ojd access status` shows. The WebSocket's port serves the folder at `http://127.0.0.1:PORT/`, and a folder serves its `index.html`.
+4. The page connects to `ws://127.0.0.1:PORT/endpoint` and exchanges the same messages, one JSON object per text message. It signs the challenge with its [token](#use-a-token), its origin, and the port.
 
 ```javascript
 const token = "ojd_…";
@@ -199,9 +199,9 @@ An error line is a `Status` with `status` `Failure` and a `code` from `E1001` to
 A sandboxed app cannot connect to the socket: macOS refuses the connection with `EPERM`. It can use the WebSocket instead:
 
 1. Give the app the `com.apple.security.network.client` entitlement.
-1. Turn on the WebSocket with `ojd access web enable`, and create a token without `--origin`: `ojd access grant --token myapp`.
-1. Connect to `ws://127.0.0.1:PORT/endpoint` without an `Origin` header.
-1. Sign the challenge with the token, an empty origin line, and the port.
+2. Turn on the WebSocket with `ojd access web enable`, and create a token without `--origin`: `ojd access grant --token myapp`.
+3. Connect to `ws://127.0.0.1:PORT/endpoint` without an `Origin` header.
+4. Sign the challenge with the token, an empty origin line, and the port.
 
 Any local program that has such a token can use it, also programs of other users on the same Mac, so store it like a password. On the WebSocket, a token without origins works only from a client that sends no `Origin`, and web browsers always send one, so web pages cannot use it.
 
@@ -210,11 +210,11 @@ Any local program that has such a token can use it, also programs of other users
 A program with the `control` scope can drive a virtual gamepad through the endpoint, as [`ojd virtual feed`](#drive-a-virtual-gamepad) does:
 
 1. Grant the scope: `ojd access grant --token driver --scope control`. Add `--scope read` to grant both. A token that has `--origin` cannot have `control`, because a web page cannot use it.
-1. Send a `Hello` with `"scopes":["control"]`.
-1. After the `Welcome`, send `{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"FeedRequest","as":"hid-generic"}`. The virtual gamepad profiles are `hid-xbox-one-s-bt` and `hid-generic`.
-1. The endpoint answers `{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"FeedSession","as":"hid-generic"}` when the virtual gamepad exists.
-1. Send one frame per line, each with `apiVersion` and `"kind":"Frame"`. A frame has the keys of an `ojd virtual feed` line, and the service plays frames with the same rules.
-1. The endpoint sends each rumble command that a game sends to the virtual gamepad as one `RumbleCommand` line, the same as `ojd virtual feed` prints. Its `type` is `setRumble` or `stopRumble`. The `virtualFeed` entry of the output schema describes it.
+2. Send a `Hello` with `"scopes":["control"]`.
+3. After the `Welcome`, send `{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"FeedRequest","as":"hid-generic"}`. The virtual gamepad profiles are `hid-xbox-one-s-bt` and `hid-generic`.
+4. The endpoint answers `{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"FeedSession","as":"hid-generic"}` when the virtual gamepad exists.
+5. Send one frame per line, each with `apiVersion` and `"kind":"Frame"`. A frame has the keys of an `ojd virtual feed` line, and the service plays frames with the same rules.
+6. The endpoint sends each rumble command that a game sends to the virtual gamepad as one `RumbleCommand` line, the same as `ojd virtual feed` prints. Its `type` is `setRumble` or `stopRumble`. The `virtualFeed` entry of the output schema describes it.
 
 Closing the connection removes the virtual gamepad at once and drops the frames that have not played. The endpoint does not report when a frame has played, so stay connected for the sum of the play times of the frames, and a short margin, because the service starts a frame a moment after it arrives. Each frame plays for its `holdMilliseconds`, and at least 8 ms. While 256 frames wait, the endpoint stops reading lines. When the client sends no frame line for 2 seconds after its last frame has played, the endpoint closes the connection with `E1009` and removes the virtual gamepad, so a stalled client does not hold a button. The 2 seconds start when the queue is empty and the last frame's time has elapsed, so frames that wait or play, and a long hold, never cause the close. Rumble lines that the endpoint sends do not count. To keep the gamepad after the last frame has played, send another line within 2 seconds. The endpoint runs at most 4 virtual gamepads at the same time, and answers another `feed` with `E1008`. When the virtual gamepad does not start, or the service stops it, the endpoint sends `E1009`.
 
