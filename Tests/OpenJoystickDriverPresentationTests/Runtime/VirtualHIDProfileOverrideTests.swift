@@ -257,7 +257,7 @@ struct VirtualHIDProfileOverrideTests {
 
   @Test
   func publishedIdentityComesFromTheLiveVirtualHIDProfile() {
-    let xbox = Self.device(
+    var xbox = Self.device(
       profile: ApplicationServiceVirtualHIDProfileStatus(
         profile: .xboxOneSBluetooth,
         source: "override",
@@ -265,11 +265,44 @@ struct VirtualHIDProfileOverrideTests {
         unavailable: false
       )
     )
+    xbox.publication = ApplicationServicePublicationStatus(
+      state: .published,
+      target: .xboxOneSBluetooth
+    )
     #expect(xbox.publishedIdentityLabel.contains("045E:02FD"))
     #expect(xbox.publishedIdentityPresentation.glyphFamily == .xbox)
 
     let unpublished = Self.device()
     #expect(unpublished.publishedVirtualProfile == nil)
     #expect(unpublished.publishedIdentityLabel == RuntimePresentation.noVirtualHIDProfileLabel)
+  }
+
+  @Test
+  func unpublishedControllerShowsItsPhysicalFamilyIcon() {
+    var sixaxis = ApplicationServiceDeviceDescription(
+      name: "Test Pad",
+      vendorID: 0x1234,
+      productID: 0x5678,
+      protocolBinding: ProtocolBindingID(.sonySixaxis, variant: .usb),
+      connection: "USB",
+      discoverySource: .hid,
+      physicalOwnership: .nativeGamepad,
+      serialNumber: nil,
+      bindingResult: .hidDescriptorFixture,
+      runtimeIdentifier: "session-native"
+    )
+    sixaxis.virtualHIDProfile = ApplicationServiceVirtualHIDProfileStatus(
+      profile: .xboxOneSBluetooth,
+      source: "automatic",
+      override: nil,
+      unavailable: false
+    )
+    sixaxis.publication = ApplicationServicePublicationStatus(
+      state: .notPublished,
+      reason: "nativeGamepad"
+    )
+
+    #expect(sixaxis.publishedIdentityPresentation == .playstation)
+    #expect(sixaxis.publishedIdentityPresentation.glyphFamily != .xbox)
   }
 }
