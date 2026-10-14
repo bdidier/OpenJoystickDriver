@@ -30,7 +30,7 @@ Open tasks: [issues](https://github.com/xsyetopz/OpenJoystickDriver/issues).
 ## Adding a Controller
 
 1. `system_profiler SPUSBDataType`. `bDeviceClass` `0xff` is vendor-specific (often GIP); `0x03` is HID.
-1. Do not hand-edit generated records. Update the pinned importer, or add `Resources/ControllerOverrides/<vid>/<vid>-<pid>.json`. Decimal JSON, no display names, no protocol defaults. Then:
+2. Do not hand-edit generated records. Update the pinned importer, or add `Resources/ControllerOverrides/<vid>/<vid>-<pid>.json`. Decimal JSON, no display names, no protocol defaults. Then:
 
    ```bash
    ./Scripts/ojd catalog regenerate --write
@@ -38,8 +38,8 @@ Open tasks: [issues](https://github.com/xsyetopz/OpenJoystickDriver/issues).
    ```
 
    Source rules: `docs/development/xpad-import.md`.
-1. New protocol only: driver in `Sources/OpenJoystickDriverKit/Protocol/Drivers/`, `PhysicalProtocolDriver`, tests under `Tests/OpenJoystickDriverKitTests/`.
-1. Check:
+3. New protocol only: driver in `Sources/OpenJoystickDriverKit/Protocol/Drivers/`, `PhysicalProtocolDriver`, tests under `Tests/OpenJoystickDriverKitTests/`.
+4. Check:
 
    ```bash
    ./Scripts/ojd check profiles
