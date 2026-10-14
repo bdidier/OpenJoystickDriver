@@ -5,8 +5,8 @@ The Input Test window shows live input from a controller and lets you test rumbl
 ## Open the Window
 
 1. Open the **Controllers** pane.
-1. Select a controller.
-1. Click **Open Input Test...**.
+2. Select a controller.
+3. Click **Open Input Test...**.
 
 OJD uses one Input Test window. The title is "Input Test" followed by the controller name. Closing the window stops sampling and any running output test. The toolbar has **Refresh Controller**.
 
@@ -46,8 +46,8 @@ For controllers with a gyroscope. Keep the controller still while OJD collects t
 Shows only when the controller supports rumble. Otherwise it shows **Rumble is not supported by this controller.**
 
 1. Set the strength of each motor with its slider. The range is 0 to 255. Some motors only switch on and off.
-1. Set **Duration**. The range is 100 to 2000 ms. The default is 300 ms.
-1. Click **Test Rumble**.
+2. Set **Duration**. The range is 100 to 2000 ms. The default is 300 ms.
+3. Click **Test Rumble**.
 
 Click **Stop** to end the test early. The group shows **Done** or **Failed**. If the controller rejects the test, the group shows **The controller rejected this output test.**
 
