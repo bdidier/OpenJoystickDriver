@@ -194,7 +194,7 @@ Follows clig.dev plus Apple conventions; global flags `--json --plain -q --no-co
 
 | Old | New |
 | --- | --- |
-| `controller ownership native\|virtual`, `outputOwner macos\|ojd`, record `ownership` | `controller server <ref> system\|ojd`, record field `server` |
+| `controller ownership native\|virtual`, `outputOwner macos\|ojd`, record `ownership` | `controller claim <ref>` / `controller release <ref>`, record field `server` |
 | `ownership.physical` `driverKitOwnedUSB`, `nativeGamepad`, `nativeHIDVisible` | `ExtensionOwnedUsb`, `SystemGamepad`, `SystemHidVisible` |
 | `extension` command, kind `DriverExtension` | `transport-extension`, kind `TransportExtension` |
 | `usbExtension claims\|doesNotClaim` | `transportClaim claimed\|unclaimed` |
@@ -210,7 +210,7 @@ Follows clig.dev plus Apple conventions; global flags `--json --plain -q --no-co
 | socket in `DARWIN_USER_TEMP_DIR` | runtime-directory port |
 | endpoint `as: hid-xbox-one-s-bt` | persona ids |
 
-New: `ojd virtual export-mapping`, `ojd setting` keys for every GUI-only switch (per-event notifications, Send Test Notification, command-line tool link, Copy Support Report as `diagnose --copy`), a settings file schema (settings move out of `UserDefaults` into layered files), and a single `DataDirectory` port that every store uses. The CLI target imports the Service in 9 files and USB in 2; the neutral core is split from a macOS host adapter so that `Sources/OpenJoystickDriver` has no macOS-only imports outside `platform`. The command tree is checked by a test that lists every command and flags any without a GUI place (D10).
+New: `ojd virtual export-mapping`, `ojd setting` keys for every GUI-only switch (per-event notifications, Send Test Notification, command-line tool link, Copy Support Report as `diagnose` on stdout, which the GUI copies), a settings file schema (settings move out of `UserDefaults` into layered files), and a single `DataDirectory` port that every store uses. The CLI target imports the Service in 9 files and USB in 2; the neutral core is split from a macOS host adapter so that `Sources/OpenJoystickDriver` has no macOS-only imports outside `platform`. The command tree is checked by a test that lists every command and flags any without a GUI place (D10).
 
 Facts that go to docs: `docs/development/wire-protocols.md:20,22` is stale; `source-topology.md` lists a nonexistent `CLI/Catalog/`; the stale backend id `gameControllerHID` is removed.
 
