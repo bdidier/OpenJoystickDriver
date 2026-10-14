@@ -68,9 +68,9 @@ Packet differencing, classification, and bulk formatting stay outside `@MainActo
 `ProtocolClassifier` (`OpenJoystickDriverKit/Protocol/Classification/`) selects one protocol from observed `PhysicalDevice` facts. It performs no I/O and no classification write. Precedence:
 
 1. the exact catalog row for the VID/PID; its family must match the observed access path (raw USB or HID);
-1. an interface class/subclass/protocol signature pinned to Linux `xpad.c` (XID `58/42/00`, XUSB wired and receiver, GIP on interface 0);
-1. the device-descriptor GIP triple `FF/47/D0`, only on an unconfigured device that exposes no interface facts;
-1. `hid.descriptor`, only on IOHID and only after `HIDDescriptorContract` accepts the report descriptor. A catalog row naming `hid.descriptor` must pass the same contract.
+2. an interface class/subclass/protocol signature pinned to Linux `xpad.c` (XID `58/42/00`, XUSB wired and receiver, GIP on interface 0);
+3. the device-descriptor GIP triple `FF/47/D0`, only on an unconfigured device that exposes no interface facts;
+4. `hid.descriptor`, only on IOHID and only after `HIDDescriptorContract` accepts the report descriptor. A catalog row naming `hid.descriptor` must pass the same contract.
 
 A catalog row naming `hid.report-layout` carries a `ControllerInputLayout` in its record, and `ReportLayoutDriver` decodes the raw report from it; no signature selects that family.
 
