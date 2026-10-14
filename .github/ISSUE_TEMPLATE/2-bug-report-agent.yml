@@ -16,7 +16,7 @@ body:
     attributes:
       label: Agent, model, and harness
       description: The exact model ID, and the harness with its version.
-      placeholder: claude-opus-5-5 in Claude Code 2.1.0
+      placeholder: claude-opus-5-5 in Claude Code 2.1.300
     validations:
       required: true
   - type: input
