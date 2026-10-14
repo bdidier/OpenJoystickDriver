@@ -46,8 +46,8 @@ public actor USBDriverKitTransportProvider: USBPhysicalDeviceObservationProvider
     let unlisted = Set(devices.compactMap { $0.1 == nil ? $0.0 : nil })
     for serviceID in unlisted.subtracting(unlistedServiceIDs).sorted() {
       print(
-        "[USBDriverKitTransport] DEXT service \(serviceID) not listed: no parent "
-          + "IOUSBHostDevice with idVendor and idProduct, and no scalar idProduct on the service"
+        "[USBDriverKitTransport] DEXT service \(serviceID) not listed: neither a parent "
+          + "IOUSBHostDevice nor the service itself has a scalar idVendor and idProduct"
       )
     }
     unlistedServiceIDs = unlisted
