@@ -46,4 +46,4 @@ These rules come from `AGENTS.md`, `LOCALIZATION.md`, and `docs/development/sour
 | USB transport | `swift test --filter OpenJoystickDriverUSBTests.<Type>` |
 | Generator or DriverKit | the matching test, then `./Scripts/ojd check driverkit` |
 
-Then run `swift test --no-parallel` and compare the passed count with the count before the change. Use `./Scripts/ojd repair swiftpm-module-cache` only for the SwiftPM module-cache mismatch error, then rerun the failed command.
+Then run the `swift test --no-parallel` line of the `## Checks` list in `AGENTS.md` and compare the passed count with the count before the change. Use `./Scripts/ojd repair swiftpm-module-cache` only for the SwiftPM module-cache mismatch error, then rerun the failed command.

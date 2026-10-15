@@ -1,4 +1,6 @@
-"""One check list: AGENTS.md is canonical; the README, justfile, and CI must run the same commands.
+"""One check list: AGENTS.md is canonical.
+
+The README, justfile, CI, and the release gate must run the same commands.
 
 Documented exemptions, kept deliberately small:
 - the justfile's whitespace check on the working tree (`JUSTFILE_ONLY`) has no CI or README
@@ -25,7 +27,17 @@ CI_ONLY_STEPS = {
 }
 CI_ONLY_COMMANDS = {'test "$OJD_USE_LOCAL_SWIFTERKIT" = "0"'}
 JUSTFILE_ROOT_RECIPES = ("check",)
-CI_JOB = "macos-swiftpm"
+# (workflow, job, first step, last step): the release job also resolves tags, signs, and publishes;
+# only its gate steps, from the first to the last named step, must match the canonical list.
+WORKFLOWS = {
+    "ci": (".github/workflows/ci.yml", "macos-swiftpm", None, None),
+    "release": (
+        ".github/workflows/release.yml",
+        "package",
+        "Remove unused untrusted Homebrew taps",
+        "Run tests",
+    ),
+}
 
 
 def normalize(command: str) -> str:
@@ -90,8 +102,10 @@ def justfile_commands() -> list[str]:
     return commands
 
 
-def ci_commands() -> list[str]:
-    lines = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8").splitlines()
+def workflow_commands(key: str) -> list[str]:
+    path, job, first, last = WORKFLOWS[key]
+    lines = (ROOT / path).read_text(encoding="utf-8").splitlines()
+    active = first is None
     commands: list[str] = []
     step = ""
     index = 0
@@ -100,16 +114,17 @@ def ci_commands() -> list[str]:
         line = lines[index]
         index += 1
         if re.match(r"^  \w[\w-]*:\s*$", line):
-            in_job = line.strip() == f"{CI_JOB}:"
+            in_job = line.strip() == f"{job}:"
             continue
         if not in_job:
             continue
         name = re.match(r"^\s+- name:\s*(.+?)\s*$", line)
         if name:
             step = name.group(1)
+            active = active or step == first
             continue
         run = re.match(r"^(\s+)run:\s*(.*)$", line)
-        if not run or step in CI_ONLY_STEPS:
+        if not run or not active or step in CI_ONLY_STEPS:
             continue
         if run.group(2) not in ("|", ">"):
             commands.append(normalize(run.group(2)))
@@ -121,6 +136,8 @@ def ci_commands() -> list[str]:
             body.append(lines[index])
             index += 1
         commands.extend(join_continuations(body))
+        if step == last:
+            break
     return [command for command in commands if command not in CI_ONLY_COMMANDS]
 
 
@@ -160,7 +177,10 @@ class CheckListTests(unittest.TestCase):
         self.assert_same("justfile", justfile_commands())
 
     def test_ci_runs_the_canonical_list(self) -> None:
-        self.assert_same(".github/workflows/ci.yml", ci_commands())
+        self.assert_same(WORKFLOWS["ci"][0], workflow_commands("ci"))
+
+    def test_the_release_gate_runs_the_canonical_list(self) -> None:
+        self.assert_same(WORKFLOWS["release"][0], workflow_commands("release"))
 
 
 if __name__ == "__main__":
