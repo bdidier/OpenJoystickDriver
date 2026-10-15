@@ -20,7 +20,7 @@ package struct DeadlineTimer: Sendable {
   }
 
   /// The timer production code uses: one dispatch timer on its own serial queue per deadline.
-  package static let dispatch = DeadlineTimer { nanoseconds, fire in
+  package static let dispatch = Self { nanoseconds, fire in
     let queue = DispatchQueue(label: "com.openjoystickdriver.deadline")
     let source = DispatchSource.makeTimerSource(queue: queue)
     source.schedule(

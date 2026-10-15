@@ -66,9 +66,9 @@ final class UserSpaceReportSender: Sendable {
   /// Races one native send against its deadline and resumes the waiting publisher exactly once.
   ///
   /// The send runs in an unstructured task and the deadline on a timer, not in a task group,
-  /// because a group awaits every child: a native send that ignores cancellation would hold the worker past the
-  /// deadline. Cancelling the waiting publisher (closing) must also not cut the deadline short,
-  /// so the send can still drain until then.
+  /// because a group awaits every child: a native send that ignores cancellation would hold the
+  /// worker past the deadline. Cancelling the waiting publisher (closing) must also not cut the
+  /// deadline short, so the send can still drain until then.
   private final class NativeSendOperation: Sendable {
     private struct State: Sendable {
       var completed = false
