@@ -183,6 +183,7 @@ public final class ProtocolDriverRegistry: Sendable {
         return .failure(.unsupportedProtocolVariant)
       }
     }
+    let tuning = protocolID.driverTuning(variant: variant, record: record.tuning)
     switch protocolID {
     case .hidDescriptor:
       return .success(
@@ -199,12 +200,20 @@ public final class ProtocolDriverRegistry: Sendable {
     case .xboxXID: return .success(XIDDriver(outEndpoint: transportProfile.outputEndpoint))
     case .xboxXUSB:
       guard variant == .receiver else {
-        return .success(XUSBDriver(outEndpoint: transportProfile.outputEndpoint))
+        return .success(
+          XUSBDriver(
+            outEndpoint: transportProfile.outputEndpoint,
+            tuning: tuning,
+            usbStartupWrites: record.usbStartupWrites
+          )
+        )
       }
       guard
         let receiverSlot = XUSBDriver(
           outEndpoint: transportProfile.outputEndpoint,
-          slotOrdinal: slotOrdinal
+          slotOrdinal: slotOrdinal,
+          tuning: tuning,
+          usbStartupWrites: record.usbStartupWrites
         )
       else { return .failure(.interfaceContractMismatch) }
       return .success(receiverSlot)
@@ -213,9 +222,11 @@ public final class ProtocolDriverRegistry: Sendable {
         GIPDriver(
           transportProfile: transportProfile,
           startupPackets: record.gipStartupPackets,
+          usbStartupWrites: record.usbStartupWrites,
           keepAlivePolicy: record.gipKeepAlivePolicy,
           shareButtonFromEnd: record.parameters.shareButton?.fromEnd,
-          allowsPhysicalOutput: !record.capabilityDelta.rumbleAbsent
+          allowsPhysicalOutput: !record.capabilityDelta.rumbleAbsent,
+          tuning: tuning
         )
       )
     case .sonySixaxis: return .success(SixaxisDriver(isBluetooth: variant == .bluetoothClassic))
@@ -224,7 +235,8 @@ public final class ProtocolDriverRegistry: Sendable {
         DualShock4Driver(
           prefersBluetooth: variant == .bluetoothClassic,
           usesFactoryCalibration: record.parameters.motionCalibration == .factory,
-          model: DualShock4Model(parameters: record.parameters)
+          model: DualShock4Model(parameters: record.parameters),
+          tuning: tuning
         )
       )
     case .sonyDualSense:
@@ -234,7 +246,8 @@ public final class ProtocolDriverRegistry: Sendable {
           hasEdgeButtons: DualSenseDriver.edgeControls.isSubset(
             of: record.capabilityDelta.presentControls
           ),
-          parameters: record.parameters
+          parameters: record.parameters,
+          tuning: tuning
         )
       )
     case .nintendoSwitch2:
@@ -245,7 +258,14 @@ public final class ProtocolDriverRegistry: Sendable {
         case .joyConRight: .rightJoyCon
         case .pro, nil: .pro
         }
-      return .success(Switch2Driver(layout: layout, link: variant == .usb ? .usb : .bluetoothLE))
+      return .success(
+        Switch2Driver(
+          layout: layout,
+          link: variant == .usb ? .usb : .bluetoothLE,
+          tuning: tuning,
+          usbStartupWrites: record.usbStartupWrites
+        )
+      )
     case .nintendoSwitchInputOnly: return .success(SwitchInputOnlyDriver())
     case .nintendoSwitch1:
       let layout: NintendoControllerLayout =
@@ -255,7 +275,8 @@ public final class ProtocolDriverRegistry: Sendable {
         case .pro, .gameCube, nil: .pro
         }
       return .success(Switch1Driver(layout: layout, isBluetooth: variant == .bluetoothClassic))
-    case .valveSteamTriton: return .success(SteamTritonDriver(isDongle: variant == .dongle))
+    case .valveSteamTriton:
+      return .success(SteamTritonDriver(isDongle: variant == .dongle, tuning: tuning))
     case .valveSteamDeck: return .success(SteamDeckDriver())
     case .valveSteamController:
       return .success(
@@ -281,14 +302,19 @@ public final class ProtocolDriverRegistry: Sendable {
       switch variant {
       case .usb:
         return .success(
-          GameSirDriver(protocol: .g7ProUSB, outEndpoint: transportProfile.outputEndpoint)
+          GameSirDriver(
+            protocol: .g7ProUSB,
+            outEndpoint: transportProfile.outputEndpoint,
+            tuning: tuning
+          )
         )
       case .enhancedHID:
         return .success(
           GameSirDriver(
             protocol: .enhancedHID,
             hasInnerGrips: record.parameters.innerGrips == true,
-            usesLightingSlots: record.parameters.lightingMemory == .profileSlots
+            usesLightingSlots: record.parameters.lightingMemory == .profileSlots,
+            tuning: tuning
           )
         )
       default: return .failure(.unsupportedProtocolVariant)

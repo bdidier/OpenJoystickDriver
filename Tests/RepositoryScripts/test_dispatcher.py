@@ -152,7 +152,7 @@ class DispatcherTests(unittest.TestCase):
             dispatcher.subprocess, "run", return_value=completed
         ) as run_command:
             self.assertEqual(dispatcher.dispatch(["check", "tools"]), 0)
-        command = run_command.call_args.args[0]
+        command = run_command.call_args_list[0].args[0]
         self.assertEqual(command[:2], ["/bin/bash", "-c"])
         self.assertIn('source "$1"', command[2])
         self.assertIn("exec xmake build", command[2])
@@ -163,6 +163,29 @@ class DispatcherTests(unittest.TestCase):
                 str(dispatcher.PROJECT_DIR / "Tools/SDLGamepadProbe"),
             ],
         )
+
+    def test_check_tools_runs_the_bridge_package_tests(self) -> None:
+        completed = subprocess.CompletedProcess(args=[], returncode=0)
+        with patch.object(
+            dispatcher.subprocess, "run", return_value=completed
+        ) as run_command:
+            dispatcher.dispatch(["check", "tools"])
+        self.assertEqual(run_command.call_count, 2)
+        call = run_command.call_args_list[1]
+        self.assertEqual(
+            call.kwargs["cwd"], dispatcher.PROJECT_DIR / "Tools/WebRTCBridge"
+        )
+        command = call.args[0]
+        self.assertIn('exec "$SWIFT_BIN"', command[2])
+        self.assertEqual(command[5:], ["test"])
+
+    def test_check_tools_fails_when_the_bridge_tests_fail(self) -> None:
+        results = [
+            subprocess.CompletedProcess(args=[], returncode=0),
+            subprocess.CompletedProcess(args=[], returncode=1),
+        ]
+        with patch.object(dispatcher.subprocess, "run", side_effect=results):
+            self.assertEqual(dispatcher.dispatch(["check", "tools"]), 1)
 
     def test_hooks_install_runs_bun_install(self) -> None:
         completed = subprocess.CompletedProcess([], 0)

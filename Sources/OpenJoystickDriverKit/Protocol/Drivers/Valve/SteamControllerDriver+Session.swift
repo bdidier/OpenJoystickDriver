@@ -17,15 +17,7 @@ extension SteamControllerDriver {
   }
 
   public var capabilities: ControllerCapabilities {
-    let extra: Set<ControlID> = [
-      .guide, .leftTriggerButton, .rightTriggerButton, .paddleLeft2, .paddleRight2,
-      .leftTrackpadClick, .rightTrackpadClick, .leftTrackpadTouch, .rightTrackpadTouch,
-    ]
-    return ControllerCapabilities(
-      controls: ControlID.xboxLayout.subtracting([.rightStickClick]).union(extra),
-      touchContactCount: 1,
-      motion: true
-    )
+    PhysicalProtocolID.valveSteamController.describedControls
   }
 
   public var outputCapabilities: PhysicalControllerOutputCapabilities {

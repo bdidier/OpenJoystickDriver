@@ -4,8 +4,8 @@ extension GIPDriver {
   /// Share presence varies by model, so only a row with the `shareButton` parameter, whose fixed
   /// offset is the per-record evidence that the model has Share, declares it.
   public var capabilities: ControllerCapabilities {
-    ControllerCapabilities(
-      controls: ControlID.xboxLayout.union(shareButtonFromEnd != nil ? [.guide, .share] : [.guide])
+    PhysicalProtocolID.xboxGIP.describedControls.union(
+      ControllerCapabilities(controls: shareButtonFromEnd != nil ? [.share] : [])
     )
   }
 

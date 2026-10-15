@@ -61,8 +61,13 @@ final class VirtualFeedRegistry: @unchecked Sendable {
   /// Older commands are dropped first when a client does not collect them.
   static let maximumQueuedFeedback = 256
 
-  private final class Session {
+  /// One open feed: the source of the frames its client queued, and the virtual device that is
+  /// their sink.
+  /// - Note: `@unchecked Sendable` because the registry's `lock` guards every mutable member.
+  private final class Session: InputSource, @unchecked Sendable {
     let device: any VirtualFeedDevice
+    let origin: InputOrigin
+    let sink: any OutputSink
     let identifier: LogicalControllerID
     let pool: VirtualFeedPool
     var feedback: [ControllerOutputCommand] = []
@@ -78,6 +83,8 @@ final class VirtualFeedRegistry: @unchecked Sendable {
 
     init(device: any VirtualFeedDevice, identifier: LogicalControllerID, pool: VirtualFeedPool) {
       self.device = device
+      self.origin = pool == .endpoint ? .endpointFeed : .virtualFeed
+      self.sink = VirtualFeedDeviceSink(device)
       self.identifier = identifier
       self.pool = pool
       lastExchange = ProcessInfo.processInfo.systemUptime
@@ -295,7 +302,7 @@ final class VirtualFeedRegistry: @unchecked Sendable {
       }
       guard let (session, frame, milliseconds) = next else { return }
       do {
-        try await session.device.send(frame.gamepadState, for: session.identifier)
+        try await session.produce(.gamepad(frame.gamepadState, for: session.identifier))
         try await Task.sleep(nanoseconds: UInt64(milliseconds) * 1_000_000)
       } catch is CancellationError {
         return
@@ -326,5 +333,24 @@ final class VirtualFeedRegistry: @unchecked Sendable {
       }
       try? await Task.sleep(nanoseconds: UInt64(min(remaining, idleTimeout) * 1_000_000_000))
     }
+  }
+}
+
+/// The virtual device of one feed as the sink of the feed's frames.
+final class VirtualFeedDeviceSink: OutputSink {
+  let destination = OutputDestination.virtualDevice
+  private let device: any VirtualFeedDevice
+
+  init(_ device: any VirtualFeedDevice) { self.device = device }
+
+  func consume(
+    _ frame: StreamFrame,
+    onDelivered: @escaping @Sendable () -> Void
+  ) async throws {
+    guard case .gamepad(let state, let identifier) = frame else {
+      throw StreamBoundaryError.unsupported(destination)
+    }
+    try await device.send(state, for: identifier)
+    onDelivered()
   }
 }

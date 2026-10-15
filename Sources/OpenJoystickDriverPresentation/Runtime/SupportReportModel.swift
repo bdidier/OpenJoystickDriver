@@ -55,6 +55,9 @@ final class SupportReportModel: ObservableObject {
       virtualDiagnostics = nil
     }
 
+    // Like `ojd diagnose --bundle`, an unreachable service leaves the timings empty.
+    let frameTimings = (try? await gateway.frameTimings().controllers) ?? []
+
     // A separate Collect action may supersede the diagnostics display while this report is
     // being assembled. The report remains an independent user operation and must still reach a
     // terminal saved/error state; only avoid replacing newer diagnostics on screen.
@@ -76,6 +79,7 @@ final class SupportReportModel: ObservableObject {
       try await SupportExportService().writeReport(
         status: status,
         virtualDiagnostics: virtualDiagnostics,
+        frameTimings: frameTimings,
         to: outputURL
       )
       if reportGeneration == supportReportGeneration { supportReportState = .saved }

@@ -156,10 +156,14 @@ public struct PhysicalHIDFeatureReadRequest: Equatable, Sendable {
 public struct PhysicalHIDOutputReport: Equatable, Sendable {
   public let reportID: UInt8
   public let bytes: [UInt8]
+  /// The wait a startup description asks for before this report, replacing the startup
+  /// interval; nil keeps the interval.
+  public let startupDelayMilliseconds: Int?
 
-  public init(reportID: UInt8, bytes: [UInt8]) {
+  public init(reportID: UInt8, bytes: [UInt8], startupDelayMilliseconds: Int? = nil) {
     self.reportID = reportID
     self.bytes = bytes
+    self.startupDelayMilliseconds = startupDelayMilliseconds
   }
 }
 
@@ -167,11 +171,20 @@ public struct PhysicalUSBOutputPacket: Equatable, Sendable {
   public let endpoint: UInt8
   public let bytes: [UInt8]
   public let timeoutMilliseconds: UInt32
+  /// The wait a startup description asks for before this packet, replacing the startup
+  /// interval; nil keeps the interval.
+  public let startupDelayMilliseconds: Int?
 
-  public init(endpoint: UInt8, bytes: [UInt8], timeoutMilliseconds: UInt32) {
+  public init(
+    endpoint: UInt8,
+    bytes: [UInt8],
+    timeoutMilliseconds: UInt32,
+    startupDelayMilliseconds: Int? = nil
+  ) {
     self.endpoint = endpoint
     self.bytes = bytes
     self.timeoutMilliseconds = timeoutMilliseconds
+    self.startupDelayMilliseconds = startupDelayMilliseconds
   }
 }
 
@@ -184,6 +197,14 @@ public enum PhysicalOutputWrite: Equatable, Sendable {
   case hidOutput(PhysicalHIDOutputReport)
   /// A HID feature report on the bound HID device.
   case hidFeature(PhysicalHIDOutputReport)
+
+  /// The wait before this write that a startup description asks for; nil keeps the interval.
+  public var startupDelayMilliseconds: Int? {
+    switch self {
+    case .usb(let packet, _): packet.startupDelayMilliseconds
+    case .hidOutput(let report), .hidFeature(let report): report.startupDelayMilliseconds
+    }
+  }
 }
 
 /// Writes that carry one physical output command, sent in order at `intervalNanoseconds`

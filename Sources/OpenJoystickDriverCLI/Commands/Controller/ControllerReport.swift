@@ -44,6 +44,14 @@ struct ControllerShowReport: Encodable, Equatable {
     let minimumHIDOutputIntervalMs: Int?
     let hidStartupRecoveryIntervalMs: Int?
     let hidStartupRecoveryRounds: Int?
+    let keepAliveIntervalMs: Int?
+    let lizardResendTicks: Int?
+    let usbCommandTimeoutMs: Int?
+    let presenceResendReports: Int?
+    let adapterDisconnectDelayMs: Int?
+    let usbStartupIntervalMs: Int?
+    let usbStartupRetryDelayMs: Int?
+    let usbTransferTimeoutMs: Int?
     let frameQueueCapacity: Int?
 
     /// Nil when the record sets no tuning.
@@ -55,6 +63,14 @@ struct ControllerShowReport: Encodable, Equatable {
       minimumHIDOutputIntervalMs = tuning.minimumHIDOutputIntervalMilliseconds
       hidStartupRecoveryIntervalMs = tuning.hidStartupRecoveryIntervalMilliseconds
       hidStartupRecoveryRounds = tuning.hidStartupRecoveryRounds
+      keepAliveIntervalMs = tuning.keepAliveIntervalMilliseconds
+      lizardResendTicks = tuning.lizardResendTicks
+      usbCommandTimeoutMs = tuning.usbCommandTimeoutMilliseconds
+      presenceResendReports = tuning.presenceResendReports
+      adapterDisconnectDelayMs = tuning.adapterDisconnectDelayMilliseconds
+      usbStartupIntervalMs = tuning.usbStartupIntervalMilliseconds
+      usbStartupRetryDelayMs = tuning.usbStartupRetryDelayMilliseconds
+      usbTransferTimeoutMs = tuning.usbTransferTimeoutMilliseconds
       frameQueueCapacity = tuning.frameQueueCapacity
     }
 
@@ -67,6 +83,14 @@ struct ControllerShowReport: Encodable, Equatable {
         minimumHIDOutputIntervalMs.map { "minimumHIDOutputIntervalMs=\($0)" },
         hidStartupRecoveryIntervalMs.map { "hidStartupRecoveryIntervalMs=\($0)" },
         hidStartupRecoveryRounds.map { "hidStartupRecoveryRounds=\($0)" },
+        keepAliveIntervalMs.map { "keepAliveIntervalMs=\($0)" },
+        lizardResendTicks.map { "lizardResendTicks=\($0)" },
+        usbCommandTimeoutMs.map { "usbCommandTimeoutMs=\($0)" },
+        presenceResendReports.map { "presenceResendReports=\($0)" },
+        adapterDisconnectDelayMs.map { "adapterDisconnectDelayMs=\($0)" },
+        usbStartupIntervalMs.map { "usbStartupIntervalMs=\($0)" },
+        usbStartupRetryDelayMs.map { "usbStartupRetryDelayMs=\($0)" },
+        usbTransferTimeoutMs.map { "usbTransferTimeoutMs=\($0)" },
         frameQueueCapacity.map { "frameQueueCapacity=\($0)" },
       ].compactMap { $0 }
     }

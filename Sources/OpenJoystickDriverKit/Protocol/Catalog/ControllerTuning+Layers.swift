@@ -10,7 +10,18 @@ extension ControllerTuning {
     case hidStartupRecoveryRounds
     case hidStartupIntervalMs
     case minimumHIDOutputIntervalMs
+    case keepAliveIntervalMs
+    case lizardResendTicks
+    case usbCommandTimeoutMs
+    case presenceResendReports
+    case adapterDisconnectDelayMs
+    case usbStartupIntervalMs
+    case usbStartupRetryDelayMs
+    case usbTransferTimeoutMs
     case frameQueueCapacity
+
+    /// The keys every driver reads, whatever its family.
+    static let alwaysRead: Set<Key> = [.stickDeadzone, .frameQueueCapacity]
   }
 
   /// The keys this tuning sets.
@@ -25,6 +36,14 @@ extension ControllerTuning {
     case .hidStartupRecoveryRounds: hidStartupRecoveryRounds.map(String.init)
     case .hidStartupIntervalMs: hidStartupIntervalMilliseconds.map(String.init)
     case .minimumHIDOutputIntervalMs: minimumHIDOutputIntervalMilliseconds.map(String.init)
+    case .keepAliveIntervalMs: keepAliveIntervalMilliseconds.map(String.init)
+    case .lizardResendTicks: lizardResendTicks.map(String.init)
+    case .usbCommandTimeoutMs: usbCommandTimeoutMilliseconds.map(String.init)
+    case .presenceResendReports: presenceResendReports.map(String.init)
+    case .adapterDisconnectDelayMs: adapterDisconnectDelayMilliseconds.map(String.init)
+    case .usbStartupIntervalMs: usbStartupIntervalMilliseconds.map(String.init)
+    case .usbStartupRetryDelayMs: usbStartupRetryDelayMilliseconds.map(String.init)
+    case .usbTransferTimeoutMs: usbTransferTimeoutMilliseconds.map(String.init)
     case .frameQueueCapacity: frameQueueCapacity.map(String.init)
     }
   }
@@ -42,6 +61,20 @@ extension ControllerTuning {
       hidStartupRecoveryIntervalMilliseconds: higher.hidStartupRecoveryIntervalMilliseconds
         ?? hidStartupRecoveryIntervalMilliseconds,
       hidStartupRecoveryRounds: higher.hidStartupRecoveryRounds ?? hidStartupRecoveryRounds,
+      keepAliveIntervalMilliseconds: higher.keepAliveIntervalMilliseconds
+        ?? keepAliveIntervalMilliseconds,
+      lizardResendTicks: higher.lizardResendTicks ?? lizardResendTicks,
+      usbCommandTimeoutMilliseconds: higher.usbCommandTimeoutMilliseconds
+        ?? usbCommandTimeoutMilliseconds,
+      presenceResendReports: higher.presenceResendReports ?? presenceResendReports,
+      adapterDisconnectDelayMilliseconds: higher.adapterDisconnectDelayMilliseconds
+        ?? adapterDisconnectDelayMilliseconds,
+      usbStartupIntervalMilliseconds: higher.usbStartupIntervalMilliseconds
+        ?? usbStartupIntervalMilliseconds,
+      usbStartupRetryDelayMilliseconds: higher.usbStartupRetryDelayMilliseconds
+        ?? usbStartupRetryDelayMilliseconds,
+      usbTransferTimeoutMilliseconds: higher.usbTransferTimeoutMilliseconds
+        ?? usbTransferTimeoutMilliseconds,
       frameQueueCapacity: higher.frameQueueCapacity ?? frameQueueCapacity
     )
   }
@@ -60,6 +93,20 @@ extension ControllerTuning {
         ? hidStartupRecoveryIntervalMilliseconds : nil,
       hidStartupRecoveryRounds: keys.contains(.hidStartupRecoveryRounds)
         ? hidStartupRecoveryRounds : nil,
+      keepAliveIntervalMilliseconds: keys.contains(.keepAliveIntervalMs)
+        ? keepAliveIntervalMilliseconds : nil,
+      lizardResendTicks: keys.contains(.lizardResendTicks) ? lizardResendTicks : nil,
+      usbCommandTimeoutMilliseconds: keys.contains(.usbCommandTimeoutMs)
+        ? usbCommandTimeoutMilliseconds : nil,
+      presenceResendReports: keys.contains(.presenceResendReports) ? presenceResendReports : nil,
+      adapterDisconnectDelayMilliseconds: keys.contains(.adapterDisconnectDelayMs)
+        ? adapterDisconnectDelayMilliseconds : nil,
+      usbStartupIntervalMilliseconds: keys.contains(.usbStartupIntervalMs)
+        ? usbStartupIntervalMilliseconds : nil,
+      usbStartupRetryDelayMilliseconds: keys.contains(.usbStartupRetryDelayMs)
+        ? usbStartupRetryDelayMilliseconds : nil,
+      usbTransferTimeoutMilliseconds: keys.contains(.usbTransferTimeoutMs)
+        ? usbTransferTimeoutMilliseconds : nil,
       frameQueueCapacity: keys.contains(.frameQueueCapacity) ? frameQueueCapacity : nil
     )
   }
@@ -73,26 +120,24 @@ extension ControllerRecord {
 extension ControllerTuning {
   /// Why `key` does not apply to a controller of this family and stored variant, or nil when a
   /// driver reads it. A nil `protocolID` is a record with no known family: it reads only
-  /// `stickDeadzone` and `frameQueueCapacity`. `Scripts/Catalog/controller_patch.py` implements the
-  /// same rule.
+  /// `stickDeadzone` and `frameQueueCapacity`. The family's description holds the keys;
+  /// `controller_patch.py` reads the same description.
   static func scopeViolation(
     _ key: Key,
     protocolID: PhysicalProtocolID?,
     variant: PhysicalProtocolVariantID?
   ) -> String? {
-    switch key {
-    case .stickDeadzone, .frameQueueCapacity: return nil
-    case .inputLivenessTimeoutMs:
-      return protocolID == .sonyDualShock4
-        ? nil : "inputLivenessTimeoutMs requires the sony.dualshock4 family"
-    case .hidStartupRecoveryIntervalMs, .hidStartupRecoveryRounds:
-      return protocolID == .nintendoSwitch1
-        ? nil : "startup recovery tuning requires a Switch 1 controller with startup recovery"
-    case .hidStartupIntervalMs, .minimumHIDOutputIntervalMs:
-      guard let protocolID else { return "HID startup and output timings need a known family" }
-      return protocolID.usesRawUSB(storedVariant: variant)
-        ? "HID startup and output timings apply only to HID controllers" : nil
-    }
+    guard !scope(protocolID: protocolID, variant: variant).contains(key) else { return nil }
+    return "\(key.rawValue) is not read by the \(protocolID?.rawValue ?? "unknown") driver"
+  }
+
+  /// The keys that a controller of this family and stored variant reads.
+  static func scope(
+    protocolID: PhysicalProtocolID?,
+    variant: PhysicalProtocolVariantID?
+  ) -> Set<Key> {
+    guard let description = protocolID?.protocolDescription else { return Key.alwaysRead }
+    return description.tuningScope(variant: variant)
   }
 
   /// The keys that a controller of the record `document` reads, from its `protocol` family and
@@ -101,11 +146,7 @@ extension ControllerTuning {
     let info = document["protocol"] as? [String: Any]
     let protocolID = (info?["family"] as? String).flatMap(PhysicalProtocolID.init(rawValue:))
     let variant = (info?["variant"] as? String).flatMap(PhysicalProtocolVariantID.init(rawValue:))
-    return Set(
-      Key.allCases.filter {
-        scopeViolation($0, protocolID: protocolID, variant: variant) == nil
-      }
-    )
+    return scope(protocolID: protocolID, variant: variant)
   }
 }
 

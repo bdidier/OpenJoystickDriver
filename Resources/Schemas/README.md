@@ -8,7 +8,18 @@
 - `controller-patch.schema.json`: a `ControllerPatch`, an RFC 7396 merge patch of a controller record chosen by a `selector` (`model`, `vendorID` and `productID`, or `all`). The authored patches in `Resources/ControllerPatches/` and the user and package files `Controllers/*.patch.json` use it, and `Controllers/all.patch.json` gives the `tuning` defaults for every controller. It checks the patch shape only; the merged record is checked against `controller.schema.json`.
 - `virtual-device.schema.json`: a virtual device file, which defines a persona (`Generic` or `SdlCompatible`) or, with `match`, selects one for a controller and gives the HID identity its virtual gamepad publishes.
 - `mod-package.schema.json`: the `mod.json` manifest of a mod package folder.
-- `protocol-description.schema.json`: the authored protocol descriptions `Resources/Protocols/<family>.json`. Each holds the USB interface signatures (class, subclass, protocol, and the data interface number when the family pins one) that bind a device of that family without a record. The file name must equal `family`, and each signature's `variant` must be one the family implements (`PhysicalProtocolID.variants`); a family with no variants has no signatures. `./Scripts/ojd catalog regenerate` copies them into the Kit bundle.
+- `protocol-description.schema.json`: the authored protocol descriptions `Resources/Protocols/<family>.json`, which hold what is true of every device of a family. The file name must equal `family`. A description holds:
+  - `endpoints`: the USB endpoint addresses (`in`, `out`) the driver uses.
+  - `interfaceSignatures`: the USB interface signatures (class, subclass, protocol, and the data interface number when the family pins one) that bind a device of that family without a record. Each signature's `variant` must be one the family implements (`PhysicalProtocolID.variants`); a family with no variants has no signatures.
+  - `rawUSB`: `true` when the family always talks raw USB, or the list of variants that do.
+  - `recordSections`: the sections (`input`, `rumble`, `output`, and so on) of a record that the driver reads.
+  - `tuningKeys` and `rawUSBTuningKeys`: the `tuning` keys a record may set. `tuningKeys` applies to HID variants; `rawUSBTuningKeys` applies to raw-USB variants, which read no HID timing. A description that is always raw USB takes only `rawUSBTuningKeys`.
+  - `buttonLabels`: the labels of the family's buttons.
+  - `macOSOwnedOutput`: the output macOS itself handles for the family, with a `rationale` that says why.
+  - `controls`: the set of controls the family's driver reports, and `recordCapabilities`: the control deltas a record may declare (`present`, `rumbleAbsent`).
+  - `defaults`: the family's default `tuning` (for example `keepAliveIntervalMs`, the keep-alive or rumble resend interval, the Switch 1 recovery values, and the command timeouts, resend intervals and handshake pacing of the other drivers), and `defaults.variants.<variant>.tuning`, which layers over it for a transport that needs another value, such as the Switch 1 `hidStartupIntervalMs` of Bluetooth and USB. A default key must be one the variant reads, and a variant must be the family's (E5004).
+
+  `./Scripts/ojd catalog regenerate` copies them into the Kit bundle.
 - `report.schema.json`: the CloudEvents 1.0 support-report envelope and payload.
 - `cli-output.schema.json`: the `--json` output of each `ojd` command. The CLI tests check every `--json` document they print against it.
 - `profile.schema.json`: the remapping profile file that `ojd profile export` writes and `ojd profile import` reads. Cross-field rules stay in the strict decoder, and a test keeps the schema enums equal to the Swift cases.

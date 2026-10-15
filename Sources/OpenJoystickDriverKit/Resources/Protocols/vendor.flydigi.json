@@ -1,0 +1,19 @@
+{
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "ProtocolDescription",
+  "family": "vendor.flydigi",
+  "endpoints": {
+    "in": 130,
+    "out": 2
+  },
+  "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
+  "controls": {
+    "base": "xbox",
+    "add": ["guide", "left-trigger-button", "right-trigger-button"]
+  },
+  "defaults": {
+    "tuning": {
+      "frameQueueCapacity": 64
+    }
+  }
+}

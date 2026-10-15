@@ -56,7 +56,7 @@ public protocol ObservedInputDemand: AnyObject, Sendable {
 /// Implement this inward-owned port to decide what happens when controller state changes.
 /// Production adapters live in their owning transport targets; the kit provides
 /// ``LoggingOutputDispatcher`` for diagnostics.
-public protocol OutputDispatcher: AnyObject, Sendable {
+public protocol OutputDispatcher: OutputSink {
   /// When `true`, all report/event output is suppressed (e.g. during developer
   /// packet capture). Implementations should invalidate any cached state on change.
   var suppressOutput: Bool { get set }
@@ -114,6 +114,8 @@ extension OutputDispatcher {
 /// Used for hardware validation and testing. Production output uses a transport adapter.
 public final class LoggingOutputDispatcher: OutputDispatcher, Sendable {
   // Suppression is ignored because this dispatcher is only for development.
+  public var destination: OutputDestination { .diagnosticLog }
+
   /// Accepted but ignored; this dispatcher always logs.
   private let storedSuppression = Locked(false)
   public var suppressOutput: Bool {
