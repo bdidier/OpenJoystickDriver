@@ -119,11 +119,14 @@ func parseHIDToolArguments(_ arguments: [String]) throws -> HIDToolArguments? {
   try validate("--pid", range: 0...0xFFFF)
   if mode == .monitor { try validate("--seconds", range: 1...60) }
   if mode == .usbMonitor || mode == .recordProbe { try validate("--seconds", range: 1...300) }
+  if mode == .usbMonitor, values["--vid"] == nil {
+    throw HIDToolArgumentError.message("'\(mode.rawValue)' requires '--vid'")
+  }
   if mode == .usbMonitor {
     try validate("--endpoint", range: 0...255)
     try validate("--length", range: 1...1024)
   }
-  if mode == .dump || mode == .usbPassive {
+  if mode == .dump || mode == .usbPassive || mode == .open {
     for required in ["--vid", "--pid"] where values[required] == nil {
       throw HIDToolArgumentError.message("'\(mode.rawValue)' requires '\(required)'")
     }
@@ -244,7 +247,7 @@ func printUsageAndExit(_ code: Int32) -> Never {
       OpenJoystickDriverHIDTool --list
       OpenJoystickDriverHIDTool --dump --vid 0x045e --pid 0x02ea
       OpenJoystickDriverHIDTool --open --vid 0x045e --pid 0x028e [--service-open] [--set-report]
-      OpenJoystickDriverHIDTool --monitor [--vid 0x1209 --pid 0x4a4f] [--seconds 10]
+      OpenJoystickDriverHIDTool --monitor [--vid <int> --pid <int>] [--seconds 10]
       OpenJoystickDriverHIDTool --usb-monitor --vid 0x045e --pid 0x0000
         [--endpoint 0x81] [--length 64] [--seconds 20]
       OpenJoystickDriverHIDTool --record-probe <record.json>
@@ -258,6 +261,7 @@ func printUsageAndExit(_ code: Int32) -> Never {
       --service-open   With --open, recreate the device from IOHIDDeviceGetService first.
       --set-report     With --open, send one Xbox 360-style rumble output report.
       --monitor        Open matching HID devices and print input value/report callbacks.
+                       Without ids it watches the Generic persona (from its VirtualDevice record).
       --usb-monitor    Open one raw USB service and print interrupt IN packets.
       --record-probe  Validate and exercise one controller record through the USB facade.
       --validate-only  Validate --record-probe input without opening physical hardware.
