@@ -187,7 +187,7 @@ struct XUSBDriverTests {
     let parser = XUSBDriver()
     // Raw negative LSY is down, which the state reads as positive 1.
     let events = try parser.parseReport(makeXbox360ReportLE(lsy: Int16.min))
-    #expect(events.leftStickYDown?.y == 1.0)
+    #expect(events.leftStickPosition?.y == 1.0)
     #expect(events?.state.leftStick.y == .max)
   }
 
@@ -206,7 +206,7 @@ struct XUSBDriverTests {
   func testRightStickNormalization() throws {
     let parser = XUSBDriver()
     let events = try parser.parseReport(makeXbox360ReportLE(rsx: Int16.min, rsy: Int16.max))
-    let stick = try #require(events.rightStickYDown)
+    let stick = try #require(events.rightStickPosition)
     #expect(stick.x == -1.0)
     #expect(stick.y < -0.99)
   }

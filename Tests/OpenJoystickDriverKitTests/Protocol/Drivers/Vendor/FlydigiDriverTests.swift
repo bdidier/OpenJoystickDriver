@@ -84,7 +84,7 @@ struct FlydigiDriverTests {
     let parser = FlydigiDriver()
     settled(parser)
     let events = try parser.parseReport(CapturedReport.with(leftStickY: 0x80))
-    #expect((events.leftStickYDown?.y ?? 0) < -0.9)
+    #expect((events.leftStickPosition?.y ?? 0) < -0.9)
   }
 
   @Test
@@ -92,7 +92,7 @@ struct FlydigiDriverTests {
     let parser = FlydigiDriver()
     settled(parser)
     let events = try parser.parseReport(CapturedReport.with(leftStickX: 0x7F))
-    #expect((events.leftStickYDown?.x ?? 0) > 0.9)
+    #expect((events.leftStickPosition?.x ?? 0) > 0.9)
   }
 
   /// Bytes 3 and 4 are the right stick, not the triggers the descriptor implies.
@@ -101,7 +101,7 @@ struct FlydigiDriverTests {
     let parser = FlydigiDriver()
     settled(parser)
     let events = try parser.parseReport(CapturedReport.with(rightStickX: 0x7F, rightStickY: 0x80))
-    let stick = try #require(events.rightStickYDown)
+    let stick = try #require(events.rightStickPosition)
     #expect(stick.x > 0.9 && stick.y < -0.9)
   }
 
