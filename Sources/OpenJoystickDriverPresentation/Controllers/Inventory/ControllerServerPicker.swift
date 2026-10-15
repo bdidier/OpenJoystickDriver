@@ -7,7 +7,7 @@
   /// Who serves one controller model, macOS natively or OpenJoystickDriver as a virtual controller,
   /// matching `ojd controller claim` and `release`. A change goes to the service, which rewrites
   /// the user record and re-applies it to the connected controller.
-  struct ControllerOwnershipPicker: View {
+  struct ControllerServerPicker: View {
     @ObservedObject
     var viewModel: RuntimeViewModel
     let device: ApplicationServiceDeviceDescription
@@ -20,19 +20,19 @@
     }
 
     var body: some View {
-      Picker(OJDLocalized.string("controllers.ownership.label"), selection: ownershipBinding) {
-        Text(OJDLocalized.string("controllers.ownership.native")).tag(ControllerServer.system)
-        Text(OJDLocalized.string("controllers.ownership.virtual")).tag(ControllerServer.ojd)
+      Picker(OJDLocalized.string("controllers.server.label"), selection: serverBinding) {
+        Text(OJDLocalized.string("controllers.server.system")).tag(ControllerServer.system)
+        Text(OJDLocalized.string("controllers.server.ojd")).tag(ControllerServer.ojd)
       }.pickerStyle(.segmented)
     }
 
-    private var ownershipBinding: Binding<ControllerServer> {
+    private var serverBinding: Binding<ControllerServer> {
       Binding(
         get: { device.recordServer },
-        set: { ownership in
-          guard ownership != device.recordServer else { return }
+        set: { server in
+          guard server != device.recordServer else { return }
           let device = device
-          Task { @MainActor in await viewModel.setControllerOwnership(ownership, for: device) }
+          Task { @MainActor in await viewModel.setControllerServer(server, for: device) }
         }
       )
     }

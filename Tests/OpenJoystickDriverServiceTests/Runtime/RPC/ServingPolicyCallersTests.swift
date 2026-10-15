@@ -73,7 +73,7 @@ struct ServingPolicyCallersTests {
       persona: described.publishedVirtualProfile.flatMap { identity in
         VirtualHIDProfileID.allCases.first { $0.identity == identity }?.rawValue
       },
-      offersServerChoice: ControllerOwnershipPicker.isShown(for: described)
+      offersServerChoice: ControllerServerPicker.isShown(for: described)
     )
 
     let expected: String?

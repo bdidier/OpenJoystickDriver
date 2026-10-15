@@ -6,12 +6,12 @@ import Foundation
 /// file becomes a ControllerPatch file when the bundled catalog or an installed package has the
 /// model, because a patch applies over one of their records. The record watcher of the service
 /// applies the change.
-public enum ControllerOwnershipWriter {
+public enum ControllerServerWriter {
   /// One planned change, before ``write(_:)`` stores it.
   public struct Change: Sendable {
     public let model: ControllerModelID
-    public let ownership: ControllerServer
-    /// The effective ownership before the change; `system` when no layer sets it.
+    public let server: ControllerServer
+    /// The effective server before the change; `system` when no layer sets it.
     public let previous: ControllerServer
     /// The user file the change writes.
     public let file: URL
@@ -34,10 +34,10 @@ public enum ControllerOwnershipWriter {
   }
 
   /// The change that sets `server` for `model` in `directory`. `records` is the loaded
-  /// record set, which gives the effective ownership before the change.
+  /// record set, which gives the effective server before the change.
   public static func change(
     _ model: ControllerModelID,
-    to ownership: ControllerServer,
+    to server: ControllerServer,
     records: ControllerRecordSet,
     directory: URL = ControllerRecordSet.userDirectory
   ) throws(Failure) -> Change {
@@ -53,12 +53,12 @@ public enum ControllerOwnershipWriter {
     let file = existingController == nil ? patchFile : controllerFile
     let document: [String: Any]
     if let existing {
-      document = try updated(existing, file: file, ownership: ownership, packages: packages)
+      document = try updated(existing, file: file, server: server, packages: packages)
     } else {
       guard packages[model] != nil else { throw .noRecord }
       document = ControllerPatch.document(
         selector: .identity(model),
-        body: ["server": ownership.rawValue]
+        body: ["server": server.rawValue]
       )
     }
     let data: Data
@@ -71,7 +71,7 @@ public enum ControllerOwnershipWriter {
     } catch { throw .invalidResult(ControllerRecordSet.problemDescription(error)) }
     return Change(
       model: model,
-      ownership: ownership,
+      server: server,
       previous: (records.records[model] ?? packages[model])?.profile.server ?? .system,
       file: file,
       created: existing == nil,
@@ -93,7 +93,7 @@ public enum ControllerOwnershipWriter {
   private static func updated(
     _ data: Data,
     file: URL,
-    ownership: ControllerServer,
+    server: ControllerServer,
     packages: [ControllerModelID: ControllerRecord]
   ) throws(Failure) -> [String: Any] {
     let operation: ControllerRecordOperation
@@ -104,10 +104,10 @@ public enum ControllerOwnershipWriter {
       throw .invalidFile("the file is not a JSON object")
     }
     if operation == .add {
-      document["server"] = ownership.rawValue
+      document["server"] = server.rawValue
     } else {
       var fields = document["patch"] as? [String: Any] ?? [:]
-      fields["server"] = ownership.rawValue
+      fields["server"] = server.rawValue
       document["patch"] = fields
     }
     return document

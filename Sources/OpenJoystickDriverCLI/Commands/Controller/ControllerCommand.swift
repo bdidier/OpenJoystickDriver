@@ -249,9 +249,9 @@ struct ControllerShowCommand: AsyncParsableCommand {
         )
       ),
       (
-        CLILocalized.text("cli.controller.show.label.ownership_choice"),
+        CLILocalized.text("cli.controller.show.label.server_choice"),
         CLILocalized.format(
-          "cli.controller.show.ownershipChoice",
+          "cli.controller.show.serverChoice",
           detail.ownership.choice.rawValue,
           detail.ownership.choiceSource
         )

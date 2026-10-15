@@ -3,7 +3,7 @@ import Testing
 
 @testable import OpenJoystickDriverKit
 
-struct ControllerOwnershipWriterTests {
+struct ControllerServerWriterTests {
   /// A bundled `sony.dualshock4` record, a HID family.
   private static let bundledHID = ControllerModelID(vendorID: 0x2C22, productID: 0x2000)
   /// A bundled `xbox.gip` record, a raw-USB family.
@@ -24,12 +24,12 @@ struct ControllerOwnershipWriterTests {
 
   private static func change(
     _ identity: ControllerModelID,
-    to ownership: ControllerServer,
+    to server: ControllerServer,
     in directory: URL
-  ) throws -> ControllerOwnershipWriter.Change {
-    try ControllerOwnershipWriter.change(
+  ) throws -> ControllerServerWriter.Change {
+    try ControllerServerWriter.change(
       identity,
-      to: ownership,
+      to: server,
       records: .load(userDirectory: directory),
       directory: directory
     )
@@ -46,7 +46,7 @@ struct ControllerOwnershipWriterTests {
       #expect(change.created)
       #expect(change.previous == .system)
       #expect(change.file.lastPathComponent == "2c22-2000.patch.json")
-      try ControllerOwnershipWriter.write(change)
+      try ControllerServerWriter.write(change)
       let written = try Self.object(Data(contentsOf: change.file))
       #expect(written["kind"] as? String == "ControllerPatch")
       let selector = try #require(written["selector"] as? [String: Int])
@@ -72,7 +72,7 @@ struct ControllerOwnershipWriterTests {
       let change = try Self.change(Self.bundledHID, to: .system, in: directory)
       #expect(!change.created)
       #expect(change.previous == .ojd)
-      try ControllerOwnershipWriter.write(change)
+      try ControllerServerWriter.write(change)
       let set = try #require(try Self.object(Data(contentsOf: file))["patch"] as? [String: Any])
       #expect(set["server"] as? String == "system")
       #expect(set["tuning"] as? [String: Double] == ["stickDeadzone": 0.1])
@@ -95,7 +95,7 @@ struct ControllerOwnershipWriterTests {
       try fixture.store().install(package, replace: true)
       let change = try Self.change(Self.unbundled, to: .ojd, in: directory)
       #expect(change.created)
-      try ControllerOwnershipWriter.write(change)
+      try ControllerServerWriter.write(change)
       let loaded = ControllerRecordSet.load(userDirectory: directory)
       let effective = try #require(loaded.records[Self.unbundled])
       #expect(effective.profile.server == .ojd)
@@ -110,7 +110,7 @@ struct ControllerOwnershipWriterTests {
       let file = directory.appendingPathComponent("2c22-2000.patch.json")
       try Data("{".utf8).write(to: file)
       #expect(
-        throws: ControllerOwnershipWriter.Failure.invalidFile("the file is not a JSON object")
+        throws: ControllerServerWriter.Failure.invalidFile("the file is not a JSON object")
       ) { try Self.change(Self.bundledHID, to: .ojd, in: directory) }
       #expect(try Data(contentsOf: file) == Data("{".utf8))
     }
@@ -119,7 +119,7 @@ struct ControllerOwnershipWriterTests {
   @Test
   func modelWithoutARecordIsRefused() throws {
     try Self.withDirectory { directory, _ in
-      #expect(throws: ControllerOwnershipWriter.Failure.noRecord) {
+      #expect(throws: ControllerServerWriter.Failure.noRecord) {
         try Self.change(Self.unbundled, to: .ojd, in: directory)
       }
     }
@@ -132,7 +132,7 @@ struct ControllerOwnershipWriterTests {
         _ = try Self.change(Self.bundledGIP, to: .ojd, in: directory)
         Issue.record("a raw-USB model was accepted")
       } catch {
-        guard case .invalidResult(let problem) = error as? ControllerOwnershipWriter.Failure
+        guard case .invalidResult(let problem) = error as? ControllerServerWriter.Failure
         else {
           Issue.record("unexpected failure \(error)")
           return

@@ -82,9 +82,9 @@ enum ControllerServerChange {
     to server: ControllerServer,
     records: ControllerRecordSet,
     device: ApplicationServiceDeviceDescription
-  ) throws -> ControllerOwnershipWriter.Change {
+  ) throws -> ControllerServerWriter.Change {
     do {
-      return try ControllerOwnershipWriter.change(
+      return try ControllerServerWriter.change(
         model,
         to: server,
         records: records,
@@ -112,8 +112,8 @@ enum ControllerServerChange {
     }
   }
 
-  private static func write(_ change: ControllerOwnershipWriter.Change) throws {
-    do { try ControllerOwnershipWriter.write(change) } catch {
+  private static func write(_ change: ControllerServerWriter.Change) throws {
+    do { try ControllerServerWriter.write(change) } catch {
       throw CLIFailure(
         .fileAccessFailed,
         CLILocalized.format(

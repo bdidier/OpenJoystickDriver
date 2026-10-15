@@ -24,9 +24,9 @@
             )
             Divider()
             inputTestAction
-            if ControllerOwnershipPicker.isShown(for: device) {
+            if ControllerServerPicker.isShown(for: device) {
               Divider()
-              ControllerOwnershipPicker(viewModel: viewModel, device: device)
+              ControllerServerPicker(viewModel: viewModel, device: device)
             }
             if device.physicalOwnership != .nativeGamepad {
               Divider()
