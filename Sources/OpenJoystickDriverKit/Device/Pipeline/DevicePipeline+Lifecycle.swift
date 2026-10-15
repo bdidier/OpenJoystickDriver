@@ -182,7 +182,7 @@ extension DevicePipeline {
     return driver.deactivationWrites()
   }
 
-  func capabilities() -> ControllerCapabilities { driver.capabilities.normalized }
+  func capabilities() -> ControllerCapabilities { driver.capabilities }
 
   /// For an observe-only pipeline, only what its native allowance names: macOS owns the rest.
   func physicalOutputCapabilities() -> PhysicalControllerOutputCapabilities {

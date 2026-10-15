@@ -106,11 +106,11 @@ extension OutputCharacterizationTests {
   /// The former parser buttons in declaration order, as the snapshot change each reported.
   static let formerParserButtons: [(String, InputChange, InputChange, ControllerButtonLabels)] =
     [
-      ("a", ControlID.faceSouth, ControllerButtonLabels.standard), ("b", .faceEast, .standard),
-      ("x", .faceWest, .standard), ("y", .faceNorth, .standard),
+      ("a", Control.south, ControllerButtonLabels.standard), ("b", .east, .standard),
+      ("x", .west, .standard), ("y", .north, .standard),
       ("leftBumper", .leftShoulder, .standard), ("rightBumper", .rightShoulder, .standard),
       ("leftStick", .leftStickClick, .standard), ("rightStick", .rightStickClick, .standard),
-      ("start", .menu, .standard), ("back", .view, .standard), ("guide", .guide, .standard),
+      ("start", .start, .standard), ("back", .back, .standard), ("guide", .guide, .standard),
     ].map { ($0.0, InputChange.press($0.1), InputChange.release($0.1), $0.2) }
     + [
       ("dpadUp", HatDirection.north), ("dpadDown", .south), ("dpadLeft", .west),
@@ -119,19 +119,19 @@ extension OutputCharacterizationTests {
       ($0.0, InputChange.hat($0.1), InputChange.hat(.neutral), ControllerButtonLabels.standard)
     }
     + [
-      ("cross", ControlID.faceSouth, ControllerButtonLabels.playStation),
-      ("circle", .faceEast, .playStation), ("square", .faceWest, .playStation),
-      ("triangle", .faceNorth, .playStation), ("l1", .leftShoulder, .playStation),
-      ("r1", .rightShoulder, .playStation), ("l2Digital", .leftTriggerButton, .playStation),
-      ("r2Digital", .rightTriggerButton, .playStation), ("share", .share, .standard),
-      ("options", .menu, .playStation), ("ps", .guide, .playStation),
+      ("cross", Control.south, ControllerButtonLabels.playStation),
+      ("circle", .east, .playStation), ("square", .west, .playStation),
+      ("triangle", .north, .playStation), ("l1", .leftShoulder, .playStation),
+      ("r1", .rightShoulder, .playStation), ("l2Digital", .leftTrigger, .playStation),
+      ("r2Digital", .rightTrigger, .playStation), ("share", .capture, .standard),
+      ("options", .start, .playStation), ("ps", .guide, .playStation),
       ("touchpad", .touchpadClick, .playStation), ("mute", .microphone, .playStation),
-      ("leftGrip", .paddleLeft2, .standard), ("rightGrip", .paddleRight2, .standard),
+      ("leftGrip", .leftPaddle2, .standard), ("rightGrip", .rightPaddle2, .standard),
       ("leftPadClick", .leftTrackpadClick, .standard),
       ("rightPadClick", .rightTrackpadClick, .standard), ("leftSL", .auxiliary3, .nintendo),
       ("leftSR", .auxiliary4, .nintendo), ("rightSL", .auxiliary5, .nintendo),
       ("rightSR", .auxiliary6, .nintendo), ("leftFunction", .auxiliary1, .playStation),
-      ("rightFunction", .auxiliary2, .playStation), ("leftPaddle", .paddleLeft1, .playStation),
-      ("rightPaddle", .paddleRight1, .playStation),
+      ("rightFunction", .auxiliary2, .playStation), ("leftPaddle", .leftPaddle1, .playStation),
+      ("rightPaddle", .rightPaddle1, .playStation),
     ].map { ($0.0, InputChange.press($0.1), InputChange.release($0.1), $0.2) }
 }

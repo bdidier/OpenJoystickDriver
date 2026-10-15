@@ -23,9 +23,9 @@ struct DualSenseDriverTests {
     #expect(events.contains(.rightStick(x: -1.0, y: 1.0)))
     #expect(events.contains(.leftTrigger(1.0)))
     #expect(events.contains(.rightTrigger(128.0 / 255.0)))
-    #expect(events.contains(.press(.faceSouth)))
-    #expect(events.contains(.press(.view)))
-    #expect(events.contains(.press(.menu)))
+    #expect(events.contains(.press(.south)))
+    #expect(events.contains(.press(.back)))
+    #expect(events.contains(.press(.start)))
     #expect(events.contains(.press(.guide)))
     #expect(events.contains(.press(.touchpadClick)))
   }
@@ -47,9 +47,9 @@ struct DualSenseDriverTests {
     #expect(events.contains(.rightStick(x: -1.0, y: 1.0)))
     #expect(events.contains(.leftTrigger(1.0)))
     #expect(events.contains(.rightTrigger(128.0 / 255.0)))
-    #expect(events.contains(.press(.faceSouth)))
-    #expect(events.contains(.press(.view)))
-    #expect(events.contains(.press(.menu)))
+    #expect(events.contains(.press(.south)))
+    #expect(events.contains(.press(.back)))
+    #expect(events.contains(.press(.start)))
     #expect(events.contains(.press(.guide)))
     #expect(events.contains(.press(.touchpadClick)))
     #expect(events.contains(.press(.microphone)))
@@ -141,15 +141,15 @@ struct DualSenseDriverTests {
 
 extension DualSenseDriverTests {
   @Test(arguments: [
-    (UInt8(0x10), ControlID.auxiliary1, RemappingButton.leftFunction),
-    (UInt8(0x20), ControlID.auxiliary2, RemappingButton.rightFunction),
-    (UInt8(0x40), ControlID.paddleLeft1, RemappingButton.leftPaddle),
-    (UInt8(0x80), ControlID.paddleRight1, RemappingButton.rightPaddle),
+    (UInt8(0x10), Control.auxiliary1, Control.auxiliary1),
+    (UInt8(0x20), Control.auxiliary2, Control.auxiliary2),
+    (UInt8(0x40), Control.leftPaddle1, Control.leftPaddle1),
+    (UInt8(0x80), Control.rightPaddle1, Control.rightPaddle1),
   ])
   func edgeButtonMapsFromUSBAndBluetooth(
     mask: UInt8,
-    physical: ControlID,
-    source: RemappingButton
+    physical: Control,
+    source: Control
   ) throws {
     for bluetooth in [false, true] {
       let identifier = LogicalControllerID(vendorID: 0x054C, productID: 0x0DF2)
@@ -204,7 +204,7 @@ extension DualSenseDriverTests {
       ProtocolPacketFixtures.DualSense.usbInputReport(buttons: (0x08, 0, 0xF0))
     )
     #expect(events?.state.pressed.isEmpty == true)
-    #expect(!parser.capabilities.controls.contains(.paddleLeft1))
+    #expect(!parser.capabilities.controls.contains(.leftPaddle1))
   }
 
   @Test
@@ -214,10 +214,10 @@ extension DualSenseDriverTests {
     var bad = valid
     bad[77] ^= 0xFF
     #expect(throws: DualSenseDriverError.invalidBluetoothCRC) { try parser.parseReport(bad) }
-    #expect(try parser.parseReport(valid).contains(.press(.paddleLeft1)))
+    #expect(try parser.parseReport(valid).contains(.press(.leftPaddle1)))
     #expect(
       try parser.parseReport(ProtocolPacketFixtures.DualSense.bluetoothInputReport()).contains(
-        .release(.paddleLeft1)
+        .release(.leftPaddle1)
       )
     )
   }

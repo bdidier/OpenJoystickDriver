@@ -9,11 +9,11 @@ struct RemappingChordSequenceTests {
     var state = RemappingEngineState()
     let profile = profile(sequence: [.button(.south), .button(.north)])
     #expect(
-      state.process(inputs: [.press(.faceSouth)], from: identifier, profile: profile, at: 0).isEmpty
+      state.process(inputs: [.press(.south)], from: identifier, profile: profile, at: 0).isEmpty
     )
     #expect(
       state.process(
-        inputs: [.press(.faceNorth)],
+        inputs: [.press(.north)],
         from: identifier,
         profile: profile,
         at: secondPressTime
@@ -32,8 +32,8 @@ struct RemappingChordSequenceTests {
   func delayedReplayDoesNotReverseSequenceOrder() {
     var state = RemappingEngineState()
     let profile = profile(sequence: [.button(.north), .button(.south)])
-    _ = state.process(inputs: [.press(.faceSouth)], from: identifier, profile: profile, at: 0)
-    _ = state.process(inputs: [.press(.faceNorth)], from: identifier, profile: profile, at: 1)
+    _ = state.process(inputs: [.press(.south)], from: identifier, profile: profile, at: 0)
+    _ = state.process(inputs: [.press(.north)], from: identifier, profile: profile, at: 1)
     #expect(state.tick(at: 500_000_001).isEmpty)
   }
 
@@ -41,10 +41,10 @@ struct RemappingChordSequenceTests {
   func consumedPressCannotCompleteSequence() {
     var state = RemappingEngineState()
     let profile = profile(sequence: [.button(.south), .button(.north)])
-    _ = state.process(inputs: [.press(.faceSouth)], from: identifier, profile: profile, at: 0)
-    _ = state.process(inputs: [.press(.faceNorth)], from: identifier, profile: profile, at: 1)
+    _ = state.process(inputs: [.press(.south)], from: identifier, profile: profile, at: 0)
+    _ = state.process(inputs: [.press(.north)], from: identifier, profile: profile, at: 1)
     #expect(
-      state.process(inputs: [.press(.faceEast)], from: identifier, profile: profile, at: 2) == [
+      state.process(inputs: [.press(.east)], from: identifier, profile: profile, at: 2) == [
         .system(.keyDown(.c))
       ]
     )
@@ -56,9 +56,9 @@ struct RemappingChordSequenceTests {
   func originalSequenceWindowStillRejectsSlowInput() {
     var state = RemappingEngineState()
     let profile = profile(sequence: [.button(.south), .button(.north)])
-    _ = state.process(inputs: [.press(.faceSouth)], from: identifier, profile: profile, at: 0)
+    _ = state.process(inputs: [.press(.south)], from: identifier, profile: profile, at: 0)
     _ = state.process(
-      inputs: [.press(.faceNorth)],
+      inputs: [.press(.north)],
       from: identifier,
       profile: profile,
       at: 300_000_000
@@ -70,10 +70,10 @@ struct RemappingChordSequenceTests {
   func unresolvedChordDoesNotAllowUnboundedSequenceHistory() {
     var state = RemappingEngineState()
     let profile = profile(sequence: [.button(.south), .button(.north)])
-    _ = state.process(inputs: [.press(.faceSouth)], from: identifier, profile: profile, at: 0)
+    _ = state.process(inputs: [.press(.south)], from: identifier, profile: profile, at: 0)
     for time in 1...100 {
       _ = state.process(
-        inputs: [.press(.faceNorth), .release(.faceNorth)],
+        inputs: [.press(.north), .release(.north)],
         from: identifier,
         profile: profile,
         at: UInt64(time)
@@ -91,7 +91,7 @@ struct RemappingChordSequenceTests {
     let profile = profile(sequence: [.button(.south), .button(.north)])
     #expect(
       state.process(
-        inputs: [.press(.faceSouth), .press(.faceNorth), .press(.faceWest)],
+        inputs: [.press(.south), .press(.north), .press(.west)],
         from: identifier,
         profile: profile,
         at: 0
@@ -108,13 +108,13 @@ struct RemappingChordSequenceTests {
     var state = RemappingEngineState()
     let profile = profile(sequence: [.button(.south), .button(.north)])
     _ = state.process(
-      inputs: [.press(.faceSouth), .press(.faceNorth), .press(.faceWest)],
+      inputs: [.press(.south), .press(.north), .press(.west)],
       from: identifier,
       profile: profile,
       at: 0
     )
     #expect(
-      state.process(inputs: [.press(.faceEast)], from: identifier, profile: profile, at: 1) == [
+      state.process(inputs: [.press(.east)], from: identifier, profile: profile, at: 1) == [
         .system(.keyDown(.c))
       ]
     )
@@ -127,7 +127,7 @@ struct RemappingChordSequenceTests {
     var state = RemappingEngineState()
     let profile = profile(sequence: [.button(.south), .button(.north)])
     _ = state.process(
-      inputs: [.press(.faceSouth), .press(.faceNorth)],
+      inputs: [.press(.south), .press(.north)],
       from: identifier,
       profile: profile,
       at: 0
@@ -147,7 +147,7 @@ struct RemappingChordSequenceTests {
       ]
     )
     _ = state.process(
-      inputs: [.press(.faceSouth), .press(.faceNorth)],
+      inputs: [.press(.south), .press(.north)],
       from: identifier,
       profile: profile,
       at: 0

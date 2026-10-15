@@ -41,7 +41,7 @@ struct NativePassThroughTests {
         )
       )
     }
-    #expect(dispatcher.states.contains { $0.pressed.contains(.faceSouth) })
+    #expect(dispatcher.states.contains { $0.pressed.contains(.south) })
 
     #expect(
       !(await manager.sendManualRumble(

@@ -24,6 +24,7 @@ swift-format lint --recursive --strict Package.swift Sources Tests Tools
 swiftlint lint --no-cache --strict
 python3 Scripts/Quality/check_swift_file_length.py
 python3 Scripts/Quality/check_neutral_core_imports.py
+python3 Scripts/Quality/check_sink_boundary.py
 python3 Scripts/Quality/check_localization_keys.py
 ./Scripts/ojd check driverkit
 ./Scripts/ojd test parsers-macos14

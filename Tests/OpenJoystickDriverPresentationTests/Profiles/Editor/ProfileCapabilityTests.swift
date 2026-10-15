@@ -7,15 +7,15 @@ import Testing
 struct ProfileCapabilityTests {
   @Test(arguments: [
     // (VID, PID, supported buttons, unsupported buttons)
-    (0x054C, 0x09CC, [RemappingButton.options, .share], [RemappingButton.start, .back]),
-    (0x045E, 0x028E, [.start, .back], [.options, .share]),
-    (0x057E, 0x2009, [.start, .back, .share], [.options]),
+    (0x054C, 0x09CC, [Control.start, .back, .touchpadClick], [Control.capture]),
+    (0x045E, 0x028E, [.start, .back], [.capture, .touchpadClick]),
+    (0x057E, 0x2009, [.start, .back, .capture], [.touchpadClick]),
   ])
-  func menuViewAndShareSourcesFollowTheFamilyLabels(
+  func startBackAndCaptureSourcesFollowTheCapabilities(
     vendorID: Int,
     productID: Int,
-    supported: [RemappingButton],
-    unsupported: [RemappingButton]
+    supported: [Control],
+    unsupported: [Control]
   ) throws {
     let capabilities = try #require(
       ProfileCapabilityResolver.resolve(
@@ -66,10 +66,12 @@ struct ProfileCapabilityTests {
       )
     )
 
-    #expect(!single.physicalInput.controls.contains(.faceSouth))
+    #expect(!single.physicalInput.controls.contains(.south))
     #expect(!single.physicalInput.controls.contains(.rightStickX))
     #expect(
-      pair.physicalInput.controls.isSuperset(of: [.dpad, .faceSouth, .leftStickX, .rightStickX])
+      pair.physicalInput.controls.isSuperset(
+        of: Control.dpad.union([.south, .leftStickX, .rightStickX])
+      )
     )
     #expect(pair.physicalInput.controls.isSuperset(of: single.physicalInput.controls))
   }
@@ -79,7 +81,7 @@ struct ProfileCapabilityTests {
     let profile = makeProfile(vendorID: 0x054C, productID: 0x05C4)
     let full = device(
       input: ControllerCapabilities(
-        controls: ControlID.xboxLayout.union([.guide, .touchpadClick]),
+        controls: Control.xboxLayout.union([.guide, .touchpadClick]),
         touchContactCount: 2,
         motion: true
       ),
@@ -89,7 +91,7 @@ struct ProfileCapabilityTests {
       )
     )
     let limited = device(
-      input: ControllerCapabilities(controls: [.dpad, .faceSouth, .leftStickClick]),
+      input: ControllerCapabilities(controls: Control.dpad.union([.south, .leftStickClick])),
       output: PhysicalControllerOutputCapabilities(rumbleMotors: [.leftMain])
     )
 
@@ -102,7 +104,7 @@ struct ProfileCapabilityTests {
     #expect(result?.physicalOutput.rumbleMotors == [.leftMain])
     #expect(
       result?.physicalInput
-        == ControllerCapabilities(controls: [.dpad, .faceSouth, .leftStickClick])
+        == ControllerCapabilities(controls: Control.dpad.union([.south, .leftStickClick]))
     )
     #expect(result?.supportsStickAxes == false)
     #expect(result?.supportsAnalogTriggers == false)
@@ -129,7 +131,7 @@ struct ProfileCapabilityTests {
   @Test
   func sourceAndDestinationOptionsRetainUnsupportedCurrentValuesOnly() {
     let capabilities = ControllerProfileCapabilities(
-      physicalInput: ControllerCapabilities(controls: [.faceSouth, .paddleLeft1]),
+      physicalInput: ControllerCapabilities(controls: [.south, .leftPaddle1]),
       physicalOutput: PhysicalControllerOutputCapabilities(
         rumbleMotors: [.leftMain],
         lightingFeatures: [.programmableColor]
@@ -140,8 +142,8 @@ struct ProfileCapabilityTests {
     #expect(ProfileCapabilityPolicy.supports(.button(.south), capabilities: capabilities))
     #expect(!ProfileCapabilityPolicy.supports(.button(.start), capabilities: capabilities))
     #expect(!ProfileCapabilityPolicy.supports(.dpad(.up), capabilities: capabilities))
-    #expect(ProfileCapabilityPolicy.supports(.button(.leftPaddle), capabilities: capabilities))
-    #expect(!ProfileCapabilityPolicy.supports(.button(.rightPaddle), capabilities: capabilities))
+    #expect(ProfileCapabilityPolicy.supports(.button(.leftPaddle1), capabilities: capabilities))
+    #expect(!ProfileCapabilityPolicy.supports(.button(.rightPaddle1), capabilities: capabilities))
     #expect(!ProfileCapabilityPolicy.supports(.axis(.leftStickX), capabilities: capabilities))
     #expect(!ProfileCapabilityPolicy.supports(.motionLean(.left), capabilities: capabilities))
     #expect(!ProfileCapabilityPolicy.supports(.touchContact(.primary), capabilities: capabilities))
@@ -172,11 +174,11 @@ struct ProfileCapabilityTests {
   }
 
   @Test
-  func sourcePolicyMapsRemappingControlsToDeclaredControlIDs() {
+  func sourcePolicyMapsRemappingControlsToDeclaredControls() {
     let capabilities = ControllerProfileCapabilities(
       physicalInput: ControllerCapabilities(
         controls: [
-          .menu, .view, .share, .paddleLeft2, .auxiliary3, .leftTrackpadClick, .rightTrigger,
+          .start, .back, .capture, .leftPaddle2, .auxiliary3, .leftTrackpadClick, .rightTrigger,
           .leftTrackpadTouch,
         ],
         touchContactCount: 1,
@@ -186,13 +188,14 @@ struct ProfileCapabilityTests {
       buttonLabels: .standard
     )
     let supported: [RemappingSource] = [
-      .button(.start), .button(.back), .button(.share), .button(.leftGrip), .button(.leftSL),
-      .button(.leftPadClick), .axis(.rightTrigger), .triggerStage(.right, .soft),
+      .button(.start), .button(.back), .button(.capture), .button(.leftPaddle2),
+      .button(.auxiliary3), .button(.leftTrackpadClick), .axis(.rightTrigger),
+      .triggerStage(.right, .soft),
       .motionLean(.left), .touchContact(.left),
     ]
     let unsupported: [RemappingSource] = [
-      .button(.guide), .button(.options), .button(.rightGrip), .button(.leftSR),
-      .button(.rightPadClick), .axis(.leftTrigger), .triggerStage(.left, .soft),
+      .button(.guide), .button(.rightPaddle2), .button(.auxiliary4),
+      .button(.rightTrackpadClick), .axis(.leftTrigger), .triggerStage(.left, .soft),
       .touchContact(.right), .touchContact(.primary),
     ]
     for source in supported {

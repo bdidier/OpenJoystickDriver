@@ -15,8 +15,8 @@ extension GameSirDriver {
 
   public var capabilities: ControllerCapabilities {
     // The wired G7 Pro telemetry always reports the inner grips.
-    let innerGrips: Set<ControlID> =
-      gameSirProtocol == .g7ProUSB || hasInnerGrips ? [.paddleLeft2, .paddleRight2] : []
+    let innerGrips: Set<Control> =
+      gameSirProtocol == .g7ProUSB || hasInnerGrips ? [.leftPaddle2, .rightPaddle2] : []
     // No motion: no source verifies the IMU scale, frame, or byte order.
     return PhysicalProtocolID.vendorGameSir.describedControls.union(
       ControllerCapabilities(controls: innerGrips)
@@ -207,11 +207,11 @@ extension GameSirDriver {
     let face = bytes[5]
     let meta = bytes[6]
     for (byte, mask, control) in [
-      (face, 0x10, ControlID.faceWest), (face, 0x20, .faceSouth), (face, 0x40, .faceEast),
-      (face, 0x80, .faceNorth), (meta, 0x01, .leftShoulder), (meta, 0x02, .rightShoulder),
-      (meta, 0x10, .view), (meta, 0x20, .menu), (meta, 0x40, .leftStickClick),
+      (face, 0x10, Control.west), (face, 0x20, .south), (face, 0x40, .east),
+      (face, 0x80, .north), (meta, 0x01, .leftShoulder), (meta, 0x02, .rightShoulder),
+      (meta, 0x10, .back), (meta, 0x20, .start), (meta, 0x40, .leftStickClick),
       (meta, 0x80, .rightStickClick),
-    ] as [(UInt8, UInt8, ControlID)] { next.set(control, pressed: byte & mask != 0) }
+    ] as [(UInt8, UInt8, Control)] { next.set(control, pressed: byte & mask != 0) }
     next.hat = Self.dpadDirection(face & 0x0F)
     next.leftStick = StickPosition(x: Self.axis(bytes[1]), yDown: -Self.axis(bytes[2]))
     next.rightStick = StickPosition(x: Self.axis(bytes[3]), yDown: -Self.axis(bytes[4]))
@@ -237,11 +237,11 @@ extension GameSirDriver {
     includesInnerGrips: Bool,
     in state: inout ControllerState
   ) {
-    var table: [(UInt8, ControlID)] = [
-      (0x01, .guide), (0x02, .share), (0x08, .paddleLeft1), (0x10, .paddleRight1),
+    var table: [(UInt8, Control)] = [
+      (0x01, .guide), (0x02, .capture), (0x08, .leftPaddle1), (0x10, .rightPaddle1),
       (0x20, .auxiliary1),
     ]
-    if includesInnerGrips { table += [(0x40, .paddleLeft2), (0x80, .paddleRight2)] }
+    if includesInnerGrips { table += [(0x40, .leftPaddle2), (0x80, .rightPaddle2)] }
     for (mask, control) in table { state.set(control, pressed: value & mask != 0) }
   }
 

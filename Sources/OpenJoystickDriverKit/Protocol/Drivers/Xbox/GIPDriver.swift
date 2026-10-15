@@ -323,7 +323,7 @@ public final class GIPDriver: PhysicalProtocolDriver {
     for (index, bit, control) in Self.buttonTable {
       next.set(control, pressed: bytes[index] & bit != 0)
     }
-    next.set(.share, pressed: shareByte(in: bytes) & 1 != 0)
+    next.set(.capture, pressed: shareByte(in: bytes) & 1 != 0)
     next.hat = mapDpad(bytes[1] & gipDpadMask)
     next.leftStick = StickPosition(x: normalizeStick(lsx), yDown: -normalizeStick(lsy))
     next.rightStick = StickPosition(x: normalizeStick(rsx), yDown: -normalizeStick(rsy))
@@ -333,9 +333,9 @@ public final class GIPDriver: PhysicalProtocolDriver {
   }
 
   /// Button byte index (0 or 1), bit and the standard-label control it reports.
-  private static let buttonTable: [(Int, UInt8, ControlID)] = [
-    (0, 4, .menu), (0, 8, .view), (0, 16, .faceSouth), (0, 32, .faceEast), (0, 64, .faceWest),
-    (0, 128, .faceNorth), (1, 16, .leftShoulder), (1, 32, .rightShoulder), (1, 64, .leftStickClick),
+  private static let buttonTable: [(Int, UInt8, Control)] = [
+    (0, 4, .start), (0, 8, .back), (0, 16, .south), (0, 32, .east), (0, 64, .west),
+    (0, 128, .north), (1, 16, .leftShoulder), (1, 32, .rightShoulder), (1, 64, .leftStickClick),
     (1, 128, .rightStickClick),
   ]
 

@@ -1216,6 +1216,14 @@
         "add": {
           "$ref": "controller.schema.json#/$defs/controlList"
         },
+        "digitalTriggers": {
+          "description": "The triggers whose press the protocol reports as its own digital signal; they are controls of the family.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": ["LeftTrigger", "RightTrigger"]
+          }
+        },
         "touchContactCount": {
           "type": "integer",
           "minimum": 0,

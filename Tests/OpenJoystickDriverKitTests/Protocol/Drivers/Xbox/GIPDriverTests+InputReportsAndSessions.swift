@@ -16,10 +16,10 @@ extension GIPDriverTests {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
       ])
     )
-    #expect(view.contains(.press(.view)))
+    #expect(view.contains(.press(.back)))
 
-    #expect(!view.contains(.press(.share)))
-    #expect(!view.contains(.press(.menu)))
+    #expect(!view.contains(.press(.capture)))
+    #expect(!view.contains(.press(.start)))
 
     _ = try parser.parseReport(
       Data([
@@ -44,9 +44,9 @@ extension GIPDriverTests {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
       ])
     )
-    #expect(menu.contains(.press(.menu)))
+    #expect(menu.contains(.press(.start)))
 
-    #expect(!menu.contains(.press(.share)))
+    #expect(!menu.contains(.press(.capture)))
 
     _ = try parser.parseReport(
       Data([
@@ -66,9 +66,9 @@ extension GIPDriverTests {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
       ])
     )
-    #expect(share.contains(.press(.share)))
-    #expect(!share.contains(.press(.view)))
-    #expect(!share.contains(.press(.menu)))
+    #expect(share.contains(.press(.capture)))
+    #expect(!share.contains(.press(.back)))
+    #expect(!share.contains(.press(.start)))
 
     let shareRelease = try parser.parseReport(
       Data([
@@ -77,7 +77,7 @@ extension GIPDriverTests {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
       ])
     )
-    #expect(shareRelease.contains(.release(.share)))
+    #expect(shareRelease.contains(.release(.capture)))
   }
 
   /// Linux xpad reads `data[len - 26]` of the whole packet; SDL reads payload byte 18 of the
@@ -89,7 +89,7 @@ extension GIPDriverTests {
       var payload = Data(repeating: 0, count: count)
       payload[shareIndex] = 1
       let events = try parser.parseReport(ProtocolPacketFixtures.GIP.inputPacket(payload: payload))
-      #expect(events.contains(.press(.share)), "payload \(count)")
+      #expect(events.contains(.press(.capture)), "payload \(count)")
     }
   }
 

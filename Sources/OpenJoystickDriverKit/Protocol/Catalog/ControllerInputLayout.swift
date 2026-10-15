@@ -14,13 +14,13 @@ public struct ReportBitField: Hashable, Sendable {
 public struct ControllerInputLayout: Equatable, Sendable {
   /// A digital control, pressed while any of its fields has a set bit.
   public struct Button: Equatable, Sendable {
-    public let control: ControlID
+    public let control: Control
     public let fields: [ReportBitField]
   }
 
   /// One stick axis. The raw value grows right on X and down on Y, as in HID.
   public struct Axis: Equatable, Sendable {
-    public let control: ControlID
+    public let control: Control
     public let byte: Int
     /// 8, or 16 for a little-endian value in `byte` and `byte + 1`.
     public let bits: Int
@@ -93,11 +93,8 @@ public struct ControllerInputLayout: Equatable, Sendable {
     }
   }
 
-  static let stickAxes: [ControlID] = [.leftStickX, .leftStickY, .rightStickX, .rightStickY]
-  /// Controls a button may not name: the hat, the stick axes and the analog triggers.
-  static let nonButtonControls: Set<ControlID> = Set(
-    stickAxes + [.dpad, .leftTrigger, .rightTrigger]
-  )
+  /// Controls a button may not name: the D-pad, which the hat drives, and the stick axes.
+  static let nonButtonControls: Set<Control> = Control.dpad.union(Control.stickAxes)
 
   /// The ID byte 0 must carry; nil for a report without an ID.
   public let reportID: UInt8?
@@ -114,7 +111,7 @@ public struct ControllerInputLayout: Equatable, Sendable {
   init(
     reportID: UInt8?,
     minimumLength: Int,
-    buttons: [(ControlID, ReportBitField)],
+    buttons: [(Control, ReportBitField)],
     axes: [Axis],
     hat: [HatSource],
     leftTrigger: Trigger?,
@@ -157,10 +154,10 @@ public struct ControllerInputLayout: Equatable, Sendable {
     }
     guard buttons.allSatisfy({ !Self.nonButtonControls.contains($0.0) }) else {
       throw ControllerRecordProblem(
-        "a button names a digital control, not the hat, a stick or a trigger"
+        "a button names a digital control, not the D-pad or a stick axis"
       )
     }
-    guard axes.allSatisfy({ Self.stickAxes.contains($0.control) }),
+    guard axes.allSatisfy({ Control.stickAxes.contains($0.control) }),
       Set(axes.map(\.control)).count == axes.count
     else { throw ControllerRecordProblem("axes name distinct stick axes") }
     guard
@@ -199,9 +196,9 @@ public struct ControllerInputLayout: Equatable, Sendable {
   }
 
   /// Every control the layout decodes.
-  var controls: Set<ControlID> {
+  var controls: Set<Control> {
     var controls = Set(buttons.map(\.control)).union(axes.map(\.control))
-    if !hat.isEmpty { controls.insert(.dpad) }
+    if !hat.isEmpty { controls.formUnion(Control.dpad) }
     if leftTrigger != nil { controls.insert(.leftTrigger) }
     if rightTrigger != nil { controls.insert(.rightTrigger) }
     return controls

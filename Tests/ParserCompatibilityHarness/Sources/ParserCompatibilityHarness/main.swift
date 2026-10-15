@@ -63,7 +63,7 @@ func runProfileMetadataChecks() {
     require(
       profile.capabilityDelta.presentControls
         == (id.productID == 3570
-          ? [.paddleLeft1, .paddleRight1, .auxiliary1, .auxiliary2] : []),
+          ? [.leftPaddle1, .rightPaddle1, .auxiliary1, .auxiliary2] : []),
       "Only the DualSense Edge profile should declare its function buttons and paddles"
     )
   }
@@ -109,8 +109,8 @@ func runSteamInputAndFeatureChecks() throws {
     )
   )
   for expected in [
-    ControlID.faceSouth, .faceEast, .faceWest, .faceNorth, .leftShoulder, .rightShoulder, .view,
-    .guide, .menu, .leftStickClick, .rightTrackpadClick,
+    Control.south, .east, .west, .north, .leftShoulder, .rightShoulder, .back,
+    .guide, .start, .leftStickClick, .rightTrackpadClick,
   ] {
     require(
       events?.pressed.contains(expected) == true,

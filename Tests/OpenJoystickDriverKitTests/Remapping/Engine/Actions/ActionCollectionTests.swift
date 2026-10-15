@@ -19,12 +19,12 @@ struct RemappingActionCollectionTests {
     #expect(profile.requiresSystemInputAccess)
     var state = RemappingEngineState()
     #expect(
-      state.process(inputs: [.press(.faceSouth)], from: identifier, profile: profile, at: 0) == [
+      state.process(inputs: [.press(.south)], from: identifier, profile: profile, at: 0) == [
         .gamepad(RemappingGamepadState(buttons: [.north]), identifier), .system(.keyDown(.a)),
       ]
     )
     #expect(
-      state.process(inputs: [.release(.faceSouth)], from: identifier, profile: profile, at: 1) == [
+      state.process(inputs: [.release(.south)], from: identifier, profile: profile, at: 1) == [
         .gamepad(.neutral, identifier)
       ]
     )
@@ -54,13 +54,13 @@ struct RemappingActionCollectionTests {
     )
     var state = RemappingEngineState()
     #expect(
-      state.process(inputs: [.press(.faceSouth)], from: identifier, profile: profile, at: 0).isEmpty
+      state.process(inputs: [.press(.south)], from: identifier, profile: profile, at: 0).isEmpty
     )
     #expect(state.tick(at: 100_000_000) == [.system(.keyDown(.b))])
     #expect(state.tick(at: 200_000_000) == [.system(.keyDown(.d))])
     #expect(
       state.process(
-        inputs: [.release(.faceSouth)],
+        inputs: [.release(.south)],
         from: identifier,
         profile: profile,
         at: 200_000_001

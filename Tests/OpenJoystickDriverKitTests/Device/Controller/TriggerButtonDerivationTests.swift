@@ -4,9 +4,10 @@ import Testing
 @testable import OpenJoystickDriverKit
 
 struct TriggerButtonDerivationTests {
-  private static let analogOnly = ControllerCapabilities(controls: ControlID.xboxLayout)
+  private static let analogOnly = ControllerCapabilities(controls: Control.xboxLayout)
   private static let digital = ControllerCapabilities(
-    controls: ControlID.xboxLayout.union([.leftTriggerButton, .rightTriggerButton])
+    controls: Control.xboxLayout,
+    digitalTriggers: [.leftTrigger, .rightTrigger]
   )
 
   private func derive(
@@ -14,7 +15,7 @@ struct TriggerButtonDerivationTests {
     right: UInt16 = 0,
     after previous: ControllerState = .neutral,
     capabilities: ControllerCapabilities = Self.analogOnly
-  ) -> Set<ControlID> {
+  ) -> Set<Control> {
     var state = ControllerState.neutral
     state.leftTrigger = UnipolarValue(left)
     state.rightTrigger = UnipolarValue(right)
@@ -47,11 +48,11 @@ struct TriggerButtonDerivationTests {
   @Test
   func pressesAtTheThresholdAndReleasesOnlyBelowTheHysteresisBand() {
     #expect(derive(left: 32_766).isEmpty)
-    #expect(derive(left: 32_767) == [.leftTriggerButton])
-    #expect(derive(left: 0, right: 65_535) == [.rightTriggerButton])
+    #expect(derive(left: 32_767) == [.leftTrigger])
+    #expect(derive(left: 0, right: 65_535) == [.rightTrigger])
 
-    let held = snapshot(.press(.leftTriggerButton))
-    #expect(derive(left: 29_491, after: held) == [.leftTriggerButton])
+    let held = snapshot(.press(.leftTrigger))
+    #expect(derive(left: 29_491, after: held) == [.leftTrigger])
     #expect(derive(left: 29_490, after: held).isEmpty)
     #expect(derive(left: 29_491).isEmpty)
   }
@@ -59,7 +60,7 @@ struct TriggerButtonDerivationTests {
   @Test
   func aDeclaredDigitalTriggerIsNeverDerived() {
     #expect(derive(left: 65_535, capabilities: Self.digital).isEmpty)
-    var state = snapshot(.press(.rightTriggerButton))
+    var state = snapshot(.press(.rightTrigger))
     state.rightTrigger = .min
     let kept = TriggerButtonDerivation.applying(
       to: state,
@@ -72,23 +73,33 @@ struct TriggerButtonDerivationTests {
   @Test
   func aDigitalOnlyTriggerDerivesNothing() {
     let digitalOnly = ControllerCapabilities(
-      controls: ControlID.xboxLayout.subtracting([.leftTrigger, .rightTrigger]).union([
-        .leftTriggerButton, .rightTriggerButton,
-      ])
+      controls: Control.xboxLayout.subtracting([.leftTrigger, .rightTrigger]),
+      digitalTriggers: [.leftTrigger, .rightTrigger]
     )
+    #expect(digitalOnly.controls.isSuperset(of: [.leftTrigger, .rightTrigger]))
     #expect(derive(left: 65_535, capabilities: digitalOnly).isEmpty)
-    #expect(digitalOnly.normalized == digitalOnly)
+    #expect(TriggerButtonDerivation.derivedSides(of: digitalOnly).isEmpty)
   }
 
   @Test
-  func normalizedCapabilitiesListEachDerivedTriggerButton() {
-    #expect(
-      Self.analogOnly.normalized.controls
-        == Self.analogOnly.controls.union([.leftTriggerButton, .rightTriggerButton])
+  func eachDriverDeclaresItsDigitalTriggersOrLeavesThemDerived() {
+    #expect(TriggerButtonDerivation.derivedSides(of: Self.analogOnly).count == 2)
+    #expect(TriggerButtonDerivation.derivedSides(of: Self.digital).isEmpty)
+    #expect(!TriggerButtonDerivation.derivedSides(of: XUSBDriver().capabilities).isEmpty)
+    #expect(DualShock4Driver().capabilities.digitalTriggers == [.leftTrigger, .rightTrigger])
+    #expect(TriggerButtonDerivation.derivedSides(of: DualShock4Driver().capabilities).isEmpty)
+  }
+
+  @Test
+  func digitalTriggersAreOptionalInTheStoredForm() throws {
+    let encoded = try JSONEncoder().encode(Self.analogOnly)
+    #expect(try !(String(data: encoded, encoding: .utf8) ?? "").contains("digitalTriggers"))
+    #expect(try JSONDecoder().decode(ControllerCapabilities.self, from: encoded) == Self.analogOnly)
+    let round = try JSONDecoder().decode(
+      ControllerCapabilities.self,
+      from: JSONEncoder().encode(Self.digital)
     )
-    #expect(Self.digital.normalized == Self.digital)
-    #expect(XUSBDriver().capabilities.normalized.controls.contains(.leftTriggerButton))
-    #expect(DualShock4Driver().capabilities.normalized == DualShock4Driver().capabilities)
+    #expect(round == Self.digital)
   }
 
   /// The pipeline derives the button with hysteresis against its last normalized state, and a
@@ -110,15 +121,15 @@ struct TriggerButtonDerivationTests {
     var pressed: [Bool] = []
     for batch in 0..<3 {
       _ = await pipeline.feedHIDData(Data([UInt8(batch)]))
-      pressed.append(await pipeline.inputState().pressed.contains(.leftTriggerButton))
+      pressed.append(await pipeline.inputState().pressed.contains(.leftTrigger))
     }
     #expect(pressed == [true, true, false])
     _ = await pipeline.feedHIDData(Data([0]))
-    #expect(await pipeline.inputState().pressed.contains(.leftTriggerButton))
+    #expect(await pipeline.inputState().pressed.contains(.leftTrigger))
     #expect(await pipeline.suspendControllerSession())
     #expect(await pipeline.resumeControllerSession())
     _ = await pipeline.feedHIDData(Data([3]))
-    #expect(!(await pipeline.inputState().pressed.contains(.leftTriggerButton)))
+    #expect(!(await pipeline.inputState().pressed.contains(.leftTrigger)))
     await pipeline.stop()
   }
 }

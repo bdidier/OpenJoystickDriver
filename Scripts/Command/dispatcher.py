@@ -215,6 +215,7 @@ from .execution import (
     run_record,
     run_usb_passive,
     swift_command,
+    swift_test_package,
     validate_hooks,
 )
 
@@ -387,12 +388,7 @@ def dispatch(argv: list[str]) -> int:
                     check=False,
                 ).returncode
                 # The bridge is its own package, so the root `swift test` never builds it.
-                bridge = subprocess.run(
-                    swift_command(["test"]),
-                    cwd=PROJECT_DIR / "Tools/WebRTCBridge",
-                    env=env_with(),
-                    check=False,
-                ).returncode
+                bridge = swift_test_package(PROJECT_DIR / "Tools/WebRTCBridge")
                 return probe or bridge
             die(
                 f"Unknown: check {sub} (expected: profiles | schemas | driverkit | tools)"

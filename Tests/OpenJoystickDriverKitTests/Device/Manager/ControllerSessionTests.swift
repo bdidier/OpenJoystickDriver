@@ -50,7 +50,7 @@ private final class WirelessDisconnectProbe: WirelessControllerDisconnecting, @u
 }
 
 private final class AbsoluteStickParser: PhysicalProtocolDriver {
-  let capabilities = ControllerCapabilities(controls: ControlID.xboxLayout)
+  let capabilities = ControllerCapabilities(controls: Control.xboxLayout)
   let sessionPlan = DriverSessionPlan(inputReportLivenessTimeoutNanoseconds: 1_000_000_000)
   let outputCapabilities = PhysicalControllerOutputCapabilities.none
   let defaultColor: ControllerColor? = nil

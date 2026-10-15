@@ -4,8 +4,8 @@ import Testing
 @testable import OpenJoystickDriverKit
 
 struct ControllerCapabilitiesTests {
-  private static let triggerButtons: Set<ControlID> = [.leftTriggerButton, .rightTriggerButton]
-  private static let xbox = ControlID.xboxLayout
+  private static let triggerButtons: Set<Control> = [.leftTrigger, .rightTrigger]
+  private static let xbox = Control.xboxLayout
   private static let xboxGuide = xbox.union([.guide])
   /// Analog triggers without a digital signal get normalization-derived trigger buttons.
   private static let normalizedXbox = xbox.union(triggerButtons)
@@ -17,7 +17,7 @@ struct ControllerCapabilitiesTests {
     triggerButtons
   ).union([.guide, .capture])
   private static let gameSirG7Pro = normalizedXboxGuide.union([
-    .paddleLeft1, .paddleRight1, .paddleLeft2, .paddleRight2, .auxiliary1,
+    .leftPaddle1, .rightPaddle1, .leftPaddle2, .rightPaddle2, .auxiliary1,
   ])
 
   static let golden: [(String, UInt16, UInt16, ControllerCapabilities)] = [
@@ -27,7 +27,7 @@ struct ControllerCapabilitiesTests {
     ("GIP", 0x045E, 0x02EA, ControllerCapabilities(controls: normalizedXboxGuide)),
     (
       "GIP share offset", 0x045E, 0x0B12,
-      ControllerCapabilities(controls: normalizedXboxGuide.union([.share]))
+      ControllerCapabilities(controls: normalizedXboxGuide.union([.capture]))
     ), ("DS3", 0x054C, 0x0268, ControllerCapabilities(controls: xboxGuide.union(triggerButtons))),
     (
       "DS4", 0x054C, 0x05C4,
@@ -44,7 +44,7 @@ struct ControllerCapabilitiesTests {
     (
       "DualSense Edge", 0x054C, 0x0DF2,
       ControllerCapabilities(
-        controls: dualSense.union([.paddleLeft1, .paddleRight1, .auxiliary1, .auxiliary2]),
+        controls: dualSense.union([.leftPaddle1, .rightPaddle1, .auxiliary1, .auxiliary2]),
         touchContactCount: 2,
         motion: true
       )
@@ -53,8 +53,9 @@ struct ControllerCapabilitiesTests {
       "Joy-Con L", 0x057E, 0x2006,
       ControllerCapabilities(
         controls: [
-          .dpad, .leftStickX, .leftStickY, .leftStickClick, .leftShoulder, .leftTriggerButton,
-          .view, .capture, .auxiliary3, .auxiliary4,
+          .dpadUp, .dpadDown, .dpadLeft, .dpadRight, .leftStickX, .leftStickY, .leftStickClick,
+          .leftShoulder, .leftTrigger,
+          .back, .capture, .auxiliary3, .auxiliary4,
         ],
         motion: true
       )
@@ -63,8 +64,8 @@ struct ControllerCapabilitiesTests {
       "Joy-Con R", 0x057E, 0x2007,
       ControllerCapabilities(
         controls: [
-          .faceSouth, .faceEast, .faceWest, .faceNorth, .rightStickX, .rightStickY,
-          .rightStickClick, .rightShoulder, .rightTriggerButton, .menu, .guide, .auxiliary5,
+          .south, .east, .west, .north, .rightStickX, .rightStickY,
+          .rightStickClick, .rightShoulder, .rightTrigger, .start, .guide, .auxiliary5,
           .auxiliary6,
         ],
         motion: true
@@ -74,7 +75,7 @@ struct ControllerCapabilitiesTests {
       "Steam Controller", 0x28DE, 0x1102,
       ControllerCapabilities(
         controls: xbox.subtracting([.rightStickClick]).union(triggerButtons).union([
-          .guide, .paddleLeft2, .paddleRight2, .leftTrackpadClick, .rightTrackpadClick,
+          .guide, .leftPaddle2, .rightPaddle2, .leftTrackpadClick, .rightTrackpadClick,
           .leftTrackpadTouch, .rightTrackpadTouch,
         ]),
         touchContactCount: 1,
@@ -88,7 +89,7 @@ struct ControllerCapabilitiesTests {
     (
       "GameSir Cyclone 2", 0x3537, 0x100B,
       ControllerCapabilities(
-        controls: normalizedXboxGuide.union([.paddleLeft1, .paddleRight1, .auxiliary1])
+        controls: normalizedXboxGuide.union([.leftPaddle1, .rightPaddle1, .auxiliary1])
       )
     ), ("Generic HID", 0x2E95, 0x434D, ControllerCapabilities(controls: normalizedXboxGuide)),
     (
@@ -126,11 +127,16 @@ struct ControllerCapabilitiesTests {
     let encoder = JSONEncoder()
     encoder.outputFormatting = .sortedKeys
     let data = try encoder.encode(
-      ControllerCapabilities(controls: [.guide, .menu, .dpad], touchContactCount: 1, motion: true)
+      ControllerCapabilities(
+        controls: [.guide, .start, .dpadUp, .dpadDown, .dpadLeft, .dpadRight],
+        touchContactCount: 1,
+        motion: true
+      )
     )
     #expect(
       String(bytes: data, encoding: .utf8)
-        == #"{"controls":["dpad","menu","guide"],"motion":true,"touchContactCount":1}"#
+        == #"{"controls":["Start","DpadUp","DpadDown","DpadLeft","DpadRight","Guide"],"#
+        + #""motion":true,"touchContactCount":1}"#
     )
   }
 
@@ -168,17 +174,20 @@ struct ControllerCapabilitiesTests {
   @Test
   func intersectionKeepsSharedControlsAndTheWeakerSampleFormats() {
     let first = ControllerCapabilities(
-      controls: [.dpad, .guide, .touchpadClick],
+      controls: [.dpadUp, .dpadDown, .dpadLeft, .dpadRight, .guide, .touchpadClick],
       touchContactCount: 2,
       motion: true
     )
     let second = ControllerCapabilities(
-      controls: [.dpad, .touchpadClick, .capture],
+      controls: [.dpadUp, .dpadDown, .dpadLeft, .dpadRight, .touchpadClick, .capture],
       touchContactCount: 1
     )
     #expect(
       first.intersecting(second)
-        == ControllerCapabilities(controls: [.dpad, .touchpadClick], touchContactCount: 1)
+        == ControllerCapabilities(
+          controls: [.dpadUp, .dpadDown, .dpadLeft, .dpadRight, .touchpadClick],
+          touchContactCount: 1
+        )
     )
   }
 }

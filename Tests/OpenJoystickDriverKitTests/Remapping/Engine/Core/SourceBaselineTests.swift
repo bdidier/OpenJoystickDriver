@@ -21,7 +21,7 @@ struct SourceBaselineTests {
   @Test
   func twoSourcesIntoOneTargetNeverReleaseEachOther() {
     var engine = RemappingEngineState()
-    let held = ControllerEvent([.press(.faceSouth)])
+    let held = ControllerEvent([.press(.south)])
     let neutral = ControllerEvent([])
     func process(
       _ event: ControllerEvent,
@@ -41,7 +41,7 @@ struct SourceBaselineTests {
     let sink = RemappingTestSink()
     let engine = RemappingEventEngine(sink: sink)
     try await engine.process(
-      ControllerEvent([.press(.faceSouth)]),
+      ControllerEvent([.press(.south)]),
       labels: .standard,
       from: first,
       using: profile,
@@ -50,7 +50,7 @@ struct SourceBaselineTests {
     try await engine.releaseAll(for: first)
     // Kept across a release: the held button is not pressed again by an identical snapshot.
     try await engine.process(
-      ControllerEvent([.press(.faceSouth)]),
+      ControllerEvent([.press(.south)]),
       labels: .standard,
       from: first,
       using: profile,
@@ -59,7 +59,7 @@ struct SourceBaselineTests {
     #expect(sink.actions() == [.keyDown(.a), .keyUp(.a)])
     await engine.endSource(first)
     try await engine.process(
-      ControllerEvent([.press(.faceSouth)]),
+      ControllerEvent([.press(.south)]),
       labels: .standard,
       from: first,
       using: profile,

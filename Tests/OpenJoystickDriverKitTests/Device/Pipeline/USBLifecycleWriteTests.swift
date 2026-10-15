@@ -202,7 +202,7 @@ struct USBLifecycleWriteTests {
 }
 
 private final class LifecycleWriteDriver: PhysicalProtocolDriver, @unchecked Sendable {
-  let capabilities = ControllerCapabilities(controls: ControlID.xboxLayout)
+  let capabilities = ControllerCapabilities(controls: Control.xboxLayout)
   let sessionPlan: DriverSessionPlan
   let outputCapabilities = PhysicalControllerOutputCapabilities.none
   let defaultColor: ControllerColor? = nil

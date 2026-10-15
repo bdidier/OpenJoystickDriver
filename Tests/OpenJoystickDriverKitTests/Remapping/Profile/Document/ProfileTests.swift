@@ -46,10 +46,14 @@ struct RemappingProfileTests {
           source: .button(.south),
           destination: .keyboard(key: .space, modifiers: [.shift])
         ),
-        binding(id: fixedUUID(2), source: .button(.touchpad), destination: .mouseButton(.middle)),
+        binding(
+          id: fixedUUID(2),
+          source: .button(.touchpadClick),
+          destination: .mouseButton(.middle)
+        ),
         binding(
           id: fixedUUID(3),
-          source: .button(.share),
+          source: .button(.capture),
           destination: .keyboard(key: .escape, modifiers: [])
         ),
         RemappingBinding(

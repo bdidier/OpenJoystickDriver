@@ -121,7 +121,7 @@ extension EquivalenceSnapshotCatalogTests {
   }
 
   /// Control ids are the persisted profile identifiers, so their raw values are the labels.
-  static func labels(_ controls: Set<ControlID>) -> String {
+  static func labels(_ controls: Set<Control>) -> String {
     controls.map(\.rawValue).sorted().joined(separator: ",")
   }
 

@@ -90,8 +90,8 @@ public final class NVIDIAShieldDriver: PhysicalProtocolDriver {
   private static func applyV103State(_ bytes: [UInt8], to next: inout ControllerState) {
     next.hat = direction(for: bytes[3])
     applyFaceAndShoulders(bytes[1], to: &next)
-    next.set(.menu, pressed: bytes[2] & 0x02 != 0)
-    next.set(.view, pressed: bytes[2] & 0x40 != 0)
+    next.set(.start, pressed: bytes[2] & 0x02 != 0)
+    next.set(.back, pressed: bytes[2] & 0x40 != 0)
     next.set(.guide, pressed: bytes[2] & 0x80 != 0)
     applyAxes(bytes, sticks: 4, triggers: 12, to: &next)
   }
@@ -99,16 +99,16 @@ public final class NVIDIAShieldDriver: PhysicalProtocolDriver {
   private static func applyV104State(_ bytes: [UInt8], to next: inout ControllerState) {
     next.hat = direction(for: bytes[2])
     applyFaceAndShoulders(bytes[3], to: &next)
-    next.set(.menu, pressed: bytes[4] & 0x01 != 0)
+    next.set(.start, pressed: bytes[4] & 0x01 != 0)
     next.set(.guide, pressed: bytes[17] & 0x01 != 0)
-    next.set(.view, pressed: bytes[17] & 0x02 != 0)
+    next.set(.back, pressed: bytes[17] & 0x02 != 0)
     applyAxes(bytes, sticks: 9, triggers: 19, to: &next)
   }
 
   private static func applyFaceAndShoulders(_ byte: UInt8, to next: inout ControllerState) {
     for (mask, control) in [
-      (FaceMask.south, ControlID.faceSouth), (FaceMask.east, .faceEast), (FaceMask.west, .faceWest),
-      (FaceMask.north, .faceNorth), (FaceMask.leftShoulder, .leftShoulder),
+      (FaceMask.south, Control.south), (FaceMask.east, .east), (FaceMask.west, .west),
+      (FaceMask.north, .north), (FaceMask.leftShoulder, .leftShoulder),
       (FaceMask.rightShoulder, .rightShoulder), (FaceMask.leftStick, .leftStickClick),
       (FaceMask.rightStick, .rightStickClick),
     ] { next.set(control, pressed: byte & mask != 0) }

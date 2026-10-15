@@ -50,7 +50,7 @@ The section groups assignments as **Face buttons**, **Shoulders**, **D-pad**, **
 ### Add an Assignment With the Command Line
 
 ```shell
-ojd binding set "My controller" button:south key:space
+ojd binding set "My controller" button:South key:space
 ```
 
 A control has one assignment, so this command replaces the control's assignment. The `SOURCE` and `TARGET` values use this syntax:

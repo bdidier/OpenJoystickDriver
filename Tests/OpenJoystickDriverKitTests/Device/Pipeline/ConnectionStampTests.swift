@@ -40,7 +40,7 @@ struct ConnectionStampTests {
 
     // The next input is dispatched with the same stamped state; it never changes skip-if-unchanged.
     await pipeline.feedHIDData(Data([StatusFrameDriver.press]))
-    #expect(dispatcher.states.map(\.pressed) == [[.faceSouth]])
+    #expect(dispatcher.states.map(\.pressed) == [[.south]])
     #expect(dispatcher.states.last?.connection == read)
     await pipeline.feedHIDData(Data([StatusFrameDriver.status]))
     await pipeline.feedHIDData(Data([StatusFrameDriver.press]))
@@ -66,7 +66,7 @@ struct ConnectionStampTests {
     // Demand arrives while South stays held: the unchanged report still delivers it.
     dispatcher.demandsInput = true
     await pipeline.feedHIDData(Data([StatusFrameDriver.press]))
-    #expect(dispatcher.states.map(\.pressed) == [[.faceSouth]])
+    #expect(dispatcher.states.map(\.pressed) == [[.south]])
     await pipeline.feedHIDData(Data([StatusFrameDriver.press]))
     #expect(dispatcher.states.count == 1)
 
@@ -75,7 +75,7 @@ struct ConnectionStampTests {
     await pipeline.feedHIDData(Data([StatusFrameDriver.press]))
     dispatcher.demandsInput = true
     await pipeline.feedHIDData(Data([StatusFrameDriver.press]))
-    #expect(dispatcher.states.map(\.pressed) == [[.faceSouth], [.faceSouth]])
+    #expect(dispatcher.states.map(\.pressed) == [[.south], [.south]])
     await pipeline.stop()
   }
 }
@@ -89,7 +89,7 @@ private final class StatusFrameDriver: PhysicalProtocolDriver {
     wiredPower: true
   )
 
-  let capabilities = ControllerCapabilities(controls: ControlID.xboxLayout)
+  let capabilities = ControllerCapabilities(controls: Control.xboxLayout)
   let sessionPlan = DriverSessionPlan()
   let outputCapabilities = PhysicalControllerOutputCapabilities.none
   let defaultColor: ControllerColor? = nil
@@ -102,7 +102,7 @@ private final class StatusFrameDriver: PhysicalProtocolDriver {
     case Self.status:
       power = Self.charging
       return nil
-    case Self.press: return ControllerEvent([.press(.faceSouth)], at: receivedAt.nanoseconds)
+    case Self.press: return ControllerEvent([.press(.south)], at: receivedAt.nanoseconds)
     default: return nil
     }
   }

@@ -1,5 +1,6 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 /// `Resources/Schemas/profile.schema.json` accepts what the strict decoder accepts.
@@ -18,13 +19,13 @@ struct ProfileSchemaTests {
       "motionTuning": {
         "space": "world", "lean": {"thresholdDegrees": 20, "hysteresisDegrees": 5},
         "steering": {
-          "output": "left_stick_x", "fullScaleDegrees": 45, "deadzoneDegrees": 2,
+          "output": "LeftStickX", "fullScaleDegrees": 45, "deadzoneDegrees": 2,
           "responseExponent": 1.5, "inverted": false
         }
       },
       "gyroOutput": {
         "mode": "mouse", "activationMode": "while_held",
-        "activationSource": {"type": "button", "button": "right_grip"},
+        "activationSource": {"type": "button", "button": "RightPaddle2"},
         "trackball": {"source": {"type": "touch_contact", "surface": "primary"}, "axes": "yaw"}
       },
       "stickMappings": [
@@ -45,7 +46,7 @@ struct ProfileSchemaTests {
       "bindings": [
         {
           "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D61",
-          "source": {"type": "button", "button": "south"},
+          "source": {"type": "button", "button": "South"},
           "destination": {"type": "keyboard", "key": "space", "modifiers": ["shift", "command"]},
           "longHold": {
             "durationMs": 500, "destination": {"type": "mouse_button", "button": "right"}
@@ -62,8 +63,8 @@ struct ProfileSchemaTests {
         },
         {
           "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D63",
-          "source": {"type": "axis", "axis": "left_stick_x"},
-          "destination": {"type": "gamepad_axis", "axis": "right_stick_x"},
+          "source": {"type": "axis", "axis": "LeftStickX"},
+          "destination": {"type": "gamepad_axis", "axis": "RightStickX"},
           "axisTuning": {
             "deadzone": 0.1, "gain": 2, "inverted": true, "responseCurve": "ease_in",
             "digitalActivationThreshold": 0.5
@@ -71,7 +72,7 @@ struct ProfileSchemaTests {
         },
         {
           "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D64",
-          "source": {"type": "axis_direction", "axis": "right_stick_y", "direction": "negative"},
+          "source": {"type": "axis_direction", "axis": "RightStickY", "direction": "negative"},
           "destination": {"type": "keyboard", "key": "arrow_up", "modifiers": []},
           "axisTuning": {
             "deadzone": 0.2, "gain": 1, "inverted": false, "responseCurve": "linear",
@@ -80,7 +81,7 @@ struct ProfileSchemaTests {
         },
         {
           "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D70",
-          "source": {"type": "axis", "axis": "right_stick_x"},
+          "source": {"type": "axis", "axis": "RightStickX"},
           "destination": {"type": "mouse_movement", "axis": "x"},
           "axisTuning": {
             "deadzone": 0.2, "gain": 1, "inverted": false, "responseCurve": "linear",
@@ -89,7 +90,7 @@ struct ProfileSchemaTests {
         },
         {
           "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D71",
-          "source": {"type": "axis", "axis": "right_trigger"},
+          "source": {"type": "axis", "axis": "RightTrigger"},
           "destination": {"type": "scroll", "axis": "y"},
           "axisTuning": {
             "deadzone": 0.2, "gain": 1, "inverted": false, "responseCurve": "linear",
@@ -137,7 +138,7 @@ struct ProfileSchemaTests {
         },
         {
           "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D6A",
-          "source": {"type": "button", "button": "east"},
+          "source": {"type": "button", "button": "East"},
           "destination": {
             "type": "physical",
             "physical": {
@@ -146,15 +147,15 @@ struct ProfileSchemaTests {
             }
           },
           "doubleTap": {
-            "windowMs": 250, "destination": {"type": "gamepad_button", "button": "north"}
+            "windowMs": 250, "destination": {"type": "gamepad_button", "button": "North"}
           }
         }
       ],
       "chords": [
         {
           "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D6B",
-          "sources": [{"type": "button", "button": "back"}, {"type": "button", "button": "start"}],
-          "destination": {"type": "gamepad_button", "button": "guide"},
+          "sources": [{"type": "button", "button": "Back"}, {"type": "button", "button": "Start"}],
+          "destination": {"type": "gamepad_button", "button": "Guide"},
           "mode": "simultaneous", "windowMs": 40
         }
       ],
@@ -171,11 +172,11 @@ struct ProfileSchemaTests {
       "layers": [
         {
           "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D6D", "name": "Menus",
-          "activationMode": "toggle", "activator": {"type": "button", "button": "left_paddle"},
+          "activationMode": "toggle", "activator": {"type": "button", "button": "LeftPaddle1"},
           "bindings": [
             {
               "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D6E",
-              "source": {"type": "button", "button": "west"},
+              "source": {"type": "button", "button": "West"},
               "destination": {"type": "keyboard", "key": "escape", "modifiers": []},
               "turbo": {"repeatRateHz": 10, "dutyCycle": 0.5}
             }
@@ -199,11 +200,14 @@ struct ProfileSchemaTests {
     ("deadzone out of range", #""deadzone": 0.1, "gain""#, #""deadzone": 0.96, "gain""#),
     ("unknown curve", #""ease_in""#, #""quadratic""#),
     ("bad bundle ID", #""com.example.game""#, #""not an app""#),
-    ("unknown button", #""button": "south""#, #""button": "a""#),
+    ("unknown button", #""button": "South""#, #""button": "a""#),
+    ("removed button name", #""button": "South""#, #""button": "face-south""#),
+    ("removed share name", #""button": "Back""#, #""button": "share""#),
+    ("removed axis name", #""axis": "LeftStickX""#, #""axis": "left_stick_x""#),
     ("malformed unit ID", #""U-AbCd_123-xyzW09q""#, #""U-AbCd+123""#),
     (
-      "axis in a chord", #"{"type": "button", "button": "back"}"#,
-      #"{"type": "axis", "axis": "left_trigger"}"#
+      "axis in a chord", #"{"type": "button", "button": "Back"}"#,
+      #"{"type": "axis", "axis": "LeftTrigger"}"#
     ),
   ])
   func aBrokenProfileIsRejectedByTheDecoderAndTheSchema(
@@ -222,7 +226,7 @@ struct ProfileSchemaTests {
   @Test
   func schemaEnumsMatchTheSwiftCases() throws {
     let pairs: [(String, [String])] = [
-      ("button", Self.raw(RemappingButton.self)),
+      ("button", Self.raw(Control.self)),
       ("axis", Self.raw(RemappingAxis.self)),
       ("dpadDirection", Self.raw(RemappingDpadDirection.self)),
       ("touchSurface", Self.raw(RemappingTouchSurface.self)),
@@ -255,6 +259,16 @@ struct ProfileSchemaTests {
       var node: Any = definitions
       for key in pointer.split(separator: "/") {
         node = try #require((node as? [String: Any])?[String(key)], "\(pointer)")
+      }
+      if let reference = (node as? [String: Any])?["$ref"] as? String,
+        reference.hasPrefix("vocabulary.schema.json#/$defs/")
+      {
+        let name = String(reference.dropFirst("vocabulary.schema.json#/$defs/".count))
+        let vocabulary = try #require(
+          try JSONSchemaFiles.document(named: "vocabulary.schema.json")["$defs"]
+            as? [String: Any]
+        )
+        node = try #require(vocabulary[name], "\(reference)")
       }
       let values = try #require((node as? [String: Any])?["enum"] as? [String], "\(pointer)")
       #expect(values == cases, "\(pointer)")

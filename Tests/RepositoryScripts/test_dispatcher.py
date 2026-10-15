@@ -6,7 +6,19 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from Scripts.Command import dispatcher
+from Scripts.Command import dispatcher, execution
+
+XCTEST_RUN = """\
+\t Executed 5 tests, with 0 failures (0 unexpected) in 2.3 (2.3) seconds
+\t Executed 16 tests, with 0 failures (0 unexpected) in 8.9 (8.9) seconds
+\t Executed 16 tests, with 0 failures (0 unexpected) in 8.9 (8.9) seconds
+Test run with 0 tests in 0 suites passed after 0.001 seconds.
+"""
+TESTING_RUN = "Test run with 4 tests in 1 suite passed after 0.1 seconds.\n"
+NO_TESTS_RUN = """\
+\t Executed 0 tests, with 0 failures (0 unexpected) in 0.0 (0.0) seconds
+Test run with 0 tests in 0 suites passed after 0.001 seconds.
+"""
 
 
 class TargetInvoked(Exception):
@@ -147,7 +159,9 @@ class DispatcherTests(unittest.TestCase):
                 self.assertEqual(self.run_ojd(*arguments).returncode, 2)
 
     def test_check_tools_runs_xmake_with_the_environment(self) -> None:
-        completed = subprocess.CompletedProcess(args=[], returncode=0)
+        completed = subprocess.CompletedProcess(
+            args=[], returncode=0, stdout=XCTEST_RUN
+        )
         with patch.object(
             dispatcher.subprocess, "run", return_value=completed
         ) as run_command:
@@ -165,7 +179,9 @@ class DispatcherTests(unittest.TestCase):
         )
 
     def test_check_tools_runs_the_bridge_package_tests(self) -> None:
-        completed = subprocess.CompletedProcess(args=[], returncode=0)
+        completed = subprocess.CompletedProcess(
+            args=[], returncode=0, stdout=XCTEST_RUN
+        )
         with patch.object(
             dispatcher.subprocess, "run", return_value=completed
         ) as run_command:
@@ -182,10 +198,34 @@ class DispatcherTests(unittest.TestCase):
     def test_check_tools_fails_when_the_bridge_tests_fail(self) -> None:
         results = [
             subprocess.CompletedProcess(args=[], returncode=0),
-            subprocess.CompletedProcess(args=[], returncode=1),
+            subprocess.CompletedProcess(args=[], returncode=1, stdout=XCTEST_RUN),
         ]
         with patch.object(dispatcher.subprocess, "run", side_effect=results):
             self.assertEqual(dispatcher.dispatch(["check", "tools"]), 1)
+
+    def test_check_tools_fails_when_the_bridge_package_executes_no_tests(self) -> None:
+        results = [
+            subprocess.CompletedProcess(args=[], returncode=0),
+            subprocess.CompletedProcess(args=[], returncode=0, stdout=NO_TESTS_RUN),
+        ]
+        with patch.object(dispatcher.subprocess, "run", side_effect=results):
+            self.assertEqual(dispatcher.dispatch(["check", "tools"]), 1)
+
+    def test_check_tools_passes_on_swift_testing_alone(self) -> None:
+        results = [
+            subprocess.CompletedProcess(args=[], returncode=0),
+            subprocess.CompletedProcess(args=[], returncode=0, stdout=TESTING_RUN),
+        ]
+        with patch.object(dispatcher.subprocess, "run", side_effect=results):
+            self.assertEqual(dispatcher.dispatch(["check", "tools"]), 0)
+
+    def test_executed_test_count_adds_xctest_and_swift_testing(self) -> None:
+        count = execution.executed_test_count
+        self.assertEqual(count(XCTEST_RUN), 16)
+        self.assertEqual(count(TESTING_RUN), 4)
+        self.assertEqual(count(XCTEST_RUN + TESTING_RUN), 20)
+        self.assertEqual(count(NO_TESTS_RUN), 0)
+        self.assertEqual(count(""), 0)
 
     def test_hooks_install_runs_bun_install(self) -> None:
         completed = subprocess.CompletedProcess([], 0)
