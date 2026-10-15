@@ -34,6 +34,9 @@ let package = Package(
   ],
   dependencies: [
     swifterKitDependency,
+    // The endpoint client of the bridge tool: a package without dependencies, for the endpoint
+    // tests. See Tools/BridgeCore/Package.swift.
+    .package(path: "Tools/BridgeCore"),
     .package(url: "https://github.com/apple/swift-argument-parser.git", exact: "1.8.2"),
   ],
   targets: [
@@ -156,6 +159,7 @@ let package = Package(
       dependencies: [
         "OpenJoystickDriverKit", "OpenJoystickDriverService", "OpenJoystickDriverCLI",
         "OpenJoystickDriverPresentation", "OpenJoystickDriverTestSupport",
+        .product(name: "BridgeCore", package: "BridgeCore"),
       ],
       path: "Tests/OpenJoystickDriverServiceTests",
       swiftSettings: [.unsafeFlags(["-target", testTargetTriple])],
