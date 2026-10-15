@@ -53,20 +53,40 @@ struct ControllerModeTests {
     ["id": id, "protocol": ["family": family], "match": ["probes": [probe]]]
   }
 
-  private static func profile(
+  private static func recordData(
     modes: [[String: Any]]?,
-    family: String = "hid.descriptor"
-  ) throws
-    -> DeviceRuntimeProfile
-  {
+    family: String,
+    extras: [String: Any] = [:]
+  ) throws -> Data {
     var record: [String: Any] = [
       "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordDocument.kind,
       "vendorID": Int(model.vendorID), "productID": Int(model.productID),
       "protocol": ["family": family],
     ]
     record["modes"] = modes
-    let data = try JSONSerialization.data(withJSONObject: record)
-    return try #require(try ControllerRecordSet.validate(data).record).profile
+    return try JSONSerialization.data(withJSONObject: record.merging(extras) { $1 })
+  }
+
+  private static func profile(
+    modes: [[String: Any]]?,
+    family: String = "hid.descriptor"
+  ) throws
+    -> DeviceRuntimeProfile
+  {
+    try #require(try ControllerRecordSet.validate(recordData(modes: modes, family: family)).record)
+      .profile
+  }
+
+  /// The text of the problem a record with these modes is rejected for, or nil when accepted.
+  private static func problem(
+    modes: [[String: Any]]?,
+    family: String,
+    extras: [String: Any]
+  ) throws -> String? {
+    do {
+      _ = try ControllerRecordSet.validate(recordData(modes: modes, family: family, extras: extras))
+      return nil
+    } catch { return ControllerRecordSet.problemDescription(error) }
   }
 
   private static func select(
@@ -254,11 +274,12 @@ struct ControllerModeTests {
   func aReadThatNeverReturnsGivesUpAtTheDeadline() async {
     let release = DispatchSemaphore(value: 0)
     let started = ContinuousClock.now
-    let result = await BoundedHIDRead.run(timeout: 0.05) {
+    let reads = BoundedHIDRead()
+    let device = UUID()
+    let result = await reads.run(key: device, timeout: 0.05) {
       release.wait()
       return .success(Data([1]))
     }
-    release.signal()
     guard case .failed(.ioReturn(let code)) = result else {
       Issue.record("expected a timeout")
       return
@@ -266,7 +287,9 @@ struct ControllerModeTests {
     #expect(code == kIOReturnTimeout)
     #expect(ContinuousClock.now - started < .seconds(5))
     // A read inside the deadline keeps its own answer, and a timeout is no stall.
-    let fast = await BoundedHIDRead.run(timeout: 5) { .success(Data([7])) }
+    release.signal()
+    let other = await reads.run(key: UUID(), timeout: 5) { .success(Data([7])) }
+    let fast = other
     guard case .success(let data) = fast else {
       Issue.record("expected the answer")
       return
@@ -276,6 +299,52 @@ struct ControllerModeTests {
       ControllerModeProbe(reportID: 1, length: 1, expectation: .stalls).verdict(for: result)
         == .inconclusive
     )
+  }
+
+  @Test
+  func aDeviceWithAReadOutstandingIsNotReadAgain() async {
+    let release = DispatchSemaphore(value: 0)
+    let reads = BoundedHIDRead()
+    let device = UUID()
+    let calls = Locked(0)
+    let first = await reads.run(key: device, timeout: 0.05) {
+      calls.withLock { $0 += 1 }
+      release.wait()
+      return .success(Data([1]))
+    }
+    guard case .failed(.ioReturn(let timeout)) = first else {
+      Issue.record("expected a timeout")
+      return
+    }
+    #expect(timeout == kIOReturnTimeout)
+    // The first read has not returned, so the same device is refused without a read, and the
+    // refusal is no stall.
+    let second = await reads.run(key: device, timeout: 0.05) {
+      calls.withLock { $0 += 1 }
+      return .success(Data([2]))
+    }
+    guard case .failed(.ioReturn(let busy)) = second else {
+      Issue.record("expected a refusal")
+      return
+    }
+    #expect(busy == kIOReturnBusy)
+    #expect(calls.withLock { $0 } == 1)
+    #expect(
+      ControllerModeProbe(reportID: 1, length: 1, expectation: .stalls).verdict(for: second)
+        == .inconclusive
+    )
+    // Another device is unaffected.
+    let other = await reads.run(key: UUID(), timeout: 5) { .success(Data([3])) }
+    #expect(other.value == Data([3]))
+    // Once the blocked read returns, the device can be read again.
+    release.signal()
+    var again: PhysicalHIDReportResult<Data> = second
+    for _ in 0..<200 {
+      again = await reads.run(key: device, timeout: 5) { .success(Data([4])) }
+      if again.value != nil { break }
+      try? await Task.sleep(nanoseconds: 10_000_000)
+    }
+    #expect(again.value == Data([4]))
   }
 
   @Test
@@ -343,58 +412,145 @@ struct ControllerModeTests {
     )
       -> [String: Any]
     { Self.mode(id, family: family, probe: probe) }
-    let rejected: [(String, [[String: Any]]?, String)] = [
-      ("empty", [], "hid.descriptor"),
-      ("duplicate ID", [mode("a"), mode("a")], "hid.descriptor"),
-      ("reserved ID", [mode("default")], "hid.descriptor"),
-      ("uppercase ID", [mode("Mode")], "hid.descriptor"),
-      ("ID with a trailing newline", [mode("abc\n")], "hid.descriptor"),
-      (
-        "bytes with a trailing newline",
-        [
+    struct Case {
+      let name: String
+      let modes: [[String: Any]]?
+      var family = "hid.descriptor"
+      var extras: [String: Any] = [:]
+      let expected: String
+    }
+    let layout: [String: Any] = [
+      "report": ["length": 8],
+      "buttons": [["control": "face-south", "byte": 0, "mask": 1]],
+    ]
+    let rumble: [String: Any] = [
+      "rumble": [
+        "report": ["kind": "output", "id": 2, "length": 8],
+        "leftMain": ["byte": 3],
+      ]
+    ]
+    let needsLayout =
+      "every mode needs the record's input layout exactly when it is hid.report-layout"
+    let rejected: [Case] = [
+      Case(name: "empty", modes: [], expected: "modes must not be empty"),
+      Case(
+        name: "duplicate ID",
+        modes: [mode("a"), mode("a")],
+        expected: "mode IDs must be unique"
+      ),
+      Case(
+        name: "reserved ID",
+        modes: [mode("default")],
+        expected: "a mode id is lowercase words joined by hyphens and is not default"
+      ),
+      Case(
+        name: "uppercase ID",
+        modes: [mode("Mode")],
+        expected: "a mode id is lowercase words joined by hyphens and is not default"
+      ),
+      Case(
+        name: "ID with a trailing newline",
+        modes: [mode("abc\n")],
+        expected: "a mode id is lowercase words joined by hyphens and is not default"
+      ),
+      Case(
+        name: "bytes with a trailing newline",
+        modes: [
           mode(
             "a",
             probe: ["report": 1, "length": 8, "expect": "bytes", "offset": 0, "bytes": "AB\n"]
           )
-        ], "hid.descriptor"
+        ],
+        expected: "probe bytes are uppercase hex pairs that fit the read length"
       ),
-      ("raw-USB mode", [mode("a", family: "xbox.gip")], "hid.descriptor"),
-      ("raw-USB default", [mode("a")], "xbox.gip"),
-      (
-        "unknown write key", [mode("a", probe: probe.merging(["write": "01"]) { $1 })],
-        "hid.descriptor"
+      Case(
+        name: "raw-USB mode",
+        modes: [mode("a", family: "xbox.gip")],
+        expected: "modes apply only to HID controllers"
       ),
-      (
-        "lowercase hex",
-        [
+      Case(
+        name: "raw-USB default",
+        modes: [mode("a")],
+        family: "xbox.gip",
+        expected: "modes apply only to HID controllers"
+      ),
+      Case(
+        name: "unknown write key",
+        modes: [mode("a", probe: probe.merging(["write": "01"]) { $1 })],
+        expected: "unknown field(s): write"
+      ),
+      Case(
+        name: "lowercase hex",
+        modes: [
           mode(
             "a",
             probe: ["report": 1, "length": 8, "expect": "bytes", "offset": 0, "bytes": "ab"]
           )
-        ], "hid.descriptor"
+        ],
+        expected: "probe bytes are uppercase hex pairs that fit the read length"
       ),
-      (
-        "bytes past length",
-        [
+      Case(
+        name: "bytes past length",
+        modes: [
           mode(
             "a",
             probe: ["report": 1, "length": 2, "expect": "bytes", "offset": 1, "bytes": "01 02"]
           )
-        ], "hid.descriptor"
+        ],
+        expected: "probe bytes are uppercase hex pairs that fit the read length"
       ),
-      (
-        "offset on answers", [mode("a", probe: probe.merging(["offset": 0]) { $1 })],
-        "hid.descriptor"
+      Case(
+        name: "offset on answers",
+        modes: [mode("a", probe: probe.merging(["offset": 0]) { $1 })],
+        expected: "a probe expects answers, stalls, or bytes; only bytes carries offset and bytes"
       ),
-      (
-        "report above 255", [mode("a", probe: probe.merging(["report": 256]) { $1 })],
-        "hid.descriptor"
+      Case(
+        name: "report above 255",
+        modes: [mode("a", probe: probe.merging(["report": 256]) { $1 })],
+        expected: "a probe reads report 0...255 with a length of 1...65535"
+      ),
+      Case(
+        name: "input layout under a mode that is not hid.report-layout",
+        modes: [mode("a", family: "sony.sixaxis")],
+        family: "hid.report-layout",
+        extras: ["input": layout],
+        expected: needsLayout
+      ),
+      Case(
+        name: "hid.report-layout mode without the input layout",
+        modes: [mode("a", family: "hid.report-layout")],
+        family: "sony.sixaxis",
+        expected: needsLayout
+      ),
+      Case(
+        name: "rumble template under a mode whose driver does not encode it",
+        modes: [mode("a", family: "hid.descriptor")],
+        family: "vendor.ps3-third-party",
+        extras: ["output": rumble],
+        expected: "rumble templates require a driver that encodes them in every mode"
+      ),
+      Case(
+        name: "present controls under a mode whose driver does not declare them",
+        modes: [mode("a", family: "sony.sixaxis")],
+        family: "sony.dualsense",
+        extras: [
+          "capabilities": [
+            "present": ["paddle-left-1", "paddle-right-1", "auxiliary-1", "auxiliary-2"]
+          ]
+        ],
+        expected: "capabilities must be deltas the driver of every mode declares"
       ),
     ]
-    for (name, modes, family) in rejected {
-      #expect(throws: (any Error).self, Comment(rawValue: name)) {
-        _ = try Self.profile(modes: modes, family: family)
-      }
+    for rejection in rejected {
+      let problem = try Self.problem(
+        modes: rejection.modes,
+        family: rejection.family,
+        extras: rejection.extras
+      )
+      #expect(
+        problem?.contains(rejection.expected) == true,
+        Comment(rawValue: "\(rejection.name): \(problem ?? "accepted")")
+      )
     }
   }
 }

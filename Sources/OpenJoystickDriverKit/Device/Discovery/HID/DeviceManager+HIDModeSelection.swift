@@ -8,7 +8,7 @@ struct HIDConnectionModeProbeReader: ControllerModeProbeReader {
   func readFeatureReport(
     _ request: PhysicalHIDFeatureReadRequest
   ) async -> PhysicalHIDReportResult<Data> {
-    await hidManager.getFeatureReport(connection: connection, request: request)
+    await hidManager.probeFeatureReport(connection: connection, request: request)
   }
 }
 

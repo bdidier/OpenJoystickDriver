@@ -302,9 +302,22 @@ extension HIDDeviceStream {
   }
 
   /// Reads a feature report only from the exact connection lifetime, never a sibling at its
-  /// location. The read runs off the main actor and gives up after `timeout` seconds, so a
-  /// device that never answers cannot block it.
+  /// location. It waits for the device on the main actor, as the startup reads always have.
   public func getFeatureReport(
+    connection: HIDDeviceConnection,
+    request: PhysicalHIDFeatureReadRequest
+  ) async -> PhysicalHIDReportResult<Data> {
+    await MainActor.run {
+      guard let device = exactDevice(for: connection, type: kIOHIDReportTypeFeature, reads: true)
+      else { return .unavailable }
+      return Self.readFeatureReport(device, request: request)
+    }
+  }
+
+  /// Reads a feature report for a mode probe, off the main actor and bounded by `timeout`. While
+  /// an earlier probe read of the same connection has not returned, it fails with
+  /// `kIOReturnBusy` instead of reading.
+  func probeFeatureReport(
     connection: HIDDeviceConnection,
     request: PhysicalHIDFeatureReadRequest,
     timeout: TimeInterval = 2
@@ -315,22 +328,29 @@ extension HIDDeviceStream {
       )
     }
     guard let device else { return .unavailable }
-    return await BoundedHIDRead.run(timeout: timeout) {
-      var bytes = [UInt8](repeating: 0, count: request.length)
-      var reportLength = request.length
-      let result = bytes.withUnsafeMutableBufferPointer { pointer in
-        guard let baseAddress = pointer.baseAddress else { return kIOReturnBadArgument }
-        return IOHIDDeviceGetReport(
-          device.device,
-          kIOHIDReportTypeFeature,
-          CFIndex(request.reportID),
-          baseAddress,
-          &reportLength
-        )
-      }
-      guard result == kIOReturnSuccess else { return .failed(.ioReturn(result)) }
-      return .success(Data(bytes.prefix(reportLength)))
+    return await boundedReads.run(key: connection.connectionID, timeout: timeout) {
+      Self.readFeatureReport(device.device, request: request)
     }
+  }
+
+  private static func readFeatureReport(
+    _ device: IOHIDDevice,
+    request: PhysicalHIDFeatureReadRequest
+  ) -> PhysicalHIDReportResult<Data> {
+    var bytes = [UInt8](repeating: 0, count: request.length)
+    var reportLength = request.length
+    let result = bytes.withUnsafeMutableBufferPointer { pointer in
+      guard let baseAddress = pointer.baseAddress else { return kIOReturnBadArgument }
+      return IOHIDDeviceGetReport(
+        device,
+        kIOHIDReportTypeFeature,
+        CFIndex(request.reportID),
+        baseAddress,
+        &reportLength
+      )
+    }
+    guard result == kIOReturnSuccess else { return .failed(.ioReturn(result)) }
+    return .success(Data(bytes.prefix(reportLength)))
   }
 
   @MainActor
