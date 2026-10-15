@@ -99,9 +99,14 @@ public final class ApplicationServiceServer: @unchecked Sendable {
       Task { completion(await self.handleLocalRPC(request)) }
     }
     try server.start()
+    let streamDelivered: @Sendable (ControllerSessionToken, UInt64) async -> Void = {
+      [weak self] token, nanoseconds in
+      await self?.deviceManager.endpointDelivered(session: token, at: nanoseconds)
+    }
     let endpoint = EndpointServer(
       source: ApplicationServiceWatchSource(server: self),
-      feeds: virtualFeeds
+      feeds: virtualFeeds,
+      streamDelivered: streamDelivered
     )
     endpoint.start()
     rpcServerLock.withLock {

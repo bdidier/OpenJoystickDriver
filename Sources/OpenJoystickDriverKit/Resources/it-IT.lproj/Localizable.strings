@@ -1351,6 +1351,7 @@
 "cli.diagnose.records.config_ok" = "all.patch.json e i file persona sono validi";
 "cli.diagnose.records.config_problems" = "ignorati o saltati: %@; correggili e controlla con «ojd status»";
 "cli.diagnose.records.skipped" = "ignorati: %@; controllali con «ojd record list»";
+"cli.diagnose.timings.frame" = "Frame %lld di %@ (%@), orologio monotono in nanosecondi: %@";
 "cli.record.abstract" = "Abbozza, elenca, controlla, installa o rimuove i record dei controller.";
 "cli.record.discussion" = "Un record del controller dice a OpenJoystickDriver come gestire un modello di controller. I tuoi record si trovano in ~/Library/Application Support/OpenJoystickDriver/Controllers e aggiungono un modello o modificano uno incluso. Il servizio in esecuzione li applica quando la cartella cambia. Solo «ojd record draft» richiede il servizio.";
 "cli.record.draft.abstract" = "Abbozza un record del controller da un controller collegato.";

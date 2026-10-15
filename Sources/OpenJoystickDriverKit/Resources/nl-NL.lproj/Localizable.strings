@@ -1351,6 +1351,7 @@
 "cli.diagnose.records.config_ok" = "all.patch.json en persona-bestanden zijn geldig";
 "cli.diagnose.records.config_problems" = "genegeerd of overgeslagen: %@; herstel ze en controleer met ‘ojd status’";
 "cli.diagnose.records.skipped" = "%@ overgeslagen; controleer ze met ‘ojd record list’";
+"cli.diagnose.timings.frame" = "Frame %lld van %@ (%@), monotone klok in nanoseconden: %@";
 "cli.record.abstract" = "Maakt concepten van controllerrecords, toont, controleert, installeert of verwijdert ze.";
 "cli.record.discussion" = "Een controllerrecord vertelt OpenJoystickDriver hoe één controllermodel moet worden aangestuurd. Je records staan in ~/Library/Application Support/OpenJoystickDriver/Controllers en voegen een model toe of passen een meegeleverd model aan. De draaiende service past ze toe wanneer de map verandert. Alleen ‘ojd record draft’ heeft de service nodig.";
 "cli.record.draft.abstract" = "Maakt een concept-controllerrecord van een verbonden controller.";

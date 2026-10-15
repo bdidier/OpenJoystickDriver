@@ -74,6 +74,8 @@ public actor DeviceManager {
   let hidManager: HIDManager
   let usbTransportProvider: (any USBTransportProvider)?
   let wirelessControllerDisconnector: (any WirelessControllerDisconnecting)?
+  /// When the frames of every pipeline reached each stage.
+  public let frameTimings = FrameTimingRecorder()
   var pipelines: [LogicalControllerID: DevicePipeline] = [:]
   var deviceInfos: [LogicalControllerID: DeviceInfo] = [:]
   /// The startup player indicator each native controller holds, one per controller and freed on

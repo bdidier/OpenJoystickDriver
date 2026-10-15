@@ -1351,6 +1351,7 @@
 "cli.diagnose.records.config_ok" = "all.patch.json 和人設檔案有效";
 "cli.diagnose.records.config_problems" = "已忽略或略過 %@；請修正後用「ojd status」檢查";
 "cli.diagnose.records.skipped" = "已略過 %@；請用「ojd record list」檢查";
+"cli.diagnose.timings.frame" = "第 %lld 個影格，%@（%@），單調時鐘（奈秒）：%@";
 "cli.record.abstract" = "起草、列出、檢查、安裝或移除控制器記錄。";
 "cli.record.discussion" = "控制器記錄會告訴 OpenJoystickDriver 如何驅動某一型號的控制器。您的記錄存放在 ~/Library/Application Support/OpenJoystickDriver/Controllers，可新增型號，或修補內建型號。目錄變更時，執行中的服務會套用這些記錄。只有「ojd record draft」需要服務。";
 "cli.record.draft.abstract" = "根據已連接的控制器起草控制器記錄。";

@@ -103,6 +103,14 @@ extension ApplicationServiceServer {
     }
   }
 
+  /// Returns the newest per-stage frame timings of every connected controller as encoded JSON.
+  public func getFrameTimings() async -> Data {
+    do { return try JSONEncoder().encode(await deviceManager.frameTimingsSnapshot()) } catch {
+      print("[ApplicationServiceServer] getFrameTimings encode error: \(error)")
+      return Data()
+    }
+  }
+
   public func resetSettings() async -> Bool {
     await virtualOutputTransitionCoordinator.enqueue { [weak self] in
       guard let self else { return false }

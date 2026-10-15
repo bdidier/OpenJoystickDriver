@@ -71,6 +71,8 @@ actor DevicePipeline {
   let idleMonitorIntervalNanoseconds: UInt64
   /// Monotonic time source for input receipt, liveness, and keep-alive timing.
   let uptimeNanoseconds: @Sendable () -> UInt64
+  /// Where this pipeline notes when each frame reaches a stage, for `ojd diagnose`.
+  let frameTimings: FrameTimingRecorder
   var isActive = false
   /// Set by the first ``stop()``; teardown side effects run once per pipeline.
   var hasStopped = false
@@ -145,6 +147,7 @@ actor DevicePipeline {
     transportProfile: DeviceTransportProfile = .gipDefault,
     usbRecoveryPolicy: USBPipelineRecoveryPolicy = .standard,
     externalOutputAllowed: Bool = true,
+    frameTimings: FrameTimingRecorder = FrameTimingRecorder(),
     sessionState: ControllerSessionState = .active,
     idleTimeoutNanoseconds _: UInt64 = 30_000_000_000,
     idleMonitorIntervalNanoseconds: UInt64 = defaultIdleMonitorIntervalNanoseconds,
@@ -168,6 +171,7 @@ actor DevicePipeline {
     self.transportProfile = transportProfile
     self.usbRecoveryPolicy = usbRecoveryPolicy
     self.idleMonitorIntervalNanoseconds = idleMonitorIntervalNanoseconds
+    self.frameTimings = frameTimings
     self.uptimeNanoseconds = uptimeNanoseconds
     self.externalOutputAllowed = externalOutputAllowed
     self.sessionState = sessionState

@@ -1351,6 +1351,7 @@
 "cli.diagnose.records.config_ok" = "all.patch.json et les fichiers de persona sont valides";
 "cli.diagnose.records.config_problems" = "ignorés ou omis : %@; corrigez-les et vérifiez avec « ojd status »";
 "cli.diagnose.records.skipped" = "ignorés : %@; vérifiez-les avec « ojd record list »";
+"cli.diagnose.timings.frame" = "Trame %lld de %@ (%@), horloge monotone en nanosecondes : %@";
 "cli.record.abstract" = "Ébaucher, lister, vérifier, installer ou supprimer des fiches de manette.";
 "cli.record.discussion" = "Une fiche de manette indique à OpenJoystickDriver comment piloter un modèle de manette. Vos fiches se trouvent dans ~/Library/Application Support/OpenJoystickDriver/Controllers et ajoutent un modèle ou modifient un modèle intégré. Le service en cours d’exécution les applique quand le dossier change. Seule « ojd record draft » a besoin du service.";
 "cli.record.draft.abstract" = "Ébaucher une fiche de manette à partir d’une manette connectée.";

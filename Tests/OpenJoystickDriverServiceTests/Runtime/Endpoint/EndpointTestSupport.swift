@@ -26,6 +26,7 @@ struct EndpointFixture {
 func withEndpointServer(
   identity: CodeSigningIdentity? = EndpointFixture.tool,
   feeds: VirtualFeedRegistry? = nil,
+  streamDelivered: (@Sendable (ControllerSessionToken, UInt64) async -> Void)? = nil,
   _ body: (EndpointServer, EndpointFixture) async throws -> Void
 ) async throws {
   let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
@@ -44,8 +45,10 @@ func withEndpointServer(
     store: fixture.store,
     source: fixture.source,
     version: "1.2.3",
-    feeds: feeds
-  ) { _ in client }
+    feeds: feeds,
+    identify: { _ in client },
+    streamDelivered: streamDelivered
+  )
   defer {
     server.stop()
     try? FileManager.default.removeItem(at: directory)

@@ -32,15 +32,18 @@ public struct DiagnoseServiceSnapshot: Sendable {
   public let availability: Availability
   public let status: ApplicationServiceStatusPayload?
   public let virtualDiagnostics: ApplicationServiceVirtualDeviceDiagnosticsPayload?
+  public let frameTimings: ApplicationServiceFrameTimingsPayload?
 
   public init(
     availability: Availability,
     status: ApplicationServiceStatusPayload?,
-    virtualDiagnostics: ApplicationServiceVirtualDeviceDiagnosticsPayload?
+    virtualDiagnostics: ApplicationServiceVirtualDeviceDiagnosticsPayload?,
+    frameTimings: ApplicationServiceFrameTimingsPayload?
   ) {
     self.availability = availability
     self.status = status
     self.virtualDiagnostics = virtualDiagnostics
+    self.frameTimings = frameTimings
   }
 }
 

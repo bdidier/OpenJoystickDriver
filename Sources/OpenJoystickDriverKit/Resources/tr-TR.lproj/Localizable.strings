@@ -1351,6 +1351,7 @@
 "cli.diagnose.records.config_ok" = "all.patch.json ve persona dosyaları geçerli";
 "cli.diagnose.records.config_problems" = "yok sayıldı veya atlandı: %@; düzeltin ve “ojd status” ile kontrol edin";
 "cli.diagnose.records.skipped" = "%@ atlandı; “ojd record list” ile denetleyin";
+"cli.diagnose.timings.frame" = "Kare %lld, %@ (%@), nanosaniye cinsinden monoton saat: %@";
 "cli.record.abstract" = "Kontrolcü kayıtlarının taslağını oluşturur, listeler, denetler, yükler veya kaldırır.";
 "cli.record.discussion" = "Bir kontrolcü kaydı, OpenJoystickDriver’a bir kontrolcü modelini nasıl yöneteceğini söyler. Kayıtlarınız ~/Library/Application Support/OpenJoystickDriver/Controllers içinde bulunur ve bir model ekler ya da birlikte gelen bir modeli yamalar. Çalışan servis, klasör değiştiğinde bunları uygular. Yalnızca “ojd record draft” servise ihtiyaç duyar.";
 "cli.record.draft.abstract" = "Bağlı bir kontrolcüden kontrolcü kaydı taslağı oluşturur.";

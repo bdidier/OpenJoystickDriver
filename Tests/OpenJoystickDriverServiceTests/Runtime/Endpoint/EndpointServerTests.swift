@@ -129,6 +129,30 @@ struct EndpointServerTests {
   }
 
   @Test
+  func aModifiedUpdateReportsItsSessionTokenToStreamDelivered() async throws {
+    let delivered = Locked<[ControllerSessionToken]>([])
+    let record: @Sendable (ControllerSessionToken, UInt64) async -> Void = { token, _ in
+      delivered.withLock { $0.append(token) }
+    }
+    try await withEndpointServer(streamDelivered: record) { server, fixture in
+      fixture.source.set(devices: ["pad-1"], state: ControllerState(pressed: [.faceSouth]))
+      try server.setEnabled(true)
+      try server.grant(Self.tool, path: "/Tool", scopes: [.read])
+      let client = try await EndpointTestClient.subscribed(to: server.socketPath)
+      var types: [String?] = []
+      for _ in 0..<2 {
+        types.append(try await client.readObject()["type"] as? String)
+      }
+      for _ in 0..<500 where delivered.withLock({ $0.isEmpty }) {
+        try await Task.sleep(nanoseconds: 2_000_000)
+      }
+
+      #expect(types == ["ADDED", "MODIFIED"])
+      #expect(delivered.withLock { $0 } == [.fixture("pad-1")])
+    }
+  }
+
+  @Test
   func aLateSubscriberFirstReceivesTheConnectedControllers() async throws {
     try await withEndpointServer { server, fixture in
       fixture.source.set(devices: ["pad-1"], state: ControllerState(pressed: [.faceSouth]))
