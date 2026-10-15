@@ -25,7 +25,7 @@ The repository SHALL ship a reference client and a test that runs it against the
 #### Scenario: Round trip
 
 - **WHEN** the reference-client test runs
-- **THEN** it subscribes and receives a frame
+- **THEN** it subscribes and receives a watch line with the controller's input state
 
 ### Requirement: Error catalog
 

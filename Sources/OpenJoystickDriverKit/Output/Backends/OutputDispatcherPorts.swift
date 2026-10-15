@@ -12,12 +12,6 @@ public protocol VirtualOutputDispatching: OutputDispatcher {
   func setOutputSuppressed(_ suppressed: Bool) async
   /// Drains and tears down user-space virtual HID devices owned by this output.
   func close() async
-  /// Delivers input while preserving publication failures for recovery coordinators.
-  func dispatchReportingFailure(
-    _ event: ControllerEvent,
-    labels: ControllerButtonLabels,
-    from identifier: LogicalControllerID
-  ) async throws
   /// Activates output for one controller while preserving publication failures.
   func activateOutputReportingFailure(for identifier: LogicalControllerID) async throws
 }
@@ -45,11 +39,6 @@ public protocol ControllerInputOwnershipListener: AnyObject, Sendable {
 
 extension VirtualOutputDispatching {
   public func setOutputSuppressed(_ suppressed: Bool) { suppressOutput = suppressed }
-  public func dispatchReportingFailure(
-    _ event: ControllerEvent,
-    labels: ControllerButtonLabels,
-    from identifier: LogicalControllerID
-  ) async throws { await dispatch(event, labels: labels, from: identifier) }
   public func activateOutputReportingFailure(for identifier: LogicalControllerID) async throws {
     await activateOutput(for: identifier)
   }
@@ -93,10 +82,31 @@ public protocol OutputDispatcher: AnyObject, Sendable {
   /// Called by the pipeline and discovery once a controller's session can publish, and again
   /// after it resumes or reconnects.
   func activateOutput(for identifier: LogicalControllerID) async
+
+  /// Dispatches like ``dispatch(_:labels:from:)`` while preserving publication failures for
+  /// recovery coordinators, and calls `onPublished` right after the report reaches the virtual
+  /// device. `onPublished` is not called when output is suppressed or the publish fails.
+  func dispatchPublishing(
+    _ event: ControllerEvent,
+    labels: ControllerButtonLabels,
+    from identifier: LogicalControllerID,
+    onPublished: @escaping @Sendable () -> Void
+  ) async throws
 }
 
 extension OutputDispatcher {
   public func setOutputSuppressed(_ suppressed: Bool) { suppressOutput = suppressed }
+
+  /// Dispatchers that do not publish to a virtual device never report a publication.
+  @preconcurrency
+  public func dispatchPublishing(
+    _ event: ControllerEvent,
+    labels: ControllerButtonLabels,
+    from identifier: LogicalControllerID,
+    onPublished _: @escaping @Sendable () -> Void
+  ) async throws {
+    await dispatch(event, labels: labels, from: identifier)
+  }
 }
 
 /// OutputDispatcher that logs controller events to debug output.

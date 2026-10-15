@@ -7,9 +7,7 @@ import Testing
 /// A server whose automatic dispatcher builds retarget probes and reads isolated overrides.
 struct ProfileOverrideServerFixture {
   let server: ApplicationServiceServer
-  let defaults: UserDefaults
   let personaDirectory: URL
-  let suiteName: String
   let log: RetargetEventLog
 
   var store: VirtualHIDProfileOverrideStore {
@@ -26,7 +24,6 @@ struct ProfileOverrideServerFixture {
 
   func tearDown() async {
     await server.automaticUserSpaceDispatcher()?.close()
-    defaults.removePersistentDomain(forName: suiteName)
     try? FileManager.default.removeItem(at: personaDirectory)
   }
 }

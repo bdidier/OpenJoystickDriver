@@ -8,7 +8,8 @@ enum AutomaticOutputDelivery: Sendable {
 
   func publish(
     through backend: any VirtualOutputDispatching,
-    for identifier: LogicalControllerID
+    for identifier: LogicalControllerID,
+    onPublished: @escaping @Sendable () -> Void = {}
   ) async throws {
     switch self {
     case .remapped(let state):
@@ -17,7 +18,12 @@ enum AutomaticOutputDelivery: Sendable {
       }
       try await sink.send(state, for: identifier)
     case .input(let event, let labels):
-      try await backend.dispatchReportingFailure(event, labels: labels, from: identifier)
+      try await backend.dispatchPublishing(
+        event,
+        labels: labels,
+        from: identifier,
+        onPublished: onPublished
+      )
     case .activation: try await backend.activateOutputReportingFailure(for: identifier)
     }
   }

@@ -131,6 +131,9 @@ extension ApplicationServiceServer {
     case .getVirtualDeviceDiagnostics:
       _ = try decode(LocalServiceRPCEmptyArguments.self)
       return try send(getVirtualDeviceDiagnostics())
+    case .getFrameTimings:
+      _ = try decode(LocalServiceRPCEmptyArguments.self)
+      return try send(await getFrameTimings())
     case .setVirtualHIDProfileOverride:
       let value = try decode(LocalServiceRPCVirtualHIDProfileOverrideArguments.self)
       return try send(

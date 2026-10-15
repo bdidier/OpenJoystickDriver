@@ -24,7 +24,7 @@ extension ProtocolDescription {
 
     struct Defaults: Decodable {
       let output: ControllerRecordDocument.Output?
-      let input: ControllerInputLayout?
+      let input: ControllerRecordDocument.Input?
       let tuning: ControllerTuning?
       /// Defaults by variant name, layered over `tuning` for that variant.
       let variantTuning: [String: ControllerTuning]
@@ -40,10 +40,7 @@ extension ProtocolDescription {
           )
         }
         output = try container.decodeOptional(ControllerRecordDocument.Output.self, for: "output")
-        input = try container.decodeOptional(
-          ControllerRecordDocument.InputLayout.self,
-          for: "input"
-        )?.layout
+        input = try container.decodeOptional(ControllerRecordDocument.Input.self, for: "input")
         tuning = try container.decodeOptional(ControllerRecordDocument.Tuning.self, for: "tuning")?
           .tuning
         let variants = try container.decodeOptional([String: VariantDefaults].self, for: "variants")

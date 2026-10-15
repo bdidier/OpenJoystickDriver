@@ -189,7 +189,7 @@ public final class ProtocolDriverRegistry: Sendable {
         HIDDescriptorDriver(
           model: model,
           reportDescriptor: reportDescriptor,
-          usageLayout: record.parameters.usageLayout
+          usageMap: record.hidUsageMap
         )
       )
     case .hidReportLayout:

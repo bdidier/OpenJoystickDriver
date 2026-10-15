@@ -21,7 +21,7 @@
     func deliver(_ event: RuntimeNotificationEvent) {
       switch event {
       case .controllerConnected(let name):
-        guard preferenceIsEnabled(ApplicationPreferenceKeys.controllerNotifications) else { return }
+        guard preferenceIsEnabled(.notifyControllerConnected) else { return }
         delivery.deliver(
           title: OJDLocalized.string(
             "notifications.controllerConnected"
@@ -33,12 +33,7 @@
           sound: notificationSoundIsEnabled
         )
       case .controllerDisconnected(let name):
-        guard
-          preferenceIsEnabled(
-            ApplicationPreferenceKeys.controllerDisconnectedNotifications,
-            fallbackKey: ApplicationPreferenceKeys.controllerNotifications
-          )
-        else { return }
+        guard preferenceIsEnabled(.notifyControllerDisconnected) else { return }
         delivery.deliver(
           title: OJDLocalized.string(
             "notifications.controllerDisconnected"
@@ -50,12 +45,9 @@
           sound: notificationSoundIsEnabled
         )
       case .activeProfileChanged(let previousName, let currentName):
-        let preferenceKey =
-          currentName == nil
-          ? ApplicationPreferenceKeys.profileDeactivatedNotifications
-          : ApplicationPreferenceKeys.profileNotifications
-        let fallbackKey = currentName == nil ? ApplicationPreferenceKeys.profileNotifications : nil
-        guard preferenceIsEnabled(preferenceKey, fallbackKey: fallbackKey) else { return }
+        let preferenceKey: ApplicationSettingKey =
+          currentName == nil ? .notifyProfileDeactivated : .notifyProfileActivated
+        guard preferenceIsEnabled(preferenceKey) else { return }
         delivery.deliver(
           title: OJDLocalized.string(
             "notifications.profileChanged"
@@ -64,7 +56,7 @@
           sound: notificationSoundIsEnabled
         )
       case .controllerNeedsAttention(let name):
-        guard preferenceIsEnabled(ApplicationPreferenceKeys.controllerNotifications) else { return }
+        guard preferenceIsEnabled(.notifyControllerConnected) else { return }
         delivery.deliver(
           title: OJDLocalized.string(
             "notifications.controllerNeedsAttention"
@@ -78,13 +70,18 @@
       }
     }
 
-    private var notificationSoundIsEnabled: Bool {
-      defaults.object(forKey: ApplicationPreferenceKeys.notificationSounds) as? Bool ?? true
-    }
+    private var notificationSoundIsEnabled: Bool { preferenceIsEnabled(.notifySounds) }
 
-    private func preferenceIsEnabled(_ key: String, fallbackKey: String? = nil) -> Bool {
-      if let value = defaults.object(forKey: key) as? Bool { return value }
-      return fallbackKey.map { defaults.bool(forKey: $0) } ?? false
+    /// A settings file that cannot be read is logged with its path, and the built-in default of
+    /// the key applies, so sounds keep their true default.
+    private func preferenceIsEnabled(_ key: ApplicationSettingKey) -> Bool {
+      do { return try settings.value(of: key) } catch {
+        let message =
+          "[Settings] \(settings.userFileURL.path) cannot be read, using the default for "
+          + "\(key.rawValue): \(error.localizedDescription)\n"
+        FileHandle.standardError.write(Data(message.utf8))
+        return key.defaultValue
+      }
     }
 
     private func profileChangeBody(from previousName: String?, to currentName: String?) -> String {

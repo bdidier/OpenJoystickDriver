@@ -22,6 +22,12 @@ struct StatusCommand: AsyncParsableCommand {
     )
   }
 
+  /// Reads the command-line tool link; tests point it at a folder they own.
+  @TaskLocal
+  static var linkProbe: @Sendable () -> CommandLineToolLinkStatus = {
+    CommandLineToolLinkStatus.probe()
+  }
+
   @OptionGroup(visibility: GlobalOptions.subcommandVisibility)
   var global: GlobalOptions
 
@@ -35,6 +41,7 @@ struct StatusCommand: AsyncParsableCommand {
       let report = StatusReport(
         payload: payload,
         extensionStatus: Self.extensionProbe(),
+        commandLineTool: Self.linkProbe(),
         skippedRecords: records.problems.map(SkippedRecord.init),
         ignoredDefaults: SkippedRecord(records.defaults),
         skippedPersonas: RecordStore.personaFiles().filter { $0.problem != nil }
@@ -52,6 +59,7 @@ struct StatusCommand: AsyncParsableCommand {
     var rows = [
       ["service", report.service.state.rawValue, report.service.version ?? ""],
       ["extension", report.extension.bundle.rawValue, report.extension.registration.rawValue],
+      ["command-line-tool", report.commandLineTool.state.rawValue, report.commandLineTool.path],
     ]
     if let permissions = report.permissions {
       rows.append(["permission", "input-monitoring", permissions.inputMonitoring.rawValue])
@@ -103,6 +111,10 @@ struct StatusCommand: AsyncParsableCommand {
       (
         CLILocalized.text("cli.status.label.extension"),
         "\(report.extension.bundle.rawValue), \(report.extension.registration.rawValue)"
+      ),
+      (
+        CLILocalized.text("cli.status.label.command_line_tool"),
+        "\(report.commandLineTool.state.rawValue), \(report.commandLineTool.path)"
       ),
     ]
     if let permissions = report.permissions {

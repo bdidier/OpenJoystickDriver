@@ -84,6 +84,10 @@ struct ProtocolDescription: Sendable {
   /// The family's initialization sequence: writes sent when a HID controller starts.
   let startupWrites: [RecordStartupWrite]
   let inputLayout: ControllerInputLayout?
+  /// The map every `hid.descriptor` record layers over (``HIDUsageMap``).
+  let hidUsageMap: HIDUsageMap?
+  /// Descriptor shapes that select another map, first match first.
+  let hidUsageShapes: [HIDUsageShape]
   let tuning: ControllerTuning?
   /// Tuning defaults by stored variant, layered over `tuning` for that variant.
   let variantTuning: [PhysicalProtocolVariantID: ControllerTuning]
@@ -233,7 +237,9 @@ struct ProtocolDescription: Sendable {
       recordCapabilities: document.recordCapabilities,
       rumbleTemplate: document.defaults?.output?.rumble,
       startupWrites: document.defaults?.output?.startup ?? [],
-      inputLayout: document.defaults?.input,
+      inputLayout: document.defaults?.input?.layout,
+      hidUsageMap: document.defaults?.input?.usageMap,
+      hidUsageShapes: document.defaults?.input?.shapes ?? [],
       tuning: document.defaults?.tuning,
       variantTuning: variantTuning
     )
@@ -248,6 +254,9 @@ struct ProtocolDescription: Sendable {
   private var scopeViolation: String? {
     if inputLayout != nil, !recordSections.contains(.input) {
       return "an input layout applies only to a family that reads one"
+    }
+    if hidUsageMap != nil || !hidUsageShapes.isEmpty, family != .hidDescriptor {
+      return "a HID usage map applies only to hid.descriptor"
     }
     if rumbleTemplate != nil, !recordSections.contains(.rumble) {
       return "rumble templates require a driver that encodes them"

@@ -192,7 +192,7 @@ The WebSocket accepts a page only from an origin that a token is granted for, an
 
 An error line is a `Status` with `status` `Failure` and a `code` from `E1001` to `E1012`. Look up each code, its cause, and its fix on [Error codes](Error-Codes.md). With `E1010`, `E1011` and `E1012`, `details.supportedAPIVersions` lists the `apiVersion` values that the endpoint accepts. The endpoint serves at most 8 socket connections and 8 WebSocket connections at the same time. When a program reads too slowly, the endpoint keeps only the newest `MODIFIED` line of each controller. When 256 lines wait, it sends `E1007` and closes the connection.
 
-[`endpoint.schema.json`](../Resources/Schemas/endpoint.schema.json) describes each line. To drive a virtual gamepad through the endpoint, see [Drive a Virtual Gamepad Through the Endpoint](#drive-a-virtual-gamepad-through-the-endpoint).
+[`endpoint.schema.json`](../Resources/Schemas/endpoint.schema.json) describes each line, and the [SDK endpoint reference](../docs/sdk/endpoint.md) documents each message, the errors, the grants, and the versions. To drive a virtual gamepad through the endpoint, see [Drive a Virtual Gamepad Through the Endpoint](#drive-a-virtual-gamepad-through-the-endpoint).
 
 ### Use the WebSocket From an App
 
@@ -218,102 +218,7 @@ A program with the `control` scope can drive a virtual gamepad through the endpo
 
 Closing the connection removes the virtual gamepad at once and drops the frames that have not played. The endpoint does not report when a frame has played, so stay connected for the sum of the play times of the frames, and a short margin, because the service starts a frame a moment after it arrives. Each frame plays for its `holdMilliseconds`, and at least 8 ms. While 256 frames wait, the endpoint stops reading lines. When the client sends no frame line for 2 seconds after its last frame has played, the endpoint closes the connection with `E1009` and removes the virtual gamepad, so a stalled client does not hold a button. The 2 seconds start when the queue is empty and the last frame's time has elapsed, so frames that wait or play, and a long hold, never cause the close. Rumble lines that the endpoint sends do not count. To keep the gamepad after the last frame has played, send another line within 2 seconds. The endpoint runs at most 4 virtual gamepads at the same time, and answers another `feed` with `E1008`. When the virtual gamepad does not start, or the service stops it, the endpoint sends `E1009`.
 
-This client presses the south button for 100 ms, prints the rumble commands that the endpoint sends, and stays connected until the release has played. When the endpoint sends an error or closes the connection earlier, it exits with the error. It uses only the Python standard library. Set `TOKEN` to the token that `ojd access grant` printed:
-
-```python
-import hashlib
-import hmac
-import json
-import socket
-import subprocess
-import sys
-import threading
-
-API_VERSION = "openjoystickdriver/v1alpha1"
-TOKEN = "ojd_…"
-TOKEN_NAME = "driver"
-FRAMES = [{"buttons": ["south"], "holdMilliseconds": 100}, {}]
-MARGIN_SECONDS = 0.25
-
-
-def proof(token, nonce):
-    lines = ["OpenJoystickDriver endpoint hello 1", nonce, "", ""]
-    message = "".join(line + "\n" for line in lines)
-    key = hashlib.sha256(token.encode()).digest()
-    return hmac.new(key, message.encode(), hashlib.sha256).hexdigest()
-
-
-def hello(nonce):
-    return {
-        "apiVersion": API_VERSION,
-        "kind": "Hello",
-        "scopes": ["control"],
-        "tokenName": TOKEN_NAME,
-        "proof": proof(TOKEN, nonce),
-    }
-
-
-def play_seconds(frames):
-    return sum(max(frame.get("holdMilliseconds", 0), 8) for frame in frames) / 1000
-
-
-def main():
-    status = json.loads(subprocess.check_output(["ojd", "--json", "access", "status"]))
-    with socket.socket(socket.AF_UNIX) as endpoint:
-        endpoint.connect(status["socketPath"])
-        reader = endpoint.makefile("r")
-
-        def send(message):
-            endpoint.sendall((json.dumps(message) + "\n").encode())
-
-        def receive():
-            line = reader.readline()
-            if not line:
-                sys.exit("The endpoint closed the connection.")
-            message = json.loads(line)
-            if message["kind"] == "Status":
-                sys.exit(f"{message['code']}: {message['message']}")
-            return message
-
-        failed = threading.Event()
-        failure = []
-
-        def print_lines():
-            try:
-                for line in reader:
-                    message = json.loads(line)
-                    if message["kind"] == "Status":
-                        failure.append(f"{message['code']}: {message['message']}")
-                        break
-                    print(line, end="")
-                else:
-                    failure.append("The endpoint closed the connection.")
-            except ValueError as error:
-                failure.append(f"The endpoint sent a line that is not JSON: {error}")
-            failed.set()
-
-        send(hello(receive()["nonce"]))
-        receive()  # Welcome
-        send({"apiVersion": API_VERSION, "kind": "FeedRequest", "as": "Generic"})
-        receive()  # FeedSession
-        threading.Thread(target=print_lines, daemon=True).start()
-        try:
-            for frame in FRAMES:
-                send({"apiVersion": API_VERSION, "kind": "Frame", **frame})
-        except OSError:
-            pass  # The reader reports why the endpoint closed the connection.
-        # The service starts the first frame a moment after it arrives. An error line or the end
-        # of the connection before the release has played ends the wait early and fails.
-        if failed.wait(timeout=play_seconds(FRAMES) + MARGIN_SECONDS):
-            sys.exit(failure[0])
-        endpoint.shutdown(socket.SHUT_RDWR)  # The reader thread keeps the socket open.
-
-
-if __name__ == "__main__":
-    main()
-```
-
-To run the client, save it as `driver.py` and run `python3 driver.py`. Games and latency with the endpoint are not verified.
+The [reference client](../Scripts/SDK/reference_client.py) presses the south button for 100 ms, prints the rumble commands that the endpoint sends, and stays connected until the release has played. When the endpoint sends an error or closes the connection earlier, it exits with the error. With `E1010`, `E1011`, or `E1012`, it also reports the supported `apiVersion` values. It uses only the Python standard library. Set `OJD_TOKEN` to the token that `ojd access grant` printed, and run `python3 reference_client.py feed`. To subscribe instead, run `python3 reference_client.py watch`. Games and latency with the endpoint are not verified.
 
 ## Change Profiles
 
@@ -398,3 +303,4 @@ None of these actions is verified live in the Shortcuts app yet.
 - [Command line](Command-Line.md)
 - [Command reference](Command-Reference.md)
 - [Profile file reference](Profile-File-Reference.md)
+- [SDK endpoint reference](../docs/sdk/endpoint.md)

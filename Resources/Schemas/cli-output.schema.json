@@ -1047,7 +1047,7 @@
 		},
 		"diagnose": {
 			"type": "object",
-			"required": ["apiVersion", "kind", "checks"],
+			"required": ["apiVersion", "kind", "checks", "timings"],
 			"additionalProperties": false,
 			"properties": {
 				"apiVersion": {
@@ -1055,6 +1055,70 @@
 				},
 				"kind": {
 					"const": "Diagnosis"
+				},
+				"timings": {
+					"description": "The newest frames of each connected controller, oldest first; empty while the service is stopped. Nanoseconds are on the service's monotonic uptime clock. Each controller keeps its last 8 frames. The endpoint polls, so delivery-endpoint goes on the newest frame at the poll and a frame replaced by a newer one before the poll gets none.",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"required": [
+							"controller",
+							"name",
+							"frames"
+						],
+						"additionalProperties": false,
+						"properties": {
+							"controller": {
+								"type": "string"
+							},
+							"name": {
+								"type": "string"
+							},
+							"frames": {
+								"type": "array",
+								"items": {
+									"type": "object",
+									"required": [
+										"sequence",
+										"stages"
+									],
+									"additionalProperties": false,
+									"properties": {
+										"sequence": {
+											"type": "integer",
+											"minimum": 0
+										},
+										"stages": {
+											"type": "array",
+											"items": {
+												"type": "object",
+												"required": [
+													"stage",
+													"nanoseconds"
+												],
+												"additionalProperties": false,
+												"properties": {
+													"stage": {
+														"enum": [
+															"read",
+															"parse",
+															"dispatch",
+															"delivery-virtual-device",
+															"delivery-endpoint"
+														]
+													},
+													"nanoseconds": {
+														"type": "integer",
+														"minimum": 0
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
 				},
 				"bundle": {
 					"type": "string"
@@ -2797,10 +2861,14 @@
 		},
 		"sharedSettingKey": {
 			"enum": [
-				"launch-at-login",
-				"notification-sounds",
-				"include-prerelease-updates",
-				"developer-tools"
+				"launchAtLogin",
+				"notify.controllerConnected",
+				"notify.controllerDisconnected",
+				"notify.profileActivated",
+				"notify.profileDeactivated",
+				"notify.sounds",
+				"updates.includePrereleases",
+				"developerTools"
 			]
 		},
 		"sharedSkippedRecord": {
@@ -3045,6 +3113,7 @@
 			"required": [
 				"apiVersion",
 				"kind",
+				"commandLineTool",
 				"extension",
 				"service",
 				"skippedRecords"
@@ -3056,6 +3125,23 @@
 				},
 				"kind": {
 					"const": "SystemStatus"
+				},
+				"commandLineTool": {
+					"description": "The ojd link the app installs: installed when it points to this app's executable, linkedElsewhere when it points to another existing file such as another app copy, broken when its target does not exist, blockedByFile when the path is a file or folder that is not a link, and missing when nothing is at the path. target is what the link points to and appears only for a link.",
+					"type": "object",
+					"required": ["path", "state"],
+					"additionalProperties": false,
+					"properties": {
+						"path": {
+							"type": "string"
+						},
+						"state": {
+							"enum": ["installed", "linkedElsewhere", "broken", "blockedByFile", "missing"]
+						},
+						"target": {
+							"type": "string"
+						}
+					}
 				},
 				"controllers": {
 					"type": "array",

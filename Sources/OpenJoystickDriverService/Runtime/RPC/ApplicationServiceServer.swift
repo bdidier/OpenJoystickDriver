@@ -21,8 +21,8 @@ public final class ApplicationServiceServer: @unchecked Sendable {
   let virtualOutputTransitionClock: VirtualOutputTransitionClock
   let connectedIdentifierProvider: @Sendable () async -> [LogicalControllerID]
   let feedbackGate: VirtualOutputFeedbackGate
-  /// Service settings storage; also backs `virtualHIDProfileOverrides`.
-  let defaults: UserDefaults
+  /// The user settings file that every `ojd setting` key reads and writes.
+  let settings: SettingsStore
   let launchAtLogin: LaunchAtLoginControl
   let virtualHIDProfileOverrides: VirtualHIDProfileOverrideStore
   let userSpaceDispatcherFactory: UserSpaceDispatcherFactory
@@ -57,9 +57,9 @@ public final class ApplicationServiceServer: @unchecked Sendable {
     connectedIdentifierProvider: (@Sendable () async -> [LogicalControllerID])? = nil,
     virtualOutputTransitionTimeouts: VirtualOutputTransitionTimeouts = .standard,
     virtualOutputTransitionClock: VirtualOutputTransitionClock = .system,
-    defaults: UserDefaults = .standard,
+    settings: SettingsStore = SettingsStore(),
     personaDirectory: URL = VirtualHIDProfileOverrideStore.userDirectory,
-    launchAtLogin: LaunchAtLoginControl = .system
+    launchAtLogin: LaunchAtLoginControl? = nil
   ) {
     self.deviceManager = deviceManager
     self.permissionManager = permissionManager
@@ -81,8 +81,8 @@ public final class ApplicationServiceServer: @unchecked Sendable {
     self.virtualOutputTransitionTimeouts = virtualOutputTransitionTimeouts
     self.virtualOutputTransitionClock = virtualOutputTransitionClock
     self.feedbackGate = VirtualOutputFeedbackGate(deviceManager: deviceManager)
-    self.defaults = defaults
-    self.launchAtLogin = launchAtLogin
+    self.settings = settings
+    self.launchAtLogin = launchAtLogin ?? .system(settings: settings)
     self.virtualHIDProfileOverrides = VirtualHIDProfileOverrideStore(directory: personaDirectory)
     self.userSpaceEnabled = false
     self.userSpaceCloseSlot = nil
@@ -99,9 +99,14 @@ public final class ApplicationServiceServer: @unchecked Sendable {
       Task { completion(await self.handleLocalRPC(request)) }
     }
     try server.start()
+    let streamDelivered: @Sendable (ControllerSessionToken, UInt64) async -> Void = {
+      [weak self] token, nanoseconds in
+      await self?.deviceManager.endpointDelivered(session: token, at: nanoseconds)
+    }
     let endpoint = EndpointServer(
       source: ApplicationServiceWatchSource(server: self),
-      feeds: virtualFeeds
+      feeds: virtualFeeds,
+      streamDelivered: streamDelivered
     )
     endpoint.start()
     rpcServerLock.withLock {

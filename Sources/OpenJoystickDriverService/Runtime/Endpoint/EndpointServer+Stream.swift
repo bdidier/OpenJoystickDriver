@@ -63,13 +63,18 @@ extension EndpointServer {
           includeOutput: includeOutput
         )
         lastError = nil
-        lock.withLock {
-          guard stream.generation == generation else { return }
+        let delivered = lock.withLock {
+          guard stream.generation == generation else { return [ControllerSessionToken]() }
+          var tokens: [ControllerSessionToken] = []
           for update in updates {
             stream.record(update.event)
             for connection in connections.values { connection.deliver(update.event) }
+            if update.event.type == .modified { tokens.append(update.device.sessionToken) }
           }
+          return tokens
         }
+        let deliveredAt = DispatchTime.now().uptimeNanoseconds
+        for token in delivered { await streamDelivered?(token, deliveredAt) }
       } catch {
         if lastError != error.localizedDescription {
           lastError = error.localizedDescription

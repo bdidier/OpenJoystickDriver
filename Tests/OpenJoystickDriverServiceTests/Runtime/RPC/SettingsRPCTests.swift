@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -18,22 +19,22 @@ struct SettingsRPCTests {
       let payload = try decode(response)
       #expect(payload.settings.map(\.key) == ApplicationSettingKey.allCases)
       #expect(payload.value(of: .launchAtLogin) == false)
-      #expect(payload.value(of: .notificationSounds) == true)
-      #expect(payload.value(of: .includePrereleaseUpdates) == false)
+      #expect(payload.value(of: .notifySounds) == true)
+      #expect(payload.value(of: .updatesIncludePrereleases) == false)
       #expect(payload.value(of: .developerTools) == false)
     }
   }
 
   @Test
-  func setSettingStoresADefaultsBackedValueAndReturnsEverySetting() async throws {
-    try await withServer { server, defaults in
+  func setSettingStoresAFileBackedValueAndReturnsEverySetting() async throws {
+    try await withServer { server, settings in
       let arguments = try encode(
         ApplicationServiceSettingArguments(key: .developerTools, value: true)
       )
       let response = await handle(server, method: "setSetting", arguments: arguments)
 
       #expect(try decode(response).value(of: .developerTools) == true)
-      #expect(defaults.bool(forKey: "OpenJoystickDriver.developerTools.enabled"))
+      #expect(try settings.value(of: .developerTools))
     }
   }
 
@@ -112,7 +113,7 @@ struct SettingsRPCTests {
   private func withServer(
     loginAccepts: Bool = true,
     loginFails: Bool = false,
-    _ body: (ApplicationServiceServer, UserDefaults) async throws -> Void
+    _ body: (ApplicationServiceServer, SettingsStore) async throws -> Void
   ) async throws {
     let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
       UUID().uuidString,
@@ -120,9 +121,7 @@ struct SettingsRPCTests {
     )
     try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
     defer { try? FileManager.default.removeItem(at: directory) }
-    let suiteName = "OpenJoystickDriverTests.SettingsRPC.\(UUID().uuidString)"
-    let defaults = try #require(UserDefaults(suiteName: suiteName))
-    defer { defaults.removePersistentDomain(forName: suiteName) }
+    let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     let login = Locked(false)
     let dispatcher = VirtualOutputRouter()
     let library = RemappingProfileLibrary(directory: directory)
@@ -144,7 +143,7 @@ struct SettingsRPCTests {
       userSpaceDispatcherFactory: ApplicationServiceRuntime.makeAutomaticUserSpaceDispatcher(
         context:
       ),
-      defaults: defaults,
+      settings: settings,
       personaDirectory: directory.appendingPathComponent("Personas", isDirectory: true),
       launchAtLogin: LaunchAtLoginControl(
         isEnabled: { login.withLock { $0 } },
@@ -154,6 +153,6 @@ struct SettingsRPCTests {
         }
       )
     )
-    try await body(server, defaults)
+    try await body(server, settings)
   }
 }

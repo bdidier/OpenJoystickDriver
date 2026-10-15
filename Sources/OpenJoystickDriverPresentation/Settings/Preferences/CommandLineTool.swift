@@ -9,15 +9,6 @@
   /// The executable acts as the command line when it runs under the name `ojd`, and the link keeps
   /// the app's code signature, so the service accepts the command line as a client.
   struct CommandLineToolLink: Sendable {
-    enum State: Equatable {
-      case notInstalled
-      case installed
-      /// A link to something else, such as another copy of the app; installing replaces it.
-      case linkedElsewhere(String)
-      /// A file that is not a link; the app never replaces it.
-      case blockedByFile
-    }
-
     enum Failure: LocalizedError, Equatable {
       case cancelled
       case blockedByFile(String)
@@ -37,7 +28,7 @@
       }
     }
 
-    static let defaultLinkPath = "/usr/local/bin/ojd"
+    static let defaultLinkPath = CommandLineToolLinkStatus.defaultPath
 
     let linkURL: URL
     let executableURL: URL
@@ -50,20 +41,13 @@
       runAsAdministrator: AdministratorShell.run
     )
 
-    var state: State {
-      let fileManager = FileManager.default
-      guard let destination = try? fileManager.destinationOfSymbolicLink(atPath: linkURL.path)
-      else { return fileManager.fileExists(atPath: linkURL.path) ? .blockedByFile : .notInstalled }
-      let target = URL(
-        fileURLWithPath: destination,
-        relativeTo: linkURL.deletingLastPathComponent()
-      )
-      return target.resolvingSymlinksInPath().path == executableURL.resolvingSymlinksInPath().path
-        ? .installed : .linkedElsewhere(destination)
+    /// What is at the link path, classified by `CommandLineToolLinkStatus` as `ojd status` does.
+    var status: CommandLineToolLinkStatus {
+      .probe(path: linkURL.path, executable: executableURL)
     }
 
     func install() throws {
-      if state == .blockedByFile { throw Failure.blockedByFile(linkURL.path) }
+      if status.state == .blockedByFile { throw Failure.blockedByFile(linkURL.path) }
       let fileManager = FileManager.default
       let folder = linkURL.deletingLastPathComponent()
       do {
@@ -135,7 +119,7 @@
   @MainActor
   final class CommandLineToolModel: ObservableObject {
     @Published
-    private(set) var state: CommandLineToolLink.State
+    private(set) var status: CommandLineToolLinkStatus
     @Published
     private(set) var errorMessage: String?
 
@@ -143,10 +127,10 @@
 
     init(link: CommandLineToolLink = .system) {
       self.link = link
-      self.state = link.state
+      self.status = link.status
     }
 
-    func refresh() { state = link.state }
+    func refresh() { status = link.status }
 
     func install() { perform(link.install) }
 

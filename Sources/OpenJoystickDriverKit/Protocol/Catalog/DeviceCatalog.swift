@@ -88,6 +88,7 @@ struct DeviceCatalog: Sendable {
       rumbleTemplate: record.rumbleTemplate,
       startupWrites: record.startupWrites,
       inputLayout: record.inputLayout,
+      hidUsageMap: record.hidUsageMap,
       tuning: record.tuning,
       route: record.route,
       bluetoothLEVibrationCharacteristic: record.bluetoothLE?.vibrationCharacteristic,

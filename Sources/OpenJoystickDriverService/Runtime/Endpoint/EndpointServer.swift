@@ -37,6 +37,9 @@ final class EndpointServer: @unchecked Sendable {
   /// refuses every feed.
   let feeds: VirtualFeedRegistry?
   let identify: Identify
+  /// Told when a stream line about a controller went to the subscribers, with the uptime in
+  /// nanoseconds just after the send.
+  let streamDelivered: (@Sendable (ControllerSessionToken, UInt64) async -> Void)?
   let lock = NSLock()
   private let acceptQueue = DispatchQueue(label: "com.openjoystickdriver.endpoint.accept")
   let connectionQueue = DispatchQueue(
@@ -66,13 +69,15 @@ final class EndpointServer: @unchecked Sendable {
     source: any ControllerWatchSource,
     version: String = ApplicationVersion.current,
     feeds: VirtualFeedRegistry? = nil,
-    identify: @escaping Identify = EndpointClient.identify
+    identify: @escaping Identify = EndpointClient.identify,
+    streamDelivered: (@Sendable (ControllerSessionToken, UInt64) async -> Void)? = nil
   ) {
     self.socketPath = socketPath
     self.store = store
     self.source = source
     self.version = version
     self.feeds = feeds
+    self.streamDelivered = streamDelivered
     self.identify = identify
   }
 

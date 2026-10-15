@@ -142,7 +142,20 @@ extension DevicePipeline {
   func dispatch(_ event: ControllerEvent) async {
     var state = event.state
     state.connection = currentConnectionState()
-    await dispatcher.dispatch(
+    let sequence = frameTimings.dispatched(for: identifier, at: uptimeNanoseconds())
+    let frameTimings = frameTimings
+    let identifier = identifier
+    let uptimeNanoseconds = uptimeNanoseconds
+    let stampDelivery: @Sendable () -> Void = {
+      guard let sequence else { return }
+      frameTimings.virtualDeviceDelivered(
+        sequence: sequence,
+        for: identifier,
+        at: uptimeNanoseconds()
+      )
+    }
+    // A failed or suppressed publish stamps nothing; the pipeline still ignores the failure.
+    try? await dispatcher.dispatchPublishing(
       ControllerEvent(
         timestamp: event.timestamp,
         state: state,
@@ -151,7 +164,8 @@ extension DevicePipeline {
         isFresh: event.isFresh
       ),
       labels: buttonLabels,
-      from: identifier
+      from: identifier,
+      onPublished: stampDelivery
     )
   }
 

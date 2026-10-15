@@ -98,10 +98,10 @@ struct HIDDescriptorDriverTests {
   /// digital L2 and R2, and 9-12 are back, start, and the stick clicks. Z and Rz carry the right
   /// stick.
   @Test
-  func dragonRiseUsesItsButtonOrderAndZRzRightStick() {
+  func dragonRiseUsesItsButtonOrderAndZRzRightStick() throws {
     let parser = HIDDescriptorDriver(
       model: ControllerModelID(vendorID: 0x0079, productID: 6),
-      usageLayout: .dragonRise
+      usageMap: try catalogUsageMap(0x0079, 6)
     )
     let buttons: [ControlID] = [
       .faceNorth, .faceEast, .faceSouth, .faceWest, .leftShoulder, .rightShoulder,
