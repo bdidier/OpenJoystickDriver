@@ -130,7 +130,9 @@ struct VirtualOutputTransitionFixture {
     suiteName = "OpenJoystickDriverTests.VirtualOutputTransition.\(UUID().uuidString)"
     defaults = try #require(UserDefaults(suiteName: suiteName))
     let virtualOutputDispatcher = VirtualOutputRouter()
-    let profileLibrary = RemappingProfileLibrary()
+    let profileLibrary = RemappingProfileLibrary(
+      directory: RootedDataDirectory.temporary().url(for: .applicationData)
+    )
     let postEventAccess = CoreGraphicsPostEventAccess()
     let remappingRouter = RemappingOutputRouter(
       library: profileLibrary,

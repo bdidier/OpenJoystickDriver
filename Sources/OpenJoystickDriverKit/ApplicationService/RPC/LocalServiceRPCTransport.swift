@@ -130,7 +130,12 @@ package enum LocalServiceRPCError: Error, Equatable, LocalizedError, Sendable {
 }
 package enum LocalServiceRPCTransport {
   static let maximumFrameBytes = ApplicationServiceRemappingRPC.maximumTransportFrameBytes
-  package static var defaultSocketPath: String { "/tmp/com.openjoystickdriver.\(geteuid()).rpc" }
+  package static var defaultSocketPath: String { socketPath(in: MacOSDataDirectory()) }
+
+  /// The per-user RPC socket in the shared temp location of `dataDirectory`.
+  static func socketPath(in dataDirectory: any DataDirectory) -> String {
+    dataDirectory.fileURL("com.openjoystickdriver.\(geteuid()).rpc", in: .sharedTemporary).path
+  }
 
   static func openConnectedSocket(
     timeoutSeconds: TimeInterval,

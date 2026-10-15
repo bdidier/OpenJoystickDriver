@@ -104,7 +104,7 @@ extension ProfileLibraryTests {
 
   @Test
   func anOutOfRangePackageServesNoProfile() async throws {
-    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
+    let directory = MacOSDataDirectory().url(for: .temporary).appendingPathComponent(
       UUID().uuidString,
       isDirectory: true
     )

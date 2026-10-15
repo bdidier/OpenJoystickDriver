@@ -78,7 +78,7 @@ struct LogExportCommand: AsyncParsableCommand {
       }
       let text = ApplicationServiceLogService.redactingHome(
         LogShowCommand.humanText(snapshots),
-        home: FileManager.default.homeDirectoryForCurrentUser.path
+        home: MacOSDataDirectory().url(for: .home).path
       )
       do {
         try Data(text.utf8).write(to: url, options: force ? .atomic : .withoutOverwriting)

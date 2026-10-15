@@ -168,7 +168,7 @@ struct ControllerRecordSetTests {
 
   @Test
   func loadAppliesValidFilesAndReportsTheRest() throws {
-    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
+    let directory = MacOSDataDirectory().url(for: .temporary).appendingPathComponent(
       "ojd-records-\(UUID().uuidString)",
       isDirectory: true
     )
@@ -208,7 +208,7 @@ struct ControllerRecordSetTests {
   /// a file it cannot read is dropped, reported with its reason, and left as it was.
   @Test
   func aStoredFileKeepsWorkingOrIsDroppedUnchanged() throws {
-    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
+    let directory = MacOSDataDirectory().url(for: .temporary).appendingPathComponent(
       "ojd-stored-records-\(UUID().uuidString)",
       isDirectory: true
     )
@@ -254,7 +254,7 @@ struct ControllerRecordSetTests {
 
   @Test
   func loadIgnoresFilesThatAreNotJSON() throws {
-    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
+    let directory = MacOSDataDirectory().url(for: .temporary).appendingPathComponent(
       "ojd-records-\(UUID().uuidString)",
       isDirectory: true
     )
@@ -269,7 +269,7 @@ struct ControllerRecordSetTests {
   @Test
   func anUnreadableDirectoryIsReportedAndKeepsTheBundledRecords() throws {
     // A regular file stands in for a directory that cannot be listed.
-    let path = FileManager.default.temporaryDirectory.appendingPathComponent(
+    let path = MacOSDataDirectory().url(for: .temporary).appendingPathComponent(
       "ojd-records-\(UUID().uuidString)"
     )
     try Data().write(to: path)

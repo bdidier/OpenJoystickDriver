@@ -382,7 +382,7 @@ struct AccessGrantStoreTests {
   }
 
   private func withStore(_ body: (AccessGrantStore, URL) throws -> Void) throws {
-    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
+    let directory = MacOSDataDirectory().url(for: .temporary).appendingPathComponent(
       UUID().uuidString,
       isDirectory: true
     )

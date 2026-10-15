@@ -9,7 +9,7 @@ struct VirtualHIDProfileOverrideStoreTests {
   private static let unit = "U-AbCd_123-xyzW09q"
 
   private func withDirectory(_ body: (URL) throws -> Void) throws {
-    let directory = FileManager.default.temporaryDirectory
+    let directory = MacOSDataDirectory().url(for: .temporary)
       .appendingPathComponent("PersonaStoreTests-\(UUID().uuidString)", isDirectory: true)
     defer { try? FileManager.default.removeItem(at: directory) }
     try body(directory)
