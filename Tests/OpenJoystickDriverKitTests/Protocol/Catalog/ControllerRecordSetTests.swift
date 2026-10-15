@@ -66,10 +66,10 @@ struct ControllerRecordSetTests {
     #expect(bundled.fieldLayers == ["modes": .bundled])
   }
 
-  /// A patch replaces `modes` as an array, so a restated default mode keeps only the parameters it
+  /// A patch overrides `modes` as an array, so a restated default mode keeps only the parameters it
   /// names.
   @Test
-  func modesPatchReplacesTheDefaultModeWholesale() throws {
+  func modesPatchOverridesTheDefaultModeWholesale() throws {
     let shareOffsetGIP = ControllerModelID(vendorID: 0x045E, productID: 0x0B12)
     let bundledShare = try #require(ControllerRecordSet.bundled.records[shareOffsetGIP])
     #expect(bundledShare.profile.parameters == ProtocolParameters(shareButton: .init(fromEnd: 26)))
@@ -94,7 +94,7 @@ struct ControllerRecordSetTests {
 
   /// A same-family patch adds its parameters to the bundled parameters instead of replacing them.
   @Test
-  func modesPatchReplacesTheBundledParameters() throws {
+  func modesPatchOverridesTheBundledParameters() throws {
     let dualShock4 = ControllerModelID(vendorID: 0x054C, productID: 0x09CC)
     let patched = try Self.record(
       Self.patch(

@@ -126,9 +126,9 @@ public struct ControllerMode: Equatable, Sendable {
   public let match: ControllerModeMatch
   /// The interface numbers this mode drives; nil keeps the default binding.
   public let interfaceRange: ClosedRange<UInt8>?
-  /// The session's startup writes, which replace the record's; nil keeps the record's.
+  /// The session's startup writes, which override the record's; nil keeps the record's.
   public let startupWrites: [RecordStartupWrite]?
-  /// The session's raw-USB startup packets, which replace the record's; nil keeps the record's.
+  /// The session's raw-USB startup packets, which override the record's; nil keeps the record's.
   public let usbStartupWrites: [USBStartupWrite]?
 
   /// The probes of this mode's match.

@@ -227,7 +227,7 @@
       }
     },
     "modeSession": {
-      "description": "Session steps of this mode. startup replaces the record's output.startup while a HID mode runs; usbStartup replaces the record's raw-USB output.startup writes while a raw-USB mode runs. A session names exactly one.",
+      "description": "Session steps of this mode. startup overrides the record's output.startup while a HID mode runs; usbStartup overrides the record's raw-USB output.startup writes while a raw-USB mode runs. A session names exactly one.",
       "type": "object",
       "additionalProperties": false,
       "properties": {

@@ -510,7 +510,7 @@ class SDLControllerListTests(unittest.TestCase):
         catalog.apply_patches(records, adds, [])
         self.assertEqual(records, {(0x1532, 0x1000): override})
 
-    def test_modes_patch_replaces_the_array_and_keeps_other_sections(self) -> None:
+    def test_modes_patch_overrides_the_array_and_keeps_other_sections(self) -> None:
         upstream = {
             "vendorID": 1,
             "productID": 1,

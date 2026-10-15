@@ -36,7 +36,7 @@ A file in that folder is one of two kinds:
 - `Controller`: a complete record for a model that has no bundled record. Name it `VVVV-PPPP.json`.
 - `ControllerPatch`: new values for a model that already has a record. Name it `VVVV-PPPP.patch.json`. Its `selector` names the model by `vendorID` and `productID`, and its `patch` holds the fields to change.
 
-A patch follows RFC 7396 JSON Merge Patch. An object in `patch` merges into the record key by key, a value you give replaces the record's value, an array replaces the whole array, and `null` deletes the key. Deleting the last key of a section leaves an empty section, which a record does not accept, so set the whole section (`tuning`) to `null` instead. An array replaces the whole array, so a patch that changes the protocol restates the whole `modes` list, including the `default` mode, as in [Offer Alternative Modes](#offer-alternative-modes-chosen-by-link-keys-and-probes).
+A patch follows RFC 7396 JSON Merge Patch. An object in `patch` merges into the record key by key, a value you give overrides the record's value, an array overrides the whole array, and `null` deletes the key. Deleting the last key of a section leaves an empty section, which a record does not accept, so set the whole section (`tuning`) to `null` instead. An array overrides the whole array, so a patch that changes the protocol restates the whole `modes` list, including the `default` mode, as in [Offer Alternative Modes](#offer-alternative-modes-chosen-by-link-keys-and-probes).
 
 ```json
 {
@@ -123,7 +123,7 @@ OpenJoystickDriver sets the report ID in byte 0 when the ID is not 0, writes eac
 
 ## Send Fixed Reports At Startup
 
-A HID controller that needs a fixed report before it sends input can name it in `output.startup`. A mode's `session.startup` replaces these writes while that mode runs; the DualShock 3 record `054c:0268` and the Sixaxis clone record `2563:0523` use that form in a `bluetooth` mode. The example below is the record-level form, which applies on every link unless a `transport` limits it (`usb`, `bluetooth-classic`, or `bluetooth-le`; a write never names `proprietary-radio-receiver`):
+A HID controller that needs a fixed report before it sends input can name it in `output.startup`. A mode's `session.startup` overrides these writes while that mode runs; the DualShock 3 record `054c:0268` and the Sixaxis clone record `2563:0523` use that form in a `bluetooth` mode. The example below is the record-level form, which applies on every link unless a `transport` limits it (`usb`, `bluetooth-classic`, or `bluetooth-le`; a write never names `proprietary-radio-receiver`):
 
 ```json
 "output": {
@@ -329,7 +329,7 @@ Every record has a `modes` list, and the protocol a controller runs is the `prot
 - `protocol` names the protocol that mode runs.
 - `match` is required in every mode except `default`, and names at least one key. A mode is selected only when all of its keys hold.
 - `interface` (`first` and `last`, inclusive, from 0 to 255) limits which USB interface a HID mode binds to: the lowest interface in the range that the controller exposes. A raw-USB mode has none, because it claims the interface its `usb` transport resolves.
-- `session.startup` (HID modes) lists 1 to 16 startup writes, in the form of [`output.startup`](#send-fixed-reports-at-startup). While the mode runs they replace the record's `output.startup`. `session.usbStartup` (raw-USB modes) lists 1 to 16 raw-USB packets, in the raw-USB form of `output.startup`, and replaces the record's raw-USB writes. A session names exactly one of the two, and the kind must fit the mode. A mode with no `session` keeps the record's writes.
+- `session.startup` (HID modes) lists 1 to 16 startup writes, in the form of [`output.startup`](#send-fixed-reports-at-startup). While the mode runs they override the record's `output.startup`. `session.usbStartup` (raw-USB modes) lists 1 to 16 raw-USB packets, in the raw-USB form of `output.startup`, and overrides the record's raw-USB writes. A session names exactly one of the two, and the kind must fit the mode. A mode with no `session` keeps the record's writes.
 
 The `match` keys are:
 
@@ -343,7 +343,7 @@ OpenJoystickDriver never switches a controller's mode. It tries the modes in rec
 
 A probe only reads. It cannot write to the controller. Each read gives up after 2 seconds. When a probe gets no usable reply, the selection stops, the controller stays enabled in its default mode, and OpenJoystickDriver logs a line that names the report. No usable reply means a timeout, an unavailable route, or any failure other than the controller's own refusal, such as a device that is not open, gone, or held exclusively. Only a stalled pipe (`0xE000404F`) or an unsupported request (`kIOReturnUnsupported`) is a refusal. It satisfies `stalls` and fails the other expectations, so a stall where a mode expects `answers` leaves the default mode running.
 
-A raw-USB record may list alternative modes too. They are selected at USB detection from the passive keys (`link`, `interfaceSignature`, `endpoints`, and the strings); a probe never holds on a raw-USB route, because it has no feature-report read, so a mode with probes there leaves the default running. Every mode follows the record-level rules of its own protocol for `input.layout`, `output.rumble`, and `capabilities`, in a record with one mode as in a record with several. Exactly one mode has the id `default`, and the schema, the decoder, and the Python validator all reject zero or two. A patch replaces `modes` as an array, so it restates every mode it keeps.
+A raw-USB record may list alternative modes too. They are selected at USB detection from the passive keys (`link`, `interfaceSignature`, `endpoints`, and the strings); a probe never holds on a raw-USB route, because it has no feature-report read, so a mode with probes there leaves the default running. Every mode follows the record-level rules of its own protocol for `input.layout`, `output.rumble`, and `capabilities`, in a record with one mode as in a record with several. Exactly one mode has the id `default`, and the schema, the decoder, and the Python validator all reject zero or two. A patch overrides `modes` as an array, so it restates every mode it keeps.
 
 macOS reports a radio dongle as a USB device, so the `proprietary-radio-receiver` link comes from the model's own record: a model whose default mode runs a `receiver` or `dongle` variant reports it, and a mode keyed on that link refines the receiver. No bundled record attaches one product ID both through a dongle and over USB: the six receiver and dongle records (`045e:0291`, `045e:02a9`, `045e:0719`, `28de:1142`, `28de:1304`, `28de:1305`) each hold one default mode. A model that did would need an observed radio link, which nothing reports yet. Endpoint sets come from the raw USB scanner only. The IOKit registry publishes just the interface's `bNumEndpoints`, with no pipe or endpoint descriptor entries, so HID discovery reports no endpoints and an `endpoints` key never holds on a HID route.
 

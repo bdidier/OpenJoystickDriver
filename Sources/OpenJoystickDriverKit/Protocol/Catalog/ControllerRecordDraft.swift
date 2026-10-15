@@ -70,7 +70,7 @@ public struct ControllerRecordDraft: Sendable {
     if let layout { fields["input"] = layout.json }
     let body: [String: Any]
     if bundled {
-      // A patch replaces `modes` as a whole, so it restates the bundled record's other modes.
+      // A patch overrides `modes` as a whole, so it restates the bundled record's other modes.
       if let modes = Self.bundledModes(of: model) {
         fields["modes"] = modes.map { $0["id"] as? String == "default" ? defaultMode : $0 }
       }

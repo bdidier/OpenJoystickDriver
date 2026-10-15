@@ -354,10 +354,10 @@ struct ControllerModeMatchTests {
     #expect(reader.readCount == 0)
   }
 
-  /// A mode's `session.startup` replaces the record's own writes while the mode runs, and a mode
+  /// A mode's `session.startup` overrides the record's own writes while the mode runs, and a mode
   /// without a session keeps them.
   @Test
-  func aModeSessionReplacesTheRecordStartupWrites() throws {
+  func aModeSessionOverridesTheRecordStartupWrites() throws {
     let write: [String: Any] = [
       "report": ["kind": "feature", "id": 244, "length": 5], "bytes": [66, 3, 0, 0],
     ]
