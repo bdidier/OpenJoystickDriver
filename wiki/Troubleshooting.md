@@ -101,7 +101,7 @@ The design of OJD is to pick the virtual profile by itself. Use this step only t
 3. Choose **Automatic** or one of the two profiles.
 4. Test the game again.
 
-OpenEmu worked with the `hid-generic` profile in the same test. Steam with that profile was erratic and slow to respond. The override applies to every controller of that model.
+OpenEmu worked with the `Generic` profile in the same test. Steam with that profile was erratic and slow to respond. The override applies to every controller of that model.
 
 ### Try a Different Controller Mode
 

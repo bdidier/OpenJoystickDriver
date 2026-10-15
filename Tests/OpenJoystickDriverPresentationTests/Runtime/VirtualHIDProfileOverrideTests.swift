@@ -79,7 +79,7 @@ struct VirtualHIDProfileOverrideTests {
     let gateway = GatewayStub(overrideFailure: .activationFailed(detail: "backend timed out"))
     let viewModel = RuntimeViewModel(gateway: gateway)
 
-    await viewModel.setVirtualHIDProfileOverride(.xboxOneSBluetooth, for: Self.device())
+    await viewModel.setVirtualHIDProfileOverride(.sdlCompatible, for: Self.device())
 
     let state = viewModel.virtualHIDProfileOverrideStates[Self.model]
     #expect(state?.inFlight == false)
@@ -258,15 +258,15 @@ struct VirtualHIDProfileOverrideTests {
   func publishedIdentityComesFromTheLiveVirtualHIDProfile() {
     var xbox = Self.device(
       profile: ApplicationServiceVirtualHIDProfileStatus(
-        profile: .xboxOneSBluetooth,
+        profile: .sdlCompatible,
         source: "override",
-        override: .xboxOneSBluetooth,
+        override: .sdlCompatible,
         unavailable: false
       )
     )
     xbox.publication = ApplicationServicePublicationStatus(
       state: .published,
-      target: .xboxOneSBluetooth
+      target: .sdlCompatible
     )
     #expect(xbox.publishedIdentityLabel.contains("045E:02FD"))
     #expect(xbox.publishedIdentityPresentation.glyphFamily == .xbox)
@@ -291,7 +291,7 @@ struct VirtualHIDProfileOverrideTests {
       sessionToken: .fixture("session-native")
     )
     sixaxis.virtualHIDProfile = ApplicationServiceVirtualHIDProfileStatus(
-      profile: .xboxOneSBluetooth,
+      profile: .sdlCompatible,
       source: "automatic",
       override: nil,
       unavailable: false
@@ -308,7 +308,7 @@ struct VirtualHIDProfileOverrideTests {
   @Test
   func iconAndLabelComeFromOnePresentedIdentity() {
     let profile = ApplicationServiceVirtualHIDProfileStatus(
-      profile: .xboxOneSBluetooth,
+      profile: .sdlCompatible,
       source: "automatic",
       override: nil,
       unavailable: false
@@ -317,7 +317,7 @@ struct VirtualHIDProfileOverrideTests {
       (nil, false),
       (ApplicationServicePublicationStatus(state: .notPublished, reason: "noInputYet"), false),
       (ApplicationServicePublicationStatus(state: .failed, reason: "send failed"), false),
-      (ApplicationServicePublicationStatus(state: .published, target: .xboxOneSBluetooth), true),
+      (ApplicationServicePublicationStatus(state: .published, target: .sdlCompatible), true),
     ]
     for (publication, published) in cases {
       for ownership in ControllerOwnershipObservation.allCases {

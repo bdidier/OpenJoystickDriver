@@ -37,6 +37,7 @@ GENERATED_RECORDS = (
 CONTROLLER_OVERRIDES = ROOT / "Resources" / "ControllerOverrides"
 ERROR_CODES = ROOT / "Resources" / "ErrorCodes.json"
 PROTOCOL_DESCRIPTIONS = ROOT / "Resources" / "Protocols"
+VIRTUAL_DEVICES = ROOT / "Resources" / "VirtualDevices"
 SAMPLE_PACKAGE = ROOT / "docs" / "sdk" / "sample"
 ACCESS_GRANT_FIXTURES = (
     ROOT / "Tests" / "RepositoryScripts" / "fixtures" / "access_grants.json",
@@ -44,7 +45,7 @@ ACCESS_GRANT_FIXTURES = (
 # The schema of each kind of file in the sample mod package, by its folder.
 SAMPLE_FOLDER_SCHEMAS = {
     "Controllers": "controller-override",
-    "Personas": "persona",
+    "Personas": "virtual-device",
     "Profiles": "profile",
 }
 
@@ -274,6 +275,7 @@ def main() -> int:
         controller_records = sorted(GENERATED_RECORDS.glob("*/*.json"))
         overrides = sorted(CONTROLLER_OVERRIDES.glob("*/*.json"))
         protocols = sorted(PROTOCOL_DESCRIPTIONS.glob("*.json"))
+        virtual_devices = sorted(VIRTUAL_DEVICES.glob("*.json"))
         validate_documents(
             documents["controller.schema.json"], registry, controller_records
         )
@@ -285,6 +287,9 @@ def main() -> int:
         )
         validate_protocol_descriptions(
             documents["protocol-description.schema.json"], registry, protocols
+        )
+        validate_documents(
+            documents["virtual-device.schema.json"], registry, virtual_devices
         )
         samples = sample_documents()
         for stem, path in samples:
@@ -312,7 +317,7 @@ def main() -> int:
     print(
         f"Validated {len(documents)} schema documents, "
         f"{len(controller_records)} controller records, {len(overrides)} overrides, "
-        f"{len(protocols)} protocol descriptions, {len(samples)} sample mod files, "
+        f"{len(protocols)} protocol descriptions, {len(virtual_devices)} virtual devices, {len(samples)} sample mod files, "
         f"{len(ACCESS_GRANT_FIXTURES)} access grant fixtures, the error code catalog, "
         "and one live support report."
     )

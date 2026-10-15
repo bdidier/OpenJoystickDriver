@@ -1,6 +1,5 @@
 /// Chooses the one virtual HID profile a logical controller publishes: the Advanced override when
-/// the controller fits it, else `hid-xbox-one-s-bt` when its primary controls fit, else
-/// `hid-generic`.
+/// the controller fits it, else `Generic`.
 ///
 /// Selection reads only the controller's declared controls and the user's Advanced override.
 /// Protocol, manufacturer, consumer, macOS version, and access backend never participate, and a
@@ -21,7 +20,7 @@ public enum VirtualHIDProfileSelector {
 
   /// Controls whose representation decides the profile: the Xbox layout plus the digital trigger
   /// buttons. System controls other than `view` and `menu`, and every extended control, stay in
-  /// OJD's normalized API and never force `hid-generic`.
+  /// OJD's normalized API and never force a persona.
   public static let primaryControls: Set<ControlID> = ControlID.xboxLayout.union([
     .leftTriggerButton, .rightTriggerButton,
   ])
@@ -47,7 +46,7 @@ public enum VirtualHIDProfileSelector {
     let required = controls.intersection(primaryControls)
     func fits(_ profile: VirtualHIDProfileID) -> Bool { represents(required, in: slots(profile)) }
     if let override, fits(override) { return Selection(profileID: override, source: .override) }
-    let automatic: VirtualHIDProfileID = fits(.xboxOneSBluetooth) ? .xboxOneSBluetooth : .generic
+    let automatic = VirtualHIDProfileID.default
     guard fits(automatic) else { throw .virtualProfileUnavailable }
     return Selection(
       profileID: automatic,

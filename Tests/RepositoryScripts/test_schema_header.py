@@ -36,7 +36,7 @@ def instances() -> dict[str, dict[str, Any]]:
             **schema_header.header("ControllerDefaults"),
             "tuning": {"stickDeadzone": 0.02},
         },
-        "persona": load(SAMPLE / "Personas/1209-0001.json"),
+        "virtual-device": load(SAMPLE / "Personas/1209-0001.json"),
         "profile": load(SAMPLE / "Profiles/sample-pad.json"),
         "mod-package": load(SAMPLE / "mod.json"),
         "error-codes": load(ROOT / "Resources/ErrorCodes.json"),

@@ -84,7 +84,7 @@ extension VirtualOutputTests {
       ])
     )
     await dispatcher.activateOutput(for: id)
-    #expect(log.profiles() == [.xboxOneSBluetooth])
+    #expect(log.profiles() == [.sdlCompatible])
     await dispatcher.close()
   }
 
@@ -123,7 +123,7 @@ extension VirtualOutputTests {
       ])
     )
     await dispatcher.activateOutput(for: id)
-    #expect(dispatcher.status.wireValue.contains("targets: hid-xbox-one-s-bt"))
+    #expect(dispatcher.status.wireValue.contains("targets: SdlCompatible"))
     #expect(!dispatcher.status.wireValue.contains("consumer:"))
     await dispatcher.close()
   }

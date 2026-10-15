@@ -28,6 +28,10 @@ PROTOCOL_DIR = ROOT / "Resources" / "Protocols"
 PROTOCOL_OUTPUT_DIR = (
     ROOT / "Sources" / "OpenJoystickDriverKit" / "Resources" / "Protocols"
 )
+VIRTUAL_DEVICE_DIR = ROOT / "Resources" / "VirtualDevices"
+VIRTUAL_DEVICE_OUTPUT_DIR = (
+    ROOT / "Sources" / "OpenJoystickDriverKit" / "Resources" / "VirtualDevices"
+)
 # Top-level record sections a patch override may replace.
 PATCH_FIELDS = frozenset(
     {
@@ -652,12 +656,19 @@ def expected_files(
     # The bundle ships the authored protocol descriptions unchanged.
     for path in sorted(PROTOCOL_DIR.glob("*.json")):
         files[PROTOCOL_OUTPUT_DIR / path.name] = path.read_text()
+    # It ships the authored virtual device records unchanged.
+    for path in sorted(VIRTUAL_DEVICE_DIR.glob("*.json")):
+        files[VIRTUAL_DEVICE_OUTPUT_DIR / path.name] = path.read_text()
     return files
 
 
 def check_catalog(records: dict[tuple[int, int], dict[str, Any]]) -> None:
     expected = expected_files(records)
-    actual = {*OUTPUT_DIR.glob("*/*.json"), *PROTOCOL_OUTPUT_DIR.glob("*.json")}
+    actual = {
+        *OUTPUT_DIR.glob("*/*.json"),
+        *PROTOCOL_OUTPUT_DIR.glob("*.json"),
+        *VIRTUAL_DEVICE_OUTPUT_DIR.glob("*.json"),
+    }
     missing = sorted(set(expected) - actual)
     stale = sorted(actual - set(expected))
     changed = sorted(
@@ -678,7 +689,7 @@ def check_catalog(records: dict[tuple[int, int], dict[str, Any]]) -> None:
 
 def write_catalog(records: dict[tuple[int, int], dict[str, Any]]) -> None:
     expected = expected_files(records)
-    for directory in (OUTPUT_DIR, PROTOCOL_OUTPUT_DIR):
+    for directory in (OUTPUT_DIR, PROTOCOL_OUTPUT_DIR, VIRTUAL_DEVICE_OUTPUT_DIR):
         if directory.exists():
             shutil.rmtree(directory)
     for path, text in expected.items():

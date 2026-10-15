@@ -47,7 +47,7 @@ extension VirtualOutputTests {
 
     #expect(log.built().map(\.profile) == [.generic])
     #expect(dispatcher.selectionSource(for: id) == .override)
-    #expect(dispatcher.status.wireValue.contains("targets: hid-generic"))
+    #expect(dispatcher.status.wireValue.contains("targets: Generic"))
     await dispatcher.close()
   }
 
@@ -65,11 +65,11 @@ extension VirtualOutputTests {
     try await dispatcher.retarget(controller: first)
 
     let built = log.built()
-    #expect(built.map(\.profile) == [.xboxOneSBluetooth, .xboxOneSBluetooth, .generic])
+    #expect(built.map(\.profile) == [.sdlCompatible, .sdlCompatible, .generic])
     #expect(built.map(\.closed) == [true, false, false])
     #expect(dispatcher.selectionSource(for: first) == .override)
     #expect(dispatcher.selectionSource(for: second) == .automatic)
-    #expect(dispatcher.status.wireValue.contains("targets: hid-generic; hid-xbox-one-s-bt"))
+    #expect(dispatcher.status.wireValue.contains("targets: Generic; SdlCompatible"))
     await dispatcher.close()
   }
 
@@ -86,8 +86,8 @@ extension VirtualOutputTests {
 
     #expect(
       log.snapshot() == [
-        "hid-xbox-one-s-bt activate [1]", "hid-generic activate [1]", "hid-xbox-one-s-bt neutral",
-        "hid-xbox-one-s-bt close",
+        "SdlCompatible activate [1]", "Generic activate [1]", "SdlCompatible neutral",
+        "SdlCompatible close",
       ]
     )
     await dispatcher.close()
@@ -110,11 +110,11 @@ extension VirtualOutputTests {
     await #expect(throws: (any Error).self) { try await dispatcher.retarget(controller: id) }
 
     let built = log.built()
-    #expect(built.first?.profile == .xboxOneSBluetooth)
+    #expect(built.first?.profile == .sdlCompatible)
     #expect(built.first?.closed == false)
     #expect(built.dropFirst().allSatisfy { $0.closed })
-    #expect(!log.snapshot().contains("hid-xbox-one-s-bt neutral"))
-    #expect(dispatcher.status.wireValue.contains("targets: hid-xbox-one-s-bt"))
+    #expect(!log.snapshot().contains("SdlCompatible neutral"))
+    #expect(dispatcher.status.wireValue.contains("targets: SdlCompatible"))
     #expect(dispatcher.selectionSource(for: id) == .automatic)
 
     // Later reports keep publishing through the prior backend instead of retrying the override.
@@ -137,14 +137,14 @@ extension VirtualOutputTests {
     await dispatcher.activateOutput(for: id)
     try await dispatcher.activate(controller: id)
 
-    #expect(log.built().map(\.profile) == [.xboxOneSBluetooth])
+    #expect(log.built().map(\.profile) == [.sdlCompatible])
     #expect(log.built().first?.closed == false)
     #expect(dispatcher.selectionSource(for: id) == .automatic)
 
     try await dispatcher.retarget(controller: id)
 
-    #expect(log.built().map(\.profile) == [.xboxOneSBluetooth, .generic])
-    #expect(log.snapshot().contains("hid-xbox-one-s-bt neutral"))
+    #expect(log.built().map(\.profile) == [.sdlCompatible, .generic])
+    #expect(log.snapshot().contains("SdlCompatible neutral"))
     await dispatcher.close()
   }
 
@@ -182,11 +182,11 @@ extension VirtualOutputTests {
 
     await dispatcher.setOutputSuppressed(false)
 
-    #expect(log.built().map(\.profile) == [.xboxOneSBluetooth, .generic])
+    #expect(log.built().map(\.profile) == [.sdlCompatible, .generic])
     #expect(log.built().last?.suppressOutput == false)
     await dispatcher.activateOutput(for: id)
     #expect(log.built().count == 2)
-    #expect(dispatcher.status.wireValue.contains("targets: hid-generic"))
+    #expect(dispatcher.status.wireValue.contains("targets: Generic"))
     await dispatcher.close()
   }
 
@@ -205,7 +205,7 @@ extension VirtualOutputTests {
 
     try await dispatcher.activate(controller: id)
 
-    #expect(log.built().map(\.profile) == [.xboxOneSBluetooth, .generic])
+    #expect(log.built().map(\.profile) == [.sdlCompatible, .generic])
     await dispatcher.close()
   }
 
@@ -232,7 +232,7 @@ extension VirtualOutputTests {
     await stop.value
 
     await #expect(throws: (any Error).self) { try await retarget.value }
-    #expect(log.built().map(\.profile) == [.xboxOneSBluetooth, .generic])
+    #expect(log.built().map(\.profile) == [.sdlCompatible, .generic])
     #expect(log.built().allSatisfy { $0.closed })
     #expect(dispatcher.selectionSource(for: id) == nil)
     #expect(!dispatcher.status.wireValue.contains("targets"))
@@ -247,10 +247,10 @@ extension VirtualOutputTests {
     let dispatcher = retargetDispatcher([id], overrides: overrides, log: log)
     try await dispatcher.activate(for: [id])
 
-    overrides.set(.xboxOneSBluetooth, vendorID: 1)
+    overrides.set(.sdlCompatible, vendorID: 1)
     try await dispatcher.retarget(controller: id)
 
-    #expect(log.snapshot() == ["hid-xbox-one-s-bt activate [1]"])
+    #expect(log.snapshot() == ["SdlCompatible activate [1]"])
     #expect(dispatcher.selectionSource(for: id) == .override)
     await dispatcher.close()
   }

@@ -73,11 +73,11 @@ struct ControllerExposureDecisionTests {
   func automaticCarriesTheSelectedProfileInsteadOfAnIdentity() {
     let decision = ControllerExposureDecision.decide(
       ownership: .exclusiveRawUSB,
-      intent: .profile(.xboxOneSBluetooth)
+      intent: .profile(.sdlCompatible)
     )
 
     #expect(decision.eligibility == .eligible)
-    #expect(decision.intent == .profile(.xboxOneSBluetooth))
+    #expect(decision.intent == .profile(.sdlCompatible))
   }
 
   @Test

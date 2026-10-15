@@ -94,15 +94,15 @@ struct ModPackageLayeringTests {
   @Test
   func aPackagePersonaLayersUnderTheUserPersona() throws {
     try Fixture.with { fixture in
-      let fromPackage = Fixture.persona(0x1234, 0xABCD, descriptor: "hid-generic")
+      let fromPackage = Fixture.persona(0x1234, 0xABCD, descriptor: "Generic")
       try install(try fixture.makePackage(personas: [fromPackage]), in: fixture)
       let store = VirtualHIDProfileOverrideStore(directory: fixture.personas)
       #expect(store.override(vendorID: 0x1234, productID: 0xABCD) == .generic)
       #expect(store.problems.isEmpty)
 
-      let user = Fixture.persona(0x1234, 0xABCD, descriptor: "hid-xbox-one-s-bt")
+      let user = Fixture.persona(0x1234, 0xABCD, descriptor: "SdlCompatible")
       try fixture.write([user], kind: "Personas", in: fixture.root)
-      #expect(store.override(vendorID: 0x1234, productID: 0xABCD) == .xboxOneSBluetooth)
+      #expect(store.override(vendorID: 0x1234, productID: 0xABCD) == .sdlCompatible)
       let skipped = try #require(store.problems.first)
       #expect(store.problems.count == 1)
       #expect(skipped.url.path.contains("Packages/arcade-pack/Personas"))
@@ -117,7 +117,7 @@ struct ModPackageLayeringTests {
         at: fixture.packages,
         withIntermediateDirectories: true
       )
-      let descriptors = [("beta-pack", "hid-xbox-one-s-bt"), ("alpha-pack", "hid-generic")]
+      let descriptors = [("beta-pack", "SdlCompatible"), ("alpha-pack", "Generic")]
       for (name, descriptor) in descriptors {
         let folder = try fixture.makePackage(
           name,
@@ -138,17 +138,17 @@ struct ModPackageLayeringTests {
   @Test
   func settingAPackagePersonaWritesAUserFileAndLeavesThePackageFile() throws {
     try Fixture.with { fixture in
-      let fromPackage = Fixture.persona(0x1234, 0xABCD, descriptor: "hid-generic")
+      let fromPackage = Fixture.persona(0x1234, 0xABCD, descriptor: "Generic")
       try install(try fixture.makePackage(personas: [fromPackage]), in: fixture)
       let store = VirtualHIDProfileOverrideStore(directory: fixture.personas)
-      try store.set(.xboxOneSBluetooth, vendorID: 0x1234, productID: 0xABCD)
+      try store.set(.sdlCompatible, vendorID: 0x1234, productID: 0xABCD)
       let written = fixture.personas.appendingPathComponent(fromPackage.name)
       #expect(FileManager.default.fileExists(atPath: written.path))
       let packaged = fixture.packages.appendingPathComponent(
         "arcade-pack/Personas/\(fromPackage.name)"
       )
       #expect(try Data(contentsOf: packaged) == fromPackage.data)
-      #expect(store.override(vendorID: 0x1234, productID: 0xABCD) == .xboxOneSBluetooth)
+      #expect(store.override(vendorID: 0x1234, productID: 0xABCD) == .sdlCompatible)
 
       try store.reset(vendorID: 0x1234, productID: 0xABCD)
       #expect(store.override(vendorID: 0x1234, productID: 0xABCD) == .generic)

@@ -25,7 +25,15 @@ struct VirtualCommand: AsyncParsableCommand {
 }
 
 extension VirtualHIDProfileID: ExpressibleByArgument {
-  public init?(argument: String) { self.init(rawValue: argument) }
+  /// A persona on the command line is its lowercase kebab-case name, such as `sdl-compatible`.
+  public init?(argument: String) {
+    guard let persona = Self.allCases.first(where: { $0.commandLineName == argument }) else {
+      return nil
+    }
+    self = persona
+  }
+
+  public static var allValueStrings: [String] { allCases.map(\.commandLineName) }
 }
 
 /// The `ojd virtual show --json` result.

@@ -183,7 +183,7 @@ extension ApplicationServiceClient {
     )
   }
 
-  /// Publishes a virtual controller with the `profile` virtual HID profile, such as `hid-generic`,
+  /// Publishes a virtual controller with the `profile` virtual HID profile, such as `Generic`,
   /// that this client drives with ``exchangeVirtualFeed(token:frames:)``.
   ///
   /// Only OpenJoystickDriver's own signed executables can call this; other programs use

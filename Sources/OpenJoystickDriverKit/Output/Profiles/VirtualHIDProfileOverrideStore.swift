@@ -31,7 +31,7 @@ public struct VirtualPersonaFile: Equatable, Sendable {
 }
 
 /// Per-controller-model and per-unit personas, stored as `Personas/<id>.json` files that follow
-/// `persona.schema.json`.
+/// `virtual-device.schema.json`.
 ///
 /// A file matches a VID:PID model, or one unit of it (see ``ControllerPortKey``). A unit's persona
 /// wins over its model's. A file that fails validation, or repeats the match of an earlier file in
@@ -40,7 +40,7 @@ public struct VirtualPersonaFile: Equatable, Sendable {
 /// that already matches.
 public struct VirtualHIDProfileOverrideStore: Sendable {
   /// The `kind` of a persona file.
-  public static let kind = "Persona"
+  public static let kind = VirtualDevice.kind
 
   /// `~/Library/Application Support/OpenJoystickDriver/Personas`.
   public static var userDirectory: URL {
@@ -152,16 +152,16 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
     match["unit"] = unit
     var document: [String: Any] = [
       "apiVersion": OpenJoystickDriverAPI.version, "kind": Self.kind, "match": match,
-      "descriptor": profile.rawValue,
+      "persona": profile.rawValue,
     ]
     if let identity = existing?.persona.identity {
       var fields: [String: Any] = [
         "vendorID": Int(identity.vendorID), "productID": Int(identity.productID),
         "productName": identity.productName, "manufacturer": identity.manufacturer,
-        "glyphFamily": identity.glyphFamily.rawValue,
       ]
-      fields["versionNumber"] = identity.versionNumber
+      fields["version"] = identity.versionNumber
       document["identity"] = fields
+      document["labels"] = identity.glyphFamily.rawValue
     }
     do {
       try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
@@ -276,85 +276,22 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
     return .success(loaded)
   }
 
-  /// Decodes one `persona.schema.json` document.
+  /// Decodes one `virtual-device.schema.json` document that selects a persona.
   static func parse(_ data: Data) throws -> (Model, VirtualPersona) {
-    guard let object = try? JSONSerialization.jsonObject(with: data),
-      let document = object as? [String: Any]
-    else { throw ControllerRecordProblem("the file is not a JSON object") }
-    try OpenJoystickDriverAPI.requireHeader(document, kind: kind)
-    guard
-      Set(document.keys).isSubset(of: [
-        "apiVersion", "kind", "match", "descriptor", "identity",
-      ]), document["match"] != nil, document["descriptor"] != nil
-    else {
-      throw ControllerRecordProblem("the file must hold apiVersion, kind, match, and descriptor")
+    let device = try VirtualDevice.decode(data)
+    guard let model = device.match else {
+      throw ControllerRecordProblem("the file must hold match")
     }
-    guard let descriptor = (document["descriptor"] as? String).flatMap(VirtualHIDProfileID.init)
-    else { throw ControllerRecordProblem("descriptor must be hid-xbox-one-s-bt or hid-generic") }
-    let match = try fields(document["match"], named: "match", optional: ["unit"])
-    let unit = match["unit"] as? String
-    if match["unit"] != nil, unit.flatMap(ControllerPortKey.init(rawValue:)) == nil {
-      throw ControllerRecordProblem("match.unit is not a unit ID")
-    }
-    let model = Model(
-      vendorID: try id(match["vendorID"], "match.vendorID", from: 1),
-      productID: try id(match["productID"], "match.productID", from: 0),
-      unit: unit
-    )
-    return (model, VirtualPersona(descriptor: descriptor, identity: try identity(document)))
-  }
-
-  private static func identity(_ document: [String: Any]) throws -> VirtualPersona.Identity? {
-    guard document["identity"] != nil else { return nil }
-    let fields = try fields(
-      document["identity"],
-      named: "identity",
-      required: ["vendorID", "productID", "productName", "manufacturer", "glyphFamily"],
-      optional: ["versionNumber"]
-    )
-    func text(_ key: String) throws -> String {
-      guard let value = fields[key] as? String, !value.isEmpty else {
-        throw ControllerRecordProblem("identity.\(key) must be a nonempty string")
-      }
-      return value
-    }
-    guard let glyph = VirtualIdentityGlyphFamily(rawValue: try text("glyphFamily")) else {
-      throw ControllerRecordProblem("identity.glyphFamily must be xbox or generic")
-    }
-    let version = try fields["versionNumber"].map { try id($0, "identity.versionNumber", from: 0) }
-    return VirtualPersona.Identity(
-      vendorID: try id(fields["vendorID"], "identity.vendorID", from: 1),
-      productID: try id(fields["productID"], "identity.productID", from: 0),
-      versionNumber: version.map(Int.init),
-      productName: try text("productName"),
-      manufacturer: try text("manufacturer"),
-      glyphFamily: glyph
-    )
-  }
-
-  private static func fields(
-    _ value: Any?,
-    named name: String,
-    required: Set<String> = ["vendorID", "productID"],
-    optional: Set<String>
-  ) throws -> [String: Any] {
-    guard let object = value as? [String: Any],
-      Set(object.keys).isSubset(of: required.union(optional)),
-      required.isSubset(of: Set(object.keys))
-    else {
-      throw ControllerRecordProblem(
-        "\(name) must hold \(required.union(optional).sorted().joined(separator: ", "))"
+    let identity = device.identity.map { identity in
+      VirtualPersona.Identity(
+        vendorID: identity.vendorID,
+        productID: identity.productID,
+        versionNumber: identity.versionNumber,
+        productName: identity.productName,
+        manufacturer: identity.manufacturer,
+        glyphFamily: device.labels ?? VirtualDevice.definition(of: device.persona).labels ?? .generic
       )
     }
-    return object
-  }
-
-  private static func id(_ value: Any?, _ name: String, from minimum: Int) throws -> UInt16 {
-    // swiftlint:disable:next legacy_objc_type
-    guard let number = value as? NSNumber, CFGetTypeID(number) != CFBooleanGetTypeID(),
-      let integer = Int(exactly: number.doubleValue), integer >= minimum,
-      let id = UInt16(exactly: integer)
-    else { throw ControllerRecordProblem("\(name) must be \(minimum)...65535") }
-    return id
+    return (model, VirtualPersona(descriptor: device.persona, identity: identity))
   }
 }

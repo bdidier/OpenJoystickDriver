@@ -15,7 +15,7 @@ KINDS = {
     "controller": "Controller",
     "controller-override": "ControllerOverride",
     "defaults": "ControllerDefaults",
-    "persona": "Persona",
+    "virtual-device": "VirtualDevice",
     "profile": "Profile",
     "mod-package": "ModPackage",
     "error-codes": "ErrorCatalog",

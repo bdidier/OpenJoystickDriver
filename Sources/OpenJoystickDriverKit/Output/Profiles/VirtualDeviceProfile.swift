@@ -32,31 +32,14 @@ public struct VirtualDeviceProfile: Equatable, Sendable {
   /// The control glyphs and system symbol the published product shows.
   public let glyphFamily: VirtualIdentityGlyphFamily
 
-  /// Stable non-spoof Generic HID identity. Its name, version, descriptor, and report
-  /// layout form one consumer contract; incompatible layouts require a new product ID.
-  public static let openJoystickDriverGenericHID = Self(
-    vendorID: 0x1209,
-    productID: 0x4A4F,
-    versionNumber: 0x0408,
-    productName: "OpenJoystickDriver Generic HID Gamepad",
-    manufacturer: "OpenJoystickDriver",
-    transport: "USB",
-    glyphFamily: .generic
-  )
+  /// The `Generic` persona's identity: a stable non-spoof Generic HID identity. Its name,
+  /// version, descriptor, and report layout form one consumer contract; incompatible layouts
+  /// require a new product ID. The values come from the bundled `VirtualDevice` record.
+  public static var generic: Self { VirtualHIDProfileID.generic.identity }
 
-  /// Xbox One S Bluetooth identity published by the `hid-xbox-one-s-bt` virtual profile.
-  /// This is not XInputHID, XUSB, or GIP emulation.
-  public static let xboxOneS = Self(
-    vendorID: 0x045E,
-    productID: 0x02FD,
-    // Version 0x0000 matches SDL GUID `030000005e040000fd02000000000000`. On macOS SDL's HIDAPI
-    // Xbox One driver owns this ID and decodes report bytes itself; the mapping DB is not used.
-    versionNumber: 0x0000,
-    productName: "Xbox Wireless Controller",
-    manufacturer: "Microsoft",
-    transport: "Bluetooth",
-    glyphFamily: .xbox
-  )
+  /// The `SdlCompatible` persona's identity, an Xbox One S Bluetooth identity. This is not
+  /// XInputHID, XUSB, or GIP emulation. The values come from the bundled `VirtualDevice` record.
+  public static var sdlCompatible: Self { VirtualHIDProfileID.sdlCompatible.identity }
 
   /// This profile with the identity of a persona over it. The transport and, unless the persona
   /// sets one, the version number stay those of the built-in profile, so the report descriptor

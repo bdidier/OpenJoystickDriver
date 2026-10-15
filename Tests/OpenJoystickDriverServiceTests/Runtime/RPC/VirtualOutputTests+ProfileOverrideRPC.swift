@@ -83,7 +83,7 @@ extension VirtualOutputTests {
   func settingAnOverridePersistsAndRetargetsTheController() async throws {
     let fixture = try await profileOverrideServer()
 
-    let result = await fixture.change(.set("hid-generic"))
+    let result = await fixture.change(.set("Generic"))
 
     #expect(
       result
@@ -95,14 +95,14 @@ extension VirtualOutputTests {
         )
     )
     #expect(fixture.store.override(vendorID: 1, productID: 2) == .generic)
-    #expect(fixture.log.built().map(\.profile) == [.xboxOneSBluetooth, .generic])
+    #expect(fixture.log.built().map(\.profile) == [.sdlCompatible, .generic])
     await fixture.tearDown()
   }
 
   @Test
   func resettingAnOverrideReturnsTheControllerToAutomaticSelection() async throws {
     let fixture = try await profileOverrideServer()
-    _ = await fixture.change(.set("hid-generic"))
+    _ = await fixture.change(.set("Generic"))
 
     let result = await fixture.change(.reset)
 
@@ -110,7 +110,7 @@ extension VirtualOutputTests {
       result
         == VirtualHIDProfileOverrideResult(
           requested: nil,
-          live: .xboxOneSBluetooth,
+          live: .sdlCompatible,
           source: "automatic",
           failure: nil
         )
@@ -128,7 +128,7 @@ extension VirtualOutputTests {
 
     #expect(result.failure == .unknownProfile)
     #expect(result.requested == nil)
-    #expect(result.live == .xboxOneSBluetooth)
+    #expect(result.live == .sdlCompatible)
     #expect(fixture.store.files.isEmpty)
     #expect(fixture.log.built().count == 1)
     await fixture.tearDown()
@@ -139,11 +139,11 @@ extension VirtualOutputTests {
     let fixture = try await profileOverrideServer()
 
     let otherModel = await fixture.change(
-      .set("hid-generic"),
+      .set("Generic"),
       controller: .model(ControllerModelID(vendorID: 3, productID: 2))
     )
     let otherSession = await fixture.change(
-      .set("hid-generic"),
+      .set("Generic"),
       controller: .session(.fixture("missing"))
     )
 
@@ -157,7 +157,7 @@ extension VirtualOutputTests {
   func disabledOutputStillPersistsTheOverride() async throws {
     let fixture = try await profileOverrideServer(outputEnabled: false)
 
-    let result = await fixture.change(.set("hid-generic"))
+    let result = await fixture.change(.set("Generic"))
 
     #expect(
       result
@@ -177,7 +177,7 @@ extension VirtualOutputTests {
     let fixture = try await profileOverrideServer()
     await fixture.server.stop()
 
-    let result = await fixture.change(.set("hid-generic"))
+    let result = await fixture.change(.set("Generic"))
 
     #expect(result.failure == .serverStopped)
     #expect(result.requested == .generic)
@@ -187,19 +187,19 @@ extension VirtualOutputTests {
 
   @Test
   func failedActivationRestoresThePriorStoredOverride() async throws {
-    let fixture = try await profileOverrideServer(failure: (.xboxOneSBluetooth, .activation)) {
+    let fixture = try await profileOverrideServer(failure: (.sdlCompatible, .activation)) {
       VirtualHIDProfileOverrideStore(directory: $0).setGenericForTest()
     }
     #expect(fixture.log.built().map(\.profile) == [.generic])
 
-    let result = await fixture.change(.set("hid-xbox-one-s-bt"))
+    let result = await fixture.change(.set("SdlCompatible"))
 
     guard case .activationFailed(let detail) = result.failure else {
       Issue.record("Expected activation-failed, got \(String(describing: result.failure))")
       return
     }
     #expect(!detail.isEmpty)
-    #expect(result.requested == .xboxOneSBluetooth)
+    #expect(result.requested == .sdlCompatible)
     #expect(result.live == .generic)
     #expect(result.source == "override")
     #expect(fixture.store.override(vendorID: 1, productID: 2) == .generic)
@@ -213,7 +213,7 @@ extension VirtualOutputTests {
     let second = LogicalControllerID(vendorID: 1, productID: 2, locationID: 2)
     let fixture = try await profileOverrideServer([first, second])
 
-    let result = await fixture.change(.set("hid-generic"))
+    let result = await fixture.change(.set("Generic"))
     let unmatched = await fixture.change(.reset, controller: .session(.fixture("missing")))
 
     #expect(result.failure == nil)
@@ -236,7 +236,7 @@ extension VirtualOutputTests {
       method: "setVirtualHIDProfileOverride",
       arguments: LocalServiceRPCVirtualHIDProfileOverrideArguments(
         controller: .model(ControllerModelID(vendorID: 1, productID: 2)),
-        profile: "hid-generic"
+        profile: "Generic"
       )
     )
     let reset = try await localRPC(
@@ -260,7 +260,7 @@ extension VirtualOutputTests {
       reset
         == VirtualHIDProfileOverrideResult(
           requested: nil,
-          live: .xboxOneSBluetooth,
+          live: .sdlCompatible,
           source: "automatic",
           failure: nil
         )
@@ -289,7 +289,7 @@ extension VirtualOutputTests {
   func aTimedOutRetargetRestoresThePriorStoredOverride() async throws {
     let gate = InstallationGate()
     let fixture = try await profileOverrideServer(
-      activationGate: (.xboxOneSBluetooth, gate),
+      activationGate: (.sdlCompatible, gate),
       timeouts: VirtualOutputTransitionTimeouts(
         stageNanoseconds: 2_000_000_000,
         perControllerNanoseconds: 50_000_000,
@@ -297,7 +297,7 @@ extension VirtualOutputTests {
       )
     ) { VirtualHIDProfileOverrideStore(directory: $0).setGenericForTest() }
 
-    let result = await fixture.change(.set("hid-xbox-one-s-bt"))
+    let result = await fixture.change(.set("SdlCompatible"))
 
     guard case .activationFailed = result.failure else {
       Issue.record("Expected activation-failed, got \(String(describing: result.failure))")

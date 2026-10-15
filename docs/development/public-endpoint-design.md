@@ -67,8 +67,8 @@ After the `Welcome`, the client sends `{"apiVersion":"openjoystickdriver/v1alpha
 With the `control` scope, the client sends a `FeedRequest`. The service answers a `FeedSession` once the virtual gamepad exists. Each following line is one `Frame`, the keys of an `ojd virtual feed` input line with `apiVersion` and `kind`, and the service sends `RumbleCommand` lines in the `virtualFeed` shape. `endpoint.schema.json` describes `FeedRequest`, `FeedSession`, and `Frame`.
 
 ```json
-{"apiVersion":"openjoystickdriver/v1alpha1","kind":"FeedRequest","as":"hid-generic"}
-{"apiVersion":"openjoystickdriver/v1alpha1","kind":"FeedSession","as":"hid-generic"}
+{"apiVersion":"openjoystickdriver/v1alpha1","kind":"FeedRequest","as":"Generic"}
+{"apiVersion":"openjoystickdriver/v1alpha1","kind":"FeedSession","as":"Generic"}
 {"apiVersion":"openjoystickdriver/v1alpha1","kind":"Status","status":"Failure","code":"E1008","message":"..."}
 ```
 

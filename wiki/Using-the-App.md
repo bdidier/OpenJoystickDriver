@@ -124,8 +124,8 @@ A field that the controller does not report shows **Not reported**.
 The **Advanced** section appears for controllers that macOS does not handle itself. It contains the **Virtual HID profile** menu:
 
 - **Automatic** lets OJD choose the virtual controller profile.
-- **Xbox Wireless Controller (hid-xbox-one-s-bt)** forces the Xbox profile.
-- **OpenJoystickDriver Generic HID Gamepad (hid-generic)** forces the generic profile.
+- **Xbox Wireless Controller (SdlCompatible)** forces the Xbox profile.
+- **OpenJoystickDriver Generic HID Gamepad (Generic)** forces the generic profile.
 
 The **Live profile** row shows the profile in use and its source: **Automatic**, **Override**, or **Automatic, override rejected**.
 

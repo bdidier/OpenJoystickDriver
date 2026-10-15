@@ -44,7 +44,7 @@ public enum UserSpaceVirtualDeviceConstants {
     syntheticProperty: Any?
   ) -> Bool {
     if isOJDUserSpaceSerial(serialNumber) { return false }
-    if productName == VirtualDeviceProfile.openJoystickDriverGenericHID.productName { return false }
+    if productName == VirtualDeviceProfile.generic.productName { return false }
     if isOJDUserSpaceLocationID(locationID) { return false }
     if transport?.caseInsensitiveCompare("Virtual") == .orderedSame { return false }
     return !AppleGameControllerSyntheticHID.isSyntheticDevice(syntheticProperty: syntheticProperty)

@@ -211,8 +211,8 @@ A program with the `control` scope can drive a virtual gamepad through the endpo
 
 1. Grant the scope: `ojd access grant --token driver --scope control`. Add `--scope read` to grant both. A token that has `--origin` cannot have `control`, because a web page cannot use it.
 2. Send a `Hello` with `"scopes":["control"]`.
-3. After the `Welcome`, send `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"FeedRequest","as":"hid-generic"}`. The virtual gamepad profiles are `hid-xbox-one-s-bt` and `hid-generic`.
-4. The endpoint answers `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"FeedSession","as":"hid-generic"}` when the virtual gamepad exists.
+3. After the `Welcome`, send `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"FeedRequest","as":"Generic"}`. The virtual gamepad profiles are `SdlCompatible` and `Generic`.
+4. The endpoint answers `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"FeedSession","as":"Generic"}` when the virtual gamepad exists.
 5. Send one frame per line, each with `apiVersion` and `"kind":"Frame"`. A frame has the keys of an `ojd virtual feed` line, and the service plays frames with the same rules.
 6. The endpoint sends each rumble command that a game sends to the virtual gamepad as one `RumbleCommand` line, the same as `ojd virtual feed` prints. Its `type` is `setRumble` or `stopRumble`. The `virtualFeed` entry of the output schema describes it.
 
@@ -294,7 +294,7 @@ def main():
 
         send(hello(receive()["nonce"]))
         receive()  # Welcome
-        send({"apiVersion": API_VERSION, "kind": "FeedRequest", "as": "hid-generic"})
+        send({"apiVersion": API_VERSION, "kind": "FeedRequest", "as": "Generic"})
         receive()  # FeedSession
         threading.Thread(target=print_lines, daemon=True).start()
         try:
@@ -335,7 +335,7 @@ To limit a profile to one controller, set `device.unit` to the controller's unit
 
 ## Drive a Virtual Gamepad
 
-`ojd virtual feed --as PROFILE` publishes a virtual gamepad and reads one JSON object per line from standard input. Each line gives the state of the whole gamepad. A control that the line does not name is neutral. The virtual gamepad profiles are `hid-xbox-one-s-bt` and `hid-generic`.
+`ojd virtual feed --as PROFILE` publishes a virtual gamepad and reads one JSON object per line from standard input. Each line gives the state of the whole gamepad. A control that the line does not name is neutral. The virtual gamepad profiles are `SdlCompatible` and `Generic`.
 
 ```shell
 {
@@ -343,7 +343,7 @@ To limit a profile to one controller, set `device.unit` to the controller's unit
   sleep 1
   echo '{"axes":{"left_stick_x":-1,"right_trigger":0.5}}'
   sleep 1
-} | ojd virtual feed --as hid-generic
+} | ojd virtual feed --as Generic
 ```
 
 This example holds the south button for 1 second, then moves the left stick fully left and pulls the right trigger halfway for 1 second. When the input ends, the virtual gamepad is removed.
@@ -351,7 +351,7 @@ This example holds the south button for 1 second, then moves the left stick full
 To tap a button without waiting in the script, write the press with `holdMilliseconds` and the release after it:
 
 ```shell
-printf '%s\n' '{"buttons":["south"],"holdMilliseconds":50}' '{}' | ojd virtual feed --as hid-generic
+printf '%s\n' '{"buttons":["south"],"holdMilliseconds":50}' '{}' | ojd virtual feed --as Generic
 ```
 
 - `buttons` and `dpad` list the controls that are pressed. They take the names that `button:` and `dpad:` binding sources use, such as `south` and `up`.

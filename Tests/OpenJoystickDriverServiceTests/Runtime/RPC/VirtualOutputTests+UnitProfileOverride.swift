@@ -16,14 +16,14 @@ extension VirtualOutputTests {
     }
 
     let set = await fixture.change(
-      .set("hid-generic"),
+      .set("Generic"),
       controller: .port(try #require(first.portKey)),
       unit: true
     )
 
     #expect(set.failure == nil)
     #expect(live(first) == .generic)
-    #expect(live(second) == .xboxOneSBluetooth)
+    #expect(live(second) == .sdlCompatible)
     #expect(fixture.store.override(vendorID: 1, productID: 2) == nil)
     #expect(
       fixture.store.override(vendorID: 1, productID: 2, unit: first.portKey?.rawValue) == .generic
@@ -36,7 +36,7 @@ extension VirtualOutputTests {
     )
 
     #expect(reset.failure == nil)
-    #expect(live(first) == .xboxOneSBluetooth)
+    #expect(live(first) == .sdlCompatible)
     #expect(fixture.store.files.isEmpty)
     await fixture.tearDown()
   }
@@ -45,7 +45,7 @@ extension VirtualOutputTests {
   func aUnitOverrideForAControllerWithoutAUnitIDIsNotFound() async throws {
     let fixture = try await profileOverrideServer()
 
-    let result = await fixture.change(.set("hid-generic"), unit: true)
+    let result = await fixture.change(.set("Generic"), unit: true)
 
     #expect(result.failure == .controllerNotFound)
     #expect(fixture.store.files.isEmpty)
