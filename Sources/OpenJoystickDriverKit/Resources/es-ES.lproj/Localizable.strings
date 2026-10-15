@@ -514,9 +514,7 @@
 "developer.connection" = "Conexión";
 "developer.controller" = "Mando";
 "developer.controllerDetails" = "Mando";
-"developer.diagnosticMode" = "Modo de diagnóstico";
 "developer.emptyCapture" = "Pulse «Iniciar captura» y, después, pulse los botones del mando.";
-"developer.enterDiagnosticMode" = "Entrar en el modo de diagnóstico";
 "developer.exportCapture" = "Exportar captura de paquetes";
 "developer.extraInputs" = "Botones adicionales";
 "developer.extraInputsDescription" = "Pulse un botón adicional cada vez. Los botones detectados permanecen en la lista hasta que borre la captura.";
@@ -527,7 +525,6 @@
 "developer.loadingControllers" = "Cargando diagnósticos del mando…";
 "developer.noControllers" = "No hay mandos conectados";
 "developer.noControllersDetail" = "Conecte un mando y pulse «Actualizar».";
-"developer.noDiagnosticRecipe" = "No está disponible el modo de diagnóstico para este mando.";
 "developer.noExtraInputs" = "No se detectaron botones adicionales.";
 "developer.noPackets" = "Ningún paquete capturado";
 "developer.packetCapture" = "Captura de paquetes en bruto";

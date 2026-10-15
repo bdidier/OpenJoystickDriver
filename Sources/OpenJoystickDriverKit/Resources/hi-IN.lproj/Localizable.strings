@@ -514,9 +514,7 @@
 "developer.connection" = "कनेक्शन";
 "developer.controller" = "कंट्रोलर";
 "developer.controllerDetails" = "कंट्रोलर";
-"developer.diagnosticMode" = "डायग्नोस्टिक मोड";
 "developer.emptyCapture" = "“कैप्चर शुरू करें” दबाएँ, फिर कंट्रोलर के बटन दबाएँ।";
-"developer.enterDiagnosticMode" = "डायग्नोस्टिक मोड में प्रवेश करें";
 "developer.exportCapture" = "पैकेट कैप्चर एक्सपोर्ट करें";
 "developer.extraInputs" = "अतिरिक्त बटन";
 "developer.extraInputsDescription" = "एक बार में एक अतिरिक्त बटन दबाएँ। पता चले बटन तब तक सूची में रहते हैं, जब तक आप कैप्चर साफ़ नहीं करते।";
@@ -527,7 +525,6 @@
 "developer.loadingControllers" = "कंट्रोलर डायग्नोस्टिक लोड हो रहे हैं…";
 "developer.noControllers" = "कोई कंट्रोलर कनेक्ट नहीं है";
 "developer.noControllersDetail" = "कोई कंट्रोलर कनेक्ट करें, फिर “रीफ़्रेश करें” दबाएँ।";
-"developer.noDiagnosticRecipe" = "इस कंट्रोलर के लिए डायग्नोस्टिक मोड उपलब्ध नहीं है।";
 "developer.noExtraInputs" = "कोई अतिरिक्त बटन नहीं मिला।";
 "developer.noPackets" = "कोई पैकेट कैप्चर नहीं हुआ";
 "developer.packetCapture" = "रॉ पैकेट कैप्चर";

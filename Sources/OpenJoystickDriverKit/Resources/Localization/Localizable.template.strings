@@ -516,9 +516,7 @@
 "developer.connection" = "Connection";
 "developer.controller" = "Controller";
 "developer.controllerDetails" = "Controller";
-"developer.diagnosticMode" = "Diagnostic Mode";
 "developer.emptyCapture" = "Press Start Capture, then press controller buttons.";
-"developer.enterDiagnosticMode" = "Enter Diagnostic Mode";
 "developer.exportCapture" = "Export Packet Capture";
 "developer.extraInputs" = "Extra Buttons";
 "developer.extraInputsDescription" = "Press one extra button at a time. Detected buttons stay listed until you clear the capture.";
@@ -529,7 +527,6 @@
 "developer.loadingControllers" = "Loading controller diagnostics...";
 "developer.noControllers" = "No controllers connected";
 "developer.noControllersDetail" = "Connect a controller, then press Refresh.";
-"developer.noDiagnosticRecipe" = "Diagnostic mode is not available for this controller.";
 "developer.noExtraInputs" = "No extra buttons detected.";
 "developer.noPackets" = "No packets captured";
 "developer.packetCapture" = "Raw Packet Capture";

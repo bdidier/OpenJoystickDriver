@@ -514,9 +514,7 @@
 "developer.connection" = "연결";
 "developer.controller" = "컨트롤러";
 "developer.controllerDetails" = "컨트롤러";
-"developer.diagnosticMode" = "진단 모드";
 "developer.emptyCapture" = "“캡처 시작”을 누른 다음 컨트롤러 버튼을 누르세요.";
-"developer.enterDiagnosticMode" = "진단 모드 시작";
 "developer.exportCapture" = "패킷 캡처 내보내기";
 "developer.extraInputs" = "추가 버튼";
 "developer.extraInputsDescription" = "한 번씩 추가 버튼을 누르면, 발견된 버튼은 캡처를 제거할 때까지 계속 표시됩니다.";
@@ -527,7 +525,6 @@
 "developer.loadingControllers" = "컨트롤러 진단 정보를 불러오는 중…";
 "developer.noControllers" = "연결된 컨트롤러가 없습니다";
 "developer.noControllersDetail" = "컨트롤러를 연결한 다음 “새로 고침”을 누르세요.";
-"developer.noDiagnosticRecipe" = "이 컨트롤러에서는 진단 모드를 사용할 수 없습니다.";
 "developer.noExtraInputs" = "추가 버튼은 발견되지 않았습니다.";
 "developer.noPackets" = "캡처된 패킷 없음";
 "developer.packetCapture" = "원시 패킷 캡처";

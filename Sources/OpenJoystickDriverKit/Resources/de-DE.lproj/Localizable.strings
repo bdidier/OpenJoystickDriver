@@ -514,9 +514,7 @@
 "developer.connection" = "Verbindung";
 "developer.controller" = "Controller";
 "developer.controllerDetails" = "Controller";
-"developer.diagnosticMode" = "Diagnosemodus";
 "developer.emptyCapture" = "Klicke auf „Erfassung starten“ und drücke dann Tasten am Controller.";
-"developer.enterDiagnosticMode" = "Diagnosemodus starten";
 "developer.exportCapture" = "Paketerfassung exportieren";
 "developer.extraInputs" = "Zusatztasten";
 "developer.extraInputsDescription" = "Drücke jeweils eine Zusatztaste. Erkannte Tasten bleiben aufgelistet, bis du die Erfassung löschst.";
@@ -527,7 +525,6 @@
 "developer.loadingControllers" = "Controllerdiagnose wird geladen…";
 "developer.noControllers" = "Keine Controller verbunden";
 "developer.noControllersDetail" = "Verbinde einen Controller und klicke dann auf „Aktualisieren“.";
-"developer.noDiagnosticRecipe" = "Der Diagnosemodus ist für diesen Controller nicht verfügbar.";
 "developer.noExtraInputs" = "Keine Zusatztasten erkannt.";
 "developer.noPackets" = "Keine Pakete erfasst";
 "developer.packetCapture" = "Roh-Paketerfassung";

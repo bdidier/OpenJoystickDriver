@@ -514,9 +514,7 @@
 "developer.connection" = "Connexion";
 "developer.controller" = "Manette";
 "developer.controllerDetails" = "Manette";
-"developer.diagnosticMode" = "Mode diagnostic";
 "developer.emptyCapture" = "Appuyez sur « Démarrer la capture », puis sur les boutons de la manette.";
-"developer.enterDiagnosticMode" = "Entrer en mode diagnostic";
 "developer.exportCapture" = "Exporter la capture de paquets";
 "developer.extraInputs" = "Boutons supplémentaires";
 "developer.extraInputsDescription" = "Appuyez sur un bouton supplémentaire à la fois. Les boutons détectés restent listés jusqu’à ce que vous effaciez la capture.";
@@ -527,7 +525,6 @@
 "developer.loadingControllers" = "Chargement des diagnostics de manette…";
 "developer.noControllers" = "Aucune manette connectée";
 "developer.noControllersDetail" = "Connectez une manette, puis appuyez sur Actualiser.";
-"developer.noDiagnosticRecipe" = "Le mode diagnostic n’est pas disponible pour cette manette.";
 "developer.noExtraInputs" = "Aucun bouton supplémentaire détecté.";
 "developer.noPackets" = "Aucun paquet capturé";
 "developer.packetCapture" = "Capture brute de paquets";

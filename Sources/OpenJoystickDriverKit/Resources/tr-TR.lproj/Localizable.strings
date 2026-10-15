@@ -514,9 +514,7 @@
 "developer.connection" = "Bağlantı";
 "developer.controller" = "Kontrolcü";
 "developer.controllerDetails" = "Kontrolcü";
-"developer.diagnosticMode" = "Tanılama Modu";
 "developer.emptyCapture" = "“Yakalamayı Başlat”a basın, ardından kontrolcü düğmelerine basın.";
-"developer.enterDiagnosticMode" = "Tanılama Moduna Gir";
 "developer.exportCapture" = "Paket Yakalamayı Dışa Aktar";
 "developer.extraInputs" = "Ekstra Düğmeler";
 "developer.extraInputsDescription" = "Her seferinde bir ekstra düğmeye basın. Algılanan düğmeler, yakalamayı temizleyene kadar listede kalır.";
@@ -527,7 +525,6 @@
 "developer.loadingControllers" = "Kontrolcü Tanılamaları Yükleniyor…";
 "developer.noControllers" = "Bağlı Kontrolcü Yok";
 "developer.noControllersDetail" = "Bir kontrolcü bağlayın, ardından Yenile’ye basın.";
-"developer.noDiagnosticRecipe" = "Bu kontrolcü için tanılama modu kullanılamıyor.";
 "developer.noExtraInputs" = "Ekstra düğme algılanmadı.";
 "developer.noPackets" = "Yakalanan Paket Yok";
 "developer.packetCapture" = "Ham Paket Yakalama";

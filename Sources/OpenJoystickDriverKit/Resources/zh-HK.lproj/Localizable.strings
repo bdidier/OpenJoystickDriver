@@ -514,9 +514,7 @@
 "developer.connection" = "連線";
 "developer.controller" = "控制器";
 "developer.controllerDetails" = "控制器";
-"developer.diagnosticMode" = "診斷模式";
 "developer.emptyCapture" = "按下「開始擷取」，然後按控制器上的按鈕。";
-"developer.enterDiagnosticMode" = "進入診斷模式";
 "developer.exportCapture" = "匯出封包擷取";
 "developer.extraInputs" = "額外按鈕";
 "developer.extraInputsDescription" = "每次按一個額外按鈕。偵測到的按鈕會一直列出，直到您清除擷取內容。";
@@ -527,7 +525,6 @@
 "developer.loadingControllers" = "正在載入控制器診斷資料…";
 "developer.noControllers" = "沒有連接控制器";
 "developer.noControllersDetail" = "連接控制器，然後按「重新整理」。";
-"developer.noDiagnosticRecipe" = "此控制器無法使用診斷模式。";
 "developer.noExtraInputs" = "未偵測到額外按鈕。";
 "developer.noPackets" = "尚未擷取封包";
 "developer.packetCapture" = "原始封包擷取";

@@ -611,16 +611,9 @@
       ]
     },
     "gipInitializationAction": {
-      "enum": [
-        "xbox.gip/power-on",
-        "xbox.gip/s-init",
-        "xbox.gip/enable-extra-input",
-        "xbox.gip/hori-ack",
-        "xbox.gip/led-on",
-        "xbox.gip/auth-done",
-        "xbox.gip/rumble-begin",
-        "xbox.gip/rumble-end"
-      ]
+      "$comment": "The ids a family offers are in defaults.session.namedPackets of Resources/Protocols/xbox.gip.json; a record naming one the description lacks is rejected by the validators.",
+      "type": "string",
+      "pattern": "^xbox\\.gip/[a-z0-9]+(-[a-z0-9]+)*$"
     },
     "capabilities": {
       "type": "object",

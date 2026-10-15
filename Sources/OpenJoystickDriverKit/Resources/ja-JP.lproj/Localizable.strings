@@ -514,9 +514,7 @@
 "developer.connection" = "接続";
 "developer.controller" = "コントローラ";
 "developer.controllerDetails" = "コントローラ";
-"developer.diagnosticMode" = "診断モード";
 "developer.emptyCapture" = "「キャプチャを開始」を押してから、コントローラのボタンを押してください。";
-"developer.enterDiagnosticMode" = "診断モードに入る";
 "developer.exportCapture" = "パケットキャプチャを書き出す";
 "developer.extraInputs" = "追加ボタン";
 "developer.extraInputsDescription" = "追加ボタンを1つずつ押してください。検出されたボタンは、キャプチャを消去するまで一覧に残ります。";
@@ -527,7 +525,6 @@
 "developer.loadingControllers" = "コントローラの診断情報を読み込み中…";
 "developer.noControllers" = "コントローラが接続されていません";
 "developer.noControllersDetail" = "コントローラを接続して「更新」を押してください。";
-"developer.noDiagnosticRecipe" = "このコントローラでは診断モードを利用できません。";
 "developer.noExtraInputs" = "追加ボタンは検出されていません。";
 "developer.noPackets" = "キャプチャされたパケットはありません";
 "developer.packetCapture" = "生パケットキャプチャ";

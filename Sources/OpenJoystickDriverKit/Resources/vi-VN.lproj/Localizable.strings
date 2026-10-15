@@ -514,9 +514,7 @@
 "developer.connection" = "Kết nối";
 "developer.controller" = "Bộ điều khiển";
 "developer.controllerDetails" = "Bộ điều khiển";
-"developer.diagnosticMode" = "Chế độ chẩn đoán";
 "developer.emptyCapture" = "Nhấn Bắt đầu ghi, sau đó nhấn các nút của bộ điều khiển.";
-"developer.enterDiagnosticMode" = "Vào chế độ chẩn đoán";
 "developer.exportCapture" = "Xuất nội dung ghi gói tin";
 "developer.extraInputs" = "Nút bổ sung";
 "developer.extraInputsDescription" = "Nhấn từng nút bổ sung một. Các nút được phát hiện vẫn hiện trong danh sách cho đến khi bạn xóa bản ghi.";
@@ -527,7 +525,6 @@
 "developer.loadingControllers" = "Đang tải chẩn đoán bộ điều khiển…";
 "developer.noControllers" = "Chưa kết nối bộ điều khiển";
 "developer.noControllersDetail" = "Kết nối bộ điều khiển, sau đó nhấn Làm mới.";
-"developer.noDiagnosticRecipe" = "Chế độ chẩn đoán không khả dụng cho bộ điều khiển này.";
 "developer.noExtraInputs" = "Không phát hiện nút bổ sung nào.";
 "developer.noPackets" = "Chưa ghi gói tin nào";
 "developer.packetCapture" = "Ghi gói tin thô";

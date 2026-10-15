@@ -514,9 +514,7 @@
 "developer.connection" = "الاتصال";
 "developer.controller" = "وحدة التحكم";
 "developer.controllerDetails" = "وحدة التحكم";
-"developer.diagnosticMode" = "وضع التشخيص";
 "developer.emptyCapture" = "اضغط على «بدء الالتقاط» ثم اضغط على أزرار وحدة التحكم.";
-"developer.enterDiagnosticMode" = "الدخول إلى وضع التشخيص";
 "developer.exportCapture" = "تصدير التقاط الحزم";
 "developer.extraInputs" = "أزرار إضافية";
 "developer.extraInputsDescription" = "اضغط على زر إضافي واحد في كل مرة. تبقى الأزرار المكتشفة في القائمة حتى تمسح الالتقاط.";
@@ -527,7 +525,6 @@
 "developer.loadingControllers" = "جارٍ تحميل تشخيصات وحدات التحكم…";
 "developer.noControllers" = "لا توجد وحدات تحكم متصلة";
 "developer.noControllersDetail" = "وصّل وحدة تحكم ثم اضغط على «تحديث».";
-"developer.noDiagnosticRecipe" = "وضع التشخيص غير متاح لوحدة التحكم هذه.";
 "developer.noExtraInputs" = "لم يتم اكتشاف أزرار إضافية.";
 "developer.noPackets" = "لم تُلتقط أي حزم";
 "developer.packetCapture" = "التقاط الحزم الخام";

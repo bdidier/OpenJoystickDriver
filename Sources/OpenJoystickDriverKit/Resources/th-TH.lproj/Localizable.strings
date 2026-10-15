@@ -514,9 +514,7 @@
 "developer.connection" = "การเชื่อมต่อ";
 "developer.controller" = "คอนโทรลเลอร์";
 "developer.controllerDetails" = "คอนโทรลเลอร์";
-"developer.diagnosticMode" = "โหมดการวินิจฉัย";
 "developer.emptyCapture" = "กดเริ่มการจับ แล้วกดปุ่มบนคอนโทรลเลอร์";
-"developer.enterDiagnosticMode" = "เข้าสู่โหมดการวินิจฉัย";
 "developer.exportCapture" = "ส่งออกการจับแพ็กเก็ต";
 "developer.extraInputs" = "ปุ่มเพิ่มเติม";
 "developer.extraInputsDescription" = "กดทีละปุ่มเพิ่มเติม ปุ่มที่ตรวจพบจะอยู่ในรายการจนกว่าคุณจะล้างการจับ";
@@ -527,7 +525,6 @@
 "developer.loadingControllers" = "กำลังโหลดการวินิจฉัยคอนโทรลเลอร์…";
 "developer.noControllers" = "ไม่มีคอนโทรลเลอร์ที่เชื่อมต่อ";
 "developer.noControllersDetail" = "เชื่อมต่อคอนโทรลเลอร์ แล้วกดดึงข้อมูลใหม่";
-"developer.noDiagnosticRecipe" = "โหมดการวินิจฉัยไม่พร้อมใช้งานสำหรับคอนโทรลเลอร์นี้";
 "developer.noExtraInputs" = "ไม่พบปุ่มเพิ่มเติม";
 "developer.noPackets" = "ไม่มีแพ็กเก็ตที่จับได้";
 "developer.packetCapture" = "การจับแพ็กเก็ตดิบ";
