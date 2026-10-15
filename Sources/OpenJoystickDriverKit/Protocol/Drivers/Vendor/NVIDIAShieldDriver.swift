@@ -48,8 +48,8 @@ public final class NVIDIAShieldDriver: PhysicalProtocolDriver {
   public func consumeInputConnectionStateChange() -> ControllerInputConnectionState? { nil }
 
   public var capabilities: ControllerCapabilities {
-    ControllerCapabilities(
-      controls: Control.xboxLayout.union(isV103 ? [.guide, .touchpadClick] : [.guide])
+    PhysicalProtocolID.vendorNVIDIAShield.describedControls.union(
+      ControllerCapabilities(controls: isV103 ? [.touchpadClick] : [])
     )
   }
 

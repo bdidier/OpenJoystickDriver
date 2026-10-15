@@ -112,9 +112,11 @@ extension DevicePipeline {
     return driver.consumeFeatureReply(data, request: request)
   }
 
+  /// The startup-phase writes of the record or the family's description, then the driver's own
+  /// startup writes: the ones that depend on state only the driver holds.
   func hidStartupWrites() -> [PhysicalOutputWrite] {
     guard isActive else { return [] }
-    return driver.startupWrites()
+    return resolvedStartupWrites(phase: .startup) + driver.startupWrites()
   }
 
   func hidStartupRecoveryWrites() -> [PhysicalOutputWrite] {
@@ -137,11 +139,27 @@ extension DevicePipeline {
     return driver.activationWrites()
   }
 
-  /// The record's startup writes for the observed host transport; none for an observe-only
-  /// pipeline, which macOS starts.
-  func recordStartupWrites() -> [RecordStartupWrite] {
-    guard isActive, !observesOnly, let writes = binding?.record?.startupWrites else { return [] }
-    return writes.filter { $0.applies(to: interface?.hostTransport) }
+  /// The activation-phase startup writes of the record or the family's description; none for an
+  /// observe-only pipeline, which macOS starts.
+  func activationStartupWrites() -> [PhysicalOutputWrite] {
+    guard isActive, !observesOnly else { return [] }
+    return resolvedStartupWrites(phase: .activation)
+  }
+
+  /// The HID startup writes of `phase` for the observed host transport. A record that carries
+  /// HID startup writes replaces the family description's.
+  func resolvedStartupWrites(phase: StartupPhase) -> [PhysicalOutputWrite] {
+    guard let binding else { return [] }
+    let recordWrites = binding.record?.startupWrites ?? []
+    let writes =
+      recordWrites.isEmpty
+      ? binding.protocolID.protocolDescription.startupWrites(
+        phase: phase,
+        variant: binding.variant,
+        parameters: binding.record?.parameters ?? .none
+      )
+      : recordWrites.filter { $0.phase == phase }
+    return writes.filter { $0.applies(to: interface?.hostTransport) }.map(\.write)
   }
 
   func hidPresenceRequestWrite() -> PhysicalOutputWrite? { driver.presenceRequestWrite() }

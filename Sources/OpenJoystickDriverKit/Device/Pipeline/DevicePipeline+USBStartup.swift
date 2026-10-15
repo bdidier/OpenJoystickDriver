@@ -212,6 +212,15 @@ extension DevicePipeline {
     let writes = usbStartupWrites()
     let interval = plan.usbStartupIntervalNanoseconds
     for (index, write) in writes.enumerated() {
+      // A write that names its own delay waits that long, even first; the rest wait the interval.
+      let wait =
+        write.startupDelayMilliseconds.map {
+          UInt64($0) * DeviceTransportProfile.nanosecondsPerMillisecond
+        } ?? (index > 0 ? interval : 0)
+      if wait > 0 {
+        try await Task.sleep(nanoseconds: wait)
+        guard isCurrentUSBOperation(runGeneration) else { throw CancellationError() }
+      }
       let handleIsCurrent: Bool
       if let currentHandle = usbHandle {
         handleIsCurrent = ObjectIdentifier(currentHandle) == ObjectIdentifier(handle)
@@ -228,10 +237,6 @@ extension DevicePipeline {
         print(
           "[DevicePipeline] Optional USB startup output rejected for \(identifier):" + " \(error)"
         )
-      }
-      if index < writes.count - 1, interval > 0 {
-        try await Task.sleep(nanoseconds: interval)
-        guard isCurrentUSBOperation(runGeneration) else { throw CancellationError() }
       }
     }
   }

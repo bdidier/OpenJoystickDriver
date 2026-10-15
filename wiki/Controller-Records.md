@@ -137,16 +137,22 @@ A HID controller that needs a fixed report before it sends input can name it in 
 }
 ```
 
-- `report` names the HID report as in `output.rumble`. `length` is 2 to 64 bytes.
+- `report` names the HID report as in `output.rumble`. `length` is 2 to 128 bytes.
 - `bytes` lists every byte after the report ID, or every byte of the report when `id` is 0, from 0 to 255.
-- `delayMilliseconds` waits before this write, from 0, the default, to 1000.
+- `delayMilliseconds` waits before this write, from 0 to 1000. Without it, a `startup`-phase write waits the family's startup interval and an `activation`-phase write does not wait.
+- `phase` is `activation`, the default, or `startup`. An `activation` write is sent after the protocol driver's own startup, when the controller opens; a `startup` write is sent with the driver's startup writes.
+- `crc32Seed` (0 to 255) makes OpenJoystickDriver write the Sony Bluetooth CRC-32 of the report, with this seed, in its last 4 bytes. `length` then counts those 4 bytes and must exceed 4. The DualShock 4 Bluetooth report uses it.
 - `transport` limits the write to `usb`, `bluetooth-classic`, or `bluetooth-le`. Without it, OpenJoystickDriver sends the write on every transport.
 
-List 1 to 16 writes. OpenJoystickDriver sends them in order after the protocol driver's own startup, only when it opens the controller. A failed write is logged and the next one is still sent. Raw-USB families do not take `output.startup`.
+List 1 to 16 writes. OpenJoystickDriver sends them in order after the protocol driver's own startup, only when it opens the controller. A failed write is logged and the next one is still sent. A family's description may also carry startup writes, which a record's writes of the same format replace. In a description a HID write may add `variants` (the family variants it applies to) and `when` (`{"parameter": "layout", "is": ["Pro"]}` or `isNot`, naming a declared enumeration parameter). A record may not use `variants` or `when`.
+
+### Raw-USB Startup Writes
+
+A raw-USB family that carries startup packets in its description (`xbox.xusb`, `xbox.gip`, `nintendo.switch2`) takes them in `output.startup` too, in place of the description's. A raw-USB write has no `report`: `bytes` (1 to 64), `endpoint` (1 to 127, default the family's output endpoint), `timeoutMilliseconds` (1 to 60000, default the family's timeout), `delayMilliseconds` (0 to 1000), `sessionByte` (the index of a byte the driver fills with its per-session value, such as the GIP sequence), and `toleratesRejection`. One list holds one format only, and a record that names `protocol.initialization` takes no raw-USB writes.
 
 ## Tune Timings and the Stick Deadzone
 
-A record's `tuning` field changes a value that the protocol driver otherwise sets. Name at least one value. A value you leave out keeps the driver's default.
+A record's `tuning` field changes a value that the protocol driver otherwise sets. Name at least one value. A value you leave out keeps the family's default, which its protocol description holds (see [Family Defaults](#family-defaults-live-in-protocol-descriptions)).
 
 ```json
 "tuning": {
@@ -161,15 +167,38 @@ A record's `tuning` field changes a value that the protocol driver otherwise set
 | `inputLivenessTimeoutMs` | 1 to 60000 | `sony.dualshock4` | How long the controller can send no input before OpenJoystickDriver releases its held controls. The default is 1000. |
 | `hidStartupIntervalMs` | 0 to 60000 | HID families | The gap between the startup writes. |
 | `minimumHIDOutputIntervalMs` | 0 to 60000 | HID families | The shortest gap between rumble and lighting reports. 0 sends them without a limit. |
+| `hidStartupRecoveryIntervalMs` | 1 to 60000 | `nintendo.switch1` | The gap between startup recovery rounds. The family's description gives the default (200). |
+| `hidStartupRecoveryRounds` | 1 to 10 | `nintendo.switch1` | The startup recovery rounds before OpenJoystickDriver gives up. The family's description gives the default (2). |
+| `keepAliveIntervalMs` | 1 to 60000 | `xbox.gip`, `vendor.gamesir`, `valve.steam-deck`, `valve.steam-triton`, `nintendo.switch2` | The gap between keep-alive packets, or between rumble resends where the family resends rumble. The family's description gives the default, and the key applies to raw-USB GIP and GameSir too. |
+| `lizardResendTicks` | 1 to 100000 | `valve.steam-triton` | The keep-alive ticks between resends of the lizard-mode-off request. The family's description gives the default (75). |
+| `usbCommandTimeoutMs` | 1 to 60000 | `nintendo.switch2`, `vendor.gamesir` (USB) | The timeout of one USB command transfer. The description gives the default: 1000 for `nintendo.switch2`, 2000 for `vendor.gamesir`. |
+| `presenceResendReports` | 1 to 1000 | `xbox.gip`, `xbox.xusb` | The input reports between resends of the request that makes a controller announce itself. The description gives the default: 4 for `xbox.gip`, 16 for `xbox.xusb`. |
+| `adapterDisconnectDelayMs` | 1 to 60000 | `sony.dualshock4`, `sony.dualsense` | How long an adapter or dongle can stay silent before its controller counts as disconnected. The default is 500. |
+| `usbStartupIntervalMs` | 0 to 60000 | `xbox.gip` | The gap between the raw-USB startup writes. The default is 50. |
+| `usbStartupRetryDelayMs` | 1 to 60000 | `xbox.gip` | The wait before the first startup retry; each later retry waits twice as long. The default is 1000. |
+| `usbTransferTimeoutMs` | 1 to 60000 | `xbox.gip` | The timeout of each raw-USB transfer, startup packets and rumble. The default is 2000. |
 | `frameQueueCapacity` | 1 to 1024 | every family | How many virtual gamepad reports may wait behind the one being sent. The default is 64. When the queue is full, the newest state replaces the oldest waiting state, so a slow consumer never grows memory and always receives the newest state. A reply to an app's output report is never dropped. |
-| `hidStartupRecoveryIntervalMs` | 1 to 60000 | `nintendo.switch1` | The gap between startup recovery rounds. The default is 200. |
-| `hidStartupRecoveryRounds` | 1 to 10 | `nintendo.switch1` | The startup recovery rounds before OpenJoystickDriver gives up. The default is 2. |
 
 The default for `frameQueueCapacity` is in each protocol description's `defaults.tuning` (`Resources/Protocols/<family>.json`), so a record, a patch, or `all.patch.json` overrides it per model or for every controller. Reports queue only while the system takes a long time to accept the previous one; button changes that arrive in the same moment still reach the virtual gamepad in order until the queue is full.
 
 Raw-USB families, such as `xbox.gip`, do not take the two HID timings. The two recovery values apply only to `nintendo.switch1`, because the `nintendo.switch2` and `nintendo.switch-input-only` drivers have no startup recovery. `ojd record validate` rejects a value outside its range or its families.
 
 A `tuning` in a `ControllerPatch` merges per value into the bundled `tuning`: a value you leave out keeps its bundled value. Timings apply when the running service connects the controller again after the record changes.
+
+### Family Defaults Live In Protocol Descriptions
+
+A family's default timings and control set are data in `Resources/Protocols/<family>.json`, not Swift constants. [`protocol-description.schema.json`](../Resources/Schemas/protocol-description.schema.json) defines the file, and it holds these members:
+
+- `endpoints`: the USB endpoint addresses the driver uses.
+- `rawUSB`: `true`, or the variants that talk raw USB.
+- `recordSections`: the record sections the driver reads.
+- `tuningKeys`: the `tuning` keys a record may set for the family. `rawUSBTuningKeys` lists the keys of its raw-USB variants, and a description that is always raw USB takes only `rawUSBTuningKeys`.
+- `buttonLabels`: the labels of the family's buttons.
+- `macOSOwnedOutput`: the output that macOS owns for the family, and a `rationale` that says why.
+- `controls`: the controls the driver reports. `recordCapabilities` names the control deltas (`present`, `rumbleAbsent`) that a record of the family may declare; the driver adds the record-derived parts.
+- `defaults.tuning`: the default value of each tuning key, such as `keepAliveIntervalMs`. `defaults.variants.<variant>.tuning` gives another value for a transport, for example the Switch 1 `hidStartupIntervalMs` of 60 over Bluetooth and 20 over USB.
+
+Change a default by editing the description: every record of the family follows it, and a record's or patch's own `tuning` still wins. Then run `./Scripts/ojd catalog regenerate --write`, which copies the descriptions into the Kit bundle.
 
 ### Set a Default for Every Controller
 

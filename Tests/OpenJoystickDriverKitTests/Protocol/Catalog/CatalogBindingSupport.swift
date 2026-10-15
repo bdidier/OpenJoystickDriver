@@ -131,6 +131,7 @@ extension DeviceRuntimeProfile {
       server: server,
       rumbleTemplate: rumbleTemplate,
       startupWrites: startupWrites,
+      usbStartupWrites: usbStartupWrites,
       inputLayout: inputLayout,
       hidUsageMap: hidUsageMap,
       tuning: newTuning ?? tuning,

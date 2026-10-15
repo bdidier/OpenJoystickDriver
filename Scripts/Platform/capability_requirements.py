@@ -24,7 +24,13 @@ def requirements_for(argv: list[str]) -> tuple[Capability, ...]:
             Capability.FULL_XCODE,
         )
     if route == ("check", "tools"):
-        return (Capability.XMAKE, Capability.PKG_CONFIG, Capability.SDL3)
+        return (
+            Capability.XMAKE,
+            Capability.PKG_CONFIG,
+            Capability.SDL3,
+            Capability.SWIFT_TOOLCHAIN,
+            Capability.FULL_XCODE,
+        )
     if route == ("check", "driverkit"):
         return (
             Capability.SCHEMA_PYTHON,

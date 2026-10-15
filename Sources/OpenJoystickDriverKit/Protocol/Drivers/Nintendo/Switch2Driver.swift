@@ -2,10 +2,6 @@ import Foundation
 
 private let switch2StateReportID: UInt8 = 0x05
 private let switch2StateReportLength = 64
-private let switch2CommandOutEndpoint: UInt8 = 0x02
-private let switch2CommandTimeoutMilliseconds: UInt32 = 1000
-/// SDL `RUMBLE_INTERVAL`: the rumble packet is re-sent at this period while any motor runs.
-let switch2RumbleIntervalNanoseconds: UInt64 = 12_000_000
 /// SDL `RUMBLE_MAX`: the HD rumble amplitude cap.
 private let switch2RumbleMaxAmplitude = 29_000
 /// Zero-amplitude packets sent by the rumble refresh after a stop. A refresh built before the stop
@@ -17,6 +13,16 @@ public enum Switch2ControllerLayout: Sendable {
   case leftJoyCon
   case rightJoyCon
   case gameCube
+
+  /// The description's `layout` parameter value for this layout.
+  var parameter: ProtocolParameters.Layout {
+    switch self {
+    case .pro: .pro
+    case .leftJoyCon: .joyConLeft
+    case .rightJoyCon: .joyConRight
+    case .gameCube: .gameCube
+    }
+  }
 }
 
 /// The link a Switch 2 controller runs on. Both carry the same input report and command set.
@@ -85,9 +91,30 @@ public final class Switch2Driver: PhysicalProtocolDriver {
   private var gameCubeRumbleError = 0
   private var pendingStopPackets = 0
 
-  public init(layout: Switch2ControllerLayout = .pro, link: Switch2Link = .usb) {
+  /// Bulk command timeout (`usbCommandTimeoutMs`).
+  let commandTimeoutMilliseconds: UInt32
+  /// The record's own startup packets; the description's when empty.
+  private let recordStartup: [USBStartupWrite]
+
+  /// The command channel's OUT endpoint, from the description.
+  static var commandOutEndpoint: UInt8 {
+    PhysicalProtocolID.nintendoSwitch2.descriptionOutputEndpoint
+  }
+
+  /// `tuning` is the effective tuning of the controller's record; the description's defaults
+  /// when nil.
+  public init(
+    layout: Switch2ControllerLayout = .pro,
+    link: Switch2Link = .usb,
+    tuning: ControllerTuning? = nil,
+    usbStartupWrites: [USBStartupWrite] = []
+  ) {
     self.layout = layout
     self.link = link
+    recordStartup = usbStartupWrites
+    commandTimeoutMilliseconds = UInt32(
+      PhysicalProtocolID.nintendoSwitch2.described(\.usbCommandTimeoutMilliseconds, in: tuning)
+    )
   }
 
   public func resetProtocolState() { state = .neutral }
@@ -133,13 +160,16 @@ public final class Switch2Driver: PhysicalProtocolDriver {
   public var defaultColor: ControllerColor? { nil }
 
   /// SDL reads USB replies of up to `0x50` bytes in 64-byte chunks, 100 ms each. A BLE reply
-  /// waits for a connection interval, so its read timeout is longer.
+  /// waits for a connection interval, so its read timeout is longer. SDL `RUMBLE_INTERVAL`: the
+  /// description's keep-alive interval is the period the rumble packet is re-sent while any motor
+  /// runs.
   public var sessionPlan: DriverSessionPlan {
     DriverSessionPlan(
-      hidKeepAliveIntervalNanoseconds: switch2RumbleIntervalNanoseconds,
+      hidKeepAliveIntervalNanoseconds: PhysicalProtocolID.nintendoSwitch2
+        .keepAliveIntervalNanoseconds(),
       usbCommandChannel: USBCommandChannel(
         interfaceNumber: 1,
-        outEndpoint: switch2CommandOutEndpoint,
+        outEndpoint: Self.commandOutEndpoint,
         inEndpoint: 0x82,
         replyLength: 0x50,
         replyTimeoutMilliseconds: link == .usb ? 100 : 500
@@ -150,43 +180,28 @@ public final class Switch2Driver: PhysicalProtocolDriver {
   public func consumeInputConnectionStateChange() -> ControllerInputConnectionState? { nil }
 
   /// SDL `HIDAPI_DriverSwitch2_InitUSB`: flash reads for the stick and trigger calibration, then
-  /// the init sequence. The last packet starts the input reports.
+  /// the init sequence. The last packet starts the input reports. The packets are the
+  /// description's startup writes for this link and layout; the driver stamps each one's link
+  /// byte.
   ///
-  /// Over BLE the console sends the first five of these packets, ending with the feature enable
-  /// (ndeadly's captures and joycon2cpp's replay). The rest are the NFC, charging-grip, and USB
-  /// input-selection commands, which a BLE link does not use.
+  /// Over BLE the console sends the first five of the init packets, ending with the feature
+  /// enable (ndeadly's captures and joycon2cpp's replay). The rest are the NFC, charging-grip,
+  /// and USB input-selection commands, which a BLE link does not use.
   public func startupWrites() -> [PhysicalOutputWrite] {
-    var addresses: [UInt32] = [0x13080, 0x130C0]
-    if layout == .gameCube { addresses.append(0x13140) }
-    addresses += [0x1FC040, 0x1FC080]
-    let flashReads = addresses.map { address in
-      [0x02, 0x91, 0x00, 0x01, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
-        + (0..<4).map { UInt8(truncatingIfNeeded: address >> ($0 * 8)) }
+    let linkByte = link.commandTransportByte
+    let session: ([UInt8]) -> UInt8 = { _ in linkByte }
+    return PhysicalProtocolID.nintendoSwitch2.usbStartupWrites(
+      recordWrites: recordStartup,
+      variant: link == .usb ? .usb : .bluetoothLE,
+      parameters: ProtocolParameters(layout: layout.parameter)
+    ).map { write in
+      write.write(
+        defaultEndpoint: Self.commandOutEndpoint,
+        defaultTimeoutMilliseconds: Int(commandTimeoutMilliseconds),
+        session: session
+      )
     }
-    let sequence = link == .usb ? Self.initSequence : Self.bluetoothLEInitSequence
-    return (flashReads + sequence).map(command)
   }
-
-  static let bluetoothLEInitSequence = Array(initSequence.prefix(5))
-
-  /// Payload lengths match byte 5, as SDL sends `pkt[5] + 8` bytes.
-  static let initSequence: [[UInt8]] = [
-    [0x07, 0x91, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00],
-    [0x0C, 0x91, 0x00, 0x02, 0x00, 0x04, 0x00, 0x00, 0x27, 0x00, 0x00, 0x00],
-    [0x11, 0x91, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00],
-    [
-      0x0A, 0x91, 0x00, 0x08, 0x00, 0x14, 0x00, 0x00, 0x01, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-      0xFF, 0xFF, 0x35, 0x00, 0x46, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    ], [0x0C, 0x91, 0x00, 0x04, 0x00, 0x04, 0x00, 0x00, 0x27, 0x00, 0x00, 0x00],
-    [0x01, 0x91, 0x00, 0x0C, 0x00, 0x00, 0x00, 0x00],
-    [0x01, 0x91, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00],
-    [0x08, 0x91, 0x00, 0x02, 0x00, 0x04, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00],
-    [0x03, 0x91, 0x00, 0x0A, 0x00, 0x04, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00],
-    [
-      0x03, 0x91, 0x00, 0x0D, 0x00, 0x08, 0x00, 0x00, 0x01, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-      0xFF,
-    ],
-  ]
 
   /// Sets the link byte, so one packet table serves both links.
   func command(_ packet: [UInt8]) -> PhysicalOutputWrite {
@@ -194,9 +209,9 @@ public final class Switch2Driver: PhysicalProtocolDriver {
     bytes[2] = link.commandTransportByte
     return .usb(
       PhysicalUSBOutputPacket(
-        endpoint: switch2CommandOutEndpoint,
+        endpoint: Self.commandOutEndpoint,
         bytes: bytes,
-        timeoutMilliseconds: switch2CommandTimeoutMilliseconds
+        timeoutMilliseconds: commandTimeoutMilliseconds
       )
     )
   }

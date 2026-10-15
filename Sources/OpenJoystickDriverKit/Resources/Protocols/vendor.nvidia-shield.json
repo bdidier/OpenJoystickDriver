@@ -2,11 +2,20 @@
   "apiVersion": "openjoystickdriver/v1alpha1",
   "kind": "ProtocolDescription",
   "family": "vendor.nvidia-shield",
+  "endpoints": {
+    "in": 130,
+    "out": 2
+  },
+  "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
   "parameters": {
     "reportRevision": {
       "type": "enum",
       "values": ["Shield2015"]
     }
+  },
+  "controls": {
+    "base": "xbox",
+    "add": ["Guide"]
   },
   "defaults": {
     "tuning": {

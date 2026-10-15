@@ -2,6 +2,11 @@
   "apiVersion": "openjoystickdriver/v1alpha1",
   "kind": "ProtocolDescription",
   "family": "xbox.xusb",
+  "endpoints": {
+    "in": 129,
+    "out": 1
+  },
+  "rawUSB": true,
   "interfaceSignatures": [
     {
       "variant": "wired",
@@ -16,9 +21,25 @@
       "interfaceProtocol": 129
     }
   ],
+  "controls": {
+    "base": "xbox",
+    "add": ["Guide"]
+  },
+  "rawUSBTuningKeys": ["presenceResendReports"],
   "defaults": {
     "tuning": {
+      "presenceResendReports": 16,
       "frameQueueCapacity": 64
+    },
+    "output": {
+      "startup": [
+        {
+          "bytes": [8, 0, 15, 192, 0, 0, 0, 0, 0, 0, 0, 0],
+          "timeoutMilliseconds": 2000,
+          "toleratesRejection": true,
+          "variants": ["receiver"]
+        }
+      ]
     }
   }
 }

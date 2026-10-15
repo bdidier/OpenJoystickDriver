@@ -9,6 +9,7 @@ nonisolated struct SupportExportService: Sendable {
   func writeReport(
     status: ApplicationServiceStatusPayload?,
     virtualDiagnostics: ApplicationServiceVirtualDeviceDiagnosticsPayload?,
+    frameTimings: [ControllerFrameTimings],
     to outputURL: URL
   ) async throws {
     try await BlockingWork.run(label: "com.openjoystickdriver.support.report") {
@@ -22,7 +23,8 @@ nonisolated struct SupportExportService: Sendable {
         applicationServiceInstalled: ApplicationServiceManager.isInstalled,
         applicationServiceConnected: status != nil,
         buildIdentity: ApplicationVersion.buildIdentity,
-        appleGameControllerAudit: AppleGameControllerSupportAuditor.auditCurrentSystem()
+        appleGameControllerAudit: AppleGameControllerSupportAuditor.auditCurrentSystem(),
+        frameTimings: frameTimings
       )
       try SupportReportService.write(report, to: outputURL)
     }

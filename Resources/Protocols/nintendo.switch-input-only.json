@@ -1,0 +1,21 @@
+{
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "ProtocolDescription",
+  "family": "nintendo.switch-input-only",
+  "endpoints": {
+    "in": 130,
+    "out": 2
+  },
+  "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
+  "buttonLabels": "Nintendo",
+  "controls": {
+    "base": "xbox",
+    "add": ["Guide", "Capture"],
+    "digitalTriggers": ["LeftTrigger", "RightTrigger"]
+  },
+  "defaults": {
+    "tuning": {
+      "frameQueueCapacity": 64
+    }
+  }
+}

@@ -53,22 +53,26 @@ public enum PhysicalProtocolID: String, CaseIterable, Codable, Sendable {
 
   /// Whether rows of this family, with this stored variant, are reached through raw USB.
   public func usesRawUSB(storedVariant: PhysicalProtocolVariantID?) -> Bool {
-    switch self {
-    case .xboxXID, .xboxXUSB, .xboxGIP: true
-    case .vendorGameSir: storedVariant == .usb
-    case .hidDescriptor, .hidReportLayout, .sonySixaxis, .sonyDualShock4, .sonyDualSense,
-      .nintendoSwitch1, .nintendoSwitch2, .nintendoSwitchInputOnly, .valveSteamController,
-      .valveSteamTriton, .valveSteamDeck, .vendorFlydigi, .vendorPS3ThirdParty,
-      .vendorNVIDIAShield:
-      false
+    protocolDescription.rawUSB.applies(to: storedVariant)
+  }
+
+  /// This family's bundled protocol description, which holds the facts its driver reads.
+  var protocolDescription: ProtocolDescription {
+    guard let description = ProtocolDescription.bundled[self] else {
+      fatalError("[ProtocolDescription] No description for \(rawValue)")
     }
+    return description
   }
 
   /// Whether this family's driver encodes rumble from a record's rumble template.
-  var encodesRumbleTemplate: Bool { self == .hidReportLayout || self == .vendorPS3ThirdParty }
+  var encodesRumbleTemplate: Bool { protocolDescription.recordSections.contains(.rumble) }
 
-  /// Whether a protocol description may carry a declarative input layout for this family.
-  var describesInputLayout: Bool { self == .hidReportLayout || self == .xboxXID }
+  /// Whether records of this family need an input layout of their own: the driver reads one and
+  /// the description supplies none.
+  var requiresRecordInputLayout: Bool {
+    let description = protocolDescription
+    return description.recordSections.contains(.input) && description.inputLayout == nil
+  }
 
   /// Whether catalog records store this family's variant; otherwise the family has one
   /// contract or classification derives the variant from the observed transport.

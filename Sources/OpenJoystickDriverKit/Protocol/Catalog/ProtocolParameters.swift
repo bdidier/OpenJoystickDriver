@@ -291,19 +291,35 @@ public struct ProtocolParameters: Codable, Equatable, Sendable {
     return valueViolation(family: family)
   }
 
+  /// The parameters that take one of a fixed set of names.
+  static let enumerationNames: Set<String> = [
+    "layout", "usbProtocol", "lightingMemory", "hatSource", "motionCalibration", "role",
+    "motionScale", "reportRevision", "maker",
+  ]
+
+  /// The name an enumeration parameter is set to; nil when it is unset or not an enumeration.
+  func enumerationValue(_ name: String) -> String? {
+    switch name {
+    case "layout": layout?.rawValue
+    case "usbProtocol": usbProtocol?.rawValue
+    case "lightingMemory": lightingMemory?.rawValue
+    case "hatSource": hatSource?.rawValue
+    case "motionCalibration": motionCalibration?.rawValue
+    case "role": role?.rawValue
+    case "motionScale": motionScale?.rawValue
+    case "reportRevision": reportRevision?.rawValue
+    case "maker": maker?.rawValue
+    default: nil
+    }
+  }
+
   /// Why a set parameter holds a value its family's description does not declare, or nil. The
   /// enum values and integer ranges come from the description, not from this type.
   private func valueViolation(family: PhysicalProtocolID) -> String? {
     guard let declared = ProtocolDescription.bundled[family]?.parameters else { return nil }
-    let enumValues: [String: String?] = [
-      "layout": layout?.rawValue, "usbProtocol": usbProtocol?.rawValue,
-      "lightingMemory": lightingMemory?.rawValue, "hatSource": hatSource?.rawValue,
-      "motionCalibration": motionCalibration?.rawValue, "role": role?.rawValue,
-      "motionScale": motionScale?.rawValue, "reportRevision": reportRevision?.rawValue,
-      "maker": maker?.rawValue,
-    ]
-    for (name, value) in enumValues.sorted(by: { $0.key < $1.key }) {
-      guard let value, case .enumeration(let values)? = declared[name] else { continue }
+    for name in Self.enumerationNames.sorted() {
+      guard let value = enumerationValue(name), case .enumeration(let values)? = declared[name]
+      else { continue }
       if !values.contains(value) { return "\(name) \(value) is not one of \(values)" }
     }
     if let shareButton, case .object(let fields)? = declared["shareButton"],

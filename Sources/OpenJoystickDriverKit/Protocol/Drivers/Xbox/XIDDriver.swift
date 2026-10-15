@@ -26,7 +26,7 @@ public final class XIDDriver: PhysicalProtocolDriver {
   public func consumeInputConnectionStateChange() -> ControllerInputConnectionState? { nil }
 
   public var capabilities: ControllerCapabilities {
-    ControllerCapabilities(controls: Control.xboxLayout)
+    PhysicalProtocolID.xboxXID.describedControls
   }
 
   public var outputCapabilities: PhysicalControllerOutputCapabilities { .dualMainRumble }

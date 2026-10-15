@@ -52,14 +52,17 @@ extension InputTestTests {
     let capabilities = PhysicalControllerOutputCapabilities(lightingFeatures: [
       .programmableColor, .programmableBrightness,
     ])
-    let gateway = InputTestGatewayStub(outputDelayNanoseconds: 100_000_000)
+    // The first operation holds its call open until it is cancelled; the replacement then runs
+    // with no delay, so no wall-clock wait decides the outcome.
+    let gateway = InputTestGatewayStub(outputDelayNanoseconds: 60_000_000_000)
     let model = InputTestViewModel(gateway: gateway)
     model.selectDevice(makeInputTestDevice(capabilities: capabilities))
 
     model.applyColor()
-    try? await Task.sleep(nanoseconds: 10_000_000)
+    #expect(await gateway.waitForActiveOutputCall())
+    await gateway.setOutputDelay(0)
     model.applyBrightness()
-    try? await Task.sleep(nanoseconds: 150_000_000)
+    #expect(await eventually { await gateway.brightnessCalls.count == 1 })
 
     #expect(await gateway.counts().maximumConcurrentOutput == 1)
     #expect(await gateway.colorCalls.isEmpty)

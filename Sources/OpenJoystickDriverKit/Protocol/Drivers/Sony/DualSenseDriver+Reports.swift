@@ -3,10 +3,10 @@ import Foundation
 extension DualSenseDriver {
   public var defaultColor: ControllerColor? { ControllerColor(red: 0, green: 0, blue: 255) }
 
-  /// DualSense Edge function buttons and back paddles.
-  public static let edgeControls: Set<Control> = [
-    .leftPaddle1, .rightPaddle1, .auxiliary1, .auxiliary2,
-  ]
+  /// DualSense Edge function buttons and back paddles: the description's record capability.
+  public static var edgeControls: Set<Control> {
+    PhysicalProtocolID.sonyDualSense.protocolDescription.recordCapabilities.presentControls
+  }
 
   public var sessionPlan: DriverSessionPlan {
     DriverSessionPlan(
@@ -21,15 +21,10 @@ extension DualSenseDriver {
   }
 
   public var capabilities: ControllerCapabilities {
-    let base: Set<Control> = [
-      .guide, .leftTrigger, .rightTrigger, .touchpadClick, .microphone,
-    ]
-    let edge: Set<Control> = hasEdgeButtons ? Self.edgeControls : []
-    return ControllerCapabilities(
-      controls: Control.xboxLayout.union(base).union(edge),
-      digitalTriggers: [.leftTrigger, .rightTrigger],
-      touchContactCount: 2,
-      motion: true
+    let edge = PhysicalProtocolID.sonyDualSense.protocolDescription.recordCapabilities
+      .presentControls
+    return PhysicalProtocolID.sonyDualSense.describedControls.union(
+      ControllerCapabilities(controls: hasEdgeButtons ? edge : [])
     )
   }
 

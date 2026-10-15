@@ -55,12 +55,7 @@ public final class SwitchInputOnlyDriver: PhysicalProtocolDriver {
   public func consumeInputConnectionStateChange() -> ControllerInputConnectionState? { nil }
 
   public var capabilities: ControllerCapabilities {
-    ControllerCapabilities(
-      controls: Control.xboxLayout.subtracting([.leftTrigger, .rightTrigger]).union([
-        .leftTrigger, .rightTrigger, .guide, .capture,
-      ]),
-      digitalTriggers: [.leftTrigger, .rightTrigger]
-    )
+    PhysicalProtocolID.nintendoSwitchInputOnly.describedControls
   }
 
   /// Decodes one input report into the full controller state.

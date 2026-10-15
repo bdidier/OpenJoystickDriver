@@ -64,10 +64,7 @@ public final class FlydigiDriver: PhysicalProtocolDriver {
   public func consumeInputConnectionStateChange() -> ControllerInputConnectionState? { nil }
 
   public var capabilities: ControllerCapabilities {
-    ControllerCapabilities(
-      controls: Control.xboxLayout.union([.guide, .leftTrigger, .rightTrigger]),
-      digitalTriggers: [.leftTrigger, .rightTrigger]
-    )
+    PhysicalProtocolID.vendorFlydigi.describedControls
   }
 
   /// Decodes one Flydigi input report into the full controller state.

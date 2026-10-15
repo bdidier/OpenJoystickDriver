@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/protocol-description.schema.json",
-  "$comment": "Each family's variants are PhysicalProtocolID.variants in Swift; a family with none has no interface signatures. The parameter names of each family are those its driver declares in ProtocolParameters. defaults holds the sections a record layers over, limited to what the family's driver reads: input applies to hid.report-layout and xbox.xid as a byte layout and to hid.descriptor as a HID usage map, a rumble template to the drivers that encode one, startup writes and HID timings to HID families, liveness to sony.dualshock4 and startup recovery to nintendo.switch1.",
+  "$comment": "Each family's variants are PhysicalProtocolID.variants in Swift; a family with none has no interface signatures. The parameter names of each family are those its driver declares in ProtocolParameters. The family facts a driver reads live here and nowhere in code: its default endpoints, whether it is reached through raw USB (for every variant, or only the listed ones), the record sections whose layouts it reads, the tuning keys it reads beyond stickDeadzone (none for a raw-USB variant), its button labels, and what OJD still sends when macOS serves the controller. defaults holds the sections a record layers over, limited to what the family reads: input applies to hid.report-layout and xbox.xid as a byte layout and to hid.descriptor as a HID usage map, a rumble template needs the matching recordSections entry, HID startup writes need a family that is not always raw USB, raw-USB startup writes (bytes, endpoint, timeoutMilliseconds, delayMilliseconds, sessionByte, toleratesRejection) carry the packets a raw-USB driver sends, each startup write is limited by variants and by a when rule on an enumeration parameter the description declares and whose values it lists, which a schema cannot say and the validators check, and each defaults.tuning key must be stickDeadzone or in tuningKeys, which a schema cannot say and the validators check.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["apiVersion", "kind", "family"],
+  "required": ["apiVersion", "kind", "family", "endpoints"],
   "properties": {
     "apiVersion": {
       "const": "openjoystickdriver/v1alpha1"
@@ -14,6 +14,84 @@
     },
     "family": {
       "$ref": "controller.schema.json#/$defs/protocol/properties/family"
+    },
+    "endpoints": {
+      "$ref": "controller.schema.json#/$defs/usbOverride/properties/endpoints"
+    },
+    "rawUSB": {
+      "oneOf": [
+        {
+          "const": true
+        },
+        {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/interfaceSignature/properties/variant"
+          }
+        }
+      ]
+    },
+    "recordSections": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": ["input", "rumble"]
+      }
+    },
+    "tuningKeys": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "inputLivenessTimeoutMs",
+          "hidStartupIntervalMs",
+          "minimumHIDOutputIntervalMs",
+          "hidStartupRecoveryIntervalMs",
+          "hidStartupRecoveryRounds",
+          "keepAliveIntervalMs",
+          "lizardResendTicks",
+          "usbCommandTimeoutMs",
+          "presenceResendReports",
+          "adapterDisconnectDelayMs",
+          "usbStartupIntervalMs",
+          "usbStartupRetryDelayMs",
+          "usbTransferTimeoutMs"
+        ]
+      }
+    },
+    "rawUSBTuningKeys": {
+      "description": "The tuning keys a raw-USB variant reads beyond stickDeadzone.",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "keepAliveIntervalMs",
+          "lizardResendTicks",
+          "usbCommandTimeoutMs",
+          "presenceResendReports",
+          "adapterDisconnectDelayMs",
+          "usbStartupIntervalMs",
+          "usbStartupRetryDelayMs",
+          "usbTransferTimeoutMs"
+        ]
+      }
+    },
+    "controls": {
+      "$ref": "#/$defs/controls"
+    },
+    "recordCapabilities": {
+      "$ref": "#/$defs/recordCapabilities"
+    },
+    "buttonLabels": {
+      "enum": ["PlayStation", "Nintendo"]
+    },
+    "macOSOwnedOutput": {
+      "$ref": "#/$defs/macOSOwnedOutput"
     },
     "interfaceSignatures": {
       "type": "array",
@@ -46,10 +124,16 @@
       },
       "then": {
         "properties": {
-          "interfaceSignatures": false,
-          "parameters": false,
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              }
+            ]
+          },
           "defaults": {
             "properties": {
+              "variants": false,
               "input": {
                 "$ref": "#/$defs/hidDescriptorInput"
               },
@@ -66,7 +150,9 @@
                 }
               }
             }
-          }
+          },
+          "interfaceSignatures": false,
+          "parameters": false
         }
       }
     },
@@ -81,10 +167,16 @@
       },
       "then": {
         "properties": {
-          "interfaceSignatures": false,
-          "parameters": false,
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              }
+            ]
+          },
           "defaults": {
             "properties": {
+              "variants": false,
               "input": {
                 "$ref": "controller.schema.json#/$defs/input"
               },
@@ -96,7 +188,9 @@
                 }
               }
             }
-          }
+          },
+          "interfaceSignatures": false,
+          "parameters": false
         }
       }
     },
@@ -111,18 +205,25 @@
       },
       "then": {
         "properties": {
-          "interfaceSignatures": {
-            "items": {
-              "properties": {
-                "variant": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              },
+              {
+                "items": {
                   "enum": ["gamepad"]
                 }
               }
-            }
+            ]
           },
-          "parameters": false,
           "defaults": {
             "properties": {
+              "variants": {
+                "propertyNames": {
+                  "enum": ["gamepad"]
+                }
+              },
               "input": {
                 "$ref": "controller.schema.json#/$defs/input"
               },
@@ -142,7 +243,17 @@
                 }
               }
             }
-          }
+          },
+          "interfaceSignatures": {
+            "items": {
+              "properties": {
+                "variant": {
+                  "enum": ["gamepad"]
+                }
+              }
+            }
+          },
+          "parameters": false
         }
       }
     },
@@ -157,6 +268,27 @@
       },
       "then": {
         "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              },
+              {
+                "items": {
+                  "enum": ["wired", "receiver"]
+                }
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": {
+                "propertyNames": {
+                  "enum": ["wired", "receiver"]
+                }
+              }
+            }
+          },
           "interfaceSignatures": {
             "items": {
               "properties": {
@@ -166,27 +298,7 @@
               }
             }
           },
-          "parameters": false,
-          "defaults": {
-            "properties": {
-              "input": false,
-              "output": {
-                "properties": {
-                  "rumble": false,
-                  "startup": false
-                }
-              },
-              "tuning": {
-                "properties": {
-                  "inputLivenessTimeoutMs": false,
-                  "hidStartupRecoveryIntervalMs": false,
-                  "hidStartupRecoveryRounds": false,
-                  "hidStartupIntervalMs": false,
-                  "minimumHIDOutputIntervalMs": false
-                }
-              }
-            }
-          }
+          "parameters": false
         }
       }
     },
@@ -201,6 +313,27 @@
       },
       "then": {
         "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              },
+              {
+                "items": {
+                  "enum": ["usb"]
+                }
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": {
+                "propertyNames": {
+                  "enum": ["usb"]
+                }
+              }
+            }
+          },
           "interfaceSignatures": {
             "items": {
               "properties": {
@@ -213,26 +346,6 @@
           "parameters": {
             "propertyNames": {
               "enum": ["shareButton"]
-            }
-          },
-          "defaults": {
-            "properties": {
-              "input": false,
-              "output": {
-                "properties": {
-                  "rumble": false,
-                  "startup": false
-                }
-              },
-              "tuning": {
-                "properties": {
-                  "inputLivenessTimeoutMs": false,
-                  "hidStartupRecoveryIntervalMs": false,
-                  "hidStartupRecoveryRounds": false,
-                  "hidStartupIntervalMs": false,
-                  "minimumHIDOutputIntervalMs": false
-                }
-              }
             }
           }
         }
@@ -249,6 +362,27 @@
       },
       "then": {
         "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              },
+              {
+                "items": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": {
+                "propertyNames": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            }
+          },
           "interfaceSignatures": {
             "items": {
               "properties": {
@@ -258,24 +392,7 @@
               }
             }
           },
-          "parameters": false,
-          "defaults": {
-            "properties": {
-              "input": false,
-              "output": {
-                "properties": {
-                  "rumble": false
-                }
-              },
-              "tuning": {
-                "properties": {
-                  "inputLivenessTimeoutMs": false,
-                  "hidStartupRecoveryIntervalMs": false,
-                  "hidStartupRecoveryRounds": false
-                }
-              }
-            }
-          }
+          "parameters": false
         }
       }
     },
@@ -290,6 +407,27 @@
       },
       "then": {
         "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              },
+              {
+                "items": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": {
+                "propertyNames": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            }
+          },
           "interfaceSignatures": {
             "items": {
               "properties": {
@@ -302,22 +440,6 @@
           "parameters": {
             "propertyNames": {
               "enum": ["motionCalibration", "role", "motionScale"]
-            }
-          },
-          "defaults": {
-            "properties": {
-              "input": false,
-              "output": {
-                "properties": {
-                  "rumble": false
-                }
-              },
-              "tuning": {
-                "properties": {
-                  "hidStartupRecoveryIntervalMs": false,
-                  "hidStartupRecoveryRounds": false
-                }
-              }
             }
           }
         }
@@ -334,6 +456,27 @@
       },
       "then": {
         "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              },
+              {
+                "items": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": {
+                "propertyNames": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            }
+          },
           "interfaceSignatures": {
             "items": {
               "properties": {
@@ -353,23 +496,6 @@
                 "role"
               ]
             }
-          },
-          "defaults": {
-            "properties": {
-              "input": false,
-              "output": {
-                "properties": {
-                  "rumble": false
-                }
-              },
-              "tuning": {
-                "properties": {
-                  "inputLivenessTimeoutMs": false,
-                  "hidStartupRecoveryIntervalMs": false,
-                  "hidStartupRecoveryRounds": false
-                }
-              }
-            }
           }
         }
       }
@@ -385,6 +511,27 @@
       },
       "then": {
         "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              },
+              {
+                "items": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": {
+                "propertyNames": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            }
+          },
           "interfaceSignatures": {
             "items": {
               "properties": {
@@ -397,21 +544,6 @@
           "parameters": {
             "propertyNames": {
               "enum": ["layout", "usbProtocol"]
-            }
-          },
-          "defaults": {
-            "properties": {
-              "input": false,
-              "output": {
-                "properties": {
-                  "rumble": false
-                }
-              },
-              "tuning": {
-                "properties": {
-                  "inputLivenessTimeoutMs": false
-                }
-              }
             }
           }
         }
@@ -428,6 +560,27 @@
       },
       "then": {
         "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              },
+              {
+                "items": {
+                  "enum": ["usb", "bluetooth-le"]
+                }
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": {
+                "propertyNames": {
+                  "enum": ["usb", "bluetooth-le"]
+                }
+              }
+            }
+          },
           "interfaceSignatures": {
             "items": {
               "properties": {
@@ -440,23 +593,6 @@
           "parameters": {
             "propertyNames": {
               "enum": ["layout"]
-            }
-          },
-          "defaults": {
-            "properties": {
-              "input": false,
-              "output": {
-                "properties": {
-                  "rumble": false
-                }
-              },
-              "tuning": {
-                "properties": {
-                  "inputLivenessTimeoutMs": false,
-                  "hidStartupRecoveryIntervalMs": false,
-                  "hidStartupRecoveryRounds": false
-                }
-              }
             }
           }
         }
@@ -473,6 +609,27 @@
       },
       "then": {
         "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              },
+              {
+                "items": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": {
+                "propertyNames": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            }
+          },
           "interfaceSignatures": {
             "items": {
               "properties": {
@@ -482,24 +639,7 @@
               }
             }
           },
-          "parameters": false,
-          "defaults": {
-            "properties": {
-              "input": false,
-              "output": {
-                "properties": {
-                  "rumble": false
-                }
-              },
-              "tuning": {
-                "properties": {
-                  "inputLivenessTimeoutMs": false,
-                  "hidStartupRecoveryIntervalMs": false,
-                  "hidStartupRecoveryRounds": false
-                }
-              }
-            }
-          }
+          "parameters": false
         }
       }
     },
@@ -514,6 +654,27 @@
       },
       "then": {
         "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              },
+              {
+                "items": {
+                  "enum": ["wired", "dongle", "bluetooth-le"]
+                }
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": {
+                "propertyNames": {
+                  "enum": ["wired", "dongle", "bluetooth-le"]
+                }
+              }
+            }
+          },
           "interfaceSignatures": {
             "items": {
               "properties": {
@@ -523,24 +684,7 @@
               }
             }
           },
-          "parameters": false,
-          "defaults": {
-            "properties": {
-              "input": false,
-              "output": {
-                "properties": {
-                  "rumble": false
-                }
-              },
-              "tuning": {
-                "properties": {
-                  "inputLivenessTimeoutMs": false,
-                  "hidStartupRecoveryIntervalMs": false,
-                  "hidStartupRecoveryRounds": false
-                }
-              }
-            }
-          }
+          "parameters": false
         }
       }
     },
@@ -555,6 +699,27 @@
       },
       "then": {
         "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              },
+              {
+                "items": {
+                  "enum": ["wired", "dongle", "bluetooth-le"]
+                }
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": {
+                "propertyNames": {
+                  "enum": ["wired", "dongle", "bluetooth-le"]
+                }
+              }
+            }
+          },
           "interfaceSignatures": {
             "items": {
               "properties": {
@@ -564,24 +729,7 @@
               }
             }
           },
-          "parameters": false,
-          "defaults": {
-            "properties": {
-              "input": false,
-              "output": {
-                "properties": {
-                  "rumble": false
-                }
-              },
-              "tuning": {
-                "properties": {
-                  "inputLivenessTimeoutMs": false,
-                  "hidStartupRecoveryIntervalMs": false,
-                  "hidStartupRecoveryRounds": false
-                }
-              }
-            }
-          }
+          "parameters": false
         }
       }
     },
@@ -596,25 +744,20 @@
       },
       "then": {
         "properties": {
-          "interfaceSignatures": false,
-          "parameters": false,
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              }
+            ]
+          },
           "defaults": {
             "properties": {
-              "input": false,
-              "output": {
-                "properties": {
-                  "rumble": false
-                }
-              },
-              "tuning": {
-                "properties": {
-                  "inputLivenessTimeoutMs": false,
-                  "hidStartupRecoveryIntervalMs": false,
-                  "hidStartupRecoveryRounds": false
-                }
-              }
+              "variants": false
             }
-          }
+          },
+          "interfaceSignatures": false,
+          "parameters": false
         }
       }
     },
@@ -629,25 +772,20 @@
       },
       "then": {
         "properties": {
-          "interfaceSignatures": false,
-          "parameters": false,
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              }
+            ]
+          },
           "defaults": {
             "properties": {
-              "input": false,
-              "output": {
-                "properties": {
-                  "rumble": false
-                }
-              },
-              "tuning": {
-                "properties": {
-                  "inputLivenessTimeoutMs": false,
-                  "hidStartupRecoveryIntervalMs": false,
-                  "hidStartupRecoveryRounds": false
-                }
-              }
+              "variants": false
             }
-          }
+          },
+          "interfaceSignatures": false,
+          "parameters": false
         }
       }
     },
@@ -662,22 +800,22 @@
       },
       "then": {
         "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": false
+            }
+          },
           "interfaceSignatures": false,
           "parameters": {
             "propertyNames": {
               "enum": ["hatSource"]
-            }
-          },
-          "defaults": {
-            "properties": {
-              "input": false,
-              "tuning": {
-                "properties": {
-                  "inputLivenessTimeoutMs": false,
-                  "hidStartupRecoveryIntervalMs": false,
-                  "hidStartupRecoveryRounds": false
-                }
-              }
             }
           }
         }
@@ -694,6 +832,27 @@
       },
       "then": {
         "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              },
+              {
+                "items": {
+                  "enum": ["usb", "enhanced-hid"]
+                }
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": {
+                "propertyNames": {
+                  "enum": ["usb", "enhanced-hid"]
+                }
+              }
+            }
+          },
           "interfaceSignatures": {
             "items": {
               "properties": {
@@ -706,23 +865,6 @@
           "parameters": {
             "propertyNames": {
               "enum": ["innerGrips", "lightingMemory"]
-            }
-          },
-          "defaults": {
-            "properties": {
-              "input": false,
-              "output": {
-                "properties": {
-                  "rumble": false
-                }
-              },
-              "tuning": {
-                "properties": {
-                  "inputLivenessTimeoutMs": false,
-                  "hidStartupRecoveryIntervalMs": false,
-                  "hidStartupRecoveryRounds": false
-                }
-              }
             }
           }
         }
@@ -739,25 +881,126 @@
       },
       "then": {
         "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": false
+            }
+          },
           "interfaceSignatures": false,
           "parameters": {
             "propertyNames": {
               "enum": ["reportRevision"]
             }
-          },
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "not": {
+          "anyOf": [
+            {
+              "required": ["recordSections"],
+              "properties": {
+                "recordSections": {
+                  "contains": {
+                    "const": "input"
+                  }
+                }
+              }
+            },
+            {
+              "required": ["family"],
+              "properties": {
+                "family": {
+                  "const": "hid.descriptor"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "then": {
+        "properties": {
           "defaults": {
             "properties": {
-              "input": false,
+              "input": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "not": {
+          "required": ["recordSections"],
+          "properties": {
+            "recordSections": {
+              "contains": {
+                "const": "rumble"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "defaults": {
+            "properties": {
               "output": {
                 "properties": {
                   "rumble": false
                 }
-              },
-              "tuning": {
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "not": {
+          "required": ["rawUSB"]
+        }
+      },
+      "then": {
+        "not": {
+          "required": ["rawUSBTuningKeys"]
+        }
+      }
+    },
+    {
+      "if": {
+        "required": ["rawUSB"],
+        "properties": {
+          "rawUSB": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "not": {
+          "required": ["tuningKeys"]
+        },
+        "properties": {
+          "defaults": {
+            "properties": {
+              "output": {
                 "properties": {
-                  "inputLivenessTimeoutMs": false,
-                  "hidStartupRecoveryIntervalMs": false,
-                  "hidStartupRecoveryRounds": false
+                  "startup": {
+                    "items": {
+                      "not": {
+                        "required": ["report"]
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -879,11 +1122,8 @@
       "additionalProperties": false,
       "minProperties": 1,
       "properties": {
-        "capabilities": {
-          "$ref": "controller.schema.json#/$defs/capabilities"
-        },
         "output": {
-          "$ref": "controller.schema.json#/$defs/output"
+          "$ref": "#/$defs/descriptionOutput"
         },
         "input": {
           "anyOf": [
@@ -897,6 +1137,112 @@
         },
         "tuning": {
           "$ref": "controller.schema.json#/$defs/tuning"
+        },
+        "variants": {
+          "description": "Tuning that differs by variant, over the flat tuning.",
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "$ref": "#/$defs/interfaceSignature/properties/variant"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["tuning"],
+            "properties": {
+              "tuning": {
+                "$ref": "controller.schema.json#/$defs/tuning"
+              }
+            }
+          }
+        }
+      }
+    },
+    "macOSOwnedOutput": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "lightingFeatures": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "playerIndicator",
+              "programmableColor",
+              "programmableBrightness"
+            ]
+          }
+        },
+        "drivesRumble": {
+          "type": "boolean"
+        },
+        "reports": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "controller.schema.json#/$defs/templateReport"
+          }
+        },
+        "setsStartupPlayerIndicator": {
+          "type": "boolean"
+        },
+        "readsStartupFeatures": {
+          "type": "boolean"
+        },
+        "rationale": {
+          "description": "Why macOS leaves this output undone, for the reader of the description.",
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "controls": {
+      "description": "The controls every controller of the family has: the Xbox layout (without guide) when base is xbox, less remove, plus add, with the touch contacts and motion the family reports. A driver adds only what its record or layout makes true.",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "base": {
+          "enum": ["xbox"]
+        },
+        "remove": {
+          "$ref": "controller.schema.json#/$defs/controlList"
+        },
+        "add": {
+          "$ref": "controller.schema.json#/$defs/controlList"
+        },
+        "digitalTriggers": {
+          "description": "The triggers whose press the protocol reports as its own digital signal; they are controls of the family.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": ["LeftTrigger", "RightTrigger"]
+          }
+        },
+        "touchContactCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "motion": {
+          "type": "boolean"
+        }
+      }
+    },
+    "recordCapabilities": {
+      "description": "The capability deltas a record of the family may declare, because its driver acts on them: the exact controls a record may add with present, and whether it may drop rumble.",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "present": {
+          "$ref": "controller.schema.json#/$defs/controlList"
+        },
+        "rumbleAbsent": {
+          "type": "boolean"
         }
       }
     },
@@ -951,6 +1297,187 @@
           },
           "usage": {
             "$ref": "controller.schema.json#/$defs/hidUsageID"
+          }
+        }
+      }
+    },
+    "startupVariants": {
+      "description": "The stored variants a startup write is sent on; absent sends it on every variant.",
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/interfaceSignature/properties/variant"
+      }
+    },
+    "startupWhen": {
+      "description": "Limits a startup write to controllers whose record sets an enumeration parameter to a listed value (is), or not to one (isNot, which also matches an unset parameter).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["parameter"],
+      "properties": {
+        "parameter": {
+          "enum": [
+            "layout",
+            "usbProtocol",
+            "lightingMemory",
+            "hatSource",
+            "motionCalibration",
+            "role",
+            "motionScale",
+            "reportRevision",
+            "maker"
+          ]
+        },
+        "is": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "isNot": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "oneOf": [
+        {
+          "required": ["is"]
+        },
+        {
+          "required": ["isNot"]
+        }
+      ]
+    },
+    "descriptionHIDStartupWrite": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["report", "bytes"],
+      "properties": {
+        "report": {
+          "$ref": "controller.schema.json#/$defs/startupWrite/properties/report"
+        },
+        "bytes": {
+          "$ref": "controller.schema.json#/$defs/startupWrite/properties/bytes"
+        },
+        "delayMilliseconds": {
+          "$ref": "controller.schema.json#/$defs/startupWrite/properties/delayMilliseconds"
+        },
+        "transport": {
+          "$ref": "controller.schema.json#/$defs/startupWrite/properties/transport"
+        },
+        "phase": {
+          "$ref": "controller.schema.json#/$defs/startupWrite/properties/phase"
+        },
+        "crc32Seed": {
+          "$ref": "controller.schema.json#/$defs/startupWrite/properties/crc32Seed"
+        },
+        "variants": {
+          "$ref": "#/$defs/startupVariants"
+        },
+        "when": {
+          "$ref": "#/$defs/startupWhen"
+        }
+      },
+      "if": {
+        "required": ["crc32Seed"]
+      },
+      "then": {
+        "properties": {
+          "report": {
+            "properties": {
+              "length": {
+                "minimum": 5
+              }
+            }
+          }
+        }
+      }
+    },
+    "descriptionUSBStartupWrite": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bytes"],
+      "properties": {
+        "bytes": {
+          "$ref": "controller.schema.json#/$defs/usbStartupWrite/properties/bytes"
+        },
+        "endpoint": {
+          "$ref": "controller.schema.json#/$defs/usbStartupWrite/properties/endpoint"
+        },
+        "timeoutMilliseconds": {
+          "$ref": "controller.schema.json#/$defs/usbStartupWrite/properties/timeoutMilliseconds"
+        },
+        "delayMilliseconds": {
+          "$ref": "controller.schema.json#/$defs/usbStartupWrite/properties/delayMilliseconds"
+        },
+        "sessionByte": {
+          "$ref": "controller.schema.json#/$defs/usbStartupWrite/properties/sessionByte"
+        },
+        "toleratesRejection": {
+          "$ref": "controller.schema.json#/$defs/usbStartupWrite/properties/toleratesRejection"
+        },
+        "variants": {
+          "$ref": "#/$defs/startupVariants"
+        },
+        "when": {
+          "$ref": "#/$defs/startupWhen"
+        }
+      }
+    },
+    "descriptionOutput": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "rumble": {
+          "$ref": "controller.schema.json#/$defs/rumbleTemplate"
+        },
+        "startup": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/descriptionHIDStartupWrite"
+              },
+              {
+                "$ref": "#/$defs/descriptionUSBStartupWrite"
+              }
+            ]
+          }
+        }
+      },
+      "not": {
+        "required": ["startup"],
+        "properties": {
+          "startup": {
+            "allOf": [
+              {
+                "contains": {
+                  "required": ["report"]
+                }
+              },
+              {
+                "contains": {
+                  "not": {
+                    "required": ["report"]
+                  }
+                }
+              }
+            ]
           }
         }
       }

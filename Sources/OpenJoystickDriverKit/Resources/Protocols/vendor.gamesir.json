@@ -2,6 +2,16 @@
   "apiVersion": "openjoystickdriver/v1alpha1",
   "kind": "ProtocolDescription",
   "family": "vendor.gamesir",
+  "endpoints": {
+    "in": 130,
+    "out": 2
+  },
+  "rawUSB": ["usb"],
+  "tuningKeys": [
+    "hidStartupIntervalMs",
+    "minimumHIDOutputIntervalMs",
+    "keepAliveIntervalMs"
+  ],
   "parameters": {
     "innerGrips": {
       "type": "flag"
@@ -11,9 +21,54 @@
       "values": ["ProfileSlots"]
     }
   },
+  "controls": {
+    "base": "xbox",
+    "add": ["Guide", "LeftPaddle1", "RightPaddle1", "Auxiliary1"]
+  },
+  "rawUSBTuningKeys": ["keepAliveIntervalMs", "usbCommandTimeoutMs"],
   "defaults": {
     "tuning": {
+      "hidStartupIntervalMs": 20,
+      "minimumHIDOutputIntervalMs": 20,
+      "keepAliveIntervalMs": 500,
+      "usbCommandTimeoutMs": 2000,
       "frameQueueCapacity": 64
+    },
+    "output": {
+      "startup": [
+        {
+          "report": {
+            "kind": "output",
+            "id": 15,
+            "length": 64
+          },
+          "bytes": [
+            242, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+          ],
+          "phase": "startup",
+          "variants": ["enhanced-hid"]
+        },
+        {
+          "report": {
+            "kind": "output",
+            "id": 15,
+            "length": 64
+          },
+          "bytes": [
+            4, 32, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+          ],
+          "phase": "startup",
+          "variants": ["enhanced-hid"],
+          "when": {
+            "parameter": "lightingMemory",
+            "is": ["ProfileSlots"]
+          }
+        }
+      ]
     }
   }
 }

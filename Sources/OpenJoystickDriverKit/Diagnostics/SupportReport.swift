@@ -106,6 +106,9 @@ public struct SupportReport: Codable, Sendable {
     public let unboundDevices: [UnboundDevice]
     public let hidGamepads: [HIDGamepad]
     public let appleGameControllerAudit: AppleGameControllerSupportAudit?
+    /// The newest frames of each connected controller with the five per-stage stamps, empty when
+    /// the service was stopped or had no frames.
+    public let frameTimings: [ControllerFrameTimings]
     public let notes: [String]
   }
 
@@ -133,6 +136,7 @@ public struct SupportReport: Codable, Sendable {
     applicationServiceConnected: Bool,
     applicationServiceHealth: ApplicationServiceManager.ApplicationServiceHealth?,
     appleGameControllerAudit: AppleGameControllerSupportAudit? = nil,
+    frameTimings: [ControllerFrameTimings] = [],
     status: ApplicationServiceStatusPayload?,
     virtualDiagnostics: ApplicationServiceVirtualDeviceDiagnosticsPayload?
   ) {
@@ -243,6 +247,7 @@ public struct SupportReport: Codable, Sendable {
       unboundDevices: unboundDevices,
       hidGamepads: hidGamepads,
       appleGameControllerAudit: appleGameControllerAudit,
+      frameTimings: frameTimings,
       notes: reportNotes
     )
   }

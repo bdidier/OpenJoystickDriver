@@ -11,14 +11,7 @@ extension DualShock4Driver {
   }
 
   public var capabilities: ControllerCapabilities {
-    ControllerCapabilities(
-      controls: Control.xboxLayout.union([
-        .guide, .touchpadClick, .leftTrigger, .rightTrigger,
-      ]),
-      digitalTriggers: [.leftTrigger, .rightTrigger],
-      touchContactCount: 2,
-      motion: true
-    )
+    PhysicalProtocolID.sonyDualShock4.describedControls
   }
 
   enum ReportOffset {
@@ -38,11 +31,6 @@ extension DualShock4Driver {
   public func startupFeatureReads() -> [PhysicalHIDFeatureReadRequest] {
     if usesBluetoothStartup { return [PhysicalHIDFeatureReadRequest(reportID: 5, length: 41)] }
     return [PhysicalHIDFeatureReadRequest(reportID: 2, length: 37)]
-  }
-
-  public func startupWrites() -> [PhysicalOutputWrite] {
-    guard usesBluetoothStartup else { return [] }
-    return [.hidOutput(makeOutputReport(validFlags: ds4OutputValidFlagMotor))]
   }
 
   public func consumeFeatureReply(_ data: Data, request: PhysicalHIDFeatureReadRequest) -> Bool {

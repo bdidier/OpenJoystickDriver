@@ -82,36 +82,68 @@ extension DeviceManager {
     await sendRecordStartupWrites(pipeline: pipeline, connection: connection)
   }
 
-  /// Sends the record's startup writes in order, each after its delay. A failed write is logged
-  /// and the rest still go out, as with the driver's activation writes.
+  /// Sends the activation-phase startup writes of the record or its description in order, each
+  /// after its delay. A failed write is logged and the rest still go out, as with the driver's
+  /// activation writes.
   private func sendRecordStartupWrites(
     pipeline: DevicePipeline,
     connection: HIDDeviceConnection
   ) async {
     guard await isCurrentHIDStartupPipeline(pipeline, connection: connection) else { return }
-    let writes = await pipeline.recordStartupWrites()
+    let writes = await pipeline.activationStartupWrites()
+    let sent = await sendHIDStartupWrites(
+      writes,
+      intervalNanoseconds: 0,
+      pipeline: pipeline,
+      connection: connection
+    )
+    guard await isCurrentHIDStartupPipeline(pipeline, connection: connection) else { return }
+    if !sent {
+      print(
+        "[DeviceManager] Startup write failed for controller=\(pipeline.identifier) "
+          + "route=\(connection.routingAddress)"
+      )
+    }
+  }
+
+  /// Sends startup writes in order at `intervalNanoseconds` spacing. A write that names its own
+  /// delay waits that long first, in place of the interval; the writes between two such writes
+  /// go out as one batch.
+  private func sendHIDStartupWrites(
+    _ writes: [PhysicalOutputWrite],
+    intervalNanoseconds: UInt64,
+    pipeline: DevicePipeline,
+    connection: HIDDeviceConnection
+  ) async -> Bool {
+    // An empty list still goes to `sendHIDWrites`, which decides whether output is accepted.
+    var batches: [[PhysicalOutputWrite]] = writes.isEmpty ? [[]] : []
     for write in writes {
-      if write.delayMilliseconds > 0 {
-        let delay =
-          UInt64(write.delayMilliseconds) * DeviceTransportProfile.nanosecondsPerMillisecond
-        do { try await Task.sleep(nanoseconds: delay) } catch { return }
+      if write.startupDelayMilliseconds != nil || batches.isEmpty {
+        batches.append([write])
+      } else {
+        batches[batches.count - 1].append(write)
       }
-      guard await isCurrentHIDStartupPipeline(pipeline, connection: connection) else { return }
+    }
+    var succeeded = true
+    for batch in batches {
+      if let delay = batch.first?.startupDelayMilliseconds, delay > 0 {
+        let nanoseconds = UInt64(delay) * DeviceTransportProfile.nanosecondsPerMillisecond
+        do { try await Task.sleep(nanoseconds: nanoseconds) } catch { return false }
+      }
+      guard await isCurrentHIDStartupPipeline(pipeline, connection: connection) else {
+        return false
+      }
       let sent = await sendHIDWrites(
-        [write.write],
+        batch,
+        intervalNanoseconds: intervalNanoseconds,
         address: connection.routingAddress,
         identifier: pipeline.identifier,
         pipeline: pipeline,
         startupConnection: connection
       )
-      guard await isCurrentHIDStartupPipeline(pipeline, connection: connection) else { return }
-      if !sent {
-        print(
-          "[DeviceManager] Record startup write failed for controller=\(pipeline.identifier) "
-            + "route=\(connection.routingAddress) report=\(write.report.reportID)"
-        )
-      }
+      succeeded = succeeded && sent
     }
+    return succeeded
   }
 
   func sendHIDStartupOutputReportsIfNeeded(
@@ -122,13 +154,11 @@ extension DeviceManager {
     let writes = await pipeline.hidStartupWrites()
     let plan = await pipeline.sessionPlan()
     guard await isCurrentHIDStartupPipeline(pipeline, connection: connection) else { return false }
-    let succeeded = await sendHIDWrites(
+    let succeeded = await sendHIDStartupWrites(
       writes,
       intervalNanoseconds: plan.hidStartupIntervalNanoseconds,
-      address: connection.routingAddress,
-      identifier: pipeline.identifier,
       pipeline: pipeline,
-      startupConnection: connection
+      connection: connection
     )
     guard await isCurrentHIDStartupPipeline(pipeline, connection: connection) else { return false }
     if plan.hasStartupRecovery {

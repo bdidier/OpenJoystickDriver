@@ -724,15 +724,52 @@
           "minimum": 1,
           "maximum": 10
         },
+        "keepAliveIntervalMs": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60000
+        },
+        "lizardResendTicks": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100000
+        },
+        "usbCommandTimeoutMs": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60000
+        },
+        "presenceResendReports": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        },
+        "adapterDisconnectDelayMs": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60000
+        },
+        "usbStartupIntervalMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 60000
+        },
+        "usbStartupRetryDelayMs": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60000
+        },
+        "usbTransferTimeoutMs": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60000
+        },
         "frameQueueCapacity": {
           "type": "integer",
           "minimum": 1,
           "maximum": 1024
         }
       }
-    },
-    "server": {
-      "enum": ["system", "ojd"]
     },
     "route": {
       "enum": ["ExtensionOwned"]
@@ -750,7 +787,35 @@
           "minItems": 1,
           "maxItems": 16,
           "items": {
-            "$ref": "#/$defs/startupWrite"
+            "oneOf": [
+              {
+                "$ref": "#/$defs/startupWrite"
+              },
+              {
+                "$ref": "#/$defs/usbStartupWrite"
+              }
+            ]
+          }
+        }
+      },
+      "not": {
+        "required": ["startup"],
+        "properties": {
+          "startup": {
+            "allOf": [
+              {
+                "contains": {
+                  "required": ["report"]
+                }
+              },
+              {
+                "contains": {
+                  "not": {
+                    "required": ["report"]
+                  }
+                }
+              }
+            ]
           }
         }
       }
@@ -784,12 +849,12 @@
       "required": ["report", "bytes"],
       "properties": {
         "report": {
-          "$ref": "#/$defs/templateReport"
+          "$ref": "#/$defs/startupReport"
         },
         "bytes": {
           "type": "array",
           "minItems": 1,
-          "maxItems": 64,
+          "maxItems": 128,
           "items": {
             "type": "integer",
             "minimum": 0,
@@ -803,6 +868,28 @@
         },
         "transport": {
           "enum": ["usb", "bluetooth-classic", "bluetooth-le"]
+        },
+        "phase": {
+          "enum": ["startup", "activation"]
+        },
+        "crc32Seed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        }
+      },
+      "if": {
+        "required": ["crc32Seed"]
+      },
+      "then": {
+        "properties": {
+          "report": {
+            "properties": {
+              "length": {
+                "minimum": 5
+              }
+            }
+          }
         }
       }
     },
@@ -1275,6 +1362,70 @@
           "$ref": "#/$defs/inputField"
         }
       }
+    },
+    "startupReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "length"],
+      "properties": {
+        "kind": {
+          "enum": ["output", "feature"]
+        },
+        "id": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "length": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 128
+        }
+      }
+    },
+    "usbStartupWrite": {
+      "$comment": "A raw-USB startup packet: it has no report, so it never reads as a HID write.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bytes"],
+      "properties": {
+        "bytes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          }
+        },
+        "endpoint": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 127
+        },
+        "timeoutMilliseconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60000
+        },
+        "delayMilliseconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "sessionByte": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 63
+        },
+        "toleratesRejection": {
+          "type": "boolean"
+        }
+      }
+    },
+    "server": {
+      "enum": ["system", "ojd"]
     }
   },
   "allOf": [
@@ -1566,19 +1717,7 @@
     },
     {
       "if": {
-        "anyOf": [
-          {
-            "required": ["server"]
-          },
-          {
-            "properties": {
-              "output": {
-                "required": ["startup"]
-              }
-            },
-            "required": ["output"]
-          }
-        ]
+        "required": ["server"]
       },
       "then": {
         "properties": {
@@ -1605,6 +1744,86 @@
                   "required": ["family", "variant"]
                 }
               ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": ["output"],
+        "properties": {
+          "output": {
+            "required": ["startup"],
+            "properties": {
+              "startup": {
+                "contains": {
+                  "required": ["report"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "protocol": {
+            "not": {
+              "anyOf": [
+                {
+                  "properties": {
+                    "family": {
+                      "enum": ["xbox.xid", "xbox.xusb", "xbox.gip"]
+                    }
+                  },
+                  "required": ["family"]
+                },
+                {
+                  "properties": {
+                    "family": {
+                      "const": "vendor.gamesir"
+                    },
+                    "variant": {
+                      "const": "usb"
+                    }
+                  },
+                  "required": ["family", "variant"]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": ["output"],
+        "properties": {
+          "output": {
+            "required": ["startup"],
+            "properties": {
+              "startup": {
+                "contains": {
+                  "not": {
+                    "required": ["report"]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "protocol": {
+            "required": ["family"],
+            "properties": {
+              "family": {
+                "enum": ["xbox.xusb", "xbox.gip", "nintendo.switch2"]
+              }
+            },
+            "not": {
+              "required": ["initialization"]
             }
           }
         }
@@ -1685,6 +1904,180 @@
             "properties": {
               "family": {
                 "const": "nintendo.switch1"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "tuning": {
+            "required": ["keepAliveIntervalMs"]
+          }
+        },
+        "required": ["tuning"]
+      },
+      "then": {
+        "properties": {
+          "protocol": {
+            "properties": {
+              "family": {
+                "enum": [
+                  "xbox.gip",
+                  "vendor.gamesir",
+                  "valve.steam-deck",
+                  "valve.steam-triton",
+                  "nintendo.switch2"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "tuning": {
+            "required": ["lizardResendTicks"]
+          }
+        },
+        "required": ["tuning"]
+      },
+      "then": {
+        "properties": {
+          "protocol": {
+            "properties": {
+              "family": {
+                "const": "valve.steam-triton"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "tuning": {
+            "required": ["usbCommandTimeoutMs"]
+          }
+        },
+        "required": ["tuning"]
+      },
+      "then": {
+        "properties": {
+          "protocol": {
+            "properties": {
+              "family": {
+                "enum": ["nintendo.switch2", "vendor.gamesir"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "tuning": {
+            "required": ["presenceResendReports"]
+          }
+        },
+        "required": ["tuning"]
+      },
+      "then": {
+        "properties": {
+          "protocol": {
+            "properties": {
+              "family": {
+                "enum": ["xbox.gip", "xbox.xusb"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "tuning": {
+            "required": ["adapterDisconnectDelayMs"]
+          }
+        },
+        "required": ["tuning"]
+      },
+      "then": {
+        "properties": {
+          "protocol": {
+            "properties": {
+              "family": {
+                "enum": ["sony.dualshock4", "sony.dualsense"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "tuning": {
+            "required": ["usbStartupIntervalMs"]
+          }
+        },
+        "required": ["tuning"]
+      },
+      "then": {
+        "properties": {
+          "protocol": {
+            "properties": {
+              "family": {
+                "const": "xbox.gip"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "tuning": {
+            "required": ["usbStartupRetryDelayMs"]
+          }
+        },
+        "required": ["tuning"]
+      },
+      "then": {
+        "properties": {
+          "protocol": {
+            "properties": {
+              "family": {
+                "const": "xbox.gip"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "tuning": {
+            "required": ["usbTransferTimeoutMs"]
+          }
+        },
+        "required": ["tuning"]
+      },
+      "then": {
+        "properties": {
+          "protocol": {
+            "properties": {
+              "family": {
+                "const": "xbox.gip"
               }
             }
           }

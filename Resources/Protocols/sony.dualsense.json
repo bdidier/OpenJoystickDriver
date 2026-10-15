@@ -2,6 +2,16 @@
   "apiVersion": "openjoystickdriver/v1alpha1",
   "kind": "ProtocolDescription",
   "family": "sony.dualsense",
+  "endpoints": {
+    "in": 130,
+    "out": 2
+  },
+  "tuningKeys": [
+    "hidStartupIntervalMs",
+    "minimumHIDOutputIntervalMs",
+    "adapterDisconnectDelayMs"
+  ],
+  "buttonLabels": "PlayStation",
   "parameters": {
     "maker": {
       "type": "enum",
@@ -21,8 +31,19 @@
       "values": ["Receiver"]
     }
   },
+  "controls": {
+    "base": "xbox",
+    "add": ["Guide", "TouchpadClick", "Microphone"],
+    "touchContactCount": 2,
+    "motion": true,
+    "digitalTriggers": ["LeftTrigger", "RightTrigger"]
+  },
+  "recordCapabilities": {
+    "present": ["LeftPaddle1", "RightPaddle1", "Auxiliary1", "Auxiliary2"]
+  },
   "defaults": {
     "tuning": {
+      "adapterDisconnectDelayMs": 500,
       "frameQueueCapacity": 64
     }
   }

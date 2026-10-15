@@ -164,6 +164,47 @@ struct SupportDiagnosticsTests {
   }
 
   @Test
+  func reportCarriesTheFrameTimingsOfTheService() async throws {
+    let timings = ControllerFrameTimings(
+      controller: "ctrl-1",
+      name: "Pad",
+      frames: [
+        FrameTiming(
+          sequence: 4,
+          stages: [
+            FrameStageTime(stage: .read, nanoseconds: 100),
+            FrameStageTime(stage: .parse, nanoseconds: 150),
+            FrameStageTime(stage: .dispatch, nanoseconds: 200),
+            FrameStageTime(stage: .deliveryVirtualDevice, nanoseconds: 260),
+            FrameStageTime(stage: .deliveryEndpoint, nanoseconds: 900),
+          ]
+        )
+      ]
+    )
+
+    let report = try await savedReport(SupportDiagnosticsGatewayStub(frameTimings: [timings]))
+
+    #expect(report.data.frameTimings == [timings])
+  }
+
+  @Test
+  func reportHasNoFrameTimingsWhenTheServiceIsUnreachable() async throws {
+    let report = try await savedReport(SupportDiagnosticsGatewayStub(frameTimings: nil))
+
+    #expect(report.data.frameTimings.isEmpty)
+  }
+
+  private func savedReport(_ gateway: SupportDiagnosticsGatewayStub) async throws -> SupportReport {
+    let supportReport = await MainActor.run { SupportReportModel(gateway: gateway) }
+    let outputURL = FileManager.default.temporaryDirectory.appendingPathComponent(
+      "OpenJoystickDriver-support-\(UUID().uuidString).json"
+    )
+    defer { try? FileManager.default.removeItem(at: outputURL) }
+    await supportReport.saveSupportReport(to: outputURL)
+    return try JSONDecoder().decode(SupportReport.self, from: Data(contentsOf: outputURL))
+  }
+
+  @Test
   func collectingDiagnosticsDoesNotLeaveReportSaving() async throws {
     let gateway = SupportDiagnosticsGatewayStub(diagnosticsDelayNanoseconds: [100_000_000, 0])
     let supportReport = await MainActor.run { SupportReportModel(gateway: gateway) }
@@ -191,6 +232,7 @@ private actor SupportDiagnosticsGatewayStub: ApplicationServiceGateway {
   let diagnosticsPayloads: [ApplicationServiceVirtualDeviceDiagnosticsPayload]
   let diagnosticsDelayNanoseconds: [UInt64]
   let diagnosticsShouldFail: Bool
+  let frameTimingsPayload: [ControllerFrameTimings]?
   var diagnosticsReadCount = 0
 
   init(
@@ -209,8 +251,10 @@ private actor SupportDiagnosticsGatewayStub: ApplicationServiceGateway {
       )
     ],
     diagnosticsDelayNanoseconds: [UInt64] = [],
-    diagnosticsShouldFail: Bool = false
+    diagnosticsShouldFail: Bool = false,
+    frameTimings: [ControllerFrameTimings]? = []
   ) {
+    self.frameTimingsPayload = frameTimings
     self.statusPayload = statusPayload
     self.diagnosticsPayloads =
       diagnosticsPayloads.isEmpty
@@ -226,6 +270,11 @@ private actor SupportDiagnosticsGatewayStub: ApplicationServiceGateway {
   }
 
   func status() throws -> ApplicationServiceStatusPayload { statusPayload }
+
+  func frameTimings() throws -> ApplicationServiceFrameTimingsPayload {
+    guard let frameTimingsPayload else { throw ApplicationServiceClientError.timeout }
+    return ApplicationServiceFrameTimingsPayload(controllers: frameTimingsPayload)
+  }
 
   func virtualDeviceDiagnostics() async throws -> ApplicationServiceVirtualDeviceDiagnosticsPayload
   {

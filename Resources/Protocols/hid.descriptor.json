@@ -2,6 +2,11 @@
   "apiVersion": "openjoystickdriver/v1alpha1",
   "kind": "ProtocolDescription",
   "family": "hid.descriptor",
+  "endpoints": {
+    "in": 130,
+    "out": 2
+  },
+  "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
   "defaults": {
     "input": {
       "hidUsageMap": {

@@ -4,8 +4,6 @@ import Foundation
 let dualSenseCapabilitiesReportID: UInt8 = 0x03
 let dualSenseCapabilitiesReportLength = 48
 let dualSenseCapabilitiesMarker: UInt8 = 0x28
-/// SDL's `BLUETOOTH_DISCONNECT_TIMEOUT_MS`, which it also applies to third-party dongles.
-let dualSenseDongleDisconnectNanoseconds: UInt64 = 500_000_000
 /// SDL's `PS5StatePacketAlt_t` is 48 bytes; SDL checks a dongle's sequence only in a full packet.
 let dualSenseAlternatePayloadLength = 48
 
@@ -101,7 +99,7 @@ extension DualSenseDriver {
     guard let previous = lastPacketSequence else { return false }
     guard sequence != previous else {
       if dongleConnected, let lastLiveReportAt,
-        receivedAt &- lastLiveReportAt >= dualSenseDongleDisconnectNanoseconds
+        receivedAt &- lastLiveReportAt >= dongleDisconnectNanoseconds
       {
         setDongleConnected(false)
       }

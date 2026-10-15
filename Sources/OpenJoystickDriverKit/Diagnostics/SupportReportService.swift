@@ -10,6 +10,7 @@ package enum SupportReportService {
     applicationServiceConnected: Bool,
     buildIdentity: BuildIdentity,
     appleGameControllerAudit: AppleGameControllerSupportAudit? = nil,
+    frameTimings: [ControllerFrameTimings] = [],
     generatedAt: Date = Date()
   ) -> SupportReport {
     let version = ProcessInfo.processInfo.operatingSystemVersion
@@ -24,6 +25,7 @@ package enum SupportReportService {
       applicationServiceConnected: applicationServiceConnected,
       applicationServiceHealth: applicationServiceHealth,
       appleGameControllerAudit: appleGameControllerAudit,
+      frameTimings: frameTimings,
       status: status,
       virtualDiagnostics: virtualDiagnostics
     )

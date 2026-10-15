@@ -254,6 +254,53 @@ struct DiagnoseCommandTests {
   }
 
   @Test
+  func bundleReadsTheFiveStageStampsOfTheNewestFrames() async throws {
+    let socketPath = temporarySocketPath()
+    let server = try serve(socketPath: socketPath)
+    defer { server.stop() }
+    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: directory) }
+    let path = directory.appendingPathComponent("support.json").path
+
+    let result = await run(["--bundle", path, "--json"], socketPath: socketPath)
+
+    #expect(result.code == 0, "\(result.standardError)")
+    let bundle = try #require(
+      JSONSerialization.jsonObject(with: Data(contentsOf: URL(fileURLWithPath: path)))
+        as? [String: Any]
+    )
+    let data = try #require(bundle["data"] as? [String: Any])
+    let timings = try #require(data["frameTimings"] as? [[String: Any]])
+    let frames = try #require(timings.first?["frames"] as? [[String: Any]])
+    let stages = try #require(frames.first?["stages"] as? [[String: Any]])
+    #expect(timings.first?["controller"] as? String == "ctrl-1")
+    #expect(
+      stages.compactMap { $0["stage"] as? String } == [
+        "read", "parse", "dispatch", "delivery-virtual-device", "delivery-endpoint",
+      ]
+    )
+    #expect(stages.compactMap { $0["nanoseconds"] as? Int } == [100, 150, 200, 260, 900])
+  }
+
+  @Test
+  func bundleWithAStoppedServiceHasNoTimings() async throws {
+    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: directory) }
+    let path = directory.appendingPathComponent("support.json").path
+
+    _ = await run(["--bundle", path, "--json"], socketPath: temporarySocketPath())
+
+    let bundle = try #require(
+      JSONSerialization.jsonObject(with: Data(contentsOf: URL(fileURLWithPath: path)))
+        as? [String: Any]
+    )
+    let data = try #require(bundle["data"] as? [String: Any])
+    #expect((data["frameTimings"] as? [Any])?.isEmpty == true)
+  }
+
+  @Test
   func aMissingBundleParentIsAUsageError() async {
     let path = "/tmp/\(UUID().uuidString)/missing/support.json"
 

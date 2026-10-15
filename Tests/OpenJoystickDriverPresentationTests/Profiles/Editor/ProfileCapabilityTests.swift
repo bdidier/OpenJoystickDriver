@@ -174,7 +174,7 @@ struct ProfileCapabilityTests {
   }
 
   @Test
-  func sourcePolicyMapsRemappingControlsToDeclaredControlIDs() {
+  func sourcePolicyMapsRemappingControlsToDeclaredControls() {
     let capabilities = ControllerProfileCapabilities(
       physicalInput: ControllerCapabilities(
         controls: [
