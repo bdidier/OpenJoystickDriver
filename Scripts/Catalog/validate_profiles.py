@@ -73,6 +73,23 @@ def validate_record(
         not overlap, f"{path}: capabilities both absent and present: {sorted(overlap)}"
     )
 
+    # JSON Schema cannot express unique mode IDs or probe bytes that fit the read length; the
+    # runtime decoder rejects both too.
+    modes = record.get("modes", [])
+    identifiers = [mode["id"] for mode in modes]
+    require(
+        len(set(identifiers)) == len(identifiers),
+        f"{path}: mode IDs must be unique: {identifiers}",
+    )
+    for mode in modes:
+        for probe in mode["match"]["probes"]:
+            if probe["expect"] == "bytes":
+                end = probe["offset"] + len(probe["bytes"].split(" "))
+                require(
+                    end <= probe["length"],
+                    f"{path}: mode {mode['id']} probe bytes end at {end}, past length {probe['length']}",
+                )
+
     vendor_id = record["vendorID"]
     product_id = record["productID"]
     if enforce_path:

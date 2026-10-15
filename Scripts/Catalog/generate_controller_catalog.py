@@ -32,6 +32,7 @@ PROTOCOL_OUTPUT_DIR = (
 PATCH_FIELDS = frozenset(
     {
         "protocol",
+        "modes",
         "usb",
         "bluetoothLE",
         "ownership",

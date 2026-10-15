@@ -53,6 +53,9 @@
 						"protocol": {
 							"$ref": "controller.schema.json#/$defs/protocol"
 						},
+						"modes": {
+							"$ref": "controller.schema.json#/$defs/modes"
+						},
 						"usb": {
 							"$ref": "controller.schema.json#/$defs/usbOverride"
 						},
