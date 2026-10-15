@@ -1,12 +1,18 @@
 from __future__ import annotations
 
+import copy
 import json
 import shutil
 import tempfile
 import unittest
+from collections.abc import Callable
 from pathlib import Path
+from typing import Any
+
+from jsonschema import Draft202012Validator
 
 from Scripts.Catalog import generate_crosswalk as crosswalk
+from Scripts.Quality import validate_schemas
 
 ROOT = Path(__file__).resolve().parents[2]
 COPIED = (crosswalk.CROSSWALK, crosswalk.WIKI_PAGE)
@@ -75,6 +81,68 @@ class CrosswalkTableTests(unittest.TestCase):
         path.write_text(json.dumps(document), encoding="utf-8")
         with self.assertRaises(crosswalk.CrosswalkError):
             crosswalk.regenerate(root, write=False)
+
+
+class CrosswalkSchemaTests(unittest.TestCase):
+    def setUp(self) -> None:
+        documents = validate_schemas.validate_schema_documents()
+        registry = validate_schemas.schema_registry(documents)
+        self.validator = Draft202012Validator(
+            documents["crosswalk.schema.json"], registry=registry
+        )
+        self.document: dict[str, Any] = json.loads(
+            (ROOT / crosswalk.CROSSWALK).read_text(encoding="utf-8")
+        )
+
+    def rejects(self, edit: Callable[[dict[str, Any]], None]) -> bool:
+        planted = copy.deepcopy(self.document)
+        edit(planted)
+        return not self.validator.is_valid(planted)
+
+    def test_the_crosswalk_matches_its_schema(self) -> None:
+        self.assertEqual(list(self.validator.iter_errors(self.document)), [])
+
+    def test_planted_bad_files_are_rejected(self) -> None:
+        def unknown_member(d: dict[str, Any]) -> None:
+            d["extra"] = True
+
+        def wrong_kind(d: dict[str, Any]) -> None:
+            d["kind"] = "Other"
+
+        def missing_source(d: dict[str, Any]) -> None:
+            del d["sources"]["apple"]
+
+        def undated_source(d: dict[str, Any]) -> None:
+            del d["sources"]["sdl"]["checkedOn"]
+
+        def missing_pages(d: dict[str, Any]) -> None:
+            del d["sources"]["hid"]["pages"]
+
+        def unknown_control(d: dict[str, Any]) -> None:
+            d["controls"]["Cross"] = d["controls"]["South"]
+
+        def unknown_column(d: dict[str, Any]) -> None:
+            d["controls"]["South"]["gcc"] = "ButtonA"
+
+        def missing_column(d: dict[str, Any]) -> None:
+            del d["controls"]["South"]["evdev"]
+
+        def unknown_note(d: dict[str, Any]) -> None:
+            d["controls"]["DpadUp"]["notes"]["gcc"] = "text"
+
+        for edit in (
+            unknown_member,
+            wrong_kind,
+            missing_source,
+            undated_source,
+            missing_pages,
+            unknown_control,
+            unknown_column,
+            missing_column,
+            unknown_note,
+        ):
+            with self.subTest(edit.__name__):
+                self.assertTrue(self.rejects(edit))
 
 
 if __name__ == "__main__":

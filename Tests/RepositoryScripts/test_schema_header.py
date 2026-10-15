@@ -40,6 +40,7 @@ def instances() -> dict[str, dict[str, Any]]:
         "profile": load(SAMPLE / "Profiles/sample-pad.json"),
         "mod-package": load(SAMPLE / "mod.json"),
         "error-codes": load(ROOT / "Resources/ErrorCodes.json"),
+        "crosswalk": load(ROOT / "Resources/Vocabulary/crosswalk.json"),
         "access-grants": load(FIXTURES / "access_grants.json"),
         "protocol-description": load(ROOT / "Resources/Protocols/xbox.xusb.json"),
         "settings": load(FIXTURES / "settings.json"),
