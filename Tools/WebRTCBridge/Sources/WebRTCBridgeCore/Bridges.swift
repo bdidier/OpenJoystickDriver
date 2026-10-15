@@ -12,6 +12,15 @@ public struct EndpointCredentials: Sendable {
   }
 }
 
+/// The data channel that a bridge reads from and writes to. ``PeerLink`` is the one the tool uses.
+public protocol PeerChannel: AnyObject, Sendable {
+  var onMessage: (@Sendable (Data) -> Void)? { get set }
+  @discardableResult
+  func send(_ data: Data) -> Bool
+}
+
+extension PeerLink: PeerChannel {}
+
 /// The bridge on the Mac that runs the game. It needs the `control` scope. A `Frame` from the
 /// peer's data channel goes to the endpoint's virtual gamepad, and each `RumbleCommand` of the
 /// endpoint goes back over the data channel.
@@ -23,7 +32,7 @@ public final class HostBridge: @unchecked Sendable {
   /// frame that the peer sends meanwhile replaces the one that waits.
   static let sendInterval: TimeInterval = 0.008
 
-  private let link: PeerLink
+  private let link: any PeerChannel
   private let persona: String
   private let lock = NSLock()
   private var endpoint: EndpointSession?
@@ -33,7 +42,7 @@ public final class HostBridge: @unchecked Sendable {
   /// Called when the endpoint ends the feed or the connection closes.
   public var onEnd: (@Sendable (Error?) -> Void)?
 
-  public init(link: PeerLink, persona: String = "Generic") {
+  public init(link: any PeerChannel, persona: String = "Generic") {
     self.link = link
     self.persona = persona
   }
@@ -115,7 +124,7 @@ public final class HostBridge: @unchecked Sendable {
 /// `RumbleCommand` that the peer sends back. The endpoint has no message that drives a physical
 /// controller's rumble, so the bridge only reports the commands.
 public final class PlayerBridge: @unchecked Sendable {
-  private let link: PeerLink
+  private let link: any PeerChannel
   private let controller: String?
   private let lock = NSLock()
   private var endpoint: EndpointSession?
@@ -127,7 +136,7 @@ public final class PlayerBridge: @unchecked Sendable {
 
   /// `controller` is the `id` from the watch lines; without it, the first controller that the
   /// endpoint reports.
-  public init(link: PeerLink, controller: String? = nil) {
+  public init(link: any PeerChannel, controller: String? = nil) {
     self.link = link
     self.controller = controller
     self.chosen = controller

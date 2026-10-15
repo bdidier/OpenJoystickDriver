@@ -8,6 +8,8 @@ public enum PeerMessage {
   public static let maximumBytes = 64 * 1024
   /// The longest `holdMilliseconds` of a `Frame`, as in `Resources/Schemas/endpoint.schema.json`.
   public static let maximumHoldMilliseconds = 60_000
+  /// The longest `durationMilliseconds` of a `setRumble`, as in `cli-output.schema.json`.
+  public static let maximumRumbleMilliseconds = 5000
 
   private static let buttons: Set<String> = [
     "south", "east", "west", "north", "left_shoulder", "right_shoulder", "left_stick",
@@ -64,17 +66,22 @@ public enum PeerMessage {
     return frame
   }
 
-  /// The `RumbleCommand` in the message, or nil when the message is not a valid one.
+  /// The `RumbleCommand` in the message, or nil when the message is not a valid one. The shape is
+  /// that of `sharedVirtualFeedLine` in `Resources/Schemas/cli-output.schema.json`: `setRumble`
+  /// has all six intensities and an optional duration of 0 to 5000 ms, and `stopRumble` has no
+  /// member besides the header and `type`.
   public static func rumble(from data: Data) -> [String: Any]? {
     guard let line = object(from: data), keys(of: line, within: rumbleKeys),
-      header(line, "RumbleCommand"), let type = line["type"] as? String,
-      type == "setRumble" || type == "stopRumble"
+      header(line, "RumbleCommand"), let type = line["type"] as? String
     else { return nil }
     var command: [String: Any] = [
       "apiVersion": endpointAPIVersion, "kind": "RumbleCommand", "type": type,
     ]
-    if let value = line["intensities"] {
-      guard let object = value as? [String: Any], Set(object.keys).isSubset(of: intensities)
+    switch type {
+    case "stopRumble":
+      return line.count == 3 ? command : nil
+    case "setRumble":
+      guard let object = line["intensities"] as? [String: Any], Set(object.keys) == intensities
       else { return nil }
       var checked: [String: Int] = [:]
       for (name, number) in object {
@@ -82,14 +89,15 @@ public enum PeerMessage {
         checked[name] = level
       }
       command["intensities"] = checked
-    }
-    if let value = line["durationMilliseconds"] {
-      guard let duration = integer(value), (0...Int(Int32.max)).contains(duration) else {
-        return nil
+      if let value = line["durationMilliseconds"] {
+        guard let duration = integer(value), (0...maximumRumbleMilliseconds).contains(duration)
+        else { return nil }
+        command["durationMilliseconds"] = duration
       }
-      command["durationMilliseconds"] = duration
+      return command
+    default:
+      return nil
     }
-    return command
   }
 
   private static func object(from data: Data) -> [String: Any]? {
@@ -133,26 +141,29 @@ public enum PeerMessage {
 /// that is replaced before it is taken is dropped, so a peer that sends faster than the endpoint
 /// plays cannot fill the endpoint's queue.
 public final class FrameMailbox: @unchecked Sendable {
-  private let lock = NSLock()
-  private let signal = DispatchSemaphore(value: 0)
+  private let condition = NSCondition()
   private var pending: [String: Any]?
 
   public init() {}
 
-  /// Never blocks, so it can run on the WebRTC callback thread.
+  /// Never blocks for long, so it can run on the WebRTC callback thread.
   public func post(_ frame: [String: Any]) {
-    lock.lock()
-    let wasEmpty = pending == nil
+    condition.lock()
     pending = frame
-    lock.unlock()
-    if wasEmpty { signal.signal() }
+    condition.signal()
+    condition.unlock()
   }
 
-  /// The newest posted frame, or nil when none comes within `timeout`.
+  /// The newest posted frame, or nil when none is posted within `timeout`. The frame is checked
+  /// under the lock that `post` takes, so a post that races the timeout is returned, not lost, and
+  /// leaves nothing behind that would end a later wait early.
   public func next(timeout: TimeInterval) -> [String: Any]? {
-    _ = signal.wait(timeout: .now() + timeout)
-    lock.lock()
-    defer { lock.unlock() }
+    let deadline = Date(timeIntervalSinceNow: timeout)
+    condition.lock()
+    defer { condition.unlock() }
+    while pending == nil {
+      if !condition.wait(until: deadline) { break }
+    }
     let frame = pending
     pending = nil
     return frame

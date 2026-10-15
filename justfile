@@ -76,7 +76,7 @@ lint:
 # Format Python and Swift sources in place
 format:
     ruff format Scripts Tests/RepositoryScripts
-    swift-format format --recursive --in-place Package.swift Sources Tests
+    swift-format format --recursive --in-place Package.swift Sources Tests Tools
 
 # =========================================================================
 # Catalog

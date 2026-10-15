@@ -51,7 +51,11 @@ final class BridgeTests: XCTestCase {
   func testLoopbackPassesAFrameOneWayAndRumbleBack() async throws {
     let rumble: [String: Any] = [
       "apiVersion": endpointAPIVersion, "kind": "RumbleCommand", "type": "setRumble",
-      "intensities": ["leftMain": 65535], "durationMilliseconds": 200,
+      "intensities": [
+        "leftMain": 65535, "rightMain": 0, "leftTrigger": 0, "rightTrigger": 0,
+        "leftHaptic": 0, "rightHaptic": 0,
+      ],
+      "durationMilliseconds": 200,
     ]
     let hostEndpoint = try FakeEndpoint(rumble: rumble)
     let playerEndpoint = try FakeEndpoint(watchLines: [

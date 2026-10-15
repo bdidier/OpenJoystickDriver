@@ -114,7 +114,7 @@ The service shows the frames in order, each for at least 8 ms. While 256 frames 
 
 ### KeepAlive
 
-After the `FeedSession`, a program that has no new frame sends `KeepAlive` to keep the feed open. It resets the 2-second idle timeout and changes nothing else: the endpoint sends no reply, and the virtual gamepad keeps its state. A `KeepAlive` has no member besides `apiVersion` and `kind`; one that has another member is refused with `E1004`. Before the `FeedSession` the endpoint answers it with `E1011`.
+After the `FeedSession`, a program that has no new frame sends `KeepAlive` to keep the feed open. It resets the 2-second idle timeout and changes nothing else: the endpoint sends no reply, and the virtual gamepad keeps its state. A `KeepAlive` has no member besides `apiVersion` and `kind`; one that has another member is refused with `E1004`. Before the `FeedSession`, and on a `Subscription` connection, the endpoint answers it with `E1011` and closes the connection.
 
 ```json
 {"apiVersion":"openjoystickdriver/v1alpha1","kind":"KeepAlive"}

@@ -18,9 +18,16 @@ final class FakeEndpoint: @unchecked Sendable {
   private var keepAlives = 0
   let watchLines: [[String: Any]]
   let rumble: [String: Any]
+  /// Lines that a feed gets right after its `FeedSession`.
+  let feedLines: [[String: Any]]
 
-  init(watchLines: [[String: Any]] = [], rumble: [String: Any] = [:]) throws {
+  init(
+    watchLines: [[String: Any]] = [],
+    rumble: [String: Any] = [:],
+    feedLines: [[String: Any]] = []
+  ) throws {
     self.watchLines = watchLines
+    self.feedLines = feedLines
     self.rumble = rumble
     path = "/tmp/ojd-bridge-\(getpid())-\(UInt32.random(in: 0...UInt32.max)).sock"
     listener = socket(AF_UNIX, SOCK_STREAM, 0)
@@ -126,6 +133,7 @@ final class FakeEndpoint: @unchecked Sendable {
           "as": request["as"] ?? "Generic",
         ]
       )
+      for line in feedLines { write(client, line) }
       var sentRumble = false
       while let line = next() {
         if line["kind"] as? String == "KeepAlive" {

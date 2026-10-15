@@ -11,6 +11,13 @@ struct VirtualFeedRegistryTests {
     while !condition() { try await Task.sleep(nanoseconds: 2_000_000) }
   }
 
+  @Test
+  func theProductionIdleTimeoutIsTwoSecondsAndIsTheRegistryDefault() {
+    #expect(VirtualFeedExchangeResult.idleTimeoutSeconds == 2)
+    let registry = VirtualFeedRegistry(factory: { _, _ in throw CancellationError() })
+    #expect(registry.idleTimeout == VirtualFeedExchangeResult.idleTimeoutSeconds)
+  }
+
   @Test(.timeLimit(.minutes(1)))
   func aFeedPublishesItsProfileSendsFramesWithYDownAndReturnsTheHostsCommands() async throws {
     let factory = FakeFeedFactory()
