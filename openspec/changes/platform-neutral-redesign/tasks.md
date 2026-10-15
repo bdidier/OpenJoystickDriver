@@ -151,8 +151,8 @@ Owns: usage-to-control maps as data.
 Depends: 8, and the vocabulary in 15.
 Verify: `swift test`, `./Scripts/ojd check profiles`.
 
-- [ ] 10.1 Move HID usage tables from code into records using canonical control ids. Verify: a test compares each table to the previous output for the recorded samples.
-- [ ] 10.2 Support hat, axis and button usages with ranges and dead zones as typed parameters. Verify: unit tests per usage kind.
+- [x] 10.1 Move HID usage tables from code into records using canonical control ids. Verify: a test compares each table to the previous output for the recorded samples. Done: `HIDUsageLayoutEquivalenceTests` compares against the golden `Tests/HIDUsageGolden/hid-usage-layouts.txt`, generated from the coded tables at 36bf3332; maps live in `input.hidUsageMap` of records 11c1-5600, 2e95-434d, 2dc8-301b/301c, patch 0079-0006, and the `hid.descriptor.json` defaults.
+- [x] 10.2 Support hat, axis and button usages with ranges and dead zones as typed parameters. Verify: unit tests per usage kind. Done: `HIDUsageMapTests` and `test_hid_usage_map_schema.py`.
 
 ## 11. Modes and links incl. coreBluetoothGATT (old WP8)
 
