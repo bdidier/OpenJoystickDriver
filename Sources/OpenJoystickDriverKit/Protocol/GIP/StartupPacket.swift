@@ -14,7 +14,11 @@ public enum GIPStartupPacket: String, CaseIterable, Sendable {
   case rumbleBegin = "xbox.gip/rumble-begin"
   case rumbleEnd = "xbox.gip/rumble-end"
 
-  public static let defaultSequence: [Self] = [.powerOn, .ledOn, .authDone]
+  /// The packet as a startup write, with the sequence number left for the driver to stamp.
+  /// Nil never happens for these fixed packets; a nil would drop the write from the list.
+  public var startupWrite: USBStartupWrite? {
+    try? USBStartupWrite(bytes: packet(sequence: 0), sessionByte: 2)
+  }
 
   /// Host recipes that change packing after handshake. Recipes join this set
   /// only when the exact packet is an operational fact in this parser.

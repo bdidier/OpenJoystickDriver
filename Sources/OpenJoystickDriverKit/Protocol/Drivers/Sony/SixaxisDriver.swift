@@ -63,9 +63,7 @@ public final class SixaxisDriver: PhysicalProtocolDriver {
   public func consumeInputConnectionStateChange() -> ControllerInputConnectionState? { nil }
 
   public var capabilities: ControllerCapabilities {
-    ControllerCapabilities(
-      controls: ControlID.xboxLayout.union([.guide, .leftTriggerButton, .rightTriggerButton])
-    )
+    PhysicalProtocolID.sonySixaxis.describedControls
   }
 
   public var outputCapabilities: PhysicalControllerOutputCapabilities {

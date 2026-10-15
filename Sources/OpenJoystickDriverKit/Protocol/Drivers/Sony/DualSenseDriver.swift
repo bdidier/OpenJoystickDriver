@@ -58,6 +58,9 @@ public final class DualSenseDriver: PhysicalProtocolDriver {
   var features: DualSenseFeatures
   var usesAlternateReport = false
   var lastPacketSequence: UInt32?
+  /// How long repeated dongle reports may follow the last live one before the pad counts as
+  /// disconnected (`adapterDisconnectDelayMs`).
+  let dongleDisconnectNanoseconds: UInt64
   var lastLiveReportAt: UInt64?
   var dongleConnected = false
   var pendingConnectionState: ControllerInputConnectionState?
@@ -67,8 +70,13 @@ public final class DualSenseDriver: PhysicalProtocolDriver {
   public init(
     prefersBluetooth: Bool = false,
     hasEdgeButtons: Bool = false,
-    parameters: ProtocolParameters = .none
+    parameters: ProtocolParameters = .none,
+    tuning: ControllerTuning? = nil
   ) {
+    dongleDisconnectNanoseconds =
+      UInt64(
+        PhysicalProtocolID.sonyDualSense.described(\.adapterDisconnectDelayMilliseconds, in: tuning)
+      ) * DeviceTransportProfile.nanosecondsPerMillisecond
     self.hasEdgeButtons = hasEdgeButtons
     isBluetoothVariant = prefersBluetooth
     connectionMode = prefersBluetooth ? .bluetooth : .usb

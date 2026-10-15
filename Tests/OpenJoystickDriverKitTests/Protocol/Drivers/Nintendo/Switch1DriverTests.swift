@@ -90,20 +90,36 @@ struct Switch1DriverTests {
     #expect(reports.map(\.reportID) == ProtocolPacketFixtures.SwitchPro.usbStartupReportIDs)
     #expect(
       reports.map { Array($0.bytes.prefix(2)) } == [
-        [0x80, 0x02], [0x80, 0x03], [0x80, 0x02], [0x80, 0x04], [0x01, 0x00], [0x01, 0x01],
-        [0x01, 0x02], [0x01, 0x03], [0x01, 0x04],
+        [0x01, 0x00], [0x01, 0x01], [0x01, 0x02], [0x01, 0x03], [0x01, 0x04],
       ]
     )
     #expect(
-      Array(reports[4].bytes[2...9]) == ProtocolPacketFixtures.SwitchPro.neutralRumble
+      Array(reports[0].bytes[2...9]) == ProtocolPacketFixtures.SwitchPro.neutralRumble
         + ProtocolPacketFixtures.SwitchPro.neutralRumble
     )
-    #expect(reports[4].bytes[10] == 0x03)
-    #expect(reports[4].bytes[11] == 0x30)
-    #expect(reports[5].bytes[10] == 0x40)
-    #expect(reports[6].bytes[10] == 0x48)
-    #expect(reports[6].bytes[11] == 0x01)
-    #expect(reports[5].bytes[11] == 0x01)
+    #expect(reports[0].bytes[10] == 0x03)
+    #expect(reports[0].bytes[11] == 0x30)
+    #expect(reports[1].bytes[10] == 0x40)
+    #expect(reports[2].bytes[10] == 0x48)
+    #expect(reports[2].bytes[11] == 0x01)
+    #expect(reports[1].bytes[11] == 0x01)
+  }
+
+  @Test
+  func testSwitchProUsbHandshakeIsTheDescriptionsStartupWrites() {
+    let commands = { (layout: ProtocolParameters.Layout?, variant: PhysicalProtocolVariantID) in
+      PhysicalProtocolID.nintendoSwitch1.protocolDescription.startupWrites(
+        phase: .startup,
+        variant: variant,
+        parameters: ProtocolParameters(layout: layout)
+      ).map { [$0.write].hidOutputs.first?.bytes }
+    }
+    let expected = ProtocolPacketFixtures.SwitchPro.usbHandshakeCommands.map { [UInt8(0x80), $0] }
+    #expect(commands(nil, .usb) == expected)
+    #expect(commands(.pro, .usb) == expected)
+    #expect(commands(.joyConLeft, .usb).isEmpty)
+    #expect(commands(.joyConRight, .usb).isEmpty)
+    #expect(commands(.pro, .bluetoothClassic).isEmpty)
   }
 
   @Test

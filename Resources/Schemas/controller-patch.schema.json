@@ -80,16 +80,6 @@
         "bluetoothLE": {
           "type": ["object", "null"]
         },
-        "server": {
-          "anyOf": [
-            {
-              "$ref": "controller.schema.json#/$defs/server"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
         "route": {
           "anyOf": [
             {
@@ -170,6 +160,86 @@
                 }
               ]
             },
+            "keepAliveIntervalMs": {
+              "anyOf": [
+                {
+                  "$ref": "controller.schema.json#/$defs/tuning/properties/keepAliveIntervalMs"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "lizardResendTicks": {
+              "anyOf": [
+                {
+                  "$ref": "controller.schema.json#/$defs/tuning/properties/lizardResendTicks"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "usbCommandTimeoutMs": {
+              "anyOf": [
+                {
+                  "$ref": "controller.schema.json#/$defs/tuning/properties/usbCommandTimeoutMs"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "presenceResendReports": {
+              "anyOf": [
+                {
+                  "$ref": "controller.schema.json#/$defs/tuning/properties/presenceResendReports"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "adapterDisconnectDelayMs": {
+              "anyOf": [
+                {
+                  "$ref": "controller.schema.json#/$defs/tuning/properties/adapterDisconnectDelayMs"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "usbStartupIntervalMs": {
+              "anyOf": [
+                {
+                  "$ref": "controller.schema.json#/$defs/tuning/properties/usbStartupIntervalMs"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "usbStartupRetryDelayMs": {
+              "anyOf": [
+                {
+                  "$ref": "controller.schema.json#/$defs/tuning/properties/usbStartupRetryDelayMs"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "usbTransferTimeoutMs": {
+              "anyOf": [
+                {
+                  "$ref": "controller.schema.json#/$defs/tuning/properties/usbTransferTimeoutMs"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
             "frameQueueCapacity": {
               "anyOf": [
                 {
@@ -181,6 +251,16 @@
               ]
             }
           }
+        },
+        "server": {
+          "anyOf": [
+            {
+              "$ref": "controller.schema.json#/$defs/server"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       }
     }

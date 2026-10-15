@@ -381,6 +381,14 @@
                       "hidStartupRecoveryRounds",
                       "hidStartupIntervalMs",
                       "minimumHIDOutputIntervalMs",
+                      "keepAliveIntervalMs",
+                      "lizardResendTicks",
+                      "usbCommandTimeoutMs",
+                      "presenceResendReports",
+                      "adapterDisconnectDelayMs",
+                      "usbStartupIntervalMs",
+                      "usbStartupRetryDelayMs",
+                      "usbTransferTimeoutMs",
                       "frameQueueCapacity"
                     ]
                   },
@@ -1833,8 +1841,12 @@
         "record": {
           "description": "The drafted controller record, as 'ojd record install' reads it.",
           "oneOf": [
-            { "$ref": "controller.schema.json" },
-            { "$ref": "controller-patch.schema.json" }
+            {
+              "$ref": "controller.schema.json"
+            },
+            {
+              "$ref": "controller-patch.schema.json"
+            }
           ]
         },
         "report": {
