@@ -65,16 +65,16 @@ final class UserSpaceReportSender: Sendable {
 
   /// Races one native send against its deadline and resumes the waiting publisher exactly once.
   ///
-  /// The send and the deadline run in unstructured tasks, not in a task group, because a group
-  /// awaits every child: a native send that ignores cancellation would hold the worker past the
-  /// deadline. Cancelling the waiting publisher (closing) must also not cut the deadline short,
-  /// so the send can still drain until then.
+  /// The send runs in an unstructured task and the deadline on a timer, not in a task group,
+  /// because a group awaits every child: a native send that ignores cancellation would hold the
+  /// worker past the deadline. Cancelling the waiting publisher (closing) must also not cut the
+  /// deadline short, so the send can still drain until then.
   private final class NativeSendOperation: Sendable {
     private struct State: Sendable {
       var completed = false
       var cancellationRequested = false
       var sendTask: Task<Void, Never>?
-      var deadlineTask: Task<Void, Never>?
+      var cancelDeadline: DeadlineTimer.Cancel?
       var continuation: CheckedContinuation<Void, any Error>?
     }
 
@@ -84,6 +84,7 @@ final class UserSpaceReportSender: Sendable {
       report: [UInt8],
       backend: any UserSpaceOutputDispatcher.VirtualDeviceBackend,
       deadlineNanoseconds: UInt64,
+      timer: DeadlineTimer,
       continuation: CheckedContinuation<Void, any Error>
     ) {
       state.withLock { $0.continuation = continuation }
@@ -93,27 +94,24 @@ final class UserSpaceReportSender: Sendable {
           self?.finish(.success(()))
         } catch { self?.finish(.failure(error)) }
       }
-      let deadline = Task.detached { [weak self] in
-        do {
-          try await Task.sleep(nanoseconds: deadlineNanoseconds)
-          if self?.isCancellationRequested() == true {
-            self?.finish(.failure(CancellationError()))
-          } else {
-            backend.close()
-            self?.finish(.failure(Failure.sendTimedOut))
-          }
-        } catch {
-          // Cancellation only stops the deadline.
+      // The deadline runs on a timer thread of its own, not the cooperative pool, so a starved
+      // pool cannot delay it.
+      let cancelDeadline = timer.schedule(deadlineNanoseconds) { [weak self] in
+        if self?.isCancellationRequested() == true {
+          self?.finish(.failure(CancellationError()))
+        } else {
+          backend.close()
+          self?.finish(.failure(Failure.sendTimedOut))
         }
       }
       let didComplete = state.withLock { state -> Bool in
         state.sendTask = send
-        state.deadlineTask = deadline
+        state.cancelDeadline = cancelDeadline
         return state.completed
       }
       if didComplete {
         send.cancel()
-        deadline.cancel()
+        cancelDeadline()
       }
     }
 
@@ -128,13 +126,14 @@ final class UserSpaceReportSender: Sendable {
     private func isCancellationRequested() -> Bool { state.withLock { $0.cancellationRequested } }
 
     private func finish(_ result: Result<Void, any Error>) {
-      let continuation = state.withLock { state -> CheckedContinuation<Void, any Error>? in
-        guard !state.completed else { return nil }
+      let (continuation, cancelDeadline) = state.withLock {
+        state -> (CheckedContinuation<Void, any Error>?, DeadlineTimer.Cancel?) in
+        guard !state.completed else { return (nil, nil) }
         state.completed = true
-        state.deadlineTask?.cancel()
         defer { state.continuation = nil }
-        return state.continuation
+        return (state.continuation, state.cancelDeadline)
       }
+      cancelDeadline?()
       continuation?.resume(with: result)
     }
   }
@@ -163,6 +162,7 @@ final class UserSpaceReportSender: Sendable {
   /// Wakes the worker; one pending wake covers every submission queued before it runs.
   private let continuation: AsyncStream<Void>.Continuation
   private let nativeSendDeadlineNanoseconds: UInt64
+  private let deadlineTimer: DeadlineTimer
   private let queueCapacity: Int
 
   /// The number of submissions waiting behind the one being sent.
@@ -170,9 +170,11 @@ final class UserSpaceReportSender: Sendable {
 
   init(
     nativeSendDeadlineNanoseconds: UInt64 = defaultNativeSendDeadlineNanoseconds,
-    queueCapacity: Int = fallbackQueueCapacity
+    queueCapacity: Int = fallbackQueueCapacity,
+    deadlineTimer: DeadlineTimer = .dispatch
   ) {
     self.nativeSendDeadlineNanoseconds = nativeSendDeadlineNanoseconds
+    self.deadlineTimer = deadlineTimer
     self.queueCapacity = max(1, queueCapacity)
     let (wakes, continuation) = AsyncStream.makeStream(
       of: Void.self,
@@ -286,6 +288,7 @@ final class UserSpaceReportSender: Sendable {
           report: report,
           backend: backend,
           deadlineNanoseconds: nativeSendDeadlineNanoseconds,
+          timer: deadlineTimer,
           continuation: continuation
         )
       }
