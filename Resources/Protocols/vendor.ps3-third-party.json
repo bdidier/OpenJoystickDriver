@@ -20,5 +20,11 @@
 				"DpadPressure"
 			]
 		}
+	},
+	"controls": {
+		"base": "xbox",
+		"add": [
+			"guide"
+		]
 	}
 }

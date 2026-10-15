@@ -41,17 +41,69 @@ def tuning_scope(
 ) -> frozenset[str]:
     """The `tuning` keys a controller of this family and variant reads.
 
-    A controller with no known family reads only `stickDeadzone`; so does a raw-USB one, whose
-    driver reads no HID timing. `ControllerTuning.scope(ofDocument:)` in Swift is the same rule.
+    A controller with no known family reads only `stickDeadzone`. A raw-USB variant reads
+    `rawUSBTuningKeys` and no HID timing; every other variant reads `tuningKeys`.
+    `ProtocolDescription.tuningScope(variant:)` in Swift is the same rule.
     """
     scope = {ALWAYS_READ}
-    if description is not None and not uses_raw_usb(description, variant):
-        scope |= set(description.get("tuningKeys", ()))
+    if description is not None:
+        key = "rawUSBTuningKeys" if uses_raw_usb(description, variant) else "tuningKeys"
+        scope |= set(description.get(key, ()))
     return frozenset(scope)
 
 
-def tuning_violations(description: dict[str, Any]) -> list[str]:
-    """The `defaults.tuning` keys of `description` that its family does not read."""
-    tuning = description.get("defaults", {}).get("tuning", {})
-    scope = tuning_scope(description, None)
-    return sorted(key for key in tuning if key not in scope)
+def record_capabilities_permit(
+    description: dict[str, Any], present: set[str], rumble_absent: bool
+) -> bool:
+    """Whether a record's capability deltas are ones the family's driver acts on.
+
+    `RecordCapabilityRules.permits` in Swift is the same rule.
+    """
+    rules = description.get("recordCapabilities", {})
+    present_ok = not present or present == set(rules.get("present", ()))
+    return present_ok and (not rumble_absent or rules.get("rumbleAbsent", False))
+
+
+def semantic_violations(
+    description: dict[str, Any], variants: list[str]
+) -> list[tuple[str, str]]:
+    """What a schema cannot say about one description, as `ProtocolDescription` rejects in Swift.
+
+    `variants` are the family's variants, which the schema holds per family. Each violation
+    is the error code and the message.
+    """
+    found: list[tuple[str, str]] = []
+    raw = description.get("rawUSB")
+    if isinstance(raw, list):
+        found += [
+            ("E5004", f"rawUSB names {variant}, which the family does not have")
+            for variant in raw
+            if variant not in variants
+        ]
+    defaults = description.get("defaults", {})
+    reads = {
+        ALWAYS_READ,
+        *description.get("tuningKeys", ()),
+        *description.get("rawUSBTuningKeys", ()),
+    }
+    unread = sorted(set(defaults.get("tuning", {})) - reads)
+    if unread:
+        found.append(
+            ("E5002", f"defaults.tuning: {', '.join(unread)} not read by the driver")
+        )
+    for variant, body in defaults.get("variants", {}).items():
+        if variant not in variants:
+            found.append(
+                (
+                    "E5004",
+                    f"defaults.variants names {variant}, which the family does not have",
+                )
+            )
+            continue
+        unread = sorted(set(body["tuning"]) - tuning_scope(description, variant))
+        if unread:
+            where = f"defaults.variants.{variant}.tuning"
+            found.append(
+                ("E5002", f"{where}: {', '.join(unread)} not read by the driver")
+            )
+    return found

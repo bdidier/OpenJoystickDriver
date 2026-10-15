@@ -10,6 +10,7 @@ extension ControllerTuning {
     case hidStartupRecoveryRounds
     case hidStartupIntervalMs
     case minimumHIDOutputIntervalMs
+    case keepAliveIntervalMs
   }
 
   /// The keys this tuning sets.
@@ -24,6 +25,7 @@ extension ControllerTuning {
     case .hidStartupRecoveryRounds: hidStartupRecoveryRounds.map(String.init)
     case .hidStartupIntervalMs: hidStartupIntervalMilliseconds.map(String.init)
     case .minimumHIDOutputIntervalMs: minimumHIDOutputIntervalMilliseconds.map(String.init)
+    case .keepAliveIntervalMs: keepAliveIntervalMilliseconds.map(String.init)
     }
   }
 
@@ -39,7 +41,9 @@ extension ControllerTuning {
         ?? minimumHIDOutputIntervalMilliseconds,
       hidStartupRecoveryIntervalMilliseconds: higher.hidStartupRecoveryIntervalMilliseconds
         ?? hidStartupRecoveryIntervalMilliseconds,
-      hidStartupRecoveryRounds: higher.hidStartupRecoveryRounds ?? hidStartupRecoveryRounds
+      hidStartupRecoveryRounds: higher.hidStartupRecoveryRounds ?? hidStartupRecoveryRounds,
+      keepAliveIntervalMilliseconds: higher.keepAliveIntervalMilliseconds
+        ?? keepAliveIntervalMilliseconds
     )
   }
 
@@ -56,7 +60,9 @@ extension ControllerTuning {
       hidStartupRecoveryIntervalMilliseconds: keys.contains(.hidStartupRecoveryIntervalMs)
         ? hidStartupRecoveryIntervalMilliseconds : nil,
       hidStartupRecoveryRounds: keys.contains(.hidStartupRecoveryRounds)
-        ? hidStartupRecoveryRounds : nil
+        ? hidStartupRecoveryRounds : nil,
+      keepAliveIntervalMilliseconds: keys.contains(.keepAliveIntervalMs)
+        ? keepAliveIntervalMilliseconds : nil
     )
   }
 }
@@ -86,11 +92,7 @@ extension ControllerTuning {
     variant: PhysicalProtocolVariantID?
   ) -> Set<Key> {
     guard let description = protocolID?.protocolDescription else { return [.stickDeadzone] }
-    return ProtocolDescription.tuningScope(
-      tuningKeys: description.tuningKeys,
-      rawUSB: description.rawUSB,
-      variant: variant
-    )
+    return description.tuningScope(variant: variant)
   }
 
   /// The keys that a controller of the record `document` reads, from its `protocol` family and

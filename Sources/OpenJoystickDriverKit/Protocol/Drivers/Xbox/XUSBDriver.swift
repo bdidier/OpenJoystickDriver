@@ -125,7 +125,7 @@ public final class XUSBDriver: PhysicalProtocolDriver {
   }
 
   public var capabilities: ControllerCapabilities {
-    ControllerCapabilities(controls: ControlID.xboxLayout.union([.guide]))
+    PhysicalProtocolID.xboxXUSB.describedControls
   }
 
   public var sessionPlan: DriverSessionPlan {

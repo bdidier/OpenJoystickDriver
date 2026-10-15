@@ -11,13 +11,7 @@ extension DualShock4Driver {
   }
 
   public var capabilities: ControllerCapabilities {
-    ControllerCapabilities(
-      controls: ControlID.xboxLayout.union([
-        .guide, .touchpadClick, .leftTriggerButton, .rightTriggerButton,
-      ]),
-      touchContactCount: 2,
-      motion: true
-    )
+    PhysicalProtocolID.sonyDualShock4.describedControls
   }
 
   enum ReportOffset {

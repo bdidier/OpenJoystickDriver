@@ -117,14 +117,9 @@ struct ControllerRecordDocument: Decodable {
     }
   }
 
-  /// Only these deltas have a driver that acts on them: GIP drops rumble, DualSense Edge adds
-  /// exactly its paddles and function buttons.
+  /// Only the deltas the family's description declares have a driver that acts on them.
   func capabilitiesAreDeclared(by protocolID: PhysicalProtocolID) -> Bool {
-    let presentAllowed =
-      capabilities.presentControls.isEmpty
-      || (protocolID == .sonyDualSense
-        && capabilities.presentControls == DualSenseDriver.edgeControls)
-    return (!capabilities.rumbleAbsent || protocolID == .xboxGIP) && presentAllowed
+    protocolID.protocolDescription.recordCapabilities.permits(capabilities)
   }
 
   /// macOS cannot serve a raw-USB family, startup writes go to HID controllers, only a driver that

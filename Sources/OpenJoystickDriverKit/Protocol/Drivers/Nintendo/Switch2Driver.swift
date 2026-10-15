@@ -4,8 +4,6 @@ private let switch2StateReportID: UInt8 = 0x05
 private let switch2StateReportLength = 64
 private let switch2CommandOutEndpoint: UInt8 = 0x02
 private let switch2CommandTimeoutMilliseconds: UInt32 = 1000
-/// SDL `RUMBLE_INTERVAL`: the rumble packet is re-sent at this period while any motor runs.
-let switch2RumbleIntervalNanoseconds: UInt64 = 12_000_000
 /// SDL `RUMBLE_MAX`: the HD rumble amplitude cap.
 private let switch2RumbleMaxAmplitude = 29_000
 /// Zero-amplitude packets sent by the rumble refresh after a stop. A refresh built before the stop
@@ -129,10 +127,13 @@ public final class Switch2Driver: PhysicalProtocolDriver {
   public var defaultColor: ControllerColor? { nil }
 
   /// SDL reads USB replies of up to `0x50` bytes in 64-byte chunks, 100 ms each. A BLE reply
-  /// waits for a connection interval, so its read timeout is longer.
+  /// waits for a connection interval, so its read timeout is longer. SDL `RUMBLE_INTERVAL`: the
+  /// description's keep-alive interval is the period the rumble packet is re-sent while any motor
+  /// runs.
   public var sessionPlan: DriverSessionPlan {
     DriverSessionPlan(
-      hidKeepAliveIntervalNanoseconds: switch2RumbleIntervalNanoseconds,
+      hidKeepAliveIntervalNanoseconds: PhysicalProtocolID.nintendoSwitch2
+        .keepAliveIntervalNanoseconds(),
       usbCommandChannel: USBCommandChannel(
         interfaceNumber: 1,
         outEndpoint: switch2CommandOutEndpoint,

@@ -9,5 +9,24 @@
 	"tuningKeys": [
 		"hidStartupIntervalMs",
 		"minimumHIDOutputIntervalMs"
-	]
+	],
+	"controls": {
+		"base": "xbox",
+		"remove": [
+			"right-stick-click"
+		],
+		"add": [
+			"guide",
+			"left-trigger-button",
+			"right-trigger-button",
+			"paddle-left-2",
+			"paddle-right-2",
+			"left-trackpad-click",
+			"right-trackpad-click",
+			"left-trackpad-touch",
+			"right-trackpad-touch"
+		],
+		"touchContactCount": 1,
+		"motion": true
+	}
 }

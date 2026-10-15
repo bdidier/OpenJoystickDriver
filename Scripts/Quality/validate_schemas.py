@@ -6,6 +6,7 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
+from typing import Any
 
 from ..Catalog import protocol_descriptions
 from ..Catalog.schema_header import (
@@ -199,9 +200,17 @@ def protocol_description_code(error: ValidationError) -> str:
         and isinstance(error.instance, list)
         and all(isinstance(item, dict) and "variant" in item for item in error.instance)
     )
+    # The per-family rules also bound the raw-USB variants and the variants that carry default
+    # tuning; jsonschema reports the first on the list and the second on `defaults.variants`.
     names_variant = (
-        path[:1] == ["interfaceSignatures"] and path[-1:] == ["variant"]
-    ) or forbidden_list
+        (path[:1] == ["interfaceSignatures"] and path[-1:] == ["variant"])
+        or forbidden_list
+        or path == ["rawUSB"]
+        or (
+            path == ["defaults", "variants"]
+            and error.validator in ("propertyNames", "enum", None)
+        )
+    )
     return UNKNOWN_PROTOCOL_VARIANT if names_variant else INVALID_PROTOCOL_DESCRIPTION
 
 
@@ -231,17 +240,27 @@ def validate_protocol_descriptions(
                 f"{PROTOCOL_DESCRIPTION_FAMILY_MISMATCH}: {path.relative_to(ROOT)}: "
                 f"file name must be {family}.json"
             )
-        # The schema cannot say that a default tuning key is one the family reads.
-        unread = (
-            protocol_descriptions.tuning_violations(document)
-            if isinstance(document, dict)
-            else []
-        )
-        if unread:
-            raise ValidationError(
-                f"{INVALID_PROTOCOL_DESCRIPTION}: {path.relative_to(ROOT)} at defaults.tuning: "
-                f"{', '.join(unread)} not read by the {family} driver"
-            )
+        # The schema cannot say that a default tuning key is one the family reads, or that a
+        # raw-USB variant is the family's.
+        assert isinstance(document, dict)
+        for code, message in protocol_descriptions.semantic_violations(
+            document, family_variants(schema, str(family))
+        ):
+            raise ValidationError(f"{code}: {path.relative_to(ROOT)}: {message}")
+
+
+def family_variants(schema: dict[str, Any], family: str) -> list[str]:
+    """The variants of `family`, which the description schema holds per family."""
+    for rule in schema["allOf"]:
+        if (
+            rule.get("if", {}).get("properties", {}).get("family", {}).get("const")
+            == family
+        ):
+            variants = rule["then"]["properties"]["defaults"]["properties"]["variants"]
+            if isinstance(variants, bool):
+                return []
+            return list(variants.get("propertyNames", {}).get("enum", []))
+    return []
 
 
 def swift_binary_path() -> Path:

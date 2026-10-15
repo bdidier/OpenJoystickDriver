@@ -736,6 +736,7 @@ class SwiftParityTests(unittest.TestCase):
         recovery = {"hidStartupRecoveryIntervalMs": 100, "hidStartupRecoveryRounds": 2}
         interval = {"hidStartupIntervalMs": 10}
         output = {"minimumHIDOutputIntervalMs": 8}
+        keep_alive = {"keepAliveIntervalMs": 500}
         self.check(
             {
                 "liveness on DualShock 4": record(DS4, tuning=liveness),
@@ -755,8 +756,14 @@ class SwiftParityTests(unittest.TestCase):
                     tuning=interval,
                 ),
                 "stick deadzone on GIP": record(GIP, tuning={"stickDeadzone": 0.1}),
+                "keep-alive on GIP": record(GIP, tuning=keep_alive),
+                "keep-alive on GameSir USB": record(
+                    {"family": "vendor.gamesir", "variant": "usb"}, tuning=keep_alive
+                ),
             },
             {
+                "keep-alive on DualSense": record(DUALSENSE, tuning=keep_alive),
+                "keep-alive on XUSB": record(XUSB, tuning=keep_alive),
                 "liveness on DualSense": record(DUALSENSE, tuning=liveness),
                 "liveness on GIP": record(GIP, tuning=liveness),
                 "recovery interval on DualSense": record(

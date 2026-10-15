@@ -23,6 +23,15 @@
 			}
 		],
 		"setsStartupPlayerIndicator": true,
-		"readsStartupFeatures": true
+		"readsStartupFeatures": true,
+		"rationale": "macOS never writes output report 0x01 to a Sixaxis, and a USB Sixaxis ignores it until the host reads feature report 0xF2."
+	},
+	"controls": {
+		"base": "xbox",
+		"add": [
+			"guide",
+			"left-trigger-button",
+			"right-trigger-button"
+		]
 	}
 }

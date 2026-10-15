@@ -145,6 +145,8 @@ public struct ControllerTuning: Codable, Equatable, Sendable {
   public let hidStartupRecoveryIntervalMilliseconds: Int?
   /// Switch 1 startup recovery rounds before the session expires.
   public let hidStartupRecoveryRounds: Int?
+  /// Interval between keep-alive writes, or between rumble resends for a family that resends.
+  public let keepAliveIntervalMilliseconds: Int?
 
   public static let none = Self()
 
@@ -154,7 +156,8 @@ public struct ControllerTuning: Codable, Equatable, Sendable {
     hidStartupIntervalMilliseconds: Int? = nil,
     minimumHIDOutputIntervalMilliseconds: Int? = nil,
     hidStartupRecoveryIntervalMilliseconds: Int? = nil,
-    hidStartupRecoveryRounds: Int? = nil
+    hidStartupRecoveryRounds: Int? = nil,
+    keepAliveIntervalMilliseconds: Int? = nil
   ) {
     self.stickDeadzone = stickDeadzone
     self.inputLivenessTimeoutMilliseconds = inputLivenessTimeoutMilliseconds
@@ -162,6 +165,7 @@ public struct ControllerTuning: Codable, Equatable, Sendable {
     self.minimumHIDOutputIntervalMilliseconds = minimumHIDOutputIntervalMilliseconds
     self.hidStartupRecoveryIntervalMilliseconds = hidStartupRecoveryIntervalMilliseconds
     self.hidStartupRecoveryRounds = hidStartupRecoveryRounds
+    self.keepAliveIntervalMilliseconds = keepAliveIntervalMilliseconds
   }
 }
 

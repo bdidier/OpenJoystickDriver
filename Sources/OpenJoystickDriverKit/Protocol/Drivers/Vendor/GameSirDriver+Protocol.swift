@@ -4,10 +4,10 @@ extension GameSirDriver {
 
   // Share is emitted but not yet declared until per-model evidence confirms it.
   public var sessionPlan: DriverSessionPlan {
-    DriverSessionPlan(
-      usbKeepAliveIntervalNanoseconds: gameSirProtocol == .g7ProUSB
-        ? gameSirHeartbeatIntervalNanoseconds : nil,
-      hidKeepAliveIntervalNanoseconds: gameSirHeartbeatIntervalNanoseconds
+    let heartbeat = PhysicalProtocolID.vendorGameSir.keepAliveIntervalNanoseconds()
+    return DriverSessionPlan(
+      usbKeepAliveIntervalNanoseconds: gameSirProtocol == .g7ProUSB ? heartbeat : nil,
+      hidKeepAliveIntervalNanoseconds: heartbeat
     ).withDefaults(of: .vendorGameSir)
   }
 
@@ -17,9 +17,10 @@ extension GameSirDriver {
     // The wired G7 Pro telemetry always reports the inner grips.
     let innerGrips: Set<ControlID> =
       gameSirProtocol == .g7ProUSB || hasInnerGrips ? [.paddleLeft2, .paddleRight2] : []
-    let backButtons = innerGrips.union([.paddleLeft1, .paddleRight1, .auxiliary1])
     // No motion: no source verifies the IMU scale, frame, or byte order.
-    return ControllerCapabilities(controls: ControlID.xboxLayout.union([.guide]).union(backButtons))
+    return PhysicalProtocolID.vendorGameSir.describedControls.union(
+      ControllerCapabilities(controls: innerGrips)
+    )
   }
 
   public var power: ControllerConnectionState.Power? {

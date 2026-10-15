@@ -64,8 +64,11 @@ struct ProtocolDescription: Sendable {
   let endpoints: Endpoints
   let rawUSB: RawUSB
   let recordSections: Set<RecordSection>
-  /// The `tuning` keys the family reads beyond `stickDeadzone`; none for a raw-USB variant.
+  /// The `tuning` keys the family reads beyond `stickDeadzone` through IOHID; none when every
+  /// variant is raw USB.
   let tuningKeys: Set<ControllerTuning.Key>
+  /// The `tuning` keys a raw-USB variant reads beyond `stickDeadzone`.
+  let rawUSBTuningKeys: Set<ControllerTuning.Key>
   let buttonLabels: ControllerButtonLabels
   /// What OJD still sends when macOS serves the controller.
   let macOSOwnedOutput: MacOSOwnedOutput
@@ -73,11 +76,39 @@ struct ProtocolDescription: Sendable {
   /// The parameters records of this family may set, by name.
   let parameters: [String: ParameterType]
   let capabilities: ControllerCapabilityDelta?
+  /// The controls every controller of the family has; a driver adds only what its record or
+  /// layout makes true. Nil for a family whose controls follow its layout.
+  let controls: ControllerCapabilities?
+  /// The capability deltas a record of this family may declare.
+  let recordCapabilities: RecordCapabilityRules
   let rumbleTemplate: RumbleOutputTemplate?
   /// The family's initialization sequence: writes sent when a HID controller starts.
   let startupWrites: [RecordStartupWrite]
   let inputLayout: ControllerInputLayout?
   let tuning: ControllerTuning?
+  /// Tuning defaults by stored variant, layered over `tuning` for that variant.
+  let variantTuning: [PhysicalProtocolVariantID: ControllerTuning]
+
+  /// The capability deltas a record may declare: exactly this set of present controls (or none),
+  /// and rumble absent.
+  struct RecordCapabilityRules: Equatable, Sendable {
+    let presentControls: Set<ControlID>
+    let rumbleAbsent: Bool
+
+    static let none = Self(presentControls: [], rumbleAbsent: false)
+
+    func permits(_ delta: ControllerCapabilityDelta) -> Bool {
+      (delta.presentControls.isEmpty || delta.presentControls == presentControls)
+        && (!delta.rumbleAbsent || rumbleAbsent)
+    }
+  }
+
+  /// The defaults a controller of this family and stored variant starts from: the family's
+  /// `tuning` with the variant's layered over it; nil when neither sets a key.
+  func tuning(variant: PhysicalProtocolVariantID?) -> ControllerTuning? {
+    let layered = (tuning ?? .none).overlaid(by: variant.flatMap { variantTuning[$0] } ?? .none)
+    return layered == .none ? nil : layered
+  }
 
   /// The bundled descriptions, by family.
   static let bundled: [PhysicalProtocolID: Self] = {
@@ -176,21 +207,37 @@ struct ProtocolDescription: Sendable {
       }
       rawUSB = .variants(variants)
     }
+    var variantTuning: [PhysicalProtocolVariantID: ControllerTuning] = [:]
+    for (name, tuning) in document.defaults?.variantTuning ?? [:] {
+      guard let variant = PhysicalProtocolVariantID(rawValue: name),
+        protocolID.variants.contains(variant)
+      else {
+        throw ProtocolDescriptionProblem(
+          .unknownProtocolVariant,
+          "\(fileName): \(protocolID.rawValue) has no variant \(name)"
+        )
+      }
+      variantTuning[variant] = tuning
+    }
     let description = Self(
       family: protocolID,
       endpoints: document.endpoints,
       rawUSB: rawUSB,
       recordSections: document.recordSections,
       tuningKeys: document.tuningKeys,
+      rawUSBTuningKeys: document.rawUSBTuningKeys,
       buttonLabels: document.buttonLabels,
       macOSOwnedOutput: document.macOSOwnedOutput,
       interfaceSignatures: signatures,
       parameters: document.parameters,
       capabilities: document.defaults?.capabilities,
+      controls: document.controls,
+      recordCapabilities: document.recordCapabilities,
       rumbleTemplate: document.defaults?.output?.rumble,
       startupWrites: document.defaults?.output?.startup ?? [],
       inputLayout: document.defaults?.input,
-      tuning: document.defaults?.tuning
+      tuning: document.defaults?.tuning,
+      variantTuning: variantTuning
     )
     if let violation = description.scopeViolation {
       throw ProtocolDescriptionProblem(.invalidProtocolDescription, "\(fileName): \(violation)")
@@ -210,337 +257,32 @@ struct ProtocolDescription: Sendable {
     if !startupWrites.isEmpty, rawUSB == .always {
       return "startup writes apply only to HID controllers"
     }
+    if rawUSB == .always, !tuningKeys.isEmpty {
+      return "a family that is always raw USB reads its tuning through rawUSBTuningKeys"
+    }
+    if rawUSB == .never, !rawUSBTuningKeys.isEmpty {
+      return "rawUSBTuningKeys apply only to a family with a raw-USB variant"
+    }
     if let tuning {
-      let scope = Self.tuningScope(tuningKeys: tuningKeys, rawUSB: rawUSB, variant: nil)
+      let scope = tuningKeys.union(rawUSBTuningKeys).union([.stickDeadzone])
       for key in ControllerTuning.Key.allCases
       where tuning.setKeys.contains(key) && !scope.contains(key) {
         return "\(key) is not read by the \(family.rawValue) driver"
+      }
+    }
+    for (variant, tuning) in variantTuning.sorted(by: { $0.key.rawValue < $1.key.rawValue }) {
+      let scope = tuningScope(variant: variant)
+      for key in ControllerTuning.Key.allCases
+      where tuning.setKeys.contains(key) && !scope.contains(key) {
+        return "\(key) is not read by the \(family.rawValue):\(variant.rawValue) driver"
       }
     }
     return nil
   }
 
   /// The tuning keys a controller of this family and stored variant reads: `stickDeadzone`, and
-  /// the family's `tuningKeys` unless the controller is reached through raw USB.
-  static func tuningScope(
-    tuningKeys: Set<ControllerTuning.Key>,
-    rawUSB: RawUSB,
-    variant: PhysicalProtocolVariantID?
-  ) -> Set<ControllerTuning.Key> {
-    rawUSB.applies(to: variant) ? [.stickDeadzone] : tuningKeys.union([.stickDeadzone])
-  }
-
-  private struct Document: Decodable {
-    struct Signature: Decodable {
-      let variant: String
-      let interfaceClass: UInt8
-      let interfaceSubclass: UInt8
-      let interfaceProtocol: UInt8
-      let interfaceNumber: UInt8?
-
-      init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: DocumentKey.self)
-        try container.rejectUnknown(allowed: [
-          "variant", "interfaceClass", "interfaceSubclass", "interfaceProtocol", "interfaceNumber",
-        ])
-        variant = try container.decode(String.self, for: "variant")
-        interfaceClass = try container.decode(UInt8.self, for: "interfaceClass")
-        interfaceSubclass = try container.decode(UInt8.self, for: "interfaceSubclass")
-        interfaceProtocol = try container.decode(UInt8.self, for: "interfaceProtocol")
-        interfaceNumber = try container.decodeOptional(UInt8.self, for: "interfaceNumber")
-      }
-    }
-
-    struct Defaults: Decodable {
-      let capabilities: ControllerCapabilityDelta?
-      let output: ControllerRecordDocument.Output?
-      let input: ControllerInputLayout?
-      let tuning: ControllerTuning?
-
-      init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: DocumentKey.self)
-        try container.rejectUnknown(allowed: ["capabilities", "output", "input", "tuning"])
-        guard !container.allKeys.isEmpty else {
-          throw DecodingError.dataCorrupted(
-            .init(codingPath: decoder.codingPath, debugDescription: "defaults must not be empty")
-          )
-        }
-        capabilities = try container.decodeOptional(
-          ControllerRecordDocument.CapabilityDelta.self,
-          for: "capabilities"
-        )?.delta
-        output = try container.decodeOptional(ControllerRecordDocument.Output.self, for: "output")
-        input = try container.decodeOptional(
-          ControllerRecordDocument.InputLayout.self,
-          for: "input"
-        )?.layout
-        tuning = try container.decodeOptional(ControllerRecordDocument.Tuning.self, for: "tuning")?
-          .tuning
-      }
-    }
-
-    let apiVersion: String?
-    let kind: String?
-    let family: String
-    let endpoints: Endpoints
-    let rawUSB: RawUSBDeclaration?
-    let recordSections: Set<RecordSection>
-    let tuningKeys: Set<ControllerTuning.Key>
-    let buttonLabels: ControllerButtonLabels
-    let macOSOwnedOutput: MacOSOwnedOutput
-    let interfaceSignatures: [Signature]
-    let parameters: [String: ParameterType]
-    let defaults: Defaults?
-
-    /// A unique, nonempty list of `Element` names as a set; empty when absent.
-    private static func decodeSet<Element: RawRepresentable & Hashable>(
-      _: Element.Type,
-      _ key: String,
-      _ container: KeyedDecodingContainer<DocumentKey>
-    ) throws -> Set<Element> where Element.RawValue == String {
-      guard let names = try container.decodeOptional([String].self, for: key) else { return [] }
-      let elements = names.compactMap(Element.init(rawValue:))
-      guard !names.isEmpty, elements.count == names.count, Set(elements).count == names.count else {
-        throw DecodingError.dataCorrupted(
-          .init(
-            codingPath: container.codingPath + [DocumentKey(key)],
-            debugDescription: "\(key) lists unique, known names"
-          )
-        )
-      }
-      return Set(elements)
-    }
-
-    init(from decoder: any Decoder) throws {
-      let container = try decoder.container(keyedBy: DocumentKey.self)
-      try container.rejectUnknown(allowed: [
-        "apiVersion", "kind", "family", "endpoints", "rawUSB", "recordSections", "tuningKeys",
-        "buttonLabels", "macOSOwnedOutput", "interfaceSignatures", "parameters", "defaults",
-      ])
-      apiVersion = try container.decodeOptional(String.self, for: "apiVersion")
-      kind = try container.decodeOptional(String.self, for: "kind")
-      family = try container.decode(String.self, for: "family")
-      endpoints = try container.decode(EndpointsDocument.self, for: "endpoints").endpoints
-      rawUSB = try container.decodeOptional(RawUSBDeclaration.self, for: "rawUSB")
-      recordSections = try Self.decodeSet(RecordSection.self, "recordSections", container)
-      tuningKeys = try Self.decodeSet(ControllerTuning.Key.self, "tuningKeys", container)
-      guard !tuningKeys.contains(.stickDeadzone) else {
-        throw DecodingError.dataCorrupted(
-          .init(
-            codingPath: decoder.codingPath + [DocumentKey("tuningKeys")],
-            debugDescription: "stickDeadzone is read by every driver"
-          )
-        )
-      }
-      switch try container.decodeOptional(String.self, for: "buttonLabels") {
-      case nil: buttonLabels = .standard
-      case "PlayStation": buttonLabels = .playStation
-      case "Nintendo": buttonLabels = .nintendo
-      default:
-        throw DecodingError.dataCorrupted(
-          .init(
-            codingPath: decoder.codingPath + [DocumentKey("buttonLabels")],
-            debugDescription: "buttonLabels is PlayStation or Nintendo"
-          )
-        )
-      }
-      macOSOwnedOutput =
-        try container.decodeOptional(MacOSOwnedOutputDocument.self, for: "macOSOwnedOutput")?.value
-        ?? .none
-      let signatures = try container.decodeOptional([Signature].self, for: "interfaceSignatures")
-      guard signatures?.isEmpty != true else {
-        throw DecodingError.dataCorrupted(
-          .init(
-            codingPath: decoder.codingPath + [DocumentKey("interfaceSignatures")],
-            debugDescription: "interfaceSignatures must not be empty"
-          )
-        )
-      }
-      interfaceSignatures = signatures ?? []
-      let declarations = try container.decodeOptional([String: Declaration].self, for: "parameters")
-      guard declarations?.isEmpty != true else {
-        throw DecodingError.dataCorrupted(
-          .init(
-            codingPath: decoder.codingPath + [DocumentKey("parameters")],
-            debugDescription: "parameters must not be empty"
-          )
-        )
-      }
-      let unknown = Set(declarations.map { Array($0.keys) } ?? []).subtracting(
-        ProtocolParameters.names
-      )
-      guard unknown.isEmpty else {
-        throw DecodingError.dataCorrupted(
-          .init(
-            codingPath: decoder.codingPath + [DocumentKey("parameters")],
-            debugDescription:
-              "no driver reads parameter(s): \(unknown.sorted().joined(separator: ", "))"
-          )
-        )
-      }
-      parameters = declarations?.mapValues(\.type) ?? [:]
-      defaults = try container.decodeOptional(Defaults.self, for: "defaults")
-    }
-  }
-
-  /// `endpoints`: the default input and output endpoint addresses.
-  private struct EndpointsDocument: Decodable {
-    let endpoints: Endpoints
-
-    init(from decoder: any Decoder) throws {
-      let container = try decoder.container(keyedBy: DocumentKey.self)
-      try container.rejectUnknown(allowed: ["in", "out"])
-      let input = try container.decode(Int.self, for: "in")
-      let output = try container.decode(Int.self, for: "out")
-      guard (0...255).contains(input), (0...255).contains(output) else {
-        throw DecodingError.dataCorrupted(
-          .init(codingPath: decoder.codingPath, debugDescription: "endpoints are 0...255")
-        )
-      }
-      endpoints = Endpoints(input: input, output: output)
-    }
-  }
-
-  /// `rawUSB`: `true` for every variant, or the variants that are raw USB.
-  private enum RawUSBDeclaration: Decodable {
-    case always
-    case variants([String])
-
-    init(from decoder: any Decoder) throws {
-      let single = try decoder.singleValueContainer()
-      if let flag = try? single.decode(Bool.self) {
-        guard flag else {
-          throw DecodingError.dataCorrupted(
-            .init(codingPath: decoder.codingPath, debugDescription: "rawUSB is true or variants")
-          )
-        }
-        self = .always
-        return
-      }
-      let names = try single.decode([String].self)
-      guard !names.isEmpty, Set(names).count == names.count else {
-        throw DecodingError.dataCorrupted(
-          .init(codingPath: decoder.codingPath, debugDescription: "variants are unique, nonempty")
-        )
-      }
-      self = .variants(names)
-    }
-  }
-
-  /// `macOSOwnedOutput`: lighting, rumble and reports OJD still sends to a controller macOS serves.
-  private struct MacOSOwnedOutputDocument: Decodable {
-    let value: MacOSOwnedOutput
-
-    init(from decoder: any Decoder) throws {
-      let container = try decoder.container(keyedBy: DocumentKey.self)
-      try container.rejectUnknown(allowed: [
-        "lightingFeatures", "drivesRumble", "reports", "setsStartupPlayerIndicator",
-        "readsStartupFeatures",
-      ])
-      guard !container.allKeys.isEmpty else {
-        throw DecodingError.dataCorrupted(
-          .init(codingPath: decoder.codingPath, debugDescription: "macOSOwnedOutput is not empty")
-        )
-      }
-      var features: Set<PhysicalLightingFeature> = []
-      for name in try container.decodeOptional([String].self, for: "lightingFeatures") ?? [] {
-        guard let feature = PhysicalLightingFeature(rawValue: name) else {
-          throw DecodingError.dataCorrupted(
-            .init(
-              codingPath: decoder.codingPath + [DocumentKey("lightingFeatures")],
-              debugDescription: "unknown lighting feature \(name)"
-            )
-          )
-        }
-        features.insert(feature)
-      }
-      let reports =
-        try container.decodeOptional([ControllerRecordDocument.TemplateReport].self, for: "reports")
-        ?? []
-      value = MacOSOwnedOutput(
-        lightingFeatures: features,
-        drivesRumble: try container.decodeOptional(Bool.self, for: "drivesRumble") ?? false,
-        reports: Set(reports.map(\.report)),
-        setsStartupPlayerIndicator: try container.decodeOptional(
-          Bool.self,
-          for: "setsStartupPlayerIndicator"
-        ) ?? false,
-        readsStartupFeatures: try container.decodeOptional(Bool.self, for: "readsStartupFeatures")
-          ?? false
-      )
-    }
-  }
-
-  /// A parameter declaration: `{type: flag}`, `{type: enum, values}` or `{type: object, fields}`.
-  private struct Declaration: Decodable {
-    let type: ParameterType
-
-    init(from decoder: any Decoder) throws {
-      let container = try decoder.container(keyedBy: DocumentKey.self)
-      let name = try container.decode(String.self, for: "type")
-      switch name {
-      case "flag":
-        try container.rejectUnknown(allowed: ["type"])
-        type = .flag
-      case "enum":
-        try container.rejectUnknown(allowed: ["type", "values"])
-        let values = try container.decode([String].self, for: "values")
-        guard !values.isEmpty, Set(values).count == values.count,
-          values.allSatisfy({ $0.first?.isUppercase == true })
-        else {
-          throw DecodingError.dataCorrupted(
-            .init(
-              codingPath: decoder.codingPath + [DocumentKey("values")],
-              debugDescription: "values are unique, nonempty UpperCamelCase names"
-            )
-          )
-        }
-        type = .enumeration(values)
-      case "object":
-        try container.rejectUnknown(allowed: ["type", "fields"])
-        let fields = try container.decode([String: IntegerField].self, for: "fields")
-        guard !fields.isEmpty else {
-          throw DecodingError.dataCorrupted(
-            .init(
-              codingPath: decoder.codingPath + [DocumentKey("fields")],
-              debugDescription: "fields must not be empty"
-            )
-          )
-        }
-        type = .object(fields.mapValues(\.range))
-      default:
-        throw DecodingError.dataCorrupted(
-          .init(
-            codingPath: decoder.codingPath + [DocumentKey("type")],
-            debugDescription: "type is flag, enum or object"
-          )
-        )
-      }
-    }
-  }
-
-  private struct IntegerField: Decodable {
-    let range: ClosedRange<Int>
-
-    init(from decoder: any Decoder) throws {
-      let container = try decoder.container(keyedBy: DocumentKey.self)
-      try container.rejectUnknown(allowed: ["type", "minimum", "maximum"])
-      guard try container.decode(String.self, for: "type") == "integer" else {
-        throw DecodingError.dataCorrupted(
-          .init(
-            codingPath: decoder.codingPath + [DocumentKey("type")],
-            debugDescription: "an object field is an integer"
-          )
-        )
-      }
-      let minimum = try container.decode(Int.self, for: "minimum")
-      let maximum = try container.decode(Int.self, for: "maximum")
-      guard minimum <= maximum else {
-        throw DecodingError.dataCorrupted(
-          .init(codingPath: decoder.codingPath, debugDescription: "minimum exceeds maximum")
-        )
-      }
-      range = minimum...maximum
-    }
+  /// the family's `rawUSBTuningKeys` when the variant is raw USB, otherwise its `tuningKeys`.
+  func tuningScope(variant: PhysicalProtocolVariantID?) -> Set<ControllerTuning.Key> {
+    (rawUSB.applies(to: variant) ? rawUSBTuningKeys : tuningKeys).union([.stickDeadzone])
   }
 }

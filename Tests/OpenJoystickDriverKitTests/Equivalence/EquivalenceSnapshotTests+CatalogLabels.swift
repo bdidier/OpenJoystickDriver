@@ -83,6 +83,7 @@ extension EquivalenceSnapshotCatalogTests {
     case .hidStartupRecoveryRounds: "hidStartupRecoveryRounds"
     case .hidStartupIntervalMs: "hidStartupIntervalMs"
     case .minimumHIDOutputIntervalMs: "minimumHIDOutputIntervalMs"
+    case .keepAliveIntervalMs: "keepAliveIntervalMs"
     }
   }
 

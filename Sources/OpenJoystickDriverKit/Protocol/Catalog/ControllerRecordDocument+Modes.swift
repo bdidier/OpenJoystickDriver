@@ -138,7 +138,7 @@ extension ControllerRecordDocument {
       if info.protocolID.usesRawUSB(storedVariant: info.protocolVariant) {
         throw fail("modes apply only to HID controllers")
       }
-      if (inputLayout != nil) != (info.protocolID == .hidReportLayout) {
+      if (inputLayout != nil) != info.protocolID.requiresRecordInputLayout {
         throw fail(
           "every mode needs the record's input layout exactly when it is hid.report-layout"
         )

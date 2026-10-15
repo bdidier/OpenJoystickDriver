@@ -18,6 +18,9 @@
 			"interfaceProtocol": 0
 		}
 	],
+	"controls": {
+		"base": "xbox"
+	},
 	"defaults": {
 		"input": {
 			"report": {

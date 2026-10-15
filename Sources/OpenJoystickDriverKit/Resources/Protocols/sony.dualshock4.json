@@ -13,7 +13,8 @@
 	],
 	"buttonLabels": "PlayStation",
 	"macOSOwnedOutput": {
-		"readsStartupFeatures": true
+		"readsStartupFeatures": true,
+		"rationale": "A DualShock 4 on Bluetooth sends only the 10-byte input report until the host reads the calibration feature report, which macOS does not do."
 	},
 	"parameters": {
 		"motionCalibration": {
@@ -34,6 +35,17 @@
 				"StrikePad"
 			]
 		}
+	},
+	"controls": {
+		"base": "xbox",
+		"add": [
+			"guide",
+			"touchpad-click",
+			"left-trigger-button",
+			"right-trigger-button"
+		],
+		"touchContactCount": 2,
+		"motion": true
 	},
 	"defaults": {
 		"tuning": {

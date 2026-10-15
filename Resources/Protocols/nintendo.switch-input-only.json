@@ -10,5 +10,18 @@
 		"hidStartupIntervalMs",
 		"minimumHIDOutputIntervalMs"
 	],
-	"buttonLabels": "Nintendo"
+	"buttonLabels": "Nintendo",
+	"controls": {
+		"base": "xbox",
+		"remove": [
+			"left-trigger",
+			"right-trigger"
+		],
+		"add": [
+			"left-trigger-button",
+			"right-trigger-button",
+			"guide",
+			"capture"
+		]
+	}
 }

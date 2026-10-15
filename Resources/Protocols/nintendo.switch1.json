@@ -31,7 +31,21 @@
 	},
 	"defaults": {
 		"tuning": {
-			"minimumHIDOutputIntervalMs": 50
+			"minimumHIDOutputIntervalMs": 50,
+			"hidStartupRecoveryIntervalMs": 200,
+			"hidStartupRecoveryRounds": 2
+		},
+		"variants": {
+			"bluetooth-classic": {
+				"tuning": {
+					"hidStartupIntervalMs": 60
+				}
+			},
+			"usb": {
+				"tuning": {
+					"hidStartupIntervalMs": 20
+				}
+			}
 		}
 	}
 }

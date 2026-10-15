@@ -8,7 +8,8 @@
 	},
 	"tuningKeys": [
 		"hidStartupIntervalMs",
-		"minimumHIDOutputIntervalMs"
+		"minimumHIDOutputIntervalMs",
+		"keepAliveIntervalMs"
 	],
 	"buttonLabels": "Nintendo",
 	"parameters": {
@@ -20,6 +21,11 @@
 				"JoyConRight",
 				"GameCube"
 			]
+		}
+	},
+	"defaults": {
+		"tuning": {
+			"keepAliveIntervalMs": 12
 		}
 	}
 }

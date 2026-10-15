@@ -6,9 +6,6 @@ let steamDeckSmoothAbsoluteMouseSetting: UInt8 = 24
 let steamDeckLeftTrackpadClickPressureSetting: UInt8 = 52
 let steamDeckRightTrackpadClickPressureSetting: UInt8 = 53
 let steamDeckWatchdogEnableSetting: UInt8 = 71
-/// OJD's watchdog feed period. SDL feeds after 200 update passes and Linux disables the watchdog
-/// instead; the Deck reports every 4 ms, so one second stays well inside SDL's cadence.
-let steamDeckKeepAliveIntervalNanoseconds: UInt64 = 1_000_000_000
 
 /// Driver for the Steam Deck's built-in controller (Neptune).
 ///
@@ -24,16 +21,7 @@ public final class SteamDeckDriver: PhysicalProtocolDriver {
   public init() {}
 
   public var capabilities: ControllerCapabilities {
-    let extra: Set<ControlID> = [
-      .guide, .auxiliary1, .leftTriggerButton, .rightTriggerButton, .paddleLeft1, .paddleLeft2,
-      .paddleRight1, .paddleRight2, .leftStickTouch, .rightStickTouch, .leftTrackpadClick,
-      .rightTrackpadClick, .leftTrackpadTouch, .rightTrackpadTouch,
-    ]
-    return ControllerCapabilities(
-      controls: ControlID.xboxLayout.union(extra),
-      touchContactCount: 1,
-      motion: true
-    )
+    PhysicalProtocolID.valveSteamDeck.describedControls
   }
 
   /// SDL declares rumble only: no LED, no trigger rumble.
@@ -46,8 +34,14 @@ public final class SteamDeckDriver: PhysicalProtocolDriver {
 
   public var defaultColor: ControllerColor? { nil }
 
+  /// The description's keep-alive interval is OJD's watchdog feed period. SDL feeds after 200
+  /// update passes and Linux disables the watchdog instead; the Deck reports every 4 ms, so one
+  /// second stays well inside SDL's cadence.
   public var sessionPlan: DriverSessionPlan {
-    DriverSessionPlan(hidKeepAliveIntervalNanoseconds: steamDeckKeepAliveIntervalNanoseconds)
+    DriverSessionPlan(
+      hidKeepAliveIntervalNanoseconds: PhysicalProtocolID.valveSteamDeck
+        .keepAliveIntervalNanoseconds()
+    )
   }
 
   /// The Deck's controller is built in, so it has no logical connection state.

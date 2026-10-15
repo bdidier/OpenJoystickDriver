@@ -11,7 +11,8 @@
 	],
 	"tuningKeys": [
 		"hidStartupIntervalMs",
-		"minimumHIDOutputIntervalMs"
+		"minimumHIDOutputIntervalMs",
+		"keepAliveIntervalMs"
 	],
 	"parameters": {
 		"innerGrips": {
@@ -24,10 +25,23 @@
 			]
 		}
 	},
+	"controls": {
+		"base": "xbox",
+		"add": [
+			"guide",
+			"paddle-left-1",
+			"paddle-right-1",
+			"auxiliary-1"
+		]
+	},
+	"rawUSBTuningKeys": [
+		"keepAliveIntervalMs"
+	],
 	"defaults": {
 		"tuning": {
 			"hidStartupIntervalMs": 20,
-			"minimumHIDOutputIntervalMs": 20
+			"minimumHIDOutputIntervalMs": 20,
+			"keepAliveIntervalMs": 500
 		}
 	}
 }

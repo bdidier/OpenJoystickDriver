@@ -33,5 +33,25 @@
 				"Receiver"
 			]
 		}
+	},
+	"controls": {
+		"base": "xbox",
+		"add": [
+			"guide",
+			"left-trigger-button",
+			"right-trigger-button",
+			"touchpad-click",
+			"microphone"
+		],
+		"touchContactCount": 2,
+		"motion": true
+	},
+	"recordCapabilities": {
+		"present": [
+			"paddle-left-1",
+			"paddle-right-1",
+			"auxiliary-1",
+			"auxiliary-2"
+		]
 	}
 }

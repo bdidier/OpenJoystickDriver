@@ -8,6 +8,33 @@
 	},
 	"tuningKeys": [
 		"hidStartupIntervalMs",
-		"minimumHIDOutputIntervalMs"
-	]
+		"minimumHIDOutputIntervalMs",
+		"keepAliveIntervalMs"
+	],
+	"controls": {
+		"base": "xbox",
+		"add": [
+			"guide",
+			"auxiliary-1",
+			"left-trigger-button",
+			"right-trigger-button",
+			"paddle-left-1",
+			"paddle-left-2",
+			"paddle-right-1",
+			"paddle-right-2",
+			"left-stick-touch",
+			"right-stick-touch",
+			"left-trackpad-click",
+			"right-trackpad-click",
+			"left-trackpad-touch",
+			"right-trackpad-touch"
+		],
+		"touchContactCount": 1,
+		"motion": true
+	},
+	"defaults": {
+		"tuning": {
+			"keepAliveIntervalMs": 40
+		}
+	}
 }

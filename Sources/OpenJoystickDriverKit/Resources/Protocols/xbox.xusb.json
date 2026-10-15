@@ -20,5 +20,11 @@
 			"interfaceSubclass": 93,
 			"interfaceProtocol": 129
 		}
-	]
+	],
+	"controls": {
+		"base": "xbox",
+		"add": [
+			"guide"
+		]
+	}
 }

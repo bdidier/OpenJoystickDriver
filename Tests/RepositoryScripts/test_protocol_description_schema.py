@@ -392,6 +392,40 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def startup_write(self) -> dict[str, Any]:
         return {"report": {"kind": "output", "id": 1, "length": 4}, "bytes": [1, 2, 3]}
 
+    def test_rejects_raw_usb_rules_that_contradict_each_other(self) -> None:
+        for family, members in (
+            ("xbox.gip", {"rawUSB": True, "tuningKeys": ["keepAliveIntervalMs"]}),
+            ("sony.dualsense", {"rawUSBTuningKeys": ["keepAliveIntervalMs"]}),
+        ):
+            with self.subTest(family=family):
+                self.assert_rejected(self.with_body(family, **members))
+
+    def test_rejects_a_raw_usb_variant_the_family_does_not_have(self) -> None:
+        self.assert_rejected(
+            self.with_body("vendor.gamesir", rawUSB=["wired"]), code="E5004"
+        )
+
+    def test_rejects_variant_defaults_the_family_does_not_have(self) -> None:
+        self.assert_rejected(
+            self.with_body(
+                "sony.dualsense",
+                tuningKeys=["hidStartupIntervalMs"],
+                defaults={
+                    "variants": {"wired": {"tuning": {"hidStartupIntervalMs": 5}}}
+                },
+            ),
+            code="E5004",
+        )
+
+    def test_rejects_variant_tuning_outside_the_variant_scope(self) -> None:
+        self.assert_rejected(
+            self.with_body(
+                "sony.dualsense",
+                tuningKeys=["hidStartupIntervalMs"],
+                defaults={"variants": {"usb": {"tuning": {"keepAliveIntervalMs": 5}}}},
+            )
+        )
+
     def test_rejects_signatures_for_a_family_without_variants(self) -> None:
         document = self.described("hid.descriptor", "usb")
         self.assert_rejected(document, code="E5004")

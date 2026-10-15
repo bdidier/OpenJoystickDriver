@@ -144,7 +144,7 @@ List 1 to 16 writes. OpenJoystickDriver sends them in order after the protocol d
 
 ## Tune Timings and the Stick Deadzone
 
-A record's `tuning` field changes a value that the protocol driver otherwise sets. Name at least one value. A value you leave out keeps the driver's default.
+A record's `tuning` field changes a value that the protocol driver otherwise sets. Name at least one value. A value you leave out keeps the family's default, which its protocol description holds (see [Family Defaults](#family-defaults-live-in-protocol-descriptions)).
 
 ```json
 "tuning": {
@@ -159,12 +159,28 @@ A record's `tuning` field changes a value that the protocol driver otherwise set
 | `inputLivenessTimeoutMs` | 1 to 60000 | `sony.dualshock4` | How long the controller can send no input before OpenJoystickDriver releases its held controls. The default is 1000. |
 | `hidStartupIntervalMs` | 0 to 60000 | HID families | The gap between the startup writes. |
 | `minimumHIDOutputIntervalMs` | 0 to 60000 | HID families | The shortest gap between rumble and lighting reports. 0 sends them without a limit. |
-| `hidStartupRecoveryIntervalMs` | 1 to 60000 | `nintendo.switch1` | The gap between startup recovery rounds. The default is 200. |
-| `hidStartupRecoveryRounds` | 1 to 10 | `nintendo.switch1` | The startup recovery rounds before OpenJoystickDriver gives up. The default is 2. |
+| `hidStartupRecoveryIntervalMs` | 1 to 60000 | `nintendo.switch1` | The gap between startup recovery rounds. The family's description gives the default (200). |
+| `hidStartupRecoveryRounds` | 1 to 10 | `nintendo.switch1` | The startup recovery rounds before OpenJoystickDriver gives up. The family's description gives the default (2). |
+| `keepAliveIntervalMs` | 1 to 60000 | `xbox.gip`, `vendor.gamesir`, `valve.steam-deck`, `valve.steam-triton`, `nintendo.switch2` | The gap between keep-alive packets, or between rumble resends where the family resends rumble. The family's description gives the default, and the key applies to raw-USB GIP and GameSir too. |
 
 Raw-USB families, such as `xbox.gip`, do not take the two HID timings. The two recovery values apply only to `nintendo.switch1`, because the `nintendo.switch2` and `nintendo.switch-input-only` drivers have no startup recovery. `ojd record validate` rejects a value outside its range or its families.
 
 A `tuning` in a `ControllerPatch` merges per value into the bundled `tuning`: a value you leave out keeps its bundled value. Timings apply when the running service connects the controller again after the record changes.
+
+### Family Defaults Live In Protocol Descriptions
+
+A family's default timings and control set are data in `Resources/Protocols/<family>.json`, not Swift constants. [`protocol-description.schema.json`](../Resources/Schemas/protocol-description.schema.json) defines the file, and it holds these members:
+
+- `endpoints`: the USB endpoint addresses the driver uses.
+- `rawUSB`: `true`, or the variants that talk raw USB.
+- `recordSections`: the record sections the driver reads.
+- `tuningKeys`: the `tuning` keys a record may set for the family. `rawUSBTuningKeys` lists the keys of its raw-USB variants, and a description that is always raw USB takes only `rawUSBTuningKeys`.
+- `buttonLabels`: the labels of the family's buttons.
+- `macOSOwnedOutput`: the output that macOS owns for the family, and a `rationale` that says why.
+- `controls`: the controls the driver reports. `recordCapabilities` names the control deltas (`present`, `rumbleAbsent`) that a record of the family may declare; the driver adds the record-derived parts.
+- `defaults.tuning`: the default value of each tuning key, such as `keepAliveIntervalMs`. `defaults.variants.<variant>.tuning` gives another value for a transport, for example the Switch 1 `hidStartupIntervalMs` of 60 over Bluetooth and 20 over USB.
+
+Change a default by editing the description: every record of the family follows it, and a record's or patch's own `tuning` still wins. Then run `./Scripts/ojd catalog regenerate --write`, which copies the descriptions into the Kit bundle.
 
 ### Set a Default for Every Controller
 

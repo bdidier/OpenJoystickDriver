@@ -17,5 +17,11 @@
 				"Shield2015"
 			]
 		}
+	},
+	"controls": {
+		"base": "xbox",
+		"add": [
+			"guide"
+		]
 	}
 }

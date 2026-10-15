@@ -27,5 +27,22 @@
 				}
 			}
 		}
+	},
+	"controls": {
+		"base": "xbox",
+		"add": [
+			"guide"
+		]
+	},
+	"rawUSBTuningKeys": [
+		"keepAliveIntervalMs"
+	],
+	"recordCapabilities": {
+		"rumbleAbsent": true
+	},
+	"defaults": {
+		"tuning": {
+			"keepAliveIntervalMs": 4000
+		}
 	}
 }

@@ -44,6 +44,7 @@ struct ControllerShowReport: Encodable, Equatable {
     let minimumHIDOutputIntervalMs: Int?
     let hidStartupRecoveryIntervalMs: Int?
     let hidStartupRecoveryRounds: Int?
+    let keepAliveIntervalMs: Int?
 
     /// Nil when the record sets no tuning.
     init?(_ tuning: ControllerTuning) {
@@ -54,6 +55,7 @@ struct ControllerShowReport: Encodable, Equatable {
       minimumHIDOutputIntervalMs = tuning.minimumHIDOutputIntervalMilliseconds
       hidStartupRecoveryIntervalMs = tuning.hidStartupRecoveryIntervalMilliseconds
       hidStartupRecoveryRounds = tuning.hidStartupRecoveryRounds
+      keepAliveIntervalMs = tuning.keepAliveIntervalMilliseconds
     }
 
     /// The set values as `name=value`, in record-file order.
@@ -65,6 +67,7 @@ struct ControllerShowReport: Encodable, Equatable {
         minimumHIDOutputIntervalMs.map { "minimumHIDOutputIntervalMs=\($0)" },
         hidStartupRecoveryIntervalMs.map { "hidStartupRecoveryIntervalMs=\($0)" },
         hidStartupRecoveryRounds.map { "hidStartupRecoveryRounds=\($0)" },
+        keepAliveIntervalMs.map { "keepAliveIntervalMs=\($0)" },
       ].compactMap { $0 }
     }
   }

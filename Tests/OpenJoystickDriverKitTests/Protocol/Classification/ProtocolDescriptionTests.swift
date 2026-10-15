@@ -65,6 +65,18 @@ struct ProtocolDescriptionTests {
     #expect(bundled[.sonyDualShock4]?.tuning?.inputLivenessTimeoutMilliseconds == 1_000)
     #expect(bundled[.nintendoSwitch1]?.tuning?.minimumHIDOutputIntervalMilliseconds == 50)
     #expect(bundled[.vendorGameSir]?.tuning?.hidStartupIntervalMilliseconds == 20)
+    #expect(bundled[.nintendoSwitch1]?.tuning?.hidStartupRecoveryIntervalMilliseconds == 200)
+    #expect(bundled[.nintendoSwitch1]?.tuning?.hidStartupRecoveryRounds == 2)
+    #expect(bundled[.nintendoSwitch2]?.tuning?.keepAliveIntervalMilliseconds == 12)
+    #expect(bundled[.valveSteamDeck]?.tuning?.keepAliveIntervalMilliseconds == 1_000)
+    #expect(bundled[.valveSteamTriton]?.tuning?.keepAliveIntervalMilliseconds == 40)
+    #expect(bundled[.xboxGIP]?.tuning?.keepAliveIntervalMilliseconds == 4_000)
+    #expect(bundled[.vendorGameSir]?.tuning?.keepAliveIntervalMilliseconds == 500)
+    let switch1 = try #require(bundled[.nintendoSwitch1])
+    #expect(switch1.tuning(variant: .bluetoothClassic)?.hidStartupIntervalMilliseconds == 60)
+    #expect(switch1.tuning(variant: .usb)?.hidStartupIntervalMilliseconds == 20)
+    #expect(bundled[.sonyDualSense]?.recordCapabilities.presentControls.count == 4)
+    #expect(bundled[.xboxGIP]?.recordCapabilities.rumbleAbsent == true)
     let sixaxis = try #require(bundled[.sonySixaxis]).macOSOwnedOutput
     #expect(sixaxis.drivesRumble && sixaxis.setsStartupPlayerIndicator)
     #expect(
@@ -76,10 +88,17 @@ struct ProtocolDescriptionTests {
   @Test
   func tuningScopeFollowsTheDescription() {
     let gameSir = ControllerTuning.scope(protocolID: .vendorGameSir, variant: .usb)
-    #expect(gameSir == [.stickDeadzone])
+    #expect(gameSir == [.stickDeadzone, .keepAliveIntervalMs])
     let enhanced = ControllerTuning.scope(protocolID: .vendorGameSir, variant: .enhancedHID)
-    #expect(enhanced == [.stickDeadzone, .hidStartupIntervalMs, .minimumHIDOutputIntervalMs])
-    #expect(ControllerTuning.scope(protocolID: .xboxGIP, variant: nil) == [.stickDeadzone])
+    #expect(
+      enhanced == [
+        .stickDeadzone, .hidStartupIntervalMs, .minimumHIDOutputIntervalMs, .keepAliveIntervalMs,
+      ]
+    )
+    #expect(
+      ControllerTuning.scope(protocolID: .xboxGIP, variant: nil)
+        == [.stickDeadzone, .keepAliveIntervalMs]
+    )
     #expect(ControllerTuning.scope(protocolID: nil, variant: nil) == [.stickDeadzone])
     #expect(
       ControllerTuning.scope(protocolID: .sonyDualShock4, variant: nil)
@@ -220,6 +239,10 @@ struct ProtocolDescriptionTests {
       (.xboxGIP, #""defaults": {"unknown": {}}"#),
       (.xboxGIP, #""defaults": {"tuning": {"stickDeadzone": 5}}"#),
       (.xboxGIP, #""interfaceSignatures": []"#),
+      (.xboxGIP, #""rawUSB": true, "tuningKeys": ["keepAliveIntervalMs"]"#),
+      (.sonyDualSense, #""rawUSBTuningKeys": ["keepAliveIntervalMs"]"#),
+      (.sonyDualSense, #""defaults": {"variants": {"usb": {"tuning": {"stickDeadzone": 5}}}}"#),
+      (.sonyDualSense, #""macOSOwnedOutput": {"rationale": 5}"#),
     ]
   )
   func rejectsAMalformedBody(family: PhysicalProtocolID, body: String) {
@@ -244,6 +267,88 @@ struct ProtocolDescriptionTests {
     for (family, body) in cases {
       #expect(rejection(family: family, body)?.code == .invalidProtocolDescription, "\(body)")
     }
+  }
+
+  @Test
+  func rejectsAVariantTheFamilyDoesNotHave() {
+    #expect(
+      rejection(family: .vendorGameSir, #""rawUSB": ["wired"]"#)?.code == .unknownProtocolVariant
+    )
+    #expect(
+      rejection(
+        family: .sonyDualSense,
+        #""tuningKeys": ["hidStartupIntervalMs"], "#
+          + #""defaults": {"variants": {"wired": {"tuning": {"hidStartupIntervalMs": 5}}}}"#
+      )?.code == .unknownProtocolVariant
+    )
+  }
+
+  @Test
+  func variantTuningLayersOverTheFlatTuningWithinTheVariantScope() throws {
+    let description = try decode(
+      family: .sonyDualSense,
+      #""tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"], "#
+        + #""defaults": {"tuning": {"hidStartupIntervalMs": 5, "minimumHIDOutputIntervalMs": 9}, "#
+        + #""variants": {"usb": {"tuning": {"hidStartupIntervalMs": 7}}}}"#
+    )
+    let usb = description.tuning(variant: .usb)
+    #expect(usb?.hidStartupIntervalMilliseconds == 7)
+    #expect(usb?.minimumHIDOutputIntervalMilliseconds == 9)
+    #expect(description.tuning(variant: .bluetoothClassic)?.hidStartupIntervalMilliseconds == 5)
+    #expect(
+      rejection(
+        family: .sonyDualSense,
+        #""tuningKeys": ["hidStartupIntervalMs"], "#
+          + #""defaults": {"variants": {"usb": {"tuning": {"keepAliveIntervalMs": 7}}}}"#
+      )?.code == .invalidProtocolDescription
+    )
+  }
+
+  /// The spec scenario: a family's interval is edited in its description, and every record of
+  /// the family follows it unless the record sets its own.
+  @Test
+  func aFamilysKeepAliveIntervalComesFromItsDescription() throws {
+    let edited = try decode(
+      family: .valveSteamDeck,
+      #""tuningKeys": ["keepAliveIntervalMs"], "#
+        + #""defaults": {"tuning": {"keepAliveIntervalMs": 777}}"#
+    )
+    let tuning = try #require(edited.tuning(variant: nil))
+    let plan = DriverSessionPlan(hidKeepAliveIntervalNanoseconds: 1).tuned(tuning)
+    #expect(plan.hidKeepAliveIntervalNanoseconds == 777_000_000)
+
+    let families: Set<PhysicalProtocolID> = [
+      .xboxGIP, .vendorGameSir, .valveSteamDeck, .valveSteamTriton, .nintendoSwitch2,
+    ]
+    var checked: Set<PhysicalProtocolID> = []
+    for record in ControllerRecordSet.bundled.records.values {
+      let profile = record.profile
+      guard families.contains(profile.physicalProtocolID) else { continue }
+      let variant =
+        profile.physicalProtocolVariant
+        ?? (profile.physicalProtocolID.variants.contains(.usb) ? .usb : nil)
+      guard
+        case .success(let driver) = ProtocolDriverRegistry.makeUnobservedDriver(
+          protocolID: profile.physicalProtocolID,
+          variant: variant,
+          record: profile,
+          model: record.model,
+          transportProfile: profile.transportProfile
+        )
+      else { continue }
+      let plan = driver.sessionPlan.tuned(profile.tuning)
+      let intervals = [plan.usbKeepAliveIntervalNanoseconds, plan.hidKeepAliveIntervalNanoseconds]
+        .compactMap { $0 }
+      guard !intervals.isEmpty else { continue }
+      let described = profile.physicalProtocolID.protocolDescription.tuning(variant: variant)
+      let milliseconds =
+        profile.tuning.keepAliveIntervalMilliseconds ?? described?.keepAliveIntervalMilliseconds
+      for interval in intervals {
+        #expect(interval == UInt64(try #require(milliseconds)) * 1_000_000, "\(record.model)")
+      }
+      checked.insert(profile.physicalProtocolID)
+    }
+    #expect(checked == families)
   }
 
   @Test

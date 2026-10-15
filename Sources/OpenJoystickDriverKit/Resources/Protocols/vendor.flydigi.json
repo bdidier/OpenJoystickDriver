@@ -9,5 +9,13 @@
 	"tuningKeys": [
 		"hidStartupIntervalMs",
 		"minimumHIDOutputIntervalMs"
-	]
+	],
+	"controls": {
+		"base": "xbox",
+		"add": [
+			"guide",
+			"left-trigger-button",
+			"right-trigger-button"
+		]
+	}
 }

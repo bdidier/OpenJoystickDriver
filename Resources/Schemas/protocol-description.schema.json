@@ -51,9 +51,25 @@
 					"hidStartupIntervalMs",
 					"minimumHIDOutputIntervalMs",
 					"hidStartupRecoveryIntervalMs",
-					"hidStartupRecoveryRounds"
+					"hidStartupRecoveryRounds",
+					"keepAliveIntervalMs"
 				]
 			}
+		},
+		"rawUSBTuningKeys": {
+			"description": "The tuning keys a raw-USB variant reads beyond stickDeadzone.",
+			"type": "array",
+			"minItems": 1,
+			"uniqueItems": true,
+			"items": {
+				"enum": ["keepAliveIntervalMs"]
+			}
+		},
+		"controls": {
+			"$ref": "#/$defs/controls"
+		},
+		"recordCapabilities": {
+			"$ref": "#/$defs/recordCapabilities"
 		},
 		"buttonLabels": {
 			"enum": ["PlayStation", "Nintendo"]
@@ -92,6 +108,18 @@
 			},
 			"then": {
 				"properties": {
+					"rawUSB": {
+						"anyOf": [
+							{
+								"const": true
+							}
+						]
+					},
+					"defaults": {
+						"properties": {
+							"variants": false
+						}
+					},
 					"interfaceSignatures": false,
 					"parameters": {
 						"propertyNames": {
@@ -112,6 +140,18 @@
 			},
 			"then": {
 				"properties": {
+					"rawUSB": {
+						"anyOf": [
+							{
+								"const": true
+							}
+						]
+					},
+					"defaults": {
+						"properties": {
+							"variants": false
+						}
+					},
 					"interfaceSignatures": false,
 					"parameters": false
 				}
@@ -128,6 +168,27 @@
 			},
 			"then": {
 				"properties": {
+					"rawUSB": {
+						"anyOf": [
+							{
+								"const": true
+							},
+							{
+								"items": {
+									"enum": ["gamepad"]
+								}
+							}
+						]
+					},
+					"defaults": {
+						"properties": {
+							"variants": {
+								"propertyNames": {
+									"enum": ["gamepad"]
+								}
+							}
+						}
+					},
 					"interfaceSignatures": {
 						"items": {
 							"properties": {
@@ -152,6 +213,27 @@
 			},
 			"then": {
 				"properties": {
+					"rawUSB": {
+						"anyOf": [
+							{
+								"const": true
+							},
+							{
+								"items": {
+									"enum": ["wired", "receiver"]
+								}
+							}
+						]
+					},
+					"defaults": {
+						"properties": {
+							"variants": {
+								"propertyNames": {
+									"enum": ["wired", "receiver"]
+								}
+							}
+						}
+					},
 					"interfaceSignatures": {
 						"items": {
 							"properties": {
@@ -176,6 +258,27 @@
 			},
 			"then": {
 				"properties": {
+					"rawUSB": {
+						"anyOf": [
+							{
+								"const": true
+							},
+							{
+								"items": {
+									"enum": ["usb"]
+								}
+							}
+						]
+					},
+					"defaults": {
+						"properties": {
+							"variants": {
+								"propertyNames": {
+									"enum": ["usb"]
+								}
+							}
+						}
+					},
 					"interfaceSignatures": {
 						"items": {
 							"properties": {
@@ -204,6 +307,27 @@
 			},
 			"then": {
 				"properties": {
+					"rawUSB": {
+						"anyOf": [
+							{
+								"const": true
+							},
+							{
+								"items": {
+									"enum": ["usb", "bluetooth-classic"]
+								}
+							}
+						]
+					},
+					"defaults": {
+						"properties": {
+							"variants": {
+								"propertyNames": {
+									"enum": ["usb", "bluetooth-classic"]
+								}
+							}
+						}
+					},
 					"interfaceSignatures": {
 						"items": {
 							"properties": {
@@ -228,6 +352,27 @@
 			},
 			"then": {
 				"properties": {
+					"rawUSB": {
+						"anyOf": [
+							{
+								"const": true
+							},
+							{
+								"items": {
+									"enum": ["usb", "bluetooth-classic"]
+								}
+							}
+						]
+					},
+					"defaults": {
+						"properties": {
+							"variants": {
+								"propertyNames": {
+									"enum": ["usb", "bluetooth-classic"]
+								}
+							}
+						}
+					},
 					"interfaceSignatures": {
 						"items": {
 							"properties": {
@@ -256,6 +401,27 @@
 			},
 			"then": {
 				"properties": {
+					"rawUSB": {
+						"anyOf": [
+							{
+								"const": true
+							},
+							{
+								"items": {
+									"enum": ["usb", "bluetooth-classic"]
+								}
+							}
+						]
+					},
+					"defaults": {
+						"properties": {
+							"variants": {
+								"propertyNames": {
+									"enum": ["usb", "bluetooth-classic"]
+								}
+							}
+						}
+					},
 					"interfaceSignatures": {
 						"items": {
 							"properties": {
@@ -284,6 +450,27 @@
 			},
 			"then": {
 				"properties": {
+					"rawUSB": {
+						"anyOf": [
+							{
+								"const": true
+							},
+							{
+								"items": {
+									"enum": ["usb", "bluetooth-classic"]
+								}
+							}
+						]
+					},
+					"defaults": {
+						"properties": {
+							"variants": {
+								"propertyNames": {
+									"enum": ["usb", "bluetooth-classic"]
+								}
+							}
+						}
+					},
 					"interfaceSignatures": {
 						"items": {
 							"properties": {
@@ -312,6 +499,27 @@
 			},
 			"then": {
 				"properties": {
+					"rawUSB": {
+						"anyOf": [
+							{
+								"const": true
+							},
+							{
+								"items": {
+									"enum": ["usb", "bluetooth-le"]
+								}
+							}
+						]
+					},
+					"defaults": {
+						"properties": {
+							"variants": {
+								"propertyNames": {
+									"enum": ["usb", "bluetooth-le"]
+								}
+							}
+						}
+					},
 					"interfaceSignatures": {
 						"items": {
 							"properties": {
@@ -340,6 +548,27 @@
 			},
 			"then": {
 				"properties": {
+					"rawUSB": {
+						"anyOf": [
+							{
+								"const": true
+							},
+							{
+								"items": {
+									"enum": ["usb", "bluetooth-classic"]
+								}
+							}
+						]
+					},
+					"defaults": {
+						"properties": {
+							"variants": {
+								"propertyNames": {
+									"enum": ["usb", "bluetooth-classic"]
+								}
+							}
+						}
+					},
 					"interfaceSignatures": {
 						"items": {
 							"properties": {
@@ -364,6 +593,27 @@
 			},
 			"then": {
 				"properties": {
+					"rawUSB": {
+						"anyOf": [
+							{
+								"const": true
+							},
+							{
+								"items": {
+									"enum": ["wired", "dongle", "bluetooth-le"]
+								}
+							}
+						]
+					},
+					"defaults": {
+						"properties": {
+							"variants": {
+								"propertyNames": {
+									"enum": ["wired", "dongle", "bluetooth-le"]
+								}
+							}
+						}
+					},
 					"interfaceSignatures": {
 						"items": {
 							"properties": {
@@ -388,6 +638,27 @@
 			},
 			"then": {
 				"properties": {
+					"rawUSB": {
+						"anyOf": [
+							{
+								"const": true
+							},
+							{
+								"items": {
+									"enum": ["wired", "dongle", "bluetooth-le"]
+								}
+							}
+						]
+					},
+					"defaults": {
+						"properties": {
+							"variants": {
+								"propertyNames": {
+									"enum": ["wired", "dongle", "bluetooth-le"]
+								}
+							}
+						}
+					},
 					"interfaceSignatures": {
 						"items": {
 							"properties": {
@@ -412,6 +683,18 @@
 			},
 			"then": {
 				"properties": {
+					"rawUSB": {
+						"anyOf": [
+							{
+								"const": true
+							}
+						]
+					},
+					"defaults": {
+						"properties": {
+							"variants": false
+						}
+					},
 					"interfaceSignatures": false,
 					"parameters": false
 				}
@@ -428,6 +711,18 @@
 			},
 			"then": {
 				"properties": {
+					"rawUSB": {
+						"anyOf": [
+							{
+								"const": true
+							}
+						]
+					},
+					"defaults": {
+						"properties": {
+							"variants": false
+						}
+					},
 					"interfaceSignatures": false,
 					"parameters": false
 				}
@@ -444,6 +739,18 @@
 			},
 			"then": {
 				"properties": {
+					"rawUSB": {
+						"anyOf": [
+							{
+								"const": true
+							}
+						]
+					},
+					"defaults": {
+						"properties": {
+							"variants": false
+						}
+					},
 					"interfaceSignatures": false,
 					"parameters": {
 						"propertyNames": {
@@ -464,6 +771,27 @@
 			},
 			"then": {
 				"properties": {
+					"rawUSB": {
+						"anyOf": [
+							{
+								"const": true
+							},
+							{
+								"items": {
+									"enum": ["usb", "enhanced-hid"]
+								}
+							}
+						]
+					},
+					"defaults": {
+						"properties": {
+							"variants": {
+								"propertyNames": {
+									"enum": ["usb", "enhanced-hid"]
+								}
+							}
+						}
+					},
 					"interfaceSignatures": {
 						"items": {
 							"properties": {
@@ -492,6 +820,18 @@
 			},
 			"then": {
 				"properties": {
+					"rawUSB": {
+						"anyOf": [
+							{
+								"const": true
+							}
+						]
+					},
+					"defaults": {
+						"properties": {
+							"variants": false
+						}
+					},
 					"interfaceSignatures": false,
 					"parameters": {
 						"propertyNames": {
@@ -548,6 +888,18 @@
 							}
 						}
 					}
+				}
+			}
+		},
+		{
+			"if": {
+				"not": {
+					"required": ["rawUSB"]
+				}
+			},
+			"then": {
+				"not": {
+					"required": ["rawUSBTuningKeys"]
 				}
 			}
 		},
@@ -688,6 +1040,24 @@
 				},
 				"tuning": {
 					"$ref": "controller.schema.json#/$defs/tuning"
+				},
+				"variants": {
+					"description": "Tuning that differs by variant, over the flat tuning.",
+					"type": "object",
+					"minProperties": 1,
+					"propertyNames": {
+						"$ref": "#/$defs/interfaceSignature/properties/variant"
+					},
+					"additionalProperties": {
+						"type": "object",
+						"additionalProperties": false,
+						"required": ["tuning"],
+						"properties": {
+							"tuning": {
+								"$ref": "controller.schema.json#/$defs/tuning"
+							}
+						}
+					}
 				}
 			}
 		},
@@ -719,6 +1089,50 @@
 					"type": "boolean"
 				},
 				"readsStartupFeatures": {
+					"type": "boolean"
+				},
+				"rationale": {
+					"description": "Why macOS leaves this output undone, for the reader of the description.",
+					"type": "string",
+					"minLength": 1
+				}
+			}
+		},
+		"controls": {
+			"description": "The controls every controller of the family has: the Xbox layout (without guide) when base is xbox, less remove, plus add, with the touch contacts and motion the family reports. A driver adds only what its record or layout makes true.",
+			"type": "object",
+			"additionalProperties": false,
+			"minProperties": 1,
+			"properties": {
+				"base": {
+					"enum": ["xbox"]
+				},
+				"remove": {
+					"$ref": "controller.schema.json#/$defs/controlList"
+				},
+				"add": {
+					"$ref": "controller.schema.json#/$defs/controlList"
+				},
+				"touchContactCount": {
+					"type": "integer",
+					"minimum": 0,
+					"maximum": 10
+				},
+				"motion": {
+					"type": "boolean"
+				}
+			}
+		},
+		"recordCapabilities": {
+			"description": "The capability deltas a record of the family may declare, because its driver acts on them: the exact controls a record may add with present, and whether it may drop rumble.",
+			"type": "object",
+			"additionalProperties": false,
+			"minProperties": 1,
+			"properties": {
+				"present": {
+					"$ref": "controller.schema.json#/$defs/controlList"
+				},
+				"rumbleAbsent": {
 					"type": "boolean"
 				}
 			}
