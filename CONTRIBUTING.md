@@ -43,11 +43,7 @@ Open tasks: [issues](https://github.com/xsyetopz/OpenJoystickDriver/issues).
 3. New protocol only: driver in `Sources/OpenJoystickDriverKit/Protocol/Drivers/`, `PhysicalProtocolDriver`, tests under `Tests/OpenJoystickDriverKitTests/`.
 4. Check:
 
-   ```bash
-   ./Scripts/ojd check profiles
-   swiftlint lint --no-cache --strict
-   swift test
-   ```
+   Run the commands in the `## Checks` list of `AGENTS.md`.
 
 ## Code Rules
 
