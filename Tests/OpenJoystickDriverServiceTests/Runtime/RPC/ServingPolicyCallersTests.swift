@@ -36,11 +36,9 @@ struct ServingPolicyCallersTests {
   /// `virtual show` report and ownership check, and the GUI's persona and ownership picker.
   @MainActor
   @Test(arguments: ServingFixture.all)
-  func
-    theServiceDescriptionTheEndpointWatchStreamServesTheCLIAndTheGUIGiveTheAnswerThePolicyDecided(
-      _ fixture: ServingFixture
-    ) async throws
-  {
+  func theServiceDescriptionTheWatchStreamServesTheCLIAndTheGUIAnswerWhatThePolicyDecided(
+    _ fixture: ServingFixture
+  ) async throws {
     let id = LogicalControllerID(vendorID: 0x3537, productID: 0x100B)
     let server = try await VirtualOutputTests().profileOverrideServer(
       [id],
