@@ -27,7 +27,7 @@ package struct CLI {
   private static func parseAndRun(arguments: [String]) async -> Int32 {
     var command: any ParsableCommand
     do { command = try OJDCommand.parseAsRoot(arguments) } catch {
-      if let rename = RenamedWords.match(arguments: arguments) {
+      if let rename = RenamedFlags.match(arguments: arguments) {
         CLIOutput.stderr(
           CLIFailure.prefix(.usage)
             + CLILocalized.format("cli.error.renamed_flag", rename.old, rename.new)

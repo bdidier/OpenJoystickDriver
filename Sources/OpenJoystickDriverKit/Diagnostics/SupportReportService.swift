@@ -4,7 +4,7 @@ package enum SupportReportService {
   package static func make(
     status: ApplicationServiceStatusPayload?,
     virtualDiagnostics: ApplicationServiceVirtualDeviceDiagnosticsPayload?,
-    inputMonitoring: PermissionManager.AccessState,
+    inputRead: PermissionManager.AccessState,
     applicationServiceHealth: ApplicationServiceManager.ApplicationServiceHealth?,
     applicationServiceInstalled: Bool,
     applicationServiceConnected: Bool,
@@ -21,7 +21,7 @@ package enum SupportReportService {
       osName: osName,
       osVersion: osVersion,
       architecture: architecture,
-      inputMonitoring: inputMonitoring,
+      inputRead: inputRead,
       applicationServiceInstalled: applicationServiceInstalled,
       applicationServiceConnected: applicationServiceConnected,
       applicationServiceHealth: applicationServiceHealth,

@@ -207,14 +207,14 @@ struct AccessListCommand: AsyncParsableCommand {
         CLIOutput.plain(
           status.grants.map {
             [
-              "granted", $0.id, $0.identityKind.kind.rawValue, $0.identifier,
-              $0.teamIdentifier ?? "", AccessText.scopes($0.scopes),
+              "granted", $0.id, $0.publisher.kind.kind.rawValue, $0.identifier,
+              $0.publisher.id ?? "", AccessText.scopes($0.scopes),
             ]
           }
             + status.refused.map {
               [
-                "refused", $0.id, $0.identityKind.kind.rawValue, $0.identifier,
-                $0.teamIdentifier ?? "", AccessText.scopes($0.scopes),
+                "refused", $0.id, $0.publisher.kind.kind.rawValue, $0.identifier,
+                $0.publisher.id ?? "", AccessText.scopes($0.scopes),
               ]
             }
             + status.tokens.map {
@@ -234,7 +234,7 @@ struct AccessListCommand: AsyncParsableCommand {
         }
         for grant in status.grants {
           CLIOutput.stdout(
-            "  \(grant.id)  \(AccessText.signer(grant.identityKind.kind, grant.teamIdentifier))  "
+            "  \(grant.id)  \(AccessText.signer(grant.publisher.kind.kind, grant.publisher.id))  "
               + "\(grant.identifier)  \(AccessText.scopes(grant.scopes))  \(grant.path)"
           )
         }
@@ -247,7 +247,7 @@ struct AccessListCommand: AsyncParsableCommand {
         for client in status.refused {
           CLIOutput.stdout(
             "  \(client.id)  "
-              + "\(AccessText.signer(client.identityKind.kind, client.teamIdentifier))  "
+              + "\(AccessText.signer(client.publisher.kind.kind, client.publisher.id))  "
               + "\(client.identifier)  \(AccessText.scopes(client.scopes))  \(client.path ?? "")"
           )
         }
@@ -315,8 +315,8 @@ enum AccessText {
     scopes.map(\.rawValue).joined(separator: ",")
   }
 
-  /// `team ABCDE12345`, `apple`, or `ad-hoc`.
+  /// `signed ABCDE12345`, `platform`, or `adHoc`.
   static func signer(_ kind: CodeSigningIdentity.Kind, _ team: String?) -> String {
-    [kind.rawValue, kind == .team ? team : nil].compactMap(\.self).joined(separator: " ")
+    [kind.rawValue, kind == .signed ? team : nil].compactMap(\.self).joined(separator: " ")
   }
 }

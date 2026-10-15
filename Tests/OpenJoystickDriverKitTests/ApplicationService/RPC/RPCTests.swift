@@ -188,10 +188,10 @@ struct LocalServiceRPCTests {
             LocalServiceRPCPermissionArguments.self,
             from: request.arguments
           )
-          #expect(arguments.requirement == .inputMonitoring)
+          #expect(arguments.requirement == .inputRead)
           let snapshot = PermissionManager.Snapshot(
-            inputMonitoring: .denied,
-            accessibility: .granted
+            inputRead: .denied,
+            inputInject: .granted
           )
           completion(
             LocalServiceRPCResponse(result: try JSONEncoder().encode(snapshot), error: nil)
@@ -208,8 +208,8 @@ struct LocalServiceRPCTests {
     await client.connect()
     #expect(client.isConnected)
     #expect(
-      try await client.requestAccess(.inputMonitoring)
-        == PermissionManager.Snapshot(inputMonitoring: .denied, accessibility: .granted)
+      try await client.requestAccess(.inputRead)
+        == PermissionManager.Snapshot(inputRead: .denied, inputInject: .granted)
     )
   }
 

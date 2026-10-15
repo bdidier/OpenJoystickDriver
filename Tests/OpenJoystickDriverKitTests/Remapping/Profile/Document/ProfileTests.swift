@@ -39,7 +39,7 @@ struct RemappingProfileTests {
       id: fixedUUID(10),
       name: "Adventure",
       device: RemappingDeviceScope(vendorID: 0x045E, productID: 0x02EA),
-      applicationScope: .application(bundleIdentifier: "com.example.Adventure"),
+      applicationScope: .application(appID: "com.example.Adventure"),
       bindings: [
         binding(
           id: fixedUUID(1),
@@ -84,12 +84,12 @@ struct RemappingProfileTests {
       id: fixedUUID(10),
       name: "Keyboard",
       device: RemappingDeviceScope(vendorID: 1, productID: 2),
-      applicationScope: .application(bundleIdentifier: "com.example.Game"),
+      applicationScope: .application(appID: "com.example.Game"),
       bindings: [
         binding(
           id: fixedUUID(1),
           source: .dpad(.up),
-          destination: .keyboard(key: .w, modifiers: [.command, .shift])
+          destination: .keyboard(key: .w, modifiers: [.meta, .shift])
         )
       ]
     )
@@ -107,14 +107,14 @@ struct RemappingProfileTests {
     #expect(Set(device.keys) == ["vendorID", "productID"])
     let scope = try #require(root["applicationScope"] as? [String: Any])
     #expect(scope["type"] as? String == "application")
-    #expect(scope["bundleIdentifier"] as? String == "com.example.Game")
+    #expect(scope["appID"] as? String == "com.example.Game")
 
     let bindings = try #require(root["bindings"] as? [[String: Any]])
     let firstBinding = try #require(bindings.first)
     let destination = try #require(firstBinding["destination"] as? [String: Any])
     #expect(destination["type"] as? String == "keyboard")
     #expect(destination["key"] as? String == "w")
-    #expect(destination["modifiers"] as? [String] == ["command", "shift"])
+    #expect(destination["modifiers"] as? [String] == ["meta", "shift"])
     #expect(destination["key_code"] == nil)
   }
 
@@ -131,7 +131,7 @@ struct RemappingProfileTests {
     let root = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
     let scope = try #require(root["applicationScope"] as? [String: Any])
     #expect(scope["type"] as? String == "global")
-    #expect(scope["bundleIdentifier"] == nil)
+    #expect(scope["appID"] == nil)
     try profile.validate()
   }
 

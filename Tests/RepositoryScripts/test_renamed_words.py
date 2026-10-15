@@ -11,17 +11,21 @@ TABLE = (
     Path(__file__).resolve().parents[2]
     / "Sources"
     / "OpenJoystickDriverKit"
-    / "Vocabulary"
-    / "RenamedWords.swift"
+    / "Errors"
+    / "RenamedWord.swift"
 )
 ROW = re.compile(
-    r'Rename\(\s*kind:\s*\.(flag|value|field)\((?:command|in):\s*"([^"]+)"\),\s*'
-    r'old:\s*"([^"]+)",\s*new:\s*"([^"]+)"\s*\)',
+    r'Self\(\s*old:\s*"([^"]+)",\s*new:\s*"([^"]+)",\s*'
+    r'kind:\s*\.(flag|documentField)\((?:command|in):\s*"([^"]+)"\)\s*\)',
 )
 
 
 def rows() -> list[tuple[str, str, str, str]]:
-    return ROW.findall(TABLE.read_text(encoding="utf-8"))
+    """(kind, where, old, new) of every flag and document-field row of `RenamedWord.all`."""
+    return [
+        (kind, where, old, new)
+        for old, new, kind, where in ROW.findall(TABLE.read_text(encoding="utf-8"))
+    ]
 
 
 def property_names(node: Any) -> set[str]:
@@ -41,7 +45,7 @@ def property_names(node: Any) -> set[str]:
 
 
 class RenamedWordsTests(unittest.TestCase):
-    """The Swift table `RenamedWords` is the one list of renamed words; the schemas must agree."""
+    """The Swift table `RenamedWord.all` is the one list of renamed words; the schemas must agree."""
 
     def setUp(self) -> None:
         self.documents = validate_schemas.validate_schema_documents()
@@ -58,13 +62,13 @@ class RenamedWordsTests(unittest.TestCase):
         kinds = {kind for kind, _, _, _ in rows()}
 
         self.assertIn("flag", kinds)
-        self.assertIn("field", kinds)
+        self.assertIn("documentField", kinds)
 
     def test_no_schema_declares_an_old_field_and_each_declares_its_new_one(
         self,
     ) -> None:
         for kind, where, old, new in rows():
-            if kind != "field":
+            if kind != "documentField":
                 continue
             names = property_names(self.location(where))
             with self.subTest(old=old):

@@ -7,7 +7,10 @@ struct USBLifecycleWriteTests {
   @Test
   func keepAliveKeepsItsIntervalWhileReadsBlockAndStopsWithTheRun() async {
     let driver = LifecycleWriteDriver(
-      sessionPlan: DriverSessionPlan(usbKeepAliveIntervalNanoseconds: 20_000_000),
+      sessionPlan: DriverSessionPlan(
+        keepAliveChannels: [.usb],
+        keepAliveIntervalNanoseconds: 20_000_000
+      ),
       keepAlive: [Self.write(endpoint: 0x03, bytes: [0xAA])]
     )
     let session = LifecycleUSBSession()
@@ -29,7 +32,10 @@ struct USBLifecycleWriteTests {
   @Test
   func keepAliveStopsWhileTheSessionIsSuspendedAndReturnsOnResume() async {
     let driver = LifecycleWriteDriver(
-      sessionPlan: DriverSessionPlan(usbKeepAliveIntervalNanoseconds: 20_000_000),
+      sessionPlan: DriverSessionPlan(
+        keepAliveChannels: [.usb],
+        keepAliveIntervalNanoseconds: 20_000_000
+      ),
       keepAlive: [Self.write(endpoint: 0x03, bytes: [0xAA])]
     )
     let session = LifecycleUSBSession()

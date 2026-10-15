@@ -64,9 +64,8 @@ public final class SteamTritonDriver: PhysicalProtocolDriver {
   public var sessionPlan: DriverSessionPlan {
     DriverSessionPlan(
       requiresInputConnectionBeforeOutput: isDongle,
-      hidKeepAliveIntervalNanoseconds: PhysicalProtocolID.valveSteamTriton
-        .keepAliveIntervalNanoseconds()
-    )
+      keepAliveChannels: [.hid]
+    ).withKeepAlive(of: .valveSteamTriton)
   }
 
   public func resetProtocolState() {
@@ -110,10 +109,9 @@ public final class SteamTritonDriver: PhysicalProtocolDriver {
   /// One 40 ms tick: lizard mode off every 3 s, and the running rumble again.
   public func keepAliveWrites() -> [PhysicalOutputWrite] {
     guard isLogicalControllerConnected else { return [] }
-    var writes: [PhysicalOutputWrite] = []
-    if keepAliveTick.isMultiple(of: lizardResendTicks) {
-      writes.append(.hidFeature(Self.setting(steamTritonLizardModeSetting, value: 0)))
-    }
+    var writes = PhysicalProtocolID.valveSteamTriton.keepAliveWrites(variant: nil)
+      .filter { $0.isDue(tick: keepAliveTick, resendTicks: lizardResendTicks) }
+      .map { $0.output(defaultEndpoint: 0, defaultTimeoutMilliseconds: 0) }
     keepAliveTick += 1
     if rumble != (0, 0) { writes.append(.hidOutput(rumbleReport())) }
     return writes

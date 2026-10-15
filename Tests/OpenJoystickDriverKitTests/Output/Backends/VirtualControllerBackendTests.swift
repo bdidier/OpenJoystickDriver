@@ -121,11 +121,11 @@ struct VirtualControllerBackendTests {
   @Test
   func userSpaceCreationErrorsDistinguishPermissionFromEntitlementAndCreation() {
     let errors: [UserSpaceOutputDispatcher.CreationError] = [
-      .inputMonitoringDenied, .accessibilityDenied, .createFailed, .missingEntitlement("test"),
+      .inputReadDenied, .inputInjectDenied, .createFailed, .missingEntitlement("test"),
     ]
     for error in errors {
       switch error {
-      case .inputMonitoringDenied, .accessibilityDenied, .createFailed, .missingEntitlement: break
+      case .inputReadDenied, .inputInjectDenied, .createFailed, .missingEntitlement: break
       }
     }
   }

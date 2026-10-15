@@ -175,14 +175,14 @@ actor RemappingRoutingCore {
     }
     var profiles: [RemappingProfile?] = []
     do {
-      let frontmostBundleID = foregroundApplication.frontmostBundleIdentifier()
+      let frontmostBundleID = foregroundApplication.frontmostAppID()
       for identifier in affected {
         profiles.append(
           try await library.activeProfile(
             vendorID: vendorID,
             productID: productID,
             unit: identifier.portKey?.rawValue,
-            frontmostBundleIdentifier: frontmostBundleID
+            frontmostAppID: frontmostBundleID
           )
         )
       }

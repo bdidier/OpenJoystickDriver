@@ -42,8 +42,8 @@ public struct SupportReport: Codable, Sendable {
   }
 
   public struct Permissions: Codable, Sendable {
-    public let inputMonitoring: String
-    public let accessibility: String
+    public let inputRead: String
+    public let inputInject: String
   }
 
   public struct ApplicationService: Codable, Sendable {
@@ -133,7 +133,7 @@ public struct SupportReport: Codable, Sendable {
     osName: String,
     osVersion: String,
     architecture: String,
-    inputMonitoring: PermissionManager.AccessState,
+    inputRead: PermissionManager.AccessState,
     applicationServiceInstalled: Bool,
     applicationServiceConnected: Bool,
     applicationServiceHealth: ApplicationServiceManager.ApplicationServiceHealth?,
@@ -164,8 +164,8 @@ public struct SupportReport: Codable, Sendable {
       architecture: architecture
     )
     let permissions = Permissions(
-      inputMonitoring: inputMonitoring.description,
-      accessibility: status?.accessibility ?? "unknown"
+      inputRead: inputRead.description,
+      inputInject: status?.inputInject ?? "unknown"
     )
     let applicationService = ApplicationService(
       installed: applicationServiceInstalled,

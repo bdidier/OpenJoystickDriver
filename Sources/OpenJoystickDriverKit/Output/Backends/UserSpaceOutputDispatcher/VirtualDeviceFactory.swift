@@ -38,13 +38,13 @@ extension UserSpaceOutputDispatcher {
   }
 
   static func creationFailure(
-    inputMonitoring: PermissionManager.AccessState =
-      PermissionManager.currentInputMonitoringAccessState(),
-    accessibility: PermissionManager.AccessState =
-      PermissionManager.currentAccessibilityAccessState()
+    inputRead: PermissionManager.AccessState =
+      PermissionManager.currentInputReadAccessState(),
+    inputInject: PermissionManager.AccessState =
+      PermissionManager.currentInputInjectAccessState()
   ) -> CreationError {
-    if inputMonitoring != .granted { return .inputMonitoringDenied }
-    if accessibility != .granted { return .accessibilityDenied }
+    if inputRead != .granted { return .inputReadDenied }
+    if inputInject != .granted { return .inputInjectDenied }
     return .createFailed
   }
 

@@ -342,6 +342,9 @@ class OwnershipAndOutputTests(unittest.TestCase):
                 {"family": "vendor.gamesir", "variant": "usb"}, server="ojd"
             ),
             "template on DualSense": record(DUALSENSE, output={"rumble": GP100_RUMBLE}),
+            "keep-alive in a record": record(
+                THIRD_PARTY, output={"keepAlive": {"intervalMilliseconds": 500}}
+            ),
             "input report": record(
                 THIRD_PARTY,
                 output={
@@ -837,7 +840,7 @@ class SwiftParityTests(unittest.TestCase):
         recovery = {"hidStartupRecoveryIntervalMs": 100, "hidStartupRecoveryRounds": 2}
         interval = {"hidStartupIntervalMs": 10}
         output = {"minimumHIDOutputIntervalMs": 8}
-        keep_alive = {"keepAliveIntervalMs": 500}
+        removed = {"keepAliveIntervalMs": 500}
         self.check(
             {
                 "liveness on DualShock 4": record(DS4, tuning=liveness),
@@ -857,10 +860,6 @@ class SwiftParityTests(unittest.TestCase):
                     tuning=interval,
                 ),
                 "stick deadzone on GIP": record(GIP, tuning={"stickDeadzone": 0.1}),
-                "keep-alive on GIP": record(GIP, tuning=keep_alive),
-                "keep-alive on GameSir USB": record(
-                    {"family": "vendor.gamesir", "variant": "usb"}, tuning=keep_alive
-                ),
                 "smallest frame queue on GIP": record(
                     GIP, tuning={"frameQueueCapacity": 1}
                 ),
@@ -873,8 +872,14 @@ class SwiftParityTests(unittest.TestCase):
                 ),
             },
             {
-                "keep-alive on DualSense": record(DUALSENSE, tuning=keep_alive),
-                "keep-alive on XUSB": record(XUSB, tuning=keep_alive),
+                # The interval is session.keepAlive.intervalMilliseconds in the family's
+                # description; a record has no tuning key for it, on any family.
+                "interval on GIP": record(GIP, tuning=removed),
+                "interval on GameSir USB": record(
+                    {"family": "vendor.gamesir", "variant": "usb"}, tuning=removed
+                ),
+                "interval on DualSense": record(DUALSENSE, tuning=removed),
+                "interval on XUSB": record(XUSB, tuning=removed),
                 "empty frame queue": record(GIP, tuning={"frameQueueCapacity": 0}),
                 "oversized frame queue": record(
                     GIP, tuning={"frameQueueCapacity": 1025}

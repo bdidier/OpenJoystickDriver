@@ -46,8 +46,8 @@ struct BuildIdentityTests {
     )
     let status = ApplicationServiceStatusPayload(
       buildIdentity: identity,
-      inputMonitoring: "granted",
-      accessibility: "granted",
+      inputRead: "granted",
+      inputInject: "granted",
       connectedDevices: []
     )
     let object = try #require(

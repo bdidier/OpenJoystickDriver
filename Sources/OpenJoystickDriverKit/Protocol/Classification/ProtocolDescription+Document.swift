@@ -24,6 +24,7 @@ extension ProtocolDescription {
 
     struct Defaults: Decodable {
       let output: ControllerRecordDocument.Output?
+      let session: Session?
       let input: ControllerRecordDocument.Input?
       let tuning: ControllerTuning?
       /// Defaults by variant name, layered over `tuning` for that variant.
@@ -32,7 +33,7 @@ extension ProtocolDescription {
       init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: DocumentKey.self)
         try container.rejectUnknown(allowed: [
-          "output", "input", "tuning", "variants",
+          "output", "session", "input", "tuning", "variants",
         ])
         guard !container.allKeys.isEmpty else {
           throw DecodingError.dataCorrupted(
@@ -40,6 +41,7 @@ extension ProtocolDescription {
           )
         }
         output = try container.decodeOptional(ControllerRecordDocument.Output.self, for: "output")
+        session = try container.decodeOptional(Session.self, for: "session")
         input = try container.decodeOptional(ControllerRecordDocument.Input.self, for: "input")
         tuning = try container.decodeOptional(ControllerRecordDocument.Tuning.self, for: "tuning")?
           .tuning
@@ -53,6 +55,23 @@ extension ProtocolDescription {
           )
         }
         variantTuning = variants?.mapValues(\.tuning) ?? [:]
+      }
+    }
+
+    /// `defaults.session`: what runs while the device is open. Today the keep-alive; task 11.4
+    /// moves the startup writes here, so both share one `session` shape.
+    struct Session: Decodable {
+      let keepAlive: KeepAlive?
+
+      init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: DocumentKey.self)
+        try container.rejectUnknown(allowed: ["keepAlive"])
+        guard !container.allKeys.isEmpty else {
+          throw DecodingError.dataCorrupted(
+            .init(codingPath: decoder.codingPath, debugDescription: "session must not be empty")
+          )
+        }
+        keepAlive = try container.decodeOptional(KeepAlive.self, for: "keepAlive")
       }
     }
 

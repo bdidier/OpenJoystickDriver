@@ -2,6 +2,7 @@ import Foundation
 import OpenJoystickDriverTestSupport
 import Testing
 
+@testable import OpenJoystickDriverCLI
 @testable import OpenJoystickDriverKit
 
 /// Task 17.1 part C: the words `bundle`, `macOS` and `apple` left the command line and the support
@@ -99,7 +100,7 @@ struct SystemWordsTests {
       osName: "macOS",
       osVersion: "26.0.0",
       architecture: "arm64",
-      inputMonitoring: .granted,
+      inputRead: .granted,
       applicationServiceInstalled: true,
       applicationServiceConnected: true,
       applicationServiceHealth: nil,
@@ -200,9 +201,9 @@ struct SystemWordsTests {
 
   @Test
   func everyRenamedFlagRowIsRefusedWithItsNewWord() {
-    for rename in RenamedWords.renames {
+    for rename in RenamedWord.all {
       guard case .flag(let command) = rename.kind else { continue }
-      let match = RenamedWords.match(arguments: [command, rename.old])
+      let match = RenamedFlags.match(arguments: [command, rename.old])
       #expect(match?.new == rename.new, "\(rename.old)")
     }
   }

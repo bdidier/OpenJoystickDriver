@@ -3,19 +3,19 @@ import OpenJoystickDriverKit
 /// A permission `ojd` reports. The raw values are the stable ids used on the command line,
 /// in `--json`, and in `--plain` rows.
 enum PermissionID: String, CaseIterable, Sendable {
-  case inputMonitoring = "input-monitoring"
-  case accessibility
-  case driverExtension = "driver-extension"
+  case inputRead = "input-read"
+  case inputInject = "input-inject"
+  case usbTransport = "usb-transport"
 
   /// The macOS privacy permissions that `ojd permission request` can ask for.
-  static let requestable: [Self] = [.inputMonitoring, .accessibility]
+  static let requestable: [Self] = [.inputRead, .inputInject]
 
   /// The English name and purpose in `--json`, which are never localized.
   private var inventoryEntry: OJDPermissionRequirement {
     switch self {
-    case .inputMonitoring: .inputMonitoring
-    case .accessibility: .accessibility
-    case .driverExtension: .driverExtensionApproval
+    case .inputRead: .inputRead
+    case .inputInject: .inputInject
+    case .usbTransport: .usbTransport
     }
   }
 
@@ -25,32 +25,32 @@ enum PermissionID: String, CaseIterable, Sendable {
 
   var localizedName: String {
     switch self {
-    case .inputMonitoring: CLILocalized.text("cli.permission.name.input_monitoring")
-    case .accessibility: CLILocalized.text("cli.permission.name.accessibility")
-    case .driverExtension: CLILocalized.text("cli.permission.name.driver_extension")
+    case .inputRead: CLILocalized.text("cli.permission.name.input_read")
+    case .inputInject: CLILocalized.text("cli.permission.name.input_inject")
+    case .usbTransport: CLILocalized.text("cli.permission.name.usb_transport")
     }
   }
 
   var localizedPurpose: String {
     switch self {
-    case .inputMonitoring: CLILocalized.text("cli.permission.purpose.input_monitoring")
-    case .accessibility: CLILocalized.text("cli.permission.purpose.accessibility")
-    case .driverExtension: CLILocalized.text("cli.permission.purpose.driver_extension")
+    case .inputRead: CLILocalized.text("cli.permission.purpose.input_read")
+    case .inputInject: CLILocalized.text("cli.permission.purpose.input_inject")
+    case .usbTransport: CLILocalized.text("cli.permission.purpose.usb_transport")
     }
   }
 
   /// Where the user allows this permission in System Settings.
   var localizedSettingsPane: String {
     switch self {
-    case .inputMonitoring:
+    case .inputRead:
       CLILocalized.text(
-        "cli.permission.pane.input_monitoring"
+        "cli.permission.pane.input_read"
       )
-    case .accessibility:
-      CLILocalized.text("cli.permission.pane.accessibility")
-    case .driverExtension:
+    case .inputInject:
+      CLILocalized.text("cli.permission.pane.input_inject")
+    case .usbTransport:
       CLILocalized.text(
-        "cli.permission.pane.driver_extension"
+        "cli.permission.pane.usb_transport"
       )
     }
   }
@@ -82,9 +82,9 @@ struct PermissionReport: Encodable, Equatable {
     case .absent, .unavailable: driverState = .unknown
     }
     permissions = [
-      Entry(.inputMonitoring, state: snapshot.inputMonitoring),
-      Entry(.accessibility, state: snapshot.accessibility),
-      Entry(.driverExtension, state: driverState),
+      Entry(.inputRead, state: snapshot.inputRead),
+      Entry(.inputInject, state: snapshot.inputInject),
+      Entry(.usbTransport, state: driverState),
     ]
   }
 

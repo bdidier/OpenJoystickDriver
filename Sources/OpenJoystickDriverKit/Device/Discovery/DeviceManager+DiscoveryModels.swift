@@ -5,7 +5,7 @@ extension DeviceManager {
     case hid
     case rawUSB(route: USBTransportRoute)
 
-    var requiresInputMonitoring: Bool {
+    var requiresInputRead: Bool {
       if case .hid = self { return true }
       return false
     }

@@ -504,6 +504,18 @@
       "domain": "document",
       "name": "unknownProtocolVariant",
       "status": "active"
+    },
+    {
+      "code": "E5005",
+      "domain": "document",
+      "name": "damagedAccessGrants",
+      "status": "active"
+    },
+    {
+      "code": "E5006",
+      "domain": "document",
+      "name": "renamedWordsInDocument",
+      "status": "active"
     }
   ]
 }
