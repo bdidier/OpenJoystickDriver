@@ -324,7 +324,7 @@ struct ControllerModeMatchTests {
   /// A HID route reports no endpoint set, so a HID mode that names `endpoints` could never be
   /// selected; the record is refused. The same signature on a raw-USB mode is accepted.
   @Test
-  func aHIDModeWithEndpointsIsRefusedAndARawUSBModeIsNot() async throws {
+  func aHIDModeWithEndpointsIsRefusedAndARawUSBModeIsNot() throws {
     let endpoints: [[String: Any]] = [["direction": "in", "transferType": "interrupt"]]
     let match: [String: Any] = ["interfaceSignature": Self.signature(endpoints: endpoints)]
     let hid = try Self.problem([Self.mode("x", match: match)])

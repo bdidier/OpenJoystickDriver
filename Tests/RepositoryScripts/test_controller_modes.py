@@ -466,9 +466,7 @@ class RawUSBModeTests(unittest.TestCase):
         )
         self.assertTrue(self.schema.is_valid(accepted))
         validate_profiles.validate_modes(Path("record.json"), accepted)
-        refused = record(
-            modes=[DEFAULT, matched("a", interfaceSignature=signature)]
-        )
+        refused = record(modes=[DEFAULT, matched("a", interfaceSignature=signature)])
         self.assertFalse(self.schema.is_valid(refused))
         with self.assertRaises(validate_profiles.ValidationError) as caught:
             validate_profiles.validate_modes(Path("record.json"), refused)
