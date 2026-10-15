@@ -62,8 +62,8 @@ actor GatewayStub: ApplicationServiceGateway {
   var statusCallWaiters: [(count: Int, continuation: CheckedContinuation<Void, Never>)] = []
   var remappingSnapshotCallCount = 0
   var overrideRequests: [(profile: VirtualHIDProfileID?, selector: ControllerReference)] = []
-  var ownershipRequests: [(model: ControllerModelID, ownership: ControllerServer)] = []
-  var ownershipFailure: (failure: ControllerOwnershipFailure, detail: String?)?
+  var serverRequests: [(model: ControllerModelID, server: ControllerServer)] = []
+  var serverFailure: (failure: ControllerServerFailure, detail: String?)?
   var overrideRequestsAreGated = false
   var overrideContinuations: [CheckedContinuation<Void, Never>] = []
 
@@ -339,23 +339,23 @@ actor GatewayStub: ApplicationServiceGateway {
     )
   }
 
-  func setControllerOwnership(
+  func setControllerServer(
     model: ControllerModelID,
-    ownership: ControllerServer
-  ) throws -> ControllerOwnershipResult {
-    ownershipRequests.append((model, ownership))
-    return ControllerOwnershipResult(
-      ownership: ownership,
+    server: ControllerServer
+  ) throws -> ControllerServerResult {
+    serverRequests.append((model, server))
+    return ControllerServerResult(
+      server: server,
       previous: .system,
       file: nil,
       created: false,
-      failure: ownershipFailure?.failure,
-      detail: ownershipFailure?.detail
+      failure: serverFailure?.failure,
+      detail: serverFailure?.detail
     )
   }
 
-  func setOwnershipFailure(_ failure: ControllerOwnershipFailure?, detail: String? = nil) {
-    ownershipFailure = failure.map { ($0, detail) }
+  func setServerFailure(_ failure: ControllerServerFailure?, detail: String? = nil) {
+    serverFailure = failure.map { ($0, detail) }
   }
 
   func setOverrideFailure(_ failure: VirtualHIDProfileOverrideFailure?) {

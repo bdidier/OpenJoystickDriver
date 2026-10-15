@@ -151,13 +151,13 @@ extension ApplicationServiceServer {
           unit: value.unit
         )
       )
-    case .setControllerOwnership:
-      let value = try decode(LocalServiceRPCControllerOwnershipArguments.self)
+    case .setControllerServer:
+      let value = try decode(LocalServiceRPCControllerServerArguments.self)
       return try send(
-        await setControllerOwnership(
+        await setControllerServer(
           vendorID: value.vendorID,
           productID: value.productID,
-          ownership: value.ownership
+          server: value.server
         )
       )
     case .openVirtualFeed:

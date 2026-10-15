@@ -102,18 +102,18 @@ enum RuntimePresentation {
     }
   }
 
-  /// A refused controller ownership change, followed by the service's detail text when it has one.
-  static func controllerOwnershipFailure(
-    _ failure: ControllerOwnershipFailure,
+  /// A refused controller server change, followed by the service's detail text when it has one.
+  static func controllerServerFailure(
+    _ failure: ControllerServerFailure,
     detail: String?
   ) -> String {
     let message: String
     switch failure {
     case .rawUSB, .notNative: message = OJDLocalized.string("error.E2023")
-    case .noRecord: message = OJDLocalized.string("controllers.ownership.noRecord")
-    case .invalidRecord: message = OJDLocalized.string("controllers.ownership.invalidRecord")
+    case .noRecord: message = OJDLocalized.string("controllers.server.noRecord")
+    case .invalidRecord: message = OJDLocalized.string("controllers.server.invalidRecord")
     case .persistenceFailed:
-      message = OJDLocalized.string("controllers.ownership.persistenceFailed")
+      message = OJDLocalized.string("controllers.server.persistenceFailed")
     }
     return [message, detail].compactMap { $0 }.joined(separator: " ")
   }

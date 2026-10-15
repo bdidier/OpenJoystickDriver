@@ -125,40 +125,40 @@ extension RuntimeViewModel {
     }
   }
 
-  /// Makes `ownership` serve `device`'s model: macOS natively, or OpenJoystickDriver as a virtual
+  /// Sets who serves `device`'s model, `server`: macOS natively, or OpenJoystickDriver as a virtual
   /// controller. A refusal shows in the controller's detail, with the service's detail text for a
   /// record that is invalid or cannot be written.
-  func setControllerOwnership(
-    _ ownership: ControllerServer,
+  func setControllerServer(
+    _ server: ControllerServer,
     for device: ApplicationServiceDeviceDescription
   ) async {
     var accepted = false
     await performControllerAction(device) {
-      let result = try await gateway.setControllerOwnership(
+      let result = try await gateway.setControllerServer(
         model: ControllerModelID(vendorID: device.vendorID, productID: device.productID),
-        ownership: ownership
+        server: server
       )
       guard let failure = result.failure else {
         accepted = true
         return nil
       }
-      return RuntimePresentation.controllerOwnershipFailure(failure, detail: result.detail)
+      return RuntimePresentation.controllerServerFailure(failure, detail: result.detail)
     }
     guard accepted else { return }
-    await waitForRecordOwnership(ownership, of: RuntimeControllerModel(device))
+    await waitForRecordServer(server, of: RuntimeControllerModel(device))
   }
 
   /// Refreshes the inventory every 200 ms, for at most 2 seconds, until a controller of `model`
-  /// reports `ownership`. The service reloads the records after it answers, so the first refresh
+  /// reports `server`. The service reloads the records after it answers, so the first refresh
   /// can still carry the old value.
-  private func waitForRecordOwnership(
-    _ ownership: ControllerServer,
+  private func waitForRecordServer(
+    _ server: ControllerServer,
     of model: RuntimeControllerModel
   ) async {
     for _ in 0..<10 {
       if case .available(let status) = statusState,
         status.devices.contains(where: {
-          RuntimeControllerModel($0) == model && $0.recordServer == ownership
+          RuntimeControllerModel($0) == model && $0.recordServer == server
         })
       {
         return

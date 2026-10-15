@@ -1,21 +1,21 @@
 import Foundation
 
-/// Arguments of `setControllerOwnership`: the controller model and who serves it, `macos` or
+/// Arguments of `setControllerServer`: the controller model and who serves it, `system` or
 /// `ojd`.
-public struct LocalServiceRPCControllerOwnershipArguments: Codable, Sendable {
+public struct LocalServiceRPCControllerServerArguments: Codable, Sendable {
   public let vendorID: Int
   public let productID: Int
-  public let ownership: ControllerServer
+  public let server: ControllerServer
 
-  public init(vendorID: Int, productID: Int, ownership: ControllerServer) {
+  public init(vendorID: Int, productID: Int, server: ControllerServer) {
     self.vendorID = vendorID
     self.productID = productID
-    self.ownership = ownership
+    self.server = server
   }
 }
 
-/// Why a `setControllerOwnership` request changed nothing. The user record stays as it was.
-public enum ControllerOwnershipFailure: String, Codable, Equatable, Sendable {
+/// Why a `setControllerServer` request changed nothing. The user record stays as it was.
+public enum ControllerServerFailure: String, Codable, Equatable, Sendable {
   /// The model's family uses raw USB, so OJD always serves it.
   case rawUSB
   /// macOS does not serve the model natively, so OJD always serves it.
@@ -23,35 +23,35 @@ public enum ControllerOwnershipFailure: String, Codable, Equatable, Sendable {
   /// Neither the user directory, the bundled catalog, nor an installed package has a record of
   /// the model, so there is nothing to patch.
   case noRecord
-  /// The existing user record, or the record with the new `ownership`, is invalid.
+  /// The existing user record, or the record with the new `server`, is invalid.
   case invalidRecord
   /// The user record cannot be written.
   case persistenceFailed
 }
 
-/// Result of `setControllerOwnership`.
-public struct ControllerOwnershipResult: Codable, Equatable, Sendable {
-  /// The ownership the request asked for.
-  public let ownership: ControllerServer
-  /// The model's effective ownership before the request.
+/// Result of `setControllerServer`.
+public struct ControllerServerResult: Codable, Equatable, Sendable {
+  /// The server the request asked for.
+  public let server: ControllerServer
+  /// The model's effective server before the request.
   public let previous: ControllerServer
   /// The user record the request writes; nil when it was refused before a file was chosen.
   public let file: String?
   /// Whether the request created the user record.
   public let created: Bool
-  public let failure: ControllerOwnershipFailure?
+  public let failure: ControllerServerFailure?
   /// The problem text of `invalidRecord` or `persistenceFailed`.
   public let detail: String?
 
   public init(
-    ownership: ControllerServer,
+    server: ControllerServer,
     previous: ControllerServer,
     file: String?,
     created: Bool,
-    failure: ControllerOwnershipFailure?,
+    failure: ControllerServerFailure?,
     detail: String? = nil
   ) {
-    self.ownership = ownership
+    self.server = server
     self.previous = previous
     self.file = file
     self.created = created
