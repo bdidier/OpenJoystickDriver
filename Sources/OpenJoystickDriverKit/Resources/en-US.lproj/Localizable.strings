@@ -1630,6 +1630,15 @@
 "error.E2021" = "A repository build of ojd could not hand the command to the installed app. Reinstall OpenJoystickDriver.app and run the command again.";
 "error.E2022" = "The state that the record's parser produced from the captured reports differs from the expected state. Read the fields that the command lists.";
 "error.E2023" = "This controller cannot be claimed or released: its protocol family uses raw USB, or macOS does not serve it natively. The message names the reason.";
+"error.E2024" = "No endpoint client or token has this ID. Run ojd access to list the IDs, then use one of them.";
+"error.E2025" = "A client with this kind of signature cannot be granted, because any local program can claim its signature.";
+"error.E2026" = "Choose at least one scope to grant.";
+"error.E2027" = "The service is stopping. Start it, then try again.";
+"error.E2028" = "A token with this name exists. Revoke it first, or choose another name.";
+"error.E2029" = "This is not a token name. Use 1 to 64 letters, digits, dots, hyphens, or underscores.";
+"error.E2030" = "This is not a web origin. Use scheme://host[:port] with http or https, such as http://127.0.0.1:8080.";
+"error.E2031" = "This port on 127.0.0.1 is in use or cannot be opened. Choose another with --port.";
+"error.E2032" = "A token with origins cannot have the control scope, because a page must never drive a virtual gamepad. Grant control to a token without origins.";
 "error.E3001" = "The controller is not connected or not ready for remapping. Reconnect it and try again.";
 "error.E3002" = "The selected Joy-Cons could not be paired. Refresh the connected controllers and try again.";
 "error.E3003" = "The controller does not report motion data. Choose a controller with motion sensors, or leave motion options off.";
@@ -1672,4 +1681,5 @@
 "error.E5004" = "A protocol description lists a variant that its family does not have. Use one of the variants of the family.";
 "error.E5005" = "The access file AccessGrants.json is damaged. Fix the file or delete it, then grant access again.";
 "error.E5006" = "A document uses words that were renamed. Replace each old word with the new word that the message names, or delete the file, then run the command again.";
+"error.E5007" = "The access file AccessGrants.json is not supported. Delete it, then grant access again.";
 "error.withCode" = "%@ (%@)";

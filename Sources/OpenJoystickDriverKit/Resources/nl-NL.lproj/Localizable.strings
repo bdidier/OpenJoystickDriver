@@ -1413,6 +1413,15 @@
 "cli.record.test.parse_failed" = "De parser van %@ heeft ontvangen pakket %lld van %@ geweigerd.";
 "error.E2022" = "De status die de parser van het record uit de vastgelegde rapporten opleverde, wijkt af van de verwachte status. Lees de velden die de opdracht toont.";
 "error.E2023" = "Deze controller kan niet worden overgenomen of teruggegeven: de protocolfamilie gebruikt ruwe USB, of macOS ondersteunt hem niet native. Het bericht noemt de reden.";
+"error.E2024" = "Geen endpoint-client of token heeft deze ID. Voer ojd access uit om de ID’s te tonen en gebruik er een.";
+"error.E2025" = "Een client met dit soort handtekening kan geen toegang krijgen, omdat elk lokaal programma die handtekening kan claimen.";
+"error.E2026" = "Kies minstens één bereik om te verlenen.";
+"error.E2027" = "De service wordt gestopt. Start hem en probeer het opnieuw.";
+"error.E2028" = "Er bestaat al een token met deze naam. Trek het eerst in of kies een andere naam.";
+"error.E2029" = "Dit is geen tokennaam. Gebruik 1 tot 64 letters, cijfers, punten, streepjes of underscores.";
+"error.E2030" = "Dit is geen webherkomst. Gebruik scheme://host[:port] met http of https, zoals http://127.0.0.1:8080.";
+"error.E2031" = "Deze poort op 127.0.0.1 is in gebruik of kan niet worden geopend. Kies een andere met --port.";
+"error.E2032" = "Een token met herkomsten kan het bereik control niet hebben, omdat een pagina nooit een virtuele gamepad mag besturen. Verleen control aan een token zonder herkomsten.";
 "cli.record.usb_not_claimed" = "De familie gebruikt onbewerkte USB en de USB-extensie kan deze controller niet claimen, omdat de productlijst door Apple is ondertekend. OJD bereikt hem alleen via directe USB-toegang, wanneer macOS dat toestaat.";
 "cli.record.usb_only_switch2" = "Alleen USB: voeg bluetoothLE.vibrationCharacteristic toe aan dit Switch 2-record om de controller via Bluetooth LE te verbinden.";
 "cli.record.validate.abstract" = "Controleert een controllerrecord zonder het te installeren.";
@@ -1672,4 +1681,5 @@
 "error.E5004" = "Een protocolbeschrijving noemt een variant die de familie niet heeft. Gebruik een van de varianten van de familie.";
 "error.E5005" = "Het toegangsbestand AccessGrants.json is beschadigd. Herstel het bestand of verwijder het, en verleen daarna opnieuw toegang.";
 "error.E5006" = "Een document gebruikt woorden die zijn hernoemd. Vervang elk oud woord door het nieuwe woord dat het bericht noemt, of verwijder het bestand, en voer de opdracht daarna opnieuw uit.";
+"error.E5007" = "Het toegangsbestand AccessGrants.json wordt niet ondersteund. Verwijder het en verleen daarna opnieuw toegang.";
 "error.withCode" ="%@ (%@)";

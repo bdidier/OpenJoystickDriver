@@ -237,6 +237,69 @@
       "exitCode": 1
     },
     {
+      "code": "E2024",
+      "domain": "cli",
+      "name": "unknownAccessClient",
+      "status": "active",
+      "exitCode": 1
+    },
+    {
+      "code": "E2025",
+      "domain": "cli",
+      "name": "ungrantableClient",
+      "status": "active",
+      "exitCode": 1
+    },
+    {
+      "code": "E2026",
+      "domain": "cli",
+      "name": "noAccessScope",
+      "status": "active",
+      "exitCode": 64
+    },
+    {
+      "code": "E2027",
+      "domain": "cli",
+      "name": "serviceStopping",
+      "status": "active",
+      "exitCode": 1
+    },
+    {
+      "code": "E2028",
+      "domain": "cli",
+      "name": "duplicateTokenName",
+      "status": "active",
+      "exitCode": 64
+    },
+    {
+      "code": "E2029",
+      "domain": "cli",
+      "name": "invalidTokenName",
+      "status": "active",
+      "exitCode": 64
+    },
+    {
+      "code": "E2030",
+      "domain": "cli",
+      "name": "invalidWebOrigin",
+      "status": "active",
+      "exitCode": 64
+    },
+    {
+      "code": "E2031",
+      "domain": "cli",
+      "name": "webPortUnavailable",
+      "status": "active",
+      "exitCode": 64
+    },
+    {
+      "code": "E2032",
+      "domain": "cli",
+      "name": "controlScopeWithOrigins",
+      "status": "active",
+      "exitCode": 64
+    },
+    {
       "code": "E3001",
       "domain": "remapping",
       "name": "controllerUnavailable",
@@ -515,6 +578,12 @@
       "code": "E5006",
       "domain": "document",
       "name": "renamedWordsInDocument",
+      "status": "active"
+    },
+    {
+      "code": "E5007",
+      "domain": "document",
+      "name": "unsupportedAccessGrants",
       "status": "active"
     }
   ]

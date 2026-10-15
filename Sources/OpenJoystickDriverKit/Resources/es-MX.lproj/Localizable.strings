@@ -1413,6 +1413,15 @@
 "cli.record.test.parse_failed" = "El analizador de %@ rechazó el paquete recibido %lld de %@.";
 "error.E2022" = "El estado que el analizador del registro produjo a partir de los reportes capturados difiere del estado esperado. Lee los campos que enumera el comando.";
 "error.E2023" = "Este control no se puede reclamar ni devolver: su familia de protocolo usa USB sin procesar, o macOS no lo admite de forma nativa. El mensaje indica el motivo.";
+"error.E2024" = "Ningún cliente ni token del endpoint tiene este ID. Ejecuta ojd access para ver los ID y usa uno de ellos.";
+"error.E2025" = "No se puede conceder acceso a un cliente con este tipo de firma, porque cualquier programa local puede reclamar su firma.";
+"error.E2026" = "Elige al menos un alcance que conceder.";
+"error.E2027" = "El servicio se está deteniendo. Inícialo y vuelve a intentarlo.";
+"error.E2028" = "Ya existe un token con este nombre. Revócalo primero o elige otro nombre.";
+"error.E2029" = "Esto no es un nombre de token. Usa de 1 a 64 letras, dígitos, puntos, guiones o guiones bajos.";
+"error.E2030" = "Esto no es un origen web. Usa scheme://host[:port] con http o https, por ejemplo http://127.0.0.1:8080.";
+"error.E2031" = "Este puerto en 127.0.0.1 está en uso o no se puede abrir. Elige otro con --port.";
+"error.E2032" = "Un token con orígenes no puede tener el alcance control, porque una página nunca debe manejar un control virtual. Concede control a un token sin orígenes.";
 "cli.record.usb_not_claimed" = "La familia usa USB sin procesar, y la extensión USB no puede reclamar este control, porque su lista de productos está firmada por Apple. OJD solo llega a él mediante acceso USB directo, cuando macOS lo permite.";
 "cli.record.usb_only_switch2" = "Solo USB: agrega bluetoothLE.vibrationCharacteristic a este registro de Switch 2 para conectar el control por Bluetooth LE.";
 "cli.record.validate.abstract" = "Comprueba un registro de control sin instalarlo.";
@@ -1672,4 +1681,5 @@
 "error.E5004" = "Una descripción de protocolo enumera una variante que su familia no tiene. Usa una de las variantes de la familia.";
 "error.E5005" = "El archivo de acceso AccessGrants.json está dañado. Corrige el archivo o elimínalo y concede el acceso de nuevo.";
 "error.E5006" = "Un documento usa palabras que se renombraron. Sustituye cada palabra anterior por la nueva que nombra el mensaje, o elimina el archivo, y vuelve a ejecutar el comando.";
+"error.E5007" = "El archivo de acceso AccessGrants.json no es compatible. Elimínalo y concede el acceso de nuevo.";
 "error.withCode" ="%@ (%@)";

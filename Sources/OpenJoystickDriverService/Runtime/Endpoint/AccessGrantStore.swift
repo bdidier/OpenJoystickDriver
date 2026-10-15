@@ -17,40 +17,43 @@ enum AccessGrantStoreError: Error, Equatable, LocalizedError, Sendable {
   case portUnavailable(Int)
   case originsWithControl
 
-  /// The code, then what it means and how to fix it, in the language of the user.
-  private static func coded(_ code: ErrorCode) -> String {
-    "\(code.rawValue): \(code.localizedExplanation)"
+  /// The code, then what it means and how to fix it, in the language of the user, then the value
+  /// that the error is about.
+  private static func coded(_ code: ErrorCode, detail: String? = nil) -> String {
+    "\(code.rawValue): \(code.localizedExplanation)" + (detail.map { " (\($0))" } ?? "")
+  }
+
+  /// The code of the error, whose localized text `errorDescription` leads with.
+  var code: ErrorCode {
+    switch self {
+    case .damaged: .damagedAccessGrants
+    case .renamedWords: .renamedWordsInDocument
+    case .unsupported: .unsupportedAccessGrants
+    case .unknownClient: .unknownAccessClient
+    case .notGrantable: .ungrantableClient
+    case .noScope: .noAccessScope
+    case .serviceStopped: .serviceStopping
+    case .duplicateToken: .duplicateTokenName
+    case .invalidTokenName: .invalidTokenName
+    case .invalidOrigin: .invalidWebOrigin
+    case .portUnavailable: .webPortUnavailable
+    case .originsWithControl: .controlScopeWithOrigins
+    }
   }
 
   var errorDescription: String? {
     switch self {
-    case .damaged:
-      Self.coded(.damagedAccessGrants)
+    case .damaged, .noScope, .serviceStopped, .originsWithControl:
+      Self.coded(code)
     case .renamedWords(let hints):
-      Self.coded(.renamedWordsInDocument) + hints
+      Self.coded(code) + hints
     case .unsupported(let problem):
-      (problem.code.map { "\($0.rawValue): " } ?? "")
-        + "The endpoint access file \(AccessGrantStore.fileName) is not supported: "
-        + "\(problem.message). Delete it, then grant access again."
-    case .unknownClient(let id): "No endpoint client has the ID \(id)."
-    case .notGrantable(let kind):
-      "A client signed \(kind.rawValue) cannot be granted, because any local program can "
-        + "claim its signature."
-    case .noScope: "Choose at least one scope to grant."
-    case .serviceStopped: "The service is stopping. Start it, then try again."
-    case .duplicateToken(let name):
-      "A token named \(name) exists. Revoke token:\(name) first, or choose another name."
-    case .invalidTokenName(let name):
-      "\"\(name)\" is not a token name. Use 1 to 64 letters, digits, dots, hyphens, or "
-        + "underscores."
-    case .invalidOrigin(let origin):
-      "\"\(origin)\" is not a web origin. Use scheme://host[:port] with http or https, "
-        + "such as http://127.0.0.1:8080."
-    case .originsWithControl:
-      "A token with origins cannot have the control scope, because a page must never drive a "
-        + "virtual gamepad. Grant control to a token without origins."
-    case .portUnavailable(let port):
-      "Port \(port) on 127.0.0.1 is in use or cannot be opened. Choose another with --port."
+      Self.coded(code, detail: problem.description)
+    case .unknownClient(let id): Self.coded(code, detail: id)
+    case .notGrantable(let kind): Self.coded(code, detail: kind.rawValue)
+    case .duplicateToken(let name), .invalidTokenName(let name): Self.coded(code, detail: name)
+    case .invalidOrigin(let origin): Self.coded(code, detail: origin)
+    case .portUnavailable(let port): Self.coded(code, detail: String(port))
     }
   }
 }

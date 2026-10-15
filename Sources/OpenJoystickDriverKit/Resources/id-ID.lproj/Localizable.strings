@@ -1413,6 +1413,15 @@
 "cli.record.test.parse_failed" = "Parser %@ menolak paket yang diterima ke-%lld dari %@.";
 "error.E2022" = "Status yang dihasilkan parser catatan dari laporan yang ditangkap berbeda dari status yang diharapkan. Baca kolom yang ditampilkan perintah.";
 "error.E2023" = "Pengontrol ini tidak dapat diklaim atau dilepas: keluarga protokolnya memakai USB mentah, atau macOS tidak melayaninya secara native. Pesan menyebutkan alasannya.";
+"error.E2024" = "Tidak ada klien atau token endpoint dengan ID ini. Jalankan ojd access untuk melihat daftar ID, lalu pakai salah satunya.";
+"error.E2025" = "Klien dengan jenis tanda tangan ini tidak dapat diberi akses, karena program lokal mana pun dapat mengklaim tanda tangannya.";
+"error.E2026" = "Pilih setidaknya satu cakupan untuk diberikan.";
+"error.E2027" = "Layanan sedang berhenti. Mulai layanan itu, lalu coba lagi.";
+"error.E2028" = "Token dengan nama ini sudah ada. Cabut dulu, atau pilih nama lain.";
+"error.E2029" = "Ini bukan nama token. Pakai 1 sampai 64 huruf, angka, titik, tanda hubung, atau garis bawah.";
+"error.E2030" = "Ini bukan origin web. Pakai scheme://host[:port] dengan http atau https, misalnya http://127.0.0.1:8080.";
+"error.E2031" = "Port ini di 127.0.0.1 sedang dipakai atau tidak dapat dibuka. Pilih port lain dengan --port.";
+"error.E2032" = "Token dengan origin tidak boleh punya cakupan control, karena halaman tidak boleh menggerakkan gamepad virtual. Berikan control ke token tanpa origin.";
 "cli.record.usb_not_claimed" = "Famili ini menggunakan USB mentah, dan ekstensi USB tidak dapat mengklaim pengontrol ini, karena daftar produknya ditandatangani Apple. OJD hanya menjangkaunya melalui akses USB langsung, jika macOS mengizinkan.";
 "cli.record.usb_only_switch2" = "Hanya USB: tambahkan bluetoothLE.vibrationCharacteristic ke catatan Switch 2 ini untuk menghubungkan pengontrol melalui Bluetooth LE.";
 "cli.record.validate.abstract" = "Periksa catatan pengontrol tanpa menginstalnya.";
@@ -1672,4 +1681,5 @@
 "error.E5004" = "Deskripsi protokol mencantumkan varian yang tidak dimiliki keluarganya. Gunakan salah satu varian keluarga tersebut.";
 "error.E5005" = "File akses AccessGrants.json rusak. Perbaiki atau hapus file itu, lalu berikan akses lagi.";
 "error.E5006" = "Sebuah dokumen memakai kata yang namanya sudah diganti. Ganti setiap kata lama dengan kata baru yang disebut pesan, atau hapus file itu, lalu jalankan perintah lagi.";
+"error.E5007" = "File akses AccessGrants.json tidak didukung. Hapus file itu, lalu berikan akses lagi.";
 "error.withCode" ="%@ (%@)";

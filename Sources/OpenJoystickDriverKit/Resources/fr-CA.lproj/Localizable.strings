@@ -1413,6 +1413,15 @@
 "cli.record.test.parse_failed" = "L’analyseur de %@ a rejeté le paquet reçu %lld de %@.";
 "error.E2022" = "L’état que l’analyseur de la fiche a produit à partir des rapports capturés diffère de l’état attendu. Lisez les champs que la commande liste.";
 "error.E2023" = "Cette manette ne peut pas être réclamée ni rendue : sa famille de protocole utilise l’USB brut, ou macOS ne la prend pas en charge nativement. Le message en indique la raison.";
+"error.E2024" = "Aucun client ni jeton du point d’accès n’a cet ID. Exécutez ojd access pour lister les ID, puis utilisez-en un.";
+"error.E2025" = "Un client avec ce type de signature ne peut pas recevoir d’accès, car n’importe quel programme local peut revendiquer sa signature.";
+"error.E2026" = "Choisissez au moins une portée à accorder.";
+"error.E2027" = "Le service s’arrête. Démarrez-le, puis réessayez.";
+"error.E2028" = "Un jeton portant ce nom existe. Révoquez-le d’abord ou choisissez un autre nom.";
+"error.E2029" = "Ce n’est pas un nom de jeton. Utilisez de 1 à 64 lettres, chiffres, points, traits d’union ou tirets bas.";
+"error.E2030" = "Ce n’est pas une origine web. Utilisez scheme://host[:port] avec http ou https, par exemple http://127.0.0.1:8080.";
+"error.E2031" = "Ce port sur 127.0.0.1 est utilisé ou ne peut pas être ouvert. Choisissez-en un autre avec --port.";
+"error.E2032" = "Un jeton avec des origines ne peut pas avoir la portée control, car une page ne doit jamais piloter une manette virtuelle. Accordez control à un jeton sans origines.";
 "cli.record.usb_not_claimed" = "La famille utilise l’USB brut, et l’extension USB ne peut pas prendre en charge cette manette, car sa liste de produits est signée par Apple. OJD ne l’atteint que par un accès USB direct, lorsque macOS l’autorise.";
 "cli.record.usb_only_switch2" = "USB uniquement. Ajoutez bluetoothLE.vibrationCharacteristic à cette fiche Switch 2 pour connecter la manette en Bluetooth LE.";
 "cli.record.validate.abstract" = "Vérifier une fiche de manette sans l’installer.";
@@ -1672,4 +1681,5 @@
 "error.E5004" = "Une description de protocole liste une variante que sa famille n’a pas. Utilisez l’une des variantes de la famille.";
 "error.E5005" = "Le fichier d’accès AccessGrants.json est endommagé. Corrigez le fichier ou supprimez-le, puis accordez de nouveau l’accès.";
 "error.E5006" = "Un document utilise des mots qui ont été renommés. Remplacez chaque ancien mot par le nouveau mot que le message nomme, ou supprimez le fichier, puis relancez la commande.";
+"error.E5007" = "Le fichier d’accès AccessGrants.json n’est pas pris en charge. Supprimez-le, puis accordez de nouveau l’accès.";
 "error.withCode" ="%@ (%@)";

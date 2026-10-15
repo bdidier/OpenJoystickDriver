@@ -1413,6 +1413,15 @@
 "cli.record.test.parse_failed" = "O analisador de %@ rejeitou o pacote recebido %lld de %@.";
 "error.E2022" = "O estado que o analisador do registro produziu a partir dos relatórios capturados difere do estado esperado. Leia os campos que o comando lista.";
 "error.E2023" = "Este controle não pode ser assumido nem devolvido: sua família de protocolo usa USB bruto, ou o macOS não o atende nativamente. A mensagem informa o motivo.";
+"error.E2024" = "Nenhum cliente ou token do endpoint tem este ID. Execute ojd access para listar os IDs e use um deles.";
+"error.E2025" = "Não é possível conceder acesso a um cliente com este tipo de assinatura, porque qualquer programa local pode reivindicar a assinatura dele.";
+"error.E2026" = "Escolha pelo menos um escopo para conceder.";
+"error.E2027" = "O serviço está parando. Inicie-o e tente novamente.";
+"error.E2028" = "Já existe um token com este nome. Revogue-o primeiro ou escolha outro nome.";
+"error.E2029" = "Isto não é um nome de token. Use de 1 a 64 letras, dígitos, pontos, hifens ou sublinhados.";
+"error.E2030" = "Isto não é uma origem web. Use scheme://host[:port] com http ou https, como http://127.0.0.1:8080.";
+"error.E2031" = "Esta porta em 127.0.0.1 está em uso ou não pode ser aberta. Escolha outra com --port.";
+"error.E2032" = "Um token com origens não pode ter o escopo control, porque uma página nunca deve controlar um gamepad virtual. Conceda control a um token sem origens.";
 "cli.record.usb_not_claimed" = "A família usa USB bruto, e a extensão USB não consegue assumir este controle, porque a lista de produtos dela é assinada pela Apple. O OJD só o alcança por acesso USB direto, quando o macOS permite.";
 "cli.record.usb_only_switch2" = "Somente USB: adicione bluetoothLE.vibrationCharacteristic a este registro do Switch 2 para conectar o controle por Bluetooth LE.";
 "cli.record.validate.abstract" = "Verificar um registro de controle sem instalá-lo.";
@@ -1672,4 +1681,5 @@
 "error.E5004" = "Uma descrição de protocolo lista uma variante que a família não tem. Use uma das variantes da família.";
 "error.E5005" = "O arquivo de acesso AccessGrants.json está danificado. Corrija o arquivo ou exclua-o e conceda o acesso novamente.";
 "error.E5006" = "Um documento usa palavras que foram renomeadas. Substitua cada palavra antiga pela nova palavra que a mensagem indica, ou exclua o arquivo, e execute o comando novamente.";
+"error.E5007" = "O arquivo de acesso AccessGrants.json não é compatível. Exclua-o e conceda o acesso novamente.";
 "error.withCode" ="%@ (%@)";

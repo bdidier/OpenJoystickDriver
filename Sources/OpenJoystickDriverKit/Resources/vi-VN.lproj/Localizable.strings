@@ -1413,6 +1413,15 @@
 "cli.record.test.parse_failed" = "Trình phân tích của %@ đã từ chối gói tin đã nhận thứ %lld của %@.";
 "error.E2022" = "Trạng thái mà trình phân tích của bản ghi tạo ra từ các báo cáo đã ghi khác với trạng thái mong đợi. Hãy đọc các trường mà lệnh liệt kê.";
 "error.E2023" = "Không thể nhận hoặc trả bộ điều khiển này: họ giao thức của nó dùng USB thô, hoặc macOS không phục vụ nó ở chế độ gốc. Thông báo nêu lý do.";
+"error.E2024" = "Không có ứng dụng khách hay mã thông báo endpoint nào có ID này. Chạy ojd access để liệt kê các ID, rồi dùng một ID trong đó.";
+"error.E2025" = "Không thể cấp quyền cho ứng dụng khách có loại chữ ký này, vì bất kỳ chương trình cục bộ nào cũng có thể mạo nhận chữ ký của nó.";
+"error.E2026" = "Hãy chọn ít nhất một phạm vi để cấp.";
+"error.E2027" = "Dịch vụ đang dừng. Hãy khởi động dịch vụ, rồi thử lại.";
+"error.E2028" = "Đã có mã thông báo với tên này. Hãy thu hồi nó trước, hoặc chọn tên khác.";
+"error.E2029" = "Đây không phải tên mã thông báo. Dùng từ 1 đến 64 chữ cái, chữ số, dấu chấm, dấu gạch ngang hoặc dấu gạch dưới.";
+"error.E2030" = "Đây không phải nguồn gốc web. Dùng scheme://host[:port] với http hoặc https, chẳng hạn http://127.0.0.1:8080.";
+"error.E2031" = "Cổng này trên 127.0.0.1 đang được dùng hoặc không thể mở. Hãy chọn cổng khác bằng --port.";
+"error.E2032" = "Mã thông báo có nguồn gốc không thể có phạm vi control, vì một trang không bao giờ được điều khiển tay cầm ảo. Hãy cấp control cho mã thông báo không có nguồn gốc.";
 "cli.record.usb_not_claimed" = "Họ thiết bị này dùng USB thô, và phần mở rộng USB không thể chiếm bộ điều khiển này, vì danh sách sản phẩm của nó do Apple ký. OJD chỉ truy cập được nó qua truy cập USB trực tiếp, khi macOS cho phép.";
 "cli.record.usb_only_switch2" = "Chỉ USB: thêm bluetoothLE.vibrationCharacteristic vào bản ghi Switch 2 này để kết nối bộ điều khiển qua Bluetooth LE.";
 "cli.record.validate.abstract" = "Kiểm tra một bản ghi bộ điều khiển mà không cài đặt.";
@@ -1672,4 +1681,5 @@
 "error.E5004" = "Mô tả giao thức liệt kê một biến thể mà họ của nó không có. Hãy dùng một trong các biến thể của họ.";
 "error.E5005" = "Tệp truy cập AccessGrants.json bị hỏng. Hãy sửa hoặc xóa tệp, rồi cấp quyền truy cập lại.";
 "error.E5006" = "Một tài liệu dùng các từ đã được đổi tên. Hãy thay mỗi từ cũ bằng từ mới mà thông báo nêu, hoặc xóa tệp, rồi chạy lại lệnh.";
+"error.E5007" = "Tệp truy cập AccessGrants.json không được hỗ trợ. Hãy xóa tệp, rồi cấp quyền truy cập lại.";
 "error.withCode" ="%@ (%@)";

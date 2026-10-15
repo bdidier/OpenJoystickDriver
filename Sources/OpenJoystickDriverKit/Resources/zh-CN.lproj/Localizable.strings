@@ -1413,6 +1413,15 @@
 "cli.record.test.parse_failed" = "%@ 的解析器拒绝了收到的第 %lld 个数据包（%@）。";
 "error.E2022" = "记录的解析器根据已捕获报告生成的状态与期望状态不同。请查看命令列出的字段。";
 "error.E2023" = "无法接管或交还此控制器：其协议系列使用原始 USB，或 macOS 不原生处理它。消息会说明原因。";
+"error.E2024" = "没有端点客户端或令牌使用此 ID。运行 ojd access 列出 ID，然后使用其中一个。";
+"error.E2025" = "无法向具有这种签名的客户端授予访问权限，因为任何本地程序都可以冒用其签名。";
+"error.E2026" = "请至少选择一个要授予的范围。";
+"error.E2027" = "服务正在停止。请启动服务，然后重试。";
+"error.E2028" = "已存在同名令牌。请先撤销它，或选择其他名称。";
+"error.E2029" = "这不是令牌名称。请使用 1 到 64 个字母、数字、点、连字符或下划线。";
+"error.E2030" = "这不是 Web 源。请使用带 http 或 https 的 scheme://host[:port]，例如 http://127.0.0.1:8080。";
+"error.E2031" = "127.0.0.1 上的这个端口已被占用或无法打开。请用 --port 选择另一个。";
+"error.E2032" = "带源的令牌不能拥有 control 范围，因为网页绝不能操控虚拟游戏手柄。请把 control 授予不带源的令牌。";
 "cli.record.usb_not_claimed" = "该系列使用原始 USB，USB 扩展无法接管此控制器，因为其产品列表由 Apple 签名。只有在 macOS 允许时，OJD 才能通过直接 USB 访问使用它。";
 "cli.record.usb_only_switch2" = "仅限 USB：要通过低功耗蓝牙连接控制器，请将 bluetoothLE.vibrationCharacteristic 添加到此 Switch 2 记录。";
 "cli.record.validate.abstract" = "检查控制器记录，但不安装。";
@@ -1672,4 +1681,5 @@
 "error.E5004" = "协议描述列出了其系列没有的变体。请使用该系列的某个变体。";
 "error.E5005" = "访问文件 AccessGrants.json 已损坏。请修复或删除该文件，然后重新授予访问权限。";
 "error.E5006" = "文档使用了已重命名的词。请将每个旧词替换为消息中给出的新词，或删除该文件，然后重新运行命令。";
+"error.E5007" = "不支持访问文件 AccessGrants.json。请删除该文件，然后重新授予访问权限。";
 "error.withCode" ="%@ (%@)";
