@@ -122,7 +122,8 @@ extension DeviceRuntimeProfile {
       rumbleTemplate: rumbleTemplate,
       startupWrites: startupWrites,
       inputLayout: inputLayout,
-      tuning: newTuning ?? tuning
+      tuning: newTuning ?? tuning,
+      modes: modes
     )
   }
 }

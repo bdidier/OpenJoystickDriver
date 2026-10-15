@@ -141,7 +141,7 @@ Verify: `swift test`, `./Scripts/ojd check schemas`, `./Scripts/ojd test parsers
 - [x] 9.1 Define the `ProtocolDescription` kind and its schema. Verify: sample documents validate; bad ones fail with catalog errors. Done: schema declares `parameters` and `defaults` (capabilities, output rumble and startup writes, input layout, tuning) per family; 11 descriptions; `ProtocolDescription.decode` (Swift) and `validate_protocol_descriptions` (Python) reject with E5002, E5003, E5004.
 - [ ] 9.1a Move the family defaults still coded in Swift (`MacOSOwnedOutput.swift`, `DeviceCatalog.swift`, `ProtocolClassifier.swift`, `ControllerProfileCapabilities.swift`, `ControllerTuning+Layers.swift`: rumble intervals, startup writes, capabilities, tuning) into each description's `defaults` and have the drivers read `ProtocolDescription.bundled`. Verify: no copy of a moved default remains in Swift.
 - [x] 9.1b The description loader reports a missing or unknown apiVersion as E5001 through `DocumentHeaderProblem` (a wrong kind stays E5002), `validate_schemas.py` agrees, and `ProtocolParameters.violation` reads enum values and ranges from the descriptions.
-- [ ] 9.1c Express probes as record `modes[]` match keys once a consumer exists; the description schema does not carry probes.
+- [x] 9.1c Express probes as record `modes[]` match keys once a consumer exists; the description schema does not carry probes. Done: `modes[].match.probes` in the record and patch schemas, consumed by mode selection at HID admission; Swift `validateModes` and Python `validate_modes` apply the same rules.
 - [x] 9.2 Describe one existing simple protocol as data and run it through the generic interpreter beside the coded parser. Verify: a test shows identical frames from both on the recorded samples. Done: `xbox.xid` carries `defaults.input`, run by `ReportLayoutDriver` (new `table` hats and `symmetric` axes); `XboxXIDDescriptionTests` compares it with `XIDDriver` on the 1.1 characterization steps, which are hand-written transcripts, not hardware captures, plus a per-field sweep of every byte and stick word.
 - [ ] 9.3 Describe the remaining protocols whose behavior the data model covers; leave the rest coded and list them. Verify: the list is in `wiki` developer pages and every protocol has a parser test.
 
@@ -160,7 +160,7 @@ Owns: `modes` and `links` in records, including a Core Bluetooth GATT link kind.
 Depends: 9, 5.
 Verify: `swift test`, `./Scripts/ojd check schemas`.
 
-- [ ] 11.1 Add `modes` (for example XInput, DInput, switch) selected by switch, button combo or probe. Verify: a fixture record with two modes picks each by its probe.
+- [x] 11.1 Add `modes` (for example XInput, DInput, switch) selected by switch, button combo or probe. Verify: a fixture record with two modes picks each by its probe. Done: probe selection only; `ControllerModeTests` picks each of two modes by its probe. Switch and button-combo selection have no consumer yet.
 - [ ] 11.1a Complete `modes` per the `controller-records` "Modes and match keys" requirement: the default mode is a `modes[]` entry, match keys cover link kind, interface signature, manufacturer and product strings and a `bcdDevice` range besides probes, and a mode may set `interface`, `session` and protocol `parameters`. Verify: fixtures for "One model, two modes" (wired versus Bluetooth by link kind) and the `device-matching` "Dongle and wired" scenario.
 - [x] 11.2 Add the `coreBluetoothGATT` link kind for BLE controllers. Verify: a mock peripheral test delivers frames through the link.
 - [ ] 11.3 Make DS3 over Bluetooth a link of the DS3 record, with the pairing steps as documentation only. Verify: the record validates; hardware check H6 below covers the real pairing.
@@ -183,9 +183,9 @@ Owns: probe rules in device matching.
 Depends: 11, 12.
 Verify: `swift test`, `./Scripts/ojd check profiles`. Hardware: H4.
 
-- [ ] 13.1 Add record-level probes to tell clones with the same VID:PID from the genuine device. Verify: a mock test chooses each record from different probe replies.
-- [ ] 13.2 Encode the DS3 0xEF discriminator as a probe. Verify: unit test; final location mapping waits on open item 1.
-- [ ] 13.3 Define the fallback when a probe gets no reply. Verify: test shows the documented fallback and a log line.
+- [x] 13.1 Add record-level probes to tell clones with the same VID:PID from the genuine device. Verify: a mock test chooses each record from different probe replies. Done: `ScriptedProbeReader` replies select different modes of one record; probe reads are bounded at 2 s with one outstanding read per connection.
+- [x] 13.2 Encode the DS3 0xEF discriminator as a probe. Verify: unit test; final location mapping waits on open item 1. Done: `054c-0268.patch.json` mode `feature-ef-answers` (0xEF, length 49 chosen, not recorded); answer selects it, a stall gives `noModeMatched`. It runs the same `sony.sixaxis` protocol, so it is inert until open item 1.
+- [x] 13.3 Define the fallback when a probe gets no reply. Verify: test shows the documented fallback and a log line. Done: a timeout, busy or other non-stall failure is inconclusive; selection logs a line and keeps the default mode, as `wiki/Controller-Records.md` says.
 
 ## 14. Schemas: flat layout, header, Pages-ready ids
 
