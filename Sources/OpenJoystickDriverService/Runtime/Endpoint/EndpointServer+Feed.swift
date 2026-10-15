@@ -10,7 +10,7 @@ extension EndpointServer {
   /// is closed with `E1009`, so a stalled client does not hold a button or a slot. When the feed's
   /// frame queue is full, reading waits, which pushes back on the client.
   /// A client that closes the connection meanwhile ends the feed, though its unread lines wait.
-  func feed(_ connection: EndpointConnection, persona: EndpointPersona) {
+  func feed(_ connection: EndpointConnection, persona: VirtualHIDProfileID) {
     guard let feeds else {
       connection.close(
         EndpointError(code: .feedClosed, message: "The service runs no virtual gamepads.")
@@ -20,7 +20,7 @@ extension EndpointServer {
     let token: UUID
     do {
       token = try Self.waitFor(connection) {
-        try await feeds.open(profile: persona.profileName, pool: .endpoint).token
+        try await feeds.open(profile: persona.rawValue, pool: .endpoint).token
       }
     } catch {
       connection.close(Self.feedError(error, persona: persona))
@@ -79,7 +79,7 @@ extension EndpointServer {
     return .success(frame)
   }
 
-  private static func feedError(_ error: any Error, persona: EndpointPersona) -> EndpointError {
+  private static func feedError(_ error: any Error, persona: VirtualHIDProfileID) -> EndpointError {
     switch error as? VirtualFeedError {
     case .unknownProfile:
       invalid("\(persona.rawValue) is not a persona the service publishes.")

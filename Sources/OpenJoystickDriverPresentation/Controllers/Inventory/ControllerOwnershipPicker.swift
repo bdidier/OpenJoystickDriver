@@ -16,8 +16,11 @@
     /// gives it to OpenJoystickDriver, and its family does not use raw USB, which always belongs
     /// to OpenJoystickDriver.
     static func isShown(for device: ApplicationServiceDeviceDescription) -> Bool {
-      (device.physicalOwnership == .nativeGamepad || device.recordServer == .ojd)
-        && device.discoverySource != .rawUSB
+      ServingPolicy.offersServerChoice(
+        observation: device.physicalOwnership,
+        server: device.recordServer,
+        usesRawUSB: device.discoverySource == .rawUSB
+      )
     }
 
     var body: some View {

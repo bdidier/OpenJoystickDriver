@@ -77,10 +77,7 @@ extension DeviceManager {
       discoverySource: info.discoverySource.kind,
       physicalOwnership: ownership,
       hidInputOwnership: info.hidInputOwnership,
-      duplicateExposureRisk: ControllerExposureDecision.decide(
-        ownership: ownership,
-        intent: .outputDisabled
-      ).duplicateRisk,
+      duplicateExposureRisk: DuplicateExposureRisk(observation: ownership),
       serialNumber: info.serialNumber,
       parameters: record?.parameters.entries ?? [],
       bindingResult: ProtocolBindingResult(

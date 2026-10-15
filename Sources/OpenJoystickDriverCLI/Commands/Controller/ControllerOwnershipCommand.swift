@@ -60,7 +60,11 @@ struct ControllerOwnershipCommand: AsyncParsableCommand {
       let device = try await ServiceConnection.request { try await selector.resolve(with: $0) }
       let model = ControllerModelID(vendorID: device.vendorID, productID: device.productID)
       let records = RecordStore.load()
-      try Self.checkSupported(device, record: records.records[model])
+      try Self.checkSupported(
+        device,
+        server: records.records[model]?.server ?? .system,
+        usesRawUSB: records.records[model]?.usesRawUSB == true
+      )
       let change = try Self.change(model, to: choice.ownership, records: records, device: device)
       if !dryRun { try Self.write(change) }
       let result = Result(
@@ -104,15 +108,22 @@ struct ControllerOwnershipCommand: AsyncParsableCommand {
   /// counts as native, because OJD seized a controller macOS would serve.
   static func checkSupported(
     _ device: ApplicationServiceDeviceDescription,
-    record: ControllerRecord?
+    server: ControllerServer,
+    usesRawUSB: Bool
   ) throws {
-    if record?.usesRawUSB == true {
+    if usesRawUSB {
       throw CLIFailure(
         .ownershipToggleUnsupported,
         CLILocalized.format("cli.controller.ownership.raw_usb", device.identity)
       )
     }
-    guard device.physicalOwnership == .nativeGamepad || record?.server == .ojd else {
+    guard
+      ServingPolicy.offersServerChoice(
+        observation: device.physicalOwnership,
+        server: server,
+        usesRawUSB: false
+      )
+    else {
       throw CLIFailure(
         .ownershipToggleUnsupported,
         CLILocalized.format("cli.controller.ownership.not_native", device.identity)
