@@ -116,6 +116,72 @@ class ControllerModeSchemaTests(unittest.TestCase):
                 with self.assertRaises(validate_profiles.ValidationError):
                     validate_profiles.validate_record(path, enforce_path=False)
 
+    def test_validator_rejects_modes_that_break_record_level_rules(self) -> None:
+        layout = {
+            "report": {"length": 8},
+            "buttons": [{"control": "face-south", "byte": 0, "mask": 1}],
+        }
+        rumble = {
+            "rumble": {
+                "report": {"kind": "output", "id": 2, "length": 8},
+                "leftMain": {"byte": 3},
+            }
+        }
+
+        def with_mode(family: str, default: str, **fields: Any) -> dict[str, Any]:
+            return {
+                **record(**fields),
+                "protocol": {"family": default},
+                "modes": [
+                    {
+                        "id": "x",
+                        "protocol": {"family": family},
+                        "match": {"probes": [ANSWERS]},
+                    }
+                ],
+            }
+
+        needs_layout = "every mode needs the record's input layout exactly when it is hid.report-layout"
+        rejected = {
+            "raw-USB mode": (
+                with_mode("xbox.gip", "sony.sixaxis"),
+                "modes apply only to HID controllers",
+            ),
+            "raw-USB default": (
+                with_mode("sony.sixaxis", "xbox.gip"),
+                "modes apply only to HID controllers",
+            ),
+            "input layout on a mode that is not hid.report-layout": (
+                with_mode("sony.sixaxis", "hid.report-layout", input=layout),
+                needs_layout,
+            ),
+            "hid.report-layout mode without the input layout": (
+                with_mode("hid.report-layout", "sony.sixaxis"),
+                needs_layout,
+            ),
+            "rumble template on a mode whose driver does not encode it": (
+                with_mode("hid.descriptor", "vendor.ps3-third-party", output=rumble),
+                "rumble templates require a driver that encodes them in every mode",
+            ),
+            "present controls on a mode whose driver does not declare them": (
+                with_mode(
+                    "sony.sixaxis",
+                    "sony.dualsense",
+                    capabilities={
+                        "present": sorted(validate_profiles.DUALSENSE_EDGE_CONTROLS)
+                    },
+                ),
+                "capabilities must be deltas the driver of every mode declares",
+            ),
+        }
+        for name, (document, message) in rejected.items():
+            with self.subTest(name), tempfile.TemporaryDirectory() as directory:
+                path = Path(directory) / "record.json"
+                path.write_text(json.dumps(document))
+                with self.assertRaises(validate_profiles.ValidationError) as caught:
+                    validate_profiles.validate_record(path, enforce_path=False)
+                self.assertIn(message, str(caught.exception))
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -18,7 +18,16 @@ except ImportError:
     )
     raise SystemExit(2)
 
+from Scripts.Catalog.controller_patch import RAW_USB_FAMILIES
+
 ROOT = pathlib.Path(__file__).resolve().parents[2]
+# Families whose driver encodes rumble from a record's rumble template, as
+# `PhysicalProtocolID.encodesRumbleTemplate` does in Swift.
+RUMBLE_TEMPLATE_FAMILIES = frozenset({"hid.report-layout", "vendor.ps3-third-party"})
+# `DualSenseDriver.edgeControls` in Swift.
+DUALSENSE_EDGE_CONTROLS = frozenset(
+    {"paddle-left-1", "paddle-right-1", "auxiliary-1", "auxiliary-2"}
+)
 RECORD_DIR = ROOT / "Sources" / "OpenJoystickDriverKit" / "Resources" / "Controllers"
 SCHEMA_PATH = ROOT / "Resources" / "Schemas" / "controller.schema.json"
 
@@ -30,6 +39,65 @@ class ValidationError(Exception):
 def require(condition: bool, message: str) -> None:
     if not condition:
         raise ValidationError(message)
+
+
+def uses_raw_usb(protocol: dict[str, Any]) -> bool:
+    family = protocol["family"]
+    return family in RAW_USB_FAMILIES or (
+        family == "vendor.gamesir" and protocol.get("variant") == "usb"
+    )
+
+
+def capabilities_are_declared(record: dict[str, Any], family: str) -> bool:
+    capabilities = record.get("capabilities", {})
+    present = set(capabilities.get("present", []))
+    present_allowed = not present or (
+        family == "sony.dualsense" and present == DUALSENSE_EDGE_CONTROLS
+    )
+    rumble_allowed = "rumble" not in capabilities or family == "xbox.gip"
+    return rumble_allowed and present_allowed
+
+
+def validate_modes(path: pathlib.Path, record: dict[str, Any]) -> None:
+    """The record-level rules every mode's protocol obeys, as `validateModes` in Swift."""
+    modes = record.get("modes", [])
+    if not modes:
+        return
+    identifiers = [mode["id"] for mode in modes]
+    require(
+        len(set(identifiers)) == len(identifiers),
+        f"{path}: mode IDs must be unique: {identifiers}",
+    )
+    has_layout = "input" in record
+    has_template = "rumble" in record.get("output", {})
+    for protocol in [record["protocol"], *(mode["protocol"] for mode in modes)]:
+        family = protocol["family"]
+        require(
+            not uses_raw_usb(protocol),
+            f"{path}: modes apply only to HID controllers",
+        )
+        require(
+            has_layout == (family == "hid.report-layout"),
+            f"{path}: every mode needs the record's input layout exactly when it is "
+            "hid.report-layout",
+        )
+        require(
+            not has_template or family in RUMBLE_TEMPLATE_FAMILIES,
+            f"{path}: rumble templates require a driver that encodes them in every mode",
+        )
+        require(
+            capabilities_are_declared(record, family),
+            f"{path}: capabilities must be deltas the driver of every mode declares",
+        )
+    for mode in modes:
+        for probe in mode["match"]["probes"]:
+            if probe["expect"] == "bytes":
+                end = probe["offset"] + len(probe["bytes"].split(" "))
+                require(
+                    end <= probe["length"],
+                    f"{path}: mode {mode['id']} probe bytes end at {end}, "
+                    f"past length {probe['length']}",
+                )
 
 
 def expected_relative_path(vendor_id: int, product_id: int) -> pathlib.Path:
@@ -73,22 +141,9 @@ def validate_record(
         not overlap, f"{path}: capabilities both absent and present: {sorted(overlap)}"
     )
 
-    # JSON Schema cannot express unique mode IDs or probe bytes that fit the read length; the
-    # runtime decoder rejects both too.
-    modes = record.get("modes", [])
-    identifiers = [mode["id"] for mode in modes]
-    require(
-        len(set(identifiers)) == len(identifiers),
-        f"{path}: mode IDs must be unique: {identifiers}",
-    )
-    for mode in modes:
-        for probe in mode["match"]["probes"]:
-            if probe["expect"] == "bytes":
-                end = probe["offset"] + len(probe["bytes"].split(" "))
-                require(
-                    end <= probe["length"],
-                    f"{path}: mode {mode['id']} probe bytes end at {end}, past length {probe['length']}",
-                )
+    # JSON Schema cannot express unique mode IDs, probe bytes that fit the read length, or the
+    # record-level rules each mode obeys; the runtime decoder rejects all of them too.
+    validate_modes(path, record)
 
     vendor_id = record["vendorID"]
     product_id = record["productID"]
