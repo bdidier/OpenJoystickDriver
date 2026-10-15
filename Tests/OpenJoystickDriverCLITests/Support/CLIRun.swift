@@ -13,7 +13,7 @@ struct CLIRun {
   let standardError: String
 
   static func run(_ arguments: [String]) async -> Self {
-    // The executable installs the host at launch; a fake keeps tests off real USB and system extensions.
+    // The executable installs the host at launch; a fake keeps tests off real USB.
     PlatformHosts.install(FakePlatformHost())
     let capture = CLIOutputCapture()
     let code = await CLIOutput.$capture.withValue(capture) {

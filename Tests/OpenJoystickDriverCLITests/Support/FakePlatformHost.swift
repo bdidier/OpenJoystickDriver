@@ -1,6 +1,9 @@
 import Foundation
 import OpenJoystickDriverKit
 
+// The protocol requires `async`; the fake answers immediately.
+// swiftlint:disable async_without_await
+
 /// A `PlatformHost` that reports an absent extension and no USB controllers, so command tests
 /// never touch real USB or `systemextensionsctl`.
 struct FakePlatformHost: PlatformHost {
@@ -21,3 +24,5 @@ struct FakePlatformHost: PlatformHost {
   @MainActor
   func runApplication() -> Never { fatalError("Tests never run the application.") }
 }
+
+// swiftlint:enable async_without_await
