@@ -47,9 +47,6 @@ func defaultHost(of record: DeviceRuntimeProfile) -> PhysicalTransport {
   record.parameters.usbProtocol == .chargingOnly ? .bluetoothClassic : .usb
 }
 
-/// Binds a catalog model on its family's access path, as discovery does, and returns the
-/// driver the runtime would construct. A HID row is observed over `host`, or its default host;
-/// a raw-USB row claims `transportProfile`, or the record's profile, without interface facts.
 /// The HID usage map the catalog record for `vendorID:productID` declares.
 func catalogUsageMap(_ vendorID: UInt16, _ productID: UInt16) throws -> HIDUsageMap {
   let record = try #require(
@@ -60,6 +57,9 @@ func catalogUsageMap(_ vendorID: UInt16, _ productID: UInt16) throws -> HIDUsage
   return try #require(record.hidUsageMap)
 }
 
+/// Binds a catalog model on its family's access path, as discovery does, and returns the
+/// driver the runtime would construct. A HID row is observed over `host`, or its default host;
+/// a raw-USB row claims `transportProfile`, or the record's profile, without interface facts.
 func catalogParser(
   _ model: ControllerModelID,
   host: PhysicalTransport? = nil,

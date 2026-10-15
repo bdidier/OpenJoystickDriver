@@ -7,9 +7,6 @@ import Foundation
 /// folds them through a ``HIDUsageMap``: the record's, else the one the `hid.descriptor`
 /// description selects for the report descriptor's shape, else the description's standard map.
 public final class HIDDescriptorDriver: PhysicalProtocolDriver {
-  private static let consumerUsagePage = 0x0C
-  private static let usageRecord = 0xB2
-
   private let model: ControllerModelID
   private var state = ControllerState.neutral
   /// Stick axes as decoded. HID Generic Desktop Y and Ry (and a Z/Rz layout's right-stick Rz) put
@@ -20,8 +17,8 @@ public final class HIDDescriptorDriver: PhysicalProtocolDriver {
   private var rightX: Float = 0
   private var rightY: Float = 0
   let usageMap: HIDUsageMap
-  /// Whether the descriptor declares a Consumer Record button, which Xbox Series pads send as
-  /// Share over Bluetooth.
+  /// Whether the descriptor declares a usage the map binds to Share, which Xbox Series pads send
+  /// as Consumer Record over Bluetooth.
   private let hasShareButton: Bool
 
   /// Creates a driver whose usage map the `hid.descriptor` description selects.
@@ -47,9 +44,6 @@ public final class HIDDescriptorDriver: PhysicalProtocolDriver {
       reportDescriptor.flatMap { HIDReportDescriptorParser.parse(descriptor: Array($0))?.fields }
       ?? []
     let usages = Set(fields.map { HIDUsage(usagePage: $0.usagePage, usage: $0.usage) })
-    hasShareButton = usages.contains(
-      HIDUsage(usagePage: Self.consumerUsagePage, usage: Self.usageRecord)
-    )
     let description = ProtocolDescription.bundled[.hidDescriptor]
     guard
       let resolved = usageMap
@@ -57,6 +51,10 @@ public final class HIDDescriptorDriver: PhysicalProtocolDriver {
         ?? description?.hidUsageMap
     else { preconditionFailure("Resources/Protocols/hid.descriptor.json declares no usage map") }
     self.usageMap = resolved
+    hasShareButton = usages.contains { (hidUsage: HIDUsage) in
+      resolved.binding(page: UInt32(hidUsage.usagePage), usage: UInt32(hidUsage.usage))
+        == .button(.share)
+    }
     print("[HIDDescriptorDriver] Unrecognized controller \(model), using HID descriptors")
   }
 

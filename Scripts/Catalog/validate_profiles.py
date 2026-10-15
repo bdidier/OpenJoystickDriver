@@ -58,6 +58,21 @@ def capabilities_are_declared(record: dict[str, Any], family: str) -> bool:
     return rumble_allowed and present_allowed
 
 
+def usage_map_problem(usage_map: dict[str, Any]) -> str | None:
+    """What JSON Schema cannot say about a hidUsageMap, as `HIDUsageMap.init` in Swift."""
+    seen: set[tuple[int, int]] = set()
+    for entry in usage_map["usages"]:
+        key = (entry["page"], entry["usage"])
+        if key in seen:
+            return f"usage page {key[0]} usage {key[1]} appears more than once"
+        seen.add(key)
+        if entry["kind"] == "axis" and "range" in entry:
+            bounds = entry["range"]
+            if bounds["min"] >= bounds["max"]:
+                return f"axis range {bounds['min']}...{bounds['max']} must have min below max"
+    return None
+
+
 def validate_modes(path: pathlib.Path, record: dict[str, Any]) -> None:
     """The record-level rules every mode's protocol obeys, as `validateModes` in Swift."""
     modes = record.get("modes", [])
@@ -140,6 +155,12 @@ def validate_record(
     require(
         not overlap, f"{path}: capabilities both absent and present: {sorted(overlap)}"
     )
+
+    # JSON Schema cannot express unique usages or ordered axis ranges either.
+    usage_map = record.get("input", {}).get("hidUsageMap")
+    if usage_map is not None:
+        problem = usage_map_problem(usage_map)
+        require(problem is None, f"{path}: hidUsageMap: {problem}")
 
     # JSON Schema cannot express unique mode IDs, probe bytes that fit the read length, or the
     # record-level rules each mode obeys; the runtime decoder rejects all of them too.

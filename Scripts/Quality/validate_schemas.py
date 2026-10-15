@@ -13,6 +13,7 @@ from ..Catalog.schema_header import (
     SCHEMA_SUFFIX,
     schema_id,
 )
+from ..Catalog.validate_profiles import usage_map_problem
 from ..Command.execution import swift_command
 from .schema_compatibility import IncompatibleSchemaError
 from .schema_compatibility import check as check_compatibility
@@ -222,6 +223,25 @@ def validate_protocol_descriptions(
                 f"{protocol_description_code(error)}: {path.relative_to(ROOT)}{suffix}: "
                 f"{error.message}"
             ) from error
+        # JSON Schema cannot express unique usages or ordered axis ranges; the Swift decoder
+        # rejects both too.
+        defaults_input = (
+            document.get("defaults", {}).get("input", {})
+            if isinstance(document, dict)
+            else {}
+        )
+        usage_maps = {"defaults.input.hidUsageMap": defaults_input.get("hidUsageMap")}
+        for index, shape in enumerate(defaults_input.get("descriptorShapes", [])):
+            usage_maps[f"defaults.input.descriptorShapes.{index}.hidUsageMap"] = shape[
+                "hidUsageMap"
+            ]
+        for label, usage_map in usage_maps.items():
+            problem = None if usage_map is None else usage_map_problem(usage_map)
+            if problem is not None:
+                raise ValidationError(
+                    f"{INVALID_PROTOCOL_DESCRIPTION}: {path.relative_to(ROOT)} at "
+                    f"{label}: {problem}"
+                )
         # The app loads Resources/Protocols/<family>.json by family, so a renamed file would
         # otherwise fail only at launch.
         family = document.get("family") if isinstance(document, dict) else None

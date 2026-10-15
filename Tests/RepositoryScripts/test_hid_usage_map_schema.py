@@ -115,6 +115,29 @@ class HIDUsageMapRecordSchemaTests(unittest.TestCase):
             self.validator.is_valid(record(usage_map(BUTTON), "hid.report-layout"))
         )
 
+    def validate_file(self, input_section: Any) -> None:
+        with tempfile.TemporaryDirectory(prefix="ojd-hid-record-") as directory:
+            path = Path(directory) / "record.json"
+            path.write_text(json.dumps(record(input_section)), encoding="utf-8")
+            validate_profiles.validate_record(
+                path, enforce_path=False, schema_validator=self.validator
+            )
+
+    def test_validator_rejects_what_the_schema_cannot_express(self) -> None:
+        duplicate = usage_map(AXIS, {**AXIS, "control": "left-stick-y"})
+        flat = usage_map({**AXIS, "range": {"min": 5, "max": 5}})
+        backwards = usage_map({**AXIS, "range": {"min": 9, "max": 3}})
+        for name, input_section in {
+            "duplicate usage": duplicate,
+            "empty axis range": flat,
+            "reversed axis range": backwards,
+        }.items():
+            with self.subTest(name):
+                self.assertTrue(self.validator.is_valid(record(input_section)))
+                with self.assertRaises(validate_profiles.ValidationError):
+                    self.validate_file(input_section)
+        self.validate_file(usage_map(AXIS, BUTTON))
+
     def test_hid_descriptor_declares_no_parameters(self) -> None:
         document = record(None)
         document["protocol"]["parameters"] = {"usageLayout": "Wr007"}
@@ -180,6 +203,30 @@ class HIDUsageMapDescriptionSchemaTests(unittest.TestCase):
         self.assert_rejected({"input": {"descriptorShapes": [self.shape(extra=True)]}})
         self.assert_rejected({"input": usage_map({**BUTTON, "control": "dpad"})})
         self.assert_rejected({"input": usage_map()})
+
+    def test_rejects_duplicate_usages_and_empty_ranges(self) -> None:
+        duplicate = usage_map(AXIS, {**AXIS, "control": "left-stick-y"})
+        backwards = usage_map({**AXIS, "range": {"min": 9, "max": 3}})
+        self.assert_rejected({"input": duplicate})
+        self.assert_rejected({"input": backwards})
+        self.assert_rejected(
+            {
+                "input": {
+                    "descriptorShapes": [
+                        self.shape(hidUsageMap=duplicate["hidUsageMap"])
+                    ]
+                }
+            }
+        )
+        self.assert_rejected(
+            {
+                "input": {
+                    "descriptorShapes": [
+                        self.shape(hidUsageMap=backwards["hidUsageMap"])
+                    ]
+                }
+            }
+        )
 
     def test_rejects_usage_maps_in_other_families(self) -> None:
         document = {
