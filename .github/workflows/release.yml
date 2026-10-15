@@ -55,9 +55,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          for dependency in pkg-config pyright ruff sdl3 shellcheck swift-format swiftlint xmake; do
+          for dependency in bun markdownlint-cli2 pkg-config pyright ruff sdl3 shellcheck swift-format swiftlint xmake; do
             brew list --versions "$dependency" >/dev/null 2>&1 || brew install "$dependency"
           done
+          bun install --frozen-lockfile --ignore-scripts
           python3 -m venv .build/schema-validator
           .build/schema-validator/bin/python -m pip install -r Scripts/Quality/requirements.txt
           echo "$PWD/.build/schema-validator/bin" >> "$GITHUB_PATH"
@@ -65,26 +66,40 @@ jobs:
       - name: Verify generated controller catalog
         env:
           GH_TOKEN: ${{ github.token }}
-        run: ./Scripts/ojd catalog regenerate --check
+        run: |
+          ./Scripts/ojd catalog regenerate --check
+          ./Scripts/ojd errors regenerate --check
 
-      - name: Check records
-        run: ./Scripts/ojd check profiles
+      - name: Check controller records
+        run: |
+          ./Scripts/ojd check profiles
 
       - name: Check Python
         run: |
           ruff format --check Scripts Tests/RepositoryScripts
           ruff check Scripts Tests/RepositoryScripts
           pyright
-          python3 -m unittest discover -s Tests/RepositoryScripts
+          .build/schema-validator/bin/python -m unittest discover -s Tests/RepositoryScripts
 
       - name: Check shell
         run: find Scripts -type f \( -name '*.sh' -o -name ojd \) -print0 | xargs -0 shellcheck --external-sources --source-path=SCRIPTDIR
 
-      - name: Check native tools
+      - name: Check Markdown
+        run: git ls-files -z -co --exclude-standard -- '*.md' ':!.agents/' | xargs -0 markdownlint-cli2
+
+      - name: Check JSON formatting
+        run: git ls-files -z -co --exclude-standard -- '*.json' '*.jsonc' | xargs -0 node_modules/.bin/biome ci
+
+      - name: Check native tools and the WebRTC bridge package
         run: ./Scripts/ojd check tools
 
       - name: Check schemas
         run: ./Scripts/ojd check schemas
+
+      - name: Test macOS 14 parser compatibility
+        run: |
+          ./Scripts/ojd test parsers-macos14
+          ./Scripts/ojd snapshots check
 
       - name: Check generated DriverKit project
         run: |
@@ -95,9 +110,18 @@ jobs:
         run: |
           swift-format lint --recursive --strict Package.swift Sources Tests Tools
           swiftlint lint --no-cache --strict
+          python3 Scripts/Quality/check_swift_file_length.py
+          python3 Scripts/Quality/check_neutral_core_imports.py
+          python3 Scripts/Quality/check_sink_boundary.py
+          python3 Scripts/Quality/check_localization_keys.py
+
+      - name: Build package
+        run: |
+          swift build
 
       - name: Run tests
-        run: swift test --no-parallel
+        run: |
+          swift test --no-parallel
 
       - name: Create release tag
         env:

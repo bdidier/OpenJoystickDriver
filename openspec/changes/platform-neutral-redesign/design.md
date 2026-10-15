@@ -110,10 +110,11 @@ One position-based set. A label never renames an id. Values are UpperCamelCase (
 | `Microphone` | none | MISC1 (PS5) | none | Telephony or Consumer mute | none |
 | `TouchpadClick` | none | TOUCHPAD | BTN_TOUCH (touch device) | Button:n | TouchpadButton |
 | `LeftPaddle1`, `LeftPaddle2`, `RightPaddle1`, `RightPaddle2` | none | LEFT/RIGHT_PADDLE1/2 | BTN_GRIPL, BTN_GRIPL2, BTN_GRIPR, BTN_GRIPR2 | Button:n | XboxPaddleOne to Four |
+| `LeftStickTouch`, `RightStickTouch`, `LeftTrackpadClick`, `RightTrackpadClick`, `LeftTrackpadTouch`, `RightTrackpadTouch` | none | none | none | Button:n | none |
 | `Auxiliary1` to `Auxiliary8` | none | MISC2 to MISC6 | BTN_TRIGGER_HAPPY1+ | Button:n | none |
 | `LeftStickX`, `LeftStickY`, `RightStickX`, `RightStickY` | axes 0 to 3 | LEFTX, LEFTY, RIGHTX, RIGHTY | ABS_X, ABS_Y, ABS_RX, ABS_RY | GenericDesktop X, Y, Rx, Ry | LeftThumbstick, RightThumbstick |
 
-Rules: `Share` and `Options` are not ids. PS4 Share and Xbox View are `Back`; PS Options, Xbox Menu and Switch Plus are `Start`; Xbox Share and Switch Capture are `Capture`. Y axes are positive down (W3C, SDL, Linux agree). Labels and glyphs come from a per-model `labels` map. Exact HID usage ids are confirmed against the HID Usage Tables at implementation (the audit did not fetch them). Rumble actuators: `LowFrequency`, `HighFrequency`, `LeftTrigger`, `RightTrigger`, `LeftHaptic`, `RightHaptic`. Keyboard keys use W3C UI Events `KeyboardEvent.code` values.
+Rules: `Share` and `Options` are not ids. PS4 Share and Xbox View are `Back`; PS Options, Xbox Menu and Switch Plus are `Start`; Xbox Share and Switch Capture are `Capture`. Y axes are positive down (W3C, SDL, Linux agree). Grips are `LeftPaddle2`/`RightPaddle2` and back paddles `LeftPaddle1`/`RightPaddle1`; Joy-Con SL and SR and Steam function buttons are `Auxiliary1` to `Auxiliary6`. A trigger without an analog axis is still `LeftTrigger`/`RightTrigger`, marked by the record capability `digitalTriggers`. The crosswalk data is `Resources/Vocabulary/crosswalk.json`, documentation read by tests, not a schema alias. Labels and glyphs come from a per-model `labels` map. Exact HID usage ids are confirmed against the HID Usage Tables at implementation (the audit did not fetch them). Rumble actuators: `LowFrequency`, `HighFrequency`, `LeftTrigger`, `RightTrigger`, `LeftHaptic`, `RightHaptic`. Keyboard keys use W3C UI Events `KeyboardEvent.code` values.
 
 ### D4 Schema set and versioning
 

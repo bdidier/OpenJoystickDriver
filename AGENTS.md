@@ -24,6 +24,7 @@ Run applicable commands from the repository root:
 
 ```bash
 ./Scripts/ojd catalog regenerate --check
+./Scripts/ojd errors regenerate --check
 ./Scripts/ojd check profiles
 ./Scripts/ojd check schemas
 ./Scripts/ojd check tools
@@ -42,7 +43,9 @@ python3 Scripts/Quality/check_neutral_core_imports.py
 python3 Scripts/Quality/check_sink_boundary.py
 python3 Scripts/Quality/check_localization_keys.py
 ./Scripts/ojd check driverkit
-swift test
+./Scripts/ojd test parsers-macos14
+./Scripts/ojd snapshots check
+swift test --no-parallel
 ```
 
-For parser or protocol changes, also run `./Scripts/ojd test parsers-macos14`. Use `./Scripts/ojd repair swiftpm-module-cache` only to repair a SwiftPM module-cache mismatch.
+Use `./Scripts/ojd repair swiftpm-module-cache` only to repair a SwiftPM module-cache mismatch.

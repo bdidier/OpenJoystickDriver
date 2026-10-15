@@ -170,6 +170,10 @@ Verify: `swift test`, `./Scripts/ojd check schemas`.
 - [ ] 11.1a Complete `modes` per the `controller-records` "Modes and match keys" requirement: the default mode is a `modes[]` entry, match keys cover link kind, interface signature, manufacturer and product strings and a `bcdDevice` range besides probes, and a mode may set `interface`, `session` and protocol `parameters`. Verify: fixtures for "One model, two modes" (wired versus Bluetooth by link kind) and the `device-matching` "Dongle and wired" scenario.
 - [x] 11.2 Add the `coreBluetoothGATT` link kind for BLE controllers. Verify: a mock peripheral test delivers frames through the link.
 - [ ] 11.3 Make DS3 over Bluetooth a link of the DS3 record, with the pairing steps as documentation only. Verify: the record validates; hardware check H6 below covers the real pairing.
+- [ ] 11.4 Implement the "Sessions as data" requirement with one `session` shape used by a description's `defaults`, a record's `default` mode and every other mode: `startup` (init), `keepAlive`, `settle`, `shutdown`, vendor control transfers (`bmRequestType`, `bRequest`, `wValue`, `wIndex`, `wLength`) gated by match keys, and output templates (fixed bytes, scaling, motor positions, resend interval). The record-level `output.startup` and the description's `defaults.output.startup` move into it with no alias. After 9.1f, so the moved family data lands in this shape. Verify: the spec's "Gated vendor reads" and "Byte format" scenarios as Swift and Python tests; 1.1 shows zero diffs.
+- [ ] 11.5 Match `interfaceSignature` on the endpoint set too (design D7), not only the class triple and HID usage. Verify: a fixture with the same class triple and a different endpoint set selects a different mode, in Swift and Python.
+- [ ] 11.6 Report the `proprietary-radio-receiver` link kind from real discovery (for example from the receiver's record), so a mode can match it outside fixtures. Verify: a discovery test of a receiver reports the link and selects the matching mode.
+- [ ] 11.7 Make Swift `StartupWrite.transport` accept only the schema's transports (usb, bluetooth-classic, bluetooth-le), and move the `2563:0523` Sixaxis clone's Bluetooth startup write into a `bluetooth` mode session like `054c:0268`. Verify: a Swift decoder test rejects another transport as the schema does; the clone record validates and selects the mode by link.
 
 ## 12. ServingRoute and persona records (old WP9)
 
@@ -214,6 +218,10 @@ Verify: `swift test`, `./Scripts/ojd check profiles`, `./Scripts/ojd catalog reg
 - [ ] 15.1 Adopt the UpperCamelCase ids (`South`, `East`, ...) across records, profiles, the endpoint and the GUI. Verify: a test maps every old name to a new id with none left over.
 - [ ] 15.2 Keep one crosswalk to SDL and to the system HID names. Verify: round trip test per control.
 - [ ] 15.3 Update stored profile loading for renamed controls (rejected as in 3.3 if not valid). Verify: negative test.
+- [ ] 15.4 Make Y axes positive down everywhere a value leaves or enters OJD (records, profiles, the endpoint Frame, CLI output, localization text) and in the internal `StickPosition`, so one convention holds. Verify: a test per surface pushes the stick up and reads a negative Y; 1.1 shows the parsed frames with the sign recorded once.
+- [ ] 15.5 Move the names that 15.1 left on the old kind onto the vocabulary: D-pad direction names, the endpoint Frame `dpad` list, gyro and steering enum values, the `axis_direction` enum, and profile keyboard outputs as W3C `KeyboardEvent.code` values. Verify: a test per kind rejects the old name; Swift and Python agree.
+- [ ] 15.6 Confirm each crosswalk cell against its source (HID Usage Tables, Apple GameController docs, SDL3 and Linux headers) and record the source per column; the wiki table is generated from `Resources/Vocabulary/crosswalk.json`. Verify: a test compares the wiki table with the JSON.
+- [ ] 15.7 Remove the label plumbing (`ControllerButtonLabels`) that 15.1 left without a use, after confirming each use is gone, and derive the WebRTC bridge's `PeerMessage` button list from `vocabulary.schema.json` (or a test that compares them). Verify: the build passes with the plumbing gone; a test fails if the lists differ.
 
 ## 16. SDL mapping, export and launch environment
 
@@ -330,6 +338,7 @@ Verify: the full check list.
 - [ ] 24.9 Keep one check list: `AGENTS.md`, `Scripts/README.md`, the `justfile` and CI run the same commands (today `ojd errors regenerate --check` is only in the `justfile`, and `ojd check tools` and `ojd snapshots check` are missing from `AGENTS.md`). Verify: a repository test compares the four lists and fails on a difference.
 - [ ] 24.10 Make `ojd-webrtc-bridge --help` print its usage to standard output and exit 0; a bad argument still prints usage to standard error and exits non-zero. Verify: bridge tests for both cases, and the wiki page's usage block matches the output.
 - [ ] 24.11 Give each long-lived `EndpointServer` connection its own thread, as 24.1 did for the local RPC server, so blocked connections cannot starve new ones under load. Verify: a test opens the connection limit of idle clients and a new client is still served (or refused with its error) within its timeout.
+- [ ] 24.12 Find and fix the cause of the `ReportSenderTests.nativeSendThatNeverFinishesTimesOutAtTheDeadline` failure under load. Verify: the test passes under `swift test` run in parallel with a CPU load, ten times in a row.
 
 ## Hardware checks (maintainer)
 
@@ -345,6 +354,7 @@ These need the maintainer and a device. Each result is recorded in `wiki` or the
 - [ ] H8 SDL3 and Steam with `Generic` and `SdlCompatible`.
 - [ ] H9 `1209:4A4F`: press each button and move each axis to confirm mapping directions (open item 5).
 - [ ] H10 Stutter: measure with the 19.3 timestamps, with and without the WebRTC bridge.
+- [ ] H11 Native speakers review the 20 non-English locales' new strings from 12.4 and 15.x.
 
 ## Workflow follow-up
 

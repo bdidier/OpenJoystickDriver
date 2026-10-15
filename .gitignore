@@ -9,6 +9,7 @@ glossaries/
 
 # Internal planning and evidence (local only)
 /.claude/handoff.md
+/.claude/worktrees/
 /.dotclaude/
 # Regenerate with `./Scripts/ojd docs export-external-issues`.
 /docs/external/
