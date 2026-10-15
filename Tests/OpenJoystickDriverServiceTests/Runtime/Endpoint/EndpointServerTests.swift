@@ -253,13 +253,17 @@ struct EndpointServerTests {
   }
 
   @Test(arguments: [
-    (#"{"apiVersion":"openjoystickdriver.io/v2","kind":"Hello","scopes":["read"]}"#, "E1003"),
+    (#"{"apiVersion":"openjoystickdriver.io/v2","kind":"Hello","scopes":["read"]}"#, "E1010"),
+    (#"{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"Hello","scopes":["read"]}"#, "E1010"),
     (#"nonsense"#, "E1004"),
     (clientLine("Hello", #","scopes":[]"#), "E1004"),
-    (clientLine("Subscription", #","stream":"controllers""#), "E1004"),
-    (#"{"kind":"Hello","scopes":["read"]}"#, "E1004"),
-    (clientLine("Welcome", #","scopes":["read"]"#), "E1004"),
-    (clientLine("Greeting", #","scopes":["read"]"#), "E1004"),
+    (clientLine("Subscription", #","stream":"controllers""#), "E1011"),
+    (#"{"kind":"Hello","scopes":["read"]}"#, "E1012"),
+    (#"{"apiVersion":"openjoystickdriver/v1alpha1","scopes":["read"]}"#, "E1012"),
+    (#"{}"#, "E1012"),
+    (#"[1]"#, "E1004"),
+    (clientLine("Welcome", #","scopes":["read"]"#), "E1011"),
+    (clientLine("Greeting", #","scopes":["read"]"#), "E1011"),
     (clientLine("Hello", #","scopes":["read","control"]"#), "E1002"),
   ])
   func aBadHelloGetsAnError(hello: String, code: String) async throws {
@@ -279,7 +283,7 @@ struct EndpointServerTests {
       let details = object["details"] as? [String: Any]
       #expect(
         details?["supportedAPIVersions"] as? [String]
-          == (code == "E1003" ? [OpenJoystickDriverAPI.version] : nil)
+          == (["E1010", "E1011", "E1012"].contains(code) ? [OpenJoystickDriverAPI.version] : nil)
       )
       #expect(await client.readLine() == nil)
     }
@@ -344,7 +348,7 @@ struct EndpointServerTests {
       let client = try await EndpointTestClient.subscribed(to: server.socketPath)
       await client.send(clientLine("Subscription", #","stream":"controllers""#))
 
-      #expect(try await client.readObject()["code"] as? String == "E1004")
+      #expect(try await client.readObject()["code"] as? String == "E1011")
       #expect(await client.readLine() == nil)
     }
   }

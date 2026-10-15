@@ -35,6 +35,33 @@ struct ErrorCodeTests {
   }
 
   @Test
+  func theEndpointCodesKeepTheirNumbersAndTheHeaderCodesFollow() throws {
+    let data = try Data(contentsOf: repositoryResource("Resources/ErrorCodes.json"))
+    let endpoint = try JSONDecoder().decode(Catalog.self, from: data).codes.filter {
+      $0.domain == "endpoint"
+    }
+    let numbers = Dictionary(uniqueKeysWithValues: endpoint.map { ($0.code, ($0.name, $0.status)) })
+    let unchanged = [
+      "E1001": "endpointDisabled", "E1002": "notGranted", "E1004": "invalidMessage",
+      "E1005": "tooManyConnections", "E1006": "revoked", "E1007": "tooSlow",
+      "E1008": "tooManyFeeds", "E1009": "feedClosed",
+    ]
+    for (code, name) in unchanged {
+      #expect(numbers[code]?.0 == name && numbers[code]?.1 == "active", "\(code)")
+    }
+    #expect(numbers["E1003"]?.0 == "unsupportedProtocol" && numbers["E1003"]?.1 == "retired")
+    #expect(ErrorCode(rawValue: "E1003") == nil)
+    #expect(ErrorCode.unsupportedEndpointVersion.rawValue == "E1010")
+    #expect(ErrorCode.unexpectedKind.rawValue == "E1011")
+    #expect(ErrorCode.missingHeader.rawValue == "E1012")
+    #expect(
+      [ErrorCode.unsupportedEndpointVersion, .unexpectedKind, .missingHeader].allSatisfy {
+        $0.domain == .endpoint
+      }
+    )
+  }
+
+  @Test
   func eachRemappingCodeIsTheCatalogEntryOfItsWireValue() throws {
     let data = try Data(contentsOf: repositoryResource("Resources/ErrorCodes.json"))
     let remapping = try JSONDecoder().decode(Catalog.self, from: data).codes.filter {

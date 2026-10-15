@@ -43,25 +43,29 @@ class ErrorCodeTests(unittest.TestCase):
     def test_the_repository_is_current(self) -> None:
         self.assertEqual(errors.regenerate(ROOT, write=False), [])
 
-    def test_the_endpoint_codes_are_the_nine_codes_in_order(self) -> None:
-        names = [
-            item["name"]
-            for item in errors.load_catalog(ROOT)
-            if item["domain"] == "endpoint"
+    def test_the_endpoint_codes_are_in_order_with_the_old_numbers_kept(self) -> None:
+        items = [
+            item for item in errors.load_catalog(ROOT) if item["domain"] == "endpoint"
         ]
         self.assertEqual(
-            names,
+            [(item["code"], item["name"]) for item in items],
             [
-                "endpointDisabled",
-                "notGranted",
-                "unsupportedProtocol",
-                "invalidMessage",
-                "tooManyConnections",
-                "revoked",
-                "tooSlow",
-                "tooManyFeeds",
-                "feedClosed",
+                ("E1001", "endpointDisabled"),
+                ("E1002", "notGranted"),
+                ("E1003", "unsupportedProtocol"),
+                ("E1004", "invalidMessage"),
+                ("E1005", "tooManyConnections"),
+                ("E1006", "revoked"),
+                ("E1007", "tooSlow"),
+                ("E1008", "tooManyFeeds"),
+                ("E1009", "feedClosed"),
+                ("E1010", "unsupportedEndpointVersion"),
+                ("E1011", "unexpectedKind"),
+                ("E1012", "missingHeader"),
             ],
+        )
+        self.assertEqual(
+            [item["code"] for item in items if item["status"] == "retired"], ["E1003"]
         )
 
     def test_a_code_with_the_wrong_prefix_for_its_domain_is_refused(self) -> None:

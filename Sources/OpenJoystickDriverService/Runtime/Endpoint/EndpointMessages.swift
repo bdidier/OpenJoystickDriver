@@ -12,8 +12,9 @@ struct EndpointChallenge: Encodable, Sendable {
 
 /// A line that a client sends: `Hello` first, then `Subscription` or `FeedRequest`.
 ///
-/// A line with no `apiVersion`, or a missing or unknown `kind`, does not decode and is answered
-/// like any other line that is not a request, with `E1004`.
+/// A line is checked by ``EndpointHeader`` first: a missing header is answered with `E1012`, an
+/// unsupported `apiVersion` with `E1010`, and an unknown kind, or one that is not accepted at
+/// that point, with `E1011`. A line that fails to decode after that gets `E1004`.
 struct EndpointRequest: Decodable, Sendable {
   enum Kind: String, Decodable, Sendable {
     case hello = "Hello"
@@ -34,7 +35,7 @@ struct EndpointRequest: Decodable, Sendable {
   let stream: String?
   /// `Subscription` only; adds the virtual gamepad's values to the objects of the watch lines.
   let output: Bool?
-  /// `FeedRequest` only; the virtual HID profile of the gamepad, such as `hid-generic`.
+  /// `FeedRequest` only; the persona id of the gamepad, an ``EndpointPersona`` raw value.
   let `as`: String?
 }
 
@@ -49,7 +50,21 @@ struct EndpointWelcome: Encodable, Sendable {
 struct EndpointFeedSession: Encodable, Sendable {
   let apiVersion = OpenJoystickDriverAPI.version
   let kind = "FeedSession"
-  let `as`: String
+  let `as`: EndpointPersona
+}
+
+/// The persona ids that `FeedRequest` and `FeedSession` carry in `as`, neutral of any OS name.
+enum EndpointPersona: String, Encodable, CaseIterable, Sendable {
+  case generic = "Generic"
+  case sdlCompatible = "SdlCompatible"
+
+  /// The built-in virtual HID profile that publishes this persona.
+  var profileName: String {
+    switch self {
+    case .generic: "hid-generic"
+    case .sdlCompatible: "hid-xbox-one-s-bt"
+    }
+  }
 }
 
 /// A `RumbleCommand` line: the host's rumble command with `apiVersion` and `kind`.
@@ -73,9 +88,9 @@ struct EndpointRumbleCommand: Encodable, Sendable {
 
 /// A `Status` failure line; `code` is an endpoint-domain `ErrorCode`, described in
 /// `endpoint.schema.json`.
-struct EndpointError: Encodable, Sendable {
+struct EndpointError: Encodable, Error, Sendable {
   struct Details: Encodable, Sendable {
-    /// The `apiVersion` values the service accepts; `E1003` only.
+    /// The `apiVersion` values the service accepts; `E1010`, `E1011` and `E1012` only.
     let supportedAPIVersions: [String]
   }
 
@@ -86,6 +101,17 @@ struct EndpointError: Encodable, Sendable {
   /// English text for logs; clients branch on `code`.
   let message: String
   var details: Details?
+
+  /// A refusal of a line's header, which lists the versions the service speaks.
+  init(header code: ErrorCode, message: String) {
+    self.init(code: code, message: message)
+    details = .init(supportedAPIVersions: [OpenJoystickDriverAPI.version])
+  }
+
+  init(code: ErrorCode, message: String) {
+    self.code = code
+    self.message = message
+  }
 }
 
 /// The client behind an endpoint connection, as its code signature identifies it.

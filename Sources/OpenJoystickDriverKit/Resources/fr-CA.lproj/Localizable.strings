@@ -1549,13 +1549,15 @@
 "cli.profile.vanished" = "Le service n’a pas conservé le profil. Vérifiez-le avec « ojd profile list ».";
 "error.E1001" = "Le point d’accès est désactivé. Activez-le avec « ojd access enable » et reconnectez-vous.";
 "error.E1002" = "Le service a refusé ce client. Il n’a pas d’autorisation pour les portées demandées, ou sa signature ou sa preuve n’est pas valide. Exécutez « ojd access list », autorisez le client avec « ojd access grant » et reconnectez-vous.";
-"error.E1003" = "Le service ne prend pas en charge l’apiVersion indiquée dans Hello. Envoyez l’une des versions de details.supportedAPIVersions et reconnectez-vous.";
 "error.E1004" = "Le service n’a pas pu accepter la ligne. Elle n’est pas valide ou elle est arrivée au mauvais moment. Envoyez d’abord hello, puis une seule requête, et vérifiez chaque ligne avec le schéma du point d’accès.";
 "error.E1005" = "Le point d’accès sert déjà 8 connexions par transport (socket et WebSocket comptés séparément). Fermez une connexion dont vous n’avez pas besoin et reconnectez-vous.";
 "error.E1006" = "L’autorisation de ce client a été retirée pendant qu’il était connecté. Autorisez-le de nouveau avec « ojd access grant » et reconnectez-vous.";
 "error.E1007" = "Le client a lu les lignes trop lentement et 256 lignes ont attendu. Lisez les lignes aussi vite qu’elles arrivent et reconnectez-vous.";
 "error.E1008" = "Le service exécute déjà 4 manettes virtuelles. Fermez un feed dont vous n’avez pas besoin et renvoyez feed.";
 "error.E1009" = "La manette virtuelle s’est fermée, ou le service n’en exécute aucune. Reconnectez-vous et envoyez feed.";
+"error.E1010" = "Le service ne prend pas en charge l’apiVersion d’une ligne. Envoyez l’une des versions de details.supportedAPIVersions, puis reconnectez-vous.";
+"error.E1011" = "Une ligne a un kind que le service ne connaît pas ou n’accepte pas à cette étape. Envoyez d’abord Hello, puis Subscription ou FeedRequest, puis des lignes Frame, et reconnectez-vous.";
+"error.E1012" = "Une ligne n’a pas d’apiVersion ou pas de kind. Chaque ligne contient les deux. Ajoutez-les, puis reconnectez-vous.";
 "shortcuts.action.activate_profile.description" = "Active un profil de remappage pour le modèle de sa manette.";
 "shortcuts.action.activate_profile.title" = "Activer le profil";
 "shortcuts.action.app_version.description" = "Renvoie la version de l’app installée.";

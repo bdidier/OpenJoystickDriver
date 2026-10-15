@@ -9,13 +9,15 @@ import Foundation
 public enum ErrorCode: String, Codable, Sendable, CaseIterable {
   case endpointDisabled = "E1001"
   case notGranted = "E1002"
-  case unsupportedProtocol = "E1003"
   case invalidMessage = "E1004"
   case tooManyConnections = "E1005"
   case revoked = "E1006"
   case tooSlow = "E1007"
   case tooManyFeeds = "E1008"
   case feedClosed = "E1009"
+  case unsupportedEndpointVersion = "E1010"
+  case unexpectedKind = "E1011"
+  case missingHeader = "E1012"
   case unexpected = "E2001"
   case unknownCommand = "E2002"
   case usage = "E2003"
@@ -91,8 +93,8 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
 
   public var domain: Domain {
     switch self {
-    case .endpointDisabled, .notGranted, .unsupportedProtocol, .invalidMessage,
-      .tooManyConnections, .revoked, .tooSlow, .tooManyFeeds, .feedClosed:
+    case .endpointDisabled, .notGranted, .invalidMessage, .tooManyConnections, .revoked, .tooSlow,
+      .tooManyFeeds, .feedClosed, .unsupportedEndpointVersion, .unexpectedKind, .missingHeader:
       .endpoint
     case .unexpected, .unknownCommand, .usage, .serviceUnavailable, .serviceTimeout,
       .serviceRequestFailed, .peerRejected, .permissionMissing, .confirmationRequired, .aborted,

@@ -48,7 +48,9 @@ extension EndpointServer {
     guard handshake(connection, peer: peer, origin: origin, challenge: challenge) else { return }
     connection.setReceiveTimeout(seconds: 0)
 
-    guard let request = readRequest(connection) else { return }
+    guard let request = readRequest(connection, accepting: ["Subscription", "FeedRequest"]) else {
+      return
+    }
     if request.kind == .feedRequest {
       guard connection.session?.scopes.contains(.control) == true else {
         connection.close(
@@ -56,11 +58,13 @@ extension EndpointServer {
         )
         return
       }
-      guard let profile = request.as else {
-        connection.close(Self.invalid("Send FeedRequest with a virtual HID profile."))
+      guard let persona = request.as.flatMap(EndpointPersona.init(rawValue:)) else {
+        connection.close(
+          Self.invalid("Send FeedRequest with a persona: Generic or SdlCompatible.")
+        )
         return
       }
-      feed(connection, profile: profile)
+      feed(connection, persona: persona)
       return
     }
     guard request.kind == .subscription, request.stream == "controllers" else {
@@ -78,9 +82,7 @@ extension EndpointServer {
     lock.withLock { subscribe(connection, output: request.output ?? false) }
 
     // The protocol has no line after `Subscription`; any line ends the connection.
-    if readRequest(connection) != nil {
-      connection.close(Self.invalid("Only one Subscription is accepted."))
-    }
+    _ = readRequest(connection, accepting: [])
   }
 
   /// Answers `hello` with `welcome` or an error; true when the client was welcomed.
@@ -94,20 +96,7 @@ extension EndpointServer {
     origin: String?,
     challenge: Challenge
   ) -> Bool {
-    guard let hello = readRequest(connection, isHello: true) else { return false }
-    guard hello.kind == .hello else {
-      connection.close(Self.invalid("Send Hello with at least one scope first."))
-      return false
-    }
-    guard hello.apiVersion == OpenJoystickDriverAPI.version else {
-      var error = EndpointError(
-        code: .unsupportedProtocol,
-        message: "The apiVersion \(hello.apiVersion) is not supported."
-      )
-      error.details = .init(supportedAPIVersions: [OpenJoystickDriverAPI.version])
-      connection.close(error)
-      return false
-    }
+    guard let hello = readRequest(connection, accepting: ["Hello"]) else { return false }
     guard let requested = hello.scopes, !requested.isEmpty else {
       connection.close(Self.invalid("Send Hello with at least one scope first."))
       return false
@@ -216,12 +205,12 @@ extension EndpointServer {
     return AccessConnection(id: grant.id, identifier: grant.name, scopes: scopes, transport: kind)
   }
 
-  /// The next request; nil after the client closed, the timeout passed, or an invalid line, which
-  /// is answered with `E1004`. So is a line whose `apiVersion` is not supported, unless it is the
-  /// `Hello`, which `handshake` answers with `E1003`.
+  /// The next request, one of the `accepted` kinds; nil after the client closed, the timeout
+  /// passed, or a line that is refused: see ``EndpointHeader`` for `E1010` to `E1012`, and `E1004`
+  /// for a line that is not a request. With no `accepted` kind, any request is refused.
   private func readRequest(
     _ connection: EndpointConnection,
-    isHello: Bool = false
+    accepting accepted: [String]
   ) -> EndpointRequest? {
     switch connection.readMessage() {
     case .end: return nil
@@ -232,16 +221,12 @@ extension EndpointServer {
       connection.close(Self.invalid(reason))
       return nil
     case .message(let data):
-      guard let request = try? JSONDecoder().decode(EndpointRequest.self, from: data) else {
-        connection.close(
-          Self.invalid("The message is not a request: it needs a known kind and an apiVersion.")
-        )
+      if let refusal = EndpointHeader.refusal(of: data, accepting: accepted) {
+        connection.close(refusal)
         return nil
       }
-      guard isHello || request.apiVersion == OpenJoystickDriverAPI.version else {
-        connection.close(
-          Self.invalid("The apiVersion \(request.apiVersion) is not the one the Hello used.")
-        )
+      guard let request = try? JSONDecoder().decode(EndpointRequest.self, from: data) else {
+        connection.close(Self.invalid("The message is not a valid request of its kind."))
         return nil
       }
       return request
