@@ -11,7 +11,7 @@ extension UserSpaceOutputDispatcherLifecycleTests {
       (.east, .standard, .bit(1)), (.west, .standard, .bit(2)),
       (.north, .standard, .bit(3)), (.leftShoulder, .standard, .bit(4)),
       (.rightShoulder, .standard, .bit(5)), (.leftStickClick, .standard, .bit(6)),
-      (.rightStickClick, .standard, .bit(7)), (.rightTrackpadClick, .standard, .bit(7)),
+      (.rightStickClick, .standard, .bit(7)),
       (.start, .standard, .bit(8)), (.start, .playStation, .bit(8)), (.back, .standard, .bit(9)),
       (.back, .playStation, .bit(9)), (.guide, .standard, .bit(10)),
       (.capture, .standard, .bit(15)),
@@ -21,7 +21,8 @@ extension UserSpaceOutputDispatcherLifecycleTests {
     let unsupported: [Control] = [
       .leftPaddle1, .leftPaddle2, .rightPaddle1, .rightPaddle2, .auxiliary1, .auxiliary2,
       .auxiliary3, .auxiliary4, .auxiliary5, .auxiliary6, .auxiliary7, .auxiliary8, .leftStickTouch,
-      .rightStickTouch, .leftTrackpadClick, .leftTrackpadTouch, .rightTrackpadTouch, .touchpadClick,
+      .rightStickTouch, .leftTrackpadClick, .rightTrackpadClick, .leftTrackpadTouch,
+      .rightTrackpadTouch, .touchpadClick,
       .microphone,
     ]
     let analog: [Control] = [.leftStickX, .leftStickY, .rightStickX, .rightStickY]

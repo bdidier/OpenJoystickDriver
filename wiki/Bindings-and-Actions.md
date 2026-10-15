@@ -31,7 +31,7 @@ An assignment connects one controller control to one destination, such as a keyb
 | Gamepad button, D-pad, or axis | A virtual controller control | Needs virtual gamepad output |
 | Physical output | Rumble, player indicator, color, brightness, adaptive trigger | Only on controllers that support it |
 
-A gamepad destination fails validation if the profile output policy has the virtual gamepad disabled. Some controls, such as paddles, grips, and function buttons, cannot be a virtual controller output. For more information, see [About profiles](Remapping-Profiles.md#about-profiles).
+A gamepad destination fails validation if the profile output policy has the virtual gamepad disabled. Some controls, such as paddles, grips, and function buttons, cannot be a virtual controller output. For the controls each virtual controller carries, see [What the virtual controller carries](Automating-OpenJoystickDriver.md#what-the-virtual-controller-carries). For more information, see [About profiles](Remapping-Profiles.md#about-profiles).
 
 Each controller control can appear in only one assignment in a profile.
 
