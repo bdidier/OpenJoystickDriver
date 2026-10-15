@@ -6,7 +6,8 @@ import Testing
 
 /// The record's `output.startup` writes, the reports they send, and the transports they apply to.
 struct ControllerRecordStartupWriteTests {
-  private static let sixaxis = #""protocol": {"family": "sony.sixaxis"}"#
+  private static let sixaxis =
+    #""modes": [{"id": "default", "protocol": {"family": "sony.sixaxis"}}]"#
   private static let enable = #"""
     {"report": {"kind": "feature", "id": 244, "length": 5}, "bytes": [66, 3, 0, 0],
       "transport": "bluetooth-classic"}
@@ -74,7 +75,9 @@ struct ControllerRecordStartupWriteTests {
   )
   func rejectsStartupWritesOnRawUSBFamilies(protocolInfo: String) {
     #expect(throws: DecodingError.self) {
-      try decode("\"protocol\": \(protocolInfo), \"output\": {\"startup\": [\(Self.enable)]}")
+      try decode(
+        "\"modes\": [{\"id\": \"default\", \"protocol\": \(protocolInfo)}], \"output\": {\"startup\": [\(Self.enable)]}"
+      )
     }
   }
 
@@ -92,11 +95,18 @@ struct ControllerRecordStartupWriteTests {
   @Test(arguments: [UInt16(0x0268), 0x0523])
   func sixaxisRecordsEnableBluetooth(productID: UInt16) throws {
     let vendorID: UInt16 = productID == 0x0268 ? 0x054C : 0x2563
+    // The DS3 holds the report in its `bluetooth` mode, which a Bluetooth link selects; the other
+    // identity still holds it as a record-level write limited to Bluetooth.
+    let modeID: String? = productID == 0x0268 ? "bluetooth" : nil
     let record = try #require(
-      DeviceCatalog().record(for: ControllerModelID(vendorID: vendorID, productID: productID))
+      DeviceCatalog().record(
+        for: ControllerModelID(vendorID: vendorID, productID: productID),
+        modeID: modeID
+      )
     )
     #expect(record.physicalProtocolID == .sonySixaxis)
-    #expect(record.startupWrites.map(\.transport) == [.bluetoothClassic])
+    let expectedTransports: [PhysicalTransport?] = productID == 0x0268 ? [nil] : [.bluetoothClassic]
+    #expect(record.startupWrites.map(\.transport) == expectedTransports)
     #expect(
       record.startupWrites.map(\.write) == [
         .hidFeature(

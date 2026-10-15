@@ -3,8 +3,13 @@
   "kind": "Controller",
   "vendorID": 7085,
   "productID": 61480,
-  "protocol": {
-    "family": "xbox.xusb",
-    "variant": "wired"
-  }
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "xbox.xusb",
+        "variant": "wired"
+      }
+    }
+  ]
 }

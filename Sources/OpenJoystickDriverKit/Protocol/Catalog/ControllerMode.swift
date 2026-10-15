@@ -1,7 +1,62 @@
 import Foundation
 
-/// One alternative mode of a controller model: the protocol it runs and the probes that must all
-/// hold for it to be selected. The record's own `protocol` is the default mode and has no probes.
+/// The keys that select a mode; every key present must hold. A key the device does not expose
+/// facts for does not hold.
+public struct ControllerModeMatch: Equatable, Sendable {
+  /// An interface the device must expose: its USB class triple and, when set, its primary usage.
+  public struct InterfaceSignature: Equatable, Sendable {
+    public let interfaceClass: UInt8
+    public let interfaceSubclass: UInt8
+    public let interfaceProtocol: UInt8
+    public let usagePage: UInt32?
+    public let usage: UInt32?
+  }
+
+  /// The link every interface of the device reaches the host over.
+  public var link: PhysicalTransport?
+  public var interfaceSignature: InterfaceSignature?
+  public var manufacturer: String?
+  public var product: String?
+  /// An inclusive range of the device release number.
+  public var bcdDevice: ClosedRange<UInt16>?
+  /// Reads of feature reports; they run after every other key holds.
+  public var probes: [ControllerModeProbe] = []
+
+  /// Whether the keys other than the probes hold for this device.
+  func holds(for device: PhysicalDevice) -> Bool {
+    if let link {
+      let links = Set((device.interfaces ?? []).map(\.hostTransport))
+      guard links == [link] else { return false }
+    }
+    if let interfaceSignature {
+      guard (device.interfaces ?? []).contains(where: interfaceSignature.matches) else {
+        return false
+      }
+    }
+    if let manufacturer, device.manufacturer != manufacturer { return false }
+    if let product, device.productName != product { return false }
+    if let bcdDevice {
+      guard let release = device.deviceRelease, bcdDevice.contains(release) else { return false }
+    }
+    return true
+  }
+}
+
+extension ControllerModeMatch.InterfaceSignature {
+  fileprivate func matches(_ interface: PhysicalInterfaceSignature) -> Bool {
+    guard interface.interfaceClass == interfaceClass,
+      interface.interfaceSubclass == interfaceSubclass,
+      interface.interfaceProtocol == interfaceProtocol
+    else { return false }
+    let primary = interface.hidLayout?.primaryUsage
+    if let usagePage, primary?.usagePage != usagePage { return false }
+    if let usage, primary?.usage != usage { return false }
+    return true
+  }
+}
+
+/// One alternative mode of a controller model: the protocol it runs and the keys that must all
+/// hold for it to be selected. The record's `default` mode is not listed; it has no keys.
 public struct ControllerMode: Equatable, Sendable {
   public let id: String
   public let physicalProtocolID: PhysicalProtocolID
@@ -10,12 +65,19 @@ public struct ControllerMode: Equatable, Sendable {
   public let gipStartupPackets: [GIPStartupPacket]
   public let gipKeepAlivePolicy: GIPKeepAlivePolicy
   public let assemblyPolicy: ControllerAssemblyPolicy?
-  public let probes: [ControllerModeProbe]
+  public let match: ControllerModeMatch
+  /// The interface numbers this mode drives; nil keeps the default binding.
+  public let interfaceRange: ClosedRange<UInt8>?
+  /// The session's startup writes, which replace the record's; nil keeps the record's.
+  public let startupWrites: [RecordStartupWrite]?
+
+  /// The probes of this mode's match.
+  public var probes: [ControllerModeProbe] { match.probes }
 }
 
 extension DeviceRuntimeProfile {
-  /// This profile running the named mode's protocol; the profile itself for nil, and nil for a
-  /// mode the record does not have.
+  /// This profile running the named mode; the profile itself for nil, and nil for a mode the
+  /// record does not have.
   func applying(modeID: String?) -> DeviceRuntimeProfile? {
     guard let modeID else { return self }
     guard let mode = modes.first(where: { $0.id == modeID }) else { return nil }
@@ -26,6 +88,8 @@ extension DeviceRuntimeProfile {
     profile.gipStartupPackets = mode.gipStartupPackets
     profile.gipKeepAlivePolicy = mode.gipKeepAlivePolicy
     profile.assemblyPolicy = mode.assemblyPolicy
+    profile.interfaceRange = mode.interfaceRange ?? interfaceRange
+    profile.startupWrites = mode.startupWrites ?? startupWrites
     profile.modeID = modeID
     return profile
   }
@@ -33,11 +97,11 @@ extension DeviceRuntimeProfile {
 
 /// How a model's mode was chosen.
 public enum ControllerModeSelection: Equatable, Sendable {
-  /// The record has no modes.
+  /// The record has no mode besides `default`.
   case noModes
-  /// Every probe of the named mode held.
+  /// Every key of the named mode held.
   case matched(String)
-  /// No mode's probes all held, so the default mode runs.
+  /// No mode's keys all held, so the default mode runs.
   case noModeMatched
   /// The device is not on an IOHID route, which is the only route a probe can read, so the
   /// default mode runs.
@@ -52,9 +116,10 @@ public enum ControllerModeSelection: Equatable, Sendable {
   }
 }
 
-/// Picks a model's mode by reading its probes. Modes are tried in record order and the first
-/// whose probes all hold wins. A probe without a usable reply ends the selection at the default
-/// mode and never disables the controller.
+/// Picks a model's mode. Modes are tried in record order and the first whose keys all hold wins.
+/// The keys read from the enumerated device are checked first, and a mode's probes only once
+/// those hold. A probe without a usable reply ends the selection at the default mode and never
+/// disables the controller.
 public enum ControllerModeSelector {
   @preconcurrency
   public static func select(
@@ -62,22 +127,23 @@ public enum ControllerModeSelector {
     model: ControllerModelID,
     backend: DeviceAccessBackend,
     reader: any ControllerModeProbeReader,
+    device: PhysicalDevice = PhysicalDevice(),
     log: @Sendable (String) -> Void = { print($0) }
   ) async -> ControllerModeSelection {
     guard !profile.modes.isEmpty else { return .noModes }
     let name = String(format: "%04X:%04X", model.vendorID, model.productID)
-    guard backend == .ioHID else {
-      log(
-        "[DeviceManager] Mode probes of \(name) read HID feature reports; the \(backend.rawValue)"
-          + " route has none, so the default mode is used"
-      )
-      return .noProbeRoute
-    }
     // One read per report serves every probe of that report.
     var replies: [Int: PhysicalHIDReportResult<Data>] = [:]
-    for mode in profile.modes {
+    for mode in profile.modes where mode.match.holds(for: device) {
       var held = true
       for probe in mode.probes {
+        guard backend == .ioHID else {
+          log(
+            "[DeviceManager] Mode probes of \(name) read HID feature reports; the"
+              + " \(backend.rawValue) route has none, so the default mode is used"
+          )
+          return .noProbeRoute
+        }
         let key = Int(probe.reportID) * 65_536 + probe.length
         let reply: PhysicalHIDReportResult<Data>
         if let cached = replies[key] {
@@ -99,11 +165,11 @@ public enum ControllerModeSelector {
         if !held { break }
       }
       if held {
-        log("[DeviceManager] Mode probes of \(name) selected mode \(mode.id)")
+        log("[DeviceManager] Mode keys of \(name) selected mode \(mode.id)")
         return .matched(mode.id)
       }
     }
-    log("[DeviceManager] No mode probe of \(name) matched; using the default mode")
+    log("[DeviceManager] No mode of \(name) matched; using the default mode")
     return .noModeMatched
   }
 }

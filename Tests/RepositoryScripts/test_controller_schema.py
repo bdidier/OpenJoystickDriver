@@ -12,7 +12,7 @@ def record(protocol: dict[str, Any], **fields: Any) -> dict[str, Any]:
         **header("Controller"),
         "vendorID": 0x045E,
         "productID": 0x02EA,
-        "protocol": protocol,
+        "modes": [{"id": "default", "protocol": protocol}],
         **fields,
     }
 

@@ -65,13 +65,16 @@ public struct ControllerRecordDraft: Sendable {
     capturedReports = matching.count
     changedBytes = Self.changedBytes(in: matching, length: chosen?.length ?? 0)
 
-    var fields: [String: Any] = ["protocol": ["family": family.rawValue]]
+    let defaultMode: [String: Any] = ["id": "default", "protocol": ["family": family.rawValue]]
+    var fields: [String: Any] = ["modes": [defaultMode]]
     if let layout { fields["input"] = layout.json }
     let body: [String: Any]
     if bundled {
-      // A patch merges into the bundled protocol, so a changed family drops the old parameters.
+      // A patch replaces `modes` as a whole, so it restates the bundled record's other modes.
+      if let modes = Self.bundledModes(of: model) {
+        fields["modes"] = modes.map { $0["id"] as? String == "default" ? defaultMode : $0 }
+      }
       if ControllerRecordSet.bundled.records[model]?.family != family.rawValue {
-        fields["protocol"] = ["family": family.rawValue, "parameters": NSNull()]
         // The byte layout replaces the old record's usage map instead of merging into it.
         if ControllerRecordSet.bundled.records[model]?.profile.hidUsageMap != nil,
           var input = fields["input"] as? [String: Any]
@@ -95,6 +98,14 @@ public struct ControllerRecordDraft: Sendable {
       )
     else { return nil }
     self.document = document
+  }
+
+  /// The `modes` of the bundled record of `model`, as written in its document.
+  private static func bundledModes(of model: ControllerModelID) -> [[String: Any]]? {
+    guard let data = ControllerRecordSet.bundled.records[model]?.document,
+      let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+    else { return nil }
+    return object["modes"] as? [[String: Any]]
   }
 
   /// The most common length among `reports`, the longest on a tie, or nil when none is 1 to 64

@@ -95,10 +95,11 @@ extension ControllerTuning {
     }
   }
 
-  /// The keys that a controller of the record `document` reads, from its `protocol` family and
-  /// variant.
+  /// The keys that a controller of the record `document` reads, from the family and variant of
+  /// its `default` mode.
   static func scope(ofDocument document: [String: Any]) -> Set<Key> {
-    let info = document["protocol"] as? [String: Any]
+    let modes = document["modes"] as? [[String: Any]]
+    let info = modes?.first { $0["id"] as? String == "default" }?["protocol"] as? [String: Any]
     let protocolID = (info?["family"] as? String).flatMap(PhysicalProtocolID.init(rawValue:))
     let variant = (info?["variant"] as? String).flatMap(PhysicalProtocolVariantID.init(rawValue:))
     return Set(

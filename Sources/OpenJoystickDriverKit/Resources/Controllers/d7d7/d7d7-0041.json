@@ -3,7 +3,12 @@
   "kind": "Controller",
   "vendorID": 55255,
   "productID": 65,
-  "protocol": {
-    "family": "vendor.flydigi"
-  }
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "vendor.flydigi"
+      }
+    }
+  ]
 }

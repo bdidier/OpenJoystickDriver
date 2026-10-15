@@ -7,15 +7,21 @@ import Testing
 struct ControllerRecordRouteTests {
   @Test
   func decodesExtensionOwnedOnARawUSBFamily() throws {
-    let document = try decode(#""protocol": {"family": "xbox.gip"}, "route": "ExtensionOwned""#)
+    let document = try decode(
+      #""modes": [{"id": "default", "protocol": {"family": "xbox.gip"}}], "route": "ExtensionOwned""#
+    )
     #expect(document.route == .extensionOwned)
-    #expect(try decode(#""protocol": {"family": "xbox.gip"}"#).route == nil)
+    #expect(
+      try decode(#""modes": [{"id": "default", "protocol": {"family": "xbox.gip"}}]"#).route == nil
+    )
   }
 
   @Test(arguments: ["extensionOwned", "System", ""])
   func rejectsUnknownRoutes(name: String) {
     #expect(throws: DecodingError.self) {
-      try decode("\"protocol\": {\"family\": \"xbox.gip\"}, \"route\": \"\(name)\"")
+      try decode(
+        "\"modes\": [{\"id\": \"default\", \"protocol\": {\"family\": \"xbox.gip\"}}], \"route\": \"\(name)\""
+      )
     }
   }
 
@@ -23,7 +29,9 @@ struct ControllerRecordRouteTests {
   @Test(arguments: [#"{"family": "sony.dualsense"}"#, #"{"family": "vendor.ps3-third-party"}"#])
   func rejectsExtensionOwnedOnHIDFamilies(protocolInfo: String) {
     #expect(throws: DecodingError.self) {
-      try decode("\"protocol\": \(protocolInfo), \"route\": \"ExtensionOwned\"")
+      try decode(
+        "\"modes\": [{\"id\": \"default\", \"protocol\": \(protocolInfo)}], \"route\": \"ExtensionOwned\""
+      )
     }
   }
 

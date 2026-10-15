@@ -11,7 +11,7 @@ struct ControllerRecordWatcherPackageReplaceTests {
       """
       {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "Controller",
        "vendorID": 4660,
-       "productID": \(productID), "protocol": {"family": "xbox.gip"}}
+       "productID": \(productID), "modes": [{"id": "default", "protocol": {"family": "xbox.gip"}}]}
       """.utf8
     )
   }

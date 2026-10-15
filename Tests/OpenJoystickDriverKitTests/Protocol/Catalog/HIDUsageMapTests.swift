@@ -43,7 +43,7 @@ struct HIDUsageMapTests {
     let report = reportID.map { "\"reportID\": \($0)," } ?? ""
     let json = """
       {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "\(ControllerRecordDocument.kind)",
-       "vendorID": 65534, "productID": 1, "protocol": {"family": "\(family)"},
+       "vendorID": 65534, "productID": 1, "modes": [{"id": "default", "protocol": {"family": "\(family)"}}],
        "input": {"\(key)": {\(report) "usages": [\(entries)]}}}
       """
     return try JSONDecoder().decode(ControllerRecordDocument.self, from: Data(json.utf8))

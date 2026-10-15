@@ -22,7 +22,8 @@ struct ControllerRecordSetTests {
     try json([
       "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordDocument.kind,
       "vendorID": Int(identity.vendorID),
-      "productID": Int(identity.productID), "protocol": ["family": family],
+      "productID": Int(identity.productID),
+      "modes": [["id": "default", "protocol": ["family": family]]],
     ])
   }
 
@@ -47,55 +48,70 @@ struct ControllerRecordSetTests {
   @Test
   func patchReplacesOnlyItsFieldsAndMarksThemUser() throws {
     let validated = try ControllerRecordSet.validate(
-      Self.patch(Self.bundledGIP, set: ["protocol": ["family": "xbox.gip", "keepAlive": false]])
+      Self.patch(
+        Self.bundledGIP,
+        set: [
+          "modes": [["id": "default", "protocol": ["family": "xbox.gip", "keepAlive": false]]]
+        ]
+      )
     )
     let record = try #require(validated.record)
     #expect(validated.operation == .patch)
     #expect(validated.fileName == "366c-0005.patch.json")
-    #expect(record.fieldLayers == ["protocol": .user])
+    #expect(record.fieldLayers == ["modes": .user])
     #expect(record.profile.gipKeepAlivePolicy == .disabled)
     #expect(record.usesRawUSB)
     let bundled = try #require(ControllerRecordSet.bundled.records[Self.bundledGIP])
     #expect(bundled.layer == .bundled)
-    #expect(bundled.fieldLayers == ["protocol": .bundled])
+    #expect(bundled.fieldLayers == ["modes": .bundled])
   }
 
-  /// A protocol patch merges key by key, so it keeps the bundled parameters it does not name, and a
-  /// `null` deletes one.
+  /// A patch replaces `modes` as an array, so a restated default mode keeps only the parameters it
+  /// names.
   @Test
-  func protocolPatchKeepsUnnamedFieldsAndNullDeletesOne() throws {
+  func modesPatchReplacesTheDefaultModeWholesale() throws {
     let shareOffsetGIP = ControllerModelID(vendorID: 0x045E, productID: 0x0B12)
-    let kept = try Self.record(
-      Self.patch(shareOffsetGIP, set: ["protocol": ["family": "xbox.gip", "keepAlive": false]])
+    let bundledShare = try #require(ControllerRecordSet.bundled.records[shareOffsetGIP])
+    #expect(bundledShare.profile.parameters == ProtocolParameters(shareButton: .init(fromEnd: 26)))
+    let replaced = try Self.record(
+      Self.patch(
+        shareOffsetGIP,
+        set: [
+          "modes": [["id": "default", "protocol": ["family": "xbox.gip", "keepAlive": false]]]
+        ]
+      )
     )
-    #expect(kept.profile.parameters == ProtocolParameters(shareButton: .init(fromEnd: 26)))
-    #expect(kept.profile.gipKeepAlivePolicy == .disabled)
-    let deleted = try Self.record(
-      Self.patch(shareOffsetGIP, set: ["protocol": ["parameters": NSNull()]])
-    )
-    #expect(deleted.profile.parameters == ProtocolParameters())
+    #expect(replaced.profile.parameters == ProtocolParameters())
+    #expect(replaced.profile.gipKeepAlivePolicy == .disabled)
     let refamilied = try Self.record(
-      Self.patch(Self.bundledHID, set: ["protocol": ["family": "hid.descriptor"]])
+      Self.patch(
+        Self.bundledHID,
+        set: ["modes": [["id": "default", "protocol": ["family": "hid.descriptor"]]]]
+      )
     )
     #expect(refamilied.profile.physicalProtocolID == .hidDescriptor)
   }
 
   /// A same-family patch adds its parameters to the bundled parameters instead of replacing them.
   @Test
-  func protocolPatchAddsItsParametersToTheBundledParameters() throws {
+  func modesPatchReplacesTheBundledParameters() throws {
     let dualShock4 = ControllerModelID(vendorID: 0x054C, productID: 0x09CC)
     let patched = try Self.record(
       Self.patch(
         dualShock4,
         set: [
-          "protocol": ["family": "sony.dualshock4", "parameters": ["motionScale": "StrikePad"]]
+          "modes": [
+            [
+              "id": "default",
+              "protocol": [
+                "family": "sony.dualshock4", "parameters": ["motionScale": "StrikePad"],
+              ],
+            ]
+          ]
         ]
       )
     )
-    #expect(
-      patched.profile.parameters
-        == ProtocolParameters(motionCalibration: .factory, motionScale: .strikePad)
-    )
+    #expect(patched.profile.parameters == ProtocolParameters(motionScale: .strikePad))
   }
 
   @Test
@@ -114,7 +130,7 @@ struct ControllerRecordSetTests {
     #expect(validated.operation == .add)
     #expect(validated.fileName == "1234-abcd.json")
     #expect(record.model == Self.unbundled)
-    #expect(record.fieldLayers == ["protocol": .user])
+    #expect(record.fieldLayers == ["modes": .user])
     #expect(record.family == "xbox.gip")
   }
 
@@ -125,11 +141,21 @@ struct ControllerRecordSetTests {
         == "366C:0005 is a bundled controller; use a patch to change it"
     )
     #expect(
-      Self.problem(try Self.patch(Self.unbundled, set: ["protocol": ["family": "xbox.gip"]]))
+      Self.problem(
+        try Self.patch(
+          Self.unbundled,
+          set: ["modes": [["id": "default", "protocol": ["family": "xbox.gip"]]]]
+        )
+      )
         == "1234:ABCD is not a known controller; use a Controller file"
     )
     #expect(
-      Self.problem(try Self.patch(Self.bundledGIP, set: ["protocol": ["family": "xbox.gip"]]))
+      Self.problem(
+        try Self.patch(
+          Self.bundledGIP,
+          set: ["modes": [["id": "default", "protocol": ["family": "xbox.gip"]]]]
+        )
+      )
         == "the patch changes nothing in the record"
     )
     #expect(
@@ -138,7 +164,7 @@ struct ControllerRecordSetTests {
     )
     #expect(
       Self.problem(try Self.patch(Self.bundledGIP, set: ["capabilities": ["rumble": "absent"]]))
-        == "patch must hold protocol, modes, usb, bluetoothLE, server, "
+        == "patch must hold modes, usb, bluetoothLE, server, "
         + "route, output, input, or tuning"
     )
     #expect(
@@ -156,7 +182,7 @@ struct ControllerRecordSetTests {
         == "the file must hold exactly apiVersion, kind, selector, and patch"
     )
     let badFamily = try Self.add(Self.unbundled, family: "xbox.unknown")
-    #expect(Self.problem(badFamily) == "record.protocol: unknown family xbox.unknown")
+    #expect(Self.problem(badFamily) == "record.modes.[0].protocol: unknown family xbox.unknown")
   }
 
   /// A file declares its version through `apiVersion` and its type through `kind`. A missing or
@@ -194,7 +220,7 @@ struct ControllerRecordSetTests {
     }
     let oldRecord = try Self.json([
       "apiVersion": old, "kind": ControllerRecordDocument.kind, "vendorID": 0x1234,
-      "productID": 0xABCD, "protocol": ["family": "xbox.gip"],
+      "productID": 0xABCD, "modes": [["id": "default", "protocol": ["family": "xbox.gip"]]],
     ])
     #expect(Self.problem(oldRecord)?.contains("apiVersion \(old) is not supported") == true)
     #expect(Self.problemCode(oldRecord) == .unsupportedAPIVersion)
@@ -266,7 +292,8 @@ struct ControllerRecordSetTests {
     let current = Data(
       (#"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","#
         + #""kind":"ControllerPatch","selector":{"vendorID":13932,"productID":5},"#
-        + #""patch":{"protocol":{"family":"xbox.gip","keepAlive":false}}}"#).utf8
+        + #""patch":{"modes":[{"id":"default","#
+        + #""protocol":{"family":"xbox.gip","keepAlive":false}}]}}"#).utf8
     )
     let currentURL = directory.appendingPathComponent("366c-0005.patch.json")
     try current.write(to: currentURL)
@@ -274,7 +301,7 @@ struct ControllerRecordSetTests {
     let released = Data(
       (#"{"apiVersion":"openjoystickdriver.io/v1beta1","#
         + #""kind":"\#(ControllerRecordDocument.kind)","vendorID":4660,"productID":43981,"#
-        + #""protocol":{"family":"xbox.gip"}}"#).utf8
+        + #""modes":[{"id":"default","protocol":{"family":"xbox.gip"}}]}"#).utf8
     )
     let releasedURL = directory.appendingPathComponent("1234-abcd.json")
     try released.write(to: releasedURL)
@@ -289,7 +316,7 @@ struct ControllerRecordSetTests {
     let set = ControllerRecordSet.load(userDirectory: directory)
 
     let kept = try #require(set.records[ControllerModelID(vendorID: 0x366C, productID: 0x0005)])
-    #expect(kept.fieldLayers["protocol"] == .user)
+    #expect(kept.fieldLayers["modes"] == .user)
     #expect(kept.profile.gipKeepAlivePolicy == .disabled)
     #expect(set.records[Self.unbundled] == nil)
     #expect(set.problems.map(\.url.lastPathComponent) == ["1234-abcd.json", "366c-0005.json"])

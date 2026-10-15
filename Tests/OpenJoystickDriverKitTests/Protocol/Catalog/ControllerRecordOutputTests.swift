@@ -6,7 +6,8 @@ import Testing
 /// The record's `server` and `output` fields, the rumble template they decode into, and the
 /// writes OJD keeps for a controller macOS serves.
 struct ControllerRecordOutputTests {
-  private static let thirdParty = #""protocol": {"family": "vendor.ps3-third-party"}"#
+  private static let thirdParty =
+    #""modes": [{"id": "default", "protocol": {"family": "vendor.ps3-third-party"}}]"#
   private static let gp100Rumble = #"""
     "rumble": {"report": {"kind": "output", "id": 2, "length": 8},
       "leftMain": {"byte": 3}, "rightMain": {"byte": 2}}
@@ -23,7 +24,9 @@ struct ControllerRecordOutputTests {
     #expect(template.motorBytes == [.leftMain: 3, .rightMain: 2])
     #expect(template.outputCapabilities == .dualMainRumble)
     #expect(try decode(Self.thirdParty).server == nil)
-    let sixaxis = try decode(#""protocol": {"family": "sony.sixaxis"}, "server": "system""#)
+    let sixaxis = try decode(
+      #""modes": [{"id": "default", "protocol": {"family": "sony.sixaxis"}}], "server": "system""#
+    )
     #expect(sixaxis.server == .system)
   }
 
@@ -43,7 +46,9 @@ struct ControllerRecordOutputTests {
   )
   func rejectsOwnershipOnRawUSBFamilies(protocolInfo: String) {
     #expect(throws: DecodingError.self) {
-      try decode("\"protocol\": \(protocolInfo), \"server\": \"ojd\"")
+      try decode(
+        "\"modes\": [{\"id\": \"default\", \"protocol\": \(protocolInfo)}], \"server\": \"ojd\""
+      )
     }
   }
 
@@ -54,7 +59,9 @@ struct ControllerRecordOutputTests {
       variant.map { "{\"family\": \"\(family.rawValue)\", \"variant\": \"\($0)\"}" }
       ?? "{\"family\": \"\(family.rawValue)\"}"
     #expect(throws: DecodingError.self) {
-      try decode("\"protocol\": \(protocolInfo), \"output\": {\(Self.gp100Rumble)}")
+      try decode(
+        "\"modes\": [{\"id\": \"default\", \"protocol\": \(protocolInfo)}], \"output\": {\(Self.gp100Rumble)}"
+      )
     }
   }
 

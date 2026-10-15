@@ -21,7 +21,7 @@ def record(input_section: Any, family: str = "hid.descriptor") -> dict[str, Any]
         **header("Controller"),
         "vendorID": 0xFFFE,
         "productID": 1,
-        "protocol": {"family": family},
+        "modes": [{"id": "default", "protocol": {"family": family}}],
     }
     if input_section is not None:
         document["input"] = input_section
@@ -140,7 +140,7 @@ class HIDUsageMapRecordSchemaTests(unittest.TestCase):
 
     def test_hid_descriptor_declares_no_parameters(self) -> None:
         document = record(None)
-        document["protocol"]["parameters"] = {"usageLayout": "Wr007"}
+        document["modes"][0]["protocol"]["parameters"] = {"usageLayout": "Wr007"}
         self.assertFalse(self.validator.is_valid(document))
 
 

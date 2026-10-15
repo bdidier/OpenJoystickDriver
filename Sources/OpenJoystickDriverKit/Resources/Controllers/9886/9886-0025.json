@@ -3,7 +3,12 @@
   "kind": "Controller",
   "vendorID": 39046,
   "productID": 37,
-  "protocol": {
-    "family": "sony.dualshock4"
-  }
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "sony.dualshock4"
+      }
+    }
+  ]
 }

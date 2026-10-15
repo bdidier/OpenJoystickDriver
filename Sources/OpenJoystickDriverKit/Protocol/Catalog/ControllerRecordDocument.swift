@@ -11,9 +11,12 @@ struct ControllerRecordDocument: Decodable {
 
   let vendorID: Int
   let productID: Int
-  let protocolInfo: ProtocolInfo
-  /// Alternative modes of an HID controller, tried in order; empty when the record has none. The
-  /// record's own protocol is the default mode.
+  /// The `default` mode, which runs when no other mode matches.
+  let defaultMode: ModeDocument
+  /// The protocol of the `default` mode.
+  var protocolInfo: ProtocolInfo { defaultMode.protocolInfo }
+  /// The record's modes: `default` and the alternatives of an HID controller, which are tried in
+  /// order.
   let modes: [ModeDocument]
   let usb: USBOverride?
   /// Present exactly for Switch 2 controllers that connect over Bluetooth LE.
@@ -35,7 +38,7 @@ struct ControllerRecordDocument: Decodable {
   init(from decoder: any Decoder) throws {
     let container = try decoder.container(keyedBy: DocumentKey.self)
     try container.rejectUnknown(allowed: [
-      "apiVersion", "kind", "vendorID", "productID", "protocol", "modes", "usb",
+      "apiVersion", "kind", "vendorID", "productID", "modes", "usb",
       "bluetoothLE", "capabilities", "server", "route", "output", "input", "tuning",
     ])
     let apiVersion = try container.decodeOptional(String.self, for: "apiVersion")
@@ -54,16 +57,16 @@ struct ControllerRecordDocument: Decodable {
     }
     vendorID = try container.decode(Int.self, for: "vendorID")
     productID = try container.decode(Int.self, for: "productID")
-    protocolInfo = try container.decode(ProtocolInfo.self, for: "protocol")
-    modes = try container.decodeOptional([ModeDocument].self, for: "modes") ?? []
-    if container.contains(DocumentKey("modes")), modes.isEmpty {
+    modes = try container.decode([ModeDocument].self, for: "modes")
+    guard let defaultMode = modes.first(where: \.isDefault) else {
       throw DecodingError.dataCorrupted(
         .init(
           codingPath: decoder.codingPath + [DocumentKey("modes")],
-          debugDescription: "modes must not be empty"
+          debugDescription: "modes need exactly one mode with the id default"
         )
       )
     }
+    self.defaultMode = defaultMode
     usb = try container.decodeOptional(USBOverride.self, for: "usb")
     bluetoothLE = try container.decodeOptional(BluetoothLE.self, for: "bluetoothLE")
     capabilities =

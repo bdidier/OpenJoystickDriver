@@ -86,13 +86,14 @@ struct DeviceCatalog: Sendable {
       assemblyPolicy: protocolInfo.assembly,
       server: record.server ?? .system,
       rumbleTemplate: record.rumbleTemplate,
-      startupWrites: record.startupWrites,
+      startupWrites: record.defaultMode.startupWrites ?? record.startupWrites,
       inputLayout: record.inputLayout,
       hidUsageMap: record.hidUsageMap,
       tuning: record.tuning,
       route: record.route,
       bluetoothLEVibrationCharacteristic: record.bluetoothLE?.vibrationCharacteristic,
-      modes: record.modes.map(\.mode)
+      interfaceRange: record.defaultMode.interfaceRange,
+      modes: record.modes.filter { !$0.isDefault }.map(\.mode)
     )
   }
 

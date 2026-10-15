@@ -3,10 +3,15 @@
   "kind": "Controller",
   "vendorID": 1699,
   "productID": 63010,
-  "protocol": {
-    "family": "vendor.ps3-third-party",
-    "parameters": {
-      "hatSource": "DpadPressure"
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "vendor.ps3-third-party",
+        "parameters": {
+          "hatSource": "DpadPressure"
+        }
+      }
     }
-  }
+  ]
 }

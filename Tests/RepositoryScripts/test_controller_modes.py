@@ -11,6 +11,7 @@ from Scripts.Catalog.schema_header import header
 
 SIXAXIS = {"family": "sony.sixaxis"}
 ANSWERS = {"report": 239, "length": 64, "expect": "answers"}
+DEFAULT = {"id": "default", "protocol": SIXAXIS}
 
 
 def mode(identifier: str, *probes: dict[str, Any]) -> dict[str, Any]:
@@ -21,12 +22,16 @@ def mode(identifier: str, *probes: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def matched(identifier: str, **keys: Any) -> dict[str, Any]:
+    return {"id": identifier, "protocol": SIXAXIS, "match": keys}
+
+
 def record(**fields: Any) -> dict[str, Any]:
     return {
         **header("Controller"),
         "vendorID": 0x054C,
         "productID": 0x0268,
-        "protocol": SIXAXIS,
+        "modes": [DEFAULT],
         **fields,
     }
 
@@ -38,6 +43,7 @@ class ControllerModeSchemaTests(unittest.TestCase):
     def test_accepts_modes_selected_by_each_probe_expectation(self) -> None:
         document = record(
             modes=[
+                DEFAULT,
                 mode("answers", ANSWERS),
                 mode("stalls", {"report": 239, "length": 64, "expect": "stalls"}),
                 mode(
@@ -54,44 +60,125 @@ class ControllerModeSchemaTests(unittest.TestCase):
         )
         self.assertTrue(self.validator.is_valid(document))
 
+    def test_accepts_modes_selected_by_cheap_keys(self) -> None:
+        wired = {"link": "usb", "bcdDevice": {"min": 0, "max": 255}}
+        document = record(
+            modes=[
+                DEFAULT,
+                matched("bluetooth", link="bluetooth-classic"),
+                matched("dongle", link="proprietary-radio-receiver"),
+                matched("wired", **wired),
+                matched(
+                    "named",
+                    manufacturer="Sony",
+                    product="PLAYSTATION(R)3 Controller",
+                    interfaceSignature={
+                        "interfaceClass": 3,
+                        "interfaceSubclass": 0,
+                        "interfaceProtocol": 0,
+                        "usagePage": 1,
+                        "usage": 5,
+                    },
+                    probes=[ANSWERS],
+                ),
+                {
+                    **matched("ranged", link="usb"),
+                    "interface": {"first": 1, "last": 2},
+                    "session": {
+                        "startup": [
+                            {
+                                "report": {"kind": "feature", "id": 244, "length": 5},
+                                "bytes": [66, 3, 0, 0],
+                            }
+                        ]
+                    },
+                },
+            ]
+        )
+        self.assertTrue(self.validator.is_valid(document))
+
+    def test_ds3_record_holds_bluetooth_as_a_link_mode(self) -> None:
+        generated = json.loads(
+            (
+                Path(__file__).resolve().parents[2]
+                / "Sources/OpenJoystickDriverKit/Resources/Controllers/054c/054c-0268.json"
+            ).read_text()
+        )
+        self.assertTrue(self.validator.is_valid(generated))
+        modes = {entry["id"]: entry for entry in generated["modes"]}
+        self.assertEqual(modes["bluetooth"]["match"], {"link": "bluetooth-classic"})
+        self.assertNotIn("startup", generated.get("output", {}))
+        self.assertEqual(
+            modes["bluetooth"]["session"]["startup"][0]["bytes"], [66, 3, 0, 0]
+        )
+
     def test_rejects_invalid_modes(self) -> None:
         bytes_probe = {"report": 1, "length": 8, "expect": "bytes"}
         rejected = {
             "empty modes": record(modes=[]),
-            "default is reserved": record(modes=[mode("default")]),
-            "uppercase id": record(modes=[mode("XInput")]),
-            "id with a trailing newline": record(modes=[mode("abc\n")]),
+            "no default mode": record(modes=[mode("x")]),
+            "two default modes": record(modes=[DEFAULT, DEFAULT]),
+            "default with a match": record(
+                modes=[{**DEFAULT, "match": {"link": "usb"}}]
+            ),
+            "uppercase id": record(modes=[DEFAULT, mode("XInput")]),
+            "id with a trailing newline": record(modes=[DEFAULT, mode("abc\n")]),
             "bytes with a trailing newline": record(
-                modes=[mode("x", {**bytes_probe, "offset": 0, "bytes": "AB\n"})]
-            ),
-            "no probes": record(
-                modes=[{"id": "x", "protocol": SIXAXIS, "match": {"probes": []}}]
-            ),
-            "no match": record(modes=[{"id": "x", "protocol": SIXAXIS}]),
-            "unknown match key": record(
                 modes=[
-                    {
-                        "id": "x",
-                        "protocol": SIXAXIS,
-                        "match": {"probes": [ANSWERS], "bcdDevice": 1},
-                    }
+                    DEFAULT,
+                    mode("x", {**bytes_probe, "offset": 0, "bytes": "AB\n"}),
                 ]
             ),
-            "write probe": record(modes=[mode("x", {**ANSWERS, "write": "01"})]),
-            "unknown expectation": record(
-                modes=[mode("x", {**ANSWERS, "expect": "a"})]
+            "no probes": record(modes=[DEFAULT, matched("x", probes=[])]),
+            "no match": record(modes=[DEFAULT, {"id": "x", "protocol": SIXAXIS}]),
+            "empty match": record(modes=[DEFAULT, {**mode("x"), "match": {}}]),
+            "unknown link": record(modes=[DEFAULT, matched("x", link="serial")]),
+            "bcdDevice above 16 bits": record(
+                modes=[DEFAULT, matched("x", bcdDevice={"min": 0, "max": 65536})]
             ),
-            "bytes without pattern": record(modes=[mode("x", bytes_probe)]),
+            "empty manufacturer": record(
+                modes=[DEFAULT, matched("x", manufacturer="")]
+            ),
+            "signature without a class": record(
+                modes=[
+                    DEFAULT,
+                    matched("x", interfaceSignature={"interfaceSubclass": 1}),
+                ]
+            ),
+            "session with an empty startup": record(
+                modes=[
+                    DEFAULT,
+                    {**matched("x", link="usb"), "session": {"startup": []}},
+                ]
+            ),
+            "unknown mode key": record(
+                modes=[DEFAULT, {**matched("x", link="usb"), "keepAlive": 1}]
+            ),
+            "unknown match key": record(
+                modes=[
+                    DEFAULT,
+                    matched("x", probes=[ANSWERS], serialNumber="1"),
+                ]
+            ),
+            "write probe": record(
+                modes=[DEFAULT, mode("x", {**ANSWERS, "write": "01"})]
+            ),
+            "unknown expectation": record(
+                modes=[DEFAULT, mode("x", {**ANSWERS, "expect": "a"})]
+            ),
+            "bytes without pattern": record(modes=[DEFAULT, mode("x", bytes_probe)]),
             "pattern on answers": record(
-                modes=[mode("x", {**ANSWERS, "offset": 0, "bytes": "01"})]
+                modes=[DEFAULT, mode("x", {**ANSWERS, "offset": 0, "bytes": "01"})]
             ),
             "lowercase hex": record(
-                modes=[mode("x", {**bytes_probe, "offset": 0, "bytes": "ab"})]
+                modes=[DEFAULT, mode("x", {**bytes_probe, "offset": 0, "bytes": "ab"})]
             ),
             "unpaired hex": record(
-                modes=[mode("x", {**bytes_probe, "offset": 0, "bytes": "A"})]
+                modes=[DEFAULT, mode("x", {**bytes_probe, "offset": 0, "bytes": "A"})]
             ),
-            "report above 255": record(modes=[mode("x", {**ANSWERS, "report": 256})]),
+            "report above 255": record(
+                modes=[DEFAULT, mode("x", {**ANSWERS, "report": 256})]
+            ),
         }
         for name, document in rejected.items():
             with self.subTest(name):
@@ -106,8 +193,17 @@ class ControllerModeSchemaTests(unittest.TestCase):
             "bytes": "03 04",
         }
         rejected = {
-            "duplicate id": record(modes=[mode("a"), mode("a")]),
-            "bytes past length": record(modes=[mode("a", overflowing)]),
+            "duplicate id": record(modes=[DEFAULT, mode("a"), mode("a")]),
+            "bcdDevice min above max": record(
+                modes=[DEFAULT, matched("x", bcdDevice={"min": 5, "max": 4})]
+            ),
+            "interface first above last": record(
+                modes=[
+                    DEFAULT,
+                    {**matched("x", link="usb"), "interface": {"first": 2, "last": 1}},
+                ]
+            ),
+            "bytes past length": record(modes=[DEFAULT, mode("a", overflowing)]),
         }
         for name, document in rejected.items():
             with self.subTest(name), tempfile.TemporaryDirectory() as directory:
@@ -131,13 +227,13 @@ class ControllerModeSchemaTests(unittest.TestCase):
         def with_mode(family: str, default: str, **fields: Any) -> dict[str, Any]:
             return {
                 **record(**fields),
-                "protocol": {"family": default},
                 "modes": [
+                    {"id": "default", "protocol": {"family": default}},
                     {
                         "id": "x",
                         "protocol": {"family": family},
                         "match": {"probes": [ANSWERS]},
-                    }
+                    },
                 ],
             }
 

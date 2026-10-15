@@ -236,7 +236,7 @@ enum ProtocolClassifier {
     var interfaceNumber =
       isRawUSB
       ? record.transportProfile.interfaceNumber
-      : interfaces.count == 1 ? interfaces[0].interfaceNumber : nil
+      : boundInterfaceNumber(of: record, in: interfaces)
     // A catalog row adds identity to `hid.descriptor`; it never replaces validation.
     if record.physicalProtocolID == .hidDescriptor {
       guard let interface = descriptorInterface(interfaces) else {
@@ -281,6 +281,18 @@ enum ProtocolClassifier {
   }
 
   /// The first interface whose observed HID facts satisfy the descriptor contract.
+  /// The interface a HID record binds to: the lowest one inside the mode's `interface` range, or
+  /// the only one when the record names no range.
+  private static func boundInterfaceNumber(
+    of record: DeviceRuntimeProfile,
+    in interfaces: [PhysicalInterfaceSignature]
+  ) -> UInt8? {
+    guard let range = record.interfaceRange else {
+      return interfaces.count == 1 ? interfaces[0].interfaceNumber : nil
+    }
+    return interfaces.compactMap(\.interfaceNumber).filter(range.contains).min()
+  }
+
   private static func descriptorInterface(
     _ interfaces: [PhysicalInterfaceSignature]
   ) -> PhysicalInterfaceSignature? {

@@ -3,10 +3,15 @@
   "kind": "Controller",
   "vendorID": 1356,
   "productID": 1476,
-  "protocol": {
-    "family": "sony.dualshock4",
-    "parameters": {
-      "motionCalibration": "Factory"
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "sony.dualshock4",
+        "parameters": {
+          "motionCalibration": "Factory"
+        }
+      }
     }
-  }
+  ]
 }

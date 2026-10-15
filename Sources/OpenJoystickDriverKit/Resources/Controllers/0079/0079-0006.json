@@ -3,9 +3,14 @@
   "kind": "Controller",
   "vendorID": 121,
   "productID": 6,
-  "protocol": {
-    "family": "hid.descriptor"
-  },
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "hid.descriptor"
+      }
+    }
+  ],
   "input": {
     "hidUsageMap": {
       "usages": [

@@ -171,9 +171,9 @@ struct ControllerRecordProbePlanTests {
     let gated = try #require(
       try ControllerRecordProbePlan(
         data: try mutatedRecord { record in
-          var protocolConfig = record["protocol"] as? [String: Any] ?? [:]
+          var protocolConfig = Self.defaultProtocol(of: record)
           protocolConfig["parameters"] = ["shareButton": ["fromEnd": 26]]
-          record["protocol"] = protocolConfig
+          Self.setDefaultProtocol(protocolConfig, in: &record)
           record["capabilities"] = ["rumble": "absent"]
         }
       ).makeUnobservedDriver() as? GIPDriver
@@ -226,30 +226,39 @@ struct ControllerRecordProbePlanTests {
       { (record: inout [String: Any]) in record["usb"] = ["postHandshakeSettleMs": 60_001] },
       { (record: inout [String: Any]) in record["usb"] = NSNull() },
       { (record: inout [String: Any]) in
-        var protocolConfig = record["protocol"] as? [String: Any] ?? [:]
+        var protocolConfig = Self.defaultProtocol(of: record)
         protocolConfig["parameters"] = [String: Any]()
-        record["protocol"] = protocolConfig
+        Self.setDefaultProtocol(protocolConfig, in: &record)
       },
       { (record: inout [String: Any]) in
-        var protocolConfig = record["protocol"] as? [String: Any] ?? [:]
+        var protocolConfig = Self.defaultProtocol(of: record)
         protocolConfig["initialization"] = ["xbox.gip/power-on", "xbox.gip/power-on"]
-        record["protocol"] = protocolConfig
+        Self.setDefaultProtocol(protocolConfig, in: &record)
       },
       { (record: inout [String: Any]) in
-        var protocolConfig = record["protocol"] as? [String: Any] ?? [:]
+        var protocolConfig = Self.defaultProtocol(of: record)
         protocolConfig["parameters"] = ["gyro": true]
-        record["protocol"] = protocolConfig
+        Self.setDefaultProtocol(protocolConfig, in: &record)
       },
       { (record: inout [String: Any]) in
-        var protocolConfig = record["protocol"] as? [String: Any] ?? [:]
+        var protocolConfig = Self.defaultProtocol(of: record)
         protocolConfig["startupPackets"] = ["xbox.gip/power-on"]
-        record["protocol"] = protocolConfig
+        Self.setDefaultProtocol(protocolConfig, in: &record)
       }, { (record: inout [String: Any]) in record["usb"] = ["endpoints": ["in": 130, "out": 2]] },
     ] {
       #expect(throws: ControllerRecordProbeError.self) {
         try ControllerRecordProbePlan(data: try mutatedRecord(mutation))
       }
     }
+  }
+
+  private static func defaultProtocol(of record: [String: Any]) -> [String: Any] {
+    let modes = record["modes"] as? [[String: Any]]
+    return modes?.first?["protocol"] as? [String: Any] ?? [:]
+  }
+
+  private static func setDefaultProtocol(_ info: [String: Any], in record: inout [String: Any]) {
+    record["modes"] = [["id": "default", "protocol": info]]
   }
 
   private func recordData(
@@ -280,7 +289,8 @@ struct ControllerRecordProbePlanTests {
     if let keepAliveEnabled { protocolConfig["keepAlive"] = keepAliveEnabled }
     if let extraProtocolField { protocolConfig[extraProtocolField] = true }
 
-    var record: [String: Any] = ["vendorID": 5_426, "productID": 2_627, "protocol": protocolConfig]
+    var record: [String: Any] = ["vendorID": 5_426, "productID": 2_627]
+    Self.setDefaultProtocol(protocolConfig, in: &record)
     if let apiVersion { record["apiVersion"] = apiVersion }
     if let kind { record["kind"] = kind }
     if let extraRootField { record[extraRootField] = ["source": "legacy"] }

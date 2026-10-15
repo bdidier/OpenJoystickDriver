@@ -3,9 +3,14 @@
   "kind": "Controller",
   "vendorID": 9571,
   "productID": 1315,
-  "protocol": {
-    "family": "sony.sixaxis"
-  },
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "sony.sixaxis"
+      }
+    }
+  ],
   "output": {
     "startup": [
       {

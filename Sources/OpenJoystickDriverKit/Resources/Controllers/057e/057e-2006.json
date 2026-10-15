@@ -3,10 +3,15 @@
   "kind": "Controller",
   "vendorID": 1406,
   "productID": 8198,
-  "protocol": {
-    "family": "nintendo.switch1",
-    "parameters": {
-      "layout": "JoyConLeft"
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "nintendo.switch1",
+        "parameters": {
+          "layout": "JoyConLeft"
+        }
+      }
     }
-  }
+  ]
 }

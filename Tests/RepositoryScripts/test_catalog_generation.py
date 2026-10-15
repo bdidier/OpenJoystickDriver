@@ -20,6 +20,11 @@ def hid_source(vendor: str, product: str) -> str:
     return f"static const struct hid_device_id ids[] = {{ HID_USB_DEVICE({vendor}, {product}) }};"
 
 
+def proto(record: dict[str, Any]) -> dict[str, Any]:
+    """The protocol of a record's default mode."""
+    return next(mode for mode in record["modes"] if mode["id"] == "default")["protocol"]
+
+
 class CatalogGenerationTests(unittest.TestCase):
     def test_rate_limited_download_uses_authenticated_github_fallback(self) -> None:
         source = "static const int xpad_device[] = {0};\n"
@@ -77,9 +82,7 @@ class XpadTranslationTests(unittest.TestCase):
         profile = xpad.build_profile(
             self.device("XTYPE_XBOX", "DANCEPAD_MAP_CONFIG"), init_rules=[]
         )
-        self.assertEqual(
-            profile["protocol"], {"family": "xbox.xid", "variant": "gamepad"}
-        )
+        self.assertEqual(proto(profile), {"family": "xbox.xid", "variant": "gamepad"})
         self.assertNotIn("transport", profile)
         self.assertEqual(
             profile["capabilities"],
@@ -117,7 +120,7 @@ class XpadTranslationTests(unittest.TestCase):
         )
         self.assertEqual(skipped, [])
         self.assertEqual(
-            candidates[0].profile["protocol"],
+            proto(candidates[0].profile),
             {
                 "family": "xbox.gip",
                 "initialization": ["xbox.gip/power-on"],
@@ -147,7 +150,7 @@ class XpadTranslationTests(unittest.TestCase):
             self.device("XTYPE_XBOXONE", "MAP_SHARE_BUTTON | MAP_SHARE_OFFSET"), rules
         )
         self.assertEqual(
-            profile["protocol"],
+            proto(profile),
             {
                 "family": "xbox.gip",
                 "parameters": {"shareButton": {"fromEnd": 26}},
@@ -176,7 +179,7 @@ class XpadTranslationTests(unittest.TestCase):
         for xtype, protocol in expected.items():
             with self.subTest(xtype):
                 profile = xpad.build_profile(self.device(xtype, "0"), init_rules=[])
-                self.assertEqual(profile["protocol"], protocol)
+                self.assertEqual(proto(profile), protocol)
 
 
 class HIDRecordTests(unittest.TestCase):
@@ -200,7 +203,7 @@ class HIDRecordTests(unittest.TestCase):
                 }
             )
         self.assertEqual(
-            records[0]["protocol"],
+            proto(records[0]),
             {"family": "valve.steam-controller", "variant": "dongle"},
         )
         self.assertNotIn("transport", records[0])
@@ -250,7 +253,7 @@ class HIDRecordTests(unittest.TestCase):
         upstream = {
             "vendorID": 0x11C1,
             "productID": 0x5600,
-            "protocol": {"family": "hid.descriptor"},
+            "modes": [{"id": "default", "protocol": {"family": "hid.descriptor"}}],
         }
         records = {(0x11C1, 0x5600): upstream}
         catalog.apply_patches(records, adds, patches)
@@ -326,7 +329,7 @@ class SDLControllerListTests(unittest.TestCase):
         for controller_type, protocol in expected.items():
             with self.subTest(controller_type):
                 records, counts = self.build([(0x054C, 0x1234, controller_type)])
-                self.assertEqual(records[(0x054C, 0x1234)]["protocol"], protocol)
+                self.assertEqual(proto(records[(0x054C, 0x1234)]), protocol)
                 self.assertEqual(counts, {"added": 1})
 
     def test_steam_rows_store_the_variant_their_sdl_row_names(self) -> None:
@@ -343,7 +346,7 @@ class SDLControllerListTests(unittest.TestCase):
             (0x28DE, 0x1305, "SteamControllerTriton"),
         ]
         records, counts = self.build(rows)
-        protocols = {key[1]: record["protocol"] for key, record in records.items()}
+        protocols = {key[1]: proto(record) for key, record in records.items()}
         steam = "valve.steam-controller"
         triton = "valve.steam-triton"
         wired = {"family": steam, "variant": "wired"}
@@ -373,7 +376,7 @@ class SDLControllerListTests(unittest.TestCase):
             (0x057E, 0x2069, "SwitchProController"),
         ]
         records, counts = self.build(rows)
-        protocols = {key[1]: record["protocol"] for key, record in records.items()}
+        protocols = {key[1]: proto(record) for key, record in records.items()}
         switch = "nintendo.switch1"
         switch2 = "nintendo.switch2"
         self.assertEqual(
@@ -422,7 +425,7 @@ class SDLControllerListTests(unittest.TestCase):
                 [(0x0955, 0x7210, "XBox360Controller")], {}
             )
         self.assertEqual(
-            records[(0x0955, 0x7210)]["protocol"], {"family": "vendor.nvidia-shield"}
+            proto(records[(0x0955, 0x7210)]), {"family": "vendor.nvidia-shield"}
         )
         self.assertEqual(counts, {"added": 1})
 
@@ -492,7 +495,7 @@ class SDLControllerListTests(unittest.TestCase):
             **header("Controller"),
             "vendorID": 0x1532,
             "productID": 0x1000,
-            "protocol": {"family": "hid.descriptor"},
+            "modes": [{"id": "default", "protocol": {"family": "hid.descriptor"}}],
         }
         adds = {(0x1532, 0x1000): override}
         records: dict[tuple[int, int], dict[str, object]] = {}
@@ -507,36 +510,28 @@ class SDLControllerListTests(unittest.TestCase):
         catalog.apply_patches(records, adds, [])
         self.assertEqual(records, {(0x1532, 0x1000): override})
 
-    def test_protocol_patch_merges_parameters_key_by_key_and_null_deletes(self) -> None:
-        def upstream() -> dict[str, Any]:
-            return {
-                "vendorID": 1,
-                "productID": 1,
-                "protocol": {
-                    "family": "xbox.gip",
-                    "parameters": {"shareButton": {"fromEnd": 26}, "keepAlive": True},
-                },
-                "usb": {"interface": 0},
-            }
-
-        def apply(body: dict[str, Any]) -> dict[str, Any]:
-            records = {(1, 1): upstream()}
-            catalog.apply_patches(
-                records, {}, [({"vendorID": 1, "productID": 1}, body)]
-            )
-            return records[(1, 1)]
-
-        added = apply({"protocol": {"parameters": {"x": 1}}})
-        self.assertEqual(
-            added["protocol"]["parameters"],
-            {"shareButton": {"fromEnd": 26}, "keepAlive": True, "x": 1},
+    def test_modes_patch_replaces_the_array_and_keeps_other_sections(self) -> None:
+        upstream = {
+            "vendorID": 1,
+            "productID": 1,
+            "modes": [
+                {
+                    "id": "default",
+                    "protocol": {
+                        "family": "xbox.gip",
+                        "parameters": {"shareButton": {"fromEnd": 26}},
+                    },
+                }
+            ],
+            "usb": {"interface": 0},
+        }
+        records = {(1, 1): upstream}
+        restated = [{"id": "default", "protocol": {"family": "hid.descriptor"}}]
+        catalog.apply_patches(
+            records, {}, [({"vendorID": 1, "productID": 1}, {"modes": restated})]
         )
-        deleted = apply({"protocol": {"parameters": {"keepAlive": None}}})
-        self.assertEqual(
-            deleted["protocol"]["parameters"], {"shareButton": {"fromEnd": 26}}
-        )
-        changed = apply({"protocol": {"family": "hid.descriptor", "parameters": None}})
-        self.assertEqual(changed["protocol"], {"family": "hid.descriptor"})
+        changed = records[(1, 1)]
+        self.assertEqual(changed["modes"], restated)
         self.assertEqual(changed["usb"], {"interface": 0})
 
     def test_third_party_dualsense_is_admitted_and_360_product_ids_are_skipped(
@@ -554,12 +549,10 @@ class SDLControllerListTests(unittest.TestCase):
             sorted(records), [(0x054C, 0x0CE6), (0x1532, 0x0A15), (0x1532, 0x100B)]
         )
         self.assertEqual(
-            records[(0x1532, 0x100B)]["protocol"],
+            proto(records[(0x1532, 0x100B)]),
             {"family": "sony.dualsense", "parameters": {"maker": "ThirdParty"}},
         )
-        self.assertEqual(
-            records[(0x054C, 0x0CE6)]["protocol"], {"family": "sony.dualsense"}
-        )
+        self.assertEqual(proto(records[(0x054C, 0x0CE6)]), {"family": "sony.dualsense"})
         self.assertEqual(counts, {"added": 3, "interface-signature": 2})
 
     def test_third_party_ps3_rows_bind_the_third_party_family(self) -> None:
@@ -567,11 +560,9 @@ class SDLControllerListTests(unittest.TestCase):
             [(0x0738, 0x3250, "PS3Controller"), (0x054C, 0x0268, "PS3Controller")]
         )
         self.assertEqual(
-            records[(0x0738, 0x3250)]["protocol"], {"family": "vendor.ps3-third-party"}
+            proto(records[(0x0738, 0x3250)]), {"family": "vendor.ps3-third-party"}
         )
-        self.assertEqual(
-            records[(0x054C, 0x0268)]["protocol"], {"family": "sony.sixaxis"}
-        )
+        self.assertEqual(proto(records[(0x054C, 0x0268)]), {"family": "sony.sixaxis"})
         self.assertEqual(counts, {"added": 2})
 
     def test_identity_families_override_the_type_and_must_stay_listed(self) -> None:
@@ -587,11 +578,9 @@ class SDLControllerListTests(unittest.TestCase):
             records, counts = catalog.build_sdl_records(rows, {})
             with self.assertRaises(catalog.CatalogError):
                 catalog.build_sdl_records(rows[:1], {})
+        self.assertEqual(proto(records[(0x2563, 0x0523)]), {"family": "sony.sixaxis"})
         self.assertEqual(
-            records[(0x2563, 0x0523)]["protocol"], {"family": "sony.sixaxis"}
-        )
-        self.assertEqual(
-            records[(0x0F0D, 0x0086)]["protocol"],
+            proto(records[(0x0F0D, 0x0086)]),
             {"family": "xbox.xusb", "variant": "wired"},
         )
         self.assertEqual(counts, {"added": 2})
@@ -623,15 +612,13 @@ class SDLControllerListTests(unittest.TestCase):
             ),
         ):
             records, _ = catalog.build_sdl_records([(*backbone, "PS5Controller")], {})
-        self.assertEqual(
-            records[(0x358A, 0x0304)]["protocol"], {"family": "hid.descriptor"}
-        )
+        self.assertEqual(proto(records[(0x358A, 0x0304)]), {"family": "hid.descriptor"})
 
     def test_records_carry_no_provenance(self) -> None:
         records, _ = self.build([(0x1532, 0x1000, "PS4Controller")])
         self.assertEqual(
             set(records[(0x1532, 0x1000)]),
-            {"apiVersion", "kind", "vendorID", "productID", "protocol"},
+            {"apiVersion", "kind", "vendorID", "productID", "modes"},
         )
 
 
@@ -707,7 +694,7 @@ class CommittedCatalogTests(unittest.TestCase):
     def test_backbone_one_ps5_v2_is_not_catalogued_as_dualsense(self) -> None:
         record = self.records.get((0x358A, 0x0304))
         if record is not None:
-            self.assertEqual(record["protocol"]["family"], "hid.descriptor")
+            self.assertEqual(proto(record)["family"], "hid.descriptor")
 
     def test_excluded_sdl_identities_are_not_catalogued(self) -> None:
         self.assertEqual(sorted(set(catalog.SDL_EXCLUSIONS) & set(self.records)), [])
@@ -747,14 +734,12 @@ class PinnedSDLDataTests(unittest.TestCase):
         # Linux xpad legitimately binds PDP 0e6f:02a0/02a1 to GIP, so check what SDL
         # itself would admit, with only Microsoft rows treated as already catalogued.
         microsoft = {
-            key: record["protocol"]["family"]
+            key: proto(record)["family"]
             for key, record in committed_records().items()
             if key[0] == catalog.MICROSOFT_VENDOR_ID
         }
         records, _ = catalog.build_sdl_records(self.rows, microsoft)
-        families = {
-            key: record["protocol"]["family"] for key, record in records.items()
-        }
+        families = {key: proto(record)["family"] for key, record in records.items()}
         self.assertEqual(
             [
                 key
@@ -769,8 +754,7 @@ class PinnedSDLDataTests(unittest.TestCase):
 
     def test_real_exclusions_hold_and_every_admissible_row_is_committed(self) -> None:
         existing = {
-            key: record["protocol"]["family"]
-            for key, record in committed_records().items()
+            key: proto(record)["family"] for key, record in committed_records().items()
         }
         records, counts = catalog.build_sdl_records(self.rows, existing)
         self.assertEqual(records, {})

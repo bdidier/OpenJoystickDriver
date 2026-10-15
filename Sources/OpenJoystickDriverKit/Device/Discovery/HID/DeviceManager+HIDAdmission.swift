@@ -88,6 +88,7 @@ extension DeviceManager {
     let connectionName = physicalDevice.transportProperty ?? "HID"
     let modeSelection = await selectedHIDMode(
       for: connection,
+      device: physicalDevice,
       vendorID: vendorID,
       productID: productID
     )

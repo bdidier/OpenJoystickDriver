@@ -3,8 +3,13 @@
   "kind": "Controller",
   "vendorID": 13623,
   "productID": 4190,
-  "protocol": {
-    "family": "vendor.gamesir",
-    "variant": "usb"
-  }
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "vendor.gamesir",
+        "variant": "usb"
+      }
+    }
+  ]
 }
