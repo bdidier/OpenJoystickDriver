@@ -81,7 +81,7 @@ extension RuntimeProfileDraftTests {
   func destinationOptionsCurateModifiersAndPreserveCustomDestinations() {
     let custom = RemappingDestination.keyboard(
       key: .a,
-      modifiers: [.command, .control, .option, .shift]
+      modifiers: [.meta, .control, .alt, .shift]
     )
     let options = DestinationOption.options(for: .button(.south))
 
@@ -89,7 +89,7 @@ extension RuntimeProfileDraftTests {
     #expect(options.count < 400)
     #expect(
       options.contains {
-        $0.destination == .keyboard(key: .arrowUp, modifiers: [.command, .shift])
+        $0.destination == .keyboard(key: .arrowUp, modifiers: [.meta, .shift])
       }
     )
     #expect(!options.contains { $0.destination == custom })
@@ -209,7 +209,7 @@ extension RuntimeProfileDraftTests {
     draft = try draft.settingMetadata(
       name: "Application Profile",
       device: RemappingDeviceScope(vendorID: 0x045E, productID: 0x02EA),
-      applicationScope: .application(bundleIdentifier: "com.example.Game")
+      applicationScope: .application(appID: "com.example.Game")
     )
     draft = try draft.settingBindingBehaviors(
       turbo: nil,
@@ -220,7 +220,7 @@ extension RuntimeProfileDraftTests {
 
     #expect(draft.profile.name == "Application Profile")
     #expect(draft.profile.device == RemappingDeviceScope(vendorID: 0x045E, productID: 0x02EA))
-    #expect(draft.profile.applicationScope == .application(bundleIdentifier: "com.example.Game"))
+    #expect(draft.profile.applicationScope == .application(appID: "com.example.Game"))
     #expect(draft.profile.bindings[0].longHold?.durationMs == 500)
     #expect(draft.profile.bindings[0].doubleTap?.windowMs == 250)
   }

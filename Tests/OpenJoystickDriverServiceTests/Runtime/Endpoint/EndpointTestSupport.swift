@@ -9,9 +9,9 @@ import Testing
 
 struct EndpointFixture {
   static let tool = CodeSigningIdentity(
-    kind: .team,
+    kind: .signed,
     identifier: "com.example.tool",
-    teamIdentifier: "ABCDE12345"
+    publisherID: "ABCDE12345"
   )
 
   let directory: URL

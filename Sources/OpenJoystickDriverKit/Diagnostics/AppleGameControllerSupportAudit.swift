@@ -65,7 +65,7 @@ public struct AppleGameControllerRecordAudit: Codable, Hashable, Sendable {
   public let productID: UInt16
   public let name: String
   public let catalogListed: Bool
-  public let appleIdentifiers: [String]
+  public let systemIdentifiers: [String]
   public let transportConstraints: [String]
   public let versionConstraints: [Int]
 }
@@ -74,7 +74,7 @@ public struct AppleGameControllerRecordAudit: Codable, Hashable, Sendable {
 public struct AppleGameControllerSupportAudit: Codable, Sendable {
   public let source: AppleGameControllerCatalogSource
   public let bundleVersions: [String]
-  public let appleExactDeviceCount: Int
+  public let systemExactDeviceCount: Int
   public let skippedAppleDeviceCount: Int
   public let ojdRecordCount: Int
   public let catalogListedOJDRecordCount: Int
@@ -192,7 +192,7 @@ public enum AppleGameControllerSupportAuditor {
         productID: model.productID,
         name: String(format: "Controller %04x:%04x", model.vendorID, model.productID),
         catalogListed: entry != nil,
-        appleIdentifiers: entry?.identifiers ?? [],
+        systemIdentifiers: entry?.identifiers ?? [],
         transportConstraints: entry?.transports ?? [],
         versionConstraints: entry?.versionNumbers ?? []
       )
@@ -205,7 +205,7 @@ public enum AppleGameControllerSupportAuditor {
     return AppleGameControllerSupportAudit(
       source: snapshot.source,
       bundleVersions: snapshot.bundleVersions,
-      appleExactDeviceCount: snapshot.entries.count,
+      systemExactDeviceCount: snapshot.entries.count,
       skippedAppleDeviceCount: snapshot.skippedDeviceCount,
       ojdRecordCount: rows.count,
       catalogListedOJDRecordCount: rows.filter(\.catalogListed).count,

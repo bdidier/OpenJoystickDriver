@@ -5,12 +5,12 @@ import Testing
 
 struct RemappingForegroundPolicyTests {
   @Test
-  func applicationScopeRequiresExactFrontmostBundleIdentifier() {
-    let scope = RemappingApplicationScope.application(bundleIdentifier: "com.example.Game")
+  func applicationScopeRequiresExactFrontmostAppID() {
+    let scope = RemappingApplicationScope.application(appID: "com.example.Game")
     #expect(
       RemappingForegroundPolicy.eligibility(
         for: scope,
-        frontmostBundleIdentifier: "com.example.Game",
+        frontmostAppID: "com.example.Game",
         accessState: .granted,
         outputSuppressed: false
       ) == .eligible
@@ -18,7 +18,7 @@ struct RemappingForegroundPolicyTests {
     #expect(
       RemappingForegroundPolicy.eligibility(
         for: scope,
-        frontmostBundleIdentifier: "com.example.Game.Helper",
+        frontmostAppID: "com.example.Game.Helper",
         accessState: .granted,
         outputSuppressed: false
       ) == .targetApplicationNotFrontmost
@@ -26,7 +26,7 @@ struct RemappingForegroundPolicyTests {
     #expect(
       RemappingForegroundPolicy.eligibility(
         for: scope,
-        frontmostBundleIdentifier: nil,
+        frontmostAppID: nil,
         accessState: .granted,
         outputSuppressed: false
       ) == .targetApplicationNotFrontmost
@@ -38,7 +38,7 @@ struct RemappingForegroundPolicyTests {
     #expect(
       RemappingForegroundPolicy.eligibility(
         for: .global,
-        frontmostBundleIdentifier: nil,
+        frontmostAppID: nil,
         accessState: .granted,
         outputSuppressed: false
       ) == .eligible
@@ -46,7 +46,7 @@ struct RemappingForegroundPolicyTests {
     #expect(
       RemappingForegroundPolicy.eligibility(
         for: .global,
-        frontmostBundleIdentifier: nil,
+        frontmostAppID: nil,
         accessState: .notAuthorized,
         outputSuppressed: false
       ) == .postEventAccessNotAuthorized
@@ -57,8 +57,8 @@ struct RemappingForegroundPolicyTests {
   func explicitSuppressionPrecedesOtherEligibilityStates() {
     #expect(
       RemappingForegroundPolicy.eligibility(
-        for: .application(bundleIdentifier: "com.example.Game"),
-        frontmostBundleIdentifier: nil,
+        for: .application(appID: "com.example.Game"),
+        frontmostAppID: nil,
         accessState: .notAuthorized,
         outputSuppressed: true
       ) == .outputSuppressed

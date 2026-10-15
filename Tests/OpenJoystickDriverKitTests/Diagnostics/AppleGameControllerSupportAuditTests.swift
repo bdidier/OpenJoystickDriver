@@ -62,7 +62,7 @@ struct AppleGameControllerSupportAuditTests {
       ]
     )
 
-    #expect(audit.appleExactDeviceCount == 1)
+    #expect(audit.systemExactDeviceCount == 1)
     #expect(audit.ojdRecordCount == 2)
     #expect(audit.catalogListedOJDRecordCount == 1)
     #expect(audit.records[0].catalogListed)

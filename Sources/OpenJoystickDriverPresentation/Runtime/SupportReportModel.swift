@@ -55,7 +55,7 @@ final class SupportReportModel: ObservableObject {
       virtualDiagnostics = nil
     }
 
-    // Like `ojd diagnose --bundle`, an unreachable service leaves the timings empty.
+    // Like `ojd diagnose --output`, an unreachable service leaves the timings empty.
     let frameTimings = (try? await gateway.frameTimings().controllers) ?? []
 
     // A separate Collect action may supersede the diagnostics display while this report is

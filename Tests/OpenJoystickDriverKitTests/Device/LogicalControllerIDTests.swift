@@ -186,7 +186,7 @@ struct LogicalControllerIDTests {
       activeProfileID: nil,
       activeProfileName: nil,
       applicationScope: nil,
-      frontmostBundleIdentifier: nil,
+      frontmostAppID: nil,
       postEventAccess: .granted,
       failure: nil
     )

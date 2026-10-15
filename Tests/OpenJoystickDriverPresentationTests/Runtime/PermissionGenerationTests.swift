@@ -10,8 +10,8 @@ struct RuntimePermissionGenerationTests {
   func newerPermissionRequestWinsOverAnOlderRefresh() async {
     let gateway = PermissionRaceGatewayStub(
       statusPayload: ApplicationServiceStatusPayload(
-        inputMonitoring: "denied",
-        accessibility: "denied",
+        inputRead: "denied",
+        inputInject: "denied",
         connectedDevices: [],
         userSpaceVirtualDeviceEnabled: true,
         userSpaceVirtualDeviceStatus: .backend("ready")
@@ -38,8 +38,8 @@ struct RuntimePermissionGenerationTests {
   func newerPermissionRequestWinsInTheFullRefreshStatusSummary() async {
     let gateway = PermissionRaceGatewayStub(
       statusPayload: ApplicationServiceStatusPayload(
-        inputMonitoring: "denied",
-        accessibility: "denied",
+        inputRead: "denied",
+        inputInject: "denied",
         connectedDevices: [],
         userSpaceVirtualDeviceEnabled: true,
         userSpaceVirtualDeviceStatus: .backend("ready")
@@ -129,8 +129,8 @@ private actor PermissionRaceGatewayStub: ApplicationServiceGateway {
 
   init(
     statusPayload: ApplicationServiceStatusPayload = ApplicationServiceStatusPayload(
-      inputMonitoring: "granted",
-      accessibility: "granted",
+      inputRead: "granted",
+      inputInject: "granted",
       connectedDevices: [],
       userSpaceVirtualDeviceEnabled: true,
       userSpaceVirtualDeviceStatus: .backend("ready")
@@ -189,7 +189,7 @@ private actor PermissionRaceGatewayStub: ApplicationServiceGateway {
   }
 
   func requestPermissions() throws -> PermissionManager.Snapshot {
-    PermissionManager.Snapshot(inputMonitoring: .granted, accessibility: .granted)
+    PermissionManager.Snapshot(inputRead: .granted, inputInject: .granted)
   }
 
   func requestPermission(

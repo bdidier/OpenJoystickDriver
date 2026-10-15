@@ -135,11 +135,11 @@ public enum DiagnosticsService {
 
   public static func permissionChecks(_ snapshot: DiagnoseServiceSnapshot) -> [DiagnoseCheck] {
     guard let status = snapshot.status else {
-      return [skipped("input-monitoring", snapshot), skipped("accessibility", snapshot)]
+      return [skipped("input-read", snapshot), skipped("input-inject", snapshot)]
     }
     return [
-      permissionCheck("input-monitoring", status.inputMonitoring),
-      permissionCheck("accessibility", status.accessibility),
+      permissionCheck("input-read", status.inputRead),
+      permissionCheck("input-inject", status.inputInject),
     ]
   }
 

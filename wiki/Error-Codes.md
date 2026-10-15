@@ -61,6 +61,15 @@ The table is generated from the code catalog and the English text of OJD. The ta
 | E2021 | Command line | A repository build of ojd could not hand the command to the installed app. Reinstall OpenJoystickDriver.app and run the command again. Exit code 127. |
 | E2022 | Command line | The state that the record's parser produced from the captured reports differs from the expected state. Read the fields that the command lists. Exit code 1. |
 | E2023 | Command line | This controller cannot be claimed or released: its protocol family uses raw USB, or macOS does not serve it natively. The message names the reason. Exit code 1. |
+| E2024 | Command line | No endpoint client or token has this ID. Run ojd access to list the IDs, then use one of them. Exit code 1. |
+| E2025 | Command line | A client with this kind of signature cannot be granted, because any local program can claim its signature. Exit code 1. |
+| E2026 | Command line | Choose at least one scope to grant. Exit code 64. |
+| E2027 | Command line | The service is stopping. Start it, then try again. Exit code 1. |
+| E2028 | Command line | A token with this name exists. Revoke it first, or choose another name. Exit code 64. |
+| E2029 | Command line | This is not a token name. Use 1 to 64 letters, digits, dots, hyphens, or underscores. Exit code 64. |
+| E2030 | Command line | This is not a web origin. Use scheme://host[:port] with http or https, such as `http://127.0.0.1:8080`. Exit code 64. |
+| E2031 | Command line | This port on 127.0.0.1 is in use or cannot be opened. Choose another with --port. Exit code 64. |
+| E2032 | Command line | A token with origins cannot have the control scope, because a page must never drive a virtual gamepad. Grant control to a token without origins. Exit code 64. |
 | E3001 | Remapping | The controller is not connected or not ready for remapping. Reconnect it and try again. Wire value `controller_unavailable`. |
 | E3002 | Remapping | The selected Joy-Cons could not be paired. Refresh the connected controllers and try again. Wire value `joy_con_pair_unavailable`. |
 | E3003 | Remapping | The controller does not report motion data. Choose a controller with motion sensors, or leave motion options off. Wire value `motion_unavailable`. |
@@ -101,6 +110,9 @@ The table is generated from the code catalog and the English text of OJD. The ta
 | E5002 | Document | A protocol description is invalid. Check the file against the protocol-description schema and fix the field that the message names. |
 | E5003 | Document | A protocol description names a family that differs from its file name. Name the file after its family. |
 | E5004 | Document | A protocol description lists a variant that its family does not have. Use one of the variants of the family. |
+| E5005 | Document | The access file AccessGrants.json is damaged. Fix the file or delete it, then grant access again. |
+| E5006 | Document | A document uses words that were renamed. Replace each old word with the new word that the message names, or delete the file, then run the command again. |
+| E5007 | Document | The access file AccessGrants.json is not supported. Delete it, then grant access again. |
 <!-- END GENERATED: error-codes -->
 
 ## Further reading

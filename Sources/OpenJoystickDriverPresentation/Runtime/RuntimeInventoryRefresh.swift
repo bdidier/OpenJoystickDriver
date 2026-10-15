@@ -100,7 +100,7 @@ extension RuntimeViewModel {
       case .requesting:
         permissions =
           authoritativePermissionSummary
-          ?? RuntimePermissionSummary(inputMonitoring: .unknown, accessibility: .unknown)
+          ?? RuntimePermissionSummary(inputRead: .unknown, inputInject: .unknown)
       case .loading, .available, .unavailable, .error:
         permissions = RuntimePermissionSummary(status: payload)
         authoritativePermissionSummary = permissions

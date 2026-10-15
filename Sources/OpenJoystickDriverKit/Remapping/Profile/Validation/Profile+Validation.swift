@@ -227,8 +227,8 @@ extension RemappingProfile {
 
   private func validateApplicationScope() throws {
     guard case .application(let identifier) = applicationScope else { return }
-    guard Self.isValidBundleIdentifier(identifier) else {
-      throw RemappingValidationError.invalidBundleIdentifier(identifier)
+    guard Self.isValidAppID(identifier) else {
+      throw RemappingValidationError.invalidAppID(identifier)
     }
   }
 

@@ -6,7 +6,7 @@ enum ProfileText {
   static func scope(_ scope: RemappingApplicationScope) -> String {
     switch scope {
     case .global: "global"
-    case .application(let bundleID): "app:\(bundleID)"
+    case .application(let appID): "app:\(appID)"
     }
   }
 

@@ -13,9 +13,9 @@ public enum EndpointScope: String, Codable, CaseIterable, Comparable, Sendable {
 
 extension CodeSigningIdentity {
   /// The short ID that `ojd access` shows for a client: the first 8 hex digits of the SHA-256 of
-  /// its kind, team, and signing identifier.
+  /// its publisher kind, publisher ID, and signing identifier.
   public var accessID: String {
-    let key = "\(kind.rawValue)\n\(teamIdentifier ?? "")\n\(identifier)"
+    let key = "\(kind.rawValue)\n\(publisherID ?? "")\n\(identifier)"
     return SHA256.hash(data: Data(key.utf8)).prefix(4).map { String(format: "%02x", $0) }.joined()
   }
 }
@@ -24,7 +24,7 @@ extension CodeSigningIdentity {
 public struct AccessGrant: Codable, Equatable, Sendable {
   public let kind: CodeSigningIdentity.Kind
   public let identifier: String
-  public let teamIdentifier: String?
+  public let publisherID: String?
   /// Sorted, without repeats.
   public let scopes: [EndpointScope]
   /// ISO 8601 time of the latest `ojd access grant` for this client.
@@ -35,6 +35,42 @@ public struct AccessGrant: Codable, Equatable, Sendable {
   /// with a `control` scope but no mark is damaged.
   public let controlGrantedAt: String?
 
+  private enum CodingKeys: String, CodingKey {
+    case publisher
+    case identifier
+    case scopes
+    case grantedAt
+    case path
+    case controlGrantedAt
+  }
+
+  private struct StoredPublisher: Codable {
+    let kind: CodeSigningIdentity.Kind
+    let id: String?
+  }
+
+  public init(from decoder: any Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    let publisher = try container.decode(StoredPublisher.self, forKey: .publisher)
+    kind = publisher.kind
+    publisherID = publisher.id
+    identifier = try container.decode(String.self, forKey: .identifier)
+    scopes = try container.decode([EndpointScope].self, forKey: .scopes)
+    grantedAt = try container.decode(String.self, forKey: .grantedAt)
+    path = try container.decode(String.self, forKey: .path)
+    controlGrantedAt = try container.decodeIfPresent(String.self, forKey: .controlGrantedAt)
+  }
+
+  public func encode(to encoder: any Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(StoredPublisher(kind: kind, id: publisherID), forKey: .publisher)
+    try container.encode(identifier, forKey: .identifier)
+    try container.encode(scopes, forKey: .scopes)
+    try container.encode(grantedAt, forKey: .grantedAt)
+    try container.encode(path, forKey: .path)
+    try container.encodeIfPresent(controlGrantedAt, forKey: .controlGrantedAt)
+  }
+
   public init(
     identity: CodeSigningIdentity,
     scopes: [EndpointScope],
@@ -43,7 +79,7 @@ public struct AccessGrant: Codable, Equatable, Sendable {
   ) {
     kind = identity.kind
     identifier = identity.identifier
-    teamIdentifier = identity.teamIdentifier
+    publisherID = identity.publisherID
     self.scopes = Array(Set(scopes)).sorted()
     self.grantedAt = grantedAt
     self.path = path
@@ -51,43 +87,27 @@ public struct AccessGrant: Codable, Equatable, Sendable {
   }
 
   public var identity: CodeSigningIdentity {
-    CodeSigningIdentity(kind: kind, identifier: identifier, teamIdentifier: teamIdentifier)
+    CodeSigningIdentity(kind: kind, identifier: identifier, publisherID: publisherID)
   }
 }
 
-/// Who signed a client, as `ojd access --json` and the endpoint name it.
-///
-/// ``CodeSigningIdentity/Kind`` keeps its kebab-case raw value because `AccessGrants.json` stores
-/// it; this type is the lowerCamelCase output spelling.
-public enum AccessIdentityKind: String, Codable, Sendable {
-  case team
-  case apple
-  case adHoc
+/// Who published a client: how it was signed, and the publisher's ID when it has one.
+public struct AccessPublisher: Codable, Equatable, Sendable {
+  public let kind: CodeSigningIdentity.Kind
+  public let id: String?
 
-  public init(_ kind: CodeSigningIdentity.Kind) {
-    switch kind {
-    case .team: self = .team
-    case .apple: self = .apple
-    case .adHoc: self = .adHoc
-    }
-  }
-
-  public var kind: CodeSigningIdentity.Kind {
-    switch self {
-    case .team: .team
-    case .apple: .apple
-    case .adHoc: .adHoc
-    }
+  public init(kind: CodeSigningIdentity.Kind, id: String?) {
+    self.kind = kind
+    self.id = id
   }
 }
 
 /// A grant as `ojd access` prints it, with its client ID.
 public struct AccessGrantSummary: Codable, Equatable, Sendable {
   public let id: String
-  /// The grant's `kind`, renamed because every `--json` document has its own `kind`.
-  public let identityKind: AccessIdentityKind
+  /// The publisher, a sub-object because every `--json` document has its own `kind`.
+  public let publisher: AccessPublisher
   public let identifier: String
-  public let teamIdentifier: String?
   public let scopes: [EndpointScope]
   /// RFC 3339 time of the latest grant.
   public let grantTime: String
@@ -95,9 +115,8 @@ public struct AccessGrantSummary: Codable, Equatable, Sendable {
 
   public init(_ grant: AccessGrant) {
     id = grant.identity.accessID
-    identityKind = AccessIdentityKind(grant.kind)
+    publisher = AccessPublisher(kind: grant.kind, id: grant.publisherID)
     identifier = grant.identifier
-    teamIdentifier = grant.teamIdentifier
     scopes = grant.scopes
     grantTime = grant.grantedAt
     path = grant.path
@@ -107,9 +126,8 @@ public struct AccessGrantSummary: Codable, Equatable, Sendable {
 /// A client the endpoint refused in the last 24 hours.
 public struct AccessRefusedClient: Codable, Equatable, Sendable {
   public let id: String
-  public let identityKind: AccessIdentityKind
+  public let publisher: AccessPublisher
   public let identifier: String
-  public let teamIdentifier: String?
   /// The client's executable, when the service could read it.
   public let path: String?
   public let scopes: [EndpointScope]
@@ -126,9 +144,8 @@ public struct AccessRefusedClient: Codable, Equatable, Sendable {
     refusalTime: String
   ) {
     id = identity.accessID
-    identityKind = AccessIdentityKind(identity.kind)
+    publisher = AccessPublisher(kind: identity.kind, id: identity.publisherID)
     identifier = identity.identifier
-    teamIdentifier = identity.teamIdentifier
     self.path = path
     self.scopes = Array(Set(scopes)).sorted()
     self.reason = reason
@@ -137,9 +154,9 @@ public struct AccessRefusedClient: Codable, Equatable, Sendable {
 
   public var identity: CodeSigningIdentity {
     CodeSigningIdentity(
-      kind: identityKind.kind,
+      kind: publisher.kind,
       identifier: identifier,
-      teamIdentifier: teamIdentifier
+      publisherID: publisher.id
     )
   }
 }

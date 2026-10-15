@@ -123,7 +123,7 @@ body:
     attributes:
       label: Support report and logs
       description: >-
-        Attach `support-report.json` from `ojd diagnose --bundle support-report.json`.
+        Attach `support-report.json` from `ojd diagnose --output support-report.json`.
         For a crash or an error, add `ojd log show --lines 200`. For wrong or missing input, add a packet capture
         and the controls you pressed in order. [How to get each file](https://github.com/xsyetopz/OpenJoystickDriver/wiki/Reporting-a-Bug).
         Read each file before you attach it. If you leave a file out, say which and why.

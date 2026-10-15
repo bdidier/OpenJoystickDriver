@@ -40,7 +40,7 @@ With `--json`, the output is one `SystemStatus` object with these keys:
 - `service`: `state` (`running` or `stopped`) and `version`.
 - `extension`: `bundle` (`present`, `missing`, or `invalid`) and `registration` (`active`, `inactive`, `absent`, or `unavailable`).
 - `commandLineTool`: the `ojd` link that the app installs. `state` is `installed` (a link to this app's executable), `linkedElsewhere` (a link to another existing file, such as another copy of the app), `broken` (a link whose target is gone), `blockedByFile` (a file or folder that is not a link; the app never replaces it), or `missing` (nothing at `path`). `path` is where the link goes, and `target` is what it points at, when it is a link.
-- `permissions`: `inputMonitoring` and `accessibility`.
+- `permissions`: `inputRead` and `inputInject`.
 - `virtualDevice`: `enabled`, `status`, and `overrideError`.
 - `controllers`: each with `id`, `name`, `vendorID`, `productID`, and `connection`.
 - `unboundDevices`: devices that OpenJoystickDriver does not support, each with `vendorID`, `productID`, `connection`, and `reason`.
@@ -121,7 +121,7 @@ ojd profile set PROFILE KEY VALUE
 
 - `profile list`: List each profile with its ID, name, controller model, app scope, and number of bindings, and show which profiles are active. When a saved profile cannot be loaded, it also reports each issue on stderr, followed by "Repair them with 'ojd profile recover'."
 - `profile show`: Show a profile's settings and bindings. Bindings use the `SOURCE` and `TARGET` forms of `ojd binding set`.
-- `profile create`: Create an empty, inactive profile for one controller model. `--controller` is `VVVV:PPPP` or the ID of a connected controller. The profile applies in every app unless `--app` gives an app's bundle ID. `--virtual-gamepad` sets what the virtual gamepad sends: nothing (`disabled`), bound controls only (`mapped`), or also every control that no binding uses (`passthrough`, the default). `--physical-input` sets whether macOS still sees the controller (`shared`, the default) or OpenJoystickDriver takes it (`exclusive`).
+- `profile create`: Create an empty, inactive profile for one controller model. `--controller` is `VVVV:PPPP` or the ID of a connected controller. The profile applies in every app unless `--app` gives an app ID. `--virtual-gamepad` sets what the virtual gamepad sends: nothing (`disabled`), bound controls only (`mapped`), or also every control that no binding uses (`passthrough`, the default). `--physical-input` sets whether macOS still sees the controller (`shared`, the default) or OpenJoystickDriver takes it (`exclusive`).
 - `profile duplicate`: Copy a profile under a new name. The copy is inactive.
 - `profile rename`: Give a profile a new name of 1 to 80 characters.
 - `profile delete`: Delete a profile. An active profile stops applying. It asks first on a terminal and needs `--force` otherwise. `--dry-run` (`-n`) prints what would change and changes nothing.
@@ -159,7 +159,7 @@ ojd binding clear PROFILE --all [--force] [--dry-run]
 
 `TARGET` is one of these forms:
 
-- `key:KEY`, with modifiers as `key:KEY:mods=command,control,option,shift`
+- `key:KEY`, with modifiers as `key:KEY:mods=alt,control,meta,shift`
 - `mouse:BUTTON`, `move:x`, `move:y`, `scroll:x`, or `scroll:y`
 - `gamepad:button:NAME`, `gamepad:dpad:DIRECTION`, or `gamepad:axis:NAME`
 - `physical:...` for rumble, lights, and adaptive triggers
@@ -260,11 +260,11 @@ List the macOS permissions OpenJoystickDriver needs, or ask the service to reque
 
 ```text
 ojd permission list
-ojd permission request [input-monitoring] [accessibility]
+ojd permission request [input-read] [input-inject]
 ```
 
-- `permission list`: Show each permission, its state (`granted`, `denied`, or `unknown`), and what OpenJoystickDriver uses it for. The permissions are `input-monitoring`, `accessibility`, and `driver-extension`. When the service is stopped, `ojd` reads the states itself and says so on stderr.
-- `permission request`: Ask the service to request each permission you name, or both `input-monitoring` and `accessibility` when you name none. macOS shows its own prompt. The command never prompts in the terminal. It exits with code 77 when a permission is still not granted.
+- `permission list`: Show each permission, its state (`granted`, `denied`, or `unknown`), and what OpenJoystickDriver uses it for. The permissions are `input-read`, `input-inject`, and `usb-transport`. When the service is stopped, `ojd` reads the states itself and says so on stderr.
+- `permission request`: Ask the service to request each permission you name, or both `input-read` and `input-inject` when you name none. macOS shows its own prompt. The command never prompts in the terminal. It exits with code 77 when a permission is still not granted.
 
 With `--json`, `permission list` prints a `PermissionList` with `items`, each with `id`, `name`, `state`, and `purpose`.
 
@@ -333,7 +333,7 @@ ojd access web enable [--port PORT] [--force]
 ojd access web disable
 ```
 
-- `access status`: Show whether the endpoint is on, the path of its socket, and the connected clients. It also shows the WebSocket and the number of tokens. With `--json`, it prints an `EndpointAccess` with `enabled`, `socketPath`, `connections`, `grants`, `refused`, `web`, `tokens`, and `refusedTokens`, and `access enable` and `access disable` print the same kind. `access web enable` and `access web disable` print a `WebAccess`, and `access list` prints an `AccessSummary`. A grant and a refused client have an `identityKind`. Each connection has a `transport`: `socket` or `web`.
+- `access status`: Show whether the endpoint is on, the path of its socket, and the connected clients. It also shows the WebSocket and the number of tokens. With `--json`, it prints an `EndpointAccess` with `enabled`, `socketPath`, `connections`, `grants`, `refused`, `web`, `tokens`, and `refusedTokens`, and `access enable` and `access disable` print the same kind. `access web enable` and `access web disable` print a `WebAccess`, and `access list` prints an `AccessSummary`. A grant and a refused client have a `publisher` with a `kind` (`signed`, `platform`, or `adHoc`) and an `id`. Each connection has a `transport`: `socket` or `web`.
 - `access enable`: Turn on the endpoint. It asks first. In a script, it needs `--force`. The endpoint is off until you run this command.
 - `access disable`: Turn off the endpoint and close its connections. The grants stay.
 - `access list`: List the granted clients and tokens, and the clients and tokens that the endpoint refused in the last 24 hours. Each client has an 8-character ID, and each token has the ID `token:NAME`.
@@ -368,17 +368,17 @@ ojd log export FILE [--lines COUNT] [--force]
 Run every check and report what is wrong.
 
 ```text
-ojd diagnose [--bundle PATH] [--soak SECONDS]
+ojd diagnose [--output PATH] [--soak SECONDS]
 ```
 
-The checks are `service`, `extension-bundle`, `extension-registration`, `input-monitoring`, `accessibility`, `controller-records`, `config-files`, `usb-access`, `virtual-device`, and `runtime-health`. Each reports `pass`, `warn`, `fail`, or `skip`. The `controller-records` check warns when OpenJoystickDriver skipped one of your controller record files. The `config-files` check warns when it ignored your `Controllers/all.patch.json` or skipped one of your persona files. Checks that need the service are skipped while it is stopped. The command exits with code 1 when any check fails.
+The checks are `service`, `extension-bundle`, `extension-registration`, `input-read`, `input-inject`, `controller-records`, `config-files`, `usb-access`, `virtual-device`, and `runtime-health`. Each reports `pass`, `warn`, `fail`, or `skip`. The `controller-records` check warns when OpenJoystickDriver skipped one of your controller record files. The `config-files` check warns when it ignored your `Controllers/all.patch.json` or skipped one of your persona files. Checks that need the service are skipped while it is stopped. The command exits with code 1 when any check fails.
 
-- `--bundle PATH`: Also write a support report to `PATH`. Read it before you share it.
+- `--output PATH`: Also write a support report to `PATH`. Read it before you share it.
 - `--soak SECONDS`: Run the `runtime-health` check. It samples the service's memory, file descriptors, and CPU for 1 to 86400 seconds. Without `--soak`, that check is skipped. `--interval-ms`, `--rss-limit-mib`, and `--footprint-limit-mib` tune the sampling and set failure limits.
 
 With `--json`, the output is a `Diagnosis` with `checks`, each with `id`, `status`, and `detail`, and `bundle` when you wrote one.
 
-Each connected controller also lists the timing of its newest frames. Every frame carries a time in nanoseconds on the service's monotonic uptime clock for each stage it reached: `read`, `parse`, `dispatch`, `delivery-virtual-device`, and `delivery-endpoint`. The service keeps the last 8 frames of each controller, and the list is empty while the service is stopped. `delivery-virtual-device` is present only when the report reached the virtual device, so a failed or suppressed publish leaves it out. The endpoint polls the controller state, so `delivery-endpoint` goes on the controller's newest frame when the poll runs, and a frame replaced by a newer one before the poll gets none. With `--json`, the timings are `timings`, each with `controller`, `name`, and `frames`. With `--plain`, each stage is a row of `timing`, controller, frame sequence, stage, and nanoseconds. Without either, each frame is one line after the checks. `--bundle` writes the same frames to `data.frameTimings` of the support report, with the same stage names and nanoseconds, and an empty list while the service is stopped.
+Each connected controller also lists the timing of its newest frames. Every frame carries a time in nanoseconds on the service's monotonic uptime clock for each stage it reached: `read`, `parse`, `dispatch`, `delivery-virtual-device`, and `delivery-endpoint`. The service keeps the last 8 frames of each controller, and the list is empty while the service is stopped. `delivery-virtual-device` is present only when the report reached the virtual device, so a failed or suppressed publish leaves it out. The endpoint polls the controller state, so `delivery-endpoint` goes on the controller's newest frame when the poll runs, and a frame replaced by a newer one before the poll gets none. With `--json`, the timings are `timings`, each with `controller`, `name`, and `frames`. With `--plain`, each stage is a row of `timing`, controller, frame sequence, stage, and nanoseconds. Without either, each frame is one line after the checks. `--output` writes the same frames to `data.frameTimings` of the support report, with the same stage names and nanoseconds, and an empty list while the service is stopped.
 
 ## update
 

@@ -69,8 +69,8 @@ actor GatewayStub: ApplicationServiceGateway {
 
   init(
     statusPayload: ApplicationServiceStatusPayload = ApplicationServiceStatusPayload(
-      inputMonitoring: "granted",
-      accessibility: "granted",
+      inputRead: "granted",
+      inputInject: "granted",
       connectedDevices: [],
       userSpaceVirtualDeviceEnabled: true,
       userSpaceVirtualDeviceStatus: .backend("ready")
@@ -162,7 +162,7 @@ actor GatewayStub: ApplicationServiceGateway {
   }
 
   func requestPermissions() throws -> PermissionManager.Snapshot {
-    PermissionManager.Snapshot(inputMonitoring: .granted, accessibility: .granted)
+    PermissionManager.Snapshot(inputRead: .granted, inputInject: .granted)
   }
 
   func requestPermission(
