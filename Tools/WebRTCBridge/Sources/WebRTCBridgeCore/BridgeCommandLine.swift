@@ -1,4 +1,4 @@
-/// The command line of `ojd-webrtc-bridge`: its usage text and how its arguments split into options.
+/// The command line of `ojd-webrtc-bridge`: its usage text and how its arguments split.
 public enum BridgeCommandLine {
   public static let usage = """
     usage: ojd-webrtc-bridge --role host|player [--signal offer|answer] [--socket PATH]
