@@ -2,7 +2,7 @@
 
 ### Requirement: One position-based vocabulary
 
-Records, profiles, CLI output, the endpoint and the GUI SHALL use one control vocabulary whose ids name positions, not labels: `South`, `East`, `West`, `North`, `LeftShoulder`, `RightShoulder`, `LeftTrigger`, `RightTrigger`, `Back`, `Start`, `LeftStickClick`, `RightStickClick`, `DpadUp`, `DpadDown`, `DpadLeft`, `DpadRight`, `Guide`, `Capture`, `Microphone`, `TouchpadClick`, paddles, auxiliaries and the four stick axes. `ControlID` and `RemappingButton` SHALL NOT exist.
+Records, profiles, CLI output, the endpoint and the GUI SHALL use one vocabulary whose ids name positions, not labels: `South`, `East`, `West`, `North`, `LeftShoulder`, `RightShoulder`, `LeftTrigger`, `RightTrigger`, `Back`, `Start`, `LeftStickClick`, `RightStickClick`, `DpadUp`, `DpadDown`, `DpadLeft`, `DpadRight`, `Guide`, `Capture`, `Microphone`, `TouchpadClick`, touch and trackpad ids, paddles, auxiliaries and the stick axes. `ControlID` and `RemappingButton` SHALL NOT exist.
 
 #### Scenario: Label does not rename
 
@@ -13,6 +13,15 @@ Records, profiles, CLI output, the endpoint and the GUI SHALL use one control vo
 
 - **WHEN** a document uses `Share` or `Options`
 - **THEN** it is rejected
+
+### Requirement: Touch, trackpad, grip and auxiliary ids
+
+The vocabulary SHALL include `LeftStickTouch`, `RightStickTouch`, `LeftTrackpadClick`, `RightTrackpadClick`, `LeftTrackpadTouch` and `RightTrackpadTouch`. Grips SHALL be paddles, and SL, SR and function buttons SHALL be auxiliaries.
+
+#### Scenario: Steam trackpad
+
+- **WHEN** a record maps the left trackpad press
+- **THEN** it uses `LeftTrackpadClick`
 
 ### Requirement: Crosswalk
 
