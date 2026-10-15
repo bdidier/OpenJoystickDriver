@@ -61,7 +61,7 @@ final class VirtualOutputTransitionProbe: VirtualOutputDispatching,
     try await activate(for: [identifier])
   }
 
-  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: LogicalControllerID) {
+  func dispatch(_: ControllerEvent, from _: LogicalControllerID) {
   }
   func activateOutput(for _: LogicalControllerID) {}
   func setOutputSuppressed(_ suppressed: Bool) { suppressOutput = suppressed }

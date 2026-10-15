@@ -63,15 +63,15 @@ struct ControllerStateTests {
   }
 
   @Test
-  func snapshotChangesFollowTheDeltaPipelineOrder() {
+  func snapshotChangesFollowOneControlOrder() {
     var next = ControllerState.neutral
     next.pressed = [.north, .south, .start, .leftStickClick]
     next.hat = .east
     next.leftTrigger = UnipolarValue(1)
     next.rightStick = StickPosition(x: BipolarValue(10), y: BipolarValue(20))
-    let standard = RemappingEngineState.changes(from: .neutral, to: next, labels: .standard)
+    let changes = RemappingEngineState.changes(from: .neutral, to: next)
     #expect(
-      standard == [
+      changes == [
         .button(.south, isPressed: true), .button(.north, isPressed: true),
         .button(.leftStickClick, isPressed: true), .button(.start, isPressed: true),
         .dpad(.east),
@@ -79,25 +79,18 @@ struct ControllerStateTests {
         .leftTrigger(UnipolarValue(1).normalized),
       ]
     )
-    let playStation = RemappingEngineState.changes(from: .neutral, to: next, labels: .playStation)
-    #expect(
-      playStation.prefix(4) == [
-        .button(.leftStickClick, isPressed: true), .button(.south, isPressed: true),
-        .button(.north, isPressed: true), .button(.start, isPressed: true),
-      ]
-    )
-    #expect(RemappingEngineState.changes(from: next, to: next, labels: .standard).isEmpty)
+    #expect(RemappingEngineState.changes(from: next, to: next).isEmpty)
 
     // Former Button order: back before l2Digital before leftSL, for presses and releases alike.
     let joyCon = ControllerState(pressed: [.auxiliary3, .leftTrigger, .back])
     #expect(
-      RemappingEngineState.changes(from: .neutral, to: joyCon, labels: .nintendo) == [
+      RemappingEngineState.changes(from: .neutral, to: joyCon) == [
         .button(.back, isPressed: true), .button(.leftTrigger, isPressed: true),
         .button(.auxiliary3, isPressed: true),
       ]
     )
     #expect(
-      RemappingEngineState.changes(from: joyCon, to: .neutral, labels: .nintendo) == [
+      RemappingEngineState.changes(from: joyCon, to: .neutral) == [
         .button(.back, isPressed: false), .button(.leftTrigger, isPressed: false),
         .button(.auxiliary3, isPressed: false),
       ]

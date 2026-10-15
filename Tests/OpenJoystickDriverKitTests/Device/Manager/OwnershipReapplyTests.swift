@@ -206,7 +206,6 @@ private final class UnroutedDispatcher: OutputDispatcher, ObservedInputDemand,
 
   func dispatch(
     _: ControllerEvent,
-    labels _: ControllerButtonLabels,
     from _: LogicalControllerID
   ) { lock.withLock { dispatched += 1 } }
 

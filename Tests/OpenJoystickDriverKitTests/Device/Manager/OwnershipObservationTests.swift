@@ -337,7 +337,7 @@ private final class OwnershipOutputRecorder: OutputDispatcher, ControllerLifecyc
     set { lock.withLock { suppressed = newValue } }
   }
 
-  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: LogicalControllerID) {
+  func dispatch(_: ControllerEvent, from _: LogicalControllerID) {
     lock.withLock { sentCount += 1 }
   }
 

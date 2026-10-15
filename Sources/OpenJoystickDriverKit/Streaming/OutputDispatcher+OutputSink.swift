@@ -11,10 +11,9 @@ extension OutputDispatcher {
     onDelivered: @escaping @Sendable () -> Void
   ) async throws {
     switch frame {
-    case .controller(let event, let labels, let identifier):
+    case .controller(let event, let identifier):
       try await dispatchPublishing(
         event,
-        labels: labels,
         from: identifier,
         onPublished: onDelivered
       )

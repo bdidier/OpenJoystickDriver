@@ -248,20 +248,18 @@ enum RuntimePresentation {
   ]
 
   static func detectedSource(
-    from state: ControllerState,
-    labels: ControllerButtonLabels
+    from state: ControllerState
   ) -> RemappingSource? {
     if let sample = state.touch.first(where: { $0.contacts.contains(where: \.isActive) }) {
       return .touchContact(RemappingTouchSurface(sample.surface))
     }
-    return detectedButton(pressed: state.pressed, dpad: dpadDirections(state.hat), labels: labels)
+    return detectedButton(pressed: state.pressed, dpad: dpadDirections(state.hat))
       ?? detectedAxis(in: state)
   }
 
   static func detectedTransition(
     from previous: ControllerState,
-    to current: ControllerState,
-    labels: ControllerButtonLabels
+    to current: ControllerState
   ) -> RemappingSource? {
     let previousTouches = activeTouchSurfaces(previous)
     let currentTouches = activeTouchSurfaces(current)
@@ -272,8 +270,7 @@ enum RuntimePresentation {
     }
     if let source = detectedButton(
       pressed: current.pressed.subtracting(previous.pressed),
-      dpad: dpadDirections(current.hat).subtracting(dpadDirections(previous.hat)),
-      labels: labels
+      dpad: dpadDirections(current.hat).subtracting(dpadDirections(previous.hat))
     ) {
       return source
     }
@@ -296,8 +293,7 @@ enum RuntimePresentation {
 
   private static func detectedButton(
     pressed: Set<Control>,
-    dpad: Set<RemappingDpadDirection>,
-    labels: ControllerButtonLabels
+    dpad: Set<RemappingDpadDirection>
   ) -> RemappingSource? {
     if let button = captureButtonOrder.first(where: pressed.contains) {
       return .button(button)

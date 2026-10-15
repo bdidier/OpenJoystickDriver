@@ -17,7 +17,7 @@ private final class ExposureBackendProbe: VirtualOutputDispatching,
 
   func activate(for identifiers: [LogicalControllerID]) { activations.append(identifiers) }
   func activate(controller identifier: LogicalControllerID) { activations.append([identifier]) }
-  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: LogicalControllerID) {
+  func dispatch(_: ControllerEvent, from _: LogicalControllerID) {
     dispatches += 1
   }
   func activateOutput(for _: LogicalControllerID) { dispatches += 1 }

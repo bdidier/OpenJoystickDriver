@@ -50,8 +50,7 @@ public final class ProtocolDriverRegistry: Sendable {
     else { return nil }
     return ControllerProfileCapabilities(
       physicalInput: capabilities(driver.capabilities, record: record),
-      physicalOutput: driver.outputCapabilities,
-      buttonLabels: ControllerButtonLabels(protocolID: record.physicalProtocolID)
+      physicalOutput: driver.outputCapabilities
     )
   }
 

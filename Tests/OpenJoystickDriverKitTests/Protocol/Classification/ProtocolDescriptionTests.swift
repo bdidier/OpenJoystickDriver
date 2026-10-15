@@ -61,9 +61,6 @@ struct ProtocolDescriptionTests {
     #expect(bundled[.sonyDualSense]?.rawUSB == .never)
     #expect(bundled[.hidReportLayout]?.recordSections == [.input, .rumble])
     #expect(bundled[.vendorPS3ThirdParty]?.recordSections == [.rumble])
-    #expect(bundled[.sonyDualShock4]?.buttonLabels == .playStation)
-    #expect(bundled[.nintendoSwitch2]?.buttonLabels == .nintendo)
-    #expect(bundled[.xboxGIP]?.buttonLabels == .standard)
     #expect(bundled[.sonyDualShock4]?.tuning?.inputLivenessTimeoutMilliseconds == 1_000)
     #expect(bundled[.nintendoSwitch1]?.tuning?.minimumHIDOutputIntervalMilliseconds == 50)
     #expect(bundled[.vendorGameSir]?.tuning?.hidStartupIntervalMilliseconds == 20)
@@ -258,6 +255,7 @@ struct ProtocolDescriptionTests {
       (.sonyDualSense, #""parameters": {"maker": {"type": "flag", "values": ["A"]}}"#),
       (.sonyDualSense, #""parameters": {"unknown": {"type": "flag"}}"#),
       (.sonyDualSense, #""parameters": {}"#),
+      (.sonyDualShock4, #""buttonLabels": "PlayStation""#),
       (
         .xboxGIP,
         #""parameters": {"shareButton": {"type": "object", "fields": "#

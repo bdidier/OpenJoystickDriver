@@ -8,6 +8,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The pr
 
 ### Added
 
+- The WebRTC bridge's `PeerMessage` button list is checked against `vocabulary.schema.json` by `PeerMessageTests.testTheFrameListsMatchTheSchemas`, which fails when the lists differ.
 - `./Scripts/ojd check tools` also runs `swift test` in `Tools/WebRTCBridge/`, and the CI job that runs it covers the bridge package. The route now needs the Swift toolchain and Xcode besides xmake and SDL3.
 - The wiki has a [WebRTC bridge](wiki/WebRTC-Bridge.md) page: the two roles, the steps to connect two Macs, and each option of `ojd-webrtc-bridge`.
 - `EndpointBridgeTests` runs the bridge's `HostBridge` against an in-process `EndpointServer` over its Unix socket: a granted feed reaches the virtual gamepad and stays open on `KeepAlive` lines, and a token without `control`, or an unknown token, gets `E1002` and no gamepad. The endpoint client and bridge logic moved to `Tools/BridgeCore/`, a package with no dependencies, so the root package takes it without any WebRTC code.
@@ -163,6 +164,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The pr
 
 ### Removed
 
+- The `buttonLabels` key of a protocol description (`PlayStation` or `Nintendo`) and the `ControllerButtonLabels` type behind it are gone; a description that still sets `buttonLabels` is rejected as an unknown key. Nothing read the label to show or spell a button. Its only effect was the order in which simultaneous button changes from one report reach the remapping engine: every controller now uses the one order that standard controllers used, so a PlayStation controller's simultaneous changes can reach a binding in a different order than before.
 - **Breaking:** `ojd controller ownership` is removed and is now an unknown command. Use `ojd controller claim` (was `virtual`) and `ojd controller release` (was `native`). In `ojd controller show --json`, `ownership.choice` and `ownership.choiceSource` are now `ownership.server` and `ownership.serverSource`, and `server` is `system` or `ojd`, and the `ojd controller claim` and `release` output has the kind `ControllerServer` with `server` in place of `ownership`.
 - **BREAKING:** Remove every command of the old command line, with no aliases. Each is replaced as follows:
   - `--headless` → run the executable as `ojd`; `--json-lines` → `--json`

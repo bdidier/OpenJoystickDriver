@@ -27,7 +27,6 @@ final class PublishingDispatcher: OutputDispatcher, @unchecked Sendable {
 
   func dispatch(
     _: ControllerEvent,
-    labels _: ControllerButtonLabels,
     from _: LogicalControllerID
   ) {}
 
@@ -35,7 +34,6 @@ final class PublishingDispatcher: OutputDispatcher, @unchecked Sendable {
 
   func dispatchPublishing(
     _: ControllerEvent,
-    labels _: ControllerButtonLabels,
     from _: LogicalControllerID,
     onPublished: @escaping @Sendable () -> Void
   ) throws {
@@ -118,14 +116,12 @@ struct FrameTimingsTests {
 
     try await router.dispatchPublishing(
       event,
-      labels: .standard,
       from: identifier,
       onPublished: count
     )
     router.suppressOutput = true
     try await router.dispatchPublishing(
       event,
-      labels: .standard,
       from: identifier,
       onPublished: count
     )

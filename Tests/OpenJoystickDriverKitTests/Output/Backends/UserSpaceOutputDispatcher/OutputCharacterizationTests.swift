@@ -49,29 +49,25 @@ extension OutputCharacterizationTests {
       )
     }
 
-    /// Applies `changes` to the identifier's previous snapshot and dispatches the result under
-    /// the family labels of its test device.
+    /// Applies `changes` to the identifier's previous snapshot and dispatches the result.
     func dispatch(
       _ changes: [InputChange],
-      from identifier: LogicalControllerID,
-      labels: ControllerButtonLabels? = nil
+      from identifier: LogicalControllerID
     ) async {
       let event = lock.withLock {
         let event = ControllerEvent(changes, after: inputs[identifier] ?? .neutral)
         inputs[identifier] = event.state
         return event
       }
-      let labels = labels ?? OutputCharacterizationTests.labels(for: identifier)
-      await stateDispatcher.dispatch(event, labels: labels, from: identifier)
-      await reportDispatcher.dispatch(event, labels: labels, from: identifier)
+      await stateDispatcher.dispatch(event, from: identifier)
+      await reportDispatcher.dispatch(event, from: identifier)
     }
 
     /// Dispatches `event` as it stands, as a pipeline does.
     func dispatch(_ event: ControllerEvent, from identifier: LogicalControllerID) async {
       lock.withLock { inputs[identifier] = event.state }
-      let labels = OutputCharacterizationTests.labels(for: identifier)
-      await stateDispatcher.dispatch(event, labels: labels, from: identifier)
-      await reportDispatcher.dispatch(event, labels: labels, from: identifier)
+      await stateDispatcher.dispatch(event, from: identifier)
+      await reportDispatcher.dispatch(event, from: identifier)
     }
 
     func send(_ state: RemappingGamepadState, for identifier: LogicalControllerID) async throws {
@@ -155,7 +151,6 @@ extension OutputCharacterizationTests {
       // One step is one report: the whole batch lands in one snapshot.
       try await engine.process(
         InputScript.of(engine).event(events, for: device),
-        labels: OutputCharacterizationTests.labels(for: device),
         from: device,
         using: profile,
         at: time
@@ -167,7 +162,6 @@ extension OutputCharacterizationTests {
     func step(_ label: String, event: ControllerEvent) async throws -> [String] {
       try await engine.process(
         event,
-        labels: OutputCharacterizationTests.labels(for: device),
         from: device,
         using: profile,
         at: 0
@@ -181,26 +175,16 @@ extension OutputCharacterizationTests {
     }
   }
 
-  /// The family labels the pipeline binds for each test device.
-  static func labels(for identifier: LogicalControllerID) -> ControllerButtonLabels {
-    switch identifier {
-    case playStation: .playStation
-    case nintendo: .nintendo
-    default: .standard
-    }
-  }
-
   /// What `event` changed since `previous`, in the order the engine applies it: `+`/`-` and the
-  /// remapping button under `labels`, `hat=`, sticks as raw values with Y rendered down-positive
+  /// remapping button, `hat=`, sticks as raw values with Y rendered down-positive
   /// (the canonical Y negated) and triggers as raw values, then `motion` and `touch` per sample.
   static func renderChanges(
     from previous: ControllerState,
-    to event: ControllerEvent,
-    labels: ControllerButtonLabels
+    to event: ControllerEvent
   ) -> String {
     let state = event.state
     var parts: [String] = []
-    for change in RemappingEngineState.changes(from: previous, to: state, labels: labels) {
+    for change in RemappingEngineState.changes(from: previous, to: state) {
       switch change {
       case .button(let button, let isPressed):
         parts.append((isPressed ? "+" : "-") + button.rawValue)

@@ -129,12 +129,11 @@ extension OutputDispatcher {
   /// Dispatches one scripted snapshot of `identifier` per change, in order.
   func dispatch(
     changes: [InputChange],
-    from identifier: LogicalControllerID,
-    labels: ControllerButtonLabels = .standard
+    from identifier: LogicalControllerID
   ) async {
     let script = InputScript.of(self)
     for report in reports(changes, after: script.state(for: identifier)) {
-      await dispatch(script.event(report, for: identifier), labels: labels, from: identifier)
+      await dispatch(script.event(report, for: identifier), from: identifier)
     }
   }
 }
@@ -143,13 +142,12 @@ extension RemappingOutputRouter {
   /// Routes one scripted snapshot of `identifier` per change, in order.
   func dispatchCausally(
     changes: [InputChange],
-    from identifier: LogicalControllerID,
-    labels: ControllerButtonLabels = .standard
+    from identifier: LogicalControllerID
   ) async throws {
     let script = InputScript.of(self)
     for report in reports(changes, after: script.state(for: identifier)) {
       try await dispatchCausally(
-        .input(script.event(report, for: identifier), labels),
+        .input(script.event(report, for: identifier)),
         from: identifier
       )
     }

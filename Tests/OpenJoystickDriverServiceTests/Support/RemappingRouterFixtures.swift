@@ -55,7 +55,6 @@ final class RemappingRouterVirtualOutput: OutputDispatcher, ControllerLifecycleL
 
   func dispatch(
     _ event: ControllerEvent,
-    labels _: ControllerButtonLabels,
     from identifier: LogicalControllerID
   ) async { await record(.virtualGamepad(event.state, identifier)) }
 

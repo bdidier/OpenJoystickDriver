@@ -131,11 +131,11 @@ extension OutputCharacterizationTests {
     )
   }
 
-  /// Passthrough carries family labels as engine sources. A real DualSense report drives the
+  /// Passthrough carries each family's controls as engine sources. A real DualSense report drives the
   /// PlayStation family: Create reaches Share (bit 15, not View bit 9), Options reaches Start, PS
   /// reaches Guide. Standard View, Menu, Guide and the right pad click follow as parser events.
   @Test
-  func passthroughFamilyLabels() async throws {
+  func passthroughFamilyControls() async throws {
     let playStation = EngineSession(Self.profile(.passthrough), device: Self.playStation)
     let driver = DualSenseDriver()
     var previous = ControllerState.neutral
@@ -149,7 +149,7 @@ extension OutputCharacterizationTests {
       report[8] = 0x08
       if mask != 0 { report[offset] |= mask }
       let event = try #require(try driver.parseReport(Data(report)))
-      let parsed = Self.renderChanges(from: previous, to: event, labels: .playStation)
+      let parsed = Self.renderChanges(from: previous, to: event)
       previous = event.state
       lines += try await playStation.step("ds \(label) [\(parsed)]", event: event)
     }

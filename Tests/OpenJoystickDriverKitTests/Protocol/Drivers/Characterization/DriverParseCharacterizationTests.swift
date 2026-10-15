@@ -66,14 +66,12 @@ struct DriverParseCharacterizationTests {
   ) throws -> [String] {
     transcript(
       try driver(subject),
-      labels: ControllerButtonLabels(protocolID: subject.protocolID),
       steps
     )
   }
 
   func transcript(
     _ driver: any PhysicalProtocolDriver,
-    labels _: ControllerButtonLabels,
     _ steps: [Step]
   ) -> [String] {
     let receivedAt = MonotonicTimestamp(nanoseconds: Self.receivedAt)

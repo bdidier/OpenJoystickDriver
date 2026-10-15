@@ -22,7 +22,7 @@ extension OutputCharacterizationTests {
       lines += output.render("\(name) held")
       let neutralized = ControllerState.neutral
       let event = ControllerEvent(timestamp: MonotonicTimestamp(nanoseconds: 0), state: neutralized)
-      lines.append("  events \(Self.renderChanges(from: input, to: event, labels: .standard))")
+      lines.append("  events \(Self.renderChanges(from: input, to: event))")
       await output.dispatch(event, from: identifier)
       lines += output.render("\(name) neutralized")
       lines.append(
@@ -34,7 +34,7 @@ extension OutputCharacterizationTests {
       )
       let again = ControllerEvent(timestamp: MonotonicTimestamp(nanoseconds: 0), state: .neutral)
       lines.append(
-        "\(name) again [\(Self.renderChanges(from: neutralized, to: again, labels: .standard))]"
+        "\(name) again [\(Self.renderChanges(from: neutralized, to: again))]"
       )
     }
     #expect(

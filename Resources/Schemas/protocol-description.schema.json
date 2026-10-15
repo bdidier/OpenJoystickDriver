@@ -85,9 +85,6 @@
     "recordCapabilities": {
       "$ref": "#/$defs/recordCapabilities"
     },
-    "buttonLabels": {
-      "enum": ["PlayStation", "Nintendo"]
-    },
     "macOSOwnedOutput": {
       "$ref": "#/$defs/macOSOwnedOutput"
     },

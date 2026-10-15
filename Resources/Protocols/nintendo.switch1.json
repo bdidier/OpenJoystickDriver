@@ -12,7 +12,6 @@
     "hidStartupRecoveryIntervalMs",
     "hidStartupRecoveryRounds"
   ],
-  "buttonLabels": "Nintendo",
   "parameters": {
     "layout": {
       "type": "enum",

@@ -27,7 +27,7 @@ struct SourceBaselineTests {
       _ event: ControllerEvent,
       from source: LogicalControllerID
     ) -> [RemappingEngineAction] {
-      engine.process(event, labels: .standard, from: source, into: first, profile: profile, at: 0)
+      engine.process(event, from: source, into: first, profile: profile, at: 0)
     }
     #expect(process(held, from: first) == [.system(.keyDown(.a))])
     // The second source's neutral snapshot changes nothing of its own baseline.
@@ -42,7 +42,6 @@ struct SourceBaselineTests {
     let engine = RemappingEventEngine(sink: sink)
     try await engine.process(
       ControllerEvent([.press(.south)]),
-      labels: .standard,
       from: first,
       using: profile,
       at: 0
@@ -51,7 +50,6 @@ struct SourceBaselineTests {
     // Kept across a release: the held button is not pressed again by an identical snapshot.
     try await engine.process(
       ControllerEvent([.press(.south)]),
-      labels: .standard,
       from: first,
       using: profile,
       at: 1
@@ -60,7 +58,6 @@ struct SourceBaselineTests {
     await engine.endSource(first)
     try await engine.process(
       ControllerEvent([.press(.south)]),
-      labels: .standard,
       from: first,
       using: profile,
       at: 2

@@ -27,7 +27,6 @@ final class ControllerSessionOutputProbe: OutputDispatcher, ControllerLifecycleL
 
   func dispatch(
     _ event: ControllerEvent,
-    labels _: ControllerButtonLabels,
     from _: LogicalControllerID
   ) { lock.withLock { states.append(event.state) } }
 

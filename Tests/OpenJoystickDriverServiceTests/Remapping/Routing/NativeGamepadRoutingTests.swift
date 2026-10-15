@@ -19,7 +19,7 @@ private final class NativePublicationProbe: VirtualOutputDispatching,
     lock.withLock { activationCount += identifiers.count }
   }
   func activate(controller _: LogicalControllerID) { lock.withLock { activationCount += 1 } }
-  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: LogicalControllerID) {
+  func dispatch(_: ControllerEvent, from _: LogicalControllerID) {
     lock.withLock { dispatchCount += 1 }
   }
   func activateOutput(for _: LogicalControllerID) { lock.withLock { dispatchCount += 1 } }

@@ -14,7 +14,6 @@
   - `rawUSB`: `true` when the family always talks raw USB, or the list of variants that do.
   - `recordSections`: the sections (`input`, `rumble`, `output`, and so on) of a record that the driver reads.
   - `tuningKeys` and `rawUSBTuningKeys`: the `tuning` keys a record may set. `tuningKeys` applies to HID variants; `rawUSBTuningKeys` applies to raw-USB variants, which read no HID timing. A description that is always raw USB takes only `rawUSBTuningKeys`.
-  - `buttonLabels`: the labels of the family's buttons.
   - `macOSOwnedOutput`: the output macOS itself handles for the family, with a `rationale` that says why.
   - `controls`: the set of controls the family's driver reports, and `recordCapabilities`: the control deltas a record may declare (`present`, `rumbleAbsent`).
   - `defaults`: the family's `session.keepAlive` (the keep-alive `intervalMilliseconds` and its fixed `writes`), the Switch 1 `session.subcommands` (the report id, the counter modulus and the startup `requests`), the default `tuning` (for example the Switch 1 recovery values, and the command timeouts, resend intervals and handshake pacing of the other drivers), and `defaults.variants.<variant>.tuning`, which layers over it for a transport that needs another value, such as the Switch 1 `hidStartupIntervalMs` of Bluetooth and USB. A default key must be one the variant reads, and a variant must be the family's (E5004).

@@ -23,7 +23,7 @@ class SinkBoundaryTests(unittest.TestCase):
             write(
                 root,
                 "Sources/Service/Route.swift",
-                "await output.dispatch(event, labels: labels, from: id)\n"
+                "await output.dispatch(event, from: id)\n"
                 "await output.activateOutput(for: id)\n"
                 "await manager.setMappingPhysicalOutput(out, active: true, owner: o, for: id)\n"
                 "await manager.releaseMappingPhysicalOutputs(for: id)\n"
@@ -37,7 +37,7 @@ class SinkBoundaryTests(unittest.TestCase):
             root = Path(directory)
             (forwarder,) = sorted(check.SINK_INTERNALS)[:1]
             write(
-                root, forwarder, "await target?.dispatch(event, labels: l, from: id)\n"
+                root, forwarder, "await target?.dispatch(event, from: id)\n"
             )
             write(
                 root,

@@ -80,11 +80,10 @@ actor DevicePipeline {
   var usbHandle: (any USBTransportSession)?
   /// Open ``USBCommandChannel`` of a controller bound over HID; see `sendUSBCommands`.
   var usbCommandSession: (any USBTransportSession)?
-  /// The binding the driver was built for: its protocol fixes the button labels, and with the
-  /// interface it fixes the link that `ControllerState.connection` reports.
+  /// The binding the driver was built for: its protocol and the
+  /// interface fix the link that `ControllerState.connection` reports.
   let binding: ProtocolBinding?
   let interface: PhysicalInterfaceSignature?
-  let buttonLabels: ControllerButtonLabels
   /// The controller's latest observed state, including input hidden from output.
   var currentInputState = ControllerState.neutral
   /// The state last sent to the dispatcher, without connection; neutral once the dispatcher was
@@ -159,8 +158,6 @@ actor DevicePipeline {
     self.dispatcher = dispatcher
     self.binding = binding
     self.interface = interface
-    self.buttonLabels =
-      binding.map { ControllerButtonLabels(protocolID: $0.protocolID) } ?? .standard
     self.macOSOwnedOutput = macOSOwnedOutput
     self.observesOnly = macOSOwnedOutput != nil
     self.usbStartupPlayerIndicator = usbStartupPlayerIndicator

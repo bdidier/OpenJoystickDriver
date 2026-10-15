@@ -10,10 +10,10 @@ extension OutputCharacterizationTests {
   func everyButtonPressAndRelease() async {
     var lines: [String] = []
     let output = VirtualOutput()
-    for (name, press, release, labels) in Self.formerParserButtons {
-      await output.dispatch([press], from: Self.standard, labels: labels)
+    for (name, press, release) in Self.formerParserButtons {
+      await output.dispatch([press], from: Self.standard)
       lines += output.render("+\(name)")
-      await output.dispatch([release], from: Self.standard, labels: labels)
+      await output.dispatch([release], from: Self.standard)
       lines += output.render("-\(name)")
     }
     #expect(
@@ -103,34 +103,34 @@ extension OutputCharacterizationTests {
   }
 
   /// The former parser buttons in declaration order, as the snapshot change each reported.
-  static let formerParserButtons: [(String, InputChange, InputChange, ControllerButtonLabels)] =
+  static let formerParserButtons: [(String, InputChange, InputChange)] =
     [
-      ("a", Control.south, ControllerButtonLabels.standard), ("b", .east, .standard),
-      ("x", .west, .standard), ("y", .north, .standard),
-      ("leftBumper", .leftShoulder, .standard), ("rightBumper", .rightShoulder, .standard),
-      ("leftStick", .leftStickClick, .standard), ("rightStick", .rightStickClick, .standard),
-      ("start", .start, .standard), ("back", .back, .standard), ("guide", .guide, .standard),
-    ].map { ($0.0, InputChange.press($0.1), InputChange.release($0.1), $0.2) }
+      ("a", Control.south), ("b", .east),
+      ("x", .west), ("y", .north),
+      ("leftBumper", .leftShoulder), ("rightBumper", .rightShoulder),
+      ("leftStick", .leftStickClick), ("rightStick", .rightStickClick),
+      ("start", .start), ("back", .back), ("guide", .guide),
+    ].map { ($0.0, InputChange.press($0.1), InputChange.release($0.1)) }
     + [
       ("dpadUp", HatDirection.north), ("dpadDown", .south), ("dpadLeft", .west),
       ("dpadRight", .east),
     ].map {
-      ($0.0, InputChange.hat($0.1), InputChange.hat(.neutral), ControllerButtonLabels.standard)
+      ($0.0, InputChange.hat($0.1), InputChange.hat(.neutral))
     }
     + [
-      ("cross", Control.south, ControllerButtonLabels.playStation),
-      ("circle", .east, .playStation), ("square", .west, .playStation),
-      ("triangle", .north, .playStation), ("l1", .leftShoulder, .playStation),
-      ("r1", .rightShoulder, .playStation), ("l2Digital", .leftTrigger, .playStation),
-      ("r2Digital", .rightTrigger, .playStation), ("share", .capture, .standard),
-      ("options", .start, .playStation), ("ps", .guide, .playStation),
-      ("touchpad", .touchpadClick, .playStation), ("mute", .microphone, .playStation),
-      ("leftGrip", .leftPaddle2, .standard), ("rightGrip", .rightPaddle2, .standard),
-      ("leftPadClick", .leftTrackpadClick, .standard),
-      ("rightPadClick", .rightTrackpadClick, .standard), ("leftSL", .auxiliary3, .nintendo),
-      ("leftSR", .auxiliary4, .nintendo), ("rightSL", .auxiliary5, .nintendo),
-      ("rightSR", .auxiliary6, .nintendo), ("leftFunction", .auxiliary1, .playStation),
-      ("rightFunction", .auxiliary2, .playStation), ("leftPaddle", .leftPaddle1, .playStation),
-      ("rightPaddle", .rightPaddle1, .playStation),
-    ].map { ($0.0, InputChange.press($0.1), InputChange.release($0.1), $0.2) }
+      ("cross", Control.south),
+      ("circle", .east), ("square", .west),
+      ("triangle", .north), ("l1", .leftShoulder),
+      ("r1", .rightShoulder), ("l2Digital", .leftTrigger),
+      ("r2Digital", .rightTrigger), ("share", .capture),
+      ("options", .start), ("ps", .guide),
+      ("touchpad", .touchpadClick), ("mute", .microphone),
+      ("leftGrip", .leftPaddle2), ("rightGrip", .rightPaddle2),
+      ("leftPadClick", .leftTrackpadClick),
+      ("rightPadClick", .rightTrackpadClick), ("leftSL", .auxiliary3),
+      ("leftSR", .auxiliary4), ("rightSL", .auxiliary5),
+      ("rightSR", .auxiliary6), ("leftFunction", .auxiliary1),
+      ("rightFunction", .auxiliary2), ("leftPaddle", .leftPaddle1),
+      ("rightPaddle", .rightPaddle1),
+    ].map { ($0.0, InputChange.press($0.1), InputChange.release($0.1)) }
 }
