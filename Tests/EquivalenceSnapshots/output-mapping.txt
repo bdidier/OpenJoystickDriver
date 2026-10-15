@@ -45,7 +45,7 @@ RightStickY=min: 00 00 00 00 00 00 00 00 FF 7F 00 00 00 00
 LeftStickTouch: unmapped
 RightStickTouch: unmapped
 LeftTrackpadClick: unmapped
-RightTrackpadClick: 00 02 00 00 00 00 00 00 00 00 00 00 00 00
+RightTrackpadClick: unmapped
 LeftTrackpadTouch: unmapped
 RightTrackpadTouch: unmapped
 combined: 51 66 FF 7F FF 7F 01 80 01 80 FF 7F FF 7F
@@ -95,7 +95,7 @@ RightStickY=min: 01 00 80 00 80 00 80 FF FF 00 00 00 00 00 00 00
 LeftStickTouch: unmapped
 RightStickTouch: unmapped
 LeftTrackpadClick: unmapped
-RightTrackpadClick: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 00 02
+RightTrackpadClick: unmapped
 LeftTrackpadTouch: unmapped
 RightTrackpadTouch: unmapped
 combined: 01 FF FF FF FF 01 00 01 00 FF 03 FF 03 02 51 06

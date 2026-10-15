@@ -36,6 +36,7 @@ extension UserSpaceOutputDispatcher {
     let stickTransfer =
       remappedState == nil
       ? Self.stickTransfer(for: identifier) : StickTransfer(deadzone: 0, rescalesDeadzone: false)
+    let rightPadIsRightStick = Self.rightPadIsRightStick(identifier)
     let isActive: @Sendable () -> Bool = { [self] in
       lifecycle.isOpen && (!isOutputSuppressed(remapped: remapped) || neutralizing)
     }
@@ -51,7 +52,13 @@ extension UserSpaceOutputDispatcher {
           if let remappedState {
             apply(remappedState, to: &state)
           } else if let input {
-            Self.apply(input, labels: labels, stickTransfer: stickTransfer, to: &state)
+            Self.apply(
+              input,
+              labels: labels,
+              stickTransfer: stickTransfer,
+              rightPadIsRightStick: rightPadIsRightStick,
+              to: &state
+            )
           }
         }
         let primary =

@@ -3,7 +3,9 @@ import Foundation
 extension RemappingDeviceState {
   /// Rebuilds the unmapped contribution using the same aggregate as explicit destinations.
   mutating func updatePassthrough(
-    replayingAxis: (RemappingAxis, Float)? = nil
+    replayingAxis: (RemappingAxis, Float)? = nil,
+    rightPadIsRightStick lookup: (LogicalControllerID) -> Bool =
+      UserSpaceOutputDispatcher.rightPadIsRightStick
   ) -> [RemappingEngineAction] {
     guard profile.outputPolicy.virtualGamepad == .passthrough else { return [] }
     var reserved = reservedPassthroughSources
@@ -13,12 +15,22 @@ extension RemappingDeviceState {
     where trigger.passthroughSources.contains(where: {
       reserved.contains($0) || binding(for: $0) != nil
     }) { reserved.formUnion(trigger.passthroughSources) }
+    // The catalog record is read once per update, not once per pressed button.
+    let rightPadIsRightStick = lookup(identifier)
     var buttons: Set<Control> = []
     var directions: Set<RemappingDpadDirection> = []
     for source in activeSources where !reserved.contains(source) && binding(for: source) == nil {
       switch source {
-      case .button(.rightTrackpadClick): buttons.insert(.rightStickClick)
-      case .button(let button): buttons.insert(button)
+      case .button(let button):
+        // A controller whose right pad is its right stick has the pad click as R3; one with a
+        // real R3 keeps it as its own control, which no virtual persona carries. One rule with
+        // the report mapping.
+        buttons.insert(
+          UserSpaceOutputDispatcher.virtualControl(
+            button,
+            rightPadIsRightStick: rightPadIsRightStick
+          )
+        )
       case .dpad(let direction): directions.insert(direction)
       case .axis, .axisDirection, .triggerStage, .motionLean, .touchContact, .touchGrid,
         .touchSwipe:

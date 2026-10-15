@@ -27,6 +27,11 @@ import Foundation
 ///
 /// This layout is the published contract for OJD VID/PID `1209:4A4F`. An incompatible
 /// descriptor or report-layout change must use a new product ID.
+///
+/// All 16 buttons are in use, so the persona carries no touchpad click, microphone, paddle,
+/// auxiliary, stick or trackpad touch, or left trackpad click: a button for them would be an
+/// incompatible change, hence a new product ID. ``UserSpaceOutputDispatcher/buttonBit(for:)`` is
+/// the control-to-bit table and lists them.
 public enum GamepadHIDDescriptor {
   // MARK: - Report descriptor bytes
 
