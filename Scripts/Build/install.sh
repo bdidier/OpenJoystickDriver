@@ -148,11 +148,11 @@ install_full() {
   if sysext_listed "$NEW_SHORT_VERSION" "$NEW_BUILD_VERSION"; then
     echo "  ✓ The app requested activation of ${NEW_SHORT_VERSION} (${NEW_BUILD_VERSION})"
   # argv[0] "ojd" selects the command line in the app executable.
-  elif (exec -a ojd "$APP_BIN" extension activate); then
+  elif (exec -a ojd "$APP_BIN" transport-extension activate); then
     echo "  ✓ Sysext activation request submitted"
   else
     echo "  ✗ Sysext activation request failed"
-    echo "    Fix: run: ojd extension activate"
+    echo "    Fix: run: ojd transport-extension activate"
   fi
 
   echo ""

@@ -8,7 +8,7 @@ import OpenJoystickDriverUSB
 package struct MacOSPlatformHost: PlatformHost {
   package init() {}
 
-  package var extensionBundleIdentifier: String { ExtensionProbe.bundleIdentifier }
+  package var extensionID: String { ExtensionProbe.extensionID }
 
   package func extensionStatus(bundleURL: URL) -> ExtensionStatus {
     ExtensionProbe.currentStatus(bundleURL: bundleURL)

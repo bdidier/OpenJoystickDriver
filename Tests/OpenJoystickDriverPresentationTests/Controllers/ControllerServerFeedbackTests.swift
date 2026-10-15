@@ -17,7 +17,7 @@ struct ControllerServerFeedbackTests {
       protocolBinding: ProtocolBindingID(.hidDescriptor),
       connection: "USB",
       discoverySource: .hid,
-      physicalOwnership: .nativeGamepad,
+      physicalOwnership: .systemGamepad,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
       recordServer: recordServer,

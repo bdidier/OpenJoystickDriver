@@ -310,7 +310,7 @@ extension ApplicationServiceServer {
   ) -> String? {
     switch route {
     case .nativePassThrough:
-      observation == .nativeGamepad ? "nativeGamepad" : "nativeHIDPassThrough"
+      observation == .systemGamepad ? "systemGamepad" : "nativeHIDPassThrough"
     case .outputDisabled(.upstreamVirtualDevice): "upstreamVirtualDevice"
     case .outputDisabled(.userDisabled): "outputDisabled"
     case .outputDisabled(.noVirtualProfile), .virtualHid, .extensionOwned: nil

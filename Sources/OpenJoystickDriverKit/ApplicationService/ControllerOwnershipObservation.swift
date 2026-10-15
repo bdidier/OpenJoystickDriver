@@ -1,20 +1,37 @@
+import Foundation
+
 /// How OJD owns or observes the physical controller input path.
 public enum ControllerOwnershipObservation: String, Codable, CaseIterable, Equatable, Sendable {
   case exclusiveHID
   case exclusiveRawUSB
-  case driverKitOwnedUSB
-  case nativeHIDVisible
+  case extensionOwnedUsb = "ExtensionOwnedUsb"
+  case systemHidVisible = "SystemHidVisible"
   /// macOS serves the controller as a native gamepad; OJD only observes its shared input.
-  case nativeGamepad
+  case systemGamepad = "SystemGamepad"
   case upstreamVirtualDevice
   case unknown
+
+  /// Decodes a value; an old spelling is refused with a message that names the new one.
+  public init(from decoder: any Decoder) throws {
+    let name = try decoder.singleValueContainer().decode(String.self)
+    guard let value = Self(rawValue: name) else {
+      throw DecodingError.dataCorrupted(
+        .init(
+          codingPath: decoder.codingPath,
+          debugDescription: "unknown value '\(name)'."
+            + RenamedWord.hints(for: [name], kind: .physicalOwnership)
+        )
+      )
+    }
+    self = value
+  }
 
   /// Whether the system serves the controller itself, so OJD publishes no virtual device for it.
   /// The decision depends on who serves the input, not on which OS does.
   public var isServedBySystem: Bool {
     switch self {
-    case .nativeGamepad, .nativeHIDVisible: true
-    case .exclusiveHID, .exclusiveRawUSB, .driverKitOwnedUSB, .upstreamVirtualDevice, .unknown:
+    case .systemGamepad, .systemHidVisible: true
+    case .exclusiveHID, .exclusiveRawUSB, .extensionOwnedUsb, .upstreamVirtualDevice, .unknown:
       false
     }
   }
@@ -23,9 +40,24 @@ public enum ControllerOwnershipObservation: String, Codable, CaseIterable, Equat
 /// The duplicate-device concern associated with the physical ownership observation.
 public enum DuplicateExposureRisk: String, Codable, Equatable, Sendable {
   case none
-  case nativeHIDVisible
+  case systemHidVisible = "SystemHidVisible"
   case upstreamVirtualDevice
   case unknownOwnership
+
+  /// Decodes a value; an old spelling is refused with a message that names the new one.
+  public init(from decoder: any Decoder) throws {
+    let name = try decoder.singleValueContainer().decode(String.self)
+    guard let value = Self(rawValue: name) else {
+      throw DecodingError.dataCorrupted(
+        .init(
+          codingPath: decoder.codingPath,
+          debugDescription: "unknown value '\(name)'."
+            + RenamedWord.hints(for: [name], kind: .physicalOwnership)
+        )
+      )
+    }
+    self = value
+  }
 }
 
 extension DuplicateExposureRisk {
@@ -34,8 +66,8 @@ extension DuplicateExposureRisk {
     self =
       switch observation {
       // OJD never publishes for a native gamepad, so games see only Apple's device.
-      case .exclusiveHID, .exclusiveRawUSB, .driverKitOwnedUSB, .nativeGamepad: .none
-      case .nativeHIDVisible: .nativeHIDVisible
+      case .exclusiveHID, .exclusiveRawUSB, .extensionOwnedUsb, .systemGamepad: .none
+      case .systemHidVisible: .systemHidVisible
       case .upstreamVirtualDevice: .upstreamVirtualDevice
       case .unknown: .unknownOwnership
       }

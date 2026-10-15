@@ -28,7 +28,7 @@
               Divider()
               ControllerServerPicker(viewModel: viewModel, device: device)
             }
-            if device.physicalOwnership != .nativeGamepad {
+            if device.physicalOwnership != .systemGamepad {
               Divider()
               // A per-controller identity collapses Advanced again on a new selection.
               VirtualHIDProfileOverrideView(viewModel: viewModel, device: device).id(

@@ -34,7 +34,7 @@ struct ControllerClaimCommandTests {
     var object = try #require(
       try JSONSerialization.jsonObject(with: JSONEncoder().encode(fixture)) as? [String: Any]
     )
-    object["physicalOwnership"] = ControllerOwnershipObservation.nativeGamepad.rawValue
+    object["physicalOwnership"] = ControllerOwnershipObservation.systemGamepad.rawValue
     return try JSONDecoder().decode(
       ApplicationServiceDeviceDescription.self,
       from: JSONSerialization.data(withJSONObject: object)

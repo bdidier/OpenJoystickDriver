@@ -17,6 +17,18 @@ public struct RenamedWord: Sendable, Equatable {
     case modifier
     /// A command-line flag of `command`, as typed, including its leading dashes.
     case flag(command: String)
+    /// A top-level command group of `ojd`.
+    case command
+    /// A value of `ownership.physical` or `ownership.duplicateExposureRisk`.
+    case physicalOwnership
+    /// A value of `transportClaim` in a record output.
+    case transportClaim
+    /// The `kind` of a `--json` output document.
+    case outputKind
+    /// The id of a diagnose check.
+    case checkID
+    /// The `reason` of a controller's publication state.
+    case publicationReason
   }
 
   public let old: String
@@ -44,6 +56,17 @@ public struct RenamedWord: Sendable, Equatable {
     Self(old: "command", new: "meta", kind: .modifier),
     Self(old: "option", new: "alt", kind: .modifier),
     Self(old: "--bundle", new: "--output", kind: .flag(command: "diagnose")),
+    Self(old: "extension", new: "transport-extension", kind: .command),
+    Self(old: "driverKitOwnedUSB", new: "ExtensionOwnedUsb", kind: .physicalOwnership),
+    Self(old: "nativeGamepad", new: "SystemGamepad", kind: .physicalOwnership),
+    Self(old: "nativeHIDVisible", new: "SystemHidVisible", kind: .physicalOwnership),
+    Self(old: "usbExtension", new: "transportClaim", kind: .field),
+    Self(old: "claims", new: "claimed", kind: .transportClaim),
+    Self(old: "doesNotClaim", new: "unclaimed", kind: .transportClaim),
+    Self(old: "DriverExtension", new: "TransportExtension", kind: .outputKind),
+    Self(old: "extension-bundle", new: "transport-extension-bundle", kind: .checkID),
+    Self(old: "extension-registration", new: "transport-extension-registration", kind: .checkID),
+    Self(old: "nativeGamepad", new: "systemGamepad", kind: .publicationReason),
   ]
 
   /// The renamed word for `old` in `kind`, or nil when `old` was not renamed there.

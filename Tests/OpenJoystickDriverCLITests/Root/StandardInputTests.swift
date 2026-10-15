@@ -10,8 +10,8 @@ import Testing
 struct StandardInputTests {
   /// Leaves the sweep skips, because they act on the system instead of the fake service.
   private static let systemCommands: Set<[String]> = [
-    ["service", "start"], ["service", "stop"], ["extension", "activate"],
-    ["extension", "deactivate"], ["update", "check"], ["log", "show"], ["log", "export"],
+    ["service", "start"], ["service", "stop"], ["transport-extension", "activate"],
+    ["transport-extension", "deactivate"], ["update", "check"], ["log", "show"], ["log", "export"],
     ["controller", "watch"], ["diagnose"],
   ]
 
