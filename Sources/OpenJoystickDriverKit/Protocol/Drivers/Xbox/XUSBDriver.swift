@@ -252,8 +252,8 @@ public final class XUSBDriver: PhysicalProtocolDriver {
     next.hat = mapDpad(buttons & 0x000F)
     next.leftTrigger = UnipolarValue(normalized: Float(bytes[4]) / xbox360TriggerMax)
     next.rightTrigger = UnipolarValue(normalized: Float(bytes[5]) / xbox360TriggerMax)
-    next.leftStick = StickPosition(x: normalizeStick(lsx), yDown: -normalizeStick(lsy))
-    next.rightStick = StickPosition(x: normalizeStick(rsx), yDown: -normalizeStick(rsy))
+    next.leftStick = StickPosition(x: normalizeStick(lsx), y: -normalizeStick(lsy))
+    next.rightStick = StickPosition(x: normalizeStick(rsx), y: -normalizeStick(rsy))
     state = next
     return next
   }

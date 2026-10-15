@@ -1294,7 +1294,7 @@
 "cli.controller.watch.all_started" = "Observando todos os controles. Pressione botões do controle.";
 "cli.controller.watch.connected" = "%@ conectado: %@ (%@)";
 "cli.controller.watch.disconnected" = "%@ desconectado";
-"cli.controller.watch.discussion" = "Com --json, exibe um objeto JSON por linha. O eixo Y do analógico aponta para cima. Com --first-press, exibe o primeiro controle pressionado e sai; falha se --duration passar antes.";
+"cli.controller.watch.discussion" = "Com --json, exibe um objeto JSON por linha. O eixo Y do analógico aponta para baixo. Com --first-press, exibe o primeiro controle pressionado e sai; falha se --duration passar antes.";
 "cli.controller.watch.discussion.all" = "Com --all, cada linha começa com o ID do controle, e uma linha informa cada controle que se conecta ou desconecta. As primeiras linhas informam os controles já conectados.";
 "cli.controller.watch.error.first_press_all" = "--first-press precisa de um CONTROLLER; não funciona com --all.";
 "cli.controller.watch.error.target" = "Informe um CONTROLLER ou --all, mas não ambos.";
@@ -1344,7 +1344,7 @@
 "cli.virtual.export_mapping.format" = "O formato a imprimir: sdl ou w3c.";
 "cli.virtual.export_mapping.profile" = "O perfil de gamepad virtual a imprimir. Omita para imprimir todos os perfis.";
 "cli.virtual.feed.abstract" = "Publicar um gamepad virtual controlado pelo stdin.";
-"cli.virtual.feed.discussion" = "Lê um objeto JSON por linha: “buttons” e “dpad” listam os controles pressionados, como South e up, e “axes” associa valores aos nomes dos eixos, como LeftStickX. Controles ausentes ficam neutros. Os analógicos vão de -1 a 1, com Y para cima; os gatilhos vão de 0 a 1. Os quadros são reproduzidos em ordem, cada um por pelo menos 8 ms; “holdMilliseconds” mantém um quadro por mais tempo, até 60000. Imprime cada comando de saída que os jogos enviam ao gamepad, como vibração, como um objeto JSON por linha. Termina quando todos os quadros são reproduzidos após o fim da entrada.";
+"cli.virtual.feed.discussion" = "Lê um objeto JSON por linha: “buttons” e “dpad” listam os controles pressionados, como South e up, e “axes” associa valores aos nomes dos eixos, como LeftStickX. Controles ausentes ficam neutros. Os analógicos vão de -1 a 1, com Y para baixo; os gatilhos vão de 0 a 1. Os quadros são reproduzidos em ordem, cada um por pelo menos 8 ms; “holdMilliseconds” mantém um quadro por mais tempo, até 60000. Imprime cada comando de saída que os jogos enviam ao gamepad, como vibração, como um objeto JSON por linha. Termina quando todos os quadros são reproduzidos após o fim da entrada.";
 "cli.virtual.feed.error.closed" = "O serviço fechou o gamepad virtual. Verifique com “ojd status”.";
 "cli.virtual.feed.error.frame" = "A linha %@ não é um quadro válido. “ojd virtual feed --help” mostra o formato.";
 "cli.virtual.feed.profile" = "O perfil do gamepad virtual a publicar.";

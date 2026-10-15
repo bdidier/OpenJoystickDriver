@@ -90,8 +90,8 @@ struct SteamDeckDriverTests {
     let event = try #require(try SteamDeckDriver().parseReport(DeckReport.state(words: words)))
     #expect(event.state.leftTrigger == .max)
     #expect(event.state.rightTrigger == .min)
-    #expect(event.state.leftStick == StickPosition(x: 1, yDown: -1))
-    #expect(event.state.rightStick == StickPosition(x: -1, yDown: 1))
+    #expect(event.state.leftStick == StickPosition(x: 1, y: -1))
+    #expect(event.state.rightStick == StickPosition(x: -1, y: 1))
   }
 
   @Test

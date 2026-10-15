@@ -75,12 +75,12 @@ struct RemappingStickRuntime {
       }
       output.pointerDelta.x += degrees * mapping.pointerPointsPerDegree
     case .pointerArea:
-      let target = SIMD2(next.x, -next.y) * mapping.pointerRadiusPoints
+      let target = next * mapping.pointerRadiusPoints
       output.pointerDelta += target - previousTarget
       previousTarget = target
     case .pointerRing:
       let target =
-        next == .zero ? .zero : SIMD2(next.x, -next.y) / next.length * mapping.pointerRadiusPoints
+        next == .zero ? .zero : next / next.length * mapping.pointerRadiusPoints
       output.pointerDelta += target - previousTarget
       previousTarget = target
     case .scrollWheel: output.scrollLines += scrollOutput(previous: previousValue, current: next)
@@ -100,7 +100,7 @@ struct RemappingStickRuntime {
       let scale =
         Double(elapsed) / 1_000_000_000 * mapping.aimDegreesPerSecond
         * mapping.pointerPointsPerDegree
-      output.pointerDelta = SIMD2(value.x * scale, -value.y * scale)
+      output.pointerDelta = value * scale
     } else if mapping.mode == .steering {
       if value.length < 1, steeringDegrees != 0 {
         let amount =
@@ -123,7 +123,7 @@ struct RemappingStickRuntime {
       previousAngle = nil
       return .zero
     }
-    let angle = atan2(current.y, current.x)
+    let angle = atan2(-current.y, current.x)
     defer { previousAngle = angle }
     guard let oldAngle = previousAngle, previous != .zero else { return .zero }
     let delta =
@@ -140,8 +140,8 @@ struct RemappingStickRuntime {
 
   private mutating func updateSteering(previous: SIMD2<Double>, current: SIMD2<Double>) {
     guard previous != .zero, current != .zero else { return }
-    let oldAngle = atan2(previous.y, previous.x)
-    let angle = atan2(current.y, current.x)
+    let oldAngle = atan2(-previous.y, previous.x)
+    let angle = atan2(-current.y, current.x)
     let delta =
       Self.shortestAngle(from: oldAngle, to: angle) * 180 / .pi * current.length
       * mapping.rotationDirection.multiplier

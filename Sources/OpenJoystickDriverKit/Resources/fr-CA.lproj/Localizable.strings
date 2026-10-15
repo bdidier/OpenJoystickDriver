@@ -1294,7 +1294,7 @@
 "cli.controller.watch.all_started" = "Surveillance de toutes les manettes. Appuyez sur les boutons de la manette.";
 "cli.controller.watch.connected" = "%@ connectée : %@ (%@)";
 "cli.controller.watch.disconnected" = "%@ déconnectée";
-"cli.controller.watch.discussion" = "Avec --json, affiche un objet JSON par ligne. L’axe Y du stick pointe vers le haut. Avec --first-press, affiche la première commande actionnée et quitte; échoue si --duration s’écoule avant.";
+"cli.controller.watch.discussion" = "Avec --json, affiche un objet JSON par ligne. L’axe Y du stick pointe vers le bas. Avec --first-press, affiche la première commande actionnée et quitte; échoue si --duration s’écoule avant.";
 "cli.controller.watch.discussion.all" = "Avec --all, chaque ligne commence par l’identifiant de la manette, et une ligne signale chaque manette qui se connecte ou se déconnecte. Les premières lignes signalent les manettes déjà connectées.";
 "cli.controller.watch.error.first_press_all" = "--first-press nécessite une CONTROLLER; il ne fonctionne pas avec --all.";
 "cli.controller.watch.error.target" = "Indiquez une CONTROLLER ou --all, mais pas les deux.";
@@ -1344,7 +1344,7 @@
 "cli.virtual.export_mapping.format" = "Le format à afficher : sdl ou w3c.";
 "cli.virtual.export_mapping.profile" = "Le profil de manette virtuelle à afficher. Omettez-le pour afficher tous les profils.";
 "cli.virtual.feed.abstract" = "Publier une manette virtuelle pilotée par stdin.";
-"cli.virtual.feed.discussion" = "Lit un objet JSON par ligne : « buttons » et « dpad » listent les commandes actionnées, par exemple South et up, et « axes » associe des valeurs aux noms d’axes, par exemple LeftStickX. Les commandes absentes restent neutres. Les sticks vont de -1 à 1, avec Y vers le haut; les gâchettes vont de 0 à 1. Les images sont lues dans l’ordre, chacune pendant au moins 8 ms; « holdMilliseconds » maintient une image plus longtemps, jusqu’à 60000. Affiche chaque commande de sortie que les jeux envoient à la manette, comme la vibration, sous forme d’un objet JSON par ligne. S’arrête quand toutes les images ont été lues après la fin de l’entrée.";
+"cli.virtual.feed.discussion" = "Lit un objet JSON par ligne : « buttons » et « dpad » listent les commandes actionnées, par exemple South et up, et « axes » associe des valeurs aux noms d’axes, par exemple LeftStickX. Les commandes absentes restent neutres. Les sticks vont de -1 à 1, avec Y vers le bas; les gâchettes vont de 0 à 1. Les images sont lues dans l’ordre, chacune pendant au moins 8 ms; « holdMilliseconds » maintient une image plus longtemps, jusqu’à 60000. Affiche chaque commande de sortie que les jeux envoient à la manette, comme la vibration, sous forme d’un objet JSON par ligne. S’arrête quand toutes les images ont été lues après la fin de l’entrée.";
 "cli.virtual.feed.error.closed" = "Le service a fermé la manette virtuelle. Vérifiez avec « ojd status ».";
 "cli.virtual.feed.error.frame" = "La ligne %@ n’est pas une trame valide. « ojd virtual feed --help » indique le format.";
 "cli.virtual.feed.profile" = "Le profil de la manette virtuelle à publier.";

@@ -27,8 +27,8 @@ extension OutputCharacterizationTests {
       lines += output.render("\(name) neutralized")
       lines.append(
         "\(name) residual [\(neutralized.pressed.map(\.rawValue).sorted().joined(separator: ","))]"
-          + " ls=\(neutralized.leftStick.x.rawValue),\(-neutralized.leftStick.y.rawValue)"
-          + " rs=\(neutralized.rightStick.x.rawValue),\(-neutralized.rightStick.y.rawValue)"
+          + " ls=\(neutralized.leftStick.x.rawValue),\(neutralized.leftStick.y.rawValue)"
+          + " rs=\(neutralized.rightStick.x.rawValue),\(neutralized.rightStick.y.rawValue)"
           + " t=\(neutralized.leftTrigger.rawValue),\(neutralized.rightTrigger.rawValue)"
           + " neutral=\(neutralized == .neutral)"
       )

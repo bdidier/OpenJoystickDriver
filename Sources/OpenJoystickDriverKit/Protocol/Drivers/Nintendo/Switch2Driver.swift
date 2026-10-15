@@ -391,7 +391,7 @@ public final class Switch2Driver: PhysicalProtocolDriver {
     _ calibration: Switch2StickCalibration
   ) -> StickPosition {
     let raw = Self.twelveBitPair(bytes, at: offset)
-    return StickPosition(x: calibration.x.normalize(raw.x), yDown: -calibration.y.normalize(raw.y))
+    return StickPosition(x: calibration.x.normalize(raw.x), y: -calibration.y.normalize(raw.y))
   }
 
   /// SDL `MapTriggerAxis`: the analog value scaled from the flash zero point to 232.

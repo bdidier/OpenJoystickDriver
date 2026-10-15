@@ -25,7 +25,7 @@ extension GyroRoutingTests {
     )
     #expect(
       movement == [
-        .gamepad(RemappingGamepadState(axes: [.rightStickX: -1, .rightStickY: 0.5]), device)
+        .gamepad(RemappingGamepadState(axes: [.rightStickX: -1, .rightStickY: -0.5]), device)
       ]
     )
     #expect(

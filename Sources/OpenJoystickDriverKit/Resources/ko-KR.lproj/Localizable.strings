@@ -1294,7 +1294,7 @@
 "cli.controller.watch.all_started" = "모든 컨트롤러를 지켜보는 중입니다. 컨트롤러 버튼을 누르세요.";
 "cli.controller.watch.connected" = "%@ 연결됨: %@ (%@)";
 "cli.controller.watch.disconnected" = "%@ 연결 해제됨";
-"cli.controller.watch.discussion" = "--json을 사용하면 한 줄에 JSON 객체 하나를 출력합니다. 스틱 Y축은 위쪽이 양수입니다. --first-press를 사용하면 처음 누른 컨트롤을 출력하고 종료하며, 그 전에 --duration이 지나면 실패합니다.";
+"cli.controller.watch.discussion" = "--json을 사용하면 한 줄에 JSON 객체 하나를 출력합니다. 스틱 Y축은 아래쪽이 양수입니다. --first-press를 사용하면 처음 누른 컨트롤을 출력하고 종료하며, 그 전에 --duration이 지나면 실패합니다.";
 "cli.controller.watch.discussion.all" = "--all을 사용하면 각 줄이 컨트롤러 ID로 시작하며, 연결되거나 연결 해제되는 컨트롤러마다 한 줄씩 보고합니다. 처음 몇 줄은 이미 연결된 컨트롤러를 보고합니다.";
 "cli.controller.watch.error.first_press_all" = "--first-press에는 CONTROLLER가 필요하며 --all과 함께 사용할 수 없습니다.";
 "cli.controller.watch.error.target" = "CONTROLLER 또는 --all 중 하나만 지정하세요.";
@@ -1344,7 +1344,7 @@
 "cli.virtual.export_mapping.format" = "출력할 형식: sdl 또는 w3c.";
 "cli.virtual.export_mapping.profile" = "출력할 가상 게임패드 프로필. 생략하면 모든 프로필을 출력합니다.";
 "cli.virtual.feed.abstract" = "stdin으로 구동되는 가상 게임패드를 게시합니다.";
-"cli.virtual.feed.discussion" = "한 줄에 JSON 객체 하나를 읽습니다. ‘buttons’와 ‘dpad’는 South, up처럼 눌린 컨트롤을 나열하고, ‘axes’는 LeftStickX 같은 축 이름을 값에 대응시킵니다. 없는 컨트롤은 중립으로 처리됩니다. 스틱은 -1에서 1까지이며 Y는 위쪽입니다. 트리거는 0에서 1까지입니다. 프레임은 순서대로 재생되며 각각 최소 8 ms 동안 유지됩니다. ‘holdMilliseconds’는 프레임을 더 오래 유지하며 최대 60000까지 가능합니다. 게임이 게임패드로 보내는 모든 출력 명령(예: 진동)을 한 줄에 JSON 객체 하나로 출력합니다. 입력이 끝난 뒤 모든 프레임이 재생되면 중지됩니다.";
+"cli.virtual.feed.discussion" = "한 줄에 JSON 객체 하나를 읽습니다. ‘buttons’와 ‘dpad’는 South, up처럼 눌린 컨트롤을 나열하고, ‘axes’는 LeftStickX 같은 축 이름을 값에 대응시킵니다. 없는 컨트롤은 중립으로 처리됩니다. 스틱은 -1에서 1까지이며 Y는 아래쪽입니다. 트리거는 0에서 1까지입니다. 프레임은 순서대로 재생되며 각각 최소 8 ms 동안 유지됩니다. ‘holdMilliseconds’는 프레임을 더 오래 유지하며 최대 60000까지 가능합니다. 게임이 게임패드로 보내는 모든 출력 명령(예: 진동)을 한 줄에 JSON 객체 하나로 출력합니다. 입력이 끝난 뒤 모든 프레임이 재생되면 중지됩니다.";
 "cli.virtual.feed.error.closed" = "서비스가 가상 게임패드를 닫았습니다. ‘ojd status’로 확인하세요.";
 "cli.virtual.feed.error.frame" = "%@번째 줄은 올바른 프레임이 아닙니다. ‘ojd virtual feed --help’에서 형식을 확인할 수 있습니다.";
 "cli.virtual.feed.profile" = "게시할 가상 게임패드 프로파일.";

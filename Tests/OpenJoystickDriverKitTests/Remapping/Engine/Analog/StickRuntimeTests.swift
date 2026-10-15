@@ -42,7 +42,7 @@ struct StickRuntimeTests {
     )
     let first = stick.update(x: 1, y: 0, at: 0)
     #expect(first == .zero)
-    let rotation = stick.update(x: 0, y: 1, at: 1)
+    let rotation = stick.update(x: 0, y: -1, at: 1)
     #expect(rotation.pointerDelta == SIMD2(-90, 0))
     let invalid = stick.update(x: .nan, y: 0, at: 2)
     #expect(invalid == .zero)
@@ -85,8 +85,8 @@ struct StickRuntimeTests {
         rotationDirection: .counterclockwise
       )
     )
-    _ = stick.update(x: -1, y: 0.01, at: 0)
-    let wrapped = stick.update(x: -1, y: -1, at: 1)
+    _ = stick.update(x: -1, y: -0.01, at: 0)
+    let wrapped = stick.update(x: -1, y: 1, at: 1)
     #expect(wrapped.scrollLines == SIMD2(0, 1))
     #expect(!stick.needsTicks)
   }
@@ -104,7 +104,7 @@ struct StickRuntimeTests {
       )
     )
     _ = stick.update(x: 1, y: 0, at: 0)
-    let wound = stick.update(x: 0, y: 1, at: 1)
+    let wound = stick.update(x: 0, y: -1, at: 1)
     #expect(wound.virtualAxes[.leftStickX] == 0.5)
     _ = stick.update(x: 0, y: 0, at: 1)
     #expect(stick.needsTicks)

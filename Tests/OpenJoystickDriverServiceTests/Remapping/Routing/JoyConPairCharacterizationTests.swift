@@ -134,8 +134,8 @@ struct JoyConPairCharacterizationTests {
       switch change {
       case .button(let button, let isPressed): (isPressed ? "+" : "-") + button.rawValue
       case .dpad(let hat): "hat=\(hat.rawValue)"
-      case .leftStick: "ls=\(state.leftStick.x.rawValue),\(-state.leftStick.y.rawValue)"
-      case .rightStick: "rs=\(state.rightStick.x.rawValue),\(-state.rightStick.y.rawValue)"
+      case .leftStick: "ls=\(state.leftStick.x.rawValue),\(state.leftStick.y.rawValue)"
+      case .rightStick: "rs=\(state.rightStick.x.rawValue),\(state.rightStick.y.rawValue)"
       case .leftTrigger: "lt=\(state.leftTrigger.rawValue)"
       case .rightTrigger: "rt=\(state.rightTrigger.rawValue)"
       case .motion: "motion"

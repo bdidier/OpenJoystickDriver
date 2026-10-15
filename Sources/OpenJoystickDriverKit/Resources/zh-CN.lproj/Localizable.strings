@@ -1294,7 +1294,7 @@
 "cli.controller.watch.all_started" = "正在监视所有控制器。请按下控制器上的按键。";
 "cli.controller.watch.connected" = "%@ 已连接：%@（%@）";
 "cli.controller.watch.disconnected" = "%@ 已断开连接";
-"cli.controller.watch.discussion" = "使用 --json 时，每行打印一个 JSON 对象。摇杆 Y 轴向上为正。使用 --first-press 时，打印第一个被按下的控件并退出；如果先达到 --duration，则失败。";
+"cli.controller.watch.discussion" = "使用 --json 时，每行打印一个 JSON 对象。摇杆 Y 轴向下为正。使用 --first-press 时，打印第一个被按下的控件并退出；如果先达到 --duration，则失败。";
 "cli.controller.watch.discussion.all" = "使用 --all 时，每行以控制器 ID 开头，并报告每个已连接或已断开的控制器。最前面几行报告已连接的控制器。";
 "cli.controller.watch.error.first_press_all" = "--first-press 需要 CONTROLLER；它不能与 --all 一起使用。";
 "cli.controller.watch.error.target" = "请提供 CONTROLLER 或 --all，但不能同时提供。";
@@ -1344,7 +1344,7 @@
 "cli.virtual.export_mapping.format" = "要输出的格式：sdl 或 w3c。";
 "cli.virtual.export_mapping.profile" = "要输出的虚拟游戏手柄配置文件。省略则输出所有配置文件。";
 "cli.virtual.feed.abstract" = "发布一个由 stdin 驱动的虚拟游戏手柄。";
-"cli.virtual.feed.discussion" = "每行读取一个 JSON 对象：“buttons” 和 “dpad” 列出被按下的控件，例如 South 和 up；“axes” 将轴名称（例如 LeftStickX）映射到数值。缺少的控件保持中立。摇杆范围为 -1 到 1，Y 轴向上；扳机范围为 0 到 1。帧按顺序播放，每帧至少持续 8 ms；“holdMilliseconds” 可让某一帧保持更久，最长 60000。将游戏发送给游戏手柄的每条输出命令（例如震动）以每行一个 JSON 对象的形式输出。输入结束且所有帧播放完毕后停止。";
+"cli.virtual.feed.discussion" = "每行读取一个 JSON 对象：“buttons” 和 “dpad” 列出被按下的控件，例如 South 和 up；“axes” 将轴名称（例如 LeftStickX）映射到数值。缺少的控件保持中立。摇杆范围为 -1 到 1，Y 轴向下；扳机范围为 0 到 1。帧按顺序播放，每帧至少持续 8 ms；“holdMilliseconds” 可让某一帧保持更久，最长 60000。将游戏发送给游戏手柄的每条输出命令（例如震动）以每行一个 JSON 对象的形式输出。输入结束且所有帧播放完毕后停止。";
 "cli.virtual.feed.error.closed" = "服务已关闭虚拟游戏手柄。请用 “ojd status” 检查。";
 "cli.virtual.feed.error.frame" = "第 %@ 行不是有效的帧。“ojd virtual feed --help” 会显示格式。";
 "cli.virtual.feed.profile" = "要发布的虚拟游戏手柄配置文件。";
