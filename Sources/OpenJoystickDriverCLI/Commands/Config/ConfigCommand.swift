@@ -125,7 +125,7 @@ struct ConfigShowCommand: AsyncParsableCommand {
     Set(set.records.values.filter { $0.reads(key) }.map(\.family)).sorted()
   }
 
-  /// The outcome of checking the keys `Defaults.json` sets against the connected controllers.
+  /// The outcome of checking the keys `all.patch.json` sets against the connected controllers.
   private enum UnreadCheck {
     /// The keys no connected controller reads, in key order.
     case ran([ControllerTuning.Key])
@@ -133,8 +133,8 @@ struct ConfigShowCommand: AsyncParsableCommand {
     case skipped(serviceRunning: Bool)
   }
 
-  /// Checks the keys `Defaults.json` sets against the connected controllers. The service is asked
-  /// only when some record ignores a key `Defaults.json` sets. Without a running service or a
+  /// Checks the keys `all.patch.json` sets against the connected controllers. The service is asked
+  /// only when some record ignores a key `all.patch.json` sets. Without a running service or a
   /// connected controller the check is skipped, so the caller can say so instead of looking clean.
   private static func unreadDefaults(in set: ControllerRecordSet) async -> UnreadCheck {
     let keys = ControllerTuning.Key.allCases.filter { key in

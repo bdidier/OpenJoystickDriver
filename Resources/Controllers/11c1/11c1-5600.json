@@ -1,0 +1,15 @@
+{
+	"apiVersion": "openjoystickdriver/v1alpha1",
+	"kind": "Controller",
+	"vendorID": 4545,
+	"productID": 22016,
+	"protocol": {
+		"family": "hid.descriptor",
+		"parameters": {
+			"usageLayout": "Wr007"
+		}
+	},
+	"tuning": {
+		"stickDeadzone": 0.02
+	}
+}

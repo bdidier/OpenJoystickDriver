@@ -1,0 +1,13 @@
+{
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "Controller",
+  "vendorID": 13623,
+  "productID": 4179,
+  "protocol": {
+    "family": "vendor.gamesir",
+    "variant": "enhanced-hid",
+    "parameters": {
+      "lightingMemory": "ProfileSlots"
+    }
+  }
+}

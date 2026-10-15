@@ -18,7 +18,7 @@ struct ModCommandTests {
       ((try? FileManager.default.contentsOfDirectory(atPath: packages.path)) ?? []).sorted()
     }
 
-    /// A package folder that holds one controller `add` record for a model the catalog lacks.
+    /// A package folder that holds one Controller record for a model the catalog lacks.
     func makePackage(
       _ name: String = "arcade-pack",
       productID: Int = 1,
@@ -29,13 +29,9 @@ struct ModCommandTests {
       try FileManager.default.createDirectory(at: controllers, withIntermediateDirectories: true)
       let file = String(format: "fff1-%04x.json", productID)
       let record: [String: Any] = [
-        "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
-        "operation": "add",
-        "record": [
-          "apiVersion": OpenJoystickDriverAPI.version, "kind": "Controller",
-          "vendorID": 0xFFF1,
-          "productID": productID, "protocol": ["family": "xbox.gip"],
-        ],
+        "apiVersion": OpenJoystickDriverAPI.version, "kind": "Controller",
+        "vendorID": 0xFFF1,
+        "productID": productID, "protocol": ["family": "xbox.gip"],
       ]
       try JSONSerialization.data(withJSONObject: record).write(
         to: controllers.appendingPathComponent(file)

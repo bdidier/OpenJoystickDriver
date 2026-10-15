@@ -10,7 +10,7 @@ extension EndpointServer {
   /// is closed with `E1009`, so a stalled client does not hold a button or a slot. When the feed's
   /// frame queue is full, reading waits, which pushes back on the client.
   /// A client that closes the connection meanwhile ends the feed, though its unread lines wait.
-  func feed(_ connection: EndpointConnection, profile: String) {
+  func feed(_ connection: EndpointConnection, persona: EndpointPersona) {
     guard let feeds else {
       connection.close(
         EndpointError(code: .feedClosed, message: "The service runs no virtual gamepads.")
@@ -20,10 +20,10 @@ extension EndpointServer {
     let token: UUID
     do {
       token = try Self.waitFor(connection) {
-        try await feeds.open(profile: profile, pool: .endpoint).token
+        try await feeds.open(profile: persona.profileName, pool: .endpoint).token
       }
     } catch {
-      connection.close(Self.feedError(error, profile: profile))
+      connection.close(Self.feedError(error, persona: persona))
       return
     }
     let exchanger = FeedExchanger(feeds: feeds, token: token, connection: connection)
@@ -36,7 +36,7 @@ extension EndpointServer {
       pump.cancel()
       Task { await feeds.close(token: token) }
     }
-    connection.send(EndpointFeedSession(as: profile))
+    connection.send(EndpointFeedSession(as: persona))
 
     while true {
       switch connection.readMessage() {
@@ -48,10 +48,11 @@ extension EndpointServer {
         connection.close(Self.invalid(reason))
         return
       case .message(let data):
-        guard let frame = Self.frame(data) else {
-          connection.close(
-            Self.invalid("Send Frame lines with apiVersion and kind after FeedSession.")
-          )
+        let frame: VirtualFeedFrame
+        switch Self.frame(data) {
+        case .success(let decoded): frame = decoded
+        case .failure(let refusal):
+          connection.close(refusal)
           return
         }
         while let accepted = exchanger.exchange([frame]), accepted == 0 {
@@ -63,29 +64,25 @@ extension EndpointServer {
     }
   }
 
-  /// The `apiVersion` and `kind` that an endpoint frame line must carry.
-  private struct FrameEnvelope: Decodable {
-    let apiVersion: String
-    let kind: String
-  }
-
-  /// The frame on the line; nil for anything else, such as a line without the `Frame` envelope.
+  /// The frame on the line, or the error that refuses the line: the header errors of
+  /// ``EndpointHeader``, or `E1004` for a `Frame` that does not decode.
   ///
-  /// Decodes each line twice, the envelope and then the frame, because ``VirtualFeedFrame``
-  /// takes the envelope as optional for the CLI's stdin lines.
-  private static func frame(_ data: Data) -> VirtualFeedFrame? {
-    let decoder = JSONDecoder()
-    guard let envelope = try? decoder.decode(FrameEnvelope.self, from: data),
-      envelope.apiVersion == OpenJoystickDriverAPI.version,
-      envelope.kind == VirtualFeedFrame.kind
-    else { return nil }
-    return try? decoder.decode(VirtualFeedFrame.self, from: data)
+  /// ``VirtualFeedFrame`` takes the envelope as optional for the CLI's stdin lines, so the header
+  /// is checked first.
+  private static func frame(_ data: Data) -> Result<VirtualFeedFrame, EndpointError> {
+    if let refusal = EndpointHeader.refusal(of: data, accepting: [VirtualFeedFrame.kind]) {
+      return .failure(refusal)
+    }
+    guard let frame = try? JSONDecoder().decode(VirtualFeedFrame.self, from: data) else {
+      return .failure(invalid("Send Frame lines that match the endpoint schema after FeedSession."))
+    }
+    return .success(frame)
   }
 
-  private static func feedError(_ error: any Error, profile: String) -> EndpointError {
+  private static func feedError(_ error: any Error, persona: EndpointPersona) -> EndpointError {
     switch error as? VirtualFeedError {
     case .unknownProfile:
-      invalid("\(profile) is not a virtual HID profile.")
+      invalid("\(persona.rawValue) is not a persona the service publishes.")
     case .tooManyFeeds(let limit):
       EndpointError(
         code: .tooManyFeeds,

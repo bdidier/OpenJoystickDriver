@@ -28,12 +28,23 @@ This page explains how to add a controller that OpenJoystickDriver does not know
 
 A controller record tells OpenJoystickDriver which protocol family drives one controller model, identified by its VID:PID. The app contains a bundled record for each supported model. Your records are JSON files in `~/Library/Application Support/OpenJoystickDriver/Controllers`. Each file is named after its model in lowercase hexadecimal, for example `045e-028e.json`.
 
-A record has one of two operations:
+A file in that folder is one of two kinds:
 
-- `add`: a complete record for a model that has no bundled record.
-- `patch`: new values for the `protocol`, `usb`, `ownership`, `output`, `input`, `tuning`, or `bluetoothLE` fields of a bundled record. The other fields stay bundled. A field you set replaces the bundled field whole, except `tuning`, which merges per value, and `protocol`: when it names the bundled family, OJD keeps the bundled protocol values you leave out, and the `parameters` you list merge key by key into the bundled parameters, your value winning. A patch cannot remove a bundled parameter. A `protocol` with a different family replaces the bundled one whole, with its parameters.
+- `Controller`: a complete record for a model that has no bundled record. Name it `VVVV-PPPP.json`.
+- `ControllerPatch`: new values for a model that already has a record. Name it `VVVV-PPPP.patch.json`. Its `selector` names the model by `vendorID` and `productID`, and its `patch` holds the fields to change.
 
-A record can also come from an installed [mod package](Writing-Controller-Mods.md). A package record sits between the bundled record and yours: your record wins over it. A `patch` record of yours for a model that only a package defines applies over the package record. If you remove the package later, OJD lists your patch as a problem and skips it.
+A patch follows RFC 7396 JSON Merge Patch. An object in `patch` merges into the record key by key, a value you give replaces the record's value, an array replaces the whole array, and `null` deletes the key. Deleting the last key of a section leaves an empty section, which a record does not accept, so set the whole section (`tuning`, `protocol.parameters`) to `null` instead. A patch that changes `protocol.family` must also set to `null` every `protocol` key of the old family that the new family does not read.
+
+```json
+{
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "ControllerPatch",
+  "selector": { "vendorID": 1118, "productID": 746 },
+  "patch": { "tuning": { "stickDeadzone": 0.08 }, "protocol": { "parameters": { "shareButton": null } } }
+}
+```
+
+Several patches can apply to one model. The layers apply from the weakest to the strongest: the bundled record, a bundled patch, a patch from an installed [mod package](Writing-Controller-Mods.md), then your patch. Inside one layer, a patch with `"selector": { "all": true }` applies first, a `vendorID` and `productID` patch next, and a patch with `"selector": { "model": "VVVV-PPPP" }` last. A `Controller` file of yours replaces a package's `Controller` file for the same model. A `ControllerPatch` of yours applies over the package record instead of replacing it. If you remove the package later, OJD lists your patch as a problem and skips it.
 
 A record for a model that uses raw USB works only when macOS lets OpenJoystickDriver open the device directly. The Xbox USB part of the [OJD driver extension](Connecting-Controllers.md#xbox-usb-driver-extension) claims only the Xbox models in its signed product list, and your record cannot add a model to that list. `ojd record validate` says when this applies.
 
@@ -46,11 +57,11 @@ macOS serves some controllers natively through the Game Controller framework. Op
 
 A raw-USB family, such as `xbox.gip`, has no `ownership` field, because macOS cannot serve those controllers. A new `ownership` value applies to a connected controller as soon as the running service reloads the records. You do not need to unplug the controller.
 
-To change `ownership` without editing the file, run `ojd controller ownership CONTROLLER native|virtual`. `native` sets `macos`, and `virtual` sets `ojd`. The command writes the value to your record for the model, and creates a `patch` record when you have none and the bundled catalog or an installed package has a record of the model. It refuses a raw-USB family, a controller that macOS does not serve natively, and a model that has no record at all, with the code E2023. For a model with no record, run `ojd record draft` to start one. `ojd controller show` names the choice and the layer it comes from. In the app, the controller detail has the same choice as the **Served by** picker, shown for a controller that macOS serves natively or that a record gives to OpenJoystickDriver, and never for a raw-USB family.
+To change `ownership` without editing the file, run `ojd controller ownership CONTROLLER native|virtual`. `native` sets `macos`, and `virtual` sets `ojd`. The command writes the value to your record for the model, and creates a `ControllerPatch` file when you have none and the bundled catalog or an installed package has a record of the model. It refuses a raw-USB family, a controller that macOS does not serve natively, and a model that has no record at all, with the code E2023. For a model with no record, run `ojd record draft` to start one. `ojd controller show` names the choice and the layer it comes from. In the app, the controller detail has the same choice as the **Served by** picker, shown for a controller that macOS serves natively or that a record gives to OpenJoystickDriver, and never for a raw-USB family.
 
 ## Describe a Controller's Input Reports
 
-Some controllers send fixed input reports that their HID descriptor describes wrongly. A record with the protocol family `hid.report-layout` names where each control sits in the report, in its `input` field. The family requires `input`, and no other family takes it.
+Some controllers send fixed input reports that their HID descriptor describes wrongly. A record with the protocol family `hid.report-layout` names where each control sits in the report, in its `input` field. The family requires `input`, and no other family takes it in a record. The bundled `xbox.xid` protocol description declares its own `input` layout as data, in `Resources/Protocols/xbox.xid.json`, with the same fields.
 
 ```json
 "protocol": { "family": "hid.report-layout" },
@@ -82,8 +93,8 @@ Offsets count from the first byte of the report as macOS delivers it.
 
 - `report`: `length` is the shortest report OpenJoystickDriver reads, from 1 to 64 bytes. With `id`, from 1 to 255, byte 0 must hold that report ID, and `length` counts it. OpenJoystickDriver ignores shorter reports and reports with another ID.
 - `buttons`: each entry names a control, a `byte`, and a `mask`. The button is pressed while any masked bit is set. Repeat a control to read it from several places. A button cannot be `dpad`, a stick axis, `left-trigger`, or `right-trigger`.
-- `axes`: each entry names a stick axis and its `byte`. `bits` is 8, the default, or 16 for a little-endian value in `byte` and the next byte. `signed` reads the value as two's complement. `min` and `max` set the raw range, which defaults to the full range of the width. `inverted` flips the direction. X grows right and Y grows down, as in HID.
-- `hat`: a list of sources; the first that reads a direction wins. An `8-way` source reads the masked bits as 0 for north, clockwise to 7 for north-west, and any other value as centered. With `neutralUntilNonzero`, 0 also reads centered until the bits have been nonzero once, for a controller that sends 0 before its hat is live. A `directions` source names one bit for each direction; opposing directions cancel.
+- `axes`: each entry names a stick axis and its `byte`. `bits` is 8, the default, or 16 for a little-endian value in `byte` and the next byte. `signed` reads the value as two's complement. `min` and `max` set the raw range, which defaults to the full range of the width. `inverted` flips the direction. `symmetric` reads a signed value as the raw value divided by `max`, so the lowest raw value reads as full negative; it requires `signed`; `min` and `max` default to the full range, and if given must be negative and positive. X grows right and Y grows down, as in HID.
+- `hat`: a list of sources; the first that reads a direction wins. An `8-way` source reads the masked bits as 0 for north, clockwise to 7 for north-west, and any other value as centered. With `neutralUntilNonzero`, 0 also reads centered until the bits have been nonzero once, for a controller that sends 0 before its hat is live. A `directions` source names one bit for each direction; opposing directions cancel. A `table` source takes a `byte`, a `mask`, and `values`, which maps each masked number, written in decimal without leading zeros, to a direction name from `north`, `northEast`, `east`, `southEast`, `south`, `southWest`, `west`, and `northWest`; any other number reads as centered.
 - `leftTrigger` and `rightTrigger`: a `byte` read from 0 to 255, a `button` that reads as fully pulled, or both.
 
 Name at least one control. `ojd record validate` checks that every field lies inside the report.
@@ -152,23 +163,24 @@ A record's `tuning` field changes a value that the protocol driver otherwise set
 
 Raw-USB families, such as `xbox.gip`, do not take the two HID timings. The two recovery values apply only to `nintendo.switch1`, because the `nintendo.switch2` and `nintendo.switch-input-only` drivers have no startup recovery. `ojd record validate` rejects a value outside its range or its families.
 
-A `tuning` in a `patch` merges per value into the bundled `tuning`: a value you leave out keeps its bundled value. Timings apply when the running service connects the controller again after the record changes.
+A `tuning` in a `ControllerPatch` merges per value into the bundled `tuning`: a value you leave out keeps its bundled value. Timings apply when the running service connects the controller again after the record changes.
 
 ### Set a Default for Every Controller
 
-`~/Library/Application Support/OpenJoystickDriver/Defaults.json` sets a `tuning` default for every controller. It uses the same values as a record, and [`defaults.schema.json`](../Resources/Schemas/defaults.schema.json) describes it.
+`~/Library/Application Support/OpenJoystickDriver/Controllers/all.patch.json` sets a `tuning` default for every controller. It is a `ControllerPatch` with `"selector": { "all": true }`, and [`controller-patch.schema.json`](../Resources/Schemas/controller-patch.schema.json) describes it. Only `tuning` may appear in its `patch`.
 
 ```json
 {
   "apiVersion": "openjoystickdriver/v1alpha1",
-  "kind": "ControllerDefaults",
-  "tuning": { "stickDeadzone": 0.05 }
+  "kind": "ControllerPatch",
+  "selector": { "all": true },
+  "patch": { "tuning": { "stickDeadzone": 0.05 } }
 }
 ```
 
-Each value takes the first layer that sets it, from the strongest down: your record, the bundled record, `Defaults.json`, then the driver's own default. A value in `Defaults.json` applies only to the families that read it, as in the table above. The file is optional. An invalid file is ignored whole, and `ojd config show`, `ojd status`, and the `config-files` check of `ojd diagnose` report why. `ojd config show` prints each value and the layer that set it.
+Each value takes the first layer that sets it, from the strongest down: a patch of yours for the model, your `all.patch.json`, the package, the bundled record, then the driver's own default. A value in `all.patch.json` applies only to the families that read it, as in the table above. The file is optional. An invalid file is ignored whole, and `ojd config show`, `ojd status`, and the `config-files` check of `ojd diagnose` report why. `ojd config show` prints each value and the layer that set it.
 
-The record's `stickDeadzone` shapes the virtual gamepad's stick report. A profile's `innerDeadzone` calibrates a stick that the profile maps to aim, flick, pointer, scroll, or steering output. The two do not inherit from each other: a deadzone in a record or in `Defaults.json` does not change what a profile mapping does. `ojd config show --controller` lists the active profile's `innerDeadzone` values in the `profile` layer next to the record's keys, when the service runs.
+The record's `stickDeadzone` shapes the virtual gamepad's stick report. A profile's `innerDeadzone` calibrates a stick that the profile maps to aim, flick, pointer, scroll, or steering output. The two do not inherit from each other: a deadzone in a record or in `all.patch.json` does not change what a profile mapping does. `ojd config show --controller` lists the active profile's `innerDeadzone` values in the `profile` layer next to the record's keys, when the service runs.
 
 ### Change the Virtual Gamepad Identity
 
@@ -221,7 +233,7 @@ OpenJoystickDriver connects a Nintendo Switch 2 controller over Bluetooth LE onl
 
 Write the UUID in uppercase. Only a `nintendo.switch2` record takes `bluetoothLE`. The service looks for Switch 2 advertisements with the Nintendo vendor ID (`057E`) only.
 
-A Switch 2 record without `bluetoothLE` connects over USB only, and `ojd record validate` and `ojd record show` say so. The bundled Switch 2 records have the section, and a `patch` that leaves `bluetoothLE` out keeps the bundled value. An `add` for a new Switch 2 model needs its own `bluetoothLE`.
+A Switch 2 record without `bluetoothLE` connects over USB only, and `ojd record validate` and `ojd record show` say so. The bundled Switch 2 records have the section, and a `ControllerPatch` that leaves `bluetoothLE` out keeps the bundled value. A `Controller` for a new Switch 2 model needs its own `bluetoothLE`.
 
 ## Draft a Record From a Connected Controller
 
@@ -231,12 +243,12 @@ A Switch 2 record without `bluetoothLE` connects over USB only, and `ojd record 
 2. For 10 seconds, press every button and move each stick, trigger, and the D-pad. `--duration SECONDS` changes the time.
 3. Read the bytes that changed. For each report byte that took more than one value, the command prints its offset and its lowest and highest value on stderr.
 
-The record maps what the HID report descriptor states plainly: buttons 1 to 11 in the order the `hid.descriptor` family reads them, X, Y, Rx, and Ry sticks, Z and Rz triggers, and the hat, with the `hid.report-layout` family. When nothing maps, it names `hid.descriptor` instead. Check every control against the changed bytes and correct the record before you install it. The record is a `patch` for a model with a bundled record and an `add` otherwise.
+The record maps what the HID report descriptor states plainly: buttons 1 to 11 in the order the `hid.descriptor` family reads them, X, Y, Rx, and Ry sticks, Z and Rz triggers, and the hat, with the `hid.report-layout` family. When nothing maps, it names `hid.descriptor` instead. Check every control against the changed bytes and correct the record before you install it. The draft is a `ControllerPatch` for a model with a bundled record and a `Controller` otherwise.
 
 ## Install a Record
 
 1. Find the VID:PID of your controller. For more information, see [Finding your controller ID](Connecting-Controllers.md#finding-your-controller-id).
-2. Write the record file. Set `apiVersion` to `openjoystickdriver/v1alpha1` and `kind` to `ControllerOverride`.
+2. Write the record file. Set `apiVersion` to `openjoystickdriver/v1alpha1` and `kind` to `Controller` or `ControllerPatch`.
 3. Check the file. Run `ojd record validate FILE`.
 4. Install the file. Run `ojd record install FILE`.
 
@@ -255,11 +267,11 @@ OpenJoystickDriver skips a file that is not valid and uses the bundled record fo
 1. Run `ojd record remove VVVV:PPPP`.
 2. Confirm the deletion.
 
-A bundled model then goes back to its bundled record.
+The command removes the `Controller` file and the patch file of that model. A bundled model then goes back to its bundled record.
 
 ## Schema Versions and Compatibility
 
-Each file that OJD reads declares `apiVersion: openjoystickdriver/v1alpha1` and its `kind`, such as `Controller`, `ControllerOverride`, `ControllerDefaults`, `Persona`, `Profile`, or `ModPackage`. Files do not declare `$schema`. OJD accepts only the `apiVersion` it supports and rejects every other one, a missing one, and a `kind` it does not read there. The error names the file, the version it found, and the supported one. It does not convert files. The schemas are flat files in `Resources/Schemas/`, and each `$id` is `https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/<kind>.schema.json`. Nothing publishes those IDs yet.
+Each file that OJD reads declares `apiVersion: openjoystickdriver/v1alpha1` and its `kind`, such as `Controller`, `ControllerPatch`, `Persona`, `Profile`, or `ModPackage`. Files do not declare `$schema`. OJD accepts only the `apiVersion` it supports and rejects every other one, a missing one, and a `kind` it does not read there. The error names the file, the version it found, and the supported one. It does not convert files. The schemas are flat files in `Resources/Schemas/`, and each `$id` is `https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/<kind>.schema.json`. Nothing publishes those IDs yet.
 
 - Before 1.0, a `v1alpha1` schema may change incompatibly. The release notes list each such change and how to update a file.
 - At 1.0 the schemas are promoted to `v1`. A `v1` schema takes only additive changes: a new optional field, or a new value where a reader can ignore it.

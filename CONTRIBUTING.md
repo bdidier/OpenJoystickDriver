@@ -32,7 +32,7 @@ Open tasks: [issues](https://github.com/xsyetopz/OpenJoystickDriver/issues).
 ## Adding a Controller
 
 1. `system_profiler SPUSBDataType`. `bDeviceClass` `0xff` is vendor-specific (often GIP); `0x03` is HID.
-2. Do not hand-edit generated records. Update the pinned importer, or add `Resources/ControllerOverrides/<vid>/<vid>-<pid>.json`. Decimal JSON, no display names, no protocol defaults. Then:
+2. Do not hand-edit generated records. Update the pinned importer, or add `Resources/Controllers/<vid>/<vid>-<pid>.json` (a `Controller` for a model no pinned source knows) or `Resources/ControllerPatches/<vid>/<vid>-<pid>.patch.json` (a `ControllerPatch`). Decimal JSON, no display names, no protocol defaults. Then:
 
    ```bash
    ./Scripts/ojd catalog regenerate --write

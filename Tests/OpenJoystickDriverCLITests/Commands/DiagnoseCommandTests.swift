@@ -254,7 +254,7 @@ struct DiagnoseCommandTests {
     )
     try FileManager.default.createDirectory(at: personas, withIntermediateDirectories: true)
     defer { try? FileManager.default.removeItem(at: support) }
-    try Data("{".utf8).write(to: support.appendingPathComponent("Defaults.json"))
+    try Data("{".utf8).write(to: support.appendingPathComponent("Controllers/all.patch.json"))
     try Data("{".utf8).write(to: personas.appendingPathComponent("broken.json"))
 
     let result = await run(
@@ -267,7 +267,7 @@ struct DiagnoseCommandTests {
     let checks = try #require(try result.json()["checks"] as? [[String: String]])
     let config = try #require(checks.first { $0["id"] == "config-files" })
     #expect(config["status"] == "warn")
-    #expect(config["detail"]?.contains("Defaults.json (the file is not a JSON object)") == true)
+    #expect(config["detail"]?.contains("all.patch.json (the file is not a JSON object)") == true)
     #expect(config["detail"]?.contains("broken.json (the file is not a JSON object)") == true)
     let clean = await run(["--json"], socketPath: temporarySocketPath())
     let cleanChecks = try #require(try clean.json()["checks"] as? [[String: String]])

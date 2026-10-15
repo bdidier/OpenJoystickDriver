@@ -60,6 +60,9 @@ extension EquivalenceSnapshotCatalogTests {
           "inputLayout hat directions up=\(field(up)) right=\(field(right))"
             + " down=\(field(down)) left=\(field(left))"
         )
+      case .table(let hat, let directions):
+        let entries = directions.sorted { $0.key < $1.key }.map { "\($0.key)=\($0.value.rawValue)" }
+        lines.append("inputLayout hat table \(field(hat)) \(entries.joined(separator: ","))")
       }
     }
     for (name, trigger) in [("left", layout.leftTrigger), ("right", layout.rightTrigger)] {

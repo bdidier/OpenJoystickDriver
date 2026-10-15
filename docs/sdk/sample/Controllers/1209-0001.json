@@ -1,40 +1,87 @@
 {
   "apiVersion": "openjoystickdriver/v1alpha1",
-  "kind": "ControllerOverride",
-  "operation": "add",
-  "record": {
-    "apiVersion": "openjoystickdriver/v1alpha1",
-    "kind": "Controller",
-    "vendorID": 4617,
-    "productID": 1,
-    "protocol": {
-      "family": "hid.report-layout"
+  "kind": "Controller",
+  "vendorID": 4617,
+  "productID": 1,
+  "protocol": {
+    "family": "hid.report-layout"
+  },
+  "input": {
+    "report": {
+      "length": 8
     },
-    "input": {
-      "report": {
-        "length": 8
+    "buttons": [
+      {
+        "control": "face-south",
+        "byte": 0,
+        "mask": 1
       },
-      "buttons": [
-        { "control": "face-south", "byte": 0, "mask": 1 },
-        { "control": "face-east", "byte": 0, "mask": 2 },
-        { "control": "face-west", "byte": 0, "mask": 4 },
-        { "control": "face-north", "byte": 0, "mask": 8 },
-        { "control": "left-shoulder", "byte": 0, "mask": 16 },
-        { "control": "right-shoulder", "byte": 0, "mask": 32 },
-        { "control": "view", "byte": 0, "mask": 64 },
-        { "control": "menu", "byte": 0, "mask": 128 }
-      ],
-      "axes": [
-        { "control": "left-stick-x", "byte": 2 },
-        { "control": "left-stick-y", "byte": 3 },
-        { "control": "right-stick-x", "byte": 4 },
-        { "control": "right-stick-y", "byte": 5 }
-      ],
-      "hat": [
-        { "encoding": "8-way", "byte": 1, "mask": 15 }
-      ],
-      "leftTrigger": { "byte": 6 },
-      "rightTrigger": { "byte": 7 }
+      {
+        "control": "face-east",
+        "byte": 0,
+        "mask": 2
+      },
+      {
+        "control": "face-west",
+        "byte": 0,
+        "mask": 4
+      },
+      {
+        "control": "face-north",
+        "byte": 0,
+        "mask": 8
+      },
+      {
+        "control": "left-shoulder",
+        "byte": 0,
+        "mask": 16
+      },
+      {
+        "control": "right-shoulder",
+        "byte": 0,
+        "mask": 32
+      },
+      {
+        "control": "view",
+        "byte": 0,
+        "mask": 64
+      },
+      {
+        "control": "menu",
+        "byte": 0,
+        "mask": 128
+      }
+    ],
+    "axes": [
+      {
+        "control": "left-stick-x",
+        "byte": 2
+      },
+      {
+        "control": "left-stick-y",
+        "byte": 3
+      },
+      {
+        "control": "right-stick-x",
+        "byte": 4
+      },
+      {
+        "control": "right-stick-y",
+        "byte": 5
+      }
+    ],
+    "hat": [
+      {
+        "encoding": "8-way",
+        "byte": 1,
+        "mask": 15
+      }
+    ],
+    "leftTrigger": {
+      "byte": 6
+    },
+    "rightTrigger": {
+      "byte": 7
     }
   }
 }

@@ -133,8 +133,8 @@ struct ProtocolDescription: Sendable {
 
   /// Why the defaults name something the family's driver does not read, or nil.
   private var scopeViolation: String? {
-    if inputLayout != nil, family != .hidReportLayout {
-      return "an input layout applies only to hid.report-layout"
+    if inputLayout != nil, !family.describesInputLayout {
+      return "an input layout applies only to hid.report-layout and xbox.xid"
     }
     if rumbleTemplate != nil, !family.encodesRumbleTemplate {
       return "rumble templates require a driver that encodes them"

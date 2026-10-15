@@ -42,10 +42,10 @@ final class ControllerRecordWatcher {
       }
     }
     apply()
-    // The parent folder holds `Defaults.json`, which sits under every record's tuning. A package
-    // is installed, replaced, and removed as a folder of `Packages`, and each folder is watched.
+    // A package is installed, replaced, and removed as a folder of `Packages`, and each folder is
+    // watched.
     let watcher = FileChangeWatcher(
-      directories: [directory, directory.deletingLastPathComponent(), packages],
+      directories: [directory, packages],
       watchesFile: {
         $0.pathExtension == "json"
           || $0.deletingLastPathComponent().standardizedFileURL == packages.standardizedFileURL

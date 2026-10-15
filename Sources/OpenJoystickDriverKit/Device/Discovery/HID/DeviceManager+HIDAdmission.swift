@@ -86,7 +86,10 @@ extension DeviceManager {
       }
     }
     let connectionName = physicalDevice.transportProperty ?? "HID"
-    let classification = protocolDriverRegistry.classify(physicalDevice, backend: .ioHID)
+    let classification = protocolDriverRegistry.classify(
+      physicalDevice,
+      backend: connection.accessBackend
+    )
     let binding: ProtocolBinding
     let driver: any PhysicalProtocolDriver
     switch classification {

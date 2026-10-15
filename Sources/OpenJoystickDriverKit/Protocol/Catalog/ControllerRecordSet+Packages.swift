@@ -25,55 +25,42 @@ extension ControllerRecordSet {
   /// `mod.json` is listed with the reason. A package record that fails validation, has the wrong
   /// file name, or repeats the model of an earlier package's record is skipped and listed with
   /// its reason. `runningVersion` is the OJD version that the
-  /// `requires` of a package is checked against; nil means the running one.
+  /// `requires` of a package is checked against; nil means the running one. Package Controller
+  /// files apply first, then the package patches in the order of
+  /// ``ControllerPatchMerge/ordered(_:)``.
   static func packageRecords(
     in directory: URL,
     runningVersion: String? = nil
   ) -> ControllerPackageRecords {
     var packaged = ControllerPackageRecords(records: bundled.records)
-    var owners: [ControllerModelID: String] = [:]
+    var entries: [ControllerLayerEntry] = []
+    var manifestProblems: [(position: Int, file: ControllerRecordFile)] = []
     for package in ModPackageStore(directory: directory, runningVersion: runningVersion).list() {
       guard let manifest = package.manifest, package.problem == nil else {
-        packaged.files.append(
-          ControllerRecordFile(
-            url: package.directory.appendingPathComponent(ModPackageManifest.fileName),
-            model: nil,
-            operation: nil,
-            problem: package.problem
+        manifestProblems.append(
+          (
+            entries.count,
+            ControllerRecordFile(
+              url: package.directory.appendingPathComponent(ModPackageManifest.fileName),
+              model: nil,
+              operation: nil,
+              problem: package.problem
+            )
           )
         )
         continue
       }
-      for name in manifest.records.sorted() {
-        let url = package.directory.appendingPathComponent("Controllers/\(name)")
-        let file: ControllerRecordFile
-        do {
-          let validated = try validate(Data(contentsOf: url), file: url, layer: .package)
-          let model = validated.record.model
-          if name != fileName(for: model) {
-            throw ControllerRecordProblem("the file name must be \(fileName(for: model))")
-          }
-          if let owner = owners[model] {
-            throw ControllerRecordProblem("same controller as package \(owner)")
-          }
-          owners[model] = package.name
-          packaged.records[model] = validated.record
-          file = ControllerRecordFile(
-            url: url,
-            model: model,
-            operation: validated.operation,
-            problem: nil
-          )
-        } catch {
-          file = ControllerRecordFile(
-            url: url,
-            model: nil,
-            operation: nil,
-            problem: problemDescription(error)
-          )
-        }
-        packaged.files.append(file)
+      entries += manifest.records.sorted().map {
+        ControllerLayerEntry(
+          url: package.directory.appendingPathComponent("Controllers/\($0)"),
+          owner: package.name
+        )
       }
+    }
+    let applied = applyLayer(entries, layer: .package, to: &packaged.records).files
+    for position in 0...applied.count {
+      packaged.files += manifestProblems.filter { $0.position == position }.map(\.file)
+      if position < applied.count { packaged.files.append(applied[position]) }
     }
     return packaged
   }

@@ -53,7 +53,7 @@ class EndpointReferenceClientTests(unittest.TestCase):
         return {"apiVersion": self.client["API_VERSION"], "kind": kind, **fields}
 
     def feed_request(self) -> dict[str, Any]:
-        return self.envelope("FeedRequest", **{"as": "hid-generic"})
+        return self.envelope("FeedRequest", **{"as": "Generic"})
 
     def frame_lines(self) -> list[dict[str, Any]]:
         return [self.envelope("Frame", **frame) for frame in self.client["FRAMES"]]
@@ -88,7 +88,7 @@ class EndpointReferenceClientTests(unittest.TestCase):
 
     def test_service_lines_match_the_schema(self) -> None:
         lines = [
-            self.envelope("FeedSession", **{"as": "hid-generic"}),
+            self.envelope("FeedSession", **{"as": "Generic"}),
             {
                 "apiVersion": self.client["API_VERSION"],
                 "kind": "RumbleCommand",
@@ -108,7 +108,7 @@ class EndpointReferenceClientTests(unittest.TestCase):
             self.envelope(
                 "Status",
                 status="Failure",
-                code="E1003",
+                code="E1010",
                 message="Unsupported.",
                 details={"supportedAPIVersions": [self.client["API_VERSION"]]},
             ),
@@ -157,7 +157,7 @@ class EndpointReferenceClientTests(unittest.TestCase):
                             self.envelope("Welcome", version="test", scopes=["control"])
                         )
                         received.append(json.loads(lines.readline()))
-                        send(self.envelope("FeedSession", **{"as": "hid-generic"}))
+                        send(self.envelope("FeedSession", **{"as": "Generic"}))
                         send(rumble)
                         received.extend(json.loads(line) for line in lines)
 
@@ -203,7 +203,7 @@ class EndpointReferenceClientTests(unittest.TestCase):
                         lines.readline()
                         send(self.envelope("Welcome", version="test", scopes=[]))
                         lines.readline()
-                        send(self.envelope("FeedSession", **{"as": "hid-generic"}))
+                        send(self.envelope("FeedSession", **{"as": "Generic"}))
                         after_feeding(send)
 
                 server = threading.Thread(target=serve, daemon=True)

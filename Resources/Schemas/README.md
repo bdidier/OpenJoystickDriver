@@ -5,8 +5,7 @@
 ## Live Contracts
 
 - `controller.schema.json`: generated runtime controller records.
-- `controller-override.schema.json`: authored additions and factual patches.
-- `defaults.schema.json`: `Defaults.json`, the `tuning` defaults for every controller.
+- `controller-patch.schema.json`: a `ControllerPatch`, an RFC 7396 merge patch of a controller record chosen by a `selector` (`model`, `vendorID` and `productID`, or `all`). The authored patches in `Resources/ControllerPatches/` and the user and package files `Controllers/*.patch.json` use it, and `Controllers/all.patch.json` gives the `tuning` defaults for every controller. It checks the patch shape only; the merged record is checked against `controller.schema.json`.
 - `persona.schema.json`: a persona file, which matches a controller and gives the descriptor and HID identity its virtual gamepad publishes.
 - `mod-package.schema.json`: the `mod.json` manifest of a mod package folder.
 - `protocol-description.schema.json`: the authored protocol descriptions `Resources/Protocols/<family>.json`. Each holds the USB interface signatures (class, subclass, protocol, and the data interface number when the family pins one) that bind a device of that family without a record. The file name must equal `family`, and each signature's `variant` must be one the family implements (`PhysicalProtocolID.variants`); a family with no variants has no signatures. `./Scripts/ojd catalog regenerate` copies them into the Kit bundle.
@@ -23,8 +22,7 @@ Each artifact class has one current contract, a flat `<kind>.schema.json` here. 
 | Schema | `kind` |
 | --- | --- |
 | `controller.schema.json` | `Controller` |
-| `controller-override.schema.json` | `ControllerOverride` |
-| `defaults.schema.json` | `ControllerDefaults` |
+| `controller-patch.schema.json` | `ControllerPatch` |
 | `persona.schema.json` | `Persona` |
 | `profile.schema.json` | `Profile` |
 | `mod-package.schema.json` | `ModPackage` |

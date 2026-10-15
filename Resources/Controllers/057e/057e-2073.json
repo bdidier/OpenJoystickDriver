@@ -1,0 +1,15 @@
+{
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "Controller",
+  "vendorID": 1406,
+  "productID": 8307,
+  "protocol": {
+    "family": "nintendo.switch2",
+    "parameters": {
+      "layout": "GameCube"
+    }
+  },
+  "bluetoothLE": {
+    "vibrationCharacteristic": "3F8FB670-AB25-45BF-B540-38C72834D064"
+  }
+}

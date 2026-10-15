@@ -94,7 +94,7 @@ struct StatusReport: Encodable, Equatable {
   /// User controller records OJD skipped. Read from the files, so present while the service is
   /// stopped.
   let skippedRecords: [SkippedRecord]
-  /// The `Defaults.json` OJD ignored whole; absent when it applied the file or there is none.
+  /// The `all.patch.json` OJD ignored whole; absent when it applied the file or there is none.
   let ignoredDefaults: SkippedRecord?
   /// Persona files OJD skipped. Read from the files, so present while the service is stopped.
   let skippedPersonas: [SkippedRecord]
