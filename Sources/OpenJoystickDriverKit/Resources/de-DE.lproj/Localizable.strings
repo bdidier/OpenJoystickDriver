@@ -1419,7 +1419,7 @@
 "error.E2027" = "Der Dienst wird beendet. Starte ihn und versuche es dann erneut.";
 "error.E2028" = "Ein Token mit diesem Namen existiert. Widerrufe ihn zuerst oder wähle einen anderen Namen.";
 "error.E2029" = "Das ist kein Token-Name. Verwende 1 bis 64 Buchstaben, Ziffern, Punkte, Bindestriche oder Unterstriche.";
-"error.E2030" = "Das ist kein Web-Origin. Verwende scheme://host[:port] mit http oder https, zum Beispiel http://127.0.0.1:8080.";
+"error.E2030" = "Das ist kein Web-Origin. Verwende scheme://host[:port] mit http oder https, zum Beispiel `http://127.0.0.1:8080`.";
 "error.E2031" = "Dieser Port auf 127.0.0.1 ist belegt oder kann nicht geöffnet werden. Wähle mit --port einen anderen.";
 "error.E2032" = "Ein Token mit Origins darf den Bereich control nicht haben, weil eine Seite nie ein virtuelles Gamepad steuern darf. Erteile control einem Token ohne Origins.";
 "cli.record.usb_not_claimed" = "Die Familie nutzt rohes USB, und die USB-Erweiterung kann diesen Controller nicht übernehmen, weil ihre Produktliste von Apple signiert ist. OJD erreicht ihn nur über direkten USB-Zugriff, sofern macOS ihn erlaubt.";

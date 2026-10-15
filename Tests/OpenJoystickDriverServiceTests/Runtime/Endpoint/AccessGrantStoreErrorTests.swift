@@ -5,7 +5,7 @@ import Testing
 @testable import OpenJoystickDriverService
 
 struct AccessGrantStoreErrorTests {
-  fileprivate struct Case: CustomTestStringConvertible, Sendable {
+  struct Case: CustomTestStringConvertible, Sendable {
     let error: AccessGrantStoreError
     let code: ErrorCode
     /// The value that the message names after the text; nil for a message without one.
@@ -20,7 +20,7 @@ struct AccessGrantStoreErrorTests {
     expected: "AccessGrants"
   )!
 
-  fileprivate static let cases: [Case] = [
+  static let cases: [Case] = [
     Case(error: .unsupported(problem), code: .unsupportedAccessGrants, detail: problem.description),
     Case(error: .unknownClient("a1b2c3d4"), code: .unknownAccessClient, detail: "a1b2c3d4"),
     Case(error: .notGrantable(.adHoc), code: .ungrantableClient, detail: "adHoc"),
@@ -34,7 +34,7 @@ struct AccessGrantStoreErrorTests {
   ]
 
   @Test(arguments: cases)
-  fileprivate func theMessageLeadsWithTheCodeAndItsLocalizedText(_ item: Case) {
+  func theMessageLeadsWithTheCodeAndItsLocalizedText(_ item: Case) {
     let message = item.error.errorDescription ?? ""
     let text = item.code.localizedExplanation
     #expect(item.error.code == item.code)

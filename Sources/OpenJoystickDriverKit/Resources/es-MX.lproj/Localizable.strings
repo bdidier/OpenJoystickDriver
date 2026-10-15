@@ -1419,7 +1419,7 @@
 "error.E2027" = "El servicio se está deteniendo. Inícialo y vuelve a intentarlo.";
 "error.E2028" = "Ya existe un token con este nombre. Revócalo primero o elige otro nombre.";
 "error.E2029" = "Esto no es un nombre de token. Usa de 1 a 64 letras, dígitos, puntos, guiones o guiones bajos.";
-"error.E2030" = "Esto no es un origen web. Usa scheme://host[:port] con http o https, por ejemplo http://127.0.0.1:8080.";
+"error.E2030" = "Esto no es un origen web. Usa scheme://host[:port] con http o https, por ejemplo `http://127.0.0.1:8080`.";
 "error.E2031" = "Este puerto en 127.0.0.1 está en uso o no se puede abrir. Elige otro con --port.";
 "error.E2032" = "Un token con orígenes no puede tener el alcance control, porque una página nunca debe manejar un control virtual. Concede control a un token sin orígenes.";
 "cli.record.usb_not_claimed" = "La familia usa USB sin procesar, y la extensión USB no puede reclamar este control, porque su lista de productos está firmada por Apple. OJD solo llega a él mediante acceso USB directo, cuando macOS lo permite.";

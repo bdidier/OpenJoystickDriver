@@ -1419,7 +1419,7 @@
 "error.E2027" = "Dịch vụ đang dừng. Hãy khởi động dịch vụ, rồi thử lại.";
 "error.E2028" = "Đã có mã thông báo với tên này. Hãy thu hồi nó trước, hoặc chọn tên khác.";
 "error.E2029" = "Đây không phải tên mã thông báo. Dùng từ 1 đến 64 chữ cái, chữ số, dấu chấm, dấu gạch ngang hoặc dấu gạch dưới.";
-"error.E2030" = "Đây không phải nguồn gốc web. Dùng scheme://host[:port] với http hoặc https, chẳng hạn http://127.0.0.1:8080.";
+"error.E2030" = "Đây không phải nguồn gốc web. Dùng scheme://host[:port] với http hoặc https, chẳng hạn `http://127.0.0.1:8080`.";
 "error.E2031" = "Cổng này trên 127.0.0.1 đang được dùng hoặc không thể mở. Hãy chọn cổng khác bằng --port.";
 "error.E2032" = "Mã thông báo có nguồn gốc không thể có phạm vi control, vì một trang không bao giờ được điều khiển tay cầm ảo. Hãy cấp control cho mã thông báo không có nguồn gốc.";
 "cli.record.usb_not_claimed" = "Họ thiết bị này dùng USB thô, và phần mở rộng USB không thể chiếm bộ điều khiển này, vì danh sách sản phẩm của nó do Apple ký. OJD chỉ truy cập được nó qua truy cập USB trực tiếp, khi macOS cho phép.";

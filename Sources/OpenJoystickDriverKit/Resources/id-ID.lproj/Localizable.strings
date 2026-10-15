@@ -1419,7 +1419,7 @@
 "error.E2027" = "Layanan sedang berhenti. Mulai layanan itu, lalu coba lagi.";
 "error.E2028" = "Token dengan nama ini sudah ada. Cabut dulu, atau pilih nama lain.";
 "error.E2029" = "Ini bukan nama token. Pakai 1 sampai 64 huruf, angka, titik, tanda hubung, atau garis bawah.";
-"error.E2030" = "Ini bukan origin web. Pakai scheme://host[:port] dengan http atau https, misalnya http://127.0.0.1:8080.";
+"error.E2030" = "Ini bukan origin web. Pakai scheme://host[:port] dengan http atau https, misalnya `http://127.0.0.1:8080`.";
 "error.E2031" = "Port ini di 127.0.0.1 sedang dipakai atau tidak dapat dibuka. Pilih port lain dengan --port.";
 "error.E2032" = "Token dengan origin tidak boleh punya cakupan control, karena halaman tidak boleh menggerakkan gamepad virtual. Berikan control ke token tanpa origin.";
 "cli.record.usb_not_claimed" = "Famili ini menggunakan USB mentah, dan ekstensi USB tidak dapat mengklaim pengontrol ini, karena daftar produknya ditandatangani Apple. OJD hanya menjangkaunya melalui akses USB langsung, jika macOS mengizinkan.";

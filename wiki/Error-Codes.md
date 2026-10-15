@@ -67,7 +67,7 @@ The table is generated from the code catalog and the English text of OJD. The ta
 | E2027 | Command line | The service is stopping. Start it, then try again. Exit code 1. |
 | E2028 | Command line | A token with this name exists. Revoke it first, or choose another name. Exit code 64. |
 | E2029 | Command line | This is not a token name. Use 1 to 64 letters, digits, dots, hyphens, or underscores. Exit code 64. |
-| E2030 | Command line | This is not a web origin. Use scheme://host[:port] with http or https, such as http://127.0.0.1:8080. Exit code 64. |
+| E2030 | Command line | This is not a web origin. Use scheme://host[:port] with http or https, such as `http://127.0.0.1:8080`. Exit code 64. |
 | E2031 | Command line | This port on 127.0.0.1 is in use or cannot be opened. Choose another with --port. Exit code 64. |
 | E2032 | Command line | A token with origins cannot have the control scope, because a page must never drive a virtual gamepad. Grant control to a token without origins. Exit code 64. |
 | E3001 | Remapping | The controller is not connected or not ready for remapping. Reconnect it and try again. Wire value `controller_unavailable`. |

@@ -1419,7 +1419,7 @@
 "error.E2027" = "O serviço está parando. Inicie-o e tente novamente.";
 "error.E2028" = "Já existe um token com este nome. Revogue-o primeiro ou escolha outro nome.";
 "error.E2029" = "Isto não é um nome de token. Use de 1 a 64 letras, dígitos, pontos, hifens ou sublinhados.";
-"error.E2030" = "Isto não é uma origem web. Use scheme://host[:port] com http ou https, como http://127.0.0.1:8080.";
+"error.E2030" = "Isto não é uma origem web. Use scheme://host[:port] com http ou https, como `http://127.0.0.1:8080`.";
 "error.E2031" = "Esta porta em 127.0.0.1 está em uso ou não pode ser aberta. Escolha outra com --port.";
 "error.E2032" = "Um token com origens não pode ter o escopo control, porque uma página nunca deve controlar um gamepad virtual. Conceda control a um token sem origens.";
 "cli.record.usb_not_claimed" = "A família usa USB bruto, e a extensão USB não consegue assumir este controle, porque a lista de produtos dela é assinada pela Apple. O OJD só o alcança por acesso USB direto, quando o macOS permite.";

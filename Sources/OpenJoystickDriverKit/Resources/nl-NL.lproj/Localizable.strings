@@ -1419,7 +1419,7 @@
 "error.E2027" = "De service wordt gestopt. Start hem en probeer het opnieuw.";
 "error.E2028" = "Er bestaat al een token met deze naam. Trek het eerst in of kies een andere naam.";
 "error.E2029" = "Dit is geen tokennaam. Gebruik 1 tot 64 letters, cijfers, punten, streepjes of underscores.";
-"error.E2030" = "Dit is geen webherkomst. Gebruik scheme://host[:port] met http of https, zoals http://127.0.0.1:8080.";
+"error.E2030" = "Dit is geen webherkomst. Gebruik scheme://host[:port] met http of https, zoals `http://127.0.0.1:8080`.";
 "error.E2031" = "Deze poort op 127.0.0.1 is in gebruik of kan niet worden geopend. Kies een andere met --port.";
 "error.E2032" = "Een token met herkomsten kan het bereik control niet hebben, omdat een pagina nooit een virtuele gamepad mag besturen. Verleen control aan een token zonder herkomsten.";
 "cli.record.usb_not_claimed" = "De familie gebruikt onbewerkte USB en de USB-extensie kan deze controller niet claimen, omdat de productlijst door Apple is ondertekend. OJD bereikt hem alleen via directe USB-toegang, wanneer macOS dat toestaat.";

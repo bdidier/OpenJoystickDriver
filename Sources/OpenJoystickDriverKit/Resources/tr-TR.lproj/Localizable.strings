@@ -1419,7 +1419,7 @@
 "error.E2027" = "Hizmet duruyor. Hizmeti başlatın, sonra yeniden deneyin.";
 "error.E2028" = "Bu adda bir belirteç var. Önce onu iptal edin veya başka bir ad seçin.";
 "error.E2029" = "Bu bir belirteç adı değil. 1 ile 64 arasında harf, rakam, nokta, tire veya alt çizgi kullanın.";
-"error.E2030" = "Bu bir web kaynağı değil. http veya https ile scheme://host[:port] biçimini kullanın, örneğin http://127.0.0.1:8080.";
+"error.E2030" = "Bu bir web kaynağı değil. http veya https ile scheme://host[:port] biçimini kullanın, örneğin `http://127.0.0.1:8080`.";
 "error.E2031" = "127.0.0.1 üzerindeki bu bağlantı noktası kullanımda veya açılamıyor. --port ile başka birini seçin.";
 "error.E2032" = "Kaynakları olan bir belirteç control kapsamına sahip olamaz, çünkü bir sayfa asla sanal bir oyun kumandasını sürmemelidir. control kapsamını kaynağı olmayan bir belirtece verin.";
 "cli.record.usb_not_claimed" = "Bu aile ham USB kullanır ve ürün listesi Apple tarafından imzalandığı için USB uzantısı bu kontrolcüyü sahiplenemez. OJD ona yalnızca macOS izin verdiğinde doğrudan USB erişimiyle ulaşır.";
