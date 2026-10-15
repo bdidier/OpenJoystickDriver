@@ -123,7 +123,8 @@
         "sourceCommit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "sourceState": "clean"
       },
-      "macOSVersion": "26.0.0"
+      "osName": "macOS",
+      "osVersion": "26.0.0"
     },
     "unboundDevices": [
       {

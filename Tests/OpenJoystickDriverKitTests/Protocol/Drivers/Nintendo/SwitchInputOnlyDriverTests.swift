@@ -35,10 +35,10 @@ struct SwitchInputOnlyDriverTests {
 
   @Test
   func mapsButtonBitsByNintendoPosition() throws {
-    let controls: [(Int, UInt8, ControlID)] = [
-      (0, 0x01, .faceWest), (0, 0x02, .faceSouth), (0, 0x04, .faceEast), (0, 0x08, .faceNorth),
-      (0, 0x10, .leftShoulder), (0, 0x20, .rightShoulder), (0, 0x40, .leftTriggerButton),
-      (0, 0x80, .rightTriggerButton), (1, 0x01, .view), (1, 0x02, .menu),
+    let controls: [(Int, UInt8, Control)] = [
+      (0, 0x01, .west), (0, 0x02, .south), (0, 0x04, .east), (0, 0x08, .north),
+      (0, 0x10, .leftShoulder), (0, 0x20, .rightShoulder), (0, 0x40, .leftTrigger),
+      (0, 0x80, .rightTrigger), (1, 0x01, .back), (1, 0x02, .start),
       (1, 0x04, .leftStickClick), (1, 0x08, .rightStickClick), (1, 0x10, .guide),
       (1, 0x20, .capture),
     ]

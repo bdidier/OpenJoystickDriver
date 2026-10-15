@@ -8,9 +8,9 @@ struct RemappingEngineTests {
   func xboxAndPlayStationAliasesReachTheSameFaceAndShoulderSources() async throws {
     let sink = RemappingTestSink()
     let engine = RemappingEventEngine(sink: sink)
-    let aliases: [(ControlID, RemappingSource)] = [
-      (.faceSouth, .button(.south)), (.faceEast, .button(.east)), (.faceWest, .button(.west)),
-      (.faceNorth, .button(.north)), (.leftShoulder, .button(.leftShoulder)),
+    let aliases: [(Control, RemappingSource)] = [
+      (.south, .button(.south)), (.east, .button(.east)), (.west, .button(.west)),
+      (.north, .button(.north)), (.leftShoulder, .button(.leftShoulder)),
       (.rightShoulder, .button(.rightShoulder)), (.guide, .button(.guide)),
     ]
 
@@ -39,13 +39,13 @@ struct RemappingEngineTests {
   func packetMappedButtonsRemainReachable() async throws {
     let sink = RemappingTestSink()
     let engine = RemappingEventEngine(sink: sink)
-    let cases: [(ControlID, ControllerButtonLabels, RemappingButton)] = [
-      (.share, .standard, .share), (.menu, .playStation, .options), (.microphone, .standard, .mute),
-      (.touchpadClick, .playStation, .touchpad),
+    let cases: [(Control, ControllerButtonLabels)] = [
+      (.capture, .standard), (.start, .playStation), (.microphone, .standard),
+      (.touchpadClick, .playStation),
     ]
 
-    for (control, labels, source) in cases {
-      let currentProfile = profile(bindings: [binding(source: .button(source), key: .returnKey)])
+    for (control, labels) in cases {
+      let currentProfile = profile(bindings: [binding(source: .button(control), key: .returnKey)])
       for change in [InputChange.press(control), .release(control)] {
         try await engine.process(
           inputs: [change],
@@ -186,7 +186,7 @@ struct RemappingEngineTests {
     let start: UInt64 = 1_000_000_000
 
     try await engine.process(
-      inputs: [.press(.faceSouth)],
+      inputs: [.press(.south)],
       from: device(1),
       using: currentProfile,
       at: start
@@ -196,13 +196,13 @@ struct RemappingEngineTests {
     try await engine.tick(at: start + 99_000_000)
     try await engine.tick(at: start + 100_000_000)
     try await engine.process(
-      inputs: [.release(.faceSouth)],
+      inputs: [.release(.south)],
       from: device(1),
       using: currentProfile,
       at: start + 125_000_000
     )
     try await engine.process(
-      inputs: [.release(.faceSouth)],
+      inputs: [.release(.south)],
       from: device(1),
       using: currentProfile,
       at: start + 126_000_000
@@ -225,25 +225,25 @@ struct RemappingEngineTests {
     ])
 
     try await engine.process(
-      inputs: [.press(.faceSouth), .press(.faceEast)],
+      inputs: [.press(.south), .press(.east)],
       from: device(1),
       using: currentProfile,
       at: 0
     )
     try await engine.process(
-      inputs: [.press(.faceSouth)],
+      inputs: [.press(.south)],
       from: device(2),
       using: currentProfile,
       at: 0
     )
     try await engine.process(
-      inputs: [.release(.faceSouth), .release(.faceEast)],
+      inputs: [.release(.south), .release(.east)],
       from: device(1),
       using: currentProfile,
       at: 1
     )
     try await engine.process(
-      inputs: [.release(.faceSouth)],
+      inputs: [.release(.south)],
       from: device(2),
       using: currentProfile,
       at: 1
@@ -262,13 +262,13 @@ struct RemappingEngineTests {
     ])
 
     try await engine.process(
-      inputs: [.press(.faceSouth), .press(.faceEast)],
+      inputs: [.press(.south), .press(.east)],
       from: device(1),
       using: currentProfile,
       at: 0
     )
     try await engine.process(
-      inputs: [.release(.faceSouth), .release(.faceEast)],
+      inputs: [.release(.south), .release(.east)],
       from: device(1),
       using: currentProfile,
       at: 1
@@ -290,7 +290,7 @@ struct RemappingEngineTests {
 
     for identifier in [device(1), device(2)] {
       try await engine.process(
-        inputs: [.press(.faceSouth)],
+        inputs: [.press(.south)],
         from: identifier,
         using: currentProfile,
         at: 0
@@ -311,8 +311,8 @@ struct RemappingEngineTests {
     let first = profile(name: "First", bindings: [binding(source: .button(.south), key: .a)])
     let second = profile(name: "Second", bindings: [binding(source: .button(.south), key: .b)])
 
-    try await engine.process(inputs: [.press(.faceSouth)], from: device(1), using: first, at: 0)
-    try await engine.process(inputs: [.press(.faceSouth)], from: device(1), using: second, at: 1)
+    try await engine.process(inputs: [.press(.south)], from: device(1), using: first, at: 0)
+    try await engine.process(inputs: [.press(.south)], from: device(1), using: second, at: 1)
     try await engine.setProfile(nil, for: device(1))
     try await engine.setProfile(nil, for: device(1))
 

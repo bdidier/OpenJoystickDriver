@@ -150,9 +150,9 @@ ojd binding clear PROFILE --all [--force] [--dry-run]
 
 `SOURCE` is one of these forms:
 
-- `button:NAME`, such as `button:south` or `button:left_shoulder`
+- `button:NAME`, such as `button:South` or `button:LeftShoulder`
 - `dpad:DIRECTION`
-- `axis:NAME`, or `axis:NAME:negative` or `axis:NAME:positive` for one direction, such as `axis:left_stick_x:positive`
+- `axis:NAME`, or `axis:NAME:negative` or `axis:NAME:positive` for one direction, such as `axis:LeftStickX:positive`
 - `trigger:NAME:STAGE`
 - `motion:lean:DIRECTION`
 - `touch:SURFACE:contact`, `touch:SURFACE:grid:COLUMNS:ROWS:COLUMN:ROW`, or `touch:SURFACE:swipe:DIRECTION:DISTANCE`
@@ -193,7 +193,7 @@ ojd virtual feed --as PROFILE
 - `virtual show`: Show each controller's virtual gamepad and the profiles you can choose. Name a controller to show only that one. With `--json`, it prints a `VirtualGamepadConfiguration`, and `overrideScope` says whether a stored choice is the controller's own (`unit`) or its model's (`model`).
 - `virtual set`: Choose the profile for the controller's model. With `--unit`, choose it for that controller only. A controller with no unit ID cannot take `--unit`. The profiles are `sdl-compatible` and `generic`.
 - `virtual reset`: Return the controller's model to automatic selection. With `--unit`, it removes only that controller's own choice, so its model's choice applies again. `--unit` cannot be used with `--all`. `--all` returns every model, including models that are not connected. It asks first on a terminal and needs `--force` otherwise. `--dry-run` (`-n`) prints what would change and changes nothing. With `--json`, `virtual set` and `virtual reset` print a `VirtualGamepadChange`, except `virtual reset --all`, which prints a `Status` with `{"reset":"all"}` in `details`.
-- `virtual feed`: Publish a virtual gamepad with the `--as` profile and drive it from standard input. Write one JSON object per line, such as `{"buttons":["south"],"dpad":["up"],"axes":{"left_stick_x":0.5,"right_trigger":1}}`. Buttons, D-pad directions, and stick axes take the names of `button:`, `dpad:`, and `axis:` binding sources, and the triggers are the axes `left_trigger` and `right_trigger`. A missing control is neutral. Sticks run from -1 to 1 with Y up, and triggers run from 0 to 1. Frames play in order, each for at least 8 ms; `holdMilliseconds`, from 0 to 60000, keeps a frame longer. The command ends after the last frame has played. Each rumble command a game sends to the virtual gamepad is printed as one `RumbleCommand` object per line, with a `type` of `setRumble` or `stopRumble`. The gamepad is removed when the input ends, on Control-C, or when the service gets no update for 2 seconds. A line that is not a frame, such as one with an unknown key or a button listed twice, exits with code 64. The service runs at most 4 feeds from this command, and endpoint clients have 4 more of their own.
+- `virtual feed`: Publish a virtual gamepad with the `--as` profile and drive it from standard input. Write one JSON object per line, such as `{"buttons":["South"],"dpad":["up"],"axes":{"LeftStickX":0.5,"RightTrigger":1}}`. Buttons, D-pad directions, and stick axes take the names of `button:`, `dpad:`, and `axis:` binding sources, and the triggers are the axes `LeftTrigger` and `RightTrigger`. A missing control is neutral. Sticks run from -1 to 1 with Y up, and triggers run from 0 to 1. Frames play in order, each for at least 8 ms; `holdMilliseconds`, from 0 to 60000, keeps a frame longer. The command ends after the last frame has played. Each rumble command a game sends to the virtual gamepad is printed as one `RumbleCommand` object per line, with a `type` of `setRumble` or `stopRumble`. The gamepad is removed when the input ends, on Control-C, or when the service gets no update for 2 seconds. A line that is not a frame, such as one with an unknown key or a button listed twice, exits with code 64. The service runs at most 4 feeds from this command, and endpoint clients have 4 more of their own.
 
 ## record
 
@@ -368,17 +368,17 @@ ojd log export FILE [--lines COUNT] [--force]
 Run every check and report what is wrong.
 
 ```text
-ojd diagnose [--bundle PATH] [--soak SECONDS]
+ojd diagnose [--output PATH] [--soak SECONDS]
 ```
 
 The checks are `service`, `extension-bundle`, `extension-registration`, `input-read`, `input-inject`, `controller-records`, `config-files`, `usb-access`, `virtual-device`, and `runtime-health`. Each reports `pass`, `warn`, `fail`, or `skip`. The `controller-records` check warns when OpenJoystickDriver skipped one of your controller record files. The `config-files` check warns when it ignored your `Controllers/all.patch.json` or skipped one of your persona files. Checks that need the service are skipped while it is stopped. The command exits with code 1 when any check fails.
 
-- `--bundle PATH`: Also write a support report to `PATH`. Read it before you share it.
+- `--output PATH`: Also write a support report to `PATH`. Read it before you share it.
 - `--soak SECONDS`: Run the `runtime-health` check. It samples the service's memory, file descriptors, and CPU for 1 to 86400 seconds. Without `--soak`, that check is skipped. `--interval-ms`, `--rss-limit-mib`, and `--footprint-limit-mib` tune the sampling and set failure limits.
 
 With `--json`, the output is a `Diagnosis` with `checks`, each with `id`, `status`, and `detail`, and `bundle` when you wrote one.
 
-Each connected controller also lists the timing of its newest frames. Every frame carries a time in nanoseconds on the service's monotonic uptime clock for each stage it reached: `read`, `parse`, `dispatch`, `delivery-virtual-device`, and `delivery-endpoint`. The service keeps the last 8 frames of each controller, and the list is empty while the service is stopped. `delivery-virtual-device` is present only when the report reached the virtual device, so a failed or suppressed publish leaves it out. The endpoint polls the controller state, so `delivery-endpoint` goes on the controller's newest frame when the poll runs, and a frame replaced by a newer one before the poll gets none. With `--json`, the timings are `timings`, each with `controller`, `name`, and `frames`. With `--plain`, each stage is a row of `timing`, controller, frame sequence, stage, and nanoseconds. Without either, each frame is one line after the checks. `--bundle` writes the same frames to `data.frameTimings` of the support report, with the same stage names and nanoseconds, and an empty list while the service is stopped.
+Each connected controller also lists the timing of its newest frames. Every frame carries a time in nanoseconds on the service's monotonic uptime clock for each stage it reached: `read`, `parse`, `dispatch`, `delivery-virtual-device`, and `delivery-endpoint`. The service keeps the last 8 frames of each controller, and the list is empty while the service is stopped. `delivery-virtual-device` is present only when the report reached the virtual device, so a failed or suppressed publish leaves it out. The endpoint polls the controller state, so `delivery-endpoint` goes on the controller's newest frame when the poll runs, and a frame replaced by a newer one before the poll gets none. With `--json`, the timings are `timings`, each with `controller`, `name`, and `frames`. With `--plain`, each stage is a row of `timing`, controller, frame sequence, stage, and nanoseconds. Without either, each frame is one line after the checks. `--output` writes the same frames to `data.frameTimings` of the support report, with the same stage names and nanoseconds, and an empty list while the service is stopped.
 
 ## update
 

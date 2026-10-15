@@ -48,7 +48,7 @@ struct FlydigiDriverTests {
   func malformedReportsPreserveState(kind: Int) throws {
     let parser = FlydigiDriver()
     let pressed = CapturedReport.with(hatAndFace: 0x10)
-    #expect(try parser.parseReport(pressed).contains(.press(.faceSouth)))
+    #expect(try parser.parseReport(pressed).contains(.press(.south)))
     var malformed = Data(CapturedReport.neutral)
     switch kind {
     case 0: malformed[0] = 0x02
@@ -56,8 +56,8 @@ struct FlydigiDriverTests {
     default: malformed.append(0)
     }
     #expect(try parser.parseReport(malformed) == nil)
-    #expect(try parser.parseReport(pressed).contains(.press(.faceSouth)))
-    #expect(try parser.parseReport(Data(CapturedReport.neutral)).contains(.release(.faceSouth)))
+    #expect(try parser.parseReport(pressed).contains(.press(.south)))
+    #expect(try parser.parseReport(Data(CapturedReport.neutral)).contains(.release(.south)))
   }
 
   @Test
@@ -137,8 +137,8 @@ struct FlydigiDriverTests {
 
   @Test
   func testFaceButtonsUseHighNibble() throws {
-    let cases: [(UInt8, ControlID)] = [
-      (0x10, .faceSouth), (0x20, .faceEast), (0x40, .faceWest), (0x80, .faceNorth),
+    let cases: [(UInt8, Control)] = [
+      (0x10, .south), (0x20, .east), (0x40, .west), (0x80, .north),
     ]
     for (mask, button) in cases {
       let parser = FlydigiDriver()
@@ -150,8 +150,8 @@ struct FlydigiDriverTests {
 
   @Test
   func testShoulderByteButtons() throws {
-    let cases: [(UInt8, ControlID)] = [
-      (0x01, .leftShoulder), (0x02, .rightShoulder), (0x10, .view), (0x20, .menu),
+    let cases: [(UInt8, Control)] = [
+      (0x01, .leftShoulder), (0x02, .rightShoulder), (0x10, .back), (0x20, .start),
       (0x40, .leftStickClick), (0x80, .rightStickClick),
     ]
     for (mask, button) in cases {
@@ -191,7 +191,7 @@ struct FlydigiDriverTests {
     let parser = FlydigiDriver()
     settled(parser)
     let events = try parser.parseReport(CapturedReport.with(hatAndFace: 0x10 | 3))
-    #expect(events.contains(.press(.faceSouth)))
+    #expect(events.contains(.press(.south)))
     #expect(events.contains(.hat(.east)))
   }
 
@@ -201,7 +201,7 @@ struct FlydigiDriverTests {
     settled(parser)
     _ = try parser.parseReport(CapturedReport.with(hatAndFace: 0x10))
     let events = try parser.parseReport(Data(CapturedReport.neutral))
-    #expect(events.contains(.release(.faceSouth)))
+    #expect(events.contains(.release(.south)))
   }
 
   @Test

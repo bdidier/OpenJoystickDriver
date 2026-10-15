@@ -942,8 +942,9 @@
 "cli.error.service_timeout" = "Dịch vụ không phản hồi kịp thời. Hãy thử lại, hoặc kiểm tra bằng “ojd status”.";
 "cli.error.service_unavailable" = "Dịch vụ OpenJoystickDriver chưa chạy. Hãy khởi động bằng “ojd service start”.";
 "cli.error.timeout_value" = "--timeout cần một số giây lớn hơn 0.";
-"cli.error.unexpected" = "Lỗi không mong đợi: %@. Hãy chạy “ojd diagnose --bundle PATH” và đính kèm gói vào báo cáo lỗi.";
+"cli.error.unexpected" = "Lỗi không mong đợi: %@. Hãy chạy “ojd diagnose --output PATH” và đính kèm gói vào báo cáo lỗi.";
 "cli.error.unknown_command" = "Lệnh “%@” không xác định. Ý bạn là “%@”?";
+"cli.error.renamed_flag" = "“%@” đã được đổi tên thành “%@”.";
 "cli.option.json" = "In JSON ra stdout.";
 "cli.option.no_color" = "Không dùng màu.";
 "cli.option.no_input" = "Không bao giờ nhắc nhập; báo lỗi khi thiếu giá trị.";
@@ -962,7 +963,7 @@
 "cli.controller.light.examples" = "Ví dụ:\n  # Đặt thanh đèn sang màu cam\n  ojd controller light 054C:09CC --color FF8000\n  # Đặt màu và độ sáng thấp\n  ojd controller light 054C:09CC --color 0000FF --brightness 40";
 "cli.profile.create.examples" = "Ví dụ:\n  # Tạo hồ sơ cho một mẫu tay cầm\n  ojd profile create Racing --controller 045E:028E\n  # Chỉ áp dụng khi Safari đang ở phía trước\n  ojd profile create Browsing --controller 045E:028E --app com.apple.Safari";
 "cli.profile.set.examples" = "Ví dụ:\n  # Đổi tên hồ sơ\n  ojd profile set Racing name Rally\n  # Đặt vùng chết bên trong của ánh xạ cần analog đầu tiên\n  ojd profile set Racing stickMappings.0.tuning.innerDeadzone 0.2";
-"cli.binding.set.examples" = "Ví dụ:\n  # Giữ Space trong khi nút phía nam đang được giữ\n  ojd binding set Racing button:south key:space\n  # Bật/tắt J mỗi lần nhấn\n  ojd binding set Racing button:west key:j --behavior toggle\n  # Lặp lại J 10 lần mỗi giây khi đang giữ\n  ojd binding set Racing button:west key:j --turbo-rate 10 --turbo-duty 0.5";
+"cli.binding.set.examples" = "Ví dụ:\n  # Giữ Space trong khi nút phía nam đang được giữ\n  ojd binding set Racing button:South key:space\n  # Bật/tắt J mỗi lần nhấn\n  ojd binding set Racing button:West key:j --behavior toggle\n  # Lặp lại J 10 lần mỗi giây khi đang giữ\n  ojd binding set Racing button:West key:j --turbo-rate 10 --turbo-duty 0.5";
 "cli.record.install.examples" = "Ví dụ:\n  # Cài đặt một tệp bản ghi\n  ojd record install 045E-028E.json\n  # Đọc bản ghi từ stdin\n  ojd record install - < 045E-028E.json";
 "cli.access.grant.examples" = "Ví dụ:\n  # Cho phép một chương trình dùng dịch vụ\n  ojd access grant /Applications/Example.app\n  # Tạo token cho các trang được phục vụ từ một origin\n  ojd access grant --token overlay --origin http://127.0.0.1:8080";
 "cli.service.abstract" = "Khởi động hoặc dừng dịch vụ OpenJoystickDriver, hoặc chờ đến khi dịch vụ nhận yêu cầu.";
@@ -1050,12 +1051,12 @@
 "cli.access.web.port" = "Cổng trên 127.0.0.1, từ 1024 đến 65535.";
 "cli.access.web.port_range" = "--port phải nằm trong khoảng 1024 đến 65535.";
 "cli.diagnose.abstract" = "Chạy mọi kiểm tra và báo cáo điều gì không ổn.";
-"cli.diagnose.bundle" = "Đồng thời ghi một gói hỗ trợ vào tệp này.";
-"cli.diagnose.bundle_failed" = "Gói hỗ trợ chưa được ghi: %@. Hãy chọn đường dẫn --bundle khác.";
-"cli.diagnose.bundle_parent" = "--bundle cần một thư mục có sẵn; %@ không tồn tại.";
-"cli.diagnose.bundle_progress" = "Đang ghi gói hỗ trợ…";
-"cli.diagnose.bundle_written" = "Đã ghi gói hỗ trợ vào %@. Hãy xem lại trước khi chia sẻ; tên thiết bị được bao gồm.";
-"cli.diagnose.discussion" = "Mỗi kiểm tra báo pass, warn, fail hoặc skip. Các kiểm tra cần dịch vụ sẽ bị bỏ qua khi dịch vụ đã dừng. Thoát với mã 1 khi có kiểm tra thất bại. --soak thêm một kiểm tra tình trạng khi chạy, lấy mẫu dịch vụ trong khoảng thời gian đã cho; không có nó thì kiểm tra này bị bỏ qua. --bundle còn ghi một báo cáo hỗ trợ; hãy xem lại trước khi chia sẻ.";
+"cli.diagnose.output" = "Đồng thời ghi một gói hỗ trợ vào tệp này.";
+"cli.diagnose.output_failed" = "Gói hỗ trợ chưa được ghi: %@. Hãy chọn đường dẫn --output khác.";
+"cli.diagnose.output_parent" = "--output cần một thư mục có sẵn; %@ không tồn tại.";
+"cli.diagnose.output_progress" = "Đang ghi gói hỗ trợ…";
+"cli.diagnose.output_written" = "Đã ghi gói hỗ trợ vào %@. Hãy xem lại trước khi chia sẻ; tên thiết bị được bao gồm.";
+"cli.diagnose.discussion" = "Mỗi kiểm tra báo pass, warn, fail hoặc skip. Các kiểm tra cần dịch vụ sẽ bị bỏ qua khi dịch vụ đã dừng. Thoát với mã 1 khi có kiểm tra thất bại. --soak thêm một kiểm tra tình trạng khi chạy, lấy mẫu dịch vụ trong khoảng thời gian đã cho; không có nó thì kiểm tra này bị bỏ qua. --output còn ghi một báo cáo hỗ trợ; hãy xem lại trước khi chia sẻ.";
 "cli.diagnose.extension.absent" = "chưa đăng ký với macOS; hãy chạy “ojd extension activate”";
 "cli.diagnose.extension.active" = "đang hoạt động trong macOS";
 "cli.diagnose.extension.bundle_invalid" = "mã định danh gói không mong đợi %@; hãy cài đặt lại OpenJoystickDriver";
@@ -1063,7 +1064,7 @@
 "cli.diagnose.extension.bundle_present" = "đã được nhúng trong ứng dụng";
 "cli.diagnose.extension.inactive" = "đã đăng ký nhưng chưa hoạt động; hãy phê duyệt bằng “ojd extension activate”";
 "cli.diagnose.extension.unavailable" = "macOS không báo cáo việc đăng ký: %@";
-"cli.diagnose.failed" = "Kiểm tra thất bại: %lld. Hãy sửa theo chi tiết ở trên, hoặc chạy “ojd diagnose --bundle <path>” và đính kèm tệp vào báo cáo lỗi.";
+"cli.diagnose.failed" = "Kiểm tra thất bại: %lld. Hãy sửa theo chi tiết ở trên, hoặc chạy “ojd diagnose --output <path>” và đính kèm tệp vào báo cáo lỗi.";
 "cli.diagnose.footprint_limit" = "Với --soak, báo lỗi khi vượt mức footprint vật lý này tính bằng MiB; 0 để tắt (0-65536).";
 "cli.diagnose.interval" = "Với --soak, số mili giây giữa các lần lấy mẫu (100-60000).";
 "cli.diagnose.interval_range" = "--interval-ms phải nằm trong khoảng 100 đến 60000.";
@@ -1339,7 +1340,7 @@
 "cli.virtual.error.failed" = "Tay cầm ảo cho %@ không thay đổi (%@). Hãy kiểm tra bằng “ojd virtual show”.";
 "cli.virtual.error.no_unit" = "%@ không có ID thiết bị, nên một lựa chọn chỉ có thể áp dụng cho cả kiểu máy. Hãy chạy lệnh không có --unit.";
 "cli.virtual.feed.abstract" = "Cung cấp một tay cầm ảo do đầu vào chuẩn điều khiển.";
-"cli.virtual.feed.discussion" = "Đọc một đối tượng JSON mỗi dòng: “buttons” và “dpad” liệt kê các thành phần được nhấn, như south và up, và “axes” ánh xạ tên trục, như left_stick_x, tới giá trị. Thành phần bị thiếu ở trạng thái trung tính. Các cần chạy từ -1 đến 1 với Y hướng lên; các cò chạy từ 0 đến 1. Các khung được phát theo thứ tự, mỗi khung ít nhất 8 ms; “holdMilliseconds” giữ một khung lâu hơn, tối đa 60000. In mỗi lệnh đầu ra mà trò chơi gửi đến tay cầm, như rung, thành một đối tượng JSON mỗi dòng. Dừng khi mọi khung đã phát xong sau khi đầu vào kết thúc.";
+"cli.virtual.feed.discussion" = "Đọc một đối tượng JSON mỗi dòng: “buttons” và “dpad” liệt kê các thành phần được nhấn, như South và up, và “axes” ánh xạ tên trục, như LeftStickX, tới giá trị. Thành phần bị thiếu ở trạng thái trung tính. Các cần chạy từ -1 đến 1 với Y hướng lên; các cò chạy từ 0 đến 1. Các khung được phát theo thứ tự, mỗi khung ít nhất 8 ms; “holdMilliseconds” giữ một khung lâu hơn, tối đa 60000. In mỗi lệnh đầu ra mà trò chơi gửi đến tay cầm, như rung, thành một đối tượng JSON mỗi dòng. Dừng khi mọi khung đã phát xong sau khi đầu vào kết thúc.";
 "cli.virtual.feed.error.closed" = "Dịch vụ đã đóng tay cầm ảo. Hãy kiểm tra bằng “ojd status”.";
 "cli.virtual.feed.error.frame" = "Dòng %@ không phải là khung hợp lệ. “ojd virtual feed --help” hiển thị định dạng.";
 "cli.virtual.feed.profile" = "Cấu hình tay cầm ảo để cung cấp.";
@@ -1452,7 +1453,7 @@
 "cli.binding.option.turbo_rate" = "Lặp lại đích số lần này mỗi giây khi đang giữ. Cần --turbo-duty.";
 "cli.binding.set.abstract" = "Liên kết một nguồn của bộ điều khiển với một đích, thay thế liên kết hiện tại của nguồn.";
 "cli.binding.set.done" = "“%@” hiện liên kết %@.";
-"cli.binding.set.source" = "Thành phần của bộ điều khiển, như button:south.";
+"cli.binding.set.source" = "Thành phần của bộ điều khiển, như button:South.";
 "cli.binding.set.target" = "Điều nó gửi, như key:space.";
 "cli.binding.source_invalid" = "“%@” không phải là một nguồn. “ojd binding set --help” liệt kê các dạng nguồn.";
 "cli.binding.target_invalid" = "“%@” không phải là một đích. “ojd binding set --help” liệt kê các dạng đích.";

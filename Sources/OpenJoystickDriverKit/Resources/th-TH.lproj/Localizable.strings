@@ -942,8 +942,9 @@
 "cli.error.service_timeout" = "บริการไม่ตอบกลับทันเวลา ลองอีกครั้ง หรือตรวจสอบด้วย “ojd status”";
 "cli.error.service_unavailable" = "บริการ OpenJoystickDriver ไม่ได้ทำงานอยู่ เริ่มด้วย “ojd service start”";
 "cli.error.timeout_value" = "--timeout ต้องการจำนวนวินาทีที่มากกว่า 0";
-"cli.error.unexpected" = "ข้อผิดพลาดที่ไม่คาดคิด: %@ เรียกใช้ “ojd diagnose --bundle PATH” และแนบบันเดิลไปกับรายงานข้อบกพร่อง";
+"cli.error.unexpected" = "ข้อผิดพลาดที่ไม่คาดคิด: %@ เรียกใช้ “ojd diagnose --output PATH” และแนบบันเดิลไปกับรายงานข้อบกพร่อง";
 "cli.error.unknown_command" = "ไม่รู้จักคำสั่ง “%@” คุณหมายถึง “%@” หรือไม่";
+"cli.error.renamed_flag" = "เปลี่ยนชื่อ “%@” เป็น “%@” แล้ว";
 "cli.option.json" = "พิมพ์ JSON ไปยัง stdout";
 "cli.option.no_color" = "ไม่ใช้สี";
 "cli.option.no_input" = "ไม่ถามเด็ดขาด ล้มเหลวเมื่อไม่มีค่า";
@@ -962,7 +963,7 @@
 "cli.controller.light.examples" = "ตัวอย่าง:\n  # ตั้งไลต์บาร์เป็นสีส้ม\n  ojd controller light 054C:09CC --color FF8000\n  # ตั้งสีและความสว่างต่ำ\n  ojd controller light 054C:09CC --color 0000FF --brightness 40";
 "cli.profile.create.examples" = "ตัวอย่าง:\n  # สร้างโปรไฟล์สำหรับคอนโทรลเลอร์รุ่นหนึ่ง\n  ojd profile create Racing --controller 045E:028E\n  # ใช้เฉพาะเมื่อ Safari อยู่ด้านหน้าสุด\n  ojd profile create Browsing --controller 045E:028E --app com.apple.Safari";
 "cli.profile.set.examples" = "ตัวอย่าง:\n  # เปลี่ยนชื่อโปรไฟล์\n  ojd profile set Racing name Rally\n  # ตั้งเดดโซนด้านในของการแมปสติ๊กแรก\n  ojd profile set Racing stickMappings.0.tuning.innerDeadzone 0.2";
-"cli.binding.set.examples" = "ตัวอย่าง:\n  # กด Space ค้างไว้ขณะที่กดปุ่มทิศใต้ค้างไว้\n  ojd binding set Racing button:south key:space\n  # สลับ J ทุกครั้งที่กด\n  ojd binding set Racing button:west key:j --behavior toggle\n  # กด J ซ้ำ 10 ครั้งต่อวินาทีขณะกดค้างไว้\n  ojd binding set Racing button:west key:j --turbo-rate 10 --turbo-duty 0.5";
+"cli.binding.set.examples" = "ตัวอย่าง:\n  # กด Space ค้างไว้ขณะที่กดปุ่มทิศใต้ค้างไว้\n  ojd binding set Racing button:South key:space\n  # สลับ J ทุกครั้งที่กด\n  ojd binding set Racing button:West key:j --behavior toggle\n  # กด J ซ้ำ 10 ครั้งต่อวินาทีขณะกดค้างไว้\n  ojd binding set Racing button:West key:j --turbo-rate 10 --turbo-duty 0.5";
 "cli.record.install.examples" = "ตัวอย่าง:\n  # ติดตั้งไฟล์เรคคอร์ด\n  ojd record install 045E-028E.json\n  # อ่านเรคคอร์ดจาก stdin\n  ojd record install - < 045E-028E.json";
 "cli.access.grant.examples" = "ตัวอย่าง:\n  # อนุญาตให้โปรแกรมใช้บริการ\n  ojd access grant /Applications/Example.app\n  # สร้างโทเค็นสำหรับหน้าเว็บที่ให้บริการจากต้นทางเดียว\n  ojd access grant --token overlay --origin http://127.0.0.1:8080";
 "cli.service.abstract" = "เริ่มหรือหยุดบริการ OpenJoystickDriver หรือรอจนกว่าบริการจะรับคำขอ";
@@ -1050,12 +1051,12 @@
 "cli.access.web.port" = "พอร์ตบน 127.0.0.1 ตั้งแต่ 1024 ถึง 65535";
 "cli.access.web.port_range" = "--port ต้องอยู่ระหว่าง 1024 ถึง 65535";
 "cli.diagnose.abstract" = "เรียกใช้การตรวจสอบทุกรายการและรายงานสิ่งที่ผิดปกติ";
-"cli.diagnose.bundle" = "เขียนบันเดิลการสนับสนุนลงในไฟล์นี้ด้วย";
-"cli.diagnose.bundle_failed" = "ไม่ได้เขียนบันเดิลการสนับสนุน: %@ เลือกพาธ --bundle อื่น";
-"cli.diagnose.bundle_parent" = "--bundle ต้องใช้ไดเรกทอรีที่มีอยู่ %@ ไม่มีอยู่";
-"cli.diagnose.bundle_progress" = "กำลังเขียนบันเดิลการสนับสนุน…";
-"cli.diagnose.bundle_written" = "เขียนบันเดิลการสนับสนุนไปที่ %@ แล้ว ตรวจสอบก่อนแชร์ เพราะมีชื่ออุปกรณ์รวมอยู่ด้วย";
-"cli.diagnose.discussion" = "การตรวจสอบแต่ละรายการรายงานเป็น pass, warn, fail หรือ skip การตรวจสอบที่ต้องใช้บริการจะถูกข้ามขณะที่บริการหยุดทำงาน ออกด้วยรหัส 1 เมื่อมีการตรวจสอบใดล้มเหลว --soak เพิ่มการตรวจสอบสุขภาพรันไทม์ที่สุ่มตัวอย่างบริการตามเวลาที่กำหนด หากไม่ใช้จะข้ามการตรวจสอบนั้น --bundle เขียนรายงานการสนับสนุนด้วย ตรวจสอบก่อนแชร์";
+"cli.diagnose.output" = "เขียนบันเดิลการสนับสนุนลงในไฟล์นี้ด้วย";
+"cli.diagnose.output_failed" = "ไม่ได้เขียนบันเดิลการสนับสนุน: %@ เลือกพาธ --output อื่น";
+"cli.diagnose.output_parent" = "--output ต้องใช้ไดเรกทอรีที่มีอยู่ %@ ไม่มีอยู่";
+"cli.diagnose.output_progress" = "กำลังเขียนบันเดิลการสนับสนุน…";
+"cli.diagnose.output_written" = "เขียนบันเดิลการสนับสนุนไปที่ %@ แล้ว ตรวจสอบก่อนแชร์ เพราะมีชื่ออุปกรณ์รวมอยู่ด้วย";
+"cli.diagnose.discussion" = "การตรวจสอบแต่ละรายการรายงานเป็น pass, warn, fail หรือ skip การตรวจสอบที่ต้องใช้บริการจะถูกข้ามขณะที่บริการหยุดทำงาน ออกด้วยรหัส 1 เมื่อมีการตรวจสอบใดล้มเหลว --soak เพิ่มการตรวจสอบสุขภาพรันไทม์ที่สุ่มตัวอย่างบริการตามเวลาที่กำหนด หากไม่ใช้จะข้ามการตรวจสอบนั้น --output เขียนรายงานการสนับสนุนด้วย ตรวจสอบก่อนแชร์";
 "cli.diagnose.extension.absent" = "ไม่ได้ลงทะเบียนกับ macOS เรียกใช้ “ojd extension activate”";
 "cli.diagnose.extension.active" = "ทำงานอยู่ใน macOS";
 "cli.diagnose.extension.bundle_invalid" = "ตัวระบุบันเดิลที่ไม่คาดคิด %@ ติดตั้ง OpenJoystickDriver ใหม่";
@@ -1063,7 +1064,7 @@
 "cli.diagnose.extension.bundle_present" = "ฝังไว้ในแอพ";
 "cli.diagnose.extension.inactive" = "ลงทะเบียนแล้วแต่ไม่ได้ทำงาน อนุญาตด้วย “ojd extension activate”";
 "cli.diagnose.extension.unavailable" = "macOS ไม่ได้รายงานการลงทะเบียน: %@";
-"cli.diagnose.failed" = "การตรวจสอบที่ล้มเหลว: %lld แก้ไขโดยใช้รายละเอียดด้านบน หรือเรียกใช้ “ojd diagnose --bundle <path>” แล้วแนบไฟล์ไปกับรายงานข้อบกพร่อง";
+"cli.diagnose.failed" = "การตรวจสอบที่ล้มเหลว: %lld แก้ไขโดยใช้รายละเอียดด้านบน หรือเรียกใช้ “ojd diagnose --output <path>” แล้วแนบไฟล์ไปกับรายงานข้อบกพร่อง";
 "cli.diagnose.footprint_limit" = "เมื่อใช้ --soak จะล้มเหลวหากเกินฟุตพริ้นต์จริงนี้เป็น MiB 0 คือปิดใช้งาน (0-65536)";
 "cli.diagnose.interval" = "เมื่อใช้ --soak คือมิลลิวินาทีระหว่างตัวอย่าง (100-60000)";
 "cli.diagnose.interval_range" = "--interval-ms ต้องอยู่ระหว่าง 100 ถึง 60000";
@@ -1339,7 +1340,7 @@
 "cli.virtual.error.failed" = "เกมแพดเสมือนสำหรับ %@ ไม่เปลี่ยนแปลง (%@) ตรวจสอบด้วย “ojd virtual show”";
 "cli.virtual.error.no_unit" = "%@ ไม่มี ID ยูนิต ตัวเลือกจึงใช้ได้กับทั้งรุ่นเท่านั้น เรียกใช้คำสั่งโดยไม่ใช้ --unit";
 "cli.virtual.feed.abstract" = "เผยแพร่เกมแพดเสมือนที่ควบคุมด้วยอินพุตมาตรฐาน";
-"cli.virtual.feed.discussion" = "อ่านออบเจ็กต์ JSON หนึ่งรายการต่อบรรทัด โดย “buttons” และ “dpad” แสดงรายการตัวควบคุมที่ถูกกด เช่น south และ up ส่วน “axes” จับคู่ชื่อแกน เช่น left_stick_x กับค่า ตัวควบคุมที่ไม่ระบุจะอยู่ตำแหน่งกลาง สติ๊กมีค่าตั้งแต่ -1 ถึง 1 โดย Y ชี้ขึ้น ทริกเกอร์มีค่าตั้งแต่ 0 ถึง 1 เฟรมจะเล่นตามลำดับ เฟรมละอย่างน้อย 8 มิลลิวินาที ส่วน “holdMilliseconds” ทำให้เฟรมอยู่นานขึ้นได้สูงสุด 60000 พิมพ์คำสั่งเอาต์พุตแต่ละรายการที่เกมส่งไปยังเกมแพด เช่นแรงสั่น เป็นออบเจ็กต์ JSON หนึ่งรายการต่อบรรทัด จะหยุดเมื่อเล่นครบทุกเฟรมหลังจากอินพุตสิ้นสุด";
+"cli.virtual.feed.discussion" = "อ่านออบเจ็กต์ JSON หนึ่งรายการต่อบรรทัด โดย “buttons” และ “dpad” แสดงรายการตัวควบคุมที่ถูกกด เช่น South และ up ส่วน “axes” จับคู่ชื่อแกน เช่น LeftStickX กับค่า ตัวควบคุมที่ไม่ระบุจะอยู่ตำแหน่งกลาง สติ๊กมีค่าตั้งแต่ -1 ถึง 1 โดย Y ชี้ขึ้น ทริกเกอร์มีค่าตั้งแต่ 0 ถึง 1 เฟรมจะเล่นตามลำดับ เฟรมละอย่างน้อย 8 มิลลิวินาที ส่วน “holdMilliseconds” ทำให้เฟรมอยู่นานขึ้นได้สูงสุด 60000 พิมพ์คำสั่งเอาต์พุตแต่ละรายการที่เกมส่งไปยังเกมแพด เช่นแรงสั่น เป็นออบเจ็กต์ JSON หนึ่งรายการต่อบรรทัด จะหยุดเมื่อเล่นครบทุกเฟรมหลังจากอินพุตสิ้นสุด";
 "cli.virtual.feed.error.closed" = "บริการปิดเกมแพดเสมือนแล้ว ตรวจสอบด้วย “ojd status”";
 "cli.virtual.feed.error.frame" = "บรรทัด %@ ไม่ใช่เฟรมที่ถูกต้อง “ojd virtual feed --help” แสดงรูปแบบ";
 "cli.virtual.feed.profile" = "โปรไฟล์เกมแพดเสมือนที่จะเผยแพร่";
@@ -1452,7 +1453,7 @@
 "cli.binding.option.turbo_rate" = "ทำซ้ำปลายทางตามจำนวนครั้งต่อวินาทีนี้ขณะกดค้าง ต้องใช้ --turbo-duty";
 "cli.binding.set.abstract" = "กำหนดต้นทางของคอนโทรลเลอร์ให้กับปลายทาง โดยแทนที่การกำหนดปัจจุบันของต้นทาง";
 "cli.binding.set.done" = "ตอนนี้ “%@” กำหนดเป็น %@";
-"cli.binding.set.source" = "ตัวควบคุมของคอนโทรลเลอร์ เช่น button:south";
+"cli.binding.set.source" = "ตัวควบคุมของคอนโทรลเลอร์ เช่น button:South";
 "cli.binding.set.target" = "สิ่งที่ส่ง เช่น key:space";
 "cli.binding.source_invalid" = "“%@” ไม่ใช่ต้นทาง “ojd binding set --help” แสดงรูปแบบของต้นทาง";
 "cli.binding.target_invalid" = "“%@” ไม่ใช่ปลายทาง “ojd binding set --help” แสดงรูปแบบของปลายทาง";

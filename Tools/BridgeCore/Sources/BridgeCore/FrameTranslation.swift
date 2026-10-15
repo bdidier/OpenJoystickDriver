@@ -3,14 +3,6 @@ import Foundation
 /// Turns the `input` of a `MODIFIED` watch line into the `Frame` line that the endpoint's
 /// `FeedRequest` flow accepts.
 public enum FrameTranslation {
-  private static let buttons: [String: String] = [
-    "face-south": "south", "face-east": "east", "face-west": "west", "face-north": "north",
-    "left-shoulder": "left_shoulder", "right-shoulder": "right_shoulder",
-    "left-stick-click": "left_stick", "right-stick-click": "right_stick",
-    "menu": "start", "view": "back", "guide": "guide", "share": "share",
-    "touchpad-click": "touchpad", "microphone": "mute",
-    "left-trigger-button": "left_trigger_click", "right-trigger-button": "right_trigger_click",
-  ]
   private static let dpad: [String: [String]] = [
     "north": ["up"], "northEast": ["up", "right"], "east": ["right"],
     "southEast": ["down", "right"], "south": ["down"], "southWest": ["down", "left"],
@@ -28,16 +20,16 @@ public enum FrameTranslation {
     else { return nil }
     let pressed = (input["pressed"] as? [String]) ?? []
     var frame: [String: Any] = ["apiVersion": endpointAPIVersion, "kind": "Frame"]
-    frame["buttons"] = pressed.compactMap { buttons[$0] }
+    frame["buttons"] = pressed.filter { PeerMessage.buttons.contains($0) }
     frame["dpad"] = dpad[input["hat"] as? String ?? ""] ?? []
     var axes: [String: Double] = [:]
-    for (key, name) in [("leftStick", "left_stick"), ("rightStick", "right_stick")] {
+    for (key, name) in [("leftStick", "LeftStick"), ("rightStick", "RightStick")] {
       let stick = input[key] as? [String: Any]
-      axes["\(name)_x"] = unit(stick?["x"], scale: 32767, low: -1)
-      axes["\(name)_y"] = unit(stick?["y"], scale: 32767, low: -1)
+      axes["\(name)X"] = unit(stick?["x"], scale: 32767, low: -1)
+      axes["\(name)Y"] = unit(stick?["y"], scale: 32767, low: -1)
     }
-    axes["left_trigger"] = unit(input["leftTrigger"], scale: 65535, low: 0)
-    axes["right_trigger"] = unit(input["rightTrigger"], scale: 65535, low: 0)
+    axes["LeftTrigger"] = unit(input["leftTrigger"], scale: 65535, low: 0)
+    axes["RightTrigger"] = unit(input["rightTrigger"], scale: 65535, low: 0)
     frame["axes"] = axes
     return (id, frame)
   }

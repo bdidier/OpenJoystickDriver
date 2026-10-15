@@ -6,7 +6,7 @@ import Testing
 @Suite
 struct ProtocolDescriptionTests {
   private static let minimalInput =
-    #"{"report": {"length": 1}, "buttons": [{"control": "face-south", "byte": 0, "mask": 1}]}"#
+    #"{"report": {"length": 1}, "buttons": [{"control": "South", "byte": 0, "mask": 1}]}"#
   private static let rumbleTemplate =
     #"{"report": {"kind": "output", "id": 1, "length": 4}, "leftMain": {"byte": 1}}"#
   private static let startupWrite =
@@ -186,7 +186,7 @@ struct ProtocolDescriptionTests {
       #""recordSections": ["input"], "#
         + #""defaults": {"input": \#(Self.minimalInput), "tuning": {"stickDeadzone": 0.1}}"#
     )
-    #expect(layout.inputLayout?.controls == [.faceSouth])
+    #expect(layout.inputLayout?.controls == [.south])
     #expect(layout.tuning == ControllerTuning(stickDeadzone: 0.1))
 
     let hid = try decode(
@@ -210,7 +210,7 @@ struct ProtocolDescriptionTests {
       #""rawUSB": true, "recordSections": ["input"], "#
         + #""defaults": {"input": \#(Self.minimalInput)}"#
     )
-    #expect(description.inputLayout?.controls == [.faceSouth])
+    #expect(description.inputLayout?.controls == [.south])
   }
 
   @Test

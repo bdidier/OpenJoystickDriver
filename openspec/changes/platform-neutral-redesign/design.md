@@ -204,7 +204,7 @@ Follows clig.dev plus Apple conventions; global flags `--json --plain -q --no-co
 | `--app <bundle-id>`, `bundleIdentifier` | `--app <app-id>`, `appID` |
 | modifier names `command`, `option` | `meta`, `alt` |
 | `diagnose --bundle` | `diagnose --output` |
-| `accessBackend ioHID\|ioUSBHost\|usbDriverKit` | `hid\|rawUsb\|usbExtension` |
+| `accessBackend ioHID\|ioUSBHost\|usbDriverKit\|coreBluetoothGATT` | `hid\|rawUsb\|usbExtension\|gatt` |
 | `macOSVersion` | `osVersion` plus `osName` |
 | `appleGameControllerAudit`, `appleExactDeviceCount`, `appleRecord`, `appleIdentifiers` | `systemGamepadAudit`, `systemExactDeviceCount`, `systemRecord`, `systemIdentifiers` |
 | kinds `USBPacket`, `JoyConPair` | `RawReport`, `ControllerPair` |

@@ -114,13 +114,14 @@ struct SupportReportTests {
         sourceCommit: String(repeating: "a", count: 40),
         sourceState: .clean
       ),
-      macOSVersion: "26.0.0",
+      osName: "macOS",
+      osVersion: "26.0.0",
       architecture: "arm64",
       inputRead: .granted,
       applicationServiceInstalled: true,
       applicationServiceConnected: true,
       applicationServiceHealth: health,
-      appleGameControllerAudit: appleAudit,
+      systemGamepadAudit: appleAudit,
       status: status,
       virtualDiagnostics: diagnostics
     )
@@ -163,7 +164,7 @@ struct SupportReportTests {
     let buildIdentity = try #require(system["buildIdentity"] as? [String: Any])
     #expect(buildIdentity["appBundleVersion"] as? String == "1.4.89")
     #expect(buildIdentity["sourceCommit"] as? String == String(repeating: "a", count: 40))
-    #expect(report.data.appleGameControllerAudit?.catalogListedOJDRecordCount == 1)
+    #expect(report.data.systemGamepadAudit?.catalogListedOJDRecordCount == 1)
 
     let decoded = try JSONDecoder().decode(SupportReport.self, from: data)
     #expect(decoded.specversion == "1.0")
@@ -182,7 +183,8 @@ struct SupportReportTests {
         sourceCommit: "unknown",
         sourceState: .unknown
       ),
-      macOSVersion: "26.0.0",
+      osName: "macOS",
+      osVersion: "26.0.0",
       architecture: "arm64",
       inputRead: .denied,
       applicationServiceInstalled: false,

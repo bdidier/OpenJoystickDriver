@@ -37,7 +37,7 @@ struct ReceiverPresencePipelineTests {
     let start = Task { await pipeline.start() }
     #expect(await waitUntil { dispatcher.stops == [identifier] })
 
-    #expect(dispatcher.states == [snapshot(.press(.faceSouth)), .neutral])
+    #expect(dispatcher.states == [snapshot(.press(.south)), .neutral])
     #expect(await session.writes == [inquiry, playerOneLED])
     await pipeline.stop()
     await start.value
@@ -67,7 +67,7 @@ struct ReceiverPresencePipelineTests {
 
     // The held button is released with the lost session and pressed again by the next one.
     #expect(
-      dispatcher.states == [snapshot(.press(.faceSouth)), .neutral, snapshot(.press(.faceSouth))]
+      dispatcher.states == [snapshot(.press(.south)), .neutral, snapshot(.press(.south))]
     )
     #expect(dispatcher.stops == [identifier])
     #expect(await second.writes == [inquiry, playerOneLED])

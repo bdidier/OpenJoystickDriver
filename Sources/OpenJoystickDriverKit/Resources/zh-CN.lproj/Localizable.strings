@@ -942,8 +942,9 @@
 "cli.error.service_timeout" = "服务未及时回复。请重试，或用“ojd status”检查。";
 "cli.error.service_unavailable" = "OpenJoystickDriver 服务未运行。请用“ojd service start”启动。";
 "cli.error.timeout_value" = "--timeout 需要大于 0 的秒数。";
-"cli.error.unexpected" = "意外错误：%@。请运行“ojd diagnose --bundle PATH”，并将生成的包附在错误报告中。";
+"cli.error.unexpected" = "意外错误：%@。请运行“ojd diagnose --output PATH”，并将生成的包附在错误报告中。";
 "cli.error.unknown_command" = "未知命令“%@”。你是不是想用“%@”？";
+"cli.error.renamed_flag" = "“%@”已重命名为“%@”。";
 "cli.option.json" = "在 stdout 上输出 JSON。";
 "cli.option.no_color" = "不使用颜色。";
 "cli.option.no_input" = "从不提示输入；缺少值时失败。";
@@ -962,7 +963,7 @@
 "cli.controller.light.examples" = "示例：\n  # 将灯条设为橙色\n  ojd controller light 054C:09CC --color FF8000\n  # 设置颜色和较低的亮度\n  ojd controller light 054C:09CC --color 0000FF --brightness 40";
 "cli.profile.create.examples" = "示例：\n  # 为某一控制器型号创建配置文件\n  ojd profile create Racing --controller 045E:028E\n  # 仅在 Safari 位于最前面时应用\n  ojd profile create Browsing --controller 045E:028E --app com.apple.Safari";
 "cli.profile.set.examples" = "示例：\n  # 重命名配置文件\n  ojd profile set Racing name Rally\n  # 设置第一个摇杆映射的内死区\n  ojd profile set Racing stickMappings.0.tuning.innerDeadzone 0.2";
-"cli.binding.set.examples" = "示例：\n  # 按住南键时按住空格键\n  ojd binding set Racing button:south key:space\n  # 每按一次切换 J 的开关\n  ojd binding set Racing button:west key:j --behavior toggle\n  # 按住时每秒重复 J 10 次\n  ojd binding set Racing button:west key:j --turbo-rate 10 --turbo-duty 0.5";
+"cli.binding.set.examples" = "示例：\n  # 按住南键时按住空格键\n  ojd binding set Racing button:South key:space\n  # 每按一次切换 J 的开关\n  ojd binding set Racing button:West key:j --behavior toggle\n  # 按住时每秒重复 J 10 次\n  ojd binding set Racing button:West key:j --turbo-rate 10 --turbo-duty 0.5";
 "cli.record.install.examples" = "示例：\n  # 安装记录文件\n  ojd record install 045E-028E.json\n  # 从标准输入读取记录\n  ojd record install - < 045E-028E.json";
 "cli.access.grant.examples" = "示例：\n  # 允许某个程序使用服务\n  ojd access grant /Applications/Example.app\n  # 为来自某个源的页面创建令牌\n  ojd access grant --token overlay --origin http://127.0.0.1:8080";
 "cli.service.abstract" = "启动或停止 OpenJoystickDriver 服务，或等待其开始接受请求。";
@@ -1050,12 +1051,12 @@
 "cli.access.web.port" = "127.0.0.1 上的端口，范围为 1024 至 65535。";
 "cli.access.web.port_range" = "--port 必须介于 1024 和 65535 之间。";
 "cli.diagnose.abstract" = "运行所有检查并报告问题。";
-"cli.diagnose.bundle" = "同时将支持包写入此文件。";
-"cli.diagnose.bundle_failed" = "未能写入支持包：%@。请选择其他 --bundle 路径。";
-"cli.diagnose.bundle_parent" = "--bundle 需要一个已存在的目录；%@ 不存在。";
-"cli.diagnose.bundle_progress" = "正在写入支持包...";
-"cli.diagnose.bundle_written" = "支持包已写入 %@。其中包含设备名称，分享前请先检查。";
-"cli.diagnose.discussion" = "每项检查会报告 pass、warn、fail 或 skip。需要服务的检查在服务停止时会被跳过。任何检查为 fail 时以退出码 1 退出。--soak 会增加一项运行时健康检查，在给定时间内对服务采样；不使用时会跳过该检查。--bundle 还会写入支持报告，分享前请先检查。";
+"cli.diagnose.output" = "同时将支持包写入此文件。";
+"cli.diagnose.output_failed" = "未能写入支持包：%@。请选择其他 --output 路径。";
+"cli.diagnose.output_parent" = "--output 需要一个已存在的目录；%@ 不存在。";
+"cli.diagnose.output_progress" = "正在写入支持包...";
+"cli.diagnose.output_written" = "支持包已写入 %@。其中包含设备名称，分享前请先检查。";
+"cli.diagnose.discussion" = "每项检查会报告 pass、warn、fail 或 skip。需要服务的检查在服务停止时会被跳过。任何检查为 fail 时以退出码 1 退出。--soak 会增加一项运行时健康检查，在给定时间内对服务采样；不使用时会跳过该检查。--output 还会写入支持报告，分享前请先检查。";
 "cli.diagnose.extension.absent" = "未在 macOS 中注册；请运行 “ojd extension activate”";
 "cli.diagnose.extension.active" = "在 macOS 中已启用";
 "cli.diagnose.extension.bundle_invalid" = "意外的包标识符 %@；请重新安装 OpenJoystickDriver";
@@ -1063,7 +1064,7 @@
 "cli.diagnose.extension.bundle_present" = "已嵌入 App";
 "cli.diagnose.extension.inactive" = "已注册但未启用；请使用 “ojd extension activate” 批准";
 "cli.diagnose.extension.unavailable" = "macOS 未报告注册情况：%@";
-"cli.diagnose.failed" = "未通过的检查：%lld 项。请根据上方详细信息修复，或运行 “ojd diagnose --bundle <path>” 并将文件附到错误报告中。";
+"cli.diagnose.failed" = "未通过的检查：%lld 项。请根据上方详细信息修复，或运行 “ojd diagnose --output <path>” 并将文件附到错误报告中。";
 "cli.diagnose.footprint_limit" = "使用 --soak 时，超过此物理占用量（MiB）则判为失败；0 表示停用（0-65536）。";
 "cli.diagnose.interval" = "使用 --soak 时，采样间隔的毫秒数（100-60000）。";
 "cli.diagnose.interval_range" = "--interval-ms 必须介于 100 和 60000 之间。";
@@ -1339,7 +1340,7 @@
 "cli.virtual.error.failed" = "%@ 的虚拟游戏手柄未更改（%@）。请用 “ojd virtual show” 检查。";
 "cli.virtual.error.no_unit" = "%@ 没有单元 ID，因此所做选择只能适用于其整个型号。请不带 --unit 运行该命令。";
 "cli.virtual.feed.abstract" = "发布一个由 stdin 驱动的虚拟游戏手柄。";
-"cli.virtual.feed.discussion" = "每行读取一个 JSON 对象：“buttons” 和 “dpad” 列出被按下的控件，例如 south 和 up；“axes” 将轴名称（例如 left_stick_x）映射到数值。缺少的控件保持中立。摇杆范围为 -1 到 1，Y 轴向上；扳机范围为 0 到 1。帧按顺序播放，每帧至少持续 8 ms；“holdMilliseconds” 可让某一帧保持更久，最长 60000。将游戏发送给游戏手柄的每条输出命令（例如震动）以每行一个 JSON 对象的形式输出。输入结束且所有帧播放完毕后停止。";
+"cli.virtual.feed.discussion" = "每行读取一个 JSON 对象：“buttons” 和 “dpad” 列出被按下的控件，例如 South 和 up；“axes” 将轴名称（例如 LeftStickX）映射到数值。缺少的控件保持中立。摇杆范围为 -1 到 1，Y 轴向上；扳机范围为 0 到 1。帧按顺序播放，每帧至少持续 8 ms；“holdMilliseconds” 可让某一帧保持更久，最长 60000。将游戏发送给游戏手柄的每条输出命令（例如震动）以每行一个 JSON 对象的形式输出。输入结束且所有帧播放完毕后停止。";
 "cli.virtual.feed.error.closed" = "服务已关闭虚拟游戏手柄。请用 “ojd status” 检查。";
 "cli.virtual.feed.error.frame" = "第 %@ 行不是有效的帧。“ojd virtual feed --help” 会显示格式。";
 "cli.virtual.feed.profile" = "要发布的虚拟游戏手柄配置文件。";
@@ -1452,7 +1453,7 @@
 "cli.binding.option.turbo_rate" = "按住期间每秒重复目标的次数。需要 --turbo-duty。";
 "cli.binding.set.abstract" = "将控制器来源映射到目标，并替换该来源当前的映射。";
 "cli.binding.set.done" = "“%@”现在映射到 %@。";
-"cli.binding.set.source" = "控制器上的控件，例如 button:south。";
+"cli.binding.set.source" = "控制器上的控件，例如 button:South。";
 "cli.binding.set.target" = "它发送的内容，例如 key:space。";
 "cli.binding.source_invalid" = "“%@”不是来源。“ojd binding set --help” 会列出来源的写法。";
 "cli.binding.target_invalid" = "“%@”不是目标。“ojd binding set --help” 会列出目标的写法。";

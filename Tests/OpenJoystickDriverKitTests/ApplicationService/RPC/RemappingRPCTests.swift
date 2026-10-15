@@ -328,7 +328,7 @@ struct RemappingRPCTests {
       modifiers: Set(RemappingKeyModifier.allCases)
     )
     let turbo = RemappingTurbo(repeatRateHz: 60, dutyCycle: 0.95)
-    var bindings = RemappingButton.allCases.map {
+    var bindings = Control.allCases.map {
       RemappingBinding(source: .button($0), destination: discreteDestination, turbo: turbo)
     }
     bindings += RemappingDpadDirection.allCases.map {

@@ -12,15 +12,15 @@ extension RemappingOutputRouterTests {
     let harness = try await RemappingRouterHarness.make(profile: remappingRouterProfile())
     defer { harness.removeFiles() }
     let device = remappingRouterDevice(1)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
     harness.foreground.set("com.example.Other")
     try await harness.router.refreshEligibility()
     try await harness.router.refreshEligibility()
 
-    try await harness.router.dispatchCausally(changes: [.press(.faceEast)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.east)], from: device)
     harness.foreground.set("com.example.Game")
     try await harness.router.refreshEligibility()
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
 
     #expect(
       harness.recorder.snapshot() == [
@@ -35,7 +35,7 @@ extension RemappingOutputRouterTests {
     let harness = try await RemappingRouterHarness.make(profile: remappingRouterProfile())
     defer { harness.removeFiles() }
     let device = remappingRouterDevice(1)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
 
     harness.access.set(.notAuthorized)
     try await harness.router.refreshEligibility()
@@ -53,7 +53,7 @@ extension RemappingOutputRouterTests {
     let harness = try await RemappingRouterHarness.make(profile: remappingRouterProfile())
     defer { harness.removeFiles() }
     let device = remappingRouterDevice(1)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
     harness.foreground.setSequence(["com.example.Game", "com.example.Other"])
     harness.access.setSequence([.granted, .notAuthorized])
     harness.foreground.resetReadCount()
@@ -73,10 +73,10 @@ extension RemappingOutputRouterTests {
     let harness = try await RemappingRouterHarness.make(profile: remappingRouterProfile())
     defer { harness.removeFiles() }
     let device = remappingRouterDevice(1)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
     harness.access.set(.notAuthorized)
     try await harness.router.refreshEligibility()
-    try await harness.router.dispatchCausally(changes: [.press(.faceEast)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.east)], from: device)
 
     let deniedStatus = try #require(await harness.router.status(for: device))
     #expect(deniedStatus.selection != .virtualGamepad)
@@ -85,9 +85,9 @@ extension RemappingOutputRouterTests {
 
     harness.access.set(.granted)
     try await harness.router.refreshEligibility()
-    try await harness.router.dispatchCausally(changes: [.release(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.release(.south)], from: device)
     #expect(harness.recorder.snapshot() == [.system(.keyDown(.space)), .system(.keyUp(.space))])
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
     let restoredStatus = try #require(await harness.router.status(for: device))
     #expect(restoredStatus.selection != .virtualGamepad)
     #expect(restoredStatus.eligibility == .eligible)
@@ -105,7 +105,7 @@ extension RemappingOutputRouterTests {
     let harness = try await RemappingRouterHarness.make(profile: original)
     defer { harness.removeFiles() }
     let device = remappingRouterDevice(1)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
 
     let edited = remappingRouterProfile(
       id: original.id,
@@ -114,7 +114,7 @@ extension RemappingOutputRouterTests {
     )
     try await harness.library.update(edited, expectedCurrent: original)
     try await harness.router.refreshModel(vendorID: 1118, productID: 654)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
 
     let replacement = remappingRouterProfile(name: "Replacement", destination: .mouseButton(.left))
     try await harness.library.create(replacement)
@@ -138,17 +138,17 @@ extension RemappingOutputRouterTests {
     defer { harness.removeFiles() }
     let device = remappingRouterDevice(1)
     let virtualOutput = remappingRouterDevice(2, vendorID: 1356, productID: 2508)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
-    try await harness.router.dispatchCausally(changes: [.press(.faceEast)], from: virtualOutput)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.east)], from: virtualOutput)
     harness.router.setOutputSuppressed(true)
     harness.router.setOutputSuppressed(true)
-    try await harness.router.dispatchCausally(changes: [.press(.faceEast)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.east)], from: device)
     harness.router.setOutputSuppressed(false)
 
     #expect(
       harness.recorder.snapshot() == [
         .system(.keyDown(.space)),
-        .virtualGamepad(ControllerState.neutral.applying([.press(.faceEast)]), virtualOutput),
+        .virtualGamepad(ControllerState.neutral.applying([.press(.east)]), virtualOutput),
         .virtualOutputStop(virtualOutput), .system(.keyUp(.space)),
       ]
     )
@@ -160,11 +160,11 @@ extension RemappingOutputRouterTests {
     let harness = try await RemappingRouterHarness.make(profile: remappingRouterProfile())
     defer { harness.removeFiles() }
     let device = remappingRouterDevice(1)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
 
     harness.router.suppressOutput = true
     harness.router.suppressOutput = true
-    try await harness.router.dispatchCausally(changes: [.press(.faceEast)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.east)], from: device)
 
     #expect(harness.recorder.snapshot() == [.system(.keyDown(.space)), .system(.keyUp(.space))])
     #expect(harness.router.suppressOutput)
@@ -178,7 +178,7 @@ extension RemappingOutputRouterTests {
     let device = remappingRouterDevice(1)
 
     await #expect(throws: RemappingOutputRoutingError.library(.corruptLibrary)) {
-      try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
+      try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
     }
     let status = try #require(await harness.router.status(for: device))
     #expect(status.selection == .unavailable)
@@ -192,7 +192,7 @@ extension RemappingOutputRouterTests {
     let harness = try await RemappingRouterHarness.make(profile: profile)
     defer { harness.removeFiles() }
     let device = remappingRouterDevice(1)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
     try await harness.router.tick(at: 1_025_000_000)
     harness.foreground.set("com.example.Other")
     try await harness.router.tick(at: 1_100_000_000)
@@ -241,8 +241,8 @@ extension RemappingOutputRouterTests {
     defer { harness.removeFiles() }
     let mapped = remappingRouterDevice(1)
     let virtualOutput = remappingRouterDevice(2, vendorID: 1356, productID: 2508)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: mapped)
-    try await harness.router.dispatchCausally(changes: [.press(.faceEast)], from: virtualOutput)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: mapped)
+    try await harness.router.dispatchCausally(changes: [.press(.east)], from: virtualOutput)
 
     try await harness.router.shutdown()
     try await harness.router.shutdown()
@@ -250,13 +250,13 @@ extension RemappingOutputRouterTests {
     #expect(
       harness.recorder.snapshot() == [
         .system(.keyDown(.space)),
-        .virtualGamepad(ControllerState.neutral.applying([.press(.faceEast)]), virtualOutput),
+        .virtualGamepad(ControllerState.neutral.applying([.press(.east)]), virtualOutput),
         .system(.keyUp(.space)), .virtualOutputStop(virtualOutput),
       ]
     )
     #expect(await harness.router.statuses().isEmpty)
     await #expect(throws: RemappingOutputRoutingError.shutDown) {
-      try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: mapped)
+      try await harness.router.dispatchCausally(changes: [.press(.south)], from: mapped)
     }
   }
 }
@@ -268,16 +268,16 @@ extension RemappingOutputRouterTests {
     let harness = try await RemappingRouterHarness.make(profile: profile)
     defer { harness.removeFiles() }
     let device = remappingRouterDevice(1)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
 
     try await harness.library.deactivate(profileID: profile.id)
     try await harness.router.refreshModel(vendorID: 1118, productID: 654)
     #expect(await harness.router.status(for: device)?.selection == .virtualGamepad)
-    try await harness.router.dispatchCausally(changes: [.release(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.release(.south)], from: device)
 
     try await harness.library.activate(profileID: profile.id)
     try await harness.router.refreshModel(vendorID: 1118, productID: 654)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
 
     let system = harness.recorder.snapshot().filter {
       if case .system = $0 { return true }

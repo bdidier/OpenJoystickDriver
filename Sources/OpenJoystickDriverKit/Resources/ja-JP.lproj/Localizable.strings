@@ -942,8 +942,9 @@
 "cli.error.service_timeout" = "サービスが時間内に応答しませんでした。再試行するか、「ojd status」で確認してください。";
 "cli.error.service_unavailable" = "OpenJoystickDriver サービスが実行されていません。「ojd service start」で開始してください。";
 "cli.error.timeout_value" = "--timeout には 0 より大きい秒数を指定してください。";
-"cli.error.unexpected" = "予期しないエラー: %@。「ojd diagnose --bundle PATH」を実行し、バンドルをバグ報告に添付してください。";
+"cli.error.unexpected" = "予期しないエラー: %@。「ojd diagnose --output PATH」を実行し、バンドルをバグ報告に添付してください。";
 "cli.error.unknown_command" = "不明なコマンド「%@」です。「%@」のことですか？";
+"cli.error.renamed_flag" = "「%@」は「%@」に名前が変更されました。";
 "cli.option.json" = "JSON を stdout に出力します。";
 "cli.option.no_color" = "色を使用しません。";
 "cli.option.no_input" = "入力を求めません。値がない場合は失敗します。";
@@ -962,7 +963,7 @@
 "cli.controller.light.examples" = "例:\n  # ライトバーをオレンジに設定\n  ojd controller light 054C:09CC --color FF8000\n  # 色と低い明るさを設定\n  ojd controller light 054C:09CC --color 0000FF --brightness 40";
 "cli.profile.create.examples" = "例:\n  # コントローラのモデル用にプロファイルを作成\n  ojd profile create Racing --controller 045E:028E\n  # Safari が最前面にあるときだけ適用\n  ojd profile create Browsing --controller 045E:028E --app com.apple.Safari";
 "cli.profile.set.examples" = "例:\n  # プロファイル名を変更\n  ojd profile set Racing name Rally\n  # 最初のスティックマッピングの内側デッドゾーンを設定\n  ojd profile set Racing stickMappings.0.tuning.innerDeadzone 0.2";
-"cli.binding.set.examples" = "例:\n  # 南ボタンを押している間 Space を押し続ける\n  ojd binding set Racing button:south key:space\n  # 押すたびに J のオンとオフを切り替える\n  ojd binding set Racing button:west key:j --behavior toggle\n  # 押している間、J を 1 秒に 10 回繰り返す\n  ojd binding set Racing button:west key:j --turbo-rate 10 --turbo-duty 0.5";
+"cli.binding.set.examples" = "例:\n  # 南ボタンを押している間 Space を押し続ける\n  ojd binding set Racing button:South key:space\n  # 押すたびに J のオンとオフを切り替える\n  ojd binding set Racing button:West key:j --behavior toggle\n  # 押している間、J を 1 秒に 10 回繰り返す\n  ojd binding set Racing button:West key:j --turbo-rate 10 --turbo-duty 0.5";
 "cli.record.install.examples" = "例:\n  # レコードファイルをインストール\n  ojd record install 045E-028E.json\n  # 標準入力からレコードを読み込む\n  ojd record install - < 045E-028E.json";
 "cli.access.grant.examples" = "例:\n  # プログラムにサービスの使用を許可\n  ojd access grant /Applications/Example.app\n  # 1 つのオリジンから配信されるページ用のトークンを作成\n  ojd access grant --token overlay --origin http://127.0.0.1:8080";
 "cli.service.abstract" = "OpenJoystickDriver サービスを開始または停止するか、リクエストを受け付けるまで待機します。";
@@ -1050,12 +1051,12 @@
 "cli.access.web.port" = "127.0.0.1 のポート。1024 から 65535 まで。";
 "cli.access.web.port_range" = "--port は 1024 から 65535 の間で指定してください。";
 "cli.diagnose.abstract" = "すべてのチェックを実行し、問題点を報告します。";
-"cli.diagnose.bundle" = "サポート用バンドルもこのファイルに書き出します。";
-"cli.diagnose.bundle_failed" = "サポート用バンドルを書き出せませんでした: %@。別の --bundle パスを指定してください。";
-"cli.diagnose.bundle_parent" = "--bundle には既存のディレクトリが必要です。%@ は存在しません。";
-"cli.diagnose.bundle_progress" = "サポート用バンドルを書き出しています...";
-"cli.diagnose.bundle_written" = "サポート用バンドルを %@ に書き出しました。デバイス名が含まれるため、共有する前に内容を確認してください。";
-"cli.diagnose.discussion" = "各チェックの結果は pass、warn、fail、skip のいずれかです。サービスが必要なチェックは、サービスが停止中の間はスキップされます。いずれかのチェックが fail の場合は終了コード 1 で終了します。--soak を付けると、指定した時間サービスをサンプリングするランタイムヘルスチェックを追加します。付けない場合、このチェックはスキップされます。--bundle はサポート用レポートも書き出します。共有する前に内容を確認してください。";
+"cli.diagnose.output" = "サポート用バンドルもこのファイルに書き出します。";
+"cli.diagnose.output_failed" = "サポート用バンドルを書き出せませんでした: %@。別の --output パスを指定してください。";
+"cli.diagnose.output_parent" = "--output には既存のディレクトリが必要です。%@ は存在しません。";
+"cli.diagnose.output_progress" = "サポート用バンドルを書き出しています...";
+"cli.diagnose.output_written" = "サポート用バンドルを %@ に書き出しました。デバイス名が含まれるため、共有する前に内容を確認してください。";
+"cli.diagnose.discussion" = "各チェックの結果は pass、warn、fail、skip のいずれかです。サービスが必要なチェックは、サービスが停止中の間はスキップされます。いずれかのチェックが fail の場合は終了コード 1 で終了します。--soak を付けると、指定した時間サービスをサンプリングするランタイムヘルスチェックを追加します。付けない場合、このチェックはスキップされます。--output はサポート用レポートも書き出します。共有する前に内容を確認してください。";
 "cli.diagnose.extension.absent" = "macOS に登録されていません。「ojd extension activate」を実行してください";
 "cli.diagnose.extension.active" = "macOS で有効です";
 "cli.diagnose.extension.bundle_invalid" = "バンドル識別子 %@ が想定と異なります。OpenJoystickDriver を再インストールしてください";
@@ -1063,7 +1064,7 @@
 "cli.diagnose.extension.bundle_present" = "アプリに組み込まれています";
 "cli.diagnose.extension.inactive" = "登録済みですが有効ではありません。「ojd extension activate」で承認してください";
 "cli.diagnose.extension.unavailable" = "macOS が登録状況を返しませんでした: %@";
-"cli.diagnose.failed" = "失敗したチェック: %lld 件。上記の詳細を参考に修正するか、「ojd diagnose --bundle <path>」を実行してファイルをバグ報告に添付してください。";
+"cli.diagnose.failed" = "失敗したチェック: %lld 件。上記の詳細を参考に修正するか、「ojd diagnose --output <path>」を実行してファイルをバグ報告に添付してください。";
 "cli.diagnose.footprint_limit" = "--soak 使用時、この物理フットプリント (MiB) を超えると失敗とします。0 で無効 (0-65536)。";
 "cli.diagnose.interval" = "--soak 使用時のサンプル間隔 (ミリ秒) (100-60000)。";
 "cli.diagnose.interval_range" = "--interval-ms は 100 から 60000 の間で指定してください。";
@@ -1339,7 +1340,7 @@
 "cli.virtual.error.failed" = "%@ の仮想ゲームパッドは変更されませんでした (%@)。「ojd virtual show」で確認してください。";
 "cli.virtual.error.no_unit" = "%@ にはユニット ID がないため、選択はモデル全体にのみ適用できます。--unit を付けずにコマンドを実行してください。";
 "cli.virtual.feed.abstract" = "stdin で操作される仮想ゲームパッドを公開します。";
-"cli.virtual.feed.discussion" = "1 行につき 1 つの JSON オブジェクトを読み取ります。「buttons」 と 「dpad」 は押されているコントロール (south や up など) を列挙し、「axes」 は軸名 (left_stick_x など) を値に対応付けます。省略したコントロールはニュートラルになります。スティックは -1 から 1 の範囲で Y が上方向、トリガーは 0 から 1 の範囲です。フレームは順番に再生され、各フレームは最低 8 ms 継続します。「holdMilliseconds」 を指定すると、フレームをより長く (最大 60000) 保持できます。ゲームがゲームパッドに送るすべての出力コマンド (振動など) を、1 行につき 1 つの JSON オブジェクトとして出力します。入力が終了した後、すべてのフレームを再生し終えると停止します。";
+"cli.virtual.feed.discussion" = "1 行につき 1 つの JSON オブジェクトを読み取ります。「buttons」 と 「dpad」 は押されているコントロール (South や up など) を列挙し、「axes」 は軸名 (LeftStickX など) を値に対応付けます。省略したコントロールはニュートラルになります。スティックは -1 から 1 の範囲で Y が上方向、トリガーは 0 から 1 の範囲です。フレームは順番に再生され、各フレームは最低 8 ms 継続します。「holdMilliseconds」 を指定すると、フレームをより長く (最大 60000) 保持できます。ゲームがゲームパッドに送るすべての出力コマンド (振動など) を、1 行につき 1 つの JSON オブジェクトとして出力します。入力が終了した後、すべてのフレームを再生し終えると停止します。";
 "cli.virtual.feed.error.closed" = "サービスが仮想ゲームパッドを閉じました。「ojd status」 で確認してください。";
 "cli.virtual.feed.error.frame" = "%@ 行目は有効なフレームではありません。「ojd virtual feed --help」 で形式を確認できます。";
 "cli.virtual.feed.profile" = "公開する仮想ゲームパッドのプロファイル。";
@@ -1452,7 +1453,7 @@
 "cli.binding.option.turbo_rate" = "押している間、ターゲットを 1 秒あたりこの回数繰り返します。--turbo-duty が必要です。";
 "cli.binding.set.abstract" = "コントローラのソースをターゲットに割り当て、そのソースの現在の割り当てを置き換えます。";
 "cli.binding.set.done" = "「%@」に %@ を割り当てました。";
-"cli.binding.set.source" = "コントローラの操作部。例: button:south";
+"cli.binding.set.source" = "コントローラの操作部。例: button:South";
 "cli.binding.set.target" = "送信する内容。例: key:space";
 "cli.binding.source_invalid" = "「%@」はソースではありません。「ojd binding set --help」でソースの形式を確認できます。";
 "cli.binding.target_invalid" = "「%@」はターゲットではありません。「ojd binding set --help」でターゲットの形式を確認できます。";

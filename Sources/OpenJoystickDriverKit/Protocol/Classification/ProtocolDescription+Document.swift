@@ -229,14 +229,16 @@ extension ProtocolDescription {
   }
 
   /// `controls`: the controls every controller of the family has, as the Xbox layout with
-  /// `remove` taken away and `add` put in, plus its touch contacts and motion.
+  /// `remove` taken away and `add` put in, plus its digital triggers, touch contacts and motion.
   struct ControlsDocument: Decodable {
     let value: ControllerCapabilities
 
     init(from decoder: any Decoder) throws {
       let container = try decoder.container(keyedBy: DocumentKey.self)
-      try container.rejectUnknown(allowed: ["base", "remove", "add", "touchContactCount", "motion"])
-      var controls: Set<ControlID> = []
+      try container.rejectUnknown(allowed: [
+        "base", "remove", "add", "digitalTriggers", "touchContactCount", "motion",
+      ])
+      var controls: Set<Control> = []
       if let base = try container.decodeOptional(String.self, for: "base") {
         guard base == "xbox" else {
           throw DecodingError.dataCorrupted(
@@ -246,12 +248,14 @@ extension ProtocolDescription {
             )
           )
         }
-        controls = ControlID.xboxLayout
+        controls = Control.xboxLayout
       }
-      let remove = Set(try container.decodeUniqueList(ControlID.self, for: "remove") ?? [])
-      let add = Set(try container.decodeUniqueList(ControlID.self, for: "add") ?? [])
+      let remove = Set(try container.decodeUniqueList(Control.self, for: "remove") ?? [])
+      let add = Set(try container.decodeUniqueList(Control.self, for: "add") ?? [])
+      let digital = Set(try container.decodeUniqueList(Control.self, for: "digitalTriggers") ?? [])
       let touch = try container.decodeOptional(Int.self, for: "touchContactCount") ?? 0
-      guard remove.isDisjoint(with: add), remove.isSubset(of: controls), (0...10).contains(touch),
+      guard remove.isDisjoint(with: add), remove.isSubset(of: controls),
+        digital.isSubset(of: [.leftTrigger, .rightTrigger]), (0...10).contains(touch),
         !controls.isEmpty || !add.isEmpty
       else {
         throw DecodingError.dataCorrupted(
@@ -264,6 +268,7 @@ extension ProtocolDescription {
       }
       value = ControllerCapabilities(
         controls: controls.subtracting(remove).union(add),
+        digitalTriggers: digital,
         touchContactCount: UInt8(touch),
         motion: try container.decodeOptional(Bool.self, for: "motion") ?? false
       )
@@ -277,7 +282,7 @@ extension ProtocolDescription {
     init(from decoder: any Decoder) throws {
       let container = try decoder.container(keyedBy: DocumentKey.self)
       try container.rejectUnknown(allowed: ["present", "rumbleAbsent"])
-      let present = Set(try container.decodeUniqueList(ControlID.self, for: "present") ?? [])
+      let present = Set(try container.decodeUniqueList(Control.self, for: "present") ?? [])
       let rumbleAbsent = try container.decodeOptional(Bool.self, for: "rumbleAbsent") ?? false
       guard !container.allKeys.isEmpty, rumbleAbsent || container.contains(DocumentKey("present"))
       else {

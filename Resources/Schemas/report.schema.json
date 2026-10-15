@@ -98,8 +98,8 @@
             "$ref": "#/$defs/hidGamepad"
           }
         },
-        "appleGameControllerAudit": {
-          "$ref": "#/$defs/appleGameControllerAudit"
+        "systemGamepadAudit": {
+          "$ref": "#/$defs/systemGamepadAudit"
         },
         "frameTimings": {
           "description": "The newest frames of each connected controller, oldest first, as `ojd diagnose --json` lists them in `timings`; empty while the service is stopped or has no frames. Nanoseconds are on the service's monotonic uptime clock. Each controller keeps its last 8 frames.",
@@ -196,13 +196,16 @@
     },
     "system": {
       "type": "object",
-      "required": ["buildIdentity", "macOSVersion", "architecture"],
+      "required": ["buildIdentity", "osName", "osVersion", "architecture"],
       "additionalProperties": false,
       "properties": {
         "buildIdentity": {
           "$ref": "#/$defs/buildIdentity"
         },
-        "macOSVersion": {
+        "osName": {
+          "type": "string"
+        },
+        "osVersion": {
           "type": "string"
         },
         "architecture": {
@@ -713,12 +716,12 @@
         }
       }
     },
-    "appleGameControllerAudit": {
+    "systemGamepadAudit": {
       "type": "object",
       "required": [
         "source",
         "bundleVersions",
-        "appleExactDeviceCount",
+        "systemExactDeviceCount",
         "skippedAppleDeviceCount",
         "ojdRecordCount",
         "catalogListedOJDRecordCount",
@@ -741,7 +744,7 @@
             "type": "string"
           }
         },
-        "appleExactDeviceCount": {
+        "systemExactDeviceCount": {
           "type": "integer",
           "minimum": 0
         },
@@ -760,7 +763,7 @@
         "records": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/appleRecord"
+            "$ref": "#/$defs/systemRecord"
           }
         },
         "warnings": {
@@ -774,14 +777,14 @@
         }
       }
     },
-    "appleRecord": {
+    "systemRecord": {
       "type": "object",
       "required": [
         "vendorID",
         "productID",
         "name",
         "catalogListed",
-        "appleIdentifiers",
+        "systemIdentifiers",
         "transportConstraints",
         "versionConstraints"
       ],
@@ -803,7 +806,7 @@
         "catalogListed": {
           "type": "boolean"
         },
-        "appleIdentifiers": {
+        "systemIdentifiers": {
           "type": "array",
           "items": {
             "type": "string"

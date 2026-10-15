@@ -945,8 +945,9 @@
 "cli.error.service_timeout" = "The service did not reply in time. Retry, or check it with 'ojd status'.";
 "cli.error.service_unavailable" = "The OpenJoystickDriver service is not running. Start it with 'ojd service start'.";
 "cli.error.timeout_value" = "--timeout needs a number of seconds above 0.";
-"cli.error.unexpected" = "Unexpected error: %@. Run 'ojd diagnose --bundle PATH' and attach the bundle to a bug report.";
+"cli.error.unexpected" = "Unexpected error: %@. Run 'ojd diagnose --output PATH' and attach the bundle to a bug report.";
 "cli.error.unknown_command" = "Unknown command '%@'. Did you mean '%@'?";
+"cli.error.renamed_flag" = "'%@' was renamed to '%@'.";
 "cli.option.json" = "Print JSON on stdout.";
 "cli.option.no_color" = "Do not use color.";
 "cli.option.no_input" = "Never prompt; fail when a value is missing.";
@@ -965,7 +966,7 @@
 "cli.controller.light.examples" = "Examples:\n  # Set the lightbar to orange\n  ojd controller light 054C:09CC --color FF8000\n  # Set the color and a low brightness\n  ojd controller light 054C:09CC --color 0000FF --brightness 40";
 "cli.profile.create.examples" = "Examples:\n  # Create a profile for a controller model\n  ojd profile create Racing --controller 045E:028E\n  # Apply it only while Safari is in front\n  ojd profile create Browsing --controller 045E:028E --app com.apple.Safari";
 "cli.profile.set.examples" = "Examples:\n  # Rename a profile\n  ojd profile set Racing name Rally\n  # Set the inner deadzone of the first stick mapping\n  ojd profile set Racing stickMappings.0.tuning.innerDeadzone 0.2";
-"cli.binding.set.examples" = "Examples:\n  # Hold Space while the south button is held\n  ojd binding set Racing button:south key:space\n  # Toggle J on each press\n  ojd binding set Racing button:west key:j --behavior toggle\n  # Repeat J 10 times a second while held\n  ojd binding set Racing button:west key:j --turbo-rate 10 --turbo-duty 0.5";
+"cli.binding.set.examples" = "Examples:\n  # Hold Space while the south button is held\n  ojd binding set Racing button:South key:space\n  # Toggle J on each press\n  ojd binding set Racing button:West key:j --behavior toggle\n  # Repeat J 10 times a second while held\n  ojd binding set Racing button:West key:j --turbo-rate 10 --turbo-duty 0.5";
 "cli.record.install.examples" = "Examples:\n  # Install a record file\n  ojd record install 045E-028E.json\n  # Read the record from stdin\n  ojd record install - < 045E-028E.json";
 "cli.access.grant.examples" = "Examples:\n  # Let a program use the service\n  ojd access grant /Applications/Example.app\n  # Create a token for pages served at one origin\n  ojd access grant --token overlay --origin http://127.0.0.1:8080";
 "cli.service.abstract" = "Start or stop the OpenJoystickDriver service, or wait until it accepts requests.";
@@ -1053,12 +1054,12 @@
 "cli.access.web.port" = "The port on 127.0.0.1, from 1024 to 65535.";
 "cli.access.web.port_range" = "--port must be between 1024 and 65535.";
 "cli.diagnose.abstract" = "Run every check and report what is wrong.";
-"cli.diagnose.bundle" = "Also write a support bundle to this file.";
-"cli.diagnose.bundle_failed" = "The support bundle was not written: %@. Choose another --bundle path.";
-"cli.diagnose.bundle_parent" = "--bundle needs an existing directory; %@ does not exist.";
-"cli.diagnose.bundle_progress" = "Writing the support bundle...";
-"cli.diagnose.bundle_written" = "Support bundle written to %@. Review it before sharing; device names are included.";
-"cli.diagnose.discussion" = "Each check reports pass, warn, fail, or skip. Checks that need the service are skipped while it is stopped. Exits 1 when any check fails. --soak adds a runtime-health check that samples the service for the given time; without it that check is skipped. --bundle also writes a support report; review it before sharing.";
+"cli.diagnose.output" = "Also write a support bundle to this file.";
+"cli.diagnose.output_failed" = "The support bundle was not written: %@. Choose another --output path.";
+"cli.diagnose.output_parent" = "--output needs an existing directory; %@ does not exist.";
+"cli.diagnose.output_progress" = "Writing the support bundle...";
+"cli.diagnose.output_written" = "Support bundle written to %@. Review it before sharing; device names are included.";
+"cli.diagnose.discussion" = "Each check reports pass, warn, fail, or skip. Checks that need the service are skipped while it is stopped. Exits 1 when any check fails. --soak adds a runtime-health check that samples the service for the given time; without it that check is skipped. --output also writes a support report; review it before sharing.";
 "cli.diagnose.extension.absent" = "not registered with macOS; run 'ojd extension activate'";
 "cli.diagnose.extension.active" = "active in macOS";
 "cli.diagnose.extension.bundle_invalid" = "unexpected bundle identifier %@; reinstall OpenJoystickDriver";
@@ -1066,7 +1067,7 @@
 "cli.diagnose.extension.bundle_present" = "embedded in the app";
 "cli.diagnose.extension.inactive" = "registered but not active; approve it with 'ojd extension activate'";
 "cli.diagnose.extension.unavailable" = "macOS did not report the registration: %@";
-"cli.diagnose.failed" = "Failed checks: %lld. Fix them using the details above, or run 'ojd diagnose --bundle <path>' and attach the file to a bug report.";
+"cli.diagnose.failed" = "Failed checks: %lld. Fix them using the details above, or run 'ojd diagnose --output <path>' and attach the file to a bug report.";
 "cli.diagnose.footprint_limit" = "With --soak, fail above this physical footprint in MiB; 0 disables (0-65536).";
 "cli.diagnose.interval" = "With --soak, milliseconds between samples (100-60000).";
 "cli.diagnose.interval_range" = "--interval-ms must be between 100 and 60000.";
@@ -1342,7 +1343,7 @@
 "cli.virtual.error.failed" = "The virtual gamepad for %@ did not change (%@). Check it with 'ojd virtual show'.";
 "cli.virtual.error.no_unit" = "%@ has no unit ID, so a choice can apply only to its whole model. Run the command without --unit.";
 "cli.virtual.feed.abstract" = "Publish a virtual gamepad that standard input drives.";
-"cli.virtual.feed.discussion" = "Reads one JSON object per line: 'buttons' and 'dpad' list the pressed controls, such as south and up, and 'axes' maps axis names, such as left_stick_x, to values. Missing controls are neutral. Sticks run from -1 to 1 with Y up; triggers run from 0 to 1. Frames play in order, each for at least 8 ms; 'holdMilliseconds' keeps a frame longer, up to 60000. Prints each output command that games send to the gamepad, such as rumble, as one JSON object per line. Stops when every frame has played after the input ends.";
+"cli.virtual.feed.discussion" = "Reads one JSON object per line: 'buttons' and 'dpad' list the pressed controls, such as South and up, and 'axes' maps axis names, such as LeftStickX, to values. Missing controls are neutral. Sticks run from -1 to 1 with Y up; triggers run from 0 to 1. Frames play in order, each for at least 8 ms; 'holdMilliseconds' keeps a frame longer, up to 60000. Prints each output command that games send to the gamepad, such as rumble, as one JSON object per line. Stops when every frame has played after the input ends.";
 "cli.virtual.feed.error.closed" = "The service closed the virtual gamepad. Check it with 'ojd status'.";
 "cli.virtual.feed.error.frame" = "Line %@ is not a valid frame. 'ojd virtual feed --help' shows the format.";
 "cli.virtual.feed.profile" = "The virtual gamepad profile to publish.";
@@ -1453,7 +1454,7 @@
 "cli.binding.option.turbo_rate" = "Repeat the target this many times a second while held. Needs --turbo-duty.";
 "cli.binding.set.abstract" = "Bind a controller source to a target, replacing the source's current binding.";
 "cli.binding.set.done" = "'%@' now binds %@.";
-"cli.binding.set.source" = "The controller control, such as button:south.";
+"cli.binding.set.source" = "The controller control, such as button:South.";
 "cli.binding.set.target" = "What it sends, such as key:space.";
 "cli.binding.source_invalid" = "'%@' is not a source. 'ojd binding set --help' lists the source forms.";
 "cli.binding.target_invalid" = "'%@' is not a target. 'ojd binding set --help' lists the target forms.";

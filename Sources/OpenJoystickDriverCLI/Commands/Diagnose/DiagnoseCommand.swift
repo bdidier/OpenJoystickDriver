@@ -35,7 +35,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
       )
     }
 
-  /// The Apple Game Controller audit for the support bundle; tests replace it.
+  /// The system gamepad audit for the support bundle; tests replace it.
   @TaskLocal
   static var gameControllerAudit: @Sendable () -> AppleGameControllerSupportAudit? = {
     AppleGameControllerSupportAuditor.auditCurrentSystem()
@@ -46,11 +46,11 @@ struct DiagnoseCommand: AsyncParsableCommand {
 
   @Option(
     help: ArgumentHelp(
-      CLILocalized.text("cli.diagnose.bundle"),
+      CLILocalized.text("cli.diagnose.output"),
       valueName: "path"
     )
   )
-  var bundle: String?
+  var output: String?
 
   @Option(
     help: ArgumentHelp(
@@ -96,7 +96,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
   var footprintLimitMiB = 512
 
   func validate() throws {
-    if let bundle { _ = try Self.bundleURL(bundle) }
+    if let output { _ = try Self.bundleURL(output) }
     guard let soak else { return }
     guard ApplicationServiceRuntimeHealthSampler.secondsRange.contains(soak) else {
       throw ValidationError(
@@ -153,7 +153,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
     else {
       throw ValidationError(
         CLILocalized.format(
-          "cli.diagnose.bundle_parent",
+          "cli.diagnose.output_parent",
           parent
         )
       )
@@ -180,11 +180,11 @@ struct DiagnoseCommand: AsyncParsableCommand {
 
       var bundleURL: URL?
       var bundleError: (any Error)?
-      if let bundle {
+      if let output {
         do {
-          let url = try Self.bundleURL(bundle)
+          let url = try Self.bundleURL(output)
           CLIOutput.stderr(
-            CLILocalized.text("cli.diagnose.bundle_progress")
+            CLILocalized.text("cli.diagnose.output_progress")
           )
           try Self.writeBundle(to: url, snapshot: snapshot)
           bundleURL = url
@@ -204,7 +204,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
       if let bundleURL {
         CLIOutput.success(
           CLILocalized.format(
-            "cli.diagnose.bundle_written",
+            "cli.diagnose.output_written",
             bundleURL.path
           )
         )
@@ -213,7 +213,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
         throw CLIFailure(
           .fileAccessFailed,
           CLILocalized.format(
-            "cli.diagnose.bundle_failed",
+            "cli.diagnose.output_failed",
             bundleError.localizedDescription
           )
         )
@@ -274,7 +274,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
       applicationServiceInstalled: ApplicationServiceManager.isInstalled,
       applicationServiceConnected: snapshot.status != nil,
       buildIdentity: ApplicationVersion.buildIdentity,
-      appleGameControllerAudit: gameControllerAudit(),
+      systemGamepadAudit: gameControllerAudit(),
       frameTimings: snapshot.frameTimings?.controllers ?? []
     )
     try SupportReportService.write(report, to: url)

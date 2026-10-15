@@ -77,12 +77,12 @@ class EndpointReferenceClientTests(unittest.TestCase):
     def test_schema_rejects_a_frame_with_a_repeated_button(self) -> None:
         with self.assertRaises(validate_schemas.ValidationError):
             self.client_lines.validate(
-                self.envelope("Frame", buttons=["south", "south"])
+                self.envelope("Frame", buttons=["South", "South"])
             )
 
     def test_schema_rejects_a_frame_without_the_envelope(self) -> None:
         with self.assertRaises(validate_schemas.ValidationError):
-            self.client_lines.validate({"buttons": ["south"]})
+            self.client_lines.validate({"buttons": ["South"]})
 
     def test_service_lines_match_the_schema(self) -> None:
         lines = [

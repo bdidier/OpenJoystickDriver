@@ -12,11 +12,11 @@ func runXIDInputChecks() throws {
   _ = try parse(parser, makeXIDReport())
   let analog = try parse(parser, makeXIDReport(analogA: 0xFF))
   require(
-    analog?.pressed.contains(.faceSouth) == true,
+    analog?.pressed.contains(.south) == true,
     "XID analog A should become a digital press"
   )
   let digital = try parse(parser, makeXIDReport(digital: 0x11))
-  require(digital?.pressed.contains(.menu) == true, "XID digital start should parse")
+  require(digital?.pressed.contains(.start) == true, "XID digital start should parse")
   require(digital?.hat == .north, "XID digital d-pad north should parse")
 }
 

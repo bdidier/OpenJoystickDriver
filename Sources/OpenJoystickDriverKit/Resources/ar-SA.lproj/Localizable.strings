@@ -942,8 +942,9 @@
 "cli.error.service_timeout" = "لم تردّ الخدمة في الوقت المناسب. أعد المحاولة، أو تحقّق منها باستخدام «ojd status».";
 "cli.error.service_unavailable" = "خدمة OpenJoystickDriver غير قيد التشغيل. ابدأها باستخدام «ojd service start».";
 "cli.error.timeout_value" = "يتطلب --timeout عددًا من الثواني أكبر من 0.";
-"cli.error.unexpected" = "خطأ غير متوقع: %@. شغّل «ojd diagnose --bundle PATH» وأرفق الحزمة بتقرير الخلل.";
+"cli.error.unexpected" = "خطأ غير متوقع: %@. شغّل «ojd diagnose --output PATH» وأرفق الحزمة بتقرير الخلل.";
 "cli.error.unknown_command" = "أمر غير معروف «%@». هل تقصد «%@»؟";
+"cli.error.renamed_flag" = "تمت إعادة تسمية «%@» إلى «%@».";
 "cli.option.json" = "اطبع JSON على stdout.";
 "cli.option.no_color" = "لا تستخدم الألوان.";
 "cli.option.no_input" = "لا تطلب إدخالًا أبدًا؛ وأخفق عند غياب قيمة.";
@@ -962,7 +963,7 @@
 "cli.controller.light.examples" = "أمثلة:\n  # ضبط شريط الإضاءة على اللون البرتقالي\n  ojd controller light 054C:09CC --color FF8000\n  # ضبط اللون مع سطوع منخفض\n  ojd controller light 054C:09CC --color 0000FF --brightness 40";
 "cli.profile.create.examples" = "أمثلة:\n  # إنشاء ملف تعريف لطراز وحدة تحكم\n  ojd profile create Racing --controller 045E:028E\n  # تطبيقه فقط أثناء ظهور Safari في المقدمة\n  ojd profile create Browsing --controller 045E:028E --app com.apple.Safari";
 "cli.profile.set.examples" = "أمثلة:\n  # إعادة تسمية ملف تعريف\n  ojd profile set Racing name Rally\n  # ضبط المنطقة الميتة الداخلية لأول تعيين للعصا\n  ojd profile set Racing stickMappings.0.tuning.innerDeadzone 0.2";
-"cli.binding.set.examples" = "أمثلة:\n  # الضغط مطولًا على Space أثناء الضغط على الزر الجنوبي\n  ojd binding set Racing button:south key:space\n  # تبديل J عند كل ضغطة\n  ojd binding set Racing button:west key:j --behavior toggle\n  # تكرار J عشر مرات في الثانية أثناء الضغط\n  ojd binding set Racing button:west key:j --turbo-rate 10 --turbo-duty 0.5";
+"cli.binding.set.examples" = "أمثلة:\n  # الضغط مطولًا على Space أثناء الضغط على الزر الجنوبي\n  ojd binding set Racing button:South key:space\n  # تبديل J عند كل ضغطة\n  ojd binding set Racing button:West key:j --behavior toggle\n  # تكرار J عشر مرات في الثانية أثناء الضغط\n  ojd binding set Racing button:West key:j --turbo-rate 10 --turbo-duty 0.5";
 "cli.record.install.examples" = "أمثلة:\n  # تثبيت ملف سجل\n  ojd record install 045E-028E.json\n  # قراءة السجل من الإدخال القياسي\n  ojd record install - < 045E-028E.json";
 "cli.access.grant.examples" = "أمثلة:\n  # السماح لبرنامج باستخدام الخدمة\n  ojd access grant /Applications/Example.app\n  # إنشاء رمز مميز لصفحات تُقدَّم من أصل واحد\n  ojd access grant --token overlay --origin http://127.0.0.1:8080";
 "cli.service.abstract" = "ابدأ خدمة OpenJoystickDriver أو أوقفها، أو انتظر حتى تقبل الطلبات.";
@@ -1050,12 +1051,12 @@
 "cli.access.web.port" = "المنفذ على 127.0.0.1، من 1024 إلى 65535.";
 "cli.access.web.port_range" = "يجب أن يكون --port بين 1024 و65535.";
 "cli.diagnose.abstract" = "شغّل جميع الفحوصات وأبلغ عن المشكلات.";
-"cli.diagnose.bundle" = "اكتب أيضًا حزمة دعم في هذا الملف.";
-"cli.diagnose.bundle_failed" = "لم تُكتب حزمة الدعم: %@. اختر مسارًا آخر لـ --bundle.";
-"cli.diagnose.bundle_parent" = "يتطلب --bundle مجلدًا موجودًا؛ المجلد %@ غير موجود.";
-"cli.diagnose.bundle_progress" = "جارٍ كتابة حزمة الدعم…";
-"cli.diagnose.bundle_written" = "كُتبت حزمة الدعم في %@. راجعها قبل مشاركتها؛ فهي تتضمن أسماء الأجهزة.";
-"cli.diagnose.discussion" = "يُبلغ كل فحص عن النتيجة: pass أو warn أو fail أو skip. تُتخطى الفحوصات التي تحتاج إلى الخدمة أثناء توقفها. ينتهي بالرمز 1 عند فشل أي فحص. يضيف --soak فحص سلامة التشغيل الذي يأخذ عينات من الخدمة للمدة المحددة؛ وبدونه يُتخطى هذا الفحص. يكتب --bundle أيضًا تقرير دعم؛ راجعه قبل مشاركته.";
+"cli.diagnose.output" = "اكتب أيضًا حزمة دعم في هذا الملف.";
+"cli.diagnose.output_failed" = "لم تُكتب حزمة الدعم: %@. اختر مسارًا آخر لـ --output.";
+"cli.diagnose.output_parent" = "يتطلب --output مجلدًا موجودًا؛ المجلد %@ غير موجود.";
+"cli.diagnose.output_progress" = "جارٍ كتابة حزمة الدعم…";
+"cli.diagnose.output_written" = "كُتبت حزمة الدعم في %@. راجعها قبل مشاركتها؛ فهي تتضمن أسماء الأجهزة.";
+"cli.diagnose.discussion" = "يُبلغ كل فحص عن النتيجة: pass أو warn أو fail أو skip. تُتخطى الفحوصات التي تحتاج إلى الخدمة أثناء توقفها. ينتهي بالرمز 1 عند فشل أي فحص. يضيف --soak فحص سلامة التشغيل الذي يأخذ عينات من الخدمة للمدة المحددة؛ وبدونه يُتخطى هذا الفحص. يكتب --output أيضًا تقرير دعم؛ راجعه قبل مشاركته.";
 "cli.diagnose.extension.absent" = "غير مسجّل لدى macOS؛ شغّل «ojd extension activate»";
 "cli.diagnose.extension.active" = "نشط في macOS";
 "cli.diagnose.extension.bundle_invalid" = "معرّف الحزمة %@ غير متوقع؛ أعد تثبيت OpenJoystickDriver";
@@ -1063,7 +1064,7 @@
 "cli.diagnose.extension.bundle_present" = "مضمّن في التطبيق";
 "cli.diagnose.extension.inactive" = "مسجّل لكنه غير نشط؛ وافق عليه باستخدام «ojd extension activate»";
 "cli.diagnose.extension.unavailable" = "لم يُبلغ macOS عن التسجيل: %@";
-"cli.diagnose.failed" = "الفحوصات الفاشلة: %lld. أصلحها باستخدام التفاصيل أعلاه، أو شغّل «ojd diagnose --bundle <path>» وأرفق الملف ببلاغ الخطأ.";
+"cli.diagnose.failed" = "الفحوصات الفاشلة: %lld. أصلحها باستخدام التفاصيل أعلاه، أو شغّل «ojd diagnose --output <path>» وأرفق الملف ببلاغ الخطأ.";
 "cli.diagnose.footprint_limit" = "مع --soak، يفشل الفحص عند تجاوز هذا الحجم الفعلي بالـ MiB؛ القيمة 0 تعطّل الحد (0-65536).";
 "cli.diagnose.interval" = "مع --soak، عدد المللي ثانية بين العينات (100-60000).";
 "cli.diagnose.interval_range" = "يجب أن تكون قيمة --interval-ms بين 100 و60000.";
@@ -1339,7 +1340,7 @@
 "cli.virtual.error.failed" = "لم تتغير وحدة التحكم الافتراضية لـ %@ (%@). افحصها باستخدام «ojd virtual show».";
 "cli.virtual.error.no_unit" = "%@ ليس له معرّف جهاز، لذا لا يمكن تطبيق الاختيار إلا على طرازه بالكامل. شغّل الأمر بدون --unit.";
 "cli.virtual.feed.abstract" = "انشر وحدة تحكم افتراضية يتحكم فيها stdin.";
-"cli.virtual.feed.discussion" = "يقرأ كائن JSON واحدًا في كل سطر: يسرد «buttons» و«dpad» عناصر التحكم المضغوطة، مثل south و up، ويربط «axes» أسماء المحاور، مثل left_stick_x، بالقيم. عناصر التحكم المفقودة محايدة. تتراوح العصي من -1 إلى 1 مع اتجاه Y للأعلى؛ وتتراوح الزنادات من 0 إلى 1. تُشغَّل الإطارات بالترتيب، كل إطار لمدة 8 مللي ثانية على الأقل؛ ويُبقي «holdMilliseconds» الإطار مدة أطول، حتى 60000. يطبع كل أمر إخراج ترسله الألعاب إلى وحدة التحكم الافتراضية، مثل الاهتزاز، ككائن JSON واحد في كل سطر. يتوقف عندما يتم تشغيل كل الإطارات بعد انتهاء الإدخال.";
+"cli.virtual.feed.discussion" = "يقرأ كائن JSON واحدًا في كل سطر: يسرد «buttons» و«dpad» عناصر التحكم المضغوطة، مثل South و up، ويربط «axes» أسماء المحاور، مثل LeftStickX، بالقيم. عناصر التحكم المفقودة محايدة. تتراوح العصي من -1 إلى 1 مع اتجاه Y للأعلى؛ وتتراوح الزنادات من 0 إلى 1. تُشغَّل الإطارات بالترتيب، كل إطار لمدة 8 مللي ثانية على الأقل؛ ويُبقي «holdMilliseconds» الإطار مدة أطول، حتى 60000. يطبع كل أمر إخراج ترسله الألعاب إلى وحدة التحكم الافتراضية، مثل الاهتزاز، ككائن JSON واحد في كل سطر. يتوقف عندما يتم تشغيل كل الإطارات بعد انتهاء الإدخال.";
 "cli.virtual.feed.error.closed" = "أغلقت الخدمة وحدة التحكم الافتراضية. تحقق منها باستخدام «ojd status».";
 "cli.virtual.feed.error.frame" = "السطر %@ ليس إطارًا صالحًا. يعرض «ojd virtual feed --help» التنسيق.";
 "cli.virtual.feed.profile" = "ملف تعريف وحدة التحكم الافتراضية المراد نشرها.";
@@ -1452,7 +1453,7 @@
 "cli.binding.option.turbo_rate" = "كرّر الهدف هذا العدد من المرات في الثانية أثناء الضغط المستمر. يحتاج --turbo-duty.";
 "cli.binding.set.abstract" = "عيّن لمصدر من وحدة التحكم هدفًا، مع استبدال التعيين الحالي للمصدر.";
 "cli.binding.set.done" = "«%@» معيَّن الآن إلى %@.";
-"cli.binding.set.source" = "عنصر التحكم في وحدة التحكم، مثل button:south.";
+"cli.binding.set.source" = "عنصر التحكم في وحدة التحكم، مثل button:South.";
 "cli.binding.set.target" = "ما يرسله، مثل key:space.";
 "cli.binding.source_invalid" = "«%@» ليس مصدرًا. يعرض «ojd binding set --help» صيغ المصادر.";
 "cli.binding.target_invalid" = "«%@» ليس هدفًا. يعرض «ojd binding set --help» صيغ الأهداف.";

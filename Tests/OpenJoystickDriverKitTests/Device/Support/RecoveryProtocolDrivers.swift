@@ -3,7 +3,7 @@ import Foundation
 @testable import OpenJoystickDriverKit
 
 final class RecoveryInputParser: PhysicalProtocolDriver, @unchecked Sendable {
-  let capabilities = ControllerCapabilities(controls: ControlID.xboxLayout)
+  let capabilities = ControllerCapabilities(controls: Control.xboxLayout)
   let sessionPlan = DriverSessionPlan()
   let outputCapabilities = PhysicalControllerOutputCapabilities.none
   let defaultColor: ControllerColor? = nil
@@ -14,14 +14,14 @@ final class RecoveryInputParser: PhysicalProtocolDriver, @unchecked Sendable {
   var resetCount: Int { lock.withLock { storedResetCount } }
 
   func parse(report data: Data, receivedAt: MonotonicTimestamp) throws -> ControllerEvent? {
-    data == Data([1]) ? ControllerEvent([.press(.faceSouth)], at: receivedAt.nanoseconds) : nil
+    data == Data([1]) ? ControllerEvent([.press(.south)], at: receivedAt.nanoseconds) : nil
   }
 
   func resetProtocolState() { lock.withLock { storedResetCount += 1 } }
 }
 
 final class RecoveryRumbleParser: PhysicalProtocolDriver, @unchecked Sendable {
-  let capabilities = ControllerCapabilities(controls: ControlID.xboxLayout)
+  let capabilities = ControllerCapabilities(controls: Control.xboxLayout)
   let sessionPlan = DriverSessionPlan()
   let outputCapabilities = PhysicalControllerOutputCapabilities(rumbleMotors: [
     .leftMain, .rightMain, .leftTrigger, .rightTrigger,
@@ -30,7 +30,7 @@ final class RecoveryRumbleParser: PhysicalProtocolDriver, @unchecked Sendable {
   func consumeInputConnectionStateChange() -> ControllerInputConnectionState? { nil }
 
   func parse(report data: Data, receivedAt: MonotonicTimestamp) throws -> ControllerEvent? {
-    data == Data([1]) ? ControllerEvent([.press(.faceSouth)], at: receivedAt.nanoseconds) : nil
+    data == Data([1]) ? ControllerEvent([.press(.south)], at: receivedAt.nanoseconds) : nil
   }
 
   func encode(

@@ -124,7 +124,7 @@ body:
     attributes:
       label: Support report and packet capture
       description: >-
-        Attach `support-report.json` from `ojd diagnose --bundle support-report.json`. If OJD detects the controller,
+        Attach `support-report.json` from `ojd diagnose --output support-report.json`. If OJD detects the controller,
         attach `ojd controller capture <controller> --duration 10 --json > capture.jsonl` and list the controls you pressed in order.
         Read each file before you attach it. If you leave a file out, say which and why.
     validations:

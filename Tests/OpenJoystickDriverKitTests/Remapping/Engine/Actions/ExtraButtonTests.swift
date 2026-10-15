@@ -5,16 +5,17 @@ import Testing
 
 struct RemappingExtraButtonTests {
   @Test(arguments: [
-    (ControlID.paddleLeft2, RemappingButton.leftGrip), (ControlID.paddleRight2, .rightGrip),
-    (ControlID.leftTrackpadClick, .leftPadClick), (ControlID.rightTrackpadClick, .rightPadClick),
-    (ControlID.auxiliary3, .leftSL), (ControlID.auxiliary4, .leftSR),
-    (ControlID.auxiliary5, .rightSL), (ControlID.auxiliary6, .rightSR),
-    (ControlID.auxiliary1, .leftFunction), (ControlID.auxiliary2, .rightFunction),
-    (ControlID.paddleLeft1, .leftPaddle), (ControlID.paddleRight1, .rightPaddle),
+    (Control.leftPaddle2, Control.leftPaddle2), (Control.rightPaddle2, .rightPaddle2),
+    (Control.leftTrackpadClick, .leftTrackpadClick),
+    (Control.rightTrackpadClick, .rightTrackpadClick),
+    (Control.auxiliary3, .auxiliary3), (Control.auxiliary4, .auxiliary4),
+    (Control.auxiliary5, .auxiliary5), (Control.auxiliary6, .auxiliary6),
+    (Control.auxiliary1, .auxiliary1), (Control.auxiliary2, .auxiliary2),
+    (Control.leftPaddle1, .leftPaddle1), (Control.rightPaddle1, .rightPaddle1),
   ])
   func extraButtonCanHoldAndReleaseAKeyboardAction(
-    physical: ControlID,
-    source: RemappingButton
+    physical: Control,
+    source: Control
   ) throws {
     let profile = profile(source: source)
     try profile.validate()
@@ -38,10 +39,11 @@ struct RemappingExtraButtonTests {
   }
 
   @Test(arguments: [
-    RemappingButton.leftGrip, .rightGrip, .leftPadClick, .rightPadClick, .leftSL, .leftSR, .rightSL,
-    .rightSR, .leftFunction, .rightFunction, .leftPaddle, .rightPaddle,
+    Control.leftPaddle2, .rightPaddle2, .leftTrackpadClick, .rightTrackpadClick, .auxiliary3,
+    .auxiliary4, .auxiliary5,
+    .auxiliary6, .auxiliary1, .auxiliary2, .leftPaddle1, .rightPaddle1,
   ])
-  func inputOnlyButtonsCannotBeVirtualDestinations(_ button: RemappingButton) {
+  func inputOnlyButtonsCannotBeVirtualDestinations(_ button: Control) {
     let invalid = RemappingProfile(
       name: "Invalid output",
       device: RemappingDeviceScope(vendorID: 1, productID: 2),
@@ -58,7 +60,7 @@ struct RemappingExtraButtonTests {
   func rightPadPassthroughIsConsumedByAnExplicitMapping() throws {
     let identifier = LogicalControllerID(vendorID: 1, productID: 2)
     for mapped in [false, true] {
-      let bindings = mapped ? profile(source: .rightPadClick).bindings : []
+      let bindings = mapped ? profile(source: .rightTrackpadClick).bindings : []
       let profile = RemappingProfile(
         name: "Pad passthrough",
         device: RemappingDeviceScope(vendorID: 1, productID: 2),
@@ -84,13 +86,13 @@ struct RemappingExtraButtonTests {
         #expect(press == [.system(.keyDown(.space))])
         #expect(release == [.system(.keyUp(.space))])
       } else {
-        #expect(press == [.gamepad(RemappingGamepadState(buttons: [.rightStick]), identifier)])
+        #expect(press == [.gamepad(RemappingGamepadState(buttons: [.rightStickClick]), identifier)])
         #expect(release == [.gamepad(.neutral, identifier)])
       }
     }
   }
 
-  private func profile(source: RemappingButton) -> RemappingProfile {
+  private func profile(source: Control) -> RemappingProfile {
     RemappingProfile(
       name: "Extra button",
       device: RemappingDeviceScope(vendorID: 1, productID: 2),

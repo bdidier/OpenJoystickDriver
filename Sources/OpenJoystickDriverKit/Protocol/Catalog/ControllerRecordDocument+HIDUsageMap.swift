@@ -83,13 +83,13 @@ extension ControllerRecordDocument {
       let container = try decoder.container(keyedBy: DocumentKey.self)
       let kind = try container.decode(String.self, for: "kind")
       let usage = try Self.usage(in: container, codingPath: decoder.codingPath)
-      let control = try container.decode(ControlID.self, for: "control")
       let binding: HIDUsageMap.Binding
       switch kind {
       case "button":
         try container.rejectUnknown(allowed: ["kind", "page", "usage", "control"])
-        binding = .button(control)
+        binding = .button(try container.decode(Control.self, for: "control"))
       case "axis":
+        let control = try container.decode(Control.self, for: "control")
         try container.rejectUnknown(allowed: [
           "kind", "page", "usage", "control", "inverted", "range", "deadZone",
         ])
@@ -103,12 +103,7 @@ extension ControllerRecordDocument {
           )
         )
       case "hat":
-        try container.rejectUnknown(allowed: ["kind", "page", "usage", "control", "range"])
-        guard control == .dpad else {
-          throw DecodingError.dataCorrupted(
-            .init(codingPath: decoder.codingPath, debugDescription: "a hat drives dpad")
-          )
-        }
+        try container.rejectUnknown(allowed: ["kind", "page", "usage", "range"])
         binding = .hat(
           HIDUsageMap.Hat(range: try container.decodeOptional(UsageRange.self, for: "range")?.range)
         )

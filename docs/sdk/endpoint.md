@@ -107,7 +107,7 @@ The endpoint answers a `FeedRequest` when the virtual gamepad exists.
 After the `FeedSession`, the program sends one `Frame` for each line. A frame has the keys of an `ojd virtual feed` line. A control that the frame omits is neutral. Sticks run from -1 to 1, with positive Y up, and triggers run from 0 to 1. `holdMilliseconds` is how long the frame shows at least; without it, the frame shows until the next one.
 
 ```json
-{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Frame","buttons":["south"],"axes":{"left_stick_y":0.5},"holdMilliseconds":100}
+{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Frame","buttons":["South"],"axes":{"LeftStickY":0.5},"holdMilliseconds":100}
 ```
 
 The service shows the frames in order, each for at least 8 ms. While 256 frames wait, the endpoint stops reading lines. The endpoint does not report when a frame has played, so the program stays connected until its last frame has played, because closing the connection drops the frames that wait. When the program sends no frame line for 2 seconds after its last frame has played, the endpoint closes the connection with `E1009`. A program that has no frame to send keeps the feed open with a `KeepAlive` line (see below). The endpoint runs at most 4 virtual gamepads at the same time and answers another `FeedRequest` with `E1008`.
@@ -201,7 +201,7 @@ OJD_TOKEN=ojd_… python3 Scripts/SDK/reference_client.py feed
 ```
 
 - `watch` subscribes to the `controllers` stream and prints the first watch line. `--count N` prints `N` lines. `--timeout SECONDS` ends the run with a non-zero exit when the endpoint sends nothing for that long, for example when no controller is connected.
-- `feed` presses the south button for 100 ms, prints the rumble commands that the endpoint sends, and stays connected until the release has played.
+- `feed` presses the South button for 100 ms, prints the rumble commands that the endpoint sends, and stays connected until the release has played.
 - On `E1010`, `E1011`, or `E1012`, or when a line has another `apiVersion`, the client stops and reports the supported versions.
 - `--socket PATH` names the socket; without it, the client runs `ojd --json access status`.
 

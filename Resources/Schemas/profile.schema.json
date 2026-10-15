@@ -236,17 +236,10 @@
       }
     },
     "axis": {
-      "enum": [
-        "left_stick_x",
-        "left_stick_y",
-        "right_stick_x",
-        "right_stick_y",
-        "left_trigger",
-        "right_trigger"
-      ]
+      "$ref": "vocabulary.schema.json#/$defs/axis"
     },
     "axisOutput": {
-      "enum": ["left_stick_x", "right_stick_x"]
+      "$ref": "vocabulary.schema.json#/$defs/horizontalStickAxis"
     },
     "axisTuning": {
       "type": "object",
@@ -336,37 +329,7 @@
       }
     },
     "button": {
-      "enum": [
-        "south",
-        "east",
-        "west",
-        "north",
-        "left_shoulder",
-        "right_shoulder",
-        "left_stick",
-        "right_stick",
-        "start",
-        "back",
-        "guide",
-        "share",
-        "options",
-        "touchpad",
-        "mute",
-        "left_trigger_click",
-        "right_trigger_click",
-        "left_grip",
-        "right_grip",
-        "left_pad_click",
-        "right_pad_click",
-        "left_sl",
-        "left_sr",
-        "right_sl",
-        "right_sr",
-        "left_function",
-        "right_function",
-        "left_paddle",
-        "right_paddle"
-      ]
+      "$ref": "vocabulary.schema.json#/$defs/control"
     },
     "byte": {
       "type": "integer",
@@ -1298,8 +1261,8 @@
           "default": 360
         },
         "steeringOutput": {
-          "enum": ["left_stick_x", "right_stick_x"],
-          "default": "left_stick_x"
+          "$ref": "vocabulary.schema.json#/$defs/horizontalStickAxis",
+          "default": "LeftStickX"
         },
         "steeringReturnDegreesPerSecond": {
           "type": "number",

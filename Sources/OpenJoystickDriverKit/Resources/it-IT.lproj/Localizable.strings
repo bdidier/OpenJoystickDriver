@@ -942,8 +942,9 @@
 "cli.error.service_timeout" = "Il servizio non ha risposto in tempo. Riprova, oppure controllalo con «ojd status».";
 "cli.error.service_unavailable" = "Il servizio OpenJoystickDriver non è in esecuzione. Avvialo con «ojd service start».";
 "cli.error.timeout_value" = "--timeout richiede un numero di secondi maggiore di 0.";
-"cli.error.unexpected" = "Errore imprevisto: %@. Esegui «ojd diagnose --bundle PATH» e allega il pacchetto alla segnalazione del bug.";
+"cli.error.unexpected" = "Errore imprevisto: %@. Esegui «ojd diagnose --output PATH» e allega il pacchetto alla segnalazione del bug.";
 "cli.error.unknown_command" = "Comando sconosciuto «%@». Intendevi «%@»?";
+"cli.error.renamed_flag" = "«%@» è stato rinominato in «%@».";
 "cli.option.json" = "Stampa JSON su stdout.";
 "cli.option.no_color" = "Non usare i colori.";
 "cli.option.no_input" = "Non chiedere mai input; fallisci se manca un valore.";
@@ -962,7 +963,7 @@
 "cli.controller.light.examples" = "Esempi:\n  # Imposta la barra luminosa su arancione\n  ojd controller light 054C:09CC --color FF8000\n  # Imposta il colore e una luminosità bassa\n  ojd controller light 054C:09CC --color 0000FF --brightness 40";
 "cli.profile.create.examples" = "Esempi:\n  # Crea un profilo per un modello di controller\n  ojd profile create Racing --controller 045E:028E\n  # Applicalo solo quando Safari è in primo piano\n  ojd profile create Browsing --controller 045E:028E --app com.apple.Safari";
 "cli.profile.set.examples" = "Esempi:\n  # Rinomina un profilo\n  ojd profile set Racing name Rally\n  # Imposta la zona morta interna della prima mappatura dello stick\n  ojd profile set Racing stickMappings.0.tuning.innerDeadzone 0.2";
-"cli.binding.set.examples" = "Esempi:\n  # Tieni premuto Spazio mentre il pulsante sud è premuto\n  ojd binding set Racing button:south key:space\n  # Attiva/disattiva J a ogni pressione\n  ojd binding set Racing button:west key:j --behavior toggle\n  # Ripeti J 10 volte al secondo finché è premuto\n  ojd binding set Racing button:west key:j --turbo-rate 10 --turbo-duty 0.5";
+"cli.binding.set.examples" = "Esempi:\n  # Tieni premuto Spazio mentre il pulsante sud è premuto\n  ojd binding set Racing button:South key:space\n  # Attiva/disattiva J a ogni pressione\n  ojd binding set Racing button:West key:j --behavior toggle\n  # Ripeti J 10 volte al secondo finché è premuto\n  ojd binding set Racing button:West key:j --turbo-rate 10 --turbo-duty 0.5";
 "cli.record.install.examples" = "Esempi:\n  # Installa un file di registrazione\n  ojd record install 045E-028E.json\n  # Leggi la registrazione dallo stdin\n  ojd record install - < 045E-028E.json";
 "cli.access.grant.examples" = "Esempi:\n  # Consenti a un programma di usare il servizio\n  ojd access grant /Applications/Example.app\n  # Crea un token per le pagine servite da una sola origine\n  ojd access grant --token overlay --origin http://127.0.0.1:8080";
 "cli.service.abstract" = "Avvia o arresta il servizio OpenJoystickDriver, oppure attendi che accetti richieste.";
@@ -1050,12 +1051,12 @@
 "cli.access.web.port" = "La porta su 127.0.0.1, da 1024 a 65535.";
 "cli.access.web.port_range" = "--port deve essere compreso tra 1024 e 65535.";
 "cli.diagnose.abstract" = "Esegue tutti i controlli e segnala cosa non va.";
-"cli.diagnose.bundle" = "Scrive anche un pacchetto di supporto in questo file.";
-"cli.diagnose.bundle_failed" = "Il pacchetto di supporto non è stato scritto: %@. Scegli un altro percorso per --bundle.";
-"cli.diagnose.bundle_parent" = "--bundle richiede una cartella esistente; %@ non esiste.";
-"cli.diagnose.bundle_progress" = "Scrittura del pacchetto di supporto…";
-"cli.diagnose.bundle_written" = "Pacchetto di supporto scritto in %@. Controllalo prima di condividerlo; include i nomi dei dispositivi.";
-"cli.diagnose.discussion" = "Ogni controllo riporta pass, warn, fail o skip. I controlli che richiedono il servizio vengono saltati finché è fermo. Termina con codice 1 se un controllo fallisce. --soak aggiunge un controllo dello stato di esecuzione che campiona il servizio per il tempo indicato; senza, quel controllo viene saltato. --bundle scrive anche un rapporto di supporto; controllalo prima di condividerlo.";
+"cli.diagnose.output" = "Scrive anche un pacchetto di supporto in questo file.";
+"cli.diagnose.output_failed" = "Il pacchetto di supporto non è stato scritto: %@. Scegli un altro percorso per --output.";
+"cli.diagnose.output_parent" = "--output richiede una cartella esistente; %@ non esiste.";
+"cli.diagnose.output_progress" = "Scrittura del pacchetto di supporto…";
+"cli.diagnose.output_written" = "Pacchetto di supporto scritto in %@. Controllalo prima di condividerlo; include i nomi dei dispositivi.";
+"cli.diagnose.discussion" = "Ogni controllo riporta pass, warn, fail o skip. I controlli che richiedono il servizio vengono saltati finché è fermo. Termina con codice 1 se un controllo fallisce. --soak aggiunge un controllo dello stato di esecuzione che campiona il servizio per il tempo indicato; senza, quel controllo viene saltato. --output scrive anche un rapporto di supporto; controllalo prima di condividerlo.";
 "cli.diagnose.extension.absent" = "non registrata in macOS; esegui «ojd extension activate»";
 "cli.diagnose.extension.active" = "attiva in macOS";
 "cli.diagnose.extension.bundle_invalid" = "identificatore del bundle %@ inatteso; reinstalla OpenJoystickDriver";
@@ -1063,7 +1064,7 @@
 "cli.diagnose.extension.bundle_present" = "incorporata nell’app";
 "cli.diagnose.extension.inactive" = "registrata ma non attiva; approvala con «ojd extension activate»";
 "cli.diagnose.extension.unavailable" = "macOS non ha riportato la registrazione: %@";
-"cli.diagnose.failed" = "Controlli falliti: %lld. Risolvili con i dettagli sopra, oppure esegui «ojd diagnose --bundle <path>» e allega il file a una segnalazione di bug.";
+"cli.diagnose.failed" = "Controlli falliti: %lld. Risolvili con i dettagli sopra, oppure esegui «ojd diagnose --output <path>» e allega il file a una segnalazione di bug.";
 "cli.diagnose.footprint_limit" = "Con --soak, fallisce oltre questo footprint fisico in MiB; 0 disattiva (0-65536).";
 "cli.diagnose.interval" = "Con --soak, millisecondi tra un campione e l’altro (100-60000).";
 "cli.diagnose.interval_range" = "--interval-ms deve essere compreso tra 100 e 60000.";
@@ -1339,7 +1340,7 @@
 "cli.virtual.error.failed" = "Il gamepad virtuale di %@ non è cambiato (%@). Controlla con «ojd virtual show».";
 "cli.virtual.error.no_unit" = "%@ non ha un ID unità, quindi una scelta può valere solo per l’intero modello. Esegui il comando senza --unit.";
 "cli.virtual.feed.abstract" = "Pubblica un gamepad virtuale controllato dallo stdin.";
-"cli.virtual.feed.discussion" = "Legge un oggetto JSON per riga: «buttons» e «dpad» elencano i controlli premuti, ad esempio south e up, mentre «axes» associa dei valori ai nomi degli assi, ad esempio left_stick_x. I controlli mancanti restano neutri. Gli stick vanno da -1 a 1, con Y verso l’alto; i grilletti vanno da 0 a 1. I fotogrammi vengono riprodotti in ordine, ciascuno per almeno 8 ms; «holdMilliseconds» mantiene un fotogramma più a lungo, fino a 60000. Stampa ogni comando di uscita che i giochi inviano al gamepad, ad esempio la vibrazione, come un oggetto JSON per riga. Termina quando tutti i fotogrammi sono stati riprodotti dopo la fine dell’input.";
+"cli.virtual.feed.discussion" = "Legge un oggetto JSON per riga: «buttons» e «dpad» elencano i controlli premuti, ad esempio South e up, mentre «axes» associa dei valori ai nomi degli assi, ad esempio LeftStickX. I controlli mancanti restano neutri. Gli stick vanno da -1 a 1, con Y verso l’alto; i grilletti vanno da 0 a 1. I fotogrammi vengono riprodotti in ordine, ciascuno per almeno 8 ms; «holdMilliseconds» mantiene un fotogramma più a lungo, fino a 60000. Stampa ogni comando di uscita che i giochi inviano al gamepad, ad esempio la vibrazione, come un oggetto JSON per riga. Termina quando tutti i fotogrammi sono stati riprodotti dopo la fine dell’input.";
 "cli.virtual.feed.error.closed" = "Il servizio ha chiuso il gamepad virtuale. Controlla con «ojd status».";
 "cli.virtual.feed.error.frame" = "La riga %@ non è un frame valido. «ojd virtual feed --help» mostra il formato.";
 "cli.virtual.feed.profile" = "Il profilo del gamepad virtuale da pubblicare.";
@@ -1452,7 +1453,7 @@
 "cli.binding.option.turbo_rate" = "Ripete la destinazione questo numero di volte al secondo finché resta premuta. Richiede --turbo-duty.";
 "cli.binding.set.abstract" = "Associa una sorgente del controller a una destinazione, sostituendo l’assegnazione attuale della sorgente.";
 "cli.binding.set.done" = "Ora «%@» è assegnato a %@.";
-"cli.binding.set.source" = "Il controllo del controller, ad esempio button:south.";
+"cli.binding.set.source" = "Il controllo del controller, ad esempio button:South.";
 "cli.binding.set.target" = "Cosa invia, ad esempio key:space.";
 "cli.binding.source_invalid" = "«%@» non è una sorgente. «ojd binding set --help» elenca le forme delle sorgenti.";
 "cli.binding.target_invalid" = "«%@» non è una destinazione. «ojd binding set --help» elenca le forme delle destinazioni.";

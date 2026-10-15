@@ -26,13 +26,14 @@ public final class SwitchInputOnlyDriver: PhysicalProtocolDriver {
   }
 
   /// Nintendo labels map by position: Y west, B south, A east, X north.
-  private static let primaryButtons: [(UInt8, ControlID)] = [
-    (0x01, .faceWest), (0x02, .faceSouth), (0x04, .faceEast), (0x08, .faceNorth),
-    (0x10, .leftShoulder), (0x20, .rightShoulder), (0x40, .leftTriggerButton),
-    (0x80, .rightTriggerButton),
+  private static let primaryButtons: [(UInt8, Control)] = [
+    (0x01, .west), (0x02, .south), (0x04, .east), (0x08, .north),
+    (0x10, .leftShoulder), (0x20, .rightShoulder), (0x40, .leftTrigger),
+    (0x80, .rightTrigger),
   ]
-  private static let systemButtons: [(UInt8, ControlID)] = [
-    (0x01, .view), (0x02, .menu), (0x04, .leftStickClick), (0x08, .rightStickClick), (0x10, .guide),
+  private static let systemButtons: [(UInt8, Control)] = [
+    (0x01, .back), (0x02, .start), (0x04, .leftStickClick), (0x08, .rightStickClick),
+    (0x10, .guide),
     (0x20, .capture),
   ]
   private static let hatDirections: [HatDirection] = [

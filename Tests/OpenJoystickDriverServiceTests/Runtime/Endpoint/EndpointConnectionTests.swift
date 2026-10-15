@@ -15,7 +15,7 @@ struct EndpointConnectionTests {
     connection.subscribe(output: false, snapshot: [])
     for index in 0..<100 { connection.deliver(Self.connected("pad-\(index)")) }
     for index in 0..<50 {
-      let control: ControlID = index.isMultiple(of: 2) ? .faceSouth : .faceEast
+      let control: Control = index.isMultiple(of: 2) ? .south : .east
       connection.deliver(
         ControllerWatchEvent(
           type: .modified,
@@ -34,7 +34,7 @@ struct EndpointConnectionTests {
     #expect(objects.count == 101)
     #expect(modified.count == 1)
     #expect(object?["kind"] as? String == "Controller")
-    #expect((object?["input"] as? [String: Any])?["pressed"] as? [String] == ["face-east"])
+    #expect((object?["input"] as? [String: Any])?["pressed"] as? [String] == ["East"])
   }
 
   @Test

@@ -41,15 +41,15 @@ struct SteamControllerDriverTests {
       )
     )
 
-    #expect(events.contains(.press(.faceSouth)))
-    #expect(events.contains(.press(.faceEast)))
-    #expect(events.contains(.press(.faceWest)))
-    #expect(events.contains(.press(.faceNorth)))
+    #expect(events.contains(.press(.south)))
+    #expect(events.contains(.press(.east)))
+    #expect(events.contains(.press(.west)))
+    #expect(events.contains(.press(.north)))
     #expect(events.contains(.press(.leftShoulder)))
     #expect(events.contains(.press(.rightShoulder)))
-    #expect(events.contains(.press(.view)))
+    #expect(events.contains(.press(.back)))
     #expect(events.contains(.press(.guide)))
-    #expect(events.contains(.press(.menu)))
+    #expect(events.contains(.press(.start)))
     #expect(events.contains(.press(.leftStickClick)))
     #expect(events.contains(.press(.rightTrackpadClick)))
     #expect(events.contains(.leftTrigger(1.0)))
@@ -66,7 +66,7 @@ struct SteamControllerDriverTests {
     let events = try parser.parseReport(
       ProtocolPacketFixtures.Steam.inputReport(buttons: (0, 0x80, 0x01))
     )
-    #expect(events?.state.pressed == [.paddleLeft2, .paddleRight2])
+    #expect(events?.state.pressed == [.leftPaddle2, .rightPaddle2])
     let releases = try parser.parseReport(ProtocolPacketFixtures.Steam.inputReport())
     #expect(releases?.state.pressed.isEmpty == true)
   }
@@ -226,7 +226,7 @@ struct SteamControllerDriverTests {
     let inputEvents = try parser.parseReport(
       ProtocolPacketFixtures.Steam.inputReport(buttons: (0x80, 0, 0))
     )
-    #expect(inputEvents.contains(.press(.faceSouth)))
+    #expect(inputEvents.contains(.press(.south)))
 
     let disconnectEvents = try parser.parseReport(
       ProtocolPacketFixtures.Steam.wirelessReport(status: 0x01)
@@ -252,7 +252,7 @@ struct SteamControllerDriverTests {
     let inputEvents = try parser.parseReport(
       ProtocolPacketFixtures.Steam.inputReport(buttons: (0x80, 0, 0))
     )
-    #expect(inputEvents.contains(.press(.faceSouth)))
+    #expect(inputEvents.contains(.press(.south)))
   }
 
   @Test

@@ -66,11 +66,11 @@ public final class XIDDriver: PhysicalProtocolDriver {
     var next = state
     next.hat = mapDpad(digital & 0x0F)
     for (bit, control) in [
-      (4, ControlID.menu), (5, .view), (6, .leftStickClick), (7, .rightStickClick),
+      (4, Control.start), (5, .back), (6, .leftStickClick), (7, .rightStickClick),
     ] { next.set(control, pressed: digital & (1 << bit) != 0) }
     // Any nonzero analog face or shoulder value is pressed.
     for (offset, control) in [
-      (4, ControlID.faceSouth), (5, .faceEast), (6, .faceWest), (7, .faceNorth), (8, .leftShoulder),
+      (4, Control.south), (5, .east), (6, .west), (7, .north), (8, .leftShoulder),
       (9, .rightShoulder),
     ] { next.set(control, pressed: bytes[offset] != 0) }
     next.leftTrigger = UnipolarValue(normalized: Float(bytes[10]) / xidTriggerMax)

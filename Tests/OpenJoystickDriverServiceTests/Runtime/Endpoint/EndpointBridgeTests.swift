@@ -39,7 +39,7 @@ struct EndpointBridgeTests {
 
       let failure = await Self.start(bridge, server: server, token: granted.token)
       #expect(failure == nil)
-      channel.peerSends(#"{\#(Self.header),"kind":"Frame","buttons":["south"]}"#)
+      channel.peerSends(#"{\#(Self.header),"kind":"Frame","buttons":["South"]}"#)
 
       let device = try #require(factory.devices.first)
       #expect(device.profile == .generic)

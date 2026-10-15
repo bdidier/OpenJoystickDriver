@@ -23,7 +23,7 @@ nonisolated struct SupportExportService: Sendable {
         applicationServiceInstalled: ApplicationServiceManager.isInstalled,
         applicationServiceConnected: status != nil,
         buildIdentity: ApplicationVersion.buildIdentity,
-        appleGameControllerAudit: AppleGameControllerSupportAuditor.auditCurrentSystem(),
+        systemGamepadAudit: AppleGameControllerSupportAuditor.auditCurrentSystem(),
         frameTimings: frameTimings
       )
       try SupportReportService.write(report, to: outputURL)

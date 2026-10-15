@@ -47,17 +47,17 @@ struct SteamDeckDriverTests {
 
   @Test
   func mapsButtonBitsAsSDLReportsThem() throws {
-    let low: [(UInt32, ControlID)] = [
-      (0x0000_0001, .rightTriggerButton), (0x0000_0002, .leftTriggerButton),
-      (0x0000_0004, .rightShoulder), (0x0000_0008, .leftShoulder), (0x0000_0010, .faceNorth),
-      (0x0000_0020, .faceEast), (0x0000_0040, .faceWest), (0x0000_0080, .faceSouth),
-      (0x0000_1000, .view), (0x0000_2000, .guide), (0x0000_4000, .menu),
-      (0x0000_8000, .paddleLeft2), (0x0001_0000, .paddleRight2), (0x0002_0000, .leftTrackpadClick),
+    let low: [(UInt32, Control)] = [
+      (0x0000_0001, .rightTrigger), (0x0000_0002, .leftTrigger),
+      (0x0000_0004, .rightShoulder), (0x0000_0008, .leftShoulder), (0x0000_0010, .north),
+      (0x0000_0020, .east), (0x0000_0040, .west), (0x0000_0080, .south),
+      (0x0000_1000, .back), (0x0000_2000, .guide), (0x0000_4000, .start),
+      (0x0000_8000, .leftPaddle2), (0x0001_0000, .rightPaddle2), (0x0002_0000, .leftTrackpadClick),
       (0x0004_0000, .rightTrackpadClick), (0x0040_0000, .leftStickClick),
       (0x0400_0000, .rightStickClick),
     ]
-    let high: [(UInt32, ControlID)] = [
-      (0x0000_0200, .paddleLeft1), (0x0000_0400, .paddleRight1), (0x0000_4000, .leftStickTouch),
+    let high: [(UInt32, Control)] = [
+      (0x0000_0200, .leftPaddle1), (0x0000_0400, .rightPaddle1), (0x0000_4000, .leftStickTouch),
       (0x0000_8000, .rightStickTouch), (0x0004_0000, .auxiliary1),
     ]
     for (mask, control) in low {

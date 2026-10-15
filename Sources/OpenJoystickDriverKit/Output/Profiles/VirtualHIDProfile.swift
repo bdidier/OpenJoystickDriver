@@ -39,24 +39,23 @@ public enum VirtualHIDProfileID: String, CaseIterable, Codable, Sendable {
 
   /// Every normalized control this profile's layout can carry, which is what profile selection
   /// checks a controller's required primary controls against.
-  public var representableControls: Set<ControlID> {
+  public var representableControls: Set<Control> {
     switch self {
     // The Xbox layout. Guide stays out until a genuine capture of the Xbox One S Bluetooth pad
     // shows whether ordinary HID clients see it, although today's report still carries it as
     // button usage 11.
-    case .sdlCompatible: return ControlID.xboxLayout
+    case .sdlCompatible: return Control.xboxLayout
     // The generic layout: the frozen 32 buttons, the hat and the six named axes. Today's report
     // carries only its first 16 buttons.
     case .generic:
-      return [
-        .faceSouth, .faceEast, .faceWest, .faceNorth, .leftShoulder, .rightShoulder,
-        .leftTriggerButton, .rightTriggerButton, .view, .menu, .leftStickClick, .rightStickClick,
-        .guide, .share, .capture, .touchpadClick, .paddleLeft1, .paddleLeft2, .paddleRight1,
-        .paddleRight2, .auxiliary1, .auxiliary2, .auxiliary3, .auxiliary4, .auxiliary5, .auxiliary6,
-        .auxiliary7, .auxiliary8, .leftStickTouch, .rightStickTouch, .leftTrackpadClick,
-        .rightTrackpadClick, .dpad, .leftStickX, .leftStickY, .rightStickX, .rightStickY,
-        .leftTrigger, .rightTrigger,
-      ]
+      return Control.dpad.union([
+        .south, .east, .west, .north, .leftShoulder, .rightShoulder, .leftTrigger, .rightTrigger,
+        .back, .start, .leftStickClick, .rightStickClick, .guide, .capture, .touchpadClick,
+        .leftPaddle1, .leftPaddle2, .rightPaddle1, .rightPaddle2, .auxiliary1, .auxiliary2,
+        .auxiliary3, .auxiliary4, .auxiliary5, .auxiliary6, .auxiliary7, .auxiliary8,
+        .leftStickTouch, .rightStickTouch, .leftTrackpadClick, .rightTrackpadClick, .leftStickX,
+        .leftStickY, .rightStickX, .rightStickY,
+      ])
     }
   }
 }
