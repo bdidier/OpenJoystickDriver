@@ -107,7 +107,7 @@ Verify: `swift test`, `./Scripts/ojd test parsers-macos14`, `./Scripts/ojd catal
 
 - [x] 7.1 Give each distinct wire sub-protocol its own protocol ID (for example the GIP variants and the two DS4 report forms). Verify: parser tests name the ID they cover, and 1.1 shows zero diffs.
 - [x] 7.2 Reject a record that names an unknown protocol ID with a catalog error. Verify: negative test and `./Scripts/ojd check profiles`.
-- [ ] 7.3 Move the interface signatures in `ProtocolClassifier.signatures` (XID, XUSB wired and receiver, GIP) into the protocol description data and keep binding devices without a record by them. Verify: `interfaceSignatureBindsWithoutACatalogRecord` and `gipBindsOnlyItsDataInterface` pass unchanged, and no interface triple remains in Swift.
+- [x] 7.3 Move the interface signatures in `ProtocolClassifier.signatures` (XID, XUSB wired and receiver, GIP) into the protocol description data and keep binding devices without a record by them. Verify: `interfaceSignatureBindsWithoutACatalogRecord` and `gipBindsOnlyItsDataInterface` pass unchanged, and no interface triple remains in Swift.
 
 ## 8. Typed parameters replace ControllerQuirk (old WP5)
 
