@@ -149,6 +149,19 @@ public struct USBStartupWrite: Equatable, Sendable {
     self.condition = condition
   }
 
+  /// This write limited by `condition` instead.
+  func with(condition: StartupWriteCondition) throws(ControllerRecordProblem) -> Self {
+    try Self(
+      bytes: bytes,
+      endpoint: endpoint,
+      timeoutMilliseconds: timeoutMilliseconds,
+      delayMilliseconds: delayMilliseconds,
+      sessionByte: sessionByte,
+      toleratesRejection: toleratesRejection,
+      condition: condition
+    )
+  }
+
   /// The packet to send, on `defaultEndpoint` and with `defaultTimeoutMilliseconds` unless this
   /// write names its own. `session` gives the value of the session byte.
   func write(

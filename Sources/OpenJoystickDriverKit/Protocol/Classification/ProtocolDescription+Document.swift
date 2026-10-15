@@ -58,16 +58,16 @@ extension ProtocolDescription {
       }
     }
 
-    /// `defaults.session`: what runs while the device is open. Today the keep-alive and the
-    /// Switch 1 subcommands; task 11.4 moves the startup writes here, so all share one `session`
-    /// shape.
+    /// `defaults.session`: what runs while the device is open. The keep-alive, the Switch 1
+    /// subcommands and the GIP named packets.
     struct Session: Decodable {
       let keepAlive: KeepAlive?
       let subcommands: SubcommandPlan?
+      let namedPackets: NamedPacketPlan?
 
       init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: DocumentKey.self)
-        try container.rejectUnknown(allowed: ["keepAlive", "subcommands"])
+        try container.rejectUnknown(allowed: ["keepAlive", "subcommands", "namedPackets"])
         guard !container.allKeys.isEmpty else {
           throw DecodingError.dataCorrupted(
             .init(codingPath: decoder.codingPath, debugDescription: "session must not be empty")
@@ -75,6 +75,7 @@ extension ProtocolDescription {
         }
         keepAlive = try container.decodeOptional(KeepAlive.self, for: "keepAlive")
         subcommands = try container.decodeOptional(SubcommandPlan.self, for: "subcommands")
+        namedPackets = try container.decodeOptional(NamedPacketPlan.self, for: "namedPackets")
       }
     }
 

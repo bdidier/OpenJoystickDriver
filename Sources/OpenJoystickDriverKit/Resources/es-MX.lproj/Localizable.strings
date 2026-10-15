@@ -514,9 +514,7 @@
 "developer.connection" = "Conexión";
 "developer.controller" = "Control";
 "developer.controllerDetails" = "Control";
-"developer.diagnosticMode" = "Modo de diagnóstico";
 "developer.emptyCapture" = "Pulse “Iniciar captura” y, después, pulse los botones del control.";
-"developer.enterDiagnosticMode" = "Entrar en el modo de diagnóstico";
 "developer.exportCapture" = "Exportar captura de paquetes";
 "developer.extraInputs" = "Botones adicionales";
 "developer.extraInputsDescription" = "Pulse un botón adicional cada vez. Los botones detectados permanecen en la lista hasta que borre la captura.";
@@ -527,7 +525,6 @@
 "developer.loadingControllers" = "Cargando diagnósticos del control…";
 "developer.noControllers" = "No hay controles conectados";
 "developer.noControllersDetail" = "Conecte un control y pulse “Actualizar”.";
-"developer.noDiagnosticRecipe" = "No está disponible el modo de diagnóstico para este control.";
 "developer.noExtraInputs" = "No se detectaron botones adicionales.";
 "developer.noPackets" = "Ningún paquete capturado";
 "developer.packetCapture" = "Captura de paquetes en bruto";
@@ -1338,6 +1335,10 @@
 "cli.virtual.discussion.unit" = "Con --unit, “set” se aplica a un solo control según su ID de unidad, y “reset” devuelve ese control a la elección de su modelo.";
 "cli.virtual.error.failed" = "El control virtual de %@ no cambió (%@). Revísalo con “ojd virtual show”.";
 "cli.virtual.error.no_unit" = "%@ no tiene ID de unidad, así que una elección solo puede aplicarse a todo su modelo. Ejecuta el comando sin --unit.";
+"cli.virtual.export_mapping.abstract" = "Imprime la asignación SDL o la descripción W3C que deriva un perfil de control virtual.";
+"cli.virtual.export_mapping.discussion" = "SDL imprime una línea de asignación por perfil, que es un archivo de asignaciones SDL válido. W3C imprime la descripción del diseño estándar como JSON. Ambas se derivan del descriptor de reportes del perfil.";
+"cli.virtual.export_mapping.format" = "El formato que se imprimirá: sdl o w3c.";
+"cli.virtual.export_mapping.profile" = "El perfil de control virtual que se imprimirá. Omítelo para imprimir todos los perfiles.";
 "cli.virtual.feed.abstract" = "Publicar un control virtual controlado por stdin.";
 "cli.virtual.feed.discussion" = "Lee un objeto JSON por línea: “buttons” y “dpad” enumeran los controles presionados, como South y up, y “axes” asigna valores a los nombres de los ejes, como LeftStickX. Los controles que faltan quedan en neutro. Los sticks van de -1 a 1, con Y hacia abajo; los gatillos van de 0 a 1. Los fotogramas se reproducen en orden, cada uno durante al menos 8 ms; “holdMilliseconds” mantiene un fotograma más tiempo, hasta 60000. Imprime cada cocontrol de salida que los juegos envían al control, como la vibración, como un objeto JSON por línea. Termina cuando se han reproducido todos los fotogramas después de que termine la entrada.";
 "cli.virtual.feed.error.closed" = "El servicio cerró el control virtual. Compruébalo con “ojd status”.";
@@ -1356,6 +1357,7 @@
 "cli.virtual.reset.error.unit_all" = "--unit necesita un CONTROLLER, no --all.";
 "cli.virtual.set.abstract" = "Elige el control virtual para el modelo de un control.";
 "cli.virtual.set.profile" = "El perfil del control virtual.";
+"cli.virtual.sdl_hints_note" = "Nota: %@ no funciona con las sugerencias predeterminadas de SDL.";
 "cli.virtual.show.abstract" = "Muestra el control virtual de cada control y los perfiles que puedes elegir.";
 "cli.virtual.show.none" = "sin control virtual";
 "cli.virtual.show.profiles" = "Perfiles: %@";

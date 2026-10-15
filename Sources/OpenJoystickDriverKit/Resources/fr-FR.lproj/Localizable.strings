@@ -514,9 +514,7 @@
 "developer.connection" = "Connexion";
 "developer.controller" = "Manette";
 "developer.controllerDetails" = "Manette";
-"developer.diagnosticMode" = "Mode diagnostic";
 "developer.emptyCapture" = "Appuyez sur « Démarrer la capture », puis sur les boutons de la manette.";
-"developer.enterDiagnosticMode" = "Entrer en mode diagnostic";
 "developer.exportCapture" = "Exporter la capture de paquets";
 "developer.extraInputs" = "Boutons supplémentaires";
 "developer.extraInputsDescription" = "Appuyez sur un bouton supplémentaire à la fois. Les boutons détectés restent listés jusqu’à ce que vous effaciez la capture.";
@@ -527,7 +525,6 @@
 "developer.loadingControllers" = "Chargement des diagnostics de manette…";
 "developer.noControllers" = "Aucune manette connectée";
 "developer.noControllersDetail" = "Connectez une manette, puis appuyez sur Actualiser.";
-"developer.noDiagnosticRecipe" = "Le mode diagnostic n’est pas disponible pour cette manette.";
 "developer.noExtraInputs" = "Aucun bouton supplémentaire détecté.";
 "developer.noPackets" = "Aucun paquet capturé";
 "developer.packetCapture" = "Capture brute de paquets";
@@ -1338,6 +1335,10 @@
 "cli.virtual.discussion.unit" = "Avec --unit, « set » s’applique à une seule manette selon son identifiant d’unité, et « reset » remet cette manette sur le choix de son modèle.";
 "cli.virtual.error.failed" = "La manette virtuelle de %@ n’a pas changé (%@). Vérifiez avec « ojd virtual show ».";
 "cli.virtual.error.no_unit" = "%@ n’a pas d’identifiant d’unité, un choix ne peut donc s’appliquer qu’à l’ensemble de son modèle. Lancez la commande sans --unit.";
+"cli.virtual.export_mapping.abstract" = "Affiche le mappage SDL ou la description W3C que dérive un profil de manette virtuelle.";
+"cli.virtual.export_mapping.discussion" = "SDL affiche une ligne de mappage par profil, ce qui forme un fichier de mappage SDL valide. W3C affiche la description de la disposition standard en JSON. Les deux sont dérivés du descripteur de rapports du profil.";
+"cli.virtual.export_mapping.format" = "Le format à afficher : sdl ou w3c.";
+"cli.virtual.export_mapping.profile" = "Le profil de manette virtuelle à afficher. Omettez-le pour afficher tous les profils.";
 "cli.virtual.feed.abstract" = "Publier une manette virtuelle pilotée par stdin.";
 "cli.virtual.feed.discussion" = "Lit un objet JSON par ligne : « buttons » et « dpad » listent les commandes actionnées, par exemple South et up, et « axes » associe des valeurs aux noms d’axes, par exemple LeftStickX. Les commandes absentes restent neutres. Les sticks vont de -1 à 1, avec Y vers le bas ; les gâchettes vont de 0 à 1. Les images sont lues dans l’ordre, chacune pendant au moins 8 ms ; « holdMilliseconds » maintient une image plus longtemps, jusqu’à 60000. Affiche chaque commande de sortie que les jeux envoient à la manette, comme la vibration, sous forme d’un objet JSON par ligne. S’arrête quand toutes les images ont été lues après la fin de l’entrée.";
 "cli.virtual.feed.error.closed" = "Le service a fermé la manette virtuelle. Vérifiez avec « ojd status ».";
@@ -1356,6 +1357,7 @@
 "cli.virtual.reset.error.unit_all" = "--unit exige un CONTROLLER, pas --all.";
 "cli.virtual.set.abstract" = "Choisir la manette virtuelle du modèle d’une manette.";
 "cli.virtual.set.profile" = "Le profil de la manette virtuelle.";
+"cli.virtual.sdl_hints_note" = "Remarque : %@ ne fonctionne pas avec les indicateurs SDL par défaut.";
 "cli.virtual.show.abstract" = "Afficher la manette virtuelle de chaque manette et les profils disponibles.";
 "cli.virtual.show.none" = "aucune manette virtuelle";
 "cli.virtual.show.profiles" = "Profils : %@";

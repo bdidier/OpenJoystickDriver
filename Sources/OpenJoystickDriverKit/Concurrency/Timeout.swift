@@ -14,14 +14,15 @@ package func withTimeout<T: Sendable>(
       continuation.yield(try? await operation())
       continuation.finish()
     }
-    let deadline = Task {
-      try? await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
+    // The deadline runs on a timer thread, not the cooperative pool, so a starved pool cannot
+    // delay it.
+    let cancelDeadline = DeadlineTimer.dispatch.schedule(UInt64(seconds * 1_000_000_000)) {
       continuation.yield(nil)
       continuation.finish()
     }
     continuation.onTermination = { _ in
       work.cancel()
-      deadline.cancel()
+      cancelDeadline()
     }
   }
   for await outcome in outcomes { return outcome }

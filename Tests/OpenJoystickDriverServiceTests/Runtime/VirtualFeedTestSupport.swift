@@ -22,6 +22,9 @@ final class FakeFeedDevice: VirtualFeedDevice, @unchecked Sendable {
   private var sentTimesValue: [TimeInterval] = []
   private var closeCountValue = 0
 
+  /// How many calls are hung until `release`.
+  var hungCount: Int { lock.withLock { hung.count } }
+
   init(
     profile: VirtualHIDProfileID,
     output: @escaping UserSpaceOutputDispatcher.OutputCommandHandler,
@@ -104,7 +107,8 @@ final class FakeFeedFactory: @unchecked Sendable {
 
   func registry(
     idleTimeout: TimeInterval = 60,
-    activationTimeout: TimeInterval = VirtualFeedRegistry.activationTimeoutSeconds
+    activationTimeout: TimeInterval = VirtualFeedRegistry.activationTimeoutSeconds,
+    clock: VirtualFeedClock = .system
   ) -> VirtualFeedRegistry {
     VirtualFeedRegistry(
       factory: { profile, output in
@@ -120,7 +124,8 @@ final class FakeFeedFactory: @unchecked Sendable {
         }
       },
       idleTimeout: idleTimeout,
-      activationTimeout: activationTimeout
+      activationTimeout: activationTimeout,
+      clock: clock
     )
   }
 }

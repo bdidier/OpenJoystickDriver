@@ -133,6 +133,39 @@ private final class SlowTeardownBackend: UserSpaceOutputDispatcher.VirtualDevice
   func closeCount() -> Int { lock.withLock { closes } }
 }
 
+/// A deadline timer that fires only when the test says so, so no assertion depends on real time.
+private final class ManualDeadlineTimer: @unchecked Sendable {
+  private struct Entry {
+    let delay: UInt64
+    let fire: @Sendable () -> Void
+    var cancelled = false
+  }
+
+  private let lock = NSLock()
+  private var entries: [Entry] = []
+
+  var timer: DeadlineTimer {
+    DeadlineTimer { [self] delay, fire in
+      let index = lock.withLock {
+        entries.append(Entry(delay: delay, fire: fire))
+        return entries.count - 1
+      }
+      return { [self] in lock.withLock { entries[index].cancelled = true } }
+    }
+  }
+
+  func waitUntilScheduled() async {
+    while lock.withLock({ entries.isEmpty }) { await Task.yield() }
+  }
+
+  func scheduledDelays() -> [UInt64] { lock.withLock { entries.map(\.delay) } }
+
+  func fireAll() {
+    let due = lock.withLock { entries.filter { !$0.cancelled }.map(\.fire) }
+    due.forEach { $0() }
+  }
+}
+
 private final class ActivityFlag: @unchecked Sendable {
   private let lock = NSLock()
   private var active = true
@@ -365,16 +398,22 @@ struct ReportSenderTests {
   func nativeSendThatNeverFinishesTimesOutAtTheDeadline() async {
     let backend = NonCooperativeReportBackend()
     let deadline: UInt64 = 50_000_000
-    let sender = UserSpaceReportSender(nativeSendDeadlineNanoseconds: deadline)
+    let timer = ManualDeadlineTimer()
+    let sender = UserSpaceReportSender(
+      nativeSendDeadlineNanoseconds: deadline,
+      deadlineTimer: timer.timer
+    )
     sender.attach(backend)
-    let start = DispatchTime.now().uptimeNanoseconds
 
-    await #expect(throws: UserSpaceReportSender.Failure.sendTimedOut) {
-      try await sender.submit { [[1]] }.value()
-    }
-    let elapsed = DispatchTime.now().uptimeNanoseconds - start
-    #expect(elapsed >= deadline)
-    #expect(elapsed < UserSpaceReportSender.defaultNativeSendDeadlineNanoseconds)
+    let receipt = sender.submit { [[1]] }
+    await backend.gate.waitForEntry()
+    await timer.waitUntilScheduled()
+    // The sender asked for exactly the configured deadline, and nothing has expired it yet.
+    #expect(timer.scheduledDelays() == [deadline])
+    #expect(backend.closeCount() == 0)
+
+    timer.fireAll()
+    await #expect(throws: UserSpaceReportSender.Failure.sendTimedOut) { try await receipt.value() }
     #expect(backend.closeCount() == 1)
 
     await backend.gate.release()

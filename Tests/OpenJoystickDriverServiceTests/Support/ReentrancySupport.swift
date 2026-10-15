@@ -86,10 +86,15 @@ final class TransientTerminalFailureSink: RemappingSystemInputSink, @unchecked S
   private enum TransientSinkError: Error { case rejected }
 }
 
+/// Waits until `condition` holds and returns true.
+///
+/// The wait has no count or clock budget of its own, so whether it passes cannot depend on how
+/// many scheduler turns the machine grants. A condition that never holds ends only when the
+/// enclosing test's time limit cancels the task, and then the result is false.
 func eventually(_ condition: @escaping @Sendable () -> Bool) async -> Bool {
-  for _ in 0..<10_000 {
-    if condition() { return true }
-    await Task.yield()
+  while !condition() {
+    if Task.isCancelled { return false }
+    try? await Task.sleep(nanoseconds: 1_000_000)
   }
-  return condition()
+  return true
 }

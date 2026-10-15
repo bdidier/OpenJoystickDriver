@@ -83,6 +83,18 @@ def usage_map_problem(usage_map: dict[str, Any]) -> str | None:
     return None
 
 
+def validate_initialization(path: pathlib.Path, record: dict[str, Any]) -> None:
+    """Every action a protocol names is a named packet of its family, as `ProtocolInfo` in Swift."""
+    for protocol in [
+        record["protocol"],
+        *(m["protocol"] for m in record.get("modes", [])),
+    ]:
+        problem = protocol_descriptions.initialization_problem(
+            description_of(protocol["family"]), protocol.get("initialization", [])
+        )
+        require(problem is None, f"{path}: {problem}")
+
+
 def validate_modes(path: pathlib.Path, record: dict[str, Any]) -> None:
     """The record-level rules every mode's protocol obeys, as `validateModes` in Swift."""
     modes = record.get("modes", [])
@@ -184,6 +196,9 @@ def validate_record(
     # JSON Schema cannot express unique mode IDs, probe bytes that fit the read length, or the
     # record-level rules each mode obeys; the runtime decoder rejects all of them too.
     validate_modes(path, record)
+
+    # JSON Schema cannot see the description's named packets either.
+    validate_initialization(path, record)
 
     vendor_id = record["vendorID"]
     product_id = record["productID"]

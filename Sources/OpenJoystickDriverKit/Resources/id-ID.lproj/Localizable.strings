@@ -514,9 +514,7 @@
 "developer.connection" = "Koneksi";
 "developer.controller" = "Pengontrol";
 "developer.controllerDetails" = "Pengontrol";
-"developer.diagnosticMode" = "Mode Diagnostik";
 "developer.emptyCapture" = "Tekan Mulai Penangkapan, lalu tekan tombol pengontrol.";
-"developer.enterDiagnosticMode" = "Masuk ke Mode Diagnostik";
 "developer.exportCapture" = "Ekspor Penangkapan Paket";
 "developer.extraInputs" = "Tombol Tambahan";
 "developer.extraInputsDescription" = "Tekan satu tombol tambahan sekali satu. Tombol yang terdeteksi tetap tercantum hingga Anda menghapus penangkapan.";
@@ -527,7 +525,6 @@
 "developer.loadingControllers" = "Memuat diagnostik pengontrol…";
 "developer.noControllers" = "Tidak ada pengontrol yang terhubung";
 "developer.noControllersDetail" = "Hubungkan pengontrol, lalu tekan Segarkan.";
-"developer.noDiagnosticRecipe" = "Mode diagnostik tidak tersedia untuk pengontrol ini.";
 "developer.noExtraInputs" = "Tidak ada tombol tambahan yang terdeteksi.";
 "developer.noPackets" = "Tidak ada paket yang ditangkap";
 "developer.packetCapture" = "Penangkapan Paket Mentah";
@@ -1338,6 +1335,10 @@
 "cli.virtual.discussion.unit" = "Dengan --unit, “set” berlaku untuk satu pengontrol berdasarkan ID perangkatnya, dan “reset” mengembalikan pengontrol itu ke pilihan modelnya.";
 "cli.virtual.error.failed" = "Gamepad virtual untuk %@ tidak berubah (%@). Periksa dengan “ojd virtual show”.";
 "cli.virtual.error.no_unit" = "%@ tidak memiliki ID perangkat, sehingga pilihan hanya dapat berlaku untuk seluruh modelnya. Jalankan perintah tanpa --unit.";
+"cli.virtual.export_mapping.abstract" = "Cetak pemetaan SDL atau deskripsi W3C yang diturunkan oleh profil gamepad virtual.";
+"cli.virtual.export_mapping.discussion" = "SDL mencetak satu baris pemetaan per profil, yang merupakan berkas pemetaan SDL yang valid. W3C mencetak deskripsi tata letak standar sebagai JSON. Keduanya diturunkan dari deskriptor laporan profil.";
+"cli.virtual.export_mapping.format" = "Format yang dicetak: sdl atau w3c.";
+"cli.virtual.export_mapping.profile" = "Profil gamepad virtual yang dicetak. Kosongkan untuk mencetak semua profil.";
 "cli.virtual.feed.abstract" = "Publikasikan gamepad virtual yang digerakkan oleh input standar.";
 "cli.virtual.feed.discussion" = "Membaca satu objek JSON per baris: “buttons” dan “dpad” mencantumkan kontrol yang ditekan, seperti South dan up, dan “axes” memetakan nama sumbu, seperti LeftStickX, ke nilai. Kontrol yang tidak ada dianggap netral. Stik berkisar dari -1 sampai 1 dengan Y ke bawah; pemicu berkisar dari 0 sampai 1. Frame diputar berurutan, masing-masing minimal 8 ms; “holdMilliseconds” menahan frame lebih lama, hingga 60000. Mencetak setiap perintah output yang dikirim game ke gamepad, seperti getaran, sebagai satu objek JSON per baris. Berhenti setelah semua frame diputar dan input berakhir.";
 "cli.virtual.feed.error.closed" = "Layanan menutup gamepad virtual. Periksa dengan “ojd status”.";
@@ -1356,6 +1357,7 @@
 "cli.virtual.reset.error.unit_all" = "--unit memerlukan CONTROLLER, bukan --all.";
 "cli.virtual.set.abstract" = "Pilih gamepad virtual untuk model suatu pengontrol.";
 "cli.virtual.set.profile" = "Profil gamepad virtual.";
+"cli.virtual.sdl_hints_note" = "Catatan: %@ tidak berfungsi dengan hint bawaan SDL.";
 "cli.virtual.show.abstract" = "Tampilkan gamepad virtual setiap pengontrol dan profil yang dapat Anda pilih.";
 "cli.virtual.show.none" = "tidak ada gamepad virtual";
 "cli.virtual.show.profiles" = "Profil: %@";

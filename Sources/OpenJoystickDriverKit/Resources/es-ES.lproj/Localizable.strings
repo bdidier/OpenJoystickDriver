@@ -514,9 +514,7 @@
 "developer.connection" = "Conexión";
 "developer.controller" = "Mando";
 "developer.controllerDetails" = "Mando";
-"developer.diagnosticMode" = "Modo de diagnóstico";
 "developer.emptyCapture" = "Pulse «Iniciar captura» y, después, pulse los botones del mando.";
-"developer.enterDiagnosticMode" = "Entrar en el modo de diagnóstico";
 "developer.exportCapture" = "Exportar captura de paquetes";
 "developer.extraInputs" = "Botones adicionales";
 "developer.extraInputsDescription" = "Pulse un botón adicional cada vez. Los botones detectados permanecen en la lista hasta que borre la captura.";
@@ -527,7 +525,6 @@
 "developer.loadingControllers" = "Cargando diagnósticos del mando…";
 "developer.noControllers" = "No hay mandos conectados";
 "developer.noControllersDetail" = "Conecte un mando y pulse «Actualizar».";
-"developer.noDiagnosticRecipe" = "No está disponible el modo de diagnóstico para este mando.";
 "developer.noExtraInputs" = "No se detectaron botones adicionales.";
 "developer.noPackets" = "Ningún paquete capturado";
 "developer.packetCapture" = "Captura de paquetes en bruto";
@@ -1338,6 +1335,10 @@
 "cli.virtual.discussion.unit" = "Con --unit, «set» se aplica a un solo mando según su ID de unidad, y «reset» devuelve ese mando a la elección de su modelo.";
 "cli.virtual.error.failed" = "El mando virtual de %@ no ha cambiado (%@). Compruébalo con «ojd virtual show».";
 "cli.virtual.error.no_unit" = "%@ no tiene ID de unidad, así que una elección solo puede aplicarse a todo su modelo. Ejecuta el comando sin --unit.";
+"cli.virtual.export_mapping.abstract" = "Imprime la asignación SDL o la descripción W3C que deriva un perfil de mando virtual.";
+"cli.virtual.export_mapping.discussion" = "SDL imprime una línea de asignación por perfil, que es un archivo de asignaciones SDL válido. W3C imprime la descripción del diseño estándar como JSON. Ambas se derivan del descriptor de informes del perfil.";
+"cli.virtual.export_mapping.format" = "El formato que imprimir: sdl o w3c.";
+"cli.virtual.export_mapping.profile" = "El perfil de mando virtual que imprimir. Omítelo para imprimir todos los perfiles.";
 "cli.virtual.feed.abstract" = "Publicar un mando virtual controlado por stdin.";
 "cli.virtual.feed.discussion" = "Lee un objeto JSON por línea: «buttons» y «dpad» enumeran los controles pulsados, como South y up, y «axes» asigna valores a los nombres de los ejes, como LeftStickX. Los controles que faltan quedan en neutro. Los sticks van de -1 a 1, con Y hacia abajo; los gatillos van de 0 a 1. Los fotogramas se reproducen en orden, cada uno durante al menos 8 ms; «holdMilliseconds» mantiene un fotograma más tiempo, hasta 60000. Imprime cada comando de salida que los juegos envían al mando, como la vibración, como un objeto JSON por línea. Termina cuando se han reproducido todos los fotogramas después de que termine la entrada.";
 "cli.virtual.feed.error.closed" = "El servicio ha cerrado el mando virtual. Compruébalo con «ojd status».";
@@ -1356,6 +1357,7 @@
 "cli.virtual.reset.error.unit_all" = "--unit necesita un CONTROLLER, no --all.";
 "cli.virtual.set.abstract" = "Elegir el mando virtual para el modelo de un mando.";
 "cli.virtual.set.profile" = "El perfil del mando virtual.";
+"cli.virtual.sdl_hints_note" = "Nota: %@ no funciona con las sugerencias predeterminadas de SDL.";
 "cli.virtual.show.abstract" = "Mostrar el mando virtual de cada mando y los perfiles que puedes elegir.";
 "cli.virtual.show.none" = "sin mando virtual";
 "cli.virtual.show.profiles" = "Perfiles: %@";

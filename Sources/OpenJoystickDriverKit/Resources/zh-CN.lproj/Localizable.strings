@@ -514,9 +514,7 @@
 "developer.connection" = "连接";
 "developer.controller" = "控制器";
 "developer.controllerDetails" = "控制器";
-"developer.diagnosticMode" = "诊断模式";
 "developer.emptyCapture" = "按“开始捕捉”，然后按控制器上的按钮。";
-"developer.enterDiagnosticMode" = "进入诊断模式";
 "developer.exportCapture" = "导出数据包捕捉";
 "developer.extraInputs" = "额外按钮";
 "developer.extraInputsDescription" = "每次按一个额外按钮。检测到的按钮会一直列出，直到你清除捕捉。";
@@ -527,7 +525,6 @@
 "developer.loadingControllers" = "正在加载控制器诊断信息…";
 "developer.noControllers" = "没有连接的控制器";
 "developer.noControllersDetail" = "连接控制器，然后点按“刷新”。";
-"developer.noDiagnosticRecipe" = "此控制器不支持诊断模式。";
 "developer.noExtraInputs" = "未检测到额外按钮。";
 "developer.noPackets" = "尚未捕捉数据包";
 "developer.packetCapture" = "原始数据包捕捉";
@@ -1338,6 +1335,10 @@
 "cli.virtual.discussion.unit" = "使用 --unit 时，“set” 只作用于按单元 ID 指定的那一个控制器，“reset” 会让该控制器恢复为其型号的选择。";
 "cli.virtual.error.failed" = "%@ 的虚拟游戏手柄未更改（%@）。请用 “ojd virtual show” 检查。";
 "cli.virtual.error.no_unit" = "%@ 没有单元 ID，因此所做选择只能适用于其整个型号。请不带 --unit 运行该命令。";
+"cli.virtual.export_mapping.abstract" = "输出虚拟游戏手柄配置文件推导出的 SDL 映射或 W3C 描述。";
+"cli.virtual.export_mapping.discussion" = "SDL 为每个配置文件输出一行映射，可直接作为有效的 SDL 映射文件。W3C 以 JSON 输出标准布局的描述。两者都由配置文件的报告描述符推导而来。";
+"cli.virtual.export_mapping.format" = "要输出的格式：sdl 或 w3c。";
+"cli.virtual.export_mapping.profile" = "要输出的虚拟游戏手柄配置文件。省略则输出所有配置文件。";
 "cli.virtual.feed.abstract" = "发布一个由 stdin 驱动的虚拟游戏手柄。";
 "cli.virtual.feed.discussion" = "每行读取一个 JSON 对象：“buttons” 和 “dpad” 列出被按下的控件，例如 South 和 up；“axes” 将轴名称（例如 LeftStickX）映射到数值。缺少的控件保持中立。摇杆范围为 -1 到 1，Y 轴向下；扳机范围为 0 到 1。帧按顺序播放，每帧至少持续 8 ms；“holdMilliseconds” 可让某一帧保持更久，最长 60000。将游戏发送给游戏手柄的每条输出命令（例如震动）以每行一个 JSON 对象的形式输出。输入结束且所有帧播放完毕后停止。";
 "cli.virtual.feed.error.closed" = "服务已关闭虚拟游戏手柄。请用 “ojd status” 检查。";
@@ -1356,6 +1357,7 @@
 "cli.virtual.reset.error.unit_all" = "--unit 需要 CONTROLLER，不能与 --all 一起使用。";
 "cli.virtual.set.abstract" = "为控制器的型号选择虚拟游戏手柄。";
 "cli.virtual.set.profile" = "虚拟游戏手柄配置文件。";
+"cli.virtual.sdl_hints_note" = "注意：%@ 无法在 SDL 的默认提示设置下工作。";
 "cli.virtual.show.abstract" = "显示每个控制器的虚拟游戏手柄以及可选择的配置文件。";
 "cli.virtual.show.none" = "无虚拟游戏手柄";
 "cli.virtual.show.profiles" = "配置文件：%@";

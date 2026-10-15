@@ -145,7 +145,7 @@ private func renderProbeRecord(
   startup: [PhysicalOutputWrite],
   transport: DeviceTransportProfile
 ) {
-  let profileStartup = plan.startupPackets.map(\.rawValue).joined(separator: ",")
+  let profileStartup = plan.startupPackets.joined(separator: ",")
   let usbStartupBytes = startup.map(\.hexBytes).joined(separator: ",")
   print(
     "RECORD identity=\"\(plan.name)\" vid=\(plan.vendorID) pid=\(plan.productID)"
