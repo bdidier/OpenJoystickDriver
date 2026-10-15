@@ -25,7 +25,7 @@ struct JoyConPairingRoutingTests {
       profile: profile
     )
     try await harness.router.dispatchCausally(changes: [.press(.auxiliary3)], from: left)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: right)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: right)
 
     #expect(
       harness.recorder.snapshot().suffix(2) == [
@@ -46,10 +46,10 @@ struct JoyConPairingRoutingTests {
     harness.recorder.removeAll()
     // The stopped half reconnects with a fresh pipeline, whose first snapshot holds South.
     InputScript.of(harness.router).reset(right)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: right)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: right)
     #expect(
       harness.recorder.snapshot() == [
-        .virtualGamepad(ControllerState.neutral.applying([.press(.faceSouth)]), right)
+        .virtualGamepad(ControllerState.neutral.applying([.press(.south)]), right)
       ]
     )
     #expect(await harness.router.statusSnapshot().joyConPairs.isEmpty)
@@ -158,7 +158,7 @@ struct JoyConPairingRoutingTests {
       outputPolicy: RemappingOutputPolicy(virtualGamepad: .mapped, physicalInput: .exclusive),
       joyConPair: RemappingJoyConPairSettings(gyroSelection: gyroSelection),
       bindings: [
-        RemappingBinding(source: .button(.leftSL), destination: .gamepadButton(.leftShoulder)),
+        RemappingBinding(source: .button(.auxiliary3), destination: .gamepadButton(.leftShoulder)),
         RemappingBinding(source: .button(.south), destination: .gamepadButton(.north)),
       ]
     )

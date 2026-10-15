@@ -7,20 +7,20 @@ struct VirtualHIDProfileSelectorTests {
 
   @Test
   func aFullXboxLayoutSelectsTheDefaultProfile() throws {
-    let selection = try Selector.select(controls: ControlID.xboxLayout, override: nil)
+    let selection = try Selector.select(controls: Control.xboxLayout, override: nil)
     #expect(selection == .init(profileID: .generic, source: .automatic))
   }
 
   @Test
   func everyDeclaredControlTogetherStillSelectsTheDefaultProfile() throws {
-    let selection = try Selector.select(controls: Set(ControlID.allCases), override: nil)
+    let selection = try Selector.select(controls: Set(Control.allCases), override: nil)
     #expect(selection == .init(profileID: .generic, source: .automatic))
   }
 
   @Test
   func extendedAndSystemControlsDoNotForceAProfile() throws {
-    let controls = ControlID.xboxLayout.union([
-      .guide, .share, .capture, .touchpadClick, .microphone, .paddleLeft1, .paddleRight2,
+    let controls = Control.xboxLayout.union([
+      .guide, .capture, .capture, .touchpadClick, .microphone, .leftPaddle1, .rightPaddle2,
       .auxiliary8, .leftTrackpadClick, .rightTrackpadTouch,
     ])
     #expect(try Selector.select(controls: controls, override: nil).profileID == .generic)
@@ -28,34 +28,34 @@ struct VirtualHIDProfileSelectorTests {
 
   @Test
   func digitalOnlyTriggersFitTheTriggerSlots() throws {
-    let controls = ControlID.xboxLayout.subtracting([.leftTrigger, .rightTrigger]).union([
-      .leftTriggerButton, .rightTriggerButton,
+    let controls = Control.xboxLayout.subtracting([.leftTrigger, .rightTrigger]).union([
+      .leftTrigger, .rightTrigger,
     ])
     #expect(try Selector.select(controls: controls, override: nil).profileID == .generic)
   }
 
   @Test
   func aSubsetOfTheXboxLayoutSelectsTheDefaultProfile() throws {
-    let controls: Set<ControlID> = [.dpad, .faceSouth, .faceEast, .view, .menu]
+    let controls = Control.dpad.union([.south, .east, .back, .start])
     #expect(try Selector.select(controls: controls, override: nil).profileID == .generic)
   }
 
   @Test(arguments: VirtualHIDProfileID.allCases)
   func theAdvancedOverrideWins(profile: VirtualHIDProfileID) throws {
-    let selection = try Selector.select(controls: ControlID.xboxLayout, override: profile)
+    let selection = try Selector.select(controls: Control.xboxLayout, override: profile)
     #expect(selection == .init(profileID: profile, source: .override))
   }
 
-  /// A new `ControlID` must be classified here on purpose: primary controls decide the profile.
+  /// A new `Control` must be classified here on purpose: primary controls decide the profile.
   @Test
   func everyControlOutsideTheXboxLayoutAndTriggerButtonsIsNonPrimary() {
-    let nonPrimary: Set<ControlID> = [
-      .guide, .share, .capture, .touchpadClick, .microphone, .paddleLeft1, .paddleLeft2,
-      .paddleRight1, .paddleRight2, .auxiliary1, .auxiliary2, .auxiliary3, .auxiliary4, .auxiliary5,
+    let nonPrimary: Set<Control> = [
+      .guide, .capture, .capture, .touchpadClick, .microphone, .leftPaddle1, .leftPaddle2,
+      .rightPaddle1, .rightPaddle2, .auxiliary1, .auxiliary2, .auxiliary3, .auxiliary4, .auxiliary5,
       .auxiliary6, .auxiliary7, .auxiliary8, .leftStickTouch, .rightStickTouch, .leftTrackpadClick,
       .rightTrackpadClick, .leftTrackpadTouch, .rightTrackpadTouch,
     ]
-    #expect(Set(ControlID.allCases).subtracting(Selector.primaryControls) == nonPrimary)
+    #expect(Set(Control.allCases).subtracting(Selector.primaryControls) == nonPrimary)
   }
 
   /// Both profiles carry every primary control today, so automatic selection never needs
@@ -69,18 +69,18 @@ struct VirtualHIDProfileSelectorTests {
 
   @Test
   func representationChecksEachControlAgainstTheProfileSlots() {
-    #expect(Selector.represents([.leftTriggerButton], in: [.leftTrigger]))
-    #expect(!Selector.represents([.leftTriggerButton], in: [.rightTrigger]))
-    #expect(!Selector.represents([.faceSouth], in: [.faceEast]))
+    #expect(Selector.represents([.leftTrigger], in: [.leftTrigger]))
+    #expect(!Selector.represents([.leftTrigger], in: [.rightTrigger]))
+    #expect(!Selector.represents([.south], in: [.east]))
   }
 
   @Test
   func automaticSelectionNeverFallsBackToTheOtherPersona() {
-    let slots: [VirtualHIDProfileID: Set<ControlID>] = [
-      .sdlCompatible: [.faceSouth, .faceEast], .generic: [.faceSouth],
+    let slots: [VirtualHIDProfileID: Set<Control>] = [
+      .sdlCompatible: [.south, .east], .generic: [.south],
     ]
     #expect(throws: ProtocolBindingReason.virtualProfileUnavailable) {
-      try Selector.select(controls: [.faceSouth, .faceEast], override: nil) {
+      try Selector.select(controls: [.south, .east], override: nil) {
         slots[$0, default: []]
       }
     }
@@ -88,11 +88,11 @@ struct VirtualHIDProfileSelectorTests {
 
   @Test
   func anUnsatisfiableOverrideFallsBackToAutomaticSelection() throws {
-    let slots: [VirtualHIDProfileID: Set<ControlID>] = [
-      .generic: [.faceSouth, .faceEast], .sdlCompatible: [.faceSouth],
+    let slots: [VirtualHIDProfileID: Set<Control>] = [
+      .generic: [.south, .east], .sdlCompatible: [.south],
     ]
     let selection = try Selector.select(
-      controls: [.faceSouth, .faceEast],
+      controls: [.south, .east],
       override: .sdlCompatible
     ) { slots[$0, default: []] }
     #expect(
@@ -103,7 +103,7 @@ struct VirtualHIDProfileSelectorTests {
   @Test
   func controlsNoProfileCarriesFailWithVirtualProfileUnavailable() {
     #expect(throws: ProtocolBindingReason.virtualProfileUnavailable) {
-      try Selector.select(controls: [.faceSouth], override: nil) { _ in [] }
+      try Selector.select(controls: [.south], override: nil) { _ in [] }
     }
   }
 }

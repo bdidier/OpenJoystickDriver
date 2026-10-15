@@ -20,7 +20,7 @@ struct EndpointReferenceClientTests {
   @Test
   func theClientSubscribesAndReceivesAControllerFrame() async throws {
     try await withEndpointServer(identity: nil) { server, fixture in
-      fixture.source.set(devices: ["pad-1"], state: ControllerState(pressed: [.faceSouth]))
+      fixture.source.set(devices: ["pad-1"], state: ControllerState(pressed: [.south]))
       try server.setEnabled(true)
       let granted = try server.grantToken(name: "driver", origins: [], scopes: [.read])
 
@@ -42,7 +42,7 @@ struct EndpointReferenceClientTests {
       let pressed = objects.compactMap {
         (($0["object"] as? [String: Any])?["input"] as? [String: Any])?["pressed"] as? [String]
       }
-      #expect(pressed == [["face-south"]])
+      #expect(pressed == [["South"]])
     }
   }
 

@@ -643,54 +643,8 @@
       "minItems": 1,
       "uniqueItems": true,
       "items": {
-        "$ref": "#/$defs/controlID"
+        "$ref": "vocabulary.schema.json#/$defs/control"
       }
-    },
-    "controlID": {
-      "enum": [
-        "dpad",
-        "left-stick-x",
-        "left-stick-y",
-        "right-stick-x",
-        "right-stick-y",
-        "left-stick-click",
-        "right-stick-click",
-        "face-south",
-        "face-east",
-        "face-west",
-        "face-north",
-        "left-shoulder",
-        "right-shoulder",
-        "left-trigger",
-        "right-trigger",
-        "left-trigger-button",
-        "right-trigger-button",
-        "view",
-        "menu",
-        "guide",
-        "share",
-        "capture",
-        "touchpad-click",
-        "microphone",
-        "paddle-left-1",
-        "paddle-left-2",
-        "paddle-right-1",
-        "paddle-right-2",
-        "auxiliary-1",
-        "auxiliary-2",
-        "auxiliary-3",
-        "auxiliary-4",
-        "auxiliary-5",
-        "auxiliary-6",
-        "auxiliary-7",
-        "auxiliary-8",
-        "left-stick-touch",
-        "right-stick-touch",
-        "left-trackpad-click",
-        "right-trackpad-click",
-        "left-trackpad-touch",
-        "right-trackpad-touch"
-      ]
     },
     "usbOverride": {
       "type": "object",
@@ -1007,18 +961,17 @@
         "control": {
           "allOf": [
             {
-              "$ref": "#/$defs/controlID"
+              "$ref": "vocabulary.schema.json#/$defs/control"
             },
             {
               "not": {
-                "enum": [
-                  "dpad",
-                  "left-stick-x",
-                  "left-stick-y",
-                  "right-stick-x",
-                  "right-stick-y",
-                  "left-trigger",
-                  "right-trigger"
+                "anyOf": [
+                  {
+                    "$ref": "vocabulary.schema.json#/$defs/stickAxis"
+                  },
+                  {
+                    "$ref": "vocabulary.schema.json#/$defs/dpadControl"
+                  }
                 ]
               }
             }
@@ -1042,14 +995,7 @@
           "$ref": "#/$defs/hidUsageID"
         },
         "control": {
-          "enum": [
-            "left-stick-x",
-            "left-stick-y",
-            "right-stick-x",
-            "right-stick-y",
-            "left-trigger",
-            "right-trigger"
-          ]
+          "$ref": "vocabulary.schema.json#/$defs/axis"
         },
         "inverted": {
           "type": "boolean"
@@ -1085,7 +1031,7 @@
       "$comment": "A hat reads eight positions, north first and clockwise, from the first value of its range; any value outside the range is neutral. Without a range, the element's logical minimum is the first value.",
       "type": "object",
       "additionalProperties": false,
-      "required": ["kind", "page", "usage", "control"],
+      "required": ["kind", "page", "usage"],
       "properties": {
         "kind": {
           "const": "hat"
@@ -1095,9 +1041,6 @@
         },
         "usage": {
           "$ref": "#/$defs/hidUsageID"
-        },
-        "control": {
-          "const": "dpad"
         },
         "range": {
           "oneOf": [
@@ -1142,18 +1085,17 @@
         "control": {
           "allOf": [
             {
-              "$ref": "#/$defs/controlID"
+              "$ref": "vocabulary.schema.json#/$defs/control"
             },
             {
               "not": {
-                "enum": [
-                  "dpad",
-                  "left-stick-x",
-                  "left-stick-y",
-                  "right-stick-x",
-                  "right-stick-y",
-                  "left-trigger",
-                  "right-trigger"
+                "anyOf": [
+                  {
+                    "$ref": "vocabulary.schema.json#/$defs/stickAxis"
+                  },
+                  {
+                    "$ref": "vocabulary.schema.json#/$defs/dpadControl"
+                  }
                 ]
               }
             }
@@ -1177,12 +1119,7 @@
       "required": ["control", "byte"],
       "properties": {
         "control": {
-          "enum": [
-            "left-stick-x",
-            "left-stick-y",
-            "right-stick-x",
-            "right-stick-y"
-          ]
+          "$ref": "vocabulary.schema.json#/$defs/stickAxis"
         },
         "byte": {
           "type": "integer",
@@ -1546,10 +1483,10 @@
                 "minItems": 4,
                 "items": {
                   "enum": [
-                    "paddle-left-1",
-                    "paddle-right-1",
-                    "auxiliary-1",
-                    "auxiliary-2"
+                    "LeftPaddle1",
+                    "RightPaddle1",
+                    "Auxiliary1",
+                    "Auxiliary2"
                   ]
                 }
               }

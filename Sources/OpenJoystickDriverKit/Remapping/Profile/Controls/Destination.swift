@@ -2,7 +2,7 @@ import Foundation
 
 /// The system-input destination of a binding.
 public enum RemappingDestination: Codable, Equatable, Hashable, Sendable {
-  case gamepadButton(RemappingButton)
+  case gamepadButton(Control)
   case gamepadDpad(RemappingDpadDirection)
   case gamepadAxis(RemappingAxis)
   case keyboard(key: RemappingKeyboardKey, modifiers: Set<RemappingKeyModifier>)
@@ -66,7 +66,7 @@ public enum RemappingDestination: Codable, Equatable, Hashable, Sendable {
     case .gamepadDpad:
       self = .gamepadDpad(try container.decode(RemappingDpadDirection.self, forKey: .direction))
     case .gamepadButton:
-      self = .gamepadButton(try container.decode(RemappingButton.self, forKey: .button))
+      self = .gamepadButton(try container.decode(Control.self, forKey: .button))
     case .keyboard:
       let modifiers = try container.decode([RemappingKeyModifier].self, forKey: .modifiers)
       self = .keyboard(

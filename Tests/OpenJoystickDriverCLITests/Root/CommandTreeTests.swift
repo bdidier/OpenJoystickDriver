@@ -139,10 +139,10 @@ struct CommandTreeTests {
     ["controller", "brightness"], ["controller", "disconnect-wireless"], ["controller", "output"],
     ["controller", "virtual"], ["controller", "plan"], ["diagnose", "catalog"],
     ["record", "show", "zz"], ["record", "show", "045E"], ["map", "list"], ["mapping"],
-    ["binding", "clear", "p"], ["binding", "clear", "p", "button:south", "--all"],
+    ["binding", "clear", "p"], ["binding", "clear", "p", "button:South", "--all"],
     ["binding", "set", "p", "nonsense", "key:space"],
-    ["binding", "set", "p", "button:south", "key:space", "--turbo-rate", "10"],
-    ["binding", "set", "p", "button:south", "key:space", "--deadzone", "0.2"],
+    ["binding", "set", "p", "button:South", "key:space", "--turbo-rate", "10"],
+    ["binding", "set", "p", "button:South", "key:space", "--deadzone", "0.2"],
     ["profile", "import", "/nonexistent/profile.json"],
   ])
   func usageErrorsExitSixtyFourOnStandardErrorOnly(arguments: [String]) async {

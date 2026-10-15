@@ -10,133 +10,132 @@
             "kind": "button",
             "page": 9,
             "usage": 1,
-            "control": "face-south"
+            "control": "South"
           },
           {
             "kind": "button",
             "page": 9,
             "usage": 2,
-            "control": "face-east"
+            "control": "East"
           },
           {
             "kind": "button",
             "page": 9,
             "usage": 3,
-            "control": "face-west"
+            "control": "West"
           },
           {
             "kind": "button",
             "page": 9,
             "usage": 4,
-            "control": "face-north"
+            "control": "North"
           },
           {
             "kind": "button",
             "page": 9,
             "usage": 5,
-            "control": "left-shoulder"
+            "control": "LeftShoulder"
           },
           {
             "kind": "button",
             "page": 9,
             "usage": 6,
-            "control": "right-shoulder"
+            "control": "RightShoulder"
           },
           {
             "kind": "button",
             "page": 9,
             "usage": 7,
-            "control": "view"
+            "control": "Back"
           },
           {
             "kind": "button",
             "page": 9,
             "usage": 8,
-            "control": "menu"
+            "control": "Start"
           },
           {
             "kind": "button",
             "page": 9,
             "usage": 9,
-            "control": "left-stick-click"
+            "control": "LeftStickClick"
           },
           {
             "kind": "button",
             "page": 9,
             "usage": 10,
-            "control": "right-stick-click"
+            "control": "RightStickClick"
           },
           {
             "kind": "button",
             "page": 9,
             "usage": 11,
-            "control": "guide"
+            "control": "Guide"
           },
           {
             "kind": "axis",
             "page": 1,
             "usage": 48,
-            "control": "left-stick-x"
+            "control": "LeftStickX"
           },
           {
             "kind": "axis",
             "page": 1,
             "usage": 49,
-            "control": "left-stick-y"
+            "control": "LeftStickY"
           },
           {
             "kind": "axis",
             "page": 1,
             "usage": 50,
-            "control": "left-trigger"
+            "control": "LeftTrigger"
           },
           {
             "kind": "axis",
             "page": 1,
             "usage": 51,
-            "control": "right-stick-x"
+            "control": "RightStickX"
           },
           {
             "kind": "axis",
             "page": 1,
             "usage": 52,
-            "control": "right-stick-y"
+            "control": "RightStickY"
           },
           {
             "kind": "axis",
             "page": 1,
             "usage": 53,
-            "control": "right-trigger"
+            "control": "RightTrigger"
           },
           {
             "kind": "hat",
             "page": 1,
-            "usage": 57,
-            "control": "dpad"
+            "usage": 57
           },
           {
             "kind": "button",
             "page": 1,
             "usage": 133,
-            "control": "guide"
+            "control": "Guide"
           },
           {
             "kind": "button",
             "page": 12,
             "usage": 178,
-            "control": "share"
+            "control": "Capture"
           },
           {
             "kind": "button",
             "page": 12,
             "usage": 547,
-            "control": "guide"
+            "control": "Guide"
           },
           {
             "kind": "button",
             "page": 12,
             "usage": 548,
-            "control": "view"
+            "control": "Back"
           }
         ]
       },
@@ -178,145 +177,144 @@
                 "kind": "button",
                 "page": 9,
                 "usage": 1,
-                "control": "face-south"
+                "control": "South"
               },
               {
                 "kind": "button",
                 "page": 9,
                 "usage": 2,
-                "control": "face-east"
+                "control": "East"
               },
               {
                 "kind": "button",
                 "page": 9,
                 "usage": 4,
-                "control": "face-west"
+                "control": "West"
               },
               {
                 "kind": "button",
                 "page": 9,
                 "usage": 5,
-                "control": "face-north"
+                "control": "North"
               },
               {
                 "kind": "button",
                 "page": 9,
                 "usage": 7,
-                "control": "left-shoulder"
+                "control": "LeftShoulder"
               },
               {
                 "kind": "button",
                 "page": 9,
                 "usage": 8,
-                "control": "right-shoulder"
+                "control": "RightShoulder"
               },
               {
                 "kind": "button",
                 "page": 9,
                 "usage": 11,
-                "control": "view"
+                "control": "Back"
               },
               {
                 "kind": "button",
                 "page": 9,
                 "usage": 12,
-                "control": "menu"
+                "control": "Start"
               },
               {
                 "kind": "button",
                 "page": 9,
                 "usage": 13,
-                "control": "guide"
+                "control": "Guide"
               },
               {
                 "kind": "button",
                 "page": 9,
                 "usage": 14,
-                "control": "left-stick-click"
+                "control": "LeftStickClick"
               },
               {
                 "kind": "button",
                 "page": 9,
                 "usage": 15,
-                "control": "right-stick-click"
+                "control": "RightStickClick"
               },
               {
                 "kind": "axis",
                 "page": 1,
                 "usage": 48,
-                "control": "left-stick-x"
+                "control": "LeftStickX"
               },
               {
                 "kind": "axis",
                 "page": 1,
                 "usage": 49,
-                "control": "left-stick-y"
+                "control": "LeftStickY"
               },
               {
                 "kind": "axis",
                 "page": 1,
                 "usage": 50,
-                "control": "right-stick-x"
+                "control": "RightStickX"
               },
               {
                 "kind": "axis",
                 "page": 1,
                 "usage": 51,
-                "control": "right-stick-x"
+                "control": "RightStickX"
               },
               {
                 "kind": "axis",
                 "page": 1,
                 "usage": 52,
-                "control": "right-stick-y"
+                "control": "RightStickY"
               },
               {
                 "kind": "axis",
                 "page": 1,
                 "usage": 53,
-                "control": "right-stick-y"
+                "control": "RightStickY"
               },
               {
                 "kind": "axis",
                 "page": 2,
                 "usage": 196,
-                "control": "right-trigger"
+                "control": "RightTrigger"
               },
               {
                 "kind": "axis",
                 "page": 2,
                 "usage": 197,
-                "control": "left-trigger"
+                "control": "LeftTrigger"
               },
               {
                 "kind": "hat",
                 "page": 1,
-                "usage": 57,
-                "control": "dpad"
+                "usage": 57
               },
               {
                 "kind": "button",
                 "page": 1,
                 "usage": 133,
-                "control": "guide"
+                "control": "Guide"
               },
               {
                 "kind": "button",
                 "page": 12,
                 "usage": 178,
-                "control": "share"
+                "control": "Capture"
               },
               {
                 "kind": "button",
                 "page": 12,
                 "usage": 547,
-                "control": "guide"
+                "control": "Guide"
               },
               {
                 "kind": "button",
                 "page": 12,
                 "usage": 548,
-                "control": "view"
+                "control": "Back"
               }
             ]
           }

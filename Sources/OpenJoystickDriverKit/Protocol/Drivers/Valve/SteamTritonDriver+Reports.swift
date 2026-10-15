@@ -62,18 +62,18 @@ extension SteamTritonDriver {
   )
 
   /// SDL's output mapping per button bit. SDL names bit `0x40` VIEW and bit `0x4000` MENU but
-  /// reports them as Start and Back, so they map to `.menu` and `.view` here.
-  private static let buttonTable: [(UInt32, ControlID)] = [
-    (0x0000_0001, .faceSouth), (0x0000_0002, .faceEast), (0x0000_0004, .faceWest),
-    (0x0000_0008, .faceNorth), (0x0000_0010, .auxiliary1), (0x0000_0020, .rightStickClick),
-    (0x0000_0040, .menu), (0x0000_0080, .paddleRight1), (0x0000_0100, .paddleRight2),
-    (0x0000_0200, .rightShoulder), (0x0000_4000, .view), (0x0000_8000, .leftStickClick),
-    (0x0001_0000, .guide), (0x0002_0000, .paddleLeft1), (0x0004_0000, .paddleLeft2),
+  /// reports them as Start and Back, so they map to `.start` and `.back` here.
+  private static let buttonTable: [(UInt32, Control)] = [
+    (0x0000_0001, .south), (0x0000_0002, .east), (0x0000_0004, .west),
+    (0x0000_0008, .north), (0x0000_0010, .auxiliary1), (0x0000_0020, .rightStickClick),
+    (0x0000_0040, .start), (0x0000_0080, .rightPaddle1), (0x0000_0100, .rightPaddle2),
+    (0x0000_0200, .rightShoulder), (0x0000_4000, .back), (0x0000_8000, .leftStickClick),
+    (0x0001_0000, .guide), (0x0002_0000, .leftPaddle1), (0x0004_0000, .leftPaddle2),
     (0x0008_0000, .leftShoulder), (0x0010_0000, .rightStickTouch),
     (0x0020_0000, .rightTrackpadTouch), (0x0040_0000, .rightTrackpadClick),
-    (0x0080_0000, .rightTriggerButton), (0x0100_0000, .leftStickTouch),
+    (0x0080_0000, .rightTrigger), (0x0100_0000, .leftStickTouch),
     (0x0200_0000, .leftTrackpadTouch), (0x0400_0000, .leftTrackpadClick),
-    (0x0800_0000, .leftTriggerButton),
+    (0x0800_0000, .leftTrigger),
   ]
   private static let dpadDown: UInt32 = 0x0400
   private static let dpadRight: UInt32 = 0x0800

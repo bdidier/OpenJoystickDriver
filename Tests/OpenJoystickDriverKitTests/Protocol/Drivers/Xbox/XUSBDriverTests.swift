@@ -88,9 +88,9 @@ struct XUSBDriverTests {
     let press = makeXbox360ReportLE(buttons: 1 << 12)
     let release = makeXbox360ReportLE(buttons: 0)
     let pressEvents = try parser.parseReport(press)
-    #expect(pressEvents.contains(.press(.faceSouth)))
+    #expect(pressEvents.contains(.press(.south)))
     let releaseEvents = try parser.parseReport(release)
-    #expect(releaseEvents.contains(.release(.faceSouth)))
+    #expect(releaseEvents.contains(.release(.south)))
   }
 
   @Test
@@ -98,9 +98,9 @@ struct XUSBDriverTests {
     let parser = XUSBDriver()
     let packet = makeXbox360ReportLE(buttons: (1 << 13) | (1 << 14) | (1 << 15))
     let events = try parser.parseReport(packet)
-    #expect(events.contains(.press(.faceEast)))
-    #expect(events.contains(.press(.faceWest)))
-    #expect(events.contains(.press(.faceNorth)))
+    #expect(events.contains(.press(.east)))
+    #expect(events.contains(.press(.west)))
+    #expect(events.contains(.press(.north)))
   }
 
   @Test
@@ -121,8 +121,8 @@ struct XUSBDriverTests {
     // START=bit4, BACK=bit5
     let packet = makeXbox360ReportLE(buttons: (1 << 4) | (1 << 5))
     let events = try parser.parseReport(packet)
-    #expect(events.contains(.press(.menu)))
-    #expect(events.contains(.press(.view)))
+    #expect(events.contains(.press(.start)))
+    #expect(events.contains(.press(.back)))
   }
 
   @Test
@@ -154,10 +154,10 @@ struct XUSBDriverTests {
     let parser = XUSBDriver()
     let packet = makeXbox360ReportLE(buttons: 0x000F)  // all four dpad bits set
     let events = try parser.parseReport(packet)
-    #expect(!events.contains(.press(.faceSouth)))
-    #expect(!events.contains(.press(.faceEast)))
-    #expect(!events.contains(.press(.faceWest)))
-    #expect(!events.contains(.press(.faceNorth)))
+    #expect(!events.contains(.press(.south)))
+    #expect(!events.contains(.press(.east)))
+    #expect(!events.contains(.press(.west)))
+    #expect(!events.contains(.press(.north)))
   }
 
   @Test
@@ -207,7 +207,7 @@ struct XUSBDriverTests {
     let first = try parser.parseReport(report)
     let second = try parser.parseReport(report)
     #expect(second?.state == first?.state)
-    #expect(second.contains(.press(.faceSouth)))
+    #expect(second.contains(.press(.south)))
   }
 
   @Test
@@ -215,8 +215,8 @@ struct XUSBDriverTests {
     let parser = XUSBDriver()
     let packet = makeXbox360ReportLE(buttons: (1 << 12) | (1 << 13) | (1 << 8))
     let events = try parser.parseReport(packet)
-    #expect(events.contains(.press(.faceSouth)))
-    #expect(events.contains(.press(.faceEast)))
+    #expect(events.contains(.press(.south)))
+    #expect(events.contains(.press(.east)))
     #expect(events.contains(.press(.leftShoulder)))
   }
 
@@ -245,7 +245,7 @@ struct XUSBDriverTests {
     state[1] = 0x14
     state[3] = 0x10
     let events = try parser.parseReport(Data([0x00, 0x01, 0x00, 0x00] + state))
-    #expect(events.contains(.press(.faceSouth)))
+    #expect(events.contains(.press(.south)))
     #expect(parser.consumeInputConnectionStateChange() == nil)
 
     #expect(try parser.parseReport(Data([0x08, 0x00])) == nil)

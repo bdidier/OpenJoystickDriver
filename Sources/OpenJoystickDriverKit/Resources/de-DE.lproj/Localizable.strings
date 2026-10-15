@@ -957,7 +957,7 @@
 "cli.controller.light.examples" = "Beispiele:\n  # Die Lightbar auf Orange setzen\n  ojd controller light 054C:09CC --color FF8000\n  # Farbe und eine niedrige Helligkeit setzen\n  ojd controller light 054C:09CC --color 0000FF --brightness 40";
 "cli.profile.create.examples" = "Beispiele:\n  # Ein Profil für ein Controller-Modell erstellen\n  ojd profile create Racing --controller 045E:028E\n  # Es nur anwenden, solange Safari im Vordergrund ist\n  ojd profile create Browsing --controller 045E:028E --app com.apple.Safari";
 "cli.profile.set.examples" = "Beispiele:\n  # Ein Profil umbenennen\n  ojd profile set Racing name Rally\n  # Die innere Totzone der ersten Stick-Zuordnung setzen\n  ojd profile set Racing stickMappings.0.tuning.innerDeadzone 0.2";
-"cli.binding.set.examples" = "Beispiele:\n  # Leertaste halten, solange die südliche Taste gehalten wird\n  ojd binding set Racing button:south key:space\n  # J bei jedem Drücken umschalten\n  ojd binding set Racing button:west key:j --behavior toggle\n  # J 10-mal pro Sekunde wiederholen, solange die Taste gehalten wird\n  ojd binding set Racing button:west key:j --turbo-rate 10 --turbo-duty 0.5";
+"cli.binding.set.examples" = "Beispiele:\n  # Leertaste halten, solange die südliche Taste gehalten wird\n  ojd binding set Racing button:South key:space\n  # J bei jedem Drücken umschalten\n  ojd binding set Racing button:West key:j --behavior toggle\n  # J 10-mal pro Sekunde wiederholen, solange die Taste gehalten wird\n  ojd binding set Racing button:West key:j --turbo-rate 10 --turbo-duty 0.5";
 "cli.record.install.examples" = "Beispiele:\n  # Eine Record-Datei installieren\n  ojd record install 045E-028E.json\n  # Den Record von stdin lesen\n  ojd record install - < 045E-028E.json";
 "cli.access.grant.examples" = "Beispiele:\n  # Einem Programm die Nutzung des Dienstes erlauben\n  ojd access grant /Applications/Example.app\n  # Ein Token für Seiten erstellen, die von einem Ursprung ausgeliefert werden\n  ojd access grant --token overlay --origin http://127.0.0.1:8080";
 "cli.service.abstract" = "Den Dienst von OpenJoystickDriver starten oder stoppen, oder warten, bis er Anfragen annimmt.";
@@ -1331,7 +1331,7 @@
 "cli.virtual.error.failed" = "Das virtuelle Gamepad für %@ wurde nicht geändert (%@). Prüfe das mit „ojd virtual show“.";
 "cli.virtual.error.no_unit" = "%@ hat keine Geräte-ID, daher kann eine Auswahl nur für das gesamte Modell gelten. Führe den Befehl ohne --unit aus.";
 "cli.virtual.feed.abstract" = "Ein virtuelles Gamepad veröffentlichen, das über stdin gesteuert wird.";
-"cli.virtual.feed.discussion" = "Liest ein JSON-Objekt pro Zeile: „buttons“ und „dpad“ listen die gedrückten Bedienelemente auf, etwa south und up, und „axes“ ordnet Achsennamen wie left_stick_x Werte zu. Fehlende Bedienelemente bleiben neutral. Sticks reichen von -1 bis 1, wobei Y nach oben zeigt; Trigger reichen von 0 bis 1. Frames werden der Reihe nach abgespielt, jeweils mindestens 8 ms lang; „holdMilliseconds“ hält einen Frame länger, bis zu 60000. Gibt jeden Ausgabebefehl, den Spiele an das Gamepad senden, etwa Vibration, als ein JSON-Objekt pro Zeile aus. Endet, wenn nach dem Ende der Eingabe jeder Frame abgespielt wurde.";
+"cli.virtual.feed.discussion" = "Liest ein JSON-Objekt pro Zeile: „buttons“ und „dpad“ listen die gedrückten Bedienelemente auf, etwa South und up, und „axes“ ordnet Achsennamen wie LeftStickX Werte zu. Fehlende Bedienelemente bleiben neutral. Sticks reichen von -1 bis 1, wobei Y nach oben zeigt; Trigger reichen von 0 bis 1. Frames werden der Reihe nach abgespielt, jeweils mindestens 8 ms lang; „holdMilliseconds“ hält einen Frame länger, bis zu 60000. Gibt jeden Ausgabebefehl, den Spiele an das Gamepad senden, etwa Vibration, als ein JSON-Objekt pro Zeile aus. Endet, wenn nach dem Ende der Eingabe jeder Frame abgespielt wurde.";
 "cli.virtual.feed.error.closed" = "Der Dienst hat das virtuelle Gamepad geschlossen. Prüfe es mit „ojd status“.";
 "cli.virtual.feed.error.frame" = "Zeile %@ ist kein gültiger Frame. „ojd virtual feed --help“ zeigt das Format.";
 "cli.virtual.feed.profile" = "Das Profil des virtuellen Gamepads, das veröffentlicht werden soll.";
@@ -1444,7 +1444,7 @@
 "cli.binding.option.turbo_rate" = "Das Ziel so oft pro Sekunde wiederholen, solange es gehalten wird. Erfordert --turbo-duty.";
 "cli.binding.set.abstract" = "Eine Quelle des Controllers an ein Ziel binden und die bisherige Belegung der Quelle ersetzen.";
 "cli.binding.set.done" = "„%@“ ist jetzt an %@ gebunden.";
-"cli.binding.set.source" = "Das Bedienelement des Controllers, zum Beispiel button:south.";
+"cli.binding.set.source" = "Das Bedienelement des Controllers, zum Beispiel button:South.";
 "cli.binding.set.target" = "Was es sendet, zum Beispiel key:space.";
 "cli.binding.source_invalid" = "„%@“ ist keine Quelle. „ojd binding set --help“ listet die Quellformen auf.";
 "cli.binding.target_invalid" = "„%@“ ist kein Ziel. „ojd binding set --help“ listet die Zielformen auf.";

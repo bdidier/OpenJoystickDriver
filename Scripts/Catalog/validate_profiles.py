@@ -10,6 +10,7 @@ from typing import Any
 try:
     from jsonschema import Draft202012Validator
     from jsonschema.exceptions import ValidationError as JSONSchemaValidationError
+    from referencing import Registry, Resource
 except ImportError:
     print(
         "error: install schema validation dependencies with "
@@ -26,7 +27,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 RUMBLE_TEMPLATE_FAMILIES = frozenset({"hid.report-layout", "vendor.ps3-third-party"})
 # `DualSenseDriver.edgeControls` in Swift.
 DUALSENSE_EDGE_CONTROLS = frozenset(
-    {"paddle-left-1", "paddle-right-1", "auxiliary-1", "auxiliary-2"}
+    {"LeftPaddle1", "RightPaddle1", "Auxiliary1", "Auxiliary2"}
 )
 RECORD_DIR = ROOT / "Sources" / "OpenJoystickDriverKit" / "Resources" / "Controllers"
 SCHEMA_PATH = ROOT / "Resources" / "Schemas" / "controller.schema.json"
@@ -128,10 +129,19 @@ def load_object(path: pathlib.Path) -> dict[str, Any]:
     return value
 
 
+def schema_registry() -> Any:
+    """Every schema under `Resources/Schemas`, so `vocabulary.schema.json` refs resolve."""
+    resources = []
+    for path in sorted(SCHEMA_PATH.parent.glob("*.schema.json")):
+        document = load_object(path)
+        resources.append((document["$id"], Resource.from_contents(document)))
+    return Registry().with_resources(resources)
+
+
 def validator() -> Any:
     schema = load_object(SCHEMA_PATH)
     Draft202012Validator.check_schema(schema)
-    return Draft202012Validator(schema)
+    return Draft202012Validator(schema, registry=schema_registry())
 
 
 def validate_record(

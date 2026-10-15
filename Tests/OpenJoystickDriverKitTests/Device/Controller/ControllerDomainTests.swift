@@ -30,16 +30,16 @@ struct ControllerDomainTests {
   @Test
   func controlIDsMatchTheStandardControlList() {
     let standardControls = [
-      "dpad", "left-stick-x", "left-stick-y", "right-stick-x", "right-stick-y", "left-stick-click",
-      "right-stick-click", "face-south", "face-east", "face-west", "face-north", "left-shoulder",
-      "right-shoulder", "left-trigger", "right-trigger", "left-trigger-button",
-      "right-trigger-button", "view", "menu", "guide", "share", "capture", "touchpad-click",
-      "microphone", "paddle-left-1", "paddle-left-2", "paddle-right-1", "paddle-right-2",
-      "auxiliary-1", "auxiliary-2", "auxiliary-3", "auxiliary-4", "auxiliary-5", "auxiliary-6",
-      "auxiliary-7", "auxiliary-8", "left-stick-touch", "right-stick-touch", "left-trackpad-click",
-      "right-trackpad-click", "left-trackpad-touch", "right-trackpad-touch",
+      "South", "East", "West", "North", "LeftShoulder", "RightShoulder", "LeftTrigger",
+      "RightTrigger", "Back", "Start", "LeftStickClick", "RightStickClick", "DpadUp", "DpadDown",
+      "DpadLeft", "DpadRight", "Guide", "Capture", "Microphone", "TouchpadClick",
+      "LeftPaddle1", "LeftPaddle2", "RightPaddle1", "RightPaddle2",
+      "Auxiliary1", "Auxiliary2", "Auxiliary3", "Auxiliary4", "Auxiliary5", "Auxiliary6",
+      "Auxiliary7", "Auxiliary8", "LeftStickX", "LeftStickY", "RightStickX", "RightStickY",
+      "LeftStickTouch", "RightStickTouch", "LeftTrackpadClick", "RightTrackpadClick",
+      "LeftTrackpadTouch", "RightTrackpadTouch",
     ]
 
-    #expect(ControlID.allCases.map(\.rawValue) == standardControls)
+    #expect(Control.allCases.map(\.rawValue) == standardControls)
   }
 }

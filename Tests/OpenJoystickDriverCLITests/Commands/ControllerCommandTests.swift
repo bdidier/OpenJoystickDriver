@@ -180,14 +180,14 @@ struct ControllerCommandTests {
       // A control held at the start does not count; face-south is the new press.
       let state =
         reads.next() < 2
-        ? ControllerState(pressed: [.menu]) : ControllerState(pressed: [.menu, .faceSouth])
+        ? ControllerState(pressed: [.start]) : ControllerState(pressed: [.start, .south])
       return doubleEncoded(state)
     }
     let result = await service.run([
       "controller", "watch", token("pad-1"), "--first-press", "--duration", "3", "--json",
     ])
     #expect(result.code == 0, "\(result.standardError)")
-    #expect(try result.json()["control"] as? String == "face-south")
+    #expect(try result.json()["control"] as? String == "South")
   }
 
   @Test
@@ -366,7 +366,7 @@ struct ControllerCommandTests {
     virtual.leftStickY = -300
     virtual.rightTriggerPressed = true
     let output = ApplicationServiceVirtualOutputState(virtual)
-    let input = ControllerState(pressed: [.faceSouth])
+    let input = ControllerState(pressed: [.south])
     let service = try FakeService(devices: [
       ApplicationServiceDeviceDescription.fixture(id: "pad-1")
     ]) { method, _ in
@@ -597,7 +597,7 @@ struct ControllerCommandTests {
     let service = try FakeService(devices: [
       ApplicationServiceDeviceDescription.fixture(id: "pad-1")
     ]) { method, _ in
-      method == .getControllerState ? doubleEncoded(ControllerState(pressed: [.faceSouth])) : nil
+      method == .getControllerState ? doubleEncoded(ControllerState(pressed: [.south])) : nil
     }
     let result = await service.run([
       "controller", "watch", token("pad-1"), "--duration", "0.2", "--json",
@@ -622,7 +622,7 @@ struct ControllerCommandTests {
           : [ApplicationServiceDeviceDescription.fixture(id: "pad-1")]
       },
       respond: { method, _ in
-        method == .getControllerState ? doubleEncoded(ControllerState(pressed: [.faceSouth])) : nil
+        method == .getControllerState ? doubleEncoded(ControllerState(pressed: [.south])) : nil
       }
     )
     let result = await service.run(["controller", "watch", "--all", "--duration", "0.4", "--json"])
@@ -648,13 +648,13 @@ struct ControllerCommandTests {
     )
     #expect(objects[1]["unit"] as? String == unit)
     let input = try #require(objects[2]["input"] as? [String: Any])
-    #expect(input["pressed"] as? [String] == ["face-south"])
+    #expect(input["pressed"] as? [String] == ["South"])
     #expect(objects[4]["input"] != nil)
   }
 
   @Test
   func watchAllPrefixesEachHumanAndPlainLineWithTheController() async throws {
-    let input = ControllerState(pressed: [.faceSouth])
+    let input = ControllerState(pressed: [.south])
     let service = try FakeService(devices: [
       ApplicationServiceDeviceDescription.fixture(id: "pad-1")
     ]) { method, _ in

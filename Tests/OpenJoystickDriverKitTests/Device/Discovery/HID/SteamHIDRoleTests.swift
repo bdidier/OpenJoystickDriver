@@ -49,9 +49,9 @@ struct SteamHIDRoleTests {
     let aPressed = ProtocolPacketFixtures.Steam.inputReport(buttons: (0x80, 0, 0))
     await Self.send(aPressed, on: connections[2], to: manager)
     await Self.send(aPressed, on: connections[0], to: manager)
-    #expect(recorder.pressed(from: slots[1]).contains(.faceSouth))
+    #expect(recorder.pressed(from: slots[1]).contains(.south))
     for slot in [slots[0], slots[2], slots[3]] {
-      #expect(!recorder.pressed(from: slot).contains(.faceSouth))
+      #expect(!recorder.pressed(from: slot).contains(.south))
     }
 
     // The keyboard interface leaving first stops no slot.

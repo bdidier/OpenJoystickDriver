@@ -57,7 +57,7 @@ public struct ControllerState: Equatable, Codable, Sendable {
   public static let neutral = Self()
 
   /// Digital controls currently held. The hat is not listed here.
-  public var pressed: Set<ControlID>
+  public var pressed: Set<Control>
   public var hat: HatDirection
   public var leftStick: StickPosition
   public var rightStick: StickPosition
@@ -69,7 +69,7 @@ public struct ControllerState: Equatable, Codable, Sendable {
   public var connection: ControllerConnectionState?
 
   public init(
-    pressed: Set<ControlID> = [],
+    pressed: Set<Control> = [],
     hat: HatDirection = .neutral,
     leftStick: StickPosition = .center,
     rightStick: StickPosition = .center,
@@ -89,7 +89,7 @@ public struct ControllerState: Equatable, Codable, Sendable {
   }
 
   /// Presses or releases one digital control.
-  mutating func set(_ control: ControlID, pressed isPressed: Bool) {
+  mutating func set(_ control: Control, pressed isPressed: Bool) {
     if isPressed { pressed.insert(control) } else { pressed.remove(control) }
   }
 
@@ -107,7 +107,7 @@ public struct ControllerState: Equatable, Codable, Sendable {
 
   public init(from decoder: any Decoder) throws {
     let values = try decoder.container(keyedBy: CodingKeys.self)
-    pressed = Set(try values.decode([ControlID].self, forKey: .pressed))
+    pressed = Set(try values.decode([Control].self, forKey: .pressed))
     hat = try values.decode(HatDirection.self, forKey: .hat)
     leftStick = try values.decode(StickPosition.self, forKey: .leftStick)
     rightStick = try values.decode(StickPosition.self, forKey: .rightStick)
@@ -117,10 +117,10 @@ public struct ControllerState: Equatable, Codable, Sendable {
     connection = try values.decodeIfPresent(ControllerConnectionState.self, forKey: .connection)
   }
 
-  /// Encodes `pressed` in `ControlID` declaration order, so equal states encode identically.
+  /// Encodes `pressed` in `Control` declaration order, so equal states encode identically.
   public func encode(to encoder: any Encoder) throws {
     var values = encoder.container(keyedBy: CodingKeys.self)
-    try values.encode(ControlID.allCases.filter(pressed.contains), forKey: .pressed)
+    try values.encode(Control.allCases.filter(pressed.contains), forKey: .pressed)
     try values.encode(hat, forKey: .hat)
     try values.encode(leftStick, forKey: .leftStick)
     try values.encode(rightStick, forKey: .rightStick)

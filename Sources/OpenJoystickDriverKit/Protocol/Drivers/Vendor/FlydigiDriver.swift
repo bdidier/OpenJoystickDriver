@@ -65,7 +65,8 @@ public final class FlydigiDriver: PhysicalProtocolDriver {
 
   public var capabilities: ControllerCapabilities {
     ControllerCapabilities(
-      controls: ControlID.xboxLayout.union([.guide, .leftTriggerButton, .rightTriggerButton])
+      controls: Control.xboxLayout.union([.guide, .leftTrigger, .rightTrigger]),
+      digitalTriggers: [.leftTrigger, .rightTrigger]
     )
   }
 
@@ -80,17 +81,17 @@ public final class FlydigiDriver: PhysicalProtocolDriver {
     let hatAndFace = bytes[ReportOffset.hatAndFace]
     let shoulders = bytes[ReportOffset.shoulders]
     for (mask, control) in [
-      (FaceMask.a, ControlID.faceSouth), (FaceMask.b, .faceEast), (FaceMask.x, .faceWest),
-      (FaceMask.y, .faceNorth),
+      (FaceMask.a, Control.south), (FaceMask.b, .east), (FaceMask.x, .west),
+      (FaceMask.y, .north),
     ] { next.set(control, pressed: hatAndFace & mask != 0) }
     next.hat = Self.direction(for: hatAndFace & 0x0F)
     // The shoulder byte's trigger bits are the protocol's digital trigger signal; the analog
     // bytes alone drive the trigger position.
     for (mask, control) in [
-      (ShoulderMask.leftBumper, ControlID.leftShoulder), (ShoulderMask.rightBumper, .rightShoulder),
-      (ShoulderMask.leftTrigger, .leftTriggerButton),
-      (ShoulderMask.rightTrigger, .rightTriggerButton), (ShoulderMask.back, .view),
-      (ShoulderMask.start, .menu), (ShoulderMask.leftStick, .leftStickClick),
+      (ShoulderMask.leftBumper, Control.leftShoulder), (ShoulderMask.rightBumper, .rightShoulder),
+      (ShoulderMask.leftTrigger, .leftTrigger),
+      (ShoulderMask.rightTrigger, .rightTrigger), (ShoulderMask.back, .back),
+      (ShoulderMask.start, .start), (ShoulderMask.leftStick, .leftStickClick),
       (ShoulderMask.rightStick, .rightStickClick),
     ] { next.set(control, pressed: shoulders & mask != 0) }
     next.set(.guide, pressed: bytes[ReportOffset.system] & SystemMask.guide != 0)

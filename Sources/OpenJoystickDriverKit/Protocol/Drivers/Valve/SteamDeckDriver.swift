@@ -24,13 +24,14 @@ public final class SteamDeckDriver: PhysicalProtocolDriver {
   public init() {}
 
   public var capabilities: ControllerCapabilities {
-    let extra: Set<ControlID> = [
-      .guide, .auxiliary1, .leftTriggerButton, .rightTriggerButton, .paddleLeft1, .paddleLeft2,
-      .paddleRight1, .paddleRight2, .leftStickTouch, .rightStickTouch, .leftTrackpadClick,
+    let extra: Set<Control> = [
+      .guide, .auxiliary1, .leftTrigger, .rightTrigger, .leftPaddle1, .leftPaddle2,
+      .rightPaddle1, .rightPaddle2, .leftStickTouch, .rightStickTouch, .leftTrackpadClick,
       .rightTrackpadClick, .leftTrackpadTouch, .rightTrackpadTouch,
     ]
     return ControllerCapabilities(
-      controls: ControlID.xboxLayout.union(extra),
+      controls: Control.xboxLayout.union(extra),
+      digitalTriggers: [.leftTrigger, .rightTrigger],
       touchContactCount: 1,
       motion: true
     )

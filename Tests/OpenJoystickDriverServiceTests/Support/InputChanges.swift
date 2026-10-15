@@ -7,8 +7,8 @@ import Foundation
 /// (down is positive), which the engine and these tests use; the fold flips it into the canonical
 /// frame.
 enum InputChange: Equatable {
-  case press(ControlID)
-  case release(ControlID)
+  case press(Control)
+  case release(Control)
   case hat(HatDirection)
   case leftStick(x: Float, y: Float)
   case rightStick(x: Float, y: Float)

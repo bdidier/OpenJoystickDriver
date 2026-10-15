@@ -10,7 +10,7 @@ import Testing
 /// Each step feeds one report (or, for `HIDDescriptorDriver`, one element value) at a fixed receipt
 /// time and renders the snapshot it returns; a frame without input, or a report that threw, leaves
 /// the previous snapshot in place:
-/// - Pressed controls are `ControlID` names in declaration order.
+/// - Pressed controls are `Control` names in declaration order.
 /// - The hat renders as a `HatDirection` kebab name.
 /// - Sticks render as their `BipolarValue` and triggers as their `UnipolarValue`. Y is rendered
 ///   down-positive (the canonical Y negated), the frame S1 pinned each driver's output in.
@@ -116,9 +116,9 @@ struct DriverParseCharacterizationTests {
 
   // MARK: - Rendering
 
-  /// Pressed controls in `ControlID` order; stick Y rendered down-positive, as S1 pinned it.
+  /// Pressed controls in `Control` order; stick Y rendered down-positive, as S1 pinned it.
   func render(_ state: ControllerState) -> String {
-    let pressed = ControlID.allCases.filter(state.pressed.contains).map(\.rawValue)
+    let pressed = Control.allCases.filter(state.pressed.contains).map(\.rawValue)
     return "[\(pressed.joined(separator: ","))] hat=\(state.hat.rawValue)"
       + " ls=\(state.leftStick.x.rawValue),\(-state.leftStick.y.rawValue)"
       + " rs=\(state.rightStick.x.rawValue),\(-state.rightStick.y.rawValue)"

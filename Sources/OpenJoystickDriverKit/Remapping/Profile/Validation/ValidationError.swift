@@ -2,7 +2,7 @@ import Foundation
 
 public enum RemappingValidationError: Error, Equatable, LocalizedError, Sendable {
   case bindingBehaviorConflict(index: Int)
-  case unsupportedGamepadButton(RemappingButton)
+  case unsupportedGamepadButton(Control)
   case virtualOutputRequired
   case invalidPhysicalOutput
   case invalidMotionTuning(RemappingMotionTuningError)

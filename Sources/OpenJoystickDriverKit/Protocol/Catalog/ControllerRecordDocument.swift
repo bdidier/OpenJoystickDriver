@@ -333,8 +333,8 @@ struct ControllerRecordDocument: Decodable {
     init(from decoder: any Decoder) throws {
       let container = try decoder.container(keyedBy: DocumentKey.self)
       try container.rejectUnknown(allowed: ["absent", "present", "rumble"])
-      let absent = Set(try container.decodeUniqueList(ControlID.self, for: "absent") ?? [])
-      let present = Set(try container.decodeUniqueList(ControlID.self, for: "present") ?? [])
+      let absent = Set(try container.decodeUniqueList(Control.self, for: "absent") ?? [])
+      let present = Set(try container.decodeUniqueList(Control.self, for: "present") ?? [])
       let rumble = try container.decodeOptional(String.self, for: "rumble")
       guard !container.allKeys.isEmpty, absent.isDisjoint(with: present),
         rumble == nil || rumble == "absent"

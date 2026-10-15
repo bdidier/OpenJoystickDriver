@@ -39,21 +39,21 @@ struct NVIDIAShieldDriverTests {
   }
 
   @Test(arguments: [
-    (1, 0x01, ControlID.faceSouth), (1, 0x02, .faceEast), (1, 0x04, .faceWest),
-    (1, 0x08, .faceNorth), (1, 0x10, .leftShoulder), (1, 0x20, .rightShoulder),
-    (1, 0x40, .leftStickClick), (1, 0x80, .rightStickClick), (2, 0x02, .menu), (2, 0x40, .view),
+    (1, 0x01, Control.south), (1, 0x02, .east), (1, 0x04, .west),
+    (1, 0x08, .north), (1, 0x10, .leftShoulder), (1, 0x20, .rightShoulder),
+    (1, 0x40, .leftStickClick), (1, 0x80, .rightStickClick), (2, 0x02, .start), (2, 0x40, .back),
     (2, 0x80, .guide),
   ])
-  func v103ButtonsFollowSDL(offset: Int, mask: UInt8, control: ControlID) throws {
+  func v103ButtonsFollowSDL(offset: Int, mask: UInt8, control: Control) throws {
     let event = try v103.parseReport(ShieldReport.v103([offset: mask]))
     #expect(event?.state == snapshot(.press(control)))
   }
 
   @Test(arguments: [
-    (3, 0x01, ControlID.faceSouth), (3, 0x08, .faceNorth), (3, 0x80, .rightStickClick),
-    (4, 0x01, .menu), (17, 0x01, .guide), (17, 0x02, .view),
+    (3, 0x01, Control.south), (3, 0x08, .north), (3, 0x80, .rightStickClick),
+    (4, 0x01, .start), (17, 0x01, .guide), (17, 0x02, .back),
   ])
-  func v104ButtonsFollowSDL(offset: Int, mask: UInt8, control: ControlID) throws {
+  func v104ButtonsFollowSDL(offset: Int, mask: UInt8, control: Control) throws {
     let event = try v104.parseReport(ShieldReport.v104([offset: mask]))
     #expect(event?.state == snapshot(.press(control)))
   }

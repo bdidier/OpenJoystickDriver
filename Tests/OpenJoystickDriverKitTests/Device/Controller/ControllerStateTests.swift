@@ -28,7 +28,7 @@ struct ControllerStateTests {
   @Test
   func encodingIsDeterministicAndRoundTrips() throws {
     var state = ControllerState.neutral
-    state.pressed = [.menu, .faceSouth, .guide]
+    state.pressed = [.start, .south, .guide]
     state.hat = .northWest
     state.leftStick = StickPosition(x: BipolarValue(1200), y: BipolarValue(-32767))
     state.rightTrigger = UnipolarValue(65535)
@@ -36,7 +36,7 @@ struct ControllerStateTests {
     encoder.outputFormatting = [.sortedKeys]
     let data = try encoder.encode(state)
     let object = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
-    #expect(object["pressed"] as? [String] == ["face-south", "menu", "guide"])
+    #expect(object["pressed"] as? [String] == ["South", "Start", "Guide"])
     #expect(object["hat"] as? String == "northWest")
     #expect(try JSONDecoder().decode(ControllerState.self, from: data) == state)
   }
@@ -58,14 +58,14 @@ struct ControllerStateTests {
     state.rightTrigger = UnipolarValue(normalized: 0.3)
     #expect(!state.isEffectivelyNeutral)
     state.rightTrigger = .min
-    state.pressed = [.faceSouth]
+    state.pressed = [.south]
     #expect(!state.isEffectivelyNeutral)
   }
 
   @Test
   func snapshotChangesFollowTheDeltaPipelineOrder() {
     var next = ControllerState.neutral
-    next.pressed = [.faceNorth, .faceSouth, .menu, .leftStickClick]
+    next.pressed = [.north, .south, .start, .leftStickClick]
     next.hat = .east
     next.leftTrigger = UnipolarValue(1)
     next.rightStick = StickPosition(x: BipolarValue(10), y: BipolarValue(20))
@@ -73,7 +73,8 @@ struct ControllerStateTests {
     #expect(
       standard == [
         .button(.south, isPressed: true), .button(.north, isPressed: true),
-        .button(.leftStick, isPressed: true), .button(.start, isPressed: true), .dpad(.east),
+        .button(.leftStickClick, isPressed: true), .button(.start, isPressed: true),
+        .dpad(.east),
         .rightStick(x: BipolarValue(10).normalized, y: -BipolarValue(20).normalized),
         .leftTrigger(UnipolarValue(1).normalized),
       ]
@@ -81,24 +82,24 @@ struct ControllerStateTests {
     let playStation = RemappingEngineState.changes(from: .neutral, to: next, labels: .playStation)
     #expect(
       playStation.prefix(4) == [
-        .button(.leftStick, isPressed: true), .button(.south, isPressed: true),
-        .button(.north, isPressed: true), .button(.options, isPressed: true),
+        .button(.leftStickClick, isPressed: true), .button(.south, isPressed: true),
+        .button(.north, isPressed: true), .button(.start, isPressed: true),
       ]
     )
     #expect(RemappingEngineState.changes(from: next, to: next, labels: .standard).isEmpty)
 
     // Former Button order: back before l2Digital before leftSL, for presses and releases alike.
-    let joyCon = ControllerState(pressed: [.auxiliary3, .leftTriggerButton, .view])
+    let joyCon = ControllerState(pressed: [.auxiliary3, .leftTrigger, .back])
     #expect(
       RemappingEngineState.changes(from: .neutral, to: joyCon, labels: .nintendo) == [
-        .button(.back, isPressed: true), .button(.leftTriggerClick, isPressed: true),
-        .button(.leftSL, isPressed: true),
+        .button(.back, isPressed: true), .button(.leftTrigger, isPressed: true),
+        .button(.auxiliary3, isPressed: true),
       ]
     )
     #expect(
       RemappingEngineState.changes(from: joyCon, to: .neutral, labels: .nintendo) == [
-        .button(.back, isPressed: false), .button(.leftTriggerClick, isPressed: false),
-        .button(.leftSL, isPressed: false),
+        .button(.back, isPressed: false), .button(.leftTrigger, isPressed: false),
+        .button(.auxiliary3, isPressed: false),
       ]
     )
   }

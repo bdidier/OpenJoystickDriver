@@ -182,7 +182,7 @@ struct ControllerShowReport: Encodable, Equatable {
       record: record.map(Record.init),
       tuning: Tuning(device.tuning),
       capabilities: Capabilities(
-        controls: ControlID.allCases.filter(device.capabilities.controls.contains).map(\.rawValue),
+        controls: Control.allCases.filter(device.capabilities.controls.contains).map(\.rawValue),
         touchContactCount: Int(device.capabilities.touchContactCount),
         motion: device.capabilities.motion,
         rumbleMotors: output.rumbleMotors.map(\.rawValue),

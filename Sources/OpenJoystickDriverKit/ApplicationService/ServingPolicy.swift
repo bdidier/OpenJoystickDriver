@@ -45,7 +45,7 @@ public struct ServingInput: Equatable, Sendable {
   /// Whether virtual output is on.
   public var outputEnabled: Bool
   /// The normalized controls the controller declares.
-  public var controls: Set<ControlID>
+  public var controls: Set<Control>
   /// The persona the user chose for this controller, if any.
   public var override: VirtualHIDProfileID?
   /// What OJD may drive on the physical controller when the system serves it.
@@ -56,7 +56,7 @@ public struct ServingInput: Equatable, Sendable {
     server: ControllerServer = .system,
     accessRoute: ControllerAccessRoute = .system,
     outputEnabled: Bool = true,
-    controls: Set<ControlID> = [],
+    controls: Set<Control> = [],
     override: VirtualHIDProfileID? = nil,
     allowance: PhysicalControllerOutputCapabilities = .none
   ) {

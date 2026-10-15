@@ -135,7 +135,7 @@ extension ControllerSessionTests {
     await pipeline.feedHIDData(crossHeld)
 
     #expect(await pipeline.inputHealth().state == .healthy)
-    #expect(await pipeline.inputState().pressed == [.faceSouth])
+    #expect(await pipeline.inputState().pressed == [.south])
     await pipeline.stop()
   }
 

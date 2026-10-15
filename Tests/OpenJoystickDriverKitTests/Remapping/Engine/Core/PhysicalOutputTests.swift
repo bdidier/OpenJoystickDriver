@@ -21,7 +21,7 @@ struct RemappingPhysicalOutputTests {
     )
 
     try await engine.process(
-      inputs: [.press(.faceSouth), .release(.faceSouth)],
+      inputs: [.press(.south), .release(.south)],
       from: identifier,
       using: profile,
       at: 1
@@ -47,7 +47,7 @@ struct RemappingPhysicalOutputTests {
       bindings: [RemappingBinding(source: .button(.south), destination: .physical(output))]
     )
 
-    try await engine.process(inputs: [.press(.faceSouth)], from: identifier, using: profile, at: 1)
+    try await engine.process(inputs: [.press(.south)], from: identifier, using: profile, at: 1)
     try await engine.drain()
 
     #expect(sink.events().last == .set(output, false, profile.bindings[0].id, identifier))
@@ -69,7 +69,7 @@ struct RemappingPhysicalOutputTests {
 
     await #expect(throws: RemappingEventEngineError.sinkUnavailable) {
       try await engine.process(
-        inputs: [.press(.faceSouth)],
+        inputs: [.press(.south)],
         from: identifier,
         using: profile,
         at: 1

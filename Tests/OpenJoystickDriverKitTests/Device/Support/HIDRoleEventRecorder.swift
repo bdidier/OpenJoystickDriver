@@ -22,7 +22,7 @@ final class HIDRoleEventRecorder: OutputDispatcher, @unchecked Sendable {
   func activateOutput(for _: LogicalControllerID) {}
 
   /// Controls pressed in any state dispatched from `identifier`.
-  func pressed(from identifier: LogicalControllerID) -> Set<ControlID> {
+  func pressed(from identifier: LogicalControllerID) -> Set<Control> {
     lock.withLock {
       dispatched.filter { $0.0 == identifier }.reduce(into: []) { $0.formUnion($1.1.pressed) }
     }

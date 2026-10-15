@@ -28,16 +28,16 @@ struct Switch1DriverTests {
       ProtocolPacketFixtures.SwitchPro.inputReport(buttons: allPrimaryButtons)
     )
 
-    #expect(events.contains(.press(.faceSouth)))
-    #expect(events.contains(.press(.faceEast)))
-    #expect(events.contains(.press(.faceWest)))
-    #expect(events.contains(.press(.faceNorth)))
+    #expect(events.contains(.press(.south)))
+    #expect(events.contains(.press(.east)))
+    #expect(events.contains(.press(.west)))
+    #expect(events.contains(.press(.north)))
     #expect(events.contains(.press(.leftShoulder)))
     #expect(events.contains(.press(.rightShoulder)))
-    #expect(events.contains(.press(.leftTriggerButton)))
-    #expect(events.contains(.press(.rightTriggerButton)))
-    #expect(events.contains(.press(.view)))
-    #expect(events.contains(.press(.menu)))
+    #expect(events.contains(.press(.leftTrigger)))
+    #expect(events.contains(.press(.rightTrigger)))
+    #expect(events.contains(.press(.back)))
+    #expect(events.contains(.press(.start)))
     #expect(events.contains(.press(.leftStickClick)))
     #expect(events.contains(.press(.rightStickClick)))
     #expect(events.contains(.press(.guide)))
@@ -46,16 +46,16 @@ struct Switch1DriverTests {
   }
 
   @Test
-  func testSwitchDigitalTriggersNormalizeToNamedTriggerClicks() {
-    #expect(RemappingButton(control: .leftTriggerButton, labels: .nintendo) == .leftTriggerClick)
-    #expect(RemappingButton(control: .rightTriggerButton, labels: .nintendo) == .rightTriggerClick)
+  func testSwitchProDeclaresItsDigitalTriggers() {
+    let capabilities = Switch1Driver(layout: .pro).capabilities
+    #expect(capabilities.digitalTriggers == [.leftTrigger, .rightTrigger])
   }
 
   @Test
   func testSwitchProFaceButtonsUseLinuxPositionalMapping() throws {
-    let expectations: [(UInt32, ControlID)] = [
-      (0x0000_0008, .faceEast), (0x0000_0004, .faceSouth), (0x0000_0002, .faceNorth),
-      (0x0000_0001, .faceWest),
+    let expectations: [(UInt32, Control)] = [
+      (0x0000_0008, .east), (0x0000_0004, .south), (0x0000_0002, .north),
+      (0x0000_0001, .west),
     ]
 
     for (mask, button) in expectations {

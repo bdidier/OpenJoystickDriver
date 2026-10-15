@@ -28,19 +28,19 @@ struct InputTestPresentationTests {
     var state = ControllerState.neutral
     state.hat = .north
     state.pressed = [
-      .leftShoulder, .leftStickClick, .leftTriggerButton, .auxiliary1, .auxiliary2, .paddleLeft1,
-      .paddleRight1, .auxiliary3, .auxiliary4, .auxiliary5, .auxiliary6, .microphone,
+      .leftShoulder, .leftStickClick, .leftTrigger, .auxiliary1, .auxiliary2, .leftPaddle1,
+      .rightPaddle1, .auxiliary3, .auxiliary4, .auxiliary5, .auxiliary6, .microphone,
     ]
 
     #expect(
-      InputTestButtonPresentation.additionalControls(in: state, labels: .standard) == [
-        .microphone, .paddleLeft1, .paddleRight1, .auxiliary1, .auxiliary2, .auxiliary3,
+      InputTestButtonPresentation.additionalControls(in: state) == [
+        .microphone, .leftPaddle1, .rightPaddle1, .auxiliary1, .auxiliary2, .auxiliary3,
         .auxiliary4, .auxiliary5, .auxiliary6,
       ]
     )
     #expect(
-      InputTestButtonPresentation.localizedTitle(for: .auxiliary1, labels: .playStation)
-        == RuntimePresentation.sourceLabel(.button(.leftFunction))
+      InputTestButtonPresentation.localizedTitle(for: .auxiliary1)
+        == RuntimePresentation.sourceLabel(.button(.auxiliary1))
     )
   }
 
@@ -59,26 +59,10 @@ struct InputTestPresentationTests {
   }
 
   @Test
-  func viewSlotShowsViewUnlessPlayStationCreatePublishesAsShare() {
-    #expect(InputTestSystemClusterLayout.viewControls(labels: .standard) == [.view])
-    #expect(InputTestSystemClusterLayout.viewControls(labels: .nintendo) == [.view])
-    #expect(InputTestSystemClusterLayout.viewControls(labels: .playStation).isEmpty)
-  }
-
-  @Test
-  func shareAndCaptureAreListedAsAdditional() {
+  func captureIsListedAsAdditionalAndBackIsDrawn() {
     var state = ControllerState.neutral
-    state.pressed = [.view, .guide, .share, .capture]
+    state.pressed = [.back, .guide, .capture]
 
-    #expect(
-      InputTestButtonPresentation.additionalControls(in: state, labels: .standard) == [
-        .share, .capture,
-      ]
-    )
-    #expect(
-      InputTestButtonPresentation.additionalControls(in: state, labels: .playStation) == [
-        .view, .share, .capture,
-      ]
-    )
+    #expect(InputTestButtonPresentation.additionalControls(in: state) == [.capture])
   }
 }

@@ -10,7 +10,7 @@ struct RemappingGamepadTests {
     var virtual = VirtualGamepadState()
     dispatcher.apply(
       RemappingGamepadState(
-        buttons: [.south, .touchpad],
+        buttons: [.south, .touchpadClick],
         dpad: [.up, .right],
         axes: [.leftStickX: 0.001, .rightStickY: -0.5, .leftTrigger: 0.001, .rightTrigger: 1]
       ),
@@ -27,13 +27,11 @@ struct RemappingGamepadTests {
   }
 
   @Test
-  func remappedNamingAliasesShareOneBit() {
+  func startBackAndCaptureEachHaveTheirOwnBit() {
     let dispatcher = Self.dispatcher()
     var virtual = VirtualGamepadState()
-    dispatcher.apply(RemappingGamepadState(buttons: [.start, .options, .share]), to: &virtual)
-    #expect(virtual.buttons == 1 << 8 | 1 << 15)
-    dispatcher.apply(RemappingGamepadState(buttons: [.options, .share]), to: &virtual)
-    #expect(virtual.buttons == 1 << 8 | 1 << 15)
+    dispatcher.apply(RemappingGamepadState(buttons: [.start, .back, .capture]), to: &virtual)
+    #expect(virtual.buttons == 1 << 8 | 1 << 9 | 1 << 15)
   }
 
   private static func dispatcher() -> UserSpaceOutputDispatcher {

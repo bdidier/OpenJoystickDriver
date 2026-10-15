@@ -40,7 +40,7 @@ class EndpointSchemaTests(unittest.TestCase):
             line("Subscription", stream="controllers", output=True),
             line("FeedRequest", **{"as": "Generic"}),
             line("FeedSession", **{"as": "SdlCompatible"}),
-            line("Frame", buttons=["south"], axes={"left_stick_x": 0.5}),
+            line("Frame", buttons=["South"], axes={"LeftStickX": 0.5}),
             failure("E1001"),
             failure("E1004"),
             failure("E1010", **DETAILS),

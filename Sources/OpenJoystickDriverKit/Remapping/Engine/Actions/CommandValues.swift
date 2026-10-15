@@ -15,7 +15,7 @@ public enum RemappingCommandValueError: Error, Equatable, LocalizedError, Sendab
 public enum RemappingCommandValueParser {
   public static func source(_ raw: String) throws -> RemappingSource {
     let parts = raw.split(separator: ":", omittingEmptySubsequences: false).map(String.init)
-    if parts.count == 2, parts[0] == "button", let button = RemappingButton(rawValue: parts[1]) {
+    if parts.count == 2, parts[0] == "button", let button = Control(rawValue: parts[1]) {
       return .button(button)
     }
     if parts.count == 2, parts[0] == "dpad",
@@ -91,7 +91,7 @@ public enum RemappingCommandValueParser {
       return .gamepadDpad(direction)
     }
     if parts.count == 3, parts[0] == "gamepad", parts[1] == "button",
-      let button = RemappingButton(rawValue: parts[2])
+      let button = Control(rawValue: parts[2])
     {
       return .gamepadButton(button)
     }

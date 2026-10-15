@@ -22,7 +22,7 @@ struct ControllerProfileCapabilitiesTests {
   func intersectionKeepsOnlyCapabilitiesSharedByEveryController() {
     let first = ControllerProfileCapabilities(
       physicalInput: ControllerCapabilities(
-        controls: ControlID.xboxLayout.union([.touchpadClick, .microphone]),
+        controls: Control.xboxLayout.union([.touchpadClick, .microphone]),
         touchContactCount: 2,
         motion: true
       ),
@@ -35,7 +35,7 @@ struct ControllerProfileCapabilitiesTests {
     )
     let second = ControllerProfileCapabilities(
       physicalInput: ControllerCapabilities(
-        controls: [.faceSouth, .leftTrigger, .touchpadClick],
+        controls: [.south, .leftTrigger, .touchpadClick],
         touchContactCount: 1
       ),
       physicalOutput: PhysicalControllerOutputCapabilities(
@@ -49,7 +49,7 @@ struct ControllerProfileCapabilitiesTests {
     let result = first.intersecting(second)
     #expect(!result.physicalInput.motion)
     #expect(result.physicalInput.touchContactCount == 1)
-    #expect(result.physicalInput.controls == [.faceSouth, .leftTrigger, .touchpadClick])
+    #expect(result.physicalInput.controls == [.south, .leftTrigger, .touchpadClick])
     #expect(result.physicalInput.touchSurfaces == [.primary])
     #expect(result.physicalOutput.rumbleMotors == [.rightMain])
     #expect(result.physicalOutput.lightingFeatures == [.programmableColor])

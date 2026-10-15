@@ -6,27 +6,28 @@ import Testing
 extension UserSpaceOutputDispatcherLifecycleTests {
   @Test
   func everyAcceptedButtonPreservesHoldReleaseAndLaterInput() async {
-    let supported: [(ControlID, ControllerButtonLabels, ExpectedButtonOutput)] = [
-      (.faceSouth, .standard, .bit(0)), (.faceSouth, .playStation, .bit(0)),
-      (.faceEast, .standard, .bit(1)), (.faceWest, .standard, .bit(2)),
-      (.faceNorth, .standard, .bit(3)), (.leftShoulder, .standard, .bit(4)),
+    let supported: [(Control, ControllerButtonLabels, ExpectedButtonOutput)] = [
+      (.south, .standard, .bit(0)), (.south, .playStation, .bit(0)),
+      (.east, .standard, .bit(1)), (.west, .standard, .bit(2)),
+      (.north, .standard, .bit(3)), (.leftShoulder, .standard, .bit(4)),
       (.rightShoulder, .standard, .bit(5)), (.leftStickClick, .standard, .bit(6)),
       (.rightStickClick, .standard, .bit(7)), (.rightTrackpadClick, .standard, .bit(7)),
-      (.menu, .standard, .bit(8)), (.menu, .playStation, .bit(8)), (.view, .standard, .bit(9)),
-      (.view, .playStation, .bit(15)), (.guide, .standard, .bit(10)), (.share, .standard, .bit(15)),
-      (.capture, .nintendo, .bit(15)), (.leftTriggerButton, .standard, .leftTrigger),
-      (.rightTriggerButton, .standard, .rightTrigger),
+      (.start, .standard, .bit(8)), (.start, .playStation, .bit(8)), (.back, .standard, .bit(9)),
+      (.back, .playStation, .bit(9)), (.guide, .standard, .bit(10)),
+      (.capture, .standard, .bit(15)),
+      (.capture, .nintendo, .bit(15)), (.leftTrigger, .standard, .leftTrigger),
+      (.rightTrigger, .standard, .rightTrigger),
     ]
-    let unsupported: [ControlID] = [
-      .paddleLeft1, .paddleLeft2, .paddleRight1, .paddleRight2, .auxiliary1, .auxiliary2,
+    let unsupported: [Control] = [
+      .leftPaddle1, .leftPaddle2, .rightPaddle1, .rightPaddle2, .auxiliary1, .auxiliary2,
       .auxiliary3, .auxiliary4, .auxiliary5, .auxiliary6, .auxiliary7, .auxiliary8, .leftStickTouch,
       .rightStickTouch, .leftTrackpadClick, .leftTrackpadTouch, .rightTrackpadTouch, .touchpadClick,
       .microphone,
     ]
-    let analog: [ControlID] = [
-      .dpad, .leftStickX, .leftStickY, .rightStickX, .rightStickY, .leftTrigger, .rightTrigger,
-    ]
-    #expect(Set(supported.map(\.0) + unsupported + analog) == Set(ControlID.allCases))
+    let analog: [Control] = [.leftStickX, .leftStickY, .rightStickX, .rightStickY]
+    #expect(
+      Set(supported.map(\.0) + unsupported + analog).union(Control.dpad) == Set(Control.allCases)
+    )
 
     for (control, labels, output) in supported {
       let backend = UserSpaceDispatcherTestBackend()
@@ -132,9 +133,9 @@ extension UserSpaceOutputDispatcherLifecycleTests {
       var expected = VirtualGamepadState()
       await verifyContinuity(
         pressed: pressed,
-        heldWith: .press(.faceWest),
+        heldWith: .press(.west),
         released: released,
-        later: .press(.faceSouth)
+        later: .press(.south)
       ) { stage in
         switch stage {
         case 0: update(&expected, true)
@@ -158,7 +159,7 @@ extension UserSpaceOutputDispatcherLifecycleTests {
     let identifier = LogicalControllerID(vendorID: 1, productID: 2)
     await dispatcher.setOutputSuppressed(true)
 
-    await dispatcher.dispatch(changes: [.press(.faceSouth)], from: identifier)
+    await dispatcher.dispatch(changes: [.press(.south)], from: identifier)
 
     #expect(creations.current() == 1)
     #expect(backend.publishedReports().isEmpty)
@@ -171,7 +172,7 @@ extension UserSpaceOutputDispatcherLifecycleTests {
     let backend = UserSpaceDispatcherTestBackend()
     let dispatcher = UserSpaceOutputDispatcher { _ in backend }
     let identifier = LogicalControllerID(vendorID: 1, productID: 2)
-    await dispatcher.dispatch(changes: [.press(.faceSouth)], from: identifier)
+    await dispatcher.dispatch(changes: [.press(.south)], from: identifier)
 
     await dispatcher.setOutputSuppressed(true)
 
@@ -181,10 +182,10 @@ extension UserSpaceOutputDispatcherLifecycleTests {
     )
     #expect(backend.counts().close == 0)
     // Released while suppressed: a snapshot carries every held control, so South must be let go.
-    await dispatcher.dispatch(changes: [.release(.faceSouth)], from: identifier)
+    await dispatcher.dispatch(changes: [.release(.south)], from: identifier)
 
     await dispatcher.setOutputSuppressed(false)
-    await dispatcher.dispatch(changes: [.press(.faceEast)], from: identifier)
+    await dispatcher.dispatch(changes: [.press(.east)], from: identifier)
     var expected = VirtualGamepadState()
     expected.buttons = 1 << GamepadHIDDescriptor.ButtonBit.b.rawValue
     #expect(
@@ -216,13 +217,13 @@ extension UserSpaceOutputDispatcherLifecycleTests {
     let backend = UserSpaceDispatcherTestBackend()
     let dispatcher = UserSpaceOutputDispatcher { _ in backend }
     let identifier = LogicalControllerID(vendorID: 1, productID: 2)
-    await dispatcher.dispatch(changes: [.press(.faceSouth)], from: identifier)
+    await dispatcher.dispatch(changes: [.press(.south)], from: identifier)
     let pressed = try #require(backend.publishedReports().last)
 
     await dispatcher.setOutputSuppressed(true)
     #expect(backend.publishedReports().last != pressed)
     await dispatcher.setOutputSuppressed(false)
-    await dispatcher.dispatch(changes: [.press(.faceSouth)], from: identifier)
+    await dispatcher.dispatch(changes: [.press(.south)], from: identifier)
 
     #expect(backend.publishedReports().last == pressed)
     await dispatcher.close()
@@ -234,7 +235,7 @@ extension UserSpaceOutputDispatcherLifecycleTests {
     let dispatcher = UserSpaceOutputDispatcher { _ in backend }
     let identifier = LogicalControllerID(vendorID: 1, productID: 2)
     await dispatcher.setOutputSuppressed(true)
-    await dispatcher.dispatch(changes: [.press(.faceSouth)], from: identifier)
+    await dispatcher.dispatch(changes: [.press(.south)], from: identifier)
     #expect(backend.publishedReports().isEmpty)
     try await dispatcher.send(RemappingGamepadState(buttons: [.north]), for: identifier)
     #expect(!backend.publishedReports().isEmpty)
@@ -256,7 +257,7 @@ extension UserSpaceOutputDispatcherLifecycleTests {
     let dispatcher = UserSpaceOutputDispatcher { _ in backend }
     let identifier = LogicalControllerID(vendorID: 1, productID: 2)
     try await dispatcher.send(
-      RemappingGamepadState(buttons: [.share], axes: [.leftStickX: 0.01]),
+      RemappingGamepadState(buttons: [.capture], axes: [.leftStickX: 0.01]),
       for: identifier
     )
     var expected = VirtualGamepadState()
@@ -328,7 +329,7 @@ extension UserSpaceOutputDispatcherLifecycleTests {
     #expect(backend.counts().send == idleSends)
 
     let idle = try #require(backend.publishedReports().last)
-    await dispatcher.dispatch(changes: [.press(.faceSouth)], from: identifier)
+    await dispatcher.dispatch(changes: [.press(.south)], from: identifier)
     #expect(backend.counts().send > idleSends)
     let pressed = try #require(backend.publishedReports().last)
     #expect(pressed != idle)

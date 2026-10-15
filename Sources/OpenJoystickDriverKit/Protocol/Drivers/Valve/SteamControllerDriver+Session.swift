@@ -17,12 +17,13 @@ extension SteamControllerDriver {
   }
 
   public var capabilities: ControllerCapabilities {
-    let extra: Set<ControlID> = [
-      .guide, .leftTriggerButton, .rightTriggerButton, .paddleLeft2, .paddleRight2,
+    let extra: Set<Control> = [
+      .guide, .leftTrigger, .rightTrigger, .leftPaddle2, .rightPaddle2,
       .leftTrackpadClick, .rightTrackpadClick, .leftTrackpadTouch, .rightTrackpadTouch,
     ]
     return ControllerCapabilities(
-      controls: ControlID.xboxLayout.subtracting([.rightStickClick]).union(extra),
+      controls: Control.xboxLayout.subtracting([.rightStickClick]).union(extra),
+      digitalTriggers: [.leftTrigger, .rightTrigger],
       touchContactCount: 1,
       motion: true
     )
@@ -238,15 +239,15 @@ extension SteamControllerDriver {
   }
 
   /// Report byte, mask and standard-label control of each button.
-  private static let buttonTable: [(Int, UInt8, ControlID)] = [
-    (ReportOffset.buttons0, 0x01, .rightTriggerButton),
-    (ReportOffset.buttons0, 0x02, .leftTriggerButton),
+  private static let buttonTable: [(Int, UInt8, Control)] = [
+    (ReportOffset.buttons0, 0x01, .rightTrigger),
+    (ReportOffset.buttons0, 0x02, .leftTrigger),
     (ReportOffset.buttons0, 0x04, .rightShoulder), (ReportOffset.buttons0, 0x08, .leftShoulder),
-    (ReportOffset.buttons0, 0x10, .faceNorth), (ReportOffset.buttons0, 0x20, .faceEast),
-    (ReportOffset.buttons0, 0x40, .faceWest), (ReportOffset.buttons0, 0x80, .faceSouth),
-    (ReportOffset.buttons1, 0x10, .view), (ReportOffset.buttons1, 0x20, .guide),
-    (ReportOffset.buttons1, 0x40, .menu), (ReportOffset.buttons1, 0x80, .paddleLeft2),
-    (ReportOffset.buttons2, 0x01, .paddleRight2), (ReportOffset.buttons2, 0x02, .leftTrackpadClick),
+    (ReportOffset.buttons0, 0x10, .north), (ReportOffset.buttons0, 0x20, .east),
+    (ReportOffset.buttons0, 0x40, .west), (ReportOffset.buttons0, 0x80, .south),
+    (ReportOffset.buttons1, 0x10, .back), (ReportOffset.buttons1, 0x20, .guide),
+    (ReportOffset.buttons1, 0x40, .start), (ReportOffset.buttons1, 0x80, .leftPaddle2),
+    (ReportOffset.buttons2, 0x01, .rightPaddle2), (ReportOffset.buttons2, 0x02, .leftTrackpadClick),
     (ReportOffset.buttons2, 0x04, .rightTrackpadClick),
     (ReportOffset.buttons2, 0x40, .leftStickClick),
   ]

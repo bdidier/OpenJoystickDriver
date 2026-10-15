@@ -20,7 +20,7 @@ package struct ServingFixture: Sendable {
       server: server,
       accessRoute: accessRoute,
       outputEnabled: outputEnabled,
-      controls: ControlID.xboxLayout,
+      controls: Control.xboxLayout,
       override: override
     )
   }
@@ -39,7 +39,7 @@ package struct ServingFixture: Sendable {
       bindingResult: .hidDescriptorFixture,
       recordServer: server,
       recordAccessRoute: accessRoute,
-      capabilities: ControllerCapabilities(controls: ControlID.xboxLayout),
+      capabilities: ControllerCapabilities(controls: Control.xboxLayout),
       sessionToken: .fixture("serving-fixture")
     )
   }

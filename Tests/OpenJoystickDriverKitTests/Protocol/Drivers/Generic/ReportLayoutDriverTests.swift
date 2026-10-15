@@ -54,8 +54,8 @@ struct ReportLayoutDriverTests {
   /// Button map an Ant Esports GP100 owner recorded with a raw HID probe (issue #38).
   @Test
   func gp100MapsPressureBytesToButtons() throws {
-    let controls: [Int: ControlID] = [
-      11: .faceNorth, 12: .faceEast, 13: .faceSouth, 14: .faceWest, 15: .leftShoulder,
+    let controls: [Int: Control] = [
+      11: .north, 12: .east, 13: .south, 14: .west, 15: .leftShoulder,
       16: .rightShoulder,
     ]
     for (offset, control) in controls {
@@ -114,9 +114,9 @@ struct ReportLayoutDriverTests {
     #expect(
       event?.state
         == snapshot(
-          .press(.faceEast),
-          .press(.view),
-          .press(.faceSouth),
+          .press(.east),
+          .press(.back),
+          .press(.south),
           .hat(.east),
           .leftStick(x: 1, y: 0),
           .rightStick(x: 0, y: -1),
@@ -159,12 +159,12 @@ struct ReportLayoutDriverTests {
   func chillStreamFaceButtonsReadFromBitsOrPressure() throws {
     let driver = try catalogDriver(chillStreamModel)
     #expect(
-      try driver.parseReport(chillStreamReport([0: 0x08]))?.state == snapshot(.press(.faceNorth))
+      try driver.parseReport(chillStreamReport([0: 0x08]))?.state == snapshot(.press(.north))
     )
     #expect(
-      try driver.parseReport(chillStreamReport([10: 0x80]))?.state == snapshot(.press(.faceNorth))
+      try driver.parseReport(chillStreamReport([10: 0x80]))?.state == snapshot(.press(.north))
     )
-    #expect(try driver.parseReport(chillStreamReport()).contains(.release(.faceNorth)))
+    #expect(try driver.parseReport(chillStreamReport()).contains(.release(.north)))
   }
 
   // MARK: - Layout fields
@@ -174,11 +174,11 @@ struct ReportLayoutDriverTests {
     let driver = ReportLayoutDriver(
       layout: try inputLayout(
         #"{"report": {"id": 5, "length": 2}, "#
-          + #""buttons": [{"control": "face-south", "byte": 1, "mask": 1}]}"#
+          + #""buttons": [{"control": "South", "byte": 1, "mask": 1}]}"#
       )
     )
     #expect(try driver.parseReport(Data([6, 1])) == nil)
-    #expect(try driver.parseReport(Data([5, 1]))?.state == snapshot(.press(.faceSouth)))
+    #expect(try driver.parseReport(Data([5, 1]))?.state == snapshot(.press(.south)))
     #expect(driver.outputCapabilities == .none)
     #expect(throws: ControllerOutputError.self) { try driver.encode(.stopRumble) }
   }
@@ -188,9 +188,9 @@ struct ReportLayoutDriverTests {
     let layout = try inputLayout(
       """
       {"report": {"length": 4}, "axes": [
-        {"control": "left-stick-x", "byte": 0, "bits": 16, "signed": true},
-        {"control": "left-stick-y", "byte": 2, "inverted": true},
-        {"control": "right-stick-x", "byte": 3, "min": 0, "max": 200}
+        {"control": "LeftStickX", "byte": 0, "bits": 16, "signed": true},
+        {"control": "LeftStickY", "byte": 2, "inverted": true},
+        {"control": "RightStickX", "byte": 3, "min": 0, "max": 200}
       ]}
       """
     )

@@ -117,7 +117,7 @@ extension InputTestTests {
   @MainActor
   func rejectedOutputRetainsLatestInputAndReportsInlineFailure() async {
     var snapshot = ControllerState.neutral
-    snapshot.pressed = [.faceSouth]
+    snapshot.pressed = [.south]
     let gateway = InputTestGatewayStub(inputSequence: [snapshot])
     await gateway.setOutputResult(false)
     let model = InputTestViewModel(gateway: gateway, sampleIntervalNanoseconds: 1_000_000_000)

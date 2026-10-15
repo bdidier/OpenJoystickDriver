@@ -209,7 +209,7 @@
           "type": "array",
           "uniqueItems": true,
           "items": {
-            "$ref": "profile.schema.json#/$defs/button"
+            "$ref": "vocabulary.schema.json#/$defs/control"
           }
         },
         "dpad": {
@@ -222,7 +222,7 @@
         "axes": {
           "type": "object",
           "propertyNames": {
-            "$ref": "profile.schema.json#/$defs/axis"
+            "$ref": "vocabulary.schema.json#/$defs/axis"
           },
           "additionalProperties": {
             "type": "number"

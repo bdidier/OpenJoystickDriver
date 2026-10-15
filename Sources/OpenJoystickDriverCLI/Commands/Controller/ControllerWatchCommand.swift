@@ -49,16 +49,16 @@ struct ControllerFirstPress: Encodable, Equatable {
   let control: String
   let direction: String?
 
-  /// The first control pressed in `state` that `previous` did not hold, in `ControlID` order,
-  /// then the D-pad when the hat leaves neutral.
+  /// The first control pressed in `state` that `previous` did not hold, in `Control` order,
+  /// then the D-pad id for the hat when it leaves neutral; a diagonal names its vertical id.
   init?(previous: ControllerState, state: ControllerState) {
-    if let control = ControlID.allCases.first(where: {
+    if let control = Control.allCases.first(where: {
       state.pressed.contains($0) && !previous.pressed.contains($0)
     }) {
       self.control = control.rawValue
       direction = nil
     } else if state.hat != .neutral, state.hat != previous.hat {
-      control = ControlID.dpad.rawValue
+      control = state.hat.dpadControl.rawValue
       direction = state.hat.rawValue
     } else {
       return nil
@@ -251,7 +251,7 @@ struct ControllerWatchCommand: AsyncParsableCommand {
     ]
   }
 
-  /// Pressed controls in `ControlID` order, the hat, and the raw stick and trigger values.
+  /// Pressed controls in `Control` order, the hat, and the raw stick and trigger values.
   static func formatted(_ state: ControllerState) -> String {
     let pressed = pressedControls(state)
     let buttons = pressed.isEmpty ? "none" : pressed.joined(separator: ",")
@@ -287,7 +287,7 @@ struct ControllerWatchCommand: AsyncParsableCommand {
   }
 
   private static func pressedControls(_ state: ControllerState) -> [String] {
-    ControlID.allCases.filter(state.pressed.contains).map(\.rawValue)
+    Control.allCases.filter(state.pressed.contains).map(\.rawValue)
   }
 }
 

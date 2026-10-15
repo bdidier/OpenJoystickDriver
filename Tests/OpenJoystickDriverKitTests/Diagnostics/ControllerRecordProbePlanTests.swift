@@ -183,8 +183,8 @@ struct ControllerRecordProbePlanTests {
     payload[18] = 1
     let packet = ProtocolPacketFixtures.GIP.inputPacket(payload: payload)
 
-    #expect(try gated.parseReport(packet).contains(.press(.share)))
-    #expect(try !plain.parseReport(packet).contains(.press(.share)))
+    #expect(try gated.parseReport(packet).contains(.press(.capture)))
+    #expect(try !plain.parseReport(packet).contains(.press(.capture)))
     #expect(gated.outputCapabilities.rumbleMotors.isEmpty)
     #expect(!plain.outputCapabilities.rumbleMotors.isEmpty)
   }

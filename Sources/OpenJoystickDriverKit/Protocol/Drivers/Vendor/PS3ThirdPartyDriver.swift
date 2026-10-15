@@ -109,7 +109,7 @@ public final class PS3ThirdPartyDriver: PhysicalProtocolDriver {
   public func consumeInputConnectionStateChange() -> ControllerInputConnectionState? { nil }
 
   public var capabilities: ControllerCapabilities {
-    ControllerCapabilities(controls: ControlID.xboxLayout.union([.guide]))
+    ControllerCapabilities(controls: Control.xboxLayout.union([.guide]))
   }
 
   /// Rumble through the record's template; the motors run until the next report.
@@ -195,16 +195,16 @@ public final class PS3ThirdPartyDriver: PhysicalProtocolDriver {
   ) {
     let pressure = layout.pressureOffset
     for (mask, offset, control) in [
-      (UInt8(0x01), Pressure.west, ControlID.faceWest), (0x02, Pressure.south, .faceSouth),
-      (0x04, Pressure.east, .faceEast), (0x08, Pressure.north, .faceNorth),
+      (UInt8(0x01), Pressure.west, Control.west), (0x02, Pressure.south, .south),
+      (0x04, Pressure.east, .east), (0x08, Pressure.north, .north),
       (0x10, Pressure.leftShoulder, .leftShoulder), (0x20, Pressure.rightShoulder, .rightShoulder),
     ] {
       let pressed =
         digital & mask != 0 || bytes[pressure + offset] & ps3ThirdPartyPressedThreshold != 0
       next.set(control, pressed: pressed)
     }
-    var system: [(UInt8, ControlID)] = [
-      (0x01, .view), (0x02, .menu), (0x04, .leftStickClick), (0x08, .rightStickClick),
+    var system: [(UInt8, Control)] = [
+      (0x01, .back), (0x02, .start), (0x04, .leftStickClick), (0x08, .rightStickClick),
     ]
     if layout == .standard { system.append((0x10, .guide)) }
     for (mask, control) in system { next.set(control, pressed: bytes[1] & mask != 0) }

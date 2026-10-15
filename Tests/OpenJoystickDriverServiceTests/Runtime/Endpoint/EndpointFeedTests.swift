@@ -16,7 +16,7 @@ struct EndpointFeedTests {
     try await withEndpointServer(feeds: factory.registry()) { server, _ in
       let client = try await feeding(server)
       await client.send(
-        clientLine("Frame", #","buttons":["south"],"axes":{"left_stick_y":0.5}"#)
+        clientLine("Frame", #","buttons":["South"],"axes":{"LeftStickY":0.5}"#)
       )
 
       let device = try #require(factory.devices.first)
@@ -71,7 +71,7 @@ struct EndpointFeedTests {
       var client: EndpointTestClient? = try await feeding(server)
       let device = try #require(factory.devices.first)
       for index in 0..<(VirtualFeedExchangeResult.maximumQueuedFrames + 20) {
-        let button = index.isMultiple(of: 2) ? "south" : "east"
+        let button = index.isMultiple(of: 2) ? "South" : "East"
         await client?.send(
           clientLine("Frame", #","buttons":["\#(button)"],"holdMilliseconds":60000"#)
         )
@@ -166,7 +166,7 @@ struct EndpointFeedTests {
     let feeds = factory.registry(idleTimeout: 0.3)
     try await withEndpointServer(feeds: feeds) { server, _ in
       let client = try await feeding(server)
-      await client.send(clientLine("Frame", #","buttons":["east"]"#))
+      await client.send(clientLine("Frame", #","buttons":["East"]"#))
       let device = try #require(factory.devices.first)
       try await Self.wait { device.sent.contains { $0.buttons.contains(.east) } }
 
@@ -183,7 +183,7 @@ struct EndpointFeedTests {
     try await withEndpointServer(feeds: feeds) { server, _ in
       let client = try await feeding(server)
       for _ in 0..<8 {
-        await client.send(clientLine("Frame", #","buttons":["east"]"#))
+        await client.send(clientLine("Frame", #","buttons":["East"]"#))
         try await Task.sleep(nanoseconds: 150_000_000)
       }
 
@@ -229,16 +229,16 @@ struct EndpointFeedTests {
     (clientLine("Frame", #","buttons":["jump"]"#), "E1004"),
     (clientLine("Frame", #","axes":{"throttle":1}"#), "E1004"),
     (clientLine("Frame", #","holdMilliseconds":60001"#), "E1004"),
-    (clientLine("Frame", #","buttons":["south","south"]"#), "E1004"),
+    (clientLine("Frame", #","buttons":["South","South"]"#), "E1004"),
     (clientLine("Frame", #","dpad":["up","up"]"#), "E1004"),
-    (clientLine("Frame", #","buttons":["south"],"turbo":true"#), "E1004"),
-    (#"{"buttons":["south"]}"#, "E1012"),
-    (#"{"apiVersion":"openjoystickdriver.io/v2","kind":"Frame","buttons":["south"]}"#, "E1010"),
-    (#"{"kind":"Frame","buttons":["south"]}"#, "E1012"),
-    (#"{"apiVersion":"openjoystickdriver/v1alpha1","buttons":["south"]}"#, "E1012"),
-    (#"{"apiVersion":null,"kind":"Frame","buttons":["south"]}"#, "E1012"),
-    (#"{"apiVersion":"openjoystickdriver/v1alpha1","kind":null,"buttons":["south"]}"#, "E1012"),
-    (#"{"apiVersion":2,"kind":"Frame","buttons":["south"]}"#, "E1012"),
+    (clientLine("Frame", #","buttons":["South"],"turbo":true"#), "E1004"),
+    (#"{"buttons":["South"]}"#, "E1012"),
+    (#"{"apiVersion":"openjoystickdriver.io/v2","kind":"Frame","buttons":["South"]}"#, "E1010"),
+    (#"{"kind":"Frame","buttons":["South"]}"#, "E1012"),
+    (#"{"apiVersion":"openjoystickdriver/v1alpha1","buttons":["South"]}"#, "E1012"),
+    (#"{"apiVersion":null,"kind":"Frame","buttons":["South"]}"#, "E1012"),
+    (#"{"apiVersion":"openjoystickdriver/v1alpha1","kind":null,"buttons":["South"]}"#, "E1012"),
+    (#"{"apiVersion":2,"kind":"Frame","buttons":["South"]}"#, "E1012"),
     (clientLine("Greeting", ""), "E1011"),
     ("nonsense", "E1004"),
   ])

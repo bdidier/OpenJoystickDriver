@@ -5,7 +5,7 @@ extension GIPDriver {
   /// offset is the per-record evidence that the model has Share, declares it.
   public var capabilities: ControllerCapabilities {
     ControllerCapabilities(
-      controls: ControlID.xboxLayout.union(shareButtonFromEnd != nil ? [.guide, .share] : [.guide])
+      controls: Control.xboxLayout.union(shareButtonFromEnd != nil ? [.guide, .capture] : [.guide])
     )
   }
 

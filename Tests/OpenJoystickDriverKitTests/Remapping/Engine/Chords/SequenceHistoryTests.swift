@@ -10,7 +10,7 @@ struct RemappingSequenceHistoryTests {
     let profile = profile(hasSequence: hasSequence)
     for time in 0..<1000 {
       _ = state.process(
-        inputs: [.press(.faceSouth), .release(.faceSouth)],
+        inputs: [.press(.south), .release(.south)],
         from: identifier,
         profile: profile,
         at: UInt64(time)
@@ -23,7 +23,7 @@ struct RemappingSequenceHistoryTests {
   @Test
   func idleSequenceHistoryExpiresWithoutRepeatedPastDeadlines() {
     var state = RemappingEngineState()
-    _ = state.process(inputs: [.press(.faceSouth)], from: identifier, profile: profile(), at: 0)
+    _ = state.process(inputs: [.press(.south)], from: identifier, profile: profile(), at: 0)
     #expect(state.nextScheduledTick(after: 0, continuousIntervalNanoseconds: 1) == 100_000_001)
     #expect(state.tick(at: 100_000_000).isEmpty)
     #expect(state.hasScheduledOutput)
@@ -35,10 +35,10 @@ struct RemappingSequenceHistoryTests {
   @Test
   func sequenceCanFinishAtInclusiveWindowBoundary() {
     var state = RemappingEngineState()
-    _ = state.process(inputs: [.press(.faceSouth)], from: identifier, profile: profile(), at: 0)
+    _ = state.process(inputs: [.press(.south)], from: identifier, profile: profile(), at: 0)
     #expect(
       state.process(
-        inputs: [.press(.faceEast)],
+        inputs: [.press(.east)],
         from: identifier,
         profile: profile(),
         at: 100_000_000

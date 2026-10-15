@@ -731,7 +731,15 @@
             "controls": {
               "type": "array",
               "items": {
-                "$ref": "controller.schema.json#/$defs/controlID"
+                "$ref": "vocabulary.schema.json#/$defs/control"
+              }
+            },
+            "digitalTriggers": {
+              "description": "Triggers the controller reports only as buttons. The others are analog and also derive a button.",
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "$ref": "vocabulary.schema.json#/$defs/trigger"
               }
             },
             "lightingFeatures": {
@@ -1001,7 +1009,7 @@
               "const": "ControlPress"
             },
             "control": {
-              "$ref": "controller.schema.json#/$defs/controlID"
+              "$ref": "vocabulary.schema.json#/$defs/control"
             },
             "direction": {
               "enum": [
@@ -1833,8 +1841,12 @@
         "record": {
           "description": "The drafted controller record, as 'ojd record install' reads it.",
           "oneOf": [
-            { "$ref": "controller.schema.json" },
-            { "$ref": "controller-patch.schema.json" }
+            {
+              "$ref": "controller.schema.json"
+            },
+            {
+              "$ref": "controller-patch.schema.json"
+            }
           ]
         },
         "report": {
@@ -2431,7 +2443,7 @@
         "pressed": {
           "type": "array",
           "items": {
-            "$ref": "controller.schema.json#/$defs/controlID"
+            "$ref": "vocabulary.schema.json#/$defs/control"
           }
         },
         "rightStick": {

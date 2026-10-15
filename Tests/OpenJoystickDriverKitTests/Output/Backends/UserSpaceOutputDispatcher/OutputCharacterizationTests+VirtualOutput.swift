@@ -4,32 +4,32 @@ import Testing
 
 // Pinned virtual-output-path transcripts; the rendering rules are on `OutputCharacterizationTests`.
 extension OutputCharacterizationTests {
-  /// Family labels reach the bits by parser label, not by control: PlayStation Share (Create) and
-  /// Nintendo Capture land on bit 15 like standard Share, standard View (Back) on bit 9.
+  /// Each control reaches one bit whatever the family: PlayStation Share (Create) and standard
+  /// View are Back on bit 9; Nintendo and standard Capture land on bit 15.
   @Test
   func familyLabelsReachTheirBits() async {
     var lines: [String] = []
     // Each family's former parser button name and the control it now reports under its labels.
-    let families: [(String, LogicalControllerID, [(String, ControlID)])] = [
+    let families: [(String, LogicalControllerID, [(String, Control)])] = [
       (
         "ps", Self.playStation,
         [
-          ("share", .view), ("options", .menu), ("ps", .guide), ("cross", .faceSouth),
+          ("share", .back), ("options", .start), ("ps", .guide), ("cross", .south),
           ("touchpad", .touchpadClick), ("mute", .microphone),
         ]
       ),
       (
         "std", Self.standard,
         [
-          ("back", .view), ("start", .menu), ("guide", .guide), ("a", .faceSouth),
-          ("share", .share),
+          ("back", .back), ("start", .start), ("guide", .guide), ("a", .south),
+          ("share", .capture),
         ]
       ),
       (
         "nin", Self.nintendo,
         [
-          ("share", .capture), ("back", .view), ("start", .menu), ("guide", .guide),
-          ("b", .faceEast),
+          ("share", .capture), ("back", .back), ("start", .start), ("guide", .guide),
+          ("b", .east),
         ]
       ),
     ]
@@ -44,7 +44,7 @@ extension OutputCharacterizationTests {
     }
     #expect(
       lines == [
-        "ps +share b=8000 h=0 ls=0,0 rs=0,0 t=0,0 f=00 +1", "  out 0080000000000000000000000000",
+        "ps +share b=0200 h=0 ls=0,0 rs=0,0 t=0,0 f=00 +1", "  out 4000000000000000000000000000",
         "ps -share b=0000 h=0 ls=0,0 rs=0,0 t=0,0 f=00 +1", "  out 0000000000000000000000000000",
         "ps +options b=0100 h=0 ls=0,0 rs=0,0 t=0,0 f=00 +1", "  out 8000000000000000000000000000",
         "ps -options b=0000 h=0 ls=0,0 rs=0,0 t=0,0 f=00 +1", "  out 0000000000000000000000000000",
@@ -94,8 +94,8 @@ extension OutputCharacterizationTests {
       ("rs1.5", Self.standard, [.rightStick(x: 1.5, y: -1.5)]),
       ("lt.5", Self.standard, [.leftTrigger(0.5)]), ("rt2", Self.standard, [.rightTrigger(2)]),
       ("lt-.5", Self.standard, [.leftTrigger(-0.5)]),
-      ("l2", Self.standard, [.leftTrigger(0), .press(.leftTriggerButton)]),
-      ("r2", Self.standard, [.press(.rightTriggerButton)]),
+      ("l2", Self.standard, [.leftTrigger(0), .press(.leftTrigger)]),
+      ("r2", Self.standard, [.press(.rightTrigger)]),
       ("ne", Self.standard, [.hat(.northEast)]), ("sw", Self.standard, [.hat(.southWest)]),
       ("hat0", Self.standard, [.hat(.neutral)]),
       ("zero", Self.standard, [.leftStick(x: 0, y: 0), .rightStick(x: 0, y: 0)]),
@@ -172,15 +172,16 @@ extension OutputCharacterizationTests {
   func twoControlsInOneBatch() async {
     var lines: [String] = []
     let steps: [(String, [InputChange])] = [
-      ("+b", [.press(.faceEast)]), ("+a-b", [.press(.faceSouth), .release(.faceEast)]),
-      ("+x+y", [.press(.faceWest), .press(.faceNorth)]),
-      ("-a-x-y", [.release(.faceSouth), .release(.faceWest), .release(.faceNorth)]),
-      ("+a-a", [.press(.faceSouth), .release(.faceSouth)]),
-      ("-a+a", [.release(.faceSouth), .press(.faceSouth)]), ("-a", [.release(.faceSouth)]),
+      ("+b", [.press(.east)]), ("+a-b", [.press(.south), .release(.east)]),
+      ("+x+y", [.press(.west), .press(.north)]),
+      ("-a-x-y", [.release(.south), .release(.west), .release(.north)]),
+      ("+a-a", [.press(.south), .release(.south)]),
+      ("-a+a", [.release(.south), .press(.south)]), ("-a", [.release(.south)]),
       ("+rs", [.press(.rightStickClick)]),
       ("+rpc-rpc", [.press(.rightTrackpadClick), .release(.rightTrackpadClick)]),
-      ("-rs", [.release(.rightStickClick)]), ("+start", [.press(.menu)]), ("+opt", [.press(.menu)]),
-      ("-opt", [.release(.menu)]), ("-start", [.release(.menu)]),
+      ("-rs", [.release(.rightStickClick)]), ("+start", [.press(.start)]),
+      ("+opt", [.press(.start)]),
+      ("-opt", [.release(.start)]), ("-start", [.release(.start)]),
       // D-pad buttons fold into the one hat, as the pipeline folded them: a later hat replaces
       // a held button, and a button held with a hat direction adds its own.
       ("+dup,east", [.hat(.east)]), ("hat0", [.hat(.neutral)]), ("east,+dup", [.hat(.northEast)]),

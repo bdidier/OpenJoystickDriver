@@ -12,7 +12,7 @@ struct ControllerRecordDocumentTests {
         "initialization": ["xbox.gip/hori-ack", "xbox.gip/power-on"],
       ],
       usb: ["configuration": "set1-before-claim"],
-      capabilities: ["absent": ["left-trigger", "right-trigger"], "rumble": "absent"]
+      capabilities: ["absent": ["LeftTrigger", "RightTrigger"], "rumble": "absent"]
     )
 
     #expect(document.protocolInfo.protocolID == .xboxGIP)
@@ -209,10 +209,10 @@ struct ControllerRecordDocumentTests {
 
   @Test(
     arguments: [
-      [:], ["absent": [String]()], ["absent": ["left-trigger", "left-trigger"]],
+      [:], ["absent": [String]()], ["absent": ["LeftTrigger", "LeftTrigger"]],
       ["absent": ["leftTrigger"]], ["present": ["trackpad"]],
-      ["absent": ["guide"], "present": ["guide"]], ["rumble": "present"],
-      ["rumble": "absent", "controls": ["guide"]],
+      ["absent": ["Guide"], "present": ["Guide"]], ["rumble": "present"],
+      ["rumble": "absent", "controls": ["Guide"]],
     ] as [[String: any Sendable]]
   )
   func rejectsInvalidCapabilities(capabilities: [String: any Sendable]) {
@@ -223,7 +223,7 @@ struct ControllerRecordDocumentTests {
 
   @Test
   func presentControlsAreOnlyTheDualSenseEdgeSet() throws {
-    let edge = ["paddle-left-1", "paddle-right-1", "auxiliary-1", "auxiliary-2"]
+    let edge = ["LeftPaddle1", "RightPaddle1", "Auxiliary1", "Auxiliary2"]
     let dualSense: [String: any Sendable] = ["family": "sony.dualsense"]
     let document = try decode(protocol: dualSense, capabilities: ["present": edge])
     #expect(document.capabilities.presentControls == DualSenseDriver.edgeControls)
@@ -231,7 +231,7 @@ struct ControllerRecordDocumentTests {
       try decode(protocol: dualSense, capabilities: ["present": Array(edge.prefix(2))])
     }
     #expect(throws: DecodingError.self) {
-      try decode(protocol: ["family": "xbox.gip"], capabilities: ["present": ["paddle-left-1"]])
+      try decode(protocol: ["family": "xbox.gip"], capabilities: ["present": ["LeftPaddle1"]])
     }
   }
 
@@ -286,7 +286,6 @@ struct ControllerRecordDocumentTests {
   func schemaVocabularyMatchesTheSwiftEnums() throws {
     let schema = try Self.controllerSchema()
     let definitions = try #require(schema["$defs"] as? [String: Any])
-    #expect(Self.enumValues(definitions["controlID"]) == ControlID.allCases.map(\.rawValue))
     #expect(
       Self.enumValues(definitions["gipInitializationAction"])
         == GIPStartupPacket.allCases.map(\.rawValue)
@@ -343,7 +342,7 @@ struct ControllerRecordDocumentTests {
       protocol: ["family": "hid.report-layout"],
       extra: ["input": Self.minimalInput]
     )
-    #expect(document.inputLayout?.controls == [.faceSouth])
+    #expect(document.inputLayout?.controls == [.south])
     #expect(throws: DecodingError.self) { try decode(protocol: ["family": "hid.report-layout"]) }
     #expect(throws: DecodingError.self) {
       try decode(protocol: ["family": "hid.descriptor"], extra: ["input": Self.minimalInput])
@@ -353,7 +352,7 @@ struct ControllerRecordDocumentTests {
   /// The smallest valid `input` section: one button in a one-byte report.
   static let minimalInput: [String: any Sendable] = [
     "report": ["length": 1] as [String: Int],
-    "buttons": [["control": "face-south", "byte": 0, "mask": 1] as [String: any Sendable]],
+    "buttons": [["control": "South", "byte": 0, "mask": 1] as [String: any Sendable]],
   ]
 
   @Test

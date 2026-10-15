@@ -16,7 +16,7 @@ struct HIDDescriptorDriverTests {
     let released = value(page: 0x09, usage: 1, minimum: 0, maximum: 1, integer: 0)
 
     let first = parse(parser, pressed)
-    #expect(first.contains(.press(.faceSouth)))
+    #expect(first.contains(.press(.south)))
     #expect(parse(parser, pressed)?.state == first?.state)
     #expect(parse(parser, released)?.state == .neutral)
     #expect(parse(parser, released)?.state == .neutral)
@@ -103,9 +103,9 @@ struct HIDDescriptorDriverTests {
       model: ControllerModelID(vendorID: 0x0079, productID: 6),
       usageMap: try catalogUsageMap(0x0079, 6)
     )
-    let buttons: [ControlID] = [
-      .faceNorth, .faceEast, .faceSouth, .faceWest, .leftShoulder, .rightShoulder,
-      .leftTriggerButton, .rightTriggerButton, .view, .menu, .leftStickClick, .rightStickClick,
+    let buttons: [Control] = [
+      .north, .east, .south, .west, .leftShoulder, .rightShoulder,
+      .leftTrigger, .rightTrigger, .back, .start, .leftStickClick, .rightStickClick,
     ]
     for (index, control) in buttons.enumerated() {
       let usage = UInt32(index + 1)
@@ -116,8 +116,8 @@ struct HIDDescriptorDriverTests {
     }
     #expect(parse(parser, axis(usage: 0x32, integer: 255)).contains(.rightStick(x: 1, y: 0)))
     #expect(parse(parser, axis(usage: 0x35, integer: 0)).contains(.rightStick(x: 1, y: -1)))
-    #expect(parser.capabilities.controls.contains(.leftTriggerButton))
-    #expect(!parser.capabilities.controls.contains(.leftTrigger))
+    #expect(parser.capabilities.controls.contains(.leftTrigger))
+    #expect(parser.capabilities.digitalTriggers == [.leftTrigger, .rightTrigger])
   }
 
   @Test
@@ -126,7 +126,7 @@ struct HIDDescriptorDriverTests {
     #expect(parse(parser, axis(usage: 0x30, integer: 255)).contains(.leftStick(x: 1, y: 0)))
     #expect(
       parse(parser, value(page: 0x09, usage: 1, minimum: 0, maximum: 1, integer: 1)).contains(
-        .press(.faceSouth)
+        .press(.south)
       )
     )
 

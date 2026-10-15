@@ -126,7 +126,7 @@ struct RemappingTouchRoutingTests {
     let recorder = TouchOutputRecorder()
     let engine = RemappingEventEngine(sink: recorder)
     let profile = makeProfile(bindings: [
-      binding(.touchContact(.primary), .a), binding(.button(.touchpad), .b),
+      binding(.touchContact(.primary), .a), binding(.button(.touchpadClick), .b),
     ])
 
     try await engine.process(

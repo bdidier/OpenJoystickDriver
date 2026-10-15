@@ -13,11 +13,11 @@ extension RemappingDeviceState {
     where trigger.passthroughSources.contains(where: {
       reserved.contains($0) || binding(for: $0) != nil
     }) { reserved.formUnion(trigger.passthroughSources) }
-    var buttons: Set<RemappingButton> = []
+    var buttons: Set<Control> = []
     var directions: Set<RemappingDpadDirection> = []
     for source in activeSources where !reserved.contains(source) && binding(for: source) == nil {
       switch source {
-      case .button(.rightPadClick): buttons.insert(.rightStick)
+      case .button(.rightTrackpadClick): buttons.insert(.rightStickClick)
       case .button(let button): buttons.insert(button)
       case .dpad(let direction): directions.insert(direction)
       case .axis, .axisDirection, .triggerStage, .motionLean, .touchContact, .touchGrid,
@@ -79,7 +79,7 @@ extension RemappingTriggerSource {
   var passthroughSources: [RemappingSource] {
     [
       .axis(axis), .axisDirection(axis, .negative), .axisDirection(axis, .positive),
-      .button(self == .left ? .leftTriggerClick : .rightTriggerClick),
+      .button(self == .left ? .leftTrigger : .rightTrigger),
     ]
   }
 }
