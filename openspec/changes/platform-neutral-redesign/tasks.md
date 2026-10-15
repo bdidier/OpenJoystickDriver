@@ -161,7 +161,7 @@ Depends: 9, 5.
 Verify: `swift test`, `./Scripts/ojd check schemas`.
 
 - [ ] 11.1 Add `modes` (for example XInput, DInput, switch) selected by switch, button combo or probe. Verify: a fixture record with two modes picks each by its probe.
-- [ ] 11.2 Add the `coreBluetoothGATT` link kind for BLE controllers. Verify: a mock peripheral test delivers frames through the link.
+- [x] 11.2 Add the `coreBluetoothGATT` link kind for BLE controllers. Verify: a mock peripheral test delivers frames through the link.
 - [ ] 11.3 Make DS3 over Bluetooth a link of the DS3 record, with the pairing steps as documentation only. Verify: the record validates; hardware check H6 below covers the real pairing.
 
 ## 12. ServingRoute and persona records (old WP9)
