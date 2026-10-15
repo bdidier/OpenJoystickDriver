@@ -16,7 +16,7 @@ final class Switch2BluetoothLECentral: NSObject, @unchecked Sendable {
     var command: CBCharacteristic?
     var reply: CBCharacteristic?
     var vibration: CBCharacteristic?
-    var admitted = false
+    var gatt: GATTPeripheralLink?
   }
 
   private let hub: Switch2BluetoothLEHub
@@ -164,17 +164,22 @@ extension Switch2BluetoothLECentral: CBPeripheralDelegate {
       drop(peripheral)
       return
     }
-    guard !link.admitted, link.input?.isNotifying == true, link.reply?.isNotifying == true,
-      let command = link.command, let vibration = link.vibration
+    guard link.gatt == nil, link.input?.isNotifying == true, link.reply?.isNotifying == true,
+      let command = link.command, let vibration = link.vibration,
+      let gatt = GATTPeripheralLink(
+        peripheral: CoreBluetoothGATTPeripheral(
+          queue: queue,
+          peripheral: peripheral,
+          writable: [command, vibration]
+        ),
+        productID: link.productID,
+        productName: link.name,
+        hub: hub
+      )
     else { return }
-    link.admitted = true
+    link.gatt = gatt
     links[peripheral.identifier] = link
-    hub.linkConnected(
-      peripheralID: peripheral.identifier,
-      productID: link.productID,
-      productName: link.name,
-      writer: Writer(queue: queue, peripheral: peripheral, command: command, vibration: vibration)
-    )
+    gatt.admit()
   }
 
   func peripheral(
@@ -182,36 +187,31 @@ extension Switch2BluetoothLECentral: CBPeripheralDelegate {
     didUpdateValueFor characteristic: CBCharacteristic,
     error: (any Error)?
   ) {
-    guard error == nil, let link = links[peripheral.identifier], link.admitted,
+    guard error == nil, let gatt = links[peripheral.identifier]?.gatt,
       let value = characteristic.value
     else { return }
-    if characteristic.uuid == inputUUID {
-      hub.receivedInput(peripheralID: peripheral.identifier, bytes: [UInt8](value))
-    } else if characteristic.uuid == replyUUID {
-      hub.receivedReply(peripheralID: peripheral.identifier, bytes: [UInt8](value))
-    }
+    gatt.notified(characteristic: characteristic.uuid.uuidString, value: [UInt8](value))
   }
 }
 
-extension Switch2BluetoothLECentral {
-  /// Writes without response on the central's queue. Callers are pipeline tasks, never that queue.
-  private struct Writer: Switch2BluetoothLEWriter, @unchecked Sendable {
-    let queue: DispatchQueue
-    let peripheral: CBPeripheral
-    let command: CBCharacteristic
-    let vibration: CBCharacteristic
+/// A `CBPeripheral` as a ``GATTPeripheral``. It writes without response on the central's queue;
+/// callers are pipeline tasks, never that queue.
+private struct CoreBluetoothGATTPeripheral: GATTPeripheral, @unchecked Sendable {
+  let queue: DispatchQueue
+  let peripheral: CBPeripheral
+  let writable: [CBCharacteristic]
 
-    func writeCommand(_ bytes: [UInt8]) -> Bool { write(bytes, to: command) }
-    func writeVibration(_ bytes: [UInt8]) -> Bool { write(bytes, to: vibration) }
+  var identifier: UUID { peripheral.identifier }
 
-    private func write(_ bytes: [UInt8], to characteristic: CBCharacteristic) -> Bool {
-      queue.sync {
-        guard peripheral.state == .connected,
-          bytes.count <= peripheral.maximumWriteValueLength(for: .withoutResponse)
-        else { return false }
-        peripheral.writeValue(Data(bytes), for: characteristic, type: .withoutResponse)
-        return true
-      }
+  func writeWithoutResponse(_ bytes: [UInt8], to characteristic: String) -> Bool {
+    guard let target = writable.first(where: { $0.uuid.uuidString == characteristic.uppercased() })
+    else { return false }
+    return queue.sync {
+      guard peripheral.state == .connected,
+        bytes.count <= peripheral.maximumWriteValueLength(for: .withoutResponse)
+      else { return false }
+      peripheral.writeValue(Data(bytes), for: target, type: .withoutResponse)
+      return true
     }
   }
 }

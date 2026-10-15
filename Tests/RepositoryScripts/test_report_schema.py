@@ -37,6 +37,24 @@ class ReportSchemaTests(unittest.TestCase):
 
         self.validator.validate(report)
 
+    def test_accepts_a_bluetooth_le_controller_on_a_core_bluetooth_gatt_link(
+        self,
+    ) -> None:
+        report = copy.deepcopy(load_fixture())
+        controller = report["data"]["controllers"][0]
+        controller["binding"]["accessBackend"] = "coreBluetoothGATT"
+        controller["connectionState"]["backend"] = "coreBluetoothGATT"
+        controller["connectionState"]["transport"] = "bluetoothLE"
+
+        self.validator.validate(report)
+
+    def test_rejects_an_unknown_access_backend(self) -> None:
+        report = copy.deepcopy(load_fixture())
+        report["data"]["controllers"][0]["binding"]["accessBackend"] = "coreBluetooth"
+
+        with self.assertRaises(validate_schemas.ValidationError):
+            self.validator.validate(report)
+
     def test_rejects_a_top_level_catalog_record_id_on_an_unsupported_result(
         self,
     ) -> None:

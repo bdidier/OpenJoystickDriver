@@ -123,7 +123,7 @@ public final class ProtocolDriverRegistry: Sendable {
       )
     }
     var transportProfile = record.transportProfile
-    if binding.accessBackend != .ioHID {
+    if binding.accessBackend.usesRawUSB {
       guard let claimed else { return .failure(.interfaceContractMismatch) }
       if let violation = Self.claimedInterfaceViolation(
         of: binding,
