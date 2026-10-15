@@ -22,7 +22,7 @@ enum LocalizationCatalogAudit {
   ]
   private static let frenchTerms: Set<String> = [
     "capture.destination", "capture.gain", "cli.controller.show.label.session",
-    "cli.status.label.extension", "cli.status.label.service", "common.destination",
+    "cli.status.label.transport_extension", "cli.status.label.service", "common.destination",
     "common.service", "console.title", "inputTest.menu", "keyboard.alt", "mapping.guide",
     "mapping.mode", "mapping.options", "mapping.start", "motion.calibration.pause",
     "profiles.activationMode", "profiles.motion.local", "profiles.sectionSticks",

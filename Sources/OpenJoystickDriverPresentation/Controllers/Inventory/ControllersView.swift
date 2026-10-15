@@ -268,7 +268,7 @@
           publishesVirtualDevice: false,
           presentation: protocolBinding.protocolID.physicalPresentation,
           label: physicalOwnership.isServedBySystem
-            ? OJDLocalized.string("controllers.nativeGamepadNotPublished")
+            ? OJDLocalized.string("controllers.systemGamepadNotPublished")
             : RuntimePresentation.noVirtualHIDProfileLabel
         )
       }

@@ -17,6 +17,18 @@ public struct RenamedWord: Sendable, Equatable {
     case modifier
     /// A command-line flag of `command`, as typed, including its leading dashes.
     case flag(command: String)
+    /// A top-level command group of `ojd`.
+    case command
+    /// A value of `ownership.physical` or `ownership.duplicateExposureRisk`.
+    case physicalOwnership
+    /// A value of `transportClaim` in a record output.
+    case transportClaim
+    /// The `kind` of a `--json` output document.
+    case outputKind
+    /// The id of a diagnose check.
+    case checkID
+    /// The `reason` of a controller's publication state.
+    case publicationReason
     /// A property of the document kind that the schema file `in` defines, such as
     /// `report.schema.json` or `cli-output.schema.json#/$defs/diagnose`. Unlike `.field`, the
     /// word is refused only in that document, so a property of another document may keep the name.
@@ -50,6 +62,31 @@ public struct RenamedWord: Sendable, Equatable {
     Self(old: "command", new: "meta", kind: .modifier),
     Self(old: "option", new: "alt", kind: .modifier),
     Self(old: "--bundle", new: "--output", kind: .flag(command: "diagnose")),
+    Self(old: "extension", new: "transport-extension", kind: .command),
+    Self(old: "driverKitOwnedUSB", new: "ExtensionOwnedUsb", kind: .physicalOwnership),
+    Self(old: "nativeGamepad", new: "SystemGamepad", kind: .physicalOwnership),
+    Self(old: "nativeHIDVisible", new: "SystemHidVisible", kind: .physicalOwnership),
+    Self(
+      old: "usbExtension",
+      new: "transportClaim",
+      kind: .documentField(in: "cli-output.schema.json#/$defs/recordShow")
+    ),
+    Self(
+      old: "usbExtension",
+      new: "transportClaim",
+      kind: .documentField(in: "cli-output.schema.json#/$defs/sharedRecordValidation")
+    ),
+    Self(
+      old: "extension",
+      new: "transportExtension",
+      kind: .documentField(in: "cli-output.schema.json#/$defs/status")
+    ),
+    Self(old: "claims", new: "claimed", kind: .transportClaim),
+    Self(old: "doesNotClaim", new: "unclaimed", kind: .transportClaim),
+    Self(old: "DriverExtension", new: "TransportExtension", kind: .outputKind),
+    Self(old: "extension-bundle", new: "transport-extension-bundle", kind: .checkID),
+    Self(old: "extension-registration", new: "transport-extension-registration", kind: .checkID),
+    Self(old: "nativeGamepad", new: "systemGamepad", kind: .publicationReason),
     Self(old: "macOSVersion", new: "osVersion", kind: .documentField(in: "report.schema.json")),
     Self(
       old: "appleGameControllerAudit",

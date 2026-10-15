@@ -180,12 +180,12 @@ struct DiagnoseCommandTests {
     )
 
     #expect(human.code == 1)
-    #expect(human.standardOutput.contains("extension-bundle"))
+    #expect(human.standardOutput.contains("transport-extension-bundle"))
     #expect(!human.standardError.isEmpty)
     #expect(json.code == 1)
-    #expect(try statuses(json)["extension-bundle"] == "fail")
+    #expect(try statuses(json)["transport-extension-bundle"] == "fail")
     #expect(plain.code == 1)
-    #expect(plain.standardOutput.contains("extension-bundle\tfail\t"))
+    #expect(plain.standardOutput.contains("transport-extension-bundle\tfail\t"))
   }
 
   @Test

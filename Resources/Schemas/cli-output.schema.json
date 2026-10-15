@@ -829,7 +829,7 @@
             "duplicateExposureRisk": {
               "enum": [
                 "none",
-                "nativeHIDVisible",
+                "SystemHidVisible",
                 "upstreamVirtualDevice",
                 "unknownOwnership"
               ]
@@ -848,9 +848,9 @@
               "enum": [
                 "exclusiveHID",
                 "exclusiveRawUSB",
-                "driverKitOwnedUSB",
-                "nativeHIDVisible",
-                "nativeGamepad",
+                "ExtensionOwnedUsb",
+                "SystemHidVisible",
+                "SystemGamepad",
                 "upstreamVirtualDevice",
                 "unknown"
               ]
@@ -1197,25 +1197,25 @@
         }
       }
     },
-    "extensionActivate": {
+    "transportExtensionActivate": {
       "required": ["apiVersion", "kind"],
       "properties": {
         "kind": {
-          "const": "DriverExtension"
+          "const": "TransportExtension"
         }
       },
-      "$ref": "#/$defs/sharedExtensionState"
+      "$ref": "#/$defs/sharedTransportExtensionState"
     },
-    "extensionDeactivate": {
+    "transportExtensionDeactivate": {
       "required": ["apiVersion", "kind"],
       "properties": {
         "kind": {
-          "const": "DriverExtension"
+          "const": "TransportExtension"
         }
       },
-      "$ref": "#/$defs/sharedExtensionState"
+      "$ref": "#/$defs/sharedTransportExtensionState"
     },
-    "extensionStatus": {
+    "transportExtensionStatus": {
       "type": "object",
       "required": ["apiVersion", "kind", "bundle", "registration"],
       "additionalProperties": false,
@@ -1224,7 +1224,7 @@
           "$ref": "#/$defs/sharedAPIVersion"
         },
         "kind": {
-          "const": "DriverExtension"
+          "const": "TransportExtension"
         },
         "bundle": {
           "enum": ["present", "missing", "invalid"]
@@ -2033,8 +2033,8 @@
         "transport": {
           "enum": ["hid", "usb"]
         },
-        "usbExtension": {
-          "enum": ["claims", "doesNotClaim"]
+        "transportClaim": {
+          "enum": ["claimed", "unclaimed"]
         }
       }
     },
@@ -2688,7 +2688,7 @@
         }
       }
     },
-    "sharedExtensionState": {
+    "sharedTransportExtensionState": {
       "type": "object",
       "required": ["state"],
       "additionalProperties": false,
@@ -2901,8 +2901,8 @@
         "transport": {
           "enum": ["hid", "usb"]
         },
-        "usbExtension": {
-          "enum": ["claims", "doesNotClaim"]
+        "transportClaim": {
+          "enum": ["claimed", "unclaimed"]
         },
         "valid": {
           "type": "boolean"
@@ -3199,7 +3199,7 @@
         "apiVersion",
         "kind",
         "commandLineTool",
-        "extension",
+        "transportExtension",
         "service",
         "skippedRecords"
       ],
@@ -3263,7 +3263,7 @@
             }
           }
         },
-        "extension": {
+        "transportExtension": {
           "type": "object",
           "required": ["bundle", "registration"],
           "additionalProperties": false,

@@ -31,14 +31,14 @@ struct ControllerServerPickerTests {
   @Test(
     arguments: [
       (
-        ControllerOwnershipObservation.nativeGamepad, ControllerServer.system,
+        ControllerOwnershipObservation.systemGamepad, ControllerServer.system,
         ControllerAccessRoute.system, true
       ),
       (.exclusiveHID, .ojd, .system, true),
-      (.nativeGamepad, .ojd, .system, true),
+      (.systemGamepad, .ojd, .system, true),
       (.exclusiveHID, .system, .system, false),
-      (.nativeHIDVisible, .system, .system, false),
-      (.nativeGamepad, .system, .rawAccess, false),
+      (.systemHidVisible, .system, .system, false),
+      (.systemGamepad, .system, .rawAccess, false),
       (.exclusiveRawUSB, .ojd, .rawAccess, false),
     ]
   )
@@ -61,7 +61,7 @@ struct ControllerServerPickerTests {
   func aChangeCallsTheGatewayWithTheModelIdentityAndTheValue(_ server: ControllerServer) async {
     let gateway = GatewayStub()
     let viewModel = RuntimeViewModel(gateway: gateway)
-    let device = Self.device(physicalOwnership: .nativeGamepad)
+    let device = Self.device(physicalOwnership: .systemGamepad)
 
     await viewModel.setControllerServer(server, for: device)
 
@@ -77,7 +77,7 @@ struct ControllerServerPickerTests {
     let gateway = GatewayStub()
     await gateway.setServerFailure(.invalidRecord, detail: "bad record")
     let viewModel = RuntimeViewModel(gateway: gateway)
-    let device = Self.device(physicalOwnership: .nativeGamepad)
+    let device = Self.device(physicalOwnership: .systemGamepad)
 
     await viewModel.setControllerServer(.ojd, for: device)
 

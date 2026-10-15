@@ -2,7 +2,7 @@ import Foundation
 import OpenJoystickDriverKit
 
 /// Submits DriverKit system-extension activation and deactivation requests to macOS.
-enum ExtensionSubmission {
+enum TransportExtensionSubmission {
   enum Action: Sendable {
     case activate
     case deactivate
@@ -32,7 +32,7 @@ enum ExtensionSubmission {
       throw CLIFailure(
         .installationProblem,
         CLILocalized.format(
-          "cli.extension.not_installed",
+          "cli.transport_extension.not_installed",
           bundle.path
         )
       )
@@ -42,14 +42,14 @@ enum ExtensionSubmission {
   private static func requireEmbeddedExtension() throws {
     let bundle = ServiceStartCommand.applicationBundleURL() ?? Bundle.main.bundleURL
     let dext = bundle.appendingPathComponent(
-      "Contents/Library/SystemExtensions/\(PlatformHosts.current.extensionBundleIdentifier).dext"
+      "Contents/Library/SystemExtensions/\(PlatformHosts.current.extensionID).dext"
     )
     guard FileManager.default.fileExists(atPath: dext.path) else {
       throw CLIFailure(
         .installationProblem,
         CLILocalized.format(
-          "cli.extension.bundle_missing",
-          PlatformHosts.current.extensionBundleIdentifier
+          "cli.transport_extension.bundle_missing",
+          PlatformHosts.current.extensionID
         )
       )
     }
@@ -66,7 +66,7 @@ enum ExtensionSubmission {
       throw CLIFailure(
         .installationProblem,
         CLILocalized.format(
-          "cli.extension.codesign_failed_to_run",
+          "cli.transport_extension.codesign_failed_to_run",
           error.localizedDescription
         )
       )
@@ -74,7 +74,7 @@ enum ExtensionSubmission {
     if let problem {
       throw CLIFailure(
         .installationProblem,
-        CLILocalized.format("cli.extension.signature_invalid", problem)
+        CLILocalized.format("cli.transport_extension.signature_invalid", problem)
       )
     }
   }

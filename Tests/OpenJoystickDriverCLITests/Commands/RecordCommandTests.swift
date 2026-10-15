@@ -61,7 +61,7 @@ struct RecordCommandTests {
     #expect(result["identity"] as? String == "366C:0005")
     #expect(result["fileName"] as? String == "366c-0005.patch.json")
     #expect(result["transport"] as? String == "usb")
-    #expect(result["usbExtension"] as? String == "doesNotClaim")
+    #expect(result["transportClaim"] as? String == "unclaimed")
     #expect(human.standardOutput.contains("366C:0005"))
     #expect(directory.fileNames.isEmpty)
   }

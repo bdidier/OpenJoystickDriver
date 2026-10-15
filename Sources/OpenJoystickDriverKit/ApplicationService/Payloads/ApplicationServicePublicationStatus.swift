@@ -12,7 +12,7 @@ public struct ApplicationServicePublicationStatus: Codable, Equatable, Sendable 
   }
 
   public let state: State
-  /// Why the controller is not published: `outputDisabled`, `nativeGamepad`,
+  /// Why the controller is not published: `outputDisabled`, `systemGamepad`,
   /// `nativeHIDPassThrough`, `upstreamVirtualDevice`, `sessionSuspended`, `noVirtualProfile`,
   /// `suppressed`, or `noInputYet`; the failure text when `state` is `failed`; nil when
   /// published.

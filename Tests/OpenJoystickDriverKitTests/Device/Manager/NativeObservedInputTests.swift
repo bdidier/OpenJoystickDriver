@@ -126,7 +126,7 @@ struct NativeObservedInputTests {
 
     let device = try #require(await manager.connectedDeviceDescriptions().first)
     #expect(device.protocolBinding.protocolID == .hidReportLayout)
-    #expect(device.physicalOwnership == .nativeGamepad)
+    #expect(device.physicalOwnership == .systemGamepad)
     // macOS has no driver for the GP100's vendor rumble report 0x02, so OJD drives it.
     #expect(device.physicalOutputCapabilities.rumbleMotors == [.leftMain, .rightMain])
     #expect(device.physicalOutputCapabilities.lightingFeatures.isEmpty)

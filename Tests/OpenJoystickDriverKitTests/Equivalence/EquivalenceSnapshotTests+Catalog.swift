@@ -52,7 +52,7 @@ struct EquivalenceSnapshotCatalogTests {
       ).isEmpty
     }
     if selects(.ioUSBHost) { return "raw-access" }
-    if selects(.usbDriverKit) { return "extension" }
+    if selects(.usbDriverKit) { return "transport-extension" }
     return "system ownership=\(label(record.profile.server))"
   }
 
@@ -66,7 +66,7 @@ struct EquivalenceSnapshotCatalogTests {
   /// The production route of the record, in the vocabulary of the 1.2 snapshot.
   private static func route(_ record: ControllerRecord) -> String {
     switch record.profile.accessRoute {
-    case .extensionOwned: "extension"
+    case .extensionOwned: "transport-extension"
     case .rawAccess: "raw-access"
     case .system: "system ownership=\(label(record.profile.server))"
     }

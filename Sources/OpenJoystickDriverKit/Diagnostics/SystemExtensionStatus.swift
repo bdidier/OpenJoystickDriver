@@ -7,12 +7,12 @@ package enum ExtensionBundleState: Sendable, Equatable {
 }
 
 package struct ExtensionVersionFacts: Sendable, Equatable {
-  package let bundleIdentifier: String
+  package let extensionID: String
   package let shortVersion: String
   package let buildVersion: String
 
-  package init(bundleIdentifier: String, shortVersion: String, buildVersion: String) {
-    self.bundleIdentifier = bundleIdentifier
+  package init(extensionID: String, shortVersion: String, buildVersion: String) {
+    self.extensionID = extensionID
     self.shortVersion = shortVersion
     self.buildVersion = buildVersion
   }

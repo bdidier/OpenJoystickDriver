@@ -19,9 +19,9 @@ extension DeviceManager {
 
     var ownershipObservation: ControllerOwnershipObservation {
       switch self {
-      case .hid: .nativeHIDVisible
+      case .hid: .systemHidVisible
       case .rawUSB(.ioUSBHost): .exclusiveRawUSB
-      case .rawUSB(.usbDriverKit): .driverKitOwnedUSB
+      case .rawUSB(.usbDriverKit): .extensionOwnedUsb
       }
     }
   }
@@ -64,7 +64,7 @@ extension DeviceManager {
     }
 
     var ownershipObservation: ControllerOwnershipObservation {
-      if physicalDevice?.nativePassThrough == true { return .nativeGamepad }
+      if physicalDevice?.nativePassThrough == true { return .systemGamepad }
       if case .hid = discoverySource, hidInputOwnership == .exclusive { return .exclusiveHID }
       return discoverySource.ownershipObservation
     }

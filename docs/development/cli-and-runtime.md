@@ -30,7 +30,7 @@ ojd service start|stop|wait
 ojd controller list|show|watch|capture|rumble|light|player|suspend|resume|disconnect
 ojd virtual show|set|reset
 ojd permission list|request
-ojd extension status|activate|deactivate
+ojd transport-extension status|activate|deactivate
 ojd setting list|get|set
 ojd log show|path
 ojd diagnose [--output PATH] [--soak SECONDS]
@@ -44,7 +44,7 @@ ojd update check
 | `status` | Overview |
 | `service start/stop/wait` | Menu-bar Quit and app launch |
 | `permission list/request` | Overview permission cards |
-| `extension status/activate/deactivate` | Overview Xbox USB Driver card |
+| `transport-extension status/activate/deactivate` | Overview Xbox USB Driver card |
 | `setting list/get/set` | Settings |
 | `log show/path` | Console pane |
 | `diagnose --output` | Copy Support Report |

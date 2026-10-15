@@ -76,12 +76,12 @@ package final class SystemExtensionSubmission: NSObject, OSSystemExtensionReques
     switch mode {
     case .activation:
       request = OSSystemExtensionRequest.activationRequest(
-        forExtensionWithIdentifier: ExtensionProbe.bundleIdentifier,
+        forExtensionWithIdentifier: ExtensionProbe.extensionID,
         queue: .main
       )
     case .deactivation:
       request = OSSystemExtensionRequest.deactivationRequest(
-        forExtensionWithIdentifier: ExtensionProbe.bundleIdentifier,
+        forExtensionWithIdentifier: ExtensionProbe.extensionID,
         queue: .main
       )
     }
@@ -112,7 +112,7 @@ package final class SystemExtensionSubmission: NSObject, OSSystemExtensionReques
     setResult(
       .completed(
         localization.formatted(
-          "cli.extension.completed",
+          "cli.transport_extension.completed",
           arguments: [String(result.rawValue)]
         )
       )
@@ -126,7 +126,7 @@ package final class SystemExtensionSubmission: NSObject, OSSystemExtensionReques
     setResult(
       .failed(
         localization.formatted(
-          "cli.extension.failed",
+          "cli.transport_extension.failed",
           arguments: [nsError.domain, nsError.code, nsError.localizedDescription]
         )
       )
@@ -146,7 +146,7 @@ package final class SystemExtensionSubmission: NSObject, OSSystemExtensionReques
     withExtension ext: OSSystemExtensionProperties
   ) -> OSSystemExtensionRequest.ReplacementAction {
     let message = localization.formatted(
-      "cli.extension.replacing",
+      "cli.transport_extension.replacing",
       arguments: [existing.bundleIdentifier, existing.bundleVersion, ext.bundleVersion]
     )
     FileHandle.standardError.write(Data((message + "\n").utf8))
@@ -172,7 +172,7 @@ package final class SystemExtensionSubmission: NSObject, OSSystemExtensionReques
     setResult(
       .failed(
         localization.string(
-          "cli.extension.cancelled"
+          "cli.transport_extension.cancelled"
         )
       )
     )
