@@ -25,6 +25,11 @@ actor PhysicalHIDOutputSerialQueue {
     let sequence: UInt64
   }
 
+  /// The priority of the queue's own tasks, whatever the caller's. A task created at the caller's
+  /// priority inherits a background caller's: under CPU contention macOS may not schedule a
+  /// background-QoS job for minutes, and every later operation, however urgent, waits behind it.
+  static let taskPriority = TaskPriority.userInitiated
+
   @TaskLocal
   private static var runningOperation: RunningOperation?
 
@@ -39,7 +44,9 @@ actor PhysicalHIDOutputSerialQueue {
   /// A queue whose first operation waits until `predecessor` has drained, so a reconnected
   /// interface's output stays serialized behind a removed queue's running operation.
   init(after predecessor: PhysicalHIDOutputSerialQueue? = nil) {
-    tail = predecessor.map { predecessor in Task { await predecessor.drain() } }
+    tail = predecessor.map { predecessor in
+      Task(priority: Self.taskPriority) { await predecessor.drain() }
+    }
   }
 
   /// Queues `operation`. `nonisolated(nonsending)` runs this on the caller's executor, so the
@@ -67,7 +74,7 @@ actor PhysicalHIDOutputSerialQueue {
     defer { submittedOperationCount -= 1 }
     sequence &+= 1
     let current = sequence
-    let task = Task<PhysicalOutputQueueOutcome<Value>, Never> {
+    let task = Task<PhysicalOutputQueueOutcome<Value>, Never>(priority: Self.taskPriority) {
       // A cancelled operation still waits for its predecessor, so the operations queued after it
       // keep running one at a time.
       if let previous { await previous.value }
@@ -78,7 +85,7 @@ actor PhysicalHIDOutputSerialQueue {
       self.finish(current)
       return .completed(value)
     }
-    tail = Task { _ = await task.value }
+    tail = Task(priority: Self.taskPriority) { _ = await task.value }
     let outcome = await task.value
     if sequence == current { tail = nil }
     return outcome

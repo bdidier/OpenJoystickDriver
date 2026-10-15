@@ -100,6 +100,7 @@ private final class FirstStickDispatchHeldRecorder: OutputDispatcher, @unchecked
 /// `DeviceManager.EventBatches` and `inputReportsFollowedByLaterReport(in:)`, over the real
 /// pipeline, `UserSpaceOutputDispatcher`, and `UserSpaceReportSender`. The Service target's
 /// `AutomaticUserSpaceOutputDispatcher` is not reachable from Kit tests.
+@Suite(.timeLimit(.minutes(2)))
 struct StickDeliveryLatencyTests {
   private static let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 1)
   private static let connectionID = UUID()
