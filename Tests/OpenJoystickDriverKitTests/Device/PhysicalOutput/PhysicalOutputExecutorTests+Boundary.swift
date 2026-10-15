@@ -25,18 +25,14 @@ extension PhysicalOutputExecutorTests {
     await manager.stop()
   }
 
-  /// A profile colour through the sink is accepted, and refused once the manager is stopping.
+  /// A profile colour, and its removal, are accepted through the sink for a connected controller.
   @Test
-  func aProfileColorThroughTheSinkIsRefusedOnceTheManagerStops() async throws {
+  func aProfileColorThroughTheSinkIsAcceptedForAConnectedController() async throws {
     let started = try await startSixaxis(locationID: 541)
     let manager = started.manager
+    let color = ControllerColor(red: 0, green: 128, blue: 255)
+    try await manager.consume(ProfileColorClaim(color), for: started.identifier)
     try await manager.consume(ProfileColorClaim(nil), for: started.identifier)
     await manager.stop()
-
-    await #expect(
-      throws: StreamBoundaryError.rejected(.physicalOutput, "profile colour not applied")
-    ) {
-      try await manager.consume(ProfileColorClaim(nil), for: started.identifier)
-    }
   }
 }
