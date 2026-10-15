@@ -245,7 +245,7 @@ struct DiagnoseCommandTests {
     defer { try? FileManager.default.removeItem(at: directory) }
     let path = directory.appendingPathComponent("support.json").path
 
-    let result = await run(["--bundle", path, "--json"], socketPath: temporarySocketPath())
+    let result = await run(["--output", path, "--json"], socketPath: temporarySocketPath())
 
     #expect(result.code == 0, "\(result.standardError)")
     #expect(try result.json()["bundle"] as? String == path)
@@ -263,7 +263,7 @@ struct DiagnoseCommandTests {
     defer { try? FileManager.default.removeItem(at: directory) }
     let path = directory.appendingPathComponent("support.json").path
 
-    let result = await run(["--bundle", path, "--json"], socketPath: socketPath)
+    let result = await run(["--output", path, "--json"], socketPath: socketPath)
 
     #expect(result.code == 0, "\(result.standardError)")
     let bundle = try #require(
@@ -290,7 +290,7 @@ struct DiagnoseCommandTests {
     defer { try? FileManager.default.removeItem(at: directory) }
     let path = directory.appendingPathComponent("support.json").path
 
-    _ = await run(["--bundle", path, "--json"], socketPath: temporarySocketPath())
+    _ = await run(["--output", path, "--json"], socketPath: temporarySocketPath())
 
     let bundle = try #require(
       JSONSerialization.jsonObject(with: Data(contentsOf: URL(fileURLWithPath: path)))
@@ -304,7 +304,7 @@ struct DiagnoseCommandTests {
   func aMissingBundleParentIsAUsageError() async {
     let path = "/tmp/\(UUID().uuidString)/missing/support.json"
 
-    let result = await run(["--bundle", path], socketPath: temporarySocketPath())
+    let result = await run(["--output", path], socketPath: temporarySocketPath())
 
     #expect(result.code == 64)
     #expect(result.standardOutput.isEmpty)

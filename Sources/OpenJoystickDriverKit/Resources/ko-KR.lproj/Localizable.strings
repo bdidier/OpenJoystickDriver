@@ -942,8 +942,9 @@
 "cli.error.service_timeout" = "서비스가 제때 응답하지 않았습니다. 다시 시도하거나 ‘ojd status’로 확인하세요.";
 "cli.error.service_unavailable" = "OpenJoystickDriver 서비스가 실행 중이 아닙니다. ‘ojd service start’로 시작하세요.";
 "cli.error.timeout_value" = "--timeout에는 0보다 큰 초 단위 숫자가 필요합니다.";
-"cli.error.unexpected" = "예기치 않은 오류: %@. ‘ojd diagnose --bundle PATH’를 실행하고 번들을 버그 보고서에 첨부하세요.";
+"cli.error.unexpected" = "예기치 않은 오류: %@. ‘ojd diagnose --output PATH’를 실행하고 번들을 버그 보고서에 첨부하세요.";
 "cli.error.unknown_command" = "알 수 없는 명령 ‘%@’입니다. ‘%@’ 명령을 찾으셨나요?";
+"cli.error.renamed_flag" = "‘%@’의 이름이 ‘%@’(으)로 바뀌었습니다.";
 "cli.option.json" = "JSON을 stdout에 출력합니다.";
 "cli.option.no_color" = "색상을 사용하지 않습니다.";
 "cli.option.no_input" = "입력을 요청하지 않으며, 값이 없으면 실패합니다.";
@@ -1050,11 +1051,11 @@
 "cli.access.web.port" = "127.0.0.1의 포트이며 1024부터 65535까지입니다.";
 "cli.access.web.port_range" = "--port는 1024에서 65535 사이여야 합니다.";
 "cli.diagnose.abstract" = "모든 검사를 실행하고 문제를 보고합니다.";
-"cli.diagnose.bundle" = "지원용 번들도 이 파일에 기록합니다.";
-"cli.diagnose.bundle_failed" = "지원용 번들을 기록하지 못했습니다: %@. 다른 --bundle 경로를 지정하십시오.";
-"cli.diagnose.bundle_parent" = "--bundle에는 기존 디렉터리가 필요합니다. %@이(가) 없습니다.";
-"cli.diagnose.bundle_progress" = "지원용 번들을 기록하는 중...";
-"cli.diagnose.bundle_written" = "지원용 번들을 %@에 기록했습니다. 장치 이름이 포함되어 있으므로 공유하기 전에 검토하십시오.";
+"cli.diagnose.output" = "지원용 번들도 이 파일에 기록합니다.";
+"cli.diagnose.output_failed" = "지원용 번들을 기록하지 못했습니다: %@. 다른 --output 경로를 지정하십시오.";
+"cli.diagnose.output_parent" = "--bundle에는 기존 디렉터리가 필요합니다. %@이(가) 없습니다.";
+"cli.diagnose.output_progress" = "지원용 번들을 기록하는 중...";
+"cli.diagnose.output_written" = "지원용 번들을 %@에 기록했습니다. 장치 이름이 포함되어 있으므로 공유하기 전에 검토하십시오.";
 "cli.diagnose.discussion" = "각 검사는 pass, warn, fail, skip 중 하나를 보고합니다. 서비스가 필요한 검사는 서비스가 중지된 동안 건너뜁니다. 검사 중 하나라도 fail이면 종료 코드 1로 끝납니다. --soak은 지정한 시간 동안 서비스를 샘플링하는 런타임 상태 검사를 추가하며, 이 옵션이 없으면 해당 검사는 건너뜁니다. --bundle은 지원용 보고서도 기록하므로 공유하기 전에 검토하십시오.";
 "cli.diagnose.extension.absent" = "macOS에 등록되지 않았습니다. ‘ojd extension activate’를 실행하십시오";
 "cli.diagnose.extension.active" = "macOS에서 활성화됨";
@@ -1063,7 +1064,7 @@
 "cli.diagnose.extension.bundle_present" = "앱에 포함되어 있음";
 "cli.diagnose.extension.inactive" = "등록되었지만 활성화되지 않았습니다. ‘ojd extension activate’로 승인하십시오";
 "cli.diagnose.extension.unavailable" = "macOS가 등록 상태를 알려 주지 않았습니다: %@";
-"cli.diagnose.failed" = "실패한 검사: %lld개. 위의 세부 정보를 참고하여 해결하거나, ‘ojd diagnose --bundle <path>’를 실행하여 파일을 버그 보고서에 첨부하십시오.";
+"cli.diagnose.failed" = "실패한 검사: %lld개. 위의 세부 정보를 참고하여 해결하거나, ‘ojd diagnose --output <path>’를 실행하여 파일을 버그 보고서에 첨부하십시오.";
 "cli.diagnose.footprint_limit" = "--soak 사용 시 이 물리 메모리 사용량(MiB)을 초과하면 실패 처리합니다. 0이면 사용 안 함 (0-65536).";
 "cli.diagnose.interval" = "--soak 사용 시 샘플 간 간격(밀리초) (100-60000).";
 "cli.diagnose.interval_range" = "--interval-ms는 100에서 60000 사이여야 합니다.";

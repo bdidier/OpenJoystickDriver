@@ -269,7 +269,8 @@ struct SupportReportBindingTests {
         sourceCommit: String(repeating: "a", count: 40),
         sourceState: .clean
       ),
-      macOSVersion: "26.0.0",
+      osName: "macOS",
+      osVersion: "26.0.0",
       architecture: "arm64",
       inputMonitoring: .granted,
       applicationServiceInstalled: true,

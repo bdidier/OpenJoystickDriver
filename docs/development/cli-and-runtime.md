@@ -33,7 +33,7 @@ ojd permission list|request
 ojd extension status|activate|deactivate
 ojd setting list|get|set
 ojd log show|path
-ojd diagnose [--bundle PATH] [--soak SECONDS]
+ojd diagnose [--output PATH] [--soak SECONDS]
 ojd update check
 ```
 
@@ -47,7 +47,7 @@ ojd update check
 | `extension status/activate/deactivate` | Overview Xbox USB Driver card |
 | `setting list/get/set` | Settings |
 | `log show/path` | Console pane |
-| `diagnose --bundle` | Copy Support Report |
+| `diagnose --output` | Copy Support Report |
 | `update check` | Settings update check |
 | JSON/JSONL output, scripting, soak tests, catalog diagnostics, packaging, catalog generation, and DriverKit generation | Automation-only |
 
