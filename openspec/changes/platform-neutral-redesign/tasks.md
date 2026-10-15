@@ -190,7 +190,7 @@ Depends: 9, 12.
 Verify: `./Scripts/ojd check schemas`, `.build/schema-validator/bin/python -m unittest discover -s Tests/RepositoryScripts`, `ruff check Scripts Tests/RepositoryScripts`, `pyright`.
 
 - [x] 14.1 Move schemas from `Resources/Schemas/v1beta1/` to flat files named `<kind>.schema.json`. Verify: `./Scripts/ojd check schemas` finds all and nothing remains in the old directory.
-- [ ] 14.2 Require `apiVersion: openjoystickdriver/v1alpha1` and `kind` on every document kind; reject `openjoystickdriver.io/v1beta1`. Verify: negative tests per kind.
+- [x] 14.2 Require `apiVersion: openjoystickdriver/v1alpha1` and `kind` on every document kind; reject `openjoystickdriver.io/v1beta1`. Verify: negative tests per kind.
 - [x] 14.3 Set `$id` to `https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/<kind>.schema.json` and extend `validate_schemas` to check ids and the `apiVersion` constant against one source. Verify: the constant-equality unit test.
 - [x] 14.4 Rewrite `Resources/Schemas/AGENTS.md` for the flat layout. Verify: markdownlint over the file.
 - [x] 14.5 Update every sample and doc under `docs/sdk/` to the new header. Verify: `./Scripts/ojd check schemas` and `ojd mod validate` on the sample.
