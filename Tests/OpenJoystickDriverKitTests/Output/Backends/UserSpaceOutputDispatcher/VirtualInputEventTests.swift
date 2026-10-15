@@ -7,13 +7,11 @@ struct VirtualInputEventTests {
   /// Maps a parsed snapshot onto the virtual state with no stick dead zone.
   private func apply(
     _ event: ControllerEvent?,
-    labels: ControllerButtonLabels = .standard,
     to state: inout VirtualGamepadState
   ) {
     guard let event else { return }
     UserSpaceOutputDispatcher.apply(
       event.state,
-      labels: labels,
       stickTransfer: .init(deadzone: 0, rescalesDeadzone: false),
       to: &state
     )
@@ -50,7 +48,7 @@ struct VirtualInputEventTests {
 
     let events = try parser.parseReport(Data(packet))
     var state = VirtualGamepadState()
-    apply(events, labels: .playStation, to: &state)
+    apply(events, to: &state)
     let virtualReport = try xboxOneSReport(state)
 
     #expect(events.contains(.press(.south)))
@@ -119,7 +117,6 @@ struct VirtualInputEventTests {
       var state = VirtualGamepadState()
       UserSpaceOutputDispatcher.apply(
         snapshot(.leftStick(x: x, y: y)),
-        labels: .standard,
         stickTransfer: UserSpaceOutputDispatcher.stickTransfer(for: zd),
         to: &state
       )

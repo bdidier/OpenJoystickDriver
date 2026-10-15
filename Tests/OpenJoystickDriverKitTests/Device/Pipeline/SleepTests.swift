@@ -331,7 +331,6 @@ private final class RecordingOutputDispatcher: OutputDispatcher, @unchecked Send
 
   func dispatch(
     _ event: ControllerEvent,
-    labels _: ControllerButtonLabels,
     from _: LogicalControllerID
   ) { lock.withLock { recordedStates.append(event.state) } }
 

@@ -15,7 +15,6 @@ struct StreamBoundaryTests {
 
     func dispatch(
       _ event: ControllerEvent,
-      labels _: ControllerButtonLabels,
       from _: LogicalControllerID
     ) async {  // swiftlint:disable:this async_without_await
       lock.withLock { published.append(event) }
@@ -52,7 +51,7 @@ struct StreamBoundaryTests {
     let event = ControllerEvent([.leftStick(x: 0.5, y: 0)])
 
     try await dispatcher.consume(
-      .controller(event, labels: .standard, from: Self.identifier)
+      .controller(event, from: Self.identifier)
     ) { delivered.withLock { $0 += 1 } }
 
     #expect(dispatcher.destination == .virtualDevice)

@@ -33,7 +33,6 @@ extension UserSpaceOutputDispatcher {
   /// mapping; the dispatcher and the `VirtualHIDProfile` encoders share it.
   static func apply(
     _ input: ControllerState,
-    labels: ControllerButtonLabels,
     stickTransfer: StickTransfer,
     rightPadIsRightStick: Bool = false,
     to state: inout VirtualGamepadState

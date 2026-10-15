@@ -21,8 +21,7 @@ enum ProfileCapabilityResolver {
     let pairInput = halves.map(\.physicalInput).reduce(resolved.physicalInput) { $0.union($1) }
     return ControllerProfileCapabilities(
       physicalInput: pairInput,
-      physicalOutput: resolved.physicalOutput,
-      buttonLabels: .nintendo
+      physicalOutput: resolved.physicalOutput
     )
   }
 
@@ -35,9 +34,8 @@ enum ProfileCapabilityResolver {
       $0.vendorID == profile.device.vendorID && $0.productID == profile.device.productID
     }
     if let first = matchingDevices.first {
-      let labels = ControllerButtonLabels(protocolID: first.protocolBinding.protocolID)
-      return matchingDevices.dropFirst().reduce(capabilities(for: first, labels: labels)) {
-        $0.intersecting(capabilities(for: $1, labels: labels))
+      return matchingDevices.dropFirst().reduce(capabilities(for: first)) {
+        $0.intersecting(capabilities(for: $1))
       }
     }
     return registry.profileCapabilities(
@@ -46,13 +44,11 @@ enum ProfileCapabilityResolver {
   }
 
   private static func capabilities(
-    for device: ApplicationServiceDeviceDescription,
-    labels: ControllerButtonLabels
+    for device: ApplicationServiceDeviceDescription
   ) -> ControllerProfileCapabilities {
     ControllerProfileCapabilities(
       physicalInput: device.capabilities,
-      physicalOutput: device.physicalOutputCapabilities,
-      buttonLabels: labels
+      physicalOutput: device.physicalOutputCapabilities
     )
   }
 }

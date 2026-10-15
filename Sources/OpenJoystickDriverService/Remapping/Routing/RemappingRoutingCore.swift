@@ -3,7 +3,7 @@ import OpenJoystickDriverKit
 
 /// What one routed call carries: a controller's snapshot, or a request to activate its output.
 enum RemappingRoutedInput: Sendable {
-  case input(ControllerEvent, ControllerButtonLabels)
+  case input(ControllerEvent)
   case activation
 }
 
@@ -102,8 +102,8 @@ actor RemappingRoutingCore {
       guard route.eligibility == .eligible else { return }
       _ = try requireOperationalPermit(proposedPermit)
       switch input {
-      case .input(let event, let labels):
-        try? await virtualOutput.consume(.controller(event, labels: labels, from: identifier)) {}
+      case .input(let event):
+        try? await virtualOutput.consume(.controller(event, from: identifier)) {}
       case .activation:
         try? await virtualOutput.consume(.activation(identifier)) {}
       }
@@ -112,10 +112,9 @@ actor RemappingRoutingCore {
       let permit = try requireOperationalPermit(proposedPermit)
       do {
         switch input {
-        case .input(let event, let labels):
+        case .input(let event):
           try await engine.process(
             pairEvent(event, from: identifier),
-            labels: labels,
             from: identifier,
             into: routingIdentifier,
             using: profile,

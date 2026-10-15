@@ -42,7 +42,6 @@ struct PersonaControlMappingTests {
       var state = VirtualGamepadState()
       Dispatcher.apply(
         input,
-        labels: .standard,
         stickTransfer: Dispatcher.StickTransfer(deadzone: 0, rescalesDeadzone: false),
         rightPadIsRightStick: rightPadIsRightStick,
         to: &state

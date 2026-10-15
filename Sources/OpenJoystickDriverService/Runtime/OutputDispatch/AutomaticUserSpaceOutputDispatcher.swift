@@ -181,13 +181,11 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
   var lastRumbleStatus: String? { nil }
   func dispatch(
     _ event: ControllerEvent,
-    labels: ControllerButtonLabels,
     from identifier: LogicalControllerID
   ) async {
     let unobserved: @Sendable () -> Void = {}
     try? await dispatchPublishing(
       event,
-      labels: labels,
       from: identifier,
       onPublished: unobserved
     )
@@ -195,12 +193,11 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
 
   func dispatchPublishing(
     _ event: ControllerEvent,
-    labels: ControllerButtonLabels,
     from identifier: LogicalControllerID,
     onPublished: @escaping @Sendable () -> Void
   ) async throws {
     do {
-      try await deliver(.input(event, labels), from: identifier, onPublished: onPublished)
+      try await deliver(.input(event), from: identifier, onPublished: onPublished)
     } catch {
       await synchronizeDiagnostics()
       throw error

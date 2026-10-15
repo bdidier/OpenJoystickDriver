@@ -19,7 +19,6 @@ extension RemappingEngineState {
   /// pair) never release each other's controls.
   mutating func process(
     _ event: ControllerEvent,
-    labels: ControllerButtonLabels,
     from source: LogicalControllerID,
     into target: LogicalControllerID,
     profile: RemappingProfile,
@@ -28,24 +27,27 @@ extension RemappingEngineState {
     let baseline = sourceBaselines[source] ?? .neutral
     sourceBaselines[source] = event.state
     let changes =
-      Self.changes(from: baseline, to: event.state, labels: labels)
+      Self.changes(from: baseline, to: event.state)
       + event.motion.map(RemappingInputChange.motion)
       + event.touchFrames.map(RemappingInputChange.touch)
     return process(changes: changes, from: target, profile: profile, at: uptimeNanoseconds)
   }
 
-  /// Changes from `old` to `new` in the order the delta pipeline delivered them: buttons in parser
-  /// label order, then the hat, left stick, right stick, left trigger and right trigger.
+  /// Changes from `old` to `new`: every button release before any button press, so a report that
+  /// swaps one held button for another never shows both held; releases and presses each follow
+  /// ``controlOrder``. The hat, left stick, right stick, left trigger and right trigger follow.
   static func changes(
     from old: ControllerState,
-    to new: ControllerState,
-    labels: ControllerButtonLabels
+    to new: ControllerState
   ) -> [RemappingInputChange] {
     var changes: [RemappingInputChange] = []
-    for control in controlOrder(labels) {
-      let isPressed = new.pressed.contains(control)
-      guard old.pressed.contains(control) != isPressed else { continue }
-      changes.append(.button(control, isPressed: isPressed))
+    for isPressed in [false, true] {
+      for control in controlOrder {
+        guard old.pressed.contains(control) != new.pressed.contains(control),
+          new.pressed.contains(control) == isPressed
+        else { continue }
+        changes.append(.button(control, isPressed: isPressed))
+      }
     }
     if old.hat != new.hat { changes.append(.dpad(new.hat)) }
     if old.leftStick != new.leftStick {
@@ -63,40 +65,15 @@ extension RemappingEngineState {
     return changes
   }
 
-  /// Digital controls in the order the delta pipeline delivered their changes: the declaration
-  /// order of the parser button each family's parsers spelled them with (Xbox spelling for the
-  /// standard and Nintendo families, PlayStation spelling, stick clicks first, for PlayStation).
-  static func controlOrder(_ labels: ControllerButtonLabels) -> [Control] {
-    switch labels {
-    case .standard: standardControlOrder
-    case .nintendo: nintendoControlOrder
-    case .playStation: playStationControlOrder
-    }
-  }
-
-  private static let extraControlOrder: [Control] = [
-    .leftPaddle2, .rightPaddle2, .leftTrackpadClick, .rightTrackpadClick, .auxiliary3, .auxiliary4,
-    .auxiliary5, .auxiliary6, .auxiliary1, .auxiliary2, .leftPaddle1, .rightPaddle1,
-  ]
-
-  private static let standardControlOrder: [Control] =
+  /// Digital controls in the one order that releases and presses are each delivered in, the same
+  /// for every controller.
+  static let controlOrder: [Control] =
     [
       .south, .east, .west, .north, .leftShoulder, .rightShoulder, .leftStickClick,
       .rightStickClick, .start, .back, .guide, .leftTrigger, .rightTrigger, .capture,
       .touchpadClick, .microphone,
-    ] + extraControlOrder
-
-  private static let nintendoControlOrder: [Control] =
-    [
-      .south, .east, .west, .north, .leftShoulder, .rightShoulder, .leftStickClick,
-      .rightStickClick, .start, .back, .guide, .leftTrigger, .rightTrigger, .capture,
-      .touchpadClick, .microphone,
-    ] + extraControlOrder
-
-  private static let playStationControlOrder: [Control] =
-    [
-      .leftStickClick, .rightStickClick, .south, .east, .west, .north,
-      .leftShoulder, .rightShoulder, .leftTrigger, .rightTrigger, .back, .start, .guide,
-      .touchpadClick, .microphone,
-    ] + extraControlOrder
+      .leftPaddle2, .rightPaddle2, .leftTrackpadClick, .rightTrackpadClick, .auxiliary3,
+      .auxiliary4, .auxiliary5, .auxiliary6, .auxiliary1, .auxiliary2, .leftPaddle1,
+      .rightPaddle1,
+    ]
 }

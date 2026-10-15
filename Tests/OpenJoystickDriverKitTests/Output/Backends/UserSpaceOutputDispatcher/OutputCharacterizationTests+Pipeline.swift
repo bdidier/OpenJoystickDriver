@@ -23,12 +23,11 @@ extension OutputCharacterizationTests {
     /// Records what the snapshot changed since the previous one.
     func dispatch(
       _ event: ControllerEvent,
-      labels: ControllerButtonLabels,
       from identifier: LogicalControllerID
     ) async {
       let changes = lock.withLock {
         defer { previous = event.state }
-        return OutputCharacterizationTests.renderChanges(from: previous, to: event, labels: labels)
+        return OutputCharacterizationTests.renderChanges(from: previous, to: event)
       }
       record("  dispatch [\(changes)]")
       await output.dispatch(event, from: identifier)

@@ -8,7 +8,6 @@ extension UserSpaceOutputDispatcher {
 
   internal func deliver(
     input: ControllerState?,
-    labels: ControllerButtonLabels,
     from identifier: LogicalControllerID,
     remappedState: RemappingGamepadState?,
     onPublished: @escaping @Sendable () -> Void = {}
@@ -54,7 +53,6 @@ extension UserSpaceOutputDispatcher {
           } else if let input {
             Self.apply(
               input,
-              labels: labels,
               stickTransfer: stickTransfer,
               rightPadIsRightStick: rightPadIsRightStick,
               to: &state

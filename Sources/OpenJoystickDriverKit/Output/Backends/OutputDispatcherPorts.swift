@@ -68,12 +68,9 @@ public protocol OutputDispatcher: OutputSink {
   /// with an unchanged state to activate output for the controller.
   /// - Parameters:
   ///   - event: The controller's state and the samples of the report that produced it.
-  ///   - labels: The family labels the controller's pipeline was bound with; the same source
-  ///     always passes the same labels.
   ///   - identifier: Which controller the state came from.
   func dispatch(
     _ event: ControllerEvent,
-    labels: ControllerButtonLabels,
     from identifier: LogicalControllerID
   ) async
 
@@ -83,12 +80,11 @@ public protocol OutputDispatcher: OutputSink {
   /// after it resumes or reconnects.
   func activateOutput(for identifier: LogicalControllerID) async
 
-  /// Dispatches like ``dispatch(_:labels:from:)`` while preserving publication failures for
+  /// Dispatches like ``dispatch(_:from:)`` while preserving publication failures for
   /// recovery coordinators, and calls `onPublished` right after the report reaches the virtual
   /// device. `onPublished` is not called when output is suppressed or the publish fails.
   func dispatchPublishing(
     _ event: ControllerEvent,
-    labels: ControllerButtonLabels,
     from identifier: LogicalControllerID,
     onPublished: @escaping @Sendable () -> Void
   ) async throws
@@ -101,11 +97,10 @@ extension OutputDispatcher {
   @preconcurrency
   public func dispatchPublishing(
     _ event: ControllerEvent,
-    labels: ControllerButtonLabels,
     from identifier: LogicalControllerID,
     onPublished _: @escaping @Sendable () -> Void
   ) async throws {
-    await dispatch(event, labels: labels, from: identifier)
+    await dispatch(event, from: identifier)
   }
 }
 
@@ -129,7 +124,6 @@ public final class LoggingOutputDispatcher: OutputDispatcher, Sendable {
   /// Prints each state to standard output.
   public func dispatch(
     _ event: ControllerEvent,
-    labels _: ControllerButtonLabels,
     from identifier: LogicalControllerID
   ) {
     print(

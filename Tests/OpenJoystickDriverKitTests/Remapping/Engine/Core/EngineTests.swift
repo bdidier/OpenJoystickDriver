@@ -16,22 +16,19 @@ struct RemappingEngineTests {
 
     for (control, source) in aliases {
       let profile = profile(bindings: [binding(source: source, key: .space)])
-      for labels in [ControllerButtonLabels.standard, .playStation] {
-        for change in [InputChange.press(control), .release(control)] {
-          try await engine.process(
-            inputs: [change],
-            from: device(1),
-            labels: labels,
-            using: profile,
-            at: 0
-          )
-        }
+      for change in [InputChange.press(control), .release(control)] {
+        try await engine.process(
+          inputs: [change],
+          from: device(1),
+          using: profile,
+          at: 0
+        )
       }
     }
 
     #expect(
       sink.actions()
-        == Array(repeating: [.keyDown(.space), .keyUp(.space)], count: 14).flatMap { $0 }
+        == Array(repeating: [.keyDown(.space), .keyUp(.space)], count: aliases.count).flatMap { $0 }
     )
   }
 
@@ -39,18 +36,14 @@ struct RemappingEngineTests {
   func packetMappedButtonsRemainReachable() async throws {
     let sink = RemappingTestSink()
     let engine = RemappingEventEngine(sink: sink)
-    let cases: [(Control, ControllerButtonLabels)] = [
-      (.capture, .standard), (.start, .playStation), (.microphone, .standard),
-      (.touchpadClick, .playStation),
-    ]
+    let cases: [Control] = [.capture, .start, .microphone, .touchpadClick]
 
-    for (control, labels) in cases {
+    for control in cases {
       let currentProfile = profile(bindings: [binding(source: .button(control), key: .returnKey)])
       for change in [InputChange.press(control), .release(control)] {
         try await engine.process(
           inputs: [change],
           from: device(1),
-          labels: labels,
           using: currentProfile,
           at: 0
         )

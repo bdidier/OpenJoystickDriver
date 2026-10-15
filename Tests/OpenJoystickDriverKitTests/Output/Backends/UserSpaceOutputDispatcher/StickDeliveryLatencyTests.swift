@@ -71,7 +71,6 @@ private final class FirstStickDispatchHeldRecorder: OutputDispatcher, @unchecked
 
   func dispatch(
     _ event: ControllerEvent,
-    labels _: ControllerButtonLabels,
     from _: LogicalControllerID
   ) async {
     let holds = lock.withLock {
@@ -260,7 +259,6 @@ struct StickDeliveryLatencyTests {
     func deliver(_ x: Int16) async throws {
       try await dispatcher.deliver(
         input: state(x),
-        labels: .standard,
         from: Self.identifier,
         remappedState: nil
       )
@@ -346,7 +344,7 @@ struct StickDeliveryLatencyTests {
     _ = await pipeline.feedHIDData(Data([0]))
     for _ in 0..<5 { _ = await pipeline.feedHIDData(Data([1])) }
     let event = ControllerEvent([.leftStick(x: 0.5, y: 0)])
-    for _ in 0..<5 { await dispatcher.dispatch(event, labels: .standard, from: Self.identifier) }
+    for _ in 0..<5 { await dispatcher.dispatch(event, from: Self.identifier) }
     let published = backend.publishedReports().count
     await pipeline.stop()
     await dispatcher.close()

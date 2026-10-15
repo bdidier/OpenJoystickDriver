@@ -95,9 +95,7 @@
       cancelOutput(stopSelector: oldSelector)
       device = selectedDevice
       isDeviceConnected = true
-      liveState.reset(
-        labels: ControllerButtonLabels(protocolID: selectedDevice.protocolBinding.protocolID)
-      )
+      liveState.reset()
       rumbleIntensities = Dictionary(
         uniqueKeysWithValues: selectedDevice.physicalOutputCapabilities.rumbleMotors.map {
           ($0, 0.0)

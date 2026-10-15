@@ -8,6 +8,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The pr
 
 ### Added
 
+- The WebRTC bridge's `PeerMessage` button list is checked against `vocabulary.schema.json` by `PeerMessageTests.testTheFrameListsMatchTheSchemas`, which fails when the lists differ.
 - `ojd virtual export-mapping [PROFILE] [--format sdl|w3c]` prints the SDL mapping (one line per profile, a valid mapping file) or the W3C Gamepad description of each virtual gamepad profile, and `ojd virtual show --json` gains `sdl` (`guid`, `mapping`) and `w3c` (`id`, `buttons`, `axes`) on each controller that has a live profile. Both are derived from the profile's report descriptor and report codec, not written per profile; the `Generic` mapping equals the one in the equivalence snapshot. Each virtual device record states `worksWithDefaultSDLHints` (required in a definition, refused with `match`); `sdl.worksWithDefaultSDLHints` carries it in `--json`, and the human output of both commands notes it for `SdlCompatible`, which does not work with SDL's default hints. The four `cli.virtual.export_mapping.*` strings and `cli.virtual.sdl_hints_note` need native review in every language but English.
 - `./Scripts/ojd check tools` also runs `swift test` in `Tools/WebRTCBridge/`, and the CI job that runs it covers the bridge package. The route now needs the Swift toolchain and Xcode besides xmake and SDL3.
 - The wiki has a [WebRTC bridge](wiki/WebRTC-Bridge.md) page: the two roles, the steps to connect two Macs, and each option of `ojd-webrtc-bridge`.
@@ -166,6 +167,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The pr
 
 ### Removed
 
+- The `buttonLabels` key of a protocol description and the `ControllerButtonLabels` type are removed. Simultaneous button changes from one report reach the remapping engine with every release before any press, each in one fixed order for every controller, so a report that swaps one held button for another never holds both.
 - **Breaking:** `ojd controller ownership` is removed and is now an unknown command. Use `ojd controller claim` (was `virtual`) and `ojd controller release` (was `native`). In `ojd controller show --json`, `ownership.choice` and `ownership.choiceSource` are now `ownership.server` and `ownership.serverSource`, and `server` is `system` or `ojd`, and the `ojd controller claim` and `release` output has the kind `ControllerServer` with `server` in place of `ownership`.
 - **BREAKING:** Remove every command of the old command line, with no aliases. Each is replaced as follows:
   - `--headless` → run the executable as `ojd`; `--json-lines` → `--json`
