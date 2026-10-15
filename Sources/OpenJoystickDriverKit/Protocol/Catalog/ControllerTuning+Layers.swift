@@ -69,25 +69,28 @@ extension ControllerRecord {
 extension ControllerTuning {
   /// Why `key` does not apply to a controller of this family and stored variant, or nil when a
   /// driver reads it. A nil `protocolID` is a record with no known family: it reads only
-  /// `stickDeadzone`. `Scripts/Catalog/controller_patch.py` implements the same rule.
+  /// `stickDeadzone`. The family's description holds the keys; `controller_patch.py`
+  /// reads the same description.
   static func scopeViolation(
     _ key: Key,
     protocolID: PhysicalProtocolID?,
     variant: PhysicalProtocolVariantID?
   ) -> String? {
-    switch key {
-    case .stickDeadzone: return nil
-    case .inputLivenessTimeoutMs:
-      return protocolID == .sonyDualShock4
-        ? nil : "inputLivenessTimeoutMs requires the sony.dualshock4 family"
-    case .hidStartupRecoveryIntervalMs, .hidStartupRecoveryRounds:
-      return protocolID == .nintendoSwitch1
-        ? nil : "startup recovery tuning requires a Switch 1 controller with startup recovery"
-    case .hidStartupIntervalMs, .minimumHIDOutputIntervalMs:
-      guard let protocolID else { return "HID startup and output timings need a known family" }
-      return protocolID.usesRawUSB(storedVariant: variant)
-        ? "HID startup and output timings apply only to HID controllers" : nil
-    }
+    guard !scope(protocolID: protocolID, variant: variant).contains(key) else { return nil }
+    return "\(key.rawValue) is not read by the \(protocolID?.rawValue ?? "unknown") driver"
+  }
+
+  /// The keys that a controller of this family and stored variant reads.
+  static func scope(
+    protocolID: PhysicalProtocolID?,
+    variant: PhysicalProtocolVariantID?
+  ) -> Set<Key> {
+    guard let description = protocolID?.protocolDescription else { return [.stickDeadzone] }
+    return ProtocolDescription.tuningScope(
+      tuningKeys: description.tuningKeys,
+      rawUSB: description.rawUSB,
+      variant: variant
+    )
   }
 
   /// The keys that a controller of the record `document` reads, from its `protocol` family and
@@ -96,11 +99,7 @@ extension ControllerTuning {
     let info = document["protocol"] as? [String: Any]
     let protocolID = (info?["family"] as? String).flatMap(PhysicalProtocolID.init(rawValue:))
     let variant = (info?["variant"] as? String).flatMap(PhysicalProtocolVariantID.init(rawValue:))
-    return Set(
-      Key.allCases.filter {
-        scopeViolation($0, protocolID: protocolID, variant: variant) == nil
-      }
-    )
+    return scope(protocolID: protocolID, variant: variant)
   }
 }
 

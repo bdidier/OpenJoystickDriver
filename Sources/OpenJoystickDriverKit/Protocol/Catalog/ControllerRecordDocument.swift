@@ -97,13 +97,9 @@ struct ControllerRecordDocument: Decodable {
       )
     }
     if let endpoints = usb?.endpoints {
-      let defaultEndpoints: (Int, Int)
-      switch protocolInfo.protocolID {
-      case .xboxXUSB: defaultEndpoints = (129, 1)
-      case .xboxXID: defaultEndpoints = (129, 2)
-      default: defaultEndpoints = (130, 2)
-      }
-      guard (endpoints.input, endpoints.output) != defaultEndpoints else {
+      let defaultEndpoints = protocolInfo.protocolID.protocolDescription.endpoints
+      guard (endpoints.input, endpoints.output) != (defaultEndpoints.input, defaultEndpoints.output)
+      else {
         throw DecodingError.dataCorrupted(
           .init(
             codingPath: decoder.codingPath + [DocumentKey("usb"), DocumentKey("endpoints")],
@@ -143,7 +139,7 @@ struct ControllerRecordDocument: Decodable {
         )
       )
     }
-    if (inputLayout != nil) != (protocolInfo.protocolID == .hidReportLayout) {
+    if (inputLayout != nil) != protocolInfo.protocolID.requiresRecordInputLayout {
       throw DecodingError.dataCorrupted(
         .init(
           codingPath: codingPath + [DocumentKey("input")],

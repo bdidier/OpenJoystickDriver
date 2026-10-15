@@ -1,0 +1,13 @@
+{
+	"apiVersion": "openjoystickdriver/v1alpha1",
+	"kind": "ProtocolDescription",
+	"family": "valve.steam-deck",
+	"endpoints": {
+		"in": 130,
+		"out": 2
+	},
+	"tuningKeys": [
+		"hidStartupIntervalMs",
+		"minimumHIDOutputIntervalMs"
+	]
+}

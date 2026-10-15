@@ -67,12 +67,11 @@ public final class DualShock4Driver: PhysicalProtocolDriver {
     // Startup output is required only for the bound Bluetooth variant; Bluetooth-shaped reports
     // on a USB binding change the startup writes, not this requirement.
     sessionPlan = DriverSessionPlan(
-      inputReportLivenessTimeoutNanoseconds: 1_000_000_000,
       requiresInputConnectionBeforeOutput: model == .wirelessAdapter,
       outputPrecedesFeatureReads: true,
       requiresStartupOutput: prefersBluetooth,
       validatesFeatureReplies: true
-    )
+    ).withDefaults(of: .sonyDualShock4)
   }
 
   /// A new transport session starts from neutral input and re-anchors motion time.

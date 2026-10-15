@@ -109,6 +109,12 @@ public struct DriverSessionPlan: Equatable, Sendable {
     self.usbCommandChannel = usbCommandChannel
   }
 
+  /// This plan with the timings that `family`'s protocol description defaults in place of the
+  /// plan's own; the plan when the description defaults none.
+  func withDefaults(of family: PhysicalProtocolID) -> Self {
+    family.protocolDescription.tuning.map(tuned) ?? self
+  }
+
   /// This plan with the record's tuned timings in place of the driver defaults.
   func tuned(_ tuning: ControllerTuning) -> Self {
     func nanoseconds(_ milliseconds: Int) -> UInt64 {

@@ -2,6 +2,11 @@
 	"apiVersion": "openjoystickdriver/v1alpha1",
 	"kind": "ProtocolDescription",
 	"family": "xbox.xusb",
+	"endpoints": {
+		"in": 129,
+		"out": 1
+	},
+	"rawUSB": true,
 	"interfaceSignatures": [
 		{
 			"variant": "wired",

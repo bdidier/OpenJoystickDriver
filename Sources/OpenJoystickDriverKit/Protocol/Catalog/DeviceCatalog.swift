@@ -46,7 +46,7 @@ struct DeviceCatalog: Sendable {
       )
     }
     let protocolInfo = record.protocolInfo
-    let defaultEndpoints = defaultEndpoints(for: protocolInfo.protocolID)
+    let defaultEndpoints = protocolInfo.protocolID.protocolDescription.endpoints
     let inputEndpoint = record.usb?.endpoints?.input ?? defaultEndpoints.input
     let outputEndpoint = record.usb?.endpoints?.output ?? defaultEndpoints.output
     if record.usb != nil
@@ -97,7 +97,7 @@ struct DeviceCatalog: Sendable {
     variant: PhysicalProtocolVariantID?,
     needsSetConfiguration: Bool
   ) -> DeviceRuntimeProfile {
-    let endpoints = defaultEndpoints(for: protocolID)
+    let endpoints = protocolID.protocolDescription.endpoints
     return DeviceRuntimeProfile(
       recordID: nil,
       transportProfile: DeviceTransportProfile(
@@ -119,15 +119,5 @@ struct DeviceCatalog: Sendable {
       inputLayout: nil,
       tuning: .none
     )
-  }
-
-  private static func defaultEndpoints(
-    for protocolID: PhysicalProtocolID
-  ) -> (input: Int, output: Int) {
-    switch protocolID {
-    case .xboxXUSB: (input: 129, output: 1)
-    case .xboxXID: (input: 129, output: 2)
-    default: (input: 130, output: 2)
-    }
   }
 }

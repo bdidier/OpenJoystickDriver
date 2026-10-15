@@ -2,7 +2,9 @@ import Foundation
 
 let gameSirReportLength = 64
 let gameSirHeartbeatIntervalNanoseconds: UInt64 = 500_000_000
-let gameSirCommandIntervalNanoseconds: UInt64 = 20_000_000
+/// The spacing of lighting commands: the description's default output interval.
+let gameSirCommandIntervalNanoseconds =
+  DriverSessionPlan().withDefaults(of: .vendorGameSir).minimumHIDOutputIntervalNanoseconds
 let gameSirUSBTimeoutMilliseconds: UInt32 = 2_000
 let gameSirEnhancedHIDHeartbeatPayload: [UInt8] = [0x0F, 0xF2]
 

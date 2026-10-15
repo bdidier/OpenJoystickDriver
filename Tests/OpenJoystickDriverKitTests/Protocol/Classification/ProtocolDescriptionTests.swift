@@ -17,7 +17,7 @@ struct ProtocolDescriptionTests {
   ) throws(ProtocolDescriptionProblem) -> ProtocolDescription {
     let json = """
       {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "ProtocolDescription",
-       "family": "\(family.rawValue)", \(body)}
+       "family": "\(family.rawValue)", "endpoints": {"in": 130, "out": 2}, \(body)}
       """
     return try ProtocolDescription.decode(
       Data(json.utf8),
@@ -44,7 +44,47 @@ struct ProtocolDescriptionTests {
         #expect(description != nil, "\(family.rawValue)")
       }
     }
-    #expect(ProtocolDescription.bundled.count == 11)
+    #expect(ProtocolDescription.bundled.count == PhysicalProtocolID.allCases.count)
+  }
+
+  /// The family facts the drivers read come from the descriptions.
+  @Test
+  func bundledDescriptionsHoldTheFamilyFacts() throws {
+    let bundled = ProtocolDescription.bundled
+    #expect(bundled[.xboxXUSB]?.endpoints == .init(input: 129, output: 1))
+    #expect(bundled[.xboxXID]?.endpoints == .init(input: 129, output: 2))
+    #expect(bundled[.xboxGIP]?.endpoints == .init(input: 130, output: 2))
+    #expect(bundled[.xboxXID]?.rawUSB == .always)
+    #expect(bundled[.vendorGameSir]?.rawUSB == .variants([.usb]))
+    #expect(bundled[.sonyDualSense]?.rawUSB == .never)
+    #expect(bundled[.hidReportLayout]?.recordSections == [.input, .rumble])
+    #expect(bundled[.vendorPS3ThirdParty]?.recordSections == [.rumble])
+    #expect(bundled[.sonyDualShock4]?.buttonLabels == .playStation)
+    #expect(bundled[.nintendoSwitch2]?.buttonLabels == .nintendo)
+    #expect(bundled[.xboxGIP]?.buttonLabels == .standard)
+    #expect(bundled[.sonyDualShock4]?.tuning?.inputLivenessTimeoutMilliseconds == 1_000)
+    #expect(bundled[.nintendoSwitch1]?.tuning?.minimumHIDOutputIntervalMilliseconds == 50)
+    #expect(bundled[.vendorGameSir]?.tuning?.hidStartupIntervalMilliseconds == 20)
+    let sixaxis = try #require(bundled[.sonySixaxis]).macOSOwnedOutput
+    #expect(sixaxis.drivesRumble && sixaxis.setsStartupPlayerIndicator)
+    #expect(
+      sixaxis.reports == [ControllerTemplateReport(kind: .output, reportID: 0x01, length: 49)]
+    )
+  }
+
+  /// A raw-USB variant reads no HID timing, so its tuning scope is `stickDeadzone` alone.
+  @Test
+  func tuningScopeFollowsTheDescription() {
+    let gameSir = ControllerTuning.scope(protocolID: .vendorGameSir, variant: .usb)
+    #expect(gameSir == [.stickDeadzone])
+    let enhanced = ControllerTuning.scope(protocolID: .vendorGameSir, variant: .enhancedHID)
+    #expect(enhanced == [.stickDeadzone, .hidStartupIntervalMs, .minimumHIDOutputIntervalMs])
+    #expect(ControllerTuning.scope(protocolID: .xboxGIP, variant: nil) == [.stickDeadzone])
+    #expect(ControllerTuning.scope(protocolID: nil, variant: nil) == [.stickDeadzone])
+    #expect(
+      ControllerTuning.scope(protocolID: .sonyDualShock4, variant: nil)
+        .contains(.inputLivenessTimeoutMs)
+    )
   }
 
   /// The parameters a description declares are those `ProtocolParameters` decodes: the names
@@ -92,7 +132,8 @@ struct ProtocolDescriptionTests {
   func decodesDefaultsTheirDriverReads() throws {
     let layout = try decode(
       family: .hidReportLayout,
-      #""defaults": {"input": \#(Self.minimalInput), "tuning": {"stickDeadzone": 0.1}}"#
+      #""recordSections": ["input"], "#
+        + #""defaults": {"input": \#(Self.minimalInput), "tuning": {"stickDeadzone": 0.1}}"#
     )
     #expect(layout.inputLayout?.controls == [.faceSouth])
     #expect(layout.tuning == ControllerTuning(stickDeadzone: 0.1))
@@ -105,7 +146,8 @@ struct ProtocolDescriptionTests {
 
     let ds4 = try decode(
       family: .sonyDualShock4,
-      #""defaults": {"tuning": {"inputLivenessTimeoutMs": 1500}}"#
+      #""tuningKeys": ["inputLivenessTimeoutMs"], "#
+        + #""defaults": {"tuning": {"inputLivenessTimeoutMs": 1500}}"#
     )
     #expect(ds4.tuning == ControllerTuning(inputLivenessTimeoutMilliseconds: 1_500))
   }
@@ -114,7 +156,8 @@ struct ProtocolDescriptionTests {
   func anXboxXIDDescriptionMayDeclareAnInputLayout() throws {
     let description = try decode(
       family: .xboxXID,
-      #""defaults": {"input": \#(Self.minimalInput)}"#
+      #""rawUSB": true, "recordSections": ["input"], "#
+        + #""defaults": {"input": \#(Self.minimalInput)}"#
     )
     #expect(description.inputLayout?.controls == [.faceSouth])
   }
@@ -188,9 +231,14 @@ struct ProtocolDescriptionTests {
     let cases: [(PhysicalProtocolID, String)] = [
       (.hidDescriptor, #""defaults": {"input": \#(Self.minimalInput)}"#),
       (.xboxXUSB, #""defaults": {"input": \#(Self.minimalInput)}"#),
-      (.xboxGIP, #""defaults": {"output": \#(Self.startupWrite)}"#),
-      (.xboxXID, #""defaults": {"tuning": {"hidStartupIntervalMs": 5}}"#),
-      (.sonyDualSense, #""defaults": {"tuning": {"inputLivenessTimeoutMs": 5}}"#),
+      (.xboxGIP, #""rawUSB": true, "defaults": {"output": \#(Self.startupWrite)}"#),
+      (.xboxXID, #""rawUSB": true, "defaults": {"tuning": {"hidStartupIntervalMs": 5}}"#),
+      (.sonyDualSense, #""defaults": {"tuning": {"hidStartupIntervalMs": 5}}"#),
+      (
+        .sonyDualSense,
+        #""tuningKeys": ["hidStartupIntervalMs"], "#
+          + #""defaults": {"tuning": {"inputLivenessTimeoutMs": 5}}"#
+      ),
       (.sonyDualSense, #""defaults": {"tuning": {"hidStartupRecoveryRounds": 5}}"#),
     ]
     for (family, body) in cases {

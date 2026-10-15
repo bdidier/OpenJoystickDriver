@@ -7,6 +7,7 @@ import sys
 import tempfile
 from pathlib import Path
 
+from ..Catalog import protocol_descriptions
 from ..Catalog.schema_header import (
     API_VERSION,
     KINDS,
@@ -229,6 +230,17 @@ def validate_protocol_descriptions(
             raise ValidationError(
                 f"{PROTOCOL_DESCRIPTION_FAMILY_MISMATCH}: {path.relative_to(ROOT)}: "
                 f"file name must be {family}.json"
+            )
+        # The schema cannot say that a default tuning key is one the family reads.
+        unread = (
+            protocol_descriptions.tuning_violations(document)
+            if isinstance(document, dict)
+            else []
+        )
+        if unread:
+            raise ValidationError(
+                f"{INVALID_PROTOCOL_DESCRIPTION}: {path.relative_to(ROOT)} at defaults.tuning: "
+                f"{', '.join(unread)} not read by the {family} driver"
             )
 
 

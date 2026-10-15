@@ -17,6 +17,7 @@ import copy
 import re
 from typing import Any
 
+from Scripts.Catalog import protocol_descriptions
 from Scripts.Catalog.schema_header import KINDS, header
 
 PATCH_KIND = KINDS["controller-patch"]
@@ -36,30 +37,6 @@ SECTIONS = frozenset(
 )
 UNSUPPORTED_API_VERSION = "E5001"
 RANK_ALL, RANK_IDENTITY, RANK_MODEL = 0, 1, 2
-RAW_USB_FAMILIES = frozenset({"xbox.xid", "xbox.xusb", "xbox.gip"})
-# The raw values of `PhysicalProtocolID`; a test compares them with the Swift enum.
-KNOWN_FAMILIES = frozenset(
-    {
-        "hid.descriptor",
-        "hid.report-layout",
-        "xbox.xid",
-        "xbox.xusb",
-        "xbox.gip",
-        "sony.sixaxis",
-        "sony.dualshock4",
-        "sony.dualsense",
-        "nintendo.switch1",
-        "nintendo.switch2",
-        "nintendo.switch-input-only",
-        "valve.steam-controller",
-        "valve.steam-triton",
-        "valve.steam-deck",
-        "vendor.flydigi",
-        "vendor.ps3-third-party",
-        "vendor.gamesir",
-        "vendor.nvidia-shield",
-    }
-)
 
 
 class PatchError(ValueError):
@@ -114,24 +91,19 @@ def merge_patch(target: Any, patch: Any) -> Any:
 def tuning_scope(record: dict[str, Any]) -> frozenset[str]:
     """The `tuning` keys that a controller of `record`'s family reads.
 
-    `ControllerTuning.scope(ofDocument:)` in Swift is the same rule. A record with no known
-    family reads only `stickDeadzone`.
+    `ControllerTuning.scope(ofDocument:)` in Swift is the same rule, and both read the family's
+    description (`Resources/Protocols`). A record with no known family reads only
+    `stickDeadzone`.
     """
     info = record.get("protocol")
     info = info if isinstance(info, dict) else {}
-    family = info.get("family")
-    family = family if family in KNOWN_FAMILIES else None
-    raw_usb = family in RAW_USB_FAMILIES or (
-        family == "vendor.gamesir" and info.get("variant") == "usb"
+    family, variant = info.get("family"), info.get("variant")
+    return protocol_descriptions.tuning_scope(
+        protocol_descriptions.bundled().get(family)
+        if isinstance(family, str)
+        else None,
+        variant if isinstance(variant, str) else None,
     )
-    scope = {"stickDeadzone"}
-    if family == "sony.dualshock4":
-        scope.add("inputLivenessTimeoutMs")
-    if family == "nintendo.switch1":
-        scope |= {"hidStartupRecoveryIntervalMs", "hidStartupRecoveryRounds"}
-    if family is not None and not raw_usb:
-        scope |= {"hidStartupIntervalMs", "minimumHIDOutputIntervalMs"}
-    return frozenset(scope)
 
 
 def selector_rank(selector: dict[str, Any]) -> int:

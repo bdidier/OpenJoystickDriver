@@ -2,6 +2,17 @@
 	"apiVersion": "openjoystickdriver/v1alpha1",
 	"kind": "ProtocolDescription",
 	"family": "vendor.ps3-third-party",
+	"endpoints": {
+		"in": 130,
+		"out": 2
+	},
+	"recordSections": [
+		"rumble"
+	],
+	"tuningKeys": [
+		"hidStartupIntervalMs",
+		"minimumHIDOutputIntervalMs"
+	],
 	"parameters": {
 		"hatSource": {
 			"type": "enum",

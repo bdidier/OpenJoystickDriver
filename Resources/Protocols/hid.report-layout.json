@@ -1,0 +1,17 @@
+{
+	"apiVersion": "openjoystickdriver/v1alpha1",
+	"kind": "ProtocolDescription",
+	"family": "hid.report-layout",
+	"endpoints": {
+		"in": 130,
+		"out": 2
+	},
+	"recordSections": [
+		"input",
+		"rumble"
+	],
+	"tuningKeys": [
+		"hidStartupIntervalMs",
+		"minimumHIDOutputIntervalMs"
+	]
+}

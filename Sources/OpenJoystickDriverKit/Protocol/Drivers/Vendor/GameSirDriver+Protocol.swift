@@ -7,10 +7,8 @@ extension GameSirDriver {
     DriverSessionPlan(
       usbKeepAliveIntervalNanoseconds: gameSirProtocol == .g7ProUSB
         ? gameSirHeartbeatIntervalNanoseconds : nil,
-      hidStartupIntervalNanoseconds: gameSirCommandIntervalNanoseconds,
-      hidKeepAliveIntervalNanoseconds: gameSirHeartbeatIntervalNanoseconds,
-      minimumHIDOutputIntervalNanoseconds: gameSirCommandIntervalNanoseconds
-    )
+      hidKeepAliveIntervalNanoseconds: gameSirHeartbeatIntervalNanoseconds
+    ).withDefaults(of: .vendorGameSir)
   }
 
   public func consumeInputConnectionStateChange() -> ControllerInputConnectionState? { nil }

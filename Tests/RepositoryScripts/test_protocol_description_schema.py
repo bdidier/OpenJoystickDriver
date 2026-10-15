@@ -18,6 +18,8 @@ def xusb_description() -> dict[str, Any]:
     return {
         **header("ProtocolDescription"),
         "family": "xbox.xusb",
+        "endpoints": {"in": 129, "out": 1},
+        "rawUSB": True,
         "interfaceSignatures": [
             {
                 "variant": "wired",
@@ -27,6 +29,15 @@ def xusb_description() -> dict[str, Any]:
             }
         ],
     }
+
+
+# The facts a description states about its family, which the schema ties its defaults to.
+FAMILY_FACTS: dict[str, dict[str, Any]] = {
+    "hid.report-layout": {"recordSections": ["input", "rumble"]},
+    "xbox.gip": {"rawUSB": True},
+    "xbox.xid": {"rawUSB": True, "recordSections": ["input"]},
+    "xbox.xusb": {"rawUSB": True},
+}
 
 
 class ProtocolDescriptionSchemaTests(unittest.TestCase):
@@ -61,19 +72,11 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         paths = sorted(validate_schemas.PROTOCOL_DESCRIPTIONS.glob("*.json"))
         self.assertEqual(
             [path.stem for path in paths],
-            [
-                "hid.descriptor",
-                "nintendo.switch1",
-                "nintendo.switch2",
-                "sony.dualsense",
-                "sony.dualshock4",
-                "vendor.gamesir",
-                "vendor.nvidia-shield",
-                "vendor.ps3-third-party",
-                "xbox.gip",
-                "xbox.xid",
-                "xbox.xusb",
-            ],
+            sorted(
+                family["const"]
+                for rule in self.schema["allOf"]
+                if (family := rule["if"].get("properties", {}).get("family"))
+            ),
         )
         with patch.object(validate_schemas, "ROOT", REPOSITORY_ROOT):
             validate_schemas.validate_protocol_descriptions(
@@ -149,10 +152,18 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         signatures.append(copy.deepcopy(signatures[0]))
         self.assert_rejected(document)
 
+    def family_rules(self) -> list[Any]:
+        """The per-family rules; the other `allOf` rules name no family."""
+        return [
+            rule
+            for rule in self.schema["allOf"]
+            if "family" in rule["if"].get("properties", {})
+        ]
+
     def family_variants(self) -> dict[str, list[str]]:
         """Each family's admitted variants; the Swift tests keep these equal to `variants`."""
         families: dict[str, list[str]] = {}
-        for rule in self.schema["allOf"]:
+        for rule in self.family_rules():
             family = rule["if"]["properties"]["family"]["const"]
             signatures = rule["then"]["properties"]["interfaceSignatures"]
             families[family] = (
@@ -201,7 +212,14 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     # Parameters and defaults.
 
     def with_body(self, family: str, **members: Any) -> dict[str, Any]:
-        return {**header("ProtocolDescription"), "family": family, **members}
+        facts: dict[str, Any] = FAMILY_FACTS.get(family, {})
+        return {
+            **header("ProtocolDescription"),
+            "family": family,
+            "endpoints": {"in": 130, "out": 2},
+            **facts,
+            **members,
+        }
 
     def test_accepts_parameters_and_defaults(self) -> None:
         self.check(
@@ -392,7 +410,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 records.setdefault(family, set()).update(
                     parameters.get("properties", {})
                 )
-        for rule in self.schema["allOf"]:
+        for rule in self.family_rules():
             family = rule["if"]["properties"]["family"]["const"]
             declared = rule["then"]["properties"]["parameters"]
             allowed = (

@@ -2,6 +2,15 @@
 	"apiVersion": "openjoystickdriver/v1alpha1",
 	"kind": "ProtocolDescription",
 	"family": "sony.dualsense",
+	"endpoints": {
+		"in": 130,
+		"out": 2
+	},
+	"tuningKeys": [
+		"hidStartupIntervalMs",
+		"minimumHIDOutputIntervalMs"
+	],
+	"buttonLabels": "PlayStation",
 	"parameters": {
 		"maker": {
 			"type": "enum",

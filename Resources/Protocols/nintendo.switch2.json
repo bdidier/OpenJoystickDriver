@@ -2,6 +2,15 @@
 	"apiVersion": "openjoystickdriver/v1alpha1",
 	"kind": "ProtocolDescription",
 	"family": "nintendo.switch2",
+	"endpoints": {
+		"in": 130,
+		"out": 2
+	},
+	"tuningKeys": [
+		"hidStartupIntervalMs",
+		"minimumHIDOutputIntervalMs"
+	],
+	"buttonLabels": "Nintendo",
 	"parameters": {
 		"layout": {
 			"type": "enum",

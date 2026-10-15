@@ -2,6 +2,19 @@
 	"apiVersion": "openjoystickdriver/v1alpha1",
 	"kind": "ProtocolDescription",
 	"family": "sony.dualshock4",
+	"endpoints": {
+		"in": 130,
+		"out": 2
+	},
+	"tuningKeys": [
+		"hidStartupIntervalMs",
+		"minimumHIDOutputIntervalMs",
+		"inputLivenessTimeoutMs"
+	],
+	"buttonLabels": "PlayStation",
+	"macOSOwnedOutput": {
+		"readsStartupFeatures": true
+	},
 	"parameters": {
 		"motionCalibration": {
 			"type": "enum",
@@ -20,6 +33,11 @@
 			"values": [
 				"StrikePad"
 			]
+		}
+	},
+	"defaults": {
+		"tuning": {
+			"inputLivenessTimeoutMs": 1000
 		}
 	}
 }

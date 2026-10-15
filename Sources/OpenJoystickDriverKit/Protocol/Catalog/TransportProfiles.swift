@@ -38,9 +38,10 @@ public struct DeviceTransportProfile: Equatable, Sendable {
     self.postHandshakeSettleNanoseconds = postHandshakeSettleNanoseconds
   }
 
+  /// The `xbox.gip` family's default endpoints, from its protocol description.
   public static let gipDefault = Self(
-    inputEndpoint: 0x82,
-    outputEndpoint: 0x02,
+    inputEndpoint: UInt8(PhysicalProtocolID.xboxGIP.protocolDescription.endpoints.input),
+    outputEndpoint: UInt8(PhysicalProtocolID.xboxGIP.protocolDescription.endpoints.output),
     needsSetConfiguration: false
   )
 }

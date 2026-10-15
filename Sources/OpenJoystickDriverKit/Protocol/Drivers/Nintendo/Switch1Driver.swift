@@ -68,9 +68,8 @@ public final class Switch1Driver: PhysicalProtocolDriver {
   public var sessionPlan: DriverSessionPlan {
     DriverSessionPlan(
       hidStartupIntervalNanoseconds: isBluetooth ? 60_000_000 : 20_000_000,
-      hasStartupRecovery: true,
-      minimumHIDOutputIntervalNanoseconds: 50_000_000
-    )
+      hasStartupRecovery: true
+    ).withDefaults(of: .nintendoSwitch1)
   }
 
   public func consumeInputConnectionStateChange() -> ControllerInputConnectionState? { nil }
