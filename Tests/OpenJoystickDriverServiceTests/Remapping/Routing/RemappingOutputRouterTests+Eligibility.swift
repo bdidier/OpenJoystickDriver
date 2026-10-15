@@ -62,7 +62,7 @@ extension RemappingOutputRouterTests {
     let status = try #require(await harness.router.status(for: device))
 
     #expect(status.eligibility == .eligible)
-    #expect(status.frontmostBundleIdentifier == "com.example.Game")
+    #expect(status.frontmostAppID == "com.example.Game")
     #expect(status.postEventAccessState == .granted)
     #expect(harness.foreground.readCount == 1)
     #expect(harness.access.readCount == 1)
@@ -207,7 +207,7 @@ extension RemappingOutputRouterTests {
     let profile = RemappingProfile(
       name: "Pointer",
       device: RemappingDeviceScope(vendorID: 1118, productID: 654),
-      applicationScope: .application(bundleIdentifier: "com.example.Game"),
+      applicationScope: .application(appID: "com.example.Game"),
       bindings: [
         RemappingBinding(
           source: .axis(.rightStickX),

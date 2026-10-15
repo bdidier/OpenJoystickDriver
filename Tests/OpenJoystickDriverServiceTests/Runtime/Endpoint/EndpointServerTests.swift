@@ -11,14 +11,14 @@ import Testing
 @Suite(.serialized)
 struct EndpointServerTests {
   private static let tool = CodeSigningIdentity(
-    kind: .team,
+    kind: .signed,
     identifier: "com.example.tool",
-    teamIdentifier: "ABCDE12345"
+    publisherID: "ABCDE12345"
   )
   private static let adHoc = CodeSigningIdentity(
     kind: .adHoc,
     identifier: "a.out",
-    teamIdentifier: nil
+    publisherID: nil
   )
 
   @Test
@@ -77,7 +77,7 @@ struct EndpointServerTests {
       await client.send(clientLine("Hello", #","scopes":["read"]"#))
 
       #expect(try await client.readObject()["code"] as? String == "E1002")
-      #expect(try server.status().refused.map(\.identityKind) == [.adHoc])
+      #expect(try server.status().refused.map(\.publisher.kind) == [.adHoc])
       #expect(throws: AccessGrantStoreError.notGrantable(.adHoc)) {
         try server.grant(Self.adHoc, path: "/a.out", scopes: [.read])
       }

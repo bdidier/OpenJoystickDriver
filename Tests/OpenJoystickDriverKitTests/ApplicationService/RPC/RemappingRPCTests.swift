@@ -41,7 +41,7 @@ struct RemappingRPCTests {
       )
     }
     let active = [
-      entry("Global", .global), entry("Game", .application(bundleIdentifier: "com.example.game")),
+      entry("Global", .global), entry("Game", .application(appID: "com.example.game")),
       entry("Other", .global, productID: 3),
     ]
 
@@ -353,7 +353,7 @@ struct RemappingRPCTests {
     return RemappingProfile(
       name: String(repeating: "P", count: 77) + suffix,
       device: RemappingDeviceScope(vendorID: UInt16(index), productID: UInt16(index)),
-      applicationScope: .application(bundleIdentifier: "com." + String(repeating: "a", count: 251)),
+      applicationScope: .application(appID: "com." + String(repeating: "a", count: 251)),
       bindings: bindings
     )
   }
@@ -381,7 +381,7 @@ struct RemappingRPCTests {
           activeProfileID: profile.id,
           activeProfileName: profile.name,
           applicationScope: profile.applicationScope,
-          frontmostBundleIdentifier: "com.example.Game",
+          frontmostAppID: "com.example.Game",
           postEventAccess: .granted,
           failure: nil
         )

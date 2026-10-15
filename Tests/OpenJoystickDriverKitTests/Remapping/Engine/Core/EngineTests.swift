@@ -257,7 +257,7 @@ struct RemappingEngineTests {
     let sink = RemappingTestSink()
     let engine = RemappingEventEngine(sink: sink)
     let currentProfile = profile(bindings: [
-      binding(source: .button(.south), key: .a, modifiers: [.shift, .command]),
+      binding(source: .button(.south), key: .a, modifiers: [.shift, .meta]),
       binding(source: .button(.east), key: .b, modifiers: [.shift]),
     ])
 
@@ -276,8 +276,8 @@ struct RemappingEngineTests {
 
     #expect(
       sink.actions() == [
-        .modifierDown(.command), .modifierDown(.shift), .keyDown(.a), .keyDown(.b), .keyUp(.a),
-        .modifierUp(.command), .keyUp(.b), .modifierUp(.shift),
+        .modifierDown(.meta), .modifierDown(.shift), .keyDown(.a), .keyDown(.b), .keyUp(.a),
+        .modifierUp(.meta), .keyUp(.b), .modifierUp(.shift),
       ]
     )
   }

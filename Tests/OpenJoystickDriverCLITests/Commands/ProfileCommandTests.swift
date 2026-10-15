@@ -67,7 +67,7 @@ struct ProfileCommandTests {
     let created = try #require(library.stored.first)
     #expect(created.name == "Racing")
     #expect(created.device == RemappingDeviceScope(vendorID: 0x054C, productID: 0x0CE6))
-    #expect(created.applicationScope == .application(bundleIdentifier: "com.example.game"))
+    #expect(created.applicationScope == .application(appID: "com.example.game"))
     #expect(created.outputPolicy.virtualGamepad == .passthrough)
     let profile = try #require(try result.json()["profile"] as? [String: Any])
     #expect(profile["id"] as? String == created.id.uuidString)

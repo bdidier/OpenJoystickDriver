@@ -80,7 +80,7 @@ struct RecordShowCommand: AsyncParsableCommand {
     let layer: String
     let file: String?
     let transport: RecordTransport
-    let usbExtension: RecordUSBExtension?
+    let transportClaim: RecordTransportClaim?
     let fields: [String: String]
     let record: RecordJSON
   }
@@ -119,7 +119,7 @@ struct RecordShowCommand: AsyncParsableCommand {
             layer: record.layer.rawValue,
             file: record.file?.path,
             transport: RecordTransport(record),
-            usbExtension: RecordUSBExtension(record),
+            transportClaim: RecordTransportClaim(record),
             fields: fields,
             record: try RecordJSON(data: record.document)
           )

@@ -173,9 +173,9 @@
 
     static func modifiers(for event: NSEvent) -> Set<RemappingKeyModifier> {
       var modifiers = Set<RemappingKeyModifier>()
-      if event.modifierFlags.contains(.command) { modifiers.insert(.command) }
+      if event.modifierFlags.contains(.command) { modifiers.insert(.meta) }
       if event.modifierFlags.contains(.control) { modifiers.insert(.control) }
-      if event.modifierFlags.contains(.option) { modifiers.insert(.option) }
+      if event.modifierFlags.contains(.option) { modifiers.insert(.alt) }
       if event.modifierFlags.contains(.shift) { modifiers.insert(.shift) }
       return modifiers
     }

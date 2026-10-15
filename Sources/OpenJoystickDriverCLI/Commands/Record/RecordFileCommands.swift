@@ -11,7 +11,7 @@ struct RecordValidation: Encodable, Equatable {
   let family: String?
   let fileName: String?
   let transport: RecordTransport?
-  let usbExtension: RecordUSBExtension?
+  let transportClaim: RecordTransportClaim?
 
   init(_ validated: ValidatedControllerRecord) {
     valid = true
@@ -23,7 +23,7 @@ struct RecordValidation: Encodable, Equatable {
     family = validated.record?.family
     fileName = validated.fileName
     transport = validated.record.map(RecordTransport.init)
-    usbExtension = validated.record.flatMap(RecordUSBExtension.init)
+    transportClaim = validated.record.flatMap(RecordTransportClaim.init)
   }
 
   init(problem: String) {
@@ -34,7 +34,7 @@ struct RecordValidation: Encodable, Equatable {
     family = nil
     fileName = nil
     transport = nil
-    usbExtension = nil
+    transportClaim = nil
   }
 
   /// Validates the bytes read from `path`, `-` for stdin. An invalid record prints
@@ -52,7 +52,7 @@ struct RecordValidation: Encodable, Equatable {
 
   /// Where OJD can reach the controller, in words, when the USB extension cannot claim it.
   static func usbNote(_ validated: ValidatedControllerRecord) -> String? {
-    guard let record = validated.record, RecordUSBExtension(record) == .doesNotClaim else {
+    guard let record = validated.record, RecordTransportClaim(record) == .unclaimed else {
       return nil
     }
     return CLILocalized.text(
@@ -102,7 +102,7 @@ struct RecordValidateCommand: AsyncParsableCommand {
           [
             result.operation ?? "", result.identity ?? "", result.family ?? "",
             result.fileName ?? "", result.transport?.rawValue ?? "",
-            result.usbExtension?.rawValue ?? "",
+            result.transportClaim?.rawValue ?? "",
           ]
         ])
       case .human:

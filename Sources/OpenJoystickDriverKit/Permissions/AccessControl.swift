@@ -6,13 +6,13 @@ private let permissionPollNanoseconds: UInt64 = 1_000_000_000
 // TCC needs a short run-loop turn to register the application after the
 // Input Monitoring request.  Asking for Accessibility immediately afterwards
 // can make macOS skip adding the app to the Input Monitoring list altogether.
-private let inputMonitoringRegistrationDelayNanoseconds: UInt64 = 600_000_000
+private let inputReadRegistrationDelayNanoseconds: UInt64 = 600_000_000
 
 /// Manages the macOS HID permissions used by OpenJoystickDriver.
 public actor PermissionManager {
   public enum Requirement: String, Codable, Sendable, Equatable {
-    case inputMonitoring
-    case accessibility
+    case inputRead
+    case inputInject
   }
 
   public enum AccessState: String, Codable, Sendable, Equatable, CustomStringConvertible {
@@ -38,29 +38,29 @@ public actor PermissionManager {
 
   /// Current permission states for physical input and virtual HID publication.
   public struct Snapshot: Codable, Sendable, Equatable {
-    public let inputMonitoring: AccessState
-    public let accessibility: AccessState
+    public let inputRead: AccessState
+    public let inputInject: AccessState
 
-    public init(inputMonitoring: AccessState, accessibility: AccessState) {
-      self.inputMonitoring = inputMonitoring
-      self.accessibility = accessibility
+    public init(inputRead: AccessState, inputInject: AccessState) {
+      self.inputRead = inputRead
+      self.inputInject = inputInject
     }
 
-    public var isReady: Bool { inputMonitoring == .granted && accessibility == .granted }
+    public var isReady: Bool { inputRead == .granted && inputInject == .granted }
   }
 
-  public private(set) var inputMonitoringState: AccessState = .unknown
-  public private(set) var accessibilityState: AccessState = .unknown
+  public private(set) var inputReadState: AccessState = .unknown
+  public private(set) var inputInjectState: AccessState = .unknown
   private(set) var pollingTask: Task<Void, Never>?
 
   public init() {}
 
-  nonisolated public static func currentInputMonitoringAccessState() -> AccessState {
+  nonisolated public static func currentInputReadAccessState() -> AccessState {
     accessState(for: kIOHIDRequestTypeListenEvent)
   }
 
   /// IOHIDUserDevice creation is authorized through the post-event TCC service.
-  nonisolated public static func currentAccessibilityAccessState() -> AccessState {
+  nonisolated public static func currentInputInjectAccessState() -> AccessState {
     accessState(for: kIOHIDRequestTypePostEvent)
   }
 
@@ -74,8 +74,8 @@ public actor PermissionManager {
 
   public func checkAccess() -> Snapshot {
     Snapshot(
-      inputMonitoring: Self.currentInputMonitoringAccessState(),
-      accessibility: Self.currentAccessibilityAccessState()
+      inputRead: Self.currentInputReadAccessState(),
+      inputInject: Self.currentInputInjectAccessState()
     )
   }
 
@@ -83,17 +83,17 @@ public actor PermissionManager {
   public func refreshAccessState() -> Snapshot {
     let snapshot = checkAccess()
     updateState(
-      name: "Input Monitoring",
-      previous: inputMonitoringState,
-      current: snapshot.inputMonitoring
+      name: "Input read",
+      previous: inputReadState,
+      current: snapshot.inputRead
     )
     updateState(
-      name: "Accessibility",
-      previous: accessibilityState,
-      current: snapshot.accessibility
+      name: "Input inject",
+      previous: inputInjectState,
+      current: snapshot.inputInject
     )
-    inputMonitoringState = snapshot.inputMonitoring
-    accessibilityState = snapshot.accessibility
+    inputReadState = snapshot.inputRead
+    inputInjectState = snapshot.inputInject
     return snapshot
   }
 
@@ -107,12 +107,12 @@ public actor PermissionManager {
   @discardableResult
   public func requestRequiredAccess() async -> Snapshot {
     var snapshot = checkAccess()
-    if snapshot.inputMonitoring != .granted {
+    if snapshot.inputRead != .granted {
       await requestAccessOnMainActor(kIOHIDRequestTypeListenEvent)
-      try? await Task.sleep(nanoseconds: inputMonitoringRegistrationDelayNanoseconds)
+      try? await Task.sleep(nanoseconds: inputReadRegistrationDelayNanoseconds)
       snapshot = checkAccess()
     }
-    if snapshot.accessibility != .granted {
+    if snapshot.inputInject != .granted {
       await requestAccessOnMainActor(kIOHIDRequestTypePostEvent)
     }
     return refreshAccessState()
@@ -126,10 +126,10 @@ public actor PermissionManager {
   public func requestAccess(_ requirement: Requirement) async -> Snapshot {
     let snapshot = checkAccess()
     switch requirement {
-    case .inputMonitoring where snapshot.inputMonitoring != .granted:
+    case .inputRead where snapshot.inputRead != .granted:
       await requestAccessOnMainActor(kIOHIDRequestTypeListenEvent)
-      try? await Task.sleep(nanoseconds: inputMonitoringRegistrationDelayNanoseconds)
-    case .accessibility where snapshot.accessibility != .granted:
+      try? await Task.sleep(nanoseconds: inputReadRegistrationDelayNanoseconds)
+    case .inputInject where snapshot.inputInject != .granted:
       await requestAccessOnMainActor(kIOHIDRequestTypePostEvent)
     default: break
     }
@@ -178,24 +178,24 @@ public struct OJDPermissionRequirement: Sendable, Equatable {
     self.requested = requested
   }
 
-  public static let inputMonitoring = Self(
-    name: "Input Monitoring",
+  public static let inputRead = Self(
+    name: "Input read",
     owner: "OpenJoystickDriver app",
     purpose: "Read input from physical controllers",
     requested: true
   )
-  public static let accessibility = Self(
-    name: "Accessibility",
+  public static let inputInject = Self(
+    name: "Input inject",
     owner: "OpenJoystickDriver app",
     purpose: "Publish virtual controller output",
     requested: true
   )
-  public static let driverExtensionApproval = Self(
-    name: "Driver Extension approval",
+  public static let usbTransport = Self(
+    name: "USB transport",
     owner: "OpenJoystickDriver app",
-    purpose: "Own entitlement-restricted raw USB interfaces; not a TCC privacy permission",
+    purpose: "Own entitlement-restricted raw USB interfaces; not a privacy permission",
     requested: true
   )
 
-  public static let inventory = [inputMonitoring, accessibility, driverExtensionApproval]
+  public static let inventory = [inputRead, inputInject, usbTransport]
 }

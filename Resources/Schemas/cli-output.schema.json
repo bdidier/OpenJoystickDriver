@@ -829,7 +829,7 @@
             "duplicateExposureRisk": {
               "enum": [
                 "none",
-                "nativeHIDVisible",
+                "SystemHidVisible",
                 "upstreamVirtualDevice",
                 "unknownOwnership"
               ]
@@ -848,9 +848,9 @@
               "enum": [
                 "exclusiveHID",
                 "exclusiveRawUSB",
-                "driverKitOwnedUSB",
-                "nativeHIDVisible",
-                "nativeGamepad",
+                "ExtensionOwnedUsb",
+                "SystemHidVisible",
+                "SystemGamepad",
                 "upstreamVirtualDevice",
                 "unknown"
               ]
@@ -1138,7 +1138,7 @@
             }
           }
         },
-        "bundle": {
+        "output": {
           "type": "string"
         },
         "checks": {
@@ -1197,25 +1197,25 @@
         }
       }
     },
-    "extensionActivate": {
+    "transportExtensionActivate": {
       "required": ["apiVersion", "kind"],
       "properties": {
         "kind": {
-          "const": "DriverExtension"
+          "const": "TransportExtension"
         }
       },
-      "$ref": "#/$defs/sharedExtensionState"
+      "$ref": "#/$defs/sharedTransportExtensionState"
     },
-    "extensionDeactivate": {
+    "transportExtensionDeactivate": {
       "required": ["apiVersion", "kind"],
       "properties": {
         "kind": {
-          "const": "DriverExtension"
+          "const": "TransportExtension"
         }
       },
-      "$ref": "#/$defs/sharedExtensionState"
+      "$ref": "#/$defs/sharedTransportExtensionState"
     },
-    "extensionStatus": {
+    "transportExtensionStatus": {
       "type": "object",
       "required": ["apiVersion", "kind", "bundle", "registration"],
       "additionalProperties": false,
@@ -1224,7 +1224,7 @@
           "$ref": "#/$defs/sharedAPIVersion"
         },
         "kind": {
-          "const": "DriverExtension"
+          "const": "TransportExtension"
         },
         "bundle": {
           "enum": ["present", "missing", "invalid"]
@@ -2033,8 +2033,8 @@
         "transport": {
           "enum": ["hid", "usb"]
         },
-        "usbExtension": {
-          "enum": ["claims", "doesNotClaim"]
+        "transportClaim": {
+          "enum": ["claimed", "unclaimed"]
         }
       }
     },
@@ -2139,8 +2139,8 @@
         "grantTime",
         "id",
         "identifier",
-        "identityKind",
         "path",
+        "publisher",
         "scopes"
       ],
       "additionalProperties": false,
@@ -2160,8 +2160,18 @@
         "identifier": {
           "type": "string"
         },
-        "identityKind": {
-          "enum": ["team", "apple"]
+        "publisher": {
+          "type": "object",
+          "required": ["kind"],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "enum": ["signed", "platform"]
+            },
+            "id": {
+              "type": "string"
+            }
+          }
         },
         "path": {
           "type": "string"
@@ -2171,9 +2181,6 @@
           "items": {
             "enum": ["read", "control"]
           }
-        },
-        "teamIdentifier": {
-          "type": "string"
         }
       }
     },
@@ -2182,7 +2189,7 @@
       "required": [
         "id",
         "identifier",
-        "identityKind",
+        "publisher",
         "reason",
         "refusalTime",
         "scopes"
@@ -2195,8 +2202,18 @@
         "identifier": {
           "type": "string"
         },
-        "identityKind": {
-          "enum": ["team", "apple", "adHoc"]
+        "publisher": {
+          "type": "object",
+          "required": ["kind"],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "enum": ["signed", "platform", "adHoc"]
+            },
+            "id": {
+              "type": "string"
+            }
+          }
         },
         "path": {
           "type": "string"
@@ -2214,9 +2231,6 @@
           "items": {
             "enum": ["read", "control"]
           }
-        },
-        "teamIdentifier": {
-          "type": "string"
         }
       }
     },
@@ -2674,7 +2688,7 @@
         }
       }
     },
-    "sharedExtensionState": {
+    "sharedTransportExtensionState": {
       "type": "object",
       "required": ["state"],
       "additionalProperties": false,
@@ -2776,11 +2790,7 @@
             "additionalProperties": false,
             "properties": {
               "id": {
-                "enum": [
-                  "input-monitoring",
-                  "accessibility",
-                  "driver-extension"
-                ]
+                "enum": ["input-read", "input-inject", "usb-transport"]
               },
               "name": {
                 "type": "string"
@@ -2891,8 +2901,8 @@
         "transport": {
           "enum": ["hid", "usb"]
         },
-        "usbExtension": {
-          "enum": ["claims", "doesNotClaim"]
+        "transportClaim": {
+          "enum": ["claimed", "unclaimed"]
         },
         "valid": {
           "type": "boolean"
@@ -3246,7 +3256,7 @@
         "apiVersion",
         "kind",
         "commandLineTool",
-        "extension",
+        "transportExtension",
         "service",
         "skippedRecords"
       ],
@@ -3310,7 +3320,7 @@
             }
           }
         },
-        "extension": {
+        "transportExtension": {
           "type": "object",
           "required": ["bundle", "registration"],
           "additionalProperties": false,
@@ -3331,13 +3341,13 @@
         },
         "permissions": {
           "type": "object",
-          "required": ["accessibility", "inputMonitoring"],
+          "required": ["inputInject", "inputRead"],
           "additionalProperties": false,
           "properties": {
-            "accessibility": {
+            "inputInject": {
               "enum": ["granted", "denied", "unknown"]
             },
-            "inputMonitoring": {
+            "inputRead": {
               "enum": ["granted", "denied", "unknown"]
             }
           }
