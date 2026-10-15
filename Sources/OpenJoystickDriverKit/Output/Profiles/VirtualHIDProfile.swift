@@ -41,8 +41,9 @@ public enum VirtualHIDProfileID: String, CaseIterable, Codable, Sendable {
   /// checks a controller's required primary controls against.
   public var representableControls: Set<ControlID> {
     switch self {
-    // The Xbox layout. Guide stays out until a genuine capture of the Xbox One S Bluetooth pad shows
-    // whether ordinary HID clients see it, although today's report still carries it as button usage 11.
+    // The Xbox layout. Guide stays out until a genuine capture of the Xbox One S Bluetooth pad
+    // shows whether ordinary HID clients see it, although today's report still carries it as
+    // button usage 11.
     case .sdlCompatible: return ControlID.xboxLayout
     // The generic layout: the frozen 32 buttons, the hat and the six named axes. Today's report
     // carries only its first 16 buttons.

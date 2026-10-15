@@ -289,7 +289,8 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
         versionNumber: identity.versionNumber,
         productName: identity.productName,
         manufacturer: identity.manufacturer,
-        glyphFamily: device.labels ?? VirtualDevice.definition(of: device.persona).labels ?? .generic
+        glyphFamily: device.labels ?? VirtualDevice.definition(of: device.persona).labels
+          ?? .generic
       )
     }
     return (model, VirtualPersona(descriptor: device.persona, identity: identity))

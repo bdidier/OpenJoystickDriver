@@ -75,7 +75,7 @@ struct VirtualDevice: Equatable, Sendable {
 
 extension VirtualHIDProfileID {
   /// The name of the bundled record file, without extension.
-  fileprivate var bundledFileName: String {
+  var bundledFileName: String {
     switch self {
     case .generic: "virtual-device.generic"
     case .sdlCompatible: "virtual-device.sdl-compatible"

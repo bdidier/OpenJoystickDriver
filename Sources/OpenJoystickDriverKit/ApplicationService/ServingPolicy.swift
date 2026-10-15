@@ -10,8 +10,8 @@ public enum OutputDisabledReason: String, Codable, CaseIterable, Equatable, Send
 
 /// The one way OJD serves a controller. Exactly one route holds for each controller.
 public enum ServingRoute: Equatable, Sendable {
-  /// The system serves the controller and OJD publishes nothing. The allowance is what OJD may still
-  /// drive on the physical controller: the motors and lighting the system leaves undone.
+  /// The system serves the controller and OJD publishes nothing. The allowance is what OJD may
+  /// still drive on the physical controller: the motors and lighting the system leaves undone.
   case nativePassThrough(PhysicalControllerOutputCapabilities)
   /// OJD publishes a virtual HID gamepad with this persona.
   case virtualHid(VirtualHIDProfileID)
@@ -75,7 +75,9 @@ public enum ServingPolicy {
   /// The route for `input`. Equal inputs give equal routes.
   public static func route(_ input: ServingInput) -> ServingRoute {
     if !input.outputEnabled { return .outputDisabled(.userDisabled) }
-    if input.observation == .upstreamVirtualDevice { return .outputDisabled(.upstreamVirtualDevice) }
+    if input.observation == .upstreamVirtualDevice {
+      return .outputDisabled(.upstreamVirtualDevice)
+    }
     // A record that gives a natively served model to OJD turns passthrough into a virtual gamepad.
     if input.observation.isServedBySystem && input.server == .system {
       return .nativePassThrough(input.allowance)

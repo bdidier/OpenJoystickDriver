@@ -21,7 +21,9 @@ extension VirtualDevice {
       "apiVersion", "kind", "persona", "match", "layout", "transport", "labels", "identity",
     ]
     guard Set(document.keys).isSubset(of: allowed) else {
-      throw ControllerRecordProblem("the file must hold only \(allowed.sorted().joined(separator: ", "))")
+      throw ControllerRecordProblem(
+        "the file must hold only \(allowed.sorted().joined(separator: ", "))"
+      )
     }
     guard let persona = (document["persona"] as? String).flatMap(VirtualHIDProfileID.init)
     else {
@@ -51,10 +53,13 @@ extension VirtualDevice {
     let identity = try document["identity"].map(Self.identity)
     if match != nil {
       guard layout == nil, transport == nil else {
-        throw ControllerRecordProblem("a file with match selects a persona and holds no layout or transport")
+        throw ControllerRecordProblem(
+          "a file with match selects a persona and holds no layout or transport"
+        )
       }
     } else {
-      guard layout != nil, transport != nil, labels != nil, let identity, identity.versionNumber != nil
+      guard layout != nil, transport != nil, labels != nil, let identity,
+        identity.versionNumber != nil
       else {
         throw ControllerRecordProblem(
           "a persona definition must hold layout, transport, labels, and identity with version"
@@ -72,7 +77,12 @@ extension VirtualDevice {
   }
 
   private static func match(_ value: Any) throws -> VirtualHIDProfileOverrideStore.Model {
-    let match = try fields(value, named: "match", required: ["vendorID", "productID"], optional: ["unit"])
+    let match = try fields(
+      value,
+      named: "match",
+      required: ["vendorID", "productID"],
+      optional: ["unit"]
+    )
     let unit = match["unit"] as? String
     if match["unit"] != nil, unit.flatMap(ControllerPortKey.init(rawValue:)) == nil {
       throw ControllerRecordProblem("match.unit is not a unit ID")

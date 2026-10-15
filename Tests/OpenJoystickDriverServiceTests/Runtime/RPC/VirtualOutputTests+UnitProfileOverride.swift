@@ -26,7 +26,8 @@ extension VirtualOutputTests {
     #expect(live(second) == .generic)
     #expect(fixture.store.override(vendorID: 1, productID: 2) == nil)
     #expect(
-      fixture.store.override(vendorID: 1, productID: 2, unit: first.portKey?.rawValue) == .sdlCompatible
+      fixture.store.override(vendorID: 1, productID: 2, unit: first.portKey?.rawValue)
+        == .sdlCompatible
     )
 
     let reset = await fixture.change(

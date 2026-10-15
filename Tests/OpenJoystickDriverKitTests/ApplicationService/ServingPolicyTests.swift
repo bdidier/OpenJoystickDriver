@@ -6,8 +6,10 @@ import Testing
 struct ServingPolicyTests {
   @Test(arguments: ServingFixture.all)
   func theFixtureSetGetsItsRoute(_ fixture: ServingFixture) {
-    #expect(ServingPolicy.route(fixture.input) == fixture.route, "\(fixture.name)")
-    #expect(ServingPolicy.route(fixture.input) == ServingPolicy.route(fixture.input))
+    let first = ServingPolicy.route(fixture.input)
+    let again = ServingPolicy.route(fixture.input)
+    #expect(first == fixture.route, "\(fixture.name)")
+    #expect(first == again)
   }
 
   @Test(arguments: ServingFixture.all)

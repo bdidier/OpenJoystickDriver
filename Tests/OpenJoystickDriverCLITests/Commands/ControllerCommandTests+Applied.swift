@@ -69,8 +69,8 @@ struct ControllerShowAppliedTests {
 
     let controller = try json.json()
     let capabilities = try #require(controller["capabilities"] as? [String: Any])
-    #expect(capabilities["outputOwner"] as? String == "macos")
-    #expect(plain.standardOutput.contains("\noutput-owner\tmacos\n"))
+    #expect(capabilities["outputOwner"] as? String == "system")
+    #expect(plain.standardOutput.contains("\noutput-owner\tsystem\n"))
     #expect(
       Self.rows(human, endingIn: CLILocalized.text("cli.controller.show.output_owner.macos"))
         .count == 1

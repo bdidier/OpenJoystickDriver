@@ -64,31 +64,71 @@ package struct ServingFixture: Sendable {
   /// The fixture set the four callers are compared over.
   package static let all: [Self] = [
     Self(
-      "native gamepad", .nativeGamepad, .system,
-      route: .nativePassThrough(.none), offersServerChoice: true),
+      "native gamepad",
+      .nativeGamepad,
+      .system,
+      route: .nativePassThrough(.none),
+      offersServerChoice: true
+    ),
     Self(
-      "native HID", .nativeHIDVisible, .system,
-      route: .nativePassThrough(.none), offersServerChoice: false),
+      "native HID",
+      .nativeHIDVisible,
+      .system,
+      route: .nativePassThrough(.none),
+      offersServerChoice: false
+    ),
     Self(
-      "native claimed by OJD", .nativeGamepad, .ojd,
-      route: .virtualHid(.generic), offersServerChoice: true),
+      "native claimed by OJD",
+      .nativeGamepad,
+      .ojd,
+      route: .virtualHid(.generic),
+      offersServerChoice: true
+    ),
     Self(
-      "seized HID", .exclusiveHID, .system,
-      route: .virtualHid(.generic), offersServerChoice: false),
+      "seized HID",
+      .exclusiveHID,
+      .system,
+      route: .virtualHid(.generic),
+      offersServerChoice: false
+    ),
     Self(
-      "seized HID with override", .exclusiveHID, .system, override: .sdlCompatible,
-      route: .virtualHid(.sdlCompatible), offersServerChoice: false),
+      "seized HID with override",
+      .exclusiveHID,
+      .system,
+      override: .sdlCompatible,
+      route: .virtualHid(.sdlCompatible),
+      offersServerChoice: false
+    ),
     Self(
-      "raw USB claimed by OJD", .exclusiveRawUSB, .ojd, source: .rawUSB,
-      route: .virtualHid(.generic), offersServerChoice: false),
+      "raw USB claimed by OJD",
+      .exclusiveRawUSB,
+      .ojd,
+      source: .rawUSB,
+      route: .virtualHid(.generic),
+      offersServerChoice: false
+    ),
     Self(
-      "extension owned", .driverKitOwnedUSB, .system, source: .rawUSB,
-      route: .extensionOwned, offersServerChoice: false),
+      "extension owned",
+      .driverKitOwnedUSB,
+      .system,
+      source: .rawUSB,
+      route: .extensionOwned,
+      offersServerChoice: false
+    ),
     Self(
-      "upstream virtual", .upstreamVirtualDevice, .system,
-      route: .outputDisabled(.upstreamVirtualDevice), offersServerChoice: false),
+      "upstream virtual",
+      .upstreamVirtualDevice,
+      .system,
+      route: .outputDisabled(.upstreamVirtualDevice),
+      offersServerChoice: false
+    ),
     Self(
-      "output off", .exclusiveHID, .system, outputEnabled: false,
-      route: .outputDisabled(.userDisabled), offersServerChoice: false),
+      "output off",
+      .exclusiveHID,
+      .system,
+      outputEnabled: false,
+      route: .outputDisabled(.userDisabled),
+      offersServerChoice: false
+    ),
   ]
 }

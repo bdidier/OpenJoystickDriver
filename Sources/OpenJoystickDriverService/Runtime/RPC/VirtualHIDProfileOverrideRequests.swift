@@ -307,7 +307,8 @@ extension ApplicationServiceServer {
     observation: ControllerOwnershipObservation
   ) -> String? {
     switch route {
-    case .nativePassThrough: observation == .nativeGamepad ? "nativeGamepad" : "nativeHIDPassThrough"
+    case .nativePassThrough:
+      observation == .nativeGamepad ? "nativeGamepad" : "nativeHIDPassThrough"
     case .outputDisabled(.upstreamVirtualDevice): "upstreamVirtualDevice"
     case .outputDisabled(.userDisabled): "outputDisabled"
     case .outputDisabled(.noVirtualProfile), .virtualHid, .extensionOwned: nil

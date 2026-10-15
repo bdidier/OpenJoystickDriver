@@ -23,7 +23,7 @@ struct RecordOwnershipReportTests {
     try JSONSerialization.data(
       withJSONObject: ControllerPatch.document(
         selector: .identity(ControllerModelID(vendorID: 0x3537, productID: 0x100B)),
-        body: ["ownership": "ojd"]
+        body: ["server": "ojd"]
       )
     )
     .write(to: directory.appendingPathComponent("3537-100b.patch.json"))

@@ -57,8 +57,7 @@ struct ControllerOwnershipPickerTests {
   }
 
   @Test(arguments: [ControllerServer.ojd, .system])
-  func aChangeCallsTheGatewayWithTheModelIdentityAndTheValue(_ ownership: ControllerServer) async
-  {
+  func aChangeCallsTheGatewayWithTheModelIdentityAndTheValue(_ ownership: ControllerServer) async {
     let gateway = GatewayStub()
     let viewModel = RuntimeViewModel(gateway: gateway)
     let device = Self.device(physicalOwnership: .nativeGamepad)
