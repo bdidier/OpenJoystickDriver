@@ -83,8 +83,11 @@ Sources/OpenJoystickDriverPresentation/
   Components/  Controllers/  InputCapture/  MenuBar/  Profiles/  Runtime/  Settings/
 
 Sources/OpenJoystickDriver/
-  main.swift, App/ (headless host, Info.plist, Host.entitlements), Resources/
+  main.swift, App/ (Info.plist, Host.entitlements), Resources/
+  platform/macos/      macOS host adapter: headless host and App Intents
 ```
+
+`main.swift` is the neutral core. Only files below `platform/` import macOS-only modules (AppKit, AppIntents, IOKit, SystemExtensions, SwiftUI, and the Service, USB, and Presentation targets). `Tests/RepositoryScripts/test_neutral_core_imports.py` runs `Scripts/Quality/check_neutral_core_imports.py` and fails on a violation.
 
 Kit `Diagnostics/` holds reports and health types that both the CLI and app read.
 
