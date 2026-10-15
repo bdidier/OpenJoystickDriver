@@ -92,7 +92,6 @@ extension HIDDeviceStream {
           interfaceNumber: hostTransport == .usb ? Self.usbInterfaceNumber(for: device) : nil,
           hostTransport: hostTransport,
           accessBackend: .ioHID,
-          endpoints: Self.usbEndpoints(for: device, hostTransport: hostTransport),
           hidLayout: hidLayout
         )
       ],
