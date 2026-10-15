@@ -168,6 +168,12 @@ def validate_modes(path: pathlib.Path, record: dict[str, Any]) -> None:
             f"{path}: capabilities must be deltas the driver of every mode declares",
         )
         match = mode.get("match", {})
+        require(
+            uses_raw_usb(mode["protocol"])
+            or "endpoints" not in match.get("interfaceSignature", {}),
+            f"{path}: mode {mode['id']} is a HID mode, whose interfaceSignature has no "
+            "endpoints; only the raw USB scanner reads an interface's endpoint set",
+        )
         bcd = match.get("bcdDevice")
         require(
             bcd is None or bcd["min"] <= bcd["max"],

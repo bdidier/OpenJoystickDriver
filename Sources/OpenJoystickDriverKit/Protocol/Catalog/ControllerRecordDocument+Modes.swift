@@ -374,7 +374,8 @@ extension ControllerRecordDocument {
   /// The record's modes: unique IDs and exactly one `default`; every mode's protocol obeys the
   /// same record-level rules the default protocol does, whether the record has one mode or many.
   /// A session names HID reports for a HID mode and USB packets for a raw-USB mode, and
-  /// `interface` selects among HID interfaces, so a raw-USB mode has none.
+  /// `interface` selects among HID interfaces, so a raw-USB mode has none. A HID route reports
+  /// no endpoint set, so only a raw-USB mode's interface signature may carry `endpoints`.
   func validateModes(codingPath: [any CodingKey]) throws {
     let path = codingPath + [DocumentKey("modes")]
     func fail(_ message: String) -> DecodingError {
@@ -410,8 +411,16 @@ extension ControllerRecordDocument {
             "raw-USB startup writes need a family that reads them and no initialization list"
           )
         }
-      } else if mode.usbStartupWrites != nil {
-        throw fail("a HID mode's session names startup reports, not usbStartup packets")
+      } else {
+        if mode.usbStartupWrites != nil {
+          throw fail("a HID mode's session names startup reports, not usbStartup packets")
+        }
+        if mode.match?.interfaceSignature?.endpoints != nil {
+          throw fail(
+            "a HID mode's interfaceSignature has no endpoints; only the raw USB scanner reads"
+              + " an interface's endpoint set"
+          )
+        }
       }
       if (inputLayout != nil) != info.protocolID.requiresRecordInputLayout {
         throw fail(

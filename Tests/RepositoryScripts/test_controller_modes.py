@@ -26,6 +26,14 @@ def matched(identifier: str, **keys: Any) -> dict[str, Any]:
     return {"id": identifier, "protocol": SIXAXIS, "match": keys}
 
 
+GIP = {"family": "xbox.gip"}
+GIP_DEFAULT = {"id": "default", "protocol": GIP}
+
+
+def gip_matched(identifier: str, **keys: Any) -> dict[str, Any]:
+    return {"id": identifier, "protocol": GIP, "match": keys}
+
+
 def record(**fields: Any) -> dict[str, Any]:
     return {
         **header("Controller"),
@@ -105,8 +113,8 @@ class ControllerModeSchemaTests(unittest.TestCase):
         }
         document = record(
             modes=[
-                DEFAULT,
-                matched(
+                GIP_DEFAULT,
+                gip_matched(
                     "two-endpoints",
                     interfaceSignature={
                         **triple,
@@ -116,7 +124,7 @@ class ControllerModeSchemaTests(unittest.TestCase):
                         ],
                     },
                 ),
-                matched(
+                gip_matched(
                     "one-endpoint",
                     interfaceSignature={
                         **triple,
@@ -241,6 +249,17 @@ class ControllerModeSchemaTests(unittest.TestCase):
                 modes=[
                     DEFAULT,
                     matched("x", interfaceSignature=with_endpoints([{"interval": 1}])),
+                ]
+            ),
+            "endpoints on a HID mode": record(
+                modes=[
+                    DEFAULT,
+                    matched(
+                        "x",
+                        interfaceSignature=with_endpoints(
+                            [{"direction": "in", "transferType": "interrupt"}]
+                        ),
+                    ),
                 ]
             ),
             "session with an empty startup": record(
@@ -434,6 +453,26 @@ class RawUSBModeTests(unittest.TestCase):
         )
         self.assertTrue(self.schema.is_valid(document))
         validate_profiles.validate_modes(Path("record.json"), document)
+
+    def test_endpoints_are_accepted_on_raw_usb_and_refused_on_hid(self) -> None:
+        signature = {
+            "interfaceClass": 255,
+            "interfaceSubclass": 71,
+            "interfaceProtocol": 208,
+            "endpoints": [{"direction": "in", "transferType": "interrupt"}],
+        }
+        accepted = self.usb_record(
+            self.gip(), self.gip("a", match={"interfaceSignature": signature})
+        )
+        self.assertTrue(self.schema.is_valid(accepted))
+        validate_profiles.validate_modes(Path("record.json"), accepted)
+        refused = record(
+            modes=[DEFAULT, matched("a", interfaceSignature=signature)]
+        )
+        self.assertFalse(self.schema.is_valid(refused))
+        with self.assertRaises(validate_profiles.ValidationError) as caught:
+            validate_profiles.validate_modes(Path("record.json"), refused)
+        self.assertIn("HID mode", str(caught.exception))
 
     def test_rejects_what_a_raw_usb_mode_cannot_carry(self) -> None:
         hid_write = {

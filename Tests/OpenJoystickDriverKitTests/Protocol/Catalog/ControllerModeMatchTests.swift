@@ -43,15 +43,21 @@ struct ControllerModeMatchTests {
   private static func mode(
     _ id: String,
     match: [String: Any],
+    family: String = "sony.sixaxis",
     extras: [String: Any] = [:]
   )
     -> [String: Any]
   {
-    ["id": id, "protocol": ["family": "sony.sixaxis"], "match": match].merging(extras) { $1 }
+    ["id": id, "protocol": ["family": family], "match": match].merging(extras) { $1 }
   }
 
-  private static func profile(_ modes: [[String: Any]]) throws -> DeviceRuntimeProfile {
-    try #require(try ControllerRecordSet.validate(recordData(modes: modes)).record).profile
+  private static func profile(
+    _ modes: [[String: Any]],
+    family: String = "sony.sixaxis"
+  ) throws -> DeviceRuntimeProfile {
+    try #require(
+      try ControllerRecordSet.validate(recordData(modes: modes, family: family)).record
+    ).profile
   }
 
   private static func problem(
@@ -250,25 +256,30 @@ struct ControllerModeMatchTests {
         "endpoints": endpoints,
       ]
     }
-    let profile = try Self.profile([
-      Self.mode(
-        "pair",
-        match: [
-          "interfaceSignature": signature([
-            ["direction": "in", "transferType": "interrupt"],
-            ["direction": "out", "transferType": "interrupt"],
-          ])
-        ]
-      ),
-      Self.mode(
-        "single",
-        match: [
-          "interfaceSignature": signature([
-            ["address": 129, "direction": "in", "transferType": "bulk", "maxPacketSize": 64]
-          ])
-        ]
-      ),
-    ])
+    let profile = try Self.profile(
+      [
+        Self.mode(
+          "pair",
+          match: [
+            "interfaceSignature": signature([
+              ["direction": "in", "transferType": "interrupt"],
+              ["direction": "out", "transferType": "interrupt"],
+            ])
+          ],
+          family: "xbox.gip"
+        ),
+        Self.mode(
+          "single",
+          match: [
+            "interfaceSignature": signature([
+              ["address": 129, "direction": "in", "transferType": "bulk", "maxPacketSize": 64]
+            ])
+          ],
+          family: "xbox.gip"
+        ),
+      ],
+      family: "xbox.gip"
+    )
     func interface(_ endpoints: [PhysicalEndpointSignature]?) -> PhysicalDevice {
       Self.device(
         interfaces: [
@@ -308,6 +319,32 @@ struct ControllerModeMatchTests {
     #expect(await Self.select(profile, interface([input])) == .noModeMatched)
     #expect(await Self.select(profile, interface([input, input])) == .noModeMatched)
     #expect(await Self.select(profile, interface(nil)) == .noModeMatched)
+  }
+
+  /// A HID route reports no endpoint set, so a HID mode that names `endpoints` could never be
+  /// selected; the record is refused. The same signature on a raw-USB mode is accepted.
+  @Test
+  func aHIDModeWithEndpointsIsRefusedAndARawUSBModeIsNot() async throws {
+    let endpoints: [[String: Any]] = [["direction": "in", "transferType": "interrupt"]]
+    let match: [String: Any] = ["interfaceSignature": Self.signature(endpoints: endpoints)]
+    let hid = try Self.problem([Self.mode("x", match: match)])
+    #expect(hid?.contains("endpoints") == true)
+    let rawUSB = try Self.problem(
+      [Self.mode("x", match: match, family: "xbox.gip")],
+      family: "xbox.gip"
+    )
+    #expect(rawUSB == nil)
+    let withoutEndpoints = try Self.problem([
+      Self.mode(
+        "x",
+        match: [
+          "interfaceSignature": [
+            "interfaceClass": 255, "interfaceSubclass": 93, "interfaceProtocol": 1,
+          ]
+        ]
+      )
+    ])
+    #expect(withoutEndpoints == nil)
   }
 
   /// A probe is the costly key: it is read only after every cheap key of its mode holds.

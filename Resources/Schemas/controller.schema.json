@@ -112,7 +112,51 @@
       },
       "else": {
         "required": ["match"]
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "protocol": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "family": {
+                        "enum": ["xbox.xid", "xbox.xusb", "xbox.gip"]
+                      }
+                    }
+                  },
+                  {
+                    "properties": {
+                      "family": {
+                        "const": "vendor.gamesir"
+                      },
+                      "variant": {
+                        "const": "usb"
+                      }
+                    },
+                    "required": ["variant"]
+                  }
+                ]
+              }
+            },
+            "required": ["protocol"]
+          },
+          "else": {
+            "properties": {
+              "match": {
+                "properties": {
+                  "interfaceSignature": {
+                    "properties": {
+                      "endpoints": false
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
     },
     "modeMatch": {
       "description": "Keys that must all hold for a mode to be selected. Link, interface signature, strings and bcdDevice are read from the enumerated device; probes read a feature report and are tried last.",
@@ -152,7 +196,7 @@
       }
     },
     "modeInterfaceSignature": {
-      "description": "An interface the device must expose, by USB class triple and, optionally, the HID primary usage and the whole endpoint set.",
+      "description": "An interface the device must expose, by USB class triple and, optionally, the HID primary usage and the whole endpoint set. Only a raw-USB mode may name endpoints: a HID route reports none.",
       "type": "object",
       "required": ["interfaceClass", "interfaceSubclass", "interfaceProtocol"],
       "additionalProperties": false,
