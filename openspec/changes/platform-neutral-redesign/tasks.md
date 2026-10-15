@@ -128,6 +128,10 @@ Verify: `swift test`, `./Scripts/ojd check schemas`, `./Scripts/ojd catalog rege
 - [ ] 8.2 Delete `ControllerQuirk`. Verify: `grep -r ControllerQuirk Sources Tests` returns nothing; build passes.
 - [ ] 8.3 Update the schema for the new fields. Verify: `./Scripts/ojd check schemas`.
 
+Extras found while closing 8 (the Swift record set merges a patch's `parameters` key by key and cannot remove one, while the Python generator replaces them whole; neither follows the `controller-records` "Layered patches" requirement). Depends on 14.2 for the document header.
+
+- [ ] 8.4 Introduce the `ControllerPatch` kind (D4: the `controller-override` patch and `defaults` become `ControllerPatch`, `defaults` with `selector.all`) with RFC 7396 merge semantics, `null` deleting a key, the layer order catalog record, built-in patch, package patch, user patch, and the selector order `model`, then `vendorID`/`productID`, then `all` inside one layer. Implement it once in the Swift loader and once in the Python generator. Verify: shared fixture cases run by `swift test` and the repository unit tests give equal effective records, including a `null` delete of a parameter and a user patch beating a package patch.
+
 ## 9. Protocol description records (old WP7)
 
 Owns: `ProtocolDescription` kind, with init sequences, report layouts and probes as data.

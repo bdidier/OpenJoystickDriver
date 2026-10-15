@@ -13,6 +13,11 @@ Before editing, read `CONTRIBUTING.md`, `wiki/Home.md`, `LOCALIZATION.md`, and `
 - Confirm destructive writes and publication before running them.
 - Issues, comments, and pull requests follow `CONTRIBUTING.md#ai-agents`.
 
+## Architecture
+
+- Settle on the long-term design early. When work exposes a gap between the code and the spec, or two implementations of one rule that disagree, fix it toward the spec in Swift and Python alike, instead of carrying the gap forward or deferring it.
+- If the fix is larger than the task at hand, add it as a task to the active OpenSpec change and do it; do not leave it as a note.
+
 ## Checks
 
 Run applicable commands from the repository root:
