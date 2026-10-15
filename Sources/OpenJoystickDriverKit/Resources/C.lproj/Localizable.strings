@@ -1577,7 +1577,7 @@
 "shortcuts.profile.name" = "Name";
 "shortcuts.profile.type" = "Remapping Profile";
 "cli.explain.abstract" = "Explain an error code: what it means and how to fix it.";
-"cli.explain.discussion" = "ojd explain lists active codes; the wiki lists retired ones. It works offline, and the case of the code does not matter.";
+"cli.explain.discussion" = "ojd explain covers active and retired codes. It works offline, and the case of the code does not matter.";
 "cli.explain.code" = "The error code, for example E2004.";
 "cli.explain.unknown" = "%@ is not an active error code. Check the spelling; the wiki page Error-Codes lists every code.";
 "cli.explain.area" = "Area: %@";
@@ -1588,6 +1588,7 @@
 "cli.explain.area.document" = "Documents";
 "cli.explain.exit_code" = "Exit code: %@";
 "cli.explain.wire" = "Wire value: %@";
+"cli.explain.retired" = "Retired in %@.";
 "cli.error.stale_installation" = "The installed OpenJoystickDriver.app is older than these repository sources. Run './Scripts/ojd build install-fast dev', or set OJD_RUN_REPOSITORY_CLI=1 to run this build.";
 "cli.error.forwarder_allocation" = "Could not allocate arguments for the installed ojd. Retry the command.";
 "cli.error.forwarder_exec" = "Could not run the installed ojd: %@. Reinstall OpenJoystickDriver.app.";

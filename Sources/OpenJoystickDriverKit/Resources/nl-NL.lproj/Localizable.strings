@@ -1579,7 +1579,7 @@
 "shortcuts.profile.name" = "Naam";
 "shortcuts.profile.type" = "Toewijzingsprofiel";
 "cli.explain.abstract" = "Legt een foutcode uit: wat die betekent en hoe je het oplost.";
-"cli.explain.discussion" = "ojd explain toont actieve codes; de wiki toont ingetrokken codes. Het werkt offline en hoofdletters of kleine letters in de code maken niet uit.";
+"cli.explain.discussion" = "ojd explain behandelt actieve en ingetrokken codes. Het werkt offline en hoofdletters of kleine letters in de code maken niet uit.";
 "cli.explain.code" = "De foutcode, bijvoorbeeld E2004.";
 "cli.explain.unknown" = "%@ is geen actieve foutcode. Controleer de spelling; de wikipagina Error-Codes toont alle codes.";
 "cli.explain.area" = "Gebied: %@";
@@ -1590,6 +1590,7 @@
 "cli.explain.area.document" = "Documenten";
 "cli.explain.exit_code" ="Afsluitcode: %@";
 "cli.explain.wire" = "Wire-waarde: %@";
+"cli.explain.retired" = "Ingetrokken in %@.";
 "cli.error.stale_installation" = "De geïnstalleerde OpenJoystickDriver.app is ouder dan deze repositorybronnen. Voer „./Scripts/ojd build install-fast dev” uit of stel OJD_RUN_REPOSITORY_CLI=1 in om deze build uit te voeren.";
 "cli.error.forwarder_allocation" = "Kon geen argumenten reserveren voor de geïnstalleerde ojd. Voer de opdracht opnieuw uit.";
 "cli.error.forwarder_exec" = "Kon de geïnstalleerde ojd niet uitvoeren: %@. Installeer OpenJoystickDriver.app opnieuw.";

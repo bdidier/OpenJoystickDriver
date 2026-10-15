@@ -1579,7 +1579,7 @@
 "shortcuts.profile.name" = "Ad";
 "shortcuts.profile.type" = "Yeniden atama profili";
 "cli.explain.abstract" = "Bir hata kodunu açıklar: ne anlama geldiğini ve nasıl düzeltileceğini.";
-"cli.explain.discussion" = "ojd explain etkin kodları listeler; wiki kullanımdan kaldırılmış kodları listeler. Çevrimdışı çalışır ve koddaki büyük veya küçük harf fark etmez.";
+"cli.explain.discussion" = "ojd explain etkin ve kullanımdan kaldırılmış kodları açıklar. Çevrimdışı çalışır ve koddaki büyük veya küçük harf fark etmez.";
 "cli.explain.code" = "Hata kodu, örneğin E2004.";
 "cli.explain.unknown" = "%@ etkin bir hata kodu değil. Yazımı kontrol edin; Error-Codes wiki sayfası tüm kodları listeler.";
 "cli.explain.area" = "Alan: %@";
@@ -1590,6 +1590,7 @@
 "cli.explain.area.document" = "Belgeler";
 "cli.explain.exit_code" ="Çıkış kodu: %@";
 "cli.explain.wire" = "Tel değeri: %@";
+"cli.explain.retired" = "%@ sürümünde kullanımdan kaldırıldı.";
 "cli.error.stale_installation" = "Yüklü OpenJoystickDriver.app bu depo kaynaklarından daha eski. Bu derlemeyi çalıştırmak için “./Scripts/ojd build install-fast dev” komutunu çalıştırın veya OJD_RUN_REPOSITORY_CLI=1 ayarlayın.";
 "cli.error.forwarder_allocation" = "Yüklü ojd için bağımsız değişkenler ayrılamadı. Komutu yeniden çalıştırın.";
 "cli.error.forwarder_exec" = "Yüklü ojd çalıştırılamadı: %@. OpenJoystickDriver.app uygulamasını yeniden yükleyin.";

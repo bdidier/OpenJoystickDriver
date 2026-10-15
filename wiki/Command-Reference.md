@@ -386,9 +386,9 @@ ojd explain CODE
 `CODE` is an error code such as `E2004`, in any letter case.
 The command works offline.
 It prints the code, its area (endpoint, command line, or remapping), what it means, and the exit code of a command-line code or the wire value of a remapping code.
+A retired code prints that it is retired and in which version.
 An unknown code is a usage error.
-`ojd explain` lists active codes, and [Error codes](Error-Codes.md) lists retired ones.
-With `--json`, the output is an `ErrorExplanation` with `code`, `area`, `explanation`, and `exitCode` or `wire`.
+With `--json`, the output is an `ErrorExplanation` with `code`, `area`, `explanation`, and `exitCode`, `wire`, or `retiredIn`.
 
 ## Further Reading
 

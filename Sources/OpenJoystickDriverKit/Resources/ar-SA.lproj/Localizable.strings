@@ -1579,7 +1579,7 @@
 "shortcuts.profile.name" = "الاسم";
 "shortcuts.profile.type" = "ملف تعريف إعادة التعيين";
 "cli.explain.abstract" = "يشرح رمز خطأ: ماذا يعني وكيف تصلحه.";
-"cli.explain.discussion" = "يعرض ojd explain الرموز النشطة، وتعرض الويكي الرموز المتقاعدة. يعمل دون اتصال بالإنترنت، ولا يهم حجم أحرف الرمز.";
+"cli.explain.discussion" = "يشرح ojd explain الرموز النشطة والمتقاعدة. يعمل دون اتصال بالإنترنت، ولا يهم حجم أحرف الرمز.";
 "cli.explain.code" = "رمز الخطأ، مثل E2004.";
 "cli.explain.unknown" = "%@ ليس رمز خطأ نشطًا. تحقق من الإملاء؛ تعرض صفحة الويكي Error-Codes كل الرموز.";
 "cli.explain.area" = "المجال: %@";
@@ -1590,6 +1590,7 @@
 "cli.explain.area.document" = "المستندات";
 "cli.explain.exit_code" ="رمز الخروج: %@";
 "cli.explain.wire" = "قيمة السلك: %@";
+"cli.explain.retired" = "تقاعد في %@.";
 "cli.error.stale_installation" = "تطبيق OpenJoystickDriver.app المثبّت أقدم من مصادر المستودع هذه. شغّل «./Scripts/ojd build install-fast dev» أو اضبط OJD_RUN_REPOSITORY_CLI=1 لتشغيل هذا الإصدار.";
 "cli.error.forwarder_allocation" = "تعذّر تخصيص وسائط لـ ojd المثبّت. أعد تشغيل الأمر.";
 "cli.error.forwarder_exec" = "تعذّر تشغيل ojd المثبّت: %@. أعد تثبيت OpenJoystickDriver.app.";

@@ -72,7 +72,7 @@ Each line except a watch line has `apiVersion`, which is `openjoystickdriver/v1a
 
 1. The endpoint sends `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Challenge","nonce":"…"}` first. A granted program can ignore it; a [token](#use-a-token) client signs it.
 2. Within 5 seconds, the program sends `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Hello","scopes":["read"]}`.
-3. The endpoint answers a `Welcome`, with `version` and the granted `scopes`, or a `Status` with `status` `Failure`, `code`, and `message`, and closes the connection. A line with another `apiVersion` gets `E1010`, a line without `apiVersion` or `kind` gets `E1012`, and a `kind` that the endpoint does not accept at that point gets `E1011`.
+3. The endpoint answers a `Welcome`, with `version` and the granted `scopes`, or a `Status` with `status` `Failure`, `code`, and `message`, and closes the connection. A line with another `apiVersion` gets `E1010`, a line without `apiVersion` or `kind`, or with one that is `null` or not a string, gets `E1012`, and a `kind` that the endpoint does not accept at that point gets `E1011`.
 4. The program sends `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Subscription","stream":"controllers"}`. Add `"output":true` for the values of the virtual gamepad.
 5. The endpoint sends the same `ADDED`, `MODIFIED`, and `DELETED` watch lines as `ojd controller watch --all --json`.
 

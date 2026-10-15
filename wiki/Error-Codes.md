@@ -15,7 +15,7 @@ Each code has the form `E` and four digits. The first digit gives the area:
 A code never changes its meaning. When OJD stops using a code, the code is retired. OJD never gives a retired code to a different error.
 
 To look up a code offline, run `ojd explain E####`.
-It lists active codes, and this page also lists retired ones.
+It also answers for a retired code, and says in which version it was retired.
 
 Branch on the code in your program. The English message that comes with a code can change.
 

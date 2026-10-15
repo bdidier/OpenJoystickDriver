@@ -1579,7 +1579,7 @@
 "shortcuts.profile.name" = "이름";
 "shortcuts.profile.type" = "리매핑 프로파일";
 "cli.explain.abstract" = "오류 코드의 의미와 해결 방법을 설명합니다.";
-"cli.explain.discussion" = "ojd explain은 활성 코드를 나열하며, 폐기된 코드는 위키에서 확인할 수 있습니다. 오프라인에서 동작하고 코드의 대소문자는 구분하지 않습니다.";
+"cli.explain.discussion" = "ojd explain은 활성 코드와 폐기된 코드를 모두 설명합니다. 오프라인에서 동작하고 코드의 대소문자는 구분하지 않습니다.";
 "cli.explain.code" = "오류 코드입니다. 예: E2004";
 "cli.explain.unknown" = "%@은(는) 활성 오류 코드가 아닙니다. 철자를 확인하세요. 위키의 Error-Codes 페이지에 모든 코드가 나와 있습니다.";
 "cli.explain.area" = "영역: %@";
@@ -1590,6 +1590,7 @@
 "cli.explain.area.document" = "문서";
 "cli.explain.exit_code" ="종료 코드: %@";
 "cli.explain.wire" = "와이어 값: %@";
+"cli.explain.retired" = "%@에서 폐기되었습니다.";
 "cli.error.stale_installation" = "설치된 OpenJoystickDriver.app이 이 저장소 소스보다 오래되었습니다. 이 빌드를 실행하려면 ‘./Scripts/ojd build install-fast dev’를 실행하거나 OJD_RUN_REPOSITORY_CLI=1을 설정하세요.";
 "cli.error.forwarder_allocation" = "설치된 ojd의 인수를 확보하지 못했습니다. 명령을 다시 실행하세요.";
 "cli.error.forwarder_exec" = "설치된 ojd를 실행하지 못했습니다: %@. OpenJoystickDriver.app을 다시 설치하세요.";

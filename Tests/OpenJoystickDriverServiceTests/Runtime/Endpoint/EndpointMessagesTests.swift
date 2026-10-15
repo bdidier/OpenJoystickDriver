@@ -74,19 +74,25 @@ struct EndpointMessagesTests {
       axes: [.leftStickX: 0.5],
       holdMilliseconds: 40
     )
-    // The frame encodes the body that `ojd virtual feed` takes; the endpoint line adds the header.
-    let body = try Self.encoded(frame)
-    #expect(!(try Self.issues(body).isEmpty))
-    var object = try #require(
-      try JSONSerialization.jsonObject(with: Data(body.utf8)) as? [String: Any]
-    )
-    object["apiVersion"] = OpenJoystickDriverAPI.version
-    object["kind"] = VirtualFeedFrame.kind
-    let data = try JSONSerialization.data(withJSONObject: object)
-    let line = try #require(String(bytes: data, encoding: .utf8))
+    // The frame alone is the body that `ojd virtual feed` takes; the endpoint line adds the header.
+    #expect(!(try Self.issues(Self.encoded(frame)).isEmpty))
+    let line = try Self.encoded(EndpointFrame(frame))
     #expect(try Self.issues(line).isEmpty, "\(line)")
     #expect(EndpointHeader.refusal(of: Data(line.utf8), accepting: ["Frame"]) == nil)
     #expect(try JSONDecoder().decode(VirtualFeedFrame.self, from: Data(line.utf8)) == frame)
+  }
+
+  @Test(arguments: [
+    (#"{"apiVersion":null,"kind":"Hello"}"#, ErrorCode.missingHeader),
+    (#"{"apiVersion":"openjoystickdriver/v1alpha1","kind":null}"#, .missingHeader),
+    (#"{"apiVersion":7,"kind":"Hello"}"#, .missingHeader),
+    (#"{"apiVersion":"openjoystickdriver/v1alpha1","kind":{}}"#, .missingHeader),
+    (#"{"kind":"Hello"}"#, .missingHeader),
+    (#"{"apiVersion":"openjoystickdriver/v2","kind":null}"#, .missingHeader),
+    (#"["Hello"]"#, .invalidMessage),
+  ])
+  func aHeaderThatIsMissingOrNotStringsIsRefused(line: String, code: ErrorCode) {
+    #expect(EndpointHeader.refusal(of: Data(line.utf8), accepting: ["Hello"])?.code == code)
   }
 
   @Test(arguments: [

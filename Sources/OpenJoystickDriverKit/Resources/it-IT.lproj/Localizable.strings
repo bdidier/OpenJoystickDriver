@@ -1579,7 +1579,7 @@
 "shortcuts.profile.name" = "Nome";
 "shortcuts.profile.type" = "Profilo di rimappatura";
 "cli.explain.abstract" = "Spiega un codice di errore: cosa significa e come risolverlo.";
-"cli.explain.discussion" = "ojd explain elenca i codici attivi; la wiki elenca quelli ritirati. Funziona offline e le maiuscole o minuscole del codice non contano.";
+"cli.explain.discussion" = "ojd explain copre i codici attivi e quelli ritirati. Funziona offline e le maiuscole o minuscole del codice non contano.";
 "cli.explain.code" = "Il codice di errore, ad esempio E2004.";
 "cli.explain.unknown" = "%@ non è un codice di errore attivo. Controlla l’ortografia; la pagina Error-Codes della wiki elenca tutti i codici.";
 "cli.explain.area" = "Ambito: %@";
@@ -1590,6 +1590,7 @@
 "cli.explain.area.document" = "Documenti";
 "cli.explain.exit_code" ="Codice di uscita: %@";
 "cli.explain.wire" = "Valore di trasmissione: %@";
+"cli.explain.retired" = "Ritirato in %@.";
 "cli.error.stale_installation" = "L’app OpenJoystickDriver.app installata è più vecchia di questi sorgenti del repository. Esegui «./Scripts/ojd build install-fast dev» oppure imposta OJD_RUN_REPOSITORY_CLI=1 per eseguire questa build.";
 "cli.error.forwarder_allocation" = "Impossibile riservare gli argomenti per l’ojd installato. Esegui di nuovo il comando.";
 "cli.error.forwarder_exec" = "Impossibile eseguire l’ojd installato: %@. Reinstalla OpenJoystickDriver.app.";

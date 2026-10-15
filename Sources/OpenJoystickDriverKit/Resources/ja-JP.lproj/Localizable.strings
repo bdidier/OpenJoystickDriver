@@ -1579,7 +1579,7 @@
 "shortcuts.profile.name" = "名前";
 "shortcuts.profile.type" = "リマッピングプロファイル";
 "cli.explain.abstract" = "エラーコードの意味と対処方法を説明します。";
-"cli.explain.discussion" = "ojd explain は有効なコードを一覧表示します。廃止されたコードは wiki に掲載されています。オフラインで動作し、コードの大文字と小文字は区別されません。";
+"cli.explain.discussion" = "ojd explain は有効なコードと廃止されたコードの両方を説明します。オフラインで動作し、コードの大文字と小文字は区別されません。";
 "cli.explain.code" = "エラーコード。例: E2004。";
 "cli.explain.unknown" = "%@ は有効なエラーコードではありません。つづりを確認してください。wiki の Error-Codes ページにすべてのコードが掲載されています。";
 "cli.explain.area" = "分類: %@";
@@ -1590,6 +1590,7 @@
 "cli.explain.area.document" = "書類";
 "cli.explain.exit_code" ="終了コード: %@";
 "cli.explain.wire" = "ワイヤ値: %@";
+"cli.explain.retired" = "%@ で廃止されました。";
 "cli.error.stale_installation" = "インストールされている OpenJoystickDriver.app は、このリポジトリのソースより古いものです。このビルドを実行するには、「./Scripts/ojd build install-fast dev」を実行するか、OJD_RUN_REPOSITORY_CLI=1 を設定してください。";
 "cli.error.forwarder_allocation" = "インストール済みの ojd の引数を確保できませんでした。コマンドを再実行してください。";
 "cli.error.forwarder_exec" = "インストール済みの ojd を実行できませんでした: %@。OpenJoystickDriver.app を再インストールしてください。";

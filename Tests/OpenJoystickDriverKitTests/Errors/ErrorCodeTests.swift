@@ -10,6 +10,7 @@ struct ErrorCodeTests {
       let domain: String
       let name: String
       let status: String
+      let retiredIn: String?
       let wire: String?
     }
     let codes: [Entry]
@@ -32,6 +33,19 @@ struct ErrorCodeTests {
     #expect(active.map(\.code) == ErrorCode.allCases.map(\.rawValue))
     #expect(active.map(\.name) == ErrorCode.allCases.map { "\($0)" })
     #expect(active.map(\.domain) == ErrorCode.allCases.map(\.domain.rawValue))
+  }
+
+  @Test
+  func theRetiredCodesAreTheRetiredCatalogEntries() throws {
+    let data = try Data(contentsOf: repositoryResource("Resources/ErrorCodes.json"))
+    let retired = try JSONDecoder().decode(Catalog.self, from: data).codes.filter {
+      $0.status == "retired"
+    }
+    #expect(RetiredErrorCode.all.map(\.code) == retired.map(\.code))
+    #expect(RetiredErrorCode.all.map(\.domain.rawValue) == retired.map(\.domain))
+    #expect(RetiredErrorCode.all.map(\.retiredIn) == retired.compactMap(\.retiredIn))
+    #expect(RetiredErrorCode.named("e1003")?.retiredIn == "0.6.0-alpha.1")
+    #expect(RetiredErrorCode.named("E1004") == nil)
   }
 
   @Test

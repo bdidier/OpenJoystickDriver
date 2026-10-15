@@ -1579,7 +1579,7 @@
 "shortcuts.profile.name" = "Имя";
 "shortcuts.profile.type" = "Профиль переназначения";
 "cli.explain.abstract" = "Объясняет код ошибки: что он означает и как его исправить.";
-"cli.explain.discussion" = "ojd explain перечисляет действующие коды; вики перечисляет выведенные из употребления. Работает без сети, регистр букв в коде не важен.";
+"cli.explain.discussion" = "ojd explain объясняет действующие и выведенные из употребления коды. Работает без сети, регистр букв в коде не важен.";
 "cli.explain.code" = "Код ошибки, например E2004.";
 "cli.explain.unknown" = "%@ не является действующим кодом ошибки. Проверьте написание; на странице вики Error-Codes перечислены все коды.";
 "cli.explain.area" = "Область: %@";
@@ -1590,6 +1590,7 @@
 "cli.explain.area.document" = "Документы";
 "cli.explain.exit_code" ="Код завершения: %@";
 "cli.explain.wire" = "Значение в протоколе: %@";
+"cli.explain.retired" = "Выведен из употребления в %@.";
 "cli.error.stale_installation" = "Установленное приложение OpenJoystickDriver.app старше этих исходников репозитория. Выполните «./Scripts/ojd build install-fast dev» или задайте OJD_RUN_REPOSITORY_CLI=1, чтобы запустить эту сборку.";
 "cli.error.forwarder_allocation" = "Не удалось выделить память для аргументов установленного ojd. Выполните команду ещё раз.";
 "cli.error.forwarder_exec" = "Не удалось запустить установленный ojd: %@. Переустановите OpenJoystickDriver.app.";

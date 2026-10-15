@@ -1579,7 +1579,7 @@
 "shortcuts.profile.name" = "Tên";
 "shortcuts.profile.type" = "Cấu hình ánh xạ lại";
 "cli.explain.abstract" = "Giải thích một mã lỗi: ý nghĩa của nó và cách khắc phục.";
-"cli.explain.discussion" = "ojd explain liệt kê các mã đang dùng; wiki liệt kê các mã đã ngừng dùng. Nó hoạt động ngoại tuyến, và chữ hoa hay chữ thường của mã không quan trọng.";
+"cli.explain.discussion" = "ojd explain giải thích cả mã đang dùng lẫn mã đã ngừng dùng. Nó hoạt động ngoại tuyến, và chữ hoa hay chữ thường của mã không quan trọng.";
 "cli.explain.code" = "Mã lỗi, ví dụ E2004.";
 "cli.explain.unknown" = "%@ không phải là mã lỗi đang dùng. Hãy kiểm tra chính tả; trang wiki Error-Codes liệt kê mọi mã.";
 "cli.explain.area" = "Lĩnh vực: %@";
@@ -1590,6 +1590,7 @@
 "cli.explain.area.document" = "Tài liệu";
 "cli.explain.exit_code" ="Mã thoát: %@";
 "cli.explain.wire" = "Giá trị truyền: %@";
+"cli.explain.retired" = "Đã ngừng dùng trong %@.";
 "cli.error.stale_installation" = "OpenJoystickDriver.app đã cài đặt cũ hơn các nguồn kho mã này. Hãy chạy “./Scripts/ojd build install-fast dev”, hoặc đặt OJD_RUN_REPOSITORY_CLI=1 để chạy bản dựng này.";
 "cli.error.forwarder_allocation" = "Không thể cấp phát đối số cho ojd đã cài đặt. Hãy thử lại lệnh.";
 "cli.error.forwarder_exec" = "Không thể chạy ojd đã cài đặt: %@. Hãy cài đặt lại OpenJoystickDriver.app.";

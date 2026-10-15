@@ -1579,7 +1579,7 @@
 "shortcuts.profile.name" = "Nama";
 "shortcuts.profile.type" = "Profil Pemetaan Ulang";
 "cli.explain.abstract" = "Jelaskan kode kesalahan: artinya dan cara memperbaikinya.";
-"cli.explain.discussion" = "ojd explain mencantumkan kode yang aktif; wiki mencantumkan kode yang sudah dihentikan. Berfungsi offline, dan huruf besar atau kecil kode tidak berpengaruh.";
+"cli.explain.discussion" = "ojd explain mencakup kode yang aktif dan yang sudah dihentikan. Berfungsi offline, dan huruf besar atau kecil kode tidak berpengaruh.";
 "cli.explain.code" = "Kode kesalahan, misalnya E2004.";
 "cli.explain.unknown" = "%@ bukan kode kesalahan yang aktif. Periksa ejaannya; halaman wiki Error-Codes mencantumkan setiap kode.";
 "cli.explain.area" = "Area: %@";
@@ -1590,6 +1590,7 @@
 "cli.explain.area.document" = "Dokumen";
 "cli.explain.exit_code" ="Kode keluar: %@";
 "cli.explain.wire" = "Nilai wire: %@";
+"cli.explain.retired" = "Dihentikan di %@.";
 "cli.error.stale_installation" = "OpenJoystickDriver.app yang terinstal lebih lama daripada sumber repositori ini. Jalankan “./Scripts/ojd build install-fast dev”, atau atur OJD_RUN_REPOSITORY_CLI=1 untuk menjalankan build ini.";
 "cli.error.forwarder_allocation" = "Tidak dapat mengalokasikan argumen untuk ojd yang terinstal. Coba perintah lagi.";
 "cli.error.forwarder_exec" = "Tidak dapat menjalankan ojd yang terinstal: %@. Instal ulang OpenJoystickDriver.app.";

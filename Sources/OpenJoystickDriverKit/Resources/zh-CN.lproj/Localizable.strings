@@ -1579,7 +1579,7 @@
 "shortcuts.profile.name" = "名称";
 "shortcuts.profile.type" = "重新映射配置文件";
 "cli.explain.abstract" = "解释错误代码：它的含义以及如何修复。";
-"cli.explain.discussion" = "ojd explain 列出有效代码；wiki 列出已弃用的代码。它可离线工作，代码的大小写无关紧要。";
+"cli.explain.discussion" = "ojd explain 说明有效代码和已弃用的代码。它可离线工作，代码的大小写无关紧要。";
 "cli.explain.code" = "错误代码，例如 E2004。";
 "cli.explain.unknown" = "%@ 不是当前有效的错误代码。请检查拼写；wiki 的 Error-Codes 页面列出了所有代码。";
 "cli.explain.area" = "范围：%@";
@@ -1590,6 +1590,7 @@
 "cli.explain.area.document" = "文档";
 "cli.explain.exit_code" ="退出码：%@";
 "cli.explain.wire" = "传输值：%@";
+"cli.explain.retired" = "已在 %@ 中弃用。";
 "cli.error.stale_installation" = "已安装的 OpenJoystickDriver.app 比这些仓库源码更旧。请运行“./Scripts/ojd build install-fast dev”，或设置 OJD_RUN_REPOSITORY_CLI=1 来运行此构建。";
 "cli.error.forwarder_allocation" = "无法为已安装的 ojd 预留参数。请重新运行该命令。";
 "cli.error.forwarder_exec" = "无法运行已安装的 ojd：%@。请重新安装 OpenJoystickDriver.app。";

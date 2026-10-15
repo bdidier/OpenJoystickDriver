@@ -86,6 +86,25 @@ struct EndpointRumbleCommand: Encodable, Sendable {
   }
 }
 
+/// A `Frame` line: the frame body that `ojd virtual feed` takes with `apiVersion` and `kind`.
+struct EndpointFrame: Encodable, Sendable {
+  let frame: VirtualFeedFrame
+
+  init(_ frame: VirtualFeedFrame) { self.frame = frame }
+
+  private enum CodingKeys: String, CodingKey {
+    case apiVersion
+    case kind
+  }
+
+  func encode(to encoder: any Encoder) throws {
+    try frame.encode(to: encoder)
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(OpenJoystickDriverAPI.version, forKey: .apiVersion)
+    try container.encode(VirtualFeedFrame.kind, forKey: .kind)
+  }
+}
+
 /// A `Status` failure line; `code` is an endpoint-domain `ErrorCode`, described in
 /// `endpoint.schema.json`.
 struct EndpointError: Encodable, Error, Sendable {

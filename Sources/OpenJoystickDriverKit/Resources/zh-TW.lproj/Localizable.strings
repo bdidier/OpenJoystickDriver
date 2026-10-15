@@ -1579,7 +1579,7 @@
 "shortcuts.profile.name" = "名稱";
 "shortcuts.profile.type" = "重新對應設定檔";
 "cli.explain.abstract" = "解釋錯誤代碼：它的含義以及如何修復。";
-"cli.explain.discussion" = "ojd explain 列出有效代碼；wiki 列出已停用的代碼。它可離線工作，代碼的大小寫無關緊要。";
+"cli.explain.discussion" = "ojd explain 說明有效代碼和已停用的代碼。它可離線工作，代碼的大小寫無關緊要。";
 "cli.explain.code" = "錯誤代碼，例如 E2004。";
 "cli.explain.unknown" = "%@ 不是有效的錯誤代碼。請檢查拼寫；wiki 的 Error-Codes 頁面列出了所有代碼。";
 "cli.explain.area" = "範圍：%@";
@@ -1590,6 +1590,7 @@
 "cli.explain.area.document" = "文件";
 "cli.explain.exit_code" ="結束碼：%@";
 "cli.explain.wire" = "傳輸值：%@";
+"cli.explain.retired" = "已在 %@ 中停用。";
 "cli.error.stale_installation" = "已安裝的 OpenJoystickDriver.app 比這些儲存庫原始碼更舊。請執行「./Scripts/ojd build install-fast dev」，或設定 OJD_RUN_REPOSITORY_CLI=1 來執行此建置。";
 "cli.error.forwarder_allocation" = "無法為已安裝的 ojd 配置引數。請重新執行該指令。";
 "cli.error.forwarder_exec" = "無法執行已安裝的 ojd：%@。請重新安裝 OpenJoystickDriver.app。";

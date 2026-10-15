@@ -236,6 +236,9 @@ struct EndpointFeedTests {
     (#"{"apiVersion":"openjoystickdriver.io/v2","kind":"Frame","buttons":["south"]}"#, "E1010"),
     (#"{"kind":"Frame","buttons":["south"]}"#, "E1012"),
     (#"{"apiVersion":"openjoystickdriver/v1alpha1","buttons":["south"]}"#, "E1012"),
+    (#"{"apiVersion":null,"kind":"Frame","buttons":["south"]}"#, "E1012"),
+    (#"{"apiVersion":"openjoystickdriver/v1alpha1","kind":null,"buttons":["south"]}"#, "E1012"),
+    (#"{"apiVersion":2,"kind":"Frame","buttons":["south"]}"#, "E1012"),
     (clientLine("Greeting", ""), "E1011"),
     ("nonsense", "E1004"),
   ])
