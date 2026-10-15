@@ -1269,7 +1269,7 @@
 "cli.controller.show.ownership" = "tuyến %@, vật lý %@, đầu vào HID %@";
 "cli.controller.show.label.ownership_choice" = "Phục vụ bởi";
 "cli.controller.show.label.serving" = "Tuyến phục vụ";
-"cli.controller.show.label.persona" = "Persona";
+"cli.controller.show.label.persona" = "Persona được phát hành";
 "cli.controller.show.ownershipChoice" = "%@ (từ %@)";
 "cli.controller.show.label.protocol" = "Giao thức";
 "cli.controller.show.label.record" = "Bản ghi";
