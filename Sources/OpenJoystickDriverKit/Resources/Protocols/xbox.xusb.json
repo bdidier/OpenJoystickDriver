@@ -15,5 +15,10 @@
 			"interfaceSubclass": 93,
 			"interfaceProtocol": 129
 		}
-	]
+	],
+	"defaults": {
+		"tuning": {
+			"frameQueueCapacity": 64
+		}
+	}
 }

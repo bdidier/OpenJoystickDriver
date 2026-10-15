@@ -144,6 +144,9 @@ public struct ControllerTuning: Codable, Equatable, Sendable {
   public let hidStartupRecoveryIntervalMilliseconds: Int?
   /// Switch 1 startup recovery rounds before the session expires.
   public let hidStartupRecoveryRounds: Int?
+  /// Frames that may wait behind a send to the virtual device; a full queue drops its oldest
+  /// frame in favor of the newest.
+  public let frameQueueCapacity: Int?
 
   public static let none = Self()
 
@@ -153,7 +156,8 @@ public struct ControllerTuning: Codable, Equatable, Sendable {
     hidStartupIntervalMilliseconds: Int? = nil,
     minimumHIDOutputIntervalMilliseconds: Int? = nil,
     hidStartupRecoveryIntervalMilliseconds: Int? = nil,
-    hidStartupRecoveryRounds: Int? = nil
+    hidStartupRecoveryRounds: Int? = nil,
+    frameQueueCapacity: Int? = nil
   ) {
     self.stickDeadzone = stickDeadzone
     self.inputLivenessTimeoutMilliseconds = inputLivenessTimeoutMilliseconds
@@ -161,6 +165,7 @@ public struct ControllerTuning: Codable, Equatable, Sendable {
     self.minimumHIDOutputIntervalMilliseconds = minimumHIDOutputIntervalMilliseconds
     self.hidStartupRecoveryIntervalMilliseconds = hidStartupRecoveryIntervalMilliseconds
     self.hidStartupRecoveryRounds = hidStartupRecoveryRounds
+    self.frameQueueCapacity = frameQueueCapacity
   }
 }
 

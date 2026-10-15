@@ -21,5 +21,10 @@
 				"StrikePad"
 			]
 		}
+	},
+	"defaults": {
+		"tuning": {
+			"frameQueueCapacity": 64
+		}
 	}
 }

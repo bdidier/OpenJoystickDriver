@@ -17,5 +17,10 @@
 				"ChargingOnly"
 			]
 		}
+	},
+	"defaults": {
+		"tuning": {
+			"frameQueueCapacity": 64
+		}
 	}
 }

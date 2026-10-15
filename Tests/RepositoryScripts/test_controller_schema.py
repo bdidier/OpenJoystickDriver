@@ -755,8 +755,25 @@ class SwiftParityTests(unittest.TestCase):
                     tuning=interval,
                 ),
                 "stick deadzone on GIP": record(GIP, tuning={"stickDeadzone": 0.1}),
+                "smallest frame queue on GIP": record(
+                    GIP, tuning={"frameQueueCapacity": 1}
+                ),
+                "largest frame queue on DualSense": record(
+                    DUALSENSE, tuning={"frameQueueCapacity": 1024}
+                ),
+                "frame queue on XID": record(
+                    {"family": "xbox.xid", "variant": "gamepad"},
+                    tuning={"frameQueueCapacity": 64},
+                ),
             },
             {
+                "empty frame queue": record(GIP, tuning={"frameQueueCapacity": 0}),
+                "oversized frame queue": record(
+                    GIP, tuning={"frameQueueCapacity": 1025}
+                ),
+                "fractional frame queue": record(
+                    GIP, tuning={"frameQueueCapacity": 1.5}
+                ),
                 "liveness on DualSense": record(DUALSENSE, tuning=liveness),
                 "liveness on GIP": record(GIP, tuning=liveness),
                 "recovery interval on DualSense": record(

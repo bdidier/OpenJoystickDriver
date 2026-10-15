@@ -24,5 +24,10 @@
 				"Receiver"
 			]
 		}
+	},
+	"defaults": {
+		"tuning": {
+			"frameQueueCapacity": 64
+		}
 	}
 }

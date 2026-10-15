@@ -169,6 +169,16 @@
 									"type": "null"
 								}
 							]
+						},
+						"frameQueueCapacity": {
+							"anyOf": [
+								{
+									"$ref": "controller.schema.json#/$defs/tuning/properties/frameQueueCapacity"
+								},
+								{
+									"type": "null"
+								}
+							]
 						}
 					}
 				}

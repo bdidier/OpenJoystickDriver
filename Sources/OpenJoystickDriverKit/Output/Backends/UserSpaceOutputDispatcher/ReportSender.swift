@@ -1,21 +1,33 @@
 import Foundation
 
 /// One bounded, ordered stream for event reports and host-protocol replies.
+///
+/// At most `queueCapacity` submissions wait behind the one being sent. When the queue is full, a
+/// new submission evicts the oldest waiting frame (newest wins); the evicted frame's receipt fails
+/// with ``Failure/superseded``. Every frame carries the complete controller state, so the newest
+/// frame still brings the virtual device up to date. A submission that is not a frame, such as a
+/// host output report, is never evicted: with no frame left to evict it fails with
+/// ``Failure/queueOverflow``.
 /// Closing revokes new submissions and detaches the backend before the active native send drains.
 final class UserSpaceReportSender: Sendable {
   enum Failure: Error, Equatable, LocalizedError, Sendable {
     case queueOverflow
     case sendTimedOut
+    /// A newer frame took the place of this one in a full queue.
+    case superseded
 
     var errorDescription: String? {
       switch self {
       case .queueOverflow: "Virtual controller publication queue overflowed."
       case .sendTimedOut: "Virtual controller publication timed out."
+      case .superseded: "Virtual controller frame superseded by a newer frame."
       }
     }
   }
 
-  private static let queueCapacity = 64
+  /// The capacity when neither a record nor a protocol description names one. The bundled
+  /// descriptions' `frameQueueCapacity` carries the same value; a test keeps them equal.
+  static let fallbackQueueCapacity = 64
   /// Matches the virtual output transition deadline used to retire native virtual devices.
   static let defaultNativeSendDeadlineNanoseconds: UInt64 = 2_000_000_000
 
@@ -127,6 +139,8 @@ final class UserSpaceReportSender: Sendable {
 
   private struct Submission: Sendable {
     let completion: SubmissionReceipt
+    /// Whether a newer frame may take this submission's place in a full queue.
+    let isFrame: Bool
     let whileActive: @Sendable () -> Bool
     let requireActive: Bool
     let reports: @Sendable () throws -> [[UInt8]]
@@ -136,29 +150,36 @@ final class UserSpaceReportSender: Sendable {
     var backend: (any UserSpaceOutputDispatcher.VirtualDeviceBackend)?
     var worker: Task<Void, Never>?
     var pending: [ObjectIdentifier: SubmissionReceipt] = [:]
+    /// The submissions waiting for the worker, oldest first; never longer than the capacity.
+    var queue: [Submission] = []
     var active: SubmissionReceipt?
     var closeTask: Task<Void, Never>?
     var closed = false
   }
 
   private let state = Locked(State())
-  private let continuation: AsyncStream<Submission>.Continuation
+  /// Wakes the worker; one pending wake covers every submission queued before it runs.
+  private let continuation: AsyncStream<Void>.Continuation
   private let nativeSendDeadlineNanoseconds: UInt64
+  private let queueCapacity: Int
 
-  init(nativeSendDeadlineNanoseconds: UInt64 = defaultNativeSendDeadlineNanoseconds) {
+  /// The number of submissions waiting behind the one being sent.
+  var queuedCount: Int { state.withLock { $0.queue.count } }
+
+  init(
+    nativeSendDeadlineNanoseconds: UInt64 = defaultNativeSendDeadlineNanoseconds,
+    queueCapacity: Int = fallbackQueueCapacity
+  ) {
     self.nativeSendDeadlineNanoseconds = nativeSendDeadlineNanoseconds
-    let (stream, continuation) = AsyncStream.makeStream(
-      of: Submission.self,
-      bufferingPolicy: .bufferingOldest(Self.queueCapacity)
+    self.queueCapacity = max(1, queueCapacity)
+    let (wakes, continuation) = AsyncStream.makeStream(
+      of: Void.self,
+      bufferingPolicy: .bufferingNewest(1)
     )
     self.continuation = continuation
     let worker = Task { [weak self] in
-      for await submission in stream {
-        guard let self else {
-          submission.completion.finish(.failure(CancellationError()))
-          continue
-        }
-        await self.publish(submission)
+      for await _ in wakes {
+        while let self, let submission = self.dequeue() { await self.publish(submission) }
       }
     }
     state.withLock { $0.worker = worker }
@@ -175,11 +196,17 @@ final class UserSpaceReportSender: Sendable {
     if rejected { backend.close() }
   }
 
+  private func dequeue() -> Submission? {
+    state.withLock { $0.queue.isEmpty ? nil : $0.queue.removeFirst() }
+  }
+
   /// Builds reports in the retained worker only after preceding publication completes.
   ///
   /// Enqueueing stays synchronous: IOKit's set-report callback acknowledges ordered enqueueing
-  /// and cannot await. Await `SubmissionReceipt.value()` for the publication outcome.
+  /// and cannot await. Await `SubmissionReceipt.value()` for the publication outcome. A submission
+  /// with `isFrame` may be superseded by a newer one when the queue is full.
   func submit(
+    isFrame: Bool = false,
     whileActive: @escaping @Sendable () -> Bool = { true },
     requireActive: Bool = false,
     _ reports: @escaping @Sendable () throws -> [[UInt8]]
@@ -187,28 +214,33 @@ final class UserSpaceReportSender: Sendable {
     let completion = SubmissionReceipt()
     let submission = Submission(
       completion: completion,
+      isFrame: isFrame,
       whileActive: whileActive,
       requireActive: requireActive,
       reports: reports
     )
-    let result = state.withLock { state -> Result<Void, any Error>? in
-      guard !state.closed else { return .failure(CancellationError()) }
-      let key = ObjectIdentifier(completion)
-      state.pending[key] = completion
-      switch continuation.yield(submission) {
-      case .enqueued: return nil
-      case .dropped:
-        state.pending.removeValue(forKey: key)
-        return .failure(Failure.queueOverflow)
-      case .terminated:
-        state.pending.removeValue(forKey: key)
-        return .failure(CancellationError())
-      @unknown default:
-        state.pending.removeValue(forKey: key)
-        return .failure(CancellationError())
+    let (result, superseded) = state.withLock {
+      state -> (Result<Void, any Error>?, SubmissionReceipt?) in
+      guard !state.closed else { return (.failure(CancellationError()), nil) }
+      var superseded: SubmissionReceipt?
+      if state.queue.count >= queueCapacity {
+        guard let index = state.queue.firstIndex(where: \.isFrame) else {
+          return (.failure(Failure.queueOverflow), nil)
+        }
+        let evicted = state.queue.remove(at: index).completion
+        state.pending.removeValue(forKey: ObjectIdentifier(evicted))
+        superseded = evicted
       }
+      state.pending[ObjectIdentifier(completion)] = completion
+      state.queue.append(submission)
+      return (nil, superseded)
     }
-    if let result { completion.finish(result) }
+    superseded?.finish(.failure(Failure.superseded))
+    if let result {
+      completion.finish(result)
+    } else {
+      continuation.yield(())
+    }
     return completion
   }
 
@@ -268,6 +300,7 @@ final class UserSpaceReportSender: Sendable {
       if let closeTask = state.closeTask { return (closeTask, nil, []) }
       state.closed = true
       continuation.finish()
+      state.queue.removeAll()
       let backend = state.backend
       state.backend = nil
       let activeIdentifier = state.active.map { ObjectIdentifier($0) }

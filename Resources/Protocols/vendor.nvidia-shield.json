@@ -9,5 +9,10 @@
 				"Shield2015"
 			]
 		}
+	},
+	"defaults": {
+		"tuning": {
+			"frameQueueCapacity": 64
+		}
 	}
 }

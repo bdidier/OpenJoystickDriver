@@ -9,5 +9,10 @@
 				"DpadPressure"
 			]
 		}
+	},
+	"defaults": {
+		"tuning": {
+			"frameQueueCapacity": 64
+		}
 	}
 }

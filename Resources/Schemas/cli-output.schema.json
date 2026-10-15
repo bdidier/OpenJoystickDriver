@@ -380,7 +380,8 @@
 											"hidStartupRecoveryIntervalMs",
 											"hidStartupRecoveryRounds",
 											"hidStartupIntervalMs",
-											"minimumHIDOutputIntervalMs"
+											"minimumHIDOutputIntervalMs",
+											"frameQueueCapacity"
 										]
 									},
 									{
