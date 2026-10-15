@@ -63,7 +63,7 @@ Record flow: observed device, then link, then record `modes[]` with match keys (
 A `Controller` record (see `specs/controller-records`) declares:
 
 - `model` (`id`, `name`, `manufacturer`) and `modes[]`. Each mode has `match` keys, `protocol` (an id plus typed `parameters`), `interface` selection (for example the HID interface range 2 to 5 of the Steam Deck as data), and optional `session` steps.
-- Declarative input layouts: bit offset and size, signed fields, 10 to 16 bit values, 16-bit triggers, inversion, more than four axes, extra buttons, report ids, trigger rest value -1, hat sources.
+- Declarative input layouts: bit offset and size, signed fields, 10 to 16 bit values, 16-bit triggers, inversion, more than four axes, extra buttons, report ids, trigger rest value -1, hat sources (8-way, directions, and `table` hats mapping a masked value to a direction), `symmetric` axes (signed, divided by the maximum). A layout is carried by `hid.report-layout` records and by the `xbox.xid` protocol description (`input` in `Resources/Protocols/xbox.xid.json`); no other family takes `input`.
 - Vendor control transfers (`bmRequestType`, `bRequest`, `wValue`, `wIndex`, `wLength`), init, keepalive and settle sequences, acknowledgement rules. These come from issues #38 (ShanWan), #22, #21, #35.
 - Output templates: fixed bytes, scale, motor positions, resend interval (the xpad and `hid.report-layout` rumble cases).
 - Multi-identity linking: one model reachable through several VID:PID pairs and several link kinds (wired, dongle, Bluetooth, and a mode switch changing the PID, as the 8BitDo family does).
@@ -210,7 +210,9 @@ Follows clig.dev plus Apple conventions; global flags `--json --plain -q --no-co
 | socket in `DARWIN_USER_TEMP_DIR` | runtime-directory port |
 | endpoint `as: SdlCompatible` | persona ids |
 
-New: `ojd virtual export-mapping`, `ojd setting` keys for every GUI-only switch (per-event notifications, Send Test Notification, command-line tool link, Copy Support Report as `diagnose` on stdout, which the GUI copies), a settings file schema (settings move out of `UserDefaults` into layered files), and a single `DataDirectory` port that every store uses. The CLI target imports the Service in 9 files and USB in 2; the neutral core is split from a macOS host adapter so that `Sources/OpenJoystickDriver` has no macOS-only imports outside `platform`. The command tree is checked by a test that lists every command and flags any without a GUI place (D10).
+New: `ojd virtual export-mapping`, `ojd setting` keys for every GUI-only switch (per-event notifications, Send Test Notification, Copy Support Report as `diagnose` on stdout, which the GUI copies), a settings file schema (settings move out of `UserDefaults` into layered files), and a single `DataDirectory` port that every store uses. The CLI target imports the Service in 9 files and USB in 2; the neutral core is split from a macOS host adapter so that `Sources/OpenJoystickDriver` has no macOS-only imports outside `platform`. The command tree is checked by a test that lists every command and flags any without a GUI place (D10).
+
+Command-line tool link (open item 4, user decision 2026-10-15): the app owns the link, as other macOS apps that ship a tool do (an Install Command Line Tool action that asks for an administrator password to write `/usr/local/bin`). The app installs and removes it from the Settings Command Line pane; `ojd` does not install or remove it and only reports whether it is installed, in `ojd status`.
 
 Facts that go to docs: `docs/development/wire-protocols.md:20,22` is stale; `source-topology.md` lists a nonexistent `CLI/Catalog/`; the stale backend id `gameControllerHID` is removed.
 
@@ -280,7 +282,7 @@ Catalog-wide decisions left open by the earlier review (`06-l10n-review`) go to 
 
 ### D14 SDK, endpoint and streaming
 
-The public endpoint (today `apiVersion openjoystickdriver.io/v1beta1`, kinds Challenge, Hello, Welcome, Subscription, FeedRequest, FeedSession, Frame, Status; errors E1001 to E1009) moves to `openjoystickdriver/v1alpha1`, is documented in `docs/sdk/`, and ships with a reference client (the repository already has `Tests/RepositoryScripts/test_endpoint_reference_client.py`). Streaming boundary: `InputSource` produces canonical frames and `OutputSink` consumes them; physical controllers, the virtual HID device, the endpoint and WebRTC are plug-ins on that boundary. WebRTC is one transport; signalling is the endpoint's `Subscription` flow. Latency and fan-out limits are stated in the spec, and the existing `.bufferingOldest(64)` queue policy from issue #22 becomes a per-record tuning value.
+The public endpoint (today `apiVersion openjoystickdriver.io/v1beta1`, kinds Challenge, Hello, Welcome, Subscription, FeedRequest, FeedSession, Frame, Status; errors E1001 to E1009) moves to `openjoystickdriver/v1alpha1`, is documented in `docs/sdk/`, and ships with a reference client (the repository already has `Tests/RepositoryScripts/test_endpoint_reference_client.py`). Streaming boundary: `InputSource` produces canonical frames and `OutputSink` consumes them; physical controllers, the virtual HID device, the endpoint and WebRTC are plug-ins on that boundary. WebRTC is one transport; signalling is the endpoint's `Subscription` flow. Latency and fan-out limits are stated in the spec, and the existing `.bufferingOldest(64)` queue policy from issue #22 becomes a per-record tuning value. Header errors split by medium, one rule each: a file with a missing or unsupported `apiVersion` gets E5001; an endpoint line gets E1010 (unsupported `apiVersion`), E1011 (wrong `kind`) or E1012 (missing or non-string header field), each with `details.supportedAPIVersions`. Retired codes stay in the catalog with `retiredIn`, and `ojd explain` still resolves them.
 
 ### D15 Relation to the open issues
 
@@ -307,7 +309,7 @@ No migration: 0.5.x user files are rejected with a message that names the file, 
 1. Which DS3 (`01130000` or `01140000`) is the genuine CECHZC2E? The `0xEF` answer is the candidate discriminator; the user checks by physical marking.
 2. Request more `transport.usb` IDs from Apple? (user's call; outward-facing)
 3. Catalog-wide localization choices left by the review: French spacing before `: ; ? !` and NBSP, `pt-BR`/`es-MX` quotes (guillemets or curly), `id-ID` instal/pasang, `vi-VN` "mot cach goc", `tr-TR` `cli.mod.list.discussion`, `zh-HK`/`zh-TW` informal versus formal "you" in five strings, `ar-SA` running-service split, German "Endet mit 1" versus "Beendet sich mit 1".
-4. Does the command-line tool symlink belong to `ojd` itself (install and uninstall from the CLI) or only to the app?
+4. Settled 2026-10-15: the command-line tool link belongs to the app; `ojd` only reports it (D9).
 5. Do the button and axis directions of the `1209:4A4F` mapping hold under real presses? (hardware check)
 6. Register a new pid.codes entry for a layout equal to the W3C standard mapping?
 7. Submit the OJD mapping to SDL_GameControllerDB or SDL upstream? (outward-facing; not in tasks)

@@ -45,13 +45,13 @@ struct ControllerOwnershipWriterTests {
       let change = try Self.change(Self.bundledHID, to: .ojd, in: directory)
       #expect(change.created)
       #expect(change.previous == .system)
-      #expect(change.file.lastPathComponent == "2c22-2000.json")
+      #expect(change.file.lastPathComponent == "2c22-2000.patch.json")
       try ControllerOwnershipWriter.write(change)
       let written = try Self.object(Data(contentsOf: change.file))
-      #expect(written["operation"] as? String == "patch")
-      #expect(written["vendorID"] as? Int == 0x2C22)
-      #expect(written["productID"] as? Int == 0x2000)
-      #expect(written["set"] as? [String: String] == ["server": "ojd"])
+      #expect(written["kind"] as? String == "ControllerPatch")
+      let selector = try #require(written["selector"] as? [String: Int])
+      #expect(selector == ["vendorID": 0x2C22, "productID": 0x2000])
+      #expect(written["patch"] as? [String: String] == ["server": "ojd"])
       let loaded = ControllerRecordSet.load(userDirectory: directory)
       #expect(loaded.records[Self.bundledHID]?.profile.server == .ojd)
       #expect(loaded.records[Self.bundledHID]?.fieldLayers["server"] == .user)
@@ -61,19 +61,19 @@ struct ControllerOwnershipWriterTests {
   @Test
   func existingFileKeepsItsOtherKeys() throws {
     try Self.withDirectory { directory, _ in
-      let file = directory.appendingPathComponent("2c22-2000.json")
-      try JSONSerialization.data(withJSONObject: [
-        "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
-        "operation": "patch",
-        "vendorID": 0x2C22, "productID": 0x2000,
-        "set": ["server": "ojd", "tuning": ["stickDeadzone": 0.1]],
-      ])
+      let file = directory.appendingPathComponent("2c22-2000.patch.json")
+      try JSONSerialization.data(
+        withJSONObject: ControllerPatch.document(
+          selector: .identity(Self.bundledHID),
+          body: ["server": "ojd", "tuning": ["stickDeadzone": 0.1]]
+        )
+      )
       .write(to: file)
       let change = try Self.change(Self.bundledHID, to: .system, in: directory)
       #expect(!change.created)
       #expect(change.previous == .ojd)
       try ControllerOwnershipWriter.write(change)
-      let set = try #require(try Self.object(Data(contentsOf: file))["set"] as? [String: Any])
+      let set = try #require(try Self.object(Data(contentsOf: file))["patch"] as? [String: Any])
       #expect(set["server"] as? String == "system")
       #expect(set["tuning"] as? [String: Double] == ["stickDeadzone": 0.1])
     }
@@ -85,13 +85,9 @@ struct ControllerOwnershipWriterTests {
   func packageOnlyModelGetsAPatchOverThePackageRecord() throws {
     try Self.withDirectory { directory, fixture in
       let record: [String: Any] = [
-        "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
-        "operation": "add",
-        "record": [
-          "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordDocument.kind,
-          "vendorID": 0x1234,
-          "productID": 0xABCD, "protocol": ["family": "hid.descriptor"],
-        ],
+        "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordDocument.kind,
+        "vendorID": 0x1234,
+        "productID": 0xABCD, "protocol": ["family": "hid.descriptor"],
       ]
       let package = try fixture.makePackage(
         records: [("1234-abcd.json", try JSONSerialization.data(withJSONObject: record))]
@@ -111,7 +107,7 @@ struct ControllerOwnershipWriterTests {
   @Test
   func invalidFileIsRefusedAndKept() throws {
     try Self.withDirectory { directory, _ in
-      let file = directory.appendingPathComponent("2c22-2000.json")
+      let file = directory.appendingPathComponent("2c22-2000.patch.json")
       try Data("{".utf8).write(to: file)
       #expect(
         throws: ControllerOwnershipWriter.Failure.invalidFile("the file is not a JSON object")

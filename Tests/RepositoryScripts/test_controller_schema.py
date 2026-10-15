@@ -316,8 +316,8 @@ class OwnershipAndOutputTests(unittest.TestCase):
     def test_accepts_ownership_and_rumble_template(self) -> None:
         accepted = {
             "third-party rumble": record(THIRD_PARTY, output={"rumble": GP100_RUMBLE}),
-            "OJD ownership": record(THIRD_PARTY, ownership="ojd"),
-            "macOS ownership": record(DUALSENSE, ownership="macos"),
+            "OJD ownership": record(THIRD_PARTY, server="ojd"),
+            "macOS ownership": record(DUALSENSE, server="system"),
             "feature report": record(
                 THIRD_PARTY,
                 output={
@@ -335,11 +335,11 @@ class OwnershipAndOutputTests(unittest.TestCase):
     def test_rejects_invalid_ownership_and_output(self) -> None:
         report = GP100_RUMBLE["report"]
         rejected = {
-            "unknown ownership": record(THIRD_PARTY, ownership="native"),
-            "GIP ownership": record(GIP, ownership="ojd"),
-            "XUSB ownership": record(XUSB, ownership="macos"),
+            "unknown ownership": record(THIRD_PARTY, server="native"),
+            "GIP ownership": record(GIP, server="ojd"),
+            "XUSB ownership": record(XUSB, server="system"),
             "GameSir USB ownership": record(
-                {"family": "vendor.gamesir", "variant": "usb"}, ownership="ojd"
+                {"family": "vendor.gamesir", "variant": "usb"}, server="ojd"
             ),
             "template on DualSense": record(DUALSENSE, output={"rumble": GP100_RUMBLE}),
             "input report": record(
@@ -467,6 +467,21 @@ class InputLayoutTests(unittest.TestCase):
     def test_accepts_report_layouts_and_dpad_pressure(self) -> None:
         accepted = {
             "one button": record(REPORT_LAYOUT, input=LAYOUT),
+            "symmetric axis without a range": record(
+                REPORT_LAYOUT,
+                input={
+                    "report": {"length": 2},
+                    "axes": [
+                        {
+                            "control": "left-stick-x",
+                            "byte": 0,
+                            "bits": 16,
+                            "signed": True,
+                            "symmetric": True,
+                        }
+                    ],
+                },
+            ),
             "every section": record(
                 REPORT_LAYOUT,
                 input={
@@ -478,6 +493,9 @@ class InputLayoutTests(unittest.TestCase):
                             "byte": 2,
                             "bits": 16,
                             "signed": True,
+                            "min": -32768,
+                            "max": 32767,
+                            "symmetric": True,
                         },
                         {"control": "left-stick-y", "byte": 4, "inverted": True},
                     ],
@@ -494,6 +512,12 @@ class InputLayoutTests(unittest.TestCase):
                             "right": {"byte": 6, "mask": 2},
                             "down": {"byte": 6, "mask": 4},
                             "left": {"byte": 6, "mask": 8},
+                        },
+                        {
+                            "encoding": "table",
+                            "byte": 5,
+                            "mask": 15,
+                            "values": {"1": "north", "9": "northEast"},
                         },
                     ],
                     "leftTrigger": {"byte": 7},
@@ -540,6 +564,34 @@ class InputLayoutTests(unittest.TestCase):
             "4-way hat": record(
                 REPORT_LAYOUT,
                 input={**LAYOUT, "hat": [{"encoding": "4-way", "byte": 1, "mask": 15}]},
+            ),
+            "unsigned symmetric axis": record(
+                REPORT_LAYOUT,
+                input={
+                    **LAYOUT,
+                    "axes": [{"control": "left-stick-x", "byte": 1, "symmetric": True}],
+                },
+            ),
+            "table hat without values": record(
+                REPORT_LAYOUT,
+                input={
+                    **LAYOUT,
+                    "hat": [{"encoding": "table", "byte": 1, "mask": 15, "values": {}}],
+                },
+            ),
+            "table hat neutral entry": record(
+                REPORT_LAYOUT,
+                input={
+                    **LAYOUT,
+                    "hat": [
+                        {
+                            "encoding": "table",
+                            "byte": 1,
+                            "mask": 15,
+                            "values": {"0": "neutral"},
+                        }
+                    ],
+                },
             ),
             "empty trigger": record(REPORT_LAYOUT, input={**LAYOUT, "leftTrigger": {}}),
             "unknown section": record(REPORT_LAYOUT, input={**LAYOUT, "touchpad": {}}),

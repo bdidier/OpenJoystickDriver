@@ -1,0 +1,9 @@
+{
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "Controller",
+  "vendorID": 55255,
+  "productID": 65,
+  "protocol": {
+    "family": "vendor.flydigi"
+  }
+}

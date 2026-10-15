@@ -3,9 +3,11 @@ from __future__ import annotations
 import base64
 import hashlib
 import json
+import tempfile
 import unittest
 import urllib.error
 from email.message import Message
+from pathlib import Path
 from typing import Any, ClassVar
 from unittest.mock import patch
 
@@ -203,53 +205,64 @@ class HIDRecordTests(unittest.TestCase):
         )
         self.assertNotIn("transport", records[0])
 
-    def test_patch_override_rejects_the_removed_transport_field(self) -> None:
-        import tempfile
-        from pathlib import Path
+    def write_patch(self, root: Path, selector: dict[str, Any], body: Any) -> Path:
+        path = catalog.patch_path(root, selector)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(
+            json.dumps(
+                {**header("ControllerPatch"), "selector": selector, "patch": body}
+            )
+        )
+        return path
 
+    def test_patch_rejects_the_removed_transport_field(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            path = root / "045e" / "045e-02ea.json"
-            path.parent.mkdir()
-            path.write_text(
-                json.dumps(
-                    {
-                        **header("ControllerOverride"),
-                        "operation": "patch",
-                        "vendorID": 0x045E,
-                        "productID": 0x02EA,
-                        "set": {"transport": "hid"},
-                    }
-                )
+            self.write_patch(
+                root, {"vendorID": 0x045E, "productID": 0x02EA}, {"transport": "hid"}
             )
             with self.assertRaises(catalog.CatalogError):
-                catalog.load_overrides(validator=None, override_dir=root)
+                catalog.load_authored(
+                    validator=None, controller_dir=root / "c", patch_dir=root
+                )
 
-    def test_patch_override_adds_tuning(self) -> None:
-        import tempfile
-        from pathlib import Path
-
-        tuning = {"stickDeadzone": 0.02}
+    def test_patch_path_must_follow_its_selector(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            path = root / "11c1" / "11c1-5600.json"
-            path.parent.mkdir()
-            path.write_text(
-                json.dumps(
-                    {
-                        **header("ControllerOverride"),
-                        "operation": "patch",
-                        "vendorID": 0x11C1,
-                        "productID": 0x5600,
-                        "set": {"tuning": tuning},
-                    }
-                )
+            path = self.write_patch(
+                root, {"vendorID": 0x11C1, "productID": 0x5600}, {"server": "ojd"}
             )
-            overrides = catalog.load_overrides(validator=None, override_dir=root)
-        upstream = {"protocol": {"family": "hid.descriptor"}}
+            path.rename(root / "11c1" / "wrong.patch.json")
+            with self.assertRaises(catalog.CatalogError):
+                catalog.load_authored(
+                    validator=None, controller_dir=root / "c", patch_dir=root
+                )
+
+    def test_patch_adds_tuning(self) -> None:
+        tuning = {"stickDeadzone": 0.02}
+        selector = {"vendorID": 0x11C1, "productID": 0x5600}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.write_patch(root, selector, {"tuning": tuning})
+            adds, patches = catalog.load_authored(
+                validator=None, controller_dir=root / "c", patch_dir=root
+            )
+        upstream = {
+            "vendorID": 0x11C1,
+            "productID": 0x5600,
+            "protocol": {"family": "hid.descriptor"},
+        }
         records = {(0x11C1, 0x5600): upstream}
-        catalog.apply_overrides(records, overrides)
+        catalog.apply_patches(records, adds, patches)
         self.assertEqual(records[(0x11C1, 0x5600)], {**upstream, "tuning": tuning})
+
+    def test_orphan_and_redundant_patches_fail(self) -> None:
+        upstream = {"vendorID": 1, "productID": 2, "server": "ojd"}
+        orphan = ({"vendorID": 1, "productID": 3}, {"server": "ojd"})
+        redundant = ({"vendorID": 1, "productID": 2}, {"server": "ojd"})
+        for patches in ([orphan], [redundant]):
+            with self.assertRaises(catalog.CatalogError):
+                catalog.apply_patches({(1, 2): dict(upstream)}, {}, patches)
 
 
 SDL_FIXTURE = """\
@@ -481,55 +494,50 @@ class SDLControllerListTests(unittest.TestCase):
             "productID": 0x1000,
             "protocol": {"family": "hid.descriptor"},
         }
-        overrides = [("add", (0x1532, 0x1000), override)]
+        adds = {(0x1532, 0x1000): override}
         records: dict[tuple[int, int], dict[str, object]] = {}
         with (
             patch.object(catalog, "SDL_EXCLUSIONS", {}),
             patch.object(catalog, "SDL_IDENTITY_FAMILIES", {}),
         ):
             counts = catalog.merge_sdl_records(
-                records, overrides, [(0x1532, 0x1000, "PS4Controller")]
+                records, adds, [(0x1532, 0x1000, "PS4Controller")]
             )
         self.assertEqual(counts, {"conflict": 1})
-        catalog.apply_overrides(records, overrides)
+        catalog.apply_patches(records, adds, [])
         self.assertEqual(records, {(0x1532, 0x1000): override})
 
-    def test_protocol_patch_merges_only_within_its_family(self) -> None:
-        upstream = {
-            "protocol": {
-                "family": "xbox.gip",
-                "parameters": {"shareButton": {"fromEnd": 26}},
-            },
-            "usb": {"interface": 0},
-        }
-        records = {(1, 1): upstream, (1, 2): upstream, (1, 3): upstream}
-        catalog.apply_overrides(
-            records,
-            [
-                (
-                    "patch",
-                    (1, 1),
-                    {"protocol": {"family": "xbox.gip", "keepAlive": False}},
-                ),
-                (
-                    "patch",
-                    (1, 2),
-                    {"protocol": {"family": "xbox.gip", "parameters": {"x": 1}}},
-                ),
-                ("patch", (1, 3), {"protocol": {"family": "hid.descriptor"}}),
-            ],
-        )
+    def test_protocol_patch_merges_parameters_key_by_key_and_null_deletes(self) -> None:
+        def upstream() -> dict[str, Any]:
+            return {
+                "vendorID": 1,
+                "productID": 1,
+                "protocol": {
+                    "family": "xbox.gip",
+                    "parameters": {"shareButton": {"fromEnd": 26}, "keepAlive": True},
+                },
+                "usb": {"interface": 0},
+            }
+
+        def apply(body: dict[str, Any]) -> dict[str, Any]:
+            records = {(1, 1): upstream()}
+            catalog.apply_patches(
+                records, {}, [({"vendorID": 1, "productID": 1}, body)]
+            )
+            return records[(1, 1)]
+
+        added = apply({"protocol": {"parameters": {"x": 1}}})
         self.assertEqual(
-            records[(1, 1)]["protocol"],
-            {
-                "family": "xbox.gip",
-                "parameters": {"shareButton": {"fromEnd": 26}},
-                "keepAlive": False,
-            },
+            added["protocol"]["parameters"],
+            {"shareButton": {"fromEnd": 26}, "keepAlive": True, "x": 1},
         )
-        self.assertEqual(records[(1, 2)]["protocol"]["parameters"], {"x": 1})
-        self.assertEqual(records[(1, 3)]["protocol"], {"family": "hid.descriptor"})
-        self.assertEqual(records[(1, 3)]["usb"], {"interface": 0})
+        deleted = apply({"protocol": {"parameters": {"keepAlive": None}}})
+        self.assertEqual(
+            deleted["protocol"]["parameters"], {"shareButton": {"fromEnd": 26}}
+        )
+        changed = apply({"protocol": {"family": "hid.descriptor", "parameters": None}})
+        self.assertEqual(changed["protocol"], {"family": "hid.descriptor"})
+        self.assertEqual(changed["usb"], {"interface": 0})
 
     def test_third_party_dualsense_is_admitted_and_360_product_ids_are_skipped(
         self,

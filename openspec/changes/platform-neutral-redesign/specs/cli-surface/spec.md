@@ -34,7 +34,7 @@ The groups SHALL be `status`, `permission`, `transport-extension`, `service`, `c
 
 ### Requirement: Settings are CLI-reachable
 
-Every GUI setting (launch at login, show in menu bar, update checks, per-event notifications, command-line link) SHALL be a `setting` key readable and writable from the CLI. Settings SHALL live in a layered settings file with its own schema, not in `UserDefaults`.
+Every GUI setting (launch at login, show in menu bar, update checks, per-event notifications) SHALL be a `setting` key readable and writable from the CLI. The command-line tool link is app-owned (D9): the app installs and removes it, and `ojd status` reports it. Settings SHALL live in a layered settings file with its own schema, not in `UserDefaults`.
 
 #### Scenario: Notification toggle
 

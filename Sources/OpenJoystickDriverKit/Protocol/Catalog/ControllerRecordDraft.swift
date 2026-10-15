@@ -15,7 +15,8 @@ public struct ControllerRecordDraft: Sendable {
     public let maximum: Int
   }
 
-  /// `add` for a model without a bundled record, otherwise `patch`.
+  /// `add`, a Controller document, for a model without a bundled record, otherwise `patch`, a
+  /// ControllerPatch document.
   public let operation: ControllerRecordOperation
   /// The protocol family the draft names: `hid.report-layout` when a control mapped, otherwise
   /// `hid.descriptor`.
@@ -26,7 +27,7 @@ public struct ControllerRecordDraft: Sendable {
   /// The number of reports captured with the chosen ID and at least the chosen length.
   public let capturedReports: Int
   public let changedBytes: [ChangedByte]
-  /// The override document, as `ojd record install` reads it.
+  /// The record document, as `ojd record install` reads it.
   public let document: Data
 
   /// Builds the draft for `model`. `reports` are the captured input reports as macOS
@@ -68,20 +69,17 @@ public struct ControllerRecordDraft: Sendable {
     if let layout { fields["input"] = layout.json }
     let body: [String: Any]
     if bundled {
-      body = [
-        "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
-        "operation": "patch",
-        "vendorID": Int(model.vendorID), "productID": Int(model.productID), "set": fields,
-      ]
+      // A patch merges into the bundled protocol, so a changed family drops the old parameters.
+      if ControllerRecordSet.bundled.records[model]?.family != family.rawValue {
+        fields["protocol"] = ["family": family.rawValue, "parameters": NSNull()]
+      }
+      body = ControllerPatch.document(selector: .identity(model), body: fields)
     } else {
       fields["apiVersion"] = OpenJoystickDriverAPI.version
       fields["kind"] = ControllerRecordDocument.kind
       fields["vendorID"] = Int(model.vendorID)
       fields["productID"] = Int(model.productID)
-      body = [
-        "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
-        "operation": "add", "record": fields,
-      ]
+      body = fields
     }
     guard
       let document = try? JSONSerialization.data(

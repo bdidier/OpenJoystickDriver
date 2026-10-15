@@ -101,7 +101,7 @@ extension ControllerRecordDocument {
     init(from decoder: any Decoder) throws {
       let container = try decoder.container(keyedBy: DocumentKey.self)
       try container.rejectUnknown(allowed: [
-        "control", "byte", "bits", "signed", "min", "max", "inverted",
+        "control", "byte", "bits", "signed", "min", "max", "inverted", "symmetric",
       ])
       let bits = try container.decodeOptional(Int.self, for: "bits") ?? 8
       let isSigned = try container.decodeOptional(Bool.self, for: "signed") ?? false
@@ -113,7 +113,8 @@ extension ControllerRecordDocument {
         isSigned: isSigned,
         minimum: try container.decodeOptional(Int.self, for: "min") ?? fullRange.lowerBound,
         maximum: try container.decodeOptional(Int.self, for: "max") ?? fullRange.upperBound,
-        isInverted: try container.decodeOptional(Bool.self, for: "inverted") ?? false
+        isInverted: try container.decodeOptional(Bool.self, for: "inverted") ?? false,
+        isSymmetric: try container.decodeOptional(Bool.self, for: "symmetric") ?? false
       )
     }
   }
@@ -140,14 +141,42 @@ extension ControllerRecordDocument {
           down: try container.decode(InputField.self, for: "down").field,
           left: try container.decode(InputField.self, for: "left").field
         )
+      case "table":
+        try container.rejectUnknown(allowed: ["encoding", "byte", "mask", "values"])
+        source = .table(
+          try InputField.field(in: container, codingPath: decoder.codingPath),
+          try Self.directions(in: container, codingPath: decoder.codingPath)
+        )
       default:
         throw DecodingError.dataCorrupted(
           .init(
             codingPath: decoder.codingPath,
-            debugDescription: "hat encoding must be 8-way or directions"
+            debugDescription: "hat encoding must be 8-way, directions or table"
           )
         )
       }
+    }
+
+    /// Reads `values`, a map from a canonical decimal value to a direction name.
+    private static func directions(
+      in container: KeyedDecodingContainer<DocumentKey>,
+      codingPath: [any CodingKey]
+    ) throws -> [Int: HatDirection] {
+      var directions: [Int: HatDirection] = [:]
+      for (key, name) in try container.decode([String: String].self, for: "values") {
+        guard let value = Int(key), String(value) == key, value >= 0,
+          let direction = HatDirection(rawValue: name), direction != .neutral
+        else {
+          throw DecodingError.dataCorrupted(
+            .init(
+              codingPath: codingPath,
+              debugDescription: "values map decimal numbers to non-neutral direction names"
+            )
+          )
+        }
+        directions[value] = direction
+      }
+      return directions
     }
   }
 

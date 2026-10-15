@@ -9,9 +9,9 @@ struct RecordCommandTests {
   /// A patch of the bundled `xbox.gip` record `366C:0005`.
   private static let patch = Data(
     """
-    {"apiVersion": "\(OpenJoystickDriverAPI.version)",
-    "kind": "\(ControllerRecordSet.overrideKind)", "operation": "patch",
-     "vendorID": 13932, "productID": 5, "set": {"usb": {"postHandshakeSettleMs": 5}}}
+    {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "ControllerPatch",
+     "selector": {"vendorID": 13932, "productID": 5},
+     "patch": {"usb": {"postHandshakeSettleMs": 5}}}
     """.utf8
   )
 
@@ -59,7 +59,7 @@ struct RecordCommandTests {
     #expect(result["valid"] as? Bool == true)
     #expect(result["operation"] as? String == "patch")
     #expect(result["identity"] as? String == "366C:0005")
-    #expect(result["fileName"] as? String == "366c-0005.json")
+    #expect(result["fileName"] as? String == "366c-0005.patch.json")
     #expect(result["transport"] as? String == "usb")
     #expect(result["usbExtension"] as? String == "doesNotClaim")
     #expect(human.standardOutput.contains("366C:0005"))
@@ -98,9 +98,10 @@ struct RecordCommandTests {
     #expect(install.code == 0, "\(install.standardError)")
     #expect(try install.json()["replaced"] as? Bool == false)
     #expect(try again.json()["replaced"] as? Bool == true)
-    #expect(directory.fileNames == ["366c-0005.json"])
+    #expect(directory.fileNames == ["366c-0005.patch.json"])
     #expect(
-      try Data(contentsOf: directory.url.appendingPathComponent("366c-0005.json")) == Self.patch
+      try Data(contentsOf: directory.url.appendingPathComponent("366c-0005.patch.json"))
+        == Self.patch
     )
     let row = try #require(
       list.standardOutput.split(separator: "\n").first { $0.hasPrefix("366C:0005\t") }
@@ -127,7 +128,7 @@ struct RecordCommandTests {
     let metadata = try #require(try list.json()["metadata"] as? [String: Any])
     #expect(metadata.isEmpty)
     #expect(list.standardError.contains("wrong.json"))
-    #expect(list.standardError.contains("366c-0005.json"))
+    #expect(list.standardError.contains("366c-0005.patch.json"))
     let records = try #require(try bundled.json()["items"] as? [[String: Any]])
     #expect(records.count == ControllerRecordSet.bundled.records.count)
     #expect(records.allSatisfy { $0["layer"] as? String == "bundled" })
@@ -147,11 +148,9 @@ struct RecordCommandTests {
     let directory = Directory()
     let switch2 = Data(
       """
-      {"apiVersion": "\(OpenJoystickDriverAPI.version)",
-      "kind": "\(ControllerRecordSet.overrideKind)", "operation": "add", "record": {
-       "apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "Controller",
+      {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "Controller",
        "vendorID": 1406, "productID": 8447,
-       "protocol": {"family": "nintendo.switch2"}}}
+       "protocol": {"family": "nintendo.switch2"}}
       """.utf8
     )
     try directory.write(switch2, as: "057e-20ff.json")
@@ -183,10 +182,10 @@ struct RecordCommandTests {
     #expect(try dryRun.json()["replaced"] as? Bool == false)
     #expect(directory.fileNames.isEmpty)
 
-    try directory.write(installed, as: "366c-0005.json")
+    try directory.write(installed, as: "366c-0005.patch.json")
     let unforced = await run(["install", "-", "--no-input"], in: directory, stdin: Self.patch)
     let replacing = await run(["install", "-", "-n", "--json"], in: directory, stdin: Self.patch)
-    let file = directory.url.appendingPathComponent("366c-0005.json")
+    let file = directory.url.appendingPathComponent("366c-0005.patch.json")
     #expect(unforced.code == 64)
     #expect(try replacing.json()["replaced"] as? Bool == true)
     #expect(try Data(contentsOf: file) == installed)
@@ -199,14 +198,14 @@ struct RecordCommandTests {
   @Test
   func removeNeedsForceWithoutATerminalAndHonorsDryRun() async throws {
     let directory = Directory()
-    try directory.write(Self.patch, as: "366c-0005.json")
+    try directory.write(Self.patch, as: "366c-0005.patch.json")
 
     let dryRun = await run(["remove", "366C:0005", "--dry-run", "--json"], in: directory)
     let unforced = await run(["remove", "366C:0005", "--no-input"], in: directory)
     #expect(dryRun.code == 0)
     #expect(try dryRun.details()["dryRun"] as? Bool == true)
     #expect(unforced.code == 64)
-    #expect(directory.fileNames == ["366c-0005.json"])
+    #expect(directory.fileNames == ["366c-0005.patch.json"])
 
     let removed = await run(["remove", "366C:0005", "--force"], in: directory)
     let absent = await run(["remove", "366C:0005", "--force"], in: directory)
@@ -249,7 +248,7 @@ struct RecordCommandTests {
     #expect(json["report"] as? [String: Int] == ["length": 3])
     #expect(json["changedBytes"] as? [[String: Int]] == [["byte": 2, "minimum": 2, "maximum": 5]])
     let record = try #require(json["record"] as? [String: Any])
-    #expect(record["operation"] as? String == "add")
+    #expect(record["kind"] as? String == "Controller")
   }
 
   /// A bundled model whose descriptor maps nothing keeps its bundled family.

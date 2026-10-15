@@ -25,7 +25,7 @@ extension ProtocolClassifier {
     guard let deviceSignature, hasDeviceSignature(device), (device.interfaces ?? []).isEmpty,
       (device.configurationValue ?? 0) == 0
     else { return nil }
-    guard backend != .ioHID else {
+    guard backend.usesRawUSB else {
       return .unsupported(
         .unsupportedTransportVariant,
         rejected: ProtocolBindingResult.RejectedCandidate(

@@ -13,8 +13,7 @@ SCHEMA_SUFFIX = ".schema.json"
 # The `kind` of each document kind whose schema is `<stem>.schema.json`.
 KINDS = {
     "controller": "Controller",
-    "controller-override": "ControllerOverride",
-    "defaults": "ControllerDefaults",
+    "controller-patch": "ControllerPatch",
     "virtual-device": "VirtualDevice",
     "profile": "Profile",
     "mod-package": "ModPackage",

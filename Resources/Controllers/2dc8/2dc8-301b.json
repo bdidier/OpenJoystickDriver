@@ -1,0 +1,12 @@
+{
+	"apiVersion": "openjoystickdriver/v1alpha1",
+	"kind": "Controller",
+	"vendorID": 11720,
+	"productID": 12315,
+	"protocol": {
+		"family": "hid.descriptor",
+		"parameters": {
+			"usageLayout": "ZRzBrakeLeft"
+		}
+	}
+}

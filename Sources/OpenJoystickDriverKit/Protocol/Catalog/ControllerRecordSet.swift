@@ -5,28 +5,28 @@ import Foundation
 public enum ControllerRecordLayer: String, Codable, CaseIterable, Sendable {
   /// OJD's built-in default, used when no other layer sets a value.
   case driver
-  /// The user's `Defaults.json`.
-  case global
-  /// The signed catalog in the app bundle.
+  /// The signed catalog in the app bundle, with its built-in patches.
   case bundled
   /// A file of an installed mod package.
   case package
+  /// The user's `all` patch, `all.patch.json`: the first patch of the user layer.
+  case global
   /// A file in the user's controller-record directory.
   case user
   /// The active remapping profile.
   case profile
 }
 
-/// The operation of a user controller record, from `controller-override.schema.json`.
+/// The kind of a user controller record file.
 public enum ControllerRecordOperation: String, Codable, Sendable {
-  /// A record for a model the bundled catalog does not have.
+  /// A Controller file: a record for a model the bundled catalog does not have.
   case add
-  /// Fields that replace the same fields of a bundled record.
+  /// A ControllerPatch file: a merge patch over the records its selector names.
   case patch
 }
 
-/// One effective controller record: a bundled record, a user `add`, or a bundled record with a
-/// user `patch` applied.
+/// One effective controller record: a bundled record, a Controller file that adds one, or a
+/// record with package and user patches applied.
 public struct ControllerRecord: Sendable {
   public let model: ControllerModelID
   /// The merged record as a `controller.schema.json` document, with sorted keys.
@@ -37,7 +37,8 @@ public struct ControllerRecord: Sendable {
   /// The layer of each effective `tuning` key, by its JSON name: `bundled`, `user`, or `global`.
   /// A key no layer sets is absent, and the driver default applies.
   public let tuningLayers: [String: ControllerRecordLayer]
-  /// The user file that adds or patches this record, or nil for a bundled record.
+  /// The user file that adds or patches this record, or nil for a bundled record. An `all` patch
+  /// is not listed here.
   public let userFile: URL?
   /// The file of an installed package that adds or patches this record, or nil when no package
   /// does. A user file over it wins, and ``layer`` names the user.
@@ -50,28 +51,6 @@ public struct ControllerRecord: Sendable {
 
   /// The effective tuning: the global defaults under the record's own values, per key.
   public var tuning: ControllerTuning { profile.tuning }
-
-  /// This record with the global `defaults` under its own tuning, per key. A default applies
-  /// only for a key the family reads and the record's layers leave unset.
-  func applying(defaults: ControllerTuning) -> Self {
-    let keys = defaults.setKeys.intersection(tuningScope).subtracting(profile.tuning.setKeys)
-    guard !keys.isEmpty else { return self }
-    var layers = tuningLayers
-    for key in keys { layers[key.rawValue] = .global }
-    var profile = profile
-    profile.tuning = defaults.keeping(keys).overlaid(by: profile.tuning)
-    return Self(
-      model: model,
-      document: document,
-      fieldLayers: fieldLayers,
-      tuningLayers: layers,
-      userFile: userFile,
-      packageFile: packageFile,
-      family: family,
-      tuningScope: tuningScope,
-      profile: profile
-    )
-  }
 
   /// Whether the family reaches the controller through raw USB rather than HID.
   public var usesRawUSB: Bool { profile.usesRawUSB }
@@ -110,13 +89,20 @@ public struct ControllerRecordFile: Sendable {
   public let problem: String?
 }
 
-/// A user record that passed validation, before it is written or applied.
+/// A user record file that passed validation, before it is written or applied.
 public struct ValidatedControllerRecord: Sendable {
   public let operation: ControllerRecordOperation
-  public let record: ControllerRecord
+  /// The record the file gives: the Controller file's own, or the patched record. Nil for an
+  /// `all` patch, which applies to every record.
+  public let record: ControllerRecord?
+  /// The selector of a patch file, or nil for a Controller file.
+  public let selector: ControllerPatch.Selector?
 
-  /// The file name the record must have in the user directory, such as `045e-028e.json`.
-  public var fileName: String { ControllerRecordSet.fileName(for: record.model) }
+  /// The file name the record file must have in the user directory, such as `045e-028e.json` for a
+  /// Controller file and `045e-028e.patch.json` for a patch.
+  public var fileName: String {
+    selector?.fileName ?? record.map { ControllerRecordSet.fileName(for: $0.model) } ?? ""
+  }
 }
 
 /// Why a user controller record is invalid, in words for the person who wrote it.
@@ -131,15 +117,12 @@ public struct ControllerRecordProblem: Error, Equatable, Sendable, CustomStringC
 /// A user file that fails validation is skipped and listed in ``userFiles`` with its reason. The
 /// bundled catalog must be valid: a release must not ship a broken record.
 public struct ControllerRecordSet: Sendable {
-  /// The `kind` of a user record.
-  public static let overrideKind = "ControllerOverride"
-
   /// The effective record of every model.
   public let records: [ControllerModelID: ControllerRecord]
-  /// Every `.json` file in the user directory, in file-name order, then the record files of the
-  /// installed packages in package-name order.
+  /// Every `.json` file in the user directory except `all.patch.json`, in file-name order, then
+  /// the record files of the installed packages in package-name order.
   public let userFiles: [ControllerRecordFile]
-  /// The global defaults under every record's tuning; none for the bundled catalog alone.
+  /// The user's `all` patch, applied to every record; none for the bundled catalog alone.
   public let defaults: ControllerDefaults?
 
   init(
@@ -187,197 +170,6 @@ public struct ControllerRecordSet: Sendable {
     String(format: "%04x-%04x.json", model.vendorID, model.productID)
   }
 
-  /// The bundled catalog with every valid `.json` file in `directory` applied. A missing
-  /// directory holds no records; one that cannot be read is listed in ``userFiles`` with its
-  /// reason. The global defaults in `defaultsFile`, `Defaults.json` beside `directory` unless
-  /// given, go under every record's tuning.
-  public static func load(
-    userDirectory directory: URL = userDirectory,
-    defaultsFile: URL? = nil
-  ) -> Self {
-    let defaults = ControllerDefaults.load(
-      from: defaultsFile ?? ControllerDefaults.file(besides: directory)
-    )
-    let loaded = loadRecords(userDirectory: directory)
-    return Self(
-      records: loaded.records.mapValues { $0.applying(defaults: defaults.tuning) },
-      userFiles: loaded.userFiles,
-      defaults: defaults
-    )
-  }
-
-  private static func loadRecords(userDirectory directory: URL) -> Self {
-    var packaged = packageRecords(in: ModPackageStore.directory(besides: directory))
-    let urls: [URL]
-    do {
-      urls = try FileManager.default.contentsOfDirectory(
-        at: directory,
-        includingPropertiesForKeys: nil,
-        options: [.skipsHiddenFiles]
-      ).filter { $0.pathExtension == "json" }.sorted { $0.lastPathComponent < $1.lastPathComponent }
-    } catch CocoaError.fileReadNoSuchFile {
-      urls = []
-    } catch {
-      let file = ControllerRecordFile(
-        url: directory,
-        model: nil,
-        operation: nil,
-        problem: "cannot read the directory: \(error.localizedDescription)"
-      )
-      return Self(records: packaged.records, userFiles: [file] + packaged.files)
-    }
-    var records = packaged.records
-    var files: [ControllerRecordFile] = []
-    for url in urls {
-      let file: ControllerRecordFile
-      do {
-        let validated = try validate(
-          Data(contentsOf: url),
-          file: url,
-          packages: packaged.records
-        )
-        let model = validated.record.model
-        let expected = fileName(for: model)
-        if url.lastPathComponent == expected {
-          records[model] = validated.record
-          // A patch of a package-only model applies over the package record and keeps it.
-          if validated.operation == .add || bundled.records[model] != nil {
-            packaged.overridden(model, by: url)
-          }
-          file = ControllerRecordFile(
-            url: url,
-            model: validated.record.model,
-            operation: validated.operation,
-            problem: nil
-          )
-        } else {
-          file = ControllerRecordFile(
-            url: url,
-            model: validated.record.model,
-            operation: validated.operation,
-            problem: "the file name must be \(expected)"
-          )
-        }
-      } catch {
-        file = ControllerRecordFile(
-          url: url,
-          model: nil,
-          operation: nil,
-          problem: problemDescription(error)
-        )
-      }
-      files.append(file)
-    }
-    return Self(records: records, userFiles: files + packaged.files)
-  }
-
-  /// Validates one user record against the bundled catalog: the override schema's shape, the
-  /// controller contract and its cross-field checks, and the operation's fit with the catalog.
-  /// `file` becomes the record's ``ControllerRecord/userFile``, or its
-  /// ``ControllerRecord/packageFile`` when `layer` is `package`. A patch of a model with no
-  /// bundled record applies over its record in `packages`, the installed package records.
-  public static func validate(
-    _ data: Data,
-    file: URL? = nil,
-    layer: ControllerRecordLayer = .user,
-    packages: [ControllerModelID: ControllerRecord] = [:]
-  ) throws -> ValidatedControllerRecord {
-    guard let object = try? JSONSerialization.jsonObject(with: data),
-      let document = object as? [String: Any]
-    else { throw ControllerRecordProblem("the file is not a JSON object") }
-    try OpenJoystickDriverAPI.requireHeader(
-      document,
-      kind: overrideKind,
-      file: file?.lastPathComponent
-    )
-    switch document["operation"] as? String {
-    case ControllerRecordOperation.add.rawValue:
-      try requireKeys(document, ["apiVersion", "kind", "operation", "record"])
-      guard let record = document["record"] as? [String: Any] else {
-        throw ControllerRecordProblem("record must be an object")
-      }
-      let decoded = try decode(record)
-      guard bundled.records[decoded.model] == nil else {
-        throw ControllerRecordProblem(
-          "\(decoded.model) is a bundled controller; use a patch to change it"
-        )
-      }
-      let layers = Dictionary(
-        uniqueKeysWithValues: fieldNames(of: record).map { ($0, layer) }
-      )
-      return ValidatedControllerRecord(
-        operation: .add,
-        record: try makeRecord(record, layers: layers, file: file, layer: layer)
-      )
-    case ControllerRecordOperation.patch.rawValue:
-      try requireKeys(
-        document,
-        ["apiVersion", "kind", "operation", "vendorID", "productID", "set"]
-      )
-      guard let vendorID = integer(document["vendorID"]).flatMap(UInt16.init(exactly:)),
-        vendorID >= 1, let productID = integer(document["productID"]).flatMap(UInt16.init(exactly:))
-      else { throw ControllerRecordProblem("vendorID must be 1...65535 and productID 0...65535") }
-      let model = ControllerModelID(vendorID: vendorID, productID: productID)
-      guard let fields = document["set"] as? [String: Any], !fields.isEmpty,
-        Set(fields.keys).isSubset(of: [
-          "protocol", "usb", "bluetoothLE", "server", "output", "input", "tuning",
-        ])
-      else {
-        throw ControllerRecordProblem(
-          "set must hold protocol, usb, bluetoothLE, server, output, input, or tuning"
-        )
-      }
-      guard let upstream = bundled.records[model] ?? packages[model],
-        let base = try JSONSerialization.jsonObject(with: upstream.document) as? [String: Any]
-      else {
-        throw ControllerRecordProblem(
-          "\(model) is not a bundled controller; use an add record"
-        )
-      }
-      var merged = base.merging(fields) { _, patched in patched }
-      // A patch names the tuning keys it sets and keeps the bundled record's other keys.
-      if let patched = fields["tuning"] as? [String: Any],
-        let bundledTuning = base["tuning"] as? [String: Any]
-      {
-        merged["tuning"] = bundledTuning.merging(patched) { _, value in value }
-      }
-      // Every protocol field is scoped to its family, so a patch that keeps the family merges
-      // into the bundled block (RFC 7396) and keeps the fields it does not name. Its parameters
-      // join the bundled parameters, so a patch cannot drop the ones that select a model's
-      // calibration.
-      if var patched = fields["protocol"] as? [String: Any],
-        let bundledProtocol = base["protocol"] as? [String: Any],
-        patched["family"] as? String == bundledProtocol["family"] as? String
-      {
-        if let bundledParameters = bundledProtocol["parameters"] as? [String: Any],
-          let patchedParameters = patched["parameters"] as? [String: Any]
-        {
-          patched["parameters"] = bundledParameters.merging(patchedParameters) { _, value in value }
-        }
-        merged["protocol"] = bundledProtocol.merging(patched) { _, value in value }
-      }
-      guard
-        try JSONSerialization.data(withJSONObject: merged, options: .sortedKeys)
-          != JSONSerialization.data(withJSONObject: base, options: .sortedKeys)
-      else { throw ControllerRecordProblem("the patch changes nothing in the bundled record") }
-      var layers = upstream.fieldLayers
-      for key in fields.keys { layers[key] = layer }
-      var tuningLayers = upstream.tuningLayers
-      for key in (fields["tuning"] as? [String: Any] ?? [:]).keys { tuningLayers[key] = layer }
-      return ValidatedControllerRecord(
-        operation: .patch,
-        record: try makeRecord(
-          merged,
-          layers: layers,
-          tuningLayers: tuningLayers,
-          file: file,
-          layer: layer
-        )
-      )
-    default: throw ControllerRecordProblem("operation must be add or patch")
-    }
-  }
-
   /// The bundled records, decoded once per process.
   private static func loadBundled() throws -> Self {
     let urls = (Bundle.module.urls(forResourcesWithExtension: "json", subdirectory: nil) ?? [])
@@ -395,7 +187,7 @@ public struct ControllerRecordSet: Sendable {
         let layers = Dictionary(
           uniqueKeysWithValues: fieldNames(of: document).map { ($0, ControllerRecordLayer.bundled) }
         )
-        let record = try makeRecord(document, layers: layers, file: nil, layer: .bundled)
+        let record = try makeRecord(document, layers: layers)
         guard url.lastPathComponent == fileName(for: record.model) else {
           throw ControllerRecordProblem("filename must be \(fileName(for: record.model))")
         }
@@ -415,7 +207,7 @@ public struct ControllerRecordSet: Sendable {
     return stem.enumerated().allSatisfy { offset, character in offset == 4 || character.isHexDigit }
   }
 
-  private static func decode(
+  static func decode(
     _ record: [String: Any]
   ) throws -> (model: ControllerModelID, document: ControllerRecordDocument) {
     let data = try JSONSerialization.data(withJSONObject: record)
@@ -426,12 +218,12 @@ public struct ControllerRecordSet: Sendable {
     return (ControllerModelID(vendorID: vendorID, productID: productID), document)
   }
 
-  private static func makeRecord(
+  static func makeRecord(
     _ record: [String: Any],
     layers: [String: ControllerRecordLayer],
     tuningLayers: [String: ControllerRecordLayer]? = nil,
-    file: URL?,
-    layer: ControllerRecordLayer
+    userFile: URL? = nil,
+    packageFile: URL? = nil
   ) throws -> ControllerRecord {
     let decoded = try decode(record)
     let set = decoded.document.tuning.setKeys
@@ -446,8 +238,8 @@ public struct ControllerRecordSet: Sendable {
         ?? Dictionary(
           uniqueKeysWithValues: set.map { ($0.rawValue, layers["tuning"] ?? .bundled) }
         ),
-      userFile: layer == .user ? file : nil,
-      packageFile: layer == .package ? file : nil,
+      userFile: userFile,
+      packageFile: packageFile,
       family: decoded.document.protocolInfo.protocolID.rawValue,
       tuningScope: Set(
         ControllerTuning.Key.allCases.filter { decoded.document.tuningScopeViolation($0) == nil }
@@ -456,24 +248,12 @@ public struct ControllerRecordSet: Sendable {
     )
   }
 
-  private static func fieldNames(of record: [String: Any]) -> [String] {
+  static func fieldNames(of record: [String: Any]) -> [String] {
     record.keys.filter { !["apiVersion", "kind", "vendorID", "productID"].contains($0) }
   }
 
-  private static func requireKeys(_ document: [String: Any], _ keys: Set<String>) throws {
-    let present = Set(document.keys)
-    guard present == keys else {
-      let unknown = present.subtracting(keys).sorted()
-      let missing = keys.subtracting(present).sorted()
-      let parts =
-        (unknown.isEmpty ? [] : ["unknown field(s): \(unknown.joined(separator: ", "))"])
-        + (missing.isEmpty ? [] : ["missing field(s): \(missing.joined(separator: ", "))"])
-      throw ControllerRecordProblem(parts.joined(separator: "; "))
-    }
-  }
-
   /// An integer JSON number; booleans and fractions are not integers.
-  private static func integer(_ value: Any?) -> Int? {
+  static func integer(_ value: Any?) -> Int? {
     // swiftlint:disable:next legacy_objc_type
     guard let number = value as? NSNumber, CFGetTypeID(number) != CFBooleanGetTypeID(),
       let integer = Int(exactly: number.doubleValue)

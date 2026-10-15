@@ -2,7 +2,7 @@
 name: ojd-controller-catalog
 description: >-
   Adds or patches an OpenJoystickDriver controller identity through the
-  pinned-source lockfile, Resources/ControllerOverrides add/patch files, or a
+  pinned-source lockfile, Resources/Controllers and Resources/ControllerPatches files, or a
   protocol driver under Protocol/Drivers/<family>, then regenerates and checks
   the generated catalog. Use when a VID/PID is missing, misclassified, or needs
   an endpoint, configuration, or quirk fix. Not for probing physical hardware
@@ -16,8 +16,8 @@ Change one controller identity or one factual device deviation through the autho
 ## Workflow
 
 1. Read `Resources/Schemas/AGENTS.md`, `docs/development/xpad-import.md`, and `docs/testing/controller-record.md`.
-1. Find the current record: `rg -l '"productID": <decimal pid>' Sources/OpenJoystickDriverKit/Resources/Controllers` and check `Resources/ControllerOverrides/<vid>/` for an existing override.
-1. Choose the input from the [authored-inputs card](references/catalog-inputs.md#authored-inputs): lockfile revision, override `add`, override `patch`, or a Swift driver.
+1. Find the current record: `rg -l '"productID": <decimal pid>' Sources/OpenJoystickDriverKit/Resources/Controllers` and check `Resources/Controllers/<vid>/` and `Resources/ControllerPatches/<vid>/` for an existing file.
+1. Choose the input from the [authored-inputs card](references/catalog-inputs.md#authored-inputs): lockfile revision, controller `add`, controller `patch`, or a Swift driver.
 1. Write the authored change. Use decimal JSON numbers, lowercase hex file paths, and lowerCamelCase keys.
 1. Regenerate once with `./Scripts/ojd catalog regenerate --write`, then read the whole generated diff (`git diff --stat -- Sources/OpenJoystickDriverKit/Resources/Controllers`).
 1. Run `./Scripts/ojd catalog regenerate --check`, `./Scripts/ojd check profiles`, and `./Scripts/ojd check schemas`. For a driver change, also run the matching `swift test --filter` and `./Scripts/ojd test parsers-macos14`. The full gate list is `just check-fast` / `just check` and `AGENTS.md`.
@@ -27,8 +27,8 @@ Change one controller identity or one factual device deviation through the autho
 
 | Situation | Card |
 | --- | --- |
-| VID/PID absent from every upstream source | [Override add](references/catalog-inputs.md#override-add) |
-| Upstream record exists but one section is wrong on macOS | [Override patch](references/catalog-inputs.md#override-patch) |
+| VID/PID absent from every upstream source | [Controller add](references/catalog-inputs.md#controller-add) |
+| Upstream record exists but one section is wrong on macOS | [Controller patch](references/catalog-inputs.md#controller-patch) |
 | Upstream fixed or added the device in a newer revision | [Lockfile revision](references/catalog-inputs.md#lockfile-revision) |
 | New report format, handshake, or output encoding | [Protocol driver](references/catalog-inputs.md#protocol-driver) |
 | Deciding what the change proves | [Evidence classes](references/catalog-inputs.md#evidence-classes) |
@@ -45,7 +45,7 @@ Change one controller identity or one factual device deviation through the autho
 
 ## References
 
-- [Catalog inputs](references/catalog-inputs.md): authored inputs, override add and patch, lockfile revision, protocol driver, evidence classes.
+- [Catalog inputs](references/catalog-inputs.md): authored inputs, controller add and patch, lockfile revision, protocol driver, evidence classes.
 
 ## Completion Evidence
 

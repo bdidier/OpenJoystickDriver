@@ -459,7 +459,7 @@ struct ControllerCommandTests {
       isDirectory: true
     )
     defer { try? FileManager.default.removeItem(at: directory) }
-    let file = directory.appendingPathComponent("366c-0005.json")
+    let file = directory.appendingPathComponent("366c-0005.patch.json")
     if let userRecord {
       try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
       try userRecord.write(to: file)
@@ -474,14 +474,14 @@ struct ControllerCommandTests {
     let result = await RecordStore.$directory.withValue(directory) {
       await service.run(["controller", "show", token("pad-1")] + flags)
     }
-    return (result, "\(directory.lastPathComponent)/366c-0005.json")
+    return (result, "\(directory.lastPathComponent)/366c-0005.patch.json")
   }
 
   private static let userPatch = Data(
     """
-    {"apiVersion": "\(OpenJoystickDriverAPI.version)",
-    "kind": "\(ControllerRecordSet.overrideKind)", "operation": "patch",
-     "vendorID": 13932, "productID": 5, "set": {"usb": {"postHandshakeSettleMs": 5}}}
+    {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "ControllerPatch",
+     "selector": {"vendorID": 13932, "productID": 5},
+     "patch": {"usb": {"postHandshakeSettleMs": 5}}}
     """.utf8
   )
 

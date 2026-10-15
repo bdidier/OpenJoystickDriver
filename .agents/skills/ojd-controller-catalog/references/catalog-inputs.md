@@ -3,8 +3,8 @@
 ## Contents
 
 - [Authored inputs](#authored-inputs)
-- [Override add](#override-add)
-- [Override patch](#override-patch)
+- [Controller add](#controller-add)
+- [Controller patch](#controller-patch)
 - [Lockfile revision](#lockfile-revision)
 - [Protocol driver](#protocol-driver)
 - [Evidence classes](#evidence-classes)
@@ -15,13 +15,14 @@
 
 ```text
 ControllerSources.lock.json                           ─┐
-Resources/ControllerOverrides/<vid>/<vid>-<pid>.json  ─┼─> ./Scripts/ojd catalog regenerate --write
+Resources/Controllers/<vid>/<vid>-<pid>.json          ─┤
+Resources/ControllerPatches/<vid>/<vid>-<pid>.patch.json ─┼─> ./Scripts/ojd catalog regenerate --write
 Resources/Schemas/*.schema.json                       ─┘      ─> generated records
 Sources/OpenJoystickDriverKit/Protocol/  (parsing and transport behavior, Swift)
 ```
 
 - `ControllerSources.lock.json` (repository root) pins `linux` and `sdl` upstream commits with a SHA-256 per file.
-- `Resources/ControllerOverrides/` holds one JSON file per device, with `"operation": "add"` or `"operation": "patch"`, validated by `Resources/Schemas/controller-override.schema.json`.
+- `Resources/Controllers/` holds one `Controller` file per device that no pinned source knows, validated by `Resources/Schemas/controller.schema.json`. `Resources/ControllerPatches/` holds one `ControllerPatch` file per device (`selector.vendorID` and `selector.productID`, plus a `patch` body), validated by `Resources/Schemas/controller-patch.schema.json`.
 - `Resources/Schemas/` owns the document shapes. Its `AGENTS.md` sets the rules: strict schemas, one live schema per artifact class, no versioned successor files.
 
 **Use when.** Every catalog change starts at one of these inputs.
@@ -30,32 +31,30 @@ Sources/OpenJoystickDriverKit/Protocol/  (parsing and transport behavior, Swift)
 
 **Verify.** After `--write`, `./Scripts/ojd catalog regenerate --check` exits 0, and `git status --short Sources/OpenJoystickDriverKit/Resources/Controllers` lists only the intended records.
 
-## Override Add
+## Controller Add
 
-**Definition.** A complete record for a VID/PID that no pinned upstream source knows. The file sits at `Resources/ControllerOverrides/<vid>/<vid>-<pid>.json` (lowercase hex path) and has the keys `$schema`, `operation: "add"`, and `record`.
+**Definition.** A complete record for a VID/PID that no pinned upstream source knows. The file is a plain `Controller` document at `Resources/Controllers/<vid>/<vid>-<pid>.json` (lowercase hex path).
 
 **Use when.** `rg` finds the VID/PID in neither the generated records nor the pinned upstream files.
 
-**Do not use when.** A Linux-derived record already has the VID/PID. The generator (`apply_overrides` in `Scripts/Catalog/generate_controller_catalog.py`) raises `add override conflicts with upstream identity`; write a patch instead. SDL-only identities merge after the overrides, and an add wins over an SDL row.
+**Do not use when.** A Linux-derived record already has the VID/PID. The generator (`load_authored` in `Scripts/Catalog/generate_controller_catalog.py`) raises an add-versus-upstream conflict; write a patch instead. SDL-only identities merge after the authored files, and an add wins over an SDL row.
 
-**Example.** Copy the shape from an existing add, such as `Resources/ControllerOverrides/37d7/37d7-2801.json`, then replace every value with values observed for the new device.
+**Example.** Copy the shape from an existing add, such as `Resources/Controllers/37d7/37d7-2801.json`, then replace every value with values observed for the new device.
 
 **Verify.** `./Scripts/ojd check profiles` and `./Scripts/ojd check schemas` exit 0, and the generated diff adds exactly one record.
 
-## Override Patch
+## Controller Patch
 
-**Definition.** A narrow `set` of top-level sections that replaces the upstream values for one device.
+**Definition.** A `ControllerPatch`: an RFC 7396 merge patch of the upstream record for one device.
 
-**Example** (`Resources/ControllerOverrides/045e/045e-02d1.json`):
+**Example** (`Resources/ControllerPatches/045e/045e-02d1.patch.json`):
 
 ```json
 {
   "apiVersion": "openjoystickdriver/v1alpha1",
-  "kind": "ControllerOverride",
-  "operation": "patch",
-  "vendorID": 1118,
-  "productID": 721,
-  "set": {
+  "kind": "ControllerPatch",
+  "selector": { "vendorID": 1118, "productID": 721 },
+  "patch": {
     "usb": {
       "endpoints": { "in": 129, "out": 1 },
       "configuration": "set1-before-claim"
@@ -66,13 +65,13 @@ Sources/OpenJoystickDriverKit/Protocol/  (parsing and transport behavior, Swift)
 
 **Use when.** An upstream record exists but one section, such as the endpoints, USB configuration, or quirks, is wrong for macOS user-space access.
 
-**Do not use when.** The whole record is wrong. In that case either the upstream revision needs a bump, or the device is not the one upstream describes; check before overriding.
+**Do not use when.** The whole record is wrong. In that case either the upstream revision needs a bump, or the device is not the one upstream describes; check before patching.
 
-The merge is shallow: `{**upstream, **set}`. A patched section replaces the upstream section whole, so `set.usb` must carry every `usb` field the device needs, not only the one that changed. The exception is a `set.protocol` that keeps the upstream family: it merges one level into the upstream block (RFC 7396, lists replace), so upstream quirks it does not name stay. The generator also rejects an orphan patch (no upstream record) and a redundant patch (one that changes nothing).
+The merge is RFC 7396 and recursive: an object merges key by key, a value replaces, an array replaces whole, and `null` deletes the key. A patch that changes `protocol.family` must `null` the upstream `protocol` keys that the new family does not read, and emptying a section needs `null` on the whole section, not on its last key. The generator also rejects an orphan patch (no upstream record) and a redundant patch (one that changes nothing). The Swift loader merges with the same rules, so the generated record and the runtime record agree.
 
-**Cost removed.** A full-record copy stops tracking upstream fixes. A patch keeps every section that it does not set.
+**Cost removed.** A full-record copy stops tracking upstream fixes. A patch keeps every key that it does not set.
 
-**Verify.** The generated diff for the device changes only the patched sections, and no field inside a patched section disappeared unintentionally.
+**Verify.** The generated diff for the device changes only the patched keys, and no key disappeared unintentionally.
 
 ## Lockfile Revision
 
@@ -80,7 +79,7 @@ The merge is shallow: `{**upstream, **set}`. A patched section replaces the upst
 
 **Use when.** Upstream added or fixed the device, and the review accepts every other record change that the new revision brings.
 
-**Do not use when.** Only one device is needed and the bump churns unrelated records the change cannot review. Use an override and note the upstream commit in the testing page.
+**Do not use when.** Only one device is needed and the bump churns unrelated records the change cannot review. Use a patch and note the upstream commit in the testing page.
 
 **Verify.** Review the whole generated diff. A lockfile bump can change many records, so every change needs a reason.
 
@@ -90,7 +89,7 @@ The merge is shallow: `{**upstream, **set}`. A patched section replaces the upst
 
 **Use when.** The device speaks a report layout or handshake that no existing driver implements.
 
-**Do not use when.** An existing driver handles the layout and only identity data differs. Use an override.
+**Do not use when.** An existing driver handles the layout and only identity data differs. Use a patch.
 
 **Verify.** Add a packet-fixture test under the mirrored `Tests/OpenJoystickDriverKitTests/Protocol/` directory and run it with `swift test --filter`, then `./Scripts/ojd test parsers-macos14`. Follow the `ojd-swift-change` rules for file placement and naming.
 

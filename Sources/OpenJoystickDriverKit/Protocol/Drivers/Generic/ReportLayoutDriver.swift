@@ -90,6 +90,8 @@ public final class ReportLayoutDriver: PhysicalProtocolDriver {
           down: down.isSet(in: bytes),
           left: left.isSet(in: bytes)
         )
+      case .table(let field, let directions):
+        direction = directions[field.value(in: bytes)] ?? .neutral
       }
       if result == .neutral { result = direction }
     }

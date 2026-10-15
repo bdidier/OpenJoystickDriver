@@ -18,7 +18,8 @@
 			"code": "E1003",
 			"domain": "endpoint",
 			"name": "unsupportedProtocol",
-			"status": "active"
+			"status": "retired",
+			"retiredIn": "0.6.0-alpha.1"
 		},
 		{
 			"code": "E1004",
@@ -54,6 +55,24 @@
 			"code": "E1009",
 			"domain": "endpoint",
 			"name": "feedClosed",
+			"status": "active"
+		},
+		{
+			"code": "E1010",
+			"domain": "endpoint",
+			"name": "unsupportedEndpointVersion",
+			"status": "active"
+		},
+		{
+			"code": "E1011",
+			"domain": "endpoint",
+			"name": "unexpectedKind",
+			"status": "active"
+		},
+		{
+			"code": "E1012",
+			"domain": "endpoint",
+			"name": "missingHeader",
 			"status": "active"
 		},
 		{

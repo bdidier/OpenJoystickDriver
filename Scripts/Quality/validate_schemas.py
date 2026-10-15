@@ -34,7 +34,8 @@ SCHEMAS = ROOT / "Resources" / "Schemas"
 GENERATED_RECORDS = (
     ROOT / "Sources" / "OpenJoystickDriverKit" / "Resources" / "Controllers"
 )
-CONTROLLER_OVERRIDES = ROOT / "Resources" / "ControllerOverrides"
+AUTHORED_CONTROLLERS = ROOT / "Resources" / "Controllers"
+AUTHORED_PATCHES = ROOT / "Resources" / "ControllerPatches"
 ERROR_CODES = ROOT / "Resources" / "ErrorCodes.json"
 PROTOCOL_DESCRIPTIONS = ROOT / "Resources" / "Protocols"
 VIRTUAL_DEVICES = ROOT / "Resources" / "VirtualDevices"
@@ -42,9 +43,10 @@ SAMPLE_PACKAGE = ROOT / "docs" / "sdk" / "sample"
 ACCESS_GRANT_FIXTURES = (
     ROOT / "Tests" / "RepositoryScripts" / "fixtures" / "access_grants.json",
 )
-# The schema of each kind of file in the sample mod package, by its folder.
+# The schema of each kind of file in the sample mod package, by its folder. A `Controllers`
+# file is a `ControllerPatch` or a `Controller`, which its `kind` tells apart.
 SAMPLE_FOLDER_SCHEMAS = {
-    "Controllers": "controller-override",
+    "Controllers": "controller",
     "Personas": "virtual-device",
     "Profiles": "profile",
 }
@@ -115,7 +117,7 @@ def validate_schema_identity(documents: dict[str, dict[str, object]]) -> None:
         properties = document.get("properties")
         if not isinstance(properties, dict):
             properties = {}
-            # controller-override declares the header in each oneOf branch.
+            # A schema that declares the header in each oneOf branch.
             for branch in document.get("oneOf", []):  # type: ignore[attr-defined]
                 properties = {**properties, **branch.get("properties", {})}
         header = {
@@ -133,9 +135,17 @@ def sample_documents() -> list[tuple[str, Path]]:
     """The files of the sample mod package with the schema each is read as."""
     found: list[tuple[str, Path]] = [("mod-package", SAMPLE_PACKAGE / "mod.json")]
     for folder, stem in SAMPLE_FOLDER_SCHEMAS.items():
-        found.extend(
-            (stem, path) for path in sorted((SAMPLE_PACKAGE / folder).glob("*.json"))
-        )
+        for path in sorted((SAMPLE_PACKAGE / folder).glob("*.json")):
+            kind = load_json(path)
+            patch = (
+                isinstance(kind, dict) and kind.get("kind") == KINDS["controller-patch"]
+            )
+            found.append(
+                (
+                    "controller-patch" if folder == "Controllers" and patch else stem,
+                    path,
+                )
+            )
     known = {path for _, path in found}
     unknown = sorted(set(SAMPLE_PACKAGE.rglob("*.json")) - known)
     if unknown:
@@ -273,15 +283,17 @@ def main() -> int:
         validate_schema_identity(documents)
         registry = schema_registry(documents)
         controller_records = sorted(GENERATED_RECORDS.glob("*/*.json"))
-        overrides = sorted(CONTROLLER_OVERRIDES.glob("*/*.json"))
+        authored = sorted(AUTHORED_CONTROLLERS.glob("*/*.json"))
+        patches = sorted(
+            [*AUTHORED_PATCHES.glob("*.json"), *AUTHORED_PATCHES.glob("*/*.json")]
+        )
         protocols = sorted(PROTOCOL_DESCRIPTIONS.glob("*.json"))
         virtual_devices = sorted(VIRTUAL_DEVICES.glob("*.json"))
         validate_documents(
             documents["controller.schema.json"], registry, controller_records
         )
-        validate_documents(
-            documents["controller-override.schema.json"], registry, overrides
-        )
+        validate_documents(documents["controller.schema.json"], registry, authored)
+        validate_documents(documents["controller-patch.schema.json"], registry, patches)
         validate_documents(
             documents["error-codes.schema.json"], registry, [ERROR_CODES]
         )
@@ -316,8 +328,10 @@ def main() -> int:
         return 1
     print(
         f"Validated {len(documents)} schema documents, "
-        f"{len(controller_records)} controller records, {len(overrides)} overrides, "
-        f"{len(protocols)} protocol descriptions, {len(virtual_devices)} virtual devices, {len(samples)} sample mod files, "
+        f"{len(controller_records)} controller records, {len(authored)} authored controllers, "
+        f"{len(patches)} built-in patches, "
+        f"{len(protocols)} protocol descriptions, "
+        f"{len(virtual_devices)} virtual devices, {len(samples)} sample mod files, "
         f"{len(ACCESS_GRANT_FIXTURES)} access grant fixtures, the error code catalog, "
         "and one live support report."
     )
