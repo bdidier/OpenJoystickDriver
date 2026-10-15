@@ -100,7 +100,6 @@ extension ProtocolDescription {
     let rawUSBTuningKeys: Set<ControllerTuning.Key>
     let controls: ControllerCapabilities?
     let recordCapabilities: RecordCapabilityRules
-    let buttonLabels: ControllerButtonLabels
     let macOSOwnedOutput: MacOSOwnedOutput
     let interfaceSignatures: [Signature]
     let parameters: [String: ParameterType]
@@ -129,7 +128,7 @@ extension ProtocolDescription {
       let container = try decoder.container(keyedBy: DocumentKey.self)
       try container.rejectUnknown(allowed: [
         "apiVersion", "kind", "family", "endpoints", "rawUSB", "recordSections", "tuningKeys",
-        "rawUSBTuningKeys", "controls", "recordCapabilities", "buttonLabels", "macOSOwnedOutput",
+        "rawUSBTuningKeys", "controls", "recordCapabilities", "macOSOwnedOutput",
         "interfaceSignatures", "parameters", "defaults",
       ])
       apiVersion = try container.decodeOptional(String.self, for: "apiVersion")
@@ -156,18 +155,6 @@ extension ProtocolDescription {
       recordCapabilities =
         try container.decodeOptional(RecordCapabilitiesDocument.self, for: "recordCapabilities")?
         .value ?? .none
-      switch try container.decodeOptional(String.self, for: "buttonLabels") {
-      case nil: buttonLabels = .standard
-      case "PlayStation": buttonLabels = .playStation
-      case "Nintendo": buttonLabels = .nintendo
-      default:
-        throw DecodingError.dataCorrupted(
-          .init(
-            codingPath: decoder.codingPath + [DocumentKey("buttonLabels")],
-            debugDescription: "buttonLabels is PlayStation or Nintendo"
-          )
-        )
-      }
       macOSOwnedOutput =
         try container.decodeOptional(MacOSOwnedOutputDocument.self, for: "macOSOwnedOutput")?.value
         ?? .none

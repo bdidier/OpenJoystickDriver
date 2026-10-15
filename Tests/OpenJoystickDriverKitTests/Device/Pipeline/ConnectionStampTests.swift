@@ -117,7 +117,6 @@ private final class StampRecorder: OutputDispatcher, @unchecked Sendable {
 
   func dispatch(
     _ event: ControllerEvent,
-    labels _: ControllerButtonLabels,
     from _: LogicalControllerID
   ) { lock.withLock { recorded.append(event.state) } }
 

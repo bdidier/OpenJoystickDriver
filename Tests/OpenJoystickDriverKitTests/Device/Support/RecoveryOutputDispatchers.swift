@@ -41,7 +41,7 @@ final class RecoveryGatedOutputDispatcher: OutputDispatcher, ControllerInputOwne
 
   init(gate: RecoveryOwnershipGate) { self.gate = gate }
 
-  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: LogicalControllerID) {
+  func dispatch(_: ControllerEvent, from _: LogicalControllerID) {
   }
   func activateOutput(for _: LogicalControllerID) {}
 
@@ -74,7 +74,6 @@ final class RecoveryOutputDispatcher: OutputDispatcher, ControllerInputOwnership
 
   func dispatch(
     _ event: ControllerEvent,
-    labels _: ControllerButtonLabels,
     from _: LogicalControllerID
   ) { stateLock.withLock { storedDispatchedStates.append(event.state) } }
 

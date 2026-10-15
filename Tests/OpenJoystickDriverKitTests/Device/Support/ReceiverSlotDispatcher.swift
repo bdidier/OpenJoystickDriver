@@ -16,7 +16,6 @@ final class ReceiverSlotDispatcher: OutputDispatcher, ControllerLifecycleListene
 
   func dispatch(
     _ event: ControllerEvent,
-    labels _: ControllerButtonLabels,
     from identifier: LogicalControllerID
   ) { lock.withLock { recordedDispatches[identifier, default: []].append(event.state) } }
 

@@ -64,7 +64,7 @@ final class RetargetBackendProbe: VirtualOutputDispatching, RemappingGamepadSink
     record(state == .neutral ? "neutral" : "state")
   }
 
-  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: LogicalControllerID) {
+  func dispatch(_: ControllerEvent, from _: LogicalControllerID) {
   }
   func activateOutput(for _: LogicalControllerID) {}
 

@@ -192,7 +192,6 @@ A family's default timings and control set are data in `Resources/Protocols/<fam
 - `rawUSB`: `true`, or the variants that talk raw USB.
 - `recordSections`: the record sections the driver reads.
 - `tuningKeys`: the `tuning` keys a record may set for the family. `rawUSBTuningKeys` lists the keys of its raw-USB variants, and a description that is always raw USB takes only `rawUSBTuningKeys`.
-- `buttonLabels`: the labels of the family's buttons.
 - `macOSOwnedOutput`: the output that macOS owns for the family, and a `rationale` that says why.
 - `controls`: the controls the driver reports. `recordCapabilities` names the control deltas (`present`, `rumbleAbsent`) that a record of the family may declare; the driver adds the record-derived parts.
 - `defaults.tuning`: the default value of each tuning key, such as `lizardResendTicks`. The keep-alive interval is not a tuning key: `defaults.session.keepAlive.intervalMilliseconds` is its only source, and a description or record that names `keepAliveIntervalMs` anywhere is rejected. `defaults.variants.<variant>.tuning` gives another value for a transport, for example the Switch 1 `hidStartupIntervalMs` of 60 over Bluetooth and 20 over USB.

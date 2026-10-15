@@ -89,7 +89,7 @@ final class InstallationBackend: VirtualOutputDispatching, @unchecked Sendable {
     suppressOutput = value
   }
 
-  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: LogicalControllerID) {
+  func dispatch(_: ControllerEvent, from _: LogicalControllerID) {
   }
   func activateOutput(for _: LogicalControllerID) {}
 

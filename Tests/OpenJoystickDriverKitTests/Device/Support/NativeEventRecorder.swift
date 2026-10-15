@@ -23,7 +23,6 @@ final class NativeEventRecorder: OutputDispatcher, ObservedInputDemand, @uncheck
 
   func dispatch(
     _ event: ControllerEvent,
-    labels _: ControllerButtonLabels,
     from _: LogicalControllerID
   ) { lock.withLock { recorded.append(event.state) } }
 

@@ -176,7 +176,6 @@ extension DualSenseDriverTests {
       func process(_ event: ControllerEvent, at time: UInt64) -> [RemappingEngineAction] {
         engine.process(
           event,
-          labels: .playStation,
           from: identifier,
           into: identifier,
           profile: profile,

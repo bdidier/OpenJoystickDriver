@@ -132,12 +132,11 @@ extension OutputDispatcher {
   /// Dispatches one scripted snapshot of `identifier` per change, in order.
   func dispatch(
     changes: [InputChange],
-    from identifier: LogicalControllerID,
-    labels: ControllerButtonLabels = .standard
+    from identifier: LogicalControllerID
   ) async {
     let script = InputScript.of(self)
     for report in reports(changes, after: script.state(for: identifier)) {
-      await dispatch(script.event(report, for: identifier), labels: labels, from: identifier)
+      await dispatch(script.event(report, for: identifier), from: identifier)
     }
   }
 }
@@ -147,7 +146,6 @@ extension RemappingEventEngine {
   func process(
     inputs changes: [InputChange],
     from source: LogicalControllerID,
-    labels: ControllerButtonLabels = .standard,
     using profile: RemappingProfile,
     at uptimeNanoseconds: UInt64
   ) async throws {
@@ -155,7 +153,6 @@ extension RemappingEventEngine {
       let base = state.sourceBaselines[source] ?? .neutral
       try await process(
         ControllerEvent(report, after: base, at: uptimeNanoseconds),
-        labels: labels,
         from: source,
         using: profile,
         at: uptimeNanoseconds
@@ -166,7 +163,6 @@ extension RemappingEventEngine {
   func process(
     inputs changes: [InputChange],
     from source: LogicalControllerID,
-    labels: ControllerButtonLabels = .standard,
     using profile: RemappingProfile,
     at uptimeNanoseconds: UInt64,
     requiring permit: RemappingEmissionPermit
@@ -175,7 +171,6 @@ extension RemappingEventEngine {
       let base = state.sourceBaselines[source] ?? .neutral
       try await process(
         ControllerEvent(report, after: base, at: uptimeNanoseconds),
-        labels: labels,
         from: source,
         using: profile,
         at: uptimeNanoseconds,
@@ -190,7 +185,6 @@ extension RemappingEngineState {
   mutating func process(
     inputs changes: [InputChange],
     from source: LogicalControllerID,
-    labels: ControllerButtonLabels = .standard,
     profile: RemappingProfile,
     at uptimeNanoseconds: UInt64
   ) -> [RemappingEngineAction] {
@@ -198,7 +192,6 @@ extension RemappingEngineState {
       let base = sourceBaselines[source] ?? .neutral
       return process(
         ControllerEvent(report, after: base, at: uptimeNanoseconds),
-        labels: labels,
         from: source,
         into: source,
         profile: profile,
@@ -269,7 +262,6 @@ extension RemappingEngineState {
   /// Processes one parsed snapshot as its own source; a frame without input changes nothing.
   mutating func process(
     parsed event: ControllerEvent?,
-    labels: ControllerButtonLabels = .standard,
     from source: LogicalControllerID,
     profile: RemappingProfile,
     at uptimeNanoseconds: UInt64
@@ -277,7 +269,6 @@ extension RemappingEngineState {
     guard let event else { return [] }
     return process(
       event,
-      labels: labels,
       from: source,
       into: source,
       profile: profile,

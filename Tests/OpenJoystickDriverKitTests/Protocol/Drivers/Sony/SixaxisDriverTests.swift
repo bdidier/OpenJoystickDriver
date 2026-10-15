@@ -114,7 +114,6 @@ struct SixaxisDriverTests {
 extension SixaxisDriverTests {
   @Test
   func startBindingFiresForADS3UnderItsBoundLabels() throws {
-    let labels = ControllerButtonLabels(protocolID: .sonySixaxis)
     let report = ProtocolPacketFixtures.DS3.inputReport(
       buttons: (0x08, 0x00, false),
       sticks: ((128, 128), (128, 128)),
@@ -122,7 +121,7 @@ extension SixaxisDriverTests {
     )
     let event = try #require(try SixaxisDriver().parseReport(Data(report)))
 
-    let changes = RemappingEngineState.changes(from: .neutral, to: event.state, labels: labels)
+    let changes = RemappingEngineState.changes(from: .neutral, to: event.state)
 
     #expect(changes == [.button(.start, isPressed: true)])
   }

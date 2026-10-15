@@ -11,7 +11,7 @@ struct RuntimeExtraButtonTests {
   func captureAndAuthoringExposeInputOnlyButtons(button: Control) {
     var state = ControllerState.neutral
     state.pressed = [button]
-    #expect(RuntimePresentation.detectedSource(from: state, labels: .standard) == .button(button))
+    #expect(RuntimePresentation.detectedSource(from: state) == .button(button))
     #expect(SourceOption.options().contains { $0.source == .button(button) })
     let destinations = DestinationOption.options(
       for: .button(button),

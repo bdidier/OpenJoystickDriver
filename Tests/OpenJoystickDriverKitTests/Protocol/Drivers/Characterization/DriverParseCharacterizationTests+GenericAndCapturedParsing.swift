@@ -83,7 +83,6 @@ extension DriverParseCharacterizationTests {
   func capturedG7SE() throws {
     let lines = transcript(
       try Self.captured(0x3537, 0x1010),
-      labels: .standard,
       Self.gipCapturedSteps(Self.capturedG7SEStatus)
     )
     #expect(
@@ -100,7 +99,6 @@ extension DriverParseCharacterizationTests {
   func capturedRazer() throws {
     let lines = transcript(
       try Self.captured(0x1532, 0x0A15),
-      labels: .standard,
       Self.gipCapturedSteps(Self.capturedRazerStatus)
     )
     #expect(
@@ -180,7 +178,6 @@ extension DriverParseCharacterizationTests {
     }
     let lines = transcript(
       driver,
-      labels: ControllerButtonLabels(protocolID: Subjects.switchUSB.protocolID),
       [Step("reply", reply), Step("imu", report)]
     )
     #expect(

@@ -333,7 +333,7 @@ private final class StartupRecordingOutputDispatcher: OutputDispatcher,
 
   var activations: Int { lock.withLock { recordedActivations } }
 
-  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: LogicalControllerID) {
+  func dispatch(_: ControllerEvent, from _: LogicalControllerID) {
   }
 
   func activateOutput(for _: LogicalControllerID) {

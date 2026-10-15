@@ -30,8 +30,7 @@ struct ControllerProfileCapabilitiesTests {
         rumbleMotors: [.leftMain, .rightMain],
         lightingFeatures: [.programmableColor, .programmableBrightness],
         adaptiveTriggers: [.left, .right]
-      ),
-      buttonLabels: .standard
+      )
     )
     let second = ControllerProfileCapabilities(
       physicalInput: ControllerCapabilities(
@@ -42,8 +41,7 @@ struct ControllerProfileCapabilitiesTests {
         rumbleMotors: [.rightMain],
         lightingFeatures: [.programmableColor],
         adaptiveTriggers: [.right]
-      ),
-      buttonLabels: .standard
+      )
     )
 
     let result = first.intersecting(second)

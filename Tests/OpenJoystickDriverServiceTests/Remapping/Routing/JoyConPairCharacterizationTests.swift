@@ -74,7 +74,7 @@ struct JoyConPairCharacterizationTests {
         )
         harness.recorder.removeAll()
         if let event {
-          try await harness.router.dispatchCausally(.input(event, .nintendo), from: step.half)
+          try await harness.router.dispatchCausally(.input(event), from: step.half)
         }
         lines += traces()
       }
@@ -125,11 +125,11 @@ struct JoyConPairCharacterizationTests {
   }
 
   /// What one parsed half changed, as the engine applies it: `+`/`-` and the remapping button
-  /// under Nintendo labels, `hat=`, and sticks as raw values with Y rendered down-positive, then
+  /// `hat=`, and sticks as raw values with Y rendered down-positive, then
   /// samples.
   static func render(from previous: ControllerState, to event: ControllerEvent) -> String {
     let state = event.state
-    var parts = RemappingEngineState.changes(from: previous, to: state, labels: .nintendo).map {
+    var parts = RemappingEngineState.changes(from: previous, to: state).map {
       change -> String in
       switch change {
       case .button(let button, let isPressed): (isPressed ? "+" : "-") + button.rawValue

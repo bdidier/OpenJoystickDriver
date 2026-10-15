@@ -2,16 +2,6 @@ import Foundation
 import OpenJoystickDriverKit
 
 extension RuntimeViewModel {
-  /// The button labels of the connected controller `selector` names; standard when unknown.
-  func buttonLabels(for selector: ControllerReference) -> ControllerButtonLabels {
-    guard case .available(let status) = statusState,
-      let device = status.devices.first(where: { device in
-        selector.names(device)
-      })
-    else { return .standard }
-    return ControllerButtonLabels(protocolID: device.protocolBinding.protocolID)
-  }
-
   func listenForInput(for selector: ControllerReference) async {
     inputGeneration += 1
     let generation = inputGeneration
@@ -26,8 +16,7 @@ extension RuntimeViewModel {
           if let baselineState,
             let detectedSource = RuntimePresentation.detectedTransition(
               from: baselineState,
-              to: state,
-              labels: buttonLabels(for: selector)
+              to: state
             )
           {
             inputCaptureState = .detected(selector, state, detectedSource)

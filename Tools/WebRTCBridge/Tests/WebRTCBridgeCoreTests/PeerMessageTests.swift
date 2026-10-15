@@ -14,6 +14,26 @@ final class PeerMessageTests: XCTestCase {
     Data(#"{\#(Self.header),"kind":"RumbleCommand"\#(members)}"#.utf8)
   }
 
+  private func schemaEnum(_ file: String, _ definition: String) throws -> Set<String> {
+    let root = URL(fileURLWithPath: #filePath)
+      .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+      .deletingLastPathComponent().deletingLastPathComponent()
+    let data = try Data(contentsOf: root.appendingPathComponent("Resources/Schemas/\(file)"))
+    let schema = try XCTUnwrap(try JSONSerialization.jsonObject(with: data) as? [String: Any])
+    let definitions = try XCTUnwrap(schema["$defs"] as? [String: Any])
+    let entry = try XCTUnwrap(definitions[definition] as? [String: Any])
+    return Set(try XCTUnwrap(entry["enum"] as? [String]))
+  }
+
+  func testTheFrameListsMatchTheSchemas() throws {
+    let control = try schemaEnum("vocabulary.schema.json", "control")
+    let withoutButtons = try schemaEnum("vocabulary.schema.json", "dpadControl")
+      .union(schemaEnum("vocabulary.schema.json", "stickAxis"))
+    XCTAssertEqual(PeerMessage.buttons, control.subtracting(withoutButtons))
+    XCTAssertEqual(PeerMessage.axes, try schemaEnum("vocabulary.schema.json", "axis"))
+    XCTAssertEqual(PeerMessage.dpad, try schemaEnum("profile.schema.json", "dpadDirection"))
+  }
+
   func testAValidFrameIsRebuiltFromTheCheckedFields() throws {
     let line = try XCTUnwrap(
       PeerMessage.frame(

@@ -121,7 +121,7 @@ struct HIDUsageLayoutEquivalenceTests {
       let controls = driver.capabilities.controls.map { "\($0)" }.sorted().joined(separator: ",")
       let lines =
         ["capabilities [\(controls)]"]
-        + parse.transcript(driver, labels: .standard, steps)
+        + parse.transcript(driver, steps)
       return "## \(name)\n" + lines.joined(separator: "\n") + "\n"
     }.joined(separator: "\n")
   }

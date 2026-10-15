@@ -164,7 +164,6 @@ extension DevicePipeline {
           touchFrames: event.touchFrames,
           isFresh: event.isFresh
         ),
-        labels: buttonLabels,
         from: identifier
       ),
       onDelivered: stampDelivery
