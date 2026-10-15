@@ -254,9 +254,9 @@ Depends: 12, 18.
 Verify: `swift test`, lint pair. Hardware: H10.
 
 - [ ] 19.1 Introduce `InputSource` and `OutputSink` and attach physical, virtual, endpoint paths to them. Verify: 1.1 shows zero diffs.
-- [ ] 19.2 Add bounded queue policy per record or default. Verify: slow-consumer test keeps memory bounded and delivers the newest frame.
+- [x] 19.2 Add bounded queue policy per record or default. Verify: slow-consumer test keeps memory bounded and delivers the newest frame. Done: `tuning.frameQueueCapacity` per record, defaulted in every protocol description (64, kept equal to `fallbackQueueCapacity` by `ProtocolDescriptionTests`); newest frame wins, host replies are never evicted and a frame behind a full queue of replies is superseded without closing the device; `slowConsumerKeepsTheQueueBoundedAndDeliversTheNewestFrame` and `frameBehindAQueueOfHostRepliesLeavesTheDeviceOpen`.
 - [x] 19.3 Add per-stage timestamps to `ojd diagnose`. Verify: test output lists dispatch and delivery times. Done: read, parse, dispatch, delivery-virtual-device and delivery-endpoint stamps; `DeviceManagerFrameTimingsTests` asserts all five in order and `--plain` adds one timing row per stage.
-- [ ] 19.4 Add the WebRTC bridge in `Tools/WebRTCBridge/` as its own Swift package on LiveKitWebRTC, an endpoint client (`FeedRequest`/`RumbleCommand` on the game's Mac, `Subscription` on the player's Mac), with out-of-band offer and answer. Verify: a loopback test connects two bridges through a data channel against a test endpoint and passes a frame one way and a rumble command back; a socket scan shows no listener; the root `Package.resolved` has no WebRTC package.
+- [ ] 19.4 Add the WebRTC bridge in `Tools/WebRTCBridge/` as its own Swift package on LiveKitWebRTC, an endpoint client (`FeedRequest`/`RumbleCommand` on the game's Mac, `Subscription` on the player's Mac), with out-of-band offer and answer. Verify: a loopback test connects two bridges through a data channel against a test endpoint and passes a frame one way and a rumble command back; the host holds an idle feed open with `KeepAlive`, which the endpoint accepts (feed open past 2 s with keep-alives, E1009 without), with no frame repeated; a socket scan shows no listener; the root `Package.resolved` has no WebRTC package.
 
 ## 20. AppKit GUI shell
 
