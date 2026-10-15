@@ -4,8 +4,8 @@
   "productID": 6,
   "protocol": {
     "family": "hid.descriptor",
-    "quirks": [
-      "dragonrise"
-    ]
+    "parameters": {
+      "usageLayout": "DragonRise"
+    }
   }
 }

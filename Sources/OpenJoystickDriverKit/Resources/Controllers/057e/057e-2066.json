@@ -4,9 +4,9 @@
   "productID": 8294,
   "protocol": {
     "family": "nintendo.switch2",
-    "quirks": [
-      "joy-con-right"
-    ]
+    "parameters": {
+      "layout": "JoyConRight"
+    }
   },
   "bluetoothLE": {
     "vibrationCharacteristic": "FA19B0FB-CD1F-46A7-84A1-BBB09E00C149"

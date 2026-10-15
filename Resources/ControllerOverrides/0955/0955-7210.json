@@ -6,7 +6,7 @@
 	"set": {
 		"protocol": {
 			"family": "vendor.nvidia-shield",
-			"quirks": ["shield-2015"]
+			"parameters": { "reportRevision": "Shield2015" }
 		}
 	}
 }

@@ -158,9 +158,9 @@ extension EquivalenceSnapshotCatalogTests {
     if let uuid = profile.bluetoothLEVibrationCharacteristic {
       lines.append("bluetoothLEVibrationCharacteristic \(uuid)")
     }
-    // Quirks that only steer report decoding have no resolved value to print here; the parsed
-    // frames snapshot covers their effect for the records with sample reports.
-    lines.append("quirks=\(profile.quirks.map(label).sorted().joined(separator: ","))")
+    // Parameters that only steer report decoding have no resolved value to print here; the
+    // parsed frames snapshot covers their effect for the records with sample reports.
+    lines.append("parameters=\(profile.parameters.entries.joined(separator: ","))")
     return lines
   }
 }

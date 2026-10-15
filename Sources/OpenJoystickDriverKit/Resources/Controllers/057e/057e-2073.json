@@ -4,9 +4,9 @@
   "productID": 8307,
   "protocol": {
     "family": "nintendo.switch2",
-    "quirks": [
-      "gamecube"
-    ]
+    "parameters": {
+      "layout": "GameCube"
+    }
   },
   "bluetoothLE": {
     "vibrationCharacteristic": "3F8FB670-AB25-45BF-B540-38C72834D064"

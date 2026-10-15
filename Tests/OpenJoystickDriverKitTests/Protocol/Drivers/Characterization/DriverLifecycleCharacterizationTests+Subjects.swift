@@ -63,7 +63,7 @@ extension DriverLifecycleCharacterizationTests {
     host: .usb,
     protocolID: .sonyDualShock4,
     variant: .usb,
-    quirks: [.factoryCalibration],
+    parameters: ProtocolParameters(motionCalibration: .factory),
     input: [dualShock4Report(timestamp: 1), dualShock4Report(timestamp: 2)]
   )
   static let dualShock4Bluetooth = Subject(
@@ -71,7 +71,7 @@ extension DriverLifecycleCharacterizationTests {
     host: .bluetoothClassic,
     protocolID: .sonyDualShock4,
     variant: .bluetoothClassic,
-    quirks: [.factoryCalibration],
+    parameters: ProtocolParameters(motionCalibration: .factory),
     input: [dualShock4Report(timestamp: 1), dualShock4Report(timestamp: 2)]
   )
   static let dualSenseUSB = Subject(
@@ -126,7 +126,7 @@ extension DriverLifecycleCharacterizationTests {
     host: .usb,
     protocolID: .vendorPS3ThirdParty,
     variant: nil,
-    quirks: [.dpadPressure]
+    parameters: ProtocolParameters(hatSource: .dpadPressure)
   )
   static let reportLayout = Subject(
     model: model(0x2563, 0x0575),
@@ -139,7 +139,7 @@ extension DriverLifecycleCharacterizationTests {
     host: .usb,
     protocolID: .vendorNVIDIAShield,
     variant: nil,
-    quirks: [.shield2015]
+    parameters: ProtocolParameters(reportRevision: .shield2015)
   )
   static let gameSirUSB = Subject(
     model: model(0x3537, 0x1003),
@@ -154,7 +154,7 @@ extension DriverLifecycleCharacterizationTests {
     host: .usb,
     protocolID: .vendorGameSir,
     variant: .enhancedHID,
-    quirks: [.lightingSlots],
+    parameters: ProtocolParameters(lightingMemory: .profileSlots),
     input: gameSirEnhancedReadiness,
     readyingInput: gameSirEnhancedReadiness
   )
@@ -163,7 +163,7 @@ extension DriverLifecycleCharacterizationTests {
     host: .usb,
     protocolID: .vendorGameSir,
     variant: .enhancedHID,
-    quirks: [.innerGrips],
+    parameters: ProtocolParameters(innerGrips: true),
     input: gameSirEnhancedReadiness,
     readyingInput: gameSirEnhancedReadiness
   )
@@ -259,7 +259,7 @@ extension DriverLifecycleCharacterizationTests {
       }
       #expect(binding.protocolID == subject.protocolID, "\(subject.model)")
       #expect(binding.variant == subject.variant, "\(subject.model)")
-      #expect(record.quirks == subject.quirks, "\(subject.model)")
+      #expect(record.parameters == subject.parameters, "\(subject.model)")
     }
     let gip = try #require(Self.registry.record(for: Self.gipUSB.model))
     #expect(gip.gipKeepAlivePolicy == .enabled)

@@ -685,7 +685,7 @@
 				"ownership",
 				"productID",
 				"protocol",
-				"quirks",
+				"parameters",
 				"session",
 				"vendorID"
 			],
@@ -895,7 +895,7 @@
 								}
 							}
 						},
-						"quirks": {
+						"parameters": {
 							"type": "array",
 							"items": {
 								"type": "string"

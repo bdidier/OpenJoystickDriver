@@ -32,7 +32,7 @@ struct SupportReportTests {
           connection: "USB",
           discoverySource: .rawUSB,
           serialNumber: secretSerial,
-          quirks: ["swapAB"],
+          parameters: ["layout=JoyConLeft"],
           bindingResult: .hidDescriptorFixture,
           inputEndpoint: 129,
           outputEndpoint: 2,

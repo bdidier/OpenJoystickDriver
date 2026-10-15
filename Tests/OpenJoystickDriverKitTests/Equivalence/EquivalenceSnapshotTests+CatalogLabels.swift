@@ -3,7 +3,7 @@ import Foundation
 @testable import OpenJoystickDriverKit
 
 /// Stable snapshot labels for catalog enums. Each label is a string written here, so renaming a
-/// Swift case, a family, a protocol id, or a quirk changes only the switch below, not the
+/// Swift case, a family, or a protocol id changes only the switch below, not the
 /// snapshot text of every record. A new case fails to compile until it gets a label.
 extension EquivalenceSnapshotCatalogTests {
   static func label(_ id: PhysicalProtocolID) -> String {
@@ -109,32 +109,6 @@ extension EquivalenceSnapshotCatalogTests {
     switch trigger {
     case .left: "left"
     case .right: "right"
-    }
-  }
-
-  static func label(_ quirk: ControllerQuirk) -> String {
-    switch quirk {
-    case .shareOffset: "share-offset"
-    case .joyConLeft: "joy-con-left"
-    case .joyConRight: "joy-con-right"
-    case .bluetoothOnly: "bluetooth-only"
-    case .gameCube: "gamecube"
-    case .innerGrips: "inner-grips"
-    case .lightingSlots: "lighting-slots"
-    case .dpadPressure: "dpad-pressure"
-    case .factoryCalibration: "factory-calibration"
-    case .wirelessAdapter: "wireless-adapter"
-    case .strikePad: "strike-pad"
-    case .shield2015: "shield-2015"
-    case .wr007: "wr007"
-    case .scufEnvision: "scuf-envision"
-    case .zRzBrakeLeft: "zr-z-brake-left"
-    case .dragonRise: "dragon-rise"
-    case .thirdParty: "third-party"
-    case .unprobedSensors: "unprobed-sensors"
-    case .unprobedTouchpad: "unprobed-touchpad"
-    case .forcedVibration: "forced-vibration"
-    case .receiver: "receiver"
     }
   }
 

@@ -47,10 +47,10 @@ PATCH_FIELDS = frozenset(
 
 
 # Linux HID records from `Resources/CatalogRules/linux-hid.json`: (source, vendor macro,
-# product macro, family, stored variant, quirks, capabilities).
+# product macro, family, stored variant, parameters, capabilities).
 _HID_RULES = load_rules("linux-hid.json", "LinuxHidRules", frozenset({"records"}))
 HID_RECORDS: tuple[
-    tuple[str, str, str, str, str | None, list[str], dict[str, Any] | None], ...
+    tuple[str, str, str, str, str | None, dict[str, Any], dict[str, Any] | None], ...
 ] = tuple(
     (
         entry["source"],
@@ -58,7 +58,7 @@ HID_RECORDS: tuple[
         entry["productMacro"],
         entry["family"],
         entry.get("variant"),
-        list(entry.get("quirks", [])),
+        dict(entry.get("parameters", {})),
         entry.get("capabilities"),
     )
     for entry in _HID_RULES["records"]
@@ -123,7 +123,7 @@ def build_hid_records(sources: dict[str, str]) -> list[dict[str, Any]]:
         product_macro,
         family,
         variant,
-        quirks,
+        parameters,
         capabilities,
     ) in HID_RECORDS:
         source = sources[source_key]
@@ -146,8 +146,8 @@ def build_hid_records(sources: dict[str, str]) -> list[dict[str, Any]]:
         protocol: dict[str, Any] = {"family": family}
         if variant is not None:
             protocol["variant"] = variant
-        if quirks:
-            protocol["quirks"] = quirks
+        if parameters:
+            protocol["parameters"] = parameters
         record: dict[str, Any] = {
             "$schema": RECORD_SCHEMA_ID,
             "vendorID": vendor_id,
@@ -177,7 +177,7 @@ _SDL_RULES = load_rules(
             "xboxUsbTypes",
             "identityFamilies",
             "steamVariants",
-            "controllerTypeQuirks",
+            "controllerTypeParameters",
             "switch2Identities",
             "bluetoothOnlyIdentities",
             "exclusions",
@@ -229,10 +229,10 @@ STEAM_VARIANTS: dict[tuple[int, int], str] = {
     for entry in _SDL_RULES["steamVariants"]
 }
 
-# SDL controller type -> quirks its rows carry.
-SDL_QUIRKS: dict[str, list[str]] = {
-    controller_type: list(quirks)
-    for controller_type, quirks in _SDL_RULES["controllerTypeQuirks"].items()
+# SDL controller type -> protocol parameters its rows carry.
+SDL_PARAMETERS: dict[str, dict[str, Any]] = {
+    controller_type: dict(parameters)
+    for controller_type, parameters in _SDL_RULES["controllerTypeParameters"].items()
 }
 
 # Nintendo Switch 2 identities; their rows select the Switch 2 protocol whatever their SDL type.
@@ -409,18 +409,15 @@ def build_sdl_records(
         protocol: dict[str, Any] = {"family": family}
         if variant is not None:
             protocol["variant"] = variant
-        quirks = (
-            (["bluetooth-only"] if key in BLUETOOTH_ONLY_IDENTITIES else [])
-            + SDL_QUIRKS.get(controller_type, [])
-            # SDL runs a non-Sony PS5Controller through its third-party DualSense path.
-            + (
-                ["third-party"]
-                if family == "sony.dualsense" and key[0] != SONY_VENDOR_ID
-                else []
-            )
-        )
-        if quirks:
-            protocol["quirks"] = quirks
+        parameters: dict[str, Any] = {}
+        if key in BLUETOOTH_ONLY_IDENTITIES:
+            parameters["usbProtocol"] = "ChargingOnly"
+        parameters.update(SDL_PARAMETERS.get(controller_type, {}))
+        # SDL runs a non-Sony PS5Controller through its third-party DualSense path.
+        if family == "sony.dualsense" and key[0] != SONY_VENDOR_ID:
+            parameters["maker"] = "ThirdParty"
+        if parameters:
+            protocol["parameters"] = parameters
         vendor_id, product_id = key
         records[key] = {
             "$schema": RECORD_SCHEMA_ID,

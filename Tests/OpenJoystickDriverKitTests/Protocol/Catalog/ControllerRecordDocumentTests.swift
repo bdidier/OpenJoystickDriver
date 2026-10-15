@@ -8,7 +8,7 @@ struct ControllerRecordDocumentTests {
   func decodesCurrentVocabulary() throws {
     let document = try decode(
       protocol: [
-        "family": "xbox.gip", "quirks": ["share-offset"],
+        "family": "xbox.gip", "parameters": ["shareButton": ["fromEnd": 26]],
         "initialization": ["xbox.gip/hori-ack", "xbox.gip/power-on"],
       ],
       usb: ["configuration": "set1-before-claim"],
@@ -17,7 +17,7 @@ struct ControllerRecordDocumentTests {
 
     #expect(document.protocolInfo.protocolID == .xboxGIP)
     #expect(document.protocolInfo.protocolVariant == nil)
-    #expect(document.protocolInfo.quirks == [.shareOffset])
+    #expect(document.protocolInfo.parameters == ProtocolParameters(shareButton: .init(fromEnd: 26)))
     #expect(document.protocolInfo.initialization == [.horiAck, .powerOn])
     #expect(
       document.capabilities
@@ -31,44 +31,66 @@ struct ControllerRecordDocumentTests {
   }
 
   @Test
-  func decodesGameSirModelQuirks() throws {
-    for quirk in [ControllerQuirk.innerGrips, .lightingSlots] {
+  func decodesGameSirModelParameters() throws {
+    let cases: [([String: any Sendable], ProtocolParameters)] = [
+      (["innerGrips": true], ProtocolParameters(innerGrips: true)),
+      (["lightingMemory": "ProfileSlots"], ProtocolParameters(lightingMemory: .profileSlots)),
+    ]
+    for (parameters, expected) in cases {
       let document = try decode(protocol: [
-        "family": "vendor.gamesir", "variant": "enhanced-hid", "quirks": [quirk.rawValue],
+        "family": "vendor.gamesir", "variant": "enhanced-hid", "parameters": parameters,
       ])
       #expect(document.protocolInfo.protocolVariant == .enhancedHID)
-      #expect(document.protocolInfo.quirks == [quirk])
+      #expect(document.protocolInfo.parameters == expected)
     }
   }
 
   @Test
-  func decodesHIDDescriptorLayoutQuirks() throws {
-    for quirk in [ControllerQuirk.wr007, .scufEnvision, .zRzBrakeLeft, .dragonRise] {
-      let document = try decode(protocol: ["family": "hid.descriptor", "quirks": [quirk.rawValue]])
-      #expect(document.protocolInfo.quirks == [quirk])
+  func decodesHIDDescriptorUsageLayouts() throws {
+    for layout in ProtocolParameters.UsageLayout.allCases {
+      let document = try decode(
+        protocol: ["family": "hid.descriptor", "parameters": ["usageLayout": layout.rawValue]]
+      )
+      #expect(document.protocolInfo.parameters == ProtocolParameters(usageLayout: layout))
     }
   }
 
   @Test
-  func decodesThirdPartyDualSenseModelQuirks() throws {
-    let quirks: [ControllerQuirk] = [
-      .thirdParty, .unprobedSensors, .unprobedTouchpad, .forcedVibration, .receiver,
-    ]
+  func decodesThirdPartyDualSenseModelParameters() throws {
     let document = try decode(
-      protocol: ["family": "sony.dualsense", "quirks": quirks.map(\.rawValue)],
+      protocol: [
+        "family": "sony.dualsense",
+        "parameters": [
+          "maker": "ThirdParty", "unprobedSensors": true, "unprobedTouchpad": true,
+          "forcedVibration": true, "role": "Receiver",
+        ] as [String: any Sendable],
+      ],
       vendorID: 0x1532
     )
-    #expect(document.protocolInfo.quirks == quirks)
+    #expect(
+      document.protocolInfo.parameters
+        == ProtocolParameters(
+          role: .receiver,
+          maker: .thirdParty,
+          unprobedSensors: true,
+          unprobedTouchpad: true,
+          forcedVibration: true
+        )
+    )
   }
 
   @Test
-  func rejectsDualSenseModelQuirksWithoutTheThirdPartyQuirk() {
+  func rejectsDualSenseModelParametersWithoutTheThirdPartyMaker() {
     for vendorID in [0x054C, 0x1532] {
-      #expect(throws: DecodingError.self) {
-        try decode(
-          protocol: ["family": "sony.dualsense", "quirks": ["receiver"]],
-          vendorID: vendorID
-        )
+      for parameters in [["role": "Receiver"], ["unprobedTouchpad": true]]
+        as [[String: any Sendable]]
+      {
+        #expect(throws: DecodingError.self) {
+          try decode(
+            protocol: ["family": "sony.dualsense", "parameters": parameters],
+            vendorID: vendorID
+          )
+        }
       }
     }
   }
@@ -79,8 +101,8 @@ struct ControllerRecordDocumentTests {
       var protocolInfo: [String: any Sendable] = [
         "family": family.rawValue, "variant": variant.rawValue,
       ]
-      // Enhanced HID rows must name their model quirk.
-      if variant == .enhancedHID { protocolInfo["quirks"] = ["inner-grips"] }
+      // Enhanced HID rows must name their model parameter.
+      if variant == .enhancedHID { protocolInfo["parameters"] = ["innerGrips": true] }
       let document = try decode(protocol: protocolInfo)
       #expect(document.protocolInfo.protocolID == family)
       #expect(document.protocolInfo.protocolVariant == variant)
@@ -108,43 +130,74 @@ struct ControllerRecordDocumentTests {
       ["family": "xbox.xusb", "variant": "dongle"], ["family": "xbox.xusb:wired"],
       ["family": "vendor.gamesir", "variant": "gameSirG7ProUSB"],
       ["family": "vendor.gamesir", "variant": "enhanced-hid-8k"],
-      ["family": "xbox.gip", "quirks": ["inner-grips"]],
-      ["family": "vendor.gamesir", "variant": "enhanced-hid", "quirks": ["innerGrips"]],
-      ["family": "vendor.gamesir", "variant": "usb", "quirks": ["inner-grips"]],
-      ["family": "vendor.gamesir", "variant": "usb", "quirks": ["lighting-slots"]],
+      ["family": "xbox.gip", "parameters": ["innerGrips": true]],
+      ["family": "xbox.gip", "quirks": ["share-offset"]],
+      ["family": "vendor.gamesir", "variant": "enhanced-hid", "parameters": ["inner-grips": true]],
+      ["family": "vendor.gamesir", "variant": "enhanced-hid", "parameters": ["innerGrips": "yes"]],
+      ["family": "vendor.gamesir", "variant": "enhanced-hid", "parameters": ["innerGrips": false]],
+      ["family": "vendor.gamesir", "variant": "usb", "parameters": ["innerGrips": true]],
+      [
+        "family": "vendor.gamesir", "variant": "usb",
+        "parameters": ["lightingMemory": "ProfileSlots"],
+      ],
       ["family": "vendor.gamesir", "variant": "enhanced-hid"],
-      ["family": "vendor.gamesir", "variant": "enhanced-hid", "quirks": [String]()],
+      ["family": "vendor.gamesir", "variant": "enhanced-hid", "parameters": [String: Bool]()],
       [
         "family": "vendor.gamesir", "variant": "enhanced-hid",
-        "quirks": ["inner-grips", "lighting-slots"],
-      ], ["family": "valve.steam-controller", "variant": "wired", "quirks": ["wirelessReceiver"]],
-      ["family": "xbox.adaptive-joystick"], ["family": "xbox.gip", "quirks": ["shareOffset"]],
-      ["family": "xbox.gip", "quirks": ["inputOnly"]],
-      ["family": "xbox.gip", "quirks": ["triggersToButtons"]],
-      ["family": "xbox.xid", "variant": "gamepad", "quirks": ["sticksToNull"]],
-      ["family": "xbox.xusb", "variant": "wired", "quirks": ["dpadToButtons"]],
-      ["family": "xbox.xusb", "variant": "wired", "quirks": ["share-offset"]],
-      ["family": "sony.dualsense", "quirks": ["edgeButtons"]],
-      ["family": "sony.dualsense", "quirks": ["touchpad"]],
-      ["family": "valve.steam-controller", "variant": "wired", "quirks": ["lizardMode"]],
-      ["family": "nintendo.switch1", "quirks": ["joyConLeft"]],
-      ["family": "nintendo.switch1", "quirks": ["joy-con-left", "joy-con-right"]],
-      ["family": "nintendo.switch-input-only", "quirks": ["joy-con-left"]],
-      ["family": "nintendo.switch1", "quirks": ["bluetooth-only", "joy-con-left"]],
-      ["family": "nintendo.switch2", "quirks": ["bluetooth-only"]],
-      ["family": "nintendo.switch1", "quirks": ["gamecube"]],
-      ["family": "nintendo.switch2", "quirks": ["gamecube", "joy-con-left"]],
-      ["family": "vendor.ps3-third-party", "quirks": ["input-only"]],
-      ["family": "valve.steam-controller", "variant": "wired", "quirks": ["triton"]],
+        "parameters": ["innerGrips": true, "lightingMemory": "ProfileSlots"]
+          as [String: any Sendable],
+      ],
+      [
+        "family": "vendor.gamesir", "variant": "enhanced-hid",
+        "parameters": ["lightingMemory": "profile-slots"],
+      ],
+      [
+        "family": "valve.steam-controller", "variant": "wired",
+        "parameters": ["wirelessReceiver": true],
+      ],
+      ["family": "xbox.adaptive-joystick"],
+      ["family": "xbox.gip", "parameters": ["shareOffset": true]],
+      ["family": "xbox.gip", "parameters": ["shareButton": ["fromEnd": 0]]],
+      ["family": "xbox.gip", "parameters": ["shareButton": ["fromEnd": 256]]],
+      ["family": "xbox.gip", "parameters": ["shareButton": ["fromEnd": "26"]]],
+      ["family": "xbox.gip", "parameters": ["shareButton": ["fromEnd": 26, "from": 1]]],
+      ["family": "xbox.gip", "parameters": ["shareButton": 26]],
+      ["family": "xbox.gip", "parameters": ["inputOnly": true]],
+      ["family": "xbox.gip", "parameters": ["triggersToButtons": true]],
+      ["family": "xbox.xid", "variant": "gamepad", "parameters": ["sticksToNull": true]],
+      ["family": "xbox.xusb", "variant": "wired", "parameters": ["dpadToButtons": true]],
+      ["family": "xbox.xusb", "variant": "wired", "parameters": ["shareButton": ["fromEnd": 26]]],
+      ["family": "sony.dualsense", "parameters": ["edgeButtons": true]],
+      ["family": "sony.dualsense", "parameters": ["touchpad": true]],
+      ["family": "valve.steam-controller", "variant": "wired", "parameters": ["lizardMode": true]],
+      ["family": "nintendo.switch1", "parameters": ["joyConLeft": true]],
+      ["family": "nintendo.switch1", "parameters": ["layout": "joy-con-left"]],
+      ["family": "nintendo.switch1", "parameters": ["layout": ["JoyConLeft"]]],
+      ["family": "nintendo.switch-input-only", "parameters": ["layout": "JoyConLeft"]],
+      [
+        "family": "nintendo.switch1",
+        "parameters": ["usbProtocol": "ChargingOnly", "layout": "JoyConLeft"],
+      ],
+      ["family": "nintendo.switch1", "parameters": ["usbProtocol": "Wired"]],
+      ["family": "nintendo.switch2", "parameters": ["usbProtocol": "ChargingOnly"]],
+      ["family": "nintendo.switch1", "parameters": ["layout": "GameCube"]],
+      ["family": "vendor.ps3-third-party", "parameters": ["inputOnly": true]],
+      ["family": "vendor.ps3-third-party", "parameters": ["hatSource": "dpad-pressure"]],
+      ["family": "valve.steam-controller", "variant": "wired", "parameters": ["triton": true]],
       ["family": "valve.steam-triton"], ["family": "valve.steam-deck", "variant": "wired"],
-      ["family": "sony.dualshock4", "quirks": ["gyro"]],
-      ["family": "sony.dualshock4", "quirks": ["wireless-adapter", "strikepad"]],
-      ["family": "sony.dualshock4", "quirks": ["shield-2015"]],
-      ["family": "vendor.nvidia-shield", "quirks": ["factory-calibration"]],
-      ["family": "hid.descriptor", "quirks": ["wr007", "dragonrise"]],
-      ["family": "hid.descriptor", "quirks": ["wireless-adapter"]],
-      ["family": "sony.dualshock4", "quirks": ["wr007"]],
-      ["family": "sony.dualsense", "quirks": ["wireless-adapter"]],
+      ["family": "sony.dualshock4", "parameters": ["gyro": true]],
+      [
+        "family": "sony.dualshock4",
+        "parameters": ["role": "WirelessAdapter", "motionScale": "StrikePad"],
+      ],
+      ["family": "sony.dualshock4", "parameters": ["role": "Receiver"]],
+      ["family": "sony.dualshock4", "parameters": ["reportRevision": "Shield2015"]],
+      ["family": "vendor.nvidia-shield", "parameters": ["motionCalibration": "Factory"]],
+      ["family": "hid.descriptor", "parameters": ["usageLayout": "Wr007", "layout": "Pro"]],
+      ["family": "hid.descriptor", "parameters": ["usageLayout": "WR007"]],
+      ["family": "hid.descriptor", "parameters": ["role": "WirelessAdapter"]],
+      ["family": "sony.dualshock4", "parameters": ["usageLayout": "Wr007"]],
+      ["family": "sony.dualsense", "parameters": ["role": "WirelessAdapter"]],
       ["family": "xbox.gip", "startupPackets": ["xbox.gip/power-on"]],
       ["family": "xbox.gip", "initialization": ["powerOn"]],
       ["family": "xbox.gip", "initialization": [String]()],
@@ -263,7 +316,7 @@ struct ControllerRecordDocumentTests {
     )
 
     let branches = try #require(protocolSchema["allOf"] as? [[String: Any]])
-    var declaredQuirks: [String] = []
+    var declaredParameters: Set<String> = []
     var familiesWithVariants: [PhysicalProtocolID] = []
     for branch in branches {
       for name in Self.familyNames(branch) {
@@ -275,15 +328,23 @@ struct ControllerRecordDocumentTests {
           #expect(variants == family.variants.map(\.rawValue), "\(name)")
           familiesWithVariants.append(family)
         }
-        if let quirks = Self.quirkValues(thenProperties["quirks"]) {
-          let familyQuirks = ControllerQuirk.allCases.filter { $0.protocolIDs.contains(family) }
-          #expect(quirks == familyQuirks.map(\.rawValue), "\(name)")
-          declaredQuirks += quirks
+        if let parameters = thenProperties["parameters"] as? [String: Any] {
+          let schemas = parameters["properties"] as? [String: Any] ?? [:]
+          #expect(Set(schemas.keys) == ProtocolParameters.declared(by: family), "\(name)")
+          #expect(parameters["additionalProperties"] as? Bool == false, "\(name)")
+          declaredParameters.formUnion(schemas.keys)
+          for (parameter, values) in Self.parameterEnums {
+            guard let schemaValues = Self.enumValues(schemas[parameter]) else { continue }
+            #expect(Set(schemaValues).isSubset(of: values), "\(name) \(parameter)")
+            if parameter != "layout", parameter != "role" {
+              #expect(schemaValues == values, "\(name) \(parameter)")
+            }
+          }
         }
       }
     }
     #expect(familiesWithVariants == PhysicalProtocolID.allCases.filter(\.storesVariant))
-    #expect(Set(declaredQuirks) == Set(ControllerQuirk.allCases.map(\.rawValue)))
+    #expect(declaredParameters == ProtocolParameters.names)
   }
 
   /// An input layout belongs to the `hid.report-layout` family, which cannot run without one.
@@ -415,22 +476,19 @@ struct ControllerRecordDocumentTests {
     (node as? [String: Any])?["enum"] as? [String]
   }
 
-  /// The quirk names a family's `quirks` schema admits, in declaration order: the item enum,
-  /// or the union over `anyOf` branches of their item enums and `prefixItems` values.
-  private static func quirkValues(_ node: Any?) -> [String]? {
-    guard let schema = node as? [String: Any] else { return nil }
-    let branches = (schema["anyOf"] as? [[String: Any]]) ?? [schema]
-    var names: [String] = []
-    for branch in branches {
-      let slots = [branch["items"] as Any] + ((branch["prefixItems"] as? [Any]) ?? [])
-      for slot in slots {
-        let slot = slot as? [String: Any]
-        let values = enumValues(slot) ?? (slot?["const"] as? String).map { [$0] } ?? []
-        names += values.filter { !names.contains($0) }
-      }
-    }
-    return names.isEmpty ? nil : names
-  }
+  /// The Swift value spellings of each enumerated parameter, in declaration order.
+  private static let parameterEnums: [String: [String]] = [
+    "layout": ProtocolParameters.Layout.allCases.map(\.rawValue),
+    "usbProtocol": ProtocolParameters.USBProtocol.allCases.map(\.rawValue),
+    "lightingMemory": ProtocolParameters.LightingMemory.allCases.map(\.rawValue),
+    "hatSource": ProtocolParameters.HatSource.allCases.map(\.rawValue),
+    "motionCalibration": ProtocolParameters.MotionCalibration.allCases.map(\.rawValue),
+    "role": ProtocolParameters.Role.allCases.map(\.rawValue),
+    "motionScale": ProtocolParameters.MotionScale.allCases.map(\.rawValue),
+    "reportRevision": ProtocolParameters.ReportRevision.allCases.map(\.rawValue),
+    "usageLayout": ProtocolParameters.UsageLayout.allCases.map(\.rawValue),
+    "maker": ProtocolParameters.Maker.allCases.map(\.rawValue),
+  ]
 
   /// The families a branch's condition selects with `const` or `enum`.
   private static func familyNames(_ branch: [String: Any]) -> [String] {

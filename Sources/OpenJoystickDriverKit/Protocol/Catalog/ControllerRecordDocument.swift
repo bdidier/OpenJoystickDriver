@@ -79,18 +79,6 @@ struct ControllerRecordDocument: Decodable {
     try validateOwnershipAndOutput(codingPath: decoder.codingPath)
     try validateTuning(codingPath: decoder.codingPath)
     try validateBluetoothLE(codingPath: decoder.codingPath)
-    // Every DualSense quirk is a third-party model quirk, which means nothing without the mode.
-    guard
-      !(protocolInfo.protocolID == .sonyDualSense && !protocolInfo.quirks.isEmpty
-        && !protocolInfo.quirks.contains(.thirdParty))
-    else {
-      throw DecodingError.dataCorrupted(
-        .init(
-          codingPath: decoder.codingPath + [DocumentKey("protocol")],
-          debugDescription: "DualSense model quirks require the third-party quirk"
-        )
-      )
-    }
     // Only these deltas have a driver that acts on them: GIP drops rumble, DualSense Edge adds
     // exactly its paddles and function buttons.
     let presentAllowed =
@@ -232,7 +220,7 @@ struct ControllerRecordDocument: Decodable {
     let protocolID: PhysicalProtocolID
     /// Nil unless the family stores its variant (``PhysicalProtocolID/storesVariant``).
     let protocolVariant: PhysicalProtocolVariantID?
-    let quirks: [ControllerQuirk]
+    let parameters: ProtocolParameters
     /// Named GIP initialization actions; nil selects the driver's default sequence.
     let initialization: [GIPStartupPacket]?
     let keepAliveEnabled: Bool?
@@ -242,7 +230,7 @@ struct ControllerRecordDocument: Decodable {
     init(from decoder: any Decoder) throws {
       let container = try decoder.container(keyedBy: DocumentKey.self)
       try container.rejectUnknown(allowed: [
-        "family", "variant", "quirks", "initialization", "keepAlive", "assembly",
+        "family", "variant", "parameters", "initialization", "keepAlive", "assembly",
       ])
       let family = try container.decode(String.self, for: "family")
       let variantName = try container.decodeOptional(String.self, for: "variant")
@@ -265,7 +253,7 @@ struct ControllerRecordDocument: Decodable {
       }
       self.protocolID = protocolID
       protocolVariant = variant
-      quirks = try container.decodeUniqueList(ControllerQuirk.self, for: "quirks") ?? []
+      parameters = try container.decodeOptional(ProtocolParameters.self, for: "parameters") ?? .none
       initialization = try container.decodeUniqueList(GIPStartupPacket.self, for: "initialization")
       keepAliveEnabled = try container.decodeOptional(Bool.self, for: "keepAlive")
       if let name = try container.decodeOptional(String.self, for: "assembly") {
@@ -283,23 +271,8 @@ struct ControllerRecordDocument: Decodable {
 
     private func validate(codingPath: [any CodingKey]) throws {
       let violation: String? =
-        if !quirks.allSatisfy({ $0.protocolIDs.contains(protocolID) }) {
-          "quirks must be declared by the selected driver"
-        } else if quirks.contains(.joyConLeft) && quirks.contains(.joyConRight) {
-          "Joy-Con layout must select one side"
-        } else if quirks.contains(.bluetoothOnly) && quirks.count != 1 {
-          "a Bluetooth-only Switch pad selects no other layout"
-        } else if protocolID == .nintendoSwitch2 && quirks.count > 1 {
-          "a Switch 2 row selects one layout"
-        } else if quirks.contains(.wirelessAdapter) && quirks.contains(.strikePad) {
-          "a DualShock 4 row selects at most one model"
-        } else if protocolID == .hidDescriptor && quirks.count > 1 {
-          "a HID descriptor row selects at most one layout"
-        } else if protocolID == .vendorGameSir && protocolVariant == .usb && !quirks.isEmpty {
-          "GameSir vendor USB declares no quirks"
-        } else if protocolVariant == .enhancedHID && quirks.count != 1 {
-          // An unknown model must not receive a guessed lighting-memory layout.
-          "GameSir enhanced HID must select exactly one model quirk"
+        if let problem = parameters.violation(family: protocolID, variant: protocolVariant) {
+          problem
         } else if initialization != nil && protocolID != .xboxGIP {
           "initialization actions must be declared by the selected driver"
         } else if keepAliveEnabled != nil && protocolID != .xboxGIP {

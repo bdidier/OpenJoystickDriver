@@ -4,7 +4,7 @@ import Foundation
 ///
 /// It carries observed interface class facts and the classifier's typed outcome only. It never
 /// carries a serial number, input state, packet payload, or source provenance. The bound protocol
-/// and variant and the applied quirks are reported beside it by the controller description.
+/// and variant and the applied parameters are reported beside it by the controller description.
 public struct ProtocolBindingResult: Codable, Equatable, Sendable {
   public enum Outcome: String, Codable, Sendable {
     case bound

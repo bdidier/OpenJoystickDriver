@@ -172,7 +172,7 @@ struct ControllerRecordProbePlanTests {
       try ControllerRecordProbePlan(
         data: try mutatedRecord { record in
           var protocolConfig = record["protocol"] as? [String: Any] ?? [:]
-          protocolConfig["quirks"] = ["share-offset"]
+          protocolConfig["parameters"] = ["shareButton": ["fromEnd": 26]]
           record["protocol"] = protocolConfig
           record["capabilities"] = ["rumble": "absent"]
         }
@@ -218,7 +218,7 @@ struct ControllerRecordProbePlanTests {
       { (record: inout [String: Any]) in record["usb"] = NSNull() },
       { (record: inout [String: Any]) in
         var protocolConfig = record["protocol"] as? [String: Any] ?? [:]
-        protocolConfig["quirks"] = []
+        protocolConfig["parameters"] = [String: Any]()
         record["protocol"] = protocolConfig
       },
       { (record: inout [String: Any]) in
@@ -228,7 +228,7 @@ struct ControllerRecordProbePlanTests {
       },
       { (record: inout [String: Any]) in
         var protocolConfig = record["protocol"] as? [String: Any] ?? [:]
-        protocolConfig["quirks"] = ["gyro"]
+        protocolConfig["parameters"] = ["gyro": true]
         record["protocol"] = protocolConfig
       },
       { (record: inout [String: Any]) in

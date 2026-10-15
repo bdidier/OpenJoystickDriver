@@ -30,8 +30,8 @@ struct DriverLifecycleCharacterizationTests {
     let host: PhysicalTransport
     let protocolID: PhysicalProtocolID
     let variant: PhysicalProtocolVariantID?
-    /// Catalog quirks the subject's record carries.
-    var quirks: [ControllerQuirk] = []
+    /// Protocol parameters the subject's record carries.
+    var parameters = ProtocolParameters.none
     /// Input that exercises deferred output, presence, report observation, and battery state.
     var input: [Data] = []
     /// Input after which output encoders render again; set where outputs are gated on it.

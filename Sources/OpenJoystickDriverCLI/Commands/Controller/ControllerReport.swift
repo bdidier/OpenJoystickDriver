@@ -122,7 +122,7 @@ struct ControllerShowReport: Encodable, Equatable {
     let startupCommandStatus: String?
     let inputHealth: InputHealth
     let ownership: Ownership
-    let quirks: [String]
+    let parameters: [String]
     let record: Record?
     /// Absent when the controller's record sets no tuning.
     let tuning: Tuning?
@@ -175,7 +175,7 @@ struct ControllerShowReport: Encodable, Equatable {
         choice: OwnershipChoice(record?.ownership ?? .macOS),
         choiceSource: record?.fieldLayers["ownership"]?.rawValue ?? "default"
       ),
-      quirks: device.quirks,
+      parameters: device.parameters,
       record: record.map(Record.init),
       tuning: Tuning(device.tuning),
       capabilities: Capabilities(

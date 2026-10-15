@@ -4,9 +4,11 @@
   "productID": 2834,
   "protocol": {
     "family": "xbox.gip",
-    "quirks": [
-      "share-offset"
-    ]
+    "parameters": {
+      "shareButton": {
+        "fromEnd": 26
+      }
+    }
   },
   "route": "ExtensionOwned"
 }

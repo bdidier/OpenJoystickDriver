@@ -46,7 +46,7 @@ func runProfileMetadataChecks() {
     "DS3 profile should bind Sixaxis"
   )
   require(
-    ds3Profile.quirks.isEmpty,
+    ds3Profile.parameters.isEmpty,
     "DS3 profile should not advertise unimplemented sensors or battery status"
   )
 
@@ -59,7 +59,7 @@ func runProfileMetadataChecks() {
       profile.physicalProtocolID == .sonyDualSense && profile.physicalProtocolVariant == nil,
       "DualSense profile should bind"
     )
-    require(profile.quirks.isEmpty, "DualSense profile should declare no quirks")
+    require(profile.parameters.isEmpty, "DualSense profile should declare no parameters")
     require(
       profile.capabilityDelta.presentControls
         == (id.productID == 3570
@@ -74,7 +74,7 @@ func runProfileMetadataChecks() {
       && steamWiredProfile.physicalProtocolVariant == .wired,
     "Steam wired should bind the wired variant"
   )
-  require(steamWiredProfile.quirks.isEmpty, "Steam wired profile should declare no quirks")
+  require(steamWiredProfile.parameters.isEmpty, "Steam wired profile should declare no parameters")
 
   let steamWirelessProfile = catalogRecord(ControllerModelID(vendorID: 10462, productID: 4418))
   require(
@@ -82,7 +82,10 @@ func runProfileMetadataChecks() {
       && steamWirelessProfile.physicalProtocolVariant == .dongle,
     "Steam wireless receiver should bind the dongle variant"
   )
-  require(steamWirelessProfile.quirks.isEmpty, "Steam dongle profile should declare no quirks")
+  require(
+    steamWirelessProfile.parameters.isEmpty,
+    "Steam dongle profile should declare no parameters"
+  )
 
   let switchProfile = catalogRecord(ControllerModelID(vendorID: 1406, productID: 8201))
   require(
@@ -90,7 +93,7 @@ func runProfileMetadataChecks() {
       && switchProfile.physicalProtocolVariant == nil,
     "Switch Pro profile should bind Switch 1"
   )
-  require(switchProfile.quirks.isEmpty, "Switch Pro profile should select the Pro layout")
+  require(switchProfile.parameters.isEmpty, "Switch Pro profile should select the Pro layout")
 }
 
 func runSteamInputAndFeatureChecks() throws {

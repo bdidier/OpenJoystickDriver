@@ -11,7 +11,7 @@ struct SixaxisDriverTests {
     let profile = try #require(ProtocolDriverRegistry().record(for: model))
 
     #expect(profile.physicalProtocolID == .sonySixaxis && profile.physicalProtocolVariant == nil)
-    #expect(profile.quirks.isEmpty)
+    #expect(profile.parameters.isEmpty)
     #expect(profile.transportProfile.inputEndpoint == 0x82)
     #expect(profile.transportProfile.outputEndpoint == 0x02)
   }

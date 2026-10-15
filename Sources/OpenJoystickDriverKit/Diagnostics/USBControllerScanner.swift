@@ -8,7 +8,7 @@ public struct USBControllerDescription: Equatable, Sendable {
   public let protocolBinding: ProtocolBindingID?
   public let inputEndpoint: String?
   public let outputEndpoint: String?
-  public let quirks: [String]
+  public let parameters: [String]
   public let physicalDevice: PhysicalDevice?
   /// Nil when the observation lacks the facts needed to classify without guessing.
   public let classification: ProtocolClassification?
@@ -21,7 +21,7 @@ public struct USBControllerDescription: Equatable, Sendable {
     protocolBinding: ProtocolBindingID?,
     inputEndpoint: String?,
     outputEndpoint: String?,
-    quirks: [String],
+    parameters: [String],
     physicalDevice: PhysicalDevice? = nil,
     classification: ProtocolClassification? = nil
   ) {
@@ -32,7 +32,7 @@ public struct USBControllerDescription: Equatable, Sendable {
     self.protocolBinding = protocolBinding
     self.inputEndpoint = inputEndpoint
     self.outputEndpoint = outputEndpoint
-    self.quirks = quirks
+    self.parameters = parameters
     self.physicalDevice = physicalDevice
     self.classification = classification
   }
@@ -106,7 +106,7 @@ public enum USBControllerScanner {
       protocolBinding: record?.rawUSBBinding ?? signatureBinding?.id,
       inputEndpoint: transport.map { String($0.inputEndpoint, radix: 16) },
       outputEndpoint: transport.map { String($0.outputEndpoint, radix: 16) },
-      quirks: profile?.quirks.map(\.rawValue) ?? [],
+      parameters: profile?.parameters.entries ?? [],
       physicalDevice: physicalDevice,
       classification: classification
     )

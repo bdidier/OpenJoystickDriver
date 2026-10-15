@@ -29,8 +29,8 @@ private let ps3ThirdPartyProbeMarker: UInt8 = 0x26
 /// report, starting from zero, so a hat that stays `0` never reads as held north; the driver
 /// matches that by using the D-pad pressure bytes until the hat nibble is nonzero.
 ///
-/// The record quirk `dpad-pressure` (Saitek Cyborg V.3) ignores the hat nibble and reads any
-/// nonzero D-pad pressure as held, as SDL does for that pad.
+/// The record parameter `hatSource: DpadPressure` (Saitek Cyborg V.3) ignores the hat nibble and
+/// reads any nonzero D-pad pressure as held, as SDL does for that pad.
 ///
 /// Only a pad whose controller record names a rumble template drives rumble. SDL's third-party
 /// driver sends no output, because some of these pads then rumble without stopping.
@@ -78,7 +78,7 @@ public final class PS3ThirdPartyDriver: PhysicalProtocolDriver {
   private var state = ControllerState.neutral
 
   /// Creates a driver for a controller of `model`. `rumbleTemplate` and
-  /// `hatFromPressureOnly` (quirk `dpad-pressure`) come from its record.
+  /// `hatFromPressureOnly` (`hatSource: DpadPressure`) come from its record.
   public init(
     model: ControllerModelID,
     rumbleTemplate: RumbleOutputTemplate? = nil,

@@ -6,7 +6,7 @@
 	"set": {
 		"protocol": {
 			"family": "sony.dualshock4",
-			"quirks": ["factory-calibration"]
+			"parameters": { "motionCalibration": "Factory" }
 		}
 	}
 }

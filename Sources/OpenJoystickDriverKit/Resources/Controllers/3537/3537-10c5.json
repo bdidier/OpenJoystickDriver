@@ -5,8 +5,8 @@
   "protocol": {
     "family": "vendor.gamesir",
     "variant": "enhanced-hid",
-    "quirks": [
-      "inner-grips"
-    ]
+    "parameters": {
+      "innerGrips": true
+    }
   }
 }

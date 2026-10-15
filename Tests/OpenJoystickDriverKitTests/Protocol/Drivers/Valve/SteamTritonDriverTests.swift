@@ -46,7 +46,7 @@ struct SteamTritonDriverTests {
         registry.record(for: ControllerModelID(vendorID: 0x28DE, productID: productID))
       )
       #expect(record.physicalProtocolID == .valveSteamTriton)
-      #expect(record.quirks.isEmpty)
+      #expect(record.parameters.isEmpty)
       #expect(record.physicalProtocolVariant == variant)
     }
   }

@@ -197,9 +197,9 @@
 			"note": "Steam Nereid Dongle"
 		}
 	],
-	"controllerTypeQuirks": {
-		"SwitchJoyConLeft": ["joy-con-left"],
-		"SwitchJoyConRight": ["joy-con-right"]
+	"controllerTypeParameters": {
+		"SwitchJoyConLeft": { "layout": "JoyConLeft" },
+		"SwitchJoyConRight": { "layout": "JoyConRight" }
 	},
 	"switch2Identities": ["057E:2066", "057E:2067", "057E:2069"],
 	"bluetoothOnlyIdentities": ["0E6F:0186", "0F0D:00F6"],
