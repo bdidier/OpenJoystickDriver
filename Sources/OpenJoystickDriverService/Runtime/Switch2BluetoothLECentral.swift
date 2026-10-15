@@ -43,7 +43,7 @@ final class Switch2BluetoothLECentral: NSObject, @unchecked Sendable {
     queue.sync {
       central?.stopScan()
       for link in links.values { central?.cancelPeripheralConnection(link.peripheral) }
-      for id in links.keys { hub.linkDisconnected(peripheralID: id) }
+      for link in links.values { link.gatt?.disconnected() }
       links.removeAll()
       central?.delegate = nil
       central = nil
@@ -62,8 +62,8 @@ final class Switch2BluetoothLECentral: NSObject, @unchecked Sendable {
   }
 
   private func drop(_ peripheral: CBPeripheral) {
-    guard links.removeValue(forKey: peripheral.identifier) != nil else { return }
-    hub.linkDisconnected(peripheralID: peripheral.identifier)
+    guard let link = links.removeValue(forKey: peripheral.identifier) else { return }
+    link.gatt?.disconnected()
     central?.cancelPeripheralConnection(peripheral)
     scan()
   }
@@ -72,7 +72,7 @@ final class Switch2BluetoothLECentral: NSObject, @unchecked Sendable {
 extension Switch2BluetoothLECentral: CBCentralManagerDelegate {
   func centralManagerDidUpdateState(_ central: CBCentralManager) {
     guard central.state == .poweredOn else {
-      for id in links.keys { hub.linkDisconnected(peripheralID: id) }
+      for link in links.values { link.gatt?.disconnected() }
       links.removeAll()
       return
     }

@@ -11,7 +11,8 @@ public final class GATTPeripheralLink: Switch2BluetoothLEWriter, Sendable {
   public let peripheral: any GATTPeripheral
   public let productID: UInt16
   public let productName: String?
-  private let hub: Switch2BluetoothLEHub
+  private let hubReference: WeakHub
+  private var hub: Switch2BluetoothLEHub? { hubReference.hub }
   private let commandUUID: String
   private let vibrationUUID: String
 
@@ -27,14 +28,14 @@ public final class GATTPeripheralLink: Switch2BluetoothLEWriter, Sendable {
     self.peripheral = peripheral
     self.productID = productID
     self.productName = productName
-    self.hub = hub
+    self.hubReference = WeakHub(hub: hub)
     self.commandUUID = Switch2BluetoothLEProfile.commandUUID
     self.vibrationUUID = vibrationUUID
   }
 
   /// Presents the peripheral to the hub as a connected controller.
   public func admit() {
-    hub.linkConnected(
+    hub?.linkConnected(
       peripheralID: peripheral.identifier,
       productID: productID,
       productName: productName,
@@ -47,15 +48,15 @@ public final class GATTPeripheralLink: Switch2BluetoothLEWriter, Sendable {
   public func notified(characteristic: String, value: [UInt8]) {
     switch characteristic.uppercased() {
     case Switch2BluetoothLEProfile.inputUUID:
-      hub.receivedInput(peripheralID: peripheral.identifier, bytes: value)
+      hub?.receivedInput(peripheralID: peripheral.identifier, bytes: value)
     case Switch2BluetoothLEProfile.commandReplyUUID:
-      hub.receivedReply(peripheralID: peripheral.identifier, bytes: value)
+      hub?.receivedReply(peripheralID: peripheral.identifier, bytes: value)
     default:
       break
     }
   }
 
-  public func disconnected() { hub.linkDisconnected(peripheralID: peripheral.identifier) }
+  public func disconnected() { hub?.linkDisconnected(peripheralID: peripheral.identifier) }
 
   public func writeCommand(_ bytes: [UInt8]) -> Bool {
     peripheral.writeWithoutResponse(bytes, to: commandUUID)
@@ -64,4 +65,10 @@ public final class GATTPeripheralLink: Switch2BluetoothLEWriter, Sendable {
   public func writeVibration(_ bytes: [UInt8]) -> Bool {
     peripheral.writeWithoutResponse(bytes, to: vibrationUUID)
   }
+}
+
+/// Holds the hub weakly, because the hub holds the link as the connection's writer. The hub is
+/// itself `@unchecked Sendable`, and a weak reference only ever clears.
+private struct WeakHub: @unchecked Sendable {
+  weak var hub: Switch2BluetoothLEHub?
 }

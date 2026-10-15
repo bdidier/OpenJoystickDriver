@@ -118,6 +118,22 @@ struct GATTPeripheralLinkTests {
   }
 
   @Test
+  func anAdmittedLinkDoesNotKeepTheHubAlive() throws {
+    weak var weakHub: Switch2BluetoothLEHub?
+    var link: GATTPeripheralLink?
+    do {
+      let (admitted, _, hub) = try Self.makeLink()
+      admitted.admit()
+      weakHub = hub
+      link = admitted
+    }
+    #expect(weakHub == nil)
+    link?.notified(characteristic: Switch2BluetoothLEProfile.inputUUID, value: [1])
+    link?.disconnected()
+    link = nil
+  }
+
+  @Test
   func notificationsFromOtherCharacteristicsAreIgnored() async throws {
     let (link, _, hub) = try Self.makeLink()
     var events = hub.events().makeAsyncIterator()
