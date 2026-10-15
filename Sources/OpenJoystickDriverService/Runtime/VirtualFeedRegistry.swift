@@ -71,6 +71,13 @@ final class VirtualFeedRegistry: @unchecked Sendable {
     let identifier: LogicalControllerID
     let pool: VirtualFeedPool
     var feedback: [ControllerOutputCommand] = []
+    /// Where the host's output commands go as they arrive, in order; nil when the client polls
+    /// `exchange` for them.
+    let returnSink: (any OutputSink)?
+    /// Whether the client is ready for returned commands.
+    var returnsFeedback = false
+    /// Delivers `feedback` to `returnSink`; nil when it has none to deliver.
+    var returner: Task<Void, Never>?
     /// Frames that wait for `player`, oldest first.
     var pending: [VirtualFeedFrame] = []
     /// Shows `pending`; nil when the feed shows its last frame and waits for more.
@@ -81,8 +88,14 @@ final class VirtualFeedRegistry: @unchecked Sendable {
     var lastExchange: TimeInterval
     var watchdog: Task<Void, Never>?
 
-    init(device: any VirtualFeedDevice, identifier: LogicalControllerID, pool: VirtualFeedPool) {
+    init(
+      device: any VirtualFeedDevice,
+      identifier: LogicalControllerID,
+      pool: VirtualFeedPool,
+      returnSink: (any OutputSink)?
+    ) {
       self.device = device
+      self.returnSink = returnSink
       self.origin = pool == .endpoint ? .endpointFeed : .virtualFeed
       self.sink = VirtualFeedDeviceSink(device)
       self.identifier = identifier
@@ -110,7 +123,14 @@ final class VirtualFeedRegistry: @unchecked Sendable {
     self.activationTimeout = activationTimeout
   }
 
-  func open(profile name: String, pool: VirtualFeedPool = .rpc) async throws -> VirtualFeedSession {
+  /// Opens a feed. With a `returnSink`, the host's output commands go to it in order through
+  /// `OutputSink.consume(_:for:)` once ``startReturningFeedback(token:)`` runs, and
+  /// ``exchange(token:frames:countsAsActivity:)`` returns no feedback.
+  func open(
+    profile name: String,
+    pool: VirtualFeedPool = .rpc,
+    returnSink: (any OutputSink)? = nil
+  ) async throws -> VirtualFeedSession {
     guard let profile = VirtualHIDProfileID(rawValue: name) else {
       throw VirtualFeedError.unknownProfile(name)
     }
@@ -134,7 +154,8 @@ final class VirtualFeedRegistry: @unchecked Sendable {
         productID: identity.productID,
         serialNumber: "feed-\(token.uuidString)"
       ),
-      pool: pool
+      pool: pool,
+      returnSink: returnSink
     )
     let stoppedMeanwhile = lock.withLock { () -> Bool in
       reserved[pool, default: 1] -= 1
@@ -207,13 +228,30 @@ final class VirtualFeedRegistry: @unchecked Sendable {
       if session.player == nil, !session.pending.isEmpty {
         session.player = Task { [weak self] in await self?.play(token) }
       }
-      defer { session.feedback.removeAll() }
+      let feedback = session.returnSink == nil ? session.feedback : []
+      defer { if session.returnSink == nil { session.feedback.removeAll() } }
       return VirtualFeedExchangeResult(
-        feedback: session.feedback,
+        feedback: feedback,
         closed: false,
         accepted: accepted,
         queued: session.pending.count + (session.frameDeadline == nil ? 0 : 1)
       )
+    }
+  }
+
+  /// Whether a feed with the token is open.
+  func isOpen(token: UUID) -> Bool { lock.withLock { sessions[token] != nil } }
+
+  /// Which kind of source the feed with the token is, or nil when none is open.
+  func origin(of token: UUID) -> InputOrigin? { lock.withLock { sessions[token]?.origin } }
+
+  /// Starts delivering the host's output commands to the feed's `returnSink`, those queued so far
+  /// first. The client calls it once it can take them.
+  func startReturningFeedback(token: UUID) {
+    lock.withLock {
+      guard let session = sessions[token] else { return }
+      session.returnsFeedback = true
+      scheduleReturn(of: session, token: token)
     }
   }
 
@@ -225,6 +263,7 @@ final class VirtualFeedRegistry: @unchecked Sendable {
     }
     session.watchdog?.cancel()
     session.player?.cancel()
+    session.returner?.cancel()
     await session.device.close()
     return true
   }
@@ -239,6 +278,7 @@ final class VirtualFeedRegistry: @unchecked Sendable {
     for session in closing {
       session.watchdog?.cancel()
       session.player?.cancel()
+      session.returner?.cancel()
       await session.device.close()
     }
   }
@@ -251,6 +291,37 @@ final class VirtualFeedRegistry: @unchecked Sendable {
       session.feedback.append(command)
       let excess = session.feedback.count - Self.maximumQueuedFeedback
       if excess > 0 { session.feedback.removeFirst(excess) }
+      scheduleReturn(of: session, token: token)
+    }
+  }
+
+  /// Starts the session's `returner` when it has a sink that is ready and one is not running. The
+  /// caller holds `lock`.
+  private func scheduleReturn(of session: Session, token: UUID) {
+    guard session.returnSink != nil, session.returnsFeedback, session.returner == nil,
+      !session.feedback.isEmpty
+    else { return }
+    session.returner = Task { [weak self] in await self?.returnFeedback(token) }
+  }
+
+  /// Hands the feed's queued output commands to its `returnSink` one at a time, so the client
+  /// sees them in the order the host sent them; stops when none are left.
+  private func returnFeedback(_ token: UUID) async {
+    while !Task.isCancelled {
+      let next = lock.withLock { () -> (Session, [ControllerOutputCommand])? in
+        guard let session = sessions[token] else { return nil }
+        guard !session.feedback.isEmpty else {
+          session.returner = nil
+          return nil
+        }
+        defer { session.feedback.removeAll() }
+        return (session, session.feedback)
+      }
+      guard let (session, commands) = next, let sink = session.returnSink else { return }
+      for command in commands {
+        // A refused command is gone, as a rumble line the connection dropped always was.
+        try? await sink.consume(command, for: session.identifier)
+      }
     }
   }
 

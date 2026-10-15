@@ -21,23 +21,24 @@ extension EndpointServer {
     let token: UUID
     do {
       token = try Self.waitFor(connection) {
-        try await feeds.open(profile: persona.rawValue, pool: .endpoint).token
+        try await feeds.open(
+          profile: persona.rawValue,
+          pool: .endpoint,
+          returnSink: EndpointFeedReturnSink(connection: connection)
+        ).token
       }
     } catch {
       connection.close(Self.feedError(error, persona: persona))
       return
     }
-    let exchanger = FeedExchanger(feeds: feeds, token: token, connection: connection)
-    let pump = Task {
-      while !Task.isCancelled, exchanger.exchange([]) != nil {
-        try? await Task.sleep(nanoseconds: ControllerWatchPoller.pollInterval)
-      }
-    }
+    let source = EndpointFeedSource(feeds: feeds, token: token, connection: connection)
+    let watch = Task { await source.watch() }
     defer {
-      pump.cancel()
+      watch.cancel()
       Task { await feeds.close(token: token) }
     }
     connection.send(EndpointFeedSession(as: persona))
+    feeds.startReturningFeedback(token: token)
 
     while true {
       switch connection.readMessage() {
@@ -52,18 +53,20 @@ extension EndpointServer {
         let frame: VirtualFeedFrame
         switch Self.feedLine(data) {
         case .success(.keepAlive):
-          if exchanger.exchange([], fromClient: true) == nil { return }
+          if !source.keepAlive() { return }
           continue
         case .success(.frame(let decoded)): frame = decoded
         case .failure(let refusal):
           connection.close(refusal)
           return
         }
-        while let accepted = exchanger.exchange([frame]), accepted == 0 {
+        while true {
+          let outcome = (try? Self.waitFor(connection) { await source.submit(frame) }) ?? .closed
+          if outcome == .closed { return }
+          if outcome == .accepted { break }
           if connection.peerHungUp { return }
           usleep(useconds_t(VirtualFeedExchangeResult.minimumFrameMilliseconds * 1_000))
         }
-        if exchanger.isClosed { return }
       }
     }
   }
@@ -140,54 +143,4 @@ extension EndpointServer {
 /// - Note: `@unchecked Sendable` because the semaphore orders the write before the read.
 private final class ResultBox<T>: @unchecked Sendable {
   var result: Result<T, any Error>?
-}
-
-/// Exchanges with one feed and sends its rumble lines; the lock keeps the pump's lines and the
-/// reader's lines in the order the feed returned them.
-///
-/// - Note: `@unchecked Sendable` because `closed` is guarded by `lock`.
-private final class FeedExchanger: @unchecked Sendable {
-  private let feeds: VirtualFeedRegistry
-  private let token: UUID
-  private weak var connection: EndpointConnection?
-  private let lock = NSLock()
-  private var closed = false
-
-  init(feeds: VirtualFeedRegistry, token: UUID, connection: EndpointConnection) {
-    self.feeds = feeds
-    self.token = token
-    self.connection = connection
-  }
-
-  var isClosed: Bool { lock.withLock { closed } }
-
-  /// Queues `frames` and sends the feedback; a `fromClient` call with no frames is a `KeepAlive`
-  /// and counts as activity. Returns how many frames the feed accepted, or nil
-  /// once the connection is closing, which closes the feed, or the feed closed, which closes the
-  /// connection with `E1009`.
-  func exchange(_ frames: [VirtualFeedFrame], fromClient: Bool = false) -> Int? {
-    lock.withLock {
-      guard !closed else { return nil }
-      guard let connection, !connection.isClosing else {
-        // Removes the pad now; the reader may stay blocked until the connection's writer drains.
-        closed = true
-        Task { [feeds, token] in await feeds.close(token: token) }
-        return nil
-      }
-      let result = feeds.exchange(
-        token: token,
-        frames: frames,
-        countsAsActivity: fromClient || !frames.isEmpty
-      )
-      guard !result.closed else {
-        closed = true
-        connection.close(EndpointError(code: .feedClosed, message: "The virtual gamepad closed."))
-        return nil
-      }
-      for command in result.feedback.compactMap(RumbleCommandLine.init) {
-        connection.send(EndpointRumbleCommand(command), bounded: true)
-      }
-      return result.accepted
-    }
-  }
 }

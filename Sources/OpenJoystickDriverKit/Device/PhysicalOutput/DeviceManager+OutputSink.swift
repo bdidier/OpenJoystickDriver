@@ -15,4 +15,17 @@ extension DeviceManager: OutputSink {
       throw StreamBoundaryError.rejected(.physicalOutput, result.outcome.rawValue)
     }
   }
+
+  public func consume(_ claim: MappingOutputClaim, for controller: LogicalControllerID) async throws
+  {
+    let applied = await setMappingPhysicalOutput(
+      claim.output,
+      active: claim.active,
+      owner: claim.owner,
+      for: controller
+    )
+    guard applied else {
+      throw StreamBoundaryError.rejected(.physicalOutput, "mapping output not applied")
+    }
+  }
 }

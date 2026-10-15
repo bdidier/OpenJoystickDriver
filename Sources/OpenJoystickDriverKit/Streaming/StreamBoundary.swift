@@ -11,6 +11,24 @@ public enum StreamFrame: Sendable {
   case gamepad(RemappingGamepadState, for: LogicalControllerID)
   /// An observed controller snapshot change, as the endpoint's `controllers` stream carries it.
   case observed(ControllerWatchEvent)
+  /// One frame of a feed client with its hold, before it plays on the feed's virtual gamepad.
+  case feed(VirtualFeedFrame)
+  /// A request to make a controller's output exist, such as its virtual device, with no new input.
+  case activation(LogicalControllerID)
+}
+
+/// One remapping claim on a physical controller's output: it holds `output` while `active`, and
+/// the claim's `owner` releases it.
+public struct MappingOutputClaim: Equatable, Sendable {
+  public let output: RemappingPhysicalOutput
+  public let active: Bool
+  public let owner: UUID
+
+  public init(_ output: RemappingPhysicalOutput, active: Bool, owner: UUID) {
+    self.output = output
+    self.active = active
+    self.owner = owner
+  }
 }
 
 /// Where an ``InputSource`` gets its frames.
@@ -31,6 +49,8 @@ public enum OutputDestination: String, CaseIterable, Sendable {
   case virtualDevice
   /// A client subscribed to the endpoint's `controllers` stream.
   case endpointSubscription
+  /// A client of the endpoint's `FeedRequest`, which receives the host's rumble commands.
+  case endpointFeedClient
   /// Output commands, such as rumble and lights, written to a physical controller.
   case physicalOutput
   /// A log line, for development.
@@ -93,6 +113,9 @@ public protocol OutputSink: AnyObject, Sendable {
     for controller: LogicalControllerID
   )
     async throws
+
+  /// Consumes one remapping claim on a physical controller's output.
+  func consume(_ claim: MappingOutputClaim, for controller: LogicalControllerID) async throws
 }
 
 // swiftlint:disable async_without_await
@@ -110,6 +133,11 @@ extension OutputSink {
     for controller: LogicalControllerID
   )
     async throws
+  {
+    throw StreamBoundaryError.unsupported(destination)
+  }
+
+  public func consume(_ claim: MappingOutputClaim, for controller: LogicalControllerID) async throws
   {
     throw StreamBoundaryError.unsupported(destination)
   }

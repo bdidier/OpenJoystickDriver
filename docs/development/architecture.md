@@ -70,11 +70,15 @@ Input flows through two protocols in `Streaming/`, which import nothing from a p
 | Path | Source (`origin`) | Sink (`destination`) |
 | --- | --- | --- |
 | Physical controller to virtual device | `DevicePipeline` (`physicalController`) | any `OutputDispatcher` (`virtualDevice`; `diagnosticLog` for `LoggingOutputDispatcher`) |
+| Output activation | `DevicePipeline`, and the remapping router's route for a controller | the same `OutputDispatcher`, through `StreamFrame.activation` |
 | Virtual feed | `VirtualFeedRegistry` session (`virtualFeed`, or `endpointFeed` for the endpoint pool) | `VirtualFeedDeviceSink` (`virtualDevice`) |
+| Endpoint feed client to feed queue | `EndpointFeedSource` (`endpointFeed`) | `VirtualFeedIntakeSink` (`virtualDevice`), through `StreamFrame.feed` |
+| Host feedback to an endpoint feed client | the feed's virtual device, through the registry | `EndpointFeedReturnSink` (`endpointFeedClient`), through `consume(_:for:)` |
 | Endpoint `controllers` stream | `EndpointStreamSource` (`endpointStream`) | `EndpointSubscribers` (`endpointSubscription`) |
 | Physical output commands | the service's output requests | `DeviceManager` (`physicalOutput`) |
+| Mapped physical output | `RemappingPhysicalOutputBridge` | `DeviceManager` (`physicalOutput`), through `MappingOutputClaim` |
 
-Still outside the boundary: output activation (`activateOutput`), the remapping router's direct dispatch, the physical-output bridge for mapped rumble, and the host-feedback return to an endpoint feed client.
+The registry delivers the host's output commands to a feed's return sink one task at a time, so the client sees them in the order the host sent them, and holds them until the client has its `FeedSession` line. `Scripts/Quality/check_sink_boundary.py` fails when a Swift source calls `.dispatch(`, `.dispatchPublishing(`, `.activateOutput(for:` or `.setMappingPhysicalOutput(` outside a sink; the routers that forward to the output they wrap are listed in the script, and `test_sink_boundary.py` covers it.
 
 ## Classification and Binding
 
