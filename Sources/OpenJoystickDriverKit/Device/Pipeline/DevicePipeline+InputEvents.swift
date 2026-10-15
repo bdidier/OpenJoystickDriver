@@ -135,7 +135,7 @@ extension DevicePipeline {
   }
 
   /// Asks the dispatcher to activate output for the controller, with no new input.
-  func activateOutput() async { await dispatcher.activateOutput(for: identifier) }
+  func activateOutput() async { try? await produce(.activation(identifier)) }
 
   /// Stamps the link and power state, the one source `ControllerState.connection` reads, and
   /// dispatches.

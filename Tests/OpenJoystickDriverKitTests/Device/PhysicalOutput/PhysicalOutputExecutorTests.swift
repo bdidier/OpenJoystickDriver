@@ -14,14 +14,14 @@ struct PhysicalOutputExecutorTests {
   }
 
   /// Connects a USB Sixaxis, whose report 0x01 carries rumble and LEDs from stored state.
-  func startSixaxis(locationID: UInt32) async throws -> Started {
+  func startSixaxis(locationID: UInt32, productID: UInt16 = 0x0268) async throws -> Started {
     let backend = ScriptedHIDAccessBackend()
     await backend.enableOutputReports()
     await backend.enableFeatureReports()
     let connection = HIDDeviceConnection(
       physicalDevice: PhysicalDevice(
         vendorID: 0x054C,
-        productID: 0x0268,
+        productID: productID,
         productName: "Executor controller",
         transportProperty: "USB",
         physicalLocationIdentifier: locationID,
