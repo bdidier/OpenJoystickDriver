@@ -5,11 +5,11 @@ import Testing
 
 @testable import OpenJoystickDriverCLI
 
-struct ControllerOwnershipCommandTests {
+struct ControllerClaimCommandTests {
   /// A user record directory for one test, beside an empty `Packages` store.
   private final class Directory {
     let root = FileManager.default.temporaryDirectory.appendingPathComponent(
-      "ojd-ownership-\(UUID().uuidString)",
+      "ojd-claim-\(UUID().uuidString)",
       isDirectory: true
     )
 
@@ -52,56 +52,56 @@ struct ControllerOwnershipCommandTests {
     }
   }
 
-  private static func ownership(in directory: Directory) -> ControllerServer? {
+  private static func server(in directory: Directory) -> ControllerServer? {
     ControllerRecordSet.load(userDirectory: directory.controllers)
       .records[ControllerModelID(vendorID: 0x2C22, productID: 0x2000)]?.server
   }
 
   @Test
-  func virtualWritesTheUserRecord() async throws {
+  func claimWritesTheUserRecord() async throws {
     let directory = Directory()
     let result = try await Self.run(
-      ["controller", "ownership", token("pad-1"), "virtual", "--json"],
+      ["controller", "claim", token("pad-1"), "--json"],
       device: Self.device(native: true),
       in: directory
     )
     #expect(result.code == 0, "\(result.standardError)")
     let json = try result.json()
-    #expect(json["kind"] as? String == "ControllerOwnership")
+    #expect(json["kind"] as? String == "ControllerServer")
     #expect(json["identity"] as? String == "2C22:2000")
-    #expect(json["ownership"] as? String == "virtual")
-    #expect(json["previous"] as? String == "native")
+    #expect(json["server"] as? String == "ojd")
+    #expect(json["previous"] as? String == "system")
     #expect(json["created"] as? Bool == true)
     #expect(json["dryRun"] as? Bool == false)
     #expect(json["file"] as? String == directory.file.path)
-    #expect(Self.ownership(in: directory) == .ojd)
+    #expect(Self.server(in: directory) == .ojd)
   }
 
   @Test
-  func nativeSwitchesAVirtualModelBack() async throws {
+  func releaseGivesAClaimedModelBack() async throws {
     let directory = Directory()
     let device = try Self.device(native: false)
     _ = try await Self.run(
-      ["controller", "ownership", token("pad-1"), "virtual"],
+      ["controller", "claim", token("pad-1")],
       device: Self.device(native: true),
       in: directory
     )
     // OJD seized the controller, so it no longer reports as a native gamepad.
     let result = try await Self.run(
-      ["controller", "ownership", token("pad-1"), "native", "--plain"],
+      ["controller", "release", token("pad-1"), "--plain"],
       device: device,
       in: directory
     )
     #expect(result.code == 0, "\(result.standardError)")
-    #expect(result.standardOutput == "2C22:2000\tnative\t\(directory.file.path)\n")
-    #expect(Self.ownership(in: directory) == .system)
+    #expect(result.standardOutput == "2C22:2000\tsystem\t\(directory.file.path)\n")
+    #expect(Self.server(in: directory) == .system)
   }
 
   @Test
   func dryRunWritesNothing() async throws {
     let directory = Directory()
     let result = try await Self.run(
-      ["controller", "ownership", token("pad-1"), "virtual", "--dry-run", "--json"],
+      ["controller", "claim", token("pad-1"), "--dry-run", "--json"],
       device: Self.device(native: true),
       in: directory
     )
@@ -114,12 +114,12 @@ struct ControllerOwnershipCommandTests {
   func rawUSBControllerIsRefused() async throws {
     let directory = Directory()
     let result = try await Self.run(
-      ["controller", "ownership", token("pad-1"), "native"],
+      ["controller", "release", token("pad-1")],
       device: Self.device(vendorID: 0x366C, productID: 0x0005, native: true),
       in: directory
     )
     #expect(result.code == 1)
-    #expect(result.standardError.contains(ErrorCode.ownershipToggleUnsupported.rawValue))
+    #expect(result.standardError.contains(ErrorCode.claimUnsupported.rawValue))
     #expect(!FileManager.default.fileExists(atPath: directory.controllers.path))
   }
 
@@ -127,12 +127,12 @@ struct ControllerOwnershipCommandTests {
   func controllerMacOSDoesNotServeIsRefused() async throws {
     let directory = Directory()
     let result = try await Self.run(
-      ["controller", "ownership", token("pad-1"), "virtual"],
+      ["controller", "claim", token("pad-1")],
       device: Self.device(native: false),
       in: directory
     )
     #expect(result.code == 1)
-    #expect(result.standardError.contains(ErrorCode.ownershipToggleUnsupported.rawValue))
+    #expect(result.standardError.contains(ErrorCode.claimUnsupported.rawValue))
     #expect(!FileManager.default.fileExists(atPath: directory.controllers.path))
   }
 
@@ -140,12 +140,37 @@ struct ControllerOwnershipCommandTests {
   func modelWithoutARecordIsRefused() async throws {
     let directory = Directory()
     let result = try await Self.run(
-      ["controller", "ownership", token("pad-1"), "virtual"],
+      ["controller", "claim", token("pad-1")],
       device: Self.device(vendorID: 0x1234, productID: 0xABCD, native: true),
       in: directory
     )
     #expect(result.code == 1)
-    #expect(result.standardError.contains(ErrorCode.ownershipToggleUnsupported.rawValue))
+    #expect(result.standardError.contains(ErrorCode.claimUnsupported.rawValue))
+    #expect(!FileManager.default.fileExists(atPath: directory.controllers.path))
+  }
+
+  @Test
+  func claimRefusesARawUSBControllerWithoutWriting() async throws {
+    let directory = Directory()
+    let result = try await Self.run(
+      ["controller", "claim", token("pad-1"), "--json"],
+      device: Self.device(vendorID: 0x366C, productID: 0x0005, native: true),
+      in: directory
+    )
+    #expect(result.code == 1)
+    #expect(result.standardError.contains("E2023"))
+    #expect(!FileManager.default.fileExists(atPath: directory.controllers.path))
+  }
+
+  @Test
+  func theOldOwnershipWordIsAnUnknownCommand() async throws {
+    let directory = Directory()
+    let result = try await Self.run(
+      ["controller", "ownership", token("pad-1"), "virtual"],
+      device: Self.device(native: true),
+      in: directory
+    )
+    #expect(result.code == 64, "\(result.standardError)")
     #expect(!FileManager.default.fileExists(atPath: directory.controllers.path))
   }
 
@@ -159,11 +184,11 @@ struct ControllerOwnershipCommandTests {
       in: directory
     )
     let beforeOwnership = try #require(try before.json()["ownership"] as? [String: Any])
-    #expect(beforeOwnership["choice"] as? String == "native")
+    #expect(beforeOwnership["choice"] as? String == "system")
     #expect(beforeOwnership["choiceSource"] as? String == "default")
 
     _ = try await Self.run(
-      ["controller", "ownership", token("pad-1"), "virtual"],
+      ["controller", "claim", token("pad-1")],
       device: device,
       in: directory
     )
@@ -173,7 +198,7 @@ struct ControllerOwnershipCommandTests {
       in: directory
     )
     let afterOwnership = try #require(try after.json()["ownership"] as? [String: Any])
-    #expect(afterOwnership["choice"] as? String == "virtual")
+    #expect(afterOwnership["choice"] as? String == "ojd")
     #expect(afterOwnership["choiceSource"] as? String == "user")
 
     let plain = try await Self.run(
@@ -181,6 +206,6 @@ struct ControllerOwnershipCommandTests {
       device: device,
       in: directory
     )
-    #expect(plain.standardOutput.contains("ownership-choice\tvirtual\tuser\n"))
+    #expect(plain.standardOutput.contains("ownership-choice\tojd\tuser\n"))
   }
 }

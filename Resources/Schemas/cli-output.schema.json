@@ -497,6 +497,18 @@
         }
       }
     },
+    "controllerClaim": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "ControllerServer"
+        },
+        "server": {
+          "const": "ojd"
+        }
+      },
+      "$ref": "#/$defs/sharedControllerServer"
+    },
     "controllerDisconnect": {
       "required": ["apiVersion", "kind"],
       "properties": {
@@ -591,53 +603,6 @@
         }
       }
     },
-    "controllerOwnership": {
-      "type": "object",
-      "required": [
-        "apiVersion",
-        "kind",
-        "controller",
-        "created",
-        "dryRun",
-        "file",
-        "identity",
-        "ownership",
-        "previous"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "apiVersion": {
-          "$ref": "#/$defs/sharedAPIVersion"
-        },
-        "kind": {
-          "const": "ControllerOwnership"
-        },
-        "controller": {
-          "type": "string"
-        },
-        "created": {
-          "description": "Whether the change creates the user record file.",
-          "type": "boolean"
-        },
-        "dryRun": {
-          "type": "boolean"
-        },
-        "file": {
-          "description": "The user record file the change writes.",
-          "type": "string"
-        },
-        "identity": {
-          "type": "string",
-          "pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
-        },
-        "ownership": {
-          "$ref": "#/$defs/sharedOwnershipChoice"
-        },
-        "previous": {
-          "$ref": "#/$defs/sharedOwnershipChoice"
-        }
-      }
-    },
     "controllerPair": {
       "required": ["apiVersion", "kind"],
       "properties": {
@@ -657,6 +622,18 @@
           "$ref": "#/$defs/sharedControllerOutput"
         }
       }
+    },
+    "controllerRelease": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "ControllerServer"
+        },
+        "server": {
+          "const": "system"
+        }
+      },
+      "$ref": "#/$defs/sharedControllerServer"
     },
     "controllerResume": {
       "required": ["apiVersion", "kind"],
@@ -694,6 +671,7 @@
         "productID",
         "protocol",
         "parameters",
+        "serving",
         "session",
         "vendorID"
       ],
@@ -824,7 +802,7 @@
           "additionalProperties": false,
           "properties": {
             "choice": {
-              "$ref": "#/$defs/sharedOwnershipChoice"
+              "$ref": "#/$defs/sharedServer"
             },
             "choiceSource": {
               "description": "The record layer that sets the choice, or default when no layer sets it and macOS serves the controller.",
@@ -920,6 +898,34 @@
             },
             "layer": {
               "enum": ["bundled", "package", "user"]
+            }
+          }
+        },
+        "serving": {
+          "description": "How OJD serves the controller, as the serving policy decides it.",
+          "type": "object",
+          "required": ["route"],
+          "additionalProperties": false,
+          "properties": {
+            "persona": {
+              "description": "The persona OJD publishes. Absent for a route that publishes nothing.",
+              "enum": ["SdlCompatible", "Generic"]
+            },
+            "reason": {
+              "description": "Why the route publishes nothing. Present only with OutputDisabled.",
+              "enum": [
+                "userDisabled",
+                "upstreamVirtualDevice",
+                "noVirtualProfile"
+              ]
+            },
+            "route": {
+              "enum": [
+                "NativePassThrough",
+                "VirtualHid",
+                "ExtensionOwned",
+                "OutputDisabled"
+              ]
             }
           }
         },
@@ -2363,6 +2369,52 @@
         }
       }
     },
+    "sharedControllerServer": {
+      "description": "The result of claim and release: the model's server setting before and after.",
+      "type": "object",
+      "required": [
+        "controller",
+        "created",
+        "dryRun",
+        "file",
+        "identity",
+        "previous",
+        "server"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "ControllerServer"
+        },
+        "controller": {
+          "type": "string"
+        },
+        "created": {
+          "description": "Whether the change creates the user record file.",
+          "type": "boolean"
+        },
+        "dryRun": {
+          "type": "boolean"
+        },
+        "file": {
+          "description": "The user record file the change writes.",
+          "type": "string"
+        },
+        "identity": {
+          "type": "string",
+          "pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
+        },
+        "previous": {
+          "$ref": "#/$defs/sharedServer"
+        },
+        "server": {
+          "$ref": "#/$defs/sharedServer"
+        }
+      }
+    },
     "sharedControllerSession": {
       "type": "object",
       "required": ["changed", "controller", "session"],
@@ -2514,6 +2566,10 @@
           "$ref": "#/$defs/sharedWatchedController"
         }
       }
+    },
+    "sharedServer": {
+      "description": "Who serves the controller model, the server setting: system leaves it to the system, ojd lets OpenJoystickDriver seize it and publish a virtual gamepad.",
+      "enum": ["system", "ojd"]
     },
     "sharedWatchedController": {
       "description": "A Controller: the fields of an item of ojd controller list, and the latest input and output once the controller has any.",
@@ -2681,10 +2737,6 @@
           "type": "string"
         }
       }
-    },
-    "sharedOwnershipChoice": {
-      "description": "Who serves the controller: native leaves it to macOS, virtual lets OpenJoystickDriver seize it and publish a virtual gamepad.",
-      "enum": ["native", "virtual"]
     },
     "sharedPermissions": {
       "type": "object",

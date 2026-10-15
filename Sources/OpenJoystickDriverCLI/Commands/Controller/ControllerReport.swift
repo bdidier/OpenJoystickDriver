@@ -8,8 +8,8 @@ struct ControllerShowReport: Encodable, Equatable {
     let physical: String
     let hidInput: String
     let duplicateExposureRisk: String
-    /// Who the record lets serve the model: `native` (macOS) or `virtual` (OJD).
-    let choice: OwnershipChoice
+    /// Who the record lets serve the model: `system` or `ojd`, the `server` setting.
+    let choice: ControllerServer
     /// The record layer that sets the choice: `bundled`, `package`, or `user`; `default` when no
     /// layer sets it.
     let choiceSource: String
@@ -81,6 +81,22 @@ struct ControllerShowReport: Encodable, Equatable {
     let unavailable: Bool
   }
 
+  /// How OJD serves the controller, as `ServingPolicy` decides it.
+  struct Serving: Encodable, Equatable {
+    /// The route: `NativePassThrough`, `VirtualHid`, `ExtensionOwned` or `OutputDisabled`.
+    let route: String
+    /// The persona OJD publishes; absent for a route that publishes nothing.
+    let persona: String?
+    /// Why a route publishes nothing; absent for a route that serves.
+    let reason: String?
+
+    init(_ decision: ServingDecision) {
+      route = decision.route.id
+      persona = decision.selection?.profileID.rawValue
+      reason = decision.route.disabledReason?.rawValue
+    }
+  }
+
   /// Whether a virtual device publishes the controller, and why not.
   struct Publication: Encodable, Equatable {
     let state: String
@@ -125,6 +141,7 @@ struct ControllerShowReport: Encodable, Equatable {
     let startupCommandStatus: String?
     let inputHealth: InputHealth
     let ownership: Ownership
+    let serving: Serving
     let parameters: [String]
     let record: Record?
     /// Absent when the controller's record sets no tuning.
@@ -175,9 +192,10 @@ struct ControllerShowReport: Encodable, Equatable {
         physical: device.physicalOwnership.rawValue,
         hidInput: device.hidInputOwnership.rawValue,
         duplicateExposureRisk: device.duplicateExposureRisk.rawValue,
-        choice: OwnershipChoice(record?.server ?? .system),
+        choice: record?.server ?? .system,
         choiceSource: record?.fieldLayers["server"]?.rawValue ?? "default"
       ),
+      serving: Serving(device.servingDecision),
       parameters: device.parameters,
       record: record.map(Record.init),
       tuning: Tuning(device.tuning),

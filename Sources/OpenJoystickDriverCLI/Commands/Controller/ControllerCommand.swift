@@ -19,7 +19,8 @@ struct ControllerCommand: AsyncParsableCommand {
       ControllerCaptureCommand.self, ControllerRumbleCommand.self, ControllerLightCommand.self,
       ControllerPlayerCommand.self, ControllerSuspendCommand.self, ControllerResumeCommand.self,
       ControllerDisconnectCommand.self, ControllerCalibrateCommand.self, ControllerPairCommand.self,
-      ControllerUnpairCommand.self, ControllerOwnershipCommand.self,
+      ControllerUnpairCommand.self, ControllerClaimCommand.self,
+      ControllerReleaseCommand.self,
     ]
   )
 
@@ -158,6 +159,8 @@ struct ControllerShowCommand: AsyncParsableCommand {
       ["input-health", detail.inputHealth.state],
       ["ownership", detail.ownership.physical],
       ["ownership-choice", detail.ownership.choice.rawValue, detail.ownership.choiceSource],
+      ["serving-route", detail.serving.route, detail.serving.reason ?? ""],
+      ["persona", detail.serving.persona ?? ""],
       ["controls", detail.capabilities.controls.joined(separator: ",")],
       ["rumble-motors", detail.capabilities.rumbleMotors.joined(separator: ",")],
       ["lighting", detail.capabilities.lightingFeatures.joined(separator: ",")],
@@ -252,6 +255,14 @@ struct ControllerShowCommand: AsyncParsableCommand {
           detail.ownership.choice.rawValue,
           detail.ownership.choiceSource
         )
+      ),
+      (
+        CLILocalized.text("cli.controller.show.label.serving"),
+        detail.serving.route + (detail.serving.reason.map { " (\($0))" } ?? "")
+      ),
+      (
+        CLILocalized.text("cli.controller.show.label.persona"),
+        detail.serving.persona ?? none
       ),
       (CLILocalized.text("cli.controller.show.label.record"), recordText(detail.record)),
       (

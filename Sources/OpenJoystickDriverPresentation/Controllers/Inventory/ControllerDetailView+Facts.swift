@@ -267,6 +267,7 @@
           OJDLocalized.string("controllers.publishedAs"),
           device.publishedIdentityLabel
         ),
+        (OJDLocalized.string("controllers.serving.label"), device.servingRouteLabel),
         (
           OJDLocalized.string("common.protocol"),
           device.protocolBinding.displayLabel

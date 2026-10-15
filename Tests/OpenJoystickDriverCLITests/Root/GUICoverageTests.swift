@@ -22,6 +22,23 @@ struct GUICoverageTests {
   }
 
   @Test
+  func everyFieldPlaceNamesARealCommandAndSchemaField() throws {
+    let paths = CLICommandTree.paths()
+    for entry in GUICoverageMatrix.fields {
+      #expect(paths.contains(entry.command), "no command \(entry.command)")
+      var node = try #require(
+        CLIOutputSchema.definitions[CLIOutputSchema.definitionName(for: entry.command)]
+          as? [String: Any]
+      )
+      for name in entry.field.split(separator: ".") {
+        let properties = try #require(node["properties"] as? [String: Any])
+        node = try #require(properties[String(name)] as? [String: Any], "\(entry.field)")
+      }
+      #expect(!entry.place.isEmpty)
+    }
+  }
+
+  @Test
   func aFakeCommandWithNoGUIPlaceIsReported() {
     let paths = CLICommandTree.paths(of: FakeRoot.self)
     #expect(paths == [["status"], ["frobnicate"], ["frobnicate", "run"]])

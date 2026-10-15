@@ -16,7 +16,34 @@ struct GUIPlace: Equatable {
   let statusItem: String?
 }
 
+/// The GUI place of one `--json` field, for a field a command prints that the GUI shows as a named
+/// element. The command-group table above says where a command lives; this one says where a field
+/// of its output shows.
+struct GUIField: Equatable {
+  /// The command path, such as `["controller", "show"]`.
+  let command: [String]
+  /// The dotted `--json` field, such as `serving.route`.
+  let field: String
+  /// The element of the GUI area that shows the field.
+  let place: String
+}
+
 enum GUICoverageMatrix {
+  /// Fields the GUI shows by name. Task 24.5: the serving route and persona of
+  /// `ojd controller show`.
+  static let fields: [GUIField] = [
+    GUIField(
+      command: ["controller", "show"],
+      field: "serving.route",
+      place: "Controllers > controller detail > Serving route fact"
+    ),
+    GUIField(
+      command: ["controller", "show"],
+      field: "serving.persona",
+      place: "Controllers > controller detail > Published as fact"
+    ),
+  ]
+
   /// D10 rows, one entry per CLI group named in the row.
   ///
   /// `extension` is still the command name; D9 renames it `transport-extension` (task 17.1), and
