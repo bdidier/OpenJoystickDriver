@@ -109,19 +109,34 @@ def semantic_violations(
     found += startup_violations(description, variants)
     found += keep_alive_violations(description, variants)
     found += subcommand_violations(description)
+    found += named_packet_violations(description)
     return found
 
 
 def startup_violations(
     description: dict[str, Any], variants: list[str]
 ) -> list[tuple[str, str]]:
-    """The `variants` and `when` of each startup write must name things the family declares."""
+    """The `variants` and `when` of each startup write must name things the family declares,
+    and a `packet` must name one of its `defaults.session.namedPackets`."""
     found: list[tuple[str, str]] = []
     parameters = description.get("parameters", {})
+    named = {
+        packet["id"]
+        for packet in description.get("defaults", {})
+        .get("session", {})
+        .get("namedPackets", ())
+    }
     for index, write in enumerate(
         description.get("defaults", {}).get("output", {}).get("startup", [])
     ):
         where = f"defaults.output.startup[{index}]"
+        if "packet" in write and write["packet"] not in named:
+            found.append(
+                (
+                    "E5002",
+                    f"{where}.packet: {write['packet']} is not a named packet of the family",
+                )
+            )
         found += [
             ("E5004", f"{where}.variants names {name}, which the family does not have")
             for name in write.get("variants", ())
@@ -223,3 +238,45 @@ def subcommand_violations(description: dict[str, Any]) -> list[tuple[str, str]]:
             "defaults.session.subcommands: each SPI read purpose appears at most once",
         )
     ]
+
+
+def named_packet_violations(description: dict[str, Any]) -> list[tuple[str, str]]:
+    """What `defaults.session.namedPackets` may hold, as `NamedPacketPlan` checks it in Swift.
+
+    Each id starts with the family name and a slash and appears at most once. A schema cannot
+    say either.
+    """
+    packets = description.get("defaults", {}).get("session", {}).get("namedPackets")
+    if packets is None:
+        return []
+    found: list[tuple[str, str]] = []
+    where = "defaults.session.namedPackets"
+    identifiers = [packet["id"] for packet in packets]
+    if len(set(identifiers)) != len(identifiers):
+        found.append(("E5002", f"{where}: each id appears at most once"))
+    prefix = f"{description['family']}/"
+    found += [
+        ("E5002", f"{where}: {identifier} must start with {prefix}")
+        for identifier in identifiers
+        if not identifier.startswith(prefix)
+    ]
+    return found
+
+
+def initialization_problem(
+    description: dict[str, Any], initialization: list[str]
+) -> str | None:
+    """The first action a record names that the family's description does not define.
+
+    `ProtocolInfo` in Swift rejects the same record.
+    """
+    offered = {
+        packet["id"]
+        for packet in description.get("defaults", {})
+        .get("session", {})
+        .get("namedPackets", ())
+    }
+    for action in initialization:
+        if action not in offered:
+            return f"initialization action {action} is not a named packet of the family"
+    return None

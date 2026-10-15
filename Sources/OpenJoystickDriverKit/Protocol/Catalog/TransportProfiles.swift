@@ -211,7 +211,7 @@ public struct DeviceRuntimeProfile: Equatable, Sendable {
   public let capabilityDelta: ControllerCapabilityDelta
   public let preferredBackends: [VirtualControllerBackendID]
   /// The record's named GIP startup packets; empty runs the family description's.
-  public internal(set) var gipStartupPackets: [GIPStartupPacket]
+  public internal(set) var gipStartupPackets: [String]
   public internal(set) var gipKeepAlivePolicy: GIPKeepAlivePolicy
   /// The assembly policy the row names; nil runs each protocol role as its own controller.
   public internal(set) var assemblyPolicy: ControllerAssemblyPolicy?

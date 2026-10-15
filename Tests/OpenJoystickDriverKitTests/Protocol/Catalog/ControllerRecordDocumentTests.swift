@@ -18,7 +18,7 @@ struct ControllerRecordDocumentTests {
     #expect(document.protocolInfo.protocolID == .xboxGIP)
     #expect(document.protocolInfo.protocolVariant == nil)
     #expect(document.protocolInfo.parameters == ProtocolParameters(shareButton: .init(fromEnd: 26)))
-    #expect(document.protocolInfo.initialization == [.horiAck, .powerOn])
+    #expect(document.protocolInfo.initialization == ["xbox.gip/hori-ack", "xbox.gip/power-on"])
     #expect(
       document.capabilities
         == ControllerCapabilityDelta(
@@ -189,6 +189,8 @@ struct ControllerRecordDocumentTests {
       ["family": "sony.dualsense", "parameters": ["role": "WirelessAdapter"]],
       ["family": "xbox.gip", "startupPackets": ["xbox.gip/power-on"]],
       ["family": "xbox.gip", "initialization": ["powerOn"]],
+      ["family": "xbox.gip", "initialization": ["xbox.gip/missing"]],
+      ["family": "xbox.gip", "initialization": ["xbox.gip/power-on", "xbox.gip/power-on"]],
       ["family": "xbox.gip", "initialization": [String]()],
       ["family": "xbox.xusb", "variant": "wired", "initialization": ["xbox.gip/power-on"]],
       ["family": "xbox.xusb", "variant": "wired", "keepAlive": false],
@@ -286,10 +288,16 @@ struct ControllerRecordDocumentTests {
   func schemaVocabularyMatchesTheSwiftEnums() throws {
     let schema = try Self.controllerSchema()
     let definitions = try #require(schema["$defs"] as? [String: Any])
-    #expect(
-      Self.enumValues(definitions["gipInitializationAction"])
-        == GIPStartupPacket.allCases.map(\.rawValue)
+    // The description defines the ids; the schema holds only their shape.
+    let action = try #require(definitions["gipInitializationAction"] as? [String: Any])
+    let pattern = try #require(action["pattern"] as? String)
+    let identifiers = try #require(
+      ProtocolDescription.bundled[.xboxGIP]?.namedPackets?.packets.map(\.id)
     )
+    #expect(!identifiers.isEmpty)
+    for identifier in identifiers {
+      #expect(identifier.range(of: pattern, options: .regularExpression) != nil, "\(identifier)")
+    }
 
     // Every implemented family has catalog rows, so the schema lists all of them.
     let protocolSchema = try #require(definitions["protocol"] as? [String: Any])

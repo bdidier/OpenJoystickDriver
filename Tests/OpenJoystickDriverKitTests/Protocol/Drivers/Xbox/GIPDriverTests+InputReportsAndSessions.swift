@@ -155,11 +155,6 @@ extension GIPDriverTests {
     #expect(parser.drainPendingWrites().isEmpty)
   }
 
-  @Test
-  func diagnosticHostRecipesStayEmptyUntilAVerifiedPacketExists() {
-    #expect(GIPStartupPacket.allCases.allSatisfy { !$0.isDiagnosticRecipe })
-  }
-
 }
 
 extension GIPDriverTests {

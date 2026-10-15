@@ -514,9 +514,7 @@
 "developer.connection" = "接続";
 "developer.controller" = "コントローラ";
 "developer.controllerDetails" = "コントローラ";
-"developer.diagnosticMode" = "診断モード";
 "developer.emptyCapture" = "「キャプチャを開始」を押してから、コントローラのボタンを押してください。";
-"developer.enterDiagnosticMode" = "診断モードに入る";
 "developer.exportCapture" = "パケットキャプチャを書き出す";
 "developer.extraInputs" = "追加ボタン";
 "developer.extraInputsDescription" = "追加ボタンを1つずつ押してください。検出されたボタンは、キャプチャを消去するまで一覧に残ります。";
@@ -527,7 +525,6 @@
 "developer.loadingControllers" = "コントローラの診断情報を読み込み中…";
 "developer.noControllers" = "コントローラが接続されていません";
 "developer.noControllersDetail" = "コントローラを接続して「更新」を押してください。";
-"developer.noDiagnosticRecipe" = "このコントローラでは診断モードを利用できません。";
 "developer.noExtraInputs" = "追加ボタンは検出されていません。";
 "developer.noPackets" = "キャプチャされたパケットはありません";
 "developer.packetCapture" = "生パケットキャプチャ";
@@ -1339,6 +1336,10 @@
 "cli.virtual.discussion.unit" = "--unit を付けると、「set」 はユニット ID で指定した 1 台のコントローラに適用され、「reset」 はそのコントローラをモデルの選択に戻します。";
 "cli.virtual.error.failed" = "%@ の仮想ゲームパッドは変更されませんでした (%@)。「ojd virtual show」で確認してください。";
 "cli.virtual.error.no_unit" = "%@ にはユニット ID がないため、選択はモデル全体にのみ適用できます。--unit を付けずにコマンドを実行してください。";
+"cli.virtual.export_mapping.abstract" = "仮想ゲームパッドのプロファイルから導出した SDL マッピングまたは W3C の記述を出力します。";
+"cli.virtual.export_mapping.discussion" = "SDL ではプロファイルごとに 1 行のマッピングを出力し、そのまま有効な SDL マッピングファイルになります。W3C では標準レイアウトの記述を JSON で出力します。どちらもプロファイルのレポートディスクリプタから導出されます。";
+"cli.virtual.export_mapping.format" = "出力する形式: sdl または w3c。";
+"cli.virtual.export_mapping.profile" = "出力する仮想ゲームパッドのプロファイル。省略するとすべてのプロファイルを出力します。";
 "cli.virtual.feed.abstract" = "stdin で操作される仮想ゲームパッドを公開します。";
 "cli.virtual.feed.discussion" = "1 行につき 1 つの JSON オブジェクトを読み取ります。「buttons」 と 「dpad」 は押されているコントロール (South や up など) を列挙し、「axes」 は軸名 (LeftStickX など) を値に対応付けます。省略したコントロールはニュートラルになります。スティックは -1 から 1 の範囲で Y が下方向、トリガーは 0 から 1 の範囲です。フレームは順番に再生され、各フレームは最低 8 ms 継続します。「holdMilliseconds」 を指定すると、フレームをより長く (最大 60000) 保持できます。ゲームがゲームパッドに送るすべての出力コマンド (振動など) を、1 行につき 1 つの JSON オブジェクトとして出力します。入力が終了した後、すべてのフレームを再生し終えると停止します。";
 "cli.virtual.feed.error.closed" = "サービスが仮想ゲームパッドを閉じました。「ojd status」 で確認してください。";
@@ -1357,6 +1358,7 @@
 "cli.virtual.reset.error.unit_all" = "--unit には CONTROLLER が必要です。--all は使用できません。";
 "cli.virtual.set.abstract" = "コントローラのモデルに使う仮想ゲームパッドを選択します。";
 "cli.virtual.set.profile" = "仮想ゲームパッドのプロファイル。";
+"cli.virtual.sdl_hints_note" = "注: %@ は SDL の既定のヒントでは動作しません。";
 "cli.virtual.show.abstract" = "各コントローラの仮想ゲームパッドと、選択できるプロファイルを表示します。";
 "cli.virtual.show.none" = "仮想ゲームパッドなし";
 "cli.virtual.show.profiles" = "プロファイル: %@";

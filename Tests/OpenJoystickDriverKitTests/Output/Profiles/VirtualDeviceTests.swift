@@ -15,6 +15,40 @@ struct VirtualDeviceTests {
   }
 
   @Test
+  func theRecordsStateWhichPersonaWorksWithDefaultSDLHints() throws {
+    #expect(VirtualDevice.definition(of: .generic).worksWithDefaultSDLHints == true)
+    #expect(VirtualDevice.definition(of: .sdlCompatible).worksWithDefaultSDLHints == false)
+  }
+
+  @Test
+  func aDefinitionWithoutOrWithAMalformedHintsFieldIsRefused() throws {
+    let url = URL(fileURLWithPath: #filePath)
+      .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+      .deletingLastPathComponent().deletingLastPathComponent()
+      .appendingPathComponent("Resources/VirtualDevices/virtual-device.generic.json")
+    var document = try #require(
+      try JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any]
+    )
+    _ = try VirtualDevice.decode(JSONSerialization.data(withJSONObject: document))
+    for value: Any? in [nil, "yes", 1] {
+      document["worksWithDefaultSDLHints"] = value
+      #expect(throws: ControllerRecordProblem.self, "\(String(describing: value))") {
+        try VirtualDevice.decode(JSONSerialization.data(withJSONObject: document))
+      }
+    }
+  }
+
+  @Test
+  func aSelectionRecordHoldsNoHintsField() {
+    let document =
+      "{\(Self.header),\"persona\":\"Generic\","
+      + "\"match\":{\"vendorID\":1,\"productID\":2},\"worksWithDefaultSDLHints\":true}"
+    #expect(throws: ControllerRecordProblem.self) {
+      try VirtualDevice.decode(Data(document.utf8))
+    }
+  }
+
+  @Test
   func genericIsTheDefaultPersona() {
     #expect(VirtualHIDProfileID.default == .generic)
   }

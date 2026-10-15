@@ -514,9 +514,7 @@
 "developer.connection" = "การเชื่อมต่อ";
 "developer.controller" = "คอนโทรลเลอร์";
 "developer.controllerDetails" = "คอนโทรลเลอร์";
-"developer.diagnosticMode" = "โหมดการวินิจฉัย";
 "developer.emptyCapture" = "กดเริ่มการจับ แล้วกดปุ่มบนคอนโทรลเลอร์";
-"developer.enterDiagnosticMode" = "เข้าสู่โหมดการวินิจฉัย";
 "developer.exportCapture" = "ส่งออกการจับแพ็กเก็ต";
 "developer.extraInputs" = "ปุ่มเพิ่มเติม";
 "developer.extraInputsDescription" = "กดทีละปุ่มเพิ่มเติม ปุ่มที่ตรวจพบจะอยู่ในรายการจนกว่าคุณจะล้างการจับ";
@@ -527,7 +525,6 @@
 "developer.loadingControllers" = "กำลังโหลดการวินิจฉัยคอนโทรลเลอร์…";
 "developer.noControllers" = "ไม่มีคอนโทรลเลอร์ที่เชื่อมต่อ";
 "developer.noControllersDetail" = "เชื่อมต่อคอนโทรลเลอร์ แล้วกดดึงข้อมูลใหม่";
-"developer.noDiagnosticRecipe" = "โหมดการวินิจฉัยไม่พร้อมใช้งานสำหรับคอนโทรลเลอร์นี้";
 "developer.noExtraInputs" = "ไม่พบปุ่มเพิ่มเติม";
 "developer.noPackets" = "ไม่มีแพ็กเก็ตที่จับได้";
 "developer.packetCapture" = "การจับแพ็กเก็ตดิบ";
@@ -1339,6 +1336,10 @@
 "cli.virtual.discussion.unit" = "เมื่อใช้ --unit “set” จะใช้กับคอนโทรลเลอร์หนึ่งตัวตาม ID ยูนิต และ “reset” จะคืนคอนโทรลเลอร์ตัวนั้นให้เป็นตัวเลือกของรุ่น";
 "cli.virtual.error.failed" = "เกมแพดเสมือนสำหรับ %@ ไม่เปลี่ยนแปลง (%@) ตรวจสอบด้วย “ojd virtual show”";
 "cli.virtual.error.no_unit" = "%@ ไม่มี ID ยูนิต ตัวเลือกจึงใช้ได้กับทั้งรุ่นเท่านั้น เรียกใช้คำสั่งโดยไม่ใช้ --unit";
+"cli.virtual.export_mapping.abstract" = "พิมพ์การแมป SDL หรือคำอธิบาย W3C ที่โปรไฟล์เกมแพดเสมือนสร้างขึ้น";
+"cli.virtual.export_mapping.discussion" = "SDL พิมพ์บรรทัดการแมปหนึ่งบรรทัดต่อโปรไฟล์ ซึ่งเป็นไฟล์การแมป SDL ที่ใช้ได้ ส่วน W3C พิมพ์คำอธิบายเลย์เอาต์มาตรฐานเป็น JSON ทั้งสองอย่างสร้างจากตัวบรรยายรายงานของโปรไฟล์";
+"cli.virtual.export_mapping.format" = "รูปแบบที่จะพิมพ์: sdl หรือ w3c";
+"cli.virtual.export_mapping.profile" = "โปรไฟล์เกมแพดเสมือนที่จะพิมพ์ ละไว้เพื่อพิมพ์ทุกโปรไฟล์";
 "cli.virtual.feed.abstract" = "เผยแพร่เกมแพดเสมือนที่ควบคุมด้วยอินพุตมาตรฐาน";
 "cli.virtual.feed.discussion" = "อ่านออบเจ็กต์ JSON หนึ่งรายการต่อบรรทัด โดย “buttons” และ “dpad” แสดงรายการตัวควบคุมที่ถูกกด เช่น South และ up ส่วน “axes” จับคู่ชื่อแกน เช่น LeftStickX กับค่า ตัวควบคุมที่ไม่ระบุจะอยู่ตำแหน่งกลาง สติ๊กมีค่าตั้งแต่ -1 ถึง 1 โดย Y ชี้ลง ทริกเกอร์มีค่าตั้งแต่ 0 ถึง 1 เฟรมจะเล่นตามลำดับ เฟรมละอย่างน้อย 8 มิลลิวินาที ส่วน “holdMilliseconds” ทำให้เฟรมอยู่นานขึ้นได้สูงสุด 60000 พิมพ์คำสั่งเอาต์พุตแต่ละรายการที่เกมส่งไปยังเกมแพด เช่นแรงสั่น เป็นออบเจ็กต์ JSON หนึ่งรายการต่อบรรทัด จะหยุดเมื่อเล่นครบทุกเฟรมหลังจากอินพุตสิ้นสุด";
 "cli.virtual.feed.error.closed" = "บริการปิดเกมแพดเสมือนแล้ว ตรวจสอบด้วย “ojd status”";
@@ -1357,6 +1358,7 @@
 "cli.virtual.reset.error.unit_all" = "--unit ต้องใช้ CONTROLLER ไม่ใช่ --all";
 "cli.virtual.set.abstract" = "เลือกเกมแพดเสมือนสำหรับรุ่นของคอนโทรลเลอร์";
 "cli.virtual.set.profile" = "โปรไฟล์เกมแพดเสมือน";
+"cli.virtual.sdl_hints_note" = "หมายเหตุ: %@ ใช้งานไม่ได้กับฮินต์เริ่มต้นของ SDL";
 "cli.virtual.show.abstract" = "แสดงเกมแพดเสมือนของคอนโทรลเลอร์แต่ละตัวและโปรไฟล์ที่คุณเลือกได้";
 "cli.virtual.show.none" = "ไม่มีเกมแพดเสมือน";
 "cli.virtual.show.profiles" = "โปรไฟล์: %@";

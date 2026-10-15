@@ -65,7 +65,7 @@ struct ServingPolicyCallersTests {
         accessRoute: fixture.accessRoute
       )) != nil
     let cli = Answer(
-      persona: VirtualShowReport.Controller(described).profile,
+      persona: try VirtualShowReport.Controller(described).profile,
       offersServerChoice: cliAccepts
     )
     // GUI: the persona it shows and whether it shows the picker.
