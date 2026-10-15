@@ -202,6 +202,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The pr
 
 ### Fixed
 
+- The native-send deadline of a virtual gamepad, the 2-second wait for a virtual device to report cancellation, and the deadline of `withTimeout` in the command line now run on a timer thread of their own instead of `Task.sleep` on the cooperative pool, so a busy pool no longer delays them past their limit.
+- The idle and hung-send deadline of a virtual feed, the frame-hold pacing of its player, and the timeouts of a virtual output transition now run on the same timer thread, so a busy pool no longer delays them.
 - Merge the stick reports that queue behind a slow virtual-gamepad publication to the newest state while keeping every button edge, so sticks no longer stutter. A remapping route's controller still gets every queued report, and ending a session drops held input. Not verified on hardware.
 - List an Xbox One controller (`045E:02D1`) in `ojd controller list` while the XboxUSBDevice extension is active ([issue #18](https://github.com/xsyetopz/OpenJoystickDriver/issues/18)): the extension route reads the vendor, product, location, and name from the parent USB device. Not verified on hardware.
 - Stop a USB pipeline that a detach stopped before admission started it from opening a session that nothing closed.

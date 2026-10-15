@@ -86,26 +86,20 @@ extension UserSpaceOutputDispatcher {
 
     /// Suspends until the device's cancel handler ran, so the device no longer publishes.
     func waitUntilClosed() async {
-      await withTaskGroup(of: Void.self) { group in
-        group.addTask { [self] in
-          await withCheckedContinuation { continuation in
-            let done = cancellation.withLock { state -> Bool in
-              if state.completed { return true }
-              state.waiters.append(continuation)
-              return false
-            }
-            if done { continuation.resume() }
-          }
-        }
-        group.addTask { [self] in
-          // A device that never reports cancellation must not stall teardown forever.
-          guard (try? await Task.sleep(nanoseconds: Self.cancellationTimeoutNanoseconds)) != nil
-          else { return }
-          finishCancellation()
-        }
-        await group.next()
-        group.cancelAll()
+      // A device that never reports cancellation must not stall teardown forever. The limit runs
+      // on a timer thread, so a starved cooperative pool cannot extend it.
+      let cancelTimeout = DeadlineTimer.dispatch.schedule(Self.cancellationTimeoutNanoseconds) {
+        [weak self] in self?.finishCancellation()
       }
+      await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+        let done = cancellation.withLock { state -> Bool in
+          if state.completed { return true }
+          state.waiters.append(continuation)
+          return false
+        }
+        if done { continuation.resume() }
+      }
+      cancelTimeout()
     }
 
     deinit { close() }
