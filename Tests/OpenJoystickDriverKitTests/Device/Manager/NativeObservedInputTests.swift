@@ -46,11 +46,12 @@ struct NativeObservedInputTests {
     #expect(expected.reportID == 0x01 && expected.bytes.count == 49 && expected.bytes[10] == 0x02)
     #expect(expected.bytes[3] == 0 && expected.bytes[5] == 0)
     #expect(await backend.recordedFeatureReports().isEmpty)
-    // A USB Sixaxis sends no input until the host reads feature 0xF2; macOS does not.
-    #expect(await backend.recordedFeatureReadReportIDs() == [0xF2, 0xF5])
+    // The record's mode probe reads feature 0xEF first. A USB Sixaxis then sends no input until
+    // the host reads feature 0xF2; macOS does not.
+    #expect(await backend.recordedFeatureReadReportIDs() == [0xEF, 0xF2, 0xF5])
     // A never-seized native device is reachable only through its exact connection.
     let target: UUID? = connection.connectionID
-    #expect(await backend.recordedFeatureReadTargets() == [target, target])
+    #expect(await backend.recordedFeatureReadTargets() == [target, target, target])
     #expect(
       await manager.sendManualRumble(
         for: identifier,

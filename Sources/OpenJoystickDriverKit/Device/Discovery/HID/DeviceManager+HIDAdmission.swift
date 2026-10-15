@@ -86,7 +86,17 @@ extension DeviceManager {
       }
     }
     let connectionName = physicalDevice.transportProperty ?? "HID"
-    let classification = protocolDriverRegistry.classify(physicalDevice, backend: .ioHID)
+    let modeSelection = await selectedHIDMode(
+      for: connection,
+      vendorID: vendorID,
+      productID: productID
+    )
+    guard !Task.isCancelled, isCurrentHIDInitialization(connection) else { return }
+    let classification = protocolDriverRegistry.classify(
+      physicalDevice,
+      backend: .ioHID,
+      modeID: modeSelection.modeID
+    )
     let binding: ProtocolBinding
     let driver: any PhysicalProtocolDriver
     switch classification {

@@ -320,11 +320,11 @@ public struct ControllerRecordSet: Sendable {
       let model = ControllerModelID(vendorID: vendorID, productID: productID)
       guard let fields = document["set"] as? [String: Any], !fields.isEmpty,
         Set(fields.keys).isSubset(of: [
-          "protocol", "usb", "bluetoothLE", "ownership", "output", "input", "tuning",
+          "protocol", "modes", "usb", "bluetoothLE", "ownership", "output", "input", "tuning",
         ])
       else {
         throw ControllerRecordProblem(
-          "set must hold protocol, usb, bluetoothLE, ownership, output, input, or tuning"
+          "set must hold protocol, modes, usb, bluetoothLE, ownership, output, input, or tuning"
         )
       }
       guard let upstream = bundled.records[model] ?? packages[model],
