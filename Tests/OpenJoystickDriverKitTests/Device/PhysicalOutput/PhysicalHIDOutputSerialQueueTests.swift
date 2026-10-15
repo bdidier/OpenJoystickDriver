@@ -22,7 +22,27 @@ private actor PhysicalHIDOutputOrderRecorder {
   func snapshot() -> [Int] { values }
 }
 
+@Suite(.timeLimit(.minutes(2)))
 struct PhysicalHIDOutputSerialQueueTests {
+  /// A background caller must not leave background-priority tasks on the chain: macOS may not
+  /// schedule them under load, and every later operation would wait behind them. This checks the
+  /// priority itself, so it fails without needing contention.
+  @Test
+  func operationsRunAtTheQueuePriorityWhateverTheCallerPriority() async {
+    let queue = PhysicalHIDOutputSerialQueue()
+    for callerPriority in [TaskPriority.background, .low, .utility] {
+      let outcome = await Task(priority: callerPriority) {
+        await queue.perform { _ in Task.currentPriority }
+      }.value
+      #expect(outcome == .completed(PhysicalHIDOutputSerialQueue.taskPriority))
+    }
+    let successor = PhysicalHIDOutputSerialQueue(after: queue)
+    let outcome = await Task(priority: .background) {
+      await successor.perform { _ in Task.currentPriority }
+    }.value
+    #expect(outcome == .completed(PhysicalHIDOutputSerialQueue.taskPriority))
+  }
+
   @Test
   func commandsCompleteInSubmissionOrderWithoutInterleaving() async {
     let queue = PhysicalHIDOutputSerialQueue()

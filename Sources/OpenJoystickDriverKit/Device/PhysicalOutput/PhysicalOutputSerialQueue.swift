@@ -28,7 +28,7 @@ actor PhysicalHIDOutputSerialQueue {
   /// The priority of the queue's own tasks, whatever the caller's. A task created at the caller's
   /// priority inherits a background caller's: under CPU contention macOS may not schedule a
   /// background-QoS job for minutes, and every later operation, however urgent, waits behind it.
-  private static let taskPriority = TaskPriority.userInitiated
+  static let taskPriority = TaskPriority.userInitiated
 
   @TaskLocal
   private static var runningOperation: RunningOperation?
