@@ -31,7 +31,9 @@ public final class Switch1Driver: PhysicalProtocolDriver {
   private let isBluetooth: Bool
   private var sensorSamples = NintendoSensorSamples()
   private var motionCalibration = NintendoMotionCalibration.nominal
-  private var pendingMotionCalibration: Set<UInt32> = []
+  private var pendingMotionCalibration: Set<SubcommandRequest.SPIRead.Purpose> = []
+  /// The subcommand report, counter rule and startup requests from the family's description.
+  private let subcommands: SubcommandPlan
   private var factoryMotionBytes: [UInt8]?
   private var userMotionBytes: [UInt8]?
   private var state = ControllerState.neutral
@@ -42,6 +44,9 @@ public final class Switch1Driver: PhysicalProtocolDriver {
   public init(layout: NintendoControllerLayout = .pro, isBluetooth: Bool = false) {
     self.layout = layout
     self.isBluetooth = isBluetooth
+    guard let subcommands = PhysicalProtocolID.nintendoSwitch1.protocolDescription.subcommands
+    else { fatalError("[ProtocolDescription] nintendo.switch1 has no subcommands") }
+    self.subcommands = subcommands
   }
 
   /// A new transport session starts from neutral input and re-anchors motion time.
@@ -202,34 +207,23 @@ public final class Switch1Driver: PhysicalProtocolDriver {
   private static let rightJoyConButtonTable: [(UInt32, Control)] =
     [(0x0000_0020, .auxiliary5), (0x0000_0010, .auxiliary6)] + proButtonTable
 
+  /// Every request of the description in order; the SPI reads join the pending set.
   private func startupReports() -> [PhysicalHIDOutputReport] {
-    [
-      subcommand(0x03, data: [0x30]), subcommand(0x40, data: [0x01]),
-      subcommand(0x48, data: [0x01]),
-    ] + motionCalibrationRequests()
-  }
-
-  private func motionCalibrationRequests() -> [PhysicalHIDOutputReport] {
-    pendingMotionCalibration = [0x6020, 0x8026]
+    pendingMotionCalibration = Set(subcommands.requests.compactMap { $0.spiRead?.purpose })
     factoryMotionBytes = nil
     userMotionBytes = nil
-    return pendingMotionCalibrationRequests()
+    return subcommands.requests.map { subcommand($0.subcommand, data: $0.data) }
   }
 
   public func startupRecoveryWrites() -> [PhysicalOutputWrite] {
     pendingMotionCalibrationRequests().map { .hidOutput($0) }
   }
 
+  /// The SPI reads whose reply has not arrived, in the description's order.
   private func pendingMotionCalibrationRequests() -> [PhysicalHIDOutputReport] {
-    pendingMotionCalibration.sorted().map { address in
-      let length: UInt8 = address == 0x6020 ? 24 : 20
-      return subcommand(
-        0x10,
-        data: [
-          UInt8(truncatingIfNeeded: address), UInt8(truncatingIfNeeded: address >> 8), 0, 0, length,
-        ]
-      )
-    }
+    subcommands.requests
+      .filter { $0.spiRead.map { pendingMotionCalibration.contains($0.purpose) } ?? false }
+      .map { subcommand($0.subcommand, data: $0.data) }
   }
 
   public func expireStartupRecovery() {
@@ -239,21 +233,26 @@ public final class Switch1Driver: PhysicalProtocolDriver {
   }
 
   private func consumeMotionCalibrationReply(_ bytes: [UInt8]) {
-    guard bytes.count >= 20, bytes[13] & 0x80 != 0, bytes[14] == 0x10 else { return }
+    guard bytes.count >= 20, bytes[13] & 0x80 != 0 else { return }
     let address =
       UInt32(bytes[15]) | (UInt32(bytes[16]) << 8) | (UInt32(bytes[17]) << 16)
       | (UInt32(bytes[18]) << 24)
-    guard pendingMotionCalibration.contains(address) else { return }
-    let length = address == 0x6020 ? 24 : 20
+    guard
+      let request = subcommands.requests.first(where: {
+        $0.subcommand == bytes[14] && $0.spiRead?.address == address
+      }),
+      let read = request.spiRead, pendingMotionCalibration.contains(read.purpose)
+    else { return }
+    let length = Int(read.length)
     guard Int(bytes[19]) == length, bytes.count >= 20 + length else { return }
     let data = Array(bytes[20..<(20 + length)])
-    if address == 0x6020 {
+    if read.purpose == .factoryMotionCalibration {
       guard NintendoMotionCalibration.factory(data) != nil else { return }
       factoryMotionBytes = data
     } else {
       userMotionBytes = data[0] == 0xB2 && data[1] == 0xA1 ? data : nil
     }
-    pendingMotionCalibration.remove(address)
+    pendingMotionCalibration.remove(read.purpose)
     guard let factoryMotionBytes,
       let factory = NintendoMotionCalibration.factory(factoryMotionBytes)
     else { return }
@@ -266,16 +265,16 @@ public final class Switch1Driver: PhysicalProtocolDriver {
 
   private func subcommand(_ id: UInt8, data: [UInt8]) -> PhysicalHIDOutputReport {
     var bytes = [UInt8](repeating: 0, count: 11 + data.count)
-    bytes[0] = 0x01
+    bytes[0] = subcommands.reportID
     bytes[1] = nextPacketNumber()
     bytes.replaceSubrange(2..<10, with: physicalRumbleData)
     bytes[10] = id
     for (index, value) in data.enumerated() { bytes[11 + index] = value }
-    return PhysicalHIDOutputReport(reportID: 0x01, bytes: bytes)
+    return PhysicalHIDOutputReport(reportID: subcommands.reportID, bytes: bytes)
   }
 
   private func nextPacketNumber() -> UInt8 {
-    defer { outputPacketNumber = (outputPacketNumber + 1) & 0x0F }
+    defer { outputPacketNumber = subcommands.nextCounter(after: outputPacketNumber) }
     return outputPacketNumber
   }
 

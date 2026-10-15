@@ -58,20 +58,23 @@ extension ProtocolDescription {
       }
     }
 
-    /// `defaults.session`: what runs while the device is open. Today the keep-alive; task 11.4
-    /// moves the startup writes here, so both share one `session` shape.
+    /// `defaults.session`: what runs while the device is open. Today the keep-alive and the
+    /// Switch 1 subcommands; task 11.4 moves the startup writes here, so all share one `session`
+    /// shape.
     struct Session: Decodable {
       let keepAlive: KeepAlive?
+      let subcommands: SubcommandPlan?
 
       init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: DocumentKey.self)
-        try container.rejectUnknown(allowed: ["keepAlive"])
+        try container.rejectUnknown(allowed: ["keepAlive", "subcommands"])
         guard !container.allKeys.isEmpty else {
           throw DecodingError.dataCorrupted(
             .init(codingPath: decoder.codingPath, debugDescription: "session must not be empty")
           )
         }
         keepAlive = try container.decodeOptional(KeepAlive.self, for: "keepAlive")
+        subcommands = try container.decodeOptional(SubcommandPlan.self, for: "subcommands")
       }
     }
 
