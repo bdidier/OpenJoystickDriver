@@ -5,7 +5,8 @@ import OpenJoystickDriverKit
 /// Decodes and validates a profile document, turning any error into a usage error.
 func decodeProfile(_ data: Data, source: String) throws -> RemappingProfile {
   do { return try RemappingProfileFileStore.load(from: data) } catch {
-    throw CLIFailure.usage(
+    throw CLIFailure(
+      DocumentProblem.code(error) ?? .usage,
       CLILocalized.format(
         "cli.profile.document_invalid",
         source,
@@ -139,7 +140,7 @@ struct ProfileValidateCommand: AsyncParsableCommand {
         let problem = DocumentProblem.describe(error)
         if CLIContext.current.format == .json { try CLIOutput.json(Result(problem: problem)) }
         throw CLIFailure(
-          .invalidInputFile,
+          DocumentProblem.code(error) ?? .invalidInputFile,
           CLILocalized.format(
             "cli.profile.document_invalid",
             file == "-" ? "stdin" : file,

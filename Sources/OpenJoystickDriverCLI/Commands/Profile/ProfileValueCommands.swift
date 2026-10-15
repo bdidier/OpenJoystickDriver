@@ -249,7 +249,8 @@ struct ProfileSetCommand: AsyncParsableCommand {
     }
     let edited: RemappingProfile
     do { edited = try RemappingProfileFileStore.load(from: try JSONEncoder().encode(tree)) } catch {
-      throw CLIFailure.usage(
+      throw CLIFailure(
+        DocumentProblem.code(error) ?? .usage,
         CLILocalized.format(
           "cli.profile.set.invalid",
           key.text,

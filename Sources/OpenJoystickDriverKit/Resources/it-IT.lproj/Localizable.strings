@@ -1585,6 +1585,7 @@
 "cli.explain.area.cli" = "Riga di comando";
 "cli.explain.area.remapping" = "Rimappatura";
 "cli.explain.area.mod" = "Pacchetti mod";
+"cli.explain.area.document" = "Documenti";
 "cli.explain.exit_code" ="Codice di uscita: %@";
 "cli.explain.wire" = "Valore di trasmissione: %@";
 "cli.error.stale_installation" = "L’app OpenJoystickDriver.app installata è più vecchia di questi sorgenti del repository. Esegui «./Scripts/ojd build install-fast dev» oppure imposta OJD_RUN_REPOSITORY_CLI=1 per eseguire questa build.";
@@ -1647,4 +1648,5 @@
 "error.E4005" = "Un pacchetto con questo nome è già installato. Esegui il comando con --force per sostituirlo.";
 "error.E4006" = "Nessun pacchetto installato ha questo nome. Esegui ojd mod list per vedere i pacchetti installati.";
 "error.E4007" = "Non è stato possibile modificare la cartella dei pacchetti. Controlla lo spazio libero su disco e i permessi della cartella.";
+"error.E5001" = "Un documento non ha apiVersion, oppure la sua apiVersion non è supportata da questa versione di OpenJoystickDriver. Cambia il documento con l’apiVersion supportata indicata dal messaggio ed esegui di nuovo il comando.";
 "error.withCode" ="%@ (%@)";

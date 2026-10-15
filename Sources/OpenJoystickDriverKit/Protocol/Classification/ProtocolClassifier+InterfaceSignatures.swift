@@ -118,7 +118,8 @@ extension ProtocolClassifier {
       kind: document.kind,
       expected: protocolDescriptionKind
     ) {
-      throw ControllerRecordProblem("\(fileName): \(problem)")
+      if problem.code != nil { throw problem.located(in: fileName) }
+      throw ControllerRecordProblem("\(fileName): \(problem.message)")
     }
     guard document.family == protocolID.rawValue else {
       throw ControllerRecordProblem("\(fileName): family must be \(protocolID.rawValue)")

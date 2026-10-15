@@ -1585,6 +1585,7 @@
 "cli.explain.area.cli" = "سطر الأوامر";
 "cli.explain.area.remapping" = "إعادة التعيين";
 "cli.explain.area.mod" = "حزم المودات";
+"cli.explain.area.document" = "المستندات";
 "cli.explain.exit_code" ="رمز الخروج: %@";
 "cli.explain.wire" = "قيمة السلك: %@";
 "cli.error.stale_installation" = "تطبيق OpenJoystickDriver.app المثبّت أقدم من مصادر المستودع هذه. شغّل «./Scripts/ojd build install-fast dev» أو اضبط OJD_RUN_REPOSITORY_CLI=1 لتشغيل هذا الإصدار.";
@@ -1647,4 +1648,5 @@
 "error.E4005" = "توجد حزمة مثبتة بهذا الاسم بالفعل. شغّل الأمر مع --force لاستبدالها.";
 "error.E4006" = "لا توجد حزمة مثبتة بهذا الاسم. شغّل ojd mod list لعرض الحزم المثبتة.";
 "error.E4007" = "تعذّر تغيير مجلد الحزم. افحص مساحة القرص الحرة وأذونات المجلد.";
+"error.E5001" = "المستند لا يحتوي على apiVersion، أو أن apiVersion غير مدعوم في هذا الإصدار من OpenJoystickDriver. غيّر المستند إلى apiVersion المدعوم الذي تذكره الرسالة، ثم شغّل الأمر مرة أخرى.";
 "error.withCode" ="%@ (%@)";

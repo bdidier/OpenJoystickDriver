@@ -1585,6 +1585,7 @@
 "cli.explain.area.cli" = "कमांड लाइन";
 "cli.explain.area.remapping" = "रीमैपिंग";
 "cli.explain.area.mod" = "मॉड पैकेज";
+"cli.explain.area.document" = "दस्तावेज़";
 "cli.explain.exit_code" ="एग्ज़िट कोड: %@";
 "cli.explain.wire" = "वायर मान: %@";
 "cli.error.stale_installation" = "इंस्टॉल किया गया OpenJoystickDriver.app इन रिपॉज़िटरी स्रोतों से पुराना है। इस बिल्ड को चलाने के लिए “./Scripts/ojd build install-fast dev” चलाएँ या OJD_RUN_REPOSITORY_CLI=1 सेट करें।";
@@ -1647,4 +1648,5 @@
 "error.E4005" = "इस नाम का पैकेज पहले से इंस्टॉल है। उसे बदलने के लिए कमांड को --force के साथ चलाएँ।";
 "error.E4006" = "इस नाम का कोई इंस्टॉल किया हुआ पैकेज नहीं है। इंस्टॉल किए गए पैकेज देखने के लिए ojd mod list चलाएँ।";
 "error.E4007" = "पैकेज फ़ोल्डर बदला नहीं जा सका। डिस्क की खाली जगह और फ़ोल्डर की अनुमतियाँ जाँचें।";
+"error.E5001" = "किसी दस्तावेज़ में apiVersion नहीं है, या उसका apiVersion OpenJoystickDriver के इस संस्करण में समर्थित नहीं है। दस्तावेज़ को संदेश में बताए गए समर्थित apiVersion पर बदलें और कमांड फिर से चलाएँ।";
 "error.withCode" ="%@ (%@)";

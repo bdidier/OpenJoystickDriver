@@ -1585,6 +1585,7 @@
 "cli.explain.area.cli" = "Baris perintah";
 "cli.explain.area.remapping" = "Pemetaan ulang";
 "cli.explain.area.mod" = "Paket mod";
+"cli.explain.area.document" = "Dokumen";
 "cli.explain.exit_code" ="Kode keluar: %@";
 "cli.explain.wire" = "Nilai wire: %@";
 "cli.error.stale_installation" = "OpenJoystickDriver.app yang terinstal lebih lama daripada sumber repositori ini. Jalankan “./Scripts/ojd build install-fast dev”, atau atur OJD_RUN_REPOSITORY_CLI=1 untuk menjalankan build ini.";
@@ -1647,4 +1648,5 @@
 "error.E4005" = "Paket dengan nama ini sudah terpasang. Jalankan perintah dengan --force untuk menggantinya.";
 "error.E4006" = "Tidak ada paket terpasang dengan nama ini. Jalankan ojd mod list untuk melihat paket yang terpasang.";
 "error.E4007" = "Folder paket tidak dapat diubah. Periksa ruang disk yang tersisa dan izin folder.";
+"error.E5001" = "Dokumen tidak memiliki apiVersion, atau apiVersion-nya tidak didukung oleh versi OpenJoystickDriver ini. Ubah dokumen ke apiVersion yang didukung seperti yang disebutkan pesan, lalu jalankan perintah lagi.";
 "error.withCode" ="%@ (%@)";

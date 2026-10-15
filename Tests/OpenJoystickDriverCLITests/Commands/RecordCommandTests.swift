@@ -78,7 +78,7 @@ struct RecordCommandTests {
     #expect(json.code == 1)
     #expect(try json.json()["valid"] as? Bool == false)
     #expect((try json.json()["problem"] as? String)?.contains("apiVersion") == true)
-    #expect(json.standardError.hasPrefix("error[E2011]: "))
+    #expect(json.standardError.hasPrefix("error[E5001]: "))
     #expect(json.standardError.contains("no apiVersion found"))
     #expect(install.code == 1)
     #expect(directory.fileNames.isEmpty)

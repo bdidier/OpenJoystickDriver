@@ -75,6 +75,7 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
   case packageAlreadyInstalled = "E4005"
   case packageNotInstalled = "E4006"
   case packageStoreUnwritable = "E4007"
+  case unsupportedAPIVersion = "E5001"
 
   /// The part of the product that raises a code; the first digit of the number.
   public enum Domain: String, Sendable {
@@ -82,6 +83,7 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
     case commandLine = "cli"
     case remapping
     case mod
+    case document
   }
 
   public var domain: Domain {
@@ -108,6 +110,8 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
     case .invalidManifest, .requiresExcludesVersion, .invalidPackageContent, .packageClash,
       .packageAlreadyInstalled, .packageNotInstalled, .packageStoreUnwritable:
       .mod
+    case .unsupportedAPIVersion:
+      .document
     }
   }
 

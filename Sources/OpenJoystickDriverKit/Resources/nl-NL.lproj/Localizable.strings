@@ -1585,6 +1585,7 @@
 "cli.explain.area.cli" = "Opdrachtregel";
 "cli.explain.area.remapping" = "Hertoewijzing";
 "cli.explain.area.mod" = "Modpakketten";
+"cli.explain.area.document" = "Documenten";
 "cli.explain.exit_code" ="Afsluitcode: %@";
 "cli.explain.wire" = "Wire-waarde: %@";
 "cli.error.stale_installation" = "De geïnstalleerde OpenJoystickDriver.app is ouder dan deze repositorybronnen. Voer „./Scripts/ojd build install-fast dev” uit of stel OJD_RUN_REPOSITORY_CLI=1 in om deze build uit te voeren.";
@@ -1647,4 +1648,5 @@
 "error.E4005" = "Er is al een pakket met deze naam geïnstalleerd. Voer de opdracht uit met --force om het te vervangen.";
 "error.E4006" = "Geen geïnstalleerd pakket heeft deze naam. Voer ojd mod list uit om de geïnstalleerde pakketten te zien.";
 "error.E4007" = "De pakketmap kon niet worden gewijzigd. Controleer de vrije schijfruimte en de maprechten.";
+"error.E5001" = "Een document heeft geen apiVersion, of de apiVersion wordt niet ondersteund door deze versie van OpenJoystickDriver. Wijzig het document naar de ondersteunde apiVersion die de melding noemt en voer de opdracht opnieuw uit.";
 "error.withCode" ="%@ (%@)";

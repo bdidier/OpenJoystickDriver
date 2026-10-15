@@ -1585,6 +1585,7 @@
 "cli.explain.area.cli" = "Ligne de commande";
 "cli.explain.area.remapping" = "Réaffectation";
 "cli.explain.area.mod" = "Paquets de mods";
+"cli.explain.area.document" = "Fichiers de configuration";
 "cli.explain.exit_code" ="Code de sortie : %@";
 "cli.explain.wire" = "Valeur de transmission : %@";
 "cli.error.stale_installation" = "L’application OpenJoystickDriver.app installée est plus ancienne que ces sources du dépôt. Exécutez « ./Scripts/ojd build install-fast dev » ou définissez OJD_RUN_REPOSITORY_CLI=1 pour exécuter cette version.";
@@ -1647,4 +1648,5 @@
 "error.E4005" = "Un paquet portant ce nom est déjà installé. Lancez la commande avec --force pour le remplacer.";
 "error.E4006" = "Aucun paquet installé ne porte ce nom. Lancez ojd mod list pour voir les paquets installés.";
 "error.E4007" = "Le dossier des paquets n’a pas pu être modifié. Vérifiez l’espace disque libre et les autorisations du dossier.";
+"error.E5001" = "Un document n’a pas d’apiVersion, ou son apiVersion n’est pas prise en charge par cette version d’OpenJoystickDriver. Remplacez-la dans le document par l’apiVersion prise en charge que le message indique, puis relancez la commande.";
 "error.withCode" ="%@ (%@)";

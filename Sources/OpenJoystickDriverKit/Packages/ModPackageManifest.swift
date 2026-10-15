@@ -75,7 +75,10 @@ extension ModPackageManifest: Decodable {
       kind: try container.decodeIfPresent(String.self, forKey: .kind),
       expected: Self.kind
     ) {
-      throw ModPackageError(.invalidManifest, problem)
+      guard let code = problem.code else {
+        throw ModPackageError(.invalidManifest, problem.message)
+      }
+      throw ModPackageError(code, "\(Self.fileName): \(problem.message)")
     }
     name = try container.decode(String.self, forKey: .name)
     guard name.range(of: "\\A[a-z0-9]+(-[a-z0-9]+)*\\z", options: .regularExpression) != nil else {

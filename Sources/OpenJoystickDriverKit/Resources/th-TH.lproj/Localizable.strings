@@ -1585,6 +1585,7 @@
 "cli.explain.area.cli" = "บรรทัดคำสั่ง";
 "cli.explain.area.remapping" = "การแมปใหม่";
 "cli.explain.area.mod" = "แพ็กเกจม็อด";
+"cli.explain.area.document" = "เอกสาร";
 "cli.explain.exit_code" ="รหัสออก: %@";
 "cli.explain.wire" = "ค่าบนสาย: %@";
 "cli.error.stale_installation" = "OpenJoystickDriver.app ที่ติดตั้งเก่ากว่าซอร์สของที่เก็บนี้ เรียกใช้ “./Scripts/ojd build install-fast dev” หรือตั้ง OJD_RUN_REPOSITORY_CLI=1 เพื่อเรียกใช้บิลด์นี้";
@@ -1647,4 +1648,5 @@
 "error.E4005" = "มีแพ็กเกจชื่อนี้ติดตั้งอยู่แล้ว เรียกใช้คำสั่งด้วย --force เพื่อแทนที่";
 "error.E4006" = "ไม่มีแพ็กเกจที่ติดตั้งไว้ที่ใช้ชื่อนี้ เรียกใช้ ojd mod list เพื่อดูแพ็กเกจที่ติดตั้งไว้";
 "error.E4007" = "เปลี่ยนโฟลเดอร์แพ็กเกจไม่ได้ ตรวจสอบพื้นที่ดิสก์ว่างและสิทธิ์ของโฟลเดอร์";
+"error.E5001" = "เอกสารไม่มี apiVersion หรือ apiVersion ของเอกสารไม่ได้รับการรองรับใน OpenJoystickDriver เวอร์ชันนี้ ให้เปลี่ยนเอกสารเป็น apiVersion ที่รองรับซึ่งข้อความระบุไว้ แล้วเรียกใช้คำสั่งอีกครั้ง";
 "error.withCode" ="%@ (%@)";

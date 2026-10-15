@@ -140,14 +140,14 @@ struct RemappingProfileTests {
       bindings: []
     )
     let supported = "the supported apiVersion is \(OpenJoystickDriverAPI.version)"
-    let cases: [(member: String, value: String?, message: String)] = [
-      ("apiVersion", nil, "no apiVersion found; \(supported)"),
+    let cases: [(member: String, value: String?, code: ErrorCode?, message: String)] = [
+      ("apiVersion", nil, .unsupportedAPIVersion, "no apiVersion found; \(supported)"),
       (
-        "apiVersion", "openjoystickdriver.io/v1beta1",
+        "apiVersion", "openjoystickdriver.io/v1beta1", .unsupportedAPIVersion,
         "apiVersion openjoystickdriver.io/v1beta1 is not supported; \(supported)"
       ),
-      ("kind", nil, "no kind found; expected Profile"),
-      ("kind", "Controller", "expected Profile, found Controller"),
+      ("kind", nil, nil, "no kind found; expected Profile"),
+      ("kind", "Controller", nil, "expected Profile, found Controller"),
     ]
     for item in cases {
       var object = try #require(
@@ -158,7 +158,12 @@ struct RemappingProfileTests {
       do {
         _ = try JSONDecoder().decode(RemappingProfile.self, from: data)
         Issue.record("\(item.member) \(item.value ?? "nil") was accepted")
+      } catch let problem as DocumentHeaderProblem {
+        #expect(item.code != nil)
+        #expect(problem.code == item.code)
+        #expect(problem.message == item.message)
       } catch let DecodingError.dataCorrupted(context) {
+        #expect(item.code == nil)
         #expect(context.debugDescription == item.message)
       }
     }

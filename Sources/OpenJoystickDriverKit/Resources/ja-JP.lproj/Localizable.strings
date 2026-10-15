@@ -1585,6 +1585,7 @@
 "cli.explain.area.cli" = "コマンドライン";
 "cli.explain.area.remapping" = "リマッピング";
 "cli.explain.area.mod" = "MODパッケージ";
+"cli.explain.area.document" = "書類";
 "cli.explain.exit_code" ="終了コード: %@";
 "cli.explain.wire" = "ワイヤ値: %@";
 "cli.error.stale_installation" = "インストールされている OpenJoystickDriver.app は、このリポジトリのソースより古いものです。このビルドを実行するには、「./Scripts/ojd build install-fast dev」を実行するか、OJD_RUN_REPOSITORY_CLI=1 を設定してください。";
@@ -1647,4 +1648,5 @@
 "error.E4005" = "この名前のパッケージはすでにインストールされています。置き換えるには --force を付けてコマンドを実行してください。";
 "error.E4006" = "この名前のインストール済みパッケージはありません。ojd mod list を実行して、インストール済みのパッケージを確認してください。";
 "error.E4007" = "パッケージフォルダを変更できませんでした。ディスクの空き容量とフォルダの権限を確認してください。";
+"error.E5001" = "書類に apiVersion がないか、その apiVersion はこのバージョンの OpenJoystickDriver ではサポートされていません。書類をメッセージに示されたサポート対象の apiVersion に変更して、コマンドをもう一度実行してください。";
 "error.withCode" ="%@（%@）";

@@ -97,7 +97,7 @@ struct ModPackageStoreTests {
         ["name": "Arcade Pack"], ["version": "1.0"], ["version": "v1.0.0"], ["author": ""],
         ["requires": ["minimum": "latest"]], ["requires": ["below": "1.0.0"]],
         ["requires": ["minimum": "0.6.0", "extra": 1]], ["extra": true],
-        ["apiVersion": "openjoystickdriver.io/v1beta1"], ["kind": "Controller"],
+        ["kind": "Controller"],
         ["$schema": "https://example.com/mod-package.schema.json"],
         ["records": ["../1234-abcd.json"]], ["records": ["1234-abcd.json", "1234-abcd.json"]],
         ["records": []],
@@ -105,6 +105,11 @@ struct ModPackageStoreTests {
         let folder = try fixture.makePackage(records: [record], manifest: overrides)
         #expect(code { try store.validate(folder) } == .invalidManifest, "\(overrides)")
       }
+      let oldVersion = try fixture.makePackage(
+        records: [record],
+        manifest: ["apiVersion": "openjoystickdriver.io/v1beta1"]
+      )
+      #expect(code { try store.validate(oldVersion) } == .unsupportedAPIVersion)
       let noManifest = try fixture.makePackage(records: [record])
       try FileManager.default.removeItem(at: noManifest.appendingPathComponent("mod.json"))
       #expect(code { try store.validate(noManifest) } == .invalidManifest)
@@ -141,7 +146,7 @@ struct ModPackageStoreTests {
       let wrongPersona = try fixture.makePackage(personas: [("x.json", persona.data)])
       #expect(code { try store.validate(wrongPersona) } == .invalidManifest)
       let brokenProfile = try fixture.makePackage(profiles: [("p.json", Data("{}".utf8))])
-      #expect(code { try store.validate(brokenProfile) } == .invalidPackageContent)
+      #expect(code { try store.validate(brokenProfile) } == .unsupportedAPIVersion)
       #expect(store.list().isEmpty)
     }
   }
