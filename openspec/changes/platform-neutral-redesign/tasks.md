@@ -128,9 +128,9 @@ Verify: `swift test`, `./Scripts/ojd check schemas`, `./Scripts/ojd catalog rege
 - [x] 8.2 Delete `ControllerQuirk`. Verify: `grep -r ControllerQuirk Sources Tests` returns nothing; build passes.
 - [x] 8.3 Update the schema for the new fields. Verify: `./Scripts/ojd check schemas`.
 
-Extras found while closing 8 (the Swift record set merges a patch's `parameters` key by key and cannot remove one, while the Python generator replaces them whole; neither follows the `controller-records` "Layered patches" requirement). Depends on 14.2 for the document header.
+Extras found while closing 8 (the Swift record set merged a patch's `parameters` key by key and could not remove one, while the Python generator replaced them whole). 8.4 settles it: one merge order and one tuning-scope rule shared by the loader, the generator and the fixture.
 
-- [ ] 8.4 Introduce the `ControllerPatch` kind (D4: the `controller-override` patch and `defaults` become `ControllerPatch`, `defaults` with `selector.all`) with RFC 7396 merge semantics, `null` deleting a key, the layer order catalog record, built-in patch, package patch, user patch, and the selector order `model`, then `vendorID`/`productID`, then `all` inside one layer. Implement it once in the Swift loader and once in the Python generator. Verify: shared fixture cases run by `swift test` and the repository unit tests give equal effective records, including a `null` delete of a parameter and a user patch beating a package patch.
+- [x] 8.4 Introduce the `ControllerPatch` kind (D4: the `controller-override` patch and `defaults` become `ControllerPatch`, `defaults` with `selector.all`) with RFC 7396 merge semantics, `null` deleting a key, the layer order catalog record, built-in patch, package patch, user patch, and the selector order `model`, then `vendorID`/`productID`, then `all` inside one layer. Implement it once in the Swift loader and once in the Python generator. Verify: shared fixture cases run by `swift test` and the repository unit tests give equal effective records, including a `null` delete of a parameter and a user patch beating a package patch.
 
 ## 9. Protocol description records (old WP7)
 
@@ -161,6 +161,7 @@ Depends: 9, 5.
 Verify: `swift test`, `./Scripts/ojd check schemas`.
 
 - [ ] 11.1 Add `modes` (for example XInput, DInput, switch) selected by switch, button combo or probe. Verify: a fixture record with two modes picks each by its probe.
+- [ ] 11.1a Complete `modes` per the `controller-records` "Modes and match keys" requirement: the default mode is a `modes[]` entry, match keys cover link kind, interface signature, manufacturer and product strings and a `bcdDevice` range besides probes, and a mode may set `interface`, `session` and protocol `parameters`. Verify: fixtures for "One model, two modes" (wired versus Bluetooth by link kind) and the `device-matching` "Dongle and wired" scenario.
 - [x] 11.2 Add the `coreBluetoothGATT` link kind for BLE controllers. Verify: a mock peripheral test delivers frames through the link.
 - [ ] 11.3 Make DS3 over Bluetooth a link of the DS3 record, with the pairing steps as documentation only. Verify: the record validates; hardware check H6 below covers the real pairing.
 
@@ -228,6 +229,7 @@ Verify: `swift test`, lint pair, `./Scripts/ojd check schemas`.
 
 - [ ] 17.1 Rename commands and words by the D9 table, and give the access values OS-neutral names (`ioHID`, `ioUSBHost`, `usbDriverKit`, `coreBluetoothGATT` in `report.schema.json` and `DeviceAccessBackend`), with OS words only under `platform` (cli-surface). Verify: a test lists every old word as rejected with a hint to the new word.
 - [ ] 17.2 Add a settings schema and move settings out of `UserDefaults` into layered files; add `ojd setting` keys for every GUI-only switch. Verify: schema check and a round-trip test.
+- [ ] 17.2a Add the `setting` keys for show in menu bar and update checks together with their switches in the 20.x General pane, and give Send Test Notification a CLI place once a service-to-GUI notification path exists (D9). Verify: the 17.2 round-trip test covers the new keys; the D10 coverage test lists Send Test Notification.
 - [x] 17.3 Add the single `DataDirectory` port used by every store. Verify: `grep` finds no direct path building outside the port; tests use a temp directory.
 - [ ] 17.4 Split the neutral core from a macOS host adapter so `Sources/OpenJoystickDriver` has no macOS-only imports outside `platform`. Verify: a script or test greps imports and fails on a violation.
 - [ ] 17.5 Add the coverage test that lists every command and flags any with no GUI place. Verify: the test passes and fails on a fake command.
@@ -240,8 +242,8 @@ Owns: endpoint, `endpoint.schema.json`, reference client, `docs/sdk/`.
 Depends: 4, 14, 17.
 Verify: `swift test`, `./Scripts/ojd check schemas`.
 
-- [ ] 18.1 Implement Challenge, Hello, Welcome, Subscription, FeedRequest, FeedSession, Frame and Status with `AccessGrants`. Verify: round-trip tests against the schema.
-- [ ] 18.2 Return the supported-version list on a bad `apiVersion`, wrong kind or missing header, with new catalog codes. Verify: tests for each; old codes keep numbers.
+- [x] 18.1 Implement Challenge, Hello, Welcome, Subscription, FeedRequest, FeedSession, Frame and Status with `AccessGrants`. Verify: round-trip tests against the schema.
+- [x] 18.2 Return the supported-version list on a bad `apiVersion`, wrong kind or missing header, with new catalog codes. Verify: tests for each; old codes keep numbers.
 - [ ] 18.3 Ship the reference client and its test. Verify: the test subscribes and receives a frame.
 - [ ] 18.4 Document the endpoint in `docs/sdk/`. Verify: markdownlint.
 
