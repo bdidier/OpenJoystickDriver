@@ -52,6 +52,17 @@ final class ManualVirtualFeedClock: @unchecked Sendable {
     }
   }
 
+  /// Suspends until a wait that ends at exactly `due` is parked on the clock.
+  ///
+  /// Unlike ``waitForSleepers(_:)`` this names the wait, so a test cannot be released by a
+  /// different wait that happens to be parked.
+  func waitForSleeper(due: TimeInterval) async {
+    while !lock.withLock({ sleepers.contains { $0.due == due } }) {
+      if Task.isCancelled { return }
+      try? await Task.sleep(nanoseconds: 1_000_000)
+    }
+  }
+
   private func sleep(until due: TimeInterval) async throws {
     let id = lock.withLock { () -> UInt64 in
       nextID += 1

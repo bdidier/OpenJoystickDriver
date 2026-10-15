@@ -240,8 +240,10 @@ struct EndpointFeedTests {
     let feeds = factory.registry(idleTimeout: 0.5, clock: time.clock)
     try await withEndpointServer(feeds: feeds) { server, _ in
       let client = try await feeding(server)
+      // Move off time 0 so the KeepAlive's exchange is visible as the current time.
+      time.advance(by: 0.0625)
       await client.send(clientLine("KeepAlive"))
-      await time.waitForSleepers(1)
+      try await Self.wait { feeds.lastExchangeTimes.contains(time.now) }
 
       time.advance(by: 0.5)
       #expect(try await client.readObject()["code"] as? String == "E1009")

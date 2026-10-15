@@ -205,13 +205,14 @@ struct VirtualFeedRegistryTests {
     // Each step plays one frame; the burst takes 0.75 seconds, three times the idle timeout.
     for played in 1...frames.count {
       try await Self.wait { device.sent.count == played }
-      await time.waitForSleepers(2)
+      // The frame's own wait ends at its start plus its hold; wait for that one by name.
+      await time.waitForSleeper(due: 0.125 * Double(played))
       #expect(registry.openFeedCount == 1)
       time.advance(by: 0.125)
     }
     #expect(device.closeCount == 0)
-    // The idle time counts from the end of the last frame.
-    await time.waitForSleepers(1)
+    // The idle time counts from the end of the last frame, which the player records.
+    try await Self.wait { registry.lastExchangeTimes.contains(time.now) }
     time.advance(by: 0.1875)
     await time.waitForSleepers(1)
     #expect(registry.openFeedCount == 1)
