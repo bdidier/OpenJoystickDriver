@@ -306,6 +306,21 @@ Verify: the full check list.
 - [ ] 23.3 Apply `pending-deltas.md` after the old change is archived. Verify: `openspec validate platform-neutral-redesign --strict`.
 - [ ] 23.4 Run the full check list on the final tree, plus `./Scripts/ojd test parsers-macos14`. Verify: every command exits 0; paste the results.
 
+## 24. Follow-ups found during the work
+
+Owns: whatever each item names.
+Depends: the item's subject merged.
+Verify: the full check list.
+
+- [ ] 24.1 Find the cause of each flaky test and fix it: the CLI `E2005: The service did not reply in time` timeouts (`BindingAxisDefaultsTests` and the 17-issue `OpenJoystickDriverCLITests` run), `outputOperationsRemainSerializedWhenAReplacementCancelsTheFirst`, `VirtualFeedRegistryTests.aFailedSendClosesTheFeed`, `EndpointServerTests.theNinthConnectionIsRefused`, and the load failures in `EndpointWebSocketTests`, `RecordCommandTests` and `ConfigCommandTests`. Verify: each suite passes 30 runs in a row while the full `swift test` runs alongside it, and the cause of each is written in its commit.
+- [ ] 24.2 Build and test `Tools/WebRTCBridge` in CI and in `./Scripts/ojd check tools`. Verify: a CI job and `ojd check tools` run the package's `swift test`.
+- [ ] 24.3 Add a wiki page for the WebRTC bridge, linked from `wiki/Home.md`. Verify: markdownlint passes and the page's commands match `ojd-webrtc-bridge --help`.
+- [ ] 24.4 Test the WebRTC bridge against the real endpoint server, not a fake. Verify: a test runs a host bridge against an in-process `EndpointServer`: a granted feed reaches the virtual device and stays open on `KeepAlive`; an ungranted token gets E1002 and no virtual gamepad appears.
+- [ ] 24.5 Show the serving route and persona in `ojd controller show` (text and `--json`, in `cli-output.schema.json`). Verify: CLI tests for each route, and the GUI coverage matrix names the field's GUI place.
+- [ ] 24.6 Include the per-stage timings in `ojd diagnose --bundle`. Verify: a test reads the five stage stamps from the bundle.
+- [ ] 24.7 Give every rule that Python's schema tests reject a Swift decoder test rejecting the same input. Verify: a repository test lists the Python negative cases for `controller.schema.json` and the protocol descriptions and fails when one has no Swift counterpart.
+- [ ] 24.8 Pin Biome in `package.json` and run the pinned binary in the hook, the JSON writers and CI. Verify: `biome --version` from each path prints the pinned version, and the `biome.json` `$schema` names the same version.
+
 ## Hardware checks (maintainer)
 
 These need the maintainer and a device. Each result is recorded in `wiki` or the record's evidence field.
