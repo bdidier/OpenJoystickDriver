@@ -34,11 +34,7 @@
     "motion": true
   },
   "defaults": {
-    "tuning": {
-      "lizardResendTicks": 75,
-      "frameQueueCapacity": 64
-    },
-    "output": {
+    "session": {
       "keepAlive": {
         "intervalMilliseconds": 40,
         "writes": [
@@ -57,6 +53,10 @@
           }
         ]
       }
+    },
+    "tuning": {
+      "lizardResendTicks": 75,
+      "frameQueueCapacity": 64
     }
   }
 }

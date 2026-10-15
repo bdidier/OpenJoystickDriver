@@ -546,7 +546,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 "tuningKeys": ["keepAliveIntervalMs", "lizardResendTicks"]
             },
         }
-        defaults = {"output": {"keepAlive": keep_alive}}
+        defaults = {"session": {"keepAlive": keep_alive}}
         if family == "valve.steam-triton":
             defaults["tuning"] = {"lizardResendTicks": 75}
         return self.with_body(
@@ -642,10 +642,10 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         interval = {"intervalMilliseconds": 500}
         # Not a family that reads keepAliveIntervalMs, and not one that has no output at all.
         self.assert_rejected(
-            self.with_body("xbox.gip", defaults={"output": {"keepAlive": interval}})
+            self.with_body("xbox.gip", defaults={"session": {"keepAlive": interval}})
         )
         self.assert_rejected(
-            self.with_body("xbox.xid", defaults={"output": {"keepAlive": interval}})
+            self.with_body("xbox.xid", defaults={"session": {"keepAlive": interval}})
         )
         # A HID write for a raw-USB family, and a raw-USB write for a HID family.
         self.assert_rejected(

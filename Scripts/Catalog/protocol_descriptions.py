@@ -152,7 +152,7 @@ def startup_violations(
 def keep_alive_violations(
     description: dict[str, Any], variants: list[str]
 ) -> list[tuple[str, str]]:
-    """What `defaults.output.keepAlive` may name, as `ProtocolDescription` checks it in Swift.
+    """What `defaults.session.keepAlive` may name, as `ProtocolDescription` checks it in Swift.
 
     The interval has one home, so tuning must not repeat it; the family must read it; a write
     is a HID report only where the family has HID variants and a raw-USB packet only where it
@@ -168,19 +168,19 @@ def keep_alive_violations(
     found += [
         (
             "E5002",
-            f"{where}: keepAliveIntervalMs belongs to defaults.output.keepAlive, not tuning",
+            f"{where}: keepAliveIntervalMs belongs to defaults.session.keepAlive, not tuning",
         )
         for where, tuning in tunings.items()
         if "keepAliveIntervalMs" in tuning
     ]
-    keep_alive = defaults.get("output", {}).get("keepAlive")
+    keep_alive = defaults.get("session", {}).get("keepAlive")
     if keep_alive is None:
         return found
     reads = {
         *description.get("tuningKeys", ()),
         *description.get("rawUSBTuningKeys", ()),
     }
-    where = "defaults.output.keepAlive"
+    where = "defaults.session.keepAlive"
     if "keepAliveIntervalMs" not in reads:
         found.append(
             (

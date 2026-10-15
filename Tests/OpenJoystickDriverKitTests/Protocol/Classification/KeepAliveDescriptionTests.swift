@@ -4,7 +4,7 @@ import Testing
 @testable import OpenJoystickDriverKit
 
 /// Task 9.1d: the keep-alive interval and fixed writes of GameSir, GIP, Switch 2 and the Steam
-/// Deck and Triton come from `defaults.output.keepAlive` in the family's description. The decoder
+/// Deck and Triton come from `defaults.session.keepAlive` in the family's description. The decoder
 /// accepts and rejects the documents the Python validator does (the protocol description tests),
 /// and each driver sends the bytes, at the interval, that it sent before the move.
 private let writes500 = #"{"intervalMilliseconds": 500, "writes": ["#
@@ -44,7 +44,7 @@ struct KeepAliveDescriptionTests {
   private func gip(_ keepAlive: String, tuning: String = "") -> String {
     #""rawUSB": true, "rawUSBTuningKeys": ["keepAliveIntervalMs"], "defaults": {"#
       + (tuning.isEmpty ? "" : #""tuning": \#(tuning), "#)
-      + #""output": {"keepAlive": \#(keepAlive)}}"#
+      + #""session": {"keepAlive": \#(keepAlive)}}"#
   }
 
   // MARK: - Decoder
@@ -97,7 +97,7 @@ struct KeepAliveDescriptionTests {
   )
   func rejectsStartupOnlyMembersInAKeepAliveWrite(write: String) {
     let body =
-      #""tuningKeys": ["keepAliveIntervalMs"], "defaults": {"output": {"keepAlive": "#
+      #""tuningKeys": ["keepAliveIntervalMs"], "defaults": {"session": {"keepAlive": "#
       + #"{"intervalMilliseconds": 500, "writes": [\#(write)]}}}"#
     #expect(rejection(family: .sonyDualSense, body)?.code == .invalidProtocolDescription)
   }
@@ -109,7 +109,7 @@ struct KeepAliveDescriptionTests {
     #expect(
       rejection(
         family: .xboxGIP,
-        #""rawUSB": true, "defaults": {"output": {"keepAlive": \#(interval)}}"#
+        #""rawUSB": true, "defaults": {"session": {"keepAlive": \#(interval)}}"#
       )?
       .code == .invalidProtocolDescription
     )
@@ -122,7 +122,7 @@ struct KeepAliveDescriptionTests {
       .code == .invalidProtocolDescription
     )
     let hidFamily =
-      #""tuningKeys": ["keepAliveIntervalMs"], "defaults": {"output": {"keepAlive": "#
+      #""tuningKeys": ["keepAliveIntervalMs"], "defaults": {"session": {"keepAlive": "#
       + #"{"intervalMilliseconds": 500, "writes": [\#(Self.usbWrite)]}}}"#
     #expect(rejection(family: .sonyDualSense, hidFamily)?.code == .invalidProtocolDescription)
     // A variant the family lacks.
@@ -137,7 +137,7 @@ struct KeepAliveDescriptionTests {
     #expect(
       rejection(
         family: .xboxXID,
-        #""rawUSB": true, "defaults": {"output": {"keepAlive": \#(interval)}}"#
+        #""rawUSB": true, "defaults": {"session": {"keepAlive": \#(interval)}}"#
       ) != nil
     )
   }

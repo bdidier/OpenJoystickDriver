@@ -230,10 +230,10 @@
               "output": {
                 "properties": {
                   "rumble": false,
-                  "startup": false,
-                  "keepAlive": false
+                  "startup": false
                 }
               },
+              "session": false,
               "tuning": {
                 "properties": {
                   "inputLivenessTimeoutMs": false,
@@ -1126,6 +1126,9 @@
         "output": {
           "$ref": "#/$defs/descriptionOutput"
         },
+        "session": {
+          "$ref": "#/$defs/descriptionSession"
+        },
         "input": {
           "anyOf": [
             {
@@ -1137,7 +1140,7 @@
           ]
         },
         "tuning": {
-          "description": "keepAliveIntervalMs is output.keepAlive.intervalMilliseconds, not a tuning default.",
+          "description": "keepAliveIntervalMs is session.keepAlive.intervalMilliseconds, not a tuning default.",
           "$ref": "controller.schema.json#/$defs/tuning",
           "properties": {
             "keepAliveIntervalMs": false
@@ -1458,9 +1461,6 @@
               }
             ]
           }
-        },
-        "keepAlive": {
-          "$ref": "#/$defs/descriptionKeepAlive"
         }
       },
       "not": {
@@ -1482,6 +1482,17 @@
               }
             ]
           }
+        }
+      }
+    },
+    "descriptionSession": {
+      "description": "What runs while the device is open. Today the keep-alive; the startup writes join it with the session task.",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "keepAlive": {
+          "$ref": "#/$defs/descriptionKeepAlive"
         }
       }
     },

@@ -20,6 +20,11 @@
     }
   },
   "defaults": {
+    "session": {
+      "keepAlive": {
+        "intervalMilliseconds": 12
+      }
+    },
     "tuning": {
       "usbCommandTimeoutMs": 1000,
       "frameQueueCapacity": 64
@@ -110,10 +115,7 @@
           "sessionByte": 2,
           "variants": ["usb"]
         }
-      ],
-      "keepAlive": {
-        "intervalMilliseconds": 12
-      }
+      ]
     }
   }
 }

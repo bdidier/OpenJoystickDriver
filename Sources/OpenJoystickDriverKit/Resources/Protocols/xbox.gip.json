@@ -43,6 +43,17 @@
     "rumbleAbsent": true
   },
   "defaults": {
+    "session": {
+      "keepAlive": {
+        "intervalMilliseconds": 4000,
+        "writes": [
+          {
+            "bytes": [3, 32, 0, 3, 0, 0, 0],
+            "sessionByte": 2
+          }
+        ]
+      }
+    },
     "tuning": {
       "presenceResendReports": 4,
       "usbStartupIntervalMs": 50,
@@ -64,16 +75,7 @@
           "bytes": [6, 32, 0, 2, 1, 0],
           "sessionByte": 2
         }
-      ],
-      "keepAlive": {
-        "intervalMilliseconds": 4000,
-        "writes": [
-          {
-            "bytes": [3, 32, 0, 3, 0, 0, 0],
-            "sessionByte": 2
-          }
-        ]
-      }
+      ]
     }
   }
 }

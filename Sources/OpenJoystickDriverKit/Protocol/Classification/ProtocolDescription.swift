@@ -219,7 +219,7 @@ struct ProtocolDescription: Sendable {
       }
       rawUSB = .variants(variants)
     }
-    // The interval has one home, `output.keepAlive`; the tuning layer takes it from there.
+    // The interval has one home, `session.keepAlive`; the tuning layer takes it from there.
     let tuningSetsInterval =
       document.defaults?.tuning?.keepAliveIntervalMilliseconds != nil
       || (document.defaults?.variantTuning ?? [:]).values.contains {
@@ -228,7 +228,7 @@ struct ProtocolDescription: Sendable {
     guard !tuningSetsInterval else {
       throw ProtocolDescriptionProblem(
         .invalidProtocolDescription,
-        "\(fileName): keepAliveIntervalMs belongs to defaults.output.keepAlive, not tuning"
+        "\(fileName): keepAliveIntervalMs belongs to defaults.session.keepAlive, not tuning"
       )
     }
     var variantTuning: [PhysicalProtocolVariantID: ControllerTuning] = [:]
@@ -259,13 +259,13 @@ struct ProtocolDescription: Sendable {
       rumbleTemplate: document.defaults?.output?.rumble,
       startupWrites: document.defaults?.output?.startup ?? [],
       usbStartupWrites: document.defaults?.output?.usbStartup ?? [],
-      keepAlive: document.defaults?.output?.keepAlive,
+      keepAlive: document.defaults?.session?.keepAlive,
       inputLayout: document.defaults?.input?.layout,
       hidUsageMap: document.defaults?.input?.usageMap,
       hidUsageShapes: document.defaults?.input?.shapes ?? [],
       tuning: Self.tuning(
         document.defaults?.tuning,
-        keepAlive: document.defaults?.output?.keepAlive
+        keepAlive: document.defaults?.session?.keepAlive
       ),
       variantTuning: variantTuning
     )
@@ -283,7 +283,7 @@ struct ProtocolDescription: Sendable {
     return description
   }
 
-  /// The description's tuning defaults with the keep-alive interval, which `output.keepAlive`
+  /// The description's tuning defaults with the keep-alive interval, which `session.keepAlive`
   /// holds, as `keepAliveIntervalMs`.
   private static func tuning(
     _ tuning: ControllerTuning?,

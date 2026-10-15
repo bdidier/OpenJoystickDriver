@@ -33,10 +33,7 @@
     "motion": true
   },
   "defaults": {
-    "tuning": {
-      "frameQueueCapacity": 64
-    },
-    "output": {
+    "session": {
       "keepAlive": {
         "intervalMilliseconds": 1000,
         "writes": [
@@ -66,6 +63,9 @@
           }
         ]
       }
+    },
+    "tuning": {
+      "frameQueueCapacity": 64
     }
   }
 }

@@ -452,7 +452,7 @@ struct ProtocolDescriptionTests {
     let edited = try decode(
       family: .valveSteamDeck,
       #""tuningKeys": ["keepAliveIntervalMs"], "#
-        + #""defaults": {"output": {"keepAlive": {"intervalMilliseconds": 777}}}"#
+        + #""defaults": {"session": {"keepAlive": {"intervalMilliseconds": 777}}}"#
     )
     let tuning = try #require(edited.tuning(variant: nil))
     let plan = DriverSessionPlan(hidKeepAliveIntervalNanoseconds: 1).tuned(tuning)

@@ -27,6 +27,35 @@
   },
   "rawUSBTuningKeys": ["keepAliveIntervalMs", "usbCommandTimeoutMs"],
   "defaults": {
+    "session": {
+      "keepAlive": {
+        "intervalMilliseconds": 500,
+        "writes": [
+          {
+            "report": {
+              "kind": "output",
+              "id": 15,
+              "length": 64
+            },
+            "bytes": [
+              242, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+            ],
+            "variants": ["enhanced-hid"]
+          },
+          {
+            "bytes": [
+              15, 0, 0, 2, 242, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+            ],
+            "sessionByte": 2,
+            "variants": ["usb"]
+          }
+        ]
+      }
+    },
     "tuning": {
       "hidStartupIntervalMs": 20,
       "minimumHIDOutputIntervalMs": 20,
@@ -67,34 +96,7 @@
             "is": ["ProfileSlots"]
           }
         }
-      ],
-      "keepAlive": {
-        "intervalMilliseconds": 500,
-        "writes": [
-          {
-            "report": {
-              "kind": "output",
-              "id": 15,
-              "length": 64
-            },
-            "bytes": [
-              242, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            ],
-            "variants": ["enhanced-hid"]
-          },
-          {
-            "bytes": [
-              15, 0, 0, 2, 242, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            ],
-            "sessionByte": 2,
-            "variants": ["usb"]
-          }
-        ]
-      }
+      ]
     }
   }
 }

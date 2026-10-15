@@ -1,4 +1,4 @@
-/// A family's keep-alive (`defaults.output.keepAlive` in its protocol description): how often the
+/// A family's keep-alive (`defaults.session.keepAlive` in its protocol description): how often the
 /// driver's keep-alive runs, and the fixed packets each run sends. A record never carries one, so
 /// no record replaces these writes.
 struct KeepAlive: Equatable, Sendable {
