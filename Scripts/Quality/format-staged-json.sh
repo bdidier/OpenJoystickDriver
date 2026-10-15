@@ -5,6 +5,7 @@
 set -euo pipefail
 
 repository_root="$(git rev-parse --show-toplevel)"
+biome="$repository_root/node_modules/.bin/biome"
 staged_copy="$(mktemp -d "${TMPDIR:-/tmp}/ojd-staged-json.XXXXXX")"
 trap 'rm -rf "$staged_copy"' EXIT INT TERM
 
@@ -16,8 +17,12 @@ if ((${#paths[@]} == 0)); then
   exit 0
 fi
 
+if [[ ! -x "$biome" ]]; then
+  printf 'error: %s is missing; run bun install in %s\n' "$biome" "$repository_root" >&2
+  exit 1
+fi
 printf '%s\0' "${paths[@]}" | git checkout-index -z --stdin --prefix="$staged_copy/"
-biome format --write --config-path="$repository_root/biome.json" --vcs-enabled=false \
+"$biome" format --write --config-path="$repository_root/biome.json" --vcs-enabled=false \
   "$staged_copy" >/dev/null
 
 for path in "${paths[@]}"; do

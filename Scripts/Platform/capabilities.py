@@ -66,6 +66,8 @@ class Resolver:
     def ensure(self, capability: Capability) -> RepairOutcome:
         if capability in FORMULAS:
             return self._ensure_formula(capability)
+        if capability == Capability.BIOME:
+            return self._ensure_biome()
         if capability == Capability.SCHEMA_PYTHON:
             return self._ensure_schema_python()
         if capability == Capability.SWIFT_TOOLCHAIN:
@@ -137,6 +139,16 @@ class Resolver:
             stderr=subprocess.DEVNULL,
         )
         return result.returncode == 0
+
+    def _ensure_biome(self) -> RepairOutcome:
+        binary = self.project_dir / "node_modules/.bin/biome"
+        if binary.is_file() and os.access(binary, os.X_OK):
+            return RepairOutcome(Capability.BIOME, OutcomeKind.AVAILABLE)
+        return RepairOutcome(
+            Capability.BIOME,
+            OutcomeKind.UNSUPPORTED,
+            f"{binary} is missing; run `bun install` in {self.project_dir}.",
+        )
 
     def _ensure_schema_python(self) -> RepairOutcome:
         destination = self.project_dir / ".build/schema-validator"

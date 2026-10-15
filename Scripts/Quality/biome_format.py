@@ -7,6 +7,7 @@ import subprocess
 import tempfile
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
+BIOME = ROOT / "node_modules/.bin/biome"
 
 
 class BiomeError(OSError):
@@ -27,7 +28,7 @@ def format_json(texts: dict[pathlib.Path, str]) -> dict[pathlib.Path, str]:
         try:
             result = subprocess.run(
                 [
-                    "biome",
+                    str(BIOME),
                     "format",
                     "--write",
                     f"--config-path={ROOT / 'biome.json'}",
@@ -39,9 +40,7 @@ def format_json(texts: dict[pathlib.Path, str]) -> dict[pathlib.Path, str]:
                 text=True,
             )
         except FileNotFoundError as error:
-            raise BiomeError(
-                "biome is not installed; run: brew install biome"
-            ) from error
+            raise BiomeError(f"{BIOME} is missing; run: bun install") from error
         if result.returncode:
             detail = result.stderr.strip() or result.stdout.strip()
             raise BiomeError(f"biome format failed: {detail}")
