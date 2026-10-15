@@ -171,7 +171,7 @@ Depends: 6, 8, 11.
 Verify: `swift test`, `./Scripts/ojd check profiles`, `./Scripts/ojd test parsers-macos14`.
 
 - [ ] 12.1 Define routes (`ExtensionOwned`, raw access, `System`) and the `server` field `system` or `ojd`. Verify: route table test over all records matches the 1.2 snapshot.
-- [ ] 12.2 Define `VirtualDevice` records for `Generic` and `SdlCompatible`; `Generic` is the default. Verify: a test checks the default and that the opt-in switches the persona without replug.
+- [ ] 12.2 Define `VirtualDevice` records for `Generic` and `SdlCompatible`; `Generic` is the default. Name personas by these ids everywhere (`ojd virtual feed`, `cli-output.schema.json`, `VirtualHIDProfile`) and delete the endpoint's `EndpointPersona.profileName` mapping to `hid-generic`/`hid-xbox-one-s-bt`. Verify: a test checks the default and that the opt-in switches the persona without replug.
 - [ ] 12.3 Put route and persona choice in one policy that the service, CLI, GUI and endpoint all call. Verify: a test shows the four callers get the same answer for a fixture set.
 - [ ] 12.4 Add `ojd controller claim <ref>` and `ojd controller release <ref>` and remove `controller ownership`. Verify: CLI tests for success, `--dry-run`, `--json`, and the refusal `error.E2023` for raw-USB routes.
 - [ ] 12.5 Keep stick-report delivery semantics (newest state within one send time, every button edge). Verify: the existing delivery tests pass for both personas.
@@ -226,7 +226,7 @@ Owns: `Sources/OpenJoystickDriverCLI`, settings schema, `DataDirectory` port, co
 Depends: 4, 12, 14.
 Verify: `swift test`, lint pair, `./Scripts/ojd check schemas`.
 
-- [ ] 17.1 Rename commands and words by the D9 table. Verify: a test lists every old word as rejected with a hint to the new word.
+- [ ] 17.1 Rename commands and words by the D9 table, and give the access values OS-neutral names (`ioHID`, `ioUSBHost`, `usbDriverKit`, `coreBluetoothGATT` in `report.schema.json` and `DeviceAccessBackend`), with OS words only under `platform` (cli-surface). Verify: a test lists every old word as rejected with a hint to the new word.
 - [ ] 17.2 Add a settings schema and move settings out of `UserDefaults` into layered files; add `ojd setting` keys for every GUI-only switch. Verify: schema check and a round-trip test.
 - [x] 17.3 Add the single `DataDirectory` port used by every store. Verify: `grep` finds no direct path building outside the port; tests use a temp directory.
 - [ ] 17.4 Split the neutral core from a macOS host adapter so `Sources/OpenJoystickDriver` has no macOS-only imports outside `platform`. Verify: a script or test greps imports and fails on a violation.
