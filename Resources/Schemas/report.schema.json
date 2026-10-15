@@ -722,7 +722,7 @@
         "source",
         "bundleVersions",
         "systemExactDeviceCount",
-        "skippedAppleDeviceCount",
+        "skippedSystemDeviceCount",
         "ojdRecordCount",
         "catalogListedOJDRecordCount",
         "records",
@@ -748,7 +748,7 @@
           "type": "integer",
           "minimum": 0
         },
-        "skippedAppleDeviceCount": {
+        "skippedSystemDeviceCount": {
           "type": "integer",
           "minimum": 0
         },

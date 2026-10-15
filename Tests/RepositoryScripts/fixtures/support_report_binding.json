@@ -102,7 +102,7 @@
       "Review this file before sharing. Device product names are included.",
       "Serial values, paths, packet payloads, HID locations, and discovery text are excluded.",
       "Virtual-device diagnostics were unavailable.",
-      "Apple GameController catalog audit was unavailable."
+      "System gamepad catalog audit was unavailable."
     ],
     "permissions": {
       "inputInject": "granted",

@@ -1138,7 +1138,7 @@
             }
           }
         },
-        "bundle": {
+        "output": {
           "type": "string"
         },
         "checks": {
