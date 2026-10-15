@@ -369,6 +369,8 @@ struct ProtocolDescription: Sendable {
   /// Why the keep-alive names something the family's driver does not read, or nil.
   private var keepAliveViolation: String? {
     guard let keepAlive else { return nil }
+    // The schema's xbox.xid rule forbids `defaults.session`; XID has no session to keep alive.
+    if family == .xboxXID { return "xbox.xid has no session, so it has no keep-alive" }
     let reads = tuningKeys.union(rawUSBTuningKeys)
     for write in keepAlive.writes {
       switch write.payload {

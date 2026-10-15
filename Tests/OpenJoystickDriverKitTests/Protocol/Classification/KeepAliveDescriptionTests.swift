@@ -139,7 +139,8 @@ struct KeepAliveDescriptionTests {
     arguments: [
       #""rawUSB": true, "rawUSBTuningKeys": ["KEY"]"#,
       #""tuningKeys": ["KEY"]"#,
-      #""rawUSB": true, "rawUSBTuningKeys": ["usbCommandTimeoutMs"], "defaults": {"tuning": {"KEY": 500}}"#,
+      #""rawUSB": true, "rawUSBTuningKeys": ["usbCommandTimeoutMs"], "#
+        + #""defaults": {"tuning": {"KEY": 500}}"#,
       #""rawUSB": true, "rawUSBTuningKeys": ["usbCommandTimeoutMs"], "#
         + #""defaults": {"variants": {"usb": {"tuning": {"KEY": 500}}}}"#,
     ]
