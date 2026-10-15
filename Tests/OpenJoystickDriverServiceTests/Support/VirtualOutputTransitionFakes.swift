@@ -112,8 +112,6 @@ final class VirtualOutputTransitionFactory: @unchecked Sendable {
 /// A server with no live output whose backends come from `factory`, over isolated defaults.
 struct VirtualOutputTransitionFixture {
   let server: ApplicationServiceServer
-  let defaults: UserDefaults
-  let suiteName: String
   /// Empty and removed by `tearDown`, so no test reads the user's personas.
   let personaDirectory = FileManager.default.temporaryDirectory
     .appendingPathComponent(
@@ -127,8 +125,7 @@ struct VirtualOutputTransitionFixture {
     timeouts: VirtualOutputTransitionTimeouts = .standard,
     clock: VirtualOutputTransitionClock = .system
   ) throws {
-    suiteName = "OpenJoystickDriverTests.VirtualOutputTransition.\(UUID().uuidString)"
-    defaults = try #require(UserDefaults(suiteName: suiteName))
+    let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     let virtualOutputDispatcher = VirtualOutputRouter()
     let profileLibrary = RemappingProfileLibrary(
       directory: RootedDataDirectory.temporary().url(for: .applicationData)
@@ -152,7 +149,7 @@ struct VirtualOutputTransitionFixture {
       connectedIdentifierProvider: { identifiers },
       virtualOutputTransitionTimeouts: timeouts,
       virtualOutputTransitionClock: clock,
-      defaults: defaults,
+      settings: settings,
       personaDirectory: personaDirectory
     )
   }
@@ -170,7 +167,6 @@ struct VirtualOutputTransitionFixture {
 
   func tearDown() async {
     await server.stop()
-    defaults.removePersistentDomain(forName: suiteName)
     try? FileManager.default.removeItem(at: personaDirectory)
   }
 }

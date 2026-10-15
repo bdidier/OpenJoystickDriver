@@ -1,5 +1,6 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverPresentation
@@ -11,7 +12,7 @@ struct PreferencesTests {
   func startAtLoginReflectsTheNativeControllerResult() {
     let launch = LaunchAtLoginStub(isEnabled: false)
     let model = SettingsPreferencesModel(
-      defaults: .standard,
+      settings: SettingsStore(directory: RootedDataDirectory.temporary()),
       launchAtLogin: launch,
       notificationAuthorization: NotificationAuthorizationStub(state: .denied)
     )
@@ -25,12 +26,10 @@ struct PreferencesTests {
   @Test
   @MainActor
   func enablingNotificationsRequestsNativeAuthorization() async throws {
-    let suiteName = "PreferencesTests.\(UUID().uuidString)"
-    let defaults = try #require(UserDefaults(suiteName: suiteName))
-    defer { defaults.removePersistentDomain(forName: suiteName) }
+    let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     let authorization = NotificationAuthorizationStub(state: .notDetermined)
     let model = SettingsPreferencesModel(
-      defaults: defaults,
+      settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: authorization
     )
@@ -39,19 +38,17 @@ struct PreferencesTests {
     await waitUntil { model.controllerNotifications }
 
     #expect(authorization.requestCount == 1)
-    #expect(defaults.bool(forKey: ApplicationPreferenceKeys.controllerNotifications))
+    #expect(try settings.value(of: .notifyControllerConnected))
     #expect(model.notificationAuthorization == .allowed)
   }
 
   @Test
   @MainActor
   func staleRefreshDoesNotOverwriteANewerAuthorizationResult() async throws {
-    let suiteName = "PreferencesTests.\(UUID().uuidString)"
-    let defaults = try #require(UserDefaults(suiteName: suiteName))
-    defer { defaults.removePersistentDomain(forName: suiteName) }
+    let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     let authorization = HeldSettingsAuthorizationStub()
     let model = SettingsPreferencesModel(
-      defaults: defaults,
+      settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: authorization
     )
@@ -72,12 +69,10 @@ struct PreferencesTests {
   @Test
   @MainActor
   func disablingNotificationsPersistsImmediately() throws {
-    let suiteName = "PreferencesTests.\(UUID().uuidString)"
-    let defaults = try #require(UserDefaults(suiteName: suiteName))
-    defer { defaults.removePersistentDomain(forName: suiteName) }
-    defaults.set(true, forKey: ApplicationPreferenceKeys.controllerNotifications)
+    let settings = SettingsStore(directory: RootedDataDirectory.temporary())
+    try settings.set(.notifyControllerConnected, to: true)
     let model = SettingsPreferencesModel(
-      defaults: defaults,
+      settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: NotificationAuthorizationStub(state: .denied)
     )
@@ -85,17 +80,15 @@ struct PreferencesTests {
     model.setControllerNotifications(false)
 
     #expect(!model.controllerNotifications)
-    #expect(!defaults.bool(forKey: ApplicationPreferenceKeys.controllerNotifications))
+    #expect(try settings.value(of: .notifyControllerConnected) == false)
   }
 
   @Test
   @MainActor
   func notificationEventsAndSoundPersistIndependently() async throws {
-    let suiteName = "PreferencesTests.\(UUID().uuidString)"
-    let defaults = try #require(UserDefaults(suiteName: suiteName))
-    defer { defaults.removePersistentDomain(forName: suiteName) }
+    let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     let model = SettingsPreferencesModel(
-      defaults: defaults,
+      settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: NotificationAuthorizationStub(state: .allowed)
     )
@@ -107,22 +100,20 @@ struct PreferencesTests {
       model.controllerDisconnectedNotifications && model.profileDeactivatedNotifications
     }
 
-    #expect(defaults.bool(forKey: ApplicationPreferenceKeys.controllerDisconnectedNotifications))
-    #expect(defaults.bool(forKey: ApplicationPreferenceKeys.profileDeactivatedNotifications))
-    #expect(!defaults.bool(forKey: ApplicationPreferenceKeys.notificationSounds))
+    #expect(try settings.value(of: .notifyControllerDisconnected))
+    #expect(try settings.value(of: .notifyProfileDeactivated))
+    #expect(try settings.value(of: .notifySounds) == false)
   }
 
   @Test
   @MainActor
   func testNotificationUsesNativeAuthorizationAndSoundPreference() async throws {
-    let suiteName = "PreferencesTests.\(UUID().uuidString)"
-    let defaults = try #require(UserDefaults(suiteName: suiteName))
-    defer { defaults.removePersistentDomain(forName: suiteName) }
-    defaults.set(false, forKey: ApplicationPreferenceKeys.notificationSounds)
+    let settings = SettingsStore(directory: RootedDataDirectory.temporary())
+    try settings.set(.notifySounds, to: false)
     let authorization = NotificationAuthorizationStub(state: .notDetermined)
     let delivery = PreferencesNotificationDeliverySpy()
     let model = SettingsPreferencesModel(
-      defaults: defaults,
+      settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: authorization,
       notificationDelivery: delivery
@@ -141,7 +132,7 @@ struct PreferencesTests {
   func refreshPublishesAuthorizationGrantedOutsideTheApp() async {
     let authorization = NotificationAuthorizationStub(state: .denied)
     let model = SettingsPreferencesModel(
-      defaults: .standard,
+      settings: SettingsStore(directory: RootedDataDirectory.temporary()),
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: authorization
     )
@@ -158,7 +149,7 @@ struct PreferencesTests {
   func startAtLoginReportsWhenNativeApprovalIsStillRequired() {
     let launch = LaunchAtLoginStub(isEnabled: false, acceptsChanges: false)
     let model = SettingsPreferencesModel(
-      defaults: .standard,
+      settings: SettingsStore(directory: RootedDataDirectory.temporary()),
       launchAtLogin: launch,
       notificationAuthorization: NotificationAuthorizationStub(state: .denied)
     )
@@ -172,12 +163,10 @@ struct PreferencesTests {
   @Test
   @MainActor
   func prereleaseChoiceAndUpdateCheckShareTheCLIUpdateEngine() async throws {
-    let suiteName = "PreferencesTests.\(UUID().uuidString)"
-    let defaults = try #require(UserDefaults(suiteName: suiteName))
-    defer { defaults.removePersistentDomain(forName: suiteName) }
+    let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     let checker = UpdateCheckerStub(result: .upToDate("v1.2.3"))
     let model = SettingsPreferencesModel(
-      defaults: defaults,
+      settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: NotificationAuthorizationStub(state: .denied),
       updateChecker: checker
@@ -187,18 +176,16 @@ struct PreferencesTests {
     model.checkForUpdates()
     await waitUntil { model.updateState == .upToDate("v1.2.3") }
 
-    #expect(defaults.bool(forKey: ApplicationPreferenceKeys.includePrereleaseUpdates))
+    #expect(try settings.value(of: .updatesIncludePrereleases))
     #expect(await checker.includePrereleaseArguments == [true])
   }
 
   @Test
   @MainActor
   func developerToolsChoicePersists() throws {
-    let suiteName = "PreferencesTests.\(UUID().uuidString)"
-    let defaults = try #require(UserDefaults(suiteName: suiteName))
-    defer { defaults.removePersistentDomain(forName: suiteName) }
+    let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     let model = SettingsPreferencesModel(
-      defaults: defaults,
+      settings: settings,
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: NotificationAuthorizationStub(state: .denied)
     )
@@ -206,7 +193,56 @@ struct PreferencesTests {
     model.setDeveloperToolsEnabled(true)
 
     #expect(model.developerToolsEnabled)
-    #expect(defaults.bool(forKey: ApplicationPreferenceKeys.developerTools))
+    #expect(try settings.value(of: .developerTools))
+  }
+
+  @Test
+  @MainActor
+  func aChangeFromAnotherStoreReachesTheModel() async throws {
+    let directory = RootedDataDirectory.temporary()
+    let loginItem = LaunchAtLoginStub(isEnabled: false)
+    let model = SettingsPreferencesModel(
+      settings: SettingsStore(directory: directory),
+      launchAtLogin: loginItem,
+      notificationAuthorization: NotificationAuthorizationStub(state: .allowed)
+    )
+    #expect(!model.controllerNotifications)
+    #expect(!model.startAtLogin)
+
+    // What `ojd setting` or another process does; the service changes the login item too.
+    loginItem.isEnabled = true
+    try SettingsStore(directory: directory).update([
+      .notifyControllerConnected: true, .launchAtLogin: true,
+    ])
+
+    for _ in 0..<100 where !(model.controllerNotifications && model.startAtLogin) {
+      try await Task.sleep(nanoseconds: 50_000_000)
+    }
+    #expect(model.controllerNotifications)
+    #expect(model.startAtLogin)
+  }
+
+  @Test
+  @MainActor
+  func aGoodReloadClearsTheErrorOfAFailedSettingsRead() throws {
+    let settings = SettingsStore(directory: RootedDataDirectory.temporary())
+    let model = SettingsPreferencesModel(
+      settings: settings,
+      launchAtLogin: LaunchAtLoginStub(isEnabled: false),
+      notificationAuthorization: NotificationAuthorizationStub(state: .allowed)
+    )
+    try FileManager.default.createDirectory(
+      at: settings.folderURL,
+      withIntermediateDirectories: true
+    )
+    try Data("not json".utf8).write(to: settings.userFileURL)
+
+    model.reloadSettings()
+    #expect(model.errorMessage != nil)
+
+    try FileManager.default.removeItem(at: settings.userFileURL)
+    model.reloadSettings()
+    #expect(model.errorMessage == nil)
   }
 
   @MainActor

@@ -24,9 +24,17 @@ enum SettingCatalog {
     switch key {
     case .launchAtLogin:
       CLILocalized.text("cli.setting.launch_at_login")
-    case .notificationSounds:
+    case .notifyControllerConnected:
+      CLILocalized.text("cli.setting.notify_controller_connected")
+    case .notifyControllerDisconnected:
+      CLILocalized.text("cli.setting.notify_controller_disconnected")
+    case .notifyProfileActivated:
+      CLILocalized.text("cli.setting.notify_profile_activated")
+    case .notifyProfileDeactivated:
+      CLILocalized.text("cli.setting.notify_profile_deactivated")
+    case .notifySounds:
       CLILocalized.text("cli.setting.notification_sounds")
-    case .includePrereleaseUpdates:
+    case .updatesIncludePrereleases:
       CLILocalized.text(
         "cli.setting.include_prerelease_updates"
       )

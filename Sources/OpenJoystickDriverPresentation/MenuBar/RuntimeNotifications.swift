@@ -300,15 +300,15 @@
 
   @MainActor
   final class RuntimeNotificationMonitor {
-    let defaults: UserDefaults
+    let settings: SettingsStore
     let delivery: any RuntimeNotificationDelivering
     var previousSnapshot: RuntimeNotificationSnapshot?
 
     init(
-      defaults: UserDefaults = .standard,
+      settings: SettingsStore = SettingsStore(),
       delivery: any RuntimeNotificationDelivering = SystemRuntimeNotificationDelivery()
     ) {
-      self.defaults = defaults
+      self.settings = settings
       self.delivery = delivery
     }
   }

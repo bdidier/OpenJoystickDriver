@@ -47,17 +47,17 @@ struct CommandLineToolTests {
     let sandbox = try Sandbox()
     defer { sandbox.remove() }
     let tool = sandbox.tool()
-    #expect(tool.state == .notInstalled)
+    #expect(tool.status.state == .missing)
 
     try tool.install()
-    #expect(tool.state == .installed)
+    #expect(tool.status.state == .installed)
     #expect(
       try FileManager.default.destinationOfSymbolicLink(atPath: sandbox.link.path)
         == sandbox.executable.path
     )
 
     try tool.uninstall()
-    #expect(tool.state == .notInstalled)
+    #expect(tool.status.state == .missing)
     #expect(sandbox.adminCommands.withLock { $0 }.isEmpty)
   }
 
@@ -69,17 +69,57 @@ struct CommandLineToolTests {
       at: sandbox.link.deletingLastPathComponent(),
       withIntermediateDirectories: true
     )
+    let other = sandbox.root.appendingPathComponent("Old/OpenJoystickDriver")
+    try FileManager.default.createDirectory(
+      at: other.deletingLastPathComponent(),
+      withIntermediateDirectories: true
+    )
+    try Data().write(to: other)
+    try FileManager.default.createSymbolicLink(
+      atPath: sandbox.link.path,
+      withDestinationPath: other.path
+    )
+    let tool = sandbox.tool()
+    #expect(tool.status.state == .linkedElsewhere)
+    #expect(tool.status.target == other.path)
+
+    try tool.install()
+    #expect(tool.status.state == .installed)
+  }
+
+  @Test
+  func installReplacesABrokenLink() throws {
+    let sandbox = try Sandbox()
+    defer { sandbox.remove() }
+    try FileManager.default.createDirectory(
+      at: sandbox.link.deletingLastPathComponent(),
+      withIntermediateDirectories: true
+    )
     try FileManager.default.createSymbolicLink(
       atPath: sandbox.link.path,
       withDestinationPath: "/Applications/Old.app/Contents/MacOS/OpenJoystickDriver"
     )
     let tool = sandbox.tool()
-    #expect(
-      tool.state == .linkedElsewhere("/Applications/Old.app/Contents/MacOS/OpenJoystickDriver")
-    )
+    #expect(tool.status.state == .broken)
 
     try tool.install()
-    #expect(tool.state == .installed)
+    #expect(tool.status.state == .installed)
+  }
+
+  @Test
+  func aRelativeLinkToTheExecutableIsInstalled() throws {
+    let sandbox = try Sandbox()
+    defer { sandbox.remove() }
+    try FileManager.default.createDirectory(
+      at: sandbox.link.deletingLastPathComponent(),
+      withIntermediateDirectories: true
+    )
+    try FileManager.default.createSymbolicLink(
+      atPath: sandbox.link.path,
+      withDestinationPath: "../App/OpenJoystickDriver"
+    )
+
+    #expect(sandbox.tool().status.state == .installed)
   }
 
   @Test
@@ -92,7 +132,7 @@ struct CommandLineToolTests {
     )
     try Data("keep".utf8).write(to: sandbox.link)
     let tool = sandbox.tool()
-    #expect(tool.state == .blockedByFile)
+    #expect(tool.status.state == .blockedByFile)
 
     #expect(throws: CommandLineToolLink.Failure.blockedByFile(sandbox.link.path)) {
       try tool.install()
@@ -132,7 +172,7 @@ struct CommandLineToolTests {
     let cancelled = CommandLineToolModel(link: sandbox.tool(adminResult: .cancelled))
     cancelled.install()
     #expect(cancelled.errorMessage == nil)
-    #expect(cancelled.state == .notInstalled)
+    #expect(cancelled.status.state == .missing)
 
     let failed = CommandLineToolModel(link: sandbox.tool(adminResult: .failed("denied")))
     failed.install()

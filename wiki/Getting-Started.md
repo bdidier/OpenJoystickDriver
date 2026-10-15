@@ -64,7 +64,7 @@ OJD is a menu-bar app. It has no Dock icon. After it starts, a controller icon a
 
 At start, OJD also does these actions:
 
-- On macOS 13 and later, it registers itself as a login item. To turn this off, run the `ojd setting set launch-at-login false` command. Turning off **Start at login** in **Settings** may not last, because OJD registers itself again at the next start. Not verified on a running system. For more information, see [Console and settings](Using-the-App.md#console-and-settings).
+- On macOS 13 and later, it registers itself as a login item. To turn this off, run the `ojd setting set launchAtLogin false` command. Turning off **Start at login** in **Settings**, or running that command, also records that you opted out, so OJD does not register itself again at the next start. If you change the login item in **System Settings** instead, OJD reads the change from macOS but does not record an opt-out. For more information, see [Console and settings](Using-the-App.md#console-and-settings).
 - It checks the OJD driver extension. If the extension needs activation, OJD submits one request. macOS may then ask for your approval.
 
 OJD asks for no privacy permission at start. You grant permissions later. For more information, see [Permissions](Permissions-and-Security.md#permissions).
