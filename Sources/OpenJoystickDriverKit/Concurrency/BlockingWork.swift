@@ -23,4 +23,13 @@ package enum BlockingWork {
       queue.async { continuation.resume(with: Result(catching: work)) }
     }
   }
+
+  /// Runs `work` once on its own serial dispatch queue, without waiting for it.
+  ///
+  /// A concurrent queue gives blocked work only a limited pool of threads, and a thread that
+  /// blocks on a socket for seconds lets queued work wait behind it; a serial queue is started on
+  /// a thread of its own at once.
+  package static func detach(label: String, _ work: @escaping @Sendable () -> Void) {
+    DispatchQueue(label: label).async(execute: work)
+  }
 }
