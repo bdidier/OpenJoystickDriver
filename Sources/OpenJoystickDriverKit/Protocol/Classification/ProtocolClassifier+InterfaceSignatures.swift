@@ -52,16 +52,38 @@ extension ProtocolClassifier {
       let interfaceSubclass: UInt8
       let interfaceProtocol: UInt8
       let interfaceNumber: UInt8?
+
+      enum CodingKeys: String, CodingKey, CaseIterable {
+        case variant, interfaceClass, interfaceSubclass, interfaceProtocol, interfaceNumber
+      }
+
+      init(from decoder: any Decoder) throws {
+        try decoder.rejectUnknownKeys(CodingKeys.self)
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        variant = try container.decode(String.self, forKey: .variant)
+        interfaceClass = try container.decode(UInt8.self, forKey: .interfaceClass)
+        interfaceSubclass = try container.decode(UInt8.self, forKey: .interfaceSubclass)
+        interfaceProtocol = try container.decode(UInt8.self, forKey: .interfaceProtocol)
+        interfaceNumber = try container.decodeIfPresent(UInt8.self, forKey: .interfaceNumber)
+      }
     }
 
     let schema: String
     let family: String
     let interfaceSignatures: [Signature]
 
-    enum CodingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey, CaseIterable {
       case schema = "$schema"
       case family
       case interfaceSignatures
+    }
+
+    init(from decoder: any Decoder) throws {
+      try decoder.rejectUnknownKeys(CodingKeys.self)
+      let container = try decoder.container(keyedBy: CodingKeys.self)
+      schema = try container.decode(String.self, forKey: .schema)
+      family = try container.decode(String.self, forKey: .family)
+      interfaceSignatures = try container.decode([Signature].self, forKey: .interfaceSignatures)
     }
   }
 
@@ -70,36 +92,50 @@ extension ProtocolClassifier {
     for protocolID in PhysicalProtocolID.allCases {
       guard let url = Bundle.module.url(forResource: protocolID.rawValue, withExtension: "json")
       else { continue }
-      let document = try JSONDecoder().decode(
-        ProtocolDescriptionDocument.self,
-        from: Data(contentsOf: url)
+      signatures += try interfaceSignatures(
+        decoding: Data(contentsOf: url),
+        protocolID: protocolID,
+        fileName: url.lastPathComponent
       )
-      guard protocolDescriptionSchemaIDs.contains(document.schema) else {
-        throw ControllerRecordProblem("\(url.lastPathComponent): unknown $schema")
-      }
-      guard document.family == protocolID.rawValue else {
-        throw ControllerRecordProblem(
-          "\(url.lastPathComponent): family must be \(protocolID.rawValue)"
-        )
-      }
-      for signature in document.interfaceSignatures {
-        guard let variant = PhysicalProtocolVariantID(rawValue: signature.variant) else {
-          throw ControllerRecordProblem(
-            "\(url.lastPathComponent): unknown variant \(signature.variant)"
-          )
-        }
-        signatures.append(
-          InterfaceSignature(
-            protocolID: protocolID,
-            variant: variant,
-            interfaceClass: signature.interfaceClass,
-            interfaceSubclass: signature.interfaceSubclass,
-            interfaceProtocol: signature.interfaceProtocol,
-            requiredInterfaceNumber: signature.interfaceNumber
-          )
-        )
-      }
     }
     return signatures
+  }
+
+  /// The signatures of one protocol description document, the file `fileName` that the
+  /// bundle holds for `protocolID`.
+  static func interfaceSignatures(
+    decoding data: Data,
+    protocolID: PhysicalProtocolID,
+    fileName: String
+  ) throws -> [InterfaceSignature] {
+    let document: ProtocolDescriptionDocument
+    do {
+      document = try JSONDecoder().decode(ProtocolDescriptionDocument.self, from: data)
+    } catch let error as DecodingError {
+      throw ControllerRecordProblem("\(fileName): \(error)")
+    }
+    guard protocolDescriptionSchemaIDs.contains(document.schema) else {
+      throw ControllerRecordProblem("\(fileName): unknown $schema")
+    }
+    guard document.family == protocolID.rawValue else {
+      throw ControllerRecordProblem("\(fileName): family must be \(protocolID.rawValue)")
+    }
+    return try document.interfaceSignatures.map { signature in
+      guard let variant = PhysicalProtocolVariantID(rawValue: signature.variant),
+        protocolID.variants.contains(variant)
+      else {
+        throw ControllerRecordProblem(
+          "\(fileName): \(protocolID.rawValue) has no variant \(signature.variant)"
+        )
+      }
+      return InterfaceSignature(
+        protocolID: protocolID,
+        variant: variant,
+        interfaceClass: signature.interfaceClass,
+        interfaceSubclass: signature.interfaceSubclass,
+        interfaceProtocol: signature.interfaceProtocol,
+        requiredInterfaceNumber: signature.interfaceNumber
+      )
+    }
   }
 }
