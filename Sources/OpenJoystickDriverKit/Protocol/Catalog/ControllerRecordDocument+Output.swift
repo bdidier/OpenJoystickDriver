@@ -1,24 +1,31 @@
 extension ControllerRecordDocument {
-  /// The output section: a rumble template, startup writes, or both. A write with a `report` is
-  /// a HID write; one without is a raw-USB write.
+  /// The output section: a rumble template, startup writes, a keep-alive, or any of them. A write
+  /// with a `report` is a HID write; one without is a raw-USB write. Only a protocol description
+  /// carries a keep-alive.
   struct Output: Decodable {
     let rumble: RumbleOutputTemplate?
     let startup: [RecordStartupWrite]
     let usbStartup: [USBStartupWrite]
+    let keepAlive: KeepAlive?
 
     init(from decoder: any Decoder) throws {
       let container = try decoder.container(keyedBy: DocumentKey.self)
-      try container.rejectUnknown(allowed: ["rumble", "startup"])
+      let isDescription = decoder.userInfo[.startupConditionsAllowed] as? Bool == true
+      try container.rejectUnknown(
+        allowed: isDescription ? ["rumble", "startup", "keepAlive"] : ["rumble", "startup"]
+      )
       rumble = try container.decodeOptional(RumbleTemplate.self, for: "rumble")?.template
       let startup = try container.decodeOptional([StartupWrite].self, for: "startup")
       self.startup = startup?.compactMap(\.hid) ?? []
       usbStartup = startup?.compactMap(\.usb) ?? []
-      guard rumble != nil || startup != nil, startup.map({ (1...16).contains($0.count) }) ?? true
-      else {
+      keepAlive = try container.decodeOptional(KeepAlive.self, for: "keepAlive")
+      let startupCountIsValid = startup.map { (1...16).contains($0.count) } ?? true
+      guard rumble != nil || startup != nil || keepAlive != nil, startupCountIsValid else {
         throw DecodingError.dataCorrupted(
           .init(
             codingPath: decoder.codingPath,
-            debugDescription: "output names a rumble template or 1...16 startup writes"
+            debugDescription:
+              "output names a rumble template, 1...16 startup writes or a keep-alive"
           )
         )
       }
@@ -64,7 +71,7 @@ extension ControllerRecordDocument {
       }
     }
 
-    private static func bytes(
+    static func bytes(
       _ container: KeyedDecodingContainer<DocumentKey>
     ) throws -> [UInt8] {
       let values = try container.decode([Int].self, for: "bytes")
@@ -75,7 +82,7 @@ extension ControllerRecordDocument {
       return bytes
     }
 
-    private static func hidWrite(
+    static func hidWrite(
       _ container: KeyedDecodingContainer<DocumentKey>,
       condition: StartupWriteCondition
     ) throws -> RecordStartupWrite {
@@ -107,7 +114,7 @@ extension ControllerRecordDocument {
       )
     }
 
-    private static func usbWrite(
+    static func usbWrite(
       _ container: KeyedDecodingContainer<DocumentKey>,
       condition: StartupWriteCondition
     ) throws -> USBStartupWrite {

@@ -107,6 +107,7 @@ def semantic_violations(
                 ("E5002", f"{where}: {', '.join(unread)} not read by the driver")
             )
     found += startup_violations(description, variants)
+    found += keep_alive_violations(description, variants)
     return found
 
 
@@ -145,4 +146,75 @@ def startup_violations(
                         f"{where}.when: {name} is not a value of {when['parameter']}",
                     )
                 )
+    return found
+
+
+def keep_alive_violations(
+    description: dict[str, Any], variants: list[str]
+) -> list[tuple[str, str]]:
+    """What `defaults.output.keepAlive` may name, as `ProtocolDescription` checks it in Swift.
+
+    The interval has one home, so tuning must not repeat it; the family must read it; a write
+    is a HID report only where the family has HID variants and a raw-USB packet only where it
+    has raw-USB ones; a `variants` entry names a variant the family has; and a `resendTuning`
+    key is one the family reads and defaults.
+    """
+    found: list[tuple[str, str]] = []
+    defaults = description.get("defaults", {})
+    tunings = {"defaults.tuning": defaults.get("tuning", {})} | {
+        f"defaults.variants.{variant}.tuning": body["tuning"]
+        for variant, body in defaults.get("variants", {}).items()
+    }
+    found += [
+        (
+            "E5002",
+            f"{where}: keepAliveIntervalMs belongs to defaults.output.keepAlive, not tuning",
+        )
+        for where, tuning in tunings.items()
+        if "keepAliveIntervalMs" in tuning
+    ]
+    keep_alive = defaults.get("output", {}).get("keepAlive")
+    if keep_alive is None:
+        return found
+    reads = {
+        *description.get("tuningKeys", ()),
+        *description.get("rawUSBTuningKeys", ()),
+    }
+    where = "defaults.output.keepAlive"
+    if "keepAliveIntervalMs" not in reads:
+        found.append(
+            (
+                "E5002",
+                f"{where} applies only to a family that reads keepAliveIntervalMs",
+            )
+        )
+    raw = description.get("rawUSB")
+    for index, write in enumerate(keep_alive.get("writes", [])):
+        label = f"{where}.writes[{index}]"
+        if "report" in write and raw is True:
+            found.append(
+                ("E5002", f"{label} is a HID write, and the family is raw USB")
+            )
+        if "report" not in write and not raw:
+            found.append(
+                (
+                    "E5002",
+                    f"{label} is a raw-USB write, and the family has no raw-USB variant",
+                )
+            )
+        found += [
+            ("E5004", f"{label}.variants names {name}, which the family does not have")
+            for name in write.get("variants", ())
+            if name not in variants
+        ]
+        key = write.get("resendTuning")
+        if key is not None and (
+            key not in reads or key not in defaults.get("tuning", {})
+        ):
+            found.append(
+                (
+                    "E5002",
+                    f"{label}.resendTuning: {key} must be read by the family and defaulted",
+                )
+            )
     return found

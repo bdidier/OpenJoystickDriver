@@ -44,7 +44,6 @@
   },
   "defaults": {
     "tuning": {
-      "keepAliveIntervalMs": 4000,
       "presenceResendReports": 4,
       "usbStartupIntervalMs": 50,
       "usbStartupRetryDelayMs": 1000,
@@ -65,7 +64,16 @@
           "bytes": [6, 32, 0, 2, 1, 0],
           "sessionByte": 2
         }
-      ]
+      ],
+      "keepAlive": {
+        "intervalMilliseconds": 4000,
+        "writes": [
+          {
+            "bytes": [3, 32, 0, 3, 0, 0, 0],
+            "sessionByte": 2
+          }
+        ]
+      }
     }
   }
 }

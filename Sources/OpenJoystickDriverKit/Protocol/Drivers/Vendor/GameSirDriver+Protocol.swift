@@ -58,19 +58,19 @@ extension GameSirDriver {
     storedPower = nil
   }
 
+  /// The description's keep-alive for this variant: the enhanced HID heartbeat report, or the wired
+  /// G7 packet with its running sequence number.
   public func keepAliveWrites() -> [PhysicalOutputWrite] {
-    guard gameSirProtocol == .g7ProUSB else {
-      return [.hidOutput(Self.hidReport(gameSirEnhancedHIDHeartbeatPayload))]
+    let variant: PhysicalProtocolVariantID = gameSirProtocol == .g7ProUSB ? .usb : .enhancedHID
+    return PhysicalProtocolID.vendorGameSir.keepAliveWrites(variant: variant).map { write in
+      write.output(
+        defaultEndpoint: outEndpoint,
+        defaultTimeoutMilliseconds: Int(usbTimeoutMilliseconds)
+      ) { [self] _ in
+        sequence &+= 1
+        return sequence
+      }
     }
-    return [
-      .usb(
-        PhysicalUSBOutputPacket(
-          endpoint: outEndpoint,
-          bytes: g7Packet(command: 0x02, payload: [0xF2, 0x00]),
-          timeoutMilliseconds: usbTimeoutMilliseconds
-        )
-      )
-    ]
   }
 
   public var outputCapabilities: PhysicalControllerOutputCapabilities {

@@ -79,13 +79,9 @@ public final class SteamDeckDriver: PhysicalProtocolDriver {
 
   /// SDL `FeedDeckLizardWatchdog`, for firmware that ignores the watchdog setting.
   public func keepAliveWrites() -> [PhysicalOutputWrite] {
-    let rightTrackpadNone = [
-      (steamControllerRightTrackpadModeSetting, UInt16(steamControllerTrackpadNone))
-    ]
-    return [
-      .hidFeature(Self.featureReport(steamControllerClearDigitalMappingsPayload)),
-      .hidFeature(Self.settingsReport(rightTrackpadNone)),
-    ]
+    PhysicalProtocolID.valveSteamDeck.keepAliveWrites(variant: nil).map {
+      $0.output(defaultEndpoint: 0, defaultTimeoutMilliseconds: 0)
+    }
   }
 
   /// SDL `HIDAPI_DriverSteamDeck_RumbleJoystick`: `MsgSimpleRumbleCmd` with system intensity,

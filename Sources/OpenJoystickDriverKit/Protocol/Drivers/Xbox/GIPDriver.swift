@@ -10,7 +10,6 @@ private let gipMaximumVarintBytes = 5
 private let gipRumbleAllMotors: UInt8 = 0x0F
 private let gipRumbleSubCommandLength: UInt8 = 0x09
 private let gipRumbleDefaultDuration: UInt8 = 0xFF
-private let gipStatusSubCommandLength: UInt8 = 3
 
 private struct GIPFrame {
   let command: UInt8
@@ -122,12 +121,12 @@ public final class GIPDriver: PhysicalProtocolDriver {
   /// Builds the periodic host-side GIP status packet (CMD=0x03).
   public func keepAliveWrites() -> [PhysicalOutputWrite] {
     guard keepAlivePolicy == .enabled else { return [] }
-    let seq = sequencer.next(for: GIPCommand.status, options: GIPOption.internal)
-    return [
-      usbWrite([
-        GIPCommand.status, GIPOption.internal, seq, gipStatusSubCommandLength, 0x00, 0x00, 0x00,
-      ])
-    ]
+    return PhysicalProtocolID.xboxGIP.keepAliveWrites(variant: .usb).map { write in
+      write.output(
+        defaultEndpoint: outEndpoint,
+        defaultTimeoutMilliseconds: usbTimeoutMilliseconds
+      ) { [self] bytes in sequencer.next(for: bytes[0], options: bytes[1]) }
+    }
   }
 
   private func usbWrite(_ bytes: [UInt8]) -> PhysicalOutputWrite {

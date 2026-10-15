@@ -342,6 +342,9 @@ class OwnershipAndOutputTests(unittest.TestCase):
                 {"family": "vendor.gamesir", "variant": "usb"}, server="ojd"
             ),
             "template on DualSense": record(DUALSENSE, output={"rumble": GP100_RUMBLE}),
+            "keep-alive in a record": record(
+                THIRD_PARTY, output={"keepAlive": {"intervalMilliseconds": 500}}
+            ),
             "input report": record(
                 THIRD_PARTY,
                 output={
