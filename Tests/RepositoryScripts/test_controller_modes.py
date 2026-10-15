@@ -97,6 +97,43 @@ class ControllerModeSchemaTests(unittest.TestCase):
         )
         self.assertTrue(self.validator.is_valid(document))
 
+    def test_accepts_modes_told_apart_by_endpoint_set(self) -> None:
+        triple = {
+            "interfaceClass": 255,
+            "interfaceSubclass": 93,
+            "interfaceProtocol": 1,
+        }
+        document = record(
+            modes=[
+                DEFAULT,
+                matched(
+                    "two-endpoints",
+                    interfaceSignature={
+                        **triple,
+                        "endpoints": [
+                            {"direction": "in", "transferType": "interrupt"},
+                            {"direction": "out", "transferType": "interrupt"},
+                        ],
+                    },
+                ),
+                matched(
+                    "one-endpoint",
+                    interfaceSignature={
+                        **triple,
+                        "endpoints": [
+                            {
+                                "address": 129,
+                                "direction": "in",
+                                "transferType": "bulk",
+                                "maxPacketSize": 64,
+                            }
+                        ],
+                    },
+                ),
+            ]
+        )
+        self.assertTrue(self.validator.is_valid(document))
+
     def test_ds3_record_holds_bluetooth_as_a_link_mode(self) -> None:
         generated = json.loads(
             (
@@ -114,6 +151,15 @@ class ControllerModeSchemaTests(unittest.TestCase):
 
     def test_rejects_invalid_modes(self) -> None:
         bytes_probe = {"report": 1, "length": 8, "expect": "bytes"}
+
+        def with_endpoints(endpoints: list[dict[str, Any]]) -> dict[str, Any]:
+            return {
+                "interfaceClass": 255,
+                "interfaceSubclass": 93,
+                "interfaceProtocol": 1,
+                "endpoints": endpoints,
+            }
+
         rejected = {
             "empty modes": record(modes=[]),
             "no default mode": record(modes=[mode("x")]),
@@ -143,6 +189,58 @@ class ControllerModeSchemaTests(unittest.TestCase):
                 modes=[
                     DEFAULT,
                     matched("x", interfaceSignature={"interfaceSubclass": 1}),
+                ]
+            ),
+            "endpoints without an entry": record(
+                modes=[
+                    DEFAULT,
+                    matched("x", interfaceSignature=with_endpoints([])),
+                ]
+            ),
+            "endpoint without a key": record(
+                modes=[
+                    DEFAULT,
+                    matched("x", interfaceSignature=with_endpoints([{}])),
+                ]
+            ),
+            "endpoint with a bad direction": record(
+                modes=[
+                    DEFAULT,
+                    matched(
+                        "x", interfaceSignature=with_endpoints([{"direction": "both"}])
+                    ),
+                ]
+            ),
+            "endpoint with a bad transfer type": record(
+                modes=[
+                    DEFAULT,
+                    matched(
+                        "x",
+                        interfaceSignature=with_endpoints(
+                            [{"transferType": "unknown"}]
+                        ),
+                    ),
+                ]
+            ),
+            "endpoint address above 255": record(
+                modes=[
+                    DEFAULT,
+                    matched("x", interfaceSignature=with_endpoints([{"address": 256}])),
+                ]
+            ),
+            "endpoint packet size above 16 bits": record(
+                modes=[
+                    DEFAULT,
+                    matched(
+                        "x",
+                        interfaceSignature=with_endpoints([{"maxPacketSize": 65536}]),
+                    ),
+                ]
+            ),
+            "endpoint with an unknown key": record(
+                modes=[
+                    DEFAULT,
+                    matched("x", interfaceSignature=with_endpoints([{"interval": 1}])),
                 ]
             ),
             "session with an empty startup": record(

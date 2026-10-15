@@ -66,6 +66,13 @@ struct ControllerModeMatchTests {
     } catch { return ControllerRecordSet.problemDescription(error) }
   }
 
+  private static func signature(endpoints: [[String: Any]]) -> [String: Any] {
+    [
+      "interfaceClass": 255, "interfaceSubclass": 93, "interfaceProtocol": 1,
+      "endpoints": endpoints,
+    ]
+  }
+
   private static func device(
     link: PhysicalTransport = .usb,
     release: UInt16? = nil,
@@ -125,6 +132,45 @@ struct ControllerModeMatchTests {
     let wired = await Self.select(profile, Self.device(link: .usb))
     #expect(dongle == .matched("dongle"))
     #expect(wired == .matched("wired"))
+  }
+
+  /// A receiver or dongle record is the evidence of the radio link: macOS reports the dongle as a
+  /// USB device, so discovery sees the host link `usb` and the record supplies the controller-side
+  /// link. A model whose record is no receiver never reports it.
+  @Test
+  func aReceiverRecordReportsTheRadioLinkAndSelectsItsMode() async throws {
+    func profile(variant: String?) throws -> DeviceRuntimeProfile {
+      var protocolKeys: [String: Any] = ["family": "valve.steam-controller"]
+      protocolKeys["variant"] = variant
+      let radio: [String: Any] = [
+        "id": "radio", "protocol": protocolKeys, "match": ["link": "proprietary-radio-receiver"],
+        "interface": ["first": 2, "last": 5],
+      ]
+      let record: [String: Any] = [
+        "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordDocument.kind,
+        "vendorID": Int(Self.model.vendorID), "productID": Int(Self.model.productID),
+        "modes": [["id": "default", "protocol": protocolKeys], radio],
+      ]
+      return try #require(
+        try ControllerRecordSet.validate(JSONSerialization.data(withJSONObject: record)).record
+      ).profile
+    }
+    let dongle = try profile(variant: "dongle")
+    let wired = try profile(variant: "wired")
+    let discovered = Self.device(link: .usb)
+    #expect(await Self.select(dongle, discovered) == .matched("radio"))
+    #expect(await Self.select(wired, discovered) == .noModeMatched)
+    // An observed controller-side link outranks the record's evidence.
+    let observed = Self.device(
+      interfaces: [
+        PhysicalInterfaceSignature(
+          interfaceNumber: 0,
+          hostTransport: .usb,
+          physicalTransport: .usb
+        )
+      ]
+    )
+    #expect(await Self.select(dongle, observed) == .noModeMatched)
   }
 
   @Test
@@ -192,6 +238,76 @@ struct ControllerModeMatchTests {
     )
     #expect(await Self.select(profile, Self.device(interfaces: [vendor, hid])) == .matched("hid"))
     #expect(await Self.select(profile, Self.device(interfaces: [vendor])) == .noModeMatched)
+  }
+
+  /// Two interfaces of one class triple are told apart by their endpoint sets: the listed
+  /// endpoints must pair one-to-one with the interface's and none may be left over.
+  @Test
+  func anEndpointSetTellsApartInterfacesOfOneClassTriple() async throws {
+    func signature(_ endpoints: [[String: Any]]) -> [String: Any] {
+      [
+        "interfaceClass": 255, "interfaceSubclass": 93, "interfaceProtocol": 1,
+        "endpoints": endpoints,
+      ]
+    }
+    let profile = try Self.profile([
+      Self.mode(
+        "pair",
+        match: [
+          "interfaceSignature": signature([
+            ["direction": "in", "transferType": "interrupt"],
+            ["direction": "out", "transferType": "interrupt"],
+          ])
+        ]
+      ),
+      Self.mode(
+        "single",
+        match: [
+          "interfaceSignature": signature([
+            ["address": 129, "direction": "in", "transferType": "bulk", "maxPacketSize": 64]
+          ])
+        ]
+      ),
+    ])
+    func interface(_ endpoints: [PhysicalEndpointSignature]?) -> PhysicalDevice {
+      Self.device(
+        interfaces: [
+          PhysicalInterfaceSignature(
+            interfaceNumber: 0,
+            interfaceClass: 255,
+            interfaceSubclass: 93,
+            interfaceProtocol: 1,
+            hostTransport: .usb,
+            endpoints: endpoints
+          )
+        ]
+      )
+    }
+    let input = PhysicalEndpointSignature(
+      address: 129,
+      direction: .in,
+      transferType: .interrupt,
+      maxPacketSize: 32
+    )
+    let output = PhysicalEndpointSignature(
+      address: 1,
+      direction: .out,
+      transferType: .interrupt,
+      maxPacketSize: 32
+    )
+    let bulk = PhysicalEndpointSignature(
+      address: 129,
+      direction: .in,
+      transferType: .bulk,
+      maxPacketSize: 64
+    )
+    #expect(await Self.select(profile, interface([output, input])) == .matched("pair"))
+    #expect(await Self.select(profile, interface([bulk])) == .matched("single"))
+    // A leftover endpoint, a missing one, a wrong fact, and unreported endpoints all fail.
+    #expect(await Self.select(profile, interface([input, output, bulk])) == .noModeMatched)
+    #expect(await Self.select(profile, interface([input])) == .noModeMatched)
+    #expect(await Self.select(profile, interface([input, input])) == .noModeMatched)
+    #expect(await Self.select(profile, interface(nil)) == .noModeMatched)
   }
 
   /// A probe is the costly key: it is read only after every cheap key of its mode holds.
@@ -387,6 +503,61 @@ struct ControllerModeMatchTests {
       ),
       ("unknown mode key", [Self.mode("x", match: usb, extras: ["keepAlive": 1])], "keepAlive"),
       ("default with a match", [Self.mode("default", match: usb)], "default"),
+      (
+        "empty endpoint list",
+        [Self.mode("x", match: ["interfaceSignature": Self.signature(endpoints: [])])],
+        "at least one endpoint"
+      ),
+      (
+        "endpoint without a key",
+        [Self.mode("x", match: ["interfaceSignature": Self.signature(endpoints: [[:]])])],
+        "at least one key"
+      ),
+      (
+        "endpoint with a bad direction",
+        [
+          Self.mode(
+            "x",
+            match: ["interfaceSignature": Self.signature(endpoints: [["direction": "both"]])]
+          )
+        ], "direction"
+      ),
+      (
+        "endpoint with an unknown transfer type",
+        [
+          Self.mode(
+            "x",
+            match: ["interfaceSignature": Self.signature(endpoints: [["transferType": "unknown"]])]
+          )
+        ], "transferType"
+      ),
+      (
+        "endpoint address above 255",
+        [
+          Self.mode(
+            "x",
+            match: ["interfaceSignature": Self.signature(endpoints: [["address": 256]])]
+          )
+        ], "address"
+      ),
+      (
+        "endpoint packet size above 16 bits",
+        [
+          Self.mode(
+            "x",
+            match: ["interfaceSignature": Self.signature(endpoints: [["maxPacketSize": 65_536]])]
+          )
+        ], "maxPacketSize"
+      ),
+      (
+        "endpoint with an unknown key",
+        [
+          Self.mode(
+            "x",
+            match: ["interfaceSignature": Self.signature(endpoints: [["interval": 1]])]
+          )
+        ], "interval"
+      ),
     ]
     for (name, modes, fragment) in cases {
       let problem = try Self.problem(modes)

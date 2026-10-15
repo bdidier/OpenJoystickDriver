@@ -3,16 +3,40 @@ import Foundation
 /// The keys that select a mode; every key present must hold. A key the device does not expose
 /// facts for does not hold.
 public struct ControllerModeMatch: Equatable, Sendable {
-  /// An interface the device must expose: its USB class triple and, when set, its primary usage.
+  /// An interface the device must expose: its USB class triple and, when set, its primary usage
+  /// and its endpoint set.
   public struct InterfaceSignature: Equatable, Sendable {
+    /// One endpoint of the set; every field present must hold for the endpoint it is paired with.
+    public struct Endpoint: Equatable, Sendable {
+      public var address: UInt8?
+      public var direction: USBEndpointDirection?
+      public var transferType: USBEndpointTransferType?
+      public var maxPacketSize: UInt16?
+
+      public init(
+        address: UInt8? = nil,
+        direction: USBEndpointDirection? = nil,
+        transferType: USBEndpointTransferType? = nil,
+        maxPacketSize: UInt16? = nil
+      ) {
+        self.address = address
+        self.direction = direction
+        self.transferType = transferType
+        self.maxPacketSize = maxPacketSize
+      }
+    }
+
     public let interfaceClass: UInt8
     public let interfaceSubclass: UInt8
     public let interfaceProtocol: UInt8
     public let usagePage: UInt32?
     public let usage: UInt32?
+    /// The interface's whole endpoint set; nil does not constrain it.
+    public var endpoints: [Endpoint]? = nil
   }
 
-  /// The link every interface of the device reaches the host over.
+  /// The link every interface of the device reaches the controller over: the observed physical
+  /// link, else the link a receiver or dongle record reports, else the host link.
   public var link: PhysicalTransport?
   public var interfaceSignature: InterfaceSignature?
   public var manufacturer: String?
@@ -22,10 +46,16 @@ public struct ControllerModeMatch: Equatable, Sendable {
   /// Reads of feature reports; they run after every other key holds.
   public var probes: [ControllerModeProbe] = []
 
-  /// Whether the keys other than the probes hold for this device.
-  func holds(for device: PhysicalDevice) -> Bool {
+  /// Whether the keys other than the probes hold for this device. `receiverRecord` is whether the
+  /// model's own record runs a receiver or dongle protocol variant, which is the evidence that its
+  /// interfaces reach the controller over a proprietary radio link.
+  func holds(for device: PhysicalDevice, receiverRecord: Bool = false) -> Bool {
     if let link {
-      let links = Set((device.interfaces ?? []).map(\.hostTransport))
+      let links = Set(
+        (device.interfaces ?? []).map {
+          $0.physicalTransport ?? (receiverRecord ? .proprietaryRadioReceiver : $0.hostTransport)
+        }
+      )
       guard links == [link] else { return false }
     }
     if let interfaceSignature {
@@ -51,7 +81,35 @@ extension ControllerModeMatch.InterfaceSignature {
     let primary = interface.hidLayout?.primaryUsage
     if let usagePage, primary?.usagePage != usagePage { return false }
     if let usage, primary?.usage != usage { return false }
+    if let endpoints { return Self.pair(endpoints[...], with: interface.endpoints) }
     return true
+  }
+
+  /// Whether every listed endpoint pairs with a distinct endpoint of the interface and none is
+  /// left over. An interface that reports no endpoints never pairs.
+  private static func pair(
+    _ wanted: ArraySlice<Endpoint>,
+    with actual: [PhysicalEndpointSignature]?
+  )
+    -> Bool
+  {
+    guard let actual, wanted.count == actual.count else { return false }
+    guard let first = wanted.first else { return true }
+    for (index, candidate) in actual.enumerated() where first.accepts(candidate) {
+      var rest = actual
+      rest.remove(at: index)
+      if pair(wanted.dropFirst(), with: rest) { return true }
+    }
+    return false
+  }
+}
+
+extension ControllerModeMatch.InterfaceSignature.Endpoint {
+  func accepts(_ endpoint: PhysicalEndpointSignature) -> Bool {
+    (address == nil || address == endpoint.address)
+      && (direction == nil || direction == endpoint.direction)
+      && (transferType == nil || transferType == endpoint.transferType)
+      && (maxPacketSize == nil || maxPacketSize == endpoint.maxPacketSize)
   }
 }
 
@@ -131,10 +189,12 @@ public enum ControllerModeSelector {
     log: @Sendable (String) -> Void = { print($0) }
   ) async -> ControllerModeSelection {
     guard !profile.modes.isEmpty else { return .noModes }
+    let receiverRecord =
+      profile.physicalProtocolVariant.map { [.receiver, .dongle].contains($0) } ?? false
     let name = String(format: "%04X:%04X", model.vendorID, model.productID)
     // One read per report serves every probe of that report.
     var replies: [Int: PhysicalHIDReportResult<Data>] = [:]
-    for mode in profile.modes where mode.match.holds(for: device) {
+    for mode in profile.modes where mode.match.holds(for: device, receiverRecord: receiverRecord) {
       var held = true
       for probe in mode.probes {
         guard backend == .ioHID else {

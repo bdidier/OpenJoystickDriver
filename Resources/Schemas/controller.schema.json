@@ -152,7 +152,7 @@
       }
     },
     "modeInterfaceSignature": {
-      "description": "An interface the device must expose, by USB class triple and, for HID, the primary usage.",
+      "description": "An interface the device must expose, by USB class triple and, optionally, the HID primary usage and the whole endpoint set.",
       "type": "object",
       "required": ["interfaceClass", "interfaceSubclass", "interfaceProtocol"],
       "additionalProperties": false,
@@ -175,6 +175,14 @@
           "type": "integer",
           "minimum": 0,
           "maximum": 65535
+        },
+        "endpoints": {
+          "description": "The interface's whole endpoint set: each entry pairs with one distinct endpoint and none is left over.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/modeEndpoint"
+          }
         }
       },
       "dependentRequired": {
@@ -1621,6 +1629,28 @@
     },
     "server": {
       "enum": ["system", "ojd"]
+    },
+    "modeEndpoint": {
+      "description": "One endpoint of an endpoint set; every key present must hold.",
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "$ref": "#/$defs/modeByte"
+        },
+        "direction": {
+          "enum": ["in", "out"]
+        },
+        "transferType": {
+          "enum": ["control", "isochronous", "bulk", "interrupt"]
+        },
+        "maxPacketSize": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        }
+      }
     }
   },
   "allOf": [

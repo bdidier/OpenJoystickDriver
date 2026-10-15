@@ -196,7 +196,10 @@ extension ControllerRecordDocument {
     init(from decoder: any Decoder) throws {
       let container = try decoder.container(keyedBy: DocumentKey.self)
       try container.rejectUnknown(
-        allowed: ["interfaceClass", "interfaceSubclass", "interfaceProtocol", "usagePage", "usage"]
+        allowed: [
+          "interfaceClass", "interfaceSubclass", "interfaceProtocol", "usagePage", "usage",
+          "endpoints",
+        ]
       )
       func byte(_ key: String) throws -> UInt8 {
         guard let byte = UInt8(exactly: try container.decode(Int.self, for: key)) else {
@@ -221,8 +224,63 @@ extension ControllerRecordDocument {
         interfaceSubclass: try byte("interfaceSubclass"),
         interfaceProtocol: try byte("interfaceProtocol"),
         usagePage: usagePage,
-        usage: usage
+        usage: usage,
+        endpoints: try container.decodeOptional([ModeEndpointDocument].self, for: "endpoints")?
+          .map(\.endpoint)
       )
+      if let count = signature.endpoints?.count, count == 0 {
+        throw ModeDocument.invalid("endpoints", "endpoints names at least one endpoint", decoder)
+      }
+    }
+  }
+
+  /// One endpoint of an interface signature's endpoint set.
+  struct ModeEndpointDocument: Decodable {
+    let endpoint: ControllerModeMatch.InterfaceSignature.Endpoint
+
+    init(from decoder: any Decoder) throws {
+      let container = try decoder.container(keyedBy: DocumentKey.self)
+      try container.rejectUnknown(allowed: [
+        "address", "direction", "transferType", "maxPacketSize",
+      ])
+      guard !container.allKeys.isEmpty else {
+        throw DecodingError.dataCorrupted(
+          .init(
+            codingPath: decoder.codingPath,
+            debugDescription: "an endpoint needs at least one key"
+          )
+        )
+      }
+      var endpoint = ControllerModeMatch.InterfaceSignature.Endpoint()
+      if let address = try container.decodeOptional(Int.self, for: "address") {
+        guard let byte = UInt8(exactly: address) else {
+          throw ModeDocument.invalid("address", "address is 0...255", decoder)
+        }
+        endpoint.address = byte
+      }
+      if let name = try container.decodeOptional(String.self, for: "direction") {
+        guard let direction = USBEndpointDirection(rawValue: name) else {
+          throw ModeDocument.invalid("direction", "direction is in or out", decoder)
+        }
+        endpoint.direction = direction
+      }
+      if let name = try container.decodeOptional(String.self, for: "transferType") {
+        guard let type = USBEndpointTransferType(rawValue: name), type != .unknown else {
+          throw ModeDocument.invalid(
+            "transferType",
+            "transferType is control, isochronous, bulk, or interrupt",
+            decoder
+          )
+        }
+        endpoint.transferType = type
+      }
+      if let size = try container.decodeOptional(Int.self, for: "maxPacketSize") {
+        guard let word = UInt16(exactly: size) else {
+          throw ModeDocument.invalid("maxPacketSize", "maxPacketSize is 0...65535", decoder)
+        }
+        endpoint.maxPacketSize = word
+      }
+      self.endpoint = endpoint
     }
   }
 
