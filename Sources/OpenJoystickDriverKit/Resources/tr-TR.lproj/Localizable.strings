@@ -1585,6 +1585,7 @@
 "cli.explain.area.cli" = "Komut satırı";
 "cli.explain.area.remapping" = "Yeniden atama";
 "cli.explain.area.mod" = "Mod paketleri";
+"cli.explain.area.document" = "Belge";
 "cli.explain.exit_code" ="Çıkış kodu: %@";
 "cli.explain.wire" = "Tel değeri: %@";
 "cli.error.stale_installation" = "Yüklü OpenJoystickDriver.app bu depo kaynaklarından daha eski. Bu derlemeyi çalıştırmak için “./Scripts/ojd build install-fast dev” komutunu çalıştırın veya OJD_RUN_REPOSITORY_CLI=1 ayarlayın.";
@@ -1647,4 +1648,7 @@
 "error.E4005" = "Bu ada sahip bir paket zaten yüklü. Değiştirmek için komutu --force ile çalıştırın.";
 "error.E4006" = "Yüklü hiçbir paketin adı bu değil. Yüklü paketleri görmek için ojd mod list çalıştırın.";
 "error.E4007" = "Paket klasörü değiştirilemedi. Boş disk alanını ve klasör izinlerini kontrol edin.";
+"error.E5002" = "Bir protokol açıklaması geçersiz. Dosyayı protocol-description şemasına göre denetleyin ve iletinin belirttiği alanı düzeltin.";
+"error.E5003" = "Bir protokol açıklaması, dosya adından farklı bir aile belirtiyor. Dosyayı ailesinin adıyla adlandırın.";
+"error.E5004" = "Bir protokol açıklaması, ailesinde olmayan bir varyant listeliyor. Ailenin varyantlarından birini kullanın.";
 "error.withCode" ="%@ (%@)";

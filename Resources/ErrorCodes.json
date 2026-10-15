@@ -461,6 +461,24 @@
 			"domain": "mod",
 			"name": "packageStoreUnwritable",
 			"status": "active"
+		},
+		{
+			"code": "E5002",
+			"domain": "document",
+			"name": "invalidProtocolDescription",
+			"status": "active"
+		},
+		{
+			"code": "E5003",
+			"domain": "document",
+			"name": "protocolDescriptionFamilyMismatch",
+			"status": "active"
+		},
+		{
+			"code": "E5004",
+			"domain": "document",
+			"name": "unknownProtocolVariant",
+			"status": "active"
 		}
 	]
 }

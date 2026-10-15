@@ -1,0 +1,13 @@
+{
+	"apiVersion": "openjoystickdriver/v1alpha1",
+	"kind": "ProtocolDescription",
+	"family": "vendor.ps3-third-party",
+	"parameters": {
+		"hatSource": {
+			"type": "enum",
+			"values": [
+				"DpadPressure"
+			]
+		}
+	}
+}

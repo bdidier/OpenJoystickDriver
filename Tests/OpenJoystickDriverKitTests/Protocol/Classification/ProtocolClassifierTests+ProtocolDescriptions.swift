@@ -8,11 +8,11 @@ extension ProtocolClassifierTests {
 
   @Test
   func protocolDescriptionDecodesItsSignatures() throws {
-    let signatures = try ProtocolClassifier.interfaceSignatures(
-      decoding: protocolDescription(signature: #""variant": "usb", "interfaceNumber": 0"#),
+    let signatures = try ProtocolDescription.decode(
+      protocolDescription(signature: #""variant": "usb", "interfaceNumber": 0"#),
       protocolID: .xboxGIP,
       fileName: "xbox.gip.json"
-    )
+    ).interfaceSignatures
     #expect(
       signatures == [
         ProtocolInterfaceSignature(
@@ -30,55 +30,72 @@ extension ProtocolClassifierTests {
 
   @Test(
     arguments: [
-      (#""variant": "usb", "endpoint": 129"#, "unknown field(s): endpoint"),
-      (#""variant": "wired""#, "xbox.gip has no variant wired"),
-      (#""variant": "bluetooth""#, "xbox.gip has no variant bluetooth"),
+      (
+        #""variant": "usb", "endpoint": 129"#, "unknown field(s): endpoint",
+        ErrorCode.invalidProtocolDescription
+      ),
+      (#""variant": "wired""#, "xbox.gip has no variant wired", ErrorCode.unknownProtocolVariant),
+      (
+        #""variant": "bluetooth""#, "xbox.gip has no variant bluetooth",
+        ErrorCode.unknownProtocolVariant
+      ),
     ]
   )
-  func protocolDescriptionRejectsABadSignature(signature: String, problem: String) {
-    let error = #expect(throws: ControllerRecordProblem.self) {
-      try ProtocolClassifier.interfaceSignatures(
-        decoding: protocolDescription(signature: signature),
+  func protocolDescriptionRejectsABadSignature(
+    signature: String,
+    problem: String,
+    code: ErrorCode
+  ) {
+    let error = #expect(throws: ProtocolDescriptionProblem.self) {
+      try ProtocolDescription.decode(
+        protocolDescription(signature: signature),
         protocolID: .xboxGIP,
         fileName: "xbox.gip.json"
       )
     }
-    #expect(error?.description.hasPrefix("xbox.gip.json: ") == true)
+    #expect(error?.code == code)
+    #expect(error?.detail.hasPrefix("xbox.gip.json: ") == true)
     #expect(error?.description.contains(problem) == true)
   }
 
   @Test
   func protocolDescriptionRejectsABadHeader() {
-    let cases: [(Data, String)] = [
+    let cases: [(Data, String, ErrorCode)] = [
       (
         protocolDescription(signature: #""variant": "usb""#, extra: #""vendorID": 1118,"#),
-        "unknown field(s): vendorID"
+        "unknown field(s): vendorID",
+        .invalidProtocolDescription
       ),
       (
         protocolDescription(
           signature: #""variant": "usb""#,
           apiVersion: "openjoystickdriver.io/v1beta1"
         ),
-        "apiVersion openjoystickdriver.io/v1beta1 is not supported; the supported apiVersion is \(OpenJoystickDriverAPI.version)"
+        "apiVersion openjoystickdriver.io/v1beta1 is not supported; "
+          + "the supported apiVersion is \(OpenJoystickDriverAPI.version)",
+        .invalidProtocolDescription
       ),
       (
         protocolDescription(signature: #""variant": "usb""#, kind: "Controller"),
-        "expected \(ProtocolClassifier.protocolDescriptionKind), found Controller"
+        "expected \(ProtocolDescription.kind), found Controller",
+        .invalidProtocolDescription
       ),
       (
         protocolDescription(signature: #""variant": "usb""#, family: "xbox.xusb"),
-        "family must be xbox.gip"
+        "family must be xbox.gip",
+        .protocolDescriptionFamilyMismatch
       ),
     ]
-    for (data, problem) in cases {
-      let error = #expect(throws: ControllerRecordProblem.self) {
-        try ProtocolClassifier.interfaceSignatures(
-          decoding: data,
+    for (data, problem, code) in cases {
+      let error = #expect(throws: ProtocolDescriptionProblem.self) {
+        try ProtocolDescription.decode(
+          data,
           protocolID: .xboxGIP,
           fileName: "xbox.gip.json"
         )
       }
-      #expect(error?.description.contains(problem) == true)
+      #expect(error?.code == code)
+      #expect(error?.detail.contains(problem) == true)
     }
   }
 
@@ -98,19 +115,20 @@ extension ProtocolClassifierTests {
     let variant = (signature?["properties"] as? [String: Any])?["variant"] as? [String: Any]
     #expect(variant?["enum"] as? [String] == PhysicalProtocolVariantID.allCases.map(\.rawValue))
 
-    var rules: [String: [String: Any]] = [:]
+    var rules: [String: Any] = [:]
     for rule in try #require(schema["allOf"] as? [[String: Any]]) {
       let condition = (rule["if"] as? [String: Any])?["properties"] as? [String: Any]
       let family = try #require((condition?["family"] as? [String: Any])?["const"] as? String)
       let then = (rule["then"] as? [String: Any])?["properties"] as? [String: Any]
-      rules[family] = then?["interfaceSignatures"] as? [String: Any]
+      rules[family] = then?["interfaceSignatures"]
     }
     #expect(Set(rules.keys) == Set(PhysicalProtocolID.allCases.map(\.rawValue)))
     for protocolID in PhysicalProtocolID.allCases {
-      let signatures = rules[protocolID.rawValue]
       if protocolID.variants.isEmpty {
-        #expect(signatures?["maxItems"] as? Int == 0, "\(protocolID.rawValue)")
+        // A family with no variants has no signatures to list: the schema forbids the field.
+        #expect(rules[protocolID.rawValue] as? Bool == false, "\(protocolID.rawValue)")
       } else {
+        let signatures = rules[protocolID.rawValue] as? [String: Any]
         let items = (signatures?["items"] as? [String: Any])?["properties"] as? [String: Any]
         let allowed = (items?["variant"] as? [String: Any])?["enum"] as? [String]
         #expect(allowed == protocolID.variants.map(\.rawValue), "\(protocolID.rawValue)")
@@ -124,7 +142,7 @@ extension ProtocolClassifierTests {
     signature: String,
     extra: String = "",
     apiVersion: String = OpenJoystickDriverAPI.version,
-    kind: String = ProtocolClassifier.protocolDescriptionKind,
+    kind: String = ProtocolDescription.kind,
     family: String = "xbox.gip"
   ) -> Data {
     Data(

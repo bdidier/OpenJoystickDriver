@@ -22,6 +22,7 @@ enum LocalizationCatalogAudit {
   ]
   private static let frenchTerms: Set<String> = [
     "capture.destination", "capture.gain", "cli.controller.show.label.session",
+    "cli.explain.area.document",
     "cli.status.label.extension", "cli.status.label.service", "common.destination",
     "common.service", "console.title", "inputTest.menu", "keyboard.option", "mapping.guide",
     "mapping.mode", "mapping.options", "mapping.start", "motion.calibration.pause",
@@ -81,7 +82,8 @@ enum LocalizationCatalogAudit {
       "keyboard.option", "keyboard.return", "keyboard.shift",
     ],
     "nl-NL": [
-      "capture.controller", "cli.access.status.socket", "cli.controller.show.label.protocol",
+      "capture.controller", "cli.access.status.socket", "cli.explain.area.document",
+      "cli.controller.show.label.protocol",
       "cli.controller.show.label.record", "cli.controller.show.label.rumble",
       "cli.status.label.controllers", "cli.status.label.service", "common.controller",
       "common.controllers", "common.protocol", "common.runtime", "common.service", "common.status",

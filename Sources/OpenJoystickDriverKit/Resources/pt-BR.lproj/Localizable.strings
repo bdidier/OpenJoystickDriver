@@ -1585,6 +1585,7 @@
 "cli.explain.area.cli" = "Linha de comando";
 "cli.explain.area.remapping" = "Remapeamento";
 "cli.explain.area.mod" = "Pacotes de mods";
+"cli.explain.area.document" = "Documento";
 "cli.explain.exit_code" ="Código de saída: %@";
 "cli.explain.wire" = "Valor de transmissão: %@";
 "cli.error.stale_installation" = "O OpenJoystickDriver.app instalado é mais antigo que estas fontes do repositório. Execute «./Scripts/ojd build install-fast dev» ou defina OJD_RUN_REPOSITORY_CLI=1 para executar esta compilação.";
@@ -1647,4 +1648,7 @@
 "error.E4005" = "Já existe um pacote instalado com este nome. Execute o comando com --force para substituí-lo.";
 "error.E4006" = "Nenhum pacote instalado tem este nome. Execute ojd mod list para ver os pacotes instalados.";
 "error.E4007" = "Não foi possível alterar a pasta de pacotes. Verifique o espaço livre em disco e as permissões da pasta.";
+"error.E5002" = "Uma descrição de protocolo é inválida. Verifique o arquivo com o esquema protocol-description e corrija o campo que a mensagem indica.";
+"error.E5003" = "Uma descrição de protocolo indica uma família diferente do nome do arquivo. Dê ao arquivo o nome da sua família.";
+"error.E5004" = "Uma descrição de protocolo lista uma variante que a família não tem. Use uma das variantes da família.";
 "error.withCode" ="%@ (%@)";

@@ -1585,6 +1585,7 @@
 "cli.explain.area.cli" = "Dòng lệnh";
 "cli.explain.area.remapping" = "Ánh xạ lại";
 "cli.explain.area.mod" = "Gói mod";
+"cli.explain.area.document" = "Tài liệu";
 "cli.explain.exit_code" ="Mã thoát: %@";
 "cli.explain.wire" = "Giá trị truyền: %@";
 "cli.error.stale_installation" = "OpenJoystickDriver.app đã cài đặt cũ hơn các nguồn kho mã này. Hãy chạy “./Scripts/ojd build install-fast dev”, hoặc đặt OJD_RUN_REPOSITORY_CLI=1 để chạy bản dựng này.";
@@ -1647,4 +1648,7 @@
 "error.E4005" = "Đã cài một gói có tên này. Hãy chạy lệnh với --force để thay thế.";
 "error.E4006" = "Không có gói đã cài nào có tên này. Hãy chạy ojd mod list để xem các gói đã cài.";
 "error.E4007" = "Không thể thay đổi thư mục gói. Hãy kiểm tra dung lượng đĩa trống và quyền của thư mục.";
+"error.E5002" = "Mô tả giao thức không hợp lệ. Kiểm tra tệp với lược đồ protocol-description và sửa trường mà thông báo nêu.";
+"error.E5003" = "Mô tả giao thức nêu một họ khác với tên tệp. Đặt tên tệp theo họ của nó.";
+"error.E5004" = "Mô tả giao thức liệt kê một biến thể mà họ của nó không có. Hãy dùng một trong các biến thể của họ.";
 "error.withCode" ="%@ (%@)";

@@ -138,7 +138,10 @@ Owns: `ProtocolDescription` kind, with init sequences, report layouts and probes
 Depends: 7, 8.
 Verify: `swift test`, `./Scripts/ojd check schemas`, `./Scripts/ojd test parsers-macos14`.
 
-- [ ] 9.1 Define the `ProtocolDescription` kind and its schema. Verify: sample documents validate; bad ones fail with catalog errors.
+- [x] 9.1 Define the `ProtocolDescription` kind and its schema. Verify: sample documents validate; bad ones fail with catalog errors. Done: schema declares `parameters` and `defaults` (capabilities, output rumble and startup writes, input layout, tuning) per family; 11 descriptions; `ProtocolDescription.decode` (Swift) and `validate_protocol_descriptions` (Python) reject with E5002, E5003, E5004.
+- [ ] 9.1a Move the family defaults still coded in Swift (`MacOSOwnedOutput.swift`, `DeviceCatalog.swift`, `ProtocolClassifier.swift`, `ControllerProfileCapabilities.swift`, `ControllerTuning+Layers.swift`: rumble intervals, startup writes, capabilities, tuning) into each description's `defaults` and have the drivers read `ProtocolDescription.bundled`. Verify: no copy of a moved default remains in Swift.
+- [ ] 9.1b Switch the description loader's apiVersion rejections from E5002 to E5001 once the unsupported-apiVersion code lands, and make `ProtocolParameters.violation` read enum values and ranges from the descriptions.
+- [ ] 9.1c Express probes as record `modes[]` match keys once a consumer exists; the description schema does not carry probes.
 - [ ] 9.2 Describe one existing simple protocol as data and run it through the generic interpreter beside the coded parser. Verify: a test shows identical frames from both on the recorded samples.
 - [ ] 9.3 Describe the remaining protocols whose behavior the data model covers; leave the rest coded and list them. Verify: the list is in `wiki` developer pages and every protocol has a parser test.
 

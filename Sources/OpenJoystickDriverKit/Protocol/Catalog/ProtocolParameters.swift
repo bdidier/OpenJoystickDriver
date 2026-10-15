@@ -272,21 +272,9 @@ public struct ProtocolParameters: Codable, Equatable, Sendable {
     return result
   }
 
-  /// The parameter names each protocol driver declares.
+  /// The parameter names the family's protocol description declares.
   static func declared(by family: PhysicalProtocolID) -> Set<String> {
-    switch family {
-    case .xboxGIP: ["shareButton"]
-    case .nintendoSwitch1: ["layout", "usbProtocol"]
-    case .nintendoSwitch2: ["layout"]
-    case .vendorGameSir: ["innerGrips", "lightingMemory"]
-    case .vendorPS3ThirdParty: ["hatSource"]
-    case .sonyDualShock4: ["motionCalibration", "role", "motionScale"]
-    case .vendorNVIDIAShield: ["reportRevision"]
-    case .hidDescriptor: ["usageLayout"]
-    case .sonyDualSense:
-      ["maker", "unprobedSensors", "unprobedTouchpad", "forcedVibration", "role"]
-    default: []
-    }
+    ProtocolDescription.bundled[family].map { Set($0.parameters.keys) } ?? []
   }
 
   /// Why the parameters cannot belong to `family`, or nil when its driver declares them all and
