@@ -315,10 +315,7 @@ class SDLControllerListTests(unittest.TestCase):
             "SwitchProController": {"family": "nintendo.switch1"},
             "XBox360Controller": {"family": "xbox.xusb", "variant": "wired"},
             "XBoxOneController": {"family": "xbox.gip"},
-            "SwitchInputOnlyController": {
-                "family": "nintendo.switch1",
-                "quirks": ["input-only"],
-            },
+            "SwitchInputOnlyController": {"family": "nintendo.switch-input-only"},
         }
         for controller_type, protocol in expected.items():
             with self.subTest(controller_type):
@@ -342,6 +339,7 @@ class SDLControllerListTests(unittest.TestCase):
         records, counts = self.build(rows)
         protocols = {key[1]: record["protocol"] for key, record in records.items()}
         steam = "valve.steam-controller"
+        triton = "valve.steam-triton"
         wired = {"family": steam, "variant": "wired"}
         ble = {"family": steam, "variant": "bluetooth-le"}
         self.assertEqual(
@@ -352,16 +350,16 @@ class SDLControllerListTests(unittest.TestCase):
                 0x1106: ble,
                 0x1201: wired,
                 0x1202: ble,
-                0x1205: {**wired, "quirks": ["neptune"]},
-                0x1302: {**wired, "quirks": ["triton"]},
-                0x1303: {**ble, "quirks": ["triton"]},
-                0x1304: {"family": steam, "variant": "dongle", "quirks": ["triton"]},
-                0x1305: {"family": steam, "variant": "dongle", "quirks": ["triton"]},
+                0x1205: {"family": "valve.steam-deck"},
+                0x1302: {"family": triton, "variant": "wired"},
+                0x1303: {"family": triton, "variant": "bluetooth-le"},
+                0x1304: {"family": triton, "variant": "dongle"},
+                0x1305: {"family": triton, "variant": "dongle"},
             },
         )
         self.assertEqual(counts, {"added": 10})
 
-    def test_switch_2_rows_carry_the_switch_2_quirk_before_the_side(self) -> None:
+    def test_switch_2_rows_use_the_switch_2_family_with_the_side_quirk(self) -> None:
         rows = [
             (0x057E, 0x2006, "SwitchJoyConLeft"),
             (0x057E, 0x2066, "SwitchJoyConRight"),
@@ -371,13 +369,14 @@ class SDLControllerListTests(unittest.TestCase):
         records, counts = self.build(rows)
         protocols = {key[1]: record["protocol"] for key, record in records.items()}
         switch = "nintendo.switch1"
+        switch2 = "nintendo.switch2"
         self.assertEqual(
             protocols,
             {
                 0x2006: {"family": switch, "quirks": ["joy-con-left"]},
-                0x2066: {"family": switch, "quirks": ["switch-2", "joy-con-right"]},
-                0x2067: {"family": switch, "quirks": ["switch-2", "joy-con-left"]},
-                0x2069: {"family": switch, "quirks": ["switch-2"]},
+                0x2066: {"family": switch2, "quirks": ["joy-con-right"]},
+                0x2067: {"family": switch2, "quirks": ["joy-con-left"]},
+                0x2069: {"family": switch2},
             },
         )
         self.assertEqual(counts, {"added": 4})

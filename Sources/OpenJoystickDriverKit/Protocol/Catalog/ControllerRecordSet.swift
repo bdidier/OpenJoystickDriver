@@ -85,7 +85,7 @@ public struct ControllerRecord: Sendable {
   /// Whether the record is a Switch 2 controller without `bluetoothLE`, which OJD reaches only
   /// over USB, because the Bluetooth LE central needs the vibration characteristic.
   public var isSwitch2WithoutBluetoothLE: Bool {
-    profile.physicalProtocolID == .nintendoSwitch1 && profile.quirks.contains(.switch2)
+    profile.physicalProtocolID == .nintendoSwitch2
       && profile.bluetoothLEVibrationCharacteristic == nil
   }
 

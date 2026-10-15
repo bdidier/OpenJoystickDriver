@@ -216,21 +216,16 @@ public final class ProtocolDriverRegistry: Sendable {
           quirks: record.quirks
         )
       )
+    case .nintendoSwitch2:
+      let layout: Switch2ControllerLayout =
+        if record.quirks.contains(.gameCube) {
+          .gameCube
+        } else if record.quirks.contains(.joyConLeft) {
+          .leftJoyCon
+        } else if record.quirks.contains(.joyConRight) { .rightJoyCon } else { .pro }
+      return .success(Switch2Driver(layout: layout, link: variant == .usb ? .usb : .bluetoothLE))
+    case .nintendoSwitchInputOnly: return .success(SwitchInputOnlyDriver())
     case .nintendoSwitch1:
-      // Switch 2 controllers run over USB or their Bluetooth LE GATT link; the Bluetooth LE
-      // variant belongs to no other Switch model.
-      if record.quirks.contains(.switch2) {
-        guard variant != .bluetoothClassic else { return .failure(.unsupportedProtocolVariant) }
-        let layout: Switch2ControllerLayout =
-          if record.quirks.contains(.gameCube) {
-            .gameCube
-          } else if record.quirks.contains(.joyConLeft) {
-            .leftJoyCon
-          } else if record.quirks.contains(.joyConRight) { .rightJoyCon } else { .pro }
-        return .success(Switch2Driver(layout: layout, link: variant == .usb ? .usb : .bluetoothLE))
-      }
-      guard variant != .bluetoothLE else { return .failure(.unsupportedProtocolVariant) }
-      if record.quirks.contains(.inputOnly) { return .success(SwitchInputOnlyDriver()) }
       let layout: NintendoControllerLayout
       if record.quirks.contains(.joyConLeft) {
         layout = .leftJoyCon
@@ -240,11 +235,9 @@ public final class ProtocolDriverRegistry: Sendable {
         layout = .pro
       }
       return .success(Switch1Driver(layout: layout, isBluetooth: variant == .bluetoothClassic))
+    case .valveSteamTriton: return .success(SteamTritonDriver(isDongle: variant == .dongle))
+    case .valveSteamDeck: return .success(SteamDeckDriver())
     case .valveSteamController:
-      if record.quirks.contains(.triton) {
-        return .success(SteamTritonDriver(isDongle: variant == .dongle))
-      }
-      if record.quirks.contains(.neptune) { return .success(SteamDeckDriver()) }
       return .success(
         SteamControllerDriver(
           isWirelessReceiver: variant == .dongle,

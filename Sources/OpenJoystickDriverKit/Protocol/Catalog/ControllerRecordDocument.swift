@@ -283,28 +283,18 @@ struct ControllerRecordDocument: Decodable {
 
     private func validate(codingPath: [any CodingKey]) throws {
       let violation: String? =
-        if !quirks.allSatisfy({ $0.protocolID == protocolID }) {
+        if !quirks.allSatisfy({ $0.protocolIDs.contains(protocolID) }) {
           "quirks must be declared by the selected driver"
         } else if quirks.contains(.joyConLeft) && quirks.contains(.joyConRight) {
           "Joy-Con layout must select one side"
-        } else if quirks.contains(.inputOnly) && quirks.count != 1 {
-          "a Switch input-only pad has no Joy-Con layout"
         } else if quirks.contains(.bluetoothOnly) && quirks.count != 1 {
           "a Bluetooth-only Switch pad selects no other layout"
-        } else if quirks.contains(.gameCube) && !quirks.contains(.switch2) {
-          "the GameCube layout is a Switch 2 controller"
-        } else if quirks.contains(.gameCube)
-          && (quirks.contains(.joyConLeft) || quirks.contains(.joyConRight))
-        {
+        } else if protocolID == .nintendoSwitch2 && quirks.count > 1 {
           "a Switch 2 row selects one layout"
-        } else if protocolID == .valveSteamController && quirks.count > 1 {
-          "a Steam Controller row selects at most one hardware generation"
         } else if quirks.contains(.wirelessAdapter) && quirks.contains(.strikePad) {
           "a DualShock 4 row selects at most one model"
         } else if protocolID == .hidDescriptor && quirks.count > 1 {
           "a HID descriptor row selects at most one layout"
-        } else if quirks.contains(.neptune) && protocolVariant != .wired {
-          "the Steam Deck controller is an internal USB device"
         } else if protocolID == .vendorGameSir && protocolVariant == .usb && !quirks.isEmpty {
           "GameSir vendor USB declares no quirks"
         } else if protocolVariant == .enhancedHID && quirks.count != 1 {

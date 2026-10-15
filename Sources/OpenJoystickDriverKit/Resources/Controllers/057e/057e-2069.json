@@ -3,10 +3,7 @@
   "vendorID": 1406,
   "productID": 8297,
   "protocol": {
-    "family": "nintendo.switch1",
-    "quirks": [
-      "switch-2"
-    ]
+    "family": "nintendo.switch2"
   },
   "bluetoothLE": {
     "vibrationCharacteristic": "CC483F51-9258-427D-A939-630C31F72B05"

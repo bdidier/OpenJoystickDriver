@@ -3,10 +3,7 @@
   "vendorID": 10462,
   "productID": 4867,
   "protocol": {
-    "family": "valve.steam-controller",
-    "variant": "bluetooth-le",
-    "quirks": [
-      "triton"
-    ]
+    "family": "valve.steam-triton",
+    "variant": "bluetooth-le"
   }
 }

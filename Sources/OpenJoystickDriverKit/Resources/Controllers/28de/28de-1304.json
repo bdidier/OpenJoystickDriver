@@ -3,10 +3,7 @@
   "vendorID": 10462,
   "productID": 4868,
   "protocol": {
-    "family": "valve.steam-controller",
-    "variant": "dongle",
-    "quirks": [
-      "triton"
-    ]
+    "family": "valve.steam-triton",
+    "variant": "dongle"
   }
 }

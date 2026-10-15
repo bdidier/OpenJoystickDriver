@@ -48,7 +48,9 @@ public enum JoyConHalf: Equatable, Sendable {
   public static func generationProductIDs(forLeft productID: UInt16) -> [UInt16] {
     let catalog = DeviceCatalog.current.withLock { $0 }
     let halves = catalog.hidModels.compactMap { model in
-      catalog.record(for: model).map { (model: model, quirks: $0.quirks) }
+      catalog.record(for: model).map {
+        (model: model, protocolID: $0.physicalProtocolID, quirks: $0.quirks)
+      }
     }
     let lefts = halves.filter {
       $0.model.productID == productID && $0.quirks.contains(.joyConLeft)
@@ -58,7 +60,7 @@ public enum JoyConHalf: Equatable, Sendable {
       right.quirks.contains(.joyConRight)
         && lefts.contains {
           $0.model.vendorID == right.model.vendorID
-            && $0.quirks.contains(.switch2) == right.quirks.contains(.switch2)
+            && $0.protocolID == right.protocolID
         }
     }
     return [productID] + rights.map(\.model.productID)

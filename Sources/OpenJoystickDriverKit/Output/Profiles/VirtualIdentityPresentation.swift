@@ -56,7 +56,8 @@ extension PhysicalProtocolID {
     switch self {
     case .xboxXID, .xboxXUSB, .xboxGIP: .xbox
     case .sonySixaxis, .sonyDualShock4, .sonyDualSense, .vendorPS3ThirdParty: .playstation
-    case .hidDescriptor, .hidReportLayout, .nintendoSwitch1, .valveSteamController,
+    case .hidDescriptor, .hidReportLayout, .nintendoSwitch1, .nintendoSwitch2,
+      .nintendoSwitchInputOnly, .valveSteamController, .valveSteamTriton, .valveSteamDeck,
       .vendorFlydigi, .vendorGameSir, .vendorNVIDIAShield:
       .generic
     }

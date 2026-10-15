@@ -25,9 +25,7 @@ extension ControllerRecordDocument {
 
   /// Only the Switch 2 Bluetooth LE central reads the section.
   func validateBluetoothLE(codingPath: [any CodingKey]) throws {
-    guard bluetoothLE != nil,
-      protocolInfo.protocolID != .nintendoSwitch1 || !protocolInfo.quirks.contains(.switch2)
-    else { return }
+    guard bluetoothLE != nil, protocolInfo.protocolID != .nintendoSwitch2 else { return }
     throw DecodingError.dataCorrupted(
       .init(
         codingPath: codingPath + [DocumentKey("bluetoothLE")],

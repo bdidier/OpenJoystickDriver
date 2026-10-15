@@ -129,14 +129,14 @@ struct ControllerRecordDocumentTests {
       ["family": "valve.steam-controller", "variant": "wired", "quirks": ["lizardMode"]],
       ["family": "nintendo.switch1", "quirks": ["joyConLeft"]],
       ["family": "nintendo.switch1", "quirks": ["joy-con-left", "joy-con-right"]],
-      ["family": "nintendo.switch1", "quirks": ["input-only", "joy-con-left"]],
+      ["family": "nintendo.switch-input-only", "quirks": ["joy-con-left"]],
       ["family": "nintendo.switch1", "quirks": ["bluetooth-only", "joy-con-left"]],
-      ["family": "nintendo.switch1", "quirks": ["switch-2", "bluetooth-only"]],
+      ["family": "nintendo.switch2", "quirks": ["bluetooth-only"]],
       ["family": "nintendo.switch1", "quirks": ["gamecube"]],
-      ["family": "nintendo.switch1", "quirks": ["switch-2", "gamecube", "joy-con-left"]],
+      ["family": "nintendo.switch2", "quirks": ["gamecube", "joy-con-left"]],
       ["family": "vendor.ps3-third-party", "quirks": ["input-only"]],
-      ["family": "valve.steam-controller", "variant": "wired", "quirks": ["triton", "neptune"]],
-      ["family": "valve.steam-controller", "variant": "bluetooth-le", "quirks": ["neptune"]],
+      ["family": "valve.steam-controller", "variant": "wired", "quirks": ["triton"]],
+      ["family": "valve.steam-triton"], ["family": "valve.steam-deck", "variant": "wired"],
       ["family": "sony.dualshock4", "quirks": ["gyro"]],
       ["family": "sony.dualshock4", "quirks": ["wireless-adapter", "strikepad"]],
       ["family": "sony.dualshock4", "quirks": ["shield-2015"]],
@@ -266,24 +266,24 @@ struct ControllerRecordDocumentTests {
     var declaredQuirks: [String] = []
     var familiesWithVariants: [PhysicalProtocolID] = []
     for branch in branches {
-      guard let name = Self.familyConstant(branch), let family = PhysicalProtocolID(rawValue: name),
-        let then = branch["then"] as? [String: Any],
-        let thenProperties = then["properties"] as? [String: Any]
-      else { continue }
-      if let variants = Self.enumValues(thenProperties["variant"]) {
-        #expect(variants == family.variants.map(\.rawValue), "\(name)")
-        familiesWithVariants.append(family)
-      }
-      if let quirks = Self.quirkValues(thenProperties["quirks"]) {
-        #expect(
-          quirks == ControllerQuirk.allCases.filter { $0.protocolID == family }.map(\.rawValue),
-          "\(name)"
-        )
-        declaredQuirks += quirks
+      for name in Self.familyNames(branch) {
+        guard let family = PhysicalProtocolID(rawValue: name),
+          let then = branch["then"] as? [String: Any],
+          let thenProperties = then["properties"] as? [String: Any]
+        else { continue }
+        if let variants = Self.enumValues(thenProperties["variant"]) {
+          #expect(variants == family.variants.map(\.rawValue), "\(name)")
+          familiesWithVariants.append(family)
+        }
+        if let quirks = Self.quirkValues(thenProperties["quirks"]) {
+          let familyQuirks = ControllerQuirk.allCases.filter { $0.protocolIDs.contains(family) }
+          #expect(quirks == familyQuirks.map(\.rawValue), "\(name)")
+          declaredQuirks += quirks
+        }
       }
     }
     #expect(familiesWithVariants == PhysicalProtocolID.allCases.filter(\.storesVariant))
-    #expect(declaredQuirks.sorted() == ControllerQuirk.allCases.map(\.rawValue).sorted())
+    #expect(Set(declaredQuirks) == Set(ControllerQuirk.allCases.map(\.rawValue)))
   }
 
   /// An input layout belongs to the `hid.report-layout` family, which cannot run without one.
@@ -355,12 +355,12 @@ struct ControllerRecordDocumentTests {
     }
   }
 
-  @Test(arguments: [["switch-2"], ["input-only"]])
-  func rejectsRecoveryTuningForSwitchDriversWithoutRecovery(quirks: [String]) throws {
-    _ = try decode(protocol: ["family": "nintendo.switch1", "quirks": quirks])
+  @Test(arguments: ["nintendo.switch2", "nintendo.switch-input-only"])
+  func rejectsRecoveryTuningForSwitchDriversWithoutRecovery(family: String) throws {
+    _ = try decode(protocol: ["family": family])
     #expect(throws: DecodingError.self) {
       try decode(
-        protocol: ["family": "nintendo.switch1", "quirks": quirks],
+        protocol: ["family": family],
         extra: ["tuning": ["hidStartupRecoveryRounds": 2]]
       )
     }
@@ -368,7 +368,7 @@ struct ControllerRecordDocumentTests {
 
   static let vibrationUUID = "FA19B0FB-CD1F-46A7-84A1-BBB09E00C149"
   static let switch2: [String: any Sendable] = [
-    "family": "nintendo.switch1", "quirks": ["switch-2"],
+    "family": "nintendo.switch2"
   ]
 
   @Test
@@ -432,10 +432,13 @@ struct ControllerRecordDocumentTests {
     return names.isEmpty ? nil : names
   }
 
-  private static func familyConstant(_ branch: [String: Any]) -> String? {
+  /// The families a branch's condition selects with `const` or `enum`.
+  private static func familyNames(_ branch: [String: Any]) -> [String] {
     let condition = branch["if"] as? [String: Any]
     let properties = condition?["properties"] as? [String: Any]
-    return (properties?["family"] as? [String: Any])?["const"] as? String
+    let family = properties?["family"] as? [String: Any]
+    if let name = family?["const"] as? String { return [name] }
+    return family?["enum"] as? [String] ?? []
   }
 
   private func decode(

@@ -17,7 +17,8 @@ extension DriverLifecycleCharacterizationTests {
       let hosts: [PhysicalTransport] =
         record.usesRawUSB
         ? [.usb]
-        : record.quirks.contains(.switch2) ? [.usb, .bluetoothLE] : [.usb, .bluetoothClassic]
+        : record.physicalProtocolID == .nintendoSwitch2
+          ? [.usb, .bluetoothLE] : [.usb, .bluetoothClassic]
       for host in hosts {
         let device = PhysicalDevice(
           vendorID: model.vendorID,
@@ -28,15 +29,11 @@ extension DriverLifecycleCharacterizationTests {
         guard case .bound(let binding) = Self.registry.classify(device, backend: backend) else {
           continue
         }
-        let candidates =
-          [Self.tritonDongle, Self.steamBluetoothLE, Self.switch2BluetoothLE] + Self.subjects
-        let family = candidates.filter {
-          $0.protocolID == binding.protocolID && $0.variant == binding.variant
-        }
-        // A quirk can select another driver in the same family and variant, with other input.
+        let candidates = Self.sweepSubjects + Self.subjects
         guard
-          let subject = family.first(where: { Set($0.quirks) == Set(record.quirks) })
-            ?? family.first
+          let subject = candidates.first(where: {
+            $0.protocolID == binding.protocolID && $0.variant == binding.variant
+          })
         else {
           Issue.record("\(model) binds \(binding.protocolID) with no subject")
           continue

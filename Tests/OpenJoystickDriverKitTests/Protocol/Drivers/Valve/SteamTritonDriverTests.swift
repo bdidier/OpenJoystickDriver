@@ -36,7 +36,7 @@ private enum TritonReport {
 struct SteamTritonDriverTests {
 
   @Test
-  func tritonRowsSelectTheTritonDriverAndStoreTheirTransportVariant() throws {
+  func tritonRowsBindValveSteamTritonAndStoreTheirTransportVariant() throws {
     let registry = ProtocolDriverRegistry()
     let rows: [(UInt16, PhysicalProtocolVariantID)] = [
       (0x1302, .wired), (0x1303, .bluetoothLE), (0x1304, .dongle), (0x1305, .dongle),
@@ -45,7 +45,8 @@ struct SteamTritonDriverTests {
       let record = try #require(
         registry.record(for: ControllerModelID(vendorID: 0x28DE, productID: productID))
       )
-      #expect(record.quirks == [.triton])
+      #expect(record.physicalProtocolID == .valveSteamTriton)
+      #expect(record.quirks.isEmpty)
       #expect(record.physicalProtocolVariant == variant)
     }
   }

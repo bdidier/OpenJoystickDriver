@@ -10,7 +10,7 @@ public enum ControllerButtonLabels: Equatable, Sendable {
   public init(protocolID: PhysicalProtocolID) {
     switch protocolID {
     case .sonyDualShock4, .sonyDualSense: self = .playStation
-    case .nintendoSwitch1: self = .nintendo
+    case .nintendoSwitch1, .nintendoSwitch2, .nintendoSwitchInputOnly: self = .nintendo
     default: self = .standard
     }
   }

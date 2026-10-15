@@ -71,7 +71,7 @@ class CatalogRulesLoadingTests(unittest.TestCase):
         )
         self.assertEqual(len(catalog.SDL_EXCLUSIONS), 11)
         self.assertEqual(len(catalog.SDL_IDENTITY_FAMILIES), 13)
-        self.assertEqual(len(catalog.STEAM_VARIANTS), 12)
+        self.assertEqual(len(catalog.STEAM_VARIANTS), 11)
         self.assertEqual(len(catalog.MICROSOFT_XBOX_360_PRODUCT_IDS), 6)
         self.assertEqual(
             catalog.SDL_XBOX_USB_TYPES,

@@ -1,6 +1,6 @@
 # Test Switch 2 Controllers
 
-The Switch 2 Pro Controller is `0x057e:0x2069`. The Joy-Con 2 are `0x2066` (right) and `0x2067` (left). The NSO GameCube controller is `0x2073`. The `switch-2` quirk selects `Switch2Driver`, and the `joy-con-left`, `joy-con-right` or `gamecube` quirk selects the layout. The USB driver follows SDL `SDL_hidapi_switch2.c`. The Bluetooth LE transport follows [ndeadly's switch2_controller_research][1] and [joycon2cpp][2]. None of these controllers is hardware-verified.
+The Switch 2 Pro Controller is `0x057e:0x2069`. The Joy-Con 2 are `0x2066` (right) and `0x2067` (left). The NSO GameCube controller is `0x2073`. The `nintendo.switch2` family selects `Switch2Driver`, and the `joy-con-left`, `joy-con-right` or `gamecube` quirk selects the layout. The USB driver follows SDL `SDL_hidapi_switch2.c`. The Bluetooth LE transport follows [ndeadly's switch2_controller_research][1] and [joycon2cpp][2]. None of these controllers is hardware-verified.
 
 ## What the Driver Does
 

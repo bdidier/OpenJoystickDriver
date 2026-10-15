@@ -400,10 +400,12 @@ struct ProtocolDriverRegistryTests {
     case .sonySixaxis: driver is SixaxisDriver
     case .sonyDualShock4: driver is DualShock4Driver
     case .sonyDualSense: driver is DualSenseDriver
-    case .nintendoSwitch1:
-      driver is Switch1Driver || driver is SwitchInputOnlyDriver || driver is Switch2Driver
-    case .valveSteamController:
-      driver is SteamControllerDriver || driver is SteamTritonDriver || driver is SteamDeckDriver
+    case .nintendoSwitch1: driver is Switch1Driver
+    case .nintendoSwitch2: driver is Switch2Driver
+    case .nintendoSwitchInputOnly: driver is SwitchInputOnlyDriver
+    case .valveSteamController: driver is SteamControllerDriver
+    case .valveSteamTriton: driver is SteamTritonDriver
+    case .valveSteamDeck: driver is SteamDeckDriver
     case .vendorFlydigi: driver is FlydigiDriver
     case .vendorPS3ThirdParty: driver is PS3ThirdPartyDriver
     case .vendorGameSir: driver is GameSirDriver
