@@ -35,8 +35,8 @@ struct VirtualHIDProfileOverrideTests {
     _ devices: [ApplicationServiceDeviceDescription]
   ) -> ApplicationServiceStatusPayload {
     ApplicationServiceStatusPayload(
-      inputMonitoring: "granted",
-      accessibility: "granted",
+      inputRead: "granted",
+      inputInject: "granted",
       connectedDevices: devices,
       userSpaceVirtualDeviceEnabled: true,
       userSpaceVirtualDeviceStatus: .backend("ready")
@@ -242,8 +242,8 @@ struct VirtualHIDProfileOverrideTests {
   func overrideStoreProblemsAppearInTheStatusSummary() {
     let status = RuntimeStatusPresentation(
       payload: ApplicationServiceStatusPayload(
-        inputMonitoring: "granted",
-        accessibility: "granted",
+        inputRead: "granted",
+        inputInject: "granted",
         connectedDevices: [],
         virtualHIDProfileOverrideError: "unsupported-schema"
       )
@@ -271,11 +271,11 @@ struct VirtualHIDProfileOverrideTests {
     #expect(xbox.publishedIdentityLabel.contains("045E:02FD"))
     #expect(xbox.publishedIdentityPresentation.glyphFamily == .xbox)
 
-    let unpublished = Self.device(ownership: .nativeGamepad)
+    let unpublished = Self.device(ownership: .systemGamepad)
     #expect(unpublished.publishedVirtualProfile == nil)
     #expect(
       unpublished.publishedIdentityLabel
-        == OJDLocalized.string("controllers.nativeGamepadNotPublished")
+        == OJDLocalized.string("controllers.systemGamepadNotPublished")
     )
   }
 
@@ -288,7 +288,7 @@ struct VirtualHIDProfileOverrideTests {
       protocolBinding: ProtocolBindingID(.sonySixaxis, variant: .usb),
       connection: "USB",
       discoverySource: .hid,
-      physicalOwnership: .nativeGamepad,
+      physicalOwnership: .systemGamepad,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
       sessionToken: .fixture("session-native")
@@ -301,7 +301,7 @@ struct VirtualHIDProfileOverrideTests {
     )
     sixaxis.publication = ApplicationServicePublicationStatus(
       state: .notPublished,
-      reason: "nativeGamepad"
+      reason: "systemGamepad"
     )
 
     #expect(sixaxis.publishedIdentityPresentation == .playstation)
@@ -348,7 +348,7 @@ struct VirtualHIDProfileOverrideTests {
           #expect(!identity.label.contains("045E:02FD"))
           let expected =
             ownership.isServedBySystem
-            ? OJDLocalized.string("controllers.nativeGamepadNotPublished")
+            ? OJDLocalized.string("controllers.systemGamepadNotPublished")
             : RuntimePresentation.noVirtualHIDProfileLabel
           #expect(identity.label == expected)
         }

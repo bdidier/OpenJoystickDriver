@@ -4,7 +4,7 @@ import Foundation
 /// conforms to it and the executable installs the conformance before any command runs.
 package protocol PlatformHost: Sendable {
   /// The bundle identifier of the DriverKit extension the host installs.
-  var extensionBundleIdentifier: String { get }
+  var extensionID: String { get }
 
   /// Reads the extension's installed and registered state for the app at `bundleURL`.
   func extensionStatus(bundleURL: URL) -> ExtensionStatus

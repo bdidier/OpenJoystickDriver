@@ -45,12 +45,9 @@ enum GUICoverageMatrix {
   ]
 
   /// D10 rows, one entry per CLI group named in the row.
-  ///
-  /// `extension` is still the command name; D9 renames it `transport-extension` (task 17.1), and
-  /// this entry follows the rename.
   static let places: [GUIPlace] =
     row(
-      [["status"], ["extension"], ["permission"], ["service"]],
+      [["status"], ["transport-extension"], ["permission"], ["service"]],
       area: "Status",
       mainMenu: "View > Status (Command-1)",
       statusItem: "status line, Open Window"

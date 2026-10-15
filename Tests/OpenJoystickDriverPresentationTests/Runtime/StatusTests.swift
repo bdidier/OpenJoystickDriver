@@ -13,8 +13,8 @@ struct StatusTests {
     let device = testPad(sessionToken: "device-7")
     let gateway = GatewayStub(
       statusPayload: ApplicationServiceStatusPayload(
-        inputMonitoring: "granted",
-        accessibility: "granted",
+        inputRead: "granted",
+        inputInject: "granted",
         connectedDevices: [device],
         userSpaceVirtualDeviceEnabled: true,
         userSpaceVirtualDeviceStatus: .backend("ready")
@@ -45,8 +45,8 @@ struct StatusTests {
     )
     let gateway = GatewayStub(
       statusPayload: ApplicationServiceStatusPayload(
-        inputMonitoring: "granted",
-        accessibility: "granted",
+        inputRead: "granted",
+        inputInject: "granted",
         connectedDevices: [device],
         userSpaceVirtualDeviceEnabled: true,
         userSpaceVirtualDeviceStatus: .backend("ready")
@@ -75,15 +75,15 @@ struct StatusTests {
   func liveStatusRefreshPublishesControllerDisconnectionWithoutLoadingTheUI() async {
     let device = testPad(sessionToken: "device-live")
     let connected = ApplicationServiceStatusPayload(
-      inputMonitoring: "granted",
-      accessibility: "granted",
+      inputRead: "granted",
+      inputInject: "granted",
       connectedDevices: [device],
       userSpaceVirtualDeviceEnabled: true,
       userSpaceVirtualDeviceStatus: .backend("ready")
     )
     let disconnected = ApplicationServiceStatusPayload(
-      inputMonitoring: "granted",
-      accessibility: "granted",
+      inputRead: "granted",
+      inputInject: "granted",
       connectedDevices: [],
       userSpaceVirtualDeviceEnabled: true,
       userSpaceVirtualDeviceStatus: .backend("ready")
@@ -108,8 +108,8 @@ struct StatusTests {
     let device = testPad(sessionToken: "device-retained")
     let gateway = GatewayStub(
       statusPayload: ApplicationServiceStatusPayload(
-        inputMonitoring: "granted",
-        accessibility: "granted",
+        inputRead: "granted",
+        inputInject: "granted",
         connectedDevices: [device],
         userSpaceVirtualDeviceEnabled: true,
         userSpaceVirtualDeviceStatus: .backend("ready")
@@ -200,8 +200,8 @@ struct StatusTests {
     )
     await gateway.setStatusPayload(
       ApplicationServiceStatusPayload(
-        inputMonitoring: "granted",
-        accessibility: "granted",
+        inputRead: "granted",
+        inputInject: "granted",
         connectedDevices: [ds4],
         userSpaceVirtualDeviceEnabled: true,
         userSpaceVirtualDeviceStatus: .backend("ready")
@@ -303,8 +303,8 @@ struct StatusTests {
     let device = testPad(sessionToken: "device-9")
     let gateway = GatewayStub(
       statusPayload: ApplicationServiceStatusPayload(
-        inputMonitoring: "granted",
-        accessibility: "granted",
+        inputRead: "granted",
+        inputInject: "granted",
         connectedDevices: [device],
         userSpaceVirtualDeviceEnabled: true,
         userSpaceVirtualDeviceStatus: .backend("ready")
@@ -328,8 +328,8 @@ struct StatusTests {
   @Test
   func statusReadinessRemainsUnknownBeforeRemappingSnapshot() {
     let payload = ApplicationServiceStatusPayload(
-      inputMonitoring: "granted",
-      accessibility: "granted",
+      inputRead: "granted",
+      inputInject: "granted",
       connectedDevices: [],
       userSpaceVirtualDeviceEnabled: true,
       userSpaceVirtualDeviceStatus: .backend("ready")

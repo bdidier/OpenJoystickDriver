@@ -5,33 +5,74 @@ import Security
 public struct CodeSigningIdentity: Codable, Equatable, Hashable, Sendable {
   /// Who signed the code.
   public enum Kind: String, Codable, Sendable {
-    /// Signed with an Apple-issued developer certificate of `teamIdentifier`.
-    case team
-    /// Signed by Apple, such as a system tool.
-    case apple
+    /// Signed with a developer certificate of the publisher `publisherID`.
+    case signed
+    /// Signed by the platform vendor, such as a system tool.
+    case platform
     /// Ad-hoc signed or not signed; any local process can claim this identity.
-    case adHoc = "ad-hoc"
+    case adHoc
+
+    public init(from decoder: any Decoder) throws {
+      let name = try decoder.singleValueContainer().decode(String.self)
+      guard let kind = Self(rawValue: name) else {
+        throw DecodingError.dataCorrupted(
+          .init(
+            codingPath: decoder.codingPath,
+            debugDescription: "unknown publisher kind '\(name)'."
+              + RenamedWord.hints(for: [name], kind: .publisherKind)
+          )
+        )
+      }
+      self = kind
+    }
+  }
+
+  private enum CodingKeys: String, CodingKey {
+    case publisher
+    case identifier
+  }
+
+  private struct Publisher: Codable {
+    let kind: Kind
+    let id: String?
+  }
+
+  public init(from decoder: any Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    let publisher = try container.decode(Publisher.self, forKey: .publisher)
+    self.init(
+      kind: publisher.kind,
+      identifier: try container.decode(String.self, forKey: .identifier),
+      publisherID: publisher.id
+    )
+  }
+
+  public func encode(to encoder: any Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(Publisher(kind: kind, id: publisherID), forKey: .publisher)
+    try container.encode(identifier, forKey: .identifier)
   }
 
   public let kind: Kind
   public let identifier: String
-  public let teamIdentifier: String?
+  /// The publisher's ID: the signing team's identifier for a signed identity.
+  public let publisherID: String?
 
-  public init(kind: Kind, identifier: String, teamIdentifier: String?) {
+  public init(kind: Kind, identifier: String, publisherID: String?) {
     self.kind = kind
     self.identifier = identifier
-    self.teamIdentifier = teamIdentifier
+    self.publisherID = publisherID
   }
 
   /// The requirement that code with this identity satisfies; nil for ad-hoc code.
   public var requirementText: String? {
     let identifierClause = "identifier \(Self.quoted(identifier))"
     switch kind {
-    case .team:
-      guard let teamIdentifier else { return nil }
+    case .signed:
+      guard let publisherID else { return nil }
       return "\(identifierClause) and anchor apple generic and certificate leaf[subject.OU] = "
-        + Self.quoted(teamIdentifier)
-    case .apple: return "\(identifierClause) and anchor apple"
+        + Self.quoted(publisherID)
+    case .platform: return "\(identifierClause) and anchor apple"
     case .adHoc: return nil
     }
   }
@@ -70,12 +111,12 @@ public struct CodeSigningIdentity: Codable, Equatable, Hashable, Sendable {
       let values = information as? [String: Any],
       let identifier = values[kSecCodeInfoIdentifier as String] as? String
     else { return nil }
-    let teamIdentifier = values[kSecCodeInfoTeamIdentifier as String] as? String
-    for kind in [Kind.team, .apple] {
+    let publisherID = values[kSecCodeInfoTeamIdentifier as String] as? String
+    for kind in [Kind.signed, .platform] {
       let candidate = Self(
         kind: kind,
         identifier: identifier,
-        teamIdentifier: teamIdentifier
+        publisherID: publisherID
       )
       if let requirement = candidate.requirement,
         SecStaticCodeCheckValidity(staticCode, SecCSFlags(), requirement) == errSecSuccess
@@ -83,7 +124,7 @@ public struct CodeSigningIdentity: Codable, Equatable, Hashable, Sendable {
         return candidate
       }
     }
-    return Self(kind: .adHoc, identifier: identifier, teamIdentifier: teamIdentifier)
+    return Self(kind: .adHoc, identifier: identifier, publisherID: publisherID)
   }
 
   /// The identity of the code at `url`; nil when the path holds no signed code.

@@ -121,14 +121,14 @@ struct RemappingValidationTests {
     "Game", "com..example", ".com.example", "com.example.", "com.example.bad_value",
     "com.-example.Game",
   ])
-  func applicationScopeRequiresValidBundleIdentifier(identifier: String) {
+  func applicationScopeRequiresValidAppID(identifier: String) {
     let profile = RemappingProfile(
       name: "Invalid scope",
       device: RemappingDeviceScope(vendorID: 1, productID: 2),
-      applicationScope: .application(bundleIdentifier: identifier),
+      applicationScope: .application(appID: identifier),
       bindings: []
     )
-    #expect(throws: RemappingValidationError.invalidBundleIdentifier(identifier)) {
+    #expect(throws: RemappingValidationError.invalidAppID(identifier)) {
       try profile.validate()
     }
   }
@@ -213,7 +213,7 @@ struct RemappingValidationTests {
     RemappingProfile(
       name: "Test",
       device: RemappingDeviceScope(vendorID: 0x045E, productID: 0x02EA),
-      applicationScope: .application(bundleIdentifier: "com.example.Game"),
+      applicationScope: .application(appID: "com.example.Game"),
       bindings: bindings
     )
   }

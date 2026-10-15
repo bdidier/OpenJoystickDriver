@@ -89,9 +89,9 @@ public struct ApplicationServiceStatusPayload: Codable, Sendable {
   /// Exact source and app bundle identity that produced this status snapshot.
   public let buildIdentity: BuildIdentity
   /// Input Monitoring permission state (e.g. "granted", "denied").
-  public let inputMonitoring: String
+  public let inputRead: String
   /// Accessibility permission used to publish an IOHIDUserDevice.
-  public let accessibility: String
+  public let inputInject: String
   /// Structured descriptions of all connected controllers.
   public let connectedDevices: [ApplicationServiceDeviceDescription]
   /// Observed devices that no protocol driver bound.
@@ -109,8 +109,8 @@ public struct ApplicationServiceStatusPayload: Codable, Sendable {
   /// Creates a new ApplicationServiceStatusPayload.
   public init(
     buildIdentity: BuildIdentity = .current(),
-    inputMonitoring: String,
-    accessibility: String,
+    inputRead: String,
+    inputInject: String,
     connectedDevices: [ApplicationServiceDeviceDescription],
     unboundDevices: [ApplicationServiceUnboundDevice] = [],
     passThroughDevices: [ApplicationServicePassThroughDevice] = [],
@@ -119,8 +119,8 @@ public struct ApplicationServiceStatusPayload: Codable, Sendable {
     virtualHIDProfileOverrideError: String? = nil
   ) {
     self.buildIdentity = buildIdentity
-    self.inputMonitoring = inputMonitoring
-    self.accessibility = accessibility
+    self.inputRead = inputRead
+    self.inputInject = inputInject
     self.connectedDevices = connectedDevices
     self.unboundDevices = unboundDevices
     self.passThroughDevices = passThroughDevices
@@ -131,8 +131,8 @@ public struct ApplicationServiceStatusPayload: Codable, Sendable {
 
   private enum CodingKeys: String, CodingKey {
     case buildIdentity
-    case inputMonitoring
-    case accessibility
+    case inputRead
+    case inputInject
     case connectedDevices
     case unboundDevices
     case passThroughDevices

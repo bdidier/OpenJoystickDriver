@@ -126,8 +126,8 @@ struct SupportDiagnosticsTests {
     )
     let gateway = SupportDiagnosticsGatewayStub(
       statusPayload: ApplicationServiceStatusPayload(
-        inputMonitoring: "granted",
-        accessibility: "granted",
+        inputRead: "granted",
+        inputInject: "granted",
         connectedDevices: [device],
         userSpaceVirtualDeviceEnabled: true,
         userSpaceVirtualDeviceStatus: .backend("ready")
@@ -237,8 +237,8 @@ private actor SupportDiagnosticsGatewayStub: ApplicationServiceGateway {
 
   init(
     statusPayload: ApplicationServiceStatusPayload = ApplicationServiceStatusPayload(
-      inputMonitoring: "granted",
-      accessibility: "granted",
+      inputRead: "granted",
+      inputInject: "granted",
       connectedDevices: [],
       userSpaceVirtualDeviceEnabled: true,
       userSpaceVirtualDeviceStatus: .backend("ready")
@@ -289,7 +289,7 @@ private actor SupportDiagnosticsGatewayStub: ApplicationServiceGateway {
   }
 
   func requestPermissions() throws -> PermissionManager.Snapshot {
-    PermissionManager.Snapshot(inputMonitoring: .granted, accessibility: .granted)
+    PermissionManager.Snapshot(inputRead: .granted, inputInject: .granted)
   }
 
   func requestPermission(

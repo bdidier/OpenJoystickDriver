@@ -77,7 +77,7 @@ extension RemappingRoutingCore {
       activeProfileID: profile?.id,
       activeProfileName: profile?.name,
       applicationScope: profile?.applicationScope,
-      frontmostBundleIdentifier: route.eligibilitySnapshot.frontmostBundleIdentifier,
+      frontmostAppID: route.eligibilitySnapshot.frontmostAppID,
       postEventAccessState: route.eligibilitySnapshot.postEventAccessState,
       error: route.error
     )

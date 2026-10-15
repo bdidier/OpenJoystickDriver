@@ -179,15 +179,15 @@ extension InputTestTests {
 
   @Test
   @MainActor
-  func deniedInputMonitoringDoesNotBlockConnectedRawUSBInput() {
+  func deniedInputReadDoesNotBlockConnectedRawUSBInput() {
     let gateway = InputTestGatewayStub()
     let model = InputTestViewModel(gateway: gateway)
     let device = makeInputTestDevice(connection: "USB")
     model.selectDevice(device)
     let status = RuntimeStatusPresentation(
       payload: ApplicationServiceStatusPayload(
-        inputMonitoring: "denied",
-        accessibility: "granted",
+        inputRead: "denied",
+        inputInject: "granted",
         connectedDevices: [device],
         userSpaceVirtualDeviceEnabled: true,
         userSpaceVirtualDeviceStatus: .backend("ready")
@@ -202,7 +202,7 @@ extension InputTestTests {
 
   @Test
   @MainActor
-  func deniedInputMonitoringStopsSamplingAndReportsPermissionRequirement() async {
+  func deniedInputReadStopsSamplingAndReportsPermissionRequirement() async {
     let gateway = InputTestGatewayStub(inputDelayNanoseconds: 200_000_000)
     let model = InputTestViewModel(gateway: gateway)
     let device = makeInputTestDevice(connection: "USB", discoverySource: .hid)
@@ -211,8 +211,8 @@ extension InputTestTests {
     try? await Task.sleep(nanoseconds: 20_000_000)
     let status = RuntimeStatusPresentation(
       payload: ApplicationServiceStatusPayload(
-        inputMonitoring: "denied",
-        accessibility: "granted",
+        inputRead: "denied",
+        inputInject: "granted",
         connectedDevices: [],
         userSpaceVirtualDeviceEnabled: true,
         userSpaceVirtualDeviceStatus: .backend("ready")

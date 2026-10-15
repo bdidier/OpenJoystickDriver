@@ -162,7 +162,7 @@ extension RemappingRoutingCore {
     let profile = session.profile
     let eligibility = RemappingForegroundPolicy.eligibility(
       for: profile.applicationScope,
-      frontmostBundleIdentifier: environment.frontmostBundleIdentifier,
+      frontmostAppID: environment.frontmostAppID,
       accessState: environment.postEventAccessState,
       outputSuppressed: controls.outputSuppressed,
       requiresPostEventAccess: profile.requiresSystemInputAccess

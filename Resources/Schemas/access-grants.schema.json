@@ -111,20 +111,37 @@
     "grant": {
       "description": "A client the user allowed, matched by its code signature.",
       "type": "object",
-      "required": ["kind", "identifier", "scopes", "grantedAt", "path"],
+      "required": ["publisher", "identifier", "scopes", "grantedAt", "path"],
       "additionalProperties": false,
       "properties": {
-        "kind": {
-          "description": "'team' matches the identifier signed by an Apple-issued certificate of the team; 'apple' matches the identifier signed by Apple.",
-          "enum": ["team", "apple"]
+        "publisher": {
+          "description": "Who published the client. 'signed' matches the identifier signed by a certificate of the publisher 'id'; 'platform' matches the identifier signed by the platform vendor.",
+          "type": "object",
+          "required": ["kind"],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "enum": ["signed", "platform"]
+            },
+            "id": {
+              "description": "The publisher's ID; required for 'signed' grants.",
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "signed"
+              }
+            }
+          },
+          "then": {
+            "required": ["id"]
+          }
         },
         "identifier": {
           "description": "The code signing identifier.",
-          "type": "string",
-          "minLength": 1
-        },
-        "teamIdentifier": {
-          "description": "The signing team; present for 'team' grants.",
           "type": "string",
           "minLength": 1
         },
@@ -152,18 +169,6 @@
         }
       },
       "allOf": [
-        {
-          "if": {
-            "properties": {
-              "kind": {
-                "const": "team"
-              }
-            }
-          },
-          "then": {
-            "required": ["teamIdentifier"]
-          }
-        },
         {
           "$ref": "#/$defs/controlIsMarked"
         }

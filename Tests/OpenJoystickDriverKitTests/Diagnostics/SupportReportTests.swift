@@ -21,8 +21,8 @@ struct SupportReportTests {
     let secretSerial = "SERIAL-SECRET-123"
     let secretPath = "/Users/alice/private/controller.txt"
     let status = ApplicationServiceStatusPayload(
-      inputMonitoring: "granted",
-      accessibility: "granted",
+      inputRead: "granted",
+      inputInject: "granted",
       connectedDevices: [
         ApplicationServiceDeviceDescription(
           name: "Test Controller",
@@ -90,12 +90,12 @@ struct SupportReportTests {
       activeCount: 1,
       state: "running"
     )
-    let appleAudit = AppleGameControllerSupportAuditor.audit(
-      snapshot: AppleGameControllerCatalogSnapshot(
+    let appleAudit = SystemGamepadSupportAuditor.audit(
+      snapshot: SystemGamepadCatalogSnapshot(
         source: .downloadedMobileAsset,
         bundleVersions: ["10.5.2"],
         entries: [
-          AppleGameControllerCatalogEntry(
+          SystemGamepadCatalogEntry(
             vendorID: 1_234,
             productID: 5_678,
             identifiers: ["test.controller"]
@@ -114,13 +114,14 @@ struct SupportReportTests {
         sourceCommit: String(repeating: "a", count: 40),
         sourceState: .clean
       ),
-      macOSVersion: "26.0.0",
+      osName: "macOS",
+      osVersion: "26.0.0",
       architecture: "arm64",
-      inputMonitoring: .granted,
+      inputRead: .granted,
       applicationServiceInstalled: true,
       applicationServiceConnected: true,
       applicationServiceHealth: health,
-      appleGameControllerAudit: appleAudit,
+      systemGamepadAudit: appleAudit,
       status: status,
       virtualDiagnostics: diagnostics
     )
@@ -163,7 +164,7 @@ struct SupportReportTests {
     let buildIdentity = try #require(system["buildIdentity"] as? [String: Any])
     #expect(buildIdentity["appBundleVersion"] as? String == "1.4.89")
     #expect(buildIdentity["sourceCommit"] as? String == String(repeating: "a", count: 40))
-    #expect(report.data.appleGameControllerAudit?.catalogListedOJDRecordCount == 1)
+    #expect(report.data.systemGamepadAudit?.catalogListedOJDRecordCount == 1)
 
     let decoded = try JSONDecoder().decode(SupportReport.self, from: data)
     #expect(decoded.specversion == "1.0")
@@ -182,9 +183,10 @@ struct SupportReportTests {
         sourceCommit: "unknown",
         sourceState: .unknown
       ),
-      macOSVersion: "26.0.0",
+      osName: "macOS",
+      osVersion: "26.0.0",
       architecture: "arm64",
-      inputMonitoring: .denied,
+      inputRead: .denied,
       applicationServiceInstalled: false,
       applicationServiceConnected: false,
       applicationServiceHealth: nil,

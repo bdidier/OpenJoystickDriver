@@ -57,8 +57,8 @@ struct StatusReport: Encodable, Equatable {
   }
 
   struct Permissions: Encodable, Equatable {
-    let inputMonitoring: PermissionManager.AccessState
-    let accessibility: PermissionManager.AccessState
+    let inputRead: PermissionManager.AccessState
+    let inputInject: PermissionManager.AccessState
   }
 
   struct VirtualDevice: Encodable, Equatable {
@@ -83,7 +83,7 @@ struct StatusReport: Encodable, Equatable {
   }
 
   let service: Service
-  let `extension`: Extension
+  let transportExtension: Extension
   let commandLineTool: CommandLineTool
   let permissions: Permissions?
   let virtualDevice: VirtualDevice?
@@ -106,7 +106,7 @@ struct StatusReport: Encodable, Equatable {
     ignoredDefaults: SkippedRecord? = nil,
     skippedPersonas: [SkippedRecord] = []
   ) {
-    self.extension = Extension(extensionStatus)
+    self.transportExtension = Extension(extensionStatus)
     self.commandLineTool = CommandLineTool(commandLineTool)
     self.skippedRecords = skippedRecords
     self.ignoredDefaults = ignoredDefaults
@@ -122,8 +122,8 @@ struct StatusReport: Encodable, Equatable {
     }
     service = Service(state: .running, version: payload.buildIdentity.semanticVersion)
     permissions = Permissions(
-      inputMonitoring: PermissionManager.AccessState(status: payload.inputMonitoring),
-      accessibility: PermissionManager.AccessState(status: payload.accessibility)
+      inputRead: PermissionManager.AccessState(status: payload.inputRead),
+      inputInject: PermissionManager.AccessState(status: payload.inputInject)
     )
     virtualDevice = VirtualDevice(
       enabled: payload.userSpaceVirtualDeviceEnabled,

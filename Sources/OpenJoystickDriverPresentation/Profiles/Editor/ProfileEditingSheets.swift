@@ -18,7 +18,7 @@
     @State
     private var scopeKind: ProfileScopeKind
     @State
-    private var bundleIdentifier: String
+    private var appID: String
     @State
     private var joyConPairEnabled: Bool
     @State
@@ -33,13 +33,13 @@
       _vendorID = State(initialValue: ProfileIdentifierInput.formatted(profile.device.vendorID))
       _productID = State(initialValue: ProfileIdentifierInput.formatted(profile.device.productID))
       _scopeKind = State(initialValue: ProfileScopeKind(profile.applicationScope))
-      let bundleIdentifier: String
+      let appID: String
       if case .application(let value) = profile.applicationScope {
-        bundleIdentifier = value
+        appID = value
       } else {
-        bundleIdentifier = ""
+        appID = ""
       }
-      _bundleIdentifier = State(initialValue: bundleIdentifier)
+      _appID = State(initialValue: appID)
       _joyConPairEnabled = State(initialValue: profile.joyConPair != nil)
       _joyConGyroSelection = State(initialValue: profile.joyConPair?.gyroSelection ?? .right)
     }
@@ -75,8 +75,8 @@
         }
         if scopeKind == .application {
           TextField(
-            OJDLocalized.string("profiles.bundleIdentifier"),
-            text: $bundleIdentifier
+            OJDLocalized.string("profiles.appID"),
+            text: $appID
           )
         }
         Toggle(
@@ -125,7 +125,7 @@
       let scope: RemappingApplicationScope
       switch scopeKind {
       case .global: scope = .global
-      case .application: scope = .application(bundleIdentifier: bundleIdentifier)
+      case .application: scope = .application(appID: appID)
       }
       let candidate = RemappingProfile(
         id: profile.id,

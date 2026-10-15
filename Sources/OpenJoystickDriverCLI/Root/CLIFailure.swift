@@ -16,7 +16,9 @@ enum CLIExitCode: Int32, Sendable {
   /// `exitCode`. A code of another area, such as a remapping code, is a plain failure.
   init(for id: ErrorCode) {
     switch id {
-    case .unknownCommand, .usage, .confirmationRequired: self = .usage
+    case .unknownCommand, .usage, .confirmationRequired, .noAccessScope, .duplicateTokenName,
+      .invalidTokenName, .invalidWebOrigin, .webPortUnavailable, .controlScopeWithOrigins:
+      self = .usage
     case .serviceUnavailable: self = .serviceUnavailable
     case .permissionMissing: self = .permissionDenied
     case .installedCLIFailed: self = .installedCLIFailed

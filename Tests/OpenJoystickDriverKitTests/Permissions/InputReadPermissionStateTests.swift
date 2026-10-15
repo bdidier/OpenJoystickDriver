@@ -2,7 +2,7 @@ import Foundation
 import OpenJoystickDriverKit
 import Testing
 
-struct InputMonitoringPermissionStateTests {
+struct InputReadPermissionStateTests {
   @Test
   func accessStateNormalizesMultilineProbeOutput() {
     #expect(PermissionManager.AccessState(status: "granted") == .granted)
@@ -16,8 +16,8 @@ struct InputMonitoringPermissionStateTests {
 
   @Test
   func permissionSnapshotRequiresBothStates() {
-    #expect(PermissionManager.Snapshot(inputMonitoring: .granted, accessibility: .granted).isReady)
-    #expect(!PermissionManager.Snapshot(inputMonitoring: .granted, accessibility: .denied).isReady)
+    #expect(PermissionManager.Snapshot(inputRead: .granted, inputInject: .granted).isReady)
+    #expect(!PermissionManager.Snapshot(inputRead: .granted, inputInject: .denied).isReady)
   }
 
   @Test

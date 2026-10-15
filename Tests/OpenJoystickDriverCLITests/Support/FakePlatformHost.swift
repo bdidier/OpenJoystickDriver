@@ -7,7 +7,7 @@ import OpenJoystickDriverKit
 /// A `PlatformHost` that reports an absent extension and no USB controllers, so command tests
 /// never touch real USB or `systemextensionsctl`.
 struct FakePlatformHost: PlatformHost {
-  var extensionBundleIdentifier: String { "com.openjoystickdriver.fake-extension" }
+  var extensionID: String { "com.openjoystickdriver.fake-extension" }
 
   func extensionStatus(bundleURL: URL) -> ExtensionStatus {
     ExtensionStatus(bundle: .missing, registration: .absent)

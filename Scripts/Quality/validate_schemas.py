@@ -317,7 +317,7 @@ def validate_live_support_report(schema: dict[str, object], registry: Registry) 
         report_path = Path(directory) / "support-report.json"
         # argv[0] "ojd" selects the command line in the app executable. `diagnose` exits 1 when
         # a check fails, such as a missing extension on CI, and still writes the report.
-        command = ["ojd", "diagnose", "--bundle", str(report_path)]
+        command = ["ojd", "diagnose", "--output", str(report_path)]
         result = subprocess.run(
             command,
             executable=swift_binary_path(),

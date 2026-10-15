@@ -65,22 +65,22 @@ public enum DiagnosticsService {
     switch status.bundle {
     case .present:
       bundle = DiagnoseCheck(
-        "extension-bundle",
+        "transport-extension-bundle",
         .pass,
-        localization.string("cli.diagnose.extension.bundle_present")
+        localization.string("cli.diagnose.transport_extension.bundle_present")
       )
     case .missing:
       bundle = DiagnoseCheck(
-        "extension-bundle",
+        "transport-extension-bundle",
         .fail,
-        localization.string("cli.diagnose.extension.bundle_missing")
+        localization.string("cli.diagnose.transport_extension.bundle_missing")
       )
     case .invalid:
       bundle = DiagnoseCheck(
-        "extension-bundle",
+        "transport-extension-bundle",
         .fail,
         localization.formatted(
-          "cli.diagnose.extension.bundle_invalid",
+          "cli.diagnose.transport_extension.bundle_invalid",
           arguments: [status.detail ?? ""]
         )
       )
@@ -89,28 +89,28 @@ public enum DiagnosticsService {
     switch status.registration {
     case .active:
       registration = DiagnoseCheck(
-        "extension-registration",
+        "transport-extension-registration",
         .pass,
-        localization.string("cli.diagnose.extension.active")
+        localization.string("cli.diagnose.transport_extension.active")
       )
     case .inactive:
       registration = DiagnoseCheck(
-        "extension-registration",
+        "transport-extension-registration",
         .warn,
-        localization.string("cli.diagnose.extension.inactive")
+        localization.string("cli.diagnose.transport_extension.inactive")
       )
     case .absent:
       registration = DiagnoseCheck(
-        "extension-registration",
+        "transport-extension-registration",
         .warn,
-        localization.string("cli.diagnose.extension.absent")
+        localization.string("cli.diagnose.transport_extension.absent")
       )
     case .unavailable:
       registration = DiagnoseCheck(
-        "extension-registration",
+        "transport-extension-registration",
         .warn,
         localization.formatted(
-          "cli.diagnose.extension.unavailable",
+          "cli.diagnose.transport_extension.unavailable",
           arguments: [status.detail ?? ""]
         )
       )
@@ -135,11 +135,11 @@ public enum DiagnosticsService {
 
   public static func permissionChecks(_ snapshot: DiagnoseServiceSnapshot) -> [DiagnoseCheck] {
     guard let status = snapshot.status else {
-      return [skipped("input-monitoring", snapshot), skipped("accessibility", snapshot)]
+      return [skipped("input-read", snapshot), skipped("input-inject", snapshot)]
     }
     return [
-      permissionCheck("input-monitoring", status.inputMonitoring),
-      permissionCheck("accessibility", status.accessibility),
+      permissionCheck("input-read", status.inputRead),
+      permissionCheck("input-inject", status.inputInject),
     ]
   }
 

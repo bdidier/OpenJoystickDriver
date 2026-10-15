@@ -269,18 +269,18 @@ enum CoreGraphicsMapping {
 
   static func coreGraphicsFlag(for modifier: RemappingKeyModifier) -> CoreGraphicsModifierFlags {
     switch modifier {
-    case .command: .command
+    case .meta: .command
     case .control: .control
-    case .option: .option
+    case .alt: .option
     case .shift: .shift
     }
   }
 
   static func virtualKey(for modifier: RemappingKeyModifier) -> CGKeyCode {
     switch modifier {
-    case .command: CGKeyCode(kVK_Command)
+    case .meta: CGKeyCode(kVK_Command)
     case .control: CGKeyCode(kVK_Control)
-    case .option: CGKeyCode(kVK_Option)
+    case .alt: CGKeyCode(kVK_Option)
     case .shift: CGKeyCode(kVK_Shift)
     }
   }
