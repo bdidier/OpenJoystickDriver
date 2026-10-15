@@ -202,6 +202,7 @@ extension DeviceManager {
         ? MacOSOwnedOutput.allowance(for: binding.protocolID, record: binding.record) : nil,
       usbTransportProvider: usbTransportProvider,
       externalOutputAllowed: false,
+      frameTimings: frameTimings,
       sessionState: suspendedControllerIdentities.contains(identifier) ? .suspended : .active
     )
     let requiresSuccessfulStartupOutput = await pipeline.requiresSuccessfulHIDStartupOutput()

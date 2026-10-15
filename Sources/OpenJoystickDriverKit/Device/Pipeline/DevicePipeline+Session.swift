@@ -170,10 +170,20 @@ extension DevicePipeline {
       receivedAt: MonotonicTimestamp(nanoseconds: receivedAt)
     )
     snapshotPower()
+    if event != nil {
+      frameTimings.parsed(for: identifier, read: receivedAt, parse: uptimeNanoseconds())
+    }
     return event
   }
 
   func parseElementValue(_ value: HIDElementValue, receivedAt: UInt64) -> ControllerEvent? {
-    driver.parse(elementValue: value, receivedAt: MonotonicTimestamp(nanoseconds: receivedAt))
+    let event = driver.parse(
+      elementValue: value,
+      receivedAt: MonotonicTimestamp(nanoseconds: receivedAt)
+    )
+    if event != nil {
+      frameTimings.parsed(for: identifier, read: receivedAt, parse: uptimeNanoseconds())
+    }
+    return event
   }
 }

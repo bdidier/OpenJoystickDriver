@@ -1351,6 +1351,7 @@
 "cli.diagnose.records.config_ok" = "all.patch.json and persona files are valid";
 "cli.diagnose.records.config_problems" = "ignored or skipped %@; fix them and check with 'ojd status'";
 "cli.diagnose.records.skipped" = "skipped %@; check them with 'ojd record list'";
+"cli.diagnose.timings.frame" = "Frame %lld of %@ (%@), monotonic clock in nanoseconds: %@";
 "cli.record.abstract" = "Draft, list, check, install, or remove controller records.";
 "cli.record.discussion" = "A controller record tells OpenJoystickDriver how to drive one controller model. Your records live in ~/Library/Application Support/OpenJoystickDriver/Controllers and add a model or patch a bundled one. The running service applies them when the directory changes. Only 'ojd record draft' needs the service.";
 "cli.record.draft.abstract" = "Draft a controller record from a connected controller.";

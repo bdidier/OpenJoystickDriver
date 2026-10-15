@@ -142,6 +142,7 @@ extension DevicePipeline {
   func dispatch(_ event: ControllerEvent) async {
     var state = event.state
     state.connection = currentConnectionState()
+    let sequence = frameTimings.dispatched(for: identifier, at: uptimeNanoseconds())
     await dispatcher.dispatch(
       ControllerEvent(
         timestamp: event.timestamp,
@@ -153,6 +154,13 @@ extension DevicePipeline {
       labels: buttonLabels,
       from: identifier
     )
+    if let sequence {
+      frameTimings.virtualDeviceDelivered(
+        sequence: sequence,
+        for: identifier,
+        at: uptimeNanoseconds()
+      )
+    }
   }
 
   /// The link and power state now; nil for a pipeline built without a binding.

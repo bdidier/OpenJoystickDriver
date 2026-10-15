@@ -1351,6 +1351,7 @@
 "cli.diagnose.records.config_ok" = "all.patch.json とペルソナファイルは有効です";
 "cli.diagnose.records.config_problems" = "無視またはスキップ: %@。修正して「ojd status」で確認してください";
 "cli.diagnose.records.skipped" = "%@ をスキップしました。「ojd record list」で確認してください";
+"cli.diagnose.timings.frame" = "フレーム %lld、%@（%@）、単調クロック（ナノ秒）: %@";
 "cli.record.abstract" = "コントローラのレコードの下書き作成、一覧表示、確認、インストール、削除を行います。";
 "cli.record.discussion" = "コントローラのレコードは、OpenJoystickDriver に 1 つのコントローラモデルの扱い方を伝えます。ユーザーのレコードは ~/Library/Application Support/OpenJoystickDriver/Controllers に保存され、モデルを追加するか、同梱のモデルを上書きします。実行中のサービスは、ディレクトリが変更されると自動的に適用します。サービスを必要とするのは 「ojd record draft」 だけです。";
 "cli.record.draft.abstract" = "接続中のコントローラからコントローラレコードの下書きを作成します。";

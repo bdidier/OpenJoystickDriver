@@ -14,7 +14,12 @@ struct DiagnosticsServiceTests {
       userSpaceVirtualDeviceStatus: .error("Missing entitlement")
     )
     let check = DiagnosticsService.virtualDeviceCheck(
-      DiagnoseServiceSnapshot(availability: .running, status: status, virtualDiagnostics: nil)
+      DiagnoseServiceSnapshot(
+        availability: .running,
+        status: status,
+        virtualDiagnostics: nil,
+        frameTimings: nil
+      )
     )
 
     #expect(

@@ -28,12 +28,36 @@ struct DiagnoseCommandTests {
         )
       )
     )
+    let timingsResult = try JSONEncoder().encode(
+      try JSONEncoder().encode(
+        ApplicationServiceFrameTimingsPayload(controllers: [
+          ControllerFrameTimings(
+            controller: "ctrl-1",
+            name: "Pad",
+            frames: [
+              FrameTiming(
+                sequence: 4,
+                stages: [
+                  FrameStageTime(stage: .read, nanoseconds: 100),
+                  FrameStageTime(stage: .parse, nanoseconds: 150),
+                  FrameStageTime(stage: .dispatch, nanoseconds: 200),
+                  FrameStageTime(stage: .deliveryVirtualDevice, nanoseconds: 260),
+                  FrameStageTime(stage: .deliveryEndpoint, nanoseconds: 900),
+                ]
+              )
+            ]
+          )
+        ])
+      )
+    )
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
       handler: { request, completion in
         if request.method == ApplicationServiceRPCMethod.getStatus.rawValue {
           completion(LocalServiceRPCResponse(result: statusResult, error: nil))
+        } else if request.method == ApplicationServiceRPCMethod.getFrameTimings.rawValue {
+          completion(LocalServiceRPCResponse(result: timingsResult, error: nil))
         } else {
           completion(LocalServiceRPCResponse(result: nil, error: "unexpected \(request.method)"))
         }
@@ -95,6 +119,50 @@ struct DiagnoseCommandTests {
     #expect(statuses.filter { $0.value == "skip" }.keys.sorted() == ["runtime-health"])
     #expect(statuses.values.allSatisfy { $0 == "pass" || $0 == "skip" })
     #expect(try result.json()["bundle"] == nil)
+  }
+
+  @Test
+  func jsonListsEveryStageTimestampOfTheNewestFrames() async throws {
+    let socketPath = temporarySocketPath()
+    let server = try serve(socketPath: socketPath)
+    defer { server.stop() }
+
+    let result = await run(["--json"], socketPath: socketPath)
+
+    #expect(result.code == 0, "\(result.standardError)")
+    let timings = try #require(try result.json()["timings"] as? [[String: Any]])
+    let frames = try #require(timings.first?["frames"] as? [[String: Any]])
+    let stages = try #require(frames.first?["stages"] as? [[String: Any]])
+    #expect(timings.first?["controller"] as? String == "ctrl-1")
+    #expect(
+      stages.compactMap { $0["stage"] as? String } == [
+        "read", "parse", "dispatch", "delivery-virtual-device", "delivery-endpoint",
+      ]
+    )
+    #expect(stages.compactMap { $0["nanoseconds"] as? Int } == [100, 150, 200, 260, 900])
+  }
+
+  @Test
+  func humanOutputListsDispatchAndDeliveryTimes() async throws {
+    let socketPath = temporarySocketPath()
+    let server = try serve(socketPath: socketPath)
+    defer { server.stop() }
+
+    let result = await run([], socketPath: socketPath)
+
+    #expect(result.code == 0, "\(result.standardError)")
+    #expect(result.standardOutput.contains("dispatch=200"))
+    #expect(result.standardOutput.contains("delivery-virtual-device=260"))
+    #expect(result.standardOutput.contains("delivery-endpoint=900"))
+    #expect(result.standardOutput.contains("ctrl-1"))
+  }
+
+  @Test
+  func aStoppedServiceReportsNoTimings() async throws {
+    let result = await run(["--json"], socketPath: temporarySocketPath())
+
+    let timings = try #require(try result.json()["timings"] as? [Any])
+    #expect(timings.isEmpty)
   }
 
   @Test

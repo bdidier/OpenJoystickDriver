@@ -1351,6 +1351,7 @@
 "cli.diagnose.records.config_ok" = "all.patch.json e os arquivos de persona são válidos";
 "cli.diagnose.records.config_problems" = "ignorados ou pulados: %@; corrija-os e verifique com «ojd status»";
 "cli.diagnose.records.skipped" = "%@ ignorado(s); verifique com «ojd record list»";
+"cli.diagnose.timings.frame" = "Quadro %lld de %@ (%@), relógio monotônico em nanossegundos: %@";
 "cli.record.abstract" = "Criar rascunhos, listar, verificar, instalar ou remover registros de controle.";
 "cli.record.discussion" = "Um registro de controle diz ao OpenJoystickDriver como operar um modelo de controle. Seus registros ficam em ~/Library/Application Support/OpenJoystickDriver/Controllers e adicionam um modelo ou alteram um incluído. O serviço em execução os aplica quando a pasta muda. Só «ojd record draft» precisa do serviço.";
 "cli.record.draft.abstract" = "Criar um rascunho de registro de controle a partir de um controle conectado.";

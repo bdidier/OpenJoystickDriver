@@ -1351,6 +1351,7 @@
 "cli.diagnose.records.config_ok" = "all.patch.json और persona फ़ाइलें मान्य हैं";
 "cli.diagnose.records.config_problems" = "अनदेखा या छोड़ा गया: %@; इन्हें ठीक करें और “ojd status” से जाँचें";
 "cli.diagnose.records.skipped" = "छोड़े गए: %@; उन्हें “ojd record list” से जाँचें";
+"cli.diagnose.timings.frame" = "फ़्रेम %lld, कंट्रोलर %@ (%@), नैनोसेकंड में मोनोटोनिक घड़ी: %@";
 "cli.record.abstract" = "कंट्रोलर रिकॉर्ड का मसौदा बनाएँ, सूचीबद्ध करें, जाँचें, इंस्टॉल करें या हटाएँ।";
 "cli.record.discussion" = "कंट्रोलर रिकॉर्ड OpenJoystickDriver को बताता है कि एक कंट्रोलर मॉडल को कैसे चलाना है। आपके रिकॉर्ड ~/Library/Application Support/OpenJoystickDriver/Controllers में रहते हैं और कोई मॉडल जोड़ते हैं या बंडल किए गए मॉडल को बदलते हैं। डायरेक्टरी बदलने पर चल रही सेवा उन्हें लागू करती है। सेवा की ज़रूरत केवल “ojd record draft” को है।";
 "cli.record.draft.abstract" = "जुड़े हुए कंट्रोलर से कंट्रोलर रिकॉर्ड का मसौदा बनाएँ।";

@@ -1046,7 +1046,7 @@
 		},
 		"diagnose": {
 			"type": "object",
-			"required": ["apiVersion", "kind", "checks"],
+			"required": ["apiVersion", "kind", "checks", "timings"],
 			"additionalProperties": false,
 			"properties": {
 				"apiVersion": {
@@ -1054,6 +1054,70 @@
 				},
 				"kind": {
 					"const": "Diagnosis"
+				},
+				"timings": {
+					"description": "The newest frames of each connected controller, oldest first; empty while the service is stopped. Nanoseconds are on the service's monotonic uptime clock.",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"required": [
+							"controller",
+							"name",
+							"frames"
+						],
+						"additionalProperties": false,
+						"properties": {
+							"controller": {
+								"type": "string"
+							},
+							"name": {
+								"type": "string"
+							},
+							"frames": {
+								"type": "array",
+								"items": {
+									"type": "object",
+									"required": [
+										"sequence",
+										"stages"
+									],
+									"additionalProperties": false,
+									"properties": {
+										"sequence": {
+											"type": "integer",
+											"minimum": 0
+										},
+										"stages": {
+											"type": "array",
+											"items": {
+												"type": "object",
+												"required": [
+													"stage",
+													"nanoseconds"
+												],
+												"additionalProperties": false,
+												"properties": {
+													"stage": {
+														"enum": [
+															"read",
+															"parse",
+															"dispatch",
+															"delivery-virtual-device",
+															"delivery-endpoint"
+														]
+													},
+													"nanoseconds": {
+														"type": "integer",
+														"minimum": 0
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
 				},
 				"bundle": {
 					"type": "string"

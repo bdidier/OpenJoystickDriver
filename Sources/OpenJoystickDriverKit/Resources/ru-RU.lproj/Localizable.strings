@@ -1351,6 +1351,7 @@
 "cli.diagnose.records.config_ok" = "all.patch.json и файлы персон допустимы";
 "cli.diagnose.records.config_problems" = "проигнорировано или пропущено: %@; исправьте и проверьте командой «ojd status»";
 "cli.diagnose.records.skipped" = "пропущено: %@; проверьте их командой «ojd record list»";
+"cli.diagnose.timings.frame" = "Кадр %lld контроллера %@ (%@), монотонные часы в наносекундах: %@";
 "cli.record.abstract" = "Создаёт черновики, показывает, проверяет, устанавливает или удаляет записи контроллеров.";
 "cli.record.discussion" = "Запись контроллера сообщает OpenJoystickDriver, как работать с одной моделью контроллера. Ваши записи хранятся в ~/Library/Application Support/OpenJoystickDriver/Controllers и добавляют модель или изменяют встроенную. Работающая служба применяет их при изменении каталога. Служба нужна только «ojd record draft».";
 "cli.record.draft.abstract" = "Создаёт черновик записи контроллера по подключённому контроллеру.";

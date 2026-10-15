@@ -1351,6 +1351,7 @@
 "cli.diagnose.records.config_ok" = "all.patch.json dan file persona valid";
 "cli.diagnose.records.config_problems" = "diabaikan atau dilewati: %@; perbaiki lalu periksa dengan “ojd status”";
 "cli.diagnose.records.skipped" = "%@ dilewati; periksa dengan “ojd record list”";
+"cli.diagnose.timings.frame" = "Frame %lld dari %@ (%@), jam monotonik dalam nanodetik: %@";
 "cli.record.abstract" = "Susun draf, daftar, periksa, instal, atau hapus catatan pengontrol.";
 "cli.record.discussion" = "Catatan pengontrol memberi tahu OpenJoystickDriver cara mengendalikan satu model pengontrol. Catatan Anda berada di ~/Library/Application Support/OpenJoystickDriver/Controllers dan menambah model atau menambal model bawaan. Layanan yang berjalan menerapkannya saat direktori berubah. Hanya “ojd record draft” yang memerlukan layanan.";
 "cli.record.draft.abstract" = "Susun draf catatan pengontrol dari pengontrol yang terhubung.";

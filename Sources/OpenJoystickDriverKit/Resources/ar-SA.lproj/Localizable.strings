@@ -1351,6 +1351,7 @@
 "cli.diagnose.records.config_ok" = "ملف all.patch.json وملفات الشخصية صالحة";
 "cli.diagnose.records.config_problems" = "تم تجاهل أو تخطي %@؛ أصلحها وتحقق عبر «ojd status»";
 "cli.diagnose.records.skipped" = "تم تخطي %@؛ افحصها باستخدام «ojd record list»";
+"cli.diagnose.timings.frame" = "الإطار %lld من %@ (%@)، الساعة الرتيبة بالنانوثانية: %@";
 "cli.record.abstract" = "صُغ مسودات سجلات وحدات التحكم أو اعرضها أو افحصها أو ثبّتها أو أزلها.";
 "cli.record.discussion" = "يخبر سجل وحدة التحكم OpenJoystickDriver بكيفية تشغيل طراز واحد من وحدات التحكم. توجد سجلاتك في ~/Library/Application Support/OpenJoystickDriver/Controllers، وتضيف طرازًا أو تعدّل طرازًا مضمّنًا. تطبّقها الخدمة العاملة عند تغيّر المجلد. ولا يحتاج إلى الخدمة سوى «ojd record draft».";
 "cli.record.draft.abstract" = "صُغ مسودة سجل وحدة تحكم من وحدة تحكم متصلة.";

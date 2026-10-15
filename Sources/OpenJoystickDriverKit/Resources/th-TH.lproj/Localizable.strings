@@ -1351,6 +1351,7 @@
 "cli.diagnose.records.config_ok" = "all.patch.json และไฟล์เพอร์โซนาถูกต้อง";
 "cli.diagnose.records.config_problems" = "ละเว้นหรือข้าม: %@; แก้ไขแล้วตรวจสอบด้วย “ojd status”";
 "cli.diagnose.records.skipped" = "ข้าม %@ ตรวจสอบด้วย “ojd record list”";
+"cli.diagnose.timings.frame" = "เฟรม %lld ของ %@ (%@) นาฬิกาแบบโมโนโทนิกเป็นนาโนวินาที: %@";
 "cli.record.abstract" = "ร่าง แสดงรายการ ตรวจสอบ ติดตั้ง หรือเอาระเบียนคอนโทรลเลอร์ออก";
 "cli.record.discussion" = "ระเบียนคอนโทรลเลอร์บอก OpenJoystickDriver ว่าจะขับคอนโทรลเลอร์หนึ่งรุ่นอย่างไร ระเบียนของคุณอยู่ใน ~/Library/Application Support/OpenJoystickDriver/Controllers และเพิ่มรุ่นใหม่หรือแก้ไขรุ่นที่รวมมาให้ บริการที่ทำงานอยู่จะใช้ระเบียนเมื่อไดเรกทอรีเปลี่ยนแปลง มีเพียง “ojd record draft” ที่ต้องใช้บริการ";
 "cli.record.draft.abstract" = "ร่างระเบียนคอนโทรลเลอร์จากคอนโทรลเลอร์ที่เชื่อมต่ออยู่";

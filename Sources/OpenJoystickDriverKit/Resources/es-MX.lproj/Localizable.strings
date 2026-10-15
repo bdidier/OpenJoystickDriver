@@ -1351,6 +1351,7 @@
 "cli.diagnose.records.config_ok" = "all.patch.json y los archivos de persona son válidos";
 "cli.diagnose.records.config_problems" = "ignorados u omitidos: %@; corrígelos y compruébalo con «ojd status»";
 "cli.diagnose.records.skipped" = "omitidos: %@; revísalos con «ojd record list»";
+"cli.diagnose.timings.frame" = "Cuadro %lld de %@ (%@), reloj monótono en nanosegundos: %@";
 "cli.record.abstract" = "Redacta, lista, comprueba, instala o elimina registros de control.";
 "cli.record.discussion" = "Un registro de control indica a OpenJoystickDriver cómo manejar un modelo de control. Tus registros están en ~/Library/Application Support/OpenJoystickDriver/Controllers y agregan un modelo o modifican uno incluido. El servicio en ejecución los aplica cuando cambia el directorio. Solo «ojd record draft» necesita el servicio.";
 "cli.record.draft.abstract" = "Redacta un registro de control a partir de un control conectado.";

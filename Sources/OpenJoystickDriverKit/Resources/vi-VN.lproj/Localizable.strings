@@ -1351,6 +1351,7 @@
 "cli.diagnose.records.config_ok" = "all.patch.json và các tệp persona hợp lệ";
 "cli.diagnose.records.config_problems" = "đã bỏ qua hoặc không tải: %@; hãy sửa rồi kiểm tra bằng “ojd status”";
 "cli.diagnose.records.skipped" = "đã bỏ qua %@; hãy kiểm tra bằng “ojd record list”";
+"cli.diagnose.timings.frame" = "Khung hình %lld của %@ (%@), đồng hồ đơn điệu tính bằng nano giây: %@";
 "cli.record.abstract" = "Soạn thảo, liệt kê, kiểm tra, cài đặt hoặc gỡ các bản ghi bộ điều khiển.";
 "cli.record.discussion" = "Một bản ghi bộ điều khiển cho OpenJoystickDriver biết cách điều khiển một kiểu máy bộ điều khiển. Các bản ghi của bạn nằm trong ~/Library/Application Support/OpenJoystickDriver/Controllers và thêm một kiểu máy hoặc vá một kiểu máy đi kèm. Dịch vụ đang chạy áp dụng chúng khi thư mục thay đổi. Chỉ “ojd record draft” cần dịch vụ.";
 "cli.record.draft.abstract" = "Soạn thảo một bản ghi bộ điều khiển từ một bộ điều khiển đã kết nối.";

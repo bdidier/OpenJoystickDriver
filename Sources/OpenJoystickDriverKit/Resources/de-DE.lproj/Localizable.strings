@@ -1351,6 +1351,7 @@
 "cli.diagnose.records.config_ok" = "all.patch.json und Persona-Dateien sind gültig";
 "cli.diagnose.records.config_problems" = "ignoriert oder übersprungen: %@; beheben und mit „ojd status“ prüfen";
 "cli.diagnose.records.skipped" = "übersprungen: %@; prüfe sie mit „ojd record list“";
+"cli.diagnose.timings.frame" = "Frame %lld von %@ (%@), monotone Uhr in Nanosekunden: %@";
 "cli.record.abstract" = "Controller-Einträge entwerfen, auflisten, prüfen, installieren oder entfernen.";
 "cli.record.discussion" = "Ein Controller-Eintrag sagt OpenJoystickDriver, wie ein Controller-Modell angesteuert wird. Deine Einträge liegen in ~/Library/Application Support/OpenJoystickDriver/Controllers und fügen ein Modell hinzu oder passen ein mitgeliefertes an. Der laufende Dienst wendet sie an, sobald sich der Ordner ändert. Nur „ojd record draft“ braucht den Dienst.";
 "cli.record.draft.abstract" = "Einen Controller-Eintrag aus einem verbundenen Controller entwerfen.";
