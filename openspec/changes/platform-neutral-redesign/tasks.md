@@ -249,14 +249,14 @@ Verify: `swift test`, `./Scripts/ojd check schemas`.
 
 ## 19. Streaming boundary and WebRTC
 
-Owns: `InputSource`, `OutputSink`, queue policy, WebRTC transport, latency report.
+Owns: `InputSource`, `OutputSink`, queue policy, WebRTC bridge, latency report.
 Depends: 12, 18.
 Verify: `swift test`, lint pair. Hardware: H10.
 
 - [ ] 19.1 Introduce `InputSource` and `OutputSink` and attach physical, virtual, endpoint paths to them. Verify: 1.1 shows zero diffs.
 - [ ] 19.2 Add bounded queue policy per record or default. Verify: slow-consumer test keeps memory bounded and delivers the newest frame.
 - [x] 19.3 Add per-stage timestamps to `ojd diagnose`. Verify: test output lists dispatch and delivery times. Done: read, parse, dispatch, delivery-virtual-device and delivery-endpoint stamps; `DeviceManagerFrameTimingsTests` asserts all five in order and `--plain` adds one timing row per stage.
-- [ ] 19.4 Add the WebRTC transport, off by default, using the endpoint Subscription flow for signalling. Verify: loopback test; with the setting off, a socket scan shows no listener.
+- [ ] 19.4 Add the WebRTC bridge in `Tools/WebRTCBridge/` as its own Swift package on LiveKitWebRTC, an endpoint client (`FeedRequest`/`RumbleCommand` on the game's Mac, `Subscription` on the player's Mac), with out-of-band offer and answer. Verify: a loopback test connects two bridges through a data channel against a test endpoint and passes a frame one way and a rumble command back; a socket scan shows no listener; the root `Package.resolved` has no WebRTC package.
 
 ## 20. AppKit GUI shell
 
@@ -318,7 +318,7 @@ These need the maintainer and a device. Each result is recorded in `wiki` or the
 - [ ] H7 Wine, CrossOver and a browser: confirm the expectations in the SDL consumer table.
 - [ ] H8 SDL3 and Steam with `Generic` and `SdlCompatible`.
 - [ ] H9 `1209:4A4F`: press each button and move each axis to confirm mapping directions (open item 5).
-- [ ] H10 Stutter: measure with the 19.3 timestamps, with WebRTC off and on.
+- [ ] H10 Stutter: measure with the 19.3 timestamps, with and without the WebRTC bridge.
 
 ## Workflow follow-up
 
