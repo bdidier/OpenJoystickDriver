@@ -109,6 +109,14 @@ Verify: `swift test`, `./Scripts/ojd test parsers-macos14`, `./Scripts/ojd catal
 - [x] 7.2 Reject a record that names an unknown protocol ID with a catalog error. Verify: negative test and `./Scripts/ojd check profiles`.
 - [x] 7.3 Move the interface signatures in `ProtocolClassifier.signatures` (XID, XUSB wired and receiver, GIP) into the protocol description data and keep binding devices without a record by them. Verify: `interfaceSignatureBindsWithoutACatalogRecord` and `gipBindsOnlyItsDataInterface` pass unchanged, and no interface triple remains in Swift.
 
+Extras found while closing 7.3 (the protocol descriptions it added had no negative checks):
+
+- [x] 7.4 Make `./Scripts/ojd check schemas` reject bad protocol descriptions: wrong `$schema`, unknown family, a byte out of range, an empty or missing `interfaceSignatures`, an unknown field. Verify: negative unit tests in `Tests/RepositoryScripts` and the authored files still validate.
+- [x] 7.5 Limit each family's `variant` in `protocol-description.schema.json` to the variants Swift implements (`xbox.xid` gamepad, `xbox.xusb` wired and receiver, `xbox.gip` usb). Verify: a negative unit test with a variant from another family.
+- [x] 7.6 Make `./Scripts/ojd check schemas` fail when a protocol description's file name differs from its `family`, which today fails only when the app starts. Verify: a negative unit test and `./Scripts/ojd check schemas` on the real tree.
+- [x] 7.7 Make the Swift loader decode protocol descriptions strictly and testably: reject an unknown field, an unknown `$schema`, a family that differs from the file, and a variant outside the family's `variants`, each with a `ControllerRecordProblem`. Verify: negative tests in `swift test`.
+- [x] 7.8 Make `./Scripts/ojd catalog regenerate --check` report a missing, stale or changed protocol copy in the Kit bundle. Verify: unit tests for each case.
+
 ## 8. Typed parameters replace ControllerQuirk (old WP5)
 
 Owns: typed parameters in records per the D2 table.
