@@ -16,8 +16,9 @@ if ((${#paths[@]} == 0)); then
   exit 0
 fi
 
+biome="$(python3 "$repository_root/Scripts/Quality/biome_binary.py" "$repository_root")"
 printf '%s\0' "${paths[@]}" | git checkout-index -z --stdin --prefix="$staged_copy/"
-biome format --write --config-path="$repository_root/biome.json" --vcs-enabled=false \
+"$biome" format --write --config-path="$repository_root/biome.json" --vcs-enabled=false \
   "$staged_copy" >/dev/null
 
 for path in "${paths[@]}"; do

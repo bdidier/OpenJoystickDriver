@@ -109,7 +109,7 @@ def requirements_for(argv: list[str]) -> tuple[Capability, ...]:
     if route[:1] == ("snapshots",) or route == ("test", "parsers-macos14"):
         return (Capability.SWIFT_TOOLCHAIN, Capability.FULL_XCODE)
     if route[:2] == ("hooks", "install"):
-        return (Capability.BUN, Capability.BIOME)
+        return (Capability.BUN,)
     if route[:2] == ("hooks", "validate"):
         return (Capability.BUN,)
     if route == ("setup",):
@@ -120,6 +120,5 @@ def requirements_for(argv: list[str]) -> tuple[Capability, ...]:
             Capability.PYRIGHT,
             Capability.SHELLCHECK,
             Capability.SWIFTLINT,
-            Capability.BIOME,
         )
     return ()
