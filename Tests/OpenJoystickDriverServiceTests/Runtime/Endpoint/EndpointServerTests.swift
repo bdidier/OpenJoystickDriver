@@ -437,6 +437,24 @@ struct EndpointServerTests {
   }
 
   @Test
+  func connectionsAreServedWhileDispatchHasNoFreeThread() async throws {
+    try await withEndpointServer { server, _ in
+      try server.setEnabled(true)
+      try server.grant(Self.tool, path: "/Tool", scopes: [.read])
+      try await withSaturatedDispatchPool {
+        var clients: [EndpointTestClient] = []
+        for _ in 0..<EndpointServer.maximumConnections {
+          clients.append(try await EndpointTestClient.subscribed(to: server.socketPath))
+        }
+        let ninth = try await EndpointTestClient(path: server.socketPath)
+
+        #expect(try await ninth.readObject()["code"] as? String == "E1005")
+        _ = clients
+      }
+    }
+  }
+
+  @Test
   func aDamagedFileIsReportedAndKeepsTheEndpointClosed() async throws {
     try await withEndpointServer { server, fixture in
       try FileManager.default.createDirectory(

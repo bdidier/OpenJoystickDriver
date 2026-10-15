@@ -548,6 +548,24 @@ struct EndpointWebSocketTests {
     }
   }
 
+  @Test
+  func webConnectionsAreServedWhileDispatchHasNoFreeThread() async throws {
+    try await withWeb { server, _, port, _ in
+      try server.setEnabled(true)
+      try server.grant(EndpointFixture.tool, path: "/Tool", scopes: [.read])
+      try await withSaturatedDispatchPool {
+        var pages: [EndpointWebTestClient] = []
+        for _ in 0..<EndpointServer.maximumConnections {
+          pages.append(try await upgraded(port: port))
+        }
+        let ninth = try await upgraded(port: port)
+
+        #expect(try await ninth.readObject()["code"] as? String == "E1005")
+        _ = pages
+      }
+    }
+  }
+
   // MARK: - Pages
 
   @Test
