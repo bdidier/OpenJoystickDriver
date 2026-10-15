@@ -81,6 +81,7 @@ extension CLI {
       (VirtualSetCommand.self, "VirtualGamepadChange"),
       (VirtualResetCommand.self, "VirtualGamepadChange"),
       (VirtualFeedCommand.self, "RumbleCommand"),
+      (VirtualExportMappingCommand.self, "VirtualGamepadMapping"),
     ]
     return Dictionary(uniqueKeysWithValues: table.map { (ObjectIdentifier($0.0), $0.1) })
   }()

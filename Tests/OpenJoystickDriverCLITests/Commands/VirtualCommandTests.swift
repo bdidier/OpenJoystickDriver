@@ -142,5 +142,84 @@ struct VirtualCommandTests {
     let controllers = try #require(json["controllers"] as? [[String: Any]])
     #expect(controllers.map { $0["id"] as? String } == [token("pad-1")])
     #expect(json["profiles"] as? [String] == VirtualHIDProfileID.allCases.map(\.rawValue))
+    for controller in controllers {
+      // A controller carries the mapping of its live persona, and none without one.
+      let profile = controller["profile"] as? String
+      let sdl = controller["sdl"] as? [String: Any]
+      #expect((sdl != nil) == (profile != nil), "\(controller)")
+      #expect((controller["w3c"] != nil) == (profile != nil), "\(controller)")
+      if let profile, let id = VirtualHIDProfileID(rawValue: profile) {
+        #expect(sdl?["mapping"] as? String == (try id.gamepadMapping()).sdlMapping)
+      }
+    }
+  }
+
+  @Test
+  func exportMappingPrintsOneSDLLinePerPersonaByDefault() async throws {
+    let service = try FakeService(devices: [])
+    let result = await service.run(["virtual", "export-mapping"])
+    #expect(result.code == 0, "\(result.standardError)")
+    let lines = result.standardOutput.split(separator: "\n").map(String.init)
+    #expect(lines == (try VirtualHIDProfileID.allCases.map { try $0.gamepadMapping().sdlMapping }))
+    #expect(
+      lines.contains {
+        $0.hasPrefix("03000000091200004f4a000008040000,") && $0.contains(",a:b0,b:b1,x:b2,y:b3,")
+      }
+    )
+  }
+
+  @Test
+  func exportMappingJSONCarriesTheSDLMappingOfEachPersona() async throws {
+    let service = try FakeService(devices: [])
+    let result = await service.run(["virtual", "export-mapping", "--format", "sdl", "--json"])
+    #expect(result.code == 0, "\(result.standardError)")
+    let json = try result.json()
+    #expect(json["format"] as? String == "sdl")
+    let mappings = try #require(json["mappings"] as? [[String: Any]])
+    #expect(
+      mappings.map { $0["profile"] as? String } == VirtualHIDProfileID.allCases.map(\.rawValue)
+    )
+    for entry in mappings {
+      let sdl = try #require(entry["sdl"] as? [String: String])
+      #expect(sdl["mapping"]?.hasPrefix("\(try #require(sdl["guid"])),") == true)
+      #expect(entry["w3c"] == nil)
+    }
+    let generic = try #require(mappings.first { $0["profile"] as? String == "Generic" })
+    let sdl = try #require(generic["sdl"] as? [String: String])
+    #expect(sdl["guid"] == "03000000091200004f4a000008040000")
+  }
+
+  @Test
+  func exportMappingJSONCarriesTheW3CDescriptionOfOnePersona() async throws {
+    let service = try FakeService(devices: [])
+    let result = await service.run([
+      "virtual", "export-mapping", "generic", "--format", "w3c", "--json",
+    ])
+    #expect(result.code == 0, "\(result.standardError)")
+    let json = try result.json()
+    let mappings = try #require(json["mappings"] as? [[String: Any]])
+    #expect(mappings.count == 1)
+    let w3c = try #require(mappings.first?["w3c"] as? [String: Any])
+    #expect(mappings.first?["sdl"] == nil)
+    let buttons = try #require(w3c["buttons"] as? [[String: Any]])
+    let axes = try #require(w3c["axes"] as? [[String: Any]])
+    #expect(buttons.first?["control"] as? String == "South")
+    #expect(buttons.first?["index"] as? Int == 0)
+    #expect(
+      axes.map { $0["control"] as? String } == [
+        "LeftStickX", "LeftStickY", "RightStickX", "RightStickY",
+      ]
+    )
+  }
+
+  @Test
+  func exportMappingRejectsAnUnknownProfileOrFormatWithExitSixtyFour() async throws {
+    let service = try FakeService(devices: [])
+    for arguments in [
+      ["virtual", "export-mapping", "nope"], ["virtual", "export-mapping", "--format", "x"],
+    ] {
+      let result = await service.run(arguments)
+      #expect(result.code == 64, "\(arguments)")
+    }
   }
 }

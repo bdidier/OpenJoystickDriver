@@ -1338,6 +1338,10 @@
 "cli.virtual.discussion.unit" = "Con --unit, «set» se aplica a un solo mando según su ID de unidad, y «reset» devuelve ese mando a la elección de su modelo.";
 "cli.virtual.error.failed" = "El mando virtual de %@ no ha cambiado (%@). Compruébalo con «ojd virtual show».";
 "cli.virtual.error.no_unit" = "%@ no tiene ID de unidad, así que una elección solo puede aplicarse a todo su modelo. Ejecuta el comando sin --unit.";
+"cli.virtual.export_mapping.abstract" = "Imprime la asignación SDL o la descripción W3C que deriva un perfil de mando virtual.";
+"cli.virtual.export_mapping.discussion" = "SDL imprime una línea de asignación por perfil, que es un archivo de asignaciones SDL válido. W3C imprime la descripción del diseño estándar como JSON. Ambas se derivan del descriptor de informes del perfil.";
+"cli.virtual.export_mapping.format" = "El formato que imprimir: sdl o w3c.";
+"cli.virtual.export_mapping.profile" = "El perfil de mando virtual que imprimir. Omítelo para imprimir todos los perfiles.";
 "cli.virtual.feed.abstract" = "Publicar un mando virtual controlado por stdin.";
 "cli.virtual.feed.discussion" = "Lee un objeto JSON por línea: «buttons» y «dpad» enumeran los controles pulsados, como South y up, y «axes» asigna valores a los nombres de los ejes, como LeftStickX. Los controles que faltan quedan en neutro. Los sticks van de -1 a 1, con Y hacia arriba; los gatillos van de 0 a 1. Los fotogramas se reproducen en orden, cada uno durante al menos 8 ms; «holdMilliseconds» mantiene un fotograma más tiempo, hasta 60000. Imprime cada comando de salida que los juegos envían al mando, como la vibración, como un objeto JSON por línea. Termina cuando se han reproducido todos los fotogramas después de que termine la entrada.";
 "cli.virtual.feed.error.closed" = "El servicio ha cerrado el mando virtual. Compruébalo con «ojd status».";

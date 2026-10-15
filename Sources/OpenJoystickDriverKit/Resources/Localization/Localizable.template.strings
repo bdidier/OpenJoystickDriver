@@ -1341,6 +1341,10 @@
 "cli.virtual.discussion.unit" = "With --unit, 'set' applies to one controller by its unit ID, and 'reset' returns that controller to its model's choice.";
 "cli.virtual.error.failed" = "The virtual gamepad for %@ did not change (%@). Check it with 'ojd virtual show'.";
 "cli.virtual.error.no_unit" = "%@ has no unit ID, so a choice can apply only to its whole model. Run the command without --unit.";
+"cli.virtual.export_mapping.abstract" = "Print the SDL mapping or the W3C description that a virtual gamepad profile derives.";
+"cli.virtual.export_mapping.discussion" = "SDL prints one mapping line per profile, which is a valid SDL mapping file. W3C prints the standard-layout description as JSON. Both are derived from the profile's report descriptor.";
+"cli.virtual.export_mapping.format" = "The format to print: sdl or w3c.";
+"cli.virtual.export_mapping.profile" = "The virtual gamepad profile to print. Leave it out to print every profile.";
 "cli.virtual.feed.abstract" = "Publish a virtual gamepad that standard input drives.";
 "cli.virtual.feed.discussion" = "Reads one JSON object per line: 'buttons' and 'dpad' list the pressed controls, such as South and up, and 'axes' maps axis names, such as LeftStickX, to values. Missing controls are neutral. Sticks run from -1 to 1 with Y up; triggers run from 0 to 1. Frames play in order, each for at least 8 ms; 'holdMilliseconds' keeps a frame longer, up to 60000. Prints each output command that games send to the gamepad, such as rumble, as one JSON object per line. Stops when every frame has played after the input ends.";
 "cli.virtual.feed.error.closed" = "The service closed the virtual gamepad. Check it with 'ojd status'.";

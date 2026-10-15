@@ -1338,6 +1338,10 @@
 "cli.virtual.discussion.unit" = "使用 --unit 時，「set」 只會套用到按單元 ID 指定的那一部控制器，「reset」 會讓該控制器恢復為其型號的選擇。";
 "cli.virtual.error.failed" = "%@ 的虛擬遊戲控制器沒有改變（%@）。請用 「ojd virtual show」 檢查。";
 "cli.virtual.error.no_unit" = "%@ 沒有單元 ID，因此所做選擇只能套用到其整個型號。請不帶 --unit 執行該指令。";
+"cli.virtual.export_mapping.abstract" = "輸出虛擬遊戲控制器設定檔推導出的 SDL 對應或 W3C 描述。";
+"cli.virtual.export_mapping.discussion" = "SDL 會為每個設定檔輸出一行對應，可直接作為有效的 SDL 對應檔。W3C 會以 JSON 輸出標準配置的描述。兩者都由設定檔的報告描述元推導而來。";
+"cli.virtual.export_mapping.format" = "要輸出的格式：sdl 或 w3c。";
+"cli.virtual.export_mapping.profile" = "要輸出的虛擬遊戲控制器設定檔。省略則輸出所有設定檔。";
 "cli.virtual.feed.abstract" = "發布由 stdin 驅動的虛擬遊戲控制器。";
 "cli.virtual.feed.discussion" = "每行讀取一個 JSON 物件：「buttons」 和 「dpad」 列出被按下的控制項，例如 South 和 up；「axes」 將軸名稱（例如 LeftStickX）對應到數值。缺少的控制項保持中立。搖桿範圍為 -1 到 1，Y 軸向上；扳機範圍為 0 到 1。影格依序播放，每個影格至少持續 8 ms；「holdMilliseconds」 可讓影格維持更久，最長 60000。將遊戲傳送給遊戲控制器的每個輸出指令（例如震動）以每行一個 JSON 物件的形式輸出。輸入結束且所有影格播放完畢後停止。";
 "cli.virtual.feed.error.closed" = "服務已關閉虛擬遊戲控制器。請用 「ojd status」 檢查。";

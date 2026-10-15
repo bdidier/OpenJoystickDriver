@@ -1338,6 +1338,10 @@
 "cli.virtual.discussion.unit" = "--unit ile “set”, tek bir kontrolcüye cihaz kimliği üzerinden uygulanır; “reset” ise o kontrolcüyü modelinin seçimine döndürür.";
 "cli.virtual.error.failed" = "%@ için sanal oyun kontrolcüsü değişmedi (%@). “ojd virtual show” ile kontrol edin.";
 "cli.virtual.error.no_unit" = "%@ için cihaz kimliği yok, bu yüzden bir seçim yalnızca modelin tamamına uygulanabilir. Komutu --unit olmadan çalıştırın.";
+"cli.virtual.export_mapping.abstract" = "Sanal bir oyun kumandası profilinin türettiği SDL eşlemesini veya W3C açıklamasını yazdırır.";
+"cli.virtual.export_mapping.discussion" = "SDL, her profil için bir eşleme satırı yazdırır; bu satırlar geçerli bir SDL eşleme dosyasıdır. W3C, standart yerleşimin açıklamasını JSON olarak yazdırır. İkisi de profilin rapor tanımlayıcısından türetilir.";
+"cli.virtual.export_mapping.format" = "Yazdırılacak biçim: sdl veya w3c.";
+"cli.virtual.export_mapping.profile" = "Yazdırılacak sanal oyun kumandası profili. Tüm profilleri yazdırmak için belirtmeyin.";
 "cli.virtual.feed.abstract" = "stdin ile yönetilen sanal bir oyun kontrolcüsü yayımlar.";
 "cli.virtual.feed.discussion" = "Her satırda bir JSON nesnesi okur: “buttons” ve “dpad” basılan denetimleri listeler, örneğin South ve up; “axes” ise eksen adlarını, örneğin LeftStickX, değerlerle eşler. Eksik denetimler nötrdür. Çubuklar -1 ile 1 arasında değişir, Y yukarı yöndedir; tetikler 0 ile 1 arasında değişir. Kareler sırayla oynatılır, her biri en az 8 ms sürer; “holdMilliseconds” bir kareyi daha uzun tutar, en fazla 60000. Oyunların sanal oyun kontrolcüsüne gönderdiği her çıkış komutunu, örneğin titreşimi, satır başına bir JSON nesnesi olarak yazdırır. Girdi bittikten sonra tüm kareler oynatıldığında durur.";
 "cli.virtual.feed.error.closed" = "Servis sanal oyun kontrolcüsünü kapattı. “ojd status” ile kontrol edin.";

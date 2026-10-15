@@ -1,7 +1,7 @@
-# Derived drift detector, not a shipped mapping: OJD ships no SDL mapping text. Each line
-# is derived by driving one control through the virtual profile's report codec and reading
-# the HID fields it changes. Entries follow SDL's field order; analog triggers carry the
-# + half-axis prefix SDL expects for 0..max axes.
+# The SDL mapping each virtual HID profile derives for itself. Each line is derived by
+# driving one control through the profile's report codec and reading the HID fields it
+# changes. Entries follow SDL's field order; analog triggers carry the + half-axis prefix
+# SDL expects for 0..max axes.
 ## hid-generic
 profile=hid-generic vendor=4617 product=19023 version=1032 name=OpenJoystickDriver Generic HID Gamepad
 guid=03000000091200004f4a000008040000

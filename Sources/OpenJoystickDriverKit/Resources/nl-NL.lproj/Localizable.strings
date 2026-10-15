@@ -1338,6 +1338,10 @@
 "cli.virtual.discussion.unit" = "Met --unit geldt ‘set’ voor één controller op basis van het apparaat-ID, en ‘reset’ zet die controller terug op de keuze van zijn model.";
 "cli.virtual.error.failed" = "Het virtuele gamepad voor %@ is niet gewijzigd (%@). Controleer dit met ‘ojd virtual show’.";
 "cli.virtual.error.no_unit" = "%@ heeft geen apparaat-ID, dus een keuze kan alleen voor het hele model gelden. Voer de opdracht uit zonder --unit.";
+"cli.virtual.export_mapping.abstract" = "Toont de SDL-mapping of de W3C-beschrijving die een virtueel gamepadprofiel afleidt.";
+"cli.virtual.export_mapping.discussion" = "SDL toont per profiel één mappingregel, wat een geldig SDL-mappingbestand is. W3C toont de beschrijving van de standaardindeling als JSON. Beide worden afgeleid van de rapportdescriptor van het profiel.";
+"cli.virtual.export_mapping.format" = "De te tonen indeling: sdl of w3c.";
+"cli.virtual.export_mapping.profile" = "Het te tonen virtuele gamepadprofiel. Laat het weg om alle profielen te tonen.";
 "cli.virtual.feed.abstract" = "Een virtueel gamepad publiceren dat door stdin wordt aangestuurd.";
 "cli.virtual.feed.discussion" = "Leest één JSON-object per regel: ‘buttons’ en ‘dpad’ geven de ingedrukte bedieningselementen weer, zoals South en up, en ‘axes’ koppelt namen van assen, zoals LeftStickX, aan waarden. Ontbrekende bedieningselementen blijven neutraal. Sticks lopen van -1 tot 1 met Y omhoog; triggers lopen van 0 tot 1. Frames worden op volgorde afgespeeld, elk minstens 8 ms; ‘holdMilliseconds’ houdt een frame langer vast, tot 60000. Drukt elk uitvoercommando dat games naar de gamepad sturen, zoals trillen, af als één JSON-object per regel. Stopt wanneer elk frame is afgespeeld nadat de invoer is geëindigd.";
 "cli.virtual.feed.error.closed" = "De service heeft het virtuele gamepad gesloten. Controleer dit met ‘ojd status’.";
