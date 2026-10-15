@@ -1,40 +1,40 @@
 {
-	"apiVersion": "openjoystickdriver/v1alpha1",
-	"kind": "ProtocolDescription",
-	"family": "valve.steam-deck",
-	"endpoints": {
-		"in": 130,
-		"out": 2
-	},
-	"tuningKeys": [
-		"hidStartupIntervalMs",
-		"minimumHIDOutputIntervalMs",
-		"keepAliveIntervalMs"
-	],
-	"controls": {
-		"base": "xbox",
-		"add": [
-			"guide",
-			"auxiliary-1",
-			"left-trigger-button",
-			"right-trigger-button",
-			"paddle-left-1",
-			"paddle-left-2",
-			"paddle-right-1",
-			"paddle-right-2",
-			"left-stick-touch",
-			"right-stick-touch",
-			"left-trackpad-click",
-			"right-trackpad-click",
-			"left-trackpad-touch",
-			"right-trackpad-touch"
-		],
-		"touchContactCount": 1,
-		"motion": true
-	},
-	"defaults": {
-		"tuning": {
-			"keepAliveIntervalMs": 1000
-		}
-	}
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "ProtocolDescription",
+  "family": "valve.steam-deck",
+  "endpoints": {
+    "in": 130,
+    "out": 2
+  },
+  "tuningKeys": [
+    "hidStartupIntervalMs",
+    "minimumHIDOutputIntervalMs",
+    "keepAliveIntervalMs"
+  ],
+  "controls": {
+    "base": "xbox",
+    "add": [
+      "guide",
+      "auxiliary-1",
+      "left-trigger-button",
+      "right-trigger-button",
+      "paddle-left-1",
+      "paddle-left-2",
+      "paddle-right-1",
+      "paddle-right-2",
+      "left-stick-touch",
+      "right-stick-touch",
+      "left-trackpad-click",
+      "right-trackpad-click",
+      "left-trackpad-touch",
+      "right-trackpad-touch"
+    ],
+    "touchContactCount": 1,
+    "motion": true
+  },
+  "defaults": {
+    "tuning": {
+      "keepAliveIntervalMs": 1000
+    }
+  }
 }

@@ -93,8 +93,10 @@ public final class Switch1Driver: PhysicalProtocolDriver {
     return ControllerCapabilities(controls: controls, motion: true)
   }
 
+  /// The subcommand reports and calibration requests; the USB handshake commands are the
+  /// description's startup writes.
   public func startupWrites() -> [PhysicalOutputWrite] {
-    startupReports(includeUSBSetup: !isBluetooth && layout == .pro).map { .hidOutput($0) }
+    startupReports().map { .hidOutput($0) }
   }
 
   /// Each Joy-Con drives only its own side. The player subcommand repeats the last rumble.
@@ -195,15 +197,8 @@ public final class Switch1Driver: PhysicalProtocolDriver {
   private static let rightJoyConButtonTable: [(UInt32, ControlID)] =
     [(0x0000_0020, .auxiliary5), (0x0000_0010, .auxiliary6)] + proButtonTable
 
-  private func usbCommand(_ command: UInt8) -> PhysicalHIDOutputReport {
-    PhysicalHIDOutputReport(reportID: 0x80, bytes: [0x80, command])
-  }
-
-  private func startupReports(includeUSBSetup: Bool) -> [PhysicalHIDOutputReport] {
-    let usbSetup =
-      includeUSBSetup
-      ? [usbCommand(0x02), usbCommand(0x03), usbCommand(0x02), usbCommand(0x04)] : []
-    return usbSetup + [
+  private func startupReports() -> [PhysicalHIDOutputReport] {
+    [
       subcommand(0x03, data: [0x30]), subcommand(0x40, data: [0x01]),
       subcommand(0x48, data: [0x01]),
     ] + motionCalibrationRequests()

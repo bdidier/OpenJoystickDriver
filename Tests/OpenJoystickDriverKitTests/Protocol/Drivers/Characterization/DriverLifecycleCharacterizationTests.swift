@@ -76,7 +76,11 @@ struct DriverLifecycleCharacterizationTests {
     let boundTransports = try Self.transports.filter { try driver(subject, transport: $0) != nil }
     for transport in boundTransports {
       let bound = { try #require(try driver(subject, transport: transport)) }
-      lines += hidStartupOutput(try bound(), transport: transport)
+      lines += hidStartupOutput(
+        try bound(),
+        declared: try declaredStartupWrites(subject, transport: transport),
+        transport: transport
+      )
       lines += hidStartupFeatureReads(try bound(), transport: transport)
       lines += hidFeatureReplies(try bound(), subject: subject, transport: transport)
       lines += hidStartupFeatureReports(try bound(), transport: transport)
@@ -166,8 +170,42 @@ struct DriverLifecycleCharacterizationTests {
     }
   }
 
-  func hidStartupOutput(_ driver: any PhysicalProtocolDriver, transport: String?) -> [String] {
-    let reports = driver.startupWrites().hidOutputs
+  /// The startup-phase HID writes the pipeline sends before the driver's own: the record's, or
+  /// else the family description's for the variant the classifier binds over `transport`.
+  func declaredStartupWrites(
+    _ subject: Subject,
+    transport: String?
+  ) throws
+    -> [PhysicalOutputWrite]
+  {
+    let record = try #require(Self.registry.record(for: subject.model))
+    let host = HIDDeviceStream.hostTransport(forTransportProperty: transport)
+    let device = PhysicalDevice(
+      vendorID: subject.model.vendorID,
+      productID: subject.model.productID,
+      interfaces: record.usesRawUSB ? nil : [gamepadHIDInterface(host: host)]
+    )
+    let backend: DeviceAccessBackend = record.usesRawUSB ? .ioUSBHost : .ioHID
+    guard case .bound(let binding) = Self.registry.classify(device, backend: backend) else {
+      return []
+    }
+    let writes =
+      record.startupWrites.isEmpty
+      ? binding.protocolID.protocolDescription.startupWrites(
+        phase: .startup,
+        variant: binding.variant,
+        parameters: record.parameters
+      )
+      : record.startupWrites.filter { $0.phase == .startup }
+    return writes.filter { $0.applies(to: host) }.map(\.write)
+  }
+
+  func hidStartupOutput(
+    _ driver: any PhysicalProtocolDriver,
+    declared: [PhysicalOutputWrite],
+    transport: String?
+  ) -> [String] {
+    let reports = (declared + driver.startupWrites()).hidOutputs
     let plan = driver.sessionPlan
     return [
       "hid.startupOutput[\(label(transport))] interval=\(plan.hidStartupIntervalNanoseconds)"

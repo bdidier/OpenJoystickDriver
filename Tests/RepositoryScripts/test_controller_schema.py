@@ -407,6 +407,26 @@ class StartupWriteTests(unittest.TestCase):
             "startup with rumble": record(
                 THIRD_PARTY, output={"rumble": GP100_RUMBLE, "startup": [ENABLE]}
             ),
+            "phased write": record(
+                SIXAXIS, output={"startup": [{**ENABLE, "phase": "startup"}]}
+            ),
+            "long report with a CRC": record(
+                DS4,
+                output={
+                    "startup": [
+                        {
+                            "report": {"kind": "output", "id": 17, "length": 78},
+                            "bytes": [0] * 73,
+                            "crc32Seed": 162,
+                        }
+                    ]
+                },
+            ),
+            "GIP packet": record(GIP, output={"startup": [USB_WRITE]}),
+            "XUSB packet": record(XUSB, output={"startup": [USB_WRITE]}),
+            "Switch 2 packet": record(
+                {"family": "nintendo.switch2"}, output={"startup": [USB_WRITE]}
+            ),
         }
         for name, document in accepted.items():
             with self.subTest(name):
@@ -449,11 +469,92 @@ class StartupWriteTests(unittest.TestCase):
             "rumble on Sixaxis": record(
                 SIXAXIS, output={"rumble": GP100_RUMBLE, "startup": [ENABLE]}
             ),
+            "unknown phase": record(
+                SIXAXIS, output={"startup": [{**ENABLE, "phase": "later"}]}
+            ),
+            "CRC seed above 255": record(
+                SIXAXIS, output={"startup": [{**ENABLE, "crc32Seed": 256}]}
+            ),
+            "CRC without room": record(
+                DS4,
+                output={
+                    "startup": [
+                        {
+                            "report": {"kind": "output", "id": 1, "length": 4},
+                            "bytes": [1, 2, 3],
+                            "crc32Seed": 1,
+                        }
+                    ]
+                },
+            ),
+            "report above 128 bytes": record(
+                SIXAXIS,
+                output={
+                    "startup": [
+                        {
+                            **ENABLE,
+                            "report": {"kind": "output", "id": 1, "length": 129},
+                        }
+                    ]
+                },
+            ),
+            "family-only variants": record(
+                SIXAXIS, output={"startup": [{**ENABLE, "variants": ["usb"]}]}
+            ),
+            "family-only condition": record(
+                SIXAXIS,
+                output={
+                    "startup": [{**ENABLE, "when": {"parameter": "role", "is": ["A"]}}]
+                },
+            ),
+            "packet endpoint 0": record(
+                GIP, output={"startup": [{**USB_WRITE, "endpoint": 0}]}
+            ),
+            "packet endpoint 128": record(
+                GIP, output={"startup": [{**USB_WRITE, "endpoint": 128}]}
+            ),
+            "packet timeout 0": record(
+                GIP, output={"startup": [{**USB_WRITE, "timeoutMilliseconds": 0}]}
+            ),
+            "packet timeout above 60000": record(
+                GIP,
+                output={"startup": [{**USB_WRITE, "timeoutMilliseconds": 60001}]},
+            ),
+            "packet delay above 1000": record(
+                GIP, output={"startup": [{**USB_WRITE, "delayMilliseconds": 1001}]}
+            ),
+            "packet session byte above 63": record(
+                GIP, output={"startup": [{**USB_WRITE, "sessionByte": 64}]}
+            ),
+            "packet above 64 bytes": record(
+                GIP, output={"startup": [{**USB_WRITE, "bytes": [0] * 65}]}
+            ),
+            "packet with a condition": record(
+                GIP,
+                output={
+                    "startup": [
+                        {**USB_WRITE, "variants": ["usb"]},
+                    ]
+                },
+            ),
+            "packet on a HID family": record(SIXAXIS, output={"startup": [USB_WRITE]}),
+            "packet on XID": record(
+                {"family": "xbox.xid"}, output={"startup": [USB_WRITE]}
+            ),
+            "packet with an initialization list": record(
+                {**GIP, "initialization": ["xbox.gip/power-on"]},
+                output={"startup": [USB_WRITE]},
+            ),
+            "packet mixed with a report": record(
+                GIP, output={"startup": [USB_WRITE, ENABLE]}
+            ),
         }
         for name, document in rejected.items():
             with self.subTest(name):
                 self.assertFalse(self.validator.is_valid(document))
 
+
+USB_WRITE = {"bytes": [5, 32, 0, 1, 0]}
 
 REPORT_LAYOUT = {"family": "hid.report-layout"}
 BUTTON = {"control": "face-south", "byte": 1, "mask": 1}
@@ -802,6 +903,7 @@ class SwiftParityTests(unittest.TestCase):
         presence = {"presenceResendReports": 4}
         disconnect = {"adapterDisconnectDelayMs": 500}
         handshake = {"usbStartupIntervalMs": 50, "usbStartupRetryDelayMs": 1000}
+        transfer = {"usbTransferTimeoutMs": 2000}
         self.check(
             {
                 "lizard resend on Triton": record(triton, tuning=lizard),
@@ -812,6 +914,7 @@ class SwiftParityTests(unittest.TestCase):
                 "disconnect delay on DualShock 4": record(DS4, tuning=disconnect),
                 "disconnect delay on DualSense": record(DUALSENSE, tuning=disconnect),
                 "handshake pacing on GIP": record(GIP, tuning=handshake),
+                "transfer timeout on GIP": record(GIP, tuning=transfer),
             },
             {
                 "lizard resend on GIP": record(GIP, tuning=lizard),
@@ -819,6 +922,11 @@ class SwiftParityTests(unittest.TestCase):
                 "presence resend on DualSense": record(DUALSENSE, tuning=presence),
                 "disconnect delay on GIP": record(GIP, tuning=disconnect),
                 "handshake pacing on XUSB": record(XUSB, tuning=handshake),
+                "transfer timeout on XUSB": record(XUSB, tuning=transfer),
+                "transfer timeout on DualSense": record(DUALSENSE, tuning=transfer),
+                "transfer timeout below range": record(
+                    GIP, tuning={"usbTransferTimeoutMs": 0}
+                ),
                 "retry delay below range": record(
                     GIP, tuning={"usbStartupRetryDelayMs": 0}
                 ),

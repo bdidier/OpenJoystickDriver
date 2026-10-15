@@ -23,6 +23,94 @@
     "tuning": {
       "keepAliveIntervalMs": 12,
       "usbCommandTimeoutMs": 1000
+    },
+    "output": {
+      "startup": [
+        {
+          "bytes": [2, 145, 0, 1, 0, 8, 0, 0, 0, 0, 0, 0, 128, 48, 1, 0],
+          "sessionByte": 2,
+          "variants": ["usb", "bluetooth-le"]
+        },
+        {
+          "bytes": [2, 145, 0, 1, 0, 8, 0, 0, 0, 0, 0, 0, 192, 48, 1, 0],
+          "sessionByte": 2,
+          "variants": ["usb", "bluetooth-le"]
+        },
+        {
+          "bytes": [2, 145, 0, 1, 0, 8, 0, 0, 0, 0, 0, 0, 64, 49, 1, 0],
+          "sessionByte": 2,
+          "variants": ["usb", "bluetooth-le"],
+          "when": {
+            "parameter": "layout",
+            "is": ["GameCube"]
+          }
+        },
+        {
+          "bytes": [2, 145, 0, 1, 0, 8, 0, 0, 0, 0, 0, 0, 64, 192, 31, 0],
+          "sessionByte": 2,
+          "variants": ["usb", "bluetooth-le"]
+        },
+        {
+          "bytes": [2, 145, 0, 1, 0, 8, 0, 0, 0, 0, 0, 0, 128, 192, 31, 0],
+          "sessionByte": 2,
+          "variants": ["usb", "bluetooth-le"]
+        },
+        {
+          "bytes": [7, 145, 0, 1, 0, 0, 0, 0],
+          "sessionByte": 2,
+          "variants": ["usb", "bluetooth-le"]
+        },
+        {
+          "bytes": [12, 145, 0, 2, 0, 4, 0, 0, 39, 0, 0, 0],
+          "sessionByte": 2,
+          "variants": ["usb", "bluetooth-le"]
+        },
+        {
+          "bytes": [17, 145, 0, 1, 0, 0, 0, 0],
+          "sessionByte": 2,
+          "variants": ["usb", "bluetooth-le"]
+        },
+        {
+          "bytes": [
+            10, 145, 0, 8, 0, 20, 0, 0, 1, 255, 255, 255, 255, 255, 255, 255,
+            255, 53, 0, 70, 0, 0, 0, 0, 0, 0, 0, 0
+          ],
+          "sessionByte": 2,
+          "variants": ["usb", "bluetooth-le"]
+        },
+        {
+          "bytes": [12, 145, 0, 4, 0, 4, 0, 0, 39, 0, 0, 0],
+          "sessionByte": 2,
+          "variants": ["usb", "bluetooth-le"]
+        },
+        {
+          "bytes": [1, 145, 0, 12, 0, 0, 0, 0],
+          "sessionByte": 2,
+          "variants": ["usb"]
+        },
+        {
+          "bytes": [1, 145, 0, 1, 0, 0, 0, 0],
+          "sessionByte": 2,
+          "variants": ["usb"]
+        },
+        {
+          "bytes": [8, 145, 0, 2, 0, 4, 0, 0, 1, 0, 0, 0],
+          "sessionByte": 2,
+          "variants": ["usb"]
+        },
+        {
+          "bytes": [3, 145, 0, 10, 0, 4, 0, 0, 5, 0, 0, 0],
+          "sessionByte": 2,
+          "variants": ["usb"]
+        },
+        {
+          "bytes": [
+            3, 145, 0, 13, 0, 8, 0, 0, 1, 0, 255, 255, 255, 255, 255, 255
+          ],
+          "sessionByte": 2,
+          "variants": ["usb"]
+        }
+      ]
     }
   }
 }

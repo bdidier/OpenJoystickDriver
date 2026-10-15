@@ -51,6 +51,7 @@ struct ControllerShowReport: Encodable, Equatable {
     let adapterDisconnectDelayMs: Int?
     let usbStartupIntervalMs: Int?
     let usbStartupRetryDelayMs: Int?
+    let usbTransferTimeoutMs: Int?
 
     /// Nil when the record sets no tuning.
     init?(_ tuning: ControllerTuning) {
@@ -68,6 +69,7 @@ struct ControllerShowReport: Encodable, Equatable {
       adapterDisconnectDelayMs = tuning.adapterDisconnectDelayMilliseconds
       usbStartupIntervalMs = tuning.usbStartupIntervalMilliseconds
       usbStartupRetryDelayMs = tuning.usbStartupRetryDelayMilliseconds
+      usbTransferTimeoutMs = tuning.usbTransferTimeoutMilliseconds
     }
 
     /// The set values as `name=value`, in record-file order.
@@ -86,6 +88,7 @@ struct ControllerShowReport: Encodable, Equatable {
         adapterDisconnectDelayMs.map { "adapterDisconnectDelayMs=\($0)" },
         usbStartupIntervalMs.map { "usbStartupIntervalMs=\($0)" },
         usbStartupRetryDelayMs.map { "usbStartupRetryDelayMs=\($0)" },
+        usbTransferTimeoutMs.map { "usbTransferTimeoutMs=\($0)" },
       ].compactMap { $0 }
     }
   }

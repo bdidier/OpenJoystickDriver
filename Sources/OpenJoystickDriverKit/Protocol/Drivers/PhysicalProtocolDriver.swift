@@ -178,10 +178,10 @@ extension PhysicalProtocolID {
   }
 
   /// The value of `key` that a driver of this family reads: from `tuning` when the registry
-  /// supplies the record's, otherwise from the description's defaults. A description that
-  /// defaults none for a key its driver reads is a defect.
+  /// supplies the record's, otherwise (or where it sets none) from the description's defaults. A
+  /// description that defaults none for a key its driver reads is a defect.
   func described(_ key: KeyPath<ControllerTuning, Int?>, in tuning: ControllerTuning?) -> Int {
-    guard let value = (tuning ?? driverTuning())[keyPath: key] else {
+    guard let value = driverTuning().overlaid(by: tuning ?? .none)[keyPath: key] else {
       preconditionFailure("\(rawValue).json defaults no \(key)")
     }
     return value

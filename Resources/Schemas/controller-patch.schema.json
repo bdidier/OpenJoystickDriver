@@ -239,6 +239,16 @@
                   "type": "null"
                 }
               ]
+            },
+            "usbTransferTimeoutMs": {
+              "anyOf": [
+                {
+                  "$ref": "controller.schema.json#/$defs/tuning/properties/usbTransferTimeoutMs"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             }
           }
         }

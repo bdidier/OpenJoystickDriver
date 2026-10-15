@@ -414,6 +414,109 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def startup_write(self) -> dict[str, Any]:
         return {"report": {"kind": "output", "id": 1, "length": 4}, "bytes": [1, 2, 3]}
 
+    def usb_write(self, **members: Any) -> dict[str, Any]:
+        return {"bytes": [5, 32, 0, 1, 0], **members}
+
+    def hid_write(self, **members: Any) -> dict[str, Any]:
+        return {**self.startup_write(), **members}
+
+    def test_accepts_startup_writes_a_family_carries(self) -> None:
+        for family, write in (
+            (
+                "xbox.gip",
+                self.usb_write(endpoint=2, timeoutMilliseconds=2000, sessionByte=2),
+            ),
+            ("xbox.xusb", self.usb_write(delayMilliseconds=0, toleratesRejection=True)),
+            ("sony.dualsense", self.hid_write(phase="startup", delayMilliseconds=5)),
+            (
+                "sony.dualsense",
+                self.hid_write(
+                    report={"kind": "output", "id": 17, "length": 78},
+                    bytes=[0] * 73,
+                    crc32Seed=162,
+                    variants=["bluetooth-classic"],
+                ),
+            ),
+        ):
+            with self.subTest(family=family, write=write):
+                self.check(
+                    self.with_body(family, defaults={"output": {"startup": [write]}})
+                )
+
+    def test_rejects_malformed_startup_writes(self) -> None:
+        for family, write in (
+            ("xbox.gip", self.usb_write(endpoint=0)),
+            ("xbox.gip", self.usb_write(endpoint=128)),
+            ("xbox.gip", self.usb_write(timeoutMilliseconds=0)),
+            ("xbox.gip", self.usb_write(timeoutMilliseconds=60001)),
+            ("xbox.gip", self.usb_write(delayMilliseconds=1001)),
+            ("xbox.gip", self.usb_write(delayMilliseconds=-1)),
+            ("xbox.gip", self.usb_write(sessionByte=64)),
+            ("xbox.gip", self.usb_write(bytes=[0] * 65)),
+            ("xbox.gip", self.usb_write(bytes=[])),
+            ("xbox.gip", self.usb_write(toleratesRejection="yes")),
+            (
+                "xbox.gip",
+                self.usb_write(report={"kind": "output", "id": 1, "length": 4}),
+            ),
+            ("sony.dualsense", self.hid_write(phase="later")),
+            ("sony.dualsense", self.hid_write(delayMilliseconds=1001)),
+            ("sony.dualsense", self.hid_write(crc32Seed=256)),
+            ("sony.dualsense", self.hid_write(crc32Seed=1)),
+            (
+                "sony.dualsense",
+                self.hid_write(report={"kind": "output", "id": 1, "length": 129}),
+            ),
+            ("sony.dualsense", self.hid_write(variants=[])),
+            ("sony.dualsense", self.hid_write(variants=["usb", "usb"])),
+            ("sony.dualsense", self.hid_write(when={"parameter": "layout"})),
+            (
+                "sony.dualsense",
+                self.hid_write(when={"parameter": "role", "is": ["A"], "isNot": ["B"]}),
+            ),
+            ("sony.dualsense", self.hid_write(when={"parameter": "role", "is": []})),
+            (
+                "sony.dualsense",
+                self.hid_write(when={"parameter": "color", "is": ["A"]}),
+            ),
+        ):
+            with self.subTest(family=family, write=write):
+                self.assert_rejected(
+                    self.with_body(family, defaults={"output": {"startup": [write]}})
+                )
+
+    def test_rejects_startup_writes_mixing_hid_and_usb_formats(self) -> None:
+        self.assert_rejected(
+            self.with_body(
+                "sony.dualsense",
+                defaults={"output": {"startup": [self.hid_write(), self.usb_write()]}},
+            )
+        )
+
+    def test_rejects_hid_startup_writes_for_a_raw_usb_family(self) -> None:
+        self.assert_rejected(
+            self.with_body(
+                "xbox.gip", defaults={"output": {"startup": [self.hid_write()]}}
+            )
+        )
+
+    def test_rejects_a_startup_write_naming_what_the_family_lacks(self) -> None:
+        role = {"role": {"type": "enum", "values": ["WirelessAdapter"]}}
+        for write, code in (
+            (self.usb_write(variants=["wired"]), "E5004"),
+            (self.usb_write(when={"parameter": "layout", "is": ["Pro"]}), "E5002"),
+            (self.usb_write(when={"parameter": "role", "is": ["Other"]}), "E5002"),
+        ):
+            with self.subTest(write=write):
+                self.assert_rejected(
+                    self.with_body(
+                        "sony.dualshock4",
+                        parameters=role,
+                        defaults={"output": {"startup": [write]}},
+                    ),
+                    code=code,
+                )
+
     def test_rejects_raw_usb_rules_that_contradict_each_other(self) -> None:
         for family, members in (
             ("xbox.gip", {"rawUSB": True, "tuningKeys": ["keepAliveIntervalMs"]}),

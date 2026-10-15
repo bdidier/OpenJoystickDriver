@@ -29,6 +29,16 @@
   "defaults": {
     "tuning": {
       "presenceResendReports": 16
+    },
+    "output": {
+      "startup": [
+        {
+          "bytes": [8, 0, 15, 192, 0, 0, 0, 0, 0, 0, 0, 0],
+          "timeoutMilliseconds": 2000,
+          "toleratesRejection": true,
+          "variants": ["receiver"]
+        }
+      ]
     }
   }
 }

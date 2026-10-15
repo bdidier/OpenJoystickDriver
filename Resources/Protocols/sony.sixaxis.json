@@ -1,37 +1,28 @@
 {
-	"apiVersion": "openjoystickdriver/v1alpha1",
-	"kind": "ProtocolDescription",
-	"family": "sony.sixaxis",
-	"endpoints": {
-		"in": 130,
-		"out": 2
-	},
-	"tuningKeys": [
-		"hidStartupIntervalMs",
-		"minimumHIDOutputIntervalMs"
-	],
-	"macOSOwnedOutput": {
-		"lightingFeatures": [
-			"playerIndicator"
-		],
-		"drivesRumble": true,
-		"reports": [
-			{
-				"kind": "output",
-				"id": 1,
-				"length": 49
-			}
-		],
-		"setsStartupPlayerIndicator": true,
-		"readsStartupFeatures": true,
-		"rationale": "macOS never writes output report 0x01 to a Sixaxis, and a USB Sixaxis ignores it until the host reads feature report 0xF2."
-	},
-	"controls": {
-		"base": "xbox",
-		"add": [
-			"guide",
-			"left-trigger-button",
-			"right-trigger-button"
-		]
-	}
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "ProtocolDescription",
+  "family": "sony.sixaxis",
+  "endpoints": {
+    "in": 130,
+    "out": 2
+  },
+  "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
+  "macOSOwnedOutput": {
+    "lightingFeatures": ["playerIndicator"],
+    "drivesRumble": true,
+    "reports": [
+      {
+        "kind": "output",
+        "id": 1,
+        "length": 49
+      }
+    ],
+    "setsStartupPlayerIndicator": true,
+    "readsStartupFeatures": true,
+    "rationale": "macOS never writes output report 0x01 to a Sixaxis, and a USB Sixaxis ignores it until the host reads feature report 0xF2."
+  },
+  "controls": {
+    "base": "xbox",
+    "add": ["guide", "left-trigger-button", "right-trigger-button"]
+  }
 }

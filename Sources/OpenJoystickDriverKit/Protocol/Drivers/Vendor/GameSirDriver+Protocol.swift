@@ -58,13 +58,6 @@ extension GameSirDriver {
     storedPower = nil
   }
 
-  public func startupWrites() -> [PhysicalOutputWrite] {
-    guard gameSirProtocol == .enhancedHID else { return [] }
-    var reports = [Self.hidReport(gameSirEnhancedHIDHeartbeatPayload)]
-    if usesLightingSlots { reports.append(Self.hidReport([0x0F, 0x04, 0x20, 0x00, 0x00, 0x01])) }
-    return reports.map { .hidOutput($0) }
-  }
-
   public func keepAliveWrites() -> [PhysicalOutputWrite] {
     guard gameSirProtocol == .g7ProUSB else {
       return [.hidOutput(Self.hidReport(gameSirEnhancedHIDHeartbeatPayload))]

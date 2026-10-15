@@ -11,7 +11,6 @@ private let gipRumbleAllMotors: UInt8 = 0x0F
 private let gipRumbleSubCommandLength: UInt8 = 0x09
 private let gipRumbleDefaultDuration: UInt8 = 0xFF
 private let gipStatusSubCommandLength: UInt8 = 3
-private let gipRumbleTransferTimeoutMs: UInt32 = 2000
 
 private struct GIPFrame {
   let command: UInt8
@@ -41,7 +40,8 @@ public enum GIPError: Error, Sendable {
 public final class GIPDriver: PhysicalProtocolDriver {
 
   private let outEndpoint: UInt8
-  private let startupPackets: [GIPStartupPacket]
+  private let startup: [USBStartupWrite]
+  private let usbTimeoutMilliseconds: Int
   public let keepAlivePolicy: GIPKeepAlivePolicy
   /// Where the Share button sits, counted back from the packet end; nil keeps the default byte.
   let shareButtonFromEnd: Int?
@@ -65,14 +65,24 @@ public final class GIPDriver: PhysicalProtocolDriver {
   /// Creates a new GIPDriver with the given endpoint configuration.
   public init(
     transportProfile: DeviceTransportProfile = .gipDefault,
-    startupPackets: [GIPStartupPacket] = GIPStartupPacket.defaultSequence,
+    startupPackets: [GIPStartupPacket] = [],
+    usbStartupWrites: [USBStartupWrite] = [],
     keepAlivePolicy: GIPKeepAlivePolicy = .enabled,
     shareButtonFromEnd: Int? = nil,
     allowsPhysicalOutput: Bool = true,
     tuning: ControllerTuning? = nil
   ) {
     self.outEndpoint = transportProfile.outputEndpoint
-    self.startupPackets = startupPackets
+    let named = startupPackets.compactMap(\.startupWrite)
+    startup = PhysicalProtocolID.xboxGIP.usbStartupWrites(
+      recordWrites: usbStartupWrites.isEmpty ? named : usbStartupWrites,
+      variant: .usb,
+      parameters: .none
+    )
+    usbTimeoutMilliseconds = PhysicalProtocolID.xboxGIP.described(
+      \.usbTransferTimeoutMilliseconds,
+      in: tuning
+    )
     self.keepAlivePolicy = keepAlivePolicy
     self.shareButtonFromEnd = shareButtonFromEnd
     self.allowsPhysicalOutput = allowsPhysicalOutput
@@ -94,12 +104,18 @@ public final class GIPDriver: PhysicalProtocolDriver {
     ).withDefaults(of: .xboxGIP)
   }
 
-  /// Sends the GIP init sequence to the controller.
+  /// Sends the GIP init sequence of the record or the description, each packet stamped with the
+  /// next sequence number for its command.
   public func startupWrites() -> [PhysicalOutputWrite] {
-    startupPackets.map { packet in
-      var bytes = packet.packet(sequence: 0)
-      bytes[2] = sequencer.next(for: bytes[0], options: bytes[1])
-      return usbWrite(bytes)
+    let session: ([UInt8]) -> UInt8 = { [self] bytes in
+      sequencer.next(for: bytes[0], options: bytes[1])
+    }
+    return startup.map { write in
+      write.write(
+        defaultEndpoint: outEndpoint,
+        defaultTimeoutMilliseconds: usbTimeoutMilliseconds,
+        session: session
+      )
     }
   }
 
@@ -119,7 +135,7 @@ public final class GIPDriver: PhysicalProtocolDriver {
       PhysicalUSBOutputPacket(
         endpoint: outEndpoint,
         bytes: bytes,
-        timeoutMilliseconds: gipRumbleTransferTimeoutMs
+        timeoutMilliseconds: UInt32(usbTimeoutMilliseconds)
       )
     )
   }
@@ -275,7 +291,7 @@ public final class GIPDriver: PhysicalProtocolDriver {
     let write = PhysicalUSBOutputPacket(
       endpoint: outEndpoint,
       bytes: packet,
-      timeoutMilliseconds: gipRumbleTransferTimeoutMs
+      timeoutMilliseconds: UInt32(usbTimeoutMilliseconds)
     )
     return PhysicalOutputPlan(writes: [.usb(write)])
   }

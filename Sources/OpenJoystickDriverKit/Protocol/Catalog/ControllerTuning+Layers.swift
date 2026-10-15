@@ -17,6 +17,7 @@ extension ControllerTuning {
     case adapterDisconnectDelayMs
     case usbStartupIntervalMs
     case usbStartupRetryDelayMs
+    case usbTransferTimeoutMs
   }
 
   /// The keys this tuning sets.
@@ -38,6 +39,7 @@ extension ControllerTuning {
     case .adapterDisconnectDelayMs: adapterDisconnectDelayMilliseconds.map(String.init)
     case .usbStartupIntervalMs: usbStartupIntervalMilliseconds.map(String.init)
     case .usbStartupRetryDelayMs: usbStartupRetryDelayMilliseconds.map(String.init)
+    case .usbTransferTimeoutMs: usbTransferTimeoutMilliseconds.map(String.init)
     }
   }
 
@@ -65,7 +67,9 @@ extension ControllerTuning {
       usbStartupIntervalMilliseconds: higher.usbStartupIntervalMilliseconds
         ?? usbStartupIntervalMilliseconds,
       usbStartupRetryDelayMilliseconds: higher.usbStartupRetryDelayMilliseconds
-        ?? usbStartupRetryDelayMilliseconds
+        ?? usbStartupRetryDelayMilliseconds,
+      usbTransferTimeoutMilliseconds: higher.usbTransferTimeoutMilliseconds
+        ?? usbTransferTimeoutMilliseconds
     )
   }
 
@@ -94,7 +98,9 @@ extension ControllerTuning {
       usbStartupIntervalMilliseconds: keys.contains(.usbStartupIntervalMs)
         ? usbStartupIntervalMilliseconds : nil,
       usbStartupRetryDelayMilliseconds: keys.contains(.usbStartupRetryDelayMs)
-        ? usbStartupRetryDelayMilliseconds : nil
+        ? usbStartupRetryDelayMilliseconds : nil,
+      usbTransferTimeoutMilliseconds: keys.contains(.usbTransferTimeoutMs)
+        ? usbTransferTimeoutMilliseconds : nil
     )
   }
 }

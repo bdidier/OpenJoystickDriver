@@ -159,6 +159,8 @@ public struct ControllerTuning: Codable, Equatable, Sendable {
   public let usbStartupIntervalMilliseconds: Int?
   /// Wait before the first raw-USB startup retry; each later retry waits twice as long.
   public let usbStartupRetryDelayMilliseconds: Int?
+  /// Timeout of one USB transfer to a GIP controller, for rumble and startup writes.
+  public let usbTransferTimeoutMilliseconds: Int?
 
   public static let none = Self()
 
@@ -175,7 +177,8 @@ public struct ControllerTuning: Codable, Equatable, Sendable {
     presenceResendReports: Int? = nil,
     adapterDisconnectDelayMilliseconds: Int? = nil,
     usbStartupIntervalMilliseconds: Int? = nil,
-    usbStartupRetryDelayMilliseconds: Int? = nil
+    usbStartupRetryDelayMilliseconds: Int? = nil,
+    usbTransferTimeoutMilliseconds: Int? = nil
   ) {
     self.stickDeadzone = stickDeadzone
     self.inputLivenessTimeoutMilliseconds = inputLivenessTimeoutMilliseconds
@@ -190,6 +193,7 @@ public struct ControllerTuning: Codable, Equatable, Sendable {
     self.adapterDisconnectDelayMilliseconds = adapterDisconnectDelayMilliseconds
     self.usbStartupIntervalMilliseconds = usbStartupIntervalMilliseconds
     self.usbStartupRetryDelayMilliseconds = usbStartupRetryDelayMilliseconds
+    self.usbTransferTimeoutMilliseconds = usbTransferTimeoutMilliseconds
   }
 }
 
@@ -205,6 +209,7 @@ public struct DeviceRuntimeProfile: Equatable, Sendable {
   public internal(set) var parameters: ProtocolParameters
   public let capabilityDelta: ControllerCapabilityDelta
   public let preferredBackends: [VirtualControllerBackendID]
+  /// The record's named GIP startup packets; empty runs the family description's.
   public internal(set) var gipStartupPackets: [GIPStartupPacket]
   public internal(set) var gipKeepAlivePolicy: GIPKeepAlivePolicy
   /// The assembly policy the row names; nil runs each protocol role as its own controller.
@@ -214,6 +219,8 @@ public struct DeviceRuntimeProfile: Equatable, Sendable {
   public let rumbleTemplate: RumbleOutputTemplate?
   /// The record's fixed startup reports, in order; OJD sends them only to a controller it owns.
   public let startupWrites: [RecordStartupWrite]
+  /// The record's raw-USB startup packets; empty runs the family description's.
+  public let usbStartupWrites: [USBStartupWrite]
   /// The record's input-report layout; set exactly for the `hid.report-layout` family.
   public let inputLayout: ControllerInputLayout?
   /// The record's HID usage map; set only for a `hid.descriptor` record that declares one.

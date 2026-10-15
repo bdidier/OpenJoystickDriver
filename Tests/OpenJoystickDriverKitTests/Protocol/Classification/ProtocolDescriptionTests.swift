@@ -110,7 +110,7 @@ struct ProtocolDescriptionTests {
       ControllerTuning.scope(protocolID: .xboxGIP, variant: nil)
         == [
           .stickDeadzone, .keepAliveIntervalMs, .presenceResendReports, .usbStartupIntervalMs,
-          .usbStartupRetryDelayMs,
+          .usbStartupRetryDelayMs, .usbTransferTimeoutMs,
         ]
     )
     #expect(ControllerTuning.scope(protocolID: nil, variant: nil) == [.stickDeadzone])
@@ -284,6 +284,88 @@ struct ProtocolDescriptionTests {
     for (family, body) in cases {
       #expect(rejection(family: family, body)?.code == .invalidProtocolDescription, "\(body)")
     }
+  }
+
+  private static let hidReport = #""report": {"kind": "output", "id": 1, "length": 4}"#
+
+  private func startup(_ write: String) -> String {
+    #""defaults": {"output": {"startup": ["# + write + "]}}"
+  }
+
+  private func hidWrite(_ field: String) -> String {
+    "{\(Self.hidReport), \"bytes\": [1, 2, 3]" + (field.isEmpty ? "}" : ", \(field)}")
+  }
+
+  @Test
+  func decodesStartupWritesOfBothFormats() throws {
+    let hid = try decode(
+      family: .sonyDualSense,
+      startup(
+        hidWrite(
+          #""phase": "startup", "delayMilliseconds": 5, "variants": ["usb"]"#
+        )
+      )
+    )
+    #expect(hid.startupWrites(phase: .startup, variant: .usb, parameters: .none).count == 1)
+    #expect(
+      hid.startupWrites(phase: .startup, variant: .bluetoothClassic, parameters: .none).isEmpty
+    )
+    #expect(hid.startupWrites(phase: .activation, variant: .usb, parameters: .none).isEmpty)
+    let usb = try decode(
+      family: .xboxGIP,
+      #""rawUSB": true, "#
+        + startup(
+          #"{"bytes": [1, 2], "endpoint": 2, "timeoutMilliseconds": 500, "#
+            + #""delayMilliseconds": 5, "sessionByte": 1, "toleratesRejection": true}"#
+        )
+    )
+    #expect(usb.usbStartupWrites(variant: nil, parameters: .none).count == 1)
+  }
+
+  @Test(
+    arguments: [
+      #""phase": "later""#, #""delayMilliseconds": 1001"#, #""crc32Seed": 256"#,
+      #""crc32Seed": 1"#, #""variants": []"#, #""variants": ["usb", "usb"]"#,
+      #""when": {"parameter": "layout", "is": []}"#, #""when": {"parameter": "layout"}"#,
+    ]
+  )
+  func rejectsAMalformedHIDStartupWrite(field: String) {
+    let problem = rejection(family: .sonyDualSense, startup(hidWrite(field)))
+    #expect(problem?.code == .invalidProtocolDescription, "\(field)")
+  }
+
+  @Test(
+    arguments: [
+      #""endpoint": 0"#, #""endpoint": 128"#, #""timeoutMilliseconds": 0"#,
+      #""timeoutMilliseconds": 60001"#, #""delayMilliseconds": 1001"#,
+      #""delayMilliseconds": -1"#, #""sessionByte": 64"#, #""toleratesRejection": 1"#,
+    ]
+  )
+  func rejectsAMalformedUSBStartupWrite(field: String) {
+    let body = #""rawUSB": true, "# + startup(#"{"bytes": [1], "# + field + "}")
+    #expect(rejection(family: .xboxGIP, body)?.code == .invalidProtocolDescription, "\(field)")
+  }
+
+  @Test
+  func rejectsStartupWritesMixingBothFormats() {
+    let body = startup(hidWrite("") + #", {"bytes": [1]}"#)
+    #expect(rejection(family: .sonyDualSense, body)?.code == .invalidProtocolDescription)
+  }
+
+  @Test
+  func rejectsAStartupWriteNamingWhatTheFamilyLacks() {
+    let variant = rejection(family: .sonyDualSense, startup(hidWrite(#""variants": ["wired"]"#)))
+    #expect(variant?.code == .unknownProtocolVariant)
+    let layout = #""when": {"parameter": "layout", "is": ["Pro"]}"#
+    #expect(
+      rejection(family: .sonyDualSense, startup(hidWrite(layout)))?.code
+        == .invalidProtocolDescription
+    )
+    let value = #""when": {"parameter": "layout", "is": ["Triangle"]}"#
+    #expect(
+      rejection(family: .nintendoSwitch1, startup(hidWrite(value)))?.code
+        == .invalidProtocolDescription
+    )
   }
 
   @Test

@@ -44,7 +44,7 @@ extension ControllerRecordDocument {
         physicalProtocolID: protocolInfo.protocolID,
         physicalProtocolVariant: protocolInfo.protocolVariant,
         parameters: protocolInfo.parameters,
-        gipStartupPackets: protocolInfo.initialization ?? GIPStartupPacket.defaultSequence,
+        gipStartupPackets: protocolInfo.initialization ?? [],
         gipKeepAlivePolicy: protocolInfo.keepAliveEnabled.map { $0 ? .enabled : .disabled }
           ?? .enabled,
         assemblyPolicy: protocolInfo.assembly,

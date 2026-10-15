@@ -106,4 +106,43 @@ def semantic_violations(
             found.append(
                 ("E5002", f"{where}: {', '.join(unread)} not read by the driver")
             )
+    found += startup_violations(description, variants)
+    return found
+
+
+def startup_violations(
+    description: dict[str, Any], variants: list[str]
+) -> list[tuple[str, str]]:
+    """The `variants` and `when` of each startup write must name things the family declares."""
+    found: list[tuple[str, str]] = []
+    parameters = description.get("parameters", {})
+    for index, write in enumerate(
+        description.get("defaults", {}).get("output", {}).get("startup", [])
+    ):
+        where = f"defaults.output.startup[{index}]"
+        found += [
+            ("E5004", f"{where}.variants names {name}, which the family does not have")
+            for name in write.get("variants", ())
+            if name not in variants
+        ]
+        when = write.get("when")
+        if when is None:
+            continue
+        declared = parameters.get(when["parameter"], {})
+        if declared.get("type") != "enum":
+            found.append(
+                (
+                    "E5002",
+                    f"{where}.when: {when['parameter']} is not a declared enumeration",
+                )
+            )
+            continue
+        for name in (*when.get("is", ()), *when.get("isNot", ())):
+            if name not in declared.get("values", ()):
+                found.append(
+                    (
+                        "E5002",
+                        f"{where}.when: {name} is not a value of {when['parameter']}",
+                    )
+                )
     return found

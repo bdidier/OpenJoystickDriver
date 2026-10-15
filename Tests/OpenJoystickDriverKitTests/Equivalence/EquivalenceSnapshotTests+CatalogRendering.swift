@@ -113,7 +113,15 @@ extension EquivalenceSnapshotCatalogTests {
         + " recoveryRounds=\(plan.hidStartupRecoveryRounds)"
         + " livenessMs=\(milliseconds(plan.inputReportLivenessTimeoutNanoseconds))",
     ]
-    lines += writes("startup", driver.startupWrites())
+    // The pipeline sends the description's HID startup writes before the driver's own.
+    let declared =
+      profile.startupWrites.isEmpty
+      ? profile.physicalProtocolID.protocolDescription.startupWrites(
+        phase: .startup,
+        variant: variant,
+        parameters: profile.parameters
+      ).map(\.write) : []
+    lines += writes("startup", declared + driver.startupWrites())
     lines += writes("activation", driver.activationWrites())
     lines += writes("keepAlive", driver.keepAliveWrites())
     return lines
@@ -137,7 +145,15 @@ extension EquivalenceSnapshotCatalogTests {
     ]
     lines += driverLines(record)
     if profile.physicalProtocolID == .xboxGIP {
-      let packets = profile.gipStartupPackets.map { hex($0.packet(sequence: 0)) }
+      // A record that names no packets runs the description's, whose session byte is zero here.
+      let packets =
+        profile.gipStartupPackets.isEmpty
+        ? profile.physicalProtocolID.usbStartupWrites(
+          recordWrites: profile.usbStartupWrites,
+          variant: profile.physicalProtocolVariant,
+          parameters: profile.parameters
+        ).map { hex($0.bytes) }
+        : profile.gipStartupPackets.map { hex($0.packet(sequence: 0)) }
       lines.append(
         "gip keepAlive=\(label(profile.gipKeepAlivePolicy))"
           + " startup=[\(packets.joined(separator: ","))]"
@@ -146,7 +162,7 @@ extension EquivalenceSnapshotCatalogTests {
     for (index, write) in profile.startupWrites.enumerated() {
       lines.append(
         "recordStartup[\(index)] \(label(write.report.kind)) id=\(write.report.reportID)"
-          + " length=\(write.report.length) delayMs=\(write.delayMilliseconds)"
+          + " length=\(write.report.length) delayMs=\(write.delayMilliseconds ?? 0)"
           + " transport=\(label(write.transport)) \(hex(write.bytes))"
       )
     }

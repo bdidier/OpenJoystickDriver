@@ -200,13 +200,20 @@ public final class ProtocolDriverRegistry: Sendable {
     case .xboxXID: return .success(XIDDriver(outEndpoint: transportProfile.outputEndpoint))
     case .xboxXUSB:
       guard variant == .receiver else {
-        return .success(XUSBDriver(outEndpoint: transportProfile.outputEndpoint, tuning: tuning))
+        return .success(
+          XUSBDriver(
+            outEndpoint: transportProfile.outputEndpoint,
+            tuning: tuning,
+            usbStartupWrites: record.usbStartupWrites
+          )
+        )
       }
       guard
         let receiverSlot = XUSBDriver(
           outEndpoint: transportProfile.outputEndpoint,
           slotOrdinal: slotOrdinal,
-          tuning: tuning
+          tuning: tuning,
+          usbStartupWrites: record.usbStartupWrites
         )
       else { return .failure(.interfaceContractMismatch) }
       return .success(receiverSlot)
@@ -215,6 +222,7 @@ public final class ProtocolDriverRegistry: Sendable {
         GIPDriver(
           transportProfile: transportProfile,
           startupPackets: record.gipStartupPackets,
+          usbStartupWrites: record.usbStartupWrites,
           keepAlivePolicy: record.gipKeepAlivePolicy,
           shareButtonFromEnd: record.parameters.shareButton?.fromEnd,
           allowsPhysicalOutput: !record.capabilityDelta.rumbleAbsent,
@@ -251,7 +259,12 @@ public final class ProtocolDriverRegistry: Sendable {
         case .pro, nil: .pro
         }
       return .success(
-        Switch2Driver(layout: layout, link: variant == .usb ? .usb : .bluetoothLE, tuning: tuning)
+        Switch2Driver(
+          layout: layout,
+          link: variant == .usb ? .usb : .bluetoothLE,
+          tuning: tuning,
+          usbStartupWrites: record.usbStartupWrites
+        )
       )
     case .nintendoSwitchInputOnly: return .success(SwitchInputOnlyDriver())
     case .nintendoSwitch1:

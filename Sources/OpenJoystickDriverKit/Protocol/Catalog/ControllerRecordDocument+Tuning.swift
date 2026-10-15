@@ -17,6 +17,7 @@ extension ControllerRecordDocument {
         "adapterDisconnectDelayMs",
         "usbStartupIntervalMs",
         "usbStartupRetryDelayMs",
+        "usbTransferTimeoutMs",
       ])
       guard !container.allKeys.isEmpty else {
         throw DecodingError.dataCorrupted(
@@ -60,7 +61,8 @@ extension ControllerRecordDocument {
         presenceResendReports: try integer("presenceResendReports", 1...1_000),
         adapterDisconnectDelayMilliseconds: try integer("adapterDisconnectDelayMs", 1...60_000),
         usbStartupIntervalMilliseconds: try integer("usbStartupIntervalMs", 0...60_000),
-        usbStartupRetryDelayMilliseconds: try integer("usbStartupRetryDelayMs", 1...60_000)
+        usbStartupRetryDelayMilliseconds: try integer("usbStartupRetryDelayMs", 1...60_000),
+        usbTransferTimeoutMilliseconds: try integer("usbTransferTimeoutMs", 1...60_000)
       )
     }
   }

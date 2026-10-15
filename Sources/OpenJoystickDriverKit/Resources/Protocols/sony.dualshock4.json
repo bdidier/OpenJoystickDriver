@@ -46,6 +46,26 @@
     "tuning": {
       "inputLivenessTimeoutMs": 1000,
       "adapterDisconnectDelayMs": 500
+    },
+    "output": {
+      "startup": [
+        {
+          "report": {
+            "kind": "output",
+            "id": 17,
+            "length": 78
+          },
+          "bytes": [
+            196, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0
+          ],
+          "phase": "startup",
+          "variants": ["bluetooth-classic"],
+          "crc32Seed": 162
+        }
+      ]
     }
   }
 }

@@ -33,11 +33,6 @@ extension DualShock4Driver {
     return [PhysicalHIDFeatureReadRequest(reportID: 2, length: 37)]
   }
 
-  public func startupWrites() -> [PhysicalOutputWrite] {
-    guard usesBluetoothStartup else { return [] }
-    return [.hidOutput(makeOutputReport(validFlags: ds4OutputValidFlagMotor))]
-  }
-
   public func consumeFeatureReply(_ data: Data, request: PhysicalHIDFeatureReadRequest) -> Bool {
     let bluetooth = usesBluetoothStartup
     guard request.length == data.count, data.first == request.reportID else { return false }

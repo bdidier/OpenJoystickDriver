@@ -40,6 +40,66 @@
           "hidStartupIntervalMs": 20
         }
       }
+    },
+    "output": {
+      "startup": [
+        {
+          "report": {
+            "kind": "output",
+            "id": 128,
+            "length": 2
+          },
+          "bytes": [2],
+          "phase": "startup",
+          "variants": ["usb"],
+          "when": {
+            "parameter": "layout",
+            "isNot": ["JoyConLeft", "JoyConRight"]
+          }
+        },
+        {
+          "report": {
+            "kind": "output",
+            "id": 128,
+            "length": 2
+          },
+          "bytes": [3],
+          "phase": "startup",
+          "variants": ["usb"],
+          "when": {
+            "parameter": "layout",
+            "isNot": ["JoyConLeft", "JoyConRight"]
+          }
+        },
+        {
+          "report": {
+            "kind": "output",
+            "id": 128,
+            "length": 2
+          },
+          "bytes": [2],
+          "phase": "startup",
+          "variants": ["usb"],
+          "when": {
+            "parameter": "layout",
+            "isNot": ["JoyConLeft", "JoyConRight"]
+          }
+        },
+        {
+          "report": {
+            "kind": "output",
+            "id": 128,
+            "length": 2
+          },
+          "bytes": [4],
+          "phase": "startup",
+          "variants": ["usb"],
+          "when": {
+            "parameter": "layout",
+            "isNot": ["JoyConLeft", "JoyConRight"]
+          }
+        }
+      ]
     }
   }
 }

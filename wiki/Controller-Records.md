@@ -136,12 +136,18 @@ A HID controller that needs a fixed report before it sends input can name it in 
 }
 ```
 
-- `report` names the HID report as in `output.rumble`. `length` is 2 to 64 bytes.
+- `report` names the HID report as in `output.rumble`. `length` is 2 to 128 bytes.
 - `bytes` lists every byte after the report ID, or every byte of the report when `id` is 0, from 0 to 255.
-- `delayMilliseconds` waits before this write, from 0, the default, to 1000.
+- `delayMilliseconds` waits before this write, from 0 to 1000. Without it, a `startup`-phase write waits the family's startup interval and an `activation`-phase write does not wait.
+- `phase` is `activation`, the default, or `startup`. An `activation` write is sent after the protocol driver's own startup, when the controller opens; a `startup` write is sent with the driver's startup writes.
+- `crc32Seed` (0 to 255) makes OpenJoystickDriver write the Sony Bluetooth CRC-32 of the report, with this seed, in its last 4 bytes. `length` then counts those 4 bytes and must exceed 4. The DualShock 4 Bluetooth report uses it.
 - `transport` limits the write to `usb`, `bluetooth-classic`, or `bluetooth-le`. Without it, OpenJoystickDriver sends the write on every transport.
 
-List 1 to 16 writes. OpenJoystickDriver sends them in order after the protocol driver's own startup, only when it opens the controller. A failed write is logged and the next one is still sent. Raw-USB families do not take `output.startup`.
+List 1 to 16 writes. OpenJoystickDriver sends them in order after the protocol driver's own startup, only when it opens the controller. A failed write is logged and the next one is still sent. A family's description may also carry startup writes, which a record's writes of the same format replace. In a description a HID write may add `variants` (the family variants it applies to) and `when` (`{"parameter": "layout", "is": ["Pro"]}` or `isNot`, naming a declared enumeration parameter). A record may not use `variants` or `when`.
+
+### Raw-USB Startup Writes
+
+A raw-USB family that carries startup packets in its description (`xbox.xusb`, `xbox.gip`, `nintendo.switch2`) takes them in `output.startup` too, in place of the description's. A raw-USB write has no `report`: `bytes` (1 to 64), `endpoint` (1 to 127, default the family's output endpoint), `timeoutMilliseconds` (1 to 60000, default the family's timeout), `delayMilliseconds` (0 to 1000), `sessionByte` (the index of a byte the driver fills with its per-session value, such as the GIP sequence), and `toleratesRejection`. One list holds one format only, and a record that names `protocol.initialization` takes no raw-USB writes.
 
 ## Tune Timings and the Stick Deadzone
 
@@ -169,6 +175,7 @@ A record's `tuning` field changes a value that the protocol driver otherwise set
 | `adapterDisconnectDelayMs` | 1 to 60000 | `sony.dualshock4`, `sony.dualsense` | How long an adapter or dongle can stay silent before its controller counts as disconnected. The default is 500. |
 | `usbStartupIntervalMs` | 0 to 60000 | `xbox.gip` | The gap between the raw-USB startup writes. The default is 50. |
 | `usbStartupRetryDelayMs` | 1 to 60000 | `xbox.gip` | The wait before the first startup retry; each later retry waits twice as long. The default is 1000. |
+| `usbTransferTimeoutMs` | 1 to 60000 | `xbox.gip` | The timeout of each raw-USB transfer, startup packets and rumble. The default is 2000. |
 
 Raw-USB families, such as `xbox.gip`, do not take the two HID timings. The two recovery values apply only to `nintendo.switch1`, because the `nintendo.switch2` and `nintendo.switch-input-only` drivers have no startup recovery. `ojd record validate` rejects a value outside its range or its families.
 

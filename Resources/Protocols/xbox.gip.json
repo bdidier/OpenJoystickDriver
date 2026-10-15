@@ -36,7 +36,8 @@
     "keepAliveIntervalMs",
     "presenceResendReports",
     "usbStartupIntervalMs",
-    "usbStartupRetryDelayMs"
+    "usbStartupRetryDelayMs",
+    "usbTransferTimeoutMs"
   ],
   "recordCapabilities": {
     "rumbleAbsent": true
@@ -46,7 +47,24 @@
       "keepAliveIntervalMs": 4000,
       "presenceResendReports": 4,
       "usbStartupIntervalMs": 50,
-      "usbStartupRetryDelayMs": 1000
+      "usbStartupRetryDelayMs": 1000,
+      "usbTransferTimeoutMs": 2000
+    },
+    "output": {
+      "startup": [
+        {
+          "bytes": [5, 32, 0, 1, 0],
+          "sessionByte": 2
+        },
+        {
+          "bytes": [10, 32, 0, 3, 0, 1, 20],
+          "sessionByte": 2
+        },
+        {
+          "bytes": [6, 32, 0, 2, 1, 0],
+          "sessionByte": 2
+        }
+      ]
     }
   }
 }

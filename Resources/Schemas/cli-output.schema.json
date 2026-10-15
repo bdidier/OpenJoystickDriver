@@ -387,7 +387,8 @@
                       "presenceResendReports",
                       "adapterDisconnectDelayMs",
                       "usbStartupIntervalMs",
-                      "usbStartupRetryDelayMs"
+                      "usbStartupRetryDelayMs",
+                      "usbTransferTimeoutMs"
                     ]
                   },
                   {

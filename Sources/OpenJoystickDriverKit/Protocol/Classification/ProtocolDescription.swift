@@ -81,8 +81,12 @@ struct ProtocolDescription: Sendable {
   /// The capability deltas a record of this family may declare.
   let recordCapabilities: RecordCapabilityRules
   let rumbleTemplate: RumbleOutputTemplate?
-  /// The family's initialization sequence: writes sent when a HID controller starts.
+  /// The family's HID initialization writes, sent when a controller starts unless its record
+  /// carries its own.
   let startupWrites: [RecordStartupWrite]
+  /// The family's raw-USB initialization packets, sent when a controller starts unless its record
+  /// carries its own.
+  let usbStartupWrites: [USBStartupWrite]
   let inputLayout: ControllerInputLayout?
   /// The map every `hid.descriptor` record layers over (``HIDUsageMap``).
   let hidUsageMap: HIDUsageMap?
@@ -150,7 +154,9 @@ struct ProtocolDescription: Sendable {
   ) throws(ProtocolDescriptionProblem) -> Self {
     let document: Document
     do {
-      document = try JSONDecoder().decode(Document.self, from: data)
+      let decoder = JSONDecoder()
+      decoder.userInfo[.startupConditionsAllowed] = true
+      document = try decoder.decode(Document.self, from: data)
     } catch {
       throw ProtocolDescriptionProblem(.invalidProtocolDescription, "\(fileName): \(error)")
     }
@@ -237,16 +243,74 @@ struct ProtocolDescription: Sendable {
       recordCapabilities: document.recordCapabilities,
       rumbleTemplate: document.defaults?.output?.rumble,
       startupWrites: document.defaults?.output?.startup ?? [],
+      usbStartupWrites: document.defaults?.output?.usbStartup ?? [],
       inputLayout: document.defaults?.input?.layout,
       hidUsageMap: document.defaults?.input?.usageMap,
       hidUsageShapes: document.defaults?.input?.shapes ?? [],
       tuning: document.defaults?.tuning,
       variantTuning: variantTuning
     )
+    for condition in description.startupWrites.map(\.condition)
+      + description.usbStartupWrites.map(\.condition)
+    {
+      if let problem = description.conditionProblem(condition, fileName: fileName) {
+        throw problem
+      }
+    }
     if let violation = description.scopeViolation {
       throw ProtocolDescriptionProblem(.invalidProtocolDescription, "\(fileName): \(violation)")
     }
     return description
+  }
+
+  /// Why a startup write's condition names a variant the family lacks (E5004) or a parameter or
+  /// value the description does not declare (E5002), or nil.
+  private func conditionProblem(
+    _ condition: StartupWriteCondition,
+    fileName: String
+  ) -> ProtocolDescriptionProblem? {
+    for variant in condition.variants ?? [] where !family.variants.contains(variant) {
+      return ProtocolDescriptionProblem(
+        .unknownProtocolVariant,
+        "\(fileName): \(family.rawValue) has no variant \(variant.rawValue)"
+      )
+    }
+    guard let rule = condition.rule else { return nil }
+    guard case .enumeration(let declared)? = parameters[rule.parameter] else {
+      return ProtocolDescriptionProblem(
+        .invalidProtocolDescription,
+        "\(fileName): when names \(rule.parameter), which is not an enumeration parameter of "
+          + family.rawValue
+      )
+    }
+    for value in rule.values where !declared.contains(value) {
+      return ProtocolDescriptionProblem(
+        .invalidProtocolDescription,
+        "\(fileName): when names \(value), which \(rule.parameter) does not declare"
+      )
+    }
+    return nil
+  }
+
+  /// The HID startup writes of `phase` that a controller on `variant` whose record sets
+  /// `parameters` receives from this description.
+  func startupWrites(
+    phase: StartupPhase,
+    variant: PhysicalProtocolVariantID?,
+    parameters: ProtocolParameters
+  ) -> [RecordStartupWrite] {
+    startupWrites.filter {
+      $0.phase == phase && $0.condition.matches(variant: variant, parameters: parameters)
+    }
+  }
+
+  /// The raw-USB startup packets that a controller on `variant` whose record sets `parameters`
+  /// receives from this description.
+  func usbStartupWrites(
+    variant: PhysicalProtocolVariantID?,
+    parameters: ProtocolParameters
+  ) -> [USBStartupWrite] {
+    usbStartupWrites.filter { $0.condition.matches(variant: variant, parameters: parameters) }
   }
 
   /// Why the defaults name something the family's driver does not read, or nil. The rule reads
@@ -262,7 +326,7 @@ struct ProtocolDescription: Sendable {
       return "rumble templates require a driver that encodes them"
     }
     if !startupWrites.isEmpty, rawUSB == .always {
-      return "startup writes apply only to HID controllers"
+      return "HID startup writes apply only to HID controllers"
     }
     if rawUSB == .always, !tuningKeys.isEmpty {
       return "a family that is always raw USB reads its tuning through rawUSBTuningKeys"

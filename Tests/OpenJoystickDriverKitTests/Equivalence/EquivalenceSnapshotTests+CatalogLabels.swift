@@ -90,6 +90,7 @@ extension EquivalenceSnapshotCatalogTests {
     case .adapterDisconnectDelayMs: "adapterDisconnectDelayMs"
     case .usbStartupIntervalMs: "usbStartupIntervalMs"
     case .usbStartupRetryDelayMs: "usbStartupRetryDelayMs"
+    case .usbTransferTimeoutMs: "usbTransferTimeoutMs"
     }
   }
 

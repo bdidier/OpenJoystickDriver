@@ -397,6 +397,22 @@ struct ControllerRecordDocumentTests {
       ("hid.descriptor", ["inputLivenessTimeoutMs": 1_000]),
       ("sony.dualsense", ["hidStartupRecoveryRounds": 2]),
       ("xbox.gip", ["hidStartupIntervalMs": 20]),
+      ("valve.steam-triton", ["lizardResendTicks": 0]),
+      ("valve.steam-triton", ["lizardResendTicks": 100_001]),
+      ("nintendo.switch2", ["usbCommandTimeoutMs": 0]),
+      ("nintendo.switch2", ["usbCommandTimeoutMs": 60_001]),
+      ("xbox.gip", ["presenceResendReports": 0]),
+      ("xbox.gip", ["presenceResendReports": 1_001]),
+      ("xbox.xusb", ["presenceResendReports": 0]),
+      ("xbox.xusb", ["presenceResendReports": 1_001]),
+      ("sony.dualshock4", ["adapterDisconnectDelayMs": 0]),
+      ("sony.dualshock4", ["adapterDisconnectDelayMs": 60_001]),
+      ("xbox.gip", ["usbStartupIntervalMs": -1]),
+      ("xbox.gip", ["usbStartupIntervalMs": 60_001]),
+      ("xbox.gip", ["usbStartupRetryDelayMs": 0]),
+      ("xbox.gip", ["usbStartupRetryDelayMs": 60_001]),
+      ("xbox.gip", ["usbTransferTimeoutMs": 0]),
+      ("xbox.gip", ["usbTransferTimeoutMs": 60_001]),
     ] as [(String, [String: any Sendable])]
   )
   func rejectsTuningOutOfRangeOrOutsideItsFamily(family: String, tuning: [String: any Sendable]) {
