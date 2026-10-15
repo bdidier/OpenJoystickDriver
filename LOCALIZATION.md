@@ -27,6 +27,8 @@ Do not restore retired catalogs.
 
 - English source: ASCII `...` and `'`.
 - Translations: native `…`, quotes (`„…“`, `«…»`, `「…」`), `→` for arrows.
+- `pt-BR` and `es-MX` quote with `“…”`; `es-ES` keeps `«…»`.
+- French: NBSP before `:` and inside `« »`. `fr-FR` puts a narrow NBSP (U+202F) before `; ? !`; `fr-CA` puts no space there.
 - No ASCII `"` inside a `.strings` value.
 - Numeric ranges stay `0...255`.
 
