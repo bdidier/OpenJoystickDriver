@@ -3,6 +3,8 @@ import Foundation
 extension RemappingProfile {
 
   enum CodingKeys: String, CodingKey, CaseIterable {
+    case apiVersion
+    case kind
     case id
     case name
     case device
@@ -23,6 +25,8 @@ extension RemappingProfile {
 
   public func encode(to encoder: any Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(OpenJoystickDriverAPI.version, forKey: .apiVersion)
+    try container.encode(Self.kind, forKey: .kind)
     try container.encode(id, forKey: .id)
     try container.encode(name, forKey: .name)
     try container.encode(device, forKey: .device)

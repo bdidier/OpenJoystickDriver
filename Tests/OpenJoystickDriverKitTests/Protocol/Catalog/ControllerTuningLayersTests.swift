@@ -13,16 +13,21 @@ struct ControllerTuningLayersTests {
     var controllers: URL { url.appendingPathComponent("Controllers", isDirectory: true) }
     var defaultsFile: URL { url.appendingPathComponent("Defaults.json") }
 
-    func writeDefaults(_ tuning: String, schema: String = ControllerDefaults.schemaID) throws {
+    func writeDefaults(
+      _ tuning: String,
+      apiVersion: String = OpenJoystickDriverAPI.version
+    ) throws {
       try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
-      let json = #"{"$schema":"\#(schema)","tuning":\#(tuning)}"#
+      let json =
+        #"{"apiVersion":"\#(apiVersion)","kind":"\#(ControllerDefaults.kind)","tuning":\#(tuning)}"#
       try Data(json.utf8).write(to: defaultsFile)
     }
 
     func writePatch(_ set: String, for identity: ControllerModelID) throws {
       try FileManager.default.createDirectory(at: controllers, withIntermediateDirectories: true)
       let json =
-        #"{"$schema":"\#(ControllerRecordSet.overrideSchemaID)","operation":"patch","#
+        #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","#
+        + #""kind":"\#(ControllerRecordSet.overrideKind)","operation":"patch","#
         + #""vendorID":\#(identity.vendorID),"productID":\#(identity.productID),"set":\#(set)}"#
       try Data(json.utf8).write(
         to: controllers.appendingPathComponent(ControllerRecordSet.fileName(for: identity))
@@ -121,11 +126,11 @@ struct ControllerTuningLayersTests {
   }
 
   @Test
-  func aWrongSchemaIDMakesTheDefaultsFileInvalid() throws {
+  func anUnsupportedAPIVersionMakesTheDefaultsFileInvalid() throws {
     let root = Root()
-    try root.writeDefaults(#"{"stickDeadzone":0.2}"#, schema: "https://example.com/other.json")
+    try root.writeDefaults(#"{"stickDeadzone":0.2}"#, apiVersion: "openjoystickdriver.io/v1beta1")
 
-    #expect(root.load().defaults?.problem != nil)
+    #expect(root.load().defaults?.problem?.contains("openjoystickdriver.io/v1beta1") == true)
   }
 
   @Test

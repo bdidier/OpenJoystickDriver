@@ -42,7 +42,8 @@ struct ControllerRecordRouteTests {
   /// Decodes a record for 045E:0B12 whose remaining top-level fields are `fields`.
   private func decode(_ fields: String) throws -> ControllerRecordDocument {
     let json = """
-      {"$schema": "\(ControllerRecordDocument.schemaID)", "vendorID": 1118, "productID": 2834, \
+      {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "\(ControllerRecordDocument.kind)",
+      "vendorID": 1118, "productID": 2834, \
       \(fields)}
       """
     return try JSONDecoder().decode(ControllerRecordDocument.self, from: Data(json.utf8))

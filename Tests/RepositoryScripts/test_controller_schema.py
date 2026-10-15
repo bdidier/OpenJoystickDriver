@@ -4,11 +4,12 @@ import unittest
 from typing import Any
 
 from Scripts.Catalog import validate_profiles
+from Scripts.Catalog.schema_header import header
 
 
 def record(protocol: dict[str, Any], **fields: Any) -> dict[str, Any]:
     return {
-        "$schema": validate_profiles.load_object(validate_profiles.SCHEMA_PATH)["$id"],
+        **header("Controller"),
         "vendorID": 0x045E,
         "productID": 0x02EA,
         "protocol": protocol,

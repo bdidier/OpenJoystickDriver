@@ -63,7 +63,8 @@ struct ControllerOwnershipWriterTests {
     try Self.withDirectory { directory, _ in
       let file = directory.appendingPathComponent("2c22-2000.json")
       try JSONSerialization.data(withJSONObject: [
-        "$schema": ControllerRecordSet.overrideSchemaID, "operation": "patch",
+        "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
+        "operation": "patch",
         "vendorID": 0x2C22, "productID": 0x2000,
         "set": ["ownership": "ojd", "tuning": ["stickDeadzone": 0.1]],
       ])
@@ -84,9 +85,11 @@ struct ControllerOwnershipWriterTests {
   func packageOnlyModelGetsAPatchOverThePackageRecord() throws {
     try Self.withDirectory { directory, fixture in
       let record: [String: Any] = [
-        "$schema": ControllerRecordSet.overrideSchemaID, "operation": "add",
+        "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
+        "operation": "add",
         "record": [
-          "$schema": ControllerRecordDocument.schemaID, "vendorID": 0x1234,
+          "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordDocument.kind,
+          "vendorID": 0x1234,
           "productID": 0xABCD, "protocol": ["family": "hid.descriptor"],
         ],
       ]

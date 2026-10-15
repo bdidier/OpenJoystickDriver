@@ -8,7 +8,7 @@ extension VirtualOutputTests {
   /// A persona directory holding one custom persona for vendor 1, product 2.
   private func personaStore(in directory: URL) throws -> VirtualHIDProfileOverrideStore {
     let document: [String: Any] = [
-      "$schema": VirtualHIDProfileOverrideStore.schemaID,
+      "apiVersion": OpenJoystickDriverAPI.version, "kind": VirtualHIDProfileOverrideStore.kind,
       "match": ["vendorID": 1, "productID": 2],
       "descriptor": "hid-generic",
       "identity": [
@@ -85,7 +85,7 @@ extension VirtualOutputTests {
   /// Rewrites the persona file of `personaStore(in:)` with `productName` as its identity.
   private func rewritePersona(in directory: URL, productName: String) throws {
     let document: [String: Any] = [
-      "$schema": VirtualHIDProfileOverrideStore.schemaID,
+      "apiVersion": OpenJoystickDriverAPI.version, "kind": VirtualHIDProfileOverrideStore.kind,
       "match": ["vendorID": 1, "productID": 2],
       "descriptor": "hid-generic",
       "identity": [

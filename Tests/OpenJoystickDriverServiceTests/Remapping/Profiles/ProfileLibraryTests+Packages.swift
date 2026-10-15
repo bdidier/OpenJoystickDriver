@@ -188,7 +188,7 @@ extension ProfileLibraryTests {
       )
     }
     let manifest: [String: Any] = [
-      "$schema": ModPackageManifest.knownSchemaIDs.sorted()[0], "name": name,
+      "apiVersion": OpenJoystickDriverAPI.version, "kind": ModPackageManifest.kind, "name": name,
       "version": "1.0.0", "author": "Tester", "requires": ["minimum": "0.6.0"],
       "profiles": fileNames,
     ]

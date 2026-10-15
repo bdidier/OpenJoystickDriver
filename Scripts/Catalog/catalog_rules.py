@@ -6,9 +6,10 @@ import json
 import pathlib
 from typing import Any
 
+from Scripts.Catalog.schema_header import API_VERSION
+
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 RULES_DIR = ROOT / "Resources" / "CatalogRules"
-API_VERSION = "openjoystickdriver/v1alpha1"
 
 
 class RulesError(ValueError):

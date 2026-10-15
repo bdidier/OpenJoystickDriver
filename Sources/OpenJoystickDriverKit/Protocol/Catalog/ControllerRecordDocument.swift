@@ -3,14 +3,11 @@ import Foundation
 /// Strict runtime representation of the one current controller-record contract.
 ///
 /// JSONDecoder normally ignores unknown keys. This decoder instead rejects
-/// removed or misspelled fields and requires a `$schema` from ``knownSchemaIDs``.
+/// removed or misspelled fields and requires the `apiVersion` and `kind` of the controller
+/// contract.
 struct ControllerRecordDocument: Decodable {
-  /// The `$schema` that OJD writes: the current version of the controller contract.
-  static let schemaID =
-    "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/"
-    + "Resources/Schemas/v1beta1/controller.schema.json"
-  /// The `$schema` values OJD accepts. A version that is not here is rejected, not converted.
-  static let knownSchemaIDs: Set<String> = [schemaID]
+  /// The `kind` of a controller record.
+  static let kind = "Controller"
 
   let vendorID: Int
   let productID: Int
@@ -33,15 +30,20 @@ struct ControllerRecordDocument: Decodable {
   init(from decoder: any Decoder) throws {
     let container = try decoder.container(keyedBy: DocumentKey.self)
     try container.rejectUnknown(allowed: [
-      "$schema", "vendorID", "productID", "protocol", "usb", "bluetoothLE", "capabilities",
-      "ownership", "route", "output", "input", "tuning",
+      "apiVersion", "kind", "vendorID", "productID", "protocol", "usb", "bluetoothLE",
+      "capabilities", "ownership", "route", "output", "input", "tuning",
     ])
-    let schema = try container.decode(String.self, for: "$schema")
-    guard Self.knownSchemaIDs.contains(schema) else {
+    let apiVersion = try container.decodeOptional(String.self, for: "apiVersion")
+    let kind = try container.decodeOptional(String.self, for: "kind")
+    if let problem = OpenJoystickDriverAPI.headerProblem(
+      apiVersion: apiVersion,
+      kind: kind,
+      expected: Self.kind
+    ) {
       throw DecodingError.dataCorruptedError(
-        forKey: DocumentKey("$schema"),
+        forKey: DocumentKey(apiVersion == OpenJoystickDriverAPI.version ? "kind" : "apiVersion"),
         in: container,
-        debugDescription: "$schema must identify a known controller contract version"
+        debugDescription: problem
       )
     }
     vendorID = try container.decode(Int.self, for: "vendorID")

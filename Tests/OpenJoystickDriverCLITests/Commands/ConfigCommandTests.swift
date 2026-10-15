@@ -15,7 +15,9 @@ struct ConfigCommandTests {
 
     func writeDefaults(_ tuning: String) throws {
       try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
-      let json = #"{"$schema":"\#(ControllerDefaults.schemaID)","tuning":\#(tuning)}"#
+      let json =
+        #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(ControllerDefaults.kind)","#
+        + #""tuning":\#(tuning)}"#
       try Data(json.utf8).write(to: url.appendingPathComponent("Defaults.json"))
     }
 

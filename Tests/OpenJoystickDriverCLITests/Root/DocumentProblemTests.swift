@@ -6,7 +6,8 @@ import Testing
 
 struct DocumentProblemTests {
   private static let profile = """
-    {"applicationScope":{"type":"global"},"bindings":[],"chords":[],\
+    {"apiVersion":"\(OpenJoystickDriverAPI.version)","kind":"Profile",\
+    "applicationScope":{"type":"global"},"bindings":[],"chords":[],\
     "device":{"productID":616,"vendorID":1356},"id":"1364CBAC-B60B-4E11-B3E7-C38AD809FE42",\
     "layers":[],"name":"Pad","outputPolicy":{"physicalInput":"shared",\
     "virtualGamepad":"passthrough"},"sequences":[]}

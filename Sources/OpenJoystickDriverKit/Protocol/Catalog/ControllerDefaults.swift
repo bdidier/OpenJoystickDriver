@@ -6,12 +6,8 @@ import Foundation
 /// to each controller whose family reads that key. A file that fails validation is ignored whole
 /// and reported in ``problem``.
 public struct ControllerDefaults: Equatable, Sendable {
-  /// The `$schema` that OJD writes.
-  public static let schemaID =
-    "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/"
-    + "Resources/Schemas/v1beta1/defaults.schema.json"
-  /// The `$schema` values OJD accepts. A version that is not here is rejected.
-  public static let knownSchemaIDs: Set<String> = [schemaID]
+  /// The `kind` of the defaults file.
+  public static let kind = "ControllerDefaults"
 
   /// The file that was read, whether or not it exists.
   public let url: URL
@@ -50,13 +46,10 @@ public struct ControllerDefaults: Equatable, Sendable {
     guard let object = try? JSONSerialization.jsonObject(with: data),
       let document = object as? [String: Any]
     else { throw ControllerRecordProblem("the file is not a JSON object") }
-    guard let schema = document["$schema"] as? String, knownSchemaIDs.contains(schema) else {
-      throw ControllerRecordProblem(
-        "$schema must be one of \(knownSchemaIDs.sorted().joined(separator: ", "))"
-      )
-    }
-    guard Set(document.keys) == ["$schema", "tuning"], let tuning = document["tuning"] else {
-      throw ControllerRecordProblem("the file must hold exactly $schema and tuning")
+    try OpenJoystickDriverAPI.requireHeader(document, kind: kind)
+    guard Set(document.keys) == ["apiVersion", "kind", "tuning"], let tuning = document["tuning"]
+    else {
+      throw ControllerRecordProblem("the file must hold exactly apiVersion, kind, and tuning")
     }
     do {
       let section = try JSONSerialization.data(withJSONObject: tuning)

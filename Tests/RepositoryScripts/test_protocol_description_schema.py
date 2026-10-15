@@ -8,18 +8,15 @@ from pathlib import Path
 from typing import Any
 from unittest.mock import patch
 
+from Scripts.Catalog.schema_header import header
 from Scripts.Quality import validate_schemas
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
-SCHEMA_ID = (
-    "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/"
-    "Resources/Schemas/v1beta1/protocol-description.schema.json"
-)
 
 
 def xusb_description() -> dict[str, Any]:
     return {
-        "$schema": SCHEMA_ID,
+        **header("ProtocolDescription"),
         "family": "xbox.xusb",
         "interfaceSignatures": [
             {
@@ -70,10 +67,20 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def test_accepts_a_minimal_description(self) -> None:
         self.check(xusb_description())
 
-    def test_rejects_a_wrong_schema_id(self) -> None:
-        document = xusb_description()
-        document["$schema"] = SCHEMA_ID.replace("v1beta1", "v1alpha1")
-        self.assert_rejected(document)
+    def test_rejects_a_missing_or_foreign_header(self) -> None:
+        for member, value in (
+            ("apiVersion", None),
+            ("apiVersion", "openjoystickdriver.io/v1beta1"),
+            ("kind", None),
+            ("kind", "Controller"),
+        ):
+            with self.subTest(member=member, value=value):
+                document = xusb_description()
+                if value is None:
+                    del document[member]
+                else:
+                    document[member] = value
+                self.assert_rejected(document)
 
     def test_rejects_an_unknown_family(self) -> None:
         document = xusb_description()

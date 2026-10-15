@@ -1,5 +1,6 @@
 {
-	"$schema": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/error-codes.schema.json",
+	"apiVersion": "openjoystickdriver/v1alpha1",
+	"kind": "ErrorCatalog",
 	"codes": [
 		{
 			"code": "E1001",

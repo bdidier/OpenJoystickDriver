@@ -8,9 +8,10 @@ import Testing
 struct ControllerRecordWatcherTests {
   private static let addRecord = Data(
     """
-    {"$schema": "\(ControllerRecordSet.overrideSchemaID)", "operation": "add",
-     "record": {"$schema": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/\
-    Resources/Schemas/v1beta1/controller.schema.json", "vendorID": 4660, "productID": 43981,
+    {"apiVersion": "\(OpenJoystickDriverAPI.version)",
+    "kind": "\(ControllerRecordSet.overrideKind)", "operation": "add",
+     "record": {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "Controller",
+     "vendorID": 4660, "productID": 43981,
      "protocol": {"family": "xbox.gip"}}}
     """.utf8
   )

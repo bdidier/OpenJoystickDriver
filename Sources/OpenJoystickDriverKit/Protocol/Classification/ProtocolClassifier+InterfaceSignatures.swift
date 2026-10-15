@@ -39,11 +39,8 @@ extension ProtocolClassifier {
     }
   }()
 
-  /// The `$schema` values a protocol description may declare.
-  static let protocolDescriptionSchemaIDs: Set<String> = [
-    "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/"
-      + "Resources/Schemas/v1beta1/protocol-description.schema.json"
-  ]
+  /// The `kind` of a protocol description.
+  static let protocolDescriptionKind = "ProtocolDescription"
 
   private struct ProtocolDescriptionDocument: Decodable {
     struct Signature: Decodable {
@@ -68,12 +65,13 @@ extension ProtocolClassifier {
       }
     }
 
-    let schema: String
+    let apiVersion: String?
+    let kind: String?
     let family: String
     let interfaceSignatures: [Signature]
 
     enum CodingKeys: String, CodingKey, CaseIterable {
-      case schema = "$schema"
+      case apiVersion, kind
       case family
       case interfaceSignatures
     }
@@ -81,7 +79,8 @@ extension ProtocolClassifier {
     init(from decoder: any Decoder) throws {
       try decoder.rejectUnknownKeys(CodingKeys.self)
       let container = try decoder.container(keyedBy: CodingKeys.self)
-      schema = try container.decode(String.self, forKey: .schema)
+      apiVersion = try container.decodeIfPresent(String.self, forKey: .apiVersion)
+      kind = try container.decodeIfPresent(String.self, forKey: .kind)
       family = try container.decode(String.self, forKey: .family)
       interfaceSignatures = try container.decode([Signature].self, forKey: .interfaceSignatures)
     }
@@ -114,8 +113,12 @@ extension ProtocolClassifier {
     } catch let error as DecodingError {
       throw ControllerRecordProblem("\(fileName): \(error)")
     }
-    guard protocolDescriptionSchemaIDs.contains(document.schema) else {
-      throw ControllerRecordProblem("\(fileName): unknown $schema")
+    if let problem = OpenJoystickDriverAPI.headerProblem(
+      apiVersion: document.apiVersion,
+      kind: document.kind,
+      expected: protocolDescriptionKind
+    ) {
+      throw ControllerRecordProblem("\(fileName): \(problem)")
     }
     guard document.family == protocolID.rawValue else {
       throw ControllerRecordProblem("\(fileName): family must be \(protocolID.rawValue)")

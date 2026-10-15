@@ -140,7 +140,8 @@ struct JoyConParserTests {
   @Test
   func conflictingSideSelectionIsRejected() throws {
     let record: [String: Any] = [
-      "$schema": ControllerRecordDocument.schemaID, "vendorID": 1406, "productID": 8198,
+      "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordDocument.kind,
+      "vendorID": 1406, "productID": 8198,
       "protocol": ["family": "nintendo.switch1", "quirks": ["joy-con-left", "joy-con-right"]],
     ]
     let encoded = try JSONSerialization.data(withJSONObject: record)

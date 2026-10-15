@@ -17,7 +17,24 @@
 - `endpoint.schema.json`: the JSON lines that a granted client and the service exchange on the endpoint socket. The stream lines are the `ojd controller watch --all` events from `cli-output.schema.json`.
 - `error-codes.schema.json`: the authored catalog `Resources/ErrorCodes.json`, which gives every E#### error code its domain and name. `./Scripts/ojd errors regenerate` copies the endpoint codes into `endpoint.schema.json` and the table into `wiki/Error-Codes.md`, and refuses to reuse or delete a released code.
 
-Each artifact class has one current contract, in the version directory `v1beta1/`. A file that declares a `$schema` names that directory in its ID, such as `https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/controller.schema.json`, and OJD rejects any other ID, including the old ID without `v1beta1/`. OJD-owned property names use lowerCamelCase, including `vendorID`, `profileID`, `initialization`, `keepAlive`, and `postHandshakeSettleMs`. JSON Schema keywords, CloudEvents context attributes, external API fields, and dynamic map keys retain their standards' or sources' spelling. Do not recase values: enums, protocol identifiers, hashes, URLs, or user text.
+Each artifact class has one current contract, a flat `<kind>.schema.json` here. Its `$id` is `https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/<kind>.schema.json`; the ID is a name for the schema and nothing publishes or fetches it yet. A document declares `apiVersion: openjoystickdriver/v1alpha1` and its `kind`, and does not declare `$schema`. OJD rejects a missing or unknown `apiVersion`, including the former `openjoystickdriver.io/v1beta1`, and a `kind` that is not the one it reads. The error names the file, the version found, and the supported version.
+
+| Schema | `kind` |
+| --- | --- |
+| `controller.schema.json` | `Controller` |
+| `controller-override.schema.json` | `ControllerOverride` |
+| `defaults.schema.json` | `ControllerDefaults` |
+| `persona.schema.json` | `Persona` |
+| `profile.schema.json` | `Profile` |
+| `mod-package.schema.json` | `ModPackage` |
+| `protocol-description.schema.json` | `ProtocolDescription` |
+| `error-codes.schema.json` | `ErrorCatalog` |
+| `access-grants.schema.json` | `AccessGrants` |
+| `report.schema.json` | `SupportDiagnostic`, on the `data` payload; the CloudEvents envelope has none |
+
+`cli-output.schema.json` and `endpoint.schema.json` give each message its own `kind` and share the `apiVersion`.
+
+OJD-owned property names use lowerCamelCase, including `vendorID`, `profileID`, `initialization`, `keepAlive`, and `postHandshakeSettleMs`. JSON Schema keywords, CloudEvents context attributes, external API fields, and dynamic map keys retain their standards' or sources' spelling. Do not recase values: enums, protocol identifiers, hashes, URLs, or user text.
 
 Change a schema atomically with every producer, consumer, authored input, generated output, and test. Do not add a second live version, aliases, migrations, upcasters, fallback readers, crosswalks, or dual writers. Git history preserves obsolete contracts.
 
@@ -47,7 +64,7 @@ CloudEvents owns `specversion`, `id`, `source`, `type`, `time`, `datacontenttype
 git diff --check
 ```
 
-`check schemas` validates all schemas, every generated controller record, every override, every protocol description, the error code catalog, and one live support report.
+`check schemas` validates all schemas, every generated controller record, every override, every protocol description, the sample mod package, the access grant fixtures, the error code catalog, and one live support report. It checks each `$id`, `apiVersion` const, and `kind` const against `Scripts/Catalog/schema_header.py`.
 It also compares `cli-output.schema.json` with its copy at the last release tag, and fails when a change would break a program that reads that release's `--json` output; see [Using the command line](../../wiki/Command-Line.md). Generate an intentional catalog change only through:
 
 ```bash

@@ -1,13 +1,16 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/protocol-description.schema.json",
+	"$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/protocol-description.schema.json",
 	"$comment": "Each family's variants are PhysicalProtocolID.variants in Swift; a family with none has no interface signatures.",
 	"type": "object",
 	"additionalProperties": false,
-	"required": ["$schema", "family", "interfaceSignatures"],
+	"required": ["apiVersion", "kind", "family", "interfaceSignatures"],
 	"properties": {
-		"$schema": {
-			"const": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/protocol-description.schema.json"
+		"apiVersion": {
+			"const": "openjoystickdriver/v1alpha1"
+		},
+		"kind": {
+			"const": "ProtocolDescription"
 		},
 		"family": {
 			"$ref": "controller.schema.json#/$defs/protocol/properties/family"

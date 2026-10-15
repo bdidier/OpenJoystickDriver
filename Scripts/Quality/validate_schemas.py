@@ -7,6 +7,12 @@ import sys
 import tempfile
 from pathlib import Path
 
+from ..Catalog.schema_header import (
+    API_VERSION,
+    KINDS,
+    SCHEMA_SUFFIX,
+    schema_id,
+)
 from ..Command.execution import swift_command
 from .schema_compatibility import IncompatibleSchemaError
 from .schema_compatibility import check as check_compatibility
@@ -24,27 +30,23 @@ except ImportError:
     raise SystemExit(2)
 
 ROOT = Path(__file__).resolve().parents[2]
-SCHEMAS = ROOT / "Resources" / "Schemas" / "v1beta1"
+SCHEMAS = ROOT / "Resources" / "Schemas"
 GENERATED_RECORDS = (
     ROOT / "Sources" / "OpenJoystickDriverKit" / "Resources" / "Controllers"
 )
 CONTROLLER_OVERRIDES = ROOT / "Resources" / "ControllerOverrides"
 ERROR_CODES = ROOT / "Resources" / "ErrorCodes.json"
 PROTOCOL_DESCRIPTIONS = ROOT / "Resources" / "Protocols"
-SCHEMA_PATHS = (
-    SCHEMAS / "controller.schema.json",
-    SCHEMAS / "controller-override.schema.json",
-    SCHEMAS / "report.schema.json",
-    SCHEMAS / "cli-output.schema.json",
-    SCHEMAS / "profile.schema.json",
-    SCHEMAS / "access-grants.schema.json",
-    SCHEMAS / "endpoint.schema.json",
-    SCHEMAS / "error-codes.schema.json",
-    SCHEMAS / "defaults.schema.json",
-    SCHEMAS / "persona.schema.json",
-    SCHEMAS / "mod-package.schema.json",
-    SCHEMAS / "protocol-description.schema.json",
+SAMPLE_PACKAGE = ROOT / "docs" / "sdk" / "sample"
+ACCESS_GRANT_FIXTURES = (
+    ROOT / "Tests" / "RepositoryScripts" / "fixtures" / "access_grants.json",
 )
+# The schema of each kind of file in the sample mod package, by its folder.
+SAMPLE_FOLDER_SCHEMAS = {
+    "Controllers": "controller-override",
+    "Personas": "persona",
+    "Profiles": "profile",
+}
 
 
 def load_json(path: Path) -> object:
@@ -54,7 +56,10 @@ def load_json(path: Path) -> object:
 
 def validate_schema_documents() -> dict[str, dict[str, object]]:
     documents: dict[str, dict[str, object]] = {}
-    for path in SCHEMA_PATHS:
+    paths = sorted(SCHEMAS.glob(f"*{SCHEMA_SUFFIX}"))
+    if not paths:
+        raise SchemaError(f"no schemas in {SCHEMAS.relative_to(ROOT)}")
+    for path in paths:
         document = load_json(path)
         if not isinstance(document, dict):
             raise SchemaError(f"{path.relative_to(ROOT)} must contain a JSON object")
@@ -68,11 +73,75 @@ def schema_registry(documents: dict[str, dict[str, object]]) -> Registry:
     for name, document in documents.items():
         identifier = document.get("$id")
         if not isinstance(identifier, str) or not identifier:
-            raise SchemaError(
-                f"Resources/Schemas/v1beta1/{name} must declare a nonempty $id"
-            )
+            raise SchemaError(f"Resources/Schemas/{name} must declare a nonempty $id")
         resources.append((identifier, Resource.from_contents(document)))
     return Registry().with_resources(resources)
+
+
+def api_version_consts(value: object, where: str = "") -> list[tuple[str, object]]:
+    """Every `const` in `value` that names an OJD `apiVersion`, with where it is."""
+    found: list[tuple[str, object]] = []
+    if isinstance(value, dict):
+        const = value.get("const")
+        if isinstance(const, str) and const.startswith("openjoystickdriver"):
+            found.append((where, const))
+        for key, child in value.items():
+            found.extend(api_version_consts(child, f"{where}/{key}"))
+    elif isinstance(value, list):
+        for index, child in enumerate(value):
+            found.extend(api_version_consts(child, f"{where}/{index}"))
+    return found
+
+
+def validate_schema_identity(documents: dict[str, dict[str, object]]) -> None:
+    """Check each `$id`, `apiVersion` const, and `kind` const against the one source."""
+    for name, document in documents.items():
+        stem = name[: -len(SCHEMA_SUFFIX)]
+        if document.get("$id") != schema_id(stem):
+            raise SchemaError(
+                f"Resources/Schemas/{name}: $id must be {schema_id(stem)}, "
+                f"found {document.get('$id')}"
+            )
+        for where, const in api_version_consts(document):
+            if const != API_VERSION:
+                raise SchemaError(
+                    f"Resources/Schemas/{name}{where}: apiVersion const must be "
+                    f"{API_VERSION}, found {const}"
+                )
+        kind = KINDS.get(stem)
+        if kind is None:
+            continue
+        properties = document.get("properties")
+        if not isinstance(properties, dict):
+            properties = {}
+            # controller-override declares the header in each oneOf branch.
+            for branch in document.get("oneOf", []):  # type: ignore[attr-defined]
+                properties = {**properties, **branch.get("properties", {})}
+        header = {
+            member: properties.get(member, {}).get("const")
+            for member in ("apiVersion", "kind")
+        }
+        if header != {"apiVersion": API_VERSION, "kind": kind}:
+            raise SchemaError(
+                f"Resources/Schemas/{name}: must require apiVersion {API_VERSION} "
+                f"and kind {kind}, found {header}"
+            )
+
+
+def sample_documents() -> list[tuple[str, Path]]:
+    """The files of the sample mod package with the schema each is read as."""
+    found: list[tuple[str, Path]] = [("mod-package", SAMPLE_PACKAGE / "mod.json")]
+    for folder, stem in SAMPLE_FOLDER_SCHEMAS.items():
+        found.extend(
+            (stem, path) for path in sorted((SAMPLE_PACKAGE / folder).glob("*.json"))
+        )
+    known = {path for _, path in found}
+    unknown = sorted(set(SAMPLE_PACKAGE.rglob("*.json")) - known)
+    if unknown:
+        raise SchemaError(
+            f"{unknown[0].relative_to(ROOT)}: no schema is named for this sample file"
+        )
+    return found
 
 
 def validate_documents(
@@ -157,6 +226,7 @@ def validate_live_support_report(schema: dict[str, object], registry: Registry) 
 def main() -> int:
     try:
         documents = validate_schema_documents()
+        validate_schema_identity(documents)
         registry = schema_registry(documents)
         controller_records = sorted(GENERATED_RECORDS.glob("*/*.json"))
         overrides = sorted(CONTROLLER_OVERRIDES.glob("*/*.json"))
@@ -172,6 +242,14 @@ def main() -> int:
         )
         validate_protocol_descriptions(
             documents["protocol-description.schema.json"], registry, protocols
+        )
+        samples = sample_documents()
+        for stem, path in samples:
+            validate_documents(documents[f"{stem}{SCHEMA_SUFFIX}"], registry, [path])
+        validate_documents(
+            documents["access-grants.schema.json"],
+            registry,
+            list(ACCESS_GRANT_FIXTURES),
         )
         validate_live_support_report(documents["report.schema.json"], registry)
         compatibility = check_compatibility(ROOT, documents)
@@ -191,7 +269,8 @@ def main() -> int:
     print(
         f"Validated {len(documents)} schema documents, "
         f"{len(controller_records)} controller records, {len(overrides)} overrides, "
-        f"{len(protocols)} protocol descriptions, the error code catalog, "
+        f"{len(protocols)} protocol descriptions, {len(samples)} sample mod files, "
+        f"{len(ACCESS_GRANT_FIXTURES)} access grant fixtures, the error code catalog, "
         "and one live support report."
     )
     print(compatibility)

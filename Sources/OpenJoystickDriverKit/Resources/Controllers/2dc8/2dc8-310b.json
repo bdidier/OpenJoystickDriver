@@ -1,5 +1,6 @@
 {
-  "$schema": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/controller.schema.json",
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "Controller",
   "vendorID": 11720,
   "productID": 12555,
   "protocol": {

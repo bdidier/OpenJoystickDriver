@@ -31,9 +31,11 @@ struct ModPackageFixture {
   /// A controller `add` record for an identity the bundled catalog does not have.
   static func record(_ vendorID: Int, _ productID: Int) throws -> (name: String, data: Data) {
     let document: [String: Any] = [
-      "$schema": ControllerRecordSet.overrideSchemaID, "operation": "add",
+      "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
+      "operation": "add",
       "record": [
-        "$schema": ControllerRecordDocument.schemaID, "vendorID": vendorID,
+        "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordDocument.kind,
+        "vendorID": vendorID,
         "productID": productID, "protocol": ["family": "xbox.gip"],
       ],
     ]
@@ -50,7 +52,8 @@ struct ModPackageFixture {
     descriptor: String = "hid-generic"
   ) -> (name: String, data: Data) {
     let text =
-      #"{"$schema":"\#(VirtualHIDProfileOverrideStore.schemaID)","#
+      #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","#
+      + #""kind":"\#(VirtualHIDProfileOverrideStore.kind)","#
       + #""match":{"vendorID":\#(vendorID),"productID":\#(productID)},"#
       + #""descriptor":"\#(descriptor)"}"#
     return (String(format: "%04x-%04x.json", vendorID, productID), Data(text.utf8))
@@ -97,7 +100,7 @@ struct ModPackageFixture {
     try write(personas, kind: "Personas", in: folder)
     try write(profiles, kind: "Profiles", in: folder)
     var manifest: [String: Any] = [
-      "$schema": ModPackageManifest.knownSchemaIDs.sorted()[0], "name": name,
+      "apiVersion": OpenJoystickDriverAPI.version, "kind": ModPackageManifest.kind, "name": name,
       "version": version, "author": "Tester", "requires": requires,
     ]
     if !records.isEmpty { manifest["records"] = records.map(\.name) }

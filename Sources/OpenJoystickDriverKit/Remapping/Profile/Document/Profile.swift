@@ -263,6 +263,8 @@ public struct RemappingBinding: Codable, Equatable, Hashable, Identifiable, Send
 }
 
 public struct RemappingProfile: Codable, Equatable, Identifiable, Sendable {
+  /// The `kind` of a profile document.
+  public static let kind = "Profile"
   public static let maximumBindingCount = 512
   public static let maximumEncodedBytes = RemappingPayloadLimits.maximumEncodedBytes
   public static let profileNameLengthRange = 1...80
@@ -325,6 +327,17 @@ public struct RemappingProfile: Codable, Equatable, Identifiable, Sendable {
   public init(from decoder: any Decoder) throws {
     try decoder.rejectUnknownKeys(CodingKeys.self)
     let container = try decoder.container(keyedBy: CodingKeys.self)
+    if let problem = OpenJoystickDriverAPI.headerProblem(
+      apiVersion: try container.decodeIfPresent(String.self, forKey: .apiVersion),
+      kind: try container.decodeIfPresent(String.self, forKey: .kind),
+      expected: Self.kind
+    ) {
+      throw DecodingError.dataCorruptedError(
+        forKey: .apiVersion,
+        in: container,
+        debugDescription: problem
+      )
+    }
     id = try container.decode(UUID.self, forKey: .id)
     name = try container.decode(String.self, forKey: .name)
     device = try container.decode(RemappingDeviceScope.self, forKey: .device)

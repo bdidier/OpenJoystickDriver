@@ -52,7 +52,8 @@ public enum ControllerOwnershipWriter {
     } else {
       guard packages[model] != nil else { throw .noRecord }
       document = [
-        "$schema": ControllerRecordSet.overrideSchemaID, "operation": "patch",
+        "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
+        "operation": "patch",
         "vendorID": Int(model.vendorID), "productID": Int(model.productID),
         "set": ["ownership": ownership.rawValue],
       ]

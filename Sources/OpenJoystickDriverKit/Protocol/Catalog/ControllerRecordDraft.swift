@@ -69,15 +69,18 @@ public struct ControllerRecordDraft: Sendable {
     let body: [String: Any]
     if bundled {
       body = [
-        "$schema": ControllerRecordSet.overrideSchemaID, "operation": "patch",
+        "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
+        "operation": "patch",
         "vendorID": Int(model.vendorID), "productID": Int(model.productID), "set": fields,
       ]
     } else {
-      fields["$schema"] = ControllerRecordDocument.schemaID
+      fields["apiVersion"] = OpenJoystickDriverAPI.version
+      fields["kind"] = ControllerRecordDocument.kind
       fields["vendorID"] = Int(model.vendorID)
       fields["productID"] = Int(model.productID)
       body = [
-        "$schema": ControllerRecordSet.overrideSchemaID, "operation": "add", "record": fields,
+        "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
+        "operation": "add", "record": fields,
       ]
     }
     guard

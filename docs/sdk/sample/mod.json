@@ -1,5 +1,6 @@
 {
-  "$schema": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/mod-package.schema.json",
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "ModPackage",
   "name": "ojd-sample",
   "version": "1.0.0",
   "author": "OpenJoystickDriver",

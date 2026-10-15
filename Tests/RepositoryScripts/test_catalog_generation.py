@@ -11,6 +11,7 @@ from unittest.mock import patch
 
 from Scripts.Catalog import generate_controller_catalog as catalog
 from Scripts.Catalog import generate_xpad_records as xpad
+from Scripts.Catalog.schema_header import header
 
 
 def hid_source(vendor: str, product: str) -> str:
@@ -213,11 +214,7 @@ class HIDRecordTests(unittest.TestCase):
             path.write_text(
                 json.dumps(
                     {
-                        "$schema": (
-                            "https://raw.githubusercontent.com/xsyetopz/"
-                            "OpenJoystickDriver/main/Resources/Schemas/v1beta1/"
-                            "controller-override.schema.json"
-                        ),
+                        **header("ControllerOverride"),
                         "operation": "patch",
                         "vendorID": 0x045E,
                         "productID": 0x02EA,
@@ -240,11 +237,7 @@ class HIDRecordTests(unittest.TestCase):
             path.write_text(
                 json.dumps(
                     {
-                        "$schema": (
-                            "https://raw.githubusercontent.com/xsyetopz/"
-                            "OpenJoystickDriver/main/Resources/Schemas/v1beta1/"
-                            "controller-override.schema.json"
-                        ),
+                        **header("ControllerOverride"),
                         "operation": "patch",
                         "vendorID": 0x11C1,
                         "productID": 0x5600,
@@ -483,7 +476,7 @@ class SDLControllerListTests(unittest.TestCase):
 
     def test_add_override_wins_over_an_sdl_identity(self) -> None:
         override = {
-            "$schema": catalog.RECORD_SCHEMA_ID,
+            **header("Controller"),
             "vendorID": 0x1532,
             "productID": 0x1000,
             "protocol": {"family": "hid.descriptor"},
@@ -623,7 +616,7 @@ class SDLControllerListTests(unittest.TestCase):
         records, _ = self.build([(0x1532, 0x1000, "PS4Controller")])
         self.assertEqual(
             set(records[(0x1532, 0x1000)]),
-            {"$schema", "vendorID", "productID", "protocol"},
+            {"apiVersion", "kind", "vendorID", "productID", "protocol"},
         )
 
 

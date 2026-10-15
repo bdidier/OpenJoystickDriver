@@ -94,8 +94,8 @@ struct RemappingProfileTests {
     let root = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
     #expect(
       Set(root.keys) == [
-        "id", "name", "device", "applicationScope", "bindings", "chords", "sequences", "layers",
-        "outputPolicy",
+        "apiVersion", "kind", "id", "name", "device", "applicationScope", "bindings", "chords",
+        "sequences", "layers", "outputPolicy",
       ]
     )
 
@@ -129,6 +129,39 @@ struct RemappingProfileTests {
     #expect(scope["type"] as? String == "global")
     #expect(scope["bundleIdentifier"] == nil)
     try profile.validate()
+  }
+
+  @Test
+  func aMissingOrUnsupportedHeaderIsRejectedAndNamed() throws {
+    let profile = RemappingProfile(
+      name: "Current",
+      device: RemappingDeviceScope(vendorID: 1, productID: 2),
+      applicationScope: .global,
+      bindings: []
+    )
+    let supported = "the supported apiVersion is \(OpenJoystickDriverAPI.version)"
+    let cases: [(member: String, value: String?, message: String)] = [
+      ("apiVersion", nil, "no apiVersion found; \(supported)"),
+      (
+        "apiVersion", "openjoystickdriver.io/v1beta1",
+        "apiVersion openjoystickdriver.io/v1beta1 is not supported; \(supported)"
+      ),
+      ("kind", nil, "no kind found; expected Profile"),
+      ("kind", "Controller", "expected Profile, found Controller"),
+    ]
+    for item in cases {
+      var object = try #require(
+        JSONSerialization.jsonObject(with: JSONEncoder().encode(profile)) as? [String: Any]
+      )
+      object[item.member] = item.value
+      let data = try JSONSerialization.data(withJSONObject: object)
+      do {
+        _ = try JSONDecoder().decode(RemappingProfile.self, from: data)
+        Issue.record("\(item.member) \(item.value ?? "nil") was accepted")
+      } catch let DecodingError.dataCorrupted(context) {
+        #expect(context.debugDescription == item.message)
+      }
+    }
   }
 
   @Test

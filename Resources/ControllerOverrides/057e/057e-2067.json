@@ -1,5 +1,6 @@
 {
-	"$schema": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/controller-override.schema.json",
+	"apiVersion": "openjoystickdriver/v1alpha1",
+	"kind": "ControllerOverride",
 	"operation": "patch",
 	"vendorID": 1406,
 	"productID": 8295,

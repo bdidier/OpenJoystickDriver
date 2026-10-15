@@ -13,13 +13,10 @@ from dataclasses import dataclass
 from typing import Any
 
 from Scripts.Catalog.catalog_rules import load_rules
+from Scripts.Catalog.schema_header import KINDS, header
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 PROFILE_DIR = ROOT / "Sources" / "OpenJoystickDriverKit" / "Resources" / "Controllers"
-SCHEMA_ID = (
-    "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/"
-    "Resources/Schemas/v1beta1/controller.schema.json"
-)
 LINUX_REPOSITORY = "torvalds/linux"
 XPAD_PATH = "drivers/input/joystick/xpad.c"
 
@@ -301,7 +298,7 @@ def build_profile(
             protocol["initialization"] = initialization
 
     profile: dict[str, Any] = {
-        "$schema": SCHEMA_ID,
+        **header(KINDS["controller"]),
         "vendorID": device.vendor_id,
         "productID": device.product_id,
         "protocol": protocol,

@@ -152,6 +152,8 @@ struct SupportReportTests {
     #expect(object["reportType"] == nil)
     #expect(object["schemaVersion"] == nil)
     let payload = try #require(object["data"] as? [String: Any])
+    #expect(payload["apiVersion"] as? String == OpenJoystickDriverAPI.version)
+    #expect(payload["kind"] as? String == "SupportDiagnostic")
     _ = try #require(payload["hidGamepads"] as? [[String: Any]])
     let controllers = payload["controllers"] as? [[String: Any]]
     let encodedPower = (controllers?.first?["connectionState"] as? [String: Any])?["power"]

@@ -18,8 +18,8 @@ public struct SupportReport: Codable, Sendable {
   public static let supportDiagnosticType = "com.openjoystickdriver.support.diagnostic"
   public static let source = "urn:openjoystickdriver:support"
   public static let dataSchema =
-    "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/"
-    + "v1beta1/report.schema.json#/$defs/supportDiagnosticData"
+    "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/"
+    + "report.schema.json#/$defs/supportDiagnosticData"
 
   public struct Privacy: Codable, Sendable {
     public let includesRawSerialNumbers: Bool
@@ -95,6 +95,8 @@ public struct SupportReport: Codable, Sendable {
   }
 
   public struct Payload: Codable, Sendable {
+    public let apiVersion: String
+    public let kind: String
     public let privacy: Privacy
     public let system: System
     public let permissions: Permissions
@@ -230,6 +232,8 @@ public struct SupportReport: Codable, Sendable {
       reportNotes.append("Apple GameController catalog audit was unavailable.")
     }
     data = Payload(
+      apiVersion: OpenJoystickDriverAPI.version,
+      kind: "SupportDiagnostic",
       privacy: privacy,
       system: system,
       permissions: permissions,

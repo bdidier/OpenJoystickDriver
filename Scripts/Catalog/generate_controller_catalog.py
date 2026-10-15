@@ -17,6 +17,7 @@ import urllib.request
 from typing import Any
 
 from Scripts.Catalog.catalog_rules import load_rules, parse_id, parse_identity
+from Scripts.Catalog.schema_header import KINDS, header
 from Scripts.Catalog.xpad_io import json_text, run_gh
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
@@ -26,10 +27,6 @@ OUTPUT_DIR = ROOT / "Sources" / "OpenJoystickDriverKit" / "Resources" / "Control
 PROTOCOL_DIR = ROOT / "Resources" / "Protocols"
 PROTOCOL_OUTPUT_DIR = (
     ROOT / "Sources" / "OpenJoystickDriverKit" / "Resources" / "Protocols"
-)
-RECORD_SCHEMA_ID = (
-    "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/"
-    "Resources/Schemas/v1beta1/controller.schema.json"
 )
 # Top-level record sections a patch override may replace.
 PATCH_FIELDS = frozenset(
@@ -149,7 +146,7 @@ def build_hid_records(sources: dict[str, str]) -> list[dict[str, Any]]:
         if quirks:
             protocol["quirks"] = quirks
         record: dict[str, Any] = {
-            "$schema": RECORD_SCHEMA_ID,
+            **header(KINDS["controller"]),
             "vendorID": vendor_id,
             "productID": product_id,
             "protocol": protocol,
@@ -423,7 +420,7 @@ def build_sdl_records(
             protocol["quirks"] = quirks
         vendor_id, product_id = key
         records[key] = {
-            "$schema": RECORD_SCHEMA_ID,
+            **header(KINDS["controller"]),
             "vendorID": vendor_id,
             "productID": product_id,
             "protocol": protocol,
@@ -484,19 +481,20 @@ def load_overrides(
 ) -> list[tuple[str, tuple[int, int], dict[str, Any]]]:
     result: list[tuple[str, tuple[int, int], dict[str, Any]]] = []
     seen: set[tuple[int, int]] = set()
-    schema_id = (
-        "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/"
-        "Resources/Schemas/v1beta1/controller-override.schema.json"
-    )
     for path in sorted(override_dir.glob("*/*.json")):
         document = json.loads(path.read_text())
-        if document.get("$schema") != schema_id:
-            raise CatalogError(f"{path}: invalid override schema")
+        expected_header = header(KINDS["controller-override"])
+        for member, expected_value in expected_header.items():
+            if document.get(member) != expected_value:
+                raise CatalogError(
+                    f"{path}: {member} must be {expected_value}, "
+                    f"found {document.get(member)!r}"
+                )
         operation = document.get("operation")
         allowed = (
-            {"$schema", "operation", "record"}
+            {"apiVersion", "kind", "operation", "record"}
             if operation == "add"
-            else {"$schema", "operation", "vendorID", "productID", "set"}
+            else {"apiVersion", "kind", "operation", "vendorID", "productID", "set"}
         )
         if operation not in {"add", "patch"} or set(document) != allowed:
             raise CatalogError(f"{path}: invalid override shape")
