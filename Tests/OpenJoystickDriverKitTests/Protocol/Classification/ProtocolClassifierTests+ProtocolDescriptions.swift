@@ -72,6 +72,42 @@ extension ProtocolClassifierTests {
     }
   }
 
+  @Test
+  func protocolDescriptionSchemaAdmitsExactlyEachFamilysVariants() throws {
+    let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+      .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+      .deletingLastPathComponent()
+    let url = root.appendingPathComponent(
+      "Resources/Schemas/v1beta1/protocol-description.schema.json"
+    )
+    let schema = try #require(
+      JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any]
+    )
+    let definitions = schema["$defs"] as? [String: Any]
+    let signature = definitions?["interfaceSignature"] as? [String: Any]
+    let variant = (signature?["properties"] as? [String: Any])?["variant"] as? [String: Any]
+    #expect(variant?["enum"] as? [String] == PhysicalProtocolVariantID.allCases.map(\.rawValue))
+
+    var rules: [String: [String: Any]] = [:]
+    for rule in try #require(schema["allOf"] as? [[String: Any]]) {
+      let condition = (rule["if"] as? [String: Any])?["properties"] as? [String: Any]
+      let family = try #require((condition?["family"] as? [String: Any])?["const"] as? String)
+      let then = (rule["then"] as? [String: Any])?["properties"] as? [String: Any]
+      rules[family] = then?["interfaceSignatures"] as? [String: Any]
+    }
+    #expect(Set(rules.keys) == Set(PhysicalProtocolID.allCases.map(\.rawValue)))
+    for protocolID in PhysicalProtocolID.allCases {
+      let signatures = rules[protocolID.rawValue]
+      if protocolID.variants.isEmpty {
+        #expect(signatures?["maxItems"] as? Int == 0, "\(protocolID.rawValue)")
+      } else {
+        let items = (signatures?["items"] as? [String: Any])?["properties"] as? [String: Any]
+        let allowed = (items?["variant"] as? [String: Any])?["enum"] as? [String]
+        #expect(allowed == protocolID.variants.map(\.rawValue), "\(protocolID.rawValue)")
+      }
+    }
+  }
+
   // MARK: - Helpers
 
   func protocolDescription(

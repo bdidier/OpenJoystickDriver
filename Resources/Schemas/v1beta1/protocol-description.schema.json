@@ -1,7 +1,7 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
 	"$id": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/protocol-description.schema.json",
-	"$comment": "Each family's variants are PhysicalProtocolID.variants in Swift.",
+	"$comment": "Each family's variants are PhysicalProtocolID.variants in Swift; a family with none has no interface signatures.",
 	"type": "object",
 	"additionalProperties": false,
 	"required": ["$schema", "family", "interfaceSignatures"],
@@ -22,6 +22,38 @@
 		}
 	},
 	"allOf": [
+		{
+			"if": {
+				"properties": {
+					"family": {
+						"const": "hid.descriptor"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"interfaceSignatures": {
+						"maxItems": 0
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"family": {
+						"const": "hid.report-layout"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"interfaceSignatures": {
+						"maxItems": 0
+					}
+				}
+			}
+		},
 		{
 			"if": {
 				"properties": {
@@ -87,6 +119,268 @@
 					}
 				}
 			}
+		},
+		{
+			"if": {
+				"properties": {
+					"family": {
+						"const": "sony.sixaxis"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"interfaceSignatures": {
+						"items": {
+							"properties": {
+								"variant": {
+									"enum": ["usb", "bluetooth-classic"]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"family": {
+						"const": "sony.dualshock4"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"interfaceSignatures": {
+						"items": {
+							"properties": {
+								"variant": {
+									"enum": ["usb", "bluetooth-classic"]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"family": {
+						"const": "sony.dualsense"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"interfaceSignatures": {
+						"items": {
+							"properties": {
+								"variant": {
+									"enum": ["usb", "bluetooth-classic"]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"family": {
+						"const": "nintendo.switch1"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"interfaceSignatures": {
+						"items": {
+							"properties": {
+								"variant": {
+									"enum": ["usb", "bluetooth-classic"]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"family": {
+						"const": "nintendo.switch2"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"interfaceSignatures": {
+						"items": {
+							"properties": {
+								"variant": {
+									"enum": ["usb", "bluetooth-le"]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"family": {
+						"const": "nintendo.switch-input-only"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"interfaceSignatures": {
+						"items": {
+							"properties": {
+								"variant": {
+									"enum": ["usb", "bluetooth-classic"]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"family": {
+						"const": "valve.steam-controller"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"interfaceSignatures": {
+						"items": {
+							"properties": {
+								"variant": {
+									"enum": ["wired", "dongle", "bluetooth-le"]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"family": {
+						"const": "valve.steam-triton"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"interfaceSignatures": {
+						"items": {
+							"properties": {
+								"variant": {
+									"enum": ["wired", "dongle", "bluetooth-le"]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"family": {
+						"const": "valve.steam-deck"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"interfaceSignatures": {
+						"maxItems": 0
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"family": {
+						"const": "vendor.flydigi"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"interfaceSignatures": {
+						"maxItems": 0
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"family": {
+						"const": "vendor.ps3-third-party"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"interfaceSignatures": {
+						"maxItems": 0
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"family": {
+						"const": "vendor.gamesir"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"interfaceSignatures": {
+						"items": {
+							"properties": {
+								"variant": {
+									"enum": ["usb", "enhanced-hid"]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"family": {
+						"const": "vendor.nvidia-shield"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"interfaceSignatures": {
+						"maxItems": 0
+					}
+				}
+			}
 		}
 	],
 	"$defs": {
@@ -96,7 +390,7 @@
 			"required": ["variant", "interfaceClass", "interfaceSubclass", "interfaceProtocol"],
 			"properties": {
 				"variant": {
-					"$ref": "controller.schema.json#/$defs/protocol/properties/variant"
+					"enum": ["usb", "bluetooth-classic", "bluetooth-le", "gamepad", "wired", "receiver", "dongle", "enhanced-hid"]
 				},
 				"interfaceClass": {
 					"$ref": "#/$defs/byte"
