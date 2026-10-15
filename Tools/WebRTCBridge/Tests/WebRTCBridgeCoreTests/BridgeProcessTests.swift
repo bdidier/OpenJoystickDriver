@@ -27,8 +27,8 @@ final class BridgeProcessTests: XCTestCase {
     process.waitUntilExit()
     return Result(
       status: process.terminationStatus,
-      output: String(decoding: outputData, as: UTF8.self),
-      error: String(decoding: errorData, as: UTF8.self)
+      output: String(bytes: outputData, encoding: .utf8) ?? "",
+      error: String(bytes: errorData, encoding: .utf8) ?? ""
     )
   }
 
