@@ -43,6 +43,13 @@ extension DeviceManager {
     )
   }
 
+  /// Stamps the endpoint delivery on the newest frame of the controller attached as `token`; a
+  /// token that no connected controller holds stamps nothing.
+  public func endpointDelivered(session token: ControllerSessionToken, at nanoseconds: UInt64) {
+    guard let identifier = connectedIdentifier(for: .session(token)) else { return }
+    frameTimings.endpointDelivered(for: identifier, at: nanoseconds)
+  }
+
   /// Returns a snapshot of every connected controller.
   /// Used by the application service to report its live device list.
   public func connectedDeviceDescriptions() async -> [ConnectedDeviceSnapshot] {

@@ -15,6 +15,38 @@ private final class StickParser: PhysicalProtocolDriver {
   }
 }
 
+private struct PublishFailure: Error {}
+
+/// Publishes like the virtual device does: reports the publication only when it succeeds.
+final class PublishingDispatcher: OutputDispatcher, @unchecked Sendable {
+  enum Outcome: Sendable { case publishes, fails, suppressed }
+
+  var suppressOutput = false
+  private let outcome: Outcome
+  init(_ outcome: Outcome) { self.outcome = outcome }
+
+  func dispatch(
+    _: ControllerEvent,
+    labels _: ControllerButtonLabels,
+    from _: LogicalControllerID
+  ) {}
+
+  func activateOutput(for _: LogicalControllerID) {}
+
+  func dispatchPublishing(
+    _: ControllerEvent,
+    labels _: ControllerButtonLabels,
+    from _: LogicalControllerID,
+    onPublished: @escaping @Sendable () -> Void
+  ) throws {
+    switch outcome {
+    case .publishes: onPublished()
+    case .fails: throw PublishFailure()
+    case .suppressed: return
+    }
+  }
+}
+
 struct FrameTimingsTests {
   private let identifier = LogicalControllerID(vendorID: 1, productID: 2)
 
@@ -26,7 +58,7 @@ struct FrameTimingsTests {
       identifier: identifier,
       transport: .hid(address: .ioKit(locationID: 6, interfaceNumber: nil)),
       driver: StickParser(),
-      dispatcher: ControllerSessionOutputProbe(),
+      dispatcher: PublishingDispatcher(.publishes),
       frameTimings: recorder
     ) {
       ticks.withLock { value in
@@ -48,6 +80,57 @@ struct FrameTimingsTests {
     #expect(Set(stages.map(\.nanoseconds)).count == stages.count)
     await pipeline.stop()
     #expect(recorder.frames(for: identifier).isEmpty)
+  }
+
+  @Test(arguments: [PublishingDispatcher.Outcome.fails, .suppressed])
+  func aFrameThatNeverReachedTheVirtualDeviceHasNoDeliveryStage(
+    outcome: PublishingDispatcher.Outcome
+  ) async {
+    let ticks = Locked<UInt64>(1_000)
+    let recorder = FrameTimingRecorder()
+    let pipeline = DevicePipeline(
+      identifier: identifier,
+      transport: .hid(address: .ioKit(locationID: 6, interfaceNumber: nil)),
+      driver: StickParser(),
+      dispatcher: PublishingDispatcher(outcome),
+      frameTimings: recorder
+    ) {
+      ticks.withLock { value in
+        value += 10
+        return value
+      }
+    }
+    await pipeline.start()
+    await pipeline.feedHIDData(Data([1]))
+
+    let stages = recorder.frames(for: identifier).first?.stages.map(\.stage)
+    #expect(stages == [.read, .parse, .dispatch], "\(String(describing: stages))")
+    await pipeline.stop()
+  }
+
+  @Test
+  func theRouterReportsAPublicationOnlyWhileOutputIsNotSuppressed() async throws {
+    let router = VirtualOutputRouter()
+    router.setBackend(PublishingDispatcher(.publishes))
+    let published = Locked(0)
+    let event = ControllerEvent([], at: 1)
+    let count: @Sendable () -> Void = { published.withLock { $0 += 1 } }
+
+    try await router.dispatchPublishing(
+      event,
+      labels: .standard,
+      from: identifier,
+      onPublished: count
+    )
+    router.suppressOutput = true
+    try await router.dispatchPublishing(
+      event,
+      labels: .standard,
+      from: identifier,
+      onPublished: count
+    )
+
+    #expect(published.withLock { $0 } == 1)
   }
 
   @Test

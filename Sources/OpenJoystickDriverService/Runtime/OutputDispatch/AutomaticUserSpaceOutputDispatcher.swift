@@ -184,7 +184,27 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
     labels: ControllerButtonLabels,
     from identifier: LogicalControllerID
   ) async {
-    try? await deliver(.input(event, labels), from: identifier)
+    let unobserved: @Sendable () -> Void = {}
+    try? await dispatchPublishing(
+      event,
+      labels: labels,
+      from: identifier,
+      onPublished: unobserved
+    )
+  }
+
+  func dispatchPublishing(
+    _ event: ControllerEvent,
+    labels: ControllerButtonLabels,
+    from identifier: LogicalControllerID,
+    onPublished: @escaping @Sendable () -> Void
+  ) async throws {
+    do {
+      try await deliver(.input(event, labels), from: identifier, onPublished: onPublished)
+    } catch {
+      await synchronizeDiagnostics()
+      throw error
+    }
     await synchronizeDiagnostics()
   }
 
@@ -223,7 +243,8 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
 
   private func deliver(
     _ delivery: AutomaticOutputDelivery,
-    from identifier: LogicalControllerID
+    from identifier: LogicalControllerID,
+    onPublished: @escaping @Sendable () -> Void = {}
   ) async throws {
     await coordinator.synchronizeSuppression { self.suppressOutput }
     let generation = cacheGeneration(for: identifier)
@@ -240,7 +261,11 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
     else { throw RemappingEventEngineError.sinkUnavailable }
     do {
       await coordinator.recordPublicationAttempt(for: identifier)
-      try await delivery.publish(through: lease.backend, for: identifier)
+      try await delivery.publish(
+        through: lease.backend,
+        for: identifier,
+        onPublished: onPublished
+      )
       await coordinator.recordPublicationCompletion(for: identifier)
     } catch {
       await lease.release()

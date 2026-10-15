@@ -143,7 +143,19 @@ extension DevicePipeline {
     var state = event.state
     state.connection = currentConnectionState()
     let sequence = frameTimings.dispatched(for: identifier, at: uptimeNanoseconds())
-    await dispatcher.dispatch(
+    let frameTimings = frameTimings
+    let identifier = identifier
+    let uptimeNanoseconds = uptimeNanoseconds
+    let stampDelivery: @Sendable () -> Void = {
+      guard let sequence else { return }
+      frameTimings.virtualDeviceDelivered(
+        sequence: sequence,
+        for: identifier,
+        at: uptimeNanoseconds()
+      )
+    }
+    // A failed or suppressed publish stamps nothing; the pipeline still ignores the failure.
+    try? await dispatcher.dispatchPublishing(
       ControllerEvent(
         timestamp: event.timestamp,
         state: state,
@@ -152,15 +164,9 @@ extension DevicePipeline {
         isFresh: event.isFresh
       ),
       labels: buttonLabels,
-      from: identifier
+      from: identifier,
+      onPublished: stampDelivery
     )
-    if let sequence {
-      frameTimings.virtualDeviceDelivered(
-        sequence: sequence,
-        for: identifier,
-        at: uptimeNanoseconds()
-      )
-    }
   }
 
   /// The link and power state now; nil for a pipeline built without a binding.

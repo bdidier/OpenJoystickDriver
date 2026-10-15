@@ -101,10 +101,7 @@ public final class ApplicationServiceServer: @unchecked Sendable {
     try server.start()
     let streamDelivered: @Sendable (ControllerSessionToken, UInt64) async -> Void = {
       [weak self] token, nanoseconds in
-      guard let manager = self?.deviceManager,
-        let identifier = await manager.connectedIdentifier(for: .session(token))
-      else { return }
-      await manager.frameTimings.endpointDelivered(for: identifier, at: nanoseconds)
+      await self?.deviceManager.endpointDelivered(session: token, at: nanoseconds)
     }
     let endpoint = EndpointServer(
       source: ApplicationServiceWatchSource(server: self),

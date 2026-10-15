@@ -10,7 +10,8 @@ extension UserSpaceOutputDispatcher {
     input: ControllerState?,
     labels: ControllerButtonLabels,
     from identifier: LogicalControllerID,
-    remappedState: RemappingGamepadState?
+    remappedState: RemappingGamepadState?,
+    onPublished: @escaping @Sendable () -> Void = {}
   ) async throws {
     let neutralizing = remappedState == .neutral
     let remapped = remappedState != nil
@@ -53,6 +54,7 @@ extension UserSpaceOutputDispatcher {
           activeEntry.inputReportState.claimDelivery(of: primaryReport) ? [primaryReport] : []
         return primary + activeEntry.inputReportState.claimChangedAuxiliaryReports()
       }.value()
+      onPublished()
       registryLock.withLock { recomputeStatusLocked() }
     } catch {
       let removed = registryLock.withLock { () -> Entry? in

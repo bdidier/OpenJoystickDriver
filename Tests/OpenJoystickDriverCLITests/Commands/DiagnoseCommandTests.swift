@@ -189,6 +189,20 @@ struct DiagnoseCommandTests {
   }
 
   @Test
+  func plainListsOneTabSeparatedRowPerRecordedStage() async throws {
+    let socketPath = temporarySocketPath()
+    let server = try serve(socketPath: socketPath)
+    defer { server.stop() }
+
+    let plain = await run(["--plain"], socketPath: socketPath)
+
+    let rows = plain.standardOutput.split(separator: "\n").map(String.init)
+    #expect(rows.contains("timing\tctrl-1\t4\tread\t100"), "\(rows)")
+    #expect(rows.contains("timing\tctrl-1\t4\tdispatch\t200"), "\(rows)")
+    #expect(rows.contains("timing\tctrl-1\t4\tdelivery-endpoint\t900"), "\(rows)")
+  }
+
+  @Test
   func aStoppedServiceSkipsItsChecksAndNeverExits69() async throws {
     let result = await run(["--json"], socketPath: temporarySocketPath())
 

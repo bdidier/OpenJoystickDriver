@@ -365,6 +365,8 @@ The checks are `service`, `extension-bundle`, `extension-registration`, `input-m
 
 With `--json`, the output is a `Diagnosis` with `checks`, each with `id`, `status`, and `detail`, and `bundle` when you wrote one.
 
+Each connected controller also lists the timing of its newest frames. Every frame carries a time in nanoseconds on the service's monotonic uptime clock for each stage it reached: `read`, `parse`, `dispatch`, `delivery-virtual-device`, and `delivery-endpoint`. The service keeps the last 8 frames of each controller, and the list is empty while the service is stopped. `delivery-virtual-device` is present only when the report reached the virtual device, so a failed or suppressed publish leaves it out. The endpoint polls the controller state, so `delivery-endpoint` goes on the controller's newest frame when the poll runs, and a frame replaced by a newer one before the poll gets none. With `--json`, the timings are `timings`, each with `controller`, `name`, and `frames`. With `--plain`, each stage is a row of `timing`, controller, frame sequence, stage, and nanoseconds. Without either, each frame is one line after the checks. `--bundle` does not include timings.
+
 ## update
 
 Check whether a newer release exists.

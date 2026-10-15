@@ -1056,7 +1056,7 @@
 					"const": "Diagnosis"
 				},
 				"timings": {
-					"description": "The newest frames of each connected controller, oldest first; empty while the service is stopped. Nanoseconds are on the service's monotonic uptime clock.",
+					"description": "The newest frames of each connected controller, oldest first; empty while the service is stopped. Nanoseconds are on the service's monotonic uptime clock. Each controller keeps its last 8 frames. The endpoint polls, so delivery-endpoint goes on the newest frame at the poll and a frame replaced by a newer one before the poll gets none.",
 					"type": "array",
 					"items": {
 						"type": "object",
