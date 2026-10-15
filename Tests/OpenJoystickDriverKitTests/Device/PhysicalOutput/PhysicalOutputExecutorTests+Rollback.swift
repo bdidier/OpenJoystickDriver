@@ -98,7 +98,7 @@ extension PhysicalOutputExecutorTests {
   }
 
   /// A failed stop-rumble leaves no manual claim, and a retried stop writes.
-  @Test(.timeLimit(.minutes(2)))
+  @Test
   func failedStopRumbleLeavesNoClaimAndRetryWrites() async throws {
     let started = try await startSixaxis(locationID: 530)
     let manager = started.manager

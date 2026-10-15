@@ -5,6 +5,7 @@ import Testing
 
 /// The per-interface output executor: each command encodes and writes as one queue operation, so
 /// a stateful encoder's reports reach the controller in encode order.
+@Suite(.timeLimit(.minutes(2)))
 struct PhysicalOutputExecutorTests {
   struct Started {
     let backend: ScriptedHIDAccessBackend
@@ -57,7 +58,7 @@ struct PhysicalOutputExecutorTests {
   /// the one before it in at most that one field; a report written out of encode order carries a
   /// later command's field without an earlier one's. Some commands run at background priority,
   /// which the output queue must not let stall the rest, so a stall fails the test.
-  @Test(.timeLimit(.minutes(2)))
+  @Test
   func concurrentStatefulCommandsWriteInEncodeOrder() async throws {
     let started = try await startSixaxis(locationID: 520)
     let manager = started.manager

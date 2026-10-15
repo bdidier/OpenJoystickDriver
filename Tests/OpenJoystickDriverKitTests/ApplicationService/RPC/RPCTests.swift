@@ -10,7 +10,7 @@ private func waitForSemaphore(
   timeout: DispatchTime
 ) -> DispatchTimeoutResult { semaphore.wait(timeout: timeout) }
 
-@Suite(.serialized)
+@Suite(.serialized, .timeLimit(.minutes(2)))
 struct LocalServiceRPCTests {
   @Test
   func roundTripUsesPrivateSocketAndBoundedJSONFrame() async throws {

@@ -4,7 +4,7 @@ import Testing
 
 @testable import OpenJoystickDriverService
 
-@Suite(.serialized)
+@Suite(.serialized, .timeLimit(.minutes(2)))
 struct RemappingProfileTransactionIsolationTests {
   @Test
   func rejectedCandidateCannotEmitBeforeExactRollbackCompletes() async throws {
