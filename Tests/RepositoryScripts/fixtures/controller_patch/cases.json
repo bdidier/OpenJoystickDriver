@@ -943,6 +943,37 @@
   ],
   "rejected": [
     {
+      "name": "a patch with no apiVersion",
+      "code": "E5001",
+      "document": {
+        "kind": "ControllerPatch",
+        "selector": {
+          "all": true
+        },
+        "patch": {
+          "tuning": {
+            "stickDeadzone": 0.1
+          }
+        }
+      }
+    },
+    {
+      "name": "a patch with the unsupported apiVersion openjoystickdriver.io/v1beta1",
+      "code": "E5001",
+      "document": {
+        "apiVersion": "openjoystickdriver.io/v1beta1",
+        "kind": "ControllerPatch",
+        "selector": {
+          "all": true
+        },
+        "patch": {
+          "tuning": {
+            "stickDeadzone": 0.1
+          }
+        }
+      }
+    },
+    {
       "name": "the removed ControllerOverride kind",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",

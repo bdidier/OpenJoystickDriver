@@ -1300,7 +1300,7 @@
 "cli.mod.already_installed" = "%@ ist bereits installiert. Mit --force ersetzen.";
 "cli.mod.not_installed" = "%@ ist nicht installiert. „ojd mod list“ zeigt die installierten Pakete.";
 "cli.mod.validate.abstract" = "Einen Mod-Paketordner prüfen, ohne ihn zu installieren.";
-"cli.mod.validate.discussion" = "Prüft das Manifest, ob das Paket mit dieser Version läuft, ob seine Dateien die aufgelisteten und gültig sind und ob keine mit deinen Dateien oder einem anderen Paket kollidiert. Endet mit 1 und dem E4xxx-Code, wenn das Paket abgelehnt wird.";
+"cli.mod.validate.discussion" = "Prüft das Manifest, ob das Paket mit dieser Version läuft, ob seine Dateien die aufgelisteten und gültig sind und ob keine mit deinen Dateien oder einem anderen Paket kollidiert. Endet mit 1 und dem Code E4xxx oder E5001, wenn das Paket abgelehnt wird.";
 "cli.mod.validate.valid" = "%@ ist ein gültiges Paket: %@ %@. Mit „ojd mod install“ installieren.";
 "cli.mod.install.abstract" = "Ein Mod-Paket prüfen und für dein Konto installieren.";
 "cli.mod.install.discussion" = "Kopiert das Paket nach Packages/NAME und tauscht es sofort ein; der laufende Dienst übernimmt es. Ein bereits installiertes Paket gleichen Namens wird abgelehnt, außer du gibst --force an. --force überschreibt nie requires, eine Identitätskollision oder eine Kollision von Profil-ID oder -Name. --dry-run prüft das Paket und schreibt nichts.";
@@ -1308,7 +1308,7 @@
 "cli.mod.install.dry_run" = "%@ würde installiert werden.";
 "cli.mod.install.success" = "%@ installiert. Der laufende Dienst übernimmt es jetzt.";
 "cli.mod.list.abstract" = "Die installierten Mod-Pakete und ihre Dateien auflisten.";
-"cli.mod.list.discussion" = "Listet jedes Paket mit Version, Autor und Dateien auf. Ein Paket, das OJD nicht verwendet, etwa weil requires diese Version ausschließt, zeigt den Grund mit seinem E4xxx-Code.";
+"cli.mod.list.discussion" = "Listet jedes Paket mit Version, Autor und Dateien auf. Ein Paket, das OJD nicht verwendet, etwa weil requires diese Version ausschließt, zeigt den Grund mit seinem Code E4xxx oder E5001.";
 "cli.mod.list.problem" = "  Nicht verwendet: %@";
 "cli.mod.remove.abstract" = "Ein installiertes Mod-Paket entfernen.";
 "cli.mod.remove.discussion" = "Löscht nur Packages/NAME. Fragt im Terminal nach Bestätigung, sonst ist --force nötig. --dry-run prüft, ob das Paket installiert ist, und ändert nichts. Endet mit 1 und E4006, wenn es nicht installiert ist.";
@@ -1585,6 +1585,7 @@
 "cli.explain.area.cli" = "Befehlszeile";
 "cli.explain.area.remapping" = "Neuzuordnung";
 "cli.explain.area.mod" = "Mod-Pakete";
+"cli.explain.area.document" = "Dokumente";
 "cli.explain.exit_code" ="Exit-Code: %@";
 "cli.explain.wire" = "Wire-Wert: %@";
 "cli.error.stale_installation" = "Die installierte OpenJoystickDriver.app ist älter als diese Repository-Quellen. Führe „./Scripts/ojd build install-fast dev“ aus oder setze OJD_RUN_REPOSITORY_CLI=1, um diesen Build auszuführen.";
@@ -1647,4 +1648,8 @@
 "error.E4005" = "Ein Paket mit diesem Namen ist bereits installiert. Führe den Befehl mit --force aus, um es zu ersetzen.";
 "error.E4006" = "Kein installiertes Paket hat diesen Namen. Führe ojd mod list aus, um die installierten Pakete anzuzeigen.";
 "error.E4007" = "Der Paketordner konnte nicht geändert werden. Prüfe den freien Speicherplatz und die Ordnerberechtigungen.";
+"error.E5001" = "Einem Dokument fehlt die apiVersion, oder seine apiVersion wird von dieser Version von OpenJoystickDriver nicht unterstützt. Ändere das Dokument auf die unterstützte apiVersion, die die Meldung nennt, und führe den Befehl erneut aus.";
+"error.E5002" = "Eine Protokollbeschreibung ist ungültig. Prüfe die Datei gegen das Schema protocol-description und korrigiere das Feld, das die Meldung nennt.";
+"error.E5003" = "Eine Protokollbeschreibung nennt eine Familie, die vom Dateinamen abweicht. Benenne die Datei nach ihrer Familie.";
+"error.E5004" = "Eine Protokollbeschreibung führt eine Variante auf, die ihre Familie nicht hat. Verwende eine der Varianten der Familie.";
 "error.withCode" ="%@ (%@)";

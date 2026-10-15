@@ -32,9 +32,26 @@ class ControllerPatchTests(unittest.TestCase):
         for case in load_cases()["rejected"]:
             with (
                 self.subTest(case=case["name"]),
-                self.assertRaises(controller_patch.PatchError),
+                self.assertRaises(controller_patch.PatchError) as raised,
             ):
                 controller_patch.parse_patch(case["document"])
+            self.assertEqual(raised.exception.code, case.get("code"))
+
+    def test_a_missing_or_unsupported_api_version_is_e5001(self) -> None:
+        rejected = {case["name"]: case for case in load_cases()["rejected"]}
+        missing = rejected["a patch with no apiVersion"]
+        with self.assertRaises(controller_patch.PatchError) as raised:
+            controller_patch.parse_patch(missing["document"])
+        self.assertEqual(
+            str(raised.exception),
+            "E5001: no apiVersion found; "
+            "the supported apiVersion is openjoystickdriver/v1alpha1",
+        )
+        old = "openjoystickdriver.io/v1beta1"
+        with self.assertRaises(controller_patch.PatchError) as raised:
+            controller_patch.parse_patch({**missing["document"], "apiVersion": old})
+        self.assertEqual(raised.exception.code, "E5001")
+        self.assertIn(f"apiVersion {old} is not supported", str(raised.exception))
 
     def test_the_cases_cover_the_required_behaviour(self) -> None:
         names = {case["name"] for case in load_cases()["cases"]}

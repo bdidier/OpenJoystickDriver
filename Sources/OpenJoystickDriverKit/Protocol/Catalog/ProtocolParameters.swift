@@ -272,21 +272,9 @@ public struct ProtocolParameters: Codable, Equatable, Sendable {
     return result
   }
 
-  /// The parameter names each protocol driver declares.
+  /// The parameter names the family's protocol description declares.
   static func declared(by family: PhysicalProtocolID) -> Set<String> {
-    switch family {
-    case .xboxGIP: ["shareButton"]
-    case .nintendoSwitch1: ["layout", "usbProtocol"]
-    case .nintendoSwitch2: ["layout"]
-    case .vendorGameSir: ["innerGrips", "lightingMemory"]
-    case .vendorPS3ThirdParty: ["hatSource"]
-    case .sonyDualShock4: ["motionCalibration", "role", "motionScale"]
-    case .vendorNVIDIAShield: ["reportRevision"]
-    case .hidDescriptor: ["usageLayout"]
-    case .sonyDualSense:
-      ["maker", "unprobedSensors", "unprobedTouchpad", "forcedVibration", "role"]
-    default: []
-    }
+    ProtocolDescription.bundled[family].map { Set($0.parameters.keys) } ?? []
   }
 
   /// Why the parameters cannot belong to `family`, or nil when its driver declares them all and
@@ -320,6 +308,29 @@ public struct ProtocolParameters: Codable, Equatable, Sendable {
       // without the mode.
       if maker == nil, !isEmpty { return "DualSense model parameters require maker ThirdParty" }
     default: break
+    }
+    return valueViolation(family: family)
+  }
+
+  /// Why a set parameter holds a value its family's description does not declare, or nil. The
+  /// enum values and integer ranges come from the description, not from this type.
+  private func valueViolation(family: PhysicalProtocolID) -> String? {
+    guard let declared = ProtocolDescription.bundled[family]?.parameters else { return nil }
+    let enumValues: [String: String?] = [
+      "layout": layout?.rawValue, "usbProtocol": usbProtocol?.rawValue,
+      "lightingMemory": lightingMemory?.rawValue, "hatSource": hatSource?.rawValue,
+      "motionCalibration": motionCalibration?.rawValue, "role": role?.rawValue,
+      "motionScale": motionScale?.rawValue, "reportRevision": reportRevision?.rawValue,
+      "usageLayout": usageLayout?.rawValue, "maker": maker?.rawValue,
+    ]
+    for (name, value) in enumValues.sorted(by: { $0.key < $1.key }) {
+      guard let value, case .enumeration(let values)? = declared[name] else { continue }
+      if !values.contains(value) { return "\(name) \(value) is not one of \(values)" }
+    }
+    if let shareButton, case .object(let fields)? = declared["shareButton"],
+      let range = fields["fromEnd"], !range.contains(shareButton.fromEnd)
+    {
+      return "shareButton.fromEnd must be in \(range)"
     }
     return nil
   }

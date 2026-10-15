@@ -172,20 +172,63 @@ def validate_documents(
             ) from error
 
 
+# The catalog codes of an invalid protocol description, as ProtocolDescription.decode throws them.
+UNSUPPORTED_API_VERSION = "E5001"
+INVALID_PROTOCOL_DESCRIPTION = "E5002"
+PROTOCOL_DESCRIPTION_FAMILY_MISMATCH = "E5003"
+UNKNOWN_PROTOCOL_VARIANT = "E5004"
+
+
+def protocol_description_code(error: ValidationError) -> str:
+    """The catalog code for a schema failure.
+
+    E5001 when apiVersion is missing or not the supported one, E5004 when a variant is not the
+    family's, and E5002 for every other invalid field.
+    """
+    path = list(error.absolute_path)
+    missing_version = (
+        error.validator == "required" and not path and "'apiVersion'" in error.message
+    )
+    if path == ["apiVersion"] or missing_version:
+        return UNSUPPORTED_API_VERSION
+    # The schema forbids the signature list of a family with no variants with a false schema, and
+    # jsonschema reports that failure on the list itself, without a path.
+    forbidden_list = (
+        error.validator is None
+        and isinstance(error.instance, list)
+        and all(isinstance(item, dict) and "variant" in item for item in error.instance)
+    )
+    names_variant = (
+        path[:1] == ["interfaceSignatures"] and path[-1:] == ["variant"]
+    ) or forbidden_list
+    return UNKNOWN_PROTOCOL_VARIANT if names_variant else INVALID_PROTOCOL_DESCRIPTION
+
+
 def validate_protocol_descriptions(
     schema: dict[str, object],
     registry: Registry,
     paths: list[Path],
 ) -> None:
-    validate_documents(schema, registry, paths)
-    # The app loads Resources/Protocols/<family>.json by family, so a renamed file would
-    # otherwise fail only at launch.
+    """Validates protocol descriptions; every failure names its error catalog code."""
+    validator = Draft202012Validator(schema, registry=registry)
     for path in paths:
         document = load_json(path)
+        try:
+            validator.validate(document)
+        except ValidationError as error:
+            location = ".".join(str(component) for component in error.absolute_path)
+            suffix = f" at {location}" if location else ""
+            raise ValidationError(
+                f"{protocol_description_code(error)}: {path.relative_to(ROOT)}{suffix}: "
+                f"{error.message}"
+            ) from error
+        # The app loads Resources/Protocols/<family>.json by family, so a renamed file would
+        # otherwise fail only at launch.
         family = document.get("family") if isinstance(document, dict) else None
         if path.stem != family:
             raise ValidationError(
-                f"{path.relative_to(ROOT)}: file name must be {family}.json"
+                f"{PROTOCOL_DESCRIPTION_FAMILY_MISMATCH}: {path.relative_to(ROOT)}: "
+                f"file name must be {family}.json"
             )
 
 

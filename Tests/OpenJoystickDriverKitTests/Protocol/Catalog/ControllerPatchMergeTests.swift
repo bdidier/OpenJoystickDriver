@@ -50,7 +50,13 @@ struct ControllerPatchMergeTests {
     for fixture in rejected {
       let name = try #require(fixture["name"] as? String)
       let document = try #require(fixture["document"] as? [String: Any])
-      #expect(throws: (any Error).self, "\(name)") { try ControllerPatch.parse(document) }
+      do {
+        _ = try ControllerPatch.parse(document)
+        Issue.record("\(name) was accepted")
+      } catch {
+        let code = ControllerRecordSet.problemCode(error)?.rawValue
+        #expect(code == fixture["code"] as? String, "\(name)")
+      }
     }
   }
 

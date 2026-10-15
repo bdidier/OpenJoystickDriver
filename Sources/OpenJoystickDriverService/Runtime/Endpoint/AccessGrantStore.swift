@@ -4,7 +4,7 @@ import OpenJoystickDriverKit
 enum AccessGrantStoreError: Error, Equatable, LocalizedError, Sendable {
   case damaged
   /// The file's `apiVersion` or `kind` is not the supported one; the text says what was found.
-  case unsupported(String)
+  case unsupported(DocumentHeaderProblem)
   case unknownClient(String)
   case notGrantable(CodeSigningIdentity.Kind)
   case noScope
@@ -20,9 +20,10 @@ enum AccessGrantStoreError: Error, Equatable, LocalizedError, Sendable {
     case .damaged:
       "The endpoint access file \(AccessGrantStore.fileName) is damaged. "
         + "Fix or delete it, then try again."
-    case .unsupported(let reason):
-      "The endpoint access file \(AccessGrantStore.fileName) is not supported: \(reason). "
-        + "Delete it, then grant access again."
+    case .unsupported(let problem):
+      (problem.code.map { "\($0.rawValue): " } ?? "")
+        + "The endpoint access file \(AccessGrantStore.fileName) is not supported: "
+        + "\(problem.message). Delete it, then grant access again."
     case .unknownClient(let id): "No endpoint client has the ID \(id)."
     case .notGrantable(let kind):
       "A client signed \(kind.rawValue) cannot be granted, because any local program can "
@@ -141,7 +142,7 @@ struct AccessGrantFile: Equatable, Sendable {
 }
 
 /// Why a file's `apiVersion` or `kind` is not the supported one.
-struct AccessGrantHeaderProblem: Error, Equatable, Sendable { let reason: String }
+struct AccessGrantHeaderProblem: Error, Equatable, Sendable { let problem: DocumentHeaderProblem }
 
 extension AccessGrantFile: Codable {
   private enum CodingKeys: String, CodingKey {
@@ -150,12 +151,12 @@ extension AccessGrantFile: Codable {
 
   init(from decoder: any Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
-    if let reason = OpenJoystickDriverAPI.headerProblem(
+    if let problem = OpenJoystickDriverAPI.headerProblem(
       apiVersion: try container.decodeIfPresent(String.self, forKey: .apiVersion),
       kind: try container.decodeIfPresent(String.self, forKey: .kind),
       expected: Self.kind
     ) {
-      throw AccessGrantHeaderProblem(reason: reason)
+      throw AccessGrantHeaderProblem(problem: problem)
     }
     enabled = try container.decode(Bool.self, forKey: .enabled)
     grants = try container.decode([AccessGrant].self, forKey: .grants)
@@ -201,7 +202,7 @@ struct AccessGrantStore: Sendable {
     do {
       decoded = try JSONDecoder().decode(AccessGrantFile.self, from: data)
     } catch let problem as AccessGrantHeaderProblem {
-      throw AccessGrantStoreError.unsupported(problem.reason)
+      throw AccessGrantStoreError.unsupported(problem.problem)
     } catch {
       decoded = nil
     }

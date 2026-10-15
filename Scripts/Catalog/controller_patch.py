@@ -32,11 +32,20 @@ SECTIONS = frozenset(
         "tuning",
     }
 )
+UNSUPPORTED_API_VERSION = "E5001"
 RANK_ALL, RANK_IDENTITY, RANK_MODEL = 0, 1, 2
 
 
 class PatchError(ValueError):
-    """A patch document that is not a valid `ControllerPatch`."""
+    """A patch document that is not a valid `ControllerPatch`.
+
+    `code` is the catalog code, `E5001` when the `apiVersion` is missing or unsupported, and
+    None for every other problem, as `DocumentHeaderProblem.code` is in Swift.
+    """
+
+    def __init__(self, message: str, code: str | None = None) -> None:
+        super().__init__(f"{code}: {message}" if code else message)
+        self.code = code
 
 
 def model_id(record: dict[str, Any]) -> str:
@@ -71,6 +80,17 @@ def selector_rank(selector: dict[str, Any]) -> int:
 def parse_patch(document: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
     """The checked `(selector, patch)` of a `ControllerPatch` document."""
     expected = header(PATCH_KIND)
+    found = document.get("apiVersion")
+    if found != expected["apiVersion"]:
+        detail = (
+            "no apiVersion found"
+            if "apiVersion" not in document
+            else (f"apiVersion {found} is not supported")
+        )
+        raise PatchError(
+            f"{detail}; the supported apiVersion is {expected['apiVersion']}",
+            UNSUPPORTED_API_VERSION,
+        )
     for member, value in expected.items():
         if document.get(member) != value:
             raise PatchError(

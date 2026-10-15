@@ -90,7 +90,7 @@ ojd mod list
 ojd mod remove NAME [--force] [--dry-run]
 ```
 
-- `mod validate`: Check a package folder without installing it. It checks the manifest, `requires`, the files, and clashes. It exits with code 1 and the E4xxx code when the package is refused.
+- `mod validate`: Check a package folder without installing it. It checks the manifest, `requires`, the files, and clashes. It exits with code 1 and the E4xxx or E5001 code when the package is refused.
 - `mod install`: Check the package and copy it to `Packages/NAME`. A package of the same name that is installed is refused with E4005 unless you pass `--force`. `--force` never overrides `requires`, a clash, or an invalid file. `--dry-run` writes nothing.
 - `mod list`: List each installed package with its version, author, and files. A package that OJD does not use shows the reason with its code.
 - `mod remove`: Delete only the folder of that package. It asks first on a terminal and needs `--force` otherwise. It exits with code 1 and E4006 when the package is not installed.

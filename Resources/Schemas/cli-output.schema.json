@@ -2587,7 +2587,7 @@
 				},
 				"code": {
 					"type": "string",
-					"pattern": "^E4[0-9]{3}$"
+					"pattern": "^(E4[0-9]{3}|E5001)$"
 				},
 				"files": {
 					"type": "array",

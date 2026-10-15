@@ -129,7 +129,7 @@ struct ModPackageLayeringTests {
       let set = ControllerRecordSet.load(userDirectory: fixture.controllers)
       #expect(set.records.count == ControllerRecordSet.bundled.records.count)
       #expect(set.problems.map(\.url.lastPathComponent) == ["mod.json"])
-      #expect(set.problems.first?.problem?.hasPrefix("E4001") == true)
+      #expect(set.problems.first?.problem?.hasPrefix("E5001") == true)
     }
   }
 

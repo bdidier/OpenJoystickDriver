@@ -41,10 +41,10 @@ struct RecordValidation: Encodable, Equatable {
   /// `valid: false` with `--json` and exits 1.
   static func check(_ path: String, data: Data) throws -> ValidatedControllerRecord {
     do { return try ControllerRecordSet.validate(data) } catch {
-      let problem = ControllerRecordSet.problemDescription(error)
+      let problem = ControllerRecordSet.problemDescription(error, includingCode: false)
       if CLIContext.current.format == .json { try CLIOutput.json(Self(problem: problem)) }
       throw CLIFailure(
-        .invalidInputFile,
+        ControllerRecordSet.problemCode(error) ?? .invalidInputFile,
         CLILocalized.format("cli.record.invalid", path, problem)
       )
     }
