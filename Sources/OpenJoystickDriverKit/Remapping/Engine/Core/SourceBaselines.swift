@@ -65,8 +65,8 @@ extension RemappingEngineState {
     return changes
   }
 
-  /// Digital controls in the one order that releases and presses are each delivered in, the same for
-  /// every controller.
+  /// Digital controls in the one order that releases and presses are each delivered in, the same
+  /// for every controller.
   static let controlOrder: [Control] =
     [
       .south, .east, .west, .north, .leftShoulder, .rightShoulder, .leftStickClick,

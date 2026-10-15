@@ -131,9 +131,9 @@ extension OutputCharacterizationTests {
     )
   }
 
-  /// Passthrough carries each family's controls as engine sources. A real DualSense report drives the
-  /// PlayStation family: Create reaches Share (bit 15, not View bit 9), Options reaches Start, PS
-  /// reaches Guide. Standard View, Menu, Guide and the right pad click follow as parser events.
+  /// Passthrough carries each family's controls as engine sources. A real DualSense report drives
+  /// the PlayStation family: Create reaches Share (bit 15, not View bit 9), Options reaches
+  /// Start, PS reaches Guide. Standard View, Menu, Guide and the right pad click follow as parser events.
   @Test
   func passthroughFamilyControls() async throws {
     let playStation = EngineSession(Self.profile(.passthrough), device: Self.playStation)
@@ -206,8 +206,8 @@ extension OutputCharacterizationTests {
     #expect(
       lines == [
         "+b", "  pad [East] d=[] a=[]", "    b=0002 h=0 ls=0,0 rs=0,0 t=0,0 f=00 +1",
-        "  out 0200000000000000000000000000", "+a-b", "  pad [East,South] d=[] a=[]",
-        "    b=0003 h=0 ls=0,0 rs=0,0 t=0,0 f=00 +1", "  out 0300000000000000000000000000",
+        "  out 0200000000000000000000000000", "+a-b", "  pad [] d=[] a=[]",
+        "    b=0000 h=0 ls=0,0 rs=0,0 t=0,0 f=00 +1", "  out 0000000000000000000000000000",
         "  pad [South] d=[] a=[]", "    b=0001 h=0 ls=0,0 rs=0,0 t=0,0 f=00 +1",
         "  out 0100000000000000000000000000", "+x+y", "  pad [South,West] d=[] a=[]",
         "    b=0005 h=0 ls=0,0 rs=0,0 t=0,0 f=00 +1", "  out 0500000000000000000000000000",
@@ -224,7 +224,7 @@ extension OutputCharacterizationTests {
     )
   }
 
-  /// Keyboard destinations of one batch follow the batch's event order.
+  /// Keyboard destinations of one batch follow the releases-before-presses order.
   @Test
   func twoKeysInOneBatch() async throws {
     let session = EngineSession(
@@ -242,7 +242,7 @@ extension OutputCharacterizationTests {
     lines += try await session.step("+a", [.press(.south)])
     #expect(
       lines == [
-        "+b", "  sys key-down y", "+a-b", "  sys key-down x", "  sys key-up y", "-a+b",
+        "+b", "  sys key-down y", "+a-b", "  sys key-up y", "  sys key-down x", "-a+b",
         "  sys key-up x", "  sys key-down y", "+a", "  sys key-down x",
       ]
     )
