@@ -381,7 +381,6 @@
                       "hidStartupRecoveryRounds",
                       "hidStartupIntervalMs",
                       "minimumHIDOutputIntervalMs",
-                      "keepAliveIntervalMs",
                       "lizardResendTicks",
                       "usbCommandTimeoutMs",
                       "presenceResendReports",

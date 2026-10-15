@@ -52,7 +52,6 @@
           "minimumHIDOutputIntervalMs",
           "hidStartupRecoveryIntervalMs",
           "hidStartupRecoveryRounds",
-          "keepAliveIntervalMs",
           "lizardResendTicks",
           "usbCommandTimeoutMs",
           "presenceResendReports",
@@ -70,7 +69,6 @@
       "uniqueItems": true,
       "items": {
         "enum": [
-          "keepAliveIntervalMs",
           "lizardResendTicks",
           "usbCommandTimeoutMs",
           "presenceResendReports",
@@ -233,6 +231,7 @@
                   "startup": false
                 }
               },
+              "session": false,
               "tuning": {
                 "properties": {
                   "inputLivenessTimeoutMs": false,
@@ -1125,6 +1124,9 @@
         "output": {
           "$ref": "#/$defs/descriptionOutput"
         },
+        "session": {
+          "$ref": "#/$defs/descriptionSession"
+        },
         "input": {
           "anyOf": [
             {
@@ -1302,7 +1304,7 @@
       }
     },
     "startupVariants": {
-      "description": "The stored variants a startup write is sent on; absent sends it on every variant.",
+      "description": "The stored variants a startup or keep-alive write is sent on; absent sends it on every variant.",
       "type": "array",
       "minItems": 1,
       "maxItems": 8,
@@ -1479,6 +1481,91 @@
               }
             ]
           }
+        }
+      }
+    },
+    "descriptionSession": {
+      "description": "What runs while the device is open. Today the keep-alive; the startup writes join it with the session task.",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "keepAlive": {
+          "$ref": "#/$defs/descriptionKeepAlive"
+        }
+      }
+    },
+    "descriptionKeepAlive": {
+      "description": "The family's keep-alive: its period, and the fixed writes of each run. The driver adds the writes that follow its state. A list may mix HID reports and raw-USB packets, each limited to the variants it is for.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["intervalMilliseconds"],
+      "properties": {
+        "intervalMilliseconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60000
+        },
+        "writes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/descriptionKeepAliveHIDWrite"
+              },
+              {
+                "$ref": "#/$defs/descriptionKeepAliveUSBWrite"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "descriptionKeepAliveHIDWrite": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["report", "bytes"],
+      "properties": {
+        "report": {
+          "$ref": "controller.schema.json#/$defs/startupWrite/properties/report"
+        },
+        "bytes": {
+          "$ref": "controller.schema.json#/$defs/startupWrite/properties/bytes"
+        },
+        "variants": {
+          "$ref": "#/$defs/startupVariants"
+        },
+        "resendTuning": {
+          "description": "The tuning key that gives the number of runs between sends of this write; absent sends it on every run.",
+          "enum": ["lizardResendTicks"]
+        }
+      }
+    },
+    "descriptionKeepAliveUSBWrite": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bytes"],
+      "properties": {
+        "bytes": {
+          "$ref": "controller.schema.json#/$defs/usbStartupWrite/properties/bytes"
+        },
+        "endpoint": {
+          "$ref": "controller.schema.json#/$defs/usbStartupWrite/properties/endpoint"
+        },
+        "timeoutMilliseconds": {
+          "$ref": "controller.schema.json#/$defs/usbStartupWrite/properties/timeoutMilliseconds"
+        },
+        "sessionByte": {
+          "$ref": "controller.schema.json#/$defs/usbStartupWrite/properties/sessionByte"
+        },
+        "variants": {
+          "$ref": "#/$defs/startupVariants"
+        },
+        "resendTuning": {
+          "description": "The tuning key that gives the number of runs between sends of this write; absent sends it on every run.",
+          "enum": ["lizardResendTicks"]
         }
       }
     }

@@ -4,11 +4,10 @@ extension GameSirDriver {
 
   // Share is emitted but not yet declared until per-model evidence confirms it.
   public var sessionPlan: DriverSessionPlan {
-    // The interval is a placeholder that marks which keep-alives run; the description's
-    // `keepAliveIntervalMs` replaces it.
+    // The driver names the channels it keeps alive; the description's
+    // `defaults.session.keepAlive` holds the interval.
     DriverSessionPlan(
-      usbKeepAliveIntervalNanoseconds: gameSirProtocol == .g7ProUSB ? 0 : nil,
-      hidKeepAliveIntervalNanoseconds: 0
+      keepAliveChannels: gameSirProtocol == .g7ProUSB ? [.usb, .hid] : [.hid]
     ).withDefaults(of: .vendorGameSir)
   }
 
@@ -58,19 +57,19 @@ extension GameSirDriver {
     storedPower = nil
   }
 
+  /// The description's keep-alive for this variant: the enhanced HID heartbeat report, or the wired
+  /// G7 packet with its running sequence number.
   public func keepAliveWrites() -> [PhysicalOutputWrite] {
-    guard gameSirProtocol == .g7ProUSB else {
-      return [.hidOutput(Self.hidReport(gameSirEnhancedHIDHeartbeatPayload))]
+    let variant: PhysicalProtocolVariantID = gameSirProtocol == .g7ProUSB ? .usb : .enhancedHID
+    return PhysicalProtocolID.vendorGameSir.keepAliveWrites(variant: variant).map { write in
+      write.output(
+        defaultEndpoint: outEndpoint,
+        defaultTimeoutMilliseconds: Int(usbTimeoutMilliseconds)
+      ) { [self] _ in
+        sequence &+= 1
+        return sequence
+      }
     }
-    return [
-      .usb(
-        PhysicalUSBOutputPacket(
-          endpoint: outEndpoint,
-          bytes: g7Packet(command: 0x02, payload: [0xF2, 0x00]),
-          timeoutMilliseconds: usbTimeoutMilliseconds
-        )
-      )
-    ]
   }
 
   public var outputCapabilities: PhysicalControllerOutputCapabilities {

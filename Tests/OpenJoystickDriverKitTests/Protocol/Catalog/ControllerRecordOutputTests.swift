@@ -86,6 +86,15 @@ struct ControllerRecordOutputTests {
     }
   }
 
+  /// A keep-alive belongs to a family's description; a record has none to replace it with.
+  @Test
+  func rejectsAKeepAliveInARecord() {
+    let keepAlive = #"{"intervalMilliseconds": 500}"#
+    #expect(throws: DecodingError.self) {
+      try decode("\(Self.thirdParty), \"output\": {\"keepAlive\": \(keepAlive)}")
+    }
+  }
+
   /// A report ID of 0 has no ID byte, so byte 0 carries a motor; a feature report stays a feature.
   @Test
   func writesReportsWithoutAnIDAndFeatureReports() throws {
