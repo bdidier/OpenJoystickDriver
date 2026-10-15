@@ -1,12 +1,12 @@
 # AGENTS.md
 
-## Before editing
+## Before Editing
 
 - Read `CONTRIBUTING.md`, `LOCALIZATION.md`, `wiki/Home.md`, and `Resources/Schemas/AGENTS.md`.
 - Follow the active OpenSpec change in `openspec/changes/`.
 - Ground every claim in source, tests, schemas, or recorded hardware evidence.
 
-## No compatibility
+## No Compatibility
 
 - No aliases, typealiases, deprecated forwarding, or compatibility flags.
 - No fallback decoders, upcasters, dual readers or writers, shims, upgraders, or migrations.
@@ -15,13 +15,13 @@
 - Earlier input fails like any unknown or invalid input: same path, error code, and message.
 - Replace the earlier form completely in one change: producers, consumers, tests, fixtures, schemas, snapshots, localized strings, and docs.
 
-## No hidden behavior
+## No Hidden Behavior
 
 - No silent fallback, default, or retry that covers for invalid input or a failed operation.
 - Give real behavior a name, a test, and user-facing text where its effect is visible.
 - Find every reference before calling code unused. Remove it only when unused; move a real use to its current owner.
 
-## Comments and docs
+## Comments & Docs
 
 - State current behavior and its reason only.
 - No history: "renamed", "formerly", "previously", "was", "no longer", "now", "new", "old", "legacy", "replaces", "since 0.x".

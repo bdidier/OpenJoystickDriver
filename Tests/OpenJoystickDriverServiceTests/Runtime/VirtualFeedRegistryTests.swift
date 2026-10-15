@@ -174,9 +174,16 @@ struct VirtualFeedRegistryTests {
   @Test(.timeLimit(.minutes(1)))
   func aFeedWithoutExchangesClosesAfterTheIdleTimeout() async throws {
     let factory = FakeFeedFactory()
-    let registry = factory.registry(idleTimeout: 0.1)
+    let time = ManualVirtualFeedClock()
+    let registry = factory.registry(idleTimeout: 0.125, clock: time.clock)
     let session = try await registry.open(profile: "Generic")
     let device = try #require(factory.devices.first)
+    await time.waitForSleepers(1)
+
+    time.advance(by: 0.0625)
+    await time.waitForSleepers(1)
+    #expect(registry.openFeedCount == 1)
+    time.advance(by: 0.0625)
     try await Self.wait { registry.openFeedCount == 0 && device.closeCount > 0 }
 
     #expect(device.closeCount == 1)
@@ -186,58 +193,85 @@ struct VirtualFeedRegistryTests {
   @Test(.timeLimit(.minutes(1)))
   func aBurstThatPlaysLongerThanTheIdleTimeoutIsNotClosed() async throws {
     let factory = FakeFeedFactory()
-    let registry = factory.registry(idleTimeout: 0.2)
+    let time = ManualVirtualFeedClock()
+    let registry = factory.registry(idleTimeout: 0.25, clock: time.clock)
     let session = try await registry.open(profile: "Generic")
     let device = try #require(factory.devices.first)
     let frames = (0..<6).map {
-      VirtualFeedFrame(buttons: $0.isMultiple(of: 2) ? [.south] : [.east], holdMilliseconds: 100)
+      VirtualFeedFrame(buttons: $0.isMultiple(of: 2) ? [.south] : [.east], holdMilliseconds: 125)
     }
     #expect(registry.exchange(token: session.token, frames: frames).accepted == frames.count)
 
-    while device.sent.count < frames.count {
+    // Each step plays one frame; the burst takes 0.75 seconds, three times the idle timeout.
+    for played in 1...frames.count {
+      try await Self.wait { device.sent.count == played }
+      // The frame's own wait ends at its start plus its hold; wait for that one by name.
+      await time.waitForSleeper(due: 0.125 * Double(played))
       #expect(registry.openFeedCount == 1)
-      try await Task.sleep(nanoseconds: 20_000_000)
+      time.advance(by: 0.125)
     }
     #expect(device.closeCount == 0)
-    while registry.openFeedCount > 0 { try await Task.sleep(nanoseconds: 10_000_000) }
+    // The idle time counts from the end of the last frame, which the player records.
+    try await Self.wait { registry.lastExchangeTimes.contains(time.now) }
+    time.advance(by: 0.1875)
+    await time.waitForSleepers(1)
+    #expect(registry.openFeedCount == 1)
+    time.advance(by: 0.0625)
+    try await Self.wait { registry.openFeedCount == 0 }
     #expect(device.sent.count == frames.count)
   }
 
   @Test(.timeLimit(.minutes(1)))
   func aFrameHeldLongerThanTheIdleTimeoutIsNotClosedBeforeItsHoldEnds() async throws {
     let factory = FakeFeedFactory()
-    let registry = factory.registry(idleTimeout: 0.2)
+    let time = ManualVirtualFeedClock()
+    let registry = factory.registry(idleTimeout: 0.25, clock: time.clock)
     let session = try await registry.open(profile: "Generic")
-    let started = ProcessInfo.processInfo.systemUptime
+    let device = try #require(factory.devices.first)
     _ = registry.exchange(
       token: session.token,
-      frames: [VirtualFeedFrame(buttons: [.south], holdMilliseconds: 800)]
+      frames: [VirtualFeedFrame(buttons: [.south], holdMilliseconds: 750)]
     )
+    try await Self.wait { device.sent.count == 1 }
+    await time.waitForSleepers(2)
 
-    try await Task.sleep(nanoseconds: 600_000_000)
+    // Two idle timeouts pass while the frame is still held.
+    time.advance(by: 0.5)
+    await time.waitForSleepers(2)
     #expect(registry.openFeedCount == 1)
-    while registry.openFeedCount > 0 { try await Task.sleep(nanoseconds: 10_000_000) }
-    // The idle time counts from the end of the hold, not from the exchange.
-    #expect(ProcessInfo.processInfo.systemUptime - started >= 0.8 + 0.2 - 0.05)
+    // The hold ends at 0.75; the idle time counts from there, not from the exchange.
+    time.advance(by: 0.25)
+    await time.waitForSleepers(1)
+    time.advance(by: 0.1875)
+    await time.waitForSleepers(1)
+    #expect(registry.openFeedCount == 1)
+    time.advance(by: 0.0625)
+    try await Self.wait { registry.openFeedCount == 0 }
     #expect(factory.devices.first?.closeCount == 1)
   }
 
   @Test(.timeLimit(.minutes(1)))
   func aSendThatHangsClosesTheFeedOnceTheFrameTimePlusTheIdleTimeoutPasses() async throws {
     let factory = FakeFeedFactory()
-    let registry = factory.registry(idleTimeout: 0.2)
+    let time = ManualVirtualFeedClock()
+    let registry = factory.registry(idleTimeout: 0.25, clock: time.clock)
     defer { factory.release() }
     let session = try await registry.open(profile: "Generic")
     let device = try #require(factory.devices.first)
     device.hangsSending = true
-    let started = ProcessInfo.processInfo.systemUptime
     _ = registry.exchange(
       token: session.token,
-      frames: [VirtualFeedFrame(buttons: [.south], holdMilliseconds: 300)]
+      frames: [VirtualFeedFrame(buttons: [.south], holdMilliseconds: 250)]
     )
+    try await Self.wait { device.hungCount == 1 }
+    await time.waitForSleepers(1)
 
+    // The frame time is 0.25 and the idle timeout 0.25, so the feed closes at 0.5.
+    time.advance(by: 0.4375)
+    await time.waitForSleepers(1)
+    #expect(registry.openFeedCount == 1)
+    time.advance(by: 0.0625)
     try await Self.wait { registry.openFeedCount == 0 }
-    #expect(ProcessInfo.processInfo.systemUptime - started >= 0.3 + 0.2 - 0.05)
     #expect(device.closeCount == 1)
     #expect(registry.exchange(token: session.token, frames: []).closed)
   }

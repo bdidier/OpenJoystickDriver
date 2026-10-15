@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverKit
 
 struct VirtualOutputTransitionTimeouts: Sendable {
   static let standard = Self(
@@ -43,7 +44,7 @@ struct VirtualOutputTransitionTimeouts: Sendable {
 struct VirtualOutputTransitionClock: Sendable {
   static let system = Self(
     now: { DispatchTime.now().uptimeNanoseconds },
-    sleep: { nanoseconds in try await Task.sleep(nanoseconds: nanoseconds) }
+    sleep: { nanoseconds in try await DeadlineTimer.dispatch.sleep(nanoseconds: nanoseconds) }
   )
 
   let now: @Sendable () -> UInt64
