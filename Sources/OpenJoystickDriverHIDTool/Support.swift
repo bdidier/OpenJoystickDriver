@@ -245,10 +245,10 @@ func printUsageAndExit(_ code: Int32) -> Never {
 
     Usage:
       OpenJoystickDriverHIDTool --list
-      OpenJoystickDriverHIDTool --dump --vid 0x045e --pid 0x02ea
-      OpenJoystickDriverHIDTool --open --vid 0x045e --pid 0x028e [--service-open] [--set-report]
+      OpenJoystickDriverHIDTool --dump --vid 0x1209 --pid 0x4a4f
+      OpenJoystickDriverHIDTool --open --vid 0x1209 --pid 0x4a4f [--service-open] [--set-report]
       OpenJoystickDriverHIDTool --monitor [--vid <int> --pid <int>] [--seconds 10]
-      OpenJoystickDriverHIDTool --usb-monitor --vid 0x045e --pid 0x0000
+      OpenJoystickDriverHIDTool --usb-monitor --vid 0x1209
         [--endpoint 0x81] [--length 64] [--seconds 20]
       OpenJoystickDriverHIDTool --record-probe <record.json>
         [--seconds 30] [--validate-only]
