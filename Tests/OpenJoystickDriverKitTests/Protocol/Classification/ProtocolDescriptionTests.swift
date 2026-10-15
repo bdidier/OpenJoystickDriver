@@ -60,7 +60,6 @@ struct ProtocolDescriptionTests {
       "role": ProtocolParameters.Role.allCases.map(\.rawValue),
       "motionScale": ProtocolParameters.MotionScale.allCases.map(\.rawValue),
       "reportRevision": ProtocolParameters.ReportRevision.allCases.map(\.rawValue),
-      "usageLayout": ProtocolParameters.UsageLayout.allCases.map(\.rawValue),
       "maker": ProtocolParameters.Maker.allCases.map(\.rawValue),
     ]
     let flags: Set<String> = [

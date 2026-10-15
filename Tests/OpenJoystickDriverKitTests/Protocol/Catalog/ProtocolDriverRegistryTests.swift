@@ -196,23 +196,26 @@ struct ProtocolDriverRegistryTests {
     #expect(try shield(0x7214).outputCapabilities == .none)
   }
 
-  /// The generic HID driver takes its axis layout from the record parameters.
+  /// The generic HID driver reads the record's usage map, and the description's standard map when
+  /// the record declares none.
   @Test(
     arguments: [
-      (0x11C1, 0x5600, .wr007), (0x2E95, 0x434D, .envision), (0x2DC8, 0x301B, .zRzBrakeLeft),
-      (0x2DC8, 0x301C, .zRzBrakeLeft), (0x0079, 0x0006, .dragonRise), (0x3537, 0x100A, .standard),
-    ] as [(UInt16, UInt16, HIDDescriptorDriver.AxisLayout)]
+      (0x11C1, 0x5600, true), (0x2E95, 0x434D, true), (0x2DC8, 0x301B, true),
+      (0x2DC8, 0x301C, true), (0x0079, 0x0006, true), (0x3537, 0x100A, false),
+    ] as [(UInt16, UInt16, Bool)]
   )
-  func recordParametersSelectTheHIDAxisLayout(
+  func recordUsageMapsSelectTheHIDUsageMap(
     vendorID: UInt16,
     productID: UInt16,
-    layout: HIDDescriptorDriver.AxisLayout
+    declaresMap: Bool
   ) throws {
-    let driver = try #require(
-      try catalogParser(ControllerModelID(vendorID: vendorID, productID: productID))
-        as? HIDDescriptorDriver
-    )
-    #expect(driver.axisLayout == layout)
+    let model = ControllerModelID(vendorID: vendorID, productID: productID)
+    let driver = try #require(try catalogParser(model) as? HIDDescriptorDriver)
+    let standard = try #require(ProtocolDescription.bundled[.hidDescriptor]?.hidUsageMap)
+    let recordMap = try #require(ProtocolDriverRegistry().record(for: model)).hidUsageMap
+    #expect((recordMap != nil) == declaresMap)
+    #expect(driver.usageMap == (recordMap ?? standard))
+    #expect((driver.usageMap == standard) == !declaresMap)
   }
 
   /// A non-Sony DualSense record selects third-party mode, and its parameters give SDL's model

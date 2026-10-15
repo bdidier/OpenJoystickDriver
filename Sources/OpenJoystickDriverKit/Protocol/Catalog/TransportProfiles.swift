@@ -187,6 +187,8 @@ public struct DeviceRuntimeProfile: Equatable, Sendable {
   public let startupWrites: [RecordStartupWrite]
   /// The record's input-report layout; set exactly for the `hid.report-layout` family.
   public let inputLayout: ControllerInputLayout?
+  /// The record's HID usage map; set only for a `hid.descriptor` record that declares one.
+  var hidUsageMap: HIDUsageMap?
   /// The record's timing and deadzone values; nil fields keep the driver defaults.
   public internal(set) var tuning: ControllerTuning
   /// The record's route; nil leaves it to the family.
