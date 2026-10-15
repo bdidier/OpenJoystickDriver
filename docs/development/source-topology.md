@@ -94,7 +94,7 @@ Sources/OpenJoystickDriver/
   platform/macos/      PlatformHostInstallation.swift and the App Intents (compiled into the app target for discovery)
 ```
 
-The neutral targets are `Sources/OpenJoystickDriverCLI` and the executable's files outside `platform/`. They import no macOS-only module (AppKit, AppIntents, IOKit, SystemExtensions, SwiftUI, Service, USB, Presentation, MacOSHost, and similar). `Tests/RepositoryScripts/test_neutral_core_imports.py` runs `Scripts/Quality/check_neutral_core_imports.py`, which CI, `just`, and the AGENTS.md check list also run directly. Kit and `Darwin` imports are macOS-bound and out of scope for the check.
+The neutral targets are `Sources/OpenJoystickDriverCLI` and the executable's files outside `Sources/OpenJoystickDriver/platform`. Each has an import allow-list in `Scripts/Quality/check_neutral_core_imports.py`: the CLI may import ArgumentParser, Darwin, Dispatch, Foundation, Glibc, and Kit; the executable may import Dispatch, Foundation, CLI, and Kit. Any other import or `canImport` fails, including `@_exported` and kinded imports, and block comments are skipped. `Tests/RepositoryScripts/test_neutral_core_imports.py` covers the script, and CI, `just`, and the AGENTS.md check list run it directly. Kit is macOS-bound and out of scope.
 
 Kit `Diagnostics/` holds reports and health types that both the CLI and app read.
 

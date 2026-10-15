@@ -173,7 +173,7 @@ let package = Package(
       name: "OpenJoystickDriverCLITests",
       dependencies: [
         "OpenJoystickDriverKit", "OpenJoystickDriverService", "OpenJoystickDriverCLI",
-        "OpenJoystickDriverMacOSHost", "OpenJoystickDriverTestSupport",
+        "OpenJoystickDriverTestSupport",
         .product(name: "ArgumentParser", package: "swift-argument-parser"),
       ],
       path: "Tests/OpenJoystickDriverCLITests",

@@ -3,7 +3,6 @@ import Foundation
 import Testing
 
 import OpenJoystickDriverKit
-import OpenJoystickDriverMacOSHost
 
 @testable import OpenJoystickDriverCLI
 
@@ -14,8 +13,8 @@ struct CLIRun {
   let standardError: String
 
   static func run(_ arguments: [String]) async -> Self {
-    // The executable installs the host at launch; the commands' defaults need one in-process.
-    PlatformHosts.install(MacOSPlatformHost())
+    // The executable installs the host at launch; a fake keeps tests off real USB and system extensions.
+    PlatformHosts.install(FakePlatformHost())
     let capture = CLIOutputCapture()
     let code = await CLIOutput.$capture.withValue(capture) {
       await CLI.execute(arguments: arguments)

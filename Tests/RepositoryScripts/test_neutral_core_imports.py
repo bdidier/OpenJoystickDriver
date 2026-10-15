@@ -89,6 +89,50 @@ class NeutralCoreImportTests(unittest.TestCase):
             )
             self.assertEqual(check.violations(root), [])
 
+    def test_exported_and_kinded_imports_are_reported(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write(root, CLI, "A.swift", "@_exported import AppKit\n")
+            write(root, CLI, "B.swift", "import struct IOKit.IOReturn\n")
+            write(root, CLI, "C.swift", "import Network\n")
+            found = check.violations(root)
+        self.assertEqual(
+            found,
+            [
+                f"{CLI}/A.swift:1: AppKit",
+                f"{CLI}/B.swift:1: IOKit",
+                f"{CLI}/C.swift:1: Network",
+            ],
+        )
+
+    def test_a_platform_directory_inside_the_cli_is_scanned(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write(root, CLI, "platform/Host.swift", "import AppKit\n")
+            found = check.violations(root)
+        self.assertEqual(found, [f"{CLI}/platform/Host.swift:1: AppKit"])
+
+    def test_block_commented_imports_are_not_reported(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write(
+                root,
+                CLI,
+                "A.swift",
+                "/*\nimport AppKit\n/* nested */\nimport IOKit\n*/\nimport SwiftUI\n",
+            )
+            found = check.violations(root)
+        self.assertEqual(found, [f"{CLI}/A.swift:6: SwiftUI"])
+
+    def test_two_imports_on_one_line_are_both_checked(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write(
+                root, CLI, "A.swift", "import Foundation; import AppKit; import IOKit\n"
+            )
+            found = check.violations(root)
+        self.assertEqual(found, [f"{CLI}/A.swift:1: AppKit", f"{CLI}/A.swift:1: IOKit"])
+
     def test_the_host_adapter_target_is_not_scanned(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
