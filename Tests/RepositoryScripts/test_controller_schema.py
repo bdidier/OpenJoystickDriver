@@ -478,6 +478,9 @@ class InputLayoutTests(unittest.TestCase):
                             "byte": 2,
                             "bits": 16,
                             "signed": True,
+                            "min": -32768,
+                            "max": 32767,
+                            "symmetric": True,
                         },
                         {"control": "left-stick-y", "byte": 4, "inverted": True},
                     ],
@@ -494,6 +497,12 @@ class InputLayoutTests(unittest.TestCase):
                             "right": {"byte": 6, "mask": 2},
                             "down": {"byte": 6, "mask": 4},
                             "left": {"byte": 6, "mask": 8},
+                        },
+                        {
+                            "encoding": "table",
+                            "byte": 5,
+                            "mask": 15,
+                            "values": {"1": "north", "9": "northEast"},
                         },
                     ],
                     "leftTrigger": {"byte": 7},
@@ -540,6 +549,34 @@ class InputLayoutTests(unittest.TestCase):
             "4-way hat": record(
                 REPORT_LAYOUT,
                 input={**LAYOUT, "hat": [{"encoding": "4-way", "byte": 1, "mask": 15}]},
+            ),
+            "unsigned symmetric axis": record(
+                REPORT_LAYOUT,
+                input={
+                    **LAYOUT,
+                    "axes": [{"control": "left-stick-x", "byte": 1, "symmetric": True}],
+                },
+            ),
+            "table hat without values": record(
+                REPORT_LAYOUT,
+                input={
+                    **LAYOUT,
+                    "hat": [{"encoding": "table", "byte": 1, "mask": 15, "values": {}}],
+                },
+            ),
+            "table hat neutral entry": record(
+                REPORT_LAYOUT,
+                input={
+                    **LAYOUT,
+                    "hat": [
+                        {
+                            "encoding": "table",
+                            "byte": 1,
+                            "mask": 15,
+                            "values": {"0": "neutral"},
+                        }
+                    ],
+                },
             ),
             "empty trigger": record(REPORT_LAYOUT, input={**LAYOUT, "leftTrigger": {}}),
             "unknown section": record(REPORT_LAYOUT, input={**LAYOUT, "touchpad": {}}),

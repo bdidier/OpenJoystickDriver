@@ -67,6 +67,9 @@ public enum PhysicalProtocolID: String, CaseIterable, Codable, Sendable {
   /// Whether this family's driver encodes rumble from a record's rumble template.
   var encodesRumbleTemplate: Bool { self == .hidReportLayout || self == .vendorPS3ThirdParty }
 
+  /// Whether a protocol description may carry a declarative input layout for this family.
+  var describesInputLayout: Bool { self == .hidReportLayout || self == .xboxXID }
+
   /// Whether catalog records store this family's variant; otherwise the family has one
   /// contract or classification derives the variant from the observed transport.
   public var storesVariant: Bool {

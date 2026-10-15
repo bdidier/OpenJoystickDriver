@@ -242,6 +242,35 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 },
             )
         )
+        self.check(
+            self.with_body(
+                "xbox.xid",
+                defaults={
+                    "input": {
+                        "report": {"length": 4},
+                        "axes": [
+                            {
+                                "control": "left-stick-x",
+                                "byte": 0,
+                                "bits": 16,
+                                "signed": True,
+                                "min": -32768,
+                                "max": 32767,
+                                "symmetric": True,
+                            }
+                        ],
+                        "hat": [
+                            {
+                                "encoding": "table",
+                                "byte": 2,
+                                "mask": 15,
+                                "values": {"1": "north", "9": "northEast"},
+                            }
+                        ],
+                    }
+                },
+            )
+        )
 
     def test_rejects_a_bad_parameter_declaration(self) -> None:
         for declaration in (
@@ -276,6 +305,61 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         }
         for family, defaults in (
             ("hid.descriptor", {"input": input_layout}),
+            ("xbox.xusb", {"input": input_layout}),
+            (
+                "xbox.xid",
+                {
+                    "input": {
+                        "report": {"length": 4},
+                        "axes": [
+                            {"control": "left-stick-x", "byte": 0, "symmetric": True}
+                        ],
+                    }
+                },
+            ),
+            (
+                "xbox.xid",
+                {
+                    "input": {
+                        "report": {"length": 4},
+                        "hat": [
+                            {"encoding": "table", "byte": 2, "mask": 15, "values": {}}
+                        ],
+                    }
+                },
+            ),
+            (
+                "xbox.xid",
+                {
+                    "input": {
+                        "report": {"length": 4},
+                        "hat": [
+                            {
+                                "encoding": "table",
+                                "byte": 2,
+                                "mask": 15,
+                                "values": {"01": "north"},
+                            }
+                        ],
+                    }
+                },
+            ),
+            (
+                "xbox.xid",
+                {
+                    "input": {
+                        "report": {"length": 4},
+                        "hat": [
+                            {
+                                "encoding": "table",
+                                "byte": 2,
+                                "mask": 15,
+                                "values": {"1": "neutral"},
+                            }
+                        ],
+                    }
+                },
+            ),
             ("xbox.xid", {"output": {"startup": [self.startup_write()]}}),
             ("sony.dualsense", {"tuning": {"inputLivenessTimeoutMs": 5}}),
             ("sony.dualsense", {"tuning": {"hidStartupRecoveryRounds": 2}}),
