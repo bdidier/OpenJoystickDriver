@@ -14,6 +14,7 @@ This page explains how to add a controller that OpenJoystickDriver does not know
 - [Tune Timings and the Stick Deadzone](#tune-timings-and-the-stick-deadzone)
 - [Select a Model With Protocol Parameters](#select-a-model-with-protocol-parameters)
 - [Map HID Usages](#map-hid-usages)
+- [Control Names and Other Vocabularies](#control-names-and-other-vocabularies)
 - [Offer Alternative Modes Chosen By a Probe](#offer-alternative-modes-chosen-by-a-probe)
 - [Connect a Switch 2 Controller Over Bluetooth LE][toc-2]
 - [Draft a Record From a Connected Controller][toc-1]
@@ -70,12 +71,12 @@ Some controllers send fixed input reports that their HID descriptor describes wr
 "input": {
   "report": { "length": 19 },
   "buttons": [
-    { "control": "face-south", "byte": 13, "mask": 128 },
-    { "control": "view", "byte": 1, "mask": 1 }
+    { "control": "South", "byte": 13, "mask": 128 },
+    { "control": "Back", "byte": 1, "mask": 1 }
   ],
   "axes": [
-    { "control": "left-stick-x", "byte": 3 },
-    { "control": "left-stick-y", "byte": 4 }
+    { "control": "LeftStickX", "byte": 3 },
+    { "control": "LeftStickY", "byte": 4 }
   ],
   "hat": [
     {
@@ -225,11 +226,48 @@ A DualShock 4 record takes at most one of `role` and `motionScale`. A `sony.dual
 
 A `hid.descriptor` record maps the usages of its report descriptor to controls in `input.hidUsageMap`. Without one, the record uses the standard map in `Resources/Protocols/hid.descriptor.json`. Each entry names a usage by decimal `page` and `usage` and one `control`, as a `kind`:
 
-- `button`: the control is pressed while the value is nonzero. It cannot be `dpad`, a stick axis or a trigger.
-- `axis`: the control is a stick axis (`left-stick-x`, `left-stick-y`, `right-stick-x`, `right-stick-y`) or `left-trigger` or `right-trigger`. A stick reads -1 to 1 and a trigger 0 to 1 across the element's logical range. `range` (`{"min": 0, "max": 100}`, `min` below `max`) replaces that range, `inverted` reverses the axis, and `deadZone` (above 0 and below 1) reads 0 within that fraction of full travel and rescales the rest.
-- `hat`: the control is `dpad`. `range` is `{"min": 0, "max": 7}` or `{"min": 1, "max": 8}` and names the value of north, then clockwise; any other value is neutral. Without `range`, the element's logical minimum is north.
+- `button`: the control is pressed while the value is nonzero. It cannot be a D-pad id or a stick axis.
+- `axis`: the control is a stick axis (`LeftStickX`, `LeftStickY`, `RightStickX`, `RightStickY`) or `LeftTrigger` or `RightTrigger`. A stick reads -1 to 1 and a trigger 0 to 1 across the element's logical range. `range` (`{"min": 0, "max": 100}`, `min` below `max`) replaces that range, `inverted` reverses the axis, and `deadZone` (above 0 and below 1) reads 0 within that fraction of full travel and rescales the rest.
+- `hat`: the entry has no `control`; it drives `DpadUp`, `DpadDown`, `DpadLeft` and `DpadRight`. `range` is `{"min": 0, "max": 7}` or `{"min": 1, "max": 8}` and names the value of north, then clockwise; any other value is neutral. Without `range`, the element's logical minimum is north.
 
 `reportID` limits the map to one report. A usage the map does not name is ignored, and both the app and `./Scripts/ojd check profiles` reject a usage named twice or an axis `range` whose `min` is not below its `max`. The description may also list `descriptorShapes` that choose a map from the usages a controller's report descriptor declares: the shape in `hid.descriptor.json` gives a controller with Z, Rz, a Brake or Accelerator and no Rx or Ry the Z/Rz layout, with Brake as LT and Accelerator as RT. The records for the WR007 (`11C1:5600`), SCUF Envision (`2E95:434D`), 8BitDo Ultimate 2C (`2DC8:301B`, `301C`) and DragonRise (`0079:0006`, by patch) show complete maps.
+
+## Control Names and Other Vocabularies
+
+Every document, profile, endpoint message and record names a control with one UpperCamelCase id. `Resources/Schemas/vocabulary.schema.json` defines the ids, and `Resources/Vocabulary/crosswalk.json` holds the names the same control has elsewhere. The crosswalk is documentation: it is not a schema alias, and a document that uses another spelling is refused. A `-` means the other vocabulary has no name for the control. The W3C index is the `buttons` index of the standard gamepad mapping. `Capture` and `Microphone` share the SDL3 name `MISC1`. The JSON file also lists the HID page and usage of each control. A `null` usage means the device descriptor assigns it.
+
+| Control | W3C index | SDL3 | evdev | Apple GameController |
+| --- | --- | --- | --- | --- |
+| `South` | 0 | `SOUTH` | `BTN_SOUTH` | `ButtonA` |
+| `East` | 1 | `EAST` | `BTN_EAST` | `ButtonB` |
+| `West` | 2 | `WEST` | `BTN_WEST` | `ButtonX` |
+| `North` | 3 | `NORTH` | `BTN_NORTH` | `ButtonY` |
+| `LeftShoulder` | 4 | `LEFT_SHOULDER` | `BTN_TL` | `LeftShoulder` |
+| `RightShoulder` | 5 | `RIGHT_SHOULDER` | `BTN_TR` | `RightShoulder` |
+| `LeftTrigger` | 6 | `LEFT_TRIGGER` | `ABS_Z` | `LeftTrigger` |
+| `RightTrigger` | 7 | `RIGHT_TRIGGER` | `ABS_RZ` | `RightTrigger` |
+| `Back` | 8 | `BACK` | `BTN_SELECT` | `ButtonOptions` |
+| `Start` | 9 | `START` | `BTN_START` | `ButtonMenu` |
+| `LeftStickClick` | 10 | `LEFT_STICK` | `BTN_THUMBL` | `LeftThumbstickButton` |
+| `RightStickClick` | 11 | `RIGHT_STICK` | `BTN_THUMBR` | `RightThumbstickButton` |
+| `DpadUp` | 12 | `DPAD_UP` | `BTN_DPAD_UP` | `DirectionPad` |
+| `DpadDown` | 13 | `DPAD_DOWN` | `BTN_DPAD_DOWN` | `DirectionPad` |
+| `DpadLeft` | 14 | `DPAD_LEFT` | `BTN_DPAD_LEFT` | `DirectionPad` |
+| `DpadRight` | 15 | `DPAD_RIGHT` | `BTN_DPAD_RIGHT` | `DirectionPad` |
+| `Guide` | 16 | `GUIDE` | `BTN_MODE` | `ButtonHome` |
+| `Capture` | - | `MISC1` | `KEY_RECORD` | `ButtonShare` |
+| `Microphone` | - | `MISC1` | - | - |
+| `TouchpadClick` | - | `TOUCHPAD` | `BTN_TOUCH` | `TouchpadButton` |
+| `LeftPaddle1` | - | `LEFT_PADDLE1` | `BTN_GRIPL` | `XboxPaddleOne` |
+| `LeftPaddle2` | - | `LEFT_PADDLE2` | `BTN_GRIPL2` | `XboxPaddleTwo` |
+| `RightPaddle1` | - | `RIGHT_PADDLE1` | `BTN_GRIPR` | `XboxPaddleThree` |
+| `RightPaddle2` | - | `RIGHT_PADDLE2` | `BTN_GRIPR2` | `XboxPaddleFour` |
+| `Auxiliary1` | - | `MISC2` | `BTN_TRIGGER_HAPPY1` | - |
+| `Auxiliary2` | - | `MISC3` | `BTN_TRIGGER_HAPPY2` | - |
+| `Auxiliary3` | - | `MISC4` | `BTN_TRIGGER_HAPPY3` | - |
+| `Auxiliary4` | - | `MISC5` | `BTN_TRIGGER_HAPPY4` | - |
+
+PlayStation Share (Create) and Xbox View are `Back`. PlayStation Options, Xbox Menu and Switch Plus are `Start`. Xbox Share and Switch Capture are `Capture`. The names `Share` and `Options` are not controls.
 
 ## Offer Alternative Modes Chosen By a Probe
 
