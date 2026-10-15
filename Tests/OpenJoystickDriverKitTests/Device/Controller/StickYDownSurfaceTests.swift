@@ -27,7 +27,7 @@ struct StickYDownSurfaceTests {
 
   @Test
   func theRemappingEngineSeesAStickPushedUpAsNegativeY() {
-    let changes = RemappingEngineState.changes(from: .neutral, to: Self.up, labels: .standard)
+    let changes = RemappingEngineState.changes(from: .neutral, to: Self.up)
     #expect(changes == [.leftStick(x: 0, y: -1)])
   }
 
