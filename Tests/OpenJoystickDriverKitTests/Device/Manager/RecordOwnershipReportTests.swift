@@ -20,12 +20,13 @@ struct RecordOwnershipReportTests {
     try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
     defer { try? FileManager.default.removeItem(at: directory) }
     #expect(DeviceCatalog().record(for: Self.gameSir)?.ownership == .macOS)
-    try JSONSerialization.data(withJSONObject: [
-      "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
-      "operation": "patch",
-      "vendorID": 0x3537, "productID": 0x100B, "set": ["ownership": "ojd"],
-    ])
-    .write(to: directory.appendingPathComponent("3537-100b.json"))
+    try JSONSerialization.data(
+      withJSONObject: ControllerPatch.document(
+        selector: .identity(ControllerModelID(vendorID: 0x3537, productID: 0x100B)),
+        body: ["ownership": "ojd"]
+      )
+    )
+    .write(to: directory.appendingPathComponent("3537-100b.patch.json"))
 
     let records = ControllerRecordSet.load(userDirectory: directory)
 

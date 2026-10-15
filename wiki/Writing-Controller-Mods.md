@@ -29,7 +29,7 @@ ojd-sample/
   Personas/1209-0001.json
 ```
 
-- `Controllers/` holds [controller records](Controller-Records.md). Name each file `vvvv-pppp.json` after its model, in lowercase hexadecimal.
+- `Controllers/` holds [controller records](Controller-Records.md). Name a `Controller` file `vvvv-pppp.json` after its model, in lowercase hexadecimal. Name a `ControllerPatch` file `vvvv-pppp.patch.json`, `model-vvvv-pppp.patch.json`, or `all.patch.json`.
 - `Profiles/` holds [remapping profiles](Profile-File-Reference.md).
 - `Personas/` holds virtual gamepad personas. Name each file `vvvv-pppp.json` after the model it matches, or `vvvv-pppp-U-UNIT.json` for one controller, where `UNIT` is the 16-character unit ID that `ojd controller show` prints.
 
@@ -69,11 +69,11 @@ OJD does not use a package whose `requires` leaves out the running version. It s
 
 ## Precedence and Clashes
 
-A package is a read-only layer between the bundled catalog and your own files. When you and a package both have a record for a model, OJD uses your record and ignores the package record. The last item in the list below is the only exception. Your `patch` of a bundled model applies over the bundled record only. A package record is an `add` for a model that has no bundled record, or a `patch` of a bundled one. A package cannot `add` a model that has a bundled record.
+A package is a read-only layer between the bundled catalog and your own files. When you and a package both have a `Controller` file for a model, OJD uses your file and ignores the package file. Your `ControllerPatch` applies over the package record and over a package patch, and wins over it. A package `Controller` file is for a model that has no bundled record, and a package `ControllerPatch` changes a bundled or packaged one. A package cannot add a `Controller` for a model that has a bundled record.
 
 - `ojd mod install` and `ojd mod validate` refuse a package whose record or persona covers a model that your files or another package already hold. They also refuse a profile that has the ID or the name of one that you or another package already hold. The code is E4004. `--force` does not override this.
 - A clash can also appear after the install, for example when you add a record later. Your file then wins. Among packages, the first by package name wins. `ojd record list` names each package record that OJD ignores and the reason. OJD does not report a package profile that it ignores because of a clash. `ojd status` and `ojd diagnose` list each persona that OJD ignores and the reason.
-- A patch record of yours for a model that only a package defines applies over the package record. If you remove the package later, OJD lists the patch as a problem and skips it.
+- A `ControllerPatch` of yours for a model that only a package defines applies over the package record. If you remove the package later, OJD lists the patch as a problem and skips it.
 
 ## Package Profiles Are Read-Only
 

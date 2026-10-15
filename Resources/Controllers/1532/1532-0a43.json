@@ -1,0 +1,9 @@
+{
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "Controller",
+  "vendorID": 5426,
+  "productID": 2627,
+  "protocol": {
+    "family": "xbox.gip"
+  }
+}

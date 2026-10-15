@@ -194,7 +194,7 @@ public enum DiagnosticsService {
     )
   }
 
-  /// The check for `Defaults.json` and the persona files: it warns when OJD ignored the defaults
+  /// The check for `all.patch.json` and the persona files: it warns when OJD ignored the defaults
   /// file or skipped a persona file, and names each.
   public static func configFilesCheck(
     defaults: ControllerDefaults?,

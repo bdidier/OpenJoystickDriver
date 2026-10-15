@@ -28,19 +28,29 @@ struct ModPackageFixture {
     ModPackageStore(directory: packages, runningVersion: version)
   }
 
-  /// A controller `add` record for an identity the bundled catalog does not have.
+  /// A Controller record for an identity the bundled catalog does not have.
   static func record(_ vendorID: Int, _ productID: Int) throws -> (name: String, data: Data) {
     let document: [String: Any] = [
-      "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
-      "operation": "add",
-      "record": [
-        "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordDocument.kind,
-        "vendorID": vendorID,
-        "productID": productID, "protocol": ["family": "xbox.gip"],
-      ],
+      "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordDocument.kind,
+      "vendorID": vendorID,
+      "productID": productID, "protocol": ["family": "xbox.gip"],
     ]
     return (
       String(format: "%04x-%04x.json", vendorID, productID),
+      try JSONSerialization.data(withJSONObject: document)
+    )
+  }
+
+  /// A ControllerPatch for `vendorID` and `productID` that merges `body`.
+  static func patch(
+    _ vendorID: Int,
+    _ productID: Int,
+    _ body: [String: Any]
+  ) throws -> (name: String, data: Data) {
+    let identity = ControllerModelID(vendorID: UInt16(vendorID), productID: UInt16(productID))
+    let document = ControllerPatch.document(selector: .identity(identity), body: body)
+    return (
+      ControllerPatch.Selector.identity(identity).fileName,
       try JSONSerialization.data(withJSONObject: document)
     )
   }

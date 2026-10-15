@@ -352,7 +352,7 @@
 					"pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
 				},
 				"defaultsFile": {
-					"description": "The Defaults.json path, whether or not the file exists.",
+					"description": "The all.patch.json path, whether or not the file exists.",
 					"type": "string"
 				},
 				"profile": {
@@ -360,7 +360,7 @@
 					"type": "string"
 				},
 				"defaultsProblem": {
-					"description": "Why OJD ignored Defaults.json. Absent when it applies or does not exist.",
+					"description": "Why OJD ignored all.patch.json. Absent when it applies or does not exist.",
 					"type": "string"
 				},
 				"values": {
@@ -390,7 +390,7 @@
 							},
 							"layer": {
 								"description": "The layer that set the value, lowest first.",
-								"enum": ["driver", "global", "bundled", "package", "user", "profile"]
+								"enum": ["driver", "bundled", "package", "global", "user", "profile"]
 							},
 							"value": {
 								"description": "Absent while only the driver default applies.",
@@ -1759,7 +1759,10 @@
 				},
 				"record": {
 					"description": "The drafted controller record, as 'ojd record install' reads it.",
-					"$ref": "controller-override.schema.json"
+					"oneOf": [
+						{ "$ref": "controller.schema.json" },
+						{ "$ref": "controller-patch.schema.json" }
+					]
 				},
 				"report": {
 					"type": "object",

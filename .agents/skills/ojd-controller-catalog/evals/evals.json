@@ -4,9 +4,9 @@
 		{
 			"id": 1,
 			"prompt": "Add support for the controller at 37d7:2802; it behaves like the 37d7:2801 record.",
-			"expected_output": "An add override in Resources/ControllerOverrides/37d7/ validated against controller-override.schema.json, then catalog regenerate --write and --check.",
+			"expected_output": "A Controller file in Resources/Controllers/37d7/ validated against controller.schema.json, then catalog regenerate --write and --check.",
 			"assertions": [
-				"Creates or edits a file under Resources/ControllerOverrides/, not Sources/OpenJoystickDriverKit/Resources/Controllers/",
+				"Creates or edits a file under Resources/Controllers/ or Resources/ControllerPatches/, not Sources/OpenJoystickDriverKit/Resources/Controllers/",
 				"Runs ./Scripts/ojd catalog regenerate --write then --check",
 				"States the evidence class without claiming hardware verification"
 			]
@@ -14,9 +14,9 @@
 		{
 			"id": 2,
 			"prompt": "The Xbox 360 wired pad 045e:028e has the wrong name in the catalog; fix it.",
-			"expected_output": "Checks whether a Linux-derived record exists; uses a patch override with vendorID, productID, set rather than an add.",
+			"expected_output": "Checks whether a Linux-derived record exists; uses a ControllerPatch with selector vendorID, productID and a patch body rather than an add.",
 			"assertions": [
-				"Uses operation patch, not add, for a Linux-derived identity",
+				"Uses a ControllerPatch, not a Controller file, for a Linux-derived identity",
 				"Does not hand-edit generated controller JSON"
 			]
 		},

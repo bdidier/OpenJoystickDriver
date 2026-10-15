@@ -1,0 +1,11 @@
+{
+	"apiVersion": "openjoystickdriver/v1alpha1",
+	"kind": "ControllerPatch",
+	"selector": {
+		"vendorID": 1118,
+		"productID": 2834
+	},
+	"patch": {
+		"route": "ExtensionOwned"
+	}
+}

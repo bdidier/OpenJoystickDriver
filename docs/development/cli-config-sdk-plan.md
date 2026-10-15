@@ -60,7 +60,7 @@ The maintainer approves each commit.
    - Environment fallbacks `OJD_NO_INPUT`, `OJD_TIMEOUT`, and `OJD_COLOR`, where a flag beats the variable; `OJD_RUN_REPOSITORY_CLI` documented for contributors.
    - `--version` checked in a release build.
 3. **Per-controller constants into records.**
-   Add fields to `controller-override.schema.json` and `controller.schema.json`, move the values into `Resources/ControllerOverrides/`, regenerate the catalog, and delete the identity checks:
+   Add fields to `controller-patch.schema.json` and `controller.schema.json`, move the values into `Resources/ControllerPatches/`, regenerate the catalog, and delete the identity checks:
    - the `11C1:5600` stick deadzone (`UserSpaceOutputDispatcher+ReportMapping.swift`);
    - DualShock 4 factory calibration by vendor (`ProtocolDriverRegistry.swift`) and `DualShock4Model` by VID:PID (`DualShock4Driver+Models.swift`, `DualShock4Driver.swift`);
    - the Shield PID (`NVIDIAShieldDriver.swift`);
@@ -72,7 +72,7 @@ The maintainer approves each commit.
    A user patch can set `tuning`, which merges per key into the bundled `tuning` (changed in slice 4, so each key reports its own layer).
    The `hid.descriptor` axis layouts and the third-party DualSense model values are record parameters; a non-Sony vendor ID still selects third-party DualSense mode.
 4. **Configuration layer.**
-   - A global defaults file, `~/Library/Application Support/OpenJoystickDriver/Defaults.json`, for deadzone and timing defaults.
+   - A global defaults file, `~/Library/Application Support/OpenJoystickDriver/Controllers/all.patch.json`, for deadzone and timing defaults.
      Precedence, lowest first: driver default, global file, bundled record, user record, active profile.
    - Persona overrides move from the `VirtualHIDProfileOverrides` user default (`VirtualHIDProfileOverrideStore.swift`) to `Personas/<id>.json` files with a schema.
      Users can define a persona: identity strings, VID, PID, and glyph family over one of the built-in report descriptors.
