@@ -106,6 +106,7 @@ check-hook:
 check-fast: check-schemas lint
     ./Scripts/ojd catalog regenerate --check
     ./Scripts/ojd errors regenerate --check
+    ./Scripts/ojd vocabulary regenerate --check
     ./Scripts/ojd check profiles
     python3 Scripts/Quality/check_swift_file_length.py
     python3 Scripts/Quality/check_neutral_core_imports.py

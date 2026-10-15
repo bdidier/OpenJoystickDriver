@@ -115,7 +115,17 @@ struct ControlVocabularyTests {
       let evdev: String?
       let hid: [HID]
       let apple: String?
+      let notes: [String: String]?
     }
+    struct Source: Decodable {
+      let document: String
+      let version: String
+      let revision: String?
+      let url: String
+      let checkedOn: String
+      let pages: [String: Int]?
+    }
+    let sources: [String: Source]
     let controls: [String: Row]
   }
 
@@ -186,5 +196,42 @@ struct ControlVocabularyTests {
     #expect(rows["RightStickY"]?.w3cAxis == 3)
     #expect(rows["DpadRight"]?.w3cButton == 15)
     #expect(rows["South"]?.hid == [.init(page: "Button", usage: 1)])
+  }
+
+  @Test
+  func crosswalkRecordsASourcePerColumn() throws {
+    let crosswalk = try Self.crosswalk()
+    #expect(Set(crosswalk.sources.keys) == ["w3c", "sdl", "evdev", "hid", "apple"])
+    for (column, source) in crosswalk.sources {
+      #expect(!source.document.isEmpty && !source.version.isEmpty, "\(column)")
+      #expect(source.url.hasPrefix("https://"), "\(column)")
+      #expect(!source.checkedOn.isEmpty, "\(column)")
+    }
+    #expect(crosswalk.sources["sdl"]?.revision?.count == 40)
+    #expect(crosswalk.sources["evdev"]?.revision?.count == 40)
+    let pages = Set(crosswalk.sources["hid"]?.pages?.keys.map { $0 } ?? [])
+    for (id, row) in crosswalk.controls {
+      #expect(row.hid.allSatisfy { pages.contains($0.page) }, "\(id) hid page")
+      #expect((row.notes ?? [:]).keys.allSatisfy { crosswalk.sources[$0] != nil }, "\(id) note")
+    }
+  }
+
+  @Test
+  func crosswalkKeepsTheCorrectedCells() throws {
+    let rows = try Self.crosswalk().controls
+    #expect(rows["LeftTrigger"]?.hid.contains(.init(page: "Simulation", usage: 197)) == true)
+    #expect(rows["RightTrigger"]?.hid.contains(.init(page: "Simulation", usage: 196)) == true)
+    #expect(rows["TouchpadClick"]?.evdev == "BTN_LEFT")
+    #expect(rows["TouchpadClick"]?.apple == "DualShockTouchpadButton")
+    #expect(rows["RightPaddle1"]?.apple == "XboxPaddleOne")
+    #expect(rows["RightPaddle2"]?.apple == "XboxPaddleTwo")
+    #expect(rows["LeftPaddle1"]?.apple == "XboxPaddleThree")
+    #expect(rows["LeftPaddle2"]?.apple == "XboxPaddleFour")
+    #expect(rows["DpadUp"]?.hid.first == .init(page: "GenericDesktop", usage: 144))
+    #expect(rows["Capture"]?.hid == [.init(page: "Consumer", usage: 178)])
+    for id in ["LeftStickTouch", "LeftTrackpadClick", "RightTrackpadTouch"] {
+      let row = try #require(rows[id])
+      #expect(row.hid.isEmpty && row.sdl == nil && row.evdev == nil && row.apple == nil, "\(id)")
+    }
   }
 }

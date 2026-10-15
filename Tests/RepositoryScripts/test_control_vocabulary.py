@@ -37,7 +37,9 @@ class ControlVocabularyTests(unittest.TestCase):
         assert isinstance(defs, dict)
         cls.controls: list[str] = defs["control"]["enum"]
         with CROSSWALK.open(encoding="utf-8") as source:
-            cls.crosswalk: dict[str, dict[str, Any]] = json.load(source)["controls"]
+            document = json.load(source)
+        cls.crosswalk: dict[str, dict[str, Any]] = document["controls"]
+        cls.sources: dict[str, dict[str, Any]] = document["sources"]
 
     def validator(self, name: str) -> Any:
         return validate_schemas.Draft202012Validator(
@@ -87,6 +89,49 @@ class ControlVocabularyTests(unittest.TestCase):
                     self.assertIn(control, index[key], f"{control} via {column}")
         self.assertEqual(indexes["sdl"]["MISC1"], {"Capture", "Microphone"})
         self.assertEqual(indexes["sdl"]["SOUTH"], {"South"})
+
+    def test_every_column_records_its_source(self) -> None:
+        self.assertEqual(set(self.sources), {"w3c", "sdl", "evdev", "hid", "apple"})
+        for column, source in self.sources.items():
+            for field in ("document", "version", "url", "checkedOn"):
+                self.assertTrue(source.get(field), f"{column} source {field}")
+            self.assertTrue(source["url"].startswith("https://"), column)
+        self.assertRegex(self.sources["sdl"]["revision"], r"^[0-9a-f]{40}$")
+        self.assertRegex(self.sources["evdev"]["revision"], r"^[0-9a-f]{40}$")
+
+    def test_every_hid_page_is_a_page_of_the_hid_source(self) -> None:
+        pages = self.sources["hid"]["pages"]
+        for control, row in self.crosswalk.items():
+            for entry in row["hid"]:
+                self.assertIn(entry["page"], pages, control)
+
+    def test_a_note_names_a_column_of_the_table(self) -> None:
+        for control, row in self.crosswalk.items():
+            for column in row.get("notes", {}):
+                self.assertIn(column, self.sources, control)
+
+    def test_the_corrected_cells_hold(self) -> None:
+        rows = self.crosswalk
+        simulation = {"page": "Simulation"}
+        self.assertIn({**simulation, "usage": 197}, rows["LeftTrigger"]["hid"])
+        self.assertIn({**simulation, "usage": 196}, rows["RightTrigger"]["hid"])
+        self.assertEqual(rows["TouchpadClick"]["evdev"], "BTN_LEFT")
+        self.assertEqual(rows["TouchpadClick"]["apple"], "DualShockTouchpadButton")
+        self.assertEqual(rows["RightPaddle1"]["apple"], "XboxPaddleOne")
+        self.assertEqual(rows["RightPaddle2"]["apple"], "XboxPaddleTwo")
+        self.assertEqual(rows["LeftPaddle1"]["apple"], "XboxPaddleThree")
+        self.assertEqual(rows["LeftPaddle2"]["apple"], "XboxPaddleFour")
+        self.assertEqual(
+            rows["DpadUp"]["hid"][0], {"page": "GenericDesktop", "usage": 144}
+        )
+        self.assertEqual(rows["Capture"]["hid"], [{"page": "Consumer", "usage": 178}])
+
+    def test_no_control_without_a_name_has_a_guess(self) -> None:
+        for control in ("LeftStickTouch", "LeftTrackpadClick", "RightTrackpadTouch"):
+            row = self.crosswalk[control]
+            self.assertEqual(row["hid"], [], control)
+            for column in ("w3cButton", "w3cAxis", "sdl", "evdev", "apple"):
+                self.assertIsNone(row[column], f"{control} {column}")
 
     def test_a_profile_with_a_current_name_is_valid(self) -> None:
         with SAMPLE_PROFILE.open(encoding="utf-8") as source:
