@@ -4,6 +4,7 @@ import Testing
 
 @testable import OpenJoystickDriverKit
 
+@Suite(.timeLimit(.minutes(2)))
 struct StartupLifetimeTests {
   @Test
   func hidManagerTargetsOutputAndFeatureReportsByExactConnection() async {
