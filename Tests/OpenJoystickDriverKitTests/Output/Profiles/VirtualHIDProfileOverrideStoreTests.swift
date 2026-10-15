@@ -32,13 +32,13 @@ struct VirtualHIDProfileOverrideStoreTests {
       + (unit.map { #","unit":"\#($0)""# } ?? "") + "}"
     return
       #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(Store.kind)","#
-      + #""match":\#(match),"descriptor":"\#(descriptor)""#
+      + #""match":\#(match),"persona":"\#(descriptor)""#
       + (identity.map { #","identity":\#($0)"# } ?? "") + "}"
   }
 
   private static let identityJSON =
     #"{"vendorID":4660,"productID":22136,"productName":"Arcade Stick","#
-    + #""manufacturer":"Acme","glyphFamily":"generic"}"#
+    + #""manufacturer":"Acme"}"#
 
   @Test
   func anAbsentDirectoryHasNoPersonas() throws {
@@ -62,7 +62,7 @@ struct VirtualHIDProfileOverrideStoreTests {
       #expect(document["$schema"] == nil)
       #expect(document["apiVersion"] as? String == OpenJoystickDriverAPI.version)
       #expect(document["kind"] as? String == Store.kind)
-      #expect(document["descriptor"] as? String == "Generic")
+      #expect(document["persona"] as? String == "Generic")
       let match = try #require(document["match"] as? [String: Any])
       #expect(match["vendorID"] as? Int == 0x045E)
       #expect(match["productID"] as? Int == 0x02EA)

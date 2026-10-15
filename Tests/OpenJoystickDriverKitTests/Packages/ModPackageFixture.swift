@@ -65,7 +65,7 @@ struct ModPackageFixture {
       #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","#
       + #""kind":"\#(VirtualHIDProfileOverrideStore.kind)","#
       + #""match":{"vendorID":\#(vendorID),"productID":\#(productID)},"#
-      + #""descriptor":"\#(descriptor)"}"#
+      + #""persona":"\#(descriptor)"}"#
     return (String(format: "%04x-%04x.json", vendorID, productID), Data(text.utf8))
   }
 

@@ -10,10 +10,10 @@ extension VirtualOutputTests {
     let document: [String: Any] = [
       "apiVersion": OpenJoystickDriverAPI.version, "kind": VirtualHIDProfileOverrideStore.kind,
       "match": ["vendorID": 1, "productID": 2],
-      "descriptor": "Generic",
+      "persona": "Generic", "labels": "xbox",
       "identity": [
         "vendorID": 0x1234, "productID": 0x5678, "productName": "Custom Pad",
-        "manufacturer": "Custom Maker", "glyphFamily": "xbox",
+        "manufacturer": "Custom Maker",
       ] as [String: Any],
     ]
     try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
@@ -78,7 +78,7 @@ extension VirtualOutputTests {
     try await dispatcher.activate(for: [custom, plain])
 
     let builds = log.snapshot().filter { $0.hasPrefix("built") }
-    #expect(builds == ["built Generic as 4660:22136 Custom Pad", "built SdlCompatible"])
+    #expect(builds == ["built Generic as 4660:22136 Custom Pad", "built Generic"])
     await dispatcher.close()
   }
 
@@ -87,10 +87,10 @@ extension VirtualOutputTests {
     let document: [String: Any] = [
       "apiVersion": OpenJoystickDriverAPI.version, "kind": VirtualHIDProfileOverrideStore.kind,
       "match": ["vendorID": 1, "productID": 2],
-      "descriptor": "Generic",
+      "persona": "Generic", "labels": "xbox",
       "identity": [
         "vendorID": 0x1234, "productID": 0x5678, "productName": productName,
-        "manufacturer": "Custom Maker", "glyphFamily": "xbox",
+        "manufacturer": "Custom Maker",
       ] as [String: Any],
     ]
     try JSONSerialization.data(withJSONObject: document).write(
@@ -137,7 +137,7 @@ extension VirtualOutputTests {
     try FileManager.default.removeItem(at: directory.appendingPathComponent("0001-0002.json"))
     try await dispatcher.retarget(controller: custom)
     #expect(builds().count == 4)
-    #expect(builds().last == "built SdlCompatible")
+    #expect(builds().last == "built Generic")
     await dispatcher.close()
   }
 }
