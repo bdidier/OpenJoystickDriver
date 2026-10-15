@@ -152,9 +152,11 @@ public enum ProtocolPacketFixtures {
       return Data(report)
     }
 
-    public static let usbStartupReportIDs: [UInt8] = [
-      0x80, 0x80, 0x80, 0x80, 0x01, 0x01, 0x01, 0x01, 0x01,
-    ]
+    /// What the driver sends itself over USB; the 0x80 handshake commands are the protocol
+    /// description's startup writes.
+    public static let usbStartupReportIDs: [UInt8] = [0x01, 0x01, 0x01, 0x01, 0x01]
+    /// The Linux USB init slice's handshake commands, in order.
+    public static let usbHandshakeCommands: [UInt8] = [0x02, 0x03, 0x02, 0x04]
     public static let bluetoothStartupReportIDs: [UInt8] = [0x01, 0x01, 0x01, 0x01, 0x01]
     public static let bluetoothStartupSubcommands: [UInt8] = [0x03, 0x40, 0x48, 0x10, 0x10]
     public static let neutralRumble: [UInt8] = [0x00, 0x01, 0x40, 0x40]

@@ -7,12 +7,9 @@ public enum ControllerButtonLabels: Equatable, Sendable {
   case playStation
   case nintendo
 
+  /// The labels the family's protocol description names; standard when it names none.
   public init(protocolID: PhysicalProtocolID) {
-    switch protocolID {
-    case .sonyDualShock4, .sonyDualSense: self = .playStation
-    case .nintendoSwitch1, .nintendoSwitch2, .nintendoSwitchInputOnly: self = .nintendo
-    default: self = .standard
-    }
+    self = protocolID.protocolDescription.buttonLabels
   }
 }
 

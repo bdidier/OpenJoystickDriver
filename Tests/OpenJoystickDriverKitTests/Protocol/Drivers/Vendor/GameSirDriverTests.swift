@@ -72,8 +72,8 @@ struct GameSirDriverTests {
     let gripPress = enhanced(extras: 0x40 | 0x80)
     #expect(try grips.parseReport(gripPress).contains(.press(.paddleLeft2)))
     #expect(!(try slots.parseReport(gripPress).contains(.press(.paddleLeft2))))
-    #expect(grips.startupWrites().count == 1)
-    #expect(slots.startupWrites().count == 2)
+    #expect(grips.startupWrites().isEmpty)
+    #expect(slots.startupWrites().isEmpty)
   }
 
   @Test
@@ -107,7 +107,7 @@ struct GameSirDriverTests {
     let enhanced = GameSirDriver(protocol: .enhancedHID, usesLightingSlots: true)
     #expect(enhanced.sessionPlan.hidKeepAliveIntervalNanoseconds == 500_000_000)
     #expect(Array(enhanced.keepAliveWrites().hidOutputs[0].bytes.prefix(2)) == [0x0F, 0xF2])
-    #expect(enhanced.startupWrites().count == 2)
+    #expect(enhanced.startupWrites().isEmpty)
 
     let g7 = GameSirDriver(protocol: .g7ProUSB)
     #expect(g7.sessionPlan.usbKeepAliveIntervalNanoseconds == 500_000_000)

@@ -1,8 +1,5 @@
 import Foundation
 
-/// SDL's `BLUETOOTH_DISCONNECT_TIMEOUT_MS`, which `SDL_hidapi_ps4.c` also applies to Sony's
-/// wireless adapter.
-let ds4AdapterDisconnectNanoseconds: UInt64 = 500_000_000
 /// Payload byte (after the USB report ID) whose bit 2 is set while Sony's wireless adapter has no
 /// pad connected; SDL `HIDAPI_DriverPS4_IsPacketValid` reads it as `data[31] & 0x04`.
 let ds4AdapterStatusOffset = 30
@@ -49,7 +46,7 @@ extension DualShock4Driver {
     guard model == .wirelessAdapter, payload.count > ds4AdapterStatusOffset else { return true }
     guard payload[ds4AdapterStatusOffset] & ds4AdapterNoPadFlag == 0 else {
       if adapterPadConnected, let lastAdapterPadReportAt,
-        receivedAt &- lastAdapterPadReportAt >= ds4AdapterDisconnectNanoseconds
+        receivedAt &- lastAdapterPadReportAt >= adapterDisconnectNanoseconds
       {
         setAdapterPadConnected(false)
       }

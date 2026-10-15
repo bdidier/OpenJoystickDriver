@@ -30,7 +30,17 @@ extension GIPDriverTests {
 
   @Test
   func testDefaultStartupSequence() {
-    #expect(GIPStartupPacket.defaultSequence == [.powerOn, .ledOn, .authDone])
+    let described = PhysicalProtocolID.xboxGIP.protocolDescription.usbStartupWrites(
+      variant: .usb,
+      parameters: .none
+    )
+    #expect(
+      described.map(\.bytes)
+        == [
+          GIPStartupPacket.powerOn, .ledOn, .authDone,
+        ].map { $0.packet(sequence: 0) }
+    )
+    #expect(described.allSatisfy { $0.sessionByte == 2 })
     #expect(GIPStartupPacket.powerOn.packet(sequence: 0) == [5, 32, 0, 1, 0])
     #expect(GIPStartupPacket.ledOn.packet(sequence: 0) == [10, 32, 0, 3, 0, 1, 20])
     #expect(GIPStartupPacket.authDone.packet(sequence: 0) == [6, 32, 0, 2, 1, 0])

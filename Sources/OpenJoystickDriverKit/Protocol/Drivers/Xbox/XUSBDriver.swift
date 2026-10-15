@@ -9,12 +9,9 @@ private let xbox360InputReportLength = 20
 private let xbox360TriggerMax: Float = 255
 /// Maximum positive value for a signed stick axis.
 private let xbox360StickMax = Float(Int16.max)
-/// Receiver presence inquiry, byte for byte as xpad sends it (xpad.c:1449–1469).
-private let xbox360ReceiverPresenceInquiry: [UInt8] = [
-  0x08, 0x00, 0x0F, 0xC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-]
-/// Pad reports seen without presence between presence inquiry resends, and the most resends.
-private let xbox360ReceiverInquiryResendInterval = 16
+/// The timeout of one output packet that names none.
+private let xbox360OutputTimeoutMs = 2_000
+/// The most presence inquiry resends.
 private let xbox360ReceiverInquiryResendLimit = 8
 
 /// Xbox 360 ring-of-light LED patterns.
@@ -103,6 +100,10 @@ public final class XUSBDriver: PhysicalProtocolDriver {
   private var pendingConnectionState: ControllerInputConnectionState?
   private var pendingWrites: [PhysicalOutputWrite] = []
   private var padReportsWithoutPresence = 0
+  /// Pad reports seen without presence between inquiry resends (`presenceResendReports`).
+  let inquiryResendInterval: Int
+  /// The record's own startup packets; the description's when empty.
+  private let recordStartup: [USBStartupWrite]
 
   private var state = ControllerState.neutral
 
@@ -110,22 +111,44 @@ public final class XUSBDriver: PhysicalProtocolDriver {
   /// - Parameters:
   ///   - outEndpoint: Interrupt OUT endpoint address (default 0x01).
   ///   - isWirelessReceiver: Whether reports use the Xbox 360 receiver envelope.
-  public init(outEndpoint: UInt8 = 0x01, isWirelessReceiver: Bool = false) {
+  ///   - tuning: The effective tuning of the controller's record; the description's defaults
+  ///     when nil.
+  public init(
+    outEndpoint: UInt8 = 0x01,
+    isWirelessReceiver: Bool = false,
+    tuning: ControllerTuning? = nil,
+    usbStartupWrites: [USBStartupWrite] = []
+  ) {
     self.outEndpoint = outEndpoint
+    recordStartup = usbStartupWrites
     self.isWirelessReceiver = isWirelessReceiver
+    inquiryResendInterval = PhysicalProtocolID.xboxXUSB.described(
+      \.presenceResendReports,
+      in: tuning
+    )
   }
 
   /// Creates the driver for one Xbox 360 wireless receiver slot, or nil outside slots 0–3.
   /// - Parameters:
   ///   - outEndpoint: Interrupt OUT endpoint address (default 0x01).
   ///   - slotOrdinal: Zero-based receiver slot in interface order.
-  public convenience init?(outEndpoint: UInt8 = 0x01, slotOrdinal: Int) {
+  public convenience init?(
+    outEndpoint: UInt8 = 0x01,
+    slotOrdinal: Int,
+    tuning: ControllerTuning? = nil,
+    usbStartupWrites: [USBStartupWrite] = []
+  ) {
     guard (0..<4).contains(slotOrdinal) else { return nil }
-    self.init(outEndpoint: outEndpoint, isWirelessReceiver: true)
+    self.init(
+      outEndpoint: outEndpoint,
+      isWirelessReceiver: true,
+      tuning: tuning,
+      usbStartupWrites: usbStartupWrites
+    )
   }
 
   public var capabilities: ControllerCapabilities {
-    ControllerCapabilities(controls: ControlID.xboxLayout.union([.guide]))
+    PhysicalProtocolID.xboxXUSB.describedControls
   }
 
   public var sessionPlan: DriverSessionPlan {
@@ -149,7 +172,7 @@ public final class XUSBDriver: PhysicalProtocolDriver {
   /// opened reports itself (xpad.c:1845–1864). Either device that rejects its write still
   /// starts: xpad fails start only when it cannot submit the write (xpad.c:1473).
   public func startupWrites() -> [PhysicalOutputWrite] {
-    isWirelessReceiver ? [presenceInquiryWrite] : []
+    presenceInquiryWrites
   }
 
   /// A new transport session learns receiver presence again from the device; the pipeline drops
@@ -190,17 +213,24 @@ public final class XUSBDriver: PhysicalProtocolDriver {
     return decodeWired(Data(data.dropFirst(4)))
   }
 
-  private var presenceInquiryWrite: PhysicalOutputWrite {
-    .usb(outputPacket(xbox360ReceiverPresenceInquiry), toleratesRejection: true)
+  /// The presence inquiry: the description's startup write for a receiver slot (xpad.c:1449–1469).
+  private var presenceInquiryWrites: [PhysicalOutputWrite] {
+    PhysicalProtocolID.xboxXUSB.usbStartupWrites(
+      recordWrites: recordStartup,
+      variant: isWirelessReceiver ? .receiver : .wired,
+      parameters: .none
+    ).map {
+      $0.write(defaultEndpoint: outEndpoint, defaultTimeoutMilliseconds: xbox360OutputTimeoutMs)
+    }
   }
 
   private func resendPresenceInquiry() {
     defer { padReportsWithoutPresence += 1 }
-    guard padReportsWithoutPresence.isMultiple(of: xbox360ReceiverInquiryResendInterval),
-      padReportsWithoutPresence / xbox360ReceiverInquiryResendInterval
+    guard padReportsWithoutPresence.isMultiple(of: inquiryResendInterval),
+      padReportsWithoutPresence / inquiryResendInterval
         < xbox360ReceiverInquiryResendLimit
     else { return }
-    pendingWrites.append(presenceInquiryWrite)
+    pendingWrites.append(contentsOf: presenceInquiryWrites)
   }
 
   /// Decodes one wired-format Xbox 360 state report.
@@ -301,7 +331,11 @@ public final class XUSBDriver: PhysicalProtocolDriver {
   }
 
   private func outputPacket(_ bytes: [UInt8]) -> PhysicalUSBOutputPacket {
-    PhysicalUSBOutputPacket(endpoint: outEndpoint, bytes: bytes, timeoutMilliseconds: 2_000)
+    PhysicalUSBOutputPacket(
+      endpoint: outEndpoint,
+      bytes: bytes,
+      timeoutMilliseconds: UInt32(xbox360OutputTimeoutMs)
+    )
   }
 
   // MARK: - Private parsing

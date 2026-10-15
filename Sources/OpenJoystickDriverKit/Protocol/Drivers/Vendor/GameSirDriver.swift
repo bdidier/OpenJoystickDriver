@@ -1,9 +1,9 @@
 import Foundation
 
 let gameSirReportLength = 64
-let gameSirHeartbeatIntervalNanoseconds: UInt64 = 500_000_000
-let gameSirCommandIntervalNanoseconds: UInt64 = 20_000_000
-let gameSirUSBTimeoutMilliseconds: UInt32 = 2_000
+/// The spacing of lighting commands: the description's default output interval.
+let gameSirCommandIntervalNanoseconds =
+  DriverSessionPlan().withDefaults(of: .vendorGameSir).minimumHIDOutputIntervalNanoseconds
 let gameSirEnhancedHIDHeartbeatPayload: [UInt8] = [0x0F, 0xF2]
 
 /// GameSir protocol families backed by the vendor's observed report streams.
@@ -20,6 +20,8 @@ public final class GameSirDriver: PhysicalProtocolDriver {
   /// Enhanced HID lighting memory is slot-based (parameter `lightingMemory: ProfileSlots`).
   let usesLightingSlots: Bool
   let outEndpoint: UInt8
+  /// Raw-USB command timeout (`usbCommandTimeoutMs`).
+  let usbTimeoutMilliseconds: UInt32
   var standardParser = XUSBDriver()
   var state = ControllerState.neutral
   /// The wired G7 splits input over two streams, standard XUSB reports and telemetry; each applies
@@ -38,11 +40,15 @@ public final class GameSirDriver: PhysicalProtocolDriver {
     protocol gameSirProtocol: GameSirProtocol,
     hasInnerGrips: Bool = false,
     usesLightingSlots: Bool = false,
-    outEndpoint: UInt8 = 0x02
+    outEndpoint: UInt8 = 0x02,
+    tuning: ControllerTuning? = nil
   ) {
     self.gameSirProtocol = gameSirProtocol
     self.hasInnerGrips = hasInnerGrips
     self.usesLightingSlots = usesLightingSlots
     self.outEndpoint = outEndpoint
+    usbTimeoutMilliseconds = UInt32(
+      PhysicalProtocolID.vendorGameSir.described(\.usbCommandTimeoutMilliseconds, in: tuning)
+    )
   }
 }

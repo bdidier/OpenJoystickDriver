@@ -1387,6 +1387,102 @@
           "family": "xbox.gip"
         }
       }
+    },
+    {
+      "name": "layered patches merge the family timing keys",
+      "record": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "xbox.gip",
+          "parameters": {
+            "shareButton": {
+              "fromEnd": 26
+            },
+            "keepAlive": true,
+            "modes": [1, 2, 3]
+          }
+        },
+        "usb": {
+          "interface": 0
+        },
+        "ownership": "macos"
+      },
+      "builtin": [
+        {
+          "apiVersion": "openjoystickdriver/v1alpha1",
+          "kind": "ControllerPatch",
+          "selector": {
+            "vendorID": 1118,
+            "productID": 746
+          },
+          "patch": {
+            "tuning": {
+              "presenceResendReports": 8,
+              "usbStartupIntervalMs": 20
+            }
+          }
+        }
+      ],
+      "package": [
+        {
+          "apiVersion": "openjoystickdriver/v1alpha1",
+          "kind": "ControllerPatch",
+          "selector": {
+            "vendorID": 1118,
+            "productID": 746
+          },
+          "patch": {
+            "tuning": {
+              "presenceResendReports": 6,
+              "usbStartupRetryDelayMs": 500
+            }
+          }
+        }
+      ],
+      "user": [
+        {
+          "apiVersion": "openjoystickdriver/v1alpha1",
+          "kind": "ControllerPatch",
+          "selector": {
+            "vendorID": 1118,
+            "productID": 746
+          },
+          "patch": {
+            "tuning": {
+              "usbStartupIntervalMs": null
+            }
+          }
+        }
+      ],
+      "expected": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "xbox.gip",
+          "parameters": {
+            "shareButton": {
+              "fromEnd": 26
+            },
+            "keepAlive": true,
+            "modes": [1, 2, 3]
+          }
+        },
+        "usb": {
+          "interface": 0
+        },
+        "ownership": "macos",
+        "tuning": {
+          "presenceResendReports": 6,
+          "usbStartupRetryDelayMs": 500
+        }
+      }
     }
   ],
   "rejected": [

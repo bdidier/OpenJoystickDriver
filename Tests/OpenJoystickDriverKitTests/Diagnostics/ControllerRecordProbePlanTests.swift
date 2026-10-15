@@ -16,7 +16,7 @@ struct ControllerRecordProbePlanTests {
     #expect(plan.transportProfile.inputEndpoint == 130)
     #expect(plan.transportProfile.outputEndpoint == 2)
     #expect(!plan.transportProfile.needsSetConfiguration)
-    #expect(plan.startupPackets == GIPStartupPacket.defaultSequence)
+    #expect(plan.startupPackets.isEmpty)
     #expect(plan.keepAlivePolicy == .enabled)
     #expect(plan.makeUnobservedDriver() is GIPDriver)
   }

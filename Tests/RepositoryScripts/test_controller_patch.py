@@ -8,7 +8,7 @@ import unittest
 from pathlib import Path
 from typing import Any
 
-from Scripts.Catalog import controller_patch
+from Scripts.Catalog import controller_patch, protocol_descriptions
 
 CASES = Path(__file__).resolve().parent / "fixtures" / "controller_patch" / "cases.json"
 
@@ -55,14 +55,14 @@ class ControllerPatchTests(unittest.TestCase):
         self.assertEqual(raised.exception.code, "E5001")
         self.assertIn(f"apiVersion {old} is not supported", str(raised.exception))
 
-    def test_known_families_match_the_swift_protocol_ids(self) -> None:
+    def test_every_swift_protocol_id_has_a_description(self) -> None:
         source = (
             Path(__file__).resolve().parents[2]
             / "Sources/OpenJoystickDriverKit/Protocol/Classification/ProtocolClassifier.swift"
         ).read_text(encoding="utf-8")
         body = source.split("enum PhysicalProtocolID", 1)[1].split("var variants", 1)[0]
         raw_values = set(re.findall(r'^\s*case \w+ = "([^"]+)"', body, re.MULTILINE))
-        self.assertEqual(set(controller_patch.KNOWN_FAMILIES), raw_values)
+        self.assertEqual(set(protocol_descriptions.bundled()), raw_values)
 
     def test_the_cases_cover_the_required_behaviour(self) -> None:
         names = {case["name"] for case in load_cases()["cases"]}
