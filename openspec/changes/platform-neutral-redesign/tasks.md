@@ -124,9 +124,9 @@ Owns: typed parameters in records per the D2 table.
 Depends: 7.
 Verify: `swift test`, `./Scripts/ojd check schemas`, `./Scripts/ojd catalog regenerate --check`.
 
-- [ ] 8.1 Replace each `ControllerQuirk` case with a typed parameter or a mode field following the D2 crosswalk. Verify: a test lists every old case and the new place it landed; 1.1 shows zero diffs.
-- [ ] 8.2 Delete `ControllerQuirk`. Verify: `grep -r ControllerQuirk Sources Tests` returns nothing; build passes.
-- [ ] 8.3 Update the schema for the new fields. Verify: `./Scripts/ojd check schemas`.
+- [x] 8.1 Replace each `ControllerQuirk` case with a typed parameter or a mode field following the D2 crosswalk. Verify: a test lists every old case and the new place it landed; 1.1 shows zero diffs.
+- [x] 8.2 Delete `ControllerQuirk`. Verify: `grep -r ControllerQuirk Sources Tests` returns nothing; build passes.
+- [x] 8.3 Update the schema for the new fields. Verify: `./Scripts/ojd check schemas`.
 
 Extras found while closing 8 (the Swift record set merges a patch's `parameters` key by key and cannot remove one, while the Python generator replaces them whole; neither follows the `controller-records` "Layered patches" requirement). Depends on 14.2 for the document header.
 
@@ -189,11 +189,11 @@ Owns: `Resources/Schemas/`, `Scripts/` validators, `Resources/Schemas/AGENTS.md`
 Depends: 9, 12.
 Verify: `./Scripts/ojd check schemas`, `.build/schema-validator/bin/python -m unittest discover -s Tests/RepositoryScripts`, `ruff check Scripts Tests/RepositoryScripts`, `pyright`.
 
-- [ ] 14.1 Move schemas from `Resources/Schemas/v1beta1/` to flat files named `<kind>.schema.json`. Verify: `./Scripts/ojd check schemas` finds all and nothing remains in the old directory.
+- [x] 14.1 Move schemas from `Resources/Schemas/v1beta1/` to flat files named `<kind>.schema.json`. Verify: `./Scripts/ojd check schemas` finds all and nothing remains in the old directory.
 - [ ] 14.2 Require `apiVersion: openjoystickdriver/v1alpha1` and `kind` on every document kind; reject `openjoystickdriver.io/v1beta1`. Verify: negative tests per kind.
-- [ ] 14.3 Set `$id` to `https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/<kind>.schema.json` and extend `validate_schemas` to check ids and the `apiVersion` constant against one source. Verify: the constant-equality unit test.
-- [ ] 14.4 Rewrite `Resources/Schemas/AGENTS.md` for the flat layout. Verify: markdownlint over the file.
-- [ ] 14.5 Update every sample and doc under `docs/sdk/` to the new header. Verify: `./Scripts/ojd check schemas` and `ojd mod validate` on the sample.
+- [x] 14.3 Set `$id` to `https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/<kind>.schema.json` and extend `validate_schemas` to check ids and the `apiVersion` constant against one source. Verify: the constant-equality unit test.
+- [x] 14.4 Rewrite `Resources/Schemas/AGENTS.md` for the flat layout. Verify: markdownlint over the file.
+- [x] 14.5 Update every sample and doc under `docs/sdk/` to the new header. Verify: `./Scripts/ojd check schemas` and `ojd mod validate` on the sample.
 
 ## 15. Control vocabulary unification
 
@@ -225,7 +225,7 @@ Verify: `swift test`, lint pair, `./Scripts/ojd check schemas`.
 
 - [ ] 17.1 Rename commands and words by the D9 table. Verify: a test lists every old word as rejected with a hint to the new word.
 - [ ] 17.2 Add a settings schema and move settings out of `UserDefaults` into layered files; add `ojd setting` keys for every GUI-only switch. Verify: schema check and a round-trip test.
-- [ ] 17.3 Add the single `DataDirectory` port used by every store. Verify: `grep` finds no direct path building outside the port; tests use a temp directory.
+- [x] 17.3 Add the single `DataDirectory` port used by every store. Verify: `grep` finds no direct path building outside the port; tests use a temp directory.
 - [ ] 17.4 Split the neutral core from a macOS host adapter so `Sources/OpenJoystickDriver` has no macOS-only imports outside `platform`. Verify: a script or test greps imports and fails on a violation.
 - [ ] 17.5 Add the coverage test that lists every command and flags any with no GUI place. Verify: the test passes and fails on a fake command.
 - [ ] 17.6 Decide on the command-line-tool symlink after open item 4. Verify: the decision is in `design.md`.
