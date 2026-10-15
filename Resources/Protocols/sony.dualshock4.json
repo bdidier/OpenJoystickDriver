@@ -9,7 +9,8 @@
 	"tuningKeys": [
 		"hidStartupIntervalMs",
 		"minimumHIDOutputIntervalMs",
-		"inputLivenessTimeoutMs"
+		"inputLivenessTimeoutMs",
+		"adapterDisconnectDelayMs"
 	],
 	"buttonLabels": "PlayStation",
 	"macOSOwnedOutput": {
@@ -49,7 +50,8 @@
 	},
 	"defaults": {
 		"tuning": {
-			"inputLivenessTimeoutMs": 1000
+			"inputLivenessTimeoutMs": 1000,
+			"adapterDisconnectDelayMs": 500
 		}
 	}
 }

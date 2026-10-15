@@ -8,7 +8,8 @@
 	},
 	"tuningKeys": [
 		"hidStartupIntervalMs",
-		"minimumHIDOutputIntervalMs"
+		"minimumHIDOutputIntervalMs",
+		"adapterDisconnectDelayMs"
 	],
 	"buttonLabels": "PlayStation",
 	"parameters": {
@@ -53,5 +54,10 @@
 			"auxiliary-1",
 			"auxiliary-2"
 		]
+	},
+	"defaults": {
+		"tuning": {
+			"adapterDisconnectDelayMs": 500
+		}
 	}
 }

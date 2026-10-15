@@ -98,11 +98,6 @@ extension EquivalenceSnapshotCatalogTests {
     func milliseconds(_ nanoseconds: UInt64?) -> String {
       nanoseconds.map { String($0 / 1_000_000) } ?? "-"
     }
-    // The snapshot predates recovery being Switch 1 only. A plan with no recovery printed the
-    // plan's former default of 200 ms and 2 rounds, and the snapshot keeps that spelling.
-    let recoveryInterval =
-      plan.hasStartupRecovery ? plan.hidStartupRecoveryIntervalNanoseconds : 200_000_000
-    let recoveryRounds = plan.hasStartupRecovery ? plan.hidStartupRecoveryRounds : 2
     var lines = [
       "controls [\(labels(controls.controls))]",
       "output rumble=[\(output.rumbleMotors.map(label).joined(separator: ","))]"
@@ -114,8 +109,8 @@ extension EquivalenceSnapshotCatalogTests {
         + " hidStartupMs=\(milliseconds(plan.hidStartupIntervalNanoseconds))"
         + " hidKeepAliveMs=\(milliseconds(plan.hidKeepAliveIntervalNanoseconds))"
         + " minimumHIDOutputMs=\(milliseconds(plan.minimumHIDOutputIntervalNanoseconds))"
-        + " recoveryMs=\(milliseconds(recoveryInterval))"
-        + " recoveryRounds=\(recoveryRounds)"
+        + " recoveryMs=\(milliseconds(plan.hidStartupRecoveryIntervalNanoseconds))"
+        + " recoveryRounds=\(plan.hidStartupRecoveryRounds)"
         + " livenessMs=\(milliseconds(plan.inputReportLivenessTimeoutNanoseconds))",
     ]
     lines += writes("startup", driver.startupWrites())

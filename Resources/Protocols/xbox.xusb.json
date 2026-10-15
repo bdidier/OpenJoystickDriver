@@ -26,5 +26,13 @@
 		"add": [
 			"guide"
 		]
+	},
+	"rawUSBTuningKeys": [
+		"presenceResendReports"
+	],
+	"defaults": {
+		"tuning": {
+			"presenceResendReports": 16
+		}
 	}
 }

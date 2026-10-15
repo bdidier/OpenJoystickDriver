@@ -192,6 +192,17 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         self.assertEqual(families["sony.dualshock4"], ["usb", "bluetooth-classic"])
         self.assertEqual(families["hid.descriptor"], [])
 
+    def test_variant_lookup_fails_for_an_unknown_family(self) -> None:
+        with self.assertRaisesRegex(KeyError, "xbox.unknown"):
+            validate_schemas.family_variants(self.schema, "xbox.unknown")
+        self.assertEqual(
+            validate_schemas.family_variants(self.schema, "hid.descriptor"), []
+        )
+        self.assertEqual(
+            validate_schemas.family_variants(self.schema, "sony.dualshock4"),
+            ["usb", "bluetooth-classic"],
+        )
+
     def test_each_family_accepts_only_its_own_variants(self) -> None:
         every = self.schema["$defs"]["interfaceSignature"]["properties"]["variant"][
             "enum"
@@ -388,9 +399,17 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             ("xbox.gip", {}),
             ("xbox.gip", {"unknown": {}}),
             ("xbox.gip", {"tuning": {"stickDeadzone": 5}}),
+            ("xbox.gip", {"output": {"rumble": self.rumble_template()}}),
+            ("xbox.xusb", {"output": {"rumble": self.rumble_template()}}),
         ):
             with self.subTest(family=family, defaults=defaults):
                 self.assert_rejected(self.with_body(family, defaults=defaults))
+
+    def rumble_template(self) -> dict[str, Any]:
+        return {
+            "report": {"kind": "output", "id": 1, "length": 4},
+            "leftMain": {"byte": 1},
+        }
 
     def startup_write(self) -> dict[str, Any]:
         return {"report": {"kind": "output", "id": 1, "length": 4}, "bytes": [1, 2, 3]}
@@ -428,6 +447,34 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 defaults={"variants": {"usb": {"tuning": {"keepAliveIntervalMs": 5}}}},
             )
         )
+
+    def test_rejects_a_variant_tuning_key_the_family_reads_only_elsewhere(self) -> None:
+        self.assert_rejected(
+            self.with_body(
+                "sony.dualsense",
+                tuningKeys=["hidStartupIntervalMs"],
+                defaults={
+                    "variants": {"usb": {"tuning": {"adapterDisconnectDelayMs": 5}}}
+                },
+            )
+        )
+
+    def test_rejects_stick_deadzone_as_a_declared_tuning_key(self) -> None:
+        self.assert_rejected(
+            self.with_body("sony.dualsense", tuningKeys=["stickDeadzone"])
+        )
+        self.assert_rejected(
+            self.with_body("xbox.gip", rawUSB=True, rawUSBTuningKeys=["stickDeadzone"])
+        )
+
+    def test_rejects_a_rationale_of_the_wrong_type(self) -> None:
+        for rationale in (5, None, ["rationale"], {"text": "x"}):
+            with self.subTest(rationale=rationale):
+                self.assert_rejected(
+                    self.with_body(
+                        "sony.dualsense", macOSOwnedOutput={"rationale": rationale}
+                    )
+                )
 
     def test_rejects_signatures_for_a_family_without_variants(self) -> None:
         document = self.described("hid.descriptor", "usb")

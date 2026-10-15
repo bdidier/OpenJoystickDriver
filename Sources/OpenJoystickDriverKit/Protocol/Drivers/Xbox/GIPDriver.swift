@@ -3,12 +3,7 @@ import Foundation
 private let gipDpadMask: UInt8 = 0x0F
 private let gipGuideButtonMask: UInt8 = 0x03
 private let gipHandshakeMaxAttempts = 3
-private let gipAnnounceResendInterval = 4
 private let gipAnnounceResendLimit = 8
-// Handshake pacing is the driver's algorithm, not a family default: the delays and attempt count
-// below are how this driver retries a handshake, so they stay in code.
-private let gipHandshakeRetryDelays: [UInt64] = [1_000_000_000, 2_000_000_000, 4_000_000_000]
-private let gipInitDelayNanoseconds: UInt64 = 50_000_000
 private let gipStickMax: Float = 32767
 private let gipTriggerMax: Float = 1023
 private let gipMaximumVarintBytes = 5
@@ -58,6 +53,8 @@ public final class GIPDriver: PhysicalProtocolDriver {
   private var pendingWrites: [PhysicalOutputWrite] = []
   /// Announces received before the controller's first input, for the startup resend.
   private var announcesBeforeInput = 0
+  /// Announces between startup resends (`presenceResendReports`).
+  let announceResendInterval: Int
   private var hasReceivedInput = false
 
   /// Current device state, driven by auth progress.
@@ -71,7 +68,8 @@ public final class GIPDriver: PhysicalProtocolDriver {
     startupPackets: [GIPStartupPacket] = GIPStartupPacket.defaultSequence,
     keepAlivePolicy: GIPKeepAlivePolicy = .enabled,
     shareButtonFromEnd: Int? = nil,
-    allowsPhysicalOutput: Bool = true
+    allowsPhysicalOutput: Bool = true,
+    tuning: ControllerTuning? = nil
   ) {
     self.outEndpoint = transportProfile.outputEndpoint
     self.startupPackets = startupPackets
@@ -79,17 +77,21 @@ public final class GIPDriver: PhysicalProtocolDriver {
     self.shareButtonFromEnd = shareButtonFromEnd
     self.allowsPhysicalOutput = allowsPhysicalOutput
     self.authHandler = GIPAuthHandler()
+    announceResendInterval = PhysicalProtocolID.xboxGIP.described(
+      \.presenceResendReports,
+      in: tuning
+    )
   }
 
   // MARK: - PhysicalProtocolDriver
 
   public var sessionPlan: DriverSessionPlan {
+    // The retry count is the driver's algorithm; the description sets the delays, and
+    // `keepAliveIntervalMs` replaces the keep-alive placeholder.
     DriverSessionPlan(
-      usbStartupIntervalNanoseconds: gipInitDelayNanoseconds,
-      usbStartupRetryDelays: Array(gipHandshakeRetryDelays.prefix(gipHandshakeMaxAttempts - 1)),
-      usbKeepAliveIntervalNanoseconds: keepAlivePolicy == .enabled
-        ? PhysicalProtocolID.xboxGIP.keepAliveIntervalNanoseconds() : nil
-    )
+      usbStartupRetryDelays: Array(repeating: 0, count: gipHandshakeMaxAttempts - 1),
+      usbKeepAliveIntervalNanoseconds: keepAlivePolicy == .enabled ? 0 : nil
+    ).withDefaults(of: .xboxGIP)
   }
 
   /// Sends the GIP init sequence to the controller.
@@ -233,8 +235,8 @@ public final class GIPDriver: PhysicalProtocolDriver {
   private func resendStartupAfterAnnounce() {
     guard !hasReceivedInput else { return }
     defer { announcesBeforeInput += 1 }
-    guard announcesBeforeInput.isMultiple(of: gipAnnounceResendInterval),
-      announcesBeforeInput / gipAnnounceResendInterval < gipAnnounceResendLimit
+    guard announcesBeforeInput.isMultiple(of: announceResendInterval),
+      announcesBeforeInput / announceResendInterval < gipAnnounceResendLimit
     else { return }
     pendingWrites += startupWrites()
   }

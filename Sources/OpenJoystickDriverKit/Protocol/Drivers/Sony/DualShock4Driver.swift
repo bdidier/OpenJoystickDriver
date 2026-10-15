@@ -49,6 +49,9 @@ public final class DualShock4Driver: PhysicalProtocolDriver {
   /// The bound variant; startup follows Bluetooth whenever this or the observed reports say so.
   let isBluetoothVariant: Bool
   let model: DualShock4Model
+  /// How long flagged adapter reports may follow the last live one before the pad counts as
+  /// disconnected (`adapterDisconnectDelayMs`).
+  let adapterDisconnectNanoseconds: UInt64
   var adapterPadConnected = false
   var lastAdapterPadReportAt: UInt64?
   var pendingConnectionState: ControllerInputConnectionState?
@@ -57,12 +60,20 @@ public final class DualShock4Driver: PhysicalProtocolDriver {
   public init(
     prefersBluetooth: Bool = false,
     usesFactoryCalibration: Bool = true,
-    model: DualShock4Model = .standard
+    model: DualShock4Model = .standard,
+    tuning: ControllerTuning? = nil
   ) {
     transport = prefersBluetooth ? .bluetooth : .usb
     isBluetoothVariant = prefersBluetooth
     self.usesFactoryCalibration = usesFactoryCalibration
     self.model = model
+    adapterDisconnectNanoseconds =
+      UInt64(
+        PhysicalProtocolID.sonyDualShock4.described(
+          \.adapterDisconnectDelayMilliseconds,
+          in: tuning
+        )
+      ) * DeviceTransportProfile.nanosecondsPerMillisecond
     motionCalibration = model.scaled(.nominal)
     // Startup output is required only for the bound Bluetooth variant; Bluetooth-shaped reports
     // on a USB binding change the startup writes, not this requirement.

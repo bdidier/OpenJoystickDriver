@@ -273,17 +273,24 @@ def validate_protocol_descriptions(
 
 
 def family_variants(schema: dict[str, Any], family: str) -> list[str]:
-    """The variants of `family`, which the description schema holds per family."""
-    for rule in schema["allOf"]:
-        if (
-            rule.get("if", {}).get("properties", {}).get("family", {}).get("const")
-            == family
-        ):
-            variants = rule["then"]["properties"]["defaults"]["properties"]["variants"]
-            if isinstance(variants, bool):
-                return []
-            return list(variants.get("propertyNames", {}).get("enum", []))
-    return []
+    """The variants of `family`, which the description schema holds per family.
+
+    Raises `KeyError` for a family the schema has no rule for, so a family added to the
+    controller schema without a description rule fails here instead of reading as having none.
+    """
+    rules = {
+        rule["if"]["properties"]["family"]["const"]: rule["then"]["properties"][
+            "defaults"
+        ]["properties"]["variants"]
+        for rule in schema["allOf"]
+        if "const" in rule.get("if", {}).get("properties", {}).get("family", {})
+    }
+    if family not in rules:
+        raise KeyError(f"protocol-description.schema.json has no rule for {family}")
+    variants = rules[family]
+    if isinstance(variants, bool):
+        return []
+    return list(variants["propertyNames"]["enum"])
 
 
 def swift_binary_path() -> Path:

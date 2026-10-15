@@ -179,6 +179,66 @@
 									"type": "null"
 								}
 							]
+						},
+						"lizardResendTicks": {
+							"anyOf": [
+								{
+									"$ref": "controller.schema.json#/$defs/tuning/properties/lizardResendTicks"
+								},
+								{
+									"type": "null"
+								}
+							]
+						},
+						"usbCommandTimeoutMs": {
+							"anyOf": [
+								{
+									"$ref": "controller.schema.json#/$defs/tuning/properties/usbCommandTimeoutMs"
+								},
+								{
+									"type": "null"
+								}
+							]
+						},
+						"presenceResendReports": {
+							"anyOf": [
+								{
+									"$ref": "controller.schema.json#/$defs/tuning/properties/presenceResendReports"
+								},
+								{
+									"type": "null"
+								}
+							]
+						},
+						"adapterDisconnectDelayMs": {
+							"anyOf": [
+								{
+									"$ref": "controller.schema.json#/$defs/tuning/properties/adapterDisconnectDelayMs"
+								},
+								{
+									"type": "null"
+								}
+							]
+						},
+						"usbStartupIntervalMs": {
+							"anyOf": [
+								{
+									"$ref": "controller.schema.json#/$defs/tuning/properties/usbStartupIntervalMs"
+								},
+								{
+									"type": "null"
+								}
+							]
+						},
+						"usbStartupRetryDelayMs": {
+							"anyOf": [
+								{
+									"$ref": "controller.schema.json#/$defs/tuning/properties/usbStartupRetryDelayMs"
+								},
+								{
+									"type": "null"
+								}
+							]
 						}
 					}
 				}

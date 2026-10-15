@@ -793,6 +793,41 @@ class SwiftParityTests(unittest.TestCase):
             },
         )
 
+    def test_family_timings_are_limited_to_their_families(self) -> None:
+        triton = {"family": "valve.steam-triton", "variant": "wired"}
+        switch2 = {"family": "nintendo.switch2"}
+        gamesir = {"family": "vendor.gamesir", "variant": "usb"}
+        lizard = {"lizardResendTicks": 75}
+        timeout = {"usbCommandTimeoutMs": 1000}
+        presence = {"presenceResendReports": 4}
+        disconnect = {"adapterDisconnectDelayMs": 500}
+        handshake = {"usbStartupIntervalMs": 50, "usbStartupRetryDelayMs": 1000}
+        self.check(
+            {
+                "lizard resend on Triton": record(triton, tuning=lizard),
+                "command timeout on Switch 2": record(switch2, tuning=timeout),
+                "command timeout on GameSir": record(gamesir, tuning=timeout),
+                "presence resend on GIP": record(GIP, tuning=presence),
+                "presence resend on XUSB": record(XUSB, tuning=presence),
+                "disconnect delay on DualShock 4": record(DS4, tuning=disconnect),
+                "disconnect delay on DualSense": record(DUALSENSE, tuning=disconnect),
+                "handshake pacing on GIP": record(GIP, tuning=handshake),
+            },
+            {
+                "lizard resend on GIP": record(GIP, tuning=lizard),
+                "command timeout on GIP": record(GIP, tuning=timeout),
+                "presence resend on DualSense": record(DUALSENSE, tuning=presence),
+                "disconnect delay on GIP": record(GIP, tuning=disconnect),
+                "handshake pacing on XUSB": record(XUSB, tuning=handshake),
+                "retry delay below range": record(
+                    GIP, tuning={"usbStartupRetryDelayMs": 0}
+                ),
+                "presence resend above range": record(
+                    GIP, tuning={"presenceResendReports": 1001}
+                ),
+            },
+        )
+
 
 class CapabilityOverlapTests(unittest.TestCase):
     def test_validator_rejects_overlapping_capabilities(self) -> None:

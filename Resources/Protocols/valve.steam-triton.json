@@ -9,7 +9,8 @@
 	"tuningKeys": [
 		"hidStartupIntervalMs",
 		"minimumHIDOutputIntervalMs",
-		"keepAliveIntervalMs"
+		"keepAliveIntervalMs",
+		"lizardResendTicks"
 	],
 	"controls": {
 		"base": "xbox",
@@ -34,7 +35,8 @@
 	},
 	"defaults": {
 		"tuning": {
-			"keepAliveIntervalMs": 40
+			"keepAliveIntervalMs": 40,
+			"lizardResendTicks": 75
 		}
 	}
 }

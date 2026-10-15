@@ -35,13 +35,15 @@
 		]
 	},
 	"rawUSBTuningKeys": [
-		"keepAliveIntervalMs"
+		"keepAliveIntervalMs",
+		"usbCommandTimeoutMs"
 	],
 	"defaults": {
 		"tuning": {
 			"hidStartupIntervalMs": 20,
 			"minimumHIDOutputIntervalMs": 20,
-			"keepAliveIntervalMs": 500
+			"keepAliveIntervalMs": 500,
+			"usbCommandTimeoutMs": 2000
 		}
 	}
 }

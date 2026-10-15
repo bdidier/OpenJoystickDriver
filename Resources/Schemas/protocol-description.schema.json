@@ -52,7 +52,13 @@
 					"minimumHIDOutputIntervalMs",
 					"hidStartupRecoveryIntervalMs",
 					"hidStartupRecoveryRounds",
-					"keepAliveIntervalMs"
+					"keepAliveIntervalMs",
+					"lizardResendTicks",
+					"usbCommandTimeoutMs",
+					"presenceResendReports",
+					"adapterDisconnectDelayMs",
+					"usbStartupIntervalMs",
+					"usbStartupRetryDelayMs"
 				]
 			}
 		},
@@ -62,7 +68,15 @@
 			"minItems": 1,
 			"uniqueItems": true,
 			"items": {
-				"enum": ["keepAliveIntervalMs"]
+				"enum": [
+					"keepAliveIntervalMs",
+					"lizardResendTicks",
+					"usbCommandTimeoutMs",
+					"presenceResendReports",
+					"adapterDisconnectDelayMs",
+					"usbStartupIntervalMs",
+					"usbStartupRetryDelayMs"
+				]
 			}
 		},
 		"controls": {

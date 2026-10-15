@@ -11,6 +11,12 @@ extension ControllerTuning {
     case hidStartupIntervalMs
     case minimumHIDOutputIntervalMs
     case keepAliveIntervalMs
+    case lizardResendTicks
+    case usbCommandTimeoutMs
+    case presenceResendReports
+    case adapterDisconnectDelayMs
+    case usbStartupIntervalMs
+    case usbStartupRetryDelayMs
   }
 
   /// The keys this tuning sets.
@@ -26,6 +32,12 @@ extension ControllerTuning {
     case .hidStartupIntervalMs: hidStartupIntervalMilliseconds.map(String.init)
     case .minimumHIDOutputIntervalMs: minimumHIDOutputIntervalMilliseconds.map(String.init)
     case .keepAliveIntervalMs: keepAliveIntervalMilliseconds.map(String.init)
+    case .lizardResendTicks: lizardResendTicks.map(String.init)
+    case .usbCommandTimeoutMs: usbCommandTimeoutMilliseconds.map(String.init)
+    case .presenceResendReports: presenceResendReports.map(String.init)
+    case .adapterDisconnectDelayMs: adapterDisconnectDelayMilliseconds.map(String.init)
+    case .usbStartupIntervalMs: usbStartupIntervalMilliseconds.map(String.init)
+    case .usbStartupRetryDelayMs: usbStartupRetryDelayMilliseconds.map(String.init)
     }
   }
 
@@ -43,7 +55,17 @@ extension ControllerTuning {
         ?? hidStartupRecoveryIntervalMilliseconds,
       hidStartupRecoveryRounds: higher.hidStartupRecoveryRounds ?? hidStartupRecoveryRounds,
       keepAliveIntervalMilliseconds: higher.keepAliveIntervalMilliseconds
-        ?? keepAliveIntervalMilliseconds
+        ?? keepAliveIntervalMilliseconds,
+      lizardResendTicks: higher.lizardResendTicks ?? lizardResendTicks,
+      usbCommandTimeoutMilliseconds: higher.usbCommandTimeoutMilliseconds
+        ?? usbCommandTimeoutMilliseconds,
+      presenceResendReports: higher.presenceResendReports ?? presenceResendReports,
+      adapterDisconnectDelayMilliseconds: higher.adapterDisconnectDelayMilliseconds
+        ?? adapterDisconnectDelayMilliseconds,
+      usbStartupIntervalMilliseconds: higher.usbStartupIntervalMilliseconds
+        ?? usbStartupIntervalMilliseconds,
+      usbStartupRetryDelayMilliseconds: higher.usbStartupRetryDelayMilliseconds
+        ?? usbStartupRetryDelayMilliseconds
     )
   }
 
@@ -62,7 +84,17 @@ extension ControllerTuning {
       hidStartupRecoveryRounds: keys.contains(.hidStartupRecoveryRounds)
         ? hidStartupRecoveryRounds : nil,
       keepAliveIntervalMilliseconds: keys.contains(.keepAliveIntervalMs)
-        ? keepAliveIntervalMilliseconds : nil
+        ? keepAliveIntervalMilliseconds : nil,
+      lizardResendTicks: keys.contains(.lizardResendTicks) ? lizardResendTicks : nil,
+      usbCommandTimeoutMilliseconds: keys.contains(.usbCommandTimeoutMs)
+        ? usbCommandTimeoutMilliseconds : nil,
+      presenceResendReports: keys.contains(.presenceResendReports) ? presenceResendReports : nil,
+      adapterDisconnectDelayMilliseconds: keys.contains(.adapterDisconnectDelayMs)
+        ? adapterDisconnectDelayMilliseconds : nil,
+      usbStartupIntervalMilliseconds: keys.contains(.usbStartupIntervalMs)
+        ? usbStartupIntervalMilliseconds : nil,
+      usbStartupRetryDelayMilliseconds: keys.contains(.usbStartupRetryDelayMs)
+        ? usbStartupRetryDelayMilliseconds : nil
     )
   }
 }

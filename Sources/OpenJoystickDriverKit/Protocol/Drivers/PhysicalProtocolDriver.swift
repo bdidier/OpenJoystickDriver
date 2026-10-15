@@ -40,9 +40,9 @@ public struct DriverSessionPlan: Equatable, Sendable {
   /// such a driver has element values delivered, since decoding every report costs CPU.
   public let parsesHIDElementValues: Bool
   /// Delay between consecutive USB startup writes.
-  public let usbStartupIntervalNanoseconds: UInt64
+  public internal(set) var usbStartupIntervalNanoseconds: UInt64
   /// Delays before each repeated USB startup attempt after a failed one; empty means one attempt.
-  public let usbStartupRetryDelays: [UInt64]
+  public internal(set) var usbStartupRetryDelays: [UInt64]
   /// Interval between USB keep-alive writes; nil when the protocol sends none.
   public internal(set) var usbKeepAliveIntervalNanoseconds: UInt64?
   /// Delay between consecutive HID startup and startup-recovery writes.
@@ -145,6 +145,14 @@ public struct DriverSessionPlan: Equatable, Sendable {
         plan.hidKeepAliveIntervalNanoseconds = nanoseconds(value)
       }
     }
+    if let value = tuning.usbStartupIntervalMilliseconds {
+      plan.usbStartupIntervalNanoseconds = nanoseconds(value)
+    }
+    if let value = tuning.usbStartupRetryDelayMilliseconds {
+      plan.usbStartupRetryDelays = plan.usbStartupRetryDelays.indices.map {
+        nanoseconds(value) << UInt64($0)
+      }
+    }
     return plan
   }
 }
@@ -156,6 +164,27 @@ extension PhysicalProtocolID {
     protocolDescription.tuning(variant: variant)?.keepAliveIntervalMilliseconds.map {
       UInt64($0) * DeviceTransportProfile.nanosecondsPerMillisecond
     }
+  }
+}
+
+extension PhysicalProtocolID {
+  /// The tuning that a driver of this family and stored variant reads: the description's
+  /// defaults, with the record's values over them.
+  func driverTuning(
+    variant: PhysicalProtocolVariantID? = nil,
+    record: ControllerTuning = .none
+  ) -> ControllerTuning {
+    (protocolDescription.tuning(variant: variant) ?? .none).overlaid(by: record)
+  }
+
+  /// The value of `key` that a driver of this family reads: from `tuning` when the registry
+  /// supplies the record's, otherwise from the description's defaults. A description that
+  /// defaults none for a key its driver reads is a defect.
+  func described(_ key: KeyPath<ControllerTuning, Int?>, in tuning: ControllerTuning?) -> Int {
+    guard let value = (tuning ?? driverTuning())[keyPath: key] else {
+      preconditionFailure("\(rawValue).json defaults no \(key)")
+    }
+    return value
   }
 }
 

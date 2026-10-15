@@ -774,6 +774,36 @@
 					"type": "integer",
 					"minimum": 1,
 					"maximum": 60000
+				},
+				"lizardResendTicks": {
+					"type": "integer",
+					"minimum": 1,
+					"maximum": 100000
+				},
+				"usbCommandTimeoutMs": {
+					"type": "integer",
+					"minimum": 1,
+					"maximum": 60000
+				},
+				"presenceResendReports": {
+					"type": "integer",
+					"minimum": 1,
+					"maximum": 1000
+				},
+				"adapterDisconnectDelayMs": {
+					"type": "integer",
+					"minimum": 1,
+					"maximum": 60000
+				},
+				"usbStartupIntervalMs": {
+					"type": "integer",
+					"minimum": 0,
+					"maximum": 60000
+				},
+				"usbStartupRetryDelayMs": {
+					"type": "integer",
+					"minimum": 1,
+					"maximum": 60000
 				}
 			}
 		},
@@ -1775,6 +1805,141 @@
 									"valve.steam-triton",
 									"nintendo.switch2"
 								]
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"tuning": {
+						"required": ["lizardResendTicks"]
+					}
+				},
+				"required": ["tuning"]
+			},
+			"then": {
+				"properties": {
+					"protocol": {
+						"properties": {
+							"family": {
+								"const": "valve.steam-triton"
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"tuning": {
+						"required": ["usbCommandTimeoutMs"]
+					}
+				},
+				"required": ["tuning"]
+			},
+			"then": {
+				"properties": {
+					"protocol": {
+						"properties": {
+							"family": {
+								"enum": [
+									"nintendo.switch2",
+									"vendor.gamesir"
+								]
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"tuning": {
+						"required": ["presenceResendReports"]
+					}
+				},
+				"required": ["tuning"]
+			},
+			"then": {
+				"properties": {
+					"protocol": {
+						"properties": {
+							"family": {
+								"enum": [
+									"xbox.gip",
+									"xbox.xusb"
+								]
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"tuning": {
+						"required": ["adapterDisconnectDelayMs"]
+					}
+				},
+				"required": ["tuning"]
+			},
+			"then": {
+				"properties": {
+					"protocol": {
+						"properties": {
+							"family": {
+								"enum": [
+									"sony.dualshock4",
+									"sony.dualsense"
+								]
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"tuning": {
+						"required": ["usbStartupIntervalMs"]
+					}
+				},
+				"required": ["tuning"]
+			},
+			"then": {
+				"properties": {
+					"protocol": {
+						"properties": {
+							"family": {
+								"const": "xbox.gip"
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"tuning": {
+						"required": ["usbStartupRetryDelayMs"]
+					}
+				},
+				"required": ["tuning"]
+			},
+			"then": {
+				"properties": {
+					"protocol": {
+						"properties": {
+							"family": {
+								"const": "xbox.gip"
 							}
 						}
 					}

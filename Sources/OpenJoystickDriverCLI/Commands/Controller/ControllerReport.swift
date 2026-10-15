@@ -45,6 +45,12 @@ struct ControllerShowReport: Encodable, Equatable {
     let hidStartupRecoveryIntervalMs: Int?
     let hidStartupRecoveryRounds: Int?
     let keepAliveIntervalMs: Int?
+    let lizardResendTicks: Int?
+    let usbCommandTimeoutMs: Int?
+    let presenceResendReports: Int?
+    let adapterDisconnectDelayMs: Int?
+    let usbStartupIntervalMs: Int?
+    let usbStartupRetryDelayMs: Int?
 
     /// Nil when the record sets no tuning.
     init?(_ tuning: ControllerTuning) {
@@ -56,6 +62,12 @@ struct ControllerShowReport: Encodable, Equatable {
       hidStartupRecoveryIntervalMs = tuning.hidStartupRecoveryIntervalMilliseconds
       hidStartupRecoveryRounds = tuning.hidStartupRecoveryRounds
       keepAliveIntervalMs = tuning.keepAliveIntervalMilliseconds
+      lizardResendTicks = tuning.lizardResendTicks
+      usbCommandTimeoutMs = tuning.usbCommandTimeoutMilliseconds
+      presenceResendReports = tuning.presenceResendReports
+      adapterDisconnectDelayMs = tuning.adapterDisconnectDelayMilliseconds
+      usbStartupIntervalMs = tuning.usbStartupIntervalMilliseconds
+      usbStartupRetryDelayMs = tuning.usbStartupRetryDelayMilliseconds
     }
 
     /// The set values as `name=value`, in record-file order.
@@ -68,6 +80,12 @@ struct ControllerShowReport: Encodable, Equatable {
         hidStartupRecoveryIntervalMs.map { "hidStartupRecoveryIntervalMs=\($0)" },
         hidStartupRecoveryRounds.map { "hidStartupRecoveryRounds=\($0)" },
         keepAliveIntervalMs.map { "keepAliveIntervalMs=\($0)" },
+        lizardResendTicks.map { "lizardResendTicks=\($0)" },
+        usbCommandTimeoutMs.map { "usbCommandTimeoutMs=\($0)" },
+        presenceResendReports.map { "presenceResendReports=\($0)" },
+        adapterDisconnectDelayMs.map { "adapterDisconnectDelayMs=\($0)" },
+        usbStartupIntervalMs.map { "usbStartupIntervalMs=\($0)" },
+        usbStartupRetryDelayMs.map { "usbStartupRetryDelayMs=\($0)" },
       ].compactMap { $0 }
     }
   }

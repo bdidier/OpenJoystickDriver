@@ -13,8 +13,7 @@ private let xbox360StickMax = Float(Int16.max)
 private let xbox360ReceiverPresenceInquiry: [UInt8] = [
   0x08, 0x00, 0x0F, 0xC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 ]
-/// Pad reports seen without presence between presence inquiry resends, and the most resends.
-private let xbox360ReceiverInquiryResendInterval = 16
+/// The most presence inquiry resends.
 private let xbox360ReceiverInquiryResendLimit = 8
 
 /// Xbox 360 ring-of-light LED patterns.
@@ -103,6 +102,8 @@ public final class XUSBDriver: PhysicalProtocolDriver {
   private var pendingConnectionState: ControllerInputConnectionState?
   private var pendingWrites: [PhysicalOutputWrite] = []
   private var padReportsWithoutPresence = 0
+  /// Pad reports seen without presence between inquiry resends (`presenceResendReports`).
+  let inquiryResendInterval: Int
 
   private var state = ControllerState.neutral
 
@@ -110,18 +111,32 @@ public final class XUSBDriver: PhysicalProtocolDriver {
   /// - Parameters:
   ///   - outEndpoint: Interrupt OUT endpoint address (default 0x01).
   ///   - isWirelessReceiver: Whether reports use the Xbox 360 receiver envelope.
-  public init(outEndpoint: UInt8 = 0x01, isWirelessReceiver: Bool = false) {
+  ///   - tuning: The effective tuning of the controller's record; the description's defaults
+  ///     when nil.
+  public init(
+    outEndpoint: UInt8 = 0x01,
+    isWirelessReceiver: Bool = false,
+    tuning: ControllerTuning? = nil
+  ) {
     self.outEndpoint = outEndpoint
     self.isWirelessReceiver = isWirelessReceiver
+    inquiryResendInterval = PhysicalProtocolID.xboxXUSB.described(
+      \.presenceResendReports,
+      in: tuning
+    )
   }
 
   /// Creates the driver for one Xbox 360 wireless receiver slot, or nil outside slots 0–3.
   /// - Parameters:
   ///   - outEndpoint: Interrupt OUT endpoint address (default 0x01).
   ///   - slotOrdinal: Zero-based receiver slot in interface order.
-  public convenience init?(outEndpoint: UInt8 = 0x01, slotOrdinal: Int) {
+  public convenience init?(
+    outEndpoint: UInt8 = 0x01,
+    slotOrdinal: Int,
+    tuning: ControllerTuning? = nil
+  ) {
     guard (0..<4).contains(slotOrdinal) else { return nil }
-    self.init(outEndpoint: outEndpoint, isWirelessReceiver: true)
+    self.init(outEndpoint: outEndpoint, isWirelessReceiver: true, tuning: tuning)
   }
 
   public var capabilities: ControllerCapabilities {
@@ -196,8 +211,8 @@ public final class XUSBDriver: PhysicalProtocolDriver {
 
   private func resendPresenceInquiry() {
     defer { padReportsWithoutPresence += 1 }
-    guard padReportsWithoutPresence.isMultiple(of: xbox360ReceiverInquiryResendInterval),
-      padReportsWithoutPresence / xbox360ReceiverInquiryResendInterval
+    guard padReportsWithoutPresence.isMultiple(of: inquiryResendInterval),
+      padReportsWithoutPresence / inquiryResendInterval
         < xbox360ReceiverInquiryResendLimit
     else { return }
     pendingWrites.append(presenceInquiryWrite)

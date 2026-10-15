@@ -147,6 +147,18 @@ public struct ControllerTuning: Codable, Equatable, Sendable {
   public let hidStartupRecoveryRounds: Int?
   /// Interval between keep-alive writes, or between rumble resends for a family that resends.
   public let keepAliveIntervalMilliseconds: Int?
+  /// Keep-alive ticks between Steam Triton lizard-mode resends.
+  public let lizardResendTicks: Int?
+  /// Timeout of one USB command transfer.
+  public let usbCommandTimeoutMilliseconds: Int?
+  /// Input reports between resends of the request that makes a controller announce itself.
+  public let presenceResendReports: Int?
+  /// Silence from an adapter or dongle after which its controller counts as disconnected.
+  public let adapterDisconnectDelayMilliseconds: Int?
+  /// Gap between the raw-USB startup writes.
+  public let usbStartupIntervalMilliseconds: Int?
+  /// Wait before the first raw-USB startup retry; each later retry waits twice as long.
+  public let usbStartupRetryDelayMilliseconds: Int?
 
   public static let none = Self()
 
@@ -157,7 +169,13 @@ public struct ControllerTuning: Codable, Equatable, Sendable {
     minimumHIDOutputIntervalMilliseconds: Int? = nil,
     hidStartupRecoveryIntervalMilliseconds: Int? = nil,
     hidStartupRecoveryRounds: Int? = nil,
-    keepAliveIntervalMilliseconds: Int? = nil
+    keepAliveIntervalMilliseconds: Int? = nil,
+    lizardResendTicks: Int? = nil,
+    usbCommandTimeoutMilliseconds: Int? = nil,
+    presenceResendReports: Int? = nil,
+    adapterDisconnectDelayMilliseconds: Int? = nil,
+    usbStartupIntervalMilliseconds: Int? = nil,
+    usbStartupRetryDelayMilliseconds: Int? = nil
   ) {
     self.stickDeadzone = stickDeadzone
     self.inputLivenessTimeoutMilliseconds = inputLivenessTimeoutMilliseconds
@@ -166,6 +184,12 @@ public struct ControllerTuning: Codable, Equatable, Sendable {
     self.hidStartupRecoveryIntervalMilliseconds = hidStartupRecoveryIntervalMilliseconds
     self.hidStartupRecoveryRounds = hidStartupRecoveryRounds
     self.keepAliveIntervalMilliseconds = keepAliveIntervalMilliseconds
+    self.lizardResendTicks = lizardResendTicks
+    self.usbCommandTimeoutMilliseconds = usbCommandTimeoutMilliseconds
+    self.presenceResendReports = presenceResendReports
+    self.adapterDisconnectDelayMilliseconds = adapterDisconnectDelayMilliseconds
+    self.usbStartupIntervalMilliseconds = usbStartupIntervalMilliseconds
+    self.usbStartupRetryDelayMilliseconds = usbStartupRetryDelayMilliseconds
   }
 }
 

@@ -3,7 +3,6 @@ import Foundation
 private let switch2StateReportID: UInt8 = 0x05
 private let switch2StateReportLength = 64
 private let switch2CommandOutEndpoint: UInt8 = 0x02
-private let switch2CommandTimeoutMilliseconds: UInt32 = 1000
 /// SDL `RUMBLE_MAX`: the HD rumble amplitude cap.
 private let switch2RumbleMaxAmplitude = 29_000
 /// Zero-amplitude packets sent by the rumble refresh after a stop. A refresh built before the stop
@@ -83,9 +82,21 @@ public final class Switch2Driver: PhysicalProtocolDriver {
   private var gameCubeRumbleError = 0
   private var pendingStopPackets = 0
 
-  public init(layout: Switch2ControllerLayout = .pro, link: Switch2Link = .usb) {
+  /// Bulk command timeout (`usbCommandTimeoutMs`).
+  let commandTimeoutMilliseconds: UInt32
+
+  /// `tuning` is the effective tuning of the controller's record; the description's defaults
+  /// when nil.
+  public init(
+    layout: Switch2ControllerLayout = .pro,
+    link: Switch2Link = .usb,
+    tuning: ControllerTuning? = nil
+  ) {
     self.layout = layout
     self.link = link
+    commandTimeoutMilliseconds = UInt32(
+      PhysicalProtocolID.nintendoSwitch2.described(\.usbCommandTimeoutMilliseconds, in: tuning)
+    )
   }
 
   public func resetProtocolState() { state = .neutral }
@@ -193,7 +204,7 @@ public final class Switch2Driver: PhysicalProtocolDriver {
       PhysicalUSBOutputPacket(
         endpoint: switch2CommandOutEndpoint,
         bytes: bytes,
-        timeoutMilliseconds: switch2CommandTimeoutMilliseconds
+        timeoutMilliseconds: commandTimeoutMilliseconds
       )
     )
   }

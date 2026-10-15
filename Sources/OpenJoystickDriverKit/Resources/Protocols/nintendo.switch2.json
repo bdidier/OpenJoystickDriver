@@ -9,7 +9,8 @@
 	"tuningKeys": [
 		"hidStartupIntervalMs",
 		"minimumHIDOutputIntervalMs",
-		"keepAliveIntervalMs"
+		"keepAliveIntervalMs",
+		"usbCommandTimeoutMs"
 	],
 	"buttonLabels": "Nintendo",
 	"parameters": {
@@ -25,7 +26,8 @@
 	},
 	"defaults": {
 		"tuning": {
-			"keepAliveIntervalMs": 12
+			"keepAliveIntervalMs": 12,
+			"usbCommandTimeoutMs": 1000
 		}
 	}
 }

@@ -7,6 +7,8 @@ import Testing
 struct ProtocolDescriptionTests {
   private static let minimalInput =
     #"{"report": {"length": 1}, "buttons": [{"control": "face-south", "byte": 0, "mask": 1}]}"#
+  private static let rumbleTemplate =
+    #"{"report": {"kind": "output", "id": 1, "length": 4}, "leftMain": {"byte": 1}}"#
   private static let startupWrite =
     #"{"startup": [{"report": {"kind": "output", "id": 1, "length": 4}, "bytes": [1, 2, 3]}]}"#
 
@@ -72,6 +74,15 @@ struct ProtocolDescriptionTests {
     #expect(bundled[.valveSteamTriton]?.tuning?.keepAliveIntervalMilliseconds == 40)
     #expect(bundled[.xboxGIP]?.tuning?.keepAliveIntervalMilliseconds == 4_000)
     #expect(bundled[.vendorGameSir]?.tuning?.keepAliveIntervalMilliseconds == 500)
+    #expect(bundled[.valveSteamTriton]?.tuning?.lizardResendTicks == 75)
+    #expect(bundled[.nintendoSwitch2]?.tuning?.usbCommandTimeoutMilliseconds == 1_000)
+    #expect(bundled[.vendorGameSir]?.tuning?.usbCommandTimeoutMilliseconds == 2_000)
+    #expect(bundled[.xboxGIP]?.tuning?.presenceResendReports == 4)
+    #expect(bundled[.xboxXUSB]?.tuning?.presenceResendReports == 16)
+    #expect(bundled[.xboxGIP]?.tuning?.usbStartupIntervalMilliseconds == 50)
+    #expect(bundled[.xboxGIP]?.tuning?.usbStartupRetryDelayMilliseconds == 1_000)
+    #expect(bundled[.sonyDualShock4]?.tuning?.adapterDisconnectDelayMilliseconds == 500)
+    #expect(bundled[.sonyDualSense]?.tuning?.adapterDisconnectDelayMilliseconds == 500)
     let switch1 = try #require(bundled[.nintendoSwitch1])
     #expect(switch1.tuning(variant: .bluetoothClassic)?.hidStartupIntervalMilliseconds == 60)
     #expect(switch1.tuning(variant: .usb)?.hidStartupIntervalMilliseconds == 20)
@@ -88,7 +99,7 @@ struct ProtocolDescriptionTests {
   @Test
   func tuningScopeFollowsTheDescription() {
     let gameSir = ControllerTuning.scope(protocolID: .vendorGameSir, variant: .usb)
-    #expect(gameSir == [.stickDeadzone, .keepAliveIntervalMs])
+    #expect(gameSir == [.stickDeadzone, .keepAliveIntervalMs, .usbCommandTimeoutMs])
     let enhanced = ControllerTuning.scope(protocolID: .vendorGameSir, variant: .enhancedHID)
     #expect(
       enhanced == [
@@ -97,7 +108,10 @@ struct ProtocolDescriptionTests {
     )
     #expect(
       ControllerTuning.scope(protocolID: .xboxGIP, variant: nil)
-        == [.stickDeadzone, .keepAliveIntervalMs]
+        == [
+          .stickDeadzone, .keepAliveIntervalMs, .presenceResendReports, .usbStartupIntervalMs,
+          .usbStartupRetryDelayMs,
+        ]
     )
     #expect(ControllerTuning.scope(protocolID: nil, variant: nil) == [.stickDeadzone])
     #expect(
@@ -243,6 +257,9 @@ struct ProtocolDescriptionTests {
       (.sonyDualSense, #""rawUSBTuningKeys": ["keepAliveIntervalMs"]"#),
       (.sonyDualSense, #""defaults": {"variants": {"usb": {"tuning": {"stickDeadzone": 5}}}}"#),
       (.sonyDualSense, #""macOSOwnedOutput": {"rationale": 5}"#),
+      (.xboxGIP, #""defaults": {"output": {"rumble": \#(Self.rumbleTemplate)}}"#),
+      (.sonyDualSense, #""tuningKeys": ["stickDeadzone"]"#),
+      (.xboxGIP, #""rawUSB": true, "rawUSBTuningKeys": ["stickDeadzone"]"#),
     ]
   )
   func rejectsAMalformedBody(family: PhysicalProtocolID, body: String) {
@@ -280,6 +297,29 @@ struct ProtocolDescriptionTests {
         #""tuningKeys": ["hidStartupIntervalMs"], "#
           + #""defaults": {"variants": {"wired": {"tuning": {"hidStartupIntervalMs": 5}}}}"#
       )?.code == .unknownProtocolVariant
+    )
+  }
+
+  @Test
+  func rejectsRumbleDefaultsAndStickDeadzoneForTheRightReason() {
+    let rumble = rejection(
+      family: .xboxGIP,
+      #""defaults": {"output": {"rumble": \#(Self.rumbleTemplate)}}"#
+    )
+    #expect(rumble?.description.contains("rumble templates require") == true)
+    let deadzone = rejection(family: .sonyDualSense, #""tuningKeys": ["stickDeadzone"]"#)
+    #expect(deadzone?.code == .invalidProtocolDescription)
+    #expect(deadzone?.description.contains("stickDeadzone") == true)
+  }
+
+  @Test
+  func rejectsAVariantTuningKeyOutsideTheVariantScope() {
+    #expect(
+      rejection(
+        family: .sonyDualSense,
+        #""tuningKeys": ["hidStartupIntervalMs"], "#
+          + #""defaults": {"variants": {"usb": {"tuning": {"adapterDisconnectDelayMs": 7}}}}"#
+      )?.code == .invalidProtocolDescription
     )
   }
 

@@ -163,6 +163,12 @@ A record's `tuning` field changes a value that the protocol driver otherwise set
 | `hidStartupRecoveryIntervalMs` | 1 to 60000 | `nintendo.switch1` | The gap between startup recovery rounds. The family's description gives the default (200). |
 | `hidStartupRecoveryRounds` | 1 to 10 | `nintendo.switch1` | The startup recovery rounds before OpenJoystickDriver gives up. The family's description gives the default (2). |
 | `keepAliveIntervalMs` | 1 to 60000 | `xbox.gip`, `vendor.gamesir`, `valve.steam-deck`, `valve.steam-triton`, `nintendo.switch2` | The gap between keep-alive packets, or between rumble resends where the family resends rumble. The family's description gives the default, and the key applies to raw-USB GIP and GameSir too. |
+| `lizardResendTicks` | 1 to 100000 | `valve.steam-triton` | The keep-alive ticks between resends of the lizard-mode-off request. The family's description gives the default (75). |
+| `usbCommandTimeoutMs` | 1 to 60000 | `nintendo.switch2`, `vendor.gamesir` (USB) | The timeout of one USB command transfer. The description gives the default: 1000 for `nintendo.switch2`, 2000 for `vendor.gamesir`. |
+| `presenceResendReports` | 1 to 1000 | `xbox.gip`, `xbox.xusb` | The input reports between resends of the request that makes a controller announce itself. The description gives the default: 4 for `xbox.gip`, 16 for `xbox.xusb`. |
+| `adapterDisconnectDelayMs` | 1 to 60000 | `sony.dualshock4`, `sony.dualsense` | How long an adapter or dongle can stay silent before its controller counts as disconnected. The default is 500. |
+| `usbStartupIntervalMs` | 0 to 60000 | `xbox.gip` | The gap between the raw-USB startup writes. The default is 50. |
+| `usbStartupRetryDelayMs` | 1 to 60000 | `xbox.gip` | The wait before the first startup retry; each later retry waits twice as long. The default is 1000. |
 
 Raw-USB families, such as `xbox.gip`, do not take the two HID timings. The two recovery values apply only to `nintendo.switch1`, because the `nintendo.switch2` and `nintendo.switch-input-only` drivers have no startup recovery. `ojd record validate` rejects a value outside its range or its families.
 

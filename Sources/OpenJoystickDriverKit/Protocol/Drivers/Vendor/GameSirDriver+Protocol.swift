@@ -4,10 +4,11 @@ extension GameSirDriver {
 
   // Share is emitted but not yet declared until per-model evidence confirms it.
   public var sessionPlan: DriverSessionPlan {
-    let heartbeat = PhysicalProtocolID.vendorGameSir.keepAliveIntervalNanoseconds()
-    return DriverSessionPlan(
-      usbKeepAliveIntervalNanoseconds: gameSirProtocol == .g7ProUSB ? heartbeat : nil,
-      hidKeepAliveIntervalNanoseconds: heartbeat
+    // The interval is a placeholder that marks which keep-alives run; the description's
+    // `keepAliveIntervalMs` replaces it.
+    DriverSessionPlan(
+      usbKeepAliveIntervalNanoseconds: gameSirProtocol == .g7ProUSB ? 0 : nil,
+      hidKeepAliveIntervalNanoseconds: 0
     ).withDefaults(of: .vendorGameSir)
   }
 
@@ -73,7 +74,7 @@ extension GameSirDriver {
         PhysicalUSBOutputPacket(
           endpoint: outEndpoint,
           bytes: g7Packet(command: 0x02, payload: [0xF2, 0x00]),
-          timeoutMilliseconds: gameSirUSBTimeoutMilliseconds
+          timeoutMilliseconds: usbTimeoutMilliseconds
         )
       )
     ]
@@ -161,7 +162,7 @@ extension GameSirDriver {
       let packet = PhysicalUSBOutputPacket(
         endpoint: outEndpoint,
         bytes: g7Packet(command: 0x3C, payload: [0x03, 0x20, 0x01, 0xF9, 0x01, value]),
-        timeoutMilliseconds: gameSirUSBTimeoutMilliseconds
+        timeoutMilliseconds: usbTimeoutMilliseconds
       )
       return PhysicalOutputPlan(writes: [.usb(packet)])
     }

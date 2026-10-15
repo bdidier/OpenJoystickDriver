@@ -17,7 +17,7 @@
   - `buttonLabels`: the labels of the family's buttons.
   - `macOSOwnedOutput`: the output macOS itself handles for the family, with a `rationale` that says why.
   - `controls`: the set of controls the family's driver reports, and `recordCapabilities`: the control deltas a record may declare (`present`, `rumbleAbsent`).
-  - `defaults`: the family's default `tuning` (for example `keepAliveIntervalMs`, the keep-alive or rumble resend interval, and the Switch 1 recovery values), and `defaults.variants.<variant>.tuning`, which layers over it for a transport that needs another value, such as the Switch 1 `hidStartupIntervalMs` of Bluetooth and USB. A default key must be one the variant reads, and a variant must be the family's (E5004).
+  - `defaults`: the family's default `tuning` (for example `keepAliveIntervalMs`, the keep-alive or rumble resend interval, the Switch 1 recovery values, and the command timeouts, resend intervals and handshake pacing of the other drivers), and `defaults.variants.<variant>.tuning`, which layers over it for a transport that needs another value, such as the Switch 1 `hidStartupIntervalMs` of Bluetooth and USB. A default key must be one the variant reads, and a variant must be the family's (E5004).
 
   `./Scripts/ojd catalog regenerate` copies them into the Kit bundle.
 - `report.schema.json`: the CloudEvents 1.0 support-report envelope and payload.

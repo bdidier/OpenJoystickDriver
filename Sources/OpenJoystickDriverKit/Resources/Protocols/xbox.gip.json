@@ -35,14 +35,20 @@
 		]
 	},
 	"rawUSBTuningKeys": [
-		"keepAliveIntervalMs"
+		"keepAliveIntervalMs",
+		"presenceResendReports",
+		"usbStartupIntervalMs",
+		"usbStartupRetryDelayMs"
 	],
 	"recordCapabilities": {
 		"rumbleAbsent": true
 	},
 	"defaults": {
 		"tuning": {
-			"keepAliveIntervalMs": 4000
+			"keepAliveIntervalMs": 4000,
+			"presenceResendReports": 4,
+			"usbStartupIntervalMs": 50,
+			"usbStartupRetryDelayMs": 1000
 		}
 	}
 }
