@@ -4,7 +4,7 @@ import Testing
 @testable import OpenJoystickDriverKit
 
 struct ProtocolParametersTests {
-  /// One removed `ControllerQuirk` raw value, the family that declared it, and the typed
+  /// One removed quirk tag, the family that declared it, and the typed
   /// parameter it became.
   private struct Crosswalk: Sendable {
     let quirk: String
@@ -164,7 +164,7 @@ struct ProtocolParametersTests {
     ),
   ]
 
-  /// The raw values of the removed `ControllerQuirk` enum.
+  /// The raw values of the removed quirk tags.
   private static let removedQuirks: Set<String> = [
     "share-offset", "joy-con-left", "joy-con-right", "bluetooth-only", "gamecube", "inner-grips",
     "lighting-slots", "dpad-pressure", "factory-calibration", "wireless-adapter", "strikepad",
