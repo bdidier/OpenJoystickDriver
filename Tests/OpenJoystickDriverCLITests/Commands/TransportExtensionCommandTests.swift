@@ -6,11 +6,11 @@ import Testing
 @testable import OpenJoystickDriverCLI
 
 @Suite(.serialized)
-struct ExtensionCommandTests {
+struct TransportExtensionCommandTests {
   private func status(_ arguments: [String], _ extensionStatus: ExtensionStatus) async -> CLIRun {
     let probe: @Sendable () -> ExtensionStatus = { extensionStatus }
     return await StatusCommand.$extensionProbe.withValue(probe) {
-      await CLIRun.run(["extension", "status"] + arguments)
+      await CLIRun.run(["transport-extension", "status"] + arguments)
     }
   }
 
@@ -18,16 +18,17 @@ struct ExtensionCommandTests {
     _ verb: String,
     _ arguments: [String] = [],
     outcome: SystemExtensionSetupRequestResult,
-    actions: Locked<[ExtensionSubmission.Action]> = Locked([])
+    actions: Locked<[TransportExtensionSubmission.Action]> = Locked([])
   ) async -> CLIRun {
     let submission:
-      @Sendable (ExtensionSubmission.Action) async throws -> SystemExtensionSetupRequestResult = {
-        action in
-        actions.withLock { $0.append(action) }
-        return outcome
-      }
-    return await ExtensionSubmission.$submit.withValue(submission) {
-      await CLIRun.run(["extension", verb] + arguments)
+      @Sendable (TransportExtensionSubmission.Action) async throws ->
+        SystemExtensionSetupRequestResult = {
+          action in
+          actions.withLock { $0.append(action) }
+          return outcome
+        }
+    return await TransportExtensionSubmission.$submit.withValue(submission) {
+      await CLIRun.run(["transport-extension", verb] + arguments)
     }
   }
 
@@ -87,7 +88,7 @@ struct ExtensionCommandTests {
 
   @Test
   func activateReportsTheStateAndSubmitsOneActivation() async throws {
-    let actions = Locked<[ExtensionSubmission.Action]>([])
+    let actions = Locked<[TransportExtensionSubmission.Action]>([])
 
     let jsonRun = await submit("activate", ["--json"], outcome: .active, actions: actions)
     let humanRun = await submit("activate", outcome: .active, actions: actions)
@@ -101,7 +102,7 @@ struct ExtensionCommandTests {
 
   @Test
   func deactivateSubmitsADeactivation() async throws {
-    let actions = Locked<[ExtensionSubmission.Action]>([])
+    let actions = Locked<[TransportExtensionSubmission.Action]>([])
 
     let result = await submit("deactivate", ["--plain"], outcome: .inactive, actions: actions)
     let jsonRun = await submit("deactivate", ["--json"], outcome: .inactive, actions: actions)
@@ -133,6 +134,6 @@ struct ExtensionCommandTests {
     #expect(result.code == 1)
     #expect(result.standardOutput.isEmpty)
     #expect(result.standardError.hasPrefix("error[E2015]: "))
-    #expect(result.standardError.contains("ojd extension status"))
+    #expect(result.standardError.contains("ojd transport-extension status"))
   }
 }

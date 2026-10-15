@@ -64,7 +64,7 @@ Nouns come first, then verbs. The same verb means the same action on every noun.
 | `ojd extension status\|activate\|deactivate` | `extension status\|enable\|disable` | The DriverKit extension, in Apple's activation terms. |
 | `ojd setting list\|get\|set` | `app login enable\|disable` | App settings, including `launchAtLogin`. The service applies them. |
 | `ojd log show\|path` | `app logs show\|path\|open` | `show --follow` streams. `open` is dropped: `open "$(ojd log path)"` does the same. |
-| `ojd diagnose` | `diagnose runtime`, `diagnose report` | Run every check. `--bundle PATH` also writes a support bundle. |
+| `ojd diagnose` | `diagnose runtime`, `diagnose report` | Run every check. `--output PATH` also writes a support bundle. |
 | `ojd update check` | `update check` | Only when asked. The CLI never checks for updates on its own. |
 
 Calibration commands (`map calibration`) move to wherever slice 4 finds calibration data belongs: the profile file or the controller record. `diagnose usb-passive` (DEBUG only) moves to `./Scripts/ojd`, because it is a contributor probe and not a product command.
@@ -88,7 +88,7 @@ An ambiguous or unknown selector exits 1 and lists the matching controllers. Rec
 - `--quiet` removes success messages on stderr.
 - Color is used only when stderr or stdout is a terminal, and never when `NO_COLOR` is set, `TERM=dumb`, or `--no-color` is given. No spinners or progress animation off a terminal.
 - `ojd log show` pages through `$PAGER` on a terminal. No other command pages.
-- Errors use one format: `ojd: <what failed>. <how to fix it>`. Expected errors never print a Swift error dump. Unexpected errors print a one-line summary and suggest `ojd diagnose --bundle`.
+- Errors use one format: `ojd: <what failed>. <how to fix it>`. Expected errors never print a Swift error dump. Unexpected errors print a one-line summary and suggest `ojd diagnose --output`.
 
 ## Exit Codes
 

@@ -70,9 +70,9 @@ enum RecordTransport: String, Encodable, Equatable {
 
 /// Whether the signed USB extension can claim a raw-USB controller. Its USB entitlement is a
 /// product list Apple signs, so a user record cannot add a product to it.
-enum RecordUSBExtension: String, Encodable, Equatable {
-  case claims
-  case doesNotClaim
+enum RecordTransportClaim: String, Encodable, Equatable {
+  case claimed
+  case unclaimed
 
   init?(_ record: ControllerRecord) {
     guard record.usesRawUSB else { return nil }
@@ -80,7 +80,7 @@ enum RecordUSBExtension: String, Encodable, Equatable {
       vendorID: record.model.vendorID,
       productID: record.model.productID
     )
-    self = claimed ? .claims : .doesNotClaim
+    self = claimed ? .claimed : .unclaimed
   }
 }
 

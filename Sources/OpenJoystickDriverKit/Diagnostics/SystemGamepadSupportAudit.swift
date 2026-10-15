@@ -1,7 +1,7 @@
 import Foundation
 
 /// Location class for Apple's private, read-only GameController mapping database.
-public enum AppleGameControllerCatalogSource: String, Codable, Sendable {
+public enum SystemGamepadCatalogSource: String, Codable, Sendable {
   case downloadedMobileAsset
   case preinstalledMobileAsset
   case unavailable
@@ -11,7 +11,7 @@ public enum AppleGameControllerCatalogSource: String, Codable, Sendable {
 ///
 /// Catalog presence is evidence only. Runtime support can still depend on transport,
 /// firmware version, report descriptor, and GameController.framework behavior.
-public struct AppleGameControllerCatalogEntry: Codable, Hashable, Sendable {
+public struct SystemGamepadCatalogEntry: Codable, Hashable, Sendable {
   public let vendorID: UInt16
   public let productID: UInt16
   public let identifiers: [String]
@@ -34,17 +34,17 @@ public struct AppleGameControllerCatalogEntry: Codable, Hashable, Sendable {
 }
 
 /// Redacted snapshot of Apple's current-system GameController mapping catalog.
-public struct AppleGameControllerCatalogSnapshot: Codable, Sendable {
-  public let source: AppleGameControllerCatalogSource
+public struct SystemGamepadCatalogSnapshot: Codable, Sendable {
+  public let source: SystemGamepadCatalogSource
   public let bundleVersions: [String]
-  public let entries: [AppleGameControllerCatalogEntry]
+  public let entries: [SystemGamepadCatalogEntry]
   public let skippedDeviceCount: Int
   public let warnings: [String]
 
   public init(
-    source: AppleGameControllerCatalogSource,
+    source: SystemGamepadCatalogSource,
     bundleVersions: [String],
-    entries: [AppleGameControllerCatalogEntry],
+    entries: [SystemGamepadCatalogEntry],
     skippedDeviceCount: Int = 0,
     warnings: [String] = []
   ) {
@@ -60,32 +60,32 @@ public struct AppleGameControllerCatalogSnapshot: Codable, Sendable {
 }
 
 /// Exact current-system Apple catalog evidence for one OJD controller record.
-public struct AppleGameControllerRecordAudit: Codable, Hashable, Sendable {
+public struct SystemGamepadRecordAudit: Codable, Hashable, Sendable {
   public let vendorID: UInt16
   public let productID: UInt16
   public let name: String
   public let catalogListed: Bool
-  public let appleIdentifiers: [String]
+  public let systemIdentifiers: [String]
   public let transportConstraints: [String]
   public let versionConstraints: [Int]
 }
 
 /// Comparison of OJD records with Apple's private current-system mapping database.
-public struct AppleGameControllerSupportAudit: Codable, Sendable {
-  public let source: AppleGameControllerCatalogSource
+public struct SystemGamepadSupportAudit: Codable, Sendable {
+  public let source: SystemGamepadCatalogSource
   public let bundleVersions: [String]
-  public let appleExactDeviceCount: Int
-  public let skippedAppleDeviceCount: Int
+  public let systemExactDeviceCount: Int
+  public let skippedSystemDeviceCount: Int
   public let ojdRecordCount: Int
   public let catalogListedOJDRecordCount: Int
-  public let records: [AppleGameControllerRecordAudit]
+  public let records: [SystemGamepadRecordAudit]
   public let warnings: [String]
   public let caveat: String
 }
 
 /// Deserializes Apple's private mapping plists, extracting only selected
 /// redacted keys without treating the asset as a supported API.
-public enum AppleGameControllerSupportAuditor {
+public enum SystemGamepadSupportAuditor {
   private struct EntryAccumulator {
     var identifiers: Set<String> = []
     var transports: Set<String> = []
@@ -94,7 +94,7 @@ public enum AppleGameControllerSupportAuditor {
 
   private struct AssetCandidate {
     let version: String
-    let snapshot: AppleGameControllerCatalogSnapshot
+    let snapshot: SystemGamepadCatalogSnapshot
   }
 
   private struct ProfileDocument: Decodable {
@@ -107,7 +107,7 @@ public enum AppleGameControllerSupportAuditor {
     }
   }
 
-  private static let catalogRoots: [(AppleGameControllerCatalogSource, URL)] = [
+  private static let catalogRoots: [(SystemGamepadCatalogSource, URL)] = [
     (
       .downloadedMobileAsset,
       URL(fileURLWithPath: "/System/Library/AssetsV2/com_apple_MobileAsset_GameController_DB1")
@@ -121,21 +121,21 @@ public enum AppleGameControllerSupportAuditor {
     ),
   ]
 
-  public static func auditCurrentSystem() -> AppleGameControllerSupportAudit {
+  public static func auditCurrentSystem() -> SystemGamepadSupportAudit {
     audit(snapshot: currentSystemSnapshot(), records: bundledOJDRecords())
   }
 
-  public static func currentSystemSnapshot() -> AppleGameControllerCatalogSnapshot {
+  public static func currentSystemSnapshot() -> SystemGamepadCatalogSnapshot {
     for (source, root) in catalogRoots {
       if let snapshot = loadBestAsset(at: root, source: source), !snapshot.entries.isEmpty {
         return snapshot
       }
     }
-    return AppleGameControllerCatalogSnapshot(
+    return SystemGamepadCatalogSnapshot(
       source: .unavailable,
       bundleVersions: [],
       entries: [],
-      warnings: ["Apple GameController mapping MobileAsset was not available on this system."]
+      warnings: ["The system gamepad mapping catalog was not available on this system."]
     )
   }
 
@@ -166,17 +166,17 @@ public enum AppleGameControllerSupportAuditor {
   }
 
   public static func audit(
-    snapshot: AppleGameControllerCatalogSnapshot,
+    snapshot: SystemGamepadCatalogSnapshot,
     records: [ControllerModelID]
-  ) -> AppleGameControllerSupportAudit {
-    var appleByKey: [ControllerModelID: AppleGameControllerCatalogEntry] = [:]
+  ) -> SystemGamepadSupportAudit {
+    var appleByKey: [ControllerModelID: SystemGamepadCatalogEntry] = [:]
     for entry in snapshot.entries {
       let key = ControllerModelID(vendorID: entry.vendorID, productID: entry.productID)
       guard let existing = appleByKey[key] else {
         appleByKey[key] = entry
         continue
       }
-      appleByKey[key] = AppleGameControllerCatalogEntry(
+      appleByKey[key] = SystemGamepadCatalogEntry(
         vendorID: key.vendorID,
         productID: key.productID,
         identifiers: Array(Set(existing.identifiers + entry.identifiers)),
@@ -187,12 +187,12 @@ public enum AppleGameControllerSupportAuditor {
 
     let rows = records.map { model in
       let entry = appleByKey[model]
-      return AppleGameControllerRecordAudit(
+      return SystemGamepadRecordAudit(
         vendorID: model.vendorID,
         productID: model.productID,
         name: String(format: "Controller %04x:%04x", model.vendorID, model.productID),
         catalogListed: entry != nil,
-        appleIdentifiers: entry?.identifiers ?? [],
+        systemIdentifiers: entry?.identifiers ?? [],
         transportConstraints: entry?.transports ?? [],
         versionConstraints: entry?.versionNumbers ?? []
       )
@@ -202,11 +202,11 @@ public enum AppleGameControllerSupportAuditor {
       return $0.productID < $1.productID
     }
 
-    return AppleGameControllerSupportAudit(
+    return SystemGamepadSupportAudit(
       source: snapshot.source,
       bundleVersions: snapshot.bundleVersions,
-      appleExactDeviceCount: snapshot.entries.count,
-      skippedAppleDeviceCount: snapshot.skippedDeviceCount,
+      systemExactDeviceCount: snapshot.entries.count,
+      skippedSystemDeviceCount: snapshot.skippedDeviceCount,
       ojdRecordCount: rows.count,
       catalogListedOJDRecordCount: rows.filter(\.catalogListed).count,
       records: rows,
@@ -219,8 +219,8 @@ public enum AppleGameControllerSupportAuditor {
 
   static func snapshot(
     bundleInfoData: [Data],
-    source: AppleGameControllerCatalogSource
-  ) -> AppleGameControllerCatalogSnapshot {
+    source: SystemGamepadCatalogSource
+  ) -> SystemGamepadCatalogSnapshot {
     var accumulators: [ControllerModelID: EntryAccumulator] = [:]
     var versions: Set<String> = []
     var skippedDeviceCount = 0
@@ -271,7 +271,7 @@ public enum AppleGameControllerSupportAuditor {
     }
 
     let entries = accumulators.map { key, accumulator in
-      AppleGameControllerCatalogEntry(
+      SystemGamepadCatalogEntry(
         vendorID: key.vendorID,
         productID: key.productID,
         identifiers: Array(accumulator.identifiers),
@@ -290,7 +290,7 @@ public enum AppleGameControllerSupportAuditor {
         "\(skippedDeviceCount) catalog device record(s) lacked an exact numeric VID/PID."
       )
     }
-    return AppleGameControllerCatalogSnapshot(
+    return SystemGamepadCatalogSnapshot(
       source: source,
       bundleVersions: Array(versions),
       entries: entries,
@@ -301,8 +301,8 @@ public enum AppleGameControllerSupportAuditor {
 
   private static func loadBestAsset(
     at root: URL,
-    source: AppleGameControllerCatalogSource
-  ) -> AppleGameControllerCatalogSnapshot? {
+    source: SystemGamepadCatalogSource
+  ) -> SystemGamepadCatalogSnapshot? {
     let fileManager = FileManager.default
     guard
       let assetURLs = try? fileManager.contentsOfDirectory(

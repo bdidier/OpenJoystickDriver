@@ -23,7 +23,7 @@ public enum RemappingValidationError: Error, Equatable, LocalizedError, Sendable
   case duplicateBindingID(UUID)
   case duplicateLayerID(UUID)
   case duplicateSource(RemappingSource)
-  case invalidBundleIdentifier(String)
+  case invalidAppID(String)
   case axisTuningRequired(index: Int)
   case axisTuningNotApplicable(index: Int)
   case incompatibleSourceAndDestination(index: Int)
@@ -89,7 +89,7 @@ public enum RemappingValidationError: Error, Equatable, LocalizedError, Sendable
     case .duplicateBindingID(let id): "The binding identifier \(id.uuidString) is duplicated."
     case .duplicateLayerID(let id): "The layer identifier \(id.uuidString) is duplicated."
     case .duplicateSource: "Each controller source can appear in only one binding."
-    case .invalidBundleIdentifier(let identifier):
+    case .invalidAppID(let identifier):
       "The target application bundle identifier is invalid: \(identifier)."
     case .axisTuningRequired(let index): "Binding \(index) requires axis tuning."
     case .axisTuningNotApplicable(let index): "Binding \(index) cannot have axis tuning."

@@ -16,14 +16,14 @@ nonisolated struct SupportExportService: Sendable {
       let report = SupportReportService.make(
         status: status,
         virtualDiagnostics: virtualDiagnostics,
-        inputMonitoring: PermissionManager.AccessState(
-          status: status?.inputMonitoring ?? "unknown"
+        inputRead: PermissionManager.AccessState(
+          status: status?.inputRead ?? "unknown"
         ),
         applicationServiceHealth: ApplicationServiceManager.health(),
         applicationServiceInstalled: ApplicationServiceManager.isInstalled,
         applicationServiceConnected: status != nil,
         buildIdentity: ApplicationVersion.buildIdentity,
-        appleGameControllerAudit: AppleGameControllerSupportAuditor.auditCurrentSystem(),
+        systemGamepadAudit: SystemGamepadSupportAuditor.auditCurrentSystem(),
         frameTimings: frameTimings
       )
       try SupportReportService.write(report, to: outputURL)

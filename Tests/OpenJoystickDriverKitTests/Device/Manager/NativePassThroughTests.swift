@@ -5,7 +5,7 @@ import Testing
 
 struct NativePassThroughTests {
   @Test
-  func nativeGamepadBindsObserveOnlyWithoutDeviceWrites() async throws {
+  func systemGamepadBindsObserveOnlyWithoutDeviceWrites() async throws {
     let backend = ScriptedHIDAccessBackend()
     await backend.enableOutputReports()
     await backend.enableFeatureReports()
@@ -21,13 +21,13 @@ struct NativePassThroughTests {
 
     let device = try #require(await manager.connectedDeviceDescriptions().first)
     #expect(device.protocolBinding.protocolID == .sonyDualShock4)
-    #expect(device.physicalOwnership == .nativeGamepad)
+    #expect(device.physicalOwnership == .systemGamepad)
     #expect(device.duplicateExposureRisk == DuplicateExposureRisk.none)
     #expect(device.physicalOutputCapabilities == .none)
     #expect(await manager.passThroughDeviceDescriptions().isEmpty)
     let identifier = try #require(await manager.pipelines.keys.first)
     #expect(await manager.pipelines[identifier]?.observesOnly == true)
-    #expect(await manager.ownershipObservation(for: identifier) == .nativeGamepad)
+    #expect(await manager.ownershipObservation(for: identifier) == .systemGamepad)
 
     // A neutral report first, so a slow run that trips input liveness recovers before the press.
     for (buttons, timestamp) in [(UInt8(0x08), UInt16(1)), (0x28, 2)] {
@@ -59,7 +59,7 @@ struct NativePassThroughTests {
         ownership: .exclusive
       )
     )
-    #expect(await manager.ownershipObservation(for: identifier) == .nativeGamepad)
+    #expect(await manager.ownershipObservation(for: identifier) == .systemGamepad)
     await manager.handleHIDEvent(.disconnected(connection: connection))
     #expect(await manager.connectedDeviceDescriptions().isEmpty)
     #expect(await backend.recordedOutputReports().isEmpty)
@@ -114,7 +114,7 @@ struct NativePassThroughTests {
     await manager.handleHIDEvent(.connected(connection: native, ownership: .unknown))
 
     let devices = await manager.connectedDeviceDescriptions()
-    #expect(devices.map(\.physicalOwnership) == [.nativeGamepad])
+    #expect(devices.map(\.physicalOwnership) == [.systemGamepad])
     #expect(await manager.passThroughDeviceDescriptions().isEmpty)
     #expect(await backend.releasedLocations() == [74])
     #expect(await backend.reacquiredLocations().isEmpty)
@@ -134,7 +134,7 @@ struct NativePassThroughTests {
     await manager.handleHIDEvent(.connected(connection: sibling, ownership: .exclusive))
 
     let owners = await manager.connectedDeviceDescriptions().map(\.physicalOwnership)
-    #expect(owners == [.nativeGamepad])
+    #expect(owners == [.systemGamepad])
     #expect(await manager.passThroughDeviceDescriptions().count == 1)
     #expect(await backend.releasedLocations() == [75])
     #expect(await backend.reacquiredLocations().isEmpty)
@@ -178,7 +178,7 @@ struct NativePassThroughTests {
     await manager.handleHIDEvent(.connected(connection: native, ownership: .unknown))
 
     let owners = await manager.connectedDeviceDescriptions().map(\.physicalOwnership)
-    #expect(owners == [.nativeGamepad])
+    #expect(owners == [.systemGamepad])
     #expect(await backend.reacquiredLocations().isEmpty)
     await manager.stop()
   }
@@ -240,8 +240,8 @@ struct NativePassThroughTests {
       connection: "Bluetooth"
     )
     let payload = ApplicationServiceStatusPayload(
-      inputMonitoring: "granted",
-      accessibility: "granted",
+      inputRead: "granted",
+      inputInject: "granted",
       connectedDevices: [],
       passThroughDevices: [device]
     )
@@ -253,8 +253,8 @@ struct NativePassThroughTests {
   }
 
   @Test
-  func nativeGamepadIsNeverEligibleForPublication() {
-    let route = ServingPolicy.route(ServingInput(observation: .nativeGamepad))
+  func systemGamepadIsNeverEligibleForPublication() {
+    let route = ServingPolicy.route(ServingInput(observation: .systemGamepad))
     #expect(!route.publishesVirtualDevice)
   }
 

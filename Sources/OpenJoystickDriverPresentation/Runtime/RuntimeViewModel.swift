@@ -148,7 +148,7 @@ final class RuntimeViewModel: ObservableObject {
         // available, replace the payload's old value with an honest checking state.
         permissions =
           authoritativePermissionSummary
-          ?? RuntimePermissionSummary(inputMonitoring: .unknown, accessibility: .unknown)
+          ?? RuntimePermissionSummary(inputRead: .unknown, inputInject: .unknown)
       }
       let presentation = RuntimeStatusPresentation(payload: payload).applyingPermissions(
         permissions
@@ -214,7 +214,7 @@ final class RuntimeViewModel: ObservableObject {
     let generation = permissionRefreshGeneration
     authoritativePermissionSummary = nil
     permissionState = .loading
-    updateStatusPermissions(.init(inputMonitoring: .unknown, accessibility: .unknown))
+    updateStatusPermissions(.init(inputRead: .unknown, inputInject: .unknown))
     do {
       let payload = try await gateway.status()
       guard generation == permissionRefreshGeneration else { return }
@@ -226,7 +226,7 @@ final class RuntimeViewModel: ObservableObject {
       guard generation == permissionRefreshGeneration else { return }
       let message = RuntimePresentation.userFacingError(error)
       permissionState = .error(message)
-      updateStatusPermissions(.init(inputMonitoring: .unknown, accessibility: .unknown))
+      updateStatusPermissions(.init(inputRead: .unknown, inputInject: .unknown))
     }
   }
 
@@ -236,7 +236,7 @@ final class RuntimeViewModel: ObservableObject {
     let generation = permissionRefreshGeneration
     authoritativePermissionSummary = nil
     permissionState = .requesting
-    updateStatusPermissions(.init(inputMonitoring: .unknown, accessibility: .unknown))
+    updateStatusPermissions(.init(inputRead: .unknown, inputInject: .unknown))
     do {
       let snapshot = try await gateway.requestPermissions()
       guard generation == permissionRefreshGeneration else { return nil }
@@ -249,7 +249,7 @@ final class RuntimeViewModel: ObservableObject {
       guard generation == permissionRefreshGeneration else { return nil }
       let message = RuntimePresentation.userFacingError(error)
       permissionState = .error(message)
-      updateStatusPermissions(.init(inputMonitoring: .unknown, accessibility: .unknown))
+      updateStatusPermissions(.init(inputRead: .unknown, inputInject: .unknown))
       return nil
     }
   }
@@ -262,7 +262,7 @@ final class RuntimeViewModel: ObservableObject {
     let generation = permissionRefreshGeneration
     authoritativePermissionSummary = nil
     permissionState = .requesting
-    updateStatusPermissions(.init(inputMonitoring: .unknown, accessibility: .unknown))
+    updateStatusPermissions(.init(inputRead: .unknown, inputInject: .unknown))
     do {
       let snapshot = try await gateway.requestPermission(requirement)
       guard generation == permissionRefreshGeneration else { return nil }
@@ -275,7 +275,7 @@ final class RuntimeViewModel: ObservableObject {
       guard generation == permissionRefreshGeneration else { return nil }
       let message = RuntimePresentation.userFacingError(error)
       permissionState = .error(message)
-      updateStatusPermissions(.init(inputMonitoring: .unknown, accessibility: .unknown))
+      updateStatusPermissions(.init(inputRead: .unknown, inputInject: .unknown))
       return nil
     }
   }

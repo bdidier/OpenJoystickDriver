@@ -31,18 +31,19 @@ public struct SupportReport: Codable, Sendable {
 
   public struct System: Codable, Sendable {
     public let buildIdentity: BuildIdentity
-    public let macOSVersion: String
+    public let osName: String
+    public let osVersion: String
     public let architecture: String
 
     private enum CodingKeys: String, CodingKey {
       case buildIdentity
-      case macOSVersion, architecture
+      case osName, osVersion, architecture
     }
   }
 
   public struct Permissions: Codable, Sendable {
-    public let inputMonitoring: String
-    public let accessibility: String
+    public let inputRead: String
+    public let inputInject: String
   }
 
   public struct ApplicationService: Codable, Sendable {
@@ -105,7 +106,7 @@ public struct SupportReport: Codable, Sendable {
     public let controllers: [Controller]
     public let unboundDevices: [UnboundDevice]
     public let hidGamepads: [HIDGamepad]
-    public let appleGameControllerAudit: AppleGameControllerSupportAudit?
+    public let systemGamepadAudit: SystemGamepadSupportAudit?
     /// The newest frames of each connected controller with the five per-stage stamps, empty when
     /// the service was stopped or had no frames.
     public let frameTimings: [ControllerFrameTimings]
@@ -129,13 +130,14 @@ public struct SupportReport: Codable, Sendable {
   public init(
     generatedAt: Date,
     buildIdentity: BuildIdentity,
-    macOSVersion: String,
+    osName: String,
+    osVersion: String,
     architecture: String,
-    inputMonitoring: PermissionManager.AccessState,
+    inputRead: PermissionManager.AccessState,
     applicationServiceInstalled: Bool,
     applicationServiceConnected: Bool,
     applicationServiceHealth: ApplicationServiceManager.ApplicationServiceHealth?,
-    appleGameControllerAudit: AppleGameControllerSupportAudit? = nil,
+    systemGamepadAudit: SystemGamepadSupportAudit? = nil,
     frameTimings: [ControllerFrameTimings] = [],
     status: ApplicationServiceStatusPayload?,
     virtualDiagnostics: ApplicationServiceVirtualDeviceDiagnosticsPayload?
@@ -157,12 +159,13 @@ public struct SupportReport: Codable, Sendable {
     )
     let system = System(
       buildIdentity: buildIdentity,
-      macOSVersion: macOSVersion,
+      osName: osName,
+      osVersion: osVersion,
       architecture: architecture
     )
     let permissions = Permissions(
-      inputMonitoring: inputMonitoring.description,
-      accessibility: status?.accessibility ?? "unknown"
+      inputRead: inputRead.description,
+      inputInject: status?.inputInject ?? "unknown"
     )
     let applicationService = ApplicationService(
       installed: applicationServiceInstalled,
@@ -232,8 +235,8 @@ public struct SupportReport: Codable, Sendable {
     if virtualDiagnostics == nil {
       reportNotes.append("Virtual-device diagnostics were unavailable.")
     }
-    if appleGameControllerAudit == nil {
-      reportNotes.append("Apple GameController catalog audit was unavailable.")
+    if systemGamepadAudit == nil {
+      reportNotes.append("System gamepad catalog audit was unavailable.")
     }
     data = Payload(
       apiVersion: OpenJoystickDriverAPI.version,
@@ -246,7 +249,7 @@ public struct SupportReport: Codable, Sendable {
       controllers: controllers,
       unboundDevices: unboundDevices,
       hidGamepads: hidGamepads,
-      appleGameControllerAudit: appleGameControllerAudit,
+      systemGamepadAudit: systemGamepadAudit,
       frameTimings: frameTimings,
       notes: reportNotes
     )

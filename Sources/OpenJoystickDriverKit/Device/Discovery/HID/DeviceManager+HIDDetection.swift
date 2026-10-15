@@ -282,9 +282,9 @@ extension DeviceManager {
     clearPassThroughDevices()
     hidRoleConnections.removeAll()
     let hidIdentifiers = Set(
-      pipelines.keys.filter { deviceInfos[$0]?.discoverySource.requiresInputMonitoring == true }
+      pipelines.keys.filter { deviceInfos[$0]?.discoverySource.requiresInputRead == true }
         + deviceInfos.keys.filter {
-          deviceInfos[$0]?.discoverySource.requiresInputMonitoring == true
+          deviceInfos[$0]?.discoverySource.requiresInputRead == true
         }
     )
     let candidates = hidIdentifiers.compactMap { identifier -> HIDTeardownCandidate? in

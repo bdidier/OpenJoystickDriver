@@ -269,16 +269,17 @@ struct SupportReportBindingTests {
         sourceCommit: String(repeating: "a", count: 40),
         sourceState: .clean
       ),
-      macOSVersion: "26.0.0",
+      osName: "macOS",
+      osVersion: "26.0.0",
       architecture: "arm64",
-      inputMonitoring: .granted,
+      inputRead: .granted,
       applicationServiceInstalled: true,
       applicationServiceConnected: true,
       applicationServiceHealth: nil,
       frameTimings: frameTimings,
       status: ApplicationServiceStatusPayload(
-        inputMonitoring: "granted",
-        accessibility: "granted",
+        inputRead: "granted",
+        inputInject: "granted",
         connectedDevices: connected,
         unboundDevices: unbound
       ),

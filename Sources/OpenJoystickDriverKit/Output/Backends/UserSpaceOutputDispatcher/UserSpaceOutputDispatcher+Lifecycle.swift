@@ -10,15 +10,15 @@ extension UserSpaceOutputDispatcher {
 
   public enum CreationError: Error, CustomStringConvertible, Sendable {
     case createFailed
-    case inputMonitoringDenied
-    case accessibilityDenied
+    case inputReadDenied
+    case inputInjectDenied
     case missingEntitlement(String)
 
     public var description: String {
       switch self {
       case .createFailed: return "Failed to create virtual HID device"
-      case .inputMonitoringDenied: return "Input Monitoring denied for IOKit virtual device"
-      case .accessibilityDenied: return "Accessibility denied for IOKit virtual device"
+      case .inputReadDenied: return "Input Monitoring denied for IOKit virtual device"
+      case .inputInjectDenied: return "Accessibility denied for IOKit virtual device"
       case .missingEntitlement(let entitlement): return "Missing entitlement: \(entitlement)"
       }
     }

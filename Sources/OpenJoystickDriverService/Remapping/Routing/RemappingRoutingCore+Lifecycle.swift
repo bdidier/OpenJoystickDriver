@@ -29,7 +29,7 @@ extension RemappingRoutingCore {
 
   func sampleEligibilityEnvironment() -> RemappingEligibilityEnvironment {
     RemappingEligibilityEnvironment(
-      frontmostBundleIdentifier: foregroundApplication.frontmostBundleIdentifier(),
+      frontmostAppID: foregroundApplication.frontmostAppID(),
       postEventAccessState: postEventAccess.currentState()
     )
   }

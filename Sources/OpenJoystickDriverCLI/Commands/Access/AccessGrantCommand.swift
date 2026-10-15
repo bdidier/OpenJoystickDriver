@@ -32,9 +32,9 @@ struct AccessClient {
     if let grant = status.grants.first(where: { $0.id == text }) {
       return Self(
         identity: CodeSigningIdentity(
-          kind: grant.identityKind.kind,
+          kind: grant.publisher.kind,
           identifier: grant.identifier,
-          teamIdentifier: grant.teamIdentifier
+          publisherID: grant.publisher.id
         ),
         path: grant.path
       )
@@ -230,14 +230,14 @@ struct AccessGrantCommand: AsyncParsableCommand {
       CLILocalized.format(
         "cli.access.grant.confirm",
         identity.identifier,
-        AccessText.signer(identity.kind, identity.teamIdentifier),
+        AccessText.signer(identity.kind, identity.publisherID),
         AccessText.scopes(scope)
       )
     ]
-    if identity.kind == .apple {
+    if identity.kind == .platform {
       lines.insert(
         CLILocalized.text(
-          "cli.access.grant.apple_warning"
+          "cli.access.grant.platform_warning"
         ),
         at: 0
       )

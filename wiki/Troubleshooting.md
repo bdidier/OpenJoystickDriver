@@ -52,7 +52,7 @@ The built-in catalog has 696 records. A record without a physical test is unveri
 - **Dongle:** A dongle problem is separate from a controller problem. Test the controller in another connection mode if it has one.
 - **Runtime disconnected:** Run `ojd service start`, then run `ojd status`.
 - **SDL sees 0 controllers:** Grant **Input Monitoring** and **Accessibility**, restart OJD, and try again.
-- **Xbox USB driver extension install fails:** Rebuild the signed app, then run `ojd extension activate`.
+- **Xbox USB driver extension install fails:** Rebuild the signed app, then run `ojd transport-extension activate`.
 - **Input stays held, or the status says Needs attention:** Release the controls. Then check the controller input health with `ojd status --json`.
 
 ### Check From the Terminal

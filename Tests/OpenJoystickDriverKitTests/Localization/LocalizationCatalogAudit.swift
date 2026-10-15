@@ -22,8 +22,8 @@ enum LocalizationCatalogAudit {
   ]
   private static let frenchTerms: Set<String> = [
     "capture.destination", "capture.gain", "cli.controller.show.label.session",
-    "cli.status.label.extension", "cli.status.label.service", "common.destination",
-    "common.service", "console.title", "inputTest.menu", "keyboard.option", "mapping.guide",
+    "cli.status.label.transport_extension", "cli.status.label.service", "common.destination",
+    "common.service", "console.title", "inputTest.menu", "keyboard.alt", "mapping.guide",
     "mapping.mode", "mapping.options", "mapping.start", "motion.calibration.pause",
     "profiles.activationMode", "profiles.motion.local", "profiles.sectionSticks",
     "profiles.stick.horizontal", "profiles.stick.source", "profiles.stick.vertical",
@@ -33,7 +33,7 @@ enum LocalizationCatalogAudit {
 
   private static let sourceIdenticalTermsByLocale: [String: Set<String>] = [
     "ar-SA": [
-      "keyboard.command", "keyboard.control", "keyboard.escape", "keyboard.option",
+      "keyboard.meta", "keyboard.control", "keyboard.escape", "keyboard.alt",
       "keyboard.return", "keyboard.shift", "keyboard.tab",
     ],
     "de-DE": [
@@ -56,8 +56,8 @@ enum LocalizationCatalogAudit {
       "cli.controller.show.label.input", "cli.explain.area", "cli.explain.area.endpoint",
       "common.runtime", "common.status", "console.output", "console.stream", "debug.runtime",
       "debug.title", "developer.packetColumnData", "inputTest.home", "inputTest.menu",
-      "inputTest.tabInput", "inputTest.tabOutput", "keyboard.capsLock", "keyboard.command",
-      "keyboard.control", "keyboard.escape", "keyboard.option", "keyboard.return", "keyboard.shift",
+      "inputTest.tabInput", "inputTest.tabOutput", "keyboard.capsLock", "keyboard.meta",
+      "keyboard.control", "keyboard.escape", "keyboard.alt", "keyboard.return", "keyboard.shift",
       "keyboard.tab", "mapping.guide", "mapping.mode", "menu.edit", "menu.zoom",
       "motion.calibration.offset", "profiles.physical.motor", "profiles.stick.horizontal",
       "profiles.target", "profiles.trackball.enabled", "profiles.turbo", "settings.debug",
@@ -73,12 +73,12 @@ enum LocalizationCatalogAudit {
       "shortcuts.controller.type", "shortcuts.parameter.controller",
     ],
     "ja-JP": [
-      "keyboard.capsLock", "keyboard.escape", "keyboard.option", "keyboard.return",
+      "keyboard.capsLock", "keyboard.escape", "keyboard.alt", "keyboard.return",
       "keyboard.shift",
     ],
     "ko-KR": [
-      "keyboard.capsLock", "keyboard.command", "keyboard.control", "keyboard.escape",
-      "keyboard.option", "keyboard.return", "keyboard.shift",
+      "keyboard.capsLock", "keyboard.meta", "keyboard.control", "keyboard.escape",
+      "keyboard.alt", "keyboard.return", "keyboard.shift",
     ],
     "nl-NL": [
       "capture.controller", "cli.access.status.socket", "cli.controller.show.label.protocol",
@@ -89,8 +89,8 @@ enum LocalizationCatalogAudit {
       "controllers.title", "debug.controllers", "debug.runtime", "developer.controller",
       "developer.controllerDetails", "developer.packetColumnBytes", "developer.route",
       "inputTest.home", "inputTest.menu", "inputTest.rumble", "keyboard.capsLock",
-      "keyboard.command", "keyboard.control",
-      "keyboard.escape", "keyboard.option", "keyboard.return", "keyboard.shift", "keyboard.tab",
+      "keyboard.meta", "keyboard.control",
+      "keyboard.escape", "keyboard.alt", "keyboard.return", "keyboard.shift", "keyboard.tab",
       "mapping.guide", "mapping.physicalRumble", "mapping.start", "menu.help", "menu.zoom",
       "motion.calibration.offset", "profiles.activator", "profiles.physical.effect",
       "profiles.physical.motor", "profiles.sectionSticks", "profiles.sectionTriggers",
@@ -107,30 +107,30 @@ enum LocalizationCatalogAudit {
       "profiles.stick.vertical", "profiles.trackball.enabled", "profiles.turbo", "settings.status",
     ],
     "ru-RU": [
-      "keyboard.capsLock", "keyboard.command", "keyboard.control", "keyboard.delete",
-      "keyboard.escape", "keyboard.option", "keyboard.return", "keyboard.shift", "keyboard.tab",
+      "keyboard.capsLock", "keyboard.meta", "keyboard.control", "keyboard.delete",
+      "keyboard.escape", "keyboard.alt", "keyboard.return", "keyboard.shift", "keyboard.tab",
       "mapping.guide",
     ],
     "th-TH": [
-      "inputTest.home", "keyboard.capsLock", "keyboard.command", "keyboard.control",
-      "keyboard.delete", "keyboard.escape", "keyboard.forwardDelete", "keyboard.option",
+      "inputTest.home", "keyboard.capsLock", "keyboard.meta", "keyboard.control",
+      "keyboard.delete", "keyboard.escape", "keyboard.forwardDelete", "keyboard.alt",
       "keyboard.pageDown", "keyboard.pageUp", "keyboard.return", "keyboard.shift",
       "keyboard.space", "keyboard.tab",
     ],
     "tr-TR": [
-      "keyboard.control", "keyboard.escape", "keyboard.option", "keyboard.return", "keyboard.shift",
+      "keyboard.control", "keyboard.escape", "keyboard.alt", "keyboard.return", "keyboard.shift",
       "keyboard.tab", "profiles.physical.motor", "profiles.trackball.enabled", "profiles.turbo",
       "shortcuts.controller.model",
     ],
     "vi-VN": [
       "cli.access.status.socket", "inputTest.home", "inputTest.menu", "keyboard.capsLock",
-      "keyboard.command", "keyboard.control", "keyboard.delete", "keyboard.escape",
-      "keyboard.option", "keyboard.pageDown", "keyboard.pageUp", "keyboard.return",
+      "keyboard.meta", "keyboard.control", "keyboard.delete", "keyboard.escape",
+      "keyboard.alt", "keyboard.pageDown", "keyboard.pageUp", "keyboard.return",
       "keyboard.shift", "keyboard.tab", "mapping.guide", "profiles.trackball.enabled",
       "profiles.turbo",
     ],
-    "zh-CN": ["keyboard.option", "keyboard.shift"],
-    "zh-TW": ["keyboard.escape", "keyboard.option"],
+    "zh-CN": ["keyboard.alt", "keyboard.shift"],
+    "zh-TW": ["keyboard.escape", "keyboard.alt"],
   ]
 
   static func allowedSourceIdenticalEnglishProseKeys(for localization: String) -> Set<String> {
