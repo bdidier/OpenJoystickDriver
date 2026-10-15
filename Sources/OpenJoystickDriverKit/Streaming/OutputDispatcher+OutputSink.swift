@@ -5,6 +5,7 @@ import Foundation
 extension OutputDispatcher {
   public var destination: OutputDestination { .virtualDevice }
 
+  @preconcurrency
   public func consume(
     _ frame: StreamFrame,
     onDelivered: @escaping @Sendable () -> Void

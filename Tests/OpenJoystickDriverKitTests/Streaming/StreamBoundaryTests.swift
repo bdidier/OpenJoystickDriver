@@ -16,7 +16,7 @@ struct StreamBoundaryTests {
       _ event: ControllerEvent,
       labels _: ControllerButtonLabels,
       from _: LogicalControllerID
-    ) async {
+    ) async {  // swiftlint:disable:this async_without_await
       lock.withLock { published.append(event) }
     }
 

@@ -54,7 +54,8 @@ extension EndpointServer {
 
   private func runStream(generation: Int) async {
     var poller = ControllerWatchPoller(source: source)
-    let stream = EndpointStreamSource(sink: EndpointSubscribers(server: self, generation: generation))
+    let subscribers = EndpointSubscribers(server: self, generation: generation)
+    let stream = EndpointStreamSource(sink: subscribers)
     var lastError: String?
     while !Task.isCancelled {
       let includeOutput = lock.withLock { connections.values.contains(where: \.wantsOutputValues) }
@@ -110,7 +111,7 @@ final class EndpointSubscribers: OutputSink, @unchecked Sendable {
   func consume(
     _ frame: StreamFrame,
     onDelivered: @escaping @Sendable () -> Void
-  ) async throws {
+  ) async throws {  // swiftlint:disable:this async_without_await
     guard case .observed(let event) = frame else {
       throw StreamBoundaryError.unsupported(destination)
     }

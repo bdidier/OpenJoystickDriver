@@ -61,6 +61,7 @@ extension InputSource {
   /// Sends one frame to ``sink``. `onDelivered` runs once the frame reached the sink's
   /// destination, which is where the pipeline stamps a delivery stage; it does not run for a frame
   /// the sink suppresses or fails to deliver.
+  @preconcurrency
   public func produce(
     _ frame: StreamFrame,
     onDelivered: @escaping @Sendable () -> Void = {}
@@ -80,17 +81,23 @@ public protocol OutputSink: AnyObject, Sendable {
 
   /// Consumes one frame. `onDelivered` runs once the frame reached the destination, and not for a
   /// frame the sink suppresses or fails to deliver.
+  @preconcurrency
   func consume(
     _ frame: StreamFrame,
     onDelivered: @escaping @Sendable () -> Void
   ) async throws
 
   /// Consumes one output command, such as rumble or a light, for one controller.
-  func consume(_ command: ControllerOutputCommand, for controller: LogicalControllerID)
+  func consume(
+    _ command: ControllerOutputCommand,
+    for controller: LogicalControllerID
+  )
     async throws
 }
 
+// swiftlint:disable async_without_await
 extension OutputSink {
+  @preconcurrency
   public func consume(
     _ frame: StreamFrame,
     onDelivered: @escaping @Sendable () -> Void
@@ -98,9 +105,13 @@ extension OutputSink {
     throw StreamBoundaryError.unsupported(destination)
   }
 
-  public func consume(_ command: ControllerOutputCommand, for controller: LogicalControllerID)
+  public func consume(
+    _ command: ControllerOutputCommand,
+    for controller: LogicalControllerID
+  )
     async throws
   {
     throw StreamBoundaryError.unsupported(destination)
   }
 }
+// swiftlint:enable async_without_await
