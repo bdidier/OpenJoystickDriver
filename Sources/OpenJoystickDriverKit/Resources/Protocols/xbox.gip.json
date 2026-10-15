@@ -10,5 +10,17 @@
 			"interfaceProtocol": 208,
 			"interfaceNumber": 0
 		}
-	]
+	],
+	"parameters": {
+		"shareButton": {
+			"type": "object",
+			"fields": {
+				"fromEnd": {
+					"type": "integer",
+					"minimum": 1,
+					"maximum": 255
+				}
+			}
+		}
+	}
 }

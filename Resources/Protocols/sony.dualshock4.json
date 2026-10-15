@@ -1,0 +1,25 @@
+{
+	"apiVersion": "openjoystickdriver/v1alpha1",
+	"kind": "ProtocolDescription",
+	"family": "sony.dualshock4",
+	"parameters": {
+		"motionCalibration": {
+			"type": "enum",
+			"values": [
+				"Factory"
+			]
+		},
+		"role": {
+			"type": "enum",
+			"values": [
+				"WirelessAdapter"
+			]
+		},
+		"motionScale": {
+			"type": "enum",
+			"values": [
+				"StrikePad"
+			]
+		}
+	}
+}

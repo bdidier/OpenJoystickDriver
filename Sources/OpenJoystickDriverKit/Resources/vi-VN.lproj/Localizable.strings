@@ -1649,4 +1649,7 @@
 "error.E4006" = "Không có gói đã cài nào có tên này. Hãy chạy ojd mod list để xem các gói đã cài.";
 "error.E4007" = "Không thể thay đổi thư mục gói. Hãy kiểm tra dung lượng đĩa trống và quyền của thư mục.";
 "error.E5001" = "Tài liệu không có apiVersion, hoặc apiVersion của tài liệu không được phiên bản OpenJoystickDriver này hỗ trợ. Hãy đổi tài liệu sang apiVersion được hỗ trợ mà thông báo nêu, rồi chạy lại lệnh.";
+"error.E5002" = "Mô tả giao thức không hợp lệ. Kiểm tra tệp với lược đồ protocol-description và sửa trường mà thông báo nêu.";
+"error.E5003" = "Mô tả giao thức nêu một họ khác với tên tệp. Đặt tên tệp theo họ của nó.";
+"error.E5004" = "Mô tả giao thức liệt kê một biến thể mà họ của nó không có. Hãy dùng một trong các biến thể của họ.";
 "error.withCode" ="%@ (%@)";

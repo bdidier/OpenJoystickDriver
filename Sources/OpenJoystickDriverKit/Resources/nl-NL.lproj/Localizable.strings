@@ -1649,4 +1649,7 @@
 "error.E4006" = "Geen geïnstalleerd pakket heeft deze naam. Voer ojd mod list uit om de geïnstalleerde pakketten te zien.";
 "error.E4007" = "De pakketmap kon niet worden gewijzigd. Controleer de vrije schijfruimte en de maprechten.";
 "error.E5001" = "Een document heeft geen apiVersion, of de apiVersion wordt niet ondersteund door deze versie van OpenJoystickDriver. Wijzig het document naar de ondersteunde apiVersion die de melding noemt en voer de opdracht opnieuw uit.";
+"error.E5002" = "Een protocolbeschrijving is ongeldig. Controleer het bestand met het schema protocol-description en herstel het veld dat het bericht noemt.";
+"error.E5003" = "Een protocolbeschrijving noemt een familie die afwijkt van de bestandsnaam. Noem het bestand naar zijn familie.";
+"error.E5004" = "Een protocolbeschrijving noemt een variant die de familie niet heeft. Gebruik een van de varianten van de familie.";
 "error.withCode" ="%@ (%@)";

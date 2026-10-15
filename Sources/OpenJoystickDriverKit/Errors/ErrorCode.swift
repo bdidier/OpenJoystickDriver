@@ -76,6 +76,9 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
   case packageNotInstalled = "E4006"
   case packageStoreUnwritable = "E4007"
   case unsupportedAPIVersion = "E5001"
+  case invalidProtocolDescription = "E5002"
+  case protocolDescriptionFamilyMismatch = "E5003"
+  case unknownProtocolVariant = "E5004"
 
   /// The part of the product that raises a code; the first digit of the number.
   public enum Domain: String, Sendable {
@@ -110,7 +113,8 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
     case .invalidManifest, .requiresExcludesVersion, .invalidPackageContent, .packageClash,
       .packageAlreadyInstalled, .packageNotInstalled, .packageStoreUnwritable:
       .mod
-    case .unsupportedAPIVersion:
+    case .unsupportedAPIVersion, .invalidProtocolDescription, .protocolDescriptionFamilyMismatch,
+      .unknownProtocolVariant:
       .document
     }
   }

@@ -1,0 +1,28 @@
+{
+	"apiVersion": "openjoystickdriver/v1alpha1",
+	"kind": "ProtocolDescription",
+	"family": "sony.dualsense",
+	"parameters": {
+		"maker": {
+			"type": "enum",
+			"values": [
+				"ThirdParty"
+			]
+		},
+		"unprobedSensors": {
+			"type": "flag"
+		},
+		"unprobedTouchpad": {
+			"type": "flag"
+		},
+		"forcedVibration": {
+			"type": "flag"
+		},
+		"role": {
+			"type": "enum",
+			"values": [
+				"Receiver"
+			]
+		}
+	}
+}

@@ -68,13 +68,21 @@ class ErrorCodeTests(unittest.TestCase):
         with self.assertRaisesRegex(errors.ErrorCodeError, "E2001 is in the endpoint"):
             errors.check_invariants([entry("E2001", "endpoint", "wrongArea")])
 
-    def test_the_document_area_holds_the_unsupported_api_version_code(self) -> None:
+    def test_the_document_area_holds_the_document_codes(self) -> None:
         documents = [
             (item["code"], item["name"])
             for item in errors.load_catalog(ROOT)
             if item["domain"] == "document"
         ]
-        self.assertEqual(documents, [("E5001", "unsupportedAPIVersion")])
+        self.assertEqual(
+            documents,
+            [
+                ("E5001", "unsupportedAPIVersion"),
+                ("E5002", "invalidProtocolDescription"),
+                ("E5003", "protocolDescriptionFamilyMismatch"),
+                ("E5004", "unknownProtocolVariant"),
+            ],
+        )
         with self.assertRaisesRegex(errors.ErrorCodeError, "E4001 is in the document"):
             errors.check_invariants([entry("E4001", "document", "wrongArea")])
 

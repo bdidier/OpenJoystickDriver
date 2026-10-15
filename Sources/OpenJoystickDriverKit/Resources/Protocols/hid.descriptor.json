@@ -1,0 +1,16 @@
+{
+	"apiVersion": "openjoystickdriver/v1alpha1",
+	"kind": "ProtocolDescription",
+	"family": "hid.descriptor",
+	"parameters": {
+		"usageLayout": {
+			"type": "enum",
+			"values": [
+				"Wr007",
+				"ScufEnvision",
+				"ZRzBrakeLeft",
+				"DragonRise"
+			]
+		}
+	}
+}

@@ -1652,4 +1652,7 @@
 "error.E4006" = "No installed package has this name. Run 'ojd mod list' to see the installed packages.";
 "error.E4007" = "The package folder could not be changed. Check the free disk space and the folder permissions.";
 "error.E5001" = "A document has no apiVersion, or its apiVersion is not supported by this version of OpenJoystickDriver. Change the document to the supported apiVersion that the message names, and run the command again.";
+"error.E5002" = "A protocol description is invalid. Check the file against the protocol-description schema and fix the field that the message names.";
+"error.E5003" = "A protocol description names a family that differs from its file name. Name the file after its family.";
+"error.E5004" = "A protocol description lists a variant that its family does not have. Use one of the variants of the family.";
 "error.withCode" = "%@ (%@)";

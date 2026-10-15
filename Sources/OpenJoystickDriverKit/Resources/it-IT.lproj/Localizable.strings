@@ -1649,4 +1649,7 @@
 "error.E4006" = "Nessun pacchetto installato ha questo nome. Esegui ojd mod list per vedere i pacchetti installati.";
 "error.E4007" = "Non è stato possibile modificare la cartella dei pacchetti. Controlla lo spazio libero su disco e i permessi della cartella.";
 "error.E5001" = "Un documento non ha apiVersion, oppure la sua apiVersion non è supportata da questa versione di OpenJoystickDriver. Cambia il documento con l’apiVersion supportata indicata dal messaggio ed esegui di nuovo il comando.";
+"error.E5002" = "Una descrizione di protocollo non è valida. Controlla il file con lo schema protocol-description e correggi il campo indicato dal messaggio.";
+"error.E5003" = "Una descrizione di protocollo indica una famiglia diversa dal nome del suo file. Dai al file il nome della sua famiglia.";
+"error.E5004" = "Una descrizione di protocollo elenca una variante che la sua famiglia non ha. Usa una delle varianti della famiglia.";
 "error.withCode" ="%@ (%@)";

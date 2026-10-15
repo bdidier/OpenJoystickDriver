@@ -1649,4 +1649,7 @@
 "error.E4006" = "沒有已安裝的套件使用此名稱。請執行 ojd mod list 查看已安裝的套件。";
 "error.E4007" = "無法變更套件資料夾。請檢查磁碟可用空間和資料夾權限。";
 "error.E5001" = "文件缺少 apiVersion，或其 apiVersion 不受此版本的 OpenJoystickDriver 支援。請將文件改為訊息中指出的支援的 apiVersion，然後重新執行指令。";
+"error.E5002" = "協定描述無效。請用 protocol-description 架構檢查該檔案，並修正訊息指出的欄位。";
+"error.E5003" = "協定描述指定的系列與其檔案名稱不同。請以系列名稱命名該檔案。";
+"error.E5004" = "協定描述列出了其系列沒有的變體。請使用該系列的其中一個變體。";
 "error.withCode" ="%@ (%@)";

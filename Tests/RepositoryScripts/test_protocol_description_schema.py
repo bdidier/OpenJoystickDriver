@@ -49,15 +49,31 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         )
 
     def assert_rejected(
-        self, document: dict[str, Any], name: str | None = None
+        self,
+        document: dict[str, Any],
+        name: str | None = None,
+        code: str = "E5002",
     ) -> None:
-        with self.assertRaises(validate_schemas.ValidationError):
+        with self.assertRaisesRegex(validate_schemas.ValidationError, rf"^{code}: "):
             self.check(document, name)
 
     def test_authored_descriptions_validate(self) -> None:
         paths = sorted(validate_schemas.PROTOCOL_DESCRIPTIONS.glob("*.json"))
         self.assertEqual(
-            [path.stem for path in paths], ["xbox.gip", "xbox.xid", "xbox.xusb"]
+            [path.stem for path in paths],
+            [
+                "hid.descriptor",
+                "nintendo.switch1",
+                "nintendo.switch2",
+                "sony.dualsense",
+                "sony.dualshock4",
+                "vendor.gamesir",
+                "vendor.nvidia-shield",
+                "vendor.ps3-third-party",
+                "xbox.gip",
+                "xbox.xid",
+                "xbox.xusb",
+            ],
         )
         with patch.object(validate_schemas, "ROOT", REPOSITORY_ROOT):
             validate_schemas.validate_protocol_descriptions(
@@ -80,7 +96,8 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                     del document[member]
                 else:
                     document[member] = value
-                self.assert_rejected(document)
+                code = "E5001" if member == "apiVersion" else "E5002"
+                self.assert_rejected(document, code=code)
 
     def test_rejects_an_unknown_family(self) -> None:
         document = xusb_description()
@@ -99,13 +116,17 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 document["interfaceSignatures"][0][field] = value
                 self.assert_rejected(document)
 
-    def test_rejects_missing_or_empty_signatures(self) -> None:
+    def test_rejects_empty_signatures_and_admits_none(self) -> None:
         empty = xusb_description()
         empty["interfaceSignatures"] = []
         self.assert_rejected(empty)
-        missing = xusb_description()
-        del missing["interfaceSignatures"]
-        self.assert_rejected(missing)
+        # A description may carry only parameters or defaults.
+        absent = xusb_description()
+        del absent["interfaceSignatures"]
+        absent["parameters"] = {}
+        self.assert_rejected(absent)
+        del absent["parameters"]
+        self.check(absent)
 
     def test_rejects_a_signature_missing_a_triple_field(self) -> None:
         for field in ("variant", "interfaceClass", "interfaceSubclass"):
@@ -136,7 +157,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             signatures = rule["then"]["properties"]["interfaceSignatures"]
             families[family] = (
                 signatures["items"]["properties"]["variant"]["enum"]
-                if "items" in signatures
+                if signatures is not False
                 else []
             )
         return families
@@ -168,13 +189,135 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                     if variant in allowed:
                         self.check(document)
                     else:
-                        self.assert_rejected(document)
+                        self.assert_rejected(document, code="E5004")
 
     def test_rejects_a_file_name_that_differs_from_the_family(self) -> None:
         with self.assertRaisesRegex(
-            validate_schemas.ValidationError, r"file name must be xbox\.xusb\.json"
+            validate_schemas.ValidationError,
+            r"^E5003: .*file name must be xbox\.xusb\.json",
         ):
             self.check(xusb_description(), name="xbox.gip.json")
+
+    # Parameters and defaults.
+
+    def with_body(self, family: str, **members: Any) -> dict[str, Any]:
+        return {**header("ProtocolDescription"), "family": family, **members}
+
+    def test_accepts_parameters_and_defaults(self) -> None:
+        self.check(
+            self.with_body(
+                "sony.dualsense",
+                parameters={
+                    "maker": {"type": "enum", "values": ["ThirdParty"]},
+                    "forcedVibration": {"type": "flag"},
+                },
+                defaults={"tuning": {"stickDeadzone": 0.1}},
+            )
+        )
+        self.check(
+            self.with_body(
+                "xbox.gip",
+                parameters={
+                    "shareButton": {
+                        "type": "object",
+                        "fields": {
+                            "fromEnd": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 255,
+                            }
+                        },
+                    }
+                },
+            )
+        )
+        self.check(
+            self.with_body(
+                "hid.report-layout",
+                defaults={
+                    "input": {
+                        "report": {"length": 1},
+                        "buttons": [{"control": "face-south", "byte": 0, "mask": 1}],
+                    }
+                },
+            )
+        )
+
+    def test_rejects_a_bad_parameter_declaration(self) -> None:
+        for declaration in (
+            {"type": "string"},
+            {"type": "flag", "values": ["A"]},
+            {"type": "enum"},
+            {"type": "enum", "values": []},
+            {"type": "enum", "values": ["lower"]},
+            {"type": "enum", "values": ["A", "A"]},
+            {"type": "object", "fields": {}},
+            {"type": "object", "fields": {"x": {"type": "integer", "minimum": 1}}},
+            {"type": "object", "fields": {"x": {"type": "string"}}},
+        ):
+            with self.subTest(declaration=declaration):
+                self.assert_rejected(
+                    self.with_body("sony.dualsense", parameters={"maker": declaration})
+                )
+
+    def test_rejects_a_parameter_the_family_does_not_declare(self) -> None:
+        flag = {"type": "flag"}
+        self.assert_rejected(self.with_body("sony.dualsense", parameters={"x": flag}))
+        self.assert_rejected(
+            self.with_body("sony.dualsense", parameters={"layout": flag})
+        )
+        self.assert_rejected(self.with_body("xbox.xid", parameters={"layout": flag}))
+        self.assert_rejected(self.with_body("sony.dualsense", parameters={}))
+
+    def test_rejects_defaults_a_driver_does_not_read(self) -> None:
+        input_layout = {
+            "report": {"length": 1},
+            "buttons": [{"control": "face-south", "byte": 0, "mask": 1}],
+        }
+        for family, defaults in (
+            ("hid.descriptor", {"input": input_layout}),
+            ("xbox.xid", {"output": {"startup": [self.startup_write()]}}),
+            ("sony.dualsense", {"tuning": {"inputLivenessTimeoutMs": 5}}),
+            ("sony.dualsense", {"tuning": {"hidStartupRecoveryRounds": 2}}),
+            ("xbox.xusb", {"tuning": {"hidStartupIntervalMs": 5}}),
+            ("xbox.gip", {}),
+            ("xbox.gip", {"unknown": {}}),
+            ("xbox.gip", {"tuning": {"stickDeadzone": 5}}),
+        ):
+            with self.subTest(family=family, defaults=defaults):
+                self.assert_rejected(self.with_body(family, defaults=defaults))
+
+    def startup_write(self) -> dict[str, Any]:
+        return {"report": {"kind": "output", "id": 1, "length": 4}, "bytes": [1, 2, 3]}
+
+    def test_rejects_signatures_for_a_family_without_variants(self) -> None:
+        document = self.described("hid.descriptor", "usb")
+        self.assert_rejected(document, code="E5004")
+
+    def test_family_parameters_match_the_controller_schema(self) -> None:
+        """Each family declares the parameters that controller records may set for it."""
+        controller: Any = self.documents["controller.schema.json"]
+        records: dict[str, set[str]] = {}
+        for rule in controller["$defs"]["protocol"]["allOf"]:
+            families = rule["if"]["properties"]["family"]
+            names = families.get("enum") or [families.get("const")]
+            if None in names:
+                continue
+            parameters = rule["then"]["properties"].get("parameters", {})
+            for family in names:
+                records.setdefault(family, set()).update(
+                    parameters.get("properties", {})
+                )
+        for rule in self.schema["allOf"]:
+            family = rule["if"]["properties"]["family"]["const"]
+            declared = rule["then"]["properties"]["parameters"]
+            allowed = (
+                set(declared["propertyNames"]["enum"])
+                if declared is not False
+                else set()
+            )
+            with self.subTest(family=family):
+                self.assertEqual(allowed, records.get(family, set()))
 
 
 if __name__ == "__main__":

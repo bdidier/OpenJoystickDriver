@@ -1649,4 +1649,7 @@
 "error.E4006" = "没有已安装的包使用此名称。请运行 ojd mod list 查看已安装的包。";
 "error.E4007" = "无法更改包文件夹。请检查磁盘可用空间和文件夹权限。";
 "error.E5001" = "文档缺少 apiVersion，或其 apiVersion 不受此版本 OpenJoystickDriver 支持。请将文档改为消息中指出的受支持的 apiVersion，然后重新运行该命令。";
+"error.E5002" = "协议描述无效。请用 protocol-description 架构检查该文件，并修正消息指出的字段。";
+"error.E5003" = "协议描述指定的系列与其文件名不同。请以系列名称命名该文件。";
+"error.E5004" = "协议描述列出了其系列没有的变体。请使用该系列的某个变体。";
 "error.withCode" ="%@ (%@)";
