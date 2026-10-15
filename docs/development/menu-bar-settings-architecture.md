@@ -20,12 +20,12 @@ The UI lives in the `OpenJoystickDriverPresentation` library, which depends on `
 
 `ApplicationServiceRuntime` is the `@MainActor` composition and process-lifecycle owner. It starts and stops the service actors but does not perform controller I/O or serve as a presentation gateway. `DeviceManager` owns physical discovery and sessions; the remapping router, permission manager, and application server retain their existing isolated responsibilities.
 
-`HeadlessApplicationHost` is the composition root. A no-argument launch starts the runtime and the AppKit presentation shell. Argument-bearing launches keep the existing CLI path.
+`HeadlessApplicationHost` is the composition root; it lives in `OpenJoystickDriverMacOSHost`, which the executable installs through `PlatformHost`. A no-argument launch starts the runtime and the AppKit presentation shell. Argument-bearing launches keep the existing CLI path.
 
 ```text
 main.swift
   ├─ arguments ─► CLI ─► existing commands and services
-  └─ no arguments ─► HeadlessApplicationHost
+  └─ no arguments ─► HeadlessApplicationHost (via PlatformHosts.current.runApplication())
                       ├─ ApplicationServiceRuntime
                       └─ AppKit shell
                            ├─ NSStatusItem / NSMenu

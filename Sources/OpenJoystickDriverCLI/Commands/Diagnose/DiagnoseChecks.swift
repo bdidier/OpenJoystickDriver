@@ -1,6 +1,5 @@
 import Foundation
 import OpenJoystickDriverKit
-import OpenJoystickDriverService
 
 extension DiagnoseServiceSnapshot {
   /// Asks the service once; a stopped or failing service never throws.

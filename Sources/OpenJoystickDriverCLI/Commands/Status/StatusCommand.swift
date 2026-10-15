@@ -1,7 +1,6 @@
 import ArgumentParser
 import Foundation
 import OpenJoystickDriverKit
-import OpenJoystickDriverService
 
 struct StatusCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
@@ -17,7 +16,7 @@ struct StatusCommand: AsyncParsableCommand {
   /// Reads the DriverKit extension state; tests replace it to avoid `systemextensionsctl`.
   @TaskLocal
   static var extensionProbe: @Sendable () -> ExtensionStatus = {
-    ExtensionProbe.currentStatus(
+    PlatformHosts.current.extensionStatus(
       bundleURL: ServiceStartCommand.applicationBundleURL() ?? Bundle.main.bundleURL
     )
   }

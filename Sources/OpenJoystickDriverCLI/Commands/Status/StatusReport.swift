@@ -1,6 +1,5 @@
 import Foundation
 import OpenJoystickDriverKit
-import OpenJoystickDriverService
 
 /// The `ojd status --json` result.
 ///
