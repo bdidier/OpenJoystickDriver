@@ -314,7 +314,7 @@ Every document, profile, endpoint message and record names a control with one Up
 | `LeftTrackpadTouch` | - | - | - | - | - |
 | `RightTrackpadTouch` | - | - | - | - | - |
 
-Each column was confirmed against this source:
+Each column is checked against this source:
 
 | Column | Document | Version | Revision | Checked on |
 | --- | --- | --- | --- | --- |

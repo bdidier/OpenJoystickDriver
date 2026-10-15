@@ -209,7 +209,7 @@ struct ControlVocabularyTests {
     }
     #expect(crosswalk.sources["sdl"]?.revision?.count == 40)
     #expect(crosswalk.sources["evdev"]?.revision?.count == 40)
-    let pages = Set(crosswalk.sources["hid"]?.pages?.keys.map { $0 } ?? [])
+    let pages = Set(crosswalk.sources["hid"]?.pages?.keys.sorted() ?? [])
     for (id, row) in crosswalk.controls {
       #expect(row.hid.allSatisfy { pages.contains($0.page) }, "\(id) hid page")
       #expect((row.notes ?? [:]).keys.allSatisfy { crosswalk.sources[$0] != nil }, "\(id) note")

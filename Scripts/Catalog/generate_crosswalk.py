@@ -82,7 +82,7 @@ def wiki_block(document: dict[str, Any]) -> str:
     for control, row in controls.items():
         cells = " | ".join(cell(row, column) for column, _ in COLUMNS)
         lines.append(f"| `{control}` | {cells} |")
-    lines += ["", "Each column was confirmed against this source:", ""]
+    lines += ["", "Each column is checked against this source:", ""]
     lines.append("| Column | Document | Version | Revision | Checked on |")
     lines.append("| --- | --- | --- | --- | --- |")
     for column, title in COLUMNS:
