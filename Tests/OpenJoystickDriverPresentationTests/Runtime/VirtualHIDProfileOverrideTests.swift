@@ -324,6 +324,11 @@ struct VirtualHIDProfileOverrideTests {
     ]
     for (publication, published) in cases {
       for ownership in ControllerOwnershipObservation.allCases {
+        // The service never reports a published device for a controller the policy routes to no
+        // virtual device.
+        if published && (ownership.isServedBySystem || ownership == .upstreamVirtualDevice) {
+          continue
+        }
         var pad = Self.device(
           profile: profile,
           protocolBinding: ProtocolBindingID(.sonySixaxis, variant: .usb),
