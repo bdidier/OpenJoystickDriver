@@ -131,7 +131,7 @@ check-profiles:
 check-schemas:
     ./Scripts/ojd check schemas
 
-# Build supported native tools without opening hardware
+# Build supported native tools without opening hardware and test the WebRTC bridge package
 check-tools:
     ./Scripts/ojd check tools
 

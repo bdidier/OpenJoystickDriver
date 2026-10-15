@@ -29,6 +29,9 @@ struct ControllerRecordDocument: Decodable {
   let rumbleTemplate: RumbleOutputTemplate?
   /// Fixed reports OJD sends when it starts the controller; empty when the record has none.
   let startupWrites: [RecordStartupWrite]
+  /// Fixed raw-USB packets OJD sends when it starts the controller; empty when the record has
+  /// none. Only a family whose description carries raw-USB startup packets takes them.
+  let usbStartupWrites: [USBStartupWrite]
   /// Present exactly for the `hid.report-layout` family.
   let inputLayout: ControllerInputLayout?
   /// Present only for the `hid.descriptor` family, which then replaces the description's map.
@@ -94,6 +97,7 @@ struct ControllerRecordDocument: Decodable {
     let output = try container.decodeOptional(Output.self, for: "output")
     rumbleTemplate = output?.rumble
     startupWrites = output?.startup ?? []
+    usbStartupWrites = output?.usbStartup ?? []
     let input = try container.decodeOptional(Input.self, for: "input")
     inputLayout = input?.layout
     hidUsageMap = input?.usageMap
@@ -119,13 +123,9 @@ struct ControllerRecordDocument: Decodable {
     }
     try validateModes(codingPath: decoder.codingPath)
     if let endpoints = usb?.endpoints {
-      let defaultEndpoints: (Int, Int)
-      switch protocolInfo.protocolID {
-      case .xboxXUSB: defaultEndpoints = (129, 1)
-      case .xboxXID: defaultEndpoints = (129, 2)
-      default: defaultEndpoints = (130, 2)
-      }
-      guard (endpoints.input, endpoints.output) != defaultEndpoints else {
+      let defaultEndpoints = protocolInfo.protocolID.protocolDescription.endpoints
+      guard (endpoints.input, endpoints.output) != (defaultEndpoints.input, defaultEndpoints.output)
+      else {
         throw DecodingError.dataCorrupted(
           .init(
             codingPath: decoder.codingPath + [DocumentKey("usb"), DocumentKey("endpoints")],
@@ -136,19 +136,14 @@ struct ControllerRecordDocument: Decodable {
     }
   }
 
-  /// Only these deltas have a driver that acts on them: GIP drops rumble, DualSense Edge adds
-  /// exactly its paddles and function buttons.
+  /// Only the deltas the family's description declares have a driver that acts on them.
   func capabilitiesAreDeclared(by protocolID: PhysicalProtocolID) -> Bool {
-    let presentAllowed =
-      capabilities.presentControls.isEmpty
-      || (protocolID == .sonyDualSense
-        && capabilities.presentControls == DualSenseDriver.edgeControls)
-    return (!capabilities.rumbleAbsent || protocolID == .xboxGIP) && presentAllowed
+    protocolID.protocolDescription.recordCapabilities.permits(capabilities)
   }
 
-  /// macOS cannot serve a raw-USB family, startup writes go to HID controllers, only a driver that
-  /// encodes rumble from a template may name one, and the report-layout family alone has, and
-  /// needs, an input layout.
+  /// macOS cannot serve a raw-USB family, HID startup writes go to HID controllers while raw-USB
+  /// startup packets go to families that read them, only a driver that encodes rumble from a
+  /// template may name one, and the report-layout family alone has, and needs, an input layout.
   private func validateOwnershipAndOutput(codingPath: [any CodingKey]) throws {
     let rawUSB = protocolInfo.protocolID.usesRawUSB(storedVariant: protocolInfo.protocolVariant)
     if server != nil, rawUSB {
@@ -171,11 +166,24 @@ struct ControllerRecordDocument: Decodable {
       throw DecodingError.dataCorrupted(
         .init(
           codingPath: codingPath + [DocumentKey("output"), DocumentKey("startup")],
-          debugDescription: "startup writes apply only to HID controllers"
+          debugDescription: "HID startup writes apply only to HID controllers"
         )
       )
     }
-    if (inputLayout != nil) != (protocolInfo.protocolID == .hidReportLayout) {
+    if !usbStartupWrites.isEmpty {
+      let carriesUSBWrites =
+        ProtocolDescription.bundled[protocolInfo.protocolID]?.usbStartupWrites.isEmpty == false
+      guard carriesUSBWrites, protocolInfo.initialization == nil else {
+        throw DecodingError.dataCorrupted(
+          .init(
+            codingPath: codingPath + [DocumentKey("output"), DocumentKey("startup")],
+            debugDescription:
+              "raw-USB startup writes need a family that reads them and no initialization list"
+          )
+        )
+      }
+    }
+    if (inputLayout != nil) != protocolInfo.protocolID.requiresRecordInputLayout {
       throw DecodingError.dataCorrupted(
         .init(
           codingPath: codingPath + [DocumentKey("input")],

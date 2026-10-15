@@ -160,6 +160,8 @@ class HIDUsageMapDescriptionSchemaTests(unittest.TestCase):
         document = {
             **header("ProtocolDescription"),
             "family": "hid.descriptor",
+            "endpoints": {"in": 130, "out": 2},
+            "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
             "defaults": defaults,
             **members,
         }

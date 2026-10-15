@@ -37,6 +37,36 @@ class ReportSchemaTests(unittest.TestCase):
 
         self.validator.validate(report)
 
+    def test_accepts_the_five_stage_stamps_of_a_frame(self) -> None:
+        report = load_fixture()
+        stages = report["data"]["frameTimings"][0]["frames"][0]["stages"]
+        self.assertEqual(
+            [stage["stage"] for stage in stages],
+            [
+                "read",
+                "parse",
+                "dispatch",
+                "delivery-virtual-device",
+                "delivery-endpoint",
+            ],
+        )
+
+        self.validator.validate(report)
+
+    def test_rejects_an_unknown_frame_stage(self) -> None:
+        report = copy.deepcopy(load_fixture())
+        report["data"]["frameTimings"][0]["frames"][0]["stages"][0]["stage"] = "wire"
+
+        with self.assertRaises(validate_schemas.ValidationError):
+            self.validator.validate(report)
+
+    def test_rejects_a_report_without_frame_timings(self) -> None:
+        report = copy.deepcopy(load_fixture())
+        del report["data"]["frameTimings"]
+
+        with self.assertRaises(validate_schemas.ValidationError):
+            self.validator.validate(report)
+
     def test_accepts_a_bluetooth_le_controller_on_a_core_bluetooth_gatt_link(
         self,
     ) -> None:

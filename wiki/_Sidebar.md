@@ -22,6 +22,7 @@
   - [Command line](Command-Line.md)
   - [Command reference](Command-Reference.md)
   - [Automating OpenJoystickDriver](Automating-OpenJoystickDriver.md)
+  - [WebRTC bridge](WebRTC-Bridge.md)
 - **Help**
   - [Troubleshooting](Troubleshooting.md)
   - [Known issues](Known-Issues.md)

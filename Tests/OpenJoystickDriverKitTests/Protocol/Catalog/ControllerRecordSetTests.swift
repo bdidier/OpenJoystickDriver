@@ -169,7 +169,7 @@ struct ControllerRecordSetTests {
     )
     #expect(
       Self.problem(try Self.patch(Self.bundledGIP, set: ["tuning": ["hidStartupIntervalMs": 5]]))
-        == "record.tuning: HID startup and output timings apply only to HID controllers"
+        == "record.tuning: hidStartupIntervalMs is not read by the xbox.gip driver"
     )
     #expect(Self.problem(Data("[]".utf8)) == "the file is not a JSON object")
     var withNote = ControllerPatch.document(

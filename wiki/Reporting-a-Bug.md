@@ -28,6 +28,8 @@ You can also click **Copy Support Report** on the **Xbox USB Driver** card in **
 
 The report leaves out serial numbers, file paths, packet payloads, and HID location IDs. It includes controller product names. Read the report before you share it.
 
+The support report, from `ojd diagnose --bundle` or the app, also lists `frameTimings`, the time each of a controller's newest 8 frames reached each pipeline stage. Attach it to a stutter or latency report.
+
 ## Get the Logs
 
 Open the Console pane and click **Copy All**. To open the pane, use the **Help** submenu of the menu bar item. Or run the following command.

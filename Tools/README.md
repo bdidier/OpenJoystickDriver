@@ -2,7 +2,7 @@
 
 Use these probes only for intentional hardware tests.
 
-Build the maintained `SDLGamepadProbe` without opening hardware:
+Build the maintained `SDLGamepadProbe` without opening hardware, and run the tests of the WebRTC bridge package:
 
 ```bash
 ./Scripts/ojd check tools
@@ -22,11 +22,13 @@ Expected result: the probe lists SDL gamepad events and exits after 10 seconds. 
 
 ## WebRTC Bridge
 
-`Tools/WebRTCBridge/` is a separate Swift package with its own `Package.swift`. It depends on LiveKitWebRTC, and the root package, `swift test` at the repository root and `./Scripts/ojd check tools` do not fetch or build it. Build and test it on its own:
+`Tools/WebRTCBridge/` is a separate Swift package with its own `Package.swift`. It depends on LiveKitWebRTC, and the root package and `swift test` at the repository root do not fetch or build it. `./Scripts/ojd check tools` builds the SDL probe and then runs `swift test` in the bridge package. To test it on its own:
 
 ```bash
 cd Tools/WebRTCBridge
 swift test
 ```
+
+`Tools/BridgeCore/` is the part of the bridge without WebRTC: the endpoint client, `HostBridge`, `PlayerBridge` and the peer messages. It is a package with no dependencies, and the root package takes it for its endpoint tests.
 
 The first build downloads the LiveKitWebRTC XCFramework, about 70 MB. See [WebRTC Bridge](../docs/sdk/webrtc-bridge.md) for the roles and the steps.

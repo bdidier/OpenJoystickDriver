@@ -264,7 +264,11 @@ class ControllerModeSchemaTests(unittest.TestCase):
                     "sony.sixaxis",
                     "sony.dualsense",
                     capabilities={
-                        "present": sorted(validate_profiles.DUALSENSE_EDGE_CONTROLS)
+                        "present": sorted(
+                            validate_profiles.description_of("sony.dualsense")[
+                                "recordCapabilities"
+                            ]["present"]
+                        )
                     },
                 ),
                 "capabilities must be deltas the driver of every mode declares",

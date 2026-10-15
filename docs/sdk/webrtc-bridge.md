@@ -33,7 +33,7 @@ The endpoint has no message that drives the rumble of a physical controller, so 
 
 ## Connect two Macs
 
-1. On each Mac, turn on the endpoint with `ojd access enable`, and create a token with `ojd access grant --token bridge`. The host needs the `control` scope. The player needs `read`.
+1. On each Mac, turn on the endpoint with `ojd access enable`, and create a token with `ojd access grant --token bridge --scope control` on the host or `--scope read` on the player.
 2. Start the player: `OJD_TOKEN=ojd_… ojd-webrtc-bridge --role player`. It prints its offer as one line on stdout.
 3. Copy that line to the host and start the host: `OJD_TOKEN=ojd_… ojd-webrtc-bridge --role host`. Paste the offer on stdin. The host prints its answer as one line.
 4. Paste the answer on the player's stdin. When the data channel opens, both bridges connect to their endpoint.
@@ -73,4 +73,6 @@ cd Tools/WebRTCBridge
 swift test
 ```
 
-The loopback test runs a player and a host in one process, joined by a real data channel, against a fake endpoint on a Unix socket, not against the real service. A frame goes from the player to the host's feed, and a `RumbleCommand` goes back.
+The loopback test runs a player and a host in one process, joined by a real data channel, against a fake endpoint on a Unix socket. A frame goes from the player to the host's feed, and a `RumbleCommand` goes back. `./Scripts/ojd check tools` and the CI job run this `swift test`.
+
+The endpoint client and the bridge logic (`HostBridge`, `PlayerBridge`, the peer messages) are in `Tools/BridgeCore/`, a Swift package with no dependencies. The root package takes it for its tests only, so it needs no WebRTC code. `EndpointBridgeTests` in the root `swift test` runs a `HostBridge` against an in-process `EndpointServer`: a granted feed reaches the virtual gamepad and stays open on `KeepAlive` lines, and a token without the `control` scope, or an unknown token, gets `E1002` and no gamepad.

@@ -85,7 +85,7 @@ COMMAND_HELP = """Commands:
   check profiles              Check canonical controller records
   check schemas               Validate canonical schemas and a live support report
   check driverkit             Verify generated DriverKit reproducibility and build
-  check tools                 Build the SDL gamepad probe
+  check tools                 Build the SDL gamepad probe and test the WebRTC bridge package
   test parsers-macos14        Run focused parser regressions without Swift Testing
   snapshots check             Diff the tree against the equivalence snapshots, per record
   snapshots write             Rewrite the equivalence snapshots from the tree
@@ -373,7 +373,7 @@ def dispatch(argv: list[str]) -> int:
             if sub == "tools":
                 require("check tools", tail, count=0)
                 # xmake's clang finds no SDK on its own; environment.sh exports SDKROOT.
-                return subprocess.run(
+                probe = subprocess.run(
                     [
                         "/bin/bash",
                         "-c",
@@ -386,6 +386,14 @@ def dispatch(argv: list[str]) -> int:
                     env=env_with(),
                     check=False,
                 ).returncode
+                # The bridge is its own package, so the root `swift test` never builds it.
+                bridge = subprocess.run(
+                    swift_command(["test"]),
+                    cwd=PROJECT_DIR / "Tools/WebRTCBridge",
+                    env=env_with(),
+                    check=False,
+                ).returncode
+                return probe or bridge
             die(
                 f"Unknown: check {sub} (expected: profiles | schemas | driverkit | tools)"
             )

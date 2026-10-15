@@ -101,6 +101,11 @@ final class EndpointTestClient: @unchecked Sendable {
   init(path: String) async throws {
     let descriptor = socket(AF_UNIX, SOCK_STREAM, 0)
     self.descriptor = descriptor
+    // Set before `connect`: macOS answers `setsockopt` with EINVAL once the service has already
+    // closed a refused connection, so setting them after would fail for a refused client.
+    var noSignal: Int32 = 1
+    setsockopt(descriptor, SOL_SOCKET, SO_NOSIGPIPE, &noSignal, socklen_t(MemoryLayout<Int32>.size))
+    try LocalServiceRPCTransport.setTimeout(descriptor, seconds: 5)
     let address = try LocalServiceRPCTransport.socketAddress(path: path)
     let length = LocalServiceRPCTransport.socketAddressLength(path: path)
     let error = await offPool { () -> Int32? in
@@ -115,9 +120,6 @@ final class EndpointTestClient: @unchecked Sendable {
       // another test has reused.
       throw POSIXError(POSIXErrorCode(rawValue: error) ?? .EIO)
     }
-    var noSignal: Int32 = 1
-    setsockopt(descriptor, SOL_SOCKET, SO_NOSIGPIPE, &noSignal, socklen_t(MemoryLayout<Int32>.size))
-    try LocalServiceRPCTransport.setTimeout(descriptor, seconds: 5)
     let challenge = try await readObject()
     #expect(challenge["kind"] as? String == "Challenge")
     #expect(challenge["apiVersion"] as? String == OpenJoystickDriverAPI.version)
@@ -194,6 +196,11 @@ final class EndpointWebTestClient: @unchecked Sendable {
   init(port: Int, address: String = "127.0.0.1") async throws {
     let descriptor = socket(AF_INET, SOCK_STREAM, 0)
     self.descriptor = descriptor
+    // Set before `connect`: macOS answers `setsockopt` with EINVAL once the service has already
+    // closed a refused connection, so setting them after would fail for a refused client.
+    var noSignal: Int32 = 1
+    setsockopt(descriptor, SOL_SOCKET, SO_NOSIGPIPE, &noSignal, socklen_t(MemoryLayout<Int32>.size))
+    try LocalServiceRPCTransport.setTimeout(descriptor, seconds: 5)
     var target = sockaddr_in()
     target.sin_len = UInt8(MemoryLayout<sockaddr_in>.size)
     target.sin_family = sa_family_t(AF_INET)
@@ -214,9 +221,6 @@ final class EndpointWebTestClient: @unchecked Sendable {
       // another test has reused.
       throw POSIXError(POSIXErrorCode(rawValue: error) ?? .EIO)
     }
-    var noSignal: Int32 = 1
-    setsockopt(descriptor, SOL_SOCKET, SO_NOSIGPIPE, &noSignal, socklen_t(MemoryLayout<Int32>.size))
-    try LocalServiceRPCTransport.setTimeout(descriptor, seconds: 5)
   }
 
   deinit { close(descriptor) }

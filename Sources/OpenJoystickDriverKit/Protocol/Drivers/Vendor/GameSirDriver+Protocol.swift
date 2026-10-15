@@ -4,13 +4,12 @@ extension GameSirDriver {
 
   // Share is emitted but not yet declared until per-model evidence confirms it.
   public var sessionPlan: DriverSessionPlan {
+    // The interval is a placeholder that marks which keep-alives run; the description's
+    // `keepAliveIntervalMs` replaces it.
     DriverSessionPlan(
-      usbKeepAliveIntervalNanoseconds: gameSirProtocol == .g7ProUSB
-        ? gameSirHeartbeatIntervalNanoseconds : nil,
-      hidStartupIntervalNanoseconds: gameSirCommandIntervalNanoseconds,
-      hidKeepAliveIntervalNanoseconds: gameSirHeartbeatIntervalNanoseconds,
-      minimumHIDOutputIntervalNanoseconds: gameSirCommandIntervalNanoseconds
-    )
+      usbKeepAliveIntervalNanoseconds: gameSirProtocol == .g7ProUSB ? 0 : nil,
+      hidKeepAliveIntervalNanoseconds: 0
+    ).withDefaults(of: .vendorGameSir)
   }
 
   public func consumeInputConnectionStateChange() -> ControllerInputConnectionState? { nil }
@@ -19,9 +18,10 @@ extension GameSirDriver {
     // The wired G7 Pro telemetry always reports the inner grips.
     let innerGrips: Set<ControlID> =
       gameSirProtocol == .g7ProUSB || hasInnerGrips ? [.paddleLeft2, .paddleRight2] : []
-    let backButtons = innerGrips.union([.paddleLeft1, .paddleRight1, .auxiliary1])
     // No motion: no source verifies the IMU scale, frame, or byte order.
-    return ControllerCapabilities(controls: ControlID.xboxLayout.union([.guide]).union(backButtons))
+    return PhysicalProtocolID.vendorGameSir.describedControls.union(
+      ControllerCapabilities(controls: innerGrips)
+    )
   }
 
   public var power: ControllerConnectionState.Power? {
@@ -58,13 +58,6 @@ extension GameSirDriver {
     storedPower = nil
   }
 
-  public func startupWrites() -> [PhysicalOutputWrite] {
-    guard gameSirProtocol == .enhancedHID else { return [] }
-    var reports = [Self.hidReport(gameSirEnhancedHIDHeartbeatPayload)]
-    if usesLightingSlots { reports.append(Self.hidReport([0x0F, 0x04, 0x20, 0x00, 0x00, 0x01])) }
-    return reports.map { .hidOutput($0) }
-  }
-
   public func keepAliveWrites() -> [PhysicalOutputWrite] {
     guard gameSirProtocol == .g7ProUSB else {
       return [.hidOutput(Self.hidReport(gameSirEnhancedHIDHeartbeatPayload))]
@@ -74,7 +67,7 @@ extension GameSirDriver {
         PhysicalUSBOutputPacket(
           endpoint: outEndpoint,
           bytes: g7Packet(command: 0x02, payload: [0xF2, 0x00]),
-          timeoutMilliseconds: gameSirUSBTimeoutMilliseconds
+          timeoutMilliseconds: usbTimeoutMilliseconds
         )
       )
     ]
@@ -162,7 +155,7 @@ extension GameSirDriver {
       let packet = PhysicalUSBOutputPacket(
         endpoint: outEndpoint,
         bytes: g7Packet(command: 0x3C, payload: [0x03, 0x20, 0x01, 0xF9, 0x01, value]),
-        timeoutMilliseconds: gameSirUSBTimeoutMilliseconds
+        timeoutMilliseconds: usbTimeoutMilliseconds
       )
       return PhysicalOutputPlan(writes: [.usb(packet)])
     }

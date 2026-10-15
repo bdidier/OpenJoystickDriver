@@ -1,5 +1,6 @@
 import XCTest
 
+@testable import BridgeCore
 @testable import WebRTCBridgeCore
 
 final class BridgeTests: XCTestCase {

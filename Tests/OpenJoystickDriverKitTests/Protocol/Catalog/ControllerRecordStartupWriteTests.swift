@@ -23,14 +23,19 @@ struct ControllerRecordStartupWriteTests {
     #expect(document.rumbleTemplate == nil)
     #expect(document.startupWrites.count == 2)
     let enable = document.startupWrites[0]
-    #expect(enable.transport == .bluetoothClassic && enable.delayMilliseconds == 0)
+    #expect(enable.transport == .bluetoothClassic && enable.delayMilliseconds == nil)
     #expect(
       enable.write
         == .hidFeature(PhysicalHIDOutputReport(reportID: 0xF4, bytes: [0xF4, 0x42, 3, 0, 0]))
     )
     let unnumbered = document.startupWrites[1]
     #expect(unnumbered.transport == nil && unnumbered.delayMilliseconds == 50)
-    #expect(unnumbered.write == .hidOutput(PhysicalHIDOutputReport(reportID: 0, bytes: [1, 2])))
+    #expect(
+      unnumbered.write
+        == .hidOutput(
+          PhysicalHIDOutputReport(reportID: 0, bytes: [1, 2], startupDelayMilliseconds: 50)
+        )
+    )
     #expect(try decode(Self.sixaxis).startupWrites.isEmpty)
   }
 
@@ -58,6 +63,105 @@ struct ControllerRecordStartupWriteTests {
   func rejectsInvalidStartupWrites(startup: String) {
     #expect(throws: DecodingError.self) {
       try decode("\(Self.sixaxis), \"output\": {\"startup\": \(startup)}")
+    }
+  }
+
+  private static let hidReport =
+    #""report": {"kind": "output", "id": 1, "length": 8}, "bytes": [1, 2, 3, 4, 5, 6, 7]"#
+  private static let gip = #"{"family": "xbox.gip"}"#
+
+  @Test
+  func decodesPhaseAndCRCSeed() throws {
+    let document = try decode(
+      "\(Self.sixaxis), \"output\": {\"startup\": [{\(Self.hidReport), \"phase\": \"startup\", "
+        + #""crc32Seed": 162}]}"#
+    )
+    #expect(document.startupWrites.first?.phase == .startup)
+    #expect(document.startupWrites.first?.crc32Seed == 162)
+    #expect(
+      try decode("\(Self.sixaxis), \"output\": {\"startup\": [\(Self.enable)]}").startupWrites
+        .first?.phase == .activation
+    )
+  }
+
+  @Test(
+    arguments: [
+      #""phase": "later""#, #""crc32Seed": 256"#, #""crc32Seed": -1"#, #""delayMilliseconds": -1"#,
+      #""variants": ["bluetooth-classic"]"#,
+      #""when": {"parameter": "layout", "is": ["Pro"]}"#,
+    ]
+  )
+  func rejectsAMalformedOrDescriptionOnlyHIDField(field: String) {
+    #expect(throws: DecodingError.self) {
+      try decode(
+        "\(Self.sixaxis), \"output\": {\"startup\": [{\(Self.hidReport), \(field)}]}"
+      )
+    }
+  }
+
+  @Test
+  func rejectsACRCWriteWithoutRoomForTheTrailer() {
+    #expect(throws: DecodingError.self) {
+      try decode(
+        "\(Self.sixaxis), \"output\": {\"startup\": ["
+          + #"{"report": {"kind": "output", "id": 1, "length": 4}, "bytes": [1, 2, 3], "#
+          + #""crc32Seed": 1}]}"#
+      )
+    }
+  }
+
+  @Test
+  func decodesRawUSBStartupWritesForTheFamiliesThatCarryThem() throws {
+    let write =
+      #"{"bytes": [1, 2], "endpoint": 2, "timeoutMilliseconds": 500, "#
+      + #""delayMilliseconds": 5, "sessionByte": 1, "toleratesRejection": true}"#
+    for family in [Self.gip, #"{"family": "nintendo.switch2"}"#] {
+      let document = try decode("\"protocol\": \(family), \"output\": {\"startup\": [\(write)]}")
+      #expect(document.startupWrites.isEmpty)
+      #expect(document.usbStartupWrites.count == 1)
+      #expect(document.usbStartupWrites.first?.endpoint == 2)
+    }
+  }
+
+  @Test(
+    arguments: [
+      #""endpoint": 0"#, #""endpoint": 128"#, #""timeoutMilliseconds": 0"#,
+      #""timeoutMilliseconds": 60001"#, #""delayMilliseconds": 1001"#, #""sessionByte": 64"#,
+      #""variants": ["usb"]"#, #""when": {"parameter": "layout", "is": ["Pro"]}"#,
+    ]
+  )
+  func rejectsAMalformedRawUSBStartupWrite(field: String) {
+    #expect(throws: DecodingError.self) {
+      try decode(
+        "\"protocol\": \(Self.gip), \"output\": {\"startup\": [{\"bytes\": [1], \(field)}]}"
+      )
+    }
+  }
+
+  @Test
+  func rejectsRawUSBStartupWritesWhereTheFamilyDoesNotCarryThem() {
+    for family in [
+      #"{"family": "sony.sixaxis"}"#, #"{"family": "vendor.gamesir", "variant": "usb"}"#,
+    ] {
+      #expect(throws: DecodingError.self) {
+        try decode("\"protocol\": \(family), \"output\": {\"startup\": [{\"bytes\": [1]}]}")
+      }
+    }
+  }
+
+  @Test
+  func rejectsRawUSBStartupWritesNextToInitializationOrHIDWrites() {
+    #expect(throws: DecodingError.self) {
+      try decode(
+        #""protocol": {"family": "xbox.gip", "initialization": ["xbox.gip/power-on"]}, "#
+          + #""output": {"startup": [{"bytes": [1]}]}"#
+      )
+    }
+    #expect(throws: DecodingError.self) {
+      try decode(
+        "\"protocol\": \(Self.gip), \"output\": {\"startup\": [{\"bytes\": [1]}, "
+          + "{\(Self.hidReport)}]}"
+      )
     }
   }
 

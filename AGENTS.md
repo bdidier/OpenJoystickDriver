@@ -26,6 +26,7 @@ Run applicable commands from the repository root:
 ./Scripts/ojd catalog regenerate --check
 ./Scripts/ojd check profiles
 ./Scripts/ojd check schemas
+./Scripts/ojd check tools
 ruff format --check Scripts Tests/RepositoryScripts
 ruff check Scripts Tests/RepositoryScripts
 pyright

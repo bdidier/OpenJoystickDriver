@@ -184,7 +184,11 @@ extension StartupLifetimeTests {
   @Test
   func ds4BluetoothStartupEnablesFullInputWithoutChangingTheLight() {
     let provider = DualShock4Driver(prefersBluetooth: true)
-    let reports = provider.startupWrites().hidOutputs
+    let reports = PhysicalProtocolID.sonyDualShock4.protocolDescription.startupWrites(
+      phase: .startup,
+      variant: .bluetoothClassic,
+      parameters: .none
+    ).map(\.write).hidOutputs
     let report = reports.first
 
     #expect(provider.sessionPlan.outputPrecedesFeatureReads)
@@ -195,7 +199,14 @@ extension StartupLifetimeTests {
     #expect(report?.bytes[3] == 0x01)
     #expect(report?.bytes[6...10].allSatisfy { $0 == 0 } == true)
     #expect(report.map { Array($0.bytes[74...77]) } == [0x37, 0x89, 0xFE, 0x89])
-    #expect(DualShock4Driver().startupWrites().isEmpty)
+    #expect(provider.startupWrites().isEmpty)
+    #expect(
+      PhysicalProtocolID.sonyDualShock4.protocolDescription.startupWrites(
+        phase: .startup,
+        variant: .usb,
+        parameters: .none
+      ).isEmpty
+    )
   }
 
   func hidConnection(id: String, productName: String) -> HIDDeviceConnection {

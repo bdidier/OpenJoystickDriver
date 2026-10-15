@@ -118,7 +118,7 @@ final class EndpointServer: @unchecked Sendable {
       return AccessStatusPayload(
         enabled: file.enabled,
         socketPath: socketPath,
-        connections: connections.values.compactMap(\.session)
+        connections: connections.values.filter { !$0.isClosing }.compactMap(\.session)
           .sorted { ($0.identifier, $0.id) < ($1.identifier, $1.id) },
         grants: file.grants.map(AccessGrantSummary.init),
         refused: refusals.clients(at: Date()),

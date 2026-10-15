@@ -54,6 +54,12 @@ struct HIDLifecycleWriteTests {
   @Test
   func failedStartupReportStillSendsTheLaterOnesAtThePlanInterval() async throws {
     let startup = Switch1Driver().startupWrites().hidOutputs
+    // The description's handshake commands go first; the driver adds the counter-stamped reports.
+    let declared = PhysicalProtocolID.nintendoSwitch1.protocolDescription.startupWrites(
+      phase: .startup,
+      variant: .usb,
+      parameters: ProtocolParameters(layout: .pro)
+    ).map(\.write).hidOutputs
     let started = await start(
       vendorID: 0x057E,
       productID: 0x2009,
@@ -64,7 +70,8 @@ struct HIDLifecycleWriteTests {
     )
     let sent = await started.backend.recordedOutputReports()
     #expect(
-      Array(sent.prefix(startup.count - 1)) == startup.enumerated().filter { $0.0 != 1 }.map(\.1)
+      Array(sent.prefix(declared.count + startup.count - 1))
+        == declared + startup.enumerated().filter { $0.0 != 1 }.map(\.1)
     )
     // Startup is paced by the plan's 20 ms, not the 50 ms user-output rate limit, which would
     // also stamp the last physical output time and delay the first rumble.

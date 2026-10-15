@@ -18,16 +18,9 @@ except ImportError:
     )
     raise SystemExit(2)
 
-from Scripts.Catalog.controller_patch import RAW_USB_FAMILIES
+from Scripts.Catalog import protocol_descriptions
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-# Families whose driver encodes rumble from a record's rumble template, as
-# `PhysicalProtocolID.encodesRumbleTemplate` does in Swift.
-RUMBLE_TEMPLATE_FAMILIES = frozenset({"hid.report-layout", "vendor.ps3-third-party"})
-# `DualSenseDriver.edgeControls` in Swift.
-DUALSENSE_EDGE_CONTROLS = frozenset(
-    {"paddle-left-1", "paddle-right-1", "auxiliary-1", "auxiliary-2"}
-)
 RECORD_DIR = ROOT / "Sources" / "OpenJoystickDriverKit" / "Resources" / "Controllers"
 SCHEMA_PATH = ROOT / "Resources" / "Schemas" / "controller.schema.json"
 
@@ -41,21 +34,37 @@ def require(condition: bool, message: str) -> None:
         raise ValidationError(message)
 
 
+def description_of(family: str) -> dict[str, Any]:
+    return protocol_descriptions.bundled()[family]
+
+
 def uses_raw_usb(protocol: dict[str, Any]) -> bool:
-    family = protocol["family"]
-    return family in RAW_USB_FAMILIES or (
-        family == "vendor.gamesir" and protocol.get("variant") == "usb"
+    return protocol_descriptions.uses_raw_usb(
+        description_of(protocol["family"]), protocol.get("variant")
     )
+
+
+def encodes_rumble_template(family: str) -> bool:
+    """Whether the family's driver encodes rumble from a record's rumble template."""
+    return "rumble" in description_of(family).get("recordSections", ())
+
+
+def requires_record_input_layout(family: str) -> bool:
+    """Whether records of the family need an input layout of their own: the driver reads one
+    and the description supplies none."""
+    description = description_of(family)
+    return "input" in description.get(
+        "recordSections", ()
+    ) and "input" not in description.get("defaults", {})
 
 
 def capabilities_are_declared(record: dict[str, Any], family: str) -> bool:
     capabilities = record.get("capabilities", {})
-    present = set(capabilities.get("present", []))
-    present_allowed = not present or (
-        family == "sony.dualsense" and present == DUALSENSE_EDGE_CONTROLS
+    return protocol_descriptions.record_capabilities_permit(
+        description_of(family),
+        set(capabilities.get("present", [])),
+        "rumble" in capabilities,
     )
-    rumble_allowed = "rumble" not in capabilities or family == "xbox.gip"
-    return rumble_allowed and present_allowed
 
 
 def usage_map_problem(usage_map: dict[str, Any]) -> str | None:
@@ -96,12 +105,12 @@ def validate_modes(path: pathlib.Path, record: dict[str, Any]) -> None:
     for mode in modes:
         family = mode["protocol"]["family"]
         require(
-            has_layout == (family == "hid.report-layout"),
+            has_layout == requires_record_input_layout(family),
             f"{path}: every mode needs the record's input layout exactly when it is "
             "hid.report-layout",
         )
         require(
-            not has_template or family in RUMBLE_TEMPLATE_FAMILIES,
+            not has_template or encodes_rumble_template(family),
             f"{path}: rumble templates require a driver that encodes them in every mode",
         )
         require(

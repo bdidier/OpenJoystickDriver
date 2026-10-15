@@ -149,6 +149,10 @@ actor GatewayStub: ApplicationServiceGateway {
     snapshotPayload = payload
   }
 
+  func frameTimings() throws -> ApplicationServiceFrameTimingsPayload {
+    ApplicationServiceFrameTimingsPayload(controllers: [])
+  }
+
   func virtualDeviceDiagnostics() throws -> ApplicationServiceVirtualDeviceDiagnosticsPayload {
     ApplicationServiceVirtualDeviceDiagnosticsPayload(
       userSpaceVirtualDeviceEnabled: true,

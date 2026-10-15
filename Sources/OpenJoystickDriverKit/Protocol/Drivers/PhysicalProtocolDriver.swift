@@ -40,11 +40,11 @@ public struct DriverSessionPlan: Equatable, Sendable {
   /// such a driver has element values delivered, since decoding every report costs CPU.
   public let parsesHIDElementValues: Bool
   /// Delay between consecutive USB startup writes.
-  public let usbStartupIntervalNanoseconds: UInt64
+  public internal(set) var usbStartupIntervalNanoseconds: UInt64
   /// Delays before each repeated USB startup attempt after a failed one; empty means one attempt.
-  public let usbStartupRetryDelays: [UInt64]
+  public internal(set) var usbStartupRetryDelays: [UInt64]
   /// Interval between USB keep-alive writes; nil when the protocol sends none.
-  public let usbKeepAliveIntervalNanoseconds: UInt64?
+  public internal(set) var usbKeepAliveIntervalNanoseconds: UInt64?
   /// Delay between consecutive HID startup and startup-recovery writes.
   public internal(set) var hidStartupIntervalNanoseconds: UInt64
   /// True when HID startup writes go before the startup feature reads; otherwise after them.
@@ -61,7 +61,7 @@ public struct DriverSessionPlan: Equatable, Sendable {
   /// Startup recovery rounds after the first startup; the session expires after the last.
   public internal(set) var hidStartupRecoveryRounds: Int
   /// Interval between HID keep-alive writes; nil when the protocol sends none.
-  public let hidKeepAliveIntervalNanoseconds: UInt64?
+  public internal(set) var hidKeepAliveIntervalNanoseconds: UInt64?
   /// Minimum spacing between user-output HID output reports (rumble, lighting); 0 is unlimited.
   public internal(set) var minimumHIDOutputIntervalNanoseconds: UInt64
   /// True when the driver sets no player indicator itself: the manager picks a free slot per
@@ -83,8 +83,8 @@ public struct DriverSessionPlan: Equatable, Sendable {
     requiresStartupOutput: Bool = false,
     validatesFeatureReplies: Bool = false,
     hasStartupRecovery: Bool = false,
-    hidStartupRecoveryIntervalNanoseconds: UInt64 = 200_000_000,
-    hidStartupRecoveryRounds: Int = 2,
+    hidStartupRecoveryIntervalNanoseconds: UInt64 = 0,
+    hidStartupRecoveryRounds: Int = 0,
     hidKeepAliveIntervalNanoseconds: UInt64? = nil,
     minimumHIDOutputIntervalNanoseconds: UInt64 = 0,
     assignsStartupPlayerIndicator: Bool = false,
@@ -109,6 +109,15 @@ public struct DriverSessionPlan: Equatable, Sendable {
     self.usbCommandChannel = usbCommandChannel
   }
 
+  /// This plan with the timings that `family`'s protocol description defaults for `variant` in
+  /// place of the plan's own; the plan when the description defaults none.
+  func withDefaults(
+    of family: PhysicalProtocolID,
+    variant: PhysicalProtocolVariantID? = nil
+  ) -> Self {
+    family.protocolDescription.tuning(variant: variant).map(tuned) ?? self
+  }
+
   /// This plan with the record's tuned timings in place of the driver defaults.
   func tuned(_ tuning: ControllerTuning) -> Self {
     func nanoseconds(_ milliseconds: Int) -> UInt64 {
@@ -128,7 +137,65 @@ public struct DriverSessionPlan: Equatable, Sendable {
       plan.hidStartupRecoveryIntervalNanoseconds = nanoseconds(value)
     }
     if let value = tuning.hidStartupRecoveryRounds { plan.hidStartupRecoveryRounds = value }
+    if let value = tuning.keepAliveIntervalMilliseconds {
+      if plan.usbKeepAliveIntervalNanoseconds != nil {
+        plan.usbKeepAliveIntervalNanoseconds = nanoseconds(value)
+      }
+      if plan.hidKeepAliveIntervalNanoseconds != nil {
+        plan.hidKeepAliveIntervalNanoseconds = nanoseconds(value)
+      }
+    }
+    if let value = tuning.usbStartupIntervalMilliseconds {
+      plan.usbStartupIntervalNanoseconds = nanoseconds(value)
+    }
+    if let value = tuning.usbStartupRetryDelayMilliseconds {
+      plan.usbStartupRetryDelays = plan.usbStartupRetryDelays.indices.map {
+        nanoseconds(value) << UInt64($0)
+      }
+    }
     return plan
+  }
+}
+
+extension PhysicalProtocolID {
+  /// The keep-alive (or rumble resend) interval that the family's description defaults for
+  /// `variant`; nil when it defaults none. A driver that sends keep-alives takes its interval here.
+  func keepAliveIntervalNanoseconds(variant: PhysicalProtocolVariantID? = nil) -> UInt64? {
+    protocolDescription.tuning(variant: variant)?.keepAliveIntervalMilliseconds.map {
+      UInt64($0) * DeviceTransportProfile.nanosecondsPerMillisecond
+    }
+  }
+}
+
+extension PhysicalProtocolID {
+  /// The tuning that a driver of this family and stored variant reads: the description's
+  /// defaults, with the record's values over them.
+  func driverTuning(
+    variant: PhysicalProtocolVariantID? = nil,
+    record: ControllerTuning = .none
+  ) -> ControllerTuning {
+    (protocolDescription.tuning(variant: variant) ?? .none).overlaid(by: record)
+  }
+
+  /// The value of `key` that a driver of this family reads: from `tuning` when the registry
+  /// supplies the record's, otherwise (or where it sets none) from the description's defaults. A
+  /// description that defaults none for a key its driver reads is a defect.
+  func described(_ key: KeyPath<ControllerTuning, Int?>, in tuning: ControllerTuning?) -> Int {
+    guard let value = driverTuning().overlaid(by: tuning ?? .none)[keyPath: key] else {
+      preconditionFailure("\(rawValue).json defaults no \(key)")
+    }
+    return value
+  }
+}
+
+extension PhysicalProtocolID {
+  /// The controls that the family's description gives every controller of it. A driver adds only
+  /// what its record or layout makes true.
+  var describedControls: ControllerCapabilities {
+    guard let controls = protocolDescription.controls else {
+      preconditionFailure("\(rawValue).json describes no controls")
+    }
+    return controls
   }
 }
 
