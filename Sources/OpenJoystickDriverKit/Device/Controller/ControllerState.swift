@@ -30,7 +30,8 @@ extension UnipolarValue {
   public var normalized: Float { Float(rawValue) / Float(UInt16.max) }
 }
 
-/// One analog stick: positive X is right, positive Y is up.
+/// One analog stick: positive X is right, positive Y is down. That is the one frame of every
+/// record, profile, frame, and command that leaves or enters OpenJoystickDriver.
 public struct StickPosition: Hashable, Codable, Sendable {
   public static let center = Self(x: .center, y: .center)
 
@@ -42,10 +43,10 @@ public struct StickPosition: Hashable, Codable, Sendable {
     self.y = y
   }
 
-  /// Quantizes a driver's normalized `-1...1` axes; `yDown` is positive toward the player, the
-  /// frame most reports use, and is negated here, once, into the canonical Y-up frame.
-  init(x: Float, yDown: Float) {
-    self.init(x: BipolarValue(normalized: x), y: BipolarValue(normalized: -yDown))
+  /// Quantizes normalized `-1...1` axes. Y is positive down; a driver whose report grows upward
+  /// negates it once, at parse.
+  init(x: Float, y: Float) {
+    self.init(x: BipolarValue(normalized: x), y: BipolarValue(normalized: y))
   }
 }
 

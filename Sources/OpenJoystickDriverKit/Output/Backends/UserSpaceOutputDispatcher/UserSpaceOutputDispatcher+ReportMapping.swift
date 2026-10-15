@@ -47,17 +47,11 @@ extension UserSpaceOutputDispatcher {
     state.hat = hat
     state.leftTriggerPressed = input.pressed.contains(.leftTrigger)
     state.rightTriggerPressed = input.pressed.contains(.rightTrigger)
-    // The report's Y points down; the canonical state's Y points up.
+    // The report's Y and the canonical state's Y both point down.
     state.leftStickX = Self.axisValue(input.leftStick.x, transfer: stickTransfer)
-    state.leftStickY = Self.axisValue(
-      BipolarValue(-input.leftStick.y.rawValue),
-      transfer: stickTransfer
-    )
+    state.leftStickY = Self.axisValue(input.leftStick.y, transfer: stickTransfer)
     state.rightStickX = Self.axisValue(input.rightStick.x, transfer: stickTransfer)
-    state.rightStickY = Self.axisValue(
-      BipolarValue(-input.rightStick.y.rawValue),
-      transfer: stickTransfer
-    )
+    state.rightStickY = Self.axisValue(input.rightStick.y, transfer: stickTransfer)
     state.leftTrigger = Self.triggerValue(input.leftTrigger)
     state.rightTrigger = Self.triggerValue(input.rightTrigger)
   }

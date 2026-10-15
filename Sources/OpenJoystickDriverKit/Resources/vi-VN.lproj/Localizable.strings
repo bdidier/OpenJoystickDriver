@@ -1293,7 +1293,7 @@
 "cli.controller.watch.all_started" = "Đang theo dõi mọi bộ điều khiển. Hãy nhấn các nút của bộ điều khiển.";
 "cli.controller.watch.connected" = "%@ đã kết nối: %@ (%@)";
 "cli.controller.watch.disconnected" = "%@ đã ngắt kết nối";
-"cli.controller.watch.discussion" = "Với --json, in một đối tượng JSON mỗi dòng. Trục Y của cần hướng lên. Với --first-press, in thành phần được nhấn đầu tiên rồi thoát; thất bại nếu --duration trôi qua trước.";
+"cli.controller.watch.discussion" = "Với --json, in một đối tượng JSON mỗi dòng. Trục Y của cần hướng xuống. Với --first-press, in thành phần được nhấn đầu tiên rồi thoát; thất bại nếu --duration trôi qua trước.";
 "cli.controller.watch.discussion.all" = "Với --all, mỗi dòng bắt đầu bằng ID bộ điều khiển, và một dòng báo cáo từng bộ điều khiển kết nối hoặc ngắt kết nối. Các dòng đầu báo cáo những bộ điều khiển đã kết nối sẵn.";
 "cli.controller.watch.error.first_press_all" = "--first-press cần một CONTROLLER; nó không dùng được với --all.";
 "cli.controller.watch.error.target" = "Hãy đưa một CONTROLLER hoặc --all, không đưa cả hai.";
@@ -1339,7 +1339,7 @@
 "cli.virtual.error.failed" = "Tay cầm ảo cho %@ không thay đổi (%@). Hãy kiểm tra bằng “ojd virtual show”.";
 "cli.virtual.error.no_unit" = "%@ không có ID thiết bị, nên một lựa chọn chỉ có thể áp dụng cho cả kiểu máy. Hãy chạy lệnh không có --unit.";
 "cli.virtual.feed.abstract" = "Cung cấp một tay cầm ảo do đầu vào chuẩn điều khiển.";
-"cli.virtual.feed.discussion" = "Đọc một đối tượng JSON mỗi dòng: “buttons” và “dpad” liệt kê các thành phần được nhấn, như South và up, và “axes” ánh xạ tên trục, như LeftStickX, tới giá trị. Thành phần bị thiếu ở trạng thái trung tính. Các cần chạy từ -1 đến 1 với Y hướng lên; các cò chạy từ 0 đến 1. Các khung được phát theo thứ tự, mỗi khung ít nhất 8 ms; “holdMilliseconds” giữ một khung lâu hơn, tối đa 60000. In mỗi lệnh đầu ra mà trò chơi gửi đến tay cầm, như rung, thành một đối tượng JSON mỗi dòng. Dừng khi mọi khung đã phát xong sau khi đầu vào kết thúc.";
+"cli.virtual.feed.discussion" = "Đọc một đối tượng JSON mỗi dòng: “buttons” và “dpad” liệt kê các thành phần được nhấn, như South và up, và “axes” ánh xạ tên trục, như LeftStickX, tới giá trị. Thành phần bị thiếu ở trạng thái trung tính. Các cần chạy từ -1 đến 1 với Y hướng xuống; các cò chạy từ 0 đến 1. Các khung được phát theo thứ tự, mỗi khung ít nhất 8 ms; “holdMilliseconds” giữ một khung lâu hơn, tối đa 60000. In mỗi lệnh đầu ra mà trò chơi gửi đến tay cầm, như rung, thành một đối tượng JSON mỗi dòng. Dừng khi mọi khung đã phát xong sau khi đầu vào kết thúc.";
 "cli.virtual.feed.error.closed" = "Dịch vụ đã đóng tay cầm ảo. Hãy kiểm tra bằng “ojd status”.";
 "cli.virtual.feed.error.frame" = "Dòng %@ không phải là khung hợp lệ. “ojd virtual feed --help” hiển thị định dạng.";
 "cli.virtual.feed.profile" = "Cấu hình tay cầm ảo để cung cấp.";
