@@ -103,12 +103,9 @@ actor RemappingRoutingCore {
       _ = try requireOperationalPermit(proposedPermit)
       switch input {
       case .input(let event, let labels):
-        try? await virtualOutput.consume(
-          .controller(event, labels: labels, from: identifier),
-          onDelivered: {}
-        )
+        try? await virtualOutput.consume(.controller(event, labels: labels, from: identifier)) {}
       case .activation:
-        try? await virtualOutput.consume(.activation(identifier), onDelivered: {})
+        try? await virtualOutput.consume(.activation(identifier)) {}
       }
     case .remapping(let profile):
       guard route.eligibility == .eligible else { return }

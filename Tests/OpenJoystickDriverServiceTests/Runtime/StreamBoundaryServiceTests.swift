@@ -184,7 +184,7 @@ struct StreamBoundaryServiceTests {
     try await sink.consume(.setRumble(.off, duration: .held), for: Self.identifier)
     var buffer = [UInt8](repeating: 0, count: 4_096)
     let count = recv(descriptors[1], &buffer, buffer.count, 0)
-    let line = String(decoding: buffer.prefix(max(count, 0)), as: UTF8.self)
+    let line = String(bytes: buffer.prefix(max(count, 0)), encoding: .utf8) ?? ""
     #expect(line.contains("RumbleCommand"))
 
     connection.close(nil)
