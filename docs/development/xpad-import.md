@@ -52,13 +52,13 @@ SDL's `src/joystick/controller_list.h` is the second pinned upstream (currently 
 | `XBox360Controller` | `xbox.xusb:wired` |
 | `XBoxOneController` | `xbox.gip` |
 | `SteamController`, `SteamControllerV2` | `valve.steam-controller` with the variant from `STEAM_VARIANTS` |
-| `SteamControllerNeptune` | `valve.steam-controller:wired` with the `neptune` quirk |
-| `SwitchInputOnlyController` | `nintendo.switch1` with the `input-only` quirk |
-| `SteamControllerTriton` | `valve.steam-controller` with the `triton` quirk and the variant from `STEAM_VARIANTS` |
+| `SteamControllerNeptune` | `valve.steam-deck` |
+| `SwitchInputOnlyController` | `nintendo.switch-input-only` |
+| `SteamControllerTriton` | `valve.steam-triton` with the variant from `STEAM_VARIANTS` |
 
 One SDL Steam type covers wired pads, dongles and Bluetooth LE links, so the type alone does not give the variant. The generator takes it from `STEAM_VARIANTS` in `Scripts/Catalog/generate_controller_catalog.py`, which follows the per-row comments in SDL `controller_list.h` and `IsProteusDongle` in `SDL_hidapi_steam_triton.c`. The Bluetooth LE rows (`1105`, `1106`, `1202`, `1303`) store `bluetooth-le`, the dongles (`1142`, `1304`, `1305`) store `dongle`, and the rest store `wired`. A Steam row that `STEAM_VARIANTS` does not list fails generation.
 
-The Switch 2 identities in `SWITCH_2_IDENTITIES` (`057e:2066`, `2067`, `2069`) also get the `switch-2` quirk first, which selects `Switch2Driver` instead of the Switch 1 driver. The GameCube controller `057e:2073` is only in SDL `usb_ids.h`, so an add override gives it `switch-2` and `gamecube`.
+The Switch 2 identities in `SWITCH_2_IDENTITIES` (`057e:2066`, `2067`, `2069`) get the `nintendo.switch2` family, which selects `Switch2Driver` instead of the Switch 1 driver. The GameCube controller `057e:2073` is only in SDL `usb_ids.h`, so an add override gives it `nintendo.switch2` and the `gamecube` quirk.
 
 A few identities use a different SDL driver than their type implies. `SDL_IDENTITY_FAMILIES` in `generate_controller_catalog.py` gives each one the family of the driver that claims it: SDL's Sixaxis driver claims the ShanWan DS3 (`2563:0523`), so it gets `sony.sixaxis`, and `controller_list.h` marks HORI `0f0d:0086` as the Xbox 360 protocol, so it gets `xbox.xusb`. SDL's PS5 driver rejects the Backbone One PlayStation Edition Gen 2 (`358a:0304`), so it gets `hid.descriptor`. DragonRise `0079:0006`, SDL's "Generic USB PCB", is a standard HID gamepad, so it gets `hid.descriptor`. SDL's Xbox 360 driver rejects the NVIDIA SHIELD controller `0955:7210` because it does not speak the Xbox protocol (`SDL_hidapi_shield.c` drives it), so it gets `vendor.nvidia-shield`; generation fails on any other NVIDIA row that is neither catalogued nor listed. The Microsoft Bluetooth Xbox identities that SDL's `SDL_IsJoystickBluetoothXboxOne` lists (`045e:02e0`, `02fd`, `0b05`, `0b0c`, `0b13`, `0b20`, `0b21`, `0b22`) are HID over Bluetooth, not GIP, so they get `hid.descriptor`; `HIDDescriptorDriver` picks the layout from the report descriptor, covering the Linux and Windows firmware modes that xpadneo documents in `docs/descriptors/`. A listed identity must still appear with its expected type, so a lock bump forces a review.
 

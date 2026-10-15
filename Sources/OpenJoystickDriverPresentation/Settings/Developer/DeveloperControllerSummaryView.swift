@@ -132,14 +132,14 @@
       case .sonySixaxis: OJDLocalized.string("controller.dualShock3")
       case .sonyDualShock4: OJDLocalized.string("controller.dualShock4")
       case .sonyDualSense: OJDLocalized.string("controller.dualSense")
-      case .valveSteamController:
+      case .valveSteamController, .valveSteamTriton, .valveSteamDeck:
         OJDLocalized.string("controller.steamController")
       case .vendorFlydigi: OJDLocalized.string("controller.flydigi")
       case .vendorPS3ThirdParty: "Third-party PS3"
       case .vendorNVIDIAShield: "NVIDIA SHIELD"
       case .vendorGameSir where value.variant == .usb: "GameSir G7 Pro USB"
       case .vendorGameSir: "GameSir enhanced HID"
-      case .nintendoSwitch1:
+      case .nintendoSwitch1, .nintendoSwitch2, .nintendoSwitchInputOnly:
         OJDLocalized.string("controller.switchProController")
       case .hidDescriptor, .hidReportLayout:
         OJDLocalized.string("controller.standardHID")

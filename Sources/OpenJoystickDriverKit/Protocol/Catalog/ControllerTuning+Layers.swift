@@ -69,15 +69,13 @@ extension ControllerRecord {
 extension ControllerRecordDocument {
   /// Why `key` does not apply to this record's family, or nil when a driver reads it.
   func tuningScopeViolation(_ key: ControllerTuning.Key) -> String? {
-    let quirks = protocolInfo.quirks
     switch key {
     case .stickDeadzone: return nil
     case .inputLivenessTimeoutMs:
       return protocolInfo.protocolID == .sonyDualShock4
         ? nil : "inputLivenessTimeoutMs requires the sony.dualshock4 family"
     case .hidStartupRecoveryIntervalMs, .hidStartupRecoveryRounds:
-      return protocolInfo.protocolID == .nintendoSwitch1 && !quirks.contains(.switch2)
-        && !quirks.contains(.inputOnly)
+      return protocolInfo.protocolID == .nintendoSwitch1
         ? nil : "startup recovery tuning requires a Switch 1 controller with startup recovery"
     case .hidStartupIntervalMs, .minimumHIDOutputIntervalMs:
       return protocolInfo.protocolID.usesRawUSB(storedVariant: protocolInfo.protocolVariant)

@@ -1033,7 +1033,7 @@ startup[8] hid-output id=1 01040001404000014040102680000014
 quirks=
 
 ## 057E:2066
-protocol=nintendo-switch1 variant=- ownership=macos
+protocol=nintendo-switch2 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [auxiliary-1,auxiliary-5,auxiliary-6,face-east,face-north,face-south,face-west,guide,menu,right-shoulder,right-stick-click,right-stick-x,right-stick-y,right-trigger-button]
@@ -1054,10 +1054,10 @@ startup[11] usb ep=2 timeoutMs=1000 tolerated=false 089100020004000001000000
 startup[12] usb ep=2 timeoutMs=1000 tolerated=false 0391000A0004000005000000
 startup[13] usb ep=2 timeoutMs=1000 tolerated=false 0391000D000800000100FFFFFFFFFFFF
 bluetoothLEVibrationCharacteristic FA19B0FB-CD1F-46A7-84A1-BBB09E00C149
-quirks=joy-con-right,switch-2
+quirks=joy-con-right
 
 ## 057E:2067
-protocol=nintendo-switch1 variant=- ownership=macos
+protocol=nintendo-switch2 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [auxiliary-3,auxiliary-4,capture,dpad,left-shoulder,left-stick-click,left-stick-x,left-stick-y,left-trigger-button,view]
@@ -1078,10 +1078,10 @@ startup[11] usb ep=2 timeoutMs=1000 tolerated=false 089100020004000001000000
 startup[12] usb ep=2 timeoutMs=1000 tolerated=false 0391000A0004000005000000
 startup[13] usb ep=2 timeoutMs=1000 tolerated=false 0391000D000800000100FFFFFFFFFFFF
 bluetoothLEVibrationCharacteristic 289326CB-A471-485D-A8F4-240C14F18241
-quirks=joy-con-left,switch-2
+quirks=joy-con-left
 
 ## 057E:2069
-protocol=nintendo-switch1 variant=- ownership=macos
+protocol=nintendo-switch2 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [auxiliary-1,capture,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-x,left-stick-y,left-trigger-button,menu,paddle-left-1,paddle-right-1,right-shoulder,right-stick-click,right-stick-x,right-stick-y,right-trigger-button,view]
@@ -1102,10 +1102,10 @@ startup[11] usb ep=2 timeoutMs=1000 tolerated=false 089100020004000001000000
 startup[12] usb ep=2 timeoutMs=1000 tolerated=false 0391000A0004000005000000
 startup[13] usb ep=2 timeoutMs=1000 tolerated=false 0391000D000800000100FFFFFFFFFFFF
 bluetoothLEVibrationCharacteristic CC483F51-9258-427D-A939-630C31F72B05
-quirks=switch-2
+quirks=
 
 ## 057E:2073
-protocol=nintendo-switch1 variant=- ownership=macos
+protocol=nintendo-switch2 variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [auxiliary-1,capture,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-x,left-stick-y,left-trigger,left-trigger-button,menu,right-shoulder,right-stick-x,right-stick-y,right-trigger,right-trigger-button]
@@ -1127,7 +1127,7 @@ startup[12] usb ep=2 timeoutMs=1000 tolerated=false 089100020004000001000000
 startup[13] usb ep=2 timeoutMs=1000 tolerated=false 0391000A0004000005000000
 startup[14] usb ep=2 timeoutMs=1000 tolerated=false 0391000D000800000100FFFFFFFFFFFF
 bluetoothLEVibrationCharacteristic 3F8FB670-AB25-45BF-B540-38C72834D064
-quirks=gamecube,switch-2
+quirks=gamecube
 
 ## 05B8:1004
 protocol=vendor-ps3-third-party variant=- ownership=macos
@@ -2521,40 +2521,40 @@ gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
 quirks=
 
 ## 0E6F:0180
-protocol=nintendo-switch1 variant=- ownership=macos
+protocol=nintendo-switch-input-only variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [capture,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-x,left-stick-y,left-trigger-button,menu,right-shoulder,right-stick-click,right-stick-x,right-stick-y,right-trigger-button,view]
 output rumble=[] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=200 recoveryRounds=2 livenessMs=-
-quirks=input-only
+quirks=
 
 ## 0E6F:0181
-protocol=nintendo-switch1 variant=- ownership=macos
+protocol=nintendo-switch-input-only variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [capture,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-x,left-stick-y,left-trigger-button,menu,right-shoulder,right-stick-click,right-stick-x,right-stick-y,right-trigger-button,view]
 output rumble=[] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=200 recoveryRounds=2 livenessMs=-
-quirks=input-only
+quirks=
 
 ## 0E6F:0184
-protocol=nintendo-switch1 variant=- ownership=macos
+protocol=nintendo-switch-input-only variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [capture,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-x,left-stick-y,left-trigger-button,menu,right-shoulder,right-stick-click,right-stick-x,right-stick-y,right-trigger-button,view]
 output rumble=[] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=200 recoveryRounds=2 livenessMs=-
-quirks=input-only
+quirks=
 
 ## 0E6F:0185
-protocol=nintendo-switch1 variant=- ownership=macos
+protocol=nintendo-switch-input-only variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [capture,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-x,left-stick-y,left-trigger-button,menu,right-shoulder,right-stick-click,right-stick-x,right-stick-y,right-trigger-button,view]
 output rumble=[] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=200 recoveryRounds=2 livenessMs=-
-quirks=input-only
+quirks=
 
 ## 0E6F:0186
 protocol=nintendo-switch1 variant=- ownership=macos
@@ -2575,22 +2575,22 @@ startup[8] hid-output id=1 01040001404000014040102680000014
 quirks=bluetooth-only
 
 ## 0E6F:0187
-protocol=nintendo-switch1 variant=- ownership=macos
+protocol=nintendo-switch-input-only variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [capture,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-x,left-stick-y,left-trigger-button,menu,right-shoulder,right-stick-click,right-stick-x,right-stick-y,right-trigger-button,view]
 output rumble=[] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=200 recoveryRounds=2 livenessMs=-
-quirks=input-only
+quirks=
 
 ## 0E6F:0188
-protocol=nintendo-switch1 variant=- ownership=macos
+protocol=nintendo-switch-input-only variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [capture,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-x,left-stick-y,left-trigger-button,menu,right-shoulder,right-stick-click,right-stick-x,right-stick-y,right-trigger-button,view]
 output rumble=[] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=200 recoveryRounds=2 livenessMs=-
-quirks=input-only
+quirks=
 
 ## 0E6F:018B
 protocol=nintendo-switch1 variant=- ownership=macos
@@ -3796,13 +3796,13 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 quirks=
 
 ## 0F0D:0092
-protocol=nintendo-switch1 variant=- ownership=macos
+protocol=nintendo-switch-input-only variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [capture,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-x,left-stick-y,left-trigger-button,menu,right-shoulder,right-stick-click,right-stick-x,right-stick-y,right-trigger-button,view]
 output rumble=[] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=200 recoveryRounds=2 livenessMs=-
-quirks=input-only
+quirks=
 
 ## 0F0D:0097
 protocol=xbox-gip variant=- ownership=macos
@@ -3846,13 +3846,13 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 quirks=
 
 ## 0F0D:00AA
-protocol=nintendo-switch1 variant=- ownership=macos
+protocol=nintendo-switch-input-only variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [capture,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-x,left-stick-y,left-trigger-button,menu,right-shoulder,right-stick-click,right-stick-x,right-stick-y,right-trigger-button,view]
 output rumble=[] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=200 recoveryRounds=2 livenessMs=-
-quirks=input-only
+quirks=
 
 ## 0F0D:00AE
 protocol=xbox-xusb variant=wired ownership=macos
@@ -3901,13 +3901,13 @@ gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
 quirks=
 
 ## 0F0D:00C1
-protocol=nintendo-switch1 variant=- ownership=macos
+protocol=nintendo-switch-input-only variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [capture,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-x,left-stick-y,left-trigger-button,menu,right-shoulder,right-stick-click,right-stick-x,right-stick-y,right-trigger-button,view]
 output rumble=[] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=200 recoveryRounds=2 livenessMs=-
-quirks=input-only
+quirks=
 
 ## 0F0D:00C5
 protocol=xbox-gip variant=- ownership=macos
@@ -3965,13 +3965,13 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 quirks=
 
 ## 0F0D:00F0
-protocol=nintendo-switch1 variant=- ownership=macos
+protocol=nintendo-switch-input-only variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [capture,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-x,left-stick-y,left-trigger-button,menu,right-shoulder,right-stick-click,right-stick-x,right-stick-y,right-trigger-button,view]
 output rumble=[] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=200 recoveryRounds=2 livenessMs=-
-quirks=input-only
+quirks=
 
 ## 0F0D:00F6
 protocol=nintendo-switch1 variant=- ownership=macos
@@ -5888,67 +5888,67 @@ gip keepAlive=enabled startup=[0520000100,0A200003000114,062000020100]
 quirks=
 
 ## 20D6:A711
-protocol=nintendo-switch1 variant=- ownership=macos
+protocol=nintendo-switch-input-only variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [capture,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-x,left-stick-y,left-trigger-button,menu,right-shoulder,right-stick-click,right-stick-x,right-stick-y,right-trigger-button,view]
 output rumble=[] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=200 recoveryRounds=2 livenessMs=-
-quirks=input-only
+quirks=
 
 ## 20D6:A712
-protocol=nintendo-switch1 variant=- ownership=macos
+protocol=nintendo-switch-input-only variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [capture,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-x,left-stick-y,left-trigger-button,menu,right-shoulder,right-stick-click,right-stick-x,right-stick-y,right-trigger-button,view]
 output rumble=[] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=200 recoveryRounds=2 livenessMs=-
-quirks=input-only
+quirks=
 
 ## 20D6:A713
-protocol=nintendo-switch1 variant=- ownership=macos
+protocol=nintendo-switch-input-only variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [capture,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-x,left-stick-y,left-trigger-button,menu,right-shoulder,right-stick-click,right-stick-x,right-stick-y,right-trigger-button,view]
 output rumble=[] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=200 recoveryRounds=2 livenessMs=-
-quirks=input-only
+quirks=
 
 ## 20D6:A714
-protocol=nintendo-switch1 variant=- ownership=macos
+protocol=nintendo-switch-input-only variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [capture,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-x,left-stick-y,left-trigger-button,menu,right-shoulder,right-stick-click,right-stick-x,right-stick-y,right-trigger-button,view]
 output rumble=[] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=200 recoveryRounds=2 livenessMs=-
-quirks=input-only
+quirks=
 
 ## 20D6:A715
-protocol=nintendo-switch1 variant=- ownership=macos
+protocol=nintendo-switch-input-only variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [capture,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-x,left-stick-y,left-trigger-button,menu,right-shoulder,right-stick-click,right-stick-x,right-stick-y,right-trigger-button,view]
 output rumble=[] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=200 recoveryRounds=2 livenessMs=-
-quirks=input-only
+quirks=
 
 ## 20D6:A716
-protocol=nintendo-switch1 variant=- ownership=macos
+protocol=nintendo-switch-input-only variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [capture,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-x,left-stick-y,left-trigger-button,menu,right-shoulder,right-stick-click,right-stick-x,right-stick-y,right-trigger-button,view]
 output rumble=[] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=200 recoveryRounds=2 livenessMs=-
-quirks=input-only
+quirks=
 
 ## 20D6:A718
-protocol=nintendo-switch1 variant=- ownership=macos
+protocol=nintendo-switch-input-only variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [capture,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-x,left-stick-y,left-trigger-button,menu,right-shoulder,right-stick-click,right-stick-x,right-stick-y,right-trigger-button,view]
 output rumble=[] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=200 recoveryRounds=2 livenessMs=-
-quirks=input-only
+quirks=
 
 ## 20D6:CA6D
 protocol=vendor-ps3-third-party variant=- ownership=macos
@@ -6511,7 +6511,7 @@ activation[1] hid-feature id=3 03C0870C07070008070030180031020000000000
 quirks=
 
 ## 28DE:1205
-protocol=valve-steam-controller variant=wired ownership=macos
+protocol=valve-steam-deck variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [auxiliary-1,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-touch,left-stick-x,left-stick-y,left-trackpad-click,left-trackpad-touch,left-trigger,left-trigger-button,menu,paddle-left-1,paddle-left-2,paddle-right-1,paddle-right-2,right-shoulder,right-stick-click,right-stick-touch,right-stick-x,right-stick-y,right-trackpad-click,right-trackpad-touch,right-trigger,right-trigger-button,view]
@@ -6521,10 +6521,10 @@ activation[0] hid-feature id=0 8100000000000000000000000000000000000000000000000
 activation[1] hid-feature id=0 871218000007070008070034FFFF35FFFF4700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 keepAlive[0] hid-feature id=0 81000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 keepAlive[1] hid-feature id=0 87030807000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-quirks=neptune
+quirks=
 
 ## 28DE:1302
-protocol=valve-steam-controller variant=wired ownership=macos
+protocol=valve-steam-triton variant=wired ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [auxiliary-1,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-touch,left-stick-x,left-stick-y,left-trackpad-click,left-trackpad-touch,left-trigger,left-trigger-button,menu,paddle-left-1,paddle-left-2,paddle-right-1,paddle-right-2,right-shoulder,right-stick-click,right-stick-touch,right-stick-x,right-stick-y,right-trackpad-click,right-trackpad-touch,right-trigger,right-trigger-button,view]
@@ -6533,10 +6533,10 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=40 minimum
 activation[0] hid-feature id=1 01870309000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 activation[1] hid-feature id=1 01870330180000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 keepAlive[0] hid-feature id=1 01870309000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-quirks=triton
+quirks=
 
 ## 28DE:1303
-protocol=valve-steam-controller variant=bluetooth-le ownership=macos
+protocol=valve-steam-triton variant=bluetooth-le ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [auxiliary-1,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-touch,left-stick-x,left-stick-y,left-trackpad-click,left-trackpad-touch,left-trigger,left-trigger-button,menu,paddle-left-1,paddle-left-2,paddle-right-1,paddle-right-2,right-shoulder,right-stick-click,right-stick-touch,right-stick-x,right-stick-y,right-trackpad-click,right-trackpad-touch,right-trigger,right-trigger-button,view]
@@ -6545,10 +6545,10 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=40 minimum
 activation[0] hid-feature id=1 01870309000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 activation[1] hid-feature id=1 01870330180000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 keepAlive[0] hid-feature id=1 01870309000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-quirks=triton
+quirks=
 
 ## 28DE:1304
-protocol=valve-steam-controller variant=dongle ownership=macos
+protocol=valve-steam-triton variant=dongle ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [auxiliary-1,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-touch,left-stick-x,left-stick-y,left-trackpad-click,left-trackpad-touch,left-trigger,left-trigger-button,menu,paddle-left-1,paddle-left-2,paddle-right-1,paddle-right-2,right-shoulder,right-stick-click,right-stick-touch,right-stick-x,right-stick-y,right-trackpad-click,right-trackpad-touch,right-trigger,right-trigger-button,view]
@@ -6556,10 +6556,10 @@ output rumble=[left-main,right-main] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=40 minimumHIDOutputMs=0 recoveryMs=200 recoveryRounds=2 livenessMs=-
 activation[0] hid-feature id=1 01870309000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 activation[1] hid-feature id=1 01870330180000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-quirks=triton
+quirks=
 
 ## 28DE:1305
-protocol=valve-steam-controller variant=dongle ownership=macos
+protocol=valve-steam-triton variant=dongle ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [auxiliary-1,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-touch,left-stick-x,left-stick-y,left-trackpad-click,left-trackpad-touch,left-trigger,left-trigger-button,menu,paddle-left-1,paddle-left-2,paddle-right-1,paddle-right-2,right-shoulder,right-stick-click,right-stick-touch,right-stick-x,right-stick-y,right-trackpad-click,right-trackpad-touch,right-trigger,right-trigger-button,view]
@@ -6567,7 +6567,7 @@ output rumble=[left-main,right-main] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=40 minimumHIDOutputMs=0 recoveryMs=200 recoveryRounds=2 livenessMs=-
 activation[0] hid-feature id=1 01870309000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 activation[1] hid-feature id=1 01870330180000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-quirks=triton
+quirks=
 
 ## 294B:3303
 protocol=xbox-gip variant=- ownership=macos
@@ -7143,31 +7143,31 @@ session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumH
 quirks=forced-vibration,third-party
 
 ## 33DD:0001
-protocol=nintendo-switch1 variant=- ownership=macos
+protocol=nintendo-switch-input-only variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [capture,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-x,left-stick-y,left-trigger-button,menu,right-shoulder,right-stick-click,right-stick-x,right-stick-y,right-trigger-button,view]
 output rumble=[] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=200 recoveryRounds=2 livenessMs=-
-quirks=input-only
+quirks=
 
 ## 33DD:0002
-protocol=nintendo-switch1 variant=- ownership=macos
+protocol=nintendo-switch-input-only variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [capture,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-x,left-stick-y,left-trigger-button,menu,right-shoulder,right-stick-click,right-stick-x,right-stick-y,right-trigger-button,view]
 output rumble=[] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=200 recoveryRounds=2 livenessMs=-
-quirks=input-only
+quirks=
 
 ## 33DD:0003
-protocol=nintendo-switch1 variant=- ownership=macos
+protocol=nintendo-switch-input-only variant=- ownership=macos
 transport in=130 out=2 interface=0 alt=0 interfaceOverride=false endpointOverride=false setConfiguration=false settleNs=0
 tuning -
 controls [capture,dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-x,left-stick-y,left-trigger-button,menu,right-shoulder,right-stick-click,right-stick-x,right-stick-y,right-trigger-button,view]
 output rumble=[] binary=[] lighting=[] adaptiveTriggers=[]
 session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=200 recoveryRounds=2 livenessMs=-
-quirks=input-only
+quirks=
 
 ## 3537:0575
 protocol=vendor-gamesir variant=enhanced-hid ownership=macos

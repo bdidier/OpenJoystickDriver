@@ -150,7 +150,7 @@ struct RecordCommandTests {
        "$schema": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/\
       Resources/Schemas/v1beta1/controller.schema.json",
        "vendorID": 1406, "productID": 8447,
-       "protocol": {"family": "nintendo.switch1", "quirks": ["switch-2"]}}}
+       "protocol": {"family": "nintendo.switch2"}}}
       """.utf8
     )
     try directory.write(switch2, as: "057e-20ff.json")

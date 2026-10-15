@@ -3,9 +3,6 @@
   "vendorID": 13277,
   "productID": 2,
   "protocol": {
-    "family": "nintendo.switch1",
-    "quirks": [
-      "input-only"
-    ]
+    "family": "nintendo.switch-input-only"
   }
 }

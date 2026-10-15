@@ -218,8 +218,8 @@ SDL_IDENTITY_FAMILIES: dict[tuple[int, int], tuple[str, str, str | None]] = {
     for entry in _SDL_RULES["identityFamilies"]
 }
 
-# Stored variant of each Valve Steam identity. A Steam row missing here fails generation
-# instead of guessing.
+# Stored variant of each Steam Controller and Steam Triton identity. A row of either family
+# missing here fails generation instead of guessing.
 STEAM_VARIANTS: dict[tuple[int, int], str] = {
     parse_identity(entry["identity"]): entry["variant"]
     for entry in _SDL_RULES["steamVariants"]
@@ -231,11 +231,13 @@ SDL_QUIRKS: dict[str, list[str]] = {
     for controller_type, quirks in _SDL_RULES["controllerTypeQuirks"].items()
 }
 
-# Nintendo Switch 2 identities; their rows also carry the Switch 2 quirk before any Joy-Con
-# side quirk.
+# Nintendo Switch 2 identities; their rows select the Switch 2 protocol whatever their SDL type.
 SWITCH_2_IDENTITIES = frozenset(
     parse_identity(text) for text in _SDL_RULES["switch2Identities"]
 )
+SWITCH_2_FAMILY = "nintendo.switch2"
+# Families whose SDL rows take their stored variant from STEAM_VARIANTS.
+STEAM_VARIANT_FAMILIES = frozenset({"valve.steam-controller", "valve.steam-triton"})
 
 # Identities that get no record: (identity) -> (expected SDL type, skip reason). Each entry
 # must still be listed with that type at the pinned commit and must not already be catalogued.
@@ -305,6 +307,8 @@ def sdl_family(
     override = SDL_IDENTITY_FAMILIES.get(key)
     if override is not None:
         return override[1], override[2]
+    if key in SWITCH_2_IDENTITIES:
+        return SWITCH_2_FAMILY, None
     if controller_type == "PS3Controller" and key[0] != SONY_VENDOR_ID:
         return THIRD_PARTY_PS3_FAMILY, None
     return SDL_FAMILIES.get(controller_type)
@@ -394,7 +398,7 @@ def build_sdl_records(
                 reason if reason == INTERFACE_SIGNATURE_BUCKET else f"excluded:{reason}"
             )
             continue
-        if family == "valve.steam-controller":
+        if family in STEAM_VARIANT_FAMILIES:
             if key not in STEAM_VARIANTS:
                 raise CatalogError(f"Steam row {key} has no STEAM_VARIANTS entry")
             variant = STEAM_VARIANTS[key]
@@ -402,8 +406,7 @@ def build_sdl_records(
         if variant is not None:
             protocol["variant"] = variant
         quirks = (
-            (["switch-2"] if key in SWITCH_2_IDENTITIES else [])
-            + (["bluetooth-only"] if key in BLUETOOTH_ONLY_IDENTITIES else [])
+            (["bluetooth-only"] if key in BLUETOOTH_ONLY_IDENTITIES else [])
             + SDL_QUIRKS.get(controller_type, [])
             # SDL runs a non-Sony PS5Controller through its third-party DualSense path.
             + (

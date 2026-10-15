@@ -240,9 +240,10 @@
       case .sonySixaxis: OJDLocalized.string("controller.dualShock3")
       case .sonyDualShock4: OJDLocalized.string("controller.dualShock4")
       case .sonyDualSense: OJDLocalized.string("controller.dualSense")
-      case .valveSteamController:
+      case .valveSteamController, .valveSteamTriton, .valveSteamDeck:
         OJDLocalized.string("controller.steamController")
-      case .nintendoSwitch1: OJDLocalized.string("controller.switchPro")
+      case .nintendoSwitch1, .nintendoSwitch2, .nintendoSwitchInputOnly:
+        OJDLocalized.string("controller.switchPro")
       case .vendorFlydigi: OJDLocalized.string("controller.flydigi")
       case .vendorPS3ThirdParty: "Third-party PS3"
       case .vendorNVIDIAShield: "NVIDIA SHIELD"

@@ -174,15 +174,32 @@ extension DriverLifecycleCharacterizationTests {
     variant: nil
   )
 
-  /// Catalog rows whose driver a family and variant alone does not select. Only the output
-  /// capability sweep uses them, so the transcripts over ``subjects`` stay unchanged.
+  /// Catalog rows outside ``subjects``. Only the output capability sweep uses them, so the
+  /// transcripts over ``subjects`` stay unchanged.
+  static let tritonWired = Subject(
+    model: model(0x28DE, 0x1302),
+    host: .usb,
+    protocolID: .valveSteamTriton,
+    variant: .wired
+  )
   static let tritonDongle = Subject(
     model: model(0x28DE, 0x1304),
     host: .usb,
-    protocolID: .valveSteamController,
+    protocolID: .valveSteamTriton,
     variant: .dongle,
-    quirks: [.triton],
     readyingInput: [Data([0x79, 0x02])]
+  )
+  static let tritonBluetoothLE = Subject(
+    model: model(0x28DE, 0x1303),
+    host: .bluetoothLE,
+    protocolID: .valveSteamTriton,
+    variant: .bluetoothLE
+  )
+  static let steamDeck = Subject(
+    model: model(0x28DE, 0x1205),
+    host: .usb,
+    protocolID: .valveSteamDeck,
+    variant: nil
   )
   static let steamBluetoothLE = Subject(
     model: model(0x28DE, 0x1106),
@@ -190,12 +207,34 @@ extension DriverLifecycleCharacterizationTests {
     protocolID: .valveSteamController,
     variant: .bluetoothLE
   )
+  static let switch2USB = Subject(
+    model: model(0x057E, 0x2069),
+    host: .usb,
+    protocolID: .nintendoSwitch2,
+    variant: .usb
+  )
   static let switch2BluetoothLE = Subject(
     model: model(0x057E, 0x2069),
     host: .bluetoothLE,
-    protocolID: .nintendoSwitch1,
+    protocolID: .nintendoSwitch2,
     variant: .bluetoothLE
   )
+  static let inputOnlyUSB = Subject(
+    model: model(0x0E6F, 0x0180),
+    host: .usb,
+    protocolID: .nintendoSwitchInputOnly,
+    variant: .usb
+  )
+  static let inputOnlyBluetooth = Subject(
+    model: model(0x0E6F, 0x0180),
+    host: .bluetoothClassic,
+    protocolID: .nintendoSwitchInputOnly,
+    variant: .bluetoothClassic
+  )
+  static let sweepSubjects = [
+    tritonWired, tritonDongle, tritonBluetoothLE, steamDeck, steamBluetoothLE, switch2USB,
+    switch2BluetoothLE, inputOnlyUSB, inputOnlyBluetooth,
+  ]
 
   static let subjects = [
     gipUSB, gipKeepAliveDisabled, xidGamepad, xusbWired, xusbReceiver, sixaxisUSB, sixaxisBluetooth,

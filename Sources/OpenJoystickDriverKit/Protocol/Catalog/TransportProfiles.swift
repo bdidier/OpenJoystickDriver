@@ -92,26 +92,22 @@ public struct ProtocolBindingID: Hashable, Sendable, RawRepresentable, Codable,
   public var usesRawUSB: Bool { protocolID.usesRawUSB(storedVariant: variant) }
 }
 
-/// Catalog quirks, each declared by the one protocol driver that consumes it.
+/// Catalog quirks, each declared by the protocol drivers that consume it.
 ///
 /// A quirk changes how the driver decodes or reaches a variant; one that decodes a fixed extra
 /// button bit also declares that control. Capability corrections are ``ControllerCapabilityDelta``.
 public enum ControllerQuirk: String, CaseIterable, Sendable {
   /// GIP Share sits at a fixed offset from the end of the input packet (xpad `MAP_SHARE_OFFSET`).
   case shareOffset = "share-offset"
-  /// Nintendo left Joy-Con axis and button permutation.
+  /// Nintendo left Joy-Con axis and button permutation; on `nintendo.switch2`, the Joy-Con 2
+  /// layout.
   case joyConLeft = "joy-con-left"
-  /// Nintendo right Joy-Con axis and button permutation.
+  /// Nintendo right Joy-Con axis and button permutation; on `nintendo.switch2`, the Joy-Con 2
+  /// layout.
   case joyConRight = "joy-con-right"
-  /// Wired Switch pad with a fixed HID input report and no subcommand channel (SDL
-  /// `SwitchInputOnlyController`).
-  case inputOnly = "input-only"
   /// Switch pad that enumerates over USB for charging but speaks the protocol only over
   /// Bluetooth (SDL `HIDAPI_DriverSwitch_IsSupportedDevice`, Linux `hid-nintendo.c` device table).
   case bluetoothOnly = "bluetooth-only"
-  /// Nintendo Switch 2 controller (SDL `SDL_hidapi_switch2.c`): input report `0x05` after an init
-  /// sequence on the vendor bulk interface. A Joy-Con side quirk selects the Joy-Con 2 layout.
-  case switch2 = "switch-2"
   /// Switch 2 NSO GameCube controller layout, with analog triggers and flash trigger calibration.
   case gameCube = "gamecube"
   /// GameSir enhanced HID reports the inner grips in extras-byte bits 0x40 and 0x80.
@@ -119,12 +115,6 @@ public enum ControllerQuirk: String, CaseIterable, Sendable {
   /// GameSir enhanced HID lighting memory is organized in profile slots: the driver reads the
   /// active slot at startup, tracks it, and writes color and brightness into that slot.
   case lightingSlots = "lighting-slots"
-  /// 2026 Steam Controller (SDL `SteamControllerTriton`): its own report IDs, settings feature
-  /// report, and repeated rumble report.
-  case triton = "triton"
-  /// Steam Deck built-in controller (SDL `SteamControllerNeptune`): its own state report,
-  /// settings, watchdog, and rumble report.
-  case neptune = "neptune"
   /// Third-party PS3 pad whose hat bits are untrusted, so any nonzero D-pad pressure byte holds
   /// its direction (SDL `SDL_hidapi_ps3.c`, Saitek Cyborg V.3 Rumble Pad).
   case dpadPressure = "dpad-pressure"
@@ -164,20 +154,20 @@ public enum ControllerQuirk: String, CaseIterable, Sendable {
   /// Third-party DualSense wireless receiver that keeps reporting with no controller paired.
   case receiver = "receiver"
 
-  /// The protocol driver that declares this quirk.
-  public var protocolID: PhysicalProtocolID {
+  /// The protocol drivers that declare this quirk.
+  public var protocolIDs: Set<PhysicalProtocolID> {
     switch self {
-    case .shareOffset: .xboxGIP
-    case .joyConLeft, .joyConRight, .inputOnly, .bluetoothOnly, .switch2, .gameCube:
-      .nintendoSwitch1
-    case .innerGrips, .lightingSlots: .vendorGameSir
-    case .triton, .neptune: .valveSteamController
-    case .dpadPressure: .vendorPS3ThirdParty
-    case .factoryCalibration, .wirelessAdapter, .strikePad: .sonyDualShock4
-    case .shield2015: .vendorNVIDIAShield
-    case .wr007, .scufEnvision, .zRzBrakeLeft, .dragonRise: .hidDescriptor
+    case .shareOffset: [.xboxGIP]
+    case .joyConLeft, .joyConRight: [.nintendoSwitch1, .nintendoSwitch2]
+    case .bluetoothOnly: [.nintendoSwitch1]
+    case .gameCube: [.nintendoSwitch2]
+    case .innerGrips, .lightingSlots: [.vendorGameSir]
+    case .dpadPressure: [.vendorPS3ThirdParty]
+    case .factoryCalibration, .wirelessAdapter, .strikePad: [.sonyDualShock4]
+    case .shield2015: [.vendorNVIDIAShield]
+    case .wr007, .scufEnvision, .zRzBrakeLeft, .dragonRise: [.hidDescriptor]
     case .thirdParty, .unprobedSensors, .unprobedTouchpad, .forcedVibration, .receiver:
-      .sonyDualSense
+      [.sonyDualSense]
     }
   }
 }

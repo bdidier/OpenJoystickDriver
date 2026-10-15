@@ -31,7 +31,7 @@ extension ProtocolDriverRegistry {
   /// A Bluetooth LE link has one HID service and no USB interface number, so that connection is
   /// its location's controller; SDL `HIDAPI_DriverSteam_IsSupportedDevice` and
   /// `HIDAPI_DriverSteamTriton_IsSupportedDevice` accept every Bluetooth interface. The Triton
-  /// (`triton` quirk) dongles carry controllers on interfaces 2–5 only (SDL
+  /// (`valve.steam-triton`) dongles carry controllers on interfaces 2–5 only (SDL
   /// `SDL_hidapi_steam_triton.c`).
   func hidConnectionRole(of device: PhysicalDevice) -> HIDConnectionRole {
     guard let record = hidRoleRecord(of: device) else { return .location }
@@ -39,11 +39,12 @@ extension ProtocolDriverRegistry {
       let descriptor = interface.hidLayout?.reportDescriptor,
       HIDReportDescriptorParser.parse(descriptor: Array(descriptor))?.containsFeatureItem == true
     else { return .notARole }
-    let isTriton = record.quirks.contains(.triton)
     guard let interfaceNumber = interface.interfaceNumber else {
       return interface.hostTransport == .bluetoothLE ? .location : .notARole
     }
-    if isTriton, record.physicalProtocolVariant == .dongle, !(2...5).contains(interfaceNumber) {
+    if record.physicalProtocolID == .valveSteamTriton, record.physicalProtocolVariant == .dongle,
+      !(2...5).contains(interfaceNumber)
+    {
       return .notARole
     }
     return .interface(interfaceNumber)
@@ -72,6 +73,6 @@ extension ProtocolDriverRegistry {
   }
 
   private static func declaresHIDRoles(_ record: DeviceRuntimeProfile) -> Bool {
-    record.physicalProtocolID == .valveSteamController
+    [.valveSteamController, .valveSteamTriton, .valveSteamDeck].contains(record.physicalProtocolID)
   }
 }

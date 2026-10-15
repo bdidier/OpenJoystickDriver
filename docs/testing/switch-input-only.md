@@ -1,6 +1,6 @@
 # Wired Switch Input-Only Pads
 
-Many licensed wired Switch pads send one fixed HID input report and do not accept the Switch Pro Controller subcommands. SDL lists them as `SwitchInputOnlyController`. The catalog imports them from SDL's `controller_list.h` as `nintendo.switch1` records with the `input-only` quirk, which selects `SwitchInputOnlyDriver`:
+Many licensed wired Switch pads send one fixed HID input report and do not accept the Switch Pro Controller subcommands. SDL lists them as `SwitchInputOnlyController`. The catalog imports them from SDL's `controller_list.h` as `nintendo.switch-input-only` records, which select `SwitchInputOnlyDriver`:
 
 | Controller | VID:PID |
 | --- | --- |
@@ -53,7 +53,7 @@ ojd controller list
 ojd controller show <controller>
 ```
 
-`show` should report the protocol `nintendo.switch1`, and `ojd controller show <controller> --json` should list the quirk `input-only`. Then watch the controls:
+`show` should report the protocol `nintendo.switch-input-only`. Then watch the controls:
 
 ```bash
 ojd controller watch <controller>

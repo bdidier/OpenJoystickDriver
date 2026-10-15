@@ -6,8 +6,8 @@
     "vendorID": 1406,
     "productID": 8307,
     "protocol": {
-      "family": "nintendo.switch1",
-      "quirks": ["switch-2", "gamecube"]
+      "family": "nintendo.switch2",
+      "quirks": ["gamecube"]
     },
     "bluetoothLE": {
       "vibrationCharacteristic": "3F8FB670-AB25-45BF-B540-38C72834D064"

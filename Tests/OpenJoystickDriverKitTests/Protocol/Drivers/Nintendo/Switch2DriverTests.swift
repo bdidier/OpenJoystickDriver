@@ -49,6 +49,18 @@ private enum Switch2Report {
 struct Switch2DriverTests {
 
   @Test
+  func switch2RowsBindNintendoSwitch2AndBuildTheSwitch2Driver() throws {
+    let models = [0x2066, 0x2067, 0x2069, 0x2073].map {
+      ControllerModelID(vendorID: 0x057E, productID: $0)
+    }
+    for model in models {
+      let record = try #require(ProtocolDriverRegistry().record(for: model), "\(model)")
+      #expect(record.physicalProtocolID == .nintendoSwitch2, "\(model)")
+      #expect(try catalogParser(model) is Switch2Driver, "\(model)")
+    }
+  }
+
+  @Test
   func mapsProButtonBitsAsSDLReportsThem() throws {
     let cases: [(UInt32, ControlID)] = [
       (0x0000_0001, .faceWest), (0x0000_0002, .faceNorth), (0x0000_0004, .faceSouth),

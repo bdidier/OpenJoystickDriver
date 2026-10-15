@@ -1,6 +1,6 @@
 # Steam Controller (2026, Triton)
 
-The 2026 Steam Controller talks a protocol that differs from the original Steam Controller. SDL lists it as `SteamControllerTriton`, and the catalog imports its rows from SDL's `controller_list.h` as `valve.steam-controller` records with the `triton` quirk. The quirk selects `SteamTritonDriver`.
+The 2026 Steam Controller talks a protocol that differs from the original Steam Controller. SDL lists it as `SteamControllerTriton`, and the catalog imports its rows from SDL's `controller_list.h` as `valve.steam-triton` records. That family selects `SteamTritonDriver`.
 
 | Identity | Link | Stored variant |
 | --- | --- | --- |
@@ -47,7 +47,7 @@ ojd controller list
 ojd controller show <controller>
 ```
 
-`show` should report the protocol `valve.steam-controller`, and `ojd controller show <controller> --json` should list the quirk `triton`. Then watch the controls:
+`show` should report the protocol `valve.steam-triton`. Then watch the controls:
 
 ```bash
 ojd controller watch <controller>

@@ -15,7 +15,19 @@ public enum PhysicalProtocolID: String, CaseIterable, Codable, Sendable {
   case sonyDualShock4 = "sony.dualshock4"
   case sonyDualSense = "sony.dualsense"
   case nintendoSwitch1 = "nintendo.switch1"
+  /// Nintendo Switch 2 controller (SDL `SDL_hidapi_switch2.c`): input report `0x05` after an init
+  /// sequence on the vendor bulk interface, or the same state over its Bluetooth LE GATT link.
+  case nintendoSwitch2 = "nintendo.switch2"
+  /// Wired Switch pad with a fixed HID input report and no subcommand channel (SDL
+  /// `SwitchInputOnlyController`).
+  case nintendoSwitchInputOnly = "nintendo.switch-input-only"
   case valveSteamController = "valve.steam-controller"
+  /// 2026 Steam Controller (SDL `SteamControllerTriton`): its own report IDs, settings feature
+  /// report, and repeated rumble report.
+  case valveSteamTriton = "valve.steam-triton"
+  /// Steam Deck built-in controller (SDL `SteamControllerNeptune`): its own state report,
+  /// settings, watchdog, and rumble report.
+  case valveSteamDeck = "valve.steam-deck"
   case vendorFlydigi = "vendor.flydigi"
   case vendorPS3ThirdParty = "vendor.ps3-third-party"
   case vendorGameSir = "vendor.gamesir"
@@ -25,15 +37,16 @@ public enum PhysicalProtocolID: String, CaseIterable, Codable, Sendable {
   public var variants: [PhysicalProtocolVariantID] {
     switch self {
     case .hidDescriptor, .hidReportLayout, .vendorFlydigi, .vendorPS3ThirdParty,
-      .vendorNVIDIAShield:
+      .vendorNVIDIAShield, .valveSteamDeck:
       []
     case .xboxXID: [.gamepad]
     case .xboxXUSB: [.wired, .receiver]
     case .xboxGIP: [.usb]
     case .sonySixaxis, .sonyDualShock4, .sonyDualSense: [.usb, .bluetoothClassic]
-    // Bluetooth LE is the Switch 2 GATT link; see `transportVariants(of:)`.
-    case .nintendoSwitch1: [.usb, .bluetoothClassic, .bluetoothLE]
-    case .valveSteamController: [.wired, .dongle, .bluetoothLE]
+    case .nintendoSwitch1, .nintendoSwitchInputOnly: [.usb, .bluetoothClassic]
+    // Bluetooth LE is the Switch 2 GATT link.
+    case .nintendoSwitch2: [.usb, .bluetoothLE]
+    case .valveSteamController, .valveSteamTriton: [.wired, .dongle, .bluetoothLE]
     case .vendorGameSir: [.usb, .enhancedHID]
     }
   }
@@ -44,7 +57,8 @@ public enum PhysicalProtocolID: String, CaseIterable, Codable, Sendable {
     case .xboxXID, .xboxXUSB, .xboxGIP: true
     case .vendorGameSir: storedVariant == .usb
     case .hidDescriptor, .hidReportLayout, .sonySixaxis, .sonyDualShock4, .sonyDualSense,
-      .nintendoSwitch1, .valveSteamController, .vendorFlydigi, .vendorPS3ThirdParty,
+      .nintendoSwitch1, .nintendoSwitch2, .nintendoSwitchInputOnly, .valveSteamController,
+      .valveSteamTriton, .valveSteamDeck, .vendorFlydigi, .vendorPS3ThirdParty,
       .vendorNVIDIAShield:
       false
     }
@@ -57,9 +71,10 @@ public enum PhysicalProtocolID: String, CaseIterable, Codable, Sendable {
   /// contract or classification derives the variant from the observed transport.
   public var storesVariant: Bool {
     switch self {
-    case .xboxXID, .xboxXUSB, .valveSteamController, .vendorGameSir: true
+    case .xboxXID, .xboxXUSB, .valveSteamController, .valveSteamTriton, .vendorGameSir: true
     case .hidDescriptor, .hidReportLayout, .xboxGIP, .sonySixaxis, .sonyDualShock4,
-      .sonyDualSense, .nintendoSwitch1, .vendorFlydigi, .vendorPS3ThirdParty, .vendorNVIDIAShield:
+      .sonyDualSense, .nintendoSwitch1, .nintendoSwitch2, .nintendoSwitchInputOnly,
+      .valveSteamDeck, .vendorFlydigi, .vendorPS3ThirdParty, .vendorNVIDIAShield:
       false
     }
   }
@@ -265,18 +280,14 @@ enum ProtocolClassifier {
     interfaces.first { HIDDescriptorContract.violation(in: $0.hidLayout) == nil }
   }
 
-  /// The family's variants this model has a link for. A Switch 2 controller has USB and its
-  /// Bluetooth LE GATT link; every other Switch model has USB and Bluetooth Classic, except a
-  /// Bluetooth-only pad, whose USB link only charges it.
+  /// The family's variants this model has a link for: all of them, except for a Bluetooth-only
+  /// Switch pad, whose USB link only charges it.
   private static func transportVariants(
     of record: DeviceRuntimeProfile
   ) -> [PhysicalProtocolVariantID] {
     let variants = record.physicalProtocolID.variants
-    guard record.physicalProtocolID == .nintendoSwitch1 else { return variants }
-    var absent: Set<PhysicalProtocolVariantID> =
-      record.quirks.contains(.switch2) ? [.bluetoothClassic] : [.bluetoothLE]
-    if record.quirks.contains(.bluetoothOnly) { absent.insert(.usb) }
-    return variants.filter { !absent.contains($0) }
+    guard record.quirks.contains(.bluetoothOnly) else { return variants }
+    return variants.filter { $0 != .usb }
   }
 
   /// The single host transport shared by every interface; unknown when any is absent.

@@ -63,7 +63,11 @@
 						"sony.dualshock4",
 						"sony.dualsense",
 						"nintendo.switch1",
+						"nintendo.switch2",
+						"nintendo.switch-input-only",
 						"valve.steam-controller",
+						"valve.steam-triton",
+						"valve.steam-deck",
 						"vendor.flydigi",
 						"vendor.ps3-third-party",
 						"vendor.gamesir",
@@ -146,7 +150,7 @@
 					"if": {
 						"properties": {
 							"family": {
-								"const": "valve.steam-controller"
+								"enum": ["valve.steam-controller", "valve.steam-triton"]
 							}
 						},
 						"required": ["family"]
@@ -156,30 +160,6 @@
 						"properties": {
 							"variant": {
 								"enum": ["wired", "dongle", "bluetooth-le"]
-							},
-							"quirks": {
-								"items": {
-									"enum": ["triton", "neptune"]
-								},
-								"maxItems": 1,
-								"type": "array"
-							}
-						},
-						"if": {
-							"properties": {
-								"quirks": {
-									"contains": {
-										"const": "neptune"
-									}
-								}
-							},
-							"required": ["quirks"]
-						},
-						"then": {
-							"properties": {
-								"variant": {
-									"const": "wired"
-								}
 							}
 						}
 					}
@@ -252,6 +232,7 @@
 										"xbox.xid",
 										"xbox.xusb",
 										"valve.steam-controller",
+										"valve.steam-triton",
 										"vendor.gamesir"
 									]
 								}
@@ -341,35 +322,31 @@
 					"then": {
 						"properties": {
 							"quirks": {
-								"anyOf": [
-									{
-										"items": {
-											"enum": [
-												"joy-con-left",
-												"joy-con-right",
-												"input-only",
-												"bluetooth-only",
-												"switch-2"
-											]
-										},
-										"maxItems": 1
-									},
-									{
-										"contains": {
-											"const": "switch-2"
-										},
-										"items": {
-											"enum": [
-												"switch-2",
-												"joy-con-left",
-												"joy-con-right",
-												"gamecube"
-											]
-										},
-										"minItems": 2,
-										"maxItems": 2
-									}
-								],
+								"items": {
+									"enum": ["joy-con-left", "joy-con-right", "bluetooth-only"]
+								},
+								"maxItems": 1,
+								"type": "array"
+							}
+						}
+					}
+				},
+				{
+					"if": {
+						"properties": {
+							"family": {
+								"const": "nintendo.switch2"
+							}
+						},
+						"required": ["family"]
+					},
+					"then": {
+						"properties": {
+							"quirks": {
+								"items": {
+									"enum": ["joy-con-left", "joy-con-right", "gamecube"]
+								},
+								"maxItems": 1,
 								"type": "array"
 							}
 						}
@@ -496,7 +473,7 @@
 									"enum": [
 										"xbox.gip",
 										"nintendo.switch1",
-										"valve.steam-controller",
+										"nintendo.switch2",
 										"vendor.gamesir",
 										"vendor.ps3-third-party",
 										"sony.dualshock4",
@@ -1379,13 +1356,6 @@
 						"properties": {
 							"family": {
 								"const": "nintendo.switch1"
-							},
-							"quirks": {
-								"not": {
-									"contains": {
-										"enum": ["switch-2", "input-only"]
-									}
-								}
 							}
 						}
 					}
@@ -1447,15 +1417,10 @@
 					"protocol": {
 						"properties": {
 							"family": {
-								"const": "nintendo.switch1"
-							},
-							"quirks": {
-								"contains": {
-									"const": "switch-2"
-								}
+								"const": "nintendo.switch2"
 							}
 						},
-						"required": ["quirks"]
+						"required": ["family"]
 					}
 				}
 			}

@@ -43,10 +43,22 @@ class ControllerSchemaTests(unittest.TestCase):
                 {"family": "nintendo.switch1", "quirks": ["joy-con-left"]}
             ),
             "Switch 2 Joy-Con": record(
-                {"family": "nintendo.switch1", "quirks": ["switch-2", "joy-con-right"]}
+                {"family": "nintendo.switch2", "quirks": ["joy-con-right"]}
             ),
+            "Switch 2 Pro": record({"family": "nintendo.switch2"}),
+            "Switch input-only": record({"family": "nintendo.switch-input-only"}),
+            "Steam Triton wired": record(
+                {"family": "valve.steam-triton", "variant": "wired"}
+            ),
+            "Steam Triton dongle": record(
+                {"family": "valve.steam-triton", "variant": "dongle"}
+            ),
+            "Steam Triton Bluetooth LE": record(
+                {"family": "valve.steam-triton", "variant": "bluetooth-le"}
+            ),
+            "Steam Deck": record({"family": "valve.steam-deck"}),
             "Switch 2 GameCube": record(
-                {"family": "nintendo.switch1", "quirks": ["switch-2", "gamecube"]}
+                {"family": "nintendo.switch2", "quirks": ["gamecube"]}
             ),
             "DualSense Edge controls": record(
                 DUALSENSE,
@@ -160,17 +172,37 @@ class ControllerSchemaTests(unittest.TestCase):
                     "quirks": ["joy-con-left", "joy-con-right"],
                 }
             ),
-            "GameCube without Switch 2": record(
+            "GameCube on Switch 1": record(
                 {"family": "nintendo.switch1", "quirks": ["gamecube"]}
             ),
             "Switch 2 with two layouts": record(
                 {
-                    "family": "nintendo.switch1",
-                    "quirks": ["switch-2", "gamecube", "joy-con-left"],
+                    "family": "nintendo.switch2",
+                    "quirks": ["gamecube", "joy-con-left"],
                 }
             ),
-            "Switch 2 input-only": record(
-                {"family": "nintendo.switch1", "quirks": ["switch-2", "input-only"]}
+            "Switch input-only with a quirk": record(
+                {"family": "nintendo.switch-input-only", "quirks": ["gamecube"]}
+            ),
+            "Steam Deck with a quirk": record(
+                {"family": "valve.steam-deck", "quirks": ["lizard-mode"]}
+            ),
+            "Steam Deck with a variant": record(
+                {"family": "valve.steam-deck", "variant": "wired"}
+            ),
+            "Steam Triton without a variant": record({"family": "valve.steam-triton"}),
+            "Steam Triton with a quirk": record(
+                {
+                    "family": "valve.steam-triton",
+                    "variant": "wired",
+                    "quirks": ["lizard-mode"],
+                }
+            ),
+            "Switch 2 with a variant": record(
+                {"family": "nintendo.switch2", "variant": "bluetooth-le"}
+            ),
+            "Switch 1 with removed switch-2 quirk": record(
+                {"family": "nintendo.switch1", "quirks": ["switch-2"]}
             ),
             "Bluetooth-only with a layout": record(
                 {
@@ -531,46 +563,36 @@ class SwiftParityTests(unittest.TestCase):
             },
         )
 
-    def test_switch_2_quirks_in_either_order(self) -> None:
+    def test_switch_2_allows_at_most_one_layout_quirk(self) -> None:
+        switch2 = {"family": "nintendo.switch2"}
         self.check(
             {
-                f"{first} {second}": record({**SWITCH1, "quirks": [first, second]})
-                for first, second in (
-                    ("switch-2", "joy-con-right"),
-                    ("joy-con-right", "switch-2"),
-                    ("gamecube", "switch-2"),
-                    ("joy-con-left", "switch-2"),
-                )
+                "no quirks": record(switch2),
+                **{
+                    quirk: record({**switch2, "quirks": [quirk]})
+                    for quirk in ("joy-con-left", "joy-con-right", "gamecube")
+                },
             },
             {
-                "layout without switch-2 in either order": record(
-                    {**SWITCH1, "quirks": ["gamecube", "joy-con-left"]}
-                ),
-                "reversed input-only": record(
-                    {**SWITCH1, "quirks": ["input-only", "switch-2"]}
-                ),
-                "reversed with three quirks": record(
-                    {
-                        **SWITCH1,
-                        "quirks": ["gamecube", "switch-2", "joy-con-left"],
-                    }
-                ),
+                f"{first} {second}": record({**switch2, "quirks": [first, second]})
+                for first, second in (
+                    ("joy-con-left", "joy-con-right"),
+                    ("gamecube", "joy-con-left"),
+                    ("joy-con-right", "gamecube"),
+                )
             },
         )
 
-    def test_steam_neptune_is_wired(self) -> None:
+    def test_steam_triton_requires_a_variant(self) -> None:
+        triton = {"family": "valve.steam-triton"}
         self.check(
             {
-                "neptune wired": record(
-                    {**STEAM, "variant": "wired", "quirks": ["neptune"]}
-                ),
-                "wired without neptune": record({**STEAM, "variant": "wired"}),
+                f"triton {variant}": record({**triton, "variant": variant})
+                for variant in ("wired", "dongle", "bluetooth-le")
             },
             {
-                f"neptune {variant}": record(
-                    {**STEAM, "variant": variant, "quirks": ["neptune"]}
-                )
-                for variant in ("dongle", "bluetooth-le")
+                "triton without variant": record(triton),
+                "triton unknown variant": record({**triton, "variant": "usb"}),
             },
         )
 
@@ -608,10 +630,11 @@ class SwiftParityTests(unittest.TestCase):
                     DS4, tuning={"hidStartupRecoveryRounds": 2}
                 ),
                 "recovery on Switch 2": record(
-                    {**SWITCH1, "quirks": ["switch-2", "gamecube"]}, tuning=recovery
+                    {"family": "nintendo.switch2", "quirks": ["gamecube"]},
+                    tuning=recovery,
                 ),
-                "recovery on input-only Switch 1": record(
-                    {**SWITCH1, "quirks": ["input-only"]}, tuning=recovery
+                "recovery on Switch input-only": record(
+                    {"family": "nintendo.switch-input-only"}, tuning=recovery
                 ),
                 "startup interval on GIP": record(GIP, tuning=interval),
                 "output interval on XUSB": record(XUSB, tuning=output),

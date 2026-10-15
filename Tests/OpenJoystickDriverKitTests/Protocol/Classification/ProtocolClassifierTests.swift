@@ -162,7 +162,7 @@ struct ProtocolClassifierTests {
     )
     let expected = rejection(
       .unsupportedTransportVariant,
-      .nintendoSwitch1,
+      .nintendoSwitch2,
       record: recordID(0x057E, 0x2069)
     )
     #expect(classic == expected)

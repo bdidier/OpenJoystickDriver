@@ -3,10 +3,7 @@
   "vendorID": 10462,
   "productID": 4866,
   "protocol": {
-    "family": "valve.steam-controller",
-    "variant": "wired",
-    "quirks": [
-      "triton"
-    ]
+    "family": "valve.steam-triton",
+    "variant": "wired"
   }
 }

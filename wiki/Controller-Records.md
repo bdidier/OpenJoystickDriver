@@ -150,7 +150,7 @@ A record's `tuning` field changes a value that the protocol driver otherwise set
 | `hidStartupRecoveryIntervalMs` | 1 to 60000 | `nintendo.switch1` | The gap between startup recovery rounds. The default is 200. |
 | `hidStartupRecoveryRounds` | 1 to 10 | `nintendo.switch1` | The startup recovery rounds before OpenJoystickDriver gives up. The default is 2. |
 
-Raw-USB families, such as `xbox.gip`, do not take the two HID timings. The two recovery values apply only to a Switch 1 controller without the `switch-2` or `input-only` quirk, because those controllers have no startup recovery. `ojd record validate` rejects a value outside its range or its families.
+Raw-USB families, such as `xbox.gip`, do not take the two HID timings. The two recovery values apply only to `nintendo.switch1`, because the `nintendo.switch2` and `nintendo.switch-input-only` drivers have no startup recovery. `ojd record validate` rejects a value outside its range or its families.
 
 A `tuning` in a `patch` merges per value into the bundled `tuning`: a value you leave out keeps its bundled value. Timings apply when the running service connects the controller again after the record changes.
 
@@ -212,7 +212,7 @@ OpenJoystickDriver connects a Nintendo Switch 2 controller over Bluetooth LE onl
 }
 ```
 
-Write the UUID in uppercase. Only a `nintendo.switch1` record with the `switch-2` quirk takes `bluetoothLE`. The service looks for Switch 2 advertisements with the Nintendo vendor ID (`057E`) only.
+Write the UUID in uppercase. Only a `nintendo.switch2` record takes `bluetoothLE`. The service looks for Switch 2 advertisements with the Nintendo vendor ID (`057E`) only.
 
 A Switch 2 record without `bluetoothLE` connects over USB only, and `ojd record validate` and `ojd record show` say so. The bundled Switch 2 records have the section, and a `patch` that leaves `bluetoothLE` out keeps the bundled value. An `add` for a new Switch 2 model needs its own `bluetoothLE`.
 

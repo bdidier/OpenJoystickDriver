@@ -17,6 +17,18 @@ private enum InputOnlyReport {
 struct SwitchInputOnlyDriverTests {
 
   @Test
+  func inputOnlyRowsBindNintendoSwitchInputOnlyAndBuildItsDriver() throws {
+    let models = [(0x0E6F, 0x0180), (0x0F0D, 0x0092)].map {
+      ControllerModelID(vendorID: $0.0, productID: $0.1)
+    }
+    for model in models {
+      let record = try #require(ProtocolDriverRegistry().record(for: model), "\(model)")
+      #expect(record.physicalProtocolID == .nintendoSwitchInputOnly, "\(model)")
+      #expect(try catalogParser(model) is SwitchInputOnlyDriver, "\(model)")
+    }
+  }
+
+  @Test
   func restingReportIsNeutral() throws {
     #expect(try SwitchInputOnlyDriver().parseReport(InputOnlyReport.with())?.state == .neutral)
   }

@@ -36,6 +36,16 @@ private enum DeckReport {
 struct SteamDeckDriverTests {
 
   @Test
+  func steamDeckRowBindsValveSteamDeckAndBuildsTheDeckDriver() throws {
+    let models = [0x1205].map { ControllerModelID(vendorID: 0x28DE, productID: $0) }
+    for model in models {
+      let record = try #require(ProtocolDriverRegistry().record(for: model), "\(model)")
+      #expect(record.physicalProtocolID == .valveSteamDeck, "\(model)")
+      #expect(try catalogParser(model) is SteamDeckDriver, "\(model)")
+    }
+  }
+
+  @Test
   func mapsButtonBitsAsSDLReportsThem() throws {
     let low: [(UInt32, ControlID)] = [
       (0x0000_0001, .rightTriggerButton), (0x0000_0002, .leftTriggerButton),

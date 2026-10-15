@@ -3,9 +3,8 @@
   "vendorID": 1406,
   "productID": 8307,
   "protocol": {
-    "family": "nintendo.switch1",
+    "family": "nintendo.switch2",
     "quirks": [
-      "switch-2",
       "gamecube"
     ]
   },
