@@ -183,10 +183,7 @@ extension OutputCharacterizationTests {
         "+guide", "  pad [Guide] d=[] a=[]", "    b=0400 h=0 ls=0,0 rs=0,0 t=0,0 f=00 +1",
         "  out 0040000000000000000000000000", "-guide", "  pad [] d=[] a=[]",
         "    b=0000 h=0 ls=0,0 rs=0,0 t=0,0 f=00 +1", "  out 0000000000000000000000000000",
-        "+rightPadClick", "  pad [RightStickClick] d=[] a=[]",
-        "    b=0080 h=0 ls=0,0 rs=0,0 t=0,0 f=00 +1", "  out 0002000000000000000000000000",
-        "-rightPadClick", "  pad [] d=[] a=[]", "    b=0000 h=0 ls=0,0 rs=0,0 t=0,0 f=00 +1",
-        "  out 0000000000000000000000000000",
+        "+rightPadClick", "-rightPadClick",
       ]
     )
   }
