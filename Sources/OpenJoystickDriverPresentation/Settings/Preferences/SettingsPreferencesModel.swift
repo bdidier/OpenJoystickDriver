@@ -41,6 +41,8 @@
 
     private let settings: SettingsStore
     private var watcher: SettingsWatcher?
+    /// True while `errorMessage` shows a failed read of the settings file.
+    private var settingsReadFailed = false
     private let launchAtLogin: any LaunchAtLoginControlling
     private let notificationAuthorizationController: any NotificationAuthorizationControlling
     /// Counts authorization reads. The controller answers off the main actor, so a refresh that
@@ -84,13 +86,19 @@
       refreshNotificationAuthorization()
     }
 
-    /// Reads the user settings file again; a damaged file shows in `errorMessage` and leaves the
-    /// switches as they are.
+    /// Reads the user settings file and the login item again; a damaged file shows in
+    /// `errorMessage` and leaves the switches as they are.
     func reloadSettings() {
+      startAtLogin = launchAtLogin.isEnabled
       let stored: SettingsDocument
       do { stored = try settings.load() } catch {
         errorMessage = error.localizedDescription
+        settingsReadFailed = true
         return
+      }
+      if settingsReadFailed {
+        settingsReadFailed = false
+        errorMessage = nil
       }
       func value(_ key: ApplicationSettingKey) -> Bool { stored[key] ?? key.defaultValue }
       controllerNotifications = value(.notifyControllerConnected)

@@ -21,7 +21,7 @@ public final class ApplicationServiceServer: @unchecked Sendable {
   let virtualOutputTransitionClock: VirtualOutputTransitionClock
   let connectedIdentifierProvider: @Sendable () async -> [LogicalControllerID]
   let feedbackGate: VirtualOutputFeedbackGate
-  /// The layered settings files that every `ojd setting` key reads and writes.
+  /// The user settings file that every `ojd setting` key reads and writes.
   let settings: SettingsStore
   let launchAtLogin: LaunchAtLoginControl
   let virtualHIDProfileOverrides: VirtualHIDProfileOverrideStore

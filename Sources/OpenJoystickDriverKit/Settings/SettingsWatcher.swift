@@ -22,7 +22,7 @@ public final class SettingsWatcher: @unchecked Sendable {
       withIntermediateDirectories: true,
       attributes: [.posixPermissions: 0o700]
     )
-    let descriptor = open(folder.path, O_EVTONLY)
+    let descriptor = open(folder.path, O_EVTONLY | O_CLOEXEC)
     guard descriptor >= 0 else { return nil }
     source = DispatchSource.makeFileSystemObjectSource(
       fileDescriptor: descriptor,

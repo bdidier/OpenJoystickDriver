@@ -200,20 +200,49 @@ struct PreferencesTests {
   @MainActor
   func aChangeFromAnotherStoreReachesTheModel() async throws {
     let directory = RootedDataDirectory.temporary()
+    let loginItem = LaunchAtLoginStub(isEnabled: false)
     let model = SettingsPreferencesModel(
       settings: SettingsStore(directory: directory),
-      launchAtLogin: LaunchAtLoginStub(isEnabled: false),
+      launchAtLogin: loginItem,
       notificationAuthorization: NotificationAuthorizationStub(state: .allowed)
     )
     #expect(!model.controllerNotifications)
+    #expect(!model.startAtLogin)
 
-    // What `ojd setting` or another process does.
-    try SettingsStore(directory: directory).set(.notifyControllerConnected, to: true)
+    // What `ojd setting` or another process does; the service changes the login item too.
+    loginItem.isEnabled = true
+    try SettingsStore(directory: directory).update([
+      .notifyControllerConnected: true, .launchAtLogin: true,
+    ])
 
-    for _ in 0..<100 where !model.controllerNotifications {
+    for _ in 0..<100 where !(model.controllerNotifications && model.startAtLogin) {
       try await Task.sleep(nanoseconds: 50_000_000)
     }
     #expect(model.controllerNotifications)
+    #expect(model.startAtLogin)
+  }
+
+  @Test
+  @MainActor
+  func aGoodReloadClearsTheErrorOfAFailedSettingsRead() throws {
+    let settings = SettingsStore(directory: RootedDataDirectory.temporary())
+    let model = SettingsPreferencesModel(
+      settings: settings,
+      launchAtLogin: LaunchAtLoginStub(isEnabled: false),
+      notificationAuthorization: NotificationAuthorizationStub(state: .allowed)
+    )
+    try FileManager.default.createDirectory(
+      at: settings.folderURL,
+      withIntermediateDirectories: true
+    )
+    try Data("not json".utf8).write(to: settings.userFileURL)
+
+    model.reloadSettings()
+    #expect(model.errorMessage != nil)
+
+    try FileManager.default.removeItem(at: settings.userFileURL)
+    model.reloadSettings()
+    #expect(model.errorMessage == nil)
   }
 
   @MainActor

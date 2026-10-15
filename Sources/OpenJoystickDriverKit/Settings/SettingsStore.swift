@@ -77,7 +77,11 @@ public struct SettingsStore: Sendable {
         attributes: [.posixPermissions: 0o700]
       )
     } catch { throw SettingsStoreError.unwritable(file: url.path) }
-    let lock = open(folder.appendingPathComponent(Self.lockFileName).path, O_CREAT | O_RDWR, 0o600)
+    let lock = open(
+      folder.appendingPathComponent(Self.lockFileName).path,
+      O_CREAT | O_RDWR | O_CLOEXEC,
+      0o600
+    )
     guard lock >= 0 else { throw SettingsStoreError.unwritable(file: url.path) }
     // Closing the descriptor also releases the lock.
     defer { close(lock) }

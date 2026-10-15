@@ -48,7 +48,7 @@ extension ApplicationServiceServer {
     return try getSettings()
   }
 
-  /// The login item reports macOS's state; every other key reports the layered files.
+  /// The login item reports macOS's state; every other key reports the user settings file.
   private func currentValue(of key: ApplicationSettingKey, stored: SettingsDocument) -> Bool {
     key == .launchAtLogin ? launchAtLogin.isEnabled() : stored[key] ?? key.defaultValue
   }
