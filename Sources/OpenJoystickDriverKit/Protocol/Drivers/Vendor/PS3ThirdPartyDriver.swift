@@ -109,7 +109,7 @@ public final class PS3ThirdPartyDriver: PhysicalProtocolDriver {
   public func consumeInputConnectionStateChange() -> ControllerInputConnectionState? { nil }
 
   public var capabilities: ControllerCapabilities {
-    ControllerCapabilities(controls: ControlID.xboxLayout.union([.guide]))
+    PhysicalProtocolID.vendorPS3ThirdParty.describedControls
   }
 
   /// Rumble through the record's template; the motors run until the next report.

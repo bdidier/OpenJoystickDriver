@@ -237,7 +237,7 @@ func runSwitchProTransportAndMappingCheck() throws {
   require(
     hidReports(Switch1Driver().startupWrites()).map(\.reportID)
       == ProtocolPacketFixtures.SwitchPro.usbStartupReportIDs,
-    "Switch Pro USB startup report IDs should match Linux init slice"
+    "Switch Pro USB startup report IDs should match the driver's own startup reports"
   )
 
   let expectations: [(UInt32, ControlID)] = [
@@ -292,23 +292,22 @@ func runSwitchProTransportAndMappingCheck() throws {
   )
   require(
     startupReports.map { Array($0.bytes.prefix(2)) } == [
-      [0x80, 0x02], [0x80, 0x03], [0x80, 0x02], [0x80, 0x04], [0x01, 0x00], [0x01, 0x01],
-      [0x01, 0x02], [0x01, 0x03], [0x01, 0x04],
+      [0x01, 0x00], [0x01, 0x01], [0x01, 0x02], [0x01, 0x03], [0x01, 0x04],
     ],
     "Switch Pro USB startup reports should match Linux init prefixes"
   )
   require(
-    startupReports[4].bytes[10] == 0x03,
+    startupReports[0].bytes[10] == 0x03,
     "Switch Pro startup should set full report mode subcommand"
   )
   require(
-    startupReports[4].bytes[11] == 0x30,
+    startupReports[0].bytes[11] == 0x30,
     "Switch Pro startup should request full report mode 0x30"
   )
-  require(startupReports[5].bytes[10] == 0x40, "Switch Pro startup should enable IMU")
+  require(startupReports[1].bytes[10] == 0x40, "Switch Pro startup should enable IMU")
   require(
-    startupReports[6].bytes[10] == 0x48 && startupReports[6].bytes[11] == 1,
+    startupReports[2].bytes[10] == 0x48 && startupReports[2].bytes[11] == 1,
     "Switch Pro startup should enable rumble"
   )
-  require(startupReports[5].bytes[11] == 0x01, "Switch Pro startup should enable IMU data")
+  require(startupReports[1].bytes[11] == 0x01, "Switch Pro startup should enable IMU data")
 }

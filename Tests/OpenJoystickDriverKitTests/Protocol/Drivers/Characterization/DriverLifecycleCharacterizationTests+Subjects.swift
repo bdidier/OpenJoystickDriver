@@ -263,10 +263,10 @@ extension DriverLifecycleCharacterizationTests {
     }
     let gip = try #require(Self.registry.record(for: Self.gipUSB.model))
     #expect(gip.gipKeepAlivePolicy == .enabled)
-    #expect(gip.gipStartupPackets == GIPStartupPacket.defaultSequence)
+    #expect(gip.gipStartupPackets.isEmpty)
     let disabled = try #require(Self.registry.record(for: Self.gipKeepAliveDisabled.model))
     #expect(disabled.gipKeepAlivePolicy == .disabled)
-    #expect(disabled.gipStartupPackets == GIPStartupPacket.defaultSequence)
+    #expect(disabled.gipStartupPackets.isEmpty)
   }
 
   // MARK: - Inputs

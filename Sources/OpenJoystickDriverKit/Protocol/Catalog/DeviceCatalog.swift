@@ -51,7 +51,7 @@ struct DeviceCatalog: Sendable {
       )
     }
     let protocolInfo = record.protocolInfo
-    let defaultEndpoints = defaultEndpoints(for: protocolInfo.protocolID)
+    let defaultEndpoints = protocolInfo.protocolID.protocolDescription.endpoints
     let inputEndpoint = record.usb?.endpoints?.input ?? defaultEndpoints.input
     let outputEndpoint = record.usb?.endpoints?.output ?? defaultEndpoints.output
     if record.usb != nil
@@ -81,12 +81,13 @@ struct DeviceCatalog: Sendable {
       parameters: protocolInfo.parameters,
       capabilityDelta: record.capabilities,
       preferredBackends: [.userSpaceHID],
-      gipStartupPackets: protocolInfo.initialization ?? GIPStartupPacket.defaultSequence,
+      gipStartupPackets: protocolInfo.initialization ?? [],
       gipKeepAlivePolicy: keepAlivePolicy,
       assemblyPolicy: protocolInfo.assembly,
       server: record.server ?? .system,
       rumbleTemplate: record.rumbleTemplate,
       startupWrites: record.startupWrites,
+      usbStartupWrites: record.usbStartupWrites,
       inputLayout: record.inputLayout,
       hidUsageMap: record.hidUsageMap,
       tuning: record.tuning,
@@ -104,7 +105,7 @@ struct DeviceCatalog: Sendable {
     variant: PhysicalProtocolVariantID?,
     needsSetConfiguration: Bool
   ) -> DeviceRuntimeProfile {
-    let endpoints = defaultEndpoints(for: protocolID)
+    let endpoints = protocolID.protocolDescription.endpoints
     return DeviceRuntimeProfile(
       recordID: nil,
       transportProfile: DeviceTransportProfile(
@@ -117,24 +118,15 @@ struct DeviceCatalog: Sendable {
       parameters: .none,
       capabilityDelta: .none,
       preferredBackends: [.userSpaceHID],
-      gipStartupPackets: GIPStartupPacket.defaultSequence,
+      gipStartupPackets: [],
       gipKeepAlivePolicy: .enabled,
       assemblyPolicy: nil,
       server: .system,
       rumbleTemplate: nil,
       startupWrites: [],
+      usbStartupWrites: [],
       inputLayout: nil,
       tuning: .none
     )
-  }
-
-  private static func defaultEndpoints(
-    for protocolID: PhysicalProtocolID
-  ) -> (input: Int, output: Int) {
-    switch protocolID {
-    case .xboxXUSB: (input: 129, output: 1)
-    case .xboxXID: (input: 129, output: 2)
-    default: (input: 130, output: 2)
-    }
   }
 }

@@ -10,6 +10,14 @@ extension ControllerRecordDocument {
       try container.rejectUnknown(allowed: [
         "stickDeadzone", "inputLivenessTimeoutMs", "hidStartupIntervalMs",
         "minimumHIDOutputIntervalMs", "hidStartupRecoveryIntervalMs", "hidStartupRecoveryRounds",
+        "keepAliveIntervalMs",
+        "lizardResendTicks",
+        "usbCommandTimeoutMs",
+        "presenceResendReports",
+        "adapterDisconnectDelayMs",
+        "usbStartupIntervalMs",
+        "usbStartupRetryDelayMs",
+        "usbTransferTimeoutMs",
         "frameQueueCapacity",
       ])
       guard !container.allKeys.isEmpty else {
@@ -48,13 +56,21 @@ extension ControllerRecordDocument {
           1...60_000
         ),
         hidStartupRecoveryRounds: try integer("hidStartupRecoveryRounds", 1...10),
+        keepAliveIntervalMilliseconds: try integer("keepAliveIntervalMs", 1...60_000),
+        lizardResendTicks: try integer("lizardResendTicks", 1...100_000),
+        usbCommandTimeoutMilliseconds: try integer("usbCommandTimeoutMs", 1...60_000),
+        presenceResendReports: try integer("presenceResendReports", 1...1_000),
+        adapterDisconnectDelayMilliseconds: try integer("adapterDisconnectDelayMs", 1...60_000),
+        usbStartupIntervalMilliseconds: try integer("usbStartupIntervalMs", 0...60_000),
+        usbStartupRetryDelayMilliseconds: try integer("usbStartupRetryDelayMs", 1...60_000),
+        usbTransferTimeoutMilliseconds: try integer("usbTransferTimeoutMs", 1...60_000),
         frameQueueCapacity: try integer("frameQueueCapacity", 1...1024)
       )
     }
   }
 
-  /// Each timing applies only where a driver reads it: DualShock 4 liveness, Switch 1 startup
-  /// recovery, and HID startup and output pacing.
+  /// Each timing applies only where a driver reads it; the family's description names the keys
+  /// its driver reads.
   func validateTuning(codingPath: [any CodingKey]) throws {
     let path = codingPath + [DocumentKey("tuning")]
     let violation = ControllerTuning.Key.allCases.filter(tuning.setKeys.contains).lazy

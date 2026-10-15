@@ -118,7 +118,10 @@ extension ProtocolClassifierTests {
     var rules: [String: Any] = [:]
     for rule in try #require(schema["allOf"] as? [[String: Any]]) {
       let condition = (rule["if"] as? [String: Any])?["properties"] as? [String: Any]
-      let family = try #require((condition?["family"] as? [String: Any])?["const"] as? String)
+      // The generic rules (record sections, raw USB) name no family.
+      guard let family = (condition?["family"] as? [String: Any])?["const"] as? String else {
+        continue
+      }
       let then = (rule["then"] as? [String: Any])?["properties"] as? [String: Any]
       rules[family] = then?["interfaceSignatures"]
     }
@@ -152,6 +155,7 @@ extension ProtocolClassifierTests {
         "apiVersion": "\(apiVersion)",
         "kind": "\(kind)",
         "family": "\(family)",
+        "endpoints": {"in": 130, "out": 2},
         "interfaceSignatures": [
           {\(signature), "interfaceClass": 255, "interfaceSubclass": 71, "interfaceProtocol": 208}
         ]

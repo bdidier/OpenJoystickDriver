@@ -9,10 +9,6 @@ let steamTritonIMUModeSetting: UInt8 = 48
 let steamTritonRawIMUMode: UInt8 = 0x18
 let steamTritonRumbleReportID: UInt8 = 0x80
 let steamTritonRumbleReportLength = 10
-/// SDL `TRITON_RUMBLE_RESEND_INTERVAL_MS`: the firmware drops a rumble it does not hear again.
-let steamTritonKeepAliveIntervalNanoseconds: UInt64 = 40_000_000
-/// SDL resends lizard-mode-off every 3000 ms; the firmware watchdog restores lizard mode.
-let steamTritonLizardResendTicks = 75
 
 /// Driver for the 2026 Steam Controller (Triton) over USB, Bluetooth LE, and its dongles.
 ///
@@ -32,24 +28,23 @@ public final class SteamTritonDriver: PhysicalProtocolDriver {
   var pendingConnectionStateChange: ControllerInputConnectionState?
   var rumble: (left: UInt16, right: UInt16) = (0, 0)
   var keepAliveTick = 0
+  /// Keep-alive ticks between lizard-mode-off resends (`lizardResendTicks`): SDL resends every
+  /// 3000 ms, and the firmware watchdog restores lizard mode if the resends stop.
+  let lizardResendTicks: Int
 
-  /// Creates a Triton driver; `isDongle` starts with no controller connected.
-  public init(isDongle: Bool = false) {
+  /// Creates a Triton driver; `isDongle` starts with no controller connected. `tuning` is the
+  /// effective tuning of the controller's record; the description's defaults when nil.
+  public init(isDongle: Bool = false, tuning: ControllerTuning? = nil) {
     self.isDongle = isDongle
+    lizardResendTicks = PhysicalProtocolID.valveSteamTriton.described(
+      \.lizardResendTicks,
+      in: tuning
+    )
     isLogicalControllerConnected = !isDongle
   }
 
   public var capabilities: ControllerCapabilities {
-    let extra: Set<ControlID> = [
-      .guide, .auxiliary1, .leftTriggerButton, .rightTriggerButton, .paddleLeft1, .paddleLeft2,
-      .paddleRight1, .paddleRight2, .leftStickTouch, .rightStickTouch, .leftTrackpadClick,
-      .rightTrackpadClick, .leftTrackpadTouch, .rightTrackpadTouch,
-    ]
-    return ControllerCapabilities(
-      controls: ControlID.xboxLayout.union(extra),
-      touchContactCount: 1,
-      motion: true
-    )
+    PhysicalProtocolID.valveSteamTriton.describedControls
   }
 
   /// SDL declares rumble only: no LED, no trigger rumble.
@@ -64,10 +59,13 @@ public final class SteamTritonDriver: PhysicalProtocolDriver {
 
   public var power: ControllerConnectionState.Power? { storedPower }
 
+  /// The description's keep-alive interval is SDL `TRITON_RUMBLE_RESEND_INTERVAL_MS`: the firmware
+  /// drops a rumble it does not hear again.
   public var sessionPlan: DriverSessionPlan {
     DriverSessionPlan(
       requiresInputConnectionBeforeOutput: isDongle,
-      hidKeepAliveIntervalNanoseconds: steamTritonKeepAliveIntervalNanoseconds
+      hidKeepAliveIntervalNanoseconds: PhysicalProtocolID.valveSteamTriton
+        .keepAliveIntervalNanoseconds()
     )
   }
 
@@ -113,7 +111,7 @@ public final class SteamTritonDriver: PhysicalProtocolDriver {
   public func keepAliveWrites() -> [PhysicalOutputWrite] {
     guard isLogicalControllerConnected else { return [] }
     var writes: [PhysicalOutputWrite] = []
-    if keepAliveTick.isMultiple(of: steamTritonLizardResendTicks) {
+    if keepAliveTick.isMultiple(of: lizardResendTicks) {
       writes.append(.hidFeature(Self.setting(steamTritonLizardModeSetting, value: 0)))
     }
     keepAliveTick += 1
