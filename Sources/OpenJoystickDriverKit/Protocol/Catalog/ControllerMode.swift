@@ -32,7 +32,7 @@ public struct ControllerModeMatch: Equatable, Sendable {
     public let usagePage: UInt32?
     public let usage: UInt32?
     /// The interface's whole endpoint set; nil does not constrain it.
-    public var endpoints: [Endpoint]? = nil
+    public var endpoints: [Endpoint]?
   }
 
   /// The link every interface of the device reaches the controller over: the observed physical

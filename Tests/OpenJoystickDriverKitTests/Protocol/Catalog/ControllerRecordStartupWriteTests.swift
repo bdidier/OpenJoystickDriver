@@ -223,18 +223,16 @@ struct ControllerRecordStartupWriteTests {
         interfaces: [PhysicalInterfaceSignature(interfaceNumber: 0, hostTransport: link)]
       )
     }
-    for (link, expected) in [
-      (PhysicalTransport.bluetoothClassic, ControllerModeSelection.matched("bluetooth")),
-      (.usb, .noModeMatched),
-    ] {
+    // The DS3 also has a probed mode, which a wired link reaches and the reader cannot answer.
+    for (link, expected) in [(PhysicalTransport.bluetoothClassic, "bluetooth"), (.usb, nil)] {
       let selected = await ControllerModeSelector.select(
         from: base,
         model: model,
         backend: .ioHID,
-        reader: NoProbeReader(),
+        reader: UnansweredProbeReader(),
         device: device(link)
       ) { _ in }
-      #expect(selected == expected)
+      #expect(selected.modeID == expected)
     }
     #expect(
       record.startupWrites.map(\.write) == [
@@ -259,12 +257,11 @@ struct ControllerRecordStartupWriteTests {
   }
 }
 
-/// A reader for modes with no probe: any read is a test failure.
-private struct NoProbeReader: ControllerModeProbeReader {
+/// A reader that never answers, so a probed mode is never selected.
+private struct UnansweredProbeReader: ControllerModeProbeReader {
   func readFeatureReport(
     _ request: PhysicalHIDFeatureReadRequest
   ) -> PhysicalHIDReportResult<Data> {
-    Issue.record("a mode without a probe read a report")
     return .unavailable
   }
 }
