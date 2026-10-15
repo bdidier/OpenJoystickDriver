@@ -1,939 +1,959 @@
 {
-	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/protocol-description.schema.json",
-	"$comment": "Each family's variants are PhysicalProtocolID.variants in Swift; a family with none has no interface signatures. The parameter names of each family are those its driver declares in ProtocolParameters. defaults holds the sections a record layers over, limited to what the family's driver reads: input applies to hid.report-layout and xbox.xid as a byte layout and to hid.descriptor as a HID usage map, a rumble template to the drivers that encode one, startup writes and HID timings to HID families, liveness to sony.dualshock4 and startup recovery to nintendo.switch1.",
-	"type": "object",
-	"additionalProperties": false,
-	"required": ["apiVersion", "kind", "family"],
-	"properties": {
-		"apiVersion": {
-			"const": "openjoystickdriver/v1alpha1"
-		},
-		"kind": {
-			"const": "ProtocolDescription"
-		},
-		"family": {
-			"$ref": "controller.schema.json#/$defs/protocol/properties/family"
-		},
-		"interfaceSignatures": {
-			"type": "array",
-			"minItems": 1,
-			"uniqueItems": true,
-			"items": {
-				"$ref": "#/$defs/interfaceSignature"
-			}
-		},
-		"parameters": {
-			"type": "object",
-			"minProperties": 1,
-			"additionalProperties": {
-				"$ref": "#/$defs/parameterDeclaration"
-			}
-		},
-		"defaults": {
-			"$ref": "#/$defs/defaults"
-		}
-	},
-	"allOf": [
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "hid.descriptor"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"interfaceSignatures": false,
-					"parameters": false,
-					"defaults": {
-						"properties": {
-							"input": {
-								"$ref": "#/$defs/hidDescriptorInput"
-							},
-							"output": {
-								"properties": {
-									"rumble": false
-								}
-							},
-							"tuning": {
-								"properties": {
-									"inputLivenessTimeoutMs": false,
-									"hidStartupRecoveryIntervalMs": false,
-									"hidStartupRecoveryRounds": false
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "hid.report-layout"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"interfaceSignatures": false,
-					"parameters": false,
-					"defaults": {
-						"properties": {
-							"input": {
-								"$ref": "controller.schema.json#/$defs/input"
-							},
-							"tuning": {
-								"properties": {
-									"inputLivenessTimeoutMs": false,
-									"hidStartupRecoveryIntervalMs": false,
-									"hidStartupRecoveryRounds": false
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "xbox.xid"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"interfaceSignatures": {
-						"items": {
-							"properties": {
-								"variant": {
-									"enum": ["gamepad"]
-								}
-							}
-						}
-					},
-					"parameters": false,
-					"defaults": {
-						"properties": {
-							"input": {
-								"$ref": "controller.schema.json#/$defs/input"
-							},
-							"output": {
-								"properties": {
-									"rumble": false,
-									"startup": false
-								}
-							},
-							"tuning": {
-								"properties": {
-									"inputLivenessTimeoutMs": false,
-									"hidStartupRecoveryIntervalMs": false,
-									"hidStartupRecoveryRounds": false,
-									"hidStartupIntervalMs": false,
-									"minimumHIDOutputIntervalMs": false
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "xbox.xusb"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"interfaceSignatures": {
-						"items": {
-							"properties": {
-								"variant": {
-									"enum": ["wired", "receiver"]
-								}
-							}
-						}
-					},
-					"parameters": false,
-					"defaults": {
-						"properties": {
-							"input": false,
-							"output": {
-								"properties": {
-									"rumble": false,
-									"startup": false
-								}
-							},
-							"tuning": {
-								"properties": {
-									"inputLivenessTimeoutMs": false,
-									"hidStartupRecoveryIntervalMs": false,
-									"hidStartupRecoveryRounds": false,
-									"hidStartupIntervalMs": false,
-									"minimumHIDOutputIntervalMs": false
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "xbox.gip"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"interfaceSignatures": {
-						"items": {
-							"properties": {
-								"variant": {
-									"enum": ["usb"]
-								}
-							}
-						}
-					},
-					"parameters": {
-						"propertyNames": {
-							"enum": ["shareButton"]
-						}
-					},
-					"defaults": {
-						"properties": {
-							"input": false,
-							"output": {
-								"properties": {
-									"rumble": false,
-									"startup": false
-								}
-							},
-							"tuning": {
-								"properties": {
-									"inputLivenessTimeoutMs": false,
-									"hidStartupRecoveryIntervalMs": false,
-									"hidStartupRecoveryRounds": false,
-									"hidStartupIntervalMs": false,
-									"minimumHIDOutputIntervalMs": false
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "sony.sixaxis"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"interfaceSignatures": {
-						"items": {
-							"properties": {
-								"variant": {
-									"enum": ["usb", "bluetooth-classic"]
-								}
-							}
-						}
-					},
-					"parameters": false,
-					"defaults": {
-						"properties": {
-							"input": false,
-							"output": {
-								"properties": {
-									"rumble": false
-								}
-							},
-							"tuning": {
-								"properties": {
-									"inputLivenessTimeoutMs": false,
-									"hidStartupRecoveryIntervalMs": false,
-									"hidStartupRecoveryRounds": false
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "sony.dualshock4"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"interfaceSignatures": {
-						"items": {
-							"properties": {
-								"variant": {
-									"enum": ["usb", "bluetooth-classic"]
-								}
-							}
-						}
-					},
-					"parameters": {
-						"propertyNames": {
-							"enum": ["motionCalibration", "role", "motionScale"]
-						}
-					},
-					"defaults": {
-						"properties": {
-							"input": false,
-							"output": {
-								"properties": {
-									"rumble": false
-								}
-							},
-							"tuning": {
-								"properties": {
-									"hidStartupRecoveryIntervalMs": false,
-									"hidStartupRecoveryRounds": false
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "sony.dualsense"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"interfaceSignatures": {
-						"items": {
-							"properties": {
-								"variant": {
-									"enum": ["usb", "bluetooth-classic"]
-								}
-							}
-						}
-					},
-					"parameters": {
-						"propertyNames": {
-							"enum": ["maker", "unprobedSensors", "unprobedTouchpad", "forcedVibration", "role"]
-						}
-					},
-					"defaults": {
-						"properties": {
-							"input": false,
-							"output": {
-								"properties": {
-									"rumble": false
-								}
-							},
-							"tuning": {
-								"properties": {
-									"inputLivenessTimeoutMs": false,
-									"hidStartupRecoveryIntervalMs": false,
-									"hidStartupRecoveryRounds": false
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "nintendo.switch1"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"interfaceSignatures": {
-						"items": {
-							"properties": {
-								"variant": {
-									"enum": ["usb", "bluetooth-classic"]
-								}
-							}
-						}
-					},
-					"parameters": {
-						"propertyNames": {
-							"enum": ["layout", "usbProtocol"]
-						}
-					},
-					"defaults": {
-						"properties": {
-							"input": false,
-							"output": {
-								"properties": {
-									"rumble": false
-								}
-							},
-							"tuning": {
-								"properties": {
-									"inputLivenessTimeoutMs": false
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "nintendo.switch2"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"interfaceSignatures": {
-						"items": {
-							"properties": {
-								"variant": {
-									"enum": ["usb", "bluetooth-le"]
-								}
-							}
-						}
-					},
-					"parameters": {
-						"propertyNames": {
-							"enum": ["layout"]
-						}
-					},
-					"defaults": {
-						"properties": {
-							"input": false,
-							"output": {
-								"properties": {
-									"rumble": false
-								}
-							},
-							"tuning": {
-								"properties": {
-									"inputLivenessTimeoutMs": false,
-									"hidStartupRecoveryIntervalMs": false,
-									"hidStartupRecoveryRounds": false
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "nintendo.switch-input-only"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"interfaceSignatures": {
-						"items": {
-							"properties": {
-								"variant": {
-									"enum": ["usb", "bluetooth-classic"]
-								}
-							}
-						}
-					},
-					"parameters": false,
-					"defaults": {
-						"properties": {
-							"input": false,
-							"output": {
-								"properties": {
-									"rumble": false
-								}
-							},
-							"tuning": {
-								"properties": {
-									"inputLivenessTimeoutMs": false,
-									"hidStartupRecoveryIntervalMs": false,
-									"hidStartupRecoveryRounds": false
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "valve.steam-controller"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"interfaceSignatures": {
-						"items": {
-							"properties": {
-								"variant": {
-									"enum": ["wired", "dongle", "bluetooth-le"]
-								}
-							}
-						}
-					},
-					"parameters": false,
-					"defaults": {
-						"properties": {
-							"input": false,
-							"output": {
-								"properties": {
-									"rumble": false
-								}
-							},
-							"tuning": {
-								"properties": {
-									"inputLivenessTimeoutMs": false,
-									"hidStartupRecoveryIntervalMs": false,
-									"hidStartupRecoveryRounds": false
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "valve.steam-triton"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"interfaceSignatures": {
-						"items": {
-							"properties": {
-								"variant": {
-									"enum": ["wired", "dongle", "bluetooth-le"]
-								}
-							}
-						}
-					},
-					"parameters": false,
-					"defaults": {
-						"properties": {
-							"input": false,
-							"output": {
-								"properties": {
-									"rumble": false
-								}
-							},
-							"tuning": {
-								"properties": {
-									"inputLivenessTimeoutMs": false,
-									"hidStartupRecoveryIntervalMs": false,
-									"hidStartupRecoveryRounds": false
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "valve.steam-deck"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"interfaceSignatures": false,
-					"parameters": false,
-					"defaults": {
-						"properties": {
-							"input": false,
-							"output": {
-								"properties": {
-									"rumble": false
-								}
-							},
-							"tuning": {
-								"properties": {
-									"inputLivenessTimeoutMs": false,
-									"hidStartupRecoveryIntervalMs": false,
-									"hidStartupRecoveryRounds": false
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "vendor.flydigi"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"interfaceSignatures": false,
-					"parameters": false,
-					"defaults": {
-						"properties": {
-							"input": false,
-							"output": {
-								"properties": {
-									"rumble": false
-								}
-							},
-							"tuning": {
-								"properties": {
-									"inputLivenessTimeoutMs": false,
-									"hidStartupRecoveryIntervalMs": false,
-									"hidStartupRecoveryRounds": false
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "vendor.ps3-third-party"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"interfaceSignatures": false,
-					"parameters": {
-						"propertyNames": {
-							"enum": ["hatSource"]
-						}
-					},
-					"defaults": {
-						"properties": {
-							"input": false,
-							"tuning": {
-								"properties": {
-									"inputLivenessTimeoutMs": false,
-									"hidStartupRecoveryIntervalMs": false,
-									"hidStartupRecoveryRounds": false
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "vendor.gamesir"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"interfaceSignatures": {
-						"items": {
-							"properties": {
-								"variant": {
-									"enum": ["usb", "enhanced-hid"]
-								}
-							}
-						}
-					},
-					"parameters": {
-						"propertyNames": {
-							"enum": ["innerGrips", "lightingMemory"]
-						}
-					},
-					"defaults": {
-						"properties": {
-							"input": false,
-							"output": {
-								"properties": {
-									"rumble": false
-								}
-							},
-							"tuning": {
-								"properties": {
-									"inputLivenessTimeoutMs": false,
-									"hidStartupRecoveryIntervalMs": false,
-									"hidStartupRecoveryRounds": false
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "vendor.nvidia-shield"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"interfaceSignatures": false,
-					"parameters": {
-						"propertyNames": {
-							"enum": ["reportRevision"]
-						}
-					},
-					"defaults": {
-						"properties": {
-							"input": false,
-							"output": {
-								"properties": {
-									"rumble": false
-								}
-							},
-							"tuning": {
-								"properties": {
-									"inputLivenessTimeoutMs": false,
-									"hidStartupRecoveryIntervalMs": false,
-									"hidStartupRecoveryRounds": false
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	],
-	"$defs": {
-		"interfaceSignature": {
-			"type": "object",
-			"additionalProperties": false,
-			"required": ["variant", "interfaceClass", "interfaceSubclass", "interfaceProtocol"],
-			"properties": {
-				"variant": {
-					"enum": ["usb", "bluetooth-classic", "bluetooth-le", "gamepad", "wired", "receiver", "dongle", "enhanced-hid"]
-				},
-				"interfaceClass": {
-					"$ref": "#/$defs/byte"
-				},
-				"interfaceSubclass": {
-					"$ref": "#/$defs/byte"
-				},
-				"interfaceProtocol": {
-					"$ref": "#/$defs/byte"
-				},
-				"interfaceNumber": {
-					"$ref": "#/$defs/byte"
-				}
-			}
-		},
-		"byte": {
-			"type": "integer",
-			"minimum": 0,
-			"maximum": 255
-		},
-		"parameterDeclaration": {
-			"oneOf": [
-				{
-					"type": "object",
-					"additionalProperties": false,
-					"required": ["type"],
-					"properties": {
-						"type": {
-							"const": "flag"
-						}
-					}
-				},
-				{
-					"type": "object",
-					"additionalProperties": false,
-					"required": ["type", "values"],
-					"properties": {
-						"type": {
-							"const": "enum"
-						},
-						"values": {
-							"type": "array",
-							"minItems": 1,
-							"uniqueItems": true,
-							"items": {
-								"type": "string",
-								"pattern": "^[A-Z][A-Za-z0-9]*$"
-							}
-						}
-					}
-				},
-				{
-					"type": "object",
-					"additionalProperties": false,
-					"required": ["type", "fields"],
-					"properties": {
-						"type": {
-							"const": "object"
-						},
-						"fields": {
-							"type": "object",
-							"minProperties": 1,
-							"additionalProperties": {
-								"$ref": "#/$defs/integerField"
-							}
-						}
-					}
-				}
-			]
-		},
-		"integerField": {
-			"type": "object",
-			"additionalProperties": false,
-			"required": ["type", "minimum", "maximum"],
-			"properties": {
-				"type": {
-					"const": "integer"
-				},
-				"minimum": {
-					"type": "integer"
-				},
-				"maximum": {
-					"type": "integer"
-				}
-			}
-		},
-		"defaults": {
-			"type": "object",
-			"additionalProperties": false,
-			"minProperties": 1,
-			"properties": {
-				"capabilities": {
-					"$ref": "controller.schema.json#/$defs/capabilities"
-				},
-				"output": {
-					"$ref": "controller.schema.json#/$defs/output"
-				},
-				"input": {
-					"anyOf": [
-						{
-							"$ref": "controller.schema.json#/$defs/input"
-						},
-						{
-							"$ref": "#/$defs/hidDescriptorInput"
-						}
-					]
-				},
-				"tuning": {
-					"$ref": "controller.schema.json#/$defs/tuning"
-				}
-			}
-		},
-		"hidDescriptorInput": {
-			"$comment": "hid.descriptor's input defaults: hidUsageMap is the map every record layers over, and descriptorShapes picks another map for a controller whose report descriptor has a shape. The first shape whose usages are all present, none of absent present, and at least one of anyOf present (when listed) applies.",
-			"type": "object",
-			"additionalProperties": false,
-			"minProperties": 1,
-			"properties": {
-				"hidUsageMap": {
-					"$ref": "controller.schema.json#/$defs/hidUsageMap"
-				},
-				"descriptorShapes": {
-					"type": "array",
-					"minItems": 1,
-					"items": {
-						"$ref": "#/$defs/descriptorShape"
-					}
-				}
-			}
-		},
-		"descriptorShape": {
-			"type": "object",
-			"additionalProperties": false,
-			"required": ["present", "hidUsageMap"],
-			"properties": {
-				"present": {
-					"$ref": "#/$defs/usageList"
-				},
-				"absent": {
-					"$ref": "#/$defs/usageList"
-				},
-				"anyOf": {
-					"$ref": "#/$defs/usageList"
-				},
-				"hidUsageMap": {
-					"$ref": "controller.schema.json#/$defs/hidUsageMap"
-				}
-			}
-		},
-		"usageList": {
-			"type": "array",
-			"minItems": 1,
-			"uniqueItems": true,
-			"items": {
-				"type": "object",
-				"additionalProperties": false,
-				"required": ["page", "usage"],
-				"properties": {
-					"page": {
-						"$ref": "controller.schema.json#/$defs/hidUsagePage"
-					},
-					"usage": {
-						"$ref": "controller.schema.json#/$defs/hidUsageID"
-					}
-				}
-			}
-		}
-	}
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/protocol-description.schema.json",
+  "$comment": "Each family's variants are PhysicalProtocolID.variants in Swift; a family with none has no interface signatures. The parameter names of each family are those its driver declares in ProtocolParameters. defaults holds the sections a record layers over, limited to what the family's driver reads: input applies to hid.report-layout and xbox.xid as a byte layout and to hid.descriptor as a HID usage map, a rumble template to the drivers that encode one, startup writes and HID timings to HID families, liveness to sony.dualshock4 and startup recovery to nintendo.switch1.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "family"],
+  "properties": {
+    "apiVersion": {
+      "const": "openjoystickdriver/v1alpha1"
+    },
+    "kind": {
+      "const": "ProtocolDescription"
+    },
+    "family": {
+      "$ref": "controller.schema.json#/$defs/protocol/properties/family"
+    },
+    "interfaceSignatures": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/interfaceSignature"
+      }
+    },
+    "parameters": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/parameterDeclaration"
+      }
+    },
+    "defaults": {
+      "$ref": "#/$defs/defaults"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "hid.descriptor"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "interfaceSignatures": false,
+          "parameters": false,
+          "defaults": {
+            "properties": {
+              "input": {
+                "$ref": "#/$defs/hidDescriptorInput"
+              },
+              "output": {
+                "properties": {
+                  "rumble": false
+                }
+              },
+              "tuning": {
+                "properties": {
+                  "inputLivenessTimeoutMs": false,
+                  "hidStartupRecoveryIntervalMs": false,
+                  "hidStartupRecoveryRounds": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "hid.report-layout"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "interfaceSignatures": false,
+          "parameters": false,
+          "defaults": {
+            "properties": {
+              "input": {
+                "$ref": "controller.schema.json#/$defs/input"
+              },
+              "tuning": {
+                "properties": {
+                  "inputLivenessTimeoutMs": false,
+                  "hidStartupRecoveryIntervalMs": false,
+                  "hidStartupRecoveryRounds": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "xbox.xid"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "interfaceSignatures": {
+            "items": {
+              "properties": {
+                "variant": {
+                  "enum": ["gamepad"]
+                }
+              }
+            }
+          },
+          "parameters": false,
+          "defaults": {
+            "properties": {
+              "input": {
+                "$ref": "controller.schema.json#/$defs/input"
+              },
+              "output": {
+                "properties": {
+                  "rumble": false,
+                  "startup": false
+                }
+              },
+              "tuning": {
+                "properties": {
+                  "inputLivenessTimeoutMs": false,
+                  "hidStartupRecoveryIntervalMs": false,
+                  "hidStartupRecoveryRounds": false,
+                  "hidStartupIntervalMs": false,
+                  "minimumHIDOutputIntervalMs": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "xbox.xusb"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "interfaceSignatures": {
+            "items": {
+              "properties": {
+                "variant": {
+                  "enum": ["wired", "receiver"]
+                }
+              }
+            }
+          },
+          "parameters": false,
+          "defaults": {
+            "properties": {
+              "input": false,
+              "output": {
+                "properties": {
+                  "rumble": false,
+                  "startup": false
+                }
+              },
+              "tuning": {
+                "properties": {
+                  "inputLivenessTimeoutMs": false,
+                  "hidStartupRecoveryIntervalMs": false,
+                  "hidStartupRecoveryRounds": false,
+                  "hidStartupIntervalMs": false,
+                  "minimumHIDOutputIntervalMs": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "xbox.gip"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "interfaceSignatures": {
+            "items": {
+              "properties": {
+                "variant": {
+                  "enum": ["usb"]
+                }
+              }
+            }
+          },
+          "parameters": {
+            "propertyNames": {
+              "enum": ["shareButton"]
+            }
+          },
+          "defaults": {
+            "properties": {
+              "input": false,
+              "output": {
+                "properties": {
+                  "rumble": false,
+                  "startup": false
+                }
+              },
+              "tuning": {
+                "properties": {
+                  "inputLivenessTimeoutMs": false,
+                  "hidStartupRecoveryIntervalMs": false,
+                  "hidStartupRecoveryRounds": false,
+                  "hidStartupIntervalMs": false,
+                  "minimumHIDOutputIntervalMs": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "sony.sixaxis"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "interfaceSignatures": {
+            "items": {
+              "properties": {
+                "variant": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            }
+          },
+          "parameters": false,
+          "defaults": {
+            "properties": {
+              "input": false,
+              "output": {
+                "properties": {
+                  "rumble": false
+                }
+              },
+              "tuning": {
+                "properties": {
+                  "inputLivenessTimeoutMs": false,
+                  "hidStartupRecoveryIntervalMs": false,
+                  "hidStartupRecoveryRounds": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "sony.dualshock4"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "interfaceSignatures": {
+            "items": {
+              "properties": {
+                "variant": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            }
+          },
+          "parameters": {
+            "propertyNames": {
+              "enum": ["motionCalibration", "role", "motionScale"]
+            }
+          },
+          "defaults": {
+            "properties": {
+              "input": false,
+              "output": {
+                "properties": {
+                  "rumble": false
+                }
+              },
+              "tuning": {
+                "properties": {
+                  "hidStartupRecoveryIntervalMs": false,
+                  "hidStartupRecoveryRounds": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "sony.dualsense"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "interfaceSignatures": {
+            "items": {
+              "properties": {
+                "variant": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            }
+          },
+          "parameters": {
+            "propertyNames": {
+              "enum": [
+                "maker",
+                "unprobedSensors",
+                "unprobedTouchpad",
+                "forcedVibration",
+                "role"
+              ]
+            }
+          },
+          "defaults": {
+            "properties": {
+              "input": false,
+              "output": {
+                "properties": {
+                  "rumble": false
+                }
+              },
+              "tuning": {
+                "properties": {
+                  "inputLivenessTimeoutMs": false,
+                  "hidStartupRecoveryIntervalMs": false,
+                  "hidStartupRecoveryRounds": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "nintendo.switch1"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "interfaceSignatures": {
+            "items": {
+              "properties": {
+                "variant": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            }
+          },
+          "parameters": {
+            "propertyNames": {
+              "enum": ["layout", "usbProtocol"]
+            }
+          },
+          "defaults": {
+            "properties": {
+              "input": false,
+              "output": {
+                "properties": {
+                  "rumble": false
+                }
+              },
+              "tuning": {
+                "properties": {
+                  "inputLivenessTimeoutMs": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "nintendo.switch2"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "interfaceSignatures": {
+            "items": {
+              "properties": {
+                "variant": {
+                  "enum": ["usb", "bluetooth-le"]
+                }
+              }
+            }
+          },
+          "parameters": {
+            "propertyNames": {
+              "enum": ["layout"]
+            }
+          },
+          "defaults": {
+            "properties": {
+              "input": false,
+              "output": {
+                "properties": {
+                  "rumble": false
+                }
+              },
+              "tuning": {
+                "properties": {
+                  "inputLivenessTimeoutMs": false,
+                  "hidStartupRecoveryIntervalMs": false,
+                  "hidStartupRecoveryRounds": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "nintendo.switch-input-only"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "interfaceSignatures": {
+            "items": {
+              "properties": {
+                "variant": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            }
+          },
+          "parameters": false,
+          "defaults": {
+            "properties": {
+              "input": false,
+              "output": {
+                "properties": {
+                  "rumble": false
+                }
+              },
+              "tuning": {
+                "properties": {
+                  "inputLivenessTimeoutMs": false,
+                  "hidStartupRecoveryIntervalMs": false,
+                  "hidStartupRecoveryRounds": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "valve.steam-controller"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "interfaceSignatures": {
+            "items": {
+              "properties": {
+                "variant": {
+                  "enum": ["wired", "dongle", "bluetooth-le"]
+                }
+              }
+            }
+          },
+          "parameters": false,
+          "defaults": {
+            "properties": {
+              "input": false,
+              "output": {
+                "properties": {
+                  "rumble": false
+                }
+              },
+              "tuning": {
+                "properties": {
+                  "inputLivenessTimeoutMs": false,
+                  "hidStartupRecoveryIntervalMs": false,
+                  "hidStartupRecoveryRounds": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "valve.steam-triton"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "interfaceSignatures": {
+            "items": {
+              "properties": {
+                "variant": {
+                  "enum": ["wired", "dongle", "bluetooth-le"]
+                }
+              }
+            }
+          },
+          "parameters": false,
+          "defaults": {
+            "properties": {
+              "input": false,
+              "output": {
+                "properties": {
+                  "rumble": false
+                }
+              },
+              "tuning": {
+                "properties": {
+                  "inputLivenessTimeoutMs": false,
+                  "hidStartupRecoveryIntervalMs": false,
+                  "hidStartupRecoveryRounds": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "valve.steam-deck"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "interfaceSignatures": false,
+          "parameters": false,
+          "defaults": {
+            "properties": {
+              "input": false,
+              "output": {
+                "properties": {
+                  "rumble": false
+                }
+              },
+              "tuning": {
+                "properties": {
+                  "inputLivenessTimeoutMs": false,
+                  "hidStartupRecoveryIntervalMs": false,
+                  "hidStartupRecoveryRounds": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "vendor.flydigi"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "interfaceSignatures": false,
+          "parameters": false,
+          "defaults": {
+            "properties": {
+              "input": false,
+              "output": {
+                "properties": {
+                  "rumble": false
+                }
+              },
+              "tuning": {
+                "properties": {
+                  "inputLivenessTimeoutMs": false,
+                  "hidStartupRecoveryIntervalMs": false,
+                  "hidStartupRecoveryRounds": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "vendor.ps3-third-party"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "interfaceSignatures": false,
+          "parameters": {
+            "propertyNames": {
+              "enum": ["hatSource"]
+            }
+          },
+          "defaults": {
+            "properties": {
+              "input": false,
+              "tuning": {
+                "properties": {
+                  "inputLivenessTimeoutMs": false,
+                  "hidStartupRecoveryIntervalMs": false,
+                  "hidStartupRecoveryRounds": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "vendor.gamesir"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "interfaceSignatures": {
+            "items": {
+              "properties": {
+                "variant": {
+                  "enum": ["usb", "enhanced-hid"]
+                }
+              }
+            }
+          },
+          "parameters": {
+            "propertyNames": {
+              "enum": ["innerGrips", "lightingMemory"]
+            }
+          },
+          "defaults": {
+            "properties": {
+              "input": false,
+              "output": {
+                "properties": {
+                  "rumble": false
+                }
+              },
+              "tuning": {
+                "properties": {
+                  "inputLivenessTimeoutMs": false,
+                  "hidStartupRecoveryIntervalMs": false,
+                  "hidStartupRecoveryRounds": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "vendor.nvidia-shield"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "interfaceSignatures": false,
+          "parameters": {
+            "propertyNames": {
+              "enum": ["reportRevision"]
+            }
+          },
+          "defaults": {
+            "properties": {
+              "input": false,
+              "output": {
+                "properties": {
+                  "rumble": false
+                }
+              },
+              "tuning": {
+                "properties": {
+                  "inputLivenessTimeoutMs": false,
+                  "hidStartupRecoveryIntervalMs": false,
+                  "hidStartupRecoveryRounds": false
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "interfaceSignature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "variant",
+        "interfaceClass",
+        "interfaceSubclass",
+        "interfaceProtocol"
+      ],
+      "properties": {
+        "variant": {
+          "enum": [
+            "usb",
+            "bluetooth-classic",
+            "bluetooth-le",
+            "gamepad",
+            "wired",
+            "receiver",
+            "dongle",
+            "enhanced-hid"
+          ]
+        },
+        "interfaceClass": {
+          "$ref": "#/$defs/byte"
+        },
+        "interfaceSubclass": {
+          "$ref": "#/$defs/byte"
+        },
+        "interfaceProtocol": {
+          "$ref": "#/$defs/byte"
+        },
+        "interfaceNumber": {
+          "$ref": "#/$defs/byte"
+        }
+      }
+    },
+    "byte": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 255
+    },
+    "parameterDeclaration": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type"],
+          "properties": {
+            "type": {
+              "const": "flag"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "values"],
+          "properties": {
+            "type": {
+              "const": "enum"
+            },
+            "values": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Z][A-Za-z0-9]*$"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "fields"],
+          "properties": {
+            "type": {
+              "const": "object"
+            },
+            "fields": {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": {
+                "$ref": "#/$defs/integerField"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "integerField": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "minimum", "maximum"],
+      "properties": {
+        "type": {
+          "const": "integer"
+        },
+        "minimum": {
+          "type": "integer"
+        },
+        "maximum": {
+          "type": "integer"
+        }
+      }
+    },
+    "defaults": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "capabilities": {
+          "$ref": "controller.schema.json#/$defs/capabilities"
+        },
+        "output": {
+          "$ref": "controller.schema.json#/$defs/output"
+        },
+        "input": {
+          "anyOf": [
+            {
+              "$ref": "controller.schema.json#/$defs/input"
+            },
+            {
+              "$ref": "#/$defs/hidDescriptorInput"
+            }
+          ]
+        },
+        "tuning": {
+          "$ref": "controller.schema.json#/$defs/tuning"
+        }
+      }
+    },
+    "hidDescriptorInput": {
+      "$comment": "hid.descriptor's input defaults: hidUsageMap is the map every record layers over, and descriptorShapes picks another map for a controller whose report descriptor has a shape. The first shape whose usages are all present, none of absent present, and at least one of anyOf present (when listed) applies.",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "hidUsageMap": {
+          "$ref": "controller.schema.json#/$defs/hidUsageMap"
+        },
+        "descriptorShapes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/descriptorShape"
+          }
+        }
+      }
+    },
+    "descriptorShape": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["present", "hidUsageMap"],
+      "properties": {
+        "present": {
+          "$ref": "#/$defs/usageList"
+        },
+        "absent": {
+          "$ref": "#/$defs/usageList"
+        },
+        "anyOf": {
+          "$ref": "#/$defs/usageList"
+        },
+        "hidUsageMap": {
+          "$ref": "controller.schema.json#/$defs/hidUsageMap"
+        }
+      }
+    },
+    "usageList": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["page", "usage"],
+        "properties": {
+          "page": {
+            "$ref": "controller.schema.json#/$defs/hidUsagePage"
+          },
+          "usage": {
+            "$ref": "controller.schema.json#/$defs/hidUsageID"
+          }
+        }
+      }
+    }
+  }
 }

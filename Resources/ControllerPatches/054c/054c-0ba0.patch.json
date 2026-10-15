@@ -1,17 +1,17 @@
 {
-	"apiVersion": "openjoystickdriver/v1alpha1",
-	"kind": "ControllerPatch",
-	"selector": {
-		"vendorID": 1356,
-		"productID": 2976
-	},
-	"patch": {
-		"protocol": {
-			"family": "sony.dualshock4",
-			"parameters": {
-				"motionCalibration": "Factory",
-				"role": "WirelessAdapter"
-			}
-		}
-	}
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "ControllerPatch",
+  "selector": {
+    "vendorID": 1356,
+    "productID": 2976
+  },
+  "patch": {
+    "protocol": {
+      "family": "sony.dualshock4",
+      "parameters": {
+        "motionCalibration": "Factory",
+        "role": "WirelessAdapter"
+      }
+    }
+  }
 }

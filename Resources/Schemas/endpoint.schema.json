@@ -1,308 +1,308 @@
 {
-	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/endpoint.schema.json",
-	"title": "OpenJoystickDriver endpoint protocol",
-	"description": "One JSON object per line on the endpoint socket, or per text message on the WebSocket. Every line except a watch line carries apiVersion and kind. A client sends Hello, waits for Welcome, then sends Subscription or FeedRequest. After Subscription the service sends watch lines, {type, object}, identical to 'ojd controller watch --all --json'; after FeedRequest and FeedSession the client sends Frame lines and the service sends the host's RumbleCommand lines. A Status line with status Failure is the last line before the service closes the connection. A line that is not a JSON object is answered with Status E1004. For any other line the service reads the header first: a line without apiVersion or kind is answered with E1012, another apiVersion with E1010, and an unknown kind, or one that is not accepted at that point, with E1011; each of these carries details.supportedAPIVersions.",
-	"oneOf": [
-		{
-			"$ref": "#/$defs/clientLine"
-		},
-		{
-			"$ref": "#/$defs/serviceLine"
-		}
-	],
-	"$defs": {
-		"clientLine": {
-			"oneOf": [
-				{
-					"$ref": "#/$defs/hello"
-				},
-				{
-					"$ref": "#/$defs/subscription"
-				},
-				{
-					"$ref": "#/$defs/feedRequest"
-				},
-				{
-					"$ref": "#/$defs/frame"
-				}
-			]
-		},
-		"serviceLine": {
-			"oneOf": [
-				{
-					"$ref": "#/$defs/challenge"
-				},
-				{
-					"$ref": "#/$defs/welcome"
-				},
-				{
-					"$ref": "#/$defs/error"
-				},
-				{
-					"$ref": "cli-output.schema.json#/$defs/sharedControllerWatchEvent"
-				},
-				{
-					"$ref": "#/$defs/feedSession"
-				},
-				{
-					"$ref": "cli-output.schema.json#/$defs/sharedVirtualFeedLine"
-				}
-			]
-		},
-		"apiVersion": {
-			"$ref": "cli-output.schema.json#/$defs/sharedAPIVersion"
-		},
-		"hello": {
-			"type": "object",
-			"required": ["apiVersion", "kind", "scopes"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/apiVersion"
-				},
-				"kind": {
-					"const": "Hello"
-				},
-				"scopes": {
-					"type": "array",
-					"minItems": 1,
-					"uniqueItems": true,
-					"items": {
-						"$ref": "access-grants.schema.json#/$defs/scope"
-					},
-					"description": "The scopes the client needs; each must be granted."
-				},
-				"tokenName": {
-					"type": "string",
-					"pattern": "^[A-Za-z0-9._-]{1,64}$",
-					"description": "The name of a token from 'ojd access grant --token'; required on the WebSocket. A client with a token is not checked by its signature."
-				},
-				"proof": {
-					"type": "string",
-					"pattern": "^[0-9a-f]{64}$",
-					"description": "The lowercase hex HMAC-SHA256, keyed with the SHA-256 of the token, of four lines that each end with a newline: 'OpenJoystickDriver endpoint hello 1', the challenge's nonce, the page's origin, and the WebSocket's port. On the socket, the origin and port lines are empty."
-				}
-			},
-			"if": {
-				"required": ["tokenName"]
-			},
-			"then": {
-				"required": ["proof"]
-			}
-		},
-		"challenge": {
-			"type": "object",
-			"required": ["apiVersion", "kind", "nonce"],
-			"additionalProperties": false,
-			"description": "The first line on every connection.",
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/apiVersion"
-				},
-				"kind": {
-					"const": "Challenge"
-				},
-				"nonce": {
-					"type": "string",
-					"pattern": "^[A-Za-z0-9_-]{43}$",
-					"description": "32 random bytes in unpadded base64url, new for each connection."
-				}
-			}
-		},
-		"welcome": {
-			"type": "object",
-			"required": ["apiVersion", "kind", "scopes", "version"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/apiVersion"
-				},
-				"kind": {
-					"const": "Welcome"
-				},
-				"version": {
-					"type": "string",
-					"description": "The OpenJoystickDriver version."
-				},
-				"scopes": {
-					"type": "array",
-					"minItems": 1,
-					"uniqueItems": true,
-					"items": {
-						"$ref": "access-grants.schema.json#/$defs/scope"
-					}
-				}
-			}
-		},
-		"subscription": {
-			"type": "object",
-			"required": ["apiVersion", "kind", "stream"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/apiVersion"
-				},
-				"kind": {
-					"const": "Subscription"
-				},
-				"stream": {
-					"const": "controllers"
-				},
-				"output": {
-					"type": "boolean",
-					"description": "Adds the virtual gamepad's values to the objects of the watch lines. Defaults to false."
-				}
-			}
-		},
-		"feedRequest": {
-			"type": "object",
-			"required": ["apiVersion", "as", "kind"],
-			"additionalProperties": false,
-			"description": "Publishes a virtual gamepad that the connection drives; needs the control scope. Closing the connection removes the gamepad.",
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/apiVersion"
-				},
-				"kind": {
-					"const": "FeedRequest"
-				},
-				"as": {
-					"$ref": "#/$defs/persona"
-				}
-			}
-		},
-		"feedSession": {
-			"type": "object",
-			"required": ["apiVersion", "as", "kind"],
-			"additionalProperties": false,
-			"description": "The answer to FeedRequest: the virtual gamepad exists and takes Frame lines.",
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/apiVersion"
-				},
-				"kind": {
-					"const": "FeedSession"
-				},
-				"as": {
-					"$ref": "#/$defs/persona"
-				}
-			}
-		},
-		"persona": {
-			"enum": ["Generic", "SdlCompatible"],
-			"description": "The persona id of the virtual gamepad."
-		},
-		"frame": {
-			"type": "object",
-			"required": ["apiVersion", "kind"],
-			"additionalProperties": false,
-			"description": "One input frame after FeedSession, as in 'ojd virtual feed', which takes the same line without apiVersion and kind. Missing controls are neutral. The service shows frames in order, each for at least 8 ms; it stops reading while 256 frames wait. Closing the connection removes the virtual gamepad at once and drops the frames that have not played, unlike 'ojd virtual feed', so a client stays connected until its last frame has played.",
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/apiVersion"
-				},
-				"kind": {
-					"const": "Frame"
-				},
-				"buttons": {
-					"type": "array",
-					"uniqueItems": true,
-					"items": {
-						"$ref": "profile.schema.json#/$defs/button"
-					}
-				},
-				"dpad": {
-					"type": "array",
-					"uniqueItems": true,
-					"items": {
-						"$ref": "profile.schema.json#/$defs/dpadDirection"
-					}
-				},
-				"axes": {
-					"type": "object",
-					"propertyNames": {
-						"$ref": "profile.schema.json#/$defs/axis"
-					},
-					"additionalProperties": {
-						"type": "number"
-					},
-					"description": "Sticks run from -1 to 1 with positive Y up; triggers run from 0 to 1. Values out of range are clamped."
-				},
-				"holdMilliseconds": {
-					"type": "integer",
-					"minimum": 0,
-					"maximum": 60000,
-					"description": "How long the frame shows at least; without it, the frame shows until the next one."
-				}
-			}
-		},
-		"error": {
-			"type": "object",
-			"required": ["apiVersion", "code", "kind", "message", "status"],
-			"additionalProperties": false,
-			"description": "A Status line: the failure that ends the connection.",
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/apiVersion"
-				},
-				"kind": {
-					"const": "Status"
-				},
-				"status": {
-					"const": "Failure"
-				},
-				"code": {
-					"description": "A stable E#### code from Resources/ErrorCodes.json; ./Scripts/ojd errors regenerate keeps the enum equal to the active endpoint codes.",
-					"enum": [
-						"E1001",
-						"E1002",
-						"E1004",
-						"E1005",
-						"E1006",
-						"E1007",
-						"E1008",
-						"E1009",
-						"E1010",
-						"E1011",
-						"E1012"
-					]
-				},
-				"message": {
-					"type": "string",
-					"description": "English text for logs; clients branch on code."
-				},
-				"details": {
-					"type": "object",
-					"required": ["supportedAPIVersions"],
-					"additionalProperties": false,
-					"properties": {
-						"supportedAPIVersions": {
-							"type": "array",
-							"minItems": 1,
-							"items": {
-								"$ref": "#/$defs/apiVersion"
-							},
-							"description": "The apiVersion values the service speaks; only with E1010, E1011 and E1012."
-						}
-					}
-				}
-			},
-			"if": {
-				"properties": {
-					"code": {
-						"enum": ["E1010", "E1011", "E1012"]
-					}
-				}
-			},
-			"then": {
-				"required": ["details"]
-			},
-			"else": {
-				"not": {
-					"required": ["details"]
-				}
-			}
-		}
-	}
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/endpoint.schema.json",
+  "title": "OpenJoystickDriver endpoint protocol",
+  "description": "One JSON object per line on the endpoint socket, or per text message on the WebSocket. Every line except a watch line carries apiVersion and kind. A client sends Hello, waits for Welcome, then sends Subscription or FeedRequest. After Subscription the service sends watch lines, {type, object}, identical to 'ojd controller watch --all --json'; after FeedRequest and FeedSession the client sends Frame lines and the service sends the host's RumbleCommand lines. A Status line with status Failure is the last line before the service closes the connection. A line that is not a JSON object is answered with Status E1004. For any other line the service reads the header first: a line without apiVersion or kind is answered with E1012, another apiVersion with E1010, and an unknown kind, or one that is not accepted at that point, with E1011; each of these carries details.supportedAPIVersions.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/clientLine"
+    },
+    {
+      "$ref": "#/$defs/serviceLine"
+    }
+  ],
+  "$defs": {
+    "clientLine": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/hello"
+        },
+        {
+          "$ref": "#/$defs/subscription"
+        },
+        {
+          "$ref": "#/$defs/feedRequest"
+        },
+        {
+          "$ref": "#/$defs/frame"
+        }
+      ]
+    },
+    "serviceLine": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/challenge"
+        },
+        {
+          "$ref": "#/$defs/welcome"
+        },
+        {
+          "$ref": "#/$defs/error"
+        },
+        {
+          "$ref": "cli-output.schema.json#/$defs/sharedControllerWatchEvent"
+        },
+        {
+          "$ref": "#/$defs/feedSession"
+        },
+        {
+          "$ref": "cli-output.schema.json#/$defs/sharedVirtualFeedLine"
+        }
+      ]
+    },
+    "apiVersion": {
+      "$ref": "cli-output.schema.json#/$defs/sharedAPIVersion"
+    },
+    "hello": {
+      "type": "object",
+      "required": ["apiVersion", "kind", "scopes"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/apiVersion"
+        },
+        "kind": {
+          "const": "Hello"
+        },
+        "scopes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "access-grants.schema.json#/$defs/scope"
+          },
+          "description": "The scopes the client needs; each must be granted."
+        },
+        "tokenName": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]{1,64}$",
+          "description": "The name of a token from 'ojd access grant --token'; required on the WebSocket. A client with a token is not checked by its signature."
+        },
+        "proof": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "The lowercase hex HMAC-SHA256, keyed with the SHA-256 of the token, of four lines that each end with a newline: 'OpenJoystickDriver endpoint hello 1', the challenge's nonce, the page's origin, and the WebSocket's port. On the socket, the origin and port lines are empty."
+        }
+      },
+      "if": {
+        "required": ["tokenName"]
+      },
+      "then": {
+        "required": ["proof"]
+      }
+    },
+    "challenge": {
+      "type": "object",
+      "required": ["apiVersion", "kind", "nonce"],
+      "additionalProperties": false,
+      "description": "The first line on every connection.",
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/apiVersion"
+        },
+        "kind": {
+          "const": "Challenge"
+        },
+        "nonce": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{43}$",
+          "description": "32 random bytes in unpadded base64url, new for each connection."
+        }
+      }
+    },
+    "welcome": {
+      "type": "object",
+      "required": ["apiVersion", "kind", "scopes", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/apiVersion"
+        },
+        "kind": {
+          "const": "Welcome"
+        },
+        "version": {
+          "type": "string",
+          "description": "The OpenJoystickDriver version."
+        },
+        "scopes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "access-grants.schema.json#/$defs/scope"
+          }
+        }
+      }
+    },
+    "subscription": {
+      "type": "object",
+      "required": ["apiVersion", "kind", "stream"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/apiVersion"
+        },
+        "kind": {
+          "const": "Subscription"
+        },
+        "stream": {
+          "const": "controllers"
+        },
+        "output": {
+          "type": "boolean",
+          "description": "Adds the virtual gamepad's values to the objects of the watch lines. Defaults to false."
+        }
+      }
+    },
+    "feedRequest": {
+      "type": "object",
+      "required": ["apiVersion", "as", "kind"],
+      "additionalProperties": false,
+      "description": "Publishes a virtual gamepad that the connection drives; needs the control scope. Closing the connection removes the gamepad.",
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/apiVersion"
+        },
+        "kind": {
+          "const": "FeedRequest"
+        },
+        "as": {
+          "$ref": "#/$defs/persona"
+        }
+      }
+    },
+    "feedSession": {
+      "type": "object",
+      "required": ["apiVersion", "as", "kind"],
+      "additionalProperties": false,
+      "description": "The answer to FeedRequest: the virtual gamepad exists and takes Frame lines.",
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/apiVersion"
+        },
+        "kind": {
+          "const": "FeedSession"
+        },
+        "as": {
+          "$ref": "#/$defs/persona"
+        }
+      }
+    },
+    "persona": {
+      "enum": ["Generic", "SdlCompatible"],
+      "description": "The persona id of the virtual gamepad."
+    },
+    "frame": {
+      "type": "object",
+      "required": ["apiVersion", "kind"],
+      "additionalProperties": false,
+      "description": "One input frame after FeedSession, as in 'ojd virtual feed', which takes the same line without apiVersion and kind. Missing controls are neutral. The service shows frames in order, each for at least 8 ms; it stops reading while 256 frames wait. Closing the connection removes the virtual gamepad at once and drops the frames that have not played, unlike 'ojd virtual feed', so a client stays connected until its last frame has played.",
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/apiVersion"
+        },
+        "kind": {
+          "const": "Frame"
+        },
+        "buttons": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "profile.schema.json#/$defs/button"
+          }
+        },
+        "dpad": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "profile.schema.json#/$defs/dpadDirection"
+          }
+        },
+        "axes": {
+          "type": "object",
+          "propertyNames": {
+            "$ref": "profile.schema.json#/$defs/axis"
+          },
+          "additionalProperties": {
+            "type": "number"
+          },
+          "description": "Sticks run from -1 to 1 with positive Y up; triggers run from 0 to 1. Values out of range are clamped."
+        },
+        "holdMilliseconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 60000,
+          "description": "How long the frame shows at least; without it, the frame shows until the next one."
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "required": ["apiVersion", "code", "kind", "message", "status"],
+      "additionalProperties": false,
+      "description": "A Status line: the failure that ends the connection.",
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/apiVersion"
+        },
+        "kind": {
+          "const": "Status"
+        },
+        "status": {
+          "const": "Failure"
+        },
+        "code": {
+          "description": "A stable E#### code from Resources/ErrorCodes.json; ./Scripts/ojd errors regenerate keeps the enum equal to the active endpoint codes.",
+          "enum": [
+            "E1001",
+            "E1002",
+            "E1004",
+            "E1005",
+            "E1006",
+            "E1007",
+            "E1008",
+            "E1009",
+            "E1010",
+            "E1011",
+            "E1012"
+          ]
+        },
+        "message": {
+          "type": "string",
+          "description": "English text for logs; clients branch on code."
+        },
+        "details": {
+          "type": "object",
+          "required": ["supportedAPIVersions"],
+          "additionalProperties": false,
+          "properties": {
+            "supportedAPIVersions": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/apiVersion"
+              },
+              "description": "The apiVersion values the service speaks; only with E1010, E1011 and E1012."
+            }
+          }
+        }
+      },
+      "if": {
+        "properties": {
+          "code": {
+            "enum": ["E1010", "E1011", "E1012"]
+          }
+        }
+      },
+      "then": {
+        "required": ["details"]
+      },
+      "else": {
+        "not": {
+          "required": ["details"]
+        }
+      }
+    }
+  }
 }

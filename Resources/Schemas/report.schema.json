@@ -1,769 +1,769 @@
 {
-	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/report.schema.json",
-	"type": "object",
-	"required": [
-		"specversion",
-		"id",
-		"source",
-		"type",
-		"time",
-		"datacontenttype",
-		"dataschema",
-		"data"
-	],
-	"additionalProperties": false,
-	"properties": {
-		"specversion": {
-			"const": "1.0"
-		},
-		"id": {
-			"type": "string"
-		},
-		"source": {
-			"const": "urn:openjoystickdriver:support"
-		},
-		"type": {
-			"const": "com.openjoystickdriver.support.diagnostic"
-		},
-		"time": {
-			"type": "string",
-			"format": "date-time"
-		},
-		"datacontenttype": {
-			"const": "application/json"
-		},
-		"dataschema": {
-			"const": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/report.schema.json#/$defs/supportDiagnosticData"
-		},
-		"data": {
-			"$ref": "#/$defs/supportDiagnosticData"
-		}
-	},
-	"$defs": {
-		"supportDiagnosticData": {
-			"type": "object",
-			"required": [
-				"apiVersion",
-				"kind",
-				"privacy",
-				"system",
-				"permissions",
-				"applicationService",
-				"configuration",
-				"controllers",
-				"unboundDevices",
-				"hidGamepads",
-				"notes"
-			],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"const": "openjoystickdriver/v1alpha1"
-				},
-				"kind": {
-					"const": "SupportDiagnostic"
-				},
-				"privacy": {
-					"$ref": "#/$defs/privacy"
-				},
-				"system": {
-					"$ref": "#/$defs/system"
-				},
-				"permissions": {
-					"$ref": "#/$defs/permissions"
-				},
-				"applicationService": {
-					"$ref": "#/$defs/applicationService"
-				},
-				"configuration": {
-					"$ref": "#/$defs/configuration"
-				},
-				"controllers": {
-					"type": "array",
-					"items": {
-						"$ref": "#/$defs/controller"
-					}
-				},
-				"unboundDevices": {
-					"type": "array",
-					"items": {
-						"$ref": "#/$defs/unboundDevice"
-					}
-				},
-				"hidGamepads": {
-					"type": "array",
-					"items": {
-						"$ref": "#/$defs/hidGamepad"
-					}
-				},
-				"appleGameControllerAudit": {
-					"$ref": "#/$defs/appleGameControllerAudit"
-				},
-				"notes": {
-					"type": "array",
-					"items": {
-						"type": "string"
-					}
-				}
-			}
-		},
-		"privacy": {
-			"type": "object",
-			"required": [
-				"includesRawSerialNumbers",
-				"includesFilesystemPaths",
-				"includesPacketPayloads",
-				"includesHIDLocationIDs",
-				"includesDeviceProductNames"
-			],
-			"additionalProperties": false,
-			"properties": {
-				"includesRawSerialNumbers": {
-					"const": false
-				},
-				"includesFilesystemPaths": {
-					"const": false
-				},
-				"includesPacketPayloads": {
-					"const": false
-				},
-				"includesHIDLocationIDs": {
-					"const": false
-				},
-				"includesDeviceProductNames": {
-					"type": "boolean"
-				}
-			}
-		},
-		"system": {
-			"type": "object",
-			"required": ["buildIdentity", "macOSVersion", "architecture"],
-			"additionalProperties": false,
-			"properties": {
-				"buildIdentity": {
-					"$ref": "#/$defs/buildIdentity"
-				},
-				"macOSVersion": {
-					"type": "string"
-				},
-				"architecture": {
-					"type": "string"
-				}
-			}
-		},
-		"buildIdentity": {
-			"type": "object",
-			"required": [
-				"semanticVersion",
-				"appBundleVersion",
-				"sourceCommit",
-				"sourceState"
-			],
-			"additionalProperties": false,
-			"properties": {
-				"semanticVersion": {
-					"type": "string"
-				},
-				"appBundleVersion": {
-					"type": "string"
-				},
-				"sourceCommit": {
-					"type": "string"
-				},
-				"sourceState": {
-					"enum": ["clean", "dirty", "unknown"]
-				}
-			}
-		},
-		"permissions": {
-			"type": "object",
-			"required": ["inputMonitoring", "accessibility"],
-			"additionalProperties": false,
-			"properties": {
-				"inputMonitoring": {
-					"type": "string"
-				},
-				"accessibility": {
-					"type": "string"
-				}
-			}
-		},
-		"applicationService": {
-			"type": "object",
-			"required": ["installed", "connected"],
-			"additionalProperties": false,
-			"properties": {
-				"installed": {
-					"type": "boolean"
-				},
-				"connected": {
-					"type": "boolean"
-				},
-				"runtimeState": {
-					"type": "string"
-				},
-				"activeCount": {
-					"type": "integer"
-				}
-			}
-		},
-		"configuration": {
-			"type": "object",
-			"additionalProperties": false,
-			"properties": {
-				"userSpaceVirtualDeviceEnabled": {
-					"type": "boolean"
-				}
-			}
-		},
-		"controller": {
-			"type": "object",
-			"required": [
-				"name",
-				"vendorID",
-				"productID",
-				"protocolBinding",
-				"connection",
-				"serialNumberPresent",
-				"parameters",
-				"binding",
-				"inputEndpoint",
-				"outputEndpoint",
-				"needsSetConfiguration",
-				"postHandshakeSettleMilliseconds",
-				"preferredBackends",
-				"physicalOutputCapabilities",
-				"sessionState",
-				"inputHealth"
-			],
-			"additionalProperties": false,
-			"properties": {
-				"name": {
-					"type": "string"
-				},
-				"vendorID": {
-					"type": "integer",
-					"minimum": 0,
-					"maximum": 65535
-				},
-				"productID": {
-					"type": "integer",
-					"minimum": 0,
-					"maximum": 65535
-				},
-				"protocolBinding": {
-					"type": "string",
-					"pattern": "^[a-z0-9]+\\.[a-z0-9-]+(:[a-z0-9-]+)?$"
-				},
-				"connection": {
-					"type": "string"
-				},
-				"serialNumberPresent": {
-					"type": "boolean"
-				},
-				"parameters": {
-					"type": "array",
-					"items": {
-						"type": "string"
-					}
-				},
-				"binding": {
-					"allOf": [
-						{ "$ref": "#/$defs/bindingResult" },
-						{ "properties": { "outcome": { "const": "bound" } } }
-					]
-				},
-				"inputEndpoint": {
-					"type": "integer",
-					"minimum": 0,
-					"maximum": 255
-				},
-				"outputEndpoint": {
-					"type": "integer",
-					"minimum": 0,
-					"maximum": 255
-				},
-				"needsSetConfiguration": {
-					"type": "boolean"
-				},
-				"postHandshakeSettleMilliseconds": {
-					"type": "integer",
-					"minimum": 0
-				},
-				"preferredBackends": {
-					"type": "array",
-					"items": {
-						"type": "string"
-					}
-				},
-				"physicalOutputCapabilities": {
-					"$ref": "#/$defs/physicalOutputCapabilities"
-				},
-				"sessionState": {
-					"enum": ["active", "suspended"]
-				},
-				"startupCommandStatus": {
-					"type": "string"
-				},
-				"inputHealth": {
-					"$ref": "#/$defs/controllerInputHealth"
-				},
-				"connectionState": {
-					"$ref": "#/$defs/controllerConnectionState"
-				}
-			}
-		},
-		"controllerInputHealth": {
-			"type": "object",
-			"required": ["state", "recoveryCount"],
-			"additionalProperties": false,
-			"properties": {
-				"state": {
-					"enum": ["healthy", "stale", "waitingForNeutral"]
-				},
-				"failureReason": {
-					"enum": ["missingReports", "freshnessNotAdvancing"]
-				},
-				"reportFormat": {
-					"type": "string"
-				},
-				"lastReportAgeNanoseconds": {
-					"type": "integer",
-					"minimum": 0
-				},
-				"recoveryCount": {
-					"type": "integer",
-					"minimum": 0
-				}
-			}
-		},
-		"controllerConnectionState": {
-			"type": "object",
-			"required": ["backend", "isConnected", "power"],
-			"additionalProperties": false,
-			"properties": {
-				"transport": {
-					"enum": [
-						"usb",
-						"bluetoothClassic",
-						"bluetoothLE",
-						"proprietaryRadioReceiver"
-					]
-				},
-				"backend": {
-					"enum": ["ioHID", "ioUSBHost", "usbDriverKit", "coreBluetoothGATT"]
-				},
-				"isConnected": {
-					"type": "boolean"
-				},
-				"power": {
-					"type": "object",
-					"required": ["charging", "battery"],
-					"additionalProperties": false,
-					"properties": {
-						"charging": {
-							"enum": [
-								"unknown",
-								"discharging",
-								"charging",
-								"full",
-								"notChargeable"
-							]
-						},
-						"battery": {
-							"type": "object",
-							"additionalProperties": false,
-							"properties": {
-								"percentage": {
-									"type": "array",
-									"prefixItems": [
-										{
-											"type": "integer",
-											"minimum": 0,
-											"maximum": 100
-										},
-										{
-											"type": "integer",
-											"minimum": 0,
-											"maximum": 100
-										}
-									],
-									"items": false,
-									"minItems": 2
-								}
-							}
-						},
-						"wiredPower": {
-							"type": "boolean"
-						}
-					}
-				}
-			}
-		},
-		"physicalOutputCapabilities": {
-			"type": "object",
-			"required": [
-				"rumbleMotors",
-				"lightingFeatures",
-				"binaryRumbleMotors",
-				"adaptiveTriggers"
-			],
-			"additionalProperties": false,
-			"properties": {
-				"rumbleMotors": {
-					"type": "array",
-					"items": {
-						"$ref": "#/$defs/rumbleMotor"
-					}
-				},
-				"lightingFeatures": {
-					"type": "array",
-					"items": {
-						"enum": [
-							"playerIndicator",
-							"programmableColor",
-							"programmableBrightness"
-						]
-					}
-				},
-				"binaryRumbleMotors": {
-					"type": "array",
-					"items": {
-						"$ref": "#/$defs/rumbleMotor"
-					}
-				},
-				"adaptiveTriggers": {
-					"type": "array",
-					"items": {
-						"enum": ["left", "right"]
-					}
-				}
-			}
-		},
-		"rumbleMotor": {
-			"enum": [
-				"leftMain",
-				"rightMain",
-				"leftTrigger",
-				"rightTrigger",
-				"leftHaptic",
-				"rightHaptic"
-			]
-		},
-		"unboundDevice": {
-			"type": "object",
-			"required": ["vendorID", "productID", "connection", "binding"],
-			"additionalProperties": false,
-			"properties": {
-				"vendorID": { "type": "integer", "minimum": 0, "maximum": 65535 },
-				"productID": { "type": "integer", "minimum": 0, "maximum": 65535 },
-				"connection": { "type": "string" },
-				"binding": {
-					"allOf": [
-						{ "$ref": "#/$defs/bindingResult" },
-						{ "properties": { "outcome": { "const": "unsupported" } } }
-					]
-				}
-			}
-		},
-		"bindingResult": {
-			"type": "object",
-			"required": [
-				"outcome",
-				"accessBackend",
-				"interfaces",
-				"matchedPredicates",
-				"rejectedCandidates"
-			],
-			"additionalProperties": false,
-			"properties": {
-				"outcome": { "enum": ["bound", "unsupported"] },
-				"reason": { "$ref": "#/$defs/bindingReason" },
-				"accessBackend": {
-					"enum": ["ioHID", "ioUSBHost", "usbDriverKit", "coreBluetoothGATT"]
-				},
-				"interfaces": {
-					"type": "array",
-					"items": { "$ref": "#/$defs/bindingInterface" }
-				},
-				"rule": {
-					"enum": ["catalogRecord", "interfaceSignature", "hidDescriptor"]
-				},
-				"matchedPredicates": {
-					"type": "array",
-					"items": {
-						"enum": [
-							"catalogIdentity",
-							"catalogAccessPath",
-							"hostTransport",
-							"interfaceSignature",
-							"deviceClassSignature",
-							"interruptEndpointPair",
-							"hidDescriptorContract"
-						]
-					}
-				},
-				"catalogRecordID": { "$ref": "#/$defs/catalogRecordID" },
-				"rejectedCandidates": {
-					"type": "array",
-					"items": { "$ref": "#/$defs/rejectedCandidate" }
-				}
-			},
-			"if": { "properties": { "outcome": { "const": "bound" } } },
-			"then": {
-				"required": ["rule"],
-				"properties": { "rejectedCandidates": { "maxItems": 0 } },
-				"not": { "required": ["reason"] }
-			},
-			"else": {
-				"required": ["reason"],
-				"properties": { "matchedPredicates": { "maxItems": 0 } },
-				"not": {
-					"anyOf": [
-						{ "required": ["rule"] },
-						{ "required": ["catalogRecordID"] }
-					]
-				}
-			}
-		},
-		"bindingInterface": {
-			"type": "object",
-			"additionalProperties": false,
-			"properties": {
-				"interfaceNumber": { "type": "integer", "minimum": 0, "maximum": 255 },
-				"alternateSetting": { "type": "integer", "minimum": 0, "maximum": 255 },
-				"interfaceClass": { "type": "integer", "minimum": 0, "maximum": 255 },
-				"interfaceSubclass": {
-					"type": "integer",
-					"minimum": 0,
-					"maximum": 255
-				},
-				"interfaceProtocol": {
-					"type": "integer",
-					"minimum": 0,
-					"maximum": 255
-				},
-				"hostTransport": {
-					"enum": [
-						"usb",
-						"bluetoothClassic",
-						"bluetoothLE",
-						"proprietaryRadioReceiver"
-					]
-				},
-				"primaryUsage": {
-					"type": "object",
-					"additionalProperties": false,
-					"properties": {
-						"usagePage": {
-							"type": "integer",
-							"minimum": 0,
-							"maximum": 4294967295
-						},
-						"usage": { "type": "integer", "minimum": 0, "maximum": 4294967295 }
-					}
-				},
-				"hasGamePadOrJoystickCollection": { "type": "boolean" },
-				"descriptorFingerprint": {
-					"type": "string",
-					"pattern": "^[0-9a-f]{64}$"
-				}
-			}
-		},
-		"rejectedCandidate": {
-			"type": "object",
-			"required": ["protocolID", "reason"],
-			"additionalProperties": false,
-			"properties": {
-				"protocolID": {
-					"enum": [
-						"hid.descriptor",
-						"hid.report-layout",
-						"xbox.xid",
-						"xbox.xusb",
-						"xbox.gip",
-						"sony.sixaxis",
-						"sony.dualshock4",
-						"sony.dualsense",
-						"nintendo.switch1",
-						"nintendo.switch2",
-						"nintendo.switch-input-only",
-						"valve.steam-controller",
-						"valve.steam-triton",
-						"valve.steam-deck",
-						"vendor.flydigi",
-						"vendor.ps3-third-party",
-						"vendor.gamesir",
-						"vendor.nvidia-shield"
-					]
-				},
-				"reason": { "$ref": "#/$defs/bindingReason" },
-				"catalogRecordID": { "$ref": "#/$defs/catalogRecordID" }
-			}
-		},
-		"catalogRecordID": {
-			"type": "string",
-			"pattern": "^[0-9a-f]{4}-[0-9a-f]{4}$"
-		},
-		"bindingReason": {
-			"enum": [
-				"noProtocolMatch",
-				"ambiguousProtocolMatch",
-				"interfaceContractMismatch",
-				"descriptorContractMismatch",
-				"packetContractMismatch",
-				"unsupportedProtocolVariant",
-				"unsupportedTransportVariant",
-				"requiredInitializationFailed",
-				"catalogConflict",
-				"virtualProfileUnavailable"
-			]
-		},
-		"hidGamepad": {
-			"type": "object",
-			"required": ["vendorID", "productID", "serialKind", "isOJDUserSpace"],
-			"additionalProperties": false,
-			"properties": {
-				"vendorID": {
-					"type": "integer",
-					"minimum": 0,
-					"maximum": 65535
-				},
-				"productID": {
-					"type": "integer",
-					"minimum": 0,
-					"maximum": 65535
-				},
-				"product": {
-					"type": "string"
-				},
-				"transport": {
-					"type": "string"
-				},
-				"serialKind": {
-					"enum": ["none", "ojdUserSpace", "present"]
-				},
-				"ioUserClass": {
-					"type": "string"
-				},
-				"isOJDUserSpace": {
-					"type": "boolean"
-				},
-				"isGameControllerSupported": {
-					"type": "boolean"
-				}
-			}
-		},
-		"appleGameControllerAudit": {
-			"type": "object",
-			"required": [
-				"source",
-				"bundleVersions",
-				"appleExactDeviceCount",
-				"skippedAppleDeviceCount",
-				"ojdRecordCount",
-				"catalogListedOJDRecordCount",
-				"records",
-				"warnings",
-				"caveat"
-			],
-			"additionalProperties": false,
-			"properties": {
-				"source": {
-					"enum": [
-						"downloadedMobileAsset",
-						"preinstalledMobileAsset",
-						"unavailable"
-					]
-				},
-				"bundleVersions": {
-					"type": "array",
-					"items": {
-						"type": "string"
-					}
-				},
-				"appleExactDeviceCount": {
-					"type": "integer",
-					"minimum": 0
-				},
-				"skippedAppleDeviceCount": {
-					"type": "integer",
-					"minimum": 0
-				},
-				"ojdRecordCount": {
-					"type": "integer",
-					"minimum": 0
-				},
-				"catalogListedOJDRecordCount": {
-					"type": "integer",
-					"minimum": 0
-				},
-				"records": {
-					"type": "array",
-					"items": {
-						"$ref": "#/$defs/appleRecord"
-					}
-				},
-				"warnings": {
-					"type": "array",
-					"items": {
-						"type": "string"
-					}
-				},
-				"caveat": {
-					"type": "string"
-				}
-			}
-		},
-		"appleRecord": {
-			"type": "object",
-			"required": [
-				"vendorID",
-				"productID",
-				"name",
-				"catalogListed",
-				"appleIdentifiers",
-				"transportConstraints",
-				"versionConstraints"
-			],
-			"additionalProperties": false,
-			"properties": {
-				"vendorID": {
-					"type": "integer",
-					"minimum": 0,
-					"maximum": 65535
-				},
-				"productID": {
-					"type": "integer",
-					"minimum": 0,
-					"maximum": 65535
-				},
-				"name": {
-					"type": "string"
-				},
-				"catalogListed": {
-					"type": "boolean"
-				},
-				"appleIdentifiers": {
-					"type": "array",
-					"items": {
-						"type": "string"
-					}
-				},
-				"transportConstraints": {
-					"type": "array",
-					"items": {
-						"type": "string"
-					}
-				},
-				"versionConstraints": {
-					"type": "array",
-					"items": {
-						"type": "integer"
-					}
-				}
-			}
-		}
-	}
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/report.schema.json",
+  "type": "object",
+  "required": [
+    "specversion",
+    "id",
+    "source",
+    "type",
+    "time",
+    "datacontenttype",
+    "dataschema",
+    "data"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "specversion": {
+      "const": "1.0"
+    },
+    "id": {
+      "type": "string"
+    },
+    "source": {
+      "const": "urn:openjoystickdriver:support"
+    },
+    "type": {
+      "const": "com.openjoystickdriver.support.diagnostic"
+    },
+    "time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "datacontenttype": {
+      "const": "application/json"
+    },
+    "dataschema": {
+      "const": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/report.schema.json#/$defs/supportDiagnosticData"
+    },
+    "data": {
+      "$ref": "#/$defs/supportDiagnosticData"
+    }
+  },
+  "$defs": {
+    "supportDiagnosticData": {
+      "type": "object",
+      "required": [
+        "apiVersion",
+        "kind",
+        "privacy",
+        "system",
+        "permissions",
+        "applicationService",
+        "configuration",
+        "controllers",
+        "unboundDevices",
+        "hidGamepads",
+        "notes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "const": "openjoystickdriver/v1alpha1"
+        },
+        "kind": {
+          "const": "SupportDiagnostic"
+        },
+        "privacy": {
+          "$ref": "#/$defs/privacy"
+        },
+        "system": {
+          "$ref": "#/$defs/system"
+        },
+        "permissions": {
+          "$ref": "#/$defs/permissions"
+        },
+        "applicationService": {
+          "$ref": "#/$defs/applicationService"
+        },
+        "configuration": {
+          "$ref": "#/$defs/configuration"
+        },
+        "controllers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/controller"
+          }
+        },
+        "unboundDevices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/unboundDevice"
+          }
+        },
+        "hidGamepads": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/hidGamepad"
+          }
+        },
+        "appleGameControllerAudit": {
+          "$ref": "#/$defs/appleGameControllerAudit"
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "required": [
+        "includesRawSerialNumbers",
+        "includesFilesystemPaths",
+        "includesPacketPayloads",
+        "includesHIDLocationIDs",
+        "includesDeviceProductNames"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "includesRawSerialNumbers": {
+          "const": false
+        },
+        "includesFilesystemPaths": {
+          "const": false
+        },
+        "includesPacketPayloads": {
+          "const": false
+        },
+        "includesHIDLocationIDs": {
+          "const": false
+        },
+        "includesDeviceProductNames": {
+          "type": "boolean"
+        }
+      }
+    },
+    "system": {
+      "type": "object",
+      "required": ["buildIdentity", "macOSVersion", "architecture"],
+      "additionalProperties": false,
+      "properties": {
+        "buildIdentity": {
+          "$ref": "#/$defs/buildIdentity"
+        },
+        "macOSVersion": {
+          "type": "string"
+        },
+        "architecture": {
+          "type": "string"
+        }
+      }
+    },
+    "buildIdentity": {
+      "type": "object",
+      "required": [
+        "semanticVersion",
+        "appBundleVersion",
+        "sourceCommit",
+        "sourceState"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "semanticVersion": {
+          "type": "string"
+        },
+        "appBundleVersion": {
+          "type": "string"
+        },
+        "sourceCommit": {
+          "type": "string"
+        },
+        "sourceState": {
+          "enum": ["clean", "dirty", "unknown"]
+        }
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "required": ["inputMonitoring", "accessibility"],
+      "additionalProperties": false,
+      "properties": {
+        "inputMonitoring": {
+          "type": "string"
+        },
+        "accessibility": {
+          "type": "string"
+        }
+      }
+    },
+    "applicationService": {
+      "type": "object",
+      "required": ["installed", "connected"],
+      "additionalProperties": false,
+      "properties": {
+        "installed": {
+          "type": "boolean"
+        },
+        "connected": {
+          "type": "boolean"
+        },
+        "runtimeState": {
+          "type": "string"
+        },
+        "activeCount": {
+          "type": "integer"
+        }
+      }
+    },
+    "configuration": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "userSpaceVirtualDeviceEnabled": {
+          "type": "boolean"
+        }
+      }
+    },
+    "controller": {
+      "type": "object",
+      "required": [
+        "name",
+        "vendorID",
+        "productID",
+        "protocolBinding",
+        "connection",
+        "serialNumberPresent",
+        "parameters",
+        "binding",
+        "inputEndpoint",
+        "outputEndpoint",
+        "needsSetConfiguration",
+        "postHandshakeSettleMilliseconds",
+        "preferredBackends",
+        "physicalOutputCapabilities",
+        "sessionState",
+        "inputHealth"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "vendorID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "productID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "protocolBinding": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+\\.[a-z0-9-]+(:[a-z0-9-]+)?$"
+        },
+        "connection": {
+          "type": "string"
+        },
+        "serialNumberPresent": {
+          "type": "boolean"
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "binding": {
+          "allOf": [
+            { "$ref": "#/$defs/bindingResult" },
+            { "properties": { "outcome": { "const": "bound" } } }
+          ]
+        },
+        "inputEndpoint": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "outputEndpoint": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "needsSetConfiguration": {
+          "type": "boolean"
+        },
+        "postHandshakeSettleMilliseconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "preferredBackends": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "physicalOutputCapabilities": {
+          "$ref": "#/$defs/physicalOutputCapabilities"
+        },
+        "sessionState": {
+          "enum": ["active", "suspended"]
+        },
+        "startupCommandStatus": {
+          "type": "string"
+        },
+        "inputHealth": {
+          "$ref": "#/$defs/controllerInputHealth"
+        },
+        "connectionState": {
+          "$ref": "#/$defs/controllerConnectionState"
+        }
+      }
+    },
+    "controllerInputHealth": {
+      "type": "object",
+      "required": ["state", "recoveryCount"],
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "enum": ["healthy", "stale", "waitingForNeutral"]
+        },
+        "failureReason": {
+          "enum": ["missingReports", "freshnessNotAdvancing"]
+        },
+        "reportFormat": {
+          "type": "string"
+        },
+        "lastReportAgeNanoseconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "recoveryCount": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "controllerConnectionState": {
+      "type": "object",
+      "required": ["backend", "isConnected", "power"],
+      "additionalProperties": false,
+      "properties": {
+        "transport": {
+          "enum": [
+            "usb",
+            "bluetoothClassic",
+            "bluetoothLE",
+            "proprietaryRadioReceiver"
+          ]
+        },
+        "backend": {
+          "enum": ["ioHID", "ioUSBHost", "usbDriverKit", "coreBluetoothGATT"]
+        },
+        "isConnected": {
+          "type": "boolean"
+        },
+        "power": {
+          "type": "object",
+          "required": ["charging", "battery"],
+          "additionalProperties": false,
+          "properties": {
+            "charging": {
+              "enum": [
+                "unknown",
+                "discharging",
+                "charging",
+                "full",
+                "notChargeable"
+              ]
+            },
+            "battery": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "percentage": {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 100
+                    },
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 100
+                    }
+                  ],
+                  "items": false,
+                  "minItems": 2
+                }
+              }
+            },
+            "wiredPower": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "physicalOutputCapabilities": {
+      "type": "object",
+      "required": [
+        "rumbleMotors",
+        "lightingFeatures",
+        "binaryRumbleMotors",
+        "adaptiveTriggers"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "rumbleMotors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/rumbleMotor"
+          }
+        },
+        "lightingFeatures": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "playerIndicator",
+              "programmableColor",
+              "programmableBrightness"
+            ]
+          }
+        },
+        "binaryRumbleMotors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/rumbleMotor"
+          }
+        },
+        "adaptiveTriggers": {
+          "type": "array",
+          "items": {
+            "enum": ["left", "right"]
+          }
+        }
+      }
+    },
+    "rumbleMotor": {
+      "enum": [
+        "leftMain",
+        "rightMain",
+        "leftTrigger",
+        "rightTrigger",
+        "leftHaptic",
+        "rightHaptic"
+      ]
+    },
+    "unboundDevice": {
+      "type": "object",
+      "required": ["vendorID", "productID", "connection", "binding"],
+      "additionalProperties": false,
+      "properties": {
+        "vendorID": { "type": "integer", "minimum": 0, "maximum": 65535 },
+        "productID": { "type": "integer", "minimum": 0, "maximum": 65535 },
+        "connection": { "type": "string" },
+        "binding": {
+          "allOf": [
+            { "$ref": "#/$defs/bindingResult" },
+            { "properties": { "outcome": { "const": "unsupported" } } }
+          ]
+        }
+      }
+    },
+    "bindingResult": {
+      "type": "object",
+      "required": [
+        "outcome",
+        "accessBackend",
+        "interfaces",
+        "matchedPredicates",
+        "rejectedCandidates"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "outcome": { "enum": ["bound", "unsupported"] },
+        "reason": { "$ref": "#/$defs/bindingReason" },
+        "accessBackend": {
+          "enum": ["ioHID", "ioUSBHost", "usbDriverKit", "coreBluetoothGATT"]
+        },
+        "interfaces": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/bindingInterface" }
+        },
+        "rule": {
+          "enum": ["catalogRecord", "interfaceSignature", "hidDescriptor"]
+        },
+        "matchedPredicates": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "catalogIdentity",
+              "catalogAccessPath",
+              "hostTransport",
+              "interfaceSignature",
+              "deviceClassSignature",
+              "interruptEndpointPair",
+              "hidDescriptorContract"
+            ]
+          }
+        },
+        "catalogRecordID": { "$ref": "#/$defs/catalogRecordID" },
+        "rejectedCandidates": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/rejectedCandidate" }
+        }
+      },
+      "if": { "properties": { "outcome": { "const": "bound" } } },
+      "then": {
+        "required": ["rule"],
+        "properties": { "rejectedCandidates": { "maxItems": 0 } },
+        "not": { "required": ["reason"] }
+      },
+      "else": {
+        "required": ["reason"],
+        "properties": { "matchedPredicates": { "maxItems": 0 } },
+        "not": {
+          "anyOf": [
+            { "required": ["rule"] },
+            { "required": ["catalogRecordID"] }
+          ]
+        }
+      }
+    },
+    "bindingInterface": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "interfaceNumber": { "type": "integer", "minimum": 0, "maximum": 255 },
+        "alternateSetting": { "type": "integer", "minimum": 0, "maximum": 255 },
+        "interfaceClass": { "type": "integer", "minimum": 0, "maximum": 255 },
+        "interfaceSubclass": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "interfaceProtocol": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "hostTransport": {
+          "enum": [
+            "usb",
+            "bluetoothClassic",
+            "bluetoothLE",
+            "proprietaryRadioReceiver"
+          ]
+        },
+        "primaryUsage": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "usagePage": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            },
+            "usage": { "type": "integer", "minimum": 0, "maximum": 4294967295 }
+          }
+        },
+        "hasGamePadOrJoystickCollection": { "type": "boolean" },
+        "descriptorFingerprint": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "rejectedCandidate": {
+      "type": "object",
+      "required": ["protocolID", "reason"],
+      "additionalProperties": false,
+      "properties": {
+        "protocolID": {
+          "enum": [
+            "hid.descriptor",
+            "hid.report-layout",
+            "xbox.xid",
+            "xbox.xusb",
+            "xbox.gip",
+            "sony.sixaxis",
+            "sony.dualshock4",
+            "sony.dualsense",
+            "nintendo.switch1",
+            "nintendo.switch2",
+            "nintendo.switch-input-only",
+            "valve.steam-controller",
+            "valve.steam-triton",
+            "valve.steam-deck",
+            "vendor.flydigi",
+            "vendor.ps3-third-party",
+            "vendor.gamesir",
+            "vendor.nvidia-shield"
+          ]
+        },
+        "reason": { "$ref": "#/$defs/bindingReason" },
+        "catalogRecordID": { "$ref": "#/$defs/catalogRecordID" }
+      }
+    },
+    "catalogRecordID": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{4}-[0-9a-f]{4}$"
+    },
+    "bindingReason": {
+      "enum": [
+        "noProtocolMatch",
+        "ambiguousProtocolMatch",
+        "interfaceContractMismatch",
+        "descriptorContractMismatch",
+        "packetContractMismatch",
+        "unsupportedProtocolVariant",
+        "unsupportedTransportVariant",
+        "requiredInitializationFailed",
+        "catalogConflict",
+        "virtualProfileUnavailable"
+      ]
+    },
+    "hidGamepad": {
+      "type": "object",
+      "required": ["vendorID", "productID", "serialKind", "isOJDUserSpace"],
+      "additionalProperties": false,
+      "properties": {
+        "vendorID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "productID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "product": {
+          "type": "string"
+        },
+        "transport": {
+          "type": "string"
+        },
+        "serialKind": {
+          "enum": ["none", "ojdUserSpace", "present"]
+        },
+        "ioUserClass": {
+          "type": "string"
+        },
+        "isOJDUserSpace": {
+          "type": "boolean"
+        },
+        "isGameControllerSupported": {
+          "type": "boolean"
+        }
+      }
+    },
+    "appleGameControllerAudit": {
+      "type": "object",
+      "required": [
+        "source",
+        "bundleVersions",
+        "appleExactDeviceCount",
+        "skippedAppleDeviceCount",
+        "ojdRecordCount",
+        "catalogListedOJDRecordCount",
+        "records",
+        "warnings",
+        "caveat"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "enum": [
+            "downloadedMobileAsset",
+            "preinstalledMobileAsset",
+            "unavailable"
+          ]
+        },
+        "bundleVersions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "appleExactDeviceCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "skippedAppleDeviceCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ojdRecordCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "catalogListedOJDRecordCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "records": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/appleRecord"
+          }
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "caveat": {
+          "type": "string"
+        }
+      }
+    },
+    "appleRecord": {
+      "type": "object",
+      "required": [
+        "vendorID",
+        "productID",
+        "name",
+        "catalogListed",
+        "appleIdentifiers",
+        "transportConstraints",
+        "versionConstraints"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "vendorID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "productID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "name": {
+          "type": "string"
+        },
+        "catalogListed": {
+          "type": "boolean"
+        },
+        "appleIdentifiers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "transportConstraints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "versionConstraints": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
 }

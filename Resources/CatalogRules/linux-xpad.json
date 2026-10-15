@@ -31,20 +31,11 @@
     },
     {
       "flag": "MAP_TRIGGERS_TO_BUTTONS",
-      "controls": [
-        "left-trigger",
-        "right-trigger"
-      ]
+      "controls": ["left-trigger", "right-trigger"]
     }
   ],
-  "representationFlags": [
-    "MAP_DPAD_TO_BUTTONS"
-  ],
-  "presenceFlags": [
-    "MAP_PADDLES",
-    "MAP_PROFILE_BUTTON",
-    "MAP_SHARE_BUTTON"
-  ],
+  "representationFlags": ["MAP_DPAD_TO_BUTTONS"],
+  "presenceFlags": ["MAP_PADDLES", "MAP_PROFILE_BUTTON", "MAP_SHARE_BUTTON"],
   "dancepadFlags": [
     "MAP_DPAD_TO_BUTTONS",
     "MAP_STICKS_TO_NULL",

@@ -212,9 +212,21 @@ class CapabilityResolverTests(unittest.TestCase):
     def test_setup_includes_shellcheck(self) -> None:
         self.assertIn(Capability.SHELLCHECK, requirements_for(["setup"]))
 
+    def test_json_writers_and_the_hook_require_biome(self) -> None:
+        self.assertIn(Capability.BIOME, requirements_for(["setup"]))
+        for route in (
+            ["catalog", "regenerate", "--write"],
+            ["errors", "regenerate", "--check"],
+            ["catalog", "xpad"],
+        ):
+            self.assertIn(Capability.BIOME, requirements_for(route))
+        self.assertEqual(FORMULAS[Capability.BIOME], ("biome", "biome"))
+
     def test_setup_and_hooks_require_bun_with_formula(self) -> None:
         self.assertIn(Capability.BUN, requirements_for(["setup"]))
-        self.assertEqual(requirements_for(["hooks", "install"]), (Capability.BUN,))
+        self.assertEqual(
+            requirements_for(["hooks", "install"]), (Capability.BUN, Capability.BIOME)
+        )
         self.assertEqual(requirements_for(["hooks", "validate"]), (Capability.BUN,))
         self.assertEqual(FORMULAS[Capability.BUN], ("bun", "bun"))
 
