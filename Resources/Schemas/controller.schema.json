@@ -227,9 +227,8 @@
       }
     },
     "modeSession": {
-      "description": "Session steps of this mode. startup replaces the record's output.startup while this mode runs.",
+      "description": "Session steps of this mode. startup replaces the record's output.startup while a HID mode runs; usbStartup replaces the record's raw-USB output.startup writes while a raw-USB mode runs. A session names exactly one.",
       "type": "object",
-      "required": ["startup"],
       "additionalProperties": false,
       "properties": {
         "startup": {
@@ -239,8 +238,24 @@
           "items": {
             "$ref": "#/$defs/startupWrite"
           }
+        },
+        "usbStartup": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/usbStartupWrite"
+          }
         }
-      }
+      },
+      "oneOf": [
+        {
+          "required": ["startup"]
+        },
+        {
+          "required": ["usbStartup"]
+        }
+      ]
     },
     "modeProbe": {
       "description": "A read of one feature report. A probe never writes. answers: the read succeeds. stalls: the device refuses the read. bytes: the reply holds the given bytes at offset.",
@@ -1640,21 +1655,19 @@
       "then": {
         "properties": {
           "modes": {
-            "contains": {
+            "items": {
               "properties": {
-                "id": {
-                  "const": "default"
-                },
                 "protocol": {
                   "properties": {
                     "family": {
                       "const": "xbox.gip"
                     }
                   },
+                  "required": ["family"],
                   "type": "object"
                 }
               },
-              "required": ["id", "protocol"]
+              "required": ["protocol"]
             }
           }
         }
@@ -1885,20 +1898,18 @@
       "then": {
         "properties": {
           "modes": {
-            "contains": {
+            "items": {
               "properties": {
-                "id": {
-                  "const": "default"
-                },
                 "protocol": {
                   "properties": {
                     "family": {
                       "enum": ["hid.report-layout", "vendor.ps3-third-party"]
                     }
-                  }
+                  },
+                  "required": ["family"]
                 }
               },
-              "required": ["id", "protocol"]
+              "required": ["protocol"]
             }
           }
         }
@@ -1910,9 +1921,6 @@
           "modes": {
             "contains": {
               "properties": {
-                "id": {
-                  "const": "default"
-                },
                 "protocol": {
                   "properties": {
                     "family": {
@@ -1922,7 +1930,7 @@
                   "required": ["family"]
                 }
               },
-              "required": ["id", "protocol"]
+              "required": ["protocol"]
             }
           }
         }
@@ -1932,6 +1940,21 @@
         "properties": {
           "input": {
             "$ref": "#/$defs/input"
+          },
+          "modes": {
+            "items": {
+              "properties": {
+                "protocol": {
+                  "properties": {
+                    "family": {
+                      "const": "hid.report-layout"
+                    }
+                  },
+                  "required": ["family"]
+                }
+              },
+              "required": ["protocol"]
+            }
           }
         }
       },
@@ -1941,9 +1964,6 @@
             "modes": {
               "contains": {
                 "properties": {
-                  "id": {
-                    "const": "default"
-                  },
                   "protocol": {
                     "properties": {
                       "family": {
@@ -1953,7 +1973,7 @@
                     "required": ["family"]
                   }
                 },
-                "required": ["id", "protocol"]
+                "required": ["protocol"]
               }
             }
           }

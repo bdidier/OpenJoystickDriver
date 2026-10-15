@@ -87,6 +87,48 @@ def default_mode(record: dict[str, Any]) -> dict[str, Any]:
     return next(mode for mode in record["modes"] if mode["id"] == "default")
 
 
+def validate_mode_session(
+    path: pathlib.Path,
+    mode: dict[str, Any],
+    *,
+    record_startup: list[Any],
+    record_usb_startup: list[Any],
+) -> None:
+    """A session names HID reports for a HID mode and USB packets for a raw-USB mode, and
+    `interface` selects among HID interfaces, so a raw-USB mode has none."""
+    protocol = mode["protocol"]
+    session = mode.get("session", {})
+    if not uses_raw_usb(protocol):
+        require(
+            "usbStartup" not in session,
+            f"{path}: a HID mode's session names startup reports, not usbStartup packets",
+        )
+        return
+    require(
+        "interface" not in mode,
+        f"{path}: interface selects among HID interfaces; a raw-USB mode claims the "
+        "interface its usb transport resolves",
+    )
+    require(
+        "startup" not in session,
+        f"{path}: a raw-USB mode's session names usbStartup packets, not HID reports",
+    )
+    require(
+        not record_startup,
+        f"{path}: HID startup writes apply only to HID controllers, so not to a raw-USB mode",
+    )
+    if session.get("usbStartup", record_usb_startup):
+        described = (
+            description_of(protocol["family"]).get("defaults", {}).get("output", {})
+        )
+        carries = any("report" not in write for write in described.get("startup", []))
+        require(
+            carries and "initialization" not in protocol,
+            f"{path}: raw-USB startup writes need a family that reads them and no "
+            "initialization list",
+        )
+
+
 def validate_modes(path: pathlib.Path, record: dict[str, Any]) -> None:
     """The record-level rules every mode obeys, as `validateModes` in Swift."""
     modes = record["modes"]
@@ -95,16 +137,23 @@ def validate_modes(path: pathlib.Path, record: dict[str, Any]) -> None:
         len(set(identifiers)) == len(identifiers),
         f"{path}: mode IDs must be unique: {identifiers}",
     )
+    require(
+        identifiers.count("default") == 1,
+        f"{path}: modes need exactly one mode with the id default: {identifiers}",
+    )
     has_layout = "report" in record.get("input", {})
     has_template = "rumble" in record.get("output", {})
-    if len(modes) > 1:
-        for mode in modes:
-            require(
-                not uses_raw_usb(mode["protocol"]),
-                f"{path}: modes apply only to HID controllers",
-            )
+    written = record.get("output", {}).get("startup", [])
+    record_startup = [write for write in written if "report" in write]
+    record_usb_startup = [write for write in written if "report" not in write]
     for mode in modes:
         family = mode["protocol"]["family"]
+        validate_mode_session(
+            path,
+            mode,
+            record_startup=record_startup,
+            record_usb_startup=record_usb_startup,
+        )
         require(
             has_layout == requires_record_input_layout(family),
             f"{path}: every mode needs the record's input layout exactly when it is "

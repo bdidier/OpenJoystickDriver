@@ -221,7 +221,7 @@ public struct DeviceRuntimeProfile: Equatable, Sendable {
   /// The record's fixed startup reports, in order; OJD sends them only to a controller it owns.
   public internal(set) var startupWrites: [RecordStartupWrite]
   /// The record's raw-USB startup packets; empty runs the family description's.
-  public let usbStartupWrites: [USBStartupWrite]
+  public internal(set) var usbStartupWrites: [USBStartupWrite]
   /// The record's input-report layout; set exactly for the `hid.report-layout` family.
   public let inputLayout: ControllerInputLayout?
   /// The record's HID usage map; set only for a `hid.descriptor` record that declares one.

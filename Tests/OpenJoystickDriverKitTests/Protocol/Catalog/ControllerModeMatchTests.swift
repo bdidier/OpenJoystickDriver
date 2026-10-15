@@ -587,7 +587,11 @@ struct ControllerModeMatchTests {
     #expect(try decode([]) != nil)
     #expect(try decode([other])?.contains("exactly one mode with the id default") == true)
     #expect(
-      try decode([plainDefault, plainDefault])?.contains("mode IDs must be unique") == true
+      try decode([plainDefault, plainDefault])?.contains("exactly one mode with the id default")
+        == true
+    )
+    #expect(
+      try decode([plainDefault, other, other])?.contains("mode IDs must be unique") == true
     )
   }
 

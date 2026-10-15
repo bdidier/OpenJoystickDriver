@@ -128,6 +128,8 @@ public struct ControllerMode: Equatable, Sendable {
   public let interfaceRange: ClosedRange<UInt8>?
   /// The session's startup writes, which replace the record's; nil keeps the record's.
   public let startupWrites: [RecordStartupWrite]?
+  /// The session's raw-USB startup packets, which replace the record's; nil keeps the record's.
+  public let usbStartupWrites: [USBStartupWrite]?
 
   /// The probes of this mode's match.
   public var probes: [ControllerModeProbe] { match.probes }
@@ -148,6 +150,7 @@ extension DeviceRuntimeProfile {
     profile.assemblyPolicy = mode.assemblyPolicy
     profile.interfaceRange = mode.interfaceRange ?? interfaceRange
     profile.startupWrites = mode.startupWrites ?? startupWrites
+    profile.usbStartupWrites = mode.usbStartupWrites ?? usbStartupWrites
     profile.modeID = modeID
     return profile
   }

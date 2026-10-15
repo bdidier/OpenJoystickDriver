@@ -292,6 +292,11 @@ class ControllerModeSchemaTests(unittest.TestCase):
         }
         rejected = {
             "duplicate id": record(modes=[DEFAULT, mode("a"), mode("a")]),
+            "no default mode": record(modes=[mode("a")]),
+            "two default modes": record(modes=[DEFAULT, DEFAULT]),
+            "default with a match": record(
+                modes=[{**DEFAULT, "match": {"link": "usb"}}]
+            ),
             "bcdDevice min above max": record(
                 modes=[DEFAULT, matched("x", bcdDevice={"min": 5, "max": 4})]
             ),
@@ -337,14 +342,6 @@ class ControllerModeSchemaTests(unittest.TestCase):
 
         needs_layout = "every mode needs the record's input layout exactly when it is hid.report-layout"
         rejected = {
-            "raw-USB mode": (
-                with_mode("xbox.gip", "sony.sixaxis"),
-                "modes apply only to HID controllers",
-            ),
-            "raw-USB default": (
-                with_mode("sony.sixaxis", "xbox.gip"),
-                "modes apply only to HID controllers",
-            ),
             "input layout on a mode that is not hid.report-layout": (
                 with_mode("sony.sixaxis", "hid.report-layout", input=layout),
                 needs_layout,
@@ -373,12 +370,127 @@ class ControllerModeSchemaTests(unittest.TestCase):
             ),
         }
         for name, (document, message) in rejected.items():
-            with self.subTest(name), tempfile.TemporaryDirectory() as directory:
-                path = Path(directory) / "record.json"
-                path.write_text(json.dumps(document))
+            with self.subTest(name):
                 with self.assertRaises(validate_profiles.ValidationError) as caught:
-                    validate_profiles.validate_record(path, enforce_path=False)
+                    validate_profiles.validate_modes(Path("record.json"), document)
                 self.assertIn(message, str(caught.exception))
+
+    def test_single_mode_records_get_the_same_per_mode_checks(self) -> None:
+        layout = {
+            "report": {"length": 8},
+            "buttons": [{"control": "South", "byte": 0, "mask": 1}],
+        }
+        rumble = {
+            "rumble": {
+                "report": {"kind": "output", "id": 2, "length": 8},
+                "leftMain": {"byte": 3},
+            }
+        }
+
+        def single(family: str, **fields: Any) -> dict[str, Any]:
+            return record(
+                modes=[{"id": "default", "protocol": {"family": family}}], **fields
+            )
+
+        schema = validate_profiles.validator()
+        rejected = {
+            "report-layout without a layout": single("hid.report-layout"),
+            "layout under another family": single("sony.sixaxis", input=layout),
+            "template under hid.descriptor": single("hid.descriptor", output=rumble),
+            "template under a raw-USB family": single("xbox.gip", output=rumble),
+        }
+        for name, document in rejected.items():
+            with self.subTest(name):
+                self.assertFalse(schema.is_valid(document))
+                with self.assertRaises(validate_profiles.ValidationError):
+                    validate_profiles.validate_modes(Path("record.json"), document)
+        for name, document in {
+            "layout": single("hid.report-layout", input=layout),
+            "layout and template": single(
+                "hid.report-layout", input=layout, output=rumble
+            ),
+        }.items():
+            with self.subTest(name):
+                self.assertTrue(schema.is_valid(document))
+                validate_profiles.validate_modes(Path("record.json"), document)
+
+
+class RawUSBModeTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.schema = validate_profiles.validator()
+
+    @staticmethod
+    def gip(identifier: str = "default", **fields: Any) -> dict[str, Any]:
+        return {"id": identifier, "protocol": {"family": "xbox.gip"}, **fields}
+
+    def usb_record(self, *modes: dict[str, Any]) -> dict[str, Any]:
+        return record(modes=list(modes))
+
+    def test_accepts_alternative_modes_and_usb_sessions_on_raw_usb(self) -> None:
+        usb_write = {"bytes": [1, 2]}
+        document = self.usb_record(
+            self.gip(),
+            self.gip("alt", match={"link": "usb"}, session={"usbStartup": [usb_write]}),
+        )
+        self.assertTrue(self.schema.is_valid(document))
+        validate_profiles.validate_modes(Path("record.json"), document)
+
+    def test_rejects_what_a_raw_usb_mode_cannot_carry(self) -> None:
+        hid_write = {
+            "report": {"kind": "feature", "id": 1, "length": 2},
+            "bytes": [1, 2],
+        }
+        usb_write = {"bytes": [1, 2]}
+        rejected = {
+            "interface on raw USB": (
+                self.usb_record(
+                    self.gip(),
+                    self.gip(
+                        "a", match={"link": "usb"}, interface={"first": 0, "last": 1}
+                    ),
+                ),
+                "interface selects among HID interfaces",
+                True,
+            ),
+            "HID session on raw USB": (
+                self.usb_record(
+                    self.gip(),
+                    self.gip(
+                        "a", match={"link": "usb"}, session={"startup": [hid_write]}
+                    ),
+                ),
+                "names usbStartup packets, not HID reports",
+                True,
+            ),
+            "USB packets in a HID mode": (
+                self.usb_record(
+                    {**DEFAULT, "session": {"usbStartup": [usb_write]}},
+                ),
+                "names startup reports, not usbStartup packets",
+                True,
+            ),
+            "session naming both kinds": (
+                self.usb_record(
+                    self.gip(
+                        session={"startup": [hid_write], "usbStartup": [usb_write]}
+                    )
+                ),
+                "",
+                False,
+            ),
+            "session naming neither": (
+                self.usb_record(self.gip(session={})),
+                "",
+                False,
+            ),
+        }
+        for name, (document, message, schema_accepts) in rejected.items():
+            with self.subTest(name):
+                self.assertEqual(self.schema.is_valid(document), schema_accepts)
+                if schema_accepts:
+                    with self.assertRaises(validate_profiles.ValidationError) as caught:
+                        validate_profiles.validate_modes(Path("record.json"), document)
+                    self.assertIn(message, str(caught.exception))
 
 
 if __name__ == "__main__":

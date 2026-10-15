@@ -87,7 +87,7 @@ struct DeviceCatalog: Sendable {
       server: record.server ?? .system,
       rumbleTemplate: record.rumbleTemplate,
       startupWrites: record.defaultMode.startupWrites ?? record.startupWrites,
-      usbStartupWrites: record.usbStartupWrites,
+      usbStartupWrites: record.defaultMode.usbStartupWrites ?? record.usbStartupWrites,
       inputLayout: record.inputLayout,
       hidUsageMap: record.hidUsageMap,
       tuning: record.tuning,

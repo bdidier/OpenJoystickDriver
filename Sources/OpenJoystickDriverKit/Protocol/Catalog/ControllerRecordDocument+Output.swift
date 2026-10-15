@@ -83,6 +83,7 @@ extension ControllerRecordDocument {
       let transportName = try container.decodeOptional(String.self, for: "transport")
       let transport = transportName.flatMap(PhysicalTransport.init(rawValue:))
         .flatMap { $0 == .proprietaryRadioReceiver ? nil : $0 }
+        .flatMap { $0 == .proprietaryRadioReceiver ? nil : $0 }
       guard transportName == nil || transport != nil else {
         throw ControllerRecordProblem(
           "a startup transport is usb, bluetooth-classic or bluetooth-le"

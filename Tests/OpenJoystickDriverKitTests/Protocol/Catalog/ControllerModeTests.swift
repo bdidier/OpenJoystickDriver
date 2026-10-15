@@ -464,17 +464,6 @@ struct ControllerModeTests {
         expected: "probe bytes are uppercase hex pairs that fit the read length"
       ),
       Case(
-        name: "raw-USB mode",
-        modes: [mode("a", family: "xbox.gip")],
-        expected: "modes apply only to HID controllers"
-      ),
-      Case(
-        name: "raw-USB default",
-        modes: [mode("a")],
-        family: "xbox.gip",
-        expected: "modes apply only to HID controllers"
-      ),
-      Case(
         name: "unknown write key",
         modes: [mode("a", probe: probe.merging(["write": "01"]) { $1 })],
         expected: "unknown field(s): write"
