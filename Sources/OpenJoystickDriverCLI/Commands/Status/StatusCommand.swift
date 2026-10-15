@@ -57,7 +57,10 @@ struct StatusCommand: AsyncParsableCommand {
   static func plainRows(_ report: StatusReport) -> [[String]] {
     var rows = [
       ["service", report.service.state.rawValue, report.service.version ?? ""],
-      ["transport-extension", report.transportExtension.bundle.rawValue, report.transportExtension.registration.rawValue],
+      [
+        "transport-extension", report.transportExtension.bundle.rawValue,
+        report.transportExtension.registration.rawValue,
+      ],
       ["command-line-tool", report.commandLineTool.state.rawValue, report.commandLineTool.path],
     ]
     if let permissions = report.permissions {
@@ -102,6 +105,7 @@ struct StatusCommand: AsyncParsableCommand {
   }
 
   private static func printHuman(_ report: StatusReport) {
+    let transport = report.transportExtension
     var rows: [(String, String)] = [
       (
         CLILocalized.text("cli.status.label.service"),
@@ -109,7 +113,7 @@ struct StatusCommand: AsyncParsableCommand {
       ),
       (
         CLILocalized.text("cli.status.label.transport_extension"),
-        "\(report.transportExtension.bundle.rawValue), \(report.transportExtension.registration.rawValue)"
+        "\(transport.bundle.rawValue), \(transport.registration.rawValue)"
       ),
       (
         CLILocalized.text("cli.status.label.command_line_tool"),

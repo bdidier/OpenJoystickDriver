@@ -73,7 +73,8 @@ struct ExtensionWordsTests {
   }
 
   @Test(arguments: [
-    ("claims", "claimed", RenamedWord.Kind.transportClaim), ("doesNotClaim", "unclaimed", .transportClaim),
+    ("claims", "claimed", RenamedWord.Kind.transportClaim),
+    ("doesNotClaim", "unclaimed", .transportClaim),
     ("DriverExtension", "TransportExtension", .outputKind),
     ("extension-bundle", "transport-extension-bundle", .checkID),
     ("extension-registration", "transport-extension-registration", .checkID),
@@ -94,9 +95,11 @@ struct ExtensionWordsTests {
     #expect(word != nil)
     #expect(RenamedWord.all.contains { $0.old == old && $0.new == new })
     #expect(RenamedWord.documentFieldReplacement(for: old, in: "report.schema.json") == nil)
-    #expect(RenamedWord.all.contains {
-      $0.old == old && $0.kind == .documentField(in: location)
-    })
+    #expect(
+      RenamedWord.all.contains {
+        $0.old == old && $0.kind == .documentField(in: location)
+      }
+    )
   }
 
   @Test
