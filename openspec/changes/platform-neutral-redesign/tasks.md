@@ -228,13 +228,13 @@ Depends: 4, 12, 14.
 Verify: `swift test`, lint pair, `./Scripts/ojd check schemas`.
 
 - [ ] 17.1 Rename commands and words by the D9 table, and give the access values OS-neutral names (`ioHID`, `ioUSBHost`, `usbDriverKit`, `coreBluetoothGATT` in `report.schema.json` and `DeviceAccessBackend`), with OS words only under `platform` (cli-surface). Verify: a test lists every old word as rejected with a hint to the new word.
-- [ ] 17.2 Add a settings schema and move settings out of `UserDefaults` into layered files; add `ojd setting` keys for every GUI-only switch. Verify: schema check and a round-trip test.
+- [x] 17.2 Add a settings schema and move settings out of `UserDefaults` into layered files; add `ojd setting` keys for every GUI-only switch. Verify: schema check and a round-trip test. Done: `settings.schema.json`, layered files with a one-time `UserDefaults` import; `everySettingRoundTripsThroughTheUserFile` and `./Scripts/ojd check schemas` pass. Show in menu bar, update checks and Send Test Notification stay with 17.2a.
 - [ ] 17.2a Add the `setting` keys for show in menu bar and update checks together with their switches in the 20.x General pane, and give Send Test Notification a CLI place once a service-to-GUI notification path exists (D9). Verify: the 17.2 round-trip test covers the new keys; the D10 coverage test lists Send Test Notification.
 - [x] 17.3 Add the single `DataDirectory` port used by every store. Verify: `grep` finds no direct path building outside the port; tests use a temp directory.
 - [ ] 17.4 Split the neutral core from a macOS host adapter so `Sources/OpenJoystickDriver` has no macOS-only imports outside `platform`. Verify: a script or test greps imports and fails on a violation.
 - [ ] 17.5 Add the coverage test that lists every command and flags any with no GUI place. Verify: the test passes and fails on a fake command.
 - [x] 17.6 Decide on the command-line-tool symlink after open item 4. Verify: the decision is in `design.md`.
-- [ ] 17.6a Make `ojd status` report whether the command-line tool link is installed, and give `ojd` no command or setting that installs or removes it (D9). Verify: CLI tests for an installed, a missing and a broken link, with `--json`.
+- [x] 17.6a Make `ojd status` report whether the command-line tool link is installed, and give `ojd` no command or setting that installs or removes it (D9). Verify: CLI tests for an installed, a missing and a broken link, with `--json`. Done: `StatusCommandLinkTests` covers installed, missing, broken and relative links, each with `--json`.
 
 ## 18. SDK endpoint and reference client
 
@@ -244,8 +244,8 @@ Verify: `swift test`, `./Scripts/ojd check schemas`.
 
 - [x] 18.1 Implement Challenge, Hello, Welcome, Subscription, FeedRequest, FeedSession, Frame and Status with `AccessGrants`. Verify: round-trip tests against the schema.
 - [x] 18.2 Return the supported-version list on a bad `apiVersion`, wrong kind or missing header, with new catalog codes. Verify: tests for each; old codes keep numbers.
-- [ ] 18.3 Ship the reference client and its test. Verify: the test subscribes and receives a frame.
-- [ ] 18.4 Document the endpoint in `docs/sdk/`. Verify: markdownlint.
+- [x] 18.3 Ship the reference client and its test. Verify: the test subscribes and receives a watch line with the controller's input state. Done: `Scripts/SDK/reference_client.py`; `theClientSubscribesAndReceivesAControllerFrame` and `test_endpoint_reference_client.py` pass. The service sends watch lines on subscribe; `Frame` is a client-to-service kind.
+- [x] 18.4 Document the endpoint in `docs/sdk/`. Verify: markdownlint. Done: `docs/sdk/endpoint.md`; markdownlint reports 0 issues over 140 files and `test_sdk_docs.py` checks the examples against the catalog and fixtures.
 
 ## 19. Streaming boundary and WebRTC
 
