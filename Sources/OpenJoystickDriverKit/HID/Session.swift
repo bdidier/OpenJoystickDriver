@@ -94,6 +94,11 @@ protocol HIDAccessBackend: Sendable {
     connection: HIDDeviceConnection,
     request: PhysicalHIDFeatureReadRequest
   ) async -> PhysicalHIDReportResult<Data>
+  /// Reads a feature report for a mode probe, which must not wait on a silent device.
+  func probeFeatureReport(
+    connection: HIDDeviceConnection,
+    request: PhysicalHIDFeatureReadRequest
+  ) async -> PhysicalHIDReportResult<Data>
   func releaseInputClaim(address: ControllerConnectionAddress) async -> PhysicalHIDClaimResult
   func reacquireInputClaim(address: ControllerConnectionAddress) async -> PhysicalHIDClaimResult
   /// Re-runs the seize of an address's devices whose earlier attempt was refused or failed.
@@ -105,6 +110,14 @@ protocol HIDAccessBackend: Sendable {
 }
 
 extension HIDAccessBackend {
+  /// A backend with no bounded read reads as the startup reads do.
+  func probeFeatureReport(
+    connection: HIDDeviceConnection,
+    request: PhysicalHIDFeatureReadRequest
+  ) async -> PhysicalHIDReportResult<Data> {
+    await getFeatureReport(connection: connection, request: request)
+  }
+
   /// A backend whose devices never pass through to macOS has nothing to re-evaluate.
   func reevaluateOwnership(of _: Set<ControllerModelID>) -> Set<UUID> { [] }
 }
@@ -173,6 +186,13 @@ private final class IOHIDAccessBackend: HIDAccessBackend, Sendable {
     request: PhysicalHIDFeatureReadRequest
   ) async -> PhysicalHIDReportResult<Data> {
     await stream.getFeatureReport(connection: connection, request: request)
+  }
+
+  func probeFeatureReport(
+    connection: HIDDeviceConnection,
+    request: PhysicalHIDFeatureReadRequest
+  ) async -> PhysicalHIDReportResult<Data> {
+    await stream.probeFeatureReport(connection: connection, request: request)
   }
 
   // Seizes and closes run on main, where the manager's run loop removes devices: a device that
@@ -282,6 +302,15 @@ public final class HIDManager: Sendable {
     request: PhysicalHIDFeatureReadRequest
   ) async -> PhysicalHIDReportResult<Data> {
     await backend.getFeatureReport(connection: connection, request: request)
+  }
+
+  /// Reads a feature report for a mode probe. It gives up after a deadline, and while an
+  /// earlier probe read of the connection is outstanding it fails at once.
+  func probeFeatureReport(
+    connection: HIDDeviceConnection,
+    request: PhysicalHIDFeatureReadRequest
+  ) async -> PhysicalHIDReportResult<Data> {
+    await backend.probeFeatureReport(connection: connection, request: request)
   }
 
   public func releaseInputClaim(

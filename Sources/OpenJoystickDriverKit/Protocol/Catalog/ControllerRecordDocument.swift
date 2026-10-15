@@ -12,6 +12,9 @@ struct ControllerRecordDocument: Decodable {
   let vendorID: Int
   let productID: Int
   let protocolInfo: ProtocolInfo
+  /// Alternative modes of an HID controller, tried in order; empty when the record has none. The
+  /// record's own protocol is the default mode.
+  let modes: [ModeDocument]
   let usb: USBOverride?
   /// Present exactly for Switch 2 controllers that connect over Bluetooth LE.
   let bluetoothLE: BluetoothLE?
@@ -30,8 +33,8 @@ struct ControllerRecordDocument: Decodable {
   init(from decoder: any Decoder) throws {
     let container = try decoder.container(keyedBy: DocumentKey.self)
     try container.rejectUnknown(allowed: [
-      "apiVersion", "kind", "vendorID", "productID", "protocol", "usb", "bluetoothLE",
-      "capabilities", "ownership", "route", "output", "input", "tuning",
+      "apiVersion", "kind", "vendorID", "productID", "protocol", "modes", "usb",
+      "bluetoothLE", "capabilities", "ownership", "route", "output", "input", "tuning",
     ])
     let apiVersion = try container.decodeOptional(String.self, for: "apiVersion")
     let kind = try container.decodeOptional(String.self, for: "kind")
@@ -50,6 +53,15 @@ struct ControllerRecordDocument: Decodable {
     vendorID = try container.decode(Int.self, for: "vendorID")
     productID = try container.decode(Int.self, for: "productID")
     protocolInfo = try container.decode(ProtocolInfo.self, for: "protocol")
+    modes = try container.decodeOptional([ModeDocument].self, for: "modes") ?? []
+    if container.contains(DocumentKey("modes")), modes.isEmpty {
+      throw DecodingError.dataCorrupted(
+        .init(
+          codingPath: decoder.codingPath + [DocumentKey("modes")],
+          debugDescription: "modes must not be empty"
+        )
+      )
+    }
     usb = try container.decodeOptional(USBOverride.self, for: "usb")
     bluetoothLE = try container.decodeOptional(BluetoothLE.self, for: "bluetoothLE")
     capabilities =
@@ -82,13 +94,7 @@ struct ControllerRecordDocument: Decodable {
     try validateOwnershipAndOutput(codingPath: decoder.codingPath)
     try validateTuning(codingPath: decoder.codingPath)
     try validateBluetoothLE(codingPath: decoder.codingPath)
-    // Only these deltas have a driver that acts on them: GIP drops rumble, DualSense Edge adds
-    // exactly its paddles and function buttons.
-    let presentAllowed =
-      capabilities.presentControls.isEmpty
-      || (protocolInfo.protocolID == .sonyDualSense
-        && capabilities.presentControls == DualSenseDriver.edgeControls)
-    guard !capabilities.rumbleAbsent || protocolInfo.protocolID == .xboxGIP, presentAllowed else {
+    guard capabilitiesAreDeclared(by: protocolInfo.protocolID) else {
       throw DecodingError.dataCorrupted(
         .init(
           codingPath: decoder.codingPath + [DocumentKey("capabilities")],
@@ -96,6 +102,7 @@ struct ControllerRecordDocument: Decodable {
         )
       )
     }
+    try validateModes(codingPath: decoder.codingPath)
     if let endpoints = usb?.endpoints {
       let defaultEndpoints: (Int, Int)
       switch protocolInfo.protocolID {
@@ -112,6 +119,16 @@ struct ControllerRecordDocument: Decodable {
         )
       }
     }
+  }
+
+  /// Only these deltas have a driver that acts on them: GIP drops rumble, DualSense Edge adds
+  /// exactly its paddles and function buttons.
+  func capabilitiesAreDeclared(by protocolID: PhysicalProtocolID) -> Bool {
+    let presentAllowed =
+      capabilities.presentControls.isEmpty
+      || (protocolID == .sonyDualSense
+        && capabilities.presentControls == DualSenseDriver.edgeControls)
+    return (!capabilities.rumbleAbsent || protocolID == .xboxGIP) && presentAllowed
   }
 
   /// macOS cannot serve a raw-USB family, startup writes go to HID controllers, only a driver that

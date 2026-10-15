@@ -24,6 +24,9 @@
 		"protocol": {
 			"$ref": "#/$defs/protocol"
 		},
+		"modes": {
+			"$ref": "#/$defs/modes"
+		},
 		"usb": {
 			"$ref": "#/$defs/usbOverride"
 		},
@@ -50,6 +53,99 @@
 		}
 	},
 	"$defs": {
+		"modes": {
+			"description": "Alternative modes of one model. The record's protocol is the default mode, which a controller runs when no mode here matches or a probe gets no reply. Modes are tried in order and the first whose probes all hold is selected.",
+			"type": "array",
+			"minItems": 1,
+			"items": {
+				"$ref": "#/$defs/mode"
+			}
+		},
+		"mode": {
+			"type": "object",
+			"required": ["id", "protocol", "match"],
+			"additionalProperties": false,
+			"properties": {
+				"id": {
+					"type": "string",
+					"pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*(?!\\n)$",
+					"not": {
+						"const": "default"
+					}
+				},
+				"protocol": {
+					"$ref": "#/$defs/protocol"
+				},
+				"match": {
+					"$ref": "#/$defs/modeMatch"
+				}
+			}
+		},
+		"modeMatch": {
+			"type": "object",
+			"required": ["probes"],
+			"additionalProperties": false,
+			"properties": {
+				"probes": {
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/modeProbe"
+					}
+				}
+			}
+		},
+		"modeProbe": {
+			"description": "A read of one feature report. A probe never writes. answers: the read succeeds. stalls: the device refuses the read. bytes: the reply holds the given bytes at offset.",
+			"type": "object",
+			"required": ["report", "length", "expect"],
+			"additionalProperties": false,
+			"properties": {
+				"report": {
+					"type": "integer",
+					"minimum": 0,
+					"maximum": 255
+				},
+				"length": {
+					"type": "integer",
+					"minimum": 1,
+					"maximum": 65535
+				},
+				"expect": {
+					"enum": ["answers", "stalls", "bytes"]
+				},
+				"offset": {
+					"type": "integer",
+					"minimum": 0,
+					"maximum": 65534
+				},
+				"bytes": {
+					"type": "string",
+					"pattern": "^[0-9A-F]{2}( [0-9A-F]{2})*(?!\\n)$"
+				}
+			},
+			"allOf": [
+				{
+					"if": {
+						"properties": {
+							"expect": {
+								"const": "bytes"
+							}
+						},
+						"required": ["expect"]
+					},
+					"then": {
+						"required": ["offset", "bytes"]
+					},
+					"else": {
+						"properties": {
+							"offset": false,
+							"bytes": false
+						}
+					}
+				}
+			]
+		},
 		"protocol": {
 			"type": "object",
 			"required": ["family"],
