@@ -3,7 +3,7 @@
 ///
 /// Selection reads only the controller's declared controls and the user's Advanced override.
 /// Protocol, manufacturer, consumer, macOS version, and access backend never participate, and a
-/// natively passed-through controller never reaches selection.
+/// natively passed-through controller never reaches selection. Only ``ServingPolicy`` calls it.
 public enum VirtualHIDProfileSelector {
   /// The outcome of selection.
   public struct Selection: Equatable, Sendable {
@@ -29,7 +29,7 @@ public enum VirtualHIDProfileSelector {
   ///
   /// - Throws: `ProtocolBindingReason.virtualProfileUnavailable` when the selected profile cannot
   ///   represent the controller's primary controls.
-  public static func select(
+  static func select(
     controls: Set<ControlID>,
     override: VirtualHIDProfileID?
   ) throws(ProtocolBindingReason) -> Selection {

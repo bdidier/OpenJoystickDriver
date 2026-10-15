@@ -271,9 +271,12 @@ struct VirtualHIDProfileOverrideTests {
     #expect(xbox.publishedIdentityLabel.contains("045E:02FD"))
     #expect(xbox.publishedIdentityPresentation.glyphFamily == .xbox)
 
-    let unpublished = Self.device()
+    let unpublished = Self.device(ownership: .nativeGamepad)
     #expect(unpublished.publishedVirtualProfile == nil)
-    #expect(unpublished.publishedIdentityLabel == RuntimePresentation.noVirtualHIDProfileLabel)
+    #expect(
+      unpublished.publishedIdentityLabel
+        == OJDLocalized.string("controllers.nativeGamepadNotPublished")
+    )
   }
 
   @Test
@@ -309,8 +312,8 @@ struct VirtualHIDProfileOverrideTests {
   func iconAndLabelComeFromOnePresentedIdentity() {
     let profile = ApplicationServiceVirtualHIDProfileStatus(
       profile: .sdlCompatible,
-      source: "automatic",
-      override: nil,
+      source: "override",
+      override: .sdlCompatible,
       unavailable: false
     )
     let cases: [(ApplicationServicePublicationStatus?, published: Bool)] = [

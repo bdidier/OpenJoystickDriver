@@ -63,7 +63,7 @@ struct ControllerOwnershipCommand: AsyncParsableCommand {
       try Self.checkSupported(
         device,
         server: records.records[model]?.server ?? .system,
-        usesRawUSB: records.records[model]?.usesRawUSB == true
+        accessRoute: records.records[model]?.accessRoute ?? .system
       )
       let change = try Self.change(model, to: choice.ownership, records: records, device: device)
       if !dryRun { try Self.write(change) }
@@ -109,21 +109,18 @@ struct ControllerOwnershipCommand: AsyncParsableCommand {
   static func checkSupported(
     _ device: ApplicationServiceDeviceDescription,
     server: ControllerServer,
-    usesRawUSB: Bool
+    accessRoute: ControllerAccessRoute
   ) throws {
-    if usesRawUSB {
+    var input = ServingInput(device)
+    input.server = server
+    input.accessRoute = accessRoute
+    if accessRoute != .system {
       throw CLIFailure(
         .ownershipToggleUnsupported,
         CLILocalized.format("cli.controller.ownership.raw_usb", device.identity)
       )
     }
-    guard
-      ServingPolicy.offersServerChoice(
-        observation: device.physicalOwnership,
-        server: server,
-        usesRawUSB: false
-      )
-    else {
+    guard ServingPolicy.offersServerChoice(input) else {
       throw CLIFailure(
         .ownershipToggleUnsupported,
         CLILocalized.format("cli.controller.ownership.not_native", device.identity)

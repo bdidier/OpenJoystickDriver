@@ -11,7 +11,7 @@ extension ControllerOwnershipCommandTests {
       (try? ControllerOwnershipCommand.checkSupported(
         fixture.device,
         server: fixture.server,
-        usesRawUSB: fixture.source == .rawUSB
+        accessRoute: fixture.accessRoute
       )) != nil
     #expect(accepted == fixture.offersServerChoice, "\(fixture.name)")
   }

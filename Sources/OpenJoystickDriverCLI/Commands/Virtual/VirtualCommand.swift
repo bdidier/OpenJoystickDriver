@@ -54,11 +54,12 @@ struct VirtualShowReport: Encodable, Equatable {
       name = device.name
       vendorID = Int(device.vendorID)
       productID = Int(device.productID)
-      profile = device.virtualHIDProfile?.profile?.rawValue
-      source = device.virtualHIDProfile?.source
+      let decision = device.servingDecision
+      profile = decision.selection?.profileID.rawValue
+      source = decision.selection?.source.wireName
       override = device.virtualHIDProfile?.override?.rawValue
       overrideScope = device.virtualHIDProfile?.overrideScope
-      unavailable = device.virtualHIDProfile?.unavailable ?? false
+      unavailable = decision.route == .outputDisabled(.noVirtualProfile)
     }
   }
 

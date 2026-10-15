@@ -141,8 +141,8 @@ extension VirtualOutputTests {
           unavailable: false
         ),
         ApplicationServiceVirtualHIDProfileStatus(
-          profile: nil,
-          source: nil,
+          profile: .generic,
+          source: "automatic",
           override: nil,
           unavailable: false
         ),
@@ -175,7 +175,7 @@ extension VirtualOutputTests {
     ])
 
     #expect(described[0].virtualHIDProfile?.override == .sdlCompatible)
-    if ownership.isServedBySystem {
+    if ownership.isServedBySystem || ownership == .upstreamVirtualDevice {
       #expect(described[0].virtualHIDProfile?.profile == nil)
       #expect(described[0].virtualHIDProfile?.source == nil)
     } else {

@@ -49,6 +49,8 @@ public struct ConnectedDeviceSnapshot: Sendable {
   public let physicalOutputOwner: ControllerServer
   /// Who the record the controller bound with says serves the model; `macOS` when it sets none.
   public let recordServer: ControllerServer
+  /// How the controller record reaches the controller; `system` when it names no other route.
+  public let recordAccessRoute: ControllerAccessRoute
   /// The record's timing and deadzone values as applied to this controller.
   public let tuning: ControllerTuning
   /// Normalized controls and sample formats the active parser emits for this record.

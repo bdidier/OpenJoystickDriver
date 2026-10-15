@@ -6,6 +6,7 @@ package struct ServingFixture: Sendable {
   package let observation: ControllerOwnershipObservation
   package let server: ControllerServer
   package let source: DeviceDiscoverySource
+  package let accessRoute: ControllerAccessRoute
   package let outputEnabled: Bool
   package let override: VirtualHIDProfileID?
   /// The route the policy must decide.
@@ -17,6 +18,7 @@ package struct ServingFixture: Sendable {
     ServingInput(
       observation: observation,
       server: server,
+      accessRoute: accessRoute,
       outputEnabled: outputEnabled,
       controls: ControlID.xboxLayout,
       override: override
@@ -36,6 +38,7 @@ package struct ServingFixture: Sendable {
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
       recordServer: server,
+      recordAccessRoute: accessRoute,
       capabilities: ControllerCapabilities(controls: ControlID.xboxLayout),
       sessionToken: .fixture("serving-fixture")
     )
@@ -46,6 +49,7 @@ package struct ServingFixture: Sendable {
     _ observation: ControllerOwnershipObservation,
     _ server: ControllerServer,
     source: DeviceDiscoverySource = .hid,
+    accessRoute: ControllerAccessRoute = .system,
     outputEnabled: Bool = true,
     override: VirtualHIDProfileID? = nil,
     route: ServingRoute,
@@ -55,6 +59,7 @@ package struct ServingFixture: Sendable {
     self.observation = observation
     self.server = server
     self.source = source
+    self.accessRoute = accessRoute
     self.outputEnabled = outputEnabled
     self.override = override
     self.route = route
@@ -104,6 +109,7 @@ package struct ServingFixture: Sendable {
       .exclusiveRawUSB,
       .ojd,
       source: .rawUSB,
+      accessRoute: .rawAccess,
       route: .virtualHid(.generic),
       offersServerChoice: false
     ),
@@ -112,6 +118,7 @@ package struct ServingFixture: Sendable {
       .driverKitOwnedUSB,
       .system,
       source: .rawUSB,
+      accessRoute: .extensionOwned,
       route: .extensionOwned,
       offersServerChoice: false
     ),

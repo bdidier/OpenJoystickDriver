@@ -53,6 +53,8 @@ public struct ApplicationServiceDeviceDescription: Codable, Sendable {
   /// `ojd` when a layer sets it, `macOS` otherwise. Unlike ``physicalOutputOwner``, it stays `ojd`
   /// while OJD serves a model that macOS also supports.
   public let recordServer: ControllerServer
+  /// How the controller record reaches the controller; `system` when it names no other route.
+  public let recordAccessRoute: ControllerAccessRoute
   /// The record's timing and deadzone values as applied to this controller.
   public let tuning: ControllerTuning
   /// Normalized controls and sample formats the active parser emits for this record.
@@ -94,6 +96,7 @@ public struct ApplicationServiceDeviceDescription: Codable, Sendable {
     physicalOutputCapabilities: PhysicalControllerOutputCapabilities = .none,
     physicalOutputOwner: ControllerServer = .ojd,
     recordServer: ControllerServer = .system,
+    recordAccessRoute: ControllerAccessRoute = .system,
     tuning: ControllerTuning = .none,
     capabilities: ControllerCapabilities = ControllerCapabilities(controls: []),
     connectionState: ControllerConnectionState? = nil,
@@ -126,6 +129,7 @@ public struct ApplicationServiceDeviceDescription: Codable, Sendable {
     self.physicalOutputCapabilities = physicalOutputCapabilities
     self.physicalOutputOwner = physicalOutputOwner
     self.recordServer = recordServer
+    self.recordAccessRoute = recordAccessRoute
     self.tuning = tuning
     self.capabilities = capabilities
     self.connectionState = connectionState
@@ -179,6 +183,9 @@ public struct ApplicationServiceDeviceDescription: Codable, Sendable {
     // A service older than this field sends none; the record then serves the model to macOS.
     self.recordServer =
       try container.decodeIfPresent(ControllerServer.self, forKey: .recordServer) ?? .system
+    self.recordAccessRoute =
+      try container.decodeIfPresent(ControllerAccessRoute.self, forKey: .recordAccessRoute)
+      ?? .system
     self.tuning = try container.decode(ControllerTuning.self, forKey: .tuning)
     self.capabilities = try container.decode(ControllerCapabilities.self, forKey: .capabilities)
     self.connectionState = try container.decodeIfPresent(
@@ -225,6 +232,7 @@ public struct ApplicationServiceDeviceDescription: Codable, Sendable {
     case physicalOutputCapabilities
     case physicalOutputOwner
     case recordServer
+    case recordAccessRoute
     case tuning
     case capabilities
     case connectionState
@@ -261,6 +269,7 @@ extension ApplicationServiceDeviceDescription {
       physicalOutputCapabilities: snapshot.physicalOutputCapabilities,
       physicalOutputOwner: snapshot.physicalOutputOwner,
       recordServer: snapshot.recordServer,
+      recordAccessRoute: snapshot.recordAccessRoute,
       tuning: snapshot.tuning,
       capabilities: snapshot.capabilities,
       connectionState: snapshot.connectionState,

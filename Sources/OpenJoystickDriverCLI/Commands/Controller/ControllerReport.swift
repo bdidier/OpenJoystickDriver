@@ -190,11 +190,11 @@ struct ControllerShowReport: Encodable, Equatable {
       ),
       virtual: device.virtualHIDProfile.map {
         Virtual(
-          profile: $0.profile?.rawValue,
-          source: $0.source,
+          profile: device.servingDecision.selection?.profileID.rawValue,
+          source: device.servingDecision.selection?.source.wireName,
           override: $0.override?.rawValue,
           overrideScope: $0.overrideScope,
-          unavailable: $0.unavailable
+          unavailable: device.servingDecision.route == .outputDisabled(.noVirtualProfile)
         )
       },
       publication: device.publication.map {

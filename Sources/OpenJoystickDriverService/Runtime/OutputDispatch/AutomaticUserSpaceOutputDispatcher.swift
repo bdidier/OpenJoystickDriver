@@ -319,14 +319,12 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
     return selection?.profileID
   }
 
-  /// Selection from the controller's declared controls and its Advanced override.
+  /// The persona the serving policy decides OJD publishes for the controller, from its declared
+  /// controls and its Advanced override; nil when no persona can represent it.
   private func select(
     for description: ApplicationServiceDeviceDescription
   ) -> VirtualHIDProfileSelector.Selection? {
-    try? VirtualHIDProfileSelector.select(
-      controls: description.capabilities.controls,
-      override: overrideProvider(description)
-    )
+    ServingPolicy.publishedPersona(for: description, override: overrideProvider(description))
   }
 
   /// Records the controller's selection, or records it as unavailable when no profile can

@@ -10,7 +10,7 @@ struct ControllerOwnershipPickerTests {
   private static func device(
     physicalOwnership: ControllerOwnershipObservation = .exclusiveHID,
     recordServer: ControllerServer = .system,
-    discoverySource: DeviceDiscoverySource = .hid
+    accessRoute: ControllerAccessRoute = .system
   ) -> ApplicationServiceDeviceDescription {
     ApplicationServiceDeviceDescription(
       name: "Test Pad",
@@ -18,11 +18,12 @@ struct ControllerOwnershipPickerTests {
       productID: 0x100B,
       protocolBinding: ProtocolBindingID(.hidDescriptor),
       connection: "USB",
-      discoverySource: discoverySource,
+      discoverySource: accessRoute == .system ? .hid : .rawUSB,
       physicalOwnership: physicalOwnership,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
       recordServer: recordServer,
+      recordAccessRoute: accessRoute,
       sessionToken: .fixture("device-ownership")
     )
   }
@@ -31,26 +32,26 @@ struct ControllerOwnershipPickerTests {
     arguments: [
       (
         ControllerOwnershipObservation.nativeGamepad, ControllerServer.system,
-        DeviceDiscoverySource.hid, true
+        ControllerAccessRoute.system, true
       ),
-      (.exclusiveHID, .ojd, .hid, true),
-      (.nativeGamepad, .ojd, .hid, true),
-      (.exclusiveHID, .system, .hid, false),
-      (.nativeHIDVisible, .system, .hid, false),
-      (.nativeGamepad, .system, .rawUSB, false),
-      (.exclusiveRawUSB, .ojd, .rawUSB, false),
+      (.exclusiveHID, .ojd, .system, true),
+      (.nativeGamepad, .ojd, .system, true),
+      (.exclusiveHID, .system, .system, false),
+      (.nativeHIDVisible, .system, .system, false),
+      (.nativeGamepad, .system, .rawAccess, false),
+      (.exclusiveRawUSB, .ojd, .rawAccess, false),
     ]
   )
   func thePickerShowsOnlyForANativeOrOJDOwnedHIDController(
     physicalOwnership: ControllerOwnershipObservation,
     recordServer: ControllerServer,
-    discoverySource: DeviceDiscoverySource,
+    accessRoute: ControllerAccessRoute,
     shown: Bool
   ) {
     let device = Self.device(
       physicalOwnership: physicalOwnership,
       recordServer: recordServer,
-      discoverySource: discoverySource
+      accessRoute: accessRoute
     )
 
     #expect(ControllerOwnershipPicker.isShown(for: device) == shown)

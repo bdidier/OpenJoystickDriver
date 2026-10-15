@@ -265,7 +265,6 @@ extension ApplicationServiceServer {
   ) -> [ApplicationServiceDeviceDescription] {
     let automatic = automaticUserSpaceDispatcher()
     return controllers.map { identifier, device in
-      let state = automatic?.profileState(for: identifier)
       var described = device
       let unitOverride = device.portKey.flatMap {
         virtualHIDProfileOverrides.storedOverride(
@@ -280,21 +279,24 @@ extension ApplicationServiceServer {
           vendorID: device.vendorID,
           productID: device.productID
         )
-      // The system serves this controller and OJD publishes nothing, so a selection left from an
-      // earlier session is stale.
-      let selection = device.physicalOwnership.isServedBySystem ? nil : state?.selection
+      // The serving policy decides the route and the persona; the dispatcher only carries it out.
+      // A controller the system serves, or one with output off, has no selection.
+      let decision = ServingPolicy.decision(
+        ServingInput(device, outputEnabled: automatic != nil, override: override)
+      )
+      let unavailable = decision.route == .outputDisabled(.noVirtualProfile)
       described.virtualHIDProfile = ApplicationServiceVirtualHIDProfileStatus(
-        profile: selection?.profileID,
-        source: selection?.source.wireName,
+        profile: decision.selection?.profileID,
+        source: decision.selection?.source.wireName,
         override: override,
         overrideScope: override == nil ? nil : unitOverride == nil ? "model" : "unit",
-        unavailable: state?.unavailable ?? false
+        unavailable: unavailable
       )
       described.publication = Self.publication(
         of: device,
         identifier: identifier,
         automatic: automatic,
-        unavailable: state?.unavailable ?? false
+        unavailable: unavailable
       )
       return described
     }

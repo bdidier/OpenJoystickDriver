@@ -115,6 +115,7 @@ extension DeviceManager {
       physicalOutputCapabilities: await pipeline.physicalOutputCapabilities(),
       physicalOutputOwner: pipeline.macOSOwnedOutput == nil ? .ojd : .system,
       recordServer: record?.server ?? .system,
+      recordAccessRoute: record?.accessRoute ?? .system,
       tuning: record?.tuning ?? .none,
       capabilities: protocolDriverRegistry.capabilities(
         await pipeline.capabilities(),
