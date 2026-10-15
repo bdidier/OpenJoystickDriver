@@ -122,7 +122,7 @@ OpenJoystickDriver sets the report ID in byte 0 when the ID is not 0, writes eac
 
 ## Send Fixed Reports At Startup
 
-A HID controller that needs a fixed report before it sends input can name it in `output.startup`. The Sixaxis clone record `2563:0523` uses one to enable the controller over Bluetooth. A mode's `session.startup` replaces these writes while that mode runs; the DualShock 3 record uses that form in its `bluetooth` mode:
+A HID controller that needs a fixed report before it sends input can name it in `output.startup`. A mode's `session.startup` replaces these writes while that mode runs; the DualShock 3 record `054c:0268` and the Sixaxis clone record `2563:0523` use that form in a `bluetooth` mode. The example below is the record-level form, which applies on every link unless a `transport` limits it (`usb`, `bluetooth-classic`, or `bluetooth-le`; a write never names `proprietary-radio-receiver`):
 
 ```json
 "output": {
@@ -293,8 +293,8 @@ Every record has a `modes` list, and the protocol a controller runs is the `prot
 
 The `match` keys are:
 
-- `link` is `usb`, `bluetooth-classic`, `bluetooth-le`, or `proprietary-radio-receiver`. It holds when every interface of the device reaches the host over that link.
-- `interfaceSignature` holds when one interface has the given `interfaceClass`, `interfaceSubclass`, and `interfaceProtocol` (0 to 255) and, when given, the HID `usagePage` and `usage` (0 to 65535, `usage` needs `usagePage`).
+- `link` is `usb`, `bluetooth-classic`, `bluetooth-le`, or `proprietary-radio-receiver`. It holds when every interface of the device reaches the controller over that link: the physical link where discovery observed one, otherwise `proprietary-radio-receiver` for a model whose own record runs a `receiver` or `dongle` protocol variant, otherwise the host link macOS reports.
+- `interfaceSignature` holds when one interface has the given `interfaceClass`, `interfaceSubclass`, and `interfaceProtocol` (0 to 255) and, when given, the HID `usagePage` and `usage` (0 to 65535, `usage` needs `usagePage`) and the whole `endpoints` set. `endpoints` lists 1 or more endpoints, each with at least one of `address` (0 to 255), `direction` (`in` or `out`), `transferType` (`control`, `isochronous`, `bulk`, or `interrupt`), and `maxPacketSize` (0 to 65535). Each listed endpoint must pair with a distinct endpoint of the interface, and none of the interface's endpoints may be left over, so two interfaces with one class triple and different endpoint sets select different modes. An interface whose endpoints discovery does not report never holds an `endpoints` key.
 - `manufacturer` and `product` hold when the device's strings equal the given non-empty text.
 - `bcdDevice` holds when the device's release number lies in `min` to `max`, both inclusive, from 0 to 65535.
 - `probes` lists 1 or more probes. A probe reads a feature report (`report` 0 to 255, `length` 1 to 65535) and expects `answers`, `stalls`, or `bytes`. `bytes` also takes `offset` and `bytes`, uppercase hex pairs the reply must hold at that offset; the other expectations take neither.
@@ -305,7 +305,7 @@ A probe only reads. It cannot write to the controller. Each read gives up after 
 
 Modes apply to HID controllers only. A record with a raw-USB family has one `default` mode, and `interface` and `session` are for HID modes. Every mode follows the record-level rules of the default protocol for `input.layout`, `output.rumble`, and `capabilities`. A patch replaces `modes` as an array, so it restates every mode it keeps.
 
-The `proprietary-radio-receiver` link is in the record format, but macOS does not report it for a device today, so no real controller selects it yet. The `interfaceSignature` key does not compare endpoints.
+macOS reports a radio dongle as a USB device, so the `proprietary-radio-receiver` link comes from the model's own record: a model whose default mode runs a `receiver` or `dongle` variant reports it, and a mode keyed on that link refines the receiver. A model that attaches both through a dongle and through USB under one product ID cannot be told apart this way yet, because nothing observes the radio link. Endpoint sets are read from the raw USB scanner; HID discovery does not report endpoints, so an `endpoints` key selects a mode only on a route that does.
 
 The DualShock 3 record has the `bluetooth` mode above, which sends feature report `0xF4` (`42 03 00 00`) when the controller connects over classic Bluetooth, the enable report that Linux `hid-sony.c` sends. It also carries one mode that probes feature report `0xEF`. That mode is a candidate discriminator only: it runs the same protocol as the default, and the record does not say which unit is genuine. The `length` of 49 is a chosen length, the size of a Sixaxis input report, not a size recorded from a DualShock 3 reply.
 
