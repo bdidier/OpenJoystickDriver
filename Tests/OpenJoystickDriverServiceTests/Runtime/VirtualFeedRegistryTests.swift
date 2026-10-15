@@ -142,7 +142,9 @@ struct VirtualFeedRegistryTests {
     device.failsSending = true
 
     _ = registry.exchange(token: session.token, frames: [VirtualFeedFrame()])
-    try await Self.wait { registry.openFeedCount == 0 }
+    // The registry drops the feed before it awaits the device's close, so the count alone does
+    // not say the device is closed.
+    try await Self.wait { registry.openFeedCount == 0 && device.closeCount > 0 }
 
     #expect(device.closeCount == 1)
     #expect(registry.exchange(token: session.token, frames: []).closed)
@@ -167,9 +169,10 @@ struct VirtualFeedRegistryTests {
     let factory = FakeFeedFactory()
     let registry = factory.registry(idleTimeout: 0.1)
     let session = try await registry.open(profile: "Generic")
-    while registry.openFeedCount > 0 { try await Task.sleep(nanoseconds: 10_000_000) }
+    let device = try #require(factory.devices.first)
+    try await Self.wait { registry.openFeedCount == 0 && device.closeCount > 0 }
 
-    #expect(factory.devices.first?.closeCount == 1)
+    #expect(device.closeCount == 1)
     #expect(registry.exchange(token: session.token, frames: []).closed)
   }
 
