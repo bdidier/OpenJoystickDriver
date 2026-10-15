@@ -31,12 +31,16 @@ struct ServingPolicyCallersTests {
     let offersServerChoice: Bool
   }
 
-  /// Runs one fixture through the four callers' real entry points and compares their answers: the
+  /// Runs one fixture through the callers' real entry points and compares their answers: the
   /// service's description (which the endpoint's controller stream also serves), the CLI's
   /// `virtual show` report and ownership check, and the GUI's persona and ownership picker.
   @MainActor
   @Test(arguments: ServingFixture.all)
-  func theFourCallersGiveTheAnswerThePolicyDecided(_ fixture: ServingFixture) async throws {
+  func
+    theServiceDescriptionTheEndpointWatchStreamServesTheCLIAndTheGUIGiveTheAnswerThePolicyDecided(
+      _ fixture: ServingFixture
+    ) async throws
+  {
     let id = LogicalControllerID(vendorID: 0x3537, productID: 0x100B)
     let server = try await VirtualOutputTests().profileOverrideServer(
       [id],
