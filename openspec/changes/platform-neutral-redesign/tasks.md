@@ -116,6 +116,7 @@ Extras found while closing 7.3 (the protocol descriptions it added had no negati
 - [x] 7.6 Make `./Scripts/ojd check schemas` fail when a protocol description's file name differs from its `family`, which today fails only when the app starts. Verify: a negative unit test and `./Scripts/ojd check schemas` on the real tree.
 - [x] 7.7 Make the Swift loader decode protocol descriptions strictly and testably: reject an unknown field, an unknown `$schema`, a family that differs from the file, and a variant outside the family's `variants`, each with a `ControllerRecordProblem`. Verify: negative tests in `swift test`.
 - [x] 7.8 Make `./Scripts/ojd catalog regenerate --check` report a missing, stale or changed protocol copy in the Kit bundle. Verify: unit tests for each case.
+- [x] 7.9 Extend 7.5 to every family: `protocol-description.schema.json` admits exactly the variants of `PhysicalProtocolID.variants` per family (including `bluetooth-classic`), and rejects signatures for a family with no variants. Verify: a Swift test keeps the schema equal to `variants` for every family, and per-family negative unit tests in `Tests/RepositoryScripts`.
 
 ## 8. Typed parameters replace ControllerQuirk (old WP5)
 
