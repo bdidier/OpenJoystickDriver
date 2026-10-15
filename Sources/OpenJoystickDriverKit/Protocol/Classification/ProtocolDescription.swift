@@ -90,6 +90,9 @@ struct ProtocolDescription: Sendable {
   /// The family's keep-alive: its interval, the one place the interval is set, and the fixed
   /// writes of each run.
   let keepAlive: KeepAlive?
+  /// The family's subcommand reports: the report id, the rolling counter rule and the startup
+  /// requests. Only `nintendo.switch1` has them.
+  let subcommands: SubcommandPlan?
   let inputLayout: ControllerInputLayout?
   /// The map every `hid.descriptor` record layers over (``HIDUsageMap``).
   let hidUsageMap: HIDUsageMap?
@@ -248,6 +251,7 @@ struct ProtocolDescription: Sendable {
       startupWrites: document.defaults?.output?.startup ?? [],
       usbStartupWrites: document.defaults?.output?.usbStartup ?? [],
       keepAlive: document.defaults?.session?.keepAlive,
+      subcommands: document.defaults?.session?.subcommands,
       inputLayout: document.defaults?.input?.layout,
       hidUsageMap: document.defaults?.input?.usageMap,
       hidUsageShapes: document.defaults?.input?.shapes ?? [],
@@ -343,6 +347,9 @@ struct ProtocolDescription: Sendable {
       return "HID startup writes apply only to HID controllers"
     }
     if let violation = keepAliveViolation { return violation }
+    if (subcommands != nil) != (family == .nintendoSwitch1) {
+      return "only nintendo.switch1 has subcommands, and it must have them"
+    }
     if rawUSB == .always, !tuningKeys.isEmpty {
       return "a family that is always raw USB reads its tuning through rawUSBTuningKeys"
     }
