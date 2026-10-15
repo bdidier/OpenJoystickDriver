@@ -28,4 +28,20 @@ extension DeviceManager: OutputSink {
       throw StreamBoundaryError.rejected(.physicalOutput, "mapping output not applied")
     }
   }
+
+  public func consume(
+    _ release: MappingOutputRelease,
+    for controller: LogicalControllerID
+  ) async throws {
+    guard await releaseMappingPhysicalOutputs(for: controller) else {
+      throw StreamBoundaryError.rejected(.physicalOutput, "mapping outputs not released")
+    }
+  }
+
+  public func consume(_ color: ProfileColorClaim, for controller: LogicalControllerID) async throws
+  {
+    guard await setProfilePhysicalColor(color.color, for: controller) else {
+      throw StreamBoundaryError.rejected(.physicalOutput, "profile colour not applied")
+    }
+  }
 }

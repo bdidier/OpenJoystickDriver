@@ -76,9 +76,9 @@ Input flows through two protocols in `Streaming/`, which import nothing from a p
 | Host feedback to an endpoint feed client | the feed's virtual device, through the registry | `EndpointFeedReturnSink` (`endpointFeedClient`), through `consume(_:for:)` |
 | Endpoint `controllers` stream | `EndpointStreamSource` (`endpointStream`) | `EndpointSubscribers` (`endpointSubscription`) |
 | Physical output commands | the service's output requests | `DeviceManager` (`physicalOutput`) |
-| Mapped physical output | `RemappingPhysicalOutputBridge` | `DeviceManager` (`physicalOutput`), through `MappingOutputClaim` |
+| Mapped physical output | `RemappingPhysicalOutputBridge` | `DeviceManager` (`physicalOutput`), through `MappingOutputClaim`, `MappingOutputRelease` and `ProfileColorClaim` |
 
-The registry delivers the host's output commands to a feed's return sink one task at a time, so the client sees them in the order the host sent them, and holds them until the client has its `FeedSession` line. `Scripts/Quality/check_sink_boundary.py` fails when a Swift source calls `.dispatch(`, `.dispatchPublishing(`, `.activateOutput(for:` or `.setMappingPhysicalOutput(` outside a sink; the routers that forward to the output they wrap are listed in the script, and `test_sink_boundary.py` covers it.
+The registry delivers the host's output commands to a feed's return sink one task at a time, so the client sees them in the order the host sent them, and holds them until the client has its `FeedSession` line. `Scripts/Quality/check_sink_boundary.py` fails when a Swift source calls `.dispatch(`, `.dispatchPublishing(`, `.activateOutput(for:`, `.setMappingPhysicalOutput(`, `.releaseMappingPhysicalOutputs(` or `.setProfilePhysicalColor(` outside a sink; the routers that forward to the output they wrap are listed in the script, and `test_sink_boundary.py` covers it.
 
 ## Classification and Binding
 

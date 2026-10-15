@@ -29,7 +29,7 @@ final class RemappingPhysicalOutputBridge: RemappingPhysicalOutputSink, Sendable
     guard let manager = attached.withLock({ $0.manager }) else {
       throw RemappingEventEngineError.sinkUnavailable
     }
-    guard await manager.releaseMappingPhysicalOutputs(for: identifier) else {
+    do { try await manager.consume(MappingOutputRelease(), for: identifier) } catch {
       throw RemappingEventEngineError.sinkUnavailable
     }
   }
@@ -39,7 +39,7 @@ final class RemappingPhysicalOutputBridge: RemappingPhysicalOutputSink, Sendable
     guard let manager = attached.withLock({ $0.manager }) else {
       throw RemappingEventEngineError.sinkUnavailable
     }
-    guard await manager.setProfilePhysicalColor(color, for: identifier) else {
+    do { try await manager.consume(ProfileColorClaim(color), for: identifier) } catch {
       throw RemappingEventEngineError.sinkUnavailable
     }
   }

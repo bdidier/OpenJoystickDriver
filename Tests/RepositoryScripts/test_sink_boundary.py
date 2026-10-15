@@ -25,10 +25,12 @@ class SinkBoundaryTests(unittest.TestCase):
                 "Sources/Service/Route.swift",
                 "await output.dispatch(event, labels: labels, from: id)\n"
                 "await output.activateOutput(for: id)\n"
-                "await manager.setMappingPhysicalOutput(out, active: true, owner: o, for: id)\n",
+                "await manager.setMappingPhysicalOutput(out, active: true, owner: o, for: id)\n"
+                "await manager.releaseMappingPhysicalOutputs(for: id)\n"
+                "await manager.setProfilePhysicalColor(color, for: id)\n",
             )
             found = check.violations(root)
-        self.assertEqual(len(found), 3)
+        self.assertEqual(len(found), 5)
 
     def test_a_listed_sink_comments_and_declarations_pass(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

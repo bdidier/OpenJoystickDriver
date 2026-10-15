@@ -100,6 +100,16 @@ struct StreamBoundaryTests {
   }
 
   @Test
+  func aSinkRefusesAMappingReleaseAndAProfileColorUnlessItAppliesThem() async {
+    await #expect(throws: StreamBoundaryError.unsupported(.physicalOutput)) {
+      try await BareSink().consume(MappingOutputRelease(), for: Self.identifier)
+    }
+    await #expect(throws: StreamBoundaryError.unsupported(.physicalOutput)) {
+      try await BareSink().consume(ProfileColorClaim(nil), for: Self.identifier)
+    }
+  }
+
+  @Test
   func aPipelineIsAPhysicalControllerSourceThatFeedsItsDispatcherThroughTheSink() async {
     let dispatcher = RecordingDispatcher()
     let pipeline = DevicePipeline(

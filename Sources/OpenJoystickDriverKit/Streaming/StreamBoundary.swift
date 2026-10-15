@@ -31,6 +31,18 @@ public struct MappingOutputClaim: Equatable, Sendable {
   }
 }
 
+/// The release of every remapping claim on one physical controller's output.
+public struct MappingOutputRelease: Equatable, Sendable {
+  public init() {}
+}
+
+/// The profile's colour for one physical controller, or nil to remove it.
+public struct ProfileColorClaim: Equatable, Sendable {
+  public let color: ControllerColor?
+
+  public init(_ color: ControllerColor?) { self.color = color }
+}
+
 /// Where an ``InputSource`` gets its frames.
 public enum InputOrigin: String, CaseIterable, Sendable {
   /// A physical controller read and parsed by a protocol driver.
@@ -116,6 +128,12 @@ public protocol OutputSink: AnyObject, Sendable {
 
   /// Consumes one remapping claim on a physical controller's output.
   func consume(_ claim: MappingOutputClaim, for controller: LogicalControllerID) async throws
+
+  /// Releases every remapping claim on a physical controller's output.
+  func consume(_ release: MappingOutputRelease, for controller: LogicalControllerID) async throws
+
+  /// Sets or removes the profile's colour on a physical controller.
+  func consume(_ color: ProfileColorClaim, for controller: LogicalControllerID) async throws
 }
 
 // swiftlint:disable async_without_await
@@ -139,6 +157,20 @@ extension OutputSink {
 
   public func consume(_ claim: MappingOutputClaim, for controller: LogicalControllerID) async throws
   {
+    throw StreamBoundaryError.unsupported(destination)
+  }
+
+  public func consume(
+    _ release: MappingOutputRelease,
+    for controller: LogicalControllerID
+  ) async throws {
+    throw StreamBoundaryError.unsupported(destination)
+  }
+
+  public func consume(
+    _ color: ProfileColorClaim,
+    for controller: LogicalControllerID
+  ) async throws {
     throw StreamBoundaryError.unsupported(destination)
   }
 }

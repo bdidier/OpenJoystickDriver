@@ -3,7 +3,8 @@
 Every frame, activation and mapped physical-output claim reaches its destination through
 `OutputSink.consume` (`InputSource.produce` for a source). A call to `.dispatch(`,
 `.dispatchPublishing(`, `.activateOutput(for:`, `.activateOutputReportingFailure(for:` or
-`.setMappingPhysicalOutput(` goes around that boundary, unless it is a sink forwarding to the
+`.setMappingPhysicalOutput(`, `.releaseMappingPhysicalOutputs(` or
+`.setProfilePhysicalColor(` goes around that boundary, unless it is a sink forwarding to the
 output it wraps; those files are listed in `SINK_INTERNALS`.
 """
 
@@ -25,7 +26,7 @@ SINK_INTERNALS = frozenset(
     }
 )
 BYPASS = re.compile(
-    r"\.(?:dispatch|dispatchPublishing|setMappingPhysicalOutput)\("
+    r"\.(?:dispatch|dispatchPublishing|setMappingPhysicalOutput|releaseMappingPhysicalOutputs|setProfilePhysicalColor)\("
     r"|\.activateOutput(?:ReportingFailure)?\(for:"
 )
 
