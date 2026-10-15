@@ -40,10 +40,11 @@ struct ControllerRecordDocument: Decodable {
       kind: kind,
       expected: Self.kind
     ) {
+      if problem.code != nil { throw problem }
       throw DecodingError.dataCorruptedError(
-        forKey: DocumentKey(apiVersion == OpenJoystickDriverAPI.version ? "kind" : "apiVersion"),
+        forKey: DocumentKey("kind"),
         in: container,
-        debugDescription: problem
+        debugDescription: problem.message
       )
     }
     vendorID = try container.decode(Int.self, for: "vendorID")

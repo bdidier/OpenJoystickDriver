@@ -178,7 +178,8 @@ extension ModPackageStore {
     }
   }
 
-  /// Reads `url` and runs `check` on it, and turns each failure into E4003 naming `label`.
+  /// Reads `url` and runs `check` on it, and turns each failure into E4003 naming `label`, or
+  /// into E5001 when the file's `apiVersion` is not supported.
   private static func content<Value>(
     _ url: URL,
     _ label: String,
@@ -186,8 +187,8 @@ extension ModPackageStore {
   ) throws -> Value {
     do { return try check(Data(contentsOf: url)) } catch {
       throw ModPackageError(
-        .invalidPackageContent,
-        "\(label): \(ControllerRecordSet.problemDescription(error))"
+        ControllerRecordSet.problemCode(error) ?? .invalidPackageContent,
+        "\(label): \(ControllerRecordSet.problemDescription(error, includingCode: false))"
       )
     }
   }

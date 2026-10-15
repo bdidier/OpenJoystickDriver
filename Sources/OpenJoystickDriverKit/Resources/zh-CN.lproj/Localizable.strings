@@ -1300,7 +1300,7 @@
 "cli.mod.already_installed" = "%@ 已安装。使用 --force 替换。";
 "cli.mod.not_installed" = "%@ 未安装。“ojd mod list”会显示已安装的包。";
 "cli.mod.validate.abstract" = "检查模组包文件夹，不安装。";
-"cli.mod.validate.discussion" = "检查清单、包是否能在此版本上运行、其文件是否与列出的一致且有效，以及是否有文件与你的文件或其他包冲突。包被拒绝时，以退出码 1 和 E4xxx 代码退出。";
+"cli.mod.validate.discussion" = "检查清单、包是否能在此版本上运行、其文件是否与列出的一致且有效，以及是否有文件与你的文件或其他包冲突。包被拒绝时，以退出码 1 和 E4xxx 或 E5001 代码退出。";
 "cli.mod.validate.valid" = "%@ 是有效的包：%@ %@。用“ojd mod install”安装。";
 "cli.mod.install.abstract" = "检查模组包并为你的用户安装。";
 "cli.mod.install.discussion" = "将包复制到 Packages/NAME 并一次性替换；运行中的服务会应用它。已安装同名包时会被拒绝，除非使用 --force。--force 不会绕过 requires、身份冲突，或配置文件 ID 或名称冲突。--dry-run 检查包，不写入任何内容。";
@@ -1308,7 +1308,7 @@
 "cli.mod.install.dry_run" = "如果运行，将安装 %@。";
 "cli.mod.install.success" = "已安装 %@。运行中的服务现在会应用它。";
 "cli.mod.list.abstract" = "列出已安装的模组包及每个包的文件。";
-"cli.mod.list.discussion" = "列出每个包的版本、作者和文件。OJD 不使用的包，例如其 requires 不包含此版本的包，会连同 E4xxx 代码显示原因。";
+"cli.mod.list.discussion" = "列出每个包的版本、作者和文件。OJD 不使用的包，例如其 requires 不包含此版本的包，会连同 E4xxx 或 E5001 代码显示原因。";
 "cli.mod.list.problem" = "  未使用：%@";
 "cli.mod.remove.abstract" = "移除一个已安装的模组包。";
 "cli.mod.remove.discussion" = "仅删除 Packages/NAME。在终端中会请求确认，否则需要 --force。--dry-run 检查包是否已安装，不更改任何内容。未安装时以退出码 1 和 E4006 退出。";
@@ -1648,6 +1648,7 @@
 "error.E4005" = "已安装同名的包。请使用 --force 运行该命令以替换它。";
 "error.E4006" = "没有已安装的包使用此名称。请运行 ojd mod list 查看已安装的包。";
 "error.E4007" = "无法更改包文件夹。请检查磁盘可用空间和文件夹权限。";
+"error.E5001" = "文档缺少 apiVersion，或其 apiVersion 不受此版本 OpenJoystickDriver 支持。请将文档改为消息中指出的受支持的 apiVersion，然后重新运行该命令。";
 "error.E5002" = "协议描述无效。请用 protocol-description 架构检查该文件，并修正消息指出的字段。";
 "error.E5003" = "协议描述指定的系列与其文件名不同。请以系列名称命名该文件。";
 "error.E5004" = "协议描述列出了其系列没有的变体。请使用该系列的某个变体。";

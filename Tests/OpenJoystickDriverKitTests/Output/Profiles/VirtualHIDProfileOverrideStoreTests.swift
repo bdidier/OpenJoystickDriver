@@ -135,6 +135,7 @@ struct VirtualHIDProfileOverrideStoreTests {
       let store = Store(directory: directory)
 
       #expect(store.override(vendorID: 1, productID: 2) == nil)
+      #expect(store.problems.first?.problem?.hasPrefix("E5001: ") == true)
       #expect(
         store.problems.first?.problem?.contains(
           "apiVersion openjoystickdriver.io/v1beta1 is not supported"

@@ -1303,7 +1303,7 @@
 "cli.mod.already_installed" = "%@ is already installed. Use --force to replace it.";
 "cli.mod.not_installed" = "%@ is not installed. 'ojd mod list' shows the installed packages.";
 "cli.mod.validate.abstract" = "Check a mod package folder without installing it.";
-"cli.mod.validate.discussion" = "Checks the manifest, that the package runs on this version, that its files are the listed ones and valid, and that none clashes with your files or another package. Exits 1 with the E4xxx code when the package is refused.";
+"cli.mod.validate.discussion" = "Checks the manifest, that the package runs on this version, that its files are the listed ones and valid, and that none clashes with your files or another package. Exits 1 with the E4xxx or E5001 code when the package is refused.";
 "cli.mod.validate.valid" = "%@ is a valid package: %@ %@. Install it with 'ojd mod install'.";
 "cli.mod.install.abstract" = "Check a mod package and install it for your user.";
 "cli.mod.install.discussion" = "Copies the package to Packages/NAME and swaps it in at once; the running service applies it. A package of the same name that is already installed is refused unless you pass --force. --force never overrides requires, an identity clash, or a profile id or name clash. --dry-run checks the package and writes nothing.";
@@ -1311,7 +1311,7 @@
 "cli.mod.install.dry_run" = "Would install %@.";
 "cli.mod.install.success" = "Installed %@. The running service applies it now.";
 "cli.mod.list.abstract" = "List the installed mod packages and the files each holds.";
-"cli.mod.list.discussion" = "Lists each package with its version, author, and files. A package that OJD does not use, such as one whose requires leaves out this version, shows the reason with its E4xxx code.";
+"cli.mod.list.discussion" = "Lists each package with its version, author, and files. A package that OJD does not use, such as one whose requires leaves out this version, shows the reason with its E4xxx or E5001 code.";
 "cli.mod.list.problem" = "  Not used: %@";
 "cli.mod.remove.abstract" = "Remove one installed mod package.";
 "cli.mod.remove.discussion" = "Deletes only Packages/NAME. Asks for confirmation on a terminal; needs --force otherwise. --dry-run checks that the package is installed and changes nothing. Exits 1 with E4006 when it is not installed.";
@@ -1586,7 +1586,7 @@
 "cli.explain.area.cli" = "Command line";
 "cli.explain.area.remapping" = "Remapping";
 "cli.explain.area.mod" = "Mod packages";
-"cli.explain.area.document" = "Document";
+"cli.explain.area.document" = "Documents";
 "cli.explain.exit_code" = "Exit code: %@";
 "cli.explain.wire" = "Wire value: %@";
 "cli.error.stale_installation" = "The installed OpenJoystickDriver.app is older than these repository sources. Run './Scripts/ojd build install-fast dev', or set OJD_RUN_REPOSITORY_CLI=1 to run this build.";
@@ -1651,6 +1651,7 @@
 "error.E4005" = "A package with this name is already installed. Run the command with --force to replace it.";
 "error.E4006" = "No installed package has this name. Run 'ojd mod list' to see the installed packages.";
 "error.E4007" = "The package folder could not be changed. Check the free disk space and the folder permissions.";
+"error.E5001" = "A document has no apiVersion, or its apiVersion is not supported by this version of OpenJoystickDriver. Change the document to the supported apiVersion that the message names, and run the command again.";
 "error.E5002" = "A protocol description is invalid. Check the file against the protocol-description schema and fix the field that the message names.";
 "error.E5003" = "A protocol description names a family that differs from its file name. Name the file after its family.";
 "error.E5004" = "A protocol description lists a variant that its family does not have. Use one of the variants of the family.";

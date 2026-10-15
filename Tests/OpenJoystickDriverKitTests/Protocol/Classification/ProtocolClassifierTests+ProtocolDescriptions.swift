@@ -73,7 +73,7 @@ extension ProtocolClassifierTests {
         ),
         "apiVersion openjoystickdriver.io/v1beta1 is not supported; "
           + "the supported apiVersion is \(OpenJoystickDriverAPI.version)",
-        .invalidProtocolDescription
+        .unsupportedAPIVersion
       ),
       (
         protocolDescription(signature: #""variant": "usb""#, kind: "Controller"),

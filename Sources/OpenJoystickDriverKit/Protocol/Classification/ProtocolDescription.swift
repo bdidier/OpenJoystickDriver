@@ -83,7 +83,10 @@ struct ProtocolDescription: Sendable {
       kind: document.kind,
       expected: kind
     ) {
-      throw ProtocolDescriptionProblem(.invalidProtocolDescription, "\(fileName): \(problem)")
+      throw ProtocolDescriptionProblem(
+        problem.code ?? .invalidProtocolDescription,
+        "\(fileName): \(problem.message)"
+      )
     }
     guard document.family == protocolID.rawValue else {
       throw ProtocolDescriptionProblem(

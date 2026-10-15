@@ -463,6 +463,12 @@
 			"status": "active"
 		},
 		{
+			"code": "E5001",
+			"domain": "document",
+			"name": "unsupportedAPIVersion",
+			"status": "active"
+		},
+		{
 			"code": "E5002",
 			"domain": "document",
 			"name": "invalidProtocolDescription",

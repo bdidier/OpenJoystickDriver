@@ -10,6 +10,7 @@ Each code has the form `E` and four digits. The first digit gives the area:
 - `E2xxx` is the command line.
 - `E3xxx` is remapping.
 - `E4xxx` is mod packages.
+- `E5xxx` is documents: the files and lines that OJD reads, such as a profile, a controller record, or a mod manifest.
 
 A code never changes its meaning. When OJD stops using a code, the code is retired. OJD never gives a retired code to a different error.
 
@@ -93,6 +94,7 @@ The table is generated from the code catalog and the English text of OJD. The ta
 | E4005 | Mod | A package with this name is already installed. Run the command with --force to replace it. |
 | E4006 | Mod | No installed package has this name. Run 'ojd mod list' to see the installed packages. |
 | E4007 | Mod | The package folder could not be changed. Check the free disk space and the folder permissions. |
+| E5001 | Document | A document has no apiVersion, or its apiVersion is not supported by this version of OpenJoystickDriver. Change the document to the supported apiVersion that the message names, and run the command again. |
 | E5002 | Document | A protocol description is invalid. Check the file against the protocol-description schema and fix the field that the message names. |
 | E5003 | Document | A protocol description names a family that differs from its file name. Name the file after its family. |
 | E5004 | Document | A protocol description lists a variant that its family does not have. Use one of the variants of the family. |

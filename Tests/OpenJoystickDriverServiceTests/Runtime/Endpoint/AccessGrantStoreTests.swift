@@ -110,26 +110,36 @@ struct AccessGrantStoreTests {
   func aMissingOrUnsupportedHeaderIsRefusedWithWhatWasFound() throws {
     let supported = "the supported apiVersion is \(OpenJoystickDriverAPI.version)"
     let body = #""enabled":true,"grants":[],"tokens":[],"web":{"enabled":false}}"#
-    let cases: [(String, String)] = [
-      (#"{"kind":"AccessGrants","# + body, "no apiVersion found; \(supported)"),
+    let cases: [(String, ErrorCode?, String)] = [
+      (
+        #"{"kind":"AccessGrants","# + body, .unsupportedAPIVersion,
+        "no apiVersion found; \(supported)"
+      ),
       (
         #"{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"AccessGrants","# + body,
+        .unsupportedAPIVersion,
         "apiVersion openjoystickdriver.io/v1beta1 is not supported; \(supported)"
       ),
       (
         #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","# + body,
-        "no kind found; expected AccessGrants"
+        nil, "no kind found; expected AccessGrants"
       ),
       (
         #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"Profile","# + body,
-        "expected AccessGrants, found Profile"
+        nil, "expected AccessGrants, found Profile"
       ),
     ]
     try withStore { store, directory in
       try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-      for (text, reason) in cases {
+      for (text, code, reason) in cases {
         try Data(text.utf8).write(to: store.url)
-        #expect(throws: AccessGrantStoreError.unsupported(reason)) { try store.load() }
+        do {
+          _ = try store.load()
+          Issue.record("the header was accepted")
+        } catch let AccessGrantStoreError.unsupported(problem) {
+          #expect(problem.code == code)
+          #expect(problem.message == reason)
+        }
         #expect(try String(contentsOf: store.url, encoding: .utf8) == text)
       }
     }

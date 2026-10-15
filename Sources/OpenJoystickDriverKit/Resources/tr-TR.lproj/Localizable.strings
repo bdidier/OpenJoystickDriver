@@ -1300,7 +1300,7 @@
 "cli.mod.already_installed" = "%@ zaten yüklü. Değiştirmek için --force kullanın.";
 "cli.mod.not_installed" = "%@ yüklü değil. “ojd mod list” yüklü paketleri gösterir.";
 "cli.mod.validate.abstract" = "Bir mod paketi klasörünü yüklemeden denetle.";
-"cli.mod.validate.discussion" = "Bildirimi, paketin bu sürümde çalıştığını, dosyalarının listelenenler olduğunu ve geçerli olduğunu, hiçbirinin dosyalarınızla veya başka bir paketle çakışmadığını denetler. Paket reddedilirse 1 ve E4xxx koduyla çıkar.";
+"cli.mod.validate.discussion" = "Bildirimi, paketin bu sürümde çalıştığını, dosyalarının listelenenler olduğunu ve geçerli olduğunu, hiçbirinin dosyalarınızla veya başka bir paketle çakışmadığını denetler. Paket reddedilirse 1 ve E4xxx veya E5001 koduyla çıkar.";
 "cli.mod.validate.valid" = "%@ geçerli bir paket: %@ %@. “ojd mod install” ile yükleyin.";
 "cli.mod.install.abstract" = "Bir mod paketini denetle ve kullanıcınız için yükle.";
 "cli.mod.install.discussion" = "Paketi Packages/NAME içine kopyalar ve bir anda yerine koyar; çalışan servis onu uygular. Aynı adlı yüklü bir paket, --force vermedikçe reddedilir. --force, requires’ı, kimlik çakışmasını veya profil kimliği ya da adı çakışmasını asla aşmaz. --dry-run paketi denetler ve hiçbir şey yazmaz.";
@@ -1308,7 +1308,7 @@
 "cli.mod.install.dry_run" = "%@ yüklenirdi.";
 "cli.mod.install.success" = "%@ yüklendi. Çalışan servis şimdi uyguluyor.";
 "cli.mod.list.abstract" = "Yüklü mod paketlerini ve her birinin dosyalarını listele.";
-"cli.mod.list.discussion" = "Her paketi sürümü, yazarı ve dosyalarıyla listeler. OJD’nin kullanmadığı bir paket, örneğin requires’ı bu sürümü dışarıda bırakan, nedenini E4xxx koduyla gösterir.";
+"cli.mod.list.discussion" = "Her paketi sürümü, yazarı ve dosyalarıyla listeler. OJD’nin kullanmadığı bir paket, örneğin requires’ı bu sürümü dışarıda bırakan, nedenini E4xxx veya E5001 koduyla gösterir.";
 "cli.mod.list.problem" = "  Kullanılmıyor: %@";
 "cli.mod.remove.abstract" = "Yüklü bir mod paketini kaldır.";
 "cli.mod.remove.discussion" = "Yalnızca Packages/NAME dizinini siler. Terminalde onay ister; aksi halde --force gerekir. --dry-run paketin yüklü olduğunu denetler ve hiçbir şeyi değiştirmez. Yüklü değilse 1 ve E4006 ile çıkar.";
@@ -1585,7 +1585,7 @@
 "cli.explain.area.cli" = "Komut satırı";
 "cli.explain.area.remapping" = "Yeniden atama";
 "cli.explain.area.mod" = "Mod paketleri";
-"cli.explain.area.document" = "Belge";
+"cli.explain.area.document" = "Belgeler";
 "cli.explain.exit_code" ="Çıkış kodu: %@";
 "cli.explain.wire" = "Tel değeri: %@";
 "cli.error.stale_installation" = "Yüklü OpenJoystickDriver.app bu depo kaynaklarından daha eski. Bu derlemeyi çalıştırmak için “./Scripts/ojd build install-fast dev” komutunu çalıştırın veya OJD_RUN_REPOSITORY_CLI=1 ayarlayın.";
@@ -1648,6 +1648,7 @@
 "error.E4005" = "Bu ada sahip bir paket zaten yüklü. Değiştirmek için komutu --force ile çalıştırın.";
 "error.E4006" = "Yüklü hiçbir paketin adı bu değil. Yüklü paketleri görmek için ojd mod list çalıştırın.";
 "error.E4007" = "Paket klasörü değiştirilemedi. Boş disk alanını ve klasör izinlerini kontrol edin.";
+"error.E5001" = "Bir belgede apiVersion yok ya da apiVersion değeri OpenJoystickDriver’ın bu sürümünde desteklenmiyor. Belgeyi iletinin belirttiği desteklenen apiVersion değerine değiştirin ve komutu yeniden çalıştırın.";
 "error.E5002" = "Bir protokol açıklaması geçersiz. Dosyayı protocol-description şemasına göre denetleyin ve iletinin belirttiği alanı düzeltin.";
 "error.E5003" = "Bir protokol açıklaması, dosya adından farklı bir aile belirtiyor. Dosyayı ailesinin adıyla adlandırın.";
 "error.E5004" = "Bir protokol açıklaması, ailesinde olmayan bir varyant listeliyor. Ailenin varyantlarından birini kullanın.";

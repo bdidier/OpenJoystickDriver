@@ -163,14 +163,24 @@ def validate_documents(
 
 
 # The catalog codes of an invalid protocol description, as ProtocolDescription.decode throws them.
+UNSUPPORTED_API_VERSION = "E5001"
 INVALID_PROTOCOL_DESCRIPTION = "E5002"
 PROTOCOL_DESCRIPTION_FAMILY_MISMATCH = "E5003"
 UNKNOWN_PROTOCOL_VARIANT = "E5004"
 
 
 def protocol_description_code(error: ValidationError) -> str:
-    """The catalog code for a schema failure: E5004 when a variant is not the family's."""
+    """The catalog code for a schema failure.
+
+    E5001 when apiVersion is missing or not the supported one, E5004 when a variant is not the
+    family's, and E5002 for every other invalid field.
+    """
     path = list(error.absolute_path)
+    missing_version = (
+        error.validator == "required" and not path and "'apiVersion'" in error.message
+    )
+    if path == ["apiVersion"] or missing_version:
+        return UNSUPPORTED_API_VERSION
     # The schema forbids the signature list of a family with no variants with a false schema, and
     # jsonschema reports that failure on the list itself, without a path.
     forbidden_list = (

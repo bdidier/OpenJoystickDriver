@@ -135,6 +135,19 @@ struct ProtocolDescriptionTests {
     #expect(gip.parameters == ["shareButton": .object(["fromEnd": 1...255])])
   }
 
+  /// `ProtocolParameters.violation` takes the ranges and enum values from the description.
+  @Test
+  func parameterViolationsReadTheDescription() {
+    var parameters = ProtocolParameters()
+    parameters.shareButton = .init(fromEnd: 300)
+    #expect(
+      parameters.violation(family: .xboxGIP, variant: nil)
+        == "shareButton.fromEnd must be in 1...255"
+    )
+    parameters.shareButton = .init(fromEnd: 2)
+    #expect(parameters.violation(family: .xboxGIP, variant: nil) == nil)
+  }
+
   // MARK: - Rejections
 
   @Test(

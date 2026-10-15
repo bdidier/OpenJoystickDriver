@@ -75,6 +75,7 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
   case packageAlreadyInstalled = "E4005"
   case packageNotInstalled = "E4006"
   case packageStoreUnwritable = "E4007"
+  case unsupportedAPIVersion = "E5001"
   case invalidProtocolDescription = "E5002"
   case protocolDescriptionFamilyMismatch = "E5003"
   case unknownProtocolVariant = "E5004"
@@ -112,7 +113,8 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
     case .invalidManifest, .requiresExcludesVersion, .invalidPackageContent, .packageClash,
       .packageAlreadyInstalled, .packageNotInstalled, .packageStoreUnwritable:
       .mod
-    case .invalidProtocolDescription, .protocolDescriptionFamilyMismatch, .unknownProtocolVariant:
+    case .unsupportedAPIVersion, .invalidProtocolDescription, .protocolDescriptionFamilyMismatch,
+      .unknownProtocolVariant:
       .document
     }
   }

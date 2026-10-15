@@ -309,6 +309,29 @@ public struct ProtocolParameters: Codable, Equatable, Sendable {
       if maker == nil, !isEmpty { return "DualSense model parameters require maker ThirdParty" }
     default: break
     }
+    return valueViolation(family: family)
+  }
+
+  /// Why a set parameter holds a value its family's description does not declare, or nil. The
+  /// enum values and integer ranges come from the description, not from this type.
+  private func valueViolation(family: PhysicalProtocolID) -> String? {
+    guard let declared = ProtocolDescription.bundled[family]?.parameters else { return nil }
+    let enumValues: [String: String?] = [
+      "layout": layout?.rawValue, "usbProtocol": usbProtocol?.rawValue,
+      "lightingMemory": lightingMemory?.rawValue, "hatSource": hatSource?.rawValue,
+      "motionCalibration": motionCalibration?.rawValue, "role": role?.rawValue,
+      "motionScale": motionScale?.rawValue, "reportRevision": reportRevision?.rawValue,
+      "usageLayout": usageLayout?.rawValue, "maker": maker?.rawValue,
+    ]
+    for (name, value) in enumValues.sorted(by: { $0.key < $1.key }) {
+      guard let value, case .enumeration(let values)? = declared[name] else { continue }
+      if !values.contains(value) { return "\(name) \(value) is not one of \(values)" }
+    }
+    if let shareButton, case .object(let fields)? = declared["shareButton"],
+      let range = fields["fromEnd"], !range.contains(shareButton.fromEnd)
+    {
+      return "shareButton.fromEnd must be in \(range)"
+    }
     return nil
   }
 }

@@ -96,7 +96,8 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                     del document[member]
                 else:
                     document[member] = value
-                self.assert_rejected(document)
+                code = "E5001" if member == "apiVersion" else "E5002"
+                self.assert_rejected(document, code=code)
 
     def test_rejects_an_unknown_family(self) -> None:
         document = xusb_description()

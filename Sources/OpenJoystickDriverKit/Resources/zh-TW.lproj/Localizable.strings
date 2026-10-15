@@ -1300,7 +1300,7 @@
 "cli.mod.already_installed" = "%@ 已安裝。使用 --force 取代。";
 "cli.mod.not_installed" = "%@ 尚未安裝。「ojd mod list」會顯示已安裝的套件。";
 "cli.mod.validate.abstract" = "檢查模組套件資料夾，不安裝。";
-"cli.mod.validate.discussion" = "檢查清單、套件是否能在此版本上執行、其檔案是否與列出的相符且有效，以及是否有檔案與你的檔案或其他套件衝突。套件被拒絕時，以結束碼 1 和 E4xxx 代碼結束。";
+"cli.mod.validate.discussion" = "檢查清單、套件是否能在此版本上執行、其檔案是否與列出的相符且有效，以及是否有檔案與你的檔案或其他套件衝突。套件被拒絕時，以結束碼 1 和 E4xxx 或 E5001 代碼結束。";
 "cli.mod.validate.valid" = "%@ 是有效的套件：%@ %@。用「ojd mod install」安裝。";
 "cli.mod.install.abstract" = "檢查模組套件並為你的使用者安裝。";
 "cli.mod.install.discussion" = "將套件複製到 Packages/NAME 並一次性替換；執行中的服務會套用它。已安裝同名套件時會被拒絕，除非使用 --force。--force 不會略過 requires、身分衝突，或設定檔 ID 或名稱衝突。--dry-run 檢查套件，不寫入任何內容。";
@@ -1308,7 +1308,7 @@
 "cli.mod.install.dry_run" = "如果執行，將安裝 %@。";
 "cli.mod.install.success" = "已安裝 %@。執行中的服務現在會套用它。";
 "cli.mod.list.abstract" = "列出已安裝的模組套件及每個套件的檔案。";
-"cli.mod.list.discussion" = "列出每個套件的版本、作者和檔案。OJD 不使用的套件，例如其 requires 不包含此版本的套件，會連同 E4xxx 代碼顯示原因。";
+"cli.mod.list.discussion" = "列出每個套件的版本、作者和檔案。OJD 不使用的套件，例如其 requires 不包含此版本的套件，會連同 E4xxx 或 E5001 代碼顯示原因。";
 "cli.mod.list.problem" = "  未使用：%@";
 "cli.mod.remove.abstract" = "移除一個已安裝的模組套件。";
 "cli.mod.remove.discussion" = "僅刪除 Packages/NAME。在終端機中會要求確認，否則需要 --force。--dry-run 檢查套件是否已安裝，不更改任何內容。未安裝時以結束碼 1 和 E4006 結束。";
@@ -1648,6 +1648,7 @@
 "error.E4005" = "已安裝同名的套件。請以 --force 執行指令以取代它。";
 "error.E4006" = "沒有已安裝的套件使用此名稱。請執行 ojd mod list 查看已安裝的套件。";
 "error.E4007" = "無法變更套件資料夾。請檢查磁碟可用空間和資料夾權限。";
+"error.E5001" = "文件缺少 apiVersion，或其 apiVersion 不受此版本的 OpenJoystickDriver 支援。請將文件改為訊息中指出的支援的 apiVersion，然後重新執行指令。";
 "error.E5002" = "協定描述無效。請用 protocol-description 架構檢查該檔案，並修正訊息指出的欄位。";
 "error.E5003" = "協定描述指定的系列與其檔案名稱不同。請以系列名稱命名該檔案。";
 "error.E5004" = "協定描述列出了其系列沒有的變體。請使用該系列的其中一個變體。";
