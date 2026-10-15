@@ -177,7 +177,7 @@ struct ControllerCommandTests {
       ApplicationServiceDeviceDescription.fixture(id: "pad-1")
     ]) { method, _ in
       guard method == .getControllerState else { return nil }
-      // A control held at the start does not count; face-south is the new press.
+      // A control held at the start does not count; South is the new press.
       let state =
         reads.next() < 2
         ? ControllerState(pressed: [.start]) : ControllerState(pressed: [.start, .south])

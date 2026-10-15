@@ -41,6 +41,7 @@ class EndpointSchemaTests(unittest.TestCase):
             line("FeedRequest", **{"as": "Generic"}),
             line("FeedSession", **{"as": "SdlCompatible"}),
             line("Frame", buttons=["South"], axes={"LeftStickX": 0.5}),
+            line("KeepAlive"),
             failure("E1001"),
             failure("E1004"),
             failure("E1010", **DETAILS),
@@ -49,6 +50,11 @@ class EndpointSchemaTests(unittest.TestCase):
         ]
         for message in messages:
             self.assertTrue(self.valid(message), message)
+
+    def test_a_keep_alive_has_no_member_besides_the_header(self) -> None:
+        self.assertTrue(self.valid(line("KeepAlive")))
+        self.assertFalse(self.valid(line("KeepAlive", buttons=["south"])))
+        self.assertFalse(self.valid({"kind": "KeepAlive"}))
 
     def test_the_header_codes_need_the_supported_versions_and_no_other_code_has_them(
         self,

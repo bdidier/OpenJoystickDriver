@@ -69,7 +69,9 @@ class ControlVocabularyTests(unittest.TestCase):
             for column, index in indexes.items():
                 if column == "hid":
                     keys: list[Any] = [
-                        (entry["page"], entry["usage"]) for entry in row["hid"] if entry["usage"]
+                        (entry["page"], entry["usage"])
+                        for entry in row["hid"]
+                        if entry["usage"]
                     ]
                 else:
                     keys = [] if row[column] is None else [row[column]]

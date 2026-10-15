@@ -31,6 +31,7 @@ let package = Package(
     .library(name: "OpenJoystickDriverService", targets: ["OpenJoystickDriverService"]),
     .library(name: "OpenJoystickDriverCLI", targets: ["OpenJoystickDriverCLI"]),
     .library(name: "OpenJoystickDriverPresentation", targets: ["OpenJoystickDriverPresentation"]),
+    .library(name: "OpenJoystickDriverMacOSHost", targets: ["OpenJoystickDriverMacOSHost"]),
   ],
   dependencies: [
     swifterKitDependency,
@@ -75,10 +76,18 @@ let package = Package(
     .target(
       name: "OpenJoystickDriverCLI",
       dependencies: [
-        "OpenJoystickDriverKit", "OpenJoystickDriverUSB", "OpenJoystickDriverService",
-        .product(name: "ArgumentParser", package: "swift-argument-parser"),
+        "OpenJoystickDriverKit", .product(name: "ArgumentParser", package: "swift-argument-parser"),
       ],
       path: "Sources/OpenJoystickDriverCLI"
+    ),
+
+    .target(
+      name: "OpenJoystickDriverMacOSHost",
+      dependencies: [
+        "OpenJoystickDriverKit", "OpenJoystickDriverUSB", "OpenJoystickDriverService",
+        "OpenJoystickDriverPresentation",
+      ],
+      path: "Sources/OpenJoystickDriverMacOSHost"
     ),
 
     .target(
@@ -91,7 +100,7 @@ let package = Package(
       name: "OpenJoystickDriver",
       dependencies: [
         "OpenJoystickDriverKit", "OpenJoystickDriverService", "OpenJoystickDriverCLI",
-        "OpenJoystickDriverPresentation",
+        "OpenJoystickDriverPresentation", "OpenJoystickDriverMacOSHost",
       ],
       path: "Sources/OpenJoystickDriver",
       exclude: ["App/Host.entitlements", "App/Info.plist"],
@@ -191,7 +200,8 @@ let package = Package(
 // `_errorLabel`.
 let warningsAsErrorsTargets: Set = [
   "OpenJoystickDriverKit", "OpenJoystickDriverUSB", "OpenJoystickDriverService",
-  "OpenJoystickDriverCLI", "OpenJoystickDriverPresentation", "OpenJoystickDriver",
+  "OpenJoystickDriverCLI", "OpenJoystickDriverPresentation", "OpenJoystickDriverMacOSHost",
+  "OpenJoystickDriver",
 ]
 for target in package.targets where warningsAsErrorsTargets.contains(target.name) {
   target.swiftSettings = (target.swiftSettings ?? []) + [.treatAllWarnings(as: .error)]

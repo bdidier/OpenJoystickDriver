@@ -193,6 +193,56 @@ struct EndpointFeedTests {
   }
 
   @Test
+  func keepAliveLinesHoldAnIdleFeedOpenPastTheIdleTimeout() async throws {
+    let factory = FakeFeedFactory()
+    let feeds = factory.registry(idleTimeout: 0.5)
+    try await withEndpointServer(feeds: feeds) { server, _ in
+      let client = try await feeding(server)
+      await client.send(clientLine("Frame", #","buttons":["East"]"#))
+      let device = try #require(factory.devices.first)
+      try await Self.wait { device.sent.contains { $0.buttons.contains(.east) } }
+      let sentBefore = device.sent.count
+      for _ in 0..<8 {
+        await client.send(clientLine("KeepAlive"))
+        try await Task.sleep(nanoseconds: 150_000_000)
+      }
+
+      #expect(feeds.openFeedCount == 1)
+      #expect(device.closeCount == 0)
+      // A KeepAlive changes nothing: the gamepad shows no new state.
+      #expect(device.sent.count == sentBefore)
+    }
+  }
+
+  @Test
+  func anIdleFeedWithoutKeepAliveLinesClosesWithE1009() async throws {
+    let factory = FakeFeedFactory()
+    let feeds = factory.registry(idleTimeout: 0.5)
+    try await withEndpointServer(feeds: feeds) { server, _ in
+      let client = try await feeding(server)
+      await client.send(clientLine("KeepAlive"))
+
+      #expect(try await client.readObject()["code"] as? String == "E1009")
+      try await Self.wait { factory.devices.first?.closeCount == 1 }
+      #expect(feeds.openFeedCount == 0)
+    }
+  }
+
+  @Test
+  func aKeepAliveWithAnotherMemberIsRefused() async throws {
+    let factory = FakeFeedFactory()
+    try await withEndpointServer(feeds: factory.registry()) { server, _ in
+      let client = try await feeding(server)
+      await client.send(clientLine("KeepAlive", #","buttons":["South"]"#))
+
+      let error = try #require(await client.readLine())
+      #expect(try JSONSchemaFiles.issues(in: error, against: "endpoint.schema.json").isEmpty)
+      #expect(try client.object(error)["code"] as? String == "E1004")
+      try await Self.wait { factory.devices.first?.closeCount == 1 }
+    }
+  }
+
+  @Test
   func aFifthFeedIsRefused() async throws {
     let factory = FakeFeedFactory()
     try await withEndpointServer(feeds: factory.registry()) { server, _ in

@@ -29,6 +29,13 @@ struct LocalRPCBridgeTests {
   ]
 
   @Test
+  func theServersFeedsKeepTheProductionIdleTimeout() async throws {
+    try await withServer { server in
+      #expect(server.virtualFeeds.idleTimeout == 2)
+    }
+  }
+
+  @Test
   func methodRawValuesAreTheWireNames() {
     #expect(
       Set(ApplicationServiceRPCMethod.allCases.map(\.rawValue))

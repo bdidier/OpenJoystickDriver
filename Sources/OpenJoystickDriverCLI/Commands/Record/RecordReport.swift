@@ -1,7 +1,6 @@
 import ArgumentParser
 import Foundation
 import OpenJoystickDriverKit
-import OpenJoystickDriverUSB
 
 /// Where `ojd record` reads and writes user controller records, and how it reads its input.
 enum RecordStore {
@@ -77,9 +76,10 @@ enum RecordUSBExtension: String, Encodable, Equatable {
 
   init?(_ record: ControllerRecord) {
     guard record.usesRawUSB else { return nil }
-    let claimed =
-      record.model.vendorID == USBDriverKitExtensionConfiguration.microsoftVendorID
-      && USBDriverKitExtensionConfiguration.microsoftProductIDs.contains(record.model.productID)
+    let claimed = PlatformHosts.current.extensionEntitlementCovers(
+      vendorID: record.model.vendorID,
+      productID: record.model.productID
+    )
     self = claimed ? .claims : .doesNotClaim
   }
 }
