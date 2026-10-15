@@ -37,21 +37,34 @@ class ControllerClaimSchemaTests(unittest.TestCase):
     def test_claim_sets_ojd_and_release_sets_system(self) -> None:
         self.validator("controllerClaim").validate(claim_document("ojd", "system"))
         self.validator("controllerRelease").validate(claim_document("system", "ojd"))
-        for name, server in (("controllerClaim", "system"), ("controllerRelease", "ojd")):
-            with self.subTest(name=name), self.assertRaises(validate_schemas.ValidationError):
+        for name, server in (
+            ("controllerClaim", "system"),
+            ("controllerRelease", "ojd"),
+        ):
+            with (
+                self.subTest(name=name),
+                self.assertRaises(validate_schemas.ValidationError),
+            ):
                 self.validator(name).validate(claim_document(server))
 
     def test_rejects_the_removed_ownership_words(self) -> None:
         for word in ("native", "virtual"):
-            with self.subTest(word=word), self.assertRaises(validate_schemas.ValidationError):
-                self.validator("controllerClaim").validate(claim_document(previous=word))
+            with (
+                self.subTest(word=word),
+                self.assertRaises(validate_schemas.ValidationError),
+            ):
+                self.validator("controllerClaim").validate(
+                    claim_document(previous=word)
+                )
 
     def test_the_ownership_command_has_no_schema(self) -> None:
         self.assertNotIn("controllerOwnership", self.schema["$defs"])
 
     def test_show_serving_names_every_route(self) -> None:
         show = self.schema["$defs"]["controllerShow"]
-        self.assertEqual(show["properties"]["serving"]["properties"]["route"]["enum"], list(ROUTES))
+        self.assertEqual(
+            show["properties"]["serving"]["properties"]["route"]["enum"], list(ROUTES)
+        )
         self.assertIn("serving", show["required"])
 
 
