@@ -85,6 +85,8 @@ class ErrorCodeTests(unittest.TestCase):
                 ("E5002", "invalidProtocolDescription"),
                 ("E5003", "protocolDescriptionFamilyMismatch"),
                 ("E5004", "unknownProtocolVariant"),
+                ("E5005", "damagedAccessGrants"),
+                ("E5006", "renamedWordsInDocument"),
             ],
         )
         with self.assertRaisesRegex(errors.ErrorCodeError, "E4001 is in the document"):
