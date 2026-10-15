@@ -270,6 +270,30 @@ printf '%s\n' '{"buttons":["South"],"holdMilliseconds":50}' '{}' | ojd virtual f
 
 Games and latency with `ojd virtual feed` are not verified.
 
+### What the virtual controller carries
+
+The virtual controller is a standard gamepad. Each profile has a fixed set of buttons, so some controls on a physical controller have no output. A control that is not carried does nothing on the virtual controller, whether it is passed through or assigned to a gamepad output.
+
+| Control | `generic` | `sdl-compatible` |
+| --- | --- | --- |
+| South, East, West, North | Carried | Carried |
+| Left and right shoulder | Carried | Carried |
+| Back, Start | Carried | Carried |
+| Left and right stick click | Carried | Carried |
+| Guide | Carried | Carried, in its own report |
+| D-pad | Carried as a hat and as 4 buttons | Carried as a hat |
+| Sticks and triggers | Carried | Carried |
+| Capture | Carried | Not carried |
+| Touchpad click, microphone | Not carried | Not carried |
+| Paddles, grips, and auxiliary buttons | Not carried | Not carried |
+| Stick touch, trackpad touch, left trackpad click | Not carried | Not carried |
+| Right trackpad click | Right stick click on the classic Steam Controller, otherwise not carried | Right stick click on the classic Steam Controller, otherwise not carried |
+
+- `generic` has 16 buttons and all 16 are in use. Its layout is the published contract for the product ID `1209:4A4F`, so a new button would need a new product ID.
+- `sdl-compatible` follows the Xbox One S Bluetooth report. That 16-byte report has no field for Capture, and SDL reads no other button from it.
+- The right pad of the classic Steam Controller is its right stick, and the controller has no separate right stick click, so its pad click is the right stick click. The Steam Deck and the Steam Triton have a right stick click of their own, so their right pad click is a different control and is not carried.
+- The D-pad buttons of `sdl-compatible` stay clear. The D-pad is the hat.
+
 ## Use Shortcuts
 
 On macOS 13 or later, the Shortcuts app lists these OpenJoystickDriver actions:

@@ -35,12 +35,14 @@ extension UserSpaceOutputDispatcher {
     _ input: ControllerState,
     labels: ControllerButtonLabels,
     stickTransfer: StickTransfer,
+    rightPadIsRightStick: Bool = false,
     to state: inout VirtualGamepadState
   ) {
     let hat = hatValue(for: input.hat)
     state.buttons = GamepadHIDDescriptor.dpadButtonBits(for: hat)
     for control in input.pressed {
-      if let bit = Self.buttonBit(for: control) { state.buttons |= 1 << bit }
+      let carried = virtualControl(control, rightPadIsRightStick: rightPadIsRightStick)
+      if let bit = Self.buttonBit(for: carried) { state.buttons |= 1 << bit }
     }
     state.hat = hat
     state.leftTriggerPressed = input.pressed.contains(.leftTrigger)
@@ -90,9 +92,46 @@ extension UserSpaceOutputDispatcher {
 
   // MARK: - Button mapping (XInput semantic order)
 
+  /// Whether the controller's right pad is its right stick, read from its resolved record: the
+  /// controls it has (the family's, corrected by the record's `capabilityDelta`) include a right
+  /// pad click and no right stick click. The classic Steam Controller's record
+  /// (`remove: ["RightStickClick"]`) is that, so its pad click is R3. A Steam Deck or Triton has
+  /// both controls, so its pad click stays its own control, which no virtual persona carries. A
+  /// record or patch that adds or removes either control changes the answer.
+  static func rightPadIsRightStick(_ identifier: LogicalControllerID) -> Bool {
+    let catalog = DeviceCatalog.current.withLock { $0 }
+    return rightPadIsRightStick(record: catalog.record(for: identifier.model))
+  }
+
+  /// ``rightPadIsRightStick(_:)`` for an already resolved record; false without one.
+  static func rightPadIsRightStick(record: DeviceRuntimeProfile?) -> Bool {
+    guard let record, let family = record.physicalProtocolID.protocolDescription.controls?.controls
+    else { return false }
+    let delta = record.capabilityDelta
+    let controls = family.subtracting(delta.absentControls).union(delta.presentControls)
+    return controls.contains(.rightTrackpadClick) && !controls.contains(.rightStickClick)
+  }
+
+  /// The control a virtual persona carries for `control`. This is the one rule the report mapping
+  /// and the remapping passthrough share.
+  static func virtualControl(_ control: Control, rightPadIsRightStick: Bool) -> Control {
+    control == .rightTrackpadClick && rightPadIsRightStick ? .rightStickClick : control
+  }
+
   /// The one control-to-bit table. A control is the same bit whatever the physical label: PS4
   /// Share, PS Create and Xbox View are `back` (bit 9); PS Options, Xbox Menu and Switch Plus are
   /// `start` (bit 8); Xbox Share and Switch Capture are `capture` (bit 15).
+  ///
+  /// Carried by neither persona, so `nil`, for these reasons:
+  /// - `touchpadClick`, `microphone`, paddles, `auxiliary1...8`, stick and trackpad touch,
+  ///   `leftTrackpadClick`: no free button. The generic descriptor's 16 buttons are all used and
+  ///   it is a published contract for 1209:4A4F, so another button needs a new PID. The
+  ///   sdl-compatible Xbox One report has no slot SDL names for them.
+  /// - `rightTrackpadClick`: a pad click is R3 only where the right pad is the right stick
+  ///   (``virtualControl(_:rightPadIsRightStick:)``); elsewhere it has no slot.
+  /// - `capture` is bit 15 in the generic persona only. The sdl-compatible report is the 16-byte
+  ///   Xbox One layout (``XboxGeckoHIDReportFormat``), which has no Share field and clears that
+  ///   bit.
   static func buttonBit(for control: Control) -> UInt32? {
     switch control {
     case .south: return 0
@@ -102,13 +141,14 @@ extension UserSpaceOutputDispatcher {
     case .leftShoulder: return 4
     case .rightShoulder: return 5
     case .leftStickClick: return 6
-    case .rightStickClick, .rightTrackpadClick: return 7
+    case .rightStickClick: return 7
     case .start: return 8
     case .back: return 9
     case .guide: return 10
     case .capture: return 15
     case .dpadUp, .dpadDown, .dpadLeft, .dpadRight, .leftStickX, .leftStickY, .rightStickX,
-      .rightStickY, .leftTrigger, .rightTrigger, .touchpadClick, .microphone, .leftPaddle1,
+      .rightStickY, .leftTrigger, .rightTrigger, .rightTrackpadClick, .touchpadClick, .microphone,
+      .leftPaddle1,
       .leftPaddle2, .rightPaddle1, .rightPaddle2, .auxiliary1, .auxiliary2, .auxiliary3,
       .auxiliary4, .auxiliary5, .auxiliary6, .auxiliary7, .auxiliary8, .leftStickTouch,
       .rightStickTouch, .leftTrackpadClick, .leftTrackpadTouch, .rightTrackpadTouch:
