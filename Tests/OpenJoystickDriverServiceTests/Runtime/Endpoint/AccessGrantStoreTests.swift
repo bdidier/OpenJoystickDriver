@@ -90,7 +90,7 @@ struct AccessGrantStoreTests {
       for text in [
         "{",
         #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
-          + #""enabled":true,"grants":[{"publisher":{"kind":"ad-hoc"},"identifier":"a.out","#
+          + #""enabled":true,"grants":[{"publisher":{"kind":"adHoc"},"identifier":"a.out","#
           + #""scopes":["read"],"#
           + #""grantedAt":"x","path":"/a.out"}],"tokens":[],"web":{"enabled":false,"port":47614}}"#,
         #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
@@ -110,6 +110,27 @@ struct AccessGrantStoreTests {
   }
 
   @Test
+  func aDamagedFileErrorCarriesItsCodeAndALocalizedText() {
+    let message = AccessGrantStoreError.damaged.errorDescription ?? ""
+    #expect(message == "E5005: \(ErrorCode.damagedAccessGrants.localizedExplanation)")
+    #expect(message.contains(AccessGrantStore.fileName))
+  }
+
+  @Test
+  func theOldHyphenatedAdHocKindIsNotAcceptedInAFile() throws {
+    try withStore { store, directory in
+      try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+      let text =
+        #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
+        + #""enabled":true,"grants":[{"publisher":{"kind":"ad-hoc"},"identifier":"a.out","#
+        + #""scopes":["read"],"grantedAt":"x","path":"/a.out"}],"tokens":[],"#
+        + #""web":{"enabled":false,"port":47614}}"#
+      try Data(text.utf8).write(to: store.url)
+      #expect(throws: AccessGrantStoreError.self) { try store.load() }
+    }
+  }
+
+  @Test
   func aFileWithTheOldPublisherWordsIsRefusedAndNamesTheNewWords() throws {
     try withStore { store, directory in
       try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
@@ -125,11 +146,12 @@ struct AccessGrantStoreTests {
         _ = try store.load()
       } throws: { error in
         let message = (error as? AccessGrantStoreError)?.errorDescription ?? ""
-        return [
-          "'teamIdentifier' was renamed to 'publisher.id'.",
-          "'kind' was renamed to 'publisher.kind'.",
-          "'team' was renamed to 'signed'.",
-        ].allSatisfy(message.contains)
+        return message.hasPrefix("E5006: ")
+          && [
+            "'teamIdentifier' was renamed to 'publisher.id'.",
+            "'kind' was renamed to 'publisher.kind'.",
+            "'team' was renamed to 'signed'.",
+          ].allSatisfy(message.contains)
       }
       #expect(try String(contentsOf: store.url, encoding: .utf8) == text)
     }

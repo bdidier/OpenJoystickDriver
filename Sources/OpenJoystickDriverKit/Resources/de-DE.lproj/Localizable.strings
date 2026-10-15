@@ -1670,4 +1670,6 @@
 "error.E5002" = "Eine Protokollbeschreibung ist ungültig. Prüfe die Datei gegen das Schema protocol-description und korrigiere das Feld, das die Meldung nennt.";
 "error.E5003" = "Eine Protokollbeschreibung nennt eine Familie, die vom Dateinamen abweicht. Benenne die Datei nach ihrer Familie.";
 "error.E5004" = "Eine Protokollbeschreibung führt eine Variante auf, die ihre Familie nicht hat. Verwende eine der Varianten der Familie.";
+"error.E5005" = "Die Zugriffsdatei AccessGrants.json ist beschädigt. Repariere die Datei oder lösche sie und erteile den Zugriff dann erneut.";
+"error.E5006" = "Ein Dokument verwendet Wörter, die umbenannt wurden. Ersetze jedes alte Wort durch das neue Wort, das die Meldung nennt, oder lösche die Datei, und führe den Befehl dann erneut aus.";
 "error.withCode" ="%@ (%@)";

@@ -82,10 +82,16 @@ class AccessWordsSchemaTests(unittest.TestCase):
 
     def test_a_grant_with_an_old_publisher_kind_is_refused(self) -> None:
         validator = self.validator("access-grants.schema.json")
-        for old in ["team", "apple"]:
+        for old in ["team", "apple", "ad-hoc", "adHoc"]:
             grants = load(FIXTURES / "access_grants.json")
             grants["grants"][0]["publisher"]["kind"] = old
             self.assertFalse(validator.is_valid(grants), old)
+
+    def test_the_ad_hoc_kind_has_one_spelling_in_the_output(self) -> None:
+        kinds = self.documents["cli-output.schema.json"]
+        text = json.dumps(kinds)
+        self.assertIn('"adHoc"', text)
+        self.assertNotIn("ad-hoc", text)
 
     def test_a_grant_with_the_old_publisher_fields_is_refused(self) -> None:
         grants = load(FIXTURES / "access_grants.json")

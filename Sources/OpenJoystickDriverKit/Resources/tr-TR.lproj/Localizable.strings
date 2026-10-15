@@ -1670,4 +1670,6 @@
 "error.E5002" = "Bir protokol açıklaması geçersiz. Dosyayı protocol-description şemasına göre denetleyin ve iletinin belirttiği alanı düzeltin.";
 "error.E5003" = "Bir protokol açıklaması, dosya adından farklı bir aile belirtiyor. Dosyayı ailesinin adıyla adlandırın.";
 "error.E5004" = "Bir protokol açıklaması, ailesinde olmayan bir varyant listeliyor. Ailenin varyantlarından birini kullanın.";
+"error.E5005" = "AccessGrants.json erişim dosyası hasarlı. Dosyayı düzeltin veya silin, sonra erişimi yeniden verin.";
+"error.E5006" = "Bir belge, adı değiştirilmiş sözcükler kullanıyor. Her eski sözcüğü iletinin belirttiği yeni sözcükle değiştirin veya dosyayı silin, sonra komutu yeniden çalıştırın.";
 "error.withCode" ="%@ (%@)";

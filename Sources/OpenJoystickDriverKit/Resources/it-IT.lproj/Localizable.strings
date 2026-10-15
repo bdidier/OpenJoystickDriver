@@ -1670,4 +1670,6 @@
 "error.E5002" = "Una descrizione di protocollo non è valida. Controlla il file con lo schema protocol-description e correggi il campo indicato dal messaggio.";
 "error.E5003" = "Una descrizione di protocollo indica una famiglia diversa dal nome del suo file. Dai al file il nome della sua famiglia.";
 "error.E5004" = "Una descrizione di protocollo elenca una variante che la sua famiglia non ha. Usa una delle varianti della famiglia.";
+"error.E5005" = "Il file di accesso AccessGrants.json è danneggiato. Correggi il file o eliminalo, poi concedi di nuovo l’accesso.";
+"error.E5006" = "Un documento usa parole che sono state rinominate. Sostituisci ogni parola vecchia con la nuova parola indicata dal messaggio, oppure elimina il file, poi esegui di nuovo il comando.";
 "error.withCode" ="%@ (%@)";

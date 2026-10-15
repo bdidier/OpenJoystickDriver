@@ -315,7 +315,7 @@ enum AccessText {
     scopes.map(\.rawValue).joined(separator: ",")
   }
 
-  /// `signed ABCDE12345`, `platform`, or `ad-hoc`.
+  /// `signed ABCDE12345`, `platform`, or `adHoc`.
   static func signer(_ kind: CodeSigningIdentity.Kind, _ team: String?) -> String {
     [kind.rawValue, kind == .signed ? team : nil].compactMap(\.self).joined(separator: " ")
   }

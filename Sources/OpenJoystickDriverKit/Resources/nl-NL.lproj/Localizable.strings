@@ -1670,4 +1670,6 @@
 "error.E5002" = "Een protocolbeschrijving is ongeldig. Controleer het bestand met het schema protocol-description en herstel het veld dat het bericht noemt.";
 "error.E5003" = "Een protocolbeschrijving noemt een familie die afwijkt van de bestandsnaam. Noem het bestand naar zijn familie.";
 "error.E5004" = "Een protocolbeschrijving noemt een variant die de familie niet heeft. Gebruik een van de varianten van de familie.";
+"error.E5005" = "Het toegangsbestand AccessGrants.json is beschadigd. Herstel het bestand of verwijder het, en verleen daarna opnieuw toegang.";
+"error.E5006" = "Een document gebruikt woorden die zijn hernoemd. Vervang elk oud woord door het nieuwe woord dat het bericht noemt, of verwijder het bestand, en voer de opdracht daarna opnieuw uit.";
 "error.withCode" ="%@ (%@)";

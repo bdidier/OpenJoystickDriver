@@ -10,7 +10,7 @@ public struct CodeSigningIdentity: Codable, Equatable, Hashable, Sendable {
     /// Signed by the platform vendor, such as a system tool.
     case platform
     /// Ad-hoc signed or not signed; any local process can claim this identity.
-    case adHoc = "ad-hoc"
+    case adHoc
 
     public init(from decoder: any Decoder) throws {
       let name = try decoder.singleValueContainer().decode(String.self)

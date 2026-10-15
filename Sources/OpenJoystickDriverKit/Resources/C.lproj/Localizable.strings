@@ -1670,4 +1670,6 @@
 "error.E5002" = "A protocol description is invalid. Check the file against the protocol-description schema and fix the field that the message names.";
 "error.E5003" = "A protocol description names a family that differs from its file name. Name the file after its family.";
 "error.E5004" = "A protocol description lists a variant that its family does not have. Use one of the variants of the family.";
+"error.E5005" = "The access file AccessGrants.json is damaged. Fix the file or delete it, then grant access again.";
+"error.E5006" = "A document uses words that were renamed. Replace each old word with the new word that the message names, or delete the file, then run the command again.";
 "error.withCode" = "%@ (%@)";

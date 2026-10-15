@@ -101,6 +101,8 @@ The table is generated from the code catalog and the English text of OJD. The ta
 | E5002 | Document | A protocol description is invalid. Check the file against the protocol-description schema and fix the field that the message names. |
 | E5003 | Document | A protocol description names a family that differs from its file name. Name the file after its family. |
 | E5004 | Document | A protocol description lists a variant that its family does not have. Use one of the variants of the family. |
+| E5005 | Document | The access file AccessGrants.json is damaged. Fix the file or delete it, then grant access again. |
+| E5006 | Document | A document uses words that were renamed. Replace each old word with the new word that the message names, or delete the file, then run the command again. |
 <!-- END GENERATED: error-codes -->
 
 ## Further reading

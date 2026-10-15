@@ -1670,4 +1670,6 @@
 "error.E5002" = "Mô tả giao thức không hợp lệ. Kiểm tra tệp với lược đồ protocol-description và sửa trường mà thông báo nêu.";
 "error.E5003" = "Mô tả giao thức nêu một họ khác với tên tệp. Đặt tên tệp theo họ của nó.";
 "error.E5004" = "Mô tả giao thức liệt kê một biến thể mà họ của nó không có. Hãy dùng một trong các biến thể của họ.";
+"error.E5005" = "Tệp truy cập AccessGrants.json bị hỏng. Hãy sửa hoặc xóa tệp, rồi cấp quyền truy cập lại.";
+"error.E5006" = "Một tài liệu dùng các từ đã được đổi tên. Hãy thay mỗi từ cũ bằng từ mới mà thông báo nêu, hoặc xóa tệp, rồi chạy lại lệnh.";
 "error.withCode" ="%@ (%@)";

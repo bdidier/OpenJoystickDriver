@@ -93,8 +93,8 @@ public struct AccessGrant: Codable, Equatable, Sendable {
 
 /// Who published a client, as `ojd access --json` and the endpoint name it.
 ///
-/// ``CodeSigningIdentity/Kind`` keeps its kebab-case raw value because `AccessGrants.json` stores
-/// it; this type is the lowerCamelCase output spelling.
+/// It uses the same lowerCamelCase spelling as ``CodeSigningIdentity/Kind``, which
+/// `AccessGrants.json` stores; no other spelling is accepted.
 public enum AccessIdentityKind: String, Codable, Sendable {
   case signed
   case platform

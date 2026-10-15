@@ -73,6 +73,20 @@ struct AccessWordsTests {
     }
   }
 
+  @Test
+  func theAdHocKindHasOneSpelling() throws {
+    let adHoc = Data(#""adHoc""#.utf8)
+    #expect(try JSONDecoder().decode(CodeSigningIdentity.Kind.self, from: adHoc) == .adHoc)
+    #expect(try JSONDecoder().decode(AccessIdentityKind.self, from: adHoc) == .adHoc)
+    let hyphenated = Data(#""ad-hoc""#.utf8)
+    #expect(throws: DecodingError.self) {
+      try JSONDecoder().decode(CodeSigningIdentity.Kind.self, from: hyphenated)
+    }
+    #expect(throws: DecodingError.self) {
+      try JSONDecoder().decode(AccessIdentityKind.self, from: hyphenated)
+    }
+  }
+
   @Test(arguments: [
     ("identityKind", "publisher.kind"), ("teamIdentifier", "publisher.id"),
     ("bundleIdentifier", "appID"), ("inputMonitoring", "inputRead"),

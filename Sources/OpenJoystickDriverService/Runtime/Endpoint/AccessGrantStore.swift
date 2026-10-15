@@ -17,14 +17,17 @@ enum AccessGrantStoreError: Error, Equatable, LocalizedError, Sendable {
   case portUnavailable(Int)
   case originsWithControl
 
+  /// The code, then what it means and how to fix it, in the language of the user.
+  private static func coded(_ code: ErrorCode) -> String {
+    "\(code.rawValue): \(code.localizedExplanation)"
+  }
+
   var errorDescription: String? {
     switch self {
     case .damaged:
-      "The endpoint access file \(AccessGrantStore.fileName) is damaged. "
-        + "Fix or delete it, then try again."
+      Self.coded(.damagedAccessGrants)
     case .renamedWords(let hints):
-      "The endpoint access file \(AccessGrantStore.fileName) uses old words.\(hints) "
-        + "Fix or delete it, then try again."
+      Self.coded(.renamedWordsInDocument) + hints
     case .unsupported(let problem):
       (problem.code.map { "\($0.rawValue): " } ?? "")
         + "The endpoint access file \(AccessGrantStore.fileName) is not supported: "
