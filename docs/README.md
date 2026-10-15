@@ -32,6 +32,10 @@ This directory holds the development notes and hardware-evidence records for Ope
 - [Xbox Fallback Identities](development/xbox-identities.md): What a safe published virtual profile needs beyond a product name.
 - [Import Controller Identities From Linux xpad](development/xpad-import.md): How the generated runtime catalog takes identities from pinned sources.
 
+## SDK
+
+- [SDK Endpoint](sdk/endpoint.md): The handshake, messages, errors, grants, and versions of the endpoint, and its reference client.
+
 ## Hardware Evidence
 
 - [8BitDo Ultimate 2C Wireless](testing/8bitdo-ultimate-2c.md): Testing each mode, which enumerates as a different identity.

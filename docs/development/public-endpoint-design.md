@@ -1,5 +1,7 @@
 # Public Endpoint Design
 
+The reference for the messages, errors, grants and versions is [SDK Endpoint](../sdk/endpoint.md). This page records the design.
+
 Status: implemented for read (slice 3.3), with token grants and the WebSocket (slice 3.4), and for the control stream (milestone 4).
 
 ## Goal
