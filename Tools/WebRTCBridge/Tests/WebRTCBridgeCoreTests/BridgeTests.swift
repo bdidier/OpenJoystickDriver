@@ -3,12 +3,19 @@ import XCTest
 @testable import WebRTCBridgeCore
 
 final class BridgeTests: XCTestCase {
-  func testProofMatchesTheDocumentedConstruction() {
-    // Same construction as Scripts/SDK/reference_client.py: HMAC-SHA256 over four lines.
-    let proof = EndpointSession.proof(token: "ojd_x", nonce: "abc")
-    XCTAssertEqual(proof.count, 64)
-    XCTAssertEqual(proof, EndpointSession.proof(token: "ojd_x", nonce: "abc"))
-    XCTAssertNotEqual(proof, EndpointSession.proof(token: "ojd_x", nonce: "abd"))
+  func testProofMatchesTheReferenceClientVectors() {
+    // Computed with `proof()` of Scripts/SDK/reference_client.py, not with this package.
+    XCTAssertEqual(
+      EndpointSession.proof(token: "ojd_x", nonce: "abc"),
+      "7ec5c93f68b657c0ecffc781972b4f9f330a1015402afd3d0ff980c90c26a738"
+    )
+    XCTAssertEqual(
+      EndpointSession.proof(
+        token: "ojd_test_token",
+        nonce: "ICEiIyQlJicoKSorLC0uLzAxMjM0NTY3ODk6Ozw9Pj8"
+      ),
+      "5944d41d5cf05ebd966fe93b5273fdaf0ed5d19c337f3176139f9c18455952ff"
+    )
   }
 
   func testAWatchLineBecomesAFrame() throws {
@@ -105,6 +112,10 @@ final class BridgeTests: XCTestCase {
     // WebRTC stack must not hold any listening socket.
     try await Task.sleep(nanoseconds: 300_000_000)
     XCTAssertEqual(ListeningSockets.ofThisProcess(), [])
+
+    // The peer sent no frame after the first, so the host keeps the feed open with KeepAlive.
+    try await Task.sleep(nanoseconds: 1_200_000_000)
+    XCTAssertGreaterThanOrEqual(hostEndpoint.keepAliveCount(), 1)
 
     hostBridge.stop()
     playerBridge.stop()

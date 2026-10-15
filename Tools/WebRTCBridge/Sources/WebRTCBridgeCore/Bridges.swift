@@ -16,15 +16,18 @@ public struct EndpointCredentials: Sendable {
 /// peer's data channel goes to the endpoint's virtual gamepad, and each `RumbleCommand` of the
 /// endpoint goes back over the data channel.
 public final class HostBridge: @unchecked Sendable {
-  /// The endpoint closes a feed that sends no frame for 2 seconds, so the bridge repeats the last
-  /// frame while the peer's controller is idle.
+  /// The endpoint closes a feed that sends no frame for 2 seconds, so the bridge sends a
+  /// `KeepAlive` line when no frame has arrived for this long.
   static let keepAliveInterval: TimeInterval = 0.5
+  /// The pause after each frame, so the endpoint shows it for the 8 ms that it holds a frame. A
+  /// frame that the peer sends meanwhile replaces the one that waits.
+  static let sendInterval: TimeInterval = 0.008
 
   private let link: PeerLink
   private let persona: String
   private let lock = NSLock()
   private var endpoint: EndpointSession?
-  private var lastFrame: EndpointSession.Line = ["apiVersion": endpointAPIVersion, "kind": "Frame"]
+  private let mailbox = FrameMailbox()
   private var stopped = false
 
   /// Called when the endpoint ends the feed or the connection closes.
@@ -51,7 +54,7 @@ public final class HostBridge: @unchecked Sendable {
     lock.unlock()
     link.onMessage = { [weak self] data in self?.receive(data) }
     Thread.detachNewThread { [weak self] in self?.readEndpoint(session) }
-    Thread.detachNewThread { [weak self] in self?.keepAlive(session) }
+    Thread.detachNewThread { [weak self] in self?.sendLoop(session) }
   }
 
   public func stop() {
@@ -68,22 +71,18 @@ public final class HostBridge: @unchecked Sendable {
     return stopped
   }
 
+  /// Runs on the WebRTC callback thread: it checks the message and hands it on, and never blocks.
   private func receive(_ data: Data) {
-    guard let line = try? JSONSerialization.jsonObject(with: data) as? EndpointSession.Line,
-      line["kind"] as? String == "Frame", line["apiVersion"] as? String == endpointAPIVersion
-    else { return }
-    lock.lock()
-    lastFrame = line
-    let session = endpoint
-    lock.unlock()
-    try? session?.send(line)
+    guard let frame = PeerMessage.frame(from: data) else { return }
+    mailbox.post(frame)
   }
 
   private func readEndpoint(_ session: EndpointSession) {
     do {
       while let line = try session.readLine() {
         guard line["kind"] as? String == "RumbleCommand",
-          let data = try? JSONSerialization.data(withJSONObject: line)
+          let data = try? JSONSerialization.data(withJSONObject: line),
+          data.count <= PeerMessage.maximumBytes
         else { continue }
         link.send(data)
       }
@@ -91,13 +90,17 @@ public final class HostBridge: @unchecked Sendable {
     } catch { finish(error) }
   }
 
-  private func keepAlive(_ session: EndpointSession) {
+  /// The one thread that sends to the endpoint: the newest frame, or a `KeepAlive` when none
+  /// came within the keep-alive interval.
+  private func sendLoop(_ session: EndpointSession) {
+    let keepAlive: EndpointSession.Line = ["apiVersion": endpointAPIVersion, "kind": "KeepAlive"]
     while !isStopped {
-      Thread.sleep(forTimeInterval: Self.keepAliveInterval)
-      lock.lock()
-      let frame = lastFrame
-      lock.unlock()
-      if (try? session.send(frame)) == nil { return }
+      if let frame = mailbox.next(timeout: Self.keepAliveInterval) {
+        if (try? session.send(frame)) == nil { return }
+        Thread.sleep(forTimeInterval: Self.sendInterval)
+      } else if (try? session.send(keepAlive)) == nil {
+        return
+      }
     }
   }
 
@@ -144,10 +147,8 @@ public final class PlayerBridge: @unchecked Sendable {
     endpoint = session
     lock.unlock()
     link.onMessage = { [weak self] data in
-      guard let line = try? JSONSerialization.jsonObject(with: data) as? EndpointSession.Line,
-        line["kind"] as? String == "RumbleCommand"
-      else { return }
-      self?.onRumble?(line)
+      guard let command = PeerMessage.rumble(from: data) else { return }
+      self?.onRumble?(command)
     }
     Thread.detachNewThread { [weak self] in self?.readEndpoint(session) }
   }

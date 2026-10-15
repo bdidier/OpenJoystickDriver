@@ -159,7 +159,10 @@ public final class PeerLink: NSObject, @unchecked Sendable {
     return try JSONSerialization.data(withJSONObject: object).base64EncodedString()
   }
 
-  private static func decode(_ blob: String) throws -> LKRTCSessionDescription {
+  static func decode(_ blob: String) throws -> LKRTCSessionDescription {
+    guard blob.utf8.count <= PeerMessage.maximumBytes else {
+      throw BridgeError.signaling("The blob is longer than \(PeerMessage.maximumBytes) bytes.")
+    }
     guard let data = Data(base64Encoded: blob.trimmingCharacters(in: .whitespacesAndNewlines)),
       let object = try? JSONSerialization.jsonObject(with: data) as? [String: String],
       let type = object["type"], let sdp = object["sdp"]

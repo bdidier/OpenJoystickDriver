@@ -29,7 +29,7 @@ The first build downloads the XCFramework, about 70 MB. The program is `.build/r
 | `host` | The Mac that runs the game | `control` | `FeedRequest` | Sends each `Frame` from the data channel to the virtual gamepad, and each `RumbleCommand` of the endpoint back over the data channel. |
 | `player` | The Mac with the controller | `read` | `Subscription` | Sends the input of one controller over the data channel as `Frame` lines, and prints each `RumbleCommand` that comes back. |
 
-The endpoint has no message that drives the rumble of a physical controller, so the player only prints the rumble commands. The endpoint closes a feed that sends no frame for 2 seconds, so the host repeats the last frame every 0.5 seconds while the player's controller is idle.
+The endpoint has no message that drives the rumble of a physical controller, so the player only prints the rumble commands. The endpoint closes a feed that sends no frame for 2 seconds, so the host sends a `KeepAlive` line every 0.5 seconds while no new frame arrives from the player. The host drops a message from the peer that is longer than 64 KiB or is not a valid `Frame` (unknown members, an unknown control name, a `holdMilliseconds` above 60000, a repeated name), and forwards only the newest frame for each 8 ms. The player prints only a valid `RumbleCommand`, and a signaling blob longer than 64 KiB is refused.
 
 ## Connect two Macs
 
@@ -73,4 +73,4 @@ cd Tools/WebRTCBridge
 swift test
 ```
 
-The loopback test runs a player and a host in one process, joined by a real data channel, against a fake endpoint on a Unix socket. A frame goes from the player to the host's feed, and a `RumbleCommand` goes back.
+The loopback test runs a player and a host in one process, joined by a real data channel, against a fake endpoint on a Unix socket, not against the real service. A frame goes from the player to the host's feed, and a `RumbleCommand` goes back.

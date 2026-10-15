@@ -15,6 +15,7 @@ final class FakeEndpoint: @unchecked Sendable {
   private(set) var framesReceived: [[String: Any]] = []
   private(set) var requests: [[String: Any]] = []
   private(set) var proofsValid: [Bool] = []
+  private var keepAlives = 0
   let watchLines: [[String: Any]]
   let rumble: [String: Any]
 
@@ -58,6 +59,13 @@ final class FakeEndpoint: @unchecked Sendable {
     lock.lock()
     defer { lock.unlock() }
     return (framesReceived, requests, proofsValid)
+  }
+
+  /// The `KeepAlive` lines that the feed received.
+  func keepAliveCount() -> Int {
+    lock.lock()
+    defer { lock.unlock() }
+    return keepAlives
   }
 
   private func write(_ client: Int32, _ line: [String: Any]) {
@@ -120,6 +128,10 @@ final class FakeEndpoint: @unchecked Sendable {
       )
       var sentRumble = false
       while let line = next() {
+        if line["kind"] as? String == "KeepAlive" {
+          record { keepAlives += 1 }
+          continue
+        }
         guard line["kind"] as? String == "Frame" else { continue }
         record { framesReceived.append(line) }
         if !sentRumble && (line["buttons"] as? [String])?.isEmpty == false {
