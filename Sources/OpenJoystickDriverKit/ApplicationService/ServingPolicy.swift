@@ -30,8 +30,8 @@ public enum ServingRoute: Equatable, Sendable {
 ///   declares.
 /// - The link: ``observation``, how the physical input path is owned or observed right now.
 /// - The user setting: ``outputEnabled`` (virtual output on or off) and ``override`` (the persona
-///   the user chose). The `server` setting the user changes with `controller claim` and `controller release` is written
-///   to the record layers, so it reaches the policy as ``server``.
+///   the user chose). The `server` setting the user changes with `controller claim` and
+///   `controller release` is written to the record layers, so it reaches the policy as ``server``.
 /// - The per-app allowance: no mechanism exists that grants or withholds output per application,
 ///   so the policy has no such input. ``allowance`` is the controller-side allowance only: what OJD
 ///   may still drive on a controller the system serves.

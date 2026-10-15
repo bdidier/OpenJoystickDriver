@@ -5,8 +5,8 @@
   import SwiftUI
 
   /// Who serves one controller model, macOS natively or OpenJoystickDriver as a virtual controller,
-  /// matching `ojd controller claim` and `release`. A change goes to the service, which rewrites the user
-  /// record and re-applies it to the connected controller.
+  /// matching `ojd controller claim` and `release`. A change goes to the service, which rewrites
+  /// the user record and re-applies it to the connected controller.
   struct ControllerOwnershipPicker: View {
     @ObservedObject
     var viewModel: RuntimeViewModel
