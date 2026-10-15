@@ -95,9 +95,9 @@ Owns: the generated DriverKit match list.
 Depends: 2, 5.
 Verify: `./Scripts/ojd driverkit generate`, `./Scripts/ojd check driverkit`, `./Scripts/ojd test parsers-macos14`.
 
-- [ ] 6.1 Generate the match list from records whose route is `ExtensionOwned`, limited to the seven granted IDs (`045E:02D1`, `02DD`, `02E3`, `02EA`, `0B00`, `0B0A`, `0B12`). Verify: the list matches the 1.2 snapshot and `./Scripts/ojd check driverkit` passes.
-- [ ] 6.2 Make the signing doctor fail on a match term outside the grant. Verify: a test with an extra ID makes `./Scripts/ojd signing doctor` fail; the real tree passes.
-- [ ] 6.3 Record the open item about requesting more IDs without changing the list. Verify: `wiki/Known-Issues.md` names the limit.
+- [x] 6.1 Generate the match list from records whose route is `ExtensionOwned`, limited to the seven granted IDs (`045E:02D1`, `02DD`, `02E3`, `02EA`, `0B00`, `0B0A`, `0B12`). Verify: the list matches the 1.2 snapshot and `./Scripts/ojd check driverkit` passes.
+- [x] 6.2 Make the signing doctor fail on a match term outside the grant. Verify: a test with an extra ID makes `./Scripts/ojd signing doctor` fail; the real tree passes.
+- [x] 6.3 Record the open item about requesting more IDs without changing the list. Verify: `wiki/Known-Issues.md` names the limit.
 
 ## 7. Protocol IDs for real sub-protocols (old WP4)
 
