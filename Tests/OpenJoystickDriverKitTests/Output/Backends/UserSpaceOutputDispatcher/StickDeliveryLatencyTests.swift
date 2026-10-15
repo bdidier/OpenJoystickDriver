@@ -218,17 +218,58 @@ struct StickDeliveryLatencyTests {
     #expect(result.reports.last.map(Self.leftStickX) == Int16(0.4 * 32_767))
   }
 
-  /// A burst far longer than the sender's 64-entry queue behind a slow send neither overflows
-  /// it nor closes the device (design hypothesis: `bufferingOldest(64)` drops reports); the
-  /// burst collapses to its newest position.
+  /// A burst far longer than the sender's queue (bounded and newest-wins, sized by
+  /// `frameQueueCapacity`, default 64) behind a slow send neither closes the device nor
+  /// delivers stale positions; the burst collapses to its newest position.
   @Test
-  func longBurstNeverOverflowsTheSenderQueue() async {
+  func longBurstKeepsTheDeviceOpenAndEndsOnTheNewestPosition() async {
     // Starts off neutral, so the first position is published and its send is held.
     let positions: [Float] = (1...100).map { Float($0) / 100 }
     let result = await Self.deliverBurst(positions.map { [.leftStick(x: $0, y: 0)] })
 
     #expect(result.closes == 0)
     #expect(result.reports.map(Self.leftStickX) == [327, 32_767])
+  }
+
+  /// A frame that finds the queue full of host replies fails as superseded, so the dispatcher
+  /// returns without closing the device, and the next frame still publishes.
+  @Test
+  func frameBehindAQueueOfHostRepliesLeavesTheDeviceOpen() async throws {
+    let backend = FirstSendHeldBackend()
+    let dispatcher = UserSpaceOutputDispatcher(
+      testBackendFactory: { _ in backend },
+      format: Self.format
+    )
+    func state(_ x: Int16) -> ControllerState {
+      var state = ControllerState.neutral
+      state.leftStick = StickPosition(x: BipolarValue(x), y: .center)
+      return state
+    }
+    func deliver(_ x: Int16) async throws {
+      try await dispatcher.deliver(
+        input: state(x),
+        labels: .standard,
+        from: Self.identifier,
+        remappedState: nil
+      )
+    }
+    let first = Task { try await deliver(16_000) }
+    await backend.waitForHeldSend()
+    let entry = try await dispatcher.entry(for: Self.identifier)
+    let capacity = UserSpaceOutputDispatcher.frameQueueCapacity(for: Self.identifier)
+    let replies = (0..<capacity).map { _ in entry.sender.submit { [[0xAA]] } }
+
+    try await deliver(29_000)
+
+    await backend.openHeldSend()
+    try await first.value
+    for reply in replies { try await reply.value() }
+    try await deliver(Int16.max)
+    let result = backend.snapshot()
+    await dispatcher.close()
+
+    #expect(result.closes == 0)
+    #expect(result.reports.last.map(Self.leftStickX) == 32_767)
   }
 
   /// A last queued report that carries no input still publishes the newest stick position the

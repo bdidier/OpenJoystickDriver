@@ -22,7 +22,9 @@ class CoreWithoutWebRTCTests(unittest.TestCase):
                 self.assertNotIn(name, text, pin)
 
     def test_the_bridge_package_is_the_one_that_links_webrtc(self) -> None:
-        manifest = (ROOT / "Tools/WebRTCBridge/Package.swift").read_text(encoding="utf-8")
+        manifest = (ROOT / "Tools/WebRTCBridge/Package.swift").read_text(
+            encoding="utf-8"
+        )
         self.assertIn("webrtc-xcframework", manifest)
 
 

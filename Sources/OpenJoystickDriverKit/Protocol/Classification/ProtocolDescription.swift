@@ -155,7 +155,7 @@ struct ProtocolDescription: Sendable {
       let rawUSB = family.usesRawUSB(storedVariant: nil)
       for key in ControllerTuning.Key.allCases where tuning.setKeys.contains(key) {
         switch key {
-        case .stickDeadzone: break
+        case .stickDeadzone, .frameQueueCapacity: break
         case .inputLivenessTimeoutMs:
           if family != .sonyDualShock4 { return "\(key) requires the sony.dualshock4 family" }
         case .hidStartupRecoveryIntervalMs, .hidStartupRecoveryRounds:

@@ -46,7 +46,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          for dependency in markdownlint-cli2 pkg-config pyright ruff sdl3 shellcheck swift-format swiftlint xmake; do
+          for dependency in biome markdownlint-cli2 pkg-config pyright ruff sdl3 shellcheck swift-format swiftlint xmake; do
             brew list --versions "$dependency" >/dev/null 2>&1 || brew install "$dependency"
           done
           python3 -m venv .build/schema-validator
@@ -74,6 +74,9 @@ jobs:
 
       - name: Check Markdown
         run: git ls-files -z -co --exclude-standard -- '*.md' ':!.agents/' | xargs -0 markdownlint-cli2
+
+      - name: Check JSON formatting
+        run: git ls-files -z -co --exclude-standard -- '*.json' '*.jsonc' | xargs -0 biome ci
 
       - name: Check native tools
         run: ./Scripts/ojd check tools

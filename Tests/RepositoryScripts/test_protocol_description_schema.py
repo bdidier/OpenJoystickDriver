@@ -371,6 +371,22 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             with self.subTest(family=family, defaults=defaults):
                 self.assert_rejected(self.with_body(family, defaults=defaults))
 
+    def test_every_family_defaults_the_frame_queue_capacity(self) -> None:
+        # Swift's `UserSpaceReportSender.fallbackQueueCapacity` is 64; a Swift test keeps both.
+        paths = sorted(validate_schemas.PROTOCOL_DESCRIPTIONS.glob("*.json"))
+        for path in paths:
+            with self.subTest(family=path.stem):
+                document = json.loads(path.read_text(encoding="utf-8"))
+                self.assertEqual(
+                    document["defaults"]["tuning"]["frameQueueCapacity"], 64
+                )
+                for capacity in (1, 1024):
+                    document["defaults"]["tuning"]["frameQueueCapacity"] = capacity
+                    self.check(document, path.name)
+                for capacity in (0, 1025, 1.5, "64"):
+                    document["defaults"]["tuning"]["frameQueueCapacity"] = capacity
+                    self.assert_rejected(document, path.name)
+
     def startup_write(self) -> dict[str, Any]:
         return {"report": {"kind": "output", "id": 1, "length": 4}, "bytes": [1, 2, 3]}
 

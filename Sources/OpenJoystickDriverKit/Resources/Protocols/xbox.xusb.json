@@ -1,19 +1,24 @@
 {
-	"apiVersion": "openjoystickdriver/v1alpha1",
-	"kind": "ProtocolDescription",
-	"family": "xbox.xusb",
-	"interfaceSignatures": [
-		{
-			"variant": "wired",
-			"interfaceClass": 255,
-			"interfaceSubclass": 93,
-			"interfaceProtocol": 1
-		},
-		{
-			"variant": "receiver",
-			"interfaceClass": 255,
-			"interfaceSubclass": 93,
-			"interfaceProtocol": 129
-		}
-	]
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "ProtocolDescription",
+  "family": "xbox.xusb",
+  "interfaceSignatures": [
+    {
+      "variant": "wired",
+      "interfaceClass": 255,
+      "interfaceSubclass": 93,
+      "interfaceProtocol": 1
+    },
+    {
+      "variant": "receiver",
+      "interfaceClass": 255,
+      "interfaceSubclass": 93,
+      "interfaceProtocol": 129
+    }
+  ],
+  "defaults": {
+    "tuning": {
+      "frameQueueCapacity": 64
+    }
+  }
 }

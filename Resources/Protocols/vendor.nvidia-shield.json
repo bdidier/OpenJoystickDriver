@@ -1,13 +1,16 @@
 {
-	"apiVersion": "openjoystickdriver/v1alpha1",
-	"kind": "ProtocolDescription",
-	"family": "vendor.nvidia-shield",
-	"parameters": {
-		"reportRevision": {
-			"type": "enum",
-			"values": [
-				"Shield2015"
-			]
-		}
-	}
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "ProtocolDescription",
+  "family": "vendor.nvidia-shield",
+  "parameters": {
+    "reportRevision": {
+      "type": "enum",
+      "values": ["Shield2015"]
+    }
+  },
+  "defaults": {
+    "tuning": {
+      "frameQueueCapacity": 64
+    }
+  }
 }

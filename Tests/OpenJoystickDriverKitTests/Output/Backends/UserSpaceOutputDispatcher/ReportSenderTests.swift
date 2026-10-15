@@ -191,6 +191,70 @@ struct ReportSenderTests {
   }
 
   @Test(.timeLimit(.minutes(1)))
+  func slowConsumerKeepsTheQueueBoundedAndDeliversTheNewestFrame() async throws {
+    let capacity = 4
+    let gate = ReportSendGate()
+    let backend = OrderedReportBackend(gate: gate)
+    let sender = UserSpaceReportSender(queueCapacity: capacity)
+    sender.attach(backend)
+    let blocking = sender.submit(isFrame: true) { [[0]] }
+    await gate.waitForEntry()
+
+    var frames: [UserSpaceReportSender.SubmissionReceipt] = []
+    for value in 1...1_000 {
+      frames.append(sender.submit(isFrame: true) { [[UInt8(value % 251)]] })
+      #expect(sender.queuedCount <= capacity)
+    }
+    await gate.open()
+    try await blocking.value()
+    try await frames[999].value()
+
+    var superseded = 0
+    for frame in frames.dropLast(capacity) {
+      do { try await frame.value() } catch UserSpaceReportSender.Failure.superseded {
+        superseded += 1
+      }
+    }
+    #expect(superseded == 1_000 - capacity)
+    let reports = backend.snapshot().reports
+    #expect(reports.count == capacity + 1)
+    #expect(reports.last == [UInt8(1_000 % 251)])
+    await sender.beginClose().value
+  }
+
+  @Test(.timeLimit(.minutes(1)))
+  func fullQueueNeverEvictsAHostReplyAndFailsItWhenNoFrameCanYield() async throws {
+    let gate = ReportSendGate()
+    let backend = OrderedReportBackend(gate: gate)
+    let sender = UserSpaceReportSender(queueCapacity: 2)
+    sender.attach(backend)
+    let blocking = sender.submit { [[0]] }
+    await gate.waitForEntry()
+    let reply = sender.submit { [[2]] }
+    let frame = sender.submit(isFrame: true) { [[1]] }
+    let newest = sender.submit(isFrame: true) { [[5]] }
+    await #expect(throws: UserSpaceReportSender.Failure.superseded) { try await frame.value() }
+    let secondReply = sender.submit { [[3]] }
+    await #expect(throws: UserSpaceReportSender.Failure.superseded) { try await newest.value() }
+    #expect(sender.queuedCount == 2)
+    let overflow = sender.submit { [[4]] }
+    let lateFrame = sender.submit(isFrame: true) { [[6]] }
+    await #expect(throws: UserSpaceReportSender.Failure.queueOverflow) {
+      try await overflow.value()
+    }
+    await #expect(throws: UserSpaceReportSender.Failure.superseded) {
+      try await lateFrame.value()
+    }
+    #expect(sender.queuedCount == 2)
+    await gate.open()
+    try await blocking.value()
+    try await reply.value()
+    try await secondReply.value()
+    #expect(backend.snapshot().reports == [[0], [2], [3]])
+    await sender.beginClose().value
+  }
+
+  @Test(.timeLimit(.minutes(1)))
   func suppressionBetweenReportsSkipsTheRemainingReportAndCanResume() async throws {
     let gate = ReportSendGate()
     let backend = OrderedReportBackend(gate: gate)

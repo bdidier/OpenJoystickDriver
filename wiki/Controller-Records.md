@@ -160,8 +160,11 @@ A record's `tuning` field changes a value that the protocol driver otherwise set
 | `inputLivenessTimeoutMs` | 1 to 60000 | `sony.dualshock4` | How long the controller can send no input before OpenJoystickDriver releases its held controls. The default is 1000. |
 | `hidStartupIntervalMs` | 0 to 60000 | HID families | The gap between the startup writes. |
 | `minimumHIDOutputIntervalMs` | 0 to 60000 | HID families | The shortest gap between rumble and lighting reports. 0 sends them without a limit. |
+| `frameQueueCapacity` | 1 to 1024 | every family | How many virtual gamepad reports may wait behind the one being sent. The default is 64. When the queue is full, the newest state replaces the oldest waiting state, so a slow consumer never grows memory and always receives the newest state. A reply to an app's output report is never dropped. |
 | `hidStartupRecoveryIntervalMs` | 1 to 60000 | `nintendo.switch1` | The gap between startup recovery rounds. The default is 200. |
 | `hidStartupRecoveryRounds` | 1 to 10 | `nintendo.switch1` | The startup recovery rounds before OpenJoystickDriver gives up. The default is 2. |
+
+The default for `frameQueueCapacity` is in each protocol description's `defaults.tuning` (`Resources/Protocols/<family>.json`), so a record, a patch, or `all.patch.json` overrides it per model or for every controller. Reports queue only while the system takes a long time to accept the previous one; button changes that arrive in the same moment still reach the virtual gamepad in order until the queue is full.
 
 Raw-USB families, such as `xbox.gip`, do not take the two HID timings. The two recovery values apply only to `nintendo.switch1`, because the `nintendo.switch2` and `nintendo.switch-input-only` drivers have no startup recovery. `ojd record validate` rejects a value outside its range or its families.
 

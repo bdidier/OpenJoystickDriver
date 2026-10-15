@@ -10,6 +10,7 @@ extension ControllerRecordDocument {
       try container.rejectUnknown(allowed: [
         "stickDeadzone", "inputLivenessTimeoutMs", "hidStartupIntervalMs",
         "minimumHIDOutputIntervalMs", "hidStartupRecoveryIntervalMs", "hidStartupRecoveryRounds",
+        "frameQueueCapacity",
       ])
       guard !container.allKeys.isEmpty else {
         throw DecodingError.dataCorrupted(
@@ -46,7 +47,8 @@ extension ControllerRecordDocument {
           "hidStartupRecoveryIntervalMs",
           1...60_000
         ),
-        hidStartupRecoveryRounds: try integer("hidStartupRecoveryRounds", 1...10)
+        hidStartupRecoveryRounds: try integer("hidStartupRecoveryRounds", 1...10),
+        frameQueueCapacity: try integer("frameQueueCapacity", 1...1024)
       )
     }
   }

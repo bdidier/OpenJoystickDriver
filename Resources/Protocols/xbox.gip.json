@@ -1,26 +1,31 @@
 {
-	"apiVersion": "openjoystickdriver/v1alpha1",
-	"kind": "ProtocolDescription",
-	"family": "xbox.gip",
-	"interfaceSignatures": [
-		{
-			"variant": "usb",
-			"interfaceClass": 255,
-			"interfaceSubclass": 71,
-			"interfaceProtocol": 208,
-			"interfaceNumber": 0
-		}
-	],
-	"parameters": {
-		"shareButton": {
-			"type": "object",
-			"fields": {
-				"fromEnd": {
-					"type": "integer",
-					"minimum": 1,
-					"maximum": 255
-				}
-			}
-		}
-	}
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "ProtocolDescription",
+  "family": "xbox.gip",
+  "interfaceSignatures": [
+    {
+      "variant": "usb",
+      "interfaceClass": 255,
+      "interfaceSubclass": 71,
+      "interfaceProtocol": 208,
+      "interfaceNumber": 0
+    }
+  ],
+  "parameters": {
+    "shareButton": {
+      "type": "object",
+      "fields": {
+        "fromEnd": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 255
+        }
+      }
+    }
+  },
+  "defaults": {
+    "tuning": {
+      "frameQueueCapacity": 64
+    }
+  }
 }

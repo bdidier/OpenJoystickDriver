@@ -2,7 +2,7 @@
 
 ### Requirement: Protocol descriptions are data
 
-Each protocol family SHALL have a description under `Resources/Protocols/` that holds its defaults (output behavior, capabilities, tuning). Driver code SHALL read these values and SHALL NOT hold a copy.
+Each protocol family SHALL have a description under `Resources/Protocols/` that holds its defaults (output behavior, the family's controls, tuning). Driver code SHALL read these values and SHALL NOT hold a copy.
 
 #### Scenario: Family default changes
 
