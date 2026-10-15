@@ -34,7 +34,7 @@ find Scripts -type f \( -name '*.sh' -o -name ojd \) -print0 | xargs -0 shellche
   --external-sources --source-path=SCRIPTDIR
 git ls-files -z -co --exclude-standard -- '*.md' ':!.agents/' | xargs -0 markdownlint-cli2
 git ls-files -z -co --exclude-standard -- '*.json' '*.jsonc' | xargs -0 biome ci
-swift-format lint --recursive --strict Package.swift Sources Tests
+swift-format lint --recursive --strict Package.swift Sources Tests Tools
 swiftlint lint --no-cache --strict
 python3 Scripts/Quality/check_swift_file_length.py
 python3 Scripts/Quality/check_localization_keys.py
