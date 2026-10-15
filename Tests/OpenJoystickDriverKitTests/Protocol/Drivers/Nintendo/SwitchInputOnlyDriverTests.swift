@@ -74,8 +74,8 @@ struct SwitchInputOnlyDriverTests {
         InputOnlyReport.with([3: 0x00, 4: 0xFF, 5: 0xFF, 6: 0x00])
       )
     )
-    #expect(event.state.leftStick == StickPosition(x: -1, yDown: 1))
-    #expect(event.state.rightStick == StickPosition(x: 1, yDown: -1))
+    #expect(event.state.leftStick == StickPosition(x: -1, y: 1))
+    #expect(event.state.rightStick == StickPosition(x: 1, y: -1))
   }
 
   @Test

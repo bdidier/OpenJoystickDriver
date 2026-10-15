@@ -120,8 +120,8 @@ struct DriverParseCharacterizationTests {
   func render(_ state: ControllerState) -> String {
     let pressed = Control.allCases.filter(state.pressed.contains).map(\.rawValue)
     return "[\(pressed.joined(separator: ","))] hat=\(state.hat.rawValue)"
-      + " ls=\(state.leftStick.x.rawValue),\(-state.leftStick.y.rawValue)"
-      + " rs=\(state.rightStick.x.rawValue),\(-state.rightStick.y.rawValue)"
+      + " ls=\(state.leftStick.x.rawValue),\(state.leftStick.y.rawValue)"
+      + " rs=\(state.rightStick.x.rawValue),\(state.rightStick.y.rawValue)"
       + " lt=\(state.leftTrigger.rawValue) rt=\(state.rightTrigger.rawValue)"
   }
 

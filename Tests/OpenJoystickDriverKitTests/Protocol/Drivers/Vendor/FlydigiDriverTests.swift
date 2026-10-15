@@ -66,7 +66,7 @@ struct FlydigiDriverTests {
     settled(parser)
     let rest = BipolarValue(normalized: Float(-1) / 127)
     var expected = ControllerState.neutral
-    expected.leftStick = StickPosition(x: rest, y: BipolarValue(-rest.rawValue))
+    expected.leftStick = StickPosition(x: rest, y: rest)
     expected.rightStick = expected.leftStick
     #expect(try parser.parseReport(Data(CapturedReport.neutral))?.state == expected)
   }

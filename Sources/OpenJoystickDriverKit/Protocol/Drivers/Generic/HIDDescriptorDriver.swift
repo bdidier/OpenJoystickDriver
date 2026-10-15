@@ -112,8 +112,8 @@ public final class HIDDescriptorDriver: PhysicalProtocolDriver {
       default: next.rightTrigger = UnipolarValue(normalized: position)
       }
       if !axis.isTrigger {
-        next.leftStick = StickPosition(x: leftX, yDown: leftY)
-        next.rightStick = StickPosition(x: rightX, yDown: rightY)
+        next.leftStick = StickPosition(x: leftX, y: leftY)
+        next.rightStick = StickPosition(x: rightX, y: rightY)
       }
     }
     state = next

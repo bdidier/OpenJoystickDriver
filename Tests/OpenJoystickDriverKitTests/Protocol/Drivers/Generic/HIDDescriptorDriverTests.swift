@@ -67,10 +67,10 @@ struct HIDDescriptorDriverTests {
       )?.state
     }
 
-    #expect(stick(0x31, atLogicalMinimum: true)?.leftStick == StickPosition(x: .center, y: .max))
-    #expect(stick(0x31, atLogicalMinimum: false)?.leftStick == StickPosition(x: .center, y: .min))
-    #expect(stick(0x34, atLogicalMinimum: true)?.rightStick == StickPosition(x: .center, y: .max))
-    #expect(stick(0x34, atLogicalMinimum: false)?.rightStick == StickPosition(x: .center, y: .min))
+    #expect(stick(0x31, atLogicalMinimum: true)?.leftStick == StickPosition(x: .center, y: .min))
+    #expect(stick(0x31, atLogicalMinimum: false)?.leftStick == StickPosition(x: .center, y: .max))
+    #expect(stick(0x34, atLogicalMinimum: true)?.rightStick == StickPosition(x: .center, y: .min))
+    #expect(stick(0x34, atLogicalMinimum: false)?.rightStick == StickPosition(x: .center, y: .max))
     #expect(stick(0x30, atLogicalMinimum: false)?.leftStick.x == .max)
   }
 

@@ -63,10 +63,10 @@ struct VirtualHIDProfileTests {
     #expect(neutral == [UInt8](repeating: 0, count: 14))
     #expect(neutral == OJDGenericGamepadFormat().buildInputReport(from: VirtualGamepadState()))
 
-    // South, Y-up canonical stick at full up, which the report carries Y-down.
+    // South, stick at full up: negative Y in the state, and the Y-down report carries it as is.
     let pressed = ControllerState(
       pressed: [.south],
-      leftStick: StickPosition(x: .center, y: BipolarValue(Int16.max))
+      leftStick: StickPosition(x: .center, y: BipolarValue(-Int16.max))
     )
     #expect(
       profile.inputReport(for: pressed) == [

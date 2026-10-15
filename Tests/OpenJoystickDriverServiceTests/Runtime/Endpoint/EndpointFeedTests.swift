@@ -23,7 +23,7 @@ struct EndpointFeedTests {
       #expect(device.profile == .generic)
       try await Self.wait { device.sent.contains { $0.buttons.contains(.south) } }
       let state = try #require(device.sent.last { $0.buttons.contains(.south) })
-      #expect(state.axes[.leftStickY] == -0.5)
+      #expect(state.axes[.leftStickY] == 0.5)
     }
   }
 
