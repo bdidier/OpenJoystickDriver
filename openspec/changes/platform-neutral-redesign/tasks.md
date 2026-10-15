@@ -255,7 +255,7 @@ Verify: `swift test`, lint pair. Hardware: H10.
 
 - [ ] 19.1 Introduce `InputSource` and `OutputSink` and attach physical, virtual, endpoint paths to them. Verify: 1.1 shows zero diffs.
 - [ ] 19.2 Add bounded queue policy per record or default. Verify: slow-consumer test keeps memory bounded and delivers the newest frame.
-- [ ] 19.3 Add per-stage timestamps to `ojd diagnose`. Verify: test output lists dispatch and delivery times.
+- [x] 19.3 Add per-stage timestamps to `ojd diagnose`. Verify: test output lists dispatch and delivery times. Done: read, parse, dispatch, delivery-virtual-device and delivery-endpoint stamps; `DeviceManagerFrameTimingsTests` asserts all five in order and `--plain` adds one timing row per stage.
 - [ ] 19.4 Add the WebRTC transport, off by default, using the endpoint Subscription flow for signalling. Verify: loopback test; with the setting off, a socket scan shows no listener.
 
 ## 20. AppKit GUI shell
