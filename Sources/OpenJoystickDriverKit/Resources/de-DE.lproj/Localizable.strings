@@ -1294,7 +1294,7 @@
 "cli.controller.watch.all_started" = "Alle Controller werden beobachtet. Drücke Tasten am Controller.";
 "cli.controller.watch.connected" = "%@ verbunden: %@ (%@)";
 "cli.controller.watch.disconnected" = "%@ getrennt";
-"cli.controller.watch.discussion" = "Mit --json wird ein JSON-Objekt pro Zeile ausgegeben. Stick-Y zeigt nach oben. Mit --first-press wird das zuerst gedrückte Bedienelement ausgegeben und der Befehl beendet; er schlägt fehl, wenn --duration zuerst abläuft.";
+"cli.controller.watch.discussion" = "Mit --json wird ein JSON-Objekt pro Zeile ausgegeben. Stick-Y zeigt nach unten. Mit --first-press wird das zuerst gedrückte Bedienelement ausgegeben und der Befehl beendet; er schlägt fehl, wenn --duration zuerst abläuft.";
 "cli.controller.watch.discussion.all" = "Mit --all beginnt jede Zeile mit der Controller-ID, und eine Zeile meldet jeden Controller, der verbunden oder getrennt wird. Die ersten Zeilen melden die bereits verbundenen Controller.";
 "cli.controller.watch.error.first_press_all" = "--first-press benötigt einen CONTROLLER; es funktioniert nicht mit --all.";
 "cli.controller.watch.error.target" = "Gib einen CONTROLLER oder --all an, aber nicht beides.";
@@ -1340,7 +1340,7 @@
 "cli.virtual.error.failed" = "Das virtuelle Gamepad für %@ wurde nicht geändert (%@). Prüfe das mit „ojd virtual show“.";
 "cli.virtual.error.no_unit" = "%@ hat keine Geräte-ID, daher kann eine Auswahl nur für das gesamte Modell gelten. Führe den Befehl ohne --unit aus.";
 "cli.virtual.feed.abstract" = "Ein virtuelles Gamepad veröffentlichen, das über stdin gesteuert wird.";
-"cli.virtual.feed.discussion" = "Liest ein JSON-Objekt pro Zeile: „buttons“ und „dpad“ listen die gedrückten Bedienelemente auf, etwa South und up, und „axes“ ordnet Achsennamen wie LeftStickX Werte zu. Fehlende Bedienelemente bleiben neutral. Sticks reichen von -1 bis 1, wobei Y nach oben zeigt; Trigger reichen von 0 bis 1. Frames werden der Reihe nach abgespielt, jeweils mindestens 8 ms lang; „holdMilliseconds“ hält einen Frame länger, bis zu 60000. Gibt jeden Ausgabebefehl, den Spiele an das Gamepad senden, etwa Vibration, als ein JSON-Objekt pro Zeile aus. Endet, wenn nach dem Ende der Eingabe jeder Frame abgespielt wurde.";
+"cli.virtual.feed.discussion" = "Liest ein JSON-Objekt pro Zeile: „buttons“ und „dpad“ listen die gedrückten Bedienelemente auf, etwa South und up, und „axes“ ordnet Achsennamen wie LeftStickX Werte zu. Fehlende Bedienelemente bleiben neutral. Sticks reichen von -1 bis 1, wobei Y nach unten zeigt; Trigger reichen von 0 bis 1. Frames werden der Reihe nach abgespielt, jeweils mindestens 8 ms lang; „holdMilliseconds“ hält einen Frame länger, bis zu 60000. Gibt jeden Ausgabebefehl, den Spiele an das Gamepad senden, etwa Vibration, als ein JSON-Objekt pro Zeile aus. Endet, wenn nach dem Ende der Eingabe jeder Frame abgespielt wurde.";
 "cli.virtual.feed.error.closed" = "Der Dienst hat das virtuelle Gamepad geschlossen. Prüfe es mit „ojd status“.";
 "cli.virtual.feed.error.frame" = "Zeile %@ ist kein gültiger Frame. „ojd virtual feed --help“ zeigt das Format.";
 "cli.virtual.feed.profile" = "Das Profil des virtuellen Gamepads, das veröffentlicht werden soll.";

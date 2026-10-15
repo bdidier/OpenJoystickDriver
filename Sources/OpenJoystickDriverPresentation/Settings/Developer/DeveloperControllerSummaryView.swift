@@ -108,7 +108,7 @@
       }
     }
 
-    /// Raw canonical values; Y points up.
+    /// Raw canonical values; Y points down.
     private func stickValue(_ stick: StickPosition?) -> String {
       let stick = stick ?? .center
       return "\(stick.x.rawValue), \(stick.y.rawValue)"

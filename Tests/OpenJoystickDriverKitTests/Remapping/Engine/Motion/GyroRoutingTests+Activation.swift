@@ -39,7 +39,7 @@ extension GyroRoutingTests {
     )
     #expect(
       initial == [
-        .gamepad(RemappingGamepadState(axes: [.rightStickX: -1, .rightStickY: 0.5]), device)
+        .gamepad(RemappingGamepadState(axes: [.rightStickX: -1, .rightStickY: -0.5]), device)
       ]
     )
     let changed = engine.process(
@@ -65,7 +65,7 @@ extension GyroRoutingTests {
     )
     #expect(
       resumed == [
-        .gamepad(RemappingGamepadState(axes: [.rightStickX: -0.5, .rightStickY: 0.25]), device)
+        .gamepad(RemappingGamepadState(axes: [.rightStickX: -0.5, .rightStickY: -0.25]), device)
       ]
     )
     let released = engine.process(
@@ -249,7 +249,9 @@ extension GyroRoutingTests {
     #expect(
       combined == [
         .gamepad(
-          RemappingGamepadState(axes: [.rightStickX: -1 + quantizedStick(0.25), .rightStickY: 0.5]),
+          RemappingGamepadState(axes: [
+            .rightStickX: -1 + quantizedStick(0.25), .rightStickY: -0.5,
+          ]),
           device
         )
       ]
@@ -303,7 +305,7 @@ extension GyroRoutingTests {
     #expect(!reset.hasMotionBaseline)
     #expect(
       await virtual.states == [
-        RemappingGamepadState(axes: [.leftStickX: -1, .leftStickY: 0.5]), .neutral,
+        RemappingGamepadState(axes: [.leftStickX: -1, .leftStickY: -0.5]), .neutral,
       ]
     )
     #expect(await !engine.hasScheduledOutput())

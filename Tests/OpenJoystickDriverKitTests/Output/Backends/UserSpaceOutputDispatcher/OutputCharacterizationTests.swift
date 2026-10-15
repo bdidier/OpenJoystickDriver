@@ -191,8 +191,8 @@ extension OutputCharacterizationTests {
   }
 
   /// What `event` changed since `previous`, in the order the engine applies it: `+`/`-` and the
-  /// remapping button under `labels`, `hat=`, sticks as raw values with Y rendered down-positive
-  /// (the canonical Y negated) and triggers as raw values, then `motion` and `touch` per sample.
+  /// remapping button under `labels`, `hat=`, sticks as raw values with Y down-positive and
+  /// triggers as raw values, then `motion` and `touch` per sample.
   static func renderChanges(
     from previous: ControllerState,
     to event: ControllerEvent,
@@ -206,9 +206,9 @@ extension OutputCharacterizationTests {
         parts.append((isPressed ? "+" : "-") + button.rawValue)
       case .dpad(let hat): parts.append("hat=\(hat.rawValue)")
       case .leftStick:
-        parts.append("ls=\(state.leftStick.x.rawValue),\(-state.leftStick.y.rawValue)")
+        parts.append("ls=\(state.leftStick.x.rawValue),\(state.leftStick.y.rawValue)")
       case .rightStick:
-        parts.append("rs=\(state.rightStick.x.rawValue),\(-state.rightStick.y.rawValue)")
+        parts.append("rs=\(state.rightStick.x.rawValue),\(state.rightStick.y.rawValue)")
       case .leftTrigger: parts.append("lt=\(state.leftTrigger.rawValue)")
       case .rightTrigger: parts.append("rt=\(state.rightTrigger.rawValue)")
       case .motion, .touch: break
