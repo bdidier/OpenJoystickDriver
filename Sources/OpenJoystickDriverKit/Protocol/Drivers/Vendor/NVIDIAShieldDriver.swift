@@ -126,8 +126,8 @@ public final class NVIDIAShieldDriver: PhysicalProtocolDriver {
     func stick(_ offset: Int) -> Float {
       max(-1, min(1, Float(word(offset) - shieldAxisCenter) / shieldAxisMagnitude))
     }
-    next.leftStick = StickPosition(x: stick(sticks), yDown: stick(sticks + 2))
-    next.rightStick = StickPosition(x: stick(sticks + 4), yDown: stick(sticks + 6))
+    next.leftStick = StickPosition(x: stick(sticks), y: stick(sticks + 2))
+    next.rightStick = StickPosition(x: stick(sticks + 4), y: stick(sticks + 6))
     next.leftTrigger = UnipolarValue(normalized: Float(word(triggers)) / shieldTriggerMax)
     next.rightTrigger = UnipolarValue(normalized: Float(word(triggers + 2)) / shieldTriggerMax)
   }

@@ -14,9 +14,9 @@ func parse(_ parser: any PhysicalProtocolDriver, _ report: Data) throws -> Contr
   try parser.parse(report: report, receivedAt: MonotonicTimestamp(nanoseconds: 0))?.state
 }
 
-/// A stick position from normalized axes whose Y points down, the report frame.
-func stick(_ x: Float, _ yDown: Float) -> StickPosition {
-  StickPosition(x: BipolarValue(normalized: x), y: BipolarValue(normalized: -yDown))
+/// A stick position from normalized axes whose Y points down.
+func stick(_ x: Float, _ y: Float) -> StickPosition {
+  StickPosition(x: BipolarValue(normalized: x), y: BipolarValue(normalized: y))
 }
 
 func trigger(_ value: Float) -> UnipolarValue { UnipolarValue(normalized: value) }

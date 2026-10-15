@@ -224,8 +224,8 @@ extension SteamControllerDriver {
     next.rightTrigger = UnipolarValue(
       normalized: Float(bytes[ReportOffset.rightTrigger]) / steamControllerTriggerMax
     )
-    next.leftStick = StickPosition(x: normalizeAxis(lx), yDown: normalizeAxis(ly))
-    next.rightStick = StickPosition(x: normalizeAxis(rx), yDown: normalizeAxis(ry))
+    next.leftStick = StickPosition(x: normalizeAxis(lx), y: normalizeAxis(ly))
+    next.rightStick = StickPosition(x: normalizeAxis(rx), y: normalizeAxis(ry))
     return next
   }
 

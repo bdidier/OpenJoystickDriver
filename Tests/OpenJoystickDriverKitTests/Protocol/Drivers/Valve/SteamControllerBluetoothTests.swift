@@ -34,14 +34,14 @@ struct SteamControllerBluetoothTests {
     let event = try #require(try driver.parseReport(BLEReport.segment(first)))
     #expect(event.state.pressed == [.south])
     #expect(event.state.leftTrigger == .max)
-    #expect(event.state.leftStick == StickPosition(x: 1, yDown: 0))
+    #expect(event.state.leftStick == StickPosition(x: 1, y: 0))
 
     // A triggers-only packet keeps the buttons and stick from the previous packet.
     let second = BLEReport.chunked(mask: 0x0020, [0, 255])
     let next = try #require(try driver.parseReport(BLEReport.segment(second)))
     #expect(next.state.pressed == [.south])
     #expect(next.state.leftTrigger == .min && next.state.rightTrigger == .max)
-    #expect(next.state.leftStick == StickPosition(x: 1, yDown: 0))
+    #expect(next.state.leftStick == StickPosition(x: 1, y: 0))
   }
 
   @Test

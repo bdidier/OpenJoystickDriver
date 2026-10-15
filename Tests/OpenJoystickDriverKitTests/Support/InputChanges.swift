@@ -2,9 +2,8 @@ import Foundation
 
 @testable import OpenJoystickDriverKit
 
-/// One change a test applies to a controller's previous snapshot. Stick Y is in the remapping frame
-/// (down is positive), which the engine and these tests use; the fold flips it into the canonical
-/// frame.
+/// One change a test applies to a controller's previous snapshot. Stick Y is positive down, as in
+/// the controller state and the engine.
 enum InputChange: Equatable {
   case press(Control)
   case release(Control)
@@ -29,12 +28,12 @@ extension ControllerState {
       case .leftStick(let x, let y):
         next.leftStick = StickPosition(
           x: BipolarValue(normalized: x),
-          y: BipolarValue(normalized: -y)
+          y: BipolarValue(normalized: y)
         )
       case .rightStick(let x, let y):
         next.rightStick = StickPosition(
           x: BipolarValue(normalized: x),
-          y: BipolarValue(normalized: -y)
+          y: BipolarValue(normalized: y)
         )
       case .leftTrigger(let value): next.leftTrigger = UnipolarValue(normalized: value)
       case .rightTrigger(let value): next.rightTrigger = UnipolarValue(normalized: value)
@@ -289,13 +288,13 @@ extension RemappingEngineState {
 
 extension ControllerEvent? {
   /// The left stick in the remapping frame (Y down); nil without a snapshot.
-  var leftStickYDown: (x: Float, y: Float)? {
-    self.map { ($0.state.leftStick.x.normalized, -$0.state.leftStick.y.normalized) }
+  var leftStickPosition: (x: Float, y: Float)? {
+    self.map { ($0.state.leftStick.x.normalized, $0.state.leftStick.y.normalized) }
   }
 
   /// The right stick in the remapping frame (Y down); nil without a snapshot.
-  var rightStickYDown: (x: Float, y: Float)? {
-    self.map { ($0.state.rightStick.x.normalized, -$0.state.rightStick.y.normalized) }
+  var rightStickPosition: (x: Float, y: Float)? {
+    self.map { ($0.state.rightStick.x.normalized, $0.state.rightStick.y.normalized) }
   }
 }
 
