@@ -26,26 +26,21 @@ extension StartupLifetimeTests {
     )
 
     await manager.ensureHIDDetectionState(for: .granted)
-    for _ in 0..<500 {
-      if await backend.attemptCount() == 1 { break }
-      await Task.yield()
-    }
+    await backend.waitForAttempt(1)
     #expect(await backend.attemptCount() == 1)
 
     await backend.yield(.connected(connection: connection, ownership: .exclusive), attempt: 1)
-    for _ in 0..<500 {
-      if await manager.pipelines[identifier] != nil { break }
-      try? await Task.sleep(nanoseconds: 2_000_000)
+    await waitUntil("manager.pipelines[identifier] != nil") {
+      await manager.pipelines[identifier] != nil
     }
     #expect(await manager.deviceInfos[identifier]?.hidConnectionID == connection.connectionID)
     #expect(await manager.pipelines[identifier] != nil)
 
     await backend.fail(.ioReturn(kIOReturnNotResponding), attempt: 1)
-    for _ in 0..<500 {
-      if await manager.hidDetectionTask == nil, await manager.deviceInfos[identifier] == nil {
-        break
-      }
-      try? await Task.sleep(nanoseconds: 2_000_000)
+    await waitUntil("detection task retired and device info removed") {
+      let task = await manager.hidDetectionTask
+      let info = await manager.deviceInfos[identifier]
+      return task == nil && info == nil
     }
     #expect(await manager.hidDetectionTask == nil)
     #expect(await manager.hidDetectionSessionID == nil)
@@ -55,16 +50,10 @@ extension StartupLifetimeTests {
 
     // The existing permission watcher invokes this again on its next one-second tick.
     await manager.ensureHIDDetectionState(for: .granted)
-    for _ in 0..<500 {
-      if await backend.attemptCount() == 2 { break }
-      await Task.yield()
-    }
+    await backend.waitForAttempt(2)
     #expect(await backend.attemptCount() == 2)
     await backend.fail(.ioReturn(kIOReturnNoDevice), attempt: 2)
-    for _ in 0..<500 {
-      if await manager.hidDetectionTask == nil { break }
-      try? await Task.sleep(nanoseconds: 2_000_000)
-    }
+    await waitUntil("manager.hidDetectionTask == nil") { await manager.hidDetectionTask == nil }
     await manager.stop()
   }
 
@@ -78,19 +67,13 @@ extension StartupLifetimeTests {
 
     await manager.ensureHIDDetectionState(for: .granted)
     let firstTask = await manager.hidDetectionTask
-    for _ in 0..<500 {
-      if await backend.attemptCount() == 1 { break }
-      await Task.yield()
-    }
+    await backend.waitForAttempt(1)
     #expect(await backend.attemptCount() == 1)
 
     await manager.ensureHIDDetectionState(for: .denied)
     await manager.ensureHIDDetectionState(for: .granted)
     let secondTask = await manager.hidDetectionTask
-    for _ in 0..<500 {
-      if await backend.attemptCount() == 2 { break }
-      await Task.yield()
-    }
+    await backend.waitForAttempt(2)
     let secondSessionID = await manager.hidDetectionSessionID
     #expect(await backend.attemptCount() == 2)
     #expect(secondSessionID != nil)
@@ -152,32 +135,20 @@ extension StartupLifetimeTests {
     await blockerStarted.wait()
 
     let detachTask = Task { await manager.handleHIDEvent(.disconnected(connection: oldConnection)) }
-    var teardownSuspendedWithOldInfo = false
-    for _ in 0..<500 {
+    await waitUntil("teardownSuspendedWithOldInfo") {
       let currentPipeline = await manager.pipelines[identifier]
       let currentConnectionID = await manager.deviceInfos[identifier]?.hidConnectionID
-      if currentPipeline == nil, currentConnectionID == oldConnection.connectionID {
-        teardownSuspendedWithOldInfo = true
-        break
-      }
-      try await Task.sleep(nanoseconds: 2_000_000)
+      return currentPipeline == nil && currentConnectionID == oldConnection.connectionID
     }
-    #expect(teardownSuspendedWithOldInfo)
 
     let reconnectTask = Task {
       await manager.handleHIDEvent(.connected(connection: newConnection, ownership: .exclusive))
     }
-    var reconnectedInfoIsInstalled = false
-    for _ in 0..<500 {
+    await waitUntil("reconnectedInfoIsInstalled") {
       let currentConnectionID = await manager.deviceInfos[identifier]?.hidConnectionID
       let currentPipeline = await manager.pipelines[identifier]
-      if currentConnectionID == newConnection.connectionID, currentPipeline != nil {
-        reconnectedInfoIsInstalled = true
-        break
-      }
-      try await Task.sleep(nanoseconds: 2_000_000)
+      return currentConnectionID == newConnection.connectionID && currentPipeline != nil
     }
-    #expect(reconnectedInfoIsInstalled)
 
     await releaseBlocker.open()
     #expect(await blockerTask.value == .completed(true))

@@ -40,11 +40,9 @@ struct DeviceManagerFrameTimingsTests {
       HIDDeviceConnectionSnapshot(connection: connection, ownership: .exclusive)
     ])
     await manager.ensureHIDDetectionState(for: .granted)
-    for _ in 0..<500 where await backend.attemptCount() == 0 { await Task.yield() }
+    await backend.waitForAttempt(1)
     await backend.yield(.connected(connection: connection, ownership: .exclusive), attempt: 1)
-    for _ in 0..<500 where await manager.pipelines.isEmpty {
-      try? await Task.sleep(nanoseconds: 2_000_000)
-    }
+    await waitUntil("manager.pipelines is not empty") { await !manager.pipelines.isEmpty }
     try #require(await !manager.pipelines.isEmpty)
 
     await backend.yield(
@@ -56,9 +54,9 @@ struct DeviceManagerFrameTimingsTests {
       $0.controllers.first?.frames.last?.stages.contains { $0.stage == .deliveryVirtualDevice }
         == true
     }
-    for _ in 0..<500 where !delivered(snapshot) {
-      try? await Task.sleep(nanoseconds: 2_000_000)
+    await waitUntil("virtual-device delivery stage recorded") {
       snapshot = await manager.frameTimingsSnapshot()
+      return delivered(snapshot)
     }
     let controller = try #require(snapshot.controllers.first)
     let token = try #require(ControllerSessionToken(rawValue: controller.controller))

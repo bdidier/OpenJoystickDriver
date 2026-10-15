@@ -284,15 +284,11 @@ extension StartupLifetimeTests {
 
     await manager.ensureHIDDetectionState(for: .granted)
     let oldDetectionTask = await manager.hidDetectionTask
-    for _ in 0..<500 {
-      if await backend.attemptCount() == 1 { break }
-      await Task.yield()
-    }
+    await backend.waitForAttempt(1)
     #expect(await backend.attemptCount() == 1)
     await backend.yield(.connected(connection: oldConnection, ownership: .exclusive), attempt: 1)
-    for _ in 0..<500 {
-      if await manager.pipelines[identifier] != nil { break }
-      try await Task.sleep(nanoseconds: 2_000_000)
+    await waitUntil("manager.pipelines[identifier] != nil") {
+      await manager.pipelines[identifier] != nil
     }
     #expect(await manager.deviceInfos[identifier]?.hidConnectionID == oldConnection.connectionID)
 
@@ -312,9 +308,8 @@ extension StartupLifetimeTests {
     case .denied: deniedCleanup = Task { await manager.ensureHIDDetectionState(for: .denied) }
     }
     await initializationStarted.wait()
-    for _ in 0..<500 {
-      if await manager.hidInitializationTasks.isEmpty { break }
-      await Task.yield()
+    await waitUntil("manager.hidInitializationTasks.isEmpty") {
+      await manager.hidInitializationTasks.isEmpty
     }
     #expect(await manager.hidInitializationTasks.isEmpty)
 
@@ -324,22 +319,16 @@ extension StartupLifetimeTests {
       await manager.ensureHIDDetectionState(for: .denied)
     }
     await manager.ensureHIDDetectionState(for: .granted)
-    for _ in 0..<500 {
-      if await backend.attemptCount() == 2 { break }
-      await Task.yield()
-    }
+    await backend.waitForAttempt(2)
     let newDetectionTask = await manager.hidDetectionTask
     let newSessionID = await manager.hidDetectionSessionID
     #expect(await backend.attemptCount() == 2)
     #expect(newSessionID != nil)
     await backend.yield(.connected(connection: newConnection, ownership: .exclusive), attempt: 2)
-    for _ in 0..<500 {
-      if await manager.deviceInfos[identifier]?.hidConnectionID == newConnection.connectionID,
-        await manager.pipelines[identifier] != nil
-      {
-        break
-      }
-      try await Task.sleep(nanoseconds: 2_000_000)
+    await waitUntil("new connection installed with a pipeline") {
+      let connectionID = await manager.deviceInfos[identifier]?.hidConnectionID
+      let pipeline = await manager.pipelines[identifier]
+      return connectionID == newConnection.connectionID && pipeline != nil
     }
     #expect(await manager.deviceInfos[identifier]?.hidConnectionID == newConnection.connectionID)
     #expect(await manager.pipelines[identifier] != nil)
