@@ -1,90 +1,90 @@
 {
-	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/mod-package.schema.json",
-	"title": "OpenJoystickDriver mod package manifest",
-	"description": "The mod.json of a package folder. The folder holds Controllers/, Profiles/, and Personas/; each list names the files in the subfolder of the same kind.",
-	"type": "object",
-	"additionalProperties": false,
-	"required": ["apiVersion", "kind", "name", "version", "author", "requires"],
-	"properties": {
-		"apiVersion": {
-			"const": "openjoystickdriver/v1alpha1"
-		},
-		"kind": {
-			"const": "ModPackage"
-		},
-		"name": {
-			"type": "string",
-			"pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
-			"description": "Lowercase letters, digits, and hyphens. The installed folder has this name."
-		},
-		"version": {
-			"$ref": "#/$defs/semver"
-		},
-		"author": {
-			"type": "string",
-			"minLength": 1
-		},
-		"requires": {
-			"type": "object",
-			"additionalProperties": false,
-			"required": ["minimum"],
-			"properties": {
-				"minimum": {
-					"$ref": "#/$defs/semver",
-					"description": "The lowest OpenJoystickDriver version that runs the package."
-				},
-				"below": {
-					"$ref": "#/$defs/semver",
-					"description": "The lowest version that does not run the package."
-				}
-			}
-		},
-		"records": {
-			"description": "Files in Controllers/: vvvv-pppp.json for a Controller, and vvvv-pppp.patch.json, model-vvvv-pppp.patch.json, or all.patch.json for a ControllerPatch.",
-			"$ref": "#/$defs/files",
-			"items": {
-				"pattern": "^([0-9a-f]{4}-[0-9a-f]{4}\\.json|[0-9a-f]{4}-[0-9a-f]{4}\\.patch\\.json|model-[0-9a-f]{4}-[0-9a-f]{4}\\.patch\\.json|all\\.patch\\.json)$"
-			}
-		},
-		"profiles": {
-			"description": "Files in Profiles/.",
-			"$ref": "#/$defs/files",
-			"items": {
-				"pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*\\.json$"
-			}
-		},
-		"personas": {
-			"description": "Files in Personas/, named vvvv-pppp.json or vvvv-pppp-U-<unit>.json after the match they cover.",
-			"$ref": "#/$defs/files",
-			"items": {
-				"pattern": "^[0-9a-f]{4}-[0-9a-f]{4}(-U-[A-Za-z0-9_-]{16})?\\.json$"
-			}
-		}
-	},
-	"anyOf": [
-		{
-			"required": ["records"]
-		},
-		{
-			"required": ["profiles"]
-		},
-		{
-			"required": ["personas"]
-		}
-	],
-	"$defs": {
-		"semver": {
-			"type": "string",
-			"pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-(0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(\\.(0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*)?$"
-		},
-		"files": {
-			"type": "array",
-			"minItems": 1,
-			"uniqueItems": true,
-			"items": {
-				"type": "string"
-			}
-		}
-	}
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/mod-package.schema.json",
+  "title": "OpenJoystickDriver mod package manifest",
+  "description": "The mod.json of a package folder. The folder holds Controllers/, Profiles/, and Personas/; each list names the files in the subfolder of the same kind.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "name", "version", "author", "requires"],
+  "properties": {
+    "apiVersion": {
+      "const": "openjoystickdriver/v1alpha1"
+    },
+    "kind": {
+      "const": "ModPackage"
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "Lowercase letters, digits, and hyphens. The installed folder has this name."
+    },
+    "version": {
+      "$ref": "#/$defs/semver"
+    },
+    "author": {
+      "type": "string",
+      "minLength": 1
+    },
+    "requires": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimum"],
+      "properties": {
+        "minimum": {
+          "$ref": "#/$defs/semver",
+          "description": "The lowest OpenJoystickDriver version that runs the package."
+        },
+        "below": {
+          "$ref": "#/$defs/semver",
+          "description": "The lowest version that does not run the package."
+        }
+      }
+    },
+    "records": {
+      "description": "Files in Controllers/: vvvv-pppp.json for a Controller, and vvvv-pppp.patch.json, model-vvvv-pppp.patch.json, or all.patch.json for a ControllerPatch.",
+      "$ref": "#/$defs/files",
+      "items": {
+        "pattern": "^([0-9a-f]{4}-[0-9a-f]{4}\\.json|[0-9a-f]{4}-[0-9a-f]{4}\\.patch\\.json|model-[0-9a-f]{4}-[0-9a-f]{4}\\.patch\\.json|all\\.patch\\.json)$"
+      }
+    },
+    "profiles": {
+      "description": "Files in Profiles/.",
+      "$ref": "#/$defs/files",
+      "items": {
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*\\.json$"
+      }
+    },
+    "personas": {
+      "description": "Files in Personas/, named vvvv-pppp.json or vvvv-pppp-U-<unit>.json after the match they cover.",
+      "$ref": "#/$defs/files",
+      "items": {
+        "pattern": "^[0-9a-f]{4}-[0-9a-f]{4}(-U-[A-Za-z0-9_-]{16})?\\.json$"
+      }
+    }
+  },
+  "anyOf": [
+    {
+      "required": ["records"]
+    },
+    {
+      "required": ["profiles"]
+    },
+    {
+      "required": ["personas"]
+    }
+  ],
+  "$defs": {
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-(0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(\\.(0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*)?$"
+    },
+    "files": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    }
+  }
 }

@@ -1,142 +1,142 @@
 {
-	"apiVersion": "openjoystickdriver/v1alpha1",
-	"kind": "Controller",
-	"vendorID": 11925,
-	"productID": 17229,
-	"protocol": {
-		"family": "hid.descriptor"
-	},
-	"input": {
-		"hidUsageMap": {
-			"reportID": 6,
-			"usages": [
-				{
-					"kind": "button",
-					"page": 9,
-					"usage": 1,
-					"control": "face-south"
-				},
-				{
-					"kind": "button",
-					"page": 9,
-					"usage": 2,
-					"control": "face-east"
-				},
-				{
-					"kind": "button",
-					"page": 9,
-					"usage": 3,
-					"control": "face-west"
-				},
-				{
-					"kind": "button",
-					"page": 9,
-					"usage": 4,
-					"control": "face-north"
-				},
-				{
-					"kind": "button",
-					"page": 9,
-					"usage": 5,
-					"control": "left-shoulder"
-				},
-				{
-					"kind": "button",
-					"page": 9,
-					"usage": 6,
-					"control": "right-shoulder"
-				},
-				{
-					"kind": "button",
-					"page": 9,
-					"usage": 7,
-					"control": "view"
-				},
-				{
-					"kind": "button",
-					"page": 9,
-					"usage": 8,
-					"control": "menu"
-				},
-				{
-					"kind": "button",
-					"page": 9,
-					"usage": 9,
-					"control": "left-stick-click"
-				},
-				{
-					"kind": "button",
-					"page": 9,
-					"usage": 10,
-					"control": "right-stick-click"
-				},
-				{
-					"kind": "axis",
-					"page": 1,
-					"usage": 48,
-					"control": "left-stick-x"
-				},
-				{
-					"kind": "axis",
-					"page": 1,
-					"usage": 49,
-					"control": "left-stick-y"
-				},
-				{
-					"kind": "axis",
-					"page": 1,
-					"usage": 50,
-					"control": "right-stick-x"
-				},
-				{
-					"kind": "axis",
-					"page": 1,
-					"usage": 51,
-					"control": "left-trigger"
-				},
-				{
-					"kind": "axis",
-					"page": 1,
-					"usage": 52,
-					"control": "right-trigger"
-				},
-				{
-					"kind": "axis",
-					"page": 1,
-					"usage": 53,
-					"control": "right-stick-y"
-				},
-				{
-					"kind": "hat",
-					"page": 1,
-					"usage": 57,
-					"control": "dpad"
-				},
-				{
-					"kind": "button",
-					"page": 1,
-					"usage": 133,
-					"control": "guide"
-				},
-				{
-					"kind": "button",
-					"page": 12,
-					"usage": 178,
-					"control": "share"
-				},
-				{
-					"kind": "button",
-					"page": 12,
-					"usage": 547,
-					"control": "guide"
-				},
-				{
-					"kind": "button",
-					"page": 12,
-					"usage": 548,
-					"control": "view"
-				}
-			]
-		}
-	}
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "Controller",
+  "vendorID": 11925,
+  "productID": 17229,
+  "protocol": {
+    "family": "hid.descriptor"
+  },
+  "input": {
+    "hidUsageMap": {
+      "reportID": 6,
+      "usages": [
+        {
+          "kind": "button",
+          "page": 9,
+          "usage": 1,
+          "control": "face-south"
+        },
+        {
+          "kind": "button",
+          "page": 9,
+          "usage": 2,
+          "control": "face-east"
+        },
+        {
+          "kind": "button",
+          "page": 9,
+          "usage": 3,
+          "control": "face-west"
+        },
+        {
+          "kind": "button",
+          "page": 9,
+          "usage": 4,
+          "control": "face-north"
+        },
+        {
+          "kind": "button",
+          "page": 9,
+          "usage": 5,
+          "control": "left-shoulder"
+        },
+        {
+          "kind": "button",
+          "page": 9,
+          "usage": 6,
+          "control": "right-shoulder"
+        },
+        {
+          "kind": "button",
+          "page": 9,
+          "usage": 7,
+          "control": "view"
+        },
+        {
+          "kind": "button",
+          "page": 9,
+          "usage": 8,
+          "control": "menu"
+        },
+        {
+          "kind": "button",
+          "page": 9,
+          "usage": 9,
+          "control": "left-stick-click"
+        },
+        {
+          "kind": "button",
+          "page": 9,
+          "usage": 10,
+          "control": "right-stick-click"
+        },
+        {
+          "kind": "axis",
+          "page": 1,
+          "usage": 48,
+          "control": "left-stick-x"
+        },
+        {
+          "kind": "axis",
+          "page": 1,
+          "usage": 49,
+          "control": "left-stick-y"
+        },
+        {
+          "kind": "axis",
+          "page": 1,
+          "usage": 50,
+          "control": "right-stick-x"
+        },
+        {
+          "kind": "axis",
+          "page": 1,
+          "usage": 51,
+          "control": "left-trigger"
+        },
+        {
+          "kind": "axis",
+          "page": 1,
+          "usage": 52,
+          "control": "right-trigger"
+        },
+        {
+          "kind": "axis",
+          "page": 1,
+          "usage": 53,
+          "control": "right-stick-y"
+        },
+        {
+          "kind": "hat",
+          "page": 1,
+          "usage": 57,
+          "control": "dpad"
+        },
+        {
+          "kind": "button",
+          "page": 1,
+          "usage": 133,
+          "control": "guide"
+        },
+        {
+          "kind": "button",
+          "page": 12,
+          "usage": 178,
+          "control": "share"
+        },
+        {
+          "kind": "button",
+          "page": 12,
+          "usage": 547,
+          "control": "guide"
+        },
+        {
+          "kind": "button",
+          "page": 12,
+          "usage": 548,
+          "control": "view"
+        }
+      ]
+    }
+  }
 }

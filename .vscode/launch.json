@@ -1,104 +1,104 @@
 {
-	"configurations": [
-		{
-			"type": "swift",
-			"request": "launch",
-			"args": [],
-			"cwd": "${workspaceFolder:OpenJoystickDriver}",
-			"name": "Debug OpenJoystickDriver",
-			"target": "OpenJoystickDriver",
-			"configuration": "debug",
-			"preLaunchTask": "swift: Build Debug OpenJoystickDriver"
-		},
-		{
-			"type": "swift",
-			"request": "launch",
-			"args": [],
-			"cwd": "${workspaceFolder:OpenJoystickDriver}",
-			"name": "Release OpenJoystickDriver",
-			"target": "OpenJoystickDriver",
-			"configuration": "release",
-			"preLaunchTask": "swift: Build Release OpenJoystickDriver"
-		},
-		{
-			"type": "swift",
-			"request": "launch",
-			"args": [],
-			"cwd": "${workspaceFolder:OpenJoystickDriver}",
-			"name": "Debug OpenJoystickDriverHIDTool",
-			"target": "OpenJoystickDriverHIDTool",
-			"configuration": "debug",
-			"preLaunchTask": "swift: Build Debug OpenJoystickDriverHIDTool"
-		},
-		{
-			"type": "swift",
-			"request": "launch",
-			"args": [],
-			"cwd": "${workspaceFolder:OpenJoystickDriver}",
-			"name": "Release OpenJoystickDriverHIDTool",
-			"target": "OpenJoystickDriverHIDTool",
-			"configuration": "release",
-			"preLaunchTask": "swift: Build Release OpenJoystickDriverHIDTool"
-		},
-		{
-			"type": "swift",
-			"request": "launch",
-			"args": [],
-			"cwd": "${workspaceFolder:OpenJoystickDriver}",
-			"name": "Debug OpenJoystickDriverGameControllerProbe",
-			"target": "OpenJoystickDriverGameControllerProbe",
-			"configuration": "debug",
-			"preLaunchTask": "swift: Build Debug OpenJoystickDriverGameControllerProbe"
-		},
-		{
-			"type": "swift",
-			"request": "launch",
-			"args": [],
-			"cwd": "${workspaceFolder:OpenJoystickDriver}",
-			"name": "Release OpenJoystickDriverGameControllerProbe",
-			"target": "OpenJoystickDriverGameControllerProbe",
-			"configuration": "release",
-			"preLaunchTask": "swift: Build Release OpenJoystickDriverGameControllerProbe"
-		},
-		{
-			"type": "swift",
-			"request": "launch",
-			"args": [],
-			"cwd": "${workspaceFolder:OpenJoystickDriver}",
-			"name": "Debug DriverKitGenerator",
-			"target": "DriverKitGenerator",
-			"configuration": "debug",
-			"preLaunchTask": "swift: Build Debug DriverKitGenerator"
-		},
-		{
-			"type": "swift",
-			"request": "launch",
-			"args": [],
-			"cwd": "${workspaceFolder:OpenJoystickDriver}",
-			"name": "Release DriverKitGenerator",
-			"target": "DriverKitGenerator",
-			"configuration": "release",
-			"preLaunchTask": "swift: Build Release DriverKitGenerator"
-		},
-		{
-			"type": "swift",
-			"request": "launch",
-			"args": [],
-			"cwd": "${workspaceFolder:OpenJoystickDriver}",
-			"name": "Debug ParserCompatibilityHarness",
-			"target": "ParserCompatibilityHarness",
-			"configuration": "debug",
-			"preLaunchTask": "swift: Build Debug ParserCompatibilityHarness"
-		},
-		{
-			"type": "swift",
-			"request": "launch",
-			"args": [],
-			"cwd": "${workspaceFolder:OpenJoystickDriver}",
-			"name": "Release ParserCompatibilityHarness",
-			"target": "ParserCompatibilityHarness",
-			"configuration": "release",
-			"preLaunchTask": "swift: Build Release ParserCompatibilityHarness"
-		}
-	]
+  "configurations": [
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:OpenJoystickDriver}",
+      "name": "Debug OpenJoystickDriver",
+      "target": "OpenJoystickDriver",
+      "configuration": "debug",
+      "preLaunchTask": "swift: Build Debug OpenJoystickDriver"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:OpenJoystickDriver}",
+      "name": "Release OpenJoystickDriver",
+      "target": "OpenJoystickDriver",
+      "configuration": "release",
+      "preLaunchTask": "swift: Build Release OpenJoystickDriver"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:OpenJoystickDriver}",
+      "name": "Debug OpenJoystickDriverHIDTool",
+      "target": "OpenJoystickDriverHIDTool",
+      "configuration": "debug",
+      "preLaunchTask": "swift: Build Debug OpenJoystickDriverHIDTool"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:OpenJoystickDriver}",
+      "name": "Release OpenJoystickDriverHIDTool",
+      "target": "OpenJoystickDriverHIDTool",
+      "configuration": "release",
+      "preLaunchTask": "swift: Build Release OpenJoystickDriverHIDTool"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:OpenJoystickDriver}",
+      "name": "Debug OpenJoystickDriverGameControllerProbe",
+      "target": "OpenJoystickDriverGameControllerProbe",
+      "configuration": "debug",
+      "preLaunchTask": "swift: Build Debug OpenJoystickDriverGameControllerProbe"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:OpenJoystickDriver}",
+      "name": "Release OpenJoystickDriverGameControllerProbe",
+      "target": "OpenJoystickDriverGameControllerProbe",
+      "configuration": "release",
+      "preLaunchTask": "swift: Build Release OpenJoystickDriverGameControllerProbe"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:OpenJoystickDriver}",
+      "name": "Debug DriverKitGenerator",
+      "target": "DriverKitGenerator",
+      "configuration": "debug",
+      "preLaunchTask": "swift: Build Debug DriverKitGenerator"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:OpenJoystickDriver}",
+      "name": "Release DriverKitGenerator",
+      "target": "DriverKitGenerator",
+      "configuration": "release",
+      "preLaunchTask": "swift: Build Release DriverKitGenerator"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:OpenJoystickDriver}",
+      "name": "Debug ParserCompatibilityHarness",
+      "target": "ParserCompatibilityHarness",
+      "configuration": "debug",
+      "preLaunchTask": "swift: Build Debug ParserCompatibilityHarness"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:OpenJoystickDriver}",
+      "name": "Release ParserCompatibilityHarness",
+      "target": "ParserCompatibilityHarness",
+      "configuration": "release",
+      "preLaunchTask": "swift: Build Release ParserCompatibilityHarness"
+    }
+  ]
 }

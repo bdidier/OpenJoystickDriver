@@ -1,12 +1,12 @@
 {
-	"apiVersion": "openjoystickdriver/v1alpha1",
-	"kind": "Controller",
-	"vendorID": 13623,
-	"productID": 4130,
-	"protocol": {
-		"family": "xbox.gip"
-	},
-	"capabilities": {
-		"rumble": "absent"
-	}
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "Controller",
+  "vendorID": 13623,
+  "productID": 4130,
+  "protocol": {
+    "family": "xbox.gip"
+  },
+  "capabilities": {
+    "rumble": "absent"
+  }
 }

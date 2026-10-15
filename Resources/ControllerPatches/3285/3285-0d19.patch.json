@@ -1,17 +1,17 @@
 {
-	"apiVersion": "openjoystickdriver/v1alpha1",
-	"kind": "ControllerPatch",
-	"selector": {
-		"vendorID": 12933,
-		"productID": 3353
-	},
-	"patch": {
-		"protocol": {
-			"family": "sony.dualsense",
-			"parameters": {
-				"maker": "ThirdParty",
-				"forcedVibration": true
-			}
-		}
-	}
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "ControllerPatch",
+  "selector": {
+    "vendorID": 12933,
+    "productID": 3353
+  },
+  "patch": {
+    "protocol": {
+      "family": "sony.dualsense",
+      "parameters": {
+        "maker": "ThirdParty",
+        "forcedVibration": true
+      }
+    }
+  }
 }
