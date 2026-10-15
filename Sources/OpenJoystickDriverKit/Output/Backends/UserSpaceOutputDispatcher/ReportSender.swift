@@ -7,7 +7,8 @@ import Foundation
 /// with ``Failure/superseded``. Every frame carries the complete controller state, so the newest
 /// frame still brings the virtual device up to date. A submission that is not a frame, such as a
 /// host output report, is never evicted: with no frame left to evict it fails with
-/// ``Failure/queueOverflow``.
+/// ``Failure/queueOverflow``, while a frame that finds only such submissions fails with
+/// ``Failure/superseded``.
 /// Closing revokes new submissions and detaches the backend before the active native send drains.
 final class UserSpaceReportSender: Sendable {
   enum Failure: Error, Equatable, LocalizedError, Sendable {
@@ -225,7 +226,9 @@ final class UserSpaceReportSender: Sendable {
       var superseded: SubmissionReceipt?
       if state.queue.count >= queueCapacity {
         guard let index = state.queue.firstIndex(where: \.isFrame) else {
-          return (.failure(Failure.queueOverflow), nil)
+          // The waiting host replies go first, so a frame that finds only replies is the
+          // older state and yields to the next frame.
+          return (.failure(isFrame ? Failure.superseded : Failure.queueOverflow), nil)
         }
         let evicted = state.queue.remove(at: index).completion
         state.pending.removeValue(forKey: ObjectIdentifier(evicted))

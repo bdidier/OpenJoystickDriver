@@ -40,6 +40,10 @@ struct ProtocolDescription: Sendable {
   /// The family's initialization sequence: writes sent when a HID controller starts.
   let startupWrites: [RecordStartupWrite]
   let inputLayout: ControllerInputLayout?
+  /// The map every `hid.descriptor` record layers over (``HIDUsageMap``).
+  let hidUsageMap: HIDUsageMap?
+  /// Descriptor shapes that select another map, first match first.
+  let hidUsageShapes: [HIDUsageShape]
   let tuning: ControllerTuning?
 
   /// The bundled descriptions, by family.
@@ -122,7 +126,9 @@ struct ProtocolDescription: Sendable {
       capabilities: document.defaults?.capabilities,
       rumbleTemplate: document.defaults?.output?.rumble,
       startupWrites: document.defaults?.output?.startup ?? [],
-      inputLayout: document.defaults?.input,
+      inputLayout: document.defaults?.input?.layout,
+      hidUsageMap: document.defaults?.input?.usageMap,
+      hidUsageShapes: document.defaults?.input?.shapes ?? [],
       tuning: document.defaults?.tuning
     )
     if let violation = description.scopeViolation {
@@ -135,6 +141,9 @@ struct ProtocolDescription: Sendable {
   private var scopeViolation: String? {
     if inputLayout != nil, !family.describesInputLayout {
       return "an input layout applies only to hid.report-layout and xbox.xid"
+    }
+    if hidUsageMap != nil || !hidUsageShapes.isEmpty, family != .hidDescriptor {
+      return "a HID usage map applies only to hid.descriptor"
     }
     if rumbleTemplate != nil, !family.encodesRumbleTemplate {
       return "rumble templates require a driver that encodes them"
@@ -183,7 +192,7 @@ struct ProtocolDescription: Sendable {
     struct Defaults: Decodable {
       let capabilities: ControllerCapabilityDelta?
       let output: ControllerRecordDocument.Output?
-      let input: ControllerInputLayout?
+      let input: ControllerRecordDocument.Input?
       let tuning: ControllerTuning?
 
       init(from decoder: any Decoder) throws {
@@ -199,10 +208,7 @@ struct ProtocolDescription: Sendable {
           for: "capabilities"
         )?.delta
         output = try container.decodeOptional(ControllerRecordDocument.Output.self, for: "output")
-        input = try container.decodeOptional(
-          ControllerRecordDocument.InputLayout.self,
-          for: "input"
-        )?.layout
+        input = try container.decodeOptional(ControllerRecordDocument.Input.self, for: "input")
         tuning = try container.decodeOptional(ControllerRecordDocument.Tuning.self, for: "tuning")?
           .tuning
       }

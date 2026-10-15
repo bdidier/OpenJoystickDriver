@@ -96,21 +96,6 @@ public struct ProtocolParameters: Codable, Equatable, Sendable {
     case shield2015 = "Shield2015"
   }
 
-  /// The usage layout of a `hid.descriptor` pad whose descriptor is not enough to choose it.
-  public enum UsageLayout: String, Codable, CaseIterable, Sendable {
-    /// Z/Rz right stick, Accelerator as LT and Brake as RT, and the WR007 button order.
-    case wr007 = "Wr007"
-    /// Input only from report 6, buttons 1-10, and Z/Rz swapped with Rx/Ry.
-    case scufEnvision = "ScufEnvision"
-    /// WR007's Z/Rz right stick and button order, with Brake as LT and a Home button. Records
-    /// name it for pads whose descriptor is not recorded; a descriptor of this shape selects it
-    /// anyway.
-    case zRzBrakeLeft = "ZRzBrakeLeft"
-    /// DragonRise generic USB PCB: Z/Rz right stick and DirectInput button order, where 1-4 are
-    /// Y, B, A, X and 7-8 are digital L2 and R2.
-    case dragonRise = "DragonRise"
-  }
-
   /// Who made a DualSense-protocol controller. `ThirdParty` is one that Sony did not make: the
   /// driver follows SDL's non-Sony path, probing for features. The other `sony.dualsense`
   /// fields describe a third-party DualSense and need this one.
@@ -129,7 +114,6 @@ public struct ProtocolParameters: Codable, Equatable, Sendable {
   public var role: Role?
   public var motionScale: MotionScale?
   public var reportRevision: ReportRevision?
-  public var usageLayout: UsageLayout?
   public var maker: Maker?
   /// Third-party DualSense with sensors though it does not answer the probe (SDL's Razer list).
   public var unprobedSensors: Bool?
@@ -153,7 +137,6 @@ public struct ProtocolParameters: Codable, Equatable, Sendable {
     role: Role? = nil,
     motionScale: MotionScale? = nil,
     reportRevision: ReportRevision? = nil,
-    usageLayout: UsageLayout? = nil,
     maker: Maker? = nil,
     unprobedSensors: Bool? = nil,
     unprobedTouchpad: Bool? = nil,
@@ -169,7 +152,6 @@ public struct ProtocolParameters: Codable, Equatable, Sendable {
     self.role = role
     self.motionScale = motionScale
     self.reportRevision = reportRevision
-    self.usageLayout = usageLayout
     self.maker = maker
     self.unprobedSensors = unprobedSensors
     self.unprobedTouchpad = unprobedTouchpad
@@ -179,7 +161,7 @@ public struct ProtocolParameters: Codable, Equatable, Sendable {
   /// Every parameter name a record may write.
   static let names: Set<String> = [
     "shareButton", "layout", "usbProtocol", "innerGrips", "lightingMemory", "hatSource",
-    "motionCalibration", "role", "motionScale", "reportRevision", "usageLayout", "maker",
+    "motionCalibration", "role", "motionScale", "reportRevision", "maker",
     "unprobedSensors", "unprobedTouchpad", "forcedVibration",
   ]
 
@@ -218,7 +200,6 @@ public struct ProtocolParameters: Codable, Equatable, Sendable {
     role = try container.decodeOptional(Role.self, for: "role")
     motionScale = try container.decodeOptional(MotionScale.self, for: "motionScale")
     reportRevision = try container.decodeOptional(ReportRevision.self, for: "reportRevision")
-    usageLayout = try container.decodeOptional(UsageLayout.self, for: "usageLayout")
     maker = try container.decodeOptional(Maker.self, for: "maker")
     unprobedSensors = try flag("unprobedSensors")
     unprobedTouchpad = try flag("unprobedTouchpad")
@@ -238,7 +219,6 @@ public struct ProtocolParameters: Codable, Equatable, Sendable {
     if let role { result.append("role=\(role.rawValue)") }
     if let motionScale { result.append("motionScale=\(motionScale.rawValue)") }
     if let reportRevision { result.append("reportRevision=\(reportRevision.rawValue)") }
-    if let usageLayout { result.append("usageLayout=\(usageLayout.rawValue)") }
     if let maker { result.append("maker=\(maker.rawValue)") }
     if unprobedSensors != nil { result.append("unprobedSensors=true") }
     if unprobedTouchpad != nil { result.append("unprobedTouchpad=true") }
@@ -264,7 +244,6 @@ public struct ProtocolParameters: Codable, Equatable, Sendable {
     if role != nil { result.insert("role") }
     if motionScale != nil { result.insert("motionScale") }
     if reportRevision != nil { result.insert("reportRevision") }
-    if usageLayout != nil { result.insert("usageLayout") }
     if maker != nil { result.insert("maker") }
     if unprobedSensors != nil { result.insert("unprobedSensors") }
     if unprobedTouchpad != nil { result.insert("unprobedTouchpad") }
@@ -321,7 +300,7 @@ public struct ProtocolParameters: Codable, Equatable, Sendable {
       "lightingMemory": lightingMemory?.rawValue, "hatSource": hatSource?.rawValue,
       "motionCalibration": motionCalibration?.rawValue, "role": role?.rawValue,
       "motionScale": motionScale?.rawValue, "reportRevision": reportRevision?.rawValue,
-      "usageLayout": usageLayout?.rawValue, "maker": maker?.rawValue,
+      "maker": maker?.rawValue,
     ]
     for (name, value) in enumValues.sorted(by: { $0.key < $1.key }) {
       guard let value, case .enumeration(let values)? = declared[name] else { continue }

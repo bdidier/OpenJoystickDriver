@@ -46,16 +46,6 @@ struct ControllerRecordDocumentTests {
   }
 
   @Test
-  func decodesHIDDescriptorUsageLayouts() throws {
-    for layout in ProtocolParameters.UsageLayout.allCases {
-      let document = try decode(
-        protocol: ["family": "hid.descriptor", "parameters": ["usageLayout": layout.rawValue]]
-      )
-      #expect(document.protocolInfo.parameters == ProtocolParameters(usageLayout: layout))
-    }
-  }
-
-  @Test
   func decodesThirdPartyDualSenseModelParameters() throws {
     let document = try decode(
       protocol: [
@@ -193,8 +183,7 @@ struct ControllerRecordDocumentTests {
       ["family": "sony.dualshock4", "parameters": ["role": "Receiver"]],
       ["family": "sony.dualshock4", "parameters": ["reportRevision": "Shield2015"]],
       ["family": "vendor.nvidia-shield", "parameters": ["motionCalibration": "Factory"]],
-      ["family": "hid.descriptor", "parameters": ["usageLayout": "Wr007", "layout": "Pro"]],
-      ["family": "hid.descriptor", "parameters": ["usageLayout": "WR007"]],
+      ["family": "hid.descriptor", "parameters": ["usageLayout": "Wr007"]],
       ["family": "hid.descriptor", "parameters": ["role": "WirelessAdapter"]],
       ["family": "sony.dualshock4", "parameters": ["usageLayout": "Wr007"]],
       ["family": "sony.dualsense", "parameters": ["role": "WirelessAdapter"]],
@@ -497,7 +486,6 @@ struct ControllerRecordDocumentTests {
     "role": ProtocolParameters.Role.allCases.map(\.rawValue),
     "motionScale": ProtocolParameters.MotionScale.allCases.map(\.rawValue),
     "reportRevision": ProtocolParameters.ReportRevision.allCases.map(\.rawValue),
-    "usageLayout": ProtocolParameters.UsageLayout.allCases.map(\.rawValue),
     "maker": ProtocolParameters.Maker.allCases.map(\.rawValue),
   ]
 

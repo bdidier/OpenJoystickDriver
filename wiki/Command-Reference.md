@@ -39,6 +39,7 @@ With `--json`, the output is one `SystemStatus` object with these keys:
 
 - `service`: `state` (`running` or `stopped`) and `version`.
 - `extension`: `bundle` (`present`, `missing`, or `invalid`) and `registration` (`active`, `inactive`, `absent`, or `unavailable`).
+- `commandLineTool`: the `ojd` link that the app installs. `state` is `installed` (a link to this app's executable), `linkedElsewhere` (a link to another existing file, such as another copy of the app), `broken` (a link whose target is gone), `blockedByFile` (a file or folder that is not a link; the app never replaces it), or `missing` (nothing at `path`). `path` is where the link goes, and `target` is what it points at, when it is a link.
 - `permissions`: `inputMonitoring` and `accessibility`.
 - `virtualDevice`: `enabled`, `status`, and `overrideError`.
 - `controllers`: each with `id`, `name`, `vendorID`, `productID`, and `connection`.
@@ -50,7 +51,7 @@ With `--json`, the output is one `SystemStatus` object with these keys:
 
 Keys that need the service are absent when it is stopped.
 
-With `--plain`, the first field of each line is `service`, `extension`, `permission`, `virtual-device`, `controller`, `unbound`, `pass-through`, `skipped-record`, `ignored-defaults`, or `skipped-persona`.
+With `--plain`, the first field of each line is `service`, `extension`, `command-line-tool`, `permission`, `virtual-device`, `controller`, `unbound`, `pass-through`, `skipped-record`, `ignored-defaults`, or `skipped-persona`.
 
 ## controller
 
@@ -292,7 +293,18 @@ ojd setting get KEY
 ojd setting set KEY true|false
 ```
 
-The keys are `launch-at-login`, `notification-sounds`, `include-prerelease-updates`, and `developer-tools`. `setting get` prints `true` or `false` alone. With `--json`, `setting list` prints a `SettingList` with `items`, each with `key`, `value`, and `description`, and `setting get` and `setting set` print a `Setting` with `key` and `value`.
+The keys are:
+
+- `launchAtLogin`: the macOS login item. `get` reads it from macOS, so it includes changes made in System Settings, and `set` registers or unregisters the item. A change made with `ojd setting` or in the app also records whether you opted out, so OJD does not register itself again at the next start. A change made only in System Settings records nothing.
+- `notify.controllerConnected`: notify when a controller connects or needs attention.
+- `notify.controllerDisconnected`: notify when a controller disconnects.
+- `notify.profileActivated`: notify when a profile is activated or switched.
+- `notify.profileDeactivated`: notify when the active profile is turned off.
+- `notify.sounds`: play a sound with notifications. It is on by default; every other key is off by default.
+- `updates.includePrereleases`: include prereleases when checking for updates.
+- `developerTools`: show the developer tools.
+
+Settings live in `Settings.json`. A setting your file at `~/Library/Application Support/OpenJoystickDriver/Settings.json` leaves out takes its built-in default. `setting set` writes that file. The first time a newer version starts and finds no file, the app copies the settings an older version kept in macOS preferences into it and removes the old preferences, so a login-item opt-out survives the upgrade. A file with an unsupported `apiVersion` is refused with `E5001`. `setting get` prints `true` or `false` alone. With `--json`, `setting list` prints a `SettingList` with `items`, each with `key`, `value`, and `description`, and `setting get` and `setting set` print a `Setting` with `key` and `value`.
 
 ## config
 

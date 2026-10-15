@@ -242,7 +242,7 @@ struct ReportSenderTests {
     await #expect(throws: UserSpaceReportSender.Failure.queueOverflow) {
       try await overflow.value()
     }
-    await #expect(throws: UserSpaceReportSender.Failure.queueOverflow) {
+    await #expect(throws: UserSpaceReportSender.Failure.superseded) {
       try await lateFrame.value()
     }
     #expect(sender.queuedCount == 2)

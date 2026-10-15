@@ -100,34 +100,6 @@ struct ProtocolParametersTests {
       entry: "reportRevision=Shield2015"
     ),
     Crosswalk(
-      quirk: "wr007",
-      family: .hidDescriptor,
-      json: #"{"usageLayout":"Wr007"}"#,
-      parameters: ProtocolParameters(usageLayout: .wr007),
-      entry: "usageLayout=Wr007"
-    ),
-    Crosswalk(
-      quirk: "scuf-envision",
-      family: .hidDescriptor,
-      json: #"{"usageLayout":"ScufEnvision"}"#,
-      parameters: ProtocolParameters(usageLayout: .scufEnvision),
-      entry: "usageLayout=ScufEnvision"
-    ),
-    Crosswalk(
-      quirk: "z-rz-brake-left",
-      family: .hidDescriptor,
-      json: #"{"usageLayout":"ZRzBrakeLeft"}"#,
-      parameters: ProtocolParameters(usageLayout: .zRzBrakeLeft),
-      entry: "usageLayout=ZRzBrakeLeft"
-    ),
-    Crosswalk(
-      quirk: "dragonrise",
-      family: .hidDescriptor,
-      json: #"{"usageLayout":"DragonRise"}"#,
-      parameters: ProtocolParameters(usageLayout: .dragonRise),
-      entry: "usageLayout=DragonRise"
-    ),
-    Crosswalk(
       quirk: "third-party",
       family: .sonyDualSense,
       json: #"{"maker":"ThirdParty"}"#,
@@ -168,7 +140,7 @@ struct ProtocolParametersTests {
   private static let removedQuirks: Set<String> = [
     "share-offset", "joy-con-left", "joy-con-right", "bluetooth-only", "gamecube", "inner-grips",
     "lighting-slots", "dpad-pressure", "factory-calibration", "wireless-adapter", "strikepad",
-    "shield-2015", "wr007", "scuf-envision", "z-rz-brake-left", "dragonrise", "third-party",
+    "shield-2015", "third-party",
     "unprobed-sensors", "unprobed-touchpad", "forced-vibration", "receiver",
   ]
 

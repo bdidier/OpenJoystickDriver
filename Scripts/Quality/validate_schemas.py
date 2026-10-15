@@ -13,6 +13,7 @@ from ..Catalog.schema_header import (
     SCHEMA_SUFFIX,
     schema_id,
 )
+from ..Catalog.validate_profiles import usage_map_problem
 from ..Command.execution import swift_command
 from .schema_compatibility import IncompatibleSchemaError
 from .schema_compatibility import check as check_compatibility
@@ -41,6 +42,9 @@ PROTOCOL_DESCRIPTIONS = ROOT / "Resources" / "Protocols"
 SAMPLE_PACKAGE = ROOT / "docs" / "sdk" / "sample"
 ACCESS_GRANT_FIXTURES = (
     ROOT / "Tests" / "RepositoryScripts" / "fixtures" / "access_grants.json",
+)
+SETTINGS_FIXTURES = (
+    ROOT / "Tests" / "RepositoryScripts" / "fixtures" / "settings.json",
 )
 # The schema of each kind of file in the sample mod package, by its folder. A `Controllers`
 # file is a `ControllerPatch` or a `Controller`, which its `kind` tells apart.
@@ -222,6 +226,25 @@ def validate_protocol_descriptions(
                 f"{protocol_description_code(error)}: {path.relative_to(ROOT)}{suffix}: "
                 f"{error.message}"
             ) from error
+        # JSON Schema cannot express unique usages or ordered axis ranges; the Swift decoder
+        # rejects both too.
+        defaults_input = (
+            document.get("defaults", {}).get("input", {})
+            if isinstance(document, dict)
+            else {}
+        )
+        usage_maps = {"defaults.input.hidUsageMap": defaults_input.get("hidUsageMap")}
+        for index, shape in enumerate(defaults_input.get("descriptorShapes", [])):
+            usage_maps[f"defaults.input.descriptorShapes.{index}.hidUsageMap"] = shape[
+                "hidUsageMap"
+            ]
+        for label, usage_map in usage_maps.items():
+            problem = None if usage_map is None else usage_map_problem(usage_map)
+            if problem is not None:
+                raise ValidationError(
+                    f"{INVALID_PROTOCOL_DESCRIPTION}: {path.relative_to(ROOT)} at "
+                    f"{label}: {problem}"
+                )
         # The app loads Resources/Protocols/<family>.json by family, so a renamed file would
         # otherwise fail only at launch.
         family = document.get("family") if isinstance(document, dict) else None
@@ -306,6 +329,9 @@ def main() -> int:
             registry,
             list(ACCESS_GRANT_FIXTURES),
         )
+        validate_documents(
+            documents["settings.schema.json"], registry, list(SETTINGS_FIXTURES)
+        )
         validate_live_support_report(documents["report.schema.json"], registry)
         compatibility = check_compatibility(ROOT, documents)
     except (
@@ -326,7 +352,8 @@ def main() -> int:
         f"{len(controller_records)} controller records, {len(authored)} authored controllers, "
         f"{len(patches)} built-in patches, "
         f"{len(protocols)} protocol descriptions, {len(samples)} sample mod files, "
-        f"{len(ACCESS_GRANT_FIXTURES)} access grant fixtures, the error code catalog, "
+        f"{len(ACCESS_GRANT_FIXTURES)} access grant fixtures, "
+        f"{len(SETTINGS_FIXTURES)} settings fixtures, the error code catalog, "
         "and one live support report."
     )
     print(compatibility)

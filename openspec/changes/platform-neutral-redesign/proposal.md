@@ -17,7 +17,7 @@ Live evidence from 2026-10-14 (macOS 27, SDL 3.4.18) also shows that the current
 - **BREAKING** The CLI vocabulary is OS-neutral (`system|ojd`, `input-read`, `transport-extension`, `publisher.kind`); macOS terms live under `platform`. The CLI follows clig.dev.
 - **BREAKING** The GUI is rebuilt as an AppKit shell (sidebar toggle plus area buttons; Settings window with pane buttons), following Apple HIG. Every CLI capability is reachable in the GUI; the menu bar is a subset of the GUI.
 - **BREAKING** Localization keys are re-keyed into namespaces, with positional specifiers, translator comments and a `crowdin.yml`.
-- New: a public SDK endpoint with a reference client, an `InputSource`/`OutputSink` streaming boundary with WebRTC as one transport, and consumer support for SDL, Wine/CrossOver and browsers.
+- New: a public SDK endpoint with a reference client, an `InputSource`/`OutputSink` streaming boundary, a WebRTC bridge program that is an endpoint client, and consumer support for SDL, Wine/CrossOver and browsers.
 - New: wiki, docs, release checks, and a hardware-check list for the maintainer.
 
 Out of scope: submitting the mapping to SDL_GameControllerDB or SDL upstream; enabling GitHub Pages; asking Apple for more `transport.usb` IDs; push, tag, notarize and publish. Each is the user's decision.
@@ -40,7 +40,7 @@ Out of scope: submitting the mapping to SDL_GameControllerDB or SDL upstream; en
 - `menu-bar`: main menu and status item.
 - `localization-keys`: key namespaces, specifiers, comments, Crowdin.
 - `sdk-endpoint`: public endpoint and reference client.
-- `input-streaming`: streaming boundary and WebRTC transport.
+- `input-streaming`: streaming boundary and the WebRTC bridge.
 
 ### Modified Capabilities
 

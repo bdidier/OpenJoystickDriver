@@ -72,6 +72,13 @@ public struct ControllerRecordDraft: Sendable {
       // A patch merges into the bundled protocol, so a changed family drops the old parameters.
       if ControllerRecordSet.bundled.records[model]?.family != family.rawValue {
         fields["protocol"] = ["family": family.rawValue, "parameters": NSNull()]
+        // The byte layout replaces the old record's usage map instead of merging into it.
+        if ControllerRecordSet.bundled.records[model]?.profile.hidUsageMap != nil,
+          var input = fields["input"] as? [String: Any]
+        {
+          input["hidUsageMap"] = NSNull()
+          fields["input"] = input
+        }
       }
       body = ControllerPatch.document(selector: .identity(model), body: fields)
     } else {

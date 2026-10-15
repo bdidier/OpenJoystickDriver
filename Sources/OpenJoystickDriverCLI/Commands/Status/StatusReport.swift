@@ -44,6 +44,19 @@ struct StatusReport: Encodable, Equatable {
     }
   }
 
+  /// The `ojd` link the app installs, reported without the service, like the extension.
+  struct CommandLineTool: Encodable, Equatable {
+    let state: CommandLineToolLinkStatus.State
+    let path: String
+    let target: String?
+
+    init(_ status: CommandLineToolLinkStatus) {
+      state = status.state
+      path = status.path
+      target = status.target
+    }
+  }
+
   struct Permissions: Encodable, Equatable {
     let inputMonitoring: PermissionManager.AccessState
     let accessibility: PermissionManager.AccessState
@@ -72,6 +85,7 @@ struct StatusReport: Encodable, Equatable {
 
   let service: Service
   let `extension`: Extension
+  let commandLineTool: CommandLineTool
   let permissions: Permissions?
   let virtualDevice: VirtualDevice?
   let controllers: [Controller]?
@@ -88,11 +102,13 @@ struct StatusReport: Encodable, Equatable {
   init(
     payload: ApplicationServiceStatusPayload?,
     extensionStatus: ExtensionStatus,
+    commandLineTool: CommandLineToolLinkStatus,
     skippedRecords: [SkippedRecord] = [],
     ignoredDefaults: SkippedRecord? = nil,
     skippedPersonas: [SkippedRecord] = []
   ) {
     self.extension = Extension(extensionStatus)
+    self.commandLineTool = CommandLineTool(commandLineTool)
     self.skippedRecords = skippedRecords
     self.ignoredDefaults = ignoredDefaults
     self.skippedPersonas = skippedPersonas

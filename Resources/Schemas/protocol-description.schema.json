@@ -1,7 +1,7 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
 	"$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/protocol-description.schema.json",
-	"$comment": "Each family's variants are PhysicalProtocolID.variants in Swift; a family with none has no interface signatures. The parameter names of each family are those its driver declares in ProtocolParameters. defaults holds the sections a record layers over, limited to what the family's driver reads: input applies to hid.report-layout and xbox.xid only, a rumble template to the drivers that encode one, startup writes and HID timings to HID families, liveness to sony.dualshock4 and startup recovery to nintendo.switch1.",
+	"$comment": "Each family's variants are PhysicalProtocolID.variants in Swift; a family with none has no interface signatures. The parameter names of each family are those its driver declares in ProtocolParameters. defaults holds the sections a record layers over, limited to what the family's driver reads: input applies to hid.report-layout and xbox.xid as a byte layout and to hid.descriptor as a HID usage map, a rumble template to the drivers that encode one, startup writes and HID timings to HID families, liveness to sony.dualshock4 and startup recovery to nintendo.switch1.",
 	"type": "object",
 	"additionalProperties": false,
 	"required": ["apiVersion", "kind", "family"],
@@ -47,14 +47,12 @@
 			"then": {
 				"properties": {
 					"interfaceSignatures": false,
-					"parameters": {
-						"propertyNames": {
-							"enum": ["usageLayout"]
-						}
-					},
+					"parameters": false,
 					"defaults": {
 						"properties": {
-							"input": false,
+							"input": {
+								"$ref": "#/$defs/hidDescriptorInput"
+							},
 							"output": {
 								"properties": {
 									"rumble": false
@@ -87,6 +85,9 @@
 					"parameters": false,
 					"defaults": {
 						"properties": {
+							"input": {
+								"$ref": "controller.schema.json#/$defs/input"
+							},
 							"tuning": {
 								"properties": {
 									"inputLivenessTimeoutMs": false,
@@ -122,6 +123,9 @@
 					"parameters": false,
 					"defaults": {
 						"properties": {
+							"input": {
+								"$ref": "controller.schema.json#/$defs/input"
+							},
 							"output": {
 								"properties": {
 									"rumble": false,
@@ -862,10 +866,72 @@
 					"$ref": "controller.schema.json#/$defs/output"
 				},
 				"input": {
-					"$ref": "controller.schema.json#/$defs/input"
+					"anyOf": [
+						{
+							"$ref": "controller.schema.json#/$defs/input"
+						},
+						{
+							"$ref": "#/$defs/hidDescriptorInput"
+						}
+					]
 				},
 				"tuning": {
 					"$ref": "controller.schema.json#/$defs/tuning"
+				}
+			}
+		},
+		"hidDescriptorInput": {
+			"$comment": "hid.descriptor's input defaults: hidUsageMap is the map every record layers over, and descriptorShapes picks another map for a controller whose report descriptor has a shape. The first shape whose usages are all present, none of absent present, and at least one of anyOf present (when listed) applies.",
+			"type": "object",
+			"additionalProperties": false,
+			"minProperties": 1,
+			"properties": {
+				"hidUsageMap": {
+					"$ref": "controller.schema.json#/$defs/hidUsageMap"
+				},
+				"descriptorShapes": {
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/descriptorShape"
+					}
+				}
+			}
+		},
+		"descriptorShape": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["present", "hidUsageMap"],
+			"properties": {
+				"present": {
+					"$ref": "#/$defs/usageList"
+				},
+				"absent": {
+					"$ref": "#/$defs/usageList"
+				},
+				"anyOf": {
+					"$ref": "#/$defs/usageList"
+				},
+				"hidUsageMap": {
+					"$ref": "controller.schema.json#/$defs/hidUsageMap"
+				}
+			}
+		},
+		"usageList": {
+			"type": "array",
+			"minItems": 1,
+			"uniqueItems": true,
+			"items": {
+				"type": "object",
+				"additionalProperties": false,
+				"required": ["page", "usage"],
+				"properties": {
+					"page": {
+						"$ref": "controller.schema.json#/$defs/hidUsagePage"
+					},
+					"usage": {
+						"$ref": "controller.schema.json#/$defs/hidUsageID"
+					}
 				}
 			}
 		}

@@ -2861,10 +2861,14 @@
 		},
 		"sharedSettingKey": {
 			"enum": [
-				"launch-at-login",
-				"notification-sounds",
-				"include-prerelease-updates",
-				"developer-tools"
+				"launchAtLogin",
+				"notify.controllerConnected",
+				"notify.controllerDisconnected",
+				"notify.profileActivated",
+				"notify.profileDeactivated",
+				"notify.sounds",
+				"updates.includePrereleases",
+				"developerTools"
 			]
 		},
 		"sharedSkippedRecord": {
@@ -3109,6 +3113,7 @@
 			"required": [
 				"apiVersion",
 				"kind",
+				"commandLineTool",
 				"extension",
 				"service",
 				"skippedRecords"
@@ -3120,6 +3125,23 @@
 				},
 				"kind": {
 					"const": "SystemStatus"
+				},
+				"commandLineTool": {
+					"description": "The ojd link the app installs: installed when it points to this app's executable, linkedElsewhere when it points to another existing file such as another app copy, broken when its target does not exist, blockedByFile when the path is a file or folder that is not a link, and missing when nothing is at the path. target is what the link points to and appears only for a link.",
+					"type": "object",
+					"required": ["path", "state"],
+					"additionalProperties": false,
+					"properties": {
+						"path": {
+							"type": "string"
+						},
+						"state": {
+							"enum": ["installed", "linkedElsewhere", "broken", "blockedByFile", "missing"]
+						},
+						"target": {
+							"type": "string"
+						}
+					}
 				},
 				"controllers": {
 					"type": "array",

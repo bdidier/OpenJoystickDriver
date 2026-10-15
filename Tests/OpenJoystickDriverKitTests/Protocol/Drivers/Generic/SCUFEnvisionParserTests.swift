@@ -1,4 +1,4 @@
-import OpenJoystickDriverKit
+@testable import OpenJoystickDriverKit
 import Testing
 
 struct SCUFEnvisionParserTests {
@@ -9,16 +9,16 @@ struct SCUFEnvisionParserTests {
     parser.parse(elementValue: elementValue, receivedAt: MonotonicTimestamp(nanoseconds: 0))
   }
 
-  private func parser() -> HIDDescriptorDriver {
+  private func parser() throws -> HIDDescriptorDriver {
     HIDDescriptorDriver(
       model: ControllerModelID(vendorID: 0x2E95, productID: 0x434D),
-      usageLayout: .scufEnvision
+      usageMap: try catalogUsageMap(0x2E95, 0x434D)
     )
   }
 
   @Test
-  func mapsConfirmedButtonsAndRejectsUnverifiedButtons() {
-    let parser = parser()
+  func mapsConfirmedButtonsAndRejectsUnverifiedButtons() throws {
+    let parser = try parser()
     let buttons: [ControlID] = [
       .faceSouth, .faceEast, .faceWest, .faceNorth, .leftShoulder, .rightShoulder, .view, .menu,
       .leftStickClick, .rightStickClick,
@@ -39,8 +39,8 @@ struct SCUFEnvisionParserTests {
   }
 
   @Test
-  func acceptsOnlyReportSix() {
-    let parser = parser()
+  func acceptsOnlyReportSix() throws {
+    let parser = try parser()
     for reportID: UInt32? in [nil, 0, 1, 7, 256] {
       #expect(parse(parser, value(page: 9, usage: 1, integer: 1, reportID: reportID)) == nil)
     }
@@ -50,8 +50,8 @@ struct SCUFEnvisionParserTests {
   }
 
   @Test
-  func mapsSignedSticksAndIndependentTriggers() {
-    let parser = parser()
+  func mapsSignedSticksAndIndependentTriggers() throws {
+    let parser = try parser()
     #expect(parse(parser, value(usage: 0x30, integer: 32_767)).contains(.leftStick(x: 1, y: 0)))
     #expect(parse(parser, value(usage: 0x31, integer: -32_768)).contains(.leftStick(x: 1, y: -1)))
     #expect(parse(parser, value(usage: 0x32, integer: -32_768)).contains(.rightStick(x: -1, y: 0)))
@@ -69,8 +69,8 @@ struct SCUFEnvisionParserTests {
   }
 
   @Test
-  func mapsHatDiagonalsAndNeutral() {
-    let parser = parser()
+  func mapsHatDiagonalsAndNeutral() throws {
+    let parser = try parser()
     let directions: [HatDirection] = [
       .north, .northEast, .east, .southEast, .south, .southWest, .west, .northWest, .neutral,
     ]

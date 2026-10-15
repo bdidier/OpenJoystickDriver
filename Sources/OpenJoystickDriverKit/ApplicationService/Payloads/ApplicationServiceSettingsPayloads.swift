@@ -1,24 +1,19 @@
 import Foundation
 
-/// An app setting the service can read and apply; each raw value is the stable kebab-case name.
+/// An app setting the service can read and apply; each raw value is the stable key that
+/// `ojd setting` takes and that names the setting in `Settings.json`.
 public enum ApplicationSettingKey: String, Codable, CaseIterable, Sendable {
-  case launchAtLogin = "launch-at-login"
-  case notificationSounds = "notification-sounds"
-  case includePrereleaseUpdates = "include-prerelease-updates"
-  case developerTools = "developer-tools"
+  case launchAtLogin
+  case notifyControllerConnected = "notify.controllerConnected"
+  case notifyControllerDisconnected = "notify.controllerDisconnected"
+  case notifyProfileActivated = "notify.profileActivated"
+  case notifyProfileDeactivated = "notify.profileDeactivated"
+  case notifySounds = "notify.sounds"
+  case updatesIncludePrereleases = "updates.includePrereleases"
+  case developerTools
 
-  /// The `UserDefaults` key that stores the setting, or nil when macOS stores it.
-  public var defaultsKey: String? {
-    switch self {
-    case .launchAtLogin: nil
-    case .notificationSounds: "OpenJoystickDriver.notifications.sounds"
-    case .includePrereleaseUpdates: "OpenJoystickDriver.updates.includePrereleases"
-    case .developerTools: "OpenJoystickDriver.developerTools.enabled"
-    }
-  }
-
-  /// The value while nothing has stored one.
-  public var defaultValue: Bool { self == .notificationSounds }
+  /// The value while no settings file stores one: true for `notify.sounds`, false otherwise.
+  public var defaultValue: Bool { self == .notifySounds }
 }
 
 /// One app setting and its current value.

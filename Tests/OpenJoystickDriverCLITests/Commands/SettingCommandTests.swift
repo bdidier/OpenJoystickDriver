@@ -68,12 +68,12 @@ struct SettingCommandTests {
     #expect(json.code == 0, "\(json.standardError)")
     let settings = try #require(try json.json()["items"] as? [[String: Any]])
     #expect(settings.count == ApplicationSettingKey.allCases.count)
-    let login = try #require(settings.first { $0["key"] as? String == "launch-at-login" })
+    let login = try #require(settings.first { $0["key"] as? String == "launchAtLogin" })
     #expect(login["value"] as? Bool == true)
     #expect(login["description"] is String)
-    #expect(plain.standardOutput.contains("launch-at-login\ttrue\n"))
+    #expect(plain.standardOutput.contains("launchAtLogin\ttrue\n"))
     #expect(human.code == 0)
-    #expect(human.standardOutput.contains("launch-at-login"))
+    #expect(human.standardOutput.contains("launchAtLogin"))
     #expect(human.standardError.isEmpty)
   }
 
@@ -83,12 +83,12 @@ struct SettingCommandTests {
     let server = try serve(settings: [.developerTools: true], socketPath: socketPath)
     defer { server.stop() }
 
-    let human = await run(["setting", "get", "developer-tools"], socketPath: socketPath)
-    let json = await run(["setting", "get", "developer-tools", "--json"], socketPath: socketPath)
+    let human = await run(["setting", "get", "developerTools"], socketPath: socketPath)
+    let json = await run(["setting", "get", "developerTools", "--json"], socketPath: socketPath)
 
     #expect(human.code == 0)
     #expect(human.standardOutput == "true\n")
-    #expect(try json.json()["key"] as? String == "developer-tools")
+    #expect(try json.json()["key"] as? String == "developerTools")
     #expect(try json.json()["value"] as? Bool == true)
   }
 
@@ -99,12 +99,12 @@ struct SettingCommandTests {
     let server = try serve(socketPath: socketPath, received: received)
     defer { server.stop() }
 
-    let result = await run(["setting", "set", "launch-at-login", "true"], socketPath: socketPath)
-    let after = await run(["setting", "get", "launch-at-login"], socketPath: socketPath)
+    let result = await run(["setting", "set", "launchAtLogin", "true"], socketPath: socketPath)
+    let after = await run(["setting", "get", "launchAtLogin"], socketPath: socketPath)
 
     #expect(result.code == 0, "\(result.standardError)")
     #expect(result.standardOutput.isEmpty)
-    #expect(result.standardError.contains("launch-at-login"))
+    #expect(result.standardError.contains("launchAtLogin"))
     #expect(after.standardOutput == "true\n")
     #expect(received.withLock { $0.contains(ApplicationServiceRPCMethod.setSetting.rawValue) })
   }
@@ -116,12 +116,12 @@ struct SettingCommandTests {
     defer { server.stop() }
 
     let result = await run(
-      ["setting", "set", "notification-sounds", "false", "--json"],
+      ["setting", "set", "notify.sounds", "false", "--json"],
       socketPath: socketPath
     )
 
     #expect(result.code == 0, "\(result.standardError)")
-    #expect(try result.json()["key"] as? String == "notification-sounds")
+    #expect(try result.json()["key"] as? String == "notify.sounds")
     #expect(try result.json()["value"] as? Bool == false)
   }
 
@@ -131,7 +131,7 @@ struct SettingCommandTests {
     let server = try serve(refused: [.launchAtLogin], socketPath: socketPath)
     defer { server.stop() }
 
-    let result = await run(["setting", "set", "launch-at-login", "true"], socketPath: socketPath)
+    let result = await run(["setting", "set", "launchAtLogin", "true"], socketPath: socketPath)
 
     #expect(result.code == 1)
     #expect(result.standardOutput.isEmpty)
@@ -140,7 +140,7 @@ struct SettingCommandTests {
 
   @Test(arguments: [
     ["setting", "get", "no-such-key"], ["setting", "set", "no-such-key", "true"],
-    ["setting", "set", "launch-at-login", "yes"], ["setting", "set", "launch-at-login"],
+    ["setting", "set", "launchAtLogin", "yes"], ["setting", "set", "launchAtLogin"],
   ])
   func badKeysAndValuesExitSixtyFourBeforeAnyRequest(arguments: [String]) async throws {
     let socketPath = temporarySocketPath()
@@ -156,7 +156,7 @@ struct SettingCommandTests {
     #expect(received.withLock { $0.isEmpty })
   }
 
-  @Test(arguments: [["setting", "list"], ["setting", "get", "launch-at-login"]])
+  @Test(arguments: [["setting", "list"], ["setting", "get", "launchAtLogin"]])
   func serviceDownExitsSixtyNine(arguments: [String]) async {
     let result = await run(arguments, socketPath: temporarySocketPath())
 

@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -117,9 +118,7 @@ struct LocalRPCBridgeTests {
     )
     try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
     defer { try? FileManager.default.removeItem(at: directory) }
-    let suiteName = "OpenJoystickDriverTests.LocalRPCBridge.\(UUID().uuidString)"
-    let defaults = try #require(UserDefaults(suiteName: suiteName))
-    defer { defaults.removePersistentDomain(forName: suiteName) }
+    let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     let dispatcher = VirtualOutputRouter()
     let library = RemappingProfileLibrary(directory: directory)
     let postEventAccess = CoreGraphicsPostEventAccess()
@@ -140,7 +139,7 @@ struct LocalRPCBridgeTests {
       userSpaceDispatcherFactory: ApplicationServiceRuntime.makeAutomaticUserSpaceDispatcher(
         context:
       ),
-      defaults: defaults,
+      settings: settings,
       personaDirectory: directory.appendingPathComponent("Personas", isDirectory: true)
     )
     try await body(server)

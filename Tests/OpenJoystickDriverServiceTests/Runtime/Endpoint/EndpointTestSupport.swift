@@ -111,7 +111,8 @@ final class EndpointTestClient: @unchecked Sendable {
       return status == 0 ? nil : errno
     }
     if let error {
-      close(descriptor)
+      // `deinit` closes the descriptor; closing it here too could close a descriptor that
+      // another test has reused.
       throw POSIXError(POSIXErrorCode(rawValue: error) ?? .EIO)
     }
     var noSignal: Int32 = 1
@@ -209,7 +210,8 @@ final class EndpointWebTestClient: @unchecked Sendable {
       return status == 0 ? nil : errno
     }
     if let error {
-      close(descriptor)
+      // `deinit` closes the descriptor; closing it here too could close a descriptor that
+      // another test has reused.
       throw POSIXError(POSIXErrorCode(rawValue: error) ?? .EIO)
     }
     var noSignal: Int32 = 1

@@ -9,19 +9,33 @@ Input SHALL flow through an `InputSource` that produces canonical frames and an 
 - **WHEN** a transport is added
 - **THEN** it implements `InputSource` or `OutputSink` and no other part of the pipeline changes
 
-### Requirement: WebRTC transport
+### Requirement: WebRTC bridge
 
-OJD SHALL provide WebRTC as one transport, using the endpoint `Subscription` flow for signalling, carrying canonical frames and returning rumble. The transport SHALL be off until the user enables it with a setting.
+OJD SHALL ship WebRTC as a separate program, the WebRTC bridge, that is a client of the SDK endpoint. The app, the service and `ojd` SHALL NOT link WebRTC code. Endpoint grants SHALL govern the bridge like any other client.
+
+#### Scenario: Core without WebRTC
+
+- **WHEN** the app, the service and `ojd` are built
+- **THEN** none of them links a WebRTC library
+
+#### Scenario: Not granted
+
+- **WHEN** the bridge has no grant
+- **THEN** the endpoint refuses it with `E1002` and no virtual gamepad appears
+
+### Requirement: Bridge roles
+
+On the Mac that runs the game, the bridge SHALL take canonical frames from a remote peer over a WebRTC data channel, drive a virtual gamepad with a `FeedRequest`, and send each `RumbleCommand` back to the peer. On the player's Mac, it SHALL read a controller with a `Subscription` and send its frames to the peer. It SHALL exchange the offer and answer out of band and SHALL NOT open a listening socket.
 
 #### Scenario: Remote play
 
-- **WHEN** a remote peer connects after the user enables the transport and grants access
-- **THEN** the peer receives frames and can send rumble
+- **WHEN** the user grants the bridge the `control` scope and a remote peer connects
+- **THEN** the game receives the peer's input and the peer receives rumble
 
-#### Scenario: Disabled
+#### Scenario: No listener
 
-- **WHEN** the setting is off
-- **THEN** no listening socket is open for the transport
+- **WHEN** the bridge runs
+- **THEN** a socket scan shows no listening socket owned by it
 
 ### Requirement: Queue policy
 

@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import io
 import json
-import re
-import runpy
+import os
 import socket
+import struct
 import tempfile
 import threading
 import unittest
@@ -14,29 +14,23 @@ from typing import Any
 from unittest.mock import patch
 
 from Scripts.Quality import validate_schemas
+from Scripts.SDK import reference_client
 
-ROOT = Path(__file__).resolve().parents[2]
-PAGE = ROOT / "wiki" / "Automating-OpenJoystickDriver.md"
-HEADING = "### Drive a Virtual Gamepad Through the Endpoint"
 VECTOR = Path(__file__).resolve().parent / "fixtures" / "endpoint_hello_proof.json"
-
-
-def client_source() -> str:
-    """The first Python block after HEADING in the wiki page."""
-    text = PAGE.read_text(encoding="utf-8")
-    section = text[text.index(HEADING) :]
-    match = re.search(r"^```python\n(.*?)^```$", section, re.MULTILINE | re.DOTALL)
-    if match is None:
-        raise AssertionError(f"{PAGE.name} has no Python block after {HEADING}")
-    return match.group(1)
 
 
 class EndpointReferenceClientTests(unittest.TestCase):
     def setUp(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
-            path = Path(directory) / "driver.py"
-            path.write_text(client_source(), encoding="utf-8")
-            self.client = runpy.run_path(str(path), run_name="reference_client")
+        vector = json.loads(VECTOR.read_text(encoding="utf-8"))
+        self.client = {
+            "API_VERSION": reference_client.API_VERSION,
+            "FRAMES": reference_client.FRAMES,
+            "proof": reference_client.proof,
+            "play_seconds": reference_client.play_seconds,
+            "hello": lambda nonce: reference_client.hello(
+                nonce, vector["token"], "driver", "control"
+            ),
+        }
         documents = validate_schemas.validate_schema_documents()
         registry = validate_schemas.schema_registry(documents)
         endpoint = documents["endpoint.schema.json"]["$id"]
@@ -48,6 +42,10 @@ class EndpointReferenceClientTests(unittest.TestCase):
 
         self.client_lines = validator("clientLine")
         self.service_lines = validator("serviceLine")
+
+    def client_environment(self) -> Any:
+        token = json.loads(VECTOR.read_text(encoding="utf-8"))["token"]
+        return patch.dict(os.environ, {"OJD_TOKEN": token})
 
     def envelope(self, kind: str, **fields: Any) -> dict[str, Any]:
         return {"apiVersion": self.client["API_VERSION"], "kind": kind, **fields}
@@ -163,13 +161,9 @@ class EndpointReferenceClientTests(unittest.TestCase):
 
                 server = threading.Thread(target=serve, daemon=True)
                 server.start()
-                status = json.dumps({"socketPath": path})
                 output = io.StringIO()
-                with (
-                    patch("subprocess.check_output", return_value=status),
-                    redirect_stdout(output),
-                ):
-                    self.client["main"]()
+                with self.client_environment(), redirect_stdout(output):
+                    reference_client.main(["--socket", path, "feed"])
                 server.join(timeout=5)
 
         self.assertFalse(server.is_alive())
@@ -181,8 +175,8 @@ class EndpointReferenceClientTests(unittest.TestCase):
         self.assertEqual(json.loads(output.getvalue()), rumble)
 
     def run_until_feeding(self, after_feeding: Any) -> SystemExit:
-        """Runs the client against a fake endpoint that calls `after_feeding(send)` once the
-        client sent `feed`; returns the client's exit."""
+        """Runs the client against a fake endpoint that calls `after_feeding(send, reset)` once
+        the client sent `feed`; returns the client's exit."""
         nonce = json.loads(VECTOR.read_text(encoding="utf-8"))["nonce"]
         with tempfile.TemporaryDirectory(dir="/tmp") as directory:
             path = str(Path(directory) / "endpoint.sock")
@@ -204,17 +198,26 @@ class EndpointReferenceClientTests(unittest.TestCase):
                         send(self.envelope("Welcome", version="test", scopes=[]))
                         lines.readline()
                         send(self.envelope("FeedSession", **{"as": "Generic"}))
-                        after_feeding(send)
+
+                        def reset() -> None:
+                            # A zero linger makes close() send a reset, not an end of file.
+                            connection.setsockopt(
+                                socket.SOL_SOCKET,
+                                socket.SO_LINGER,
+                                struct.pack("ii", 1, 0),
+                            )
+                            connection.close()
+
+                        after_feeding(send, reset)
 
                 server = threading.Thread(target=serve, daemon=True)
                 server.start()
-                status = json.dumps({"socketPath": path})
                 with (
-                    patch("subprocess.check_output", return_value=status),
+                    self.client_environment(),
                     redirect_stdout(io.StringIO()),
                     self.assertRaises(SystemExit) as exit_info,
                 ):
-                    self.client["main"]()
+                    reference_client.main(["--socket", path, "feed"])
                 server.join(timeout=5)
         return exit_info.exception
 
@@ -225,7 +228,7 @@ class EndpointReferenceClientTests(unittest.TestCase):
             code="E1009",
             message="The virtual gamepad closed.",
         )
-        exit_info = self.run_until_feeding(lambda send: send(error))
+        exit_info = self.run_until_feeding(lambda send, _reset: send(error))
 
         self.assertIn("E1009", str(exit_info.code))
         self.assertNotIn(exit_info.code, (0, None))
@@ -233,9 +236,115 @@ class EndpointReferenceClientTests(unittest.TestCase):
     def test_client_exits_when_the_endpoint_closes_before_the_release_has_played(
         self,
     ) -> None:
-        exit_info = self.run_until_feeding(lambda send: None)
+        exit_info = self.run_until_feeding(lambda _send, _reset: None)
 
         self.assertIn("closed the connection", str(exit_info.code))
+
+    def test_client_exits_when_the_connection_is_reset_mid_stream(self) -> None:
+        exit_info = self.run_until_feeding(lambda _send, reset: reset())
+
+        self.assertNotIn(exit_info.code, (0, None))
+        self.assertIsInstance(exit_info.code, str)
+
+    def test_client_exits_cleanly_when_the_endpoint_refuses_the_connection(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory(dir="/tmp") as directory:
+            path = str(Path(directory) / "missing.sock")
+            for command in (["feed"], ["watch"]):
+                with (
+                    self.subTest(command=command),
+                    self.client_environment(),
+                    self.assertRaises(SystemExit) as exit_info,
+                ):
+                    reference_client.main(["--socket", path, *command])
+                self.assertIn("failed", str(exit_info.exception.code))
+
+    def test_watch_times_out_when_no_line_arrives(self) -> None:
+        nonce = json.loads(VECTOR.read_text(encoding="utf-8"))["nonce"]
+        with tempfile.TemporaryDirectory(dir="/tmp") as directory:
+            path = str(Path(directory) / "endpoint.sock")
+            with socket.socket(socket.AF_UNIX) as listener:
+                listener.bind(path)
+                listener.listen(1)
+                listener.settimeout(5)
+                done = threading.Event()
+
+                def serve() -> None:
+                    connection, _ = listener.accept()
+                    with connection, connection.makefile("rw") as lines:
+                        lines.write(
+                            json.dumps(self.envelope("Challenge", nonce=nonce)) + "\n"
+                        )
+                        lines.flush()
+                        lines.readline()
+                        welcome = self.envelope("Welcome", version="test", scopes=[])
+                        lines.write(json.dumps(welcome) + "\n")
+                        lines.flush()
+                        lines.readline()
+                        done.wait(5)  # No controller: no watch line follows.
+
+                server = threading.Thread(target=serve, daemon=True)
+                server.start()
+                with (
+                    self.client_environment(),
+                    redirect_stdout(io.StringIO()),
+                    self.assertRaises(SystemExit) as exit_info,
+                ):
+                    reference_client.main(
+                        ["--socket", path, "watch", "--timeout", "0.3"]
+                    )
+                done.set()
+                server.join(timeout=5)
+
+        self.assertIn("within 0.3 seconds", str(exit_info.exception.code))
+
+    def test_client_reports_the_supported_versions_on_a_header_error(self) -> None:
+        for code in ("E1010", "E1011", "E1012"):
+            error = self.envelope(
+                "Status",
+                status="Failure",
+                code=code,
+                message="Refused.",
+                details={"supportedAPIVersions": ["openjoystickdriver/v1alpha1"]},
+            )
+            with self.subTest(code=code):
+                exit_info = self.run_until_feeding(
+                    lambda send, _reset, error=error: send(error)
+                )
+
+                self.assertIn(code, str(exit_info.code))
+                self.assertIn("openjoystickdriver/v1alpha1", str(exit_info.code))
+                self.assertIn("Supported apiVersion values", str(exit_info.code))
+
+    def test_client_refuses_a_line_with_another_api_version(self) -> None:
+        old = {"apiVersion": "openjoystickdriver.io/v1beta1", "kind": "Challenge"}
+        with self.assertRaises(SystemExit) as exit_info:
+            reference_client.parse_line(json.dumps(old))
+
+        self.assertIn("openjoystickdriver.io/v1beta1", str(exit_info.exception.code))
+        self.assertIn(reference_client.API_VERSION, str(exit_info.exception.code))
+
+    def test_client_checks_the_header_of_a_watch_lines_object(self) -> None:
+        controller = {"id": "pad-1", "name": "Test Pad"}
+        watch = {"type": "ADDED", "object": self.envelope("Controller", **controller)}
+        self.assertEqual(reference_client.parse_line(json.dumps(watch)), watch)
+
+        old = {
+            "type": "ADDED",
+            "object": {"apiVersion": "other/v1", "kind": "Controller"},
+        }
+        with self.assertRaises(SystemExit) as exit_info:
+            reference_client.parse_line(json.dumps(old))
+        self.assertIn("other/v1", str(exit_info.exception.code))
+
+    def test_client_refuses_to_run_without_a_token(self) -> None:
+        with (
+            patch.dict(os.environ, {}, clear=True),
+            self.assertRaises(SystemExit) as exit_info,
+        ):
+            reference_client.main(["--socket", "/tmp/none.sock", "watch"])
+        self.assertIn("OJD_TOKEN", str(exit_info.exception.code))
 
     def test_client_stays_connected_until_the_last_frame_has_played(self) -> None:
         # The 100 ms press, then the release for the 8 ms minimum.
