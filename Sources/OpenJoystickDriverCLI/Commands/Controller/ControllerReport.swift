@@ -172,8 +172,8 @@ struct ControllerShowReport: Encodable, Equatable {
         physical: device.physicalOwnership.rawValue,
         hidInput: device.hidInputOwnership.rawValue,
         duplicateExposureRisk: device.duplicateExposureRisk.rawValue,
-        choice: OwnershipChoice(record?.ownership ?? .macOS),
-        choiceSource: record?.fieldLayers["ownership"]?.rawValue ?? "default"
+        choice: OwnershipChoice(record?.server ?? .system),
+        choiceSource: record?.fieldLayers["server"]?.rawValue ?? "default"
       ),
       parameters: device.parameters,
       record: record.map(Record.init),

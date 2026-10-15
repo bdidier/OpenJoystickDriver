@@ -62,7 +62,7 @@ actor GatewayStub: ApplicationServiceGateway {
   var statusCallWaiters: [(count: Int, continuation: CheckedContinuation<Void, Never>)] = []
   var remappingSnapshotCallCount = 0
   var overrideRequests: [(profile: VirtualHIDProfileID?, selector: ControllerReference)] = []
-  var ownershipRequests: [(model: ControllerModelID, ownership: ControllerOwnership)] = []
+  var ownershipRequests: [(model: ControllerModelID, ownership: ControllerServer)] = []
   var ownershipFailure: (failure: ControllerOwnershipFailure, detail: String?)?
   var overrideRequestsAreGated = false
   var overrideContinuations: [CheckedContinuation<Void, Never>] = []
@@ -337,12 +337,12 @@ actor GatewayStub: ApplicationServiceGateway {
 
   func setControllerOwnership(
     model: ControllerModelID,
-    ownership: ControllerOwnership
+    ownership: ControllerServer
   ) throws -> ControllerOwnershipResult {
     ownershipRequests.append((model, ownership))
     return ControllerOwnershipResult(
       ownership: ownership,
-      previous: .macOS,
+      previous: .system,
       file: nil,
       created: false,
       failure: ownershipFailure?.failure,

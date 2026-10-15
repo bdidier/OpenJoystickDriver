@@ -43,9 +43,9 @@ extension EquivalenceSnapshotCatalogTests {
     }
   }
 
-  static func label(_ ownership: ControllerOwnership) -> String {
+  static func label(_ ownership: ControllerServer) -> String {
     switch ownership {
-    case .macOS: "macos"
+    case .system: "macos"
     case .ojd: "ojd"
     }
   }

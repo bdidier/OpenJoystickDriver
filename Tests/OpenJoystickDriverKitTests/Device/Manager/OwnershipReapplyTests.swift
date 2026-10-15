@@ -144,7 +144,7 @@ struct OwnershipReapplyTests {
     try JSONSerialization.data(withJSONObject: [
       "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
       "operation": "patch",
-      "vendorID": 0x3537, "productID": 0x100B, "set": ["ownership": "ojd"],
+      "vendorID": 0x3537, "productID": 0x100B, "set": ["server": "ojd"],
     ])
     .write(to: directory.appendingPathComponent("3537-100b.json"))
     let records = ControllerRecordSet.load(userDirectory: directory)

@@ -3,7 +3,7 @@ import Testing
 
 @testable import OpenJoystickDriverKit
 
-/// The record's `ownership` and `output` fields, the rumble template they decode into, and the
+/// The record's `server` and `output` fields, the rumble template they decode into, and the
 /// writes OJD keeps for a controller macOS serves.
 struct ControllerRecordOutputTests {
   private static let thirdParty = #""protocol": {"family": "vendor.ps3-third-party"}"#
@@ -15,22 +15,22 @@ struct ControllerRecordOutputTests {
   @Test
   func decodesOwnershipAndARumbleTemplate() throws {
     let document = try decode(
-      "\(Self.thirdParty), \"ownership\": \"ojd\", \"output\": {\(Self.gp100Rumble)}"
+      "\(Self.thirdParty), \"server\": \"ojd\", \"output\": {\(Self.gp100Rumble)}"
     )
-    #expect(document.ownership == .ojd)
+    #expect(document.server == .ojd)
     let template = try #require(document.rumbleTemplate)
     #expect(template.report == ControllerTemplateReport(kind: .output, reportID: 2, length: 8))
     #expect(template.motorBytes == [.leftMain: 3, .rightMain: 2])
     #expect(template.outputCapabilities == .dualMainRumble)
-    #expect(try decode(Self.thirdParty).ownership == nil)
-    let sixaxis = try decode(#""protocol": {"family": "sony.sixaxis"}, "ownership": "macos""#)
-    #expect(sixaxis.ownership == .macOS)
+    #expect(try decode(Self.thirdParty).server == nil)
+    let sixaxis = try decode(#""protocol": {"family": "sony.sixaxis"}, "server": "system""#)
+    #expect(sixaxis.server == .system)
   }
 
   @Test(arguments: ["OJD", "native", ""])
   func rejectsUnknownOwnership(name: String) {
     #expect(throws: DecodingError.self) {
-      try decode("\(Self.thirdParty), \"ownership\": \"\(name)\"")
+      try decode("\(Self.thirdParty), \"server\": \"\(name)\"")
     }
   }
 
@@ -43,7 +43,7 @@ struct ControllerRecordOutputTests {
   )
   func rejectsOwnershipOnRawUSBFamilies(protocolInfo: String) {
     #expect(throws: DecodingError.self) {
-      try decode("\"protocol\": \(protocolInfo), \"ownership\": \"ojd\"")
+      try decode("\"protocol\": \(protocolInfo), \"server\": \"ojd\"")
     }
   }
 

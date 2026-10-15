@@ -34,7 +34,7 @@ PATCH_FIELDS = frozenset(
         "protocol",
         "usb",
         "bluetoothLE",
-        "ownership",
+        "server",
         "route",
         "output",
         "input",

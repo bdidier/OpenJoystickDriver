@@ -60,7 +60,7 @@ struct ControllerShowAppliedTests {
   @Test
   func showNamesMacOSAsTheOutputOwnerNextToTheNarrowedCapabilities() async throws {
     let service = try FakeService(devices: [
-      ApplicationServiceDeviceDescription.fixture(id: "pad-1", physicalOutputOwner: .macOS)
+      ApplicationServiceDeviceDescription.fixture(id: "pad-1", physicalOutputOwner: .system)
     ])
 
     let json = await service.run(["controller", "show", token("pad-1"), "--json"])

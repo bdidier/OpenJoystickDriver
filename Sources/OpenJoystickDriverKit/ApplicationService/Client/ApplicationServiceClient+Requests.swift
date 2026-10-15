@@ -156,7 +156,7 @@ extension ApplicationServiceClient {
   /// applies it to every connected controller of the model without a replug.
   public func setControllerOwnership(
     model: ControllerModelID,
-    ownership: ControllerOwnership
+    ownership: ControllerServer
   ) async throws -> ControllerOwnershipResult {
     try await call(
       .setControllerOwnership,

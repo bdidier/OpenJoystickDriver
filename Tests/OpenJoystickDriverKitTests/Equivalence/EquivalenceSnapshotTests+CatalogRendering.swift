@@ -123,7 +123,7 @@ extension EquivalenceSnapshotCatalogTests {
     var lines = [
       "protocol=\(label(profile.physicalProtocolID))"
         + " variant=\(label(profile.physicalProtocolVariant))"
-        + " ownership=\(label(profile.ownership))",
+        + " ownership=\(label(profile.server))",
       "transport in=\(transport.inputEndpoint) out=\(transport.outputEndpoint)"
         + " interface=\(transport.interfaceNumber) alt=\(transport.alternateSetting)"
         + " interfaceOverride=\(transport.hasInterfaceOverride)"

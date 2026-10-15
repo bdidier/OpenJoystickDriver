@@ -17,7 +17,7 @@ struct ControllerRecordDocument: Decodable {
   let bluetoothLE: BluetoothLE?
   let capabilities: ControllerCapabilityDelta
   /// Nil leaves a controller macOS supports to macOS.
-  let ownership: ControllerOwnership?
+  let server: ControllerServer?
   /// Set only on raw-USB records that OJD's USB extension serves.
   let route: ControllerRecordRoute?
   let rumbleTemplate: RumbleOutputTemplate?
@@ -31,7 +31,7 @@ struct ControllerRecordDocument: Decodable {
     let container = try decoder.container(keyedBy: DocumentKey.self)
     try container.rejectUnknown(allowed: [
       "apiVersion", "kind", "vendorID", "productID", "protocol", "usb", "bluetoothLE",
-      "capabilities", "ownership", "route", "output", "input", "tuning",
+      "capabilities", "server", "route", "output", "input", "tuning",
     ])
     let apiVersion = try container.decodeOptional(String.self, for: "apiVersion")
     let kind = try container.decodeOptional(String.self, for: "kind")
@@ -54,15 +54,15 @@ struct ControllerRecordDocument: Decodable {
     bluetoothLE = try container.decodeOptional(BluetoothLE.self, for: "bluetoothLE")
     capabilities =
       try container.decodeOptional(CapabilityDelta.self, for: "capabilities")?.delta ?? .none
-    ownership = try container.decodeOptional(String.self, for: "ownership").map { name in
-      guard let ownership = ControllerOwnership(rawValue: name) else {
+    server = try container.decodeOptional(String.self, for: "server").map { name in
+      guard let server = ControllerServer(rawValue: name) else {
         throw DecodingError.dataCorruptedError(
-          forKey: DocumentKey("ownership"),
+          forKey: DocumentKey("server"),
           in: container,
-          debugDescription: "ownership must be macos or ojd"
+          debugDescription: "server must be system or ojd"
         )
       }
-      return ownership
+      return server
     }
     route = try container.decodeOptional(String.self, for: "route").map { name in
       guard let route = ControllerRecordRoute(rawValue: name) else {
@@ -119,11 +119,11 @@ struct ControllerRecordDocument: Decodable {
   /// needs, an input layout.
   private func validateOwnershipAndOutput(codingPath: [any CodingKey]) throws {
     let rawUSB = protocolInfo.protocolID.usesRawUSB(storedVariant: protocolInfo.protocolVariant)
-    if ownership != nil, rawUSB {
+    if server != nil, rawUSB {
       throw DecodingError.dataCorrupted(
         .init(
-          codingPath: codingPath + [DocumentKey("ownership")],
-          debugDescription: "ownership applies only to HID controllers"
+          codingPath: codingPath + [DocumentKey("server")],
+          debugDescription: "server applies only to HID controllers"
         )
       )
     }

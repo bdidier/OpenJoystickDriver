@@ -36,7 +36,7 @@ extension ApplicationServiceDeviceDescription {
     outputs: PhysicalControllerOutputCapabilities = .none,
     unit: String? = nil,
     power: ControllerConnectionState.Power? = nil,
-    physicalOutputOwner: ControllerOwnership = .ojd,
+    physicalOutputOwner: ControllerServer = .ojd,
     tuning: ControllerTuning = .none
   ) -> ApplicationServiceDeviceDescription {
     ApplicationServiceDeviceDescription(

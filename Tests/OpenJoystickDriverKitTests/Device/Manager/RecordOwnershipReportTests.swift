@@ -19,39 +19,39 @@ struct RecordOwnershipReportTests {
     )
     try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
     defer { try? FileManager.default.removeItem(at: directory) }
-    #expect(DeviceCatalog().record(for: Self.gameSir)?.ownership == .macOS)
+    #expect(DeviceCatalog().record(for: Self.gameSir)?.server == .system)
     try JSONSerialization.data(withJSONObject: [
       "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
       "operation": "patch",
-      "vendorID": 0x3537, "productID": 0x100B, "set": ["ownership": "ojd"],
+      "vendorID": 0x3537, "productID": 0x100B, "set": ["server": "ojd"],
     ])
     .write(to: directory.appendingPathComponent("3537-100b.json"))
 
     let records = ControllerRecordSet.load(userDirectory: directory)
 
     #expect(records.problems.isEmpty)
-    #expect(DeviceCatalog(records: records).record(for: Self.gameSir)?.ownership == .ojd)
+    #expect(DeviceCatalog(records: records).record(for: Self.gameSir)?.server == .ojd)
   }
 
   @Test
   func theDescriptionEncodesAndDecodesTheRecordOwnership() throws {
     let device = ApplicationServiceDeviceDescription.fixture(id: "A")
-    #expect(device.recordOwnership == .macOS)
+    #expect(device.recordServer == .system)
     let object = try Self.object(of: device)
 
-    #expect(object["recordOwnership"] as? String == "macos")
+    #expect(object["recordServer"] as? String == "system")
     var owned = object
-    owned["recordOwnership"] = "ojd"
-    #expect(try Self.decoded(owned).recordOwnership == .ojd)
+    owned["recordServer"] = "ojd"
+    #expect(try Self.decoded(owned).recordServer == .ojd)
   }
 
   /// A service that predates the field sends none, and the app then treats the record as native.
   @Test
   func aPayloadWithoutTheFieldDecodesAsMacOS() throws {
     var object = try Self.object(of: .fixture(id: "A"))
-    object["recordOwnership"] = nil
+    object["recordServer"] = nil
 
-    #expect(try Self.decoded(object).recordOwnership == .macOS)
+    #expect(try Self.decoded(object).recordServer == .system)
   }
 
   private static func object(of device: ApplicationServiceDeviceDescription) throws -> [String: Any]

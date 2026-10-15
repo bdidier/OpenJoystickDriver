@@ -16,22 +16,22 @@
     /// gives it to OpenJoystickDriver, and its family does not use raw USB, which always belongs
     /// to OpenJoystickDriver.
     static func isShown(for device: ApplicationServiceDeviceDescription) -> Bool {
-      (device.physicalOwnership == .nativeGamepad || device.recordOwnership == .ojd)
+      (device.physicalOwnership == .nativeGamepad || device.recordServer == .ojd)
         && device.discoverySource != .rawUSB
     }
 
     var body: some View {
       Picker(OJDLocalized.string("controllers.ownership.label"), selection: ownershipBinding) {
-        Text(OJDLocalized.string("controllers.ownership.native")).tag(ControllerOwnership.macOS)
-        Text(OJDLocalized.string("controllers.ownership.virtual")).tag(ControllerOwnership.ojd)
+        Text(OJDLocalized.string("controllers.ownership.native")).tag(ControllerServer.system)
+        Text(OJDLocalized.string("controllers.ownership.virtual")).tag(ControllerServer.ojd)
       }.pickerStyle(.segmented)
     }
 
-    private var ownershipBinding: Binding<ControllerOwnership> {
+    private var ownershipBinding: Binding<ControllerServer> {
       Binding(
-        get: { device.recordOwnership },
+        get: { device.recordServer },
         set: { ownership in
-          guard ownership != device.recordOwnership else { return }
+          guard ownership != device.recordServer else { return }
           let device = device
           Task { @MainActor in await viewModel.setControllerOwnership(ownership, for: device) }
         }

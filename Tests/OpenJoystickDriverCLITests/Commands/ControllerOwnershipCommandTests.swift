@@ -52,9 +52,9 @@ struct ControllerOwnershipCommandTests {
     }
   }
 
-  private static func ownership(in directory: Directory) -> ControllerOwnership? {
+  private static func ownership(in directory: Directory) -> ControllerServer? {
     ControllerRecordSet.load(userDirectory: directory.controllers)
-      .records[ControllerModelID(vendorID: 0x2C22, productID: 0x2000)]?.ownership
+      .records[ControllerModelID(vendorID: 0x2C22, productID: 0x2000)]?.server
   }
 
   @Test
@@ -94,7 +94,7 @@ struct ControllerOwnershipCommandTests {
     )
     #expect(result.code == 0, "\(result.standardError)")
     #expect(result.standardOutput == "2C22:2000\tnative\t\(directory.file.path)\n")
-    #expect(Self.ownership(in: directory) == .macOS)
+    #expect(Self.ownership(in: directory) == .system)
   }
 
   @Test

@@ -33,7 +33,7 @@ struct EquivalenceSnapshotCatalogTests {
   /// How the controller is reached today, decided by the real transport selection: a device the
   /// raw-USB provider would list on the IOUSBHost route is `raw-access`, one it would leave to
   /// the signed USB extension is `extension`, and anything else stays with the system HID stack.
-  private static func route(_ record: ControllerRecord) -> String {
+  private static func transportRoute(_ record: ControllerRecord) -> String {
     let models = Set(ProtocolDriverRegistry().rawUSBModels)
     let model = record.model
     func selects(_ route: USBTransportRoute) -> Bool {
@@ -53,7 +53,7 @@ struct EquivalenceSnapshotCatalogTests {
     }
     if selects(.ioUSBHost) { return "raw-access" }
     if selects(.usbDriverKit) { return "extension" }
-    return "system ownership=\(label(record.ownership))"
+    return "system ownership=\(label(record.profile.server))"
   }
 
   @Test
@@ -61,6 +61,22 @@ struct EquivalenceSnapshotCatalogTests {
     let sections = Self.records.map { (title: Self.title($0), lines: Self.profileLines($0)) }
     let rendered = EquivalenceSnapshotStore.render(sections, header: Self.indexHeader)
     #expect(try EquivalenceSnapshotStore.verify(rendered, named: "catalog-index.txt") == nil)
+  }
+
+  /// The production route of the record, in the vocabulary of the 1.2 snapshot.
+  private static func route(_ record: ControllerRecord) -> String {
+    switch record.profile.accessRoute {
+    case .extensionOwned: "extension"
+    case .rawAccess: "raw-access"
+    case .system: "system ownership=\(label(record.profile.server))"
+    }
+  }
+
+  @Test
+  func recordRoutesAgreeWithTransportSelection() {
+    for record in Self.records {
+      #expect(Self.route(record) == Self.transportRoute(record), "\(Self.title(record))")
+    }
   }
 
   @Test

@@ -59,8 +59,8 @@
 						"bluetoothLE": {
 							"$ref": "controller.schema.json#/$defs/bluetoothLE"
 						},
-						"ownership": {
-							"$ref": "controller.schema.json#/$defs/ownership"
+						"server": {
+							"$ref": "controller.schema.json#/$defs/server"
 						},
 						"route": {
 							"$ref": "controller.schema.json#/$defs/route"

@@ -31,7 +31,7 @@ A controller record tells OpenJoystickDriver which protocol family drives one co
 A record has one of two operations:
 
 - `add`: a complete record for a model that has no bundled record.
-- `patch`: new values for the `protocol`, `usb`, `ownership`, `output`, `input`, `tuning`, or `bluetoothLE` fields of a bundled record. The other fields stay bundled. A field you set replaces the bundled field whole, except `tuning`, which merges per value, and `protocol`: when it names the bundled family, OJD keeps the bundled protocol values you leave out, and the `parameters` you list merge key by key into the bundled parameters, your value winning. A patch cannot remove a bundled parameter. A `protocol` with a different family replaces the bundled one whole, with its parameters.
+- `patch`: new values for the `protocol`, `usb`, `server`, `output`, `input`, `tuning`, or `bluetoothLE` fields of a bundled record. The other fields stay bundled. A field you set replaces the bundled field whole, except `tuning`, which merges per value, and `protocol`: when it names the bundled family, OJD keeps the bundled protocol values you leave out, and the `parameters` you list merge key by key into the bundled parameters, your value winning. A patch cannot remove a bundled parameter. A `protocol` with a different family replaces the bundled one whole, with its parameters.
 
 A record can also come from an installed [mod package](Writing-Controller-Mods.md). A package record sits between the bundled record and yours: your record wins over it. A `patch` record of yours for a model that only a package defines applies over the package record. If you remove the package later, OJD lists your patch as a problem and skips it.
 
@@ -39,14 +39,14 @@ A record for a model that uses raw USB works only when macOS lets OpenJoystickDr
 
 ## Choose Who Drives the Controller
 
-macOS serves some controllers natively through the Game Controller framework. OpenJoystickDriver leaves those to macOS by default and only reads their input. The record's `ownership` field changes this:
+macOS serves some controllers natively through the Game Controller framework. OpenJoystickDriver leaves those to macOS by default and only reads their input. The record's `server` field changes this:
 
-- `macos`: macOS drives the controller when it can. This is the default.
+- `system`: macOS drives the controller when it can. This is the default.
 - `ojd`: OpenJoystickDriver opens the controller exclusively even when macOS supports it, and drives it like a controller macOS does not know.
 
-A raw-USB family, such as `xbox.gip`, has no `ownership` field, because macOS cannot serve those controllers. A new `ownership` value applies to a connected controller as soon as the running service reloads the records. You do not need to unplug the controller.
+A raw-USB family, such as `xbox.gip`, has no `server` field, because macOS cannot serve those controllers. A new `server` value applies to a connected controller as soon as the running service reloads the records. You do not need to unplug the controller.
 
-To change `ownership` without editing the file, run `ojd controller ownership CONTROLLER native|virtual`. `native` sets `macos`, and `virtual` sets `ojd`. The command writes the value to your record for the model, and creates a `patch` record when you have none and the bundled catalog or an installed package has a record of the model. It refuses a raw-USB family, a controller that macOS does not serve natively, and a model that has no record at all, with the code E2023. For a model with no record, run `ojd record draft` to start one. `ojd controller show` names the choice and the layer it comes from. In the app, the controller detail has the same choice as the **Served by** picker, shown for a controller that macOS serves natively or that a record gives to OpenJoystickDriver, and never for a raw-USB family.
+To change `server` without editing the file, run `ojd controller ownership CONTROLLER native|virtual`. `native` sets `system`, and `virtual` sets `ojd`. The command writes the value to your record for the model, and creates a `patch` record when you have none and the bundled catalog or an installed package has a record of the model. It refuses a raw-USB family, a controller that macOS does not serve natively, and a model that has no record at all, with the code E2023. For a model with no record, run `ojd record draft` to start one. `ojd controller show` names the choice and the layer it comes from. In the app, the controller detail has the same choice as the **Served by** picker, shown for a controller that macOS serves natively or that a record gives to OpenJoystickDriver, and never for a raw-USB family.
 
 ## Describe a Controller's Input Reports
 

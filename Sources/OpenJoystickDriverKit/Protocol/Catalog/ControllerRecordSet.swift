@@ -77,7 +77,7 @@ public struct ControllerRecord: Sendable {
   public var usesRawUSB: Bool { profile.usesRawUSB }
 
   /// Who serves the controller: `macos` unless a layer sets `ojd`.
-  public var ownership: ControllerOwnership { profile.ownership }
+  public var server: ControllerServer { profile.server }
 
   /// The route the record asks for; nil leaves it to the family.
   public var route: ControllerRecordRoute? { profile.route }
@@ -320,11 +320,11 @@ public struct ControllerRecordSet: Sendable {
       let model = ControllerModelID(vendorID: vendorID, productID: productID)
       guard let fields = document["set"] as? [String: Any], !fields.isEmpty,
         Set(fields.keys).isSubset(of: [
-          "protocol", "usb", "bluetoothLE", "ownership", "output", "input", "tuning",
+          "protocol", "usb", "bluetoothLE", "server", "output", "input", "tuning",
         ])
       else {
         throw ControllerRecordProblem(
-          "set must hold protocol, usb, bluetoothLE, ownership, output, input, or tuning"
+          "set must hold protocol, usb, bluetoothLE, server, output, input, or tuning"
         )
       }
       guard let upstream = bundled.records[model] ?? packages[model],

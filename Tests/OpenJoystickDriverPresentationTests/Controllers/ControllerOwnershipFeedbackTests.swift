@@ -8,7 +8,7 @@ import Testing
 @MainActor
 struct ControllerOwnershipFeedbackTests {
   private static func device(
-    recordOwnership: ControllerOwnership = .macOS
+    recordServer: ControllerServer = .system
   ) -> ApplicationServiceDeviceDescription {
     ApplicationServiceDeviceDescription(
       name: "Test Pad",
@@ -20,7 +20,7 @@ struct ControllerOwnershipFeedbackTests {
       physicalOwnership: .nativeGamepad,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
-      recordOwnership: recordOwnership,
+      recordServer: recordServer,
       sessionToken: .fixture("device-feedback")
     )
   }
@@ -37,9 +37,9 @@ struct ControllerOwnershipFeedbackTests {
     )
   }
 
-  private static func shownOwnership(_ viewModel: RuntimeViewModel) -> ControllerOwnership? {
+  private static func shownOwnership(_ viewModel: RuntimeViewModel) -> ControllerServer? {
     guard case .available(let status) = viewModel.statusState else { return nil }
-    return status.devices.first?.recordOwnership
+    return status.devices.first?.recordServer
   }
 
   @Test
@@ -49,7 +49,7 @@ struct ControllerOwnershipFeedbackTests {
 
     let toggle = Task { await viewModel.setControllerOwnership(.ojd, for: Self.device()) }
     await gateway.waitForStatusCall(count: 3)
-    await gateway.setStatusPayload(Self.status([Self.device(recordOwnership: .ojd)]))
+    await gateway.setStatusPayload(Self.status([Self.device(recordServer: .ojd)]))
     await toggle.value
 
     #expect(Self.shownOwnership(viewModel) == .ojd)
@@ -63,7 +63,7 @@ struct ControllerOwnershipFeedbackTests {
 
     await viewModel.setControllerOwnership(.ojd, for: Self.device())
 
-    #expect(Self.shownOwnership(viewModel) == .macOS)
+    #expect(Self.shownOwnership(viewModel) == .system)
     #expect(await gateway.statusCallCount == 11)
   }
 

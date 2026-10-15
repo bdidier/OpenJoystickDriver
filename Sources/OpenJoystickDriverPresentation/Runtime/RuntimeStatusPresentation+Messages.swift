@@ -117,7 +117,7 @@ extension RuntimeStatusPresentation {
       && lhs.inputHealth.failureReason == rhs.inputHealth.failureReason
       && lhs.inputHealth.recoveryCount == rhs.inputHealth.recoveryCount
       && lhs.virtualHIDProfile == rhs.virtualHIDProfile
-      && lhs.recordOwnership == rhs.recordOwnership
+      && lhs.recordServer == rhs.recordServer
   }
 
   static func readiness(

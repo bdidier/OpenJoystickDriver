@@ -9,7 +9,7 @@ import Testing
 struct ControllerOwnershipPickerTests {
   private static func device(
     physicalOwnership: ControllerOwnershipObservation = .exclusiveHID,
-    recordOwnership: ControllerOwnership = .macOS,
+    recordServer: ControllerServer = .system,
     discoverySource: DeviceDiscoverySource = .hid
   ) -> ApplicationServiceDeviceDescription {
     ApplicationServiceDeviceDescription(
@@ -22,7 +22,7 @@ struct ControllerOwnershipPickerTests {
       physicalOwnership: physicalOwnership,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
-      recordOwnership: recordOwnership,
+      recordServer: recordServer,
       sessionToken: .fixture("device-ownership")
     )
   }
@@ -30,34 +30,34 @@ struct ControllerOwnershipPickerTests {
   @Test(
     arguments: [
       (
-        ControllerOwnershipObservation.nativeGamepad, ControllerOwnership.macOS,
+        ControllerOwnershipObservation.nativeGamepad, ControllerServer.system,
         DeviceDiscoverySource.hid, true
       ),
       (.exclusiveHID, .ojd, .hid, true),
       (.nativeGamepad, .ojd, .hid, true),
-      (.exclusiveHID, .macOS, .hid, false),
-      (.nativeHIDVisible, .macOS, .hid, false),
-      (.nativeGamepad, .macOS, .rawUSB, false),
+      (.exclusiveHID, .system, .hid, false),
+      (.nativeHIDVisible, .system, .hid, false),
+      (.nativeGamepad, .system, .rawUSB, false),
       (.exclusiveRawUSB, .ojd, .rawUSB, false),
     ]
   )
   func thePickerShowsOnlyForANativeOrOJDOwnedHIDController(
     physicalOwnership: ControllerOwnershipObservation,
-    recordOwnership: ControllerOwnership,
+    recordServer: ControllerServer,
     discoverySource: DeviceDiscoverySource,
     shown: Bool
   ) {
     let device = Self.device(
       physicalOwnership: physicalOwnership,
-      recordOwnership: recordOwnership,
+      recordServer: recordServer,
       discoverySource: discoverySource
     )
 
     #expect(ControllerOwnershipPicker.isShown(for: device) == shown)
   }
 
-  @Test(arguments: [ControllerOwnership.ojd, .macOS])
-  func aChangeCallsTheGatewayWithTheModelIdentityAndTheValue(_ ownership: ControllerOwnership) async
+  @Test(arguments: [ControllerServer.ojd, .system])
+  func aChangeCallsTheGatewayWithTheModelIdentityAndTheValue(_ ownership: ControllerServer) async
   {
     let gateway = GatewayStub()
     let viewModel = RuntimeViewModel(gateway: gateway)

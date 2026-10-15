@@ -733,8 +733,8 @@
 									"type": "boolean"
 								},
 								"outputOwner": {
-									"description": "Who drives the controller's output. With macos, macOS serves the controller natively, so the rumble and lighting lists hold only what macOS leaves undone.",
-									"enum": ["macos", "ojd"]
+									"description": "Who drives the controller's output. With system, macOS serves the controller natively, so the rumble and lighting lists hold only what macOS leaves undone.",
+									"enum": ["system", "ojd"]
 								},
 								"rumbleMotors": {
 									"type": "array",

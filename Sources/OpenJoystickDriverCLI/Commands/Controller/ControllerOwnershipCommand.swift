@@ -8,12 +8,12 @@ enum OwnershipChoice: String, ExpressibleByArgument, CaseIterable, Encodable, Se
   case native
   case virtual
 
-  init(_ ownership: ControllerOwnership) {
-    self = ownership == .macOS ? .native : .virtual
+  init(_ ownership: ControllerServer) {
+    self = ownership == .system ? .native : .virtual
   }
 
   /// The record's `ownership` value for this choice.
-  var ownership: ControllerOwnership { self == .native ? .macOS : .ojd }
+  var ownership: ControllerServer { self == .native ? .system : .ojd }
 }
 
 struct ControllerOwnershipCommand: AsyncParsableCommand {
@@ -112,7 +112,7 @@ struct ControllerOwnershipCommand: AsyncParsableCommand {
         CLILocalized.format("cli.controller.ownership.raw_usb", device.identity)
       )
     }
-    guard device.physicalOwnership == .nativeGamepad || record?.ownership == .ojd else {
+    guard device.physicalOwnership == .nativeGamepad || record?.server == .ojd else {
       throw CLIFailure(
         .ownershipToggleUnsupported,
         CLILocalized.format("cli.controller.ownership.not_native", device.identity)
@@ -122,7 +122,7 @@ struct ControllerOwnershipCommand: AsyncParsableCommand {
 
   private static func change(
     _ model: ControllerModelID,
-    to ownership: ControllerOwnership,
+    to ownership: ControllerServer,
     records: ControllerRecordSet,
     device: ApplicationServiceDeviceDescription
   ) throws -> ControllerOwnershipWriter.Change {
