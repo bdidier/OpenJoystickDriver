@@ -9,11 +9,9 @@ struct ControllerRecordWatcherPackageReplaceTests {
   private static func record(_ productID: Int) -> Data {
     Data(
       """
-      {"apiVersion": "\(OpenJoystickDriverAPI.version)",
-      "kind": "\(ControllerRecordSet.overrideKind)", "operation": "add",
-       "record": {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "Controller",
+      {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "Controller",
        "vendorID": 4660,
-       "productID": \(productID), "protocol": {"family": "xbox.gip"}}}
+       "productID": \(productID), "protocol": {"family": "xbox.gip"}}
       """.utf8
     )
   }

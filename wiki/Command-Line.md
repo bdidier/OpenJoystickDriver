@@ -88,7 +88,7 @@ A command that needs the service exits with code 69 when the service is not runn
 
 ## Configuration
 
-`ojd config show` prints each effective tuning value and the layer that set it: the driver default, `Defaults.json`, the bundled record, or your record. It reads the files directly, so it works without the service. With `--controller` and the service running, it also lists the active profile's stick deadzones in the `profile` layer. See [Controller records](Controller-Records.md#set-a-default-for-every-controller).
+`ojd config show` prints each effective tuning value and the layer that set it: the driver default, the bundled record, a package, your `all.patch.json`, or your record. It reads the files directly, so it works without the service. With `--controller` and the service running, it also lists the active profile's stick deadzones in the `profile` layer. See [Controller records](Controller-Records.md#set-a-default-for-every-controller).
 
 ## Mod Packages
 

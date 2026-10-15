@@ -44,7 +44,7 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
 
   /// `~/Library/Application Support/OpenJoystickDriver/Personas`.
   public static var userDirectory: URL {
-    ControllerDefaults.userFile.deletingLastPathComponent()
+    ControllerRecordSet.userDirectory.deletingLastPathComponent()
       .appendingPathComponent("Personas", isDirectory: true)
   }
 

@@ -1,0 +1,17 @@
+{
+	"apiVersion": "openjoystickdriver/v1alpha1",
+	"kind": "ControllerPatch",
+	"selector": {
+		"vendorID": 1356,
+		"productID": 1477
+	},
+	"patch": {
+		"protocol": {
+			"family": "sony.dualshock4",
+			"parameters": {
+				"motionCalibration": "Factory",
+				"motionScale": "StrikePad"
+			}
+		}
+	}
+}

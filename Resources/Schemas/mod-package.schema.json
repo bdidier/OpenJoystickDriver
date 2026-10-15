@@ -41,10 +41,10 @@
 			}
 		},
 		"records": {
-			"description": "Files in Controllers/, named vvvv-pppp.json after the identity they cover.",
+			"description": "Files in Controllers/: vvvv-pppp.json for a Controller, and vvvv-pppp.patch.json, model-vvvv-pppp.patch.json, or all.patch.json for a ControllerPatch.",
 			"$ref": "#/$defs/files",
 			"items": {
-				"pattern": "^[0-9a-f]{4}-[0-9a-f]{4}\\.json$"
+				"pattern": "^([0-9a-f]{4}-[0-9a-f]{4}\\.json|[0-9a-f]{4}-[0-9a-f]{4}\\.patch\\.json|model-[0-9a-f]{4}-[0-9a-f]{4}\\.patch\\.json|all\\.patch\\.json)$"
 			}
 		},
 		"profiles": {

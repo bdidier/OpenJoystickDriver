@@ -77,7 +77,7 @@ struct ServiceCommandTests {
     )
     try FileManager.default.createDirectory(at: personas, withIntermediateDirectories: true)
     defer { try? FileManager.default.removeItem(at: support) }
-    try Data("{".utf8).write(to: support.appendingPathComponent("Defaults.json"))
+    try Data("{".utf8).write(to: support.appendingPathComponent("Controllers/all.patch.json"))
     try Data("{".utf8).write(to: personas.appendingPathComponent("broken.json"))
 
     let json = await runStatus(["--json"], records: support.appendingPathComponent("Controllers"))
@@ -86,7 +86,7 @@ struct ServiceCommandTests {
 
     let report = try json.json()
     let defaults = try #require(report["ignoredDefaults"] as? [String: String])
-    #expect(defaults["file"]?.hasSuffix("/Defaults.json") == true)
+    #expect(defaults["file"]?.hasSuffix("/Controllers/all.patch.json") == true)
     #expect(defaults["problem"] == "the file is not a JSON object")
     let skipped = try #require(report["skippedPersonas"] as? [[String: String]])
     #expect(skipped.map { $0["file"]?.hasSuffix("/Personas/broken.json") } == [true])

@@ -38,8 +38,7 @@ struct ControllerRecordDraftTests {
     let document = try #require(
       JSONSerialization.jsonObject(with: draft.document) as? [String: Any]
     )
-    let record = try #require(document["record"] as? [String: Any])
-    let input = try #require(record["input"] as? [String: Any])
+    let input = try #require(document["input"] as? [String: Any])
     #expect(input["report"] as? [String: Int] == ["length": 6, "id": 1])
     let buttons = try #require(input["buttons"] as? [[String: Any]])
     #expect(buttons.compactMap { $0["control"] as? String }.first == "face-south")
@@ -55,7 +54,7 @@ struct ControllerRecordDraftTests {
     #expect(input["rightTrigger"] == nil)
 
     let validated = try ControllerRecordSet.validate(draft.document)
-    #expect(validated.operation == .add && validated.record.family == "hid.report-layout")
+    #expect(validated.operation == .add && validated.record?.family == "hid.report-layout")
   }
 
   /// Only reports with the chosen ID and at least the chosen length count.
@@ -93,7 +92,7 @@ struct ControllerRecordDraftTests {
     )
     #expect(draft.operation == .patch && draft.capturedReports == 0 && draft.changedBytes.isEmpty)
     let validated = try ControllerRecordSet.validate(draft.document)
-    #expect(validated.operation == .patch && validated.record.family == "hid.report-layout")
+    #expect(validated.operation == .patch && validated.record?.family == "hid.report-layout")
   }
 
   /// Without a usable descriptor, a new model gets `hid.descriptor` and the common report length.
@@ -111,7 +110,7 @@ struct ControllerRecordDraftTests {
     #expect(draft.operation == .add && draft.family == .hidDescriptor)
     #expect(draft.reportID == nil && draft.reportLength == 3 && draft.capturedReports == 3)
     #expect(draft.changedBytes == [.init(byte: 2, minimum: 2, maximum: 3)])
-    #expect(try ControllerRecordSet.validate(draft.document).record.family == "hid.descriptor")
+    #expect(try ControllerRecordSet.validate(draft.document).record?.family == "hid.descriptor")
     #expect(
       ControllerRecordDraft(
         model: Self.unbundled,

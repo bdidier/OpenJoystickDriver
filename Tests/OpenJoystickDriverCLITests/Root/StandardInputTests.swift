@@ -18,9 +18,9 @@ struct StandardInputTests {
   /// A patch of the bundled `xbox.gip` record `366C:0005`.
   private static let patch = Data(
     """
-    {"apiVersion": "\(OpenJoystickDriverAPI.version)",
-    "kind": "\(ControllerRecordSet.overrideKind)", "operation": "patch",
-     "vendorID": 13932, "productID": 5, "set": {"usb": {"postHandshakeSettleMs": 5}}}
+    {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "ControllerPatch",
+     "selector": {"vendorID": 13932, "productID": 5},
+     "patch": {"usb": {"postHandshakeSettleMs": 5}}}
     """.utf8
   )
 
@@ -38,7 +38,7 @@ struct StandardInputTests {
     )
     try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
     defer { try? FileManager.default.removeItem(at: directory) }
-    try Self.patch.write(to: directory.appendingPathComponent("366c-0005.json"))
+    try Self.patch.write(to: directory.appendingPathComponent("366c-0005.patch.json"))
 
     let leaves = CLICommandTree.leafPaths.filter { !Self.systemCommands.contains($0) }
       .map { $0 + CLICommandTree.sampleOperands(for: $0) }
@@ -62,7 +62,7 @@ struct StandardInputTests {
       }
       #expect(library.stored.map(\.bindings) == [[binding]])
       let records = try FileManager.default.contentsOfDirectory(atPath: directory.path)
-      #expect(records == ["366c-0005.json"])
+      #expect(records == ["366c-0005.patch.json"])
       for arguments in leaves {
         let result = await RecordStore.$directory.withValue(directory) {
           await service.run(arguments)

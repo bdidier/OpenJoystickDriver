@@ -15,22 +15,14 @@ struct ControllerRecordSetTests {
   }
 
   private static func patch(_ identity: ControllerModelID, set: [String: Any]) throws -> Data {
-    try json([
-      "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
-      "operation": "patch", "vendorID": Int(identity.vendorID),
-      "productID": Int(identity.productID), "set": set,
-    ])
+    try json(ControllerPatch.document(selector: .identity(identity), body: set))
   }
 
   private static func add(_ identity: ControllerModelID, family: String) throws -> Data {
     try json([
-      "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
-      "operation": "add",
-      "record": [
-        "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordDocument.kind,
-        "vendorID": Int(identity.vendorID),
-        "productID": Int(identity.productID), "protocol": ["family": family],
-      ],
+      "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordDocument.kind,
+      "vendorID": Int(identity.vendorID),
+      "productID": Int(identity.productID), "protocol": ["family": family],
     ])
   }
 
@@ -41,42 +33,51 @@ struct ControllerRecordSetTests {
     } catch { return ControllerRecordSet.problemDescription(error) }
   }
 
+  private static func record(_ data: Data) throws -> ControllerRecord {
+    try #require(try ControllerRecordSet.validate(data).record)
+  }
+
   @Test
   func patchReplacesOnlyItsFieldsAndMarksThemUser() throws {
     let validated = try ControllerRecordSet.validate(
       Self.patch(Self.bundledGIP, set: ["protocol": ["family": "xbox.gip", "keepAlive": false]])
     )
+    let record = try #require(validated.record)
     #expect(validated.operation == .patch)
-    #expect(validated.fileName == "366c-0005.json")
-    #expect(validated.record.fieldLayers == ["protocol": .user])
-    #expect(validated.record.profile.gipKeepAlivePolicy == .disabled)
-    #expect(validated.record.usesRawUSB)
+    #expect(validated.fileName == "366c-0005.patch.json")
+    #expect(record.fieldLayers == ["protocol": .user])
+    #expect(record.profile.gipKeepAlivePolicy == .disabled)
+    #expect(record.usesRawUSB)
     let bundled = try #require(ControllerRecordSet.bundled.records[Self.bundledGIP])
     #expect(bundled.layer == .bundled)
     #expect(bundled.fieldLayers == ["protocol": .bundled])
   }
 
-  /// A same-family protocol patch keeps the bundled parameters it does not name; a family change
-  /// replaces the block, because every protocol field belongs to its family.
+  /// A protocol patch merges key by key, so it keeps the bundled parameters it does not name, and a
+  /// `null` deletes one.
   @Test
-  func protocolPatchKeepsUnnamedFieldsOnlyWithinTheFamily() throws {
+  func protocolPatchKeepsUnnamedFieldsAndNullDeletesOne() throws {
     let shareOffsetGIP = ControllerModelID(vendorID: 0x045E, productID: 0x0B12)
-    let kept = try ControllerRecordSet.validate(
+    let kept = try Self.record(
       Self.patch(shareOffsetGIP, set: ["protocol": ["family": "xbox.gip", "keepAlive": false]])
     )
-    #expect(kept.record.profile.parameters == ProtocolParameters(shareButton: .init(fromEnd: 26)))
-    #expect(kept.record.profile.gipKeepAlivePolicy == .disabled)
-    let refamilied = try ControllerRecordSet.validate(
+    #expect(kept.profile.parameters == ProtocolParameters(shareButton: .init(fromEnd: 26)))
+    #expect(kept.profile.gipKeepAlivePolicy == .disabled)
+    let deleted = try Self.record(
+      Self.patch(shareOffsetGIP, set: ["protocol": ["parameters": NSNull()]])
+    )
+    #expect(deleted.profile.parameters == ProtocolParameters())
+    let refamilied = try Self.record(
       Self.patch(Self.bundledHID, set: ["protocol": ["family": "hid.descriptor"]])
     )
-    #expect(refamilied.record.profile.physicalProtocolID == .hidDescriptor)
+    #expect(refamilied.profile.physicalProtocolID == .hidDescriptor)
   }
 
   /// A same-family patch adds its parameters to the bundled parameters instead of replacing them.
   @Test
   func protocolPatchAddsItsParametersToTheBundledParameters() throws {
     let dualShock4 = ControllerModelID(vendorID: 0x054C, productID: 0x09CC)
-    let patched = try ControllerRecordSet.validate(
+    let patched = try Self.record(
       Self.patch(
         dualShock4,
         set: [
@@ -85,29 +86,29 @@ struct ControllerRecordSetTests {
       )
     )
     #expect(
-      patched.record.profile.parameters
+      patched.profile.parameters
         == ProtocolParameters(motionCalibration: .factory, motionScale: .strikePad)
     )
   }
 
   @Test
   func tuningPatchSetsTheRecordTuning() throws {
-    let validated = try ControllerRecordSet.validate(
+    let record = try Self.record(
       Self.patch(Self.bundledHID, set: ["tuning": ["inputLivenessTimeoutMs": 2_500]])
     )
-    #expect(validated.record.fieldLayers["tuning"] == .user)
-    #expect(
-      validated.record.profile.tuning == ControllerTuning(inputLivenessTimeoutMilliseconds: 2_500)
-    )
+    #expect(record.fieldLayers["tuning"] == .user)
+    #expect(record.profile.tuning == ControllerTuning(inputLivenessTimeoutMilliseconds: 2_500))
   }
 
   @Test
-  func addForANewIdentityIsAUserRecord() throws {
+  func aControllerFileForANewIdentityIsAUserRecord() throws {
     let validated = try ControllerRecordSet.validate(Self.add(Self.unbundled, family: "xbox.gip"))
+    let record = try #require(validated.record)
     #expect(validated.operation == .add)
-    #expect(validated.record.model == Self.unbundled)
-    #expect(validated.record.fieldLayers == ["protocol": .user])
-    #expect(validated.record.family == "xbox.gip")
+    #expect(validated.fileName == "1234-abcd.json")
+    #expect(record.model == Self.unbundled)
+    #expect(record.fieldLayers == ["protocol": .user])
+    #expect(record.family == "xbox.gip")
   }
 
   @Test
@@ -118,11 +119,11 @@ struct ControllerRecordSetTests {
     )
     #expect(
       Self.problem(try Self.patch(Self.unbundled, set: ["protocol": ["family": "xbox.gip"]]))
-        == "1234:ABCD is not a bundled controller; use an add record"
+        == "1234:ABCD is not a known controller; use a Controller file"
     )
     #expect(
       Self.problem(try Self.patch(Self.bundledGIP, set: ["protocol": ["family": "xbox.gip"]]))
-        == "the patch changes nothing in the bundled record"
+        == "the patch changes nothing in the record"
     )
     #expect(
       Self.problem(try Self.patch(Self.bundledHID, set: ["usb": ["postHandshakeSettleMs": 5]]))
@@ -130,60 +131,62 @@ struct ControllerRecordSetTests {
     )
     #expect(
       Self.problem(try Self.patch(Self.bundledGIP, set: ["capabilities": ["rumble": "absent"]]))
-        == "set must hold protocol, usb, bluetoothLE, ownership, output, input, or tuning"
+        == "patch must hold protocol, usb, bluetoothLE, ownership, route, output, input, or tuning"
     )
     #expect(
       Self.problem(try Self.patch(Self.bundledGIP, set: ["tuning": ["hidStartupIntervalMs": 5]]))
         == "record.tuning: HID startup and output timings apply only to HID controllers"
     )
     #expect(Self.problem(Data("[]".utf8)) == "the file is not a JSON object")
-    let unknownKey = try Self.json([
-      "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
-      "operation": "patch", "vendorID": 0x366C, "productID": 5,
-      "set": ["usb": ["postHandshakeSettleMs": 5]], "note": "x",
-    ])
-    #expect(Self.problem(unknownKey) == "unknown field(s): note")
+    var withNote = ControllerPatch.document(
+      selector: .identity(Self.bundledGIP),
+      body: ["usb": ["postHandshakeSettleMs": 5]]
+    )
+    withNote["note"] = "x"
+    #expect(
+      Self.problem(try Self.json(withNote))
+        == "the file must hold exactly apiVersion, kind, selector, and patch"
+    )
     let badFamily = try Self.add(Self.unbundled, family: "xbox.unknown")
     #expect(Self.problem(badFamily) == "record.protocol: unknown family xbox.unknown")
   }
 
   /// A file declares its version through `apiVersion` and its type through `kind`. A missing or
-  /// unsupported version, or a kind that is not the one it is read as, is rejected and named.
+  /// unsupported version, or a kind that is not one it is read as, is rejected and named. The
+  /// removed `ControllerOverride` and `ControllerDefaults` kinds are wrong kinds like any other.
   @Test
   func aMissingOrUnsupportedHeaderIsRejected() throws {
     let supported = "the supported apiVersion is \(OpenJoystickDriverAPI.version)"
     let old = "openjoystickdriver.io/v1beta1"
-    let override: [String: Any] = [
-      "operation": "patch", "vendorID": 0x366C, "productID": 5,
-      "set": ["usb": ["postHandshakeSettleMs": 5]],
-    ]
-    let noVersion = override.merging(["kind": ControllerRecordSet.overrideKind]) { $1 }
+    let body = ControllerPatch.document(
+      selector: .identity(Self.bundledGIP),
+      body: ["usb": ["postHandshakeSettleMs": 5]]
+    )
+    let noVersion = body.filter { $0.key != "apiVersion" }
     #expect(Self.problem(try Self.json(noVersion)) == "no apiVersion found; \(supported)")
-    let oldVersion = noVersion.merging(["apiVersion": old]) { $1 }
+    let oldVersion = body.merging(["apiVersion": old]) { $1 }
     #expect(
       Self.problem(try Self.json(oldVersion)) == "apiVersion \(old) is not supported; \(supported)"
     )
-    let noKind = override.merging(["apiVersion": OpenJoystickDriverAPI.version]) { $1 }
+    let noKind = body.filter { $0.key != "kind" }
     #expect(
-      Self.problem(try Self.json(noKind))
-        == "no kind found; expected \(ControllerRecordSet.overrideKind)"
+      Self.problem(try Self.json(noKind)) == "no kind found; expected \(ControllerPatch.kind)"
     )
-    let wrongKind = noKind.merging(["kind": ControllerRecordDocument.kind]) { $1 }
-    #expect(
-      Self.problem(try Self.json(wrongKind))
-        == "expected \(ControllerRecordSet.overrideKind), found \(ControllerRecordDocument.kind)"
-    )
+    for removed in ["ControllerOverride", "ControllerDefaults", "Persona"] {
+      let wrongKind = body.merging(["kind": removed]) { $1 }
+      #expect(
+        Self.problem(try Self.json(wrongKind))
+          == "expected \(ControllerPatch.kind), found \(removed)"
+      )
+    }
     let oldRecord = try Self.json([
-      "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
-      "operation": "add",
-      "record": [
-        "apiVersion": old, "kind": ControllerRecordDocument.kind, "vendorID": 0x1234,
-        "productID": 0xABCD, "protocol": ["family": "xbox.gip"],
-      ],
+      "apiVersion": old, "kind": ControllerRecordDocument.kind, "vendorID": 0x1234,
+      "productID": 0xABCD, "protocol": ["family": "xbox.gip"],
     ])
     #expect(Self.problem(oldRecord)?.contains("apiVersion \(old) is not supported") == true)
-    let oldDefaults = Data(
-      #"{"apiVersion": "\#(old)", "kind": "\#(ControllerDefaults.kind)", "tuning": {}}"#.utf8
+    let oldDefaults = try Self.json(
+      ControllerPatch.document(selector: .all, body: ["tuning": ["stickDeadzone": 0.1]])
+        .merging(["apiVersion": old]) { $1 }
     )
     #expect(throws: ControllerRecordProblem.self) { try ControllerDefaults.validate(oldDefaults) }
     let defaultsWrongKind = Data(
@@ -219,7 +222,7 @@ struct ControllerRecordSetTests {
     #expect(set.records[Self.unbundled]?.layer == .user)
     #expect(set.records[Self.bundledGIP]?.layer == .bundled)
     #expect(set.problems.map(\.url.lastPathComponent) == ["broken.json", "wrong-name.json"])
-    #expect(set.problems.last?.problem == "the file name must be 366c-0005.json")
+    #expect(set.problems.last?.problem == "the file name must be 366c-0005.patch.json")
     #expect(set.records.count == ControllerRecordSet.bundled.records.count + 1)
 
     let catalog = DeviceCatalog(records: set)
@@ -242,24 +245,28 @@ struct ControllerRecordSetTests {
     )
     try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
     defer { try? FileManager.default.removeItem(at: directory) }
-    // A patch as written before `ControllerModelID`: the model is its vendorID and productID.
     let current = Data(
       (#"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","#
-        + #""kind":"\#(ControllerRecordSet.overrideKind)","operation":"patch","vendorID":13932,"#
-        + #""productID":5,"set":{"protocol":{"family":"xbox.gip","keepAlive":false}}}"#).utf8
+        + #""kind":"ControllerPatch","selector":{"vendorID":13932,"productID":5},"#
+        + #""patch":{"protocol":{"family":"xbox.gip","keepAlive":false}}}"#).utf8
     )
-    let currentURL = directory.appendingPathComponent("366c-0005.json")
+    let currentURL = directory.appendingPathComponent("366c-0005.patch.json")
     try current.write(to: currentURL)
-    // An add in the `openjoystickdriver.io/v1beta1` schema.
+    // A Controller file in the `openjoystickdriver.io/v1beta1` schema.
     let released = Data(
       (#"{"apiVersion":"openjoystickdriver.io/v1beta1","#
-        + #""kind":"\#(ControllerRecordSet.overrideKind)","operation":"add","record":{"#
-        + #""apiVersion":"\#(OpenJoystickDriverAPI.version)","#
         + #""kind":"\#(ControllerRecordDocument.kind)","vendorID":4660,"productID":43981,"#
-        + #""protocol":{"family":"xbox.gip"}}}"#).utf8
+        + #""protocol":{"family":"xbox.gip"}}"#).utf8
     )
     let releasedURL = directory.appendingPathComponent("1234-abcd.json")
     try released.write(to: releasedURL)
+    // A file of the removed `ControllerOverride` kind.
+    let removed = Data(
+      (#"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"ControllerOverride","#
+        + #""operation":"patch","vendorID":13932,"productID":5,"set":{"usb":{}}}"#).utf8
+    )
+    let removedURL = directory.appendingPathComponent("366c-0005.json")
+    try removed.write(to: removedURL)
 
     let set = ControllerRecordSet.load(userDirectory: directory)
 
@@ -267,14 +274,19 @@ struct ControllerRecordSetTests {
     #expect(kept.fieldLayers["protocol"] == .user)
     #expect(kept.profile.gipKeepAlivePolicy == .disabled)
     #expect(set.records[Self.unbundled] == nil)
-    #expect(set.problems.map(\.url.lastPathComponent) == ["1234-abcd.json"])
+    #expect(set.problems.map(\.url.lastPathComponent) == ["1234-abcd.json", "366c-0005.json"])
     #expect(
       set.problems.first?.problem
         == "1234-abcd.json: apiVersion openjoystickdriver.io/v1beta1 is not supported; "
         + "the supported apiVersion is \(OpenJoystickDriverAPI.version)"
     )
+    #expect(
+      set.problems.last?.problem
+        == "366c-0005.json: expected ControllerPatch, found ControllerOverride"
+    )
     #expect(try Data(contentsOf: releasedURL) == released)
     #expect(try Data(contentsOf: currentURL) == current)
+    #expect(try Data(contentsOf: removedURL) == removed)
   }
 
   @Test

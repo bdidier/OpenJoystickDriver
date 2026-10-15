@@ -3,9 +3,9 @@ import Foundation
 /// Sets the `ownership` of one controller model in the user's controller-record directory.
 ///
 /// An existing user file keeps every other key; only `ownership` is set or replaced. A missing
-/// file becomes a `patch` record when the bundled catalog or an installed package has the model,
-/// because a `patch` applies over one of their records. The record watcher of the service applies
-/// the change.
+/// file becomes a ControllerPatch file when the bundled catalog or an installed package has the
+/// model, because a patch applies over one of their records. The record watcher of the service
+/// applies the change.
 public enum ControllerOwnershipWriter {
   /// One planned change, before ``write(_:)`` stores it.
   public struct Change: Sendable {
@@ -25,7 +25,7 @@ public enum ControllerOwnershipWriter {
   public enum Failure: Error, Equatable, Sendable {
     /// The user directory has no file for the model and neither the bundled catalog nor an
     /// installed package has a record of it, so there is nothing to patch. `ojd record draft`
-    /// starts an `add` record.
+    /// starts a Controller file.
     case noRecord
     /// The existing user file is invalid, with its problem.
     case invalidFile(String)
@@ -41,22 +41,25 @@ public enum ControllerOwnershipWriter {
     records: ControllerRecordSet,
     directory: URL = ControllerRecordSet.userDirectory
   ) throws(Failure) -> Change {
-    let file = directory.appendingPathComponent(ControllerRecordSet.fileName(for: model))
+    let controllerFile = directory.appendingPathComponent(ControllerRecordSet.fileName(for: model))
+    let patchFile = directory.appendingPathComponent(
+      ControllerPatch.Selector.identity(model).fileName
+    )
     let packages = ControllerRecordSet.packageRecords(
       in: ModPackageStore.directory(besides: directory)
     ).records
-    let existing = try? Data(contentsOf: file)
+    let existingController = try? Data(contentsOf: controllerFile)
+    let existing = existingController ?? (try? Data(contentsOf: patchFile))
+    let file = existingController == nil ? patchFile : controllerFile
     let document: [String: Any]
     if let existing {
       document = try updated(existing, file: file, ownership: ownership, packages: packages)
     } else {
       guard packages[model] != nil else { throw .noRecord }
-      document = [
-        "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
-        "operation": "patch",
-        "vendorID": Int(model.vendorID), "productID": Int(model.productID),
-        "set": ["ownership": ownership.rawValue],
-      ]
+      document = ControllerPatch.document(
+        selector: .identity(model),
+        body: ["ownership": ownership.rawValue]
+      )
     }
     let data: Data
     do {
@@ -85,7 +88,8 @@ public enum ControllerOwnershipWriter {
     try change.data.write(to: change.file, options: .atomic)
   }
 
-  /// The existing user record with `ownership` set in its `record` or its `set`.
+  /// The existing user file with `ownership` set in the Controller file or in the `patch` of the
+  /// ControllerPatch file.
   private static func updated(
     _ data: Data,
     file: URL,
@@ -99,10 +103,13 @@ public enum ControllerOwnershipWriter {
     guard var document = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] else {
       throw .invalidFile("the file is not a JSON object")
     }
-    let key = operation == .add ? "record" : "set"
-    var fields = document[key] as? [String: Any] ?? [:]
-    fields["ownership"] = ownership.rawValue
-    document[key] = fields
+    if operation == .add {
+      document["ownership"] = ownership.rawValue
+    } else {
+      var fields = document["patch"] as? [String: Any] ?? [:]
+      fields["ownership"] = ownership.rawValue
+      document["patch"] = fields
+    }
     return document
   }
 }

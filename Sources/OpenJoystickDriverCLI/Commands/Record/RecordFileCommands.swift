@@ -17,14 +17,13 @@ struct RecordValidation: Encodable, Equatable {
     valid = true
     problem = nil
     operation = validated.operation.rawValue
-    identity = deviceIdentity(
-      vendorID: Int(validated.record.model.vendorID),
-      productID: Int(validated.record.model.productID)
-    )
-    family = validated.record.family
+    identity = validated.record.map {
+      deviceIdentity(vendorID: Int($0.model.vendorID), productID: Int($0.model.productID))
+    }
+    family = validated.record?.family
     fileName = validated.fileName
-    transport = RecordTransport(validated.record)
-    usbExtension = RecordUSBExtension(validated.record)
+    transport = validated.record.map(RecordTransport.init)
+    usbExtension = validated.record.flatMap(RecordUSBExtension.init)
   }
 
   init(problem: String) {
@@ -53,7 +52,9 @@ struct RecordValidation: Encodable, Equatable {
 
   /// Where OJD can reach the controller, in words, when the USB extension cannot claim it.
   static func usbNote(_ validated: ValidatedControllerRecord) -> String? {
-    guard RecordUSBExtension(validated.record) == .doesNotClaim else { return nil }
+    guard let record = validated.record, RecordUSBExtension(record) == .doesNotClaim else {
+      return nil
+    }
     return CLILocalized.text(
       "cli.record.usb_not_claimed"
     )
@@ -111,11 +112,11 @@ struct RecordValidateCommand: AsyncParsableCommand {
             file,
             validated.operation.rawValue,
             result.identity ?? "",
-            validated.record.family
+            validated.record?.family ?? ""
           )
         )
         if let note = RecordValidation.usbNote(validated) { CLIOutput.stdout(note) }
-        if let note = RecordValidation.bluetoothLENote(validated.record) {
+        if let note = validated.record.flatMap(RecordValidation.bluetoothLENote) {
           CLIOutput.stdout(note)
         }
       }
@@ -268,10 +269,12 @@ struct RecordRemoveCommand: AsyncParsableCommand {
 
   func run() async throws {
     try await global.run {
-      let target = RecordStore.directory.appendingPathComponent(
-        ControllerRecordSet.fileName(for: model)
-      )
-      guard FileManager.default.fileExists(atPath: target.path) else {
+      let targets = [
+        ControllerRecordSet.fileName(for: model),
+        ControllerPatch.Selector.identity(model).fileName,
+      ].map { RecordStore.directory.appendingPathComponent($0) }
+        .filter { FileManager.default.fileExists(atPath: $0.path) }
+      guard !targets.isEmpty else {
         throw CLIFailure(
           .notFound,
           CLILocalized.format(
@@ -280,34 +283,37 @@ struct RecordRemoveCommand: AsyncParsableCommand {
           )
         )
       }
+      let paths = targets.map(\.path).joined(separator: ", ")
       if !dryRun {
         try CLITerminal.confirm(
-          CLILocalized.format("cli.record.remove.confirm", target.path),
+          CLILocalized.format("cli.record.remove.confirm", paths),
           force: force
         )
-        do { try FileManager.default.removeItem(at: target) } catch {
-          throw CLIFailure(
-            .fileAccessFailed,
-            CLILocalized.format(
-              "cli.record.remove.failed",
-              target.path,
-              error.localizedDescription
+        for target in targets {
+          do { try FileManager.default.removeItem(at: target) } catch {
+            throw CLIFailure(
+              .fileAccessFailed,
+              CLILocalized.format(
+                "cli.record.remove.failed",
+                target.path,
+                error.localizedDescription
+              )
             )
-          )
+          }
         }
       }
       switch CLIContext.current.format {
       case .json:
-        try CLIOutput.json(CLIStatus(details: Result(removed: target.path, dryRun: dryRun)))
-      case .plain: CLIOutput.plain([[target.path]])
+        try CLIOutput.json(CLIStatus(details: Result(removed: paths, dryRun: dryRun)))
+      case .plain: CLIOutput.plain(targets.map { [$0.path] })
       case .human:
         if dryRun {
           CLIOutput.stdout(
-            CLILocalized.format("cli.record.remove.dry_run", target.path)
+            CLILocalized.format("cli.record.remove.dry_run", paths)
           )
         } else {
           CLIOutput.success(
-            CLILocalized.format("cli.record.remove.success", target.path)
+            CLILocalized.format("cli.record.remove.success", paths)
           )
         }
       }

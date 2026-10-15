@@ -4,33 +4,36 @@ import Testing
 @testable import OpenJoystickDriverKit
 
 struct ControllerTuningLayersTests {
-  /// A directory that holds `Controllers/` and `Defaults.json` for one test.
+  /// A directory that holds `Controllers/` and its `all.patch.json` for one test.
   private final class Root {
     let url = FileManager.default.temporaryDirectory.appendingPathComponent(
       "ojd-layers-\(UUID().uuidString)",
       isDirectory: true
     )
     var controllers: URL { url.appendingPathComponent("Controllers", isDirectory: true) }
-    var defaultsFile: URL { url.appendingPathComponent("Defaults.json") }
+    var defaultsFile: URL { ControllerDefaults.file(in: controllers) }
 
     func writeDefaults(
       _ tuning: String,
       apiVersion: String = OpenJoystickDriverAPI.version
     ) throws {
-      try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+      try FileManager.default.createDirectory(at: controllers, withIntermediateDirectories: true)
       let json =
-        #"{"apiVersion":"\#(apiVersion)","kind":"\#(ControllerDefaults.kind)","tuning":\#(tuning)}"#
+        #"{"apiVersion":"\#(apiVersion)","kind":"ControllerPatch","selector":{"all":true},"#
+        + #""patch":{"tuning":\#(tuning)}}"#
       try Data(json.utf8).write(to: defaultsFile)
     }
 
     func writePatch(_ set: String, for identity: ControllerModelID) throws {
       try FileManager.default.createDirectory(at: controllers, withIntermediateDirectories: true)
       let json =
-        #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","#
-        + #""kind":"\#(ControllerRecordSet.overrideKind)","operation":"patch","#
-        + #""vendorID":\#(identity.vendorID),"productID":\#(identity.productID),"set":\#(set)}"#
+        #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"ControllerPatch","#
+        + #""selector":{"vendorID":\#(identity.vendorID),"productID":\#(identity.productID)},"#
+        + #""patch":\#(set)}"#
       try Data(json.utf8).write(
-        to: controllers.appendingPathComponent(ControllerRecordSet.fileName(for: identity))
+        to: controllers.appendingPathComponent(
+          ControllerPatch.Selector.identity(identity).fileName
+        )
       )
     }
 
@@ -81,6 +84,31 @@ struct ControllerTuningLayersTests {
 
     #expect(record.tuning.stickDeadzone == 0.3)
     #expect(record.tuningLayers["stickDeadzone"] == .user)
+  }
+
+  @Test
+  func aGlobalDefaultBeatsTheBundledTuningOfAKey() throws {
+    let root = Root()
+    // The bundled HID record 11C1:5600 sets `stickDeadzone` to 0.02.
+    let identity = ControllerModelID(vendorID: 0x11C1, productID: 0x5600)
+    try root.writeDefaults(#"{"stickDeadzone":0.2}"#)
+
+    let record = try #require(root.load().records[identity])
+
+    #expect(record.tuning.stickDeadzone == 0.2)
+    #expect(record.tuningLayers["stickDeadzone"] == .global)
+  }
+
+  @Test
+  func aNullInAUserPatchDeletesABundledTuningKey() throws {
+    let root = Root()
+    let identity = ControllerModelID(vendorID: 0x11C1, productID: 0x5600)
+    try root.writePatch(#"{"tuning":null}"#, for: identity)
+
+    let record = try #require(root.load().records[identity])
+
+    #expect(record.tuning.stickDeadzone == nil)
+    #expect(record.tuningLayers["stickDeadzone"] == nil)
   }
 
   @Test
@@ -136,7 +164,7 @@ struct ControllerTuningLayersTests {
   @Test
   func layersAreOrderedLowestFirst() {
     #expect(
-      ControllerRecordLayer.allCases == [.driver, .global, .bundled, .package, .user, .profile]
+      ControllerRecordLayer.allCases == [.driver, .bundled, .package, .global, .user, .profile]
     )
   }
 }

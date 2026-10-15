@@ -109,16 +109,19 @@ extension ModPackageStore {
         throw ModPackageError(.invalidPackageContent, "\(kind)/\(file) is not listed in mod.json")
       }
     }
-    for file in manifest.records {
+    // A patch may apply over a Controller file of the same package, so those are read first.
+    var own: [ControllerModelID: ControllerRecord] = [:]
+    let isPatch = { (file: String) in file.hasSuffix(".patch.json") }
+    for file in manifest.records.filter({ !isPatch($0) }) + manifest.records.filter(isPatch) {
       let url = folder.appendingPathComponent("Controllers/\(file)")
-      let record = try content(url, "Controllers/\(file)") {
-        try ControllerRecordSet.validate($0, file: url, layer: .package).record
+      let validated = try content(url, "Controllers/\(file)") {
+        try ControllerRecordSet.validate($0, file: url, layer: .package, packages: own)
       }
-      guard file == ControllerRecordSet.fileName(for: record.model) else {
+      if let record = validated.record, validated.operation == .add { own[record.model] = record }
+      guard file == validated.fileName else {
         throw ModPackageError(
           .invalidPackageContent,
-          "Controllers/\(file): the file name must be "
-            + ControllerRecordSet.fileName(for: record.model)
+          "Controllers/\(file): the file name must be \(validated.fileName)"
         )
       }
       claims.records.insert(file)

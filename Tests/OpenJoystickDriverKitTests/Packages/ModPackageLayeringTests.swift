@@ -79,6 +79,48 @@ struct ModPackageLayeringTests {
   }
 
   @Test
+  func aUserPatchLayersOverAPackageRecord() throws {
+    try Fixture.with { fixture in
+      let record = try Fixture.record(0x1234, 0xABCD)
+      try install(try fixture.makePackage(records: [record]), in: fixture)
+      let patch = try Fixture.patch(0x1234, 0xABCD, ["tuning": ["stickDeadzone": 0.3]])
+      try fixture.write([patch], kind: "Controllers", in: fixture.root)
+
+      let set = ControllerRecordSet.load(userDirectory: fixture.controllers)
+      let loaded = try #require(set.records[Self.identity])
+      #expect(loaded.fieldLayers == ["protocol": .package, "tuning": .user])
+      #expect(loaded.tuning.stickDeadzone == 0.3)
+      #expect(set.problems.isEmpty)
+    }
+  }
+
+  @Test
+  func aUserPatchBeatsAPackagePatchAndANullDeletesTheKey() throws {
+    try Fixture.with { fixture in
+      let record = try Fixture.record(0x1234, 0xABCD)
+      let packaged = try Fixture.patch(0x1234, 0xABCD, ["tuning": ["stickDeadzone": 0.1]])
+      try install(try fixture.makePackage(records: [record, packaged]), in: fixture)
+      let packagedSet = ControllerRecordSet.load(userDirectory: fixture.controllers)
+      #expect(packagedSet.records[Self.identity]?.tuning.stickDeadzone == 0.1)
+      #expect(packagedSet.records[Self.identity]?.tuningLayers["stickDeadzone"] == .package)
+
+      let user = try Fixture.patch(0x1234, 0xABCD, ["tuning": ["stickDeadzone": 0.3]])
+      try fixture.write([user], kind: "Controllers", in: fixture.root)
+      let beaten = ControllerRecordSet.load(userDirectory: fixture.controllers)
+      #expect(beaten.records[Self.identity]?.tuning.stickDeadzone == 0.3)
+      #expect(beaten.records[Self.identity]?.tuningLayers["stickDeadzone"] == .user)
+
+      let deleting = try Fixture.patch(0x1234, 0xABCD, ["tuning": NSNull()])
+      try fixture.write([deleting], kind: "Controllers", in: fixture.root)
+      let set = ControllerRecordSet.load(userDirectory: fixture.controllers)
+      let loaded = try #require(set.records[Self.identity])
+      #expect(loaded.tuning.stickDeadzone == nil)
+      #expect(loaded.tuningLayers["stickDeadzone"] == nil)
+      #expect(set.problems.isEmpty)
+    }
+  }
+
+  @Test
   func aPackageWithAnInvalidManifestIsListedAndAppliesNothing() throws {
     try Fixture.with { fixture in
       let broken = fixture.packages.appendingPathComponent("broken-pack", isDirectory: true)
