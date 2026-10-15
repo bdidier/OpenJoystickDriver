@@ -177,7 +177,7 @@ enum ProtocolClassifier {
     {
       return result
     }
-    guard backend == .ioHID else { return .unsupported(.noProtocolMatch) }
+    guard !backend.usesRawUSB else { return .unsupported(.noProtocolMatch) }
     guard let interface = descriptorInterface(interfaces) else {
       return .unsupported(.descriptorContractMismatch)
     }
@@ -199,7 +199,7 @@ enum ProtocolClassifier {
     interfaces: [PhysicalInterfaceSignature],
     backend: DeviceAccessBackend
   ) -> ProtocolClassification {
-    let isRawUSB = backend != .ioHID
+    let isRawUSB = backend.usesRawUSB
     func reject(_ reason: ProtocolBindingReason) -> ProtocolClassification {
       .unsupported(
         reason,
@@ -326,7 +326,7 @@ enum ProtocolClassifier {
     }
     // These are raw-USB variants; HID access cannot drive them and must not reach
     // `hid.descriptor`.
-    guard backend != .ioHID else {
+    guard backend.usesRawUSB else {
       return .unsupported(
         .unsupportedTransportVariant,
         rejected: ProtocolBindingResult.RejectedCandidate(

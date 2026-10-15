@@ -37,11 +37,16 @@ public enum PhysicalTransport: String, CaseIterable, Codable, Equatable, Sendabl
   }
 }
 
-/// Access-backend vocabulary: IOKit HID, or raw USB through IOUSBHost or the DEXT.
+/// Access-backend vocabulary: IOKit HID, raw USB through IOUSBHost or the DEXT, or a Bluetooth LE
+/// GATT link through Core Bluetooth.
 public enum DeviceAccessBackend: String, Codable, Equatable, Sendable {
   case ioHID
   case ioUSBHost
   case usbDriverKit
+  case coreBluetoothGATT
+
+  /// Whether the backend reaches the device as raw USB, with no HID layer in between.
+  public var usesRawUSB: Bool { self == .ioUSBHost || self == .usbDriverKit }
 
   public init(route: USBTransportRoute) {
     switch route {
