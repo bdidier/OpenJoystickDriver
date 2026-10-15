@@ -1135,11 +1135,11 @@
 "cli.permission.request.ids" = "İstenecek izinler: input-monitoring veya accessibility.";
 "cli.permission.request.unknown_id" = "Bilinmeyen izin “%@”. %@ kullanın.";
 "cli.config.abstract" = "OpenJoystickDriver’ın uyguladığı yapılandırmayı ve her değeri hangi katmanın belirlediğini gösterir.";
-"cli.config.discussion" = "Değerler en düşük katmandan başlayarak katmanlanır: sürücü varsayılanı, all.patch.json, pakete dahil kayıt, sizin kaydınız, etkin profil. Her ayar anahtarı, onu belirleyen en yüksek katmanın değerini alır.";
+"cli.config.discussion" = "Değerler en düşük katmandan başlayarak katmanlanır: sürücü varsayılanı, pakete dahil kayıt, paket kaydı, all.patch.json, sizin kaydınız, etkin profil. Her ayar anahtarı, onu belirleyen en yüksek katmanın değerini alır.";
 "cli.config.show.abstract" = "Her ayar değerini ve onu belirleyen katmanı yazdırır.";
 "cli.config.show.controller" = "Genel varsayılanlar yerine tek bir kontrolcünün etkin ayarını VVVV:PPPP biçiminde gösterir.";
 "cli.config.show.defaults_ignored" = "%@ yok sayıldı: %@";
-"cli.config.show.discussion" = "--controller olmadan tüm ayar anahtarlarını all.patch.json’daki değerleriyle ve kayıtları bu anahtarları okuyan ailelerle birlikte yazdırır. Seçenekle birlikte, all.patch.json, sizin kaydınız ve pakete dahil kayıt katmanlandıktan sonra kontrolcünün kaydını yazdırır. Hiçbir katmanın belirlemediği anahtar “sürücü varsayılanı” olarak görünür.";
+"cli.config.show.discussion" = "--controller olmadan tüm ayar anahtarlarını all.patch.json’daki değerleriyle ve kayıtları bu anahtarları okuyan ailelerle birlikte yazdırır. Seçenekle birlikte, pakete dahil kayıt, paket kayıtları, all.patch.json ve sizin kaydınız katmanlandıktan sonra kontrolcünün kaydını yazdırır. Hiçbir katmanın belirlemediği anahtar “sürücü varsayılanı” olarak görünür.";
 "cli.config.show.read_by" = "okuyanlar: %@";
 "cli.config.show.unread" = "all.patch.json %@ anahtarını ayarlıyor, ancak bağlı hiçbir kontrolcü bu anahtarı okumuyor. Bu anahtarı okuyan aileler: %@.";
 "cli.config.show.unread_skipped_no_controller" = "Bağlı kontrolcü yok, bu yüzden all.patch.json içinde hiçbir kontrolcünün okumadığı anahtarların kontrolü atlandı.";

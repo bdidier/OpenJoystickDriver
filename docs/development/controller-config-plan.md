@@ -16,7 +16,7 @@ Testers and users can add or fix a controller without a new OJD build. Most per-
 | Active profile selections | `~/Library/Application Support/OpenJoystickDriver/ActiveProfiles.json` | user | selection list |
 | App preferences | `UserDefaults` for the app's bundle identifier | app | unchanged |
 
-This follows Apple's file-system layout: shipped data stays in the signed bundle, and user-owned data goes in Application Support under the app's name. User records use the same override schema as the repository, so a user record that works can be copied into `Resources/ControllerOverrides/` in a pull request without changes.
+This follows Apple's file-system layout: shipped data stays in the signed bundle, and user-owned data goes in Application Support under the app's name. User records use the same ControllerPatch schema as the repository, so a user patch that works can be copied into `Resources/ControllerPatches/` in a pull request without changes.
 
 Profiles move from the single `RemappingProfiles.json` to one file per profile, so a profile can be shared as a file. Old libraries are not read. Users recreate their profiles.
 

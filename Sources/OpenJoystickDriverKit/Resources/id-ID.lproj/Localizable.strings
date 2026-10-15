@@ -1135,11 +1135,11 @@
 "cli.permission.request.ids" = "Izin yang diminta: input-monitoring atau accessibility.";
 "cli.permission.request.unknown_id" = "Izin tidak dikenal “%@”. Gunakan %@.";
 "cli.config.abstract" = "Tampilkan konfigurasi yang diterapkan OpenJoystickDriver dan lapisan yang menetapkan setiap nilai.";
-"cli.config.discussion" = "Nilai disusun berlapis, dari yang terendah: default driver, all.patch.json, catatan bawaan, catatan Anda, profil aktif. Setiap kunci penyetelan memakai nilai dari lapisan tertinggi yang menetapkannya.";
+"cli.config.discussion" = "Nilai disusun berlapis, dari yang terendah: default driver, catatan bawaan, catatan paket, all.patch.json, catatan Anda, profil aktif. Setiap kunci penyetelan memakai nilai dari lapisan tertinggi yang menetapkannya.";
 "cli.config.show.abstract" = "Cetak setiap nilai penyetelan dan lapisan yang menetapkannya.";
 "cli.config.show.controller" = "Tampilkan penyetelan efektif satu pengontrol, sebagai VVVV:PPPP, bukan default global.";
 "cli.config.show.defaults_ignored" = "%@ diabaikan: %@";
-"cli.config.show.discussion" = "Tanpa --controller, mencetak setiap kunci penyetelan beserta nilainya dari all.patch.json, dan keluarga yang catatannya membaca kunci tersebut. Dengan opsi itu, mencetak catatan pengontrol setelah all.patch.json, catatan Anda, dan catatan bawaan disusun berlapis. Kunci yang tidak ditetapkan lapisan mana pun menampilkan “default driver”.";
+"cli.config.show.discussion" = "Tanpa --controller, mencetak setiap kunci penyetelan beserta nilainya dari all.patch.json, dan keluarga yang catatannya membaca kunci tersebut. Dengan opsi itu, mencetak catatan pengontrol setelah catatan bawaan, catatan paket, all.patch.json, dan catatan Anda disusun berlapis. Kunci yang tidak ditetapkan lapisan mana pun menampilkan “default driver”.";
 "cli.config.show.read_by" = "dibaca oleh: %@";
 "cli.config.show.unread" = "all.patch.json mengatur %@, tetapi tidak ada pengontrol terhubung yang membacanya. Keluarga yang membacanya: %@.";
 "cli.config.show.unread_skipped_no_controller" = "Tidak ada pengontrol yang terhubung, sehingga pemeriksaan kunci all.patch.json yang tidak dibaca pengontrol mana pun dilewati.";

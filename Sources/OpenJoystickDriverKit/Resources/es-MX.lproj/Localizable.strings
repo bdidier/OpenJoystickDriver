@@ -1135,11 +1135,11 @@
 "cli.permission.request.ids" = "Permisos que solicitar: input-monitoring o accessibility.";
 "cli.permission.request.unknown_id" = "Permiso desconocido «%@». Usa %@.";
 "cli.config.abstract" = "Muestra la configuración que aplica OpenJoystickDriver y qué capa estableció cada valor.";
-"cli.config.discussion" = "Los valores se apilan en capas, de la más baja a la más alta: valor predeterminado del controlador, all.patch.json, registro incluido, tu registro, perfil activo. Cada clave de ajuste toma el valor de la capa más alta que la establece.";
+"cli.config.discussion" = "Los valores se apilan en capas, de la más baja a la más alta: valor predeterminado del controlador, registro incluido, registro del paquete, all.patch.json, tu registro, perfil activo. Cada clave de ajuste toma el valor de la capa más alta que la establece.";
 "cli.config.show.abstract" = "Imprime cada valor de ajuste y la capa que lo estableció.";
 "cli.config.show.controller" = "Muestra el ajuste efectivo de un control, como VVVV:PPPP, en lugar de los valores predeterminados globales.";
 "cli.config.show.defaults_ignored" = "%@ ignorado: %@";
-"cli.config.show.discussion" = "Sin --controller, imprime todas las claves de ajuste con su valor de all.patch.json y las familias cuyos registros las leen. Con él, imprime el registro del control una vez apilados all.patch.json, tu registro y el registro incluido. Una clave que ninguna capa establece muestra «valor predeterminado del controlador».";
+"cli.config.show.discussion" = "Sin --controller, imprime todas las claves de ajuste con su valor de all.patch.json y las familias cuyos registros las leen. Con él, imprime el registro del control una vez apilados el registro incluido, los registros del paquete, all.patch.json y tu registro. Una clave que ninguna capa establece muestra «valor predeterminado del controlador».";
 "cli.config.show.read_by" = "lo leen: %@";
 "cli.config.show.unread" = "all.patch.json define %@, pero ningún control conectado la lee. Familias que la leen: %@.";
 "cli.config.show.unread_skipped_no_controller" = "No hay ningún control conectado, así que se omitió la comprobación de las claves de all.patch.json que ningún control lee.";

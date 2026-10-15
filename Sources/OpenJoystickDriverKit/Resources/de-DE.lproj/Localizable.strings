@@ -1135,11 +1135,11 @@
 "cli.permission.request.ids" = "Anzufordernde Berechtigungen: input-monitoring oder accessibility.";
 "cli.permission.request.unknown_id" = "Unbekannte Berechtigung „%@“. Verwende %@.";
 "cli.config.abstract" = "Zeigt die Konfiguration, die OpenJoystickDriver anwendet, und welche Ebene jeden Wert festgelegt hat.";
-"cli.config.discussion" = "Die Werte liegen in Ebenen, von der niedrigsten zur höchsten: Treiberstandard, all.patch.json, mitgelieferter Eintrag, dein Eintrag, aktives Profil. Jeder Tuning-Schlüssel übernimmt den Wert der höchsten Ebene, die ihn festlegt.";
+"cli.config.discussion" = "Die Werte liegen in Ebenen, von der niedrigsten zur höchsten: Treiberstandard, mitgelieferter Eintrag, Paketeintrag, all.patch.json, dein Eintrag, aktives Profil. Jeder Tuning-Schlüssel übernimmt den Wert der höchsten Ebene, die ihn festlegt.";
 "cli.config.show.abstract" = "Gibt jeden Tuning-Wert und die Ebene aus, die ihn festgelegt hat.";
 "cli.config.show.controller" = "Zeigt das effektive Tuning eines Controllers als VVVV:PPPP an, statt der globalen Standardwerte.";
 "cli.config.show.defaults_ignored" = "%@ ignoriert: %@";
-"cli.config.show.discussion" = "Ohne --controller werden alle Tuning-Schlüssel mit ihrem Wert aus all.patch.json ausgegeben, dazu die Familien, deren Einträge sie lesen. Mit --controller wird der Eintrag des Controllers ausgegeben, nachdem all.patch.json, dein Eintrag und der mitgelieferte Eintrag in Ebenen zusammengeführt wurden. Ein Schlüssel, den keine Ebene festlegt, zeigt „Treiberstandard“.";
+"cli.config.show.discussion" = "Ohne --controller werden alle Tuning-Schlüssel mit ihrem Wert aus all.patch.json ausgegeben, dazu die Familien, deren Einträge sie lesen. Mit --controller wird der Eintrag des Controllers ausgegeben, nachdem der mitgelieferte Eintrag, die Paketeinträge, all.patch.json und dein Eintrag in Ebenen zusammengeführt wurden. Ein Schlüssel, den keine Ebene festlegt, zeigt „Treiberstandard“.";
 "cli.config.show.read_by" = "gelesen von: %@";
 "cli.config.show.unread" = "all.patch.json legt %@ fest, aber kein verbundener Controller liest diesen Schlüssel. Familien, die ihn lesen: %@.";
 "cli.config.show.unread_skipped_no_controller" = "Es ist kein Controller verbunden, daher wurde die Prüfung auf Schlüssel in all.patch.json, die kein Controller liest, übersprungen.";

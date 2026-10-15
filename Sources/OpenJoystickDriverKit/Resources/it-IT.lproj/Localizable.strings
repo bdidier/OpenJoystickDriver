@@ -1135,11 +1135,11 @@
 "cli.permission.request.ids" = "Permessi da richiedere: input-monitoring o accessibility.";
 "cli.permission.request.unknown_id" = "Permesso sconosciuto «%@». Usa %@.";
 "cli.config.abstract" = "Mostra la configurazione applicata da OpenJoystickDriver e quale livello ha impostato ogni valore.";
-"cli.config.discussion" = "I valori si sovrappongono in livelli, dal più basso: predefinito del driver, all.patch.json, record incluso, il tuo record, profilo attivo. Ogni chiave di regolazione prende il valore del livello più alto che la imposta.";
+"cli.config.discussion" = "I valori si sovrappongono in livelli, dal più basso: predefinito del driver, record incluso, record del pacchetto, all.patch.json, il tuo record, profilo attivo. Ogni chiave di regolazione prende il valore del livello più alto che la imposta.";
 "cli.config.show.abstract" = "Stampa ogni valore di regolazione e il livello che lo ha impostato.";
 "cli.config.show.controller" = "Mostra la regolazione effettiva di un controller, come VVVV:PPPP, invece dei valori predefiniti globali.";
 "cli.config.show.defaults_ignored" = "%@ ignorato: %@";
-"cli.config.show.discussion" = "Senza --controller, stampa tutte le chiavi di regolazione con il loro valore in all.patch.json e le famiglie i cui record le leggono. Con questa opzione, stampa il record del controller dopo aver sovrapposto all.patch.json, il tuo record e il record incluso. Una chiave che nessun livello imposta mostra «predefinito del driver».";
+"cli.config.show.discussion" = "Senza --controller, stampa tutte le chiavi di regolazione con il loro valore in all.patch.json e le famiglie i cui record le leggono. Con questa opzione, stampa il record del controller dopo aver sovrapposto il record incluso, i record del pacchetto, all.patch.json e il tuo record. Una chiave che nessun livello imposta mostra «predefinito del driver».";
 "cli.config.show.read_by" = "letto da: %@";
 "cli.config.show.unread" = "all.patch.json imposta %@, ma nessun controller collegato la legge. Famiglie che la leggono: %@.";
 "cli.config.show.unread_skipped_no_controller" = "Nessun controller è collegato, quindi la verifica delle chiavi di all.patch.json che nessun controller legge è stata saltata.";
