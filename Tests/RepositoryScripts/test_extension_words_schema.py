@@ -12,11 +12,14 @@ SCHEMA = "cli-output.schema.json"
 class ExtensionWordsSchemaTests(unittest.TestCase):
     """The CLI output schema accepts the transport-extension words and refuses the old."""
 
+    defs: dict[str, Any]
+
     @classmethod
     def setUpClass(cls) -> None:
         cls.documents = validate_schemas.validate_schema_documents()
         cls.registry = validate_schemas.schema_registry(cls.documents)
-        cls.defs: dict[str, Any] = cls.documents[SCHEMA]["$defs"]
+        schema: Any = cls.documents[SCHEMA]
+        cls.defs = schema["$defs"]
 
     def validator(self, definition: str) -> Any:
         return validate_schemas.Draft202012Validator(

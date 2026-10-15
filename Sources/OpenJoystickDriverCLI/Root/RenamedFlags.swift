@@ -1,9 +1,9 @@
 import Foundation
 import OpenJoystickDriverKit
 
-/// Names the new word when a command line uses a flag or command group that 0.6.0 renamed to an OS-neutral word.
-/// The old flag is still refused; this only explains the refusal. The flags come from the one
-/// table of old words, ``RenamedWord/all``.
+/// Names the new word when a command line uses a flag or command group that 0.6.0 renamed to an
+/// OS-neutral word. The old word is still refused; this only explains the refusal. The words come
+/// from the one table of old words, ``RenamedWord/all``.
 enum RenamedFlags {
   /// The rename that `arguments` trips, or nil when no renamed flag is used.
   static func match(arguments: [String]) -> RenamedWord? {
