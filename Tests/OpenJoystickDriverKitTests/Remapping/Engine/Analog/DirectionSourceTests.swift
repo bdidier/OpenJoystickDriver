@@ -20,7 +20,7 @@ struct RemappingDirectionSourceTests {
     var state = RemappingEngineState()
     #expect(
       state.process(
-        inputs: [.leftTrigger(1), .press(.faceSouth)],
+        inputs: [.leftTrigger(1), .press(.south)],
         from: identifier,
         profile: profile,
         at: 0
@@ -45,7 +45,7 @@ struct RemappingDirectionSourceTests {
     var state = RemappingEngineState()
     #expect(
       state.process(
-        inputs: [.leftStick(x: -1, y: 0), .press(.faceSouth)],
+        inputs: [.leftStick(x: -1, y: 0), .press(.south)],
         from: identifier,
         profile: profile,
         at: 0
@@ -76,7 +76,7 @@ struct RemappingDirectionSourceTests {
     var state = RemappingEngineState()
     #expect(
       state.process(
-        inputs: [.rightStick(x: 1, y: 0), .press(.faceSouth)],
+        inputs: [.rightStick(x: 1, y: 0), .press(.south)],
         from: identifier,
         profile: profile,
         at: 0

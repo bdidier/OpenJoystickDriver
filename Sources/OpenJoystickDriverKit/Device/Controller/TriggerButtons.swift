@@ -1,14 +1,14 @@
 import Foundation
 
-/// The one trigger-button policy for protocols without a distinct digital trigger signal.
+/// The one trigger-press policy for protocols without a distinct digital trigger signal.
 ///
-/// A driver whose protocol reports a physical digital trigger declares `leftTriggerButton` or
-/// `rightTriggerButton` in its capabilities and emits it from that signal. For a side whose driver
-/// declares only the analog trigger, normalization derives the button from the canonical analog
-/// value: it presses at `pressThreshold` and, once pressed, releases only at or below
-/// `releaseThreshold`. The values reuse the remapping defaults for an axis acting as a button,
-/// applied here to the canonical value with no dead zone. A remapped trigger axis sets the virtual
-/// digital trigger by the same rule.
+/// A driver whose protocol reports a physical digital trigger lists that trigger in the
+/// `digitalTriggers` of its capabilities and emits `leftTrigger` or `rightTrigger` in `pressed`
+/// from that signal. For any other trigger in `controls`, normalization derives the press from the
+/// canonical analog value: it presses at `pressThreshold` and, once pressed, releases only at or
+/// below `releaseThreshold`. The values reuse the remapping defaults for an axis acting as a
+/// button, applied here to the canonical value with no dead zone. A remapped trigger axis sets the
+/// virtual digital trigger by the same rule.
 enum TriggerButtonDerivation {
   static let pressThreshold = UnipolarValue(
     normalized: Float(RemappingAxisTuning.defaultDigitalActivationThreshold)
@@ -19,17 +19,17 @@ enum TriggerButtonDerivation {
     )
   )
 
-  /// The trigger sides `capabilities` leaves to derivation: an analog trigger with no declared
-  /// digital trigger button.
+  /// The trigger sides `capabilities` leaves to derivation: a trigger with no declared digital
+  /// signal.
   static func derivedSides(
     of capabilities: ControllerCapabilities
-  ) -> [(trigger: KeyPath<ControllerState, UnipolarValue>, button: ControlID)] {
+  ) -> [(trigger: KeyPath<ControllerState, UnipolarValue>, button: Control)] {
     [
-      (\ControllerState.leftTrigger, ControlID.leftTrigger, ControlID.leftTriggerButton),
-      (\ControllerState.rightTrigger, .rightTrigger, .rightTriggerButton),
-    ].compactMap { trigger, analog, button in
-      capabilities.controls.contains(analog) && !capabilities.controls.contains(button)
-        ? (trigger, button) : nil
+      (\ControllerState.leftTrigger, Control.leftTrigger),
+      (\ControllerState.rightTrigger, Control.rightTrigger),
+    ].compactMap { trigger, control in
+      capabilities.controls.contains(control) && !capabilities.digitalTriggers.contains(control)
+        ? (trigger, control) : nil
     }
   }
 
@@ -54,19 +54,5 @@ enum TriggerButtonDerivation {
   static func isPressed(_ value: UnipolarValue, wasPressed: Bool) -> Bool {
     wasPressed
       ? value.rawValue > releaseThreshold.rawValue : value.rawValue >= pressThreshold.rawValue
-  }
-}
-
-extension ControllerCapabilities {
-  /// The capabilities after normalization: the declared controls plus each trigger button
-  /// normalization derives.
-  public var normalized: ControllerCapabilities {
-    let derived = TriggerButtonDerivation.derivedSides(of: self).map(\.button)
-    guard !derived.isEmpty else { return self }
-    return ControllerCapabilities(
-      controls: controls.union(derived),
-      touchContactCount: touchContactCount,
-      motion: motion
-    )
   }
 }

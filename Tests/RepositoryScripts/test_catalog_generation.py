@@ -88,12 +88,12 @@ class XpadTranslationTests(unittest.TestCase):
             profile["capabilities"],
             {
                 "absent": [
-                    "left-stick-x",
-                    "left-stick-y",
-                    "right-stick-x",
-                    "right-stick-y",
-                    "left-trigger",
-                    "right-trigger",
+                    "LeftStickX",
+                    "LeftStickY",
+                    "RightStickX",
+                    "RightStickY",
+                    "LeftTrigger",
+                    "RightTrigger",
                 ]
             },
         )

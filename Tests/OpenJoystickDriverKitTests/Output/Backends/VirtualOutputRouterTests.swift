@@ -14,14 +14,14 @@ struct VirtualOutputRouterTests {
     dispatcher.setBackend(previous)
     dispatcher.setBackend(current)
     await dispatcher.dispatch(
-      ControllerEvent([.press(.faceSouth)]),
+      ControllerEvent([.press(.south)]),
       labels: .playStation,
       from: identifier
     )
     await dispatcher.activateOutput(for: identifier)
 
     #expect(previous.states.isEmpty && previous.activations.isEmpty)
-    #expect(current.states == [snapshot(.press(.faceSouth))])
+    #expect(current.states == [snapshot(.press(.south))])
     #expect(current.labels == [.playStation])
     #expect(current.activations == [identifier])
   }
@@ -34,7 +34,7 @@ struct VirtualOutputRouterTests {
     dispatcher.suppressOutput = true
 
     await dispatcher.dispatch(
-      ControllerEvent([.press(.faceSouth)]),
+      ControllerEvent([.press(.south)]),
       labels: .standard,
       from: LogicalControllerID(vendorID: 1, productID: 2)
     )

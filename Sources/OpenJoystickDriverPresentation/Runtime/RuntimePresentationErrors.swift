@@ -114,23 +114,23 @@ extension RuntimePresentation {
     }
   }
 
-  static func buttonLabel(_ button: RemappingButton) -> String {
+  static func buttonLabel(_ button: Control) -> String {
     switch button {
-    case .leftFunction:
+    case .auxiliary1:
       return OJDLocalized.string("mapping.leftFunctionButton")
-    case .rightFunction:
+    case .auxiliary2:
       return OJDLocalized.string("mapping.rightFunctionButton")
-    case .leftPaddle: return OJDLocalized.string("mapping.leftPaddle")
-    case .rightPaddle: return OJDLocalized.string("mapping.rightPaddle")
-    case .leftSL: return OJDLocalized.string("mapping.leftJoyConSL")
-    case .leftSR: return OJDLocalized.string("mapping.leftJoyConSR")
-    case .rightSL: return OJDLocalized.string("mapping.rightJoyConSL")
-    case .rightSR: return OJDLocalized.string("mapping.rightJoyConSR")
-    case .leftGrip: return OJDLocalized.string("mapping.leftGrip")
-    case .rightGrip: return OJDLocalized.string("mapping.rightGrip")
-    case .leftPadClick:
+    case .leftPaddle1: return OJDLocalized.string("mapping.leftPaddle")
+    case .rightPaddle1: return OJDLocalized.string("mapping.rightPaddle")
+    case .auxiliary3: return OJDLocalized.string("mapping.leftJoyConSL")
+    case .auxiliary4: return OJDLocalized.string("mapping.leftJoyConSR")
+    case .auxiliary5: return OJDLocalized.string("mapping.rightJoyConSL")
+    case .auxiliary6: return OJDLocalized.string("mapping.rightJoyConSR")
+    case .leftPaddle2: return OJDLocalized.string("mapping.leftGrip")
+    case .rightPaddle2: return OJDLocalized.string("mapping.rightGrip")
+    case .leftTrackpadClick:
       return OJDLocalized.string("mapping.leftPadClick")
-    case .rightPadClick:
+    case .rightTrackpadClick:
       return OJDLocalized.string("mapping.rightPadClick")
     case .south: return OJDLocalized.string("mapping.buttonSouth")
     case .east: return OJDLocalized.string("mapping.buttonEast")
@@ -140,21 +140,24 @@ extension RuntimePresentation {
       return OJDLocalized.string("mapping.leftShoulder")
     case .rightShoulder:
       return OJDLocalized.string("mapping.rightShoulder")
-    case .leftStick:
+    case .leftStickClick:
       return OJDLocalized.string("mapping.leftStickClick")
-    case .rightStick:
+    case .rightStickClick:
       return OJDLocalized.string("mapping.rightStickClick")
     case .start: return OJDLocalized.string("mapping.start")
     case .back: return OJDLocalized.string("mapping.back")
     case .guide: return OJDLocalized.string("mapping.guide")
-    case .share: return OJDLocalized.string("mapping.share")
-    case .options: return OJDLocalized.string("mapping.options")
-    case .touchpad: return OJDLocalized.string("mapping.touchpadClick")
-    case .mute: return OJDLocalized.string("mapping.mute")
-    case .leftTriggerClick:
+    case .capture: return OJDLocalized.string("mapping.share")
+    case .touchpadClick: return OJDLocalized.string("mapping.touchpadClick")
+    case .microphone: return OJDLocalized.string("mapping.mute")
+    case .leftTrigger:
       return OJDLocalized.string("mapping.leftTriggerClick")
-    case .rightTriggerClick:
+    case .rightTrigger:
       return OJDLocalized.string("mapping.rightTriggerClick")
+    case .dpadUp, .dpadDown, .dpadLeft, .dpadRight, .leftStickX, .leftStickY, .rightStickX,
+      .rightStickY, .auxiliary7, .auxiliary8, .leftStickTouch, .rightStickTouch,
+      .leftTrackpadTouch, .rightTrackpadTouch:
+      return button.rawValue
     }
   }
 

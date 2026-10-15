@@ -10,6 +10,7 @@ from typing import Any
 try:
     from jsonschema import Draft202012Validator
     from jsonschema.exceptions import ValidationError as JSONSchemaValidationError
+    from referencing import Registry, Resource
 except ImportError:
     print(
         "error: install schema validation dependencies with "
@@ -151,10 +152,19 @@ def load_object(path: pathlib.Path) -> dict[str, Any]:
     return value
 
 
+def schema_registry() -> Any:
+    """Every schema under `Resources/Schemas`, so `vocabulary.schema.json` refs resolve."""
+    resources = []
+    for path in sorted(SCHEMA_PATH.parent.glob("*.schema.json")):
+        document = load_object(path)
+        resources.append((document["$id"], Resource.from_contents(document)))
+    return Registry().with_resources(resources)
+
+
 def validator() -> Any:
     schema = load_object(SCHEMA_PATH)
     Draft202012Validator.check_schema(schema)
-    return Draft202012Validator(schema)
+    return Draft202012Validator(schema, registry=schema_registry())
 
 
 def validate_record(

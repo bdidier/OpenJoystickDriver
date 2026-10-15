@@ -103,6 +103,7 @@ jobs:
           swiftlint lint --no-cache --strict
           python3 Scripts/Quality/check_swift_file_length.py
           python3 Scripts/Quality/check_neutral_core_imports.py
+          python3 Scripts/Quality/check_sink_boundary.py
           python3 Scripts/Quality/check_localization_keys.py
 
       - name: Build package

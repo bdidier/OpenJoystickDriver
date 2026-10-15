@@ -20,7 +20,6 @@
 
     var content: some View {
       let snapshot = liveState.snapshot
-      let labels = liveState.labels
       let pressed = snapshot.pressed
       let presentation = publishedProfile.presentation
       let symbols = InputTestControllerSymbolSet.resolve(for: presentation.glyphFamily)
@@ -29,7 +28,7 @@
         Divider()
         HStack(alignment: .center, spacing: 18) {
           dpadCluster(hat: snapshot.hat).frame(maxWidth: .infinity)
-          systemCluster(pressed: pressed, labels: labels, symbols: symbols).frame(
+          systemCluster(pressed: pressed, symbols: symbols).frame(
             maxWidth: .infinity
           )
           faceButtonCluster(pressed: pressed, symbols: symbols).frame(maxWidth: .infinity)
@@ -51,10 +50,7 @@
             clickActive: pressed.contains(.rightStickClick)
           )
         }
-        let additionalButtons = InputTestButtonPresentation.additionalControls(
-          in: snapshot,
-          labels: labels
-        )
+        let additionalButtons = InputTestButtonPresentation.additionalControls(in: snapshot)
         if !additionalButtons.isEmpty {
           Divider()
           VStack(alignment: .leading, spacing: 8) {
@@ -63,7 +59,7 @@
             VStack(alignment: .leading, spacing: 8) {
               ForEach(additionalButtons, id: \.self) { control in
                 InputTestIndicator(
-                  title: InputTestButtonPresentation.localizedTitle(for: control, labels: labels),
+                  title: InputTestButtonPresentation.localizedTitle(for: control),
                   active: true
                 )
               }
@@ -82,12 +78,12 @@
         indicator(
           symbols.leftTrigger,
           active: snapshot.leftTrigger.normalized > 0.05
-            || snapshot.pressed.contains(.leftTriggerButton)
+            || snapshot.pressed.contains(.leftTrigger)
         )
         indicator(
           symbols.rightTrigger,
           active: snapshot.rightTrigger.normalized > 0.05
-            || snapshot.pressed.contains(.rightTriggerButton)
+            || snapshot.pressed.contains(.rightTrigger)
         )
         indicator(symbols.rightShoulder, active: snapshot.pressed.contains(.rightShoulder))
       }
@@ -127,33 +123,30 @@
 
     @ViewBuilder
     private func systemCluster(
-      pressed: Set<ControlID>,
-      labels: ControllerButtonLabels,
+      pressed: Set<Control>,
       symbols: InputTestControllerSymbolSet
     ) -> some View {
       HStack(spacing: 6) {
         indicator(
           symbols.view,
-          active: !pressed.isDisjoint(
-            with: InputTestSystemClusterLayout.viewControls(labels: labels)
-          )
+          active: pressed.contains(.back)
         )
         indicator(symbols.guide, active: pressed.contains(.guide))
-        indicator(symbols.menu, active: pressed.contains(.menu))
+        indicator(symbols.menu, active: pressed.contains(.start))
       }
     }
 
     private func faceButtonCluster(
-      pressed: Set<ControlID>,
+      pressed: Set<Control>,
       symbols: InputTestControllerSymbolSet
     ) -> some View {
       VStack(spacing: 6) {
-        indicator(symbols.northFace, active: pressed.contains(.faceNorth))
+        indicator(symbols.northFace, active: pressed.contains(.north))
         HStack(spacing: 6) {
-          indicator(symbols.westFace, active: pressed.contains(.faceWest))
-          indicator(symbols.eastFace, active: pressed.contains(.faceEast))
+          indicator(symbols.westFace, active: pressed.contains(.west))
+          indicator(symbols.eastFace, active: pressed.contains(.east))
         }
-        indicator(symbols.southFace, active: pressed.contains(.faceSouth))
+        indicator(symbols.southFace, active: pressed.contains(.south))
       }
     }
 

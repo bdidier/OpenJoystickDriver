@@ -24,6 +24,7 @@ swift-format lint --recursive --strict Package.swift Sources Tests Tools
 swiftlint lint --no-cache --strict
 python3 Scripts/Quality/check_swift_file_length.py
 python3 Scripts/Quality/check_neutral_core_imports.py
+python3 Scripts/Quality/check_sink_boundary.py
 python3 Scripts/Quality/check_localization_keys.py
 ./Scripts/ojd check driverkit
 ./Scripts/ojd test parsers-macos14
@@ -31,6 +32,6 @@ python3 Scripts/Quality/check_localization_keys.py
 swift test --no-parallel
 ```
 
-`snapshots check` runs the equivalence snapshot tests and prints the changed, added, and removed records against the files in `Tests/EquivalenceSnapshots/` (parsed frames, catalog index, record routes, DriverKit match list, SDL mappings); it exits non-zero on any difference. `snapshots write` rewrites those files from the current tree, so run it after any intended behavior change and review the resulting diff.
+`snapshots check` runs the equivalence snapshot tests and prints the changed, added, and removed records against the files in `Tests/EquivalenceSnapshots/` (parsed frames, catalog index, record routes, DriverKit match list, SDL mappings, and the virtual report bytes each persona produces from canonical frames, with a control that has no bit in a persona recorded as `unmapped`); it exits non-zero on any difference. `snapshots write` rewrites those files from the current tree, so run it after any intended behavior change and review the resulting diff.
 
 `catalog regenerate --write` writes generated controller records. DriverKit project generation writes DriverKit output. All other commands retain their documented route-specific effects and requirements.

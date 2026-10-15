@@ -39,9 +39,8 @@ public final class SteamDeckDriver: PhysicalProtocolDriver {
   /// second stays well inside SDL's cadence.
   public var sessionPlan: DriverSessionPlan {
     DriverSessionPlan(
-      hidKeepAliveIntervalNanoseconds: PhysicalProtocolID.valveSteamDeck
-        .keepAliveIntervalNanoseconds()
-    )
+      keepAliveChannels: [.hid]
+    ).withKeepAlive(of: .valveSteamDeck)
   }
 
   /// The Deck's controller is built in, so it has no logical connection state.
@@ -79,13 +78,9 @@ public final class SteamDeckDriver: PhysicalProtocolDriver {
 
   /// SDL `FeedDeckLizardWatchdog`, for firmware that ignores the watchdog setting.
   public func keepAliveWrites() -> [PhysicalOutputWrite] {
-    let rightTrackpadNone = [
-      (steamControllerRightTrackpadModeSetting, UInt16(steamControllerTrackpadNone))
-    ]
-    return [
-      .hidFeature(Self.featureReport(steamControllerClearDigitalMappingsPayload)),
-      .hidFeature(Self.settingsReport(rightTrackpadNone)),
-    ]
+    PhysicalProtocolID.valveSteamDeck.keepAliveWrites(variant: nil).map {
+      $0.output(defaultEndpoint: 0, defaultTimeoutMilliseconds: 0)
+    }
   }
 
   /// SDL `HIDAPI_DriverSteamDeck_RumbleJoystick`: `MsgSimpleRumbleCmd` with system intensity,

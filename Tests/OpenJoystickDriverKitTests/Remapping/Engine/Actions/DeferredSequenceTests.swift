@@ -9,20 +9,20 @@ struct RemappingDeferredSequenceTests {
     var state = RemappingEngineState()
     let profile = profile()
     _ = state.process(
-      inputs: [.press(.faceSouth), .press(.faceEast)],
+      inputs: [.press(.south), .press(.east)],
       from: identifier,
       profile: profile,
       at: 0
     )
     #expect(
-      state.process(inputs: [.release(.faceSouth)], from: identifier, profile: profile, at: 1)
+      state.process(inputs: [.release(.south)], from: identifier, profile: profile, at: 1)
         .isEmpty
     )
     #expect(
       state.devices[identifier]?.chords.deferredSequences.first?.awaitingSources == [.button(.east)]
     )
     #expect(
-      state.process(inputs: [.release(.faceEast)], from: identifier, profile: profile, at: 2) == [
+      state.process(inputs: [.release(.east)], from: identifier, profile: profile, at: 2) == [
         .system(.keyDown(.d)), .system(.keyUp(.d)),
       ]
     )
@@ -34,14 +34,14 @@ struct RemappingDeferredSequenceTests {
     var state = RemappingEngineState()
     let profile = profile()
     _ = state.process(
-      inputs: [.press(.faceSouth), .press(.faceEast), .release(.faceSouth)],
+      inputs: [.press(.south), .press(.east), .release(.south)],
       from: identifier,
       profile: profile,
       at: 0
     )
     #expect(
       state.process(
-        inputs: [.press(.faceSouth), .press(.faceWest)],
+        inputs: [.press(.south), .press(.west)],
         from: identifier,
         profile: profile,
         at: 1

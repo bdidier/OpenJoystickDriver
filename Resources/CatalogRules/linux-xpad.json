@@ -22,16 +22,11 @@
   "capabilityAbsences": [
     {
       "flag": "MAP_STICKS_TO_NULL",
-      "controls": [
-        "left-stick-x",
-        "left-stick-y",
-        "right-stick-x",
-        "right-stick-y"
-      ]
+      "controls": ["LeftStickX", "LeftStickY", "RightStickX", "RightStickY"]
     },
     {
       "flag": "MAP_TRIGGERS_TO_BUTTONS",
-      "controls": ["left-trigger", "right-trigger"]
+      "controls": ["LeftTrigger", "RightTrigger"]
     }
   ],
   "representationFlags": ["MAP_DPAD_TO_BUTTONS"],

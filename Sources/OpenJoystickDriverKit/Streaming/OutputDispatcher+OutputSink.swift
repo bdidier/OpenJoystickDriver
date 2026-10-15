@@ -24,7 +24,10 @@ extension OutputDispatcher {
       }
       try await sink.send(state, for: identifier)
       onDelivered()
-    case .observed:
+    case .activation(let identifier):
+      await activateOutput(for: identifier)
+      onDelivered()
+    case .observed, .feed:
       throw StreamBoundaryError.unsupported(destination)
     }
   }

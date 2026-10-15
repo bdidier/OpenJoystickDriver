@@ -5,12 +5,12 @@ import Testing
 
 struct RuntimeExtraButtonTests {
   @Test(arguments: [
-    RemappingButton.leftFunction, .rightFunction, .leftPaddle, .rightPaddle, .leftSL, .leftSR,
-    .rightSL, .rightSR, .leftGrip, .rightGrip, .leftPadClick, .rightPadClick,
+    Control.auxiliary1, .auxiliary2, .leftPaddle1, .rightPaddle1, .auxiliary3, .auxiliary4,
+    .auxiliary5, .auxiliary6, .leftPaddle2, .rightPaddle2, .leftTrackpadClick, .rightTrackpadClick,
   ])
-  func captureAndAuthoringExposeInputOnlyButtons(button: RemappingButton) throws {
+  func captureAndAuthoringExposeInputOnlyButtons(button: Control) {
     var state = ControllerState.neutral
-    state.pressed = [try #require(button.controlID(labels: .standard))]
+    state.pressed = [button]
     #expect(RuntimePresentation.detectedSource(from: state, labels: .standard) == .button(button))
     #expect(SourceOption.options().contains { $0.source == .button(button) })
     let destinations = DestinationOption.options(

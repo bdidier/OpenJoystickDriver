@@ -241,7 +241,7 @@ extension DeviceManager {
       if await pipeline.controllerSessionState() == .active,
         !(await pipeline.requiresInputConnectionBeforeOutput())
       {
-        await dispatcher.activateOutput(for: identifier)
+        await pipeline.activateOutput()
       }
       return
     }
@@ -279,7 +279,7 @@ extension DeviceManager {
     if !plan.requiresInputConnectionBeforeOutput {
       guard await isCurrentHIDStartupPipeline(pipeline, connection: connection) else { return }
       if await pipeline.controllerSessionState() == .active {
-        await dispatcher.activateOutput(for: identifier)
+        await pipeline.activateOutput()
       }
       guard await isCurrentHIDStartupPipeline(pipeline, connection: connection) else { return }
     }

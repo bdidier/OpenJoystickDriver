@@ -37,14 +37,14 @@ struct JoyConParserTests {
     bytes[5] = 0xFF
     let left = try Switch1Driver(layout: .leftJoyCon).parseReport(Data(bytes))
     #expect(left.contains(.press(.leftShoulder)))
-    #expect(left.contains(.press(.view)))
+    #expect(left.contains(.press(.back)))
     #expect(!left.contains(.press(.rightShoulder)))
-    #expect(!left.contains(.press(.menu)))
+    #expect(!left.contains(.press(.start)))
     let right = try Switch1Driver(layout: .rightJoyCon).parseReport(Data(bytes))
     #expect(right.contains(.press(.rightShoulder)))
-    #expect(right.contains(.press(.menu)))
+    #expect(right.contains(.press(.start)))
     #expect(!right.contains(.press(.leftShoulder)))
-    #expect(!right.contains(.press(.view)))
+    #expect(!right.contains(.press(.back)))
   }
 
   @Test(arguments: [NintendoControllerLayout.leftJoyCon, .rightJoyCon])
@@ -67,7 +67,7 @@ struct JoyConParserTests {
     bytes[0] = 0x30
     bytes[3] = 0x30
     bytes[5] = 0x30
-    let expected: Set<ControlID>
+    let expected: Set<Control>
     switch layout {
     case .pro: expected = []
     case .leftJoyCon: expected = [.auxiliary3, .auxiliary4]
@@ -81,16 +81,16 @@ struct JoyConParserTests {
   }
 
   @Test(arguments: [
-    (NintendoControllerLayout.leftJoyCon, 5, UInt8(0x20), RemappingButton.leftSL),
-    (NintendoControllerLayout.leftJoyCon, 5, UInt8(0x10), RemappingButton.leftSR),
-    (NintendoControllerLayout.rightJoyCon, 3, UInt8(0x20), RemappingButton.rightSL),
-    (NintendoControllerLayout.rightJoyCon, 3, UInt8(0x10), RemappingButton.rightSR),
+    (NintendoControllerLayout.leftJoyCon, 5, UInt8(0x20), Control.auxiliary3),
+    (NintendoControllerLayout.leftJoyCon, 5, UInt8(0x10), Control.auxiliary4),
+    (NintendoControllerLayout.rightJoyCon, 3, UInt8(0x20), Control.auxiliary5),
+    (NintendoControllerLayout.rightJoyCon, 3, UInt8(0x10), Control.auxiliary6),
   ])
   func eachRailBitDrivesOnlyItsAssignedAction(
     layout: NintendoControllerLayout,
     offset: Int,
     mask: UInt8,
-    source: RemappingButton
+    source: Control
   ) throws {
     let parser = Switch1Driver(layout: layout)
     let identifier = LogicalControllerID(

@@ -31,7 +31,7 @@ struct XboxBluetoothDescriptorLayoutTests {
     #expect(parse(parser, axis(usage: 0x35, integer: 65535)).contains(.rightStick(x: 1, y: 1)))
     #expect(parse(parser, trigger(page: 2, usage: 0xC5, integer: 1023)).contains(.leftTrigger(1)))
     #expect(parse(parser, trigger(page: 2, usage: 0xC4, integer: 1023)).contains(.rightTrigger(1)))
-    #expect(!parser.capabilities.controls.contains(.share))
+    #expect(!parser.capabilities.controls.contains(.capture))
   }
 
   @Test
@@ -40,10 +40,10 @@ struct XboxBluetoothDescriptorLayoutTests {
       model: Self.xboxOneS,
       reportDescriptor: RecordedHIDDescriptors.xboxOneSLinux
     )
-    #expect(parse(parser, button(page: 0x0C, usage: 0x224, reportID: 1)).contains(.press(.view)))
+    #expect(parse(parser, button(page: 0x0C, usage: 0x224, reportID: 1)).contains(.press(.back)))
     #expect(parse(parser, button(page: 0x0C, usage: 0x223, reportID: 2)).contains(.press(.guide)))
-    #expect(parse(parser, button(usage: 12, reportID: 1)).contains(.press(.menu)))
-    #expect(parse(parser, button(usage: 5, reportID: 1)).contains(.press(.faceNorth)))
+    #expect(parse(parser, button(usage: 12, reportID: 1)).contains(.press(.start)))
+    #expect(parse(parser, button(usage: 5, reportID: 1)).contains(.press(.north)))
   }
 
   @Test
@@ -52,10 +52,10 @@ struct XboxBluetoothDescriptorLayoutTests {
       model: Self.xboxSeries,
       reportDescriptor: RecordedHIDDescriptors.xboxSeries
     )
-    #expect(parser.capabilities.controls.contains(.share))
-    #expect(parse(parser, button(page: 0x0C, usage: 0xB2, reportID: 1)).contains(.press(.share)))
+    #expect(parser.capabilities.controls.contains(.capture))
+    #expect(parse(parser, button(page: 0x0C, usage: 0xB2, reportID: 1)).contains(.press(.capture)))
     #expect(parse(parser, button(usage: 13, reportID: 1)).contains(.press(.guide)))
-    #expect(parse(parser, button(usage: 11, reportID: 1)).contains(.press(.view)))
+    #expect(parse(parser, button(usage: 11, reportID: 1)).contains(.press(.back)))
   }
 
   @Test
@@ -67,8 +67,8 @@ struct XboxBluetoothDescriptorLayoutTests {
     #expect(parse(parser, axis(usage: 0x33, integer: 65535)).contains(.rightStick(x: 1, y: 0)))
     #expect(parse(parser, trigger(page: 1, usage: 0x32, integer: 1023)).contains(.leftTrigger(1)))
     #expect(parse(parser, trigger(page: 1, usage: 0x35, integer: 1023)).contains(.rightTrigger(1)))
-    let buttons: [ControlID] = [
-      .faceSouth, .faceEast, .faceWest, .faceNorth, .leftShoulder, .rightShoulder, .view, .menu,
+    let buttons: [Control] = [
+      .south, .east, .west, .north, .leftShoulder, .rightShoulder, .back, .start,
       .leftStickClick, .rightStickClick,
     ]
     for (index, control) in buttons.enumerated() {

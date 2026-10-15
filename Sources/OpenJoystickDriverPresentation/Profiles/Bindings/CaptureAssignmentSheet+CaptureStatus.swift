@@ -116,7 +116,7 @@
         .ojdAccessibilityValue(captureStatusAccessibilityValue)
     }
     private func heldControlsText(_ state: ControllerState) -> String {
-      let held = ControlID.allCases.filter(state.pressed.contains)
+      let held = Control.allCases.filter(state.pressed.contains)
       guard !held.isEmpty else {
         return OJDLocalized.string("capture.noButton")
       }

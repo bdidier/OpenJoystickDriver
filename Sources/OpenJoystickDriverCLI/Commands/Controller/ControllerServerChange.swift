@@ -45,9 +45,25 @@ enum ControllerServerChange {
       case .json: try CLIOutput.json(result)
       case .plain: CLIOutput.plain([[result.identity, result.server.rawValue, result.file]])
       case .human:
-        let key = dryRun ? "cli.controller.server.dry_run" : "cli.controller.server.success"
-        let line = CLILocalized.format(key, result.identity, result.server.rawValue, result.file)
-        if dryRun { CLIOutput.stdout(line) } else { CLIOutput.success(line) }
+        if dryRun {
+          CLIOutput.stdout(
+            CLILocalized.format(
+              "cli.controller.server.dry_run",
+              result.identity,
+              result.server.rawValue,
+              result.file
+            )
+          )
+        } else {
+          CLIOutput.success(
+            CLILocalized.format(
+              "cli.controller.server.success",
+              result.identity,
+              result.server.rawValue,
+              result.file
+            )
+          )
+        }
       }
     }
   }

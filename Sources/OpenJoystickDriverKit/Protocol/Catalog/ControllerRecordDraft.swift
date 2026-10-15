@@ -161,11 +161,11 @@ private struct DraftLayout {
   }
 
   /// The button order the `hid.descriptor` family reads in its standard layout.
-  private static let standardButtons: [ControlID] = [
-    .faceSouth, .faceEast, .faceWest, .faceNorth, .leftShoulder, .rightShoulder, .view, .menu,
+  private static let standardButtons: [Control] = [
+    .south, .east, .west, .north, .leftShoulder, .rightShoulder, .back, .start,
     .leftStickClick, .rightStickClick, .guide,
   ]
-  private static let stickAxes: [Int: ControlID] = [
+  private static let stickAxes: [Int: Control] = [
     0x30: .leftStickX, 0x31: .leftStickY, 0x33: .rightStickX, 0x34: .rightStickY,
   ]
   private static let triggerAxes = [0x32: "leftTrigger", 0x35: "rightTrigger"]
@@ -179,7 +179,7 @@ private struct DraftLayout {
       payload + base >= (id == 0 ? 1 : 2)
     else { return nil }
     length = payload + base
-    var named = Set<ControlID>()
+    var named = Set<Control>()
     var triggerKeys = Set<String>()
     for field in parsed.fields where field.reportID == id && !field.flags.isRelative {
       let byte = base + field.bitOffset / 8
@@ -212,7 +212,7 @@ private struct DraftLayout {
   }
 
   /// A byte-aligned 8- or 16-bit axis, with its logical range when it is not the full range.
-  private static func axis(_ field: HIDField, control: ControlID, byte: Int) -> [String: Any]? {
+  private static func axis(_ field: HIDField, control: Control, byte: Int) -> [String: Any]? {
     guard field.bitOffset.isMultiple(of: 8), field.bitSize == 8 || field.bitSize == 16 else {
       return nil
     }

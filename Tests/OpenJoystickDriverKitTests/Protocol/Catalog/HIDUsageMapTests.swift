@@ -54,13 +54,13 @@ struct HIDUsageMapTests {
 
   @Test
   func aButtonUsagePressesItsControlWhileNonzero() throws {
-    let driver = try makeDriver(#"{"kind":"button","page":9,"usage":3,"control":"face-west"}"#)
+    let driver = try makeDriver(#"{"kind":"button","page":9,"usage":3,"control":"West"}"#)
     #expect(
-      state(driver, element(page: 9, usage: 3, 1, range: 0...1))?.pressed.contains(.faceWest)
+      state(driver, element(page: 9, usage: 3, 1, range: 0...1))?.pressed.contains(.west)
         == true
     )
     #expect(
-      state(driver, element(page: 9, usage: 3, 0, range: 0...1))?.pressed.contains(.faceWest)
+      state(driver, element(page: 9, usage: 3, 0, range: 0...1))?.pressed.contains(.west)
         == false
     )
     #expect(state(driver, element(page: 9, usage: 4, 1, range: 0...1)) == nil)
@@ -70,14 +70,14 @@ struct HIDUsageMapTests {
   @Test
   func aReportIDRestrictsTheMapToThatReport() throws {
     let driver = try makeDriver(
-      #"{"kind":"button","page":9,"usage":1,"control":"face-south"}"#,
+      #"{"kind":"button","page":9,"usage":1,"control":"South"}"#,
       reportID: 6
     )
     #expect(state(driver, element(page: 9, usage: 1, 1, range: 0...1, reportID: 5)) == nil)
     #expect(state(driver, element(page: 9, usage: 1, 1, range: 0...1, reportID: nil)) == nil)
     #expect(
       state(driver, element(page: 9, usage: 1, 1, range: 0...1, reportID: 6))?.pressed.contains(
-        .faceSouth
+        .south
       )
         == true
     )
@@ -91,7 +91,7 @@ struct HIDUsageMapTests {
 
   @Test
   func aStickAxisScalesTheLogicalRangeToMinusOneToOne() throws {
-    let driver = try makeDriver(axisEntry(control: "left-stick-x"))
+    let driver = try makeDriver(axisEntry(control: "LeftStickX"))
     #expect(state(driver, element(usage: 48, 255))?.leftStick.x.normalized == 1)
     #expect(state(driver, element(usage: 48, 0))?.leftStick.x.normalized == -1)
     #expect(
@@ -101,7 +101,7 @@ struct HIDUsageMapTests {
 
   @Test
   func anInvertedStickNegatesTheAxis() throws {
-    let driver = try makeDriver(axisEntry(control: "left-stick-x", #","inverted":true"#))
+    let driver = try makeDriver(axisEntry(control: "LeftStickX", #","inverted":true"#))
     #expect(state(driver, element(usage: 48, 255))?.leftStick.x.normalized == -1)
     #expect(state(driver, element(usage: 48, 0))?.leftStick.x.normalized == 1)
   }
@@ -109,7 +109,7 @@ struct HIDUsageMapTests {
   @Test
   func anAxisRangeOverridesTheElementsLogicalRange() throws {
     let driver = try makeDriver(
-      axisEntry(control: "left-stick-x", #","range":{"min":0,"max":100}"#)
+      axisEntry(control: "LeftStickX", #","range":{"min":0,"max":100}"#)
     )
     // The element declares 0...255; the record says full deflection is 100.
     #expect(state(driver, element(usage: 48, 100))?.leftStick.x.normalized == 1)
@@ -120,7 +120,7 @@ struct HIDUsageMapTests {
   @Test
   func aStickDeadZoneReadsZeroInsideAndRescalesOutside() throws {
     let driver = try makeDriver(
-      axisEntry(control: "left-stick-x", #","range":{"min":-100,"max":100},"deadZone":0.2"#)
+      axisEntry(control: "LeftStickX", #","range":{"min":-100,"max":100},"deadZone":0.2"#)
     )
     let wide = -100...100
     #expect(state(driver, element(usage: 48, 10, range: wide))?.leftStick.x.normalized == 0)
@@ -134,15 +134,15 @@ struct HIDUsageMapTests {
 
   @Test
   func aTriggerAxisReadsZeroToOneAndSupportsInversionAndDeadZone() throws {
-    let plain = try makeDriver(axisEntry(control: "right-trigger"))
+    let plain = try makeDriver(axisEntry(control: "RightTrigger"))
     #expect(state(plain, element(usage: 48, 255))?.rightTrigger.normalized == 1)
     #expect(state(plain, element(usage: 48, 0))?.rightTrigger.normalized == 0)
 
-    let inverted = try makeDriver(axisEntry(control: "left-trigger", #","inverted":true"#))
+    let inverted = try makeDriver(axisEntry(control: "LeftTrigger", #","inverted":true"#))
     #expect(state(inverted, element(usage: 48, 0))?.leftTrigger.normalized == 1)
     #expect(state(inverted, element(usage: 48, 255))?.leftTrigger.normalized == 0)
 
-    let dead = try makeDriver(axisEntry(control: "left-trigger", #","deadZone":0.5"#))
+    let dead = try makeDriver(axisEntry(control: "LeftTrigger", #","deadZone":0.5"#))
     #expect(state(dead, element(usage: 48, 100))?.leftTrigger.normalized == 0)
     #expect(state(dead, element(usage: 48, 255))?.leftTrigger.normalized == 1)
   }
@@ -151,8 +151,8 @@ struct HIDUsageMapTests {
   @Test
   func swappedTriggerAxesFollowTheRecord() throws {
     let driver = try makeDriver(
-      #"{"kind":"axis","page":1,"usage":50,"control":"right-trigger"},"#
-        + #"{"kind":"axis","page":1,"usage":53,"control":"left-trigger"}"#
+      #"{"kind":"axis","page":1,"usage":50,"control":"RightTrigger"},"#
+        + #"{"kind":"axis","page":1,"usage":53,"control":"LeftTrigger"}"#
     )
     let pulled = state(driver, element(usage: 50, 255))
     #expect(pulled?.rightTrigger.normalized == 1)
@@ -161,13 +161,13 @@ struct HIDUsageMapTests {
 
   @Test
   func anAxisWithNoSpanReadsZero() throws {
-    let driver = try makeDriver(axisEntry(control: "left-stick-x"))
+    let driver = try makeDriver(axisEntry(control: "LeftStickX"))
     #expect(state(driver, element(usage: 48, 5, range: 0...0))?.leftStick.x.normalized == 0)
   }
 
   // MARK: - Hats
 
-  private let hatEntry = #"{"kind":"hat","page":1,"usage":57,"control":"dpad"}"#
+  private let hatEntry = #"{"kind":"hat","page":1,"usage":57}"#
 
   @Test
   func aHatReadsFromTheElementsLogicalMinimumByDefault() throws {
@@ -183,7 +183,7 @@ struct HIDUsageMapTests {
   func aHatRangeNamesWhereNorthIs(first: Int, nullValue: Int) throws {
     let range = "{\"min\":\(first),\"max\":\(first + 7)}"
     let driver = try makeDriver(
-      #"{"kind":"hat","page":1,"usage":57,"control":"dpad","range":\#(range)}"#
+      #"{"kind":"hat","page":1,"usage":57,"range":\#(range)}"#
     )
     #expect(state(driver, element(usage: 57, first, range: 0...15))?.hat == .north)
     #expect(state(driver, element(usage: 57, first + 4, range: 0...15))?.hat == .south)
@@ -195,35 +195,34 @@ struct HIDUsageMapTests {
 
   @Test
   func theDecoderRejectsInvalidUsages() {
-    let button = #"{"kind":"button","page":9,"usage":1,"control":"face-south"}"#
+    let button = #"{"kind":"button","page":9,"usage":1,"control":"South"}"#
     let invalid = [
       // The same usage twice.
       button + "," + button,
-      // A button cannot drive an axis, a trigger or the dpad.
-      #"{"kind":"button","page":9,"usage":1,"control":"left-stick-x"}"#,
-      #"{"kind":"button","page":9,"usage":1,"control":"left-trigger"}"#,
-      #"{"kind":"button","page":9,"usage":1,"control":"dpad"}"#,
+      // A button cannot drive a stick axis or the dpad.
+      #"{"kind":"button","page":9,"usage":1,"control":"LeftStickX"}"#,
+      #"{"kind":"button","page":9,"usage":1,"control":"DpadUp"}"#,
       // An axis needs a stick axis or trigger.
-      #"{"kind":"axis","page":1,"usage":48,"control":"face-south"}"#,
-      #"{"kind":"axis","page":1,"usage":48,"control":"dpad"}"#,
-      // A hat drives only the dpad.
-      #"{"kind":"hat","page":1,"usage":57,"control":"face-south"}"#,
+      #"{"kind":"axis","page":1,"usage":48,"control":"South"}"#,
+      #"{"kind":"axis","page":1,"usage":48,"control":"DpadUp"}"#,
+      // A hat has no control: it is the four dpad ids.
+      #"{"kind":"hat","page":1,"usage":57,"control":"DpadUp"}"#,
       // Ranges must have min below max, and a hat range is 0...7 or 1...8.
-      #"{"kind":"axis","page":1,"usage":48,"control":"left-stick-x","range":{"min":5,"max":5}}"#,
-      #"{"kind":"axis","page":1,"usage":48,"control":"left-stick-x","range":{"min":9,"max":1}}"#,
-      #"{"kind":"hat","page":1,"usage":57,"control":"dpad","range":{"min":2,"max":9}}"#,
+      #"{"kind":"axis","page":1,"usage":48,"control":"LeftStickX","range":{"min":5,"max":5}}"#,
+      #"{"kind":"axis","page":1,"usage":48,"control":"LeftStickX","range":{"min":9,"max":1}}"#,
+      #"{"kind":"hat","page":1,"usage":57,"range":{"min":2,"max":9}}"#,
       // A dead zone is above 0 and below 1.
-      #"{"kind":"axis","page":1,"usage":48,"control":"left-stick-x","deadZone":0}"#,
-      #"{"kind":"axis","page":1,"usage":48,"control":"left-stick-x","deadZone":1}"#,
-      #"{"kind":"axis","page":1,"usage":48,"control":"left-stick-x","deadZone":-0.1}"#,
+      #"{"kind":"axis","page":1,"usage":48,"control":"LeftStickX","deadZone":0}"#,
+      #"{"kind":"axis","page":1,"usage":48,"control":"LeftStickX","deadZone":1}"#,
+      #"{"kind":"axis","page":1,"usage":48,"control":"LeftStickX","deadZone":-0.1}"#,
       // Fields that belong to another kind, unknown kinds and unknown fields.
-      #"{"kind":"button","page":9,"usage":1,"control":"face-south","deadZone":0.1}"#,
-      #"{"kind":"hat","page":1,"usage":57,"control":"dpad","inverted":true}"#,
-      #"{"kind":"slider","page":1,"usage":48,"control":"left-stick-x"}"#,
-      #"{"kind":"button","page":9,"usage":1,"control":"face-south","extra":1}"#,
+      #"{"kind":"button","page":9,"usage":1,"control":"South","deadZone":0.1}"#,
+      #"{"kind":"hat","page":1,"usage":57,"inverted":true}"#,
+      #"{"kind":"slider","page":1,"usage":48,"control":"LeftStickX"}"#,
+      #"{"kind":"button","page":9,"usage":1,"control":"South","extra":1}"#,
       // Page and usage bounds.
-      #"{"kind":"button","page":0,"usage":1,"control":"face-south"}"#,
-      #"{"kind":"button","page":9,"usage":65536,"control":"face-south"}"#,
+      #"{"kind":"button","page":0,"usage":1,"control":"South"}"#,
+      #"{"kind":"button","page":9,"usage":65536,"control":"South"}"#,
       "",
     ]
     for entries in invalid {
@@ -235,7 +234,7 @@ struct HIDUsageMapTests {
 
   @Test
   func aUsageMapBelongsToHIDDescriptorRecordsOnly() throws {
-    let button = #"{"kind":"button","page":9,"usage":1,"control":"face-south"}"#
+    let button = #"{"kind":"button","page":9,"usage":1,"control":"South"}"#
     #expect(try decode(button).hidUsageMap?.entries.count == 1)
     #expect(throws: (any Error).self) { try decode(button, family: "sony.dualshock4") }
     #expect(throws: (any Error).self) { try decode(button, family: "hid.report-layout") }

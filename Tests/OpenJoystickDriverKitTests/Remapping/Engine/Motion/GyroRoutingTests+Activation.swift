@@ -43,7 +43,7 @@ extension GyroRoutingTests {
       ]
     )
     let changed = engine.process(
-      inputs: [.press(.faceSouth)],
+      inputs: [.press(.south)],
       from: device,
       profile: profile,
       at: 11_000_000
@@ -69,7 +69,7 @@ extension GyroRoutingTests {
       ]
     )
     let released = engine.process(
-      inputs: [.release(.faceSouth)],
+      inputs: [.release(.south)],
       from: device,
       profile: profile,
       at: 31_000_000
@@ -102,7 +102,7 @@ extension GyroRoutingTests {
     )
     let held = engine.process(
 
-      inputs: [.press(.faceSouth), .motion(sample(2, time: 20_000_000))],
+      inputs: [.press(.south), .motion(sample(2, time: 20_000_000))],
       from: device,
       profile: profile,
       at: 20_000_000
@@ -145,7 +145,7 @@ extension GyroRoutingTests {
       bindings: []
     )
     let pressed = engine.process(
-      inputs: [.press(.faceSouth)],
+      inputs: [.press(.south)],
       from: device,
       profile: profile,
       at: 0
@@ -155,7 +155,7 @@ extension GyroRoutingTests {
       suppresses ? [] : [.gamepad(RemappingGamepadState(buttons: [.south]), device)]
     #expect(pressed == expected)
     let released = engine.process(
-      inputs: [.release(.faceSouth)],
+      inputs: [.release(.south)],
       from: device,
       profile: profile,
       at: 1
@@ -184,14 +184,14 @@ extension GyroRoutingTests {
       ),
       bindings: []
     )
-    let initial: [InputChange] = mode == .whileReleased ? [.press(.faceSouth)] : []
+    let initial: [InputChange] = mode == .whileReleased ? [.press(.south)] : []
     _ = engine.process(
       inputs: initial + [.motion(sample(0, time: 0))],
       from: device,
       profile: profile,
       at: 0
     )
-    let enable: InputChange = mode == .whileReleased ? .release(.faceSouth) : .press(.faceSouth)
+    let enable: InputChange = mode == .whileReleased ? .release(.south) : .press(.south)
     let baseline = engine.process(
       inputs: [enable, .motion(sample(1, time: 10_000_000))],
       from: device,
@@ -208,8 +208,8 @@ extension GyroRoutingTests {
     #expect(!movement.isEmpty)
     let disable: [InputChange] =
       mode == .toggle
-      ? [.release(.faceSouth), .press(.faceSouth)]
-      : [mode == .whileHeld ? .release(.faceSouth) : .press(.faceSouth)]
+      ? [.release(.south), .press(.south)]
+      : [mode == .whileHeld ? .release(.south) : .press(.south)]
     let stopped = engine.process(inputs: disable, from: device, profile: profile, at: 21_000_000)
     #expect(stopped == [.gamepad(.neutral, device)])
     #expect(!engine.hasScheduledOutput)

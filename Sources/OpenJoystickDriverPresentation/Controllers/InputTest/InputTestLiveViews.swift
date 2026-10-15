@@ -22,13 +22,6 @@
 
   }
 
-  enum InputTestSystemClusterLayout {
-    /// Controls the view slot shows: PlayStation Create publishes as Share, not View.
-    static func viewControls(labels: ControllerButtonLabels) -> Set<ControlID> {
-      labels == .playStation ? [] : [.view]
-    }
-  }
-
   struct InputTestAxisValuesView: View {
     @ObservedObject
     var liveState: InputTestLiveState

@@ -5,7 +5,7 @@ extension GIPDriver {
   /// offset is the per-record evidence that the model has Share, declares it.
   public var capabilities: ControllerCapabilities {
     PhysicalProtocolID.xboxGIP.describedControls.union(
-      ControllerCapabilities(controls: shareButtonFromEnd != nil ? [.share] : [])
+      ControllerCapabilities(controls: shareButtonFromEnd != nil ? [.capture] : [])
     )
   }
 

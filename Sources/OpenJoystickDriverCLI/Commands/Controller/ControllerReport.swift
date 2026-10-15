@@ -44,7 +44,6 @@ struct ControllerShowReport: Encodable, Equatable {
     let minimumHIDOutputIntervalMs: Int?
     let hidStartupRecoveryIntervalMs: Int?
     let hidStartupRecoveryRounds: Int?
-    let keepAliveIntervalMs: Int?
     let lizardResendTicks: Int?
     let usbCommandTimeoutMs: Int?
     let presenceResendReports: Int?
@@ -63,7 +62,6 @@ struct ControllerShowReport: Encodable, Equatable {
       minimumHIDOutputIntervalMs = tuning.minimumHIDOutputIntervalMilliseconds
       hidStartupRecoveryIntervalMs = tuning.hidStartupRecoveryIntervalMilliseconds
       hidStartupRecoveryRounds = tuning.hidStartupRecoveryRounds
-      keepAliveIntervalMs = tuning.keepAliveIntervalMilliseconds
       lizardResendTicks = tuning.lizardResendTicks
       usbCommandTimeoutMs = tuning.usbCommandTimeoutMilliseconds
       presenceResendReports = tuning.presenceResendReports
@@ -83,7 +81,6 @@ struct ControllerShowReport: Encodable, Equatable {
         minimumHIDOutputIntervalMs.map { "minimumHIDOutputIntervalMs=\($0)" },
         hidStartupRecoveryIntervalMs.map { "hidStartupRecoveryIntervalMs=\($0)" },
         hidStartupRecoveryRounds.map { "hidStartupRecoveryRounds=\($0)" },
-        keepAliveIntervalMs.map { "keepAliveIntervalMs=\($0)" },
         lizardResendTicks.map { "lizardResendTicks=\($0)" },
         usbCommandTimeoutMs.map { "usbCommandTimeoutMs=\($0)" },
         presenceResendReports.map { "presenceResendReports=\($0)" },
@@ -224,7 +221,7 @@ struct ControllerShowReport: Encodable, Equatable {
       record: record.map(Record.init),
       tuning: Tuning(device.tuning),
       capabilities: Capabilities(
-        controls: ControlID.allCases.filter(device.capabilities.controls.contains).map(\.rawValue),
+        controls: Control.allCases.filter(device.capabilities.controls.contains).map(\.rawValue),
         touchContactCount: Int(device.capabilities.touchContactCount),
         motion: device.capabilities.motion,
         rumbleMotors: output.rumbleMotors.map(\.rawValue),

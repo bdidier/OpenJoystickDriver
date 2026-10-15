@@ -150,16 +150,6 @@
                 }
               ]
             },
-            "keepAliveIntervalMs": {
-              "anyOf": [
-                {
-                  "$ref": "controller.schema.json#/$defs/tuning/properties/keepAliveIntervalMs"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
             "lizardResendTicks": {
               "anyOf": [
                 {

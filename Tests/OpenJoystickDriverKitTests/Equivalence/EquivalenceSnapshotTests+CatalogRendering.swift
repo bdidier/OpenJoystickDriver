@@ -90,7 +90,7 @@ extension EquivalenceSnapshotCatalogTests {
       )
     else { return ["driver none"] }
     let controls = ProtocolDriverRegistry().capabilities(
-      driver.capabilities.normalized,
+      driver.capabilities,
       record: profile
     )
     let output = driver.outputCapabilities

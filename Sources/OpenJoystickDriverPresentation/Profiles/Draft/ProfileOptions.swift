@@ -50,7 +50,7 @@ struct SourceOption: Hashable {
   }
 
   static let all: [Self] = {
-    let buttons: [RemappingSource] = RemappingButton.allCases.compactMap { button in
+    let buttons: [RemappingSource] = Control.allCases.compactMap { button in
       guard button != .guide else { return nil }
       return .button(button)
     }

@@ -259,10 +259,10 @@ public final class XUSBDriver: PhysicalProtocolDriver {
   }
 
   /// Button bits (xpad xbox360_process_packet) and the standard-label controls they report.
-  private static let buttonTable: [(UInt16, ControlID)] = [
-    (4, .menu), (5, .view), (6, .leftStickClick), (7, .rightStickClick), (8, .leftShoulder),
-    (9, .rightShoulder), (10, .guide), (12, .faceSouth), (13, .faceEast), (14, .faceWest),
-    (15, .faceNorth),
+  private static let buttonTable: [(UInt16, Control)] = [
+    (4, .start), (5, .back), (6, .leftStickClick), (7, .rightStickClick), (8, .leftShoulder),
+    (9, .rightShoulder), (10, .guide), (12, .south), (13, .east), (14, .west),
+    (15, .north),
   ]
 
   // MARK: - Output

@@ -1,8 +1,14 @@
 {
-  "pressed": ["face-south", "menu"],
+  "pressed": ["South", "Start"],
   "hat": "east",
-  "leftStick": { "x": 32767, "y": 32767 },
-  "rightStick": { "x": 0, "y": 0 },
+  "leftStick": {
+    "x": 32767,
+    "y": 32767
+  },
+  "rightStick": {
+    "x": 0,
+    "y": 0
+  },
   "leftTrigger": 65535,
   "rightTrigger": 0,
   "touch": []

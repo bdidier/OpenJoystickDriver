@@ -11,9 +11,9 @@ from Scripts.Catalog import validate_profiles
 from Scripts.Catalog.schema_header import header
 from Scripts.Quality import validate_schemas
 
-BUTTON = {"kind": "button", "page": 9, "usage": 1, "control": "face-south"}
-AXIS = {"kind": "axis", "page": 1, "usage": 48, "control": "left-stick-x"}
-HAT = {"kind": "hat", "page": 1, "usage": 57, "control": "dpad"}
+BUTTON = {"kind": "button", "page": 9, "usage": 1, "control": "South"}
+AXIS = {"kind": "axis", "page": 1, "usage": 48, "control": "LeftStickX"}
+HAT = {"kind": "hat", "page": 1, "usage": 57}
 
 
 def record(input_section: Any, family: str = "hid.descriptor") -> dict[str, Any]:
@@ -49,8 +49,9 @@ class HIDUsageMapRecordSchemaTests(unittest.TestCase):
                 }
             ),
             "trigger axis": usage_map(
-                {**AXIS, "usage": 50, "control": "right-trigger", "deadZone": 0.05}
+                {**AXIS, "usage": 50, "control": "RightTrigger", "deadZone": 0.05}
             ),
+            "digital trigger button": usage_map({**BUTTON, "control": "LeftTrigger"}),
             "hat": usage_map(HAT),
             "hat starting at 0": usage_map({**HAT, "range": {"min": 0, "max": 7}}),
             "hat starting at 1": usage_map({**HAT, "range": {"min": 1, "max": 8}}),
@@ -64,12 +65,11 @@ class HIDUsageMapRecordSchemaTests(unittest.TestCase):
     def test_rejects_invalid_usages(self) -> None:
         rejected = {
             "empty usages": usage_map(),
-            "button on a stick": usage_map({**BUTTON, "control": "left-stick-x"}),
-            "button on a trigger": usage_map({**BUTTON, "control": "left-trigger"}),
-            "button on the dpad": usage_map({**BUTTON, "control": "dpad"}),
-            "axis on a button": usage_map({**AXIS, "control": "face-south"}),
-            "axis on the dpad": usage_map({**AXIS, "control": "dpad"}),
-            "hat on a button": usage_map({**HAT, "control": "face-south"}),
+            "button on a stick": usage_map({**BUTTON, "control": "LeftStickX"}),
+            "button on the dpad": usage_map({**BUTTON, "control": "DpadUp"}),
+            "axis on a button": usage_map({**AXIS, "control": "South"}),
+            "axis on the dpad": usage_map({**AXIS, "control": "DpadUp"}),
+            "hat on a button": usage_map({**HAT, "control": "South"}),
             "hat range 2...9": usage_map({**HAT, "range": {"min": 2, "max": 9}}),
             "hat with a dead zone": usage_map({**HAT, "deadZone": 0.1}),
             "button with a dead zone": usage_map({**BUTTON, "deadZone": 0.1}),
@@ -107,7 +107,7 @@ class HIDUsageMapRecordSchemaTests(unittest.TestCase):
     def test_a_byte_layout_belongs_to_report_layout_only(self) -> None:
         layout = {
             "report": {"length": 1},
-            "buttons": [{"control": "face-south", "byte": 0, "mask": 1}],
+            "buttons": [{"control": "South", "byte": 0, "mask": 1}],
         }
         self.assertTrue(self.validator.is_valid(record(layout, "hid.report-layout")))
         self.assertFalse(self.validator.is_valid(record(layout)))
@@ -124,7 +124,7 @@ class HIDUsageMapRecordSchemaTests(unittest.TestCase):
             )
 
     def test_validator_rejects_what_the_schema_cannot_express(self) -> None:
-        duplicate = usage_map(AXIS, {**AXIS, "control": "left-stick-y"})
+        duplicate = usage_map(AXIS, {**AXIS, "control": "LeftStickY"})
         flat = usage_map({**AXIS, "range": {"min": 5, "max": 5}})
         backwards = usage_map({**AXIS, "range": {"min": 9, "max": 3}})
         for name, input_section in {
@@ -203,11 +203,11 @@ class HIDUsageMapDescriptionSchemaTests(unittest.TestCase):
         self.assert_rejected({"input": {"descriptorShapes": [{"present": []}]}})
         self.assert_rejected({"input": {"descriptorShapes": [self.shape(present=[])]}})
         self.assert_rejected({"input": {"descriptorShapes": [self.shape(extra=True)]}})
-        self.assert_rejected({"input": usage_map({**BUTTON, "control": "dpad"})})
+        self.assert_rejected({"input": usage_map({**BUTTON, "control": "DpadUp"})})
         self.assert_rejected({"input": usage_map()})
 
     def test_rejects_duplicate_usages_and_empty_ranges(self) -> None:
-        duplicate = usage_map(AXIS, {**AXIS, "control": "left-stick-y"})
+        duplicate = usage_map(AXIS, {**AXIS, "control": "LeftStickY"})
         backwards = usage_map({**AXIS, "range": {"min": 9, "max": 3}})
         self.assert_rejected({"input": duplicate})
         self.assert_rejected({"input": backwards})

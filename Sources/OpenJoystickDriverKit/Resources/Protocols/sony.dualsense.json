@@ -33,18 +33,13 @@
   },
   "controls": {
     "base": "xbox",
-    "add": [
-      "guide",
-      "left-trigger-button",
-      "right-trigger-button",
-      "touchpad-click",
-      "microphone"
-    ],
+    "add": ["Guide", "TouchpadClick", "Microphone"],
     "touchContactCount": 2,
-    "motion": true
+    "motion": true,
+    "digitalTriggers": ["LeftTrigger", "RightTrigger"]
   },
   "recordCapabilities": {
-    "present": ["paddle-left-1", "paddle-right-1", "auxiliary-1", "auxiliary-2"]
+    "present": ["LeftPaddle1", "RightPaddle1", "Auxiliary1", "Auxiliary2"]
   },
   "defaults": {
     "tuning": {

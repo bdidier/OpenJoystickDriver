@@ -23,13 +23,13 @@ struct RemappingProfileStrictDecodingTests {
     #expect(throws: DecodingError.self) {
       try decoder.decode(
         RemappingSource.self,
-        from: Data(#"{"type":"axis","axis":"left_stick_x","button":"south"}"#.utf8)
+        from: Data(#"{"type":"axis","axis":"LeftStickX","button":"South"}"#.utf8)
       )
     }
     #expect(throws: DecodingError.self) {
       try decoder.decode(
         RemappingDestination.self,
-        from: Data(#"{"type":"gamepad_button","button":"south","axis":"left_stick_x"}"#.utf8)
+        from: Data(#"{"type":"gamepad_button","button":"South","axis":"LeftStickX"}"#.utf8)
       )
     }
     #expect(throws: DecodingError.self) {

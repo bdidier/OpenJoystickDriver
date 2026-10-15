@@ -422,7 +422,7 @@ struct ControllerModeTests {
     }
     let layout: [String: Any] = [
       "report": ["length": 8],
-      "buttons": [["control": "face-south", "byte": 0, "mask": 1]],
+      "buttons": [["control": "South", "byte": 0, "mask": 1]],
     ]
     let rumble: [String: Any] = [
       "rumble": [
@@ -535,7 +535,7 @@ struct ControllerModeTests {
         family: "sony.dualsense",
         extras: [
           "capabilities": [
-            "present": ["paddle-left-1", "paddle-right-1", "auxiliary-1", "auxiliary-2"]
+            "present": ["LeftPaddle1", "RightPaddle1", "Auxiliary1", "Auxiliary2"]
           ]
         ],
         expected: "capabilities must be deltas the driver of every mode declares"

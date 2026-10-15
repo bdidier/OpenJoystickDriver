@@ -17,7 +17,7 @@
   - `buttonLabels`: the labels of the family's buttons.
   - `macOSOwnedOutput`: the output macOS itself handles for the family, with a `rationale` that says why.
   - `controls`: the set of controls the family's driver reports, and `recordCapabilities`: the control deltas a record may declare (`present`, `rumbleAbsent`).
-  - `defaults`: the family's default `tuning` (for example `keepAliveIntervalMs`, the keep-alive or rumble resend interval, the Switch 1 recovery values, and the command timeouts, resend intervals and handshake pacing of the other drivers), and `defaults.variants.<variant>.tuning`, which layers over it for a transport that needs another value, such as the Switch 1 `hidStartupIntervalMs` of Bluetooth and USB. A default key must be one the variant reads, and a variant must be the family's (E5004).
+  - `defaults`: the family's `session.keepAlive` (the keep-alive `intervalMilliseconds` and its fixed `writes`), the default `tuning` (for example the Switch 1 recovery values, and the command timeouts, resend intervals and handshake pacing of the other drivers), and `defaults.variants.<variant>.tuning`, which layers over it for a transport that needs another value, such as the Switch 1 `hidStartupIntervalMs` of Bluetooth and USB. A default key must be one the variant reads, and a variant must be the family's (E5004).
 
   `./Scripts/ojd catalog regenerate` copies them into the Kit bundle.
 - `report.schema.json`: the CloudEvents 1.0 support-report envelope and payload.
@@ -27,6 +27,7 @@
 - `settings.schema.json`: the `Settings.json` file, the user file that `ojd setting set` and the app write. Every setting is optional in the file; a setting it leaves out takes its built-in default.
 - `endpoint.schema.json`: the JSON lines that a granted client and the service exchange on the endpoint socket. The stream lines are the `ojd controller watch --all` events from `cli-output.schema.json`.
 - `error-codes.schema.json`: the authored catalog `Resources/ErrorCodes.json`, which gives every E#### error code its domain and name. `./Scripts/ojd errors regenerate` copies the endpoint codes into `endpoint.schema.json` and the table into `wiki/Error-Codes.md`, and refuses to reuse or delete a released code.
+- `vocabulary.schema.json`: only `$defs`, no `kind`. The one definition of the control ids (`$defs/control`) and the subsets other schemas `$ref`: D-pad ids, stick axes, axes, horizontal stick axes and triggers. The Swift enum `Control` mirrors it, and `Resources/Vocabulary/crosswalk.json` documents the SDL, evdev, HID and Apple names of each id.
 
 Each artifact class has one current contract, a flat `<kind>.schema.json` here. Its `$id` is `https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/<kind>.schema.json`; the ID is a name for the schema and nothing publishes or fetches it yet. A document declares `apiVersion: openjoystickdriver/v1alpha1` and its `kind`, and does not declare `$schema`. OJD rejects a missing or unknown `apiVersion`, including the former `openjoystickdriver.io/v1beta1`, and a `kind` that is not the one it reads. The error names the file, the version found, and the supported version.
 

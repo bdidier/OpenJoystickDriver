@@ -17,16 +17,19 @@ final class RemappingPhysicalOutputBridge: RemappingPhysicalOutputSink, Sendable
     guard let manager = attached.withLock({ $0.manager }) else {
       throw RemappingEventEngineError.sinkUnavailable
     }
-    guard
-      await manager.setMappingPhysicalOutput(output, active: active, owner: owner, for: identifier)
-    else { throw RemappingEventEngineError.sinkUnavailable }
+    do {
+      try await manager.consume(
+        MappingOutputClaim(output, active: active, owner: owner),
+        for: identifier
+      )
+    } catch { throw RemappingEventEngineError.sinkUnavailable }
   }
 
   func releaseAll(for identifier: LogicalControllerID) async throws {
     guard let manager = attached.withLock({ $0.manager }) else {
       throw RemappingEventEngineError.sinkUnavailable
     }
-    guard await manager.releaseMappingPhysicalOutputs(for: identifier) else {
+    do { try await manager.consume(MappingOutputRelease(), for: identifier) } catch {
       throw RemappingEventEngineError.sinkUnavailable
     }
   }
@@ -36,7 +39,7 @@ final class RemappingPhysicalOutputBridge: RemappingPhysicalOutputSink, Sendable
     guard let manager = attached.withLock({ $0.manager }) else {
       throw RemappingEventEngineError.sinkUnavailable
     }
-    guard await manager.setProfilePhysicalColor(color, for: identifier) else {
+    do { try await manager.consume(ProfileColorClaim(color), for: identifier) } catch {
       throw RemappingEventEngineError.sinkUnavailable
     }
   }

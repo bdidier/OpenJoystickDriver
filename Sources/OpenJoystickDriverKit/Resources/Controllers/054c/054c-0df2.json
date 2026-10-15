@@ -12,6 +12,6 @@
     }
   ],
   "capabilities": {
-    "present": ["paddle-left-1", "paddle-right-1", "auxiliary-1", "auxiliary-2"]
+    "present": ["LeftPaddle1", "RightPaddle1", "Auxiliary1", "Auxiliary2"]
   }
 }

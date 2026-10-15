@@ -46,7 +46,7 @@ extension VirtualOutputTests {
       discoverySource: .rawUSB,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
-      capabilities: ControllerCapabilities(controls: ControlID.xboxLayout)
+      capabilities: ControllerCapabilities(controls: Control.xboxLayout)
     )
   }
 

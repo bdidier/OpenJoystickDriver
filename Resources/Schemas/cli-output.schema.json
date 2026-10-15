@@ -381,7 +381,6 @@
                       "hidStartupRecoveryRounds",
                       "hidStartupIntervalMs",
                       "minimumHIDOutputIntervalMs",
-                      "keepAliveIntervalMs",
                       "lizardResendTicks",
                       "usbCommandTimeoutMs",
                       "presenceResendReports",
@@ -717,7 +716,15 @@
             "controls": {
               "type": "array",
               "items": {
-                "$ref": "controller.schema.json#/$defs/controlID"
+                "$ref": "vocabulary.schema.json#/$defs/control"
+              }
+            },
+            "digitalTriggers": {
+              "description": "Triggers the controller reports only as buttons. The others are analog and also derive a button.",
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "$ref": "vocabulary.schema.json#/$defs/trigger"
               }
             },
             "lightingFeatures": {
@@ -1015,7 +1022,7 @@
               "const": "ControlPress"
             },
             "control": {
-              "$ref": "controller.schema.json#/$defs/controlID"
+              "$ref": "vocabulary.schema.json#/$defs/control"
             },
             "direction": {
               "enum": [
@@ -2495,7 +2502,7 @@
         "pressed": {
           "type": "array",
           "items": {
-            "$ref": "controller.schema.json#/$defs/controlID"
+            "$ref": "vocabulary.schema.json#/$defs/control"
           }
         },
         "rightStick": {

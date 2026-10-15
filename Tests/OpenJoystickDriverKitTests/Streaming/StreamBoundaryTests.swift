@@ -10,6 +10,7 @@ struct StreamBoundaryTests {
   private final class RecordingDispatcher: OutputDispatcher, @unchecked Sendable {
     private let lock = NSLock()
     private var published: [ControllerEvent] = []
+    private var activated: [LogicalControllerID] = []
     var suppressOutput = false
 
     func dispatch(
@@ -20,7 +21,11 @@ struct StreamBoundaryTests {
       lock.withLock { published.append(event) }
     }
 
-    func activateOutput(for _: LogicalControllerID) {}
+    func activateOutput(for identifier: LogicalControllerID) {
+      lock.withLock { activated.append(identifier) }
+    }
+
+    func activations() -> [LogicalControllerID] { lock.withLock { activated } }
 
     func events() -> [ControllerEvent] { lock.withLock { published } }
   }
@@ -61,6 +66,46 @@ struct StreamBoundaryTests {
     let dispatcher = RecordingDispatcher()
     await #expect(throws: StreamBoundaryError.unsupported(.virtualDevice)) {
       try await dispatcher.consume(.gamepad(RemappingGamepadState(), for: Self.identifier)) {}
+    }
+  }
+
+  @Test
+  func aDispatcherConsumesAnActivationFrameAndReportsItDelivered() async throws {
+    let dispatcher = RecordingDispatcher()
+    let delivered = Locked(0)
+
+    try await dispatcher.consume(.activation(Self.identifier)) { delivered.withLock { $0 += 1 } }
+
+    #expect(dispatcher.activations() == [Self.identifier])
+    #expect(delivered.withLock { $0 } == 1)
+  }
+
+  @Test
+  func aDispatcherRefusesAFeedFrame() async {
+    let dispatcher = RecordingDispatcher()
+    await #expect(throws: StreamBoundaryError.unsupported(.virtualDevice)) {
+      try await dispatcher.consume(.feed(VirtualFeedFrame(buttons: [], axes: [:]))) {}
+    }
+    #expect(dispatcher.activations().isEmpty)
+  }
+
+  @Test
+  func aSinkRefusesAMappingOutputClaimUnlessItAppliesOne() async {
+    await #expect(throws: StreamBoundaryError.unsupported(.physicalOutput)) {
+      try await BareSink().consume(
+        MappingOutputClaim(.brightness(0.5), active: true, owner: UUID()),
+        for: Self.identifier
+      )
+    }
+  }
+
+  @Test
+  func aSinkRefusesAMappingReleaseAndAProfileColorUnlessItAppliesThem() async {
+    await #expect(throws: StreamBoundaryError.unsupported(.physicalOutput)) {
+      try await BareSink().consume(MappingOutputRelease(), for: Self.identifier)
+    }
+    await #expect(throws: StreamBoundaryError.unsupported(.physicalOutput)) {
+      try await BareSink().consume(ProfileColorClaim(nil), for: Self.identifier)
     }
   }
 

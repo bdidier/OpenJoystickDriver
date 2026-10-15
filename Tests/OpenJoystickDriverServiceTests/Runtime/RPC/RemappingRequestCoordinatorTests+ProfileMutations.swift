@@ -93,7 +93,7 @@ extension RemappingRequestCoordinatorTests {
     _ = try await harness.coordinator.activate(id: original.id, allowEmpty: false).get()
     let device = remappingRouterDevice(1)
     try await harness.routerHarness.router.dispatchCausally(
-      changes: [.press(.faceSouth)],
+      changes: [.press(.south)],
       from: device
     )
 
@@ -107,7 +107,7 @@ extension RemappingRequestCoordinatorTests {
     )
 
     try await harness.routerHarness.router.dispatchCausally(
-      changes: [.press(.faceSouth)],
+      changes: [.press(.south)],
       from: device
     )
     _ = try await harness.coordinator.delete(id: updated.id).get()
@@ -130,7 +130,7 @@ extension RemappingRequestCoordinatorTests {
     _ = try await harness.coordinator.activate(id: original.id, allowEmpty: false).get()
     let device = remappingRouterDevice(1)
     try await harness.routerHarness.router.dispatchCausally(
-      changes: [.press(.faceSouth)],
+      changes: [.press(.south)],
       from: device
     )
 
@@ -171,7 +171,7 @@ extension RemappingRequestCoordinatorTests {
     let device = remappingRouterDevice(1)
     try await harness.routerHarness.router.dispatchCausally(
 
-      changes: [.press(.faceSouth)],
+      changes: [.press(.south)],
       from: device
     )
 
@@ -266,7 +266,7 @@ extension RemappingRequestCoordinatorTests {
     let newDevice = remappingRouterDevice(2, vendorID: 1356, productID: 2508)
 
     try await harness.router.dispatchCausally(.activation, from: newDevice)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: oldDevice)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: oldDevice)
     let exactPriorBytes = try libraryFiles(in: harness.directory)
     let profileURL = harness.library.profileURL(original.id)
     let priorFilePermissions = try permissions(at: profileURL)
@@ -296,7 +296,7 @@ extension RemappingRequestCoordinatorTests {
     _ = try await harness.coordinator.create(original).get()
     _ = try await harness.coordinator.activate(id: original.id, allowEmpty: false).get()
     let device = remappingRouterDevice(1)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
     let exactPriorBytes = try libraryFiles(in: harness.directory)
     harness.sink.failNextAction()
 

@@ -12,14 +12,14 @@ struct RemappingChordPriorityTests {
     ])
     #expect(
       state.process(
-        inputs: [.press(.faceSouth), .press(.faceEast)],
+        inputs: [.press(.south), .press(.east)],
         from: identifier,
         profile: profile,
         at: 0
       ) == [.system(.keyDown(.a))]
     )
     #expect(
-      state.process(inputs: [.press(.faceNorth)], from: identifier, profile: profile, at: 1) == [
+      state.process(inputs: [.press(.north)], from: identifier, profile: profile, at: 1) == [
         .system(.keyUp(.a)), .system(.keyDown(.b)),
       ]
     )
@@ -34,7 +34,7 @@ struct RemappingChordPriorityTests {
     ])
     #expect(
       state.process(
-        inputs: [.press(.faceSouth), .press(.faceNorth), .press(.faceEast)],
+        inputs: [.press(.south), .press(.north), .press(.east)],
         from: identifier,
         profile: profile,
         at: 0
@@ -50,7 +50,7 @@ struct RemappingChordPriorityTests {
     ])
     #expect(
       state.process(
-        inputs: [.press(.faceSouth), .press(.faceEast), .press(.faceWest), .press(.faceNorth)],
+        inputs: [.press(.south), .press(.east), .press(.west), .press(.north)],
         from: identifier,
         profile: profile,
         at: 0
@@ -74,7 +74,7 @@ struct RemappingChordPriorityTests {
     )
     #expect(
       state.process(
-        inputs: [.press(.leftShoulder), .press(.faceSouth), .press(.faceEast)],
+        inputs: [.press(.leftShoulder), .press(.south), .press(.east)],
         from: identifier,
         profile: profile,
         at: 0
@@ -84,7 +84,7 @@ struct RemappingChordPriorityTests {
 
   private let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 1)
 
-  private func chord(_ buttons: Set<RemappingButton>, key: RemappingKeyboardKey) -> RemappingChord {
+  private func chord(_ buttons: Set<Control>, key: RemappingKeyboardKey) -> RemappingChord {
     RemappingChord(
       sources: Set(buttons.map(RemappingSource.button)),
       destination: .keyboard(key: key, modifiers: [])

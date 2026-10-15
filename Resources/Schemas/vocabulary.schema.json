@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/vocabulary.schema.json",
+  "description": "The control vocabulary: the one definition of the control ids every document, endpoint message, profile and controller record uses. A Swift enum (Control) mirrors $defs/control, and a test keeps them equal. The other definitions are subsets for places that accept only some controls.",
+  "$defs": {
+    "control": {
+      "description": "A control on a gamepad, UpperCamelCase. South, East, West and North are the face buttons by position. A stick or trigger axis is also a control.",
+      "enum": [
+        "South",
+        "East",
+        "West",
+        "North",
+        "LeftShoulder",
+        "RightShoulder",
+        "LeftTrigger",
+        "RightTrigger",
+        "Back",
+        "Start",
+        "LeftStickClick",
+        "RightStickClick",
+        "DpadUp",
+        "DpadDown",
+        "DpadLeft",
+        "DpadRight",
+        "Guide",
+        "Capture",
+        "Microphone",
+        "TouchpadClick",
+        "LeftPaddle1",
+        "LeftPaddle2",
+        "RightPaddle1",
+        "RightPaddle2",
+        "Auxiliary1",
+        "Auxiliary2",
+        "Auxiliary3",
+        "Auxiliary4",
+        "Auxiliary5",
+        "Auxiliary6",
+        "Auxiliary7",
+        "Auxiliary8",
+        "LeftStickX",
+        "LeftStickY",
+        "RightStickX",
+        "RightStickY",
+        "LeftStickTouch",
+        "RightStickTouch",
+        "LeftTrackpadClick",
+        "RightTrackpadClick",
+        "LeftTrackpadTouch",
+        "RightTrackpadTouch"
+      ]
+    },
+    "dpadControl": {
+      "description": "One direction of the D-pad.",
+      "enum": ["DpadUp", "DpadDown", "DpadLeft", "DpadRight"]
+    },
+    "stickAxis": {
+      "description": "One axis of a stick.",
+      "enum": ["LeftStickX", "LeftStickY", "RightStickX", "RightStickY"]
+    },
+    "axis": {
+      "description": "An analog axis: a stick axis or a trigger.",
+      "enum": [
+        "LeftStickX",
+        "LeftStickY",
+        "RightStickX",
+        "RightStickY",
+        "LeftTrigger",
+        "RightTrigger"
+      ]
+    },
+    "horizontalStickAxis": {
+      "description": "The horizontal axis of a stick.",
+      "enum": ["LeftStickX", "RightStickX"]
+    },
+    "trigger": {
+      "description": "A trigger axis.",
+      "enum": ["LeftTrigger", "RightTrigger"]
+    }
+  }
+}

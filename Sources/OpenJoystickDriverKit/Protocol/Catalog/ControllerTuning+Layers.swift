@@ -10,7 +10,6 @@ extension ControllerTuning {
     case hidStartupRecoveryRounds
     case hidStartupIntervalMs
     case minimumHIDOutputIntervalMs
-    case keepAliveIntervalMs
     case lizardResendTicks
     case usbCommandTimeoutMs
     case presenceResendReports
@@ -36,7 +35,6 @@ extension ControllerTuning {
     case .hidStartupRecoveryRounds: hidStartupRecoveryRounds.map(String.init)
     case .hidStartupIntervalMs: hidStartupIntervalMilliseconds.map(String.init)
     case .minimumHIDOutputIntervalMs: minimumHIDOutputIntervalMilliseconds.map(String.init)
-    case .keepAliveIntervalMs: keepAliveIntervalMilliseconds.map(String.init)
     case .lizardResendTicks: lizardResendTicks.map(String.init)
     case .usbCommandTimeoutMs: usbCommandTimeoutMilliseconds.map(String.init)
     case .presenceResendReports: presenceResendReports.map(String.init)
@@ -61,8 +59,6 @@ extension ControllerTuning {
       hidStartupRecoveryIntervalMilliseconds: higher.hidStartupRecoveryIntervalMilliseconds
         ?? hidStartupRecoveryIntervalMilliseconds,
       hidStartupRecoveryRounds: higher.hidStartupRecoveryRounds ?? hidStartupRecoveryRounds,
-      keepAliveIntervalMilliseconds: higher.keepAliveIntervalMilliseconds
-        ?? keepAliveIntervalMilliseconds,
       lizardResendTicks: higher.lizardResendTicks ?? lizardResendTicks,
       usbCommandTimeoutMilliseconds: higher.usbCommandTimeoutMilliseconds
         ?? usbCommandTimeoutMilliseconds,
@@ -93,8 +89,6 @@ extension ControllerTuning {
         ? hidStartupRecoveryIntervalMilliseconds : nil,
       hidStartupRecoveryRounds: keys.contains(.hidStartupRecoveryRounds)
         ? hidStartupRecoveryRounds : nil,
-      keepAliveIntervalMilliseconds: keys.contains(.keepAliveIntervalMs)
-        ? keepAliveIntervalMilliseconds : nil,
       lizardResendTicks: keys.contains(.lizardResendTicks) ? lizardResendTicks : nil,
       usbCommandTimeoutMilliseconds: keys.contains(.usbCommandTimeoutMs)
         ? usbCommandTimeoutMilliseconds : nil,
