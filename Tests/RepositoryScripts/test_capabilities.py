@@ -199,10 +199,16 @@ class CapabilityResolverTests(unittest.TestCase):
             ),
         )
 
-    def test_native_tool_build_declares_xmake_and_sdl_requirements(self) -> None:
+    def test_tool_checks_declare_xmake_sdl_and_swift_requirements(self) -> None:
         self.assertEqual(
             requirements_for(["check", "tools"]),
-            (Capability.XMAKE, Capability.PKG_CONFIG, Capability.SDL3),
+            (
+                Capability.XMAKE,
+                Capability.PKG_CONFIG,
+                Capability.SDL3,
+                Capability.SWIFT_TOOLCHAIN,
+                Capability.FULL_XCODE,
+            ),
         )
 
     def test_help_routes_never_trigger_repairs(self) -> None:

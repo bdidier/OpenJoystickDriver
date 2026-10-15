@@ -78,7 +78,7 @@ jobs:
       - name: Check JSON formatting
         run: git ls-files -z -co --exclude-standard -- '*.json' '*.jsonc' | xargs -0 biome ci
 
-      - name: Check native tools
+      - name: Check native tools and the WebRTC bridge package
         run: ./Scripts/ojd check tools
 
       - name: Check schemas
