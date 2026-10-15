@@ -91,10 +91,10 @@ class CatalogRulesLoadingTests(unittest.TestCase):
             edge[0][6],
             {
                 "present": [
-                    "paddle-left-1",
-                    "paddle-right-1",
-                    "auxiliary-1",
-                    "auxiliary-2",
+                    "LeftPaddle1",
+                    "RightPaddle1",
+                    "Auxiliary1",
+                    "Auxiliary2",
                 ]
             },
         )

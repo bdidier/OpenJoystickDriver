@@ -963,7 +963,7 @@
 "cli.controller.light.examples" = "Ví dụ:\n  # Đặt thanh đèn sang màu cam\n  ojd controller light 054C:09CC --color FF8000\n  # Đặt màu và độ sáng thấp\n  ojd controller light 054C:09CC --color 0000FF --brightness 40";
 "cli.profile.create.examples" = "Ví dụ:\n  # Tạo hồ sơ cho một mẫu tay cầm\n  ojd profile create Racing --controller 045E:028E\n  # Chỉ áp dụng khi Safari đang ở phía trước\n  ojd profile create Browsing --controller 045E:028E --app com.apple.Safari";
 "cli.profile.set.examples" = "Ví dụ:\n  # Đổi tên hồ sơ\n  ojd profile set Racing name Rally\n  # Đặt vùng chết bên trong của ánh xạ cần analog đầu tiên\n  ojd profile set Racing stickMappings.0.tuning.innerDeadzone 0.2";
-"cli.binding.set.examples" = "Ví dụ:\n  # Giữ Space trong khi nút phía nam đang được giữ\n  ojd binding set Racing button:south key:space\n  # Bật/tắt J mỗi lần nhấn\n  ojd binding set Racing button:west key:j --behavior toggle\n  # Lặp lại J 10 lần mỗi giây khi đang giữ\n  ojd binding set Racing button:west key:j --turbo-rate 10 --turbo-duty 0.5";
+"cli.binding.set.examples" = "Ví dụ:\n  # Giữ Space trong khi nút phía nam đang được giữ\n  ojd binding set Racing button:South key:space\n  # Bật/tắt J mỗi lần nhấn\n  ojd binding set Racing button:West key:j --behavior toggle\n  # Lặp lại J 10 lần mỗi giây khi đang giữ\n  ojd binding set Racing button:West key:j --turbo-rate 10 --turbo-duty 0.5";
 "cli.record.install.examples" = "Ví dụ:\n  # Cài đặt một tệp bản ghi\n  ojd record install 045E-028E.json\n  # Đọc bản ghi từ stdin\n  ojd record install - < 045E-028E.json";
 "cli.access.grant.examples" = "Ví dụ:\n  # Cho phép một chương trình dùng dịch vụ\n  ojd access grant /Applications/Example.app\n  # Tạo token cho các trang được phục vụ từ một origin\n  ojd access grant --token overlay --origin http://127.0.0.1:8080";
 "cli.service.abstract" = "Khởi động hoặc dừng dịch vụ OpenJoystickDriver, hoặc chờ đến khi dịch vụ nhận yêu cầu.";
@@ -1340,7 +1340,7 @@
 "cli.virtual.error.failed" = "Tay cầm ảo cho %@ không thay đổi (%@). Hãy kiểm tra bằng “ojd virtual show”.";
 "cli.virtual.error.no_unit" = "%@ không có ID thiết bị, nên một lựa chọn chỉ có thể áp dụng cho cả kiểu máy. Hãy chạy lệnh không có --unit.";
 "cli.virtual.feed.abstract" = "Cung cấp một tay cầm ảo do đầu vào chuẩn điều khiển.";
-"cli.virtual.feed.discussion" = "Đọc một đối tượng JSON mỗi dòng: “buttons” và “dpad” liệt kê các thành phần được nhấn, như south và up, và “axes” ánh xạ tên trục, như left_stick_x, tới giá trị. Thành phần bị thiếu ở trạng thái trung tính. Các cần chạy từ -1 đến 1 với Y hướng lên; các cò chạy từ 0 đến 1. Các khung được phát theo thứ tự, mỗi khung ít nhất 8 ms; “holdMilliseconds” giữ một khung lâu hơn, tối đa 60000. In mỗi lệnh đầu ra mà trò chơi gửi đến tay cầm, như rung, thành một đối tượng JSON mỗi dòng. Dừng khi mọi khung đã phát xong sau khi đầu vào kết thúc.";
+"cli.virtual.feed.discussion" = "Đọc một đối tượng JSON mỗi dòng: “buttons” và “dpad” liệt kê các thành phần được nhấn, như South và up, và “axes” ánh xạ tên trục, như LeftStickX, tới giá trị. Thành phần bị thiếu ở trạng thái trung tính. Các cần chạy từ -1 đến 1 với Y hướng lên; các cò chạy từ 0 đến 1. Các khung được phát theo thứ tự, mỗi khung ít nhất 8 ms; “holdMilliseconds” giữ một khung lâu hơn, tối đa 60000. In mỗi lệnh đầu ra mà trò chơi gửi đến tay cầm, như rung, thành một đối tượng JSON mỗi dòng. Dừng khi mọi khung đã phát xong sau khi đầu vào kết thúc.";
 "cli.virtual.feed.error.closed" = "Dịch vụ đã đóng tay cầm ảo. Hãy kiểm tra bằng “ojd status”.";
 "cli.virtual.feed.error.frame" = "Dòng %@ không phải là khung hợp lệ. “ojd virtual feed --help” hiển thị định dạng.";
 "cli.virtual.feed.profile" = "Cấu hình tay cầm ảo để cung cấp.";
@@ -1453,7 +1453,7 @@
 "cli.binding.option.turbo_rate" = "Lặp lại đích số lần này mỗi giây khi đang giữ. Cần --turbo-duty.";
 "cli.binding.set.abstract" = "Liên kết một nguồn của bộ điều khiển với một đích, thay thế liên kết hiện tại của nguồn.";
 "cli.binding.set.done" = "“%@” hiện liên kết %@.";
-"cli.binding.set.source" = "Thành phần của bộ điều khiển, như button:south.";
+"cli.binding.set.source" = "Thành phần của bộ điều khiển, như button:South.";
 "cli.binding.set.target" = "Điều nó gửi, như key:space.";
 "cli.binding.source_invalid" = "“%@” không phải là một nguồn. “ojd binding set --help” liệt kê các dạng nguồn.";
 "cli.binding.target_invalid" = "“%@” không phải là một đích. “ojd binding set --help” liệt kê các dạng đích.";

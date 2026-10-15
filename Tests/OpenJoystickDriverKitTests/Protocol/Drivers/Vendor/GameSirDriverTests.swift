@@ -25,16 +25,16 @@ struct GameSirDriverTests {
       at: 1_000
     )
 
-    #expect(events.contains(.press(.faceSouth)))
+    #expect(events.contains(.press(.south)))
     #expect(events.contains(.press(.leftShoulder)))
     #expect(events.contains(.hat(.northEast)))
     #expect(events.contains(.leftStick(x: 1, y: 1)))
     #expect(events.contains(.rightStick(x: -1, y: -1)))
     #expect(events.contains(.leftTrigger(1)))
-    #expect(events.contains(.press(.paddleLeft1)))
-    #expect(events.contains(.press(.paddleRight1)))
-    #expect(events.contains(.press(.paddleLeft2)))
-    #expect(events.contains(.press(.paddleRight2)))
+    #expect(events.contains(.press(.leftPaddle1)))
+    #expect(events.contains(.press(.rightPaddle1)))
+    #expect(events.contains(.press(.leftPaddle2)))
+    #expect(events.contains(.press(.rightPaddle2)))
     #expect(events.contains(.press(.auxiliary1)))
     // No verified IMU scale or frame: the IMU bytes are not published as motion.
     #expect(events?.motion.isEmpty == true)
@@ -49,7 +49,7 @@ struct GameSirDriverTests {
     let parser = GameSirDriver(protocol: .enhancedHID, usesLightingSlots: true)
     let pressed = enhanced(face: 0x20 | 7, counter: 9, extras: 0x08)
     let first = try parser.parseReport(pressed, at: 100)
-    #expect(first.contains(.press(.faceSouth)))
+    #expect(first.contains(.press(.south)))
     #expect(first.contains(.hat(.northWest)))
     #expect(first?.motion.isEmpty == true)
     #expect(try parser.parseReport(Data([0x12, 1, 2])) == nil)
@@ -57,8 +57,8 @@ struct GameSirDriverTests {
     #expect(repeated?.state == first?.state)
     #expect(repeated?.motion.isEmpty == true)
     let released = try parser.parseReport(enhanced(counter: 10))
-    #expect(released.contains(.release(.faceSouth)))
-    #expect(released.contains(.release(.paddleLeft1)))
+    #expect(released.contains(.release(.south)))
+    #expect(released.contains(.release(.leftPaddle1)))
     #expect(released.contains(.hat(.north)))
   }
 
@@ -66,12 +66,12 @@ struct GameSirDriverTests {
   func enhancedParametersSelectInnerGripsAndTheLightingSlotRequest() throws {
     let grips = GameSirDriver(protocol: .enhancedHID, hasInnerGrips: true)
     let slots = GameSirDriver(protocol: .enhancedHID, usesLightingSlots: true)
-    let innerGrips: Set<ControlID> = [.paddleLeft2, .paddleRight2]
+    let innerGrips: Set<Control> = [.leftPaddle2, .rightPaddle2]
     #expect(innerGrips.isSubset(of: grips.capabilities.controls))
     #expect(innerGrips.isDisjoint(with: slots.capabilities.controls))
     let gripPress = enhanced(extras: 0x40 | 0x80)
-    #expect(try grips.parseReport(gripPress).contains(.press(.paddleLeft2)))
-    #expect(!(try slots.parseReport(gripPress).contains(.press(.paddleLeft2))))
+    #expect(try grips.parseReport(gripPress).contains(.press(.leftPaddle2)))
+    #expect(!(try slots.parseReport(gripPress).contains(.press(.leftPaddle2))))
     #expect(grips.startupWrites().isEmpty)
     #expect(slots.startupWrites().isEmpty)
   }
@@ -85,7 +85,7 @@ struct GameSirDriverTests {
     standard[3] = 0x10
     standard[4] = 255
     let gameplay = try parser.parseReport(Data(standard))
-    #expect(gameplay.contains(.press(.faceSouth)))
+    #expect(gameplay.contains(.press(.south)))
     #expect(gameplay.contains(.hat(.north)))
     #expect(gameplay.contains(.leftTrigger(1)))
 
@@ -98,7 +98,7 @@ struct GameSirDriverTests {
     telemetry[60] = 0x08 | 0x40
     let extras = try parser.parseReport(Data(telemetry))
     // Telemetry adds its extras to the standard stream's controls.
-    #expect(extras?.state.pressed == [.faceSouth, .paddleLeft1, .paddleLeft2])
+    #expect(extras?.state.pressed == [.south, .leftPaddle1, .leftPaddle2])
     #expect(parser.power?.battery == BatteryLevel(percentage: 73...73))
   }
 

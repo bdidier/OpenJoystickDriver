@@ -46,7 +46,7 @@ struct NativeGamepadRoutingTests {
     )
 
     try await automatic.activate(controller: identifier)
-    await automatic.dispatch(changes: [.press(.faceSouth)], from: identifier)
+    await automatic.dispatch(changes: [.press(.south)], from: identifier)
 
     #expect(probe.publications == 0)
     await automatic.close()

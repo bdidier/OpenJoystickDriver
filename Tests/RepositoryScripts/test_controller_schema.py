@@ -36,7 +36,7 @@ class ControllerSchemaTests(unittest.TestCase):
                 },
                 usb={"configuration": "set1-before-claim"},
                 capabilities={
-                    "absent": ["left-trigger", "right-trigger"],
+                    "absent": ["LeftTrigger", "RightTrigger"],
                     "rumble": "absent",
                 },
             ),
@@ -65,10 +65,10 @@ class ControllerSchemaTests(unittest.TestCase):
                 DUALSENSE,
                 capabilities={
                     "present": [
-                        "paddle-left-1",
-                        "paddle-right-1",
-                        "auxiliary-1",
-                        "auxiliary-2",
+                        "LeftPaddle1",
+                        "RightPaddle1",
+                        "Auxiliary1",
+                        "Auxiliary2",
                     ]
                 },
             ),
@@ -245,9 +245,9 @@ class ControllerSchemaTests(unittest.TestCase):
             "XUSB rumble absence": record(XUSB, capabilities={"rumble": "absent"}),
             "unknown control": record(GIP, capabilities={"absent": ["leftTrigger"]}),
             "empty capabilities": record(GIP, capabilities={}),
-            "present on GIP": record(GIP, capabilities={"present": ["paddle-left-1"]}),
+            "present on GIP": record(GIP, capabilities={"present": ["LeftPaddle1"]}),
             "partial Edge controls": record(
-                DUALSENSE, capabilities={"present": ["paddle-left-1", "auxiliary-1"]}
+                DUALSENSE, capabilities={"present": ["LeftPaddle1", "Auxiliary1"]}
             ),
         }
         for protocol, parameters in (
@@ -557,7 +557,7 @@ class StartupWriteTests(unittest.TestCase):
 USB_WRITE = {"bytes": [5, 32, 0, 1, 0]}
 
 REPORT_LAYOUT = {"family": "hid.report-layout"}
-BUTTON = {"control": "face-south", "byte": 1, "mask": 1}
+BUTTON = {"control": "South", "byte": 1, "mask": 1}
 LAYOUT = {"report": {"length": 2}, "buttons": [BUTTON]}
 
 
@@ -574,7 +574,7 @@ class InputLayoutTests(unittest.TestCase):
                     "report": {"length": 2},
                     "axes": [
                         {
-                            "control": "left-stick-x",
+                            "control": "LeftStickX",
                             "byte": 0,
                             "bits": 16,
                             "signed": True,
@@ -590,7 +590,7 @@ class InputLayoutTests(unittest.TestCase):
                     "buttons": [BUTTON],
                     "axes": [
                         {
-                            "control": "left-stick-x",
+                            "control": "LeftStickX",
                             "byte": 2,
                             "bits": 16,
                             "signed": True,
@@ -598,7 +598,7 @@ class InputLayoutTests(unittest.TestCase):
                             "max": 32767,
                             "symmetric": True,
                         },
-                        {"control": "left-stick-y", "byte": 4, "inverted": True},
+                        {"control": "LeftStickY", "byte": 4, "inverted": True},
                     ],
                     "hat": [
                         {
@@ -653,13 +653,13 @@ class InputLayoutTests(unittest.TestCase):
             ),
             "dpad button": record(
                 REPORT_LAYOUT,
-                input={**LAYOUT, "buttons": [{**BUTTON, "control": "dpad"}]},
+                input={**LAYOUT, "buttons": [{**BUTTON, "control": "DpadUp"}]},
             ),
             "12-bit axis": record(
                 REPORT_LAYOUT,
                 input={
                     **LAYOUT,
-                    "axes": [{"control": "left-stick-x", "byte": 1, "bits": 12}],
+                    "axes": [{"control": "LeftStickX", "byte": 1, "bits": 12}],
                 },
             ),
             "4-way hat": record(
@@ -670,7 +670,7 @@ class InputLayoutTests(unittest.TestCase):
                 REPORT_LAYOUT,
                 input={
                     **LAYOUT,
-                    "axes": [{"control": "left-stick-x", "byte": 1, "symmetric": True}],
+                    "axes": [{"control": "LeftStickX", "byte": 1, "symmetric": True}],
                 },
             ),
             "table hat without values": record(
@@ -963,12 +963,12 @@ class CapabilityOverlapTests(unittest.TestCase):
         overlapping = record(
             DUALSENSE,
             capabilities={
-                "absent": ["paddle-left-1"],
+                "absent": ["LeftPaddle1"],
                 "present": [
-                    "paddle-left-1",
-                    "paddle-right-1",
-                    "auxiliary-1",
-                    "auxiliary-2",
+                    "LeftPaddle1",
+                    "RightPaddle1",
+                    "Auxiliary1",
+                    "Auxiliary2",
                 ],
             },
         )

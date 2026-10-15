@@ -963,7 +963,7 @@
 "cli.controller.light.examples" = "Exemples :\n  # Régler la barre lumineuse sur orange\n  ojd controller light 054C:09CC --color FF8000\n  # Régler la couleur et une faible luminosité\n  ojd controller light 054C:09CC --color 0000FF --brightness 40";
 "cli.profile.create.examples" = "Exemples :\n  # Créer un profil pour un modèle de manette\n  ojd profile create Racing --controller 045E:028E\n  # Ne l’appliquer que lorsque Safari est au premier plan\n  ojd profile create Browsing --controller 045E:028E --app com.apple.Safari";
 "cli.profile.set.examples" = "Exemples :\n  # Renommer un profil\n  ojd profile set Racing name Rally\n  # Régler la zone morte intérieure de la première affectation de stick\n  ojd profile set Racing stickMappings.0.tuning.innerDeadzone 0.2";
-"cli.binding.set.examples" = "Exemples :\n  # Maintenir Espace tant que le bouton sud est maintenu\n  ojd binding set Racing button:south key:space\n  # Basculer J à chaque appui\n  ojd binding set Racing button:west key:j --behavior toggle\n  # Répéter J 10 fois par seconde tant que le bouton est maintenu\n  ojd binding set Racing button:west key:j --turbo-rate 10 --turbo-duty 0.5";
+"cli.binding.set.examples" = "Exemples :\n  # Maintenir Espace tant que le bouton sud est maintenu\n  ojd binding set Racing button:South key:space\n  # Basculer J à chaque appui\n  ojd binding set Racing button:West key:j --behavior toggle\n  # Répéter J 10 fois par seconde tant que le bouton est maintenu\n  ojd binding set Racing button:West key:j --turbo-rate 10 --turbo-duty 0.5";
 "cli.record.install.examples" = "Exemples :\n  # Installer un fichier d’enregistrement\n  ojd record install 045E-028E.json\n  # Lire l’enregistrement depuis stdin\n  ojd record install - < 045E-028E.json";
 "cli.access.grant.examples" = "Exemples :\n  # Autoriser un programme à utiliser le service\n  ojd access grant /Applications/Example.app\n  # Créer un jeton pour les pages servies depuis une origine\n  ojd access grant --token overlay --origin http://127.0.0.1:8080";
 "cli.service.abstract" = "Démarrer ou arrêter le service OpenJoystickDriver, ou attendre qu’il accepte les requêtes.";
@@ -1340,7 +1340,7 @@
 "cli.virtual.error.failed" = "La manette virtuelle de %@ n’a pas changé (%@). Vérifiez avec « ojd virtual show ».";
 "cli.virtual.error.no_unit" = "%@ n’a pas d’identifiant d’unité, un choix ne peut donc s’appliquer qu’à l’ensemble de son modèle. Lancez la commande sans --unit.";
 "cli.virtual.feed.abstract" = "Publier une manette virtuelle pilotée par stdin.";
-"cli.virtual.feed.discussion" = "Lit un objet JSON par ligne : « buttons » et « dpad » listent les commandes actionnées, par exemple south et up, et « axes » associe des valeurs aux noms d’axes, par exemple left_stick_x. Les commandes absentes restent neutres. Les sticks vont de -1 à 1, avec Y vers le haut ; les gâchettes vont de 0 à 1. Les images sont lues dans l’ordre, chacune pendant au moins 8 ms ; « holdMilliseconds » maintient une image plus longtemps, jusqu’à 60000. Affiche chaque commande de sortie que les jeux envoient à la manette, comme la vibration, sous forme d’un objet JSON par ligne. S’arrête quand toutes les images ont été lues après la fin de l’entrée.";
+"cli.virtual.feed.discussion" = "Lit un objet JSON par ligne : « buttons » et « dpad » listent les commandes actionnées, par exemple South et up, et « axes » associe des valeurs aux noms d’axes, par exemple LeftStickX. Les commandes absentes restent neutres. Les sticks vont de -1 à 1, avec Y vers le haut ; les gâchettes vont de 0 à 1. Les images sont lues dans l’ordre, chacune pendant au moins 8 ms ; « holdMilliseconds » maintient une image plus longtemps, jusqu’à 60000. Affiche chaque commande de sortie que les jeux envoient à la manette, comme la vibration, sous forme d’un objet JSON par ligne. S’arrête quand toutes les images ont été lues après la fin de l’entrée.";
 "cli.virtual.feed.error.closed" = "Le service a fermé la manette virtuelle. Vérifiez avec « ojd status ».";
 "cli.virtual.feed.error.frame" = "La ligne %@ n’est pas une trame valide. « ojd virtual feed --help » indique le format.";
 "cli.virtual.feed.profile" = "Le profil de la manette virtuelle à publier.";
@@ -1453,7 +1453,7 @@
 "cli.binding.option.turbo_rate" = "Répéter la cible ce nombre de fois par seconde tant qu’elle est maintenue. Exige --turbo-duty.";
 "cli.binding.set.abstract" = "Affecter une source de la manette à une cible, en remplaçant l’affectation actuelle de la source.";
 "cli.binding.set.done" = "« %@ » est maintenant affectée à %@.";
-"cli.binding.set.source" = "La commande de la manette, par exemple button:south.";
+"cli.binding.set.source" = "La commande de la manette, par exemple button:South.";
 "cli.binding.set.target" = "Ce qu’elle envoie, par exemple key:space.";
 "cli.binding.source_invalid" = "« %@ » n’est pas une source. « ojd binding set --help » liste les formes de source.";
 "cli.binding.target_invalid" = "« %@ » n’est pas une cible. « ojd binding set --help » liste les formes de cible.";

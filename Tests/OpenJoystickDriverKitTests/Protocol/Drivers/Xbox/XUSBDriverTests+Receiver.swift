@@ -35,7 +35,7 @@ extension XUSBDriverTests {
     // Dropped pad data leaves no state behind, so the first report after presence is a change.
     #expect(try parser.parseReport(Receiver.presenceConnected) == nil)
     #expect(parser.consumeInputConnectionStateChange() == .connected)
-    #expect(try parser.parseReport(Receiver.padData(buttons: 1 << 12)).contains(.press(.faceSouth)))
+    #expect(try parser.parseReport(Receiver.padData(buttons: 1 << 12)).contains(.press(.south)))
     #expect(parser.drainPendingWrites().isEmpty)
   }
 
@@ -58,8 +58,8 @@ extension XUSBDriverTests {
 
     #expect(try parser.parseReport(Receiver.presenceConnected) == nil)
     #expect(parser.consumeInputConnectionStateChange() == .connected)
-    #expect(try parser.parseReport(Receiver.padData(buttons: 1 << 12)).contains(.press(.faceSouth)))
-    #expect(try parser.parseReport(Receiver.padData()).contains(.release(.faceSouth)))
+    #expect(try parser.parseReport(Receiver.padData(buttons: 1 << 12)).contains(.press(.south)))
+    #expect(try parser.parseReport(Receiver.padData()).contains(.release(.south)))
     #expect(parser.consumeInputConnectionStateChange() == nil)
 
     #expect(try parser.parseReport(Receiver.presenceDisconnected) == nil)
@@ -72,13 +72,13 @@ extension XUSBDriverTests {
   func testWirelessReceiverHeldButtonReemitsAfterReconnect() throws {
     let parser = XUSBDriver(isWirelessReceiver: true)
     _ = try parser.parseReport(Receiver.presenceConnected)
-    #expect(try parser.parseReport(Receiver.padData(buttons: 1 << 12)).contains(.press(.faceSouth)))
+    #expect(try parser.parseReport(Receiver.padData(buttons: 1 << 12)).contains(.press(.south)))
 
     _ = try parser.parseReport(Receiver.presenceDisconnected)
     _ = try parser.parseReport(Receiver.presenceConnected)
     #expect(parser.consumeInputConnectionStateChange() == .connected)
 
-    #expect(try parser.parseReport(Receiver.padData(buttons: 1 << 12)).contains(.press(.faceSouth)))
+    #expect(try parser.parseReport(Receiver.padData(buttons: 1 << 12)).contains(.press(.south)))
   }
 
   @Test
@@ -93,7 +93,7 @@ extension XUSBDriverTests {
     #expect(try parser.parseReport(Receiver.padData(buttons: 1 << 12)) == nil)
     _ = try parser.parseReport(Receiver.presenceConnected)
     #expect(parser.consumeInputConnectionStateChange() == .connected)
-    #expect(try parser.parseReport(Receiver.padData(buttons: 1 << 12)).contains(.press(.faceSouth)))
+    #expect(try parser.parseReport(Receiver.padData(buttons: 1 << 12)).contains(.press(.south)))
   }
 
   /// The manager assigns a receiver slot's ring LED from the pool wired pads share, so the

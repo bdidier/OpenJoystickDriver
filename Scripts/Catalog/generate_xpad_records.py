@@ -70,7 +70,7 @@ MAPPING_ORDER = tuple(
     for entry in _XPAD_RULES["mappingParameters"]
 )
 # xpad mapping macros that remove analog controls, as capability absences in
-# ControlID order. Buttons and stick clicks stay.
+# Control declaration order. Buttons and stick clicks stay.
 CAPABILITY_ABSENCES = tuple(
     (entry["flag"], tuple(entry["controls"]))
     for entry in _XPAD_RULES["capabilityAbsences"]

@@ -21,21 +21,21 @@ extension JoyConPairCharacterizationTests {
     ])
     #expect(
       lines == [
-        "L a20100 4095,2048 [+back +left_trigger_click +left_sl hat=north ls=32767,0]",
-        "  pad L +back", "  pad L +left_trigger_click", "  pad L +left_shoulder", "  pad L d+up",
-        "  pad L left_stick_x=32767", "R 4 2048,2048 [+south]", "  pad L +south",
-        "R 0 2048,2048 [-south]", "  pad L -south", "R 9 2048,2048 [+east +west]", "  pad L +east",
-        "  pad L +west", "R 1 2048,2048 [-east]", "  pad L -east", "R 0 2048,2048 [-west]",
-        "  pad L -west", "R 12c0 2048,2048 [+right_shoulder +start +guide +right_trigger_click]",
-        "  pad L +right_shoulder", "  pad L +start", "  pad L +guide",
-        "  pad L +right_trigger_click",
-        "R 0 2048,2048 [-right_shoulder -start -guide -right_trigger_click]",
-        "  pad L -right_shoulder", "  pad L -start", "  pad L -guide",
-        "  pad L -right_trigger_click", "R 0 2048,0 [rs=0,32767]", "  pad L right_stick_y=32767",
-        "R 0 2048,2048 [rs=0,0]", "  pad L right_stick_y=0",
-        "L 0 2048,2048 [-back -left_trigger_click -left_sl hat=neutral ls=0,0]", "  pad L -back",
-        "  pad L -left_trigger_click", "  pad L -left_shoulder", "  pad L d-up",
-        "  pad L left_stick_x=0",
+        "L a20100 4095,2048 [+Back +LeftTrigger +Auxiliary3 hat=north ls=32767,0]",
+        "  pad L +Back", "  pad L +LeftTrigger", "  pad L +LeftShoulder", "  pad L d+up",
+        "  pad L LeftStickX=32767", "R 4 2048,2048 [+South]", "  pad L +South",
+        "R 0 2048,2048 [-South]", "  pad L -South", "R 9 2048,2048 [+East +West]", "  pad L +East",
+        "  pad L +West", "R 1 2048,2048 [-East]", "  pad L -East", "R 0 2048,2048 [-West]",
+        "  pad L -West", "R 12c0 2048,2048 [+RightShoulder +Start +Guide +RightTrigger]",
+        "  pad L +RightShoulder", "  pad L +Start", "  pad L +Guide",
+        "  pad L +RightTrigger",
+        "R 0 2048,2048 [-RightShoulder -Start -Guide -RightTrigger]",
+        "  pad L -RightShoulder", "  pad L -Start", "  pad L -Guide",
+        "  pad L -RightTrigger", "R 0 2048,0 [rs=0,32767]", "  pad L RightStickY=32767",
+        "R 0 2048,2048 [rs=0,0]", "  pad L RightStickY=0",
+        "L 0 2048,2048 [-Back -LeftTrigger -Auxiliary3 hat=neutral ls=0,0]", "  pad L -Back",
+        "  pad L -LeftTrigger", "  pad L -LeftShoulder", "  pad L d-up",
+        "  pad L LeftStickX=0",
       ]
     )
   }
@@ -54,18 +54,18 @@ extension JoyConPairCharacterizationTests {
     ])
     #expect(
       lines == [
-        "R 244 0,2048 [+south +right_shoulder +start rs=-32767,0]", "  pad L +south",
-        "  pad L +right_shoulder", "  pad L +start", "  pad L right_stick_x=-32767",
-        "L 200000 2048,2048 [+left_sl]", "  pad L +left_shoulder", "L 0 2048,2048 [-left_sl]",
-        "  pad L -left_shoulder", "L 20100 2048,2048 [+back hat=north]", "  pad L +back",
-        "  pad L d+up", "L 100 2048,2048 [hat=neutral]", "  pad L d-up", "L 0 2048,2048 [-back]",
-        "  pad L -back", "L 402800 2048,2048 [+left_shoulder +left_stick +share]",
-        "  pad L +left_shoulder", "  pad L +left_stick", "  pad L +share",
-        "L 0 2048,2048 [-left_shoulder -left_stick -share]", "  pad L -left_shoulder",
-        "  pad L -left_stick", "  pad L -share", "L 0 2048,4095 [ls=0,-32767]",
-        "  pad L left_stick_y=-32767", "L 0 2048,2048 [ls=0,0]", "  pad L left_stick_y=0",
-        "R 0 2048,2048 [-south -right_shoulder -start rs=0,0]", "  pad L -south",
-        "  pad L -right_shoulder", "  pad L -start", "  pad L right_stick_x=0",
+        "R 244 0,2048 [+South +RightShoulder +Start rs=-32767,0]", "  pad L +South",
+        "  pad L +RightShoulder", "  pad L +Start", "  pad L RightStickX=-32767",
+        "L 200000 2048,2048 [+Auxiliary3]", "  pad L +LeftShoulder", "L 0 2048,2048 [-Auxiliary3]",
+        "  pad L -LeftShoulder", "L 20100 2048,2048 [+Back hat=north]", "  pad L +Back",
+        "  pad L d+up", "L 100 2048,2048 [hat=neutral]", "  pad L d-up", "L 0 2048,2048 [-Back]",
+        "  pad L -Back", "L 402800 2048,2048 [+LeftShoulder +LeftStickClick +Capture]",
+        "  pad L +LeftShoulder", "  pad L +LeftStickClick", "  pad L +Capture",
+        "L 0 2048,2048 [-LeftShoulder -LeftStickClick -Capture]", "  pad L -LeftShoulder",
+        "  pad L -LeftStickClick", "  pad L -Capture", "L 0 2048,4095 [ls=0,-32767]",
+        "  pad L LeftStickY=-32767", "L 0 2048,2048 [ls=0,0]", "  pad L LeftStickY=0",
+        "R 0 2048,2048 [-South -RightShoulder -Start rs=0,0]", "  pad L -South",
+        "  pad L -RightShoulder", "  pad L -Start", "  pad L RightStickX=0",
       ]
     )
   }
@@ -86,9 +86,9 @@ extension JoyConPairCharacterizationTests {
     lines += try await session.run([Step(Self.left, 0)])
     #expect(
       lines == [
-        "L 220000 2048,2048 [+left_sl hat=north]", "  pad L +left_shoulder", "  pad L d+up",
-        "R 4 2048,2048 [+south]", "  pad L +south", "stop R", "  pad L -left_shoulder",
-        "  pad L -south d-up", "  compat-stop L", "L 0 2048,2048 [-left_sl hat=neutral]",
+        "L 220000 2048,2048 [+Auxiliary3 hat=north]", "  pad L +LeftShoulder", "  pad L d+up",
+        "R 4 2048,2048 [+South]", "  pad L +South", "stop R", "  pad L -LeftShoulder",
+        "  pad L -South d-up", "  compat-stop L", "L 0 2048,2048 [-Auxiliary3 hat=neutral]",
         "  compat L [neutral]",
       ]
     )
@@ -99,7 +99,7 @@ extension JoyConPairCharacterizationTests {
   @Test
   func bothHalvesDriveOneDestination() async throws {
     let session = try await pairedSession(bindings: [
-      RemappingBinding(source: .button(.rightSL), destination: .gamepadButton(.leftShoulder))
+      RemappingBinding(source: .button(.auxiliary5), destination: .gamepadButton(.leftShoulder))
     ])
     defer { session.harness.removeFiles() }
     let lines = try await session.run([
@@ -108,9 +108,10 @@ extension JoyConPairCharacterizationTests {
     ])
     #expect(
       lines == [
-        "L 400000 2048,2048 [+left_shoulder]", "  pad L +left_shoulder",
-        "R 20 2048,2048 [+right_sl]", "R 0 2048,2048 [-right_sl]", "R 20 2048,2048 [+right_sl]",
-        "L 0 2048,2048 [-left_shoulder]", "R 0 2048,2048 [-right_sl]", "  pad L -left_shoulder",
+        "L 400000 2048,2048 [+LeftShoulder]", "  pad L +LeftShoulder",
+        "R 20 2048,2048 [+Auxiliary5]", "R 0 2048,2048 [-Auxiliary5]",
+        "R 20 2048,2048 [+Auxiliary5]",
+        "L 0 2048,2048 [-LeftShoulder]", "R 0 2048,2048 [-Auxiliary5]", "  pad L -LeftShoulder",
       ]
     )
   }

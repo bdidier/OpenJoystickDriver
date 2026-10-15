@@ -3,7 +3,7 @@ import Foundation
 /// One input change the engine applies, found by diffing a source's snapshot against its baseline.
 /// Axes are in the remapping frame: Y points down.
 enum RemappingInputChange: Equatable {
-  case button(RemappingButton, isPressed: Bool)
+  case button(Control, isPressed: Bool)
   case dpad(HatDirection)
   case leftStick(x: Float, y: Float)
   case rightStick(x: Float, y: Float)
@@ -44,10 +44,8 @@ extension RemappingEngineState {
     var changes: [RemappingInputChange] = []
     for control in controlOrder(labels) {
       let isPressed = new.pressed.contains(control)
-      guard old.pressed.contains(control) != isPressed,
-        let button = RemappingButton(control: control, labels: labels)
-      else { continue }
-      changes.append(.button(button, isPressed: isPressed))
+      guard old.pressed.contains(control) != isPressed else { continue }
+      changes.append(.button(control, isPressed: isPressed))
     }
     if old.hat != new.hat { changes.append(.dpad(new.hat)) }
     if old.leftStick != new.leftStick {
@@ -68,7 +66,7 @@ extension RemappingEngineState {
   /// Digital controls in the order the delta pipeline delivered their changes: the declaration
   /// order of the parser button each family's parsers spelled them with (Xbox spelling for the
   /// standard and Nintendo families, PlayStation spelling, stick clicks first, for PlayStation).
-  static func controlOrder(_ labels: ControllerButtonLabels) -> [ControlID] {
+  static func controlOrder(_ labels: ControllerButtonLabels) -> [Control] {
     switch labels {
     case .standard: standardControlOrder
     case .nintendo: nintendoControlOrder
@@ -76,29 +74,29 @@ extension RemappingEngineState {
     }
   }
 
-  private static let extraControlOrder: [ControlID] = [
-    .paddleLeft2, .paddleRight2, .leftTrackpadClick, .rightTrackpadClick, .auxiliary3, .auxiliary4,
-    .auxiliary5, .auxiliary6, .auxiliary1, .auxiliary2, .paddleLeft1, .paddleRight1,
+  private static let extraControlOrder: [Control] = [
+    .leftPaddle2, .rightPaddle2, .leftTrackpadClick, .rightTrackpadClick, .auxiliary3, .auxiliary4,
+    .auxiliary5, .auxiliary6, .auxiliary1, .auxiliary2, .leftPaddle1, .rightPaddle1,
   ]
 
-  private static let standardControlOrder: [ControlID] =
+  private static let standardControlOrder: [Control] =
     [
-      .faceSouth, .faceEast, .faceWest, .faceNorth, .leftShoulder, .rightShoulder, .leftStickClick,
-      .rightStickClick, .menu, .view, .guide, .leftTriggerButton, .rightTriggerButton, .share,
+      .south, .east, .west, .north, .leftShoulder, .rightShoulder, .leftStickClick,
+      .rightStickClick, .start, .back, .guide, .leftTrigger, .rightTrigger, .capture,
       .touchpadClick, .microphone,
     ] + extraControlOrder
 
-  private static let nintendoControlOrder: [ControlID] =
+  private static let nintendoControlOrder: [Control] =
     [
-      .faceSouth, .faceEast, .faceWest, .faceNorth, .leftShoulder, .rightShoulder, .leftStickClick,
-      .rightStickClick, .menu, .view, .guide, .leftTriggerButton, .rightTriggerButton, .capture,
+      .south, .east, .west, .north, .leftShoulder, .rightShoulder, .leftStickClick,
+      .rightStickClick, .start, .back, .guide, .leftTrigger, .rightTrigger, .capture,
       .touchpadClick, .microphone,
     ] + extraControlOrder
 
-  private static let playStationControlOrder: [ControlID] =
+  private static let playStationControlOrder: [Control] =
     [
-      .leftStickClick, .rightStickClick, .faceSouth, .faceEast, .faceWest, .faceNorth,
-      .leftShoulder, .rightShoulder, .leftTriggerButton, .rightTriggerButton, .view, .menu, .guide,
+      .leftStickClick, .rightStickClick, .south, .east, .west, .north,
+      .leftShoulder, .rightShoulder, .leftTrigger, .rightTrigger, .back, .start, .guide,
       .touchpadClick, .microphone,
     ] + extraControlOrder
 }

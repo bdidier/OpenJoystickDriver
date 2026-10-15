@@ -84,13 +84,13 @@ extension ControllerRecordDocument {
   }
 
   struct InputButton: Decodable {
-    let control: ControlID
+    let control: Control
     let field: ReportBitField
 
     init(from decoder: any Decoder) throws {
       let container = try decoder.container(keyedBy: DocumentKey.self)
       try container.rejectUnknown(allowed: ["control", "byte", "mask"])
-      control = try container.decode(ControlID.self, for: "control")
+      control = try container.decode(Control.self, for: "control")
       field = try InputField.field(in: container, codingPath: decoder.codingPath)
     }
   }
@@ -107,7 +107,7 @@ extension ControllerRecordDocument {
       let isSigned = try container.decodeOptional(Bool.self, for: "signed") ?? false
       let fullRange = ControllerInputLayout.Axis.fullRange(bits: bits, isSigned: isSigned)
       axis = ControllerInputLayout.Axis(
-        control: try container.decode(ControlID.self, for: "control"),
+        control: try container.decode(Control.self, for: "control"),
         byte: try container.decode(Int.self, for: "byte"),
         bits: bits,
         isSigned: isSigned,

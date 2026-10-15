@@ -13,7 +13,7 @@ extension DualShock4DriverTests {
     )
     #expect(first?.isFresh == true)
     #expect(first.contains(.rightStick(x: 127.0 / 128.0, y: 0)))
-    #expect(first.contains(.press(.faceSouth)))
+    #expect(first.contains(.press(.south)))
 
     #expect(try parser.parseReport(makeDS4Report(sensorTimestamp: 0xFFFF))?.isFresh == false)
     #expect(try parser.parseReport(makeDS4Report(sensorTimestamp: 0))?.isFresh == true)
@@ -32,7 +32,7 @@ extension DualShock4DriverTests {
     }
     // The throw kept the held button and the sensor clock of the last valid report.
     let next = try parser.parseReport(makeDS4BluetoothReport(buttons0: 0x28, sensorTimestamp: 2))
-    #expect(next.contains(.press(.faceSouth)))
+    #expect(next.contains(.press(.south)))
     #expect(next?.isFresh == true)
   }
 
@@ -158,8 +158,8 @@ extension DualShock4DriverTests {
     #expect(events.contains(.leftTrigger(1.0)))
 
     #expect(events.contains(.rightTrigger(128.0 / 255.0)))
-    #expect(events.contains(.press(.view)))
-    #expect(events.contains(.press(.menu)))
+    #expect(events.contains(.press(.back)))
+    #expect(events.contains(.press(.start)))
     #expect(events.contains(.press(.guide)))
     #expect(events.contains(.press(.touchpadClick)))
   }
@@ -183,7 +183,7 @@ extension DualShock4DriverTests {
     pressed[6] = 0x28
     let events = try parser.parseReport(Data(pressed))
 
-    #expect(events.contains(.press(.faceSouth)))
+    #expect(events.contains(.press(.south)))
   }
 
   @Test
@@ -227,8 +227,8 @@ extension DualShock4DriverTests {
     #expect(events.contains(expectedRightStick))
     #expect(events.contains(expectedLeftTrigger))
     #expect(events.contains(expectedRightTrigger))
-    #expect(events.contains(.press(.view)))
-    #expect(events.contains(.press(.menu)))
+    #expect(events.contains(.press(.back)))
+    #expect(events.contains(.press(.start)))
     #expect(events.contains(.press(.guide)))
     #expect(events.contains(.press(.touchpadClick)))
   }
@@ -263,8 +263,8 @@ extension DualShock4DriverTests {
   }
 
   private func assertFaceButtonContinuity(makeReport: (UInt8, UInt8, UInt8) -> Data) throws {
-    let faceButtons: [(mask: UInt8, button: ControlID)] = [
-      (0x10, .faceWest), (0x20, .faceSouth), (0x40, .faceEast), (0x80, .faceNorth),
+    let faceButtons: [(mask: UInt8, button: Control)] = [
+      (0x10, .west), (0x20, .south), (0x40, .east), (0x80, .north),
     ]
 
     for faceButton in faceButtons {

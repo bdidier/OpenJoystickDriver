@@ -15,7 +15,7 @@ struct RemappingScheduleTests {
 
     #expect(await deadline(engine, after: start, cadence: 8_000_000) == nil)
     try await engine.process(
-      inputs: [.press(.faceSouth)],
+      inputs: [.press(.south)],
       from: device,
       using: currentProfile,
       at: start
@@ -37,7 +37,7 @@ struct RemappingScheduleTests {
     let start: UInt64 = 2_000_000_000
 
     try await engine.process(
-      inputs: [.press(.faceSouth), .press(.faceEast)],
+      inputs: [.press(.south), .press(.east)],
       from: device,
       using: currentProfile,
       at: start
@@ -53,7 +53,7 @@ struct RemappingScheduleTests {
     #expect(await deadline(engine, after: start, cadence: 1_000_000) == start + 1_000_000)
 
     try await engine.process(
-      inputs: [.release(.faceSouth), .release(.faceEast), .leftStick(x: 0, y: 0)],
+      inputs: [.release(.south), .release(.east), .leftStick(x: 0, y: 0)],
       from: device,
       using: currentProfile,
       at: start
@@ -91,21 +91,21 @@ struct RemappingScheduleTests {
 
     #expect(await engine.hasScheduledOutput() == false)
     try await engine.process(
-      inputs: [.press(.faceEast), .press(.faceWest)],
+      inputs: [.press(.east), .press(.west)],
       from: device,
       using: currentProfile,
       at: 0
     )
     #expect(await engine.hasScheduledOutput() == false)
     try await engine.process(
-      inputs: [.press(.faceSouth)],
+      inputs: [.press(.south)],
       from: device,
       using: currentProfile,
       at: 1
     )
     #expect(await engine.hasScheduledOutput())
     try await engine.process(
-      inputs: [.release(.faceSouth)],
+      inputs: [.release(.south)],
       from: device,
       using: currentProfile,
       at: 2

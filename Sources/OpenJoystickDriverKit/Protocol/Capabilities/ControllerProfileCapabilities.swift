@@ -22,7 +22,7 @@ public struct ControllerProfileCapabilities: Equatable, Sendable {
   /// A device OJD cannot describe: every standard-labelled control stays selectable, without
   /// touch, motion or physical output.
   public static let unknown = Self(
-    physicalInput: ControllerCapabilities(controls: Set(ControlID.allCases)),
+    physicalInput: ControllerCapabilities(controls: Set(Control.allCases)),
     physicalOutput: .none,
     buttonLabels: .standard
   )

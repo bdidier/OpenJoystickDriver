@@ -29,16 +29,16 @@ struct InputCapabilitiesTests {
     #expect(description.capabilities.motion)
     #expect(description.capabilities.touchContactCount == 2)
     #expect(description.capabilities.touchSurfaces == [.primary])
-    let dualSense: Set<ControlID> = [
-      .guide, .leftTriggerButton, .rightTriggerButton, .touchpadClick, .microphone,
+    let dualSense: Set<Control> = [
+      .guide, .leftTrigger, .rightTrigger, .touchpadClick, .microphone,
     ]
-    let extra: Set<ControlID>
+    let extra: Set<Control>
     switch productID {
-    case 0x0DF2: extra = dualSense.union([.paddleLeft1, .paddleRight1, .auxiliary1, .auxiliary2])
+    case 0x0DF2: extra = dualSense.union([.leftPaddle1, .rightPaddle1, .auxiliary1, .auxiliary2])
     case 0x0CE6: extra = dualSense
-    default: extra = [.guide, .touchpadClick, .leftTriggerButton, .rightTriggerButton]
+    default: extra = [.guide, .touchpadClick, .leftTrigger, .rightTrigger]
     }
-    #expect(description.capabilities.controls == ControlID.xboxLayout.union(extra))
+    #expect(description.capabilities.controls == Control.xboxLayout.union(extra))
     let encoded = try JSONEncoder().encode(
       ApplicationServiceDeviceDescription(snapshot: description)
     )

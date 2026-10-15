@@ -81,7 +81,7 @@ extension DualShock4DriverTests {
     #expect(driver.consumeInputConnectionStateChange() == nil)
 
     let pad = makeDS4Report(buttons0: 0x28)
-    #expect(try driver.parseReport(pad, at: 10_000_000).contains(.press(.faceSouth)))
+    #expect(try driver.parseReport(pad, at: 10_000_000).contains(.press(.south)))
     #expect(driver.consumeInputConnectionStateChange() == .connected)
     #expect(driver.consumeInputConnectionStateChange() == nil)
   }

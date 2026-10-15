@@ -48,7 +48,7 @@ extension RemappingOutputRouterTests {
     let devices = [remappingRouterDevice(1), remappingRouterDevice(2)]
     for device in devices {
       await harness.router.controllerInputOwnershipChanged(.exclusive, for: device)
-      try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
+      try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
 
     }
     harness.recorder.removeAll()
@@ -86,7 +86,7 @@ extension RemappingOutputRouterTests {
     defer { harness.removeFiles() }
     let device = remappingRouterDevice(1)
     await harness.router.controllerInputOwnershipChanged(.exclusive, for: device)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
     harness.recorder.removeAll()
     harness.virtualOutput.rejectNeutral = true
 
@@ -115,7 +115,7 @@ extension RemappingOutputRouterTests {
     defer { harness.removeFiles() }
     let device = remappingRouterDevice(1)
     await harness.router.controllerInputOwnershipChanged(.exclusive, for: device)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
 
     harness.recorder.removeAll()
     if transaction {
@@ -152,15 +152,15 @@ extension RemappingOutputRouterTests {
     let device = remappingRouterDevice(1)
 
     await harness.router.controllerInputOwnershipChanged(.exclusive, for: device)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
     #expect(
       harness.recorder.snapshot() == [.gamepad(RemappingGamepadState(buttons: [.north]), device)]
     )
     harness.router.suppressOutput = true
-    try await harness.router.dispatchCausally(changes: [.press(.faceEast)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.east)], from: device)
     #expect(harness.recorder.snapshot().last == .gamepad(.neutral, device))
     harness.router.suppressOutput = false
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
     #expect(
       harness.recorder.snapshot().last == .gamepad(RemappingGamepadState(buttons: [.north]), device)
     )
@@ -205,21 +205,21 @@ extension RemappingOutputRouterTests {
     let harness = try await RemappingRouterHarness.make(profile: profile)
     defer { harness.removeFiles() }
     let device = remappingRouterDevice(1)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
     #expect(harness.recorder.snapshot().isEmpty)
 
     #expect(await harness.router.status(for: device)?.eligibility == .physicalInputNotExclusive)
     await harness.router.controllerInputOwnershipChanged(.exclusive, for: device)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
     await harness.router.controllerInputOwnershipChanged(.shared, for: device)
-    try await harness.router.dispatchCausally(changes: [.press(.faceEast)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.east)], from: device)
     #expect(harness.recorder.snapshot() == [.system(.keyDown(.space)), .system(.keyUp(.space))])
     #expect(await harness.router.status(for: device)?.eligibility == .physicalInputNotExclusive)
     await harness.router.controllerInputOwnershipChanged(.exclusive, for: device)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
     #expect(harness.recorder.snapshot().last == .system(.keyDown(.space)))
     try await harness.router.stopController(device)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
     #expect(await harness.router.status(for: device)?.eligibility == .physicalInputNotExclusive)
   }
 
@@ -238,13 +238,13 @@ extension RemappingOutputRouterTests {
     let first = remappingRouterDevice(1)
     let second = remappingRouterDevice(2)
     await harness.router.controllerInputOwnershipChanged(.exclusive, for: first)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: second)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: second)
     #expect(harness.recorder.snapshot().isEmpty)
     let transaction = try await harness.router.beginProfileTransaction()
     await harness.router.controllerInputOwnershipChanged(.accessDenied, for: first)
     try await harness.router.dispatchCausally(.activation, from: first)
     try await harness.router.acceptProfileTransaction(transaction)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: first)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: first)
     #expect(harness.recorder.snapshot().isEmpty)
     #expect(await harness.router.status(for: first)?.eligibility == .physicalInputNotExclusive)
   }
@@ -258,13 +258,13 @@ extension RemappingOutputRouterTests {
     let mapped = remappingRouterDevice(1)
     let virtualOutput = remappingRouterDevice(2, vendorID: 1356, productID: 2508)
 
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: mapped)
-    try await harness.router.dispatchCausally(changes: [.press(.faceEast)], from: virtualOutput)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: mapped)
+    try await harness.router.dispatchCausally(changes: [.press(.east)], from: virtualOutput)
 
     #expect(
       harness.recorder.snapshot() == [
         .system(.keyDown(.space)),
-        .virtualGamepad(ControllerState.neutral.applying([.press(.faceEast)]), virtualOutput),
+        .virtualGamepad(ControllerState.neutral.applying([.press(.east)]), virtualOutput),
 
       ]
     )
@@ -279,25 +279,25 @@ extension RemappingOutputRouterTests {
     let harness = try await RemappingRouterHarness.make()
     defer { harness.removeFiles() }
     let device = remappingRouterDevice(1)
-    try await harness.router.dispatchCausally(changes: [.press(.faceEast)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.east)], from: device)
     let profile = remappingRouterProfile()
     try await harness.library.create(profile)
     try await harness.library.activate(profileID: profile.id)
 
     try await harness.router.refreshModel(vendorID: 1118, productID: 654)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
     try await harness.library.deactivateAll(vendorID: 1118, productID: 654)
     try await harness.router.refreshModel(vendorID: 1118, productID: 654)
-    try await harness.router.dispatchCausally(changes: [.press(.faceWest)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.west)], from: device)
 
     #expect(
       harness.recorder.snapshot() == [
-        .virtualGamepad(ControllerState.neutral.applying([.press(.faceEast)]), device),
+        .virtualGamepad(ControllerState.neutral.applying([.press(.east)]), device),
         .virtualOutputStop(device), .system(.keyDown(.space)), .system(.keyUp(.space)),
         // A snapshot carries every held control, so virtual output sees East and South still held.
         .virtualGamepad(
           ControllerState.neutral.applying([
-            .press(.faceEast), .press(.faceSouth), .press(.faceWest),
+            .press(.east), .press(.south), .press(.west),
           ]),
           device
         ),
@@ -312,8 +312,8 @@ extension RemappingOutputRouterTests {
     let first = remappingRouterDevice(1)
     let second = remappingRouterDevice(2)
 
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: first)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: second)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: first)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: second)
     try await harness.router.stopController(first)
     try await harness.router.stopController(second)
 
@@ -327,15 +327,15 @@ extension RemappingOutputRouterTests {
     let harness = try await RemappingRouterHarness.make(profile: remappingRouterProfile())
     defer { harness.removeFiles() }
     let virtualOutput = remappingRouterDevice(2, vendorID: 1356, productID: 2508)
-    try await harness.router.dispatchCausally(changes: [.press(.faceEast)], from: virtualOutput)
+    try await harness.router.dispatchCausally(changes: [.press(.east)], from: virtualOutput)
 
     harness.router.setOutputSuppressed(true)
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: virtualOutput)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: virtualOutput)
     harness.router.setOutputSuppressed(true)
 
     #expect(
       harness.recorder.snapshot() == [
-        .virtualGamepad(ControllerState.neutral.applying([.press(.faceEast)]), virtualOutput),
+        .virtualGamepad(ControllerState.neutral.applying([.press(.east)]), virtualOutput),
         .virtualOutputStop(virtualOutput),
       ]
     )
@@ -345,12 +345,12 @@ extension RemappingOutputRouterTests {
 
     harness.router.setOutputSuppressed(false)
     #expect(await harness.router.status(for: virtualOutput)?.eligibility == .eligible)
-    try await harness.router.dispatchCausally(changes: [.press(.faceEast)], from: virtualOutput)
+    try await harness.router.dispatchCausally(changes: [.press(.east)], from: virtualOutput)
     #expect(
       Array(harness.recorder.snapshot().suffix(2)) == [
-        .virtualGamepad(ControllerState.neutral.applying([.press(.faceSouth)]), virtualOutput),
+        .virtualGamepad(ControllerState.neutral.applying([.press(.south)]), virtualOutput),
         .virtualGamepad(
-          ControllerState.neutral.applying([.press(.faceSouth), .press(.faceEast)]),
+          ControllerState.neutral.applying([.press(.south), .press(.east)]),
           virtualOutput
         ),
       ]

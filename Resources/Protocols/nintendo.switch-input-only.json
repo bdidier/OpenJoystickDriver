@@ -10,8 +10,8 @@
   "buttonLabels": "Nintendo",
   "controls": {
     "base": "xbox",
-    "remove": ["left-trigger", "right-trigger"],
-    "add": ["left-trigger-button", "right-trigger-button", "guide", "capture"]
+    "add": ["Guide", "Capture"],
+    "digitalTriggers": ["LeftTrigger", "RightTrigger"]
   },
   "defaults": {
     "tuning": {

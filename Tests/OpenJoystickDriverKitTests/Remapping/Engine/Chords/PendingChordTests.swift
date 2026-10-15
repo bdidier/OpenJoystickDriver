@@ -9,17 +9,17 @@ struct RemappingPendingChordTests {
     var state = RemappingEngineState()
     let profile = profile()
     #expect(
-      state.process(inputs: [.press(.faceSouth)], from: identifier, profile: profile, at: 0).isEmpty
+      state.process(inputs: [.press(.south)], from: identifier, profile: profile, at: 0).isEmpty
     )
     #expect(state.nextScheduledTick(after: 0, continuousIntervalNanoseconds: 1) == 50_000_001)
     #expect(
-      state.process(inputs: [.press(.faceEast)], from: identifier, profile: profile, at: 50_000_000)
+      state.process(inputs: [.press(.east)], from: identifier, profile: profile, at: 50_000_000)
         == [.system(.keyDown(.c))]
     )
     #expect(!state.hasScheduledOutput)
     #expect(
       state.process(
-        inputs: [.release(.faceSouth), .release(.faceEast)],
+        inputs: [.release(.south), .release(.east)],
         from: identifier,
         profile: profile,
         at: 60_000_000
@@ -31,13 +31,13 @@ struct RemappingPendingChordTests {
   func timeoutReplaysHeldBindingOnce() {
     var state = RemappingEngineState()
     let profile = profile()
-    _ = state.process(inputs: [.press(.faceSouth)], from: identifier, profile: profile, at: 0)
+    _ = state.process(inputs: [.press(.south)], from: identifier, profile: profile, at: 0)
     #expect(state.tick(at: 50_000_000).isEmpty)
     #expect(state.tick(at: 50_000_001) == [.system(.keyDown(.a))])
     #expect(state.tick(at: 60_000_000).isEmpty)
     #expect(
       state.process(
-        inputs: [.release(.faceSouth)],
+        inputs: [.release(.south)],
         from: identifier,
         profile: profile,
         at: 70_000_000
@@ -49,9 +49,9 @@ struct RemappingPendingChordTests {
   func earlyReleaseReplaysTapInOrder() {
     var state = RemappingEngineState()
     let profile = profile()
-    _ = state.process(inputs: [.press(.faceSouth)], from: identifier, profile: profile, at: 0)
+    _ = state.process(inputs: [.press(.south)], from: identifier, profile: profile, at: 0)
     #expect(
-      state.process(inputs: [.release(.faceSouth)], from: identifier, profile: profile, at: 1) == [
+      state.process(inputs: [.release(.south)], from: identifier, profile: profile, at: 1) == [
         .system(.keyDown(.a)), .system(.keyUp(.a)),
       ]
     )
@@ -63,10 +63,10 @@ struct RemappingPendingChordTests {
     var state = RemappingEngineState()
     let profile = profile(passthrough: true)
     #expect(
-      state.process(inputs: [.press(.faceSouth)], from: identifier, profile: profile, at: 0).isEmpty
+      state.process(inputs: [.press(.south)], from: identifier, profile: profile, at: 0).isEmpty
     )
     #expect(
-      state.process(inputs: [.release(.faceSouth)], from: identifier, profile: profile, at: 1) == [
+      state.process(inputs: [.release(.south)], from: identifier, profile: profile, at: 1) == [
         .gamepad(RemappingGamepadState(buttons: [.south]), identifier),
         .gamepad(.neutral, identifier),
       ]
@@ -76,7 +76,7 @@ struct RemappingPendingChordTests {
   @Test
   func controllerReleaseCancelsPendingPress() {
     var state = RemappingEngineState()
-    _ = state.process(inputs: [.press(.faceSouth)], from: identifier, profile: profile(), at: 0)
+    _ = state.process(inputs: [.press(.south)], from: identifier, profile: profile(), at: 0)
     #expect(state.releaseController(identifier).isEmpty)
     #expect(state.tick(at: 100_000_000).isEmpty)
     #expect(!state.hasScheduledOutput)
@@ -88,7 +88,7 @@ struct RemappingPendingChordTests {
     let profile = overlappingProfile()
     #expect(
       state.process(
-        inputs: [.press(.faceSouth), .press(.faceEast)],
+        inputs: [.press(.south), .press(.east)],
         from: identifier,
         profile: profile,
         at: 0
@@ -98,7 +98,7 @@ struct RemappingPendingChordTests {
     #expect(state.tick(at: 50_000_001).isEmpty)
     #expect(
       state.process(
-        inputs: [.press(.faceNorth)],
+        inputs: [.press(.north)],
         from: identifier,
         profile: profile,
         at: 75_000_000
@@ -112,7 +112,7 @@ struct RemappingPendingChordTests {
     var state = RemappingEngineState()
     let profile = overlappingProfile()
     _ = state.process(
-      inputs: [.press(.faceSouth), .press(.faceEast)],
+      inputs: [.press(.south), .press(.east)],
       from: identifier,
       profile: profile,
       at: 0
@@ -126,14 +126,14 @@ struct RemappingPendingChordTests {
     var state = RemappingEngineState()
     let profile = overlappingProfile()
     _ = state.process(
-      inputs: [.press(.faceSouth), .press(.faceEast)],
+      inputs: [.press(.south), .press(.east)],
       from: identifier,
       profile: profile,
       at: 0
     )
     #expect(
       state.process(
-        inputs: [.release(.faceSouth)],
+        inputs: [.release(.south)],
         from: identifier,
         profile: profile,
         at: 20_000_000
@@ -147,13 +147,13 @@ struct RemappingPendingChordTests {
     var state = RemappingEngineState()
     let profile = overlappingProfile()
     _ = state.process(
-      inputs: [.press(.faceSouth), .press(.faceEast), .press(.faceNorth)],
+      inputs: [.press(.south), .press(.east), .press(.north)],
       from: identifier,
       profile: profile,
       at: 0
     )
     #expect(
-      state.process(inputs: [.release(.faceNorth)], from: identifier, profile: profile, at: 1) == [
+      state.process(inputs: [.release(.north)], from: identifier, profile: profile, at: 1) == [
         .system(.keyUp(.d))
       ]
     )
@@ -221,7 +221,7 @@ struct RemappingPendingChordTests {
     var state = RemappingEngineState()
     #expect(
       state.process(
-        inputs: [.press(.faceSouth), .press(.faceEast)],
+        inputs: [.press(.south), .press(.east)],
         from: identifier,
         profile: profile,
         at: 0
@@ -229,7 +229,7 @@ struct RemappingPendingChordTests {
     )
     #expect(
       state.process(
-        inputs: [.release(.faceEast), .release(.faceSouth)],
+        inputs: [.release(.east), .release(.south)],
         from: identifier,
         profile: profile,
         at: 1
@@ -243,7 +243,7 @@ struct RemappingPendingChordTests {
     let profile = overlappingProfile(smallerWindow: 100, largerWindow: 50)
     #expect(
       state.process(
-        inputs: [.press(.faceSouth), .press(.faceEast)],
+        inputs: [.press(.south), .press(.east)],
         from: identifier,
         profile: profile,
         at: 0

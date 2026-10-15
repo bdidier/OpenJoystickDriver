@@ -11,10 +11,10 @@
       switch button {
       case .leftShoulder, .rightShoulder:
         return OJDLocalized.string("profiles.sectionShoulders")
-      case .leftStick, .rightStick:
+      case .leftStickClick, .rightStickClick:
         return OJDLocalized.string("profiles.sectionStickClicks")
-      case .start, .back, .guide, .share, .options, .touchpad, .mute, .leftTriggerClick,
-        .rightTriggerClick:
+      case .start, .back, .guide, .capture, .touchpadClick, .microphone, .leftTrigger,
+        .rightTrigger:
         return OJDLocalized.string("profiles.sectionSystemControls")
       default: return OJDLocalized.string("profiles.sectionFaceButtons")
       }

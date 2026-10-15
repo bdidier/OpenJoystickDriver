@@ -963,7 +963,7 @@
 "cli.controller.light.examples" = "例:\n  # ライトバーをオレンジに設定\n  ojd controller light 054C:09CC --color FF8000\n  # 色と低い明るさを設定\n  ojd controller light 054C:09CC --color 0000FF --brightness 40";
 "cli.profile.create.examples" = "例:\n  # コントローラのモデル用にプロファイルを作成\n  ojd profile create Racing --controller 045E:028E\n  # Safari が最前面にあるときだけ適用\n  ojd profile create Browsing --controller 045E:028E --app com.apple.Safari";
 "cli.profile.set.examples" = "例:\n  # プロファイル名を変更\n  ojd profile set Racing name Rally\n  # 最初のスティックマッピングの内側デッドゾーンを設定\n  ojd profile set Racing stickMappings.0.tuning.innerDeadzone 0.2";
-"cli.binding.set.examples" = "例:\n  # 南ボタンを押している間 Space を押し続ける\n  ojd binding set Racing button:south key:space\n  # 押すたびに J のオンとオフを切り替える\n  ojd binding set Racing button:west key:j --behavior toggle\n  # 押している間、J を 1 秒に 10 回繰り返す\n  ojd binding set Racing button:west key:j --turbo-rate 10 --turbo-duty 0.5";
+"cli.binding.set.examples" = "例:\n  # 南ボタンを押している間 Space を押し続ける\n  ojd binding set Racing button:South key:space\n  # 押すたびに J のオンとオフを切り替える\n  ojd binding set Racing button:West key:j --behavior toggle\n  # 押している間、J を 1 秒に 10 回繰り返す\n  ojd binding set Racing button:West key:j --turbo-rate 10 --turbo-duty 0.5";
 "cli.record.install.examples" = "例:\n  # レコードファイルをインストール\n  ojd record install 045E-028E.json\n  # 標準入力からレコードを読み込む\n  ojd record install - < 045E-028E.json";
 "cli.access.grant.examples" = "例:\n  # プログラムにサービスの使用を許可\n  ojd access grant /Applications/Example.app\n  # 1 つのオリジンから配信されるページ用のトークンを作成\n  ojd access grant --token overlay --origin http://127.0.0.1:8080";
 "cli.service.abstract" = "OpenJoystickDriver サービスを開始または停止するか、リクエストを受け付けるまで待機します。";
@@ -1340,7 +1340,7 @@
 "cli.virtual.error.failed" = "%@ の仮想ゲームパッドは変更されませんでした (%@)。「ojd virtual show」で確認してください。";
 "cli.virtual.error.no_unit" = "%@ にはユニット ID がないため、選択はモデル全体にのみ適用できます。--unit を付けずにコマンドを実行してください。";
 "cli.virtual.feed.abstract" = "stdin で操作される仮想ゲームパッドを公開します。";
-"cli.virtual.feed.discussion" = "1 行につき 1 つの JSON オブジェクトを読み取ります。「buttons」 と 「dpad」 は押されているコントロール (south や up など) を列挙し、「axes」 は軸名 (left_stick_x など) を値に対応付けます。省略したコントロールはニュートラルになります。スティックは -1 から 1 の範囲で Y が上方向、トリガーは 0 から 1 の範囲です。フレームは順番に再生され、各フレームは最低 8 ms 継続します。「holdMilliseconds」 を指定すると、フレームをより長く (最大 60000) 保持できます。ゲームがゲームパッドに送るすべての出力コマンド (振動など) を、1 行につき 1 つの JSON オブジェクトとして出力します。入力が終了した後、すべてのフレームを再生し終えると停止します。";
+"cli.virtual.feed.discussion" = "1 行につき 1 つの JSON オブジェクトを読み取ります。「buttons」 と 「dpad」 は押されているコントロール (South や up など) を列挙し、「axes」 は軸名 (LeftStickX など) を値に対応付けます。省略したコントロールはニュートラルになります。スティックは -1 から 1 の範囲で Y が上方向、トリガーは 0 から 1 の範囲です。フレームは順番に再生され、各フレームは最低 8 ms 継続します。「holdMilliseconds」 を指定すると、フレームをより長く (最大 60000) 保持できます。ゲームがゲームパッドに送るすべての出力コマンド (振動など) を、1 行につき 1 つの JSON オブジェクトとして出力します。入力が終了した後、すべてのフレームを再生し終えると停止します。";
 "cli.virtual.feed.error.closed" = "サービスが仮想ゲームパッドを閉じました。「ojd status」 で確認してください。";
 "cli.virtual.feed.error.frame" = "%@ 行目は有効なフレームではありません。「ojd virtual feed --help」 で形式を確認できます。";
 "cli.virtual.feed.profile" = "公開する仮想ゲームパッドのプロファイル。";
@@ -1453,7 +1453,7 @@
 "cli.binding.option.turbo_rate" = "押している間、ターゲットを 1 秒あたりこの回数繰り返します。--turbo-duty が必要です。";
 "cli.binding.set.abstract" = "コントローラのソースをターゲットに割り当て、そのソースの現在の割り当てを置き換えます。";
 "cli.binding.set.done" = "「%@」に %@ を割り当てました。";
-"cli.binding.set.source" = "コントローラの操作部。例: button:south";
+"cli.binding.set.source" = "コントローラの操作部。例: button:South";
 "cli.binding.set.target" = "送信する内容。例: key:space";
 "cli.binding.source_invalid" = "「%@」はソースではありません。「ojd binding set --help」でソースの形式を確認できます。";
 "cli.binding.target_invalid" = "「%@」はターゲットではありません。「ojd binding set --help」でターゲットの形式を確認できます。";

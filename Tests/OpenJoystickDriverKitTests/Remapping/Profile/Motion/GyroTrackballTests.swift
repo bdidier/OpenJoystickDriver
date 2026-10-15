@@ -12,7 +12,7 @@ struct GyroTrackballTests {
     #expect(try JSONDecoder().decode(RemappingGyroOutput.self, from: encoded) == output)
     let legacy = Data(#"{"mode":"mouse"}"#.utf8)
     #expect(try JSONDecoder().decode(RemappingGyroOutput.self, from: legacy).trackball == nil)
-    let partial = Data(#"{"source":{"type":"button","button":"south"}}"#.utf8)
+    let partial = Data(#"{"source":{"type":"button","button":"South"}}"#.utf8)
     let decoded = try JSONDecoder().decode(RemappingGyroTrackball.self, from: partial)
     #expect(decoded.axes == .both)
     #expect(decoded.decayHalvingsPerSecond == 1)

@@ -55,7 +55,7 @@ public final class ReportLayoutDriver: PhysicalProtocolDriver {
     }
     var sticks: [Float] = [0, 0, 0, 0]
     for axis in layout.axes {
-      guard let index = ControllerInputLayout.stickAxes.firstIndex(of: axis.control) else {
+      guard let index = Control.stickAxes.firstIndex(of: axis.control) else {
         continue
       }
       sticks[index] = axis.value(in: bytes)

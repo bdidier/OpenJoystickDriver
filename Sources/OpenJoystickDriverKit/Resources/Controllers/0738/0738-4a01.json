@@ -7,6 +7,6 @@
     "family": "xbox.gip"
   },
   "capabilities": {
-    "absent": ["left-trigger", "right-trigger"]
+    "absent": ["LeftTrigger", "RightTrigger"]
   }
 }

@@ -64,7 +64,7 @@ struct TriggerRoutingTests {
     var engine = RemappingEngineState()
     let device = LogicalControllerID(vendorID: 1, productID: 2)
     let actions = engine.process(
-      inputs: [.leftTrigger(0.6), .press(.leftTriggerButton)],
+      inputs: [.leftTrigger(0.6), .press(.leftTrigger)],
       from: device,
       profile: profile(mode: .simultaneous),
       at: 0
@@ -83,7 +83,7 @@ struct TriggerRoutingTests {
       )
     )
     let actions = engine.process(
-      inputs: [.leftTrigger(0.6), .press(.leftTriggerButton)],
+      inputs: [.leftTrigger(0.6), .press(.leftTrigger)],
       from: device,
       profile: profile,
       at: 0
@@ -97,12 +97,12 @@ struct TriggerRoutingTests {
     let device = LogicalControllerID(vendorID: 1, productID: 2)
     let profile = passthroughProfile(
       binding: RemappingBinding(
-        source: .button(.leftTriggerClick),
+        source: .button(.leftTrigger),
         destination: .keyboard(key: .a, modifiers: [])
       )
     )
     let actions = engine.process(
-      inputs: [.leftTrigger(0.6), .press(.leftTriggerButton)],
+      inputs: [.leftTrigger(0.6), .press(.leftTrigger)],
       from: device,
       profile: profile,
       at: 0

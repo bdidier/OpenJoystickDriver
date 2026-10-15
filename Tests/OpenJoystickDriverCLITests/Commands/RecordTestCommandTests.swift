@@ -47,7 +47,7 @@ struct RecordTestCommandTests {
   func aMatchingStateExitsZero() async throws {
     let directory = Directory()
     let packets = try directory.write(Self.capture, as: "capture.jsonl")
-    let expect = try directory.write(ControllerState(pressed: [.faceSouth]), as: "expect.json")
+    let expect = try directory.write(ControllerState(pressed: [.south]), as: "expect.json")
 
     let human = await run([Self.identity, "--packets", packets, "--expect", expect])
     let json = await run([Self.identity, "--packets", packets, "--expect", expect, "--json"])
@@ -65,7 +65,7 @@ struct RecordTestCommandTests {
   func aMismatchExitsOneWithE2022AndNamesTheDifferingFields() async throws {
     let directory = Directory()
     let packets = try directory.write(Self.capture, as: "capture.jsonl")
-    let expect = try directory.write(ControllerState(pressed: [.faceEast]), as: "expect.json")
+    let expect = try directory.write(ControllerState(pressed: [.east]), as: "expect.json")
 
     let human = await run([Self.identity, "--packets", packets, "--expect", expect])
     let json = await run([Self.identity, "--packets", packets, "--expect", expect, "--json"])
@@ -78,14 +78,14 @@ struct RecordTestCommandTests {
     #expect(result["matches"] as? Bool == false)
     let differences = try #require(result["differences"] as? [[String: Any]])
     #expect(differences.map { $0["field"] as? String } == ["pressed"])
-    #expect(differences.first?["expected"] as? String == #"["face-east"]"#)
-    #expect(differences.first?["actual"] as? String == #"["face-south"]"#)
+    #expect(differences.first?["expected"] as? String == #"["East"]"#)
+    #expect(differences.first?["actual"] as? String == #"["South"]"#)
   }
 
   @Test
   func anUnreadableCaptureExitsOneWithoutComparing() async throws {
     let directory = Directory()
-    let expect = try directory.write(ControllerState(pressed: [.faceSouth]), as: "expect.json")
+    let expect = try directory.write(ControllerState(pressed: [.south]), as: "expect.json")
     let garbled = try directory.write("not json\n", as: "garbled.jsonl")
     let empty = try directory.write("", as: "empty.jsonl")
     let missing = directory.url.appendingPathComponent("missing.jsonl").path

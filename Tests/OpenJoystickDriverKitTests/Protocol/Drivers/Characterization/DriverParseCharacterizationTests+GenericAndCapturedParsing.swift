@@ -12,27 +12,27 @@ extension DriverParseCharacterizationTests {
     #expect(
       lines == [
         "report [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn1 [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn1 [South] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "btn1-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn2 [face-east] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn2 [East] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "btn2-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn3 [face-west] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn3 [West] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "btn3-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn4 [face-north] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn4 [North] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "btn4-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn5 [left-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn5 [LeftShoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "btn5-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn6 [right-shoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn6 [RightShoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "btn6-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn7 [view] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn7 [Back] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "btn7-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn8 [menu] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn8 [Start] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "btn8-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn9 [left-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn9 [LeftStickClick] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "btn9-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn10 [right-stick-click] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn10 [RightStickClick] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "btn10-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn11 [guide] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn11 [Guide] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "btn11-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "btn12 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "btn12-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
@@ -89,8 +89,8 @@ extension DriverParseCharacterizationTests {
     #expect(
       lines == [
         "cap0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "input-a [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "cap1 [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "input-a [South] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "cap1 [South] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
       ]
     )
   }
@@ -106,8 +106,8 @@ extension DriverParseCharacterizationTests {
     #expect(
       lines == [
         "cap0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "input-a [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "cap1 [face-south] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "input-a [South] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "cap1 [South] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
       ]
     )
   }

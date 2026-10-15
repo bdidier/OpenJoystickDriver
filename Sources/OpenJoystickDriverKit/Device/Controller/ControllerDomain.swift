@@ -49,57 +49,84 @@ public struct MonotonicTimestamp: Hashable, Comparable, Codable, Sendable {
   public static func < (lhs: Self, rhs: Self) -> Bool { lhs.nanoseconds < rhs.nanoseconds }
 }
 
-/// Standard semantic control identifiers. Physical labels never rename these IDs.
-public enum ControlID: String, CaseIterable, Codable, Sendable {
-  case dpad
-  case leftStickX = "left-stick-x"
-  case leftStickY = "left-stick-y"
-  case rightStickX = "right-stick-x"
-  case rightStickY = "right-stick-y"
-  case leftStickClick = "left-stick-click"
-  case rightStickClick = "right-stick-click"
-  case faceSouth = "face-south"
-  case faceEast = "face-east"
-  case faceWest = "face-west"
-  case faceNorth = "face-north"
-  case leftShoulder = "left-shoulder"
-  case rightShoulder = "right-shoulder"
-  case leftTrigger = "left-trigger"
-  case rightTrigger = "right-trigger"
-  case leftTriggerButton = "left-trigger-button"
-  case rightTriggerButton = "right-trigger-button"
-  case view
-  case menu
-  case guide
-  case share
-  case capture
-  case touchpadClick = "touchpad-click"
-  case microphone
-  case paddleLeft1 = "paddle-left-1"
-  case paddleLeft2 = "paddle-left-2"
-  case paddleRight1 = "paddle-right-1"
-  case paddleRight2 = "paddle-right-2"
-  case auxiliary1 = "auxiliary-1"
-  case auxiliary2 = "auxiliary-2"
-  case auxiliary3 = "auxiliary-3"
-  case auxiliary4 = "auxiliary-4"
-  case auxiliary5 = "auxiliary-5"
-  case auxiliary6 = "auxiliary-6"
-  case auxiliary7 = "auxiliary-7"
-  case auxiliary8 = "auxiliary-8"
-  case leftStickTouch = "left-stick-touch"
-  case rightStickTouch = "right-stick-touch"
-  case leftTrackpadClick = "left-trackpad-click"
-  case rightTrackpadClick = "right-trackpad-click"
-  case leftTrackpadTouch = "left-trackpad-touch"
-  case rightTrackpadTouch = "right-trackpad-touch"
+/// The one control vocabulary: position-based ids that physical labels never rename.
+///
+/// The raw value is the UpperCamelCase id the schemas, records, profiles and the endpoint use.
+/// `Resources/Schemas/vocabulary.schema.json` `$defs/control` defines the same set; a test keeps
+/// the two equal. A press of a trigger is the `leftTrigger` or `rightTrigger` id, and the D-pad is
+/// four ids rather than one hat.
+public enum Control: String, CaseIterable, Codable, Sendable {
+  case south = "South"
+  case east = "East"
+  case west = "West"
+  case north = "North"
+  case leftShoulder = "LeftShoulder"
+  case rightShoulder = "RightShoulder"
+  case leftTrigger = "LeftTrigger"
+  case rightTrigger = "RightTrigger"
+  case back = "Back"
+  case start = "Start"
+  case leftStickClick = "LeftStickClick"
+  case rightStickClick = "RightStickClick"
+  case dpadUp = "DpadUp"
+  case dpadDown = "DpadDown"
+  case dpadLeft = "DpadLeft"
+  case dpadRight = "DpadRight"
+  case guide = "Guide"
+  case capture = "Capture"
+  case microphone = "Microphone"
+  case touchpadClick = "TouchpadClick"
+  case leftPaddle1 = "LeftPaddle1"
+  case leftPaddle2 = "LeftPaddle2"
+  case rightPaddle1 = "RightPaddle1"
+  case rightPaddle2 = "RightPaddle2"
+  case auxiliary1 = "Auxiliary1"
+  case auxiliary2 = "Auxiliary2"
+  case auxiliary3 = "Auxiliary3"
+  case auxiliary4 = "Auxiliary4"
+  case auxiliary5 = "Auxiliary5"
+  case auxiliary6 = "Auxiliary6"
+  case auxiliary7 = "Auxiliary7"
+  case auxiliary8 = "Auxiliary8"
+  case leftStickX = "LeftStickX"
+  case leftStickY = "LeftStickY"
+  case rightStickX = "RightStickX"
+  case rightStickY = "RightStickY"
+  case leftStickTouch = "LeftStickTouch"
+  case rightStickTouch = "RightStickTouch"
+  case leftTrackpadClick = "LeftTrackpadClick"
+  case rightTrackpadClick = "RightTrackpadClick"
+  case leftTrackpadTouch = "LeftTrackpadTouch"
+  case rightTrackpadTouch = "RightTrackpadTouch"
+
+  /// The four D-pad ids; a controller with a D-pad or hat has all of them.
+  public static let dpad: Set<Control> = [.dpadUp, .dpadDown, .dpadLeft, .dpadRight]
+
+  /// The four stick axes.
+  public static let stickAxes: [Self] = [.leftStickX, .leftStickY, .rightStickX, .rightStickY]
 
   /// Controls of the standard Xbox layout, excluding `guide`.
-  public static let xboxLayout: Set<ControlID> = [
-    .dpad, .leftStickX, .leftStickY, .rightStickX, .rightStickY, .leftStickClick, .rightStickClick,
-    .faceSouth, .faceEast, .faceWest, .faceNorth, .leftShoulder, .rightShoulder, .leftTrigger,
-    .rightTrigger, .view, .menu,
-  ]
+  public static let xboxLayout: Set<Control> = dpad.union([
+    .leftStickX, .leftStickY, .rightStickX, .rightStickY, .leftStickClick, .rightStickClick,
+    .south, .east, .west, .north, .leftShoulder, .rightShoulder, .leftTrigger, .rightTrigger,
+    .back, .start,
+  ])
+
+  /// Whether the virtual gamepad report has a button for this control. A paddle, an auxiliary
+  /// button, a trackpad and a stick touch have none.
+  public var supportsVirtualOutput: Bool {
+    switch self {
+    case .south, .east, .west, .north, .leftShoulder, .rightShoulder, .leftTrigger, .rightTrigger,
+      .back, .start, .leftStickClick, .rightStickClick, .guide, .capture, .dpadUp, .dpadDown,
+      .dpadLeft, .dpadRight, .leftStickX, .leftStickY, .rightStickX, .rightStickY:
+      return true
+    case .microphone, .touchpadClick, .leftPaddle1, .leftPaddle2, .rightPaddle1, .rightPaddle2,
+      .auxiliary1, .auxiliary2, .auxiliary3, .auxiliary4, .auxiliary5, .auxiliary6, .auxiliary7,
+      .auxiliary8, .leftStickTouch, .rightStickTouch, .leftTrackpadClick, .rightTrackpadClick,
+      .leftTrackpadTouch, .rightTrackpadTouch:
+      return false
+    }
+  }
 }
 
 /// One of eight compass directions, or neutral (center) for a hat or D-pad.
@@ -113,6 +140,19 @@ public enum HatDirection: String, Codable, Sendable {
   case southWest
   case west
   case northWest
+}
+
+extension HatDirection {
+  /// The D-pad control the hat points at; a diagonal names its vertical id, and neutral the
+  /// first D-pad id.
+  public var dpadControl: Control {
+    switch self {
+    case .north, .northEast, .northWest, .neutral: .dpadUp
+    case .south, .southEast, .southWest: .dpadDown
+    case .east: .dpadRight
+    case .west: .dpadLeft
+    }
+  }
 }
 
 /// Battery charge at the precision the device reports, never a synthesized midpoint.

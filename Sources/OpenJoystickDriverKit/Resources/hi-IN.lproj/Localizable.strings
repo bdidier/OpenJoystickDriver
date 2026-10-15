@@ -963,7 +963,7 @@
 "cli.controller.light.examples" = "उदाहरण:\n  # लाइटबार को नारंगी करें\n  ojd controller light 054C:09CC --color FF8000\n  # रंग और कम ब्राइटनेस सेट करें\n  ojd controller light 054C:09CC --color 0000FF --brightness 40";
 "cli.profile.create.examples" = "उदाहरण:\n  # किसी कंट्रोलर मॉडल के लिए प्रोफ़ाइल बनाएँ\n  ojd profile create Racing --controller 045E:028E\n  # इसे केवल तब लागू करें जब Safari सबसे आगे हो\n  ojd profile create Browsing --controller 045E:028E --app com.apple.Safari";
 "cli.profile.set.examples" = "उदाहरण:\n  # प्रोफ़ाइल का नाम बदलें\n  ojd profile set Racing name Rally\n  # पहले स्टिक मैपिंग का आंतरिक डेडज़ोन सेट करें\n  ojd profile set Racing stickMappings.0.tuning.innerDeadzone 0.2";
-"cli.binding.set.examples" = "उदाहरण:\n  # साउथ बटन दबाए रखने पर Space दबाए रखें\n  ojd binding set Racing button:south key:space\n  # हर प्रेस पर J टॉगल करें\n  ojd binding set Racing button:west key:j --behavior toggle\n  # दबाए रखने पर J को प्रति सेकंड 10 बार दोहराएँ\n  ojd binding set Racing button:west key:j --turbo-rate 10 --turbo-duty 0.5";
+"cli.binding.set.examples" = "उदाहरण:\n  # साउथ बटन दबाए रखने पर Space दबाए रखें\n  ojd binding set Racing button:South key:space\n  # हर प्रेस पर J टॉगल करें\n  ojd binding set Racing button:West key:j --behavior toggle\n  # दबाए रखने पर J को प्रति सेकंड 10 बार दोहराएँ\n  ojd binding set Racing button:West key:j --turbo-rate 10 --turbo-duty 0.5";
 "cli.record.install.examples" = "उदाहरण:\n  # रिकॉर्ड फ़ाइल इंस्टॉल करें\n  ojd record install 045E-028E.json\n  # रिकॉर्ड stdin से पढ़ें\n  ojd record install - < 045E-028E.json";
 "cli.access.grant.examples" = "उदाहरण:\n  # किसी प्रोग्राम को सेवा इस्तेमाल करने दें\n  ojd access grant /Applications/Example.app\n  # एक ऑरिजिन से परोसे गए पेजों के लिए टोकन बनाएँ\n  ojd access grant --token overlay --origin http://127.0.0.1:8080";
 "cli.service.abstract" = "OpenJoystickDriver सेवा शुरू या बंद करें, या उसके अनुरोध स्वीकार करने तक प्रतीक्षा करें।";
@@ -1340,7 +1340,7 @@
 "cli.virtual.error.failed" = "%@ का वर्चुअल गेमपैड नहीं बदला (%@)। “ojd virtual show” से जाँचें।";
 "cli.virtual.error.no_unit" = "%@ की कोई यूनिट ID नहीं है, इसलिए चुनाव केवल उसके पूरे मॉडल पर लागू हो सकता है। कमांड को --unit के बिना चलाएँ।";
 "cli.virtual.feed.abstract" = "stdin से चलने वाला वर्चुअल गेमपैड प्रकाशित करें।";
-"cli.virtual.feed.discussion" = "हर पंक्ति में एक JSON ऑब्जेक्ट पढ़ता है: “buttons” और “dpad” दबाए गए कंट्रोल की सूची देते हैं, जैसे south और up, और “axes” अक्ष के नामों, जैसे left_stick_x, को मानों से जोड़ता है। जो कंट्रोल नहीं दिए गए हैं, वे न्यूट्रल रहते हैं। स्टिक -1 से 1 तक चलते हैं और Y ऊपर की ओर होता है; ट्रिगर 0 से 1 तक चलते हैं। फ़्रेम क्रम से चलते हैं, हर फ़्रेम कम से कम 8 ms के लिए; “holdMilliseconds” किसी फ़्रेम को ज़्यादा देर तक रोकता है, 60000 तक। गेम गेमपैड को जो भी आउटपुट कमांड भेजते हैं, जैसे वाइब्रेशन, उसे हर पंक्ति में एक JSON ऑब्जेक्ट के रूप में प्रिंट करता है। इनपुट खत्म होने के बाद सभी फ़्रेम चल जाने पर रुक जाता है।";
+"cli.virtual.feed.discussion" = "हर पंक्ति में एक JSON ऑब्जेक्ट पढ़ता है: “buttons” और “dpad” दबाए गए कंट्रोल की सूची देते हैं, जैसे South और up, और “axes” अक्ष के नामों, जैसे LeftStickX, को मानों से जोड़ता है। जो कंट्रोल नहीं दिए गए हैं, वे न्यूट्रल रहते हैं। स्टिक -1 से 1 तक चलते हैं और Y ऊपर की ओर होता है; ट्रिगर 0 से 1 तक चलते हैं। फ़्रेम क्रम से चलते हैं, हर फ़्रेम कम से कम 8 ms के लिए; “holdMilliseconds” किसी फ़्रेम को ज़्यादा देर तक रोकता है, 60000 तक। गेम गेमपैड को जो भी आउटपुट कमांड भेजते हैं, जैसे वाइब्रेशन, उसे हर पंक्ति में एक JSON ऑब्जेक्ट के रूप में प्रिंट करता है। इनपुट खत्म होने के बाद सभी फ़्रेम चल जाने पर रुक जाता है।";
 "cli.virtual.feed.error.closed" = "सेवा ने वर्चुअल गेमपैड बंद कर दिया। “ojd status” से जाँचें।";
 "cli.virtual.feed.error.frame" = "पंक्ति %@ मान्य फ़्रेम नहीं है। “ojd virtual feed --help” प्रारूप दिखाता है।";
 "cli.virtual.feed.profile" = "प्रकाशित किया जाने वाला वर्चुअल गेमपैड प्रोफ़ाइल।";
@@ -1453,7 +1453,7 @@
 "cli.binding.option.turbo_rate" = "दबाए रखने के दौरान लक्ष्य को प्रति सेकंड इतनी बार दोहराएँ। --turbo-duty चाहिए।";
 "cli.binding.set.abstract" = "कंट्रोलर के स्रोत को किसी लक्ष्य से असाइन करें, और उस स्रोत का मौजूदा असाइनमेंट बदल दें।";
 "cli.binding.set.done" = "“%@” अब %@ से असाइन है।";
-"cli.binding.set.source" = "कंट्रोलर का नियंत्रण, जैसे button:south।";
+"cli.binding.set.source" = "कंट्रोलर का नियंत्रण, जैसे button:South।";
 "cli.binding.set.target" = "वह जो यह भेजता है, जैसे key:space।";
 "cli.binding.source_invalid" = "“%@” कोई स्रोत नहीं है। “ojd binding set --help” स्रोत के रूप दिखाता है।";
 "cli.binding.target_invalid" = "“%@” कोई लक्ष्य नहीं है। “ojd binding set --help” लक्ष्य के रूप दिखाता है।";

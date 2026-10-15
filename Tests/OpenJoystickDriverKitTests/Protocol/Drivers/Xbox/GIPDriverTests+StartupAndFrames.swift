@@ -142,7 +142,7 @@ extension GIPDriverTests {
         + ProtocolPacketFixtures.GIP.inputPacket(payload: pressed)
     )
 
-    #expect(events.contains(.press(.faceSouth)))
+    #expect(events.contains(.press(.south)))
   }
 
   @Test
@@ -152,7 +152,7 @@ extension GIPDriverTests {
     payload[0] = 16
     let packet = Data([GIPCommand.input, 0, 0, 0x80, 0x81, 0]) + payload
 
-    #expect(try parser.parseReport(packet).contains(.press(.faceSouth)))
+    #expect(try parser.parseReport(packet).contains(.press(.south)))
   }
 
   @Test
@@ -166,7 +166,7 @@ extension GIPDriverTests {
     #expect(try parser.parseReport(chunk) == nil)
     #expect(
       try parser.parseReport(ProtocolPacketFixtures.GIP.inputPacket(payload: pressed)).contains(
-        .press(.faceSouth)
+        .press(.south)
       )
     )
   }
@@ -186,7 +186,7 @@ extension GIPDriverTests {
     payload[0] = 16  // A button
     let packet = ProtocolPacketFixtures.GIP.inputPacket(payload: payload)
     let events = try parser.parseReport(packet)
-    #expect(events.contains(.press(.faceSouth)))
+    #expect(events.contains(.press(.south)))
   }
 
   @Test
@@ -195,13 +195,13 @@ extension GIPDriverTests {
     var payload = Data(repeating: 0, count: 32)
     payload[14] = 1
     let events = try parser.parseReport(ProtocolPacketFixtures.GIP.inputPacket(payload: payload))
-    #expect(events.contains(.press(.share)))
+    #expect(events.contains(.press(.capture)))
 
     payload[14] = 0
     let releaseEvents = try parser.parseReport(
       ProtocolPacketFixtures.GIP.inputPacket(payload: payload, sequence: 1)
     )
-    #expect(releaseEvents.contains(.release(.share)))
+    #expect(releaseEvents.contains(.release(.capture)))
   }
 
   @Test
@@ -214,8 +214,8 @@ extension GIPDriverTests {
     payload[1] = 17
     let packet = ProtocolPacketFixtures.GIP.inputPacket(payload: payload)
     let events = try parser.parseReport(packet)
-    #expect(events.contains(.press(.faceSouth)))
-    #expect(events.contains(.press(.faceEast)))
+    #expect(events.contains(.press(.south)))
+    #expect(events.contains(.press(.east)))
     #expect(events.contains(.press(.leftShoulder)))
     #expect(events.contains(.hat(.north)))
   }
@@ -311,7 +311,7 @@ extension GIPDriverTests {
     payload1[0] = 16  // A
     let packet1 = ProtocolPacketFixtures.GIP.inputPacket(payload: payload1)
     let events1 = try parser.parseReport(packet1)
-    #expect(events1.contains(.press(.faceSouth)))
+    #expect(events1.contains(.press(.south)))
 
     // Same report again: the same snapshot, with A still held.
     let events2 = try parser.parseReport(packet1)

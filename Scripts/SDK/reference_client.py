@@ -1,7 +1,7 @@
 """Reference client for the OpenJoystickDriver endpoint.
 
 `watch` subscribes to the controllers stream and prints the first watch lines. `feed` drives a
-virtual gamepad: it presses the south button for 100 ms, prints the rumble commands that the
+virtual gamepad: it presses the South button for 100 ms, prints the rumble commands that the
 endpoint sends, and stays connected until the release has played. The client uses only the Python
 standard library. Set OJD_TOKEN to the token that `ojd access grant --token NAME` printed.
 
@@ -25,7 +25,7 @@ from typing import Any, TextIO
 
 API_VERSION = "openjoystickdriver/v1alpha1"
 HEADER_ERRORS = ("E1010", "E1011", "E1012")
-FRAMES: list[dict[str, Any]] = [{"buttons": ["south"], "holdMilliseconds": 100}, {}]
+FRAMES: list[dict[str, Any]] = [{"buttons": ["South"], "holdMilliseconds": 100}, {}]
 MARGIN_SECONDS = 1.0
 
 

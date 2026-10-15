@@ -53,7 +53,7 @@ struct VirtualInputEventTests {
     apply(events, labels: .playStation, to: &state)
     let virtualReport = try xboxOneSReport(state)
 
-    #expect(events.contains(.press(.faceSouth)))
+    #expect(events.contains(.press(.south)))
     #expect(events.contains(.press(.leftShoulder)))
     #expect(events.contains(.press(.guide)))
     #expect(events?.motion.count == 1)
@@ -98,11 +98,11 @@ struct VirtualInputEventTests {
   @Test
   func digitalTriggerTransitionsDoNotReplaceAnalogPressure() {
     var state = VirtualGamepadState()
-    var input = snapshot(.leftTrigger(0.5), .press(.leftTriggerButton))
+    var input = snapshot(.leftTrigger(0.5), .press(.leftTrigger))
     apply(ControllerEvent(timestamp: MonotonicTimestamp(nanoseconds: 0), state: input), to: &state)
     #expect(state.leftTrigger == 16_383)
     #expect(state.effectiveLeftTrigger == 16_383)
-    input = input.applying([.release(.leftTriggerButton)])
+    input = input.applying([.release(.leftTrigger)])
     apply(ControllerEvent(timestamp: MonotonicTimestamp(nanoseconds: 0), state: input), to: &state)
     #expect(state.effectiveLeftTrigger == 16_383)
     input = input.applying([.leftTrigger(0)])

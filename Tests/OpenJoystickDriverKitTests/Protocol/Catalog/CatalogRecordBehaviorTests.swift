@@ -141,7 +141,7 @@ struct CatalogRecordBehaviorTests {
     let packet = ProtocolPacketFixtures.GIP.inputPacket(payload: payload)
     let seriesX = try catalogParser(ControllerModelID(vendorID: 0x045E, productID: 0x0B12))
     let standard = try catalogParser(ControllerModelID(vendorID: 0x045E, productID: 0x02EA))
-    #expect(try seriesX.parseReport(packet).contains(.press(.share)))
-    #expect(try !standard.parseReport(packet).contains(.press(.share)))
+    #expect(try seriesX.parseReport(packet).contains(.press(.capture)))
+    #expect(try !standard.parseReport(packet).contains(.press(.capture)))
   }
 }

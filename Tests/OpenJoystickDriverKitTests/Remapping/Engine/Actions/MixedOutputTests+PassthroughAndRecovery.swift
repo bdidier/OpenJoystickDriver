@@ -23,7 +23,7 @@ extension RemappingMixedOutputTests {
       ]
     )
     try await engine.process(
-      inputs: [.press(.faceEast), .press(.faceSouth), .leftStick(x: 0.5, y: 0.25)],
+      inputs: [.press(.east), .press(.south), .leftStick(x: 0.5, y: 0.25)],
       from: device,
       using: profile,
       at: 0
@@ -38,7 +38,7 @@ extension RemappingMixedOutputTests {
           device
         )
     )
-    try await engine.process(inputs: [.release(.faceSouth)], from: device, using: profile, at: 1)
+    try await engine.process(inputs: [.release(.south)], from: device, using: profile, at: 1)
     #expect(
       sink.actions.last
         == .gamepad(
@@ -112,9 +112,9 @@ extension RemappingMixedOutputTests {
     #expect(decoded == profile)
     #expect(try RemappingCommandValueParser.destination("gamepad:dpad:up") == .gamepadDpad(.up))
     #expect(!profile.requiresSystemInputAccess)
-    try await engine.process(inputs: [.press(.faceSouth)], from: device, using: decoded, at: 0)
-    try await engine.process(inputs: [.press(.faceEast)], from: device, using: decoded, at: 1)
-    try await engine.process(inputs: [.release(.faceEast)], from: device, using: decoded, at: 2)
+    try await engine.process(inputs: [.press(.south)], from: device, using: decoded, at: 0)
+    try await engine.process(inputs: [.press(.east)], from: device, using: decoded, at: 1)
+    try await engine.process(inputs: [.release(.east)], from: device, using: decoded, at: 2)
     try await engine.releaseAll(for: device)
     #expect(
       sink.actions == [
@@ -133,7 +133,7 @@ extension RemappingMixedOutputTests {
       RemappingBinding(source: .button(.south), destination: .gamepadButton(.north))
     ])
     let sending = Task {
-      try await engine.process(inputs: [.press(.faceSouth)], from: device, using: profile, at: 0)
+      try await engine.process(inputs: [.press(.south)], from: device, using: profile, at: 0)
     }
     await virtual.waitUntilSuspended()
     let shutdown = Task {
@@ -162,7 +162,7 @@ extension RemappingMixedOutputTests {
       )
     ])
     try await engine.process(
-      inputs: [.press(.faceSouth), .press(.faceEast)],
+      inputs: [.press(.south), .press(.east)],
       from: device,
       using: profile,
       at: 0
@@ -187,7 +187,7 @@ extension RemappingMixedOutputTests {
     sink.rejectNextGamepadSend()
     await #expect(throws: RemappingEventEngineError.sinkUnavailable) {
       try await engine.process(
-        inputs: [.press(.faceEast), .press(.faceSouth)],
+        inputs: [.press(.east), .press(.south)],
         from: device,
         using: profile,
         at: 0
@@ -200,10 +200,10 @@ extension RemappingMixedOutputTests {
       ]
     )
     await #expect(throws: RemappingEventEngineError.faulted) {
-      try await engine.process(inputs: [.press(.faceSouth)], from: device, using: profile, at: 1)
+      try await engine.process(inputs: [.press(.south)], from: device, using: profile, at: 1)
     }
     try await engine.recover()
-    try await engine.process(inputs: [.press(.faceSouth)], from: device, using: profile, at: 2)
+    try await engine.process(inputs: [.press(.south)], from: device, using: profile, at: 2)
     #expect(sink.actions.last == .gamepad(RemappingGamepadState(buttons: [.north]), device))
     try await engine.releaseAll(for: device)
     #expect(sink.actions.last == .gamepad(.neutral, device))
@@ -219,7 +219,7 @@ extension RemappingMixedOutputTests {
     )
     #expect(throws: RemappingValidationError.virtualOutputRequired) { try profile.validate() }
     #expect(
-      try RemappingCommandValueParser.destination("gamepad:button:north") == .gamepadButton(.north)
+      try RemappingCommandValueParser.destination("gamepad:button:North") == .gamepadButton(.north)
     )
   }
 

@@ -30,7 +30,7 @@
   },
   "controls": {
     "base": "xbox",
-    "add": ["guide"]
+    "add": ["Guide"]
   },
   "rawUSBTuningKeys": [
     "keepAliveIntervalMs",

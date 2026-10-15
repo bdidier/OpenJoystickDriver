@@ -24,7 +24,7 @@ struct RemappingOutputSchedulerTests {
     #expect(!harness.router.tickerIsRunning)
 
     try await harness.router.dispatchCausally(
-      changes: [.press(.faceSouth)],
+      changes: [.press(.south)],
       from: remappingRouterDevice(1)
     )
     _ = await yieldUntil { false }
@@ -48,7 +48,7 @@ struct RemappingOutputSchedulerTests {
     }
     let device = remappingRouterDevice(1)
     harness.router.startTicker()
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
     #expect(await yieldUntil { probe.sleepCount == 1 })
     #expect(harness.router.tickerIsRunning)
 
@@ -56,10 +56,10 @@ struct RemappingOutputSchedulerTests {
     try await harness.router.dispatchCausally(changes: [], from: device)
     _ = await yieldUntil { false }
     #expect(probe.sleepCount == 1)
-    try await harness.router.dispatchCausally(changes: [.release(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.release(.south)], from: device)
     #expect(!harness.router.tickerIsRunning)
 
-    try await harness.router.dispatchCausally(changes: [.press(.faceSouth)], from: device)
+    try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
     #expect(await yieldUntil { probe.sleepCount == 2 })
     #expect(harness.router.tickerIsRunning)
   }
@@ -83,7 +83,7 @@ struct RemappingOutputSchedulerTests {
     }
     harness.router.startTicker()
     try await harness.router.dispatchCausally(
-      changes: [.press(.faceSouth)],
+      changes: [.press(.south)],
       from: remappingRouterDevice(1)
     )
     #expect(await yieldUntil { probe.sleepCount == 1 })

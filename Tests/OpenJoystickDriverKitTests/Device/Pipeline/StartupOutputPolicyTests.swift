@@ -227,7 +227,7 @@ struct USBStartupOutputPolicyTests {
 }
 
 private final class StartupInputParser: PhysicalProtocolDriver {
-  let capabilities = ControllerCapabilities(controls: ControlID.xboxLayout)
+  let capabilities = ControllerCapabilities(controls: Control.xboxLayout)
   let sessionPlan = DriverSessionPlan()
   let outputCapabilities = PhysicalControllerOutputCapabilities.none
   let defaultColor: ControllerColor? = nil

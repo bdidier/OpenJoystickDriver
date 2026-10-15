@@ -119,7 +119,7 @@ class ControllerModeSchemaTests(unittest.TestCase):
     def test_validator_rejects_modes_that_break_record_level_rules(self) -> None:
         layout = {
             "report": {"length": 8},
-            "buttons": [{"control": "face-south", "byte": 0, "mask": 1}],
+            "buttons": [{"control": "South", "byte": 0, "mask": 1}],
         }
         rumble = {
             "rumble": {

@@ -110,7 +110,7 @@ struct PS3ThirdPartyDriverTests {
       driver.parse(elementValue: leftX, receivedAt: MonotonicTimestamp(nanoseconds: 0)) == nil
     )
     #expect(
-      try driver.parseReport(ThirdPartyReport.standard([0: 0x02])).contains(.press(.faceSouth))
+      try driver.parseReport(ThirdPartyReport.standard([0: 0x02])).contains(.press(.south))
     )
   }
 
@@ -130,8 +130,8 @@ struct PS3ThirdPartyDriverTests {
 
   @Test
   func mapsDigitalBitsOfByteZero() throws {
-    let controls: [UInt8: ControlID] = [
-      0x01: .faceWest, 0x02: .faceSouth, 0x04: .faceEast, 0x08: .faceNorth, 0x10: .leftShoulder,
+    let controls: [UInt8: Control] = [
+      0x01: .west, 0x02: .south, 0x04: .east, 0x08: .north, 0x10: .leftShoulder,
       0x20: .rightShoulder,
     ]
     for (mask, control) in controls {
@@ -150,8 +150,8 @@ struct PS3ThirdPartyDriverTests {
 
   @Test
   func pressureBitSevenAlsoPresses() throws {
-    let controls: [Int: ControlID] = [
-      11: .faceNorth, 12: .faceEast, 13: .faceSouth, 14: .faceWest, 15: .leftShoulder,
+    let controls: [Int: Control] = [
+      11: .north, 12: .east, 13: .south, 14: .west, 15: .leftShoulder,
       16: .rightShoulder,
     ]
     for (offset, control) in controls {
@@ -166,8 +166,8 @@ struct PS3ThirdPartyDriverTests {
 
   @Test
   func mapsSystemBitsOfByteOne() throws {
-    let controls: [UInt8: ControlID] = [
-      0x01: .view, 0x02: .menu, 0x04: .leftStickClick, 0x08: .rightStickClick, 0x10: .guide,
+    let controls: [UInt8: Control] = [
+      0x01: .back, 0x02: .start, 0x04: .leftStickClick, 0x08: .rightStickClick, 0x10: .guide,
     ]
     for (mask, control) in controls {
       let event = try acceptedDriver().parseReport(ThirdPartyReport.standard([1: mask]))
@@ -235,11 +235,11 @@ struct PS3ThirdPartyDriverTests {
   func shortReportIsIgnoredAndKeepsState() throws {
     let driver = acceptedDriver()
     #expect(
-      try driver.parseReport(ThirdPartyReport.standard([0: 0x02])).contains(.press(.faceSouth))
+      try driver.parseReport(ThirdPartyReport.standard([0: 0x02])).contains(.press(.south))
     )
     #expect(try driver.parseReport(ThirdPartyReport.standard(length: 17)) == nil)
     #expect(
-      try driver.parseReport(ThirdPartyReport.standard([0: 0x02])).contains(.press(.faceSouth))
+      try driver.parseReport(ThirdPartyReport.standard([0: 0x02])).contains(.press(.south))
     )
   }
 
@@ -262,9 +262,9 @@ struct PS3ThirdPartyDriverTests {
     #expect(
       event?.state
         == snapshot(
-          .press(.faceEast),
-          .press(.view),
-          .press(.faceSouth),
+          .press(.east),
+          .press(.back),
+          .press(.south),
           .hat(.east),
           .leftStick(x: 1, y: 0),
           .rightStick(x: 0, y: -1),
