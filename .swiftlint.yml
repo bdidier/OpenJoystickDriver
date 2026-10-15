@@ -126,4 +126,5 @@ excluded:
   - .build
   - .swiftpm
   - .claude/worktrees
+  - "**/.build"
   - "**/Generated"
