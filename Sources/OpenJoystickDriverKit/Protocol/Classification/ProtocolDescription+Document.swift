@@ -58,9 +58,8 @@ extension ProtocolDescription {
       }
     }
 
-    /// `defaults.session`: what runs while the device is open. Today the keep-alive, the Switch 1
-    /// subcommands and the GIP named packets; task 11.4 moves the startup writes here, so all
-    /// share one `session` shape.
+    /// `defaults.session`: what runs while the device is open. The keep-alive, the Switch 1
+    /// subcommands and the GIP named packets.
     struct Session: Decodable {
       let keepAlive: KeepAlive?
       let subcommands: SubcommandPlan?

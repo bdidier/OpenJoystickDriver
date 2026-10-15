@@ -1494,7 +1494,7 @@
       }
     },
     "descriptionPacketStartupWrite": {
-      "description": "A startup write that sends one of the family's named packets, in the order listed, instead of repeating its bytes.",
+      "description": "A startup write that sends one of the family's named packets, in the order listed.",
       "type": "object",
       "additionalProperties": false,
       "required": ["packet"],

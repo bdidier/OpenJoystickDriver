@@ -41,8 +41,8 @@ extension ControllerRecordDocument {
     }
   }
 
-  /// A startup write that names one of the family's packets (`defaults.session.namedPackets`)
-  /// instead of repeating its bytes. Only a protocol description has them.
+  /// A startup write that names one of the family's packets (`defaults.session.namedPackets`).
+  /// Only a protocol description has them.
   struct StartupPacketReference: Equatable, Sendable {
     let id: String
     let condition: StartupWriteCondition

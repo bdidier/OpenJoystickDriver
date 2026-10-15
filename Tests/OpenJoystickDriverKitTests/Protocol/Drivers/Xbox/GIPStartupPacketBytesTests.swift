@@ -3,9 +3,8 @@ import Testing
 
 @testable import OpenJoystickDriverKit
 
-/// The bytes and sequence numbers the GIP driver stamps on each named startup packet, captured
-/// from the packets coded in `GIPStartupPacket` before they moved into the description
-/// (`defaults.session.namedPackets` of `xbox.gip.json`).
+/// The bytes and sequence numbers the GIP driver stamps on each named startup packet of
+/// `defaults.session.namedPackets` in `xbox.gip.json`.
 struct GIPStartupPacketBytesTests {
   private static let identifiers = [
     "xbox.gip/power-on", "xbox.gip/s-init", "xbox.gip/enable-extra-input", "xbox.gip/hori-ack",

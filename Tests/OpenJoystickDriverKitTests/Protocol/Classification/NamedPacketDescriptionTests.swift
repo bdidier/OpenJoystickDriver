@@ -3,7 +3,7 @@ import Testing
 
 @testable import OpenJoystickDriverKit
 
-/// Task 9.1f: the GIP named startup packets come from `defaults.session.namedPackets` in the
+/// The GIP named startup packets come from `defaults.session.namedPackets` in the
 /// family's description. The decoder accepts and rejects the documents the Python validator does
 /// (the protocol description tests); the bytes the driver sends are pinned in
 /// `GIPStartupPacketBytesTests`.
