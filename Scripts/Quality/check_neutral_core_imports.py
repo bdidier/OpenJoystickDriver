@@ -54,12 +54,56 @@ def string_start(text: str, index: int) -> tuple[int, int, bool] | None:
     return hashes + (3 if multiline else 1), hashes, multiline
 
 
+def skip_block_comment(text: str, index: int) -> int:
+    """Return the index past a block comment whose body starts at `index`; comments nest."""
+    depth = 1
+    while index < len(text) and depth:
+        pair = text[index : index + 2]
+        if pair == "/*":
+            depth += 1
+            index += 2
+        elif pair == "*/":
+            depth -= 1
+            index += 2
+        else:
+            index += 1
+    return index
+
+
+def skip_line_comment(text: str, index: int) -> int:
+    end = text.find("\n", index)
+    return len(text) if end < 0 else end
+
+
+def skip_interpolation(text: str, index: int) -> int:
+    """Return the index past the `)` closing an interpolation whose body starts at `index`."""
+    depth = 1
+    while index < len(text):
+        pair = text[index : index + 2]
+        opening = string_start(text, index) if text[index] in '#"' else None
+        if pair == "/*":
+            index = skip_block_comment(text, index + 2)
+        elif pair == "//":
+            index = skip_line_comment(text, index)
+        elif opening:
+            length, hashes, multiline = opening
+            index = string_end(text, index + length, hashes, multiline)
+        else:
+            depth += {"(": 1, ")": -1}.get(text[index], 0)
+            index += 1
+            if depth == 0:
+                return index
+    return len(text)
+
+
 def string_end(text: str, index: int, hashes: int, multiline: bool) -> int:
     """Return the index just past the string literal whose body starts at `index`."""
     closing = ('"' * 3 if multiline else '"') + "#" * hashes
     escape = "\\" + "#" * hashes
     while index < len(text):
-        if text.startswith(escape, index):
+        if text.startswith(escape + "(", index):
+            index = skip_interpolation(text, index + len(escape) + 1)
+        elif text.startswith(escape, index):
             index += len(escape) + 1
         elif text.startswith(closing, index):
             return index + len(closing)
@@ -74,42 +118,28 @@ def strip_comments(text: str) -> str:
     """Blank out comments and string literal contents, keeping every newline.
 
     Block comments nest, as in Swift. String forms handled are `"..."` with escapes, multiline
-    `\"\"\"...\"\"\"`, and raw `#"..."#` forms, so a `/*` or `//` inside a string neither
-    starts a comment nor hides a later import.
+    triple-quoted strings, and raw `#"..."#` forms, including code inside `\\(...)` and
+    `\\#(...)` interpolations. A `/*` or `//` inside a string neither starts a comment nor hides
+    a later import.
     """
     out: list[str] = []
     index = 0
-    depth = 0
     while index < len(text):
         pair = text[index : index + 2]
-        if depth:
-            if pair == "/*":
-                depth += 1
-                step = 2
-            elif pair == "*/":
-                depth -= 1
-                step = 2
-            else:
-                step = 1
-            out.append(blank(text[index : index + step]))
-            index += step
-        elif pair == "/*":
-            depth = 1
-            out.append("  ")
-            index += 2
+        opening = string_start(text, index) if text[index] in '#"' else None
+        if pair == "/*":
+            end = skip_block_comment(text, index + 2)
         elif pair == "//":
-            end = text.find("\n", index)
-            end = len(text) if end < 0 else end
-            out.append(blank(text[index:end]))
-            index = end
-        elif text[index] in '#"' and (opening := string_start(text, index)):
+            end = skip_line_comment(text, index)
+        elif opening:
             length, hashes, multiline = opening
             end = string_end(text, index + length, hashes, multiline)
-            out.append(blank(text[index:end]))
-            index = end
         else:
             out.append(text[index])
             index += 1
+            continue
+        out.append(blank(text[index:end]))
+        index = end
     return "".join(out)
 
 

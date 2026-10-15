@@ -176,6 +176,25 @@ class NeutralCoreImportTests(unittest.TestCase):
             ],
         )
 
+    def test_strings_nested_in_interpolation_are_lexed(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            text = (
+                'let a = "\\(f("/*"))"\nimport AppKit\n'
+                'let b = #"\\#(g("*/ (", /* ) */ 1))"#\nimport IOKit\n'
+                'let c = "\\(h(1, "x")) // not a comment"\nimport Network\n'
+            )
+            write(root, CLI, "A.swift", text)
+            found = check.violations(root)
+        self.assertEqual(
+            found,
+            [
+                f"{CLI}/A.swift:2: AppKit",
+                f"{CLI}/A.swift:4: IOKit",
+                f"{CLI}/A.swift:6: Network",
+            ],
+        )
+
     def test_the_host_adapter_target_is_not_scanned(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
