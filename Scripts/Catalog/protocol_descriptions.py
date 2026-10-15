@@ -108,6 +108,7 @@ def semantic_violations(
             )
     found += startup_violations(description, variants)
     found += keep_alive_violations(description, variants)
+    found += subcommand_violations(description)
     return found
 
 
@@ -199,3 +200,26 @@ def keep_alive_violations(
                 )
             )
     return found
+
+
+def subcommand_violations(description: dict[str, Any]) -> list[tuple[str, str]]:
+    """What `defaults.session.subcommands` may hold, as `SubcommandPlan` checks it in Swift.
+
+    Each SPI read purpose appears at most once, which a schema cannot say.
+    """
+    subcommands = description.get("defaults", {}).get("session", {}).get("subcommands")
+    if subcommands is None:
+        return []
+    purposes = [
+        request["spiRead"]["purpose"]
+        for request in subcommands.get("requests", ())
+        if isinstance(request.get("spiRead"), dict) and "purpose" in request["spiRead"]
+    ]
+    if len(set(purposes)) == len(purposes):
+        return []
+    return [
+        (
+            "E5002",
+            "defaults.session.subcommands: each SPI read purpose appears at most once",
+        )
+    ]
