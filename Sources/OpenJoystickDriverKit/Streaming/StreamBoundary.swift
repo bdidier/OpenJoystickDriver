@@ -1,0 +1,117 @@
+import Foundation
+
+/// One canonical frame on the streaming boundary.
+///
+/// A frame is a value, not a transport: it carries no socket, no HID handle, and no platform
+/// type. The same three shapes travel the boundary wherever a source and a sink meet.
+public enum StreamFrame: Sendable {
+  /// A controller's parsed state and its motion and touch samples, before any user mapping.
+  case controller(ControllerEvent, labels: ControllerButtonLabels, from: LogicalControllerID)
+  /// A virtual gamepad's state after mapping, or a feed client's frame.
+  case gamepad(RemappingGamepadState, for: LogicalControllerID)
+  /// An observed controller snapshot change, as the endpoint's `controllers` stream carries it.
+  case observed(ControllerWatchEvent)
+}
+
+/// Where an ``InputSource`` gets its frames.
+public enum InputOrigin: String, CaseIterable, Sendable {
+  /// A physical controller read and parsed by a protocol driver.
+  case physicalController
+  /// A client of a local virtual feed, such as `ojd virtual feed`.
+  case virtualFeed
+  /// A client of the endpoint's `FeedRequest`.
+  case endpointFeed
+  /// The poll of controller state that the endpoint's `Subscription` streams.
+  case endpointStream
+}
+
+/// What an ``OutputSink`` does with what it consumes.
+public enum OutputDestination: String, CaseIterable, Sendable {
+  /// A virtual HID gamepad that games and apps see.
+  case virtualDevice
+  /// A client subscribed to the endpoint's `controllers` stream.
+  case endpointSubscription
+  /// Output commands, such as rumble and lights, written to a physical controller.
+  case physicalOutput
+  /// A log line, for development.
+  case diagnosticLog
+}
+
+/// Why a sink refused what it was given.
+public enum StreamBoundaryError: Error, Equatable, Sendable {
+  /// The sink consumes no frame of this shape, or no output command.
+  case unsupported(OutputDestination)
+  /// The controller or the device behind the sink is gone, or refused the command.
+  case rejected(OutputDestination, String)
+}
+
+/// A producer of canonical frames: a physical controller, an endpoint feed, a virtual feed.
+///
+/// A source delivers every frame to its ``sink`` through ``produce(_:onDelivered:)``; it never
+/// reaches around the sink. Sources are compiled in, and OJD loads no code at run time. The
+/// protocol imports nothing from a platform, so a Linux or Windows source conforms the same way.
+public protocol InputSource: AnyObject, Sendable {
+  /// Which kind of path this source is.
+  var origin: InputOrigin { get }
+  /// Where this source's frames go.
+  var sink: any OutputSink { get }
+}
+
+extension InputSource {
+  /// Sends one frame to ``sink``. `onDelivered` runs once the frame reached the sink's
+  /// destination, which is where the pipeline stamps a delivery stage; it does not run for a frame
+  /// the sink suppresses or fails to deliver.
+  @preconcurrency
+  public func produce(
+    _ frame: StreamFrame,
+    onDelivered: @escaping @Sendable () -> Void = {}
+  ) async throws {
+    try await sink.consume(frame, onDelivered: onDelivered)
+  }
+}
+
+/// A consumer of canonical frames or output commands: a virtual device, an endpoint subscription,
+/// a physical controller's output.
+///
+/// A sink takes only the shapes it supports and throws ``StreamBoundaryError/unsupported(_:)`` for
+/// the rest; the defaults do exactly that.
+public protocol OutputSink: AnyObject, Sendable {
+  /// Which kind of path this sink is.
+  var destination: OutputDestination { get }
+
+  /// Consumes one frame. `onDelivered` runs once the frame reached the destination, and not for a
+  /// frame the sink suppresses or fails to deliver.
+  @preconcurrency
+  func consume(
+    _ frame: StreamFrame,
+    onDelivered: @escaping @Sendable () -> Void
+  ) async throws
+
+  /// Consumes one output command, such as rumble or a light, for one controller.
+  func consume(
+    _ command: ControllerOutputCommand,
+    for controller: LogicalControllerID
+  )
+    async throws
+}
+
+// swiftlint:disable async_without_await
+extension OutputSink {
+  @preconcurrency
+  public func consume(
+    _ frame: StreamFrame,
+    onDelivered: @escaping @Sendable () -> Void
+  ) async throws {
+    throw StreamBoundaryError.unsupported(destination)
+  }
+
+  public func consume(
+    _ command: ControllerOutputCommand,
+    for controller: LogicalControllerID
+  )
+    async throws
+  {
+    throw StreamBoundaryError.unsupported(destination)
+  }
+}
+// swiftlint:enable async_without_await
