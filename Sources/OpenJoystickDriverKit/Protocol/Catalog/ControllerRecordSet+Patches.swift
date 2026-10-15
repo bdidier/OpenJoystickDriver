@@ -112,11 +112,8 @@ extension ControllerRecordSet {
         )
       }
     }
-    patches.sort {
-      ($0.patch.selector.rank, $0.patch.selector.fileName, $0.entry.owner ?? "")
-        < ($1.patch.selector.rank, $1.patch.selector.fileName, $1.entry.owner ?? "")
-    }
-    for (entry, patch) in patches {
+    for (entry, patch) in ControllerPatchMerge.ordered(patches, by: { ($0.patch, $0.entry.owner) })
+    {
       let targets = records.keys.filter { patch.selector.selects($0) }.sorted()
       var failure: String?
       if targets.isEmpty, patch.selector != .all {
@@ -219,8 +216,8 @@ extension ControllerRecordSet {
     }
   }
 
-  /// `upstream` with `patch` merged in as RFC 7396 and validated as a record. An `all` patch
-  /// sets only the tuning keys the family reads, and attributes them to
+  /// `upstream` with `patch` merged in by ``ControllerPatchMerge/apply(_:to:)`` and validated as a
+  /// record. An `all` patch sets only the tuning keys the family reads, and attributes them to
   /// ``ControllerRecordLayer/global``.
   static func apply(
     _ patch: ControllerPatch,
@@ -231,17 +228,8 @@ extension ControllerRecordSet {
     guard let base = try JSONSerialization.jsonObject(with: upstream.document) as? [String: Any]
     else { throw ControllerRecordProblem("the record is not a JSON object") }
     let isAll = patch.selector == .all
-    var body = patch.body
-    if isAll {
-      let tuning = (body["tuning"] as? [String: Any] ?? [:]).filter { name, _ in
-        ControllerTuning.Key(rawValue: name).map(upstream.tuningScope.contains) ?? false
-      }
-      guard !tuning.isEmpty else { return upstream }
-      body = ["tuning": tuning]
-    }
-    guard let merged = ControllerPatchMerge.mergePatch(base, body) as? [String: Any] else {
-      throw ControllerRecordProblem("the patch does not give an object")
-    }
+    guard let body = ControllerPatchMerge.appliedBody(of: patch, to: base) else { return upstream }
+    let merged = ControllerPatchMerge.apply(patch, to: base)
     if !isAll {
       let changed =
         try JSONSerialization.data(withJSONObject: merged, options: .sortedKeys)

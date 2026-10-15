@@ -716,8 +716,7 @@
         "ownership": "macos",
         "tuning": {
           "stickDeadzone": 0.1,
-          "hidStartupIntervalMs": 5,
-          "hidStartupRecoveryRounds": 4
+          "hidStartupIntervalMs": 5
         }
       }
     },
@@ -939,6 +938,547 @@
         },
         "ownership": "macos"
       }
+    },
+    {
+      "name": "an all patch skips the tuning keys a raw USB family does not read",
+      "record": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "xbox.gip"
+        },
+        "usb": {
+          "interface": 0
+        },
+        "ownership": "macos"
+      },
+      "builtin": [],
+      "package": [],
+      "user": [
+        {
+          "apiVersion": "openjoystickdriver/v1alpha1",
+          "kind": "ControllerPatch",
+          "selector": {
+            "all": true
+          },
+          "patch": {
+            "tuning": {
+              "stickDeadzone": 0.1,
+              "inputLivenessTimeoutMs": 500,
+              "hidStartupIntervalMs": 5,
+              "minimumHIDOutputIntervalMs": 8,
+              "hidStartupRecoveryIntervalMs": 20,
+              "hidStartupRecoveryRounds": 2
+            }
+          }
+        }
+      ],
+      "expected": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "xbox.gip"
+        },
+        "usb": {
+          "interface": 0
+        },
+        "ownership": "macos",
+        "tuning": {
+          "stickDeadzone": 0.1
+        }
+      }
+    },
+    {
+      "name": "an all patch gives a DualShock 4 its liveness and HID timings",
+      "record": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "sony.dualshock4"
+        },
+        "usb": {
+          "interface": 0
+        },
+        "ownership": "macos"
+      },
+      "builtin": [],
+      "package": [],
+      "user": [
+        {
+          "apiVersion": "openjoystickdriver/v1alpha1",
+          "kind": "ControllerPatch",
+          "selector": {
+            "all": true
+          },
+          "patch": {
+            "tuning": {
+              "stickDeadzone": 0.1,
+              "inputLivenessTimeoutMs": 500,
+              "hidStartupIntervalMs": 5,
+              "minimumHIDOutputIntervalMs": 8,
+              "hidStartupRecoveryIntervalMs": 20,
+              "hidStartupRecoveryRounds": 2
+            }
+          }
+        }
+      ],
+      "expected": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "sony.dualshock4"
+        },
+        "usb": {
+          "interface": 0
+        },
+        "ownership": "macos",
+        "tuning": {
+          "stickDeadzone": 0.1,
+          "inputLivenessTimeoutMs": 500,
+          "hidStartupIntervalMs": 5,
+          "minimumHIDOutputIntervalMs": 8
+        }
+      }
+    },
+    {
+      "name": "an all patch gives a Switch 1 controller its startup recovery",
+      "record": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "nintendo.switch1"
+        },
+        "usb": {
+          "interface": 0
+        },
+        "ownership": "macos"
+      },
+      "builtin": [],
+      "package": [],
+      "user": [
+        {
+          "apiVersion": "openjoystickdriver/v1alpha1",
+          "kind": "ControllerPatch",
+          "selector": {
+            "all": true
+          },
+          "patch": {
+            "tuning": {
+              "stickDeadzone": 0.1,
+              "inputLivenessTimeoutMs": 500,
+              "hidStartupIntervalMs": 5,
+              "minimumHIDOutputIntervalMs": 8,
+              "hidStartupRecoveryIntervalMs": 20,
+              "hidStartupRecoveryRounds": 2
+            }
+          }
+        }
+      ],
+      "expected": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "nintendo.switch1"
+        },
+        "usb": {
+          "interface": 0
+        },
+        "ownership": "macos",
+        "tuning": {
+          "stickDeadzone": 0.1,
+          "hidStartupIntervalMs": 5,
+          "minimumHIDOutputIntervalMs": 8,
+          "hidStartupRecoveryIntervalMs": 20,
+          "hidStartupRecoveryRounds": 2
+        }
+      }
+    },
+    {
+      "name": "an all patch treats a GameSir USB variant as raw USB",
+      "record": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "vendor.gamesir",
+          "variant": "usb"
+        },
+        "usb": {
+          "interface": 0
+        },
+        "ownership": "macos"
+      },
+      "builtin": [],
+      "package": [],
+      "user": [
+        {
+          "apiVersion": "openjoystickdriver/v1alpha1",
+          "kind": "ControllerPatch",
+          "selector": {
+            "all": true
+          },
+          "patch": {
+            "tuning": {
+              "stickDeadzone": 0.1,
+              "inputLivenessTimeoutMs": 500,
+              "hidStartupIntervalMs": 5,
+              "minimumHIDOutputIntervalMs": 8,
+              "hidStartupRecoveryIntervalMs": 20,
+              "hidStartupRecoveryRounds": 2
+            }
+          }
+        }
+      ],
+      "expected": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "vendor.gamesir",
+          "variant": "usb"
+        },
+        "usb": {
+          "interface": 0
+        },
+        "ownership": "macos",
+        "tuning": {
+          "stickDeadzone": 0.1
+        }
+      }
+    },
+    {
+      "name": "an all patch treats a GameSir non-USB variant as HID",
+      "record": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "vendor.gamesir",
+          "variant": "bluetooth-le"
+        },
+        "usb": {
+          "interface": 0
+        },
+        "ownership": "macos"
+      },
+      "builtin": [],
+      "package": [],
+      "user": [
+        {
+          "apiVersion": "openjoystickdriver/v1alpha1",
+          "kind": "ControllerPatch",
+          "selector": {
+            "all": true
+          },
+          "patch": {
+            "tuning": {
+              "stickDeadzone": 0.1,
+              "inputLivenessTimeoutMs": 500,
+              "hidStartupIntervalMs": 5,
+              "minimumHIDOutputIntervalMs": 8,
+              "hidStartupRecoveryIntervalMs": 20,
+              "hidStartupRecoveryRounds": 2
+            }
+          }
+        }
+      ],
+      "expected": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "vendor.gamesir",
+          "variant": "bluetooth-le"
+        },
+        "usb": {
+          "interface": 0
+        },
+        "ownership": "macos",
+        "tuning": {
+          "stickDeadzone": 0.1,
+          "hidStartupIntervalMs": 5,
+          "minimumHIDOutputIntervalMs": 8
+        }
+      }
+    },
+    {
+      "name": "an all patch gives a record with an unknown family only stickDeadzone",
+      "record": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "vendor.unknown"
+        },
+        "usb": {
+          "interface": 0
+        },
+        "ownership": "macos"
+      },
+      "builtin": [],
+      "package": [],
+      "user": [
+        {
+          "apiVersion": "openjoystickdriver/v1alpha1",
+          "kind": "ControllerPatch",
+          "selector": {
+            "all": true
+          },
+          "patch": {
+            "tuning": {
+              "stickDeadzone": 0.1,
+              "inputLivenessTimeoutMs": 500,
+              "hidStartupIntervalMs": 5,
+              "minimumHIDOutputIntervalMs": 8,
+              "hidStartupRecoveryIntervalMs": 20,
+              "hidStartupRecoveryRounds": 2
+            }
+          }
+        }
+      ],
+      "expected": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "vendor.unknown"
+        },
+        "usb": {
+          "interface": 0
+        },
+        "ownership": "macos",
+        "tuning": {
+          "stickDeadzone": 0.1
+        }
+      }
+    },
+    {
+      "name": "an all patch with only out-of-scope keys changes nothing",
+      "record": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "xbox.gip"
+        },
+        "usb": {
+          "interface": 0
+        },
+        "ownership": "macos"
+      },
+      "builtin": [],
+      "package": [],
+      "user": [
+        {
+          "apiVersion": "openjoystickdriver/v1alpha1",
+          "kind": "ControllerPatch",
+          "selector": {
+            "all": true
+          },
+          "patch": {
+            "tuning": {
+              "inputLivenessTimeoutMs": 500
+            }
+          }
+        }
+      ],
+      "expected": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "xbox.gip"
+        },
+        "usb": {
+          "interface": 0
+        },
+        "ownership": "macos"
+      }
+    },
+    {
+      "name": "an all patch null deletes an in-scope key and ignores an out-of-scope null",
+      "record": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "sony.dualshock4"
+        },
+        "usb": {
+          "interface": 0
+        },
+        "ownership": "macos",
+        "tuning": {
+          "inputLivenessTimeoutMs": 900,
+          "stickDeadzone": 0.2
+        }
+      },
+      "builtin": [],
+      "package": [],
+      "user": [
+        {
+          "apiVersion": "openjoystickdriver/v1alpha1",
+          "kind": "ControllerPatch",
+          "selector": {
+            "all": true
+          },
+          "patch": {
+            "tuning": {
+              "inputLivenessTimeoutMs": null,
+              "hidStartupRecoveryRounds": null
+            }
+          }
+        }
+      ],
+      "expected": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "sony.dualshock4"
+        },
+        "usb": {
+          "interface": 0
+        },
+        "ownership": "macos",
+        "tuning": {
+          "stickDeadzone": 0.2
+        }
+      }
+    },
+    {
+      "name": "two packages with one selector apply in package name order",
+      "record": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "xbox.gip"
+        },
+        "usb": {
+          "interface": 0
+        },
+        "ownership": "macos"
+      },
+      "builtin": [],
+      "package": [
+        {
+          "owner": "b-pack",
+          "document": {
+            "apiVersion": "openjoystickdriver/v1alpha1",
+            "kind": "ControllerPatch",
+            "selector": {
+              "model": "045e-02ea"
+            },
+            "patch": {
+              "ownership": "ojd"
+            }
+          }
+        },
+        {
+          "owner": "a-pack",
+          "document": {
+            "apiVersion": "openjoystickdriver/v1alpha1",
+            "kind": "ControllerPatch",
+            "selector": {
+              "model": "045e-02ea"
+            },
+            "patch": {
+              "ownership": "macos2"
+            }
+          }
+        }
+      ],
+      "user": [],
+      "expected": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "xbox.gip"
+        },
+        "usb": {
+          "interface": 0
+        },
+        "ownership": "ojd"
+      }
+    },
+    {
+      "name": "a record with no vendorID and productID is returned unchanged",
+      "record": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "name": "No identity",
+        "protocol": {
+          "family": "xbox.gip"
+        }
+      },
+      "builtin": [],
+      "package": [],
+      "user": [
+        {
+          "apiVersion": "openjoystickdriver/v1alpha1",
+          "kind": "ControllerPatch",
+          "selector": {
+            "all": true
+          },
+          "patch": {
+            "tuning": {
+              "stickDeadzone": 0.1
+            }
+          }
+        }
+      ],
+      "expected": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "name": "No identity",
+        "protocol": {
+          "family": "xbox.gip"
+        }
+      }
     }
   ],
   "rejected": [
@@ -955,7 +1495,8 @@
             "stickDeadzone": 0.1
           }
         }
-      }
+      },
+      "message": "E5001: no apiVersion found; the supported apiVersion is openjoystickdriver/v1alpha1"
     },
     {
       "name": "a patch with the unsupported apiVersion openjoystickdriver.io/v1beta1",
@@ -971,7 +1512,8 @@
             "stickDeadzone": 0.1
           }
         }
-      }
+      },
+      "message": "E5001: apiVersion openjoystickdriver.io/v1beta1 is not supported; the supported apiVersion is openjoystickdriver/v1alpha1"
     },
     {
       "name": "the removed ControllerOverride kind",
@@ -984,7 +1526,8 @@
         "set": {
           "ownership": "ojd"
         }
-      }
+      },
+      "message": "expected ControllerPatch, found ControllerOverride"
     },
     {
       "name": "the removed ControllerDefaults kind",
@@ -994,7 +1537,8 @@
         "tuning": {
           "stickDeadzone": 0.1
         }
-      }
+      },
+      "message": "expected ControllerPatch, found ControllerDefaults"
     },
     {
       "name": "a selector that mixes model and identity",
@@ -1009,7 +1553,8 @@
         "patch": {
           "ownership": "ojd"
         }
-      }
+      },
+      "message": "selector must be all, model, or vendorID with productID"
     },
     {
       "name": "a selector with all false",
@@ -1024,7 +1569,8 @@
             "stickDeadzone": 0.1
           }
         }
-      }
+      },
+      "message": "selector.all must be true"
     },
     {
       "name": "an all patch that sets more than tuning",
@@ -1037,7 +1583,8 @@
         "patch": {
           "ownership": "ojd"
         }
-      }
+      },
+      "message": "an all patch may set only tuning"
     },
     {
       "name": "an empty patch",
@@ -1049,7 +1596,8 @@
           "productID": 746
         },
         "patch": {}
-      }
+      },
+      "message": "patch must hold protocol, usb, bluetoothLE, ownership, route, output, input, or tuning"
     },
     {
       "name": "an unknown section",
@@ -1063,7 +1611,8 @@
         "patch": {
           "name": "x"
         }
-      }
+      },
+      "message": "patch must hold protocol, usb, bluetoothLE, ownership, route, output, input, or tuning"
     },
     {
       "name": "a model that is not vvvv-pppp lowercase hex",
@@ -1076,7 +1625,8 @@
         "patch": {
           "ownership": "ojd"
         }
-      }
+      },
+      "message": "selector.model must be vvvv-pppp in lowercase hex"
     },
     {
       "name": "an unknown member",
@@ -1091,7 +1641,221 @@
           "ownership": "ojd"
         },
         "operation": "patch"
-      }
+      },
+      "message": "the file must hold exactly apiVersion, kind, selector, and patch"
+    },
+    {
+      "name": "a vendorID of 0",
+      "document": {
+        "kind": "ControllerPatch",
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "selector": {
+          "vendorID": 0,
+          "productID": 1
+        },
+        "patch": {
+          "tuning": {
+            "stickDeadzone": 0.1
+          }
+        }
+      },
+      "message": "vendorID must be 1...65535 and productID 0...65535"
+    },
+    {
+      "name": "a vendorID above 65535",
+      "document": {
+        "kind": "ControllerPatch",
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "selector": {
+          "vendorID": 65536,
+          "productID": 1
+        },
+        "patch": {
+          "tuning": {
+            "stickDeadzone": 0.1
+          }
+        }
+      },
+      "message": "vendorID must be 1...65535 and productID 0...65535"
+    },
+    {
+      "name": "a productID above 65535",
+      "document": {
+        "kind": "ControllerPatch",
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "selector": {
+          "vendorID": 1,
+          "productID": 65536
+        },
+        "patch": {
+          "tuning": {
+            "stickDeadzone": 0.1
+          }
+        }
+      },
+      "message": "vendorID must be 1...65535 and productID 0...65535"
+    },
+    {
+      "name": "a negative productID",
+      "document": {
+        "kind": "ControllerPatch",
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "selector": {
+          "vendorID": 1,
+          "productID": -1
+        },
+        "patch": {
+          "tuning": {
+            "stickDeadzone": 0.1
+          }
+        }
+      },
+      "message": "vendorID must be 1...65535 and productID 0...65535"
+    },
+    {
+      "name": "a boolean vendorID",
+      "document": {
+        "kind": "ControllerPatch",
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "selector": {
+          "vendorID": true,
+          "productID": 1
+        },
+        "patch": {
+          "tuning": {
+            "stickDeadzone": 0.1
+          }
+        }
+      },
+      "message": "vendorID must be 1...65535 and productID 0...65535"
+    },
+    {
+      "name": "a string productID",
+      "document": {
+        "kind": "ControllerPatch",
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "selector": {
+          "vendorID": 1,
+          "productID": "2"
+        },
+        "patch": {
+          "tuning": {
+            "stickDeadzone": 0.1
+          }
+        }
+      },
+      "message": "vendorID must be 1...65535 and productID 0...65535"
+    },
+    {
+      "name": "a float vendorID",
+      "document": {
+        "kind": "ControllerPatch",
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "selector": {
+          "vendorID": 1118.5,
+          "productID": 1
+        },
+        "patch": {
+          "tuning": {
+            "stickDeadzone": 0.1
+          }
+        }
+      },
+      "message": "vendorID must be 1...65535 and productID 0...65535"
+    },
+    {
+      "name": "a vendorID written as a float",
+      "document": {
+        "kind": "ControllerPatch",
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "selector": {
+          "vendorID": 1118.0,
+          "productID": 1
+        },
+        "patch": {
+          "tuning": {
+            "stickDeadzone": 0.1
+          }
+        }
+      },
+      "message": "vendorID must be 1...65535 and productID 0...65535"
+    },
+    {
+      "name": "a model with a trailing newline",
+      "document": {
+        "kind": "ControllerPatch",
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "selector": {
+          "model": "045e-02ea\n"
+        },
+        "patch": {
+          "tuning": {
+            "stickDeadzone": 0.1
+          }
+        }
+      },
+      "message": "selector.model must be vvvv-pppp in lowercase hex"
+    },
+    {
+      "name": "a model that is not a string",
+      "document": {
+        "kind": "ControllerPatch",
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "selector": {
+          "model": 5
+        },
+        "patch": {
+          "tuning": {
+            "stickDeadzone": 0.1
+          }
+        }
+      },
+      "message": "selector.model must be vvvv-pppp in lowercase hex"
+    },
+    {
+      "name": "a selector.all of 1",
+      "document": {
+        "kind": "ControllerPatch",
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "selector": {
+          "all": 1
+        },
+        "patch": {
+          "tuning": {
+            "stickDeadzone": 0.1
+          }
+        }
+      },
+      "message": "selector.all must be true"
+    },
+    {
+      "name": "a patch with no kind",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "selector": {
+          "all": true
+        },
+        "patch": {
+          "tuning": {
+            "stickDeadzone": 0.1
+          }
+        }
+      },
+      "message": "no kind found; expected ControllerPatch"
+    },
+    {
+      "name": "a patch that is not an object",
+      "document": {
+        "kind": "ControllerPatch",
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "selector": {
+          "all": true
+        },
+        "patch": [
+          1
+        ]
+      },
+      "message": "the file must hold exactly apiVersion, kind, selector, and patch"
     }
   ]
 }

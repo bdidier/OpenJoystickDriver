@@ -20,8 +20,17 @@ struct ControllerPatchMergeTests {
     )
   }
 
-  private static func patches(_ value: Any?, file: String) throws -> [ControllerPatch] {
-    try (value as? [[String: Any]] ?? []).map { try ControllerPatch.parse($0, file: file) }
+  /// The patches of one layer. An item is a patch document, or `{"owner", "document"}` to name
+  /// the package that holds it.
+  private static func entries(
+    _ value: Any?,
+    file: String
+  ) throws -> [(patch: ControllerPatch, owner: String?)] {
+    try (value as? [[String: Any]] ?? []).map { item in
+      let owner = item["owner"] as? String
+      let document = item["document"] as? [String: Any] ?? item
+      return (try ControllerPatch.parse(document, file: file), owner)
+    }
   }
 
   @Test
@@ -34,9 +43,9 @@ struct ControllerPatchMergeTests {
       let expected = try #require(fixture["expected"] as? [String: Any])
       let effective = ControllerPatchMerge.effective(
         record: record,
-        builtin: try Self.patches(fixture["builtin"], file: name),
-        package: try Self.patches(fixture["package"], file: name),
-        user: try Self.patches(fixture["user"], file: name)
+        builtin: try Self.entries(fixture["builtin"], file: name).map(\.patch),
+        package: try Self.entries(fixture["package"], file: name),
+        user: try Self.entries(fixture["user"], file: name).map(\.patch)
       )
       // swiftlint:disable:next legacy_objc_type
       #expect(NSDictionary(dictionary: effective).isEqual(to: expected), "\(name)")
@@ -56,6 +65,10 @@ struct ControllerPatchMergeTests {
       } catch {
         let code = ControllerRecordSet.problemCode(error)?.rawValue
         #expect(code == fixture["code"] as? String, "\(name)")
+        #expect(
+          ControllerRecordSet.problemDescription(error) == fixture["message"] as? String,
+          "\(name)"
+        )
       }
     }
   }

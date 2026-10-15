@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import unittest
 from pathlib import Path
 from typing import Any
@@ -36,6 +37,7 @@ class ControllerPatchTests(unittest.TestCase):
             ):
                 controller_patch.parse_patch(case["document"])
             self.assertEqual(raised.exception.code, case.get("code"))
+            self.assertEqual(str(raised.exception), case["message"])
 
     def test_a_missing_or_unsupported_api_version_is_e5001(self) -> None:
         rejected = {case["name"]: case for case in load_cases()["rejected"]}
@@ -52,6 +54,15 @@ class ControllerPatchTests(unittest.TestCase):
             controller_patch.parse_patch({**missing["document"], "apiVersion": old})
         self.assertEqual(raised.exception.code, "E5001")
         self.assertIn(f"apiVersion {old} is not supported", str(raised.exception))
+
+    def test_known_families_match_the_swift_protocol_ids(self) -> None:
+        source = (
+            Path(__file__).resolve().parents[2]
+            / "Sources/OpenJoystickDriverKit/Protocol/Classification/ProtocolClassifier.swift"
+        ).read_text(encoding="utf-8")
+        body = source.split("enum PhysicalProtocolID", 1)[1].split("var variants", 1)[0]
+        raw_values = set(re.findall(r'^\s*case \w+ = "([^"]+)"', body, re.MULTILINE))
+        self.assertEqual(set(controller_patch.KNOWN_FAMILIES), raw_values)
 
     def test_the_cases_cover_the_required_behaviour(self) -> None:
         names = {case["name"] for case in load_cases()["cases"]}

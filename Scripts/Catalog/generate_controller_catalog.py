@@ -521,19 +521,15 @@ def apply_patches(
             raise CatalogError(f"orphan patch for {target}")
     for key, record in list(records.items()):
         merged = record
-        chosen = sorted(
-            (
-                (controller_patch.selector_rank(selector), selector, body)
+        chosen = controller_patch.ordered(
+            [
+                (selector, body, "")
                 for selector, body in patches
                 if controller_patch.selects(selector, record)
-            ),
-            key=lambda item: (
-                item[0],
-                controller_patch.selector_file_name(item[1]),
-            ),
+            ]
         )
-        for _, selector, body in chosen:
-            after = controller_patch.merge_patch(merged, body)
+        for selector, body, _ in chosen:
+            after = controller_patch.apply_patch(selector, body, merged)
             if after == merged and "all" not in selector:
                 raise CatalogError(f"redundant patch for {key}")
             merged = after

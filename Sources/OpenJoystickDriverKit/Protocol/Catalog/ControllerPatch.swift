@@ -120,6 +120,15 @@ public struct ControllerPatch: Equatable, Sendable {
     return try Self(selector: parsed, body: body)
   }
 
+  /// A JSON integer: a boolean, a fraction, a number written as a float, and a string are not.
+  static func strictInteger(_ value: Any?) -> Int? {
+    // swiftlint:disable:next legacy_objc_type
+    guard let number = value as? NSNumber, CFGetTypeID(number) != CFBooleanGetTypeID(),
+      !CFNumberIsFloatType(number)
+    else { return nil }
+    return number.intValue
+  }
+
   private static func parseSelector(_ selector: [String: Any]) throws -> Selector {
     switch Set(selector.keys) {
     case ["all"]:
@@ -130,11 +139,11 @@ public struct ControllerPatch: Equatable, Sendable {
       return .all
     case ["vendorID", "productID"]:
       guard
-        let vendorID = ControllerRecordSet.integer(selector["vendorID"]).flatMap(
+        let vendorID = strictInteger(selector["vendorID"]).flatMap(
           UInt16.init(exactly:)
         ),
         vendorID >= 1,
-        let productID = ControllerRecordSet.integer(selector["productID"]).flatMap(
+        let productID = strictInteger(selector["productID"]).flatMap(
           UInt16.init(exactly:)
         )
       else { throw ControllerRecordProblem("vendorID must be 1...65535 and productID 0...65535") }
@@ -177,31 +186,75 @@ enum ControllerPatchMerge {
     return result
   }
 
-  /// `patches` ordered for one layer, least specific first, by selector rank and then file name.
-  static func ordered(_ patches: [ControllerPatch]) -> [ControllerPatch] {
-    patches.sorted {
-      ($0.selector.rank, $0.selector.fileName) < ($1.selector.rank, $1.selector.fileName)
-    }
+  /// `items` ordered for one layer, least specific first: by selector rank, then file name, then
+  /// owning package name (a user file has none), then position, so the order is total and the
+  /// same on every run.
+  static func ordered<Item>(
+    _ items: [Item],
+    by key: (Item) -> (patch: ControllerPatch, owner: String?)
+  ) -> [Item] {
+    items.enumerated().map { (offset: $0.offset, item: $0.element, key: key($0.element)) }
+      .sorted {
+        (
+          $0.key.patch.selector.rank, $0.key.patch.selector.fileName, $0.key.owner ?? "",
+          $0.offset
+        )
+          < (
+            $1.key.patch.selector.rank, $1.key.patch.selector.fileName, $1.key.owner ?? "",
+            $1.offset
+          )
+      }
+      .map(\.item)
   }
 
-  /// `record` with the built-in, package, and user patches applied in that order.
+  /// `patches` ordered for one layer, with no owners.
+  static func ordered(_ patches: [ControllerPatch]) -> [ControllerPatch] {
+    ordered(patches) { ($0, nil) }
+  }
+
+  /// The merge patch that `patch` gives to the record `document`, or nil when it changes nothing
+  /// to apply. A patch with a selector other than `all` gives its whole body. An `all` patch gives
+  /// only the `tuning` keys that the record's family reads; a `tuning` that is not an object gives
+  /// nothing.
+  static func appliedBody(of patch: ControllerPatch, to document: [String: Any]) -> [String: Any]? {
+    let body = patch.body
+    guard patch.selector == .all else { return body }
+    let scope = Set(ControllerTuning.scope(ofDocument: document).map(\.rawValue))
+    let tuning = (body["tuning"] as? [String: Any] ?? [:]).filter { scope.contains($0.key) }
+    return tuning.isEmpty ? nil : ["tuning": tuning]
+  }
+
+  /// `document` with `patch` merged in; `document` itself when the patch gives nothing.
+  static func apply(_ patch: ControllerPatch, to document: [String: Any]) -> [String: Any] {
+    guard let body = appliedBody(of: patch, to: document) else { return document }
+    return mergePatch(document, body) as? [String: Any] ?? document
+  }
+
+  /// `record` with the built-in, package, and user patches applied in that order. A package layer
+  /// entry may name its owner. A record with no valid `vendorID` and `productID` is returned
+  /// unchanged.
   static func effective(
     record: [String: Any],
     builtin: [ControllerPatch],
-    package: [ControllerPatch],
+    package: [(patch: ControllerPatch, owner: String?)],
     user: [ControllerPatch]
   ) -> [String: Any] {
     guard
-      let vendorID = ControllerRecordSet.integer(record["vendorID"]).flatMap(UInt16.init(exactly:)),
-      let productID = ControllerRecordSet.integer(record["productID"]).flatMap(
+      let vendorID = ControllerPatch.strictInteger(record["vendorID"]).flatMap(
+        UInt16.init(exactly:)
+      ),
+      let productID = ControllerPatch.strictInteger(record["productID"]).flatMap(
         UInt16.init(exactly:)
       )
     else { return record }
     let model = ControllerModelID(vendorID: vendorID, productID: productID)
+    let layers: [[(patch: ControllerPatch, owner: String?)]] = [
+      builtin.map { ($0, nil) }, package, user.map { ($0, nil) },
+    ]
     var result = record
-    for layer in [builtin, package, user] {
-      for patch in ordered(layer.filter { $0.selector.selects(model) }) {
-        result = mergePatch(result, patch.body) as? [String: Any] ?? result
+    for layer in layers {
+      for entry in ordered(layer.filter { $0.patch.selector.selects(model) }, by: { $0 }) {
+        result = apply(entry.patch, to: result)
       }
     }
     return result
