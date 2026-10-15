@@ -10,7 +10,7 @@ public struct ControllerRecordProbePlan: Equatable, Sendable {
   public let productID: UInt16
   public let protocolBinding: ProtocolBindingID
   public let transportProfile: DeviceTransportProfile
-  public let startupPackets: [GIPStartupPacket]
+  public let startupPackets: [String]
   public let keepAlivePolicy: GIPKeepAlivePolicy
   private let profile: DeviceRuntimeProfile
 

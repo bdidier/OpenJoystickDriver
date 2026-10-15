@@ -37,6 +37,14 @@ public enum VirtualHIDProfileID: String, CaseIterable, Codable, Sendable {
     return profile
   }
 
+  /// Whether SDL recognizes the persona with its default hints, as its definition states.
+  public var worksWithDefaultSDLHints: Bool {
+    guard let works = VirtualDevice.definition(of: self).worksWithDefaultSDLHints else {
+      fatalError("[VirtualDevice] \(rawValue) does not state worksWithDefaultSDLHints")
+    }
+    return works
+  }
+
   /// Every normalized control this profile's layout can carry, which is what profile selection
   /// checks a controller's required primary controls against.
   public var representableControls: Set<Control> {

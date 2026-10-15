@@ -983,6 +983,27 @@ class CapabilityOverlapTests(unittest.TestCase):
             with self.assertRaises(validate_profiles.ValidationError):
                 validate_profiles.validate_record(path, enforce_path=False)
 
+    def test_validator_rejects_a_packet_the_description_lacks(self) -> None:
+        import json
+        import tempfile
+        from pathlib import Path
+
+        for action, accepted in (
+            ("xbox.gip/hori-ack", True),
+            ("xbox.gip/missing", False),
+        ):
+            with (
+                self.subTest(action=action),
+                tempfile.TemporaryDirectory() as directory,
+            ):
+                path = Path(directory) / "record.json"
+                path.write_text(json.dumps(record({**GIP, "initialization": [action]})))
+                if accepted:
+                    validate_profiles.validate_record(path, enforce_path=False)
+                else:
+                    with self.assertRaises(validate_profiles.ValidationError):
+                        validate_profiles.validate_record(path, enforce_path=False)
+
 
 if __name__ == "__main__":
     unittest.main()

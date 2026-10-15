@@ -78,7 +78,11 @@ struct ControllerRecordProbePlanTests {
 
     #expect(plan.transportProfile.needsSetConfiguration)
     #expect(plan.transportProfile.postHandshakeSettleNanoseconds == 200_000_000)
-    #expect(plan.startupPackets == [.powerOn, .xboxOneSInit, .ledOn, .authDone])
+    #expect(
+      plan.startupPackets == [
+        "xbox.gip/power-on", "xbox.gip/s-init", "xbox.gip/led-on", "xbox.gip/auth-done",
+      ]
+    )
   }
 
   @Test

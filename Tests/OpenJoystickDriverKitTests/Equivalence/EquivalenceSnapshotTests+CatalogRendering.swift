@@ -153,7 +153,9 @@ extension EquivalenceSnapshotCatalogTests {
           variant: profile.physicalProtocolVariant,
           parameters: profile.parameters
         ).map { hex($0.bytes) }
-        : profile.gipStartupPackets.map { hex($0.packet(sequence: 0)) }
+        : profile.gipStartupPackets.map {
+          hex(PhysicalProtocolID.xboxGIP.namedPacketWrite($0)?.bytes ?? [])
+        }
       lines.append(
         "gip keepAlive=\(label(profile.gipKeepAlivePolicy))"
           + " startup=[\(packets.joined(separator: ","))]"

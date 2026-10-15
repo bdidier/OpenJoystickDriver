@@ -92,6 +92,9 @@ struct ProtocolDescription: Sendable {
   /// The family's subcommand reports: the report id, the rolling counter rule and the startup
   /// requests. Only `nintendo.switch1` has them.
   let subcommands: SubcommandPlan?
+  /// The family's named packets, which a record selects by id in `protocol.initialization`.
+  /// Only `xbox.gip` has them.
+  let namedPackets: NamedPacketPlan?
   let inputLayout: ControllerInputLayout?
   /// The map every `hid.descriptor` record layers over (``HIDUsageMap``).
   let hidUsageMap: HIDUsageMap?
@@ -233,6 +236,11 @@ struct ProtocolDescription: Sendable {
       }
       variantTuning[variant] = tuning
     }
+    let usbStartupWrites = try resolvedUSBStartup(
+      document.defaults?.output,
+      namedPackets: document.defaults?.session?.namedPackets,
+      fileName: fileName
+    )
     let description = Self(
       family: protocolID,
       endpoints: document.endpoints,
@@ -247,9 +255,10 @@ struct ProtocolDescription: Sendable {
       recordCapabilities: document.recordCapabilities,
       rumbleTemplate: document.defaults?.output?.rumble,
       startupWrites: document.defaults?.output?.startup ?? [],
-      usbStartupWrites: document.defaults?.output?.usbStartup ?? [],
+      usbStartupWrites: usbStartupWrites,
       keepAlive: document.defaults?.session?.keepAlive,
       subcommands: document.defaults?.session?.subcommands,
+      namedPackets: document.defaults?.session?.namedPackets,
       inputLayout: document.defaults?.input?.layout,
       hidUsageMap: document.defaults?.input?.usageMap,
       hidUsageShapes: document.defaults?.input?.shapes ?? [],
@@ -268,6 +277,34 @@ struct ProtocolDescription: Sendable {
       throw ProtocolDescriptionProblem(.invalidProtocolDescription, "\(fileName): \(violation)")
     }
     return description
+  }
+
+  /// The raw-USB startup packets of `output`: its own, or the named packets it refers to, each
+  /// with the condition of its reference. A reference to a packet the description lacks fails.
+  private static func resolvedUSBStartup(
+    _ output: ControllerRecordDocument.Output?,
+    namedPackets: NamedPacketPlan?,
+    fileName: String
+  ) throws(ProtocolDescriptionProblem) -> [USBStartupWrite] {
+    guard let output, !output.packetStartup.isEmpty else { return output?.usbStartup ?? [] }
+    var writes: [USBStartupWrite] = []
+    for reference in output.packetStartup {
+      guard let packet = namedPackets?.packet(named: reference.id) else {
+        throw ProtocolDescriptionProblem(
+          .invalidProtocolDescription,
+          "\(fileName): startup names \(reference.id), which is not a named packet"
+        )
+      }
+      do {
+        writes.append(try packet.write.with(condition: reference.condition))
+      } catch {
+        throw ProtocolDescriptionProblem(
+          .invalidProtocolDescription,
+          "\(fileName): \(error.description)"
+        )
+      }
+    }
+    return writes
   }
 
   /// The fixed keep-alive writes that a controller on `variant` receives from this description.
@@ -347,6 +384,12 @@ struct ProtocolDescription: Sendable {
     if let violation = keepAliveViolation { return violation }
     if (subcommands != nil) != (family == .nintendoSwitch1) {
       return "only nintendo.switch1 has subcommands, and it must have them"
+    }
+    if namedPackets != nil, family != .xboxGIP {
+      return "only xbox.gip has named packets"
+    }
+    if let namedPackets, !namedPackets.allIDs(startWith: "\(family.rawValue)/") {
+      return "each named packet id starts with \(family.rawValue)/"
     }
     if rawUSB == .always, !tuningKeys.isEmpty {
       return "a family that is always raw USB reads its tuning through rawUSBTuningKeys"

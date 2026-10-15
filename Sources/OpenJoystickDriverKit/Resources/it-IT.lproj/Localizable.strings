@@ -514,9 +514,7 @@
 "developer.connection" = "Connessione";
 "developer.controller" = "Controller";
 "developer.controllerDetails" = "Controller";
-"developer.diagnosticMode" = "Modalità diagnostica";
 "developer.emptyCapture" = "Premi «Avvia acquisizione», poi premi i pulsanti del controller.";
-"developer.enterDiagnosticMode" = "Entra in modalità diagnostica";
 "developer.exportCapture" = "Esporta acquisizione dei pacchetti";
 "developer.extraInputs" = "Pulsanti extra";
 "developer.extraInputsDescription" = "Premi un pulsante extra alla volta. I pulsanti rilevati restano elencati finché non cancelli l’acquisizione.";
@@ -527,7 +525,6 @@
 "developer.loadingControllers" = "Caricamento della diagnostica del controller…";
 "developer.noControllers" = "Nessun controller collegato";
 "developer.noControllersDetail" = "Collega un controller, poi premi «Aggiorna».";
-"developer.noDiagnosticRecipe" = "Non è disponibile la modalità diagnostica per questo controller.";
 "developer.noExtraInputs" = "Nessun pulsante extra rilevato.";
 "developer.noPackets" = "Nessun pacchetto acquisito";
 "developer.packetCapture" = "Acquisizione di pacchetti grezzi";
@@ -1339,6 +1336,10 @@
 "cli.virtual.discussion.unit" = "Con --unit, «set» si applica a un solo controller in base al suo ID unità, e «reset» riporta quel controller alla scelta del suo modello.";
 "cli.virtual.error.failed" = "Il gamepad virtuale di %@ non è cambiato (%@). Controlla con «ojd virtual show».";
 "cli.virtual.error.no_unit" = "%@ non ha un ID unità, quindi una scelta può valere solo per l’intero modello. Esegui il comando senza --unit.";
+"cli.virtual.export_mapping.abstract" = "Stampa la mappatura SDL o la descrizione W3C che un profilo di gamepad virtuale ricava.";
+"cli.virtual.export_mapping.discussion" = "SDL stampa una riga di mappatura per profilo, che è un file di mappatura SDL valido. W3C stampa la descrizione del layout standard come JSON. Entrambe derivano dal descrittore dei report del profilo.";
+"cli.virtual.export_mapping.format" = "Il formato da stampare: sdl o w3c.";
+"cli.virtual.export_mapping.profile" = "Il profilo di gamepad virtuale da stampare. Omettilo per stampare tutti i profili.";
 "cli.virtual.feed.abstract" = "Pubblica un gamepad virtuale controllato dallo stdin.";
 "cli.virtual.feed.discussion" = "Legge un oggetto JSON per riga: «buttons» e «dpad» elencano i controlli premuti, ad esempio South e up, mentre «axes» associa dei valori ai nomi degli assi, ad esempio LeftStickX. I controlli mancanti restano neutri. Gli stick vanno da -1 a 1, con Y verso il basso; i grilletti vanno da 0 a 1. I fotogrammi vengono riprodotti in ordine, ciascuno per almeno 8 ms; «holdMilliseconds» mantiene un fotogramma più a lungo, fino a 60000. Stampa ogni comando di uscita che i giochi inviano al gamepad, ad esempio la vibrazione, come un oggetto JSON per riga. Termina quando tutti i fotogrammi sono stati riprodotti dopo la fine dell’input.";
 "cli.virtual.feed.error.closed" = "Il servizio ha chiuso il gamepad virtuale. Controlla con «ojd status».";
@@ -1357,6 +1358,7 @@
 "cli.virtual.reset.error.unit_all" = "--unit richiede un CONTROLLER, non --all.";
 "cli.virtual.set.abstract" = "Sceglie il gamepad virtuale per il modello di un controller.";
 "cli.virtual.set.profile" = "Il profilo del gamepad virtuale.";
+"cli.virtual.sdl_hints_note" = "Nota: %@ non funziona con gli hint predefiniti di SDL.";
 "cli.virtual.show.abstract" = "Mostra il gamepad virtuale di ogni controller e i profili che puoi scegliere.";
 "cli.virtual.show.none" = "nessun gamepad virtuale";
 "cli.virtual.show.profiles" = "Profili: %@";

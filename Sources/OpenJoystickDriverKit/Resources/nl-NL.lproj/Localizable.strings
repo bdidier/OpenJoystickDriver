@@ -514,9 +514,7 @@
 "developer.connection" = "Verbinding";
 "developer.controller" = "Controller";
 "developer.controllerDetails" = "Controller";
-"developer.diagnosticMode" = "Diagnosemodus";
 "developer.emptyCapture" = "Klik op “Start de opname” en druk daarna op de knoppen van de controller.";
-"developer.enterDiagnosticMode" = "Diagnosemodus starten";
 "developer.exportCapture" = "Exporteer pakketopname";
 "developer.extraInputs" = "Extra knoppen";
 "developer.extraInputsDescription" = "Druk op één extra knop tegelijk. Gedetecteerde knoppen blijven in de lijst staan totdat je de opname wist.";
@@ -527,7 +525,6 @@
 "developer.loadingControllers" = "Controllerdiagnose laden…";
 "developer.noControllers" = "Geen aangesloten controllers";
 "developer.noControllersDetail" = "Verbind een controller en kies daarna “Vernieuwen”.";
-"developer.noDiagnosticRecipe" = "De diagnose-modus is niet beschikbaar voor deze controller.";
 "developer.noExtraInputs" = "Geen extra knoppen gevonden.";
 "developer.noPackets" = "Geen pakketten vastgelegd";
 "developer.packetCapture" = "Ruwe pakketopname";
@@ -1339,6 +1336,10 @@
 "cli.virtual.discussion.unit" = "Met --unit geldt ‘set’ voor één controller op basis van het apparaat-ID, en ‘reset’ zet die controller terug op de keuze van zijn model.";
 "cli.virtual.error.failed" = "Het virtuele gamepad voor %@ is niet gewijzigd (%@). Controleer dit met ‘ojd virtual show’.";
 "cli.virtual.error.no_unit" = "%@ heeft geen apparaat-ID, dus een keuze kan alleen voor het hele model gelden. Voer de opdracht uit zonder --unit.";
+"cli.virtual.export_mapping.abstract" = "Toont de SDL-mapping of de W3C-beschrijving die een virtueel gamepadprofiel afleidt.";
+"cli.virtual.export_mapping.discussion" = "SDL toont per profiel één mappingregel, wat een geldig SDL-mappingbestand is. W3C toont de beschrijving van de standaardindeling als JSON. Beide worden afgeleid van de rapportdescriptor van het profiel.";
+"cli.virtual.export_mapping.format" = "De te tonen indeling: sdl of w3c.";
+"cli.virtual.export_mapping.profile" = "Het te tonen virtuele gamepadprofiel. Laat het weg om alle profielen te tonen.";
 "cli.virtual.feed.abstract" = "Een virtueel gamepad publiceren dat door stdin wordt aangestuurd.";
 "cli.virtual.feed.discussion" = "Leest één JSON-object per regel: ‘buttons’ en ‘dpad’ geven de ingedrukte bedieningselementen weer, zoals South en up, en ‘axes’ koppelt namen van assen, zoals LeftStickX, aan waarden. Ontbrekende bedieningselementen blijven neutraal. Sticks lopen van -1 tot 1 met Y omlaag; triggers lopen van 0 tot 1. Frames worden op volgorde afgespeeld, elk minstens 8 ms; ‘holdMilliseconds’ houdt een frame langer vast, tot 60000. Drukt elk uitvoercommando dat games naar de gamepad sturen, zoals trillen, af als één JSON-object per regel. Stopt wanneer elk frame is afgespeeld nadat de invoer is geëindigd.";
 "cli.virtual.feed.error.closed" = "De service heeft het virtuele gamepad gesloten. Controleer dit met ‘ojd status’.";
@@ -1357,6 +1358,7 @@
 "cli.virtual.reset.error.unit_all" = "--unit vereist een CONTROLLER, niet --all.";
 "cli.virtual.set.abstract" = "Het virtuele gamepad voor het model van een controller kiezen.";
 "cli.virtual.set.profile" = "Het profiel van het virtuele gamepad.";
+"cli.virtual.sdl_hints_note" = "Opmerking: %@ werkt niet met de standaardhints van SDL.";
 "cli.virtual.show.abstract" = "Het virtuele gamepad van elke controller en de profielen die je kunt kiezen tonen.";
 "cli.virtual.show.none" = "geen virtueel gamepad";
 "cli.virtual.show.profiles" = "Profielen: %@";

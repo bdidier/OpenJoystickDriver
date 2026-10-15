@@ -58,13 +58,6 @@
 
     var hiddenIdlePacketCount: Int { packets.count - displayedPackets.count }
 
-    var diagnosticRecipeAvailable: Bool {
-      guard let device = selectedDevice else { return false }
-      return ProtocolDriverRegistry().record(
-        for: ControllerModelID(vendorID: device.vendorID, productID: device.productID)
-      )?.gipStartupPackets.contains(where: \.isDiagnosticRecipe) == true
-    }
-
     private let gateway: any ApplicationServiceGateway
     private let pollIntervalNanoseconds: UInt64
     private let sleep: Sleep
