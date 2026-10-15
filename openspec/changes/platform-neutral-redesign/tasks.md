@@ -76,9 +76,9 @@ Owns: `ControllerSessionToken`, `ControllerPortKey`, `ControllerReference`, `Log
 Depends: 3.
 Verify: `swift test`, lint pair above.
 
-- [ ] 4.1 Add the four types with the naming in `design.md` D12. Verify: unit tests for equality, encoding and uniqueness.
-- [ ] 4.2 Make `ControllerReference` the only way commands and the endpoint name a controller. Verify: a test resolves a reference by model, unit and logical ID, and refuses an ambiguous one with a catalog error.
-- [ ] 4.3 Replace session-lifetime uses of the old identifier. Verify: reconnect test keeps the logical ID and changes the token.
+- [x] 4.1 Add the four types with the naming in `design.md` D12. Verify: unit tests for equality, encoding and uniqueness.
+- [x] 4.2 Make `ControllerReference` the only way commands and the endpoint name a controller. Verify: a test resolves a reference by model, unit and logical ID, and refuses an ambiguous one with a catalog error.
+- [x] 4.3 Replace session-lifetime uses of the old identifier. Verify: reconnect test keeps the logical ID and changes the token.
 
 ## 5. Split DeviceIdentifier (old WP2)
 
@@ -86,8 +86,8 @@ Owns: `ControllerHardwareIdentity`, `ControllerConnectionAddress`.
 Depends: 3, 4.
 Verify: `swift test`, lint pair.
 
-- [ ] 5.1 Split the type into hardware identity and connection address. Verify: build passes; USB and Bluetooth fixtures give equal hardware identity for one model on two links.
-- [ ] 5.2 Update the USB and HID layers, and the DriverKit host, to the new types. Verify: `./Scripts/ojd check driverkit` and `swift test`.
+- [x] 5.1 Split the type into hardware identity and connection address. Verify: build passes; USB and Bluetooth fixtures give equal hardware identity for one model on two links.
+- [x] 5.2 Update the USB and HID layers, and the DriverKit host, to the new types. Verify: `./Scripts/ojd check driverkit` and `swift test`.
 
 ## 6. DEXT match list from records (old WP10)
 
