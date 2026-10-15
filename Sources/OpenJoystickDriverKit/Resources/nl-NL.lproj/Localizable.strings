@@ -982,7 +982,7 @@
 "cli.status.label.input_inject" = "Toegankelijkheid";
 "cli.status.label.command_line_tool" = "Opdrachtregelprogramma";
 "cli.status.label.controllers" = "Controllers (%lld)";
-"cli.status.label.extension" = "Extensie";
+"cli.status.label.transport_extension" = "Extensie";
 "cli.status.label.input_read" = "Invoermonitoring";
 "cli.status.label.override_error" = "Overschrijvingsfout";
 "cli.status.label.pass_through" = "Aan macOS overgelaten (%lld)";

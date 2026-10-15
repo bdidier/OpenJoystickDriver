@@ -73,8 +73,7 @@ struct ExtensionWordsTests {
   }
 
   @Test(arguments: [
-    ("usbExtension", "transportClaim", RenamedWord.Kind.field),
-    ("claims", "claimed", .transportClaim), ("doesNotClaim", "unclaimed", .transportClaim),
+    ("claims", "claimed", RenamedWord.Kind.transportClaim), ("doesNotClaim", "unclaimed", .transportClaim),
     ("DriverExtension", "TransportExtension", .outputKind),
     ("extension-bundle", "transport-extension-bundle", .checkID),
     ("extension-registration", "transport-extension-registration", .checkID),
@@ -82,6 +81,22 @@ struct ExtensionWordsTests {
   ])
   func anOldWordHasAHintThatNamesTheNewOne(old: String, new: String, kind: RenamedWord.Kind) {
     #expect(RenamedWord.hints(for: [old], kind: kind).contains(Self.hint(old, new)))
+  }
+
+  @Test(arguments: [
+    ("usbExtension", "transportClaim", "cli-output.schema.json#/$defs/recordShow"),
+    ("usbExtension", "transportClaim", "cli-output.schema.json#/$defs/sharedRecordValidation"),
+    ("extension", "transportExtension", "cli-output.schema.json#/$defs/status"),
+  ])
+  func anOldOutputFieldHasAHintOnlyInItsDocument(old: String, new: String, location: String) {
+    let word = RenamedWord.documentFieldReplacement(for: old, in: "cli-output.schema.json")
+
+    #expect(word != nil)
+    #expect(RenamedWord.all.contains { $0.old == old && $0.new == new })
+    #expect(RenamedWord.documentFieldReplacement(for: old, in: "report.schema.json") == nil)
+    #expect(RenamedWord.all.contains {
+      $0.old == old && $0.kind == .documentField(in: location)
+    })
   }
 
   @Test

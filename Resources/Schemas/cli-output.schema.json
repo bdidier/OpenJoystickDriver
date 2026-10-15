@@ -3199,7 +3199,7 @@
         "apiVersion",
         "kind",
         "commandLineTool",
-        "extension",
+        "transportExtension",
         "service",
         "skippedRecords"
       ],
@@ -3263,7 +3263,7 @@
             }
           }
         },
-        "extension": {
+        "transportExtension": {
           "type": "object",
           "required": ["bundle", "registration"],
           "additionalProperties": false,

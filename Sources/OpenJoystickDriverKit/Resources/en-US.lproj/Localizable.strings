@@ -982,7 +982,7 @@
 "cli.status.label.input_inject" = "Accessibility";
 "cli.status.label.command_line_tool" = "Command-Line Tool";
 "cli.status.label.controllers" = "Controllers (%lld)";
-"cli.status.label.extension" = "Extension";
+"cli.status.label.transport_extension" = "Extension";
 "cli.status.label.input_read" = "Input Monitoring";
 "cli.status.label.override_error" = "Override error";
 "cli.status.label.pass_through" = "Left to macOS (%lld)";

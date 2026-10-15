@@ -982,7 +982,7 @@
 "cli.status.label.input_inject" = "Erişilebilirlik";
 "cli.status.label.command_line_tool" = "Komut Satırı Aracı";
 "cli.status.label.controllers" = "Kontrolcüler (%lld)";
-"cli.status.label.extension" = "Eklenti";
+"cli.status.label.transport_extension" = "Eklenti";
 "cli.status.label.input_read" = "Giriş İzleme";
 "cli.status.label.override_error" = "Geçersiz Kılma Hatası";
 "cli.status.label.pass_through" = "macOS’a Bırakılanlar (%lld)";

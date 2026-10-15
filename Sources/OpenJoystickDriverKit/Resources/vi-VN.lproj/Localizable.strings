@@ -982,7 +982,7 @@
 "cli.status.label.input_inject" = "Trợ năng";
 "cli.status.label.command_line_tool" = "Công cụ dòng lệnh";
 "cli.status.label.controllers" = "Bộ điều khiển (%lld)";
-"cli.status.label.extension" = "Phần mở rộng";
+"cli.status.label.transport_extension" = "Phần mở rộng";
 "cli.status.label.input_read" = "Giám sát đầu vào";
 "cli.status.label.override_error" = "Lỗi ghi đè";
 "cli.status.label.pass_through" = "Giao cho macOS (%lld)";

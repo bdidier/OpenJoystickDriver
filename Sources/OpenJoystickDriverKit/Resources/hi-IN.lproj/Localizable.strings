@@ -982,7 +982,7 @@
 "cli.status.label.input_inject" = "ऐक्सेसिबिलिटी";
 "cli.status.label.command_line_tool" = "कमांड-लाइन टूल";
 "cli.status.label.controllers" = "कंट्रोलर (%lld)";
-"cli.status.label.extension" = "एक्सटेंशन";
+"cli.status.label.transport_extension" = "एक्सटेंशन";
 "cli.status.label.input_read" = "इनपुट मॉनिटरिंग";
 "cli.status.label.override_error" = "ओवरराइड त्रुटि";
 "cli.status.label.pass_through" = "macOS के पास छोड़े गए (%lld)";

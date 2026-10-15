@@ -83,7 +83,7 @@ struct StatusReport: Encodable, Equatable {
   }
 
   let service: Service
-  let `extension`: Extension
+  let transportExtension: Extension
   let commandLineTool: CommandLineTool
   let permissions: Permissions?
   let virtualDevice: VirtualDevice?
@@ -106,7 +106,7 @@ struct StatusReport: Encodable, Equatable {
     ignoredDefaults: SkippedRecord? = nil,
     skippedPersonas: [SkippedRecord] = []
   ) {
-    self.extension = Extension(extensionStatus)
+    self.transportExtension = Extension(extensionStatus)
     self.commandLineTool = CommandLineTool(commandLineTool)
     self.skippedRecords = skippedRecords
     self.ignoredDefaults = ignoredDefaults

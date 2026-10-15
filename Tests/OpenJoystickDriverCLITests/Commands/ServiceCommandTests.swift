@@ -41,9 +41,10 @@ struct ServiceCommandTests {
     let json = try result.json()
     let service = try #require(json["service"] as? [String: Any])
     #expect(service["state"] as? String == "stopped")
-    let extensionState = try #require(json["extension"] as? [String: Any])
+    let extensionState = try #require(json["transportExtension"] as? [String: Any])
     #expect(extensionState["bundle"] as? String == "present")
     #expect(extensionState["registration"] as? String == "absent")
+    #expect(json["extension"] == nil)
     #expect(json["controllers"] == nil)
     #expect((json["skippedRecords"] as? [Any])?.isEmpty == true)
   }

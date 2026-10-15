@@ -982,7 +982,7 @@
 "cli.status.label.input_inject" = "تسهيلات الاستخدام";
 "cli.status.label.command_line_tool" = "أداة سطر الأوامر";
 "cli.status.label.controllers" = "وحدات التحكم (%lld)";
-"cli.status.label.extension" = "الامتداد";
+"cli.status.label.transport_extension" = "الامتداد";
 "cli.status.label.input_read" = "مراقبة الإدخال";
 "cli.status.label.override_error" = "خطأ التجاوز";
 "cli.status.label.pass_through" = "متروكة لنظام macOS (%lld)";

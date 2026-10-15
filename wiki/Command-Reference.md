@@ -278,7 +278,7 @@ ojd transport-extension activate
 ojd transport-extension deactivate
 ```
 
-- `extension status`: Show whether the extension is in the app (`bundle`: `present`, `missing`, or `invalid`) and registered with macOS (`registration`: `active`, `inactive`, `absent`, or `unavailable`). It works when the service is stopped. It exits with code 1 when the registration is `unavailable`.
+- `transport-extension status`: Show whether the extension is in the app (`bundle`: `present`, `missing`, or `invalid`) and registered with macOS (`registration`: `active`, `inactive`, `absent`, or `unavailable`). It works when the service is stopped. It exits with code 1 when the registration is `unavailable`.
 - `extension activate`: Ask macOS to activate the extension. macOS can ask you to approve it in System Settings. The command then reports that it awaits approval (`awaitingApproval` with `--json`) and exits with code 0.
 - `extension deactivate`: Ask macOS to deactivate the extension. Connected controllers return to macOS.
 

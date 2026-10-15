@@ -66,7 +66,21 @@ public struct RenamedWord: Sendable, Equatable {
     Self(old: "driverKitOwnedUSB", new: "ExtensionOwnedUsb", kind: .physicalOwnership),
     Self(old: "nativeGamepad", new: "SystemGamepad", kind: .physicalOwnership),
     Self(old: "nativeHIDVisible", new: "SystemHidVisible", kind: .physicalOwnership),
-    Self(old: "usbExtension", new: "transportClaim", kind: .field),
+    Self(
+      old: "usbExtension",
+      new: "transportClaim",
+      kind: .documentField(in: "cli-output.schema.json#/$defs/recordShow")
+    ),
+    Self(
+      old: "usbExtension",
+      new: "transportClaim",
+      kind: .documentField(in: "cli-output.schema.json#/$defs/sharedRecordValidation")
+    ),
+    Self(
+      old: "extension",
+      new: "transportExtension",
+      kind: .documentField(in: "cli-output.schema.json#/$defs/status")
+    ),
     Self(old: "claims", new: "claimed", kind: .transportClaim),
     Self(old: "doesNotClaim", new: "unclaimed", kind: .transportClaim),
     Self(old: "DriverExtension", new: "TransportExtension", kind: .outputKind),

@@ -982,7 +982,7 @@
 "cli.status.label.input_inject" = "辅助功能";
 "cli.status.label.command_line_tool" = "命令行工具";
 "cli.status.label.controllers" = "控制器 (%lld)";
-"cli.status.label.extension" = "扩展";
+"cli.status.label.transport_extension" = "扩展";
 "cli.status.label.input_read" = "输入监控";
 "cli.status.label.override_error" = "覆盖错误";
 "cli.status.label.pass_through" = "交还 macOS (%lld)";

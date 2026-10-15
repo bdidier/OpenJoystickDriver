@@ -982,7 +982,7 @@
 "cli.status.label.input_inject" = "アクセシビリティ";
 "cli.status.label.command_line_tool" = "コマンドラインツール";
 "cli.status.label.controllers" = "コントローラ (%lld)";
-"cli.status.label.extension" = "機能拡張";
+"cli.status.label.transport_extension" = "機能拡張";
 "cli.status.label.input_read" = "入力監視";
 "cli.status.label.override_error" = "上書きエラー";
 "cli.status.label.pass_through" = "macOS に任せたデバイス (%lld)";

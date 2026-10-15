@@ -982,7 +982,7 @@
 "cli.status.label.input_inject" = "การช่วยการเข้าถึง";
 "cli.status.label.command_line_tool" = "เครื่องมือบรรทัดคำสั่ง";
 "cli.status.label.controllers" = "คอนโทรลเลอร์ (%lld)";
-"cli.status.label.extension" = "ส่วนขยาย";
+"cli.status.label.transport_extension" = "ส่วนขยาย";
 "cli.status.label.input_read" = "การตรวจสอบสัญญาณเข้า";
 "cli.status.label.override_error" = "ข้อผิดพลาดการแทนที่";
 "cli.status.label.pass_through" = "ปล่อยให้ macOS จัดการ (%lld)";

@@ -982,7 +982,7 @@
 "cli.status.label.input_inject" = "Accessibilité";
 "cli.status.label.command_line_tool" = "Outil en ligne de commande";
 "cli.status.label.controllers" = "Manettes (%lld)";
-"cli.status.label.extension" = "Extension";
+"cli.status.label.transport_extension" = "Extension";
 "cli.status.label.input_read" = "Surveillance de l’entrée";
 "cli.status.label.override_error" = "Erreur de remplacement";
 "cli.status.label.pass_through" = "Laissées à macOS (%lld)";
