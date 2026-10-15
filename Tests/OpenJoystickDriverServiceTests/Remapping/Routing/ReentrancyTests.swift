@@ -80,7 +80,10 @@ struct RemappingRouterReentrancyTests {
     }
     await gate.waitUntilPaused()
     let begin = Task { try await harness.router.beginProfileTransaction() }
+    // Suppression turns on before the barrier closes, so resume only once admission is closed;
+    // resuming earlier lets the paused operation emit as an admitted one.
     #expect(await eventually { harness.virtualOutput.suppressOutput })
+    #expect(await eventually { harness.engine.emissionBarrier.currentPermit() == nil })
     gate.resume()
 
     try await dispatch.value
@@ -111,7 +114,10 @@ struct RemappingRouterReentrancyTests {
     }
     await gate.waitUntilPaused()
     let begin = Task { try await harness.router.beginProfileTransaction() }
+    // Suppression turns on before the barrier closes, so resume only once admission is closed;
+    // resuming earlier lets the paused operation emit as an admitted one.
     #expect(await eventually { harness.virtualOutput.suppressOutput })
+    #expect(await eventually { harness.engine.emissionBarrier.currentPermit() == nil })
     gate.resume()
 
     try await dispatch.value
@@ -138,7 +144,10 @@ struct RemappingRouterReentrancyTests {
     }
     await gate.waitUntilPaused()
     let begin = Task { try await harness.router.beginProfileTransaction() }
+    // Suppression turns on before the barrier closes, so resume only once admission is closed;
+    // resuming earlier lets the paused operation emit as an admitted one.
     #expect(await eventually { harness.virtualOutput.suppressOutput })
+    #expect(await eventually { harness.engine.emissionBarrier.currentPermit() == nil })
     gate.resume()
 
     try await dispatch.value
@@ -169,7 +178,10 @@ struct RemappingRouterReentrancyTests {
     let tick = Task { try await harness.router.tick(at: 1_100_000_000) }
     await gate.waitUntilPaused()
     let begin = Task { try await harness.router.beginProfileTransaction() }
+    // Suppression turns on before the barrier closes, so resume only once admission is closed;
+    // resuming earlier lets the paused operation emit as an admitted one.
     #expect(await eventually { harness.virtualOutput.suppressOutput })
+    #expect(await eventually { harness.engine.emissionBarrier.currentPermit() == nil })
     gate.resume()
 
     try await tick.value
