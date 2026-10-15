@@ -40,7 +40,9 @@ struct VirtualControllerBackendTests {
     #expect(bit(.capture) == 15)
     #expect(bit(.back) == 9)
     #expect(bit(.start) == 8)
-    #expect(bit(.rightTrackpadClick) == 7)
+    // A pad click is R3 only where the right pad is the right stick (PersonaControlMappingTests).
+    #expect(bit(.rightStickClick) == 7)
+    #expect(bit(.rightTrackpadClick) == nil)
     #expect(bit(.microphone) == nil)
     #expect(bit(.touchpadClick) == nil)
   }

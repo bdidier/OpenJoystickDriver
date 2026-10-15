@@ -56,14 +56,21 @@ struct RemappingExtraButtonTests {
     #expect(RemappingGamepadState(buttons: [button]) == .neutral)
   }
 
-  @Test
-  func rightPadPassthroughIsConsumedByAnExplicitMapping() throws {
-    let identifier = LogicalControllerID(vendorID: 1, productID: 2)
+  /// The classic Steam Controller's right pad is its right stick, so its pad click is R3. The Steam
+  /// Deck and the Steam Triton have a real R3, so their pad click is a control no persona carries.
+  @Test(arguments: [
+    (0x1102, true), (0x1205, false), (0x1303, false),
+  ])
+  func rightPadPassthroughIsConsumedByAnExplicitMapping(
+    productID: UInt16,
+    padIsRightStick: Bool
+  ) throws {
+    let identifier = LogicalControllerID(vendorID: 0x28DE, productID: productID)
     for mapped in [false, true] {
       let bindings = mapped ? profile(source: .rightTrackpadClick).bindings : []
       let profile = RemappingProfile(
         name: "Pad passthrough",
-        device: RemappingDeviceScope(vendorID: 1, productID: 2),
+        device: RemappingDeviceScope(vendorID: 0x28DE, productID: productID),
         applicationScope: .global,
         outputPolicy: RemappingOutputPolicy(virtualGamepad: .passthrough),
         bindings: bindings
@@ -85,9 +92,12 @@ struct RemappingExtraButtonTests {
       if mapped {
         #expect(press == [.system(.keyDown(.space))])
         #expect(release == [.system(.keyUp(.space))])
-      } else {
+      } else if padIsRightStick {
         #expect(press == [.gamepad(RemappingGamepadState(buttons: [.rightStickClick]), identifier)])
         #expect(release == [.gamepad(.neutral, identifier)])
+      } else {
+        #expect(press.allSatisfy { $0 == .gamepad(.neutral, identifier) })
+        #expect(release.allSatisfy { $0 == .gamepad(.neutral, identifier) })
       }
     }
   }
