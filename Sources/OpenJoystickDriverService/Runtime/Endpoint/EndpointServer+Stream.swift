@@ -54,6 +54,7 @@ extension EndpointServer {
 
   private func runStream(generation: Int) async {
     var poller = ControllerWatchPoller(source: source)
+    let stream = EndpointStreamSource(sink: EndpointSubscribers(server: self, generation: generation))
     var lastError: String?
     while !Task.isCancelled {
       let includeOutput = lock.withLock { connections.values.contains(where: \.wantsOutputValues) }
@@ -63,18 +64,16 @@ extension EndpointServer {
           includeOutput: includeOutput
         )
         lastError = nil
-        let delivered = lock.withLock {
-          guard stream.generation == generation else { return [ControllerSessionToken]() }
-          var tokens: [ControllerSessionToken] = []
-          for update in updates {
-            stream.record(update.event)
-            for connection in connections.values { connection.deliver(update.event) }
-            if update.event.type == .modified { tokens.append(update.device.sessionToken) }
+        let delivered = Locked([ControllerSessionToken]())
+        for update in updates {
+          let token = update.device.sessionToken
+          let isModification = update.event.type == .modified
+          try? await stream.produce(.observed(update.event)) {
+            if isModification { delivered.withLock { $0.append(token) } }
           }
-          return tokens
         }
         let deliveredAt = DispatchTime.now().uptimeNanoseconds
-        for token in delivered { await streamDelivered?(token, deliveredAt) }
+        for token in delivered.withLock({ $0 }) { await streamDelivered?(token, deliveredAt) }
       } catch {
         if lastError != error.localizedDescription {
           lastError = error.localizedDescription
@@ -83,5 +82,45 @@ extension EndpointServer {
       }
       try? await Task.sleep(nanoseconds: ControllerWatchPoller.pollInterval)
     }
+  }
+}
+
+/// The poll of controller state that `Subscription` streams, as the source of its frames.
+final class EndpointStreamSource: InputSource {
+  let origin = InputOrigin.endpointStream
+  let sink: any OutputSink
+
+  init(sink: any OutputSink) { self.sink = sink }
+}
+
+/// Every subscribed connection as one sink: a frame is recorded for late subscribers and queued
+/// for each connection under the server's lock, so a subscriber's snapshot and its stream never
+/// overlap or leave a gap. A sink of an older generation, one a restart replaced, delivers nothing.
+/// - Note: `@unchecked Sendable` because `server` is weak and only read.
+final class EndpointSubscribers: OutputSink, @unchecked Sendable {
+  let destination = OutputDestination.endpointSubscription
+  private weak var server: EndpointServer?
+  private let generation: Int
+
+  init(server: EndpointServer, generation: Int) {
+    self.server = server
+    self.generation = generation
+  }
+
+  func consume(
+    _ frame: StreamFrame,
+    onDelivered: @escaping @Sendable () -> Void
+  ) async throws {
+    guard case .observed(let event) = frame else {
+      throw StreamBoundaryError.unsupported(destination)
+    }
+    guard let server else { return }
+    let delivered = server.lock.withLock {
+      guard server.stream.generation == generation else { return false }
+      server.stream.record(event)
+      for connection in server.connections.values { connection.deliver(event) }
+      return true
+    }
+    if delivered { onDelivered() }
   }
 }

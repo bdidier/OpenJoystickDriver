@@ -59,6 +59,7 @@ Sources/OpenJoystickDriverKit/
   Resources/           generated controller records (Controllers/) and localization tables
   Settings/            the `Settings.json` store, document, and legacy-defaults import (defaults, then the user file)
   Storage/             DataDirectory port and its macOS implementation; the only path builder
+  Streaming/           `InputSource` and `OutputSink`, the frame boundary every path attaches to
   Update/              release version parsing and update checking
 
 Sources/OpenJoystickDriverUSB/

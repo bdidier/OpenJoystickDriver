@@ -155,17 +155,19 @@ extension DevicePipeline {
       )
     }
     // A failed or suppressed publish stamps nothing; the pipeline still ignores the failure.
-    try? await dispatcher.dispatchPublishing(
-      ControllerEvent(
-        timestamp: event.timestamp,
-        state: state,
-        motion: event.motion,
-        touchFrames: event.touchFrames,
-        isFresh: event.isFresh
+    try? await produce(
+      .controller(
+        ControllerEvent(
+          timestamp: event.timestamp,
+          state: state,
+          motion: event.motion,
+          touchFrames: event.touchFrames,
+          isFresh: event.isFresh
+        ),
+        labels: buttonLabels,
+        from: identifier
       ),
-      labels: buttonLabels,
-      from: identifier,
-      onPublished: stampDelivery
+      onDelivered: stampDelivery
     )
   }
 
