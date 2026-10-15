@@ -23,7 +23,7 @@ Make one coherent behavior change at its owner, prove it with a behavior test th
 1. Write or extend the test first in the mirrored directory and watch it fail ([test rules](references/tests.md#behavior-tests)).
 1. Make the change with the [Swift 6 idioms](references/swift-idioms.md) that the macOS 12 floor allows.
 1. Keep files within the [naming and size rules](references/placement.md#naming-and-size).
-1. Run the focused test: `swift test --filter <TestType>`. Then run `python3 Scripts/Quality/check_swift_file_length.py`, `just lint`, and `swift test --no-parallel`. For parser or protocol code, also run `./Scripts/ojd test parsers-macos14`. `just check` runs every gate. Before running `swift` or `./Scripts/ojd`, export `DEVELOPER_DIR` for the installed Xcode.
+1. Run the focused test: `swift test --filter <TestType>`. Then run the commands in the `## Checks` list of `AGENTS.md`; `just check` runs them all. Before running `swift` or `./Scripts/ojd`, export `DEVELOPER_DIR` for the installed Xcode.
 
 ## Route the Problem To a Card
 

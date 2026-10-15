@@ -121,6 +121,7 @@ check: check-fast
     ./Scripts/ojd check tools
     ./Scripts/ojd check driverkit
     ./Scripts/ojd test parsers-macos14
+    ./Scripts/ojd snapshots check
     xcode="${DEVELOPER_DIR:-$(find /Applications -maxdepth 1 -type d -name 'Xcode*.app' -exec test -x '{}/Contents/Developer/usr/bin/xcodebuild' ';' -print | sort -r | head -n1)/Contents/Developer}"; DEVELOPER_DIR="$xcode" swift test --no-parallel
 
 # Check canonical controller records
