@@ -103,7 +103,7 @@ public enum Control: String, CaseIterable, Codable, Sendable {
   public static let dpad: Set<Control> = [.dpadUp, .dpadDown, .dpadLeft, .dpadRight]
 
   /// The four stick axes.
-  public static let stickAxes: [Control] = [.leftStickX, .leftStickY, .rightStickX, .rightStickY]
+  public static let stickAxes: [Self] = [.leftStickX, .leftStickY, .rightStickX, .rightStickY]
 
   /// Controls of the standard Xbox layout, excluding `guide`.
   public static let xboxLayout: Set<Control> = dpad.union([

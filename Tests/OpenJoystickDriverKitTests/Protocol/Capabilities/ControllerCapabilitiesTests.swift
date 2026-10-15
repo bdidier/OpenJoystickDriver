@@ -135,7 +135,8 @@ struct ControllerCapabilitiesTests {
     )
     #expect(
       String(bytes: data, encoding: .utf8)
-        == #"{"controls":["Start","DpadUp","DpadDown","DpadLeft","DpadRight","Guide"],"motion":true,"touchContactCount":1}"#
+        == #"{"controls":["Start","DpadUp","DpadDown","DpadLeft","DpadRight","Guide"],"#
+        + #""motion":true,"touchContactCount":1}"#
     )
   }
 
