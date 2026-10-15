@@ -1,7 +1,9 @@
-"""Fail when the neutral core of the executable imports a macOS-only module.
+"""Fail when a neutral target imports a macOS-only module.
 
-Files under `Sources/OpenJoystickDriver` may import macOS-only modules only below a `platform`
-directory, the macOS host adapter.
+The neutral targets are the command-line grammar (`Sources/OpenJoystickDriverCLI`) and the
+executable's own files (`Sources/OpenJoystickDriver`). They reach macOS only through the
+`PlatformHost` protocol. Code that imports a macOS-only module lives in the host adapter target
+(`Sources/OpenJoystickDriverMacOSHost`) or below a `platform` directory of the executable.
 """
 
 from __future__ import annotations
@@ -12,7 +14,10 @@ import sys
 from collections.abc import Iterable
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-CORE = "Sources/OpenJoystickDriver"
+NEUTRAL_TARGETS = (
+    "Sources/OpenJoystickDriverCLI",
+    "Sources/OpenJoystickDriver",
+)
 ADAPTER_DIRECTORY = "platform"
 MACOS_ONLY_MODULES = frozenset(
     {
@@ -25,9 +30,11 @@ MACOS_ONLY_MODULES = frozenset(
         "CoreHID",
         "DriverKit",
         "GameController",
+        "IOBluetooth",
         "IOKit",
         "IOUSBHost",
         "OSLog",
+        "OpenJoystickDriverMacOSHost",
         "OpenJoystickDriverPresentation",
         "OpenJoystickDriverService",
         "OpenJoystickDriverUSB",
@@ -57,14 +64,18 @@ def modules_on(line: str) -> list[str]:
 
 def violations(root: pathlib.Path = ROOT) -> list[str]:
     found: list[str] = []
-    for path in sorted((root / CORE).rglob("*.swift")):
-        relative = path.relative_to(root / CORE)
-        if ADAPTER_DIRECTORY in relative.parts[:-1]:
-            continue
-        for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
-            for module in modules_on(line):
-                if module in MACOS_ONLY_MODULES:
-                    found.append(f"{CORE}/{relative.as_posix()}:{number}: {module}")
+    for target in NEUTRAL_TARGETS:
+        for path in sorted((root / target).rglob("*.swift")):
+            relative = path.relative_to(root / target)
+            if ADAPTER_DIRECTORY in relative.parts[:-1]:
+                continue
+            lines = path.read_text(encoding="utf-8").splitlines()
+            for number, line in enumerate(lines, 1):
+                for module in modules_on(line):
+                    if module in MACOS_ONLY_MODULES:
+                        found.append(
+                            f"{target}/{relative.as_posix()}:{number}: {module}"
+                        )
     return found
 
 
@@ -72,7 +83,7 @@ def main(arguments: Iterable[str] = ()) -> int:
     del arguments
     found = violations()
     for entry in found:
-        print(f"macOS-only import outside platform: {entry}", file=sys.stderr)
+        print(f"macOS-only import in a neutral target: {entry}", file=sys.stderr)
     return 1 if found else 0
 
 

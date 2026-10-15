@@ -1,7 +1,6 @@
 import ArgumentParser
 import Foundation
 import OpenJoystickDriverKit
-import OpenJoystickDriverService
 
 struct PermissionCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(

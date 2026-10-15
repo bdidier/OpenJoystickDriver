@@ -1,6 +1,5 @@
 import Foundation
 import OpenJoystickDriverKit
-import OpenJoystickDriverService
 
 /// Submits DriverKit system-extension activation and deactivation requests to macOS.
 enum ExtensionSubmission {
@@ -18,12 +17,12 @@ enum ExtensionSubmission {
     action in
     try requireInstalledBundle()
     try requireValidSignature()
-    let client = DefaultSystemExtensionSetupClient()
+    let client = PlatformHosts.current
     switch action {
     case .activate:
       try requireEmbeddedExtension()
-      return await client.requestActivation()
-    case .deactivate: return await client.requestDeactivation()
+      return await client.requestExtensionActivation()
+    case .deactivate: return await client.requestExtensionDeactivation()
     }
   }
 
@@ -43,14 +42,14 @@ enum ExtensionSubmission {
   private static func requireEmbeddedExtension() throws {
     let bundle = ServiceStartCommand.applicationBundleURL() ?? Bundle.main.bundleURL
     let dext = bundle.appendingPathComponent(
-      "Contents/Library/SystemExtensions/\(ExtensionProbe.bundleIdentifier).dext"
+      "Contents/Library/SystemExtensions/\(PlatformHosts.current.extensionBundleIdentifier).dext"
     )
     guard FileManager.default.fileExists(atPath: dext.path) else {
       throw CLIFailure(
         .installationProblem,
         CLILocalized.format(
           "cli.extension.bundle_missing",
-          ExtensionProbe.bundleIdentifier
+          PlatformHosts.current.extensionBundleIdentifier
         )
       )
     }

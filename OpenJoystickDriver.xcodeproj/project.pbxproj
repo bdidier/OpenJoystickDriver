@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0A0000000000000000000101 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000000000000000000201 /* main.swift */; };
-		0A0000000000000000000102 /* HeadlessApplicationHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000000000000000000202 /* HeadlessApplicationHost.swift */; };
+		0A0000000000000000000102 /* PlatformHostInstallation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000000000000000000202 /* PlatformHostInstallation.swift */; };
 		0A0000000000000000000108 /* ControllerIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A00000000000000000020C /* ControllerIntents.swift */; };
 		0A0000000000000000000109 /* ProfileIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A00000000000000000020D /* ProfileIntents.swift */; };
 		0A0000000000000000000103 /* AppVersionIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0000000000000000000203 /* AppVersionIntent.swift */; };
@@ -20,12 +20,13 @@
 		0A0000000000000000000112 /* OpenJoystickDriverService in Frameworks */ = {isa = PBXBuildFile; productRef = 0A0000000000000000000812 /* OpenJoystickDriverService */; };
 		0A0000000000000000000113 /* OpenJoystickDriverCLI in Frameworks */ = {isa = PBXBuildFile; productRef = 0A0000000000000000000813 /* OpenJoystickDriverCLI */; };
 		0A0000000000000000000114 /* OpenJoystickDriverPresentation in Frameworks */ = {isa = PBXBuildFile; productRef = 0A0000000000000000000814 /* OpenJoystickDriverPresentation */; };
+		0A0000000000000000000115 /* OpenJoystickDriverMacOSHost in Frameworks */ = {isa = PBXBuildFile; productRef = 0A0000000000000000000815 /* OpenJoystickDriverMacOSHost */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0A0000000000000000000208 /* OpenJoystickDriver */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = OpenJoystickDriver; path = .; sourceTree = "<group>"; };
 		0A0000000000000000000201 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = main.swift; path = Sources/OpenJoystickDriver/main.swift; sourceTree = SOURCE_ROOT; };
-		0A0000000000000000000202 /* HeadlessApplicationHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HeadlessApplicationHost.swift; path = Sources/OpenJoystickDriver/platform/macos/HeadlessApplicationHost.swift; sourceTree = SOURCE_ROOT; };
+		0A0000000000000000000202 /* PlatformHostInstallation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PlatformHostInstallation.swift; path = Sources/OpenJoystickDriver/platform/macos/PlatformHostInstallation.swift; sourceTree = SOURCE_ROOT; };
 		0A00000000000000000020C /* ControllerIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ControllerIntents.swift; path = Sources/OpenJoystickDriver/platform/macos/Intents/ControllerIntents.swift; sourceTree = SOURCE_ROOT; };
 		0A00000000000000000020D /* ProfileIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ProfileIntents.swift; path = Sources/OpenJoystickDriver/platform/macos/Intents/ProfileIntents.swift; sourceTree = SOURCE_ROOT; };
 		0A0000000000000000000203 /* AppVersionIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppVersionIntent.swift; path = Sources/OpenJoystickDriver/platform/macos/Intents/AppVersionIntent.swift; sourceTree = SOURCE_ROOT; };
@@ -47,6 +48,7 @@
 				0A0000000000000000000112 /* OpenJoystickDriverService in Frameworks */,
 				0A0000000000000000000113 /* OpenJoystickDriverCLI in Frameworks */,
 				0A0000000000000000000114 /* OpenJoystickDriverPresentation in Frameworks */,
+				0A0000000000000000000115 /* OpenJoystickDriverMacOSHost in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,7 +68,7 @@
 			isa = PBXGroup;
 			children = (
 				0A0000000000000000000201 /* main.swift */,
-				0A0000000000000000000202 /* HeadlessApplicationHost.swift */,
+				0A0000000000000000000202 /* PlatformHostInstallation.swift */,
 				0A0000000000000000000203 /* AppVersionIntent.swift */,
 				0A00000000000000000020D /* ProfileIntents.swift */,
 				0A00000000000000000020C /* ControllerIntents.swift */,
@@ -109,6 +111,7 @@
 				0A0000000000000000000812 /* OpenJoystickDriverService */,
 				0A0000000000000000000813 /* OpenJoystickDriverCLI */,
 				0A0000000000000000000814 /* OpenJoystickDriverPresentation */,
+				0A0000000000000000000815 /* OpenJoystickDriverMacOSHost */,
 			);
 			productName = OpenJoystickDriver;
 			productReference = 0A0000000000000000000209 /* OpenJoystickDriver.app */;
@@ -164,7 +167,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A0000000000000000000101 /* main.swift in Sources */,
-				0A0000000000000000000102 /* HeadlessApplicationHost.swift in Sources */,
+				0A0000000000000000000102 /* PlatformHostInstallation.swift in Sources */,
 				0A0000000000000000000103 /* AppVersionIntent.swift in Sources */,
 				0A0000000000000000000109 /* ProfileIntents.swift in Sources */,
 				0A0000000000000000000108 /* ControllerIntents.swift in Sources */,
@@ -279,6 +282,10 @@
 		0A0000000000000000000814 /* OpenJoystickDriverPresentation */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = OpenJoystickDriverPresentation;
+		};
+		0A0000000000000000000815 /* OpenJoystickDriverMacOSHost */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OpenJoystickDriverMacOSHost;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

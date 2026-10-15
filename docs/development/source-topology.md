@@ -9,9 +9,10 @@ OpenJoystickDriver splits the package into SwiftPM targets whose dependencies en
 | `OpenJoystickDriverKit` | controller domain, HID/USB ports, parsers, profiles, policy, shared RPC contracts |
 | `OpenJoystickDriverUSB` | IOUSBHost/USBDriverKit facade and restricted DEXT configuration |
 | `OpenJoystickDriverService` | runtime RPC server, output dispatch, remapping library/routing/system events, status, diagnostics |
-| `OpenJoystickDriverCLI` | command grammar and command implementations |
+| `OpenJoystickDriverCLI` | command grammar and command implementations; neutral, reaches macOS through `PlatformHost` |
 | `OpenJoystickDriverPresentation` | AppKit lifecycle and SwiftUI user flows |
-| `OpenJoystickDriver` | executable: main, headless host, composition root, bundle resources |
+| `OpenJoystickDriverMacOSHost` | macOS host adapter: `MacOSPlatformHost` conformance and the headless application host |
+| `OpenJoystickDriver` | executable: main, host installation, App Intents, bundle resources |
 | `DriverKitGenerator` | build-time generated native-project entry point |
 | `OpenJoystickDriverHIDTool` | internal hardware investigation executable |
 | `OpenJoystickDriverGameControllerProbe` | isolated GameController visibility probe |
@@ -24,15 +25,17 @@ OpenJoystickDriver splits the package into SwiftPM targets whose dependencies en
 Kit
 USB                       -> Kit
 Service                   -> Kit, USB
-CLI                       -> Kit, USB, Service
+CLI                       -> Kit
 Presentation              -> Kit
-OpenJoystickDriver        -> Kit, Service, CLI, Presentation
+MacOSHost                 -> Kit, USB, Service, Presentation
+OpenJoystickDriver        -> Kit, Service, CLI, Presentation, MacOSHost
 DriverKitGenerator        -> USB
 HIDTool                   -> Kit, USB
 GameControllerProbe       -> Kit
 ```
 
 - Presentation depends on Kit only. It reaches the runtime through its `ApplicationServiceGateway` protocol (implemented by `ApplicationServiceClientGateway` over the Kit RPC client) and injected closures, so it never imports Service, CLI, or USB.
+- The CLI depends on Kit only. Kit declares the `PlatformHost` protocol and the `PlatformHosts` registry. The executable installs `MacOSPlatformHost` from `OpenJoystickDriverMacOSHost` at launch, and the CLI calls `PlatformHosts.current` for extension status, activation, USB scanning, and entitlement checks. A command run without an installed host stops on a precondition.
 - Only `OpenJoystickDriverUSB`, `DriverKitGenerator`, and their tests import SwifterKit. Kit owns stable Sendable transport values and protocols; USBDriverKit, IOUSBHost, and SwifterKit lifetimes stay in USB.
 - The headless host in the executable owns one `ApplicationServiceRuntime`, which starts the authenticated RPC server; both types live in Service.
 
@@ -43,6 +46,7 @@ Sources/OpenJoystickDriverKit/
   ApplicationService/  shared client, RPC, payload, lifecycle, and remapping contracts
   Bluetooth/           Switch 2 Bluetooth LE routing
   Concurrency/         locking and blocking-work helpers
+  Platform/            `PlatformHost` protocol and `PlatformHosts` registry
   Device/              controller identity, Manager, Discovery (HID, USB), input state,
                        PhysicalOutput, Pipeline
   Diagnostics/         support reports, probes, health, build identity, and packet logs
@@ -79,15 +83,18 @@ Sources/OpenJoystickDriverCLI/
                        Service, Setting, Status, Update, Virtual
   Root/                global options, failure and terminal handling, service connection
 
+Sources/OpenJoystickDriverMacOSHost/
+  MacOSPlatformHost.swift, HeadlessApplicationHost.swift
+
 Sources/OpenJoystickDriverPresentation/
   Components/  Controllers/  InputCapture/  MenuBar/  Profiles/  Runtime/  Settings/
 
 Sources/OpenJoystickDriver/
   main.swift, App/ (Info.plist, Host.entitlements), Resources/
-  platform/macos/      macOS host adapter: headless host and App Intents
+  platform/macos/      PlatformHostInstallation.swift and the App Intents (compiled into the app target for discovery)
 ```
 
-`main.swift` is the neutral core. Only files below `platform/` import macOS-only modules (AppKit, AppIntents, IOKit, SystemExtensions, SwiftUI, and the Service, USB, and Presentation targets). `Tests/RepositoryScripts/test_neutral_core_imports.py` runs `Scripts/Quality/check_neutral_core_imports.py` and fails on a violation.
+The neutral targets are `Sources/OpenJoystickDriverCLI` and the executable's files outside `platform/`. They import no macOS-only module (AppKit, AppIntents, IOKit, SystemExtensions, SwiftUI, Service, USB, Presentation, MacOSHost, and similar). `Tests/RepositoryScripts/test_neutral_core_imports.py` runs `Scripts/Quality/check_neutral_core_imports.py`, which CI, `just`, and the AGENTS.md check list also run directly. Kit and `Darwin` imports are macOS-bound and out of scope for the check.
 
 Kit `Diagnostics/` holds reports and health types that both the CLI and app read.
 

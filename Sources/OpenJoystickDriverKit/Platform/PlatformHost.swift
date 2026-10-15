@@ -1,0 +1,50 @@
+import Foundation
+
+/// The operating-system services the neutral command grammar reaches for. A host adapter module
+/// conforms to it and the executable installs the conformance before any command runs.
+package protocol PlatformHost: Sendable {
+  /// The bundle identifier of the DriverKit extension the host installs.
+  var extensionBundleIdentifier: String { get }
+
+  /// Reads the extension's installed and registered state for the app at `bundleURL`.
+  func extensionStatus(bundleURL: URL) -> ExtensionStatus
+
+  /// Submits an activation request for the extension and returns the system's answer.
+  func requestExtensionActivation() async -> SystemExtensionSetupRequestResult
+
+  /// Submits a deactivation request for the extension and returns the system's answer.
+  func requestExtensionDeactivation() async -> SystemExtensionSetupRequestResult
+
+  /// Counts the vendor-specific USB controllers the host can see.
+  func countVendorSpecificUSBControllers() async throws -> Int
+
+  /// Whether the signed extension's USB entitlement lists this controller.
+  func extensionEntitlementCovers(vendorID: UInt16, productID: UInt16) -> Bool
+
+  /// Runs the application until it exits; the executable calls it when not run as the tool.
+  @MainActor
+  func runApplication() -> Never
+}
+
+/// Holds the installed `PlatformHost`.
+package enum PlatformHosts {
+  private static let installed = Locked<(any PlatformHost)?>(nil)
+
+  /// Installs `host`; the executable calls it once at launch, and tests call it to inject a fake.
+  package static func install(_ host: any PlatformHost) {
+    installed.withLock { $0 = host }
+  }
+
+  /// The installed host. Reading it before `install` is a programming error.
+  package static var current: any PlatformHost {
+    guard let host = installed.withLock({ $0 }) else {
+      preconditionFailure("No PlatformHost installed; the executable installs one at launch.")
+    }
+    return host
+  }
+}
+
+/// The ports the access WebSocket may listen on.
+package enum AccessWebPorts {
+  package static let allowed = 1_024...65_535
+}

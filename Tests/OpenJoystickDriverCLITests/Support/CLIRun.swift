@@ -2,6 +2,9 @@ import ArgumentParser
 import Foundation
 import Testing
 
+import OpenJoystickDriverKit
+import OpenJoystickDriverMacOSHost
+
 @testable import OpenJoystickDriverCLI
 
 /// One in-process `ojd` invocation: its exit code and what it wrote on each stream.
@@ -11,6 +14,8 @@ struct CLIRun {
   let standardError: String
 
   static func run(_ arguments: [String]) async -> Self {
+    // The executable installs the host at launch; the commands' defaults need one in-process.
+    PlatformHosts.install(MacOSPlatformHost())
     let capture = CLIOutputCapture()
     let code = await CLIOutput.$capture.withValue(capture) {
       await CLI.execute(arguments: arguments)

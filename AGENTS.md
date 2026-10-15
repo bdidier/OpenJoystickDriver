@@ -37,6 +37,7 @@ git ls-files -z -co --exclude-standard -- '*.json' '*.jsonc' | xargs -0 biome ci
 swift-format lint --recursive --strict Package.swift Sources Tests
 swiftlint lint --no-cache --strict
 python3 Scripts/Quality/check_swift_file_length.py
+python3 Scripts/Quality/check_neutral_core_imports.py
 python3 Scripts/Quality/check_localization_keys.py
 ./Scripts/ojd check driverkit
 swift test
