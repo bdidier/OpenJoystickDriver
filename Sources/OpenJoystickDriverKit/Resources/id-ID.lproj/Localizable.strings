@@ -1300,7 +1300,7 @@
 "cli.mod.already_installed" = "%@ sudah terpasang. Gunakan --force untuk menggantinya.";
 "cli.mod.not_installed" = "%@ tidak terpasang. “ojd mod list” menampilkan paket terpasang.";
 "cli.mod.validate.abstract" = "Periksa folder paket mod tanpa memasangnya.";
-"cli.mod.validate.discussion" = "Memeriksa manifes, apakah paket berjalan di versi ini, apakah filenya sesuai daftar dan valid, dan apakah tidak ada yang bentrok dengan file Anda atau paket lain. Keluar dengan kode 1 dan kode E4xxx saat paket ditolak.";
+"cli.mod.validate.discussion" = "Memeriksa manifes, apakah paket berjalan di versi ini, apakah filenya sesuai daftar dan valid, dan apakah tidak ada yang bentrok dengan file Anda atau paket lain. Keluar dengan kode 1 dan kode E4xxx atau E5001 saat paket ditolak.";
 "cli.mod.validate.valid" = "%@ adalah paket valid: %@ %@. Pasang dengan “ojd mod install”.";
 "cli.mod.install.abstract" = "Periksa paket mod dan pasang untuk pengguna Anda.";
 "cli.mod.install.discussion" = "Menyalin paket ke Packages/NAME dan menukarnya sekaligus; layanan yang berjalan menerapkannya. Paket bernama sama yang sudah terpasang ditolak kecuali Anda memakai --force. --force tidak pernah mengabaikan requires, bentrokan identitas, atau bentrokan id atau nama profil. --dry-run memeriksa paket dan tidak menulis apa pun.";
@@ -1308,7 +1308,7 @@
 "cli.mod.install.dry_run" = "Jika dijalankan, %@ akan dipasang.";
 "cli.mod.install.success" = "%@ terpasang. Layanan yang berjalan menerapkannya sekarang.";
 "cli.mod.list.abstract" = "Tampilkan daftar paket mod terpasang dan file masing-masing.";
-"cli.mod.list.discussion" = "Menampilkan daftar setiap paket dengan versi, penulis, dan filenya. Paket yang tidak dipakai OJD, misalnya karena requires-nya tidak mencakup versi ini, menampilkan alasannya dengan kode E4xxx.";
+"cli.mod.list.discussion" = "Menampilkan daftar setiap paket dengan versi, penulis, dan filenya. Paket yang tidak dipakai OJD, misalnya karena requires-nya tidak mencakup versi ini, menampilkan alasannya dengan kode E4xxx atau E5001.";
 "cli.mod.list.problem" = "  Tidak dipakai: %@";
 "cli.mod.remove.abstract" = "Hapus satu paket mod terpasang.";
 "cli.mod.remove.discussion" = "Hanya menghapus Packages/NAME. Meminta konfirmasi di terminal; selain itu perlu --force. --dry-run memeriksa bahwa paket terpasang dan tidak mengubah apa pun. Keluar dengan kode 1 dan E4006 jika tidak terpasang.";

@@ -1300,7 +1300,7 @@
 "cli.mod.already_installed" = "%@ đã được cài. Dùng --force để thay thế.";
 "cli.mod.not_installed" = "%@ chưa được cài. “ojd mod list” hiển thị các gói đã cài.";
 "cli.mod.validate.abstract" = "Kiểm tra thư mục gói mod mà không cài đặt.";
-"cli.mod.validate.discussion" = "Kiểm tra tệp kê khai, gói có chạy trên phiên bản này không, các tệp có đúng như đã liệt kê và hợp lệ không, và không tệp nào xung đột với tệp của bạn hoặc gói khác. Thoát với mã 1 và mã E4xxx khi gói bị từ chối.";
+"cli.mod.validate.discussion" = "Kiểm tra tệp kê khai, gói có chạy trên phiên bản này không, các tệp có đúng như đã liệt kê và hợp lệ không, và không tệp nào xung đột với tệp của bạn hoặc gói khác. Thoát với mã 1 và mã E4xxx hoặc E5001 khi gói bị từ chối.";
 "cli.mod.validate.valid" = "%@ là gói hợp lệ: %@ %@. Cài bằng “ojd mod install”.";
 "cli.mod.install.abstract" = "Kiểm tra gói mod và cài cho người dùng của bạn.";
 "cli.mod.install.discussion" = "Sao chép gói vào Packages/NAME và hoán đổi ngay; dịch vụ đang chạy áp dụng nó. Gói cùng tên đã được cài sẽ bị từ chối trừ khi bạn dùng --force. --force không bao giờ bỏ qua requires, xung đột danh tính, hoặc xung đột id hay tên cấu hình. --dry-run kiểm tra gói và không ghi gì.";
@@ -1308,7 +1308,7 @@
 "cli.mod.install.dry_run" = "Nếu chạy, sẽ cài %@.";
 "cli.mod.install.success" = "Đã cài %@. Dịch vụ đang chạy áp dụng ngay bây giờ.";
 "cli.mod.list.abstract" = "Liệt kê các gói mod đã cài và các tệp của từng gói.";
-"cli.mod.list.discussion" = "Liệt kê từng gói cùng phiên bản, tác giả và tệp. Gói mà OJD không dùng, chẳng hạn gói có requires loại trừ phiên bản này, hiển thị lý do kèm mã E4xxx.";
+"cli.mod.list.discussion" = "Liệt kê từng gói cùng phiên bản, tác giả và tệp. Gói mà OJD không dùng, chẳng hạn gói có requires loại trừ phiên bản này, hiển thị lý do kèm mã E4xxx hoặc E5001.";
 "cli.mod.list.problem" = "  Không dùng: %@";
 "cli.mod.remove.abstract" = "Gỡ một gói mod đã cài.";
 "cli.mod.remove.discussion" = "Chỉ xóa Packages/NAME. Hỏi xác nhận trong terminal; nếu không thì cần --force. --dry-run kiểm tra gói đã được cài và không thay đổi gì. Thoát với mã 1 và E4006 nếu chưa cài.";

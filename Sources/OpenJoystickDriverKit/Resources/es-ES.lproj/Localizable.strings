@@ -1300,7 +1300,7 @@
 "cli.mod.already_installed" = "%@ ya está instalado. Usa --force para sustituirlo.";
 "cli.mod.not_installed" = "%@ no está instalado. «ojd mod list» muestra los paquetes instalados.";
 "cli.mod.validate.abstract" = "Comprobar la carpeta de un paquete de mods sin instalarla.";
-"cli.mod.validate.discussion" = "Comprueba el manifiesto, que el paquete funciona con esta versión, que sus archivos son los indicados y son válidos, y que ninguno choca con tus archivos ni con otro paquete. Termina con 1 y el código E4xxx cuando se rechaza el paquete.";
+"cli.mod.validate.discussion" = "Comprueba el manifiesto, que el paquete funciona con esta versión, que sus archivos son los indicados y son válidos, y que ninguno choca con tus archivos ni con otro paquete. Termina con 1 y el código E4xxx o E5001 cuando se rechaza el paquete.";
 "cli.mod.validate.valid" = "%@ es un paquete válido: %@ %@. Instálalo con «ojd mod install».";
 "cli.mod.install.abstract" = "Comprobar un paquete de mods e instalarlo para tu usuario.";
 "cli.mod.install.discussion" = "Copia el paquete en Packages/NAME y lo intercambia de una vez; el servicio en ejecución lo aplica. Se rechaza un paquete ya instalado con el mismo nombre salvo que uses --force. --force nunca anula requires, un choque de identidad ni un choque de id o nombre de perfil. --dry-run comprueba el paquete y no escribe nada.";
@@ -1308,7 +1308,7 @@
 "cli.mod.install.dry_run" = "Se instalaría %@.";
 "cli.mod.install.success" = "%@ instalado. El servicio en ejecución lo aplica ahora.";
 "cli.mod.list.abstract" = "Listar los paquetes de mods instalados y los archivos de cada uno.";
-"cli.mod.list.discussion" = "Lista cada paquete con su versión, autor y archivos. Un paquete que OJD no usa, por ejemplo uno cuyo requires excluye esta versión, muestra el motivo con su código E4xxx.";
+"cli.mod.list.discussion" = "Lista cada paquete con su versión, autor y archivos. Un paquete que OJD no usa, por ejemplo uno cuyo requires excluye esta versión, muestra el motivo con su código E4xxx o E5001.";
 "cli.mod.list.problem" = "  No se usa: %@";
 "cli.mod.remove.abstract" = "Quitar un paquete de mods instalado.";
 "cli.mod.remove.discussion" = "Elimina solo Packages/NAME. Pide confirmación en un terminal; si no, necesita --force. --dry-run comprueba que el paquete está instalado y no cambia nada. Termina con 1 y E4006 si no está instalado.";

@@ -1300,7 +1300,7 @@
 "cli.mod.already_installed" = "%@ est déjà installé. Utilisez --force pour le remplacer.";
 "cli.mod.not_installed" = "%@ n’est pas installé. « ojd mod list » affiche les paquets installés.";
 "cli.mod.validate.abstract" = "Vérifier le dossier d’un paquet de mods sans l’installer.";
-"cli.mod.validate.discussion" = "Vérifie le manifeste, que le paquet fonctionne avec cette version, que ses fichiers sont ceux listés et valides, et qu’aucun n’entre en conflit avec vos fichiers ou un autre paquet. Se termine avec le code 1 et l’erreur E4xxx quand le paquet est refusé.";
+"cli.mod.validate.discussion" = "Vérifie le manifeste, que le paquet fonctionne avec cette version, que ses fichiers sont ceux listés et valides, et qu’aucun n’entre en conflit avec vos fichiers ou un autre paquet. Se termine avec le code 1 et l’erreur E4xxx ou E5001 quand le paquet est refusé.";
 "cli.mod.validate.valid" = "%@ est un paquet valide : %@ %@. Installez-le avec « ojd mod install ».";
 "cli.mod.install.abstract" = "Vérifier un paquet de mods et l’installer pour votre utilisateur.";
 "cli.mod.install.discussion" = "Copie le paquet dans Packages/NAME et l’échange d’un coup ; le service en cours d’exécution l’applique. Un paquet déjà installé du même nom est refusé sauf avec --force. --force ne contourne jamais requires, un conflit d’identité ni un conflit d’identifiant ou de nom de profil. --dry-run vérifie le paquet et n’écrit rien.";
@@ -1308,7 +1308,7 @@
 "cli.mod.install.dry_run" = "%@ serait installé.";
 "cli.mod.install.success" = "%@ installé. Le service en cours d’exécution l’applique maintenant.";
 "cli.mod.list.abstract" = "Lister les paquets de mods installés et les fichiers de chacun.";
-"cli.mod.list.discussion" = "Liste chaque paquet avec sa version, son auteur et ses fichiers. Un paquet qu’OJD n’utilise pas, par exemple parce que son requires exclut cette version, affiche la raison avec son code E4xxx.";
+"cli.mod.list.discussion" = "Liste chaque paquet avec sa version, son auteur et ses fichiers. Un paquet qu’OJD n’utilise pas, par exemple parce que son requires exclut cette version, affiche la raison avec son code E4xxx ou E5001.";
 "cli.mod.list.problem" = "  Non utilisé : %@";
 "cli.mod.remove.abstract" = "Supprimer un paquet de mods installé.";
 "cli.mod.remove.discussion" = "Supprime uniquement Packages/NAME. Demande confirmation dans un terminal ; sinon --force est requis. --dry-run vérifie que le paquet est installé et ne change rien. Se termine avec le code 1 et l’erreur E4006 s’il n’est pas installé.";

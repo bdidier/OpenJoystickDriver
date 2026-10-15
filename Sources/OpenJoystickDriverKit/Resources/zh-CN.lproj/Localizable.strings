@@ -1300,7 +1300,7 @@
 "cli.mod.already_installed" = "%@ 已安装。使用 --force 替换。";
 "cli.mod.not_installed" = "%@ 未安装。“ojd mod list”会显示已安装的包。";
 "cli.mod.validate.abstract" = "检查模组包文件夹，不安装。";
-"cli.mod.validate.discussion" = "检查清单、包是否能在此版本上运行、其文件是否与列出的一致且有效，以及是否有文件与你的文件或其他包冲突。包被拒绝时，以退出码 1 和 E4xxx 代码退出。";
+"cli.mod.validate.discussion" = "检查清单、包是否能在此版本上运行、其文件是否与列出的一致且有效，以及是否有文件与你的文件或其他包冲突。包被拒绝时，以退出码 1 和 E4xxx 或 E5001 代码退出。";
 "cli.mod.validate.valid" = "%@ 是有效的包：%@ %@。用“ojd mod install”安装。";
 "cli.mod.install.abstract" = "检查模组包并为你的用户安装。";
 "cli.mod.install.discussion" = "将包复制到 Packages/NAME 并一次性替换；运行中的服务会应用它。已安装同名包时会被拒绝，除非使用 --force。--force 不会绕过 requires、身份冲突，或配置文件 ID 或名称冲突。--dry-run 检查包，不写入任何内容。";
@@ -1308,7 +1308,7 @@
 "cli.mod.install.dry_run" = "如果运行，将安装 %@。";
 "cli.mod.install.success" = "已安装 %@。运行中的服务现在会应用它。";
 "cli.mod.list.abstract" = "列出已安装的模组包及每个包的文件。";
-"cli.mod.list.discussion" = "列出每个包的版本、作者和文件。OJD 不使用的包，例如其 requires 不包含此版本的包，会连同 E4xxx 代码显示原因。";
+"cli.mod.list.discussion" = "列出每个包的版本、作者和文件。OJD 不使用的包，例如其 requires 不包含此版本的包，会连同 E4xxx 或 E5001 代码显示原因。";
 "cli.mod.list.problem" = "  未使用：%@";
 "cli.mod.remove.abstract" = "移除一个已安装的模组包。";
 "cli.mod.remove.discussion" = "仅删除 Packages/NAME。在终端中会请求确认，否则需要 --force。--dry-run 检查包是否已安装，不更改任何内容。未安装时以退出码 1 和 E4006 退出。";

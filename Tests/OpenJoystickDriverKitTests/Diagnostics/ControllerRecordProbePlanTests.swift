@@ -199,7 +199,7 @@ struct ControllerRecordProbePlanTests {
         data: try recordData(apiVersion: "openjoystickdriver.io/v1beta1")
       )
     }
-    #expect(oldVersion?.errorDescription?.contains("E5001: ") == true)
+    #expect(oldVersion?.errorDescription?.hasPrefix("E5001: ") == true)
     #expect(throws: ControllerRecordProbeError.self) {
       try ControllerRecordProbePlan(data: try recordData(kind: nil))
     }

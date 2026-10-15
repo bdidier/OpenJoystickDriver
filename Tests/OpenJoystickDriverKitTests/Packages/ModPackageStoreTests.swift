@@ -6,7 +6,7 @@ import Testing
 struct ModPackageStoreTests {
   private typealias Fixture = ModPackageFixture
 
-  /// The E4xxx code that `body` throws, or nil when it does not throw a ``ModPackageError``.
+  /// The error code that `body` throws, or nil when it does not throw a ``ModPackageError``.
   private func code(_ body: () throws -> Void) -> ErrorCode? {
     do {
       try body()
