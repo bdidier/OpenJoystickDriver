@@ -1308,7 +1308,7 @@
 "cli.mod.install.dry_run" = "%@ yüklenirdi.";
 "cli.mod.install.success" = "%@ yüklendi. Çalışan servis şimdi uyguluyor.";
 "cli.mod.list.abstract" = "Yüklü mod paketlerini ve her birinin dosyalarını listele.";
-"cli.mod.list.discussion" = "Her paketi sürümü, yazarı ve dosyalarıyla listeler. OJD’nin kullanmadığı bir paket, örneğin requires’ı bu sürümü dışarıda bırakan, nedenini E4xxx veya E5001 koduyla gösterir.";
+"cli.mod.list.discussion" = "Her paketi sürümü, yazarı ve dosyalarıyla listeler. OJD’nin kullanmadığı bir paket, örneğin requires alanı bu sürümü kapsamayan bir paket, nedenini E4xxx veya E5001 koduyla gösterir.";
 "cli.mod.list.problem" = "  Kullanılmıyor: %@";
 "cli.mod.remove.abstract" = "Yüklü bir mod paketini kaldır.";
 "cli.mod.remove.discussion" = "Yalnızca Packages/NAME dizinini siler. Terminalde onay ister; aksi halde --force gerekir. --dry-run paketin yüklü olduğunu denetler ve hiçbir şeyi değiştirmez. Yüklü değilse 1 ve E4006 ile çıkar.";

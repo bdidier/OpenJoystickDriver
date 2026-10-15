@@ -138,7 +138,8 @@ struct ControllerRecordSetTests {
     )
     #expect(
       Self.problem(try Self.patch(Self.bundledGIP, set: ["capabilities": ["rumble": "absent"]]))
-        == "patch must hold protocol, usb, bluetoothLE, ownership, route, output, input, or tuning"
+        == "patch must hold protocol, modes, usb, bluetoothLE, ownership, "
+        + "route, output, input, or tuning"
     )
     #expect(
       Self.problem(try Self.patch(Self.bundledGIP, set: ["tuning": ["hidStartupIntervalMs": 5]]))

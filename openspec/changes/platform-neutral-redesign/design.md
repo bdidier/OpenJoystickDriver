@@ -307,10 +307,10 @@ No migration: 0.5.x user files are rejected with a message that names the file, 
 ## Open Questions
 
 1. Which DS3 (`01130000` or `01140000`) is the genuine CECHZC2E? The `0xEF` answer is the candidate discriminator; the user checks by physical marking.
-2. Request more `transport.usb` IDs from Apple? (user's call; outward-facing)
-3. Catalog-wide localization choices left by the review: French spacing before `: ; ? !` and NBSP, `pt-BR`/`es-MX` quotes (guillemets or curly), `id-ID` instal/pasang, `vi-VN` "mot cach goc", `tr-TR` `cli.mod.list.discussion`, `zh-HK`/`zh-TW` informal versus formal "you" in five strings, `ar-SA` running-service split, German "Endet mit 1" versus "Beendet sich mit 1".
+2. Settled 2026-10-15: no request for more `transport.usb` IDs; the extension stays with the seven granted.
+3. Settled 2026-10-15 (task 22.6, one commit each): French spacing per locale (fr-FR NBSP before `:` and narrow NBSP before `; ? !`; fr-CA NBSP before `:` only; NBSP inside `« »`), curly `“…”` quotes in `pt-BR` and `es-MX`, `id-ID` instal, `vi-VN` "ở chế độ gốc", a full clause in `tr-TR` `cli.mod.list.discussion`, formal "您" in `zh-HK`/`zh-TW`, `ar-SA` "الخدمة قيد التشغيل", German "Endet mit 1". The choices were left by the review: French spacing before `: ; ? !` and NBSP, `pt-BR`/`es-MX` quotes (guillemets or curly), `id-ID` instal/pasang, `vi-VN` "mot cach goc", `tr-TR` `cli.mod.list.discussion`, `zh-HK`/`zh-TW` informal versus formal "you" in five strings, `ar-SA` running-service split, German "Endet mit 1" versus "Beendet sich mit 1".
 4. Settled 2026-10-15: the command-line tool link belongs to the app; `ojd` only reports it (D9).
 5. Do the button and axis directions of the `1209:4A4F` mapping hold under real presses? (hardware check)
-6. Register a new pid.codes entry for a layout equal to the W3C standard mapping?
-7. Submit the OJD mapping to SDL_GameControllerDB or SDL upstream? (outward-facing; not in tasks)
+6. Settled 2026-10-15: no new pid.codes entry; browsers reach the standard mapping through the Xbox ID (SDL consumer table).
+7. Settled 2026-10-15: the OJD mapping is not submitted to SDL_GameControllerDB or SDL upstream.
 8. Turn on GitHub Pages for the schema `$id` URLs? (outward-facing; the task prepares it)

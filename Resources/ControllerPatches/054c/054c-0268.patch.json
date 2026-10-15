@@ -6,6 +6,23 @@
 		"productID": 616
 	},
 	"patch": {
+		"modes": [
+			{
+				"id": "feature-ef-answers",
+				"protocol": {
+					"family": "sony.sixaxis"
+				},
+				"match": {
+					"probes": [
+						{
+							"report": 239,
+							"length": 49,
+							"expect": "answers"
+						}
+					]
+				}
+			}
+		],
 		"output": {
 			"startup": [
 				{

@@ -64,6 +64,16 @@
 				"protocol": {
 					"type": ["object", "null"]
 				},
+				"modes": {
+					"anyOf": [
+						{
+							"$ref": "controller.schema.json#/$defs/modes"
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
 				"usb": {
 					"type": ["object", "null"]
 				},

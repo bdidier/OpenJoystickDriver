@@ -26,6 +26,7 @@ MODEL_PATTERN = re.compile(r"[0-9a-f]{4}-[0-9a-f]{4}\Z")
 SECTIONS = frozenset(
     {
         "protocol",
+        "modes",
         "usb",
         "bluetoothLE",
         "ownership",
@@ -167,8 +168,8 @@ def parse_patch(document: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any
     rank = selector_rank(selector)
     if not patch or not set(patch) <= SECTIONS:
         raise PatchError(
-            "patch must hold protocol, usb, bluetoothLE, ownership, route, output, "
-            "input, or tuning"
+            "patch must hold protocol, modes, usb, bluetoothLE, ownership, route, "
+            "output, input, or tuning"
         )
     if rank == RANK_ALL and set(patch) != {"tuning"}:
         raise PatchError("an all patch may set only tuning")

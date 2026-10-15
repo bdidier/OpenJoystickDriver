@@ -170,17 +170,17 @@ public struct DeviceRuntimeProfile: Equatable, Sendable {
   /// The catalog record's `vvvv-pppp` file stem; nil for a family profile, which has no record.
   public let recordID: String?
   public let transportProfile: DeviceTransportProfile
-  public let physicalProtocolID: PhysicalProtocolID
+  public internal(set) var physicalProtocolID: PhysicalProtocolID
   /// Nil when the family has one contract or its variant is a transport variant,
   /// which classification derives from the observed transport.
-  public let physicalProtocolVariant: PhysicalProtocolVariantID?
-  public let parameters: ProtocolParameters
+  public internal(set) var physicalProtocolVariant: PhysicalProtocolVariantID?
+  public internal(set) var parameters: ProtocolParameters
   public let capabilityDelta: ControllerCapabilityDelta
   public let preferredBackends: [VirtualControllerBackendID]
-  public let gipStartupPackets: [GIPStartupPacket]
-  public let gipKeepAlivePolicy: GIPKeepAlivePolicy
+  public internal(set) var gipStartupPackets: [GIPStartupPacket]
+  public internal(set) var gipKeepAlivePolicy: GIPKeepAlivePolicy
   /// The assembly policy the row names; nil runs each protocol role as its own controller.
-  public let assemblyPolicy: ControllerAssemblyPolicy?
+  public internal(set) var assemblyPolicy: ControllerAssemblyPolicy?
   public let ownership: ControllerOwnership
   /// The record's rumble report, for a driver that encodes rumble from it.
   public let rumbleTemplate: RumbleOutputTemplate?
@@ -194,6 +194,12 @@ public struct DeviceRuntimeProfile: Equatable, Sendable {
   public var route: ControllerRecordRoute?
   /// The record's Bluetooth LE vibration characteristic UUID; set only for Switch 2 controllers.
   public var bluetoothLEVibrationCharacteristic: String?
+
+  /// The record's alternative modes, in the order their probes are tried; empty for most records.
+  /// The protocol fields above are the default mode's.
+  public internal(set) var modes: [ControllerMode] = []
+  /// The selected mode's ID; nil while the default mode runs.
+  public internal(set) var modeID: String?
 
   /// Whether this row is reached through raw USB rather than IOHID.
   public var usesRawUSB: Bool {
