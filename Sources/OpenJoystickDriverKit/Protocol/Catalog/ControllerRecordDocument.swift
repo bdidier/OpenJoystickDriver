@@ -270,7 +270,7 @@ struct ControllerRecordDocument: Decodable {
     let protocolVariant: PhysicalProtocolVariantID?
     let parameters: ProtocolParameters
     /// Named GIP initialization actions; nil selects the driver's default sequence.
-    let initialization: [GIPStartupPacket]?
+    let initialization: [String]?
     let keepAliveEnabled: Bool?
     /// The named assembly policy; its vocabulary is empty, so every name fails.
     let assembly: ControllerAssemblyPolicy?
@@ -302,7 +302,7 @@ struct ControllerRecordDocument: Decodable {
       self.protocolID = protocolID
       protocolVariant = variant
       parameters = try container.decodeOptional(ProtocolParameters.self, for: "parameters") ?? .none
-      initialization = try container.decodeUniqueList(GIPStartupPacket.self, for: "initialization")
+      initialization = try container.decodeNamedPacketList(of: protocolID, for: "initialization")
       keepAliveEnabled = try container.decodeOptional(Bool.self, for: "keepAlive")
       if let name = try container.decodeOptional(String.self, for: "assembly") {
         guard let policy = ControllerAssemblyPolicy(name: name) else {
@@ -459,6 +459,24 @@ extension KeyedDecodingContainer where Key == DocumentKey {
       )
     }
     return values
+  }
+
+  /// Decodes a nonempty list of unique ids of named packets that `family`'s description defines;
+  /// any other id fails.
+  func decodeNamedPacketList(of family: PhysicalProtocolID, for key: String) throws -> [String]? {
+    guard let names = try decodeOptional([String].self, for: key) else { return nil }
+    let plan = ProtocolDescription.bundled[family]?.namedPackets
+    guard !names.isEmpty, Set(names).count == names.count,
+      names.allSatisfy({ plan?.packet(named: $0) != nil })
+    else {
+      throw DecodingError.dataCorrupted(
+        .init(
+          codingPath: codingPath + [DocumentKey(key)],
+          debugDescription: "\(key) must contain unique, nonempty ids of the family's named packets"
+        )
+      )
+    }
+    return names
   }
 
   func rejectUnknown(allowed: Set<String>) throws {

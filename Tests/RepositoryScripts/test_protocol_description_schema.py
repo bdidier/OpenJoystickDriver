@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 from unittest.mock import patch
 
+from Scripts.Catalog import protocol_descriptions
 from Scripts.Catalog.schema_header import header
 from Scripts.Quality import validate_schemas
 
@@ -706,6 +707,151 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         for family in ("sony.dualsense", "xbox.gip", "xbox.xid", "hid.report-layout"):
             with self.subTest(family=family):
                 self.assert_rejected(self.subcommand_body(self.subcommands(), family))
+
+    # GIP named packets.
+
+    @staticmethod
+    def named_packet(**members: Any) -> dict[str, Any]:
+        return {
+            "id": "xbox.gip/power-on",
+            "bytes": [5, 32, 0, 1, 0],
+            "sessionByte": 2,
+            **members,
+        }
+
+    def named_packet_body(self, packets: Any, family: str = "xbox.gip") -> Any:
+        return self.with_body(family, defaults={"session": {"namedPackets": packets}})
+
+    def test_accepts_named_packets(self) -> None:
+        for packets in (
+            [self.named_packet()],
+            [self.named_packet(), self.named_packet(id="xbox.gip/led-on")],
+            [self.named_packet(id=f"xbox.gip/packet-{i}") for i in range(16)],
+            [self.named_packet(bytes=[0, 0, 0])],
+            [self.named_packet(bytes=[0] * 64)],
+        ):
+            with self.subTest(packets=packets):
+                self.check(self.named_packet_body(packets))
+
+    def test_rejects_malformed_named_packets(self) -> None:
+        for packets in (
+            [],
+            [self.named_packet(id=f"xbox.gip/packet-{i}") for i in range(17)],
+            [{"bytes": [5, 32, 0], "sessionByte": 2}],
+            [{"id": "xbox.gip/power-on", "sessionByte": 2}],
+            [{"id": "xbox.gip/power-on", "bytes": [5, 32, 0]}],
+            [self.named_packet(id="power-on")],
+            [self.named_packet(id="xbox.gip/Power-On")],
+            [self.named_packet(id="xbox.gip/power--on")],
+            [self.named_packet(id="xbox.gip/")],
+            [self.named_packet(bytes=[5, 32])],
+            [self.named_packet(bytes=[0] * 65)],
+            [self.named_packet(bytes=[5, 32, 256])],
+            [self.named_packet(sessionByte=1)],
+            [self.named_packet(sessionByte=3)],
+            [self.named_packet(endpoint=2)],
+            [self.named_packet(unknown=1)],
+            # Each id appears at most once, and starts with the family name.
+            [self.named_packet(), self.named_packet(bytes=[5, 32, 0, 2])],
+            [self.named_packet(id="xbox.xusb/power-on")],
+        ):
+            with self.subTest(packets=packets):
+                self.assert_rejected(self.named_packet_body(packets))
+
+    def test_only_gip_has_named_packets(self) -> None:
+        for family in ("sony.dualsense", "xbox.xusb", "xbox.xid", "nintendo.switch2"):
+            with self.subTest(family=family):
+                self.assert_rejected(
+                    self.named_packet_body([self.named_packet()], family)
+                )
+
+    def test_the_bundled_gip_description_names_the_eight_packets(self) -> None:
+        packets = protocol_descriptions.bundled()["xbox.gip"]["defaults"]["session"][
+            "namedPackets"
+        ]
+        self.assertEqual(
+            [packet["id"] for packet in packets],
+            [
+                "xbox.gip/power-on",
+                "xbox.gip/s-init",
+                "xbox.gip/enable-extra-input",
+                "xbox.gip/hori-ack",
+                "xbox.gip/led-on",
+                "xbox.gip/auth-done",
+                "xbox.gip/rumble-begin",
+                "xbox.gip/rumble-end",
+            ],
+        )
+
+    def test_a_record_names_only_packets_the_description_defines(self) -> None:
+        description = protocol_descriptions.bundled()["xbox.gip"]
+        self.assertIsNone(
+            protocol_descriptions.initialization_problem(
+                description, ["xbox.gip/hori-ack", "xbox.gip/power-on"]
+            )
+        )
+        self.assertIsNone(protocol_descriptions.initialization_problem(description, []))
+        self.assertIn(
+            "xbox.gip/missing",
+            protocol_descriptions.initialization_problem(
+                description, ["xbox.gip/power-on", "xbox.gip/missing"]
+            )
+            or "",
+        )
+        without = {
+            key: value for key, value in description.items() if key != "defaults"
+        }
+        self.assertIsNotNone(
+            protocol_descriptions.initialization_problem(without, ["xbox.gip/power-on"])
+        )
+
+    def packet_startup_body(self, startup: Any, family: str = "xbox.gip") -> Any:
+        return self.with_body(
+            family,
+            defaults={
+                "session": {"namedPackets": [self.named_packet()]},
+                "output": {"startup": startup},
+            },
+        )
+
+    def test_accepts_startup_that_refers_to_named_packets(self) -> None:
+        for startup in (
+            [{"packet": "xbox.gip/power-on"}],
+            [{"packet": "xbox.gip/power-on"}, {"packet": "xbox.gip/power-on"}],
+            [{"packet": "xbox.gip/power-on", "variants": ["usb"]}],
+        ):
+            with self.subTest(startup=startup):
+                self.check(self.packet_startup_body(startup))
+
+    def test_rejects_startup_that_refers_to_an_unknown_packet(self) -> None:
+        self.assert_rejected(
+            self.packet_startup_body([{"packet": "xbox.gip/missing"}]), code="E5002"
+        )
+        self.assert_rejected(
+            self.with_body(
+                "xbox.gip",
+                defaults={"output": {"startup": [{"packet": "xbox.gip/power-on"}]}},
+            ),
+            code="E5002",
+        )
+
+    def test_rejects_malformed_or_mixed_packet_startup(self) -> None:
+        for startup in (
+            [{"packet": "power-on"}],
+            [{"packet": "xbox.gip/power-on", "bytes": [1, 2, 3]}],
+            [{"packet": "xbox.gip/power-on"}, self.usb_write()],
+            [self.usb_write(), {"packet": "xbox.gip/power-on"}],
+            [{"packet": "xbox.gip/power-on"}, self.hid_write()],
+        ):
+            with self.subTest(startup=startup):
+                self.assert_rejected(self.packet_startup_body(startup))
+
+    def test_the_bundled_gip_startup_refers_to_named_packets_only(self) -> None:
+        description = protocol_descriptions.bundled()["xbox.gip"]
+        self.assertEqual(
+            [write["packet"] for write in description["defaults"]["output"]["startup"]],
+            ["xbox.gip/power-on", "xbox.gip/led-on", "xbox.gip/auth-done"],
+        )
 
     def test_rejects_startup_only_members_in_a_keep_alive_write(self) -> None:
         for write in (

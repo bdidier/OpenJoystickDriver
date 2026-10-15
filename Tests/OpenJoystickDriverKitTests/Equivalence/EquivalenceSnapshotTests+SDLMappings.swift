@@ -4,179 +4,45 @@ import Testing
 
 @testable import OpenJoystickDriverKit
 
-/// Snapshots the SDL mapping text each virtual HID profile yields today.
+/// Snapshots the SDL mapping text each virtual HID profile yields.
 ///
-/// OJD ships no SDL mapping text, so the mapping is derived from what a consumer sees: each
-/// control is driven alone through the profile's own report codec, the HID fields its report
-/// changes are read from the profile's descriptor, and SDL's macOS order names them: buttons by
-/// ascending button usage (`bN`), axes by ascending Generic Desktop usage (`aN`), and the hat as
-/// `h0.<mask>`. A control the report cannot carry, or one SDL has no name for, is listed apart.
+/// The mapping is derived by `VirtualHIDProfileID.gamepadMapping()`, which the CLI also prints, so
+/// this snapshot pins what ships. It lists each probe so a changed report shows where it moved.
 struct EquivalenceSnapshotSDLMappingTests {
-  private struct Probe {
-    let control: String
-    let state: ControllerState
-  }
-
-  private static let sdlNames: [String: String] = [
-    "South": "a", "East": "b", "West": "x", "North": "y",
-    "LeftShoulder": "leftshoulder", "RightShoulder": "rightshoulder", "Back": "back",
-    "Start": "start", "Guide": "guide", "LeftStickClick": "leftstick",
-    "RightStickClick": "rightstick", "Capture": "misc1", "RightPaddle1": "paddle1",
-    "LeftPaddle1": "paddle2", "RightPaddle2": "paddle3", "LeftPaddle2": "paddle4",
-    "TouchpadClick": "touchpad", "LeftStickX": "leftx", "LeftStickY": "lefty",
-    "RightStickX": "rightx", "RightStickY": "righty", "LeftTrigger": "lefttrigger",
-    "RightTrigger": "righttrigger", "dpadNorth": "dpup", "dpadEast": "dpright",
-    "dpadSouth": "dpdown", "dpadWest": "dpleft",
-  ]
-
-  /// SDL's canonical field order in a mapping string.
-  private static let sdlFieldOrder = [
-    "a", "b", "x", "y", "back", "guide", "start", "leftstick", "rightstick", "leftshoulder",
-    "rightshoulder", "dpup", "dpdown", "dpleft", "dpright", "misc1", "paddle1", "paddle2",
-    "paddle3", "paddle4", "touchpad", "leftx", "lefty", "rightx", "righty", "lefttrigger",
-    "righttrigger",
-  ]
-
-  private static func order(of entry: String) -> Int {
-    let name = String(entry.prefix { $0 != ":" })
-    return sdlFieldOrder.firstIndex(of: name) ?? sdlFieldOrder.count
-  }
-
-  private static func probes(for controls: Set<Control>) -> [Probe] {
-    var result: [Probe] = []
-    let digital = controls.subtracting(
-      Control.dpad.union([
-        .leftStickX, .leftStickY, .rightStickX, .rightStickY, .leftTrigger, .rightTrigger,
-      ])
-    )
-    for control in digital.sorted(by: { $0.rawValue < $1.rawValue }) {
-      result.append(Probe(control: control.rawValue, state: ControllerState(pressed: [control])))
-    }
-    let analog: [(Control, ControllerState)] = [
-      (.leftStickX, ControllerState(leftStick: StickPosition(x: .max, y: .center))),
-      (.leftStickY, ControllerState(leftStick: StickPosition(x: .center, y: .max))),
-      (.rightStickX, ControllerState(rightStick: StickPosition(x: .max, y: .center))),
-      (.rightStickY, ControllerState(rightStick: StickPosition(x: .center, y: .max))),
-      (.leftTrigger, ControllerState(leftTrigger: .max)),
-      (.rightTrigger, ControllerState(rightTrigger: .max)),
-    ]
-    for (control, state) in analog where controls.contains(control) {
-      result.append(Probe(control: control.rawValue, state: state))
-    }
-    if !controls.isDisjoint(with: Control.dpad) {
-      let hats: [(String, HatDirection)] = [
-        ("dpadNorth", .north), ("dpadEast", .east), ("dpadSouth", .south), ("dpadWest", .west),
-      ]
-      for (name, hat) in hats {
-        result.append(Probe(control: name, state: ControllerState(hat: hat)))
-      }
-    }
-    return result
-  }
-
-  /// The little-endian value of `field` in `report`, which leads with its report ID byte.
-  private static func value(of field: HIDField, in report: [UInt8], numbered: Bool) -> Int {
-    let payload = numbered ? Array(report.dropFirst()) : report
-    var value = 0
-    for bit in 0..<field.bitSize {
-      let position = field.bitOffset + bit
-      guard position / 8 < payload.count else { break }
-      if payload[position / 8] & (1 << UInt8(position % 8)) != 0 { value |= 1 << bit }
-    }
-    return value
-  }
-
-  private static func hex(_ value: Int) -> String {
-    let digits = String(UInt16(truncatingIfNeeded: value), radix: 16)
-    let padded = String(repeating: "0", count: 4 - digits.count) + digits
-    return String(padded.suffix(2)) + String(padded.prefix(2))
-  }
-
-  /// SDL3-style macOS GUID: bus, CRC, vendor, product, and version, each little-endian 16 bits
-  /// followed by two zero bytes except the leading bus and CRC.
-  private static func guid(_ identity: VirtualDeviceProfile) -> String {
-    let bus = identity.transport == "Bluetooth" ? "05" : "03"
-    return bus + "000000" + hex(Int(identity.vendorID)) + "0000" + hex(Int(identity.productID))
-      + "0000" + hex(identity.versionNumber) + "0000"
-  }
-
   private static func section(
     for id: VirtualHIDProfileID
   ) throws -> (
     title: String, lines: [String]
   ) {
     let profile = try id.makeProfile()
-    let parsed = try #require(HIDReportDescriptorParser.parse(descriptor: profile.descriptor))
-    let numbered = parsed.inputReportIDs != [0]
-    let buttonUsages = Set(parsed.fields.filter { $0.usagePage == 9 }.map(\.usage)).sorted()
-    let axisUsages = Set(
-      parsed.fields.filter { $0.usagePage == 1 && (0x30...0x35).contains($0.usage) }.map(\.usage)
-    ).sorted()
-    let neutral = profile.inputReport(for: .neutral)
+    let mapping = try id.gamepadMapping()
     let identity = profile.identity
     var lines = [
-      "profile=\(Self.snapshotName(id)) vendor=\(identity.vendorID) product=\(identity.productID)"
+      "profile=\(id.rawValue) vendor=\(identity.vendorID) product=\(identity.productID)"
         + " version=\(identity.versionNumber) name=\(identity.productName)",
-      "guid=\(guid(identity))",
-      "report length=\(neutral.count) descriptorBytes=\(profile.descriptor.count)",
+      "guid=\(mapping.guid)",
+      "report length=\(profile.inputReport(for: .neutral).count)"
+        + " descriptorBytes=\(profile.descriptor.count)",
     ]
-    var entries: [String] = []
-    var unmapped: [String] = []
-    for probe in probes(for: id.representableControls) {
-      let report = profile.inputReport(for: probe.state)
-      let changed = parsed.fields.filter {
-        Self.value(of: $0, in: report, numbered: numbered)
-          != Self.value(of: $0, in: neutral, numbered: numbered)
-      }
-      var binding: String?
-      if let button = changed.first(where: { $0.usagePage == 9 }),
-        let index = buttonUsages.firstIndex(of: button.usage)
-      {
-        binding = "b\(index)"
-      } else if let axis = changed.first(where: {
-        $0.usagePage == 1 && axisUsages.contains($0.usage)
-      }),
-        let index = axisUsages.firstIndex(of: axis.usage)
-      {
-        binding = "a\(index)"
-      } else if let hat = changed.first(where: { $0.usagePage == 1 && $0.usage == 0x39 }) {
-        let mask = [1: 1, 2: 3, 3: 2, 4: 6, 5: 4, 6: 12, 7: 8, 8: 9]
-        let raw = Self.value(of: hat, in: report, numbered: numbered) - hat.logicalMin + 1
-        binding = "h0.\(mask[raw] ?? 0)"
-      }
-      let fields = changed.map { "\($0.usagePage):\($0.usage)" }.joined(separator: "+")
-      lines.append("probe \(probe.control) fields=[\(fields)] -> \(binding ?? "none")")
-      if let binding, let name = Self.sdlNames[probe.control] {
-        let isTrigger = name == "lefttrigger" || name == "righttrigger"
-        entries.append("\(name):\(isTrigger && binding.hasPrefix("a") ? "+" : "")\(binding)")
-      } else {
-        unmapped.append(probe.control)
-      }
+    for probe in mapping.probes {
+      lines.append(
+        "probe \(probe.control.rawValue) fields=[\(probe.fields.joined(separator: "+"))]"
+          + " -> \(probe.binding ?? "none")"
+      )
     }
-    let bindings = entries.sorted { order(of: $0) < order(of: $1) }.joined(separator: ",")
-    lines.append(
-      "mapping=\(Self.guid(identity)),\(identity.productName),\(bindings),platform:Mac OS X,"
-    )
-    lines.append("unmapped=\(unmapped.sorted().joined(separator: ","))")
-    return (Self.snapshotName(id), lines)
-  }
-
-  /// The frozen snapshot names each profile as it was named before the redesign.
-  private static func snapshotName(_ id: VirtualHIDProfileID) -> String {
-    switch id {
-    case .generic: "hid-generic"
-    case .sdlCompatible: "hid-xbox-one-s-bt"
-    }
+    lines.append("mapping=\(mapping.sdlMapping)")
+    lines.append("unmapped=\(mapping.unmapped.map(\.rawValue).joined(separator: ","))")
+    return (id.rawValue, lines)
   }
 
   @Test
   func sdlMappingsMatchSnapshot() throws {
     let sections = try VirtualHIDProfileID.allCases.map(Self.section)
     let header = """
-      # Derived drift detector, not a shipped mapping: OJD ships no SDL mapping text. Each line
-      # is derived by driving one control through the virtual profile's report codec and reading
-      # the HID fields it changes. Entries follow SDL's field order; analog triggers carry the
-      # + half-axis prefix SDL expects for 0..max axes.
+      # The SDL mapping each virtual HID profile derives for itself. Each line is derived by
+      # driving one control through the profile's report codec and reading the HID fields it
+      # changes. Entries follow SDL's field order; analog triggers carry the + half-axis prefix
+      # SDL expects for 0..max axes.
 
       """
     let rendered = EquivalenceSnapshotStore.render(sections, header: header)

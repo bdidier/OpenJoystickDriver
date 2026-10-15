@@ -17,6 +17,7 @@ struct VirtualCommand: AsyncParsableCommand {
     subcommands: [
       VirtualShowCommand.self, VirtualSetCommand.self, VirtualResetCommand.self,
       VirtualFeedCommand.self,
+      VirtualExportMappingCommand.self,
     ]
   )
 
@@ -48,8 +49,11 @@ struct VirtualShowReport: Encodable, Equatable {
     let override: String?
     let overrideScope: String?
     let unavailable: Bool
+    /// The SDL mapping and W3C description of the live persona; absent with no persona.
+    let sdl: VirtualSDLReport?
+    let w3c: VirtualW3CReport?
 
-    init(_ device: ApplicationServiceDeviceDescription) {
+    init(_ device: ApplicationServiceDeviceDescription) throws {
       id = device.sessionToken.rawValue
       name = device.name
       vendorID = Int(device.vendorID)
@@ -60,6 +64,9 @@ struct VirtualShowReport: Encodable, Equatable {
       override = device.virtualHIDProfile?.override?.rawValue
       overrideScope = device.virtualHIDProfile?.overrideScope
       unavailable = decision.route == .outputDisabled(.noVirtualProfile)
+      let mapping = try decision.selection?.profileID.gamepadMapping()
+      sdl = mapping.map(VirtualSDLReport.init)
+      w3c = mapping.map(VirtualW3CReport.init)
     }
   }
 
@@ -97,7 +104,7 @@ struct VirtualShowCommand: AsyncParsableCommand {
         return try selector.map { [try $0.resolve(in: devices)] } ?? devices
       }
       let report = VirtualShowReport(
-        controllers: devices.map(VirtualShowReport.Controller.init),
+        controllers: try devices.map(VirtualShowReport.Controller.init),
         profiles: VirtualHIDProfileID.allCases.map(\.rawValue)
       )
       switch CLIContext.current.format {
@@ -131,6 +138,9 @@ struct VirtualShowCommand: AsyncParsableCommand {
         profile = CLILocalized.text("cli.virtual.show.none")
       }
       CLIOutput.stdout("\(id)  \(controller.name)  \(profile)")
+      if let live = controller.profile, controller.sdl?.worksWithDefaultSDLHints == false {
+        CLIOutput.stdout("\(id)  \(sdlHintsNote(live))")
+      }
     }
     CLIOutput.stdout(
       CLILocalized.format(

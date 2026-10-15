@@ -79,6 +79,14 @@ class VirtualDeviceSchemaTests(unittest.TestCase):
         self.refuses(
             {**HEADER, "persona": "Generic", "match": match, "transport": "USB"}
         )
+        self.refuses(
+            {
+                **HEADER,
+                "persona": "Generic",
+                "match": match,
+                "worksWithDefaultSDLHints": True,
+            }
+        )
 
     def test_a_match_needs_valid_ids_and_unit(self) -> None:
         for match in (
@@ -92,10 +100,16 @@ class VirtualDeviceSchemaTests(unittest.TestCase):
             with self.subTest(match=match):
                 self.refuses({**HEADER, "persona": "Generic", "match": match})
 
-    def test_a_definition_holds_layout_transport_labels_and_identity_with_version(
+    def test_a_definition_holds_layout_transport_hints_labels_and_identity_with_version(
         self,
     ) -> None:
-        for member in ("layout", "transport", "labels", "identity"):
+        for member in (
+            "layout",
+            "transport",
+            "worksWithDefaultSDLHints",
+            "labels",
+            "identity",
+        ):
             with self.subTest(missing=member):
                 document = load("virtual-device.generic.json")
                 del document[member]
@@ -109,6 +123,7 @@ class VirtualDeviceSchemaTests(unittest.TestCase):
             ("layout", "other"),
             ("transport", "Serial"),
             ("labels", "playstation"),
+            ("worksWithDefaultSDLHints", "yes"),
             ("extra", 1),
         ):
             with self.subTest(member=member):

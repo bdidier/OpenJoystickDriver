@@ -7,7 +7,7 @@ public struct ControllerMode: Equatable, Sendable {
   public let physicalProtocolID: PhysicalProtocolID
   public let physicalProtocolVariant: PhysicalProtocolVariantID?
   public let parameters: ProtocolParameters
-  public let gipStartupPackets: [GIPStartupPacket]
+  public let gipStartupPackets: [String]
   public let gipKeepAlivePolicy: GIPKeepAlivePolicy
   public let assemblyPolicy: ControllerAssemblyPolicy?
   public let probes: [ControllerModeProbe]

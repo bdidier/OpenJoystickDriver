@@ -19,6 +19,7 @@ extension VirtualDevice {
     }
     let allowed: Set<String> = [
       "apiVersion", "kind", "persona", "match", "layout", "transport", "labels", "identity",
+      "worksWithDefaultSDLHints",
     ]
     guard Set(document.keys).isSubset(of: allowed) else {
       throw ControllerRecordProblem(
@@ -50,19 +51,28 @@ extension VirtualDevice {
       }
       return labels
     }
+    let worksWithDefaultSDLHints = try document["worksWithDefaultSDLHints"].map { value in
+      // swiftlint:disable:next legacy_objc_type
+      guard let number = value as? NSNumber, CFGetTypeID(number) == CFBooleanGetTypeID() else {
+        throw ControllerRecordProblem("worksWithDefaultSDLHints must be true or false")
+      }
+      return number.boolValue
+    }
     let identity = try document["identity"].map(Self.identity)
     if match != nil {
-      guard layout == nil, transport == nil else {
+      guard layout == nil, transport == nil, worksWithDefaultSDLHints == nil else {
         throw ControllerRecordProblem(
-          "a file with match selects a persona and holds no layout or transport"
+          "a file with match selects a persona and holds no layout, transport, or "
+            + "worksWithDefaultSDLHints"
         )
       }
     } else {
-      guard layout != nil, transport != nil, labels != nil, let identity,
-        identity.versionNumber != nil
+      guard layout != nil, transport != nil, labels != nil, worksWithDefaultSDLHints != nil,
+        let identity, identity.versionNumber != nil
       else {
         throw ControllerRecordProblem(
-          "a persona definition must hold layout, transport, labels, and identity with version"
+          "a persona definition must hold layout, transport, labels, worksWithDefaultSDLHints, "
+            + "and identity with version"
         )
       }
     }
@@ -72,6 +82,7 @@ extension VirtualDevice {
       layout: layout,
       transport: transport,
       labels: labels,
+      worksWithDefaultSDLHints: worksWithDefaultSDLHints,
       identity: identity
     )
   }

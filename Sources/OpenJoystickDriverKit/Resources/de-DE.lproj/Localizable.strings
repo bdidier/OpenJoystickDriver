@@ -514,9 +514,7 @@
 "developer.connection" = "Verbindung";
 "developer.controller" = "Controller";
 "developer.controllerDetails" = "Controller";
-"developer.diagnosticMode" = "Diagnosemodus";
 "developer.emptyCapture" = "Klicke auf „Erfassung starten“ und drücke dann Tasten am Controller.";
-"developer.enterDiagnosticMode" = "Diagnosemodus starten";
 "developer.exportCapture" = "Paketerfassung exportieren";
 "developer.extraInputs" = "Zusatztasten";
 "developer.extraInputsDescription" = "Drücke jeweils eine Zusatztaste. Erkannte Tasten bleiben aufgelistet, bis du die Erfassung löschst.";
@@ -527,7 +525,6 @@
 "developer.loadingControllers" = "Controllerdiagnose wird geladen…";
 "developer.noControllers" = "Keine Controller verbunden";
 "developer.noControllersDetail" = "Verbinde einen Controller und klicke dann auf „Aktualisieren“.";
-"developer.noDiagnosticRecipe" = "Der Diagnosemodus ist für diesen Controller nicht verfügbar.";
 "developer.noExtraInputs" = "Keine Zusatztasten erkannt.";
 "developer.noPackets" = "Keine Pakete erfasst";
 "developer.packetCapture" = "Roh-Paketerfassung";
@@ -1339,6 +1336,10 @@
 "cli.virtual.discussion.unit" = "Mit --unit gilt „set“ für einen einzelnen Controller anhand seiner Geräte-ID, und „reset“ setzt diesen Controller auf die Auswahl seines Modells zurück.";
 "cli.virtual.error.failed" = "Das virtuelle Gamepad für %@ wurde nicht geändert (%@). Prüfe das mit „ojd virtual show“.";
 "cli.virtual.error.no_unit" = "%@ hat keine Geräte-ID, daher kann eine Auswahl nur für das gesamte Modell gelten. Führe den Befehl ohne --unit aus.";
+"cli.virtual.export_mapping.abstract" = "Gibt die SDL-Zuordnung oder die W3C-Beschreibung aus, die ein Profil eines virtuellen Gamepads ableitet.";
+"cli.virtual.export_mapping.discussion" = "SDL gibt pro Profil eine Zuordnungszeile aus, die eine gültige SDL-Zuordnungsdatei ist. W3C gibt die Beschreibung des Standardlayouts als JSON aus. Beides wird aus dem Report-Deskriptor des Profils abgeleitet.";
+"cli.virtual.export_mapping.format" = "Das Ausgabeformat: sdl oder w3c.";
+"cli.virtual.export_mapping.profile" = "Das auszugebende Profil des virtuellen Gamepads. Ohne Angabe werden alle Profile ausgegeben.";
 "cli.virtual.feed.abstract" = "Ein virtuelles Gamepad veröffentlichen, das über stdin gesteuert wird.";
 "cli.virtual.feed.discussion" = "Liest ein JSON-Objekt pro Zeile: „buttons“ und „dpad“ listen die gedrückten Bedienelemente auf, etwa South und up, und „axes“ ordnet Achsennamen wie LeftStickX Werte zu. Fehlende Bedienelemente bleiben neutral. Sticks reichen von -1 bis 1, wobei Y nach unten zeigt; Trigger reichen von 0 bis 1. Frames werden der Reihe nach abgespielt, jeweils mindestens 8 ms lang; „holdMilliseconds“ hält einen Frame länger, bis zu 60000. Gibt jeden Ausgabebefehl, den Spiele an das Gamepad senden, etwa Vibration, als ein JSON-Objekt pro Zeile aus. Endet, wenn nach dem Ende der Eingabe jeder Frame abgespielt wurde.";
 "cli.virtual.feed.error.closed" = "Der Dienst hat das virtuelle Gamepad geschlossen. Prüfe es mit „ojd status“.";
@@ -1357,6 +1358,7 @@
 "cli.virtual.reset.error.unit_all" = "--unit benötigt einen CONTROLLER, nicht --all.";
 "cli.virtual.set.abstract" = "Das virtuelle Gamepad für das Modell eines Controllers wählen.";
 "cli.virtual.set.profile" = "Das Profil des virtuellen Gamepads.";
+"cli.virtual.sdl_hints_note" = "Hinweis: %@ funktioniert nicht mit den Standard-Hints von SDL.";
 "cli.virtual.show.abstract" = "Das virtuelle Gamepad jedes Controllers und die wählbaren Profile anzeigen.";
 "cli.virtual.show.none" = "kein virtuelles Gamepad";
 "cli.virtual.show.profiles" = "Profile: %@";
