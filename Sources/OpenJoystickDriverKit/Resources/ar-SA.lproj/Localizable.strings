@@ -1215,13 +1215,13 @@
 "cli.controller.output.unsupported" = "%@ ليس لديها %@. شغّل «ojd controller show %@» لمعرفة ما تدعمه.";
 "cli.controller.ownership.abstract" = "اختر ما إذا كان macOS أو OpenJoystickDriver يخدم طراز وحدة التحكم.";
 "cli.controller.ownership.choice" = "native (يخدم macOS وحدة التحكم) أو virtual (يخدمها OpenJoystickDriver).";
-"cli.controller.ownership.discussion" = "يترك native وحدة التحكم لـ macOS، الذي يخدمها كوحدة تحكم ألعاب؛ ويتيح virtual لـ OpenJoystickDriver تولّيها ونشر وحدة التحكم الافتراضية الخاصة بها. ينطبق الاختيار على كل وحدة تحكم من الطراز: فهو يضبط ownership في سجلك للطراز، VVVV-PPPP.json في دليل السجلات، ويحتفظ بحقول السجل الأخرى. تطبّقه الخدمة العاملة دون إعادة توصيل. يحتاج إلى الخدمة للعثور على وحدة التحكم. لا يكتب --dry-run أي شيء. يخرج بالرمز 1 مع E2023 لوحدة تحكم تستخدم USB الخام، التي يخدمها OpenJoystickDriver دائمًا، أو التي لا يخدمها macOS أصليًا.";
+"cli.controller.ownership.discussion" = "يترك native وحدة التحكم لـ macOS، الذي يخدمها كوحدة تحكم ألعاب؛ ويتيح virtual لـ OpenJoystickDriver تولّيها ونشر وحدة التحكم الافتراضية الخاصة بها. ينطبق الاختيار على كل وحدة تحكم من الطراز: فهو يضبط ownership في سجلك للطراز، VVVV-PPPP.json في دليل السجلات، ويحتفظ بحقول السجل الأخرى. تطبّقه الخدمة قيد التشغيل دون إعادة توصيل. يحتاج إلى الخدمة للعثور على وحدة التحكم. لا يكتب --dry-run أي شيء. يخرج بالرمز 1 مع E2023 لوحدة تحكم تستخدم USB الخام، التي يخدمها OpenJoystickDriver دائمًا، أو التي لا يخدمها macOS أصليًا.";
 "cli.controller.ownership.dry_run" = "عند التنفيذ سيتم ضبط %@ على %@ في %@.";
 "cli.controller.ownership.invalid" = "تعذّر تغيير %@: %@";
 "cli.controller.ownership.no_record" = "لا يوجد لـ %@ سجل وحدة تحكم لتغييره. أنشئ واحدًا باستخدام «ojd record draft %@».";
 "cli.controller.ownership.not_native" = "لا يخدم macOS %@ أصليًا، لذا يخدمه OpenJoystickDriver دائمًا.";
 "cli.controller.ownership.raw_usb" = "يستخدم %@ USB الخام، لذا يخدمه OpenJoystickDriver دائمًا.";
-"cli.controller.ownership.success" = "تم ضبط %@ على %@ في %@. تطبّقه الخدمة العاملة الآن.";
+"cli.controller.ownership.success" = "تم ضبط %@ على %@ في %@. تطبّقه الخدمة قيد التشغيل الآن.";
 "cli.controller.player.abstract" = "اضبط أضواء مؤشر اللاعب في وحدة التحكم.";
 "cli.controller.player.number" = "رقم اللاعب من 1 إلى 4، أو off.";
 "cli.controller.resume.abstract" = "اسمح لـ OpenJoystickDriver بالتحكم في وحدة تحكم معلّقة مرة أخرى.";
@@ -1353,7 +1353,7 @@
 "cli.diagnose.records.skipped" = "تم تخطي %@؛ افحصها باستخدام «ojd record list»";
 "cli.diagnose.timings.frame" = "الإطار %lld من %@ (%@)، الساعة الرتيبة بالنانوثانية: %@";
 "cli.record.abstract" = "صُغ مسودات سجلات وحدات التحكم أو اعرضها أو افحصها أو ثبّتها أو أزلها.";
-"cli.record.discussion" = "يخبر سجل وحدة التحكم OpenJoystickDriver بكيفية تشغيل طراز واحد من وحدات التحكم. توجد سجلاتك في ~/Library/Application Support/OpenJoystickDriver/Controllers، وتضيف طرازًا أو تعدّل طرازًا مضمّنًا. تطبّقها الخدمة العاملة عند تغيّر المجلد. ولا يحتاج إلى الخدمة سوى «ojd record draft».";
+"cli.record.discussion" = "يخبر سجل وحدة التحكم OpenJoystickDriver بكيفية تشغيل طراز واحد من وحدات التحكم. توجد سجلاتك في ~/Library/Application Support/OpenJoystickDriver/Controllers، وتضيف طرازًا أو تعدّل طرازًا مضمّنًا. تطبّقها الخدمة قيد التشغيل عند تغيّر المجلد. ولا يحتاج إلى الخدمة سوى «ojd record draft».";
 "cli.record.draft.abstract" = "صُغ مسودة سجل وحدة تحكم من وحدة تحكم متصلة.";
 "cli.record.draft.captured" = "تقارير الإدخال الملتقطة: %lld.";
 "cli.record.draft.changed_byte" = "تغيّر البايت %lld: من %lld إلى %lld.";
@@ -1367,10 +1367,10 @@
 "cli.record.identity" = "طراز وحدة التحكم، بصيغة VVVV:PPPP.";
 "cli.record.install.abstract" = "افحص سجل وحدة تحكم وثبّته لمستخدمك.";
 "cli.record.install.confirm" = "هل تريد استبدال %@؟";
-"cli.record.install.discussion" = "يكتب السجل باسم VVVV-PPPP.json في مجلد سجلاتك، وتطبّقه الخدمة العاملة فورًا. استبدال السجل المثبّت سابقًا لذلك الطراز يطلب تأكيدًا في الطرفية؛ وإلا فيلزم استخدام --force. يفحص --dry-run السجل ولا يكتب شيئًا. ينتهي بالرمز 1 ولا يكتب شيئًا عندما يكون السجل غير صالح.";
+"cli.record.install.discussion" = "يكتب السجل باسم VVVV-PPPP.json في مجلد سجلاتك، وتطبّقه الخدمة قيد التشغيل فورًا. استبدال السجل المثبّت سابقًا لذلك الطراز يطلب تأكيدًا في الطرفية؛ وإلا فيلزم استخدام --force. يفحص --dry-run السجل ولا يكتب شيئًا. ينتهي بالرمز 1 ولا يكتب شيئًا عندما يكون السجل غير صالح.";
 "cli.record.install.dry_run" = "سيتم تثبيت %@.";
 "cli.record.install.failed" = "تعذّرت كتابة %@: %@";
-"cli.record.install.success" = "تم تثبيت %@. تطبّقه الخدمة العاملة الآن.";
+"cli.record.install.success" = "تم تثبيت %@. تطبّقه الخدمة قيد التشغيل الآن.";
 "cli.record.invalid" = "%@ ليس سجلًا صالحًا: %@";
 "cli.record.list.abstract" = "اعرض كل سجل لوحدة تحكم والطبقة التي يأتي منها.";
 "cli.record.list.bundled" = "اعرض الكتالوج المضمّن وحده.";
@@ -1388,7 +1388,7 @@
 "cli.record.test.abstract" = "إعادة تشغيل التقارير الملتقطة عبر محلل سجل ومقارنة الحالة المحلَّلة.";
 "cli.record.test.capture_invalid" = "%@ ليس التقاط حزم: %@";
 "cli.record.test.difference" = "%@: المتوقع %@، والفعلي %@";
-"cli.record.test.discussion" = "يعيد تشغيل الحزم المستلمة من التقاط عبر محلل السجل، ثم يقارن حالة وحدة التحكم بعد آخر تقرير إدخال بالحالة المتوقعة. الالتقاط هو أسطر JSON الناتجة عن «ojd controller capture --json». الحالة المتوقعة كائن JSON واحد بشكل سطر من «ojd controller watch --json». يسرد الأمر كل حقل مختلف وينتهي بالرمز 1 إذا اختلف أي حقل. يقارن كل الحقول عدا connection الذي تضبطه الخدمة العاملة. لا يحتاج إلى خدمة عاملة.";
+"cli.record.test.discussion" = "يعيد تشغيل الحزم المستلمة من التقاط عبر محلل السجل، ثم يقارن حالة وحدة التحكم بعد آخر تقرير إدخال بالحالة المتوقعة. الالتقاط هو أسطر JSON الناتجة عن «ojd controller capture --json». الحالة المتوقعة كائن JSON واحد بشكل سطر من «ojd controller watch --json». يسرد الأمر كل حقل مختلف وينتهي بالرمز 1 إذا اختلف أي حقل. يقارن كل الحقول عدا connection الذي تضبطه الخدمة قيد التشغيل. لا يحتاج إلى خدمة عاملة.";
 "cli.record.test.expect" = "حالة وحدة التحكم المتوقعة، كملف JSON.";
 "cli.record.test.expect_invalid" = "%@ ليس حالة وحدة تحكم: %@";
 "cli.record.test.matched" = "%@ يطابق الحالة المتوقعة: أُعيد تشغيل %lld من تقارير الإدخال.";

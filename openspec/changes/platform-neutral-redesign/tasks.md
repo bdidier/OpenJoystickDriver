@@ -32,12 +32,12 @@ This is a plan. No task here is done. Each work package (WP) lists what it owns,
 These need the user or hardware. Tasks that depend on them say so.
 
 1. Which DS3 location (`01130000` or `01140000`) is the genuine CECHZC2E (0xEF discriminator).
-2. Request more Apple `transport.usb` IDs or stay with the seven granted.
-3. Catalog-wide localization choices listed in `design.md` Open Questions.
+2. Settled: stay with the seven granted `transport.usb` IDs (`design.md` Open Questions).
+3. Settled: catalog-wide localization choices, applied by 22.6 (`design.md` Open Questions).
 4. Settled: the command-line tool link belongs to the app; `ojd` only reports it (`design.md` D9).
 5. `1209:4A4F` mapping directions need button and axis presses.
-6. A new pid.codes entry for the W3C-standard-mapping layout.
-7. Submit the SDL mapping upstream (assumed no).
+6. Settled: no new pid.codes entry (`design.md` Open Questions).
+7. Settled: the SDL mapping is not submitted upstream.
 8. Turn on GitHub Pages (the user does this).
 
 ## 1. Equivalence-test harness
@@ -291,7 +291,7 @@ Verify: `python3 Scripts/Quality/check_localization_keys.py`, `ruff check Script
 - [ ] 22.3 Add positional specifiers, `.stringsdict` plurals and translator comments to `en-US`. Verify: checker passes.
 - [ ] 22.4 Update the checker for namespaces, OS words, specifiers, comments. Verify: negative unit tests per rule.
 - [ ] 22.5 Add `crowdin.yml` and stop copying `Localizable.template.*` into bundles. Verify: a test parses the file; build output has no template.
-- [ ] 22.6 Review translation decisions from open item 3 as separate edits. Verify: each decision is a separate commit with the user's answer.
+- [x] 22.6 Review translation decisions from open item 3 as separate edits. Verify: each decision is a separate commit with the user's answer. Done: the user delegated the choices on 2026-10-15; eight `fix(l10n)` commits, one per decision.
 - [ ] 22.7 Update `LOCALIZATION.md`. Verify: markdownlint.
 
 ## 23. Docs, wiki, CHANGELOG, release checks
@@ -323,7 +323,5 @@ These need the maintainer and a device. Each result is recorded in `wiki` or the
 ## Workflow follow-up
 
 - Push, tag, notarize and publish are the maintainer's actions and need confirmation.
-- Submit the SDL mapping upstream only if the user reverses the assumption (open item 7).
 - Turn on GitHub Pages so the schema `$id` URLs resolve (open item 8).
-- Request more Apple `transport.usb` IDs if wanted (open item 2).
 - Archive this change after `release-0-6-0-alpha-1` is archived, then convert `pending-deltas.md` into MODIFIED and REMOVED deltas.

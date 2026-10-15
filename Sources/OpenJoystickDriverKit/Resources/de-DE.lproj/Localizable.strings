@@ -1049,7 +1049,7 @@
 "cli.diagnose.bundle_parent" = "--bundle benötigt einen vorhandenen Ordner; %@ existiert nicht.";
 "cli.diagnose.bundle_progress" = "Support-Paket wird geschrieben...";
 "cli.diagnose.bundle_written" = "Support-Paket nach %@ geschrieben. Prüfe es vor dem Teilen; Gerätenamen sind enthalten.";
-"cli.diagnose.discussion" = "Jede Prüfung meldet pass, warn, fail oder skip. Prüfungen, die den Dienst benötigen, werden übersprungen, solange er gestoppt ist. Beendet sich mit 1, wenn eine Prüfung fehlschlägt. --soak fügt eine Laufzeit-Integritätsprüfung hinzu, die den Dienst über die angegebene Zeit abtastet; ohne diese Option wird die Prüfung übersprungen. --bundle schreibt zusätzlich einen Support-Bericht; prüfe ihn vor dem Teilen.";
+"cli.diagnose.discussion" = "Jede Prüfung meldet pass, warn, fail oder skip. Prüfungen, die den Dienst benötigen, werden übersprungen, solange er gestoppt ist. Endet mit 1, wenn eine Prüfung fehlschlägt. --soak fügt eine Laufzeit-Integritätsprüfung hinzu, die den Dienst über die angegebene Zeit abtastet; ohne diese Option wird die Prüfung übersprungen. --bundle schreibt zusätzlich einen Support-Bericht; prüfe ihn vor dem Teilen.";
 "cli.diagnose.extension.absent" = "nicht bei macOS registriert; führe „ojd extension activate“ aus";
 "cli.diagnose.extension.active" = "in macOS aktiv";
 "cli.diagnose.extension.bundle_invalid" = "unerwartete Bundle-Kennung %@; installiere OpenJoystickDriver neu";
@@ -1083,7 +1083,7 @@
 "cli.error.permission_still_missing" = "Der Zugriff „%@“ fehlt weiterhin. Erlaube OpenJoystickDriver in Systemeinstellungen > %@ und führe dann „ojd permission request“ erneut aus.";
 "cli.extension.abstract" = "Zeigt die DriverKit-Systemerweiterung von OpenJoystickDriver an, aktiviert oder deaktiviert sie.";
 "cli.extension.activate.abstract" = "Fordert macOS auf, die Erweiterung zu aktivieren. Möglicherweise ist eine Genehmigung in den Systemeinstellungen nötig.";
-"cli.extension.activate.discussion" = "Führe das ojd in /Applications/OpenJoystickDriver.app aus. Das Warten auf die Genehmigung beendet sich mit 0.";
+"cli.extension.activate.discussion" = "Führe das ojd in /Applications/OpenJoystickDriver.app aus. Das Warten auf die Genehmigung endet mit 0.";
 "cli.extension.activated" = "Die Erweiterung ist aktiv.";
 "cli.extension.approval" = "Die Anfrage benötigt deine Genehmigung. Erlaube sie in Systemeinstellungen > Allgemein > Anmeldeobjekte & Erweiterungen > Treibererweiterungen.";
 "cli.extension.bundle_missing" = "Die App enthält %@.dext nicht. Führe „./Scripts/ojd build install dev“ aus und versuche es dann erneut aus /Applications.";
@@ -1130,7 +1130,7 @@
 "cli.permission.purpose.driver_extension" = "Besitzt durch Berechtigungen eingeschränkte rohe USB-Schnittstellen; keine TCC-Datenschutzberechtigung";
 "cli.permission.purpose.input_monitoring" = "Eingaben von physischen Controllern lesen";
 "cli.permission.request.abstract" = "Bittet den Dienst, Berechtigungen anzufordern; im Terminal erscheint nie eine Abfrage.";
-"cli.permission.request.discussion" = "macOS zeigt für den Dienst eine eigene Abfrage an. Beendet sich mit 77, wenn eine angeforderte Berechtigung weiterhin nicht erteilt ist. Ohne IDs werden input-monitoring und accessibility angefordert. --timeout beträgt hier standardmäßig 10 Sekunden.";
+"cli.permission.request.discussion" = "macOS zeigt für den Dienst eine eigene Abfrage an. Endet mit 77, wenn eine angeforderte Berechtigung weiterhin nicht erteilt ist. Ohne IDs werden input-monitoring und accessibility angefordert. --timeout beträgt hier standardmäßig 10 Sekunden.";
 "cli.permission.request.granted" = "Der angeforderte Zugriff ist erteilt.";
 "cli.permission.request.ids" = "Anzufordernde Berechtigungen: input-monitoring oder accessibility.";
 "cli.permission.request.unknown_id" = "Unbekannte Berechtigung „%@“. Verwende %@.";
@@ -1157,7 +1157,7 @@
 "cli.setting.list.abstract" = "Listet jede Einstellung und ihren Wert auf.";
 "cli.setting.notification_sounds" = "Bei Mitteilungen einen Ton abspielen.";
 "cli.setting.set.abstract" = "Ändert eine Einstellung.";
-"cli.setting.set.discussion" = "Werte sind true oder false. Beendet sich mit 1, wenn macOS launch-at-login ausgeschaltet lässt, bis du es in den Systemeinstellungen genehmigst.";
+"cli.setting.set.discussion" = "Werte sind true oder false. Endet mit 1, wenn macOS launch-at-login ausgeschaltet lässt, bis du es in den Systemeinstellungen genehmigst.";
 "cli.setting.set.key" = "Die zu ändernde Einstellung, z. B. launch-at-login.";
 "cli.setting.set.not_applied" = "macOS hat %@ nicht angewendet. Erlaube OpenJoystickDriver in Systemeinstellungen > Allgemein > Anmeldeobjekte und führe dann „ojd setting get %@“ aus.";
 "cli.setting.set.success" = "%@ auf %@ gesetzt.";
@@ -1166,7 +1166,7 @@
 "cli.update.abstract" = "Prüft, ob eine neuere Version von OpenJoystickDriver existiert.";
 "cli.update.check.abstract" = "Vergleicht diese Version mit dem neuesten Release-Tag auf GitHub.";
 "cli.update.check.available" = "OpenJoystickDriver %@ ist verfügbar (du hast %@): %@";
-"cli.update.check.discussion" = "Läuft nur auf Anfrage; ojd prüft nie von selbst. Es lädt nichts herunter und installiert nichts. Beendet sich mit 0, egal ob ein Update existiert, und mit 1, wenn die Prüfung fehlschlägt.";
+"cli.update.check.discussion" = "Läuft nur auf Anfrage; ojd prüft nie von selbst. Es lädt nichts herunter und installiert nichts. Endet mit 0, egal ob ein Update existiert, und mit 1, wenn die Prüfung fehlschlägt.";
 "cli.update.check.failed" = "Die Suche nach Updates war nicht möglich: %@. Prüfe deine Netzwerkverbindung und versuche es erneut.";
 "cli.update.check.failed_reason" = "Die Suche nach Updates war nicht möglich: %@.";
 "cli.update.check.incomplete" = "kein Ergebnis";
@@ -1544,7 +1544,7 @@
 "cli.profile.set.value" = "Der neue Wert, als JSON oder als Zeichenfolge.";
 "cli.profile.show.abstract" = "Die Einstellungen und Belegungen eines Profils anzeigen.";
 "cli.profile.validate.abstract" = "Eine Profildatei prüfen, ohne sie zu importieren.";
-"cli.profile.validate.discussion" = "Prüft die Datei anhand des Profilschemas und der feldübergreifenden Regeln, etwa doppelter Quellen. Mit - wird das Profil von stdin gelesen. Benötigt keinen laufenden Dienst. Beendet sich mit 1, wenn das Profil ungültig ist.";
+"cli.profile.validate.discussion" = "Prüft die Datei anhand des Profilschemas und der feldübergreifenden Regeln, etwa doppelter Quellen. Mit - wird das Profil von stdin gelesen. Benötigt keinen laufenden Dienst. Endet mit 1, wenn das Profil ungültig ist.";
 "cli.profile.validate.file" = "Die Profildatei oder - für stdin.";
 "cli.profile.validate.valid" = "%@ ist ein gültiges Profil: „%@“ für %@ (%@). Mit „ojd profile import“ hinzufügen.";
 "cli.profile.vanished" = "Der Dienst hat das Profil nicht behalten. Prüfe es mit „ojd profile list“.";
