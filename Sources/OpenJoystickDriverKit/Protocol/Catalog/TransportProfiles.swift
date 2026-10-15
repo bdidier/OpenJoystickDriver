@@ -213,6 +213,13 @@ public enum ControllerOwnership: String, Codable, Sendable {
   case ojd
 }
 
+/// How the record asks OJD to reach the controller; a record without one leaves the route to
+/// the family.
+public enum ControllerRecordRoute: String, Sendable {
+  /// OJD's USB extension claims the controller; the extension matches only the IDs Apple granted.
+  case extensionOwned = "ExtensionOwned"
+}
+
 /// A record's `tuning` section; each nil field keeps the driver's default.
 public struct ControllerTuning: Codable, Equatable, Sendable {
   /// Radial stick deadzone of the output dispatcher, in 0<..<1 of full deflection.
@@ -272,6 +279,8 @@ public struct DeviceRuntimeProfile: Equatable, Sendable {
   public let inputLayout: ControllerInputLayout?
   /// The record's timing and deadzone values; nil fields keep the driver defaults.
   public internal(set) var tuning: ControllerTuning
+  /// The record's route; nil leaves it to the family.
+  public var route: ControllerRecordRoute?
   /// The record's Bluetooth LE vibration characteristic UUID; set only for Switch 2 controllers.
   public var bluetoothLEVibrationCharacteristic: String?
 

@@ -10,5 +10,6 @@
       "xbox.gip/led-on",
       "xbox.gip/auth-done"
     ]
-  }
+  },
+  "route": "ExtensionOwned"
 }

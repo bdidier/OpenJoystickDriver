@@ -301,6 +301,17 @@ class OwnershipAndOutputTests(unittest.TestCase):
             with self.subTest(name):
                 self.assertFalse(self.validator.is_valid(document))
 
+    def test_route_extension_owned_applies_only_to_raw_usb_families(self) -> None:
+        self.assertTrue(self.validator.is_valid(record(GIP, route="ExtensionOwned")))
+        rejected = {
+            "unknown route": record(GIP, route="System"),
+            "DualSense route": record(DUALSENSE, route="ExtensionOwned"),
+            "third-party route": record(THIRD_PARTY, route="ExtensionOwned"),
+        }
+        for name, document in rejected.items():
+            with self.subTest(name):
+                self.assertFalse(self.validator.is_valid(document))
+
 
 SIXAXIS = {"family": "sony.sixaxis"}
 ENABLE = {

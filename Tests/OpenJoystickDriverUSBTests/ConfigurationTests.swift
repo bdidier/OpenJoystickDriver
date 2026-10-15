@@ -27,6 +27,35 @@ struct USBDriverKitExtensionConfigurationTests {
   }
 
   @Test
+  func matchListComesFromExtensionOwnedRecordsWithinTheGrant() {
+    let outside = ControllerModelID(vendorID: 0x045E, productID: 0x02FF)
+    let otherVendor = ControllerModelID(vendorID: 0x0E6F, productID: 0x02D1)
+    let models =
+      [0x0B12, 0x02D1].map { ControllerModelID(vendorID: 0x045E, productID: $0) }
+      + [outside, otherVendor]
+
+    #expect(
+      USBDriverKitExtensionConfiguration.matchedProductIDs(extensionOwned: models) == [
+        0x02D1, 0x0B12,
+      ]
+    )
+    #expect(
+      USBDriverKitExtensionConfiguration.modelsOutsideGrant(extensionOwned: models)
+        == [
+          otherVendor, outside,
+        ].sorted()
+    )
+  }
+
+  @Test
+  func bundledRecordsStayWithinTheGrant() {
+    let models = USBDriverKitExtensionConfiguration.extensionOwnedModels(
+      in: ControllerRecordSet.bundled
+    )
+    #expect(USBDriverKitExtensionConfiguration.modelsOutsideGrant(extensionOwned: models).isEmpty)
+  }
+
+  @Test
   func registryServiceBecomesStableKitOwnedDeviceValue() throws {
     let service = DriverService(
       id: 42,

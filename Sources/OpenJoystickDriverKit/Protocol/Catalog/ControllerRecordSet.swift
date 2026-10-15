@@ -79,6 +79,9 @@ public struct ControllerRecord: Sendable {
   /// Who serves the controller: `macos` unless a layer sets `ojd`.
   public var ownership: ControllerOwnership { profile.ownership }
 
+  /// The route the record asks for; nil leaves it to the family.
+  public var route: ControllerRecordRoute? { profile.route }
+
   /// Whether the record is a Switch 2 controller without `bluetoothLE`, which OJD reaches only
   /// over USB, because the Bluetooth LE central needs the vibration characteristic.
   public var isSwitch2WithoutBluetoothLE: Bool {

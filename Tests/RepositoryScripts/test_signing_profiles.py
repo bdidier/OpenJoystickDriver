@@ -166,6 +166,48 @@ class DoctorProfileTests(unittest.TestCase):
                 profile = {"Entitlements": {**FULL_DEXT, key: True}}
                 self.assertTrue(doctor.dext_profile_errors("dext", profile))
 
+    def test_match_terms_outside_the_grant_are_named(self) -> None:
+        granted = [721, 733, 739, 746, 2816, 2826, 2834]
+        documents = {
+            "entitlements": {USB: [{"idVendor": 1118, "idProductArray": granted}]},
+            "personality": {
+                "IOKitPersonalities": {
+                    "Driver": {"idVendor": 1118, "idProductArray": granted}
+                }
+            },
+            "signing entitlements": {USB: doctor.PRODUCTION_USB},
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            paths = []
+            for name, document in documents.items():
+                path = Path(directory, name)
+                path.write_bytes(plistlib.dumps(document))
+                paths.append(path)
+            self.assertEqual(doctor.match_term_errors(paths), [])
+
+            outside = {
+                "extra product": {
+                    USB: [{"idVendor": 1118, "idProductArray": [721, 767]}]
+                },
+                "other vendor": {
+                    "IOKitPersonalities": {
+                        "Driver": {"idVendor": 3695, "idProduct": 721}
+                    }
+                },
+                "vendor-wide": {"IOKitPersonalities": {"Driver": {"idVendor": 1118}}},
+            }
+            for name, document in outside.items():
+                with self.subTest(name):
+                    path = Path(directory, name)
+                    path.write_bytes(plistlib.dumps(document))
+                    errors = doctor.match_term_errors([path])
+                    self.assertEqual(len(errors), 1)
+            errors = doctor.match_term_errors([Path(directory, "extra product")])
+            self.assertIn("045E:02FF", errors[0])
+
+    def test_tree_match_terms_stay_within_the_grant(self) -> None:
+        self.assertEqual(doctor.match_term_errors(doctor.DEXT_MATCH_FILES), [])
+
 
 if __name__ == "__main__":
     unittest.main()

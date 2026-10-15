@@ -21,6 +21,8 @@ struct ControllerRecordDocument: Decodable {
   let capabilities: ControllerCapabilityDelta
   /// Nil leaves a controller macOS supports to macOS.
   let ownership: ControllerOwnership?
+  /// Set only on raw-USB records that OJD's USB extension serves.
+  let route: ControllerRecordRoute?
   let rumbleTemplate: RumbleOutputTemplate?
   /// Fixed reports OJD sends when it starts the controller; empty when the record has none.
   let startupWrites: [RecordStartupWrite]
@@ -32,7 +34,7 @@ struct ControllerRecordDocument: Decodable {
     let container = try decoder.container(keyedBy: DocumentKey.self)
     try container.rejectUnknown(allowed: [
       "$schema", "vendorID", "productID", "protocol", "usb", "bluetoothLE", "capabilities",
-      "ownership", "output", "input", "tuning",
+      "ownership", "route", "output", "input", "tuning",
     ])
     let schema = try container.decode(String.self, for: "$schema")
     guard Self.knownSchemaIDs.contains(schema) else {
@@ -58,6 +60,16 @@ struct ControllerRecordDocument: Decodable {
         )
       }
       return ownership
+    }
+    route = try container.decodeOptional(String.self, for: "route").map { name in
+      guard let route = ControllerRecordRoute(rawValue: name) else {
+        throw DecodingError.dataCorruptedError(
+          forKey: DocumentKey("route"),
+          in: container,
+          debugDescription: "route must be ExtensionOwned"
+        )
+      }
+      return route
     }
     let output = try container.decodeOptional(Output.self, for: "output")
     rumbleTemplate = output?.rumble
@@ -121,6 +133,14 @@ struct ControllerRecordDocument: Decodable {
         .init(
           codingPath: codingPath + [DocumentKey("ownership")],
           debugDescription: "ownership applies only to HID controllers"
+        )
+      )
+    }
+    if route != nil, !rawUSB {
+      throw DecodingError.dataCorrupted(
+        .init(
+          codingPath: codingPath + [DocumentKey("route")],
+          debugDescription: "route ExtensionOwned applies only to raw-USB controllers"
         )
       )
     }

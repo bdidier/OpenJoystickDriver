@@ -4,5 +4,6 @@
   "productID": 2826,
   "protocol": {
     "family": "xbox.gip"
-  }
+  },
+  "route": "ExtensionOwned"
 }

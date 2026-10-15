@@ -1,0 +1,9 @@
+{
+	"$schema": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/controller-override.schema.json",
+	"operation": "patch",
+	"vendorID": 1118,
+	"productID": 746,
+	"set": {
+		"route": "ExtensionOwned"
+	}
+}

@@ -33,6 +33,9 @@
 		"ownership": {
 			"$ref": "#/$defs/ownership"
 		},
+		"route": {
+			"$ref": "#/$defs/route"
+		},
 		"output": {
 			"$ref": "#/$defs/output"
 		},
@@ -679,6 +682,9 @@
 		"ownership": {
 			"enum": ["macos", "ojd"]
 		},
+		"route": {
+			"enum": ["ExtensionOwned"]
+		},
 		"output": {
 			"type": "object",
 			"additionalProperties": false,
@@ -1294,6 +1300,38 @@
 								}
 							]
 						}
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"required": ["route"]
+			},
+			"then": {
+				"properties": {
+					"protocol": {
+						"anyOf": [
+							{
+								"properties": {
+									"family": {
+										"enum": ["xbox.xid", "xbox.xusb", "xbox.gip"]
+									}
+								},
+								"required": ["family"]
+							},
+							{
+								"properties": {
+									"family": {
+										"const": "vendor.gamesir"
+									},
+									"variant": {
+										"const": "usb"
+									}
+								},
+								"required": ["family", "variant"]
+							}
+						]
 					}
 				}
 			}
