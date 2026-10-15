@@ -944,7 +944,6 @@
 "cli.error.timeout_value" = "--timeout 需要大於 0 的秒數。";
 "cli.error.unexpected" = "未預期的錯誤：%@。請執行「ojd diagnose --output PATH」，並將產生的套件附在錯誤報告中。";
 "cli.error.unknown_command" = "未知指令「%@」。您是否想用「%@」？";
-"cli.error.renamed_flag" = "「%@」已重新命名為「%@」。";
 "cli.option.json" = "在 stdout 上輸出 JSON。";
 "cli.option.no_color" = "不使用顏色。";
 "cli.option.no_input" = "絕不提示輸入；缺少值時失敗。";
@@ -1680,6 +1679,5 @@
 "error.E5003" = "協定描述指定的系列與其檔案名稱不同。請以系列名稱命名該檔案。";
 "error.E5004" = "協定描述列出了其系列沒有的變體。請使用該系列的其中一個變體。";
 "error.E5005" = "存取檔案 AccessGrants.json 已損毀。請修復或刪除該檔案，然後重新授予存取權限。";
-"error.E5006" = "文件使用了已重新命名的詞語。請將每個舊詞語替換為訊息中列出的新詞語，或刪除該檔案，然後重新執行指令。";
-"error.E5007" = "不支援存取檔案 AccessGrants.json。請刪除該檔案，然後重新授予存取權限。";
+"error.E5006" = "不支援存取檔案 AccessGrants.json。請刪除該檔案，然後重新授予存取權限。";
 "error.withCode" ="%@ (%@)";

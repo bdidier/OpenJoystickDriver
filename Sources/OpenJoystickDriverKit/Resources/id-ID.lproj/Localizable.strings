@@ -944,7 +944,6 @@
 "cli.error.timeout_value" = "--timeout memerlukan jumlah detik di atas 0.";
 "cli.error.unexpected" = "Kesalahan tak terduga: %@. Jalankan “ojd diagnose --output PATH” dan lampirkan bundel ke laporan bug.";
 "cli.error.unknown_command" = "Perintah tidak dikenal “%@”. Maksud Anda “%@”?";
-"cli.error.renamed_flag" = "“%@” diganti namanya menjadi “%@”.";
 "cli.option.json" = "Cetak JSON ke stdout.";
 "cli.option.no_color" = "Jangan gunakan warna.";
 "cli.option.no_input" = "Jangan pernah meminta input; gagal jika nilai tidak ada.";
@@ -1680,6 +1679,5 @@
 "error.E5003" = "Deskripsi protokol menyebut keluarga yang berbeda dari nama berkasnya. Beri nama berkas sesuai keluarganya.";
 "error.E5004" = "Deskripsi protokol mencantumkan varian yang tidak dimiliki keluarganya. Gunakan salah satu varian keluarga tersebut.";
 "error.E5005" = "File akses AccessGrants.json rusak. Perbaiki atau hapus file itu, lalu berikan akses lagi.";
-"error.E5006" = "Sebuah dokumen memakai kata yang namanya sudah diganti. Ganti setiap kata lama dengan kata baru yang disebut pesan, atau hapus file itu, lalu jalankan perintah lagi.";
-"error.E5007" = "File akses AccessGrants.json tidak didukung. Hapus file itu, lalu berikan akses lagi.";
+"error.E5006" = "File akses AccessGrants.json tidak didukung. Hapus file itu, lalu berikan akses lagi.";
 "error.withCode" ="%@ (%@)";

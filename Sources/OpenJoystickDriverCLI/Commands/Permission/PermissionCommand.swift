@@ -111,13 +111,12 @@ struct PermissionRequestCommand: AsyncParsableCommand {
   func validate() throws {
     let valid = PermissionID.requestable.map(\.rawValue)
     for id in ids where !valid.contains(id) {
-      let hint = RenamedWord.hints(for: [id], kind: .permissionID)
       throw ValidationError(
         CLILocalized.format(
           "cli.permission.request.unknown_id",
           id,
           valid.joined(separator: ", ")
-        ) + hint
+        )
       )
     }
   }

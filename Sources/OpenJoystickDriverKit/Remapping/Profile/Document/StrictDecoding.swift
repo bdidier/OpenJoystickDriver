@@ -19,7 +19,6 @@ extension Decoder {
         .init(
           codingPath: codingPath,
           debugDescription: "unknown field(s): \(unknown.joined(separator: ", "))"
-            + RenamedWord.hints(for: unknown, kind: .field)
         )
       )
     }

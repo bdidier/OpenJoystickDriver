@@ -944,7 +944,6 @@
 "cli.error.timeout_value" = "--timeout에는 0보다 큰 초 단위 숫자가 필요합니다.";
 "cli.error.unexpected" = "예기치 않은 오류: %@. ‘ojd diagnose --output PATH’를 실행하고 번들을 버그 보고서에 첨부하세요.";
 "cli.error.unknown_command" = "알 수 없는 명령 ‘%@’입니다. ‘%@’ 명령을 찾으셨나요?";
-"cli.error.renamed_flag" = "‘%@’의 이름이 ‘%@’(으)로 바뀌었습니다.";
 "cli.option.json" = "JSON을 stdout에 출력합니다.";
 "cli.option.no_color" = "색상을 사용하지 않습니다.";
 "cli.option.no_input" = "입력을 요청하지 않으며, 값이 없으면 실패합니다.";
@@ -1680,6 +1679,5 @@
 "error.E5003" = "프로토콜 설명이 파일 이름과 다른 패밀리를 지정합니다. 파일 이름을 패밀리 이름으로 지정하세요.";
 "error.E5004" = "프로토콜 설명이 해당 패밀리에 없는 변형을 나열합니다. 패밀리의 변형 중 하나를 사용하세요.";
 "error.E5005" = "접근 파일 AccessGrants.json이(가) 손상되었습니다. 파일을 고치거나 삭제한 다음 접근을 다시 허용하세요.";
-"error.E5006" = "문서에 이름이 바뀐 단어가 쓰여 있습니다. 오래된 단어를 메시지가 알려 주는 새 단어로 바꾸거나 파일을 삭제한 다음 명령을 다시 실행하세요.";
-"error.E5007" = "접근 파일 AccessGrants.json은(는) 지원되지 않습니다. 삭제한 다음 접근을 다시 허용하세요.";
+"error.E5006" = "접근 파일 AccessGrants.json은(는) 지원되지 않습니다. 삭제한 다음 접근을 다시 허용하세요.";
 "error.withCode" ="%@ (%@)";

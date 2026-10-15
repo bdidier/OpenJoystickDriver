@@ -944,7 +944,6 @@
 "cli.error.timeout_value" = "--timeout erfordert eine Sekundenzahl größer als 0.";
 "cli.error.unexpected" = "Unerwarteter Fehler: %@. Führe „ojd diagnose --output PATH“ aus und hänge das Bundle an einen Fehlerbericht an.";
 "cli.error.unknown_command" = "Unbekannter Befehl „%@“. Meintest du „%@“?";
-"cli.error.renamed_flag" = "„%@“ wurde in „%@“ umbenannt.";
 "cli.option.json" = "JSON auf stdout ausgeben.";
 "cli.option.no_color" = "Keine Farben verwenden.";
 "cli.option.no_input" = "Nie nachfragen; bei fehlendem Wert fehlschlagen.";
@@ -1680,6 +1679,5 @@
 "error.E5003" = "Eine Protokollbeschreibung nennt eine Familie, die vom Dateinamen abweicht. Benenne die Datei nach ihrer Familie.";
 "error.E5004" = "Eine Protokollbeschreibung führt eine Variante auf, die ihre Familie nicht hat. Verwende eine der Varianten der Familie.";
 "error.E5005" = "Die Zugriffsdatei AccessGrants.json ist beschädigt. Repariere die Datei oder lösche sie und erteile den Zugriff dann erneut.";
-"error.E5006" = "Ein Dokument verwendet Wörter, die umbenannt wurden. Ersetze jedes alte Wort durch das neue Wort, das die Meldung nennt, oder lösche die Datei, und führe den Befehl dann erneut aus.";
-"error.E5007" = "Die Zugriffsdatei AccessGrants.json wird nicht unterstützt. Lösche sie und erteile den Zugriff dann erneut.";
+"error.E5006" = "Die Zugriffsdatei AccessGrants.json wird nicht unterstützt. Lösche sie und erteile den Zugriff dann erneut.";
 "error.withCode" ="%@ (%@)";

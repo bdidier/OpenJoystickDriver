@@ -577,12 +577,6 @@
     {
       "code": "E5006",
       "domain": "document",
-      "name": "renamedWordsInDocument",
-      "status": "active"
-    },
-    {
-      "code": "E5007",
-      "domain": "document",
       "name": "unsupportedAccessGrants",
       "status": "active"
     }

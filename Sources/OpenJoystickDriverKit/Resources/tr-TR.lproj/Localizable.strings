@@ -944,7 +944,6 @@
 "cli.error.timeout_value" = "--timeout, 0’dan büyük bir saniye sayısı gerektirir.";
 "cli.error.unexpected" = "Beklenmeyen hata: %@. “ojd diagnose --output PATH” komutunu çalıştırın ve paketi bir hata raporuna ekleyin.";
 "cli.error.unknown_command" = "Bilinmeyen komut “%@”. Şunu mu demek istediniz: “%@”?";
-"cli.error.renamed_flag" = "“%@”, “%@” olarak yeniden adlandırıldı.";
 "cli.option.json" = "JSON’u stdout’a yazdırır.";
 "cli.option.no_color" = "Renk kullanmaz.";
 "cli.option.no_input" = "Asla sormaz; bir değer eksikse başarısız olur.";
@@ -1680,6 +1679,5 @@
 "error.E5003" = "Bir protokol açıklaması, dosya adından farklı bir aile belirtiyor. Dosyayı ailesinin adıyla adlandırın.";
 "error.E5004" = "Bir protokol açıklaması, ailesinde olmayan bir varyant listeliyor. Ailenin varyantlarından birini kullanın.";
 "error.E5005" = "AccessGrants.json erişim dosyası hasarlı. Dosyayı düzeltin veya silin, sonra erişimi yeniden verin.";
-"error.E5006" = "Bir belge, adı değiştirilmiş sözcükler kullanıyor. Her eski sözcüğü iletinin belirttiği yeni sözcükle değiştirin veya dosyayı silin, sonra komutu yeniden çalıştırın.";
-"error.E5007" = "AccessGrants.json erişim dosyası desteklenmiyor. Dosyayı silin, sonra erişimi yeniden verin.";
+"error.E5006" = "AccessGrants.json erişim dosyası desteklenmiyor. Dosyayı silin, sonra erişimi yeniden verin.";
 "error.withCode" ="%@ (%@)";

@@ -28,10 +28,10 @@ extension ProfileLibraryTests {
     }
   }
 
-  /// A stored profile that still names a control by a removed spelling is refused like any
-  /// other damaged profile: dropped from the snapshot, reported, its bytes left as they were.
-  @Test(arguments: ["south", "face-south", "share", "options", "left_trigger_click", "view"])
-  func profileWithRemovedControlNameIsRecoveredAsDamaged(oldName: String) async throws {
+  /// A stored profile that names a control the vocabulary does not have is damaged like any
+  /// other: dropped from the snapshot, reported, its bytes left as they were.
+  @Test(arguments: ["NotAControl", "a", ""])
+  func profileWithUnknownControlNameIsRecoveredAsDamaged(oldName: String) async throws {
     try await withLibrary { library, _ in
       let valid = makeProfile(name: "Valid")
       let stored = makeProfile(name: "Stored")

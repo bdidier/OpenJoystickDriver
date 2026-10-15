@@ -116,43 +116,22 @@ struct AccessGrantStoreTests {
     #expect(message.contains(AccessGrantStore.fileName))
   }
 
-  @Test
-  func theOldHyphenatedAdHocKindIsNotAcceptedInAFile() throws {
+  @Test(arguments: [
+    #""publisher":{"kind":"x"},"identifier":"a.out""#,
+    #""publisher":{"kind":"signed","id":"ABCDE12345"},"identifier":"a.out","unexpected":1"#,
+    #""kind":"signed","identifier":"a.out""#,
+  ])
+  func aFileThatIsNotTheCurrentShapeIsDamagedAndLeftAsItWas(grant: String) throws {
     try withStore { store, directory in
       try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
       let text =
         #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
-        + #""enabled":true,"grants":[{"publisher":{"kind":"ad-hoc"},"identifier":"a.out","#
+        + #""enabled":true,"grants":[{\#(grant),"#
         + #""scopes":["read"],"grantedAt":"x","path":"/a.out"}],"tokens":[],"#
         + #""web":{"enabled":false,"port":47614}}"#
       try Data(text.utf8).write(to: store.url)
-      #expect(throws: AccessGrantStoreError.self) { try store.load() }
-    }
-  }
 
-  @Test
-  func aFileWithTheOldPublisherWordsIsRefusedAndNamesTheNewWords() throws {
-    try withStore { store, directory in
-      try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-      let text =
-        #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
-        + #""enabled":true,"grants":[{"kind":"team","identifier":"x","#
-        + #""teamIdentifier":"ABCDE12345","#
-        + #""scopes":["read"],"grantedAt":"x","path":"/x"}],"tokens":[],"#
-        + #""web":{"enabled":false,"port":47614}}"#
-      try Data(text.utf8).write(to: store.url)
-
-      #expect {
-        _ = try store.load()
-      } throws: { error in
-        let message = (error as? AccessGrantStoreError)?.errorDescription ?? ""
-        return message.hasPrefix("E5006: ")
-          && [
-            "'teamIdentifier' was renamed to 'publisher.id'.",
-            "'kind' was renamed to 'publisher.kind'.",
-            "'team' was renamed to 'signed'.",
-          ].allSatisfy(message.contains)
-      }
+      #expect(throws: AccessGrantStoreError.damaged) { try store.load() }
       #expect(try String(contentsOf: store.url, encoding: .utf8) == text)
     }
   }

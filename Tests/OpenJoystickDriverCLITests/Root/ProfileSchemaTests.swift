@@ -199,11 +199,8 @@ struct ProfileSchemaTests {
     ("unknown key", #""name": "Everything""#, #""name": "Everything", "unexpected": true"#),
     ("deadzone out of range", #""deadzone": 0.1, "gain""#, #""deadzone": 0.96, "gain""#),
     ("unknown curve", #""ease_in""#, #""quadratic""#),
-    ("bad bundle ID", #""com.example.game""#, #""not an app""#),
+    ("bad app ID", #""com.example.game""#, #""not an app""#),
     ("unknown button", #""button": "South""#, #""button": "a""#),
-    ("removed button name", #""button": "South""#, #""button": "face-south""#),
-    ("removed share name", #""button": "Back""#, #""button": "share""#),
-    ("removed axis name", #""axis": "LeftStickX""#, #""axis": "left_stick_x""#),
     ("malformed unit ID", #""U-AbCd_123-xyzW09q""#, #""U-AbCd+123""#),
     (
       "axis in a chord", #"{"type": "button", "button": "Back"}"#,

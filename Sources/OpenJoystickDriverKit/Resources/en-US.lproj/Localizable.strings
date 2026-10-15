@@ -944,7 +944,6 @@
 "cli.error.timeout_value" = "--timeout needs a number of seconds above 0.";
 "cli.error.unexpected" = "Unexpected error: %@. Run 'ojd diagnose --output PATH' and attach the bundle to a bug report.";
 "cli.error.unknown_command" = "Unknown command '%@'. Did you mean '%@'?";
-"cli.error.renamed_flag" = "'%@' was renamed to '%@'.";
 "cli.option.json" = "Print JSON on stdout.";
 "cli.option.no_color" = "Do not use color.";
 "cli.option.no_input" = "Never prompt; fail when a value is missing.";
@@ -1680,6 +1679,5 @@
 "error.E5003" = "A protocol description names a family that differs from its file name. Name the file after its family.";
 "error.E5004" = "A protocol description lists a variant that its family does not have. Use one of the variants of the family.";
 "error.E5005" = "The access file AccessGrants.json is damaged. Fix the file or delete it, then grant access again.";
-"error.E5006" = "A document uses words that were renamed. Replace each old word with the new word that the message names, or delete the file, then run the command again.";
-"error.E5007" = "The access file AccessGrants.json is not supported. Delete it, then grant access again.";
+"error.E5006" = "The access file AccessGrants.json is not supported. Delete it, then grant access again.";
 "error.withCode" = "%@ (%@)";

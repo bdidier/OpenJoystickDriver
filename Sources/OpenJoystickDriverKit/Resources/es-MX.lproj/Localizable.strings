@@ -944,7 +944,6 @@
 "cli.error.timeout_value" = "--timeout necesita un número de segundos mayor que 0.";
 "cli.error.unexpected" = "Error inesperado: %@. Ejecuta “ojd diagnose --output PATH” y adjunta el paquete a un informe de error.";
 "cli.error.unknown_command" = "Comando desconocido “%@”. ¿Quisiste decir “%@”?";
-"cli.error.renamed_flag" = "“%@” se renombró a “%@”.";
 "cli.option.json" = "Imprime JSON en stdout.";
 "cli.option.no_color" = "No uses color.";
 "cli.option.no_input" = "No preguntes nunca; falla si falta un valor.";
@@ -1680,6 +1679,5 @@
 "error.E5003" = "Una descripción de protocolo nombra una familia distinta del nombre de su archivo. Ponle al archivo el nombre de su familia.";
 "error.E5004" = "Una descripción de protocolo enumera una variante que su familia no tiene. Usa una de las variantes de la familia.";
 "error.E5005" = "El archivo de acceso AccessGrants.json está dañado. Corrige el archivo o elimínalo y concede el acceso de nuevo.";
-"error.E5006" = "Un documento usa palabras que se renombraron. Sustituye cada palabra anterior por la nueva que nombra el mensaje, o elimina el archivo, y vuelve a ejecutar el comando.";
-"error.E5007" = "El archivo de acceso AccessGrants.json no es compatible. Elimínalo y concede el acceso de nuevo.";
+"error.E5006" = "El archivo de acceso AccessGrants.json no es compatible. Elimínalo y concede el acceso de nuevo.";
 "error.withCode" ="%@ (%@)";

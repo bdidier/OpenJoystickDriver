@@ -3,8 +3,6 @@ import OpenJoystickDriverKit
 
 enum AccessGrantStoreError: Error, Equatable, LocalizedError, Sendable {
   case damaged
-  /// The file uses words that were renamed; the text names the new words.
-  case renamedWords(String)
   /// The file's `apiVersion` or `kind` is not the supported one; the text says what was found.
   case unsupported(DocumentHeaderProblem)
   case unknownClient(String)
@@ -27,7 +25,6 @@ enum AccessGrantStoreError: Error, Equatable, LocalizedError, Sendable {
   var code: ErrorCode {
     switch self {
     case .damaged: .damagedAccessGrants
-    case .renamedWords: .renamedWordsInDocument
     case .unsupported: .unsupportedAccessGrants
     case .unknownClient: .unknownAccessClient
     case .notGrantable: .ungrantableClient
@@ -45,8 +42,6 @@ enum AccessGrantStoreError: Error, Equatable, LocalizedError, Sendable {
     switch self {
     case .damaged, .noScope, .serviceStopped, .originsWithControl:
       Self.coded(code)
-    case .renamedWords(let hints):
-      Self.coded(code) + hints
     case .unsupported(let problem):
       Self.coded(code, detail: problem.description)
     case .unknownClient(let id): Self.coded(code, detail: id)
@@ -216,8 +211,6 @@ struct AccessGrantStore: Sendable {
       throw AccessGrantStoreError.unsupported(problem.problem)
     } catch {
       decoded = nil
-      let hints = Self.renamedWordHints(in: data)
-      if !hints.isEmpty { throw AccessGrantStoreError.renamedWords(hints) }
     }
     guard var file = decoded,
       file.grants.allSatisfy({ $0.identity.requirement != nil && !$0.scopes.isEmpty }),
@@ -227,27 +220,6 @@ struct AccessGrantStore: Sendable {
       print("[AccessGrantStore] Ignored token \(name): only control scope, with origins")
     }
     return file
-  }
-
-  /// The hints for the renamed words that a grant of an old file uses: the `teamIdentifier` key
-  /// and the `team` and `apple` kinds.
-  private static func renamedWordHints(in data: Data) -> String {
-    guard let root = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-      let grants = root["grants"] as? [[String: Any]]
-    else { return "" }
-    var hints = ""
-    if grants.contains(where: { $0["teamIdentifier"] != nil }) {
-      hints += RenamedWord.hints(for: ["teamIdentifier"], kind: .field)
-    }
-    if grants.contains(where: { $0["kind"] != nil }) {
-      let renamed = RenamedWord(old: "kind", new: "publisher.kind", kind: .field)
-      hints += " " + renamed.hint()
-    }
-    for kind in ["team", "apple"]
-    where grants.contains(where: { ($0["kind"] as? String) == kind }) {
-      hints += RenamedWord.hints(for: [kind], kind: .publisherKind)
-    }
-    return hints
   }
 
   func save(_ file: AccessGrantFile) throws {

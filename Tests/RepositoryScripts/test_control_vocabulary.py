@@ -11,21 +11,8 @@ ROOT = validate_schemas.ROOT
 CROSSWALK = ROOT / "Resources" / "Vocabulary" / "crosswalk.json"
 SAMPLE_PROFILE = ROOT / "docs" / "sdk" / "sample" / "Profiles" / "sample-pad.json"
 
-# Names the vocabulary replaced. None of them may be a control id any more.
-REMOVED_NAMES = [
-    "face-south",
-    "left-stick-x",
-    "left-trigger-button",
-    "view",
-    "menu",
-    "share",
-    "options",
-    "south",
-    "left_stick_x",
-    "left_trigger_click",
-    "left_grip",
-    "mute",
-]
+# Names that are not control ids.
+UNKNOWN_NAMES = ["south", "NotAControl", "left_stick_x", ""]
 
 
 class ControlVocabularyTests(unittest.TestCase):
@@ -49,9 +36,6 @@ class ControlVocabularyTests(unittest.TestCase):
     def test_every_id_is_upper_camel_case(self) -> None:
         for control in self.controls:
             self.assertRegex(control, r"^[A-Z][A-Za-z0-9]*$")
-
-    def test_no_removed_name_is_a_control(self) -> None:
-        self.assertEqual(set(REMOVED_NAMES) & set(self.controls), set())
 
     def test_the_crosswalk_has_one_row_per_control(self) -> None:
         self.assertEqual(sorted(self.crosswalk), sorted(self.controls))
@@ -93,19 +77,19 @@ class ControlVocabularyTests(unittest.TestCase):
             profile = json.load(source)
         self.assertTrue(self.validator("profile.schema.json").is_valid(profile))
 
-    def test_a_profile_naming_a_removed_control_is_refused(self) -> None:
+    def test_a_profile_naming_an_unknown_control_is_refused(self) -> None:
         validator = self.validator("profile.schema.json")
         with SAMPLE_PROFILE.open(encoding="utf-8") as source:
             profile = json.load(source)
-        for name in REMOVED_NAMES:
+        for name in UNKNOWN_NAMES:
             profile["bindings"][0]["source"]["button"] = name
             self.assertFalse(validator.is_valid(profile), name)
 
-    def test_an_endpoint_frame_naming_a_removed_control_is_refused(self) -> None:
+    def test_an_endpoint_frame_naming_an_unknown_control_is_refused(self) -> None:
         validator = self.validator("endpoint.schema.json")
         frame = {"apiVersion": VERSION, "kind": "Frame", "buttons": ["South"]}
         self.assertTrue(validator.is_valid(frame))
-        for name in REMOVED_NAMES:
+        for name in UNKNOWN_NAMES:
             self.assertFalse(validator.is_valid({**frame, "buttons": [name]}), name)
             self.assertFalse(validator.is_valid({**frame, "axes": {name: 0.5}}), name)
 

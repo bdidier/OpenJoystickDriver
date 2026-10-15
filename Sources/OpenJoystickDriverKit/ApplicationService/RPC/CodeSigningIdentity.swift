@@ -11,20 +11,6 @@ public struct CodeSigningIdentity: Codable, Equatable, Hashable, Sendable {
     case platform
     /// Ad-hoc signed or not signed; any local process can claim this identity.
     case adHoc
-
-    public init(from decoder: any Decoder) throws {
-      let name = try decoder.singleValueContainer().decode(String.self)
-      guard let kind = Self(rawValue: name) else {
-        throw DecodingError.dataCorrupted(
-          .init(
-            codingPath: decoder.codingPath,
-            debugDescription: "unknown publisher kind '\(name)'."
-              + RenamedWord.hints(for: [name], kind: .publisherKind)
-          )
-        )
-      }
-      self = kind
-    }
   }
 
   private enum CodingKeys: String, CodingKey {

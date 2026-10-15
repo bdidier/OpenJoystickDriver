@@ -11,21 +11,6 @@ public enum ControllerOwnershipObservation: String, Codable, CaseIterable, Equat
   case upstreamVirtualDevice
   case unknown
 
-  /// Decodes a value; an old spelling is refused with a message that names the new one.
-  public init(from decoder: any Decoder) throws {
-    let name = try decoder.singleValueContainer().decode(String.self)
-    guard let value = Self(rawValue: name) else {
-      throw DecodingError.dataCorrupted(
-        .init(
-          codingPath: decoder.codingPath,
-          debugDescription: "unknown value '\(name)'."
-            + RenamedWord.hints(for: [name], kind: .physicalOwnership)
-        )
-      )
-    }
-    self = value
-  }
-
   /// Whether the system serves the controller itself, so OJD publishes no virtual device for it.
   /// The decision depends on who serves the input, not on which OS does.
   public var isServedBySystem: Bool {
@@ -44,20 +29,6 @@ public enum DuplicateExposureRisk: String, Codable, Equatable, Sendable {
   case upstreamVirtualDevice
   case unknownOwnership
 
-  /// Decodes a value; an old spelling is refused with a message that names the new one.
-  public init(from decoder: any Decoder) throws {
-    let name = try decoder.singleValueContainer().decode(String.self)
-    guard let value = Self(rawValue: name) else {
-      throw DecodingError.dataCorrupted(
-        .init(
-          codingPath: decoder.codingPath,
-          debugDescription: "unknown value '\(name)'."
-            + RenamedWord.hints(for: [name], kind: .physicalOwnership)
-        )
-      )
-    }
-    self = value
-  }
 }
 
 extension DuplicateExposureRisk {

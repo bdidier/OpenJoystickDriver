@@ -147,11 +147,7 @@ package enum JSONSchemaFiles {
       case "additionalProperties":
         let known = Set((schema["properties"] as? [String: Any] ?? [:]).keys)
         return try object.keys.sorted().filter { !known.contains($0) }.flatMap { key in
-          let hint = RenamedWord.documentFieldReplacement(for: key, in: file).map {
-            ["\(path).\(key): \(key) was renamed to \($0.new)"]
-          }
-          return try (hint ?? [])
-            + validate(object[key] as Any, against: argument, in: file, at: "\(path).\(key)")
+          try validate(object[key] as Any, against: argument, in: file, at: "\(path).\(key)")
         }
       case "required":
         return (argument as? [String] ?? []).filter { object[$0] == nil }.map {
