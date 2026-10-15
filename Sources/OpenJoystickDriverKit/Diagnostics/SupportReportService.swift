@@ -9,7 +9,7 @@ package enum SupportReportService {
     applicationServiceInstalled: Bool,
     applicationServiceConnected: Bool,
     buildIdentity: BuildIdentity,
-    systemGamepadAudit: AppleGameControllerSupportAudit? = nil,
+    systemGamepadAudit: SystemGamepadSupportAudit? = nil,
     frameTimings: [ControllerFrameTimings] = [],
     generatedAt: Date = Date()
   ) -> SupportReport {

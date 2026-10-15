@@ -110,7 +110,7 @@ class ReportSchemaTests(unittest.TestCase):
             "source": "downloadedMobileAsset",
             "bundleVersions": ["10.5.2"],
             "systemExactDeviceCount": 1,
-            "skippedAppleDeviceCount": 0,
+            "skippedSystemDeviceCount": 0,
             "ojdRecordCount": 1,
             "catalogListedOJDRecordCount": 1,
             "records": [

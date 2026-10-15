@@ -11,7 +11,7 @@ struct DiagnoseCommandTests {
     ExtensionStatus(bundle: .present, registration: .active("enabled"))
   }
 
-  private static let noAudit: @Sendable () -> AppleGameControllerSupportAudit? = { nil }
+  private static let noAudit: @Sendable () -> SystemGamepadSupportAudit? = { nil }
 
   private static let brokenExtension: @Sendable () -> ExtensionStatus = {
     ExtensionStatus(bundle: .missing, registration: .absent)
@@ -118,7 +118,7 @@ struct DiagnoseCommandTests {
     let statuses = try statuses(result)
     #expect(statuses.filter { $0.value == "skip" }.keys.sorted() == ["runtime-health"])
     #expect(statuses.values.allSatisfy { $0 == "pass" || $0 == "skip" })
-    #expect(try result.json()["bundle"] == nil)
+    #expect(try result.json()["output"] == nil)
   }
 
   @Test
@@ -239,7 +239,7 @@ struct DiagnoseCommandTests {
   }
 
   @Test
-  func bundleWritesAFileAndNamesItInJSON() async throws {
+  func outputWritesAFileAndNamesItInJSON() async throws {
     let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
     try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
     defer { try? FileManager.default.removeItem(at: directory) }
@@ -248,13 +248,13 @@ struct DiagnoseCommandTests {
     let result = await run(["--output", path, "--json"], socketPath: temporarySocketPath())
 
     #expect(result.code == 0, "\(result.standardError)")
-    #expect(try result.json()["bundle"] as? String == path)
+    #expect(try result.json()["output"] as? String == path)
     #expect(FileManager.default.fileExists(atPath: path))
     #expect(result.standardError.contains(path))
   }
 
   @Test
-  func bundleReadsTheFiveStageStampsOfTheNewestFrames() async throws {
+  func outputReadsTheFiveStageStampsOfTheNewestFrames() async throws {
     let socketPath = temporarySocketPath()
     let server = try serve(socketPath: socketPath)
     defer { server.stop() }
@@ -284,7 +284,7 @@ struct DiagnoseCommandTests {
   }
 
   @Test
-  func bundleWithAStoppedServiceHasNoTimings() async throws {
+  func outputWithAStoppedServiceHasNoTimings() async throws {
     let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
     try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
     defer { try? FileManager.default.removeItem(at: directory) }

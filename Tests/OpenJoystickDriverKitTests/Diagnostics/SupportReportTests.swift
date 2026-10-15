@@ -90,12 +90,12 @@ struct SupportReportTests {
       activeCount: 1,
       state: "running"
     )
-    let appleAudit = AppleGameControllerSupportAuditor.audit(
-      snapshot: AppleGameControllerCatalogSnapshot(
+    let appleAudit = SystemGamepadSupportAuditor.audit(
+      snapshot: SystemGamepadCatalogSnapshot(
         source: .downloadedMobileAsset,
         bundleVersions: ["10.5.2"],
         entries: [
-          AppleGameControllerCatalogEntry(
+          SystemGamepadCatalogEntry(
             vendorID: 1_234,
             productID: 5_678,
             identifiers: ["test.controller"]

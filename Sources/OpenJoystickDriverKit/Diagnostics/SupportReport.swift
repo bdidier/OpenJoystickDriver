@@ -106,7 +106,7 @@ public struct SupportReport: Codable, Sendable {
     public let controllers: [Controller]
     public let unboundDevices: [UnboundDevice]
     public let hidGamepads: [HIDGamepad]
-    public let systemGamepadAudit: AppleGameControllerSupportAudit?
+    public let systemGamepadAudit: SystemGamepadSupportAudit?
     /// The newest frames of each connected controller with the five per-stage stamps, empty when
     /// the service was stopped or had no frames.
     public let frameTimings: [ControllerFrameTimings]
@@ -137,7 +137,7 @@ public struct SupportReport: Codable, Sendable {
     applicationServiceInstalled: Bool,
     applicationServiceConnected: Bool,
     applicationServiceHealth: ApplicationServiceManager.ApplicationServiceHealth?,
-    systemGamepadAudit: AppleGameControllerSupportAudit? = nil,
+    systemGamepadAudit: SystemGamepadSupportAudit? = nil,
     frameTimings: [ControllerFrameTimings] = [],
     status: ApplicationServiceStatusPayload?,
     virtualDiagnostics: ApplicationServiceVirtualDeviceDiagnosticsPayload?
@@ -236,7 +236,7 @@ public struct SupportReport: Codable, Sendable {
       reportNotes.append("Virtual-device diagnostics were unavailable.")
     }
     if systemGamepadAudit == nil {
-      reportNotes.append("Apple GameController catalog audit was unavailable.")
+      reportNotes.append("System gamepad catalog audit was unavailable.")
     }
     data = Payload(
       apiVersion: OpenJoystickDriverAPI.version,

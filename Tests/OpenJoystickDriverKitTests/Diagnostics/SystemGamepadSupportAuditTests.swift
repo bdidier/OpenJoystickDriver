@@ -3,7 +3,7 @@ import Testing
 
 @testable import OpenJoystickDriverKit
 
-struct AppleGameControllerSupportAuditTests {
+struct SystemGamepadSupportAuditTests {
   @Test
   func parsesDeduplicatesAndPreservesMatchConstraints() throws {
     let first = try bundleInfo(
@@ -31,7 +31,7 @@ struct AppleGameControllerSupportAuditTests {
       ]
     )
 
-    let snapshot = AppleGameControllerSupportAuditor.snapshot(
+    let snapshot = SystemGamepadSupportAuditor.snapshot(
       bundleInfoData: [first, second],
       source: .downloadedMobileAsset
     )
@@ -49,12 +49,12 @@ struct AppleGameControllerSupportAuditTests {
 
   @Test
   func auditUsesExactPairsWithoutClaimingRuntimeSupport() {
-    let snapshot = AppleGameControllerCatalogSnapshot(
+    let snapshot = SystemGamepadCatalogSnapshot(
       source: .preinstalledMobileAsset,
       bundleVersions: ["1.2.3"],
-      entries: [AppleGameControllerCatalogEntry(vendorID: 1, productID: 2, identifiers: ["listed"])]
+      entries: [SystemGamepadCatalogEntry(vendorID: 1, productID: 2, identifiers: ["listed"])]
     )
-    let audit = AppleGameControllerSupportAuditor.audit(
+    let audit = SystemGamepadSupportAuditor.audit(
       snapshot: snapshot,
       records: [
         ControllerModelID(vendorID: 1, productID: 2),
@@ -73,7 +73,7 @@ struct AppleGameControllerSupportAuditTests {
 
   @Test
   func malformedBundlesRemainExplicitEvidence() {
-    let snapshot = AppleGameControllerSupportAuditor.snapshot(
+    let snapshot = SystemGamepadSupportAuditor.snapshot(
       bundleInfoData: [Data("not a plist".utf8)],
       source: .downloadedMobileAsset
     )

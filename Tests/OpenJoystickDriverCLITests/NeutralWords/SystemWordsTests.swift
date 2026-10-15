@@ -40,8 +40,8 @@ struct SystemWordsTests {
     let container: [String]
     let old: String
     let new: String
-    /// Whether the schema requires the new field, so that its absence names it.
-    let namesNewWord: Bool
+    /// Whether the schema requires the new field, so that its absence names it too.
+    let required: Bool
   }
 
   static let renames = [
@@ -49,35 +49,41 @@ struct SystemWordsTests {
       container: ["data", "system"],
       old: "macOSVersion",
       new: "osVersion",
-      namesNewWord: true
+      required: true
     ),
     Rename(
       container: ["data"],
       old: "appleGameControllerAudit",
       new: "systemGamepadAudit",
-      namesNewWord: false
+      required: false
     ),
     Rename(
       container: ["data", "systemGamepadAudit"],
       old: "appleExactDeviceCount",
       new: "systemExactDeviceCount",
-      namesNewWord: true
+      required: true
+    ),
+    Rename(
+      container: ["data", "systemGamepadAudit"],
+      old: "skippedAppleDeviceCount",
+      new: "skippedSystemDeviceCount",
+      required: true
     ),
     Rename(
       container: ["data", "systemGamepadAudit", "records", "0"],
       old: "appleIdentifiers",
       new: "systemIdentifiers",
-      namesNewWord: true
+      required: true
     ),
   ]
 
   private func reportDocument() throws -> [String: Any] {
-    let audit = AppleGameControllerSupportAuditor.audit(
-      snapshot: AppleGameControllerCatalogSnapshot(
+    let audit = SystemGamepadSupportAuditor.audit(
+      snapshot: SystemGamepadCatalogSnapshot(
         source: .downloadedMobileAsset,
         bundleVersions: ["10.5.2"],
         entries: [
-          AppleGameControllerCatalogEntry(vendorID: 1_234, productID: 5_678, identifiers: ["a.b"])
+          SystemGamepadCatalogEntry(vendorID: 1_234, productID: 5_678, identifiers: ["a.b"])
         ]
       ),
       records: [ControllerModelID(vendorID: 1_234, productID: 5_678)]
@@ -105,11 +111,14 @@ struct SystemWordsTests {
     return try #require(object as? [String: Any])
   }
 
-  private func issues(in document: [String: Any]) throws -> [String] {
+  private func issues(
+    in document: [String: Any],
+    against reference: String = "report.schema.json"
+  ) throws -> [String] {
     try JSONSchemaFiles.Validator().validate(
       document,
-      against: ["$ref": "report.schema.json"],
-      in: "report.schema.json",
+      against: ["$ref": reference],
+      in: String(reference.prefix { $0 != "#" }),
       at: "$"
     )
   }
@@ -165,8 +174,36 @@ struct SystemWordsTests {
 
     #expect(!found.isEmpty, "\(rename.old) was accepted")
     #expect(found.contains { $0.contains(rename.old) }, "\(found)")
-    if rename.namesNewWord {
+    #expect(
+      found.contains { $0.contains("\(rename.old) was renamed to \(rename.new)") },
+      "\(found)"
+    )
+    if rename.required {
       #expect(found.contains { $0.contains("missing \(rename.new)") }, "\(found)")
+    }
+  }
+
+  @Test
+  func theOldDiagnoseJSONFieldIsRefusedAndNamesOutput() throws {
+    let document: [String: Any] = [
+      "apiVersion": "openjoystickdriver/v1alpha1", "kind": "Diagnosis", "checks": [],
+      "timings": [], "output": "/tmp/support.json",
+    ]
+    #expect(try issues(in: document, against: "cli-output.schema.json#/$defs/diagnose").isEmpty)
+
+    var old = document
+    old["bundle"] = old.removeValue(forKey: "output")
+    let found = try issues(in: old, against: "cli-output.schema.json#/$defs/diagnose")
+
+    #expect(found.contains { $0.contains("bundle was renamed to output") }, "\(found)")
+  }
+
+  @Test
+  func everyRenamedFlagRowIsRefusedWithItsNewWord() {
+    for rename in RenamedWords.renames {
+      guard case .flag(let command) = rename.kind else { continue }
+      let match = RenamedWords.match(arguments: [command, rename.old])
+      #expect(match?.new == rename.new, "\(rename.old)")
     }
   }
 }
