@@ -183,19 +183,30 @@ struct XUSBDriverTests {
   }
 
   @Test
-  func testLeftStickFullDownIsCanonicalDown() throws {
+  func testLeftStickFullDownIsPositiveY() throws {
     let parser = XUSBDriver()
-    // Raw negative LSY, which the remapping frame reads as down-positive 1.
+    // Raw negative LSY is down, which the state reads as positive 1.
     let events = try parser.parseReport(makeXbox360ReportLE(lsy: Int16.min))
-    #expect(events.leftStickYDown?.y == 1.0)
-    #expect(events?.state.leftStick.y == .min)
+    #expect(events.leftStickPosition?.y == 1.0)
+    #expect(events?.state.leftStick.y == .max)
+  }
+
+  @Test
+  func testPushingTheStickUpReadsANegativeY() throws {
+    let parser = XUSBDriver()
+    // Raw positive LSY and RSY are up, which the state reads as negative.
+    let state = try #require(
+      try parser.parseReport(makeXbox360ReportLE(lsy: Int16.max, rsy: Int16.max))?.state
+    )
+    #expect(state.leftStick.y.rawValue < 0)
+    #expect(state.rightStick.y.rawValue < 0)
   }
 
   @Test
   func testRightStickNormalization() throws {
     let parser = XUSBDriver()
     let events = try parser.parseReport(makeXbox360ReportLE(rsx: Int16.min, rsy: Int16.max))
-    let stick = try #require(events.rightStickYDown)
+    let stick = try #require(events.rightStickPosition)
     #expect(stick.x == -1.0)
     #expect(stick.y < -0.99)
   }

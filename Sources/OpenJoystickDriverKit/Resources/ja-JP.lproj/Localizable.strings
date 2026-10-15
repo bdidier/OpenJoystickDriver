@@ -1294,7 +1294,7 @@
 "cli.controller.watch.all_started" = "すべてのコントローラを監視しています。コントローラのボタンを押してください。";
 "cli.controller.watch.connected" = "%@ が接続されました: %@ (%@)";
 "cli.controller.watch.disconnected" = "%@ が切断されました";
-"cli.controller.watch.discussion" = "--json を付けると、1行に1つの JSON オブジェクトを表示します。スティックの Y は上向きが正です。--first-press を付けると、最初に押された操作部を表示して終了します。その前に --duration が経過すると失敗します。";
+"cli.controller.watch.discussion" = "--json を付けると、1行に1つの JSON オブジェクトを表示します。スティックの Y は下向きが正です。--first-press を付けると、最初に押された操作部を表示して終了します。その前に --duration が経過すると失敗します。";
 "cli.controller.watch.discussion.all" = "--all を指定すると、各行はコントローラの ID で始まり、接続または切断されたコントローラごとに 1 行が報告されます。最初の数行は、すでに接続されているコントローラを報告します。";
 "cli.controller.watch.error.first_press_all" = "--first-press には CONTROLLER が必要です。--all とは併用できません。";
 "cli.controller.watch.error.target" = "CONTROLLER か --all のどちらか一方を指定してください。";
@@ -1340,7 +1340,7 @@
 "cli.virtual.error.failed" = "%@ の仮想ゲームパッドは変更されませんでした (%@)。「ojd virtual show」で確認してください。";
 "cli.virtual.error.no_unit" = "%@ にはユニット ID がないため、選択はモデル全体にのみ適用できます。--unit を付けずにコマンドを実行してください。";
 "cli.virtual.feed.abstract" = "stdin で操作される仮想ゲームパッドを公開します。";
-"cli.virtual.feed.discussion" = "1 行につき 1 つの JSON オブジェクトを読み取ります。「buttons」 と 「dpad」 は押されているコントロール (South や up など) を列挙し、「axes」 は軸名 (LeftStickX など) を値に対応付けます。省略したコントロールはニュートラルになります。スティックは -1 から 1 の範囲で Y が上方向、トリガーは 0 から 1 の範囲です。フレームは順番に再生され、各フレームは最低 8 ms 継続します。「holdMilliseconds」 を指定すると、フレームをより長く (最大 60000) 保持できます。ゲームがゲームパッドに送るすべての出力コマンド (振動など) を、1 行につき 1 つの JSON オブジェクトとして出力します。入力が終了した後、すべてのフレームを再生し終えると停止します。";
+"cli.virtual.feed.discussion" = "1 行につき 1 つの JSON オブジェクトを読み取ります。「buttons」 と 「dpad」 は押されているコントロール (South や up など) を列挙し、「axes」 は軸名 (LeftStickX など) を値に対応付けます。省略したコントロールはニュートラルになります。スティックは -1 から 1 の範囲で Y が下方向、トリガーは 0 から 1 の範囲です。フレームは順番に再生され、各フレームは最低 8 ms 継続します。「holdMilliseconds」 を指定すると、フレームをより長く (最大 60000) 保持できます。ゲームがゲームパッドに送るすべての出力コマンド (振動など) を、1 行につき 1 つの JSON オブジェクトとして出力します。入力が終了した後、すべてのフレームを再生し終えると停止します。";
 "cli.virtual.feed.error.closed" = "サービスが仮想ゲームパッドを閉じました。「ojd status」 で確認してください。";
 "cli.virtual.feed.error.frame" = "%@ 行目は有効なフレームではありません。「ojd virtual feed --help」 で形式を確認できます。";
 "cli.virtual.feed.profile" = "公開する仮想ゲームパッドのプロファイル。";

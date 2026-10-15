@@ -213,8 +213,8 @@ extension GameSirDriver {
       (meta, 0x80, .rightStickClick),
     ] as [(UInt8, UInt8, Control)] { next.set(control, pressed: byte & mask != 0) }
     next.hat = Self.dpadDirection(face & 0x0F)
-    next.leftStick = StickPosition(x: Self.axis(bytes[1]), yDown: -Self.axis(bytes[2]))
-    next.rightStick = StickPosition(x: Self.axis(bytes[3]), yDown: -Self.axis(bytes[4]))
+    next.leftStick = StickPosition(x: Self.axis(bytes[1]), y: -Self.axis(bytes[2]))
+    next.rightStick = StickPosition(x: Self.axis(bytes[3]), y: -Self.axis(bytes[4]))
     next.leftTrigger = UnipolarValue(normalized: Float(bytes[8]) / 255)
     next.rightTrigger = UnipolarValue(normalized: Float(bytes[9]) / 255)
     setExtraButtons(bytes[60], includesInnerGrips: hasInnerGrips, in: &next)

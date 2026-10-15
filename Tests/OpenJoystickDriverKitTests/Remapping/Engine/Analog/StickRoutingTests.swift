@@ -107,7 +107,7 @@ struct StickRoutingTests {
     )
     _ = engine.process(inputs: [.leftStick(x: 1, y: 0)], from: device, profile: steering, at: 0)
     #expect(
-      engine.process(inputs: [.leftStick(x: 0, y: 1)], from: device, profile: steering, at: 1) == [
+      engine.process(inputs: [.leftStick(x: 0, y: -1)], from: device, profile: steering, at: 1) == [
         .gamepad(RemappingGamepadState(axes: [.rightStickX: 0.5]), device)
       ]
     )

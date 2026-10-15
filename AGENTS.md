@@ -1,26 +1,56 @@
 # AGENTS.md
 
-OpenJoystickDriver is a macOS userspace gamepad driver. Ground claims in source, tests, schemas, or recorded hardware evidence.
+## Before editing
 
-Before editing, read `CONTRIBUTING.md`, `wiki/Home.md`, `LOCALIZATION.md`, and `Resources/Schemas/AGENTS.md`.
+- Read `CONTRIBUTING.md`, `LOCALIZATION.md`, `wiki/Home.md`, and `Resources/Schemas/AGENTS.md`.
+- Follow the active OpenSpec change in `openspec/changes/`.
+- Ground every claim in source, tests, schemas, or recorded hardware evidence.
+
+## No compatibility
+
+- No aliases, typealiases, deprecated forwarding, or compatibility flags.
+- No fallback decoders, upcasters, dual readers or writers, shims, upgraders, or migrations.
+- No migration guides or conversion steps.
+- No list, detector, hint, or test of earlier names, words, flags, fields, keys, codes, or file shapes.
+- Earlier input fails like any unknown or invalid input: same path, error code, and message.
+- Replace the earlier form completely in one change: producers, consumers, tests, fixtures, schemas, snapshots, localized strings, and docs.
+
+## No hidden behavior
+
+- No silent fallback, default, or retry that covers for invalid input or a failed operation.
+- Give real behavior a name, a test, and user-facing text where its effect is visible.
+- Find every reference before calling code unused. Remove it only when unused; move a real use to its current owner.
+
+## Comments and docs
+
+- State current behavior and its reason only.
+- No history: "renamed", "formerly", "previously", "was", "no longer", "now", "new", "old", "legacy", "replaces", "since 0.x".
+- No references to tasks, reviews, agents, issues, or releases.
+- No narrated reasoning or meta-commentary.
+- Apply the same rules to help text, error text, schema `description` fields, `wiki/`, and `docs/`.
+- History goes only in `CHANGELOG.md`, with no conversion steps.
 
 ## Boundaries
 
-- Do not edit generated records in `Sources/OpenJoystickDriverKit/Resources/Controllers/` or generated DriverKit files in `.build/driverkit/generated/`.
-- Regenerate the catalog with `./Scripts/ojd catalog regenerate --write` only after intentionally changing its authored inputs.
+- Do not edit generated records in `Sources/OpenJoystickDriverKit/Resources/Controllers/`.
+- Do not edit generated DriverKit files in `.build/driverkit/generated/`.
+- Run `./Scripts/ojd catalog regenerate --write` only after changing its authored inputs on purpose.
+- Run `./Scripts/ojd errors regenerate --write` after changing `Resources/ErrorCodes.json`.
 - Generate DriverKit files with `./Scripts/ojd driverkit generate`.
 - Do not add SVGs or secrets.
 - Confirm destructive writes and publication before running them.
-- Issues, comments, and pull requests follow `CONTRIBUTING.md#ai-agents`.
+- Follow `CONTRIBUTING.md#ai-agents` for issues, comments, and pull requests.
 
 ## Architecture
 
-- Settle on the long-term design early. When work exposes a gap between the code and the spec, or two implementations of one rule that disagree, fix it toward the spec in Swift and Python alike, instead of carrying the gap forward or deferring it.
-- If the fix is larger than the task at hand, add it as a task to the active OpenSpec change and do it; do not leave it as a note.
+- Settle the long-term design early.
+- Fix any gap between code and spec, or between two implementations of one rule, toward the spec in Swift and Python alike. Do not defer it.
+- Add a fix larger than the task to the active OpenSpec change as a task, and do it.
 
 ## Checks
 
-Run applicable commands from the repository root:
+- Run the applicable commands from the repository root.
+- Use `./Scripts/ojd repair swiftpm-module-cache` only to repair a SwiftPM module-cache mismatch.
 
 ```bash
 ./Scripts/ojd catalog regenerate --check
@@ -48,5 +78,3 @@ python3 Scripts/Quality/check_localization_keys.py
 ./Scripts/ojd snapshots check
 swift test --no-parallel
 ```
-
-Use `./Scripts/ojd repair swiftpm-module-cache` only to repair a SwiftPM module-cache mismatch.

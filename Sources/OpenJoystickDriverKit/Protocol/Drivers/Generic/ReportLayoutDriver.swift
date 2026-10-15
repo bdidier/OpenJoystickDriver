@@ -60,8 +60,8 @@ public final class ReportLayoutDriver: PhysicalProtocolDriver {
       }
       sticks[index] = axis.value(in: bytes)
     }
-    next.leftStick = StickPosition(x: sticks[0], yDown: sticks[1])
-    next.rightStick = StickPosition(x: sticks[2], yDown: sticks[3])
+    next.leftStick = StickPosition(x: sticks[0], y: sticks[1])
+    next.rightStick = StickPosition(x: sticks[2], y: sticks[3])
     if !layout.hat.isEmpty { next.hat = hat(bytes) }
     if let trigger = layout.leftTrigger { next.leftTrigger = trigger.value(in: bytes) }
     if let trigger = layout.rightTrigger { next.rightTrigger = trigger.value(in: bytes) }

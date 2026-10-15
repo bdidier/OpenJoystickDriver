@@ -3,7 +3,7 @@
   "hat": "east",
   "leftStick": {
     "x": 32767,
-    "y": 32767
+    "y": -32767
   },
   "rightStick": {
     "x": 0,
