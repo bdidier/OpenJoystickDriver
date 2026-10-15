@@ -1105,7 +1105,8 @@
               "hidStartupIntervalMs": 5,
               "minimumHIDOutputIntervalMs": 8,
               "hidStartupRecoveryIntervalMs": 20,
-              "hidStartupRecoveryRounds": 2
+              "hidStartupRecoveryRounds": 2,
+              "frameQueueCapacity": 4
             }
           }
         }
@@ -1127,7 +1128,8 @@
         "tuning": {
           "stickDeadzone": 0.1,
           "hidStartupIntervalMs": 5,
-          "minimumHIDOutputIntervalMs": 8
+          "minimumHIDOutputIntervalMs": 8,
+          "frameQueueCapacity": 4
         }
       }
     },
@@ -1163,7 +1165,8 @@
               "hidStartupIntervalMs": 5,
               "minimumHIDOutputIntervalMs": 8,
               "hidStartupRecoveryIntervalMs": 20,
-              "hidStartupRecoveryRounds": 2
+              "hidStartupRecoveryRounds": 2,
+              "frameQueueCapacity": 4
             }
           }
         }
@@ -1182,7 +1185,8 @@
         },
         "ownership": "macos",
         "tuning": {
-          "stickDeadzone": 0.1
+          "stickDeadzone": 0.1,
+          "frameQueueCapacity": 4
         }
       }
     },

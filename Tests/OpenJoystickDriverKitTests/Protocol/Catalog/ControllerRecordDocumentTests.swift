@@ -386,6 +386,15 @@ struct ControllerRecordDocumentTests {
     #expect(try decode(protocol: ["family": "xbox.gip"]).tuning == .none)
   }
 
+  @Test(arguments: ["xbox.gip", "sony.dualsense", "nintendo.switch2", "hid.descriptor"])
+  func decodesFrameQueueCapacityForEveryFamily(family: String) throws {
+    let record = try decode(
+      protocol: ["family": family],
+      extra: ["tuning": ["frameQueueCapacity": 8]]
+    )
+    #expect(record.tuning == ControllerTuning(frameQueueCapacity: 8))
+  }
+
   @Test(
     arguments: [
       ("sony.dualshock4", ["stickDeadzone": 0]), ("sony.dualshock4", ["stickDeadzone": 1]),
@@ -396,7 +405,9 @@ struct ControllerRecordDocumentTests {
       ("hid.descriptor", ["deadzone": 0.1]), ("hid.descriptor", [:]),
       ("hid.descriptor", ["inputLivenessTimeoutMs": 1_000]),
       ("sony.dualsense", ["hidStartupRecoveryRounds": 2]),
-      ("xbox.gip", ["hidStartupIntervalMs": 20]),
+      ("xbox.gip", ["hidStartupIntervalMs": 20]), ("xbox.gip", ["frameQueueCapacity": 0]),
+      ("hid.descriptor", ["frameQueueCapacity": 1_025]),
+      ("sony.dualsense", ["frameQueueCapacity": 1.5]),
     ] as [(String, [String: any Sendable])]
   )
   func rejectsTuningOutOfRangeOrOutsideItsFamily(family: String, tuning: [String: any Sendable]) {

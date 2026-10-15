@@ -10,6 +10,7 @@ extension ControllerTuning {
     case hidStartupRecoveryRounds
     case hidStartupIntervalMs
     case minimumHIDOutputIntervalMs
+    case frameQueueCapacity
   }
 
   /// The keys this tuning sets.
@@ -24,6 +25,7 @@ extension ControllerTuning {
     case .hidStartupRecoveryRounds: hidStartupRecoveryRounds.map(String.init)
     case .hidStartupIntervalMs: hidStartupIntervalMilliseconds.map(String.init)
     case .minimumHIDOutputIntervalMs: minimumHIDOutputIntervalMilliseconds.map(String.init)
+    case .frameQueueCapacity: frameQueueCapacity.map(String.init)
     }
   }
 
@@ -39,7 +41,8 @@ extension ControllerTuning {
         ?? minimumHIDOutputIntervalMilliseconds,
       hidStartupRecoveryIntervalMilliseconds: higher.hidStartupRecoveryIntervalMilliseconds
         ?? hidStartupRecoveryIntervalMilliseconds,
-      hidStartupRecoveryRounds: higher.hidStartupRecoveryRounds ?? hidStartupRecoveryRounds
+      hidStartupRecoveryRounds: higher.hidStartupRecoveryRounds ?? hidStartupRecoveryRounds,
+      frameQueueCapacity: higher.frameQueueCapacity ?? frameQueueCapacity
     )
   }
 
@@ -56,7 +59,8 @@ extension ControllerTuning {
       hidStartupRecoveryIntervalMilliseconds: keys.contains(.hidStartupRecoveryIntervalMs)
         ? hidStartupRecoveryIntervalMilliseconds : nil,
       hidStartupRecoveryRounds: keys.contains(.hidStartupRecoveryRounds)
-        ? hidStartupRecoveryRounds : nil
+        ? hidStartupRecoveryRounds : nil,
+      frameQueueCapacity: keys.contains(.frameQueueCapacity) ? frameQueueCapacity : nil
     )
   }
 }
@@ -69,14 +73,15 @@ extension ControllerRecord {
 extension ControllerTuning {
   /// Why `key` does not apply to a controller of this family and stored variant, or nil when a
   /// driver reads it. A nil `protocolID` is a record with no known family: it reads only
-  /// `stickDeadzone`. `Scripts/Catalog/controller_patch.py` implements the same rule.
+  /// `stickDeadzone` and `frameQueueCapacity`. `Scripts/Catalog/controller_patch.py` implements the
+  /// same rule.
   static func scopeViolation(
     _ key: Key,
     protocolID: PhysicalProtocolID?,
     variant: PhysicalProtocolVariantID?
   ) -> String? {
     switch key {
-    case .stickDeadzone: return nil
+    case .stickDeadzone, .frameQueueCapacity: return nil
     case .inputLivenessTimeoutMs:
       return protocolID == .sonyDualShock4
         ? nil : "inputLivenessTimeoutMs requires the sony.dualshock4 family"

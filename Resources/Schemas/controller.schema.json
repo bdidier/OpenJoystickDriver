@@ -769,6 +769,11 @@
           "type": "integer",
           "minimum": 1,
           "maximum": 10
+        },
+        "frameQueueCapacity": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1024
         }
       }
     },

@@ -11,5 +11,10 @@
       "type": "enum",
       "values": ["ChargingOnly"]
     }
+  },
+  "defaults": {
+    "tuning": {
+      "frameQueueCapacity": 64
+    }
   }
 }
