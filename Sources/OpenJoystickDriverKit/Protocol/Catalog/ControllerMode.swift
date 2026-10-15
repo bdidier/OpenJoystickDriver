@@ -43,7 +43,7 @@ public struct ControllerModeMatch: Equatable, Sendable {
 }
 
 extension ControllerModeMatch.InterfaceSignature {
-  fileprivate func matches(_ interface: PhysicalInterfaceSignature) -> Bool {
+  func matches(_ interface: PhysicalInterfaceSignature) -> Bool {
     guard interface.interfaceClass == interfaceClass,
       interface.interfaceSubclass == interfaceSubclass,
       interface.interfaceProtocol == interfaceProtocol

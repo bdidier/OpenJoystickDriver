@@ -8,7 +8,8 @@ struct ControllerRecordRouteTests {
   @Test
   func decodesExtensionOwnedOnARawUSBFamily() throws {
     let document = try decode(
-      #""modes": [{"id": "default", "protocol": {"family": "xbox.gip"}}], "route": "ExtensionOwned""#
+      #""modes": [{"id": "default", "protocol": {"family": "xbox.gip"}}], "#
+        + #""route": "ExtensionOwned""#
     )
     #expect(document.route == .extensionOwned)
     #expect(
@@ -20,7 +21,8 @@ struct ControllerRecordRouteTests {
   func rejectsUnknownRoutes(name: String) {
     #expect(throws: DecodingError.self) {
       try decode(
-        "\"modes\": [{\"id\": \"default\", \"protocol\": {\"family\": \"xbox.gip\"}}], \"route\": \"\(name)\""
+        "\"modes\": [{\"id\": \"default\", \"protocol\": {\"family\": \"xbox.gip\"}}], "
+          + "\"route\": \"\(name)\""
       )
     }
   }
@@ -30,7 +32,8 @@ struct ControllerRecordRouteTests {
   func rejectsExtensionOwnedOnHIDFamilies(protocolInfo: String) {
     #expect(throws: DecodingError.self) {
       try decode(
-        "\"modes\": [{\"id\": \"default\", \"protocol\": \(protocolInfo)}], \"route\": \"ExtensionOwned\""
+        "\"modes\": [{\"id\": \"default\", \"protocol\": \(protocolInfo)}], "
+          + "\"route\": \"ExtensionOwned\""
       )
     }
   }

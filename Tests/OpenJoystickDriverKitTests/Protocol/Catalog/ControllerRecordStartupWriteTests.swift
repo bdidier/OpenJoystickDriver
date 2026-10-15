@@ -116,7 +116,10 @@ struct ControllerRecordStartupWriteTests {
       #"{"bytes": [1, 2], "endpoint": 2, "timeoutMilliseconds": 500, "#
       + #""delayMilliseconds": 5, "sessionByte": 1, "toleratesRejection": true}"#
     for family in [Self.gip, #"{"family": "nintendo.switch2"}"#] {
-      let document = try decode("\"protocol\": \(family), \"output\": {\"startup\": [\(write)]}")
+      let document = try decode(
+        "\"modes\": [{\"id\": \"default\", \"protocol\": \(family)}], "
+          + "\"output\": {\"startup\": [\(write)]}"
+      )
       #expect(document.startupWrites.isEmpty)
       #expect(document.usbStartupWrites.count == 1)
       #expect(document.usbStartupWrites.first?.endpoint == 2)
@@ -133,7 +136,8 @@ struct ControllerRecordStartupWriteTests {
   func rejectsAMalformedRawUSBStartupWrite(field: String) {
     #expect(throws: DecodingError.self) {
       try decode(
-        "\"protocol\": \(Self.gip), \"output\": {\"startup\": [{\"bytes\": [1], \(field)}]}"
+        "\"modes\": [{\"id\": \"default\", \"protocol\": \(Self.gip)}], "
+          + "\"output\": {\"startup\": [{\"bytes\": [1], \(field)}]}"
       )
     }
   }
@@ -144,7 +148,10 @@ struct ControllerRecordStartupWriteTests {
       #"{"family": "sony.sixaxis"}"#, #"{"family": "vendor.gamesir", "variant": "usb"}"#,
     ] {
       #expect(throws: DecodingError.self) {
-        try decode("\"protocol\": \(family), \"output\": {\"startup\": [{\"bytes\": [1]}]}")
+        try decode(
+          "\"modes\": [{\"id\": \"default\", \"protocol\": \(family)}], "
+            + "\"output\": {\"startup\": [{\"bytes\": [1]}]}"
+        )
       }
     }
   }
@@ -153,13 +160,15 @@ struct ControllerRecordStartupWriteTests {
   func rejectsRawUSBStartupWritesNextToInitializationOrHIDWrites() {
     #expect(throws: DecodingError.self) {
       try decode(
-        #""protocol": {"family": "xbox.gip", "initialization": ["xbox.gip/power-on"]}, "#
+        #""modes": [{"id": "default", "protocol": {"family": "xbox.gip", "#
+          + #""initialization": ["xbox.gip/power-on"]}}], "#
           + #""output": {"startup": [{"bytes": [1]}]}"#
       )
     }
     #expect(throws: DecodingError.self) {
       try decode(
-        "\"protocol\": \(Self.gip), \"output\": {\"startup\": [{\"bytes\": [1]}, "
+        "\"modes\": [{\"id\": \"default\", \"protocol\": \(Self.gip)}], "
+          + "\"output\": {\"startup\": [{\"bytes\": [1]}, "
           + "{\(Self.hidReport)}]}"
       )
     }
@@ -180,7 +189,8 @@ struct ControllerRecordStartupWriteTests {
   func rejectsStartupWritesOnRawUSBFamilies(protocolInfo: String) {
     #expect(throws: DecodingError.self) {
       try decode(
-        "\"modes\": [{\"id\": \"default\", \"protocol\": \(protocolInfo)}], \"output\": {\"startup\": [\(Self.enable)]}"
+        "\"modes\": [{\"id\": \"default\", \"protocol\": \(protocolInfo)}], "
+          + "\"output\": {\"startup\": [\(Self.enable)]}"
       )
     }
   }

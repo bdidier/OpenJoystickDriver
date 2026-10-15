@@ -44,7 +44,7 @@ extension ControllerRecordDocument {
         .startup
     }
 
-    fileprivate static func invalid(
+    static func invalid(
       _ key: String,
       _ message: String,
       _ decoder: any Decoder

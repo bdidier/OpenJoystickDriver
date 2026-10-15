@@ -60,7 +60,8 @@ struct ControllerRecordOutputTests {
       ?? "{\"family\": \"\(family.rawValue)\"}"
     #expect(throws: DecodingError.self) {
       try decode(
-        "\"modes\": [{\"id\": \"default\", \"protocol\": \(protocolInfo)}], \"output\": {\(Self.gp100Rumble)}"
+        "\"modes\": [{\"id\": \"default\", \"protocol\": \(protocolInfo)}], "
+          + "\"output\": {\(Self.gp100Rumble)}"
       )
     }
   }

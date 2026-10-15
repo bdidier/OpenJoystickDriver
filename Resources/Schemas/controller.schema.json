@@ -2072,29 +2072,39 @@
       },
       "then": {
         "properties": {
-          "protocol": {
-            "not": {
-              "anyOf": [
-                {
-                  "properties": {
-                    "family": {
-                      "enum": ["xbox.xid", "xbox.xusb", "xbox.gip"]
-                    }
-                  },
-                  "required": ["family"]
+          "modes": {
+            "contains": {
+              "properties": {
+                "id": {
+                  "const": "default"
                 },
-                {
-                  "properties": {
-                    "family": {
-                      "const": "vendor.gamesir"
-                    },
-                    "variant": {
-                      "const": "usb"
-                    }
-                  },
-                  "required": ["family", "variant"]
+                "protocol": {
+                  "not": {
+                    "anyOf": [
+                      {
+                        "properties": {
+                          "family": {
+                            "enum": ["xbox.xid", "xbox.xusb", "xbox.gip"]
+                          }
+                        },
+                        "required": ["family"]
+                      },
+                      {
+                        "properties": {
+                          "family": {
+                            "const": "vendor.gamesir"
+                          },
+                          "variant": {
+                            "const": "usb"
+                          }
+                        },
+                        "required": ["family", "variant"]
+                      }
+                    ]
+                  }
                 }
-              ]
+              },
+              "required": ["id", "protocol"]
             }
           }
         }
@@ -2120,15 +2130,25 @@
       },
       "then": {
         "properties": {
-          "protocol": {
-            "required": ["family"],
-            "properties": {
-              "family": {
-                "enum": ["xbox.xusb", "xbox.gip", "nintendo.switch2"]
-              }
-            },
-            "not": {
-              "required": ["initialization"]
+          "modes": {
+            "contains": {
+              "properties": {
+                "id": {
+                  "const": "default"
+                },
+                "protocol": {
+                  "required": ["family"],
+                  "properties": {
+                    "family": {
+                      "enum": ["xbox.xusb", "xbox.gip", "nintendo.switch2"]
+                    }
+                  },
+                  "not": {
+                    "required": ["initialization"]
+                  }
+                }
+              },
+              "required": ["id", "protocol"]
             }
           }
         }
@@ -2256,17 +2276,27 @@
       },
       "then": {
         "properties": {
-          "protocol": {
-            "properties": {
-              "family": {
-                "enum": [
-                  "xbox.gip",
-                  "vendor.gamesir",
-                  "valve.steam-deck",
-                  "valve.steam-triton",
-                  "nintendo.switch2"
-                ]
-              }
+          "modes": {
+            "contains": {
+              "properties": {
+                "id": {
+                  "const": "default"
+                },
+                "protocol": {
+                  "properties": {
+                    "family": {
+                      "enum": [
+                        "xbox.gip",
+                        "vendor.gamesir",
+                        "valve.steam-deck",
+                        "valve.steam-triton",
+                        "nintendo.switch2"
+                      ]
+                    }
+                  }
+                }
+              },
+              "required": ["id", "protocol"]
             }
           }
         }
@@ -2283,11 +2313,21 @@
       },
       "then": {
         "properties": {
-          "protocol": {
-            "properties": {
-              "family": {
-                "const": "valve.steam-triton"
-              }
+          "modes": {
+            "contains": {
+              "properties": {
+                "id": {
+                  "const": "default"
+                },
+                "protocol": {
+                  "properties": {
+                    "family": {
+                      "const": "valve.steam-triton"
+                    }
+                  }
+                }
+              },
+              "required": ["id", "protocol"]
             }
           }
         }
@@ -2304,11 +2344,21 @@
       },
       "then": {
         "properties": {
-          "protocol": {
-            "properties": {
-              "family": {
-                "enum": ["nintendo.switch2", "vendor.gamesir"]
-              }
+          "modes": {
+            "contains": {
+              "properties": {
+                "id": {
+                  "const": "default"
+                },
+                "protocol": {
+                  "properties": {
+                    "family": {
+                      "enum": ["nintendo.switch2", "vendor.gamesir"]
+                    }
+                  }
+                }
+              },
+              "required": ["id", "protocol"]
             }
           }
         }
@@ -2325,11 +2375,21 @@
       },
       "then": {
         "properties": {
-          "protocol": {
-            "properties": {
-              "family": {
-                "enum": ["xbox.gip", "xbox.xusb"]
-              }
+          "modes": {
+            "contains": {
+              "properties": {
+                "id": {
+                  "const": "default"
+                },
+                "protocol": {
+                  "properties": {
+                    "family": {
+                      "enum": ["xbox.gip", "xbox.xusb"]
+                    }
+                  }
+                }
+              },
+              "required": ["id", "protocol"]
             }
           }
         }
@@ -2346,11 +2406,21 @@
       },
       "then": {
         "properties": {
-          "protocol": {
-            "properties": {
-              "family": {
-                "enum": ["sony.dualshock4", "sony.dualsense"]
-              }
+          "modes": {
+            "contains": {
+              "properties": {
+                "id": {
+                  "const": "default"
+                },
+                "protocol": {
+                  "properties": {
+                    "family": {
+                      "enum": ["sony.dualshock4", "sony.dualsense"]
+                    }
+                  }
+                }
+              },
+              "required": ["id", "protocol"]
             }
           }
         }
@@ -2367,11 +2437,21 @@
       },
       "then": {
         "properties": {
-          "protocol": {
-            "properties": {
-              "family": {
-                "const": "xbox.gip"
-              }
+          "modes": {
+            "contains": {
+              "properties": {
+                "id": {
+                  "const": "default"
+                },
+                "protocol": {
+                  "properties": {
+                    "family": {
+                      "const": "xbox.gip"
+                    }
+                  }
+                }
+              },
+              "required": ["id", "protocol"]
             }
           }
         }
@@ -2388,11 +2468,21 @@
       },
       "then": {
         "properties": {
-          "protocol": {
-            "properties": {
-              "family": {
-                "const": "xbox.gip"
-              }
+          "modes": {
+            "contains": {
+              "properties": {
+                "id": {
+                  "const": "default"
+                },
+                "protocol": {
+                  "properties": {
+                    "family": {
+                      "const": "xbox.gip"
+                    }
+                  }
+                }
+              },
+              "required": ["id", "protocol"]
             }
           }
         }
@@ -2409,11 +2499,21 @@
       },
       "then": {
         "properties": {
-          "protocol": {
-            "properties": {
-              "family": {
-                "const": "xbox.gip"
-              }
+          "modes": {
+            "contains": {
+              "properties": {
+                "id": {
+                  "const": "default"
+                },
+                "protocol": {
+                  "properties": {
+                    "family": {
+                      "const": "xbox.gip"
+                    }
+                  }
+                }
+              },
+              "required": ["id", "protocol"]
             }
           }
         }
