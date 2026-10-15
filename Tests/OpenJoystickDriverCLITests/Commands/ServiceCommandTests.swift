@@ -25,7 +25,10 @@ struct ServiceCommandTests {
     await RecordStore.$directory.withValue(records) {
       await ServiceConnection.$socketPath.withValue(socketPath) {
         await StatusCommand.$extensionProbe.withValue(stoppedExtension) {
-          await CLIRun.run(["status"] + arguments)
+          await StatusCommand.$linkProbe.withValue(
+            { CommandLineToolLinkStatus.probe(path: "/nonexistent-\(UUID().uuidString)/ojd") },
+            operation: { await CLIRun.run(["status"] + arguments) }
+          )
         }
       }
     }

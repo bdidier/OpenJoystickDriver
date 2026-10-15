@@ -37,7 +37,7 @@
       }
     }
 
-    static let defaultLinkPath = "/usr/local/bin/ojd"
+    static let defaultLinkPath = CommandLineToolLinkStatus.defaultPath
 
     let linkURL: URL
     let executableURL: URL
