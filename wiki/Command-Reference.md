@@ -39,6 +39,7 @@ With `--json`, the output is one `SystemStatus` object with these keys:
 
 - `service`: `state` (`running` or `stopped`) and `version`.
 - `extension`: `bundle` (`present`, `missing`, or `invalid`) and `registration` (`active`, `inactive`, `absent`, or `unavailable`).
+- `commandLineTool`: the `ojd` link that the app installs. `state` is `installed` (a link whose target exists), `missing` (nothing at `path`), or `broken` (a link whose target is gone, or a file that is not a link). `path` is where the link goes, and `target` is what it points at, when it is a link.
 - `permissions`: `inputMonitoring` and `accessibility`.
 - `virtualDevice`: `enabled`, `status`, and `overrideError`.
 - `controllers`: each with `id`, `name`, `vendorID`, `productID`, and `connection`.
@@ -50,7 +51,7 @@ With `--json`, the output is one `SystemStatus` object with these keys:
 
 Keys that need the service are absent when it is stopped.
 
-With `--plain`, the first field of each line is `service`, `extension`, `permission`, `virtual-device`, `controller`, `unbound`, `pass-through`, `skipped-record`, `ignored-defaults`, or `skipped-persona`.
+With `--plain`, the first field of each line is `service`, `extension`, `command-line-tool`, `permission`, `virtual-device`, `controller`, `unbound`, `pass-through`, `skipped-record`, `ignored-defaults`, or `skipped-persona`.
 
 ## controller
 
@@ -292,7 +293,18 @@ ojd setting get KEY
 ojd setting set KEY true|false
 ```
 
-The keys are `launch-at-login`, `notification-sounds`, `include-prerelease-updates`, and `developer-tools`. `setting get` prints `true` or `false` alone. With `--json`, `setting list` prints a `SettingList` with `items`, each with `key`, `value`, and `description`, and `setting get` and `setting set` print a `Setting` with `key` and `value`.
+The keys are:
+
+- `launchAtLogin`: the macOS login item. Turning it off records that you opted out.
+- `notify.controllerConnected`: notify when a controller connects or needs attention.
+- `notify.controllerDisconnected`: notify when a controller disconnects.
+- `notify.profileActivated`: notify when a profile is activated or switched.
+- `notify.profileDeactivated`: notify when the active profile is turned off.
+- `notify.sounds`: play a sound with notifications. It is on by default; every other key is off by default.
+- `updates.includePrereleases`: include prereleases when checking for updates.
+- `developerTools`: show the developer tools.
+
+Settings live in `Settings.json`. OJD reads the machine file at `/Library/Application Support/OpenJoystickDriver/Settings.json` first, then your file at `~/Library/Application Support/OpenJoystickDriver/Settings.json`, which overrides it. `setting set` writes only your file. A file with an unsupported `apiVersion` is refused with `E5001`. `setting get` prints `true` or `false` alone. With `--json`, `setting list` prints a `SettingList` with `items`, each with `key`, `value`, and `description`, and `setting get` and `setting set` print a `Setting` with `key` and `value`.
 
 ## config
 

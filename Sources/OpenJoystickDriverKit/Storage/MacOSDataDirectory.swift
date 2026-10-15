@@ -11,6 +11,11 @@ public struct MacOSDataDirectory: DataDirectory {
   public func url(for location: DataLocation) -> URL {
     switch location {
     case .applicationData: return library(.applicationSupportDirectory, "Application Support")
+    case .machineData:
+      return URL(
+        fileURLWithPath: "/Library/Application Support/\(Self.directoryName)",
+        isDirectory: true
+      )
     case .cache: return library(.cachesDirectory, "Caches")
     case .logs:
       return FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(

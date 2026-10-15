@@ -52,11 +52,12 @@ Sources/OpenJoystickDriverKit/
   Output/              availability-selected virtual HID, backends, reports, formats, and profiles
   Packages/            mod package manifest, validation, and the installed-package store
   Permissions/         app permission policy
-  Process/             bounded external process runner
+  Process/             bounded external process runner and the command-line tool link status
   Protocol/            catalog, GIP, parsers, drivers, classification, and physical-output
                        capabilities
   Remapping/           reusable profile and mapping engine
   Resources/           generated controller records (Controllers/) and localization tables
+  Settings/            the layered `Settings.json` store and document (machine file, then user file)
   Storage/             DataDirectory port and its macOS implementation; the only path builder
   Update/              release version parsing and update checking
 

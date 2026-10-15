@@ -4,6 +4,8 @@ import Foundation
 public enum DataLocation: String, CaseIterable, Sendable {
   /// Durable user data: profiles, user controller records, mods, overrides, access grants.
   case applicationData
+  /// Machine-wide settings an administrator writes; OJD only reads this location.
+  case machineData
   /// Data that can be rebuilt at any time.
   case cache
   /// Application service log files.

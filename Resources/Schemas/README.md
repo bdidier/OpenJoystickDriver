@@ -14,6 +14,7 @@
 - `cli-output.schema.json`: the `--json` output of each `ojd` command. The CLI tests check every `--json` document they print against it.
 - `profile.schema.json`: the remapping profile file that `ojd profile export` writes and `ojd profile import` reads. Cross-field rules stay in the strict decoder, and a test keeps the schema enums equal to the Swift cases.
 - `access-grants.schema.json`: the `AccessGrants.json` file in which the service keeps whether the endpoint is on and which signed clients may use it. Only the service writes it, through `ojd access`.
+- `settings.schema.json`: the `Settings.json` file, in a machine layer an administrator writes and a user layer that `ojd setting set` and the app write. Every setting is optional in a file; the layers, lowest to highest, are the built-in defaults, the machine file, and the user file.
 - `endpoint.schema.json`: the JSON lines that a granted client and the service exchange on the endpoint socket. The stream lines are the `ojd controller watch --all` events from `cli-output.schema.json`.
 - `error-codes.schema.json`: the authored catalog `Resources/ErrorCodes.json`, which gives every E#### error code its domain and name. `./Scripts/ojd errors regenerate` copies the endpoint codes into `endpoint.schema.json` and the table into `wiki/Error-Codes.md`, and refuses to reuse or delete a released code.
 
@@ -30,6 +31,7 @@ Each artifact class has one current contract, a flat `<kind>.schema.json` here. 
 | `protocol-description.schema.json` | `ProtocolDescription` |
 | `error-codes.schema.json` | `ErrorCatalog` |
 | `access-grants.schema.json` | `AccessGrants` |
+| `settings.schema.json` | `Settings` |
 | `report.schema.json` | `SupportDiagnostic`, on the `data` payload; the CloudEvents envelope has none |
 
 `cli-output.schema.json` and `endpoint.schema.json` give each message its own `kind` and share the `apiVersion`.

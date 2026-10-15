@@ -21,6 +21,7 @@ KINDS = {
     "error-codes": "ErrorCatalog",
     "access-grants": "AccessGrants",
     "protocol-description": "ProtocolDescription",
+    "settings": "Settings",
 }
 
 

@@ -2789,10 +2789,14 @@
 		},
 		"sharedSettingKey": {
 			"enum": [
-				"launch-at-login",
-				"notification-sounds",
-				"include-prerelease-updates",
-				"developer-tools"
+				"launchAtLogin",
+				"notify.controllerConnected",
+				"notify.controllerDisconnected",
+				"notify.profileActivated",
+				"notify.profileDeactivated",
+				"notify.sounds",
+				"updates.includePrereleases",
+				"developerTools"
 			]
 		},
 		"sharedSkippedRecord": {
@@ -3037,6 +3041,7 @@
 			"required": [
 				"apiVersion",
 				"kind",
+				"commandLineTool",
 				"extension",
 				"service",
 				"skippedRecords"
@@ -3048,6 +3053,23 @@
 				},
 				"kind": {
 					"const": "SystemStatus"
+				},
+				"commandLineTool": {
+					"description": "The ojd link the app installs: installed when its target exists, missing when nothing is at the path, broken when the link dangles or the path is not a link.",
+					"type": "object",
+					"required": ["path", "state"],
+					"additionalProperties": false,
+					"properties": {
+						"path": {
+							"type": "string"
+						},
+						"state": {
+							"enum": ["installed", "missing", "broken"]
+						},
+						"target": {
+							"type": "string"
+						}
+					}
 				},
 				"controllers": {
 					"type": "array",

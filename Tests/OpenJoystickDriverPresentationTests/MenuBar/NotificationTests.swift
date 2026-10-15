@@ -1,5 +1,7 @@
 import AppKit
 import Foundation
+import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverPresentation
@@ -143,13 +145,11 @@ struct NotificationTests {
   @Test
   @MainActor
   func monitorSuppressesBootNoiseAndHonorsPreferences() throws {
-    let suiteName = "NotificationTests.\(UUID().uuidString)"
-    let defaults = try #require(UserDefaults(suiteName: suiteName))
-    defer { defaults.removePersistentDomain(forName: suiteName) }
-    defaults.set(true, forKey: ApplicationPreferenceKeys.controllerNotifications)
-    defaults.set(true, forKey: ApplicationPreferenceKeys.controllerDisconnectedNotifications)
+    let settings = SettingsStore(directory: RootedDataDirectory.temporary())
+    try settings.set(.notifyControllerConnected, to: true)
+    try settings.set(.notifyControllerDisconnected, to: true)
     let delivery = NotificationDeliverySpy()
-    let monitor = RuntimeNotificationMonitor(defaults: defaults, delivery: delivery)
+    let monitor = RuntimeNotificationMonitor(settings: settings, delivery: delivery)
 
     monitor.observe(
       RuntimeNotificationSnapshot(controllers: ["old": "Old Controller"], activeProfiles: [:])
@@ -162,7 +162,7 @@ struct NotificationTests {
     #expect(delivery.messages.count == 2)
     #expect(delivery.messages.allSatisfy { $0.sound })
 
-    defaults.set(false, forKey: ApplicationPreferenceKeys.controllerNotifications)
+    try settings.set(.notifyControllerConnected, to: false)
     monitor.observe(
       RuntimeNotificationSnapshot(controllers: ["third": "Third Controller"], activeProfiles: [:])
     )

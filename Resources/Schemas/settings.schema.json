@@ -1,0 +1,63 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/settings.schema.json",
+	"title": "OpenJoystickDriver settings",
+	"description": "The file Settings.json. It exists in two layers: the machine file in /Library/Application Support/OpenJoystickDriver, which only an administrator writes, and the user file in the user's OpenJoystickDriver Application Support folder, which 'ojd setting set' and the app write. Every setting is optional in a file; a setting a file leaves out falls through to the layer below it. The layers, lowest to highest: built-in defaults, machine file, user file.",
+	"type": "object",
+	"required": ["apiVersion", "kind"],
+	"additionalProperties": false,
+	"properties": {
+		"apiVersion": {
+			"const": "openjoystickdriver/v1alpha1"
+		},
+		"kind": {
+			"const": "Settings"
+		},
+		"launchAtLoginOptOut": {
+			"description": "True after the user turned launch at login off, so the app does not register itself again on its next start. Default false. 'ojd setting' reads and writes launchAtLogin, which sets this and registers or unregisters the login item.",
+			"type": "boolean"
+		},
+		"notify": {
+			"description": "Which events post a notification.",
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"controllerConnected": {
+					"description": "A controller connects or needs attention. Default false.",
+					"type": "boolean"
+				},
+				"controllerDisconnected": {
+					"description": "A controller disconnects. Default false.",
+					"type": "boolean"
+				},
+				"profileActivated": {
+					"description": "A profile becomes active. Default false.",
+					"type": "boolean"
+				},
+				"profileDeactivated": {
+					"description": "The active profile is turned off. Default false.",
+					"type": "boolean"
+				},
+				"sounds": {
+					"description": "A notification plays a sound. Default true.",
+					"type": "boolean"
+				}
+			}
+		},
+		"updates": {
+			"description": "How update checks behave.",
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"includePrereleases": {
+					"description": "Include pre-release versions when checking for updates. Default false.",
+					"type": "boolean"
+				}
+			}
+		},
+		"developerTools": {
+			"description": "Show the developer tools in the Settings window. Default false.",
+			"type": "boolean"
+		}
+	}
+}

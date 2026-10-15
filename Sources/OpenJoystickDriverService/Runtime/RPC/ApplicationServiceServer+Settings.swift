@@ -6,24 +6,30 @@ struct LaunchAtLoginControl: Sendable {
   let isEnabled: @Sendable () -> Bool
   let setEnabled: @Sendable (Bool) throws -> Void
 
-  static let system = Self(
-    isEnabled: { ApplicationServiceManager.isLaunchAtLoginEnabled },
-    setEnabled: { enabled in
-      if enabled {
-        try ApplicationServiceManager.install()
-      } else {
-        try ApplicationServiceManager.uninstall()
+  /// The macOS login item, recording the choice in `settings`.
+  static func system(settings: SettingsStore) -> Self {
+    Self(
+      isEnabled: { ApplicationServiceManager.isLaunchAtLoginEnabled },
+      setEnabled: { enabled in
+        if enabled {
+          try ApplicationServiceManager.install(settings: settings)
+        } else {
+          try ApplicationServiceManager.uninstall(settings: settings)
+        }
       }
-    }
-  )
+    )
+  }
 }
 
 extension ApplicationServiceServer {
   /// Every app setting with its current value.
-  func getSettings() -> ApplicationSettingsPayload {
-    ApplicationSettingsPayload(
+  ///
+  /// Throws when a settings file is damaged or has an unsupported `apiVersion`.
+  func getSettings() throws -> ApplicationSettingsPayload {
+    let stored = try settings.load()
+    return ApplicationSettingsPayload(
       settings: ApplicationSettingKey.allCases.map {
-        ApplicationSettingValue(key: $0, value: currentValue(of: $0))
+        ApplicationSettingValue(key: $0, value: currentValue(of: $0, stored: stored))
       }
     )
   }
@@ -34,16 +40,16 @@ extension ApplicationServiceServer {
   /// approve it, so callers compare the returned value with the one they asked for.
   func setSetting(_ key: ApplicationSettingKey, to value: Bool) throws -> ApplicationSettingsPayload
   {
-    if let defaultsKey = key.defaultsKey {
-      defaults.set(value, forKey: defaultsKey)
-    } else {
+    if key == .launchAtLogin {
       try launchAtLogin.setEnabled(value)
+    } else {
+      try settings.set(key, to: value)
     }
-    return getSettings()
+    return try getSettings()
   }
 
-  private func currentValue(of key: ApplicationSettingKey) -> Bool {
-    guard let defaultsKey = key.defaultsKey else { return launchAtLogin.isEnabled() }
-    return defaults.object(forKey: defaultsKey) as? Bool ?? key.defaultValue
+  /// The login item reports macOS's state; every other key reports the layered files.
+  private func currentValue(of key: ApplicationSettingKey, stored: SettingsDocument) -> Bool {
+    key == .launchAtLogin ? launchAtLogin.isEnabled() : stored[key] ?? key.defaultValue
   }
 }

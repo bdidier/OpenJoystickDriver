@@ -41,6 +41,9 @@ SAMPLE_PACKAGE = ROOT / "docs" / "sdk" / "sample"
 ACCESS_GRANT_FIXTURES = (
     ROOT / "Tests" / "RepositoryScripts" / "fixtures" / "access_grants.json",
 )
+SETTINGS_FIXTURES = (
+    ROOT / "Tests" / "RepositoryScripts" / "fixtures" / "settings.json",
+)
 # The schema of each kind of file in the sample mod package, by its folder.
 SAMPLE_FOLDER_SCHEMAS = {
     "Controllers": "controller-override",
@@ -294,6 +297,9 @@ def main() -> int:
             registry,
             list(ACCESS_GRANT_FIXTURES),
         )
+        validate_documents(
+            documents["settings.schema.json"], registry, list(SETTINGS_FIXTURES)
+        )
         validate_live_support_report(documents["report.schema.json"], registry)
         compatibility = check_compatibility(ROOT, documents)
     except (
@@ -313,7 +319,8 @@ def main() -> int:
         f"Validated {len(documents)} schema documents, "
         f"{len(controller_records)} controller records, {len(overrides)} overrides, "
         f"{len(protocols)} protocol descriptions, {len(samples)} sample mod files, "
-        f"{len(ACCESS_GRANT_FIXTURES)} access grant fixtures, the error code catalog, "
+        f"{len(ACCESS_GRANT_FIXTURES)} access grant fixtures, "
+        f"{len(SETTINGS_FIXTURES)} settings fixtures, the error code catalog, "
         "and one live support report."
     )
     print(compatibility)
