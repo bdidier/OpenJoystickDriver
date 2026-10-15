@@ -85,7 +85,7 @@ final class VirtualFeedRegistry: @unchecked Sendable {
   }
 
   private let factory: VirtualFeedDeviceFactory
-  private let idleTimeout: TimeInterval
+  let idleTimeout: TimeInterval
   private let activationTimeout: TimeInterval
   private let lock = NSLock()
   private var sessions: [UUID: Session] = [:]

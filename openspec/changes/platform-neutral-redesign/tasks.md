@@ -171,11 +171,11 @@ Owns: `ServingRoute` and `VirtualDevice` kinds; the single serving policy.
 Depends: 6, 8, 11.
 Verify: `swift test`, `./Scripts/ojd check profiles`, `./Scripts/ojd test parsers-macos14`.
 
-- [ ] 12.1 Define routes (`ExtensionOwned`, raw access, `System`) and the `server` field `system` or `ojd`. Verify: route table test over all records matches the 1.2 snapshot.
-- [ ] 12.2 Define `VirtualDevice` records for `Generic` and `SdlCompatible`; `Generic` is the default. Name personas by these ids everywhere (`ojd virtual feed`, `cli-output.schema.json`, `VirtualHIDProfile`) and delete the endpoint's `EndpointPersona.profileName` mapping to `hid-generic`/`hid-xbox-one-s-bt`. Verify: a test checks the default and that the opt-in switches the persona without replug.
-- [ ] 12.3 Put route and persona choice in one policy that the service, CLI, GUI and endpoint all call. Verify: a test shows the four callers get the same answer for a fixture set.
+- [x] 12.1 Define routes (`ExtensionOwned`, raw access, `System`) and the `server` field `system` or `ojd`. Verify: route table test over all records matches the 1.2 snapshot. Done: records carry `server` (`system` or `ojd`) and an access route; `recordRoutesMatchSnapshot` checks the route table of every record against the `record-routes` snapshot.
+- [x] 12.2 Define `VirtualDevice` records for `Generic` and `SdlCompatible`; `Generic` is the default. Name personas by these ids everywhere, with the kebab-case forms `generic` and `sdl-compatible` on the command line (`ojd virtual feed`, `cli-output.schema.json`, `VirtualHIDProfile`) and delete the endpoint's `EndpointPersona.profileName` mapping to `hid-generic`/`hid-xbox-one-s-bt`. Verify: a test checks the default and that the opt-in switches the persona without replug. Done: `virtual-device.generic.json` and `virtual-device.sdl-compatible.json` under `virtual-device.schema.json`; `EndpointPersona.profileName` is gone; tests cover the `Generic` default and the opt-in retargeting without replug; Python `test_virtual_device_schema.py` rejects bad headers, ids and members.
+- [x] 12.3 Put route and persona choice in one policy that the service, CLI, GUI and endpoint all call. Verify: a test shows the four callers get the same answer for a fixture set. Done: `ServingPolicy` is the only caller of the profile selector; `theServiceDescriptionTheWatchStreamServesTheCLIAndTheGUIAnswerWhatThePolicyDecided` runs a fixture set through the service description (which the endpoint's watch stream serves), the CLI and the GUI. The per-app input was dropped from the spec: macOS does not say which app reads a virtual HID device.
 - [ ] 12.4 Add `ojd controller claim <ref>` and `ojd controller release <ref>` and remove `controller ownership`. Verify: CLI tests for success, `--dry-run`, `--json`, and the refusal `error.E2023` for raw-USB routes.
-- [ ] 12.5 Keep stick-report delivery semantics (newest state within one send time, every button edge). Verify: the existing delivery tests pass for both personas.
+- [x] 12.5 Keep stick-report delivery semantics (newest state within one send time, every button edge). Verify: the existing delivery tests pass for both personas. Done: the stick-delivery tests run for both personas (`Generic` and `SdlCompatible`) and pass.
 
 ## 13. Same-ID clone probes (old WP12)
 
@@ -305,6 +305,21 @@ Verify: the full check list.
 - [ ] 23.2 Add the CHANGELOG lines for each breaking item, rejected document shapes, the new default persona and the removed CLI words. Verify: a review against the BREAKING marks in `proposal.md`.
 - [ ] 23.3 Apply `pending-deltas.md` after the old change is archived. Verify: `openspec validate platform-neutral-redesign --strict`.
 - [ ] 23.4 Run the full check list on the final tree, plus `./Scripts/ojd test parsers-macos14`. Verify: every command exits 0; paste the results.
+
+## 24. Follow-ups found during the work
+
+Owns: whatever each item names.
+Depends: the item's subject merged.
+Verify: the full check list.
+
+- [ ] 24.1 Find the cause of each flaky test and fix it: the CLI `E2005: The service did not reply in time` timeouts (`BindingAxisDefaultsTests` and the 17-issue `OpenJoystickDriverCLITests` run), `outputOperationsRemainSerializedWhenAReplacementCancelsTheFirst`, `VirtualFeedRegistryTests.aFailedSendClosesTheFeed`, `EndpointServerTests.theNinthConnectionIsRefused`, and the load failures in `EndpointWebSocketTests`, `RecordCommandTests` and `ConfigCommandTests`. Verify: each suite passes 30 runs in a row while the full `swift test` runs alongside it, and the cause of each is written in its commit.
+- [ ] 24.2 Build and test `Tools/WebRTCBridge` in CI and in `./Scripts/ojd check tools`. Verify: a CI job and `ojd check tools` run the package's `swift test`.
+- [ ] 24.3 Add a wiki page for the WebRTC bridge, linked from `wiki/Home.md`. Verify: markdownlint passes and the page's commands match `ojd-webrtc-bridge --help`.
+- [ ] 24.4 Test the WebRTC bridge against the real endpoint server, not a fake. Verify: a test runs a host bridge against an in-process `EndpointServer`: a granted feed reaches the virtual device and stays open on `KeepAlive`; an ungranted token gets E1002 and no virtual gamepad appears.
+- [ ] 24.5 Show the serving route and persona in `ojd controller show` (text and `--json`, in `cli-output.schema.json`). Verify: CLI tests for each route, and the GUI coverage matrix names the field's GUI place.
+- [ ] 24.6 Include the per-stage timings in `ojd diagnose --bundle`. Verify: a test reads the five stage stamps from the bundle.
+- [ ] 24.7 Give every rule that Python's schema tests reject a Swift decoder test rejecting the same input. Verify: a repository test lists the Python negative cases for `controller.schema.json` and the protocol descriptions and fails when one has no Swift counterpart.
+- [ ] 24.8 Pin Biome in `package.json` and run the pinned binary in the hook, the JSON writers and CI. Verify: `biome --version` from each path prints the pinned version, and the `biome.json` `$schema` names the same version.
 
 ## Hardware checks (maintainer)
 
