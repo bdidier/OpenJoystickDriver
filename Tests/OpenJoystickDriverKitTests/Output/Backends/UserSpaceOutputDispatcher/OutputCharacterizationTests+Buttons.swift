@@ -4,13 +4,13 @@ import Testing
 
 // Pinned virtual-output-path transcripts; the rendering rules are on `OutputCharacterizationTests`.
 extension OutputCharacterizationTests {
-  /// Every former parser button pressed and released alone, in its former declaration order: the
-  /// control it reported under the family that spelled it, and a d-pad button as its hat direction.
+  /// Every parser button pressed and released alone, in declaration order: the
+  /// control it reports, and a d-pad button as its hat direction.
   @Test
   func everyButtonPressAndRelease() async {
     var lines: [String] = []
     let output = VirtualOutput()
-    for (name, press, release) in Self.formerParserButtons {
+    for (name, press, release) in Self.parserButtons {
       await output.dispatch([press], from: Self.standard)
       lines += output.render("+\(name)")
       await output.dispatch([release], from: Self.standard)
@@ -102,8 +102,8 @@ extension OutputCharacterizationTests {
     )
   }
 
-  /// The former parser buttons in declaration order, as the snapshot change each reported.
-  static let formerParserButtons: [(String, InputChange, InputChange)] =
+  /// The parser buttons in declaration order, as the snapshot change each reported.
+  static let parserButtons: [(String, InputChange, InputChange)] =
     [
       ("a", Control.south), ("b", .east),
       ("x", .west), ("y", .north),

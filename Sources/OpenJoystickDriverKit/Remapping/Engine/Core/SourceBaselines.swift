@@ -33,17 +33,21 @@ extension RemappingEngineState {
     return process(changes: changes, from: target, profile: profile, at: uptimeNanoseconds)
   }
 
-  /// Changes from `old` to `new` in the order the delta pipeline delivered them: buttons in
-  /// ``controlOrder``, then the hat, left stick, right stick, left trigger and right trigger.
+  /// Changes from `old` to `new`: every button release before any button press, so a report that
+  /// swaps one held button for another never shows both held; releases and presses each follow
+  /// ``controlOrder``. The hat, left stick, right stick, left trigger and right trigger follow.
   static func changes(
     from old: ControllerState,
     to new: ControllerState
   ) -> [RemappingInputChange] {
     var changes: [RemappingInputChange] = []
-    for control in controlOrder {
-      let isPressed = new.pressed.contains(control)
-      guard old.pressed.contains(control) != isPressed else { continue }
-      changes.append(.button(control, isPressed: isPressed))
+    for isPressed in [false, true] {
+      for control in controlOrder {
+        guard old.pressed.contains(control) != new.pressed.contains(control),
+          new.pressed.contains(control) == isPressed
+        else { continue }
+        changes.append(.button(control, isPressed: isPressed))
+      }
     }
     if old.hat != new.hat { changes.append(.dpad(new.hat)) }
     if old.leftStick != new.leftStick {
@@ -61,8 +65,8 @@ extension RemappingEngineState {
     return changes
   }
 
-  /// Digital controls in the one order simultaneous changes are delivered in, the same for every
-  /// controller.
+  /// Digital controls in the one order that releases and presses are each delivered in, the same for
+  /// every controller.
   static let controlOrder: [Control] =
     [
       .south, .east, .west, .north, .leftShoulder, .rightShoulder, .leftStickClick,
