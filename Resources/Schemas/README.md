@@ -9,7 +9,7 @@
 - `defaults.schema.json`: `Defaults.json`, the `tuning` defaults for every controller.
 - `persona.schema.json`: a persona file, which matches a controller and gives the descriptor and HID identity its virtual gamepad publishes.
 - `mod-package.schema.json`: the `mod.json` manifest of a mod package folder.
-- `protocol-description.schema.json`: the authored protocol descriptions `Resources/Protocols/<family>.json`. Each holds the USB interface signatures (class, subclass, protocol, and the data interface number when the family pins one) that bind a device of that family without a record. The file name must equal `family`, and each signature's `variant` must be one the family implements. `./Scripts/ojd catalog regenerate` copies them into the Kit bundle.
+- `protocol-description.schema.json`: the authored protocol descriptions `Resources/Protocols/<family>.json`. Each holds the USB interface signatures (class, subclass, protocol, and the data interface number when the family pins one) that bind a device of that family without a record. The file name must equal `family`, and each signature's `variant` must be one the family implements (`PhysicalProtocolID.variants`); a family with no variants has no signatures. `./Scripts/ojd catalog regenerate` copies them into the Kit bundle.
 - `report.schema.json`: the CloudEvents 1.0 support-report envelope and payload.
 - `cli-output.schema.json`: the `--json` output of each `ojd` command. The CLI tests check every `--json` document they print against it.
 - `profile.schema.json`: the remapping profile file that `ojd profile export` writes and `ojd profile import` reads. Cross-field rules stay in the strict decoder, and a test keeps the schema enums equal to the Swift cases.

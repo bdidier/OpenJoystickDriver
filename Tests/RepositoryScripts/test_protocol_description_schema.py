@@ -36,7 +36,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def setUp(self) -> None:
         self.documents = validate_schemas.validate_schema_documents()
         self.registry = validate_schemas.schema_registry(self.documents)
-        self.schema = self.documents["protocol-description.schema.json"]
+        self.schema: Any = self.documents["protocol-description.schema.json"]
         directory = tempfile.TemporaryDirectory(prefix="ojd-protocols-")
         self.addCleanup(directory.cleanup)
         self.root = Path(directory.name)
@@ -121,17 +121,47 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         signatures.append(copy.deepcopy(signatures[0]))
         self.assert_rejected(document)
 
-    def test_rejects_a_variant_from_another_family(self) -> None:
-        for family, variant in (
-            ("xbox.xid", "wired"),
-            ("xbox.xusb", "gamepad"),
-            ("xbox.gip", "receiver"),
-        ):
-            with self.subTest(family=family):
-                document = xusb_description()
-                document["family"] = family
-                document["interfaceSignatures"][0]["variant"] = variant
-                self.assert_rejected(document)
+    def family_variants(self) -> dict[str, list[str]]:
+        """Each family's admitted variants; the Swift tests keep these equal to `variants`."""
+        families: dict[str, list[str]] = {}
+        for rule in self.schema["allOf"]:
+            family = rule["if"]["properties"]["family"]["const"]
+            signatures = rule["then"]["properties"]["interfaceSignatures"]
+            families[family] = (
+                signatures["items"]["properties"]["variant"]["enum"]
+                if "items" in signatures
+                else []
+            )
+        return families
+
+    def described(self, family: str, variant: str) -> dict[str, Any]:
+        document = xusb_description()
+        document["family"] = family
+        document["interfaceSignatures"][0]["variant"] = variant
+        return document
+
+    def test_every_family_has_a_variant_rule(self) -> None:
+        families = self.family_variants()
+        controller: Any = self.documents["controller.schema.json"]
+        self.assertEqual(
+            sorted(families),
+            sorted(controller["$defs"]["protocol"]["properties"]["family"]["enum"]),
+        )
+        self.assertEqual(families["sony.dualshock4"], ["usb", "bluetooth-classic"])
+        self.assertEqual(families["hid.descriptor"], [])
+
+    def test_each_family_accepts_only_its_own_variants(self) -> None:
+        every = self.schema["$defs"]["interfaceSignature"]["properties"]["variant"][
+            "enum"
+        ]
+        for family, allowed in self.family_variants().items():
+            for variant in every:
+                with self.subTest(family=family, variant=variant):
+                    document = self.described(family, variant)
+                    if variant in allowed:
+                        self.check(document)
+                    else:
+                        self.assert_rejected(document)
 
     def test_rejects_a_file_name_that_differs_from_the_family(self) -> None:
         with self.assertRaisesRegex(

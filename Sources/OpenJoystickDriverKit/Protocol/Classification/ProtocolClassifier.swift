@@ -83,7 +83,7 @@ public enum PhysicalProtocolID: String, CaseIterable, Codable, Sendable {
 /// Protocol variants. Transport variants are derived from the observed transport;
 /// catalog records store only variants that transport cannot decide
 /// (``PhysicalProtocolID/storesVariant``).
-public enum PhysicalProtocolVariantID: String, Sendable {
+public enum PhysicalProtocolVariantID: String, CaseIterable, Sendable {
   case usb
   case bluetoothClassic = "bluetooth-classic"
   case bluetoothLE = "bluetooth-le"
