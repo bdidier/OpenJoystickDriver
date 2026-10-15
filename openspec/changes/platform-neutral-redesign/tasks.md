@@ -18,7 +18,7 @@ This is a plan. No task here is done. Each work package (WP) lists what it owns,
   - `.build/schema-validator/bin/python -m unittest discover -s Tests/RepositoryScripts`
   - shellcheck over `Scripts`
   - markdownlint over tracked and untracked `.md` files outside `.agents/`
-  - `swift-format lint --recursive --strict Package.swift Sources Tests`
+  - `swift-format lint --recursive --strict Package.swift Sources Tests Tools`
   - `swiftlint lint --no-cache --strict`
   - `python3 Scripts/Quality/check_swift_file_length.py`
   - `python3 Scripts/Quality/check_localization_keys.py`
@@ -64,7 +64,7 @@ Verify: `./Scripts/ojd catalog regenerate --check`, `ruff format --check Scripts
 
 Owns: the model identifier type and its use in stores.
 Depends: 1.
-Verify: `swift test`, `swift-format lint --recursive --strict Package.swift Sources Tests`, `swiftlint lint --no-cache --strict`.
+Verify: `swift test`, `swift-format lint --recursive --strict Package.swift Sources Tests Tools`, `swiftlint lint --no-cache --strict`.
 
 - [x] 3.1 Introduce `ControllerModelID` as the key of a record kind of controller. Verify: unit test that two physical units of one model share one ID.
 - [x] 3.2 Replace the uses of the overloaded identifier that mean "model". Verify: build passes and 1.1 to 1.3 show zero diffs.
@@ -257,7 +257,7 @@ Verify: `swift test`, lint pair. Hardware: H10.
 - [ ] 19.1 Introduce `InputSource` and `OutputSink` and attach physical, virtual, endpoint paths to them. Verify: 1.1 shows zero diffs.
 - [x] 19.2 Add bounded queue policy per record or default. Verify: slow-consumer test keeps memory bounded and delivers the newest frame. Done: `tuning.frameQueueCapacity` per record, defaulted in every protocol description (64, kept equal to `fallbackQueueCapacity` by `ProtocolDescriptionTests`); newest frame wins, host replies are never evicted and a frame behind a full queue of replies is superseded without closing the device; `slowConsumerKeepsTheQueueBoundedAndDeliversTheNewestFrame` and `frameBehindAQueueOfHostRepliesLeavesTheDeviceOpen`.
 - [x] 19.3 Add per-stage timestamps to `ojd diagnose`. Verify: test output lists dispatch and delivery times. Done: read, parse, dispatch, delivery-virtual-device and delivery-endpoint stamps; `DeviceManagerFrameTimingsTests` asserts all five in order and `--plain` adds one timing row per stage.
-- [ ] 19.4 Add the WebRTC bridge in `Tools/WebRTCBridge/` as its own Swift package on LiveKitWebRTC, an endpoint client (`FeedRequest`/`RumbleCommand` on the game's Mac, `Subscription` on the player's Mac), with out-of-band offer and answer. Verify: a loopback test connects two bridges through a data channel against a test endpoint and passes a frame one way and a rumble command back; the host holds an idle feed open with `KeepAlive`, which the endpoint accepts (feed open past 2 s with keep-alives, E1009 without), with no frame repeated; a socket scan shows no listener; the root `Package.resolved` has no WebRTC package.
+- [x] 19.4 Add the WebRTC bridge in `Tools/WebRTCBridge/` as its own Swift package on LiveKitWebRTC, an endpoint client (`FeedRequest`/`RumbleCommand` on the game's Mac, `Subscription` on the player's Mac), with out-of-band offer and answer. Verify: a loopback test connects two bridges through a data channel against a test endpoint and passes a frame one way and a rumble command back; the host holds an idle feed open with `KeepAlive`, which the endpoint accepts (feed open past 2 s with keep-alives, E1009 without), with no frame repeated; a socket scan shows no listener; the root `Package.resolved` has no WebRTC package. Done: `Tools/WebRTCBridge` on LiveKitWebRTC; `KeepAlive` in `endpoint.schema.json` and the endpoint (E1011 outside a feed, E1004 with extra members); `VirtualFeedRegistryTests` pins the 2 s default, the feed tests run KeepAlive and E1009 on a short timeout; bridge `HostBridgeTests` show no frame repeat and no write for an invalid peer message; loopback, socket-scan and `test_core_without_webrtc.py` pass.
 
 ## 20. AppKit GUI shell
 
