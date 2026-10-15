@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverKit
 import OpenJoystickDriverUSB
 import SwifterKit
 
@@ -45,8 +46,24 @@ private enum ArgumentError: Error, CustomStringConvertible {
   }
 }
 
+/// Records that ask for the extension but are outside Apple's `transport.usb` grant.
+private struct OutsideGrantError: Error, CustomStringConvertible {
+  let models: [ControllerModelID]
+
+  var description: String {
+    "ExtensionOwned records outside Apple's grant: "
+      + models.map(\.description).joined(separator: ", ")
+  }
+}
+
 do {
   let arguments = try Arguments(Array(CommandLine.arguments.dropFirst()))
+  let outsideGrant = USBDriverKitExtensionConfiguration.modelsOutsideGrant(
+    extensionOwned: USBDriverKitExtensionConfiguration.extensionOwnedModels(
+      in: ControllerRecordSet.bundled
+    )
+  )
+  guard outsideGrant.isEmpty else { throw OutsideGrantError(models: outsideGrant) }
   try DriverExtensionGenerator.generate(
     configuration: USBDriverKitExtensionConfiguration.driver,
     options: DriverExtensionGenerationOptions(

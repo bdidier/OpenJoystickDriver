@@ -29,7 +29,16 @@ RECORD_SCHEMA_ID = (
 )
 # Top-level record sections a patch override may replace.
 PATCH_FIELDS = frozenset(
-    {"protocol", "usb", "bluetoothLE", "ownership", "output", "input", "tuning"}
+    {
+        "protocol",
+        "usb",
+        "bluetoothLE",
+        "ownership",
+        "route",
+        "output",
+        "input",
+        "tuning",
+    }
 )
 
 

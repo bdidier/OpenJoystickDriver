@@ -54,7 +54,10 @@ let package = Package(
 
     .executableTarget(
       name: "DriverKitGenerator",
-      dependencies: ["OpenJoystickDriverUSB", .product(name: "SwifterKit", package: "SwifterKit")],
+      dependencies: [
+        "OpenJoystickDriverKit", "OpenJoystickDriverUSB",
+        .product(name: "SwifterKit", package: "SwifterKit"),
+      ],
       path: "Sources/DriverKitGenerator",
       exclude: ["Entitlements"]
     ),

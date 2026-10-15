@@ -84,6 +84,7 @@ struct DeviceCatalog: Sendable {
       startupWrites: record.startupWrites,
       inputLayout: record.inputLayout,
       tuning: record.tuning,
+      route: record.route,
       bluetoothLEVibrationCharacteristic: record.bluetoothLE?.vibrationCharacteristic
     )
   }

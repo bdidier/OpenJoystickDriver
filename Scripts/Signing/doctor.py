@@ -39,6 +39,14 @@ PRODUCTION_USB = [
     {"idVendor": 1118, "idProduct": 2826},
     {"idVendor": 1118, "idProduct": 733},
 ]
+ROOT = pathlib.Path(__file__).resolve().parents[2]
+# The DEXT signing entitlements, then the generated entitlements and personality, which exist
+# after `./Scripts/ojd driverkit generate`.
+DEXT_MATCH_FILES = (
+    ROOT / "Sources/DriverKitGenerator/Entitlements/XboxUSBDevice.entitlements",
+    ROOT / ".build/driverkit/generated/SwifterKitRuntime.entitlements",
+    ROOT / ".build/driverkit/generated/Info.plist",
+)
 
 
 def decode_profile(path: pathlib.Path) -> dict:
@@ -238,6 +246,44 @@ def dext_profile_errors(label: str, profile: dict) -> list[str]:
     return entitlement_errors(label, profile, expected, forbidden=FORBIDDEN_DEXT_KEYS)
 
 
+def match_terms(document: dict) -> set[tuple[int, int | None]]:
+    """Returns the vendor and product pairs of a plist's USB match terms; a product of None
+    matches every product of the vendor."""
+    terms = list(document.get(USB_TRANSPORT, []))
+    terms += document.get("IOKitPersonalities", {}).values()
+    pairs: set[tuple[int, int | None]] = set()
+    for term in terms:
+        if not isinstance(term, dict) or "idVendor" not in term:
+            continue
+        products = term.get("idProductArray", [term.get("idProduct")])
+        pairs.update((term["idVendor"], product) for product in products)
+    return pairs
+
+
+def match_term_errors(
+    paths: list[pathlib.Path] | tuple[pathlib.Path, ...],
+) -> list[str]:
+    """Returns one error for each existing file whose match terms leave Apple's grant."""
+    granted = {(term["idVendor"], term["idProduct"]) for term in PRODUCTION_USB}
+    errors = []
+    for path in paths:
+        if not path.is_file():
+            continue
+        with path.open("rb") as file:
+            outside = match_terms(plistlib.load(file)) - granted
+        if outside:
+            names = ", ".join(
+                f"{vendor:04X}:{'any' if product is None else f'{product:04X}'}"
+                for vendor, product in sorted(
+                    outside, key=lambda pair: (pair[0], pair[1] or 0)
+                )
+            )
+            errors.append(
+                f"{path} matches {names}, outside Apple's transport.usb grant"
+            )
+    return errors
+
+
 def load(label: str, path: pathlib.Path) -> tuple[dict | None, list[str]]:
     if not path.is_file():
         return None, [f"{label} is missing: {path}"]
@@ -298,6 +344,7 @@ def main() -> int:
         errors.extend(driver_errors)
     if driver is not None:
         errors.extend(dext_profile_errors("DriverKit development profile", driver))
+    errors.extend(match_term_errors(DEXT_MATCH_FILES))
 
     if host is not None and driver is not None:
         common = certificate_sha1s(host) & certificate_sha1s(driver) & apple_development
