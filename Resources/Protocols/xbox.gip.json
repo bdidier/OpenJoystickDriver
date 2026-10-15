@@ -51,7 +51,49 @@
             "sessionByte": 2
           }
         ]
-      }
+      },
+      "namedPackets": [
+        {
+          "id": "xbox.gip/power-on",
+          "bytes": [5, 32, 0, 1, 0],
+          "sessionByte": 2
+        },
+        {
+          "id": "xbox.gip/s-init",
+          "bytes": [5, 32, 0, 15, 6],
+          "sessionByte": 2
+        },
+        {
+          "id": "xbox.gip/enable-extra-input",
+          "bytes": [77, 16, 0, 2, 7, 0],
+          "sessionByte": 2
+        },
+        {
+          "id": "xbox.gip/hori-ack",
+          "bytes": [1, 32, 0, 9, 0, 4, 32, 58, 0, 0, 0, 128, 0],
+          "sessionByte": 2
+        },
+        {
+          "id": "xbox.gip/led-on",
+          "bytes": [10, 32, 0, 3, 0, 1, 20],
+          "sessionByte": 2
+        },
+        {
+          "id": "xbox.gip/auth-done",
+          "bytes": [6, 32, 0, 2, 1, 0],
+          "sessionByte": 2
+        },
+        {
+          "id": "xbox.gip/rumble-begin",
+          "bytes": [9, 0, 0, 9, 0, 15, 0, 0, 29, 29, 255, 0, 0],
+          "sessionByte": 2
+        },
+        {
+          "id": "xbox.gip/rumble-end",
+          "bytes": [9, 0, 0, 9, 0, 15, 0, 0, 0, 0, 0, 0, 0],
+          "sessionByte": 2
+        }
+      ]
     },
     "tuning": {
       "presenceResendReports": 4,

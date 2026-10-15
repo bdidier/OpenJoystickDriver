@@ -93,6 +93,9 @@ struct ProtocolDescription: Sendable {
   /// The family's subcommand reports: the report id, the rolling counter rule and the startup
   /// requests. Only `nintendo.switch1` has them.
   let subcommands: SubcommandPlan?
+  /// The family's named packets, which a record selects by id in `protocol.initialization`.
+  /// Only `xbox.gip` has them.
+  let namedPackets: NamedPacketPlan?
   let inputLayout: ControllerInputLayout?
   /// The map every `hid.descriptor` record layers over (``HIDUsageMap``).
   let hidUsageMap: HIDUsageMap?
@@ -252,6 +255,7 @@ struct ProtocolDescription: Sendable {
       usbStartupWrites: document.defaults?.output?.usbStartup ?? [],
       keepAlive: document.defaults?.session?.keepAlive,
       subcommands: document.defaults?.session?.subcommands,
+      namedPackets: document.defaults?.session?.namedPackets,
       inputLayout: document.defaults?.input?.layout,
       hidUsageMap: document.defaults?.input?.usageMap,
       hidUsageShapes: document.defaults?.input?.shapes ?? [],
@@ -349,6 +353,12 @@ struct ProtocolDescription: Sendable {
     if let violation = keepAliveViolation { return violation }
     if (subcommands != nil) != (family == .nintendoSwitch1) {
       return "only nintendo.switch1 has subcommands, and it must have them"
+    }
+    if namedPackets != nil, family != .xboxGIP {
+      return "only xbox.gip has named packets"
+    }
+    if let namedPackets, !namedPackets.allIDs(startWith: "\(family.rawValue)/") {
+      return "each named packet id starts with \(family.rawValue)/"
     }
     if rawUSB == .always, !tuningKeys.isEmpty {
       return "a family that is always raw USB reads its tuning through rawUSBTuningKeys"

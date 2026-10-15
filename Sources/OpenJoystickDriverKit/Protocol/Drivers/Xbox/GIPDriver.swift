@@ -64,7 +64,7 @@ public final class GIPDriver: PhysicalProtocolDriver {
   /// Creates a new GIPDriver with the given endpoint configuration.
   public init(
     transportProfile: DeviceTransportProfile = .gipDefault,
-    startupPackets: [GIPStartupPacket] = [],
+    startupPackets: [String] = [],
     usbStartupWrites: [USBStartupWrite] = [],
     keepAlivePolicy: GIPKeepAlivePolicy = .enabled,
     shareButtonFromEnd: Int? = nil,
@@ -72,7 +72,12 @@ public final class GIPDriver: PhysicalProtocolDriver {
     tuning: ControllerTuning? = nil
   ) {
     self.outEndpoint = transportProfile.outputEndpoint
-    let named = startupPackets.compactMap(\.startupWrite)
+    let named = startupPackets.map { identifier in
+      guard let write = PhysicalProtocolID.xboxGIP.namedPacketWrite(identifier) else {
+        preconditionFailure("\(identifier) is not a named packet of xbox.gip")
+      }
+      return write
+    }
     startup = PhysicalProtocolID.xboxGIP.usbStartupWrites(
       recordWrites: usbStartupWrites.isEmpty ? named : usbStartupWrites,
       variant: .usb,

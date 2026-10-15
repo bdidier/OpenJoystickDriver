@@ -106,7 +106,7 @@
           }
           Button(
             OJDLocalized.string("developer.enterDiagnosticMode")
-          ) {}.disabled(!model.diagnosticRecipeAvailable)
+          ) {}.disabled(true)
         }.padding(4).frame(maxWidth: .infinity, alignment: .leading)
       } label: {
         Text(OJDLocalized.string("developer.diagnosticMode")).font(
