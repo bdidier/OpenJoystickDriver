@@ -305,60 +305,6 @@ enum ProtocolClassifier {
     }
   }
 
-  struct InterfaceSignature: Equatable {
-    let protocolID: PhysicalProtocolID
-    let variant: PhysicalProtocolVariantID
-    let interfaceClass: UInt8
-    let interfaceSubclass: UInt8
-    let interfaceProtocol: UInt8
-    /// GIP shares its triple across interfaces; only this interface carries data.
-    let requiredInterfaceNumber: UInt8?
-
-    func matches(_ interface: PhysicalInterfaceSignature) -> Bool {
-      interface.interfaceClass == interfaceClass && interface.interfaceSubclass == interfaceSubclass
-        && interface.interfaceProtocol == interfaceProtocol
-    }
-  }
-
-  /// Pinned against Linux `xpad.c` at the `ControllerSources.lock.json` commit:
-  /// the `'X','B',0` table entry, `XPAD_XBOX360_VENDOR` (subclass 93, protocols 1
-  /// and 129), `XPAD_XBOXONE_VENDOR` (subclass 71, protocol 208), the GIP data
-  /// interface number, and the interrupt IN+OUT endpoint requirement in `xpad_probe`.
-  static let signatures = [
-    InterfaceSignature(
-      protocolID: .xboxXID,
-      variant: .gamepad,
-      interfaceClass: 0x58,
-      interfaceSubclass: 0x42,
-      interfaceProtocol: 0x00,
-      requiredInterfaceNumber: nil
-    ),
-    InterfaceSignature(
-      protocolID: .xboxXUSB,
-      variant: .wired,
-      interfaceClass: 0xFF,
-      interfaceSubclass: 0x5D,
-      interfaceProtocol: 0x01,
-      requiredInterfaceNumber: nil
-    ),
-    InterfaceSignature(
-      protocolID: .xboxXUSB,
-      variant: .receiver,
-      interfaceClass: 0xFF,
-      interfaceSubclass: 0x5D,
-      interfaceProtocol: 0x81,
-      requiredInterfaceNumber: nil
-    ),
-    InterfaceSignature(
-      protocolID: .xboxGIP,
-      variant: .usb,
-      interfaceClass: 0xFF,
-      interfaceSubclass: 0x47,
-      interfaceProtocol: 0xD0,
-      requiredInterfaceNumber: 0
-    ),
-  ]
-
   private static func classifySignature(
     _ interfaces: [PhysicalInterfaceSignature],
     backend: DeviceAccessBackend

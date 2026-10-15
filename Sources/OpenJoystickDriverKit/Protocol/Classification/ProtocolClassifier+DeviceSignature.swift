@@ -4,14 +4,7 @@ extension ProtocolClassifier {
   /// Xbox One devices also report the GIP triple in the device descriptor. An unconfigured device
   /// exposes no interfaces, so the device triple is the only signature fact available before
   /// configuration 1 is set.
-  static let deviceSignature = InterfaceSignature(
-    protocolID: .xboxGIP,
-    variant: .usb,
-    interfaceClass: 0xFF,
-    interfaceSubclass: 0x47,
-    interfaceProtocol: 0xD0,
-    requiredInterfaceNumber: 0
-  )
+  static let deviceSignature = signatures.first { $0.protocolID == .xboxGIP }
 
   /// Whether passive facts carry a known Xbox USB signature on an interface or in the device
   /// descriptor, whatever the configuration state.
@@ -29,7 +22,7 @@ extension ProtocolClassifier {
     _ device: PhysicalDevice,
     backend: DeviceAccessBackend
   ) -> ProtocolClassification? {
-    guard hasDeviceSignature(device), (device.interfaces ?? []).isEmpty,
+    guard let deviceSignature, hasDeviceSignature(device), (device.interfaces ?? []).isEmpty,
       (device.configurationValue ?? 0) == 0
     else { return nil }
     guard backend != .ioHID else {
@@ -55,7 +48,8 @@ extension ProtocolClassifier {
   }
 
   private static func hasDeviceSignature(_ device: PhysicalDevice) -> Bool {
-    device.deviceClass == deviceSignature.interfaceClass
+    guard let deviceSignature else { return false }
+    return device.deviceClass == deviceSignature.interfaceClass
       && device.deviceSubclass == deviceSignature.interfaceSubclass
       && device.deviceProtocol == deviceSignature.interfaceProtocol
   }

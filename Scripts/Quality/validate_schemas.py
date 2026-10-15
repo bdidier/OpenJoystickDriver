@@ -30,6 +30,7 @@ GENERATED_RECORDS = (
 )
 CONTROLLER_OVERRIDES = ROOT / "Resources" / "ControllerOverrides"
 ERROR_CODES = ROOT / "Resources" / "ErrorCodes.json"
+PROTOCOL_DESCRIPTIONS = ROOT / "Resources" / "Protocols"
 SCHEMA_PATHS = (
     SCHEMAS / "controller.schema.json",
     SCHEMAS / "controller-override.schema.json",
@@ -42,6 +43,7 @@ SCHEMA_PATHS = (
     SCHEMAS / "defaults.schema.json",
     SCHEMAS / "persona.schema.json",
     SCHEMAS / "mod-package.schema.json",
+    SCHEMAS / "protocol-description.schema.json",
 )
 
 
@@ -141,6 +143,7 @@ def main() -> int:
         registry = schema_registry(documents)
         controller_records = sorted(GENERATED_RECORDS.glob("*/*.json"))
         overrides = sorted(CONTROLLER_OVERRIDES.glob("*/*.json"))
+        protocols = sorted(PROTOCOL_DESCRIPTIONS.glob("*.json"))
         validate_documents(
             documents["controller.schema.json"], registry, controller_records
         )
@@ -149,6 +152,9 @@ def main() -> int:
         )
         validate_documents(
             documents["error-codes.schema.json"], registry, [ERROR_CODES]
+        )
+        validate_documents(
+            documents["protocol-description.schema.json"], registry, protocols
         )
         validate_live_support_report(documents["report.schema.json"], registry)
         compatibility = check_compatibility(ROOT, documents)
@@ -168,7 +174,8 @@ def main() -> int:
     print(
         f"Validated {len(documents)} schema documents, "
         f"{len(controller_records)} controller records, {len(overrides)} overrides, "
-        "the error code catalog, and one live support report."
+        f"{len(protocols)} protocol descriptions, the error code catalog, "
+        "and one live support report."
     )
     print(compatibility)
     return 0

@@ -1,0 +1,13 @@
+{
+	"$schema": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/protocol-description.schema.json",
+	"family": "xbox.gip",
+	"interfaceSignatures": [
+		{
+			"variant": "usb",
+			"interfaceClass": 255,
+			"interfaceSubclass": 71,
+			"interfaceProtocol": 208,
+			"interfaceNumber": 0
+		}
+	]
+}
