@@ -30,14 +30,24 @@ struct HIDUsageLayoutEquivalenceTests {
     0xC4, 0x15, 0x00, 0x26, 0xFF, 0x00, 0x75, 0x08, 0x95, 0x02, 0x81, 0x02, 0xC0,
   ])
 
-  private func drivers() -> [(name: String, driver: HIDDescriptorDriver)] {
+  /// Each layout comes from the record or description that now declares it.
+  private func drivers() throws -> [(name: String, driver: HIDDescriptorDriver)] {
     let model = ControllerModelID(vendorID: 0xFFFE, productID: 1)
     return [
       ("standard", HIDDescriptorDriver(model: model)),
-      ("Wr007", HIDDescriptorDriver(model: model, usageLayout: .wr007)),
-      ("ScufEnvision", HIDDescriptorDriver(model: model, usageLayout: .scufEnvision)),
-      ("ZRzBrakeLeft", HIDDescriptorDriver(model: model, usageLayout: .zRzBrakeLeft)),
-      ("DragonRise", HIDDescriptorDriver(model: model, usageLayout: .dragonRise)),
+      ("Wr007", HIDDescriptorDriver(model: model, usageMap: try catalogUsageMap(0x11C1, 0x5600))),
+      (
+        "ScufEnvision",
+        HIDDescriptorDriver(model: model, usageMap: try catalogUsageMap(0x2E95, 0x434D))
+      ),
+      (
+        "ZRzBrakeLeft",
+        HIDDescriptorDriver(model: model, usageMap: try catalogUsageMap(0x2DC8, 0x301B))
+      ),
+      (
+        "DragonRise",
+        HIDDescriptorDriver(model: model, usageMap: try catalogUsageMap(0x0079, 6))
+      ),
       (
         "descriptor Z/Rz Brake Record",
         HIDDescriptorDriver(model: model, reportDescriptor: Self.zRzBrakeDescriptor)
@@ -104,10 +114,10 @@ struct HIDUsageLayoutEquivalenceTests {
     return steps
   }
 
-  private func render() -> String {
+  private func render() throws -> String {
     let parse = Parse()
     let steps = Self.steps()
-    return drivers().map { name, driver in
+    return try drivers().map { name, driver in
       let controls = driver.capabilities.controls.map { "\($0)" }.sorted().joined(separator: ",")
       let lines =
         ["capabilities [\(controls)]"]
@@ -118,13 +128,9 @@ struct HIDUsageLayoutEquivalenceTests {
 
   @Test
   func everyUsageTableMatchesTheCodedOutput() throws {
-    let rendered = render()
+    let rendered = try render()
     let file = EquivalenceSnapshotStore.directory.deletingLastPathComponent()
       .appendingPathComponent("HIDUsageGolden/hid-usage-layouts.txt")
-    if ProcessInfo.processInfo.environment["OJD_HID_GOLDEN_WRITE"] == "1" {
-      try Data(rendered.utf8).write(to: file)
-      return
-    }
     let expected = try String(contentsOf: file, encoding: .utf8)
     let actualLines = rendered.split(separator: "\n", omittingEmptySubsequences: false)
     let expectedLines = expected.split(separator: "\n", omittingEmptySubsequences: false)

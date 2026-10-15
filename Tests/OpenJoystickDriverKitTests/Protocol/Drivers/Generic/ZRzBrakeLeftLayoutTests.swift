@@ -1,4 +1,4 @@
-import OpenJoystickDriverKit
+@testable import OpenJoystickDriverKit
 import Testing
 
 /// The Z/Rz right-stick layout with Brake as LT and a Home button. Recorded from a wired GameSir G7
@@ -14,12 +14,12 @@ struct ZRzBrakeLeftLayoutTests {
     ControllerModelID(vendorID: 0x2DC8, productID: 0x301C),
   ]
 
-  private func makeParser(_ model: ControllerModelID) -> HIDDescriptorDriver {
+  private func makeParser(_ model: ControllerModelID) throws -> HIDDescriptorDriver {
     let isGameSir = model.vendorID == 0x3537
     return HIDDescriptorDriver(
       model: model,
       reportDescriptor: isGameSir ? RecordedHIDDescriptors.gameSirG7SE : nil,
-      usageLayout: isGameSir ? nil : .zRzBrakeLeft
+      usageMap: isGameSir ? nil : try catalogUsageMap(model.vendorID, model.productID)
     )
   }
 
@@ -31,8 +31,8 @@ struct ZRzBrakeLeftLayoutTests {
   }
 
   @Test(arguments: models)
-  func mapsRecordedButtonsAndIgnoresDigitalTriggerBits(model: ControllerModelID) {
-    let parser = makeParser(model)
+  func mapsRecordedButtonsAndIgnoresDigitalTriggerBits(model: ControllerModelID) throws {
+    let parser = try makeParser(model)
     let buttons: [UInt32: ControlID] = [
       1: .faceSouth, 2: .faceEast, 4: .faceWest, 5: .faceNorth, 7: .leftShoulder, 8: .rightShoulder,
       11: .view, 12: .menu, 13: .guide, 14: .leftStickClick, 15: .rightStickClick,
@@ -48,8 +48,8 @@ struct ZRzBrakeLeftLayoutTests {
   }
 
   @Test(arguments: models)
-  func zAndRzAreTheRightStick(model: ControllerModelID) {
-    let parser = makeParser(model)
+  func zAndRzAreTheRightStick(model: ControllerModelID) throws {
+    let parser = try makeParser(model)
     #expect(parse(parser, value(usage: 0x32, integer: 255)).contains(.rightStick(x: 1, y: 0)))
     let down = parse(parser, value(usage: 0x35, integer: 255))
     #expect(down.contains(.rightStick(x: 1, y: 1)))
@@ -58,8 +58,8 @@ struct ZRzBrakeLeftLayoutTests {
   }
 
   @Test(arguments: models)
-  func brakeIsLeftTriggerAndAcceleratorIsRightTrigger(model: ControllerModelID) {
-    let parser = makeParser(model)
+  func brakeIsLeftTriggerAndAcceleratorIsRightTrigger(model: ControllerModelID) throws {
+    let parser = try makeParser(model)
     #expect(parse(parser, value(page: 2, usage: 0xC5, integer: 255)).contains(.leftTrigger(1)))
     #expect(
       parse(parser, value(page: 2, usage: 0xC4, integer: 128)).contains(
