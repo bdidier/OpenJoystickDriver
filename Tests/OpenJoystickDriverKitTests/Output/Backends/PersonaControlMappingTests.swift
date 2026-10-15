@@ -121,10 +121,11 @@ struct PersonaControlMappingTests {
     device.activeSources = [
       .button(.south), .button(.east), .button(.north), .button(.rightTrackpadClick),
     ]
-    let actions = device.updatePassthrough(rightPadIsRightStick: { _ in
+    let lookup: (LogicalControllerID) -> Bool = { _ in
       lookups.count += 1
       return padIsRightStick
-    })
+    }
+    let actions = device.updatePassthrough(rightPadIsRightStick: lookup)
     #expect(lookups.count == 1)
     let expected: Set<Control> =
       padIsRightStick
@@ -137,7 +138,7 @@ struct PersonaControlMappingTests {
 
 extension DeviceRuntimeProfile {
   /// This record with another capability delta; everything else it runs with is unchanged.
-  fileprivate func withCapabilityDelta(
+  func withCapabilityDelta(
     absent: Set<Control>,
     present: Set<Control>
   ) -> DeviceRuntimeProfile {
