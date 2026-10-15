@@ -68,6 +68,10 @@ public struct XboxGeckoHIDReportFormat: VirtualGamepadReportFormat {
     )
   }
 
+  /// The 16-byte Xbox One packet has no Share field and SDL names no further button slot, so this
+  /// persona carries neither Capture (the Share bit) nor the touchpad click, microphone, paddles,
+  /// auxiliaries or touch controls. Bits 11-14 (the generic persona's dpad buttons) stay clear: the
+  /// dpad is the hat.
   public func buildInputReport(from state: VirtualGamepadState) -> [UInt8] {
     var state = state
     let unavailableButtons: UInt32 =
