@@ -17,10 +17,22 @@ struct ServingRouteLabelTests {
     }
   }
 
+  /// The fixture as the service describes it; a controller with output off reports why.
+  private static func device(_ fixture: ServingFixture) -> ApplicationServiceDeviceDescription {
+    var device = fixture.device
+    if !fixture.outputEnabled {
+      device.publication = ApplicationServicePublicationStatus(
+        state: .notPublished,
+        reason: "outputDisabled"
+      )
+    }
+    return device
+  }
+
   @Test(arguments: ServingFixture.all)
   func detailLabelNamesTheRouteOfTheServingPolicy(_ fixture: ServingFixture) {
     let decided = ServingPolicy.decision(fixture.input).route
-    #expect(fixture.device.servingRouteLabel == OJDLocalized.string(Self.key(for: decided)))
+    #expect(Self.device(fixture).servingRouteLabel == OJDLocalized.string(Self.key(for: decided)))
   }
 
   @Test
