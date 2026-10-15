@@ -118,7 +118,8 @@ extension EndpointServer {
         Darwin.close(accepted)
         continue
       }
-      connectionQueue.async { [weak self] in
+      BlockingWork.detach(label: "com.openjoystickdriver.endpoint.web-connection") {
+        [weak self] in
         guard let self else {
           Darwin.close(accepted)
           return

@@ -42,8 +42,11 @@ final class EndpointServer: @unchecked Sendable {
   let streamDelivered: (@Sendable (ControllerSessionToken, UInt64) async -> Void)?
   let lock = NSLock()
   private let acceptQueue = DispatchQueue(label: "com.openjoystickdriver.endpoint.accept")
-  let connectionQueue = DispatchQueue(
-    label: "com.openjoystickdriver.endpoint.connections",
+  /// Runs only the short handshake timers; each connection itself runs on a thread of its own
+  /// (`BlockingWork.detach`), because a concurrent queue grows its threads slowly for blocked
+  /// work and new connections would wait behind idle ones.
+  let handshakeTimerQueue = DispatchQueue(
+    label: "com.openjoystickdriver.endpoint.handshake-timers",
     attributes: .concurrent
   )
   private var listeningDescriptor: Int32 = -1
@@ -291,7 +294,7 @@ final class EndpointServer: @unchecked Sendable {
       }
       var noSignal: Int32 = 1
       setsockopt(accepted, SOL_SOCKET, SO_NOSIGPIPE, &noSignal, socklen_t(MemoryLayout<Int32>.size))
-      connectionQueue.async { [weak self] in
+      BlockingWork.detach(label: "com.openjoystickdriver.endpoint.connection") { [weak self] in
         guard let self else {
           Darwin.close(accepted)
           return
