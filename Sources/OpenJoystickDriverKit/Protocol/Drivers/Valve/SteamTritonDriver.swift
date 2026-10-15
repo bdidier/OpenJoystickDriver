@@ -64,9 +64,8 @@ public final class SteamTritonDriver: PhysicalProtocolDriver {
   public var sessionPlan: DriverSessionPlan {
     DriverSessionPlan(
       requiresInputConnectionBeforeOutput: isDongle,
-      hidKeepAliveIntervalNanoseconds: PhysicalProtocolID.valveSteamTriton
-        .keepAliveIntervalNanoseconds()
-    )
+      keepAliveChannels: [.hid]
+    ).withKeepAlive(of: .valveSteamTriton)
   }
 
   public func resetProtocolState() {

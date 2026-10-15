@@ -52,7 +52,6 @@
           "minimumHIDOutputIntervalMs",
           "hidStartupRecoveryIntervalMs",
           "hidStartupRecoveryRounds",
-          "keepAliveIntervalMs",
           "lizardResendTicks",
           "usbCommandTimeoutMs",
           "presenceResendReports",
@@ -70,7 +69,6 @@
       "uniqueItems": true,
       "items": {
         "enum": [
-          "keepAliveIntervalMs",
           "lizardResendTicks",
           "usbCommandTimeoutMs",
           "presenceResendReports",
@@ -1140,11 +1138,7 @@
           ]
         },
         "tuning": {
-          "description": "keepAliveIntervalMs is session.keepAlive.intervalMilliseconds, not a tuning default.",
-          "$ref": "controller.schema.json#/$defs/tuning",
-          "properties": {
-            "keepAliveIntervalMs": false
-          }
+          "$ref": "controller.schema.json#/$defs/tuning"
         },
         "variants": {
           "description": "Tuning that differs by variant, over the flat tuning.",
@@ -1159,10 +1153,7 @@
             "required": ["tuning"],
             "properties": {
               "tuning": {
-                "$ref": "controller.schema.json#/$defs/tuning",
-                "properties": {
-                  "keepAliveIntervalMs": false
-                }
+                "$ref": "controller.schema.json#/$defs/tuning"
               }
             }
           }

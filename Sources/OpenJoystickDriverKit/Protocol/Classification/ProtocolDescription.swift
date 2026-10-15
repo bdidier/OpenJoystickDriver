@@ -87,8 +87,8 @@ struct ProtocolDescription: Sendable {
   /// The family's raw-USB initialization packets, sent when a controller starts unless its record
   /// carries its own.
   let usbStartupWrites: [USBStartupWrite]
-  /// The family's keep-alive: its interval and the fixed writes of each run. The interval is also
-  /// the description's `keepAliveIntervalMs` in ``tuning``, where a record's value layers over it.
+  /// The family's keep-alive: its interval, the one place the interval is set, and the fixed
+  /// writes of each run.
   let keepAlive: KeepAlive?
   let inputLayout: ControllerInputLayout?
   /// The map every `hid.descriptor` record layers over (``HIDUsageMap``).
@@ -219,18 +219,6 @@ struct ProtocolDescription: Sendable {
       }
       rawUSB = .variants(variants)
     }
-    // The interval has one home, `session.keepAlive`; the tuning layer takes it from there.
-    let tuningSetsInterval =
-      document.defaults?.tuning?.keepAliveIntervalMilliseconds != nil
-      || (document.defaults?.variantTuning ?? [:]).values.contains {
-        $0.keepAliveIntervalMilliseconds != nil
-      }
-    guard !tuningSetsInterval else {
-      throw ProtocolDescriptionProblem(
-        .invalidProtocolDescription,
-        "\(fileName): keepAliveIntervalMs belongs to defaults.session.keepAlive, not tuning"
-      )
-    }
     var variantTuning: [PhysicalProtocolVariantID: ControllerTuning] = [:]
     for (name, tuning) in document.defaults?.variantTuning ?? [:] {
       guard let variant = PhysicalProtocolVariantID(rawValue: name),
@@ -263,10 +251,7 @@ struct ProtocolDescription: Sendable {
       inputLayout: document.defaults?.input?.layout,
       hidUsageMap: document.defaults?.input?.usageMap,
       hidUsageShapes: document.defaults?.input?.shapes ?? [],
-      tuning: Self.tuning(
-        document.defaults?.tuning,
-        keepAlive: document.defaults?.session?.keepAlive
-      ),
+      tuning: document.defaults?.tuning,
       variantTuning: variantTuning
     )
     for condition in description.startupWrites.map(\.condition)
@@ -281,18 +266,6 @@ struct ProtocolDescription: Sendable {
       throw ProtocolDescriptionProblem(.invalidProtocolDescription, "\(fileName): \(violation)")
     }
     return description
-  }
-
-  /// The description's tuning defaults with the keep-alive interval, which `session.keepAlive`
-  /// holds, as `keepAliveIntervalMs`.
-  private static func tuning(
-    _ tuning: ControllerTuning?,
-    keepAlive: KeepAlive?
-  ) -> ControllerTuning? {
-    guard let keepAlive else { return tuning }
-    return (tuning ?? .none).overlaid(
-      by: ControllerTuning(keepAliveIntervalMilliseconds: keepAlive.intervalMilliseconds)
-    )
   }
 
   /// The fixed keep-alive writes that a controller on `variant` receives from this description.
@@ -397,9 +370,6 @@ struct ProtocolDescription: Sendable {
   private var keepAliveViolation: String? {
     guard let keepAlive else { return nil }
     let reads = tuningKeys.union(rawUSBTuningKeys)
-    if !reads.contains(.keepAliveIntervalMs) {
-      return "keepAlive applies only to a family that reads keepAliveIntervalMs"
-    }
     for write in keepAlive.writes {
       switch write.payload {
       case .hid where rawUSB == .always:

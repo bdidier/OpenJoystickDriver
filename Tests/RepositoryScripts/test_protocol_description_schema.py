@@ -534,17 +534,10 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 )
 
     def keep_alive_body(self, family: str, keep_alive: Any, **members: Any) -> Any:
-        """A description of `family` that reads the keep-alive interval and carries `keep_alive`."""
+        """A description of `family` that carries `keep_alive` in `defaults.session`."""
         keys = {
-            "xbox.gip": {"rawUSBTuningKeys": ["keepAliveIntervalMs"]},
-            "vendor.gamesir": {
-                "rawUSB": ["usb"],
-                "tuningKeys": ["keepAliveIntervalMs"],
-                "rawUSBTuningKeys": ["keepAliveIntervalMs"],
-            },
-            "valve.steam-triton": {
-                "tuningKeys": ["keepAliveIntervalMs", "lizardResendTicks"]
-            },
+            "vendor.gamesir": {"rawUSB": ["usb"]},
+            "valve.steam-triton": {"tuningKeys": ["lizardResendTicks"]},
         }
         defaults = {"session": {"keepAlive": keep_alive}}
         if family == "valve.steam-triton":
@@ -613,7 +606,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             {"intervalMilliseconds": 500, "writes": [self.usb_write(resendTuning="x")]},
             {
                 "intervalMilliseconds": 500,
-                "writes": [self.usb_write(resendTuning="keepAliveIntervalMs")],
+                "writes": [self.usb_write(resendTuning="usbCommandTimeoutMs")],
             },
         ):
             with self.subTest(keep_alive=keep_alive):
@@ -640,10 +633,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
 
     def test_rejects_a_keep_alive_the_family_cannot_run(self) -> None:
         interval = {"intervalMilliseconds": 500}
-        # Not a family that reads keepAliveIntervalMs, and not one that has no output at all.
-        self.assert_rejected(
-            self.with_body("xbox.gip", defaults={"session": {"keepAlive": interval}})
-        )
+        # A family that has no output at all.
         self.assert_rejected(
             self.with_body("xbox.xid", defaults={"session": {"keepAlive": interval}})
         )
@@ -654,9 +644,8 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         self.assert_rejected(
             self.with_body(
                 "sony.dualsense",
-                tuningKeys=["keepAliveIntervalMs"],
                 defaults={
-                    "output": {"keepAlive": {**interval, "writes": [self.usb_write()]}}
+                    "session": {"keepAlive": {**interval, "writes": [self.usb_write()]}}
                 },
             )
         )
@@ -668,62 +657,58 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             ),
             code="E5004",
         )
+        resend = {
+            **interval,
+            "writes": [self.hid_write(resendTuning="lizardResendTicks")],
+        }
         self.assert_rejected(
             self.with_body(
                 "valve.steam-triton",
-                tuningKeys=["keepAliveIntervalMs", "lizardResendTicks"],
-                defaults={
-                    "output": {
-                        "keepAlive": {
-                            **interval,
-                            "writes": [
-                                self.hid_write(resendTuning="lizardResendTicks")
-                            ],
-                        }
-                    }
-                },
+                tuningKeys=["lizardResendTicks"],
+                defaults={"session": {"keepAlive": resend}},
             )
         )
         self.assert_rejected(
             self.with_body(
                 "valve.steam-triton",
-                tuningKeys=["keepAliveIntervalMs"],
                 defaults={
                     "tuning": {"lizardResendTicks": 75},
-                    "output": {
-                        "keepAlive": {
-                            **interval,
-                            "writes": [
-                                self.hid_write(resendTuning="lizardResendTicks")
-                            ],
-                        }
-                    },
+                    "session": {"keepAlive": resend},
                 },
             )
         )
 
-    def test_rejects_the_keep_alive_interval_as_a_tuning_default(self) -> None:
-        for defaults in (
-            {"tuning": {"keepAliveIntervalMs": 500}},
-            {
-                "tuning": {"keepAliveIntervalMs": 500},
-                "output": {"keepAlive": {"intervalMilliseconds": 500}},
+    def test_rejects_the_interval_as_a_tuning_key(self) -> None:
+        # The interval has one home, session.keepAlive.intervalMilliseconds. keepAliveIntervalMs
+        # is no tuning key, so a description names it nowhere; each place accepts a real key.
+        places = (
+            lambda key: {"rawUSBTuningKeys": [key]},
+            lambda key: {
+                "rawUSBTuningKeys": ["usbCommandTimeoutMs"],
+                "defaults": {"tuning": {key: 500}},
             },
-            {"variants": {"usb": {"tuning": {"keepAliveIntervalMs": 500}}}},
-        ):
-            with self.subTest(defaults=defaults):
+            lambda key: {
+                "rawUSBTuningKeys": ["usbCommandTimeoutMs"],
+                "defaults": {"variants": {"usb": {"tuning": {key: 500}}}},
+            },
+        )
+        for index, place in enumerate(places):
+            with self.subTest(place=index):
+                self.check(self.with_body("xbox.gip", **place("usbCommandTimeoutMs")))
                 self.assert_rejected(
-                    self.with_body(
-                        "xbox.gip",
-                        rawUSBTuningKeys=["keepAliveIntervalMs"],
-                        defaults=defaults,
-                    )
+                    self.with_body("xbox.gip", **place("keepAliveIntervalMs"))
                 )
+        self.check(
+            self.with_body("sony.dualsense", tuningKeys=["hidStartupIntervalMs"])
+        )
+        self.assert_rejected(
+            self.with_body("sony.dualsense", tuningKeys=["keepAliveIntervalMs"])
+        )
 
     def test_rejects_raw_usb_rules_that_contradict_each_other(self) -> None:
         for family, members in (
-            ("xbox.gip", {"rawUSB": True, "tuningKeys": ["keepAliveIntervalMs"]}),
-            ("sony.dualsense", {"rawUSBTuningKeys": ["keepAliveIntervalMs"]}),
+            ("xbox.gip", {"rawUSB": True, "tuningKeys": ["lizardResendTicks"]}),
+            ("sony.dualsense", {"rawUSBTuningKeys": ["lizardResendTicks"]}),
         ):
             with self.subTest(family=family):
                 self.assert_rejected(self.with_body(family, **members))

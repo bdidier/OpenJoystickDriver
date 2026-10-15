@@ -5,7 +5,7 @@ struct KeepAlive: Equatable, Sendable {
   static let intervalRange = 1...60_000
   static let writesRange = 1...8
 
-  /// The period of the keep-alive, in milliseconds. A record's `keepAliveIntervalMs` tunes it.
+  /// The period of the keep-alive, in milliseconds.
   let intervalMilliseconds: Int
   /// The fixed writes of each run; a driver adds the writes that change with its state, such as
   /// a running rumble. Empty for a family whose whole keep-alive is state.

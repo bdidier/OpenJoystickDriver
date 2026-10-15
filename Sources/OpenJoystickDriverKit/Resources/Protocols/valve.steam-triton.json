@@ -9,7 +9,6 @@
   "tuningKeys": [
     "hidStartupIntervalMs",
     "minimumHIDOutputIntervalMs",
-    "keepAliveIntervalMs",
     "lizardResendTicks"
   ],
   "controls": {

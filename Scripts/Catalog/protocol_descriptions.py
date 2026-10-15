@@ -154,25 +154,13 @@ def keep_alive_violations(
 ) -> list[tuple[str, str]]:
     """What `defaults.session.keepAlive` may name, as `ProtocolDescription` checks it in Swift.
 
-    The interval has one home, so tuning must not repeat it; the family must read it; a write
+    The interval has one home, `intervalMilliseconds`, and no tuning key repeats it; a write
     is a HID report only where the family has HID variants and a raw-USB packet only where it
     has raw-USB ones; a `variants` entry names a variant the family has; and a `resendTuning`
     key is one the family reads and defaults.
     """
     found: list[tuple[str, str]] = []
     defaults = description.get("defaults", {})
-    tunings = {"defaults.tuning": defaults.get("tuning", {})} | {
-        f"defaults.variants.{variant}.tuning": body["tuning"]
-        for variant, body in defaults.get("variants", {}).items()
-    }
-    found += [
-        (
-            "E5002",
-            f"{where}: keepAliveIntervalMs belongs to defaults.session.keepAlive, not tuning",
-        )
-        for where, tuning in tunings.items()
-        if "keepAliveIntervalMs" in tuning
-    ]
     keep_alive = defaults.get("session", {}).get("keepAlive")
     if keep_alive is None:
         return found
@@ -181,13 +169,6 @@ def keep_alive_violations(
         *description.get("rawUSBTuningKeys", ()),
     }
     where = "defaults.session.keepAlive"
-    if "keepAliveIntervalMs" not in reads:
-        found.append(
-            (
-                "E5002",
-                f"{where} applies only to a family that reads keepAliveIntervalMs",
-            )
-        )
     raw = description.get("rawUSB")
     for index, write in enumerate(keep_alive.get("writes", [])):
         label = f"{where}.writes[{index}]"

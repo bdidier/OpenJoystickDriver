@@ -22,3 +22,10 @@ GetReport answers only the input report that the virtual format declares, bounde
 Codec and concurrency tests cover these contracts. They do not establish signed SDL/GameController binding, TCC reopen behavior, or physical output delivery.
 
 Build with SwiftPM; neither Xcode.app nor disabling SIP is required.
+
+## Coded Behavior
+
+Protocol bytes and timings live in the family descriptions under `Resources/Protocols/`. What stays in a driver follows driver or rumble state, so no fixed bytes or fixed interval can describe it. This list names each such behavior and why it is code; it grows as more of a driver moves into its description.
+
+- Nintendo Switch 2 rumble keep-alive (`Switch2Driver.keepAliveWrites()`): each tick re-sends the rumble report while a motor runs, then a few trailing stop packets. The report carries a rolling sequence number and the current motor amplitudes (the GameCube motor also dithers on an error accumulator), so the bytes differ every tick. The description gives the period (`defaults.session.keepAlive.intervalMilliseconds`, 12) and no writes.
+- Steam Triton rumble resend (`SteamTritonDriver.keepAliveWrites()`): each tick appends the rumble report while a motor runs and the logical controller is connected. The report holds the current motor values. The lizard-mode-off write beside it is description data (`defaults.session.keepAlive.writes`, every `lizardResendTicks` ticks).

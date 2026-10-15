@@ -69,11 +69,11 @@ struct ProtocolDescriptionTests {
     #expect(bundled[.vendorGameSir]?.tuning?.hidStartupIntervalMilliseconds == 20)
     #expect(bundled[.nintendoSwitch1]?.tuning?.hidStartupRecoveryIntervalMilliseconds == 200)
     #expect(bundled[.nintendoSwitch1]?.tuning?.hidStartupRecoveryRounds == 2)
-    #expect(bundled[.nintendoSwitch2]?.tuning?.keepAliveIntervalMilliseconds == 12)
-    #expect(bundled[.valveSteamDeck]?.tuning?.keepAliveIntervalMilliseconds == 1_000)
-    #expect(bundled[.valveSteamTriton]?.tuning?.keepAliveIntervalMilliseconds == 40)
-    #expect(bundled[.xboxGIP]?.tuning?.keepAliveIntervalMilliseconds == 4_000)
-    #expect(bundled[.vendorGameSir]?.tuning?.keepAliveIntervalMilliseconds == 500)
+    #expect(bundled[.nintendoSwitch2]?.keepAlive?.intervalMilliseconds == 12)
+    #expect(bundled[.valveSteamDeck]?.keepAlive?.intervalMilliseconds == 1_000)
+    #expect(bundled[.valveSteamTriton]?.keepAlive?.intervalMilliseconds == 40)
+    #expect(bundled[.xboxGIP]?.keepAlive?.intervalMilliseconds == 4_000)
+    #expect(bundled[.vendorGameSir]?.keepAlive?.intervalMilliseconds == 500)
     #expect(bundled[.valveSteamTriton]?.tuning?.lizardResendTicks == 75)
     #expect(bundled[.nintendoSwitch2]?.tuning?.usbCommandTimeoutMilliseconds == 1_000)
     #expect(bundled[.vendorGameSir]?.tuning?.usbCommandTimeoutMilliseconds == 2_000)
@@ -100,22 +100,19 @@ struct ProtocolDescriptionTests {
   func tuningScopeFollowsTheDescription() {
     let gameSir = ControllerTuning.scope(protocolID: .vendorGameSir, variant: .usb)
     #expect(
-      gameSir == [
-        .stickDeadzone, .frameQueueCapacity, .keepAliveIntervalMs, .usbCommandTimeoutMs,
-      ]
+      gameSir == [.stickDeadzone, .frameQueueCapacity, .usbCommandTimeoutMs]
     )
     let enhanced = ControllerTuning.scope(protocolID: .vendorGameSir, variant: .enhancedHID)
     #expect(
       enhanced == [
         .stickDeadzone, .frameQueueCapacity, .hidStartupIntervalMs, .minimumHIDOutputIntervalMs,
-        .keepAliveIntervalMs,
       ]
     )
     #expect(
       ControllerTuning.scope(protocolID: .xboxGIP, variant: nil)
         == [
-          .stickDeadzone, .frameQueueCapacity, .keepAliveIntervalMs, .presenceResendReports,
-          .usbStartupIntervalMs, .usbStartupRetryDelayMs, .usbTransferTimeoutMs,
+          .stickDeadzone, .frameQueueCapacity, .presenceResendReports, .usbStartupIntervalMs,
+          .usbStartupRetryDelayMs, .usbTransferTimeoutMs,
         ]
     )
     #expect(
@@ -446,16 +443,14 @@ struct ProtocolDescriptionTests {
   }
 
   /// The spec scenario: a family's interval is edited in its description, and every record of
-  /// the family follows it unless the record sets its own.
+  /// the family follows it. A record has no interval of its own.
   @Test
   func aFamilysKeepAliveIntervalComesFromItsDescription() throws {
     let edited = try decode(
       family: .valveSteamDeck,
-      #""tuningKeys": ["keepAliveIntervalMs"], "#
-        + #""defaults": {"session": {"keepAlive": {"intervalMilliseconds": 777}}}"#
+      #""defaults": {"session": {"keepAlive": {"intervalMilliseconds": 777}}}"#
     )
-    let tuning = try #require(edited.tuning(variant: nil))
-    let plan = DriverSessionPlan(hidKeepAliveIntervalNanoseconds: 1).tuned(tuning)
+    let plan = DriverSessionPlan(keepAliveChannels: [.hid]).withKeepAlive(of: edited)
     #expect(plan.hidKeepAliveIntervalNanoseconds == 777_000_000)
 
     let families: Set<PhysicalProtocolID> = [
@@ -481,11 +476,11 @@ struct ProtocolDescriptionTests {
       let intervals = [plan.usbKeepAliveIntervalNanoseconds, plan.hidKeepAliveIntervalNanoseconds]
         .compactMap { $0 }
       guard !intervals.isEmpty else { continue }
-      let described = profile.physicalProtocolID.protocolDescription.tuning(variant: variant)
-      let milliseconds =
-        profile.tuning.keepAliveIntervalMilliseconds ?? described?.keepAliveIntervalMilliseconds
+      let described = try #require(
+        profile.physicalProtocolID.protocolDescription.keepAlive?.intervalMilliseconds
+      )
       for interval in intervals {
-        #expect(interval == UInt64(try #require(milliseconds)) * 1_000_000, "\(record.model)")
+        #expect(interval == UInt64(described) * 1_000_000, "\(record.model)")
       }
       checked.insert(profile.physicalProtocolID)
     }

@@ -39,9 +39,8 @@ public final class SteamDeckDriver: PhysicalProtocolDriver {
   /// second stays well inside SDL's cadence.
   public var sessionPlan: DriverSessionPlan {
     DriverSessionPlan(
-      hidKeepAliveIntervalNanoseconds: PhysicalProtocolID.valveSteamDeck
-        .keepAliveIntervalNanoseconds()
-    )
+      keepAliveChannels: [.hid]
+    ).withKeepAlive(of: .valveSteamDeck)
   }
 
   /// The Deck's controller is built in, so it has no logical connection state.

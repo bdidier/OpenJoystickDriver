@@ -7,11 +7,7 @@
     "out": 2
   },
   "rawUSB": ["usb"],
-  "tuningKeys": [
-    "hidStartupIntervalMs",
-    "minimumHIDOutputIntervalMs",
-    "keepAliveIntervalMs"
-  ],
+  "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
   "parameters": {
     "innerGrips": {
       "type": "flag"
@@ -25,7 +21,7 @@
     "base": "xbox",
     "add": ["guide", "paddle-left-1", "paddle-right-1", "auxiliary-1"]
   },
-  "rawUSBTuningKeys": ["keepAliveIntervalMs", "usbCommandTimeoutMs"],
+  "rawUSBTuningKeys": ["usbCommandTimeoutMs"],
   "defaults": {
     "session": {
       "keepAlive": {

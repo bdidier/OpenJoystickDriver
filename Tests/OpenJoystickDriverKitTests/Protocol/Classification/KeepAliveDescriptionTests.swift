@@ -41,9 +41,8 @@ struct KeepAliveDescriptionTests {
     } catch { return error }
   }
 
-  private func gip(_ keepAlive: String, tuning: String = "") -> String {
-    #""rawUSB": true, "rawUSBTuningKeys": ["keepAliveIntervalMs"], "defaults": {"#
-      + (tuning.isEmpty ? "" : #""tuning": \#(tuning), "#)
+  private func gip(_ keepAlive: String) -> String {
+    #""rawUSB": true, "rawUSBTuningKeys": ["lizardResendTicks"], "defaults": {"#
       + #""session": {"keepAlive": \#(keepAlive)}}"#
   }
 
@@ -97,7 +96,7 @@ struct KeepAliveDescriptionTests {
   )
   func rejectsStartupOnlyMembersInAKeepAliveWrite(write: String) {
     let body =
-      #""tuningKeys": ["keepAliveIntervalMs"], "defaults": {"session": {"keepAlive": "#
+      #""tuningKeys": ["hidStartupIntervalMs"], "defaults": {"session": {"keepAlive": "#
       + #"{"intervalMilliseconds": 500, "writes": [\#(write)]}}}"#
     #expect(rejection(family: .sonyDualSense, body)?.code == .invalidProtocolDescription)
   }
@@ -105,14 +104,6 @@ struct KeepAliveDescriptionTests {
   @Test
   func rejectsAKeepAliveTheFamilyCannotRun() {
     let interval = #"{"intervalMilliseconds": 500}"#
-    // The family reads no keep-alive interval.
-    #expect(
-      rejection(
-        family: .xboxGIP,
-        #""rawUSB": true, "defaults": {"session": {"keepAlive": \#(interval)}}"#
-      )?
-      .code == .invalidProtocolDescription
-    )
     // A HID write for a raw-USB family, and a raw-USB write for a HID family.
     #expect(
       rejection(
@@ -122,7 +113,7 @@ struct KeepAliveDescriptionTests {
       .code == .invalidProtocolDescription
     )
     let hidFamily =
-      #""tuningKeys": ["keepAliveIntervalMs"], "defaults": {"session": {"keepAlive": "#
+      #""tuningKeys": ["hidStartupIntervalMs"], "defaults": {"session": {"keepAlive": "#
       + #"{"intervalMilliseconds": 500, "writes": [\#(Self.usbWrite)]}}}"#
     #expect(rejection(family: .sonyDualSense, hidFamily)?.code == .invalidProtocolDescription)
     // A variant the family lacks.
@@ -142,17 +133,31 @@ struct KeepAliveDescriptionTests {
     )
   }
 
-  @Test
-  func rejectsTheKeepAliveIntervalAsATuningDefault() {
-    let keepAlive = #"{"intervalMilliseconds": 500}"#
-    #expect(
-      rejection(family: .xboxGIP, gip(keepAlive, tuning: #"{"keepAliveIntervalMs": 500}"#))?.code
-        == .invalidProtocolDescription
+  /// The interval has one home. `keepAliveIntervalMs` is no tuning key, so a description names
+  /// it nowhere, and a control with a real key in the same place decodes.
+  @Test(
+    arguments: [
+      #""rawUSB": true, "rawUSBTuningKeys": ["KEY"]"#,
+      #""tuningKeys": ["KEY"]"#,
+      #""rawUSB": true, "rawUSBTuningKeys": ["usbCommandTimeoutMs"], "defaults": {"tuning": {"KEY": 500}}"#,
+      #""rawUSB": true, "rawUSBTuningKeys": ["usbCommandTimeoutMs"], "#
+        + #""defaults": {"variants": {"usb": {"tuning": {"KEY": 500}}}}"#,
+    ]
+  )
+  func rejectsTheIntervalAsATuningKey(template: String) throws {
+    let family = PhysicalProtocolID.xboxGIP
+    _ = try decode(
+      family: family,
+      template.replacingOccurrences(of: "KEY", with: "usbCommandTimeoutMs")
     )
-    let variantTuning =
-      #""rawUSB": true, "rawUSBTuningKeys": ["keepAliveIntervalMs"], "#
-      + #""defaults": {"variants": {"usb": {"tuning": {"keepAliveIntervalMs": 500}}}}"#
-    #expect(rejection(family: .xboxGIP, variantTuning)?.code == .invalidProtocolDescription)
+    #expect(
+      rejection(
+        family: family,
+        template.replacingOccurrences(of: "KEY", with: "keepAliveIntervalMs")
+      )
+        != nil,
+      "\(template)"
+    )
   }
 
   // MARK: - Drivers keep their bytes and interval
@@ -226,5 +231,39 @@ struct KeepAliveDescriptionTests {
     #expect(ticks.enumerated().filter { !$0.element.isEmpty }.map(\.offset) == [0, 75])
     #expect(ticks[0].map(\.bytes) == [lizardOff])
     #expect(ticks[0].map(\.reportID) == [1])
+  }
+
+  /// A driver names the channels it keeps alive and takes the one interval from its
+  /// description; no driver carries a `0` placeholder.
+  @Test
+  func driversNameTheirKeepAliveChannelsAndTakeTheIntervalFromTheDescription() throws {
+    let cases: [(String, PhysicalProtocolID, DriverSessionPlan, Set<KeepAliveChannel>)] = [
+      (
+        "GameSir enhanced HID", .vendorGameSir,
+        GameSirDriver(protocol: .enhancedHID, usesLightingSlots: true).sessionPlan, [.hid]
+      ),
+      (
+        "GameSir G7 Pro USB", .vendorGameSir, GameSirDriver(protocol: .g7ProUSB).sessionPlan,
+        [.usb, .hid]
+      ),
+      ("GIP", .xboxGIP, GIPDriver().sessionPlan, [.usb]),
+      (
+        "Switch 2", .nintendoSwitch2, Switch2Driver(layout: .pro, link: .usb).sessionPlan, [.hid]
+      ),
+      ("Steam Deck", .valveSteamDeck, SteamDeckDriver().sessionPlan, [.hid]),
+      ("Steam Triton", .valveSteamTriton, SteamTritonDriver().sessionPlan, [.hid]),
+    ]
+    for (name, family, plan, channels) in cases {
+      #expect(plan.keepAliveChannels == channels, "\(name)")
+      let milliseconds = try #require(family.protocolDescription.keepAlive?.intervalMilliseconds)
+      let interval = UInt64(milliseconds) * 1_000_000
+      #expect(plan.keepAliveIntervalNanoseconds == interval, "\(name)")
+      #expect(plan.keepAliveIntervalNanoseconds != 0, "\(name)")
+      #expect(plan.usbKeepAliveIntervalNanoseconds == (channels.contains(.usb) ? interval : nil))
+      #expect(plan.hidKeepAliveIntervalNanoseconds == (channels.contains(.hid) ? interval : nil))
+    }
+    let disabled = GIPDriver(keepAlivePolicy: .disabled).sessionPlan
+    #expect(disabled.keepAliveChannels.isEmpty)
+    #expect(disabled.keepAliveIntervalNanoseconds == nil)
   }
 }

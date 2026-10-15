@@ -770,11 +770,6 @@
           "minimum": 1,
           "maximum": 10
         },
-        "keepAliveIntervalMs": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 60000
-        },
         "lizardResendTicks": {
           "type": "integer",
           "minimum": 1,
@@ -1967,33 +1962,6 @@
             "properties": {
               "family": {
                 "const": "nintendo.switch1"
-              }
-            }
-          }
-        }
-      }
-    },
-    {
-      "if": {
-        "properties": {
-          "tuning": {
-            "required": ["keepAliveIntervalMs"]
-          }
-        },
-        "required": ["tuning"]
-      },
-      "then": {
-        "properties": {
-          "protocol": {
-            "properties": {
-              "family": {
-                "enum": [
-                  "xbox.gip",
-                  "vendor.gamesir",
-                  "valve.steam-deck",
-                  "valve.steam-triton",
-                  "nintendo.switch2"
-                ]
               }
             }
           }

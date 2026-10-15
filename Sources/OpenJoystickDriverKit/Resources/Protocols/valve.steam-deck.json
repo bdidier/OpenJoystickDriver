@@ -6,11 +6,7 @@
     "in": 130,
     "out": 2
   },
-  "tuningKeys": [
-    "hidStartupIntervalMs",
-    "minimumHIDOutputIntervalMs",
-    "keepAliveIntervalMs"
-  ],
+  "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
   "controls": {
     "base": "xbox",
     "add": [
