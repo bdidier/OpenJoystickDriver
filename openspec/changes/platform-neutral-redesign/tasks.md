@@ -34,7 +34,7 @@ These need the user or hardware. Tasks that depend on them say so.
 1. Which DS3 location (`01130000` or `01140000`) is the genuine CECHZC2E (0xEF discriminator).
 2. Request more Apple `transport.usb` IDs or stay with the seven granted.
 3. Catalog-wide localization choices listed in `design.md` Open Questions.
-4. Whether the command-line-tool symlink belongs to `ojd` itself.
+4. Settled: the command-line tool link belongs to the app; `ojd` only reports it (`design.md` D9).
 5. `1209:4A4F` mapping directions need button and axis presses.
 6. A new pid.codes entry for the W3C-standard-mapping layout.
 7. Submit the SDL mapping upstream (assumed no).
@@ -231,7 +231,8 @@ Verify: `swift test`, lint pair, `./Scripts/ojd check schemas`.
 - [x] 17.3 Add the single `DataDirectory` port used by every store. Verify: `grep` finds no direct path building outside the port; tests use a temp directory.
 - [ ] 17.4 Split the neutral core from a macOS host adapter so `Sources/OpenJoystickDriver` has no macOS-only imports outside `platform`. Verify: a script or test greps imports and fails on a violation.
 - [ ] 17.5 Add the coverage test that lists every command and flags any with no GUI place. Verify: the test passes and fails on a fake command.
-- [ ] 17.6 Decide on the command-line-tool symlink after open item 4. Verify: the decision is in `design.md`.
+- [x] 17.6 Decide on the command-line-tool symlink after open item 4. Verify: the decision is in `design.md`.
+- [ ] 17.6a Make `ojd status` report whether the command-line tool link is installed, and give `ojd` no command or setting that installs or removes it (D9). Verify: CLI tests for an installed, a missing and a broken link, with `--json`.
 
 ## 18. SDK endpoint and reference client
 

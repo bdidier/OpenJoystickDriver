@@ -210,7 +210,9 @@ Follows clig.dev plus Apple conventions; global flags `--json --plain -q --no-co
 | socket in `DARWIN_USER_TEMP_DIR` | runtime-directory port |
 | endpoint `as: hid-xbox-one-s-bt` | persona ids |
 
-New: `ojd virtual export-mapping`, `ojd setting` keys for every GUI-only switch (per-event notifications, Send Test Notification, command-line tool link, Copy Support Report as `diagnose` on stdout, which the GUI copies), a settings file schema (settings move out of `UserDefaults` into layered files), and a single `DataDirectory` port that every store uses. The CLI target imports the Service in 9 files and USB in 2; the neutral core is split from a macOS host adapter so that `Sources/OpenJoystickDriver` has no macOS-only imports outside `platform`. The command tree is checked by a test that lists every command and flags any without a GUI place (D10).
+New: `ojd virtual export-mapping`, `ojd setting` keys for every GUI-only switch (per-event notifications, Send Test Notification, Copy Support Report as `diagnose` on stdout, which the GUI copies), a settings file schema (settings move out of `UserDefaults` into layered files), and a single `DataDirectory` port that every store uses. The CLI target imports the Service in 9 files and USB in 2; the neutral core is split from a macOS host adapter so that `Sources/OpenJoystickDriver` has no macOS-only imports outside `platform`. The command tree is checked by a test that lists every command and flags any without a GUI place (D10).
+
+Command-line tool link (open item 4, user decision 2026-10-15): the app owns the link, as other macOS apps that ship a tool do (an Install Command Line Tool action that asks for an administrator password to write `/usr/local/bin`). The app installs and removes it from the Settings Command Line pane; `ojd` does not install or remove it and only reports whether it is installed, in `ojd status`.
 
 Facts that go to docs: `docs/development/wire-protocols.md:20,22` is stale; `source-topology.md` lists a nonexistent `CLI/Catalog/`; the stale backend id `gameControllerHID` is removed.
 
@@ -307,7 +309,7 @@ No migration: 0.5.x user files are rejected with a message that names the file, 
 1. Which DS3 (`01130000` or `01140000`) is the genuine CECHZC2E? The `0xEF` answer is the candidate discriminator; the user checks by physical marking.
 2. Request more `transport.usb` IDs from Apple? (user's call; outward-facing)
 3. Catalog-wide localization choices left by the review: French spacing before `: ; ? !` and NBSP, `pt-BR`/`es-MX` quotes (guillemets or curly), `id-ID` instal/pasang, `vi-VN` "mot cach goc", `tr-TR` `cli.mod.list.discussion`, `zh-HK`/`zh-TW` informal versus formal "you" in five strings, `ar-SA` running-service split, German "Endet mit 1" versus "Beendet sich mit 1".
-4. Does the command-line tool symlink belong to `ojd` itself (install and uninstall from the CLI) or only to the app?
+4. Settled 2026-10-15: the command-line tool link belongs to the app; `ojd` only reports it (D9).
 5. Do the button and axis directions of the `1209:4A4F` mapping hold under real presses? (hardware check)
 6. Register a new pid.codes entry for a layout equal to the W3C standard mapping?
 7. Submit the OJD mapping to SDL_GameControllerDB or SDL upstream? (outward-facing; not in tasks)
