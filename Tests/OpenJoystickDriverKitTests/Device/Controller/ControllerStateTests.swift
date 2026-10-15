@@ -19,10 +19,19 @@ struct ControllerStateTests {
   }
 
   @Test
-  func stickYDownIsNegatedOnceIntoTheCanonicalFrame() {
-    let stick = StickPosition(x: 0.5, yDown: 0.25)
+  func stickYIsPositiveDownAndNotNegated() {
+    let stick = StickPosition(x: 0.5, y: 0.25)
     #expect(stick.x == BipolarValue(normalized: 0.5))
-    #expect(stick.y == BipolarValue(normalized: -0.25))
+    #expect(stick.y == BipolarValue(normalized: 0.25))
+  }
+
+  @Test
+  func pushingTheStickUpReadsANegativeY() {
+    let up = StickPosition(x: 0, y: -1)
+    #expect(up.y == .min)
+    #expect(up.y.rawValue < 0)
+    let down = StickPosition(x: 0, y: 1)
+    #expect(down.y.rawValue > 0)
   }
 
   @Test
@@ -52,7 +61,7 @@ struct ControllerStateTests {
   @Test
   func sleepGateTreatsSubThresholdSticksAndTriggersAsNeutral() {
     var state = ControllerState.neutral
-    state.leftStick = StickPosition(x: 0.1, yDown: 0)
+    state.leftStick = StickPosition(x: 0.1, y: 0)
     state.leftTrigger = UnipolarValue(normalized: 0.04)
     #expect(state.isEffectivelyNeutral)
     state.rightTrigger = UnipolarValue(normalized: 0.3)
@@ -75,7 +84,7 @@ struct ControllerStateTests {
         .button(.south, isPressed: true), .button(.north, isPressed: true),
         .button(.leftStickClick, isPressed: true), .button(.start, isPressed: true),
         .dpad(.east),
-        .rightStick(x: BipolarValue(10).normalized, y: -BipolarValue(20).normalized),
+        .rightStick(x: BipolarValue(10).normalized, y: BipolarValue(20).normalized),
         .leftTrigger(UnipolarValue(1).normalized),
       ]
     )

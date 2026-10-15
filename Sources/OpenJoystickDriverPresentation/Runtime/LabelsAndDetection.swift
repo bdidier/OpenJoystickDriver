@@ -310,12 +310,12 @@ enum RuntimePresentation {
     return nil
   }
 
-  /// Axis values in the remapping frame, where stick Y points down.
+  /// Axis values in the remapping frame; stick Y points down, as in the controller state.
   private static func axisValues(_ state: ControllerState) -> [(value: Float, axis: RemappingAxis)]
   {
     [
-      (state.leftStick.x.normalized, .leftStickX), (-state.leftStick.y.normalized, .leftStickY),
-      (state.rightStick.x.normalized, .rightStickX), (-state.rightStick.y.normalized, .rightStickY),
+      (state.leftStick.x.normalized, .leftStickX), (state.leftStick.y.normalized, .leftStickY),
+      (state.rightStick.x.normalized, .rightStickX), (state.rightStick.y.normalized, .rightStickY),
       (state.leftTrigger.normalized, .leftTrigger), (state.rightTrigger.normalized, .rightTrigger),
     ]
   }

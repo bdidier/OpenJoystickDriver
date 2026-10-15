@@ -36,7 +36,7 @@ Goals:
 
 Non-Goals:
 
-- No runtime upgrader, `ojd migrate`, alias, fallback decoder or compatibility shim (decisions 2, 3).
+- No runtime upgrader, `ojd migrate`, alias, fallback decoder, compatibility shim, table of earlier names or hint that names a replacement for an earlier word (decisions 2, 3, 13).
 - No DriverKit extension for a second virtual backend; `IOHIDUserDevice` stays the only virtual backend (carried over from `release-0-6-0-alpha-1`).
 - No parser for controllers that need a new algorithmic protocol; those stay code (GIP authentication, Switch subcommands, Sony CRC, Steam, descriptor interpreters).
 - No copying of GPL or other-licensed sources; protocol facts only.
@@ -304,7 +304,7 @@ Issues the data model must make expressible: #38 (ShanWan vendor control reads, 
 
 ## Migration Plan
 
-No migration: 0.5.x user files are rejected with a message that names the file, the found `apiVersion` (or its absence) and the supported one. Release notes list the rejected shapes and tell users to recreate profiles and records. Rollback is not offered; the previous release stays installable.
+None. A stored file that lacks the supported `apiVersion` or does not validate against the current schema is refused like any other invalid file, with the same error code and a message that names the file, the version found (or its absence) and the supported one. No code, test or string knows earlier shapes, names or words. Release notes record what changed and give no conversion steps. Rollback is not offered; the previous release stays installable.
 
 ## Open Questions
 

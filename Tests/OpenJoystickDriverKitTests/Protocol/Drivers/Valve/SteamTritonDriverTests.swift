@@ -92,8 +92,8 @@ struct SteamTritonDriverTests {
     let event = try #require(try SteamTritonDriver().parseReport(report))
     #expect(event.state.leftTrigger == .max)
     #expect(event.state.rightTrigger == .min)
-    #expect(event.state.leftStick == StickPosition(x: -1, yDown: -1))
-    #expect(event.state.rightStick == StickPosition(x: 1, yDown: 1))
+    #expect(event.state.leftStick == StickPosition(x: -1, y: -1))
+    #expect(event.state.rightStick == StickPosition(x: 1, y: 1))
   }
 
   @Test
@@ -101,7 +101,7 @@ struct SteamTritonDriverTests {
     let words: [Int: Int16] = [10: 32767, 20: 32767, 24: 16384, 26: -32768]
     let report = TritonReport.state(id: 0x47, buttons: 0x0220_0000, words: words)
     let event = try #require(try SteamTritonDriver().parseReport(report))
-    #expect(event.state.leftStick == StickPosition(x: 1, yDown: 0))
+    #expect(event.state.leftStick == StickPosition(x: 1, y: 0))
     let left = try #require(event.touchFrames.first { $0.surface == .left }?.contacts.first)
     let right = try #require(event.touchFrames.first { $0.surface == .right }?.contacts.first)
     #expect(left.isActive && right.isActive)

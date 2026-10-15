@@ -19,7 +19,7 @@ struct VirtualFeedRegistryTests {
   }
 
   @Test(.timeLimit(.minutes(1)))
-  func aFeedPublishesItsProfileSendsFramesWithYDownAndReturnsTheHostsCommands() async throws {
+  func aFeedPublishesItsProfileSendsFramesAndReturnsTheHostsCommands() async throws {
     let factory = FakeFeedFactory()
     let registry = factory.registry()
     let session = try await registry.open(profile: "Generic")
@@ -48,7 +48,7 @@ struct VirtualFeedRegistryTests {
     try await Self.wait { !device.sent.isEmpty }
     #expect(
       device.sent == [
-        RemappingGamepadState(buttons: [.south], axes: [.leftStickY: -0.5, .leftStickX: 0.25])
+        RemappingGamepadState(buttons: [.south], axes: [.leftStickY: 0.5, .leftStickX: 0.25])
       ]
     )
     try await Self.wait { registry.exchange(token: session.token, frames: []).queued == 0 }

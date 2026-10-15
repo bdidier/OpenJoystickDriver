@@ -144,11 +144,11 @@ public final class SixaxisDriver: PhysicalProtocolDriver {
     )
     next.leftStick = StickPosition(
       x: normalizeAxis(bytes[ReportOffset.leftX]),
-      yDown: normalizeAxis(bytes[ReportOffset.leftY])
+      y: normalizeAxis(bytes[ReportOffset.leftY])
     )
     next.rightStick = StickPosition(
       x: normalizeAxis(bytes[ReportOffset.rightX]),
-      yDown: normalizeAxis(bytes[ReportOffset.rightY])
+      y: normalizeAxis(bytes[ReportOffset.rightY])
     )
     next.leftTrigger = UnipolarValue(
       normalized: Float(bytes[ReportOffset.l2Analog]) / ds3TriggerMax

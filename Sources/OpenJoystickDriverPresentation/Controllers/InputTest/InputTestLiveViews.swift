@@ -56,7 +56,7 @@
           )
           InputTestAxisRow(
             label: OJDLocalized.string("inputTest.leftY"),
-            value: -snapshot.leftStick.y.normalized,
+            value: snapshot.leftStick.y.normalized,
             signed: true
           )
           InputTestAxisRow(label: "LT", value: snapshot.leftTrigger.normalized, signed: false)
@@ -69,7 +69,7 @@
           )
           InputTestAxisRow(
             label: OJDLocalized.string("inputTest.rightY"),
-            value: -snapshot.rightStick.y.normalized,
+            value: snapshot.rightStick.y.normalized,
             signed: true
           )
           InputTestAxisRow(label: "RT", value: snapshot.rightTrigger.normalized, signed: false)

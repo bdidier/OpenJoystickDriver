@@ -3,9 +3,8 @@ import Foundation
 @testable import OpenJoystickDriverService
 @testable import OpenJoystickDriverKit
 
-/// One change a test applies to a controller's previous snapshot. Stick Y is in the remapping frame
-/// (down is positive), which the engine and these tests use; the fold flips it into the canonical
-/// frame.
+/// One change a test applies to a controller's previous snapshot. Stick Y is positive down, as in
+/// the controller state and the engine.
 enum InputChange: Equatable {
   case press(Control)
   case release(Control)
@@ -27,8 +26,8 @@ extension ControllerState {
       case .press(let control): next.pressed.insert(control)
       case .release(let control): next.pressed.remove(control)
       case .hat(let hat): next.hat = hat
-      case .leftStick(let x, let y): next.leftStick = StickPosition(x: x, yDown: y)
-      case .rightStick(let x, let y): next.rightStick = StickPosition(x: x, yDown: y)
+      case .leftStick(let x, let y): next.leftStick = StickPosition(x: x, y: y)
+      case .rightStick(let x, let y): next.rightStick = StickPosition(x: x, y: y)
       case .leftTrigger(let value): next.leftTrigger = UnipolarValue(normalized: value)
       case .rightTrigger(let value): next.rightTrigger = UnipolarValue(normalized: value)
       case .motion: break

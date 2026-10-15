@@ -47,10 +47,10 @@ extension RemappingEngineState {
     }
     if old.hat != new.hat { changes.append(.dpad(new.hat)) }
     if old.leftStick != new.leftStick {
-      changes.append(.leftStick(x: new.leftStick.x.normalized, y: -new.leftStick.y.normalized))
+      changes.append(.leftStick(x: new.leftStick.x.normalized, y: new.leftStick.y.normalized))
     }
     if old.rightStick != new.rightStick {
-      changes.append(.rightStick(x: new.rightStick.x.normalized, y: -new.rightStick.y.normalized))
+      changes.append(.rightStick(x: new.rightStick.x.normalized, y: new.rightStick.y.normalized))
     }
     if old.leftTrigger != new.leftTrigger {
       changes.append(.leftTrigger(new.leftTrigger.normalized))
