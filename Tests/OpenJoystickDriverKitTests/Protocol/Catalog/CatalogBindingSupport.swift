@@ -133,7 +133,8 @@ extension DeviceRuntimeProfile {
       startupWrites: startupWrites,
       inputLayout: inputLayout,
       hidUsageMap: hidUsageMap,
-      tuning: newTuning ?? tuning
+      tuning: newTuning ?? tuning,
+      modes: modes
     )
   }
 }

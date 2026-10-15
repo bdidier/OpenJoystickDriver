@@ -97,6 +97,16 @@ final class BluetoothLECompositeHIDBackend: HIDAccessBackend {
     return .unavailable
   }
 
+  func probeFeatureReport(
+    connection: HIDDeviceConnection,
+    request: PhysicalHIDFeatureReadRequest
+  ) async -> PhysicalHIDReportResult<Data> {
+    guard hub.owns(connection.routingAddress) else {
+      return await primary.probeFeatureReport(connection: connection, request: request)
+    }
+    return .unavailable
+  }
+
   // macOS has no HID client for a GATT link, so OJD always owns its input.
   func releaseInputClaim(address: ControllerConnectionAddress) async -> PhysicalHIDClaimResult {
     guard hub.owns(address) else {

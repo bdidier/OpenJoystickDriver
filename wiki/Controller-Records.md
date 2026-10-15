@@ -14,6 +14,7 @@ This page explains how to add a controller that OpenJoystickDriver does not know
 - [Tune Timings and the Stick Deadzone](#tune-timings-and-the-stick-deadzone)
 - [Select a Model With Protocol Parameters](#select-a-model-with-protocol-parameters)
 - [Map HID Usages](#map-hid-usages)
+- [Offer Alternative Modes Chosen By a Probe](#offer-alternative-modes-chosen-by-a-probe)
 - [Connect a Switch 2 Controller Over Bluetooth LE][toc-2]
 - [Draft a Record From a Connected Controller][toc-1]
 - [Install a Record](#install-a-record)
@@ -226,6 +227,35 @@ A `hid.descriptor` record maps the usages of its report descriptor to controls i
 - `hat`: the control is `dpad`. `range` is `{"min": 0, "max": 7}` or `{"min": 1, "max": 8}` and names the value of north, then clockwise; any other value is neutral. Without `range`, the element's logical minimum is north.
 
 `reportID` limits the map to one report. A usage the map does not name is ignored, and a usage named twice is rejected. The description may also list `descriptorShapes` that choose a map from the usages a controller's report descriptor declares: the shape in `hid.descriptor.json` gives a controller with Z, Rz, a Brake or Accelerator and no Rx or Ry the Z/Rz layout, with Brake as LT and Accelerator as RT. The records for the WR007 (`11C1:5600`), SCUF Envision (`2E95:434D`), 8BitDo Ultimate 2C (`2DC8:301B`, `301C`) and DragonRise (`0079:0006`, by patch) show complete maps.
+
+## Offer Alternative Modes Chosen By a Probe
+
+Some controllers can run one of several protocols, such as XInput, DInput, or Switch mode. A HID record can list the alternatives in `modes`. The record's own `protocol` is the default mode and has no probes:
+
+```json
+"modes": [
+  {
+    "id": "feature-ef-answers",
+    "protocol": { "family": "sony.sixaxis" },
+    "match": {
+      "probes": [{ "report": 239, "length": 49, "expect": "answers" }]
+    }
+  }
+]
+```
+
+- `id` is lowercase words joined by hyphens, and is not `default`. IDs are unique in a record.
+- `protocol` names the protocol that mode runs, as the record's own `protocol` does.
+- `match.probes` lists 1 or more probes. A mode is selected only when all of its probes hold.
+- A probe reads one feature report (`report` 0 to 255, `length` 1 to 65535) and expects `answers`, `stalls`, or `bytes`. `bytes` also takes `offset` and `bytes`, uppercase hex pairs the reply must hold at that offset; the other expectations take neither.
+
+A probe reads a feature report from the controller and selects a mode by the reply. OpenJoystickDriver never switches a controller's mode. It tries the modes in record order and runs the first whose probes all hold. When no mode matches, the default mode runs. A report that several probes name is read once.
+
+A probe only reads. It cannot write to the controller. Each read gives up after 2 seconds. When a probe gets no usable reply, the selection stops, the controller stays enabled in its default mode, and OpenJoystickDriver logs a line that names the report. No usable reply means a timeout, an unavailable route, or any failure other than the controller's own refusal, such as a device that is not open, gone, or held exclusively. Only a stalled pipe (`0xE000404F`) or an unsupported request (`kIOReturnUnsupported`) is a refusal. It satisfies `stalls` and fails the other expectations, so a stall where a mode expects `answers` leaves the default mode running. Probes read HID feature reports, so a controller on another route, such as a Bluetooth LE GATT peripheral, always runs its default mode.
+
+Modes apply to HID controllers only. A record with a raw-USB family cannot use `modes`, and a mode cannot name one. Every mode follows the record-level rules of the default protocol for `input.layout`, `output.rumble`, and `capabilities`. A `patch` can replace `modes`.
+
+The DualShock 3 record carries one mode that probes feature report `0xEF`. It is a candidate discriminator only: the mode runs the same protocol as the default, and the record does not say which unit is genuine. The `length` of 49 is a chosen length, the size of a Sixaxis input report, not a size recorded from a DualShock 3 reply.
 
 ## Connect a Switch 2 Controller Over Bluetooth LE
 

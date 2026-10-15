@@ -162,7 +162,8 @@ enum ProtocolClassifier {
   static func classify(
     _ device: PhysicalDevice,
     backend: DeviceAccessBackend,
-    catalog: DeviceCatalog
+    catalog: DeviceCatalog,
+    modeID: String? = nil
   ) -> ProtocolClassification {
     let interfaces = (device.interfaces ?? []).sorted {
       ($0.interfaceNumber ?? .max, $0.alternateSetting ?? .max) < (
@@ -170,7 +171,10 @@ enum ProtocolClassifier {
       )
     }
     if let vendorID = device.vendorID, let productID = device.productID,
-      let record = catalog.record(for: ControllerModelID(vendorID: vendorID, productID: productID))
+      let record = catalog.record(
+        for: ControllerModelID(vendorID: vendorID, productID: productID),
+        modeID: modeID
+      )
     {
       return otherXboxFamilyBinding(for: record, interfaces: interfaces, backend: backend)
         ?? bind(record, interfaces: interfaces, backend: backend)

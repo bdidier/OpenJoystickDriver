@@ -68,8 +68,29 @@ public final class ProtocolDriverRegistry: Sendable {
     )
   }
 
-  func classify(_ device: PhysicalDevice, backend: DeviceAccessBackend) -> ProtocolClassification {
-    ProtocolClassifier.classify(device, backend: backend, catalog: catalog)
+  /// Classifies a device; `modeID` runs the catalog record's selected mode instead of its default.
+  func classify(
+    _ device: PhysicalDevice,
+    backend: DeviceAccessBackend,
+    modeID: String? = nil
+  ) -> ProtocolClassification {
+    ProtocolClassifier.classify(device, backend: backend, catalog: catalog, modeID: modeID)
+  }
+
+  /// Chooses the mode of a catalogued model by its probes; ``ControllerModeSelection/noModes``
+  /// for a model whose record has none.
+  func selectMode(
+    of model: ControllerModelID,
+    backend: DeviceAccessBackend,
+    reader: any ControllerModeProbeReader
+  ) async -> ControllerModeSelection {
+    guard let record = catalog.record(for: model) else { return .noModes }
+    return await ControllerModeSelector.select(
+      from: record,
+      model: model,
+      backend: backend,
+      reader: reader
+    )
   }
 
   /// Whether passively observed USB facts carry a known Xbox USB interface or device signature.

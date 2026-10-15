@@ -31,6 +31,11 @@ struct DeviceCatalog: Sendable {
   /// The exact catalog record for this model; there is no default record.
   func record(for model: ControllerModelID) -> DeviceRuntimeProfile? { profiles[model] }
 
+  /// The exact catalog record running the named mode; nil when the record does not have it.
+  func record(for model: ControllerModelID, modeID: String?) -> DeviceRuntimeProfile? {
+    profiles[model]?.applying(modeID: modeID)
+  }
+
   /// Whether the record sets `ownership: ojd`, so OJD seizes the controller even when macOS
   /// serves it natively. The stream reads it when a device is added.
   func takesOwnership(of model: ControllerModelID) -> Bool {
@@ -86,7 +91,8 @@ struct DeviceCatalog: Sendable {
       hidUsageMap: record.hidUsageMap,
       tuning: record.tuning,
       route: record.route,
-      bluetoothLEVibrationCharacteristic: record.bluetoothLE?.vibrationCharacteristic
+      bluetoothLEVibrationCharacteristic: record.bluetoothLE?.vibrationCharacteristic,
+      modes: record.modes.map(\.mode)
     )
   }
 
