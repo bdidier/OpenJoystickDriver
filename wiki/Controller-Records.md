@@ -298,6 +298,7 @@ Every document, profile, endpoint message and record names a control with one Up
 | `Auxiliary4` | - | `MISC5` | `BTN_TRIGGER_HAPPY4` | - |
 
 PlayStation Share (Create) and Xbox View are `Back`. PlayStation Options, Xbox Menu and Switch Plus are `Start`. Xbox Share and Switch Capture are `Capture`. The names `Share` and `Options` are not controls.
+
 ## Offer Alternative Modes Chosen By Link, Keys, and Probes
 
 Every record has a `modes` list, and the protocol a controller runs is the `protocol` of one of its modes. The list holds exactly one mode with the id `default`, which has no `match` and runs when no other mode matches. A HID record can add alternatives for controllers that run one of several protocols, such as XInput, DInput, or Switch mode, or that need different handling over USB and over Bluetooth:
