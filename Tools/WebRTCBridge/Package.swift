@@ -20,7 +20,9 @@ let package = Package(
     .executableTarget(name: "WebRTCBridge", dependencies: ["WebRTCBridgeCore"]),
     .testTarget(
       name: "WebRTCBridgeCoreTests",
-      dependencies: ["WebRTCBridgeCore", .product(name: "BridgeCore", package: "BridgeCore")]
+      dependencies: [
+        "WebRTCBridge", "WebRTCBridgeCore", .product(name: "BridgeCore", package: "BridgeCore"),
+      ]
     ),
   ]
 )

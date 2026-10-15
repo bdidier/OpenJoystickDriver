@@ -1,29 +1,23 @@
 import Foundation
 import WebRTCBridgeCore
 
-let usage = """
-  usage: ojd-webrtc-bridge --role host|player [--signal offer|answer] [--socket PATH]
-         [--token-name NAME] [--controller ID] [--persona Generic|SdlCompatible]
-         [--ice-server URL]...
-  Set OJD_TOKEN to the token that `ojd access grant --token NAME` printed.
-  The offer and the answer are one line each: the bridge prints its own on stdout and reads the
-  peer's from stdin. The player offers by default and the host answers.
-  """
-
 func fail(_ text: String) -> Never {
   FileHandle.standardError.write(Data((text + "\n").utf8))
   exit(1)
 }
 
-let options: [String: [String]] = {
-  var parsed: [String: [String]] = [:]
-  var arguments = CommandLine.arguments.dropFirst()
-  while let name = arguments.popFirst() {
-    guard name.hasPrefix("--"), let value = arguments.popFirst() else { fail(usage) }
-    parsed[String(name.dropFirst(2)), default: []].append(value)
-  }
-  return parsed
-}()
+let usage = BridgeCommandLine.usage
+
+let options: [String: [String]]
+switch BridgeCommandLine.parse(Array(CommandLine.arguments.dropFirst())) {
+case .help:
+  print(usage)
+  exit(0)
+case .invalid:
+  fail(usage)
+case .options(let parsed):
+  options = parsed
+}
 guard let role = options["role"]?.first, role == "host" || role == "player" else { fail(usage) }
 guard let token = ProcessInfo.processInfo.environment["OJD_TOKEN"], !token.isEmpty else {
   fail("Set OJD_TOKEN to the endpoint token.")
