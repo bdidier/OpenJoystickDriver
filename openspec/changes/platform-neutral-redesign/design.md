@@ -63,7 +63,7 @@ Record flow: observed device, then link, then record `modes[]` with match keys (
 A `Controller` record (see `specs/controller-records`) declares:
 
 - `model` (`id`, `name`, `manufacturer`) and `modes[]`. Each mode has `match` keys, `protocol` (an id plus typed `parameters`), `interface` selection (for example the HID interface range 2 to 5 of the Steam Deck as data), and optional `session` steps.
-- Declarative input layouts: bit offset and size, signed fields, 10 to 16 bit values, 16-bit triggers, inversion, more than four axes, extra buttons, report ids, trigger rest value -1, hat sources.
+- Declarative input layouts: bit offset and size, signed fields, 10 to 16 bit values, 16-bit triggers, inversion, more than four axes, extra buttons, report ids, trigger rest value -1, hat sources (8-way, directions, and `table` hats mapping a masked value to a direction), `symmetric` axes (signed, divided by the maximum). A layout is carried by `hid.report-layout` records and by the `xbox.xid` protocol description (`input` in `Resources/Protocols/xbox.xid.json`); no other family takes `input`.
 - Vendor control transfers (`bmRequestType`, `bRequest`, `wValue`, `wIndex`, `wLength`), init, keepalive and settle sequences, acknowledgement rules. These come from issues #38 (ShanWan), #22, #21, #35.
 - Output templates: fixed bytes, scale, motor positions, resend interval (the xpad and `hid.report-layout` rumble cases).
 - Multi-identity linking: one model reachable through several VID:PID pairs and several link kinds (wired, dongle, Bluetooth, and a mode switch changing the PID, as the 8BitDo family does).

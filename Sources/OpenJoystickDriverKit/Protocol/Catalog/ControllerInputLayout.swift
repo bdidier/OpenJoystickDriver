@@ -28,6 +28,9 @@ public struct ControllerInputLayout: Equatable, Sendable {
     public let minimum: Int
     public let maximum: Int
     public let isInverted: Bool
+    /// A signed axis centered on 0 whose positive and negative sides share one divisor,
+    /// `maximum`: the raw value divided by `maximum`, clamped, so the lowest value reads -1.
+    public let isSymmetric: Bool
 
     /// The representable range of a raw value of this width and signedness.
     var fullRange: ClosedRange<Int> { Self.fullRange(bits: bits, isSigned: isSigned) }
@@ -42,12 +45,17 @@ public struct ControllerInputLayout: Equatable, Sendable {
     }
 
     /// The raw value scaled to -1...1 around the middle of `minimum...maximum`, clamped. For
-    /// 0...255 the center is 128, 0 reads -1 and 255 reads 1.
+    /// 0...255 the center is 128, 0 reads -1 and 255 reads 1. A symmetric axis divides by
+    /// `maximum` instead.
     func value(in bytes: [UInt8]) -> Float {
       var raw = Int(bytes[byte])
       if bits == 16 { raw |= Int(bytes[byte + 1]) << 8 }
       if isSigned {
         raw = bits == 16 ? Int(Int16(truncatingIfNeeded: raw)) : Int(Int8(truncatingIfNeeded: raw))
+      }
+      if isSymmetric {
+        let normalized = max(-1, min(1, Float(raw) / Float(maximum)))
+        return isInverted ? -normalized : normalized
       }
       let center = Float(minimum) + Float(maximum - minimum + 1) / 2
       let offset = Float(raw) - center
@@ -70,6 +78,8 @@ public struct ControllerInputLayout: Equatable, Sendable {
       down: ReportBitField,
       left: ReportBitField
     )
+    /// The masked bits, as a number, name a direction; a value the table lacks is neutral.
+    case table(ReportBitField, [Int: HatDirection])
   }
 
   /// An analog byte read as 0–255, a button that reads as fully pulled, or both.
@@ -125,6 +135,16 @@ public struct ControllerInputLayout: Equatable, Sendable {
         }
         fields.append(field)
       case .directions(let up, let right, let down, let left): fields += [up, right, down, left]
+      case .table(let field, let directions):
+        let largest = Int(field.mask >> field.mask.trailingZeroBitCount)
+        guard !directions.isEmpty, directions.keys.allSatisfy({ (0...largest).contains($0) }),
+          !directions.values.contains(.neutral)
+        else {
+          throw ControllerRecordProblem(
+            "a table hat names directions for values its mask holds, and no neutral entry"
+          )
+        }
+        fields.append(field)
       }
     }
     let bytes =
@@ -151,6 +171,8 @@ public struct ControllerInputLayout: Equatable, Sendable {
     else {
       throw ControllerRecordProblem("an axis is 8 or 16 bits with min below max inside its range")
     }
+    guard axes.allSatisfy({ !$0.isSymmetric || ($0.isSigned && $0.minimum < 0 && $0.maximum > 0) })
+    else { throw ControllerRecordProblem("a symmetric axis is signed with min below 0 below max") }
     guard
       [leftTrigger, rightTrigger].allSatisfy({ $0 == nil || $0?.byte != nil || $0?.button != nil })
     else { throw ControllerRecordProblem("a trigger names an analog byte, a button, or both") }

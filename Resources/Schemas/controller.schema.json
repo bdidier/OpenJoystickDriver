@@ -948,6 +948,31 @@
 				},
 				"inverted": {
 					"type": "boolean"
+				},
+				"symmetric": {
+					"type": "boolean"
+				}
+			},
+			"if": {
+				"properties": {
+					"symmetric": {
+						"const": true
+					}
+				},
+				"required": ["symmetric"]
+			},
+			"then": {
+				"required": ["signed"],
+				"properties": {
+					"signed": {
+						"const": true
+					},
+					"min": {
+						"maximum": -1
+					},
+					"max": {
+						"minimum": 1
+					}
 				}
 			}
 		},
@@ -995,6 +1020,46 @@
 						},
 						"left": {
 							"$ref": "#/$defs/inputField"
+						}
+					}
+				},
+				{
+					"type": "object",
+					"additionalProperties": false,
+					"required": ["encoding", "byte", "mask", "values"],
+					"properties": {
+						"encoding": {
+							"const": "table"
+						},
+						"byte": {
+							"type": "integer",
+							"minimum": 0,
+							"maximum": 63
+						},
+						"mask": {
+							"type": "integer",
+							"minimum": 1,
+							"maximum": 255
+						},
+						"values": {
+							"$comment": "Every key must be a value the mask can hold: 0 up to the mask shifted right by its trailing zero bits. JSON Schema cannot compare a key with the mask, so the Swift decoder checks it.",
+							"type": "object",
+							"minProperties": 1,
+							"propertyNames": {
+								"pattern": "^(0|[1-9][0-9]{0,2})$"
+							},
+							"additionalProperties": {
+								"enum": [
+									"north",
+									"northEast",
+									"east",
+									"southEast",
+									"south",
+									"southWest",
+									"west",
+									"northWest"
+								]
+							}
 						}
 					}
 				}

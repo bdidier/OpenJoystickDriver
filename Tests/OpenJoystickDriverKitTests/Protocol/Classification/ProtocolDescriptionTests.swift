@@ -111,6 +111,15 @@ struct ProtocolDescriptionTests {
   }
 
   @Test
+  func anXboxXIDDescriptionMayDeclareAnInputLayout() throws {
+    let description = try decode(
+      family: .xboxXID,
+      #""defaults": {"input": \#(Self.minimalInput)}"#
+    )
+    #expect(description.inputLayout?.controls == [.faceSouth])
+  }
+
+  @Test
   func decodesParameterDeclarations() throws {
     let description = try decode(
       family: .sonyDualSense,
@@ -178,6 +187,7 @@ struct ProtocolDescriptionTests {
   func rejectsDefaultsTheFamilyDriverDoesNotRead() {
     let cases: [(PhysicalProtocolID, String)] = [
       (.hidDescriptor, #""defaults": {"input": \#(Self.minimalInput)}"#),
+      (.xboxXUSB, #""defaults": {"input": \#(Self.minimalInput)}"#),
       (.xboxGIP, #""defaults": {"output": \#(Self.startupWrite)}"#),
       (.xboxXID, #""defaults": {"tuning": {"hidStartupIntervalMs": 5}}"#),
       (.sonyDualSense, #""defaults": {"tuning": {"inputLivenessTimeoutMs": 5}}"#),
