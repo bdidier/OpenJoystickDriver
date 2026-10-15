@@ -1361,6 +1361,7 @@
 "cli.virtual.reset.error.unit_all" = "--unit에는 CONTROLLER가 필요하며 --all은 사용할 수 없습니다.";
 "cli.virtual.set.abstract" = "컨트롤러 모델의 가상 게임패드를 선택합니다.";
 "cli.virtual.set.profile" = "가상 게임패드 프로파일.";
+"cli.virtual.sdl_hints_note" = "참고: %@은(는) SDL의 기본 힌트로는 작동하지 않습니다.";
 "cli.virtual.show.abstract" = "각 컨트롤러의 가상 게임패드와 선택할 수 있는 프로파일을 표시합니다.";
 "cli.virtual.show.none" = "가상 게임패드 없음";
 "cli.virtual.show.profiles" = "프로파일: %@";

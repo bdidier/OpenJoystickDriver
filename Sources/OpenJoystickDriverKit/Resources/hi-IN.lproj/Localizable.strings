@@ -1361,6 +1361,7 @@
 "cli.virtual.reset.error.unit_all" = "--unit के लिए CONTROLLER चाहिए, --all नहीं।";
 "cli.virtual.set.abstract" = "कंट्रोलर के मॉडल के लिए वर्चुअल गेमपैड चुनें।";
 "cli.virtual.set.profile" = "वर्चुअल गेमपैड प्रोफ़ाइल।";
+"cli.virtual.sdl_hints_note" = "नोट: %@ SDL के डिफ़ॉल्ट संकेतों (हिंट्स) के साथ काम नहीं करता।";
 "cli.virtual.show.abstract" = "हर कंट्रोलर का वर्चुअल गेमपैड और वे प्रोफ़ाइल दिखाएँ जिन्हें आप चुन सकते हैं।";
 "cli.virtual.show.none" = "कोई वर्चुअल गेमपैड नहीं";
 "cli.virtual.show.profiles" = "प्रोफ़ाइल: %@";

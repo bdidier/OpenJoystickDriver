@@ -1361,6 +1361,7 @@
 "cli.virtual.reset.error.unit_all" = "--unit necesita un CONTROLLER, no --all.";
 "cli.virtual.set.abstract" = "Elegir el mando virtual para el modelo de un mando.";
 "cli.virtual.set.profile" = "El perfil del mando virtual.";
+"cli.virtual.sdl_hints_note" = "Nota: %@ no funciona con las sugerencias predeterminadas de SDL.";
 "cli.virtual.show.abstract" = "Mostrar el mando virtual de cada mando y los perfiles que puedes elegir.";
 "cli.virtual.show.none" = "sin mando virtual";
 "cli.virtual.show.profiles" = "Perfiles: %@";

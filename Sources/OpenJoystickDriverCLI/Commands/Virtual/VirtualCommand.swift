@@ -138,6 +138,9 @@ struct VirtualShowCommand: AsyncParsableCommand {
         profile = CLILocalized.text("cli.virtual.show.none")
       }
       CLIOutput.stdout("\(id)  \(controller.name)  \(profile)")
+      if let live = controller.profile, controller.sdl?.worksWithDefaultSDLHints == false {
+        CLIOutput.stdout("\(id)  \(sdlHintsNote(live))")
+      }
     }
     CLIOutput.stdout(
       CLILocalized.format(

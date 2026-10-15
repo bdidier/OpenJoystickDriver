@@ -1361,6 +1361,7 @@
 "cli.virtual.reset.error.unit_all" = "--unit 需要 CONTROLLER，不能與 --all 一起使用。";
 "cli.virtual.set.abstract" = "為控制器的型號選擇虛擬遊戲控制器。";
 "cli.virtual.set.profile" = "虛擬遊戲控制器設定檔。";
+"cli.virtual.sdl_hints_note" = "注意：%@ 無法在 SDL 的預設提示設定下運作。";
 "cli.virtual.show.abstract" = "顯示每部控制器的虛擬遊戲控制器，以及可選擇的設定檔。";
 "cli.virtual.show.none" = "沒有虛擬遊戲控制器";
 "cli.virtual.show.profiles" = "設定檔：%@";

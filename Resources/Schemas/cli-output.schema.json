@@ -3130,7 +3130,7 @@
     "sharedVirtualSdl": {
       "description": "The SDL mapping of a virtual gamepad profile, derived from its report descriptor and report codec. The GUID carries a zero CRC.",
       "type": "object",
-      "required": ["guid", "mapping"],
+      "required": ["guid", "mapping", "worksWithDefaultSDLHints"],
       "additionalProperties": false,
       "properties": {
         "guid": {
@@ -3140,6 +3140,10 @@
         "mapping": {
           "description": "One SDL mapping line: the GUID, the name, the bindings, and platform:Mac OS X, ending in a comma.",
           "type": "string"
+        },
+        "worksWithDefaultSDLHints": {
+          "description": "Whether SDL recognizes the profile with its default hints, as the profile's definition states. False for SdlCompatible.",
+          "type": "boolean"
         }
       }
     },

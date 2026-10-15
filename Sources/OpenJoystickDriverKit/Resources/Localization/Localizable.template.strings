@@ -1364,6 +1364,7 @@
 "cli.virtual.reset.error.unit_all" = "--unit needs a CONTROLLER, not --all.";
 "cli.virtual.set.abstract" = "Choose the virtual gamepad for a controller's model.";
 "cli.virtual.set.profile" = "The virtual gamepad profile.";
+"cli.virtual.sdl_hints_note" = "Note: %@ does not work with SDL's default hints.";
 "cli.virtual.show.abstract" = "Show each controller's virtual gamepad and the profiles you can choose.";
 "cli.virtual.show.none" = "no virtual gamepad";
 "cli.virtual.show.profiles" = "Profiles: %@";

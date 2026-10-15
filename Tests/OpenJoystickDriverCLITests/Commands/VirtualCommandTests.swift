@@ -160,6 +160,7 @@ struct VirtualCommandTests {
     let result = await service.run(["virtual", "export-mapping"])
     #expect(result.code == 0, "\(result.standardError)")
     let lines = result.standardOutput.split(separator: "\n").map(String.init)
+      .filter { !$0.hasPrefix("#") }
     #expect(lines == (try VirtualHIDProfileID.allCases.map { try $0.gamepadMapping().sdlMapping }))
     #expect(
       lines.contains {
@@ -180,13 +181,14 @@ struct VirtualCommandTests {
       mappings.map { $0["profile"] as? String } == VirtualHIDProfileID.allCases.map(\.rawValue)
     )
     for entry in mappings {
-      let sdl = try #require(entry["sdl"] as? [String: String])
-      #expect(sdl["mapping"]?.hasPrefix("\(try #require(sdl["guid"])),") == true)
+      let sdl = try #require(entry["sdl"] as? [String: Any])
+      let mapping = try #require(sdl["mapping"] as? String)
+      #expect(mapping.hasPrefix("\(try #require(sdl["guid"] as? String)),"))
       #expect(entry["w3c"] == nil)
     }
     let generic = try #require(mappings.first { $0["profile"] as? String == "Generic" })
-    let sdl = try #require(generic["sdl"] as? [String: String])
-    #expect(sdl["guid"] == "03000000091200004f4a000008040000")
+    let sdl = try #require(generic["sdl"] as? [String: Any])
+    #expect(sdl["guid"] as? String == "03000000091200004f4a000008040000")
   }
 
   @Test
@@ -221,5 +223,66 @@ struct VirtualCommandTests {
       let result = await service.run(arguments)
       #expect(result.code == 64, "\(arguments)")
     }
+  }
+
+  @Test
+  func exportMappingTellsWhenSDLNeedsItsHints() async throws {
+    let service = try FakeService(devices: [])
+    let human = await service.run(["virtual", "export-mapping"])
+    let note = "# \(sdlHintsNote("SdlCompatible"))"
+    let lines = human.standardOutput.split(separator: "\n").map(String.init)
+    #expect(lines.filter { $0.hasPrefix("#") } == [note])
+    // The note is a comment, so every other line is still a mapping.
+    #expect(lines.filter { !$0.hasPrefix("#") }.count == VirtualHIDProfileID.allCases.count)
+    let sdlCompatible = try VirtualHIDProfileID.sdlCompatible.gamepadMapping().sdlMapping
+    let noteIndex = try #require(lines.firstIndex(of: note))
+    #expect(lines[noteIndex + 1] == sdlCompatible)
+
+    let json = try await service.run(["virtual", "export-mapping", "--json"]).json()
+    let mappings = try #require(json["mappings"] as? [[String: Any]])
+    for entry in mappings {
+      let sdl = try #require(entry["sdl"] as? [String: Any])
+      #expect(
+        sdl["worksWithDefaultSDLHints"] as? Bool
+          == (entry["profile"] as? String != "SdlCompatible"),
+        "\(entry)"
+      )
+    }
+  }
+
+  @Test
+  func showStatesInHumanAndJSONOutputWhenSDLNeedsItsHints() async throws {
+    var device = ApplicationServiceDeviceDescription.fixture(id: "pad-1")
+    device.virtualHIDProfile = ApplicationServiceVirtualHIDProfileStatus(
+      profile: .sdlCompatible,
+      source: "override",
+      override: .sdlCompatible,
+      unavailable: false
+    )
+    let service = try FakeService(devices: [device])
+    let human = await service.run(["virtual", "show"])
+    #expect(human.code == 0, "\(human.standardError)")
+    #expect(human.standardOutput.contains(sdlHintsNote("SdlCompatible")))
+
+    let json = try await service.run(["virtual", "show", "--json"]).json()
+    let controllers = try #require(json["controllers"] as? [[String: Any]])
+    let sdl = try #require(controllers.first?["sdl"] as? [String: Any])
+    #expect(sdl["worksWithDefaultSDLHints"] as? Bool == false)
+
+    var generic = ApplicationServiceDeviceDescription.fixture(id: "pad-2")
+    generic.virtualHIDProfile = ApplicationServiceVirtualHIDProfileStatus(
+      profile: .generic,
+      source: "override",
+      override: .generic,
+      unavailable: false
+    )
+    let other = try FakeService(devices: [generic])
+    let quiet = await other.run(["virtual", "show"])
+    #expect(!quiet.standardOutput.contains(sdlHintsNote("Generic")))
+    let quietJSON = try await other.run(["virtual", "show", "--json"]).json()
+    let quietSDL = try #require(
+      (quietJSON["controllers"] as? [[String: Any]])?.first?["sdl"] as? [String: Any]
+    )
+    #expect(quietSDL["worksWithDefaultSDLHints"] as? Bool == true)
   }
 }

@@ -1361,6 +1361,7 @@
 "cli.virtual.reset.error.unit_all" = "--unit には CONTROLLER が必要です。--all は使用できません。";
 "cli.virtual.set.abstract" = "コントローラのモデルに使う仮想ゲームパッドを選択します。";
 "cli.virtual.set.profile" = "仮想ゲームパッドのプロファイル。";
+"cli.virtual.sdl_hints_note" = "注: %@ は SDL の既定のヒントでは動作しません。";
 "cli.virtual.show.abstract" = "各コントローラの仮想ゲームパッドと、選択できるプロファイルを表示します。";
 "cli.virtual.show.none" = "仮想ゲームパッドなし";
 "cli.virtual.show.profiles" = "プロファイル: %@";

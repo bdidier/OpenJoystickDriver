@@ -55,4 +55,45 @@ struct VirtualGamepadMappingTests {
     #expect(mapping.w3cAxes.count == 4)
     #expect(mapping.w3cButtons.map(\.index) == mapping.w3cButtons.map(\.index).sorted())
   }
+
+  @Test
+  func everyNameInTheTableMatchesTheCrosswalk() throws {
+    let url = URL(fileURLWithPath: #filePath)
+      .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+      .deletingLastPathComponent().deletingLastPathComponent()
+      .appendingPathComponent("Resources/Vocabulary/crosswalk.json")
+    let root = try #require(
+      try JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any]
+    )
+    let controls = try #require(root["controls"] as? [String: [String: Any]])
+    // SDL3's element names as the crosswalk spells them, and the field a mapping string writes.
+    let mappingKeys = [
+      "SOUTH": "a", "EAST": "b", "WEST": "x", "NORTH": "y", "BACK": "back", "GUIDE": "guide",
+      "START": "start", "LEFT_STICK": "leftstick", "RIGHT_STICK": "rightstick",
+      "LEFT_SHOULDER": "leftshoulder", "RIGHT_SHOULDER": "rightshoulder", "DPAD_UP": "dpup",
+      "DPAD_DOWN": "dpdown", "DPAD_LEFT": "dpleft", "DPAD_RIGHT": "dpright", "MISC1": "misc1",
+      "RIGHT_PADDLE1": "paddle1", "LEFT_PADDLE1": "paddle2", "RIGHT_PADDLE2": "paddle3",
+      "LEFT_PADDLE2": "paddle4", "TOUCHPAD": "touchpad", "LEFTX": "leftx", "LEFTY": "lefty",
+      "RIGHTX": "rightx", "RIGHTY": "righty", "LEFT_TRIGGER": "lefttrigger",
+      "RIGHT_TRIGGER": "righttrigger",
+    ]
+    for (control, names) in ControlNames.table {
+      let id = control.rawValue
+      let entry = try #require(controls[id], "\(id) is not in the crosswalk")
+      let sdl = entry["sdl"] as? String
+      #expect(sdl.flatMap { mappingKeys[$0] } == names.sdl, "\(id) SDL: \(sdl ?? "null")")
+      #expect(entry["w3cButton"] as? Int == names.w3cButton, "\(id) W3C button")
+      #expect(entry["w3cAxis"] as? Int == names.w3cAxis, "\(id) W3C axis")
+    }
+    #expect(Set(ControlNames.sdlFieldOrder) == Set(ControlNames.table.values.map(\.sdl)))
+  }
+
+  @Test
+  func thePersonaDefinitionStatesWhetherSDLWorksWithItsDefaultHints() throws {
+    #expect(VirtualHIDProfileID.generic.worksWithDefaultSDLHints)
+    #expect(!VirtualHIDProfileID.sdlCompatible.worksWithDefaultSDLHints)
+    for id in VirtualHIDProfileID.allCases {
+      #expect(try id.gamepadMapping().worksWithDefaultSDLHints == id.worksWithDefaultSDLHints)
+    }
+  }
 }

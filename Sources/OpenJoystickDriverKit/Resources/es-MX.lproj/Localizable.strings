@@ -1361,6 +1361,7 @@
 "cli.virtual.reset.error.unit_all" = "--unit necesita un CONTROLLER, no --all.";
 "cli.virtual.set.abstract" = "Elige el control virtual para el modelo de un control.";
 "cli.virtual.set.profile" = "El perfil del control virtual.";
+"cli.virtual.sdl_hints_note" = "Nota: %@ no funciona con las sugerencias predeterminadas de SDL.";
 "cli.virtual.show.abstract" = "Muestra el control virtual de cada control y los perfiles que puedes elegir.";
 "cli.virtual.show.none" = "sin control virtual";
 "cli.virtual.show.profiles" = "Perfiles: %@";

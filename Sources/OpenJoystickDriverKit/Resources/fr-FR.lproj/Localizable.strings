@@ -1361,6 +1361,7 @@
 "cli.virtual.reset.error.unit_all" = "--unit exige un CONTROLLER, pas --all.";
 "cli.virtual.set.abstract" = "Choisir la manette virtuelle du modèle d’une manette.";
 "cli.virtual.set.profile" = "Le profil de la manette virtuelle.";
+"cli.virtual.sdl_hints_note" = "Remarque : %@ ne fonctionne pas avec les indicateurs SDL par défaut.";
 "cli.virtual.show.abstract" = "Afficher la manette virtuelle de chaque manette et les profils disponibles.";
 "cli.virtual.show.none" = "aucune manette virtuelle";
 "cli.virtual.show.profiles" = "Profils : %@";

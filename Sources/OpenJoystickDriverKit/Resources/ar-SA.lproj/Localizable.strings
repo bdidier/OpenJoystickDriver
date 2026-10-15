@@ -1361,6 +1361,7 @@
 "cli.virtual.reset.error.unit_all" = "يحتاج --unit إلى CONTROLLER وليس --all.";
 "cli.virtual.set.abstract" = "اختر وحدة التحكم الافتراضية لطراز وحدة تحكم.";
 "cli.virtual.set.profile" = "ملف تعريف وحدة التحكم الافتراضية.";
+"cli.virtual.sdl_hints_note" = "ملاحظة: %@ لا يعمل مع تلميحات SDL الافتراضية.";
 "cli.virtual.show.abstract" = "اعرض وحدة التحكم الافتراضية لكل وحدة تحكم وملفات التعريف التي يمكنك اختيارها.";
 "cli.virtual.show.none" = "لا توجد وحدة تحكم افتراضية";
 "cli.virtual.show.profiles" = "ملفات التعريف: %@";

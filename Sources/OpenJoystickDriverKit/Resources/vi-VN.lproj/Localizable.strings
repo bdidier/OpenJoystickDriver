@@ -1361,6 +1361,7 @@
 "cli.virtual.reset.error.unit_all" = "--unit cần một CONTROLLER, không phải --all.";
 "cli.virtual.set.abstract" = "Chọn tay cầm ảo cho kiểu máy của một bộ điều khiển.";
 "cli.virtual.set.profile" = "Cấu hình tay cầm ảo.";
+"cli.virtual.sdl_hints_note" = "Lưu ý: %@ không hoạt động với các gợi ý (hint) mặc định của SDL.";
 "cli.virtual.show.abstract" = "Hiển thị tay cầm ảo của từng bộ điều khiển và các cấu hình bạn có thể chọn.";
 "cli.virtual.show.none" = "không có tay cầm ảo";
 "cli.virtual.show.profiles" = "Cấu hình: %@";

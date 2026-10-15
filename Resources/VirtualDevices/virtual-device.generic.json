@@ -4,6 +4,7 @@
   "persona": "Generic",
   "layout": "ojd-generic-gamepad",
   "transport": "USB",
+  "worksWithDefaultSDLHints": true,
   "labels": "generic",
   "identity": {
     "vendorID": 4617,

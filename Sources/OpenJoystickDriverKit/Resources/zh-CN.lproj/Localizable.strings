@@ -1361,6 +1361,7 @@
 "cli.virtual.reset.error.unit_all" = "--unit 需要 CONTROLLER，不能与 --all 一起使用。";
 "cli.virtual.set.abstract" = "为控制器的型号选择虚拟游戏手柄。";
 "cli.virtual.set.profile" = "虚拟游戏手柄配置文件。";
+"cli.virtual.sdl_hints_note" = "注意：%@ 无法在 SDL 的默认提示设置下工作。";
 "cli.virtual.show.abstract" = "显示每个控制器的虚拟游戏手柄以及可选择的配置文件。";
 "cli.virtual.show.none" = "无虚拟游戏手柄";
 "cli.virtual.show.profiles" = "配置文件：%@";

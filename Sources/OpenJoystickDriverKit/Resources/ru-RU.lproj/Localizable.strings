@@ -1361,6 +1361,7 @@
 "cli.virtual.reset.error.unit_all" = "Для --unit нужен CONTROLLER, а не --all.";
 "cli.virtual.set.abstract" = "Выбирает виртуальный геймпад для модели контроллера.";
 "cli.virtual.set.profile" = "Профиль виртуального геймпада.";
+"cli.virtual.sdl_hints_note" = "Примечание: %@ не работает с подсказками SDL по умолчанию.";
 "cli.virtual.show.abstract" = "Показывает виртуальный геймпад каждого контроллера и профили, из которых можно выбирать.";
 "cli.virtual.show.none" = "нет виртуального геймпада";
 "cli.virtual.show.profiles" = "Профили: %@";

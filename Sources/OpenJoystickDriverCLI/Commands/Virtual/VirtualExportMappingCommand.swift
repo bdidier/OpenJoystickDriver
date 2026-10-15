@@ -6,9 +6,12 @@ import OpenJoystickDriverKit
 struct VirtualSDLReport: Encodable, Equatable {
   let guid: String
   let mapping: String
+  /// False when SDL does not recognize the persona with its default hints.
+  let worksWithDefaultSDLHints: Bool
 
   init(_ mapping: VirtualGamepadMapping) {
     guid = mapping.guid
+    worksWithDefaultSDLHints = mapping.worksWithDefaultSDLHints
     self.mapping = mapping.sdlMapping
   }
 }
@@ -56,6 +59,11 @@ struct VirtualMappingExport: Encodable, Equatable {
 
   let format: String
   let mappings: [Entry]
+}
+
+/// The note for a persona that SDL does not recognize with its default hints.
+func sdlHintsNote(_ profile: String) -> String {
+  CLILocalized.format("cli.virtual.sdl_hints_note", profile)
 }
 
 struct VirtualExportMappingCommand: AsyncParsableCommand {
@@ -116,7 +124,12 @@ struct VirtualExportMappingCommand: AsyncParsableCommand {
   /// JSON array of the descriptions.
   private static func printHuman(_ report: VirtualMappingExport) throws {
     if report.format == VirtualMappingFormat.sdl.rawValue {
-      for line in report.mappings.compactMap(\.sdl?.mapping) { CLIOutput.stdout(line) }
+      for entry in report.mappings {
+        guard let sdl = entry.sdl else { continue }
+        // A comment line keeps the output a valid SDL mapping file.
+        if !sdl.worksWithDefaultSDLHints { CLIOutput.stdout("# \(sdlHintsNote(entry.profile))") }
+        CLIOutput.stdout(sdl.mapping)
+      }
       return
     }
     struct Description: Encodable {

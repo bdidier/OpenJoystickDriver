@@ -29,6 +29,8 @@ public struct VirtualGamepadMapping: Equatable, Sendable {
   public let name: String
   /// The SDL3 macOS GUID, with a zero CRC.
   public let guid: String
+  /// Whether SDL recognizes the persona with its default hints, from the persona's definition.
+  public let worksWithDefaultSDLHints: Bool
   public let probes: [Probe]
   /// The controls with no SDL binding, sorted by name.
   public let unmapped: [Control]
@@ -48,7 +50,7 @@ public enum VirtualGamepadMappingError: Error, Equatable, Sendable {
 }
 
 /// What SDL and the W3C Gamepad API call one control. A control absent here has no SDL name.
-private struct ControlNames {
+struct ControlNames {
   let sdl: String
   let w3cButton: Int?
   let w3cAxis: Int?
@@ -175,6 +177,7 @@ extension VirtualHIDProfileID {
       profile: id,
       name: identity.productName,
       guid: guid,
+      worksWithDefaultSDLHints: id.worksWithDefaultSDLHints,
       probes: probes,
       unmapped: unmapped.sorted { $0.rawValue < $1.rawValue },
       sdlMapping: "\(guid),\(identity.productName),\(bindings),platform:Mac OS X,",

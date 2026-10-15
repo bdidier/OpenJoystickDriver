@@ -1361,6 +1361,7 @@
 "cli.virtual.reset.error.unit_all" = "--unit ต้องใช้ CONTROLLER ไม่ใช่ --all";
 "cli.virtual.set.abstract" = "เลือกเกมแพดเสมือนสำหรับรุ่นของคอนโทรลเลอร์";
 "cli.virtual.set.profile" = "โปรไฟล์เกมแพดเสมือน";
+"cli.virtual.sdl_hints_note" = "หมายเหตุ: %@ ใช้งานไม่ได้กับฮินต์เริ่มต้นของ SDL";
 "cli.virtual.show.abstract" = "แสดงเกมแพดเสมือนของคอนโทรลเลอร์แต่ละตัวและโปรไฟล์ที่คุณเลือกได้";
 "cli.virtual.show.none" = "ไม่มีเกมแพดเสมือน";
 "cli.virtual.show.profiles" = "โปรไฟล์: %@";

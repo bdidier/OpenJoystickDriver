@@ -1361,6 +1361,7 @@
 "cli.virtual.reset.error.unit_all" = "--unit bir CONTROLLER gerektirir, --all değil.";
 "cli.virtual.set.abstract" = "Bir kontrolcünün modeli için sanal oyun kontrolcüsünü seçer.";
 "cli.virtual.set.profile" = "Sanal oyun kontrolcüsü profili.";
+"cli.virtual.sdl_hints_note" = "Not: %@, SDL'in varsayılan ipuçlarıyla çalışmaz.";
 "cli.virtual.show.abstract" = "Her kontrolcünün sanal oyun kontrolcüsünü ve seçebileceğiniz profilleri gösterir.";
 "cli.virtual.show.none" = "sanal oyun kontrolcüsü yok";
 "cli.virtual.show.profiles" = "Profiller: %@";

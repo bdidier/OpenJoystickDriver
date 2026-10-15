@@ -9,17 +9,6 @@ import Testing
 /// The mapping is derived by `VirtualHIDProfileID.gamepadMapping()`, which the CLI also prints, so
 /// this snapshot pins what ships. It lists each probe so a changed report shows where it moved.
 struct EquivalenceSnapshotSDLMappingTests {
-  /// The frozen snapshot names the D-pad probes by hat direction.
-  private static func label(of control: Control) -> String {
-    switch control {
-    case .dpadUp: "dpadNorth"
-    case .dpadRight: "dpadEast"
-    case .dpadDown: "dpadSouth"
-    case .dpadLeft: "dpadWest"
-    default: control.rawValue
-    }
-  }
-
   private static func section(
     for id: VirtualHIDProfileID
   ) throws -> (
@@ -29,7 +18,7 @@ struct EquivalenceSnapshotSDLMappingTests {
     let mapping = try id.gamepadMapping()
     let identity = profile.identity
     var lines = [
-      "profile=\(Self.snapshotName(id)) vendor=\(identity.vendorID) product=\(identity.productID)"
+      "profile=\(id.rawValue) vendor=\(identity.vendorID) product=\(identity.productID)"
         + " version=\(identity.versionNumber) name=\(identity.productName)",
       "guid=\(mapping.guid)",
       "report length=\(profile.inputReport(for: .neutral).count)"
@@ -37,21 +26,13 @@ struct EquivalenceSnapshotSDLMappingTests {
     ]
     for probe in mapping.probes {
       lines.append(
-        "probe \(label(of: probe.control)) fields=[\(probe.fields.joined(separator: "+"))]"
+        "probe \(probe.control.rawValue) fields=[\(probe.fields.joined(separator: "+"))]"
           + " -> \(probe.binding ?? "none")"
       )
     }
     lines.append("mapping=\(mapping.sdlMapping)")
     lines.append("unmapped=\(mapping.unmapped.map(\.rawValue).joined(separator: ","))")
-    return (Self.snapshotName(id), lines)
-  }
-
-  /// The frozen snapshot names each profile as it was named before the redesign.
-  private static func snapshotName(_ id: VirtualHIDProfileID) -> String {
-    switch id {
-    case .generic: "hid-generic"
-    case .sdlCompatible: "hid-xbox-one-s-bt"
-    }
+    return (id.rawValue, lines)
   }
 
   @Test
