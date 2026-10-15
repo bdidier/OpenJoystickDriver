@@ -176,6 +176,10 @@ private actor PermissionRaceGatewayStub: ApplicationServiceGateway {
     return statusPayload
   }
 
+  func frameTimings() throws -> ApplicationServiceFrameTimingsPayload {
+    ApplicationServiceFrameTimingsPayload(controllers: [])
+  }
+
   func virtualDeviceDiagnostics() throws -> ApplicationServiceVirtualDeviceDiagnosticsPayload {
     ApplicationServiceVirtualDeviceDiagnosticsPayload(
       userSpaceVirtualDeviceEnabled: true,

@@ -63,6 +63,19 @@ flowchart LR
 
 Packet differencing, classification, and bulk formatting stay outside `@MainActor`. The main actor owns only AppKit/SwiftUI lifecycle and publication of bounded, already-derived presentation snapshots. The complete raw capture remains authoritative for copy and export; table virtualization changes rendering cost, not capture contents or device cadence.
 
+## Source and Sink Boundary
+
+Input flows through two protocols in `Streaming/`, which import nothing from a platform. An `InputSource` has an `origin` and a `sink`, and sends each canonical `StreamFrame` to that sink with `produce(_:onDelivered:)`. An `OutputSink` has a `destination` and consumes frames or output commands; a sink refuses a shape it does not take with `StreamBoundaryError.unsupported`. `onDelivered` runs once the frame reached the destination, which is where the delivery stage stamps are taken. All paths are compiled in; OJD loads no code at run time.
+
+| Path | Source (`origin`) | Sink (`destination`) |
+| --- | --- | --- |
+| Physical controller to virtual device | `DevicePipeline` (`physicalController`) | any `OutputDispatcher` (`virtualDevice`; `diagnosticLog` for `LoggingOutputDispatcher`) |
+| Virtual feed | `VirtualFeedRegistry` session (`virtualFeed`, or `endpointFeed` for the endpoint pool) | `VirtualFeedDeviceSink` (`virtualDevice`) |
+| Endpoint `controllers` stream | `EndpointStreamSource` (`endpointStream`) | `EndpointSubscribers` (`endpointSubscription`) |
+| Physical output commands | the service's output requests | `DeviceManager` (`physicalOutput`) |
+
+Still outside the boundary: output activation (`activateOutput`), the remapping router's direct dispatch, the physical-output bridge for mapped rumble, and the host-feedback return to an endpoint feed client.
+
 ## Classification and Binding
 
 `ProtocolClassifier` (`OpenJoystickDriverKit/Protocol/Classification/`) selects one protocol from observed `PhysicalDevice` facts. It performs no I/O and no classification write. Precedence:
