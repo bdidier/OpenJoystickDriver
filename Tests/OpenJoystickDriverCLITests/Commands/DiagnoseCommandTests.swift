@@ -11,7 +11,7 @@ struct DiagnoseCommandTests {
     ExtensionStatus(bundle: .present, registration: .active("enabled"))
   }
 
-  private static let noAudit: @Sendable () -> AppleGameControllerSupportAudit? = { nil }
+  private static let noAudit: @Sendable () -> SystemGamepadSupportAudit? = { nil }
 
   private static let brokenExtension: @Sendable () -> ExtensionStatus = {
     ExtensionStatus(bundle: .missing, registration: .absent)
@@ -21,8 +21,8 @@ struct DiagnoseCommandTests {
     let statusResult = try JSONEncoder().encode(
       try JSONEncoder().encode(
         ApplicationServiceStatusPayload(
-          inputMonitoring: "granted",
-          accessibility: "granted",
+          inputRead: "granted",
+          inputInject: "granted",
           connectedDevices: [],
           userSpaceVirtualDeviceEnabled: true
         )
@@ -118,7 +118,7 @@ struct DiagnoseCommandTests {
     let statuses = try statuses(result)
     #expect(statuses.filter { $0.value == "skip" }.keys.sorted() == ["runtime-health"])
     #expect(statuses.values.allSatisfy { $0 == "pass" || $0 == "skip" })
-    #expect(try result.json()["bundle"] == nil)
+    #expect(try result.json()["output"] == nil)
   }
 
   @Test
@@ -180,12 +180,12 @@ struct DiagnoseCommandTests {
     )
 
     #expect(human.code == 1)
-    #expect(human.standardOutput.contains("extension-bundle"))
+    #expect(human.standardOutput.contains("transport-extension-bundle"))
     #expect(!human.standardError.isEmpty)
     #expect(json.code == 1)
-    #expect(try statuses(json)["extension-bundle"] == "fail")
+    #expect(try statuses(json)["transport-extension-bundle"] == "fail")
     #expect(plain.code == 1)
-    #expect(plain.standardOutput.contains("extension-bundle\tfail\t"))
+    #expect(plain.standardOutput.contains("transport-extension-bundle\tfail\t"))
   }
 
   @Test
@@ -208,12 +208,12 @@ struct DiagnoseCommandTests {
 
     #expect(result.code == 0, "\(result.standardError)")
     let statuses = try statuses(result)
-    for id in ["input-monitoring", "accessibility", "virtual-device", "runtime-health"] {
+    for id in ["input-read", "input-inject", "virtual-device", "runtime-health"] {
       #expect(statuses[id] == "skip", "\(id)")
     }
     #expect(statuses["service"] == "warn")
     let checks = try #require(try result.json()["checks"] as? [[String: String]])
-    #expect(checks.first { $0["id"] == "accessibility" }?["detail"]?.isEmpty == false)
+    #expect(checks.first { $0["id"] == "input-inject" }?["detail"]?.isEmpty == false)
   }
 
   @Test
@@ -225,7 +225,7 @@ struct DiagnoseCommandTests {
     )
 
     #expect(result.code == 1)
-    #expect(result.standardOutput.contains("accessibility\tskip\t"))
+    #expect(result.standardOutput.contains("input-inject\tskip\t"))
   }
 
   @Test
@@ -239,22 +239,22 @@ struct DiagnoseCommandTests {
   }
 
   @Test
-  func bundleWritesAFileAndNamesItInJSON() async throws {
+  func outputWritesAFileAndNamesItInJSON() async throws {
     let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
     try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
     defer { try? FileManager.default.removeItem(at: directory) }
     let path = directory.appendingPathComponent("support.json").path
 
-    let result = await run(["--bundle", path, "--json"], socketPath: temporarySocketPath())
+    let result = await run(["--output", path, "--json"], socketPath: temporarySocketPath())
 
     #expect(result.code == 0, "\(result.standardError)")
-    #expect(try result.json()["bundle"] as? String == path)
+    #expect(try result.json()["output"] as? String == path)
     #expect(FileManager.default.fileExists(atPath: path))
     #expect(result.standardError.contains(path))
   }
 
   @Test
-  func bundleReadsTheFiveStageStampsOfTheNewestFrames() async throws {
+  func outputReadsTheFiveStageStampsOfTheNewestFrames() async throws {
     let socketPath = temporarySocketPath()
     let server = try serve(socketPath: socketPath)
     defer { server.stop() }
@@ -263,7 +263,7 @@ struct DiagnoseCommandTests {
     defer { try? FileManager.default.removeItem(at: directory) }
     let path = directory.appendingPathComponent("support.json").path
 
-    let result = await run(["--bundle", path, "--json"], socketPath: socketPath)
+    let result = await run(["--output", path, "--json"], socketPath: socketPath)
 
     #expect(result.code == 0, "\(result.standardError)")
     let bundle = try #require(
@@ -284,13 +284,13 @@ struct DiagnoseCommandTests {
   }
 
   @Test
-  func bundleWithAStoppedServiceHasNoTimings() async throws {
+  func outputWithAStoppedServiceHasNoTimings() async throws {
     let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
     try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
     defer { try? FileManager.default.removeItem(at: directory) }
     let path = directory.appendingPathComponent("support.json").path
 
-    _ = await run(["--bundle", path, "--json"], socketPath: temporarySocketPath())
+    _ = await run(["--output", path, "--json"], socketPath: temporarySocketPath())
 
     let bundle = try #require(
       JSONSerialization.jsonObject(with: Data(contentsOf: URL(fileURLWithPath: path)))
@@ -304,7 +304,7 @@ struct DiagnoseCommandTests {
   func aMissingBundleParentIsAUsageError() async {
     let path = "/tmp/\(UUID().uuidString)/missing/support.json"
 
-    let result = await run(["--bundle", path], socketPath: temporarySocketPath())
+    let result = await run(["--output", path], socketPath: temporarySocketPath())
 
     #expect(result.code == 64)
     #expect(result.standardOutput.isEmpty)

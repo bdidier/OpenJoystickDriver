@@ -142,7 +142,7 @@ public enum ServingPolicy {
         override: input.override
       )
     else { return ServingDecision(route: .outputDisabled(.noVirtualProfile)) }
-    if input.accessRoute == .extensionOwned || input.observation == .driverKitOwnedUSB {
+    if input.accessRoute == .extensionOwned || input.observation == .extensionOwnedUsb {
       return ServingDecision(route: .extensionOwned, selection: selection)
     }
     return ServingDecision(route: .virtualHid(selection.profileID), selection: selection)
@@ -170,7 +170,7 @@ public enum ServingPolicy {
   /// serves it natively, or its record already gives it to OJD, and its record does not reach it
   /// through raw USB or the extension, which always belong to OJD.
   public static func offersServerChoice(_ input: ServingInput) -> Bool {
-    input.accessRoute == .system && (input.observation == .nativeGamepad || input.server == .ojd)
+    input.accessRoute == .system && (input.observation == .systemGamepad || input.server == .ojd)
   }
 }
 

@@ -12,18 +12,18 @@ struct PermissionCommandTests {
   }
 
   private static let allGranted = PermissionManager.Snapshot(
-    inputMonitoring: .granted,
-    accessibility: .granted
+    inputRead: .granted,
+    inputInject: .granted
   )
 
   private static let deniedLocally: @Sendable () -> PermissionManager.Snapshot = {
-    PermissionManager.Snapshot(inputMonitoring: .denied, accessibility: .granted)
+    PermissionManager.Snapshot(inputRead: .denied, inputInject: .granted)
   }
 
   /// A service that answers `getStatus` with `status` and access requests with `snapshot`,
   /// and records the methods it received.
   private func serve(
-    status: (input: String, accessibility: String) = ("granted", "granted"),
+    status: (input: String, inputInject: String) = ("granted", "granted"),
     snapshot: PermissionManager.Snapshot = Self.allGranted,
     socketPath: String,
     received: Locked<[String]> = Locked([])
@@ -31,8 +31,8 @@ struct PermissionCommandTests {
     let statusResult = try JSONEncoder().encode(
       try JSONEncoder().encode(
         ApplicationServiceStatusPayload(
-          inputMonitoring: status.input,
-          accessibility: status.accessibility,
+          inputRead: status.input,
+          inputInject: status.inputInject,
           connectedDevices: []
         )
       )
@@ -80,13 +80,13 @@ struct PermissionCommandTests {
     #expect(jsonRun.code == 0, "\(jsonRun.standardError)")
     #expect(jsonRun.standardError.isEmpty)
     let entries = try #require(try jsonRun.json()["items"] as? [[String: String]])
-    #expect(entries.map { $0["id"] } == ["input-monitoring", "accessibility", "driver-extension"])
+    #expect(entries.map { $0["id"] } == ["input-read", "input-inject", "usb-transport"])
     #expect(entries.map { $0["state"] } == ["denied", "granted", "unknown"])
-    #expect(entries[0]["name"] == "Input Monitoring")
+    #expect(entries[0]["name"] == "Input read")
     #expect(entries[0]["purpose"] == "Read input from physical controllers")
     #expect(
       plainRun.standardOutput
-        == "input-monitoring\tdenied\naccessibility\tgranted\ndriver-extension\tunknown\n"
+        == "input-read\tdenied\ninput-inject\tgranted\nusb-transport\tunknown\n"
     )
   }
 
@@ -106,9 +106,9 @@ struct PermissionCommandTests {
 
     let rows = result.standardOutput.split(separator: "\n")
     #expect(rows.count == 3)
-    #expect(rows[0].hasPrefix(PermissionID.inputMonitoring.localizedName))
+    #expect(rows[0].hasPrefix(PermissionID.inputRead.localizedName))
     #expect(rows[0].contains("denied"))
-    #expect(rows[0].hasSuffix(PermissionID.inputMonitoring.localizedPurpose))
+    #expect(rows[0].hasSuffix(PermissionID.inputRead.localizedPurpose))
   }
 
   @Test
@@ -126,14 +126,14 @@ struct PermissionCommandTests {
 
     #expect(result.code == 64)
     #expect(result.standardError.contains("camera"))
-    #expect(result.standardError.contains("input-monitoring, accessibility"))
+    #expect(result.standardError.contains("input-read, input-inject"))
   }
 
   @Test
   func requestThatLeavesAPermissionDeniedExitsWith77() async throws {
     let socketPath = temporarySocketPath()
     let server = try serve(
-      snapshot: .init(inputMonitoring: .denied, accessibility: .granted),
+      snapshot: .init(inputRead: .denied, inputInject: .granted),
       socketPath: socketPath
     )
     defer { server.stop() }
@@ -141,10 +141,10 @@ struct PermissionCommandTests {
     let result = await run(["permission", "request", "--no-input"], socketPath: socketPath)
 
     #expect(result.code == 77)
-    #expect(result.standardOutput.contains(PermissionID.inputMonitoring.localizedName))
+    #expect(result.standardOutput.contains(PermissionID.inputRead.localizedName))
     #expect(result.standardOutput.contains("denied"))
     #expect(
-      result.standardError == CLIFailure.permissionStillMissing([.inputMonitoring]).line + "\n"
+      result.standardError == CLIFailure.permissionStillMissing([.inputRead]).line + "\n"
     )
     #expect(result.standardError.hasPrefix("error[E2008]: "))
     #expect(result.standardError.contains("ojd permission request"))
@@ -155,13 +155,13 @@ struct PermissionCommandTests {
     let socketPath = temporarySocketPath()
     let received = Locked<[String]>([])
     let server = try serve(
-      snapshot: .init(inputMonitoring: .denied, accessibility: .granted),
+      snapshot: .init(inputRead: .denied, inputInject: .granted),
       socketPath: socketPath,
       received: received
     )
     defer { server.stop() }
 
-    let result = await run(["permission", "request", "accessibility"], socketPath: socketPath)
+    let result = await run(["permission", "request", "input-inject"], socketPath: socketPath)
 
     #expect(result.code == 0, "\(result.standardError)")
     #expect(result.standardError.split(separator: "\n").count == 1)

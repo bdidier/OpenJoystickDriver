@@ -172,7 +172,7 @@
     @State
     private var scopeKind = ProfileScopeKind.global
     @State
-    private var bundleIdentifier = ""
+    private var appID = ""
 
     init(
       title: String,
@@ -240,8 +240,8 @@
         }
         if scopeKind == .application {
           TextField(
-            OJDLocalized.string("profiles.bundleIdentifier"),
-            text: $bundleIdentifier
+            OJDLocalized.string("profiles.appID"),
+            text: $appID
           )
         }
         if !fieldsAreEmpty && proposedProfile == nil {
@@ -276,7 +276,7 @@
     private var canCreate: Bool { proposedProfile != nil }
 
     private var fieldsAreEmpty: Bool {
-      name.isEmpty && vendorID.isEmpty && productID.isEmpty && bundleIdentifier.isEmpty
+      name.isEmpty && vendorID.isEmpty && productID.isEmpty && appID.isEmpty
     }
 
     private var proposedProfile: RemappingProfile? {
@@ -286,7 +286,7 @@
       let applicationScope: RemappingApplicationScope
       switch scopeKind {
       case .global: applicationScope = .global
-      case .application: applicationScope = .application(bundleIdentifier: bundleIdentifier)
+      case .application: applicationScope = .application(appID: appID)
       }
       let profile = RemappingProfile(
         name: trimmedName,

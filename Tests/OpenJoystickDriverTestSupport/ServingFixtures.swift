@@ -70,21 +70,21 @@ package struct ServingFixture: Sendable {
   package static let all: [Self] = [
     Self(
       "native gamepad",
-      .nativeGamepad,
+      .systemGamepad,
       .system,
       route: .nativePassThrough(.none),
       offersServerChoice: true
     ),
     Self(
       "native HID",
-      .nativeHIDVisible,
+      .systemHidVisible,
       .system,
       route: .nativePassThrough(.none),
       offersServerChoice: false
     ),
     Self(
       "native claimed by OJD",
-      .nativeGamepad,
+      .systemGamepad,
       .ojd,
       route: .virtualHid(.generic),
       offersServerChoice: true
@@ -115,7 +115,7 @@ package struct ServingFixture: Sendable {
     ),
     Self(
       "extension owned",
-      .driverKitOwnedUSB,
+      .extensionOwnedUsb,
       .system,
       source: .rawUSB,
       accessRoute: .extensionOwned,

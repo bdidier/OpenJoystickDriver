@@ -137,19 +137,19 @@ raw-access
 raw-access
 
 ## 045E:02D1
-extension
+transport-extension
 
 ## 045E:02DD
-extension
+transport-extension
 
 ## 045E:02E0
 system ownership=macos
 
 ## 045E:02E3
-extension
+transport-extension
 
 ## 045E:02EA
-extension
+transport-extension
 
 ## 045E:02FD
 system ownership=macos
@@ -158,19 +158,19 @@ system ownership=macos
 raw-access
 
 ## 045E:0B00
-extension
+transport-extension
 
 ## 045E:0B05
 system ownership=macos
 
 ## 045E:0B0A
-extension
+transport-extension
 
 ## 045E:0B0C
 system ownership=macos
 
 ## 045E:0B12
-extension
+transport-extension
 
 ## 045E:0B13
 system ownership=macos

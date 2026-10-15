@@ -86,7 +86,7 @@ Removing the app alone leaves a login item, privacy entries, a system extension,
 2. If you approved the OJD driver extension, remove it. In **Overview**, on the **Xbox USB Driver** card, click **Uninstall**. Or run the following command.
 
    ```shell
-   ojd extension deactivate
+   ojd transport-extension deactivate
    ```
 
 3. Quit OJD from the menu bar item.

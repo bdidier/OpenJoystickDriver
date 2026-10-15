@@ -29,8 +29,8 @@ final class FakeService: @unchecked Sendable {
     let status: @Sendable () -> Data? = {
       doubleEncoded(
         ApplicationServiceStatusPayload(
-          inputMonitoring: "granted",
-          accessibility: "granted",
+          inputRead: "granted",
+          inputInject: "granted",
           connectedDevices: devices(),
           userSpaceVirtualDeviceEnabled: true
         )

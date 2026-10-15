@@ -29,7 +29,7 @@ struct ControllerServerRequestsTests {
       vendorID: model.vendorID,
       productID: model.productID,
       server: server,
-      nativeGamepadConnected: native,
+      systemGamepadConnected: native,
       directory: directory
     )
   }

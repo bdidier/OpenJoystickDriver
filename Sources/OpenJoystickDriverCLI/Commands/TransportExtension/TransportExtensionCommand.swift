@@ -2,14 +2,15 @@ import ArgumentParser
 import Foundation
 import OpenJoystickDriverKit
 
-struct ExtensionCommand: AsyncParsableCommand {
+struct TransportExtensionCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
-    commandName: "extension",
+    commandName: "transport-extension",
     abstract: CLILocalized.text(
-      "cli.extension.abstract"
+      "cli.transport_extension.abstract"
     ),
     subcommands: [
-      ExtensionStatusCommand.self, ExtensionActivateCommand.self, ExtensionDeactivateCommand.self,
+      TransportExtensionStatusCommand.self, TransportExtensionActivateCommand.self,
+      TransportExtensionDeactivateCommand.self,
     ]
   )
 
@@ -17,11 +18,11 @@ struct ExtensionCommand: AsyncParsableCommand {
   var global: GlobalOptions
 }
 
-/// The `ojd extension status --json` result.
+/// The `ojd transport-extension status --json` result.
 ///
 /// `detail` is the `systemextensionsctl` record, the unexpected bundle identifier, or the
 /// reason the state is unavailable; it is absent when there is nothing to add.
-struct ExtensionStatusReport: Encodable, Equatable {
+struct TransportExtensionStatusReport: Encodable, Equatable {
   let bundle: StatusReport.Extension.Bundle
   let registration: StatusReport.Extension.Registration
   let detail: String?
@@ -34,14 +35,14 @@ struct ExtensionStatusReport: Encodable, Equatable {
   }
 }
 
-struct ExtensionStatusCommand: AsyncParsableCommand {
+struct TransportExtensionStatusCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "status",
     abstract: CLILocalized.text(
-      "cli.extension.status.abstract"
+      "cli.transport_extension.status.abstract"
     ),
     discussion: CLILocalized.text(
-      "cli.extension.status.discussion"
+      "cli.transport_extension.status.discussion"
     )
   )
 
@@ -51,7 +52,7 @@ struct ExtensionStatusCommand: AsyncParsableCommand {
   func run() async throws {
     try await global.run {
       let status = StatusCommand.extensionProbe()
-      let report = ExtensionStatusReport(status)
+      let report = TransportExtensionStatusReport(status)
       switch CLIContext.current.format {
       case .json: try CLIOutput.json(report)
       case .plain:
@@ -61,13 +62,13 @@ struct ExtensionStatusCommand: AsyncParsableCommand {
       case .human:
         CLIOutput.stdout(
           CLILocalized.format(
-            "cli.extension.status.bundle",
+            "cli.transport_extension.status.bundle",
             report.bundle.rawValue
           )
         )
         CLIOutput.stdout(
           CLILocalized.format(
-            "cli.extension.status.registration",
+            "cli.transport_extension.status.registration",
             report.registration.rawValue
           )
         )
@@ -79,7 +80,7 @@ struct ExtensionStatusCommand: AsyncParsableCommand {
         throw CLIFailure(
           .systemRequestFailed,
           CLILocalized.format(
-            "cli.extension.status.unavailable",
+            "cli.transport_extension.status.unavailable",
             reason
           )
         )
@@ -88,8 +89,8 @@ struct ExtensionStatusCommand: AsyncParsableCommand {
   }
 }
 
-/// The `--json` result of `extension activate` and `extension deactivate`.
-struct ExtensionResult: Encodable, Equatable {
+/// The `--json` result of `transport-extension activate` and `transport-extension deactivate`.
+struct TransportExtensionResult: Encodable, Equatable {
   enum State: String, Encodable {
     case active
     case inactive
@@ -100,12 +101,12 @@ struct ExtensionResult: Encodable, Equatable {
 }
 
 private func submit(
-  _ action: ExtensionSubmission.Action,
-  done state: ExtensionResult.State,
+  _ action: TransportExtensionSubmission.Action,
+  done state: TransportExtensionResult.State,
   message: String
 ) async throws {
-  let outcome = try await ExtensionSubmission.submit(action)
-  let result: ExtensionResult.State
+  let outcome = try await TransportExtensionSubmission.submit(action)
+  let result: TransportExtensionResult.State
   switch outcome {
   case .active, .inactive: result = state
   case .awaitingApproval: result = .awaitingApproval
@@ -114,25 +115,25 @@ private func submit(
     throw CLIFailure(
       .systemRequestFailed,
       CLILocalized.text(
-        "cli.extension.timeout"
+        "cli.transport_extension.timeout"
       )
     )
   case .failed:
     throw CLIFailure(
       .systemRequestFailed,
       CLILocalized.text(
-        "cli.extension.submit_failed"
+        "cli.transport_extension.submit_failed"
       )
     )
   }
   switch CLIContext.current.format {
-  case .json: try CLIOutput.json(ExtensionResult(state: result))
+  case .json: try CLIOutput.json(TransportExtensionResult(state: result))
   case .plain: CLIOutput.plain([["state", result.rawValue]])
   case .human:
     if result == .awaitingApproval {
       CLIOutput.stderr(
         CLILocalized.text(
-          "cli.extension.approval"
+          "cli.transport_extension.approval"
         )
       )
     } else {
@@ -141,14 +142,14 @@ private func submit(
   }
 }
 
-struct ExtensionActivateCommand: AsyncParsableCommand {
+struct TransportExtensionActivateCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "activate",
     abstract: CLILocalized.text(
-      "cli.extension.activate.abstract"
+      "cli.transport_extension.activate.abstract"
     ),
     discussion: CLILocalized.text(
-      "cli.extension.activate.discussion"
+      "cli.transport_extension.activate.discussion"
     )
   )
 
@@ -160,20 +161,20 @@ struct ExtensionActivateCommand: AsyncParsableCommand {
       try await submit(
         .activate,
         done: .active,
-        message: CLILocalized.text("cli.extension.activated")
+        message: CLILocalized.text("cli.transport_extension.activated")
       )
     }
   }
 }
 
-struct ExtensionDeactivateCommand: AsyncParsableCommand {
+struct TransportExtensionDeactivateCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "deactivate",
     abstract: CLILocalized.text(
-      "cli.extension.deactivate.abstract"
+      "cli.transport_extension.deactivate.abstract"
     ),
     discussion: CLILocalized.text(
-      "cli.extension.deactivate.discussion"
+      "cli.transport_extension.deactivate.discussion"
     )
   )
 
@@ -185,7 +186,7 @@ struct ExtensionDeactivateCommand: AsyncParsableCommand {
       try await submit(
         .deactivate,
         done: .inactive,
-        message: CLILocalized.text("cli.extension.deactivated")
+        message: CLILocalized.text("cli.transport_extension.deactivated")
       )
     }
   }

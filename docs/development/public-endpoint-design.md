@@ -23,7 +23,7 @@ The endpoint serves the logged-in user's own programs. Remote hosts are out of s
 
 A grant is consent, not a security boundary against malware that runs as the user. Any program that the user runs can already start `/Applications/OpenJoystickDriver.app/Contents/MacOS/ojd`, which the service trusts, and read controllers with `ojd controller watch` or drive a gamepad with `ojd virtual feed`. Grants answer a different question: which programs did the user agree to give controller input to, and can the user see and revoke that.
 
-Grants matter for privacy because controller input needs the Input Monitoring permission. Without a grant, the endpoint would pass input to apps that macOS never asked the user about. This is why the endpoint is off by default and every client needs its own grant.
+Grants matter for privacy because controller input needs the input-read permission. Without a grant, the endpoint would pass input to apps that macOS never asked the user about. This is why the endpoint is off by default and every client needs its own grant.
 
 ## Transport
 

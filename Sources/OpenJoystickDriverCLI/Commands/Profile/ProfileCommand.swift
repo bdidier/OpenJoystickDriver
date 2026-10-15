@@ -190,7 +190,7 @@ struct ProfileCreateCommand: AsyncParsableCommand {
       CLILocalized.text(
         "cli.profile.create.app"
       ),
-      valueName: "bundle-id"
+      valueName: "app-id"
     )
   )
   var app: String?
@@ -219,7 +219,7 @@ struct ProfileCreateCommand: AsyncParsableCommand {
   func run() async throws {
     try await global.run {
       let selector = controller
-      let scope = app.map { RemappingApplicationScope.application(bundleIdentifier: $0) } ?? .global
+      let scope = app.map { RemappingApplicationScope.application(appID: $0) } ?? .global
       let policy = RemappingOutputPolicy(
         virtualGamepad: virtualGamepad,
         physicalInput: physicalInput

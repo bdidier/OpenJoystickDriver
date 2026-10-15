@@ -171,7 +171,7 @@ A program must not guess a version. On `E1010`, `E1011`, or `E1012`, it reads `d
 
 The endpoint serves a program only when `AccessGrants` has a grant for it. Only the service writes the file `AccessGrants.json` in the OpenJoystickDriver Application Support folder, when `ojd access` runs, so a revoke takes effect at once. [`access-grants.schema.json`](../../Resources/Schemas/access-grants.schema.json) describes the file. A program without a grant gets `E1002`.
 
-- A grant by signature (`grants`) names the signing identifier and the team of the program. Ad-hoc signed and unsigned programs are refused. Create it with `ojd access grant PATH`.
+- A grant by signature (`grants`) names the signing identifier and the publisher of the program. Ad-hoc signed and unsigned programs are refused. Create it with `ojd access grant PATH`.
 - A grant by token (`tokens`) names the token and stores only its SHA-256, so the token cannot be shown again. It can limit the web `origins`. A token with `origins` cannot have `control`. Create it with `ojd access grant --token NAME`.
 - `scopes` is `read` to receive controller events, `control` to drive a virtual gamepad, or both. A grant with `control` also records when `control` was granted, in `controlGrantedAt`.
 - `web` holds the switch and the port of the WebSocket.
@@ -179,7 +179,7 @@ The endpoint serves a program only when `AccessGrants` has a grant for it. Only 
 The file is a secret, because the hashes are the keys of the proofs. The service writes it with mode 0600. Keep it out of shared reports and backups.
 
 ```json
-{"apiVersion":"openjoystickdriver/v1alpha1","kind":"AccessGrants","enabled":true,"grants":[{"kind":"team","identifier":"com.example.overlay","teamIdentifier":"ABCDE12345","scopes":["read"],"grantedAt":"2026-01-01T00:00:00Z","path":"/Applications/Overlay.app"}],"tokens":[{"name":"driver","tokenSHA256":"0000000000000000000000000000000000000000000000000000000000000000","origins":[],"scopes":["control"],"grantedAt":"2026-01-01T00:00:00Z","controlGrantedAt":"2026-01-01T00:00:00Z"}],"web":{"enabled":false,"port":49152}}
+{"apiVersion":"openjoystickdriver/v1alpha1","kind":"AccessGrants","enabled":true,"grants":[{"publisher":{"kind":"signed","id":"ABCDE12345"},"identifier":"com.example.overlay","scopes":["read"],"grantedAt":"2026-01-01T00:00:00Z","path":"/Applications/Overlay.app"}],"tokens":[{"name":"driver","tokenSHA256":"0000000000000000000000000000000000000000000000000000000000000000","origins":[],"scopes":["control"],"grantedAt":"2026-01-01T00:00:00Z","controlGrantedAt":"2026-01-01T00:00:00Z"}],"web":{"enabled":false,"port":49152}}
 ```
 
 ## Versioning

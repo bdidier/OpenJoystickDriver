@@ -22,8 +22,8 @@ OJD has several physical records and parsers for other Xbox controller families 
 The GameController MobileAsset version `10.5.2` downloaded on 2026-07-12 had no exact entry for `045e:028e`, `045e:02ea`, or `9886:0024`. This applies only to that system and asset version. Check again after macOS or MobileAsset updates:
 
 ```bash
-ojd diagnose --bundle /tmp/ojd-support.json
-jq .appleGameControllerAudit /tmp/ojd-support.json
+ojd diagnose --output /tmp/ojd-support.json
+jq .systemGamepadAudit /tmp/ojd-support.json
 ```
 
 The support report from the app uses the same audit.

@@ -2,6 +2,7 @@ import Testing
 
 @testable import OpenJoystickDriverKit
 
+@Suite(.timeLimit(.minutes(2)))
 struct HIDFeatureReadRetryTests {
   @Test
   func successfulReplyStopsRetries() async {

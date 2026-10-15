@@ -3,7 +3,7 @@ import OpenJoystickDriverKit
 
 /// Reads the exact bundle identifier of the current foreground application.
 protocol RemappingForegroundApplicationProviding: Sendable {
-  func frontmostBundleIdentifier() -> String?
+  func frontmostAppID() -> String?
 }
 
 // `@unchecked Sendable` only because of `observerToken`: it is written once in `init` and read
@@ -16,7 +16,7 @@ final class WorkspaceRemappingForegroundApplication: RemappingForegroundApplicat
   @unchecked Sendable
 {
   private let notificationCenter: NotificationCenter
-  private let bundleIdentifier = Locked<String?>(nil)
+  private let appID = Locked<String?>(nil)
   private var observerToken: NSObjectProtocol?
 
   init(notificationCenter: NotificationCenter = NSWorkspace.shared.notificationCenter) {
@@ -32,15 +32,15 @@ final class WorkspaceRemappingForegroundApplication: RemappingForegroundApplicat
       self?.update(application?.bundleIdentifier)
     }
     let initial = NSWorkspace.shared.frontmostApplication?.bundleIdentifier
-    bundleIdentifier.withLock { if $0 == nil { $0 = initial } }
+    appID.withLock { if $0 == nil { $0 = initial } }
   }
 
   deinit { observerToken.map(notificationCenter.removeObserver) }
 
-  func frontmostBundleIdentifier() -> String? { bundleIdentifier.withLock { $0 } }
+  func frontmostAppID() -> String? { appID.withLock { $0 } }
 
-  private func update(_ bundleIdentifier: String?) {
-    self.bundleIdentifier.withLock { $0 = bundleIdentifier }
+  private func update(_ appID: String?) {
+    self.appID.withLock { $0 = appID }
   }
 }
 
@@ -54,7 +54,7 @@ extension CoreGraphicsPostEventAccess: RemappingPostEventAccessProviding {}
 enum RemappingForegroundPolicy {
   static func eligibility(
     for scope: RemappingApplicationScope,
-    frontmostBundleIdentifier: String?,
+    frontmostAppID: String?,
     accessState: RemappingPostEventAccessState,
     outputSuppressed: Bool,
     requiresPostEventAccess: Bool = true
@@ -65,8 +65,8 @@ enum RemappingForegroundPolicy {
     }
     switch scope {
     case .global: return .eligible
-    case .application(let requiredBundleIdentifier):
-      return frontmostBundleIdentifier == requiredBundleIdentifier
+    case .application(let requiredAppID):
+      return frontmostAppID == requiredAppID
         ? .eligible : .targetApplicationNotFrontmost
     }
   }

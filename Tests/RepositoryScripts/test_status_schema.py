@@ -25,7 +25,7 @@ def status_document(state: str = "installed") -> dict[str, Any]:
     return {
         **schema_header.header("SystemStatus"),
         "commandLineTool": {"path": "/usr/local/bin/ojd", "state": state},
-        "extension": {"bundle": "present", "registration": "active"},
+        "transportExtension": {"bundle": "present", "registration": "active"},
         "service": {"state": "running"},
         "skippedRecords": [],
     }
@@ -64,6 +64,13 @@ class StatusSchemaTests(unittest.TestCase):
     def test_rejects_a_missing_command_line_tool_block(self) -> None:
         document = copy.deepcopy(status_document())
         del document["commandLineTool"]
+
+        with self.assertRaises(validate_schemas.ValidationError):
+            self.validator.validate(document)
+
+    def test_rejects_the_old_extension_field(self) -> None:
+        document = status_document()
+        document["extension"] = document.pop("transportExtension")
 
         with self.assertRaises(validate_schemas.ValidationError):
             self.validator.validate(document)

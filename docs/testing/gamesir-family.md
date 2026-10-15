@@ -24,7 +24,7 @@ Both enhanced HID models bind `vendor.gamesir:enhanced-hid`; their catalog param
   - Report `0x02` is consumer volume up/down.
 - **Interface 1:** has no macOS HID driver attached.
 
-GameController accepts the pad natively. OJD binds it as `hid.descriptor` with `physicalOwnership=nativeGamepad`, observes it without seizing it, and publishes no virtual pad.
+GameController accepts the pad natively. OJD binds it as `hid.descriptor` with `physicalOwnership=SystemGamepad`, observes it without seizing it, and publishes no virtual pad.
 
 Nexus required a firmware update, which the owner applied: firmware 6.4.0 (`bcdDevice` `0x0640`) became 6.6.4 (`0x0664`). The Nexus log names the image `JS_SL3101_V664_Key.ufw`, which is embedded in the app and applied over GIP in 52 s.
 

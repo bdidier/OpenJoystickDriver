@@ -42,7 +42,7 @@ public enum RemappingPayloadLimits {
 
 /// Declares which foreground application receives synthesized input.
 public enum RemappingApplicationScope: Codable, Equatable, Hashable, Sendable {
-  case application(bundleIdentifier: String)
+  case application(appID: String)
   case global
 
   private enum Kind: String, Codable {
@@ -52,19 +52,19 @@ public enum RemappingApplicationScope: Codable, Equatable, Hashable, Sendable {
 
   enum CodingKeys: String, CodingKey, CaseIterable {
     case type
-    case bundleIdentifier
+    case appID
   }
 
   public init(from decoder: any Decoder) throws {
     try decoder.rejectUnknownKeys(CodingKeys.self)
     let container = try decoder.container(keyedBy: CodingKeys.self)
     let kind = try container.decode(Kind.self, forKey: .type)
-    let allowed: [CodingKeys] = kind == .application ? [.type, .bundleIdentifier] : [.type]
+    let allowed: [CodingKeys] = kind == .application ? [.type, .appID] : [.type]
     try container.rejectKeys(otherThan: allowed)
     switch kind {
     case .application:
       self = .application(
-        bundleIdentifier: try container.decode(String.self, forKey: .bundleIdentifier)
+        appID: try container.decode(String.self, forKey: .appID)
       )
     case .global: self = .global
     }
@@ -73,9 +73,9 @@ public enum RemappingApplicationScope: Codable, Equatable, Hashable, Sendable {
   public func encode(to encoder: any Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
     switch self {
-    case .application(let bundleIdentifier):
+    case .application(let appID):
       try container.encode(Kind.application, forKey: .type)
-      try container.encode(bundleIdentifier, forKey: .bundleIdentifier)
+      try container.encode(appID, forKey: .appID)
     case .global: try container.encode(Kind.global, forKey: .type)
     }
   }
@@ -269,7 +269,7 @@ public struct RemappingProfile: Codable, Equatable, Identifiable, Sendable {
   public static let maximumEncodedBytes = RemappingPayloadLimits.maximumEncodedBytes
   public static let profileNameLengthRange = 1...80
   public static let layerNameLengthRange = 1...40
-  public static let bundleIdentifierLengthRange = 3...255
+  public static let appIDLengthRange = 3...255
 
   public let id: UUID
   public let name: String

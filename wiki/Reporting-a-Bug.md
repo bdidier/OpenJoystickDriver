@@ -21,14 +21,14 @@ If you use a tester build, attach `OpenJoystickDriver-TESTER-BUILD.txt` from the
 Run the following command. It runs every check and writes the report to the file you name.
 
 ```shell
-ojd diagnose --bundle support-report.json
+ojd diagnose --output support-report.json
 ```
 
 You can also click **Copy Support Report** on the **Xbox USB Driver** card in **Overview**. The app copies the report to the clipboard and shows no confirmation.
 
 The report leaves out serial numbers, file paths, packet payloads, and HID location IDs. It includes controller product names. Read the report before you share it.
 
-The support report, from `ojd diagnose --bundle` or the app, also lists `frameTimings`, the time each of a controller's newest 8 frames reached each pipeline stage. Attach it to a stutter or latency report.
+The support report, from `ojd diagnose --output` or the app, also lists `frameTimings`, the time each of a controller's newest 8 frames reached each pipeline stage. Attach it to a stutter or latency report.
 
 ## Get the Logs
 

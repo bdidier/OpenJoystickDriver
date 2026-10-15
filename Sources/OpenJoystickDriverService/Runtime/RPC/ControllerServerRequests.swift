@@ -9,15 +9,15 @@ extension ApplicationServiceServer {
     productID: Int,
     server: ControllerServer
   ) async -> ControllerServerResult {
-    let nativeGamepadConnected = await connectedDevices().contains {
+    let systemGamepadConnected = await connectedDevices().contains {
       $0.vendorID == vendorID && $0.productID == productID
-        && $0.physicalOwnership == .nativeGamepad
+        && $0.physicalOwnership == .systemGamepad
     }
     return Self.setControllerServer(
       vendorID: vendorID,
       productID: productID,
       server: server,
-      nativeGamepadConnected: nativeGamepadConnected
+      systemGamepadConnected: systemGamepadConnected
     )
   }
 
@@ -28,7 +28,7 @@ extension ApplicationServiceServer {
     vendorID: Int,
     productID: Int,
     server: ControllerServer,
-    nativeGamepadConnected: Bool,
+    systemGamepadConnected: Bool,
     directory: URL = ControllerRecordSet.userDirectory
   ) -> ControllerServerResult {
     let records = ControllerRecordSet.load(userDirectory: directory)
@@ -53,7 +53,7 @@ extension ApplicationServiceServer {
     let record = records.records[model]
     let previous = record?.server ?? .system
     if record?.usesRawUSB == true { return refused(.rawUSB, previous) }
-    guard nativeGamepadConnected || previous == .ojd else { return refused(.notNative, previous) }
+    guard systemGamepadConnected || previous == .ojd else { return refused(.notNative, previous) }
     let change: ControllerServerWriter.Change
     do {
       change = try ControllerServerWriter.change(

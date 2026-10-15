@@ -7,7 +7,7 @@ import Testing
 struct ProbeTests {
   @Test
   func distinguishesActiveInactiveAndAbsentRegistration() {
-    let identifier = ExtensionProbe.bundleIdentifier
+    let identifier = ExtensionProbe.extensionID
     let active = result(output: "* * ABC \(identifier) [activated enabled]")
     let inactive = result(output: "* * ABC \(identifier) [activated waiting for user]")
     let absent = result(output: "1 extension(s)")
@@ -39,35 +39,35 @@ struct ProbeTests {
 
   @Test
   func parsesInstalledShortAndBuildVersions() {
-    let output = "* * \(ExtensionProbe.bundleIdentifier) (0.5.0-beta.2/0.5.0b2) [activated enabled]"
+    let output = "* * \(ExtensionProbe.extensionID) (0.5.0-beta.2/0.5.0b2) [activated enabled]"
     let facts = ExtensionProbe.installedFacts(from: output)
 
     #expect(
       facts
         == ExtensionVersionFacts(
-          bundleIdentifier: ExtensionProbe.bundleIdentifier,
+          extensionID: ExtensionProbe.extensionID,
           shortVersion: "0.5.0-beta.2",
           buildVersion: "0.5.0b2"
         )
     )
     #expect(
       ExtensionProbe.installedFacts(
-        from: "* * \(ExtensionProbe.bundleIdentifier) (0.5.0-beta.1/0.5.0b1)"
+        from: "* * \(ExtensionProbe.extensionID) (0.5.0-beta.1/0.5.0b1)"
       )?.buildVersion == "0.5.0b1"
     )
     #expect(
       ExtensionProbe.installedFacts(
-        from: "* * \(ExtensionProbe.bundleIdentifier) (0.5.0-beta.3/0.5.0b3)"
+        from: "* * \(ExtensionProbe.extensionID) (0.5.0-beta.3/0.5.0b3)"
       )?.shortVersion == "0.5.0-beta.3"
     )
     for short in ["0.5.0-beta.5", "1.0.0-rc.1.2", "1.0.0"] {
       for build in ["1.4.89", "1.4.89d2"] {
         #expect(
           ExtensionProbe.installedFacts(
-            from: "* * \(ExtensionProbe.bundleIdentifier) (\(short)/\(build))"
+            from: "* * \(ExtensionProbe.extensionID) (\(short)/\(build))"
           )
             == ExtensionVersionFacts(
-              bundleIdentifier: ExtensionProbe.bundleIdentifier,
+              extensionID: ExtensionProbe.extensionID,
               shortVersion: short,
               buildVersion: build
             )
@@ -77,16 +77,16 @@ struct ProbeTests {
     for build in ["13", "500001", "500002"] {
       #expect(
         ExtensionProbe.installedFacts(
-          from: "* * \(ExtensionProbe.bundleIdentifier) (0.5.0-beta.1/\(build))"
+          from: "* * \(ExtensionProbe.extensionID) (0.5.0-beta.1/\(build))"
         )?.buildVersion == build
       )
     }
     #expect(
-      ExtensionProbe.installedFacts(from: "malformed (ExtensionProbe.bundleIdentifier)") == nil
+      ExtensionProbe.installedFacts(from: "malformed (ExtensionProbe.extensionID)") == nil
     )
     #expect(
       ExtensionProbe.installedFacts(
-        from: "* * \(ExtensionProbe.bundleIdentifier) (0.5.0-beta.3 0.5.0b3)"
+        from: "* * \(ExtensionProbe.extensionID) (0.5.0-beta.3 0.5.0b3)"
       ) == nil
     )
   }

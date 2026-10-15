@@ -54,16 +54,16 @@
     private func accessCards(width: CGFloat) -> some View {
       if width >= 850 {
         HStack(alignment: .top, spacing: 12) {
-          inputMonitoringCard
-          accessibilityCard
+          inputReadCard
+          inputInjectCard
           postEventCard
           notificationCard
         }
       } else if width >= 430 {
         VStack(alignment: .leading, spacing: 12) {
           HStack(alignment: .top, spacing: 12) {
-            inputMonitoringCard
-            accessibilityCard
+            inputReadCard
+            inputInjectCard
           }
           HStack(alignment: .top, spacing: 12) {
             postEventCard
@@ -72,41 +72,41 @@
         }
       } else {
         VStack(alignment: .leading, spacing: 12) {
-          inputMonitoringCard
-          accessibilityCard
+          inputReadCard
+          inputInjectCard
           postEventCard
           notificationCard
         }
       }
     }
 
-    private var inputMonitoringCard: some View {
+    private var inputReadCard: some View {
       AccessRequirementCard(
-        title: OJDLocalized.string("common.inputMonitoring"),
-        value: inputMonitoringStatus.value,
+        title: OJDLocalized.string("common.inputRead"),
+        value: inputReadStatus.value,
         symbol: "keyboard",
-        tone: inputMonitoringStatus.tone,
-        action: inputMonitoringStatus.isActionable
+        tone: inputReadStatus.tone,
+        action: inputReadStatus.isActionable
           ? {
             PermissionAccessActions.requestControllerAccess(
               viewModel: viewModel,
-              requirement: .inputMonitoring
+              requirement: .inputRead
             )
           } : nil
       )
     }
 
-    private var accessibilityCard: some View {
+    private var inputInjectCard: some View {
       AccessRequirementCard(
-        title: OJDLocalized.string("common.accessibility"),
-        value: accessibilityStatus.value,
+        title: OJDLocalized.string("common.inputInject"),
+        value: inputInjectStatus.value,
         symbol: "lock.shield",
-        tone: accessibilityStatus.tone,
-        action: accessibilityStatus.isActionable
+        tone: inputInjectStatus.tone,
+        action: inputInjectStatus.isActionable
           ? {
             PermissionAccessActions.requestControllerAccess(
               viewModel: viewModel,
-              requirement: .accessibility
+              requirement: .inputInject
             )
           } : nil
       )
@@ -136,17 +136,17 @@
 
     private var accessSummaryValue: String {
       [
-        inputMonitoringStatus.value, accessibilityStatus.value, postEventStatus.value,
+        inputReadStatus.value, inputInjectStatus.value, postEventStatus.value,
         notificationStatus.value,
       ].joined(separator: ", ")
     }
 
-    private var inputMonitoringStatus: OverviewAccessStatus {
-      permissionStatus(for: permissionSummary?.inputMonitoring)
+    private var inputReadStatus: OverviewAccessStatus {
+      permissionStatus(for: permissionSummary?.inputRead)
     }
 
-    private var accessibilityStatus: OverviewAccessStatus {
-      permissionStatus(for: permissionSummary?.accessibility)
+    private var inputInjectStatus: OverviewAccessStatus {
+      permissionStatus(for: permissionSummary?.inputInject)
     }
 
     private var postEventStatus: OverviewAccessStatus {
@@ -244,8 +244,8 @@
 
     private var needsPermissionRestart: Bool {
       guard let permissionSummary else { return false }
-      return permissionSummary.inputMonitoring != .granted
-        || permissionSummary.accessibility != .granted
+      return permissionSummary.inputRead != .granted
+        || permissionSummary.inputInject != .granted
     }
 
     private func permissionStatus(for state: RuntimePermissionState?) -> OverviewAccessStatus {

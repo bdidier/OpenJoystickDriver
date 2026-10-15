@@ -66,7 +66,7 @@ final class FakeProfileLibrary: @unchecked Sendable {
           activeProfileID: profile?.profileID,
           activeProfileName: profile?.profileName,
           applicationScope: profile?.applicationScope,
-          frontmostBundleIdentifier: nil,
+          frontmostAppID: nil,
           postEventAccess: .granted,
           failure: nil
         )

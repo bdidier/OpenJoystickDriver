@@ -3,6 +3,7 @@ import Testing
 
 @testable import OpenJoystickDriverKit
 
+@Suite(.timeLimit(.minutes(2)))
 struct RemappingEmissionBarrierTests {
   @Test
   func transactionAdmissionWaitsForAlreadyAdmittedLeaseAndRejectsNewWork() async throws {

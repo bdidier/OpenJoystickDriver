@@ -4,7 +4,7 @@ import Testing
 
 @testable import OpenJoystickDriverService
 
-@Suite(.serialized)
+@Suite(.serialized, .timeLimit(.minutes(2)))
 struct RemappingProfileTransactionIsolationTests {
   @Test
   func rejectedCandidateCannotEmitBeforeExactRollbackCompletes() async throws {
@@ -352,7 +352,7 @@ private func transactionProfile(
     id: id,
     name: name,
     device: RemappingDeviceScope(vendorID: 1118, productID: 654),
-    applicationScope: .application(bundleIdentifier: "com.example.Game"),
+    applicationScope: .application(appID: "com.example.Game"),
     bindings: bindings
   )
 }

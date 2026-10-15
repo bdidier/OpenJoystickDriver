@@ -22,7 +22,7 @@ Create a private, notarized DMG with the [local tester-build guide](docs/develop
 ```bash
 ./Scripts/ojd diagnose record /tmp/controller-candidate.json --validate-only
 ./Scripts/ojd diagnose backends --seconds 5
-ojd diagnose --bundle support-report.json
+ojd diagnose --output support-report.json
 ```
 
 `--validate-only` needs no Apple Developer membership. A live USB probe may need the signed app and DEXT. Capture notes: `docs/testing/controller-record.md`. Review product names before attaching a report.
