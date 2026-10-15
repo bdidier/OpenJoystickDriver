@@ -111,9 +111,6 @@ struct StickDeliveryLatencyTests {
     Int16(bitPattern: UInt16(report[4]) | UInt16(report[5]) << 8)
   }
 
-  /// Button bit 0 (south) of a `ContinuitySnapshotReportFormat` report.
-  private static func southPressed(_ report: [UInt8]) -> Bool { report[0] & 1 == 1 }
-
   /// An input report whose bytes `ScriptedBatches` parses; empty bytes carry no input.
   private static func report(_ bytes: [UInt8], connectionID: UUID = connectionID) -> HIDDeviceEvent
   {
@@ -144,7 +141,8 @@ struct StickDeliveryLatencyTests {
   /// read before `stop()`, whose neutral report and close are not part of the burst.
   private static func deliverBurst(
     _ batches: [[InputChange]],
-    burst: [HIDDeviceEvent]? = nil
+    burst: [HIDDeviceEvent]? = nil,
+    format: any VirtualGamepadReportFormat = format
   ) async -> (reports: [[UInt8]], closes: Int) {
     let backend = FirstSendHeldBackend()
     let dispatcher = UserSpaceOutputDispatcher(
@@ -179,12 +177,18 @@ struct StickDeliveryLatencyTests {
 
   /// Upstream backlog: ten stick positions arrive while one send is in flight. Once that send
   /// completes, the newest position must be next, within about one send time, and no older
-  /// position may follow a newer one.
-  @Test
-  func newestStickPositionFollowsTheSlowSendWithoutStaleBacklog() async {
+  /// position may follow a newer one. Holds for the report format of each persona.
+  @Test(arguments: VirtualHIDProfileID.allCases)
+  func newestStickPositionFollowsTheSlowSendWithoutStaleBacklog(
+    persona: VirtualHIDProfileID
+  ) async throws {
+    let format = try RecordingReportFormat(persona: persona)
     let positions: [Float] = (0..<10).map { 0.05 + Float($0) * 0.09 }
-    let result = await Self.deliverBurst(positions.map { [.leftStick(x: $0, y: 0)] })
-    let values = result.reports.map(Self.leftStickX)
+    let result = await Self.deliverBurst(
+      positions.map { [.leftStick(x: $0, y: 0)] },
+      format: format
+    )
+    let values = result.reports.compactMap { format.state(of: $0)?.leftStickX }
     let newest = values.max()
     let afterHeld = values.dropFirst()
     let staleBeforeNewest = afterHeld.prefix { $0 != newest }.count
@@ -199,36 +203,43 @@ struct StickDeliveryLatencyTests {
   }
 
   /// Every button edge inside a burst reaches the virtual device in order; a coalescing fix must
-  /// keep this green.
-  @Test
-  func everyButtonEdgeInsideABurstIsDelivered() async {
+  /// keep this green, for the report format of each persona.
+  @Test(arguments: VirtualHIDProfileID.allCases)
+  func everyButtonEdgeInsideABurstIsDelivered(persona: VirtualHIDProfileID) async throws {
+    let format = try RecordingReportFormat(persona: persona)
     let batches: [[InputChange]] = [
       [.leftStick(x: 0.1, y: 0)], [.press(.faceSouth)], [.leftStick(x: 0.2, y: 0)],
       [.release(.faceSouth)], [.leftStick(x: 0.3, y: 0)], [.press(.faceSouth)],
       [.release(.faceSouth)], [.leftStick(x: 0.4, y: 0)],
     ]
-    let result = await Self.deliverBurst(batches)
-    let south = result.reports.map(Self.southPressed)
+    let result = await Self.deliverBurst(batches, format: format)
+    let south = result.reports.compactMap { format.state(of: $0).map { $0.buttons & 1 == 1 } }
     var edges: [Bool] = []
     for (previous, next) in zip([false] + south, south) where previous != next {
       edges.append(next)
     }
 
     #expect(edges == [true, false, true, false], "south per report: \(south)")
-    #expect(result.reports.last.map(Self.leftStickX) == Int16(0.4 * 32_767))
+    #expect(result.reports.last.flatMap { format.state(of: $0)?.leftStickX } == Int16(0.4 * 32_767))
   }
 
   /// A burst far longer than the sender's queue (bounded and newest-wins, sized by
   /// `frameQueueCapacity`, default 64) behind a slow send neither closes the device nor
   /// delivers stale positions; the burst collapses to its newest position.
-  @Test
-  func longBurstKeepsTheDeviceOpenAndEndsOnTheNewestPosition() async {
+  @Test(arguments: VirtualHIDProfileID.allCases)
+  func longBurstKeepsTheDeviceOpenAndEndsOnTheNewestPosition(
+    persona: VirtualHIDProfileID
+  ) async throws {
+    let format = try RecordingReportFormat(persona: persona)
     // Starts off neutral, so the first position is published and its send is held.
     let positions: [Float] = (1...100).map { Float($0) / 100 }
-    let result = await Self.deliverBurst(positions.map { [.leftStick(x: $0, y: 0)] })
+    let result = await Self.deliverBurst(
+      positions.map { [.leftStick(x: $0, y: 0)] },
+      format: format
+    )
 
     #expect(result.closes == 0)
-    #expect(result.reports.map(Self.leftStickX) == [327, 32_767])
+    #expect(result.reports.compactMap { format.state(of: $0)?.leftStickX } == [327, 32_767])
   }
 
   /// A frame that finds the queue full of host replies fails as superseded, so the dispatcher

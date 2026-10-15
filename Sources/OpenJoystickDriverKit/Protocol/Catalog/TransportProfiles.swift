@@ -115,10 +115,10 @@ public enum GIPKeepAlivePolicy: String, Codable, Sendable {
 }
 
 /// Who serves a HID controller that macOS also supports as a native gamepad.
-public enum ControllerOwnership: String, Codable, Sendable {
+public enum ControllerServer: String, Codable, Sendable {
   /// macOS serves it; OJD publishes no virtual controller and sends only the output macOS
   /// leaves undone. A controller macOS does not support is OJD's either way.
-  case macOS = "macos"
+  case system
   /// OJD seizes it and publishes its own virtual controller.
   case ojd
 }
@@ -185,7 +185,7 @@ public struct DeviceRuntimeProfile: Equatable, Sendable {
   public internal(set) var gipKeepAlivePolicy: GIPKeepAlivePolicy
   /// The assembly policy the row names; nil runs each protocol role as its own controller.
   public internal(set) var assemblyPolicy: ControllerAssemblyPolicy?
-  public let ownership: ControllerOwnership
+  public let server: ControllerServer
   /// The record's rumble report, for a driver that encodes rumble from it.
   public let rumbleTemplate: RumbleOutputTemplate?
   /// The record's fixed startup reports, in order; OJD sends them only to a controller it owns.

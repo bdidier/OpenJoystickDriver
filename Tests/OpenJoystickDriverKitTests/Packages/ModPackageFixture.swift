@@ -59,13 +59,13 @@ struct ModPackageFixture {
   static func persona(
     _ vendorID: Int,
     _ productID: Int,
-    descriptor: String = "hid-generic"
+    descriptor: String = "Generic"
   ) -> (name: String, data: Data) {
     let text =
       #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","#
       + #""kind":"\#(VirtualHIDProfileOverrideStore.kind)","#
       + #""match":{"vendorID":\#(vendorID),"productID":\#(productID)},"#
-      + #""descriptor":"\#(descriptor)"}"#
+      + #""persona":"\#(descriptor)"}"#
     return (String(format: "%04x-%04x.json", vendorID, productID), Data(text.utf8))
   }
 

@@ -167,7 +167,7 @@ extension ApplicationServiceClient {
   /// applies it to every connected controller of the model without a replug.
   public func setControllerOwnership(
     model: ControllerModelID,
-    ownership: ControllerOwnership
+    ownership: ControllerServer
   ) async throws -> ControllerOwnershipResult {
     try await call(
       .setControllerOwnership,
@@ -194,7 +194,7 @@ extension ApplicationServiceClient {
     )
   }
 
-  /// Publishes a virtual controller with the `profile` virtual HID profile, such as `hid-generic`,
+  /// Publishes a virtual controller with the `profile` virtual HID profile, such as `Generic`,
   /// that this client drives with ``exchangeVirtualFeed(token:frames:)``.
   ///
   /// Only OpenJoystickDriver's own signed executables can call this; other programs use

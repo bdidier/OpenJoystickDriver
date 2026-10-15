@@ -268,7 +268,7 @@ struct ControllerShowCommand: AsyncParsableCommand {
       ),
     ]
     // The output lists above hold only what macOS leaves undone, so say why.
-    if detail.capabilities.outputOwner == ControllerOwnership.macOS.rawValue {
+    if detail.capabilities.outputOwner == ControllerServer.system.rawValue {
       rows.append(
         (
           CLILocalized.text("cli.controller.show.label.output_owner"),

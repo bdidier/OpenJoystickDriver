@@ -108,7 +108,7 @@ struct UserSpaceInputReportStateTests {
   @Test
   func everyVirtualHIDProfileFormatExplicitlyClassifiesSpecialControlSupport() throws {
     let supported: [VirtualHIDProfileID: Set<SpecialControl>] = [
-      .xboxOneSBluetooth: [], .generic: [.share],
+      .sdlCompatible: [], .generic: [.share],
     ]
     #expect(Set(supported.keys) == Set(VirtualHIDProfileID.allCases))
 

@@ -230,7 +230,7 @@ class HIDRecordTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             path = self.write_patch(
-                root, {"vendorID": 0x11C1, "productID": 0x5600}, {"ownership": "ojd"}
+                root, {"vendorID": 0x11C1, "productID": 0x5600}, {"server": "ojd"}
             )
             path.rename(root / "11c1" / "wrong.patch.json")
             with self.assertRaises(catalog.CatalogError):
@@ -257,9 +257,9 @@ class HIDRecordTests(unittest.TestCase):
         self.assertEqual(records[(0x11C1, 0x5600)], {**upstream, "tuning": tuning})
 
     def test_orphan_and_redundant_patches_fail(self) -> None:
-        upstream = {"vendorID": 1, "productID": 2, "ownership": "ojd"}
-        orphan = ({"vendorID": 1, "productID": 3}, {"ownership": "ojd"})
-        redundant = ({"vendorID": 1, "productID": 2}, {"ownership": "ojd"})
+        upstream = {"vendorID": 1, "productID": 2, "server": "ojd"}
+        orphan = ({"vendorID": 1, "productID": 3}, {"server": "ojd"})
+        redundant = ({"vendorID": 1, "productID": 2}, {"server": "ojd"})
         for patches in ([orphan], [redundant]):
             with self.assertRaises(catalog.CatalogError):
                 catalog.apply_patches({(1, 2): dict(upstream)}, {}, patches)

@@ -97,10 +97,7 @@ extension DeviceManager {
       discoverySource: info.discoverySource.kind,
       physicalOwnership: ownership,
       hidInputOwnership: info.hidInputOwnership,
-      duplicateExposureRisk: ControllerExposureDecision.decide(
-        ownership: ownership,
-        intent: .outputDisabled
-      ).duplicateRisk,
+      duplicateExposureRisk: DuplicateExposureRisk(observation: ownership),
       serialNumber: info.serialNumber,
       parameters: record?.parameters.entries ?? [],
       bindingResult: ProtocolBindingResult(
@@ -116,8 +113,9 @@ extension DeviceManager {
       ),
       preferredBackends: record?.preferredBackends.map(\.rawValue) ?? [],
       physicalOutputCapabilities: await pipeline.physicalOutputCapabilities(),
-      physicalOutputOwner: pipeline.macOSOwnedOutput == nil ? .ojd : .macOS,
-      recordOwnership: record?.ownership ?? .macOS,
+      physicalOutputOwner: pipeline.macOSOwnedOutput == nil ? .ojd : .system,
+      recordServer: record?.server ?? .system,
+      recordAccessRoute: record?.accessRoute ?? .system,
       tuning: record?.tuning ?? .none,
       capabilities: protocolDriverRegistry.capabilities(
         await pipeline.capabilities(),

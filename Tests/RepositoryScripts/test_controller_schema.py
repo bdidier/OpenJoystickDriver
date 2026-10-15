@@ -316,8 +316,8 @@ class OwnershipAndOutputTests(unittest.TestCase):
     def test_accepts_ownership_and_rumble_template(self) -> None:
         accepted = {
             "third-party rumble": record(THIRD_PARTY, output={"rumble": GP100_RUMBLE}),
-            "OJD ownership": record(THIRD_PARTY, ownership="ojd"),
-            "macOS ownership": record(DUALSENSE, ownership="macos"),
+            "OJD ownership": record(THIRD_PARTY, server="ojd"),
+            "macOS ownership": record(DUALSENSE, server="system"),
             "feature report": record(
                 THIRD_PARTY,
                 output={
@@ -335,11 +335,11 @@ class OwnershipAndOutputTests(unittest.TestCase):
     def test_rejects_invalid_ownership_and_output(self) -> None:
         report = GP100_RUMBLE["report"]
         rejected = {
-            "unknown ownership": record(THIRD_PARTY, ownership="native"),
-            "GIP ownership": record(GIP, ownership="ojd"),
-            "XUSB ownership": record(XUSB, ownership="macos"),
+            "unknown ownership": record(THIRD_PARTY, server="native"),
+            "GIP ownership": record(GIP, server="ojd"),
+            "XUSB ownership": record(XUSB, server="system"),
             "GameSir USB ownership": record(
-                {"family": "vendor.gamesir", "variant": "usb"}, ownership="ojd"
+                {"family": "vendor.gamesir", "variant": "usb"}, server="ojd"
             ),
             "template on DualSense": record(DUALSENSE, output={"rumble": GP100_RUMBLE}),
             "input report": record(

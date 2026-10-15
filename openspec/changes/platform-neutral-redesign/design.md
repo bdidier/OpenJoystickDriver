@@ -134,9 +134,9 @@ The 0.5.0-beta.4 audit shows `v1beta1` never shipped, so rewriting the layout br
 
 ### D5 Serving routes and personas
 
-`ServingRoute` is `NativePassThrough(allowance)`, `VirtualHid(persona)`, `ExtensionOwned`, or `OutputDisabled`, decided once by a pure `ServingPolicy` from record, link, user setting and per-app allowance. The current automatic profile default (`VirtualHIDProfileSelector.swift:50`, spoof `045E:02FD`) becomes `Generic`.
+`ServingRoute` is `NativePassThrough(allowance)`, `VirtualHid(persona)`, `ExtensionOwned`, or `OutputDisabled`, decided once by a pure `ServingPolicy` from record, link, user setting and the controller's allowance (`PhysicalControllerOutputCapabilities`). There is no per-app input: a virtual HID device is a system-wide `IOHIDUserDevice`, and macOS gives the service no way to know which app reads it. The current automatic profile default (`VirtualHIDProfileSelector.swift:50`, spoof `045E:02FD`) becomes `Generic`.
 
-Assumed (veto-able): default persona is `Generic` everywhere; `SdlCompatible` is opt-in per model or per app. Reason: SDL 3.4.18 does not list the `045E:02FD` persona with default hints, nor with `SDL_JOYSTICK_HIDAPI_XBOX(_ONE)=1`, `SDL_JOYSTICK_MFI=1` or `--gc-prewarm`; it appears only with `SDL_JOYSTICK_HIDAPI=0` (through MFi, as `045E:02E0`). The reading is that SDL's HIDAPI Xbox driver claims the device and then fails to open it, which matches the wiki's Steam and SDL failure reports. The `1209:4A4F` persona enumerates and, with the mapping line below, SDL reports `is_gamepad=yes` with axes at 0 at rest. Button and axis directions are not yet confirmed by presses.
+Assumed (veto-able): default persona is `Generic` everywhere; `SdlCompatible` is opt-in per model or by user setting. Reason: SDL 3.4.18 does not list the `045E:02FD` persona with default hints, nor with `SDL_JOYSTICK_HIDAPI_XBOX(_ONE)=1`, `SDL_JOYSTICK_MFI=1` or `--gc-prewarm`; it appears only with `SDL_JOYSTICK_HIDAPI=0` (through MFi, as `045E:02E0`). The reading is that SDL's HIDAPI Xbox driver claims the device and then fails to open it, which matches the wiki's Steam and SDL failure reports. The `1209:4A4F` persona enumerates and, with the mapping line below, SDL reports `is_gamepad=yes` with axes at 0 at rest. Button and axis directions are not yet confirmed by presses.
 
 The `SdlCompatible` persona needs a hardware-evidenced fix so SDL's HIDAPI Xbox driver opens it. Until the fix lands it is documented as not working with default SDL hints. No Microsoft ID appears outside this persona: `1209:0001` (SDK sample), `4F4A:4449` (retired) and the 045E values in the HIDTool subcommands are reconciled (sample uses a documented sample ID; retired ID removed; HIDTool takes IDs from records).
 
@@ -208,7 +208,7 @@ Follows clig.dev plus Apple conventions; global flags `--json --plain -q --no-co
 | `appleGameControllerAudit`, `appleExactDeviceCount`, `appleRecord`, `appleIdentifiers` | `systemGamepadAudit`, `systemExactDeviceCount`, `systemRecord`, `systemIdentifiers` |
 | kinds `USBPacket`, `JoyConPair` | `RawReport`, `ControllerPair` |
 | socket in `DARWIN_USER_TEMP_DIR` | runtime-directory port |
-| endpoint `as: hid-xbox-one-s-bt` | persona ids |
+| endpoint `as: SdlCompatible` | persona ids |
 
 New: `ojd virtual export-mapping`, `ojd setting` keys for every GUI-only switch (per-event notifications, Send Test Notification, Copy Support Report as `diagnose` on stdout, which the GUI copies), a settings file schema (settings move out of `UserDefaults` into layered files), and a single `DataDirectory` port that every store uses. The CLI target imports the Service in 9 files and USB in 2; the neutral core is split from a macOS host adapter so that `Sources/OpenJoystickDriver` has no macOS-only imports outside `platform`. The command tree is checked by a test that lists every command and flags any without a GUI place (D10).
 

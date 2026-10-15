@@ -32,7 +32,7 @@ extension VirtualCommandTests {
   func setWithUnitSelectsByUnitIDAndAsksForThatUnitOnly() async throws {
     let service = try Self.unitService()
 
-    let result = await service.run(["virtual", "set", "hid-generic", Self.unit, "--unit", "--json"])
+    let result = await service.run(["virtual", "set", "generic", Self.unit, "--unit", "--json"])
 
     #expect(result.code == 0, "\(result.standardError)")
     #expect(try result.json()["controller"] as? String == token("pad-1"))
@@ -62,7 +62,7 @@ extension VirtualCommandTests {
   }
 
   @Test(arguments: [
-    ["virtual", "set", "hid-generic", token("pad-2"), "--unit"],
+    ["virtual", "set", "generic", token("pad-2"), "--unit"],
     ["virtual", "reset", token("pad-2"), "--unit"],
   ])
   func unitForAControllerWithoutAUnitIDFailsBeforeAsking(arguments: [String]) async throws {

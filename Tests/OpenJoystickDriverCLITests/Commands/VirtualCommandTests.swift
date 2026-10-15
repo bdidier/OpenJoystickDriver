@@ -22,19 +22,19 @@ struct VirtualCommandTests {
           )
         ) : nil
     }
-    let result = await service.run(["virtual", "set", "hid-generic", token("pad-1"), "--json"])
+    let result = await service.run(["virtual", "set", "generic", token("pad-1"), "--json"])
 
     #expect(result.code == 0, "\(result.standardError)")
     let json = try result.json()
     #expect(json["controller"] as? String == token("pad-1"))
-    #expect(json["live"] as? String == "hid-generic")
+    #expect(json["live"] as? String == "Generic")
     #expect(json["source"] as? String == "override")
     let arguments = try #require(service.arguments(of: .setVirtualHIDProfileOverride).first)
     let sent = try JSONDecoder().decode(
       LocalServiceRPCVirtualHIDProfileOverrideArguments.self,
       from: arguments
     )
-    #expect(sent.profile == "hid-generic")
+    #expect(sent.profile == "Generic")
     #expect(sent.controller == .session(.fixture("pad-1")))
   }
 
@@ -53,7 +53,7 @@ struct VirtualCommandTests {
           )
         ) : nil
     }
-    let result = await service.run(["virtual", "set", "hid-generic", token("pad-1")])
+    let result = await service.run(["virtual", "set", "generic", token("pad-1")])
     #expect(result.code == 1)
     #expect(result.standardOutput.isEmpty)
     #expect(result.standardError.contains("no fit"))
@@ -61,7 +61,7 @@ struct VirtualCommandTests {
 
   /// With virtual output off, the service stores the choice and reports `output-disabled`.
   @Test(arguments: [
-    ["virtual", "set", "hid-generic", token("pad-1")], ["virtual", "reset", token("pad-1")],
+    ["virtual", "set", "generic", token("pad-1")], ["virtual", "reset", token("pad-1")],
   ])
   func aChoiceStoredWhileVirtualOutputIsOffSucceeds(arguments: [String]) async throws {
     let service = try FakeService(devices: [
@@ -120,7 +120,7 @@ struct VirtualCommandTests {
 
   @Test(arguments: [
     ["virtual", "reset"], ["virtual", "reset", token("pad-1"), "--all"],
-    ["virtual", "set", "hid-unknown", token("pad-1")],
+    ["virtual", "set", "unknown", token("pad-1")],
   ])
   func aMissingOrInvalidTargetExitsSixtyFour(arguments: [String]) async throws {
     let service = try FakeService(devices: [

@@ -58,7 +58,7 @@ extension EndpointServer {
         )
         return
       }
-      guard let persona = request.as.flatMap(EndpointPersona.init(rawValue:)) else {
+      guard let persona = request.as.flatMap(VirtualHIDProfileID.init(rawValue:)) else {
         connection.close(
           Self.invalid("Send FeedRequest with a persona: Generic or SdlCompatible.")
         )

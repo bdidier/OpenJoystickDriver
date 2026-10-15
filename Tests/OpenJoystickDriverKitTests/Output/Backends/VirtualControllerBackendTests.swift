@@ -49,7 +49,7 @@ struct VirtualControllerBackendTests {
   func testUserSpaceXboxOneSIdentityAdvertisesNumberedReportSizes() throws {
     let format = try XboxGeckoHIDReportFormat()
     let properties = UserSpaceOutputDispatcher.deviceProperties(
-      profile: .xboxOneS,
+      profile: .sdlCompatible,
       format: format,
       identifier: LogicalControllerID(vendorID: 13623, productID: 4112)
     )
@@ -63,7 +63,7 @@ struct VirtualControllerBackendTests {
   @Test
   func testIOKitPropertiesPreserveDescriptorAndIdentity() throws {
     let format = try XboxGeckoHIDReportFormat()
-    let profile = VirtualDeviceProfile.xboxOneS
+    let profile = VirtualDeviceProfile.sdlCompatible
     let properties = UserSpaceOutputDispatcher.deviceProperties(
       profile: profile,
       format: format,
@@ -83,7 +83,7 @@ struct VirtualControllerBackendTests {
 
     do {
       _ = try UserSpaceOutputDispatcher(
-        profile: .openJoystickDriverGenericHID,
+        profile: .generic,
         format: OJDGenericGamepadFormat()
       )
       Issue.record("UserSpaceOutputDispatcher should require the virtual HID entitlement")

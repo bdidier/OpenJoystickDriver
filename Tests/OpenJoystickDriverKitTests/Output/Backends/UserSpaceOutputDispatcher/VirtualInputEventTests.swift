@@ -19,7 +19,7 @@ struct VirtualInputEventTests {
     )
   }
 
-  /// The `hid-xbox-one-s-bt` input report for `state`.
+  /// The `SdlCompatible` input report for `state`.
   private func xboxOneSReport(_ state: VirtualGamepadState) throws -> [UInt8] {
     try XboxGeckoHIDReportFormat().buildInputReport(from: state)
   }

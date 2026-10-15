@@ -9,8 +9,8 @@ import Testing
 struct ControllerOwnershipPickerTests {
   private static func device(
     physicalOwnership: ControllerOwnershipObservation = .exclusiveHID,
-    recordOwnership: ControllerOwnership = .macOS,
-    discoverySource: DeviceDiscoverySource = .hid
+    recordServer: ControllerServer = .system,
+    accessRoute: ControllerAccessRoute = .system
   ) -> ApplicationServiceDeviceDescription {
     ApplicationServiceDeviceDescription(
       name: "Test Pad",
@@ -18,11 +18,12 @@ struct ControllerOwnershipPickerTests {
       productID: 0x100B,
       protocolBinding: ProtocolBindingID(.hidDescriptor),
       connection: "USB",
-      discoverySource: discoverySource,
+      discoverySource: accessRoute == .system ? .hid : .rawUSB,
       physicalOwnership: physicalOwnership,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
-      recordOwnership: recordOwnership,
+      recordServer: recordServer,
+      recordAccessRoute: accessRoute,
       sessionToken: .fixture("device-ownership")
     )
   }
@@ -30,35 +31,34 @@ struct ControllerOwnershipPickerTests {
   @Test(
     arguments: [
       (
-        ControllerOwnershipObservation.nativeGamepad, ControllerOwnership.macOS,
-        DeviceDiscoverySource.hid, true
+        ControllerOwnershipObservation.nativeGamepad, ControllerServer.system,
+        ControllerAccessRoute.system, true
       ),
-      (.exclusiveHID, .ojd, .hid, true),
-      (.nativeGamepad, .ojd, .hid, true),
-      (.exclusiveHID, .macOS, .hid, false),
-      (.nativeHIDVisible, .macOS, .hid, false),
-      (.nativeGamepad, .macOS, .rawUSB, false),
-      (.exclusiveRawUSB, .ojd, .rawUSB, false),
+      (.exclusiveHID, .ojd, .system, true),
+      (.nativeGamepad, .ojd, .system, true),
+      (.exclusiveHID, .system, .system, false),
+      (.nativeHIDVisible, .system, .system, false),
+      (.nativeGamepad, .system, .rawAccess, false),
+      (.exclusiveRawUSB, .ojd, .rawAccess, false),
     ]
   )
   func thePickerShowsOnlyForANativeOrOJDOwnedHIDController(
     physicalOwnership: ControllerOwnershipObservation,
-    recordOwnership: ControllerOwnership,
-    discoverySource: DeviceDiscoverySource,
+    recordServer: ControllerServer,
+    accessRoute: ControllerAccessRoute,
     shown: Bool
   ) {
     let device = Self.device(
       physicalOwnership: physicalOwnership,
-      recordOwnership: recordOwnership,
-      discoverySource: discoverySource
+      recordServer: recordServer,
+      accessRoute: accessRoute
     )
 
     #expect(ControllerOwnershipPicker.isShown(for: device) == shown)
   }
 
-  @Test(arguments: [ControllerOwnership.ojd, .macOS])
-  func aChangeCallsTheGatewayWithTheModelIdentityAndTheValue(_ ownership: ControllerOwnership) async
-  {
+  @Test(arguments: [ControllerServer.ojd, .system])
+  func aChangeCallsTheGatewayWithTheModelIdentityAndTheValue(_ ownership: ControllerServer) async {
     let gateway = GatewayStub()
     let viewModel = RuntimeViewModel(gateway: gateway)
     let device = Self.device(physicalOwnership: .nativeGamepad)

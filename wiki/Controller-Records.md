@@ -52,14 +52,14 @@ A record for a model that uses raw USB works only when macOS lets OpenJoystickDr
 
 ## Choose Who Drives the Controller
 
-macOS serves some controllers natively through the Game Controller framework. OpenJoystickDriver leaves those to macOS by default and only reads their input. The record's `ownership` field changes this:
+macOS serves some controllers natively through the Game Controller framework. OpenJoystickDriver leaves those to macOS by default and only reads their input. The record's `server` field changes this:
 
-- `macos`: macOS drives the controller when it can. This is the default.
+- `system`: macOS drives the controller when it can. This is the default.
 - `ojd`: OpenJoystickDriver opens the controller exclusively even when macOS supports it, and drives it like a controller macOS does not know.
 
-A raw-USB family, such as `xbox.gip`, has no `ownership` field, because macOS cannot serve those controllers. A new `ownership` value applies to a connected controller as soon as the running service reloads the records. You do not need to unplug the controller.
+A raw-USB family, such as `xbox.gip`, has no `server` field, because macOS cannot serve those controllers. A new `server` value applies to a connected controller as soon as the running service reloads the records. You do not need to unplug the controller.
 
-To change `ownership` without editing the file, run `ojd controller ownership CONTROLLER native|virtual`. `native` sets `macos`, and `virtual` sets `ojd`. The command writes the value to your record for the model, and creates a `ControllerPatch` file when you have none and the bundled catalog or an installed package has a record of the model. It refuses a raw-USB family, a controller that macOS does not serve natively, and a model that has no record at all, with the code E2023. For a model with no record, run `ojd record draft` to start one. `ojd controller show` names the choice and the layer it comes from. In the app, the controller detail has the same choice as the **Served by** picker, shown for a controller that macOS serves natively or that a record gives to OpenJoystickDriver, and never for a raw-USB family.
+To change `server` without editing the file, run `ojd controller ownership CONTROLLER native|virtual`. `native` sets `system`, and `virtual` sets `ojd`. The command writes the value to your record for the model, and creates a `ControllerPatch` file when you have none and the bundled catalog or an installed package has a record of the model. It refuses a raw-USB family, a controller that macOS does not serve natively, and a model that has no record at all, with the code E2023. For a model with no record, run `ojd record draft` to start one. `ojd controller show` names the choice and the layer it comes from. In the app, the controller detail has the same choice as the **Served by** picker, shown for a controller that macOS serves natively or that a record gives to OpenJoystickDriver, and never for a raw-USB family.
 
 ## Describe a Controller's Input Reports
 
@@ -189,18 +189,18 @@ The record's `stickDeadzone` shapes the virtual gamepad's stick report. A profil
 
 ### Change the Virtual Gamepad Identity
 
-A persona file in `~/Library/Application Support/OpenJoystickDriver/Personas` chooses the virtual gamepad that games see for one controller model, or for one controller unit. [`persona.schema.json`](../Resources/Schemas/persona.schema.json) describes it.
+A `VirtualDevice` file in `~/Library/Application Support/OpenJoystickDriver/Personas` chooses the virtual gamepad that games see for one controller model, or for one controller unit. [`virtual-device.schema.json`](../Resources/Schemas/virtual-device.schema.json) describes it.
 
 ```json
 {
   "apiVersion": "openjoystickdriver/v1alpha1",
-  "kind": "Persona",
+  "kind": "VirtualDevice",
   "match": { "vendorID": 1356, "productID": 3302 },
-  "descriptor": "hid-xbox-one-s-bt"
+  "persona": "SdlCompatible"
 }
 ```
 
-`match` names the model by VID:PID in decimal. Add `unit` with a `U-` ID from `ojd controller show` to match one controller. A unit file wins over a model file. `descriptor` is a built-in report descriptor: `hid-xbox-one-s-bt` or `hid-generic`. An optional `identity` gives a vendor ID, product ID, product name, manufacturer, and glyph family (`xbox` or `generic`). OpenJoystickDriver publishes the virtual gamepad with that identity over the built-in descriptor. The transport, the report layout, and the virtual LocationID stay those of the built-in profile, and `versionNumber` defaults to the built-in profile's. While the service runs, it watches the `Personas` folder. When a file is added, edited, or removed and a connected controller's `identity` or `descriptor` changes, OpenJoystickDriver creates that controller's virtual gamepad again with the new identity, so you do not reconnect the controller. Games and other apps see the old virtual gamepad disappear and a new one appear. A change that leaves a controller's identity and descriptor the same, or that concerns another controller, does not touch its virtual gamepad. A file that fails validation is skipped, and `ojd status` and the `config-files` check of `ojd diagnose` name it and the reason. The old `VirtualHIDProfileOverrides` setting is gone and is not migrated, so recreate your overrides as persona files.
+`match` names the model by VID:PID in decimal. Add `unit` with a `U-` ID from `ojd controller show` to match one controller. A unit file wins over a model file. `persona` is `Generic` or `SdlCompatible`. `Generic` is the default (`1209:4A4F`, pid.codes), and every controller publishes it until you pick another. `SdlCompatible` publishes the Xbox One S Bluetooth identity (`045E:02FD`) over an approximation of its report layout. SDL 3.4.x does not list it with the default hints. An optional `identity` gives a vendor ID, product ID, product name, manufacturer, and `version`, and an optional `labels` gives the glyph family (`xbox` or `generic`). OpenJoystickDriver publishes the virtual gamepad with that identity over the persona's report layout. The transport, the report layout, and the virtual LocationID stay those of the persona, and `version` defaults to the persona's. While the service runs, it watches the `Personas` folder. When a file is added, edited, or removed and a connected controller's `identity` or `persona` changes, OpenJoystickDriver creates that controller's virtual gamepad again with the new identity, so you do not reconnect the controller. Games and other apps see the old virtual gamepad disappear and a new one appear. A change that leaves a controller's identity and persona the same, or that concerns another controller, does not touch its virtual gamepad. A file with a wrong `apiVersion` or `kind` fails with `E5001`. Any other file that fails validation is skipped, and `ojd status` and the `config-files` check of `ojd diagnose` name it and the reason. The old `VirtualHIDProfileOverrides` setting is gone and is not migrated, so recreate your overrides as `VirtualDevice` files. The persona names `hid-generic` and `hid-xbox-one-s-bt` and the `Persona` kind are gone and are not accepted.
 
 ## Select a Model With Protocol Parameters
 

@@ -7,11 +7,11 @@ import Testing
 struct VirtualHIDProfileTests {
   @Test
   func exactlyTheTwoApprovedProfileIDsExist() {
-    #expect(VirtualHIDProfileID.allCases.map(\.rawValue) == ["hid-xbox-one-s-bt", "hid-generic"])
+    #expect(VirtualHIDProfileID.allCases.map(\.rawValue) == ["SdlCompatible", "Generic"])
   }
 
   @Test(arguments: [
-    "generic-hid", "automatic", "sdl2-3", "apple-gamecontroller", "hid-xbox-one-s-bt-v2",
+    "generic-hid", "automatic", "sdl2-3", "apple-gamecontroller", "SdlCompatible-v2",
     "HID-GENERIC", "",
   ])
   func anyOtherProfileIDIsRejected(rawValue: String) throws {
@@ -38,8 +38,8 @@ struct VirtualHIDProfileTests {
 
   @Test
   func xboxProfileAdaptsTheCurrentXboxOneSApproximation() throws {
-    let profile = try VirtualHIDProfileID.xboxOneSBluetooth.makeProfile()
-    #expect(profile.identity == .xboxOneS)
+    let profile = try VirtualHIDProfileID.sdlCompatible.makeProfile()
+    #expect(profile.identity == .sdlCompatible)
     #expect(profile.identity.vendorID == 0x045E && profile.identity.productID == 0x02FD)
     #expect(profile.descriptor == XboxOneBluetoothHIDDescriptor.oneSDescriptor)
     let neutral = profile.inputReport(for: .neutral)
@@ -57,7 +57,7 @@ struct VirtualHIDProfileTests {
   @Test
   func genericProfileAdaptsTheCurrentOJDGenericGamepad() throws {
     let profile = try VirtualHIDProfileID.generic.makeProfile()
-    #expect(profile.identity == .openJoystickDriverGenericHID)
+    #expect(profile.identity == .generic)
     #expect(profile.descriptor == GamepadHIDDescriptor.descriptor)
     let neutral = profile.inputReport(for: .neutral)
     #expect(neutral == [UInt8](repeating: 0, count: 14))
@@ -77,7 +77,7 @@ struct VirtualHIDProfileTests {
 
   @Test
   func xboxProfileDecodesOnlyItsOwnRumbleReport() throws {
-    let profile = try VirtualHIDProfileID.xboxOneSBluetooth.makeProfile()
+    let profile = try VirtualHIDProfileID.sdlCompatible.makeProfile()
     let report: [UInt8] = [0x03, 0x0F, 10, 20, 30, 40, 50, 0, 0]
     let expected = ControllerOutputCommand.consumerRumble(
       left: 30,
@@ -134,7 +134,7 @@ struct VirtualHIDProfileTests {
 
   @Test
   func xboxProfileRepresentsTheSpecXboxLayout() {
-    let profile = VirtualHIDProfileID.xboxOneSBluetooth
+    let profile = VirtualHIDProfileID.sdlCompatible
     let layout: Set<ControlID> = [
       .dpad, .faceSouth, .faceEast, .faceWest, .faceNorth, .leftShoulder, .rightShoulder,
       .leftTrigger, .rightTrigger, .leftStickX, .leftStickY, .rightStickX, .rightStickY,
