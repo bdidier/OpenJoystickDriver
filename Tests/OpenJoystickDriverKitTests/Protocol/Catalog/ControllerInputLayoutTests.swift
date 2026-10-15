@@ -91,6 +91,20 @@ struct ControllerInputLayoutTests {
     #expect(try driver.parseReport(Data([0x00, 0x00]))?.state.leftStick.x.normalized == 0)
   }
 
+  @Test
+  func aSymmetricAxisWithoutRangeUsesTheFullRange() throws {
+    let layout = try inputLayout(
+      """
+      {"report": {"length": 2}, "axes": [{"control": "left-stick-x", "byte": 0, "bits": 16,
+        "signed": true, "symmetric": true}]}
+      """
+    )
+    let driver = ReportLayoutDriver(layout: layout)
+    #expect(try driver.parseReport(Data([0x00, 0x80]))?.state.leftStick.x.normalized == -1)
+    #expect(try driver.parseReport(Data([0xFF, 0x7F]))?.state.leftStick.x.normalized == 1)
+    #expect(try driver.parseReport(Data([0x00, 0x00]))?.state.leftStick.x.normalized == 0)
+  }
+
   @Test(arguments: invalidSymmetricAxesAndTableHats)
   func rejectsInvalidSymmetricAxesAndTableHats(json: String) {
     #expect(throws: DecodingError.self) { try inputLayout(json) }

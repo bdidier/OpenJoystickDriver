@@ -467,6 +467,21 @@ class InputLayoutTests(unittest.TestCase):
     def test_accepts_report_layouts_and_dpad_pressure(self) -> None:
         accepted = {
             "one button": record(REPORT_LAYOUT, input=LAYOUT),
+            "symmetric axis without a range": record(
+                REPORT_LAYOUT,
+                input={
+                    "report": {"length": 2},
+                    "axes": [
+                        {
+                            "control": "left-stick-x",
+                            "byte": 0,
+                            "bits": 16,
+                            "signed": True,
+                            "symmetric": True,
+                        }
+                    ],
+                },
+            ),
             "every section": record(
                 REPORT_LAYOUT,
                 input={

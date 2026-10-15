@@ -962,7 +962,7 @@
 				"required": ["symmetric"]
 			},
 			"then": {
-				"required": ["signed", "min", "max"],
+				"required": ["signed"],
 				"properties": {
 					"signed": {
 						"const": true
@@ -1042,6 +1042,7 @@
 							"maximum": 255
 						},
 						"values": {
+							"$comment": "Every key must be a value the mask can hold: 0 up to the mask shifted right by its trailing zero bits. JSON Schema cannot compare a key with the mask, so the Swift decoder checks it.",
 							"type": "object",
 							"minProperties": 1,
 							"propertyNames": {
