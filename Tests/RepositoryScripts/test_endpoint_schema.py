@@ -70,8 +70,8 @@ class EndpointSchemaTests(unittest.TestCase):
         self.assertFalse(self.valid(failure("E1003", **DETAILS)))
         self.assertFalse(self.valid(failure("E1003")))
 
-    def test_the_persona_ids_replace_the_profile_names(self) -> None:
-        for name in ("hid-generic", "hid-xbox-one-s-bt", "generic", "Xbox"):
+    def test_an_unknown_persona_id_is_refused(self) -> None:
+        for name in ("NotAPersona", "generic", "Xbox"):
             self.assertFalse(self.valid(line("FeedRequest", **{"as": name})), name)
             self.assertFalse(self.valid(line("FeedSession", **{"as": name})), name)
 

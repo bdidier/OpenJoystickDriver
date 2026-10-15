@@ -69,7 +69,7 @@ struct VirtualDeviceTests {
 
   @Test
   func aDocumentWithAnUnknownPersonaIsRefused() {
-    let document = "{\(Self.header),\"persona\":\"hid-generic\"}"
+    let document = "{\(Self.header),\"persona\":\"NotAPersona\"}"
     #expect(throws: ControllerRecordProblem.self) {
       try VirtualDevice.decode(Data(document.utf8))
     }

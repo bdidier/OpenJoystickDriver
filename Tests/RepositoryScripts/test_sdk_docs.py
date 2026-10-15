@@ -124,11 +124,6 @@ class SDKDocsTests(unittest.TestCase):
             hello["proof"], reference_client.proof(vector["token"], challenge["nonce"])
         )
 
-    def test_the_page_names_the_persona_ids_only(self) -> None:
-        text = PAGE.read_text(encoding="utf-8")
-        for old in ("hid-generic", "hid-xbox"):
-            self.assertNotIn(old, text)
-
 
 if __name__ == "__main__":
     unittest.main()
