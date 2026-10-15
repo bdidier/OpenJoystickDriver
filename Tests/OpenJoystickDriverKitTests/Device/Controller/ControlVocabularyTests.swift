@@ -246,7 +246,8 @@ struct ControlVocabularyTests {
       try JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any]
     )
     edit(&document)
-    return String(decoding: try JSONSerialization.data(withJSONObject: document), as: UTF8.self)
+    let data = try JSONSerialization.data(withJSONObject: document)
+    return try #require(String(bytes: data, encoding: .utf8))
   }
 
   @Test
