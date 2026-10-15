@@ -192,7 +192,7 @@ OJD_TOKEN=ojd_… python3 Scripts/SDK/reference_client.py watch
 OJD_TOKEN=ojd_… python3 Scripts/SDK/reference_client.py feed
 ```
 
-- `watch` subscribes to the `controllers` stream and prints the first watch line. `--count N` prints `N` lines.
+- `watch` subscribes to the `controllers` stream and prints the first watch line. `--count N` prints `N` lines. `--timeout SECONDS` ends the run with a non-zero exit when the endpoint sends nothing for that long, for example when no controller is connected.
 - `feed` presses the south button for 100 ms, prints the rumble commands that the endpoint sends, and stays connected until the release has played.
 - On `E1010`, `E1011`, or `E1012`, or when a line has another `apiVersion`, the client stops and reports the supported versions.
 - `--socket PATH` names the socket; without it, the client runs `ojd --json access status`.

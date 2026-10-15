@@ -26,7 +26,7 @@ from typing import Any, TextIO
 API_VERSION = "openjoystickdriver/v1alpha1"
 HEADER_ERRORS = ("E1010", "E1011", "E1012")
 FRAMES: list[dict[str, Any]] = [{"buttons": ["south"], "holdMilliseconds": 100}, {}]
-MARGIN_SECONDS = 0.25
+MARGIN_SECONDS = 1.0
 
 
 def proof(token: str, nonce: str) -> str:
@@ -112,6 +112,7 @@ def connect(
 
 def watch(arguments: argparse.Namespace) -> None:
     with socket.socket(socket.AF_UNIX) as endpoint:
+        endpoint.settimeout(arguments.timeout)
         endpoint.connect(socket_path(arguments))
         reader = endpoint.makefile("r")
         receive = connect(endpoint, reader, arguments, "read")
@@ -121,8 +122,11 @@ def watch(arguments: argparse.Namespace) -> None:
             "stream": "controllers",
         }
         send(endpoint, subscription)
-        for _ in range(arguments.count):
-            print(json.dumps(receive()))
+        try:
+            for _ in range(arguments.count):
+                print(json.dumps(receive()))
+        except TimeoutError:
+            sys.exit(f"No watch line arrived within {arguments.timeout:g} seconds.")
 
 
 def feed(arguments: argparse.Namespace) -> None:
@@ -145,6 +149,8 @@ def feed(arguments: argparse.Namespace) -> None:
                     reasons.append("The endpoint closed the connection.")
             except SystemExit as error:
                 reasons.append(str(error.code))
+            except OSError as error:
+                reasons.append(f"The connection to the endpoint failed: {error}")
             failed.set()
 
         send(
@@ -176,13 +182,21 @@ def main(argv: list[str] | None = None) -> None:
     commands = parser.add_subparsers(dest="command", required=True)
     watcher = commands.add_parser("watch", help="subscribe to the controllers stream")
     watcher.add_argument("--count", type=int, default=1, help="watch lines to print")
+    watcher.add_argument(
+        "--timeout",
+        type=float,
+        help="seconds to wait for the endpoint before the run fails; default: wait",
+    )
     watcher.set_defaults(run=watch)
     commands.add_parser("feed", help="drive a virtual gamepad").set_defaults(run=feed)
     arguments = parser.parse_args(argv)
     arguments.token = os.environ.get("OJD_TOKEN")
     if not arguments.token:
         sys.exit("Set OJD_TOKEN to the token that `ojd access grant --token` printed.")
-    arguments.run(arguments)
+    try:
+        arguments.run(arguments)
+    except OSError as error:
+        sys.exit(f"The connection to the endpoint failed: {error}")
 
 
 if __name__ == "__main__":

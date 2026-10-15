@@ -86,11 +86,23 @@ struct EndpointReferenceClientTests {
 
   /// Runs the client off the cooperative pool, so the server's tasks keep running.
   private static func run(_ arguments: [String], token: String) async -> Result {
-    await offPool {
+    let searchPath = "/usr/bin:/bin:/usr/local/bin"
+    guard
+      searchPath.split(separator: ":").contains(where: {
+        FileManager.default.isExecutableFile(atPath: "\($0)/python3")
+      })
+    else {
+      return Result(
+        status: -1,
+        output: "",
+        error: "The reference client needs python3, and none is in \(searchPath)."
+      )
+    }
+    return await offPool {
       let process = Process()
       process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
       process.arguments = ["python3", "-I", client] + arguments
-      process.environment = ["OJD_TOKEN": token, "PATH": "/usr/bin:/bin:/usr/local/bin"]
+      process.environment = ["OJD_TOKEN": token, "PATH": searchPath]
       let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
         UUID().uuidString,
         isDirectory: true

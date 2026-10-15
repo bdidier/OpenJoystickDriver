@@ -7,8 +7,10 @@ from pathlib import Path
 from typing import Any
 
 from Scripts.Quality import validate_schemas
+from Scripts.SDK import reference_client
 
 ROOT = Path(__file__).resolve().parents[2]
+VECTOR = ROOT / "Tests" / "RepositoryScripts" / "fixtures" / "endpoint_hello_proof.json"
 PAGE = ROOT / "docs" / "sdk" / "endpoint.md"
 CLIENT_KINDS = {"Hello", "Subscription", "FeedRequest", "Frame"}
 DOCUMENTED_KINDS = {
@@ -77,21 +79,49 @@ class SDKDocsTests(unittest.TestCase):
         with self.assertRaises(validate_schemas.ValidationError):
             self.client_lines.validate(bad)
 
-    def test_the_error_table_lists_every_endpoint_code(self) -> None:
+    def endpoint_catalog(self) -> list[dict[str, Any]]:
         catalog = json.loads(
             (ROOT / "Resources" / "ErrorCodes.json").read_text(encoding="utf-8")
         )
-        expected = {
-            entry["code"]: entry["name"]
-            for entry in catalog["codes"]
-            if entry["domain"] == "endpoint"
-        }
-        rows = re.findall(
-            r"^\| `(E\d{4})` \| `(\w+)` \|",
+        return [entry for entry in catalog["codes"] if entry["domain"] == "endpoint"]
+
+    def error_rows(self) -> list[tuple[str, str, str]]:
+        return re.findall(
+            r"^\| `(E\d{4})` \| `(\w+)` \| (.*?) \|$",
             PAGE.read_text(encoding="utf-8"),
             re.MULTILINE,
         )
-        self.assertEqual(dict(rows), expected)
+
+    def test_the_error_table_lists_every_endpoint_code(self) -> None:
+        expected = {entry["code"]: entry["name"] for entry in self.endpoint_catalog()}
+        rows = {code: name for code, name, _ in self.error_rows()}
+        self.assertEqual(rows, expected)
+
+    def test_the_error_table_meanings_agree_with_the_catalog_status(self) -> None:
+        """The catalog holds no meaning text, so this compares what it does hold: a code is
+        described as retired, in the catalog's `retiredIn` version, exactly when it is retired."""
+        meanings = {code: meaning for code, _, meaning in self.error_rows()}
+        for entry in self.endpoint_catalog():
+            meaning = meanings[entry["code"]]
+            with self.subTest(code=entry["code"]):
+                if entry["status"] == "retired":
+                    self.assertTrue(
+                        meaning.startswith(f"Retired in {entry['retiredIn']}."),
+                        meaning,
+                    )
+                else:
+                    self.assertNotIn("Retired", meaning)
+                    self.assertTrue(meaning, "an active code needs a meaning")
+
+    def test_the_hello_example_proof_matches_the_reference_client(self) -> None:
+        vector = json.loads(VECTOR.read_text(encoding="utf-8"))
+        all_examples = examples()
+        challenge = next(e for e in all_examples if e.get("kind") == "Challenge")
+        hello = next(e for e in all_examples if "proof" in e)
+        self.assertEqual(challenge["nonce"], vector["nonce"])
+        self.assertEqual(
+            hello["proof"], reference_client.proof(vector["token"], challenge["nonce"])
+        )
 
     def test_the_page_names_the_persona_ids_only(self) -> None:
         text = PAGE.read_text(encoding="utf-8")
