@@ -255,7 +255,6 @@ struct ProtocolDescriptionTests {
       (.sonyDualSense, #""parameters": {"maker": {"type": "flag", "values": ["A"]}}"#),
       (.sonyDualSense, #""parameters": {"unknown": {"type": "flag"}}"#),
       (.sonyDualSense, #""parameters": {}"#),
-      (.sonyDualShock4, #""buttonLabels": "PlayStation""#),
       (
         .xboxGIP,
         #""parameters": {"shareButton": {"type": "object", "fields": "#

@@ -164,7 +164,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The pr
 
 ### Removed
 
-- The `buttonLabels` key of a protocol description (`PlayStation` or `Nintendo`) and the `ControllerButtonLabels` type behind it are gone; a description that still sets `buttonLabels` is rejected as an unknown key. Nothing read the label to show or spell a button. Its only effect was the order in which simultaneous button changes from one report reach the remapping engine: every controller now uses the one order that standard controllers used, so a PlayStation controller's simultaneous changes can reach a binding in a different order than before.
+- The `buttonLabels` key of a protocol description and the `ControllerButtonLabels` type are removed. Simultaneous button changes from one report reach the remapping engine in one order for every controller, the order standard controllers used, so a PlayStation controller's simultaneous changes can reach a binding in a different order.
 - **Breaking:** `ojd controller ownership` is removed and is now an unknown command. Use `ojd controller claim` (was `virtual`) and `ojd controller release` (was `native`). In `ojd controller show --json`, `ownership.choice` and `ownership.choiceSource` are now `ownership.server` and `ownership.serverSource`, and `server` is `system` or `ojd`, and the `ojd controller claim` and `release` output has the kind `ControllerServer` with `server` in place of `ownership`.
 - **BREAKING:** Remove every command of the old command line, with no aliases. Each is replaced as follows:
   - `--headless` → run the executable as `ojd`; `--json-lines` → `--json`

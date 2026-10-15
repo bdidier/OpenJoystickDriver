@@ -165,8 +165,8 @@ extension OutputCharacterizationTests {
       lines == [
         "ds create [+Back motion touch]", "  pad [Back] d=[] a=[]",
         "    b=0200 h=0 ls=0,0 rs=0,0 t=0,0 f=00 +1", "  out 4000000000000000000000000000",
-        "ds options [-Back +Start motion touch]", "  pad [] d=[] a=[]",
-        "    b=0000 h=0 ls=0,0 rs=0,0 t=0,0 f=00 +1", "  out 0000000000000000000000000000",
+        "ds options [+Start -Back motion touch]", "  pad [Back,Start] d=[] a=[]",
+        "    b=0300 h=0 ls=0,0 rs=0,0 t=0,0 f=00 +1", "  out c000000000000000000000000000",
         "  pad [Start] d=[] a=[]", "    b=0100 h=0 ls=0,0 rs=0,0 t=0,0 f=00 +1",
         "  out 8000000000000000000000000000", "ds ps [-Start +Guide motion touch]",
         "  pad [] d=[] a=[]", "    b=0000 h=0 ls=0,0 rs=0,0 t=0,0 f=00 +1",

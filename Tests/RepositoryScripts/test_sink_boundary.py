@@ -36,9 +36,7 @@ class SinkBoundaryTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             (forwarder,) = sorted(check.SINK_INTERNALS)[:1]
-            write(
-                root, forwarder, "await target?.dispatch(event, from: id)\n"
-            )
+            write(root, forwarder, "await target?.dispatch(event, from: id)\n")
             write(
                 root,
                 "Sources/Kit/Sink.swift",

@@ -9,7 +9,7 @@ extension OutputCharacterizationTests {
   @Test
   func familyLabelsReachTheirBits() async {
     var lines: [String] = []
-    // Each family's former parser button name and the control it now reports.
+    // Each family's button name and the control it reports.
     let families: [(String, LogicalControllerID, [(String, Control)])] = [
       (
         "ps", Self.playStation,
@@ -145,7 +145,7 @@ extension OutputCharacterizationTests {
     )
   }
 
-  /// Guide always publishes on bit 10, whatever the former parser called it.
+  /// Guide always publishes on bit 10, under either button name.
   @Test
   func guideReports() async {
     var lines: [String] = []
