@@ -54,3 +54,10 @@ Frame queues SHALL have a bounded policy declared per record or default (for exa
 
 - **WHEN** the user runs `ojd diagnose` while streaming
 - **THEN** the report lists dispatch and delivery timestamps
+
+#### Scenario: Support bundle
+
+- **WHEN** the user runs `ojd diagnose --bundle` or saves a support report from the app
+- **THEN** the bundle carries the per-stage stamps (`read`, `parse`, `dispatch`, `delivery-virtual-device`, `delivery-endpoint`) of the newest frames of each controller
+- **AND** a frame lists only the stages it reached, so a frame that never reached the virtual device or an endpoint poll has fewer than five stamps
+- **AND** with the service unreachable the bundle's timings are an empty list
