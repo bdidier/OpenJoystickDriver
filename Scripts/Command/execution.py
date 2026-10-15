@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -35,6 +36,36 @@ def swift_command(args: list[str]) -> list[str]:
         str(ENVIRONMENT),
         *args,
     ]
+
+
+def executed_test_count(output: str) -> int:
+    """Tests a `swift test` run executed, counting XCTest and Swift Testing together.
+
+    XCTest prints `Executed N tests` per suite and once more for the whole run, so its count is
+    the largest; Swift Testing prints one `Test run with N tests` line.
+    """
+    xctest = [int(n) for n in re.findall(r"Executed (\d+) tests?\b", output)]
+    testing = [int(n) for n in re.findall(r"Test run with (\d+) tests?\b", output)]
+    return max(xctest, default=0) + max(testing, default=0)
+
+
+def swift_test_package(directory: Path) -> int:
+    """Runs `swift test` in `directory`; a run that executes no test at all fails."""
+    completed = subprocess.run(
+        swift_command(["test"]),
+        cwd=directory,
+        env=env_with(),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        check=False,
+    )
+    output = completed.stdout or ""
+    print(output, end="")
+    if completed.returncode == 0 and executed_test_count(output) == 0:
+        print(f"error: swift test in {directory} executed no tests", file=sys.stderr)
+        return 1
+    return completed.returncode
 
 
 def run_record(args: list[str]) -> int:
