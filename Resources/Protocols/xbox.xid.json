@@ -1,68 +1,100 @@
 {
-	"apiVersion": "openjoystickdriver/v1alpha1",
-	"kind": "ProtocolDescription",
-	"family": "xbox.xid",
-	"endpoints": {
-		"in": 129,
-		"out": 2
-	},
-	"rawUSB": true,
-	"recordSections": [
-		"input"
-	],
-	"interfaceSignatures": [
-		{
-			"variant": "gamepad",
-			"interfaceClass": 88,
-			"interfaceSubclass": 66,
-			"interfaceProtocol": 0
-		}
-	],
-	"controls": {
-		"base": "xbox"
-	},
-	"defaults": {
-		"input": {
-			"report": {
-				"length": 20
-			},
-			"buttons": [
-				{ "control": "menu", "byte": 2, "mask": 16 },
-				{ "control": "view", "byte": 2, "mask": 32 },
-				{ "control": "left-stick-click", "byte": 2, "mask": 64 },
-				{ "control": "right-stick-click", "byte": 2, "mask": 128 },
-				{ "control": "face-south", "byte": 4, "mask": 255 },
-				{ "control": "face-east", "byte": 5, "mask": 255 },
-				{ "control": "face-west", "byte": 6, "mask": 255 },
-				{ "control": "face-north", "byte": 7, "mask": 255 },
-				{ "control": "left-shoulder", "byte": 8, "mask": 255 },
-				{ "control": "right-shoulder", "byte": 9, "mask": 255 }
-			],
-			"axes": [
-				{ "control": "left-stick-x", "byte": 12, "bits": 16, "signed": true, "min": -32768, "max": 32767, "symmetric": true },
-				{ "control": "left-stick-y", "byte": 14, "bits": 16, "signed": true, "min": -32768, "max": 32767, "inverted": true, "symmetric": true },
-				{ "control": "right-stick-x", "byte": 16, "bits": 16, "signed": true, "min": -32768, "max": 32767, "symmetric": true },
-				{ "control": "right-stick-y", "byte": 18, "bits": 16, "signed": true, "min": -32768, "max": 32767, "inverted": true, "symmetric": true }
-			],
-			"hat": [
-				{
-					"encoding": "table",
-					"byte": 2,
-					"mask": 15,
-					"values": {
-						"1": "north",
-						"2": "south",
-						"4": "west",
-						"8": "east",
-						"9": "northEast",
-						"10": "southEast",
-						"6": "southWest",
-						"5": "northWest"
-					}
-				}
-			],
-			"leftTrigger": { "byte": 10 },
-			"rightTrigger": { "byte": 11 }
-		}
-	}
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "ProtocolDescription",
+  "family": "xbox.xid",
+  "endpoints": {
+    "in": 129,
+    "out": 2
+  },
+  "rawUSB": true,
+  "recordSections": ["input"],
+  "interfaceSignatures": [
+    {
+      "variant": "gamepad",
+      "interfaceClass": 88,
+      "interfaceSubclass": 66,
+      "interfaceProtocol": 0
+    }
+  ],
+  "controls": {
+    "base": "xbox"
+  },
+  "defaults": {
+    "input": {
+      "report": {
+        "length": 20
+      },
+      "buttons": [
+        { "control": "menu", "byte": 2, "mask": 16 },
+        { "control": "view", "byte": 2, "mask": 32 },
+        { "control": "left-stick-click", "byte": 2, "mask": 64 },
+        { "control": "right-stick-click", "byte": 2, "mask": 128 },
+        { "control": "face-south", "byte": 4, "mask": 255 },
+        { "control": "face-east", "byte": 5, "mask": 255 },
+        { "control": "face-west", "byte": 6, "mask": 255 },
+        { "control": "face-north", "byte": 7, "mask": 255 },
+        { "control": "left-shoulder", "byte": 8, "mask": 255 },
+        { "control": "right-shoulder", "byte": 9, "mask": 255 }
+      ],
+      "axes": [
+        {
+          "control": "left-stick-x",
+          "byte": 12,
+          "bits": 16,
+          "signed": true,
+          "min": -32768,
+          "max": 32767,
+          "symmetric": true
+        },
+        {
+          "control": "left-stick-y",
+          "byte": 14,
+          "bits": 16,
+          "signed": true,
+          "min": -32768,
+          "max": 32767,
+          "inverted": true,
+          "symmetric": true
+        },
+        {
+          "control": "right-stick-x",
+          "byte": 16,
+          "bits": 16,
+          "signed": true,
+          "min": -32768,
+          "max": 32767,
+          "symmetric": true
+        },
+        {
+          "control": "right-stick-y",
+          "byte": 18,
+          "bits": 16,
+          "signed": true,
+          "min": -32768,
+          "max": 32767,
+          "inverted": true,
+          "symmetric": true
+        }
+      ],
+      "hat": [
+        {
+          "encoding": "table",
+          "byte": 2,
+          "mask": 15,
+          "values": {
+            "1": "north",
+            "2": "south",
+            "4": "west",
+            "8": "east",
+            "9": "northEast",
+            "10": "southEast",
+            "6": "southWest",
+            "5": "northWest"
+          }
+        }
+      ],
+      "leftTrigger": { "byte": 10 },
+      "rightTrigger": { "byte": 11 }
+    }
+  }
 }

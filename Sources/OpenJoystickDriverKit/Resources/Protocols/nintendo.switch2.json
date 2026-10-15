@@ -1,33 +1,28 @@
 {
-	"apiVersion": "openjoystickdriver/v1alpha1",
-	"kind": "ProtocolDescription",
-	"family": "nintendo.switch2",
-	"endpoints": {
-		"in": 130,
-		"out": 2
-	},
-	"tuningKeys": [
-		"hidStartupIntervalMs",
-		"minimumHIDOutputIntervalMs",
-		"keepAliveIntervalMs",
-		"usbCommandTimeoutMs"
-	],
-	"buttonLabels": "Nintendo",
-	"parameters": {
-		"layout": {
-			"type": "enum",
-			"values": [
-				"Pro",
-				"JoyConLeft",
-				"JoyConRight",
-				"GameCube"
-			]
-		}
-	},
-	"defaults": {
-		"tuning": {
-			"keepAliveIntervalMs": 12,
-			"usbCommandTimeoutMs": 1000
-		}
-	}
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "ProtocolDescription",
+  "family": "nintendo.switch2",
+  "endpoints": {
+    "in": 130,
+    "out": 2
+  },
+  "tuningKeys": [
+    "hidStartupIntervalMs",
+    "minimumHIDOutputIntervalMs",
+    "keepAliveIntervalMs",
+    "usbCommandTimeoutMs"
+  ],
+  "buttonLabels": "Nintendo",
+  "parameters": {
+    "layout": {
+      "type": "enum",
+      "values": ["Pro", "JoyConLeft", "JoyConRight", "GameCube"]
+    }
+  },
+  "defaults": {
+    "tuning": {
+      "keepAliveIntervalMs": 12,
+      "usbCommandTimeoutMs": 1000
+    }
+  }
 }

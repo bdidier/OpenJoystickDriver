@@ -1,1265 +1,1289 @@
 {
-	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/protocol-description.schema.json",
-	"$comment": "Each family's variants are PhysicalProtocolID.variants in Swift; a family with none has no interface signatures. The parameter names of each family are those its driver declares in ProtocolParameters. The family facts a driver reads live here and nowhere in code: its default endpoints, whether it is reached through raw USB (for every variant, or only the listed ones), the record sections whose layouts it reads, the tuning keys it reads beyond stickDeadzone (none for a raw-USB variant), its button labels, and what OJD still sends when macOS serves the controller. defaults holds the sections a record layers over, limited to what the family reads: input applies to hid.report-layout and xbox.xid as a byte layout and to hid.descriptor as a HID usage map, a rumble template needs the matching recordSections entry, startup writes need a family that is not always raw USB, and each defaults.tuning key must be stickDeadzone or in tuningKeys, which a schema cannot say and the validators check.",
-	"type": "object",
-	"additionalProperties": false,
-	"required": ["apiVersion", "kind", "family", "endpoints"],
-	"properties": {
-		"apiVersion": {
-			"const": "openjoystickdriver/v1alpha1"
-		},
-		"kind": {
-			"const": "ProtocolDescription"
-		},
-		"family": {
-			"$ref": "controller.schema.json#/$defs/protocol/properties/family"
-		},
-		"endpoints": {
-			"$ref": "controller.schema.json#/$defs/usbOverride/properties/endpoints"
-		},
-		"rawUSB": {
-			"oneOf": [
-				{
-					"const": true
-				},
-				{
-					"type": "array",
-					"minItems": 1,
-					"uniqueItems": true,
-					"items": {
-						"$ref": "#/$defs/interfaceSignature/properties/variant"
-					}
-				}
-			]
-		},
-		"recordSections": {
-			"type": "array",
-			"minItems": 1,
-			"uniqueItems": true,
-			"items": {
-				"enum": ["input", "rumble"]
-			}
-		},
-		"tuningKeys": {
-			"type": "array",
-			"minItems": 1,
-			"uniqueItems": true,
-			"items": {
-				"enum": [
-					"inputLivenessTimeoutMs",
-					"hidStartupIntervalMs",
-					"minimumHIDOutputIntervalMs",
-					"hidStartupRecoveryIntervalMs",
-					"hidStartupRecoveryRounds",
-					"keepAliveIntervalMs",
-					"lizardResendTicks",
-					"usbCommandTimeoutMs",
-					"presenceResendReports",
-					"adapterDisconnectDelayMs",
-					"usbStartupIntervalMs",
-					"usbStartupRetryDelayMs"
-				]
-			}
-		},
-		"rawUSBTuningKeys": {
-			"description": "The tuning keys a raw-USB variant reads beyond stickDeadzone.",
-			"type": "array",
-			"minItems": 1,
-			"uniqueItems": true,
-			"items": {
-				"enum": [
-					"keepAliveIntervalMs",
-					"lizardResendTicks",
-					"usbCommandTimeoutMs",
-					"presenceResendReports",
-					"adapterDisconnectDelayMs",
-					"usbStartupIntervalMs",
-					"usbStartupRetryDelayMs"
-				]
-			}
-		},
-		"controls": {
-			"$ref": "#/$defs/controls"
-		},
-		"recordCapabilities": {
-			"$ref": "#/$defs/recordCapabilities"
-		},
-		"buttonLabels": {
-			"enum": ["PlayStation", "Nintendo"]
-		},
-		"macOSOwnedOutput": {
-			"$ref": "#/$defs/macOSOwnedOutput"
-		},
-		"interfaceSignatures": {
-			"type": "array",
-			"minItems": 1,
-			"uniqueItems": true,
-			"items": {
-				"$ref": "#/$defs/interfaceSignature"
-			}
-		},
-		"parameters": {
-			"type": "object",
-			"minProperties": 1,
-			"additionalProperties": {
-				"$ref": "#/$defs/parameterDeclaration"
-			}
-		},
-		"defaults": {
-			"$ref": "#/$defs/defaults"
-		}
-	},
-	"allOf": [
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "hid.descriptor"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"rawUSB": {
-						"anyOf": [
-							{
-								"const": true
-							}
-						]
-					},
-					"defaults": {
-						"properties": {
-							"variants": false,
-							"input": {
-								"$ref": "#/$defs/hidDescriptorInput"
-							},
-							"output": {
-								"properties": {
-									"rumble": false
-								}
-							},
-							"tuning": {
-								"properties": {
-									"inputLivenessTimeoutMs": false,
-									"hidStartupRecoveryIntervalMs": false,
-									"hidStartupRecoveryRounds": false
-								}
-							}
-						}
-					},
-					"interfaceSignatures": false,
-					"parameters": false
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "hid.report-layout"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"rawUSB": {
-						"anyOf": [
-							{
-								"const": true
-							}
-						]
-					},
-					"defaults": {
-						"properties": {
-							"variants": false,
-							"input": {
-								"$ref": "controller.schema.json#/$defs/input"
-							},
-							"tuning": {
-								"properties": {
-									"inputLivenessTimeoutMs": false,
-									"hidStartupRecoveryIntervalMs": false,
-									"hidStartupRecoveryRounds": false
-								}
-							}
-						}
-					},
-					"interfaceSignatures": false,
-					"parameters": false
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "xbox.xid"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"rawUSB": {
-						"anyOf": [
-							{
-								"const": true
-							},
-							{
-								"items": {
-									"enum": ["gamepad"]
-								}
-							}
-						]
-					},
-					"defaults": {
-						"properties": {
-							"variants": {
-								"propertyNames": {
-									"enum": ["gamepad"]
-								}
-							},
-							"input": {
-								"$ref": "controller.schema.json#/$defs/input"
-							},
-							"output": {
-								"properties": {
-									"rumble": false,
-									"startup": false
-								}
-							},
-							"tuning": {
-								"properties": {
-									"inputLivenessTimeoutMs": false,
-									"hidStartupRecoveryIntervalMs": false,
-									"hidStartupRecoveryRounds": false,
-									"hidStartupIntervalMs": false,
-									"minimumHIDOutputIntervalMs": false
-								}
-							}
-						}
-					},
-					"interfaceSignatures": {
-						"items": {
-							"properties": {
-								"variant": {
-									"enum": ["gamepad"]
-								}
-							}
-						}
-					},
-					"parameters": false
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "xbox.xusb"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"rawUSB": {
-						"anyOf": [
-							{
-								"const": true
-							},
-							{
-								"items": {
-									"enum": ["wired", "receiver"]
-								}
-							}
-						]
-					},
-					"defaults": {
-						"properties": {
-							"variants": {
-								"propertyNames": {
-									"enum": ["wired", "receiver"]
-								}
-							}
-						}
-					},
-					"interfaceSignatures": {
-						"items": {
-							"properties": {
-								"variant": {
-									"enum": ["wired", "receiver"]
-								}
-							}
-						}
-					},
-					"parameters": false
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "xbox.gip"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"rawUSB": {
-						"anyOf": [
-							{
-								"const": true
-							},
-							{
-								"items": {
-									"enum": ["usb"]
-								}
-							}
-						]
-					},
-					"defaults": {
-						"properties": {
-							"variants": {
-								"propertyNames": {
-									"enum": ["usb"]
-								}
-							}
-						}
-					},
-					"interfaceSignatures": {
-						"items": {
-							"properties": {
-								"variant": {
-									"enum": ["usb"]
-								}
-							}
-						}
-					},
-					"parameters": {
-						"propertyNames": {
-							"enum": ["shareButton"]
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "sony.sixaxis"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"rawUSB": {
-						"anyOf": [
-							{
-								"const": true
-							},
-							{
-								"items": {
-									"enum": ["usb", "bluetooth-classic"]
-								}
-							}
-						]
-					},
-					"defaults": {
-						"properties": {
-							"variants": {
-								"propertyNames": {
-									"enum": ["usb", "bluetooth-classic"]
-								}
-							}
-						}
-					},
-					"interfaceSignatures": {
-						"items": {
-							"properties": {
-								"variant": {
-									"enum": ["usb", "bluetooth-classic"]
-								}
-							}
-						}
-					},
-					"parameters": false
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "sony.dualshock4"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"rawUSB": {
-						"anyOf": [
-							{
-								"const": true
-							},
-							{
-								"items": {
-									"enum": ["usb", "bluetooth-classic"]
-								}
-							}
-						]
-					},
-					"defaults": {
-						"properties": {
-							"variants": {
-								"propertyNames": {
-									"enum": ["usb", "bluetooth-classic"]
-								}
-							}
-						}
-					},
-					"interfaceSignatures": {
-						"items": {
-							"properties": {
-								"variant": {
-									"enum": ["usb", "bluetooth-classic"]
-								}
-							}
-						}
-					},
-					"parameters": {
-						"propertyNames": {
-							"enum": ["motionCalibration", "role", "motionScale"]
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "sony.dualsense"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"rawUSB": {
-						"anyOf": [
-							{
-								"const": true
-							},
-							{
-								"items": {
-									"enum": ["usb", "bluetooth-classic"]
-								}
-							}
-						]
-					},
-					"defaults": {
-						"properties": {
-							"variants": {
-								"propertyNames": {
-									"enum": ["usb", "bluetooth-classic"]
-								}
-							}
-						}
-					},
-					"interfaceSignatures": {
-						"items": {
-							"properties": {
-								"variant": {
-									"enum": ["usb", "bluetooth-classic"]
-								}
-							}
-						}
-					},
-					"parameters": {
-						"propertyNames": {
-							"enum": ["maker", "unprobedSensors", "unprobedTouchpad", "forcedVibration", "role"]
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "nintendo.switch1"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"rawUSB": {
-						"anyOf": [
-							{
-								"const": true
-							},
-							{
-								"items": {
-									"enum": ["usb", "bluetooth-classic"]
-								}
-							}
-						]
-					},
-					"defaults": {
-						"properties": {
-							"variants": {
-								"propertyNames": {
-									"enum": ["usb", "bluetooth-classic"]
-								}
-							}
-						}
-					},
-					"interfaceSignatures": {
-						"items": {
-							"properties": {
-								"variant": {
-									"enum": ["usb", "bluetooth-classic"]
-								}
-							}
-						}
-					},
-					"parameters": {
-						"propertyNames": {
-							"enum": ["layout", "usbProtocol"]
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "nintendo.switch2"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"rawUSB": {
-						"anyOf": [
-							{
-								"const": true
-							},
-							{
-								"items": {
-									"enum": ["usb", "bluetooth-le"]
-								}
-							}
-						]
-					},
-					"defaults": {
-						"properties": {
-							"variants": {
-								"propertyNames": {
-									"enum": ["usb", "bluetooth-le"]
-								}
-							}
-						}
-					},
-					"interfaceSignatures": {
-						"items": {
-							"properties": {
-								"variant": {
-									"enum": ["usb", "bluetooth-le"]
-								}
-							}
-						}
-					},
-					"parameters": {
-						"propertyNames": {
-							"enum": ["layout"]
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "nintendo.switch-input-only"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"rawUSB": {
-						"anyOf": [
-							{
-								"const": true
-							},
-							{
-								"items": {
-									"enum": ["usb", "bluetooth-classic"]
-								}
-							}
-						]
-					},
-					"defaults": {
-						"properties": {
-							"variants": {
-								"propertyNames": {
-									"enum": ["usb", "bluetooth-classic"]
-								}
-							}
-						}
-					},
-					"interfaceSignatures": {
-						"items": {
-							"properties": {
-								"variant": {
-									"enum": ["usb", "bluetooth-classic"]
-								}
-							}
-						}
-					},
-					"parameters": false
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "valve.steam-controller"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"rawUSB": {
-						"anyOf": [
-							{
-								"const": true
-							},
-							{
-								"items": {
-									"enum": ["wired", "dongle", "bluetooth-le"]
-								}
-							}
-						]
-					},
-					"defaults": {
-						"properties": {
-							"variants": {
-								"propertyNames": {
-									"enum": ["wired", "dongle", "bluetooth-le"]
-								}
-							}
-						}
-					},
-					"interfaceSignatures": {
-						"items": {
-							"properties": {
-								"variant": {
-									"enum": ["wired", "dongle", "bluetooth-le"]
-								}
-							}
-						}
-					},
-					"parameters": false
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "valve.steam-triton"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"rawUSB": {
-						"anyOf": [
-							{
-								"const": true
-							},
-							{
-								"items": {
-									"enum": ["wired", "dongle", "bluetooth-le"]
-								}
-							}
-						]
-					},
-					"defaults": {
-						"properties": {
-							"variants": {
-								"propertyNames": {
-									"enum": ["wired", "dongle", "bluetooth-le"]
-								}
-							}
-						}
-					},
-					"interfaceSignatures": {
-						"items": {
-							"properties": {
-								"variant": {
-									"enum": ["wired", "dongle", "bluetooth-le"]
-								}
-							}
-						}
-					},
-					"parameters": false
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "valve.steam-deck"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"rawUSB": {
-						"anyOf": [
-							{
-								"const": true
-							}
-						]
-					},
-					"defaults": {
-						"properties": {
-							"variants": false
-						}
-					},
-					"interfaceSignatures": false,
-					"parameters": false
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "vendor.flydigi"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"rawUSB": {
-						"anyOf": [
-							{
-								"const": true
-							}
-						]
-					},
-					"defaults": {
-						"properties": {
-							"variants": false
-						}
-					},
-					"interfaceSignatures": false,
-					"parameters": false
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "vendor.ps3-third-party"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"rawUSB": {
-						"anyOf": [
-							{
-								"const": true
-							}
-						]
-					},
-					"defaults": {
-						"properties": {
-							"variants": false
-						}
-					},
-					"interfaceSignatures": false,
-					"parameters": {
-						"propertyNames": {
-							"enum": ["hatSource"]
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "vendor.gamesir"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"rawUSB": {
-						"anyOf": [
-							{
-								"const": true
-							},
-							{
-								"items": {
-									"enum": ["usb", "enhanced-hid"]
-								}
-							}
-						]
-					},
-					"defaults": {
-						"properties": {
-							"variants": {
-								"propertyNames": {
-									"enum": ["usb", "enhanced-hid"]
-								}
-							}
-						}
-					},
-					"interfaceSignatures": {
-						"items": {
-							"properties": {
-								"variant": {
-									"enum": ["usb", "enhanced-hid"]
-								}
-							}
-						}
-					},
-					"parameters": {
-						"propertyNames": {
-							"enum": ["innerGrips", "lightingMemory"]
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"family": {
-						"const": "vendor.nvidia-shield"
-					}
-				},
-				"required": ["family"]
-			},
-			"then": {
-				"properties": {
-					"rawUSB": {
-						"anyOf": [
-							{
-								"const": true
-							}
-						]
-					},
-					"defaults": {
-						"properties": {
-							"variants": false
-						}
-					},
-					"interfaceSignatures": false,
-					"parameters": {
-						"propertyNames": {
-							"enum": ["reportRevision"]
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"not": {
-					"anyOf": [
-						{
-							"required": ["recordSections"],
-							"properties": {
-								"recordSections": {
-									"contains": {
-										"const": "input"
-									}
-								}
-							}
-						},
-						{
-							"required": ["family"],
-							"properties": {
-								"family": {
-									"const": "hid.descriptor"
-								}
-							}
-						}
-					]
-				}
-			},
-			"then": {
-				"properties": {
-					"defaults": {
-						"properties": {
-							"input": false
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"not": {
-					"required": ["recordSections"],
-					"properties": {
-						"recordSections": {
-							"contains": {
-								"const": "rumble"
-							}
-						}
-					}
-				}
-			},
-			"then": {
-				"properties": {
-					"defaults": {
-						"properties": {
-							"output": {
-								"properties": {
-									"rumble": false
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		{
-			"if": {
-				"not": {
-					"required": ["rawUSB"]
-				}
-			},
-			"then": {
-				"not": {
-					"required": ["rawUSBTuningKeys"]
-				}
-			}
-		},
-		{
-			"if": {
-				"required": ["rawUSB"],
-				"properties": {
-					"rawUSB": {
-						"const": true
-					}
-				}
-			},
-			"then": {
-				"not": {
-					"required": ["tuningKeys"]
-				},
-				"properties": {
-					"defaults": {
-						"properties": {
-							"output": {
-								"properties": {
-									"startup": false
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	],
-	"$defs": {
-		"interfaceSignature": {
-			"type": "object",
-			"additionalProperties": false,
-			"required": ["variant", "interfaceClass", "interfaceSubclass", "interfaceProtocol"],
-			"properties": {
-				"variant": {
-					"enum": ["usb", "bluetooth-classic", "bluetooth-le", "gamepad", "wired", "receiver", "dongle", "enhanced-hid"]
-				},
-				"interfaceClass": {
-					"$ref": "#/$defs/byte"
-				},
-				"interfaceSubclass": {
-					"$ref": "#/$defs/byte"
-				},
-				"interfaceProtocol": {
-					"$ref": "#/$defs/byte"
-				},
-				"interfaceNumber": {
-					"$ref": "#/$defs/byte"
-				}
-			}
-		},
-		"byte": {
-			"type": "integer",
-			"minimum": 0,
-			"maximum": 255
-		},
-		"parameterDeclaration": {
-			"oneOf": [
-				{
-					"type": "object",
-					"additionalProperties": false,
-					"required": ["type"],
-					"properties": {
-						"type": {
-							"const": "flag"
-						}
-					}
-				},
-				{
-					"type": "object",
-					"additionalProperties": false,
-					"required": ["type", "values"],
-					"properties": {
-						"type": {
-							"const": "enum"
-						},
-						"values": {
-							"type": "array",
-							"minItems": 1,
-							"uniqueItems": true,
-							"items": {
-								"type": "string",
-								"pattern": "^[A-Z][A-Za-z0-9]*$"
-							}
-						}
-					}
-				},
-				{
-					"type": "object",
-					"additionalProperties": false,
-					"required": ["type", "fields"],
-					"properties": {
-						"type": {
-							"const": "object"
-						},
-						"fields": {
-							"type": "object",
-							"minProperties": 1,
-							"additionalProperties": {
-								"$ref": "#/$defs/integerField"
-							}
-						}
-					}
-				}
-			]
-		},
-		"integerField": {
-			"type": "object",
-			"additionalProperties": false,
-			"required": ["type", "minimum", "maximum"],
-			"properties": {
-				"type": {
-					"const": "integer"
-				},
-				"minimum": {
-					"type": "integer"
-				},
-				"maximum": {
-					"type": "integer"
-				}
-			}
-		},
-		"defaults": {
-			"type": "object",
-			"additionalProperties": false,
-			"minProperties": 1,
-			"properties": {
-				"output": {
-					"$ref": "controller.schema.json#/$defs/output"
-				},
-				"input": {
-					"anyOf": [
-						{
-							"$ref": "controller.schema.json#/$defs/input"
-						},
-						{
-							"$ref": "#/$defs/hidDescriptorInput"
-						}
-					]
-				},
-				"tuning": {
-					"$ref": "controller.schema.json#/$defs/tuning"
-				},
-				"variants": {
-					"description": "Tuning that differs by variant, over the flat tuning.",
-					"type": "object",
-					"minProperties": 1,
-					"propertyNames": {
-						"$ref": "#/$defs/interfaceSignature/properties/variant"
-					},
-					"additionalProperties": {
-						"type": "object",
-						"additionalProperties": false,
-						"required": ["tuning"],
-						"properties": {
-							"tuning": {
-								"$ref": "controller.schema.json#/$defs/tuning"
-							}
-						}
-					}
-				}
-			}
-		},
-		"macOSOwnedOutput": {
-			"type": "object",
-			"additionalProperties": false,
-			"minProperties": 1,
-			"properties": {
-				"lightingFeatures": {
-					"type": "array",
-					"minItems": 1,
-					"uniqueItems": true,
-					"items": {
-						"enum": ["playerIndicator", "programmableColor", "programmableBrightness"]
-					}
-				},
-				"drivesRumble": {
-					"type": "boolean"
-				},
-				"reports": {
-					"type": "array",
-					"minItems": 1,
-					"uniqueItems": true,
-					"items": {
-						"$ref": "controller.schema.json#/$defs/templateReport"
-					}
-				},
-				"setsStartupPlayerIndicator": {
-					"type": "boolean"
-				},
-				"readsStartupFeatures": {
-					"type": "boolean"
-				},
-				"rationale": {
-					"description": "Why macOS leaves this output undone, for the reader of the description.",
-					"type": "string",
-					"minLength": 1
-				}
-			}
-		},
-		"controls": {
-			"description": "The controls every controller of the family has: the Xbox layout (without guide) when base is xbox, less remove, plus add, with the touch contacts and motion the family reports. A driver adds only what its record or layout makes true.",
-			"type": "object",
-			"additionalProperties": false,
-			"minProperties": 1,
-			"properties": {
-				"base": {
-					"enum": ["xbox"]
-				},
-				"remove": {
-					"$ref": "controller.schema.json#/$defs/controlList"
-				},
-				"add": {
-					"$ref": "controller.schema.json#/$defs/controlList"
-				},
-				"touchContactCount": {
-					"type": "integer",
-					"minimum": 0,
-					"maximum": 10
-				},
-				"motion": {
-					"type": "boolean"
-				}
-			}
-		},
-		"recordCapabilities": {
-			"description": "The capability deltas a record of the family may declare, because its driver acts on them: the exact controls a record may add with present, and whether it may drop rumble.",
-			"type": "object",
-			"additionalProperties": false,
-			"minProperties": 1,
-			"properties": {
-				"present": {
-					"$ref": "controller.schema.json#/$defs/controlList"
-				},
-				"rumbleAbsent": {
-					"type": "boolean"
-				}
-			}
-		},
-		"hidDescriptorInput": {
-			"$comment": "hid.descriptor's input defaults: hidUsageMap is the map every record layers over, and descriptorShapes picks another map for a controller whose report descriptor has a shape. The first shape whose usages are all present, none of absent present, and at least one of anyOf present (when listed) applies.",
-			"type": "object",
-			"additionalProperties": false,
-			"minProperties": 1,
-			"properties": {
-				"hidUsageMap": {
-					"$ref": "controller.schema.json#/$defs/hidUsageMap"
-				},
-				"descriptorShapes": {
-					"type": "array",
-					"minItems": 1,
-					"items": {
-						"$ref": "#/$defs/descriptorShape"
-					}
-				}
-			}
-		},
-		"descriptorShape": {
-			"type": "object",
-			"additionalProperties": false,
-			"required": ["present", "hidUsageMap"],
-			"properties": {
-				"present": {
-					"$ref": "#/$defs/usageList"
-				},
-				"absent": {
-					"$ref": "#/$defs/usageList"
-				},
-				"anyOf": {
-					"$ref": "#/$defs/usageList"
-				},
-				"hidUsageMap": {
-					"$ref": "controller.schema.json#/$defs/hidUsageMap"
-				}
-			}
-		},
-		"usageList": {
-			"type": "array",
-			"minItems": 1,
-			"uniqueItems": true,
-			"items": {
-				"type": "object",
-				"additionalProperties": false,
-				"required": ["page", "usage"],
-				"properties": {
-					"page": {
-						"$ref": "controller.schema.json#/$defs/hidUsagePage"
-					},
-					"usage": {
-						"$ref": "controller.schema.json#/$defs/hidUsageID"
-					}
-				}
-			}
-		}
-	}
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/protocol-description.schema.json",
+  "$comment": "Each family's variants are PhysicalProtocolID.variants in Swift; a family with none has no interface signatures. The parameter names of each family are those its driver declares in ProtocolParameters. The family facts a driver reads live here and nowhere in code: its default endpoints, whether it is reached through raw USB (for every variant, or only the listed ones), the record sections whose layouts it reads, the tuning keys it reads beyond stickDeadzone (none for a raw-USB variant), its button labels, and what OJD still sends when macOS serves the controller. defaults holds the sections a record layers over, limited to what the family reads: input applies to hid.report-layout and xbox.xid as a byte layout and to hid.descriptor as a HID usage map, a rumble template needs the matching recordSections entry, startup writes need a family that is not always raw USB, and each defaults.tuning key must be stickDeadzone or in tuningKeys, which a schema cannot say and the validators check.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "family", "endpoints"],
+  "properties": {
+    "apiVersion": {
+      "const": "openjoystickdriver/v1alpha1"
+    },
+    "kind": {
+      "const": "ProtocolDescription"
+    },
+    "family": {
+      "$ref": "controller.schema.json#/$defs/protocol/properties/family"
+    },
+    "endpoints": {
+      "$ref": "controller.schema.json#/$defs/usbOverride/properties/endpoints"
+    },
+    "rawUSB": {
+      "oneOf": [
+        {
+          "const": true
+        },
+        {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/interfaceSignature/properties/variant"
+          }
+        }
+      ]
+    },
+    "recordSections": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": ["input", "rumble"]
+      }
+    },
+    "tuningKeys": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "inputLivenessTimeoutMs",
+          "hidStartupIntervalMs",
+          "minimumHIDOutputIntervalMs",
+          "hidStartupRecoveryIntervalMs",
+          "hidStartupRecoveryRounds",
+          "keepAliveIntervalMs",
+          "lizardResendTicks",
+          "usbCommandTimeoutMs",
+          "presenceResendReports",
+          "adapterDisconnectDelayMs",
+          "usbStartupIntervalMs",
+          "usbStartupRetryDelayMs"
+        ]
+      }
+    },
+    "rawUSBTuningKeys": {
+      "description": "The tuning keys a raw-USB variant reads beyond stickDeadzone.",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "keepAliveIntervalMs",
+          "lizardResendTicks",
+          "usbCommandTimeoutMs",
+          "presenceResendReports",
+          "adapterDisconnectDelayMs",
+          "usbStartupIntervalMs",
+          "usbStartupRetryDelayMs"
+        ]
+      }
+    },
+    "controls": {
+      "$ref": "#/$defs/controls"
+    },
+    "recordCapabilities": {
+      "$ref": "#/$defs/recordCapabilities"
+    },
+    "buttonLabels": {
+      "enum": ["PlayStation", "Nintendo"]
+    },
+    "macOSOwnedOutput": {
+      "$ref": "#/$defs/macOSOwnedOutput"
+    },
+    "interfaceSignatures": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/interfaceSignature"
+      }
+    },
+    "parameters": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/parameterDeclaration"
+      }
+    },
+    "defaults": {
+      "$ref": "#/$defs/defaults"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "hid.descriptor"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": false,
+              "input": {
+                "$ref": "#/$defs/hidDescriptorInput"
+              },
+              "output": {
+                "properties": {
+                  "rumble": false
+                }
+              },
+              "tuning": {
+                "properties": {
+                  "inputLivenessTimeoutMs": false,
+                  "hidStartupRecoveryIntervalMs": false,
+                  "hidStartupRecoveryRounds": false
+                }
+              }
+            }
+          },
+          "interfaceSignatures": false,
+          "parameters": false
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "hid.report-layout"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": false,
+              "input": {
+                "$ref": "controller.schema.json#/$defs/input"
+              },
+              "tuning": {
+                "properties": {
+                  "inputLivenessTimeoutMs": false,
+                  "hidStartupRecoveryIntervalMs": false,
+                  "hidStartupRecoveryRounds": false
+                }
+              }
+            }
+          },
+          "interfaceSignatures": false,
+          "parameters": false
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "xbox.xid"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              },
+              {
+                "items": {
+                  "enum": ["gamepad"]
+                }
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": {
+                "propertyNames": {
+                  "enum": ["gamepad"]
+                }
+              },
+              "input": {
+                "$ref": "controller.schema.json#/$defs/input"
+              },
+              "output": {
+                "properties": {
+                  "rumble": false,
+                  "startup": false
+                }
+              },
+              "tuning": {
+                "properties": {
+                  "inputLivenessTimeoutMs": false,
+                  "hidStartupRecoveryIntervalMs": false,
+                  "hidStartupRecoveryRounds": false,
+                  "hidStartupIntervalMs": false,
+                  "minimumHIDOutputIntervalMs": false
+                }
+              }
+            }
+          },
+          "interfaceSignatures": {
+            "items": {
+              "properties": {
+                "variant": {
+                  "enum": ["gamepad"]
+                }
+              }
+            }
+          },
+          "parameters": false
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "xbox.xusb"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              },
+              {
+                "items": {
+                  "enum": ["wired", "receiver"]
+                }
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": {
+                "propertyNames": {
+                  "enum": ["wired", "receiver"]
+                }
+              }
+            }
+          },
+          "interfaceSignatures": {
+            "items": {
+              "properties": {
+                "variant": {
+                  "enum": ["wired", "receiver"]
+                }
+              }
+            }
+          },
+          "parameters": false
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "xbox.gip"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              },
+              {
+                "items": {
+                  "enum": ["usb"]
+                }
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": {
+                "propertyNames": {
+                  "enum": ["usb"]
+                }
+              }
+            }
+          },
+          "interfaceSignatures": {
+            "items": {
+              "properties": {
+                "variant": {
+                  "enum": ["usb"]
+                }
+              }
+            }
+          },
+          "parameters": {
+            "propertyNames": {
+              "enum": ["shareButton"]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "sony.sixaxis"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              },
+              {
+                "items": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": {
+                "propertyNames": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            }
+          },
+          "interfaceSignatures": {
+            "items": {
+              "properties": {
+                "variant": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            }
+          },
+          "parameters": false
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "sony.dualshock4"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              },
+              {
+                "items": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": {
+                "propertyNames": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            }
+          },
+          "interfaceSignatures": {
+            "items": {
+              "properties": {
+                "variant": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            }
+          },
+          "parameters": {
+            "propertyNames": {
+              "enum": ["motionCalibration", "role", "motionScale"]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "sony.dualsense"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              },
+              {
+                "items": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": {
+                "propertyNames": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            }
+          },
+          "interfaceSignatures": {
+            "items": {
+              "properties": {
+                "variant": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            }
+          },
+          "parameters": {
+            "propertyNames": {
+              "enum": [
+                "maker",
+                "unprobedSensors",
+                "unprobedTouchpad",
+                "forcedVibration",
+                "role"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "nintendo.switch1"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              },
+              {
+                "items": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": {
+                "propertyNames": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            }
+          },
+          "interfaceSignatures": {
+            "items": {
+              "properties": {
+                "variant": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            }
+          },
+          "parameters": {
+            "propertyNames": {
+              "enum": ["layout", "usbProtocol"]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "nintendo.switch2"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              },
+              {
+                "items": {
+                  "enum": ["usb", "bluetooth-le"]
+                }
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": {
+                "propertyNames": {
+                  "enum": ["usb", "bluetooth-le"]
+                }
+              }
+            }
+          },
+          "interfaceSignatures": {
+            "items": {
+              "properties": {
+                "variant": {
+                  "enum": ["usb", "bluetooth-le"]
+                }
+              }
+            }
+          },
+          "parameters": {
+            "propertyNames": {
+              "enum": ["layout"]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "nintendo.switch-input-only"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              },
+              {
+                "items": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": {
+                "propertyNames": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            }
+          },
+          "interfaceSignatures": {
+            "items": {
+              "properties": {
+                "variant": {
+                  "enum": ["usb", "bluetooth-classic"]
+                }
+              }
+            }
+          },
+          "parameters": false
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "valve.steam-controller"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              },
+              {
+                "items": {
+                  "enum": ["wired", "dongle", "bluetooth-le"]
+                }
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": {
+                "propertyNames": {
+                  "enum": ["wired", "dongle", "bluetooth-le"]
+                }
+              }
+            }
+          },
+          "interfaceSignatures": {
+            "items": {
+              "properties": {
+                "variant": {
+                  "enum": ["wired", "dongle", "bluetooth-le"]
+                }
+              }
+            }
+          },
+          "parameters": false
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "valve.steam-triton"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              },
+              {
+                "items": {
+                  "enum": ["wired", "dongle", "bluetooth-le"]
+                }
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": {
+                "propertyNames": {
+                  "enum": ["wired", "dongle", "bluetooth-le"]
+                }
+              }
+            }
+          },
+          "interfaceSignatures": {
+            "items": {
+              "properties": {
+                "variant": {
+                  "enum": ["wired", "dongle", "bluetooth-le"]
+                }
+              }
+            }
+          },
+          "parameters": false
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "valve.steam-deck"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": false
+            }
+          },
+          "interfaceSignatures": false,
+          "parameters": false
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "vendor.flydigi"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": false
+            }
+          },
+          "interfaceSignatures": false,
+          "parameters": false
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "vendor.ps3-third-party"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": false
+            }
+          },
+          "interfaceSignatures": false,
+          "parameters": {
+            "propertyNames": {
+              "enum": ["hatSource"]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "vendor.gamesir"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              },
+              {
+                "items": {
+                  "enum": ["usb", "enhanced-hid"]
+                }
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": {
+                "propertyNames": {
+                  "enum": ["usb", "enhanced-hid"]
+                }
+              }
+            }
+          },
+          "interfaceSignatures": {
+            "items": {
+              "properties": {
+                "variant": {
+                  "enum": ["usb", "enhanced-hid"]
+                }
+              }
+            }
+          },
+          "parameters": {
+            "propertyNames": {
+              "enum": ["innerGrips", "lightingMemory"]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "family": {
+            "const": "vendor.nvidia-shield"
+          }
+        },
+        "required": ["family"]
+      },
+      "then": {
+        "properties": {
+          "rawUSB": {
+            "anyOf": [
+              {
+                "const": true
+              }
+            ]
+          },
+          "defaults": {
+            "properties": {
+              "variants": false
+            }
+          },
+          "interfaceSignatures": false,
+          "parameters": {
+            "propertyNames": {
+              "enum": ["reportRevision"]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "not": {
+          "anyOf": [
+            {
+              "required": ["recordSections"],
+              "properties": {
+                "recordSections": {
+                  "contains": {
+                    "const": "input"
+                  }
+                }
+              }
+            },
+            {
+              "required": ["family"],
+              "properties": {
+                "family": {
+                  "const": "hid.descriptor"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "then": {
+        "properties": {
+          "defaults": {
+            "properties": {
+              "input": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "not": {
+          "required": ["recordSections"],
+          "properties": {
+            "recordSections": {
+              "contains": {
+                "const": "rumble"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "defaults": {
+            "properties": {
+              "output": {
+                "properties": {
+                  "rumble": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "not": {
+          "required": ["rawUSB"]
+        }
+      },
+      "then": {
+        "not": {
+          "required": ["rawUSBTuningKeys"]
+        }
+      }
+    },
+    {
+      "if": {
+        "required": ["rawUSB"],
+        "properties": {
+          "rawUSB": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "not": {
+          "required": ["tuningKeys"]
+        },
+        "properties": {
+          "defaults": {
+            "properties": {
+              "output": {
+                "properties": {
+                  "startup": false
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "interfaceSignature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "variant",
+        "interfaceClass",
+        "interfaceSubclass",
+        "interfaceProtocol"
+      ],
+      "properties": {
+        "variant": {
+          "enum": [
+            "usb",
+            "bluetooth-classic",
+            "bluetooth-le",
+            "gamepad",
+            "wired",
+            "receiver",
+            "dongle",
+            "enhanced-hid"
+          ]
+        },
+        "interfaceClass": {
+          "$ref": "#/$defs/byte"
+        },
+        "interfaceSubclass": {
+          "$ref": "#/$defs/byte"
+        },
+        "interfaceProtocol": {
+          "$ref": "#/$defs/byte"
+        },
+        "interfaceNumber": {
+          "$ref": "#/$defs/byte"
+        }
+      }
+    },
+    "byte": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 255
+    },
+    "parameterDeclaration": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type"],
+          "properties": {
+            "type": {
+              "const": "flag"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "values"],
+          "properties": {
+            "type": {
+              "const": "enum"
+            },
+            "values": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Z][A-Za-z0-9]*$"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "fields"],
+          "properties": {
+            "type": {
+              "const": "object"
+            },
+            "fields": {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": {
+                "$ref": "#/$defs/integerField"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "integerField": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "minimum", "maximum"],
+      "properties": {
+        "type": {
+          "const": "integer"
+        },
+        "minimum": {
+          "type": "integer"
+        },
+        "maximum": {
+          "type": "integer"
+        }
+      }
+    },
+    "defaults": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "output": {
+          "$ref": "controller.schema.json#/$defs/output"
+        },
+        "input": {
+          "anyOf": [
+            {
+              "$ref": "controller.schema.json#/$defs/input"
+            },
+            {
+              "$ref": "#/$defs/hidDescriptorInput"
+            }
+          ]
+        },
+        "tuning": {
+          "$ref": "controller.schema.json#/$defs/tuning"
+        },
+        "variants": {
+          "description": "Tuning that differs by variant, over the flat tuning.",
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "$ref": "#/$defs/interfaceSignature/properties/variant"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["tuning"],
+            "properties": {
+              "tuning": {
+                "$ref": "controller.schema.json#/$defs/tuning"
+              }
+            }
+          }
+        }
+      }
+    },
+    "macOSOwnedOutput": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "lightingFeatures": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "playerIndicator",
+              "programmableColor",
+              "programmableBrightness"
+            ]
+          }
+        },
+        "drivesRumble": {
+          "type": "boolean"
+        },
+        "reports": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "controller.schema.json#/$defs/templateReport"
+          }
+        },
+        "setsStartupPlayerIndicator": {
+          "type": "boolean"
+        },
+        "readsStartupFeatures": {
+          "type": "boolean"
+        },
+        "rationale": {
+          "description": "Why macOS leaves this output undone, for the reader of the description.",
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "controls": {
+      "description": "The controls every controller of the family has: the Xbox layout (without guide) when base is xbox, less remove, plus add, with the touch contacts and motion the family reports. A driver adds only what its record or layout makes true.",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "base": {
+          "enum": ["xbox"]
+        },
+        "remove": {
+          "$ref": "controller.schema.json#/$defs/controlList"
+        },
+        "add": {
+          "$ref": "controller.schema.json#/$defs/controlList"
+        },
+        "touchContactCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "motion": {
+          "type": "boolean"
+        }
+      }
+    },
+    "recordCapabilities": {
+      "description": "The capability deltas a record of the family may declare, because its driver acts on them: the exact controls a record may add with present, and whether it may drop rumble.",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "present": {
+          "$ref": "controller.schema.json#/$defs/controlList"
+        },
+        "rumbleAbsent": {
+          "type": "boolean"
+        }
+      }
+    },
+    "hidDescriptorInput": {
+      "$comment": "hid.descriptor's input defaults: hidUsageMap is the map every record layers over, and descriptorShapes picks another map for a controller whose report descriptor has a shape. The first shape whose usages are all present, none of absent present, and at least one of anyOf present (when listed) applies.",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "hidUsageMap": {
+          "$ref": "controller.schema.json#/$defs/hidUsageMap"
+        },
+        "descriptorShapes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/descriptorShape"
+          }
+        }
+      }
+    },
+    "descriptorShape": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["present", "hidUsageMap"],
+      "properties": {
+        "present": {
+          "$ref": "#/$defs/usageList"
+        },
+        "absent": {
+          "$ref": "#/$defs/usageList"
+        },
+        "anyOf": {
+          "$ref": "#/$defs/usageList"
+        },
+        "hidUsageMap": {
+          "$ref": "controller.schema.json#/$defs/hidUsageMap"
+        }
+      }
+    },
+    "usageList": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["page", "usage"],
+        "properties": {
+          "page": {
+            "$ref": "controller.schema.json#/$defs/hidUsagePage"
+          },
+          "usage": {
+            "$ref": "controller.schema.json#/$defs/hidUsageID"
+          }
+        }
+      }
+    }
+  }
 }

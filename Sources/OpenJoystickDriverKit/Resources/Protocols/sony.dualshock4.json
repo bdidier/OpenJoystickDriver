@@ -1,57 +1,51 @@
 {
-	"apiVersion": "openjoystickdriver/v1alpha1",
-	"kind": "ProtocolDescription",
-	"family": "sony.dualshock4",
-	"endpoints": {
-		"in": 130,
-		"out": 2
-	},
-	"tuningKeys": [
-		"hidStartupIntervalMs",
-		"minimumHIDOutputIntervalMs",
-		"inputLivenessTimeoutMs",
-		"adapterDisconnectDelayMs"
-	],
-	"buttonLabels": "PlayStation",
-	"macOSOwnedOutput": {
-		"readsStartupFeatures": true,
-		"rationale": "A DualShock 4 on Bluetooth sends only the 10-byte input report until the host reads the calibration feature report, which macOS does not do."
-	},
-	"parameters": {
-		"motionCalibration": {
-			"type": "enum",
-			"values": [
-				"Factory"
-			]
-		},
-		"role": {
-			"type": "enum",
-			"values": [
-				"WirelessAdapter"
-			]
-		},
-		"motionScale": {
-			"type": "enum",
-			"values": [
-				"StrikePad"
-			]
-		}
-	},
-	"controls": {
-		"base": "xbox",
-		"add": [
-			"guide",
-			"touchpad-click",
-			"left-trigger-button",
-			"right-trigger-button"
-		],
-		"touchContactCount": 2,
-		"motion": true
-	},
-	"defaults": {
-		"tuning": {
-			"inputLivenessTimeoutMs": 1000,
-			"adapterDisconnectDelayMs": 500
-		}
-	}
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "ProtocolDescription",
+  "family": "sony.dualshock4",
+  "endpoints": {
+    "in": 130,
+    "out": 2
+  },
+  "tuningKeys": [
+    "hidStartupIntervalMs",
+    "minimumHIDOutputIntervalMs",
+    "inputLivenessTimeoutMs",
+    "adapterDisconnectDelayMs"
+  ],
+  "buttonLabels": "PlayStation",
+  "macOSOwnedOutput": {
+    "readsStartupFeatures": true,
+    "rationale": "A DualShock 4 on Bluetooth sends only the 10-byte input report until the host reads the calibration feature report, which macOS does not do."
+  },
+  "parameters": {
+    "motionCalibration": {
+      "type": "enum",
+      "values": ["Factory"]
+    },
+    "role": {
+      "type": "enum",
+      "values": ["WirelessAdapter"]
+    },
+    "motionScale": {
+      "type": "enum",
+      "values": ["StrikePad"]
+    }
+  },
+  "controls": {
+    "base": "xbox",
+    "add": [
+      "guide",
+      "touchpad-click",
+      "left-trigger-button",
+      "right-trigger-button"
+    ],
+    "touchContactCount": 2,
+    "motion": true
+  },
+  "defaults": {
+    "tuning": {
+      "inputLivenessTimeoutMs": 1000,
+      "adapterDisconnectDelayMs": 500
+    }
+  }
 }

@@ -1,51 +1,45 @@
 {
-	"apiVersion": "openjoystickdriver/v1alpha1",
-	"kind": "ProtocolDescription",
-	"family": "nintendo.switch1",
-	"endpoints": {
-		"in": 130,
-		"out": 2
-	},
-	"tuningKeys": [
-		"hidStartupIntervalMs",
-		"minimumHIDOutputIntervalMs",
-		"hidStartupRecoveryIntervalMs",
-		"hidStartupRecoveryRounds"
-	],
-	"buttonLabels": "Nintendo",
-	"parameters": {
-		"layout": {
-			"type": "enum",
-			"values": [
-				"Pro",
-				"JoyConLeft",
-				"JoyConRight"
-			]
-		},
-		"usbProtocol": {
-			"type": "enum",
-			"values": [
-				"ChargingOnly"
-			]
-		}
-	},
-	"defaults": {
-		"tuning": {
-			"minimumHIDOutputIntervalMs": 50,
-			"hidStartupRecoveryIntervalMs": 200,
-			"hidStartupRecoveryRounds": 2
-		},
-		"variants": {
-			"bluetooth-classic": {
-				"tuning": {
-					"hidStartupIntervalMs": 60
-				}
-			},
-			"usb": {
-				"tuning": {
-					"hidStartupIntervalMs": 20
-				}
-			}
-		}
-	}
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "ProtocolDescription",
+  "family": "nintendo.switch1",
+  "endpoints": {
+    "in": 130,
+    "out": 2
+  },
+  "tuningKeys": [
+    "hidStartupIntervalMs",
+    "minimumHIDOutputIntervalMs",
+    "hidStartupRecoveryIntervalMs",
+    "hidStartupRecoveryRounds"
+  ],
+  "buttonLabels": "Nintendo",
+  "parameters": {
+    "layout": {
+      "type": "enum",
+      "values": ["Pro", "JoyConLeft", "JoyConRight"]
+    },
+    "usbProtocol": {
+      "type": "enum",
+      "values": ["ChargingOnly"]
+    }
+  },
+  "defaults": {
+    "tuning": {
+      "minimumHIDOutputIntervalMs": 50,
+      "hidStartupRecoveryIntervalMs": 200,
+      "hidStartupRecoveryRounds": 2
+    },
+    "variants": {
+      "bluetooth-classic": {
+        "tuning": {
+          "hidStartupIntervalMs": 60
+        }
+      },
+      "usb": {
+        "tuning": {
+          "hidStartupIntervalMs": 20
+        }
+      }
+    }
+  }
 }

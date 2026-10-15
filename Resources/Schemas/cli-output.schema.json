@@ -1,3429 +1,3439 @@
 {
-	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/cli-output.schema.json",
-	"title": "ojd --json output",
-	"description": "The --json output of each ojd command. Each command's entry in $defs is its command path in lowerCamelCase, such as controllerShow for 'ojd controller show'. Every document has apiVersion, and kind: the kind of the object it prints, such as Controller for 'ojd controller show', or Status for an action that leaves no object to print, whose details hold the command's own result. A list command prints its listed items in items, with no apiVersion or kind of their own, and an empty metadata. Entries that start with 'shared' are shapes that several commands use. A command that streams prints one document per line, and each line matches the entry.",
-	"$defs": {
-		"accessDisable": {
-			"type": "object",
-			"required": ["apiVersion", "kind", "enabled", "socketPath"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "EndpointAccess"
-				},
-				"enabled": {
-					"type": "boolean"
-				},
-				"socketPath": {
-					"type": "string"
-				}
-			}
-		},
-		"accessEnable": {
-			"type": "object",
-			"required": ["apiVersion", "kind", "enabled", "socketPath"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "EndpointAccess"
-				},
-				"enabled": {
-					"type": "boolean"
-				},
-				"socketPath": {
-					"type": "string"
-				}
-			}
-		},
-		"accessGrant": {
-			"required": ["apiVersion", "kind"],
-			"oneOf": [
-				{
-					"$ref": "#/$defs/sharedAccessGrant",
-					"properties": {
-						"kind": {
-							"const": "AccessGrant"
-						}
-					}
-				},
-				{
-					"type": "object",
-					"description": "With --token: the token, shown only this once, and its grant.",
-					"required": ["grant", "token"],
-					"additionalProperties": false,
-					"properties": {
-						"apiVersion": {
-							"$ref": "#/$defs/sharedAPIVersion"
-						},
-						"kind": {
-							"const": "AccessToken"
-						},
-						"grant": {
-							"$ref": "#/$defs/sharedAccessToken"
-						},
-						"token": {
-							"type": "string"
-						}
-					}
-				}
-			]
-		},
-		"accessList": {
-			"type": "object",
-			"required": [
-				"apiVersion",
-				"kind",
-				"grants",
-				"refused",
-				"refusedTokens",
-				"tokens"
-			],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "AccessSummary"
-				},
-				"grants": {
-					"type": "array",
-					"items": {
-						"$ref": "#/$defs/sharedAccessGrant"
-					}
-				},
-				"refused": {
-					"type": "array",
-					"items": {
-						"$ref": "#/$defs/sharedAccessRefusedClient"
-					}
-				},
-				"refusedTokens": {
-					"type": "array",
-					"items": {
-						"$ref": "#/$defs/sharedAccessRefusedToken"
-					}
-				},
-				"tokens": {
-					"type": "array",
-					"items": {
-						"$ref": "#/$defs/sharedAccessToken"
-					}
-				}
-			}
-		},
-		"accessRevoke": {
-			"$ref": "#/$defs/sharedStatus",
-			"properties": {
-				"details": {
-					"type": "object",
-					"required": ["closedConnections", "id"],
-					"additionalProperties": false,
-					"properties": {
-						"closedConnections": {
-							"type": "integer",
-							"minimum": 0
-						},
-						"grant": {
-							"$ref": "#/$defs/sharedAccessGrant"
-						},
-						"id": {
-							"type": "string"
-						},
-						"token": {
-							"$ref": "#/$defs/sharedAccessToken"
-						}
-					}
-				}
-			}
-		},
-		"accessStatus": {
-			"type": "object",
-			"required": [
-				"apiVersion",
-				"kind",
-				"connections",
-				"enabled",
-				"grants",
-				"refused",
-				"refusedTokens",
-				"socketPath",
-				"tokens",
-				"web"
-			],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "EndpointAccess"
-				},
-				"connections": {
-					"type": "array",
-					"items": {
-						"type": "object",
-						"required": ["id", "identifier", "scopes", "transport"],
-						"additionalProperties": false,
-						"properties": {
-							"id": {
-								"type": "string"
-							},
-							"identifier": {
-								"type": "string"
-							},
-							"scopes": {
-								"type": "array",
-								"items": {
-									"enum": ["read", "control"]
-								}
-							},
-							"transport": {
-								"enum": ["socket", "web"]
-							}
-						}
-					}
-				},
-				"enabled": {
-					"type": "boolean"
-				},
-				"grants": {
-					"type": "array",
-					"items": {
-						"$ref": "#/$defs/sharedAccessGrant"
-					}
-				},
-				"refused": {
-					"type": "array",
-					"items": {
-						"$ref": "#/$defs/sharedAccessRefusedClient"
-					}
-				},
-				"refusedTokens": {
-					"type": "array",
-					"items": {
-						"$ref": "#/$defs/sharedAccessRefusedToken"
-					}
-				},
-				"socketPath": {
-					"type": "string"
-				},
-				"tokens": {
-					"type": "array",
-					"items": {
-						"$ref": "#/$defs/sharedAccessToken"
-					}
-				},
-				"web": {
-					"$ref": "#/$defs/sharedAccessWeb"
-				}
-			}
-		},
-		"accessWebDisable": {
-			"required": ["apiVersion", "kind"],
-			"properties": {
-				"kind": {
-					"const": "WebAccess"
-				}
-			},
-			"$ref": "#/$defs/sharedAccessWeb"
-		},
-		"accessWebEnable": {
-			"required": ["apiVersion", "kind"],
-			"properties": {
-				"kind": {
-					"const": "WebAccess"
-				}
-			},
-			"$ref": "#/$defs/sharedAccessWeb"
-		},
-		"bindingClear": {
-			"$ref": "#/$defs/sharedStatus",
-			"properties": {
-				"details": {
-					"type": "object",
-					"required": ["all", "dryRun", "profile", "removed"],
-					"additionalProperties": false,
-					"properties": {
-						"all": {
-							"type": "boolean"
-						},
-						"dryRun": {
-							"type": "boolean"
-						},
-						"profile": {
-							"$ref": "#/$defs/sharedProfileSummary"
-						},
-						"removed": {
-							"type": "array",
-							"items": {
-								"type": "string"
-							}
-						}
-					}
-				}
-			}
-		},
-		"bindingList": {
-			"type": "object",
-			"required": ["apiVersion", "kind", "metadata", "items"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "BindingList"
-				},
-				"metadata": {
-					"type": "object",
-					"additionalProperties": false
-				},
-				"items": {
-					"type": "array",
-					"items": {
-						"type": "object",
-						"required": ["behavior", "id", "profile", "source", "target"],
-						"additionalProperties": false,
-						"properties": {
-							"behavior": {
-								"$ref": "#/$defs/sharedBindingSummary/properties/behavior"
-							},
-							"id": {
-								"$ref": "#/$defs/sharedBindingSummary/properties/id"
-							},
-							"profile": {
-								"$ref": "#/$defs/sharedProfileSummary"
-							},
-							"source": {
-								"$ref": "#/$defs/sharedBindingSummary/properties/source"
-							},
-							"target": {
-								"$ref": "#/$defs/sharedBindingSummary/properties/target"
-							}
-						}
-					}
-				}
-			}
-		},
-		"bindingSet": {
-			"type": "object",
-			"required": ["apiVersion", "kind", "binding", "profile", "replaced"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "Binding"
-				},
-				"binding": {
-					"$ref": "#/$defs/sharedBindingSummary"
-				},
-				"profile": {
-					"$ref": "#/$defs/sharedProfileSummary"
-				},
-				"replaced": {
-					"type": "boolean"
-				}
-			}
-		},
-		"configShow": {
-			"type": "object",
-			"required": ["apiVersion", "kind", "defaultsFile", "values"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "Configuration"
-				},
-				"controller": {
-					"description": "The controller whose record was layered, as VVVV:PPPP. Absent without --controller.",
-					"type": "string",
-					"pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
-				},
-				"defaultsFile": {
-					"description": "The all.patch.json path, whether or not the file exists.",
-					"type": "string"
-				},
-				"profile": {
-					"description": "The active profile whose stick values the profile rows show. Absent without --controller, without a running service, or without an active profile for the controller.",
-					"type": "string"
-				},
-				"defaultsProblem": {
-					"description": "Why OJD ignored all.patch.json. Absent when it applies or does not exist.",
-					"type": "string"
-				},
-				"values": {
-					"type": "array",
-					"items": {
-						"type": "object",
-						"required": ["key", "layer"],
-						"additionalProperties": false,
-						"properties": {
-							"key": {
-								"description": "A record tuning key, or for a profile row the profile file path of the value.",
-								"anyOf": [
-									{
-										"enum": [
-											"stickDeadzone",
-											"inputLivenessTimeoutMs",
-											"hidStartupRecoveryIntervalMs",
-											"hidStartupRecoveryRounds",
-											"hidStartupIntervalMs",
-											"minimumHIDOutputIntervalMs",
-											"keepAliveIntervalMs",
-											"lizardResendTicks",
-											"usbCommandTimeoutMs",
-											"presenceResendReports",
-											"adapterDisconnectDelayMs",
-											"usbStartupIntervalMs",
-											"usbStartupRetryDelayMs"
-										]
-									},
-									{
-										"pattern": "^stickMappings\\.[0-9]+\\.tuning\\.innerDeadzone$"
-									}
-								]
-							},
-							"layer": {
-								"description": "The layer that set the value, lowest first.",
-								"enum": ["driver", "bundled", "package", "global", "user", "profile"]
-							},
-							"value": {
-								"description": "Absent while only the driver default applies.",
-								"type": "number"
-							},
-							"families": {
-								"description": "The protocol families whose drivers read the key. Present for a tuning key without --controller.",
-								"type": "array",
-								"uniqueItems": true,
-								"items": {
-									"type": "string"
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"controllerCalibrate": {
-			"type": "object",
-			"required": [
-				"apiVersion",
-				"kind",
-				"calibrated",
-				"collecting",
-				"controller",
-				"offsetDegreesPerSecond"
-			],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "Calibration"
-				},
-				"calibrated": {
-					"type": "boolean"
-				},
-				"collecting": {
-					"type": "boolean"
-				},
-				"controller": {
-					"type": "string"
-				},
-				"offsetDegreesPerSecond": {
-					"type": "object",
-					"required": ["x", "y", "z"],
-					"additionalProperties": false,
-					"properties": {
-						"x": {
-							"type": "number"
-						},
-						"y": {
-							"type": "number"
-						},
-						"z": {
-							"type": "number"
-						}
-					}
-				}
-			}
-		},
-		"controllerCapture": {
-			"type": "object",
-			"required": [
-				"apiVersion",
-				"kind",
-				"direction",
-				"hex",
-				"length",
-				"captureTime"
-			],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "USBPacket"
-				},
-				"direction": {
-					"enum": ["rx", "tx"]
-				},
-				"hex": {
-					"type": "string",
-					"pattern": "^[0-9A-Fa-f ]*$"
-				},
-				"length": {
-					"type": "integer",
-					"minimum": 0
-				},
-				"captureTime": {
-					"type": "string",
-					"format": "date-time"
-				}
-			}
-		},
-		"controllerDisconnect": {
-			"required": ["apiVersion", "kind"],
-			"properties": {
-				"kind": {
-					"const": "ControllerSession"
-				}
-			},
-			"$ref": "#/$defs/sharedControllerSession"
-		},
-		"controllerLight": {
-			"$ref": "#/$defs/sharedStatus",
-			"properties": {
-				"status": {
-					"const": "Success"
-				},
-				"details": {
-					"$ref": "#/$defs/sharedControllerOutput"
-				}
-			}
-		},
-		"controllerList": {
-			"type": "object",
-			"required": ["apiVersion", "kind", "metadata", "items"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "ControllerList"
-				},
-				"metadata": {
-					"type": "object",
-					"additionalProperties": false,
-					"properties": {}
-				},
-				"items": {
-					"type": "array",
-					"items": {
-						"type": "object",
-						"required": [
-							"connection",
-							"hasSerialNumber",
-							"id",
-							"name",
-							"productID",
-							"protocol",
-							"session",
-							"vendorID"
-						],
-						"additionalProperties": false,
-						"properties": {
-							"connection": {
-								"type": "string"
-							},
-							"hasSerialNumber": {
-								"type": "boolean"
-							},
-							"id": {
-								"type": "string"
-							},
-							"name": {
-								"type": "string"
-							},
-							"power": {
-								"description": "The latest power state the controller reports. Absent when the service reports none.",
-								"$ref": "report.schema.json#/$defs/controllerConnectionState/properties/power"
-							},
-							"productID": {
-								"type": "integer",
-								"minimum": 0,
-								"maximum": 65535
-							},
-							"protocol": {
-								"$ref": "report.schema.json#/$defs/controller/properties/protocolBinding"
-							},
-							"session": {
-								"enum": ["active", "suspended"]
-							},
-							"unit": {
-								"type": "string",
-								"pattern": "^U-[A-Za-z0-9_-]{16}$",
-								"description": "The persistent unit ID: stays the same while the controller uses the same port. Absent without a location ID."
-							},
-							"vendorID": {
-								"type": "integer",
-								"minimum": 0,
-								"maximum": 65535
-							}
-						}
-					}
-				}
-			}
-		},
-		"controllerOwnership": {
-			"type": "object",
-			"required": [
-				"apiVersion",
-				"kind",
-				"controller",
-				"created",
-				"dryRun",
-				"file",
-				"identity",
-				"ownership",
-				"previous"
-			],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "ControllerOwnership"
-				},
-				"controller": {
-					"type": "string"
-				},
-				"created": {
-					"description": "Whether the change creates the user record file.",
-					"type": "boolean"
-				},
-				"dryRun": {
-					"type": "boolean"
-				},
-				"file": {
-					"description": "The user record file the change writes.",
-					"type": "string"
-				},
-				"identity": {
-					"type": "string",
-					"pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
-				},
-				"ownership": {
-					"$ref": "#/$defs/sharedOwnershipChoice"
-				},
-				"previous": {
-					"$ref": "#/$defs/sharedOwnershipChoice"
-				}
-			}
-		},
-		"controllerPair": {
-			"required": ["apiVersion", "kind"],
-			"properties": {
-				"kind": {
-					"const": "JoyConPair"
-				}
-			},
-			"$ref": "#/$defs/sharedJoyConPair"
-		},
-		"controllerPlayer": {
-			"$ref": "#/$defs/sharedStatus",
-			"properties": {
-				"status": {
-					"const": "Success"
-				},
-				"details": {
-					"$ref": "#/$defs/sharedControllerOutput"
-				}
-			}
-		},
-		"controllerResume": {
-			"required": ["apiVersion", "kind"],
-			"properties": {
-				"kind": {
-					"const": "ControllerSession"
-				}
-			},
-			"$ref": "#/$defs/sharedControllerSession"
-		},
-		"controllerRumble": {
-			"$ref": "#/$defs/sharedStatus",
-			"properties": {
-				"status": {
-					"const": "Success"
-				},
-				"details": {
-					"$ref": "#/$defs/sharedControllerOutput"
-				}
-			}
-		},
-		"controllerShow": {
-			"type": "object",
-			"required": [
-				"apiVersion",
-				"kind",
-				"capabilities",
-				"connection",
-				"hasSerialNumber",
-				"id",
-				"inputHealth",
-				"name",
-				"outputChecks",
-				"ownership",
-				"productID",
-				"protocol",
-				"parameters",
-				"session",
-				"vendorID"
-			],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "Controller"
-				},
-						"capabilities": {
-							"type": "object",
-							"required": [
-								"adaptiveTriggers",
-								"binaryRumbleMotors",
-								"controls",
-								"lightingFeatures",
-								"motion",
-								"outputOwner",
-								"rumbleMotors",
-								"touchContactCount"
-							],
-							"additionalProperties": false,
-							"properties": {
-								"adaptiveTriggers": {
-									"$ref": "report.schema.json#/$defs/physicalOutputCapabilities/properties/adaptiveTriggers"
-								},
-								"binaryRumbleMotors": {
-									"type": "array",
-									"items": {
-										"$ref": "report.schema.json#/$defs/rumbleMotor"
-									}
-								},
-								"controls": {
-									"type": "array",
-									"items": {
-										"$ref": "controller.schema.json#/$defs/controlID"
-									}
-								},
-								"lightingFeatures": {
-									"$ref": "report.schema.json#/$defs/physicalOutputCapabilities/properties/lightingFeatures"
-								},
-								"motion": {
-									"type": "boolean"
-								},
-								"outputOwner": {
-									"description": "Who drives the controller's output. With macos, macOS serves the controller natively, so the rumble and lighting lists hold only what macOS leaves undone.",
-									"enum": ["macos", "ojd"]
-								},
-								"rumbleMotors": {
-									"type": "array",
-									"items": {
-										"$ref": "report.schema.json#/$defs/rumbleMotor"
-									}
-								},
-								"touchContactCount": {
-									"type": "integer",
-									"minimum": 0
-								}
-							}
-						},
-						"connection": {
-							"type": "string"
-						},
-						"hasSerialNumber": {
-							"type": "boolean"
-						},
-						"id": {
-							"type": "string"
-						},
-						"inputHealth": {
-							"type": "object",
-							"required": ["recoveryCount", "state"],
-							"additionalProperties": false,
-							"properties": {
-								"failureReason": {
-									"$ref": "report.schema.json#/$defs/controllerInputHealth/properties/failureReason"
-								},
-								"recoveryCount": {
-									"type": "integer",
-									"minimum": 0
-								},
-								"reportFormat": {
-									"type": "string"
-								},
-								"state": {
-									"$ref": "report.schema.json#/$defs/controllerInputHealth/properties/state"
-								}
-							}
-						},
-						"interfaceNumber": {
-							"type": "integer",
-							"minimum": 0
-						},
-						"name": {
-							"type": "string"
-						},
-						"outputChecks": {
-							"type": "array",
-							"items": {
-								"type": "object",
-								"required": ["command", "expected", "id"],
-								"additionalProperties": false,
-								"properties": {
-									"command": {
-										"type": "string"
-									},
-									"expected": {
-										"type": "string"
-									},
-									"id": {
-										"type": "string"
-									}
-								}
-							}
-						},
-						"ownership": {
-							"type": "object",
-							"required": [
-								"choice",
-								"choiceSource",
-								"discoverySource",
-								"duplicateExposureRisk",
-								"hidInput",
-								"physical"
-							],
-							"additionalProperties": false,
-							"properties": {
-								"choice": {
-									"$ref": "#/$defs/sharedOwnershipChoice"
-								},
-								"choiceSource": {
-									"description": "The record layer that sets the choice, or default when no layer sets it and macOS serves the controller.",
-									"enum": ["bundled", "package", "user", "default"]
-								},
-								"discoverySource": {
-									"enum": ["hid", "rawUSB"]
-								},
-								"duplicateExposureRisk": {
-									"enum": [
-										"none",
-										"nativeHIDVisible",
-										"upstreamVirtualDevice",
-										"unknownOwnership"
-									]
-								},
-								"hidInput": {
-									"enum": [
-										"unknown",
-										"exclusive",
-										"shared",
-										"accessDenied",
-										"ownedByAnotherClient",
-										"acquisitionFailed"
-									]
-								},
-								"physical": {
-									"enum": [
-										"exclusiveHID",
-										"exclusiveRawUSB",
-										"driverKitOwnedUSB",
-										"nativeHIDVisible",
-										"nativeGamepad",
-										"upstreamVirtualDevice",
-										"unknown"
-									]
-								}
-							}
-						},
-						"power": {
-							"description": "The latest power state the controller reports. Absent when the service reports none.",
-							"$ref": "report.schema.json#/$defs/controllerConnectionState/properties/power"
-						},
-						"productID": {
-							"type": "integer",
-							"minimum": 0,
-							"maximum": 65535
-						},
-						"protocol": {
-							"$ref": "report.schema.json#/$defs/controller/properties/protocolBinding"
-						},
-						"publication": {
-							"description": "Whether a virtual device publishes the controller.",
-							"type": "object",
-							"required": ["state"],
-							"additionalProperties": false,
-							"properties": {
-								"lastAttemptedNanoseconds": {
-									"description": "System uptime of the last send to the virtual device.",
-									"type": "integer",
-									"minimum": 0
-								},
-								"lastCompletedNanoseconds": {
-									"description": "System uptime of the last send the virtual device accepted.",
-									"type": "integer",
-									"minimum": 0
-								},
-								"reason": {
-									"type": "string"
-								},
-								"state": {
-									"enum": ["published", "notPublished", "failed"]
-								},
-								"target": {
-									"enum": ["hid-xbox-one-s-bt", "hid-generic"]
-								}
-							}
-						},
-						"parameters": {
-							"type": "array",
-							"items": {
-								"type": "string"
-							}
-						},
-						"record": {
-							"description": "The effective record for the controller's model. Absent when no record matches.",
-							"type": "object",
-							"required": ["layer"],
-							"additionalProperties": false,
-							"properties": {
-								"file": {
-									"type": "string"
-								},
-								"layer": {
-									"enum": ["bundled", "package", "user"]
-								}
-							}
-						},
-						"session": {
-							"enum": ["active", "suspended"]
-						},
-						"startupCommandStatus": {
-							"type": "string"
-						},
-						"tuning": {
-							"description": "The effective record's tuning as applied. Absent when the record sets no tuning.",
-							"$ref": "controller.schema.json#/$defs/tuning"
-						},
-						"unit": {
-							"type": "string",
-							"pattern": "^U-[A-Za-z0-9_-]{16}$",
-							"description": "The persistent unit ID: stays the same while the controller uses the same port. Absent without a location ID."
-						},
-						"vendorID": {
-							"type": "integer",
-							"minimum": 0,
-							"maximum": 65535
-						},
-						"virtual": {
-							"type": "object",
-							"required": ["unavailable"],
-							"additionalProperties": false,
-							"properties": {
-								"override": {
-									"enum": ["hid-xbox-one-s-bt", "hid-generic"]
-								},
-								"overrideScope": {
-									"enum": ["unit", "model"],
-									"description": "Whether override is the controller's own choice or its model's."
-								},
-								"profile": {
-									"enum": ["hid-xbox-one-s-bt", "hid-generic"]
-								},
-								"source": {
-									"type": "string"
-								},
-								"unavailable": {
-									"type": "boolean"
-								}
-							}
-						}
-			}
-		},
-		"controllerSuspend": {
-			"required": ["apiVersion", "kind"],
-			"properties": {
-				"kind": {
-					"const": "ControllerSession"
-				}
-			},
-			"$ref": "#/$defs/sharedControllerSession"
-		},
-		"controllerUnpair": {
-			"required": ["apiVersion", "kind"],
-			"properties": {
-				"kind": {
-					"const": "JoyConPair"
-				}
-			},
-			"$ref": "#/$defs/sharedJoyConPair"
-		},
-		"controllerWatch": {
-			"description": "With --first-press, the first control pressed; with --all, one event per line for every controller; with --output, one controller state and the virtual gamepad's values per line; otherwise one controller state per line.",
-			"oneOf": [
-				{
-					"type": "object",
-					"required": ["apiVersion", "control", "kind"],
-					"additionalProperties": false,
-					"properties": {
-						"apiVersion": {
-							"$ref": "#/$defs/sharedAPIVersion"
-						},
-						"kind": {
-							"const": "ControlPress"
-						},
-						"control": {
-							"$ref": "controller.schema.json#/$defs/controlID"
-						},
-						"direction": {
-							"enum": [
-								"north",
-								"northEast",
-								"east",
-								"southEast",
-								"south",
-								"southWest",
-								"west",
-								"northWest"
-							]
-						}
-					}
-				},
-				{
-					"$ref": "#/$defs/sharedControllerState",
-					"required": ["apiVersion", "kind"],
-					"properties": {
-						"kind": {
-							"const": "ControllerState"
-						}
-					}
-				},
-				{
-					"type": "object",
-					"required": ["apiVersion", "input", "kind"],
-					"additionalProperties": false,
-					"properties": {
-						"apiVersion": {
-							"$ref": "#/$defs/sharedAPIVersion"
-						},
-						"kind": {
-							"const": "ControllerState"
-						},
-						"input": {
-							"$ref": "#/$defs/sharedControllerState"
-						},
-						"output": {
-							"description": "Absent when the controller is not published.",
-							"$ref": "#/$defs/sharedVirtualOutput"
-						}
-					}
-				},
-				{
-					"description": "With --all, one watch line per line.",
-					"$ref": "#/$defs/sharedControllerWatchEvent"
-				}
-			]
-		},
-		"diagnose": {
-			"type": "object",
-			"required": ["apiVersion", "kind", "checks", "timings"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "Diagnosis"
-				},
-				"timings": {
-					"description": "The newest frames of each connected controller, oldest first; empty while the service is stopped. Nanoseconds are on the service's monotonic uptime clock. Each controller keeps its last 8 frames. The endpoint polls, so delivery-endpoint goes on the newest frame at the poll and a frame replaced by a newer one before the poll gets none.",
-					"type": "array",
-					"items": {
-						"type": "object",
-						"required": [
-							"controller",
-							"name",
-							"frames"
-						],
-						"additionalProperties": false,
-						"properties": {
-							"controller": {
-								"type": "string"
-							},
-							"name": {
-								"type": "string"
-							},
-							"frames": {
-								"type": "array",
-								"items": {
-									"type": "object",
-									"required": [
-										"sequence",
-										"stages"
-									],
-									"additionalProperties": false,
-									"properties": {
-										"sequence": {
-											"type": "integer",
-											"minimum": 0
-										},
-										"stages": {
-											"type": "array",
-											"items": {
-												"type": "object",
-												"required": [
-													"stage",
-													"nanoseconds"
-												],
-												"additionalProperties": false,
-												"properties": {
-													"stage": {
-														"enum": [
-															"read",
-															"parse",
-															"dispatch",
-															"delivery-virtual-device",
-															"delivery-endpoint"
-														]
-													},
-													"nanoseconds": {
-														"type": "integer",
-														"minimum": 0
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				},
-				"bundle": {
-					"type": "string"
-				},
-				"checks": {
-					"type": "array",
-					"items": {
-						"type": "object",
-						"required": ["detail", "id", "status"],
-						"additionalProperties": false,
-						"properties": {
-							"detail": {
-								"type": "string"
-							},
-							"id": {
-								"type": "string"
-							},
-							"status": {
-								"enum": ["pass", "warn", "fail", "skip"]
-							}
-						}
-					}
-				}
-			}
-		},
-		"explain": {
-			"type": "object",
-			"required": ["apiVersion", "kind", "area", "code", "explanation"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "ErrorExplanation"
-				},
-				"area": {
-					"type": "string"
-				},
-				"code": {
-					"type": "string",
-					"pattern": "^E[0-9]{4}$"
-				},
-				"exitCode": {
-					"description": "The exit code of a command-line error.",
-					"type": "integer"
-				},
-				"explanation": {
-					"type": "string"
-				},
-				"wire": {
-					"description": "The wire value of a remapping error.",
-					"type": "string"
-				},
-				"retiredIn": {
-					"description": "The release that retired the code; only for a retired code, whose explanation says so.",
-					"type": "string"
-				}
-			}
-		},
-		"extensionActivate": {
-			"required": ["apiVersion", "kind"],
-			"properties": {
-				"kind": {
-					"const": "DriverExtension"
-				}
-			},
-			"$ref": "#/$defs/sharedExtensionState"
-		},
-		"extensionDeactivate": {
-			"required": ["apiVersion", "kind"],
-			"properties": {
-				"kind": {
-					"const": "DriverExtension"
-				}
-			},
-			"$ref": "#/$defs/sharedExtensionState"
-		},
-		"extensionStatus": {
-			"type": "object",
-			"required": ["apiVersion", "kind", "bundle", "registration"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "DriverExtension"
-				},
-				"bundle": {
-					"enum": ["present", "missing", "invalid"]
-				},
-				"detail": {
-					"type": "string"
-				},
-				"registration": {
-					"enum": ["active", "inactive", "absent", "unavailable"]
-				}
-			}
-		},
-		"logExport": {
-			"$ref": "#/$defs/sharedStatus",
-			"properties": {
-				"details": {
-					"type": "object",
-					"required": ["lines", "path"],
-					"additionalProperties": false,
-					"properties": {
-						"lines": {
-							"description": "The number of log lines written.",
-							"type": "integer",
-							"minimum": 0
-						},
-						"path": {
-							"type": "string"
-						}
-					}
-				}
-			}
-		},
-		"logPath": {
-			"type": "object",
-			"required": ["apiVersion", "kind", "path"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "LogLocation"
-				},
-				"path": {
-					"type": "string"
-				}
-			}
-		},
-		"logShow": {
-			"description": "A snapshot of each log, or with -f one line per log line.",
-			"required": ["apiVersion", "kind"],
-			"oneOf": [
-				{
-					"type": "object",
-					"required": ["logs"],
-					"additionalProperties": false,
-					"properties": {
-						"apiVersion": {
-							"$ref": "#/$defs/sharedAPIVersion"
-						},
-						"kind": {
-							"const": "LogSnapshot"
-						},
-						"logs": {
-							"type": "array",
-							"items": {
-								"type": "object",
-								"required": [
-									"exists",
-									"fileSizeBytes",
-									"lines",
-									"path",
-									"stream",
-									"truncated"
-								],
-								"additionalProperties": false,
-								"properties": {
-									"exists": {
-										"type": "boolean"
-									},
-									"fileSizeBytes": {
-										"type": "integer",
-										"minimum": 0
-									},
-									"lines": {
-										"type": "array",
-										"items": {
-											"type": "string"
-										}
-									},
-									"path": {
-										"type": "string"
-									},
-									"stream": {
-										"enum": ["standardOutput", "standardError"]
-									},
-									"truncated": {
-										"type": "boolean"
-									}
-								}
-							}
-						}
-					}
-				},
-				{
-					"type": "object",
-					"required": ["line", "stream"],
-					"additionalProperties": false,
-					"properties": {
-						"apiVersion": {
-							"$ref": "#/$defs/sharedAPIVersion"
-						},
-						"kind": {
-							"const": "LogEntry"
-						},
-						"line": {
-							"type": "string"
-						},
-						"stream": {
-							"enum": ["standardOutput", "standardError"]
-						}
-					}
-				}
-			]
-		},
-		"modInstall": {
-			"type": "object",
-			"required": ["apiVersion", "kind", "dryRun", "installed", "package", "replaced"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "ModPackage"
-				},
-				"dryRun": {
-					"type": "boolean"
-				},
-				"installed": {
-					"type": "string"
-				},
-				"package": {
-					"$ref": "#/$defs/sharedModPackageValidation"
-				},
-				"replaced": {
-					"type": "boolean"
-				}
-			}
-		},
-		"modList": {
-			"type": "object",
-			"required": ["apiVersion", "kind", "metadata", "items"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "ModPackageList"
-				},
-				"metadata": {
-					"type": "object",
-					"additionalProperties": false
-				},
-				"items": {
-					"type": "array",
-					"items": {
-						"type": "object",
-						"required": ["files", "name"],
-						"additionalProperties": false,
-						"properties": {
-							"author": {
-								"type": "string"
-							},
-							"files": {
-								"type": "array",
-								"items": {
-									"type": "string"
-								}
-							},
-							"name": {
-								"type": "string"
-							},
-							"problem": {
-								"type": "string"
-							},
-							"version": {
-								"type": "string"
-							}
-						}
-					}
-				}
-			}
-		},
-		"modRemove": {
-			"$ref": "#/$defs/sharedStatus",
-			"properties": {
-				"details": {
-					"type": "object",
-					"required": ["dryRun", "removed"],
-					"additionalProperties": false,
-					"properties": {
-						"dryRun": {
-							"type": "boolean"
-						},
-						"removed": {
-							"type": "string"
-						}
-					}
-				}
-			}
-		},
-		"modValidate": {
-			"required": ["apiVersion", "kind"],
-			"properties": {
-				"kind": {
-					"const": "ModPackageValidation"
-				}
-			},
-			"$ref": "#/$defs/sharedModPackageValidation"
-		},
-		"permissionList": {
-			"type": "object",
-			"required": ["apiVersion", "kind", "metadata", "items"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "PermissionList"
-				},
-				"metadata": {
-					"type": "object",
-					"additionalProperties": false,
-					"properties": {}
-				},
-				"items": {
-					"type": "array",
-					"items": {
-						"$ref": "#/$defs/sharedPermissions/properties/permissions/items"
-					}
-				}
-			}
-		},
-		"permissionRequest": {
-			"required": ["apiVersion", "kind"],
-			"properties": {
-				"kind": {
-					"const": "PermissionRequest"
-				}
-			},
-			"$ref": "#/$defs/sharedPermissions"
-		},
-		"profileActivate": {
-			"required": ["apiVersion", "kind"],
-			"properties": {
-				"kind": {
-					"const": "Profile"
-				}
-			},
-			"$ref": "#/$defs/sharedProfileResult"
-		},
-		"profileCreate": {
-			"required": ["apiVersion", "kind"],
-			"properties": {
-				"kind": {
-					"const": "Profile"
-				}
-			},
-			"$ref": "#/$defs/sharedProfileResult"
-		},
-		"profileDeactivate": {
-			"required": ["apiVersion", "kind"],
-			"properties": {
-				"kind": {
-					"const": "Profile"
-				}
-			},
-			"$ref": "#/$defs/sharedProfileResult"
-		},
-		"profileDelete": {
-			"$ref": "#/$defs/sharedStatus",
-			"properties": {
-				"details": {
-					"type": "object",
-					"required": ["deleted", "dryRun"],
-					"additionalProperties": false,
-					"properties": {
-						"deleted": {
-							"$ref": "#/$defs/sharedProfileSummary"
-						},
-						"dryRun": {
-							"type": "boolean"
-						}
-					}
-				}
-			}
-		},
-		"profileDuplicate": {
-			"required": ["apiVersion", "kind"],
-			"properties": {
-				"kind": {
-					"const": "Profile"
-				}
-			},
-			"$ref": "#/$defs/sharedProfileResult"
-		},
-		"profileGet": {
-			"type": "object",
-			"required": ["apiVersion", "kind", "key", "value"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "ProfileValue"
-				},
-				"key": {
-					"type": "string",
-					"minLength": 1
-				},
-				"value": {
-					"description": "The value at key in the profile file, which profile.schema.json describes.",
-					"type": ["array", "boolean", "number", "object", "string"]
-				}
-			}
-		},
-		"profileImport": {
-			"type": "object",
-			"required": ["apiVersion", "kind", "profile", "replaced"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "Profile"
-				},
-				"profile": {
-					"$ref": "#/$defs/sharedProfileSummary"
-				},
-				"replaced": {
-					"type": "boolean"
-				}
-			}
-		},
-		"profileList": {
-			"type": "object",
-			"required": ["apiVersion", "kind", "metadata", "items"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "ProfileList"
-				},
-				"metadata": {
-					"type": "object",
-					"additionalProperties": false
-				},
-				"items": {
-					"type": "array",
-					"items": {
-						"$ref": "#/$defs/sharedProfileSummary"
-					}
-				}
-			}
-		},
-		"profileRecover": {
-			"$ref": "#/$defs/sharedStatus",
-			"properties": {
-				"details": {
-					"type": "object",
-					"required": ["dryRun", "recovered"],
-					"additionalProperties": false,
-					"properties": {
-						"dryRun": {
-							"type": "boolean"
-						},
-						"recovered": {
-							"type": "array",
-							"items": {
-								"$ref": "#/$defs/sharedProfileIssue"
-							}
-						}
-					}
-				}
-			}
-		},
-		"profileRename": {
-			"required": ["apiVersion", "kind"],
-			"properties": {
-				"kind": {
-					"const": "Profile"
-				}
-			},
-			"$ref": "#/$defs/sharedProfileResult"
-		},
-		"profileSet": {
-			"required": ["apiVersion", "kind"],
-			"properties": {
-				"kind": {
-					"const": "Profile"
-				}
-			},
-			"$ref": "#/$defs/sharedProfileResult"
-		},
-		"profileShow": {
-			"type": "object",
-			"required": ["apiVersion", "kind", "document", "profile"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "Profile"
-				},
-				"document": {
-					"$ref": "profile.schema.json"
-				},
-				"profile": {
-					"$ref": "#/$defs/sharedProfileSummary"
-				}
-			}
-		},
-		"profileValidate": {
-			"type": "object",
-			"required": ["apiVersion", "kind", "valid"],
-			"additionalProperties": false,
-			"description": "A valid profile has every property except problem. An invalid profile has only valid and problem.",
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "ProfileValidation"
-				},
-				"controller": {
-					"type": "string",
-					"pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
-				},
-				"id": {
-					"type": "string",
-					"pattern": "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$"
-				},
-				"name": {
-					"type": "string"
-				},
-				"problem": {
-					"type": "string",
-					"minLength": 1
-				},
-				"scope": {
-					"type": "string",
-					"pattern": "^(global|app:.+)$"
-				},
-				"valid": {
-					"type": "boolean"
-				}
-			},
-			"oneOf": [
-				{
-					"properties": {
-						"valid": {
-							"const": true
-						}
-					},
-					"required": ["controller", "id", "name", "scope"],
-					"not": {
-						"required": ["problem"]
-					}
-				},
-				{
-					"properties": {
-						"valid": {
-							"const": false
-						}
-					},
-					"required": ["problem"],
-					"not": {
-						"anyOf": [
-							{
-								"required": ["controller"]
-							},
-							{
-								"required": ["id"]
-							},
-							{
-								"required": ["name"]
-							},
-							{
-								"required": ["scope"]
-							}
-						]
-					}
-				}
-			]
-		},
-		"recordTest": {
-			"type": "object",
-			"required": [
-				"apiVersion",
-				"kind",
-				"differences",
-				"identity",
-				"inputReports",
-				"matches"
-			],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "RecordTestResult"
-				},
-				"differences": {
-					"description": "The fields of the controller state that differ. Empty when the states match.",
-					"type": "array",
-					"items": {
-						"type": "object",
-						"required": ["actual", "expected", "field"],
-						"additionalProperties": false,
-						"properties": {
-							"actual": {
-								"description": "The parsed value of the field, as JSON text.",
-								"type": "string"
-							},
-							"expected": {
-								"description": "The expected value of the field, as JSON text.",
-								"type": "string"
-							},
-							"field": {
-								"type": "string"
-							}
-						}
-					}
-				},
-				"identity": {
-					"type": "string",
-					"pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
-				},
-				"inputReports": {
-					"type": "integer",
-					"minimum": 1
-				},
-				"matches": {
-					"type": "boolean"
-				}
-			}
-		},
-		"recordDraft": {
-			"type": "object",
-			"required": [
-				"apiVersion",
-				"kind",
-				"capturedReports",
-				"changedBytes",
-				"family",
-				"identity",
-				"name",
-				"operation",
-				"record"
-			],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "RecordDraft"
-				},
-				"capturedReports": {
-					"type": "integer",
-					"minimum": 0
-				},
-				"changedBytes": {
-					"type": "array",
-					"items": {
-						"type": "object",
-						"required": ["byte", "maximum", "minimum"],
-						"additionalProperties": false,
-						"properties": {
-							"byte": {
-								"type": "integer",
-								"minimum": 0,
-								"maximum": 63
-							},
-							"maximum": {
-								"type": "integer",
-								"minimum": 0,
-								"maximum": 255
-							},
-							"minimum": {
-								"type": "integer",
-								"minimum": 0,
-								"maximum": 255
-							}
-						}
-					}
-				},
-				"family": {
-					"enum": ["hid.descriptor", "hid.report-layout"]
-				},
-				"identity": {
-					"type": "string",
-					"pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
-				},
-				"name": {
-					"type": "string"
-				},
-				"operation": {
-					"enum": ["add", "patch"]
-				},
-				"record": {
-					"description": "The drafted controller record, as 'ojd record install' reads it.",
-					"oneOf": [
-						{ "$ref": "controller.schema.json" },
-						{ "$ref": "controller-patch.schema.json" }
-					]
-				},
-				"report": {
-					"type": "object",
-					"required": ["length"],
-					"additionalProperties": false,
-					"properties": {
-						"id": {
-							"type": "integer",
-							"minimum": 1,
-							"maximum": 255
-						},
-						"length": {
-							"type": "integer",
-							"minimum": 1,
-							"maximum": 64
-						}
-					}
-				}
-			}
-		},
-		"recordInstall": {
-			"type": "object",
-			"required": [
-				"apiVersion",
-				"kind",
-				"dryRun",
-				"installed",
-				"record",
-				"replaced"
-			],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "ControllerRecord"
-				},
-				"dryRun": {
-					"type": "boolean"
-				},
-				"installed": {
-					"type": "string"
-				},
-				"record": {
-					"$ref": "#/$defs/sharedRecordValidation"
-				},
-				"replaced": {
-					"type": "boolean"
-				}
-			}
-		},
-		"recordList": {
-			"type": "object",
-			"required": ["apiVersion", "kind", "metadata", "items"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "ControllerRecordList"
-				},
-				"metadata": {
-					"type": "object",
-					"additionalProperties": false
-				},
-				"items": {
-					"type": "array",
-					"items": {
-						"type": "object",
-						"required": [
-							"family",
-							"identity",
-							"layer",
-							"productID",
-							"vendorID"
-						],
-						"additionalProperties": false,
-						"properties": {
-							"family": {
-								"$ref": "controller.schema.json#/$defs/protocol/properties/family"
-							},
-							"file": {
-								"type": "string"
-							},
-							"identity": {
-								"type": "string",
-								"pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
-							},
-							"layer": {
-								"enum": ["bundled", "package", "user"]
-							},
-							"productID": {
-								"type": "integer",
-								"minimum": 0,
-								"maximum": 65535
-							},
-							"vendorID": {
-								"type": "integer",
-								"minimum": 0,
-								"maximum": 65535
-							}
-						}
-					}
-				}
-			}
-		},
-		"recordRemove": {
-			"$ref": "#/$defs/sharedStatus",
-			"properties": {
-				"details": {
-					"type": "object",
-					"required": ["dryRun", "removed"],
-					"additionalProperties": false,
-					"properties": {
-						"dryRun": {
-							"type": "boolean"
-						},
-						"removed": {
-							"type": "string"
-						}
-					}
-				}
-			}
-		},
-		"recordShow": {
-			"type": "object",
-			"required": [
-				"apiVersion",
-				"kind",
-				"family",
-				"fields",
-				"identity",
-				"layer",
-				"record",
-				"transport"
-			],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "ControllerRecord"
-				},
-				"family": {
-					"$ref": "controller.schema.json#/$defs/protocol/properties/family"
-				},
-				"fields": {
-					"type": "object",
-					"additionalProperties": {
-						"enum": ["bundled", "package", "user"]
-					}
-				},
-				"file": {
-					"type": "string"
-				},
-				"identity": {
-					"type": "string",
-					"pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
-				},
-				"layer": {
-					"enum": ["bundled", "package", "user"]
-				},
-				"record": {
-					"description": "The merged controller record.",
-					"$ref": "controller.schema.json"
-				},
-				"transport": {
-					"enum": ["hid", "usb"]
-				},
-				"usbExtension": {
-					"enum": ["claims", "doesNotClaim"]
-				}
-			}
-		},
-		"recordValidate": {
-			"required": ["apiVersion", "kind"],
-			"properties": {
-				"kind": {
-					"const": "RecordValidation"
-				}
-			},
-			"$ref": "#/$defs/sharedRecordValidation"
-		},
-		"serviceStart": {
-			"required": ["apiVersion", "kind"],
-			"properties": {
-				"kind": {
-					"const": "Service"
-				}
-			},
-			"$ref": "#/$defs/sharedServiceState"
-		},
-		"serviceStop": {
-			"required": ["apiVersion", "kind"],
-			"properties": {
-				"kind": {
-					"const": "Service"
-				}
-			},
-			"$ref": "#/$defs/sharedServiceState"
-		},
-		"serviceWait": {
-			"required": ["apiVersion", "kind"],
-			"properties": {
-				"kind": {
-					"const": "Service"
-				}
-			},
-			"$ref": "#/$defs/sharedServiceState"
-		},
-		"settingGet": {
-			"required": ["apiVersion", "kind"],
-			"properties": {
-				"kind": {
-					"const": "Setting"
-				}
-			},
-			"$ref": "#/$defs/sharedSetting"
-		},
-		"settingList": {
-			"type": "object",
-			"required": ["apiVersion", "kind", "metadata", "items"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "SettingList"
-				},
-				"metadata": {
-					"type": "object",
-					"additionalProperties": false,
-					"properties": {}
-				},
-				"items": {
-					"type": "array",
-					"items": {
-						"type": "object",
-						"required": ["description", "key", "value"],
-						"additionalProperties": false,
-						"properties": {
-							"description": {
-								"type": "string"
-							},
-							"key": {
-								"$ref": "#/$defs/sharedSettingKey"
-							},
-							"value": {
-								"type": "boolean"
-							}
-						}
-					}
-				}
-			}
-		},
-		"settingSet": {
-			"required": ["apiVersion", "kind"],
-			"properties": {
-				"kind": {
-					"const": "Setting"
-				}
-			},
-			"$ref": "#/$defs/sharedSetting"
-		},
-		"sharedAPIVersion": {
-			"description": "The version of the ojd --json output format.",
-			"const": "openjoystickdriver/v1alpha1"
-		},
-		"sharedAccessGrant": {
-			"type": "object",
-			"required": [
-				"grantTime",
-				"id",
-				"identifier",
-				"identityKind",
-				"path",
-				"scopes"
-			],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"type": "string"
-				},
-				"grantTime": {
-					"type": "string"
-				},
-				"id": {
-					"type": "string"
-				},
-				"identifier": {
-					"type": "string"
-				},
-				"identityKind": {
-					"enum": ["team", "apple"]
-				},
-				"path": {
-					"type": "string"
-				},
-				"scopes": {
-					"type": "array",
-					"items": {
-						"enum": ["read", "control"]
-					}
-				},
-				"teamIdentifier": {
-					"type": "string"
-				}
-			}
-		},
-		"sharedAccessRefusedClient": {
-			"type": "object",
-			"required": [
-				"id",
-				"identifier",
-				"identityKind",
-				"reason",
-				"refusalTime",
-				"scopes"
-			],
-			"additionalProperties": false,
-			"properties": {
-				"id": {
-					"type": "string"
-				},
-				"identifier": {
-					"type": "string"
-				},
-				"identityKind": {
-					"enum": ["team", "apple", "adHoc"]
-				},
-				"path": {
-					"type": "string"
-				},
-				"reason": {
-					"type": "string",
-					"pattern": "^E1[0-9]{3}$",
-					"description": "The endpoint error code of the refusal; see the wiki page Error-Codes."
-				},
-				"refusalTime": {
-					"type": "string"
-				},
-				"scopes": {
-					"type": "array",
-					"items": {
-						"enum": ["read", "control"]
-					}
-				},
-				"teamIdentifier": {
-					"type": "string"
-				}
-			}
-		},
-		"sharedAccessRefusedToken": {
-			"type": "object",
-			"required": ["reason", "refusalTime", "scopes", "transport"],
-			"additionalProperties": false,
-			"properties": {
-				"name": {
-					"type": "string",
-					"description": "The grant the token belongs to; absent for a token that matches no grant."
-				},
-				"origin": {
-					"type": "string",
-					"description": "The page's origin; WebSocket only."
-				},
-				"reason": {
-					"type": "string",
-					"pattern": "^E1[0-9]{3}$",
-					"description": "The endpoint error code of the refusal; see the wiki page Error-Codes."
-				},
-				"refusalTime": {
-					"type": "string"
-				},
-				"scopes": {
-					"type": "array",
-					"items": {
-						"enum": ["read", "control"]
-					}
-				},
-				"transport": {
-					"enum": ["socket", "web"]
-				}
-			}
-		},
-		"sharedAccessToken": {
-			"type": "object",
-			"required": ["grantTime", "id", "name", "origins", "scopes"],
-			"additionalProperties": false,
-			"properties": {
-				"grantTime": {
-					"type": "string"
-				},
-				"id": {
-					"type": "string",
-					"pattern": "^token:"
-				},
-				"name": {
-					"type": "string"
-				},
-				"origins": {
-					"type": "array",
-					"items": {
-						"type": "string"
-					}
-				},
-				"scopes": {
-					"type": "array",
-					"items": {
-						"enum": ["read", "control"]
-					}
-				}
-			}
-		},
-		"sharedAccessWeb": {
-			"type": "object",
-			"required": ["enabled", "listening", "pagesPath"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"type": "string"
-				},
-				"enabled": {
-					"type": "boolean"
-				},
-				"listening": {
-					"type": "boolean"
-				},
-				"pagesPath": {
-					"type": "string"
-				},
-				"pagesURL": {
-					"type": "string"
-				},
-				"port": {
-					"type": "integer",
-					"minimum": 1,
-					"maximum": 65535
-				},
-				"url": {
-					"type": "string"
-				}
-			}
-		},
-		"sharedBindingSummary": {
-			"type": "object",
-			"required": ["behavior", "id", "source", "target"],
-			"additionalProperties": false,
-			"properties": {
-				"behavior": {
-					"enum": [
-						"hold",
-						"toggle",
-						"tap_on_press",
-						"tap_on_release",
-						"pulse",
-						"press",
-						"release"
-					]
-				},
-				"id": {
-					"type": "string",
-					"pattern": "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$"
-				},
-				"source": {
-					"type": "string"
-				},
-				"target": {
-					"type": "string"
-				}
-			}
-		},
-		"sharedControllerOutput": {
-			"type": "object",
-			"required": ["controller", "results"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"type": "string"
-				},
-				"controller": {
-					"type": "string"
-				},
-				"results": {
-					"type": "array",
-					"items": {
-						"type": "object",
-						"required": ["command", "droppedRumbleChannels", "outcome"],
-						"additionalProperties": false,
-						"properties": {
-							"command": {
-								"type": "string"
-							},
-							"droppedRumbleChannels": {
-								"type": "array",
-								"items": {
-									"$ref": "report.schema.json#/$defs/rumbleMotor"
-								}
-							},
-							"outcome": {
-								"enum": [
-									"delivered",
-									"notFound",
-									"unsupportedCapability",
-									"notReady",
-									"invalidValue",
-									"writeFailed",
-									"cancelled"
-								]
-							}
-						}
-					}
-				}
-			}
-		},
-		"sharedControllerSession": {
-			"type": "object",
-			"required": ["changed", "controller", "session"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"type": "string"
-				},
-				"changed": {
-					"type": "boolean"
-				},
-				"controller": {
-					"type": "string"
-				},
-				"session": {
-					"enum": ["active", "suspended", "disconnected"]
-				}
-			}
-		},
-		"sharedControllerState": {
-			"type": "object",
-			"required": [
-				"hat",
-				"leftStick",
-				"leftTrigger",
-				"pressed",
-				"rightStick",
-				"rightTrigger",
-				"touch"
-			],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"type": "string"
-				},
-				"connection": {
-					"$ref": "report.schema.json#/$defs/controllerConnectionState"
-				},
-				"hat": {
-					"enum": [
-						"neutral",
-						"north",
-						"northEast",
-						"east",
-						"southEast",
-						"south",
-						"southWest",
-						"west",
-						"northWest"
-					]
-				},
-				"leftStick": {
-					"$ref": "#/$defs/sharedStick"
-				},
-				"leftTrigger": {
-					"type": "integer",
-					"minimum": 0,
-					"maximum": 65535
-				},
-				"pressed": {
-					"type": "array",
-					"items": {
-						"$ref": "controller.schema.json#/$defs/controlID"
-					}
-				},
-				"rightStick": {
-					"$ref": "#/$defs/sharedStick"
-				},
-				"rightTrigger": {
-					"type": "integer",
-					"minimum": 0,
-					"maximum": 65535
-				},
-				"touch": {
-					"type": "array",
-					"items": {
-						"type": "object",
-						"required": ["contacts", "surface", "timestamp"],
-						"additionalProperties": false,
-						"properties": {
-							"contacts": {
-								"type": "array",
-								"items": {
-									"type": "object",
-									"required": ["isActive", "slot", "x", "y"],
-									"additionalProperties": false,
-									"properties": {
-										"isActive": {
-											"type": "boolean"
-										},
-										"pressure": {
-											"type": "integer",
-											"minimum": 0,
-											"maximum": 65535
-										},
-										"slot": {
-											"type": "integer",
-											"minimum": 0,
-											"maximum": 255
-										},
-										"x": {
-											"type": "integer",
-											"minimum": 0,
-											"maximum": 65535
-										},
-										"y": {
-											"type": "integer",
-											"minimum": 0,
-											"maximum": 65535
-										}
-									}
-								}
-							},
-							"surface": {
-								"enum": ["primary", "left", "right"]
-							},
-							"timestamp": {
-								"type": "object",
-								"required": ["nanoseconds"],
-								"additionalProperties": false,
-								"properties": {
-									"nanoseconds": {
-										"type": "integer",
-										"minimum": 0
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"sharedControllerWatchEvent": {
-			"description": "A watch line: ADDED for a controller that connected, including those connected when the stream starts (the endpoint's snapshot carries the full current object); MODIFIED when its input changes; DELETED when it disconnected, with the last object. The line has no apiVersion and kind of its own; its object does. Lines of ojd controller watch --all and of the endpoint's controllers stream.",
-			"type": "object",
-			"required": ["object", "type"],
-			"additionalProperties": false,
-			"properties": {
-				"type": {
-					"enum": ["ADDED", "MODIFIED", "DELETED"]
-				},
-				"object": {
-					"$ref": "#/$defs/sharedWatchedController"
-				}
-			}
-		},
-		"sharedWatchedController": {
-			"description": "A Controller: the fields of an item of ojd controller list, and the latest input and output once the controller has any.",
-			"type": "object",
-			"required": [
-				"apiVersion",
-				"connection",
-				"hasSerialNumber",
-				"id",
-				"kind",
-				"name",
-				"productID",
-				"protocol",
-				"session",
-				"vendorID"
-			],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "Controller"
-				},
-				"connection": {
-					"$ref": "#/$defs/controllerList/properties/items/items/properties/connection"
-				},
-				"hasSerialNumber": {
-					"$ref": "#/$defs/controllerList/properties/items/items/properties/hasSerialNumber"
-				},
-				"id": {
-					"description": "The ID from ojd controller list.",
-					"type": "string"
-				},
-				"name": {
-					"$ref": "#/$defs/controllerList/properties/items/items/properties/name"
-				},
-				"power": {
-					"$ref": "#/$defs/controllerList/properties/items/items/properties/power"
-				},
-				"productID": {
-					"$ref": "#/$defs/controllerList/properties/items/items/properties/productID"
-				},
-				"protocol": {
-					"$ref": "#/$defs/controllerList/properties/items/items/properties/protocol"
-				},
-				"session": {
-					"$ref": "#/$defs/controllerList/properties/items/items/properties/session"
-				},
-				"unit": {
-					"$ref": "#/$defs/controllerList/properties/items/items/properties/unit"
-				},
-				"vendorID": {
-					"$ref": "#/$defs/controllerList/properties/items/items/properties/vendorID"
-				},
-				"input": {
-					"description": "The latest input; absent until the controller has input state.",
-					"$ref": "#/$defs/sharedControllerState"
-				},
-				"output": {
-					"description": "With --output, or a subscription that asked for output. Absent when the controller is not published.",
-					"$ref": "#/$defs/sharedVirtualOutput"
-				}
-			}
-		},
-		"sharedDevice": {
-			"type": "object",
-			"required": ["connection", "productID", "vendorID"],
-			"additionalProperties": false,
-			"properties": {
-				"connection": {
-					"type": "string"
-				},
-				"productID": {
-					"type": "integer",
-					"minimum": 0,
-					"maximum": 65535
-				},
-				"vendorID": {
-					"type": "integer",
-					"minimum": 0,
-					"maximum": 65535
-				}
-			}
-		},
-		"sharedExtensionState": {
-			"type": "object",
-			"required": ["state"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"type": "string"
-				},
-				"state": {
-					"enum": ["active", "inactive", "awaitingApproval"]
-				}
-			}
-		},
-		"sharedJoyConPair": {
-			"type": "object",
-			"required": ["gyro", "left", "profile", "right", "session"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"type": "string"
-				},
-				"gyro": {
-					"enum": ["disabled", "left", "right"]
-				},
-				"left": {
-					"type": "string"
-				},
-				"profile": {
-					"type": "string"
-				},
-				"right": {
-					"type": "string"
-				},
-				"session": {
-					"type": "string",
-					"pattern": "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$"
-				}
-			}
-		},
-		"sharedModPackageValidation": {
-			"type": "object",
-			"required": ["valid"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"type": "string"
-				},
-				"author": {
-					"type": "string"
-				},
-				"code": {
-					"type": "string",
-					"pattern": "^(E4[0-9]{3}|E5001)$"
-				},
-				"files": {
-					"type": "array",
-					"items": {
-						"type": "string"
-					}
-				},
-				"name": {
-					"type": "string"
-				},
-				"problem": {
-					"type": "string"
-				},
-				"valid": {
-					"type": "boolean"
-				},
-				"version": {
-					"type": "string"
-				}
-			}
-		},
-		"sharedOwnershipChoice": {
-			"description": "Who serves the controller: native leaves it to macOS, virtual lets OpenJoystickDriver seize it and publish a virtual gamepad.",
-			"enum": ["native", "virtual"]
-		},
-		"sharedPermissions": {
-			"type": "object",
-			"required": ["permissions"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"type": "string"
-				},
-				"permissions": {
-					"type": "array",
-					"items": {
-						"type": "object",
-						"required": ["id", "name", "purpose", "state"],
-						"additionalProperties": false,
-						"properties": {
-							"id": {
-								"enum": [
-									"input-monitoring",
-									"accessibility",
-									"driver-extension"
-								]
-							},
-							"name": {
-								"type": "string"
-							},
-							"purpose": {
-								"type": "string"
-							},
-							"state": {
-								"enum": ["granted", "denied", "unknown"]
-							}
-						}
-					}
-				}
-			}
-		},
-		"sharedProfileIssue": {
-			"type": "object",
-			"required": ["id", "kind", "message"],
-			"additionalProperties": false,
-			"properties": {
-				"id": {
-					"type": "string",
-					"pattern": "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$"
-				},
-				"kind": {
-					"enum": ["damagedProfile", "unusableLibrary"]
-				},
-				"message": {
-					"type": "string"
-				}
-			}
-		},
-		"sharedProfileResult": {
-			"type": "object",
-			"required": ["changed", "profile"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"type": "string"
-				},
-				"changed": {
-					"type": "boolean"
-				},
-				"profile": {
-					"$ref": "#/$defs/sharedProfileSummary"
-				}
-			}
-		},
-		"sharedProfileSummary": {
-			"type": "object",
-			"required": ["active", "bindings", "controller", "id", "name", "scope"],
-			"additionalProperties": false,
-			"properties": {
-				"active": {
-					"type": "boolean"
-				},
-				"bindings": {
-					"type": "integer",
-					"minimum": 0
-				},
-				"controller": {
-					"type": "string",
-					"pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
-				},
-				"id": {
-					"type": "string",
-					"pattern": "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$"
-				},
-				"name": {
-					"type": "string"
-				},
-				"scope": {
-					"type": "string",
-					"pattern": "^(global|app:.+)$"
-				}
-			}
-		},
-		"sharedRecordValidation": {
-			"type": "object",
-			"required": ["valid"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"type": "string"
-				},
-				"family": {
-					"$ref": "controller.schema.json#/$defs/protocol/properties/family"
-				},
-				"fileName": {
-					"type": "string"
-				},
-				"identity": {
-					"type": "string",
-					"pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
-				},
-				"operation": {
-					"enum": ["add", "patch"]
-				},
-				"problem": {
-					"type": "string"
-				},
-				"transport": {
-					"enum": ["hid", "usb"]
-				},
-				"usbExtension": {
-					"enum": ["claims", "doesNotClaim"]
-				},
-				"valid": {
-					"type": "boolean"
-				}
-			}
-		},
-		"sharedServiceState": {
-			"type": "object",
-			"required": ["state"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"type": "string"
-				},
-				"state": {
-					"enum": ["running", "stopped"]
-				}
-			}
-		},
-		"sharedSetting": {
-			"type": "object",
-			"required": ["key", "value"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"type": "string"
-				},
-				"key": {
-					"$ref": "#/$defs/sharedSettingKey"
-				},
-				"value": {
-					"type": "boolean"
-				}
-			}
-		},
-		"sharedSettingKey": {
-			"enum": [
-				"launchAtLogin",
-				"notify.controllerConnected",
-				"notify.controllerDisconnected",
-				"notify.profileActivated",
-				"notify.profileDeactivated",
-				"notify.sounds",
-				"updates.includePrereleases",
-				"developerTools"
-			]
-		},
-		"sharedSkippedRecord": {
-			"type": "object",
-			"required": ["file", "problem"],
-			"additionalProperties": false,
-			"properties": {
-				"file": {
-					"type": "string"
-				},
-				"problem": {
-					"type": "string"
-				}
-			}
-		},
-		"sharedStatus": {
-			"description": "A Kubernetes Status: the result of an action that leaves no object to print. details is the command's own result; each command's entry in $defs constrains it.",
-			"type": "object",
-			"required": ["apiVersion", "kind", "status", "details"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "Status"
-				},
-				"status": {
-					"enum": ["Success", "Failure"]
-				},
-				"message": {
-					"type": "string"
-				},
-				"reason": {
-					"type": "string"
-				},
-				"code": {
-					"type": "integer"
-				},
-				"details": {
-					"type": "object"
-				}
-			}
-		},
-		"sharedStick": {
-			"type": "object",
-			"required": ["x", "y"],
-			"additionalProperties": false,
-			"properties": {
-				"x": {
-					"type": "integer",
-					"minimum": -32767,
-					"maximum": 32767
-				},
-				"y": {
-					"type": "integer",
-					"minimum": -32767,
-					"maximum": 32767
-				}
-			}
-		},
-		"sharedVirtualChange": {
-			"type": "object",
-			"required": ["controller", "source"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"type": "string"
-				},
-				"controller": {
-					"type": "string"
-				},
-				"live": {
-					"enum": ["hid-xbox-one-s-bt", "hid-generic"]
-				},
-				"requested": {
-					"enum": ["hid-xbox-one-s-bt", "hid-generic"]
-				},
-				"source": {
-					"type": "string"
-				}
-			}
-		},
-		"sharedVirtualFeedLine": {
-			"description": "One output command per line that the host sent to the virtual gamepad, oldest first. Virtual gamepads receive only rumble commands.",
-			"oneOf": [
-				{
-					"type": "object",
-					"required": ["apiVersion", "intensities", "kind", "type"],
-					"additionalProperties": false,
-					"properties": {
-						"apiVersion": {
-							"$ref": "#/$defs/sharedAPIVersion"
-						},
-						"kind": {
-							"const": "RumbleCommand"
-						},
-						"type": {
-							"const": "setRumble"
-						},
-						"intensities": {
-							"type": "object",
-							"required": [
-								"leftMain",
-								"rightMain",
-								"leftTrigger",
-								"rightTrigger",
-								"leftHaptic",
-								"rightHaptic"
-							],
-							"additionalProperties": false,
-							"properties": {
-								"leftMain": {
-									"type": "integer",
-									"minimum": 0,
-									"maximum": 65535
-								},
-								"rightMain": {
-									"type": "integer",
-									"minimum": 0,
-									"maximum": 65535
-								},
-								"leftTrigger": {
-									"type": "integer",
-									"minimum": 0,
-									"maximum": 65535
-								},
-								"rightTrigger": {
-									"type": "integer",
-									"minimum": 0,
-									"maximum": 65535
-								},
-								"leftHaptic": {
-									"type": "integer",
-									"minimum": 0,
-									"maximum": 65535
-								},
-								"rightHaptic": {
-									"type": "integer",
-									"minimum": 0,
-									"maximum": 65535
-								}
-							}
-						},
-						"durationMilliseconds": {
-							"description": "How long the rumble lasts. Absent while it is held until the next rumble command.",
-							"type": "integer",
-							"minimum": 0,
-							"maximum": 5000
-						}
-					}
-				},
-				{
-					"type": "object",
-					"required": ["apiVersion", "kind", "type"],
-					"additionalProperties": false,
-					"properties": {
-						"apiVersion": {
-							"$ref": "#/$defs/sharedAPIVersion"
-						},
-						"kind": {
-							"const": "RumbleCommand"
-						},
-						"type": {
-							"const": "stopRumble"
-						}
-					}
-				}
-			]
-		},
-		"sharedVirtualOutput": {
-			"description": "What the virtual gamepad last reported, after stick transfer and remapping. Stick Y points down, as in the HID report.",
-			"type": "object",
-			"required": [
-				"buttons",
-				"hat",
-				"leftStickX",
-				"leftStickY",
-				"leftTrigger",
-				"rightStickX",
-				"rightStickY",
-				"rightTrigger"
-			],
-			"additionalProperties": false,
-			"properties": {
-				"buttons": {
-					"description": "Bit n is HID button n + 1.",
-					"type": "integer",
-					"minimum": 0,
-					"maximum": 4294967295
-				},
-				"hat": {
-					"enum": [
-						"neutral",
-						"north",
-						"northEast",
-						"east",
-						"southEast",
-						"south",
-						"southWest",
-						"west",
-						"northWest"
-					]
-				},
-				"leftStickX": {
-					"type": "integer",
-					"minimum": -32768,
-					"maximum": 32767
-				},
-				"leftStickY": {
-					"type": "integer",
-					"minimum": -32768,
-					"maximum": 32767
-				},
-				"leftTrigger": {
-					"type": "integer",
-					"minimum": -32768,
-					"maximum": 32767
-				},
-				"rightStickX": {
-					"type": "integer",
-					"minimum": -32768,
-					"maximum": 32767
-				},
-				"rightStickY": {
-					"type": "integer",
-					"minimum": -32768,
-					"maximum": 32767
-				},
-				"rightTrigger": {
-					"type": "integer",
-					"minimum": -32768,
-					"maximum": 32767
-				}
-			}
-		},
-		"status": {
-			"type": "object",
-			"required": [
-				"apiVersion",
-				"kind",
-				"commandLineTool",
-				"extension",
-				"service",
-				"skippedRecords"
-			],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "SystemStatus"
-				},
-				"commandLineTool": {
-					"description": "The ojd link the app installs: installed when it points to this app's executable, linkedElsewhere when it points to another existing file such as another app copy, broken when its target does not exist, blockedByFile when the path is a file or folder that is not a link, and missing when nothing is at the path. target is what the link points to and appears only for a link.",
-					"type": "object",
-					"required": ["path", "state"],
-					"additionalProperties": false,
-					"properties": {
-						"path": {
-							"type": "string"
-						},
-						"state": {
-							"enum": ["installed", "linkedElsewhere", "broken", "blockedByFile", "missing"]
-						},
-						"target": {
-							"type": "string"
-						}
-					}
-				},
-				"controllers": {
-					"type": "array",
-					"items": {
-						"type": "object",
-						"required": ["connection", "id", "name", "productID", "vendorID"],
-						"additionalProperties": false,
-						"properties": {
-							"connection": {
-								"type": "string"
-							},
-							"id": {
-								"type": "string"
-							},
-							"name": {
-								"type": "string"
-							},
-							"productID": {
-								"type": "integer",
-								"minimum": 0,
-								"maximum": 65535
-							},
-							"vendorID": {
-								"type": "integer",
-								"minimum": 0,
-								"maximum": 65535
-							}
-						}
-					}
-				},
-				"extension": {
-					"type": "object",
-					"required": ["bundle", "registration"],
-					"additionalProperties": false,
-					"properties": {
-						"bundle": {
-							"enum": ["present", "missing", "invalid"]
-						},
-						"registration": {
-							"enum": ["active", "inactive", "absent", "unavailable"]
-						}
-					}
-				},
-				"passThroughDevices": {
-					"type": "array",
-					"items": {
-						"$ref": "#/$defs/sharedDevice"
-					}
-				},
-				"permissions": {
-					"type": "object",
-					"required": ["accessibility", "inputMonitoring"],
-					"additionalProperties": false,
-					"properties": {
-						"accessibility": {
-							"enum": ["granted", "denied", "unknown"]
-						},
-						"inputMonitoring": {
-							"enum": ["granted", "denied", "unknown"]
-						}
-					}
-				},
-				"service": {
-					"type": "object",
-					"required": ["state"],
-					"additionalProperties": false,
-					"properties": {
-						"state": {
-							"enum": ["running", "stopped"]
-						},
-						"version": {
-							"type": "string"
-						}
-					}
-				},
-				"skippedRecords": {
-					"type": "array",
-					"items": {
-						"$ref": "#/$defs/sharedSkippedRecord"
-					}
-				},
-				"ignoredDefaults": {
-					"$ref": "#/$defs/sharedSkippedRecord"
-				},
-				"skippedPersonas": {
-					"type": "array",
-					"items": {
-						"$ref": "#/$defs/sharedSkippedRecord"
-					}
-				},
-				"unboundDevices": {
-					"type": "array",
-					"items": {
-						"type": "object",
-						"required": ["connection", "productID", "vendorID"],
-						"additionalProperties": false,
-						"properties": {
-							"connection": {
-								"type": "string"
-							},
-							"productID": {
-								"type": "integer",
-								"minimum": 0,
-								"maximum": 65535
-							},
-							"reason": {
-								"$ref": "report.schema.json#/$defs/bindingReason"
-							},
-							"vendorID": {
-								"type": "integer",
-								"minimum": 0,
-								"maximum": 65535
-							}
-						}
-					}
-				},
-				"virtualDevice": {
-					"type": "object",
-					"required": [],
-					"additionalProperties": false,
-					"properties": {
-						"enabled": {
-							"type": "boolean"
-						},
-						"overrideError": {
-							"type": "string"
-						},
-						"status": {
-							"type": "string"
-						}
-					}
-				}
-			}
-		},
-		"updateCheck": {
-			"type": "object",
-			"required": [
-				"apiVersion",
-				"kind",
-				"currentVersion",
-				"includePrereleases",
-				"latestVersion",
-				"status"
-			],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "UpdateCheck"
-				},
-				"currentVersion": {
-					"type": "string"
-				},
-				"includePrereleases": {
-					"type": "boolean"
-				},
-				"latestVersion": {
-					"type": "string"
-				},
-				"releaseURL": {
-					"type": "string"
-				},
-				"status": {
-					"enum": ["upToDate", "available"]
-				}
-			}
-		},
-		"virtualFeed": {
-			"$ref": "#/$defs/sharedVirtualFeedLine",
-			"required": ["apiVersion", "kind"],
-			"properties": {
-				"kind": {
-					"const": "RumbleCommand"
-				}
-			}
-		},
-		"virtualReset": {
-			"required": ["apiVersion", "kind"],
-			"oneOf": [
-				{
-					"description": "With --all.",
-					"$ref": "#/$defs/sharedStatus",
-					"properties": {
-						"details": {
-							"type": "object",
-							"required": ["reset"],
-							"additionalProperties": false,
-							"properties": {
-								"reset": {
-									"const": "all"
-								}
-							}
-						}
-					}
-				},
-				{
-					"$ref": "#/$defs/sharedVirtualChange",
-					"properties": {
-						"kind": {
-							"const": "VirtualGamepadChange"
-						}
-					}
-				}
-			]
-		},
-		"virtualSet": {
-			"required": ["apiVersion", "kind"],
-			"properties": {
-				"kind": {
-					"const": "VirtualGamepadChange"
-				}
-			},
-			"$ref": "#/$defs/sharedVirtualChange"
-		},
-		"virtualShow": {
-			"type": "object",
-			"required": ["apiVersion", "kind", "controllers", "profiles"],
-			"additionalProperties": false,
-			"properties": {
-				"apiVersion": {
-					"$ref": "#/$defs/sharedAPIVersion"
-				},
-				"kind": {
-					"const": "VirtualGamepadConfiguration"
-				},
-				"controllers": {
-					"type": "array",
-					"items": {
-						"type": "object",
-						"required": ["id", "name", "productID", "unavailable", "vendorID"],
-						"additionalProperties": false,
-						"properties": {
-							"id": {
-								"type": "string"
-							},
-							"name": {
-								"type": "string"
-							},
-							"override": {
-								"enum": ["hid-xbox-one-s-bt", "hid-generic"]
-							},
-							"overrideScope": {
-								"enum": ["unit", "model"],
-								"description": "Whether override is the controller's own choice or its model's."
-							},
-							"productID": {
-								"type": "integer",
-								"minimum": 0,
-								"maximum": 65535
-							},
-							"profile": {
-								"enum": ["hid-xbox-one-s-bt", "hid-generic"]
-							},
-							"source": {
-								"type": "string"
-							},
-							"unavailable": {
-								"type": "boolean"
-							},
-							"vendorID": {
-								"type": "integer",
-								"minimum": 0,
-								"maximum": 65535
-							}
-						}
-					}
-				},
-				"profiles": {
-					"type": "array",
-					"items": {
-						"enum": ["hid-xbox-one-s-bt", "hid-generic"]
-					}
-				}
-			}
-		}
-	}
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/cli-output.schema.json",
+  "title": "ojd --json output",
+  "description": "The --json output of each ojd command. Each command's entry in $defs is its command path in lowerCamelCase, such as controllerShow for 'ojd controller show'. Every document has apiVersion, and kind: the kind of the object it prints, such as Controller for 'ojd controller show', or Status for an action that leaves no object to print, whose details hold the command's own result. A list command prints its listed items in items, with no apiVersion or kind of their own, and an empty metadata. Entries that start with 'shared' are shapes that several commands use. A command that streams prints one document per line, and each line matches the entry.",
+  "$defs": {
+    "accessDisable": {
+      "type": "object",
+      "required": ["apiVersion", "kind", "enabled", "socketPath"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "EndpointAccess"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "socketPath": {
+          "type": "string"
+        }
+      }
+    },
+    "accessEnable": {
+      "type": "object",
+      "required": ["apiVersion", "kind", "enabled", "socketPath"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "EndpointAccess"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "socketPath": {
+          "type": "string"
+        }
+      }
+    },
+    "accessGrant": {
+      "required": ["apiVersion", "kind"],
+      "oneOf": [
+        {
+          "$ref": "#/$defs/sharedAccessGrant",
+          "properties": {
+            "kind": {
+              "const": "AccessGrant"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "description": "With --token: the token, shown only this once, and its grant.",
+          "required": ["grant", "token"],
+          "additionalProperties": false,
+          "properties": {
+            "apiVersion": {
+              "$ref": "#/$defs/sharedAPIVersion"
+            },
+            "kind": {
+              "const": "AccessToken"
+            },
+            "grant": {
+              "$ref": "#/$defs/sharedAccessToken"
+            },
+            "token": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "accessList": {
+      "type": "object",
+      "required": [
+        "apiVersion",
+        "kind",
+        "grants",
+        "refused",
+        "refusedTokens",
+        "tokens"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "AccessSummary"
+        },
+        "grants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sharedAccessGrant"
+          }
+        },
+        "refused": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sharedAccessRefusedClient"
+          }
+        },
+        "refusedTokens": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sharedAccessRefusedToken"
+          }
+        },
+        "tokens": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sharedAccessToken"
+          }
+        }
+      }
+    },
+    "accessRevoke": {
+      "$ref": "#/$defs/sharedStatus",
+      "properties": {
+        "details": {
+          "type": "object",
+          "required": ["closedConnections", "id"],
+          "additionalProperties": false,
+          "properties": {
+            "closedConnections": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "grant": {
+              "$ref": "#/$defs/sharedAccessGrant"
+            },
+            "id": {
+              "type": "string"
+            },
+            "token": {
+              "$ref": "#/$defs/sharedAccessToken"
+            }
+          }
+        }
+      }
+    },
+    "accessStatus": {
+      "type": "object",
+      "required": [
+        "apiVersion",
+        "kind",
+        "connections",
+        "enabled",
+        "grants",
+        "refused",
+        "refusedTokens",
+        "socketPath",
+        "tokens",
+        "web"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "EndpointAccess"
+        },
+        "connections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "identifier", "scopes", "transport"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "identifier": {
+                "type": "string"
+              },
+              "scopes": {
+                "type": "array",
+                "items": {
+                  "enum": ["read", "control"]
+                }
+              },
+              "transport": {
+                "enum": ["socket", "web"]
+              }
+            }
+          }
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "grants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sharedAccessGrant"
+          }
+        },
+        "refused": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sharedAccessRefusedClient"
+          }
+        },
+        "refusedTokens": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sharedAccessRefusedToken"
+          }
+        },
+        "socketPath": {
+          "type": "string"
+        },
+        "tokens": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sharedAccessToken"
+          }
+        },
+        "web": {
+          "$ref": "#/$defs/sharedAccessWeb"
+        }
+      }
+    },
+    "accessWebDisable": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "WebAccess"
+        }
+      },
+      "$ref": "#/$defs/sharedAccessWeb"
+    },
+    "accessWebEnable": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "WebAccess"
+        }
+      },
+      "$ref": "#/$defs/sharedAccessWeb"
+    },
+    "bindingClear": {
+      "$ref": "#/$defs/sharedStatus",
+      "properties": {
+        "details": {
+          "type": "object",
+          "required": ["all", "dryRun", "profile", "removed"],
+          "additionalProperties": false,
+          "properties": {
+            "all": {
+              "type": "boolean"
+            },
+            "dryRun": {
+              "type": "boolean"
+            },
+            "profile": {
+              "$ref": "#/$defs/sharedProfileSummary"
+            },
+            "removed": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "bindingList": {
+      "type": "object",
+      "required": ["apiVersion", "kind", "metadata", "items"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "BindingList"
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": false
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["behavior", "id", "profile", "source", "target"],
+            "additionalProperties": false,
+            "properties": {
+              "behavior": {
+                "$ref": "#/$defs/sharedBindingSummary/properties/behavior"
+              },
+              "id": {
+                "$ref": "#/$defs/sharedBindingSummary/properties/id"
+              },
+              "profile": {
+                "$ref": "#/$defs/sharedProfileSummary"
+              },
+              "source": {
+                "$ref": "#/$defs/sharedBindingSummary/properties/source"
+              },
+              "target": {
+                "$ref": "#/$defs/sharedBindingSummary/properties/target"
+              }
+            }
+          }
+        }
+      }
+    },
+    "bindingSet": {
+      "type": "object",
+      "required": ["apiVersion", "kind", "binding", "profile", "replaced"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "Binding"
+        },
+        "binding": {
+          "$ref": "#/$defs/sharedBindingSummary"
+        },
+        "profile": {
+          "$ref": "#/$defs/sharedProfileSummary"
+        },
+        "replaced": {
+          "type": "boolean"
+        }
+      }
+    },
+    "configShow": {
+      "type": "object",
+      "required": ["apiVersion", "kind", "defaultsFile", "values"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "Configuration"
+        },
+        "controller": {
+          "description": "The controller whose record was layered, as VVVV:PPPP. Absent without --controller.",
+          "type": "string",
+          "pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
+        },
+        "defaultsFile": {
+          "description": "The all.patch.json path, whether or not the file exists.",
+          "type": "string"
+        },
+        "profile": {
+          "description": "The active profile whose stick values the profile rows show. Absent without --controller, without a running service, or without an active profile for the controller.",
+          "type": "string"
+        },
+        "defaultsProblem": {
+          "description": "Why OJD ignored all.patch.json. Absent when it applies or does not exist.",
+          "type": "string"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["key", "layer"],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "description": "A record tuning key, or for a profile row the profile file path of the value.",
+                "anyOf": [
+                  {
+                    "enum": [
+                      "stickDeadzone",
+                      "inputLivenessTimeoutMs",
+                      "hidStartupRecoveryIntervalMs",
+                      "hidStartupRecoveryRounds",
+                      "hidStartupIntervalMs",
+                      "minimumHIDOutputIntervalMs",
+                      "keepAliveIntervalMs",
+                      "lizardResendTicks",
+                      "usbCommandTimeoutMs",
+                      "presenceResendReports",
+                      "adapterDisconnectDelayMs",
+                      "usbStartupIntervalMs",
+                      "usbStartupRetryDelayMs"
+                    ]
+                  },
+                  {
+                    "pattern": "^stickMappings\\.[0-9]+\\.tuning\\.innerDeadzone$"
+                  }
+                ]
+              },
+              "layer": {
+                "description": "The layer that set the value, lowest first.",
+                "enum": [
+                  "driver",
+                  "bundled",
+                  "package",
+                  "global",
+                  "user",
+                  "profile"
+                ]
+              },
+              "value": {
+                "description": "Absent while only the driver default applies.",
+                "type": "number"
+              },
+              "families": {
+                "description": "The protocol families whose drivers read the key. Present for a tuning key without --controller.",
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "controllerCalibrate": {
+      "type": "object",
+      "required": [
+        "apiVersion",
+        "kind",
+        "calibrated",
+        "collecting",
+        "controller",
+        "offsetDegreesPerSecond"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "Calibration"
+        },
+        "calibrated": {
+          "type": "boolean"
+        },
+        "collecting": {
+          "type": "boolean"
+        },
+        "controller": {
+          "type": "string"
+        },
+        "offsetDegreesPerSecond": {
+          "type": "object",
+          "required": ["x", "y", "z"],
+          "additionalProperties": false,
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "z": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "controllerCapture": {
+      "type": "object",
+      "required": [
+        "apiVersion",
+        "kind",
+        "direction",
+        "hex",
+        "length",
+        "captureTime"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "USBPacket"
+        },
+        "direction": {
+          "enum": ["rx", "tx"]
+        },
+        "hex": {
+          "type": "string",
+          "pattern": "^[0-9A-Fa-f ]*$"
+        },
+        "length": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "captureTime": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "controllerDisconnect": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "ControllerSession"
+        }
+      },
+      "$ref": "#/$defs/sharedControllerSession"
+    },
+    "controllerLight": {
+      "$ref": "#/$defs/sharedStatus",
+      "properties": {
+        "status": {
+          "const": "Success"
+        },
+        "details": {
+          "$ref": "#/$defs/sharedControllerOutput"
+        }
+      }
+    },
+    "controllerList": {
+      "type": "object",
+      "required": ["apiVersion", "kind", "metadata", "items"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "ControllerList"
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {}
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "connection",
+              "hasSerialNumber",
+              "id",
+              "name",
+              "productID",
+              "protocol",
+              "session",
+              "vendorID"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "connection": {
+                "type": "string"
+              },
+              "hasSerialNumber": {
+                "type": "boolean"
+              },
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "power": {
+                "description": "The latest power state the controller reports. Absent when the service reports none.",
+                "$ref": "report.schema.json#/$defs/controllerConnectionState/properties/power"
+              },
+              "productID": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 65535
+              },
+              "protocol": {
+                "$ref": "report.schema.json#/$defs/controller/properties/protocolBinding"
+              },
+              "session": {
+                "enum": ["active", "suspended"]
+              },
+              "unit": {
+                "type": "string",
+                "pattern": "^U-[A-Za-z0-9_-]{16}$",
+                "description": "The persistent unit ID: stays the same while the controller uses the same port. Absent without a location ID."
+              },
+              "vendorID": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 65535
+              }
+            }
+          }
+        }
+      }
+    },
+    "controllerOwnership": {
+      "type": "object",
+      "required": [
+        "apiVersion",
+        "kind",
+        "controller",
+        "created",
+        "dryRun",
+        "file",
+        "identity",
+        "ownership",
+        "previous"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "ControllerOwnership"
+        },
+        "controller": {
+          "type": "string"
+        },
+        "created": {
+          "description": "Whether the change creates the user record file.",
+          "type": "boolean"
+        },
+        "dryRun": {
+          "type": "boolean"
+        },
+        "file": {
+          "description": "The user record file the change writes.",
+          "type": "string"
+        },
+        "identity": {
+          "type": "string",
+          "pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
+        },
+        "ownership": {
+          "$ref": "#/$defs/sharedOwnershipChoice"
+        },
+        "previous": {
+          "$ref": "#/$defs/sharedOwnershipChoice"
+        }
+      }
+    },
+    "controllerPair": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "JoyConPair"
+        }
+      },
+      "$ref": "#/$defs/sharedJoyConPair"
+    },
+    "controllerPlayer": {
+      "$ref": "#/$defs/sharedStatus",
+      "properties": {
+        "status": {
+          "const": "Success"
+        },
+        "details": {
+          "$ref": "#/$defs/sharedControllerOutput"
+        }
+      }
+    },
+    "controllerResume": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "ControllerSession"
+        }
+      },
+      "$ref": "#/$defs/sharedControllerSession"
+    },
+    "controllerRumble": {
+      "$ref": "#/$defs/sharedStatus",
+      "properties": {
+        "status": {
+          "const": "Success"
+        },
+        "details": {
+          "$ref": "#/$defs/sharedControllerOutput"
+        }
+      }
+    },
+    "controllerShow": {
+      "type": "object",
+      "required": [
+        "apiVersion",
+        "kind",
+        "capabilities",
+        "connection",
+        "hasSerialNumber",
+        "id",
+        "inputHealth",
+        "name",
+        "outputChecks",
+        "ownership",
+        "productID",
+        "protocol",
+        "parameters",
+        "session",
+        "vendorID"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "Controller"
+        },
+        "capabilities": {
+          "type": "object",
+          "required": [
+            "adaptiveTriggers",
+            "binaryRumbleMotors",
+            "controls",
+            "lightingFeatures",
+            "motion",
+            "outputOwner",
+            "rumbleMotors",
+            "touchContactCount"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "adaptiveTriggers": {
+              "$ref": "report.schema.json#/$defs/physicalOutputCapabilities/properties/adaptiveTriggers"
+            },
+            "binaryRumbleMotors": {
+              "type": "array",
+              "items": {
+                "$ref": "report.schema.json#/$defs/rumbleMotor"
+              }
+            },
+            "controls": {
+              "type": "array",
+              "items": {
+                "$ref": "controller.schema.json#/$defs/controlID"
+              }
+            },
+            "lightingFeatures": {
+              "$ref": "report.schema.json#/$defs/physicalOutputCapabilities/properties/lightingFeatures"
+            },
+            "motion": {
+              "type": "boolean"
+            },
+            "outputOwner": {
+              "description": "Who drives the controller's output. With macos, macOS serves the controller natively, so the rumble and lighting lists hold only what macOS leaves undone.",
+              "enum": ["macos", "ojd"]
+            },
+            "rumbleMotors": {
+              "type": "array",
+              "items": {
+                "$ref": "report.schema.json#/$defs/rumbleMotor"
+              }
+            },
+            "touchContactCount": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "connection": {
+          "type": "string"
+        },
+        "hasSerialNumber": {
+          "type": "boolean"
+        },
+        "id": {
+          "type": "string"
+        },
+        "inputHealth": {
+          "type": "object",
+          "required": ["recoveryCount", "state"],
+          "additionalProperties": false,
+          "properties": {
+            "failureReason": {
+              "$ref": "report.schema.json#/$defs/controllerInputHealth/properties/failureReason"
+            },
+            "recoveryCount": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "reportFormat": {
+              "type": "string"
+            },
+            "state": {
+              "$ref": "report.schema.json#/$defs/controllerInputHealth/properties/state"
+            }
+          }
+        },
+        "interfaceNumber": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "name": {
+          "type": "string"
+        },
+        "outputChecks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["command", "expected", "id"],
+            "additionalProperties": false,
+            "properties": {
+              "command": {
+                "type": "string"
+              },
+              "expected": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "ownership": {
+          "type": "object",
+          "required": [
+            "choice",
+            "choiceSource",
+            "discoverySource",
+            "duplicateExposureRisk",
+            "hidInput",
+            "physical"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "choice": {
+              "$ref": "#/$defs/sharedOwnershipChoice"
+            },
+            "choiceSource": {
+              "description": "The record layer that sets the choice, or default when no layer sets it and macOS serves the controller.",
+              "enum": ["bundled", "package", "user", "default"]
+            },
+            "discoverySource": {
+              "enum": ["hid", "rawUSB"]
+            },
+            "duplicateExposureRisk": {
+              "enum": [
+                "none",
+                "nativeHIDVisible",
+                "upstreamVirtualDevice",
+                "unknownOwnership"
+              ]
+            },
+            "hidInput": {
+              "enum": [
+                "unknown",
+                "exclusive",
+                "shared",
+                "accessDenied",
+                "ownedByAnotherClient",
+                "acquisitionFailed"
+              ]
+            },
+            "physical": {
+              "enum": [
+                "exclusiveHID",
+                "exclusiveRawUSB",
+                "driverKitOwnedUSB",
+                "nativeHIDVisible",
+                "nativeGamepad",
+                "upstreamVirtualDevice",
+                "unknown"
+              ]
+            }
+          }
+        },
+        "power": {
+          "description": "The latest power state the controller reports. Absent when the service reports none.",
+          "$ref": "report.schema.json#/$defs/controllerConnectionState/properties/power"
+        },
+        "productID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "protocol": {
+          "$ref": "report.schema.json#/$defs/controller/properties/protocolBinding"
+        },
+        "publication": {
+          "description": "Whether a virtual device publishes the controller.",
+          "type": "object",
+          "required": ["state"],
+          "additionalProperties": false,
+          "properties": {
+            "lastAttemptedNanoseconds": {
+              "description": "System uptime of the last send to the virtual device.",
+              "type": "integer",
+              "minimum": 0
+            },
+            "lastCompletedNanoseconds": {
+              "description": "System uptime of the last send the virtual device accepted.",
+              "type": "integer",
+              "minimum": 0
+            },
+            "reason": {
+              "type": "string"
+            },
+            "state": {
+              "enum": ["published", "notPublished", "failed"]
+            },
+            "target": {
+              "enum": ["hid-xbox-one-s-bt", "hid-generic"]
+            }
+          }
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "record": {
+          "description": "The effective record for the controller's model. Absent when no record matches.",
+          "type": "object",
+          "required": ["layer"],
+          "additionalProperties": false,
+          "properties": {
+            "file": {
+              "type": "string"
+            },
+            "layer": {
+              "enum": ["bundled", "package", "user"]
+            }
+          }
+        },
+        "session": {
+          "enum": ["active", "suspended"]
+        },
+        "startupCommandStatus": {
+          "type": "string"
+        },
+        "tuning": {
+          "description": "The effective record's tuning as applied. Absent when the record sets no tuning.",
+          "$ref": "controller.schema.json#/$defs/tuning"
+        },
+        "unit": {
+          "type": "string",
+          "pattern": "^U-[A-Za-z0-9_-]{16}$",
+          "description": "The persistent unit ID: stays the same while the controller uses the same port. Absent without a location ID."
+        },
+        "vendorID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "virtual": {
+          "type": "object",
+          "required": ["unavailable"],
+          "additionalProperties": false,
+          "properties": {
+            "override": {
+              "enum": ["hid-xbox-one-s-bt", "hid-generic"]
+            },
+            "overrideScope": {
+              "enum": ["unit", "model"],
+              "description": "Whether override is the controller's own choice or its model's."
+            },
+            "profile": {
+              "enum": ["hid-xbox-one-s-bt", "hid-generic"]
+            },
+            "source": {
+              "type": "string"
+            },
+            "unavailable": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "controllerSuspend": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "ControllerSession"
+        }
+      },
+      "$ref": "#/$defs/sharedControllerSession"
+    },
+    "controllerUnpair": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "JoyConPair"
+        }
+      },
+      "$ref": "#/$defs/sharedJoyConPair"
+    },
+    "controllerWatch": {
+      "description": "With --first-press, the first control pressed; with --all, one event per line for every controller; with --output, one controller state and the virtual gamepad's values per line; otherwise one controller state per line.",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["apiVersion", "control", "kind"],
+          "additionalProperties": false,
+          "properties": {
+            "apiVersion": {
+              "$ref": "#/$defs/sharedAPIVersion"
+            },
+            "kind": {
+              "const": "ControlPress"
+            },
+            "control": {
+              "$ref": "controller.schema.json#/$defs/controlID"
+            },
+            "direction": {
+              "enum": [
+                "north",
+                "northEast",
+                "east",
+                "southEast",
+                "south",
+                "southWest",
+                "west",
+                "northWest"
+              ]
+            }
+          }
+        },
+        {
+          "$ref": "#/$defs/sharedControllerState",
+          "required": ["apiVersion", "kind"],
+          "properties": {
+            "kind": {
+              "const": "ControllerState"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["apiVersion", "input", "kind"],
+          "additionalProperties": false,
+          "properties": {
+            "apiVersion": {
+              "$ref": "#/$defs/sharedAPIVersion"
+            },
+            "kind": {
+              "const": "ControllerState"
+            },
+            "input": {
+              "$ref": "#/$defs/sharedControllerState"
+            },
+            "output": {
+              "description": "Absent when the controller is not published.",
+              "$ref": "#/$defs/sharedVirtualOutput"
+            }
+          }
+        },
+        {
+          "description": "With --all, one watch line per line.",
+          "$ref": "#/$defs/sharedControllerWatchEvent"
+        }
+      ]
+    },
+    "diagnose": {
+      "type": "object",
+      "required": ["apiVersion", "kind", "checks", "timings"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "Diagnosis"
+        },
+        "timings": {
+          "description": "The newest frames of each connected controller, oldest first; empty while the service is stopped. Nanoseconds are on the service's monotonic uptime clock. Each controller keeps its last 8 frames. The endpoint polls, so delivery-endpoint goes on the newest frame at the poll and a frame replaced by a newer one before the poll gets none.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["controller", "name", "frames"],
+            "additionalProperties": false,
+            "properties": {
+              "controller": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "frames": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["sequence", "stages"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "sequence": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "stages": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["stage", "nanoseconds"],
+                        "additionalProperties": false,
+                        "properties": {
+                          "stage": {
+                            "enum": [
+                              "read",
+                              "parse",
+                              "dispatch",
+                              "delivery-virtual-device",
+                              "delivery-endpoint"
+                            ]
+                          },
+                          "nanoseconds": {
+                            "type": "integer",
+                            "minimum": 0
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "bundle": {
+          "type": "string"
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["detail", "id", "status"],
+            "additionalProperties": false,
+            "properties": {
+              "detail": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string"
+              },
+              "status": {
+                "enum": ["pass", "warn", "fail", "skip"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "explain": {
+      "type": "object",
+      "required": ["apiVersion", "kind", "area", "code", "explanation"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "ErrorExplanation"
+        },
+        "area": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string",
+          "pattern": "^E[0-9]{4}$"
+        },
+        "exitCode": {
+          "description": "The exit code of a command-line error.",
+          "type": "integer"
+        },
+        "explanation": {
+          "type": "string"
+        },
+        "wire": {
+          "description": "The wire value of a remapping error.",
+          "type": "string"
+        },
+        "retiredIn": {
+          "description": "The release that retired the code; only for a retired code, whose explanation says so.",
+          "type": "string"
+        }
+      }
+    },
+    "extensionActivate": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "DriverExtension"
+        }
+      },
+      "$ref": "#/$defs/sharedExtensionState"
+    },
+    "extensionDeactivate": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "DriverExtension"
+        }
+      },
+      "$ref": "#/$defs/sharedExtensionState"
+    },
+    "extensionStatus": {
+      "type": "object",
+      "required": ["apiVersion", "kind", "bundle", "registration"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "DriverExtension"
+        },
+        "bundle": {
+          "enum": ["present", "missing", "invalid"]
+        },
+        "detail": {
+          "type": "string"
+        },
+        "registration": {
+          "enum": ["active", "inactive", "absent", "unavailable"]
+        }
+      }
+    },
+    "logExport": {
+      "$ref": "#/$defs/sharedStatus",
+      "properties": {
+        "details": {
+          "type": "object",
+          "required": ["lines", "path"],
+          "additionalProperties": false,
+          "properties": {
+            "lines": {
+              "description": "The number of log lines written.",
+              "type": "integer",
+              "minimum": 0
+            },
+            "path": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "logPath": {
+      "type": "object",
+      "required": ["apiVersion", "kind", "path"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "LogLocation"
+        },
+        "path": {
+          "type": "string"
+        }
+      }
+    },
+    "logShow": {
+      "description": "A snapshot of each log, or with -f one line per log line.",
+      "required": ["apiVersion", "kind"],
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["logs"],
+          "additionalProperties": false,
+          "properties": {
+            "apiVersion": {
+              "$ref": "#/$defs/sharedAPIVersion"
+            },
+            "kind": {
+              "const": "LogSnapshot"
+            },
+            "logs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "exists",
+                  "fileSizeBytes",
+                  "lines",
+                  "path",
+                  "stream",
+                  "truncated"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "exists": {
+                    "type": "boolean"
+                  },
+                  "fileSizeBytes": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "lines": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "stream": {
+                    "enum": ["standardOutput", "standardError"]
+                  },
+                  "truncated": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["line", "stream"],
+          "additionalProperties": false,
+          "properties": {
+            "apiVersion": {
+              "$ref": "#/$defs/sharedAPIVersion"
+            },
+            "kind": {
+              "const": "LogEntry"
+            },
+            "line": {
+              "type": "string"
+            },
+            "stream": {
+              "enum": ["standardOutput", "standardError"]
+            }
+          }
+        }
+      ]
+    },
+    "modInstall": {
+      "type": "object",
+      "required": [
+        "apiVersion",
+        "kind",
+        "dryRun",
+        "installed",
+        "package",
+        "replaced"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "ModPackage"
+        },
+        "dryRun": {
+          "type": "boolean"
+        },
+        "installed": {
+          "type": "string"
+        },
+        "package": {
+          "$ref": "#/$defs/sharedModPackageValidation"
+        },
+        "replaced": {
+          "type": "boolean"
+        }
+      }
+    },
+    "modList": {
+      "type": "object",
+      "required": ["apiVersion", "kind", "metadata", "items"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "ModPackageList"
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": false
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["files", "name"],
+            "additionalProperties": false,
+            "properties": {
+              "author": {
+                "type": "string"
+              },
+              "files": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "name": {
+                "type": "string"
+              },
+              "problem": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "modRemove": {
+      "$ref": "#/$defs/sharedStatus",
+      "properties": {
+        "details": {
+          "type": "object",
+          "required": ["dryRun", "removed"],
+          "additionalProperties": false,
+          "properties": {
+            "dryRun": {
+              "type": "boolean"
+            },
+            "removed": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "modValidate": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "ModPackageValidation"
+        }
+      },
+      "$ref": "#/$defs/sharedModPackageValidation"
+    },
+    "permissionList": {
+      "type": "object",
+      "required": ["apiVersion", "kind", "metadata", "items"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "PermissionList"
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {}
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sharedPermissions/properties/permissions/items"
+          }
+        }
+      }
+    },
+    "permissionRequest": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "PermissionRequest"
+        }
+      },
+      "$ref": "#/$defs/sharedPermissions"
+    },
+    "profileActivate": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "Profile"
+        }
+      },
+      "$ref": "#/$defs/sharedProfileResult"
+    },
+    "profileCreate": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "Profile"
+        }
+      },
+      "$ref": "#/$defs/sharedProfileResult"
+    },
+    "profileDeactivate": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "Profile"
+        }
+      },
+      "$ref": "#/$defs/sharedProfileResult"
+    },
+    "profileDelete": {
+      "$ref": "#/$defs/sharedStatus",
+      "properties": {
+        "details": {
+          "type": "object",
+          "required": ["deleted", "dryRun"],
+          "additionalProperties": false,
+          "properties": {
+            "deleted": {
+              "$ref": "#/$defs/sharedProfileSummary"
+            },
+            "dryRun": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "profileDuplicate": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "Profile"
+        }
+      },
+      "$ref": "#/$defs/sharedProfileResult"
+    },
+    "profileGet": {
+      "type": "object",
+      "required": ["apiVersion", "kind", "key", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "ProfileValue"
+        },
+        "key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {
+          "description": "The value at key in the profile file, which profile.schema.json describes.",
+          "type": ["array", "boolean", "number", "object", "string"]
+        }
+      }
+    },
+    "profileImport": {
+      "type": "object",
+      "required": ["apiVersion", "kind", "profile", "replaced"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "Profile"
+        },
+        "profile": {
+          "$ref": "#/$defs/sharedProfileSummary"
+        },
+        "replaced": {
+          "type": "boolean"
+        }
+      }
+    },
+    "profileList": {
+      "type": "object",
+      "required": ["apiVersion", "kind", "metadata", "items"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "ProfileList"
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": false
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sharedProfileSummary"
+          }
+        }
+      }
+    },
+    "profileRecover": {
+      "$ref": "#/$defs/sharedStatus",
+      "properties": {
+        "details": {
+          "type": "object",
+          "required": ["dryRun", "recovered"],
+          "additionalProperties": false,
+          "properties": {
+            "dryRun": {
+              "type": "boolean"
+            },
+            "recovered": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/sharedProfileIssue"
+              }
+            }
+          }
+        }
+      }
+    },
+    "profileRename": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "Profile"
+        }
+      },
+      "$ref": "#/$defs/sharedProfileResult"
+    },
+    "profileSet": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "Profile"
+        }
+      },
+      "$ref": "#/$defs/sharedProfileResult"
+    },
+    "profileShow": {
+      "type": "object",
+      "required": ["apiVersion", "kind", "document", "profile"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "Profile"
+        },
+        "document": {
+          "$ref": "profile.schema.json"
+        },
+        "profile": {
+          "$ref": "#/$defs/sharedProfileSummary"
+        }
+      }
+    },
+    "profileValidate": {
+      "type": "object",
+      "required": ["apiVersion", "kind", "valid"],
+      "additionalProperties": false,
+      "description": "A valid profile has every property except problem. An invalid profile has only valid and problem.",
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "ProfileValidation"
+        },
+        "controller": {
+          "type": "string",
+          "pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$"
+        },
+        "name": {
+          "type": "string"
+        },
+        "problem": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "pattern": "^(global|app:.+)$"
+        },
+        "valid": {
+          "type": "boolean"
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "valid": {
+              "const": true
+            }
+          },
+          "required": ["controller", "id", "name", "scope"],
+          "not": {
+            "required": ["problem"]
+          }
+        },
+        {
+          "properties": {
+            "valid": {
+              "const": false
+            }
+          },
+          "required": ["problem"],
+          "not": {
+            "anyOf": [
+              {
+                "required": ["controller"]
+              },
+              {
+                "required": ["id"]
+              },
+              {
+                "required": ["name"]
+              },
+              {
+                "required": ["scope"]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "recordTest": {
+      "type": "object",
+      "required": [
+        "apiVersion",
+        "kind",
+        "differences",
+        "identity",
+        "inputReports",
+        "matches"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "RecordTestResult"
+        },
+        "differences": {
+          "description": "The fields of the controller state that differ. Empty when the states match.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["actual", "expected", "field"],
+            "additionalProperties": false,
+            "properties": {
+              "actual": {
+                "description": "The parsed value of the field, as JSON text.",
+                "type": "string"
+              },
+              "expected": {
+                "description": "The expected value of the field, as JSON text.",
+                "type": "string"
+              },
+              "field": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "identity": {
+          "type": "string",
+          "pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
+        },
+        "inputReports": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "matches": {
+          "type": "boolean"
+        }
+      }
+    },
+    "recordDraft": {
+      "type": "object",
+      "required": [
+        "apiVersion",
+        "kind",
+        "capturedReports",
+        "changedBytes",
+        "family",
+        "identity",
+        "name",
+        "operation",
+        "record"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "RecordDraft"
+        },
+        "capturedReports": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "changedBytes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["byte", "maximum", "minimum"],
+            "additionalProperties": false,
+            "properties": {
+              "byte": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 63
+              },
+              "maximum": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 255
+              },
+              "minimum": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 255
+              }
+            }
+          }
+        },
+        "family": {
+          "enum": ["hid.descriptor", "hid.report-layout"]
+        },
+        "identity": {
+          "type": "string",
+          "pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
+        },
+        "name": {
+          "type": "string"
+        },
+        "operation": {
+          "enum": ["add", "patch"]
+        },
+        "record": {
+          "description": "The drafted controller record, as 'ojd record install' reads it.",
+          "oneOf": [
+            { "$ref": "controller.schema.json" },
+            { "$ref": "controller-patch.schema.json" }
+          ]
+        },
+        "report": {
+          "type": "object",
+          "required": ["length"],
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 255
+            },
+            "length": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 64
+            }
+          }
+        }
+      }
+    },
+    "recordInstall": {
+      "type": "object",
+      "required": [
+        "apiVersion",
+        "kind",
+        "dryRun",
+        "installed",
+        "record",
+        "replaced"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "ControllerRecord"
+        },
+        "dryRun": {
+          "type": "boolean"
+        },
+        "installed": {
+          "type": "string"
+        },
+        "record": {
+          "$ref": "#/$defs/sharedRecordValidation"
+        },
+        "replaced": {
+          "type": "boolean"
+        }
+      }
+    },
+    "recordList": {
+      "type": "object",
+      "required": ["apiVersion", "kind", "metadata", "items"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "ControllerRecordList"
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": false
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "family",
+              "identity",
+              "layer",
+              "productID",
+              "vendorID"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "family": {
+                "$ref": "controller.schema.json#/$defs/protocol/properties/family"
+              },
+              "file": {
+                "type": "string"
+              },
+              "identity": {
+                "type": "string",
+                "pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
+              },
+              "layer": {
+                "enum": ["bundled", "package", "user"]
+              },
+              "productID": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 65535
+              },
+              "vendorID": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 65535
+              }
+            }
+          }
+        }
+      }
+    },
+    "recordRemove": {
+      "$ref": "#/$defs/sharedStatus",
+      "properties": {
+        "details": {
+          "type": "object",
+          "required": ["dryRun", "removed"],
+          "additionalProperties": false,
+          "properties": {
+            "dryRun": {
+              "type": "boolean"
+            },
+            "removed": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "recordShow": {
+      "type": "object",
+      "required": [
+        "apiVersion",
+        "kind",
+        "family",
+        "fields",
+        "identity",
+        "layer",
+        "record",
+        "transport"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "ControllerRecord"
+        },
+        "family": {
+          "$ref": "controller.schema.json#/$defs/protocol/properties/family"
+        },
+        "fields": {
+          "type": "object",
+          "additionalProperties": {
+            "enum": ["bundled", "package", "user"]
+          }
+        },
+        "file": {
+          "type": "string"
+        },
+        "identity": {
+          "type": "string",
+          "pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
+        },
+        "layer": {
+          "enum": ["bundled", "package", "user"]
+        },
+        "record": {
+          "description": "The merged controller record.",
+          "$ref": "controller.schema.json"
+        },
+        "transport": {
+          "enum": ["hid", "usb"]
+        },
+        "usbExtension": {
+          "enum": ["claims", "doesNotClaim"]
+        }
+      }
+    },
+    "recordValidate": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "RecordValidation"
+        }
+      },
+      "$ref": "#/$defs/sharedRecordValidation"
+    },
+    "serviceStart": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "Service"
+        }
+      },
+      "$ref": "#/$defs/sharedServiceState"
+    },
+    "serviceStop": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "Service"
+        }
+      },
+      "$ref": "#/$defs/sharedServiceState"
+    },
+    "serviceWait": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "Service"
+        }
+      },
+      "$ref": "#/$defs/sharedServiceState"
+    },
+    "settingGet": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "Setting"
+        }
+      },
+      "$ref": "#/$defs/sharedSetting"
+    },
+    "settingList": {
+      "type": "object",
+      "required": ["apiVersion", "kind", "metadata", "items"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "SettingList"
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {}
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["description", "key", "value"],
+            "additionalProperties": false,
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "key": {
+                "$ref": "#/$defs/sharedSettingKey"
+              },
+              "value": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    "settingSet": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "Setting"
+        }
+      },
+      "$ref": "#/$defs/sharedSetting"
+    },
+    "sharedAPIVersion": {
+      "description": "The version of the ojd --json output format.",
+      "const": "openjoystickdriver/v1alpha1"
+    },
+    "sharedAccessGrant": {
+      "type": "object",
+      "required": [
+        "grantTime",
+        "id",
+        "identifier",
+        "identityKind",
+        "path",
+        "scopes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "grantTime": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "identifier": {
+          "type": "string"
+        },
+        "identityKind": {
+          "enum": ["team", "apple"]
+        },
+        "path": {
+          "type": "string"
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "enum": ["read", "control"]
+          }
+        },
+        "teamIdentifier": {
+          "type": "string"
+        }
+      }
+    },
+    "sharedAccessRefusedClient": {
+      "type": "object",
+      "required": [
+        "id",
+        "identifier",
+        "identityKind",
+        "reason",
+        "refusalTime",
+        "scopes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "identifier": {
+          "type": "string"
+        },
+        "identityKind": {
+          "enum": ["team", "apple", "adHoc"]
+        },
+        "path": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string",
+          "pattern": "^E1[0-9]{3}$",
+          "description": "The endpoint error code of the refusal; see the wiki page Error-Codes."
+        },
+        "refusalTime": {
+          "type": "string"
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "enum": ["read", "control"]
+          }
+        },
+        "teamIdentifier": {
+          "type": "string"
+        }
+      }
+    },
+    "sharedAccessRefusedToken": {
+      "type": "object",
+      "required": ["reason", "refusalTime", "scopes", "transport"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The grant the token belongs to; absent for a token that matches no grant."
+        },
+        "origin": {
+          "type": "string",
+          "description": "The page's origin; WebSocket only."
+        },
+        "reason": {
+          "type": "string",
+          "pattern": "^E1[0-9]{3}$",
+          "description": "The endpoint error code of the refusal; see the wiki page Error-Codes."
+        },
+        "refusalTime": {
+          "type": "string"
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "enum": ["read", "control"]
+          }
+        },
+        "transport": {
+          "enum": ["socket", "web"]
+        }
+      }
+    },
+    "sharedAccessToken": {
+      "type": "object",
+      "required": ["grantTime", "id", "name", "origins", "scopes"],
+      "additionalProperties": false,
+      "properties": {
+        "grantTime": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^token:"
+        },
+        "name": {
+          "type": "string"
+        },
+        "origins": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "enum": ["read", "control"]
+          }
+        }
+      }
+    },
+    "sharedAccessWeb": {
+      "type": "object",
+      "required": ["enabled", "listening", "pagesPath"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "listening": {
+          "type": "boolean"
+        },
+        "pagesPath": {
+          "type": "string"
+        },
+        "pagesURL": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "sharedBindingSummary": {
+      "type": "object",
+      "required": ["behavior", "id", "source", "target"],
+      "additionalProperties": false,
+      "properties": {
+        "behavior": {
+          "enum": [
+            "hold",
+            "toggle",
+            "tap_on_press",
+            "tap_on_release",
+            "pulse",
+            "press",
+            "release"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$"
+        },
+        "source": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        }
+      }
+    },
+    "sharedControllerOutput": {
+      "type": "object",
+      "required": ["controller", "results"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "controller": {
+          "type": "string"
+        },
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["command", "droppedRumbleChannels", "outcome"],
+            "additionalProperties": false,
+            "properties": {
+              "command": {
+                "type": "string"
+              },
+              "droppedRumbleChannels": {
+                "type": "array",
+                "items": {
+                  "$ref": "report.schema.json#/$defs/rumbleMotor"
+                }
+              },
+              "outcome": {
+                "enum": [
+                  "delivered",
+                  "notFound",
+                  "unsupportedCapability",
+                  "notReady",
+                  "invalidValue",
+                  "writeFailed",
+                  "cancelled"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "sharedControllerSession": {
+      "type": "object",
+      "required": ["changed", "controller", "session"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "changed": {
+          "type": "boolean"
+        },
+        "controller": {
+          "type": "string"
+        },
+        "session": {
+          "enum": ["active", "suspended", "disconnected"]
+        }
+      }
+    },
+    "sharedControllerState": {
+      "type": "object",
+      "required": [
+        "hat",
+        "leftStick",
+        "leftTrigger",
+        "pressed",
+        "rightStick",
+        "rightTrigger",
+        "touch"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "connection": {
+          "$ref": "report.schema.json#/$defs/controllerConnectionState"
+        },
+        "hat": {
+          "enum": [
+            "neutral",
+            "north",
+            "northEast",
+            "east",
+            "southEast",
+            "south",
+            "southWest",
+            "west",
+            "northWest"
+          ]
+        },
+        "leftStick": {
+          "$ref": "#/$defs/sharedStick"
+        },
+        "leftTrigger": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "pressed": {
+          "type": "array",
+          "items": {
+            "$ref": "controller.schema.json#/$defs/controlID"
+          }
+        },
+        "rightStick": {
+          "$ref": "#/$defs/sharedStick"
+        },
+        "rightTrigger": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "touch": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["contacts", "surface", "timestamp"],
+            "additionalProperties": false,
+            "properties": {
+              "contacts": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["isActive", "slot", "x", "y"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "isActive": {
+                      "type": "boolean"
+                    },
+                    "pressure": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 65535
+                    },
+                    "slot": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 255
+                    },
+                    "x": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 65535
+                    },
+                    "y": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 65535
+                    }
+                  }
+                }
+              },
+              "surface": {
+                "enum": ["primary", "left", "right"]
+              },
+              "timestamp": {
+                "type": "object",
+                "required": ["nanoseconds"],
+                "additionalProperties": false,
+                "properties": {
+                  "nanoseconds": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "sharedControllerWatchEvent": {
+      "description": "A watch line: ADDED for a controller that connected, including those connected when the stream starts (the endpoint's snapshot carries the full current object); MODIFIED when its input changes; DELETED when it disconnected, with the last object. The line has no apiVersion and kind of its own; its object does. Lines of ojd controller watch --all and of the endpoint's controllers stream.",
+      "type": "object",
+      "required": ["object", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "enum": ["ADDED", "MODIFIED", "DELETED"]
+        },
+        "object": {
+          "$ref": "#/$defs/sharedWatchedController"
+        }
+      }
+    },
+    "sharedWatchedController": {
+      "description": "A Controller: the fields of an item of ojd controller list, and the latest input and output once the controller has any.",
+      "type": "object",
+      "required": [
+        "apiVersion",
+        "connection",
+        "hasSerialNumber",
+        "id",
+        "kind",
+        "name",
+        "productID",
+        "protocol",
+        "session",
+        "vendorID"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "Controller"
+        },
+        "connection": {
+          "$ref": "#/$defs/controllerList/properties/items/items/properties/connection"
+        },
+        "hasSerialNumber": {
+          "$ref": "#/$defs/controllerList/properties/items/items/properties/hasSerialNumber"
+        },
+        "id": {
+          "description": "The ID from ojd controller list.",
+          "type": "string"
+        },
+        "name": {
+          "$ref": "#/$defs/controllerList/properties/items/items/properties/name"
+        },
+        "power": {
+          "$ref": "#/$defs/controllerList/properties/items/items/properties/power"
+        },
+        "productID": {
+          "$ref": "#/$defs/controllerList/properties/items/items/properties/productID"
+        },
+        "protocol": {
+          "$ref": "#/$defs/controllerList/properties/items/items/properties/protocol"
+        },
+        "session": {
+          "$ref": "#/$defs/controllerList/properties/items/items/properties/session"
+        },
+        "unit": {
+          "$ref": "#/$defs/controllerList/properties/items/items/properties/unit"
+        },
+        "vendorID": {
+          "$ref": "#/$defs/controllerList/properties/items/items/properties/vendorID"
+        },
+        "input": {
+          "description": "The latest input; absent until the controller has input state.",
+          "$ref": "#/$defs/sharedControllerState"
+        },
+        "output": {
+          "description": "With --output, or a subscription that asked for output. Absent when the controller is not published.",
+          "$ref": "#/$defs/sharedVirtualOutput"
+        }
+      }
+    },
+    "sharedDevice": {
+      "type": "object",
+      "required": ["connection", "productID", "vendorID"],
+      "additionalProperties": false,
+      "properties": {
+        "connection": {
+          "type": "string"
+        },
+        "productID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "vendorID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        }
+      }
+    },
+    "sharedExtensionState": {
+      "type": "object",
+      "required": ["state"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "state": {
+          "enum": ["active", "inactive", "awaitingApproval"]
+        }
+      }
+    },
+    "sharedJoyConPair": {
+      "type": "object",
+      "required": ["gyro", "left", "profile", "right", "session"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "gyro": {
+          "enum": ["disabled", "left", "right"]
+        },
+        "left": {
+          "type": "string"
+        },
+        "profile": {
+          "type": "string"
+        },
+        "right": {
+          "type": "string"
+        },
+        "session": {
+          "type": "string",
+          "pattern": "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$"
+        }
+      }
+    },
+    "sharedModPackageValidation": {
+      "type": "object",
+      "required": ["valid"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "author": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string",
+          "pattern": "^(E4[0-9]{3}|E5001)$"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "problem": {
+          "type": "string"
+        },
+        "valid": {
+          "type": "boolean"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "sharedOwnershipChoice": {
+      "description": "Who serves the controller: native leaves it to macOS, virtual lets OpenJoystickDriver seize it and publish a virtual gamepad.",
+      "enum": ["native", "virtual"]
+    },
+    "sharedPermissions": {
+      "type": "object",
+      "required": ["permissions"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "purpose", "state"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "enum": [
+                  "input-monitoring",
+                  "accessibility",
+                  "driver-extension"
+                ]
+              },
+              "name": {
+                "type": "string"
+              },
+              "purpose": {
+                "type": "string"
+              },
+              "state": {
+                "enum": ["granted", "denied", "unknown"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "sharedProfileIssue": {
+      "type": "object",
+      "required": ["id", "kind", "message"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$"
+        },
+        "kind": {
+          "enum": ["damagedProfile", "unusableLibrary"]
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "sharedProfileResult": {
+      "type": "object",
+      "required": ["changed", "profile"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "changed": {
+          "type": "boolean"
+        },
+        "profile": {
+          "$ref": "#/$defs/sharedProfileSummary"
+        }
+      }
+    },
+    "sharedProfileSummary": {
+      "type": "object",
+      "required": ["active", "bindings", "controller", "id", "name", "scope"],
+      "additionalProperties": false,
+      "properties": {
+        "active": {
+          "type": "boolean"
+        },
+        "bindings": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "controller": {
+          "type": "string",
+          "pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$"
+        },
+        "name": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string",
+          "pattern": "^(global|app:.+)$"
+        }
+      }
+    },
+    "sharedRecordValidation": {
+      "type": "object",
+      "required": ["valid"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "family": {
+          "$ref": "controller.schema.json#/$defs/protocol/properties/family"
+        },
+        "fileName": {
+          "type": "string"
+        },
+        "identity": {
+          "type": "string",
+          "pattern": "^[0-9A-F]{4}:[0-9A-F]{4}$"
+        },
+        "operation": {
+          "enum": ["add", "patch"]
+        },
+        "problem": {
+          "type": "string"
+        },
+        "transport": {
+          "enum": ["hid", "usb"]
+        },
+        "usbExtension": {
+          "enum": ["claims", "doesNotClaim"]
+        },
+        "valid": {
+          "type": "boolean"
+        }
+      }
+    },
+    "sharedServiceState": {
+      "type": "object",
+      "required": ["state"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "state": {
+          "enum": ["running", "stopped"]
+        }
+      }
+    },
+    "sharedSetting": {
+      "type": "object",
+      "required": ["key", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "key": {
+          "$ref": "#/$defs/sharedSettingKey"
+        },
+        "value": {
+          "type": "boolean"
+        }
+      }
+    },
+    "sharedSettingKey": {
+      "enum": [
+        "launchAtLogin",
+        "notify.controllerConnected",
+        "notify.controllerDisconnected",
+        "notify.profileActivated",
+        "notify.profileDeactivated",
+        "notify.sounds",
+        "updates.includePrereleases",
+        "developerTools"
+      ]
+    },
+    "sharedSkippedRecord": {
+      "type": "object",
+      "required": ["file", "problem"],
+      "additionalProperties": false,
+      "properties": {
+        "file": {
+          "type": "string"
+        },
+        "problem": {
+          "type": "string"
+        }
+      }
+    },
+    "sharedStatus": {
+      "description": "A Kubernetes Status: the result of an action that leaves no object to print. details is the command's own result; each command's entry in $defs constrains it.",
+      "type": "object",
+      "required": ["apiVersion", "kind", "status", "details"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "Status"
+        },
+        "status": {
+          "enum": ["Success", "Failure"]
+        },
+        "message": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "code": {
+          "type": "integer"
+        },
+        "details": {
+          "type": "object"
+        }
+      }
+    },
+    "sharedStick": {
+      "type": "object",
+      "required": ["x", "y"],
+      "additionalProperties": false,
+      "properties": {
+        "x": {
+          "type": "integer",
+          "minimum": -32767,
+          "maximum": 32767
+        },
+        "y": {
+          "type": "integer",
+          "minimum": -32767,
+          "maximum": 32767
+        }
+      }
+    },
+    "sharedVirtualChange": {
+      "type": "object",
+      "required": ["controller", "source"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "controller": {
+          "type": "string"
+        },
+        "live": {
+          "enum": ["hid-xbox-one-s-bt", "hid-generic"]
+        },
+        "requested": {
+          "enum": ["hid-xbox-one-s-bt", "hid-generic"]
+        },
+        "source": {
+          "type": "string"
+        }
+      }
+    },
+    "sharedVirtualFeedLine": {
+      "description": "One output command per line that the host sent to the virtual gamepad, oldest first. Virtual gamepads receive only rumble commands.",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["apiVersion", "intensities", "kind", "type"],
+          "additionalProperties": false,
+          "properties": {
+            "apiVersion": {
+              "$ref": "#/$defs/sharedAPIVersion"
+            },
+            "kind": {
+              "const": "RumbleCommand"
+            },
+            "type": {
+              "const": "setRumble"
+            },
+            "intensities": {
+              "type": "object",
+              "required": [
+                "leftMain",
+                "rightMain",
+                "leftTrigger",
+                "rightTrigger",
+                "leftHaptic",
+                "rightHaptic"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "leftMain": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 65535
+                },
+                "rightMain": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 65535
+                },
+                "leftTrigger": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 65535
+                },
+                "rightTrigger": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 65535
+                },
+                "leftHaptic": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 65535
+                },
+                "rightHaptic": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 65535
+                }
+              }
+            },
+            "durationMilliseconds": {
+              "description": "How long the rumble lasts. Absent while it is held until the next rumble command.",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5000
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["apiVersion", "kind", "type"],
+          "additionalProperties": false,
+          "properties": {
+            "apiVersion": {
+              "$ref": "#/$defs/sharedAPIVersion"
+            },
+            "kind": {
+              "const": "RumbleCommand"
+            },
+            "type": {
+              "const": "stopRumble"
+            }
+          }
+        }
+      ]
+    },
+    "sharedVirtualOutput": {
+      "description": "What the virtual gamepad last reported, after stick transfer and remapping. Stick Y points down, as in the HID report.",
+      "type": "object",
+      "required": [
+        "buttons",
+        "hat",
+        "leftStickX",
+        "leftStickY",
+        "leftTrigger",
+        "rightStickX",
+        "rightStickY",
+        "rightTrigger"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "buttons": {
+          "description": "Bit n is HID button n + 1.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "hat": {
+          "enum": [
+            "neutral",
+            "north",
+            "northEast",
+            "east",
+            "southEast",
+            "south",
+            "southWest",
+            "west",
+            "northWest"
+          ]
+        },
+        "leftStickX": {
+          "type": "integer",
+          "minimum": -32768,
+          "maximum": 32767
+        },
+        "leftStickY": {
+          "type": "integer",
+          "minimum": -32768,
+          "maximum": 32767
+        },
+        "leftTrigger": {
+          "type": "integer",
+          "minimum": -32768,
+          "maximum": 32767
+        },
+        "rightStickX": {
+          "type": "integer",
+          "minimum": -32768,
+          "maximum": 32767
+        },
+        "rightStickY": {
+          "type": "integer",
+          "minimum": -32768,
+          "maximum": 32767
+        },
+        "rightTrigger": {
+          "type": "integer",
+          "minimum": -32768,
+          "maximum": 32767
+        }
+      }
+    },
+    "status": {
+      "type": "object",
+      "required": [
+        "apiVersion",
+        "kind",
+        "commandLineTool",
+        "extension",
+        "service",
+        "skippedRecords"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "SystemStatus"
+        },
+        "commandLineTool": {
+          "description": "The ojd link the app installs: installed when it points to this app's executable, linkedElsewhere when it points to another existing file such as another app copy, broken when its target does not exist, blockedByFile when the path is a file or folder that is not a link, and missing when nothing is at the path. target is what the link points to and appears only for a link.",
+          "type": "object",
+          "required": ["path", "state"],
+          "additionalProperties": false,
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "state": {
+              "enum": [
+                "installed",
+                "linkedElsewhere",
+                "broken",
+                "blockedByFile",
+                "missing"
+              ]
+            },
+            "target": {
+              "type": "string"
+            }
+          }
+        },
+        "controllers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["connection", "id", "name", "productID", "vendorID"],
+            "additionalProperties": false,
+            "properties": {
+              "connection": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "productID": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 65535
+              },
+              "vendorID": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 65535
+              }
+            }
+          }
+        },
+        "extension": {
+          "type": "object",
+          "required": ["bundle", "registration"],
+          "additionalProperties": false,
+          "properties": {
+            "bundle": {
+              "enum": ["present", "missing", "invalid"]
+            },
+            "registration": {
+              "enum": ["active", "inactive", "absent", "unavailable"]
+            }
+          }
+        },
+        "passThroughDevices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sharedDevice"
+          }
+        },
+        "permissions": {
+          "type": "object",
+          "required": ["accessibility", "inputMonitoring"],
+          "additionalProperties": false,
+          "properties": {
+            "accessibility": {
+              "enum": ["granted", "denied", "unknown"]
+            },
+            "inputMonitoring": {
+              "enum": ["granted", "denied", "unknown"]
+            }
+          }
+        },
+        "service": {
+          "type": "object",
+          "required": ["state"],
+          "additionalProperties": false,
+          "properties": {
+            "state": {
+              "enum": ["running", "stopped"]
+            },
+            "version": {
+              "type": "string"
+            }
+          }
+        },
+        "skippedRecords": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sharedSkippedRecord"
+          }
+        },
+        "ignoredDefaults": {
+          "$ref": "#/$defs/sharedSkippedRecord"
+        },
+        "skippedPersonas": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sharedSkippedRecord"
+          }
+        },
+        "unboundDevices": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["connection", "productID", "vendorID"],
+            "additionalProperties": false,
+            "properties": {
+              "connection": {
+                "type": "string"
+              },
+              "productID": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 65535
+              },
+              "reason": {
+                "$ref": "report.schema.json#/$defs/bindingReason"
+              },
+              "vendorID": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 65535
+              }
+            }
+          }
+        },
+        "virtualDevice": {
+          "type": "object",
+          "required": [],
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "overrideError": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "updateCheck": {
+      "type": "object",
+      "required": [
+        "apiVersion",
+        "kind",
+        "currentVersion",
+        "includePrereleases",
+        "latestVersion",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "UpdateCheck"
+        },
+        "currentVersion": {
+          "type": "string"
+        },
+        "includePrereleases": {
+          "type": "boolean"
+        },
+        "latestVersion": {
+          "type": "string"
+        },
+        "releaseURL": {
+          "type": "string"
+        },
+        "status": {
+          "enum": ["upToDate", "available"]
+        }
+      }
+    },
+    "virtualFeed": {
+      "$ref": "#/$defs/sharedVirtualFeedLine",
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "RumbleCommand"
+        }
+      }
+    },
+    "virtualReset": {
+      "required": ["apiVersion", "kind"],
+      "oneOf": [
+        {
+          "description": "With --all.",
+          "$ref": "#/$defs/sharedStatus",
+          "properties": {
+            "details": {
+              "type": "object",
+              "required": ["reset"],
+              "additionalProperties": false,
+              "properties": {
+                "reset": {
+                  "const": "all"
+                }
+              }
+            }
+          }
+        },
+        {
+          "$ref": "#/$defs/sharedVirtualChange",
+          "properties": {
+            "kind": {
+              "const": "VirtualGamepadChange"
+            }
+          }
+        }
+      ]
+    },
+    "virtualSet": {
+      "required": ["apiVersion", "kind"],
+      "properties": {
+        "kind": {
+          "const": "VirtualGamepadChange"
+        }
+      },
+      "$ref": "#/$defs/sharedVirtualChange"
+    },
+    "virtualShow": {
+      "type": "object",
+      "required": ["apiVersion", "kind", "controllers", "profiles"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "VirtualGamepadConfiguration"
+        },
+        "controllers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "productID", "unavailable", "vendorID"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "override": {
+                "enum": ["hid-xbox-one-s-bt", "hid-generic"]
+              },
+              "overrideScope": {
+                "enum": ["unit", "model"],
+                "description": "Whether override is the controller's own choice or its model's."
+              },
+              "productID": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 65535
+              },
+              "profile": {
+                "enum": ["hid-xbox-one-s-bt", "hid-generic"]
+              },
+              "source": {
+                "type": "string"
+              },
+              "unavailable": {
+                "type": "boolean"
+              },
+              "vendorID": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 65535
+              }
+            }
+          }
+        },
+        "profiles": {
+          "type": "array",
+          "items": {
+            "enum": ["hid-xbox-one-s-bt", "hid-generic"]
+          }
+        }
+      }
+    }
+  }
 }

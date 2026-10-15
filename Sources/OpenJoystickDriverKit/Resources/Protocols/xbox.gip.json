@@ -1,54 +1,52 @@
 {
-	"apiVersion": "openjoystickdriver/v1alpha1",
-	"kind": "ProtocolDescription",
-	"family": "xbox.gip",
-	"endpoints": {
-		"in": 130,
-		"out": 2
-	},
-	"rawUSB": true,
-	"interfaceSignatures": [
-		{
-			"variant": "usb",
-			"interfaceClass": 255,
-			"interfaceSubclass": 71,
-			"interfaceProtocol": 208,
-			"interfaceNumber": 0
-		}
-	],
-	"parameters": {
-		"shareButton": {
-			"type": "object",
-			"fields": {
-				"fromEnd": {
-					"type": "integer",
-					"minimum": 1,
-					"maximum": 255
-				}
-			}
-		}
-	},
-	"controls": {
-		"base": "xbox",
-		"add": [
-			"guide"
-		]
-	},
-	"rawUSBTuningKeys": [
-		"keepAliveIntervalMs",
-		"presenceResendReports",
-		"usbStartupIntervalMs",
-		"usbStartupRetryDelayMs"
-	],
-	"recordCapabilities": {
-		"rumbleAbsent": true
-	},
-	"defaults": {
-		"tuning": {
-			"keepAliveIntervalMs": 4000,
-			"presenceResendReports": 4,
-			"usbStartupIntervalMs": 50,
-			"usbStartupRetryDelayMs": 1000
-		}
-	}
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "ProtocolDescription",
+  "family": "xbox.gip",
+  "endpoints": {
+    "in": 130,
+    "out": 2
+  },
+  "rawUSB": true,
+  "interfaceSignatures": [
+    {
+      "variant": "usb",
+      "interfaceClass": 255,
+      "interfaceSubclass": 71,
+      "interfaceProtocol": 208,
+      "interfaceNumber": 0
+    }
+  ],
+  "parameters": {
+    "shareButton": {
+      "type": "object",
+      "fields": {
+        "fromEnd": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 255
+        }
+      }
+    }
+  },
+  "controls": {
+    "base": "xbox",
+    "add": ["guide"]
+  },
+  "rawUSBTuningKeys": [
+    "keepAliveIntervalMs",
+    "presenceResendReports",
+    "usbStartupIntervalMs",
+    "usbStartupRetryDelayMs"
+  ],
+  "recordCapabilities": {
+    "rumbleAbsent": true
+  },
+  "defaults": {
+    "tuning": {
+      "keepAliveIntervalMs": 4000,
+      "presenceResendReports": 4,
+      "usbStartupIntervalMs": 50,
+      "usbStartupRetryDelayMs": 1000
+    }
+  }
 }
