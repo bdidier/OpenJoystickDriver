@@ -5,6 +5,22 @@ import Testing
 
 struct SupportReportBindingTests {
   private static let catalog = DeviceCatalog()
+  private static let timings = ControllerFrameTimings(
+    controller: "ctrl-1",
+    name: "Test Controller",
+    frames: [
+      FrameTiming(
+        sequence: 4,
+        stages: [
+          FrameStageTime(stage: .read, nanoseconds: 100),
+          FrameStageTime(stage: .parse, nanoseconds: 150),
+          FrameStageTime(stage: .dispatch, nanoseconds: 200),
+          FrameStageTime(stage: .deliveryVirtualDevice, nanoseconds: 260),
+          FrameStageTime(stage: .deliveryEndpoint, nanoseconds: 900),
+        ]
+      )
+    ]
+  )
 
   @Test
   func boundControllerReportsItsRuleAndCatalogRecord() throws {
@@ -179,9 +195,22 @@ struct SupportReportBindingTests {
 
     let encoded = try report(
       connected: connected.map(ApplicationServiceDeviceDescription.init(snapshot:)),
-      unbound: unbound.map(ApplicationServiceUnboundDevice.init(snapshot:))
+      unbound: unbound.map(ApplicationServiceUnboundDevice.init(snapshot:)),
+      frameTimings: [Self.timings]
     ).encodedJSON()
     try assertMatchesFixture(encoded)
+  }
+
+  @Test
+  func reportCarriesTheFiveStageStampsOfEachFrame() throws {
+    let decoded = try JSONDecoder().decode(
+      SupportReport.self,
+      from: report(frameTimings: [Self.timings]).encodedJSON()
+    )
+
+    let frame = try #require(decoded.data.frameTimings.first?.frames.first)
+    #expect(frame.stages.map(\.stage) == FrameStage.allCases)
+    #expect(frame.stages.map(\.nanoseconds) == [100, 150, 200, 260, 900])
   }
 
   /// Compares `encoded` against the checked-in fixture, ignoring the CloudEvents `id`, which is
@@ -229,7 +258,8 @@ struct SupportReportBindingTests {
 
   private func report(
     connected: [ApplicationServiceDeviceDescription] = [],
-    unbound: [ApplicationServiceUnboundDevice] = []
+    unbound: [ApplicationServiceUnboundDevice] = [],
+    frameTimings: [ControllerFrameTimings] = []
   ) -> SupportReport {
     SupportReport(
       generatedAt: Date(timeIntervalSince1970: 0),
@@ -245,6 +275,7 @@ struct SupportReportBindingTests {
       applicationServiceInstalled: true,
       applicationServiceConnected: true,
       applicationServiceHealth: nil,
+      frameTimings: frameTimings,
       status: ApplicationServiceStatusPayload(
         inputMonitoring: "granted",
         accessibility: "granted",

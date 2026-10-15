@@ -1,6 +1,6 @@
 {
   "data": {
-    "apiVersion": "openjoystickdriver/v1alpha1",
+    "apiVersion": "openjoystickdriver\/v1alpha1",
     "applicationService": {
       "connected": true,
       "installed": true
@@ -42,6 +42,7 @@
         "name": "Controller 1234:5678",
         "needsSetConfiguration": true,
         "outputEndpoint": 1,
+        "parameters": [],
         "physicalOutputCapabilities": {
           "adaptiveTriggers": [],
           "binaryRumbleMotors": [],
@@ -57,10 +58,42 @@
         "preferredBackends": ["userSpaceHID"],
         "productID": 22136,
         "protocolBinding": "xbox.gip:usb",
-        "parameters": [],
         "serialNumberPresent": false,
         "sessionState": "active",
         "vendorID": 4660
+      }
+    ],
+    "frameTimings": [
+      {
+        "controller": "ctrl-1",
+        "frames": [
+          {
+            "sequence": 4,
+            "stages": [
+              {
+                "nanoseconds": 100,
+                "stage": "read"
+              },
+              {
+                "nanoseconds": 150,
+                "stage": "parse"
+              },
+              {
+                "nanoseconds": 200,
+                "stage": "dispatch"
+              },
+              {
+                "nanoseconds": 260,
+                "stage": "delivery-virtual-device"
+              },
+              {
+                "nanoseconds": 900,
+                "stage": "delivery-endpoint"
+              }
+            ]
+          }
+        ],
+        "name": "Test Controller"
       }
     ],
     "hidGamepads": [],
@@ -120,7 +153,7 @@
   },
   "datacontenttype": "application\/json",
   "dataschema": "https:\/\/xsyetopz.github.io\/OpenJoystickDriver\/schemas\/v1alpha1\/report.schema.json#\/$defs\/supportDiagnosticData",
-  "id": "0DC52DF7-70D2-4CC0-8B39-7B8FA8E08731",
+  "id": "4F46BDCC-C961-4C13-B48C-7381FD082541",
   "source": "urn:openjoystickdriver:support",
   "specversion": "1.0",
   "time": "1970-01-01T00:00:00Z",

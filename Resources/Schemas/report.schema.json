@@ -54,6 +54,7 @@
         "controllers",
         "unboundDevices",
         "hidGamepads",
+        "frameTimings",
         "notes"
       ],
       "additionalProperties": false,
@@ -100,10 +101,67 @@
         "appleGameControllerAudit": {
           "$ref": "#/$defs/appleGameControllerAudit"
         },
+        "frameTimings": {
+          "description": "The newest frames of each connected controller, oldest first, as `ojd diagnose --json` lists them in `timings`; empty while the service is stopped or has no frames. Nanoseconds are on the service's monotonic uptime clock. Each controller keeps its last 8 frames.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/controllerFrameTimings"
+          }
+        },
         "notes": {
           "type": "array",
           "items": {
             "type": "string"
+          }
+        }
+      }
+    },
+    "controllerFrameTimings": {
+      "type": "object",
+      "required": ["controller", "name", "frames"],
+      "additionalProperties": false,
+      "properties": {
+        "controller": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "frames": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["sequence", "stages"],
+            "additionalProperties": false,
+            "properties": {
+              "sequence": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "stages": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["stage", "nanoseconds"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "stage": {
+                      "enum": [
+                        "read",
+                        "parse",
+                        "dispatch",
+                        "delivery-virtual-device",
+                        "delivery-endpoint"
+                      ]
+                    },
+                    "nanoseconds": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

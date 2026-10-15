@@ -278,7 +278,8 @@ struct DiagnoseCommand: AsyncParsableCommand {
       applicationServiceInstalled: ApplicationServiceManager.isInstalled,
       applicationServiceConnected: snapshot.status != nil,
       buildIdentity: ApplicationVersion.buildIdentity,
-      appleGameControllerAudit: gameControllerAudit()
+      appleGameControllerAudit: gameControllerAudit(),
+      frameTimings: snapshot.frameTimings?.controllers ?? []
     )
     try SupportReportService.write(report, to: url)
   }
