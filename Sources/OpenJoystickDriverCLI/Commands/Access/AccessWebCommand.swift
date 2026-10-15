@@ -1,7 +1,6 @@
 import ArgumentParser
 import Foundation
 import OpenJoystickDriverKit
-import OpenJoystickDriverService
 
 struct AccessWebCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
@@ -47,7 +46,7 @@ struct AccessWebEnableCommand: AsyncParsableCommand {
   var global: GlobalOptions
 
   func validate() throws {
-    if let port, !AccessWebSettings.ports.contains(port) {
+    if let port, !AccessWebPorts.allowed.contains(port) {
       throw ValidationError(
         CLILocalized.text("cli.access.web.port_range")
       )

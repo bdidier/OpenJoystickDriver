@@ -3,7 +3,8 @@ import Foundation
 import OpenJoystickDriverCLI
 import OpenJoystickDriverKit
 
-private var applicationHost: HeadlessApplicationHost?
+// The host adapter lives below `platform/`; everything here reaches it through `PlatformHost`.
+installPlatformHost()
 
 // The executable runs as the `ojd` command-line tool when invoked under that name, and as the app
 // otherwise.
@@ -15,6 +16,5 @@ if URL(fileURLWithPath: CommandLine.arguments[0]).lastPathComponent == "ojd" {
   do { try ApplicationServiceLogService.beginCurrentSessionCapture() } catch {
     fputs("[OpenJoystickDriver] Log capture unavailable: \(error.localizedDescription)\n", stderr)
   }
-  applicationHost = HeadlessApplicationHost()
-  applicationHost?.run()
+  PlatformHosts.current.runApplication()
 }
