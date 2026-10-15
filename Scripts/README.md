@@ -21,6 +21,7 @@ git ls-files -z -co --exclude-standard -- '*.md' ':!.agents/' | xargs -0 markdow
 git ls-files -z -co --exclude-standard -- '*.json' '*.jsonc' | xargs -0 node_modules/.bin/biome ci
 swift-format lint --recursive --strict Package.swift Sources Tests Tools
 swiftlint lint --no-cache --strict
+python3 Scripts/Quality/check_sink_boundary.py
 .build/schema-validator/bin/python -m unittest discover -s Tests/RepositoryScripts
 swift test --no-parallel
 ```

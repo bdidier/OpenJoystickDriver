@@ -98,6 +98,7 @@ catalog-xpad *args:
 check-hook:
     python3 Scripts/Quality/check_swift_file_length.py
     python3 Scripts/Quality/check_neutral_core_imports.py
+    python3 Scripts/Quality/check_sink_boundary.py
     python3 Scripts/Quality/check_localization_keys.py
     git diff --check HEAD^ HEAD
 
@@ -108,6 +109,7 @@ check-fast: check-schemas lint
     ./Scripts/ojd check profiles
     python3 Scripts/Quality/check_swift_file_length.py
     python3 Scripts/Quality/check_neutral_core_imports.py
+    python3 Scripts/Quality/check_sink_boundary.py
     python3 Scripts/Quality/check_localization_keys.py
     .build/schema-validator/bin/python -m unittest discover -s Tests/RepositoryScripts
     git diff --check
