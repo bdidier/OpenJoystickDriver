@@ -1671,4 +1671,3 @@
 "error.E5003" = "Een protocolbeschrijving noemt een familie die afwijkt van de bestandsnaam. Noem het bestand naar zijn familie.";
 "error.E5004" = "Een protocolbeschrijving noemt een variant die de familie niet heeft. Gebruik een van de varianten van de familie.";
 "error.withCode" ="%@ (%@)";
-"renamed_word.hint" = "‘%@’ heet nu ‘%@’.";

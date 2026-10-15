@@ -90,13 +90,16 @@ struct AccessGrantStoreTests {
       for text in [
         "{",
         #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
-          + #""enabled":true,"grants":[{"publisher":{"kind":"ad-hoc"},"identifier":"a.out","scopes":["read"],"#
+          + #""enabled":true,"grants":[{"publisher":{"kind":"ad-hoc"},"identifier":"a.out","#
+          + #""scopes":["read"],"#
           + #""grantedAt":"x","path":"/a.out"}],"tokens":[],"web":{"enabled":false,"port":47614}}"#,
         #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
-          + #""enabled":true,"grants":[{"publisher":{"kind":"signed"},"identifier":"x","scopes":["read"],"#
+          + #""enabled":true,"grants":[{"publisher":{"kind":"signed"},"identifier":"x","#
+          + #""scopes":["read"],"#
           + #""grantedAt":"x","path":"/x"}],"tokens":[],"web":{"enabled":false,"port":47614}}"#,
         #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
-          + #""enabled":true,"grants":[{"publisher":{"kind":"platform"},"identifier":"x","scopes":[],"#
+          + #""enabled":true,"grants":[{"publisher":{"kind":"platform"},"identifier":"x","#
+          + #""scopes":[],"#
           + #""grantedAt":"x","path":"/x"}],"tokens":[],"web":{"enabled":false,"port":47614}}"#,
       ] {
         try Data(text.utf8).write(to: store.url)
@@ -112,7 +115,8 @@ struct AccessGrantStoreTests {
       try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
       let text =
         #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
-        + #""enabled":true,"grants":[{"kind":"team","identifier":"x","teamIdentifier":"ABCDE12345","#
+        + #""enabled":true,"grants":[{"kind":"team","identifier":"x","#
+        + #""teamIdentifier":"ABCDE12345","#
         + #""scopes":["read"],"grantedAt":"x","path":"/x"}],"tokens":[],"#
         + #""web":{"enabled":false,"port":47614}}"#
       try Data(text.utf8).write(to: store.url)
@@ -121,9 +125,11 @@ struct AccessGrantStoreTests {
         _ = try store.load()
       } throws: { error in
         let message = (error as? AccessGrantStoreError)?.errorDescription ?? ""
-        return ["'teamIdentifier' was renamed to 'publisher.id'.",
+        return [
+          "'teamIdentifier' was renamed to 'publisher.id'.",
           "'kind' was renamed to 'publisher.kind'.",
-          "'team' was renamed to 'signed'."].allSatisfy(message.contains)
+          "'team' was renamed to 'signed'.",
+        ].allSatisfy(message.contains)
       }
       #expect(try String(contentsOf: store.url, encoding: .utf8) == text)
     }

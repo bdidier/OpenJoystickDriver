@@ -1671,4 +1671,3 @@
 "error.E5003" = "Una descripción de protocolo nombra una familia distinta del nombre de su archivo. Da al archivo el nombre de su familia.";
 "error.E5004" = "Una descripción de protocolo enumera una variante que su familia no tiene. Usa una de las variantes de la familia.";
 "error.withCode" ="%@ (%@)";
-"renamed_word.hint" = "«%@» se ha renombrado a «%@».";

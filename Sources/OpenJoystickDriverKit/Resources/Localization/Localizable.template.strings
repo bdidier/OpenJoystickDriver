@@ -1674,4 +1674,3 @@
 "error.E5003" = "A protocol description names a family that differs from its file name. Name the file after its family.";
 "error.E5004" = "A protocol description lists a variant that its family does not have. Use one of the variants of the family.";
 "error.withCode" = "%@ (%@)";
-"renamed_word.hint" = "'%@' was renamed to '%@'.";

@@ -303,7 +303,7 @@
 "profiles.assignmentAdjustSummary" = "%@ 到 %@，可調整";
 "profiles.behavior" = "行為…";
 "profiles.bindingBehavior" = "對應行為";
-"profiles.appID" = "App ID";
+"profiles.appID" = "應用程式 ID";
 "profiles.chordHelp" = "所選控制項全部按下期間，目的地會觸發。";
 "profiles.chordMode" = "組合鍵模式";
 "profiles.chordModeModifier" = "修飾鍵";
@@ -1671,4 +1671,3 @@
 "error.E5003" = "協定描述指定的系列與其檔案名稱不同。請以系列名稱命名該檔案。";
 "error.E5004" = "協定描述列出了其系列沒有的變體。請使用該系列的其中一個變體。";
 "error.withCode" ="%@ (%@)";
-"renamed_word.hint" = "「%@」已重新命名為「%@」。";

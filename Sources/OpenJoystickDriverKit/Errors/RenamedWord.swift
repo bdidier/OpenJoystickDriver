@@ -2,7 +2,8 @@ import Foundation
 
 /// A word that OpenJoystickDriver renamed to an OS-neutral word.
 ///
-/// The old word is not accepted anywhere. A refusal names the new word through ``hint(localization:)``.
+/// This is the one table of old words. The old word is not accepted anywhere; a refusal names the
+/// new word through ``hint(localization:)``, for flags, values, and document fields alike.
 public struct RenamedWord: Sendable, Equatable {
   /// Where the word is used.
   public enum Kind: Sendable, Equatable {
@@ -14,6 +15,8 @@ public struct RenamedWord: Sendable, Equatable {
     case publisherKind
     /// A keyboard modifier name in a profile or binding document.
     case modifier
+    /// A command-line flag of `command`, as typed, including its leading dashes.
+    case flag(command: String)
   }
 
   public let old: String
@@ -40,6 +43,7 @@ public struct RenamedWord: Sendable, Equatable {
     Self(old: "apple", new: "platform", kind: .publisherKind),
     Self(old: "command", new: "meta", kind: .modifier),
     Self(old: "option", new: "alt", kind: .modifier),
+    Self(old: "--bundle", new: "--output", kind: .flag(command: "diagnose")),
   ]
 
   /// The renamed word for `old` in `kind`, or nil when `old` was not renamed there.
@@ -49,7 +53,7 @@ public struct RenamedWord: Sendable, Equatable {
 
   /// The localized sentence that names the new word.
   public func hint(localization: Localization = Localization()) -> String {
-    localization.formatted("renamed_word.hint", arguments: [old, new])
+    localization.formatted("cli.error.renamed_flag", arguments: [old, new])
   }
 
   /// The localized hints for the renamed words among `words`, each starting with a space, or an

@@ -1671,4 +1671,3 @@
 "error.E5003" = "Eine Protokollbeschreibung nennt eine Familie, die vom Dateinamen abweicht. Benenne die Datei nach ihrer Familie.";
 "error.E5004" = "Eine Protokollbeschreibung führt eine Variante auf, die ihre Familie nicht hat. Verwende eine der Varianten der Familie.";
 "error.withCode" ="%@ (%@)";
-"renamed_word.hint" = "„%@“ heißt jetzt „%@“.";

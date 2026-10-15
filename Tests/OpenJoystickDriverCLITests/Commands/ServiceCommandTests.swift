@@ -147,7 +147,7 @@ struct ServiceCommandTests {
     #expect(service["state"] as? String == "running")
     let permissions = try #require(json["permissions"] as? [String: Any])
     #expect(permissions["inputRead"] as? String == "granted")
-    #expect(permissions["input-inject"] as? String == "denied")
+    #expect(permissions["inputInject"] as? String == "denied")
     let controllers = try #require(json["controllers"] as? [[String: Any]])
     #expect(controllers.count == 1)
     #expect(controllers.first?["id"] as? String == token("pad-1"))

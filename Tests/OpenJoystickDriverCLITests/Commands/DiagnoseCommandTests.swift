@@ -225,7 +225,7 @@ struct DiagnoseCommandTests {
     )
 
     #expect(result.code == 1)
-    #expect(result.standardOutput.contains("inputInject\tskip\t"))
+    #expect(result.standardOutput.contains("input-inject\tskip\t"))
   }
 
   @Test

@@ -49,6 +49,14 @@ struct AccessWordsTests {
     }
   }
 
+  @Test
+  func theFlagHintsAndTheWordHintsComeFromTheOneTable() {
+    let flag = RenamedFlags.match(arguments: ["diagnose", "--bundle", "x"])
+
+    #expect(flag == RenamedWord.replacement(for: "--bundle", kind: .flag(command: "diagnose")))
+    #expect(flag?.new == "--output")
+  }
+
   @Test(arguments: [("team", "signed"), ("apple", "platform")])
   func anOldPublisherKindIsRefusedAndNamesTheNewOne(old: String, new: String) {
     let json = Data(#""\#(old)""#.utf8)

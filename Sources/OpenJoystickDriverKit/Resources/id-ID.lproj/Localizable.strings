@@ -1671,4 +1671,3 @@
 "error.E5003" = "Deskripsi protokol menyebut keluarga yang berbeda dari nama berkasnya. Beri nama berkas sesuai keluarganya.";
 "error.E5004" = "Deskripsi protokol mencantumkan varian yang tidak dimiliki keluarganya. Gunakan salah satu varian keluarga tersebut.";
 "error.withCode" ="%@ (%@)";
-"renamed_word.hint" = "“%@” diganti namanya menjadi “%@”.";
