@@ -133,6 +133,49 @@ class NeutralCoreImportTests(unittest.TestCase):
             found = check.violations(root)
         self.assertEqual(found, [f"{CLI}/A.swift:1: AppKit", f"{CLI}/A.swift:1: IOKit"])
 
+    def test_an_import_after_a_string_holding_a_comment_opener_is_reported(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write(
+                root,
+                CLI,
+                "A.swift",
+                'let a = "/*"\nimport AppKit\nlet b = "// x"; import IOKit\n',
+            )
+            found = check.violations(root)
+        self.assertEqual(found, [f"{CLI}/A.swift:2: AppKit", f"{CLI}/A.swift:3: IOKit"])
+
+    def test_an_import_after_a_multiline_string_holding_a_closer_is_reported(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            text = 'let a = """\n*/ import SwiftUI\n/*\n"""\nimport AppKit\n'
+            write(root, CLI, "A.swift", text)
+            found = check.violations(root)
+        self.assertEqual(found, [f"{CLI}/A.swift:5: AppKit"])
+
+    def test_raw_strings_and_escapes_are_skipped(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            text = (
+                'let a = #"/* " quote"#\nimport AppKit\n'
+                'let b = ##"""\n"""# /* \n"""##\nimport IOKit\n'
+                'let c = "a \\" /*"\nimport Network\n'
+            )
+            write(root, CLI, "A.swift", text)
+            found = check.violations(root)
+        self.assertEqual(
+            found,
+            [
+                f"{CLI}/A.swift:2: AppKit",
+                f"{CLI}/A.swift:6: IOKit",
+                f"{CLI}/A.swift:8: Network",
+            ],
+        )
+
     def test_the_host_adapter_target_is_not_scanned(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

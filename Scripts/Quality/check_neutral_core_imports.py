@@ -37,22 +37,78 @@ IMPORT = re.compile(r"^\s*(?:@\w+(?:\([^)]*\))?\s+)*import\s+(?:\w+\s+)?([A-Za-z
 CAN_IMPORT = re.compile(r"canImport\(\s*([A-Za-z_]\w*)\s*\)")
 
 
+def blank(text: str) -> str:
+    """Replace everything but newlines with spaces."""
+    return "".join(char if char == "\n" else " " for char in text)
+
+
+def string_start(text: str, index: int) -> tuple[int, int, bool] | None:
+    """Return (opening length, hash count, multiline) for a string literal opening at `index`."""
+    hashes = 0
+    while text[index + hashes : index + hashes + 1] == "#":
+        hashes += 1
+    after = index + hashes
+    if text[after : after + 1] != '"':
+        return None
+    multiline = text[after : after + 3] == '"' * 3
+    return hashes + (3 if multiline else 1), hashes, multiline
+
+
+def string_end(text: str, index: int, hashes: int, multiline: bool) -> int:
+    """Return the index just past the string literal whose body starts at `index`."""
+    closing = ('"' * 3 if multiline else '"') + "#" * hashes
+    escape = "\\" + "#" * hashes
+    while index < len(text):
+        if text.startswith(escape, index):
+            index += len(escape) + 1
+        elif text.startswith(closing, index):
+            return index + len(closing)
+        elif text[index] == "\n" and not multiline:
+            return index
+        else:
+            index += 1
+    return len(text)
+
+
 def strip_comments(text: str) -> str:
-    """Blank out block comments (which nest in Swift), keeping every newline."""
+    """Blank out comments and string literal contents, keeping every newline.
+
+    Block comments nest, as in Swift. String forms handled are `"..."` with escapes, multiline
+    `\"\"\"...\"\"\"`, and raw `#"..."#` forms, so a `/*` or `//` inside a string neither
+    starts a comment nor hides a later import.
+    """
     out: list[str] = []
-    depth = 0
     index = 0
+    depth = 0
     while index < len(text):
         pair = text[index : index + 2]
-        if pair == "/*":
-            depth += 1
+        if depth:
+            if pair == "/*":
+                depth += 1
+                step = 2
+            elif pair == "*/":
+                depth -= 1
+                step = 2
+            else:
+                step = 1
+            out.append(blank(text[index : index + step]))
+            index += step
+        elif pair == "/*":
+            depth = 1
+            out.append("  ")
             index += 2
-        elif pair == "*/" and depth:
-            depth -= 1
-            index += 2
+        elif pair == "//":
+            end = text.find("\n", index)
+            end = len(text) if end < 0 else end
+            out.append(blank(text[index:end]))
+            index = end
+        elif text[index] in '#"' and (opening := string_start(text, index)):
+            length, hashes, multiline = opening
+            end = string_end(text, index + length, hashes, multiline)
+            out.append(blank(text[index:end]))
+            index = end
         else:
-            char = text[index]
-            out.append(char if depth == 0 or char == "\n" else " ")
+            out.append(text[index])
             index += 1
     return "".join(out)
 
