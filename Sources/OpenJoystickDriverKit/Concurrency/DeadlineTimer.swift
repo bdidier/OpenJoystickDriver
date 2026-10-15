@@ -35,3 +35,74 @@ package struct DeadlineTimer: Sendable {
     return { source.cancel() }
   }
 }
+
+extension DeadlineTimer {
+  /// Suspends for `nanoseconds` and resumes when the timer fires, or throws `CancellationError`
+  /// as soon as the calling task is cancelled.
+  package func sleep(nanoseconds: UInt64) async throws {
+    let gate = SleepGate()
+    try await withTaskCancellationHandler {
+      try await withCheckedThrowingContinuation {
+        (continuation: CheckedContinuation<Void, Error>) in
+        let cancelTimer = schedule(nanoseconds) { gate.fire() }
+        gate.arm(continuation, cancelTimer: cancelTimer)
+      }
+    } onCancel: {
+      gate.cancel()
+    }
+  }
+}
+
+/// Resumes one sleeping task exactly once, whichever of the timer, a cancellation, or an early
+/// arrival comes first.
+private final class SleepGate: @unchecked Sendable {
+  private enum Outcome { case fired, cancelled }
+
+  private let lock = NSLock()
+  private var continuation: CheckedContinuation<Void, Error>?
+  private var cancelTimer: DeadlineTimer.Cancel?
+  private var early: Outcome?
+
+  func arm(
+    _ continuation: CheckedContinuation<Void, Error>,
+    cancelTimer: @escaping DeadlineTimer.Cancel
+  ) {
+    let outcome = lock.withLock { () -> Outcome? in
+      if let early { return early }
+      self.continuation = continuation
+      self.cancelTimer = cancelTimer
+      return nil
+    }
+    guard let outcome else { return }
+    cancelTimer()
+    resume(continuation, outcome)
+  }
+
+  func fire() { finish(.fired) }
+
+  func cancel() { finish(.cancelled) }
+
+  private func finish(_ outcome: Outcome) {
+    let pending = lock.withLock {
+      () -> (CheckedContinuation<Void, Error>, DeadlineTimer.Cancel?)? in
+      guard early == nil else { return nil }
+      early = outcome
+      guard let continuation else { return nil }
+      defer {
+        self.continuation = nil
+        cancelTimer = nil
+      }
+      return (continuation, cancelTimer)
+    }
+    guard let (continuation, cancelTimer) = pending else { return }
+    cancelTimer?()
+    resume(continuation, outcome)
+  }
+
+  private func resume(_ continuation: CheckedContinuation<Void, Error>, _ outcome: Outcome) {
+    switch outcome {
+    case .fired: continuation.resume()
+    case .cancelled: continuation.resume(throwing: CancellationError())
+    }
+  }
+}

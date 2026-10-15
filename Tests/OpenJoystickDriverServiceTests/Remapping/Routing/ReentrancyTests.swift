@@ -4,7 +4,7 @@ import Testing
 
 @testable import OpenJoystickDriverService
 
-@Suite(.serialized)
+@Suite(.serialized, .timeLimit(.minutes(1)))
 struct RemappingRouterReentrancyTests {
   @Test
   func beginWaitsForVirtualOutputDispatchAdmittedBeforeSuppression() async throws {

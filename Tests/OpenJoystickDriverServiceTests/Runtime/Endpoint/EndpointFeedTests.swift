@@ -163,13 +163,20 @@ struct EndpointFeedTests {
   @Test
   func aFeedWithoutFrameLinesClosesAfterTheIdleTimeout() async throws {
     let factory = FakeFeedFactory()
-    let feeds = factory.registry(idleTimeout: 0.3)
+    let time = ManualVirtualFeedClock()
+    let feeds = factory.registry(idleTimeout: 0.3, clock: time.clock)
     try await withEndpointServer(feeds: feeds) { server, _ in
       let client = try await feeding(server)
       await client.send(clientLine("Frame", #","buttons":["East"]"#))
       let device = try #require(factory.devices.first)
       try await Self.wait { device.sent.contains { $0.buttons.contains(.east) } }
+      await time.waitForSleepers(2)
 
+      // The frame's time passes first; the idle timeout counts from its end.
+      time.advance(by: 0.05)
+      try await Self.wait { feeds.lastExchangeTimes.contains(time.now) }
+      await time.waitForSleepers(1)
+      time.advance(by: 0.3)
       #expect(try await client.readObject()["code"] as? String == "E1009")
       try await Self.wait { device.closeCount == 1 }
       #expect(feeds.openFeedCount == 0)
@@ -179,32 +186,44 @@ struct EndpointFeedTests {
   @Test
   func aFeedThatKeepsSendingFramesOutlivesTheIdleTimeout() async throws {
     let factory = FakeFeedFactory()
-    let feeds = factory.registry(idleTimeout: 0.5)
+    let time = ManualVirtualFeedClock()
+    let feeds = factory.registry(idleTimeout: 0.5, clock: time.clock)
     try await withEndpointServer(feeds: feeds) { server, _ in
       let client = try await feeding(server)
+      let device = try #require(factory.devices.first)
+      // Eight frames 0.2 seconds apart span 1.6 seconds, more than three idle timeouts.
       for _ in 0..<8 {
+        time.advance(by: 0.2)
         await client.send(clientLine("Frame", #","buttons":["East"]"#))
-        try await Task.sleep(nanoseconds: 150_000_000)
+        // The line has reached the registry once the feed's last exchange is the current time.
+        try await Self.wait { feeds.lastExchangeTimes.contains(time.now) }
       }
 
       #expect(feeds.openFeedCount == 1)
-      #expect(factory.devices.first?.closeCount == 0)
+      #expect(device.closeCount == 0)
     }
   }
 
   @Test
   func keepAliveLinesHoldAnIdleFeedOpenPastTheIdleTimeout() async throws {
     let factory = FakeFeedFactory()
-    let feeds = factory.registry(idleTimeout: 0.5)
+    let time = ManualVirtualFeedClock()
+    let feeds = factory.registry(idleTimeout: 0.5, clock: time.clock)
     try await withEndpointServer(feeds: feeds) { server, _ in
       let client = try await feeding(server)
       await client.send(clientLine("Frame", #","buttons":["East"]"#))
       let device = try #require(factory.devices.first)
       try await Self.wait { device.sent.contains { $0.buttons.contains(.east) } }
+      await time.waitForSleepers(2)
+      // Let the frame's time pass, so the feed is idle before the first KeepAlive.
+      time.advance(by: 0.05)
+      try await Self.wait { feeds.lastExchangeTimes.contains(time.now) }
       let sentBefore = device.sent.count
       for _ in 0..<8 {
+        time.advance(by: 0.2)
         await client.send(clientLine("KeepAlive"))
-        try await Task.sleep(nanoseconds: 150_000_000)
+        // The line has reached the registry once the feed's last exchange is the current time.
+        try await Self.wait { feeds.lastExchangeTimes.contains(time.now) }
       }
 
       #expect(feeds.openFeedCount == 1)
@@ -217,11 +236,14 @@ struct EndpointFeedTests {
   @Test
   func anIdleFeedWithoutKeepAliveLinesClosesWithE1009() async throws {
     let factory = FakeFeedFactory()
-    let feeds = factory.registry(idleTimeout: 0.5)
+    let time = ManualVirtualFeedClock()
+    let feeds = factory.registry(idleTimeout: 0.5, clock: time.clock)
     try await withEndpointServer(feeds: feeds) { server, _ in
       let client = try await feeding(server)
       await client.send(clientLine("KeepAlive"))
+      await time.waitForSleepers(1)
 
+      time.advance(by: 0.5)
       #expect(try await client.readObject()["code"] as? String == "E1009")
       try await Self.wait { factory.devices.first?.closeCount == 1 }
       #expect(feeds.openFeedCount == 0)
