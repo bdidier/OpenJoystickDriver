@@ -17,8 +17,16 @@ extension RemappingDeviceState {
     var directions: Set<RemappingDpadDirection> = []
     for source in activeSources where !reserved.contains(source) && binding(for: source) == nil {
       switch source {
-      case .button(.rightTrackpadClick): buttons.insert(.rightStickClick)
-      case .button(let button): buttons.insert(button)
+      case .button(let button):
+        // The classic Steam Controller's right pad is its right stick, so its pad click is R3;
+        // a controller with a real R3 keeps the pad click as its own control, which no virtual
+        // persona carries. One rule with the report mapping.
+        buttons.insert(
+          UserSpaceOutputDispatcher.virtualControl(
+            button,
+            rightPadIsRightStick: UserSpaceOutputDispatcher.rightPadIsRightStick(identifier)
+          )
+        )
       case .dpad(let direction): directions.insert(direction)
       case .axis, .axisDirection, .triggerStage, .motionLean, .touchContact, .touchGrid,
         .touchSwipe:

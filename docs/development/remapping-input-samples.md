@@ -58,7 +58,7 @@ Runtime state is owned by an exact controller and surface. Contact slots are nev
 
 Steam full-state packets expose left/right grip and left/right pad-click events as distinct physical controls. Schema-3 profiles accept `button:LeftPaddle2`, `button:RightPaddle2`, `button:LeftTrackpadClick`, and `button:RightTrackpadClick` in the CLI and native source/capture menus. They can use the existing binding behaviors, chords, sequences, and layers. New source identifiers require schema 3. The labels have first-pass translations across the current catalogs; visual, VoiceOver, and native-language review remain pending.
 
-These are input sources, not new virtual buttons. Validation rejects them as `gamepad_button` destinations, destination menus omit them, and virtual-state construction filters them. The Steam right-pad click preserves its existing right-stick-click compatibility output when passed through without a binding. A schema-3 binding consumes that contribution.
+These are input sources, not new virtual buttons. Validation rejects them as `gamepad_button` destinations, destination menus omit them, and virtual-state construction filters them. The right-pad click of the classic Steam Controller, whose right pad is its right stick, is passed through as the right stick click when it has no binding. The Steam Deck and the Steam Triton have a real right stick click, so their right-pad click is not carried by any virtual controller. A schema-3 binding consumes that contribution.
 
 Tests cover parser press/release edges, source persistence, key press/release output, invalid virtual destinations, capture, source menus, and catalog consistency. Physical isolation and delivery still require hardware validation.
 
