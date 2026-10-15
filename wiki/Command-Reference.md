@@ -39,7 +39,7 @@ With `--json`, the output is one `SystemStatus` object with these keys:
 
 - `service`: `state` (`running` or `stopped`) and `version`.
 - `extension`: `bundle` (`present`, `missing`, or `invalid`) and `registration` (`active`, `inactive`, `absent`, or `unavailable`).
-- `commandLineTool`: the `ojd` link that the app installs. `state` is `installed` (a link whose target exists), `missing` (nothing at `path`), or `broken` (a link whose target is gone, or a file that is not a link). `path` is where the link goes, and `target` is what it points at, when it is a link.
+- `commandLineTool`: the `ojd` link that the app installs. `state` is `installed` (a link to this app's executable), `linkedElsewhere` (a link to another existing file, such as another copy of the app), `broken` (a link whose target is gone), `blockedByFile` (a file or folder that is not a link; the app never replaces it), or `missing` (nothing at `path`). `path` is where the link goes, and `target` is what it points at, when it is a link.
 - `permissions`: `inputMonitoring` and `accessibility`.
 - `virtualDevice`: `enabled`, `status`, and `overrideError`.
 - `controllers`: each with `id`, `name`, `vendorID`, `productID`, and `connection`.
@@ -295,7 +295,7 @@ ojd setting set KEY true|false
 
 The keys are:
 
-- `launchAtLogin`: the macOS login item. Turning it off records that you opted out.
+- `launchAtLogin`: the macOS login item. `get` reads it from macOS, so it includes changes made in System Settings, and `set` registers or unregisters the item. A change made with `ojd setting` or in the app also records whether you opted out, so OJD does not register itself again at the next start. A change made only in System Settings records nothing.
 - `notify.controllerConnected`: notify when a controller connects or needs attention.
 - `notify.controllerDisconnected`: notify when a controller disconnects.
 - `notify.profileActivated`: notify when a profile is activated or switched.
@@ -304,7 +304,7 @@ The keys are:
 - `updates.includePrereleases`: include prereleases when checking for updates.
 - `developerTools`: show the developer tools.
 
-Settings live in `Settings.json`. OJD reads the machine file at `/Library/Application Support/OpenJoystickDriver/Settings.json` first, then your file at `~/Library/Application Support/OpenJoystickDriver/Settings.json`, which overrides it. `setting set` writes only your file. A file with an unsupported `apiVersion` is refused with `E5001`. `setting get` prints `true` or `false` alone. With `--json`, `setting list` prints a `SettingList` with `items`, each with `key`, `value`, and `description`, and `setting get` and `setting set` print a `Setting` with `key` and `value`.
+Settings live in `Settings.json`. A setting your file at `~/Library/Application Support/OpenJoystickDriver/Settings.json` leaves out takes its built-in default. `setting set` writes that file. A file with an unsupported `apiVersion` is refused with `E5001`. `setting get` prints `true` or `false` alone. With `--json`, `setting list` prints a `SettingList` with `items`, each with `key`, `value`, and `description`, and `setting get` and `setting set` print a `Setting` with `key` and `value`.
 
 ## config
 

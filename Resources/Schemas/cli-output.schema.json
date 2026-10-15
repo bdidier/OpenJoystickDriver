@@ -3062,7 +3062,7 @@
 					"const": "SystemStatus"
 				},
 				"commandLineTool": {
-					"description": "The ojd link the app installs: installed when its target exists, missing when nothing is at the path, broken when the link dangles or the path is not a link.",
+					"description": "The ojd link the app installs: installed when it points to this app's executable, linkedElsewhere when it points to another existing file such as another app copy, broken when its target does not exist, blockedByFile when the path is a file or folder that is not a link, and missing when nothing is at the path. target is what the link points to and appears only for a link.",
 					"type": "object",
 					"required": ["path", "state"],
 					"additionalProperties": false,
@@ -3071,7 +3071,7 @@
 							"type": "string"
 						},
 						"state": {
-							"enum": ["installed", "missing", "broken"]
+							"enum": ["installed", "linkedElsewhere", "broken", "blockedByFile", "missing"]
 						},
 						"target": {
 							"type": "string"
