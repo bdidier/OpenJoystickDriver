@@ -1293,7 +1293,7 @@
 "cli.controller.watch.all_started" = "正在監看所有控制器。請按下控制器按鈕。";
 "cli.controller.watch.connected" = "%@ 已連接：%@ (%@)";
 "cli.controller.watch.disconnected" = "%@ 已中斷連接";
-"cli.controller.watch.discussion" = "使用 --json 時，每行顯示一個 JSON 物件。搖桿 Y 軸向上為正。使用 --first-press 時，會顯示第一個被按下的控制項後結束；若 --duration 先到期則失敗。";
+"cli.controller.watch.discussion" = "使用 --json 時，每行顯示一個 JSON 物件。搖桿 Y 軸向下為正。使用 --first-press 時，會顯示第一個被按下的控制項後結束；若 --duration 先到期則失敗。";
 "cli.controller.watch.discussion.all" = "使用 --all 時，每行以控制器 ID 開頭，並回報每個已連接或已中斷連接的控制器。最前面幾行會回報已連接的控制器。";
 "cli.controller.watch.error.first_press_all" = "--first-press 需要 CONTROLLER；不能與 --all 一併使用。";
 "cli.controller.watch.error.target" = "請提供 CONTROLLER 或 --all，但不能同時提供。";
@@ -1339,7 +1339,7 @@
 "cli.virtual.error.failed" = "%@ 的虛擬遊戲控制器未變更 (%@)。請用 「ojd virtual show」 檢查。";
 "cli.virtual.error.no_unit" = "%@ 沒有單元 ID，因此所做選擇只能套用至其整個型號。請不使用 --unit 來執行該指令。";
 "cli.virtual.feed.abstract" = "發布由 stdin 驅動的虛擬遊戲控制器。";
-"cli.virtual.feed.discussion" = "每行讀取一個 JSON 物件：「buttons」 和 「dpad」 列出被按下的控制項，例如 South 和 up；「axes」 將軸名稱（例如 LeftStickX）對應到數值。缺少的控制項保持中立。搖桿範圍為 -1 到 1，Y 軸向上；扳機範圍為 0 到 1。影格依序播放，每個影格至少持續 8 ms；「holdMilliseconds」 可讓影格維持更久，最長 60000。將遊戲傳送給遊戲控制器的每個輸出指令（例如震動）以每行一個 JSON 物件的形式輸出。輸入結束且所有影格播放完畢後停止。";
+"cli.virtual.feed.discussion" = "每行讀取一個 JSON 物件：「buttons」 和 「dpad」 列出被按下的控制項，例如 South 和 up；「axes」 將軸名稱（例如 LeftStickX）對應到數值。缺少的控制項保持中立。搖桿範圍為 -1 到 1，Y 軸向下；扳機範圍為 0 到 1。影格依序播放，每個影格至少持續 8 ms；「holdMilliseconds」 可讓影格維持更久，最長 60000。將遊戲傳送給遊戲控制器的每個輸出指令（例如震動）以每行一個 JSON 物件的形式輸出。輸入結束且所有影格播放完畢後停止。";
 "cli.virtual.feed.error.closed" = "服務已關閉虛擬遊戲控制器。請用 「ojd status」 檢查。";
 "cli.virtual.feed.error.frame" = "第 %@ 行不是有效的影格。「ojd virtual feed --help」 會顯示格式。";
 "cli.virtual.feed.profile" = "要發布的虛擬遊戲控制器設定檔。";
