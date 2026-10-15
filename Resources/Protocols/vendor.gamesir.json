@@ -1,21 +1,19 @@
 {
-	"apiVersion": "openjoystickdriver/v1alpha1",
-	"kind": "ProtocolDescription",
-	"family": "vendor.gamesir",
-	"parameters": {
-		"innerGrips": {
-			"type": "flag"
-		},
-		"lightingMemory": {
-			"type": "enum",
-			"values": [
-				"ProfileSlots"
-			]
-		}
-	},
-	"defaults": {
-		"tuning": {
-			"frameQueueCapacity": 64
-		}
-	}
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "ProtocolDescription",
+  "family": "vendor.gamesir",
+  "parameters": {
+    "innerGrips": {
+      "type": "flag"
+    },
+    "lightingMemory": {
+      "type": "enum",
+      "values": ["ProfileSlots"]
+    }
+  },
+  "defaults": {
+    "tuning": {
+      "frameQueueCapacity": 64
+    }
+  }
 }

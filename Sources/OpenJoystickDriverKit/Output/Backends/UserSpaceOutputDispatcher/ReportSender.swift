@@ -27,7 +27,8 @@ final class UserSpaceReportSender: Sendable {
   }
 
   /// The capacity when neither a record nor a protocol description names one. The bundled
-  /// descriptions' `frameQueueCapacity` carries the same value; a test keeps them equal.
+  /// descriptions' `frameQueueCapacity` carries the same value; `ProtocolDescriptionTests` keeps
+  /// them equal.
   static let fallbackQueueCapacity = 64
   /// Matches the virtual output transition deadline used to retire native virtual devices.
   static let defaultNativeSendDeadlineNanoseconds: UInt64 = 2_000_000_000

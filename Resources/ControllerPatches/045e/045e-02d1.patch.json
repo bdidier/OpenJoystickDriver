@@ -1,18 +1,18 @@
 {
-	"apiVersion": "openjoystickdriver/v1alpha1",
-	"kind": "ControllerPatch",
-	"selector": {
-		"vendorID": 1118,
-		"productID": 721
-	},
-	"patch": {
-		"usb": {
-			"endpoints": {
-				"in": 129,
-				"out": 1
-			},
-			"configuration": "set1-before-claim"
-		},
-		"route": "ExtensionOwned"
-	}
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "ControllerPatch",
+  "selector": {
+    "vendorID": 1118,
+    "productID": 721
+  },
+  "patch": {
+    "usb": {
+      "endpoints": {
+        "in": 129,
+        "out": 1
+      },
+      "configuration": "set1-before-claim"
+    },
+    "route": "ExtensionOwned"
+  }
 }

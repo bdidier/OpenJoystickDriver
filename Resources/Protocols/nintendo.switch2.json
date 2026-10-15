@@ -1,21 +1,16 @@
 {
-	"apiVersion": "openjoystickdriver/v1alpha1",
-	"kind": "ProtocolDescription",
-	"family": "nintendo.switch2",
-	"parameters": {
-		"layout": {
-			"type": "enum",
-			"values": [
-				"Pro",
-				"JoyConLeft",
-				"JoyConRight",
-				"GameCube"
-			]
-		}
-	},
-	"defaults": {
-		"tuning": {
-			"frameQueueCapacity": 64
-		}
-	}
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "ProtocolDescription",
+  "family": "nintendo.switch2",
+  "parameters": {
+    "layout": {
+      "type": "enum",
+      "values": ["Pro", "JoyConLeft", "JoyConRight", "GameCube"]
+    }
+  },
+  "defaults": {
+    "tuning": {
+      "frameQueueCapacity": 64
+    }
+  }
 }

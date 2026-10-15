@@ -9,6 +9,8 @@ import subprocess
 import urllib.parse
 from typing import Any
 
+from Scripts.Quality.biome_format import format_json
+
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 LINUX_REPOSITORY = "torvalds/linux"
 XPAD_PATH = "drivers/input/joystick/xpad.c"
@@ -93,10 +95,12 @@ def write_catalog(
     failure: type[Exception],
 ) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
-    planned = {
-        output_dir / candidate.filename: json_text(candidate.profile)
-        for candidate in candidates
-    }
+    planned = format_json(
+        {
+            output_dir / candidate.filename: json_text(candidate.profile)
+            for candidate in candidates
+        }
+    )
 
     if not force:
         conflicts = [

@@ -1,16 +1,16 @@
 {
-	"apiVersion": "openjoystickdriver/v1alpha1",
-	"kind": "ControllerPatch",
-	"selector": {
-		"vendorID": 1699,
-		"productID": 63010
-	},
-	"patch": {
-		"protocol": {
-			"family": "vendor.ps3-third-party",
-			"parameters": {
-				"hatSource": "DpadPressure"
-			}
-		}
-	}
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "ControllerPatch",
+  "selector": {
+    "vendorID": 1699,
+    "productID": 63010
+  },
+  "patch": {
+    "protocol": {
+      "family": "vendor.ps3-third-party",
+      "parameters": {
+        "hatSource": "DpadPressure"
+      }
+    }
+  }
 }
