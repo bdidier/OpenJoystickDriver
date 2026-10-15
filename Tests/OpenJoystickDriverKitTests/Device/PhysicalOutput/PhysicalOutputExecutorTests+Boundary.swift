@@ -35,4 +35,43 @@ extension PhysicalOutputExecutorTests {
     try await manager.consume(ProfileColorClaim(nil), for: started.identifier)
     await manager.stop()
   }
+
+  /// A release whose channel write fails is refused through the sink.
+  @Test
+  func aReleaseThroughTheSinkIsRefusedWhenTheWriteFails() async throws {
+    let started = try await startSixaxis(locationID: 542)
+    let manager = started.manager
+    let claim = MappingOutputClaim(
+      .rumble(motor: .leftMain, intensity: 0.5),
+      active: true,
+      owner: UUID()
+    )
+    try await manager.consume(claim, for: started.identifier)
+    await started.backend.disableOutputReports()
+
+    await #expect(
+      throws: StreamBoundaryError.rejected(.physicalOutput, "mapping outputs not released")
+    ) {
+      try await manager.consume(MappingOutputRelease(), for: started.identifier)
+    }
+    await manager.stop()
+  }
+
+  /// A profile colour whose lightbar write fails is refused through the sink.
+  @Test
+  func aProfileColorThroughTheSinkIsRefusedWhenTheWriteFails() async throws {
+    let started = try await startSixaxis(locationID: 543, productID: 0x05C4)
+    let manager = started.manager
+    await started.backend.disableOutputReports()
+
+    await #expect(
+      throws: StreamBoundaryError.rejected(.physicalOutput, "profile colour not applied")
+    ) {
+      try await manager.consume(
+        ProfileColorClaim(ControllerColor(red: 0, green: 128, blue: 255)),
+        for: started.identifier
+      )
+    }
+    await manager.stop()
+  }
 }
