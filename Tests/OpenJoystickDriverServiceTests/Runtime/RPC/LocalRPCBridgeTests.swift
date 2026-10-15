@@ -5,7 +5,7 @@ import Testing
 @testable import OpenJoystickDriverKit
 @testable import OpenJoystickDriverService
 
-@Suite(.serialized)
+@Suite(.serialized, .timeLimit(.minutes(2)))
 struct LocalRPCBridgeTests {
   private static let controllerMethodNames: Set = [
     "getStatus", "requestRequiredAccess", "requestAccess", "getControllerState", "getPacketLog",
