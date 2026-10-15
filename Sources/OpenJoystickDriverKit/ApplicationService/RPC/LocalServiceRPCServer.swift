@@ -11,10 +11,6 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
   private let socketPath: String
   private let stateLock = NSLock()
   private let acceptQueue = DispatchQueue(label: "com.openjoystickdriver.rpc.accept")
-  private let connectionQueue = DispatchQueue(
-    label: "com.openjoystickdriver.rpc.connections",
-    attributes: .concurrent
-  )
   private var listeningDescriptor: Int32 = -1
 
   public convenience init(authentication: @escaping Authentication, handler: @escaping Handler) {
@@ -82,7 +78,9 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
         if errno == EINTR { continue }
         return
       }
-      connectionQueue.async { [weak self] in self?.handleConnection(connection) }
+      BlockingWork.detach(label: "com.openjoystickdriver.rpc.connection") { [weak self] in
+        self?.handleConnection(connection)
+      }
     }
   }
 
