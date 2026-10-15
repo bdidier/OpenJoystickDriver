@@ -34,7 +34,7 @@ public final class NVIDIAShieldDriver: PhysicalProtocolDriver {
   private var state = ControllerState.neutral
 
   /// Creates a driver for the 2017 controller, or for the 2015 controller when its record declares
-  /// the `shield-2015` quirk; only the 2015 controller has plain rumble.
+  /// the `reportRevision: Shield2015` parameter; only the 2015 controller has plain rumble.
   public init(isShield2015: Bool) { isV103 = isShield2015 }
 
   public func resetProtocolState() { state = .neutral }

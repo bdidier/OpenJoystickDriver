@@ -53,8 +53,8 @@ public final class HIDDescriptorDriver: PhysicalProtocolDriver {
 
   /// Creates a new HIDDescriptorDriver for a controller of `model`.
   ///
-  /// `reportDescriptor` is the bound interface's HID report descriptor, when observed. `quirks`
-  /// are the record's layout quirks; a record selects at most one. Without one, a descriptor with
+  /// `reportDescriptor` is the bound interface's HID report descriptor, when observed.
+  /// `usageLayout` is the record's layout, if it names one. Without one, a descriptor with
   /// Z and Rz, a Brake or Accelerator, and no Rx or Ry selects the Z/Rz layout: Z/Rz is the right
   /// stick, Brake and Accelerator are the triggers, and buttons follow Linux hid-input's
   /// `BTN_GAMEPAD` order. The Xbox One S and Series Bluetooth descriptors in Linux mode (xpadneo
@@ -63,7 +63,7 @@ public final class HIDDescriptorDriver: PhysicalProtocolDriver {
   public init(
     model: ControllerModelID,
     reportDescriptor: Data? = nil,
-    quirks: [ControllerQuirk] = []
+    usageLayout: ProtocolParameters.UsageLayout? = nil
   ) {
     self.model = model
     let fields =
@@ -71,19 +71,14 @@ public final class HIDDescriptorDriver: PhysicalProtocolDriver {
       ?? []
     let usages = Set(fields.map { HIDUsage(usagePage: $0.usagePage, usage: $0.usage) })
     hasShareButton = usages.contains(Self.usage(Self.consumerUsagePage, Self.usageRecord))
-    if quirks.contains(.wr007) {
-      axisLayout = .wr007
-    } else if quirks.contains(.scufEnvision) {
-      axisLayout = .envision
-    } else if quirks.contains(.zRzBrakeLeft) {
-      axisLayout = .zRzBrakeLeft
-    } else if quirks.contains(.dragonRise) {
-      axisLayout = .dragonRise
-    } else if Self.hasZRzBrakeLeftShape(usages) {
-      axisLayout = .zRzBrakeLeft
-    } else {
-      axisLayout = .standard
-    }
+    axisLayout =
+      switch usageLayout {
+      case .wr007: .wr007
+      case .scufEnvision: .envision
+      case .zRzBrakeLeft: .zRzBrakeLeft
+      case .dragonRise: .dragonRise
+      case nil: Self.hasZRzBrakeLeftShape(usages) ? .zRzBrakeLeft : .standard
+      }
     print("[HIDDescriptorDriver] Unrecognized controller \(model), using HID descriptors")
   }
 

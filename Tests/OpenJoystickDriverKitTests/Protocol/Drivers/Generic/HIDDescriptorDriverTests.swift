@@ -101,7 +101,7 @@ struct HIDDescriptorDriverTests {
   func dragonRiseUsesItsButtonOrderAndZRzRightStick() {
     let parser = HIDDescriptorDriver(
       model: ControllerModelID(vendorID: 0x0079, productID: 6),
-      quirks: [.dragonRise]
+      usageLayout: .dragonRise
     )
     let buttons: [ControlID] = [
       .faceNorth, .faceEast, .faceSouth, .faceWest, .leftShoulder, .rightShoulder,

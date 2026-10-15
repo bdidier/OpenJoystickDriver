@@ -147,7 +147,7 @@ class XpadTranslationTests(unittest.TestCase):
             profile["protocol"],
             {
                 "family": "xbox.gip",
-                "quirks": ["share-offset"],
+                "parameters": {"shareButton": {"fromEnd": 26}},
                 "initialization": [
                     "xbox.gip/power-on",
                     "xbox.gip/s-init",
@@ -158,7 +158,7 @@ class XpadTranslationTests(unittest.TestCase):
         )
         self.assertNotIn("capabilities", profile)
 
-    def test_quirk_outside_its_driver_is_rejected(self) -> None:
+    def test_parameter_outside_its_driver_is_rejected(self) -> None:
         with self.assertRaises(xpad.GenerationError):
             xpad.build_profile(
                 self.device("XTYPE_XBOX360", "MAP_SHARE_OFFSET"), init_rules=[]
@@ -177,7 +177,7 @@ class XpadTranslationTests(unittest.TestCase):
 
 
 class HIDRecordTests(unittest.TestCase):
-    def test_steam_receiver_is_the_dongle_variant_without_quirks(self) -> None:
+    def test_steam_receiver_is_the_dongle_variant_without_parameters(self) -> None:
         defines = (
             "#define USB_VENDOR_ID_VALVE 0x28de\n"
             "#define USB_DEVICE_ID_STEAM_CONTROLLER_WIRELESS 0x1142\n"
@@ -359,7 +359,7 @@ class SDLControllerListTests(unittest.TestCase):
         )
         self.assertEqual(counts, {"added": 10})
 
-    def test_switch_2_rows_use_the_switch_2_family_with_the_side_quirk(self) -> None:
+    def test_switch_2_rows_use_the_switch_2_family_with_the_side_layout(self) -> None:
         rows = [
             (0x057E, 0x2006, "SwitchJoyConLeft"),
             (0x057E, 0x2066, "SwitchJoyConRight"),
@@ -373,9 +373,9 @@ class SDLControllerListTests(unittest.TestCase):
         self.assertEqual(
             protocols,
             {
-                0x2006: {"family": switch, "quirks": ["joy-con-left"]},
-                0x2066: {"family": switch2, "quirks": ["joy-con-right"]},
-                0x2067: {"family": switch2, "quirks": ["joy-con-left"]},
+                0x2006: {"family": switch, "parameters": {"layout": "JoyConLeft"}},
+                0x2066: {"family": switch2, "parameters": {"layout": "JoyConRight"}},
+                0x2067: {"family": switch2, "parameters": {"layout": "JoyConLeft"}},
                 0x2069: {"family": switch2},
             },
         )
@@ -503,7 +503,10 @@ class SDLControllerListTests(unittest.TestCase):
 
     def test_protocol_patch_merges_only_within_its_family(self) -> None:
         upstream = {
-            "protocol": {"family": "xbox.gip", "quirks": ["share-offset"]},
+            "protocol": {
+                "family": "xbox.gip",
+                "parameters": {"shareButton": {"fromEnd": 26}},
+            },
             "usb": {"interface": 0},
         }
         records = {(1, 1): upstream, (1, 2): upstream, (1, 3): upstream}
@@ -518,16 +521,20 @@ class SDLControllerListTests(unittest.TestCase):
                 (
                     "patch",
                     (1, 2),
-                    {"protocol": {"family": "xbox.gip", "quirks": ["x"]}},
+                    {"protocol": {"family": "xbox.gip", "parameters": {"x": 1}}},
                 ),
                 ("patch", (1, 3), {"protocol": {"family": "hid.descriptor"}}),
             ],
         )
         self.assertEqual(
             records[(1, 1)]["protocol"],
-            {"family": "xbox.gip", "quirks": ["share-offset"], "keepAlive": False},
+            {
+                "family": "xbox.gip",
+                "parameters": {"shareButton": {"fromEnd": 26}},
+                "keepAlive": False,
+            },
         )
-        self.assertEqual(records[(1, 2)]["protocol"]["quirks"], ["x"])
+        self.assertEqual(records[(1, 2)]["protocol"]["parameters"], {"x": 1})
         self.assertEqual(records[(1, 3)]["protocol"], {"family": "hid.descriptor"})
         self.assertEqual(records[(1, 3)]["usb"], {"interface": 0})
 
@@ -547,7 +554,7 @@ class SDLControllerListTests(unittest.TestCase):
         )
         self.assertEqual(
             records[(0x1532, 0x100B)]["protocol"],
-            {"family": "sony.dualsense", "quirks": ["third-party"]},
+            {"family": "sony.dualsense", "parameters": {"maker": "ThirdParty"}},
         )
         self.assertEqual(
             records[(0x054C, 0x0CE6)]["protocol"], {"family": "sony.dualsense"}

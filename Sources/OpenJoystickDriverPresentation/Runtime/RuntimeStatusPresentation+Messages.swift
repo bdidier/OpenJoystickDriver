@@ -105,7 +105,7 @@ extension RuntimeStatusPresentation {
       && lhs.physicalOwnership == rhs.physicalOwnership
       && lhs.duplicateExposureRisk == rhs.duplicateExposureRisk
       && lhs.serialNumber == rhs.serialNumber && lhs.protocolBinding == rhs.protocolBinding
-      && lhs.quirks == rhs.quirks && lhs.inputEndpoint == rhs.inputEndpoint
+      && lhs.parameters == rhs.parameters && lhs.inputEndpoint == rhs.inputEndpoint
       && lhs.outputEndpoint == rhs.outputEndpoint
       && lhs.needsSetConfiguration == rhs.needsSetConfiguration
       && lhs.postHandshakeSettleMs == rhs.postHandshakeSettleMs

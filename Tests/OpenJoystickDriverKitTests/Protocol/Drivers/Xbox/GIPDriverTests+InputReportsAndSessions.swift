@@ -85,7 +85,7 @@ extension GIPDriverTests {
   @Test
   func testShareOffsetReadsShareFromTheEndRelativeGIPPacking() throws {
     for (count, shareIndex) in [(44, 18), (40, 14)] {
-      let parser = GIPDriver(usesShareOffset: true)
+      let parser = GIPDriver(shareButtonFromEnd: 26)
       var payload = Data(repeating: 0, count: count)
       payload[shareIndex] = 1
       let events = try parser.parseReport(ProtocolPacketFixtures.GIP.inputPacket(payload: payload))

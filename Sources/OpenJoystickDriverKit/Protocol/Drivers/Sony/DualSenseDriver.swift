@@ -38,8 +38,8 @@ public enum DualSenseDriverError: Error, Equatable { case invalidBluetoothCRC }
 /// common input report after its two-byte header and is accepted only when
 /// its Linux-compatible CRC32 validates.
 ///
-/// A controller whose record has the `third-party` quirk runs in SDL's third-party mode; see
-/// `DualSenseThirdPartyModel`.
+/// A controller whose record has the `maker: ThirdParty` parameter runs in SDL's third-party
+/// mode; see `DualSenseThirdPartyModel`.
 public final class DualSenseDriver: PhysicalProtocolDriver {
 
   public let hasEdgeButtons: Bool
@@ -62,17 +62,18 @@ public final class DualSenseDriver: PhysicalProtocolDriver {
   var dongleConnected = false
   var pendingConnectionState: ControllerInputConnectionState?
 
-  /// Creates a new DualSense parser. A record with the `third-party` quirk selects third-party
-  /// mode and takes its model from its other `quirks`.
+  /// Creates a new DualSense parser. A record with the `ThirdParty` maker selects third-party
+  /// mode and takes its model from its other `parameters`.
   public init(
     prefersBluetooth: Bool = false,
     hasEdgeButtons: Bool = false,
-    quirks: [ControllerQuirk] = []
+    parameters: ProtocolParameters = .none
   ) {
     self.hasEdgeButtons = hasEdgeButtons
     isBluetoothVariant = prefersBluetooth
     connectionMode = prefersBluetooth ? .bluetooth : .usb
-    let model = quirks.contains(.thirdParty) ? DualSenseThirdPartyModel(quirks: quirks) : nil
+    let model =
+      parameters.maker == .thirdParty ? DualSenseThirdPartyModel(parameters: parameters) : nil
     thirdParty = model
     features = model?.unprobedFeatures ?? .all
     if model?.usesAlternateReportUnprobed == true { useAlternateReport() }

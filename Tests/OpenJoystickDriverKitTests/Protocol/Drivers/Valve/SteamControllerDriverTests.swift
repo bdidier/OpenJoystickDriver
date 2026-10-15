@@ -17,14 +17,14 @@ struct SteamControllerDriverTests {
     #expect(
       wired.physicalProtocolID == .valveSteamController && wired.physicalProtocolVariant == .wired
     )
-    #expect(wired.quirks.isEmpty)
+    #expect(wired.parameters.isEmpty)
 
     let wireless = try #require(registry.record(for: models[1]))
     #expect(
       wireless.physicalProtocolID == .valveSteamController
         && wireless.physicalProtocolVariant == .dongle
     )
-    #expect(wireless.quirks.isEmpty)
+    #expect(wireless.parameters.isEmpty)
   }
 
   @Test

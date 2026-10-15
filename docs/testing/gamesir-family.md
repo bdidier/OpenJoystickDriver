@@ -6,10 +6,10 @@ These records and packet encoders are source-backed, not hardware-verified. Test
 
 - G7 Pro configuration-ready USB: `3537:1003`, `105D`, `105E`, `109B`, `109C`, and `10BA`
 - G7 Pro input-only modes: `3537:100A` and `1022`
-- Cyclone 2 enhanced HID: `3537:0575`, `100B`, and `1053`, with the `lighting-slots` quirk
-- G7 Pro 8K PC enhanced HID: `3537:10C5`, `10C6`, `10C7`, and `10C8`, with the `inner-grips` quirk
+- Cyclone 2 enhanced HID: `3537:0575`, `100B`, and `1053`, with the `lightingMemory` parameter `ProfileSlots`
+- G7 Pro 8K PC enhanced HID: `3537:10C5`, `10C6`, `10C7`, and `10C8`, with the `innerGrips` parameter
 
-Both enhanced HID models bind `vendor.gamesir:enhanced-hid`; their catalog quirks select the model differences.
+Both enhanced HID models bind `vendor.gamesir:enhanced-hid`; their catalog parameters select the model differences.
 
 `3537:1004` stays on the existing XUSB route because Linux identifies it as T4 Kaleid and the White G7 Pro dongle report shares that identity. Existing Linux-backed `3537:100F` and `1010` routes are also unchanged.
 

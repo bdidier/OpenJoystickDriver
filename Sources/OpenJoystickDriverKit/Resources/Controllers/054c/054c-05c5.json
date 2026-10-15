@@ -4,9 +4,9 @@
   "productID": 1477,
   "protocol": {
     "family": "sony.dualshock4",
-    "quirks": [
-      "factory-calibration",
-      "strikepad"
-    ]
+    "parameters": {
+      "motionCalibration": "Factory",
+      "motionScale": "StrikePad"
+    }
   }
 }

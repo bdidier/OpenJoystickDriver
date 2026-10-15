@@ -47,7 +47,8 @@ public final class GIPDriver: PhysicalProtocolDriver {
   private let outEndpoint: UInt8
   private let startupPackets: [GIPStartupPacket]
   public let keepAlivePolicy: GIPKeepAlivePolicy
-  let usesShareOffset: Bool
+  /// Where the Share button sits, counted back from the packet end; nil keeps the default byte.
+  let shareButtonFromEnd: Int?
   let allowsPhysicalOutput: Bool
 
   private var sequencer = GIPSequencer()
@@ -68,13 +69,13 @@ public final class GIPDriver: PhysicalProtocolDriver {
     transportProfile: DeviceTransportProfile = .gipDefault,
     startupPackets: [GIPStartupPacket] = GIPStartupPacket.defaultSequence,
     keepAlivePolicy: GIPKeepAlivePolicy = .enabled,
-    usesShareOffset: Bool = false,
+    shareButtonFromEnd: Int? = nil,
     allowsPhysicalOutput: Bool = true
   ) {
     self.outEndpoint = transportProfile.outputEndpoint
     self.startupPackets = startupPackets
     self.keepAlivePolicy = keepAlivePolicy
-    self.usesShareOffset = usesShareOffset
+    self.shareButtonFromEnd = shareButtonFromEnd
     self.allowsPhysicalOutput = allowsPhysicalOutput
     self.authHandler = GIPAuthHandler()
   }
@@ -320,15 +321,15 @@ public final class GIPDriver: PhysicalProtocolDriver {
   ]
 
   private func shareByte(in bytes: [UInt8]) -> UInt8 {
-    if usesShareOffset {
+    if let shareButtonFromEnd {
       // Linux xpad: data[len - 26] of the packet, which is the payload after a 4-byte GIP
       // header; SDL reads byte 18 of the 44-byte Series X firmware 5.5 payload.
-      let index = bytes.count - 26
+      let index = bytes.count - shareButtonFromEnd
       guard index >= 0, index < bytes.count else { return 0 }
       return bytes[index]
     }
     // GameSir G7 SE and typical 32-byte GIP payloads put Share at payload[14]
-    // (URB offset 18 on a 4-byte header). Series X uses the share-offset quirk instead.
+    // (URB offset 18 on a 4-byte header). Series X sets shareButton instead.
     guard bytes.count > 14 else { return 0 }
     return bytes[14]
   }

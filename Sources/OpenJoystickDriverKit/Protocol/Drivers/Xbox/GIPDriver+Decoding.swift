@@ -1,11 +1,11 @@
 extension GIPDriver {
   public func consumeInputConnectionStateChange() -> ControllerInputConnectionState? { nil }
 
-  /// Share presence varies by model, so only a row with the `share-offset` quirk, whose fixed
+  /// Share presence varies by model, so only a row with the `shareButton` parameter, whose fixed
   /// offset is the per-record evidence that the model has Share, declares it.
   public var capabilities: ControllerCapabilities {
     ControllerCapabilities(
-      controls: ControlID.xboxLayout.union(usesShareOffset ? [.guide, .share] : [.guide])
+      controls: ControlID.xboxLayout.union(shareButtonFromEnd != nil ? [.guide, .share] : [.guide])
     )
   }
 

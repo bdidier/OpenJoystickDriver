@@ -8,10 +8,14 @@
       "note": "FLAG_DELAY_INIT holds the GIP init sequence until the pad's announce packet; GIPDriver resends its startup sequence on the announces before the first input"
     }
   ],
-  "mappingQuirks": [
+  "mappingParameters": [
     {
       "flag": "MAP_SHARE_OFFSET",
-      "quirk": "share-offset",
+      "parameters": {
+        "shareButton": {
+          "fromEnd": 26
+        }
+      },
       "family": "xbox.gip"
     }
   ],

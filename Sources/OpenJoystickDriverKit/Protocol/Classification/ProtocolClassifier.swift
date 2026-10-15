@@ -286,7 +286,7 @@ enum ProtocolClassifier {
     of record: DeviceRuntimeProfile
   ) -> [PhysicalProtocolVariantID] {
     let variants = record.physicalProtocolID.variants
-    guard record.quirks.contains(.bluetoothOnly) else { return variants }
+    guard record.parameters.usbProtocol == .chargingOnly else { return variants }
     return variants.filter { $0 != .usb }
   }
 

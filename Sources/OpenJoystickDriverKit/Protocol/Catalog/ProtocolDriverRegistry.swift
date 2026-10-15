@@ -168,7 +168,7 @@ public final class ProtocolDriverRegistry: Sendable {
         HIDDescriptorDriver(
           model: model,
           reportDescriptor: reportDescriptor,
-          quirks: record.quirks
+          usageLayout: record.parameters.usageLayout
         )
       )
     case .hidReportLayout:
@@ -193,7 +193,7 @@ public final class ProtocolDriverRegistry: Sendable {
           transportProfile: transportProfile,
           startupPackets: record.gipStartupPackets,
           keepAlivePolicy: record.gipKeepAlivePolicy,
-          usesShareOffset: record.quirks.contains(.shareOffset),
+          shareButtonFromEnd: record.parameters.shareButton?.fromEnd,
           allowsPhysicalOutput: !record.capabilityDelta.rumbleAbsent
         )
       )
@@ -202,8 +202,8 @@ public final class ProtocolDriverRegistry: Sendable {
       return .success(
         DualShock4Driver(
           prefersBluetooth: variant == .bluetoothClassic,
-          usesFactoryCalibration: record.quirks.contains(.factoryCalibration),
-          model: DualShock4Model(quirks: record.quirks)
+          usesFactoryCalibration: record.parameters.motionCalibration == .factory,
+          model: DualShock4Model(parameters: record.parameters)
         )
       )
     case .sonyDualSense:
@@ -213,27 +213,26 @@ public final class ProtocolDriverRegistry: Sendable {
           hasEdgeButtons: DualSenseDriver.edgeControls.isSubset(
             of: record.capabilityDelta.presentControls
           ),
-          quirks: record.quirks
+          parameters: record.parameters
         )
       )
     case .nintendoSwitch2:
       let layout: Switch2ControllerLayout =
-        if record.quirks.contains(.gameCube) {
-          .gameCube
-        } else if record.quirks.contains(.joyConLeft) {
-          .leftJoyCon
-        } else if record.quirks.contains(.joyConRight) { .rightJoyCon } else { .pro }
+        switch record.parameters.layout {
+        case .gameCube: .gameCube
+        case .joyConLeft: .leftJoyCon
+        case .joyConRight: .rightJoyCon
+        case .pro, nil: .pro
+        }
       return .success(Switch2Driver(layout: layout, link: variant == .usb ? .usb : .bluetoothLE))
     case .nintendoSwitchInputOnly: return .success(SwitchInputOnlyDriver())
     case .nintendoSwitch1:
-      let layout: NintendoControllerLayout
-      if record.quirks.contains(.joyConLeft) {
-        layout = .leftJoyCon
-      } else if record.quirks.contains(.joyConRight) {
-        layout = .rightJoyCon
-      } else {
-        layout = .pro
-      }
+      let layout: NintendoControllerLayout =
+        switch record.parameters.layout {
+        case .joyConLeft: .leftJoyCon
+        case .joyConRight: .rightJoyCon
+        case .pro, .gameCube, nil: .pro
+        }
       return .success(Switch1Driver(layout: layout, isBluetooth: variant == .bluetoothClassic))
     case .valveSteamTriton: return .success(SteamTritonDriver(isDongle: variant == .dongle))
     case .valveSteamDeck: return .success(SteamDeckDriver())
@@ -250,11 +249,13 @@ public final class ProtocolDriverRegistry: Sendable {
         PS3ThirdPartyDriver(
           model: model,
           rumbleTemplate: record.rumbleTemplate,
-          hatFromPressureOnly: record.quirks.contains(.dpadPressure)
+          hatFromPressureOnly: record.parameters.hatSource == .dpadPressure
         )
       )
     case .vendorNVIDIAShield:
-      return .success(NVIDIAShieldDriver(isShield2015: record.quirks.contains(.shield2015)))
+      return .success(
+        NVIDIAShieldDriver(isShield2015: record.parameters.reportRevision == .shield2015)
+      )
     case .vendorGameSir:
       switch variant {
       case .usb:
@@ -265,8 +266,8 @@ public final class ProtocolDriverRegistry: Sendable {
         return .success(
           GameSirDriver(
             protocol: .enhancedHID,
-            hasInnerGrips: record.quirks.contains(.innerGrips),
-            usesLightingSlots: record.quirks.contains(.lightingSlots)
+            hasInnerGrips: record.parameters.innerGrips == true,
+            usesLightingSlots: record.parameters.lightingMemory == .profileSlots
           )
         )
       default: return .failure(.unsupportedProtocolVariant)

@@ -65,7 +65,7 @@ struct CatalogRecordBehaviorTests {
   }
 
   @Test
-  func gameSirRowsSelectTheirProtocolAndQuirks() throws {
+  func gameSirRowsSelectTheirProtocolAndParameters() throws {
     // (product, protocol, inner grips, lighting slots)
     let expectations: [(UInt16, GameSirProtocol, Bool, Bool)] =
       [0x1003, 0x105D, 0x105E, 0x109B, 0x109C, 0x10BA].map { ($0, .g7ProUSB, false, false) }

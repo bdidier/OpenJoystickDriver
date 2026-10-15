@@ -44,7 +44,7 @@ func steamHIDInterface(number: UInt8, gamepad: Bool = true) -> PhysicalInterface
 /// The host link a catalog row is observed on by default: USB, except for a Bluetooth-only
 /// pad, whose USB link only charges it.
 func defaultHost(of record: DeviceRuntimeProfile) -> PhysicalTransport {
-  record.quirks.contains(.bluetoothOnly) ? .bluetoothClassic : .usb
+  record.parameters.usbProtocol == .chargingOnly ? .bluetoothClassic : .usb
 }
 
 /// Binds a catalog model on its family's access path, as discovery does, and returns the
@@ -112,7 +112,7 @@ extension DeviceRuntimeProfile {
       transportProfile: transportProfile,
       physicalProtocolID: physicalProtocolID,
       physicalProtocolVariant: physicalProtocolVariant,
-      quirks: quirks,
+      parameters: parameters,
       capabilityDelta: capabilityDelta,
       preferredBackends: preferredBackends,
       gipStartupPackets: gipStartupPackets,

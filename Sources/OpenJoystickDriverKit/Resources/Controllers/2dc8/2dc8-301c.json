@@ -4,8 +4,8 @@
   "productID": 12316,
   "protocol": {
     "family": "hid.descriptor",
-    "quirks": [
-      "z-rz-brake-left"
-    ]
+    "parameters": {
+      "usageLayout": "ZRzBrakeLeft"
+    }
   }
 }

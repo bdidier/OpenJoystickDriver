@@ -47,18 +47,18 @@ extension DualShock4DriverTests {
   @Test
   func bundledRecordsSelectSDLModelsAndCalibration() {
     let catalog = DeviceCatalog()
-    func quirks(_ productID: UInt16) -> [ControllerQuirk]? {
-      catalog.record(for: ControllerModelID(vendorID: 0x054C, productID: productID))?.quirks
+    func parameters(_ productID: UInt16) -> ProtocolParameters? {
+      catalog.record(for: ControllerModelID(vendorID: 0x054C, productID: productID))?.parameters
     }
-    #expect(quirks(0x0BA0).map(DualShock4Model.init(quirks:)) == .wirelessAdapter)
-    #expect(quirks(0x05C5).map(DualShock4Model.init(quirks:)) == .strikePad)
-    #expect(quirks(0x09CC).map(DualShock4Model.init(quirks:)) == .standard)
+    #expect(parameters(0x0BA0).map(DualShock4Model.init(parameters:)) == .wirelessAdapter)
+    #expect(parameters(0x05C5).map(DualShock4Model.init(parameters:)) == .strikePad)
+    #expect(parameters(0x09CC).map(DualShock4Model.init(parameters:)) == .standard)
     for model in catalog.hidModels {
       guard let record = catalog.record(for: model),
         record.physicalProtocolID == .sonyDualShock4
       else { continue }
       #expect(
-        record.quirks.contains(.factoryCalibration)
+        (record.parameters.motionCalibration == .factory)
           == (model.vendorID == 0x054C),
         "\(model)"
       )

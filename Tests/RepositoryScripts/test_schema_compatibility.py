@@ -161,10 +161,10 @@ class BreakingChangesTests(unittest.TestCase):
         )
 
     def test_matches_conditional_constraints_by_their_condition(self) -> None:
-        def conditional(family: str, quirks: list[str]) -> dict[str, Any]:
+        def conditional(family: str, parameters: list[str]) -> dict[str, Any]:
             return {
                 "if": {"properties": {"family": {"const": family}}},
-                "then": {"properties": {"quirks": {"enum": quirks}}},
+                "then": {"properties": {"parameters": {"enum": parameters}}},
             }
 
         old = documents()
@@ -183,7 +183,7 @@ class BreakingChangesTests(unittest.TestCase):
         self.assertEqual(
             schema_compatibility.breaking_changes(old, new),
             [
-                f'{ROOT}#/$defs/sharedDevice/allOf/0/then/properties/quirks: value "b" removed',
+                f'{ROOT}#/$defs/sharedDevice/allOf/0/then/properties/parameters: value "b" removed',
                 f"{ROOT}#/$defs/sharedDevice/allOf/1: branch removed",
             ],
         )

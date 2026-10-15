@@ -167,9 +167,10 @@ struct ProtocolDriverRegistryTests {
     #expect(ds4USB.transport == .usb)
   }
 
-  /// The DualShock 4 and SHIELD drivers take their model and calibration from the record quirks.
+  /// The DualShock 4 and SHIELD drivers take their model and calibration from the record
+  /// parameters.
   @Test
-  func recordQuirksConfigureTheirDrivers() throws {
+  func recordParametersConfigureTheirDrivers() throws {
     func ds4(_ vendorID: UInt16, _ productID: UInt16) throws -> DualShock4Driver {
       try #require(
         try catalogParser(ControllerModelID(vendorID: vendorID, productID: productID))
@@ -195,14 +196,14 @@ struct ProtocolDriverRegistryTests {
     #expect(try shield(0x7214).outputCapabilities == .none)
   }
 
-  /// The generic HID driver takes its axis layout from the record quirks.
+  /// The generic HID driver takes its axis layout from the record parameters.
   @Test(
     arguments: [
       (0x11C1, 0x5600, .wr007), (0x2E95, 0x434D, .envision), (0x2DC8, 0x301B, .zRzBrakeLeft),
       (0x2DC8, 0x301C, .zRzBrakeLeft), (0x0079, 0x0006, .dragonRise), (0x3537, 0x100A, .standard),
     ] as [(UInt16, UInt16, HIDDescriptorDriver.AxisLayout)]
   )
-  func recordQuirksSelectTheHIDAxisLayout(
+  func recordParametersSelectTheHIDAxisLayout(
     vendorID: UInt16,
     productID: UInt16,
     layout: HIDDescriptorDriver.AxisLayout
@@ -214,7 +215,8 @@ struct ProtocolDriverRegistryTests {
     #expect(driver.axisLayout == layout)
   }
 
-  /// A non-Sony DualSense record selects third-party mode, and its quirks give SDL's model values.
+  /// A non-Sony DualSense record selects third-party mode, and its parameters give SDL's model
+  /// values.
   @Test(
     arguments: [
       (0x0F0D, 0x0184, [], false, false), (0x1532, 0x100B, [.sensors, .touchpad], false, false),
@@ -224,7 +226,7 @@ struct ProtocolDriverRegistryTests {
       (0x3285, 0x0D18, [], true, true), (0x3285, 0x0D19, [], true, false),
     ] as [(UInt16, UInt16, DualSenseFeatures, Bool, Bool)]
   )
-  func recordQuirksDescribeTheThirdPartyDualSense(
+  func recordParametersDescribeTheThirdPartyDualSense(
     vendorID: UInt16,
     productID: UInt16,
     unprobedFeatures: DualSenseFeatures,

@@ -24,22 +24,20 @@ public struct RemappingJoyConPairSettings: Codable, Equatable, Sendable {
   }
 }
 
-/// The side of a Joy-Con half that a paired session accepts, from the `joy-con-left` and
-/// `joy-con-right` quirks of the current controller records.
+/// The side of a Joy-Con half that a paired session accepts, from the `JoyConLeft` and
+/// `JoyConRight` layouts of the current controller records.
 public enum JoyConHalf: Equatable, Sendable {
   case left
   case right
 
   public init?(vendorID: UInt16, productID: UInt16) {
-    let quirks =
+    let layout =
       DeviceCatalog.current.withLock { $0 }
-      .record(for: ControllerModelID(vendorID: vendorID, productID: productID))?.quirks ?? []
-    if quirks.contains(.joyConLeft) {
-      self = .left
-    } else if quirks.contains(.joyConRight) {
-      self = .right
-    } else {
-      return nil
+      .record(for: ControllerModelID(vendorID: vendorID, productID: productID))?.parameters.layout
+    switch layout {
+    case .joyConLeft: self = .left
+    case .joyConRight: self = .right
+    default: return nil
     }
   }
 
@@ -49,15 +47,15 @@ public enum JoyConHalf: Equatable, Sendable {
     let catalog = DeviceCatalog.current.withLock { $0 }
     let halves = catalog.hidModels.compactMap { model in
       catalog.record(for: model).map {
-        (model: model, protocolID: $0.physicalProtocolID, quirks: $0.quirks)
+        (model: model, protocolID: $0.physicalProtocolID, layout: $0.parameters.layout)
       }
     }
     let lefts = halves.filter {
-      $0.model.productID == productID && $0.quirks.contains(.joyConLeft)
+      $0.model.productID == productID && $0.layout == .joyConLeft
     }
     guard !lefts.isEmpty else { return [] }
     let rights = halves.filter { right in
-      right.quirks.contains(.joyConRight)
+      right.layout == .joyConRight
         && lefts.contains {
           $0.model.vendorID == right.model.vendorID
             && $0.protocolID == right.protocolID

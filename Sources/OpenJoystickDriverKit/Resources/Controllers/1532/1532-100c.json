@@ -4,11 +4,11 @@
   "productID": 4108,
   "protocol": {
     "family": "sony.dualsense",
-    "quirks": [
-      "third-party",
-      "unprobed-sensors",
-      "unprobed-touchpad",
-      "receiver"
-    ]
+    "parameters": {
+      "maker": "ThirdParty",
+      "unprobedSensors": true,
+      "unprobedTouchpad": true,
+      "role": "Receiver"
+    }
   }
 }

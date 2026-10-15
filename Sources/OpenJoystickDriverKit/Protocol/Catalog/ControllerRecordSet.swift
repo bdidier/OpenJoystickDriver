@@ -348,16 +348,17 @@ public struct ControllerRecordSet: Sendable {
         merged["tuning"] = bundledTuning.merging(patched) { _, value in value }
       }
       // Every protocol field is scoped to its family, so a patch that keeps the family merges
-      // into the bundled block (RFC 7396) and keeps the fields it does not name. Its quirks join
-      // the bundled quirks, so a patch cannot drop the quirks that select a model's calibration.
+      // into the bundled block (RFC 7396) and keeps the fields it does not name. Its parameters
+      // join the bundled parameters, so a patch cannot drop the ones that select a model's
+      // calibration.
       if var patched = fields["protocol"] as? [String: Any],
         let bundledProtocol = base["protocol"] as? [String: Any],
         patched["family"] as? String == bundledProtocol["family"] as? String
       {
-        if let bundledQuirks = bundledProtocol["quirks"] as? [String],
-          let patchedQuirks = patched["quirks"] as? [String]
+        if let bundledParameters = bundledProtocol["parameters"] as? [String: Any],
+          let patchedParameters = patched["parameters"] as? [String: Any]
         {
-          patched["quirks"] = bundledQuirks + patchedQuirks.filter { !bundledQuirks.contains($0) }
+          patched["parameters"] = bundledParameters.merging(patchedParameters) { _, value in value }
         }
         merged["protocol"] = bundledProtocol.merging(patched) { _, value in value }
       }
