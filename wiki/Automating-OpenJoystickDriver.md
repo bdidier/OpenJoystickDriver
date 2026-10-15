@@ -28,9 +28,9 @@ ojd --no-input --json controller list | jq -r '.items[] | [.id, .name, .unit // 
 
 Keys and values in `--json` output are stable identifiers, and OJD never translates them. A command that streams, such as `ojd controller watch` or `ojd virtual feed`, prints one JSON object per line.
 
-Each object has `apiVersion`, which is `openjoystickdriver.io/v1beta1`, and `kind`, the singular UpperCamelCase name of what the command prints: `ojd controller show` prints `Controller`, and `ojd status` prints `SystemStatus`. The list commands `controller list`, `permission list`, `setting list`, `binding list`, `profile list`, and `record list` print a `kind` that ends in `List`, such as `ControllerList`, with the entries in `items` and an empty `metadata`. An item has no `apiVersion` or `kind` of its own. `binding list` gives each item a `profile`, the profile it came from. `profile list` and `record list` report the profiles that cannot be loaded and the records that were skipped as warnings on standard error, one line each. A command that changes or removes something and has no object to print, such as `ojd profile delete` or `ojd controller rumble`, prints a `Status`: `status` is `Success`, and `details` holds the command's data. A command that fails prints no JSON: it exits with a non-zero code and writes the error on standard error. Values that OJD defines in output, such as `notFound` or `bluetoothLE`, are lowerCamelCase. The `status` of a `Status` and the `type` of a watch line keep the Kubernetes spelling.
+Each object has `apiVersion`, which is `openjoystickdriver/v1alpha1`, and `kind`, the singular UpperCamelCase name of what the command prints: `ojd controller show` prints `Controller`, and `ojd status` prints `SystemStatus`. The list commands `controller list`, `permission list`, `setting list`, `binding list`, `profile list`, and `record list` print a `kind` that ends in `List`, such as `ControllerList`, with the entries in `items` and an empty `metadata`. An item has no `apiVersion` or `kind` of its own. `binding list` gives each item a `profile`, the profile it came from. `profile list` and `record list` report the profiles that cannot be loaded and the records that were skipped as warnings on standard error, one line each. A command that changes or removes something and has no object to print, such as `ojd profile delete` or `ojd controller rumble`, prints a `Status`: `status` is `Success`, and `details` holds the command's data. A command that fails prints no JSON: it exits with a non-zero code and writes the error on standard error. Values that OJD defines in output, such as `notFound` or `bluetoothLE`, are lowerCamelCase. The `status` of a `Status` and the `type` of a watch line keep the Kubernetes spelling.
 
-[`cli-output.schema.json`](../Resources/Schemas/v1beta1/cli-output.schema.json) describes the output of each command. Each command has one entry in `$defs`, named after its command path in lowerCamelCase: the entry for `ojd controller show` is `controllerShow`. Entries that start with `shared` are shapes that more than one command uses. The schema rejects keys that its release does not print, and a later release can add keys. Validate output against the schema from the same release.
+[`cli-output.schema.json`](../Resources/Schemas/cli-output.schema.json) describes the output of each command. Each command has one entry in `$defs`, named after its command path in lowerCamelCase: the entry for `ojd controller show` is `controllerShow`. Entries that start with `shared` are shapes that more than one command uses. The schema rejects keys that its release does not print, and a later release can add keys. Validate output against the schema from the same release.
 
 Do not parse the human-readable output. It is translated, and it can change in each release.
 
@@ -68,12 +68,12 @@ A program that runs all the time can read controller events from the endpoint, a
 
 The program sends and receives JSON objects, one per line, each at most 64 KiB:
 
-Each line except a watch line has `apiVersion`, which is `openjoystickdriver.io/v1beta1`, and a `kind`:
+Each line except a watch line has `apiVersion`, which is `openjoystickdriver/v1alpha1`, and a `kind`:
 
-1. The endpoint sends `{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"Challenge","nonce":"…"}` first. A granted program can ignore it; a [token](#use-a-token) client signs it.
-2. Within 5 seconds, the program sends `{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"Hello","scopes":["read"]}`.
+1. The endpoint sends `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Challenge","nonce":"…"}` first. A granted program can ignore it; a [token](#use-a-token) client signs it.
+2. Within 5 seconds, the program sends `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Hello","scopes":["read"]}`.
 3. The endpoint answers a `Welcome`, with `version` and the granted `scopes`, or a `Status` with `status` `Failure`, `code`, and `message`, and closes the connection. A `Hello` with another `apiVersion` gets `E1003`.
-4. The program sends `{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"Subscription","stream":"controllers"}`. Add `"output":true` for the values of the virtual gamepad.
+4. The program sends `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Subscription","stream":"controllers"}`. Add `"output":true` for the values of the virtual gamepad.
 5. The endpoint sends the same `ADDED`, `MODIFIED`, and `DELETED` watch lines as `ojd controller watch --all --json`.
 
 ```python
@@ -86,10 +86,10 @@ with socket.socket(socket.AF_UNIX) as endpoint:
     endpoint.connect(status["socketPath"])
     lines = endpoint.makefile("rw")
     lines.readline()  # the challenge
-    lines.write('{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"Hello","scopes":["read"]}\n')
+    lines.write('{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Hello","scopes":["read"]}\n')
     lines.flush()
     print(lines.readline(), end="")
-    lines.write('{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"Subscription","stream":"controllers"}\n')
+    lines.write('{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Subscription","stream":"controllers"}\n')
     lines.flush()
     for line in lines:
         event = json.loads(line)
@@ -106,7 +106,7 @@ A program that cannot be granted by its signature, such as a script, can use a t
 1. Create the token: `ojd access grant --token reader`. The command prints the token once, and the service keeps only its SHA-256 hash.
 2. Join four lines, each ending with a newline: `OpenJoystickDriver endpoint hello 1`, the challenge's `nonce`, the page's origin, and the WebSocket's port. On the socket, the origin and port lines are empty.
 3. Compute the HMAC-SHA256 of those lines, keyed with the SHA-256 of the token, and write it as lowercase hex.
-4. Send the token's name and the HMAC in the `Hello`: `{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"Hello","scopes":["read"],"tokenName":"reader","proof":"…"}`.
+4. Send the token's name and the HMAC in the `Hello`: `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Hello","scopes":["read"],"tokenName":"reader","proof":"…"}`.
 
 ```python
 import hashlib
@@ -120,7 +120,7 @@ message = "".join(line + "\n" for line in ["OpenJoystickDriver endpoint hello 1"
 key = hashlib.sha256(TOKEN.encode()).digest()
 proof = hmac.new(key, message.encode(), hashlib.sha256).hexdigest()
 hello = {
-    "apiVersion": "openjoystickdriver.io/v1beta1",
+    "apiVersion": "openjoystickdriver/v1alpha1",
     "kind": "Hello",
     "scopes": ["read"],
     "tokenName": "reader",
@@ -146,7 +146,7 @@ A web page, such as a stream overlay, can read the endpoint through a WebSocket:
 
 ```javascript
 const token = "ojd_…";
-const apiVersion = "openjoystickdriver.io/v1beta1";
+const apiVersion = "openjoystickdriver/v1alpha1";
 const encoder = new TextEncoder();
 
 async function proof(nonce) {
@@ -192,7 +192,7 @@ The WebSocket accepts a page only from an origin that a token is granted for, an
 
 An error line is a `Status` with `status` `Failure` and a `code` from `E1001` to `E1009`. Look up each code, its cause, and its fix on [Error codes](Error-Codes.md). With `E1003`, `details.supportedAPIVersions` lists the `apiVersion` values that the endpoint accepts. The endpoint serves at most 8 socket connections and 8 WebSocket connections at the same time. When a program reads too slowly, the endpoint keeps only the newest `MODIFIED` line of each controller. When 256 lines wait, it sends `E1007` and closes the connection.
 
-[`endpoint.schema.json`](../Resources/Schemas/v1beta1/endpoint.schema.json) describes each line. To drive a virtual gamepad through the endpoint, see [Drive a Virtual Gamepad Through the Endpoint](#drive-a-virtual-gamepad-through-the-endpoint).
+[`endpoint.schema.json`](../Resources/Schemas/endpoint.schema.json) describes each line. To drive a virtual gamepad through the endpoint, see [Drive a Virtual Gamepad Through the Endpoint](#drive-a-virtual-gamepad-through-the-endpoint).
 
 ### Use the WebSocket From an App
 
@@ -211,8 +211,8 @@ A program with the `control` scope can drive a virtual gamepad through the endpo
 
 1. Grant the scope: `ojd access grant --token driver --scope control`. Add `--scope read` to grant both. A token that has `--origin` cannot have `control`, because a web page cannot use it.
 2. Send a `Hello` with `"scopes":["control"]`.
-3. After the `Welcome`, send `{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"FeedRequest","as":"hid-generic"}`. The virtual gamepad profiles are `hid-xbox-one-s-bt` and `hid-generic`.
-4. The endpoint answers `{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"FeedSession","as":"hid-generic"}` when the virtual gamepad exists.
+3. After the `Welcome`, send `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"FeedRequest","as":"hid-generic"}`. The virtual gamepad profiles are `hid-xbox-one-s-bt` and `hid-generic`.
+4. The endpoint answers `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"FeedSession","as":"hid-generic"}` when the virtual gamepad exists.
 5. Send one frame per line, each with `apiVersion` and `"kind":"Frame"`. A frame has the keys of an `ojd virtual feed` line, and the service plays frames with the same rules.
 6. The endpoint sends each rumble command that a game sends to the virtual gamepad as one `RumbleCommand` line, the same as `ojd virtual feed` prints. Its `type` is `setRumble` or `stopRumble`. The `virtualFeed` entry of the output schema describes it.
 
@@ -229,7 +229,7 @@ import subprocess
 import sys
 import threading
 
-API_VERSION = "openjoystickdriver.io/v1beta1"
+API_VERSION = "openjoystickdriver/v1alpha1"
 TOKEN = "ojd_…"
 TOKEN_NAME = "driver"
 FRAMES = [{"buttons": ["south"], "holdMilliseconds": 100}, {}]
@@ -317,7 +317,7 @@ To run the client, save it as `driver.py` and run `python3 driver.py`. Games and
 
 ## Change Profiles
 
-A profile is a JSON file. [`profile.schema.json`](../Resources/Schemas/v1beta1/profile.schema.json) describes it, and the [Profile file reference](Profile-File-Reference.md) explains its fields.
+A profile is a JSON file. [`profile.schema.json`](../Resources/Schemas/profile.schema.json) describes it, and the [Profile file reference](Profile-File-Reference.md) explains its fields.
 
 - `ojd profile get PROFILE KEY` prints one value. `ojd profile set PROFILE KEY VALUE` changes one value. `KEY` is a path of member names and array indexes, joined by dots.
 - `ojd profile export PROFILE` prints the whole file. `ojd profile import FILE` adds it again, or replaces the profile with the same ID. Use `-` as `FILE` to read standard input.

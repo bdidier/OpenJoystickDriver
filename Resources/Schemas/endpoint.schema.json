@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/endpoint.schema.json",
+	"$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/endpoint.schema.json",
 	"title": "OpenJoystickDriver endpoint protocol",
 	"description": "One JSON object per line on the endpoint socket, or per text message on the WebSocket. Every line except a watch line carries apiVersion and kind. A client sends Hello, waits for Welcome, then sends Subscription or FeedRequest. After Subscription the service sends watch lines, {type, object}, identical to 'ojd controller watch --all --json'; after FeedRequest and FeedSession the client sends Frame lines and the service sends the host's RumbleCommand lines. A Status line with status Failure is the last line before the service closes the connection. A line without apiVersion, or with a missing or unknown kind, is answered with Status E1004; a Hello with another apiVersion is answered with E1003.",
 	"oneOf": [

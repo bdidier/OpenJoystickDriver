@@ -16,11 +16,8 @@ public struct ModPackageError: Error, Equatable, Sendable, CustomStringConvertib
 
 /// The `mod.json` of a package folder, from `mod-package.schema.json`.
 public struct ModPackageManifest: Equatable, Sendable {
-  /// The `$schema` values OJD accepts in a manifest. A version that is not here is rejected.
-  public static let knownSchemaIDs: Set<String> = [
-    "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/"
-      + "Resources/Schemas/v1beta1/mod-package.schema.json"
-  ]
+  /// The `kind` of a manifest.
+  public static let kind = "ModPackage"
   public static let fileName = "mod.json"
 
   /// The OJD versions the package runs on: `minimum` up to, but not including, `below`.
@@ -66,19 +63,19 @@ public struct ModPackageManifest: Equatable, Sendable {
 
 extension ModPackageManifest: Decodable {
   private enum Key: String, CodingKey, CaseIterable {
-    case schema = "$schema"
+    case apiVersion, kind
     case name, version, author, requires, records, profiles, personas
   }
 
   public init(from decoder: any Decoder) throws {
     try decoder.rejectUnknownKeys(Key.self)
     let container = try decoder.container(keyedBy: Key.self)
-    let schema = try container.decode(String.self, forKey: .schema)
-    guard Self.knownSchemaIDs.contains(schema) else {
-      throw ModPackageError(
-        .invalidManifest,
-        "$schema must be one of \(Self.knownSchemaIDs.sorted().joined(separator: ", "))"
-      )
+    if let problem = OpenJoystickDriverAPI.headerProblem(
+      apiVersion: try container.decodeIfPresent(String.self, forKey: .apiVersion),
+      kind: try container.decodeIfPresent(String.self, forKey: .kind),
+      expected: Self.kind
+    ) {
+      throw ModPackageError(.invalidManifest, problem)
     }
     name = try container.decode(String.self, forKey: .name)
     guard name.range(of: "\\A[a-z0-9]+(-[a-z0-9]+)*\\z", options: .regularExpression) != nil else {

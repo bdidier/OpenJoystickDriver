@@ -1,12 +1,15 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/controller.schema.json",
+	"$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/controller.schema.json",
 	"type": "object",
-	"required": ["$schema", "vendorID", "productID", "protocol"],
+	"required": ["apiVersion", "kind", "vendorID", "productID", "protocol"],
 	"additionalProperties": false,
 	"properties": {
-		"$schema": {
-			"const": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/controller.schema.json"
+		"apiVersion": {
+			"const": "openjoystickdriver/v1alpha1"
+		},
+		"kind": {
+			"const": "Controller"
 		},
 		"vendorID": {
 			"type": "integer",

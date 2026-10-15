@@ -2,11 +2,13 @@ import Foundation
 import OpenJoystickDriverKit
 import Testing
 
-/// `Resources/Schemas/v1beta1/profile.schema.json` accepts what the strict decoder accepts.
+/// `Resources/Schemas/profile.schema.json` accepts what the strict decoder accepts.
 struct ProfileSchemaTests {
   /// Uses every kind of source, destination, physical output, and mapping.
   static let richDocument = #"""
     {
+      "apiVersion": "openjoystickdriver/v1alpha1",
+      "kind": "Profile",
       "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D5E",
       "name": "Everything",
       "device": {"vendorID": 1356, "productID": 3302, "unit": "U-AbCd_123-xyzW09q"},

@@ -10,6 +10,7 @@ from typing import Any
 from unittest.mock import patch
 
 from Scripts.Catalog import generate_error_codes as errors
+from Scripts.Catalog.schema_header import header
 
 ROOT = Path(__file__).resolve().parents[2]
 COPIED = (
@@ -36,7 +37,7 @@ class ErrorCodeTests(unittest.TestCase):
 
     def write_catalog(self, root: Path, codes: list[dict[str, Any]]) -> None:
         (root / errors.CATALOG).write_text(
-            json.dumps({"codes": codes}), encoding="utf-8"
+            json.dumps({**header("ErrorCatalog"), "codes": codes}), encoding="utf-8"
         )
 
     def test_the_repository_is_current(self) -> None:

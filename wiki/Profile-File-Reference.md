@@ -45,6 +45,8 @@ A profile file contains one profile object. An exported profile file has the sam
 
 | Field | Required | Meaning |
 | --- | --- | --- |
+| `apiVersion` | Yes | `openjoystickdriver/v1alpha1` |
+| `kind` | Yes | `Profile` |
 | `id` | Yes | UUID of the profile |
 | `name` | Yes | 1 to 80 printable characters |
 | `device` | Yes | `vendorID` and `productID` of the controller model, and an optional `unit`: a unit ID from `ojd controller list` that limits the profile to that one controller |
@@ -58,7 +60,7 @@ A profile file contains one profile object. An exported profile file has the sam
 
 A profile with `device.unit` applies only to the controller with that unit ID, and wins over an active profile for the whole model in the same application scope. Activating it replaces only the active profile of that unit and scope.
 
-OJD rejects unknown keys anywhere in a profile. The file has no schema version field. [`profile.schema.json`](../Resources/Schemas/v1beta1/profile.schema.json) describes the file. Rules that span fields, such as a source used twice, are not in the schema. Check a file against both with `ojd profile validate FILE`.
+OJD rejects unknown keys anywhere in a profile. The file declares `apiVersion: openjoystickdriver/v1alpha1` and `kind: Profile`, and OJD rejects a file without them. [`profile.schema.json`](../Resources/Schemas/profile.schema.json) describes the file. Rules that span fields, such as a source used twice, are not in the schema. Check a file against both with `ojd profile validate FILE`.
 
 ## Limits
 

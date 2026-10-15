@@ -9,7 +9,8 @@ struct RecordCommandTests {
   /// A patch of the bundled `xbox.gip` record `366C:0005`.
   private static let patch = Data(
     """
-    {"$schema": "\(ControllerRecordSet.overrideSchemaID)", "operation": "patch",
+    {"apiVersion": "\(OpenJoystickDriverAPI.version)",
+    "kind": "\(ControllerRecordSet.overrideKind)", "operation": "patch",
      "vendorID": 13932, "productID": 5, "set": {"usb": {"postHandshakeSettleMs": 5}}}
     """.utf8
   )
@@ -76,9 +77,9 @@ struct RecordCommandTests {
 
     #expect(json.code == 1)
     #expect(try json.json()["valid"] as? Bool == false)
-    #expect((try json.json()["problem"] as? String)?.contains("$schema") == true)
+    #expect((try json.json()["problem"] as? String)?.contains("apiVersion") == true)
     #expect(json.standardError.hasPrefix("error[E2011]: "))
-    #expect(json.standardError.contains("$schema"))
+    #expect(json.standardError.contains("no apiVersion found"))
     #expect(install.code == 1)
     #expect(directory.fileNames.isEmpty)
     #expect(missing.code == 64)
@@ -146,9 +147,9 @@ struct RecordCommandTests {
     let directory = Directory()
     let switch2 = Data(
       """
-      {"$schema": "\(ControllerRecordSet.overrideSchemaID)", "operation": "add", "record": {
-       "$schema": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/\
-      Resources/Schemas/v1beta1/controller.schema.json",
+      {"apiVersion": "\(OpenJoystickDriverAPI.version)",
+      "kind": "\(ControllerRecordSet.overrideKind)", "operation": "add", "record": {
+       "apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "Controller",
        "vendorID": 1406, "productID": 8447,
        "protocol": {"family": "nintendo.switch2"}}}
       """.utf8

@@ -468,7 +468,7 @@ struct ControllerRecordDocumentTests {
     let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
       .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
       .deletingLastPathComponent()
-    let url = root.appendingPathComponent("Resources/Schemas/v1beta1/controller.schema.json")
+    let url = root.appendingPathComponent("Resources/Schemas/controller.schema.json")
     return try #require(JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any])
   }
 
@@ -507,7 +507,8 @@ struct ControllerRecordDocumentTests {
     vendorID: Int = 0x045E
   ) throws -> ControllerRecordDocument {
     var record: [String: Any] = [
-      "$schema": ControllerRecordDocument.schemaID, "vendorID": vendorID, "productID": 0x02EA,
+      "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordDocument.kind,
+      "vendorID": vendorID, "productID": 0x02EA,
       "protocol": protocolInfo,
     ]
     record.merge(extra) { current, _ in current }

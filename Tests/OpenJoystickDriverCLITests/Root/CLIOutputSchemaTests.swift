@@ -48,7 +48,7 @@ struct CLIOutputSchemaTests {
 
   @Test
   func outputThatBreaksItsDefinitionIsReported() throws {
-    let envelope = #""apiVersion":"openjoystickdriver.io/v1beta1","kind":"LogLocation""#
+    let envelope = #""apiVersion":"openjoystickdriver/v1alpha1","kind":"LogLocation""#
     let logPath = ["log", "path"]
     #expect(try CLIOutputSchema.issues(in: #"{\#(envelope),"path":"/a"}"#, path: logPath).isEmpty)
     #expect(try !CLIOutputSchema.issues(in: #"{\#(envelope),"path":1}"#, path: logPath).isEmpty)
@@ -56,7 +56,7 @@ struct CLIOutputSchemaTests {
     #expect(try !CLIOutputSchema.issues(in: #"{"path":"/a"}"#, path: logPath).isEmpty)
     #expect(
       try !CLIOutputSchema.issues(
-        in: #"{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"LogShow","path":"/a"}"#,
+        in: #"{"apiVersion":"openjoystickdriver/v1alpha1","kind":"LogShow","path":"/a"}"#,
         path: logPath
       ).isEmpty
     )
@@ -69,7 +69,7 @@ struct CLIOutputSchemaTests {
   @Test
   func eachLineOfAStreamIsChecked() throws {
     let good =
-      #"{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"USBPacket","#
+      #"{"apiVersion":"openjoystickdriver/v1alpha1","kind":"USBPacket","#
       + #""direction":"rx","hex":"01 02","length":2,"captureTime":"1970-01-01T00:00:01.500Z"}"#
     #expect(
       try CLIOutputSchema.issues(in: good + "\n" + good, path: ["controller", "capture"]).isEmpty

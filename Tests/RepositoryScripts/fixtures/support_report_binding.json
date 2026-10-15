@@ -1,5 +1,6 @@
 {
 	"data": {
+		"apiVersion": "openjoystickdriver/v1alpha1",
 		"applicationService": {
 			"connected": true,
 			"installed": true
@@ -63,6 +64,7 @@
 			}
 		],
 		"hidGamepads": [],
+		"kind": "SupportDiagnostic",
 		"notes": [
 			"Review this file before sharing. Device product names are included.",
 			"Serial values, paths, packet payloads, HID locations, and discovery text are excluded.",
@@ -117,7 +119,7 @@
 		]
 	},
 	"datacontenttype": "application\/json",
-	"dataschema": "https:\/\/raw.githubusercontent.com\/xsyetopz\/OpenJoystickDriver\/main\/Resources\/Schemas\/v1beta1\/report.schema.json#\/$defs\/supportDiagnosticData",
+	"dataschema": "https:\/\/xsyetopz.github.io\/OpenJoystickDriver\/schemas\/v1alpha1\/report.schema.json#\/$defs\/supportDiagnosticData",
 	"id": "0DC52DF7-70D2-4CC0-8B39-7B8FA8E08731",
 	"source": "urn:openjoystickdriver:support",
 	"specversion": "1.0",

@@ -18,7 +18,8 @@ struct StandardInputTests {
   /// A patch of the bundled `xbox.gip` record `366C:0005`.
   private static let patch = Data(
     """
-    {"$schema": "\(ControllerRecordSet.overrideSchemaID)", "operation": "patch",
+    {"apiVersion": "\(OpenJoystickDriverAPI.version)",
+    "kind": "\(ControllerRecordSet.overrideKind)", "operation": "patch",
      "vendorID": 13932, "productID": 5, "set": {"usb": {"postHandshakeSettleMs": 5}}}
     """.utf8
   )

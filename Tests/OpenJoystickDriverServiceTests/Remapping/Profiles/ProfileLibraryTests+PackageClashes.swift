@@ -159,7 +159,7 @@ extension ProfileLibraryTests {
       try data.write(to: profileFolder.appendingPathComponent(fileName))
     }
     let manifest: [String: Any] = [
-      "$schema": ModPackageManifest.knownSchemaIDs.sorted()[0], "name": name,
+      "apiVersion": OpenJoystickDriverAPI.version, "kind": ModPackageManifest.kind, "name": name,
       "version": "1.0.0", "author": "Tester", "requires": requires, "profiles": listing,
     ]
     try JSONSerialization.data(withJSONObject: manifest).write(

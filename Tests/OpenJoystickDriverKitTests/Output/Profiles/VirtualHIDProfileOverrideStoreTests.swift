@@ -30,7 +30,9 @@ struct VirtualHIDProfileOverrideStoreTests {
     let match =
       #"{"vendorID":\#(vendorID),"productID":\#(productID)"#
       + (unit.map { #","unit":"\#($0)""# } ?? "") + "}"
-    return #"{"$schema":"\#(Store.schemaID)","match":\#(match),"descriptor":"\#(descriptor)""#
+    return
+      #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(Store.kind)","#
+      + #""match":\#(match),"descriptor":"\#(descriptor)""#
       + (identity.map { #","identity":\#($0)"# } ?? "") + "}"
   }
 
@@ -57,7 +59,9 @@ struct VirtualHIDProfileOverrideStoreTests {
       let url = directory.appendingPathComponent("045e-02ea.json")
       let object = try JSONSerialization.jsonObject(with: Data(contentsOf: url))
       let document = try #require(object as? [String: Any])
-      #expect(document["$schema"] as? String == Store.schemaID)
+      #expect(document["$schema"] == nil)
+      #expect(document["apiVersion"] as? String == OpenJoystickDriverAPI.version)
+      #expect(document["kind"] as? String == Store.kind)
       #expect(document["descriptor"] as? String == "hid-generic")
       let match = try #require(document["match"] as? [String: Any])
       #expect(match["vendorID"] as? Int == 0x045E)
@@ -121,17 +125,22 @@ struct VirtualHIDProfileOverrideStoreTests {
   }
 
   @Test
-  func aFileWithTheUnversionedSchemaIsSkipped() throws {
+  func aFileWithAnUnsupportedAPIVersionIsSkipped() throws {
     try withDirectory { directory in
       let unversioned = persona(vendorID: 1, productID: 2).replacingOccurrences(
-        of: "Schemas/v1beta1/",
-        with: "Schemas/"
+        of: OpenJoystickDriverAPI.version,
+        with: "openjoystickdriver.io/v1beta1"
       )
       try write(unversioned, named: "old.json", in: directory)
       let store = Store(directory: directory)
 
       #expect(store.override(vendorID: 1, productID: 2) == nil)
-      #expect(store.problems.first?.problem?.contains("$schema must be one of") == true)
+      #expect(
+        store.problems.first?.problem?.contains(
+          "apiVersion openjoystickdriver.io/v1beta1 is not supported"
+        ) == true
+      )
+      #expect(store.problems.first?.problem?.contains(OpenJoystickDriverAPI.version) == true)
     }
   }
 

@@ -1,5 +1,6 @@
 {
-	"$schema": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/protocol-description.schema.json",
+	"apiVersion": "openjoystickdriver/v1alpha1",
+	"kind": "ProtocolDescription",
 	"family": "xbox.gip",
 	"interfaceSignatures": [
 		{

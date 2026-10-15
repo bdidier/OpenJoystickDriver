@@ -89,15 +89,47 @@ struct AccessGrantStoreTests {
       try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
       for text in [
         "{",
-        #"{"enabled":true,"grants":[{"kind":"ad-hoc","identifier":"a.out","scopes":["read"],"#
+        #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
+          + #""enabled":true,"grants":[{"kind":"ad-hoc","identifier":"a.out","scopes":["read"],"#
           + #""grantedAt":"x","path":"/a.out"}],"tokens":[],"web":{"enabled":false,"port":47614}}"#,
-        #"{"enabled":true,"grants":[{"kind":"team","identifier":"x","scopes":["read"],"#
+        #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
+          + #""enabled":true,"grants":[{"kind":"team","identifier":"x","scopes":["read"],"#
           + #""grantedAt":"x","path":"/x"}],"tokens":[],"web":{"enabled":false,"port":47614}}"#,
-        #"{"enabled":true,"grants":[{"kind":"apple","identifier":"x","scopes":[],"#
+        #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
+          + #""enabled":true,"grants":[{"kind":"apple","identifier":"x","scopes":[],"#
           + #""grantedAt":"x","path":"/x"}],"tokens":[],"web":{"enabled":false,"port":47614}}"#,
       ] {
         try Data(text.utf8).write(to: store.url)
         #expect(throws: AccessGrantStoreError.damaged) { try store.load() }
+        #expect(try String(contentsOf: store.url, encoding: .utf8) == text)
+      }
+    }
+  }
+
+  @Test
+  func aMissingOrUnsupportedHeaderIsRefusedWithWhatWasFound() throws {
+    let supported = "the supported apiVersion is \(OpenJoystickDriverAPI.version)"
+    let body = #""enabled":true,"grants":[],"tokens":[],"web":{"enabled":false}}"#
+    let cases: [(String, String)] = [
+      (#"{"kind":"AccessGrants","# + body, "no apiVersion found; \(supported)"),
+      (
+        #"{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"AccessGrants","# + body,
+        "apiVersion openjoystickdriver.io/v1beta1 is not supported; \(supported)"
+      ),
+      (
+        #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","# + body,
+        "no kind found; expected AccessGrants"
+      ),
+      (
+        #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"Profile","# + body,
+        "expected AccessGrants, found Profile"
+      ),
+    ]
+    try withStore { store, directory in
+      try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+      for (text, reason) in cases {
+        try Data(text.utf8).write(to: store.url)
+        #expect(throws: AccessGrantStoreError.unsupported(reason)) { try store.load() }
         #expect(try String(contentsOf: store.url, encoding: .utf8) == text)
       }
     }
@@ -206,22 +238,28 @@ struct AccessGrantStoreTests {
           + token("overlay", hash, "[]", #"["read"]"#),
       ] {
         let text =
-          #"{"enabled":true,"grants":[],"tokens":[\#(tokens)],"#
+          #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
+          + #""enabled":true,"grants":[],"tokens":[\#(tokens)],"#
           + #""web":{"enabled":false,"port":47614}}"#
         try Data(text.utf8).write(to: store.url)
         #expect(throws: AccessGrantStoreError.damaged, "\(text)") { try store.load() }
       }
       for port in [0, 80, 70_000] {
         let text =
-          #"{"enabled":true,"grants":[],"tokens":[],"web":{"enabled":true,"port":\#(port)}}"#
+          #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
+          + #""enabled":true,"grants":[],"tokens":[],"web":{"enabled":true,"port":\#(port)}}"#
         try Data(text.utf8).write(to: store.url)
         #expect(throws: AccessGrantStoreError.damaged, "\(text)") { try store.load() }
       }
       // The port is chosen at the first enable, so only a WebSocket that was never on lacks one.
-      let off = #"{"enabled":true,"grants":[],"tokens":[],"web":{"enabled":false}}"#
+      let off =
+        #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
+        + #""enabled":true,"grants":[],"tokens":[],"web":{"enabled":false}}"#
       try Data(off.utf8).write(to: store.url)
       #expect(try store.load().web.port == nil)
-      let on = #"{"enabled":true,"grants":[],"tokens":[],"web":{"enabled":true}}"#
+      let on =
+        #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
+        + #""enabled":true,"grants":[],"tokens":[],"web":{"enabled":true}}"#
       try Data(on.utf8).write(to: store.url)
       #expect(throws: AccessGrantStoreError.damaged) { try store.load() }
     }
@@ -259,7 +297,9 @@ struct AccessGrantStoreTests {
       for scopes in [#"["control"]"#, #"["read","control"]"#] {
         for (grants, tokens) in [(grant(scopes), ""), ("", token(scopes))] {
           let text =
-            #"{"enabled":true,"grants":[\#(grants)],"tokens":[\#(tokens)],"#
+            #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","#
+            + #""kind":"\#(AccessGrantFile.kind)","enabled":true,"grants":[\#(grants)],"#
+            + #""tokens":[\#(tokens)],"#
             + #""web":{"enabled":false}}"#
           #expect(
             !(try JSONSchemaFiles.issues(in: text, against: "access-grants.schema.json").isEmpty),
@@ -272,7 +312,9 @@ struct AccessGrantStoreTests {
       }
       // Without `control`, the same grants load as they are.
       let text =
-        #"{"enabled":true,"grants":["# + grant(#"["read"]"#) + #"],"tokens":["#
+        #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
+        + #""enabled":true,"grants":["#
+        + grant(#"["read"]"#) + #"],"tokens":["#
         + token(#"["read"]"#) + #"],"web":{"enabled":false}}"#
       try Data(text.utf8).write(to: store.url)
       let file = try store.load()
@@ -307,7 +349,8 @@ struct AccessGrantStoreTests {
       }
       let page = #"["http://localhost:8080"]"#
       let text =
-        #"{"enabled":true,"grants":[],"tokens":["#
+        #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
+        + #""enabled":true,"grants":[],"tokens":["#
         + token("both", page, #"["read","control"]"#) + ","
         + token("page", page, #"["control"]"#) + ","
         + token("native", "[]", #"["control"]"#) + #"],"web":{"enabled":false}}"#

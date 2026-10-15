@@ -95,11 +95,11 @@ The maintainer approves each commit.
      - Errors use the new `mod` domain, `E4xxx`.
    - `ojd record test RECORD --packets CAPTURE --expect STATE`: replays captured reports through the record's parser and compares the parsed state.
      It uses the packet capture that `record draft` already reads.
-   - Versioned schemas, as Kubernetes versions its APIs (maintainer decision, 2026-10-06): each schema's path and `$id` carry its version, `Resources/Schemas/v1beta1/<name>.schema.json`.
-     Before OJD 1.0, a `v1beta1` schema may change in incompatible ways, and the release notes list each change.
+   - Versioned schemas, as Kubernetes versions its APIs (maintainer decision, 2026-10-06): each document declares `apiVersion: openjoystickdriver/v1alpha1` and a `kind`, and the schemas are flat files, `Resources/Schemas/<kind>.schema.json`, whose `$id` carries the version.
+     Before OJD 1.0, a `v1alpha1` schema may change in incompatible ways, and the release notes list each change.
      OJD 1.0 promotes the schemas to `v1`, which takes only additive changes; a breaking change needs `v2`.
-     Files declare their version through `$schema`, and OJD rejects a version it does not know.
-     `Resources/Schemas/AGENTS.md` changes to allow the version segment; its ban on dual decoders and shims stays.
+     Files declare their version through `apiVersion`, and OJD rejects a version it does not know.
+     `Resources/Schemas/AGENTS.md` keeps its ban on dual decoders and shims.
      The compatibility policy is on the wiki.
    - A sample package in `docs/sdk/sample/` and an authoring guide, `wiki/Writing-Controller-Mods.md`, that states first that the USB extension's product list is Apple-signed and cannot be extended.
    - Fix `public-endpoint-design.md`, which says the endpoint supports a range of protocol versions; the code accepts only version 1 (`EndpointServer.swift`).

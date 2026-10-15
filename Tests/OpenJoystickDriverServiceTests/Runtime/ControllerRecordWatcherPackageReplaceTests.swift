@@ -6,14 +6,13 @@ import Testing
 
 @MainActor
 struct ControllerRecordWatcherPackageReplaceTests {
-  private static let schema =
-    "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/"
-
   private static func record(_ productID: Int) -> Data {
     Data(
       """
-      {"$schema": "\(ControllerRecordSet.overrideSchemaID)", "operation": "add",
-       "record": {"$schema": "\(schema)controller.schema.json", "vendorID": 4660,
+      {"apiVersion": "\(OpenJoystickDriverAPI.version)",
+      "kind": "\(ControllerRecordSet.overrideKind)", "operation": "add",
+       "record": {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "Controller",
+       "vendorID": 4660,
        "productID": \(productID), "protocol": {"family": "xbox.gip"}}}
       """.utf8
     )
@@ -32,7 +31,8 @@ struct ControllerRecordWatcherPackageReplaceTests {
     }
     let list = files.map { "\"\($0)\"" }.joined(separator: ", ")
     let manifest = """
-      {"$schema": "\(schema)mod-package.schema.json", "name": "arcade-pack", "version": "1.0.0",
+      {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "\(ModPackageManifest.kind)",
+      "name": "arcade-pack", "version": "1.0.0",
        "author": "Tester", "requires": {"minimum": "0.6.0"}, "records": [\(list)]}
       """
     try Data(manifest.utf8).write(to: folder.appendingPathComponent("mod.json"))

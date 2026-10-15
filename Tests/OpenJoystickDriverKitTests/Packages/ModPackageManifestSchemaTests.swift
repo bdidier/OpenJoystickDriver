@@ -10,7 +10,8 @@ struct ModPackageManifestSchemaTests {
   /// A valid manifest with `changes` applied. A nil value removes the key.
   private static func manifest(_ changes: [String: Any?]) -> [String: Any] {
     var document: [String: Any] = [
-      "$schema": ModPackageManifest.knownSchemaIDs.sorted()[0], "name": "arcade-pack",
+      "apiVersion": OpenJoystickDriverAPI.version, "kind": ModPackageManifest.kind,
+      "name": "arcade-pack",
       "version": "1.0.0", "author": "Tester", "requires": ["minimum": "0.6.0"],
       "records": ["1234-abcd.json"],
     ]
@@ -53,6 +54,10 @@ struct ModPackageManifestSchemaTests {
       manifest(["name": ""]),
       manifest(["author": ""]),
       manifest(["extra": 1]),
+      manifest(["apiVersion": nil]),
+      manifest(["apiVersion": "openjoystickdriver.io/v1beta1"]),
+      manifest(["kind": nil]),
+      manifest(["kind": "Controller"]),
       manifest(["$schema": "https://example.com/mod-package.schema.json"]),
     ]
   }

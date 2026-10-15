@@ -1,14 +1,17 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/mod-package.schema.json",
+	"$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/mod-package.schema.json",
 	"title": "OpenJoystickDriver mod package manifest",
 	"description": "The mod.json of a package folder. The folder holds Controllers/, Profiles/, and Personas/; each list names the files in the subfolder of the same kind.",
 	"type": "object",
 	"additionalProperties": false,
-	"required": ["$schema", "name", "version", "author", "requires"],
+	"required": ["apiVersion", "kind", "name", "version", "author", "requires"],
 	"properties": {
-		"$schema": {
-			"const": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/mod-package.schema.json"
+		"apiVersion": {
+			"const": "openjoystickdriver/v1alpha1"
+		},
+		"kind": {
+			"const": "ModPackage"
 		},
 		"name": {
 			"type": "string",

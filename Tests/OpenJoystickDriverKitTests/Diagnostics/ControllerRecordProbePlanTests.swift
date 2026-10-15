@@ -192,10 +192,18 @@ struct ControllerRecordProbePlanTests {
   @Test
   func rejectsMissingOrWrongCurrentSchemaIdentity() {
     #expect(throws: ControllerRecordProbeError.self) {
-      try ControllerRecordProbePlan(data: try recordData(schemaID: nil))
+      try ControllerRecordProbePlan(data: try recordData(apiVersion: nil))
     }
     #expect(throws: ControllerRecordProbeError.self) {
-      try ControllerRecordProbePlan(data: try recordData(schemaID: "controller-v1"))
+      try ControllerRecordProbePlan(
+        data: try recordData(apiVersion: "openjoystickdriver.io/v1beta1")
+      )
+    }
+    #expect(throws: ControllerRecordProbeError.self) {
+      try ControllerRecordProbePlan(data: try recordData(kind: nil))
+    }
+    #expect(throws: ControllerRecordProbeError.self) {
+      try ControllerRecordProbePlan(data: try recordData(kind: "Persona"))
     }
   }
 
@@ -252,7 +260,8 @@ struct ControllerRecordProbePlanTests {
     settleMilliseconds: Int? = nil,
     initialization: [String]? = nil,
     keepAliveEnabled: Bool? = nil,
-    schemaID: String? = ControllerRecordDocument.schemaID,
+    apiVersion: String? = OpenJoystickDriverAPI.version,
+    kind: String? = ControllerRecordDocument.kind,
     extraRootField: String? = nil,
     extraProtocolField: String? = nil
   ) throws -> Data {
@@ -271,7 +280,8 @@ struct ControllerRecordProbePlanTests {
     if let extraProtocolField { protocolConfig[extraProtocolField] = true }
 
     var record: [String: Any] = ["vendorID": 5_426, "productID": 2_627, "protocol": protocolConfig]
-    if let schemaID { record["$schema"] = schemaID }
+    if let apiVersion { record["apiVersion"] = apiVersion }
+    if let kind { record["kind"] = kind }
     if let extraRootField { record[extraRootField] = ["source": "legacy"] }
     if !usb.isEmpty { record["usb"] = usb }
     return try JSONSerialization.data(withJSONObject: record)

@@ -4,8 +4,6 @@ import Testing
 @testable import OpenJoystickDriverKit
 
 struct ControllerRecordSetTests {
-  private static let recordSchema = ControllerRecordDocument.schemaID
-  private static let overrideSchema = ControllerRecordSet.overrideSchemaID
   /// A bundled `xbox.gip` record with no protocol options.
   private static let bundledGIP = ControllerModelID(vendorID: 0x366C, productID: 0x0005)
   /// A bundled `sony.dualshock4` record, a HID family.
@@ -18,16 +16,19 @@ struct ControllerRecordSetTests {
 
   private static func patch(_ identity: ControllerModelID, set: [String: Any]) throws -> Data {
     try json([
-      "$schema": overrideSchema, "operation": "patch", "vendorID": Int(identity.vendorID),
+      "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
+      "operation": "patch", "vendorID": Int(identity.vendorID),
       "productID": Int(identity.productID), "set": set,
     ])
   }
 
   private static func add(_ identity: ControllerModelID, family: String) throws -> Data {
     try json([
-      "$schema": overrideSchema, "operation": "add",
+      "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
+      "operation": "add",
       "record": [
-        "$schema": recordSchema, "vendorID": Int(identity.vendorID),
+        "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordDocument.kind,
+        "vendorID": Int(identity.vendorID),
         "productID": Int(identity.productID), "protocol": ["family": family],
       ],
     ])
@@ -137,7 +138,8 @@ struct ControllerRecordSetTests {
     )
     #expect(Self.problem(Data("[]".utf8)) == "the file is not a JSON object")
     let unknownKey = try Self.json([
-      "$schema": Self.overrideSchema, "operation": "patch", "vendorID": 0x366C, "productID": 5,
+      "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
+      "operation": "patch", "vendorID": 0x366C, "productID": 5,
       "set": ["usb": ["postHandshakeSettleMs": 5]], "note": "x",
     ])
     #expect(Self.problem(unknownKey) == "unknown field(s): note")
@@ -145,30 +147,51 @@ struct ControllerRecordSetTests {
     #expect(Self.problem(badFamily) == "record.protocol: unknown family xbox.unknown")
   }
 
-  /// A file declares its version through `$schema`, and an ID outside the known set, such as the
-  /// unversioned one that releases before `v1beta1` used, is rejected rather than converted.
+  /// A file declares its version through `apiVersion` and its type through `kind`. A missing or
+  /// unsupported version, or a kind that is not the one it is read as, is rejected and named.
   @Test
-  func theUnversionedSchemaIDsAreRejected() throws {
-    func unversioned(_ id: String) -> String {
-      id.replacingOccurrences(of: "Schemas/v1beta1/", with: "Schemas/")
-    }
-    let oldOverride = try Self.json([
-      "$schema": unversioned(Self.overrideSchema), "operation": "patch", "vendorID": 0x366C,
-      "productID": 5, "set": ["usb": ["postHandshakeSettleMs": 5]],
-    ])
-    #expect(Self.problem(oldOverride) == "$schema must be one of \(Self.overrideSchema)")
+  func aMissingOrUnsupportedHeaderIsRejected() throws {
+    let supported = "the supported apiVersion is \(OpenJoystickDriverAPI.version)"
+    let old = "openjoystickdriver.io/v1beta1"
+    let override: [String: Any] = [
+      "operation": "patch", "vendorID": 0x366C, "productID": 5,
+      "set": ["usb": ["postHandshakeSettleMs": 5]],
+    ]
+    let noVersion = override.merging(["kind": ControllerRecordSet.overrideKind]) { $1 }
+    #expect(Self.problem(try Self.json(noVersion)) == "no apiVersion found; \(supported)")
+    let oldVersion = noVersion.merging(["apiVersion": old]) { $1 }
+    #expect(
+      Self.problem(try Self.json(oldVersion)) == "apiVersion \(old) is not supported; \(supported)"
+    )
+    let noKind = override.merging(["apiVersion": OpenJoystickDriverAPI.version]) { $1 }
+    #expect(
+      Self.problem(try Self.json(noKind))
+        == "no kind found; expected \(ControllerRecordSet.overrideKind)"
+    )
+    let wrongKind = noKind.merging(["kind": ControllerRecordDocument.kind]) { $1 }
+    #expect(
+      Self.problem(try Self.json(wrongKind))
+        == "expected \(ControllerRecordSet.overrideKind), found \(ControllerRecordDocument.kind)"
+    )
     let oldRecord = try Self.json([
-      "$schema": Self.overrideSchema, "operation": "add",
+      "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
+      "operation": "add",
       "record": [
-        "$schema": unversioned(Self.recordSchema), "vendorID": 0x1234, "productID": 0xABCD,
-        "protocol": ["family": "xbox.gip"],
+        "apiVersion": old, "kind": ControllerRecordDocument.kind, "vendorID": 0x1234,
+        "productID": 0xABCD, "protocol": ["family": "xbox.gip"],
       ],
     ])
-    #expect(Self.problem(oldRecord)?.contains("$schema") == true)
+    #expect(Self.problem(oldRecord)?.contains("apiVersion \(old) is not supported") == true)
     let oldDefaults = Data(
-      #"{"$schema": "\#(unversioned(ControllerDefaults.schemaID))", "tuning": {}}"#.utf8
+      #"{"apiVersion": "\#(old)", "kind": "\#(ControllerDefaults.kind)", "tuning": {}}"#.utf8
     )
     #expect(throws: ControllerRecordProblem.self) { try ControllerDefaults.validate(oldDefaults) }
+    let defaultsWrongKind = Data(
+      #"{"apiVersion": "\#(OpenJoystickDriverAPI.version)", "kind": "Persona", "tuning": {}}"#.utf8
+    )
+    #expect(throws: ControllerRecordProblem.self) {
+      try ControllerDefaults.validate(defaultsWrongKind)
+    }
   }
 
   @Test
@@ -221,16 +244,18 @@ struct ControllerRecordSetTests {
     defer { try? FileManager.default.removeItem(at: directory) }
     // A patch as written before `ControllerModelID`: the model is its vendorID and productID.
     let current = Data(
-      (#"{"$schema":"\#(Self.overrideSchema)","operation":"patch","vendorID":13932,"#
+      (#"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","#
+        + #""kind":"\#(ControllerRecordSet.overrideKind)","operation":"patch","vendorID":13932,"#
         + #""productID":5,"set":{"protocol":{"family":"xbox.gip","keepAlive":false}}}"#).utf8
     )
     let currentURL = directory.appendingPathComponent("366c-0005.json")
     try current.write(to: currentURL)
-    // An add in the 0.5.0-beta.4 schema, whose `$schema` has no version directory.
+    // An add in the `openjoystickdriver.io/v1beta1` schema.
     let released = Data(
-      (#"{"$schema":"https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/"#
-        + #"Resources/Schemas/controller-override.schema.json","operation":"add","record":{"#
-        + #""$schema":"\#(Self.recordSchema)","vendorID":4660,"productID":43981,"#
+      (#"{"apiVersion":"openjoystickdriver.io/v1beta1","#
+        + #""kind":"\#(ControllerRecordSet.overrideKind)","operation":"add","record":{"#
+        + #""apiVersion":"\#(OpenJoystickDriverAPI.version)","#
+        + #""kind":"\#(ControllerRecordDocument.kind)","vendorID":4660,"productID":43981,"#
         + #""protocol":{"family":"xbox.gip"}}}"#).utf8
     )
     let releasedURL = directory.appendingPathComponent("1234-abcd.json")
@@ -243,7 +268,11 @@ struct ControllerRecordSetTests {
     #expect(kept.profile.gipKeepAlivePolicy == .disabled)
     #expect(set.records[Self.unbundled] == nil)
     #expect(set.problems.map(\.url.lastPathComponent) == ["1234-abcd.json"])
-    #expect(set.problems.first?.problem == "$schema must be one of \(Self.overrideSchema)")
+    #expect(
+      set.problems.first?.problem
+        == "1234-abcd.json: apiVersion openjoystickdriver.io/v1beta1 is not supported; "
+        + "the supported apiVersion is \(OpenJoystickDriverAPI.version)"
+    )
     #expect(try Data(contentsOf: releasedURL) == released)
     #expect(try Data(contentsOf: currentURL) == current)
   }

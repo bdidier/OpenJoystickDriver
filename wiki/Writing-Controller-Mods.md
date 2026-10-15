@@ -43,7 +43,8 @@ The `mod.json` file names the package and lists every file it holds. This is the
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/mod-package.schema.json",
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "ModPackage",
   "name": "ojd-sample",
   "version": "1.0.0",
   "author": "OpenJoystickDriver",
@@ -54,7 +55,8 @@ The `mod.json` file names the package and lists every file it holds. This is the
 }
 ```
 
-- `$schema`: The ID of the `v1beta1` mod-package schema. OJD rejects any other ID.
+- `apiVersion`: `openjoystickdriver/v1alpha1`. OJD rejects a missing or any other version, and names the file, the version it found, and the supported one.
+- `kind`: `ModPackage`.
 - `name`: Lowercase letters, digits, and hyphens. The package installs into a folder of this name.
 - `version`: A SemVer version without a `v` prefix.
 - `author`: Text that is not empty.

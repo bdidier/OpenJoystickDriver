@@ -3,6 +3,8 @@ import OpenJoystickDriverKit
 
 enum AccessGrantStoreError: Error, Equatable, LocalizedError, Sendable {
   case damaged
+  /// The file's `apiVersion` or `kind` is not the supported one; the text says what was found.
+  case unsupported(String)
   case unknownClient(String)
   case notGrantable(CodeSigningIdentity.Kind)
   case noScope
@@ -18,6 +20,9 @@ enum AccessGrantStoreError: Error, Equatable, LocalizedError, Sendable {
     case .damaged:
       "The endpoint access file \(AccessGrantStore.fileName) is damaged. "
         + "Fix or delete it, then try again."
+    case .unsupported(let reason):
+      "The endpoint access file \(AccessGrantStore.fileName) is not supported: \(reason). "
+        + "Delete it, then grant access again."
     case .unknownClient(let id): "No endpoint client has the ID \(id)."
     case .notGrantable(let kind):
       "A client signed \(kind.rawValue) cannot be granted, because any local program can "
@@ -43,7 +48,10 @@ enum AccessGrantStoreError: Error, Equatable, LocalizedError, Sendable {
 
 /// The contents of `AccessGrants.json`: whether the endpoint and its WebSocket are on, and the
 /// granted clients and tokens.
-struct AccessGrantFile: Codable, Equatable, Sendable {
+struct AccessGrantFile: Equatable, Sendable {
+  /// The `kind` of the file.
+  static let kind = "AccessGrants"
+
   var enabled = false
   var grants: [AccessGrant] = []
   var tokens: [AccessTokenGrant] = []
@@ -132,6 +140,40 @@ struct AccessGrantFile: Codable, Equatable, Sendable {
   }
 }
 
+/// Why a file's `apiVersion` or `kind` is not the supported one.
+struct AccessGrantHeaderProblem: Error, Equatable, Sendable { let reason: String }
+
+extension AccessGrantFile: Codable {
+  private enum CodingKeys: String, CodingKey {
+    case apiVersion, kind, enabled, grants, tokens, web
+  }
+
+  init(from decoder: any Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    if let reason = OpenJoystickDriverAPI.headerProblem(
+      apiVersion: try container.decodeIfPresent(String.self, forKey: .apiVersion),
+      kind: try container.decodeIfPresent(String.self, forKey: .kind),
+      expected: Self.kind
+    ) {
+      throw AccessGrantHeaderProblem(reason: reason)
+    }
+    enabled = try container.decode(Bool.self, forKey: .enabled)
+    grants = try container.decode([AccessGrant].self, forKey: .grants)
+    tokens = try container.decode([AccessTokenGrant].self, forKey: .tokens)
+    web = try container.decode(AccessWebSettings.self, forKey: .web)
+  }
+
+  func encode(to encoder: any Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(OpenJoystickDriverAPI.version, forKey: .apiVersion)
+    try container.encode(Self.kind, forKey: .kind)
+    try container.encode(enabled, forKey: .enabled)
+    try container.encode(grants, forKey: .grants)
+    try container.encode(tokens, forKey: .tokens)
+    try container.encode(web, forKey: .web)
+  }
+}
+
 /// Reads and writes `AccessGrants.json`; the application service is its only writer.
 ///
 /// A damaged file is an error, not an empty one, so a mistake never silently turns the endpoint
@@ -155,7 +197,15 @@ struct AccessGrantStore: Sendable {
     do { data = try Data(contentsOf: url) } catch CocoaError.fileReadNoSuchFile {
       return AccessGrantFile()
     }
-    guard var file = try? JSONDecoder().decode(AccessGrantFile.self, from: data),
+    let decoded: AccessGrantFile?
+    do {
+      decoded = try JSONDecoder().decode(AccessGrantFile.self, from: data)
+    } catch let problem as AccessGrantHeaderProblem {
+      throw AccessGrantStoreError.unsupported(problem.reason)
+    } catch {
+      decoded = nil
+    }
+    guard var file = decoded,
       file.grants.allSatisfy({ $0.identity.requirement != nil && !$0.scopes.isEmpty }),
       file.hasValidTokensAndWeb, file.controlScopesAreMarked
     else { throw AccessGrantStoreError.damaged }

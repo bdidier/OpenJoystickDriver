@@ -39,12 +39,8 @@ public struct VirtualPersonaFile: Equatable, Sendable {
 /// `set` writes `vvvv-pppp.json` or `vvvv-pppp-<unit>.json`, and keeps the identity of a persona
 /// that already matches.
 public struct VirtualHIDProfileOverrideStore: Sendable {
-  /// The `$schema` that OJD writes.
-  public static let schemaID =
-    "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/"
-    + "Resources/Schemas/v1beta1/persona.schema.json"
-  /// The `$schema` values OJD accepts. A version that is not here is rejected.
-  public static let knownSchemaIDs: Set<String> = [schemaID]
+  /// The `kind` of a persona file.
+  public static let kind = "Persona"
 
   /// `~/Library/Application Support/OpenJoystickDriver/Personas`.
   public static var userDirectory: URL {
@@ -155,7 +151,8 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
     var match: [String: Any] = ["vendorID": Int(vendorID), "productID": Int(productID)]
     match["unit"] = unit
     var document: [String: Any] = [
-      "$schema": Self.schemaID, "match": match, "descriptor": profile.rawValue,
+      "apiVersion": OpenJoystickDriverAPI.version, "kind": Self.kind, "match": match,
+      "descriptor": profile.rawValue,
     ]
     if let identity = existing?.persona.identity {
       var fields: [String: Any] = [
@@ -284,14 +281,14 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
     guard let object = try? JSONSerialization.jsonObject(with: data),
       let document = object as? [String: Any]
     else { throw ControllerRecordProblem("the file is not a JSON object") }
-    guard let schema = document["$schema"] as? String, knownSchemaIDs.contains(schema) else {
-      throw ControllerRecordProblem(
-        "$schema must be one of \(knownSchemaIDs.sorted().joined(separator: ", "))"
-      )
+    try OpenJoystickDriverAPI.requireHeader(document, kind: kind)
+    guard
+      Set(document.keys).isSubset(of: [
+        "apiVersion", "kind", "match", "descriptor", "identity",
+      ]), document["match"] != nil, document["descriptor"] != nil
+    else {
+      throw ControllerRecordProblem("the file must hold apiVersion, kind, match, and descriptor")
     }
-    guard Set(document.keys).isSubset(of: ["$schema", "match", "descriptor", "identity"]),
-      document["match"] != nil, document["descriptor"] != nil
-    else { throw ControllerRecordProblem("the file must hold $schema, match, and descriptor") }
     guard let descriptor = (document["descriptor"] as? String).flatMap(VirtualHIDProfileID.init)
     else { throw ControllerRecordProblem("descriptor must be hid-xbox-one-s-bt or hid-generic") }
     let match = try fields(document["match"], named: "match", optional: ["unit"])

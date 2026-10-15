@@ -54,7 +54,17 @@ extension ProtocolClassifierTests {
         protocolDescription(signature: #""variant": "usb""#, extra: #""vendorID": 1118,"#),
         "unknown field(s): vendorID"
       ),
-      (protocolDescription(signature: #""variant": "usb""#, schema: "v1alpha1"), "unknown $schema"),
+      (
+        protocolDescription(
+          signature: #""variant": "usb""#,
+          apiVersion: "openjoystickdriver.io/v1beta1"
+        ),
+        "apiVersion openjoystickdriver.io/v1beta1 is not supported; the supported apiVersion is \(OpenJoystickDriverAPI.version)"
+      ),
+      (
+        protocolDescription(signature: #""variant": "usb""#, kind: "Controller"),
+        "expected \(ProtocolClassifier.protocolDescriptionKind), found Controller"
+      ),
       (
         protocolDescription(signature: #""variant": "usb""#, family: "xbox.xusb"),
         "family must be xbox.gip"
@@ -78,7 +88,7 @@ extension ProtocolClassifierTests {
       .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
       .deletingLastPathComponent()
     let url = root.appendingPathComponent(
-      "Resources/Schemas/v1beta1/protocol-description.schema.json"
+      "Resources/Schemas/protocol-description.schema.json"
     )
     let schema = try #require(
       JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any]
@@ -113,15 +123,16 @@ extension ProtocolClassifierTests {
   func protocolDescription(
     signature: String,
     extra: String = "",
-    schema: String = "v1beta1",
+    apiVersion: String = OpenJoystickDriverAPI.version,
+    kind: String = ProtocolClassifier.protocolDescriptionKind,
     family: String = "xbox.gip"
   ) -> Data {
     Data(
       """
       {
         \(extra)
-        "$schema": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/\
-      Resources/Schemas/\(schema)/protocol-description.schema.json",
+        "apiVersion": "\(apiVersion)",
+        "kind": "\(kind)",
         "family": "\(family)",
         "interfaceSignatures": [
           {\(signature), "interfaceClass": 255, "interfaceSubclass": 71, "interfaceProtocol": 208}

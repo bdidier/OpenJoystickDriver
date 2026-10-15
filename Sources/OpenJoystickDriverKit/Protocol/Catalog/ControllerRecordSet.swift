@@ -31,7 +31,7 @@ public struct ControllerRecord: Sendable {
   public let model: ControllerModelID
   /// The merged record as a `controller.schema.json` document, with sorted keys.
   public let document: Data
-  /// The layer of each top-level field of `document`, except `$schema`, `vendorID`, and
+  /// The layer of each top-level field of `document`, except `apiVersion`, `kind`, `vendorID`, and
   /// `productID`.
   public let fieldLayers: [String: ControllerRecordLayer]
   /// The layer of each effective `tuning` key, by its JSON name: `bundled`, `user`, or `global`.
@@ -131,12 +131,8 @@ public struct ControllerRecordProblem: Error, Equatable, Sendable, CustomStringC
 /// A user file that fails validation is skipped and listed in ``userFiles`` with its reason. The
 /// bundled catalog must be valid: a release must not ship a broken record.
 public struct ControllerRecordSet: Sendable {
-  /// The `$schema` that OJD writes into a user record.
-  public static let overrideSchemaID =
-    "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/"
-    + "Resources/Schemas/v1beta1/controller-override.schema.json"
-  /// The `$schema` values OJD accepts in a user record. A version that is not here is rejected.
-  public static let knownOverrideSchemaIDs: Set<String> = [overrideSchemaID]
+  /// The `kind` of a user record.
+  public static let overrideKind = "ControllerOverride"
 
   /// The effective record of every model.
   public let records: [ControllerModelID: ControllerRecord]
@@ -289,15 +285,14 @@ public struct ControllerRecordSet: Sendable {
     guard let object = try? JSONSerialization.jsonObject(with: data),
       let document = object as? [String: Any]
     else { throw ControllerRecordProblem("the file is not a JSON object") }
-    guard let schema = document["$schema"] as? String, knownOverrideSchemaIDs.contains(schema)
-    else {
-      throw ControllerRecordProblem(
-        "$schema must be one of \(knownOverrideSchemaIDs.sorted().joined(separator: ", "))"
-      )
-    }
+    try OpenJoystickDriverAPI.requireHeader(
+      document,
+      kind: overrideKind,
+      file: file?.lastPathComponent
+    )
     switch document["operation"] as? String {
     case ControllerRecordOperation.add.rawValue:
-      try requireKeys(document, ["$schema", "operation", "record"])
+      try requireKeys(document, ["apiVersion", "kind", "operation", "record"])
       guard let record = document["record"] as? [String: Any] else {
         throw ControllerRecordProblem("record must be an object")
       }
@@ -315,7 +310,10 @@ public struct ControllerRecordSet: Sendable {
         record: try makeRecord(record, layers: layers, file: file, layer: layer)
       )
     case ControllerRecordOperation.patch.rawValue:
-      try requireKeys(document, ["$schema", "operation", "vendorID", "productID", "set"])
+      try requireKeys(
+        document,
+        ["apiVersion", "kind", "operation", "vendorID", "productID", "set"]
+      )
       guard let vendorID = integer(document["vendorID"]).flatMap(UInt16.init(exactly:)),
         vendorID >= 1, let productID = integer(document["productID"]).flatMap(UInt16.init(exactly:))
       else { throw ControllerRecordProblem("vendorID must be 1...65535 and productID 0...65535") }
@@ -459,7 +457,7 @@ public struct ControllerRecordSet: Sendable {
   }
 
   private static func fieldNames(of record: [String: Any]) -> [String] {
-    record.keys.filter { !["$schema", "vendorID", "productID"].contains($0) }
+    record.keys.filter { !["apiVersion", "kind", "vendorID", "productID"].contains($0) }
   }
 
   private static func requireKeys(_ document: [String: Any], _ keys: Set<String>) throws {

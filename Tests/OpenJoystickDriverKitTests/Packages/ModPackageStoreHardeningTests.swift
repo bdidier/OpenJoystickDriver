@@ -197,7 +197,7 @@ struct ModPackageStoreHardeningTests {
   func aTrailingNewlineFailsEveryPattern() throws {
     func manifest(_ name: String, _ version: String, _ file: String) -> Data {
       let document: [String: Any] = [
-        "$schema": ModPackageManifest.knownSchemaIDs.sorted()[0], "name": name,
+        "apiVersion": OpenJoystickDriverAPI.version, "kind": ModPackageManifest.kind, "name": name,
         "version": version, "author": "Tester", "requires": ["minimum": "1.0.0"],
         "records": [file],
       ]

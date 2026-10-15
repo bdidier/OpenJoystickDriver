@@ -6,20 +6,20 @@ import Testing
 
 @MainActor
 struct ControllerRecordWatcherPackageTests {
-  private static let schema =
-    "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/"
-
   private static let record = Data(
     """
-    {"$schema": "\(ControllerRecordSet.overrideSchemaID)", "operation": "add",
-     "record": {"$schema": "\(schema)controller.schema.json", "vendorID": 4660,
+    {"apiVersion": "\(OpenJoystickDriverAPI.version)",
+    "kind": "\(ControllerRecordSet.overrideKind)", "operation": "add",
+     "record": {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "Controller",
+     "vendorID": 4660,
      "productID": 43981, "protocol": {"family": "xbox.gip"}}}
     """.utf8
   )
 
   private static let manifest = Data(
     """
-    {"$schema": "\(schema)mod-package.schema.json", "name": "arcade-pack", "version": "1.0.0",
+    {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "\(ModPackageManifest.kind)",
+    "name": "arcade-pack", "version": "1.0.0",
      "author": "Tester", "requires": {"minimum": "0.6.0"}, "records": ["1234-abcd.json"]}
     """.utf8
   )

@@ -156,11 +156,12 @@ A `tuning` in a `patch` merges per value into the bundled `tuning`: a value you 
 
 ### Set a Default for Every Controller
 
-`~/Library/Application Support/OpenJoystickDriver/Defaults.json` sets a `tuning` default for every controller. It uses the same values as a record, and [`defaults.schema.json`](../Resources/Schemas/v1beta1/defaults.schema.json) describes it.
+`~/Library/Application Support/OpenJoystickDriver/Defaults.json` sets a `tuning` default for every controller. It uses the same values as a record, and [`defaults.schema.json`](../Resources/Schemas/defaults.schema.json) describes it.
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/defaults.schema.json",
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "ControllerDefaults",
   "tuning": { "stickDeadzone": 0.05 }
 }
 ```
@@ -171,11 +172,12 @@ The record's `stickDeadzone` shapes the virtual gamepad's stick report. A profil
 
 ### Change the Virtual Gamepad Identity
 
-A persona file in `~/Library/Application Support/OpenJoystickDriver/Personas` chooses the virtual gamepad that games see for one controller model, or for one controller unit. [`persona.schema.json`](../Resources/Schemas/v1beta1/persona.schema.json) describes it.
+A persona file in `~/Library/Application Support/OpenJoystickDriver/Personas` chooses the virtual gamepad that games see for one controller model, or for one controller unit. [`persona.schema.json`](../Resources/Schemas/persona.schema.json) describes it.
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/persona.schema.json",
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "Persona",
   "match": { "vendorID": 1356, "productID": 3302 },
   "descriptor": "hid-xbox-one-s-bt"
 }
@@ -234,7 +236,7 @@ The record maps what the HID report descriptor states plainly: buttons 1 to 11 i
 ## Install a Record
 
 1. Find the VID:PID of your controller. For more information, see [Finding your controller ID](Connecting-Controllers.md#finding-your-controller-id).
-2. Write the record file. Set `$schema` to `https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/controller-override.schema.json`.
+2. Write the record file. Set `apiVersion` to `openjoystickdriver/v1alpha1` and `kind` to `ControllerOverride`.
 3. Check the file. Run `ojd record validate FILE`.
 4. Install the file. Run `ojd record install FILE`.
 
@@ -257,11 +259,11 @@ A bundled model then goes back to its bundled record.
 
 ## Schema Versions and Compatibility
 
-Each file that OJD reads declares its schema version in `$schema`, and the version is a directory in the schema URL: `Resources/Schemas/v1beta1/`. OJD accepts a fixed set of known `$schema` IDs and rejects every other one, including the old ID without the version directory. It does not convert files.
+Each file that OJD reads declares `apiVersion: openjoystickdriver/v1alpha1` and its `kind`, such as `Controller`, `ControllerOverride`, `ControllerDefaults`, `Persona`, `Profile`, or `ModPackage`. Files do not declare `$schema`. OJD accepts only the `apiVersion` it supports and rejects every other one, a missing one, and a `kind` it does not read there. The error names the file, the version it found, and the supported one. It does not convert files. The schemas are flat files in `Resources/Schemas/`, and each `$id` is `https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/<kind>.schema.json`. Nothing publishes those IDs yet.
 
-- Before 1.0, a `v1beta1` schema may change incompatibly. The release notes list each such change and how to update a file.
+- Before 1.0, a `v1alpha1` schema may change incompatibly. The release notes list each such change and how to update a file.
 - At 1.0 the schemas are promoted to `v1`. A `v1` schema takes only additive changes: a new optional field, or a new value where a reader can ignore it.
-- A change that is not additive needs a new version, `v2`. OJD names the IDs it accepts, so a file for an unknown version is rejected rather than half read.
+- A change that is not additive needs a new version, `v2`. OJD names the version it accepts, so a file for an unknown version is rejected rather than half read.
 
 The `--json` output schema has its own release check: within a major version, or a minor version before 1.0, it only gains keys and values. See [Using the command line](Command-Line.md).
 

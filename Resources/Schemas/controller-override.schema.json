@@ -1,14 +1,17 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/controller-override.schema.json",
+	"$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/controller-override.schema.json",
 	"oneOf": [
 		{
 			"type": "object",
 			"additionalProperties": false,
-			"required": ["$schema", "operation", "record"],
+			"required": ["apiVersion", "kind", "operation", "record"],
 			"properties": {
-				"$schema": {
-					"const": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/controller-override.schema.json"
+				"apiVersion": {
+					"const": "openjoystickdriver/v1alpha1"
+				},
+				"kind": {
+					"const": "ControllerOverride"
 				},
 				"operation": {
 					"const": "add"
@@ -21,10 +24,13 @@
 		{
 			"type": "object",
 			"additionalProperties": false,
-			"required": ["$schema", "operation", "vendorID", "productID", "set"],
+			"required": ["apiVersion", "kind", "operation", "vendorID", "productID", "set"],
 			"properties": {
-				"$schema": {
-					"const": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/controller-override.schema.json"
+				"apiVersion": {
+					"const": "openjoystickdriver/v1alpha1"
+				},
+				"kind": {
+					"const": "ControllerOverride"
 				},
 				"operation": {
 					"const": "patch"

@@ -97,6 +97,7 @@ struct ModPackageStoreTests {
         ["name": "Arcade Pack"], ["version": "1.0"], ["version": "v1.0.0"], ["author": ""],
         ["requires": ["minimum": "latest"]], ["requires": ["below": "1.0.0"]],
         ["requires": ["minimum": "0.6.0", "extra": 1]], ["extra": true],
+        ["apiVersion": "openjoystickdriver.io/v1beta1"], ["kind": "Controller"],
         ["$schema": "https://example.com/mod-package.schema.json"],
         ["records": ["../1234-abcd.json"]], ["records": ["1234-abcd.json", "1234-abcd.json"]],
         ["records": []],

@@ -29,11 +29,10 @@ struct ModCommandTests {
       try FileManager.default.createDirectory(at: controllers, withIntermediateDirectories: true)
       let file = String(format: "fff1-%04x.json", productID)
       let record: [String: Any] = [
-        "$schema": ControllerRecordSet.overrideSchemaID, "operation": "add",
+        "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
+        "operation": "add",
         "record": [
-          "$schema":
-            "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/"
-            + "Resources/Schemas/v1beta1/controller.schema.json",
+          "apiVersion": OpenJoystickDriverAPI.version, "kind": "Controller",
           "vendorID": 0xFFF1,
           "productID": productID, "protocol": ["family": "xbox.gip"],
         ],
@@ -42,7 +41,7 @@ struct ModCommandTests {
         to: controllers.appendingPathComponent(file)
       )
       let manifest: [String: Any] = [
-        "$schema": ModPackageManifest.knownSchemaIDs.sorted()[0], "name": name,
+        "apiVersion": OpenJoystickDriverAPI.version, "kind": ModPackageManifest.kind, "name": name,
         "version": "1.2.3", "author": "Tester", "requires": requires, "records": [file],
       ]
       try JSONSerialization.data(withJSONObject: manifest).write(
