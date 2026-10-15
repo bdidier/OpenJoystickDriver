@@ -635,6 +635,61 @@ def committed_records() -> dict[tuple[int, int], dict[str, Any]]:
     return records
 
 
+class ProtocolCopyTests(unittest.TestCase):
+    """`--check` compares the Kit bundle's protocol copies with the authored files."""
+
+    def setUp(self) -> None:
+        import tempfile
+        from pathlib import Path
+
+        directory = tempfile.TemporaryDirectory(prefix="ojd-catalog-")
+        self.addCleanup(directory.cleanup)
+        root = Path(directory.name)
+        self.authored = root / "Resources" / "Protocols"
+        self.bundled = root / "Kit" / "Protocols"
+        self.authored.mkdir(parents=True)
+        (self.authored / "xbox.xid.json").write_text('{"family": "xbox.xid"}\n')
+        for name, value in (
+            ("ROOT", root),
+            ("OUTPUT_DIR", root / "Kit" / "Controllers"),
+            ("PROTOCOL_DIR", self.authored),
+            ("PROTOCOL_OUTPUT_DIR", self.bundled),
+        ):
+            patcher = patch.object(catalog, name, value)
+            patcher.start()
+            self.addCleanup(patcher.stop)
+        catalog.write_catalog({})
+
+    def assert_check_reports(self, detail: str) -> None:
+        with self.assertRaisesRegex(catalog.CatalogError, detail):
+            catalog.check_catalog({})
+
+    def test_written_copies_pass_the_check(self) -> None:
+        self.assertEqual(
+            (self.bundled / "xbox.xid.json").read_text(), '{"family": "xbox.xid"}\n'
+        )
+        catalog.check_catalog({})
+
+    def test_a_missing_copy_is_reported(self) -> None:
+        (self.bundled / "xbox.xid.json").unlink()
+        self.assert_check_reports(r"missing Kit/Protocols/xbox\.xid\.json")
+
+    def test_a_stale_copy_is_reported(self) -> None:
+        (self.bundled / "xbox.old.json").write_text("{}\n")
+        self.assert_check_reports(r"stale Kit/Protocols/xbox\.old\.json")
+
+    def test_a_changed_copy_is_reported(self) -> None:
+        (self.bundled / "xbox.xid.json").write_text('{"family": "xbox.xusb"}\n')
+        self.assert_check_reports(r"changed Kit/Protocols/xbox\.xid\.json")
+
+    def test_write_removes_a_stale_copy(self) -> None:
+        (self.bundled / "xbox.old.json").write_text("{}\n")
+        catalog.write_catalog({})
+        self.assertEqual(
+            sorted(path.name for path in self.bundled.iterdir()), ["xbox.xid.json"]
+        )
+
+
 class CommittedCatalogTests(unittest.TestCase):
     """Data-level invariants of the generated catalog; no network needed."""
 

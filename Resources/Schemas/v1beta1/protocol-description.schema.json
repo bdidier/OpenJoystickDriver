@@ -1,6 +1,7 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
 	"$id": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/protocol-description.schema.json",
+	"$comment": "Each family's variants are PhysicalProtocolID.variants in Swift.",
 	"type": "object",
 	"additionalProperties": false,
 	"required": ["$schema", "family", "interfaceSignatures"],
@@ -20,6 +21,74 @@
 			}
 		}
 	},
+	"allOf": [
+		{
+			"if": {
+				"properties": {
+					"family": {
+						"const": "xbox.xid"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"interfaceSignatures": {
+						"items": {
+							"properties": {
+								"variant": {
+									"enum": ["gamepad"]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"family": {
+						"const": "xbox.xusb"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"interfaceSignatures": {
+						"items": {
+							"properties": {
+								"variant": {
+									"enum": ["wired", "receiver"]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"family": {
+						"const": "xbox.gip"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"interfaceSignatures": {
+						"items": {
+							"properties": {
+								"variant": {
+									"enum": ["usb"]
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	],
 	"$defs": {
 		"interfaceSignature": {
 			"type": "object",

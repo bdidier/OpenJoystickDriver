@@ -93,6 +93,23 @@ def validate_documents(
             ) from error
 
 
+def validate_protocol_descriptions(
+    schema: dict[str, object],
+    registry: Registry,
+    paths: list[Path],
+) -> None:
+    validate_documents(schema, registry, paths)
+    # The app loads Resources/Protocols/<family>.json by family, so a renamed file would
+    # otherwise fail only at launch.
+    for path in paths:
+        document = load_json(path)
+        family = document.get("family") if isinstance(document, dict) else None
+        if path.stem != family:
+            raise ValidationError(
+                f"{path.relative_to(ROOT)}: file name must be {family}.json"
+            )
+
+
 def swift_binary_path() -> Path:
     subprocess.run(
         swift_command(["build", "--product", "OpenJoystickDriver"]),
@@ -153,7 +170,7 @@ def main() -> int:
         validate_documents(
             documents["error-codes.schema.json"], registry, [ERROR_CODES]
         )
-        validate_documents(
+        validate_protocol_descriptions(
             documents["protocol-description.schema.json"], registry, protocols
         )
         validate_live_support_report(documents["report.schema.json"], registry)
