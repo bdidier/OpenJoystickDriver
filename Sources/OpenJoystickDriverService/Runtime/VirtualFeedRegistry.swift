@@ -84,7 +84,7 @@ final class VirtualFeedRegistry: @unchecked Sendable {
     var player: Task<Void, Never>?
     /// While `player` shows a frame, the uptime after which its send counts as hung.
     var frameDeadline: TimeInterval?
-    /// `ProcessInfo.systemUptime` of the last exchange.
+    /// `clock` time of the last exchange.
     var lastExchange: TimeInterval
     var watchdog: Task<Void, Never>?
 
@@ -92,7 +92,8 @@ final class VirtualFeedRegistry: @unchecked Sendable {
       device: any VirtualFeedDevice,
       identifier: LogicalControllerID,
       pool: VirtualFeedPool,
-      returnSink: (any OutputSink)?
+      returnSink: (any OutputSink)?,
+      now: TimeInterval
     ) {
       self.device = device
       self.returnSink = returnSink
@@ -100,13 +101,14 @@ final class VirtualFeedRegistry: @unchecked Sendable {
       self.sink = VirtualFeedDeviceSink(device)
       self.identifier = identifier
       self.pool = pool
-      lastExchange = ProcessInfo.processInfo.systemUptime
+      lastExchange = now
     }
   }
 
   private let factory: VirtualFeedDeviceFactory
   let idleTimeout: TimeInterval
   private let activationTimeout: TimeInterval
+  private let clock: VirtualFeedClock
   private let lock = NSLock()
   private var sessions: [UUID: Session] = [:]
   private var stopped = false
@@ -116,11 +118,13 @@ final class VirtualFeedRegistry: @unchecked Sendable {
   init(
     factory: @escaping VirtualFeedDeviceFactory,
     idleTimeout: TimeInterval = VirtualFeedExchangeResult.idleTimeoutSeconds,
-    activationTimeout: TimeInterval = VirtualFeedRegistry.activationTimeoutSeconds
+    activationTimeout: TimeInterval = VirtualFeedRegistry.activationTimeoutSeconds,
+    clock: VirtualFeedClock = .system
   ) {
     self.factory = factory
     self.idleTimeout = idleTimeout
     self.activationTimeout = activationTimeout
+    self.clock = clock
   }
 
   /// Opens a feed. With a `returnSink`, the host's output commands go to it in order through
@@ -155,7 +159,8 @@ final class VirtualFeedRegistry: @unchecked Sendable {
         serialNumber: "feed-\(token.uuidString)"
       ),
       pool: pool,
-      returnSink: returnSink
+      returnSink: returnSink,
+      now: clock.now()
     )
     let stoppedMeanwhile = lock.withLock { () -> Bool in
       reserved[pool, default: 1] -= 1
@@ -191,7 +196,7 @@ final class VirtualFeedRegistry: @unchecked Sendable {
     }
     let watching = lock.withLock { () -> Bool in
       guard sessions[token] === session else { return false }
-      session.lastExchange = ProcessInfo.processInfo.systemUptime
+      session.lastExchange = clock.now()
       session.watchdog = Task { [weak self] in await self?.watch(token) }
       return true
     }
@@ -223,7 +228,7 @@ final class VirtualFeedRegistry: @unchecked Sendable {
       guard let session = sessions[token] else {
         return VirtualFeedExchangeResult(feedback: [], closed: true)
       }
-      if countsAsActivity { session.lastExchange = ProcessInfo.processInfo.systemUptime }
+      if countsAsActivity { session.lastExchange = clock.now() }
       let accepted = Self.enqueue(frames, in: session)
       if session.player == nil, !session.pending.isEmpty {
         session.player = Task { [weak self] in await self?.play(token) }
@@ -353,9 +358,9 @@ final class VirtualFeedRegistry: @unchecked Sendable {
   /// is empty. A failed send closes the feed.
   private func play(_ token: UUID) async {
     while !Task.isCancelled {
-      let next = lock.withLock { () -> (Session, VirtualFeedFrame, Int)? in
+      let next = lock.withLock { () -> (Session, VirtualFeedFrame, Int, TimeInterval)? in
         guard let session = sessions[token] else { return nil }
-        let now = ProcessInfo.processInfo.systemUptime
+        let now = clock.now()
         guard !session.pending.isEmpty else {
           session.player = nil
           session.frameDeadline = nil
@@ -369,12 +374,12 @@ final class VirtualFeedRegistry: @unchecked Sendable {
           VirtualFeedExchangeResult.minimumFrameMilliseconds
         )
         session.frameDeadline = now + TimeInterval(milliseconds) / 1000 + idleTimeout
-        return (session, frame, milliseconds)
+        return (session, frame, milliseconds, now)
       }
-      guard let (session, frame, milliseconds) = next else { return }
+      guard let (session, frame, milliseconds, startedAt) = next else { return }
       do {
         try await session.produce(.gamepad(frame.gamepadState, for: session.identifier))
-        try await Task.sleep(nanoseconds: UInt64(milliseconds) * 1_000_000)
+        try await clock.sleep(startedAt + TimeInterval(milliseconds) / 1000)
       } catch is CancellationError {
         return
       } catch {
@@ -384,25 +389,29 @@ final class VirtualFeedRegistry: @unchecked Sendable {
     }
   }
 
+  /// The `clock` time of each open feed's last exchange; lets a test see that an exchange landed.
+  var lastExchangeTimes: [TimeInterval] { lock.withLock { sessions.values.map(\.lastExchange) } }
+
   /// Closes the feed once it goes `idleTimeout` without an exchange, counted from the end of the
   /// last frame's time, or once a frame's send hangs past its `frameDeadline`.
   private func watch(_ token: UUID) async {
     while !Task.isCancelled {
-      let deadline = lock.withLock { () -> TimeInterval? in
-        sessions[token].map { session in
-          if let frameDeadline = session.frameDeadline { return frameDeadline }
-          // `player` is about to show the waiting frames.
-          if !session.pending.isEmpty { return .infinity }
-          return session.lastExchange + idleTimeout
-        }
+      // The deadline and the time it is compared with are read under one lock, so an exchange
+      // that lands between them cannot make a feed look idle.
+      let snapshot = lock.withLock { () -> (deadline: TimeInterval, now: TimeInterval)? in
+        guard let session = sessions[token] else { return nil }
+        let now = clock.now()
+        if let frameDeadline = session.frameDeadline { return (frameDeadline, now) }
+        // `player` is about to show the waiting frames.
+        if !session.pending.isEmpty { return (.infinity, now) }
+        return (session.lastExchange + idleTimeout, now)
       }
-      guard let deadline else { return }
-      let remaining = deadline - ProcessInfo.processInfo.systemUptime
-      guard remaining > 0 else {
+      guard let (deadline, now) = snapshot else { return }
+      guard deadline > now else {
         await close(token: token)
         return
       }
-      try? await Task.sleep(nanoseconds: UInt64(min(remaining, idleTimeout) * 1_000_000_000))
+      try? await clock.sleep(min(deadline, now + idleTimeout))
     }
   }
 }
