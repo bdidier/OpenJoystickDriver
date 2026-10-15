@@ -118,6 +118,8 @@ struct AccessGrantStoreTests {
 
   @Test(arguments: [
     #""publisher":{"kind":"x"},"identifier":"a.out""#,
+    #""publisher":{"kind":"signed","id":"ABCDE12345"},"identifier":"a.out","unexpected":1"#,
+    #""publisher":{"kind":"signed","id":"ABCDE12345","unexpected":1},"identifier":"a.out""#,
     #""publisher":{"kind":"signed","id":"ABCDE12345"},"identifier":7"#,
     #""kind":"signed","identifier":"a.out""#,
   ])
@@ -129,6 +131,26 @@ struct AccessGrantStoreTests {
         + #""enabled":true,"grants":[{\#(grant),"#
         + #""scopes":["read"],"grantedAt":"x","path":"/a.out"}],"tokens":[],"#
         + #""web":{"enabled":false,"port":47614}}"#
+      try Data(text.utf8).write(to: store.url)
+
+      #expect(throws: AccessGrantStoreError.damaged) { try store.load() }
+      #expect(try String(contentsOf: store.url, encoding: .utf8) == text)
+    }
+  }
+
+  @Test(arguments: [
+    #""tokens":[],"web":{"enabled":false,"port":47614},"unexpected":1"#,
+    #""tokens":[],"web":{"enabled":false,"port":47614,"unexpected":1}"#,
+    #""tokens":[{"name":"overlay","tokenSHA256":"\#(String(repeating: "a", count: 64))","#
+      + #""origins":[],"scopes":["read"],"grantedAt":"x","unexpected":1}],"#
+      + #""web":{"enabled":false,"port":47614}"#,
+  ])
+  func anUnknownKeyInTheFileTokensOrWebSettingsIsDamagedAndLeftAsItWas(rest: String) throws {
+    try withStore { store, directory in
+      try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+      let text =
+        #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
+        + #""enabled":true,"grants":[],"# + rest + "}"
       try Data(text.utf8).write(to: store.url)
 
       #expect(throws: AccessGrantStoreError.damaged) { try store.load() }

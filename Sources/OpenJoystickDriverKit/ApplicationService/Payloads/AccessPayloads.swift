@@ -35,7 +35,7 @@ public struct AccessGrant: Codable, Equatable, Sendable {
   /// with a `control` scope but no mark is damaged.
   public let controlGrantedAt: String?
 
-  private enum CodingKeys: String, CodingKey {
+  private enum CodingKeys: String, CodingKey, CaseIterable {
     case publisher
     case identifier
     case scopes
@@ -47,9 +47,27 @@ public struct AccessGrant: Codable, Equatable, Sendable {
   private struct StoredPublisher: Codable {
     let kind: CodeSigningIdentity.Kind
     let id: String?
+
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+      case kind
+      case id
+    }
+
+    init(kind: CodeSigningIdentity.Kind, id: String?) {
+      self.kind = kind
+      self.id = id
+    }
+
+    init(from decoder: any Decoder) throws {
+      try decoder.rejectUnknownKeys(CodingKeys.self)
+      let container = try decoder.container(keyedBy: CodingKeys.self)
+      kind = try container.decode(CodeSigningIdentity.Kind.self, forKey: .kind)
+      id = try container.decodeIfPresent(String.self, forKey: .id)
+    }
   }
 
   public init(from decoder: any Decoder) throws {
+    try decoder.rejectUnknownKeys(CodingKeys.self)
     let container = try decoder.container(keyedBy: CodingKeys.self)
     let publisher = try container.decode(StoredPublisher.self, forKey: .publisher)
     kind = publisher.kind

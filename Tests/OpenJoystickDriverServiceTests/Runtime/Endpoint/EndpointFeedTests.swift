@@ -285,7 +285,7 @@ struct EndpointFeedTests {
     }
   }
 
-  @Test(arguments: ["hid-unknown", "Hid-Generic", "hid-generic", "hid-xbox-one-s-bt", "generic"])
+  @Test(arguments: ["NotAPersona", "generic"])
   func anUnknownProfileIsInvalid(profile: String) async throws {
     let factory = FakeFeedFactory()
     try await withEndpointServer(feeds: factory.registry()) { server, _ in
@@ -400,7 +400,7 @@ struct EndpointFeedTests {
     return client
   }
 
-  /// A welcomed client that started a `hid-generic` feed and read `feeding`.
+  /// A welcomed client that started a `Generic` feed and read `feeding`.
   private func feeding(_ server: EndpointServer) async throws -> EndpointTestClient {
     let client = try await welcomed(server)
     await client.send(clientLine("FeedRequest", #","as":"Generic""#))

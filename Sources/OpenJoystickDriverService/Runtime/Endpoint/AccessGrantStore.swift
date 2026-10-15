@@ -151,11 +151,12 @@ struct AccessGrantFile: Equatable, Sendable {
 struct AccessGrantHeaderProblem: Error, Equatable, Sendable { let problem: DocumentHeaderProblem }
 
 extension AccessGrantFile: Codable {
-  private enum CodingKeys: String, CodingKey {
+  private enum CodingKeys: String, CodingKey, CaseIterable {
     case apiVersion, kind, enabled, grants, tokens, web
   }
 
   init(from decoder: any Decoder) throws {
+    try decoder.rejectUnknownKeys(CodingKeys.self)
     let container = try decoder.container(keyedBy: CodingKeys.self)
     if let problem = OpenJoystickDriverAPI.headerProblem(
       apiVersion: try container.decodeIfPresent(String.self, forKey: .apiVersion),

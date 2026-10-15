@@ -123,8 +123,8 @@ struct EndpointMessagesTests {
   }
 
   @Test(arguments: [
-    clientLine("FeedRequest", #","as":"hid-generic""#),
-    clientLine("FeedSession", #","as":"hid-xbox-one-s-bt""#),
+    clientLine("FeedRequest", #","as":"NotAPersona""#),
+    clientLine("FeedSession", #","as":"NotAPersona""#),
     clientLine("Hello", #","scopes":[]"#),
     #"{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"Hello","scopes":["read"]}"#,
     clientLine("Status", #","status":"Failure","code":"E1010","message":"m""#),
