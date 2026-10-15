@@ -93,7 +93,7 @@ struct EndpointFeedTests {
     defer { factory.release() }
     try await withEndpointServer(feeds: feeds) { server, _ in
       let client = try await welcomed(server)
-      await client.send(clientLine("FeedRequest", #","as":"hid-generic""#))
+      await client.send(clientLine("FeedRequest", #","as":"Generic""#))
       try await Self.wait { !factory.devices.isEmpty }
       #expect(try server.revoke(id: Self.tool.accessID, scopes: [.control]).closedConnections == 1)
 
@@ -111,7 +111,7 @@ struct EndpointFeedTests {
     defer { factory.release() }
     try await withEndpointServer(feeds: feeds) { server, _ in
       var client: EndpointTestClient? = try await welcomed(server)
-      await client?.send(clientLine("FeedRequest", #","as":"hid-generic""#))
+      await client?.send(clientLine("FeedRequest", #","as":"Generic""#))
       try await Self.wait { !factory.devices.isEmpty }
       client = nil
       _ = client
@@ -132,7 +132,7 @@ struct EndpointFeedTests {
       let connection = EndpointConnection(descriptor: -1, kind: .socket, transport: transport)
       let finished = DispatchSemaphore(value: 0)
       Thread.detachNewThread {
-        server.feed(connection, profile: "hid-generic")
+        server.feed(connection, persona: .generic)
         finished.signal()
       }
       try await Self.wait { factory.devices.first?.activated != nil }
@@ -201,7 +201,7 @@ struct EndpointFeedTests {
         clients.append(try await feeding(server))
       }
       let client = try await welcomed(server)
-      await client.send(clientLine("FeedRequest", #","as":"hid-generic""#))
+      await client.send(clientLine("FeedRequest", #","as":"Generic""#))
 
       let line = try #require(await client.readLine())
       #expect(try JSONSchemaFiles.issues(in: line, against: "endpoint.schema.json").isEmpty)
@@ -211,7 +211,7 @@ struct EndpointFeedTests {
     }
   }
 
-  @Test(arguments: ["hid-unknown", "Hid-Generic"])
+  @Test(arguments: ["hid-unknown", "Hid-Generic", "hid-generic", "hid-xbox-one-s-bt", "generic"])
   func anUnknownProfileIsInvalid(profile: String) async throws {
     let factory = FakeFeedFactory()
     try await withEndpointServer(feeds: factory.registry()) { server, _ in
@@ -224,20 +224,25 @@ struct EndpointFeedTests {
   }
 
   @Test(arguments: [
-    clientLine("Subscription", #","stream":"controllers""#),
-    clientLine("FeedRequest", #","as":"hid-generic""#),
-    clientLine("Frame", #","buttons":["jump"]"#),
-    clientLine("Frame", #","axes":{"throttle":1}"#),
-    clientLine("Frame", #","holdMilliseconds":60001"#),
-    clientLine("Frame", #","buttons":["south","south"]"#),
-    clientLine("Frame", #","dpad":["up","up"]"#),
-    clientLine("Frame", #","buttons":["south"],"turbo":true"#),
-    #"{"buttons":["south"]}"#,
-    #"{"apiVersion":"openjoystickdriver.io/v2","kind":"Frame","buttons":["south"]}"#,
-    #"{"kind":"Frame","buttons":["south"]}"#,
-    "nonsense",
+    (clientLine("Subscription", #","stream":"controllers""#), "E1011"),
+    (clientLine("FeedRequest", #","as":"Generic""#), "E1011"),
+    (clientLine("Frame", #","buttons":["jump"]"#), "E1004"),
+    (clientLine("Frame", #","axes":{"throttle":1}"#), "E1004"),
+    (clientLine("Frame", #","holdMilliseconds":60001"#), "E1004"),
+    (clientLine("Frame", #","buttons":["south","south"]"#), "E1004"),
+    (clientLine("Frame", #","dpad":["up","up"]"#), "E1004"),
+    (clientLine("Frame", #","buttons":["south"],"turbo":true"#), "E1004"),
+    (#"{"buttons":["south"]}"#, "E1012"),
+    (#"{"apiVersion":"openjoystickdriver.io/v2","kind":"Frame","buttons":["south"]}"#, "E1010"),
+    (#"{"kind":"Frame","buttons":["south"]}"#, "E1012"),
+    (#"{"apiVersion":"openjoystickdriver/v1alpha1","buttons":["south"]}"#, "E1012"),
+    (#"{"apiVersion":null,"kind":"Frame","buttons":["south"]}"#, "E1012"),
+    (#"{"apiVersion":"openjoystickdriver/v1alpha1","kind":null,"buttons":["south"]}"#, "E1012"),
+    (#"{"apiVersion":2,"kind":"Frame","buttons":["south"]}"#, "E1012"),
+    (clientLine("Greeting", ""), "E1011"),
+    ("nonsense", "E1004"),
   ])
-  func aLineThatIsNotAFrameEndsTheFeed(line: String) async throws {
+  func aLineThatIsNotAFrameEndsTheFeed(line: String, code: String) async throws {
     let factory = FakeFeedFactory()
     let feeds = factory.registry()
     try await withEndpointServer(feeds: feeds) { server, _ in
@@ -246,7 +251,13 @@ struct EndpointFeedTests {
 
       let error = try #require(await client.readLine())
       #expect(try JSONSchemaFiles.issues(in: error, against: "endpoint.schema.json").isEmpty)
-      #expect(try client.object(error)["code"] as? String == "E1004")
+      let object = try client.object(error)
+      #expect(object["code"] as? String == code)
+      let details = object["details"] as? [String: Any]
+      #expect(
+        details?["supportedAPIVersions"] as? [String]
+          == (code == "E1004" ? nil : [OpenJoystickDriverAPI.version])
+      )
       try await Self.wait { factory.devices.first?.closeCount == 1 }
       #expect(feeds.openFeedCount == 0)
     }
@@ -261,7 +272,7 @@ struct EndpointFeedTests {
       let client = try await EndpointTestClient(path: server.socketPath)
       await client.send(clientLine("Hello", #","scopes":["read"]"#))
       #expect(try await client.readObject()["kind"] as? String == "Welcome")
-      await client.send(clientLine("FeedRequest", #","as":"hid-generic""#))
+      await client.send(clientLine("FeedRequest", #","as":"Generic""#))
 
       #expect(try await client.readObject()["code"] as? String == "E1002")
       #expect(factory.devices.isEmpty)
@@ -292,10 +303,10 @@ struct EndpointFeedTests {
         )
       )
       #expect(try await client.readObject()["kind"] as? String == "Welcome")
-      await client.send(clientLine("FeedRequest", #","as":"hid-xbox-one-s-bt""#))
+      await client.send(clientLine("FeedRequest", #","as":"SdlCompatible""#))
       let feeding = try #require(await client.readLine())
       #expect(try JSONSchemaFiles.issues(in: feeding, against: "endpoint.schema.json").isEmpty)
-      #expect(try client.object(feeding)["as"] as? String == "hid-xbox-one-s-bt")
+      #expect(try client.object(feeding)["as"] as? String == "SdlCompatible")
       await client.send(clientLine("Frame", #","dpad":["up"]"#))
 
       let device = try #require(factory.devices.first)
@@ -318,13 +329,13 @@ struct EndpointFeedTests {
   /// A welcomed client that started a `hid-generic` feed and read `feeding`.
   private func feeding(_ server: EndpointServer) async throws -> EndpointTestClient {
     let client = try await welcomed(server)
-    await client.send(clientLine("FeedRequest", #","as":"hid-generic""#))
+    await client.send(clientLine("FeedRequest", #","as":"Generic""#))
     let line = try #require(await client.readLine())
     #expect(try JSONSchemaFiles.issues(in: line, against: "endpoint.schema.json").isEmpty)
     let feeding = try client.object(line)
     #expect(feeding["kind"] as? String == "FeedSession")
     #expect(feeding["apiVersion"] as? String == OpenJoystickDriverAPI.version)
-    #expect(feeding["as"] as? String == "hid-generic")
+    #expect(feeding["as"] as? String == "Generic")
     return client
   }
 

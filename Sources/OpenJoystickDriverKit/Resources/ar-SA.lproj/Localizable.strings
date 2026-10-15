@@ -1549,13 +1549,15 @@
 "cli.profile.vanished" = "لم تحتفظ الخدمة بملف التعريف. تحقّق منه باستخدام «ojd profile list».";
 "error.E1001" = "نقطة النهاية متوقفة. شغّلها باستخدام «ojd access enable» ثم اتصل مرة أخرى.";
 "error.E1002" = "رفضت الخدمة هذا العميل. ليس لديه إذن للنطاقات التي طلبها، أو أن توقيعه أو إثباته غير صالح. شغّل «ojd access list»، وامنح العميل الإذن باستخدام «ojd access grant»، ثم اتصل مرة أخرى.";
-"error.E1003" = "لا تدعم الخدمة apiVersion الموجود في Hello. أرسل أحد الإصدارات المذكورة في details.supportedAPIVersions ثم اتصل مرة أخرى.";
 "error.E1004" = "تعذّر على الخدمة قبول السطر. إما أنه غير صالح أو أنه وصل في وقت خاطئ. أرسل hello أولًا ثم طلبًا واحداً، وتحقّق من كل سطر مقابل مخطط نقطة النهاية.";
 "error.E1005" = "بلغت نقطة النهاية الحد الأقصى وهو 8 اتصالات لكل وسيلة نقل (المقبس وWebSocket كلٌّ على حدة). أغلق اتصالًا لا تحتاج إليه ثم اتصل مرة أخرى.";
 "error.E1006" = "أُزيل إذن هذا العميل أثناء اتصاله. امنحه الإذن مرة أخرى باستخدام «ojd access grant» ثم اتصل مرة أخرى.";
 "error.E1007" = "قرأ العميل الأسطر ببطء شديد وانتظر 256 سطرًا. اقرأ الأسطر بالسرعة التي تصل بها ثم اتصل مرة أخرى.";
 "error.E1008" = "تشغّل الخدمة بالفعل 4 وحدات تحكم افتراضية. أغلق feed لا تحتاج إليه ثم أرسل feed مرة أخرى.";
 "error.E1009" = "أُغلقت وحدة التحكم الافتراضية، أو لا تشغّل الخدمة أي وحدة. اتصل مرة أخرى وأرسل feed.";
+"error.E1010" = "لا تدعم الخدمة apiVersion الموجود في أحد الأسطر. أرسل أحد الإصدارات المذكورة في details.supportedAPIVersions ثم اتصل مرة أخرى.";
+"error.E1011" = "يحتوي أحد الأسطر على kind لا تعرفه الخدمة أو لا تقبله في هذه المرحلة. أرسل Hello أولًا، ثم Subscription أو FeedRequest، ثم أسطر Frame، واتصل مرة أخرى.";
+"error.E1012" = "لا يحتوي أحد الأسطر على apiVersion أو على kind. يجب أن يحمل كل سطر كليهما. أضفهما واتصل مرة أخرى.";
 "shortcuts.action.activate_profile.description" = "تفعّل ملف تعريف إعادة التعيين لطراز وحدة التحكم الخاص به.";
 "shortcuts.action.activate_profile.title" = "تفعيل ملف التعريف";
 "shortcuts.action.app_version.description" = "تعرض إصدار التطبيق المثبّت.";
@@ -1577,7 +1579,7 @@
 "shortcuts.profile.name" = "الاسم";
 "shortcuts.profile.type" = "ملف تعريف إعادة التعيين";
 "cli.explain.abstract" = "يشرح رمز خطأ: ماذا يعني وكيف تصلحه.";
-"cli.explain.discussion" = "يعرض ojd explain الرموز النشطة، وتعرض الويكي الرموز المتقاعدة. يعمل دون اتصال بالإنترنت، ولا يهم حجم أحرف الرمز.";
+"cli.explain.discussion" = "يشرح ojd explain الرموز النشطة والمتقاعدة. يعمل دون اتصال بالإنترنت، ولا يهم حجم أحرف الرمز.";
 "cli.explain.code" = "رمز الخطأ، مثل E2004.";
 "cli.explain.unknown" = "%@ ليس رمز خطأ نشطًا. تحقق من الإملاء؛ تعرض صفحة الويكي Error-Codes كل الرموز.";
 "cli.explain.area" = "المجال: %@";
@@ -1588,6 +1590,7 @@
 "cli.explain.area.document" = "المستندات";
 "cli.explain.exit_code" ="رمز الخروج: %@";
 "cli.explain.wire" = "قيمة السلك: %@";
+"cli.explain.retired" = "تقاعد في %@.";
 "cli.error.stale_installation" = "تطبيق OpenJoystickDriver.app المثبّت أقدم من مصادر المستودع هذه. شغّل «./Scripts/ojd build install-fast dev» أو اضبط OJD_RUN_REPOSITORY_CLI=1 لتشغيل هذا الإصدار.";
 "cli.error.forwarder_allocation" = "تعذّر تخصيص وسائط لـ ojd المثبّت. أعد تشغيل الأمر.";
 "cli.error.forwarder_exec" = "تعذّر تشغيل ojd المثبّت: %@. أعد تثبيت OpenJoystickDriver.app.";
