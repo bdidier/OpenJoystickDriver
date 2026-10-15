@@ -28,6 +28,8 @@ struct ControllerRecordDocument: Decodable {
   let startupWrites: [RecordStartupWrite]
   /// Present exactly for the `hid.report-layout` family.
   let inputLayout: ControllerInputLayout?
+  /// Present only for the `hid.descriptor` family, which then replaces the description's map.
+  let hidUsageMap: HIDUsageMap?
   let tuning: ControllerTuning
 
   init(from decoder: any Decoder) throws {
@@ -89,7 +91,17 @@ struct ControllerRecordDocument: Decodable {
     let output = try container.decodeOptional(Output.self, for: "output")
     rumbleTemplate = output?.rumble
     startupWrites = output?.startup ?? []
-    inputLayout = try container.decodeOptional(InputLayout.self, for: "input")?.layout
+    let input = try container.decodeOptional(Input.self, for: "input")
+    inputLayout = input?.layout
+    hidUsageMap = input?.usageMap
+    guard input?.shapes.isEmpty ?? true else {
+      throw DecodingError.dataCorrupted(
+        .init(
+          codingPath: decoder.codingPath + [DocumentKey("input")],
+          debugDescription: "descriptorShapes belong to a protocol description"
+        )
+      )
+    }
     tuning = try container.decodeOptional(Tuning.self, for: "tuning")?.tuning ?? .none
     try validateOwnershipAndOutput(codingPath: decoder.codingPath)
     try validateTuning(codingPath: decoder.codingPath)
@@ -165,6 +177,14 @@ struct ControllerRecordDocument: Decodable {
         .init(
           codingPath: codingPath + [DocumentKey("input")],
           debugDescription: "an input layout is required for hid.report-layout and only there"
+        )
+      )
+    }
+    if hidUsageMap != nil, protocolInfo.protocolID != .hidDescriptor {
+      throw DecodingError.dataCorrupted(
+        .init(
+          codingPath: codingPath + [DocumentKey("input")],
+          debugDescription: "a HID usage map applies only to hid.descriptor"
         )
       )
     }

@@ -151,8 +151,8 @@ Owns: usage-to-control maps as data.
 Depends: 8, and the vocabulary in 15.
 Verify: `swift test`, `./Scripts/ojd check profiles`.
 
-- [ ] 10.1 Move HID usage tables from code into records using canonical control ids. Verify: a test compares each table to the previous output for the recorded samples.
-- [ ] 10.2 Support hat, axis and button usages with ranges and dead zones as typed parameters. Verify: unit tests per usage kind.
+- [x] 10.1 Move HID usage tables from code into records using canonical control ids. Verify: a test compares each table to the previous output for the recorded samples. Done: `HIDUsageLayoutEquivalenceTests` compares against the golden `Tests/HIDUsageGolden/hid-usage-layouts.txt`, generated from the coded tables at 36bf3332; maps live in `input.hidUsageMap` of records 11c1-5600, 2e95-434d, 2dc8-301b/301c, patch 0079-0006, and the `hid.descriptor.json` defaults.
+- [x] 10.2 Support hat, axis and button usages with ranges and dead zones as typed parameters. Verify: unit tests per usage kind. Done: `HIDUsageMapTests` and `test_hid_usage_map_schema.py`.
 
 ## 11. Modes and links incl. coreBluetoothGATT (old WP8)
 
@@ -228,13 +228,13 @@ Depends: 4, 12, 14.
 Verify: `swift test`, lint pair, `./Scripts/ojd check schemas`.
 
 - [ ] 17.1 Rename commands and words by the D9 table, and give the access values OS-neutral names (`ioHID`, `ioUSBHost`, `usbDriverKit`, `coreBluetoothGATT` in `report.schema.json` and `DeviceAccessBackend`), with OS words only under `platform` (cli-surface). Verify: a test lists every old word as rejected with a hint to the new word.
-- [ ] 17.2 Add a settings schema and move settings out of `UserDefaults` into layered files; add `ojd setting` keys for every GUI-only switch. Verify: schema check and a round-trip test.
+- [x] 17.2 Add a settings schema and move settings out of `UserDefaults` into layered files; add `ojd setting` keys for every GUI-only switch. Verify: schema check and a round-trip test. Done: `settings.schema.json`, layered files with a one-time `UserDefaults` import; `everySettingRoundTripsThroughTheUserFile` and `./Scripts/ojd check schemas` pass. Show in menu bar, update checks and Send Test Notification stay with 17.2a.
 - [ ] 17.2a Add the `setting` keys for show in menu bar and update checks together with their switches in the 20.x General pane, and give Send Test Notification a CLI place once a service-to-GUI notification path exists (D9). Verify: the 17.2 round-trip test covers the new keys; the D10 coverage test lists Send Test Notification.
 - [x] 17.3 Add the single `DataDirectory` port used by every store. Verify: `grep` finds no direct path building outside the port; tests use a temp directory.
 - [ ] 17.4 Split the neutral core from a macOS host adapter so `Sources/OpenJoystickDriver` has no macOS-only imports outside `platform`. Verify: a script or test greps imports and fails on a violation.
-- [ ] 17.5 Add the coverage test that lists every command and flags any with no GUI place. Verify: the test passes and fails on a fake command.
+- [x] 17.5 Add the coverage test that lists every command and flags any with no GUI place. Verify: the test passes and fails on a fake command. Done: `GUICoverageTests` (`everyCommandOfTheRealTreeHasAGUIPlace`, `everyMatrixEntryNamesARealCommand`, `aFakeCommandWithNoGUIPlaceIsReported`) over `GUICoverageMatrix.swift`.
 - [x] 17.6 Decide on the command-line-tool symlink after open item 4. Verify: the decision is in `design.md`.
-- [ ] 17.6a Make `ojd status` report whether the command-line tool link is installed, and give `ojd` no command or setting that installs or removes it (D9). Verify: CLI tests for an installed, a missing and a broken link, with `--json`.
+- [x] 17.6a Make `ojd status` report whether the command-line tool link is installed, and give `ojd` no command or setting that installs or removes it (D9). Verify: CLI tests for an installed, a missing and a broken link, with `--json`. Done: `StatusCommandLinkTests` covers installed, missing, broken and relative links, each with `--json`.
 
 ## 18. SDK endpoint and reference client
 
@@ -244,19 +244,19 @@ Verify: `swift test`, `./Scripts/ojd check schemas`.
 
 - [x] 18.1 Implement Challenge, Hello, Welcome, Subscription, FeedRequest, FeedSession, Frame and Status with `AccessGrants`. Verify: round-trip tests against the schema.
 - [x] 18.2 Return the supported-version list on a bad `apiVersion`, wrong kind or missing header, with new catalog codes. Verify: tests for each; old codes keep numbers.
-- [ ] 18.3 Ship the reference client and its test. Verify: the test subscribes and receives a frame.
-- [ ] 18.4 Document the endpoint in `docs/sdk/`. Verify: markdownlint.
+- [x] 18.3 Ship the reference client and its test. Verify: the test subscribes and receives a watch line with the controller's input state. Done: `Scripts/SDK/reference_client.py`; `theClientSubscribesAndReceivesAControllerFrame` and `test_endpoint_reference_client.py` pass. The service sends watch lines on subscribe; `Frame` is a client-to-service kind.
+- [x] 18.4 Document the endpoint in `docs/sdk/`. Verify: markdownlint. Done: `docs/sdk/endpoint.md`; markdownlint reports 0 issues over 140 files and `test_sdk_docs.py` checks the examples against the catalog and fixtures.
 
 ## 19. Streaming boundary and WebRTC
 
-Owns: `InputSource`, `OutputSink`, queue policy, WebRTC transport, latency report.
+Owns: `InputSource`, `OutputSink`, queue policy, WebRTC bridge, latency report.
 Depends: 12, 18.
 Verify: `swift test`, lint pair. Hardware: H10.
 
 - [ ] 19.1 Introduce `InputSource` and `OutputSink` and attach physical, virtual, endpoint paths to them. Verify: 1.1 shows zero diffs.
 - [ ] 19.2 Add bounded queue policy per record or default. Verify: slow-consumer test keeps memory bounded and delivers the newest frame.
 - [x] 19.3 Add per-stage timestamps to `ojd diagnose`. Verify: test output lists dispatch and delivery times. Done: read, parse, dispatch, delivery-virtual-device and delivery-endpoint stamps; `DeviceManagerFrameTimingsTests` asserts all five in order and `--plain` adds one timing row per stage.
-- [ ] 19.4 Add the WebRTC transport, off by default, using the endpoint Subscription flow for signalling. Verify: loopback test; with the setting off, a socket scan shows no listener.
+- [ ] 19.4 Add the WebRTC bridge in `Tools/WebRTCBridge/` as its own Swift package on LiveKitWebRTC, an endpoint client (`FeedRequest`/`RumbleCommand` on the game's Mac, `Subscription` on the player's Mac), with out-of-band offer and answer. Verify: a loopback test connects two bridges through a data channel against a test endpoint and passes a frame one way and a rumble command back; a socket scan shows no listener; the root `Package.resolved` has no WebRTC package.
 
 ## 20. AppKit GUI shell
 
@@ -318,7 +318,7 @@ These need the maintainer and a device. Each result is recorded in `wiki` or the
 - [ ] H7 Wine, CrossOver and a browser: confirm the expectations in the SDL consumer table.
 - [ ] H8 SDL3 and Steam with `Generic` and `SdlCompatible`.
 - [ ] H9 `1209:4A4F`: press each button and move each axis to confirm mapping directions (open item 5).
-- [ ] H10 Stutter: measure with the 19.3 timestamps, with WebRTC off and on.
+- [ ] H10 Stutter: measure with the 19.3 timestamps, with and without the WebRTC bridge.
 
 ## Workflow follow-up
 

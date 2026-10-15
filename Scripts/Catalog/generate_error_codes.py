@@ -17,6 +17,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from Scripts.Quality.biome_format import format_json
 from Scripts.Quality.schema_compatibility import git, last_release_tag
 
 try:
@@ -207,13 +208,7 @@ def render_endpoint_schema(text: str, entries: list[Entry]) -> str:
         for entry in entries
         if entry["domain"] == "endpoint" and entry["status"] == "active"
     ]
-    indent = "\n" + "\t" * 6
-    enum = (
-        indent
-        + ("," + indent).join(json.dumps(code) for code in codes)
-        + "\n"
-        + "\t" * 5
-    )
+    enum = ", ".join(json.dumps(code) for code in codes)
     expected = json.loads(text)
     try:
         expected["$defs"]["error"]["properties"]["code"]["enum"] = codes
@@ -225,7 +220,7 @@ def render_endpoint_schema(text: str, entries: list[Entry]) -> str:
             text[: match.start()] + match[1] + enum + match[2] + text[match.end() :]
         )
         if json.loads(rendered) == expected:
-            return rendered
+            return format_json({ENDPOINT_SCHEMA: rendered})[ENDPOINT_SCHEMA]
     raise ErrorCodeError(f"{ENDPOINT_SCHEMA} has no error code enum")
 
 

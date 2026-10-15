@@ -1,16 +1,16 @@
 {
-	"apiVersion": "openjoystickdriver/v1alpha1",
-	"kind": "ControllerPatch",
-	"selector": {
-		"vendorID": 2389,
-		"productID": 29200
-	},
-	"patch": {
-		"protocol": {
-			"family": "vendor.nvidia-shield",
-			"parameters": {
-				"reportRevision": "Shield2015"
-			}
-		}
-	}
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "ControllerPatch",
+  "selector": {
+    "vendorID": 2389,
+    "productID": 29200
+  },
+  "patch": {
+    "protocol": {
+      "family": "vendor.nvidia-shield",
+      "parameters": {
+        "reportRevision": "Shield2015"
+      }
+    }
+  }
 }

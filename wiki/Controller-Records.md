@@ -13,6 +13,7 @@ This page explains how to add a controller that OpenJoystickDriver does not know
 - [Send Fixed Reports At Startup](#send-fixed-reports-at-startup)
 - [Tune Timings and the Stick Deadzone](#tune-timings-and-the-stick-deadzone)
 - [Select a Model With Protocol Parameters](#select-a-model-with-protocol-parameters)
+- [Map HID Usages](#map-hid-usages)
 - [Offer Alternative Modes Chosen By a Probe](#offer-alternative-modes-chosen-by-a-probe)
 - [Connect a Switch 2 Controller Over Bluetooth LE][toc-2]
 - [Draft a Record From a Connected Controller][toc-1]
@@ -210,17 +211,22 @@ Some families drive several models that differ in one detail. A typed parameter 
 - `role: "WirelessAdapter"` (`sony.dualshock4`): the Sony DUALSHOCK 4 USB wireless adapter. Output waits until a controller connects to the adapter.
 - `motionScale: "StrikePad"` (`sony.dualshock4`): a controller whose motion reports half the acceleration in the opposite direction on all axes.
 - `reportRevision: "Shield2015"` (`vendor.nvidia-shield`): the 2015 SHIELD controller, which has rumble. Without it, the driver treats the controller as the 2017 model, which is input-only on macOS.
-- `usageLayout` (`hid.descriptor`):
-  - `Wr007`: Z and Rz are the right stick, Accelerator is LT and Brake is RT, with the WR007 button order.
-  - `ScufEnvision`: input comes only from report 6, buttons 1 to 10 are mapped, and Z and Rz swap with Rx and Ry.
-  - `ZRzBrakeLeft`: Z and Rz are the right stick, Brake is LT and Accelerator is RT, and button 13 is Home. A controller without a record gets this layout when its report descriptor has Z, Rz, a Brake or Accelerator, and no Rx or Ry.
-  - `DragonRise`: Z and Rz are the right stick, buttons follow the DirectInput order (1 to 4 are Y, B, A, X), and buttons 7 and 8 are digital L2 and R2.
 - `maker: "ThirdParty"` (`sony.dualsense`): the controller is not a Sony DualSense. The driver reads feature report `0x03` for its features and limits output to them, as SDL's `HIDAPI_DriverPS5` does.
 - `unprobedSensors` and `unprobedTouchpad` (`sony.dualsense`): a third-party DualSense that does not answer the capability probe still has motion sensors or a touchpad, and either parameter reads its input in the alternate report layout.
 - `forcedVibration` (`sony.dualsense`): a third-party DualSense keeps vibration when its probe reply omits it.
 - `role: "Receiver"` (`sony.dualsense`): a third-party DualSense wireless receiver, which reports with no controller paired. OJD treats the controller as connected only while the packet sequence advances.
 
-A DualShock 4 record takes at most one of `role` and `motionScale`, and a `hid.descriptor` record takes one `usageLayout`. A `sony.dualsense` record runs as a third-party controller only with `maker: "ThirdParty"`, whatever its vendor ID, and the other DualSense parameters describe that model and need it; a record without parameters is a Sony DualSense. The catalog gives `maker: "ThirdParty"` to every `sony.dualsense` record whose vendor ID is not Sony's (`054C`). A `patch` merges its parameters key by key into the bundled ones and cannot remove one, but it can set a bundled parameter to another value.
+A DualShock 4 record takes at most one of `role` and `motionScale`. A `sony.dualsense` record runs as a third-party controller only with `maker: "ThirdParty"`, whatever its vendor ID, and the other DualSense parameters describe that model and need it; a record without parameters is a Sony DualSense. The catalog gives `maker: "ThirdParty"` to every `sony.dualsense` record whose vendor ID is not Sony's (`054C`). A `patch` merges its parameters key by key into the bundled ones and cannot remove one, but it can set a bundled parameter to another value.
+
+## Map HID Usages
+
+A `hid.descriptor` record maps the usages of its report descriptor to controls in `input.hidUsageMap`. Without one, the record uses the standard map in `Resources/Protocols/hid.descriptor.json`. Each entry names a usage by decimal `page` and `usage` and one `control`, as a `kind`:
+
+- `button`: the control is pressed while the value is nonzero. It cannot be `dpad`, a stick axis or a trigger.
+- `axis`: the control is a stick axis (`left-stick-x`, `left-stick-y`, `right-stick-x`, `right-stick-y`) or `left-trigger` or `right-trigger`. A stick reads -1 to 1 and a trigger 0 to 1 across the element's logical range. `range` (`{"min": 0, "max": 100}`, `min` below `max`) replaces that range, `inverted` reverses the axis, and `deadZone` (above 0 and below 1) reads 0 within that fraction of full travel and rescales the rest.
+- `hat`: the control is `dpad`. `range` is `{"min": 0, "max": 7}` or `{"min": 1, "max": 8}` and names the value of north, then clockwise; any other value is neutral. Without `range`, the element's logical minimum is north.
+
+`reportID` limits the map to one report. A usage the map does not name is ignored, and both the app and `./Scripts/ojd check profiles` reject a usage named twice or an axis `range` whose `min` is not below its `max`. The description may also list `descriptorShapes` that choose a map from the usages a controller's report descriptor declares: the shape in `hid.descriptor.json` gives a controller with Z, Rz, a Brake or Accelerator and no Rx or Ry the Z/Rz layout, with Brake as LT and Accelerator as RT. The records for the WR007 (`11C1:5600`), SCUF Envision (`2E95:434D`), 8BitDo Ultimate 2C (`2DC8:301B`, `301C`) and DragonRise (`0079:0006`, by patch) show complete maps.
 
 ## Offer Alternative Modes Chosen By a Probe
 

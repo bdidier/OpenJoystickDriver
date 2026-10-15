@@ -163,7 +163,26 @@ extension EquivalenceSnapshotCatalogTests {
     }
     // Parameters that only steer report decoding have no resolved value to print here; the
     // parsed frames snapshot covers their effect for the records with sample reports.
-    lines.append("parameters=\(profile.parameters.entries.joined(separator: ","))")
+    let parameterEntries = profile.parameters.entries + usageLayoutEntries(profile)
+    lines.append("parameters=\(parameterEntries.joined(separator: ","))")
     return lines
+  }
+
+  /// The snapshot spelled a `hid.descriptor` record's usage map as the `usageLayout` parameter
+  /// that selected it. Each name is a record that declares the layout.
+  private static let legacyUsageLayouts: [(name: String, vendorID: UInt16, productID: UInt16)] = [
+    ("Wr007", 0x11C1, 0x5600), ("ScufEnvision", 0x2E95, 0x434D),
+    ("ZRzBrakeLeft", 0x2DC8, 0x301B), ("DragonRise", 0x0079, 0x0006),
+  ]
+
+  private static func usageLayoutEntries(_ profile: DeviceRuntimeProfile) -> [String] {
+    guard let map = profile.hidUsageMap else { return [] }
+    for layout in legacyUsageLayouts {
+      let model = ControllerModelID(vendorID: layout.vendorID, productID: layout.productID)
+      if ProtocolDriverRegistry().record(for: model)?.hidUsageMap == map {
+        return ["usageLayout=\(layout.name)"]
+      }
+    }
+    return ["usageLayout=unknown"]
   }
 }

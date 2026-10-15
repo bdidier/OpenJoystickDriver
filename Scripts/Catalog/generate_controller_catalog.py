@@ -20,6 +20,7 @@ from Scripts.Catalog import controller_patch
 from Scripts.Catalog.catalog_rules import load_rules, parse_id, parse_identity
 from Scripts.Catalog.schema_header import KINDS, header
 from Scripts.Catalog.xpad_io import json_text, run_gh
+from Scripts.Quality.biome_format import format_json
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 LOCK_PATH = ROOT / "ControllerSources.lock.json"
@@ -639,11 +640,12 @@ def sdl_summary(rows: list[tuple[int, int, str]], counts: dict[str, int]) -> str
 def expected_files(
     records: dict[tuple[int, int], dict[str, Any]],
 ) -> dict[pathlib.Path, str]:
-    files = {
-        record_path(OUTPUT_DIR, key): json.dumps(record, indent=2, ensure_ascii=False)
-        + "\n"
-        for key, record in sorted(records.items())
-    }
+    files = format_json(
+        {
+            record_path(OUTPUT_DIR, key): json_text(record)
+            for key, record in sorted(records.items())
+        }
+    )
     # The bundle ships the authored protocol descriptions unchanged.
     for path in sorted(PROTOCOL_DIR.glob("*.json")):
         files[PROTOCOL_OUTPUT_DIR / path.name] = path.read_text()

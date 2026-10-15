@@ -15,11 +15,7 @@
               "fromEnd": 26
             },
             "keepAlive": true,
-            "modes": [
-              1,
-              2,
-              3
-            ]
+            "modes": [1, 2, 3]
           }
         },
         "usb": {
@@ -58,11 +54,7 @@
             "shareButton": {
               "fromEnd": 26
             },
-            "modes": [
-              1,
-              2,
-              3
-            ]
+            "modes": [1, 2, 3]
           }
         },
         "usb": {
@@ -86,11 +78,7 @@
               "fromEnd": 26
             },
             "keepAlive": true,
-            "modes": [
-              1,
-              2,
-              3
-            ]
+            "modes": [1, 2, 3]
           }
         },
         "usb": {
@@ -126,11 +114,7 @@
               "fromEnd": 26
             },
             "keepAlive": true,
-            "modes": [
-              1,
-              2,
-              3
-            ]
+            "modes": [1, 2, 3]
           }
         },
         "server": "system"
@@ -151,11 +135,7 @@
               "fromEnd": 26
             },
             "keepAlive": true,
-            "modes": [
-              1,
-              2,
-              3
-            ]
+            "modes": [1, 2, 3]
           }
         },
         "usb": {
@@ -198,11 +178,7 @@
               "fromStart": 3
             },
             "keepAlive": true,
-            "modes": [
-              1,
-              2,
-              3
-            ]
+            "modes": [1, 2, 3]
           }
         },
         "usb": {
@@ -226,11 +202,7 @@
               "fromEnd": 26
             },
             "keepAlive": true,
-            "modes": [
-              1,
-              2,
-              3
-            ]
+            "modes": [1, 2, 3]
           }
         },
         "usb": {
@@ -250,9 +222,7 @@
           "patch": {
             "protocol": {
               "parameters": {
-                "modes": [
-                  4
-                ]
+                "modes": [4]
               }
             }
           }
@@ -272,9 +242,7 @@
               "fromEnd": 26
             },
             "keepAlive": true,
-            "modes": [
-              4
-            ]
+            "modes": [4]
           }
         },
         "usb": {
@@ -298,11 +266,7 @@
               "fromEnd": 26
             },
             "keepAlive": true,
-            "modes": [
-              1,
-              2,
-              3
-            ]
+            "modes": [1, 2, 3]
           }
         },
         "usb": {
@@ -342,11 +306,7 @@
               "fromEnd": 26
             },
             "keepAlive": true,
-            "modes": [
-              1,
-              2,
-              3
-            ]
+            "modes": [1, 2, 3]
           }
         },
         "usb": {
@@ -373,11 +333,7 @@
               "fromEnd": 26
             },
             "keepAlive": true,
-            "modes": [
-              1,
-              2,
-              3
-            ]
+            "modes": [1, 2, 3]
           }
         },
         "usb": {
@@ -429,11 +385,7 @@
               "fromEnd": 26
             },
             "keepAlive": true,
-            "modes": [
-              1,
-              2,
-              3
-            ]
+            "modes": [1, 2, 3]
           }
         },
         "usb": {
@@ -460,11 +412,7 @@
               "fromEnd": 26
             },
             "keepAlive": true,
-            "modes": [
-              1,
-              2,
-              3
-            ]
+            "modes": [1, 2, 3]
           }
         },
         "usb": {
@@ -517,11 +465,7 @@
               "fromEnd": 26
             },
             "keepAlive": true,
-            "modes": [
-              1,
-              2,
-              3
-            ]
+            "modes": [1, 2, 3]
           }
         },
         "usb": {
@@ -549,11 +493,7 @@
               "fromEnd": 26
             },
             "keepAlive": true,
-            "modes": [
-              1,
-              2,
-              3
-            ]
+            "modes": [1, 2, 3]
           }
         },
         "usb": {
@@ -605,11 +545,7 @@
               "fromEnd": 26
             },
             "keepAlive": true,
-            "modes": [
-              1,
-              2,
-              3
-            ]
+            "modes": [1, 2, 3]
           }
         },
         "usb": {
@@ -634,11 +570,7 @@
               "fromEnd": 26
             },
             "keepAlive": true,
-            "modes": [
-              1,
-              2,
-              3
-            ]
+            "modes": [1, 2, 3]
           }
         },
         "usb": {
@@ -703,11 +635,7 @@
               "fromEnd": 26
             },
             "keepAlive": true,
-            "modes": [
-              1,
-              2,
-              3
-            ]
+            "modes": [1, 2, 3]
           }
         },
         "usb": {
@@ -735,11 +663,7 @@
               "fromEnd": 26
             },
             "keepAlive": true,
-            "modes": [
-              1,
-              2,
-              3
-            ]
+            "modes": [1, 2, 3]
           }
         },
         "usb": {
@@ -789,11 +713,7 @@
               "fromEnd": 26
             },
             "keepAlive": true,
-            "modes": [
-              1,
-              2,
-              3
-            ]
+            "modes": [1, 2, 3]
           }
         },
         "usb": {
@@ -820,11 +740,7 @@
               "fromEnd": 26
             },
             "keepAlive": true,
-            "modes": [
-              1,
-              2,
-              3
-            ]
+            "modes": [1, 2, 3]
           }
         },
         "usb": {
@@ -870,11 +786,7 @@
               "fromEnd": 26
             },
             "keepAlive": true,
-            "modes": [
-              1,
-              2,
-              3
-            ]
+            "modes": [1, 2, 3]
           }
         },
         "usb": {
@@ -898,11 +810,7 @@
               "fromEnd": 26
             },
             "keepAlive": true,
-            "modes": [
-              1,
-              2,
-              3
-            ]
+            "modes": [1, 2, 3]
           }
         },
         "usb": {
@@ -926,11 +834,7 @@
               "fromEnd": 26
             },
             "keepAlive": true,
-            "modes": [
-              1,
-              2,
-              3
-            ]
+            "modes": [1, 2, 3]
           }
         },
         "usb": {
@@ -1851,9 +1755,7 @@
         "selector": {
           "all": true
         },
-        "patch": [
-          1
-        ]
+        "patch": [1]
       },
       "message": "the file must hold exactly apiVersion, kind, selector, and patch"
     }
