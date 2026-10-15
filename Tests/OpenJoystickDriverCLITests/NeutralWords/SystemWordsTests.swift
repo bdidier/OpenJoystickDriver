@@ -113,8 +113,11 @@ struct SystemWordsTests {
     let second = try issues(in: other, against: schema)
 
     #expect(!first.isEmpty)
-    #expect(first.map { $0.replacingOccurrences(of: "bundle", with: "<field>") } == second.map {
-      $0.replacingOccurrences(of: unknown, with: "<field>")
-    })
+    #expect(
+      first.map { $0.replacingOccurrences(of: "bundle", with: "<field>") }
+        == second.map {
+          $0.replacingOccurrences(of: unknown, with: "<field>")
+        }
+    )
   }
 }

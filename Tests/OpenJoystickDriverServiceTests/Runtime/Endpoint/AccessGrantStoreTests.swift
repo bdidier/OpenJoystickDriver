@@ -118,7 +118,7 @@ struct AccessGrantStoreTests {
 
   @Test(arguments: [
     #""publisher":{"kind":"x"},"identifier":"a.out""#,
-    #""publisher":{"kind":"signed","id":"ABCDE12345"},"identifier":"a.out","unexpected":1"#,
+    #""publisher":{"kind":"signed","id":"ABCDE12345"},"identifier":7"#,
     #""kind":"signed","identifier":"a.out""#,
   ])
   func aFileThatIsNotTheCurrentShapeIsDamagedAndLeftAsItWas(grant: String) throws {
