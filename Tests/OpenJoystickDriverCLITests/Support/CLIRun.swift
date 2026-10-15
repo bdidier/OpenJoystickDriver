@@ -113,7 +113,8 @@ enum CLICommandTree {
     case ["setting", "set"]: ["launchAtLogin", "true"]
     case ["controller", "show"], ["controller", "watch"], ["controller", "capture"],
       ["controller", "rumble"], ["controller", "suspend"], ["controller", "resume"],
-      ["controller", "disconnect"], ["virtual", "reset"]:
+      ["controller", "disconnect"], ["controller", "claim"], ["controller", "release"],
+      ["virtual", "reset"]:
       ["045E:028E"]
     case ["controller", "light"]: ["045E:028E", "--color", "FF0000"]
     case ["controller", "player"]: ["045E:028E", "1"]
@@ -129,7 +130,6 @@ enum CLICommandTree {
     case ["controller", "calibrate"]: ["045E:028E", "start"]
     case ["controller", "pair"]: ["057E:2006", "057E:2007", "--profile", "Pair"]
     case ["controller", "unpair"]: ["057E:2006"]
-    case ["controller", "ownership"]: ["045E:028E", "virtual"]
     case ["profile", "create"]: ["Pad", "--controller", "045E:028E"]
     case ["profile", "duplicate"], ["profile", "rename"]: ["Pad", "Copy"]
     case ["profile", "show"], ["profile", "delete"], ["profile", "activate"],

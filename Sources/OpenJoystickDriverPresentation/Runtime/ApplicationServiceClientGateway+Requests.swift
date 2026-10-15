@@ -158,12 +158,12 @@ extension ApplicationServiceClientGateway {
     return try await client.resetVirtualHIDProfileOverride(for: selector)
   }
 
-  func setControllerOwnership(
+  func setControllerServer(
     model: ControllerModelID,
-    ownership: ControllerServer
-  ) async throws -> ControllerOwnershipResult {
+    server: ControllerServer
+  ) async throws -> ControllerServerResult {
     await ensureConnection()
-    return try await client.setControllerOwnership(model: model, ownership: ownership)
+    return try await client.setControllerServer(model: model, server: server)
   }
 
   func suspendController(_ selector: ControllerReference) async throws -> ControllerSuspendResult {

@@ -285,6 +285,17 @@
     }
 
     var publishedIdentityLabel: String { presentedIdentity.label }
+
+    /// The serving route of ``servingDecision``, the same route `ojd controller show` prints
+    /// as `serving.route`.
+    var servingRouteLabel: String {
+      switch servingDecision.route {
+      case .nativePassThrough: OJDLocalized.string("controllers.serving.nativePassThrough")
+      case .virtualHid: OJDLocalized.string("controllers.serving.virtualHid")
+      case .extensionOwned: OJDLocalized.string("controllers.serving.extensionOwned")
+      case .outputDisabled: OJDLocalized.string("controllers.serving.outputDisabled")
+      }
+    }
   }
 
   /// Icon and caption of one controller: the virtual identity when OJD publishes a virtual

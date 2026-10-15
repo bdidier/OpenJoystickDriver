@@ -12,7 +12,7 @@ struct LocalRPCBridgeTests {
     "getVirtualOutputState",
     "sendControllerOutput", "previewPhysicalColor", "releasePhysicalColorPreview",
     "getVirtualDeviceDiagnostics", "getFrameTimings", "setVirtualHIDProfileOverride",
-    "resetVirtualHIDProfileOverride", "setControllerOwnership", "openVirtualFeed",
+    "resetVirtualHIDProfileOverride", "setControllerServer", "openVirtualFeed",
     "exchangeVirtualFeed",
     "closeVirtualFeed", "suspendController", "resumeController",
     "disconnectWirelessController", "resetSettings", "getSettings", "setSetting",

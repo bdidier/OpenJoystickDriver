@@ -4,11 +4,11 @@ import Testing
 
 @testable import OpenJoystickDriverCLI
 
-extension ControllerOwnershipCommandTests {
+extension ControllerClaimCommandTests {
   @Test(arguments: ServingFixture.all)
   func theCLIAcceptsAServerChangeExactlyWhenThePolicyOffersTheChoice(_ fixture: ServingFixture) {
     let accepted =
-      (try? ControllerOwnershipCommand.checkSupported(
+      (try? ControllerServerChange.checkSupported(
         fixture.device,
         server: fixture.server,
         accessRoute: fixture.accessRoute

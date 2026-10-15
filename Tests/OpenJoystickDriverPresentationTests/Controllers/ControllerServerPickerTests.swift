@@ -6,7 +6,7 @@ import Testing
 @testable import OpenJoystickDriverPresentation
 
 @MainActor
-struct ControllerOwnershipPickerTests {
+struct ControllerServerPickerTests {
   private static func device(
     physicalOwnership: ControllerOwnershipObservation = .exclusiveHID,
     recordServer: ControllerServer = .system,
@@ -24,7 +24,7 @@ struct ControllerOwnershipPickerTests {
       bindingResult: .hidDescriptorFixture,
       recordServer: recordServer,
       recordAccessRoute: accessRoute,
-      sessionToken: .fixture("device-ownership")
+      sessionToken: .fixture("device-server")
     )
   }
 
@@ -54,34 +54,34 @@ struct ControllerOwnershipPickerTests {
       accessRoute: accessRoute
     )
 
-    #expect(ControllerOwnershipPicker.isShown(for: device) == shown)
+    #expect(ControllerServerPicker.isShown(for: device) == shown)
   }
 
   @Test(arguments: [ControllerServer.ojd, .system])
-  func aChangeCallsTheGatewayWithTheModelIdentityAndTheValue(_ ownership: ControllerServer) async {
+  func aChangeCallsTheGatewayWithTheModelIdentityAndTheValue(_ server: ControllerServer) async {
     let gateway = GatewayStub()
     let viewModel = RuntimeViewModel(gateway: gateway)
     let device = Self.device(physicalOwnership: .nativeGamepad)
 
-    await viewModel.setControllerOwnership(ownership, for: device)
+    await viewModel.setControllerServer(server, for: device)
 
-    let requests = await gateway.ownershipRequests
+    let requests = await gateway.serverRequests
     #expect(requests.count == 1)
     #expect(requests.first?.model == ControllerModelID(vendorID: 0x3537, productID: 0x100B))
-    #expect(requests.first?.ownership == ownership)
+    #expect(requests.first?.server == server)
     #expect(viewModel.controllerActionFailures[device.sessionToken.rawValue] == nil)
   }
 
   @Test
   func aRefusalShowsE2023WithTheServiceDetail() async {
     let gateway = GatewayStub()
-    await gateway.setOwnershipFailure(.invalidRecord, detail: "bad record")
+    await gateway.setServerFailure(.invalidRecord, detail: "bad record")
     let viewModel = RuntimeViewModel(gateway: gateway)
     let device = Self.device(physicalOwnership: .nativeGamepad)
 
-    await viewModel.setControllerOwnership(.ojd, for: device)
+    await viewModel.setControllerServer(.ojd, for: device)
 
     let message = viewModel.controllerActionFailures[device.sessionToken.rawValue]
-    #expect(message == OJDLocalized.string("controllers.ownership.invalidRecord") + " bad record")
+    #expect(message == OJDLocalized.string("controllers.server.invalidRecord") + " bad record")
   }
 }
