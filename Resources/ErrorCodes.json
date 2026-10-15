@@ -232,7 +232,7 @@
     {
       "code": "E2023",
       "domain": "cli",
-      "name": "ownershipToggleUnsupported",
+      "name": "claimUnsupported",
       "status": "active",
       "exitCode": 1
     },

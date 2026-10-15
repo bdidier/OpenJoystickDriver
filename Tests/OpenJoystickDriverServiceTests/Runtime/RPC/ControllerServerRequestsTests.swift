@@ -4,7 +4,7 @@ import Testing
 
 @testable import OpenJoystickDriverService
 
-struct ControllerOwnershipRequestsTests {
+struct ControllerServerRequestsTests {
   /// A bundled `sony.dualshock4` record, a HID family.
   private static let bundledHID = (vendorID: 0x2C22, productID: 0x2000)
   /// A bundled `xbox.gip` record, a raw-USB family.
@@ -14,21 +14,21 @@ struct ControllerOwnershipRequestsTests {
   /// `Packages` store is empty.
   private static func withDirectory(_ body: (URL) throws -> Void) throws {
     let root = FileManager.default.temporaryDirectory
-      .appendingPathComponent("ControllerOwnershipRequestsTests-\(UUID().uuidString)")
+      .appendingPathComponent("ControllerServerRequestsTests-\(UUID().uuidString)")
     defer { try? FileManager.default.removeItem(at: root) }
     try body(root.appendingPathComponent("Controllers", isDirectory: true))
   }
 
   private static func set(
     _ model: (vendorID: Int, productID: Int),
-    to ownership: ControllerServer,
+    to server: ControllerServer,
     native: Bool,
     in directory: URL
-  ) -> ControllerOwnershipResult {
-    ApplicationServiceServer.setControllerOwnership(
+  ) -> ControllerServerResult {
+    ApplicationServiceServer.setControllerServer(
       vendorID: model.vendorID,
       productID: model.productID,
-      ownership: ownership,
+      server: server,
       nativeGamepadConnected: native,
       directory: directory
     )
@@ -102,19 +102,19 @@ struct ControllerOwnershipRequestsTests {
 
   @Test
   func resultRoundTripsThroughJSON() throws {
-    let result = ControllerOwnershipResult(
-      ownership: .ojd,
+    let result = ControllerServerResult(
+      server: .ojd,
       previous: .system,
       file: "/tmp/2c22-2000.patch.json",
       created: true,
       failure: nil
     )
     let data = try JSONEncoder().encode(result)
-    #expect(try JSONDecoder().decode(ControllerOwnershipResult.self, from: data) == result)
+    #expect(try JSONDecoder().decode(ControllerServerResult.self, from: data) == result)
     let arguments = try JSONEncoder().encode(
-      LocalServiceRPCControllerOwnershipArguments(vendorID: 1, productID: 2, ownership: .system)
+      LocalServiceRPCControllerServerArguments(vendorID: 1, productID: 2, server: .system)
     )
     let object = try JSONSerialization.jsonObject(with: arguments) as? [String: Any]
-    #expect(object?["ownership"] as? String == "system")
+    #expect(object?["server"] as? String == "system")
   }
 }

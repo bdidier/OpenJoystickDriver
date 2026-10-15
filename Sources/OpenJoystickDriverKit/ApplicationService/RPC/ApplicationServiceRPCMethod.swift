@@ -13,7 +13,7 @@ package enum ApplicationServiceRPCMethod: String, CaseIterable, Sendable {
   case getFrameTimings
   case setVirtualHIDProfileOverride
   case resetVirtualHIDProfileOverride
-  case setControllerOwnership
+  case setControllerServer
   case openVirtualFeed
   case exchangeVirtualFeed
   case closeVirtualFeed

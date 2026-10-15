@@ -61,7 +61,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The pr
 - Mod packages: a folder with a `mod.json` manifest and `Controllers/`, `Profiles/`, and `Personas/` files that `ojd mod validate|install|list|remove` manages in `~/Library/Application Support/OpenJoystickDriver/Packages`. A package record sits between the bundled record and yours, and the runtime skips a package whose `requires` leaves out the running version. See [Writing controller mods](wiki/Writing-Controller-Mods.md).
 - `E3029`: a profile that comes from an installed mod package is read-only, and a change to it is refused. Duplicate the profile and change the copy. See [Error codes](wiki/Error-Codes.md).
 - `E4001` to `E4007`: the new `mod` error domain for `ojd mod` (invalid manifest, `requires` excludes the version, invalid package content, clash, already installed, not installed, store not writable). See [Error codes](wiki/Error-Codes.md).
-- `ojd controller ownership CONTROLLER native|virtual [--dry-run]` chooses whether macOS or OpenJoystickDriver serves a controller model. It sets `ownership` in your record, the running service applies it without a replug, and a raw-USB controller, a controller that macOS does not serve natively, or a model with no record is refused with the new error `E2023`. In the app, the controller detail has the same choice as a **Served by** picker for a controller that macOS serves natively or that a record gives to OpenJoystickDriver; it is hidden for raw-USB controllers. See the [command reference](wiki/Command-Reference.md#controller).
+- `ojd controller claim CONTROLLER` and `ojd controller release CONTROLLER` set `server` in your record for the model to `ojd` (OpenJoystickDriver serves it) or `system` (macOS serves it). The running service applies the change without a replug, `--dry-run` (`-n`) writes nothing, and a raw-USB controller, a controller that macOS does not serve natively, or a model with no record is refused with the new error `E2023`. In the app, the controller detail has the same choice as a **Served by** picker for a controller that macOS serves natively or that a record gives to OpenJoystickDriver; it is hidden for raw-USB controllers. See the [command reference](wiki/Command-Reference.md#controller).
+- `ojd controller show` prints the serving route and the persona that the serving policy decides (`serving` with `route`, `persona`, and `reason` in `--json`). The controller detail in the app shows the route as the **Serving route** fact next to **Published as**.
 
 ### Changed
 
@@ -156,6 +157,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The pr
 
 ### Removed
 
+- **Breaking:** `ojd controller ownership` is removed and is now an unknown command. Use `ojd controller claim` (was `virtual`) and `ojd controller release` (was `native`). In `ojd controller show --json`, `ownership.choice` and `ownership.choiceSource` are now `ownership.server` and `ownership.serverSource`, and `server` is `system` or `ojd`, and the `ojd controller claim` and `release` output has the kind `ControllerServer` with `server` in place of `ownership`.
 - **BREAKING:** Remove every command of the old command line, with no aliases. Each is replaced as follows:
   - `--headless` → run the executable as `ojd`; `--json-lines` → `--json`
   - `status`, `app status` → `ojd status`

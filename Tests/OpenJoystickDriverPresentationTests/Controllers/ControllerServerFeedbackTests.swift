@@ -6,7 +6,7 @@ import Testing
 @testable import OpenJoystickDriverPresentation
 
 @MainActor
-struct ControllerOwnershipFeedbackTests {
+struct ControllerServerFeedbackTests {
   private static func device(
     recordServer: ControllerServer = .system
   ) -> ApplicationServiceDeviceDescription {
@@ -37,7 +37,7 @@ struct ControllerOwnershipFeedbackTests {
     )
   }
 
-  private static func shownOwnership(_ viewModel: RuntimeViewModel) -> ControllerServer? {
+  private static func shownServer(_ viewModel: RuntimeViewModel) -> ControllerServer? {
     guard case .available(let status) = viewModel.statusState else { return nil }
     return status.devices.first?.recordServer
   }
@@ -47,12 +47,12 @@ struct ControllerOwnershipFeedbackTests {
     let gateway = GatewayStub(statusPayload: Self.status([Self.device()]))
     let viewModel = RuntimeViewModel(gateway: gateway)
 
-    let toggle = Task { await viewModel.setControllerOwnership(.ojd, for: Self.device()) }
+    let toggle = Task { await viewModel.setControllerServer(.ojd, for: Self.device()) }
     await gateway.waitForStatusCall(count: 3)
     await gateway.setStatusPayload(Self.status([Self.device(recordServer: .ojd)]))
     await toggle.value
 
-    #expect(Self.shownOwnership(viewModel) == .ojd)
+    #expect(Self.shownServer(viewModel) == .ojd)
     #expect(await gateway.statusCallCount <= 4)
   }
 
@@ -61,49 +61,49 @@ struct ControllerOwnershipFeedbackTests {
     let gateway = GatewayStub(statusPayload: Self.status([Self.device()]))
     let viewModel = RuntimeViewModel(gateway: gateway)
 
-    await viewModel.setControllerOwnership(.ojd, for: Self.device())
+    await viewModel.setControllerServer(.ojd, for: Self.device())
 
-    #expect(Self.shownOwnership(viewModel) == .system)
+    #expect(Self.shownServer(viewModel) == .system)
     #expect(await gateway.statusCallCount == 11)
   }
 
   @Test
   func aRefusedToggleRefreshesOnce() async {
     let gateway = GatewayStub(statusPayload: Self.status([Self.device()]))
-    await gateway.setOwnershipFailure(.noRecord)
+    await gateway.setServerFailure(.noRecord)
     let viewModel = RuntimeViewModel(gateway: gateway)
 
-    await viewModel.setControllerOwnership(.ojd, for: Self.device())
+    await viewModel.setControllerServer(.ojd, for: Self.device())
 
     #expect(await gateway.statusCallCount == 1)
   }
 
   @Test(
     arguments: [
-      (ControllerOwnershipFailure.rawUSB, String?.none, OJDLocalized.string("error.E2023")),
+      (ControllerServerFailure.rawUSB, String?.none, OJDLocalized.string("error.E2023")),
       (.notNative, nil, OJDLocalized.string("error.E2023")),
-      (.noRecord, nil, OJDLocalized.string("controllers.ownership.noRecord")),
+      (.noRecord, nil, OJDLocalized.string("controllers.server.noRecord")),
       (
         .invalidRecord, "bad record",
-        OJDLocalized.string("controllers.ownership.invalidRecord") + " bad record"
+        OJDLocalized.string("controllers.server.invalidRecord") + " bad record"
       ),
       (
         .persistenceFailed, "disk full",
-        OJDLocalized.string("controllers.ownership.persistenceFailed") + " disk full"
+        OJDLocalized.string("controllers.server.persistenceFailed") + " disk full"
       ),
     ]
   )
   func eachRefusalShowsItsOwnText(
-    failure: ControllerOwnershipFailure,
+    failure: ControllerServerFailure,
     detail: String?,
     expected: String
   ) async {
     let gateway = GatewayStub()
-    await gateway.setOwnershipFailure(failure, detail: detail)
+    await gateway.setServerFailure(failure, detail: detail)
     let viewModel = RuntimeViewModel(gateway: gateway)
     let device = Self.device()
 
-    await viewModel.setControllerOwnership(.ojd, for: device)
+    await viewModel.setControllerServer(.ojd, for: device)
 
     let message = viewModel.controllerActionFailures[device.sessionToken.rawValue]
     #expect(message == expected)
@@ -111,14 +111,14 @@ struct ControllerOwnershipFeedbackTests {
 
   @Test(
     arguments: [
-      ("controllers.ownership.noRecord", OJDLocalized.string("controllers.ownership.noRecord")),
+      ("controllers.server.noRecord", OJDLocalized.string("controllers.server.noRecord")),
       (
-        "controllers.ownership.invalidRecord",
-        OJDLocalized.string("controllers.ownership.invalidRecord")
+        "controllers.server.invalidRecord",
+        OJDLocalized.string("controllers.server.invalidRecord")
       ),
       (
-        "controllers.ownership.persistenceFailed",
-        OJDLocalized.string("controllers.ownership.persistenceFailed")
+        "controllers.server.persistenceFailed",
+        OJDLocalized.string("controllers.server.persistenceFailed")
       ),
     ]
   )
