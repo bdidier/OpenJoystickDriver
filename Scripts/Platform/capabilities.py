@@ -11,6 +11,9 @@ from collections.abc import Callable, Iterable, Mapping
 from pathlib import Path
 from typing import TextIO
 
+from Scripts.Quality.biome_binary import BiomeBinaryError
+from Scripts.Quality.biome_binary import resolve as resolve_biome
+
 from .capability_model import (
     FORMULAS,
     Capability,
@@ -141,14 +144,11 @@ class Resolver:
         return result.returncode == 0
 
     def _ensure_biome(self) -> RepairOutcome:
-        binary = self.project_dir / "node_modules/.bin/biome"
-        if binary.is_file() and os.access(binary, os.X_OK):
-            return RepairOutcome(Capability.BIOME, OutcomeKind.AVAILABLE)
-        return RepairOutcome(
-            Capability.BIOME,
-            OutcomeKind.UNSUPPORTED,
-            f"{binary} is missing; run `bun install` in {self.project_dir}.",
-        )
+        try:
+            resolve_biome(self.project_dir)
+        except (BiomeBinaryError, KeyError, ValueError) as error:
+            return RepairOutcome(Capability.BIOME, OutcomeKind.UNSUPPORTED, str(error))
+        return RepairOutcome(Capability.BIOME, OutcomeKind.AVAILABLE)
 
     def _ensure_schema_python(self) -> RepairOutcome:
         destination = self.project_dir / ".build/schema-validator"

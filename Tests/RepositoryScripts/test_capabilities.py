@@ -226,6 +226,9 @@ class CapabilityResolverTests(unittest.TestCase):
     def test_biome_is_the_pinned_binary_without_a_path_fallback(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
+            (root / "package.json").write_text(
+                '{"devDependencies": {"@biomejs/biome": "2.5.15"}}', encoding="utf-8"
+            )
             resolver = Resolver(
                 root,
                 environ={"CI": "1"},
@@ -237,7 +240,7 @@ class CapabilityResolverTests(unittest.TestCase):
             self.assertIn("bun install", raised.exception.outcome.detail)
             binary = root / "node_modules/.bin/biome"
             binary.parent.mkdir(parents=True)
-            binary.write_text("#!/bin/sh\n", encoding="utf-8")
+            binary.write_text("#!/bin/sh\necho 'Version: 2.5.15'\n", encoding="utf-8")
             binary.chmod(0o755)
             outcomes = resolver.resolve([Capability.BIOME])
             self.assertEqual(outcomes[0].kind, OutcomeKind.AVAILABLE)
