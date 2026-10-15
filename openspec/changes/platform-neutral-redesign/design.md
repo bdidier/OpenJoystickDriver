@@ -22,6 +22,7 @@ Floor: macOS 12. Test hosts: this Mac (macOS 27) and an Intel MacBook Pro A1398 
 | 10 | "OJD should not be hard-coding/make workarounds that are baked in... users don't have to start modifying source code." |
 | 11 | The seven Microsoft IDs in the DEXT are Apple's `transport.usb` grant (`docs/development/signing.md:36`). |
 | 12 | DS3 Bluetooth pairing: macOS 27 asks a PIN the DS3 lacks; older macOS pairs. Test host is the A1398 on macOS 12. |
+| 13 | Stored files from earlier versions, such as profiles with old control names: "must be forward-thinking. no migrations. full drop and breaking changes all across." (2026-10-15) |
 | 13 | Hardware available: Razer Wolverine V1 TE (GIP), GameSir G7 SE (GIP, 3537:1010), genuine Sony CECHZC2E DS3, a DS3 clone, genuine Sony DS4 v2, on two USB hubs; SDL3 apps such as Steam. The caller also lists an 8BitDo `2DC8:301B`. |
 | 14 | One massive breaking release `0.6.0-alpha.1`; no legacy; streaming (WebRTC as a separate endpoint client), SDK/API, user configs, SDL/Wine/CrossOver/browser support in scope. |
 
