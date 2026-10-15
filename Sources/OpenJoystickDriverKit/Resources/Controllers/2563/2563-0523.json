@@ -9,19 +9,27 @@
       "protocol": {
         "family": "sony.sixaxis"
       }
-    }
-  ],
-  "output": {
-    "startup": [
-      {
-        "report": {
-          "kind": "feature",
-          "id": 244,
-          "length": 5
-        },
-        "bytes": [66, 3, 0, 0],
-        "transport": "bluetooth-classic"
+    },
+    {
+      "id": "bluetooth",
+      "protocol": {
+        "family": "sony.sixaxis"
+      },
+      "match": {
+        "link": "bluetooth-classic"
+      },
+      "session": {
+        "startup": [
+          {
+            "report": {
+              "kind": "feature",
+              "id": 244,
+              "length": 5
+            },
+            "bytes": [66, 3, 0, 0]
+          }
+        ]
       }
-    ]
-  }
+    }
+  ]
 }

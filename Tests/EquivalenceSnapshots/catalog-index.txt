@@ -6360,7 +6360,6 @@ tuning -
 controls [dpad,face-east,face-north,face-south,face-west,guide,left-shoulder,left-stick-click,left-stick-x,left-stick-y,left-trigger,left-trigger-button,menu,right-shoulder,right-stick-click,right-stick-x,right-stick-y,right-trigger,right-trigger-button,view]
 output rumble=[left-main,right-main] binary=[right-main] lighting=[player-indicator] adaptiveTriggers=[]
 session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=0 recoveryRounds=0 livenessMs=-
-recordStartup[0] feature id=244 length=5 delayMs=0 transport=bluetooth-classic 42030000
 parameters=
 
 ## 2563:0575

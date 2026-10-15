@@ -205,22 +205,37 @@ struct ControllerRecordStartupWriteTests {
     #expect(any.applies(to: .usb) && any.applies(to: .bluetoothLE) && any.applies(to: nil))
   }
 
-  /// Both Sixaxis identities carry the Bluetooth enable report `hid-sony.c` sends.
+  /// Both Sixaxis identities carry the Bluetooth enable report `hid-sony.c` sends, in the
+  /// `bluetooth` mode that a Bluetooth link selects; neither record sends it at record level.
   @Test(arguments: [UInt16(0x0268), 0x0523])
-  func sixaxisRecordsEnableBluetooth(productID: UInt16) throws {
+  func sixaxisRecordsEnableBluetooth(productID: UInt16) async throws {
     let vendorID: UInt16 = productID == 0x0268 ? 0x054C : 0x2563
-    // The DS3 holds the report in its `bluetooth` mode, which a Bluetooth link selects; the other
-    // identity still holds it as a record-level write limited to Bluetooth.
-    let modeID: String? = productID == 0x0268 ? "bluetooth" : nil
-    let record = try #require(
-      DeviceCatalog().record(
-        for: ControllerModelID(vendorID: vendorID, productID: productID),
-        modeID: modeID
-      )
-    )
+    let model = ControllerModelID(vendorID: vendorID, productID: productID)
+    let base = try #require(DeviceCatalog().record(for: model))
+    #expect(base.startupWrites.isEmpty)
+    let record = try #require(DeviceCatalog().record(for: model, modeID: "bluetooth"))
     #expect(record.physicalProtocolID == .sonySixaxis)
-    let expectedTransports: [PhysicalTransport?] = productID == 0x0268 ? [nil] : [.bluetoothClassic]
-    #expect(record.startupWrites.map(\.transport) == expectedTransports)
+    #expect(record.startupWrites.map(\.transport) == [nil])
+    func device(_ link: PhysicalTransport) -> PhysicalDevice {
+      PhysicalDevice(
+        vendorID: vendorID,
+        productID: productID,
+        interfaces: [PhysicalInterfaceSignature(interfaceNumber: 0, hostTransport: link)]
+      )
+    }
+    for (link, expected) in [
+      (PhysicalTransport.bluetoothClassic, ControllerModeSelection.matched("bluetooth")),
+      (.usb, .noModeMatched),
+    ] {
+      let selected = await ControllerModeSelector.select(
+        from: base,
+        model: model,
+        backend: .ioHID,
+        reader: NoProbeReader(),
+        device: device(link)
+      ) { _ in }
+      #expect(selected == expected)
+    }
     #expect(
       record.startupWrites.map(\.write) == [
         .hidFeature(
@@ -241,5 +256,15 @@ struct ControllerRecordStartupWriteTests {
       \(fields)}
       """
     return try JSONDecoder().decode(ControllerRecordDocument.self, from: Data(json.utf8))
+  }
+}
+
+/// A reader for modes with no probe: any read is a test failure.
+private struct NoProbeReader: ControllerModeProbeReader {
+  func readFeatureReport(
+    _ request: PhysicalHIDFeatureReadRequest
+  ) -> PhysicalHIDReportResult<Data> {
+    Issue.record("a mode without a probe read a report")
+    return .unavailable
   }
 }
