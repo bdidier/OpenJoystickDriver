@@ -30,6 +30,26 @@ extension DeviceManager {
     return await pipelines[key]?.getPacketLog() ?? []
   }
 
+  /// Returns the newest frame timings of every connected controller.
+  public func frameTimingsSnapshot() async -> ApplicationServiceFrameTimingsPayload {
+    ApplicationServiceFrameTimingsPayload(
+      controllers: await connectedDeviceDescriptions().map {
+        ControllerFrameTimings(
+          controller: $0.sessionToken.rawValue,
+          name: $0.name,
+          frames: frameTimings.frames(for: $0.logicalControllerID)
+        )
+      }
+    )
+  }
+
+  /// Stamps the endpoint delivery on the newest frame of the controller attached as `token`; a
+  /// token that no connected controller holds stamps nothing.
+  public func endpointDelivered(session token: ControllerSessionToken, at nanoseconds: UInt64) {
+    guard let identifier = connectedIdentifier(for: .session(token)) else { return }
+    frameTimings.endpointDelivered(for: identifier, at: nanoseconds)
+  }
+
   /// Returns a snapshot of every connected controller.
   /// Used by the application service to report its live device list.
   public func connectedDeviceDescriptions() async -> [ConnectedDeviceSnapshot] {

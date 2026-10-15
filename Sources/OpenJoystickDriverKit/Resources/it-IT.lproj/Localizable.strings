@@ -974,6 +974,7 @@
 "cli.status.abstract" = "Mostra servizio, estensione, autorizzazioni e controller collegati.";
 "cli.status.discussion" = "Funziona anche con il servizio arrestato: lo segnala come arrestato ed esce con 0.";
 "cli.status.label.accessibility" = "Accessibilità";
+"cli.status.label.command_line_tool" = "Strumento da riga di comando";
 "cli.status.label.controllers" = "Controller (%lld)";
 "cli.status.label.extension" = "Estensione";
 "cli.status.label.input_monitoring" = "Monitoraggio input";
@@ -1152,13 +1153,17 @@
 "cli.setting.get.abstract" = "Stampa il valore di un’impostazione.";
 "cli.setting.get.discussion" = "Stampa solo true o false, per gli script. Con --json, stampa la chiave e il valore.";
 "cli.setting.include_prerelease_updates" = "Include le versioni preliminari quando cerca aggiornamenti.";
-"cli.setting.key" = "L’impostazione da leggere, ad esempio launch-at-login.";
+"cli.setting.key" = "L’impostazione da leggere, ad esempio launchAtLogin.";
 "cli.setting.launch_at_login" = "Apre OpenJoystickDriver quando effettui il login.";
 "cli.setting.list.abstract" = "Elenca ogni impostazione e il suo valore.";
 "cli.setting.notification_sounds" = "Riproduce un suono con le notifiche.";
+"cli.setting.notify_controller_connected" = "Invia una notifica quando un controller si collega o richiede attenzione.";
+"cli.setting.notify_controller_disconnected" = "Invia una notifica quando un controller si scollega.";
+"cli.setting.notify_profile_activated" = "Invia una notifica quando un profilo viene attivato o cambiato.";
+"cli.setting.notify_profile_deactivated" = "Invia una notifica quando il profilo attivo viene disattivato.";
 "cli.setting.set.abstract" = "Modifica un’impostazione.";
-"cli.setting.set.discussion" = "I valori sono true o false. Termina con codice 1 quando macOS lascia launch-at-login disattivato finché non lo approvi in Impostazioni di Sistema.";
-"cli.setting.set.key" = "L’impostazione da modificare, ad esempio launch-at-login.";
+"cli.setting.set.discussion" = "I valori sono true o false. Termina con codice 1 quando macOS lascia launchAtLogin disattivato finché non lo approvi in Impostazioni di Sistema.";
+"cli.setting.set.key" = "L’impostazione da modificare, ad esempio launchAtLogin.";
 "cli.setting.set.not_applied" = "macOS non ha applicato %@. Consenti OpenJoystickDriver in Impostazioni di Sistema > Generali > Elementi login ed estensioni, poi esegui «ojd setting get %@».";
 "cli.setting.set.success" = "%@ impostato su %@.";
 "cli.setting.set.value" = "Il nuovo valore: true o false.";
@@ -1351,6 +1356,7 @@
 "cli.diagnose.records.config_ok" = "all.patch.json e i file persona sono validi";
 "cli.diagnose.records.config_problems" = "ignorati o saltati: %@; correggili e controlla con «ojd status»";
 "cli.diagnose.records.skipped" = "ignorati: %@; controllali con «ojd record list»";
+"cli.diagnose.timings.frame" = "Frame %lld di %@ (%@), orologio monotono in nanosecondi: %@";
 "cli.record.abstract" = "Abbozza, elenca, controlla, installa o rimuove i record dei controller.";
 "cli.record.discussion" = "Un record del controller dice a OpenJoystickDriver come gestire un modello di controller. I tuoi record si trovano in ~/Library/Application Support/OpenJoystickDriver/Controllers e aggiungono un modello o modificano uno incluso. Il servizio in esecuzione li applica quando la cartella cambia. Solo «ojd record draft» richiede il servizio.";
 "cli.record.draft.abstract" = "Abbozza un record del controller da un controller collegato.";

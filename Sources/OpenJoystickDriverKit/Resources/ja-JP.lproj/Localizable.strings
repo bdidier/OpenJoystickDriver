@@ -974,6 +974,7 @@
 "cli.status.abstract" = "サービス、機能拡張、権限、接続中のコントローラを表示します。";
 "cli.status.discussion" = "サービスが停止していても動作します。サービスを停止中として報告し、0 で終了します。";
 "cli.status.label.accessibility" = "アクセシビリティ";
+"cli.status.label.command_line_tool" = "コマンドラインツール";
 "cli.status.label.controllers" = "コントローラ (%lld)";
 "cli.status.label.extension" = "機能拡張";
 "cli.status.label.input_monitoring" = "入力監視";
@@ -1152,13 +1153,17 @@
 "cli.setting.get.abstract" = "1 つの設定の値を出力します。";
 "cli.setting.get.discussion" = "スクリプト向けに true または false だけを出力します。--json を付けると、キーと値を出力します。";
 "cli.setting.include_prerelease_updates" = "アップデートの確認にプレリリース版を含めます。";
-"cli.setting.key" = "読み取る設定。例: launch-at-login。";
+"cli.setting.key" = "読み取る設定。例: launchAtLogin。";
 "cli.setting.launch_at_login" = "ログイン時に OpenJoystickDriver を開きます。";
 "cli.setting.list.abstract" = "すべての設定とその値を一覧表示します。";
 "cli.setting.notification_sounds" = "通知と一緒にサウンドを鳴らします。";
+"cli.setting.notify_controller_connected" = "コントローラが接続されたとき、または対応が必要なときに通知します。";
+"cli.setting.notify_controller_disconnected" = "コントローラが切断されたときに通知します。";
+"cli.setting.notify_profile_activated" = "プロファイルが有効になったとき、または切り替わったときに通知します。";
+"cli.setting.notify_profile_deactivated" = "アクティブなプロファイルがオフになったときに通知します。";
 "cli.setting.set.abstract" = "1 つの設定を変更します。";
-"cli.setting.set.discussion" = "値は true または false です。システム設定で承認するまで macOS が launch-at-login をオフのままにする場合は、終了コード 1 で終了します。";
-"cli.setting.set.key" = "変更する設定。例: launch-at-login。";
+"cli.setting.set.discussion" = "値は true または false です。システム設定で承認するまで macOS が launchAtLogin をオフのままにする場合は、終了コード 1 で終了します。";
+"cli.setting.set.key" = "変更する設定。例: launchAtLogin。";
 "cli.setting.set.not_applied" = "macOS が %@ を適用しませんでした。システム設定 > 一般 > ログイン項目 で OpenJoystickDriver を許可してから、「ojd setting get %@」を実行してください。";
 "cli.setting.set.success" = "%@ を %@ に設定しました。";
 "cli.setting.set.value" = "新しい値: true または false。";
@@ -1351,6 +1356,7 @@
 "cli.diagnose.records.config_ok" = "all.patch.json とペルソナファイルは有効です";
 "cli.diagnose.records.config_problems" = "無視またはスキップ: %@。修正して「ojd status」で確認してください";
 "cli.diagnose.records.skipped" = "%@ をスキップしました。「ojd record list」で確認してください";
+"cli.diagnose.timings.frame" = "フレーム %lld、%@（%@）、単調クロック（ナノ秒）: %@";
 "cli.record.abstract" = "コントローラのレコードの下書き作成、一覧表示、確認、インストール、削除を行います。";
 "cli.record.discussion" = "コントローラのレコードは、OpenJoystickDriver に 1 つのコントローラモデルの扱い方を伝えます。ユーザーのレコードは ~/Library/Application Support/OpenJoystickDriver/Controllers に保存され、モデルを追加するか、同梱のモデルを上書きします。実行中のサービスは、ディレクトリが変更されると自動的に適用します。サービスを必要とするのは 「ojd record draft」 だけです。";
 "cli.record.draft.abstract" = "接続中のコントローラからコントローラレコードの下書きを作成します。";

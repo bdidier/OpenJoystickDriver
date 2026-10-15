@@ -4,19 +4,6 @@
   import OpenJoystickDriverKit
   import SwiftUI
 
-  enum ApplicationPreferenceKeys {
-    static let controllerNotifications = "OpenJoystickDriver.notifications.controllers"
-    static let controllerDisconnectedNotifications =
-      "OpenJoystickDriver.notifications.controllerDisconnected"
-    static let profileNotifications = "OpenJoystickDriver.notifications.profiles"
-    static let profileDeactivatedNotifications =
-      "OpenJoystickDriver.notifications.profileDeactivated"
-    static let notificationSounds = ApplicationSettingKey.notificationSounds.defaultsKey ?? ""
-    static let includePrereleaseUpdates =
-      ApplicationSettingKey.includePrereleaseUpdates.defaultsKey ?? ""
-    static let developerTools = ApplicationSettingKey.developerTools.defaultsKey ?? ""
-  }
-
   protocol ApplicationUpdateChecking: Sendable {
     func check(currentVersion: String, includePrereleases: Bool) async -> UpdateCheckState
   }
@@ -52,7 +39,10 @@
 
     let launchAtLoginIsAvailable: Bool
 
-    private let defaults: UserDefaults
+    private let settings: SettingsStore
+    private var watcher: SettingsWatcher?
+    /// True while `errorMessage` shows a failed read of the settings file.
+    private var settingsReadFailed = false
     private let launchAtLogin: any LaunchAtLoginControlling
     private let notificationAuthorizationController: any NotificationAuthorizationControlling
     /// Counts authorization reads. The controller answers off the main actor, so a refresh that
@@ -62,14 +52,15 @@
     private let notificationDelivery: any RuntimeNotificationDelivering
 
     init(
-      defaults: UserDefaults = .standard,
-      launchAtLogin: any LaunchAtLoginControlling = SystemLaunchAtLoginController(),
+      settings: SettingsStore = SettingsStore(),
+      launchAtLogin: (any LaunchAtLoginControlling)? = nil,
       notificationAuthorization: any NotificationAuthorizationControlling =
         SystemNotificationAuthorizationController(),
       updateChecker: any ApplicationUpdateChecking = UpdateChecker(),
       notificationDelivery: any RuntimeNotificationDelivering = SystemRuntimeNotificationDelivery()
     ) {
-      self.defaults = defaults
+      let launchAtLogin = launchAtLogin ?? SystemLaunchAtLoginController(settings: settings)
+      self.settings = settings
       self.launchAtLogin = launchAtLogin
       self.notificationAuthorizationController = notificationAuthorization
       self.updateChecker = updateChecker
@@ -78,34 +69,45 @@
       self.startAtLogin = launchAtLogin.isEnabled
       self.notificationAuthorization = .checking
       self.notificationSystemSettings = .authorizationOnly(.checking)
-      let controllerNotifications = defaults.bool(
-        forKey: ApplicationPreferenceKeys.controllerNotifications
-      )
-      self.controllerNotifications = controllerNotifications
-      self.controllerDisconnectedNotifications = Self.preference(
-        ApplicationPreferenceKeys.controllerDisconnectedNotifications,
-        defaults: defaults,
-        fallback: controllerNotifications
-      )
-      let profileNotifications = defaults.bool(
-        forKey: ApplicationPreferenceKeys.profileNotifications
-      )
-      self.profileNotifications = profileNotifications
-      self.profileDeactivatedNotifications = Self.preference(
-        ApplicationPreferenceKeys.profileDeactivatedNotifications,
-        defaults: defaults,
-        fallback: profileNotifications
-      )
-      self.notificationSounds = Self.preference(
-        ApplicationPreferenceKeys.notificationSounds,
-        defaults: defaults,
-        fallback: true
-      )
-      self.includePrereleaseUpdates = defaults.bool(
-        forKey: ApplicationPreferenceKeys.includePrereleaseUpdates
-      )
-      self.developerToolsEnabled = defaults.bool(forKey: ApplicationPreferenceKeys.developerTools)
+      self.controllerNotifications = ApplicationSettingKey.notifyControllerConnected.defaultValue
+      self.controllerDisconnectedNotifications =
+        ApplicationSettingKey.notifyControllerDisconnected.defaultValue
+      self.profileNotifications = ApplicationSettingKey.notifyProfileActivated.defaultValue
+      self.profileDeactivatedNotifications =
+        ApplicationSettingKey.notifyProfileDeactivated.defaultValue
+      self.notificationSounds = ApplicationSettingKey.notifySounds.defaultValue
+      self.includePrereleaseUpdates = ApplicationSettingKey.updatesIncludePrereleases.defaultValue
+      self.developerToolsEnabled = ApplicationSettingKey.developerTools.defaultValue
+      reloadSettings()
+      // A change from `ojd setting` or another process shows while the window is open.
+      watcher = SettingsWatcher(store: settings) { [weak self] in
+        Task { @MainActor in self?.reloadSettings() }
+      }
       refreshNotificationAuthorization()
+    }
+
+    /// Reads the user settings file and the login item again; a damaged file shows in
+    /// `errorMessage` and leaves the switches as they are.
+    func reloadSettings() {
+      startAtLogin = launchAtLogin.isEnabled
+      let stored: SettingsDocument
+      do { stored = try settings.load() } catch {
+        errorMessage = error.localizedDescription
+        settingsReadFailed = true
+        return
+      }
+      if settingsReadFailed {
+        settingsReadFailed = false
+        errorMessage = nil
+      }
+      func value(_ key: ApplicationSettingKey) -> Bool { stored[key] ?? key.defaultValue }
+      controllerNotifications = value(.notifyControllerConnected)
+      controllerDisconnectedNotifications = value(.notifyControllerDisconnected)
+      profileNotifications = value(.notifyProfileActivated)
+      profileDeactivatedNotifications = value(.notifyProfileDeactivated)
+      notificationSounds = value(.notifySounds)
+      includePrereleaseUpdates = value(.updatesIncludePrereleases)
+      developerToolsEnabled = value(.developerTools)
     }
 
     func setStartAtLogin(_ enabled: Bool) {
@@ -142,19 +144,19 @@
     }
 
     func setNotificationSounds(_ enabled: Bool) {
-      defaults.set(enabled, forKey: ApplicationPreferenceKeys.notificationSounds)
+      guard persist(.notifySounds, enabled) else { return }
       notificationSounds = enabled
     }
 
     func sendTestNotification() { setNotificationPreference(true, preference: .test) }
 
     func setIncludePrereleaseUpdates(_ enabled: Bool) {
-      defaults.set(enabled, forKey: ApplicationPreferenceKeys.includePrereleaseUpdates)
+      guard persist(.updatesIncludePrereleases, enabled) else { return }
       includePrereleaseUpdates = enabled
     }
 
     func setDeveloperToolsEnabled(_ enabled: Bool) {
-      defaults.set(enabled, forKey: ApplicationPreferenceKeys.developerTools)
+      guard persist(.developerTools, enabled) else { return }
       developerToolsEnabled = enabled
     }
 
@@ -190,16 +192,12 @@
         self.notificationAuthorization = state
         self.notificationSystemSettings = settings
         if state == .denied {
-          self.defaults.set(false, forKey: ApplicationPreferenceKeys.controllerNotifications)
-          self.defaults.set(
-            false,
-            forKey: ApplicationPreferenceKeys.controllerDisconnectedNotifications
-          )
-          self.defaults.set(false, forKey: ApplicationPreferenceKeys.profileNotifications)
-          self.defaults.set(
-            false,
-            forKey: ApplicationPreferenceKeys.profileDeactivatedNotifications
-          )
+          let notifications: [ApplicationSettingKey] = [
+            .notifyControllerConnected, .notifyControllerDisconnected, .notifyProfileActivated,
+            .notifyProfileDeactivated,
+          ]
+          guard self.persist(Dictionary(uniqueKeysWithValues: notifications.map { ($0, false) }))
+          else { return }
           self.controllerNotifications = false
           self.controllerDisconnectedNotifications = false
           self.profileNotifications = false
@@ -208,10 +206,24 @@
       }
     }
 
+    /// Stores `values` in the user settings file; a failure shows in `errorMessage`.
+    private func persist(_ key: ApplicationSettingKey, _ value: Bool) -> Bool {
+      persist([key: value])
+    }
+
+    private func persist(_ values: [ApplicationSettingKey: Bool]) -> Bool {
+      do {
+        try settings.update(values)
+        return true
+      } catch {
+        errorMessage = error.localizedDescription
+        return false
+      }
+    }
+
     private func setNotificationPreference(_ enabled: Bool, preference: NotificationPreference) {
-      let key = preference.defaultsKey
       guard enabled else {
-        defaults.set(false, forKey: key)
+        guard persist(preference, false) else { return }
         update(preference, enabled: false)
         errorMessage = nil
         return
@@ -223,34 +235,29 @@
         self.notificationAuthorization = state
         switch state {
         case .allowed:
-          self.acceptNotificationPreference(preference, key: key)
+          self.acceptNotificationPreference(preference)
           self.refreshNotificationAuthorization()
-        case .notDetermined, .checking: self.requestNotificationAuthorization(preference, key: key)
-        case .denied: self.rejectNotificationPreference(preference, key: key, errorDescription: nil)
+        case .notDetermined, .checking: self.requestNotificationAuthorization(preference)
+        case .denied: self.rejectNotificationPreference(preference, errorDescription: nil)
         }
       }
     }
 
-    private func requestNotificationAuthorization(_ preference: NotificationPreference, key: String)
-    {
+    private func requestNotificationAuthorization(_ preference: NotificationPreference) {
       notificationAuthorizationReads += 1
       Task { [weak self, notificationAuthorizationController] in
         let (state, errorDescription) = await notificationAuthorizationController.request()
         guard let self else { return }
         self.notificationAuthorization = state
         if state == .allowed && errorDescription == nil {
-          self.acceptNotificationPreference(preference, key: key)
+          self.acceptNotificationPreference(preference)
         } else {
-          self.rejectNotificationPreference(
-            preference,
-            key: key,
-            errorDescription: errorDescription
-          )
+          self.rejectNotificationPreference(preference, errorDescription: errorDescription)
         }
       }
     }
 
-    private func acceptNotificationPreference(_ preference: NotificationPreference, key: String) {
+    private func acceptNotificationPreference(_ preference: NotificationPreference) {
       if preference == .test {
         notificationDelivery.deliver(
           title: OJDLocalized.string(
@@ -262,7 +269,7 @@
           sound: notificationSounds
         )
       } else {
-        defaults.set(true, forKey: key)
+        guard persist(preference, true) else { return }
         update(preference, enabled: true)
       }
       errorMessage = nil
@@ -270,11 +277,9 @@
 
     private func rejectNotificationPreference(
       _ preference: NotificationPreference,
-      key: String,
       errorDescription: String?
     ) {
-      if preference != .test {
-        defaults.set(false, forKey: key)
+      if preference != .test, persist(preference, false) {
         update(preference, enabled: false)
       }
       errorMessage =
@@ -294,8 +299,9 @@
       }
     }
 
-    private static func preference(_ key: String, defaults: UserDefaults, fallback: Bool) -> Bool {
-      defaults.object(forKey: key) as? Bool ?? fallback
+    private func persist(_ preference: NotificationPreference, _ value: Bool) -> Bool {
+      guard let key = preference.settingKey else { return true }
+      return persist(key, value)
     }
   }
 
@@ -306,14 +312,14 @@
     case profileDeactivations
     case test
 
-    var defaultsKey: String {
+    /// The setting that stores the preference; the test notification has none.
+    var settingKey: ApplicationSettingKey? {
       switch self {
-      case .controllers: return ApplicationPreferenceKeys.controllerNotifications
-      case .controllerDisconnections:
-        return ApplicationPreferenceKeys.controllerDisconnectedNotifications
-      case .profiles: return ApplicationPreferenceKeys.profileNotifications
-      case .profileDeactivations: return ApplicationPreferenceKeys.profileDeactivatedNotifications
-      case .test: return ""
+      case .controllers: return .notifyControllerConnected
+      case .controllerDisconnections: return .notifyControllerDisconnected
+      case .profiles: return .notifyProfileActivated
+      case .profileDeactivations: return .notifyProfileDeactivated
+      case .test: return nil
       }
     }
   }

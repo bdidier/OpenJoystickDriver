@@ -409,7 +409,7 @@ struct AccessGrantStoreTests {
     #expect(log.clients(at: start + 7_200 + 86_401).isEmpty)
   }
 
-  /// The wiki's Python reference client checks its proof against the same vector.
+  /// The Python reference client checks its proof against the same vector.
   @Test
   func aTokenAcceptsTheSharedProofVector() throws {
     let url = URL(fileURLWithPath: #filePath).deletingLastPathComponent()  // Endpoint

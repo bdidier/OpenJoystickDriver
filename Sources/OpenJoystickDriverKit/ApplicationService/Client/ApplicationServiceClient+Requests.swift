@@ -122,6 +122,17 @@ extension ApplicationServiceClient {
     )
   }
 
+  public func getFrameTimings() async throws -> ApplicationServiceFrameTimingsPayload {
+    let data: Data = try await call(.getFrameTimings, LocalServiceRPCEmptyArguments())
+    guard
+      let payload = try? JSONDecoder().decode(
+        ApplicationServiceFrameTimingsPayload.self,
+        from: data
+      )
+    else { throw ApplicationServiceClientError.invalidResponse }
+    return payload
+  }
+
   public func getVirtualDeviceDiagnostics() async throws
     -> ApplicationServiceVirtualDeviceDiagnosticsPayload
   {

@@ -45,7 +45,6 @@ private struct MainAppServiceRegistration: ApplicationServiceRegistration {
 /// Manages the main application's login-item registration.
 public enum ApplicationServiceManager: Sendable {
   public static let label = "com.openjoystickdriver"
-  static let launchAtLoginOptOutDefaultsKey = "LaunchAtLoginOptOut"
 
   public enum ManagerError: LocalizedError, Sendable {
     case unsupportedOperatingSystem
@@ -77,14 +76,17 @@ public enum ApplicationServiceManager: Sendable {
   }
 
   /// Registers the main application itself to launch on subsequent logins.
-  public static func install() throws {
-    UserDefaults.standard.set(false, forKey: launchAtLoginOptOutDefaultsKey)
+  ///
+  /// Records the choice in `settings` first; a settings file that cannot be read or written stops
+  /// the call before it registers.
+  public static func install(settings: SettingsStore = SettingsStore()) throws {
+    try settings.set(.launchAtLogin, to: true)
     try registerMainApp()
   }
 
   /// Registers on first launch unless the user explicitly removed the login item.
-  public static func installByDefaultIfNeeded() throws {
-    guard !UserDefaults.standard.bool(forKey: launchAtLoginOptOutDefaultsKey) else { return }
+  public static func installByDefaultIfNeeded(settings: SettingsStore = SettingsStore()) throws {
+    guard !(try settings.launchAtLoginOptOut()) else { return }
     try registerMainApp()
   }
 
@@ -98,8 +100,8 @@ public enum ApplicationServiceManager: Sendable {
     log("[ApplicationServiceManager] Main app registered for login")
   }
 
-  public static func uninstall() throws {
-    UserDefaults.standard.set(true, forKey: launchAtLoginOptOutDefaultsKey)
+  public static func uninstall(settings: SettingsStore = SettingsStore()) throws {
+    try settings.set(.launchAtLogin, to: false)
     try unregisterMainApp(using: MainAppServiceRegistration())
   }
 

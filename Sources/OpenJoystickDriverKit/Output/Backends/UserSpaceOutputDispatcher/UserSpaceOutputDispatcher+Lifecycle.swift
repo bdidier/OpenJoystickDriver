@@ -252,12 +252,20 @@ extension UserSpaceOutputDispatcher {
     try await deliver(input: nil, labels: .standard, from: identifier, remappedState: nil)
   }
 
-  public func dispatchReportingFailure(
+  @preconcurrency
+  public func dispatchPublishing(
     _ event: ControllerEvent,
     labels: ControllerButtonLabels,
-    from identifier: LogicalControllerID
+    from identifier: LogicalControllerID,
+    onPublished: @escaping @Sendable () -> Void
   ) async throws {
-    try await deliver(input: event.state, labels: labels, from: identifier, remappedState: nil)
+    try await deliver(
+      input: event.state,
+      labels: labels,
+      from: identifier,
+      remappedState: nil,
+      onPublished: onPublished
+    )
   }
 
   public func send(_ state: RemappingGamepadState, for identifier: LogicalControllerID) async throws

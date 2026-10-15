@@ -1,0 +1,16 @@
+{
+	"apiVersion": "openjoystickdriver/v1alpha1",
+	"kind": "Settings",
+	"launchAtLoginOptOut": true,
+	"notify": {
+		"controllerConnected": true,
+		"controllerDisconnected": false,
+		"profileActivated": true,
+		"profileDeactivated": false,
+		"sounds": false
+	},
+	"updates": {
+		"includePrereleases": true
+	},
+	"developerTools": true
+}

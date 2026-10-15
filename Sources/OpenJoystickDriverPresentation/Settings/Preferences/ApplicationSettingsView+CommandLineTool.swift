@@ -1,6 +1,7 @@
 #if canImport(AppKit) && canImport(SwiftUI)
 
   import AppKit
+  import OpenJoystickDriverKit
   import SwiftUI
 
   extension ApplicationSettingsView {
@@ -12,12 +13,12 @@
               Color(NSColor.secondaryLabelColor)
             ).fixedSize(horizontal: false, vertical: true)
             Spacer(minLength: 12)
-            switch commandLineTool.state {
+            switch commandLineTool.status.state {
             case .installed:
               Button(
                 OJDLocalized.string("settings.commandLineTool.uninstall")
               ) { commandLineTool.uninstall() }
-            case .notInstalled, .linkedElsewhere:
+            case .missing, .linkedElsewhere, .broken:
               Button(
                 OJDLocalized.string(
                   "settings.commandLineTool.install"
@@ -42,8 +43,9 @@
 
     private var commandLineToolStatus: String {
       let path = commandLineTool.link.linkURL.path
-      switch commandLineTool.state {
-      case .notInstalled:
+      let status = commandLineTool.status
+      switch status.state {
+      case .missing:
         return OJDLocalized.formatted(
           "settings.commandLineTool.notInstalled",
           path
@@ -53,11 +55,11 @@
           "settings.commandLineTool.installed",
           path
         )
-      case .linkedElsewhere(let destination):
+      case .linkedElsewhere, .broken:
         return OJDLocalized.formatted(
           "settings.commandLineTool.linkedElsewhere",
           path,
-          destination
+          status.target ?? ""
         )
       case .blockedByFile:
         return OJDLocalized.formatted(

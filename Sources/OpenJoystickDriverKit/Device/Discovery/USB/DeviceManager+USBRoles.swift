@@ -71,6 +71,7 @@ extension DeviceManager {
         usbTransportProvider: provider,
         transportProfile: role.resolution.profile,
         externalOutputAllowed: externalOutputAllowed,
+        frameTimings: frameTimings,
         sessionState: suspendedControllerIdentities.contains(role.identifier) ? .suspended : .active
       )
       pipelines[role.identifier] = pipeline

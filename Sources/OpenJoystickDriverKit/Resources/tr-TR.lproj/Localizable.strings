@@ -974,6 +974,7 @@
 "cli.status.abstract" = "Servisi, eklentiyi, izinleri ve bağlı kontrolcüleri gösterir.";
 "cli.status.discussion" = "Servis durdurulmuşken de çalışır: servisi durdurulmuş olarak bildirir ve 0 koduyla çıkar.";
 "cli.status.label.accessibility" = "Erişilebilirlik";
+"cli.status.label.command_line_tool" = "Komut Satırı Aracı";
 "cli.status.label.controllers" = "Kontrolcüler (%lld)";
 "cli.status.label.extension" = "Eklenti";
 "cli.status.label.input_monitoring" = "Giriş İzleme";
@@ -1152,13 +1153,17 @@
 "cli.setting.get.abstract" = "Bir ayarın değerini yazdırır.";
 "cli.setting.get.discussion" = "Betikler için yalnızca true veya false yazdırır. --json ile anahtarı ve değeri yazdırır.";
 "cli.setting.include_prerelease_updates" = "Güncellemeler denetlenirken ön sürümleri de dahil eder.";
-"cli.setting.key" = "Okunacak ayar, örneğin launch-at-login.";
+"cli.setting.key" = "Okunacak ayar, örneğin launchAtLogin.";
 "cli.setting.launch_at_login" = "Oturum açtığınızda OpenJoystickDriver’ı açar.";
 "cli.setting.list.abstract" = "Her ayarı ve değerini listeler.";
 "cli.setting.notification_sounds" = "Bildirimlerle birlikte ses çalar.";
+"cli.setting.notify_controller_connected" = "Bir kontrolcü bağlandığında veya dikkat gerektirdiğinde bildirim gönderir.";
+"cli.setting.notify_controller_disconnected" = "Bir kontrolcünün bağlantısı kesildiğinde bildirim gönderir.";
+"cli.setting.notify_profile_activated" = "Bir profil etkinleştirildiğinde veya değiştirildiğinde bildirim gönderir.";
+"cli.setting.notify_profile_deactivated" = "Etkin profil kapatıldığında bildirim gönderir.";
 "cli.setting.set.abstract" = "Bir ayarı değiştirir.";
-"cli.setting.set.discussion" = "Değerler true veya false olur. Siz Sistem Ayarları’nda onaylayana kadar macOS launch-at-login ayarını kapalı bırakırsa 1 koduyla çıkar.";
-"cli.setting.set.key" = "Değiştirilecek ayar, örneğin launch-at-login.";
+"cli.setting.set.discussion" = "Değerler true veya false olur. Siz Sistem Ayarları’nda onaylayana kadar macOS launchAtLogin ayarını kapalı bırakırsa 1 koduyla çıkar.";
+"cli.setting.set.key" = "Değiştirilecek ayar, örneğin launchAtLogin.";
 "cli.setting.set.not_applied" = "macOS %@ ayarını uygulamadı. Sistem Ayarları > Genel > Giriş Öğeleri bölümünde OpenJoystickDriver’a izin verin, ardından “ojd setting get %@” komutunu çalıştırın.";
 "cli.setting.set.success" = "%@ ayarı %@ olarak belirlendi.";
 "cli.setting.set.value" = "Yeni değer: true veya false.";
@@ -1308,7 +1313,7 @@
 "cli.mod.install.dry_run" = "%@ yüklenirdi.";
 "cli.mod.install.success" = "%@ yüklendi. Çalışan servis şimdi uyguluyor.";
 "cli.mod.list.abstract" = "Yüklü mod paketlerini ve her birinin dosyalarını listele.";
-"cli.mod.list.discussion" = "Her paketi sürümü, yazarı ve dosyalarıyla listeler. OJD’nin kullanmadığı bir paket, örneğin requires’ı bu sürümü dışarıda bırakan, nedenini E4xxx veya E5001 koduyla gösterir.";
+"cli.mod.list.discussion" = "Her paketi sürümü, yazarı ve dosyalarıyla listeler. OJD’nin kullanmadığı bir paket, örneğin requires alanı bu sürümü kapsamayan bir paket, nedenini E4xxx veya E5001 koduyla gösterir.";
 "cli.mod.list.problem" = "  Kullanılmıyor: %@";
 "cli.mod.remove.abstract" = "Yüklü bir mod paketini kaldır.";
 "cli.mod.remove.discussion" = "Yalnızca Packages/NAME dizinini siler. Terminalde onay ister; aksi halde --force gerekir. --dry-run paketin yüklü olduğunu denetler ve hiçbir şeyi değiştirmez. Yüklü değilse 1 ve E4006 ile çıkar.";
@@ -1351,6 +1356,7 @@
 "cli.diagnose.records.config_ok" = "all.patch.json ve persona dosyaları geçerli";
 "cli.diagnose.records.config_problems" = "yok sayıldı veya atlandı: %@; düzeltin ve “ojd status” ile kontrol edin";
 "cli.diagnose.records.skipped" = "%@ atlandı; “ojd record list” ile denetleyin";
+"cli.diagnose.timings.frame" = "Kare %lld, %@ (%@), nanosaniye cinsinden monoton saat: %@";
 "cli.record.abstract" = "Kontrolcü kayıtlarının taslağını oluşturur, listeler, denetler, yükler veya kaldırır.";
 "cli.record.discussion" = "Bir kontrolcü kaydı, OpenJoystickDriver’a bir kontrolcü modelini nasıl yöneteceğini söyler. Kayıtlarınız ~/Library/Application Support/OpenJoystickDriver/Controllers içinde bulunur ve bir model ekler ya da birlikte gelen bir modeli yamalar. Çalışan servis, klasör değiştiğinde bunları uygular. Yalnızca “ojd record draft” servise ihtiyaç duyar.";
 "cli.record.draft.abstract" = "Bağlı bir kontrolcüden kontrolcü kaydı taslağı oluşturur.";

@@ -974,6 +974,7 @@
 "cli.status.abstract" = "Toon de service, extensie, toestemmingen en aangesloten controllers.";
 "cli.status.discussion" = "Werkt ook als de service is gestopt: meldt de service als gestopt en sluit af met 0.";
 "cli.status.label.accessibility" = "Toegankelijkheid";
+"cli.status.label.command_line_tool" = "Opdrachtregelprogramma";
 "cli.status.label.controllers" = "Controllers (%lld)";
 "cli.status.label.extension" = "Extensie";
 "cli.status.label.input_monitoring" = "Invoermonitoring";
@@ -1152,13 +1153,17 @@
 "cli.setting.get.abstract" = "Geeft de waarde van één instelling weer.";
 "cli.setting.get.discussion" = "Geeft voor scripts alleen true of false weer. Met --json worden de sleutel en de waarde weergegeven.";
 "cli.setting.include_prerelease_updates" = "Neem pre-releaseversies mee bij het zoeken naar updates.";
-"cli.setting.key" = "De instelling die je wilt lezen, zoals launch-at-login.";
+"cli.setting.key" = "De instelling die je wilt lezen, zoals launchAtLogin.";
 "cli.setting.launch_at_login" = "Open OpenJoystickDriver wanneer je inlogt.";
 "cli.setting.list.abstract" = "Toont elke instelling en de waarde ervan.";
 "cli.setting.notification_sounds" = "Speel een geluid af bij meldingen.";
+"cli.setting.notify_controller_connected" = "Geef een melding wanneer een controller verbinding maakt of aandacht nodig heeft.";
+"cli.setting.notify_controller_disconnected" = "Geef een melding wanneer de verbinding met een controller wordt verbroken.";
+"cli.setting.notify_profile_activated" = "Geef een melding wanneer een profiel wordt geactiveerd of gewisseld.";
+"cli.setting.notify_profile_deactivated" = "Geef een melding wanneer het actieve profiel wordt uitgezet.";
 "cli.setting.set.abstract" = "Wijzigt één instelling.";
-"cli.setting.set.discussion" = "Waarden zijn true of false. Stopt met code 1 als macOS launch-at-login uit laat staan totdat je het goedkeurt in Systeeminstellingen.";
-"cli.setting.set.key" = "De instelling die je wilt wijzigen, zoals launch-at-login.";
+"cli.setting.set.discussion" = "Waarden zijn true of false. Stopt met code 1 als macOS launchAtLogin uit laat staan totdat je het goedkeurt in Systeeminstellingen.";
+"cli.setting.set.key" = "De instelling die je wilt wijzigen, zoals launchAtLogin.";
 "cli.setting.set.not_applied" = "macOS heeft %@ niet toegepast. Sta OpenJoystickDriver toe in Systeeminstellingen > Algemeen > Inlogonderdelen en voer daarna ‘ojd setting get %@’ uit.";
 "cli.setting.set.success" = "%@ ingesteld op %@.";
 "cli.setting.set.value" = "De nieuwe waarde: true of false.";
@@ -1351,6 +1356,7 @@
 "cli.diagnose.records.config_ok" = "all.patch.json en persona-bestanden zijn geldig";
 "cli.diagnose.records.config_problems" = "genegeerd of overgeslagen: %@; herstel ze en controleer met ‘ojd status’";
 "cli.diagnose.records.skipped" = "%@ overgeslagen; controleer ze met ‘ojd record list’";
+"cli.diagnose.timings.frame" = "Frame %lld van %@ (%@), monotone klok in nanoseconden: %@";
 "cli.record.abstract" = "Maakt concepten van controllerrecords, toont, controleert, installeert of verwijdert ze.";
 "cli.record.discussion" = "Een controllerrecord vertelt OpenJoystickDriver hoe één controllermodel moet worden aangestuurd. Je records staan in ~/Library/Application Support/OpenJoystickDriver/Controllers en voegen een model toe of passen een meegeleverd model aan. De draaiende service past ze toe wanneer de map verandert. Alleen ‘ojd record draft’ heeft de service nodig.";
 "cli.record.draft.abstract" = "Maakt een concept-controllerrecord van een verbonden controller.";

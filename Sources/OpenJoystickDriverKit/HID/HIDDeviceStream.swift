@@ -25,6 +25,8 @@ public final class HIDDeviceStream: @unchecked Sendable {
   var continuation: AsyncStream<HIDDeviceEvent>.Continuation?
   var streamGeneration = 0
   let seizeLock = NSLock()
+  /// Mode probe reads, which give up at a deadline and are not repeated on a silent device.
+  let boundedReads = BoundedHIDRead()
   var seizedByLocation: [UInt32: [IOHIDDevice]] = [:]
   var releasedByLocation: [UInt32: [IOHIDDevice]] = [:]
   var connectionsByDeviceID: [UInt64: HIDDeviceConnection] = [:]

@@ -42,6 +42,7 @@ def instances() -> dict[str, dict[str, Any]]:
         "error-codes": load(ROOT / "Resources/ErrorCodes.json"),
         "access-grants": load(FIXTURES / "access_grants.json"),
         "protocol-description": load(ROOT / "Resources/Protocols/xbox.xusb.json"),
+        "settings": load(FIXTURES / "settings.json"),
     }
 
 

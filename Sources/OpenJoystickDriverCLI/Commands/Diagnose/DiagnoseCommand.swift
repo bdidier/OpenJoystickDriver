@@ -195,7 +195,11 @@ struct DiagnoseCommand: AsyncParsableCommand {
         } catch { bundleError = error }
       }
 
-      let report = DiagnoseReport(checks: checks, bundle: bundleURL?.path)
+      let report = DiagnoseReport(
+        checks: checks,
+        timings: snapshot.frameTimings?.controllers ?? [],
+        bundle: bundleURL?.path
+      )
       switch CLIContext.current.format {
       case .json: try CLIOutput.json(report)
       case .plain: CLIOutput.plain(report.plainRows)
@@ -240,6 +244,20 @@ struct DiagnoseCommand: AsyncParsableCommand {
         startingAt: 0
       )
       CLIOutput.stdout("\(status)  \(id)  \(check.detail)")
+    }
+    for controller in report.timings {
+      for frame in controller.frames {
+        let stages = frame.stages.map { "\($0.stage.rawValue)=\($0.nanoseconds)" }
+        CLIOutput.stdout(
+          CLILocalized.format(
+            "cli.diagnose.timings.frame",
+            Int64(frame.sequence),
+            controller.controller,
+            controller.name,
+            stages.joined(separator: " ")
+          )
+        )
+      }
     }
   }
 

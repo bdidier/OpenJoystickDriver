@@ -1597,7 +1597,7 @@
         },
         "patch": {}
       },
-      "message": "patch must hold protocol, usb, bluetoothLE, server, route, output, input, or tuning"
+      "message": "patch must hold protocol, modes, usb, bluetoothLE, server, route, output, input, or tuning"
     },
     {
       "name": "an unknown section",
@@ -1612,7 +1612,7 @@
           "name": "x"
         }
       },
-      "message": "patch must hold protocol, usb, bluetoothLE, server, route, output, input, or tuning"
+      "message": "patch must hold protocol, modes, usb, bluetoothLE, server, route, output, input, or tuning"
     },
     {
       "name": "a model that is not vvvv-pppp lowercase hex",

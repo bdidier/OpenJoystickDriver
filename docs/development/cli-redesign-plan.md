@@ -62,7 +62,7 @@ Nouns come first, then verbs. The same verb means the same action on every noun.
 | `ojd record list\|show\|validate\|install\|remove\|draft` | `diagnose catalog` | Controller records ([Controller Configuration Plan](controller-config-plan.md)). |
 | `ojd permission list\|request` | `permissions`, `map permission` | macOS privacy permissions. |
 | `ojd extension status\|activate\|deactivate` | `extension status\|enable\|disable` | The DriverKit extension, in Apple's activation terms. |
-| `ojd setting list\|get\|set` | `app login enable\|disable` | App settings, including `launch-at-login`. The service applies them. |
+| `ojd setting list\|get\|set` | `app login enable\|disable` | App settings, including `launchAtLogin`. The service applies them. |
 | `ojd log show\|path` | `app logs show\|path\|open` | `show --follow` streams. `open` is dropped: `open "$(ojd log path)"` does the same. |
 | `ojd diagnose` | `diagnose runtime`, `diagnose report` | Run every check. `--bundle PATH` also writes a support bundle. |
 | `ojd update check` | `update check` | Only when asked. The CLI never checks for updates on its own. |

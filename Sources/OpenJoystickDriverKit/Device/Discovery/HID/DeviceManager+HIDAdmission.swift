@@ -86,9 +86,16 @@ extension DeviceManager {
       }
     }
     let connectionName = physicalDevice.transportProperty ?? "HID"
+    let modeSelection = await selectedHIDMode(
+      for: connection,
+      vendorID: vendorID,
+      productID: productID
+    )
+    guard !Task.isCancelled, isCurrentHIDInitialization(connection) else { return }
     let classification = protocolDriverRegistry.classify(
       physicalDevice,
-      backend: connection.accessBackend
+      backend: connection.accessBackend,
+      modeID: modeSelection.modeID
     )
     let binding: ProtocolBinding
     let driver: any PhysicalProtocolDriver
@@ -202,6 +209,7 @@ extension DeviceManager {
         ? MacOSOwnedOutput.allowance(for: binding.protocolID, record: binding.record) : nil,
       usbTransportProvider: usbTransportProvider,
       externalOutputAllowed: false,
+      frameTimings: frameTimings,
       sessionState: suspendedControllerIdentities.contains(identifier) ? .suspended : .active
     )
     let requiresSuccessfulStartupOutput = await pipeline.requiresSuccessfulHIDStartupOutput()

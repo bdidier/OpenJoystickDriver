@@ -37,6 +37,7 @@ extension DevicePipeline {
     usbRunGeneration &+= 1
     guard !hasStopped else { return }
     hasStopped = true
+    frameTimings.forget(identifier)
     let task = runTask
     runTask = nil
     task?.cancel()

@@ -5,7 +5,7 @@ import Testing
 @testable import OpenJoystickDriverService
 
 /// A server whose automatic dispatcher builds retarget probes and reads overrides from isolated
-/// defaults.
+/// settings.
 extension VirtualOutputTests {
   func profileOverrideServer(
     _ identifiers: [LogicalControllerID] = [LogicalControllerID(vendorID: 1, productID: 2)],
@@ -17,7 +17,7 @@ extension VirtualOutputTests {
     configure: (URL) -> Void = { _ in }
   ) async throws -> ProfileOverrideServerFixture {
     let suiteName = "OpenJoystickDriverTests.ProfileOverrideRPC.\(UUID().uuidString)"
-    let defaults = try #require(UserDefaults(suiteName: suiteName))
+    let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     let personaDirectory = MacOSDataDirectory().url(for: .temporary)
       .appendingPathComponent(suiteName, isDirectory: true)
     configure(personaDirectory)
@@ -66,15 +66,13 @@ extension VirtualOutputTests {
       connectedIdentifierProvider: { identifiers },
       virtualOutputTransitionTimeouts: timeouts,
       virtualOutputTransitionClock: clock,
-      defaults: defaults,
+      settings: settings,
       personaDirectory: personaDirectory
     )
     if outputEnabled { _ = await server.activateVirtualOutputBackendForCurrentDevices() }
     return ProfileOverrideServerFixture(
       server: server,
-      defaults: defaults,
       personaDirectory: personaDirectory,
-      suiteName: suiteName,
       log: log
     )
   }

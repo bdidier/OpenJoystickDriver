@@ -501,10 +501,10 @@ struct StickDeliveryLatencyTests {
     )
   }
 
-  private static let gamepadLocationID: UInt32 = 0x0031_0000
+  static let gamepadLocationID: UInt32 = 0x0031_0000
 
   /// A generic HID gamepad, parsed through `GamepadHIDDescriptor`.
-  private static func gamepadConnection() -> HIDDeviceConnection {
+  static func gamepadConnection() -> HIDDeviceConnection {
     HIDDeviceConnection(
       physicalDevice: PhysicalDevice(
         vendorID: 0x3537,
@@ -526,7 +526,7 @@ struct StickDeliveryLatencyTests {
   }
 
   /// A report of that gamepad with the left stick X at `leftX` and every other control at rest.
-  private static func gamepadReport(
+  static func gamepadReport(
     leftX: UInt8,
     connection: HIDDeviceConnection
   ) -> HIDDeviceEvent {

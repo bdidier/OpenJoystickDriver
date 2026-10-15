@@ -32,12 +32,12 @@ This is a plan. No task here is done. Each work package (WP) lists what it owns,
 These need the user or hardware. Tasks that depend on them say so.
 
 1. Which DS3 location (`01130000` or `01140000`) is the genuine CECHZC2E (0xEF discriminator).
-2. Request more Apple `transport.usb` IDs or stay with the seven granted.
-3. Catalog-wide localization choices listed in `design.md` Open Questions.
+2. Settled: stay with the seven granted `transport.usb` IDs (`design.md` Open Questions).
+3. Settled: catalog-wide localization choices, applied by 22.6 (`design.md` Open Questions).
 4. Settled: the command-line tool link belongs to the app; `ojd` only reports it (`design.md` D9).
 5. `1209:4A4F` mapping directions need button and axis presses.
-6. A new pid.codes entry for the W3C-standard-mapping layout.
-7. Submit the SDL mapping upstream (assumed no).
+6. Settled: no new pid.codes entry (`design.md` Open Questions).
+7. Settled: the SDL mapping is not submitted upstream.
 8. Turn on GitHub Pages (the user does this).
 
 ## 1. Equivalence-test harness
@@ -141,7 +141,7 @@ Verify: `swift test`, `./Scripts/ojd check schemas`, `./Scripts/ojd test parsers
 - [x] 9.1 Define the `ProtocolDescription` kind and its schema. Verify: sample documents validate; bad ones fail with catalog errors. Done: schema declares `parameters` and `defaults` (capabilities, output rumble and startup writes, input layout, tuning) per family; 11 descriptions; `ProtocolDescription.decode` (Swift) and `validate_protocol_descriptions` (Python) reject with E5002, E5003, E5004.
 - [ ] 9.1a Move the family defaults still coded in Swift (`MacOSOwnedOutput.swift`, `DeviceCatalog.swift`, `ProtocolClassifier.swift`, `ControllerProfileCapabilities.swift`, `ControllerTuning+Layers.swift`: rumble intervals, startup writes, capabilities, tuning) into each description's `defaults` and have the drivers read `ProtocolDescription.bundled`. Verify: no copy of a moved default remains in Swift.
 - [x] 9.1b The description loader reports a missing or unknown apiVersion as E5001 through `DocumentHeaderProblem` (a wrong kind stays E5002), `validate_schemas.py` agrees, and `ProtocolParameters.violation` reads enum values and ranges from the descriptions.
-- [ ] 9.1c Express probes as record `modes[]` match keys once a consumer exists; the description schema does not carry probes.
+- [x] 9.1c Express probes as record `modes[]` match keys once a consumer exists; the description schema does not carry probes. Done: `modes[].match.probes` in the record and patch schemas, consumed by mode selection at HID admission; Swift `validateModes` and Python `validate_modes` apply the same rules.
 - [x] 9.2 Describe one existing simple protocol as data and run it through the generic interpreter beside the coded parser. Verify: a test shows identical frames from both on the recorded samples. Done: `xbox.xid` carries `defaults.input`, run by `ReportLayoutDriver` (new `table` hats and `symmetric` axes); `XboxXIDDescriptionTests` compares it with `XIDDriver` on the 1.1 characterization steps, which are hand-written transcripts, not hardware captures, plus a per-field sweep of every byte and stick word.
 - [ ] 9.3 Describe the remaining protocols whose behavior the data model covers; leave the rest coded and list them. Verify: the list is in `wiki` developer pages and every protocol has a parser test.
 
@@ -160,7 +160,7 @@ Owns: `modes` and `links` in records, including a Core Bluetooth GATT link kind.
 Depends: 9, 5.
 Verify: `swift test`, `./Scripts/ojd check schemas`.
 
-- [ ] 11.1 Add `modes` (for example XInput, DInput, switch) selected by switch, button combo or probe. Verify: a fixture record with two modes picks each by its probe.
+- [x] 11.1 Add `modes` (for example XInput, DInput, switch) selected by switch, button combo or probe. Verify: a fixture record with two modes picks each by its probe. Done: probe selection only; `ControllerModeTests` picks each of two modes by its probe. Switch and button-combo selection have no consumer yet.
 - [ ] 11.1a Complete `modes` per the `controller-records` "Modes and match keys" requirement: the default mode is a `modes[]` entry, match keys cover link kind, interface signature, manufacturer and product strings and a `bcdDevice` range besides probes, and a mode may set `interface`, `session` and protocol `parameters`. Verify: fixtures for "One model, two modes" (wired versus Bluetooth by link kind) and the `device-matching` "Dongle and wired" scenario.
 - [x] 11.2 Add the `coreBluetoothGATT` link kind for BLE controllers. Verify: a mock peripheral test delivers frames through the link.
 - [ ] 11.3 Make DS3 over Bluetooth a link of the DS3 record, with the pairing steps as documentation only. Verify: the record validates; hardware check H6 below covers the real pairing.
@@ -183,9 +183,9 @@ Owns: probe rules in device matching.
 Depends: 11, 12.
 Verify: `swift test`, `./Scripts/ojd check profiles`. Hardware: H4.
 
-- [ ] 13.1 Add record-level probes to tell clones with the same VID:PID from the genuine device. Verify: a mock test chooses each record from different probe replies.
-- [ ] 13.2 Encode the DS3 0xEF discriminator as a probe. Verify: unit test; final location mapping waits on open item 1.
-- [ ] 13.3 Define the fallback when a probe gets no reply. Verify: test shows the documented fallback and a log line.
+- [x] 13.1 Add record-level probes to tell clones with the same VID:PID from the genuine device. Verify: a mock test chooses each record from different probe replies. Done: `ScriptedProbeReader` replies select different modes of one record; probe reads are bounded at 2 s with one outstanding read per connection.
+- [x] 13.2 Encode the DS3 0xEF discriminator as a probe. Verify: unit test; final location mapping waits on open item 1. Done: `054c-0268.patch.json` mode `feature-ef-answers` (0xEF, length 49 chosen, not recorded); answer selects it, a stall gives `noModeMatched`. It runs the same `sony.sixaxis` protocol, so it is inert until open item 1.
+- [x] 13.3 Define the fallback when a probe gets no reply. Verify: test shows the documented fallback and a log line. Done: a timeout, busy or other non-stall failure is inconclusive; selection logs a line and keeps the default mode, as `wiki/Controller-Records.md` says.
 
 ## 14. Schemas: flat layout, header, Pages-ready ids
 
@@ -255,7 +255,7 @@ Verify: `swift test`, lint pair. Hardware: H10.
 
 - [ ] 19.1 Introduce `InputSource` and `OutputSink` and attach physical, virtual, endpoint paths to them. Verify: 1.1 shows zero diffs.
 - [ ] 19.2 Add bounded queue policy per record or default. Verify: slow-consumer test keeps memory bounded and delivers the newest frame.
-- [ ] 19.3 Add per-stage timestamps to `ojd diagnose`. Verify: test output lists dispatch and delivery times.
+- [x] 19.3 Add per-stage timestamps to `ojd diagnose`. Verify: test output lists dispatch and delivery times. Done: read, parse, dispatch, delivery-virtual-device and delivery-endpoint stamps; `DeviceManagerFrameTimingsTests` asserts all five in order and `--plain` adds one timing row per stage.
 - [ ] 19.4 Add the WebRTC transport, off by default, using the endpoint Subscription flow for signalling. Verify: loopback test; with the setting off, a socket scan shows no listener.
 
 ## 20. AppKit GUI shell
@@ -291,7 +291,7 @@ Verify: `python3 Scripts/Quality/check_localization_keys.py`, `ruff check Script
 - [ ] 22.3 Add positional specifiers, `.stringsdict` plurals and translator comments to `en-US`. Verify: checker passes.
 - [ ] 22.4 Update the checker for namespaces, OS words, specifiers, comments. Verify: negative unit tests per rule.
 - [ ] 22.5 Add `crowdin.yml` and stop copying `Localizable.template.*` into bundles. Verify: a test parses the file; build output has no template.
-- [ ] 22.6 Review translation decisions from open item 3 as separate edits. Verify: each decision is a separate commit with the user's answer.
+- [x] 22.6 Review translation decisions from open item 3 as separate edits. Verify: each decision is a separate commit with the user's answer. Done: the user delegated the choices on 2026-10-15; eight `fix(l10n)` commits, one per decision.
 - [ ] 22.7 Update `LOCALIZATION.md`. Verify: markdownlint.
 
 ## 23. Docs, wiki, CHANGELOG, release checks
@@ -323,7 +323,5 @@ These need the maintainer and a device. Each result is recorded in `wiki` or the
 ## Workflow follow-up
 
 - Push, tag, notarize and publish are the maintainer's actions and need confirmation.
-- Submit the SDL mapping upstream only if the user reverses the assumption (open item 7).
 - Turn on GitHub Pages so the schema `$id` URLs resolve (open item 8).
-- Request more Apple `transport.usb` IDs if wanted (open item 2).
 - Archive this change after `release-0-6-0-alpha-1` is archived, then convert `pending-deltas.md` into MODIFIED and REMOVED deltas.
