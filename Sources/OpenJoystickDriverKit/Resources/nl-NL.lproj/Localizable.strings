@@ -514,9 +514,7 @@
 "developer.connection" = "Verbinding";
 "developer.controller" = "Controller";
 "developer.controllerDetails" = "Controller";
-"developer.diagnosticMode" = "Diagnosemodus";
 "developer.emptyCapture" = "Klik op “Start de opname” en druk daarna op de knoppen van de controller.";
-"developer.enterDiagnosticMode" = "Diagnosemodus starten";
 "developer.exportCapture" = "Exporteer pakketopname";
 "developer.extraInputs" = "Extra knoppen";
 "developer.extraInputsDescription" = "Druk op één extra knop tegelijk. Gedetecteerde knoppen blijven in de lijst staan totdat je de opname wist.";
@@ -527,7 +525,6 @@
 "developer.loadingControllers" = "Controllerdiagnose laden…";
 "developer.noControllers" = "Geen aangesloten controllers";
 "developer.noControllersDetail" = "Verbind een controller en kies daarna “Vernieuwen”.";
-"developer.noDiagnosticRecipe" = "De diagnose-modus is niet beschikbaar voor deze controller.";
 "developer.noExtraInputs" = "Geen extra knoppen gevonden.";
 "developer.noPackets" = "Geen pakketten vastgelegd";
 "developer.packetCapture" = "Ruwe pakketopname";

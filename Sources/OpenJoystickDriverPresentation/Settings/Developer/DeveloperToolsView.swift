@@ -59,7 +59,6 @@
         DeveloperControllerSummaryView(model: model, compact: compact)
         DeveloperPacketCaptureView(model: model)
         extraInputDiscovery
-        diagnosticMode
       }
     }
 
@@ -88,28 +87,6 @@
         }.padding(4).frame(maxWidth: .infinity, alignment: .leading)
       } label: {
         Text(OJDLocalized.string("developer.extraInputs")).font(
-          .headline
-        )
-      }
-    }
-
-    private var diagnosticMode: some View {
-      GroupBox {
-        VStack(alignment: .leading, spacing: 10) {
-          HStack(spacing: 8) {
-            OJDSystemSymbol(name: "lock.shield", fallback: nil)
-            Text(
-              OJDLocalized.string(
-                "developer.noDiagnosticRecipe"
-              )
-            ).font(.body.weight(.medium))
-          }
-          Button(
-            OJDLocalized.string("developer.enterDiagnosticMode")
-          ) {}.disabled(true)
-        }.padding(4).frame(maxWidth: .infinity, alignment: .leading)
-      } label: {
-        Text(OJDLocalized.string("developer.diagnosticMode")).font(
           .headline
         )
       }

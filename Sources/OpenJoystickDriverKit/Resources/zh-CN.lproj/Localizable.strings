@@ -514,9 +514,7 @@
 "developer.connection" = "连接";
 "developer.controller" = "控制器";
 "developer.controllerDetails" = "控制器";
-"developer.diagnosticMode" = "诊断模式";
 "developer.emptyCapture" = "按“开始捕捉”，然后按控制器上的按钮。";
-"developer.enterDiagnosticMode" = "进入诊断模式";
 "developer.exportCapture" = "导出数据包捕捉";
 "developer.extraInputs" = "额外按钮";
 "developer.extraInputsDescription" = "每次按一个额外按钮。检测到的按钮会一直列出，直到你清除捕捉。";
@@ -527,7 +525,6 @@
 "developer.loadingControllers" = "正在加载控制器诊断信息…";
 "developer.noControllers" = "没有连接的控制器";
 "developer.noControllersDetail" = "连接控制器，然后点按“刷新”。";
-"developer.noDiagnosticRecipe" = "此控制器不支持诊断模式。";
 "developer.noExtraInputs" = "未检测到额外按钮。";
 "developer.noPackets" = "尚未捕捉数据包";
 "developer.packetCapture" = "原始数据包捕捉";

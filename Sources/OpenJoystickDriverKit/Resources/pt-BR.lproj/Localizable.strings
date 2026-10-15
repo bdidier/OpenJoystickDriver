@@ -514,9 +514,7 @@
 "developer.connection" = "Conexão";
 "developer.controller" = "Controle";
 "developer.controllerDetails" = "Controle";
-"developer.diagnosticMode" = "Modo de Diagnóstico";
 "developer.emptyCapture" = "Pressione “Iniciar captura” e, em seguida, pressione os botões do controle.";
-"developer.enterDiagnosticMode" = "Entrar no Modo de Diagnóstico";
 "developer.exportCapture" = "Exportar Captura de Pacotes";
 "developer.extraInputs" = "Botões Extras";
 "developer.extraInputsDescription" = "Pressione um botão extra por vez. Os botões detectados permanecem na lista até você limpar a captura.";
@@ -527,7 +525,6 @@
 "developer.loadingControllers" = "Carregando diagnósticos do controle…";
 "developer.noControllers" = "Nenhum Controle Conectado";
 "developer.noControllersDetail" = "Conecte um controle e pressione “Atualizar”.";
-"developer.noDiagnosticRecipe" = "O modo de diagnóstico não está disponível para este controle.";
 "developer.noExtraInputs" = "Nenhum botão extra detectado.";
 "developer.noPackets" = "Nenhum Pacote Capturado";
 "developer.packetCapture" = "Captura de Pacotes Brutos";

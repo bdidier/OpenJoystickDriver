@@ -514,9 +514,7 @@
 "developer.connection" = "Connessione";
 "developer.controller" = "Controller";
 "developer.controllerDetails" = "Controller";
-"developer.diagnosticMode" = "Modalità diagnostica";
 "developer.emptyCapture" = "Premi «Avvia acquisizione», poi premi i pulsanti del controller.";
-"developer.enterDiagnosticMode" = "Entra in modalità diagnostica";
 "developer.exportCapture" = "Esporta acquisizione dei pacchetti";
 "developer.extraInputs" = "Pulsanti extra";
 "developer.extraInputsDescription" = "Premi un pulsante extra alla volta. I pulsanti rilevati restano elencati finché non cancelli l’acquisizione.";
@@ -527,7 +525,6 @@
 "developer.loadingControllers" = "Caricamento della diagnostica del controller…";
 "developer.noControllers" = "Nessun controller collegato";
 "developer.noControllersDetail" = "Collega un controller, poi premi «Aggiorna».";
-"developer.noDiagnosticRecipe" = "Non è disponibile la modalità diagnostica per questo controller.";
 "developer.noExtraInputs" = "Nessun pulsante extra rilevato.";
 "developer.noPackets" = "Nessun pacchetto acquisito";
 "developer.packetCapture" = "Acquisizione di pacchetti grezzi";

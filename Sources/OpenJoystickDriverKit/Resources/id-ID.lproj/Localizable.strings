@@ -514,9 +514,7 @@
 "developer.connection" = "Koneksi";
 "developer.controller" = "Pengontrol";
 "developer.controllerDetails" = "Pengontrol";
-"developer.diagnosticMode" = "Mode Diagnostik";
 "developer.emptyCapture" = "Tekan Mulai Penangkapan, lalu tekan tombol pengontrol.";
-"developer.enterDiagnosticMode" = "Masuk ke Mode Diagnostik";
 "developer.exportCapture" = "Ekspor Penangkapan Paket";
 "developer.extraInputs" = "Tombol Tambahan";
 "developer.extraInputsDescription" = "Tekan satu tombol tambahan sekali satu. Tombol yang terdeteksi tetap tercantum hingga Anda menghapus penangkapan.";
@@ -527,7 +525,6 @@
 "developer.loadingControllers" = "Memuat diagnostik pengontrol…";
 "developer.noControllers" = "Tidak ada pengontrol yang terhubung";
 "developer.noControllersDetail" = "Hubungkan pengontrol, lalu tekan Segarkan.";
-"developer.noDiagnosticRecipe" = "Mode diagnostik tidak tersedia untuk pengontrol ini.";
 "developer.noExtraInputs" = "Tidak ada tombol tambahan yang terdeteksi.";
 "developer.noPackets" = "Tidak ada paket yang ditangkap";
 "developer.packetCapture" = "Penangkapan Paket Mentah";
