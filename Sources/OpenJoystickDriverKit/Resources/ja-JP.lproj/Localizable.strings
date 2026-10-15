@@ -974,9 +974,9 @@
 "cli.status.abstract" = "サービス、機能拡張、権限、接続中のコントローラを表示します。";
 "cli.status.discussion" = "サービスが停止していても動作します。サービスを停止中として報告し、0 で終了します。";
 "cli.status.label.accessibility" = "アクセシビリティ";
+"cli.status.label.command_line_tool" = "コマンドラインツール";
 "cli.status.label.controllers" = "コントローラ (%lld)";
 "cli.status.label.extension" = "機能拡張";
-"cli.status.label.command_line_tool" = "コマンドラインツール";
 "cli.status.label.input_monitoring" = "入力監視";
 "cli.status.label.override_error" = "上書きエラー";
 "cli.status.label.pass_through" = "macOS に任せたデバイス (%lld)";

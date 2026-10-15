@@ -72,9 +72,16 @@
 
     private var notificationSoundIsEnabled: Bool { preferenceIsEnabled(.notifySounds) }
 
-    /// A settings file that cannot be read turns the notification off rather than guessing.
+    /// A settings file that cannot be read is logged with its path, and the built-in default of
+    /// the key applies, so sounds keep their true default.
     private func preferenceIsEnabled(_ key: ApplicationSettingKey) -> Bool {
-      (try? settings.value(of: key)) ?? false
+      do { return try settings.value(of: key) } catch {
+        let message =
+          "[Settings] \(settings.userFileURL.path) cannot be read, using the default for "
+          + "\(key.rawValue): \(error.localizedDescription)\n"
+        FileHandle.standardError.write(Data(message.utf8))
+        return key.defaultValue
+      }
     }
 
     private func profileChangeBody(from previousName: String?, to currentName: String?) -> String {

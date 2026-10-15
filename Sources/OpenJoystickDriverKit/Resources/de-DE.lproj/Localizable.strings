@@ -974,9 +974,9 @@
 "cli.status.abstract" = "Dienst, Erweiterung, Berechtigungen und verbundene Controller anzeigen.";
 "cli.status.discussion" = "Funktioniert auch bei gestopptem Dienst: Er wird als gestoppt gemeldet und mit 0 beendet.";
 "cli.status.label.accessibility" = "Bedienungshilfen";
+"cli.status.label.command_line_tool" = "Befehlszeilenwerkzeug";
 "cli.status.label.controllers" = "Controller (%lld)";
 "cli.status.label.extension" = "Erweiterung";
-"cli.status.label.command_line_tool" = "Befehlszeilenwerkzeug";
 "cli.status.label.input_monitoring" = "Eingabeüberwachung";
 "cli.status.label.override_error" = "Überschreibungsfehler";
 "cli.status.label.pass_through" = "macOS überlassen (%lld)";

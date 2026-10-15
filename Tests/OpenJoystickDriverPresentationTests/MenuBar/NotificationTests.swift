@@ -168,6 +168,24 @@ struct NotificationTests {
     )
     #expect(delivery.messages.count == 3)
   }
+
+  @Test
+  @MainActor
+  func aDamagedSettingsFileFallsBackToTheBuiltInDefaults() throws {
+    let settings = SettingsStore(directory: RootedDataDirectory.temporary())
+    try settings.set(.notifyControllerConnected, to: true)
+    try Data("not json".utf8).write(to: settings.userFileURL)
+    let delivery = NotificationDeliverySpy()
+    let monitor = RuntimeNotificationMonitor(settings: settings, delivery: delivery)
+
+    monitor.observe(RuntimeNotificationSnapshot(controllers: [:], activeProfiles: [:]))
+    monitor.observe(
+      RuntimeNotificationSnapshot(controllers: ["new": "New Controller"], activeProfiles: [:])
+    )
+    // Notifications default to off; the damaged file does not turn one on.
+    #expect(delivery.messages.isEmpty)
+    #expect(throws: SettingsStoreError.self) { try settings.load() }
+  }
 }
 
 private struct NotificationPermissionAuthorizationStub: NotificationAuthorizationControlling {

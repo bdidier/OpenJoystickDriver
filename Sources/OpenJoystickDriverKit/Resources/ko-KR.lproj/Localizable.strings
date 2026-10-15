@@ -974,9 +974,9 @@
 "cli.status.abstract" = "서비스, 확장 프로그램, 권한, 연결된 컨트롤러를 표시합니다.";
 "cli.status.discussion" = "서비스가 중지된 상태에서도 작동하며, 서비스를 중지됨으로 보고하고 0으로 종료합니다.";
 "cli.status.label.accessibility" = "손쉬운 사용";
+"cli.status.label.command_line_tool" = "명령줄 도구";
 "cli.status.label.controllers" = "컨트롤러 (%lld)";
 "cli.status.label.extension" = "확장 프로그램";
-"cli.status.label.command_line_tool" = "명령줄 도구";
 "cli.status.label.input_monitoring" = "입력 모니터링";
 "cli.status.label.override_error" = "재정의 오류";
 "cli.status.label.pass_through" = "macOS에 맡김 (%lld)";

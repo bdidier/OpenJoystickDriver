@@ -974,9 +974,9 @@
 "cli.status.abstract" = "Mostra o serviço, a extensão, as permissões e os controles conectados.";
 "cli.status.discussion" = "Funciona com o serviço parado: informa o serviço como parado e sai com 0.";
 "cli.status.label.accessibility" = "Acessibilidade";
+"cli.status.label.command_line_tool" = "Ferramenta de Linha de Comando";
 "cli.status.label.controllers" = "Controles (%lld)";
 "cli.status.label.extension" = "Extensão";
-"cli.status.label.command_line_tool" = "Ferramenta de Linha de Comando";
 "cli.status.label.input_monitoring" = "Monitoramento de Entrada";
 "cli.status.label.override_error" = "Erro de Substituição";
 "cli.status.label.pass_through" = "Deixados ao macOS (%lld)";

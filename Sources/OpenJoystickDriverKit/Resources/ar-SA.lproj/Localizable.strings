@@ -974,9 +974,9 @@
 "cli.status.abstract" = "اعرض الخدمة والامتداد والأذونات ووحدات التحكم المتصلة.";
 "cli.status.discussion" = "يعمل عندما تكون الخدمة متوقفة: يبلّغ بأنها متوقفة ثم ينتهي بالرمز 0.";
 "cli.status.label.accessibility" = "تسهيلات الاستخدام";
+"cli.status.label.command_line_tool" = "أداة سطر الأوامر";
 "cli.status.label.controllers" = "وحدات التحكم (%lld)";
 "cli.status.label.extension" = "الامتداد";
-"cli.status.label.command_line_tool" = "أداة سطر الأوامر";
 "cli.status.label.input_monitoring" = "مراقبة الإدخال";
 "cli.status.label.override_error" = "خطأ التجاوز";
 "cli.status.label.pass_through" = "متروكة لنظام macOS (%lld)";

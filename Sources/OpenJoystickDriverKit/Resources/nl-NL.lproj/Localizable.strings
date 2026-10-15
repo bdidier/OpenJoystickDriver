@@ -974,9 +974,9 @@
 "cli.status.abstract" = "Toon de service, extensie, toestemmingen en aangesloten controllers.";
 "cli.status.discussion" = "Werkt ook als de service is gestopt: meldt de service als gestopt en sluit af met 0.";
 "cli.status.label.accessibility" = "Toegankelijkheid";
+"cli.status.label.command_line_tool" = "Opdrachtregelprogramma";
 "cli.status.label.controllers" = "Controllers (%lld)";
 "cli.status.label.extension" = "Extensie";
-"cli.status.label.command_line_tool" = "Opdrachtregelprogramma";
 "cli.status.label.input_monitoring" = "Invoermonitoring";
 "cli.status.label.override_error" = "Overschrijvingsfout";
 "cli.status.label.pass_through" = "Aan macOS overgelaten (%lld)";

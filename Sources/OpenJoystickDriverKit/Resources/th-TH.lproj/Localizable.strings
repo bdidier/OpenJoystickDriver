@@ -974,9 +974,9 @@
 "cli.status.abstract" = "แสดงบริการ ส่วนขยาย สิทธิ์ และคอนโทรลเลอร์ที่เชื่อมต่ออยู่";
 "cli.status.discussion" = "ใช้งานได้เมื่อบริการหยุดทำงาน โดยจะรายงานว่าบริการหยุดทำงานและออกด้วยรหัส 0";
 "cli.status.label.accessibility" = "การช่วยการเข้าถึง";
+"cli.status.label.command_line_tool" = "เครื่องมือบรรทัดคำสั่ง";
 "cli.status.label.controllers" = "คอนโทรลเลอร์ (%lld)";
 "cli.status.label.extension" = "ส่วนขยาย";
-"cli.status.label.command_line_tool" = "เครื่องมือบรรทัดคำสั่ง";
 "cli.status.label.input_monitoring" = "การตรวจสอบสัญญาณเข้า";
 "cli.status.label.override_error" = "ข้อผิดพลาดการแทนที่";
 "cli.status.label.pass_through" = "ปล่อยให้ macOS จัดการ (%lld)";

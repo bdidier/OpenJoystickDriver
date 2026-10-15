@@ -974,9 +974,9 @@
 "cli.status.abstract" = "Tampilkan layanan, ekstensi, izin, dan pengontrol yang terhubung.";
 "cli.status.discussion" = "Berfungsi saat layanan dihentikan: melaporkan layanan sebagai dihentikan dan keluar dengan kode 0.";
 "cli.status.label.accessibility" = "Aksesibilitas";
+"cli.status.label.command_line_tool" = "Alat Baris Perintah";
 "cli.status.label.controllers" = "Pengontrol (%lld)";
 "cli.status.label.extension" = "Ekstensi";
-"cli.status.label.command_line_tool" = "Alat Baris Perintah";
 "cli.status.label.input_monitoring" = "Pengawasan Input";
 "cli.status.label.override_error" = "Kesalahan penimpaan";
 "cli.status.label.pass_through" = "Diserahkan ke macOS (%lld)";

@@ -974,9 +974,9 @@
 "cli.status.abstract" = "顯示服務、延伸功能、權限和已連接的控制器。";
 "cli.status.discussion" = "服務停止時也可使用：會將服務回報為已停止，並以 0 結束。";
 "cli.status.label.accessibility" = "輔助使用";
+"cli.status.label.command_line_tool" = "命令列工具";
 "cli.status.label.controllers" = "控制器 (%lld)";
 "cli.status.label.extension" = "延伸功能";
-"cli.status.label.command_line_tool" = "命令列工具";
 "cli.status.label.input_monitoring" = "輸入監控";
 "cli.status.label.override_error" = "覆寫錯誤";
 "cli.status.label.pass_through" = "交還 macOS (%lld)";

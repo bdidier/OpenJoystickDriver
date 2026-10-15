@@ -974,9 +974,9 @@
 "cli.status.abstract" = "Показывает службу, расширение, разрешения и подключённые контроллеры.";
 "cli.status.discussion" = "Работает и при остановленной службе: сообщает, что служба остановлена, и завершается с кодом 0.";
 "cli.status.label.accessibility" = "Универсальный доступ";
+"cli.status.label.command_line_tool" = "Программа командной строки";
 "cli.status.label.controllers" = "Контроллеры (%lld)";
 "cli.status.label.extension" = "Расширение";
-"cli.status.label.command_line_tool" = "Программа командной строки";
 "cli.status.label.input_monitoring" = "Мониторинг ввода";
 "cli.status.label.override_error" = "Ошибка переопределения";
 "cli.status.label.pass_through" = "Оставлены macOS (%lld)";

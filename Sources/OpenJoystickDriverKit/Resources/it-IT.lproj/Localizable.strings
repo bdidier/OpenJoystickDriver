@@ -974,9 +974,9 @@
 "cli.status.abstract" = "Mostra servizio, estensione, autorizzazioni e controller collegati.";
 "cli.status.discussion" = "Funziona anche con il servizio arrestato: lo segnala come arrestato ed esce con 0.";
 "cli.status.label.accessibility" = "Accessibilità";
+"cli.status.label.command_line_tool" = "Strumento da riga di comando";
 "cli.status.label.controllers" = "Controller (%lld)";
 "cli.status.label.extension" = "Estensione";
-"cli.status.label.command_line_tool" = "Strumento da riga di comando";
 "cli.status.label.input_monitoring" = "Monitoraggio input";
 "cli.status.label.override_error" = "Errore di sostituzione";
 "cli.status.label.pass_through" = "Lasciati a macOS (%lld)";

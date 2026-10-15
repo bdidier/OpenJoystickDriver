@@ -974,9 +974,9 @@
 "cli.status.abstract" = "Hiển thị dịch vụ, phần mở rộng, quyền và các bộ điều khiển đã kết nối.";
 "cli.status.discussion" = "Hoạt động cả khi dịch vụ đã dừng: báo dịch vụ đã dừng và thoát với mã 0.";
 "cli.status.label.accessibility" = "Trợ năng";
+"cli.status.label.command_line_tool" = "Công cụ dòng lệnh";
 "cli.status.label.controllers" = "Bộ điều khiển (%lld)";
 "cli.status.label.extension" = "Phần mở rộng";
-"cli.status.label.command_line_tool" = "Công cụ dòng lệnh";
 "cli.status.label.input_monitoring" = "Giám sát đầu vào";
 "cli.status.label.override_error" = "Lỗi ghi đè";
 "cli.status.label.pass_through" = "Giao cho macOS (%lld)";

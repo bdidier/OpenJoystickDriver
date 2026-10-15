@@ -974,9 +974,9 @@
 "cli.status.abstract" = "Show the service, extension, permissions, and connected controllers.";
 "cli.status.discussion" = "Works when the service is stopped: it reports the service as stopped and exits 0.";
 "cli.status.label.accessibility" = "Accessibility";
+"cli.status.label.command_line_tool" = "Command-Line Tool";
 "cli.status.label.controllers" = "Controllers (%lld)";
 "cli.status.label.extension" = "Extension";
-"cli.status.label.command_line_tool" = "Command-Line Tool";
 "cli.status.label.input_monitoring" = "Input Monitoring";
 "cli.status.label.override_error" = "Override error";
 "cli.status.label.pass_through" = "Left to macOS (%lld)";
