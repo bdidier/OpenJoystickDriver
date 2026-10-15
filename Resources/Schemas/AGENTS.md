@@ -15,7 +15,7 @@
 - Each schema's `$id` is `https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/<kind>.schema.json`. The version constant, the `$id` base, and the kind of each schema have one source for tooling, `Scripts/Catalog/schema_header.py`, and one for Swift, `OpenJoystickDriverAPI.version`; a test keeps them and every schema's `apiVersion` const equal. The IDs are names: nothing publishes them yet, and nothing fetches them.
 - Change the one live schema for an artifact class atomically with every producer, consumer, authored input, generated output, and validation rule.
 - Raise the version, in every schema and both constants, only for the release that promotes or breaks the contract; do not keep two live versions or dated successor files. Do not retain dual writers, aliases, fallback decoders, upcasters, or compatibility shims. A crosswalk to SDL, evdev, HID, Apple and W3C names is documentation, not a schema alias: `Resources/Vocabulary/crosswalk.json` has one row per control id, no schema accepts or maps any name in it, and no reader decodes an old or foreign name to an id. Tests round-trip it; it is the one source for those names.
-- Follow the compatibility policy in `wiki/Controller-Records.md`.
+- Follow the schema version rules in `wiki/Controller-Records.md`.
 - Do not duplicate schema field definitions or enums in handwritten validators. Code may enforce cross-document and runtime invariants only.
 - Never fetch schemas at runtime. Repository validation must resolve them locally.
 

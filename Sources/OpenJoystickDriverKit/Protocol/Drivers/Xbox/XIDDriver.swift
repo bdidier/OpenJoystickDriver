@@ -75,8 +75,8 @@ public final class XIDDriver: PhysicalProtocolDriver {
     ] { next.set(control, pressed: bytes[offset] != 0) }
     next.leftTrigger = UnipolarValue(normalized: Float(bytes[10]) / xidTriggerMax)
     next.rightTrigger = UnipolarValue(normalized: Float(bytes[11]) / xidTriggerMax)
-    next.leftStick = StickPosition(x: normalizeStick(lsx), yDown: -normalizeStick(lsy))
-    next.rightStick = StickPosition(x: normalizeStick(rsx), yDown: -normalizeStick(rsy))
+    next.leftStick = StickPosition(x: normalizeStick(lsx), y: -normalizeStick(lsy))
+    next.rightStick = StickPosition(x: normalizeStick(rsx), y: -normalizeStick(rsy))
     state = next
     return ControllerEvent(timestamp: receivedAt, state: next)
   }

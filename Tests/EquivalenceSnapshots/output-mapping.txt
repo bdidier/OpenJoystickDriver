@@ -36,19 +36,19 @@ Auxiliary7: unmapped
 Auxiliary8: unmapped
 LeftStickX=max: 00 00 FF 7F 00 00 00 00 00 00 00 00 00 00
 LeftStickX=min: 00 00 01 80 00 00 00 00 00 00 00 00 00 00
-LeftStickY=max: 00 00 00 00 01 80 00 00 00 00 00 00 00 00
-LeftStickY=min: 00 00 00 00 FF 7F 00 00 00 00 00 00 00 00
+LeftStickY=max: 00 00 00 00 FF 7F 00 00 00 00 00 00 00 00
+LeftStickY=min: 00 00 00 00 01 80 00 00 00 00 00 00 00 00
 RightStickX=max: 00 00 00 00 00 00 FF 7F 00 00 00 00 00 00
 RightStickX=min: 00 00 00 00 00 00 01 80 00 00 00 00 00 00
-RightStickY=max: 00 00 00 00 00 00 00 00 01 80 00 00 00 00
-RightStickY=min: 00 00 00 00 00 00 00 00 FF 7F 00 00 00 00
+RightStickY=max: 00 00 00 00 00 00 00 00 FF 7F 00 00 00 00
+RightStickY=min: 00 00 00 00 00 00 00 00 01 80 00 00 00 00
 LeftStickTouch: unmapped
 RightStickTouch: unmapped
 LeftTrackpadClick: unmapped
 RightTrackpadClick: unmapped
 LeftTrackpadTouch: unmapped
 RightTrackpadTouch: unmapped
-combined: 51 66 FF 7F FF 7F 01 80 01 80 FF 7F FF 7F
+combined: 51 66 FF 7F 01 80 01 80 FF 7F FF 7F FF 7F
 
 ## sdl-compatible
 neutral: 01 00 80 00 80 00 80 00 80 00 00 00 00 00 00 00
@@ -86,16 +86,16 @@ Auxiliary7: unmapped
 Auxiliary8: unmapped
 LeftStickX=max: 01 FF FF 00 80 00 80 00 80 00 00 00 00 00 00 00
 LeftStickX=min: 01 01 00 00 80 00 80 00 80 00 00 00 00 00 00 00
-LeftStickY=max: 01 00 80 01 00 00 80 00 80 00 00 00 00 00 00 00
-LeftStickY=min: 01 00 80 FF FF 00 80 00 80 00 00 00 00 00 00 00
+LeftStickY=max: 01 00 80 FF FF 00 80 00 80 00 00 00 00 00 00 00
+LeftStickY=min: 01 00 80 01 00 00 80 00 80 00 00 00 00 00 00 00
 RightStickX=max: 01 00 80 00 80 FF FF 00 80 00 00 00 00 00 00 00
 RightStickX=min: 01 00 80 00 80 01 00 00 80 00 00 00 00 00 00 00
-RightStickY=max: 01 00 80 00 80 00 80 01 00 00 00 00 00 00 00 00
-RightStickY=min: 01 00 80 00 80 00 80 FF FF 00 00 00 00 00 00 00
+RightStickY=max: 01 00 80 00 80 00 80 FF FF 00 00 00 00 00 00 00
+RightStickY=min: 01 00 80 00 80 00 80 01 00 00 00 00 00 00 00 00
 LeftStickTouch: unmapped
 RightStickTouch: unmapped
 LeftTrackpadClick: unmapped
 RightTrackpadClick: unmapped
 LeftTrackpadTouch: unmapped
 RightTrackpadTouch: unmapped
-combined: 01 FF FF FF FF 01 00 01 00 FF 03 FF 03 02 51 06
+combined: 01 FF FF 01 00 01 00 FF FF FF 03 FF 03 02 51 06

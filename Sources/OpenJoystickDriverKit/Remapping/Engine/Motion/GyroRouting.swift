@@ -92,7 +92,7 @@ extension RemappingDeviceState {
     let yawSign = effectiveMotionTuning.space == .local ? -1.0 : 1.0
     let velocity = velocity ?? processed.tunedGyro
     let x = velocity.yawDegreesPerSecond * yawSign / output.fullStickDegreesPerSecond
-    let y = velocity.pitchDegreesPerSecond / output.fullStickDegreesPerSecond
+    let y = -velocity.pitchDegreesPerSecond / output.fullStickDegreesPerSecond
     guard x.isFinite, y.isFinite else { return clearGyroStick() }
     let horizontal: RemappingAxis = output.mode == .leftStick ? .leftStickX : .rightStickX
     let vertical: RemappingAxis = output.mode == .leftStick ? .leftStickY : .rightStickY

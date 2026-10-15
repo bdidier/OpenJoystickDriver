@@ -73,8 +73,8 @@ extension DualShock4Driver {
     updatePower(from: bytes)
 
     var next = state
-    next.leftStick = StickPosition(x: Self.normalize(bytes[0]), yDown: Self.normalize(bytes[1]))
-    next.rightStick = StickPosition(x: Self.normalize(bytes[2]), yDown: Self.normalize(bytes[3]))
+    next.leftStick = StickPosition(x: Self.normalize(bytes[0]), y: Self.normalize(bytes[1]))
+    next.rightStick = StickPosition(x: Self.normalize(bytes[2]), y: Self.normalize(bytes[3]))
     next.leftTrigger = UnipolarValue(normalized: Float(bytes[7]) / ds4TriggerMax)
     next.rightTrigger = UnipolarValue(normalized: Float(bytes[8]) / ds4TriggerMax)
     next.hat = Self.direction(for: bytes[4] & 0x0F)

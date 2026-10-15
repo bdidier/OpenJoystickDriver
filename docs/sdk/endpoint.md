@@ -104,7 +104,7 @@ The endpoint answers a `FeedRequest` when the virtual gamepad exists.
 
 ### Frame
 
-After the `FeedSession`, the program sends one `Frame` for each line. A frame has the keys of an `ojd virtual feed` line. A control that the frame omits is neutral. Sticks run from -1 to 1, with positive Y up, and triggers run from 0 to 1. `holdMilliseconds` is how long the frame shows at least; without it, the frame shows until the next one.
+After the `FeedSession`, the program sends one `Frame` for each line. A frame has the keys of an `ojd virtual feed` line. A control that the frame omits is neutral. Sticks run from -1 to 1, with positive Y down, and triggers run from 0 to 1. `holdMilliseconds` is how long the frame shows at least; without it, the frame shows until the next one.
 
 ```json
 {"apiVersion":"openjoystickdriver/v1alpha1","kind":"Frame","buttons":["South"],"axes":{"LeftStickY":0.5},"holdMilliseconds":100}

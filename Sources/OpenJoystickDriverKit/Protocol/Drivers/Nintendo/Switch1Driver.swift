@@ -171,10 +171,10 @@ public final class Switch1Driver: PhysicalProtocolDriver {
       left: buttons & 0x0008_0000 != 0
     )
     if layout != .rightJoyCon {
-      next.leftStick = StickPosition(x: normalizeStick(left.x), yDown: -normalizeStick(left.y))
+      next.leftStick = StickPosition(x: normalizeStick(left.x), y: -normalizeStick(left.y))
     }
     if layout != .leftJoyCon {
-      next.rightStick = StickPosition(x: normalizeStick(right.x), yDown: -normalizeStick(right.y))
+      next.rightStick = StickPosition(x: normalizeStick(right.x), y: -normalizeStick(right.y))
     }
     let motion = sensorSamples.decode(
       bytes,
