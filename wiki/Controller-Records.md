@@ -14,7 +14,7 @@ This page explains how to add a controller that OpenJoystickDriver does not know
 - [Tune Timings and the Stick Deadzone](#tune-timings-and-the-stick-deadzone)
 - [Select a Model With Protocol Parameters](#select-a-model-with-protocol-parameters)
 - [Map HID Usages](#map-hid-usages)
-- [Offer Alternative Modes Chosen By a Probe](#offer-alternative-modes-chosen-by-a-probe)
+- [Offer Alternative Modes Chosen By Link, Keys, and Probes](#offer-alternative-modes-chosen-by-link-keys-and-probes)
 - [Connect a Switch 2 Controller Over Bluetooth LE][toc-2]
 - [Draft a Record From a Connected Controller][toc-1]
 - [Install a Record](#install-a-record)
@@ -35,14 +35,14 @@ A file in that folder is one of two kinds:
 - `Controller`: a complete record for a model that has no bundled record. Name it `VVVV-PPPP.json`.
 - `ControllerPatch`: new values for a model that already has a record. Name it `VVVV-PPPP.patch.json`. Its `selector` names the model by `vendorID` and `productID`, and its `patch` holds the fields to change.
 
-A patch follows RFC 7396 JSON Merge Patch. An object in `patch` merges into the record key by key, a value you give replaces the record's value, an array replaces the whole array, and `null` deletes the key. Deleting the last key of a section leaves an empty section, which a record does not accept, so set the whole section (`tuning`, `protocol.parameters`) to `null` instead. A patch that changes `protocol.family` must also set to `null` every `protocol` key of the old family that the new family does not read.
+A patch follows RFC 7396 JSON Merge Patch. An object in `patch` merges into the record key by key, a value you give replaces the record's value, an array replaces the whole array, and `null` deletes the key. Deleting the last key of a section leaves an empty section, which a record does not accept, so set the whole section (`tuning`) to `null` instead. An array replaces the whole array, so a patch that changes the protocol restates the whole `modes` list, including the `default` mode, as in [Offer Alternative Modes](#offer-alternative-modes-chosen-by-link-keys-and-probes).
 
 ```json
 {
   "apiVersion": "openjoystickdriver/v1alpha1",
   "kind": "ControllerPatch",
   "selector": { "vendorID": 1118, "productID": 746 },
-  "patch": { "tuning": { "stickDeadzone": 0.08 }, "protocol": { "parameters": { "shareButton": null } } }
+  "patch": { "tuning": { "stickDeadzone": 0.08 }, "usb": { "postHandshakeSettleMs": 5 } }
 }
 ```
 
@@ -66,7 +66,7 @@ To change `server` without editing the file, run `ojd controller ownership CONTR
 Some controllers send fixed input reports that their HID descriptor describes wrongly. A record with the protocol family `hid.report-layout` names where each control sits in the report, in its `input` field. The family requires `input`, and no other family takes it in a record. The bundled `xbox.xid` protocol description declares its own `input` layout as data, in `Resources/Protocols/xbox.xid.json`, with the same fields.
 
 ```json
-"protocol": { "family": "hid.report-layout" },
+"modes": [{ "id": "default", "protocol": { "family": "hid.report-layout" } }],
 "input": {
   "report": { "length": 19 },
   "buttons": [
@@ -122,7 +122,7 @@ OpenJoystickDriver sets the report ID in byte 0 when the ID is not 0, writes eac
 
 ## Send Fixed Reports At Startup
 
-A HID controller that needs a fixed report before it sends input can name it in `output.startup`. The Sixaxis records use one to enable a DualShock 3 over Bluetooth:
+A HID controller that needs a fixed report before it sends input can name it in `output.startup`. The Sixaxis clone record `2563:0523` uses one to enable the controller over Bluetooth. A mode's `session.startup` replaces these writes while that mode runs; the DualShock 3 record uses that form in its `bluetooth` mode:
 
 ```json
 "output": {
@@ -204,7 +204,7 @@ A `VirtualDevice` file in `~/Library/Application Support/OpenJoystickDriver/Pers
 
 ## Select a Model With Protocol Parameters
 
-Some families drive several models that differ in one detail. A typed parameter in the record's `protocol.parameters` object selects the detail. Each family declares its own parameters, and a record with an unknown parameter, a parameter another family declares, or a value of the wrong type is rejected. A flag parameter is `true` or left out.
+Some families drive several models that differ in one detail. A typed parameter in the `protocol.parameters` object of a mode selects the detail. Each family declares its own parameters, and a record with an unknown parameter, a parameter another family declares, or a value of the wrong type is rejected. A flag parameter is `true` or left out.
 
 - `shareButton` (`xbox.gip`): `{"fromEnd": N}` reads the Share button N bytes back from the end of the packet (Linux xpad `MAP_SHARE_OFFSET` is 26).
 - `layout` (`nintendo.switch1`, `nintendo.switch2`): `Pro`, `JoyConLeft` or `JoyConRight`, and `GameCube` on `nintendo.switch2`, the NSO GameCube controller. `usbProtocol` (`nintendo.switch1`): `ChargingOnly` for a pad whose USB link only charges it, which binds the Bluetooth Classic link only; it excludes `layout`.
@@ -231,12 +231,21 @@ A `hid.descriptor` record maps the usages of its report descriptor to controls i
 
 `reportID` limits the map to one report. A usage the map does not name is ignored, and both the app and `./Scripts/ojd check profiles` reject a usage named twice or an axis `range` whose `min` is not below its `max`. The description may also list `descriptorShapes` that choose a map from the usages a controller's report descriptor declares: the shape in `hid.descriptor.json` gives a controller with Z, Rz, a Brake or Accelerator and no Rx or Ry the Z/Rz layout, with Brake as LT and Accelerator as RT. The records for the WR007 (`11C1:5600`), SCUF Envision (`2E95:434D`), 8BitDo Ultimate 2C (`2DC8:301B`, `301C`) and DragonRise (`0079:0006`, by patch) show complete maps.
 
-## Offer Alternative Modes Chosen By a Probe
+## Offer Alternative Modes Chosen By Link, Keys, and Probes
 
-Some controllers can run one of several protocols, such as XInput, DInput, or Switch mode. A HID record can list the alternatives in `modes`. The record's own `protocol` is the default mode and has no probes:
+Every record has a `modes` list, and the protocol a controller runs is the `protocol` of one of its modes. The list holds exactly one mode with the id `default`, which has no `match` and runs when no other mode matches. A HID record can add alternatives for controllers that run one of several protocols, such as XInput, DInput, or Switch mode, or that need different handling over USB and over Bluetooth:
 
 ```json
 "modes": [
+  { "id": "default", "protocol": { "family": "sony.sixaxis" } },
+  {
+    "id": "bluetooth",
+    "protocol": { "family": "sony.sixaxis" },
+    "match": { "link": "bluetooth-classic" },
+    "session": {
+      "startup": [{ "report": { "kind": "feature", "id": 244, "length": 5 }, "bytes": [66, 3, 0, 0] }]
+    }
+  },
   {
     "id": "feature-ef-answers",
     "protocol": { "family": "sony.sixaxis" },
@@ -247,18 +256,31 @@ Some controllers can run one of several protocols, such as XInput, DInput, or Sw
 ]
 ```
 
-- `id` is lowercase words joined by hyphens, and is not `default`. IDs are unique in a record.
-- `protocol` names the protocol that mode runs, as the record's own `protocol` does.
-- `match.probes` lists 1 or more probes. A mode is selected only when all of its probes hold.
-- A probe reads one feature report (`report` 0 to 255, `length` 1 to 65535) and expects `answers`, `stalls`, or `bytes`. `bytes` also takes `offset` and `bytes`, uppercase hex pairs the reply must hold at that offset; the other expectations take neither.
+- `id` is lowercase words joined by hyphens. IDs are unique in a record.
+- `protocol` names the protocol that mode runs.
+- `match` is required in every mode except `default`, and names at least one key. A mode is selected only when all of its keys hold.
+- `interface` (`first` and `last`, inclusive, from 0 to 255) limits which USB interface the mode binds to: the lowest interface in the range that the controller exposes.
+- `session.startup` lists 1 to 16 startup writes, in the form of [`output.startup`](#send-fixed-reports-at-startup). While the mode runs they replace the record's `output.startup`. A mode with no `session` keeps the record's writes.
 
-A probe reads a feature report from the controller and selects a mode by the reply. OpenJoystickDriver never switches a controller's mode. It tries the modes in record order and runs the first whose probes all hold. When no mode matches, the default mode runs. A report that several probes name is read once.
+The `match` keys are:
 
-A probe only reads. It cannot write to the controller. Each read gives up after 2 seconds. When a probe gets no usable reply, the selection stops, the controller stays enabled in its default mode, and OpenJoystickDriver logs a line that names the report. No usable reply means a timeout, an unavailable route, or any failure other than the controller's own refusal, such as a device that is not open, gone, or held exclusively. Only a stalled pipe (`0xE000404F`) or an unsupported request (`kIOReturnUnsupported`) is a refusal. It satisfies `stalls` and fails the other expectations, so a stall where a mode expects `answers` leaves the default mode running. Probes read HID feature reports, so a controller on another route, such as a Bluetooth LE GATT peripheral, always runs its default mode.
+- `link` is `usb`, `bluetooth-classic`, `bluetooth-le`, or `proprietary-radio-receiver`. It holds when every interface of the device reaches the host over that link.
+- `interfaceSignature` holds when one interface has the given `interfaceClass`, `interfaceSubclass`, and `interfaceProtocol` (0 to 255) and, when given, the HID `usagePage` and `usage` (0 to 65535, `usage` needs `usagePage`).
+- `manufacturer` and `product` hold when the device's strings equal the given non-empty text.
+- `bcdDevice` holds when the device's release number lies in `min` to `max`, both inclusive, from 0 to 65535.
+- `probes` lists 1 or more probes. A probe reads a feature report (`report` 0 to 255, `length` 1 to 65535) and expects `answers`, `stalls`, or `bytes`. `bytes` also takes `offset` and `bytes`, uppercase hex pairs the reply must hold at that offset; the other expectations take neither.
 
-Modes apply to HID controllers only. A record with a raw-USB family cannot use `modes`, and a mode cannot name one. Every mode follows the record-level rules of the default protocol for `input.layout`, `output.rumble`, and `capabilities`. A `patch` can replace `modes`.
+OpenJoystickDriver never switches a controller's mode. It tries the modes in record order and runs the first whose keys all hold. A probe is the costly key: it is read only after every other key of its mode holds, and a report that several probes name is read once. When no mode matches, the default mode runs. A mode without a probe can be selected on any route, while a mode with a probe needs a HID route, so a controller on another route, such as a Bluetooth LE GATT peripheral, runs a mode with a probe never.
 
-The DualShock 3 record carries one mode that probes feature report `0xEF`. It is a candidate discriminator only: the mode runs the same protocol as the default, and the record does not say which unit is genuine. The `length` of 49 is a chosen length, the size of a Sixaxis input report, not a size recorded from a DualShock 3 reply.
+A probe only reads. It cannot write to the controller. Each read gives up after 2 seconds. When a probe gets no usable reply, the selection stops, the controller stays enabled in its default mode, and OpenJoystickDriver logs a line that names the report. No usable reply means a timeout, an unavailable route, or any failure other than the controller's own refusal, such as a device that is not open, gone, or held exclusively. Only a stalled pipe (`0xE000404F`) or an unsupported request (`kIOReturnUnsupported`) is a refusal. It satisfies `stalls` and fails the other expectations, so a stall where a mode expects `answers` leaves the default mode running.
+
+Modes apply to HID controllers only. A record with a raw-USB family has one `default` mode, and `interface` and `session` are for HID modes. Every mode follows the record-level rules of the default protocol for `input.layout`, `output.rumble`, and `capabilities`. A patch replaces `modes` as an array, so it restates every mode it keeps.
+
+The `proprietary-radio-receiver` link is in the record format, but macOS does not report it for a device today, so no real controller selects it yet. The `interfaceSignature` key does not compare endpoints.
+
+The DualShock 3 record has the `bluetooth` mode above, which sends feature report `0xF4` (`42 03 00 00`) when the controller connects over classic Bluetooth, the enable report that Linux `hid-sony.c` sends. It also carries one mode that probes feature report `0xEF`. That mode is a candidate discriminator only: it runs the same protocol as the default, and the record does not say which unit is genuine. The `length` of 49 is a chosen length, the size of a Sixaxis input report, not a size recorded from a DualShock 3 reply.
+
+Pairing is not part of the record. A DualShock 3 has to be paired with the Mac before a Bluetooth link exists, and the pairing steps belong to macOS or to a pairing tool, not to this data. The record describes only what runs once the link is up. Pairing a real DualShock 3 is still an open hardware check, so these docs list no verified steps.
 
 ## Connect a Switch 2 Controller Over Bluetooth LE
 
