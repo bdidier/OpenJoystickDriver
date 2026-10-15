@@ -1291,7 +1291,7 @@
 "cli.controller.watch.all_started" = "Memantau setiap pengontrol. Tekan tombol pengontrol.";
 "cli.controller.watch.connected" = "%@ terhubung: %@ (%@)";
 "cli.controller.watch.disconnected" = "%@ terputus";
-"cli.controller.watch.discussion" = "Dengan --json, mencetak satu objek JSON per baris. Y stik mengarah ke atas. Dengan --first-press, mencetak kontrol pertama yang ditekan lalu keluar; gagal jika --duration habis lebih dulu.";
+"cli.controller.watch.discussion" = "Dengan --json, mencetak satu objek JSON per baris. Y stik mengarah ke bawah. Dengan --first-press, mencetak kontrol pertama yang ditekan lalu keluar; gagal jika --duration habis lebih dulu.";
 "cli.controller.watch.discussion.all" = "Dengan --all, setiap baris diawali ID pengontrol, dan satu baris melaporkan setiap pengontrol yang terhubung atau terputus. Baris pertama melaporkan pengontrol yang sudah terhubung.";
 "cli.controller.watch.error.first_press_all" = "--first-press memerlukan CONTROLLER; tidak dapat digunakan dengan --all.";
 "cli.controller.watch.error.target" = "Berikan CONTROLLER atau --all, bukan keduanya.";
@@ -1337,7 +1337,7 @@
 "cli.virtual.error.failed" = "Gamepad virtual untuk %@ tidak berubah (%@). Periksa dengan “ojd virtual show”.";
 "cli.virtual.error.no_unit" = "%@ tidak memiliki ID perangkat, sehingga pilihan hanya dapat berlaku untuk seluruh modelnya. Jalankan perintah tanpa --unit.";
 "cli.virtual.feed.abstract" = "Publikasikan gamepad virtual yang digerakkan oleh input standar.";
-"cli.virtual.feed.discussion" = "Membaca satu objek JSON per baris: “buttons” dan “dpad” mencantumkan kontrol yang ditekan, seperti South dan up, dan “axes” memetakan nama sumbu, seperti LeftStickX, ke nilai. Kontrol yang tidak ada dianggap netral. Stik berkisar dari -1 sampai 1 dengan Y ke atas; pemicu berkisar dari 0 sampai 1. Frame diputar berurutan, masing-masing minimal 8 ms; “holdMilliseconds” menahan frame lebih lama, hingga 60000. Mencetak setiap perintah output yang dikirim game ke gamepad, seperti getaran, sebagai satu objek JSON per baris. Berhenti setelah semua frame diputar dan input berakhir.";
+"cli.virtual.feed.discussion" = "Membaca satu objek JSON per baris: “buttons” dan “dpad” mencantumkan kontrol yang ditekan, seperti South dan up, dan “axes” memetakan nama sumbu, seperti LeftStickX, ke nilai. Kontrol yang tidak ada dianggap netral. Stik berkisar dari -1 sampai 1 dengan Y ke bawah; pemicu berkisar dari 0 sampai 1. Frame diputar berurutan, masing-masing minimal 8 ms; “holdMilliseconds” menahan frame lebih lama, hingga 60000. Mencetak setiap perintah output yang dikirim game ke gamepad, seperti getaran, sebagai satu objek JSON per baris. Berhenti setelah semua frame diputar dan input berakhir.";
 "cli.virtual.feed.error.closed" = "Layanan menutup gamepad virtual. Periksa dengan “ojd status”.";
 "cli.virtual.feed.error.frame" = "Baris %@ bukan frame yang valid. “ojd virtual feed --help” menampilkan formatnya.";
 "cli.virtual.feed.profile" = "Profil gamepad virtual yang dipublikasikan.";

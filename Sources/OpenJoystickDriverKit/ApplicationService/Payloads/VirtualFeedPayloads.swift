@@ -5,7 +5,7 @@ import Foundation
 ///
 /// JSON: `{"buttons":["South"],"dpad":["up"],"axes":{"LeftStickX":0.5},"holdMilliseconds":50}`,
 /// with the names of ``Control``, ``RemappingDpadDirection``, and ``RemappingAxis``.
-/// Stick axes run from `-1` to `1` with positive Y up; triggers run from `0` to `1`. Values out
+/// Stick axes run from `-1` to `1` with positive Y down; triggers run from `0` to `1`. Values out
 /// of range are clamped. Buttons without virtual output, such as paddles, are ignored. Decoding
 /// throws on an unknown key and on a button or d-pad direction listed twice.
 public struct VirtualFeedFrame: Codable, Equatable, Sendable {
@@ -113,16 +113,9 @@ public struct VirtualFeedFrame: Codable, Equatable, Sendable {
     try container.encodeIfPresent(holdMilliseconds, forKey: .holdMilliseconds)
   }
 
-  /// The frame as remapping output, whose stick Y points down.
+  /// The frame as remapping output; its stick Y points down, as the frame's does.
   public var gamepadState: RemappingGamepadState {
-    RemappingGamepadState(
-      buttons: buttons,
-      dpad: dpad,
-      axes: axes.reduce(into: [:]) { result, entry in
-        let flipsY = entry.key == .leftStickY || entry.key == .rightStickY
-        result[entry.key] = flipsY ? -entry.value : entry.value
-      }
-    )
+    RemappingGamepadState(buttons: buttons, dpad: dpad, axes: axes)
   }
 }
 

@@ -330,8 +330,8 @@ public final class GIPDriver: PhysicalProtocolDriver {
     }
     next.set(.capture, pressed: shareByte(in: bytes) & 1 != 0)
     next.hat = mapDpad(bytes[1] & gipDpadMask)
-    next.leftStick = StickPosition(x: normalizeStick(lsx), yDown: -normalizeStick(lsy))
-    next.rightStick = StickPosition(x: normalizeStick(rsx), yDown: -normalizeStick(rsy))
+    next.leftStick = StickPosition(x: normalizeStick(lsx), y: -normalizeStick(lsy))
+    next.rightStick = StickPosition(x: normalizeStick(rsx), y: -normalizeStick(rsy))
     next.leftTrigger = UnipolarValue(normalized: Float(parseLT(from: bytes)) / gipTriggerMax)
     next.rightTrigger = UnipolarValue(normalized: Float(parseRT(from: bytes)) / gipTriggerMax)
     return true

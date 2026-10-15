@@ -1291,7 +1291,7 @@
 "cli.controller.watch.all_started" = "Observando todos los controles. Presiona los botones del control.";
 "cli.controller.watch.connected" = "%@ conectado: %@ (%@)";
 "cli.controller.watch.disconnected" = "%@ desconectado";
-"cli.controller.watch.discussion" = "Con --json, imprime un objeto JSON por línea. El eje Y del stick apunta hacia arriba. Con --first-press, imprime el primer control presionado y termina; falla si --duration se cumple antes.";
+"cli.controller.watch.discussion" = "Con --json, imprime un objeto JSON por línea. El eje Y del stick apunta hacia abajo. Con --first-press, imprime el primer control presionado y termina; falla si --duration se cumple antes.";
 "cli.controller.watch.discussion.all" = "Con --all, cada línea empieza con el ID del control, y una línea informa de cada control que se conecta o desconecta. Las primeras líneas informan de los controles ya conectados.";
 "cli.controller.watch.error.first_press_all" = "--first-press necesita un CONTROLLER; no funciona con --all.";
 "cli.controller.watch.error.target" = "Indica un CONTROLLER o --all, pero no ambos.";
@@ -1337,7 +1337,7 @@
 "cli.virtual.error.failed" = "El control virtual de %@ no cambió (%@). Revísalo con “ojd virtual show”.";
 "cli.virtual.error.no_unit" = "%@ no tiene ID de unidad, así que una elección solo puede aplicarse a todo su modelo. Ejecuta el comando sin --unit.";
 "cli.virtual.feed.abstract" = "Publicar un control virtual controlado por stdin.";
-"cli.virtual.feed.discussion" = "Lee un objeto JSON por línea: “buttons” y “dpad” enumeran los controles presionados, como South y up, y “axes” asigna valores a los nombres de los ejes, como LeftStickX. Los controles que faltan quedan en neutro. Los sticks van de -1 a 1, con Y hacia arriba; los gatillos van de 0 a 1. Los fotogramas se reproducen en orden, cada uno durante al menos 8 ms; “holdMilliseconds” mantiene un fotograma más tiempo, hasta 60000. Imprime cada cocontrol de salida que los juegos envían al control, como la vibración, como un objeto JSON por línea. Termina cuando se han reproducido todos los fotogramas después de que termine la entrada.";
+"cli.virtual.feed.discussion" = "Lee un objeto JSON por línea: “buttons” y “dpad” enumeran los controles presionados, como South y up, y “axes” asigna valores a los nombres de los ejes, como LeftStickX. Los controles que faltan quedan en neutro. Los sticks van de -1 a 1, con Y hacia abajo; los gatillos van de 0 a 1. Los fotogramas se reproducen en orden, cada uno durante al menos 8 ms; “holdMilliseconds” mantiene un fotograma más tiempo, hasta 60000. Imprime cada cocontrol de salida que los juegos envían al control, como la vibración, como un objeto JSON por línea. Termina cuando se han reproducido todos los fotogramas después de que termine la entrada.";
 "cli.virtual.feed.error.closed" = "El servicio cerró el control virtual. Compruébalo con “ojd status”.";
 "cli.virtual.feed.error.frame" = "La línea %@ no es un fotograma válido. “ojd virtual feed --help” muestra el formato.";
 "cli.virtual.feed.profile" = "El perfil del control virtual que se va a publicar.";

@@ -38,14 +38,14 @@
           InputTestStickView(
             title: OJDLocalized.string("inputTest.leftStick"),
             x: snapshot.leftStick.x.normalized,
-            y: -snapshot.leftStick.y.normalized,
+            y: snapshot.leftStick.y.normalized,
             clickPresentation: symbols.leftStickClick,
             clickActive: pressed.contains(.leftStickClick)
           )
           InputTestStickView(
             title: OJDLocalized.string("inputTest.rightStick"),
             x: snapshot.rightStick.x.normalized,
-            y: -snapshot.rightStick.y.normalized,
+            y: snapshot.rightStick.y.normalized,
             clickPresentation: symbols.rightStickClick,
             clickActive: pressed.contains(.rightStickClick)
           )

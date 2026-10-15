@@ -1291,7 +1291,7 @@
 "cli.controller.watch.all_started" = "Alle controllers worden bekeken. Druk op knoppen van de controller.";
 "cli.controller.watch.connected" = "%@ verbonden: %@ (%@)";
 "cli.controller.watch.disconnected" = "%@ losgekoppeld";
-"cli.controller.watch.discussion" = "Met --json wordt één JSON-object per regel getoond. Stick-Y wijst omhoog. Met --first-press wordt het eerste ingedrukte bedieningselement getoond en stopt het commando; het mislukt als --duration eerst verstrijkt.";
+"cli.controller.watch.discussion" = "Met --json wordt één JSON-object per regel getoond. Stick-Y wijst omlaag. Met --first-press wordt het eerste ingedrukte bedieningselement getoond en stopt het commando; het mislukt als --duration eerst verstrijkt.";
 "cli.controller.watch.discussion.all" = "Met --all begint elke regel met de controller-ID, en een regel meldt elke controller die verbinding maakt of verbreekt. De eerste regels melden de controllers die al verbonden zijn.";
 "cli.controller.watch.error.first_press_all" = "--first-press heeft een CONTROLLER nodig; het werkt niet met --all.";
 "cli.controller.watch.error.target" = "Geef een CONTROLLER of --all op, maar niet beide.";
@@ -1337,7 +1337,7 @@
 "cli.virtual.error.failed" = "Het virtuele gamepad voor %@ is niet gewijzigd (%@). Controleer dit met ‘ojd virtual show’.";
 "cli.virtual.error.no_unit" = "%@ heeft geen apparaat-ID, dus een keuze kan alleen voor het hele model gelden. Voer de opdracht uit zonder --unit.";
 "cli.virtual.feed.abstract" = "Een virtueel gamepad publiceren dat door stdin wordt aangestuurd.";
-"cli.virtual.feed.discussion" = "Leest één JSON-object per regel: ‘buttons’ en ‘dpad’ geven de ingedrukte bedieningselementen weer, zoals South en up, en ‘axes’ koppelt namen van assen, zoals LeftStickX, aan waarden. Ontbrekende bedieningselementen blijven neutraal. Sticks lopen van -1 tot 1 met Y omhoog; triggers lopen van 0 tot 1. Frames worden op volgorde afgespeeld, elk minstens 8 ms; ‘holdMilliseconds’ houdt een frame langer vast, tot 60000. Drukt elk uitvoercommando dat games naar de gamepad sturen, zoals trillen, af als één JSON-object per regel. Stopt wanneer elk frame is afgespeeld nadat de invoer is geëindigd.";
+"cli.virtual.feed.discussion" = "Leest één JSON-object per regel: ‘buttons’ en ‘dpad’ geven de ingedrukte bedieningselementen weer, zoals South en up, en ‘axes’ koppelt namen van assen, zoals LeftStickX, aan waarden. Ontbrekende bedieningselementen blijven neutraal. Sticks lopen van -1 tot 1 met Y omlaag; triggers lopen van 0 tot 1. Frames worden op volgorde afgespeeld, elk minstens 8 ms; ‘holdMilliseconds’ houdt een frame langer vast, tot 60000. Drukt elk uitvoercommando dat games naar de gamepad sturen, zoals trillen, af als één JSON-object per regel. Stopt wanneer elk frame is afgespeeld nadat de invoer is geëindigd.";
 "cli.virtual.feed.error.closed" = "De service heeft het virtuele gamepad gesloten. Controleer dit met ‘ojd status’.";
 "cli.virtual.feed.error.frame" = "Regel %@ is geen geldig frame. ‘ojd virtual feed --help’ toont het formaat.";
 "cli.virtual.feed.profile" = "Het profiel van het virtuele gamepad dat moet worden gepubliceerd.";

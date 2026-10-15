@@ -96,8 +96,8 @@ struct Switch2DriverTests {
       try left.parseReport(Switch2Report.state(buttons: 0x0030_0100, left: (3072, 2048)))
     )
     #expect(leftEvent.state.pressed == [.back, .auxiliary3, .auxiliary4])
-    #expect(leftEvent.state.leftStick == StickPosition(x: 0.5, yDown: 0))
-    #expect(leftEvent.state.rightStick == StickPosition(x: 0, yDown: 0))
+    #expect(leftEvent.state.leftStick == StickPosition(x: 0.5, y: 0))
+    #expect(leftEvent.state.rightStick == StickPosition(x: 0, y: 0))
 
     let right = Switch2Driver(layout: .rightJoyCon)
     let rightEvent = try #require(
@@ -114,12 +114,12 @@ struct Switch2DriverTests {
     let driver = Switch2Driver(layout: .pro)
     // Without calibration, SDL maps 0...4096 onto -1...1.
     let raw = try #require(try driver.parseReport(Switch2Report.state(left: (3072, 1024))))
-    #expect(raw.state.leftStick == StickPosition(x: 0.5, yDown: 0.5))
+    #expect(raw.state.leftStick == StickPosition(x: 0.5, y: 0.5))
 
     let factory = Switch2Report.calibration(neutral: 2048, max: 1000, min: 1000)
     driver.consumeUSBCommandReply(Switch2Report.flashReply(address: 0x13080, data: [0x28: factory]))
     let calibrated = try #require(try driver.parseReport(Switch2Report.state(left: (3048, 1548))))
-    #expect(calibrated.state.leftStick == StickPosition(x: 1, yDown: 0.5))
+    #expect(calibrated.state.leftStick == StickPosition(x: 1, y: 0.5))
 
     // User calibration applies only with the `b2 a1` marker.
     let user = Switch2Report.calibration(neutral: 2548, max: 500, min: 500)
@@ -130,7 +130,7 @@ struct Switch2DriverTests {
       Switch2Report.flashReply(address: 0x1FC040, data: [0: [0xB2, 0xA1], 2: user])
     )
     let marked = try #require(try driver.parseReport(Switch2Report.state(left: (2548, 2048))))
-    #expect(marked.state.leftStick == StickPosition(x: 0, yDown: 1))
+    #expect(marked.state.leftStick == StickPosition(x: 0, y: 1))
 
     // Replies to other commands leave the calibration alone.
     var other = Switch2Report.flashReply(address: 0x13080, data: [0x28: user])

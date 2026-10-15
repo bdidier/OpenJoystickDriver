@@ -100,11 +100,11 @@ public final class FlydigiDriver: PhysicalProtocolDriver {
     )
     next.leftStick = StickPosition(
       x: Self.axis(bytes[ReportOffset.leftStickX]),
-      yDown: Self.axis(bytes[ReportOffset.leftStickY])
+      y: Self.axis(bytes[ReportOffset.leftStickY])
     )
     next.rightStick = StickPosition(
       x: Self.axis(bytes[ReportOffset.rightStickX]),
-      yDown: Self.axis(bytes[ReportOffset.rightStickY])
+      y: Self.axis(bytes[ReportOffset.rightStickY])
     )
     state = next
     return ControllerEvent(timestamp: receivedAt, state: next)

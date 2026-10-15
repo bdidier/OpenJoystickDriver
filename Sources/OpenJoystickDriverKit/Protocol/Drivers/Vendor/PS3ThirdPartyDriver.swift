@@ -178,10 +178,10 @@ public final class PS3ThirdPartyDriver: PhysicalProtocolDriver {
     next.leftTrigger = Self.trigger(bytes[triggers], digital: digitalTriggers & 0x40 != 0)
     next.rightTrigger = Self.trigger(bytes[triggers + 1], digital: digitalTriggers & 0x80 != 0)
     let sticks = layout.stickOffset
-    next.leftStick = StickPosition(x: Self.axis(bytes[sticks]), yDown: Self.axis(bytes[sticks + 1]))
+    next.leftStick = StickPosition(x: Self.axis(bytes[sticks]), y: Self.axis(bytes[sticks + 1]))
     next.rightStick = StickPosition(
       x: Self.axis(bytes[sticks + 2]),
-      yDown: Self.axis(bytes[sticks + 3])
+      y: Self.axis(bytes[sticks + 3])
     )
     state = next
     return ControllerEvent(timestamp: receivedAt, state: next)

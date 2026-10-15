@@ -86,11 +86,11 @@ extension DualSenseDriver {
     var next = state
     next.leftStick = StickPosition(
       x: normalizeHID(bytes[ReportOffset.leftStickX]),
-      yDown: normalizeHID(bytes[ReportOffset.leftStickY])
+      y: normalizeHID(bytes[ReportOffset.leftStickY])
     )
     next.rightStick = StickPosition(
       x: normalizeHID(bytes[ReportOffset.rightStickX]),
-      yDown: normalizeHID(bytes[ReportOffset.rightStickY])
+      y: normalizeHID(bytes[ReportOffset.rightStickY])
     )
     next.leftTrigger = trigger(
       bytes[ReportOffset.l2Trigger],

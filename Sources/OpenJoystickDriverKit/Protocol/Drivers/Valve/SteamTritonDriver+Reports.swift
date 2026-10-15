@@ -266,7 +266,7 @@ extension SteamTritonDriver {
   private func stick(_ bytes: [UInt8], x: Int, y: Int) -> StickPosition {
     let rawX = Float(s16(bytes, x)) / Self.stickMax
     let rawY = -Float(s16(bytes, y)) / Self.stickMax
-    return StickPosition(x: max(-1, min(1, rawX)), yDown: max(-1, min(1, rawY)))
+    return StickPosition(x: max(-1, min(1, rawX)), y: max(-1, min(1, rawY)))
   }
 
   private func vector(_ bytes: [UInt8], _ offset: Int, scale: Double) -> ControllerMotionVector {

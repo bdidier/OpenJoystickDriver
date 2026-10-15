@@ -275,7 +275,7 @@ extension GIPDriverTests {
     payload[9] = 0x80
     let packet = ProtocolPacketFixtures.GIP.inputPacket(payload: payload)
     let events = try parser.parseReport(packet)
-    let stick = try #require(events.leftStickYDown)
+    let stick = try #require(events.leftStickPosition)
     #expect(abs(stick.x - (-1.0)) < 0.01)
     #expect(abs(stick.y - 1.0) < 0.01)
   }

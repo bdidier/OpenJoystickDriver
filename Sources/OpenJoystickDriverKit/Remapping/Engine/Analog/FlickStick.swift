@@ -32,7 +32,7 @@ struct RemappingFlickStick {
       reset()
       return nil
     }
-    let angle = atan2(x, y) * 180 / .pi
+    let angle = atan2(x, -y) * 180 / .pi
     defer { previousAngle = angle }
     guard let previousAngle else { return .flick(degrees: angle) }
     var delta = (angle - previousAngle).truncatingRemainder(dividingBy: 360)
