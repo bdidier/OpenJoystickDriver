@@ -1,8 +1,6 @@
 import ArgumentParser
 import Foundation
 import OpenJoystickDriverKit
-import OpenJoystickDriverService
-import OpenJoystickDriverUSB
 
 struct DiagnoseCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
@@ -18,9 +16,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
   /// Counts the vendor-specific USB controllers; tests replace it to avoid touching USB.
   @TaskLocal
   static var usbProbe: @Sendable () async throws -> Int = {
-    try await USBControllerScanner.scanVendorSpecific(
-      using: OpenJoystickDriverUSBTransportProvider()
-    ).count
+    try await PlatformHosts.current.countVendorSpecificUSBControllers()
   }
 
   /// Samples the service process; tests replace it to avoid sampling for seconds.

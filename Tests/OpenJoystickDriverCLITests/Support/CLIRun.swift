@@ -2,6 +2,8 @@ import ArgumentParser
 import Foundation
 import Testing
 
+import OpenJoystickDriverKit
+
 @testable import OpenJoystickDriverCLI
 
 /// One in-process `ojd` invocation: its exit code and what it wrote on each stream.
@@ -11,6 +13,8 @@ struct CLIRun {
   let standardError: String
 
   static func run(_ arguments: [String]) async -> Self {
+    // The executable installs the host at launch; a fake keeps tests off real USB.
+    PlatformHosts.install(FakePlatformHost())
     let capture = CLIOutputCapture()
     let code = await CLIOutput.$capture.withValue(capture) {
       await CLI.execute(arguments: arguments)
