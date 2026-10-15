@@ -198,3 +198,5 @@ OJD_TOKEN=ojd_… python3 Scripts/SDK/reference_client.py feed
 - `--socket PATH` names the socket; without it, the client runs `ojd --json access status`.
 
 The test `EndpointReferenceClientTests` runs the client against a real endpoint server: the client subscribes and receives a watch line, and it feeds a frame to a virtual gamepad.
+
+The WebRTC bridge in `Tools/WebRTCBridge/` is one more client of this endpoint. It reads or feeds controllers over a WebRTC data channel and opens no listening socket. See [WebRTC Bridge](webrtc-bridge.md).
