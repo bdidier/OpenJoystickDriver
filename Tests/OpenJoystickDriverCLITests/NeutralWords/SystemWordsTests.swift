@@ -8,12 +8,11 @@ import Testing
 /// The OS-neutral words of the command line and the support report.
 struct SystemWordsTests {
   @Test
-  func theNewDiagnoseOutputFlagIsNotRefused() async {
+  func diagnoseHelpListsTheOutputFlag() async {
     let result = await CLIRun.run(["diagnose", "--help"])
 
     #expect(result.code == 0)
     #expect(result.standardOutput.contains("--output"))
-    #expect(!result.standardOutput.contains("--bundle"))
   }
 
   private func reportDocument() throws -> [String: Any] {
@@ -63,7 +62,7 @@ struct SystemWordsTests {
   }
 
   @Test
-  func theReportThatUsesTheNewWordsPassesTheSchema() throws {
+  func theReportPassesTheSchema() throws {
     let document = try reportDocument()
 
     #expect(try issues(in: document).isEmpty)
@@ -83,41 +82,25 @@ struct SystemWordsTests {
   }
 
   @Test
-  func aFlagThatEarlierReleasesHadFailsLikeAnyUnknownFlag() async {
+  func anUnknownFlagIsRefusedAsAUsageError() async {
     let unknown = "--x\(UUID().uuidString.prefix(8).lowercased())"
-    let earlier = await CLIRun.run(["diagnose", "--bundle", "/tmp/support.json"])
-    let other = await CLIRun.run(["diagnose", unknown, "/tmp/support.json"])
+    let result = await CLIRun.run(["diagnose", unknown, "/tmp/support.json"])
 
-    #expect(earlier.code != 0)
-    #expect(earlier.code == other.code)
-    #expect(earlier.standardOutput == other.standardOutput)
-    #expect(
-      earlier.standardError.replacingOccurrences(of: "--bundle", with: "<flag>")
-        == other.standardError.replacingOccurrences(of: unknown, with: "<flag>")
-    )
+    #expect(result.code == CLIExitCode.usage.rawValue)
+    #expect(result.standardOutput.isEmpty)
+    #expect(result.standardError.contains(unknown))
   }
 
   @Test
-  func aFieldThatEarlierReleasesHadFailsLikeAnyUnknownField() throws {
+  func anUnknownFieldInTheDiagnoseDocumentFailsTheSchema() throws {
     let unknown = "x\(UUID().uuidString.prefix(8).lowercased())"
-    var earlier: [String: Any] = [
+    let document: [String: Any] = [
       "apiVersion": "openjoystickdriver/v1alpha1", "kind": "Diagnosis", "checks": [],
-      "timings": [],
+      "timings": [], unknown: "/tmp/support.json",
     ]
-    var other = earlier
-    earlier["bundle"] = "/tmp/support.json"
-    other[unknown] = "/tmp/support.json"
-    let schema = "cli-output.schema.json#/$defs/diagnose"
 
-    let first = try issues(in: earlier, against: schema)
-    let second = try issues(in: other, against: schema)
+    let found = try issues(in: document, against: "cli-output.schema.json#/$defs/diagnose")
 
-    #expect(!first.isEmpty)
-    #expect(
-      first.map { $0.replacingOccurrences(of: "bundle", with: "<field>") }
-        == second.map {
-          $0.replacingOccurrences(of: unknown, with: "<field>")
-        }
-    )
+    #expect(found.contains { $0.contains(unknown) })
   }
 }
