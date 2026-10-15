@@ -24,6 +24,33 @@
     }
   },
   "defaults": {
+    "session": {
+      "subcommands": {
+        "reportId": 1,
+        "counterModulus": 16,
+        "requests": [
+          { "subcommand": 3, "data": [48] },
+          { "subcommand": 64, "data": [1] },
+          { "subcommand": 72, "data": [1] },
+          {
+            "subcommand": 16,
+            "spiRead": {
+              "address": 24608,
+              "length": 24,
+              "purpose": "factoryMotionCalibration"
+            }
+          },
+          {
+            "subcommand": 16,
+            "spiRead": {
+              "address": 32806,
+              "length": 20,
+              "purpose": "userMotionCalibration"
+            }
+          }
+        ]
+      }
+    },
     "tuning": {
       "minimumHIDOutputIntervalMs": 50,
       "hidStartupRecoveryIntervalMs": 200,

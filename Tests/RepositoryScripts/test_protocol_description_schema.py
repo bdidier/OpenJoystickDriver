@@ -180,6 +180,8 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         document = xusb_description()
         document["family"] = family
         document["interfaceSignatures"][0]["variant"] = variant
+        if family == "nintendo.switch1":
+            document["defaults"] = {"session": {"subcommands": self.subcommands()}}
         return document
 
     def test_every_family_has_a_variant_rule(self) -> None:
@@ -611,6 +613,99 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         ):
             with self.subTest(keep_alive=keep_alive):
                 self.assert_rejected(self.keep_alive_body("xbox.gip", keep_alive))
+
+    # Switch 1 subcommands.
+
+    @staticmethod
+    def spi_read(**members: Any) -> dict[str, Any]:
+        return {
+            "subcommand": 16,
+            "spiRead": {
+                "address": 24608,
+                "length": 24,
+                "purpose": "factoryMotionCalibration",
+                **members,
+            },
+        }
+
+    def subcommand_body(
+        self, subcommands: Any, family: str = "nintendo.switch1"
+    ) -> Any:
+        return self.with_body(
+            family, defaults={"session": {"subcommands": subcommands}}
+        )
+
+    @staticmethod
+    def subcommands(**members: Any) -> dict[str, Any]:
+        return {
+            "reportId": 1,
+            "counterModulus": 16,
+            "requests": [{"subcommand": 3, "data": [48]}],
+            **members,
+        }
+
+    def test_accepts_subcommands(self) -> None:
+        plain = {"subcommand": 3, "data": [48]}
+        for subcommands in (
+            self.subcommands(),
+            self.subcommands(counterModulus=2),
+            self.subcommands(counterModulus=256),
+            self.subcommands(requests=[plain] * 16),
+            self.subcommands(requests=[plain, self.spi_read()]),
+            self.subcommands(
+                requests=[
+                    self.spi_read(),
+                    self.spi_read(purpose="userMotionCalibration", address=0, length=1),
+                ]
+            ),
+            self.subcommands(requests=[self.spi_read(address=4294967295, length=29)]),
+        ):
+            with self.subTest(subcommands=subcommands):
+                self.check(self.subcommand_body(subcommands))
+
+    def test_rejects_malformed_subcommands(self) -> None:
+        plain = {"subcommand": 3, "data": [48]}
+        both = {**plain, "spiRead": self.spi_read()["spiRead"]}
+        for subcommands in (
+            {"counterModulus": 16, "requests": [plain]},
+            {"reportId": 1, "requests": [plain]},
+            {"reportId": 1, "counterModulus": 16},
+            self.subcommands(reportId=256),
+            self.subcommands(counterModulus=1),
+            self.subcommands(counterModulus=257),
+            self.subcommands(counterModulus=16.5),
+            self.subcommands(requests=[]),
+            self.subcommands(requests=[plain] * 17),
+            self.subcommands(unknown=1),
+            self.subcommands(requests=[{"subcommand": 3}]),
+            self.subcommands(requests=[both]),
+            self.subcommands(requests=[{"subcommand": 256, "data": [1]}]),
+            self.subcommands(requests=[{"subcommand": 3, "data": []}]),
+            self.subcommands(requests=[{"subcommand": 3, "data": [0] * 17}]),
+            self.subcommands(requests=[{"subcommand": 3, "data": [256]}]),
+            self.subcommands(requests=[{**plain, "unknown": 1}]),
+            self.subcommands(requests=[self.spi_read(length=0)]),
+            self.subcommands(requests=[self.spi_read(length=30)]),
+            self.subcommands(requests=[self.spi_read(address=-1)]),
+            self.subcommands(requests=[self.spi_read(address=4294967296)]),
+            self.subcommands(requests=[self.spi_read(purpose="other")]),
+            self.subcommands(requests=[self.spi_read(unknown=1)]),
+            # Each purpose appears at most once.
+            self.subcommands(requests=[self.spi_read(), self.spi_read(address=1)]),
+        ):
+            with self.subTest(subcommands=subcommands):
+                self.assert_rejected(self.subcommand_body(subcommands))
+
+    def test_only_switch_1_has_subcommands_and_it_must_have_them(self) -> None:
+        self.assert_rejected(self.with_body("nintendo.switch1"))
+        self.assert_rejected(
+            self.with_body(
+                "nintendo.switch1", defaults={"tuning": {"stickDeadzone": 0.1}}
+            )
+        )
+        for family in ("sony.dualsense", "xbox.gip", "xbox.xid", "hid.report-layout"):
+            with self.subTest(family=family):
+                self.assert_rejected(self.subcommand_body(self.subcommands(), family))
 
     def test_rejects_startup_only_members_in_a_keep_alive_write(self) -> None:
         for write in (
