@@ -83,6 +83,14 @@ extension EquivalenceSnapshotCatalogTests {
     case .hidStartupRecoveryRounds: "hidStartupRecoveryRounds"
     case .hidStartupIntervalMs: "hidStartupIntervalMs"
     case .minimumHIDOutputIntervalMs: "minimumHIDOutputIntervalMs"
+    case .keepAliveIntervalMs: "keepAliveIntervalMs"
+    case .lizardResendTicks: "lizardResendTicks"
+    case .usbCommandTimeoutMs: "usbCommandTimeoutMs"
+    case .presenceResendReports: "presenceResendReports"
+    case .adapterDisconnectDelayMs: "adapterDisconnectDelayMs"
+    case .usbStartupIntervalMs: "usbStartupIntervalMs"
+    case .usbStartupRetryDelayMs: "usbStartupRetryDelayMs"
+    case .usbTransferTimeoutMs: "usbTransferTimeoutMs"
     case .frameQueueCapacity: "frameQueueCapacity"
     }
   }

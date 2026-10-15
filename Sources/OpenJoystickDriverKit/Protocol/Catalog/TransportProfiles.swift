@@ -38,9 +38,10 @@ public struct DeviceTransportProfile: Equatable, Sendable {
     self.postHandshakeSettleNanoseconds = postHandshakeSettleNanoseconds
   }
 
+  /// The `xbox.gip` family's default endpoints, from its protocol description.
   public static let gipDefault = Self(
-    inputEndpoint: 0x82,
-    outputEndpoint: 0x02,
+    inputEndpoint: UInt8(PhysicalProtocolID.xboxGIP.protocolDescription.endpoints.input),
+    outputEndpoint: UInt8(PhysicalProtocolID.xboxGIP.protocolDescription.endpoints.output),
     needsSetConfiguration: false
   )
 }
@@ -144,6 +145,22 @@ public struct ControllerTuning: Codable, Equatable, Sendable {
   public let hidStartupRecoveryIntervalMilliseconds: Int?
   /// Switch 1 startup recovery rounds before the session expires.
   public let hidStartupRecoveryRounds: Int?
+  /// Interval between keep-alive writes, or between rumble resends for a family that resends.
+  public let keepAliveIntervalMilliseconds: Int?
+  /// Keep-alive ticks between Steam Triton lizard-mode resends.
+  public let lizardResendTicks: Int?
+  /// Timeout of one USB command transfer.
+  public let usbCommandTimeoutMilliseconds: Int?
+  /// Input reports between resends of the request that makes a controller announce itself.
+  public let presenceResendReports: Int?
+  /// Silence from an adapter or dongle after which its controller counts as disconnected.
+  public let adapterDisconnectDelayMilliseconds: Int?
+  /// Gap between the raw-USB startup writes.
+  public let usbStartupIntervalMilliseconds: Int?
+  /// Wait before the first raw-USB startup retry; each later retry waits twice as long.
+  public let usbStartupRetryDelayMilliseconds: Int?
+  /// Timeout of one USB transfer to a GIP controller, for rumble and startup writes.
+  public let usbTransferTimeoutMilliseconds: Int?
   /// Frames that may wait behind a send to the virtual device; a full queue drops its oldest
   /// frame in favor of the newest.
   public let frameQueueCapacity: Int?
@@ -157,6 +174,14 @@ public struct ControllerTuning: Codable, Equatable, Sendable {
     minimumHIDOutputIntervalMilliseconds: Int? = nil,
     hidStartupRecoveryIntervalMilliseconds: Int? = nil,
     hidStartupRecoveryRounds: Int? = nil,
+    keepAliveIntervalMilliseconds: Int? = nil,
+    lizardResendTicks: Int? = nil,
+    usbCommandTimeoutMilliseconds: Int? = nil,
+    presenceResendReports: Int? = nil,
+    adapterDisconnectDelayMilliseconds: Int? = nil,
+    usbStartupIntervalMilliseconds: Int? = nil,
+    usbStartupRetryDelayMilliseconds: Int? = nil,
+    usbTransferTimeoutMilliseconds: Int? = nil,
     frameQueueCapacity: Int? = nil
   ) {
     self.stickDeadzone = stickDeadzone
@@ -165,6 +190,14 @@ public struct ControllerTuning: Codable, Equatable, Sendable {
     self.minimumHIDOutputIntervalMilliseconds = minimumHIDOutputIntervalMilliseconds
     self.hidStartupRecoveryIntervalMilliseconds = hidStartupRecoveryIntervalMilliseconds
     self.hidStartupRecoveryRounds = hidStartupRecoveryRounds
+    self.keepAliveIntervalMilliseconds = keepAliveIntervalMilliseconds
+    self.lizardResendTicks = lizardResendTicks
+    self.usbCommandTimeoutMilliseconds = usbCommandTimeoutMilliseconds
+    self.presenceResendReports = presenceResendReports
+    self.adapterDisconnectDelayMilliseconds = adapterDisconnectDelayMilliseconds
+    self.usbStartupIntervalMilliseconds = usbStartupIntervalMilliseconds
+    self.usbStartupRetryDelayMilliseconds = usbStartupRetryDelayMilliseconds
+    self.usbTransferTimeoutMilliseconds = usbTransferTimeoutMilliseconds
     self.frameQueueCapacity = frameQueueCapacity
   }
 }
@@ -181,6 +214,7 @@ public struct DeviceRuntimeProfile: Equatable, Sendable {
   public internal(set) var parameters: ProtocolParameters
   public let capabilityDelta: ControllerCapabilityDelta
   public let preferredBackends: [VirtualControllerBackendID]
+  /// The record's named GIP startup packets; empty runs the family description's.
   public internal(set) var gipStartupPackets: [GIPStartupPacket]
   public internal(set) var gipKeepAlivePolicy: GIPKeepAlivePolicy
   /// The assembly policy the row names; nil runs each protocol role as its own controller.
@@ -190,6 +224,8 @@ public struct DeviceRuntimeProfile: Equatable, Sendable {
   public let rumbleTemplate: RumbleOutputTemplate?
   /// The record's fixed startup reports, in order; OJD sends them only to a controller it owns.
   public let startupWrites: [RecordStartupWrite]
+  /// The record's raw-USB startup packets; empty runs the family description's.
+  public let usbStartupWrites: [USBStartupWrite]
   /// The record's input-report layout; set exactly for the `hid.report-layout` family.
   public let inputLayout: ControllerInputLayout?
   /// The record's HID usage map; set only for a `hid.descriptor` record that declares one.

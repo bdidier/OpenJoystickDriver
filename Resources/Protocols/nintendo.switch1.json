@@ -2,6 +2,17 @@
   "apiVersion": "openjoystickdriver/v1alpha1",
   "kind": "ProtocolDescription",
   "family": "nintendo.switch1",
+  "endpoints": {
+    "in": 130,
+    "out": 2
+  },
+  "tuningKeys": [
+    "hidStartupIntervalMs",
+    "minimumHIDOutputIntervalMs",
+    "hidStartupRecoveryIntervalMs",
+    "hidStartupRecoveryRounds"
+  ],
+  "buttonLabels": "Nintendo",
   "parameters": {
     "layout": {
       "type": "enum",
@@ -14,7 +25,82 @@
   },
   "defaults": {
     "tuning": {
+      "minimumHIDOutputIntervalMs": 50,
+      "hidStartupRecoveryIntervalMs": 200,
+      "hidStartupRecoveryRounds": 2,
       "frameQueueCapacity": 64
+    },
+    "variants": {
+      "bluetooth-classic": {
+        "tuning": {
+          "hidStartupIntervalMs": 60
+        }
+      },
+      "usb": {
+        "tuning": {
+          "hidStartupIntervalMs": 20
+        }
+      }
+    },
+    "output": {
+      "startup": [
+        {
+          "report": {
+            "kind": "output",
+            "id": 128,
+            "length": 2
+          },
+          "bytes": [2],
+          "phase": "startup",
+          "variants": ["usb"],
+          "when": {
+            "parameter": "layout",
+            "isNot": ["JoyConLeft", "JoyConRight"]
+          }
+        },
+        {
+          "report": {
+            "kind": "output",
+            "id": 128,
+            "length": 2
+          },
+          "bytes": [3],
+          "phase": "startup",
+          "variants": ["usb"],
+          "when": {
+            "parameter": "layout",
+            "isNot": ["JoyConLeft", "JoyConRight"]
+          }
+        },
+        {
+          "report": {
+            "kind": "output",
+            "id": 128,
+            "length": 2
+          },
+          "bytes": [2],
+          "phase": "startup",
+          "variants": ["usb"],
+          "when": {
+            "parameter": "layout",
+            "isNot": ["JoyConLeft", "JoyConRight"]
+          }
+        },
+        {
+          "report": {
+            "kind": "output",
+            "id": 128,
+            "length": 2
+          },
+          "bytes": [4],
+          "phase": "startup",
+          "variants": ["usb"],
+          "when": {
+            "parameter": "layout",
+            "isNot": ["JoyConLeft", "JoyConRight"]
+          }
+        }
+      ]
     }
   }
 }

@@ -13,54 +13,30 @@ struct MacOSOwnedOutput: Equatable, Sendable {
   let setsStartupPlayerIndicator: Bool
   /// Whether OJD makes the driver's startup feature reads, which macOS does not.
   let readsStartupFeatures: Bool
+  /// Why macOS leaves this output undone, in the description's words; nil when it states none.
+  let rationale: String?
 
   static let none = Self(
     lightingFeatures: [],
     drivesRumble: false,
     reports: [],
     setsStartupPlayerIndicator: false,
-    readsStartupFeatures: false
+    readsStartupFeatures: false,
+    rationale: nil
   )
 
   /// The family default with the record's rumble template added.
   static func allowance(for protocolID: PhysicalProtocolID, record: DeviceRuntimeProfile?) -> Self {
-    let family = familyDefault(for: protocolID)
+    let family = protocolID.protocolDescription.macOSOwnedOutput
     guard let template = record?.rumbleTemplate else { return family }
     return Self(
       lightingFeatures: family.lightingFeatures,
       drivesRumble: true,
       reports: family.reports.union([template.report]),
       setsStartupPlayerIndicator: family.setsStartupPlayerIndicator,
-      readsStartupFeatures: family.readsStartupFeatures
+      readsStartupFeatures: family.readsStartupFeatures,
+      rationale: family.rationale
     )
-  }
-
-  private static func familyDefault(for protocolID: PhysicalProtocolID) -> Self {
-    switch protocolID {
-    // macOS never writes a DualShock 3 / Sixaxis output report 0x01, which carries both the
-    // player LED and the rumble motors, so OJD drives both. A Sixaxis without motors ignores the
-    // rumble fields. On USB the controller sends no input and ignores that report until the host
-    // reads feature 0xF2, which macOS does not do.
-    case .sonySixaxis:
-      Self(
-        lightingFeatures: [.playerIndicator],
-        drivesRumble: true,
-        reports: [ControllerTemplateReport(kind: .output, reportID: 0x01, length: 49)],
-        setsStartupPlayerIndicator: true,
-        readsStartupFeatures: true
-      )
-    // Over Bluetooth a DualShock 4 sends only the 10-byte report 0x01, with no motion, touch or
-    // battery, until the host reads its calibration feature report. macOS does not read it.
-    case .sonyDualShock4:
-      Self(
-        lightingFeatures: [],
-        drivesRumble: false,
-        reports: [],
-        setsStartupPlayerIndicator: false,
-        readsStartupFeatures: true
-      )
-    default: .none
-    }
   }
 
   /// The write-executor gate for a controller macOS serves.
