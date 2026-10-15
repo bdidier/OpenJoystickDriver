@@ -49,7 +49,7 @@
     @Published
     private(set) var packets: [PacketLogEntry] = []
     @Published
-    private(set) var observedExtraInputs: [ControlID] = []
+    private(set) var observedExtraInputs: [Control] = []
     @Published
     var packetFilter = PacketFilter.activity
 
@@ -319,7 +319,7 @@
       // must surface here so packet-mapped extras are visible in Developer Tools.
       let observed = state.pressed.subtracting(InputTestButtonPresentation.coreDiagnosticControls)
       let extras = Set(observedExtraInputs).union(observed)
-      observedExtraInputs = ControlID.allCases.filter(extras.contains)
+      observedExtraInputs = Control.allCases.filter(extras.contains)
     }
   }
 

@@ -77,7 +77,7 @@ struct DestinationOption: Hashable {
       )
     }
     let gamepadDestinations =
-      RemappingButton.allCases.filter(\.supportsVirtualOutput).map(
+      Control.allCases.filter(\.supportsVirtualOutput).map(
         RemappingDestination.gamepadButton
       ) + RemappingDpadDirection.allCases.map(RemappingDestination.gamepadDpad)
       + RemappingAxis.allCases.map(RemappingDestination.gamepadAxis)

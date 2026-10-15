@@ -123,7 +123,7 @@ struct ReceiverSlotDiscoveryTests {
     #expect(await waitUntil { dispatcher.stops == [slot] })
 
     #expect(Array(dispatcher.dispatches.keys) == [slot])
-    #expect(dispatcher.dispatches[slot]?.map(\.pressed) == [[.faceSouth], []])
+    #expect(dispatcher.dispatches[slot]?.map(\.pressed) == [[.south], []])
     #expect(
       dispatcher.dispatches[slot]?.allSatisfy {
         $0.connection?.transport == .proprietaryRadioReceiver

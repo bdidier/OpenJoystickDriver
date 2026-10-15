@@ -62,13 +62,13 @@ struct Switch2DriverTests {
 
   @Test
   func mapsProButtonBitsAsSDLReportsThem() throws {
-    let cases: [(UInt32, ControlID)] = [
-      (0x0000_0001, .faceWest), (0x0000_0002, .faceNorth), (0x0000_0004, .faceSouth),
-      (0x0000_0008, .faceEast), (0x0000_0040, .rightShoulder), (0x0000_0080, .rightTriggerButton),
-      (0x0000_0100, .view), (0x0000_0200, .menu), (0x0000_0400, .rightStickClick),
+    let cases: [(UInt32, Control)] = [
+      (0x0000_0001, .west), (0x0000_0002, .north), (0x0000_0004, .south),
+      (0x0000_0008, .east), (0x0000_0040, .rightShoulder), (0x0000_0080, .rightTrigger),
+      (0x0000_0100, .back), (0x0000_0200, .start), (0x0000_0400, .rightStickClick),
       (0x0000_0800, .leftStickClick), (0x0000_1000, .guide), (0x0000_2000, .capture),
-      (0x0000_4000, .auxiliary1), (0x0040_0000, .leftShoulder), (0x0080_0000, .leftTriggerButton),
-      (0x0100_0000, .paddleRight1), (0x0200_0000, .paddleLeft1),
+      (0x0000_4000, .auxiliary1), (0x0040_0000, .leftShoulder), (0x0080_0000, .leftTrigger),
+      (0x0100_0000, .rightPaddle1), (0x0200_0000, .leftPaddle1),
     ]
     for (mask, control) in cases {
       let driver = Switch2Driver(layout: .pro)
@@ -95,7 +95,7 @@ struct Switch2DriverTests {
     let leftEvent = try #require(
       try left.parseReport(Switch2Report.state(buttons: 0x0030_0100, left: (3072, 2048)))
     )
-    #expect(leftEvent.state.pressed == [.view, .auxiliary3, .auxiliary4])
+    #expect(leftEvent.state.pressed == [.back, .auxiliary3, .auxiliary4])
     #expect(leftEvent.state.leftStick == StickPosition(x: 0.5, yDown: 0))
     #expect(leftEvent.state.rightStick == StickPosition(x: 0, yDown: 0))
 
@@ -103,10 +103,10 @@ struct Switch2DriverTests {
     let rightEvent = try #require(
       try right.parseReport(Switch2Report.state(buttons: 0x0001_4034, right: (0, 2048)))
     )
-    #expect(rightEvent.state.pressed == [.faceSouth, .auxiliary5, .auxiliary6, .auxiliary1])
+    #expect(rightEvent.state.pressed == [.south, .auxiliary5, .auxiliary6, .auxiliary1])
     #expect(rightEvent.state.hat == .neutral)
     #expect(rightEvent.state.rightStick.x == .min)
-    #expect(!right.capabilities.controls.contains(.paddleRight1))
+    #expect(!right.capabilities.controls.contains(.rightPaddle1))
   }
 
   @Test

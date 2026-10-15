@@ -8,11 +8,11 @@ struct ControllerShowReport: Encodable, Equatable {
     let physical: String
     let hidInput: String
     let duplicateExposureRisk: String
-    /// Who the record lets serve the model: `native` (macOS) or `virtual` (OJD).
-    let choice: OwnershipChoice
-    /// The record layer that sets the choice: `bundled`, `package`, or `user`; `default` when no
+    /// Who the record lets serve the model: `system` or `ojd`, the `server` setting.
+    let server: ControllerServer
+    /// The record layer that sets `server`: `bundled`, `package`, or `user`; `default` when no
     /// layer sets it.
-    let choiceSource: String
+    let serverSource: String
   }
 
   struct InputHealth: Encodable, Equatable {
@@ -44,7 +44,6 @@ struct ControllerShowReport: Encodable, Equatable {
     let minimumHIDOutputIntervalMs: Int?
     let hidStartupRecoveryIntervalMs: Int?
     let hidStartupRecoveryRounds: Int?
-    let keepAliveIntervalMs: Int?
     let lizardResendTicks: Int?
     let usbCommandTimeoutMs: Int?
     let presenceResendReports: Int?
@@ -63,7 +62,6 @@ struct ControllerShowReport: Encodable, Equatable {
       minimumHIDOutputIntervalMs = tuning.minimumHIDOutputIntervalMilliseconds
       hidStartupRecoveryIntervalMs = tuning.hidStartupRecoveryIntervalMilliseconds
       hidStartupRecoveryRounds = tuning.hidStartupRecoveryRounds
-      keepAliveIntervalMs = tuning.keepAliveIntervalMilliseconds
       lizardResendTicks = tuning.lizardResendTicks
       usbCommandTimeoutMs = tuning.usbCommandTimeoutMilliseconds
       presenceResendReports = tuning.presenceResendReports
@@ -83,7 +81,6 @@ struct ControllerShowReport: Encodable, Equatable {
         minimumHIDOutputIntervalMs.map { "minimumHIDOutputIntervalMs=\($0)" },
         hidStartupRecoveryIntervalMs.map { "hidStartupRecoveryIntervalMs=\($0)" },
         hidStartupRecoveryRounds.map { "hidStartupRecoveryRounds=\($0)" },
-        keepAliveIntervalMs.map { "keepAliveIntervalMs=\($0)" },
         lizardResendTicks.map { "lizardResendTicks=\($0)" },
         usbCommandTimeoutMs.map { "usbCommandTimeoutMs=\($0)" },
         presenceResendReports.map { "presenceResendReports=\($0)" },
@@ -103,6 +100,22 @@ struct ControllerShowReport: Encodable, Equatable {
     /// `unit` or `model`: which choice `override` is.
     let overrideScope: String?
     let unavailable: Bool
+  }
+
+  /// How OJD serves the controller, as `ServingPolicy` decides it.
+  struct Serving: Encodable, Equatable {
+    /// The route: `NativePassThrough`, `VirtualHid`, `ExtensionOwned` or `OutputDisabled`.
+    let route: String
+    /// The persona OJD publishes; absent for a route that publishes nothing.
+    let persona: String?
+    /// Why a route publishes nothing; absent for a route that serves.
+    let reason: String?
+
+    init(_ decision: ServingDecision) {
+      route = decision.route.id
+      persona = decision.selection?.profileID.rawValue
+      reason = decision.route.disabledReason?.rawValue
+    }
   }
 
   /// Whether a virtual device publishes the controller, and why not.
@@ -149,6 +162,7 @@ struct ControllerShowReport: Encodable, Equatable {
     let startupCommandStatus: String?
     let inputHealth: InputHealth
     let ownership: Ownership
+    let serving: Serving
     let parameters: [String]
     let record: Record?
     /// Absent when the controller's record sets no tuning.
@@ -199,14 +213,15 @@ struct ControllerShowReport: Encodable, Equatable {
         physical: device.physicalOwnership.rawValue,
         hidInput: device.hidInputOwnership.rawValue,
         duplicateExposureRisk: device.duplicateExposureRisk.rawValue,
-        choice: OwnershipChoice(record?.server ?? .system),
-        choiceSource: record?.fieldLayers["server"]?.rawValue ?? "default"
+        server: record?.server ?? .system,
+        serverSource: record?.fieldLayers["server"]?.rawValue ?? "default"
       ),
+      serving: Serving(device.servingDecision),
       parameters: device.parameters,
       record: record.map(Record.init),
       tuning: Tuning(device.tuning),
       capabilities: Capabilities(
-        controls: ControlID.allCases.filter(device.capabilities.controls.contains).map(\.rawValue),
+        controls: Control.allCases.filter(device.capabilities.controls.contains).map(\.rawValue),
         touchContactCount: Int(device.capabilities.touchContactCount),
         motion: device.capabilities.motion,
         rumbleMotors: output.rumbleMotors.map(\.rawValue),

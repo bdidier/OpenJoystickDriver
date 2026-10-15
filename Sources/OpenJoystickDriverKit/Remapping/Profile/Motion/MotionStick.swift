@@ -35,8 +35,8 @@ public struct RemappingMotionLean: Codable, Equatable, Hashable, Sendable {
 }
 
 public enum RemappingMotionSteeringOutput: String, Codable, CaseIterable, Hashable, Sendable {
-  case leftStickX = "left_stick_x"
-  case rightStickX = "right_stick_x"
+  case leftStickX = "LeftStickX"
+  case rightStickX = "RightStickX"
 
   var axis: RemappingAxis {
     switch self {

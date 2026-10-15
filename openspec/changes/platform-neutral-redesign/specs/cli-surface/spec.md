@@ -16,7 +16,7 @@ The CLI SHALL follow clig.dev guidelines and Apple command-line conventions: exi
 
 ### Requirement: OS-neutral vocabulary
 
-Command names, flags, output fields and enum values SHALL use OS-neutral words (`system|ojd`, `input-read`, `input-inject`, `usb-transport`, `transport-extension`, `publisher.kind signed|platform`, `appID`, `meta`, `alt`, `hid|rawUsb|usbExtension`, `osVersion`, `osName`, `systemGamepadAudit`). OS-specific words SHALL appear only in `platform` sub-objects or commands.
+Command names, flags, output fields and enum values SHALL use OS-neutral words (`system|ojd`, `input-read`, `input-inject`, `usb-transport`, `transport-extension`, `publisher.kind signed|platform`, `appID`, `meta`, `alt`, `hid|rawUsb|usbExtension|gatt`, `osVersion`, `osName`, `systemGamepadAudit`). OS-specific words SHALL appear only in `platform` sub-objects or commands.
 
 #### Scenario: Status output
 

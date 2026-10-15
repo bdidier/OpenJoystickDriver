@@ -14,7 +14,7 @@ struct EndpointWebSocketTests {
   @Test
   func aTokenClientStreamsControllerEventsOverTheWebSocket() async throws {
     try await withWeb { server, fixture, port, token in
-      fixture.source.set(devices: ["pad-1"], state: ControllerState(pressed: [.faceSouth]))
+      fixture.source.set(devices: ["pad-1"], state: ControllerState(pressed: [.south]))
       let client = try await EndpointWebTestClient(port: port)
       let response = try #require(
         await client.request(
@@ -545,6 +545,24 @@ struct EndpointWebSocketTests {
       #expect(try await ninth.readObject()["code"] as? String == "E1005")
       #expect(try server.status().connections.map(\.transport) == [.socket])
       _ = (pages, socketClient)
+    }
+  }
+
+  @Test
+  func webConnectionsAreServedWhileDispatchHasNoFreeThread() async throws {
+    try await withWeb { server, _, port, _ in
+      try server.setEnabled(true)
+      try server.grant(EndpointFixture.tool, path: "/Tool", scopes: [.read])
+      try await withSaturatedDispatchPool {
+        var pages: [EndpointWebTestClient] = []
+        for _ in 0..<EndpointServer.maximumConnections {
+          pages.append(try await upgraded(port: port))
+        }
+        let ninth = try await upgraded(port: port)
+
+        #expect(try await ninth.readObject()["code"] as? String == "E1005")
+        _ = pages
+      }
     }
   }
 

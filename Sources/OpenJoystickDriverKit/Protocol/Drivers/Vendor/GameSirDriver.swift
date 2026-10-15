@@ -4,7 +4,6 @@ let gameSirReportLength = 64
 /// The spacing of lighting commands: the description's default output interval.
 let gameSirCommandIntervalNanoseconds =
   DriverSessionPlan().withDefaults(of: .vendorGameSir).minimumHIDOutputIntervalNanoseconds
-let gameSirEnhancedHIDHeartbeatPayload: [UInt8] = [0x0F, 0xF2]
 
 /// GameSir protocol families backed by the vendor's observed report streams.
 public enum GameSirProtocol: Sendable, Equatable {

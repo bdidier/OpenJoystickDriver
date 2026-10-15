@@ -33,14 +33,10 @@
   },
   "controls": {
     "base": "xbox",
-    "add": [
-      "guide",
-      "touchpad-click",
-      "left-trigger-button",
-      "right-trigger-button"
-    ],
+    "add": ["Guide", "TouchpadClick"],
     "touchContactCount": 2,
-    "motion": true
+    "motion": true,
+    "digitalTriggers": ["LeftTrigger", "RightTrigger"]
   },
   "defaults": {
     "tuning": {

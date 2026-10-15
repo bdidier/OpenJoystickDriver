@@ -40,7 +40,7 @@ extension InputTestTests {
   @MainActor
   func closeCancelsTheActiveLookup() async {
     var first = ControllerState.neutral
-    first.pressed = [.faceSouth]
+    first.pressed = [.south]
     let gateway = InputTestGatewayStub(inputSequence: [first], inputDelayNanoseconds: 200_000_000)
     let model = InputTestViewModel(gateway: gateway, sampleIntervalNanoseconds: 1_000_000)
     model.selectDevice(makeInputTestDevice())
@@ -68,7 +68,7 @@ extension InputTestTests {
   @MainActor
   func liveSamplingPublishesNormalizedState() async {
     var pressed = ControllerState.neutral
-    pressed.pressed = [.faceSouth]
+    pressed.pressed = [.south]
     pressed.hat = .north
     pressed.leftStick.x = BipolarValue(normalized: 0.75)
     pressed.rightTrigger = UnipolarValue(normalized: 0.5)
@@ -123,7 +123,7 @@ extension InputTestTests {
     let observation = model.objectWillChange.sink { broadInvalidations += 1 }
     var snapshot = model.latestInput
     snapshot.leftStick.x = BipolarValue(normalized: 0.75)
-    snapshot.pressed = [.faceSouth]
+    snapshot.pressed = [.south]
 
     model.liveState.update(snapshot)
 
@@ -203,7 +203,7 @@ extension InputTestTests {
   @MainActor
   func repeatedFailuresRetainTheLastSnapshotAndFinishStale() async {
     var snapshot = ControllerState.neutral
-    snapshot.pressed = [.faceSouth]
+    snapshot.pressed = [.south]
     let gateway = InputTestGatewayStub(inputSequence: [snapshot])
     let model = InputTestViewModel(gateway: gateway, sampleIntervalNanoseconds: 1_000_000)
     model.selectDevice(makeInputTestDevice())

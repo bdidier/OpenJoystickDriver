@@ -87,6 +87,12 @@ struct ProtocolDescription: Sendable {
   /// The family's raw-USB initialization packets, sent when a controller starts unless its record
   /// carries its own.
   let usbStartupWrites: [USBStartupWrite]
+  /// The family's keep-alive: its interval, the one place the interval is set, and the fixed
+  /// writes of each run.
+  let keepAlive: KeepAlive?
+  /// The family's subcommand reports: the report id, the rolling counter rule and the startup
+  /// requests. Only `nintendo.switch1` has them.
+  let subcommands: SubcommandPlan?
   let inputLayout: ControllerInputLayout?
   /// The map every `hid.descriptor` record layers over (``HIDUsageMap``).
   let hidUsageMap: HIDUsageMap?
@@ -99,7 +105,7 @@ struct ProtocolDescription: Sendable {
   /// The capability deltas a record may declare: exactly this set of present controls (or none),
   /// and rumble absent.
   struct RecordCapabilityRules: Equatable, Sendable {
-    let presentControls: Set<ControlID>
+    let presentControls: Set<Control>
     let rumbleAbsent: Bool
 
     static let none = Self(presentControls: [], rumbleAbsent: false)
@@ -244,6 +250,8 @@ struct ProtocolDescription: Sendable {
       rumbleTemplate: document.defaults?.output?.rumble,
       startupWrites: document.defaults?.output?.startup ?? [],
       usbStartupWrites: document.defaults?.output?.usbStartup ?? [],
+      keepAlive: document.defaults?.session?.keepAlive,
+      subcommands: document.defaults?.session?.subcommands,
       inputLayout: document.defaults?.input?.layout,
       hidUsageMap: document.defaults?.input?.usageMap,
       hidUsageShapes: document.defaults?.input?.shapes ?? [],
@@ -252,6 +260,7 @@ struct ProtocolDescription: Sendable {
     )
     for condition in description.startupWrites.map(\.condition)
       + description.usbStartupWrites.map(\.condition)
+      + (description.keepAlive?.writes.map(\.payload.condition) ?? [])
     {
       if let problem = description.conditionProblem(condition, fileName: fileName) {
         throw problem
@@ -261,6 +270,15 @@ struct ProtocolDescription: Sendable {
       throw ProtocolDescriptionProblem(.invalidProtocolDescription, "\(fileName): \(violation)")
     }
     return description
+  }
+
+  /// The fixed keep-alive writes that a controller on `variant` receives from this description.
+  /// A keep-alive write has no `when`, and a record carries none of its own, so nothing replaces
+  /// these.
+  func keepAliveWrites(variant: PhysicalProtocolVariantID?) -> [KeepAliveWrite] {
+    (keepAlive?.writes ?? []).filter {
+      $0.payload.condition.matches(variant: variant, parameters: .none)
+    }
   }
 
   /// Why a startup write's condition names a variant the family lacks (E5004) or a parameter or
@@ -328,6 +346,10 @@ struct ProtocolDescription: Sendable {
     if !startupWrites.isEmpty, rawUSB == .always {
       return "HID startup writes apply only to HID controllers"
     }
+    if let violation = keepAliveViolation { return violation }
+    if (subcommands != nil) != (family == .nintendoSwitch1) {
+      return "only nintendo.switch1 has subcommands, and it must have them"
+    }
     if rawUSB == .always, !tuningKeys.isEmpty {
       return "a family that is always raw USB reads its tuning through rawUSBTuningKeys"
     }
@@ -346,6 +368,27 @@ struct ProtocolDescription: Sendable {
       for key in ControllerTuning.Key.allCases
       where tuning.setKeys.contains(key) && !scope.contains(key) {
         return "\(key) is not read by the \(family.rawValue):\(variant.rawValue) driver"
+      }
+    }
+    return nil
+  }
+
+  /// Why the keep-alive names something the family's driver does not read, or nil.
+  private var keepAliveViolation: String? {
+    guard let keepAlive else { return nil }
+    // The schema's xbox.xid rule forbids `defaults.session`; XID has no session to keep alive.
+    if family == .xboxXID { return "xbox.xid has no session, so it has no keep-alive" }
+    let reads = tuningKeys.union(rawUSBTuningKeys)
+    for write in keepAlive.writes {
+      switch write.payload {
+      case .hid where rawUSB == .always:
+        return "a HID keep-alive write applies only to HID controllers"
+      case .usb where rawUSB == .never:
+        return "a raw-USB keep-alive write applies only to a family with a raw-USB variant"
+      default: break
+      }
+      if let key = write.resendTuning, !reads.contains(key) || tuning?.text(of: key) == nil {
+        return "resendTuning names \(key.rawValue), which the family must read and default"
       }
     }
     return nil

@@ -87,7 +87,7 @@ struct EndpointServerTests {
   @Test
   func aGrantedClientStreamsControllerEvents() async throws {
     try await withEndpointServer { server, fixture in
-      fixture.source.set(devices: ["pad-1"], state: ControllerState(pressed: [.faceSouth]))
+      fixture.source.set(devices: ["pad-1"], state: ControllerState(pressed: [.south]))
       try server.setEnabled(true)
       try server.grant(Self.tool, path: "/Tool", scopes: [.read])
       let client = try await EndpointTestClient(path: server.socketPath)
@@ -96,7 +96,7 @@ struct EndpointServerTests {
 
       var lines: [String] = []
       for _ in 0..<3 { lines.append(try #require(await client.readLine())) }
-      fixture.source.set(devices: [], state: ControllerState(pressed: [.faceSouth]))
+      fixture.source.set(devices: [], state: ControllerState(pressed: [.south]))
       lines.append(try #require(await client.readLine()))
 
       for line in lines {
@@ -117,7 +117,7 @@ struct EndpointServerTests {
       #expect(objects[1]["kind"] == nil)
       let modified = try #require(objects[2]["object"] as? [String: Any])
       #expect(modified["id"] as? String == token("pad-1"))
-      #expect((modified["input"] as? [String: Any])?["pressed"] as? [String] == ["face-south"])
+      #expect((modified["input"] as? [String: Any])?["pressed"] as? [String] == ["South"])
       #expect(modified["output"] == nil)
       let deleted = try #require(objects[3]["object"] as? [String: Any])
       #expect(deleted["id"] as? String == token("pad-1"))
@@ -135,7 +135,7 @@ struct EndpointServerTests {
       delivered.withLock { $0.append(token) }
     }
     try await withEndpointServer(streamDelivered: record) { server, fixture in
-      fixture.source.set(devices: ["pad-1"], state: ControllerState(pressed: [.faceSouth]))
+      fixture.source.set(devices: ["pad-1"], state: ControllerState(pressed: [.south]))
       try server.setEnabled(true)
       try server.grant(Self.tool, path: "/Tool", scopes: [.read])
       let client = try await EndpointTestClient.subscribed(to: server.socketPath)
@@ -155,7 +155,7 @@ struct EndpointServerTests {
   @Test
   func aLateSubscriberFirstReceivesTheConnectedControllers() async throws {
     try await withEndpointServer { server, fixture in
-      fixture.source.set(devices: ["pad-1"], state: ControllerState(pressed: [.faceSouth]))
+      fixture.source.set(devices: ["pad-1"], state: ControllerState(pressed: [.south]))
       try server.setEnabled(true)
       try server.grant(Self.tool, path: "/Tool", scopes: [.read])
       let first = try await EndpointTestClient.subscribed(to: server.socketPath)
@@ -166,7 +166,7 @@ struct EndpointServerTests {
       let object = try #require(snapshot["object"] as? [String: Any])
       #expect(snapshot["type"] as? String == "ADDED")
       #expect(object["id"] as? String == token("pad-1"))
-      #expect((object["input"] as? [String: Any])?["pressed"] as? [String] == ["face-south"])
+      #expect((object["input"] as? [String: Any])?["pressed"] as? [String] == ["South"])
     }
   }
 
@@ -409,6 +409,48 @@ struct EndpointServerTests {
       #expect(try await ninth.readObject()["code"] as? String == "E1005")
       #expect(await ninth.readLine() == nil)
       _ = clients
+    }
+  }
+
+  @Test
+  func aNewClientIsServedWhileTheLimitOfIdleClientsIsHeld() async throws {
+    try await withEndpointServer { server, _ in
+      try server.setEnabled(true)
+      try server.grant(Self.tool, path: "/Tool", scopes: [.read])
+      var clients: [EndpointTestClient] = []
+      for _ in 0..<EndpointServer.maximumConnections {
+        clients.append(try await EndpointTestClient.subscribed(to: server.socketPath))
+      }
+      let start = Date()
+
+      let ninth = try await EndpointTestClient(path: server.socketPath)
+
+      #expect(try await ninth.readObject()["code"] as? String == "E1005")
+      #expect(Date().timeIntervalSince(start) < 2)
+      // A slot freed by a closed client is served at once, behind the idle ones.
+      clients.removeLast()
+      try await Task.sleep(nanoseconds: 200_000_000)
+      let replacement = try await EndpointTestClient.subscribed(to: server.socketPath)
+      #expect(Date().timeIntervalSince(start) < 3)
+      _ = (clients, replacement)
+    }
+  }
+
+  @Test
+  func connectionsAreServedWhileDispatchHasNoFreeThread() async throws {
+    try await withEndpointServer { server, _ in
+      try server.setEnabled(true)
+      try server.grant(Self.tool, path: "/Tool", scopes: [.read])
+      try await withSaturatedDispatchPool {
+        var clients: [EndpointTestClient] = []
+        for _ in 0..<EndpointServer.maximumConnections {
+          clients.append(try await EndpointTestClient.subscribed(to: server.socketPath))
+        }
+        let ninth = try await EndpointTestClient(path: server.socketPath)
+
+        #expect(try await ninth.readObject()["code"] as? String == "E1005")
+        _ = clients
+      }
     }
   }
 

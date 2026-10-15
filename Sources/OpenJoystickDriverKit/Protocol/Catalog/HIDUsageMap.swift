@@ -9,7 +9,7 @@ struct HIDUsageMap: Equatable, Sendable {
   /// A usage bound to a button, an axis or a hat switch.
   enum Binding: Equatable, Sendable {
     /// Pressed while the element value is nonzero.
-    case button(ControlID)
+    case button(Control)
     case axis(Axis)
     case hat(Hat)
   }
@@ -17,7 +17,7 @@ struct HIDUsageMap: Equatable, Sendable {
   /// A stick or trigger axis.
   struct Axis: Equatable, Sendable {
     /// One of the four stick axes or a trigger.
-    let control: ControlID
+    let control: Control
     /// Reverses the axis: a stick is negated, a trigger reads one minus its value.
     let isInverted: Bool
     /// The raw range that scales to the full axis; nil takes the element's logical range.
@@ -78,10 +78,6 @@ struct HIDUsageMap: Equatable, Sendable {
   let entries: [Entry]
   private let bindings: [HIDUsage: Binding]
 
-  private static let stickAxes: Set<ControlID> = [
-    .leftStickX, .leftStickY, .rightStickX, .rightStickY,
-  ]
-
   /// Throws a ``ControllerRecordProblem`` for a usage named twice, a button on an axis or hat
   /// control, an axis on any other control, an empty or reversed range, or a dead zone outside
   /// the open interval from 0 to 1.
@@ -95,11 +91,11 @@ struct HIDUsageMap: Equatable, Sendable {
       }
       switch entry.binding {
       case .button(let control):
-        guard control != .dpad, !Self.stickAxes.contains(control), control != .leftTrigger,
-          control != .rightTrigger
-        else { throw ControllerRecordProblem("\(name) is a button; \(control.rawValue) is not") }
+        guard !Control.stickAxes.contains(control), !Control.dpad.contains(control) else {
+          throw ControllerRecordProblem("\(name) is a button; \(control.rawValue) is not")
+        }
       case .axis(let axis):
-        guard Self.stickAxes.contains(axis.control) || axis.isTrigger else {
+        guard Control.stickAxes.contains(axis.control) || axis.isTrigger else {
           throw ControllerRecordProblem("\(name) is an axis; \(axis.control.rawValue) is not")
         }
         if let range = axis.range, range.isEmpty || range.lowerBound == range.upperBound {
@@ -123,17 +119,27 @@ struct HIDUsageMap: Equatable, Sendable {
     bindings[HIDUsage(usagePage: Int(page), usage: Int(usage))]
   }
 
-  /// The controls the map can drive.
-  var controls: Set<ControlID> {
+  /// The triggers the map reads as buttons: a physical digital trigger signal.
+  var digitalTriggers: Set<Control> {
     Set(
-      entries.map { entry in
-        switch entry.binding {
-        case .button(let control): control
-        case .axis(let axis): axis.control
-        case .hat: ControlID.dpad
-        }
+      entries.compactMap { entry in
+        guard case .button(let control) = entry.binding else { return nil }
+        return control == .leftTrigger || control == .rightTrigger ? control : nil
       }
     )
+  }
+
+  /// The controls the map can drive.
+  var controls: Set<Control> {
+    var controls: Set<Control> = []
+    for entry in entries {
+      switch entry.binding {
+      case .button(let control): controls.insert(control)
+      case .axis(let axis): controls.insert(axis.control)
+      case .hat: controls.formUnion(Control.dpad)
+      }
+    }
+    return controls
   }
 }
 

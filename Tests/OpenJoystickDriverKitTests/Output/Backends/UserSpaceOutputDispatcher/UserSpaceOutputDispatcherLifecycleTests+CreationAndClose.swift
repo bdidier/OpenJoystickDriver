@@ -52,7 +52,7 @@ extension UserSpaceOutputDispatcherLifecycleTests {
 
     let dispatchTask = Task {
       await dispatcher.dispatch(
-        changes: [.press(.faceSouth)],
+        changes: [.press(.south)],
         from: LogicalControllerID(vendorID: 1, productID: 2)
       )
     }

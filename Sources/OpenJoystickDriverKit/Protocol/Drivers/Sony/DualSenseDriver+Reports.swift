@@ -4,7 +4,7 @@ extension DualSenseDriver {
   public var defaultColor: ControllerColor? { ControllerColor(red: 0, green: 0, blue: 255) }
 
   /// DualSense Edge function buttons and back paddles: the description's record capability.
-  public static var edgeControls: Set<ControlID> {
+  public static var edgeControls: Set<Control> {
     PhysicalProtocolID.sonyDualSense.protocolDescription.recordCapabilities.presentControls
   }
 
@@ -137,21 +137,21 @@ extension DualSenseDriver {
   }
 
   /// Payload byte, mask and PlayStation-label control of each button; Edge buttons only on Edge.
-  private var buttonTable: [(Int, UInt8, ControlID)] {
-    let base: [(Int, UInt8, ControlID)] = [
-      (ReportOffset.buttons0, 0x10, .faceWest), (ReportOffset.buttons0, 0x20, .faceSouth),
-      (ReportOffset.buttons0, 0x40, .faceEast), (ReportOffset.buttons0, 0x80, .faceNorth),
+  private var buttonTable: [(Int, UInt8, Control)] {
+    let base: [(Int, UInt8, Control)] = [
+      (ReportOffset.buttons0, 0x10, .west), (ReportOffset.buttons0, 0x20, .south),
+      (ReportOffset.buttons0, 0x40, .east), (ReportOffset.buttons0, 0x80, .north),
       (ReportOffset.buttons1, 0x01, .leftShoulder), (ReportOffset.buttons1, 0x02, .rightShoulder),
-      (ReportOffset.buttons1, 0x04, .leftTriggerButton),
-      (ReportOffset.buttons1, 0x08, .rightTriggerButton), (ReportOffset.buttons1, 0x10, .view),
-      (ReportOffset.buttons1, 0x20, .menu), (ReportOffset.buttons1, 0x40, .leftStickClick),
+      (ReportOffset.buttons1, 0x04, .leftTrigger),
+      (ReportOffset.buttons1, 0x08, .rightTrigger), (ReportOffset.buttons1, 0x10, .back),
+      (ReportOffset.buttons1, 0x20, .start), (ReportOffset.buttons1, 0x40, .leftStickClick),
       (ReportOffset.buttons1, 0x80, .rightStickClick), (ReportOffset.buttons2, 0x01, .guide),
       (ReportOffset.buttons2, 0x02, .touchpadClick), (ReportOffset.buttons2, 0x04, .microphone),
     ]
     guard hasEdgeButtons else { return base }
     return base + [
       (ReportOffset.buttons2, 0x10, .auxiliary1), (ReportOffset.buttons2, 0x20, .auxiliary2),
-      (ReportOffset.buttons2, 0x40, .paddleLeft1), (ReportOffset.buttons2, 0x80, .paddleRight1),
+      (ReportOffset.buttons2, 0x40, .leftPaddle1), (ReportOffset.buttons2, 0x80, .rightPaddle1),
     ]
   }
 

@@ -90,7 +90,7 @@ struct XIDDriverTests {
     let parser = XIDDriver()
     _ = try parser.parseReport(makeXIDReport())
     let events = try parser.parseReport(makeXIDReport(analogA: 0xFF))
-    #expect(events.contains(.press(.faceSouth)))
+    #expect(events.contains(.press(.south)))
   }
 
   @Test
@@ -98,7 +98,7 @@ struct XIDDriverTests {
     let parser = XIDDriver()
     _ = try parser.parseReport(makeXIDReport())
     let events = try parser.parseReport(makeXIDReport(digital: 0x11))
-    #expect(events.contains(.press(.menu)))
+    #expect(events.contains(.press(.start)))
     #expect(events.contains(.hat(.north)))
   }
 
@@ -118,6 +118,6 @@ struct XIDDriverTests {
     let parser = XIDDriver()
     _ = try parser.parseReport(makeXIDReport(analogY: 0x20))
     let events = try parser.parseReport(makeXIDReport(analogY: 0))
-    #expect(events.contains(.release(.faceNorth)))
+    #expect(events.contains(.release(.north)))
   }
 }

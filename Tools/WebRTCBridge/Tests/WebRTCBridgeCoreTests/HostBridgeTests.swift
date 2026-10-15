@@ -59,12 +59,12 @@ final class HostBridgeTests: XCTestCase {
   func testAFrameIsSentOnceAndAnIdleFeedGetsOnlyKeepAlive() async throws {
     let endpoint = try FakeEndpoint()
     let (bridge, channel) = try started(endpoint)
-    channel.peerSends(#"{\#(Self.header),"kind":"Frame","buttons":["south"]}"#)
+    channel.peerSends(#"{\#(Self.header),"kind":"Frame","buttons":["South"]}"#)
     try await Task.sleep(nanoseconds: 1_700_000_000)
 
     let frames = endpoint.snapshot().frames
     XCTAssertEqual(frames.count, 1)
-    XCTAssertEqual(frames.first?["buttons"] as? [String], ["south"])
+    XCTAssertEqual(frames.first?["buttons"] as? [String], ["South"])
     XCTAssertGreaterThanOrEqual(endpoint.keepAliveCount(), 2)
     bridge.stop()
   }
@@ -86,7 +86,7 @@ final class HostBridgeTests: XCTestCase {
       ]
     )
     let (bridge, channel) = try started(endpoint)
-    channel.peerSends(#"{\#(Self.header),"kind":"Frame","buttons":["south"]}"#)
+    channel.peerSends(#"{\#(Self.header),"kind":"Frame","buttons":["South"]}"#)
     try await Task.sleep(nanoseconds: 500_000_000)
 
     let sent = channel.sent.compactMap {

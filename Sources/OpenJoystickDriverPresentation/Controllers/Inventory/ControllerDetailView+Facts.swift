@@ -24,9 +24,9 @@
             )
             Divider()
             inputTestAction
-            if ControllerOwnershipPicker.isShown(for: device) {
+            if ControllerServerPicker.isShown(for: device) {
               Divider()
-              ControllerOwnershipPicker(viewModel: viewModel, device: device)
+              ControllerServerPicker(viewModel: viewModel, device: device)
             }
             if device.physicalOwnership != .nativeGamepad {
               Divider()
@@ -267,6 +267,7 @@
           OJDLocalized.string("controllers.publishedAs"),
           device.publishedIdentityLabel
         ),
+        (OJDLocalized.string("controllers.serving.label"), device.servingRouteLabel),
         (
           OJDLocalized.string("common.protocol"),
           device.protocolBinding.displayLabel

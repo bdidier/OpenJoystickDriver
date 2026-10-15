@@ -41,7 +41,7 @@ struct ControllerRecordDraftTests {
     let input = try #require(document["input"] as? [String: Any])
     #expect(input["report"] as? [String: Int] == ["length": 6, "id": 1])
     let buttons = try #require(input["buttons"] as? [[String: Any]])
-    #expect(buttons.compactMap { $0["control"] as? String }.first == "face-south")
+    #expect(buttons.compactMap { $0["control"] as? String }.first == "South")
     #expect(buttons.compactMap { $0["mask"] as? Int } == [1, 2, 4, 8, 16, 32, 64, 128])
     #expect(buttons.allSatisfy { $0["byte"] as? Int == 1 })
     let axes = try #require(input["axes"] as? [[String: Any]])

@@ -165,12 +165,12 @@ public final class SixaxisDriver: PhysicalProtocolDriver {
     _ b0: UInt8,
     _ b1: UInt8,
     _ b2: UInt8
-  ) -> [(UInt8, UInt8, ControlID)] {
+  ) -> [(UInt8, UInt8, Control)] {
     [
-      (b0, 0x01, .view), (b0, 0x02, .leftStickClick), (b0, 0x04, .rightStickClick),
-      (b0, 0x08, .menu), (b1, 0x01, .leftTriggerButton), (b1, 0x02, .rightTriggerButton),
-      (b1, 0x04, .leftShoulder), (b1, 0x08, .rightShoulder), (b1, 0x10, .faceNorth),
-      (b1, 0x20, .faceEast), (b1, 0x40, .faceSouth), (b1, 0x80, .faceWest), (b2, 0x01, .guide),
+      (b0, 0x01, .back), (b0, 0x02, .leftStickClick), (b0, 0x04, .rightStickClick),
+      (b0, 0x08, .start), (b1, 0x01, .leftTrigger), (b1, 0x02, .rightTrigger),
+      (b1, 0x04, .leftShoulder), (b1, 0x08, .rightShoulder), (b1, 0x10, .north),
+      (b1, 0x20, .east), (b1, 0x40, .south), (b1, 0x80, .west), (b2, 0x01, .guide),
     ]
   }
 

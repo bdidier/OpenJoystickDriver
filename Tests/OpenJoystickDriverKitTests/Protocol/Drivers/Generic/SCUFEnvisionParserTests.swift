@@ -19,8 +19,8 @@ struct SCUFEnvisionParserTests {
   @Test
   func mapsConfirmedButtonsAndRejectsUnverifiedButtons() throws {
     let parser = try parser()
-    let buttons: [ControlID] = [
-      .faceSouth, .faceEast, .faceWest, .faceNorth, .leftShoulder, .rightShoulder, .view, .menu,
+    let buttons: [Control] = [
+      .south, .east, .west, .north, .leftShoulder, .rightShoulder, .back, .start,
       .leftStickClick, .rightStickClick,
     ]
     for (index, button) in buttons.enumerated() {
@@ -45,7 +45,7 @@ struct SCUFEnvisionParserTests {
       #expect(parse(parser, value(page: 9, usage: 1, integer: 1, reportID: reportID)) == nil)
     }
     #expect(
-      parse(parser, value(page: 9, usage: 1, integer: 1, reportID: 6)).contains(.press(.faceSouth))
+      parse(parser, value(page: 9, usage: 1, integer: 1, reportID: 6)).contains(.press(.south))
     )
   }
 

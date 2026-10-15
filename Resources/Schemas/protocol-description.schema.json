@@ -52,7 +52,6 @@
           "minimumHIDOutputIntervalMs",
           "hidStartupRecoveryIntervalMs",
           "hidStartupRecoveryRounds",
-          "keepAliveIntervalMs",
           "lizardResendTicks",
           "usbCommandTimeoutMs",
           "presenceResendReports",
@@ -70,7 +69,6 @@
       "uniqueItems": true,
       "items": {
         "enum": [
-          "keepAliveIntervalMs",
           "lizardResendTicks",
           "usbCommandTimeoutMs",
           "presenceResendReports",
@@ -233,6 +231,7 @@
                   "startup": false
                 }
               },
+              "session": false,
               "tuning": {
                 "properties": {
                   "inputLivenessTimeoutMs": false,
@@ -510,6 +509,7 @@
         "required": ["family"]
       },
       "then": {
+        "required": ["defaults"],
         "properties": {
           "rawUSB": {
             "anyOf": [
@@ -524,7 +524,11 @@
             ]
           },
           "defaults": {
+            "required": ["session"],
             "properties": {
+              "session": {
+                "required": ["subcommands"]
+              },
               "variants": {
                 "propertyNames": {
                   "enum": ["usb", "bluetooth-classic"]
@@ -905,6 +909,31 @@
     {
       "if": {
         "not": {
+          "properties": {
+            "family": {
+              "const": "nintendo.switch1"
+            }
+          },
+          "required": ["family"]
+        }
+      },
+      "then": {
+        "properties": {
+          "defaults": {
+            "properties": {
+              "session": {
+                "properties": {
+                  "subcommands": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "not": {
           "anyOf": [
             {
               "required": ["recordSections"],
@@ -1125,6 +1154,9 @@
         "output": {
           "$ref": "#/$defs/descriptionOutput"
         },
+        "session": {
+          "$ref": "#/$defs/descriptionSession"
+        },
         "input": {
           "anyOf": [
             {
@@ -1214,6 +1246,14 @@
         "add": {
           "$ref": "controller.schema.json#/$defs/controlList"
         },
+        "digitalTriggers": {
+          "description": "The triggers whose press the protocol reports as its own digital signal; they are controls of the family.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": ["LeftTrigger", "RightTrigger"]
+          }
+        },
         "touchContactCount": {
           "type": "integer",
           "minimum": 0,
@@ -1294,7 +1334,7 @@
       }
     },
     "startupVariants": {
-      "description": "The stored variants a startup write is sent on; absent sends it on every variant.",
+      "description": "The stored variants a startup or keep-alive write is sent on; absent sends it on every variant.",
       "type": "array",
       "minItems": 1,
       "maxItems": 8,
@@ -1471,6 +1511,165 @@
               }
             ]
           }
+        }
+      }
+    },
+    "descriptionSession": {
+      "description": "What runs while the device is open. Today the keep-alive and, for nintendo.switch1, its subcommands; the startup writes join them with the session task.",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "keepAlive": {
+          "$ref": "#/$defs/descriptionKeepAlive"
+        },
+        "subcommands": {
+          "$ref": "#/$defs/descriptionSubcommands"
+        }
+      }
+    },
+    "descriptionSubcommands": {
+      "description": "The Switch 1 subcommand report: its id, the modulus of the rolling packet counter that every output report of the family shares (the counter starts at 0 and wraps to 0 after modulus - 1), and the requests sent in order at startup. A startup recovery round re-sends the SPI reads whose reply has not arrived.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reportId", "counterModulus", "requests"],
+      "properties": {
+        "reportId": {
+          "$ref": "#/$defs/byte"
+        },
+        "counterModulus": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 256
+        },
+        "requests": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/descriptionSubcommandRequest"
+          }
+        }
+      }
+    },
+    "descriptionSubcommandRequest": {
+      "description": "One subcommand: its id and either fixed data bytes or an SPI flash read. An SPI read sends the address as four little-endian bytes and then the length; its purpose names the calibration the reply feeds, and each purpose appears at most once, which a schema cannot say and the validators check.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["subcommand"],
+      "properties": {
+        "subcommand": {
+          "$ref": "#/$defs/byte"
+        },
+        "data": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/byte"
+          }
+        },
+        "spiRead": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["address", "length", "purpose"],
+          "properties": {
+            "address": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            },
+            "length": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 29
+            },
+            "purpose": {
+              "enum": ["factoryMotionCalibration", "userMotionCalibration"]
+            }
+          }
+        }
+      },
+      "oneOf": [
+        {
+          "required": ["data"]
+        },
+        {
+          "required": ["spiRead"]
+        }
+      ]
+    },
+    "descriptionKeepAlive": {
+      "description": "The family's keep-alive: its period, and the fixed writes of each run. The driver adds the writes that follow its state. A list may mix HID reports and raw-USB packets, each limited to the variants it is for.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["intervalMilliseconds"],
+      "properties": {
+        "intervalMilliseconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60000
+        },
+        "writes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/descriptionKeepAliveHIDWrite"
+              },
+              {
+                "$ref": "#/$defs/descriptionKeepAliveUSBWrite"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "descriptionKeepAliveHIDWrite": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["report", "bytes"],
+      "properties": {
+        "report": {
+          "$ref": "controller.schema.json#/$defs/startupWrite/properties/report"
+        },
+        "bytes": {
+          "$ref": "controller.schema.json#/$defs/startupWrite/properties/bytes"
+        },
+        "variants": {
+          "$ref": "#/$defs/startupVariants"
+        },
+        "resendTuning": {
+          "description": "The tuning key that gives the number of runs between sends of this write; absent sends it on every run.",
+          "enum": ["lizardResendTicks"]
+        }
+      }
+    },
+    "descriptionKeepAliveUSBWrite": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bytes"],
+      "properties": {
+        "bytes": {
+          "$ref": "controller.schema.json#/$defs/usbStartupWrite/properties/bytes"
+        },
+        "endpoint": {
+          "$ref": "controller.schema.json#/$defs/usbStartupWrite/properties/endpoint"
+        },
+        "timeoutMilliseconds": {
+          "$ref": "controller.schema.json#/$defs/usbStartupWrite/properties/timeoutMilliseconds"
+        },
+        "sessionByte": {
+          "$ref": "controller.schema.json#/$defs/usbStartupWrite/properties/sessionByte"
+        },
+        "variants": {
+          "$ref": "#/$defs/startupVariants"
+        },
+        "resendTuning": {
+          "description": "The tuning key that gives the number of runs between sends of this write; absent sends it on every run.",
+          "enum": ["lizardResendTicks"]
         }
       }
     }

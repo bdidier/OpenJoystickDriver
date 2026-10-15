@@ -107,6 +107,8 @@ def semantic_violations(
                 ("E5002", f"{where}: {', '.join(unread)} not read by the driver")
             )
     found += startup_violations(description, variants)
+    found += keep_alive_violations(description, variants)
+    found += subcommand_violations(description)
     return found
 
 
@@ -146,3 +148,78 @@ def startup_violations(
                     )
                 )
     return found
+
+
+def keep_alive_violations(
+    description: dict[str, Any], variants: list[str]
+) -> list[tuple[str, str]]:
+    """What `defaults.session.keepAlive` may name, as `ProtocolDescription` checks it in Swift.
+
+    The interval has one home, `intervalMilliseconds`, and no tuning key repeats it; a write
+    is a HID report only where the family has HID variants and a raw-USB packet only where it
+    has raw-USB ones; a `variants` entry names a variant the family has; and a `resendTuning`
+    key is one the family reads and defaults.
+    """
+    found: list[tuple[str, str]] = []
+    defaults = description.get("defaults", {})
+    keep_alive = defaults.get("session", {}).get("keepAlive")
+    if keep_alive is None:
+        return found
+    reads = {
+        *description.get("tuningKeys", ()),
+        *description.get("rawUSBTuningKeys", ()),
+    }
+    where = "defaults.session.keepAlive"
+    raw = description.get("rawUSB")
+    for index, write in enumerate(keep_alive.get("writes", [])):
+        label = f"{where}.writes[{index}]"
+        if "report" in write and raw is True:
+            found.append(
+                ("E5002", f"{label} is a HID write, and the family is raw USB")
+            )
+        if "report" not in write and not raw:
+            found.append(
+                (
+                    "E5002",
+                    f"{label} is a raw-USB write, and the family has no raw-USB variant",
+                )
+            )
+        found += [
+            ("E5004", f"{label}.variants names {name}, which the family does not have")
+            for name in write.get("variants", ())
+            if name not in variants
+        ]
+        key = write.get("resendTuning")
+        if key is not None and (
+            key not in reads or key not in defaults.get("tuning", {})
+        ):
+            found.append(
+                (
+                    "E5002",
+                    f"{label}.resendTuning: {key} must be read by the family and defaulted",
+                )
+            )
+    return found
+
+
+def subcommand_violations(description: dict[str, Any]) -> list[tuple[str, str]]:
+    """What `defaults.session.subcommands` may hold, as `SubcommandPlan` checks it in Swift.
+
+    Each SPI read purpose appears at most once, which a schema cannot say.
+    """
+    subcommands = description.get("defaults", {}).get("session", {}).get("subcommands")
+    if subcommands is None:
+        return []
+    purposes = [
+        request["spiRead"]["purpose"]
+        for request in subcommands.get("requests", ())
+        if isinstance(request.get("spiRead"), dict) and "purpose" in request["spiRead"]
+    ]
+    if len(set(purposes)) == len(purposes):
+        return []
+    return [
+        (
+            "E5002",
+            "defaults.session.subcommands: each SPI read purpose appears at most once",
+        )
+    ]

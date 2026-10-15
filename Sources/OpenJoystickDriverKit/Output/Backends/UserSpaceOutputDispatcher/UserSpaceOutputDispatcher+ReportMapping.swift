@@ -40,11 +40,11 @@ extension UserSpaceOutputDispatcher {
     let hat = hatValue(for: input.hat)
     state.buttons = GamepadHIDDescriptor.dpadButtonBits(for: hat)
     for control in input.pressed {
-      if let bit = buttonBit(for: control, labels: labels) { state.buttons |= 1 << bit }
+      if let bit = Self.buttonBit(for: control) { state.buttons |= 1 << bit }
     }
     state.hat = hat
-    state.leftTriggerPressed = input.pressed.contains(.leftTriggerButton)
-    state.rightTriggerPressed = input.pressed.contains(.rightTriggerButton)
+    state.leftTriggerPressed = input.pressed.contains(.leftTrigger)
+    state.rightTriggerPressed = input.pressed.contains(.rightTrigger)
     // The report's Y points down; the canonical state's Y points up.
     state.leftStickX = Self.axisValue(input.leftStick.x, transfer: stickTransfer)
     state.leftStickY = Self.axisValue(
@@ -67,17 +67,17 @@ extension UserSpaceOutputDispatcher {
     let hat = Self.hatValue(for: remapped.dpadDirection)
     state.buttons = GamepadHIDDescriptor.dpadButtonBits(for: hat)
     for button in remapped.buttons {
-      if let bit = buttonBit(for: button) { state.buttons |= 1 << bit }
+      if let bit = Self.buttonBit(for: button) { state.buttons |= 1 << bit }
     }
     state.hat = hat
     state.leftTriggerPressed = Self.remappedTriggerPressed(
       remapped.value(for: .leftTrigger),
-      click: remapped.buttons.contains(.leftTriggerClick),
+      click: remapped.buttons.contains(.leftTrigger),
       wasPressed: state.leftTriggerPressed
     )
     state.rightTriggerPressed = Self.remappedTriggerPressed(
       remapped.value(for: .rightTrigger),
-      click: remapped.buttons.contains(.rightTriggerClick),
+      click: remapped.buttons.contains(.rightTrigger),
       wasPressed: state.rightTriggerPressed
     )
     state.leftStickX = Self.remappedAxisValue(remapped.value(for: .leftStickX))
@@ -90,48 +90,28 @@ extension UserSpaceOutputDispatcher {
 
   // MARK: - Button mapping (XInput semantic order)
 
-  /// PlayStation Share (Create) reads as View and Nintendo Capture as Capture; both keep Share's
-  /// bit 15, while standard View keeps Back's bit 9.
-  static func buttonBit(for control: ControlID, labels: ControllerButtonLabels) -> UInt32? {
+  /// The one control-to-bit table. A control is the same bit whatever the physical label: PS4
+  /// Share, PS Create and Xbox View are `back` (bit 9); PS Options, Xbox Menu and Switch Plus are
+  /// `start` (bit 8); Xbox Share and Switch Capture are `capture` (bit 15).
+  static func buttonBit(for control: Control) -> UInt32? {
     switch control {
-    case .faceSouth: return 0
-    case .faceEast: return 1
-    case .faceWest: return 2
-    case .faceNorth: return 3
-    case .leftShoulder: return 4
-    case .rightShoulder: return 5
-    case .leftStickClick: return 6
-    case .rightStickClick, .rightTrackpadClick: return 7
-    case .menu: return 8
-    case .view: return labels == .playStation ? 15 : 9
-    case .guide: return 10
-    case .share, .capture: return 15
-    case .dpad, .leftStickX, .leftStickY, .rightStickX, .rightStickY, .leftTrigger, .rightTrigger,
-      .leftTriggerButton, .rightTriggerButton, .touchpadClick, .microphone, .paddleLeft1,
-      .paddleLeft2, .paddleRight1, .paddleRight2, .auxiliary1, .auxiliary2, .auxiliary3,
-      .auxiliary4, .auxiliary5, .auxiliary6, .auxiliary7, .auxiliary8, .leftStickTouch,
-      .rightStickTouch, .leftTrackpadClick, .leftTrackpadTouch, .rightTrackpadTouch:
-      return nil
-    }
-  }
-
-  func buttonBit(for button: RemappingButton) -> UInt32? {
-    switch button {
     case .south: return 0
     case .east: return 1
     case .west: return 2
     case .north: return 3
     case .leftShoulder: return 4
     case .rightShoulder: return 5
-    case .leftStick: return 6
-    case .rightStick: return 7
-    case .start, .options: return 8
+    case .leftStickClick: return 6
+    case .rightStickClick, .rightTrackpadClick: return 7
+    case .start: return 8
     case .back: return 9
     case .guide: return 10
-    case .share: return 15
-    case .touchpad, .mute, .leftTriggerClick, .rightTriggerClick, .leftGrip, .rightGrip,
-      .leftPadClick, .rightPadClick, .leftSL, .leftSR, .rightSL, .rightSR, .leftFunction,
-      .rightFunction, .leftPaddle, .rightPaddle:
+    case .capture: return 15
+    case .dpadUp, .dpadDown, .dpadLeft, .dpadRight, .leftStickX, .leftStickY, .rightStickX,
+      .rightStickY, .leftTrigger, .rightTrigger, .touchpadClick, .microphone, .leftPaddle1,
+      .leftPaddle2, .rightPaddle1, .rightPaddle2, .auxiliary1, .auxiliary2, .auxiliary3,
+      .auxiliary4, .auxiliary5, .auxiliary6, .auxiliary7, .auxiliary8, .leftStickTouch,
+      .rightStickTouch, .leftTrackpadClick, .leftTrackpadTouch, .rightTrackpadTouch:
       return nil
     }
   }

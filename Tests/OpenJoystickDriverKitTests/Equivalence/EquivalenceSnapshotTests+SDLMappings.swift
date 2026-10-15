@@ -18,14 +18,14 @@ struct EquivalenceSnapshotSDLMappingTests {
   }
 
   private static let sdlNames: [String: String] = [
-    "face-south": "a", "face-east": "b", "face-west": "x", "face-north": "y",
-    "left-shoulder": "leftshoulder", "right-shoulder": "rightshoulder", "view": "back",
-    "menu": "start", "guide": "guide", "left-stick-click": "leftstick",
-    "right-stick-click": "rightstick", "share": "misc1", "paddle-right-1": "paddle1",
-    "paddle-left-1": "paddle2", "paddle-right-2": "paddle3", "paddle-left-2": "paddle4",
-    "touchpad-click": "touchpad", "left-stick-x": "leftx", "left-stick-y": "lefty",
-    "right-stick-x": "rightx", "right-stick-y": "righty", "left-trigger": "lefttrigger",
-    "right-trigger": "righttrigger", "dpadNorth": "dpup", "dpadEast": "dpright",
+    "South": "a", "East": "b", "West": "x", "North": "y",
+    "LeftShoulder": "leftshoulder", "RightShoulder": "rightshoulder", "Back": "back",
+    "Start": "start", "Guide": "guide", "LeftStickClick": "leftstick",
+    "RightStickClick": "rightstick", "Capture": "misc1", "RightPaddle1": "paddle1",
+    "LeftPaddle1": "paddle2", "RightPaddle2": "paddle3", "LeftPaddle2": "paddle4",
+    "TouchpadClick": "touchpad", "LeftStickX": "leftx", "LeftStickY": "lefty",
+    "RightStickX": "rightx", "RightStickY": "righty", "LeftTrigger": "lefttrigger",
+    "RightTrigger": "righttrigger", "dpadNorth": "dpup", "dpadEast": "dpright",
     "dpadSouth": "dpdown", "dpadWest": "dpleft",
   ]
 
@@ -42,15 +42,17 @@ struct EquivalenceSnapshotSDLMappingTests {
     return sdlFieldOrder.firstIndex(of: name) ?? sdlFieldOrder.count
   }
 
-  private static func probes(for controls: Set<ControlID>) -> [Probe] {
+  private static func probes(for controls: Set<Control>) -> [Probe] {
     var result: [Probe] = []
-    let digital = controls.subtracting([
-      .dpad, .leftStickX, .leftStickY, .rightStickX, .rightStickY, .leftTrigger, .rightTrigger,
-    ])
+    let digital = controls.subtracting(
+      Control.dpad.union([
+        .leftStickX, .leftStickY, .rightStickX, .rightStickY, .leftTrigger, .rightTrigger,
+      ])
+    )
     for control in digital.sorted(by: { $0.rawValue < $1.rawValue }) {
       result.append(Probe(control: control.rawValue, state: ControllerState(pressed: [control])))
     }
-    let analog: [(ControlID, ControllerState)] = [
+    let analog: [(Control, ControllerState)] = [
       (.leftStickX, ControllerState(leftStick: StickPosition(x: .max, y: .center))),
       (.leftStickY, ControllerState(leftStick: StickPosition(x: .center, y: .max))),
       (.rightStickX, ControllerState(rightStick: StickPosition(x: .max, y: .center))),
@@ -61,7 +63,7 @@ struct EquivalenceSnapshotSDLMappingTests {
     for (control, state) in analog where controls.contains(control) {
       result.append(Probe(control: control.rawValue, state: state))
     }
-    if controls.contains(.dpad) {
+    if !controls.isDisjoint(with: Control.dpad) {
       let hats: [(String, HatDirection)] = [
         ("dpadNorth", .north), ("dpadEast", .east), ("dpadSouth", .south), ("dpadWest", .west),
       ]

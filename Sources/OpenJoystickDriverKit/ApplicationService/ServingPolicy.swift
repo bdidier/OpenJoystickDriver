@@ -30,8 +30,8 @@ public enum ServingRoute: Equatable, Sendable {
 ///   declares.
 /// - The link: ``observation``, how the physical input path is owned or observed right now.
 /// - The user setting: ``outputEnabled`` (virtual output on or off) and ``override`` (the persona
-///   the user chose). The `server` setting the user changes with `controller ownership` is written
-///   to the record layers, so it reaches the policy as ``server``.
+///   the user chose). The `server` setting the user changes with `controller claim` and
+///   `controller release` is written to the record layers, so it reaches the policy as ``server``.
 /// - The per-app allowance: no mechanism exists that grants or withholds output per application,
 ///   so the policy has no such input. ``allowance`` is the controller-side allowance only: what OJD
 ///   may still drive on a controller the system serves.
@@ -45,7 +45,7 @@ public struct ServingInput: Equatable, Sendable {
   /// Whether virtual output is on.
   public var outputEnabled: Bool
   /// The normalized controls the controller declares.
-  public var controls: Set<ControlID>
+  public var controls: Set<Control>
   /// The persona the user chose for this controller, if any.
   public var override: VirtualHIDProfileID?
   /// What OJD may drive on the physical controller when the system serves it.
@@ -56,7 +56,7 @@ public struct ServingInput: Equatable, Sendable {
     server: ControllerServer = .system,
     accessRoute: ControllerAccessRoute = .system,
     outputEnabled: Bool = true,
-    controls: Set<ControlID> = [],
+    controls: Set<Control> = [],
     override: VirtualHIDProfileID? = nil,
     allowance: PhysicalControllerOutputCapabilities = .none
   ) {
@@ -183,6 +183,23 @@ extension ApplicationServiceDeviceDescription {
 }
 
 extension ServingRoute {
+  /// The name of the route in the serving-routes spec, such as `VirtualHid`. The CLI prints it and
+  /// the schema lists it.
+  public var id: String {
+    switch self {
+    case .nativePassThrough: "NativePassThrough"
+    case .virtualHid: "VirtualHid"
+    case .extensionOwned: "ExtensionOwned"
+    case .outputDisabled: "OutputDisabled"
+    }
+  }
+
+  /// Why the route publishes nothing; nil for a route that serves.
+  public var disabledReason: OutputDisabledReason? {
+    if case .outputDisabled(let reason) = self { return reason }
+    return nil
+  }
+
   /// Whether a virtual device may publish for the controller under this route.
   public var publishesVirtualDevice: Bool {
     switch self {

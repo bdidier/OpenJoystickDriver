@@ -4,7 +4,7 @@
 /// dispatched instead; once it differs it is revealed for the rest of the mask's life.
 struct ForegroundInputMask {
   private enum Field: Hashable {
-    case control(ControlID)
+    case control(Control)
     case hat
     case leftStick
     case rightStick

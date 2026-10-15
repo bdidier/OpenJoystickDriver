@@ -81,12 +81,8 @@
             ).foregroundColor(Color(NSColor.secondaryLabelColor))
           } else {
             Text(
-              model.observedExtraInputs.map {
-                InputTestButtonPresentation.localizedTitle(
-                  for: $0,
-                  labels: model.selectedButtonLabels
-                )
-              }.joined(separator: ", ")
+              model.observedExtraInputs.map(InputTestButtonPresentation.localizedTitle)
+                .joined(separator: ", ")
             ).textSelection(.enabled)
           }
         }.padding(4).frame(maxWidth: .infinity, alignment: .leading)

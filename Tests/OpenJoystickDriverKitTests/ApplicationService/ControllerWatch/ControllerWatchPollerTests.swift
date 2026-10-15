@@ -8,12 +8,12 @@ struct ControllerWatchPollerTests {
   @Test
   func reportsConnectionsAndOnlyChangedInput() async throws {
     let source = FakeWatchSource()
-    source.set(devices: ["pad-1", "pad-2"], state: ControllerState(pressed: [.faceSouth]))
+    source.set(devices: ["pad-1", "pad-2"], state: ControllerState(pressed: [.south]))
     var poller = ControllerWatchPoller(source: source)
 
     let first = try await poller.poll(now: 0, includeOutput: false)
     let second = try await poller.poll(now: 16_000_000, includeOutput: false)
-    source.set(devices: ["pad-1"], state: ControllerState(pressed: [.faceEast]))
+    source.set(devices: ["pad-1"], state: ControllerState(pressed: [.east]))
     let third = try await poller.poll(now: 32_000_000, includeOutput: false)
     let fourth = try await poller.poll(
       now: ControllerWatchPoller.deviceListInterval,
@@ -32,9 +32,9 @@ struct ControllerWatchPollerTests {
     #expect(fourth.map(\.summary) == ["DELETED \(token("pad-2"))"])
     #expect(first[0].event.object.id == token("pad-1"))
     #expect(first[0].event.object.input == nil)
-    #expect(first[2].event.object.input == ControllerState(pressed: [.faceSouth]))
+    #expect(first[2].event.object.input == ControllerState(pressed: [.south]))
     // A deleted controller's object is the last one the watch saw.
-    #expect(fourth[0].event.object.input == ControllerState(pressed: [.faceEast]))
+    #expect(fourth[0].event.object.input == ControllerState(pressed: [.east]))
   }
 
   @Test

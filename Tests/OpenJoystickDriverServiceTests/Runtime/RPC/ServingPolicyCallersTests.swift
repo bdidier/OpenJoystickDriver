@@ -33,7 +33,7 @@ struct ServingPolicyCallersTests {
 
   /// Runs one fixture through the callers' real entry points and compares their answers: the
   /// service's description (which the endpoint's controller stream also serves), the CLI's
-  /// `virtual show` report and ownership check, and the GUI's persona and ownership picker.
+  /// `virtual show` report and claim check, and the GUI's persona and ownership picker.
   @MainActor
   @Test(arguments: ServingFixture.all)
   func theServiceDescriptionTheWatchStreamServesTheCLIAndTheGUIAnswerWhatThePolicyDecided(
@@ -57,9 +57,9 @@ struct ServingPolicyCallersTests {
       persona: described.virtualHIDProfile?.profile?.rawValue,
       offersServerChoice: ServingPolicy.offersServerChoice(ServingInput(described))
     )
-    // CLI: the `virtual show` report and the `controller ownership` check.
+    // CLI: the `virtual show` report and the `controller claim` check.
     let cliAccepts =
-      (try? ControllerOwnershipCommand.checkSupported(
+      (try? ControllerServerChange.checkSupported(
         described,
         server: fixture.server,
         accessRoute: fixture.accessRoute
@@ -73,7 +73,7 @@ struct ServingPolicyCallersTests {
       persona: described.publishedVirtualProfile.flatMap { identity in
         VirtualHIDProfileID.allCases.first { $0.identity == identity }?.rawValue
       },
-      offersServerChoice: ControllerOwnershipPicker.isShown(for: described)
+      offersServerChoice: ControllerServerPicker.isShown(for: described)
     )
 
     let expected: String?

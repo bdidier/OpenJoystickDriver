@@ -14,6 +14,7 @@ This page explains how to add a controller that OpenJoystickDriver does not know
 - [Tune Timings and the Stick Deadzone](#tune-timings-and-the-stick-deadzone)
 - [Select a Model With Protocol Parameters](#select-a-model-with-protocol-parameters)
 - [Map HID Usages](#map-hid-usages)
+- [Control Names and Other Vocabularies](#control-names-and-other-vocabularies)
 - [Offer Alternative Modes Chosen By a Probe](#offer-alternative-modes-chosen-by-a-probe)
 - [Connect a Switch 2 Controller Over Bluetooth LE][toc-2]
 - [Draft a Record From a Connected Controller][toc-1]
@@ -59,7 +60,7 @@ macOS serves some controllers natively through the Game Controller framework. Op
 
 A raw-USB family, such as `xbox.gip`, has no `server` field, because macOS cannot serve those controllers. A new `server` value applies to a connected controller as soon as the running service reloads the records. You do not need to unplug the controller.
 
-To change `server` without editing the file, run `ojd controller ownership CONTROLLER native|virtual`. `native` sets `system`, and `virtual` sets `ojd`. The command writes the value to your record for the model, and creates a `ControllerPatch` file when you have none and the bundled catalog or an installed package has a record of the model. It refuses a raw-USB family, a controller that macOS does not serve natively, and a model that has no record at all, with the code E2023. For a model with no record, run `ojd record draft` to start one. `ojd controller show` names the choice and the layer it comes from. In the app, the controller detail has the same choice as the **Served by** picker, shown for a controller that macOS serves natively or that a record gives to OpenJoystickDriver, and never for a raw-USB family.
+To change `server` without editing the file, run `ojd controller claim CONTROLLER` or `ojd controller release CONTROLLER`. `claim` sets `ojd`, and `release` sets `system`. The command writes the value to your record for the model, and creates a `ControllerPatch` file when you have none and the bundled catalog or an installed package has a record of the model. It refuses a raw-USB family, a controller that macOS does not serve natively, and a model that has no record at all, with the code E2023. For a model with no record, run `ojd record draft` to start one. `ojd controller show` names the choice and the layer it comes from, and the serving route and persona. In the app, the controller detail has the same choice as the **Served by** picker, shown for a controller that macOS serves natively or that a record gives to OpenJoystickDriver, and never for a raw-USB family.
 
 ## Describe a Controller's Input Reports
 
@@ -70,12 +71,12 @@ Some controllers send fixed input reports that their HID descriptor describes wr
 "input": {
   "report": { "length": 19 },
   "buttons": [
-    { "control": "face-south", "byte": 13, "mask": 128 },
-    { "control": "view", "byte": 1, "mask": 1 }
+    { "control": "South", "byte": 13, "mask": 128 },
+    { "control": "Back", "byte": 1, "mask": 1 }
   ],
   "axes": [
-    { "control": "left-stick-x", "byte": 3 },
-    { "control": "left-stick-y", "byte": 4 }
+    { "control": "LeftStickX", "byte": 3 },
+    { "control": "LeftStickY", "byte": 4 }
   ],
   "hat": [
     {
@@ -168,7 +169,6 @@ A record's `tuning` field changes a value that the protocol driver otherwise set
 | `minimumHIDOutputIntervalMs` | 0 to 60000 | HID families | The shortest gap between rumble and lighting reports. 0 sends them without a limit. |
 | `hidStartupRecoveryIntervalMs` | 1 to 60000 | `nintendo.switch1` | The gap between startup recovery rounds. The family's description gives the default (200). |
 | `hidStartupRecoveryRounds` | 1 to 10 | `nintendo.switch1` | The startup recovery rounds before OpenJoystickDriver gives up. The family's description gives the default (2). |
-| `keepAliveIntervalMs` | 1 to 60000 | `xbox.gip`, `vendor.gamesir`, `valve.steam-deck`, `valve.steam-triton`, `nintendo.switch2` | The gap between keep-alive packets, or between rumble resends where the family resends rumble. The family's description gives the default, and the key applies to raw-USB GIP and GameSir too. |
 | `lizardResendTicks` | 1 to 100000 | `valve.steam-triton` | The keep-alive ticks between resends of the lizard-mode-off request. The family's description gives the default (75). |
 | `usbCommandTimeoutMs` | 1 to 60000 | `nintendo.switch2`, `vendor.gamesir` (USB) | The timeout of one USB command transfer. The description gives the default: 1000 for `nintendo.switch2`, 2000 for `vendor.gamesir`. |
 | `presenceResendReports` | 1 to 1000 | `xbox.gip`, `xbox.xusb` | The input reports between resends of the request that makes a controller announce itself. The description gives the default: 4 for `xbox.gip`, 16 for `xbox.xusb`. |
@@ -195,7 +195,10 @@ A family's default timings and control set are data in `Resources/Protocols/<fam
 - `buttonLabels`: the labels of the family's buttons.
 - `macOSOwnedOutput`: the output that macOS owns for the family, and a `rationale` that says why.
 - `controls`: the controls the driver reports. `recordCapabilities` names the control deltas (`present`, `rumbleAbsent`) that a record of the family may declare; the driver adds the record-derived parts.
-- `defaults.tuning`: the default value of each tuning key, such as `keepAliveIntervalMs`. `defaults.variants.<variant>.tuning` gives another value for a transport, for example the Switch 1 `hidStartupIntervalMs` of 60 over Bluetooth and 20 over USB.
+- `defaults.tuning`: the default value of each tuning key, such as `lizardResendTicks`. The keep-alive interval is not a tuning key: `defaults.session.keepAlive.intervalMilliseconds` is its only source, and a description or record that names `keepAliveIntervalMs` anywhere is rejected. `defaults.variants.<variant>.tuning` gives another value for a transport, for example the Switch 1 `hidStartupIntervalMs` of 60 over Bluetooth and 20 over USB.
+
+- `defaults.session.keepAlive`: the family's keep-alive. `intervalMilliseconds` (1 to 60000) is the period, and the optional `writes` (1 to 8) are the fixed packets of each run, in the formats of `output.startup` (a HID report with `report` and `bytes`, or a raw-USB packet with `bytes`, `endpoint`, `timeoutMilliseconds` and `sessionByte`) without `phase`, `delayMilliseconds`, `transport`, `crc32Seed`, `toleratesRejection` and `when`. Unlike startup, one list may mix both formats, each limited with `variants` (`vendor.gamesir` sends a HID report on `enhanced-hid` and a raw-USB packet on `usb`). `resendTuning: "lizardResendTicks"` sends a write only every that-many runs (`valve.steam-triton`); the family must read the key and default it in `defaults.tuning`. A record carries no keep-alive writes, so nothing replaces them; a record cannot change the period either, because the interval has no record key. The writes that follow driver state, such as a running rumble, stay in the driver (see [Wire Protocols](../docs/development/wire-protocols.md#coded-behavior)). A HID write needs a family with HID variants, and a raw-USB write needs one with raw-USB variants.
+- `defaults.session.subcommands` (`nintendo.switch1` only, and it must have it): the subcommand report. `reportId` is the output report that carries a subcommand, `counterModulus` (2 to 256) is the rule of the rolling packet counter (it starts at 0, the next value is `(n + 1)` modulo the modulus, and the rumble-only report shares the counter), and `requests` (1 to 16) are sent in order at startup. A request has a `subcommand` byte and exactly one of `data` (1 to 16 bytes) or `spiRead` (`address`, `length` of 1 to 29, and a `purpose` of `factoryMotionCalibration` or `userMotionCalibration`, each at most once). An SPI read sends the address as four little-endian bytes and then the length. A startup recovery round re-sends the reads whose reply has not arrived. The rumble bytes in the header and the player-indicator subcommand stay in the driver (see [Wire Protocols](../docs/development/wire-protocols.md#coded-behavior)).
 
 Change a default by editing the description: every record of the family follows it, and a record's or patch's own `tuning` still wins. Then run `./Scripts/ojd catalog regenerate --write`, which copies the descriptions into the Kit bundle.
 
@@ -254,11 +257,48 @@ A DualShock 4 record takes at most one of `role` and `motionScale`. A `sony.dual
 
 A `hid.descriptor` record maps the usages of its report descriptor to controls in `input.hidUsageMap`. Without one, the record uses the standard map in `Resources/Protocols/hid.descriptor.json`. Each entry names a usage by decimal `page` and `usage` and one `control`, as a `kind`:
 
-- `button`: the control is pressed while the value is nonzero. It cannot be `dpad`, a stick axis or a trigger.
-- `axis`: the control is a stick axis (`left-stick-x`, `left-stick-y`, `right-stick-x`, `right-stick-y`) or `left-trigger` or `right-trigger`. A stick reads -1 to 1 and a trigger 0 to 1 across the element's logical range. `range` (`{"min": 0, "max": 100}`, `min` below `max`) replaces that range, `inverted` reverses the axis, and `deadZone` (above 0 and below 1) reads 0 within that fraction of full travel and rescales the rest.
-- `hat`: the control is `dpad`. `range` is `{"min": 0, "max": 7}` or `{"min": 1, "max": 8}` and names the value of north, then clockwise; any other value is neutral. Without `range`, the element's logical minimum is north.
+- `button`: the control is pressed while the value is nonzero. It cannot be a D-pad id or a stick axis.
+- `axis`: the control is a stick axis (`LeftStickX`, `LeftStickY`, `RightStickX`, `RightStickY`) or `LeftTrigger` or `RightTrigger`. A stick reads -1 to 1 and a trigger 0 to 1 across the element's logical range. `range` (`{"min": 0, "max": 100}`, `min` below `max`) replaces that range, `inverted` reverses the axis, and `deadZone` (above 0 and below 1) reads 0 within that fraction of full travel and rescales the rest.
+- `hat`: the entry has no `control`; it drives `DpadUp`, `DpadDown`, `DpadLeft` and `DpadRight`. `range` is `{"min": 0, "max": 7}` or `{"min": 1, "max": 8}` and names the value of north, then clockwise; any other value is neutral. Without `range`, the element's logical minimum is north.
 
 `reportID` limits the map to one report. A usage the map does not name is ignored, and both the app and `./Scripts/ojd check profiles` reject a usage named twice or an axis `range` whose `min` is not below its `max`. The description may also list `descriptorShapes` that choose a map from the usages a controller's report descriptor declares: the shape in `hid.descriptor.json` gives a controller with Z, Rz, a Brake or Accelerator and no Rx or Ry the Z/Rz layout, with Brake as LT and Accelerator as RT. The records for the WR007 (`11C1:5600`), SCUF Envision (`2E95:434D`), 8BitDo Ultimate 2C (`2DC8:301B`, `301C`) and DragonRise (`0079:0006`, by patch) show complete maps.
+
+## Control Names and Other Vocabularies
+
+Every document, profile, endpoint message and record names a control with one UpperCamelCase id. `Resources/Schemas/vocabulary.schema.json` defines the ids, and `Resources/Vocabulary/crosswalk.json` holds the names the same control has elsewhere. The crosswalk is documentation: it is not a schema alias, and a document that uses another spelling is refused. A `-` means the other vocabulary has no name for the control. The W3C index is the `buttons` index of the standard gamepad mapping. `Capture` and `Microphone` share the SDL3 name `MISC1`. The JSON file also lists the HID page and usage of each control. A `null` usage means the device descriptor assigns it.
+
+| Control | W3C index | SDL3 | evdev | Apple GameController |
+| --- | --- | --- | --- | --- |
+| `South` | 0 | `SOUTH` | `BTN_SOUTH` | `ButtonA` |
+| `East` | 1 | `EAST` | `BTN_EAST` | `ButtonB` |
+| `West` | 2 | `WEST` | `BTN_WEST` | `ButtonX` |
+| `North` | 3 | `NORTH` | `BTN_NORTH` | `ButtonY` |
+| `LeftShoulder` | 4 | `LEFT_SHOULDER` | `BTN_TL` | `LeftShoulder` |
+| `RightShoulder` | 5 | `RIGHT_SHOULDER` | `BTN_TR` | `RightShoulder` |
+| `LeftTrigger` | 6 | `LEFT_TRIGGER` | `ABS_Z` | `LeftTrigger` |
+| `RightTrigger` | 7 | `RIGHT_TRIGGER` | `ABS_RZ` | `RightTrigger` |
+| `Back` | 8 | `BACK` | `BTN_SELECT` | `ButtonOptions` |
+| `Start` | 9 | `START` | `BTN_START` | `ButtonMenu` |
+| `LeftStickClick` | 10 | `LEFT_STICK` | `BTN_THUMBL` | `LeftThumbstickButton` |
+| `RightStickClick` | 11 | `RIGHT_STICK` | `BTN_THUMBR` | `RightThumbstickButton` |
+| `DpadUp` | 12 | `DPAD_UP` | `BTN_DPAD_UP` | `DirectionPad` |
+| `DpadDown` | 13 | `DPAD_DOWN` | `BTN_DPAD_DOWN` | `DirectionPad` |
+| `DpadLeft` | 14 | `DPAD_LEFT` | `BTN_DPAD_LEFT` | `DirectionPad` |
+| `DpadRight` | 15 | `DPAD_RIGHT` | `BTN_DPAD_RIGHT` | `DirectionPad` |
+| `Guide` | 16 | `GUIDE` | `BTN_MODE` | `ButtonHome` |
+| `Capture` | - | `MISC1` | `KEY_RECORD` | `ButtonShare` |
+| `Microphone` | - | `MISC1` | - | - |
+| `TouchpadClick` | - | `TOUCHPAD` | `BTN_TOUCH` | `TouchpadButton` |
+| `LeftPaddle1` | - | `LEFT_PADDLE1` | `BTN_GRIPL` | `XboxPaddleOne` |
+| `LeftPaddle2` | - | `LEFT_PADDLE2` | `BTN_GRIPL2` | `XboxPaddleTwo` |
+| `RightPaddle1` | - | `RIGHT_PADDLE1` | `BTN_GRIPR` | `XboxPaddleThree` |
+| `RightPaddle2` | - | `RIGHT_PADDLE2` | `BTN_GRIPR2` | `XboxPaddleFour` |
+| `Auxiliary1` | - | `MISC2` | `BTN_TRIGGER_HAPPY1` | - |
+| `Auxiliary2` | - | `MISC3` | `BTN_TRIGGER_HAPPY2` | - |
+| `Auxiliary3` | - | `MISC4` | `BTN_TRIGGER_HAPPY3` | - |
+| `Auxiliary4` | - | `MISC5` | `BTN_TRIGGER_HAPPY4` | - |
+
+PlayStation Share (Create) and Xbox View are `Back`. PlayStation Options, Xbox Menu and Switch Plus are `Start`. Xbox Share and Switch Capture are `Capture`. The names `Share` and `Options` are not controls.
 
 ## Offer Alternative Modes Chosen By a Probe
 

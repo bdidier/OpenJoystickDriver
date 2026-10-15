@@ -1,47 +1,5 @@
 import Foundation
 
-/// A stable, normalized physical control identifier used by remapping profiles.
-public enum RemappingButton: String, Codable, CaseIterable, Hashable, Sendable {
-  case south
-  case east
-  case west
-  case north
-  case leftShoulder = "left_shoulder"
-  case rightShoulder = "right_shoulder"
-  case leftStick = "left_stick"
-  case rightStick = "right_stick"
-  case start
-  case back
-  case guide
-  case share
-  case options
-  case touchpad
-  case mute
-  case leftTriggerClick = "left_trigger_click"
-  case rightTriggerClick = "right_trigger_click"
-  case leftGrip = "left_grip"
-  case rightGrip = "right_grip"
-  case leftPadClick = "left_pad_click"
-  case rightPadClick = "right_pad_click"
-  case leftSL = "left_sl"
-  case leftSR = "left_sr"
-  case rightSL = "right_sl"
-  case rightSR = "right_sr"
-  case leftFunction = "left_function"
-  case rightFunction = "right_function"
-  case leftPaddle = "left_paddle"
-  case rightPaddle = "right_paddle"
-
-  public var supportsVirtualOutput: Bool {
-    switch self {
-    case .leftFunction, .rightFunction, .leftPaddle, .rightPaddle, .leftSL, .leftSR, .rightSL,
-      .rightSR, .leftGrip, .rightGrip, .leftPadClick, .rightPadClick:
-      false
-    default: true
-    }
-  }
-}
-
 public enum RemappingDpadDirection: String, Codable, CaseIterable, Hashable, Sendable {
   case up
   case down
@@ -49,13 +7,26 @@ public enum RemappingDpadDirection: String, Codable, CaseIterable, Hashable, Sen
   case right
 }
 
+/// A stick axis or a trigger of the control vocabulary; the raw value is its control id.
 public enum RemappingAxis: String, Codable, CaseIterable, Hashable, Sendable {
-  case leftStickX = "left_stick_x"
-  case leftStickY = "left_stick_y"
-  case rightStickX = "right_stick_x"
-  case rightStickY = "right_stick_y"
-  case leftTrigger = "left_trigger"
-  case rightTrigger = "right_trigger"
+  case leftStickX = "LeftStickX"
+  case leftStickY = "LeftStickY"
+  case rightStickX = "RightStickX"
+  case rightStickY = "RightStickY"
+  case leftTrigger = "LeftTrigger"
+  case rightTrigger = "RightTrigger"
+
+  /// The control this axis is.
+  public var control: Control {
+    switch self {
+    case .leftStickX: .leftStickX
+    case .leftStickY: .leftStickY
+    case .rightStickX: .rightStickX
+    case .rightStickY: .rightStickY
+    case .leftTrigger: .leftTrigger
+    case .rightTrigger: .rightTrigger
+    }
+  }
 }
 
 public enum RemappingAxisDirection: String, Codable, Hashable, Sendable {
@@ -65,7 +36,7 @@ public enum RemappingAxisDirection: String, Codable, Hashable, Sendable {
 
 /// The controller-side origin of a binding.
 public enum RemappingSource: Codable, Equatable, Hashable, Sendable {
-  case button(RemappingButton)
+  case button(Control)
   case dpad(RemappingDpadDirection)
   case axis(RemappingAxis)
   case axisDirection(RemappingAxis, RemappingAxisDirection)
@@ -121,7 +92,7 @@ public enum RemappingSource: Codable, Equatable, Hashable, Sendable {
     let kind = try container.decode(Kind.self, forKey: .type)
     try container.rejectKeys(otherThan: kind.fields)
     switch kind {
-    case .button: self = .button(try container.decode(RemappingButton.self, forKey: .button))
+    case .button: self = .button(try container.decode(Control.self, forKey: .button))
     case .dpad: self = .dpad(try container.decode(RemappingDpadDirection.self, forKey: .direction))
     case .axis: self = .axis(try container.decode(RemappingAxis.self, forKey: .axis))
     case .axisDirection:

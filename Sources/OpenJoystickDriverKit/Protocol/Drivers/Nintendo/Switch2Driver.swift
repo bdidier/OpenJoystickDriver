@@ -120,28 +120,32 @@ public final class Switch2Driver: PhysicalProtocolDriver {
   public func resetProtocolState() { state = .neutral }
 
   public var capabilities: ControllerCapabilities {
-    let controls: Set<ControlID>
+    let controls: Set<Control>
     switch layout {
     case .pro:
-      controls = ControlID.xboxLayout.subtracting([.leftTrigger, .rightTrigger]).union([
-        .leftTriggerButton, .rightTriggerButton, .guide, .capture, .auxiliary1, .paddleLeft1,
-        .paddleRight1,
+      controls = Control.xboxLayout.subtracting([.leftTrigger, .rightTrigger]).union([
+        .leftTrigger, .rightTrigger, .guide, .capture, .auxiliary1, .leftPaddle1,
+        .rightPaddle1,
       ])
     case .leftJoyCon:
       controls = [
-        .dpad, .leftStickX, .leftStickY, .leftStickClick, .leftShoulder, .leftTriggerButton, .view,
+        .dpadUp, .dpadDown, .dpadLeft, .dpadRight, .leftStickX, .leftStickY, .leftStickClick,
+        .leftShoulder, .leftTrigger, .back,
         .capture, .auxiliary3, .auxiliary4,
       ]
     case .rightJoyCon:
       controls = [
-        .faceSouth, .faceEast, .faceWest, .faceNorth, .rightStickX, .rightStickY, .rightStickClick,
-        .rightShoulder, .rightTriggerButton, .menu, .guide, .auxiliary1, .auxiliary5, .auxiliary6,
+        .south, .east, .west, .north, .rightStickX, .rightStickY, .rightStickClick,
+        .rightShoulder, .rightTrigger, .start, .guide, .auxiliary1, .auxiliary5, .auxiliary6,
       ]
     case .gameCube:
-      controls = ControlID.xboxLayout.subtracting([.view, .leftStickClick, .rightStickClick]).union(
-        [.leftTriggerButton, .rightTriggerButton, .guide, .capture, .auxiliary1])
+      controls = Control.xboxLayout.subtracting([.back, .leftStickClick, .rightStickClick]).union(
+        [.leftTrigger, .rightTrigger, .guide, .capture, .auxiliary1])
     }
-    return ControllerCapabilities(controls: controls)
+    return ControllerCapabilities(
+      controls: controls,
+      digitalTriggers: controls.intersection([.leftTrigger, .rightTrigger])
+    )
   }
 
   /// SDL rumbles every model through both amplitudes; the GameCube controller's single motor runs
@@ -161,8 +165,7 @@ public final class Switch2Driver: PhysicalProtocolDriver {
   /// runs.
   public var sessionPlan: DriverSessionPlan {
     DriverSessionPlan(
-      hidKeepAliveIntervalNanoseconds: PhysicalProtocolID.nintendoSwitch2
-        .keepAliveIntervalNanoseconds(),
+      keepAliveChannels: [.hid],
       usbCommandChannel: USBCommandChannel(
         interfaceNumber: 1,
         outEndpoint: Self.commandOutEndpoint,
@@ -170,7 +173,7 @@ public final class Switch2Driver: PhysicalProtocolDriver {
         replyLength: 0x50,
         replyTimeoutMilliseconds: link == .usb ? 100 : 500
       )
-    )
+    ).withKeepAlive(of: .nintendoSwitch2)
   }
 
   public func consumeInputConnectionStateChange() -> ControllerInputConnectionState? { nil }
@@ -340,7 +343,7 @@ public final class Switch2Driver: PhysicalProtocolDriver {
   }
 
   /// SDL `HandleSwitchProState` bits as one word: bytes 5, 6, 7, and 8 from the low byte up.
-  private var buttonTable: [(UInt32, ControlID)] {
+  private var buttonTable: [(UInt32, Control)] {
     switch layout {
     case .pro: Self.proButtons
     case .leftJoyCon: Self.leftJoyConButtons
@@ -349,37 +352,37 @@ public final class Switch2Driver: PhysicalProtocolDriver {
     }
   }
 
-  private static let faceButtons: [(UInt32, ControlID)] = [
-    (0x0000_0001, .faceWest), (0x0000_0002, .faceNorth), (0x0000_0004, .faceSouth),
-    (0x0000_0008, .faceEast),
+  private static let faceButtons: [(UInt32, Control)] = [
+    (0x0000_0001, .west), (0x0000_0002, .north), (0x0000_0004, .south),
+    (0x0000_0008, .east),
   ]
-  private static let proButtons: [(UInt32, ControlID)] =
+  private static let proButtons: [(UInt32, Control)] =
     faceButtons + [
-      (0x0000_0040, .rightShoulder), (0x0000_0080, .rightTriggerButton), (0x0000_0100, .view),
-      (0x0000_0200, .menu), (0x0000_0400, .rightStickClick), (0x0000_0800, .leftStickClick),
+      (0x0000_0040, .rightShoulder), (0x0000_0080, .rightTrigger), (0x0000_0100, .back),
+      (0x0000_0200, .start), (0x0000_0400, .rightStickClick), (0x0000_0800, .leftStickClick),
       (0x0000_1000, .guide), (0x0000_2000, .capture), (0x0000_4000, .auxiliary1),
-      (0x0040_0000, .leftShoulder), (0x0080_0000, .leftTriggerButton), (0x0100_0000, .paddleRight1),
-      (0x0200_0000, .paddleLeft1),
+      (0x0040_0000, .leftShoulder), (0x0080_0000, .leftTrigger), (0x0100_0000, .rightPaddle1),
+      (0x0200_0000, .leftPaddle1),
     ]
   /// SL and SR (byte 7 bits `0x20` and `0x10`) join the half layout as in ``Switch1Driver``.
-  private static let leftJoyConButtons: [(UInt32, ControlID)] = [
-    (0x0000_0100, .view), (0x0000_0800, .leftStickClick), (0x0000_2000, .capture),
+  private static let leftJoyConButtons: [(UInt32, Control)] = [
+    (0x0000_0100, .back), (0x0000_0800, .leftStickClick), (0x0000_2000, .capture),
     (0x0010_0000, .auxiliary4), (0x0020_0000, .auxiliary3), (0x0040_0000, .leftShoulder),
-    (0x0080_0000, .leftTriggerButton),
+    (0x0080_0000, .leftTrigger),
   ]
-  private static let rightJoyConButtons: [(UInt32, ControlID)] =
+  private static let rightJoyConButtons: [(UInt32, Control)] =
     faceButtons + [
       (0x0000_0010, .auxiliary6), (0x0000_0020, .auxiliary5), (0x0000_0040, .rightShoulder),
-      (0x0000_0080, .rightTriggerButton), (0x0000_0200, .menu), (0x0000_0400, .rightStickClick),
+      (0x0000_0080, .rightTrigger), (0x0000_0200, .start), (0x0000_0400, .rightStickClick),
       (0x0000_1000, .guide), (0x0000_4000, .auxiliary1),
     ]
   /// SDL `HandleGameCubeState`: `0x40` is the full-pull trigger click and `0x80` the shoulder
   /// (Z on the right, ZL on the left).
-  private static let gameCubeButtons: [(UInt32, ControlID)] =
+  private static let gameCubeButtons: [(UInt32, Control)] =
     faceButtons + [
-      (0x0000_0040, .rightTriggerButton), (0x0000_0080, .rightShoulder), (0x0000_0200, .menu),
+      (0x0000_0040, .rightTrigger), (0x0000_0080, .rightShoulder), (0x0000_0200, .start),
       (0x0000_1000, .guide), (0x0000_2000, .capture), (0x0000_4000, .auxiliary1),
-      (0x0040_0000, .leftTriggerButton), (0x0080_0000, .leftShoulder),
+      (0x0040_0000, .leftTrigger), (0x0080_0000, .leftShoulder),
     ]
 
   private func stick(

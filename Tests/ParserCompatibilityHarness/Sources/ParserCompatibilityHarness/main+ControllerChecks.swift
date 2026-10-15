@@ -15,7 +15,7 @@ func runSteamStatusFallbackCheck() throws {
     ProtocolPacketFixtures.Steam.inputReport(buttons: (0x80, 0, 0))
   )
   require(
-    inputEvents?.pressed.contains(.faceSouth) == true,
+    inputEvents?.pressed.contains(.south) == true,
     "Steam input after status fallback should parse A press"
   )
 }
@@ -49,7 +49,7 @@ func runSteamWirelessConnectDisconnectCheck() throws {
     ProtocolPacketFixtures.Steam.inputReport(buttons: (0x80, 0, 0))
   )
   require(
-    inputEvents?.pressed.contains(.faceSouth) == true,
+    inputEvents?.pressed.contains(.south) == true,
     "Steam wireless input after connect should parse A press"
   )
 
@@ -78,9 +78,9 @@ func runDS3InputChecks() throws {
     ProtocolPacketFixtures.DS3.inputReport(buttons: (0x3F, 0xFF, true))
   )
   for expected in [
-    ControlID.view, .leftStickClick, .rightStickClick, .menu, .leftTriggerButton,
-    .rightTriggerButton, .leftShoulder, .rightShoulder, .faceNorth, .faceEast, .faceSouth,
-    .faceWest, .guide,
+    Control.back, .leftStickClick, .rightStickClick, .start, .leftTrigger,
+    .rightTrigger, .leftShoulder, .rightShoulder, .north, .east, .south,
+    .west, .guide,
   ] {
     require(
       buttonEvents?.pressed.contains(expected) == true,
@@ -153,7 +153,7 @@ func runDualSenseUSBChecks() throws {
     events?.rightTrigger == trigger(128.0 / 255.0),
     "DualSense USB should parse right trigger"
   )
-  for expected in [ControlID.faceSouth, .view, .menu, .guide, .touchpadClick] {
+  for expected in [Control.south, .back, .start, .guide, .touchpadClick] {
     require(events?.pressed.contains(expected) == true, "DualSense USB should press \(expected)")
   }
 
@@ -196,9 +196,9 @@ func runDualSenseBluetoothCRCCheck() throws {
     events?.rightTrigger == trigger(128.0 / 255.0),
     "DualSense Bluetooth should parse right trigger"
   )
-  require(events?.pressed.contains(.faceSouth) == true, "DualSense Bluetooth should parse Cross")
-  require(events?.pressed.contains(.view) == true, "DualSense Bluetooth should parse Create/Share")
-  require(events?.pressed.contains(.menu) == true, "DualSense Bluetooth should parse Options")
+  require(events?.pressed.contains(.south) == true, "DualSense Bluetooth should parse Cross")
+  require(events?.pressed.contains(.back) == true, "DualSense Bluetooth should parse Create/Share")
+  require(events?.pressed.contains(.start) == true, "DualSense Bluetooth should parse Options")
   require(events?.pressed.contains(.guide) == true, "DualSense Bluetooth should parse PS")
   require(
     events?.pressed.contains(.touchpadClick) == true,
@@ -240,9 +240,9 @@ func runSwitchProTransportAndMappingCheck() throws {
     "Switch Pro USB startup report IDs should match the driver's own startup reports"
   )
 
-  let expectations: [(UInt32, ControlID)] = [
-    (0x0000_0008, .faceEast), (0x0000_0004, .faceSouth), (0x0000_0002, .faceNorth),
-    (0x0000_0001, .faceWest),
+  let expectations: [(UInt32, Control)] = [
+    (0x0000_0008, .east), (0x0000_0004, .south), (0x0000_0002, .north),
+    (0x0000_0001, .west),
   ]
   for (mask, button) in expectations {
     let parser = Switch1Driver()
@@ -262,8 +262,8 @@ func runSwitchProTransportAndMappingCheck() throws {
     ProtocolPacketFixtures.SwitchPro.inputReport(buttons: allPrimaryButtons)
   )
   for expected in [
-    ControlID.faceSouth, .faceEast, .faceWest, .faceNorth, .leftShoulder, .rightShoulder,
-    .leftTriggerButton, .rightTriggerButton, .view, .menu, .leftStickClick, .rightStickClick,
+    Control.south, .east, .west, .north, .leftShoulder, .rightShoulder,
+    .leftTrigger, .rightTrigger, .back, .start, .leftStickClick, .rightStickClick,
     .guide, .capture,
   ] {
     require(

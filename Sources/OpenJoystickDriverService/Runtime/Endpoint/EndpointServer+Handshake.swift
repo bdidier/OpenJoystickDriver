@@ -2,7 +2,7 @@ import Foundation
 import OpenJoystickDriverKit
 
 extension EndpointServer {
-  /// Runs one connection on a connection-queue thread: the handshake, then the subscription or
+  /// Runs one connection on a thread of its own: the handshake, then the subscription or
   /// the feed until either side closes. `origin` is the normalized `Origin` of a WebSocket, nil
   /// when it sent none, and `port` the port it connected to.
   func serve(_ connection: EndpointConnection, origin: String? = nil, port: Int? = nil) {
@@ -39,7 +39,7 @@ extension EndpointServer {
       seconds: TimeInterval(Self.handshakeSeconds)
     )
     // The receive timeout restarts with each byte; this bounds the whole handshake.
-    connectionQueue.asyncAfter(deadline: .now() + .seconds(Self.handshakeSeconds)) {
+    handshakeTimerQueue.asyncAfter(deadline: .now() + .seconds(Self.handshakeSeconds)) {
       [weak connection] in
       guard let connection, connection.session == nil else { return }
       connection.close(Self.invalid("Send hello within \(Self.handshakeSeconds) seconds."))

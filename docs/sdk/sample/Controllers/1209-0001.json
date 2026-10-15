@@ -12,61 +12,61 @@
     },
     "buttons": [
       {
-        "control": "face-south",
+        "control": "South",
         "byte": 0,
         "mask": 1
       },
       {
-        "control": "face-east",
+        "control": "East",
         "byte": 0,
         "mask": 2
       },
       {
-        "control": "face-west",
+        "control": "West",
         "byte": 0,
         "mask": 4
       },
       {
-        "control": "face-north",
+        "control": "North",
         "byte": 0,
         "mask": 8
       },
       {
-        "control": "left-shoulder",
+        "control": "LeftShoulder",
         "byte": 0,
         "mask": 16
       },
       {
-        "control": "right-shoulder",
+        "control": "RightShoulder",
         "byte": 0,
         "mask": 32
       },
       {
-        "control": "view",
+        "control": "Back",
         "byte": 0,
         "mask": 64
       },
       {
-        "control": "menu",
+        "control": "Start",
         "byte": 0,
         "mask": 128
       }
     ],
     "axes": [
       {
-        "control": "left-stick-x",
+        "control": "LeftStickX",
         "byte": 2
       },
       {
-        "control": "left-stick-y",
+        "control": "LeftStickY",
         "byte": 3
       },
       {
-        "control": "right-stick-x",
+        "control": "RightStickX",
         "byte": 4
       },
       {
-        "control": "right-stick-y",
+        "control": "RightStickY",
         "byte": 5
       }
     ],

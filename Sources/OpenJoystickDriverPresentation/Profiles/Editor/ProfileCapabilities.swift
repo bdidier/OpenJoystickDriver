@@ -64,14 +64,11 @@ enum ProfileCapabilityPolicy {
   ) -> Bool {
     guard let input = capabilities?.physicalInput else { return true }
     switch source {
-    case .dpad: return input.controls.contains(.dpad)
+    case .dpad: return !input.controls.isDisjoint(with: Control.dpad)
     case .button(let button):
-      guard let control = button.controlID(labels: capabilities?.buttonLabels ?? .standard) else {
-        return false
-      }
-      return input.controls.contains(control)
+      return input.controls.contains(button)
     case .axis(let axis), .axisDirection(let axis, _):
-      return input.controls.contains(axis.controlID)
+      return input.controls.contains(axis.control)
     case .triggerStage(let trigger, _):
       return input.controls.contains(trigger == .left ? .leftTrigger : .rightTrigger)
     case .motionLean: return input.motion

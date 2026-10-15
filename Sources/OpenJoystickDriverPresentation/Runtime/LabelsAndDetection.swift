@@ -102,18 +102,18 @@ enum RuntimePresentation {
     }
   }
 
-  /// A refused controller ownership change, followed by the service's detail text when it has one.
-  static func controllerOwnershipFailure(
-    _ failure: ControllerOwnershipFailure,
+  /// A refused controller server change, followed by the service's detail text when it has one.
+  static func controllerServerFailure(
+    _ failure: ControllerServerFailure,
     detail: String?
   ) -> String {
     let message: String
     switch failure {
     case .rawUSB, .notNative: message = OJDLocalized.string("error.E2023")
-    case .noRecord: message = OJDLocalized.string("controllers.ownership.noRecord")
-    case .invalidRecord: message = OJDLocalized.string("controllers.ownership.invalidRecord")
+    case .noRecord: message = OJDLocalized.string("controllers.server.noRecord")
+    case .invalidRecord: message = OJDLocalized.string("controllers.server.invalidRecord")
     case .persistenceFailed:
-      message = OJDLocalized.string("controllers.ownership.persistenceFailed")
+      message = OJDLocalized.string("controllers.server.persistenceFailed")
     }
     return [message, detail].compactMap { $0 }.joined(separator: " ")
   }
@@ -240,11 +240,11 @@ enum RuntimePresentation {
 
   /// Buttons in capture priority order. Guide/Home/logo is reserved for the operating system and
   /// is intentionally excluded from automatic capture, just like the manual SourceOption catalog.
-  private static let captureButtonOrder: [RemappingButton] = [
-    .leftFunction, .rightFunction, .leftPaddle, .rightPaddle, .leftSL, .leftSR, .rightSL, .rightSR,
-    .leftGrip, .rightGrip, .leftPadClick, .rightPadClick, .south, .east, .west, .north,
-    .leftShoulder, .rightShoulder, .leftStick, .rightStick, .start, .back, .share, .options,
-    .touchpad, .mute, .leftTriggerClick, .rightTriggerClick,
+  private static let captureButtonOrder: [Control] = [
+    .auxiliary1, .auxiliary2, .leftPaddle1, .rightPaddle1, .auxiliary3, .auxiliary4, .auxiliary5,
+    .auxiliary6, .leftPaddle2, .rightPaddle2, .leftTrackpadClick, .rightTrackpadClick, .south,
+    .east, .west, .north, .leftShoulder, .rightShoulder, .leftStickClick, .rightStickClick,
+    .start, .back, .capture, .touchpadClick, .microphone, .leftTrigger, .rightTrigger,
   ]
 
   static func detectedSource(
@@ -295,13 +295,11 @@ enum RuntimePresentation {
   }
 
   private static func detectedButton(
-    pressed: Set<ControlID>,
+    pressed: Set<Control>,
     dpad: Set<RemappingDpadDirection>,
     labels: ControllerButtonLabels
   ) -> RemappingSource? {
-    if let button = captureButtonOrder.first(where: { button in
-      button.controlID(labels: labels).map(pressed.contains) ?? false
-    }) {
+    if let button = captureButtonOrder.first(where: pressed.contains) {
       return .button(button)
     }
     let order: [RemappingDpadDirection] = [.up, .down, .left, .right]

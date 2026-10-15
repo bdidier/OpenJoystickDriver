@@ -21,7 +21,7 @@ struct RemappingChordTests {
     )
 
     try await engine.process(
-      inputs: [.press(.faceSouth)],
+      inputs: [.press(.south)],
       from: device(1),
       using: currentProfile,
       at: 0
@@ -29,7 +29,7 @@ struct RemappingChordTests {
     #expect(sink.actions().isEmpty)
 
     try await engine.process(
-      inputs: [.press(.faceEast)],
+      inputs: [.press(.east)],
       from: device(1),
       using: currentProfile,
       at: 1
@@ -37,7 +37,7 @@ struct RemappingChordTests {
     #expect(sink.actions() == [.keyDown(.c)])
 
     try await engine.process(
-      inputs: [.release(.faceEast)],
+      inputs: [.release(.east)],
       from: device(1),
       using: currentProfile,
       at: 2
@@ -45,7 +45,7 @@ struct RemappingChordTests {
     #expect(sink.actions() == [.keyDown(.c), .keyUp(.c)])
 
     try await engine.process(
-      inputs: [.release(.faceSouth)],
+      inputs: [.release(.south)],
       from: device(1),
       using: currentProfile,
       at: 3

@@ -180,6 +180,8 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         document = xusb_description()
         document["family"] = family
         document["interfaceSignatures"][0]["variant"] = variant
+        if family == "nintendo.switch1":
+            document["defaults"] = {"session": {"subcommands": self.subcommands()}}
         return document
 
     def test_every_family_has_a_variant_rule(self) -> None:
@@ -269,7 +271,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 defaults={
                     "input": {
                         "report": {"length": 1},
-                        "buttons": [{"control": "face-south", "byte": 0, "mask": 1}],
+                        "buttons": [{"control": "South", "byte": 0, "mask": 1}],
                     }
                 },
             )
@@ -282,7 +284,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                         "report": {"length": 4},
                         "axes": [
                             {
-                                "control": "left-stick-x",
+                                "control": "LeftStickX",
                                 "byte": 0,
                                 "bits": 16,
                                 "signed": True,
@@ -333,7 +335,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def test_rejects_defaults_a_driver_does_not_read(self) -> None:
         input_layout = {
             "report": {"length": 1},
-            "buttons": [{"control": "face-south", "byte": 0, "mask": 1}],
+            "buttons": [{"control": "South", "byte": 0, "mask": 1}],
         }
         for family, defaults in (
             ("hid.descriptor", {"input": input_layout}),
@@ -344,7 +346,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                     "input": {
                         "report": {"length": 4},
                         "axes": [
-                            {"control": "left-stick-x", "byte": 0, "symmetric": True}
+                            {"control": "LeftStickX", "byte": 0, "symmetric": True}
                         ],
                     }
                 },
@@ -533,10 +535,275 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                     code=code,
                 )
 
+    def keep_alive_body(self, family: str, keep_alive: Any, **members: Any) -> Any:
+        """A description of `family` that carries `keep_alive` in `defaults.session`."""
+        keys = {
+            "vendor.gamesir": {"rawUSB": ["usb"]},
+            "valve.steam-triton": {"tuningKeys": ["lizardResendTicks"]},
+        }
+        defaults = {"session": {"keepAlive": keep_alive}}
+        if family == "valve.steam-triton":
+            defaults["tuning"] = {"lizardResendTicks": 75}
+        return self.with_body(
+            family, **keys.get(family, {}), defaults=defaults, **members
+        )
+
+    def test_accepts_keep_alives_a_family_carries(self) -> None:
+        feature = {"kind": "feature", "id": 1, "length": 64}
+        for family, keep_alive in (
+            ("xbox.gip", {"intervalMilliseconds": 4000}),
+            (
+                "xbox.gip",
+                {
+                    "intervalMilliseconds": 1,
+                    "writes": [
+                        self.usb_write(endpoint=2, timeoutMilliseconds=5, sessionByte=2)
+                    ],
+                },
+            ),
+            (
+                "vendor.gamesir",
+                {
+                    "intervalMilliseconds": 60000,
+                    "writes": [
+                        self.usb_write(variants=["usb"]),
+                        self.hid_write(variants=["enhanced-hid"]),
+                    ],
+                },
+            ),
+            (
+                "valve.steam-triton",
+                {
+                    "intervalMilliseconds": 40,
+                    "writes": [
+                        {
+                            "report": feature,
+                            "bytes": [0] * 63,
+                            "resendTuning": "lizardResendTicks",
+                        }
+                    ],
+                },
+            ),
+        ):
+            with self.subTest(family=family, keep_alive=keep_alive):
+                self.check(self.keep_alive_body(family, keep_alive))
+
+    def test_rejects_malformed_keep_alives(self) -> None:
+        usb = self.usb_write()
+        for keep_alive in (
+            {},
+            {"writes": [usb]},
+            {"intervalMilliseconds": 0},
+            {"intervalMilliseconds": 60001},
+            {"intervalMilliseconds": 1.5},
+            {"intervalMilliseconds": "500"},
+            {"intervalMilliseconds": 500, "unknown": 1},
+            {"intervalMilliseconds": 500, "writes": []},
+            {"intervalMilliseconds": 500, "writes": [usb] * 9},
+            {"intervalMilliseconds": 500, "writes": [self.usb_write(bytes=[])]},
+            {"intervalMilliseconds": 500, "writes": [self.usb_write(bytes=[0] * 65)]},
+            {"intervalMilliseconds": 500, "writes": [self.usb_write(sessionByte=64)]},
+            {"intervalMilliseconds": 500, "writes": [self.usb_write(endpoint=0)]},
+            {"intervalMilliseconds": 500, "writes": [self.usb_write(variants=[])]},
+            {"intervalMilliseconds": 500, "writes": [self.usb_write(resendTuning="x")]},
+            {
+                "intervalMilliseconds": 500,
+                "writes": [self.usb_write(resendTuning="usbCommandTimeoutMs")],
+            },
+        ):
+            with self.subTest(keep_alive=keep_alive):
+                self.assert_rejected(self.keep_alive_body("xbox.gip", keep_alive))
+
+    # Switch 1 subcommands.
+
+    @staticmethod
+    def spi_read(**members: Any) -> dict[str, Any]:
+        return {
+            "subcommand": 16,
+            "spiRead": {
+                "address": 24608,
+                "length": 24,
+                "purpose": "factoryMotionCalibration",
+                **members,
+            },
+        }
+
+    def subcommand_body(
+        self, subcommands: Any, family: str = "nintendo.switch1"
+    ) -> Any:
+        return self.with_body(
+            family, defaults={"session": {"subcommands": subcommands}}
+        )
+
+    @staticmethod
+    def subcommands(**members: Any) -> dict[str, Any]:
+        return {
+            "reportId": 1,
+            "counterModulus": 16,
+            "requests": [{"subcommand": 3, "data": [48]}],
+            **members,
+        }
+
+    def test_accepts_subcommands(self) -> None:
+        plain = {"subcommand": 3, "data": [48]}
+        for subcommands in (
+            self.subcommands(),
+            self.subcommands(counterModulus=2),
+            self.subcommands(counterModulus=256),
+            self.subcommands(requests=[plain] * 16),
+            self.subcommands(requests=[plain, self.spi_read()]),
+            self.subcommands(
+                requests=[
+                    self.spi_read(),
+                    self.spi_read(purpose="userMotionCalibration", address=0, length=1),
+                ]
+            ),
+            self.subcommands(requests=[self.spi_read(address=4294967295, length=29)]),
+        ):
+            with self.subTest(subcommands=subcommands):
+                self.check(self.subcommand_body(subcommands))
+
+    def test_rejects_malformed_subcommands(self) -> None:
+        plain = {"subcommand": 3, "data": [48]}
+        both = {**plain, "spiRead": self.spi_read()["spiRead"]}
+        for subcommands in (
+            {"counterModulus": 16, "requests": [plain]},
+            {"reportId": 1, "requests": [plain]},
+            {"reportId": 1, "counterModulus": 16},
+            self.subcommands(reportId=256),
+            self.subcommands(counterModulus=1),
+            self.subcommands(counterModulus=257),
+            self.subcommands(counterModulus=16.5),
+            self.subcommands(requests=[]),
+            self.subcommands(requests=[plain] * 17),
+            self.subcommands(unknown=1),
+            self.subcommands(requests=[{"subcommand": 3}]),
+            self.subcommands(requests=[both]),
+            self.subcommands(requests=[{"subcommand": 256, "data": [1]}]),
+            self.subcommands(requests=[{"subcommand": 3, "data": []}]),
+            self.subcommands(requests=[{"subcommand": 3, "data": [0] * 17}]),
+            self.subcommands(requests=[{"subcommand": 3, "data": [256]}]),
+            self.subcommands(requests=[{**plain, "unknown": 1}]),
+            self.subcommands(requests=[self.spi_read(length=0)]),
+            self.subcommands(requests=[self.spi_read(length=30)]),
+            self.subcommands(requests=[self.spi_read(address=-1)]),
+            self.subcommands(requests=[self.spi_read(address=4294967296)]),
+            self.subcommands(requests=[self.spi_read(purpose="other")]),
+            self.subcommands(requests=[self.spi_read(unknown=1)]),
+            # Each purpose appears at most once.
+            self.subcommands(requests=[self.spi_read(), self.spi_read(address=1)]),
+        ):
+            with self.subTest(subcommands=subcommands):
+                self.assert_rejected(self.subcommand_body(subcommands))
+
+    def test_only_switch_1_has_subcommands_and_it_must_have_them(self) -> None:
+        self.assert_rejected(self.with_body("nintendo.switch1"))
+        self.assert_rejected(
+            self.with_body(
+                "nintendo.switch1", defaults={"tuning": {"stickDeadzone": 0.1}}
+            )
+        )
+        for family in ("sony.dualsense", "xbox.gip", "xbox.xid", "hid.report-layout"):
+            with self.subTest(family=family):
+                self.assert_rejected(self.subcommand_body(self.subcommands(), family))
+
+    def test_rejects_startup_only_members_in_a_keep_alive_write(self) -> None:
+        for write in (
+            self.usb_write(delayMilliseconds=5),
+            self.usb_write(toleratesRejection=True),
+            self.usb_write(when={"parameter": "layout", "is": ["Pro"]}),
+            self.hid_write(phase="startup"),
+            self.hid_write(delayMilliseconds=5),
+            self.hid_write(transport="usb"),
+            self.hid_write(crc32Seed=1),
+            self.hid_write(when={"parameter": "layout", "is": ["Pro"]}),
+        ):
+            with self.subTest(write=write):
+                self.assert_rejected(
+                    self.keep_alive_body(
+                        "vendor.gamesir",
+                        {"intervalMilliseconds": 500, "writes": [write]},
+                    )
+                )
+
+    def test_rejects_a_keep_alive_the_family_cannot_run(self) -> None:
+        interval = {"intervalMilliseconds": 500}
+        # A family that has no output at all.
+        self.assert_rejected(
+            self.with_body("xbox.xid", defaults={"session": {"keepAlive": interval}})
+        )
+        # A HID write for a raw-USB family, and a raw-USB write for a HID family.
+        self.assert_rejected(
+            self.keep_alive_body("xbox.gip", {**interval, "writes": [self.hid_write()]})
+        )
+        self.assert_rejected(
+            self.with_body(
+                "sony.dualsense",
+                defaults={
+                    "session": {"keepAlive": {**interval, "writes": [self.usb_write()]}}
+                },
+            )
+        )
+        # A variant the family lacks (E5004) and a cadence it does not default (E5002).
+        self.assert_rejected(
+            self.keep_alive_body(
+                "xbox.gip",
+                {**interval, "writes": [self.usb_write(variants=["wired"])]},
+            ),
+            code="E5004",
+        )
+        resend = {
+            **interval,
+            "writes": [self.hid_write(resendTuning="lizardResendTicks")],
+        }
+        self.assert_rejected(
+            self.with_body(
+                "valve.steam-triton",
+                tuningKeys=["lizardResendTicks"],
+                defaults={"session": {"keepAlive": resend}},
+            )
+        )
+        self.assert_rejected(
+            self.with_body(
+                "valve.steam-triton",
+                defaults={
+                    "tuning": {"lizardResendTicks": 75},
+                    "session": {"keepAlive": resend},
+                },
+            )
+        )
+
+    def test_rejects_the_interval_as_a_tuning_key(self) -> None:
+        # The interval has one home, session.keepAlive.intervalMilliseconds. keepAliveIntervalMs
+        # is no tuning key, so a description names it nowhere; each place accepts a real key.
+        places = (
+            lambda key: {"rawUSBTuningKeys": [key]},
+            lambda key: {
+                "rawUSBTuningKeys": ["usbCommandTimeoutMs"],
+                "defaults": {"tuning": {key: 500}},
+            },
+            lambda key: {
+                "rawUSBTuningKeys": ["usbCommandTimeoutMs"],
+                "defaults": {"variants": {"usb": {"tuning": {key: 500}}}},
+            },
+        )
+        for index, place in enumerate(places):
+            with self.subTest(place=index):
+                self.check(self.with_body("xbox.gip", **place("usbCommandTimeoutMs")))
+                self.assert_rejected(
+                    self.with_body("xbox.gip", **place("keepAliveIntervalMs"))
+                )
+        self.check(
+            self.with_body("sony.dualsense", tuningKeys=["hidStartupIntervalMs"])
+        )
+        self.assert_rejected(
+            self.with_body("sony.dualsense", tuningKeys=["keepAliveIntervalMs"])
+        )
+
     def test_rejects_raw_usb_rules_that_contradict_each_other(self) -> None:
         for family, members in (
-            ("xbox.gip", {"rawUSB": True, "tuningKeys": ["keepAliveIntervalMs"]}),
-            ("sony.dualsense", {"rawUSBTuningKeys": ["keepAliveIntervalMs"]}),
+            ("xbox.gip", {"rawUSB": True, "tuningKeys": ["lizardResendTicks"]}),
+            ("sony.dualsense", {"rawUSBTuningKeys": ["lizardResendTicks"]}),
         ):
             with self.subTest(family=family):
                 self.assert_rejected(self.with_body(family, **members))
@@ -563,7 +830,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             self.with_body(
                 "sony.dualsense",
                 tuningKeys=["hidStartupIntervalMs"],
-                defaults={"variants": {"usb": {"tuning": {"keepAliveIntervalMs": 5}}}},
+                defaults={"variants": {"usb": {"tuning": {"usbCommandTimeoutMs": 5}}}},
             )
         )
 

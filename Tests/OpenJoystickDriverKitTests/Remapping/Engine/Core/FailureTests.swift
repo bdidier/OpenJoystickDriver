@@ -10,7 +10,7 @@ struct RemappingFailureTests {
     let profile = chordProfile()
     let identifier = device()
 
-    try await engine.process(inputs: [.press(.faceSouth)], from: identifier, using: profile, at: 0)
+    try await engine.process(inputs: [.press(.south)], from: identifier, using: profile, at: 0)
     await #expect(throws: RemappingEventEngineError.sinkUnavailable) { try await engine.drain() }
 
     #expect(
@@ -34,7 +34,7 @@ struct RemappingFailureTests {
 
     await #expect(throws: RemappingEventEngineError.sinkUnavailable) {
       try await engine.process(
-        inputs: [.press(.faceSouth), .release(.faceSouth), .press(.faceEast)],
+        inputs: [.press(.south), .release(.south), .press(.east)],
         from: device(),
         using: profile,
         at: 0
@@ -58,7 +58,7 @@ struct RemappingFailureTests {
     )
 
     await #expect(throws: RemappingEventEngineError.sinkUnavailable) {
-      try await engine.process(inputs: [.press(.faceSouth)], from: device(), using: profile, at: 0)
+      try await engine.process(inputs: [.press(.south)], from: device(), using: profile, at: 0)
     }
 
     #expect(sink.actions() == [.keyUp(.a)])
@@ -70,7 +70,7 @@ struct RemappingFailureTests {
     let engine = RemappingEventEngine(sink: sink)
 
     try await engine.process(
-      inputs: [.press(.faceSouth)],
+      inputs: [.press(.south)],
       from: device(),
       using: chordProfile(),
       at: 0
@@ -90,7 +90,7 @@ struct RemappingFailureTests {
     let engine = RemappingEventEngine(sink: sink, emissionBarrier: barrier)
 
     try await engine.process(
-      inputs: [.press(.faceSouth)],
+      inputs: [.press(.south)],
       from: device(),
       using: chordProfile(),
       at: 0
@@ -124,7 +124,7 @@ struct RemappingFailureTests {
 
     await #expect(throws: RemappingEventEngineError.sinkUnavailable) {
       try await engine.process(
-        inputs: [.press(.faceSouth)],
+        inputs: [.press(.south)],
         from: identifier,
         using: profile,
         at: 0
@@ -132,7 +132,7 @@ struct RemappingFailureTests {
     }
     await #expect(throws: RemappingEventEngineError.faulted) {
       try await engine.process(
-        inputs: [.press(.faceSouth)],
+        inputs: [.press(.south)],
         from: identifier,
         using: profile,
         at: 1
@@ -141,7 +141,7 @@ struct RemappingFailureTests {
 
     try await engine.recover()
     try await engine.process(
-      inputs: [.press(.faceSouth), .release(.faceSouth)],
+      inputs: [.press(.south), .release(.south)],
       from: identifier,
       using: profile,
       at: 2

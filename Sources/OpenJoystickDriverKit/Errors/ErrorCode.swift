@@ -40,7 +40,7 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
   case staleInstallation = "E2020"
   case installedCLIFailed = "E2021"
   case recordTestMismatch = "E2022"
-  case ownershipToggleUnsupported = "E2023"
+  case claimUnsupported = "E2023"
   case controllerUnavailable = "E3001"
   case joyConPairUnavailable = "E3002"
   case motionUnavailable = "E3003"
@@ -101,7 +101,7 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
       .invalidInputFile, .notFound, .controllerRequestFailed, .installationProblem,
       .systemRequestFailed, .fileAccessFailed, .unsignedClient, .diagnoseFailed,
       .updateCheckFailed, .staleInstallation, .installedCLIFailed, .recordTestMismatch,
-      .ownershipToggleUnsupported:
+      .claimUnsupported:
       .commandLine
     case .controllerUnavailable, .joyConPairUnavailable, .motionUnavailable, .argumentTooLarge,
       .corruptLibrary, .duplicateName, .invalidArguments, .invalidProfile, .librarySizeExceeded,

@@ -33,9 +33,9 @@ struct ZRzBrakeLeftLayoutTests {
   @Test(arguments: models)
   func mapsRecordedButtonsAndIgnoresDigitalTriggerBits(model: ControllerModelID) throws {
     let parser = try makeParser(model)
-    let buttons: [UInt32: ControlID] = [
-      1: .faceSouth, 2: .faceEast, 4: .faceWest, 5: .faceNorth, 7: .leftShoulder, 8: .rightShoulder,
-      11: .view, 12: .menu, 13: .guide, 14: .leftStickClick, 15: .rightStickClick,
+    let buttons: [UInt32: Control] = [
+      1: .south, 2: .east, 4: .west, 5: .north, 7: .leftShoulder, 8: .rightShoulder,
+      11: .back, 12: .start, 13: .guide, 14: .leftStickClick, 15: .rightStickClick,
     ]
     for (usage, button) in buttons {
       #expect(parse(parser, value(page: 9, usage: usage, integer: 1)).contains(.press(button)))

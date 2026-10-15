@@ -12,76 +12,76 @@
     },
     "buttons": [
       {
-        "control": "face-north",
+        "control": "North",
         "byte": 11,
         "mask": 128
       },
       {
-        "control": "face-east",
+        "control": "East",
         "byte": 12,
         "mask": 128
       },
       {
-        "control": "face-south",
+        "control": "South",
         "byte": 13,
         "mask": 128
       },
       {
-        "control": "face-west",
+        "control": "West",
         "byte": 14,
         "mask": 128
       },
       {
-        "control": "left-shoulder",
+        "control": "LeftShoulder",
         "byte": 15,
         "mask": 128
       },
       {
-        "control": "right-shoulder",
+        "control": "RightShoulder",
         "byte": 16,
         "mask": 128
       },
       {
-        "control": "view",
+        "control": "Back",
         "byte": 1,
         "mask": 1
       },
       {
-        "control": "menu",
+        "control": "Start",
         "byte": 1,
         "mask": 2
       },
       {
-        "control": "left-stick-click",
+        "control": "LeftStickClick",
         "byte": 1,
         "mask": 4
       },
       {
-        "control": "right-stick-click",
+        "control": "RightStickClick",
         "byte": 1,
         "mask": 8
       },
       {
-        "control": "guide",
+        "control": "Guide",
         "byte": 1,
         "mask": 16
       }
     ],
     "axes": [
       {
-        "control": "left-stick-x",
+        "control": "LeftStickX",
         "byte": 3
       },
       {
-        "control": "left-stick-y",
+        "control": "LeftStickY",
         "byte": 4
       },
       {
-        "control": "right-stick-x",
+        "control": "RightStickX",
         "byte": 5
       },
       {
-        "control": "right-stick-y",
+        "control": "RightStickY",
         "byte": 6
       }
     ],
