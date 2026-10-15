@@ -17,6 +17,12 @@ public struct RenamedWord: Sendable, Equatable {
     case modifier
     /// A command-line flag of `command`, as typed, including its leading dashes.
     case flag(command: String)
+    /// A property of the document kind that the schema file `in` defines, such as
+    /// `report.schema.json` or `cli-output.schema.json#/$defs/diagnose`. Unlike `.field`, the
+    /// word is refused only in that document, so a property of another document may keep the name.
+    /// Add each row as one line, so that `Tests/RepositoryScripts/test_renamed_words.py` can read
+    /// it and check that the schema no longer declares `old`.
+    case documentField(in: String)
   }
 
   public let old: String
@@ -44,11 +50,45 @@ public struct RenamedWord: Sendable, Equatable {
     Self(old: "command", new: "meta", kind: .modifier),
     Self(old: "option", new: "alt", kind: .modifier),
     Self(old: "--bundle", new: "--output", kind: .flag(command: "diagnose")),
+    Self(old: "macOSVersion", new: "osVersion", kind: .documentField(in: "report.schema.json")),
+    Self(
+      old: "appleGameControllerAudit",
+      new: "systemGamepadAudit",
+      kind: .documentField(in: "report.schema.json")
+    ),
+    Self(
+      old: "appleExactDeviceCount",
+      new: "systemExactDeviceCount",
+      kind: .documentField(in: "report.schema.json")
+    ),
+    Self(
+      old: "appleIdentifiers",
+      new: "systemIdentifiers",
+      kind: .documentField(in: "report.schema.json")
+    ),
+    Self(
+      old: "skippedAppleDeviceCount",
+      new: "skippedSystemDeviceCount",
+      kind: .documentField(in: "report.schema.json")
+    ),
+    Self(
+      old: "bundle",
+      new: "output",
+      kind: .documentField(in: "cli-output.schema.json#/$defs/diagnose")
+    ),
   ]
 
   /// The renamed word for `old` in `kind`, or nil when `old` was not renamed there.
   public static func replacement(for old: String, kind: Kind) -> Self? {
     all.first { $0.kind == kind && $0.old == old }
+  }
+
+  /// The renamed property `old` of a document validated against the schema file `file`, or nil.
+  public static func documentFieldReplacement(for old: String, in file: String) -> Self? {
+    all.first { word in
+      guard case .documentField(let location) = word.kind else { return false }
+      return word.old == old && location.hasPrefix(file)
+    }
   }
 
   /// The localized sentence that names the new word.

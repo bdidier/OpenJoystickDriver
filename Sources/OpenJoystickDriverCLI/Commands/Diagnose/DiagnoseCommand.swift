@@ -37,8 +37,8 @@ struct DiagnoseCommand: AsyncParsableCommand {
 
   /// The system gamepad audit for the support bundle; tests replace it.
   @TaskLocal
-  static var gameControllerAudit: @Sendable () -> AppleGameControllerSupportAudit? = {
-    AppleGameControllerSupportAuditor.auditCurrentSystem()
+  static var gameControllerAudit: @Sendable () -> SystemGamepadSupportAudit? = {
+    SystemGamepadSupportAuditor.auditCurrentSystem()
   }
 
   @OptionGroup(visibility: GlobalOptions.subcommandVisibility)
@@ -96,7 +96,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
   var footprintLimitMiB = 512
 
   func validate() throws {
-    if let output { _ = try Self.bundleURL(output) }
+    if let output { _ = try Self.outputURL(output) }
     guard let soak else { return }
     guard ApplicationServiceRuntimeHealthSampler.secondsRange.contains(soak) else {
       throw ValidationError(
@@ -138,7 +138,7 @@ struct DiagnoseCommand: AsyncParsableCommand {
 
   /// Resolves `path` against the working directory; an existing directory gets the default
   /// file name. The parent directory must exist.
-  static func bundleURL(_ path: String) throws -> URL {
+  static func outputURL(_ path: String) throws -> URL {
     let current = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
     var url = URL(fileURLWithPath: path, relativeTo: current).standardizedFileURL
     var isDirectory: ObjCBool = false
@@ -178,43 +178,43 @@ struct DiagnoseCommand: AsyncParsableCommand {
         soak: soakOptions
       )
 
-      var bundleURL: URL?
-      var bundleError: (any Error)?
+      var outputURL: URL?
+      var outputError: (any Error)?
       if let output {
         do {
-          let url = try Self.bundleURL(output)
+          let url = try Self.outputURL(output)
           CLIOutput.stderr(
             CLILocalized.text("cli.diagnose.output_progress")
           )
           try Self.writeBundle(to: url, snapshot: snapshot)
-          bundleURL = url
-        } catch { bundleError = error }
+          outputURL = url
+        } catch { outputError = error }
       }
 
       let report = DiagnoseReport(
         checks: checks,
         timings: snapshot.frameTimings?.controllers ?? [],
-        bundle: bundleURL?.path
+        output: outputURL?.path
       )
       switch CLIContext.current.format {
       case .json: try CLIOutput.json(report)
       case .plain: CLIOutput.plain(report.plainRows)
       case .human: Self.printTable(report)
       }
-      if let bundleURL {
+      if let outputURL {
         CLIOutput.success(
           CLILocalized.format(
             "cli.diagnose.output_written",
-            bundleURL.path
+            outputURL.path
           )
         )
       }
-      if let bundleError {
+      if let outputError {
         throw CLIFailure(
           .fileAccessFailed,
           CLILocalized.format(
             "cli.diagnose.output_failed",
-            bundleError.localizedDescription
+            outputError.localizedDescription
           )
         )
       }
