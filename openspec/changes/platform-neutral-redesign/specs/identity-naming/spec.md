@@ -16,7 +16,7 @@ Renamed types, parameters, keys and CLI words SHALL NOT keep aliases, typealiase
 #### Scenario: Old CLI word
 
 - **WHEN** the user runs a command with an old word such as `ownership native`
-- **THEN** the CLI rejects it with the usage text for the new word
+- **THEN** the CLI rejects it with the same error and usage text as any other unknown word, and names no replacement
 
 ### Requirement: One reference parser
 
