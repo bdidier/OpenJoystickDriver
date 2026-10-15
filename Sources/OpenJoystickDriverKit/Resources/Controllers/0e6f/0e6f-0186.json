@@ -5,8 +5,8 @@
   "productID": 390,
   "protocol": {
     "family": "nintendo.switch1",
-    "quirks": [
-      "bluetooth-only"
-    ]
+    "parameters": {
+      "usbProtocol": "ChargingOnly"
+    }
   }
 }

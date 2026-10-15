@@ -7,7 +7,7 @@
 	"set": {
 		"protocol": {
 			"family": "sony.dualsense",
-			"quirks": ["third-party", "forced-vibration"]
+			"parameters": { "maker": "ThirdParty", "forcedVibration": true }
 		}
 	}
 }

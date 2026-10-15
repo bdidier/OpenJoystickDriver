@@ -94,8 +94,9 @@ final class SupportReportModel: ObservableObject {
 
   #if canImport(AppKit)
     func copySupportReport() async -> Bool {
-      let outputURL = FileManager.default.temporaryDirectory.appendingPathComponent(
-        "OpenJoystickDriver-support-\(UUID().uuidString).json"
+      let outputURL = MacOSDataDirectory().fileURL(
+        "OpenJoystickDriver-support-\(UUID().uuidString).json",
+        in: .temporary
       )
       await saveSupportReport(to: outputURL)
       defer { try? FileManager.default.removeItem(at: outputURL) }

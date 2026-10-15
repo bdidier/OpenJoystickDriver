@@ -88,14 +88,9 @@
 						"enhanced-hid"
 					]
 				},
-				"quirks": {
-					"type": "array",
-					"uniqueItems": true,
-					"items": {
-						"type": "string",
-						"minLength": 1
-					},
-					"minItems": 1
+				"parameters": {
+					"type": "object",
+					"minProperties": 1
 				},
 				"initialization": {
 					"type": "array",
@@ -182,11 +177,17 @@
 							"variant": {
 								"enum": ["usb", "enhanced-hid"]
 							},
-							"quirks": {
-								"items": {
-									"enum": ["inner-grips", "lighting-slots"]
-								},
-								"type": "array"
+							"parameters": {
+								"type": "object",
+								"additionalProperties": false,
+								"properties": {
+									"innerGrips": {
+										"const": true
+									},
+									"lightingMemory": {
+										"enum": ["ProfileSlots"]
+									}
+								}
 							}
 						},
 						"allOf": [
@@ -201,7 +202,7 @@
 								},
 								"then": {
 									"not": {
-										"required": ["quirks"]
+										"required": ["parameters"]
 									}
 								}
 							},
@@ -215,10 +216,17 @@
 									"required": ["variant"]
 								},
 								"then": {
-									"required": ["quirks"],
+									"required": ["parameters"],
 									"properties": {
-										"quirks": {
-											"maxItems": 1
+										"parameters": {
+											"oneOf": [
+												{
+													"required": ["innerGrips"]
+												},
+												{
+													"required": ["lightingMemory"]
+												}
+											]
 										}
 									}
 								}
@@ -284,11 +292,23 @@
 					},
 					"then": {
 						"properties": {
-							"quirks": {
-								"items": {
-									"enum": ["share-offset"]
-								},
-								"type": "array"
+							"parameters": {
+								"type": "object",
+								"additionalProperties": false,
+								"properties": {
+									"shareButton": {
+										"type": "object",
+										"additionalProperties": false,
+										"required": ["fromEnd"],
+										"properties": {
+											"fromEnd": {
+												"type": "integer",
+												"minimum": 1,
+												"maximum": 255
+											}
+										}
+									}
+								}
 							}
 						}
 					}
@@ -304,11 +324,14 @@
 					},
 					"then": {
 						"properties": {
-							"quirks": {
-								"items": {
-									"enum": ["dpad-pressure"]
-								},
-								"type": "array"
+							"parameters": {
+								"type": "object",
+								"additionalProperties": false,
+								"properties": {
+									"hatSource": {
+										"enum": ["DpadPressure"]
+									}
+								}
 							}
 						}
 					}
@@ -324,12 +347,20 @@
 					},
 					"then": {
 						"properties": {
-							"quirks": {
-								"items": {
-									"enum": ["joy-con-left", "joy-con-right", "bluetooth-only"]
+							"parameters": {
+								"type": "object",
+								"additionalProperties": false,
+								"properties": {
+									"layout": {
+										"enum": ["Pro", "JoyConLeft", "JoyConRight"]
+									},
+									"usbProtocol": {
+										"enum": ["ChargingOnly"]
+									}
 								},
-								"maxItems": 1,
-								"type": "array"
+								"not": {
+									"required": ["usbProtocol", "layout"]
+								}
 							}
 						}
 					}
@@ -345,12 +376,14 @@
 					},
 					"then": {
 						"properties": {
-							"quirks": {
-								"items": {
-									"enum": ["joy-con-left", "joy-con-right", "gamecube"]
-								},
-								"maxItems": 1,
-								"type": "array"
+							"parameters": {
+								"type": "object",
+								"additionalProperties": false,
+								"properties": {
+									"layout": {
+										"enum": ["Pro", "JoyConLeft", "JoyConRight", "GameCube"]
+									}
+								}
 							}
 						}
 					}
@@ -366,29 +399,23 @@
 					},
 					"then": {
 						"properties": {
-							"quirks": {
-								"items": {
-									"enum": [
-										"factory-calibration",
-										"wireless-adapter",
-										"strikepad"
-									]
+							"parameters": {
+								"type": "object",
+								"additionalProperties": false,
+								"properties": {
+									"motionCalibration": {
+										"enum": ["Factory"]
+									},
+									"role": {
+										"enum": ["WirelessAdapter"]
+									},
+									"motionScale": {
+										"enum": ["StrikePad"]
+									}
 								},
 								"not": {
-									"allOf": [
-										{
-											"contains": {
-												"const": "wireless-adapter"
-											}
-										},
-										{
-											"contains": {
-												"const": "strikepad"
-											}
-										}
-									]
-								},
-								"type": "array"
+									"required": ["role", "motionScale"]
+								}
 							}
 						}
 					}
@@ -404,11 +431,14 @@
 					},
 					"then": {
 						"properties": {
-							"quirks": {
-								"items": {
-									"enum": ["shield-2015"]
-								},
-								"type": "array"
+							"parameters": {
+								"type": "object",
+								"additionalProperties": false,
+								"properties": {
+									"reportRevision": {
+										"enum": ["Shield2015"]
+									}
+								}
 							}
 						}
 					}
@@ -424,17 +454,19 @@
 					},
 					"then": {
 						"properties": {
-							"quirks": {
-								"items": {
-									"enum": [
-										"wr007",
-										"scuf-envision",
-										"z-rz-brake-left",
-										"dragonrise"
-									]
-								},
-								"maxItems": 1,
-								"type": "array"
+							"parameters": {
+								"type": "object",
+								"additionalProperties": false,
+								"properties": {
+									"usageLayout": {
+										"enum": [
+											"Wr007",
+											"ScufEnvision",
+											"ZRzBrakeLeft",
+											"DragonRise"
+										]
+									}
+								}
 							}
 						}
 					}
@@ -450,20 +482,27 @@
 					},
 					"then": {
 						"properties": {
-							"quirks": {
-								"contains": {
-									"const": "third-party"
+							"parameters": {
+								"type": "object",
+								"additionalProperties": false,
+								"properties": {
+									"maker": {
+										"enum": ["ThirdParty"]
+									},
+									"unprobedSensors": {
+										"const": true
+									},
+									"unprobedTouchpad": {
+										"const": true
+									},
+									"forcedVibration": {
+										"const": true
+									},
+									"role": {
+										"enum": ["Receiver"]
+									}
 								},
-								"items": {
-									"enum": [
-										"third-party",
-										"unprobed-sensors",
-										"unprobed-touchpad",
-										"forced-vibration",
-										"receiver"
-									]
-								},
-								"type": "array"
+								"required": ["maker"]
 							}
 						}
 					}
@@ -491,7 +530,7 @@
 					},
 					"then": {
 						"not": {
-							"required": ["quirks"]
+							"required": ["parameters"]
 						}
 					}
 				}

@@ -75,7 +75,7 @@ struct ApplicationServiceLogServiceTests {
   }
 
   private func temporaryURL() -> URL {
-    FileManager.default.temporaryDirectory.appendingPathComponent(
+    MacOSDataDirectory().url(for: .temporary).appendingPathComponent(
       "ojd-application service-log-\(UUID().uuidString)"
     )
   }

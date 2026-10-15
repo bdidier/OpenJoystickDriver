@@ -73,7 +73,7 @@ struct DeviceCatalog: Sendable {
       ),
       physicalProtocolID: protocolInfo.protocolID,
       physicalProtocolVariant: protocolInfo.protocolVariant,
-      quirks: protocolInfo.quirks,
+      parameters: protocolInfo.parameters,
       capabilityDelta: record.capabilities,
       preferredBackends: [.userSpaceHID],
       gipStartupPackets: protocolInfo.initialization ?? GIPStartupPacket.defaultSequence,
@@ -90,7 +90,7 @@ struct DeviceCatalog: Sendable {
   }
 
   /// The runtime profile of a row that names only this family and stored variant: default
-  /// endpoints on interface 0, the default GIP initialization and keep-alive, and no quirks or
+  /// endpoints on interface 0, the default GIP initialization and keep-alive, and no parameters or
   /// capability deltas. Interface-signature bindings of uncatalogued devices run with it.
   static func familyRuntimeProfile(
     _ protocolID: PhysicalProtocolID,
@@ -107,7 +107,7 @@ struct DeviceCatalog: Sendable {
       ),
       physicalProtocolID: protocolID,
       physicalProtocolVariant: protocolID.storesVariant ? variant : nil,
-      quirks: [],
+      parameters: .none,
       capabilityDelta: .none,
       preferredBackends: [.userSpaceHID],
       gipStartupPackets: GIPStartupPacket.defaultSequence,

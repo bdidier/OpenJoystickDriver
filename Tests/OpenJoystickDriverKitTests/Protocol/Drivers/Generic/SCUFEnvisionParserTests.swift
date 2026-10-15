@@ -12,7 +12,7 @@ struct SCUFEnvisionParserTests {
   private func parser() -> HIDDescriptorDriver {
     HIDDescriptorDriver(
       model: ControllerModelID(vendorID: 0x2E95, productID: 0x434D),
-      quirks: [.scufEnvision]
+      usageLayout: .scufEnvision
     )
   }
 

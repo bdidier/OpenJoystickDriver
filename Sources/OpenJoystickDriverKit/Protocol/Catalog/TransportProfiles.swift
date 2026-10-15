@@ -92,86 +92,6 @@ public struct ProtocolBindingID: Hashable, Sendable, RawRepresentable, Codable,
   public var usesRawUSB: Bool { protocolID.usesRawUSB(storedVariant: variant) }
 }
 
-/// Catalog quirks, each declared by the protocol drivers that consume it.
-///
-/// A quirk changes how the driver decodes or reaches a variant; one that decodes a fixed extra
-/// button bit also declares that control. Capability corrections are ``ControllerCapabilityDelta``.
-public enum ControllerQuirk: String, CaseIterable, Sendable {
-  /// GIP Share sits at a fixed offset from the end of the input packet (xpad `MAP_SHARE_OFFSET`).
-  case shareOffset = "share-offset"
-  /// Nintendo left Joy-Con axis and button permutation; on `nintendo.switch2`, the Joy-Con 2
-  /// layout.
-  case joyConLeft = "joy-con-left"
-  /// Nintendo right Joy-Con axis and button permutation; on `nintendo.switch2`, the Joy-Con 2
-  /// layout.
-  case joyConRight = "joy-con-right"
-  /// Switch pad that enumerates over USB for charging but speaks the protocol only over
-  /// Bluetooth (SDL `HIDAPI_DriverSwitch_IsSupportedDevice`, Linux `hid-nintendo.c` device table).
-  case bluetoothOnly = "bluetooth-only"
-  /// Switch 2 NSO GameCube controller layout, with analog triggers and flash trigger calibration.
-  case gameCube = "gamecube"
-  /// GameSir enhanced HID reports the inner grips in extras-byte bits 0x40 and 0x80.
-  case innerGrips = "inner-grips"
-  /// GameSir enhanced HID lighting memory is organized in profile slots: the driver reads the
-  /// active slot at startup, tracks it, and writes color and brightness into that slot.
-  case lightingSlots = "lighting-slots"
-  /// Third-party PS3 pad whose hat bits are untrusted, so any nonzero D-pad pressure byte holds
-  /// its direction (SDL `SDL_hidapi_ps3.c`, Saitek Cyborg V.3 Rumble Pad).
-  case dpadPressure = "dpad-pressure"
-  /// DualShock 4 whose factory motion calibration report is trusted. SDL `SDL_hidapi_ps4.c` reads
-  /// it only on Sony's own controllers; other pads keep the nominal scale.
-  case factoryCalibration = "factory-calibration"
-  /// Sony's DualShock 4 wireless adapter (SDL `USB_PRODUCT_SONY_DS4_DONGLE`): output waits for a
-  /// paired pad, and its calibration uses the Bluetooth gyro order.
-  case wirelessAdapter = "wireless-adapter"
-  /// STRIKEPAD grip (SDL `USB_PRODUCT_SONY_DS4_STRIKEPAD`): doubled gyro scale and doubled,
-  /// negated accelerometer scale.
-  case strikePad = "strikepad"
-  /// 2015 NVIDIA SHIELD controller (SDL `SDL_hidapi_shield.c` V103): plain rumble output report
-  /// and a touchpad click; without it the driver runs the input-only 2017 controller.
-  case shield2015 = "shield-2015"
-  /// WR007 layout: Z/Rz right stick, Accelerator as LT and Brake as RT, and its button order.
-  case wr007 = "wr007"
-  /// SCUF Envision layout: input only from report 6, buttons 1-10, and Z/Rz swapped with Rx/Ry.
-  case scufEnvision = "scuf-envision"
-  /// WR007's Z/Rz right stick and button order, with Brake as LT and a Home button. Records name
-  /// it for pads whose descriptor is not recorded; a descriptor of this shape selects it anyway.
-  case zRzBrakeLeft = "z-rz-brake-left"
-  /// DragonRise generic USB PCB: Z/Rz right stick and DirectInput button order, where 1-4 are Y,
-  /// B, A, X and 7-8 are digital L2 and R2.
-  case dragonRise = "dragonrise"
-  /// A DualSense-protocol controller that Sony did not make: the driver follows SDL's non-Sony
-  /// path, probing for features. The model quirks below describe a third-party DualSense and
-  /// need this one.
-  case thirdParty = "third-party"
-  /// Third-party DualSense with sensors though it does not answer the probe (SDL's Razer list).
-  case unprobedSensors = "unprobed-sensors"
-  /// Third-party DualSense with a touchpad though it does not answer the probe (SDL's Razer
-  /// list). Either unprobed quirk also selects the alternate report without a probe reply.
-  case unprobedTouchpad = "unprobed-touchpad"
-  /// Third-party DualSense whose probe reply omits the vibration it has (SDL's NACON entry).
-  case forcedVibration = "forced-vibration"
-  /// Third-party DualSense wireless receiver that keeps reporting with no controller paired.
-  case receiver = "receiver"
-
-  /// The protocol drivers that declare this quirk.
-  public var protocolIDs: Set<PhysicalProtocolID> {
-    switch self {
-    case .shareOffset: [.xboxGIP]
-    case .joyConLeft, .joyConRight: [.nintendoSwitch1, .nintendoSwitch2]
-    case .bluetoothOnly: [.nintendoSwitch1]
-    case .gameCube: [.nintendoSwitch2]
-    case .innerGrips, .lightingSlots: [.vendorGameSir]
-    case .dpadPressure: [.vendorPS3ThirdParty]
-    case .factoryCalibration, .wirelessAdapter, .strikePad: [.sonyDualShock4]
-    case .shield2015: [.vendorNVIDIAShield]
-    case .wr007, .scufEnvision, .zRzBrakeLeft, .dragonRise: [.hidDescriptor]
-    case .thirdParty, .unprobedSensors, .unprobedTouchpad, .forcedVibration, .receiver:
-      [.sonyDualSense]
-    }
-  }
-}
-
 /// A driver-owned policy that assembles one logical controller from several protocol roles of
 /// one physical device. A catalog row names it in `protocol.assembly`.
 ///
@@ -253,7 +173,7 @@ public struct DeviceRuntimeProfile: Equatable, Sendable {
   /// Nil when the family has one contract or its variant is a transport variant,
   /// which classification derives from the observed transport.
   public let physicalProtocolVariant: PhysicalProtocolVariantID?
-  public let quirks: [ControllerQuirk]
+  public let parameters: ProtocolParameters
   public let capabilityDelta: ControllerCapabilityDelta
   public let preferredBackends: [VirtualControllerBackendID]
   public let gipStartupPackets: [GIPStartupPacket]

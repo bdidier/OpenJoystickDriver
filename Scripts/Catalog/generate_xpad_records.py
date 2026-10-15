@@ -45,7 +45,7 @@ _XPAD_RULES = load_rules(
     frozenset(
         {
             "driverHandledDeviceFlags",
-            "mappingQuirks",
+            "mappingParameters",
             "capabilityAbsences",
             "representationFlags",
             "presenceFlags",
@@ -63,11 +63,11 @@ _XPAD_RULES = load_rules(
 DRIVER_HANDLED_DEVICE_FLAGS = {
     (entry["flag"], entry["xtype"]) for entry in _XPAD_RULES["driverHandledDeviceFlags"]
 }
-# xpad mapping macros that select a driver-declared quirk, and the one protocol
-# family declaring it; rows needing a quirk their driver does not declare are skipped.
+# xpad mapping macros that select a driver-declared protocol parameter, and the one protocol
+# family declaring it; a row whose family does not declare it fails generation.
 MAPPING_ORDER = tuple(
-    (entry["flag"], entry["quirk"], entry["family"])
-    for entry in _XPAD_RULES["mappingQuirks"]
+    (entry["flag"], entry["parameters"], entry["family"])
+    for entry in _XPAD_RULES["mappingParameters"]
 )
 # xpad mapping macros that remove analog controls, as capability absences in
 # ControlID order. Buttons and stick clicks stay.
@@ -273,13 +273,13 @@ def build_profile(
 ) -> dict[str, Any]:
     family, variant = SUPPORTED_TYPES[device.xtype]
     mapping_flags = parse_mapping_flags(device.mapping_expression)
-    quirks: list[str] = []
-    for source, quirk, quirk_family in MAPPING_ORDER:
+    parameters: dict[str, Any] = {}
+    for source, mapped, mapped_family in MAPPING_ORDER:
         if source not in mapping_flags:
             continue
-        if quirk_family != family:
+        if mapped_family != family:
             raise GenerationError(f"Mapping flag {source} is not declared by {family}")
-        quirks.append(quirk)
+        parameters.update(mapped)
     absent = [
         control
         for source, controls in CAPABILITY_ABSENCES
@@ -290,8 +290,8 @@ def build_profile(
     protocol: dict[str, Any] = {"family": family}
     if variant is not None:
         protocol["variant"] = variant
-    if quirks:
-        protocol["quirks"] = quirks
+    if parameters:
+        protocol["parameters"] = parameters
     if family == "xbox.gip":
         initialization = initialization_for(device, init_rules)
         if initialization != DEFAULT_INITIALIZATION:

@@ -5,7 +5,7 @@ import Foundation
 /// A temporary application-support folder with the user's `Controllers`, `Personas`, and
 /// `Profiles` folders, the `Packages` store, and a `Staging` folder where packages are built.
 struct ModPackageFixture {
-  let root = FileManager.default.temporaryDirectory.appendingPathComponent(
+  let root = MacOSDataDirectory().url(for: .temporary).appendingPathComponent(
     "ojd-packages-\(UUID().uuidString)",
     isDirectory: true
   )

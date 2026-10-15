@@ -3,17 +3,21 @@ import OpenJoystickDriverKit
 
 /// The USB DualShock 4 driver the registry binds for the catalog record of `productID`.
 private func dualShock4Driver(vendorID: UInt16 = 0x054C, _ productID: UInt16) -> DualShock4Driver {
-  let quirks = catalogRecord(ControllerModelID(vendorID: vendorID, productID: productID)).quirks
+  let parameters = catalogRecord(
+    ControllerModelID(vendorID: vendorID, productID: productID)
+  ).parameters
   return DualShock4Driver(
-    usesFactoryCalibration: quirks.contains(.factoryCalibration),
-    model: DualShock4Model(quirks: quirks)
+    usesFactoryCalibration: parameters.motionCalibration == .factory,
+    model: DualShock4Model(parameters: parameters)
   )
 }
 
 /// The SHIELD driver the registry binds for the catalog record of `productID`.
 private func shieldDriver(_ productID: UInt16) -> NVIDIAShieldDriver {
-  let quirks = catalogRecord(ControllerModelID(vendorID: 0x0955, productID: productID)).quirks
-  return NVIDIAShieldDriver(isShield2015: quirks.contains(.shield2015))
+  let parameters = catalogRecord(
+    ControllerModelID(vendorID: 0x0955, productID: productID)
+  ).parameters
+  return NVIDIAShieldDriver(isShield2015: parameters.reportRevision == .shield2015)
 }
 
 /// A neutral 64-byte USB input report with raw gyro and accelerometer X, and SDL's no-pad flag.
@@ -51,7 +55,7 @@ private func groupedGyroCalibration() -> Data {
   return Data(report)
 }
 
-/// The record quirks select SDL's DualShock 4 models and factory calibration by product.
+/// The record parameters select SDL's DualShock 4 models and factory calibration by product.
 func runDualShock4RecordQuirkChecks() throws {
   let request = PhysicalHIDFeatureReadRequest(reportID: 2, length: 37)
   let grouped = groupedGyroCalibration()

@@ -19,7 +19,7 @@ struct ZRzBrakeLeftLayoutTests {
     return HIDDescriptorDriver(
       model: model,
       reportDescriptor: isGameSir ? RecordedHIDDescriptors.gameSirG7SE : nil,
-      quirks: isGameSir ? [] : [.zRzBrakeLeft]
+      usageLayout: isGameSir ? nil : .zRzBrakeLeft
     )
   }
 

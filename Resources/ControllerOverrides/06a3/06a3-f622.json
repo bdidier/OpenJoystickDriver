@@ -7,9 +7,7 @@
 	"set": {
 		"protocol": {
 			"family": "vendor.ps3-third-party",
-			"quirks": [
-				"dpad-pressure"
-			]
+			"parameters": { "hatSource": "DpadPressure" }
 		}
 	}
 }

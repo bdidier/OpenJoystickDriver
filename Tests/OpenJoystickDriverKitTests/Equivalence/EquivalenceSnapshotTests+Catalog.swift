@@ -23,9 +23,10 @@ struct EquivalenceSnapshotCatalogTests {
     # Effective behavior of each catalog record as resolved values: startup, keep-alive and
     # activation writes as hex, tuning and session timings as numbers, capabilities as sorted
     # sets. Enum-like fields use the explicit labels in EquivalenceSnapshotTests+CatalogLabels.
-    # The quirks= line is the one exception: it lists the record's quirk labels because quirks
-    # that only steer report decoding have no resolved value to print here. The parsed-frames
-    # snapshot shows their effect for the records with sample reports.
+    # The parameters= line is the one exception: it lists the record's protocol parameters as
+    # name=value entries in the record's own spelling, because parameters that only steer report
+    # decoding have no resolved value to print here. The parsed-frames snapshot shows their
+    # effect for the records with sample reports.
 
     """
 

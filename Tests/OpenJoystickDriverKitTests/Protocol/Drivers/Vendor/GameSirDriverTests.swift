@@ -63,7 +63,7 @@ struct GameSirDriverTests {
   }
 
   @Test
-  func enhancedQuirksSelectInnerGripsAndTheLightingSlotRequest() throws {
+  func enhancedParametersSelectInnerGripsAndTheLightingSlotRequest() throws {
     let grips = GameSirDriver(protocol: .enhancedHID, hasInnerGrips: true)
     let slots = GameSirDriver(protocol: .enhancedHID, usesLightingSlots: true)
     let innerGrips: Set<ControlID> = [.paddleLeft2, .paddleRight2]

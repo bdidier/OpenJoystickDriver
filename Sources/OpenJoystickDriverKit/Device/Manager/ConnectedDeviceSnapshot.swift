@@ -28,8 +28,8 @@ public struct ConnectedDeviceSnapshot: Sendable {
   public let duplicateExposureRisk: DuplicateExposureRisk
   /// USB serial number, or nil if not reported.
   public let serialNumber: String?
-  /// Driver-declared quirk IDs from the controller record.
-  public let quirks: [String]
+  /// Typed protocol parameters of the controller record, as sorted `name=value` entries.
+  public let parameters: [String]
   /// The structured, redacted decision that bound this controller.
   public let bindingResult: ProtocolBindingResult
   /// Interrupt IN endpoint address used by USB transports.

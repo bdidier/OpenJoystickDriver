@@ -70,13 +70,7 @@ actor RemappingProfileLibrary {
     self.runningVersion = runningVersion
   }
 
-  static var defaultDirectory: URL {
-    let manager = FileManager.default
-    let directory =
-      manager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
-      ?? manager.homeDirectoryForCurrentUser.appendingPathComponent("Library/Application Support")
-    return directory.appendingPathComponent("OpenJoystickDriver", isDirectory: true)
-  }
+  static var defaultDirectory: URL { MacOSDataDirectory().url(for: .applicationData) }
 
   nonisolated var profilesDirectory: URL {
     directory.appendingPathComponent("Profiles", isDirectory: true)

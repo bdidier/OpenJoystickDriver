@@ -9,7 +9,7 @@
 		"productID": 12315,
 		"protocol": {
 			"family": "hid.descriptor",
-			"quirks": ["z-rz-brake-left"]
+			"parameters": { "usageLayout": "ZRzBrakeLeft" }
 		}
 	}
 }

@@ -5,9 +5,9 @@
   "productID": 2976,
   "protocol": {
     "family": "sony.dualshock4",
-    "quirks": [
-      "factory-calibration",
-      "wireless-adapter"
-    ]
+    "parameters": {
+      "motionCalibration": "Factory",
+      "role": "WirelessAdapter"
+    }
   }
 }

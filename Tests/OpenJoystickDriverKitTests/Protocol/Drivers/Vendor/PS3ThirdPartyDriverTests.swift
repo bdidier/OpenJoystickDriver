@@ -281,7 +281,7 @@ struct PS3ThirdPartyDriverTests {
     #expect(event?.state == .neutral)
   }
 
-  // MARK: - Device quirks
+  // MARK: - Device parameters
 
   /// The Cyborg V.3 record sets `dpad-pressure`, so its hat comes only from pressure bytes 7–10.
   @Test
@@ -298,7 +298,7 @@ struct PS3ThirdPartyDriverTests {
     #expect(try driver.parseReport(ThirdPartyReport.standard([7: 0x01])).contains(.hat(.east)))
     let record = DeviceCatalog().record(for: ControllerModelID(vendorID: 0x06A3, productID: 0xF622))
     #expect(record?.physicalProtocolID == .vendorPS3ThirdParty)
-    #expect(record?.quirks == [.dpadPressure])
+    #expect(record?.parameters == ProtocolParameters(hatSource: .dpadPressure))
   }
 
   // MARK: - Output

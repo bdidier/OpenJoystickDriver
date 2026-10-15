@@ -30,8 +30,8 @@ public struct ApplicationServiceDeviceDescription: Codable, Sendable {
   public let duplicateExposureRisk: DuplicateExposureRisk
   /// USB serial number, or nil if not reported.
   public let serialNumber: String?
-  /// Driver-declared quirk IDs from the controller record.
-  public let quirks: [String]
+  /// Typed protocol parameters of the controller record, as sorted `name=value` entries.
+  public let parameters: [String]
   /// The structured, redacted decision that bound this controller.
   public let bindingResult: ProtocolBindingResult
   /// Interrupt IN endpoint address used by USB transports.
@@ -84,7 +84,7 @@ public struct ApplicationServiceDeviceDescription: Codable, Sendable {
     hidInputOwnership: HIDInputOwnership = .unknown,
     duplicateExposureRisk: DuplicateExposureRisk = .unknownOwnership,
     serialNumber: String?,
-    quirks: [String] = [],
+    parameters: [String] = [],
     bindingResult: ProtocolBindingResult,
     inputEndpoint: UInt8 = 0,
     outputEndpoint: UInt8 = 0,
@@ -116,7 +116,7 @@ public struct ApplicationServiceDeviceDescription: Codable, Sendable {
     self.hidInputOwnership = hidInputOwnership
     self.duplicateExposureRisk = duplicateExposureRisk
     self.serialNumber = serialNumber
-    self.quirks = quirks
+    self.parameters = parameters
     self.bindingResult = bindingResult
     self.inputEndpoint = inputEndpoint
     self.outputEndpoint = outputEndpoint
@@ -161,7 +161,7 @@ public struct ApplicationServiceDeviceDescription: Codable, Sendable {
       forKey: .duplicateExposureRisk
     )
     self.serialNumber = try container.decodeIfPresent(String.self, forKey: .serialNumber)
-    self.quirks = try container.decode([String].self, forKey: .quirks)
+    self.parameters = try container.decode([String].self, forKey: .parameters)
     self.bindingResult = try container.decode(ProtocolBindingResult.self, forKey: .bindingResult)
     self.inputEndpoint = try container.decode(UInt8.self, forKey: .inputEndpoint)
     self.outputEndpoint = try container.decode(UInt8.self, forKey: .outputEndpoint)
@@ -215,7 +215,7 @@ public struct ApplicationServiceDeviceDescription: Codable, Sendable {
     case hidInputOwnership
     case duplicateExposureRisk
     case serialNumber
-    case quirks
+    case parameters
     case bindingResult
     case inputEndpoint
     case outputEndpoint
@@ -251,7 +251,7 @@ extension ApplicationServiceDeviceDescription {
       hidInputOwnership: snapshot.hidInputOwnership,
       duplicateExposureRisk: snapshot.duplicateExposureRisk,
       serialNumber: snapshot.serialNumber,
-      quirks: snapshot.quirks,
+      parameters: snapshot.parameters,
       bindingResult: snapshot.bindingResult,
       inputEndpoint: snapshot.inputEndpoint,
       outputEndpoint: snapshot.outputEndpoint,

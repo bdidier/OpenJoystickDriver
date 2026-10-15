@@ -5,10 +5,10 @@
   "productID": 3352,
   "protocol": {
     "family": "sony.dualsense",
-    "quirks": [
-      "third-party",
-      "forced-vibration",
-      "receiver"
-    ]
+    "parameters": {
+      "maker": "ThirdParty",
+      "forcedVibration": true,
+      "role": "Receiver"
+    }
   }
 }

@@ -60,7 +60,9 @@ class CatalogRulesLoadingTests(unittest.TestCase):
             ("XBox360Controller", "vendor.nvidia-shield", None),
         )
         self.assertEqual(catalog.STEAM_VARIANTS[(0x28DE, 0x1304)], "dongle")
-        self.assertEqual(catalog.SDL_QUIRKS["SwitchJoyConLeft"], ["joy-con-left"])
+        self.assertEqual(
+            catalog.SDL_PARAMETERS["SwitchJoyConLeft"], {"layout": "JoyConLeft"}
+        )
         self.assertIn((0x057E, 0x2066), catalog.SWITCH_2_IDENTITIES)
         self.assertEqual(
             catalog.BLUETOOTH_ONLY_IDENTITIES, {(0x0E6F, 0x0186), (0x0F0D, 0x00F6)}
@@ -112,7 +114,8 @@ class CatalogRulesLoadingTests(unittest.TestCase):
             xpad.DRIVER_HANDLED_DEVICE_FLAGS, {("FLAG_DELAY_INIT", "XTYPE_XBOXONE")}
         )
         self.assertEqual(
-            xpad.MAPPING_ORDER, (("MAP_SHARE_OFFSET", "share-offset", "xbox.gip"),)
+            xpad.MAPPING_ORDER,
+            (("MAP_SHARE_OFFSET", {"shareButton": {"fromEnd": 26}}, "xbox.gip"),),
         )
         self.assertEqual(xpad.CAPABILITY_ABSENCES[1][0], "MAP_TRIGGERS_TO_BUTTONS")
         self.assertEqual(

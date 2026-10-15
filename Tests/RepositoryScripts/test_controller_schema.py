@@ -28,10 +28,10 @@ class ControllerSchemaTests(unittest.TestCase):
 
     def test_accepts_current_vocabulary(self) -> None:
         current = {
-            "GIP quirk, actions and capabilities": record(
+            "GIP parameter, actions and capabilities": record(
                 {
                     **GIP,
-                    "quirks": ["share-offset"],
+                    "parameters": {"shareButton": {"fromEnd": 26}},
                     "initialization": ["xbox.gip/hori-ack", "xbox.gip/power-on"],
                 },
                 usb={"configuration": "set1-before-claim"},
@@ -41,10 +41,10 @@ class ControllerSchemaTests(unittest.TestCase):
                 },
             ),
             "Joy-Con side": record(
-                {"family": "nintendo.switch1", "quirks": ["joy-con-left"]}
+                {"family": "nintendo.switch1", "parameters": {"layout": "JoyConLeft"}}
             ),
             "Switch 2 Joy-Con": record(
-                {"family": "nintendo.switch2", "quirks": ["joy-con-right"]}
+                {"family": "nintendo.switch2", "parameters": {"layout": "JoyConRight"}}
             ),
             "Switch 2 Pro": record({"family": "nintendo.switch2"}),
             "Switch input-only": record({"family": "nintendo.switch-input-only"}),
@@ -59,7 +59,7 @@ class ControllerSchemaTests(unittest.TestCase):
             ),
             "Steam Deck": record({"family": "valve.steam-deck"}),
             "Switch 2 GameCube": record(
-                {"family": "nintendo.switch2", "quirks": ["gamecube"]}
+                {"family": "nintendo.switch2", "parameters": {"layout": "GameCube"}}
             ),
             "DualSense Edge controls": record(
                 DUALSENSE,
@@ -76,14 +76,14 @@ class ControllerSchemaTests(unittest.TestCase):
                 {
                     "family": "vendor.gamesir",
                     "variant": "enhanced-hid",
-                    "quirks": ["inner-grips"],
+                    "parameters": {"innerGrips": True},
                 }
             ),
             "GameSir lighting slots": record(
                 {
                     "family": "vendor.gamesir",
                     "variant": "enhanced-hid",
-                    "quirks": ["lighting-slots"],
+                    "parameters": {"lightingMemory": "ProfileSlots"},
                 }
             ),
             "GameSir vendor USB endpoints": record(
@@ -109,11 +109,11 @@ class ControllerSchemaTests(unittest.TestCase):
                 {"family": "xbox.xusb", "variant": "xbox360"}
             ),
             "transport field": record(GIP, transport="usb"),
-            "Steam wirelessReceiver quirk": record(
+            "Steam wirelessReceiver parameter": record(
                 {
                     "family": "valve.steam-controller",
                     "variant": "wired",
-                    "quirks": ["wirelessReceiver"],
+                    "parameters": {"wirelessReceiver": True},
                 }
             ),
             "unknown family": record({"family": "xbox.adaptive-joystick"}),
@@ -130,37 +130,62 @@ class ControllerSchemaTests(unittest.TestCase):
                 {
                     "family": "vendor.gamesir",
                     "variant": "enhanced-hid",
-                    "quirks": ["inner-grips"],
+                    "parameters": {"innerGrips": True},
                 },
                 usb={"configuration": "set1-before-claim"},
             ),
-            "GameSir enhanced HID without a model quirk": record(
+            "GameSir enhanced HID without a model parameter": record(
                 {"family": "vendor.gamesir", "variant": "enhanced-hid"}
             ),
-            "GameSir enhanced HID with both model quirks": record(
+            "GameSir enhanced HID with both model parameters": record(
                 {
                     "family": "vendor.gamesir",
                     "variant": "enhanced-hid",
-                    "quirks": ["inner-grips", "lighting-slots"],
+                    "parameters": {
+                        "innerGrips": True,
+                        "lightingMemory": "ProfileSlots",
+                    },
                 }
             ),
             "GameSir vendor USB inner grips": record(
                 {
                     "family": "vendor.gamesir",
                     "variant": "usb",
-                    "quirks": ["inner-grips"],
+                    "parameters": {"innerGrips": True},
                 }
             ),
             "GameSir vendor USB lighting slots": record(
                 {
                     "family": "vendor.gamesir",
                     "variant": "usb",
-                    "quirks": ["lighting-slots"],
+                    "parameters": {"lightingMemory": "ProfileSlots"},
                 }
             ),
-            "unconsumed GIP quirk": record({**GIP, "quirks": ["sticksToNull"]}),
-            "GameSir quirk on GIP": record({**GIP, "quirks": ["inner-grips"]}),
-            "DS4 quirk": record({"family": "sony.dualshock4", "quirks": ["gyro"]}),
+            "unknown parameter": record({**GIP, "parameters": {"sticksToNull": True}}),
+            "wrong-family parameter": record(
+                {**GIP, "parameters": {"innerGrips": True}}
+            ),
+            "legacy quirks array": record({**GIP, "quirks": ["share-offset"]}),
+            "unknown DS4 parameter": record(
+                {"family": "sony.dualshock4", "parameters": {"gyro": True}}
+            ),
+            "empty parameters": record({**GIP, "parameters": {}}),
+            "wrong parameter type": record(
+                {**GIP, "parameters": {"shareButton": {"fromEnd": "26"}}}
+            ),
+            "out-of-range share offset": record(
+                {**GIP, "parameters": {"shareButton": {"fromEnd": 0}}}
+            ),
+            "unknown enum value": record(
+                {"family": "nintendo.switch1", "parameters": {"layout": "joy-con-left"}}
+            ),
+            "false flag": record(
+                {
+                    "family": "vendor.gamesir",
+                    "variant": "enhanced-hid",
+                    "parameters": {"innerGrips": False},
+                }
+            ),
             "usb interface": record(GIP, usb={"interface": 1}),
             "startupPackets": record({**GIP, "startupPackets": ["xbox.gip/power-on"]}),
             "camelCase action": record({**GIP, "initialization": ["powerOn"]}),
@@ -170,45 +195,51 @@ class ControllerSchemaTests(unittest.TestCase):
             "both Joy-Con sides": record(
                 {
                     "family": "nintendo.switch1",
-                    "quirks": ["joy-con-left", "joy-con-right"],
+                    "parameters": {"layout": ["JoyConLeft", "JoyConRight"]},
                 }
             ),
             "GameCube on Switch 1": record(
-                {"family": "nintendo.switch1", "quirks": ["gamecube"]}
+                {"family": "nintendo.switch1", "parameters": {"layout": "GameCube"}}
             ),
             "Switch 2 with two layouts": record(
                 {
                     "family": "nintendo.switch2",
-                    "quirks": ["gamecube", "joy-con-left"],
+                    "parameters": {"layout": ["GameCube", "JoyConLeft"]},
                 }
             ),
-            "Switch input-only with a quirk": record(
-                {"family": "nintendo.switch-input-only", "quirks": ["gamecube"]}
+            "Switch input-only with a parameter": record(
+                {
+                    "family": "nintendo.switch-input-only",
+                    "parameters": {"layout": "GameCube"},
+                }
             ),
-            "Steam Deck with a quirk": record(
-                {"family": "valve.steam-deck", "quirks": ["lizard-mode"]}
+            "Steam Deck with a parameter": record(
+                {"family": "valve.steam-deck", "parameters": {"lizardMode": True}}
             ),
             "Steam Deck with a variant": record(
                 {"family": "valve.steam-deck", "variant": "wired"}
             ),
             "Steam Triton without a variant": record({"family": "valve.steam-triton"}),
-            "Steam Triton with a quirk": record(
+            "Steam Triton with a parameter": record(
                 {
                     "family": "valve.steam-triton",
                     "variant": "wired",
-                    "quirks": ["lizard-mode"],
+                    "parameters": {"lizardMode": True},
                 }
             ),
             "Switch 2 with a variant": record(
                 {"family": "nintendo.switch2", "variant": "bluetooth-le"}
             ),
-            "Switch 1 with removed switch-2 quirk": record(
-                {"family": "nintendo.switch1", "quirks": ["switch-2"]}
+            "Switch 1 with a removed parameter": record(
+                {"family": "nintendo.switch1", "parameters": {"switch2": True}}
             ),
             "Bluetooth-only with a layout": record(
                 {
                     "family": "nintendo.switch1",
-                    "quirks": ["bluetooth-only", "joy-con-left"],
+                    "parameters": {
+                        "usbProtocol": "ChargingOnly",
+                        "layout": "JoyConLeft",
+                    },
                 }
             ),
             "XUSB rumble absence": record(XUSB, capabilities={"rumble": "absent"}),
@@ -219,7 +250,7 @@ class ControllerSchemaTests(unittest.TestCase):
                 DUALSENSE, capabilities={"present": ["paddle-left-1", "auxiliary-1"]}
             ),
         }
-        for protocol, quirks in (
+        for protocol, parameters in (
             (GIP, ["shareOffset", "triggersToButtons", "inputOnly"]),
             (XUSB, ["dpadToButtons", "triggersToButtons"]),
             (
@@ -236,9 +267,9 @@ class ControllerSchemaTests(unittest.TestCase):
                 ["usbHandshake", "joyConLeft", "joyConRight"],
             ),
         ):
-            for quirk in quirks:
-                removed[f"{protocol['family']} {quirk}"] = record(
-                    {**protocol, "quirks": [quirk]}
+            for parameter in parameters:
+                removed[f"{protocol['family']} {parameter}"] = record(
+                    {**protocol, "parameters": {parameter: True}}
                 )
         for variant in ("gameSirG7ProUSB", "gameSirEnhancedHID", "enhanced-hid-8k"):
             removed[variant] = record({"family": "vendor.gamesir", "variant": variant})
@@ -472,7 +503,9 @@ class InputLayoutTests(unittest.TestCase):
             "layout with rumble": record(
                 REPORT_LAYOUT, input=LAYOUT, output={"rumble": GP100_RUMBLE}
             ),
-            "dpad pressure": record({**THIRD_PARTY, "quirks": ["dpad-pressure"]}),
+            "dpad pressure": record(
+                {**THIRD_PARTY, "parameters": {"hatSource": "DpadPressure"}}
+            ),
         }
         for name, document in accepted.items():
             with self.subTest(name):
@@ -511,7 +544,7 @@ class InputLayoutTests(unittest.TestCase):
             "empty trigger": record(REPORT_LAYOUT, input={**LAYOUT, "leftTrigger": {}}),
             "unknown section": record(REPORT_LAYOUT, input={**LAYOUT, "touchpad": {}}),
             "dpad pressure elsewhere": record(
-                {**DUALSENSE, "quirks": ["dpad-pressure"]}
+                {**DUALSENSE, "parameters": {"hatSource": "DpadPressure"}}
             ),
         }
         for name, document in rejected.items():
@@ -522,11 +555,11 @@ class InputLayoutTests(unittest.TestCase):
 STEAM = {"family": "valve.steam-controller"}
 SWITCH1 = {"family": "nintendo.switch1"}
 DS4 = {"family": "sony.dualshock4"}
-DUALSENSE_MODEL_QUIRKS = (
-    "unprobed-sensors",
-    "unprobed-touchpad",
-    "forced-vibration",
-    "receiver",
+DUALSENSE_MODEL_PARAMETERS = (
+    {"unprobedSensors": True},
+    {"unprobedTouchpad": True},
+    {"forcedVibration": True},
+    {"role": "Receiver"},
 )
 
 
@@ -544,43 +577,92 @@ class SwiftParityTests(unittest.TestCase):
             with self.subTest(f"rejects {name}"):
                 self.assertFalse(self.validator.is_valid(document))
 
-    def test_dualsense_third_party_quirk(self) -> None:
+    def test_dualsense_third_party_maker(self) -> None:
         self.check(
             {
-                "third-party alone": record({**DUALSENSE, "quirks": ["third-party"]}),
-                "every model quirk": record(
+                "maker alone": record(
+                    {**DUALSENSE, "parameters": {"maker": "ThirdParty"}}
+                ),
+                "every model parameter": record(
                     {
                         **DUALSENSE,
-                        "quirks": ["third-party", *DUALSENSE_MODEL_QUIRKS],
+                        "parameters": {
+                            "maker": "ThirdParty",
+                            **{
+                                key: value
+                                for parameter in DUALSENSE_MODEL_PARAMETERS
+                                for key, value in parameter.items()
+                            },
+                        },
                     }
                 ),
-                "Sony record without quirks": record(DUALSENSE, vendorID=0x054C),
+                "Sony record without parameters": record(DUALSENSE, vendorID=0x054C),
             },
             {
-                f"{quirk} without third-party": record(
-                    {**DUALSENSE, "quirks": [quirk]}, vendorID=0x1532
+                f"{next(iter(parameter))} without a maker": record(
+                    {**DUALSENSE, "parameters": parameter}, vendorID=0x1532
                 )
-                for quirk in DUALSENSE_MODEL_QUIRKS
+                for parameter in DUALSENSE_MODEL_PARAMETERS
             },
         )
 
-    def test_switch_2_allows_at_most_one_layout_quirk(self) -> None:
+    def test_switch_layouts_are_one_value(self) -> None:
         switch2 = {"family": "nintendo.switch2"}
         self.check(
             {
-                "no quirks": record(switch2),
+                "no parameters": record(switch2),
                 **{
-                    quirk: record({**switch2, "quirks": [quirk]})
-                    for quirk in ("joy-con-left", "joy-con-right", "gamecube")
+                    layout: record({**switch2, "parameters": {"layout": layout}})
+                    for layout in ("Pro", "JoyConLeft", "JoyConRight", "GameCube")
                 },
+                "charging-only Switch 1": record(
+                    {**SWITCH1, "parameters": {"usbProtocol": "ChargingOnly"}}
+                ),
             },
             {
-                f"{first} {second}": record({**switch2, "quirks": [first, second]})
-                for first, second in (
-                    ("joy-con-left", "joy-con-right"),
-                    ("gamecube", "joy-con-left"),
-                    ("joy-con-right", "gamecube"),
+                f"{first} {second}": record(
+                    {**switch2, "parameters": {"layout": [first, second]}}
                 )
+                for first, second in (
+                    ("JoyConLeft", "JoyConRight"),
+                    ("GameCube", "JoyConLeft"),
+                    ("JoyConRight", "GameCube"),
+                )
+            },
+        )
+
+    def test_dualshock4_role_and_motion_scale_are_exclusive(self) -> None:
+        self.check(
+            {
+                "factory with role": record(
+                    {
+                        **DS4,
+                        "parameters": {
+                            "motionCalibration": "Factory",
+                            "role": "WirelessAdapter",
+                        },
+                    }
+                ),
+                "factory with scale": record(
+                    {
+                        **DS4,
+                        "parameters": {
+                            "motionCalibration": "Factory",
+                            "motionScale": "StrikePad",
+                        },
+                    }
+                ),
+            },
+            {
+                "role with scale": record(
+                    {
+                        **DS4,
+                        "parameters": {
+                            "role": "WirelessAdapter",
+                            "motionScale": "StrikePad",
+                        },
+                    }
+                ),
             },
         )
 
@@ -607,7 +689,8 @@ class SwiftParityTests(unittest.TestCase):
                 "liveness on DualShock 4": record(DS4, tuning=liveness),
                 "recovery on Switch 1": record(SWITCH1, tuning=recovery),
                 "recovery on a Joy-Con": record(
-                    {**SWITCH1, "quirks": ["joy-con-left"]}, tuning=recovery
+                    {**SWITCH1, "parameters": {"layout": "JoyConLeft"}},
+                    tuning=recovery,
                 ),
                 "startup interval on DualSense": record(DUALSENSE, tuning=interval),
                 "output interval on DualSense": record(DUALSENSE, tuning=output),
@@ -615,7 +698,7 @@ class SwiftParityTests(unittest.TestCase):
                     {
                         "family": "vendor.gamesir",
                         "variant": "enhanced-hid",
-                        "quirks": ["inner-grips"],
+                        "parameters": {"innerGrips": True},
                     },
                     tuning=interval,
                 ),
@@ -631,7 +714,10 @@ class SwiftParityTests(unittest.TestCase):
                     DS4, tuning={"hidStartupRecoveryRounds": 2}
                 ),
                 "recovery on Switch 2": record(
-                    {"family": "nintendo.switch2", "quirks": ["gamecube"]},
+                    {
+                        "family": "nintendo.switch2",
+                        "parameters": {"layout": "GameCube"},
+                    },
                     tuning=recovery,
                 ),
                 "recovery on Switch input-only": record(

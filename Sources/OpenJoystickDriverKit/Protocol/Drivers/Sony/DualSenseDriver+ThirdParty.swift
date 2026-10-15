@@ -39,13 +39,13 @@ struct DualSenseFeatures: OptionSet {
 }
 
 /// A controller that speaks the DualSense protocol but is not Sony's, which its record marks with
-/// the `third-party` quirk. It is handled as SDL's `HIDAPI_DriverPS5` handles non-Sony vendor IDs.
+/// the `ThirdParty` maker. It is handled as SDL's `HIDAPI_DriverPS5` handles non-Sony vendor IDs.
 ///
 /// SDL reads capability report `0x03`. A valid reply lists the controller's features and
 /// switches it to SDL's alternate input report, which moves the touch contacts to payload bytes
 /// 31 and 35 and carries a 16-bit microsecond sensor timestamp at 27. A controller that does not
 /// answer keeps the standard report with no sensors, touchpad or output, except the Razer models
-/// SDL names, which never answer and whose records name their features in quirks. Output is
+/// SDL names, which never answer and whose records name their features in parameters. Output is
 /// limited to the reported features and never includes adaptive triggers.
 struct DualSenseThirdPartyModel: Equatable {
   /// Features assumed before the probe, which stand when the controller does not answer.
@@ -57,16 +57,16 @@ struct DualSenseThirdPartyModel: Equatable {
   /// A wireless receiver that keeps reporting while no controller is paired to it.
   let isDongle: Bool
 
-  /// The model a controller record describes with its `sony.dualsense` quirks.
-  init(quirks: [ControllerQuirk]) {
+  /// The model a controller record describes with its `sony.dualsense` parameters.
+  init(parameters: ProtocolParameters) {
     var features: DualSenseFeatures = []
-    if quirks.contains(.unprobedSensors) { features.insert(.sensors) }
-    if quirks.contains(.unprobedTouchpad) { features.insert(.touchpad) }
+    if parameters.unprobedSensors == true { features.insert(.sensors) }
+    if parameters.unprobedTouchpad == true { features.insert(.touchpad) }
     unprobedFeatures = features
     // The sensor timestamp and the touch contacts exist only in the alternate report.
     usesAlternateReportUnprobed = !features.isEmpty
-    forcesVibration = quirks.contains(.forcedVibration)
-    isDongle = quirks.contains(.receiver)
+    forcesVibration = parameters.forcedVibration == true
+    isDongle = parameters.role == .receiver
   }
 }
 

@@ -13,7 +13,7 @@ struct Switch1DriverTests {
     #expect(
       profile.physicalProtocolID == .nintendoSwitch1 && profile.physicalProtocolVariant == nil
     )
-    #expect(profile.quirks.isEmpty)
+    #expect(profile.parameters.isEmpty)
     #expect(profile.transportProfile.inputEndpoint == 0x82)
     #expect(profile.transportProfile.outputEndpoint == 0x02)
   }

@@ -5,8 +5,8 @@
   "productID": 355,
   "protocol": {
     "family": "sony.dualsense",
-    "quirks": [
-      "third-party"
-    ]
+    "parameters": {
+      "maker": "ThirdParty"
+    }
   }
 }

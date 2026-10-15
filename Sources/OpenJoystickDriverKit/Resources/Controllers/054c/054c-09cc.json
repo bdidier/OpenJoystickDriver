@@ -5,8 +5,8 @@
   "productID": 2508,
   "protocol": {
     "family": "sony.dualshock4",
-    "quirks": [
-      "factory-calibration"
-    ]
+    "parameters": {
+      "motionCalibration": "Factory"
+    }
   }
 }

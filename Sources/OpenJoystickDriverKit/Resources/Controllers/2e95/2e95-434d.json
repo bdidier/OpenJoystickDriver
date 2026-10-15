@@ -5,8 +5,8 @@
   "productID": 17229,
   "protocol": {
     "family": "hid.descriptor",
-    "quirks": [
-      "scuf-envision"
-    ]
+    "parameters": {
+      "usageLayout": "ScufEnvision"
+    }
   }
 }

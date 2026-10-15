@@ -5,8 +5,8 @@
   "productID": 8199,
   "protocol": {
     "family": "nintendo.switch1",
-    "quirks": [
-      "joy-con-right"
-    ]
+    "parameters": {
+      "layout": "JoyConRight"
+    }
   }
 }

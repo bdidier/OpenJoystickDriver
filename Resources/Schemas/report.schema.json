@@ -226,7 +226,7 @@
 				"protocolBinding",
 				"connection",
 				"serialNumberPresent",
-				"quirks",
+				"parameters",
 				"binding",
 				"inputEndpoint",
 				"outputEndpoint",
@@ -262,7 +262,7 @@
 				"serialNumberPresent": {
 					"type": "boolean"
 				},
-				"quirks": {
+				"parameters": {
 					"type": "array",
 					"items": {
 						"type": "string"

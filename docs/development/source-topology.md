@@ -57,6 +57,7 @@ Sources/OpenJoystickDriverKit/
                        capabilities
   Remapping/           reusable profile and mapping engine
   Resources/           generated controller records (Controllers/) and localization tables
+  Storage/             DataDirectory port and its macOS implementation; the only path builder
   Update/              release version parsing and update checking
 
 Sources/OpenJoystickDriverUSB/

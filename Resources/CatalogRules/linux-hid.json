@@ -51,18 +51,18 @@
       "vendorMacro": "USB_VENDOR_ID_NINTENDO",
       "productMacro": "USB_DEVICE_ID_NINTENDO_JOYCONL",
       "family": "nintendo.switch1",
-      "quirks": [
-        "joy-con-left"
-      ]
+      "parameters": {
+        "layout": "JoyConLeft"
+      }
     },
     {
       "source": "hid_nintendo",
       "vendorMacro": "USB_VENDOR_ID_NINTENDO",
       "productMacro": "USB_DEVICE_ID_NINTENDO_JOYCONR",
       "family": "nintendo.switch1",
-      "quirks": [
-        "joy-con-right"
-      ]
+      "parameters": {
+        "layout": "JoyConRight"
+      }
     },
     {
       "source": "hid_steam",

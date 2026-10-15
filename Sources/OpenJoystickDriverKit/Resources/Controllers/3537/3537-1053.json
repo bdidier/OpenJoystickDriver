@@ -6,8 +6,8 @@
   "protocol": {
     "family": "vendor.gamesir",
     "variant": "enhanced-hid",
-    "quirks": [
-      "lighting-slots"
-    ]
+    "parameters": {
+      "lightingMemory": "ProfileSlots"
+    }
   }
 }

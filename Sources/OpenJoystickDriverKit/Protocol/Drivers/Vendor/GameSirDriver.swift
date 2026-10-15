@@ -15,9 +15,9 @@ public enum GameSirProtocol: Sendable, Equatable {
 /// Driver for source-backed GameSir controller identities.
 public final class GameSirDriver: PhysicalProtocolDriver {
   let gameSirProtocol: GameSirProtocol
-  /// Enhanced HID extras report the inner grips (catalog quirk `inner-grips`).
+  /// Enhanced HID extras report the inner grips (parameter `innerGrips`).
   let hasInnerGrips: Bool
-  /// Enhanced HID lighting memory is slot-based (catalog quirk `lighting-slots`).
+  /// Enhanced HID lighting memory is slot-based (parameter `lightingMemory: ProfileSlots`).
   let usesLightingSlots: Bool
   let outEndpoint: UInt8
   var standardParser = XUSBDriver()

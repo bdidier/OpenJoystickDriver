@@ -7,6 +7,6 @@
 		"kind": "Controller",
 		"vendorID": 11925,
 		"productID": 17229,
-		"protocol": { "family": "hid.descriptor", "quirks": ["scuf-envision"] }
+		"protocol": { "family": "hid.descriptor", "parameters": { "usageLayout": "ScufEnvision" } }
 	}
 }

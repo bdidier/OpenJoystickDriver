@@ -57,7 +57,7 @@
 				"preferredBackends": ["userSpaceHID"],
 				"productID": 22136,
 				"protocolBinding": "xbox.gip:usb",
-				"quirks": [],
+				"parameters": [],
 				"serialNumberPresent": false,
 				"sessionState": "active",
 				"vendorID": 4660

@@ -7,6 +7,6 @@
     "kind": "Controller",
     "vendorID": 13623,
     "productID": 4296,
-    "protocol": { "family": "vendor.gamesir", "variant": "enhanced-hid", "quirks": ["inner-grips"] }
+    "protocol": { "family": "vendor.gamesir", "variant": "enhanced-hid", "parameters": { "innerGrips": true } }
   }
 }

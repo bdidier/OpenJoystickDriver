@@ -7,7 +7,7 @@
 	"set": {
 		"protocol": {
 			"family": "sony.dualsense",
-			"quirks": ["third-party", "unprobed-sensors", "unprobed-touchpad"]
+			"parameters": { "maker": "ThirdParty", "unprobedSensors": true, "unprobedTouchpad": true }
 		}
 	}
 }

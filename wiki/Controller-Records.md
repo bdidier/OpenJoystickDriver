@@ -12,7 +12,7 @@ This page explains how to add a controller that OpenJoystickDriver does not know
 - [Add Rumble To a Controller](#add-rumble-to-a-controller)
 - [Send Fixed Reports At Startup](#send-fixed-reports-at-startup)
 - [Tune Timings and the Stick Deadzone](#tune-timings-and-the-stick-deadzone)
-- [Select a Model With a Quirk](#select-a-model-with-a-quirk)
+- [Select a Model With Protocol Parameters](#select-a-model-with-protocol-parameters)
 - [Connect a Switch 2 Controller Over Bluetooth LE][toc-2]
 - [Draft a Record From a Connected Controller][toc-1]
 - [Install a Record](#install-a-record)
@@ -31,7 +31,7 @@ A controller record tells OpenJoystickDriver which protocol family drives one co
 A record has one of two operations:
 
 - `add`: a complete record for a model that has no bundled record.
-- `patch`: new values for the `protocol`, `usb`, `ownership`, `output`, `input`, `tuning`, or `bluetoothLE` fields of a bundled record. The other fields stay bundled. A field you set replaces the bundled field whole, except `tuning`, which merges per value, and `protocol`: when it names the bundled family, OJD keeps the bundled protocol values you leave out, and the `quirks` you list are added to the bundled quirks. A patch cannot remove a bundled quirk. A `protocol` with a different family replaces the bundled one whole, with its quirks.
+- `patch`: new values for the `protocol`, `usb`, `ownership`, `output`, `input`, `tuning`, or `bluetoothLE` fields of a bundled record. The other fields stay bundled. A field you set replaces the bundled field whole, except `tuning`, which merges per value, and `protocol`: when it names the bundled family, OJD keeps the bundled protocol values you leave out, and the `parameters` you list merge key by key into the bundled parameters, your value winning. A patch cannot remove a bundled parameter. A `protocol` with a different family replaces the bundled one whole, with its parameters.
 
 A record can also come from an installed [mod package](Writing-Controller-Mods.md). A package record sits between the bundled record and yours: your record wins over it. A `patch` record of yours for a model that only a package defines applies over the package record. If you remove the package later, OJD lists your patch as a problem and skips it.
 
@@ -185,24 +185,29 @@ A persona file in `~/Library/Application Support/OpenJoystickDriver/Personas` ch
 
 `match` names the model by VID:PID in decimal. Add `unit` with a `U-` ID from `ojd controller show` to match one controller. A unit file wins over a model file. `descriptor` is a built-in report descriptor: `hid-xbox-one-s-bt` or `hid-generic`. An optional `identity` gives a vendor ID, product ID, product name, manufacturer, and glyph family (`xbox` or `generic`). OpenJoystickDriver publishes the virtual gamepad with that identity over the built-in descriptor. The transport, the report layout, and the virtual LocationID stay those of the built-in profile, and `versionNumber` defaults to the built-in profile's. While the service runs, it watches the `Personas` folder. When a file is added, edited, or removed and a connected controller's `identity` or `descriptor` changes, OpenJoystickDriver creates that controller's virtual gamepad again with the new identity, so you do not reconnect the controller. Games and other apps see the old virtual gamepad disappear and a new one appear. A change that leaves a controller's identity and descriptor the same, or that concerns another controller, does not touch its virtual gamepad. A file that fails validation is skipped, and `ojd status` and the `config-files` check of `ojd diagnose` name it and the reason. The old `VirtualHIDProfileOverrides` setting is gone and is not migrated, so recreate your overrides as persona files.
 
-## Select a Model With a Quirk
+## Select a Model With Protocol Parameters
 
-Some families drive several models that differ in one detail. A quirk in the record's `protocol.quirks` selects the detail:
+Some families drive several models that differ in one detail. A typed parameter in the record's `protocol.parameters` object selects the detail. Each family declares its own parameters, and a record with an unknown parameter, a parameter another family declares, or a value of the wrong type is rejected. A flag parameter is `true` or left out.
 
-- `factory-calibration` (`sony.dualshock4`): read the motion calibration from the controller. Without it, OpenJoystickDriver uses nominal calibration, as for third-party DualShock 4 controllers.
-- `wireless-adapter` (`sony.dualshock4`): the Sony DUALSHOCK 4 USB wireless adapter. Output waits until a controller connects to the adapter.
-- `strikepad` (`sony.dualshock4`): a controller whose motion reports half the acceleration in the opposite direction on all axes.
-- `shield-2015` (`vendor.nvidia-shield`): the 2015 SHIELD controller, which has rumble. Without it, the driver treats the controller as the 2017 model, which is input-only on macOS.
-- `wr007` (`hid.descriptor`): Z and Rz are the right stick, Accelerator is LT and Brake is RT, with the WR007 button order.
-- `scuf-envision` (`hid.descriptor`): input comes only from report 6, buttons 1 to 10 are mapped, and Z and Rz swap with Rx and Ry.
-- `z-rz-brake-left` (`hid.descriptor`): Z and Rz are the right stick, Brake is LT and Accelerator is RT, and button 13 is Home. A controller without a record gets this layout when its report descriptor has Z, Rz, a Brake or Accelerator, and no Rx or Ry.
-- `dragonrise` (`hid.descriptor`): Z and Rz are the right stick, buttons follow the DirectInput order (1 to 4 are Y, B, A, X), and buttons 7 and 8 are digital L2 and R2.
-- `third-party` (`sony.dualsense`): the controller is not a Sony DualSense. The driver reads feature report `0x03` for its features and limits output to them, as SDL's `HIDAPI_DriverPS5` does.
-- `unprobed-sensors` and `unprobed-touchpad` (`sony.dualsense`): a third-party DualSense that does not answer the capability probe still has motion sensors or a touchpad, and either quirk reads its input in the alternate report layout.
-- `forced-vibration` (`sony.dualsense`): a third-party DualSense keeps vibration when its probe reply omits it.
-- `receiver` (`sony.dualsense`): a third-party DualSense wireless receiver, which reports with no controller paired. OJD treats the controller as connected only while the packet sequence advances.
+- `shareButton` (`xbox.gip`): `{"fromEnd": N}` reads the Share button N bytes back from the end of the packet (Linux xpad `MAP_SHARE_OFFSET` is 26).
+- `layout` (`nintendo.switch1`, `nintendo.switch2`): `Pro`, `JoyConLeft` or `JoyConRight`, and `GameCube` on `nintendo.switch2`, the NSO GameCube controller. `usbProtocol` (`nintendo.switch1`): `ChargingOnly` for a pad whose USB link only charges it, which binds the Bluetooth Classic link only; it excludes `layout`.
+- `innerGrips` and `lightingMemory` (`vendor.gamesir`): an enhanced HID record names exactly one. `innerGrips` reports the inner grips; `lightingMemory: "ProfileSlots"` makes lighting memory slot-based. A GameSir USB record names neither.
+- `hatSource: "DpadPressure"` (`vendor.ps3-third-party`): any nonzero D-pad pressure byte holds its direction.
+- `motionCalibration: "Factory"` (`sony.dualshock4`): read the motion calibration from the controller. Without it, OpenJoystickDriver uses nominal calibration, as for third-party DualShock 4 controllers.
+- `role: "WirelessAdapter"` (`sony.dualshock4`): the Sony DUALSHOCK 4 USB wireless adapter. Output waits until a controller connects to the adapter.
+- `motionScale: "StrikePad"` (`sony.dualshock4`): a controller whose motion reports half the acceleration in the opposite direction on all axes.
+- `reportRevision: "Shield2015"` (`vendor.nvidia-shield`): the 2015 SHIELD controller, which has rumble. Without it, the driver treats the controller as the 2017 model, which is input-only on macOS.
+- `usageLayout` (`hid.descriptor`):
+  - `Wr007`: Z and Rz are the right stick, Accelerator is LT and Brake is RT, with the WR007 button order.
+  - `ScufEnvision`: input comes only from report 6, buttons 1 to 10 are mapped, and Z and Rz swap with Rx and Ry.
+  - `ZRzBrakeLeft`: Z and Rz are the right stick, Brake is LT and Accelerator is RT, and button 13 is Home. A controller without a record gets this layout when its report descriptor has Z, Rz, a Brake or Accelerator, and no Rx or Ry.
+  - `DragonRise`: Z and Rz are the right stick, buttons follow the DirectInput order (1 to 4 are Y, B, A, X), and buttons 7 and 8 are digital L2 and R2.
+- `maker: "ThirdParty"` (`sony.dualsense`): the controller is not a Sony DualSense. The driver reads feature report `0x03` for its features and limits output to them, as SDL's `HIDAPI_DriverPS5` does.
+- `unprobedSensors` and `unprobedTouchpad` (`sony.dualsense`): a third-party DualSense that does not answer the capability probe still has motion sensors or a touchpad, and either parameter reads its input in the alternate report layout.
+- `forcedVibration` (`sony.dualsense`): a third-party DualSense keeps vibration when its probe reply omits it.
+- `role: "Receiver"` (`sony.dualsense`): a third-party DualSense wireless receiver, which reports with no controller paired. OJD treats the controller as connected only while the packet sequence advances.
 
-A DualShock 4 record takes at most one of `wireless-adapter` and `strikepad`, and a `hid.descriptor` record takes at most one layout quirk. A `sony.dualsense` record runs as a third-party controller only with the `third-party` quirk, whatever its vendor ID, and the other DualSense quirks describe that model and need it; a record without quirks is a Sony DualSense. The catalog gives the `third-party` quirk to every `sony.dualsense` record whose vendor ID is not Sony's (`054C`). Because a `patch` adds quirks and cannot remove them, a patch cannot change a bundled model or layout quirk to another one.
+A DualShock 4 record takes at most one of `role` and `motionScale`, and a `hid.descriptor` record takes one `usageLayout`. A `sony.dualsense` record runs as a third-party controller only with `maker: "ThirdParty"`, whatever its vendor ID, and the other DualSense parameters describe that model and need it; a record without parameters is a Sony DualSense. The catalog gives `maker: "ThirdParty"` to every `sony.dualsense` record whose vendor ID is not Sony's (`054C`). A `patch` merges its parameters key by key into the bundled ones and cannot remove one, but it can set a bundled parameter to another value.
 
 ## Connect a Switch 2 Controller Over Bluetooth LE
 

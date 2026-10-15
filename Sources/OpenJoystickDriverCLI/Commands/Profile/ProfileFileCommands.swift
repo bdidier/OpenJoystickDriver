@@ -308,7 +308,7 @@ struct ProfileEditCommand: AsyncParsableCommand {
 
   /// Opens `profile` in the editor and returns the valid profile the user saved.
   static func edit(_ profile: RemappingProfile) throws -> RemappingProfile {
-    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
+    let directory = MacOSDataDirectory().url(for: .temporary).appendingPathComponent(
       "ojd-profile-\(UUID().uuidString)",
       isDirectory: true
     )

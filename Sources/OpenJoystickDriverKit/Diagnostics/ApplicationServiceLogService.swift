@@ -40,12 +40,12 @@ public enum ApplicationServiceLogService {
     "Application service logs may contain device names, identifiers, or diagnostic paths. "
     + "Review before sharing."
 
-  public static func url(for stream: ApplicationServiceLogStream) -> URL {
+  public static func url(
+    for stream: ApplicationServiceLogStream,
+    dataDirectory: any DataDirectory = MacOSDataDirectory()
+  ) -> URL {
     let suffix = stream == .standardOutput ? "out" : "err"
-    return FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(
-      "Library/Logs/OpenJoystickDriver",
-      isDirectory: true
-    ).appendingPathComponent("OpenJoystickDriver.\(suffix).log", isDirectory: false)
+    return dataDirectory.fileURL("OpenJoystickDriver.\(suffix).log", in: .logs)
   }
 
   /// Redirects the host process streams to fresh, user-private files for this session.

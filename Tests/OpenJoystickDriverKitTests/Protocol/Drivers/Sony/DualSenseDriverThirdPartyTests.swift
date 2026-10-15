@@ -52,17 +52,17 @@ struct DualSenseDriverThirdPartyTests {
     #expect(!driver.sessionPlan.requiresInputConnectionBeforeOutput)
   }
 
-  /// The record's `third-party` quirk selects the mode; the vendor ID plays no part.
+  /// The record's `maker: ThirdParty` parameter selects the mode; the vendor ID plays no part.
   @Test
-  func modelQuirksWithoutTheThirdPartyQuirkRunInSonyMode() {
-    let driver = DualSenseDriver(quirks: [.unprobedTouchpad])
+  func modelParametersWithoutTheThirdPartyMakerRunInSonyMode() {
+    let driver = DualSenseDriver(parameters: ProtocolParameters(unprobedTouchpad: true))
     #expect(driver.thirdParty == nil)
-    #expect(DualSenseDriver(quirks: [.thirdParty]).thirdParty != nil)
+    #expect(DualSenseDriver(parameters: ProtocolParameters(maker: .thirdParty)).thirdParty != nil)
   }
 
   @Test
   func thirdPartyProbeSetsFeaturesAndOutput() throws {
-    let driver = DualSenseDriver(quirks: [.thirdParty])
+    let driver = DualSenseDriver(parameters: ProtocolParameters(maker: .thirdParty))
     #expect(driver.startupFeatureReads().map(\.reportID) == [0x03, 0x05])
     #expect(!driver.outputCapabilities.supportsRumble)
     #expect(throws: ControllerOutputError.self) { try driver.encode(.stopRumble) }
@@ -87,7 +87,7 @@ struct DualSenseDriverThirdPartyTests {
 
   @Test
   func probeReplyWithoutMarkerIsRejected() {
-    let driver = DualSenseDriver(quirks: [.thirdParty])
+    let driver = DualSenseDriver(parameters: ProtocolParameters(maker: .thirdParty))
     var reply = [UInt8](Self.capabilityReply(features: 0x4E))
     reply[2] = 0x27
     #expect(!driver.consumeFeatureReply(Data(reply), request: Self.probe))
@@ -97,14 +97,16 @@ struct DualSenseDriverThirdPartyTests {
 
   @Test
   func naconRevolution5ProHasVibrationItsProbeOmits() {
-    let driver = DualSenseDriver(quirks: [.thirdParty, .forcedVibration])
+    let driver = DualSenseDriver(
+      parameters: ProtocolParameters(maker: .thirdParty, forcedVibration: true)
+    )
     #expect(driver.consumeFeatureReply(Self.capabilityReply(features: 0x42), request: Self.probe))
     #expect(driver.outputCapabilities.supportsRumble)
   }
 
   @Test
   func unprobedThirdPartyControllerReportsNoTouchOrMotion() throws {
-    let driver = DualSenseDriver(quirks: [.thirdParty])
+    let driver = DualSenseDriver(parameters: ProtocolParameters(maker: .thirdParty))
     var report = [UInt8](repeating: 0, count: 64)
     report[0] = 0x01
     report[8] = 0x08
@@ -116,7 +118,13 @@ struct DualSenseDriverThirdPartyTests {
 
   @Test
   func razerWolverineUsesAlternateLayoutWithoutAProbe() throws {
-    let driver = DualSenseDriver(quirks: [.thirdParty, .unprobedSensors, .unprobedTouchpad])
+    let driver = DualSenseDriver(
+      parameters: ProtocolParameters(
+        maker: .thirdParty,
+        unprobedSensors: true,
+        unprobedTouchpad: true
+      )
+    )
     let first = try #require(
       try driver.parse(
         report: Self.alternateReport(timestamp: 0xFFF0, touchCounter: 0x05),
@@ -138,7 +146,9 @@ struct DualSenseDriverThirdPartyTests {
 
   @Test
   func digitalTriggerWithIdleAnalogByteReadsFullyPulled() throws {
-    let driver = DualSenseDriver(quirks: [.thirdParty, .unprobedTouchpad])
+    let driver = DualSenseDriver(
+      parameters: ProtocolParameters(maker: .thirdParty, unprobedTouchpad: true)
+    )
     let event = try #require(
       try driver.parse(
         report: Self.alternateReport(buttons1: 0x0C, triggers: (0, 64)),
@@ -151,7 +161,9 @@ struct DualSenseDriverThirdPartyTests {
 
   @Test
   func dongleConnectsOnNewSequencesAndDisconnectsWhenTheyStop() throws {
-    let driver = DualSenseDriver(quirks: [.thirdParty, .unprobedTouchpad, .receiver])
+    let driver = DualSenseDriver(
+      parameters: ProtocolParameters(role: .receiver, maker: .thirdParty, unprobedTouchpad: true)
+    )
     #expect(driver.sessionPlan.requiresInputConnectionBeforeOutput)
     // The first report only anchors the sequence.
     #expect(
@@ -182,7 +194,9 @@ struct DualSenseDriverThirdPartyTests {
 
   @Test
   func wiredThirdPartyControllerNeedsNoConnection() throws {
-    let driver = DualSenseDriver(quirks: [.thirdParty, .unprobedTouchpad])
+    let driver = DualSenseDriver(
+      parameters: ProtocolParameters(maker: .thirdParty, unprobedTouchpad: true)
+    )
     #expect(!driver.sessionPlan.requiresInputConnectionBeforeOutput)
     #expect(
       try driver.parse(report: Self.alternateReport(sequence: 1), receivedAt: Self.at(0)) != nil

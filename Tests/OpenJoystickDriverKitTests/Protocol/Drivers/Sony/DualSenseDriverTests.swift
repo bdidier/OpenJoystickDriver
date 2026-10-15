@@ -107,7 +107,7 @@ struct DualSenseDriverTests {
       #expect(
         profile.physicalProtocolID == .sonyDualSense && profile.physicalProtocolVariant == nil
       )
-      #expect(profile.quirks.isEmpty)
+      #expect(profile.parameters.isEmpty)
       #expect(
         profile.capabilityDelta.presentControls
           == (model.productID == 3570 ? DualSenseDriver.edgeControls : [])

@@ -28,7 +28,7 @@ Supported Linux input mappings:
 - `XTYPE_XBOX360W` becomes `xbox.xusb:receiver` (Argon adapter/receiver).
 - `XTYPE_XBOXONE` becomes `xbox.gip`; the transport decides its variant, so none is stored.
 - xpad rows carry no transport field: every `xbox.*` family is reached through raw USB.
-- `MAP_SHARE_OFFSET` becomes the `xbox.gip` quirk `share-offset`; a row needing a quirk its family does not declare is skipped and counted.
+- `MAP_SHARE_OFFSET` becomes the `xbox.gip` parameter `shareButton` with `fromEnd` 26; a row needing a parameter its family does not declare fails generation.
 - `MAP_TRIGGERS_TO_BUTTONS` and `MAP_STICKS_TO_NULL` become `capabilities.absent` entries (`left-trigger`/`right-trigger` and the four stick axes). Buttons and stick clicks stay; no trigger buttons are added because the XID, XUSB and GIP parsers emit none.
 - `MAP_DPAD_TO_BUTTONS` is dropped: it changes only how Linux reports the D-pad, not the wire bits OJD parsers decode.
 - Supported PlayStation, Sony, Nintendo, and Steam HID registrations become IOHID records from their driver tables and hid-ids.h (`sony.sixaxis`, `sony.dualshock4`, `sony.dualsense`, `nintendo.switch1`, `valve.steam-controller:wired`, and `valve.steam-controller:dongle` for the Steam wireless receiver).
@@ -46,9 +46,9 @@ SDL's `src/joystick/controller_list.h` is the second pinned upstream (currently 
 | `PS3Controller`, Sony vendor ID | `sony.sixaxis` |
 | `PS3Controller`, other vendor IDs | `vendor.ps3-third-party`, which probes for SDL's `PS3ThirdParty` report format |
 | `PS4Controller` | `sony.dualshock4` |
-| `PS5Controller` | `sony.dualsense`, with the `third-party` quirk for a non-Sony vendor ID; the driver probes such controllers for their features as SDL does |
+| `PS5Controller` | `sony.dualsense`, with the `maker` parameter `ThirdParty` for a non-Sony vendor ID; the driver probes such controllers for their features as SDL does |
 | `SwitchProController` | `nintendo.switch1` |
-| `SwitchJoyConLeft`, `SwitchJoyConRight` | `nintendo.switch1` with the `joy-con-left` or `joy-con-right` quirk |
+| `SwitchJoyConLeft`, `SwitchJoyConRight` | `nintendo.switch1` with the `layout` parameter `JoyConLeft` or `JoyConRight` |
 | `XBox360Controller` | `xbox.xusb:wired` |
 | `XBoxOneController` | `xbox.gip` |
 | `SteamController`, `SteamControllerV2` | `valve.steam-controller` with the variant from `STEAM_VARIANTS` |
@@ -79,7 +79,7 @@ SDL's own drivers at the pinned commit show that some typed rows do not use the 
 - `045e:02a1` and `045e:02ff`: identities of the Windows XUSB and XBOXGIP drivers, not USB devices (`windows-driver-identity`).
 - Vendor ID `0x0000`: not a USB identity.
 
-`0e6f:0186` (PDP Afterglow Wireless) and `0f0d:00f6` (HORI Wireless Switch Pad) get a `nintendo.switch1` record with the `bluetooth-only` quirk. Their USB link only charges the pad, so the driver binds only the Bluetooth Classic link. The DualShock 4 USB wireless adapter `054c:0ba0`, the STRIKEPAD PS4 grip add-on `054c:05c5` and the Access Controller `054c:0e5f` are catalogued from their SDL types (`sony.dualshock4` for the first two, `sony.dualsense` for the Access Controller).
+`0e6f:0186` (PDP Afterglow Wireless) and `0f0d:00f6` (HORI Wireless Switch Pad) get a `nintendo.switch1` record with the `usbProtocol` parameter `ChargingOnly`. Their USB link only charges the pad, so the driver binds only the Bluetooth Classic link. The DualShock 4 USB wireless adapter `054c:0ba0`, the STRIKEPAD PS4 grip add-on `054c:05c5` and the Access Controller `054c:0e5f` are catalogued from their SDL types (`sony.dualshock4` for the first two, `sony.dualsense` for the Access Controller).
 
 Admitted third-party DualShock 4 rows keep the nominal motion scale: like SDL, OJD installs the factory calibration report only for Sony's vendor ID. SDL's own list flags `0079:181b` (Venom Arcade Stick) as possibly a PS3-protocol pad; it is admitted as `sony.dualshock4` as listed.
 

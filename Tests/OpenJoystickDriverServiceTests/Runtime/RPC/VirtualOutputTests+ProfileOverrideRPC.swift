@@ -18,7 +18,7 @@ extension VirtualOutputTests {
   ) async throws -> ProfileOverrideServerFixture {
     let suiteName = "OpenJoystickDriverTests.ProfileOverrideRPC.\(UUID().uuidString)"
     let defaults = try #require(UserDefaults(suiteName: suiteName))
-    let personaDirectory = FileManager.default.temporaryDirectory
+    let personaDirectory = MacOSDataDirectory().url(for: .temporary)
       .appendingPathComponent(suiteName, isDirectory: true)
     configure(personaDirectory)
     let store = VirtualHIDProfileOverrideStore(directory: personaDirectory)
@@ -27,7 +27,9 @@ extension VirtualOutputTests {
     let overrideProvider: @Sendable (ApplicationServiceDeviceDescription) -> VirtualHIDProfileID? =
       { store.override(vendorID: $0.vendorID, productID: $0.productID, unit: $0.portKey?.rawValue) }
     let dispatcher = VirtualOutputRouter()
-    let profileLibrary = RemappingProfileLibrary()
+    let profileLibrary = RemappingProfileLibrary(
+      directory: RootedDataDirectory.temporary().url(for: .applicationData)
+    )
     let postEventAccess = CoreGraphicsPostEventAccess()
     let remappingRouter = RemappingOutputRouter(
       library: profileLibrary,

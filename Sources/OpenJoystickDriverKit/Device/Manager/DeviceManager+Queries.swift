@@ -82,7 +82,7 @@ extension DeviceManager {
         intent: .outputDisabled
       ).duplicateRisk,
       serialNumber: info.serialNumber,
-      quirks: record?.quirks.map(\.rawValue) ?? [],
+      parameters: record?.parameters.entries ?? [],
       bindingResult: ProtocolBindingResult(
         binding: info.binding,
         interfaces: info.physicalDevice?.interfaces ?? []

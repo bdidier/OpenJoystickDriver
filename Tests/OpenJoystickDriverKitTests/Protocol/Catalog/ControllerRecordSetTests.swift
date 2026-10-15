@@ -63,7 +63,7 @@ struct ControllerRecordSetTests {
     #expect(bundled.fieldLayers == ["protocol": .bundled])
   }
 
-  /// A same-family protocol patch keeps the bundled quirks it does not name; a family change
+  /// A same-family protocol patch keeps the bundled parameters it does not name; a family change
   /// replaces the block, because every protocol field belongs to its family.
   @Test
   func protocolPatchKeepsUnnamedFieldsOnlyWithinTheFamily() throws {
@@ -71,7 +71,7 @@ struct ControllerRecordSetTests {
     let kept = try ControllerRecordSet.validate(
       Self.patch(shareOffsetGIP, set: ["protocol": ["family": "xbox.gip", "keepAlive": false]])
     )
-    #expect(kept.record.profile.quirks == [.shareOffset])
+    #expect(kept.record.profile.parameters == ProtocolParameters(shareButton: .init(fromEnd: 26)))
     #expect(kept.record.profile.gipKeepAlivePolicy == .disabled)
     let refamilied = try ControllerRecordSet.validate(
       Self.patch(Self.bundledHID, set: ["protocol": ["family": "hid.descriptor"]])
@@ -79,17 +79,22 @@ struct ControllerRecordSetTests {
     #expect(refamilied.record.profile.physicalProtocolID == .hidDescriptor)
   }
 
-  /// A same-family patch adds its quirks to the bundled quirks instead of replacing them.
+  /// A same-family patch adds its parameters to the bundled parameters instead of replacing them.
   @Test
-  func protocolPatchAddsItsQuirksToTheBundledQuirks() throws {
+  func protocolPatchAddsItsParametersToTheBundledParameters() throws {
     let dualShock4 = ControllerModelID(vendorID: 0x054C, productID: 0x09CC)
     let patched = try ControllerRecordSet.validate(
       Self.patch(
         dualShock4,
-        set: ["protocol": ["family": "sony.dualshock4", "quirks": ["strikepad"]]]
+        set: [
+          "protocol": ["family": "sony.dualshock4", "parameters": ["motionScale": "StrikePad"]]
+        ]
       )
     )
-    #expect(patched.record.profile.quirks == [.factoryCalibration, .strikePad])
+    #expect(
+      patched.record.profile.parameters
+        == ProtocolParameters(motionCalibration: .factory, motionScale: .strikePad)
+    )
   }
 
   @Test
@@ -208,7 +213,7 @@ struct ControllerRecordSetTests {
 
   @Test
   func loadAppliesValidFilesAndReportsTheRest() throws {
-    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
+    let directory = MacOSDataDirectory().url(for: .temporary).appendingPathComponent(
       "ojd-records-\(UUID().uuidString)",
       isDirectory: true
     )
@@ -248,7 +253,7 @@ struct ControllerRecordSetTests {
   /// a file it cannot read is dropped, reported with its reason, and left as it was.
   @Test
   func aStoredFileKeepsWorkingOrIsDroppedUnchanged() throws {
-    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
+    let directory = MacOSDataDirectory().url(for: .temporary).appendingPathComponent(
       "ojd-stored-records-\(UUID().uuidString)",
       isDirectory: true
     )
@@ -300,7 +305,7 @@ struct ControllerRecordSetTests {
 
   @Test
   func loadIgnoresFilesThatAreNotJSON() throws {
-    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
+    let directory = MacOSDataDirectory().url(for: .temporary).appendingPathComponent(
       "ojd-records-\(UUID().uuidString)",
       isDirectory: true
     )
@@ -315,7 +320,7 @@ struct ControllerRecordSetTests {
   @Test
   func anUnreadableDirectoryIsReportedAndKeepsTheBundledRecords() throws {
     // A regular file stands in for a directory that cannot be listed.
-    let path = FileManager.default.temporaryDirectory.appendingPathComponent(
+    let path = MacOSDataDirectory().url(for: .temporary).appendingPathComponent(
       "ojd-records-\(UUID().uuidString)"
     )
     try Data().write(to: path)

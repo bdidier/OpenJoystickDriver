@@ -61,7 +61,7 @@ public struct SupportReport: Codable, Sendable {
     public let protocolBinding: String
     public let connection: String
     public let serialNumberPresent: Bool
-    public let quirks: [String]
+    public let parameters: [String]
     public let binding: ProtocolBindingResult
     public let inputEndpoint: UInt8
     public let outputEndpoint: UInt8
@@ -177,7 +177,7 @@ public struct SupportReport: Codable, Sendable {
         protocolBinding: $0.protocolBinding.rawValue,
         connection: $0.connection,
         serialNumberPresent: $0.serialNumber?.isEmpty == false,
-        quirks: $0.quirks.sorted(),
+        parameters: $0.parameters.sorted(),
         binding: $0.bindingResult,
         inputEndpoint: $0.inputEndpoint,
         outputEndpoint: $0.outputEndpoint,
