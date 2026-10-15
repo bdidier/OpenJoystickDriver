@@ -413,6 +413,30 @@ struct EndpointServerTests {
   }
 
   @Test
+  func aNewClientIsServedWhileTheLimitOfIdleClientsIsHeld() async throws {
+    try await withEndpointServer { server, _ in
+      try server.setEnabled(true)
+      try server.grant(Self.tool, path: "/Tool", scopes: [.read])
+      var clients: [EndpointTestClient] = []
+      for _ in 0..<EndpointServer.maximumConnections {
+        clients.append(try await EndpointTestClient.subscribed(to: server.socketPath))
+      }
+      let start = Date()
+
+      let ninth = try await EndpointTestClient(path: server.socketPath)
+
+      #expect(try await ninth.readObject()["code"] as? String == "E1005")
+      #expect(Date().timeIntervalSince(start) < 2)
+      // A slot freed by a closed client is served at once, behind the idle ones.
+      clients.removeLast()
+      try await Task.sleep(nanoseconds: 200_000_000)
+      let replacement = try await EndpointTestClient.subscribed(to: server.socketPath)
+      #expect(Date().timeIntervalSince(start) < 3)
+      _ = (clients, replacement)
+    }
+  }
+
+  @Test
   func aDamagedFileIsReportedAndKeepsTheEndpointClosed() async throws {
     try await withEndpointServer { server, fixture in
       try FileManager.default.createDirectory(
