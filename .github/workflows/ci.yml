@@ -57,7 +57,9 @@ jobs:
       - name: Verify generated controller catalog
         env:
           GH_TOKEN: ${{ github.token }}
-        run: ./Scripts/ojd catalog regenerate --check
+        run: |
+          ./Scripts/ojd catalog regenerate --check
+          ./Scripts/ojd errors regenerate --check
 
       - name: Check controller records
         run: |
@@ -68,7 +70,7 @@ jobs:
           ruff format --check Scripts Tests/RepositoryScripts
           ruff check Scripts Tests/RepositoryScripts
           pyright
-          python3 -m unittest discover -s Tests/RepositoryScripts
+          .build/schema-validator/bin/python -m unittest discover -s Tests/RepositoryScripts
 
       - name: Check shell
         run: find Scripts -type f \( -name '*.sh' -o -name ojd \) -print0 | xargs -0 shellcheck --external-sources --source-path=SCRIPTDIR
@@ -86,7 +88,9 @@ jobs:
         run: ./Scripts/ojd check schemas
 
       - name: Test macOS 14 parser compatibility
-        run: ./Scripts/ojd test parsers-macos14
+        run: |
+          ./Scripts/ojd test parsers-macos14
+          ./Scripts/ojd snapshots check
 
       - name: Check generated DriverKit project
         run: |
