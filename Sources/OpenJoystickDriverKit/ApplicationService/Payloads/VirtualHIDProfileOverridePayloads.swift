@@ -1,7 +1,7 @@
 import Foundation
 
 /// Arguments of `setVirtualHIDProfileOverride`: the controller reference, the requested
-/// profile's raw identifier, such as `hid-generic`, and whether the override is for the selected
+/// profile's raw identifier, such as `Generic`, and whether the override is for the selected
 /// unit only (see ``ControllerPortKey``) instead of its model. An absent `unit` means the model.
 public struct LocalServiceRPCVirtualHIDProfileOverrideArguments: Codable, Sendable {
   public let controller: ControllerReference

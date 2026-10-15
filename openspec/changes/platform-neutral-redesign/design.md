@@ -208,7 +208,7 @@ Follows clig.dev plus Apple conventions; global flags `--json --plain -q --no-co
 | `appleGameControllerAudit`, `appleExactDeviceCount`, `appleRecord`, `appleIdentifiers` | `systemGamepadAudit`, `systemExactDeviceCount`, `systemRecord`, `systemIdentifiers` |
 | kinds `USBPacket`, `JoyConPair` | `RawReport`, `ControllerPair` |
 | socket in `DARWIN_USER_TEMP_DIR` | runtime-directory port |
-| endpoint `as: hid-xbox-one-s-bt` | persona ids |
+| endpoint `as: SdlCompatible` | persona ids |
 
 New: `ojd virtual export-mapping`, `ojd setting` keys for every GUI-only switch (per-event notifications, Send Test Notification, Copy Support Report as `diagnose` on stdout, which the GUI copies), a settings file schema (settings move out of `UserDefaults` into layered files), and a single `DataDirectory` port that every store uses. The CLI target imports the Service in 9 files and USB in 2; the neutral core is split from a macOS host adapter so that `Sources/OpenJoystickDriver` has no macOS-only imports outside `platform`. The command tree is checked by a test that lists every command and flags any without a GUI place (D10).
 

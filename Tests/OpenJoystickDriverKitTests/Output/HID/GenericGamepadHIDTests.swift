@@ -6,7 +6,7 @@ struct GenericGamepadHIDTests {
   @Test
   func identityAndDescriptorBytesRemainStable() {
     // Arrange
-    let profile = VirtualDeviceProfile.openJoystickDriverGenericHID
+    let profile = VirtualDeviceProfile.generic
 
     // Act
     let descriptorHash = GamepadHIDDescriptor.descriptor.reduce(UInt64(0xCBF2_9CE4_8422_2325)) {

@@ -6,8 +6,8 @@ import Testing
 struct VirtualIdentityPresentationTests {
   @Test
   func microsoftIdentitiesUseXboxSymbols() {
-    #expect(VirtualDeviceProfile.xboxOneS.presentation == .xbox)
-    #expect(VirtualDeviceProfile.xboxOneS.presentation.controllerSymbolName == "xbox.logo")
+    #expect(VirtualDeviceProfile.sdlCompatible.presentation == .xbox)
+    #expect(VirtualDeviceProfile.sdlCompatible.presentation.controllerSymbolName == "xbox.logo")
   }
 
   /// The persona declares its glyphs; a Microsoft vendor ID alone does not select Xbox symbols.
@@ -27,12 +27,12 @@ struct VirtualIdentityPresentationTests {
 
   @Test
   func genericHIDUsesGenericSymbol() {
-    #expect(VirtualDeviceProfile.openJoystickDriverGenericHID.presentation == .generic)
+    #expect(VirtualDeviceProfile.generic.presentation == .generic)
   }
 
   @Test
   func publishedUSBIdentityLabelsNameTheOfficialProduct() {
-    let xboxOneS = VirtualDeviceProfile.xboxOneS
+    let xboxOneS = VirtualDeviceProfile.sdlCompatible
     #expect(xboxOneS.productName == "Xbox Wireless Controller")
     #expect(xboxOneS.publishedUSBIdentityLabel == "Xbox Wireless Controller (045E:02FD)")
     #expect(xboxOneS.presentation.glyphFamily == .xbox)

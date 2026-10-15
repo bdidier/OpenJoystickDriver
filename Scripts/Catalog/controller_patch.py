@@ -28,7 +28,7 @@ SECTIONS = frozenset(
         "modes",
         "usb",
         "bluetoothLE",
-        "ownership",
+        "server",
         "route",
         "output",
         "input",
@@ -196,7 +196,7 @@ def parse_patch(document: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any
     rank = selector_rank(selector)
     if not patch or not set(patch) <= SECTIONS:
         raise PatchError(
-            "patch must hold protocol, modes, usb, bluetoothLE, ownership, route, "
+            "patch must hold protocol, modes, usb, bluetoothLE, server, route, "
             "output, input, or tuning"
         )
     if rank == RANK_ALL and set(patch) != {"tuning"}:

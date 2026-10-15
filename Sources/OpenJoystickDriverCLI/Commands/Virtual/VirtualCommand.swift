@@ -25,7 +25,15 @@ struct VirtualCommand: AsyncParsableCommand {
 }
 
 extension VirtualHIDProfileID: ExpressibleByArgument {
-  public init?(argument: String) { self.init(rawValue: argument) }
+  /// A persona on the command line is its lowercase kebab-case name, such as `sdl-compatible`.
+  public init?(argument: String) {
+    guard let persona = Self.allCases.first(where: { $0.commandLineName == argument }) else {
+      return nil
+    }
+    self = persona
+  }
+
+  public static var allValueStrings: [String] { allCases.map(\.commandLineName) }
 }
 
 /// The `ojd virtual show --json` result.
@@ -46,11 +54,12 @@ struct VirtualShowReport: Encodable, Equatable {
       name = device.name
       vendorID = Int(device.vendorID)
       productID = Int(device.productID)
-      profile = device.virtualHIDProfile?.profile?.rawValue
-      source = device.virtualHIDProfile?.source
+      let decision = device.servingDecision
+      profile = decision.selection?.profileID.rawValue
+      source = decision.selection?.source.wireName
       override = device.virtualHIDProfile?.override?.rawValue
       overrideScope = device.virtualHIDProfile?.overrideScope
-      unavailable = device.virtualHIDProfile?.unavailable ?? false
+      unavailable = decision.route == .outputDisabled(.noVirtualProfile)
     }
   }
 

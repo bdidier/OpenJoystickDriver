@@ -175,8 +175,8 @@ struct ControllerShowReport: Encodable, Equatable {
         physical: device.physicalOwnership.rawValue,
         hidInput: device.hidInputOwnership.rawValue,
         duplicateExposureRisk: device.duplicateExposureRisk.rawValue,
-        choice: OwnershipChoice(record?.ownership ?? .macOS),
-        choiceSource: record?.fieldLayers["ownership"]?.rawValue ?? "default"
+        choice: OwnershipChoice(record?.server ?? .system),
+        choiceSource: record?.fieldLayers["server"]?.rawValue ?? "default"
       ),
       parameters: device.parameters,
       record: record.map(Record.init),
@@ -193,11 +193,11 @@ struct ControllerShowReport: Encodable, Equatable {
       ),
       virtual: device.virtualHIDProfile.map {
         Virtual(
-          profile: $0.profile?.rawValue,
-          source: $0.source,
+          profile: device.servingDecision.selection?.profileID.rawValue,
+          source: device.servingDecision.selection?.source.wireName,
           override: $0.override?.rawValue,
           overrideScope: $0.overrideScope,
-          unavailable: $0.unavailable
+          unavailable: device.servingDecision.route == .outputDisabled(.noVirtualProfile)
         )
       },
       publication: device.publication.map {

@@ -5,9 +5,9 @@ import Foundation
 public struct LocalServiceRPCControllerOwnershipArguments: Codable, Sendable {
   public let vendorID: Int
   public let productID: Int
-  public let ownership: ControllerOwnership
+  public let ownership: ControllerServer
 
-  public init(vendorID: Int, productID: Int, ownership: ControllerOwnership) {
+  public init(vendorID: Int, productID: Int, ownership: ControllerServer) {
     self.vendorID = vendorID
     self.productID = productID
     self.ownership = ownership
@@ -32,9 +32,9 @@ public enum ControllerOwnershipFailure: String, Codable, Equatable, Sendable {
 /// Result of `setControllerOwnership`.
 public struct ControllerOwnershipResult: Codable, Equatable, Sendable {
   /// The ownership the request asked for.
-  public let ownership: ControllerOwnership
+  public let ownership: ControllerServer
   /// The model's effective ownership before the request.
-  public let previous: ControllerOwnership
+  public let previous: ControllerServer
   /// The user record the request writes; nil when it was refused before a file was chosen.
   public let file: String?
   /// Whether the request created the user record.
@@ -44,8 +44,8 @@ public struct ControllerOwnershipResult: Codable, Equatable, Sendable {
   public let detail: String?
 
   public init(
-    ownership: ControllerOwnership,
-    previous: ControllerOwnership,
+    ownership: ControllerServer,
+    previous: ControllerServer,
     file: String?,
     created: Bool,
     failure: ControllerOwnershipFailure?,

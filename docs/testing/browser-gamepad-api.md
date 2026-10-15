@@ -39,7 +39,7 @@ Do not create or submit browser-engine patches as part of OJD's Generic HID fall
 
 ## Current Accepted Browser Evidence
 
-Blink's fully correct Apple GameController result is the canonical report-layout oracle. Explicit Apple GameController keeps the Xbox Series `045E:0B13` descriptor, report bytes, button usages, sticks, triggers, hat, Guide, and Share. Automatic now publishes `hid-xbox-one-s-bt` (`045E:02FD`) for every browser and has no browser result yet. The former Gecko Automatic row below published Xbox One S `045E:02E0`, kept the matching axis/trigger order, emitted D-pad through the hat only, and left Share unavailable because Firefox's remapper does not expose B17.
+Blink's fully correct Apple GameController result is the canonical report-layout oracle. Explicit Apple GameController keeps the Xbox Series `045E:0B13` descriptor, report bytes, button usages, sticks, triggers, hat, Guide, and Share. Automatic now publishes `SdlCompatible` (`045E:02FD`) for every browser and has no browser result yet. The former Gecko Automatic row below published Xbox One S `045E:02E0`, kept the matching axis/trigger order, emitted D-pad through the hat only, and left Share unavailable because Firefox's remapper does not expose B17.
 
 | Browser | Mode | ID/mapping/counts | LT | RT | Issues/reconnect/switch |
 | --- | --- | --- | --- | --- | --- |

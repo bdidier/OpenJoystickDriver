@@ -15,7 +15,7 @@ struct VirtualFeedRegistryTests {
   func aFeedPublishesItsProfileSendsFramesWithYDownAndReturnsTheHostsCommands() async throws {
     let factory = FakeFeedFactory()
     let registry = factory.registry()
-    let session = try await registry.open(profile: "hid-generic")
+    let session = try await registry.open(profile: "Generic")
     let device = try #require(factory.devices.first)
     #expect(device.profile == .generic)
     let identifier = try #require(device.activated)
@@ -54,7 +54,7 @@ struct VirtualFeedRegistryTests {
   func framesPlayInOrderEachForItsHoldAndAtLeastTheMinimum() async throws {
     let factory = FakeFeedFactory()
     let registry = factory.registry()
-    let session = try await registry.open(profile: "hid-generic")
+    let session = try await registry.open(profile: "Generic")
     let device = try #require(factory.devices.first)
     let frames = [
       VirtualFeedFrame(buttons: [.south], holdMilliseconds: 100), VirtualFeedFrame(),
@@ -78,7 +78,7 @@ struct VirtualFeedRegistryTests {
   func queuedFramesCoalesceOnlyWhenButtonsAndDpadMatchWithoutAHold() async throws {
     let factory = FakeFeedFactory()
     let registry = factory.registry()
-    let session = try await registry.open(profile: "hid-generic")
+    let session = try await registry.open(profile: "Generic")
     let device = try #require(factory.devices.first)
     let frames = [
       VirtualFeedFrame(buttons: [.south], axes: [.leftStickX: 0.1]),
@@ -103,7 +103,7 @@ struct VirtualFeedRegistryTests {
   func aFullQueueAcceptsOnlyTheFramesThatFit() async throws {
     let factory = FakeFeedFactory()
     let registry = factory.registry()
-    let session = try await registry.open(profile: "hid-generic")
+    let session = try await registry.open(profile: "Generic")
     let limit = VirtualFeedExchangeResult.maximumQueuedFrames
     let frames = (0..<(limit + 10)).map {
       $0.isMultiple(of: 2) ? VirtualFeedFrame(buttons: [.south]) : VirtualFeedFrame()
@@ -119,7 +119,7 @@ struct VirtualFeedRegistryTests {
   func closingStopsTheFramesThatWait() async throws {
     let factory = FakeFeedFactory()
     let registry = factory.registry()
-    let session = try await registry.open(profile: "hid-generic")
+    let session = try await registry.open(profile: "Generic")
     let device = try #require(factory.devices.first)
     _ = registry.exchange(
       token: session.token,
@@ -137,7 +137,7 @@ struct VirtualFeedRegistryTests {
   func aFailedSendClosesTheFeed() async throws {
     let factory = FakeFeedFactory()
     let registry = factory.registry()
-    let session = try await registry.open(profile: "hid-generic")
+    let session = try await registry.open(profile: "Generic")
     let device = try #require(factory.devices.first)
     device.failsSending = true
 
@@ -152,7 +152,7 @@ struct VirtualFeedRegistryTests {
   func closingRemovesTheDeviceOnceAndLaterExchangesReportClosed() async throws {
     let factory = FakeFeedFactory()
     let registry = factory.registry()
-    let session = try await registry.open(profile: "hid-generic")
+    let session = try await registry.open(profile: "Generic")
 
     #expect(await registry.close(token: session.token))
     #expect(!(await registry.close(token: session.token)))
@@ -166,7 +166,7 @@ struct VirtualFeedRegistryTests {
   func aFeedWithoutExchangesClosesAfterTheIdleTimeout() async throws {
     let factory = FakeFeedFactory()
     let registry = factory.registry(idleTimeout: 0.1)
-    let session = try await registry.open(profile: "hid-generic")
+    let session = try await registry.open(profile: "Generic")
     while registry.openFeedCount > 0 { try await Task.sleep(nanoseconds: 10_000_000) }
 
     #expect(factory.devices.first?.closeCount == 1)
@@ -177,7 +177,7 @@ struct VirtualFeedRegistryTests {
   func aBurstThatPlaysLongerThanTheIdleTimeoutIsNotClosed() async throws {
     let factory = FakeFeedFactory()
     let registry = factory.registry(idleTimeout: 0.2)
-    let session = try await registry.open(profile: "hid-generic")
+    let session = try await registry.open(profile: "Generic")
     let device = try #require(factory.devices.first)
     let frames = (0..<6).map {
       VirtualFeedFrame(buttons: $0.isMultiple(of: 2) ? [.south] : [.east], holdMilliseconds: 100)
@@ -197,7 +197,7 @@ struct VirtualFeedRegistryTests {
   func aFrameHeldLongerThanTheIdleTimeoutIsNotClosedBeforeItsHoldEnds() async throws {
     let factory = FakeFeedFactory()
     let registry = factory.registry(idleTimeout: 0.2)
-    let session = try await registry.open(profile: "hid-generic")
+    let session = try await registry.open(profile: "Generic")
     let started = ProcessInfo.processInfo.systemUptime
     _ = registry.exchange(
       token: session.token,
@@ -217,7 +217,7 @@ struct VirtualFeedRegistryTests {
     let factory = FakeFeedFactory()
     let registry = factory.registry(idleTimeout: 0.2)
     defer { factory.release() }
-    let session = try await registry.open(profile: "hid-generic")
+    let session = try await registry.open(profile: "Generic")
     let device = try #require(factory.devices.first)
     device.hangsSending = true
     let started = ProcessInfo.processInfo.systemUptime
@@ -237,11 +237,11 @@ struct VirtualFeedRegistryTests {
     let factory = FakeFeedFactory()
     let registry = factory.registry()
     for _ in 0..<VirtualFeedRegistry.maximumFeeds {
-      _ = try await registry.open(profile: "hid-generic")
+      _ = try await registry.open(profile: "Generic")
     }
 
     await #expect(throws: VirtualFeedError.tooManyFeeds(VirtualFeedRegistry.maximumFeeds)) {
-      try await registry.open(profile: "hid-xbox-one-s-bt")
+      try await registry.open(profile: "SdlCompatible")
     }
     #expect(factory.devices.count == VirtualFeedRegistry.maximumFeeds)
     #expect(registry.openFeedCount == VirtualFeedRegistry.maximumFeeds)
@@ -252,14 +252,14 @@ struct VirtualFeedRegistryTests {
     let factory = FakeFeedFactory()
     let registry = factory.registry()
     let limit = VirtualFeedRegistry.maximumFeeds
-    for _ in 0..<limit { _ = try await registry.open(profile: "hid-generic", pool: .endpoint) }
+    for _ in 0..<limit { _ = try await registry.open(profile: "Generic", pool: .endpoint) }
 
     await #expect(throws: VirtualFeedError.tooManyFeeds(limit)) {
-      try await registry.open(profile: "hid-generic", pool: .endpoint)
+      try await registry.open(profile: "Generic", pool: .endpoint)
     }
-    for _ in 0..<limit { _ = try await registry.open(profile: "hid-generic", pool: .rpc) }
+    for _ in 0..<limit { _ = try await registry.open(profile: "Generic", pool: .rpc) }
     await #expect(throws: VirtualFeedError.tooManyFeeds(limit)) {
-      try await registry.open(profile: "hid-generic", pool: .rpc)
+      try await registry.open(profile: "Generic", pool: .rpc)
     }
     #expect(registry.openFeedCount == 2 * limit)
   }
@@ -272,7 +272,7 @@ struct VirtualFeedRegistryTests {
     defer { factory.release() }
 
     await #expect(throws: VirtualFeedError.self) {
-      try await registry.open(profile: "hid-generic")
+      try await registry.open(profile: "Generic")
     }
     #expect(registry.openFeedCount == 0)
     try await Self.wait { factory.devices.first?.closeCount == 1 }
@@ -284,7 +284,7 @@ struct VirtualFeedRegistryTests {
     factory.hangsActivation = true
     let registry = factory.registry(activationTimeout: 60)
     defer { factory.release() }
-    let opening = Task { try await registry.open(profile: "hid-generic") }
+    let opening = Task { try await registry.open(profile: "Generic") }
     try await Self.wait { !factory.devices.isEmpty }
 
     opening.cancel()
@@ -311,7 +311,7 @@ struct VirtualFeedRegistryTests {
     let registry = factory.registry()
 
     await #expect(throws: VirtualFeedError.self) {
-      try await registry.open(profile: "hid-generic")
+      try await registry.open(profile: "Generic")
     }
     #expect(registry.openFeedCount == 0)
     try await Self.wait { factory.devices.first?.closeCount == 1 }
@@ -321,13 +321,13 @@ struct VirtualFeedRegistryTests {
   func stoppingClosesEveryFeedAndRefusesNewOnes() async throws {
     let factory = FakeFeedFactory()
     let registry = factory.registry()
-    _ = try await registry.open(profile: "hid-generic")
-    _ = try await registry.open(profile: "hid-generic")
+    _ = try await registry.open(profile: "Generic")
+    _ = try await registry.open(profile: "Generic")
 
     await registry.stop()
     #expect(factory.devices.map(\.closeCount) == [1, 1])
     await #expect(throws: VirtualFeedError.serviceStopped) {
-      try await registry.open(profile: "hid-generic")
+      try await registry.open(profile: "Generic")
     }
     #expect(factory.devices.last?.closeCount == 1)
   }
@@ -336,7 +336,7 @@ struct VirtualFeedRegistryTests {
   func uncollectedCommandsKeepOnlyTheNewest() async throws {
     let factory = FakeFeedFactory()
     let registry = factory.registry()
-    let session = try await registry.open(profile: "hid-generic")
+    let session = try await registry.open(profile: "Generic")
     let device = try #require(factory.devices.first)
     let limit = VirtualFeedRegistry.maximumQueuedFeedback
     for index in 0..<(limit + 2) {

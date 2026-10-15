@@ -92,18 +92,15 @@
     }
 
     private var liveProfileLabel: String {
-      guard let status = device.virtualHIDProfile else {
+      let decision = device.servingDecision
+      if decision.route == .outputDisabled(.noVirtualProfile) {
+        return OJDLocalized.string("virtualProfile.unavailable")
+      }
+      guard let selection = decision.selection else {
         return RuntimePresentation.noVirtualHIDProfileLabel
       }
-      if status.unavailable {
-        return OJDLocalized.string(
-          "virtualProfile.unavailable"
-        )
-      }
-      guard let profile = status.profile else {
-        return RuntimePresentation.noVirtualHIDProfileLabel
-      }
-      let source = status.source.map(RuntimePresentation.virtualHIDProfileSourceLabel)
+      let profile = selection.profileID
+      let source = RuntimePresentation.virtualHIDProfileSourceLabel(selection.source.wireName)
       return [profile.identity.publishedUSBIdentityLabel, source].compactMap { $0 }.joined(
         separator: " · "
       )

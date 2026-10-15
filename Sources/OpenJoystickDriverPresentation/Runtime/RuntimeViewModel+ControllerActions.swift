@@ -129,7 +129,7 @@ extension RuntimeViewModel {
   /// controller. A refusal shows in the controller's detail, with the service's detail text for a
   /// record that is invalid or cannot be written.
   func setControllerOwnership(
-    _ ownership: ControllerOwnership,
+    _ ownership: ControllerServer,
     for device: ApplicationServiceDeviceDescription
   ) async {
     var accepted = false
@@ -152,13 +152,13 @@ extension RuntimeViewModel {
   /// reports `ownership`. The service reloads the records after it answers, so the first refresh
   /// can still carry the old value.
   private func waitForRecordOwnership(
-    _ ownership: ControllerOwnership,
+    _ ownership: ControllerServer,
     of model: RuntimeControllerModel
   ) async {
     for _ in 0..<10 {
       if case .available(let status) = statusState,
         status.devices.contains(where: {
-          RuntimeControllerModel($0) == model && $0.recordOwnership == ownership
+          RuntimeControllerModel($0) == model && $0.recordServer == ownership
         })
       {
         return

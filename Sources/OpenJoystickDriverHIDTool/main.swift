@@ -39,7 +39,7 @@ if let recordPath = argValue("--record-probe") {
 }
 
 func runRawUSBMonitor() {
-  let vendorID = UInt16(clamping: intArg("--vid", default: 0x045E))
+  let vendorID = UInt16(clamping: intArg("--vid", default: 0))
   let productID = UInt16(clamping: intArg("--pid", default: 0))
   let explicitEndpoint = argValue("--endpoint").flatMap(parseInt).map { UInt8(clamping: $0) }
   let endpoints = explicitEndpoint.map { [$0] } ?? Array(UInt8(0x81)...UInt8(0x8F))
@@ -117,8 +117,10 @@ if parsedArguments.mode == .usbPassive {
 }
 
 if monitor {
-  let vid = intArg("--vid", default: 0x1209)
-  let pid = intArg("--pid", default: 0x4A4F)
+  // Without ids, watch the Generic persona OJD publishes, read from its VirtualDevice record.
+  let persona = VirtualHIDProfileID.generic.identity
+  let vid = intArg("--vid", default: Int(persona.vendorID))
+  let pid = intArg("--pid", default: Int(persona.productID))
   let seconds = min(max(intArg("--seconds", default: 10), 1), 60)
 
   final class MonitorCounter {
@@ -264,8 +266,8 @@ if list {
 }
 
 if open {
-  let vid = intArg("--vid", default: 0x045E)
-  let pid = intArg("--pid", default: 0x028E)
+  let vid = intArg("--vid", default: 0)
+  let pid = intArg("--pid", default: 0)
   let devs = enumerateDevices(matching: [
     kIOHIDVendorIDKey as String: vid, kIOHIDProductIDKey as String: pid,
   ])

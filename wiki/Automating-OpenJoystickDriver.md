@@ -240,7 +240,7 @@ To limit a profile to one controller, set `device.unit` to the controller's unit
 
 ## Drive a Virtual Gamepad
 
-`ojd virtual feed --as PROFILE` publishes a virtual gamepad and reads one JSON object per line from standard input. Each line gives the state of the whole gamepad. A control that the line does not name is neutral. The virtual gamepad profiles are `hid-xbox-one-s-bt` and `hid-generic`.
+`ojd virtual feed --as PROFILE` publishes a virtual gamepad and reads one JSON object per line from standard input. Each line gives the state of the whole gamepad. A control that the line does not name is neutral. The virtual gamepad profiles are `sdl-compatible` and `generic`.
 
 ```shell
 {
@@ -248,7 +248,7 @@ To limit a profile to one controller, set `device.unit` to the controller's unit
   sleep 1
   echo '{"axes":{"left_stick_x":-1,"right_trigger":0.5}}'
   sleep 1
-} | ojd virtual feed --as hid-generic
+} | ojd virtual feed --as generic
 ```
 
 This example holds the south button for 1 second, then moves the left stick fully left and pulls the right trigger halfway for 1 second. When the input ends, the virtual gamepad is removed.
@@ -256,7 +256,7 @@ This example holds the south button for 1 second, then moves the left stick full
 To tap a button without waiting in the script, write the press with `holdMilliseconds` and the release after it:
 
 ```shell
-printf '%s\n' '{"buttons":["south"],"holdMilliseconds":50}' '{}' | ojd virtual feed --as hid-generic
+printf '%s\n' '{"buttons":["south"],"holdMilliseconds":50}' '{}' | ojd virtual feed --as generic
 ```
 
 - `buttons` and `dpad` list the controls that are pressed. They take the names that `button:` and `dpad:` binding sources use, such as `south` and `up`.
