@@ -11,7 +11,9 @@ public enum PeerMessage {
   /// The longest `durationMilliseconds` of a `setRumble`, as in `cli-output.schema.json`.
   public static let maximumRumbleMilliseconds = 5000
 
-  /// The control ids of `Resources/Schemas/vocabulary.schema.json` that a `Frame` lists as buttons.
+  /// The control ids of `Resources/Schemas/vocabulary.schema.json` that a `Frame` lists as buttons:
+  /// every control but the D-pad directions and the stick axes, which `dpad` and `axes` carry.
+  /// `PeerMessageTests` fails when this list and the schema differ.
   static let buttons: Set<String> = [
     "South", "East", "West", "North", "LeftShoulder", "RightShoulder", "LeftTrigger",
     "RightTrigger", "Back", "Start", "LeftStickClick", "RightStickClick", "Guide", "Capture",
@@ -20,8 +22,8 @@ public enum PeerMessage {
     "Auxiliary7", "Auxiliary8", "LeftStickTouch", "RightStickTouch", "LeftTrackpadClick",
     "RightTrackpadClick", "LeftTrackpadTouch", "RightTrackpadTouch",
   ]
-  private static let dpad: Set<String> = ["up", "down", "left", "right"]
-  private static let axes: Set<String> = [
+  static let dpad: Set<String> = ["up", "down", "left", "right"]
+  static let axes: Set<String> = [
     "LeftStickX", "LeftStickY", "RightStickX", "RightStickY", "LeftTrigger", "RightTrigger",
   ]
   private static let frameKeys: Set<String> = [

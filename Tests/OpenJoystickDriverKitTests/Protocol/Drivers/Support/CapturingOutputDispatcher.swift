@@ -8,7 +8,6 @@ final class CapturingOutputDispatcher: OutputDispatcher, @unchecked Sendable {
 
   func dispatch(
     _ event: ControllerEvent,
-    labels _: ControllerButtonLabels,
     from _: LogicalControllerID
   ) { events.append(event) }
 

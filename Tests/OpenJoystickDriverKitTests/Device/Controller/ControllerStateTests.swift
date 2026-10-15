@@ -71,16 +71,35 @@ struct ControllerStateTests {
     #expect(!state.isEffectivelyNeutral)
   }
 
+  /// Every release is delivered before any press, so a swap never holds both buttons; releases
+  /// and presses each keep the control order.
   @Test
-  func snapshotChangesFollowTheDeltaPipelineOrder() {
+  func releasesComeBeforePresses() {
+    let before = ControllerState(pressed: [.back, .east])
+    let after = ControllerState(pressed: [.start, .south, .east])
+    #expect(
+      RemappingEngineState.changes(from: before, to: after) == [
+        .button(.back, isPressed: false),
+        .button(.south, isPressed: true), .button(.start, isPressed: true),
+      ]
+    )
+    let swap = RemappingEngineState.changes(
+      from: ControllerState(pressed: [.back]),
+      to: ControllerState(pressed: [.start])
+    )
+    #expect(swap == [.button(.back, isPressed: false), .button(.start, isPressed: true)])
+  }
+
+  @Test
+  func snapshotChangesFollowOneControlOrder() {
     var next = ControllerState.neutral
     next.pressed = [.north, .south, .start, .leftStickClick]
     next.hat = .east
     next.leftTrigger = UnipolarValue(1)
     next.rightStick = StickPosition(x: BipolarValue(10), y: BipolarValue(20))
-    let standard = RemappingEngineState.changes(from: .neutral, to: next, labels: .standard)
+    let changes = RemappingEngineState.changes(from: .neutral, to: next)
     #expect(
-      standard == [
+      changes == [
         .button(.south, isPressed: true), .button(.north, isPressed: true),
         .button(.leftStickClick, isPressed: true), .button(.start, isPressed: true),
         .dpad(.east),
@@ -88,25 +107,18 @@ struct ControllerStateTests {
         .leftTrigger(UnipolarValue(1).normalized),
       ]
     )
-    let playStation = RemappingEngineState.changes(from: .neutral, to: next, labels: .playStation)
-    #expect(
-      playStation.prefix(4) == [
-        .button(.leftStickClick, isPressed: true), .button(.south, isPressed: true),
-        .button(.north, isPressed: true), .button(.start, isPressed: true),
-      ]
-    )
-    #expect(RemappingEngineState.changes(from: next, to: next, labels: .standard).isEmpty)
+    #expect(RemappingEngineState.changes(from: next, to: next).isEmpty)
 
-    // Former Button order: back before l2Digital before leftSL, for presses and releases alike.
+    // Back comes before the left trigger button, which comes before the first auxiliary.
     let joyCon = ControllerState(pressed: [.auxiliary3, .leftTrigger, .back])
     #expect(
-      RemappingEngineState.changes(from: .neutral, to: joyCon, labels: .nintendo) == [
+      RemappingEngineState.changes(from: .neutral, to: joyCon) == [
         .button(.back, isPressed: true), .button(.leftTrigger, isPressed: true),
         .button(.auxiliary3, isPressed: true),
       ]
     )
     #expect(
-      RemappingEngineState.changes(from: joyCon, to: .neutral, labels: .nintendo) == [
+      RemappingEngineState.changes(from: joyCon, to: .neutral) == [
         .button(.back, isPressed: false), .button(.leftTrigger, isPressed: false),
         .button(.auxiliary3, isPressed: false),
       ]

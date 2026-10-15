@@ -119,7 +119,6 @@ struct JoyConParserTests {
     #expect(
       engine.process(
         parsed: try parser.parseReport(Data(bytes)),
-        labels: .nintendo,
         from: identifier,
         profile: profile,
         at: 0
@@ -129,7 +128,6 @@ struct JoyConParserTests {
     #expect(
       engine.process(
         parsed: try parser.parseReport(Data(bytes)),
-        labels: .nintendo,
         from: identifier,
         profile: profile,
         at: 1

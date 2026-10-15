@@ -135,8 +135,7 @@ struct ProfileCapabilityTests {
       physicalOutput: PhysicalControllerOutputCapabilities(
         rumbleMotors: [.leftMain],
         lightingFeatures: [.programmableColor]
-      ),
-      buttonLabels: .standard
+      )
     )
 
     #expect(ProfileCapabilityPolicy.supports(.button(.south), capabilities: capabilities))
@@ -184,8 +183,7 @@ struct ProfileCapabilityTests {
         touchContactCount: 1,
         motion: true
       ),
-      physicalOutput: .none,
-      buttonLabels: .standard
+      physicalOutput: .none
     )
     let supported: [RemappingSource] = [
       .button(.start), .button(.back), .button(.capture), .button(.leftPaddle2),

@@ -14,11 +14,8 @@
         return OJDLocalized.string(
           "capture.listening"
         )
-      case .received(let selector, let state):
-        if let detected = RuntimePresentation.detectedSource(
-          from: state,
-          labels: viewModel.buttonLabels(for: selector)
-        ) {
+      case .received(_, let state):
+        if let detected = RuntimePresentation.detectedSource(from: state) {
           return OJDLocalized.formatted(
             "capture.detected",
             RuntimePresentation.sourceLabel(detected)
@@ -78,12 +75,9 @@
               "capture.listeningEllipsis"
             )
           )
-        case .received(let selector, let state):
+        case .received(_, let state):
           VStack(alignment: .leading, spacing: 3) {
-            if let detected = RuntimePresentation.detectedSource(
-              from: state,
-              labels: viewModel.buttonLabels(for: selector)
-            ) {
+            if let detected = RuntimePresentation.detectedSource(from: state) {
               Text(
                 OJDLocalized.formatted(
                   "capture.detectedNoPeriod",

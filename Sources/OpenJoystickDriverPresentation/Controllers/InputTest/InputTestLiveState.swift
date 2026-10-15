@@ -9,16 +9,12 @@
   final class InputTestLiveState: ObservableObject {
     @Published
     private(set) var snapshot: ControllerState
-    /// The selected controller's family labels, which name its controls.
-    private(set) var labels: ControllerButtonLabels
 
-    init(snapshot: ControllerState = .neutral, labels: ControllerButtonLabels = .standard) {
+    init(snapshot: ControllerState = .neutral) {
       self.snapshot = snapshot
-      self.labels = labels
     }
 
-    func reset(labels: ControllerButtonLabels) {
-      self.labels = labels
+    func reset() {
       update(.neutral)
     }
 

@@ -155,7 +155,6 @@ private final class ReceiverRecordingDispatcher: OutputDispatcher, ControllerLif
 
   func dispatch(
     _ event: ControllerEvent,
-    labels _: ControllerButtonLabels,
     from _: LogicalControllerID
   ) { lock.withLock { recordedStates.append(event.state) } }
 

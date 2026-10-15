@@ -108,7 +108,6 @@ struct EquivalenceSnapshotParsedFramesTests {
     for (vendor, product, name, steps) in captured {
       let lines = parse.transcript(
         try Parse.captured(vendor, product),
-        labels: .standard,
         steps
       )
       let title = EquivalenceSnapshotStore.recordTitle(vendorID: vendor, productID: product)
