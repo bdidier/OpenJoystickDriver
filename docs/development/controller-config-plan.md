@@ -54,9 +54,9 @@ The write executors accept only reports a template produces, on the record's own
 
 ### Ownership
 
-`ownership` is `macos` or `ojd`, with a default per protocol family.
+`server` is `system` or `ojd`, with a default per protocol family.
 
-- `macos`: macOS serves the pad, OJD publishes no virtual pad, and OJD sends only the output templates the record declares. This replaces the `NativeGamepadWrites` table: the Sixaxis and GP100 entries become data in their records or family defaults.
+- `system`: macOS serves the pad, OJD publishes no virtual pad, and OJD sends only the output templates the record declares. This replaces the `NativeGamepadWrites` table: the Sixaxis and GP100 entries become data in their records or family defaults.
 - `ojd`: OJD seizes the pad and publishes its virtual pad.
 
 A seize macOS refuses leaves the pad with macOS and is reported, as today.
