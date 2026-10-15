@@ -142,7 +142,7 @@ def build_hid_records(sources: dict[str, str]) -> list[dict[str, Any]]:
             **header(KINDS["controller"]),
             "vendorID": vendor_id,
             "productID": product_id,
-            "protocol": protocol,
+            "modes": [{"id": "default", "protocol": protocol}],
         }
         if capabilities is not None:
             record["capabilities"] = capabilities
@@ -413,7 +413,7 @@ def build_sdl_records(
             **header(KINDS["controller"]),
             "vendorID": vendor_id,
             "productID": product_id,
-            "protocol": protocol,
+            "modes": [{"id": "default", "protocol": protocol}],
         }
         count("added")
     return records, counts
@@ -547,9 +547,12 @@ def merge_sdl_records(
     rows: list[tuple[int, int, str]],
 ) -> dict[str, int]:
     """Adds SDL identities to Linux `records`; Linux rows and authored controllers win."""
-    existing = {key: record["protocol"]["family"] for key, record in records.items()}
+    existing = {
+        key: controller_patch.default_protocol(record)["family"]
+        for key, record in records.items()
+    }
     for key, record in adds.items():
-        existing[key] = record["protocol"]["family"]
+        existing[key] = controller_patch.default_protocol(record)["family"]
     sdl_records, counts = build_sdl_records(rows, existing)
     records.update(sdl_records)
     return counts

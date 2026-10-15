@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/controller.schema.json",
   "type": "object",
-  "required": ["apiVersion", "kind", "vendorID", "productID", "protocol"],
+  "required": ["apiVersion", "kind", "vendorID", "productID", "modes"],
   "additionalProperties": false,
   "properties": {
     "apiVersion": {
@@ -20,9 +20,6 @@
       "type": "integer",
       "minimum": 0,
       "maximum": 65535
-    },
-    "protocol": {
-      "$ref": "#/$defs/protocol"
     },
     "modes": {
       "$ref": "#/$defs/modes"
@@ -61,43 +58,178 @@
   },
   "$defs": {
     "modes": {
-      "description": "Alternative modes of one model. The record's protocol is the default mode, which a controller runs when no mode here matches or a probe gets no reply. Modes are tried in order and the first whose probes all hold is selected.",
+      "description": "The modes of one model. Exactly one mode has the id default and no match: it runs when no other mode matches or a probe gets no reply. Every other mode has a match. Non-default modes are tried in order and the first whose match keys all hold is selected.",
       "type": "array",
       "minItems": 1,
       "items": {
         "$ref": "#/$defs/mode"
-      }
+      },
+      "contains": {
+        "properties": {
+          "id": {
+            "const": "default"
+          }
+        },
+        "required": ["id"]
+      },
+      "minContains": 1,
+      "maxContains": 1
     },
     "mode": {
       "type": "object",
-      "required": ["id", "protocol", "match"],
+      "required": ["id", "protocol"],
       "additionalProperties": false,
       "properties": {
         "id": {
           "type": "string",
-          "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*(?!\\n)$",
-          "not": {
-            "const": "default"
-          }
+          "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*(?!\\n)$"
         },
         "protocol": {
           "$ref": "#/$defs/protocol"
         },
         "match": {
           "$ref": "#/$defs/modeMatch"
+        },
+        "interface": {
+          "$ref": "#/$defs/modeInterface"
+        },
+        "session": {
+          "$ref": "#/$defs/modeSession"
         }
+      },
+      "if": {
+        "properties": {
+          "id": {
+            "const": "default"
+          }
+        },
+        "required": ["id"]
+      },
+      "then": {
+        "properties": {
+          "match": false
+        }
+      },
+      "else": {
+        "required": ["match"]
       }
     },
     "modeMatch": {
+      "description": "Keys that must all hold for a mode to be selected. Link, interface signature, strings and bcdDevice are read from the enumerated device; probes read a feature report and are tried last.",
       "type": "object",
-      "required": ["probes"],
+      "minProperties": 1,
       "additionalProperties": false,
       "properties": {
+        "link": {
+          "enum": [
+            "usb",
+            "bluetooth-classic",
+            "bluetooth-le",
+            "proprietary-radio-receiver"
+          ]
+        },
+        "interfaceSignature": {
+          "$ref": "#/$defs/modeInterfaceSignature"
+        },
+        "manufacturer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "product": {
+          "type": "string",
+          "minLength": 1
+        },
+        "bcdDevice": {
+          "$ref": "#/$defs/bcdDeviceRange"
+        },
         "probes": {
           "type": "array",
           "minItems": 1,
           "items": {
             "$ref": "#/$defs/modeProbe"
+          }
+        }
+      }
+    },
+    "modeInterfaceSignature": {
+      "description": "An interface the device must expose, by USB class triple and, for HID, the primary usage.",
+      "type": "object",
+      "required": ["interfaceClass", "interfaceSubclass", "interfaceProtocol"],
+      "additionalProperties": false,
+      "properties": {
+        "interfaceClass": {
+          "$ref": "#/$defs/modeByte"
+        },
+        "interfaceSubclass": {
+          "$ref": "#/$defs/modeByte"
+        },
+        "interfaceProtocol": {
+          "$ref": "#/$defs/modeByte"
+        },
+        "usagePage": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "usage": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        }
+      },
+      "dependentRequired": {
+        "usage": ["usagePage"]
+      }
+    },
+    "modeByte": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 255
+    },
+    "bcdDeviceRange": {
+      "description": "An inclusive range of the device release number, bcdDevice. min must not exceed max.",
+      "type": "object",
+      "required": ["min", "max"],
+      "additionalProperties": false,
+      "properties": {
+        "min": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "max": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        }
+      }
+    },
+    "modeInterface": {
+      "description": "The interfaces this mode drives, an inclusive range of interface numbers; the lowest one the device exposes is bound. first must not exceed last.",
+      "type": "object",
+      "required": ["first", "last"],
+      "additionalProperties": false,
+      "properties": {
+        "first": {
+          "$ref": "#/$defs/modeByte"
+        },
+        "last": {
+          "$ref": "#/$defs/modeByte"
+        }
+      }
+    },
+    "modeSession": {
+      "description": "Session steps of this mode. startup replaces the record's output.startup while this mode runs.",
+      "type": "object",
+      "required": ["startup"],
+      "additionalProperties": false,
+      "properties": {
+        "startup": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/startupWrite"
           }
         }
       }
@@ -1347,27 +1479,37 @@
       },
       "then": {
         "properties": {
-          "protocol": {
-            "anyOf": [
-              {
-                "properties": {
-                  "family": {
-                    "enum": ["xbox.xid", "xbox.xusb", "xbox.gip"]
-                  }
+          "modes": {
+            "contains": {
+              "properties": {
+                "id": {
+                  "const": "default"
+                },
+                "protocol": {
+                  "anyOf": [
+                    {
+                      "properties": {
+                        "family": {
+                          "enum": ["xbox.xid", "xbox.xusb", "xbox.gip"]
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "family": {
+                          "const": "vendor.gamesir"
+                        },
+                        "variant": {
+                          "const": "usb"
+                        }
+                      },
+                      "required": ["variant"]
+                    }
+                  ]
                 }
               },
-              {
-                "properties": {
-                  "family": {
-                    "const": "vendor.gamesir"
-                  },
-                  "variant": {
-                    "const": "usb"
-                  }
-                },
-                "required": ["variant"]
-              }
-            ]
+              "required": ["id", "protocol"]
+            }
           }
         }
       }
@@ -1384,13 +1526,23 @@
       },
       "then": {
         "properties": {
-          "protocol": {
-            "properties": {
-              "family": {
-                "const": "xbox.gip"
-              }
-            },
-            "type": "object"
+          "modes": {
+            "contains": {
+              "properties": {
+                "id": {
+                  "const": "default"
+                },
+                "protocol": {
+                  "properties": {
+                    "family": {
+                      "const": "xbox.gip"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "required": ["id", "protocol"]
+            }
           }
         }
       }
@@ -1398,19 +1550,29 @@
     {
       "if": {
         "properties": {
-          "protocol": {
-            "properties": {
-              "family": {
-                "not": {
-                  "enum": ["xbox.xusb", "xbox.xid"]
+          "modes": {
+            "contains": {
+              "properties": {
+                "id": {
+                  "const": "default"
+                },
+                "protocol": {
+                  "properties": {
+                    "family": {
+                      "not": {
+                        "enum": ["xbox.xusb", "xbox.xid"]
+                      }
+                    }
+                  },
+                  "required": ["family"],
+                  "type": "object"
                 }
-              }
-            },
-            "required": ["family"],
-            "type": "object"
+              },
+              "required": ["id", "protocol"]
+            }
           }
         },
-        "required": ["protocol", "usb"]
+        "required": ["modes", "usb"]
       },
       "then": {
         "properties": {
@@ -1433,17 +1595,27 @@
     {
       "if": {
         "properties": {
-          "protocol": {
-            "properties": {
-              "family": {
-                "const": "xbox.xid"
-              }
-            },
-            "required": ["family"],
-            "type": "object"
+          "modes": {
+            "contains": {
+              "properties": {
+                "id": {
+                  "const": "default"
+                },
+                "protocol": {
+                  "properties": {
+                    "family": {
+                      "const": "xbox.xid"
+                    }
+                  },
+                  "required": ["family"],
+                  "type": "object"
+                }
+              },
+              "required": ["id", "protocol"]
+            }
           }
         },
-        "required": ["protocol", "usb"]
+        "required": ["modes", "usb"]
       },
       "then": {
         "properties": {
@@ -1466,17 +1638,27 @@
     {
       "if": {
         "properties": {
-          "protocol": {
-            "properties": {
-              "family": {
-                "const": "xbox.xusb"
-              }
-            },
-            "required": ["family"],
-            "type": "object"
+          "modes": {
+            "contains": {
+              "properties": {
+                "id": {
+                  "const": "default"
+                },
+                "protocol": {
+                  "properties": {
+                    "family": {
+                      "const": "xbox.xusb"
+                    }
+                  },
+                  "required": ["family"],
+                  "type": "object"
+                }
+              },
+              "required": ["id", "protocol"]
+            }
           }
         },
-        "required": ["protocol", "usb"]
+        "required": ["modes", "usb"]
       },
       "then": {
         "properties": {
@@ -1499,19 +1681,29 @@
     {
       "if": {
         "properties": {
-          "protocol": {
-            "properties": {
-              "family": {
-                "not": {
-                  "const": "sony.dualsense"
+          "modes": {
+            "contains": {
+              "properties": {
+                "id": {
+                  "const": "default"
+                },
+                "protocol": {
+                  "properties": {
+                    "family": {
+                      "not": {
+                        "const": "sony.dualsense"
+                      }
+                    }
+                  },
+                  "required": ["family"],
+                  "type": "object"
                 }
-              }
-            },
-            "required": ["family"],
-            "type": "object"
+              },
+              "required": ["id", "protocol"]
+            }
           }
         },
-        "required": ["protocol"]
+        "required": ["modes"]
       },
       "then": {
         "properties": {
@@ -1526,17 +1718,27 @@
     {
       "if": {
         "properties": {
-          "protocol": {
-            "properties": {
-              "family": {
-                "const": "sony.dualsense"
-              }
-            },
-            "required": ["family"],
-            "type": "object"
+          "modes": {
+            "contains": {
+              "properties": {
+                "id": {
+                  "const": "default"
+                },
+                "protocol": {
+                  "properties": {
+                    "family": {
+                      "const": "sony.dualsense"
+                    }
+                  },
+                  "required": ["family"],
+                  "type": "object"
+                }
+              },
+              "required": ["id", "protocol"]
+            }
           }
         },
-        "required": ["protocol"]
+        "required": ["modes"]
       },
       "then": {
         "properties": {
@@ -1569,11 +1771,21 @@
       },
       "then": {
         "properties": {
-          "protocol": {
-            "properties": {
-              "family": {
-                "enum": ["hid.report-layout", "vendor.ps3-third-party"]
-              }
+          "modes": {
+            "contains": {
+              "properties": {
+                "id": {
+                  "const": "default"
+                },
+                "protocol": {
+                  "properties": {
+                    "family": {
+                      "enum": ["hid.report-layout", "vendor.ps3-third-party"]
+                    }
+                  }
+                }
+              },
+              "required": ["id", "protocol"]
             }
           }
         }
@@ -1582,13 +1794,23 @@
     {
       "if": {
         "properties": {
-          "protocol": {
-            "properties": {
-              "family": {
-                "const": "hid.report-layout"
-              }
-            },
-            "required": ["family"]
+          "modes": {
+            "contains": {
+              "properties": {
+                "id": {
+                  "const": "default"
+                },
+                "protocol": {
+                  "properties": {
+                    "family": {
+                      "const": "hid.report-layout"
+                    }
+                  },
+                  "required": ["family"]
+                }
+              },
+              "required": ["id", "protocol"]
+            }
           }
         }
       },
@@ -1603,13 +1825,23 @@
       "else": {
         "if": {
           "properties": {
-            "protocol": {
-              "properties": {
-                "family": {
-                  "const": "hid.descriptor"
-                }
-              },
-              "required": ["family"]
+            "modes": {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "default"
+                  },
+                  "protocol": {
+                    "properties": {
+                      "family": {
+                        "const": "hid.descriptor"
+                      }
+                    },
+                    "required": ["family"]
+                  }
+                },
+                "required": ["id", "protocol"]
+              }
             }
           }
         },
@@ -1645,29 +1877,39 @@
       },
       "then": {
         "properties": {
-          "protocol": {
-            "not": {
-              "anyOf": [
-                {
-                  "properties": {
-                    "family": {
-                      "enum": ["xbox.xid", "xbox.xusb", "xbox.gip"]
-                    }
-                  },
-                  "required": ["family"]
+          "modes": {
+            "contains": {
+              "properties": {
+                "id": {
+                  "const": "default"
                 },
-                {
-                  "properties": {
-                    "family": {
-                      "const": "vendor.gamesir"
-                    },
-                    "variant": {
-                      "const": "usb"
-                    }
-                  },
-                  "required": ["family", "variant"]
+                "protocol": {
+                  "not": {
+                    "anyOf": [
+                      {
+                        "properties": {
+                          "family": {
+                            "enum": ["xbox.xid", "xbox.xusb", "xbox.gip"]
+                          }
+                        },
+                        "required": ["family"]
+                      },
+                      {
+                        "properties": {
+                          "family": {
+                            "const": "vendor.gamesir"
+                          },
+                          "variant": {
+                            "const": "usb"
+                          }
+                        },
+                        "required": ["family", "variant"]
+                      }
+                    ]
+                  }
                 }
-              ]
+              },
+              "required": ["id", "protocol"]
             }
           }
         }
@@ -1679,28 +1921,38 @@
       },
       "then": {
         "properties": {
-          "protocol": {
-            "anyOf": [
-              {
-                "properties": {
-                  "family": {
-                    "enum": ["xbox.xid", "xbox.xusb", "xbox.gip"]
-                  }
+          "modes": {
+            "contains": {
+              "properties": {
+                "id": {
+                  "const": "default"
                 },
-                "required": ["family"]
+                "protocol": {
+                  "anyOf": [
+                    {
+                      "properties": {
+                        "family": {
+                          "enum": ["xbox.xid", "xbox.xusb", "xbox.gip"]
+                        }
+                      },
+                      "required": ["family"]
+                    },
+                    {
+                      "properties": {
+                        "family": {
+                          "const": "vendor.gamesir"
+                        },
+                        "variant": {
+                          "const": "usb"
+                        }
+                      },
+                      "required": ["family", "variant"]
+                    }
+                  ]
+                }
               },
-              {
-                "properties": {
-                  "family": {
-                    "const": "vendor.gamesir"
-                  },
-                  "variant": {
-                    "const": "usb"
-                  }
-                },
-                "required": ["family", "variant"]
-              }
-            ]
+              "required": ["id", "protocol"]
+            }
           }
         }
       }
@@ -1716,11 +1968,21 @@
       },
       "then": {
         "properties": {
-          "protocol": {
-            "properties": {
-              "family": {
-                "const": "sony.dualshock4"
-              }
+          "modes": {
+            "contains": {
+              "properties": {
+                "id": {
+                  "const": "default"
+                },
+                "protocol": {
+                  "properties": {
+                    "family": {
+                      "const": "sony.dualshock4"
+                    }
+                  }
+                }
+              },
+              "required": ["id", "protocol"]
             }
           }
         }
@@ -1744,11 +2006,21 @@
       },
       "then": {
         "properties": {
-          "protocol": {
-            "properties": {
-              "family": {
-                "const": "nintendo.switch1"
-              }
+          "modes": {
+            "contains": {
+              "properties": {
+                "id": {
+                  "const": "default"
+                },
+                "protocol": {
+                  "properties": {
+                    "family": {
+                      "const": "nintendo.switch1"
+                    }
+                  }
+                }
+              },
+              "required": ["id", "protocol"]
             }
           }
         }
@@ -1772,29 +2044,39 @@
       },
       "then": {
         "properties": {
-          "protocol": {
-            "not": {
-              "anyOf": [
-                {
-                  "properties": {
-                    "family": {
-                      "enum": ["xbox.xid", "xbox.xusb", "xbox.gip"]
-                    }
-                  },
-                  "required": ["family"]
+          "modes": {
+            "contains": {
+              "properties": {
+                "id": {
+                  "const": "default"
                 },
-                {
-                  "properties": {
-                    "family": {
-                      "const": "vendor.gamesir"
-                    },
-                    "variant": {
-                      "const": "usb"
-                    }
-                  },
-                  "required": ["family", "variant"]
+                "protocol": {
+                  "not": {
+                    "anyOf": [
+                      {
+                        "properties": {
+                          "family": {
+                            "enum": ["xbox.xid", "xbox.xusb", "xbox.gip"]
+                          }
+                        },
+                        "required": ["family"]
+                      },
+                      {
+                        "properties": {
+                          "family": {
+                            "const": "vendor.gamesir"
+                          },
+                          "variant": {
+                            "const": "usb"
+                          }
+                        },
+                        "required": ["family", "variant"]
+                      }
+                    ]
+                  }
                 }
-              ]
+              },
+              "required": ["id", "protocol"]
             }
           }
         }
@@ -1806,13 +2088,23 @@
       },
       "then": {
         "properties": {
-          "protocol": {
-            "properties": {
-              "family": {
-                "const": "nintendo.switch2"
-              }
-            },
-            "required": ["family"]
+          "modes": {
+            "contains": {
+              "properties": {
+                "id": {
+                  "const": "default"
+                },
+                "protocol": {
+                  "properties": {
+                    "family": {
+                      "const": "nintendo.switch2"
+                    }
+                  },
+                  "required": ["family"]
+                }
+              },
+              "required": ["id", "protocol"]
+            }
           }
         }
       }

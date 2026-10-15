@@ -6,13 +6,18 @@
     "productID": 4134
   },
   "patch": {
-    "protocol": {
-      "family": "sony.dualsense",
-      "parameters": {
-        "maker": "ThirdParty",
-        "unprobedTouchpad": true,
-        "role": "Receiver"
+    "modes": [
+      {
+        "id": "default",
+        "protocol": {
+          "family": "sony.dualsense",
+          "parameters": {
+            "maker": "ThirdParty",
+            "unprobedTouchpad": true,
+            "role": "Receiver"
+          }
+        }
       }
-    }
+    ]
   }
 }

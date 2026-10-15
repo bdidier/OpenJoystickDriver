@@ -301,7 +301,7 @@ def build_profile(
         **header(KINDS["controller"]),
         "vendorID": device.vendor_id,
         "productID": device.product_id,
-        "protocol": protocol,
+        "modes": [{"id": "default", "protocol": protocol}],
     }
     if absent:
         profile["capabilities"] = {"absent": absent}

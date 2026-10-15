@@ -6,9 +6,14 @@
     "productID": 51921
   },
   "patch": {
-    "protocol": {
-      "family": "hid.report-layout"
-    },
+    "modes": [
+      {
+        "id": "default",
+        "protocol": {
+          "family": "hid.report-layout"
+        }
+      }
+    ],
     "input": {
       "report": {
         "length": 18

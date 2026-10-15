@@ -24,7 +24,6 @@ LAYERS = ("builtin", "package", "user")
 MODEL_PATTERN = re.compile(r"[0-9a-f]{4}-[0-9a-f]{4}\Z")
 SECTIONS = frozenset(
     {
-        "protocol",
         "modes",
         "usb",
         "bluetoothLE",
@@ -112,14 +111,23 @@ def merge_patch(target: Any, patch: Any) -> Any:
     return result
 
 
+def default_protocol(record: dict[str, Any]) -> dict[str, Any]:
+    """The protocol of `record`'s `default` mode; empty when the record has none."""
+    modes = record.get("modes")
+    for mode in modes if isinstance(modes, list) else []:
+        if isinstance(mode, dict) and mode.get("id") == "default":
+            info = mode.get("protocol")
+            return info if isinstance(info, dict) else {}
+    return {}
+
+
 def tuning_scope(record: dict[str, Any]) -> frozenset[str]:
     """The `tuning` keys that a controller of `record`'s family reads.
 
     `ControllerTuning.scope(ofDocument:)` in Swift is the same rule. A record with no known
     family reads only `stickDeadzone` and `frameQueueCapacity`.
     """
-    info = record.get("protocol")
-    info = info if isinstance(info, dict) else {}
+    info = default_protocol(record)
     family = info.get("family")
     family = family if family in KNOWN_FAMILIES else None
     raw_usb = family in RAW_USB_FAMILIES or (
@@ -196,7 +204,7 @@ def parse_patch(document: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any
     rank = selector_rank(selector)
     if not patch or not set(patch) <= SECTIONS:
         raise PatchError(
-            "patch must hold protocol, modes, usb, bluetoothLE, server, route, "
+            "patch must hold modes, usb, bluetoothLE, server, route, "
             "output, input, or tuning"
         )
     if rank == RANK_ALL and set(patch) != {"tuning"}:

@@ -6,11 +6,16 @@
     "productID": 29200
   },
   "patch": {
-    "protocol": {
-      "family": "vendor.nvidia-shield",
-      "parameters": {
-        "reportRevision": "Shield2015"
+    "modes": [
+      {
+        "id": "default",
+        "protocol": {
+          "family": "vendor.nvidia-shield",
+          "parameters": {
+            "reportRevision": "Shield2015"
+          }
+        }
       }
-    }
+    ]
   }
 }

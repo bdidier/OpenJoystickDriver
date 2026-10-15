@@ -61,18 +61,8 @@
       "minProperties": 1,
       "additionalProperties": false,
       "properties": {
-        "protocol": {
-          "type": ["object", "null"]
-        },
         "modes": {
-          "anyOf": [
-            {
-              "$ref": "controller.schema.json#/$defs/modes"
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "$ref": "controller.schema.json#/$defs/modes"
         },
         "usb": {
           "type": ["object", "null"]

@@ -73,24 +73,28 @@ def usage_map_problem(usage_map: dict[str, Any]) -> str | None:
     return None
 
 
+def default_mode(record: dict[str, Any]) -> dict[str, Any]:
+    return next(mode for mode in record["modes"] if mode["id"] == "default")
+
+
 def validate_modes(path: pathlib.Path, record: dict[str, Any]) -> None:
-    """The record-level rules every mode's protocol obeys, as `validateModes` in Swift."""
-    modes = record.get("modes", [])
-    if not modes:
-        return
+    """The record-level rules every mode obeys, as `validateModes` in Swift."""
+    modes = record["modes"]
     identifiers = [mode["id"] for mode in modes]
     require(
         len(set(identifiers)) == len(identifiers),
         f"{path}: mode IDs must be unique: {identifiers}",
     )
-    has_layout = "input" in record
+    has_layout = "report" in record.get("input", {})
     has_template = "rumble" in record.get("output", {})
-    for protocol in [record["protocol"], *(mode["protocol"] for mode in modes)]:
-        family = protocol["family"]
-        require(
-            not uses_raw_usb(protocol),
-            f"{path}: modes apply only to HID controllers",
-        )
+    if len(modes) > 1:
+        for mode in modes:
+            require(
+                not uses_raw_usb(mode["protocol"]),
+                f"{path}: modes apply only to HID controllers",
+            )
+    for mode in modes:
+        family = mode["protocol"]["family"]
         require(
             has_layout == (family == "hid.report-layout"),
             f"{path}: every mode needs the record's input layout exactly when it is "
@@ -104,8 +108,18 @@ def validate_modes(path: pathlib.Path, record: dict[str, Any]) -> None:
             capabilities_are_declared(record, family),
             f"{path}: capabilities must be deltas the driver of every mode declares",
         )
-    for mode in modes:
-        for probe in mode["match"]["probes"]:
+        match = mode.get("match", {})
+        bcd = match.get("bcdDevice")
+        require(
+            bcd is None or bcd["min"] <= bcd["max"],
+            f"{path}: mode {mode['id']} bcdDevice min must not exceed max",
+        )
+        interface = mode.get("interface")
+        require(
+            interface is None or interface["first"] <= interface["last"],
+            f"{path}: mode {mode['id']} interface first must not exceed last",
+        )
+        for probe in match.get("probes", []):
             if probe["expect"] == "bytes":
                 end = probe["offset"] + len(probe["bytes"].split(" "))
                 require(
@@ -173,7 +187,7 @@ def validate_record(
         expected = expected_relative_path(vendor_id, product_id)
         require(relative == expected, f"{path}: path must be {expected}")
 
-    return vendor_id, product_id, record["protocol"]["family"]
+    return vendor_id, product_id, default_mode(record)["protocol"]["family"]
 
 
 def validate_catalog(record_dir: pathlib.Path = RECORD_DIR) -> list[pathlib.Path]:

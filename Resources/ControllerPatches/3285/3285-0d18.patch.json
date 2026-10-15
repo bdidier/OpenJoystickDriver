@@ -6,13 +6,18 @@
     "productID": 3352
   },
   "patch": {
-    "protocol": {
-      "family": "sony.dualsense",
-      "parameters": {
-        "maker": "ThirdParty",
-        "forcedVibration": true,
-        "role": "Receiver"
+    "modes": [
+      {
+        "id": "default",
+        "protocol": {
+          "family": "sony.dualsense",
+          "parameters": {
+            "maker": "ThirdParty",
+            "forcedVibration": true,
+            "role": "Receiver"
+          }
+        }
       }
-    }
+    ]
   }
 }
