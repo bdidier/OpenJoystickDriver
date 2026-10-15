@@ -36,7 +36,8 @@
   "defaults": {
     "tuning": {
       "keepAliveIntervalMs": 40,
-      "lizardResendTicks": 75
+      "lizardResendTicks": 75,
+      "frameQueueCapacity": 64
     }
   }
 }

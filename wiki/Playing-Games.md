@@ -19,18 +19,18 @@ Games do not read your physical controller. OJD reads it and publishes one virtu
 
 | Profile | Shown to games as | VID:PID | Rumble |
 | --- | --- | --- | --- |
-| `hid-xbox-one-s-bt` | Xbox Wireless Controller, Microsoft, Bluetooth | `045E:02FD` | Accepts rumble output |
-| `hid-generic` | OpenJoystickDriver Generic HID Gamepad, USB | `1209:4A4F` | Input only |
+| `SdlCompatible` | Xbox Wireless Controller, Microsoft, Bluetooth | `045E:02FD` | Accepts rumble output |
+| `Generic` | OpenJoystickDriver Generic HID Gamepad, USB | `1209:4A4F` | Input only |
 
-The `hid-xbox-one-s-bt` profile is an approximation of an Xbox controller. It is not a byte-exact copy of a real controller. The `hid-generic` profile has 16 buttons and no hat. The D-pad uses four of the 16 buttons.
+The `SdlCompatible` profile is an approximation of an Xbox controller. It is not a byte-exact copy of a real controller. The `Generic` profile has 16 buttons and no hat. The D-pad uses four of the 16 buttons.
 
 ### Automatic Selection
 
 OJD picks a profile for each controller model in this order:
 
 1. The override that you set for the model, if the profile fits the controller.
-2. The `hid-xbox-one-s-bt` profile, if it fits the main controls of the controller.
-3. The `hid-generic` profile.
+2. The `SdlCompatible` profile, if it fits the main controls of the controller.
+3. The `Generic` profile.
 
 The choice does not depend on the game, the macOS version, or the vendor. In current builds, the code suggests that OJD chooses the Xbox profile for most controllers. Not verified for every model.
 
@@ -91,9 +91,9 @@ This section explains what reaches your physical controller when a game sends ru
 
 ### Rumble From Games
 
-The `hid-xbox-one-s-bt` virtual controller accepts rumble output. When a game sends rumble, OJD turns it into one short rumble command for the physical controller. OJD sends a stop command when the rumble ends. The maintainer has not verified rumble in games on hardware.
+The `SdlCompatible` virtual controller accepts rumble output. When a game sends rumble, OJD turns it into one short rumble command for the physical controller. OJD sends a stop command when the rumble ends. The maintainer has not verified rumble in games on hardware.
 
-Only rumble reaches the physical controller. OJD does not pass lightbar or lighting commands from games to the controller. The `hid-generic` profile has no rumble.
+Only rumble reaches the physical controller. OJD does not pass lightbar or lighting commands from games to the controller. The `Generic` profile has no rumble.
 
 The controller must support rumble. If it does not support a motor, OJD drops that channel. Controllers that use Generic HID have no rumble.
 

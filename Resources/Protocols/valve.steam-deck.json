@@ -34,7 +34,8 @@
   },
   "defaults": {
     "tuning": {
-      "keepAliveIntervalMs": 1000
+      "keepAliveIntervalMs": 1000,
+      "frameQueueCapacity": 64
     }
   }
 }

@@ -1,16 +1,9 @@
 {
   "apiVersion": "openjoystickdriver/v1alpha1",
-  "kind": "Persona",
+  "kind": "VirtualDevice",
+  "persona": "SdlCompatible",
   "match": {
     "vendorID": 4617,
     "productID": 1
-  },
-  "descriptor": "hid-generic",
-  "identity": {
-    "vendorID": 4617,
-    "productID": 1,
-    "productName": "OJD Sample Pad",
-    "manufacturer": "OpenJoystickDriver",
-    "glyphFamily": "generic"
   }
 }

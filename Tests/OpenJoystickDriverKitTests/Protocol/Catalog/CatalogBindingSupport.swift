@@ -128,7 +128,7 @@ extension DeviceRuntimeProfile {
       gipStartupPackets: gipStartupPackets,
       gipKeepAlivePolicy: gipKeepAlivePolicy,
       assemblyPolicy: assemblyPolicy,
-      ownership: ownership,
+      server: server,
       rumbleTemplate: rumbleTemplate,
       startupWrites: startupWrites,
       usbStartupWrites: usbStartupWrites,

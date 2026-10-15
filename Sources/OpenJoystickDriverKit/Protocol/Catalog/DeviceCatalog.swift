@@ -36,10 +36,10 @@ struct DeviceCatalog: Sendable {
     profiles[model]?.applying(modeID: modeID)
   }
 
-  /// Whether the record sets `ownership: ojd`, so OJD seizes the controller even when macOS
+  /// Whether the record sets `server: ojd`, so OJD seizes the controller even when macOS
   /// serves it natively. The stream reads it when a device is added.
   func takesOwnership(of model: ControllerModelID) -> Bool {
-    record(for: model)?.ownership == .ojd
+    record(for: model)?.server == .ojd
   }
 
   /// The runtime profile for one decoded record; the record probe plan builds on it too.
@@ -84,7 +84,7 @@ struct DeviceCatalog: Sendable {
       gipStartupPackets: protocolInfo.initialization ?? [],
       gipKeepAlivePolicy: keepAlivePolicy,
       assemblyPolicy: protocolInfo.assembly,
-      ownership: record.ownership ?? .macOS,
+      server: record.server ?? .system,
       rumbleTemplate: record.rumbleTemplate,
       startupWrites: record.startupWrites,
       usbStartupWrites: record.usbStartupWrites,
@@ -121,7 +121,7 @@ struct DeviceCatalog: Sendable {
       gipStartupPackets: [],
       gipKeepAlivePolicy: .enabled,
       assemblyPolicy: nil,
-      ownership: .macOS,
+      server: .system,
       rumbleTemplate: nil,
       startupWrites: [],
       usbStartupWrites: [],

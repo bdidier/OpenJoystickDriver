@@ -1,0 +1,15 @@
+{
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "VirtualDevice",
+  "persona": "Generic",
+  "layout": "ojd-generic-gamepad",
+  "transport": "USB",
+  "labels": "generic",
+  "identity": {
+    "vendorID": 4617,
+    "productID": 19023,
+    "version": 1032,
+    "productName": "OpenJoystickDriver Generic HID Gamepad",
+    "manufacturer": "OpenJoystickDriver"
+  }
+}

@@ -1,8 +1,8 @@
 import Foundation
 
-/// Sets the `ownership` of one controller model in the user's controller-record directory.
+/// Sets the `server` of one controller model in the user's controller-record directory.
 ///
-/// An existing user file keeps every other key; only `ownership` is set or replaced. A missing
+/// An existing user file keeps every other key; only `server` is set or replaced. A missing
 /// file becomes a ControllerPatch file when the bundled catalog or an installed package has the
 /// model, because a patch applies over one of their records. The record watcher of the service
 /// applies the change.
@@ -10,9 +10,9 @@ public enum ControllerOwnershipWriter {
   /// One planned change, before ``write(_:)`` stores it.
   public struct Change: Sendable {
     public let model: ControllerModelID
-    public let ownership: ControllerOwnership
-    /// The effective ownership before the change; `macos` when no layer sets it.
-    public let previous: ControllerOwnership
+    public let ownership: ControllerServer
+    /// The effective ownership before the change; `system` when no layer sets it.
+    public let previous: ControllerServer
     /// The user file the change writes.
     public let file: URL
     /// Whether the change creates the file.
@@ -29,15 +29,15 @@ public enum ControllerOwnershipWriter {
     case noRecord
     /// The existing user file is invalid, with its problem.
     case invalidFile(String)
-    /// The changed record is invalid, such as `ownership` on a raw-USB family, with its problem.
+    /// The changed record is invalid, such as `server` on a raw-USB family, with its problem.
     case invalidResult(String)
   }
 
-  /// The change that sets `ownership` for `model` in `directory`. `records` is the loaded
+  /// The change that sets `server` for `model` in `directory`. `records` is the loaded
   /// record set, which gives the effective ownership before the change.
   public static func change(
     _ model: ControllerModelID,
-    to ownership: ControllerOwnership,
+    to ownership: ControllerServer,
     records: ControllerRecordSet,
     directory: URL = ControllerRecordSet.userDirectory
   ) throws(Failure) -> Change {
@@ -58,7 +58,7 @@ public enum ControllerOwnershipWriter {
       guard packages[model] != nil else { throw .noRecord }
       document = ControllerPatch.document(
         selector: .identity(model),
-        body: ["ownership": ownership.rawValue]
+        body: ["server": ownership.rawValue]
       )
     }
     let data: Data
@@ -72,7 +72,7 @@ public enum ControllerOwnershipWriter {
     return Change(
       model: model,
       ownership: ownership,
-      previous: (records.records[model] ?? packages[model])?.profile.ownership ?? .macOS,
+      previous: (records.records[model] ?? packages[model])?.profile.server ?? .system,
       file: file,
       created: existing == nil,
       data: data
@@ -88,12 +88,12 @@ public enum ControllerOwnershipWriter {
     try change.data.write(to: change.file, options: .atomic)
   }
 
-  /// The existing user file with `ownership` set in the Controller file or in the `patch` of the
+  /// The existing user file with `server` set in the Controller file or in the `patch` of the
   /// ControllerPatch file.
   private static func updated(
     _ data: Data,
     file: URL,
-    ownership: ControllerOwnership,
+    ownership: ControllerServer,
     packages: [ControllerModelID: ControllerRecord]
   ) throws(Failure) -> [String: Any] {
     let operation: ControllerRecordOperation
@@ -104,10 +104,10 @@ public enum ControllerOwnershipWriter {
       throw .invalidFile("the file is not a JSON object")
     }
     if operation == .add {
-      document["ownership"] = ownership.rawValue
+      document["server"] = ownership.rawValue
     } else {
       var fields = document["patch"] as? [String: Any] ?? [:]
-      fields["ownership"] = ownership.rawValue
+      fields["server"] = ownership.rawValue
       document["patch"] = fields
     }
     return document

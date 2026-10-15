@@ -23,5 +23,10 @@
     ],
     "touchContactCount": 1,
     "motion": true
+  },
+  "defaults": {
+    "tuning": {
+      "frameQueueCapacity": 64
+    }
   }
 }

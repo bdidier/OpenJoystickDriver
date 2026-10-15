@@ -21,7 +21,7 @@ struct ControllerOwnershipRequestsTests {
 
   private static func set(
     _ model: (vendorID: Int, productID: Int),
-    to ownership: ControllerOwnership,
+    to ownership: ControllerServer,
     native: Bool,
     in directory: URL
   ) -> ControllerOwnershipResult {
@@ -34,9 +34,9 @@ struct ControllerOwnershipRequestsTests {
     )
   }
 
-  private static func loadedOwnership(in directory: URL) -> ControllerOwnership? {
+  private static func loadedOwnership(in directory: URL) -> ControllerServer? {
     ControllerRecordSet.load(userDirectory: directory)
-      .records[ControllerModelID(vendorID: 0x2C22, productID: 0x2000)]?.ownership
+      .records[ControllerModelID(vendorID: 0x2C22, productID: 0x2000)]?.server
   }
 
   @Test
@@ -44,24 +44,24 @@ struct ControllerOwnershipRequestsTests {
     try Self.withDirectory { directory in
       let toOJD = Self.set(Self.bundledHID, to: .ojd, native: true, in: directory)
       #expect(toOJD.failure == nil)
-      #expect(toOJD.previous == .macOS)
+      #expect(toOJD.previous == .system)
       #expect(toOJD.created)
       #expect(toOJD.file?.hasSuffix("Controllers/2c22-2000.patch.json") == true)
       #expect(Self.loadedOwnership(in: directory) == .ojd)
 
       // A model OJD already serves counts as native, as its seized controller is no gamepad.
-      let back = Self.set(Self.bundledHID, to: .macOS, native: false, in: directory)
+      let back = Self.set(Self.bundledHID, to: .system, native: false, in: directory)
       #expect(back.failure == nil)
       #expect(back.previous == .ojd)
       #expect(!back.created)
-      #expect(Self.loadedOwnership(in: directory) == .macOS)
+      #expect(Self.loadedOwnership(in: directory) == .system)
     }
   }
 
   @Test
   func rawUSBModelIsRefusedAndNothingIsWritten() throws {
     try Self.withDirectory { directory in
-      let result = Self.set(Self.bundledGIP, to: .macOS, native: true, in: directory)
+      let result = Self.set(Self.bundledGIP, to: .system, native: true, in: directory)
       #expect(result.failure == .rawUSB)
       #expect(result.file == nil)
       #expect(!FileManager.default.fileExists(atPath: directory.path))
@@ -104,7 +104,7 @@ struct ControllerOwnershipRequestsTests {
   func resultRoundTripsThroughJSON() throws {
     let result = ControllerOwnershipResult(
       ownership: .ojd,
-      previous: .macOS,
+      previous: .system,
       file: "/tmp/2c22-2000.patch.json",
       created: true,
       failure: nil
@@ -112,9 +112,9 @@ struct ControllerOwnershipRequestsTests {
     let data = try JSONEncoder().encode(result)
     #expect(try JSONDecoder().decode(ControllerOwnershipResult.self, from: data) == result)
     let arguments = try JSONEncoder().encode(
-      LocalServiceRPCControllerOwnershipArguments(vendorID: 1, productID: 2, ownership: .macOS)
+      LocalServiceRPCControllerOwnershipArguments(vendorID: 1, productID: 2, ownership: .system)
     )
     let object = try JSONSerialization.jsonObject(with: arguments) as? [String: Any]
-    #expect(object?["ownership"] as? String == "macos")
+    #expect(object?["ownership"] as? String == "system")
   }
 }

@@ -5,7 +5,7 @@ Everything is driven through `./Scripts/ojd`. Run `./Scripts/ojd help` for the r
 ## Prerequisites
 
 - macOS with Xcode installed and launched once. `Package.swift` declares `swift-tools-version:6.4.0` and a macOS 12 deployment floor. CI pins Xcode 27.0 and Swift 6.4 on the `xcode-27` runner image.
-- Homebrew, for the helper tools. In an interactive terminal, each `./Scripts/ojd` route offers to install only the formulas it is missing. `./Scripts/ojd setup` installs `just`, `bun`, `ruff`, `pyright`, `shellcheck`, `swiftlint`, and `biome`, plus the Git hooks (husky, installed through `bun install`; commit messages are checked by commitlint).
+- Homebrew, for the helper tools. In an interactive terminal, each `./Scripts/ojd` route offers to install only the formulas it is missing. `./Scripts/ojd setup` installs `just`, `bun`, `ruff`, `pyright`, `shellcheck`, and `swiftlint`, plus the Git hooks and the pinned Biome (`@biomejs/biome` in `package.json`; husky, commitlint and Biome are all installed through `bun install`).
 - Python 3. The dispatcher creates its own schema-validation environment.
 
 Most routes that build or run Swift code require full Xcode, not only the Command Line Tools. The route requirements in `Scripts/Platform/capability_requirements.py` list full Xcode for `check schemas`, `check driverkit`, `diagnose record`, `test parsers-macos14`, and every `build` and `release` route. When Xcode is missing, the route prints guidance and stops. Routes that only read or regenerate catalog data (`check profiles`, `catalog regenerate`) need Python alone. Whether a plain `swift build` or `swift test` works with only the Command Line Tools has not been verified.

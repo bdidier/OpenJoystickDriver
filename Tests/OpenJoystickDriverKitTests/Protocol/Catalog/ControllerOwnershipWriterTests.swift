@@ -24,7 +24,7 @@ struct ControllerOwnershipWriterTests {
 
   private static func change(
     _ identity: ControllerModelID,
-    to ownership: ControllerOwnership,
+    to ownership: ControllerServer,
     in directory: URL
   ) throws -> ControllerOwnershipWriter.Change {
     try ControllerOwnershipWriter.change(
@@ -44,17 +44,17 @@ struct ControllerOwnershipWriterTests {
     try Self.withDirectory { directory, _ in
       let change = try Self.change(Self.bundledHID, to: .ojd, in: directory)
       #expect(change.created)
-      #expect(change.previous == .macOS)
+      #expect(change.previous == .system)
       #expect(change.file.lastPathComponent == "2c22-2000.patch.json")
       try ControllerOwnershipWriter.write(change)
       let written = try Self.object(Data(contentsOf: change.file))
       #expect(written["kind"] as? String == "ControllerPatch")
       let selector = try #require(written["selector"] as? [String: Int])
       #expect(selector == ["vendorID": 0x2C22, "productID": 0x2000])
-      #expect(written["patch"] as? [String: String] == ["ownership": "ojd"])
+      #expect(written["patch"] as? [String: String] == ["server": "ojd"])
       let loaded = ControllerRecordSet.load(userDirectory: directory)
-      #expect(loaded.records[Self.bundledHID]?.profile.ownership == .ojd)
-      #expect(loaded.records[Self.bundledHID]?.fieldLayers["ownership"] == .user)
+      #expect(loaded.records[Self.bundledHID]?.profile.server == .ojd)
+      #expect(loaded.records[Self.bundledHID]?.fieldLayers["server"] == .user)
     }
   }
 
@@ -65,16 +65,16 @@ struct ControllerOwnershipWriterTests {
       try JSONSerialization.data(
         withJSONObject: ControllerPatch.document(
           selector: .identity(Self.bundledHID),
-          body: ["ownership": "ojd", "tuning": ["stickDeadzone": 0.1]]
+          body: ["server": "ojd", "tuning": ["stickDeadzone": 0.1]]
         )
       )
       .write(to: file)
-      let change = try Self.change(Self.bundledHID, to: .macOS, in: directory)
+      let change = try Self.change(Self.bundledHID, to: .system, in: directory)
       #expect(!change.created)
       #expect(change.previous == .ojd)
       try ControllerOwnershipWriter.write(change)
       let set = try #require(try Self.object(Data(contentsOf: file))["patch"] as? [String: Any])
-      #expect(set["ownership"] as? String == "macos")
+      #expect(set["server"] as? String == "system")
       #expect(set["tuning"] as? [String: Double] == ["stickDeadzone": 0.1])
     }
   }
@@ -98,8 +98,8 @@ struct ControllerOwnershipWriterTests {
       try ControllerOwnershipWriter.write(change)
       let loaded = ControllerRecordSet.load(userDirectory: directory)
       let effective = try #require(loaded.records[Self.unbundled])
-      #expect(effective.profile.ownership == .ojd)
-      #expect(effective.fieldLayers == ["protocol": .package, "ownership": .user])
+      #expect(effective.profile.server == .ojd)
+      #expect(effective.fieldLayers == ["protocol": .package, "server": .user])
       #expect(loaded.problems.isEmpty)
     }
   }
@@ -137,7 +137,7 @@ struct ControllerOwnershipWriterTests {
           Issue.record("unexpected failure \(error)")
           return
         }
-        #expect(problem.contains("ownership"))
+        #expect(problem.contains("server"))
       }
     }
   }

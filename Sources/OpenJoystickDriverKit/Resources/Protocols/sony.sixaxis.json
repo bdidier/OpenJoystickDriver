@@ -24,5 +24,10 @@
   "controls": {
     "base": "xbox",
     "add": ["guide", "left-trigger-button", "right-trigger-button"]
+  },
+  "defaults": {
+    "tuning": {
+      "frameQueueCapacity": 64
+    }
   }
 }

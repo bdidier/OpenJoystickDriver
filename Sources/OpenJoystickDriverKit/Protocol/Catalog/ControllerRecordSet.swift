@@ -55,8 +55,11 @@ public struct ControllerRecord: Sendable {
   /// Whether the family reaches the controller through raw USB rather than HID.
   public var usesRawUSB: Bool { profile.usesRawUSB }
 
-  /// Who serves the controller: `macos` unless a layer sets `ojd`.
-  public var ownership: ControllerOwnership { profile.ownership }
+  /// How OJD reaches the controller: the record route, else the family.
+  public var accessRoute: ControllerAccessRoute { profile.accessRoute }
+
+  /// Who serves the controller: `system` unless a layer sets `ojd`.
+  public var server: ControllerServer { profile.server }
 
   /// The route the record asks for; nil leaves it to the family.
   public var route: ControllerRecordRoute? { profile.route }

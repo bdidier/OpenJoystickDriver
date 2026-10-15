@@ -18,6 +18,10 @@ extension ControllerTuning {
     case usbStartupIntervalMs
     case usbStartupRetryDelayMs
     case usbTransferTimeoutMs
+    case frameQueueCapacity
+
+    /// The keys every driver reads, whatever its family.
+    static let alwaysRead: Set<Key> = [.stickDeadzone, .frameQueueCapacity]
   }
 
   /// The keys this tuning sets.
@@ -40,6 +44,7 @@ extension ControllerTuning {
     case .usbStartupIntervalMs: usbStartupIntervalMilliseconds.map(String.init)
     case .usbStartupRetryDelayMs: usbStartupRetryDelayMilliseconds.map(String.init)
     case .usbTransferTimeoutMs: usbTransferTimeoutMilliseconds.map(String.init)
+    case .frameQueueCapacity: frameQueueCapacity.map(String.init)
     }
   }
 
@@ -69,7 +74,8 @@ extension ControllerTuning {
       usbStartupRetryDelayMilliseconds: higher.usbStartupRetryDelayMilliseconds
         ?? usbStartupRetryDelayMilliseconds,
       usbTransferTimeoutMilliseconds: higher.usbTransferTimeoutMilliseconds
-        ?? usbTransferTimeoutMilliseconds
+        ?? usbTransferTimeoutMilliseconds,
+      frameQueueCapacity: higher.frameQueueCapacity ?? frameQueueCapacity
     )
   }
 
@@ -100,7 +106,8 @@ extension ControllerTuning {
       usbStartupRetryDelayMilliseconds: keys.contains(.usbStartupRetryDelayMs)
         ? usbStartupRetryDelayMilliseconds : nil,
       usbTransferTimeoutMilliseconds: keys.contains(.usbTransferTimeoutMs)
-        ? usbTransferTimeoutMilliseconds : nil
+        ? usbTransferTimeoutMilliseconds : nil,
+      frameQueueCapacity: keys.contains(.frameQueueCapacity) ? frameQueueCapacity : nil
     )
   }
 }
@@ -113,8 +120,8 @@ extension ControllerRecord {
 extension ControllerTuning {
   /// Why `key` does not apply to a controller of this family and stored variant, or nil when a
   /// driver reads it. A nil `protocolID` is a record with no known family: it reads only
-  /// `stickDeadzone`. The family's description holds the keys; `controller_patch.py`
-  /// reads the same description.
+  /// `stickDeadzone` and `frameQueueCapacity`. The family's description holds the keys;
+  /// `controller_patch.py` reads the same description.
   static func scopeViolation(
     _ key: Key,
     protocolID: PhysicalProtocolID?,
@@ -129,7 +136,7 @@ extension ControllerTuning {
     protocolID: PhysicalProtocolID?,
     variant: PhysicalProtocolVariantID?
   ) -> Set<Key> {
-    guard let description = protocolID?.protocolDescription else { return [.stickDeadzone] }
+    guard let description = protocolID?.protocolDescription else { return Key.alwaysRead }
     return description.tuningScope(variant: variant)
   }
 

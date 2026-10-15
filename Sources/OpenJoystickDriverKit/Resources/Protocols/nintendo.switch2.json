@@ -22,7 +22,8 @@
   "defaults": {
     "tuning": {
       "keepAliveIntervalMs": 12,
-      "usbCommandTimeoutMs": 1000
+      "usbCommandTimeoutMs": 1000,
+      "frameQueueCapacity": 64
     },
     "output": {
       "startup": [

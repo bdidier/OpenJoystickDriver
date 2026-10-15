@@ -80,16 +80,6 @@
         "bluetoothLE": {
           "type": ["object", "null"]
         },
-        "ownership": {
-          "anyOf": [
-            {
-              "$ref": "controller.schema.json#/$defs/ownership"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
         "route": {
           "anyOf": [
             {
@@ -249,8 +239,28 @@
                   "type": "null"
                 }
               ]
+            },
+            "frameQueueCapacity": {
+              "anyOf": [
+                {
+                  "$ref": "controller.schema.json#/$defs/tuning/properties/frameQueueCapacity"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             }
           }
+        },
+        "server": {
+          "anyOf": [
+            {
+              "$ref": "controller.schema.json#/$defs/server"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       }
     }

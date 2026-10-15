@@ -31,7 +31,8 @@
       "hidStartupIntervalMs": 20,
       "minimumHIDOutputIntervalMs": 20,
       "keepAliveIntervalMs": 500,
-      "usbCommandTimeoutMs": 2000
+      "usbCommandTimeoutMs": 2000,
+      "frameQueueCapacity": 64
     },
     "output": {
       "startup": [

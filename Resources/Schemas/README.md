@@ -6,7 +6,7 @@
 
 - `controller.schema.json`: generated runtime controller records.
 - `controller-patch.schema.json`: a `ControllerPatch`, an RFC 7396 merge patch of a controller record chosen by a `selector` (`model`, `vendorID` and `productID`, or `all`). The authored patches in `Resources/ControllerPatches/` and the user and package files `Controllers/*.patch.json` use it, and `Controllers/all.patch.json` gives the `tuning` defaults for every controller. It checks the patch shape only; the merged record is checked against `controller.schema.json`.
-- `persona.schema.json`: a persona file, which matches a controller and gives the descriptor and HID identity its virtual gamepad publishes.
+- `virtual-device.schema.json`: a virtual device file, which defines a persona (`Generic` or `SdlCompatible`) or, with `match`, selects one for a controller and gives the HID identity its virtual gamepad publishes.
 - `mod-package.schema.json`: the `mod.json` manifest of a mod package folder.
 - `protocol-description.schema.json`: the authored protocol descriptions `Resources/Protocols/<family>.json`, which hold what is true of every device of a family. The file name must equal `family`. A description holds:
   - `endpoints`: the USB endpoint addresses (`in`, `out`) the driver uses.
@@ -34,7 +34,7 @@ Each artifact class has one current contract, a flat `<kind>.schema.json` here. 
 | --- | --- |
 | `controller.schema.json` | `Controller` |
 | `controller-patch.schema.json` | `ControllerPatch` |
-| `persona.schema.json` | `Persona` |
+| `virtual-device.schema.json` | `VirtualDevice` |
 | `profile.schema.json` | `Profile` |
 | `mod-package.schema.json` | `ModPackage` |
 | `protocol-description.schema.json` | `ProtocolDescription` |

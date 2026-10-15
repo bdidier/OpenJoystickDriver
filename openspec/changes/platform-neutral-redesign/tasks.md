@@ -18,7 +18,7 @@ This is a plan. No task here is done. Each work package (WP) lists what it owns,
   - `.build/schema-validator/bin/python -m unittest discover -s Tests/RepositoryScripts`
   - shellcheck over `Scripts`
   - markdownlint over tracked and untracked `.md` files outside `.agents/`
-  - `swift-format lint --recursive --strict Package.swift Sources Tests`
+  - `swift-format lint --recursive --strict Package.swift Sources Tests Tools`
   - `swiftlint lint --no-cache --strict`
   - `python3 Scripts/Quality/check_swift_file_length.py`
   - `python3 Scripts/Quality/check_localization_keys.py`
@@ -64,7 +64,7 @@ Verify: `./Scripts/ojd catalog regenerate --check`, `ruff format --check Scripts
 
 Owns: the model identifier type and its use in stores.
 Depends: 1.
-Verify: `swift test`, `swift-format lint --recursive --strict Package.swift Sources Tests`, `swiftlint lint --no-cache --strict`.
+Verify: `swift test`, `swift-format lint --recursive --strict Package.swift Sources Tests Tools`, `swiftlint lint --no-cache --strict`.
 
 - [x] 3.1 Introduce `ControllerModelID` as the key of a record kind of controller. Verify: unit test that two physical units of one model share one ID.
 - [x] 3.2 Replace the uses of the overloaded identifier that mean "model". Verify: build passes and 1.1 to 1.3 show zero diffs.
@@ -171,11 +171,11 @@ Owns: `ServingRoute` and `VirtualDevice` kinds; the single serving policy.
 Depends: 6, 8, 11.
 Verify: `swift test`, `./Scripts/ojd check profiles`, `./Scripts/ojd test parsers-macos14`.
 
-- [ ] 12.1 Define routes (`ExtensionOwned`, raw access, `System`) and the `server` field `system` or `ojd`. Verify: route table test over all records matches the 1.2 snapshot.
-- [ ] 12.2 Define `VirtualDevice` records for `Generic` and `SdlCompatible`; `Generic` is the default. Name personas by these ids everywhere (`ojd virtual feed`, `cli-output.schema.json`, `VirtualHIDProfile`) and delete the endpoint's `EndpointPersona.profileName` mapping to `hid-generic`/`hid-xbox-one-s-bt`. Verify: a test checks the default and that the opt-in switches the persona without replug.
-- [ ] 12.3 Put route and persona choice in one policy that the service, CLI, GUI and endpoint all call. Verify: a test shows the four callers get the same answer for a fixture set.
+- [x] 12.1 Define routes (`ExtensionOwned`, raw access, `System`) and the `server` field `system` or `ojd`. Verify: route table test over all records matches the 1.2 snapshot. Done: records carry `server` (`system` or `ojd`) and an access route; `recordRoutesMatchSnapshot` checks the route table of every record against the `record-routes` snapshot.
+- [x] 12.2 Define `VirtualDevice` records for `Generic` and `SdlCompatible`; `Generic` is the default. Name personas by these ids everywhere, with the kebab-case forms `generic` and `sdl-compatible` on the command line (`ojd virtual feed`, `cli-output.schema.json`, `VirtualHIDProfile`) and delete the endpoint's `EndpointPersona.profileName` mapping to `hid-generic`/`hid-xbox-one-s-bt`. Verify: a test checks the default and that the opt-in switches the persona without replug. Done: `virtual-device.generic.json` and `virtual-device.sdl-compatible.json` under `virtual-device.schema.json`; `EndpointPersona.profileName` is gone; tests cover the `Generic` default and the opt-in retargeting without replug; Python `test_virtual_device_schema.py` rejects bad headers, ids and members.
+- [x] 12.3 Put route and persona choice in one policy that the service, CLI, GUI and endpoint all call. Verify: a test shows the four callers get the same answer for a fixture set. Done: `ServingPolicy` is the only caller of the profile selector; `theServiceDescriptionTheWatchStreamServesTheCLIAndTheGUIAnswerWhatThePolicyDecided` runs a fixture set through the service description (which the endpoint's watch stream serves), the CLI and the GUI. The per-app input was dropped from the spec: macOS does not say which app reads a virtual HID device.
 - [ ] 12.4 Add `ojd controller claim <ref>` and `ojd controller release <ref>` and remove `controller ownership`. Verify: CLI tests for success, `--dry-run`, `--json`, and the refusal `error.E2023` for raw-USB routes.
-- [ ] 12.5 Keep stick-report delivery semantics (newest state within one send time, every button edge). Verify: the existing delivery tests pass for both personas.
+- [x] 12.5 Keep stick-report delivery semantics (newest state within one send time, every button edge). Verify: the existing delivery tests pass for both personas. Done: the stick-delivery tests run for both personas (`Generic` and `SdlCompatible`) and pass.
 
 ## 13. Same-ID clone probes (old WP12)
 
@@ -232,6 +232,7 @@ Verify: `swift test`, lint pair, `./Scripts/ojd check schemas`.
 - [ ] 17.2a Add the `setting` keys for show in menu bar and update checks together with their switches in the 20.x General pane, and give Send Test Notification a CLI place once a service-to-GUI notification path exists (D9). Verify: the 17.2 round-trip test covers the new keys; the D10 coverage test lists Send Test Notification.
 - [x] 17.3 Add the single `DataDirectory` port used by every store. Verify: `grep` finds no direct path building outside the port; tests use a temp directory.
 - [ ] 17.4 Split the neutral core from a macOS host adapter so `Sources/OpenJoystickDriver` has no macOS-only imports outside `platform`. Verify: a script or test greps imports and fails on a violation.
+- [ ] 17.4a Move the macOS-only code out of `OpenJoystickDriverKit` (IOKit HID streams and sessions, the user-space virtual-device dispatcher, GameController synthetic HID, Bluetooth LE routing, access control, mode probe; 21 files) into platform targets behind Kit protocols, so the core the CLI depends on is platform-neutral. Verify: the neutral-core import check covers `Sources/OpenJoystickDriverKit` and passes, with a planted violation in Kit failing it.
 - [x] 17.5 Add the coverage test that lists every command and flags any with no GUI place. Verify: the test passes and fails on a fake command. Done: `GUICoverageTests` (`everyCommandOfTheRealTreeHasAGUIPlace`, `everyMatrixEntryNamesARealCommand`, `aFakeCommandWithNoGUIPlaceIsReported`) over `GUICoverageMatrix.swift`.
 - [x] 17.6 Decide on the command-line-tool symlink after open item 4. Verify: the decision is in `design.md`.
 - [x] 17.6a Make `ojd status` report whether the command-line tool link is installed, and give `ojd` no command or setting that installs or removes it (D9). Verify: CLI tests for an installed, a missing and a broken link, with `--json`. Done: `StatusCommandLinkTests` covers installed, missing, broken and relative links, each with `--json`.
@@ -254,9 +255,9 @@ Depends: 12, 18.
 Verify: `swift test`, lint pair. Hardware: H10.
 
 - [ ] 19.1 Introduce `InputSource` and `OutputSink` and attach physical, virtual, endpoint paths to them. Verify: 1.1 shows zero diffs.
-- [ ] 19.2 Add bounded queue policy per record or default. Verify: slow-consumer test keeps memory bounded and delivers the newest frame.
+- [x] 19.2 Add bounded queue policy per record or default. Verify: slow-consumer test keeps memory bounded and delivers the newest frame. Done: `tuning.frameQueueCapacity` per record, defaulted in every protocol description (64, kept equal to `fallbackQueueCapacity` by `ProtocolDescriptionTests`); newest frame wins, host replies are never evicted and a frame behind a full queue of replies is superseded without closing the device; `slowConsumerKeepsTheQueueBoundedAndDeliversTheNewestFrame` and `frameBehindAQueueOfHostRepliesLeavesTheDeviceOpen`.
 - [x] 19.3 Add per-stage timestamps to `ojd diagnose`. Verify: test output lists dispatch and delivery times. Done: read, parse, dispatch, delivery-virtual-device and delivery-endpoint stamps; `DeviceManagerFrameTimingsTests` asserts all five in order and `--plain` adds one timing row per stage.
-- [ ] 19.4 Add the WebRTC bridge in `Tools/WebRTCBridge/` as its own Swift package on LiveKitWebRTC, an endpoint client (`FeedRequest`/`RumbleCommand` on the game's Mac, `Subscription` on the player's Mac), with out-of-band offer and answer. Verify: a loopback test connects two bridges through a data channel against a test endpoint and passes a frame one way and a rumble command back; a socket scan shows no listener; the root `Package.resolved` has no WebRTC package.
+- [x] 19.4 Add the WebRTC bridge in `Tools/WebRTCBridge/` as its own Swift package on LiveKitWebRTC, an endpoint client (`FeedRequest`/`RumbleCommand` on the game's Mac, `Subscription` on the player's Mac), with out-of-band offer and answer. Verify: a loopback test connects two bridges through a data channel against a test endpoint and passes a frame one way and a rumble command back; the host holds an idle feed open with `KeepAlive`, which the endpoint accepts (feed open past 2 s with keep-alives, E1009 without), with no frame repeated; a socket scan shows no listener; the root `Package.resolved` has no WebRTC package. Done: `Tools/WebRTCBridge` on LiveKitWebRTC; `KeepAlive` in `endpoint.schema.json` and the endpoint (E1011 outside a feed, E1004 with extra members); `VirtualFeedRegistryTests` pins the 2 s default, the feed tests run KeepAlive and E1009 on a short timeout; bridge `HostBridgeTests` show no frame repeat and no write for an invalid peer message; loopback, socket-scan and `test_core_without_webrtc.py` pass.
 
 ## 20. AppKit GUI shell
 
@@ -304,6 +305,21 @@ Verify: the full check list.
 - [ ] 23.2 Add the CHANGELOG lines for each breaking item, rejected document shapes, the new default persona and the removed CLI words. Verify: a review against the BREAKING marks in `proposal.md`.
 - [ ] 23.3 Apply `pending-deltas.md` after the old change is archived. Verify: `openspec validate platform-neutral-redesign --strict`.
 - [ ] 23.4 Run the full check list on the final tree, plus `./Scripts/ojd test parsers-macos14`. Verify: every command exits 0; paste the results.
+
+## 24. Follow-ups found during the work
+
+Owns: whatever each item names.
+Depends: the item's subject merged.
+Verify: the full check list.
+
+- [ ] 24.1 Find the cause of each flaky test and fix it: the CLI `E2005: The service did not reply in time` timeouts (`BindingAxisDefaultsTests` and the 17-issue `OpenJoystickDriverCLITests` run), `outputOperationsRemainSerializedWhenAReplacementCancelsTheFirst`, `VirtualFeedRegistryTests.aFailedSendClosesTheFeed`, `EndpointServerTests.theNinthConnectionIsRefused`, and the load failures in `EndpointWebSocketTests`, `RecordCommandTests` and `ConfigCommandTests`. Verify: each suite passes 30 runs in a row while the full `swift test` runs alongside it, and the cause of each is written in its commit.
+- [ ] 24.2 Build and test `Tools/WebRTCBridge` in CI and in `./Scripts/ojd check tools`. Verify: a CI job and `ojd check tools` run the package's `swift test`.
+- [ ] 24.3 Add a wiki page for the WebRTC bridge, linked from `wiki/Home.md`. Verify: markdownlint passes and the page's commands match `ojd-webrtc-bridge --help`.
+- [ ] 24.4 Test the WebRTC bridge against the real endpoint server, not a fake. Verify: a test runs a host bridge against an in-process `EndpointServer`: a granted feed reaches the virtual device and stays open on `KeepAlive`; an ungranted token gets E1002 and no virtual gamepad appears.
+- [ ] 24.5 Show the serving route and persona in `ojd controller show` (text and `--json`, in `cli-output.schema.json`). Verify: CLI tests for each route, and the GUI coverage matrix names the field's GUI place.
+- [ ] 24.6 Include the per-stage timings in `ojd diagnose --bundle`. Verify: a test reads the five stage stamps from the bundle.
+- [ ] 24.7 Give every rule that Python's schema tests reject a Swift decoder test rejecting the same input. Verify: a repository test lists the Python negative cases for `controller.schema.json` and the protocol descriptions and fails when one has no Swift counterpart.
+- [ ] 24.8 Pin Biome in `package.json` and run the pinned binary in the hook, the JSON writers and CI. Verify: `biome --version` from each path prints the pinned version, and the `biome.json` `$schema` names the same version.
 
 ## Hardware checks (maintainer)
 

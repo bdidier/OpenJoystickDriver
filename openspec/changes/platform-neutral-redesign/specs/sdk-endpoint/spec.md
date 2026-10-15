@@ -2,12 +2,26 @@
 
 ### Requirement: Public endpoint
 
-The service SHALL expose a local endpoint that speaks `openjoystickdriver/v1alpha1` messages (Challenge, Hello, Welcome, Subscription, FeedRequest, FeedSession, Frame, Status), documented in `docs/sdk/` and described by `endpoint.schema.json`. Access SHALL need a grant from `AccessGrants`.
+The service SHALL expose a local endpoint that speaks `openjoystickdriver/v1alpha1` messages (Challenge, Hello, Welcome, Subscription, FeedRequest, FeedSession, Frame, KeepAlive, Status), documented in `docs/sdk/` and described by `endpoint.schema.json`. Access SHALL need a grant from `AccessGrants`.
 
 #### Scenario: No grant
 
 - **WHEN** a client connects without a grant
 - **THEN** the endpoint answers with an error code and closes
+
+### Requirement: Feed keep-alive
+
+A feed SHALL stay open while its client sends `KeepAlive` messages, and the endpoint SHALL close a feed that receives neither a frame nor a `KeepAlive` for 2 s with E1009. A `KeepAlive` SHALL change no output and get no reply. A client SHALL NOT need to resend a frame to keep a feed open.
+
+#### Scenario: Idle feed kept open
+
+- **WHEN** a client sends no frame for 5 s but sends a `KeepAlive` every 0.5 s
+- **THEN** the feed stays open and the virtual gamepad keeps its last state
+
+#### Scenario: Idle feed closed
+
+- **WHEN** a client sends neither a frame nor a `KeepAlive` for 2 s
+- **THEN** the endpoint closes the feed with E1009
 
 ### Requirement: Version negotiation
 

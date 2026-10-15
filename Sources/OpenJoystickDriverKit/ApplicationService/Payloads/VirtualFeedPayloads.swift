@@ -166,7 +166,7 @@ public struct RumbleCommandLine: Encodable, Equatable, Sendable {
 }
 
 /// Arguments of `openVirtualFeed`: the raw identifier of the virtual HID profile to publish, such
-/// as `hid-generic`.
+/// as `Generic`.
 public struct LocalServiceRPCVirtualFeedOpenArguments: Codable, Sendable {
   public let profile: String
 

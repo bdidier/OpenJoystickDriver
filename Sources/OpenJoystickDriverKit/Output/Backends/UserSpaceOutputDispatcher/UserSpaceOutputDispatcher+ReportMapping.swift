@@ -14,6 +14,19 @@ extension UserSpaceOutputDispatcher {
     return StickTransfer(deadzone: 0, rescalesDeadzone: false)
   }
 
+  /// How many frames may wait behind a send for `identifier`'s virtual device: the effective
+  /// `frameQueueCapacity` of its record, else the `defaults.tuning` of its family's protocol
+  /// description, else ``UserSpaceReportSender/fallbackQueueCapacity``.
+  static func frameQueueCapacity(for identifier: LogicalControllerID) -> Int {
+    let catalog = DeviceCatalog.current.withLock { $0 }
+    guard let record = catalog.record(for: identifier.model) else {
+      return UserSpaceReportSender.fallbackQueueCapacity
+    }
+    if let capacity = record.tuning.frameQueueCapacity { return capacity }
+    return ProtocolDescription.bundled[record.physicalProtocolID]?.tuning?.frameQueueCapacity
+      ?? UserSpaceReportSender.fallbackQueueCapacity
+  }
+
   // MARK: - State mapping (called inside reportLock.withLock)
 
   /// Replaces every input field of `state` with `input`. This is the one canonical-state

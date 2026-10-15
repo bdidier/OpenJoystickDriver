@@ -35,6 +35,7 @@ This directory holds the development notes and hardware-evidence records for Ope
 ## SDK
 
 - [SDK Endpoint](sdk/endpoint.md): The handshake, messages, errors, grants, and versions of the endpoint, and its reference client.
+- [WebRTC Bridge](sdk/webrtc-bridge.md): The separate program that carries a controller between two Macs over a WebRTC data channel.
 
 ## Hardware Evidence
 

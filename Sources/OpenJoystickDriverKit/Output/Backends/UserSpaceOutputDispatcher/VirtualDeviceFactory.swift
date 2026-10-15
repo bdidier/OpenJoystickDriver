@@ -13,7 +13,11 @@ extension UserSpaceOutputDispatcher {
         backend.close()
         throw CancellationError()
       }
-      return Entry(backend: backend, inputReportState: UserSpaceInputReportState(format: format))
+      return Entry(
+        backend: backend,
+        inputReportState: UserSpaceInputReportState(format: format),
+        frameQueueCapacity: Self.frameQueueCapacity(for: identifier)
+      )
     }
     return try createIOKitEntry(for: identifier)
   }
@@ -70,7 +74,8 @@ extension UserSpaceOutputDispatcher {
     let inputReportState = UserSpaceInputReportState(format: format)
     let entry = Entry(
       backend: IOHIDBackend(device: device, queue: queue),
-      inputReportState: inputReportState
+      inputReportState: inputReportState,
+      frameQueueCapacity: Self.frameQueueCapacity(for: identifier)
     )
     let handler = hostReportHandler(
       identifier: identifier,

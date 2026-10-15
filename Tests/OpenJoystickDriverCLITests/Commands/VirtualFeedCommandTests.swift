@@ -58,7 +58,7 @@ struct VirtualFeedCommandTests {
       }
     }
     return await VirtualFeedCommand.$standardInputLines.withValue(input) {
-      await service.run(["virtual", "feed", "--as", "hid-generic"] + arguments)
+      await service.run(["virtual", "feed", "--as", "generic"] + arguments)
     }
   }
 
@@ -88,7 +88,7 @@ struct VirtualFeedCommandTests {
     #expect(result.standardOutput.isEmpty)
     let opened = try #require(service.arguments(of: .openVirtualFeed).first)
     let open = try JSONDecoder().decode(LocalServiceRPCVirtualFeedOpenArguments.self, from: opened)
-    #expect(open.profile == "hid-generic")
+    #expect(open.profile == "Generic")
     let exchanges = try Self.exchanges(service)
     #expect(exchanges.allSatisfy { $0.token == Self.token })
     #expect(
@@ -183,7 +183,7 @@ struct VirtualFeedCommandTests {
   @Test
   func anUnknownProfileIsAUsageError() async throws {
     let service = try Self.service()
-    let result = await service.run(["virtual", "feed", "--as", "hid-unknown"])
+    let result = await service.run(["virtual", "feed", "--as", "unknown"])
 
     #expect(result.code == 64)
     #expect(service.arguments(of: .openVirtualFeed).isEmpty)

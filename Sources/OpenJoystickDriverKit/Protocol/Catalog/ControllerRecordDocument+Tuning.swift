@@ -18,6 +18,7 @@ extension ControllerRecordDocument {
         "usbStartupIntervalMs",
         "usbStartupRetryDelayMs",
         "usbTransferTimeoutMs",
+        "frameQueueCapacity",
       ])
       guard !container.allKeys.isEmpty else {
         throw DecodingError.dataCorrupted(
@@ -62,7 +63,8 @@ extension ControllerRecordDocument {
         adapterDisconnectDelayMilliseconds: try integer("adapterDisconnectDelayMs", 1...60_000),
         usbStartupIntervalMilliseconds: try integer("usbStartupIntervalMs", 0...60_000),
         usbStartupRetryDelayMilliseconds: try integer("usbStartupRetryDelayMs", 1...60_000),
-        usbTransferTimeoutMilliseconds: try integer("usbTransferTimeoutMs", 1...60_000)
+        usbTransferTimeoutMilliseconds: try integer("usbTransferTimeoutMs", 1...60_000),
+        frameQueueCapacity: try integer("frameQueueCapacity", 1...1024)
       )
     }
   }

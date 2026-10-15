@@ -388,7 +388,8 @@
                       "adapterDisconnectDelayMs",
                       "usbStartupIntervalMs",
                       "usbStartupRetryDelayMs",
-                      "usbTransferTimeoutMs"
+                      "usbTransferTimeoutMs",
+                      "frameQueueCapacity"
                     ]
                   },
                   {
@@ -748,8 +749,8 @@
               "type": "boolean"
             },
             "outputOwner": {
-              "description": "Who drives the controller's output. With macos, macOS serves the controller natively, so the rumble and lighting lists hold only what macOS leaves undone.",
-              "enum": ["macos", "ojd"]
+              "description": "Who drives the controller's output. With system, macOS serves the controller natively, so the rumble and lighting lists hold only what macOS leaves undone.",
+              "enum": ["system", "ojd"]
             },
             "rumbleMotors": {
               "type": "array",
@@ -906,7 +907,7 @@
               "enum": ["published", "notPublished", "failed"]
             },
             "target": {
-              "enum": ["hid-xbox-one-s-bt", "hid-generic"]
+              "enum": ["SdlCompatible", "Generic"]
             }
           }
         },
@@ -956,14 +957,14 @@
           "additionalProperties": false,
           "properties": {
             "override": {
-              "enum": ["hid-xbox-one-s-bt", "hid-generic"]
+              "enum": ["SdlCompatible", "Generic"]
             },
             "overrideScope": {
               "enum": ["unit", "model"],
               "description": "Whether override is the controller's own choice or its model's."
             },
             "profile": {
-              "enum": ["hid-xbox-one-s-bt", "hid-generic"]
+              "enum": ["SdlCompatible", "Generic"]
             },
             "source": {
               "type": "string"
@@ -1840,8 +1841,12 @@
         "record": {
           "description": "The drafted controller record, as 'ojd record install' reads it.",
           "oneOf": [
-            { "$ref": "controller.schema.json" },
-            { "$ref": "controller-patch.schema.json" }
+            {
+              "$ref": "controller.schema.json"
+            },
+            {
+              "$ref": "controller-patch.schema.json"
+            }
           ]
         },
         "report": {
@@ -2956,10 +2961,10 @@
           "type": "string"
         },
         "live": {
-          "enum": ["hid-xbox-one-s-bt", "hid-generic"]
+          "enum": ["SdlCompatible", "Generic"]
         },
         "requested": {
-          "enum": ["hid-xbox-one-s-bt", "hid-generic"]
+          "enum": ["SdlCompatible", "Generic"]
         },
         "source": {
           "type": "string"
@@ -3400,7 +3405,7 @@
                 "type": "string"
               },
               "override": {
-                "enum": ["hid-xbox-one-s-bt", "hid-generic"]
+                "enum": ["SdlCompatible", "Generic"]
               },
               "overrideScope": {
                 "enum": ["unit", "model"],
@@ -3412,7 +3417,7 @@
                 "maximum": 65535
               },
               "profile": {
-                "enum": ["hid-xbox-one-s-bt", "hid-generic"]
+                "enum": ["SdlCompatible", "Generic"]
               },
               "source": {
                 "type": "string"
@@ -3431,7 +3436,7 @@
         "profiles": {
           "type": "array",
           "items": {
-            "enum": ["hid-xbox-one-s-bt", "hid-generic"]
+            "enum": ["SdlCompatible", "Generic"]
           }
         }
       }

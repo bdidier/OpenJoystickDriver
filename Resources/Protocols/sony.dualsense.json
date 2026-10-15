@@ -48,7 +48,8 @@
   },
   "defaults": {
     "tuning": {
-      "adapterDisconnectDelayMs": 500
+      "adapterDisconnectDelayMs": 500,
+      "frameQueueCapacity": 64
     }
   }
 }

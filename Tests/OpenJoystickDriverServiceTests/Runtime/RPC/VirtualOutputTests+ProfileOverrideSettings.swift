@@ -8,13 +8,13 @@ extension VirtualOutputTests {
   @Test
   func anOverrideChangeAndASettingsResetRunOneAtATime() async throws {
     let gate = InstallationGate()
-    let fixture = try await profileOverrideServer(activationGate: (.generic, gate))
+    let fixture = try await profileOverrideServer(activationGate: (.sdlCompatible, gate))
     let resetFinished = CompletionFlag()
 
     let server = fixture.server
     let set = Task {
       await server.changeVirtualHIDProfileOverride(
-        .set("hid-generic"),
+        .set("SdlCompatible"),
         for: .model(ControllerModelID(vendorID: 1, productID: 2))
       )
     }
@@ -27,15 +27,15 @@ extension VirtualOutputTests {
     try await Task.sleep(nanoseconds: 50_000_000)
 
     #expect(!resetFinished.isMarked)
-    #expect(fixture.store.override(vendorID: 1, productID: 2) == .generic)
+    #expect(fixture.store.override(vendorID: 1, productID: 2) == .sdlCompatible)
     await gate.release()
-    #expect(await set.value.live == .generic)
+    #expect(await set.value.live == .sdlCompatible)
     #expect(await reset.value)
     #expect(fixture.store.files.isEmpty)
     let state = fixture.server.automaticUserSpaceDispatcher()?.profileState(
       for: LogicalControllerID(vendorID: 1, productID: 2)
     )
-    #expect(state?.selection?.profileID == .xboxOneSBluetooth)
+    #expect(state?.selection?.profileID == .generic)
     await fixture.tearDown()
   }
 
@@ -43,13 +43,13 @@ extension VirtualOutputTests {
   func aHangingRetargetDuringResetSettingsTimesOut() async throws {
     let gate = InstallationGate()
     let fixture = try await profileOverrideServer(
-      activationGate: (.xboxOneSBluetooth, gate),
+      activationGate: (.generic, gate),
       timeouts: VirtualOutputTransitionTimeouts(
         stageNanoseconds: 2_000_000_000,
         perControllerNanoseconds: 50_000_000,
         totalNanoseconds: 10_000_000_000
       )
-    ) { VirtualHIDProfileOverrideStore(directory: $0).setGenericForTest() }
+    ) { VirtualHIDProfileOverrideStore(directory: $0).setSdlCompatibleForTest() }
     let resetFinished = CompletionFlag()
     let server = fixture.server
 
@@ -75,18 +75,18 @@ extension VirtualOutputTests {
     // A real 50 ms timer also bounded the setup activation, which a loaded machine overran.
     let trigger = VirtualOutputTimeoutTrigger()
     let fixture = try await profileOverrideServer(
-      activationGate: (.xboxOneSBluetooth, gate),
+      activationGate: (.generic, gate),
       timeouts: VirtualOutputTransitionTimeouts(
         stageNanoseconds: 2_000_000_000,
         perControllerNanoseconds: 50_000_000,
         totalNanoseconds: 10_000_000_000
       ),
       clock: trigger.clock
-    ) { VirtualHIDProfileOverrideStore(directory: $0).setGenericForTest() }
+    ) { VirtualHIDProfileOverrideStore(directory: $0).setSdlCompatibleForTest() }
     let server = fixture.server
     let change = Task {
       await server.changeVirtualHIDProfileOverride(
-        .set("hid-xbox-one-s-bt"),
+        .set("Generic"),
         for: .model(ControllerModelID(vendorID: 1, productID: 2))
       )
     }
@@ -109,14 +109,14 @@ extension VirtualOutputTests {
 
     await gate.release()
     try await Task.sleep(nanoseconds: 200_000_000)
-    #expect(fixture.log.built().map(\.profile) == [.generic, .xboxOneSBluetooth])
+    #expect(fixture.log.built().map(\.profile) == [.sdlCompatible, .generic])
 
     await blocker.release()
     #expect(await queued.value)
     for _ in 0..<200 where fixture.log.built().count < 3 {
       try await Task.sleep(nanoseconds: 10_000_000)
     }
-    #expect(fixture.log.built().map(\.profile) == [.generic, .xboxOneSBluetooth, .generic])
+    #expect(fixture.log.built().map(\.profile) == [.sdlCompatible, .generic, .sdlCompatible])
     await fixture.tearDown()
   }
 
@@ -124,7 +124,7 @@ extension VirtualOutputTests {
   func statusReportsEachControllersProfileAndTheStoredOverride() async throws {
     let id = LogicalControllerID(vendorID: 1, productID: 2)
     let fixture = try await profileOverrideServer([id])
-    _ = await fixture.change(.set("hid-generic"))
+    _ = await fixture.change(.set("SdlCompatible"))
 
     let other = LogicalControllerID(vendorID: 5, productID: 6)
     let devices = fixture.server.describingVirtualHIDProfiles([
@@ -134,15 +134,15 @@ extension VirtualOutputTests {
     #expect(
       devices.map(\.virtualHIDProfile) == [
         ApplicationServiceVirtualHIDProfileStatus(
-          profile: .generic,
+          profile: .sdlCompatible,
           source: "override",
-          override: .generic,
+          override: .sdlCompatible,
           overrideScope: "model",
           unavailable: false
         ),
         ApplicationServiceVirtualHIDProfileStatus(
-          profile: nil,
-          source: nil,
+          profile: .generic,
+          source: "automatic",
           override: nil,
           unavailable: false
         ),
@@ -157,7 +157,7 @@ extension VirtualOutputTests {
   ) async throws {
     let id = LogicalControllerID(vendorID: 1, productID: 2)
     let fixture = try await profileOverrideServer([id])
-    _ = await fixture.change(.set("hid-generic"))
+    _ = await fixture.change(.set("SdlCompatible"))
     let native = ApplicationServiceDeviceDescription(
       name: "probe",
       vendorID: id.model.vendorID,
@@ -174,14 +174,14 @@ extension VirtualOutputTests {
       (id, native), (id, description(id)),
     ])
 
-    #expect(described[0].virtualHIDProfile?.override == .generic)
-    if ownership.isServedBySystem {
+    #expect(described[0].virtualHIDProfile?.override == .sdlCompatible)
+    if ownership.isServedBySystem || ownership == .upstreamVirtualDevice {
       #expect(described[0].virtualHIDProfile?.profile == nil)
       #expect(described[0].virtualHIDProfile?.source == nil)
     } else {
-      #expect(described[0].virtualHIDProfile?.profile == .generic)
+      #expect(described[0].virtualHIDProfile?.profile == .sdlCompatible)
     }
-    #expect(described[1].virtualHIDProfile?.profile == .generic)
+    #expect(described[1].virtualHIDProfile?.profile == .sdlCompatible)
     await fixture.tearDown()
   }
 
@@ -194,16 +194,16 @@ extension VirtualOutputTests {
     let status = try JSONDecoder().decode(ApplicationServiceStatusPayload.self, from: data)
 
     #expect(status.virtualHIDProfileOverrideError?.hasPrefix("unreadable-directory:") == true)
-    let result = await fixture.change(.set("hid-generic"))
+    let result = await fixture.change(.set("SdlCompatible"))
     #expect(result.failure == .persistenceFailed)
-    #expect(result.live == .xboxOneSBluetooth)
+    #expect(result.live == .generic)
     await fixture.tearDown()
   }
 
   @Test
   func resetSettingsClearsOverrides() async throws {
     let fixture = try await profileOverrideServer()
-    _ = await fixture.change(.set("hid-generic"))
+    _ = await fixture.change(.set("SdlCompatible"))
 
     let reset = await fixture.server.resetSettings()
 
@@ -212,7 +212,7 @@ extension VirtualOutputTests {
     let state = fixture.server.automaticUserSpaceDispatcher()?.profileState(
       for: LogicalControllerID(vendorID: 1, productID: 2)
     )
-    #expect(state?.selection?.profileID == .xboxOneSBluetooth)
+    #expect(state?.selection?.profileID == .generic)
     await fixture.tearDown()
   }
 
@@ -227,14 +227,14 @@ extension VirtualOutputTests {
   func profileOverridePayloadsRoundTrip() throws {
     let results = [
       VirtualHIDProfileOverrideResult(
-        requested: .generic,
-        live: .xboxOneSBluetooth,
+        requested: .sdlCompatible,
+        live: .generic,
         source: "automaticAfterRejecting",
         failure: .overrideRejectedByController
       ),
       VirtualHIDProfileOverrideResult(
-        requested: .xboxOneSBluetooth,
-        live: .generic,
+        requested: .generic,
+        live: .sdlCompatible,
         source: "override",
         failure: .activationFailed(detail: "backend unavailable")
       ),
@@ -260,12 +260,12 @@ extension VirtualOutputTests {
     )
     let requested = try JSONEncoder().encode(results[0])
     let object = try JSONSerialization.jsonObject(with: requested) as? [String: Any]
-    #expect(object?["requested"] as? String == "hid-generic")
+    #expect(object?["requested"] as? String == "SdlCompatible")
 
     let status = ApplicationServiceVirtualHIDProfileStatus(
-      profile: .generic,
+      profile: .sdlCompatible,
       source: "override",
-      override: .generic,
+      override: .sdlCompatible,
       unavailable: false
     )
     let statusData = try JSONEncoder().encode(status)

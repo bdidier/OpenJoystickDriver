@@ -1,0 +1,15 @@
+{
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "VirtualDevice",
+  "persona": "SdlCompatible",
+  "layout": "xbox-one-s-bluetooth",
+  "transport": "Bluetooth",
+  "labels": "xbox",
+  "identity": {
+    "vendorID": 1118,
+    "productID": 765,
+    "version": 0,
+    "productName": "Xbox Wireless Controller",
+    "manufacturer": "Microsoft"
+  }
+}

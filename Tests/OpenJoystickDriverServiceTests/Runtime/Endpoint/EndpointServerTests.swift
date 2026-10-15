@@ -369,6 +369,19 @@ struct EndpointServerTests {
   }
 
   @Test
+  func aKeepAliveOutsideAFeedIsRefusedWithE1011() async throws {
+    try await withEndpointServer { server, _ in
+      try server.setEnabled(true)
+      try server.grant(Self.tool, path: "/Tool", scopes: [.read])
+      let client = try await EndpointTestClient.subscribed(to: server.socketPath)
+      await client.send(clientLine("KeepAlive"))
+
+      #expect(try await client.readObject()["code"] as? String == "E1011")
+      #expect(await client.readLine() == nil)
+    }
+  }
+
+  @Test
   func aSecondSubscribeEndsTheConnection() async throws {
     try await withEndpointServer { server, _ in
       try server.setEnabled(true)

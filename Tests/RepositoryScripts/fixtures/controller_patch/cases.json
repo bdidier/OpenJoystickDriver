@@ -21,7 +21,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos"
+        "server": "system"
       },
       "builtin": [],
       "package": [],
@@ -60,7 +60,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos"
+        "server": "system"
       }
     },
     {
@@ -84,7 +84,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos"
+        "server": "system"
       },
       "builtin": [],
       "package": [],
@@ -117,7 +117,7 @@
             "modes": [1, 2, 3]
           }
         },
-        "ownership": "macos"
+        "server": "system"
       }
     },
     {
@@ -141,7 +141,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos"
+        "server": "system"
       },
       "builtin": [
         {
@@ -184,7 +184,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos"
+        "server": "system"
       }
     },
     {
@@ -208,7 +208,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos"
+        "server": "system"
       },
       "builtin": [],
       "package": [
@@ -248,7 +248,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos"
+        "server": "system"
       }
     },
     {
@@ -272,7 +272,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos",
+        "server": "system",
         "output": 5
       },
       "builtin": [],
@@ -312,7 +312,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos",
+        "server": "system",
         "output": {
           "rumble": true
         }
@@ -339,7 +339,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos"
+        "server": "system"
       },
       "builtin": [],
       "package": [
@@ -391,7 +391,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos",
+        "server": "system",
         "tuning": {
           "stickDeadzone": 0.05
         }
@@ -418,7 +418,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos"
+        "server": "system"
       },
       "builtin": [
         {
@@ -471,7 +471,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos",
+        "server": "system",
         "tuning": {
           "stickDeadzone": 0.1,
           "hidStartupRecoveryRounds": 2
@@ -499,7 +499,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos"
+        "server": "system"
       },
       "builtin": [],
       "package": [
@@ -551,7 +551,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos",
+        "server": "system",
         "tuning": {}
       }
     },
@@ -576,7 +576,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos"
+        "server": "system"
       },
       "builtin": [],
       "package": [],
@@ -641,7 +641,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos",
+        "server": "system",
         "tuning": {
           "stickDeadzone": 0.1,
           "hidStartupIntervalMs": 5
@@ -669,7 +669,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos"
+        "server": "system"
       },
       "builtin": [
         {
@@ -719,7 +719,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos",
+        "server": "system",
         "tuning": {
           "stickDeadzone": 0.3
         }
@@ -746,7 +746,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos"
+        "server": "system"
       },
       "builtin": [],
       "package": [],
@@ -759,7 +759,7 @@
             "productID": 747
           },
           "patch": {
-            "ownership": "ojd"
+            "server": "ojd"
           }
         },
         {
@@ -769,7 +769,7 @@
             "model": "045e-02eb"
           },
           "patch": {
-            "ownership": "ojd"
+            "server": "ojd"
           }
         }
       ],
@@ -792,7 +792,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos"
+        "server": "system"
       }
     },
     {
@@ -816,7 +816,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos"
+        "server": "system"
       },
       "builtin": [],
       "package": [],
@@ -840,7 +840,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos"
+        "server": "system"
       }
     },
     {
@@ -857,7 +857,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos"
+        "server": "system"
       },
       "builtin": [],
       "package": [],
@@ -892,7 +892,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos",
+        "server": "system",
         "tuning": {
           "stickDeadzone": 0.1
         }
@@ -912,7 +912,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos"
+        "server": "system"
       },
       "builtin": [],
       "package": [],
@@ -947,7 +947,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos",
+        "server": "system",
         "tuning": {
           "stickDeadzone": 0.1,
           "inputLivenessTimeoutMs": 500,
@@ -970,7 +970,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos"
+        "server": "system"
       },
       "builtin": [],
       "package": [],
@@ -1005,7 +1005,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos",
+        "server": "system",
         "tuning": {
           "stickDeadzone": 0.1,
           "hidStartupIntervalMs": 5,
@@ -1030,7 +1030,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos"
+        "server": "system"
       },
       "builtin": [],
       "package": [],
@@ -1066,7 +1066,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos",
+        "server": "system",
         "tuning": {
           "stickDeadzone": 0.1
         }
@@ -1087,7 +1087,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos"
+        "server": "system"
       },
       "builtin": [],
       "package": [],
@@ -1105,7 +1105,8 @@
               "hidStartupIntervalMs": 5,
               "minimumHIDOutputIntervalMs": 8,
               "hidStartupRecoveryIntervalMs": 20,
-              "hidStartupRecoveryRounds": 2
+              "hidStartupRecoveryRounds": 2,
+              "frameQueueCapacity": 4
             }
           }
         }
@@ -1123,11 +1124,12 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos",
+        "server": "system",
         "tuning": {
           "stickDeadzone": 0.1,
           "hidStartupIntervalMs": 5,
-          "minimumHIDOutputIntervalMs": 8
+          "minimumHIDOutputIntervalMs": 8,
+          "frameQueueCapacity": 4
         }
       }
     },
@@ -1145,7 +1147,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos"
+        "server": "system"
       },
       "builtin": [],
       "package": [],
@@ -1163,7 +1165,8 @@
               "hidStartupIntervalMs": 5,
               "minimumHIDOutputIntervalMs": 8,
               "hidStartupRecoveryIntervalMs": 20,
-              "hidStartupRecoveryRounds": 2
+              "hidStartupRecoveryRounds": 2,
+              "frameQueueCapacity": 4
             }
           }
         }
@@ -1180,9 +1183,10 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos",
+        "server": "system",
         "tuning": {
-          "stickDeadzone": 0.1
+          "stickDeadzone": 0.1,
+          "frameQueueCapacity": 4
         }
       }
     },
@@ -1200,7 +1204,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos"
+        "server": "system"
       },
       "builtin": [],
       "package": [],
@@ -1230,7 +1234,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos"
+        "server": "system"
       }
     },
     {
@@ -1247,7 +1251,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos",
+        "server": "system",
         "tuning": {
           "inputLivenessTimeoutMs": 900,
           "stickDeadzone": 0.2
@@ -1282,7 +1286,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos",
+        "server": "system",
         "tuning": {
           "stickDeadzone": 0.2
         }
@@ -1302,7 +1306,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "macos"
+        "server": "system"
       },
       "builtin": [],
       "package": [
@@ -1315,7 +1319,7 @@
               "model": "045e-02ea"
             },
             "patch": {
-              "ownership": "ojd"
+              "server": "ojd"
             }
           }
         },
@@ -1328,7 +1332,7 @@
               "model": "045e-02ea"
             },
             "patch": {
-              "ownership": "macos2"
+              "server": "system2"
             }
           }
         }
@@ -1346,7 +1350,7 @@
         "usb": {
           "interface": 0
         },
-        "ownership": "ojd"
+        "server": "ojd"
       }
     },
     {
@@ -1524,7 +1528,7 @@
         "vendorID": 1118,
         "productID": 746,
         "set": {
-          "ownership": "ojd"
+          "server": "ojd"
         }
       },
       "message": "expected ControllerPatch, found ControllerOverride"
@@ -1551,7 +1555,7 @@
           "productID": 746
         },
         "patch": {
-          "ownership": "ojd"
+          "server": "ojd"
         }
       },
       "message": "selector must be all, model, or vendorID with productID"
@@ -1581,7 +1585,7 @@
           "all": true
         },
         "patch": {
-          "ownership": "ojd"
+          "server": "ojd"
         }
       },
       "message": "an all patch may set only tuning"
@@ -1597,7 +1601,7 @@
         },
         "patch": {}
       },
-      "message": "patch must hold protocol, modes, usb, bluetoothLE, ownership, route, output, input, or tuning"
+      "message": "patch must hold protocol, modes, usb, bluetoothLE, server, route, output, input, or tuning"
     },
     {
       "name": "an unknown section",
@@ -1612,7 +1616,7 @@
           "name": "x"
         }
       },
-      "message": "patch must hold protocol, modes, usb, bluetoothLE, ownership, route, output, input, or tuning"
+      "message": "patch must hold protocol, modes, usb, bluetoothLE, server, route, output, input, or tuning"
     },
     {
       "name": "a model that is not vvvv-pppp lowercase hex",
@@ -1623,7 +1627,7 @@
           "model": "045E-02EA"
         },
         "patch": {
-          "ownership": "ojd"
+          "server": "ojd"
         }
       },
       "message": "selector.model must be vvvv-pppp in lowercase hex"
@@ -1638,7 +1642,7 @@
           "productID": 746
         },
         "patch": {
-          "ownership": "ojd"
+          "server": "ojd"
         },
         "operation": "patch"
       },

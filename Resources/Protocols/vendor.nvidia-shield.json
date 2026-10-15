@@ -16,5 +16,10 @@
   "controls": {
     "base": "xbox",
     "add": ["guide"]
+  },
+  "defaults": {
+    "tuning": {
+      "frameQueueCapacity": 64
+    }
   }
 }

@@ -27,7 +27,8 @@
     "tuning": {
       "minimumHIDOutputIntervalMs": 50,
       "hidStartupRecoveryIntervalMs": 200,
-      "hidStartupRecoveryRounds": 2
+      "hidStartupRecoveryRounds": 2,
+      "frameQueueCapacity": 64
     },
     "variants": {
       "bluetooth-classic": {

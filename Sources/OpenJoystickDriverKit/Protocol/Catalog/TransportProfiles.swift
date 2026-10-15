@@ -116,10 +116,10 @@ public enum GIPKeepAlivePolicy: String, Codable, Sendable {
 }
 
 /// Who serves a HID controller that macOS also supports as a native gamepad.
-public enum ControllerOwnership: String, Codable, Sendable {
+public enum ControllerServer: String, Codable, Sendable {
   /// macOS serves it; OJD publishes no virtual controller and sends only the output macOS
   /// leaves undone. A controller macOS does not support is OJD's either way.
-  case macOS = "macos"
+  case system
   /// OJD seizes it and publishes its own virtual controller.
   case ojd
 }
@@ -161,6 +161,9 @@ public struct ControllerTuning: Codable, Equatable, Sendable {
   public let usbStartupRetryDelayMilliseconds: Int?
   /// Timeout of one USB transfer to a GIP controller, for rumble and startup writes.
   public let usbTransferTimeoutMilliseconds: Int?
+  /// Frames that may wait behind a send to the virtual device; a full queue drops its oldest
+  /// frame in favor of the newest.
+  public let frameQueueCapacity: Int?
 
   public static let none = Self()
 
@@ -178,7 +181,8 @@ public struct ControllerTuning: Codable, Equatable, Sendable {
     adapterDisconnectDelayMilliseconds: Int? = nil,
     usbStartupIntervalMilliseconds: Int? = nil,
     usbStartupRetryDelayMilliseconds: Int? = nil,
-    usbTransferTimeoutMilliseconds: Int? = nil
+    usbTransferTimeoutMilliseconds: Int? = nil,
+    frameQueueCapacity: Int? = nil
   ) {
     self.stickDeadzone = stickDeadzone
     self.inputLivenessTimeoutMilliseconds = inputLivenessTimeoutMilliseconds
@@ -194,6 +198,7 @@ public struct ControllerTuning: Codable, Equatable, Sendable {
     self.usbStartupIntervalMilliseconds = usbStartupIntervalMilliseconds
     self.usbStartupRetryDelayMilliseconds = usbStartupRetryDelayMilliseconds
     self.usbTransferTimeoutMilliseconds = usbTransferTimeoutMilliseconds
+    self.frameQueueCapacity = frameQueueCapacity
   }
 }
 
@@ -214,7 +219,7 @@ public struct DeviceRuntimeProfile: Equatable, Sendable {
   public internal(set) var gipKeepAlivePolicy: GIPKeepAlivePolicy
   /// The assembly policy the row names; nil runs each protocol role as its own controller.
   public internal(set) var assemblyPolicy: ControllerAssemblyPolicy?
-  public let ownership: ControllerOwnership
+  public let server: ControllerServer
   /// The record's rumble report, for a driver that encodes rumble from it.
   public let rumbleTemplate: RumbleOutputTemplate?
   /// The record's fixed startup reports, in order; OJD sends them only to a controller it owns.

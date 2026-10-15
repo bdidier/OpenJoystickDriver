@@ -254,11 +254,8 @@ struct NativePassThroughTests {
 
   @Test
   func nativeGamepadIsNeverEligibleForPublication() {
-    let decision = ControllerExposureDecision.decide(
-      ownership: .nativeGamepad,
-      intent: .profile(.generic)
-    )
-    #expect(decision.eligibility == .suppressedNativeHIDPassThrough)
+    let route = ServingPolicy.route(ServingInput(observation: .nativeGamepad))
+    #expect(!route.publishesVirtualDevice)
   }
 
   static func dualShock4Bluetooth(locationID: UInt32) -> HIDDeviceConnection {

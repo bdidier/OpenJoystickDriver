@@ -93,7 +93,7 @@ jobs:
 
       - name: Check Swift formatting and lint
         run: |
-          swift-format lint --recursive --strict Package.swift Sources Tests
+          swift-format lint --recursive --strict Package.swift Sources Tests Tools
           swiftlint lint --no-cache --strict
 
       - name: Run tests

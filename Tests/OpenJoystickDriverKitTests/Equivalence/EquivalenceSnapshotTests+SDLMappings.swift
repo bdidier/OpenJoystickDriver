@@ -113,7 +113,7 @@ struct EquivalenceSnapshotSDLMappingTests {
     let neutral = profile.inputReport(for: .neutral)
     let identity = profile.identity
     var lines = [
-      "profile=\(id.rawValue) vendor=\(identity.vendorID) product=\(identity.productID)"
+      "profile=\(Self.snapshotName(id)) vendor=\(identity.vendorID) product=\(identity.productID)"
         + " version=\(identity.versionNumber) name=\(identity.productName)",
       "guid=\(guid(identity))",
       "report length=\(neutral.count) descriptorBytes=\(profile.descriptor.count)",
@@ -156,7 +156,15 @@ struct EquivalenceSnapshotSDLMappingTests {
       "mapping=\(Self.guid(identity)),\(identity.productName),\(bindings),platform:Mac OS X,"
     )
     lines.append("unmapped=\(unmapped.sorted().joined(separator: ","))")
-    return (id.rawValue, lines)
+    return (Self.snapshotName(id), lines)
+  }
+
+  /// The frozen snapshot names each profile as it was named before the redesign.
+  private static func snapshotName(_ id: VirtualHIDProfileID) -> String {
+    switch id {
+    case .generic: "hid-generic"
+    case .sdlCompatible: "hid-xbox-one-s-bt"
+    }
   }
 
   @Test

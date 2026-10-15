@@ -29,7 +29,7 @@ SECTIONS = frozenset(
         "modes",
         "usb",
         "bluetoothLE",
-        "ownership",
+        "server",
         "route",
         "output",
         "input",
@@ -94,7 +94,7 @@ def tuning_scope(record: dict[str, Any]) -> frozenset[str]:
 
     `ControllerTuning.scope(ofDocument:)` in Swift is the same rule, and both read the family's
     description (`Resources/Protocols`). A record with no known family reads only
-    `stickDeadzone`.
+    `stickDeadzone` and `frameQueueCapacity`.
     """
     info = record.get("protocol")
     info = info if isinstance(info, dict) else {}
@@ -168,7 +168,7 @@ def parse_patch(document: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any
     rank = selector_rank(selector)
     if not patch or not set(patch) <= SECTIONS:
         raise PatchError(
-            "patch must hold protocol, modes, usb, bluetoothLE, ownership, route, "
+            "patch must hold protocol, modes, usb, bluetoothLE, server, route, "
             "output, input, or tuning"
         )
     if rank == RANK_ALL and set(patch) != {"tuning"}:

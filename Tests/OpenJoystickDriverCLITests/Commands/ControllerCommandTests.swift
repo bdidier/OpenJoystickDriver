@@ -258,7 +258,7 @@ struct ControllerCommandTests {
     device.publication = ApplicationServicePublicationStatus(
       state: .notPublished,
       reason: "nativeGamepad",
-      target: .xboxOneSBluetooth
+      target: .sdlCompatible
     )
     let service = try FakeService(devices: [device])
 
@@ -271,7 +271,7 @@ struct ControllerCommandTests {
     let publication = try #require(controller["publication"] as? [String: Any])
     #expect(publication["state"] as? String == "notPublished")
     #expect(publication["reason"] as? String == "nativeGamepad")
-    #expect(publication["target"] as? String == VirtualHIDProfileID.xboxOneSBluetooth.rawValue)
+    #expect(publication["target"] as? String == VirtualHIDProfileID.sdlCompatible.rawValue)
     #expect(plain.standardOutput.contains("\npublication\tnotPublished\tnativeGamepad\n"))
     #expect(Self.rows(human, endingIn: "notPublished (nativeGamepad)").count == 1)
   }

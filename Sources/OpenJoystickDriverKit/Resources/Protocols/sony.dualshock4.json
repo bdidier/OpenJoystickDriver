@@ -45,7 +45,8 @@
   "defaults": {
     "tuning": {
       "inputLivenessTimeoutMs": 1000,
-      "adapterDisconnectDelayMs": 500
+      "adapterDisconnectDelayMs": 500,
+      "frameQueueCapacity": 64
     },
     "output": {
       "startup": [

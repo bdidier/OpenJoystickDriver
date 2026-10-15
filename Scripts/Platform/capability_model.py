@@ -27,7 +27,7 @@ class Capability(Enum):
     RUFF = "Ruff"
     PYRIGHT = "Pyright"
     XMAKE = "Xmake"
-    BIOME = "Biome"
+    BIOME = "pinned Biome"
 
 
 class OutcomeKind(Enum):
@@ -64,7 +64,6 @@ FORMULAS: dict[Capability, tuple[str, str]] = {
     Capability.RUFF: ("ruff", "ruff"),
     Capability.PYRIGHT: ("pyright", "pyright"),
     Capability.XMAKE: ("xmake", "xmake"),
-    Capability.BIOME: ("biome", "biome"),
 }
 
 

@@ -10,7 +10,7 @@ struct ApplicationServiceDeviceDescriptionAppliedTests {
     let tuning = ControllerTuning(stickDeadzone: 0.2, hidStartupRecoveryRounds: 3)
     let device = ApplicationServiceDeviceDescription.fixture(
       id: "pad-1",
-      physicalOutputOwner: .macOS,
+      physicalOutputOwner: .system,
       tuning: tuning
     )
 
@@ -19,7 +19,7 @@ struct ApplicationServiceDeviceDescriptionAppliedTests {
       from: JSONEncoder().encode(device)
     )
 
-    #expect(decoded.physicalOutputOwner == .macOS)
+    #expect(decoded.physicalOutputOwner == .system)
     #expect(decoded.tuning == tuning)
   }
 

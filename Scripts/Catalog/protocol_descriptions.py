@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any
 
 PROTOCOLS = Path(__file__).resolve().parents[2] / "Resources" / "Protocols"
-ALWAYS_READ = "stickDeadzone"
+ALWAYS_READ = frozenset({"stickDeadzone", "frameQueueCapacity"})
 
 
 @cache
@@ -41,11 +41,11 @@ def tuning_scope(
 ) -> frozenset[str]:
     """The `tuning` keys a controller of this family and variant reads.
 
-    A controller with no known family reads only `stickDeadzone`. A raw-USB variant reads
+    A controller with no known family reads only `stickDeadzone` and `frameQueueCapacity`. A raw-USB variant reads
     `rawUSBTuningKeys` and no HID timing; every other variant reads `tuningKeys`.
     `ProtocolDescription.tuningScope(variant:)` in Swift is the same rule.
     """
-    scope = {ALWAYS_READ}
+    scope = set(ALWAYS_READ)
     if description is not None:
         key = "rawUSBTuningKeys" if uses_raw_usb(description, variant) else "tuningKeys"
         scope |= set(description.get(key, ()))
@@ -82,7 +82,7 @@ def semantic_violations(
         ]
     defaults = description.get("defaults", {})
     reads = {
-        ALWAYS_READ,
+        *ALWAYS_READ,
         *description.get("tuningKeys", ()),
         *description.get("rawUSBTuningKeys", ()),
     }

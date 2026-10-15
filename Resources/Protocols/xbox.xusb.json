@@ -28,7 +28,8 @@
   "rawUSBTuningKeys": ["presenceResendReports"],
   "defaults": {
     "tuning": {
-      "presenceResendReports": 16
+      "presenceResendReports": 16,
+      "frameQueueCapacity": 64
     },
     "output": {
       "startup": [

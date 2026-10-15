@@ -95,25 +95,34 @@ struct ProtocolDescriptionTests {
     )
   }
 
-  /// A raw-USB variant reads no HID timing, so its tuning scope is `stickDeadzone` alone.
+  /// A raw-USB variant reads no HID timing.
   @Test
   func tuningScopeFollowsTheDescription() {
     let gameSir = ControllerTuning.scope(protocolID: .vendorGameSir, variant: .usb)
-    #expect(gameSir == [.stickDeadzone, .keepAliveIntervalMs, .usbCommandTimeoutMs])
+    #expect(
+      gameSir == [
+        .stickDeadzone, .frameQueueCapacity, .keepAliveIntervalMs, .usbCommandTimeoutMs,
+      ]
+    )
     let enhanced = ControllerTuning.scope(protocolID: .vendorGameSir, variant: .enhancedHID)
     #expect(
       enhanced == [
-        .stickDeadzone, .hidStartupIntervalMs, .minimumHIDOutputIntervalMs, .keepAliveIntervalMs,
+        .stickDeadzone, .frameQueueCapacity, .hidStartupIntervalMs, .minimumHIDOutputIntervalMs,
+        .keepAliveIntervalMs,
       ]
     )
     #expect(
       ControllerTuning.scope(protocolID: .xboxGIP, variant: nil)
         == [
-          .stickDeadzone, .keepAliveIntervalMs, .presenceResendReports, .usbStartupIntervalMs,
-          .usbStartupRetryDelayMs, .usbTransferTimeoutMs,
+          .stickDeadzone, .frameQueueCapacity, .keepAliveIntervalMs, .presenceResendReports,
+          .usbStartupIntervalMs, .usbStartupRetryDelayMs, .usbTransferTimeoutMs,
         ]
     )
-    #expect(ControllerTuning.scope(protocolID: nil, variant: nil) == [.stickDeadzone])
+    #expect(
+      ControllerTuning.scope(protocolID: nil, variant: nil) == [
+        .stickDeadzone, .frameQueueCapacity,
+      ]
+    )
     #expect(
       ControllerTuning.scope(protocolID: .sonyDualShock4, variant: nil)
         .contains(.inputLivenessTimeoutMs)
@@ -159,6 +168,16 @@ struct ProtocolDescriptionTests {
   }
 
   // MARK: - Defaults
+
+  @Test
+  func everyBundledDescriptionDefaultsTheFrameQueueCapacityToTheSenderFallback() {
+    for (family, description) in ProtocolDescription.bundled {
+      #expect(
+        description.tuning?.frameQueueCapacity == UserSpaceReportSender.fallbackQueueCapacity,
+        "\(family)"
+      )
+    }
+  }
 
   @Test
   func decodesDefaultsTheirDriverReads() throws {

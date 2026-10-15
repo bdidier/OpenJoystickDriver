@@ -64,10 +64,10 @@ struct ProtocolDescription: Sendable {
   let endpoints: Endpoints
   let rawUSB: RawUSB
   let recordSections: Set<RecordSection>
-  /// The `tuning` keys the family reads beyond `stickDeadzone` through IOHID; none when every
-  /// variant is raw USB.
+  /// The `tuning` keys the family reads beyond `stickDeadzone` and `frameQueueCapacity` through
+  /// IOHID; none when every variant is raw USB.
   let tuningKeys: Set<ControllerTuning.Key>
-  /// The `tuning` keys a raw-USB variant reads beyond `stickDeadzone`.
+  /// The `tuning` keys a raw-USB variant reads beyond `stickDeadzone` and `frameQueueCapacity`.
   let rawUSBTuningKeys: Set<ControllerTuning.Key>
   let buttonLabels: ControllerButtonLabels
   /// What OJD still sends when macOS serves the controller.
@@ -335,7 +335,7 @@ struct ProtocolDescription: Sendable {
       return "rawUSBTuningKeys apply only to a family with a raw-USB variant"
     }
     if let tuning {
-      let scope = tuningKeys.union(rawUSBTuningKeys).union([.stickDeadzone])
+      let scope = tuningKeys.union(rawUSBTuningKeys).union(ControllerTuning.Key.alwaysRead)
       for key in ControllerTuning.Key.allCases
       where tuning.setKeys.contains(key) && !scope.contains(key) {
         return "\(key) is not read by the \(family.rawValue) driver"
@@ -351,9 +351,11 @@ struct ProtocolDescription: Sendable {
     return nil
   }
 
-  /// The tuning keys a controller of this family and stored variant reads: `stickDeadzone`, and
-  /// the family's `rawUSBTuningKeys` when the variant is raw USB, otherwise its `tuningKeys`.
+  /// The tuning keys a controller of this family and stored variant reads: the
+  /// always-read keys, and the family's `rawUSBTuningKeys` when the variant is raw USB, otherwise
+  /// its `tuningKeys`.
   func tuningScope(variant: PhysicalProtocolVariantID?) -> Set<ControllerTuning.Key> {
-    (rawUSB.applies(to: variant) ? rawUSBTuningKeys : tuningKeys).union([.stickDeadzone])
+    (rawUSB.applies(to: variant) ? rawUSBTuningKeys : tuningKeys)
+      .union(ControllerTuning.Key.alwaysRead)
   }
 }

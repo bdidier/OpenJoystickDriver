@@ -46,8 +46,8 @@ struct UserSpaceDeviceCreationTests {
   }
 
   @Test(arguments: [
-    (VirtualDeviceProfile.xboxOneS, kIOHIDTransportBluetoothValue),
-    (VirtualDeviceProfile.openJoystickDriverGenericHID, kIOHIDTransportUSBValue),
+    (VirtualDeviceProfile.sdlCompatible, kIOHIDTransportBluetoothValue),
+    (VirtualDeviceProfile.generic, kIOHIDTransportUSBValue),
   ])
   func ioHIDTransportValueMatchesIdentity(_ profile: VirtualDeviceProfile, _ expected: String) {
     #expect(UserSpaceOutputDispatcher.ioHIDTransportValue(for: profile) == expected)
@@ -68,7 +68,7 @@ struct UserSpaceDeviceCreationTests {
   /// profile's published identity is pinned literally rather than read back from the profile.
   @Test(arguments: [
     (
-      VirtualHIDProfileID.xboxOneSBluetooth, 0x045E, 0x02FD, 0x0000, "Xbox Wireless Controller",
+      VirtualHIDProfileID.sdlCompatible, 0x045E, 0x02FD, 0x0000, "Xbox Wireless Controller",
       "Microsoft", "Bluetooth", UInt64(0x8C79_2AA2_4C28_57BD), Int?(9)
     ),
     (
