@@ -6,7 +6,7 @@ import Foundation
 /// type. The same three shapes travel the boundary wherever a source and a sink meet.
 public enum StreamFrame: Sendable {
   /// A controller's parsed state and its motion and touch samples, before any user mapping.
-  case controller(ControllerEvent, labels: ControllerButtonLabels, from: LogicalControllerID)
+  case controller(ControllerEvent, from: LogicalControllerID)
   /// A virtual gamepad's state after mapping, or a feed client's frame.
   case gamepad(RemappingGamepadState, for: LogicalControllerID)
   /// An observed controller snapshot change, as the endpoint's `controllers` stream carries it.

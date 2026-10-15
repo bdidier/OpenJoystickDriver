@@ -8,6 +8,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The pr
 
 ### Added
 
+- The WebRTC bridge's `PeerMessage` button list is checked against `vocabulary.schema.json` by `PeerMessageTests.testTheFrameListsMatchTheSchemas`, which fails when the lists differ.
 - `ojd virtual export-mapping [PROFILE] [--format sdl|w3c]` prints the SDL mapping (one line per profile, a valid mapping file) or the W3C Gamepad description of each virtual gamepad profile, and `ojd virtual show --json` gains `sdl` (`guid`, `mapping`) and `w3c` (`id`, `buttons`, `axes`) on each controller that has a live profile. Both are derived from the profile's report descriptor and report codec, not written per profile; the `Generic` mapping equals the one in the equivalence snapshot. Each virtual device record states `worksWithDefaultSDLHints` (required in a definition, refused with `match`); `sdl.worksWithDefaultSDLHints` carries it in `--json`, and the human output of both commands notes it for `SdlCompatible`, which does not work with SDL's default hints. The four `cli.virtual.export_mapping.*` strings and `cli.virtual.sdl_hints_note` need native review in every language but English.
 - `./Scripts/ojd check tools` also runs `swift test` in `Tools/WebRTCBridge/`, and the CI job that runs it covers the bridge package. The route now needs the Swift toolchain and Xcode besides xmake and SDL3.
 - The wiki has a [WebRTC bridge](wiki/WebRTC-Bridge.md) page: the two roles, the steps to connect two Macs, and each option of `ojd-webrtc-bridge`.
@@ -166,39 +167,19 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The pr
 
 ### Removed
 
+- The `buttonLabels` key of a protocol description and the `ControllerButtonLabels` type are removed. Simultaneous button changes from one report reach the remapping engine with every release before any press, each in one fixed order for every controller, so a report that swaps one held button for another never holds both.
 - **Breaking:** `ojd controller claim` makes OJD serve a controller and `ojd controller release` leaves it to macOS. In `ojd controller show --json`, `ownership.server` is `system` or `ojd` and `ownership.serverSource` names where the choice came from. The `claim` and `release` output has the kind `ControllerServer` and carries `server`.
-- **BREAKING:** Remove every command of the old command line, with no aliases. Each is replaced as follows:
-  - `--headless` → run the executable as `ojd`; `--json-lines` → `--json`
-  - `status`, `app status` → `ojd status`
-  - `app ready` and implicit service launches → `ojd service start|stop|wait`
-  - `controller list`, `controller output list` → `ojd controller list`
-  - `controller state` → `ojd controller show`
-  - `controller watch`, `test` → `ojd controller watch`
-  - `controller packets`, `controller trace` → `ojd controller capture`
-  - `controller output rumble` → `ojd controller rumble`; `--duration-ms` → `--duration` in seconds
-  - `controller output color`, `controller output brightness` → `ojd controller light --color|--brightness`
-  - `controller output player` → `ojd controller player`
-  - `controller output plan` → the Output checks section of `ojd controller show`
-  - `controller disconnect`, `controller resume` → `ojd controller suspend|resume`
-  - `controller disconnect-wireless` → `ojd controller disconnect`
-  - `controller virtual set|reset` → `ojd virtual set|reset`; `ojd virtual show` lists each controller's profile
-  - `map list` → `ojd profile list`; `map show` → `ojd profile show`
-  - `map create` → `ojd profile create`; `map update` → `ojd profile rename` for the name and `ojd profile edit` for every other setting, including the `--stick-` and `--motion-` options
-  - `map delete` → `ojd profile delete`; `map import`, `map export` → `ojd profile import|export`
-  - `map enable`, `map disable` → `ojd profile activate|deactivate`
-  - `map bind` → `ojd binding set`; `map unbind` → `ojd binding clear`
-  - `map chord`, `map sequence`, `map layer` → `ojd profile edit`
-  - `map restore-default-input`, `map clear-inputs --confirm` have no replacement; `ojd binding clear --all` removes bindings, chords, sequences, and layers, and `ojd profile edit` changes the rest
-  - `map calibration` → `ojd controller calibrate`
-  - `map joy-con pair|unpair` → `ojd controller pair|unpair`
-  - `diagnose catalog` → `ojd diagnose --output PATH`, whose document carries the `appleGameControllerAudit` object; `ojd record list --bundled` lists the bundled controller records
-  - `permissions`, `map permission` → `ojd permission list|request`; `permissions open` has no replacement
-  - `extension status|enable|disable` → `ojd extension status|activate|deactivate`
-  - `app login enable|disable` → `ojd setting set launch-at-login true|false`
-  - `app logs show|path` → `ojd log show|path`; `app logs open` has no replacement
-  - `diagnose runtime` → `ojd diagnose [--soak SECONDS]`; `diagnose report` → `ojd diagnose --output PATH`
-  - `diagnose usb-passive` → `./Scripts/ojd diagnose usb-passive VID PID` (contributor checkout only)
-  - `update check` → `ojd update check`; `update check --open` has no replacement
+- **BREAKING:** The executable is `ojd`, and its commands are:
+  - `ojd status`, `ojd service start|stop|wait`, `ojd extension status|activate|deactivate`, `ojd update check`
+  - `ojd controller list|show|watch|capture|calibrate|pair|unpair|suspend|resume|disconnect`
+  - `ojd controller rumble` (`--duration` in seconds), `ojd controller light --color|--brightness`, `ojd controller player`
+  - `ojd virtual set|reset|show`; `ojd virtual show` lists each controller's profile
+  - `ojd profile list|show|create|rename|edit|delete|import|export|activate|deactivate`
+  - `ojd binding set|clear`; `ojd binding clear --all` removes bindings, chords, sequences, and layers, and `ojd profile edit` changes the rest
+  - `ojd permission list|request`, `ojd setting set launch-at-login true|false`, `ojd log show|path`
+  - `ojd diagnose [--soak SECONDS] [--output PATH]`; the document carries the `appleGameControllerAudit` object, and `ojd record list --bundled` lists the bundled controller records
+  - `./Scripts/ojd diagnose usb-passive VID PID` (contributor checkout only)
+  - `--json` selects JSON output, and `ojd controller show` reports the Output checks section
 
 ### Fixed
 

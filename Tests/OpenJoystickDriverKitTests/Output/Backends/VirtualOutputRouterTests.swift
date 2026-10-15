@@ -15,14 +15,12 @@ struct VirtualOutputRouterTests {
     dispatcher.setBackend(current)
     await dispatcher.dispatch(
       ControllerEvent([.press(.south)]),
-      labels: .playStation,
       from: identifier
     )
     await dispatcher.activateOutput(for: identifier)
 
     #expect(previous.states.isEmpty && previous.activations.isEmpty)
     #expect(current.states == [snapshot(.press(.south))])
-    #expect(current.labels == [.playStation])
     #expect(current.activations == [identifier])
   }
 
@@ -35,7 +33,6 @@ struct VirtualOutputRouterTests {
 
     await dispatcher.dispatch(
       ControllerEvent([.press(.south)]),
-      labels: .standard,
       from: LogicalControllerID(vendorID: 1, productID: 2)
     )
     await dispatcher.activateOutput(for: LogicalControllerID(vendorID: 1, productID: 2))
@@ -48,20 +45,18 @@ struct VirtualOutputRouterTests {
 private final class RecordingVirtualOutputDispatcher: OutputDispatcher, @unchecked Sendable {
   var suppressOutput = false
   private let lock = NSLock()
-  private var recorded: [(ControllerState, ControllerButtonLabels)] = []
+  private var recorded: [ControllerState] = []
   private var recordedActivations: [LogicalControllerID] = []
 
-  var states: [ControllerState] { lock.withLock { recorded.map(\.0) } }
-  var labels: [ControllerButtonLabels] { lock.withLock { recorded.map(\.1) } }
+  var states: [ControllerState] { lock.withLock { recorded } }
   var activations: [LogicalControllerID] { lock.withLock { recordedActivations } }
 
   func dispatch(
     _ event: ControllerEvent,
-    labels: ControllerButtonLabels,
     from _: LogicalControllerID
   ) async {
     await Task.yield()
-    lock.withLock { recorded.append((event.state, labels)) }
+    lock.withLock { recorded.append(event.state) }
   }
 
   func activateOutput(for identifier: LogicalControllerID) {

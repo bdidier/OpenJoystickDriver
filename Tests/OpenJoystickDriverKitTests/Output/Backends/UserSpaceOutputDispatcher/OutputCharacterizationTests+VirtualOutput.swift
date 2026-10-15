@@ -4,12 +4,12 @@ import Testing
 
 // Pinned virtual-output-path transcripts; the rendering rules are on `OutputCharacterizationTests`.
 extension OutputCharacterizationTests {
-  /// Each control reaches one bit whatever the family: PlayStation Share (Create) and standard
+  /// Each control reaches one bit whatever the controller: PlayStation Share (Create) and standard
   /// View are Back on bit 9; Nintendo and standard Capture land on bit 15.
   @Test
-  func familyLabelsReachTheirBits() async {
+  func eachControlReachesItsBit() async {
     var lines: [String] = []
-    // Each family's former parser button name and the control it now reports under its labels.
+    // Each family's button name and the control it reports.
     let families: [(String, LogicalControllerID, [(String, Control)])] = [
       (
         "ps", Self.playStation,
@@ -145,15 +145,15 @@ extension OutputCharacterizationTests {
     )
   }
 
-  /// Guide always publishes on bit 10, independent of label family.
+  /// Guide always publishes on bit 10, under either button name.
   @Test
-  func guideReports() async {
+  func guideAlwaysPublishesOnBitTen() async {
     var lines: [String] = []
     let output = VirtualOutput()
-    for (button, labels) in [("guide", ControllerButtonLabels.standard), ("ps", .playStation)] {
-      await output.dispatch([.press(.guide)], from: Self.standard, labels: labels)
+    for button in ["guide", "ps"] {
+      await output.dispatch([.press(.guide)], from: Self.standard)
       lines += output.render("+\(button)")
-      await output.dispatch([.release(.guide)], from: Self.standard, labels: labels)
+      await output.dispatch([.release(.guide)], from: Self.standard)
       lines += output.render("-\(button)")
     }
     #expect(

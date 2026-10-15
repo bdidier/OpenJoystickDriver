@@ -32,7 +32,7 @@ final class GatedStartupOutputDispatcher: OutputDispatcher, @unchecked Sendable 
 
   func setOutputSuppressed(_ suppressed: Bool) { suppressOutput = suppressed }
 
-  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: LogicalControllerID) {
+  func dispatch(_: ControllerEvent, from _: LogicalControllerID) {
   }
 
   /// Blocks the first activation until released.

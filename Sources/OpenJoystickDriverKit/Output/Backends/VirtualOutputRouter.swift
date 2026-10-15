@@ -52,24 +52,21 @@ public final class VirtualOutputRouter: OutputDispatcher, RemappingGamepadSink,
 
   public func dispatch(
     _ event: ControllerEvent,
-    labels: ControllerButtonLabels,
     from identifier: LogicalControllerID
   ) async {
     let target = lock.withLock { _suppressOutput ? nil : backend }
-    await target?.dispatch(event, labels: labels, from: identifier)
+    await target?.dispatch(event, from: identifier)
   }
 
   @preconcurrency
   public func dispatchPublishing(
     _ event: ControllerEvent,
-    labels: ControllerButtonLabels,
     from identifier: LogicalControllerID,
     onPublished: @escaping @Sendable () -> Void
   ) async throws {
     let target = lock.withLock { _suppressOutput ? nil : backend }
     try await target?.dispatchPublishing(
       event,
-      labels: labels,
       from: identifier,
       onPublished: onPublished
     )

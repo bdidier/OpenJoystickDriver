@@ -162,7 +162,6 @@ private enum ReportFormatCodec {
     var virtual = VirtualGamepadState()
     UserSpaceOutputDispatcher.apply(
       state,
-      labels: .standard,
       stickTransfer: .init(deadzone: 0, rescalesDeadzone: false),
       to: &virtual
     )

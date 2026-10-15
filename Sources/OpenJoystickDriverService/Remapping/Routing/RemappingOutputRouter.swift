@@ -77,10 +77,9 @@ final class RemappingOutputRouter: OutputDispatcher, ControllerLifecycleListener
 
   func dispatch(
     _ event: ControllerEvent,
-    labels: ControllerButtonLabels,
     from identifier: LogicalControllerID
   ) async {
-    do { try await dispatchCausally(.input(event, labels), from: identifier) } catch {
+    do { try await dispatchCausally(.input(event), from: identifier) } catch {
       // OutputDispatcher cannot surface errors. Callers that need causal failure
       // reporting use dispatchCausally or inspect the typed route status.
     }

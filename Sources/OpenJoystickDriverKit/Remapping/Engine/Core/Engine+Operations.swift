@@ -9,7 +9,6 @@ extension RemappingEventEngine {
   /// previous mapping.
   public func process(
     _ event: ControllerEvent,
-    labels: ControllerButtonLabels,
     from source: LogicalControllerID,
     into target: LogicalControllerID? = nil,
     using profile: RemappingProfile,
@@ -20,7 +19,6 @@ extension RemappingEventEngine {
     }
     try await process(
       event,
-      labels: labels,
       from: source,
       into: target,
       using: profile,
@@ -31,7 +29,6 @@ extension RemappingEventEngine {
 
   public func process(
     _ event: ControllerEvent,
-    labels: ControllerButtonLabels,
     from source: LogicalControllerID,
     into target: LogicalControllerID? = nil,
     using profile: RemappingProfile,
@@ -43,7 +40,6 @@ extension RemappingEventEngine {
     try await commit(requiring: permit) { state in
       state.process(
         event,
-        labels: labels,
         from: source,
         into: target ?? source,
         profile: profile,

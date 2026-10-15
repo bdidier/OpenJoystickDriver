@@ -12,7 +12,6 @@
     "inputLivenessTimeoutMs",
     "adapterDisconnectDelayMs"
   ],
-  "buttonLabels": "PlayStation",
   "macOSOwnedOutput": {
     "readsStartupFeatures": true,
     "rationale": "A DualShock 4 on Bluetooth sends only the 10-byte input report until the host reads the calibration feature report, which macOS does not do."

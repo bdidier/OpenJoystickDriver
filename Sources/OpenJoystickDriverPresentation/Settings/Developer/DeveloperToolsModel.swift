@@ -39,11 +39,6 @@
     @Published
     private(set) var selectedDevice: ApplicationServiceDeviceDescription?
 
-    /// Family labels of the selected controller, which name its controls.
-    var selectedButtonLabels: ControllerButtonLabels {
-      selectedDevice.map { ControllerButtonLabels(protocolID: $0.protocolBinding.protocolID) }
-        ?? .standard
-    }
     @Published
     private(set) var latestInput: ControllerState?
     @Published

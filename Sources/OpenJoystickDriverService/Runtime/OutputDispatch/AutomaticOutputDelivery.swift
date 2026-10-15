@@ -2,7 +2,7 @@ import OpenJoystickDriverKit
 
 /// What one automatic dispatch publishes through the backend it leased.
 enum AutomaticOutputDelivery: Sendable {
-  case input(ControllerEvent, ControllerButtonLabels)
+  case input(ControllerEvent)
   case activation
   case remapped(RemappingGamepadState)
 
@@ -17,10 +17,9 @@ enum AutomaticOutputDelivery: Sendable {
         throw RemappingEventEngineError.sinkUnavailable
       }
       try await sink.send(state, for: identifier)
-    case .input(let event, let labels):
+    case .input(let event):
       try await backend.dispatchPublishing(
         event,
-        labels: labels,
         from: identifier,
         onPublished: onPublished
       )

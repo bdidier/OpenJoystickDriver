@@ -23,7 +23,7 @@ final class AutomaticBackendProbe: VirtualOutputDispatching, ControllerLifecycle
     if failsActivation { throw ActivationFailure() }
   }
 
-  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: LogicalControllerID) {
+  func dispatch(_: ControllerEvent, from _: LogicalControllerID) {
   }
   func activateOutput(for _: LogicalControllerID) {}
 
@@ -56,7 +56,7 @@ final class ConcurrentBackendProbe: VirtualOutputDispatching, @unchecked Sendabl
 
   func activate(for identifiers: [LogicalControllerID]) throws {}
 
-  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: LogicalControllerID) {
+  func dispatch(_: ControllerEvent, from _: LogicalControllerID) {
     lock.withLock { dispatchCount += 1 }
   }
 

@@ -232,30 +232,27 @@ extension UserSpaceOutputDispatcher {
 
   public func dispatch(
     _ event: ControllerEvent,
-    labels: ControllerButtonLabels,
     from identifier: LogicalControllerID
   ) async {
-    try? await deliver(input: event.state, labels: labels, from: identifier, remappedState: nil)
+    try? await deliver(input: event.state, from: identifier, remappedState: nil)
   }
 
   public func activateOutput(for identifier: LogicalControllerID) async {
-    try? await deliver(input: nil, labels: .standard, from: identifier, remappedState: nil)
+    try? await deliver(input: nil, from: identifier, remappedState: nil)
   }
 
   public func activateOutputReportingFailure(for identifier: LogicalControllerID) async throws {
-    try await deliver(input: nil, labels: .standard, from: identifier, remappedState: nil)
+    try await deliver(input: nil, from: identifier, remappedState: nil)
   }
 
   @preconcurrency
   public func dispatchPublishing(
     _ event: ControllerEvent,
-    labels: ControllerButtonLabels,
     from identifier: LogicalControllerID,
     onPublished: @escaping @Sendable () -> Void
   ) async throws {
     try await deliver(
       input: event.state,
-      labels: labels,
       from: identifier,
       remappedState: nil,
       onPublished: onPublished
@@ -268,7 +265,7 @@ extension UserSpaceOutputDispatcher {
       await close()
       return
     }
-    try await deliver(input: nil, labels: .standard, from: identifier, remappedState: state)
+    try await deliver(input: nil, from: identifier, remappedState: state)
   }
 
   internal func isOutputSuppressed(remapped: Bool) -> Bool {

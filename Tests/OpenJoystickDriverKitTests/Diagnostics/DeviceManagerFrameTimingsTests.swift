@@ -8,7 +8,6 @@ private final class PublishedFrameDispatcher: OutputDispatcher, @unchecked Senda
 
   func dispatch(
     _: ControllerEvent,
-    labels _: ControllerButtonLabels,
     from _: LogicalControllerID
   ) {}
 
@@ -16,7 +15,6 @@ private final class PublishedFrameDispatcher: OutputDispatcher, @unchecked Senda
 
   func dispatchPublishing(
     _: ControllerEvent,
-    labels _: ControllerButtonLabels,
     from _: LogicalControllerID,
     onPublished: @escaping @Sendable () -> Void
   ) throws {

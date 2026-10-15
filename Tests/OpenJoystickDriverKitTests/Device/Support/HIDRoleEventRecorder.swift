@@ -15,7 +15,6 @@ final class HIDRoleEventRecorder: OutputDispatcher, @unchecked Sendable {
 
   func dispatch(
     _ event: ControllerEvent,
-    labels _: ControllerButtonLabels,
     from identifier: LogicalControllerID
   ) { lock.withLock { dispatched.append((identifier, event.state)) } }
 
