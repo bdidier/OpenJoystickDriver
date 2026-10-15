@@ -7,7 +7,8 @@ extension EndpointServer {
   ///
   /// A pump exchanges with the feed each poll to send rumble, but that does not count as activity:
   /// a feed whose client sends no frame line for ``VirtualFeedExchangeResult/idleTimeoutSeconds``
-  /// is closed with `E1009`, so a stalled client does not hold a button or a slot. When the feed's
+  /// is closed with `E1009`, so a stalled client does not hold a button or a slot. A `KeepAlive`
+  /// line counts as activity and does nothing else. When the feed's
   /// frame queue is full, reading waits, which pushes back on the client.
   /// A client that closes the connection meanwhile ends the feed, though its unread lines wait.
   func feed(_ connection: EndpointConnection, persona: EndpointPersona) {
@@ -49,8 +50,11 @@ extension EndpointServer {
         return
       case .message(let data):
         let frame: VirtualFeedFrame
-        switch Self.frame(data) {
-        case .success(let decoded): frame = decoded
+        switch Self.feedLine(data) {
+        case .success(.keepAlive):
+          if exchanger.exchange([], fromClient: true) == nil { return }
+          continue
+        case .success(.frame(let decoded)): frame = decoded
         case .failure(let refusal):
           connection.close(refusal)
           return
@@ -64,19 +68,35 @@ extension EndpointServer {
     }
   }
 
-  /// The frame on the line, or the error that refuses the line: the header errors of
-  /// ``EndpointHeader``, or `E1004` for a `Frame` that does not decode.
+  /// A line that a feed accepts after `FeedSession`.
+  private enum FeedLine {
+    case frame(VirtualFeedFrame)
+    /// `KeepAlive`: it resets the idle timeout and changes nothing else.
+    case keepAlive
+  }
+
+  /// The `Frame` or `KeepAlive` on the line, or the error that refuses the line: the header errors
+  /// of ``EndpointHeader``, or `E1004` for a `Frame` that does not decode and a `KeepAlive` that
+  /// has a member besides `apiVersion` and `kind`.
   ///
   /// ``VirtualFeedFrame`` takes the envelope as optional for the CLI's stdin lines, so the header
   /// is checked first.
-  private static func frame(_ data: Data) -> Result<VirtualFeedFrame, EndpointError> {
-    if let refusal = EndpointHeader.refusal(of: data, accepting: [VirtualFeedFrame.kind]) {
+  private static func feedLine(_ data: Data) -> Result<FeedLine, EndpointError> {
+    let accepted = [VirtualFeedFrame.kind, "KeepAlive"]
+    if let refusal = EndpointHeader.refusal(of: data, accepting: accepted) {
       return .failure(refusal)
+    }
+    let object = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any]
+    if object?["kind"] as? String == "KeepAlive" {
+      guard object?.count == 2 else {
+        return .failure(invalid("KeepAlive has no member besides apiVersion and kind."))
+      }
+      return .success(.keepAlive)
     }
     guard let frame = try? JSONDecoder().decode(VirtualFeedFrame.self, from: data) else {
       return .failure(invalid("Send Frame lines that match the endpoint schema after FeedSession."))
     }
-    return .success(frame)
+    return .success(.frame(frame))
   }
 
   private static func feedError(_ error: any Error, persona: EndpointPersona) -> EndpointError {
@@ -141,10 +161,11 @@ private final class FeedExchanger: @unchecked Sendable {
 
   var isClosed: Bool { lock.withLock { closed } }
 
-  /// Queues `frames` and sends the feedback; returns how many frames the feed accepted, or nil
+  /// Queues `frames` and sends the feedback; a `fromClient` call with no frames is a `KeepAlive`
+  /// and counts as activity. Returns how many frames the feed accepted, or nil
   /// once the connection is closing, which closes the feed, or the feed closed, which closes the
   /// connection with `E1009`.
-  func exchange(_ frames: [VirtualFeedFrame]) -> Int? {
+  func exchange(_ frames: [VirtualFeedFrame], fromClient: Bool = false) -> Int? {
     lock.withLock {
       guard !closed else { return nil }
       guard let connection, !connection.isClosing else {
@@ -156,7 +177,7 @@ private final class FeedExchanger: @unchecked Sendable {
       let result = feeds.exchange(
         token: token,
         frames: frames,
-        countsAsActivity: !frames.isEmpty
+        countsAsActivity: fromClient || !frames.isEmpty
       )
       guard !result.closed else {
         closed = true

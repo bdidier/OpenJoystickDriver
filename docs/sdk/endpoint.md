@@ -110,7 +110,15 @@ After the `FeedSession`, the program sends one `Frame` for each line. A frame ha
 {"apiVersion":"openjoystickdriver/v1alpha1","kind":"Frame","buttons":["south"],"axes":{"left_stick_y":0.5},"holdMilliseconds":100}
 ```
 
-The service shows the frames in order, each for at least 8 ms. While 256 frames wait, the endpoint stops reading lines. The endpoint does not report when a frame has played, so the program stays connected until its last frame has played, because closing the connection drops the frames that wait. When the program sends no frame line for 2 seconds after its last frame has played, the endpoint closes the connection with `E1009`. The endpoint runs at most 4 virtual gamepads at the same time and answers another `FeedRequest` with `E1008`.
+The service shows the frames in order, each for at least 8 ms. While 256 frames wait, the endpoint stops reading lines. The endpoint does not report when a frame has played, so the program stays connected until its last frame has played, because closing the connection drops the frames that wait. When the program sends no frame line for 2 seconds after its last frame has played, the endpoint closes the connection with `E1009`. A program that has no frame to send keeps the feed open with a `KeepAlive` line (see below). The endpoint runs at most 4 virtual gamepads at the same time and answers another `FeedRequest` with `E1008`.
+
+### KeepAlive
+
+After the `FeedSession`, a program that has no new frame sends `KeepAlive` to keep the feed open. It resets the 2-second idle timeout and changes nothing else: the endpoint sends no reply, and the virtual gamepad keeps its state. A `KeepAlive` has no member besides `apiVersion` and `kind`; one that has another member is refused with `E1004`. Before the `FeedSession` the endpoint answers it with `E1011`.
+
+```json
+{"apiVersion":"openjoystickdriver/v1alpha1","kind":"KeepAlive"}
+```
 
 ### RumbleCommand
 
@@ -152,7 +160,7 @@ An error is a `Status` line, and then the endpoint closes the connection. Each c
 | `E1006` | `revoked` | A user revoked the grant while the connection was open. |
 | `E1007` | `tooSlow` | The program reads too slowly, and 256 lines wait. |
 | `E1008` | `tooManyFeeds` | The endpoint runs the maximum number of virtual gamepads. |
-| `E1009` | `feedClosed` | The virtual gamepad closed: it did not start, the service stopped it, or the program sent no frame line in time. |
+| `E1009` | `feedClosed` | The virtual gamepad closed: it did not start, the service stopped it, or the program sent no frame or `KeepAlive` line in time. |
 | `E1010` | `unsupportedEndpointVersion` | `apiVersion` is a string that the endpoint does not accept. |
 | `E1011` | `unexpectedKind` | `kind` is unknown, or the endpoint does not accept it at this point. |
 | `E1012` | `missingHeader` | `apiVersion` or `kind` is missing, `null`, or not a string. |
