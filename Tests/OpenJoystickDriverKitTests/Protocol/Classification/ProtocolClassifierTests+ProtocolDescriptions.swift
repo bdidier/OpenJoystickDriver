@@ -49,36 +49,40 @@ extension ProtocolClassifierTests {
 
   @Test
   func protocolDescriptionRejectsABadHeader() {
-    let cases: [(Data, String)] = [
+    let cases: [(Data, ErrorCode?, String)] = [
       (
         protocolDescription(signature: #""variant": "usb""#, extra: #""vendorID": 1118,"#),
-        "unknown field(s): vendorID"
+        nil, "unknown field(s): vendorID"
       ),
       (
         protocolDescription(
           signature: #""variant": "usb""#,
           apiVersion: "openjoystickdriver.io/v1beta1"
         ),
+        .unsupportedAPIVersion,
         "apiVersion openjoystickdriver.io/v1beta1 is not supported; the supported apiVersion is \(OpenJoystickDriverAPI.version)"
       ),
       (
         protocolDescription(signature: #""variant": "usb""#, kind: "Controller"),
-        "expected \(ProtocolClassifier.protocolDescriptionKind), found Controller"
+        nil, "expected \(ProtocolClassifier.protocolDescriptionKind), found Controller"
       ),
       (
         protocolDescription(signature: #""variant": "usb""#, family: "xbox.xusb"),
-        "family must be xbox.gip"
+        nil, "family must be xbox.gip"
       ),
     ]
-    for (data, problem) in cases {
-      let error = #expect(throws: ControllerRecordProblem.self) {
-        try ProtocolClassifier.interfaceSignatures(
+    for (data, code, problem) in cases {
+      do {
+        _ = try ProtocolClassifier.interfaceSignatures(
           decoding: data,
           protocolID: .xboxGIP,
           fileName: "xbox.gip.json"
         )
+        Issue.record("\(problem) was accepted")
+      } catch {
+        #expect("\(error)".contains(problem))
+        #expect(ControllerRecordSet.problemCode(error) == code)
       }
-      #expect(error?.description.contains(problem) == true)
     }
   }
 

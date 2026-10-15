@@ -23,7 +23,12 @@ public struct ControllerRecordProbePlan: Equatable, Sendable {
       document = try JSONDecoder().decode(ControllerRecordDocument.self, from: data)
       profile = try DeviceCatalog.makeRuntimeProfile(document)
     } catch {
-      throw ControllerRecordProbeError.invalidProfile("Invalid controller record: \(error)")
+      // A coded reason leads with its code, like every other `E5001: ...` message.
+      let reason =
+        ControllerRecordSet.problemCode(error) == nil
+        ? "Invalid controller record: \(error)"
+        : ControllerRecordSet.problemDescription(error)
+      throw ControllerRecordProbeError.invalidProfile(reason)
     }
     // The signing-free probe drives only the raw-USB Xbox families it can start safely.
     guard [.xboxGIP, .xboxXUSB].contains(profile.physicalProtocolID) else {

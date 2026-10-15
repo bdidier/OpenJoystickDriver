@@ -1300,7 +1300,7 @@
 "cli.mod.already_installed" = "%@ já está instalado. Use --force para substituí-lo.";
 "cli.mod.not_installed" = "%@ não está instalado. «ojd mod list» mostra os pacotes instalados.";
 "cli.mod.validate.abstract" = "Verificar a pasta de um pacote de mods sem instalá-la.";
-"cli.mod.validate.discussion" = "Verifica o manifesto, se o pacote funciona nesta versão, se seus arquivos são os listados e válidos e se nenhum entra em conflito com seus arquivos ou com outro pacote. Termina com 1 e o código E4xxx quando o pacote é recusado.";
+"cli.mod.validate.discussion" = "Verifica o manifesto, se o pacote funciona nesta versão, se seus arquivos são os listados e válidos e se nenhum entra em conflito com seus arquivos ou com outro pacote. Termina com 1 e o código E4xxx ou E5001 quando o pacote é recusado.";
 "cli.mod.validate.valid" = "%@ é um pacote válido: %@ %@. Instale-o com «ojd mod install».";
 "cli.mod.install.abstract" = "Verificar um pacote de mods e instalá-lo para o seu usuário.";
 "cli.mod.install.discussion" = "Copia o pacote para Packages/NAME e o troca de uma vez; o serviço em execução o aplica. Um pacote já instalado com o mesmo nome é recusado, a menos que você use --force. --force nunca ignora requires, um conflito de identidade nem um conflito de id ou nome de perfil. --dry-run verifica o pacote e não grava nada.";
@@ -1308,7 +1308,7 @@
 "cli.mod.install.dry_run" = "Instalaria %@.";
 "cli.mod.install.success" = "%@ instalado. O serviço em execução o aplica agora.";
 "cli.mod.list.abstract" = "Listar os pacotes de mods instalados e os arquivos de cada um.";
-"cli.mod.list.discussion" = "Lista cada pacote com versão, autor e arquivos. Um pacote que o OJD não usa, por exemplo um cujo requires exclui esta versão, mostra o motivo com seu código E4xxx.";
+"cli.mod.list.discussion" = "Lista cada pacote com versão, autor e arquivos. Um pacote que o OJD não usa, por exemplo um cujo requires exclui esta versão, mostra o motivo com seu código E4xxx ou E5001.";
 "cli.mod.list.problem" = "  Não usado: %@";
 "cli.mod.remove.abstract" = "Remover um pacote de mods instalado.";
 "cli.mod.remove.discussion" = "Exclui somente Packages/NAME. Pede confirmação em um terminal; caso contrário, exige --force. --dry-run verifica se o pacote está instalado e não muda nada. Termina com 1 e E4006 se não estiver instalado.";
@@ -1585,6 +1585,7 @@
 "cli.explain.area.cli" = "Linha de comando";
 "cli.explain.area.remapping" = "Remapeamento";
 "cli.explain.area.mod" = "Pacotes de mods";
+"cli.explain.area.document" = "Documentos";
 "cli.explain.exit_code" ="Código de saída: %@";
 "cli.explain.wire" = "Valor de transmissão: %@";
 "cli.error.stale_installation" = "O OpenJoystickDriver.app instalado é mais antigo que estas fontes do repositório. Execute «./Scripts/ojd build install-fast dev» ou defina OJD_RUN_REPOSITORY_CLI=1 para executar esta compilação.";
@@ -1647,4 +1648,5 @@
 "error.E4005" = "Já existe um pacote instalado com este nome. Execute o comando com --force para substituí-lo.";
 "error.E4006" = "Nenhum pacote instalado tem este nome. Execute ojd mod list para ver os pacotes instalados.";
 "error.E4007" = "Não foi possível alterar a pasta de pacotes. Verifique o espaço livre em disco e as permissões da pasta.";
+"error.E5001" = "Um documento não tem apiVersion, ou sua apiVersion não é compatível com esta versão do OpenJoystickDriver. Altere o documento para a apiVersion compatível que a mensagem indica e execute o comando novamente.";
 "error.withCode" ="%@ (%@)";

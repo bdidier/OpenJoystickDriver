@@ -481,8 +481,18 @@ public struct ControllerRecordSet: Sendable {
     return integer
   }
 
+  /// The error code of a document that is refused for its `apiVersion`, or nil when `error` has
+  /// none.
+  public static func problemCode(_ error: any Error) -> ErrorCode? {
+    (error as? DocumentHeaderProblem)?.code
+  }
+
   /// A one-line reason for a decoding or file error, with the JSON path of the field.
-  public static func problemDescription(_ error: any Error) -> String {
+  ///
+  /// A reason that has an error code leads with it, such as `E5001: `, because a reason is a plain
+  /// string where it is listed. A caller that reports the code itself passes `includingCode:
+  /// false`.
+  public static func problemDescription(_ error: any Error, includingCode: Bool = true) -> String {
     func path(_ codingPath: [any CodingKey]) -> String {
       codingPath.map { $0.intValue.map { "[\($0)]" } ?? $0.stringValue }.joined(separator: ".")
     }
@@ -491,6 +501,8 @@ public struct ControllerRecordSet: Sendable {
     }
     switch error {
     case let problem as ControllerRecordProblem: return problem.description
+    case let problem as DocumentHeaderProblem:
+      return includingCode ? problem.description : problem.message
     case DecodingError.dataCorrupted(let context):
       return located(context.codingPath, context.debugDescription)
     case DecodingError.keyNotFound(let key, let context):

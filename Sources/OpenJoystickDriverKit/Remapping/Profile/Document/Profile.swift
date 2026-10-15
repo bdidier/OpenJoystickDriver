@@ -332,10 +332,11 @@ public struct RemappingProfile: Codable, Equatable, Identifiable, Sendable {
       kind: try container.decodeIfPresent(String.self, forKey: .kind),
       expected: Self.kind
     ) {
+      if problem.code != nil { throw problem }
       throw DecodingError.dataCorruptedError(
-        forKey: .apiVersion,
+        forKey: .kind,
         in: container,
-        debugDescription: problem
+        debugDescription: problem.message
       )
     }
     id = try container.decode(UUID.self, forKey: .id)

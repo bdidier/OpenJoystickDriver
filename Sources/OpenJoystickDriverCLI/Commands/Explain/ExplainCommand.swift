@@ -78,6 +78,7 @@ struct ExplainCommand: AsyncParsableCommand {
       case .commandLine: CLILocalized.text("cli.explain.area.cli")
       case .remapping: CLILocalized.text("cli.explain.area.remapping")
       case .mod: CLILocalized.text("cli.explain.area.mod")
+      case .document: CLILocalized.text("cli.explain.area.document")
       }
     return Result(
       code: id.rawValue,

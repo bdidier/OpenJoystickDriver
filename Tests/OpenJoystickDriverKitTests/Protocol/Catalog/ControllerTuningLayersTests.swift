@@ -130,7 +130,9 @@ struct ControllerTuningLayersTests {
     let root = Root()
     try root.writeDefaults(#"{"stickDeadzone":0.2}"#, apiVersion: "openjoystickdriver.io/v1beta1")
 
-    #expect(root.load().defaults?.problem?.contains("openjoystickdriver.io/v1beta1") == true)
+    let problem = root.load().defaults?.problem
+    #expect(problem?.hasPrefix("E5001: ") == true)
+    #expect(problem?.contains("openjoystickdriver.io/v1beta1") == true)
   }
 
   @Test

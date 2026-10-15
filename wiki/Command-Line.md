@@ -102,7 +102,7 @@ A command that needs the service exits with code 69 when the service is not runn
   A program that reads one release's output keeps working with later releases of the same major version.
   Because a later release can add keys and values, validate output against the schema from the same release.
 - `--plain` output has one record per line, with tab-separated fields. The first field names the kind of record. Fields are stable identifiers and are never translated.
-- Errors use one format: `error[E2004]: WHAT FAILED. HOW TO FIX IT.` The code in the brackets is stable, so a script can branch on it. An error that the service reports for remapping carries an `E3xxx` code, and an error of `ojd mod` carries an `E4xxx` code. `ojd explain E2004` prints what a code means, and [Error codes](Error-Codes.md) lists them all.
+- Errors use one format: `error[E2004]: WHAT FAILED. HOW TO FIX IT.` The code in the brackets is stable, so a script can branch on it. An error that the service reports for remapping carries an `E3xxx` code, and an error of `ojd mod` carries an `E4xxx` code, or `E5001` when a package file has an unsupported `apiVersion`. `ojd explain E2004` prints what a code means, and [Error codes](Error-Codes.md) lists them all.
 - Color appears only on a terminal. `NO_COLOR`, `TERM=dumb`, `--no-color`, and `OJD_COLOR=never` turn it off. `OJD_COLOR=always` turns it on anywhere, except under `--no-color`.
 
 ## Exit Codes

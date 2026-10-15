@@ -41,6 +41,13 @@ struct ControllerRecordSetTests {
     } catch { return ControllerRecordSet.problemDescription(error) }
   }
 
+  private static func problemCode(_ data: Data) -> ErrorCode? {
+    do {
+      _ = try ControllerRecordSet.validate(data)
+      return nil
+    } catch { return ControllerRecordSet.problemCode(error) }
+  }
+
   @Test
   func patchReplacesOnlyItsFieldsAndMarksThemUser() throws {
     let validated = try ControllerRecordSet.validate(
@@ -158,11 +165,16 @@ struct ControllerRecordSetTests {
       "set": ["usb": ["postHandshakeSettleMs": 5]],
     ]
     let noVersion = override.merging(["kind": ControllerRecordSet.overrideKind]) { $1 }
-    #expect(Self.problem(try Self.json(noVersion)) == "no apiVersion found; \(supported)")
+    #expect(
+      Self.problem(try Self.json(noVersion)) == "E5001: no apiVersion found; \(supported)"
+    )
+    #expect(Self.problemCode(try Self.json(noVersion)) == .unsupportedAPIVersion)
     let oldVersion = noVersion.merging(["apiVersion": old]) { $1 }
     #expect(
-      Self.problem(try Self.json(oldVersion)) == "apiVersion \(old) is not supported; \(supported)"
+      Self.problem(try Self.json(oldVersion))
+        == "E5001: apiVersion \(old) is not supported; \(supported)"
     )
+    #expect(Self.problemCode(try Self.json(oldVersion)) == .unsupportedAPIVersion)
     let noKind = override.merging(["apiVersion": OpenJoystickDriverAPI.version]) { $1 }
     #expect(
       Self.problem(try Self.json(noKind))
@@ -182,16 +194,21 @@ struct ControllerRecordSetTests {
       ],
     ])
     #expect(Self.problem(oldRecord)?.contains("apiVersion \(old) is not supported") == true)
+    #expect(Self.problemCode(oldRecord) == .unsupportedAPIVersion)
     let oldDefaults = Data(
       #"{"apiVersion": "\#(old)", "kind": "\#(ControllerDefaults.kind)", "tuning": {}}"#.utf8
     )
-    #expect(throws: ControllerRecordProblem.self) { try ControllerDefaults.validate(oldDefaults) }
+    do {
+      _ = try ControllerDefaults.validate(oldDefaults)
+      Issue.record("the old defaults were accepted")
+    } catch { #expect(ControllerRecordSet.problemCode(error) == .unsupportedAPIVersion) }
     let defaultsWrongKind = Data(
       #"{"apiVersion": "\#(OpenJoystickDriverAPI.version)", "kind": "Persona", "tuning": {}}"#.utf8
     )
-    #expect(throws: ControllerRecordProblem.self) {
-      try ControllerDefaults.validate(defaultsWrongKind)
-    }
+    do {
+      _ = try ControllerDefaults.validate(defaultsWrongKind)
+      Issue.record("the wrong kind was accepted")
+    } catch { #expect(ControllerRecordSet.problemCode(error) == nil) }
   }
 
   @Test
@@ -270,7 +287,7 @@ struct ControllerRecordSetTests {
     #expect(set.problems.map(\.url.lastPathComponent) == ["1234-abcd.json"])
     #expect(
       set.problems.first?.problem
-        == "1234-abcd.json: apiVersion openjoystickdriver.io/v1beta1 is not supported; "
+        == "E5001: 1234-abcd.json: apiVersion openjoystickdriver.io/v1beta1 is not supported; "
         + "the supported apiVersion is \(OpenJoystickDriverAPI.version)"
     )
     #expect(try Data(contentsOf: releasedURL) == released)

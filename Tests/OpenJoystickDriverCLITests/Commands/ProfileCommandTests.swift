@@ -214,8 +214,8 @@ struct ProfileCommandTests {
 
     #expect(replaced.code == 0, "\(replaced.standardError)")
     #expect(try replaced.json()["replaced"] as? Bool == true)
-    #expect(invalid.code == 64)
-    #expect(invalid.standardError.hasPrefix("error[E2003]: "))
+    #expect(invalid.code == 1)
+    #expect(invalid.standardError.hasPrefix("error[E5001]: "))
     #expect(service.arguments(of: .importRemappingProfile).count == 1)
   }
 
@@ -247,7 +247,17 @@ struct ProfileCommandTests {
     #expect(try invalidJSON.json()["valid"] as? Bool == false)
     #expect(try invalidJSON.json()["problem"] is String)
     #expect(invalid.code == 1)
-    #expect(invalid.standardError.hasPrefix("error[E2011]: "))
+    #expect(invalid.standardError.hasPrefix("error[E5001]: "))
+    let oldVersion = await run(
+      Data(
+        #"{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"Profile","name":"Pad"}"#.utf8
+      ),
+      ["--json"]
+    )
+    #expect(oldVersion.code == 1)
+    #expect(oldVersion.standardError.hasPrefix("error[E5001]: "))
+    #expect(oldVersion.standardError.contains("openjoystickdriver.io/v1beta1"))
+    #expect(oldVersion.standardError.contains(OpenJoystickDriverAPI.version))
   }
 
   @Test

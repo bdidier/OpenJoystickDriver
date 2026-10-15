@@ -231,7 +231,7 @@ ojd mod list
 ojd mod remove NAME [--force] [--dry-run]
 ```
 
-- `mod validate`: Check a package folder without installing it: the manifest, whether `requires` includes this version, the listed files, and clashes with your files and other packages. It exits with code 1 and the `E4xxx` code when the package is refused.
+- `mod validate`: Check a package folder without installing it: the manifest, whether `requires` includes this version, the listed files, and clashes with your files and other packages. It exits with code 1 and the `E4xxx` or `E5001` code when the package is refused.
 - `mod install`: Check the package and install it to `Packages/NAME` in the OpenJoystickDriver folder. The running service applies it. A package of the same name that is installed is refused with E4005 unless you pass `--force`. `--force` never overrides `requires`, a clash, or an invalid file. `--dry-run` (`-n`) checks the package and writes nothing.
 - `mod list`: List each installed package with its version, author, and files. A package that OpenJoystickDriver does not use, such as one whose `requires` leaves out this version, shows the reason and its code.
 - `mod remove`: Delete one installed package. It asks first on a terminal and needs `--force` otherwise. `--dry-run` (`-n`) changes nothing. It exits with code 1 and E4006 when the package is not installed.
