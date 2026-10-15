@@ -57,7 +57,7 @@ Sources/OpenJoystickDriverKit/
                        capabilities
   Remapping/           reusable profile and mapping engine
   Resources/           generated controller records (Controllers/) and localization tables
-  Settings/            the layered `Settings.json` store and document (machine file, then user file)
+  Settings/            the layered `Settings.json` store and document (built-in defaults, then the user file)
   Storage/             DataDirectory port and its macOS implementation; the only path builder
   Update/              release version parsing and update checking
 

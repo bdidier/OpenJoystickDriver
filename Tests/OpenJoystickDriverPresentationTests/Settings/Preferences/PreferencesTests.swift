@@ -196,6 +196,26 @@ struct PreferencesTests {
     #expect(try settings.value(of: .developerTools))
   }
 
+  @Test
+  @MainActor
+  func aChangeFromAnotherStoreReachesTheModel() async throws {
+    let directory = RootedDataDirectory.temporary()
+    let model = SettingsPreferencesModel(
+      settings: SettingsStore(directory: directory),
+      launchAtLogin: LaunchAtLoginStub(isEnabled: false),
+      notificationAuthorization: NotificationAuthorizationStub(state: .allowed)
+    )
+    #expect(!model.controllerNotifications)
+
+    // What `ojd setting` or another process does.
+    try SettingsStore(directory: directory).set(.notifyControllerConnected, to: true)
+
+    for _ in 0..<100 where !model.controllerNotifications {
+      try await Task.sleep(nanoseconds: 50_000_000)
+    }
+    #expect(model.controllerNotifications)
+  }
+
   @MainActor
   private func waitUntil(_ condition: @escaping @MainActor () -> Bool) async {
     for _ in 0..<100 where !condition() { await Task.yield() }

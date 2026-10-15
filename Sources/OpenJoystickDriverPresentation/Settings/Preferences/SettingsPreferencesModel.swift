@@ -40,6 +40,7 @@
     let launchAtLoginIsAvailable: Bool
 
     private let settings: SettingsStore
+    private var watcher: SettingsWatcher?
     private let launchAtLogin: any LaunchAtLoginControlling
     private let notificationAuthorizationController: any NotificationAuthorizationControlling
     /// Counts authorization reads. The controller answers off the main actor, so a refresh that
@@ -66,20 +67,39 @@
       self.startAtLogin = launchAtLogin.isEnabled
       self.notificationAuthorization = .checking
       self.notificationSystemSettings = .authorizationOnly(.checking)
+      self.controllerNotifications = ApplicationSettingKey.notifyControllerConnected.defaultValue
+      self.controllerDisconnectedNotifications =
+        ApplicationSettingKey.notifyControllerDisconnected.defaultValue
+      self.profileNotifications = ApplicationSettingKey.notifyProfileActivated.defaultValue
+      self.profileDeactivatedNotifications =
+        ApplicationSettingKey.notifyProfileDeactivated.defaultValue
+      self.notificationSounds = ApplicationSettingKey.notifySounds.defaultValue
+      self.includePrereleaseUpdates = ApplicationSettingKey.updatesIncludePrereleases.defaultValue
+      self.developerToolsEnabled = ApplicationSettingKey.developerTools.defaultValue
+      reloadSettings()
+      // A change from `ojd setting` or another process shows while the window is open.
+      watcher = SettingsWatcher(store: settings) { [weak self] in
+        Task { @MainActor in self?.reloadSettings() }
+      }
+      refreshNotificationAuthorization()
+    }
+
+    /// Reads the user settings file again; a damaged file shows in `errorMessage` and leaves the
+    /// switches as they are.
+    func reloadSettings() {
       let stored: SettingsDocument
       do { stored = try settings.load() } catch {
-        stored = SettingsDocument()
         errorMessage = error.localizedDescription
+        return
       }
       func value(_ key: ApplicationSettingKey) -> Bool { stored[key] ?? key.defaultValue }
-      self.controllerNotifications = value(.notifyControllerConnected)
-      self.controllerDisconnectedNotifications = value(.notifyControllerDisconnected)
-      self.profileNotifications = value(.notifyProfileActivated)
-      self.profileDeactivatedNotifications = value(.notifyProfileDeactivated)
-      self.notificationSounds = value(.notifySounds)
-      self.includePrereleaseUpdates = value(.updatesIncludePrereleases)
-      self.developerToolsEnabled = value(.developerTools)
-      refreshNotificationAuthorization()
+      controllerNotifications = value(.notifyControllerConnected)
+      controllerDisconnectedNotifications = value(.notifyControllerDisconnected)
+      profileNotifications = value(.notifyProfileActivated)
+      profileDeactivatedNotifications = value(.notifyProfileDeactivated)
+      notificationSounds = value(.notifySounds)
+      includePrereleaseUpdates = value(.updatesIncludePrereleases)
+      developerToolsEnabled = value(.developerTools)
     }
 
     func setStartAtLogin(_ enabled: Bool) {

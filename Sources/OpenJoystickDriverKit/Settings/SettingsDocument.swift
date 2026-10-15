@@ -26,6 +26,10 @@ public struct SettingsDocument: Equatable, Sendable {
     public init() {}
   }
 
+  /// Internal state, not a setting: true after the user turned launch at login off through the
+  /// app or `ojd setting`, so the app does not register itself on its next start. The public key
+  /// `launchAtLogin` is read from and written to the macOS login item, which stays the source of
+  /// truth; a change made in System Settings does not update this field.
   public var launchAtLoginOptOut: Bool?
   public var notify = Notify()
   public var updates = Updates()
@@ -35,7 +39,8 @@ public struct SettingsDocument: Equatable, Sendable {
 
   /// The stored value of `key`, or nil when this layer leaves it out.
   ///
-  /// `launchAtLogin` is stored as its opposite, `launchAtLoginOptOut`.
+  /// `launchAtLogin` here is the opposite of the stored `launchAtLoginOptOut`; it is not the
+  /// state of the login item, which only macOS knows.
   public subscript(key: ApplicationSettingKey) -> Bool? {
     get {
       switch key {

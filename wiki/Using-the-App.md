@@ -156,7 +156,7 @@ Open **Settings** from the sidebar or press <kbd>Command</kbd>+<kbd>,</kbd>.
 
 **Start at login** opens OJD in the menu bar when you log in. It needs macOS 13 or later. If macOS needs approval, allow OJD in **System Settings** > **General** > **Login Items**.
 
-Turning the switch off records that you opted out, so OJD does not register itself again at the next start. The `ojd setting set launchAtLogin false` command does the same. For more information, see [Command reference](Command-Reference.md).
+The switch shows what macOS reports, so a change made in **System Settings** appears here. Turning the switch off here, or running `ojd setting set launchAtLogin false`, also records that you opted out, so OJD does not register itself again at the next start. A change made only in **System Settings** records nothing. For more information, see [Command reference](Command-Reference.md).
 
 #### Notifications
 

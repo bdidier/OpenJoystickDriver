@@ -68,33 +68,38 @@ struct SettingsStoreTests {
   }
 
   @Test
-  func theUserFileOverridesTheMachineFileWhichOverridesTheDefaults() throws {
+  func theUserFileOverridesTheBuiltInDefaults() throws {
     try write(
       header(
         #", "notify": {"sounds": false, "controllerConnected": true}, "developerTools": true"#
       ),
-      to: .machineData
+      to: .applicationData
     )
-    try write(header(#", "notify": {"controllerConnected": false}"#), to: .applicationData)
 
     #expect(try store.value(of: .notifySounds) == false)
     #expect(try store.value(of: .developerTools) == true)
-    #expect(try store.value(of: .notifyControllerConnected) == false)
+    #expect(try store.value(of: .notifyControllerConnected) == true)
     #expect(try store.value(of: .notifyProfileActivated) == false)
   }
 
   @Test
-  func writesNeverTouchTheMachineFile() throws {
-    let machine = header(#", "developerTools": true"#)
-    try write(machine, to: .machineData)
-
-    try store.set(.developerTools, to: false)
-
-    let machineURL = root.fileURL(SettingsStore.fileName, in: .machineData)
-    #expect(try String(contentsOf: machineURL, encoding: .utf8) == machine)
-    #expect(try store.value(of: .developerTools) == false)
-    #expect(SettingsStore.writableLayer == .applicationData)
-    #expect(SettingsStore.layers == [.machineData, .applicationData])
+  func twoStoresWritingDifferentKeysAtOnceLoseNoUpdate() async throws {
+    let keys = ApplicationSettingKey.allCases.filter { $0 != .launchAtLogin }
+    let first = store
+    let second = store
+    for round in 0..<20 {
+      let value = round.isMultiple(of: 2)
+      try await withThrowingTaskGroup(of: Void.self) { group in
+        for (index, key) in keys.enumerated() {
+          let writer = index.isMultiple(of: 2) ? first : second
+          group.addTask { try writer.set(key, to: value) }
+        }
+        try await group.waitForAll()
+      }
+      for key in keys {
+        #expect(try store.value(of: key) == value, "round \(round) \(key.rawValue)")
+      }
+    }
   }
 
   @Test
@@ -132,7 +137,7 @@ struct SettingsStoreTests {
   func aWrongKindIsRejectedWithoutACode() throws {
     try write(
       #"{"apiVersion": "\#(OpenJoystickDriverAPI.version)", "kind": "Profile"}"#,
-      to: .machineData
+      to: .applicationData
     )
 
     do {

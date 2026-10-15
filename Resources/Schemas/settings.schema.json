@@ -2,7 +2,7 @@
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
 	"$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/settings.schema.json",
 	"title": "OpenJoystickDriver settings",
-	"description": "The file Settings.json. It exists in two layers: the machine file in /Library/Application Support/OpenJoystickDriver, which only an administrator writes, and the user file in the user's OpenJoystickDriver Application Support folder, which 'ojd setting set' and the app write. Every setting is optional in a file; a setting a file leaves out falls through to the layer below it. The layers, lowest to highest: built-in defaults, machine file, user file.",
+	"description": "The file Settings.json in the user's OpenJoystickDriver Application Support folder, which 'ojd setting set' and the app write. Every setting is optional; a setting the file leaves out takes its built-in default. The layers, lowest to highest: built-in defaults, the user file.",
 	"type": "object",
 	"required": ["apiVersion", "kind"],
 	"additionalProperties": false,
@@ -14,7 +14,7 @@
 			"const": "Settings"
 		},
 		"launchAtLoginOptOut": {
-			"description": "True after the user turned launch at login off, so the app does not register itself again on its next start. Default false. 'ojd setting' reads and writes launchAtLogin, which sets this and registers or unregisters the login item.",
+			"description": "Internal state, not a setting: true after the user turned launch at login off through the app or 'ojd setting', so the app does not register itself automatically on its next start. Default false. The public key launchAtLogin is read from and written to the macOS login item (SMAppService), which stays the source of truth; a change made in System Settings does not update this field.",
 			"type": "boolean"
 		},
 		"notify": {
