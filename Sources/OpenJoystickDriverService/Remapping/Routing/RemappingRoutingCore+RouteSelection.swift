@@ -15,12 +15,12 @@ extension RemappingRoutingCore {
       return
     }
     do {
-      let frontmostBundleID = foregroundApplication.frontmostBundleIdentifier()
+      let frontmostBundleID = foregroundApplication.frontmostAppID()
       let profile = try await library.activeProfile(
         vendorID: identifier.model.vendorID,
         productID: identifier.model.productID,
         unit: identifier.portKey?.rawValue,
-        frontmostBundleIdentifier: frontmostBundleID
+        frontmostAppID: frontmostBundleID
       )
       _ = try requireOperationalPermit(permit)
       try await transition(
@@ -123,7 +123,7 @@ extension RemappingRoutingCore {
   ) -> RemappingRouteEligibility {
     let eligibility = RemappingForegroundPolicy.eligibility(
       for: profile.applicationScope,
-      frontmostBundleIdentifier: environment.frontmostBundleIdentifier,
+      frontmostAppID: environment.frontmostAppID,
       accessState: environment.postEventAccessState,
       outputSuppressed: controls.outputSuppressed,
       requiresPostEventAccess: profile.requiresSystemInputAccess

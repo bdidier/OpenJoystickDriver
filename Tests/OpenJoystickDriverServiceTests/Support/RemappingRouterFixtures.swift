@@ -104,23 +104,23 @@ final class RemappingRouterSink: RemappingSystemInputSink, @unchecked Sendable {
 final class RemappingRouterForeground: RemappingForegroundApplicationProviding, @unchecked Sendable
 {
   private let lock = NSLock()
-  private var bundleIdentifier: String?
+  private var appID: String?
   private var sequence: [String?] = []
   private var reads = 0
 
-  init(_ bundleIdentifier: String?) { self.bundleIdentifier = bundleIdentifier }
+  init(_ appID: String?) { self.appID = appID }
 
-  func frontmostBundleIdentifier() -> String? {
+  func frontmostAppID() -> String? {
     lock.withLock {
       reads += 1
-      guard !sequence.isEmpty else { return bundleIdentifier }
+      guard !sequence.isEmpty else { return appID }
       return sequence.removeFirst()
     }
   }
 
-  func set(_ bundleIdentifier: String?) {
+  func set(_ appID: String?) {
     lock.withLock {
-      self.bundleIdentifier = bundleIdentifier
+      self.appID = appID
       sequence.removeAll()
     }
   }
@@ -235,7 +235,7 @@ struct RemappingRouterHarness {
 
   static func make(
     profile: RemappingProfile? = nil,
-    frontmostBundleIdentifier: String? = "com.example.Game",
+    frontmostAppID: String? = "com.example.Game",
     accessState: RemappingPostEventAccessState = .granted,
     tickerIntervalNanoseconds: UInt64? = nil,
     tickerSleeper: @escaping RemappingOutputRouter.TickerSleeper = { _ in },
@@ -256,7 +256,7 @@ struct RemappingRouterHarness {
       try await library.activate(profileID: profile.id)
     }
     let recorder = RemappingRouterRecorder()
-    let foreground = RemappingRouterForeground(frontmostBundleIdentifier)
+    let foreground = RemappingRouterForeground(frontmostAppID)
     let access = RemappingRouterAccess(accessState)
     let sink: any RemappingSystemInputSink =
       systemInputSink ?? RemappingRouterSink(recorder: recorder)
@@ -344,7 +344,7 @@ func remappingRouterConnectedControllers() -> [ConnectedController] {
 func remappingRouterProfile(
   id: UUID = UUID(),
   name: String = "Game",
-  applicationScope: RemappingApplicationScope = .application(bundleIdentifier: "com.example.Game"),
+  applicationScope: RemappingApplicationScope = .application(appID: "com.example.Game"),
   destination: RemappingDestination = .keyboard(key: .space, modifiers: []),
   turbo: RemappingTurbo? = nil
 ) -> RemappingProfile {

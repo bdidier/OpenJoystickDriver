@@ -11,11 +11,11 @@ struct UserSpaceDeviceCreationTests {
     let classify = UserSpaceOutputDispatcher.creationFailure
     #expect(
       "\(classify(.denied, .granted))"
-        == "\(UserSpaceOutputDispatcher.CreationError.inputMonitoringDenied)"
+        == "\(UserSpaceOutputDispatcher.CreationError.inputReadDenied)"
     )
     #expect(
       "\(classify(.granted, .unknown))"
-        == "\(UserSpaceOutputDispatcher.CreationError.accessibilityDenied)"
+        == "\(UserSpaceOutputDispatcher.CreationError.inputInjectDenied)"
     )
     #expect(
       "\(classify(.granted, .granted))" == "\(UserSpaceOutputDispatcher.CreationError.createFailed)"

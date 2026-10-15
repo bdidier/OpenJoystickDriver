@@ -50,7 +50,7 @@ A profile file contains one profile object. An exported profile file has the sam
 | `id` | Yes | UUID of the profile |
 | `name` | Yes | 1 to 80 printable characters |
 | `device` | Yes | `vendorID` and `productID` of the controller model, and an optional `unit`: a unit ID from `ojd controller list` that limits the profile to that one controller |
-| `applicationScope` | Yes | `{"type":"global"}` or `{"type":"application","bundleIdentifier":"ID"}` |
+| `applicationScope` | Yes | `{"type":"global"}` or `{"type":"application","appID":"ID"}` |
 | `bindings` | Yes | The assignments |
 | `outputPolicy` | No | `virtualGamepad` and `physicalInput` |
 | `physicalColor` | No | Lighting color |

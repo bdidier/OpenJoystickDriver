@@ -22,10 +22,10 @@ struct CoreGraphicsSinkTests {
     let sink = makeSink(poster: poster)
 
     try sink.send(.modifierDown(.shift))
-    try sink.send(.modifierDown(.command))
+    try sink.send(.modifierDown(.meta))
     try sink.send(.keyDown(.a))
     try sink.send(.keyUp(.a))
-    try sink.send(.modifierUp(.command))
+    try sink.send(.modifierUp(.meta))
     try sink.send(.modifierUp(.shift))
 
     #expect(
@@ -43,8 +43,8 @@ struct CoreGraphicsSinkTests {
   @Test
   func everyModifierUsesItsPlatformKeyAndFlag() throws {
     let cases: [(RemappingKeyModifier, CGKeyCode, CoreGraphicsModifierFlags)] = [
-      (.command, CGKeyCode(kVK_Command), .command), (.control, CGKeyCode(kVK_Control), .control),
-      (.option, CGKeyCode(kVK_Option), .option), (.shift, CGKeyCode(kVK_Shift), .shift),
+      (.meta, CGKeyCode(kVK_Command), .command), (.control, CGKeyCode(kVK_Control), .control),
+      (.alt, CGKeyCode(kVK_Option), .option), (.shift, CGKeyCode(kVK_Shift), .shift),
     ]
     for (modifier, virtualKey, flag) in cases {
       let poster = RecordingPoster()

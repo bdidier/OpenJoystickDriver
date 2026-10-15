@@ -41,9 +41,10 @@ struct ServiceCommandTests {
     let json = try result.json()
     let service = try #require(json["service"] as? [String: Any])
     #expect(service["state"] as? String == "stopped")
-    let extensionState = try #require(json["extension"] as? [String: Any])
+    let extensionState = try #require(json["transportExtension"] as? [String: Any])
     #expect(extensionState["bundle"] as? String == "present")
     #expect(extensionState["registration"] as? String == "absent")
+    #expect(json["extension"] == nil)
     #expect(json["controllers"] == nil)
     #expect((json["skippedRecords"] as? [Any])?.isEmpty == true)
   }
@@ -104,8 +105,8 @@ struct ServiceCommandTests {
   func statusReportsTheRunningServiceInJSONAndPlainRows() async throws {
     let socketPath = temporarySocketPath()
     let payload = ApplicationServiceStatusPayload(
-      inputMonitoring: "granted",
-      accessibility: "denied",
+      inputRead: "granted",
+      inputInject: "denied",
       connectedDevices: [
         ApplicationServiceDeviceDescription(
           name: "Test Pad",
@@ -146,8 +147,8 @@ struct ServiceCommandTests {
     let service = try #require(json["service"] as? [String: Any])
     #expect(service["state"] as? String == "running")
     let permissions = try #require(json["permissions"] as? [String: Any])
-    #expect(permissions["inputMonitoring"] as? String == "granted")
-    #expect(permissions["accessibility"] as? String == "denied")
+    #expect(permissions["inputRead"] as? String == "granted")
+    #expect(permissions["inputInject"] as? String == "denied")
     let controllers = try #require(json["controllers"] as? [[String: Any]])
     #expect(controllers.count == 1)
     #expect(controllers.first?["id"] as? String == token("pad-1"))
@@ -158,7 +159,7 @@ struct ServiceCommandTests {
       $0.split(separator: "\t", omittingEmptySubsequences: false).map(String.init)
     }
     #expect(rows.first?.prefix(2) == ["service", "running"])
-    #expect(rows.contains(["permission", "accessibility", "denied"]))
+    #expect(rows.contains(["permission", "input-inject", "denied"]))
     #expect(rows.contains(["controller", token("pad-1"), "045E:028E", "USB", "Test Pad"]))
   }
 

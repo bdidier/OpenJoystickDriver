@@ -137,7 +137,7 @@ struct NativeGamepadRoutingTests {
     RemappingProfile(
       name: "Native",
       device: RemappingDeviceScope(vendorID: 0x054C, productID: 0x09CC),
-      applicationScope: .application(bundleIdentifier: "com.example.Game"),
+      applicationScope: .application(appID: "com.example.Game"),
       outputPolicy: policy,
       bindings: [
         RemappingBinding(

@@ -257,7 +257,7 @@ struct ControllerCommandTests {
     var device = ApplicationServiceDeviceDescription.fixture(id: "pad-1")
     device.publication = ApplicationServicePublicationStatus(
       state: .notPublished,
-      reason: "nativeGamepad",
+      reason: "systemGamepad",
       target: .sdlCompatible
     )
     let service = try FakeService(devices: [device])
@@ -270,10 +270,10 @@ struct ControllerCommandTests {
     let controller = try json.json()
     let publication = try #require(controller["publication"] as? [String: Any])
     #expect(publication["state"] as? String == "notPublished")
-    #expect(publication["reason"] as? String == "nativeGamepad")
+    #expect(publication["reason"] as? String == "systemGamepad")
     #expect(publication["target"] as? String == VirtualHIDProfileID.sdlCompatible.rawValue)
-    #expect(plain.standardOutput.contains("\npublication\tnotPublished\tnativeGamepad\n"))
-    #expect(Self.rows(human, endingIn: "notPublished (nativeGamepad)").count == 1)
+    #expect(plain.standardOutput.contains("\npublication\tnotPublished\tsystemGamepad\n"))
+    #expect(Self.rows(human, endingIn: "notPublished (systemGamepad)").count == 1)
   }
 
   @Test
@@ -441,7 +441,7 @@ struct ControllerCommandTests {
 
   @Test(arguments: [
     ("exclusiveRawUSB", "exclusive-raw-usb"), ("leftMain", "left-main"), ("raw-usb", "raw-usb"),
-    ("playerIndicator", "player-indicator"), ("driverKitOwnedUSB", "driver-kit-owned-usb"),
+    ("playerIndicator", "player-indicator"), ("ExtensionOwnedUsb", "extension-owned-usb"),
   ])
   func kebabCaseMatchesTheControlNames(value: String, expected: String) {
     #expect(ControllerShowCommand.kebabCase(value) == expected)

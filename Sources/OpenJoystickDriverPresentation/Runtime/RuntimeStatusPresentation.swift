@@ -16,33 +16,33 @@ enum RuntimePermissionState: String, Sendable, Equatable {
 }
 
 struct RuntimePermissionSummary: Sendable, Equatable {
-  let inputMonitoring: RuntimePermissionState
-  let accessibility: RuntimePermissionState
+  let inputRead: RuntimePermissionState
+  let inputInject: RuntimePermissionState
 
-  init(inputMonitoring: RuntimePermissionState, accessibility: RuntimePermissionState) {
-    self.inputMonitoring = inputMonitoring
-    self.accessibility = accessibility
+  init(inputRead: RuntimePermissionState, inputInject: RuntimePermissionState) {
+    self.inputRead = inputRead
+    self.inputInject = inputInject
   }
 
   init(status: ApplicationServiceStatusPayload) {
     self.init(
-      inputMonitoring: Self.state(for: status.inputMonitoring),
-      accessibility: Self.state(for: status.accessibility)
+      inputRead: Self.state(for: status.inputRead),
+      inputInject: Self.state(for: status.inputInject)
     )
   }
 
   init(snapshot: PermissionManager.Snapshot) {
     self.init(
-      inputMonitoring: Self.state(for: snapshot.inputMonitoring),
-      accessibility: Self.state(for: snapshot.accessibility)
+      inputRead: Self.state(for: snapshot.inputRead),
+      inputInject: Self.state(for: snapshot.inputInject)
     )
   }
 
-  var isReady: Bool { inputMonitoring == .granted && accessibility == .granted }
+  var isReady: Bool { inputRead == .granted && inputInject == .granted }
 
-  var inputMonitoringLabel: String { RuntimePresentation.permissionLabel(inputMonitoring) }
+  var inputReadLabel: String { RuntimePresentation.permissionLabel(inputRead) }
 
-  var accessibilityLabel: String { RuntimePresentation.permissionLabel(accessibility) }
+  var accessibilityLabel: String { RuntimePresentation.permissionLabel(inputInject) }
 
   static func state(for value: String) -> RuntimePermissionState {
     switch value.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() {

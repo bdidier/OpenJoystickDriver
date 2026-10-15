@@ -17,7 +17,7 @@ struct ControllerServerFeedbackTests {
       protocolBinding: ProtocolBindingID(.hidDescriptor),
       connection: "USB",
       discoverySource: .hid,
-      physicalOwnership: .nativeGamepad,
+      physicalOwnership: .systemGamepad,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
       recordServer: recordServer,
@@ -29,8 +29,8 @@ struct ControllerServerFeedbackTests {
     _ devices: [ApplicationServiceDeviceDescription]
   ) -> ApplicationServiceStatusPayload {
     ApplicationServiceStatusPayload(
-      inputMonitoring: "granted",
-      accessibility: "granted",
+      inputRead: "granted",
+      inputInject: "granted",
       connectedDevices: devices,
       userSpaceVirtualDeviceEnabled: true,
       userSpaceVirtualDeviceStatus: .backend("ready")

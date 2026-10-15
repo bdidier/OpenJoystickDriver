@@ -3,8 +3,8 @@ import OpenJoystickDriverKit
 import OpenJoystickDriverUSB
 
 package enum ExtensionProbe {
-  package static let bundleIdentifier = USBDriverKitExtensionConfiguration.bundleIdentifier
-  static let relativePath = "Contents/Library/SystemExtensions/\(bundleIdentifier).dext"
+  package static let extensionID = USBDriverKitExtensionConfiguration.extensionID
+  static let relativePath = "Contents/Library/SystemExtensions/\\(extensionID).dext"
 
   package static func currentStatus(bundleURL: URL = Bundle.main.bundleURL) -> ExtensionStatus {
     let bundle = bundleState(in: bundleURL)
@@ -36,7 +36,7 @@ package enum ExtensionProbe {
     let extensionURL = bundleURL.appendingPathComponent(relativePath)
     guard FileManager.default.fileExists(atPath: extensionURL.path) else { return .missing }
     let actualIdentifier = Bundle(url: extensionURL)?.bundleIdentifier
-    guard actualIdentifier == bundleIdentifier else {
+    guard actualIdentifier == extensionID else {
       return .invalid(actualIdentifier ?? "missing bundle identifier")
     }
     return .present
@@ -53,7 +53,7 @@ package enum ExtensionProbe {
     }
 
     let matches = result.output.split(separator: "\n").filter { line in
-      line.contains(bundleIdentifier)
+      line.contains(extensionID)
     }
     if let active = matches.first(where: { line in
       line.localizedCaseInsensitiveContains("activated enabled")
@@ -70,7 +70,7 @@ package enum ExtensionProbe {
   static func installedFacts(from output: String) -> ExtensionVersionFacts? {
     guard
       let line = output.components(separatedBy: .newlines).first(where: {
-        $0.contains(bundleIdentifier)
+        $0.contains(extensionID)
       })
     else { return nil }
     let versionToken = line.split { $0 == " " || $0 == "\t" }.first { token in
@@ -84,7 +84,7 @@ package enum ExtensionProbe {
     let build = String(parts[1])
     guard isVersionComponent(short), isVersionComponent(build) else { return nil }
     return ExtensionVersionFacts(
-      bundleIdentifier: bundleIdentifier,
+      extensionID: extensionID,
       shortVersion: short,
       buildVersion: build
     )
@@ -107,7 +107,7 @@ package enum ExtensionProbe {
       let build = info["CFBundleVersion"] as? String
     else { return nil }
     return ExtensionVersionFacts(
-      bundleIdentifier: identifier,
+      extensionID: identifier,
       shortVersion: short,
       buildVersion: build
     )

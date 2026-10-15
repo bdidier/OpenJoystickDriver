@@ -117,7 +117,7 @@ extension RemappingRoutingCore {
           vendorID: identifier.model.vendorID,
           productID: identifier.model.productID,
           unit: identifier.portKey?.rawValue,
-          frontmostBundleIdentifier: environment.frontmostBundleIdentifier
+          frontmostAppID: environment.frontmostAppID
         )
       } catch let error as RemappingProfileLibraryError {
         _ = try requireOperationalPermit(permit)

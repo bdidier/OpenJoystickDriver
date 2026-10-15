@@ -211,7 +211,7 @@ extension RemappingProfileLibrary {
       vendorID: vendorID,
       productID: productID,
       unit: unit,
-      frontmostBundleIdentifier: nil
+      frontmostAppID: nil
     )
   }
 
@@ -221,7 +221,7 @@ extension RemappingProfileLibrary {
     vendorID: UInt16,
     productID: UInt16,
     unit: String?,
-    frontmostBundleIdentifier: String?
+    frontmostAppID: String?
   ) throws -> RemappingProfile? {
     let loaded = try loadIfNeeded()
     try requireUsableLibrary()
@@ -240,9 +240,9 @@ extension RemappingProfileLibrary {
     }
 
     // Prefer an app-scoped profile matching the frontmost app (last activated wins)
-    if let bundleID = frontmostBundleIdentifier,
+    if let appID = frontmostAppID,
       let profile = preferred(
-        candidates.filter { $0.scope == .application(bundleIdentifier: bundleID) }
+        candidates.filter { $0.scope == .application(appID: appID) }
       )
     {
       return profile

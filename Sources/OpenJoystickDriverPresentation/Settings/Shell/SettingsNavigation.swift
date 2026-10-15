@@ -272,12 +272,12 @@
         guard let permissions = await viewModel.requestPermission(requirement) else { return }
         let isGranted: Bool
         switch requirement {
-        case .inputMonitoring: isGranted = permissions.inputMonitoring == .granted
-        case .accessibility: isGranted = permissions.accessibility == .granted
+        case .inputRead: isGranted = permissions.inputRead == .granted
+        case .inputInject: isGranted = permissions.inputInject == .granted
         }
         if !isGranted {
           openPrivacySettings(
-            pane: requirement == .inputMonitoring ? "Privacy_ListenEvent" : "Privacy_Accessibility"
+            pane: requirement == .inputRead ? "Privacy_ListenEvent" : "Privacy_Accessibility"
           )
         }
       }
@@ -310,7 +310,7 @@
     @MainActor
     private static func openPrivacySettings(for permissions: RuntimePermissionSummary) {
       let pane: String
-      if permissions.inputMonitoring != .granted {
+      if permissions.inputRead != .granted {
         pane = "Privacy_ListenEvent"
       } else {
         pane = "Privacy_Accessibility"

@@ -56,8 +56,8 @@ struct PermissionListCommand: AsyncParsableCommand {
       do {
         let payload = try await ServiceConnection.request { try await $0.getStatus() }
         snapshot = PermissionManager.Snapshot(
-          inputMonitoring: PermissionManager.AccessState(status: payload.inputMonitoring),
-          accessibility: PermissionManager.AccessState(status: payload.accessibility)
+          inputRead: PermissionManager.AccessState(status: payload.inputRead),
+          inputInject: PermissionManager.AccessState(status: payload.inputInject)
         )
       } catch let failure as CLIFailure where failure.code == .serviceUnavailable {
         snapshot = Self.localSnapshot()
@@ -78,8 +78,8 @@ struct PermissionListCommand: AsyncParsableCommand {
   @TaskLocal
   static var localSnapshot: @Sendable () -> PermissionManager.Snapshot = {
     PermissionManager.Snapshot(
-      inputMonitoring: PermissionManager.currentInputMonitoringAccessState(),
-      accessibility: PermissionManager.currentAccessibilityAccessState()
+      inputRead: PermissionManager.currentInputReadAccessState(),
+      inputInject: PermissionManager.currentInputInjectAccessState()
     )
   }
 }
@@ -111,12 +111,13 @@ struct PermissionRequestCommand: AsyncParsableCommand {
   func validate() throws {
     let valid = PermissionID.requestable.map(\.rawValue)
     for id in ids where !valid.contains(id) {
+      let hint = RenamedWord.hints(for: [id], kind: .permissionID)
       throw ValidationError(
         CLILocalized.format(
           "cli.permission.request.unknown_id",
           id,
           valid.joined(separator: ", ")
-        )
+        ) + hint
       )
     }
   }
@@ -151,7 +152,7 @@ struct PermissionRequestCommand: AsyncParsableCommand {
 
 extension PermissionID {
   var accessRequirement: PermissionManager.Requirement {
-    self == .accessibility ? .accessibility : .inputMonitoring
+    self == .inputInject ? .inputInject : .inputRead
   }
 }
 

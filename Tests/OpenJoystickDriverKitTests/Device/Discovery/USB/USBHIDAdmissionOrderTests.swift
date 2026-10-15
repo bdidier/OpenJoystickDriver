@@ -112,7 +112,7 @@ struct USBHIDAdmissionOrderTests {
     let hidFirst = await admit(hidFirst: true, native: true)
 
     #expect(usbFirst.sources == [.hid])
-    #expect(usbFirst.ownerships == [.nativeGamepad])
+    #expect(usbFirst.ownerships == [.systemGamepad])
     #expect(hidFirst == usbFirst)
   }
 

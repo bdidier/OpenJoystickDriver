@@ -7,14 +7,14 @@ import Testing
 
 struct AccessGrantStoreTests {
   private let tool = CodeSigningIdentity(
-    kind: .team,
+    kind: .signed,
     identifier: "com.example.tool",
-    teamIdentifier: "ABCDE12345"
+    publisherID: "ABCDE12345"
   )
   private let python = CodeSigningIdentity(
-    kind: .apple,
+    kind: .platform,
     identifier: "com.apple.python3",
-    teamIdentifier: nil
+    publisherID: nil
   )
 
   @Test
@@ -90,19 +90,70 @@ struct AccessGrantStoreTests {
       for text in [
         "{",
         #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
-          + #""enabled":true,"grants":[{"kind":"ad-hoc","identifier":"a.out","scopes":["read"],"#
+          + #""enabled":true,"grants":[{"publisher":{"kind":"adHoc"},"identifier":"a.out","#
+          + #""scopes":["read"],"#
           + #""grantedAt":"x","path":"/a.out"}],"tokens":[],"web":{"enabled":false,"port":47614}}"#,
         #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
-          + #""enabled":true,"grants":[{"kind":"team","identifier":"x","scopes":["read"],"#
+          + #""enabled":true,"grants":[{"publisher":{"kind":"signed"},"identifier":"x","#
+          + #""scopes":["read"],"#
           + #""grantedAt":"x","path":"/x"}],"tokens":[],"web":{"enabled":false,"port":47614}}"#,
         #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
-          + #""enabled":true,"grants":[{"kind":"apple","identifier":"x","scopes":[],"#
+          + #""enabled":true,"grants":[{"publisher":{"kind":"platform"},"identifier":"x","#
+          + #""scopes":[],"#
           + #""grantedAt":"x","path":"/x"}],"tokens":[],"web":{"enabled":false,"port":47614}}"#,
       ] {
         try Data(text.utf8).write(to: store.url)
         #expect(throws: AccessGrantStoreError.damaged) { try store.load() }
         #expect(try String(contentsOf: store.url, encoding: .utf8) == text)
       }
+    }
+  }
+
+  @Test
+  func aDamagedFileErrorCarriesItsCodeAndALocalizedText() {
+    let message = AccessGrantStoreError.damaged.errorDescription ?? ""
+    #expect(message == "E5005: \(ErrorCode.damagedAccessGrants.localizedExplanation)")
+    #expect(message.contains(AccessGrantStore.fileName))
+  }
+
+  @Test
+  func theOldHyphenatedAdHocKindIsNotAcceptedInAFile() throws {
+    try withStore { store, directory in
+      try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+      let text =
+        #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
+        + #""enabled":true,"grants":[{"publisher":{"kind":"ad-hoc"},"identifier":"a.out","#
+        + #""scopes":["read"],"grantedAt":"x","path":"/a.out"}],"tokens":[],"#
+        + #""web":{"enabled":false,"port":47614}}"#
+      try Data(text.utf8).write(to: store.url)
+      #expect(throws: AccessGrantStoreError.self) { try store.load() }
+    }
+  }
+
+  @Test
+  func aFileWithTheOldPublisherWordsIsRefusedAndNamesTheNewWords() throws {
+    try withStore { store, directory in
+      try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+      let text =
+        #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
+        + #""enabled":true,"grants":[{"kind":"team","identifier":"x","#
+        + #""teamIdentifier":"ABCDE12345","#
+        + #""scopes":["read"],"grantedAt":"x","path":"/x"}],"tokens":[],"#
+        + #""web":{"enabled":false,"port":47614}}"#
+      try Data(text.utf8).write(to: store.url)
+
+      #expect {
+        _ = try store.load()
+      } throws: { error in
+        let message = (error as? AccessGrantStoreError)?.errorDescription ?? ""
+        return message.hasPrefix("E5006: ")
+          && [
+            "'teamIdentifier' was renamed to 'publisher.id'.",
+            "'kind' was renamed to 'publisher.kind'.",
+            "'team' was renamed to 'signed'.",
+          ].allSatisfy(message.contains)
+      }
+      #expect(try String(contentsOf: store.url, encoding: .utf8) == text)
     }
   }
 
@@ -297,7 +348,7 @@ struct AccessGrantStoreTests {
       try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
       let hash = String(repeating: "a", count: 64)
       func grant(_ scopes: String) -> String {
-        #"{"kind":"apple","identifier":"x","scopes":\#(scopes),"#
+        #"{"publisher":{"kind":"platform"},"identifier":"x","scopes":\#(scopes),"#
           + #""grantedAt":"1970-01-01T00:00:00Z","path":"/x"}"#
       }
       func token(_ scopes: String) -> String {

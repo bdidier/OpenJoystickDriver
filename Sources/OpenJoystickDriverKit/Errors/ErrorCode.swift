@@ -41,6 +41,15 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
   case installedCLIFailed = "E2021"
   case recordTestMismatch = "E2022"
   case claimUnsupported = "E2023"
+  case unknownAccessClient = "E2024"
+  case ungrantableClient = "E2025"
+  case noAccessScope = "E2026"
+  case serviceStopping = "E2027"
+  case duplicateTokenName = "E2028"
+  case invalidTokenName = "E2029"
+  case invalidWebOrigin = "E2030"
+  case webPortUnavailable = "E2031"
+  case controlScopeWithOrigins = "E2032"
   case controllerUnavailable = "E3001"
   case joyConPairUnavailable = "E3002"
   case motionUnavailable = "E3003"
@@ -81,6 +90,9 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
   case invalidProtocolDescription = "E5002"
   case protocolDescriptionFamilyMismatch = "E5003"
   case unknownProtocolVariant = "E5004"
+  case damagedAccessGrants = "E5005"
+  case renamedWordsInDocument = "E5006"
+  case unsupportedAccessGrants = "E5007"
 
   /// The part of the product that raises a code; the first digit of the number.
   public enum Domain: String, Sendable {
@@ -101,7 +113,9 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
       .invalidInputFile, .notFound, .controllerRequestFailed, .installationProblem,
       .systemRequestFailed, .fileAccessFailed, .unsignedClient, .diagnoseFailed,
       .updateCheckFailed, .staleInstallation, .installedCLIFailed, .recordTestMismatch,
-      .claimUnsupported:
+      .claimUnsupported, .unknownAccessClient, .ungrantableClient, .noAccessScope,
+      .serviceStopping, .duplicateTokenName, .invalidTokenName, .invalidWebOrigin,
+      .webPortUnavailable, .controlScopeWithOrigins:
       .commandLine
     case .controllerUnavailable, .joyConPairUnavailable, .motionUnavailable, .argumentTooLarge,
       .corruptLibrary, .duplicateName, .invalidArguments, .invalidProfile, .librarySizeExceeded,
@@ -116,7 +130,8 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
       .packageAlreadyInstalled, .packageNotInstalled, .packageStoreUnwritable:
       .mod
     case .unsupportedAPIVersion, .invalidProtocolDescription, .protocolDescriptionFamilyMismatch,
-      .unknownProtocolVariant:
+      .unknownProtocolVariant, .damagedAccessGrants, .renamedWordsInDocument,
+      .unsupportedAccessGrants:
       .document
     }
   }

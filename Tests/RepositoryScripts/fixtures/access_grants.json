@@ -4,9 +4,8 @@
   "enabled": true,
   "grants": [
     {
-      "kind": "team",
+      "publisher": { "kind": "signed", "id": "ABCDE12345" },
       "identifier": "com.example.overlay",
-      "teamIdentifier": "ABCDE12345",
       "scopes": ["read"],
       "grantedAt": "2026-01-01T00:00:00Z",
       "path": "/Applications/Overlay.app"
