@@ -1029,9 +1029,6 @@
 			"additionalProperties": false,
 			"minProperties": 1,
 			"properties": {
-				"capabilities": {
-					"$ref": "controller.schema.json#/$defs/capabilities"
-				},
 				"output": {
 					"$ref": "controller.schema.json#/$defs/output"
 				},

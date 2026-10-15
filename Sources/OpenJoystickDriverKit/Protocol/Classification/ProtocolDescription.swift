@@ -75,7 +75,6 @@ struct ProtocolDescription: Sendable {
   let interfaceSignatures: [ProtocolInterfaceSignature]
   /// The parameters records of this family may set, by name.
   let parameters: [String: ParameterType]
-  let capabilities: ControllerCapabilityDelta?
   /// The controls every controller of the family has; a driver adds only what its record or
   /// layout makes true. Nil for a family whose controls follow its layout.
   let controls: ControllerCapabilities?
@@ -230,7 +229,6 @@ struct ProtocolDescription: Sendable {
       macOSOwnedOutput: document.macOSOwnedOutput,
       interfaceSignatures: signatures,
       parameters: document.parameters,
-      capabilities: document.defaults?.capabilities,
       controls: document.controls,
       recordCapabilities: document.recordCapabilities,
       rumbleTemplate: document.defaults?.output?.rumble,

@@ -145,6 +145,9 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         nested = xusb_description()
         nested["interfaceSignatures"][0]["endpoint"] = 129
         self.assert_rejected(nested)
+        family_delta = xusb_description()
+        family_delta["defaults"] = {"capabilities": {"rumble": "absent"}}
+        self.assert_rejected(family_delta)
 
     def test_rejects_a_duplicate_signature(self) -> None:
         document = xusb_description()

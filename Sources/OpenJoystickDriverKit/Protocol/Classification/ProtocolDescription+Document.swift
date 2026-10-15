@@ -23,7 +23,6 @@ extension ProtocolDescription {
     }
 
     struct Defaults: Decodable {
-      let capabilities: ControllerCapabilityDelta?
       let output: ControllerRecordDocument.Output?
       let input: ControllerInputLayout?
       let tuning: ControllerTuning?
@@ -33,17 +32,13 @@ extension ProtocolDescription {
       init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: DocumentKey.self)
         try container.rejectUnknown(allowed: [
-          "capabilities", "output", "input", "tuning", "variants",
+          "output", "input", "tuning", "variants",
         ])
         guard !container.allKeys.isEmpty else {
           throw DecodingError.dataCorrupted(
             .init(codingPath: decoder.codingPath, debugDescription: "defaults must not be empty")
           )
         }
-        capabilities = try container.decodeOptional(
-          ControllerRecordDocument.CapabilityDelta.self,
-          for: "capabilities"
-        )?.delta
         output = try container.decodeOptional(ControllerRecordDocument.Output.self, for: "output")
         input = try container.decodeOptional(
           ControllerRecordDocument.InputLayout.self,

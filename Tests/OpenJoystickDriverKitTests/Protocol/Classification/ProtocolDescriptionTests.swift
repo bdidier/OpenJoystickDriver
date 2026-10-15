@@ -237,6 +237,7 @@ struct ProtocolDescriptionTests {
       (.xboxGIP, #""defaults": {}"#),
       (.xboxGIP, #""defaults": {"output": {}}"#),
       (.xboxGIP, #""defaults": {"unknown": {}}"#),
+      (.xboxGIP, #""defaults": {"capabilities": {"rumble": "absent"}}"#),
       (.xboxGIP, #""defaults": {"tuning": {"stickDeadzone": 5}}"#),
       (.xboxGIP, #""interfaceSignatures": []"#),
       (.xboxGIP, #""rawUSB": true, "tuningKeys": ["keepAliveIntervalMs"]"#),
