@@ -1267,10 +1267,10 @@
 "cli.controller.show.label.output_checks" = "Ausgabeprüfungen";
 "cli.controller.show.label.ownership" = "Zuständigkeit";
 "cli.controller.show.ownership" = "Zugriffsweg %@, physisch %@, HID-Eingabe %@";
-"cli.controller.show.label.server_choice" = "Bedient von";
+"cli.controller.show.label.server" = "Bedient von";
 "cli.controller.show.label.serving" = "Bedienweg";
 "cli.controller.show.label.persona" = "Veröffentlichte Persona";
-"cli.controller.show.serverChoice" = "%@ (aus %@)";
+"cli.controller.show.server" = "%@ (aus %@)";
 "cli.controller.show.label.protocol" = "Protokoll";
 "cli.controller.show.label.record" = "Eintrag";
 "cli.controller.show.label.rumble" = "Vibration";

@@ -1267,10 +1267,10 @@
 "cli.controller.show.label.output_checks" = "Uitvoercontroles";
 "cli.controller.show.label.ownership" = "Eigenaarschap";
 "cli.controller.show.ownership" = "route %@, fysiek %@, HID-invoer %@";
-"cli.controller.show.label.server_choice" = "Bediend door";
+"cli.controller.show.label.server" = "Bediend door";
 "cli.controller.show.label.serving" = "Bedieningsroute";
 "cli.controller.show.label.persona" = "Gepubliceerde persona";
-"cli.controller.show.serverChoice" = "%@ (uit %@)";
+"cli.controller.show.server" = "%@ (uit %@)";
 "cli.controller.show.label.protocol" = "Protocol";
 "cli.controller.show.label.record" = "Record";
 "cli.controller.show.label.rumble" = "Rumble";

@@ -184,8 +184,8 @@ struct ControllerClaimCommandTests {
       in: directory
     )
     let beforeOwnership = try #require(try before.json()["ownership"] as? [String: Any])
-    #expect(beforeOwnership["choice"] as? String == "system")
-    #expect(beforeOwnership["choiceSource"] as? String == "default")
+    #expect(beforeOwnership["server"] as? String == "system")
+    #expect(beforeOwnership["serverSource"] as? String == "default")
 
     _ = try await Self.run(
       ["controller", "claim", token("pad-1")],
@@ -198,14 +198,14 @@ struct ControllerClaimCommandTests {
       in: directory
     )
     let afterOwnership = try #require(try after.json()["ownership"] as? [String: Any])
-    #expect(afterOwnership["choice"] as? String == "ojd")
-    #expect(afterOwnership["choiceSource"] as? String == "user")
+    #expect(afterOwnership["server"] as? String == "ojd")
+    #expect(afterOwnership["serverSource"] as? String == "user")
 
     let plain = try await Self.run(
       ["controller", "show", token("pad-1"), "--plain"],
       device: device,
       in: directory
     )
-    #expect(plain.standardOutput.contains("ownership-choice\tojd\tuser\n"))
+    #expect(plain.standardOutput.contains("server\tojd\tuser\n"))
   }
 }

@@ -1267,10 +1267,10 @@
 "cli.controller.show.label.output_checks" = "आउटपुट जाँच";
 "cli.controller.show.label.ownership" = "स्वामित्व";
 "cli.controller.show.ownership" = "रूट %@, भौतिक %@, HID इनपुट %@";
-"cli.controller.show.label.server_choice" = "चलाने वाला";
+"cli.controller.show.label.server" = "चलाने वाला";
 "cli.controller.show.label.serving" = "सेवा मार्ग";
 "cli.controller.show.label.persona" = "पर्सोना";
-"cli.controller.show.serverChoice" = "%@ (%@ से)";
+"cli.controller.show.server" = "%@ (%@ से)";
 "cli.controller.show.label.protocol" = "प्रोटोकॉल";
 "cli.controller.show.label.record" = "रिकॉर्ड";
 "cli.controller.show.label.rumble" = "रंबल";

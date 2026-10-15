@@ -1270,10 +1270,10 @@
 "cli.controller.show.label.output_checks" = "Output checks";
 "cli.controller.show.label.ownership" = "Ownership";
 "cli.controller.show.ownership" = "route %@, physical %@, HID input %@";
-"cli.controller.show.label.server_choice" = "Served by";
+"cli.controller.show.label.server" = "Served by";
 "cli.controller.show.label.serving" = "Serving route";
 "cli.controller.show.label.persona" = "Persona";
-"cli.controller.show.serverChoice" = "%@ (from %@)";
+"cli.controller.show.server" = "%@ (from %@)";
 "cli.controller.show.label.protocol" = "Protocol";
 "cli.controller.show.label.record" = "Record";
 "cli.controller.show.label.rumble" = "Rumble";

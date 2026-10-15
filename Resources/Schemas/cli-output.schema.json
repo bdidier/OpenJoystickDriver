@@ -800,8 +800,8 @@
         "ownership": {
           "type": "object",
           "required": [
-            "choice",
-            "choiceSource",
+            "server",
+            "serverSource",
             "discoverySource",
             "duplicateExposureRisk",
             "hidInput",
@@ -809,11 +809,11 @@
           ],
           "additionalProperties": false,
           "properties": {
-            "choice": {
+            "server": {
               "$ref": "#/$defs/sharedServer"
             },
-            "choiceSource": {
-              "description": "The record layer that sets the choice, or default when no layer sets it and macOS serves the controller.",
+            "serverSource": {
+              "description": "The record layer that sets server, or default when no layer sets it and macOS serves the controller.",
               "enum": ["bundled", "package", "user", "default"]
             },
             "discoverySource": {

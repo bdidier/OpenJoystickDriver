@@ -1267,10 +1267,10 @@
 "cli.controller.show.label.output_checks" = "Pemeriksaan output";
 "cli.controller.show.label.ownership" = "Kepemilikan";
 "cli.controller.show.ownership" = "rute %@, fisik %@, input HID %@";
-"cli.controller.show.label.server_choice" = "Dilayani oleh";
+"cli.controller.show.label.server" = "Dilayani oleh";
 "cli.controller.show.label.serving" = "Rute layanan";
 "cli.controller.show.label.persona" = "Persona yang dipublikasikan";
-"cli.controller.show.serverChoice" = "%@ (dari %@)";
+"cli.controller.show.server" = "%@ (dari %@)";
 "cli.controller.show.label.protocol" = "Protokol";
 "cli.controller.show.label.record" = "Catatan";
 "cli.controller.show.label.rumble" = "Getaran";

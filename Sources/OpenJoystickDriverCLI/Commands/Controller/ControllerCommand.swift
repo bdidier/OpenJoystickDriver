@@ -158,7 +158,7 @@ struct ControllerShowCommand: AsyncParsableCommand {
     rows += [
       ["input-health", detail.inputHealth.state],
       ["ownership", detail.ownership.physical],
-      ["ownership-choice", detail.ownership.choice.rawValue, detail.ownership.choiceSource],
+      ["server", detail.ownership.server.rawValue, detail.ownership.serverSource],
       ["serving-route", detail.serving.route, detail.serving.reason ?? ""],
       ["persona", detail.serving.persona ?? ""],
       ["controls", detail.capabilities.controls.joined(separator: ",")],
@@ -249,11 +249,11 @@ struct ControllerShowCommand: AsyncParsableCommand {
         )
       ),
       (
-        CLILocalized.text("cli.controller.show.label.server_choice"),
+        CLILocalized.text("cli.controller.show.label.server"),
         CLILocalized.format(
-          "cli.controller.show.serverChoice",
-          detail.ownership.choice.rawValue,
-          detail.ownership.choiceSource
+          "cli.controller.show.server",
+          detail.ownership.server.rawValue,
+          detail.ownership.serverSource
         )
       ),
       (

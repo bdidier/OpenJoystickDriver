@@ -60,6 +60,14 @@ class ControllerClaimSchemaTests(unittest.TestCase):
     def test_the_ownership_command_has_no_schema(self) -> None:
         self.assertNotIn("controllerOwnership", self.schema["$defs"])
 
+    def test_show_ownership_names_the_server_setting(self) -> None:
+        ownership = self.schema["$defs"]["controllerShow"]["properties"]["ownership"]
+        self.assertIn("server", ownership["properties"])
+        self.assertIn("serverSource", ownership["properties"])
+        self.assertNotIn("choice", ownership["properties"])
+        self.assertNotIn("choiceSource", ownership["properties"])
+        self.assertIn("server", ownership["required"])
+
     def test_show_serving_names_every_route(self) -> None:
         show = self.schema["$defs"]["controllerShow"]
         self.assertEqual(

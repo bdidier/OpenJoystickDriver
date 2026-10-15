@@ -156,7 +156,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The pr
 
 ### Removed
 
-- **Breaking:** `ojd controller ownership` is removed and is now an unknown command. Use `ojd controller claim` (was `virtual`) and `ojd controller release` (was `native`). In `ojd controller show --json`, `ownership.choice` is now `system` or `ojd`, and the `ojd controller claim` and `release` output has the kind `ControllerServer` with `server` in place of `ownership`.
+- **Breaking:** `ojd controller ownership` is removed and is now an unknown command. Use `ojd controller claim` (was `virtual`) and `ojd controller release` (was `native`). In `ojd controller show --json`, `ownership.choice` and `ownership.choiceSource` are now `ownership.server` and `ownership.serverSource`, and `server` is `system` or `ojd`, and the `ojd controller claim` and `release` output has the kind `ControllerServer` with `server` in place of `ownership`.
 - **BREAKING:** Remove every command of the old command line, with no aliases. Each is replaced as follows:
   - `--headless` → run the executable as `ojd`; `--json-lines` → `--json`
   - `status`, `app status` → `ojd status`

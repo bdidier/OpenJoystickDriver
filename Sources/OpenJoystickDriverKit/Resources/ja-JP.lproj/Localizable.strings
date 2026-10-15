@@ -1267,10 +1267,10 @@
 "cli.controller.show.label.output_checks" = "出力チェック";
 "cli.controller.show.label.ownership" = "所有状態";
 "cli.controller.show.ownership" = "経路 %@、物理 %@、HID 入力 %@";
-"cli.controller.show.label.server_choice" = "担当";
+"cli.controller.show.label.server" = "担当";
 "cli.controller.show.label.serving" = "処理経路";
 "cli.controller.show.label.persona" = "ペルソナ";
-"cli.controller.show.serverChoice" = "%@（%@ から）";
+"cli.controller.show.server" = "%@（%@ から）";
 "cli.controller.show.label.protocol" = "プロトコル";
 "cli.controller.show.label.record" = "レコード";
 "cli.controller.show.label.rumble" = "振動";

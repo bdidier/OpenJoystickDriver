@@ -1267,10 +1267,10 @@
 "cli.controller.show.label.output_checks" = "Çıkış Denetimleri";
 "cli.controller.show.label.ownership" = "Sahiplik";
 "cli.controller.show.ownership" = "yol %@, fiziksel %@, HID girdisi %@";
-"cli.controller.show.label.server_choice" = "Hizmet veren";
+"cli.controller.show.label.server" = "Hizmet veren";
 "cli.controller.show.label.serving" = "Hizmet yolu";
 "cli.controller.show.label.persona" = "Yayınlanan persona";
-"cli.controller.show.serverChoice" = "%@ (%@ kaynağından)";
+"cli.controller.show.server" = "%@ (%@ kaynağından)";
 "cli.controller.show.label.protocol" = "Protokol";
 "cli.controller.show.label.record" = "Kayıt";
 "cli.controller.show.label.rumble" = "Titreşim";

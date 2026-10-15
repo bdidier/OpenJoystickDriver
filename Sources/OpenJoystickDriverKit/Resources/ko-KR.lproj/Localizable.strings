@@ -1267,10 +1267,10 @@
 "cli.controller.show.label.output_checks" = "출력 점검";
 "cli.controller.show.label.ownership" = "소유권";
 "cli.controller.show.ownership" = "경로 %@, 물리 %@, HID 입력 %@";
-"cli.controller.show.label.server_choice" = "처리 주체";
+"cli.controller.show.label.server" = "처리 주체";
 "cli.controller.show.label.serving" = "처리 경로";
 "cli.controller.show.label.persona" = "페르소나";
-"cli.controller.show.serverChoice" = "%@(%@에서)";
+"cli.controller.show.server" = "%@(%@에서)";
 "cli.controller.show.label.protocol" = "프로토콜";
 "cli.controller.show.label.record" = "레코드";
 "cli.controller.show.label.rumble" = "진동";

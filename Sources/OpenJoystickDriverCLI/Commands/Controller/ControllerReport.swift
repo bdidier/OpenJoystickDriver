@@ -9,10 +9,10 @@ struct ControllerShowReport: Encodable, Equatable {
     let hidInput: String
     let duplicateExposureRisk: String
     /// Who the record lets serve the model: `system` or `ojd`, the `server` setting.
-    let choice: ControllerServer
-    /// The record layer that sets the choice: `bundled`, `package`, or `user`; `default` when no
+    let server: ControllerServer
+    /// The record layer that sets `server`: `bundled`, `package`, or `user`; `default` when no
     /// layer sets it.
-    let choiceSource: String
+    let serverSource: String
   }
 
   struct InputHealth: Encodable, Equatable {
@@ -216,8 +216,8 @@ struct ControllerShowReport: Encodable, Equatable {
         physical: device.physicalOwnership.rawValue,
         hidInput: device.hidInputOwnership.rawValue,
         duplicateExposureRisk: device.duplicateExposureRisk.rawValue,
-        choice: record?.server ?? .system,
-        choiceSource: record?.fieldLayers["server"]?.rawValue ?? "default"
+        server: record?.server ?? .system,
+        serverSource: record?.fieldLayers["server"]?.rawValue ?? "default"
       ),
       serving: Serving(device.servingDecision),
       parameters: device.parameters,

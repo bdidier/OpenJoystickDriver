@@ -1267,10 +1267,10 @@
 "cli.controller.show.label.output_checks" = "Controlli dell’output";
 "cli.controller.show.label.ownership" = "Proprietà";
 "cli.controller.show.ownership" = "percorso %@, fisico %@, input HID %@";
-"cli.controller.show.label.server_choice" = "Gestito da";
+"cli.controller.show.label.server" = "Gestito da";
 "cli.controller.show.label.serving" = "Percorso di gestione";
 "cli.controller.show.label.persona" = "Persona pubblicata";
-"cli.controller.show.serverChoice" = "%@ (da %@)";
+"cli.controller.show.server" = "%@ (da %@)";
 "cli.controller.show.label.protocol" = "Protocollo";
 "cli.controller.show.label.record" = "Record";
 "cli.controller.show.label.rumble" = "Vibrazione";
