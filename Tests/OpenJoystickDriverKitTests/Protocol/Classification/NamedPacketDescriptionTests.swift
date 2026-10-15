@@ -89,7 +89,10 @@ struct NamedPacketDescriptionTests {
     }
   }
 
-  private func decodeStartup(_ startup: String, packets: Bool = true) throws
+  private func decodeStartup(
+    _ startup: String,
+    packets: Bool = true
+  ) throws
     -> ProtocolDescription
   {
     let session = packets ? #""session": {"namedPackets": [\#(Self.powerOn)]}, "# : ""

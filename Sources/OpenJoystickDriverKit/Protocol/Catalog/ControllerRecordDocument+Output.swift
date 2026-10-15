@@ -26,8 +26,9 @@ extension ControllerRecordDocument {
           )
         )
       }
-      guard [self.startup.isEmpty, usbStartup.isEmpty, packetStartup.isEmpty].filter({ !$0 })
-        .count <= 1
+      guard
+        [self.startup.isEmpty, usbStartup.isEmpty, packetStartup.isEmpty].filter({ !$0 })
+          .count <= 1
       else {
         throw DecodingError.dataCorrupted(
           .init(
