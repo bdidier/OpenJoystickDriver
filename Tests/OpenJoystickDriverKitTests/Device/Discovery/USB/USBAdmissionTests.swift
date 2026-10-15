@@ -2,6 +2,7 @@ import Testing
 
 @testable import OpenJoystickDriverKit
 
+@Suite(.timeLimit(.minutes(2)))
 struct USBDetectionAdmissionTests {
   @Test
   func claimedInterfaceOutsideTheBoundContractIsLeftUnbound() async {

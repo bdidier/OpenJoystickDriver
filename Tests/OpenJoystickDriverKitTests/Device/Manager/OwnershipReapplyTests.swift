@@ -5,6 +5,7 @@ import Testing
 
 /// A changed `ownership` reaches a connected controller without a replug. The GameSir connections
 /// are synthetic, as in `HIDLocationRoutingTests`.
+@Suite(.timeLimit(.minutes(2)))
 struct OwnershipReapplyTests {
   private static let changedModel = ControllerModelID(vendorID: 0x3537, productID: 0x100B)
 
