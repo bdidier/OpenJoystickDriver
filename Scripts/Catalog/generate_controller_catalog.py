@@ -23,6 +23,10 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 LOCK_PATH = ROOT / "ControllerSources.lock.json"
 OVERRIDE_DIR = ROOT / "Resources" / "ControllerOverrides"
 OUTPUT_DIR = ROOT / "Sources" / "OpenJoystickDriverKit" / "Resources" / "Controllers"
+PROTOCOL_DIR = ROOT / "Resources" / "Protocols"
+PROTOCOL_OUTPUT_DIR = (
+    ROOT / "Sources" / "OpenJoystickDriverKit" / "Resources" / "Protocols"
+)
 RECORD_SCHEMA_ID = (
     "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/"
     "Resources/Schemas/v1beta1/controller.schema.json"
@@ -645,16 +649,20 @@ def sdl_summary(rows: list[tuple[int, int, str]], counts: dict[str, int]) -> str
 def expected_files(
     records: dict[tuple[int, int], dict[str, Any]],
 ) -> dict[pathlib.Path, str]:
-    return {
+    files = {
         record_path(OUTPUT_DIR, key): json.dumps(record, indent=2, ensure_ascii=False)
         + "\n"
         for key, record in sorted(records.items())
     }
+    # The bundle ships the authored protocol descriptions unchanged.
+    for path in sorted(PROTOCOL_DIR.glob("*.json")):
+        files[PROTOCOL_OUTPUT_DIR / path.name] = path.read_text()
+    return files
 
 
 def check_catalog(records: dict[tuple[int, int], dict[str, Any]]) -> None:
     expected = expected_files(records)
-    actual = set(OUTPUT_DIR.glob("*/*.json"))
+    actual = {*OUTPUT_DIR.glob("*/*.json"), *PROTOCOL_OUTPUT_DIR.glob("*.json")}
     missing = sorted(set(expected) - actual)
     stale = sorted(actual - set(expected))
     changed = sorted(
@@ -675,8 +683,9 @@ def check_catalog(records: dict[tuple[int, int], dict[str, Any]]) -> None:
 
 def write_catalog(records: dict[tuple[int, int], dict[str, Any]]) -> None:
     expected = expected_files(records)
-    if OUTPUT_DIR.exists():
-        shutil.rmtree(OUTPUT_DIR)
+    for directory in (OUTPUT_DIR, PROTOCOL_OUTPUT_DIR):
+        if directory.exists():
+            shutil.rmtree(directory)
     for path, text in expected.items():
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(text)

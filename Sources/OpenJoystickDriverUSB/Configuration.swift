@@ -37,6 +37,14 @@ public enum USBDriverKitExtensionConfiguration {
     model.vendorID == microsoftVendorID && microsoftProductIDs.contains(model.productID)
   }
 
+  /// The `xbox.gip` signature from the bundled protocol description, and its data interface.
+  private static let (gipSignature, gipDataInterface) = {
+    guard let signature = ProtocolInterfaceSignature.bundled(.xboxGIP, variant: .usb),
+      let interface = signature.requiredInterfaceNumber
+    else { fatalError("[USBDriverKit] The xbox.gip description has no data interface signature") }
+    return (signature, interface)
+  }()
+
   /// The sole source consumed by the host adapter and DriverKit generator.
   ///
   /// Interface matching belongs to the IOKit personality, while the USB transport
@@ -45,9 +53,11 @@ public enum USBDriverKitExtensionConfiguration {
     bundleIdentifier: bundleIdentifier,
     providerClass: "IOUSBHostInterface",
     matchingProperties: [
-      "bConfigurationValue": .unsignedInteger(1), "bInterfaceNumber": .unsignedInteger(0),
-      "bInterfaceClass": .unsignedInteger(0xFF), "bInterfaceSubClass": .unsignedInteger(0x47),
-      "bInterfaceProtocol": .unsignedInteger(0xD0),
+      "bConfigurationValue": .unsignedInteger(1),
+      "bInterfaceNumber": .unsignedInteger(UInt64(gipDataInterface)),
+      "bInterfaceClass": .unsignedInteger(UInt64(gipSignature.interfaceClass)),
+      "bInterfaceSubClass": .unsignedInteger(UInt64(gipSignature.interfaceSubclass)),
+      "bInterfaceProtocol": .unsignedInteger(UInt64(gipSignature.interfaceProtocol)),
     ],
     capabilities: .usb,
     usbDevice: USBDeviceConfiguration(

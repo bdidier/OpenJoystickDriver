@@ -1,0 +1,12 @@
+{
+	"$schema": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/protocol-description.schema.json",
+	"family": "xbox.xid",
+	"interfaceSignatures": [
+		{
+			"variant": "gamepad",
+			"interfaceClass": 88,
+			"interfaceSubclass": 66,
+			"interfaceProtocol": 0
+		}
+	]
+}

@@ -1,0 +1,52 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/protocol-description.schema.json",
+	"type": "object",
+	"additionalProperties": false,
+	"required": ["$schema", "family", "interfaceSignatures"],
+	"properties": {
+		"$schema": {
+			"const": "https://raw.githubusercontent.com/xsyetopz/OpenJoystickDriver/main/Resources/Schemas/v1beta1/protocol-description.schema.json"
+		},
+		"family": {
+			"$ref": "controller.schema.json#/$defs/protocol/properties/family"
+		},
+		"interfaceSignatures": {
+			"type": "array",
+			"minItems": 1,
+			"uniqueItems": true,
+			"items": {
+				"$ref": "#/$defs/interfaceSignature"
+			}
+		}
+	},
+	"$defs": {
+		"interfaceSignature": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["variant", "interfaceClass", "interfaceSubclass", "interfaceProtocol"],
+			"properties": {
+				"variant": {
+					"$ref": "controller.schema.json#/$defs/protocol/properties/variant"
+				},
+				"interfaceClass": {
+					"$ref": "#/$defs/byte"
+				},
+				"interfaceSubclass": {
+					"$ref": "#/$defs/byte"
+				},
+				"interfaceProtocol": {
+					"$ref": "#/$defs/byte"
+				},
+				"interfaceNumber": {
+					"$ref": "#/$defs/byte"
+				}
+			}
+		},
+		"byte": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 255
+		}
+	}
+}
