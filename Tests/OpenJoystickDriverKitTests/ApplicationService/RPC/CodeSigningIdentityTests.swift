@@ -8,7 +8,7 @@ struct CodeSigningIdentityTests {
   func systemToolIsSignedByApple() throws {
     let identity = try #require(CodeSigningIdentity.of(path: URL(fileURLWithPath: "/usr/bin/true")))
 
-    #expect(identity.kind == .apple)
+    #expect(identity.kind == .platform)
     #expect(identity.identifier == "com.apple.true")
     #expect(identity.requirementText == "identifier \"com.apple.true\" and anchor apple")
     #expect(identity.requirement != nil)
@@ -17,9 +17,9 @@ struct CodeSigningIdentityTests {
   @Test
   func teamRequirementPinsTheTeam() {
     let identity = CodeSigningIdentity(
-      kind: .team,
+      kind: .signed,
       identifier: "com.example.\"tool\"",
-      teamIdentifier: "ABCDE12345"
+      publisherID: "ABCDE12345"
     )
 
     #expect(
@@ -32,7 +32,7 @@ struct CodeSigningIdentityTests {
 
   @Test
   func adHocCodeHasNoRequirement() {
-    let identity = CodeSigningIdentity(kind: .adHoc, identifier: "tool", teamIdentifier: nil)
+    let identity = CodeSigningIdentity(kind: .adHoc, identifier: "tool", publisherID: nil)
 
     #expect(identity.requirementText == nil)
     #expect(identity.requirement == nil)

@@ -61,8 +61,8 @@ struct StatusCommand: AsyncParsableCommand {
       ["command-line-tool", report.commandLineTool.state.rawValue, report.commandLineTool.path],
     ]
     if let permissions = report.permissions {
-      rows.append(["permission", "input-monitoring", permissions.inputMonitoring.rawValue])
-      rows.append(["permission", "accessibility", permissions.accessibility.rawValue])
+      rows.append(["permission", "input-read", permissions.inputRead.rawValue])
+      rows.append(["permission", "input-inject", permissions.inputInject.rawValue])
     }
     if let virtual = report.virtualDevice {
       rows.append([
@@ -119,14 +119,14 @@ struct StatusCommand: AsyncParsableCommand {
     if let permissions = report.permissions {
       rows.append(
         (
-          CLILocalized.text("cli.status.label.input_monitoring"),
-          permissions.inputMonitoring.rawValue
+          CLILocalized.text("cli.status.label.input_read"),
+          permissions.inputRead.rawValue
         )
       )
       rows.append(
         (
-          CLILocalized.text("cli.status.label.accessibility"),
-          permissions.accessibility.rawValue
+          CLILocalized.text("cli.status.label.input_inject"),
+          permissions.inputInject.rawValue
         )
       )
     }

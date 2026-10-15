@@ -271,14 +271,14 @@ struct SupportReportBindingTests {
       ),
       macOSVersion: "26.0.0",
       architecture: "arm64",
-      inputMonitoring: .granted,
+      inputRead: .granted,
       applicationServiceInstalled: true,
       applicationServiceConnected: true,
       applicationServiceHealth: nil,
       frameTimings: frameTimings,
       status: ApplicationServiceStatusPayload(
-        inputMonitoring: "granted",
-        accessibility: "granted",
+        inputRead: "granted",
+        inputInject: "granted",
         connectedDevices: connected,
         unboundDevices: unbound
       ),

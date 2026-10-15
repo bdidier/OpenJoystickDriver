@@ -133,7 +133,7 @@
 
     func reconcileStatus(_ status: RuntimeStatusPresentation) {
       reconcileConnectedDevices(status.devices)
-      guard !isDeviceConnected, status.permissions.inputMonitoring != .granted,
+      guard !isDeviceConnected, status.permissions.inputRead != .granted,
         device?.discoverySource == .hid
       else { return }
       sessionState = .permissionRequired

@@ -269,10 +269,25 @@ public enum RemappingKeyboardKey: String, Codable, CaseIterable, Hashable, Senda
 }
 
 public enum RemappingKeyModifier: String, Codable, CaseIterable, Hashable, Sendable {
-  case command
+  case meta
   case control
-  case option
+  case alt
   case shift
+
+  public init(from decoder: any Decoder) throws {
+    let container = try decoder.singleValueContainer()
+    let name = try container.decode(String.self)
+    guard let modifier = Self(rawValue: name) else {
+      throw DecodingError.dataCorrupted(
+        .init(
+          codingPath: decoder.codingPath,
+          debugDescription: "unknown modifier '\(name)'"
+            + RenamedWord.hints(for: [name], kind: .modifier)
+        )
+      )
+    }
+    self = modifier
+  }
 }
 
 public enum RemappingMouseButton: String, Codable, CaseIterable, Hashable, Sendable {

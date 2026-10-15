@@ -238,7 +238,7 @@ public struct ApplicationServiceRemappingRoutePayload: Codable, Equatable, Senda
   public let activeProfileID: UUID?
   public let activeProfileName: String?
   public let applicationScope: RemappingApplicationScope?
-  public let frontmostBundleIdentifier: String?
+  public let frontmostAppID: String?
   public let postEventAccess: RemappingPostEventAccessState
   public let failure: ApplicationServiceRemappingFailurePayload?
 
@@ -251,7 +251,7 @@ public struct ApplicationServiceRemappingRoutePayload: Codable, Equatable, Senda
     activeProfileID: UUID?,
     activeProfileName: String?,
     applicationScope: RemappingApplicationScope?,
-    frontmostBundleIdentifier: String?,
+    frontmostAppID: String?,
     postEventAccess: RemappingPostEventAccessState,
     failure: ApplicationServiceRemappingFailurePayload?
   ) {
@@ -263,7 +263,7 @@ public struct ApplicationServiceRemappingRoutePayload: Codable, Equatable, Senda
     self.activeProfileID = activeProfileID
     self.activeProfileName = activeProfileName
     self.applicationScope = applicationScope
-    self.frontmostBundleIdentifier = frontmostBundleIdentifier
+    self.frontmostAppID = frontmostAppID
     self.postEventAccess = postEventAccess
     self.failure = failure
   }
@@ -277,7 +277,7 @@ public struct ApplicationServiceRemappingRoutePayload: Codable, Equatable, Senda
     case activeProfileID
     case activeProfileName
     case applicationScope
-    case frontmostBundleIdentifier
+    case frontmostAppID
     case postEventAccess
     case failure
   }

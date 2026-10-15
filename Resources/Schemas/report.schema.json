@@ -236,13 +236,13 @@
     },
     "permissions": {
       "type": "object",
-      "required": ["inputMonitoring", "accessibility"],
+      "required": ["inputRead", "inputInject"],
       "additionalProperties": false,
       "properties": {
-        "inputMonitoring": {
+        "inputRead": {
           "type": "string"
         },
-        "accessibility": {
+        "inputInject": {
           "type": "string"
         }
       }

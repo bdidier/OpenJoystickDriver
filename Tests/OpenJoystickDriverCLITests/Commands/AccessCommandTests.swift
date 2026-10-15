@@ -8,9 +8,9 @@ import Testing
 @Suite(.serialized)
 struct AccessCommandTests {
   private static let team = CodeSigningIdentity(
-    kind: .team,
+    kind: .signed,
     identifier: "com.example.reader",
-    teamIdentifier: "ABCDE12345"
+    publisherID: "ABCDE12345"
   )
   private static let grant = AccessGrantSummary(
     AccessGrant(
@@ -21,7 +21,7 @@ struct AccessCommandTests {
     )
   )
   private static let refused = AccessRefusedClient(
-    identity: CodeSigningIdentity(kind: .adHoc, identifier: "tool", teamIdentifier: nil),
+    identity: CodeSigningIdentity(kind: .adHoc, identifier: "tool", publisherID: nil),
     path: "/tmp/tool",
     scopes: [.read],
     reason: "E1002",
@@ -144,8 +144,8 @@ struct AccessCommandTests {
       (try list.json()["grants"] as? [[String: Any]])?.first?["id"] as? String == Self.grant.id
     )
     let refused = try list.json()["refused"] as? [[String: Any]]
-    #expect(refused?.first?["identityKind"] as? String == "adHoc")
-    #expect(plain.standardOutput.contains("granted\t\(Self.grant.id)\tteam\tcom.example.reader"))
+    #expect((refused?.first?["publisher"] as? [String: Any])?["kind"] as? String == "adHoc")
+    #expect(plain.standardOutput.contains("granted\t\(Self.grant.id)\tsigned\tcom.example.reader"))
     #expect(plain.standardOutput.contains("token\ttoken:overlay\thttp://localhost:8080\tread"))
     #expect(plain.standardOutput.contains("refused-token\t\thttp://evil.example\tread\tweb"))
     #expect(

@@ -12,7 +12,7 @@ struct ProfileSchemaTests {
       "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D5E",
       "name": "Everything",
       "device": {"vendorID": 1356, "productID": 3302, "unit": "U-AbCd_123-xyzW09q"},
-      "applicationScope": {"type": "application", "bundleIdentifier": "com.example.game"},
+      "applicationScope": {"type": "application", "appID": "com.example.game"},
       "outputPolicy": {"virtualGamepad": "mapped", "physicalInput": "exclusive"},
       "physicalColor": {"red": 255, "green": 32, "blue": 0},
       "motionTuning": {
@@ -46,7 +46,7 @@ struct ProfileSchemaTests {
         {
           "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D61",
           "source": {"type": "button", "button": "south"},
-          "destination": {"type": "keyboard", "key": "space", "modifiers": ["shift", "command"]},
+          "destination": {"type": "keyboard", "key": "space", "modifiers": ["shift", "meta"]},
           "longHold": {
             "durationMs": 500, "destination": {"type": "mouse_button", "button": "right"}
           },

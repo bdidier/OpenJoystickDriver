@@ -39,7 +39,7 @@ extension OutputCharacterizationTests {
       Self.profile(
         .disabled,
         bindings: [
-          RemappingBinding(source: .button(.south), destination: Self.key(.c, [.command, .shift]))
+          RemappingBinding(source: .button(.south), destination: Self.key(.c, [.meta, .shift]))
         ]
       )
     )
@@ -47,8 +47,8 @@ extension OutputCharacterizationTests {
     lines += try await session.step("-a", [.release(.faceSouth)])
     #expect(
       lines == [
-        "+a", "  sys modifier-down command", "  sys modifier-down shift", "  sys key-down c", "-a",
-        "  sys key-up c", "  sys modifier-up shift", "  sys modifier-up command",
+        "+a", "  sys modifier-down meta", "  sys modifier-down shift", "  sys key-down c", "-a",
+        "  sys key-up c", "  sys modifier-up shift", "  sys modifier-up meta",
       ]
     )
   }

@@ -2132,8 +2132,8 @@
         "grantTime",
         "id",
         "identifier",
-        "identityKind",
         "path",
+        "publisher",
         "scopes"
       ],
       "additionalProperties": false,
@@ -2153,8 +2153,18 @@
         "identifier": {
           "type": "string"
         },
-        "identityKind": {
-          "enum": ["team", "apple"]
+        "publisher": {
+          "type": "object",
+          "required": ["kind"],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "enum": ["signed", "platform"]
+            },
+            "id": {
+              "type": "string"
+            }
+          }
         },
         "path": {
           "type": "string"
@@ -2164,9 +2174,6 @@
           "items": {
             "enum": ["read", "control"]
           }
-        },
-        "teamIdentifier": {
-          "type": "string"
         }
       }
     },
@@ -2175,7 +2182,7 @@
       "required": [
         "id",
         "identifier",
-        "identityKind",
+        "publisher",
         "reason",
         "refusalTime",
         "scopes"
@@ -2188,8 +2195,18 @@
         "identifier": {
           "type": "string"
         },
-        "identityKind": {
-          "enum": ["team", "apple", "adHoc"]
+        "publisher": {
+          "type": "object",
+          "required": ["kind"],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "enum": ["signed", "platform", "adHoc"]
+            },
+            "id": {
+              "type": "string"
+            }
+          }
         },
         "path": {
           "type": "string"
@@ -2207,9 +2224,6 @@
           "items": {
             "enum": ["read", "control"]
           }
-        },
-        "teamIdentifier": {
-          "type": "string"
         }
       }
     },
@@ -2769,11 +2783,7 @@
             "additionalProperties": false,
             "properties": {
               "id": {
-                "enum": [
-                  "input-monitoring",
-                  "accessibility",
-                  "driver-extension"
-                ]
+                "enum": ["input-read", "input-inject", "usb-transport"]
               },
               "name": {
                 "type": "string"
@@ -3267,13 +3277,13 @@
         },
         "permissions": {
           "type": "object",
-          "required": ["accessibility", "inputMonitoring"],
+          "required": ["inputInject", "inputRead"],
           "additionalProperties": false,
           "properties": {
-            "accessibility": {
+            "inputInject": {
               "enum": ["granted", "denied", "unknown"]
             },
-            "inputMonitoring": {
+            "inputRead": {
               "enum": ["granted", "denied", "unknown"]
             }
           }

@@ -291,8 +291,8 @@ struct DeveloperToolsTests {
     devices: [ApplicationServiceDeviceDescription]
   ) -> ApplicationServiceStatusPayload {
     ApplicationServiceStatusPayload(
-      inputMonitoring: "granted",
-      accessibility: "granted",
+      inputRead: "granted",
+      inputInject: "granted",
       connectedDevices: devices,
       userSpaceVirtualDeviceEnabled: true,
       userSpaceVirtualDeviceStatus: .backend("ready")

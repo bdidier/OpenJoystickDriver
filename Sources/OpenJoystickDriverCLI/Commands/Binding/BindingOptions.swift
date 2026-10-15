@@ -17,11 +17,13 @@ func parseSource(_ text: String) throws -> RemappingSource {
 /// Parses a `TARGET` operand, turning a parser error into a usage error.
 func parseTarget(_ text: String) throws -> RemappingDestination {
   do { return try RemappingCommandValueParser.destination(text) } catch {
+    let modifierNames = text.split(separator: ":").last.map { $0.dropFirst(5).split(separator: ",") }
     throw CLIFailure.usage(
       CLILocalized.format(
         "cli.binding.target_invalid",
         text
       )
+        + RenamedWord.hints(for: (modifierNames ?? []).map(String.init), kind: .modifier)
     )
   }
 }

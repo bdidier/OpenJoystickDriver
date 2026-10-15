@@ -66,7 +66,7 @@ extension RemappingRequestCoordinatorTests {
     maximumResponseBytes: Int = ApplicationServiceRemappingRPC.maximumPayloadBytes
   ) async throws -> CoordinatorHarness {
     let routerHarness = try await RemappingRouterHarness.make(
-      frontmostBundleIdentifier: "com.example.Game",
+      frontmostAppID: "com.example.Game",
       accessState: .granted
     )
     let postEventAccess = CoreGraphicsPostEventAccess(probe: postEventProbe)

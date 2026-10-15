@@ -255,10 +255,10 @@ struct OwnershipObservationTests {
   }
 
   @Test
-  func inputMonitoringRequirementFollowsDiscoverySource() {
-    #expect(DeviceManager.DiscoverySource.hid.requiresInputMonitoring)
-    #expect(!DeviceManager.DiscoverySource.rawUSB(route: .ioUSBHost).requiresInputMonitoring)
-    #expect(!DeviceManager.DiscoverySource.rawUSB(route: .usbDriverKit).requiresInputMonitoring)
+  func inputReadRequirementFollowsDiscoverySource() {
+    #expect(DeviceManager.DiscoverySource.hid.requiresInputRead)
+    #expect(!DeviceManager.DiscoverySource.rawUSB(route: .ioUSBHost).requiresInputRead)
+    #expect(!DeviceManager.DiscoverySource.rawUSB(route: .usbDriverKit).requiresInputRead)
   }
 
   @Test(arguments: [

@@ -41,7 +41,7 @@ struct RemappingProfileStrictDecodingTests {
     #expect(throws: DecodingError.self) {
       try decoder.decode(
         RemappingApplicationScope.self,
-        from: Data(#"{"type":"global","bundleIdentifier":"com.example.app"}"#.utf8)
+        from: Data(#"{"type":"global","appID":"com.example.app"}"#.utf8)
       )
     }
   }
@@ -58,7 +58,7 @@ struct RemappingProfileStrictDecodingTests {
       id: UUID(uuidString: "00000000-0000-0000-0000-000000000001")!,
       name: "Strict",
       device: RemappingDeviceScope(vendorID: 1, productID: 2),
-      applicationScope: .application(bundleIdentifier: "com.example.app"),
+      applicationScope: .application(appID: "com.example.app"),
       outputPolicy: RemappingOutputPolicy(virtualGamepad: .mapped),
       gyroOutput: RemappingGyroOutput(mode: .mouse),
       stickMappings: [RemappingStickMapping(source: .right, mode: .flick)],

@@ -176,18 +176,18 @@ extension RuntimePresentation {
 
   static func modifierLabel(_ modifier: RemappingKeyModifier) -> String {
     switch modifier {
-    case .command: return OJDLocalized.string("keyboard.command")
+    case .meta: return OJDLocalized.string("keyboard.meta")
     case .control: return OJDLocalized.string("keyboard.control")
-    case .option: return OJDLocalized.string("keyboard.option")
+    case .alt: return OJDLocalized.string("keyboard.alt")
     case .shift: return OJDLocalized.string("keyboard.shift")
     }
   }
 
   static func modifierSystemSymbolName(_ modifier: RemappingKeyModifier) -> String {
     switch modifier {
-    case .command: return "command"
+    case .meta: return "command"
     case .control: return "control"
-    case .option: return "option"
+    case .alt: return "option"
     case .shift: return "shift"
     }
   }

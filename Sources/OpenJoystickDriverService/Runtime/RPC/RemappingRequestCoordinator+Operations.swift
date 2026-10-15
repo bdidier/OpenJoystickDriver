@@ -354,7 +354,7 @@ extension RemappingRequestCoordinator {
       activeProfileID: status.activeProfileID,
       activeProfileName: status.activeProfileName,
       applicationScope: status.applicationScope,
-      frontmostBundleIdentifier: status.frontmostBundleIdentifier,
+      frontmostAppID: status.frontmostAppID,
       postEventAccess: status.postEventAccessState,
       failure: failure
     )

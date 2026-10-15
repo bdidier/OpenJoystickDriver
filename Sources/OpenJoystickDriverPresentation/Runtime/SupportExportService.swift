@@ -16,8 +16,8 @@ nonisolated struct SupportExportService: Sendable {
       let report = SupportReportService.make(
         status: status,
         virtualDiagnostics: virtualDiagnostics,
-        inputMonitoring: PermissionManager.AccessState(
-          status: status?.inputMonitoring ?? "unknown"
+        inputRead: PermissionManager.AccessState(
+          status: status?.inputRead ?? "unknown"
         ),
         applicationServiceHealth: ApplicationServiceManager.health(),
         applicationServiceInstalled: ApplicationServiceManager.isInstalled,

@@ -21,8 +21,8 @@ struct SupportReportTests {
     let secretSerial = "SERIAL-SECRET-123"
     let secretPath = "/Users/alice/private/controller.txt"
     let status = ApplicationServiceStatusPayload(
-      inputMonitoring: "granted",
-      accessibility: "granted",
+      inputRead: "granted",
+      inputInject: "granted",
       connectedDevices: [
         ApplicationServiceDeviceDescription(
           name: "Test Controller",
@@ -116,7 +116,7 @@ struct SupportReportTests {
       ),
       macOSVersion: "26.0.0",
       architecture: "arm64",
-      inputMonitoring: .granted,
+      inputRead: .granted,
       applicationServiceInstalled: true,
       applicationServiceConnected: true,
       applicationServiceHealth: health,
@@ -184,7 +184,7 @@ struct SupportReportTests {
       ),
       macOSVersion: "26.0.0",
       architecture: "arm64",
-      inputMonitoring: .denied,
+      inputRead: .denied,
       applicationServiceInstalled: false,
       applicationServiceConnected: false,
       applicationServiceHealth: nil,

@@ -53,8 +53,8 @@ extension RemappingProfile {
     }
   }
 
-  internal static func isValidBundleIdentifier(_ identifier: String) -> Bool {
-    guard Self.bundleIdentifierLengthRange.contains(identifier.utf8.count),
+  internal static func isValidAppID(_ identifier: String) -> Bool {
+    guard Self.appIDLengthRange.contains(identifier.utf8.count),
       identifier.allSatisfy({ $0.isASCII })
     else { return false }
     let components = identifier.split(separator: ".", omittingEmptySubsequences: false)

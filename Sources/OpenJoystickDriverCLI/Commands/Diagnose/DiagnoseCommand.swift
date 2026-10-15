@@ -262,8 +262,8 @@ struct DiagnoseCommand: AsyncParsableCommand {
     let report = SupportReportService.make(
       status: snapshot.status,
       virtualDiagnostics: snapshot.virtualDiagnostics,
-      inputMonitoring: PermissionManager.AccessState(
-        status: snapshot.status?.inputMonitoring ?? "unknown"
+      inputRead: PermissionManager.AccessState(
+        status: snapshot.status?.inputRead ?? "unknown"
       ),
       applicationServiceHealth: ApplicationServiceManager.ApplicationServiceHealth(
         installed: ApplicationServiceManager.isInstalled,

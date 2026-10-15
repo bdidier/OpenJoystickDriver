@@ -105,8 +105,8 @@
       "Apple GameController catalog audit was unavailable."
     ],
     "permissions": {
-      "accessibility": "granted",
-      "inputMonitoring": "granted"
+      "inputInject": "granted",
+      "inputRead": "granted"
     },
     "privacy": {
       "includesDeviceProductNames": true,

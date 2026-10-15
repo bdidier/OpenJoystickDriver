@@ -49,7 +49,7 @@ struct RemappingRouteStatus: Equatable, Sendable {
   let activeProfileID: UUID?
   let activeProfileName: String?
   let applicationScope: RemappingApplicationScope?
-  let frontmostBundleIdentifier: String?
+  let frontmostAppID: String?
   let postEventAccessState: RemappingPostEventAccessState
   let error: RemappingOutputRoutingError?
 }
@@ -134,7 +134,7 @@ struct RemappingControllerRoute: Equatable, Sendable {
       eligibilitySnapshot = RemappingEligibilitySnapshot(
         eligibility: newValue,
         environment: RemappingEligibilityEnvironment(
-          frontmostBundleIdentifier: eligibilitySnapshot.frontmostBundleIdentifier,
+          frontmostAppID: eligibilitySnapshot.frontmostAppID,
           postEventAccessState: eligibilitySnapshot.postEventAccessState
         )
       )
@@ -144,18 +144,18 @@ struct RemappingControllerRoute: Equatable, Sendable {
 
 struct RemappingEligibilitySnapshot: Equatable, Sendable {
   let eligibility: RemappingRouteEligibility
-  let frontmostBundleIdentifier: String?
+  let frontmostAppID: String?
   let postEventAccessState: RemappingPostEventAccessState
 
   init(eligibility: RemappingRouteEligibility, environment: RemappingEligibilityEnvironment) {
     self.eligibility = eligibility
-    self.frontmostBundleIdentifier = environment.frontmostBundleIdentifier
+    self.frontmostAppID = environment.frontmostAppID
     self.postEventAccessState = environment.postEventAccessState
   }
 }
 
 struct RemappingEligibilityEnvironment {
-  let frontmostBundleIdentifier: String?
+  let frontmostAppID: String?
   let postEventAccessState: RemappingPostEventAccessState
 }
 

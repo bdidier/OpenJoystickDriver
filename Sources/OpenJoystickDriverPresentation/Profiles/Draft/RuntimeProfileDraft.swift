@@ -39,9 +39,9 @@ struct DestinationOption: Hashable {
       RemappingDestination.keyboard(key: key, modifiers: [])
     }
     let modifierGroups: [Set<RemappingKeyModifier>] =
-      [[.command], [.control], [.option], [.shift]] + [
-        [.command, .control], [.command, .option], [.command, .shift],
-      ] + [[.control, .option], [.control, .shift], [.option, .shift]]
+      [[.meta], [.control], [.alt], [.shift]] + [
+        [.meta, .control], [.meta, .alt], [.meta, .shift],
+      ] + [[.control, .alt], [.control, .shift], [.alt, .shift]]
     let modifiedKeyboardKeys: [RemappingKeyboardKey] =
       [.arrowUp, .arrowDown, .arrowLeft, .arrowRight] + [
         .f1, .f2, .f3, .f4, .f5, .f6, .f7, .f8, .f9, .f10,

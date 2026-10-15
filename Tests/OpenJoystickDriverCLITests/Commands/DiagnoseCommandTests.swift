@@ -21,8 +21,8 @@ struct DiagnoseCommandTests {
     let statusResult = try JSONEncoder().encode(
       try JSONEncoder().encode(
         ApplicationServiceStatusPayload(
-          inputMonitoring: "granted",
-          accessibility: "granted",
+          inputRead: "granted",
+          inputInject: "granted",
           connectedDevices: [],
           userSpaceVirtualDeviceEnabled: true
         )
@@ -208,12 +208,12 @@ struct DiagnoseCommandTests {
 
     #expect(result.code == 0, "\(result.standardError)")
     let statuses = try statuses(result)
-    for id in ["input-monitoring", "accessibility", "virtual-device", "runtime-health"] {
+    for id in ["input-read", "input-inject", "virtual-device", "runtime-health"] {
       #expect(statuses[id] == "skip", "\(id)")
     }
     #expect(statuses["service"] == "warn")
     let checks = try #require(try result.json()["checks"] as? [[String: String]])
-    #expect(checks.first { $0["id"] == "accessibility" }?["detail"]?.isEmpty == false)
+    #expect(checks.first { $0["id"] == "input-inject" }?["detail"]?.isEmpty == false)
   }
 
   @Test
@@ -225,7 +225,7 @@ struct DiagnoseCommandTests {
     )
 
     #expect(result.code == 1)
-    #expect(result.standardOutput.contains("accessibility\tskip\t"))
+    #expect(result.standardOutput.contains("inputInject\tskip\t"))
   }
 
   @Test
