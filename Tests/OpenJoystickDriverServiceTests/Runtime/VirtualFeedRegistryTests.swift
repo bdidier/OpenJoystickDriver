@@ -14,7 +14,7 @@ struct VirtualFeedRegistryTests {
   @Test
   func theProductionIdleTimeoutIsTwoSecondsAndIsTheRegistryDefault() {
     #expect(VirtualFeedExchangeResult.idleTimeoutSeconds == 2)
-    let registry = VirtualFeedRegistry(factory: { _, _ in throw CancellationError() })
+    let registry = VirtualFeedRegistry { _, _ in throw CancellationError() }
     #expect(registry.idleTimeout == VirtualFeedExchangeResult.idleTimeoutSeconds)
   }
 
