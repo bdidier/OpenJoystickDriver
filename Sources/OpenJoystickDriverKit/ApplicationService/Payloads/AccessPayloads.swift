@@ -91,52 +91,12 @@ public struct AccessGrant: Codable, Equatable, Sendable {
   }
 }
 
-/// Who published a client, as `ojd access --json` and the endpoint name it.
-///
-/// It uses the same lowerCamelCase spelling as ``CodeSigningIdentity/Kind``, which
-/// `AccessGrants.json` stores; no other spelling is accepted.
-public enum AccessIdentityKind: String, Codable, Sendable {
-  case signed
-  case platform
-  case adHoc
-
-  public init(_ kind: CodeSigningIdentity.Kind) {
-    switch kind {
-    case .signed: self = .signed
-    case .platform: self = .platform
-    case .adHoc: self = .adHoc
-    }
-  }
-
-  public var kind: CodeSigningIdentity.Kind {
-    switch self {
-    case .signed: .signed
-    case .platform: .platform
-    case .adHoc: .adHoc
-    }
-  }
-
-  public init(from decoder: any Decoder) throws {
-    let name = try decoder.singleValueContainer().decode(String.self)
-    guard let kind = Self(rawValue: name) else {
-      throw DecodingError.dataCorrupted(
-        .init(
-          codingPath: decoder.codingPath,
-          debugDescription: "unknown publisher kind '\(name)'."
-            + RenamedWord.hints(for: [name], kind: .publisherKind)
-        )
-      )
-    }
-    self = kind
-  }
-}
-
 /// Who published a client: how it was signed, and the publisher's ID when it has one.
 public struct AccessPublisher: Codable, Equatable, Sendable {
-  public let kind: AccessIdentityKind
+  public let kind: CodeSigningIdentity.Kind
   public let id: String?
 
-  public init(kind: AccessIdentityKind, id: String?) {
+  public init(kind: CodeSigningIdentity.Kind, id: String?) {
     self.kind = kind
     self.id = id
   }
@@ -155,7 +115,7 @@ public struct AccessGrantSummary: Codable, Equatable, Sendable {
 
   public init(_ grant: AccessGrant) {
     id = grant.identity.accessID
-    publisher = AccessPublisher(kind: AccessIdentityKind(grant.kind), id: grant.publisherID)
+    publisher = AccessPublisher(kind: grant.kind, id: grant.publisherID)
     identifier = grant.identifier
     scopes = grant.scopes
     grantTime = grant.grantedAt
@@ -184,7 +144,7 @@ public struct AccessRefusedClient: Codable, Equatable, Sendable {
     refusalTime: String
   ) {
     id = identity.accessID
-    publisher = AccessPublisher(kind: AccessIdentityKind(identity.kind), id: identity.publisherID)
+    publisher = AccessPublisher(kind: identity.kind, id: identity.publisherID)
     identifier = identity.identifier
     self.path = path
     self.scopes = Array(Set(scopes)).sorted()
@@ -194,7 +154,7 @@ public struct AccessRefusedClient: Codable, Equatable, Sendable {
 
   public var identity: CodeSigningIdentity {
     CodeSigningIdentity(
-      kind: publisher.kind.kind,
+      kind: publisher.kind,
       identifier: identifier,
       publisherID: publisher.id
     )

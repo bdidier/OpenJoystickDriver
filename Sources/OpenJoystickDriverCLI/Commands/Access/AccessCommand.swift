@@ -207,13 +207,13 @@ struct AccessListCommand: AsyncParsableCommand {
         CLIOutput.plain(
           status.grants.map {
             [
-              "granted", $0.id, $0.publisher.kind.kind.rawValue, $0.identifier,
+              "granted", $0.id, $0.publisher.kind.rawValue, $0.identifier,
               $0.publisher.id ?? "", AccessText.scopes($0.scopes),
             ]
           }
             + status.refused.map {
               [
-                "refused", $0.id, $0.publisher.kind.kind.rawValue, $0.identifier,
+                "refused", $0.id, $0.publisher.kind.rawValue, $0.identifier,
                 $0.publisher.id ?? "", AccessText.scopes($0.scopes),
               ]
             }
@@ -234,7 +234,7 @@ struct AccessListCommand: AsyncParsableCommand {
         }
         for grant in status.grants {
           CLIOutput.stdout(
-            "  \(grant.id)  \(AccessText.signer(grant.publisher.kind.kind, grant.publisher.id))  "
+            "  \(grant.id)  \(AccessText.signer(grant.publisher.kind, grant.publisher.id))  "
               + "\(grant.identifier)  \(AccessText.scopes(grant.scopes))  \(grant.path)"
           )
         }
@@ -247,7 +247,7 @@ struct AccessListCommand: AsyncParsableCommand {
         for client in status.refused {
           CLIOutput.stdout(
             "  \(client.id)  "
-              + "\(AccessText.signer(client.publisher.kind.kind, client.publisher.id))  "
+              + "\(AccessText.signer(client.publisher.kind, client.publisher.id))  "
               + "\(client.identifier)  \(AccessText.scopes(client.scopes))  \(client.path ?? "")"
           )
         }

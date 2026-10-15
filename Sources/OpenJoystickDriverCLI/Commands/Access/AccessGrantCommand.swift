@@ -32,7 +32,7 @@ struct AccessClient {
     if let grant = status.grants.first(where: { $0.id == text }) {
       return Self(
         identity: CodeSigningIdentity(
-          kind: grant.publisher.kind.kind,
+          kind: grant.publisher.kind,
           identifier: grant.identifier,
           publisherID: grant.publisher.id
         ),
