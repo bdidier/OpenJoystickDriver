@@ -62,6 +62,7 @@ private final class AbsoluteStickParser: PhysicalProtocolDriver {
   }
 }
 
+@Suite(.timeLimit(.minutes(2)))
 struct ControllerSessionTests {
   @Test
   func absoluteSnapshotsCenterTheStickWithoutAReleaseDelta() async {

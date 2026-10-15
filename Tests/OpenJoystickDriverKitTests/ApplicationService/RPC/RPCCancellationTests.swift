@@ -4,6 +4,7 @@ import Testing
 
 @testable import OpenJoystickDriverKit
 
+@Suite(.timeLimit(.minutes(2)))
 struct LocalServiceRPCCancellationTests {
   @Test(.timeLimit(.minutes(1)))
   func cancellingACallToASilentServerEndsPromptlyWithCancellationError() async throws {
