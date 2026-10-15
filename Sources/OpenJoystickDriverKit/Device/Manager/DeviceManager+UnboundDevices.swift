@@ -99,7 +99,7 @@ extension DeviceManager {
       vendorID: identifier.model.vendorID,
       productID: identifier.model.productID,
       connection: connection.physicalDevice.transportProperty ?? "HID",
-      backend: .ioHID,
+      backend: connection.accessBackend,
       reason: reason,
       rejectedCandidates: rejectedCandidates,
       interfaces: connection.physicalDevice.interfaces ?? []

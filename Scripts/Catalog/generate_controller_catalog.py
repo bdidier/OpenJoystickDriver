@@ -16,33 +16,20 @@ import urllib.error
 import urllib.request
 from typing import Any
 
+from Scripts.Catalog import controller_patch
 from Scripts.Catalog.catalog_rules import load_rules, parse_id, parse_identity
 from Scripts.Catalog.schema_header import KINDS, header
 from Scripts.Catalog.xpad_io import json_text, run_gh
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 LOCK_PATH = ROOT / "ControllerSources.lock.json"
-OVERRIDE_DIR = ROOT / "Resources" / "ControllerOverrides"
+CONTROLLER_DIR = ROOT / "Resources" / "Controllers"
+PATCH_DIR = ROOT / "Resources" / "ControllerPatches"
 OUTPUT_DIR = ROOT / "Sources" / "OpenJoystickDriverKit" / "Resources" / "Controllers"
 PROTOCOL_DIR = ROOT / "Resources" / "Protocols"
 PROTOCOL_OUTPUT_DIR = (
     ROOT / "Sources" / "OpenJoystickDriverKit" / "Resources" / "Protocols"
 )
-# Top-level record sections a patch override may replace.
-PATCH_FIELDS = frozenset(
-    {
-        "protocol",
-        "modes",
-        "usb",
-        "bluetoothLE",
-        "ownership",
-        "route",
-        "output",
-        "input",
-        "tuning",
-    }
-)
-
 
 # Linux HID records from `Resources/CatalogRules/linux-hid.json`: (source, vendor macro,
 # product macro, family, stored variant, parameters, capabilities).
@@ -473,88 +460,91 @@ def load_lock() -> dict[str, Any]:
         raise CatalogError(f"invalid {LOCK_PATH.name}: {error}") from error
 
 
-def load_overrides(
+def patch_path(root: pathlib.Path, selector: dict[str, Any]) -> pathlib.Path:
+    """Where the built-in patch with `selector` is stored under `root`."""
+    name = controller_patch.selector_file_name(selector)
+    if "vendorID" in selector:
+        return root / f"{int(selector['vendorID']):04x}" / name
+    return root / name
+
+
+def load_authored(
     validator: Any,
-    override_dir: pathlib.Path = OVERRIDE_DIR,
-) -> list[tuple[str, tuple[int, int], dict[str, Any]]]:
-    result: list[tuple[str, tuple[int, int], dict[str, Any]]] = []
-    seen: set[tuple[int, int]] = set()
-    for path in sorted(override_dir.glob("*/*.json")):
-        document = json.loads(path.read_text())
-        expected_header = header(KINDS["controller-override"])
-        for member, expected_value in expected_header.items():
-            if document.get(member) != expected_value:
-                raise CatalogError(
-                    f"{path}: {member} must be {expected_value}, "
-                    f"found {document.get(member)!r}"
-                )
-        operation = document.get("operation")
-        allowed = (
-            {"apiVersion", "kind", "operation", "record"}
-            if operation == "add"
-            else {"apiVersion", "kind", "operation", "vendorID", "productID", "set"}
-        )
-        if operation not in {"add", "patch"} or set(document) != allowed:
-            raise CatalogError(f"{path}: invalid override shape")
-        if operation == "add":
-            record = document["record"]
-            with tempfile.TemporaryDirectory() as directory:
-                temporary = pathlib.Path(directory) / path.name
-                temporary.write_text(json.dumps(record))
-                validator.validate_record(temporary, enforce_path=False)
-            key = record_key(record)
-            payload = record
-        else:
-            key = (int(document["vendorID"]), int(document["productID"]))
-            payload = document["set"]
-            if not payload or not set(payload) <= PATCH_FIELDS:
-                raise CatalogError(f"{path}: invalid patch fields")
-        expected = record_path(override_dir, key)
+    controller_dir: pathlib.Path = CONTROLLER_DIR,
+    patch_dir: pathlib.Path = PATCH_DIR,
+) -> tuple[
+    dict[tuple[int, int], dict[str, Any]],
+    list[tuple[dict[str, Any], dict[str, Any]]],
+]:
+    """The authored `Controller` records and the built-in `ControllerPatch` bodies."""
+    adds: dict[tuple[int, int], dict[str, Any]] = {}
+    for path in sorted(controller_dir.glob("*/*.json")):
+        record = json.loads(path.read_text())
+        if validator is not None:
+            validator.validate_record(path, enforce_path=False)
+        key = record_key(record)
+        expected = record_path(controller_dir, key)
         if path != expected:
-            raise CatalogError(f"{path}: override path must be {expected}")
-        if key in seen:
-            raise CatalogError(f"{path}: duplicate override for {key}")
-        seen.add(key)
-        result.append((operation, key, payload))
-    return result
+            raise CatalogError(f"{path}: controller path must be {expected}")
+        adds[key] = record
+    patches: list[tuple[dict[str, Any], dict[str, Any]]] = []
+    for path in sorted([*patch_dir.glob("*.json"), *patch_dir.glob("*/*.json")]):
+        try:
+            selector, body = controller_patch.parse_patch(json.loads(path.read_text()))
+        except controller_patch.PatchError as error:
+            raise CatalogError(f"{path}: {error}") from error
+        expected = patch_path(patch_dir, selector)
+        if path != expected:
+            raise CatalogError(f"{path}: patch path must be {expected}")
+        patches.append((selector, body))
+    return adds, patches
 
 
-def apply_overrides(
+def apply_patches(
     records: dict[tuple[int, int], dict[str, Any]],
-    overrides: list[tuple[str, tuple[int, int], dict[str, Any]]],
+    adds: dict[tuple[int, int], dict[str, Any]],
+    patches: list[tuple[dict[str, Any], dict[str, Any]]],
 ) -> None:
-    for operation, key, payload in overrides:
-        upstream = records.get(key)
-        if operation == "add":
-            if upstream is not None:
-                raise CatalogError(
-                    f"add override conflicts with upstream identity {key}"
-                )
-            records[key] = payload
+    """Adds the authored records, then applies the built-in layer to every record."""
+    for key, record in adds.items():
+        if key in records:
+            raise CatalogError(f"controller conflicts with upstream identity {key}")
+        records[key] = record
+    known = {controller_patch.model_id(record) for record in records.values()}
+    for selector, _ in patches:
+        if "all" in selector:
             continue
-        if upstream is None:
-            raise CatalogError(f"orphan patch override for {key}")
-        merged = {**upstream, **payload}
-        # Every protocol field is scoped to its family, so a patch that keeps the family
-        # merges into the upstream block (RFC 7396) and keeps the fields it does not name.
-        patched = payload.get("protocol")
-        if patched and patched["family"] == upstream["protocol"]["family"]:
-            merged["protocol"] = {**upstream["protocol"], **patched}
-        if merged == upstream:
-            raise CatalogError(f"redundant patch override for {key}")
+        target = selector.get("model") or "{:04x}-{:04x}".format(
+            int(selector["vendorID"]), int(selector["productID"])
+        )
+        if target not in known:
+            raise CatalogError(f"orphan patch for {target}")
+    for key, record in list(records.items()):
+        merged = record
+        chosen = controller_patch.ordered(
+            [
+                (selector, body, "")
+                for selector, body in patches
+                if controller_patch.selects(selector, record)
+            ]
+        )
+        for selector, body, _ in chosen:
+            after = controller_patch.apply_patch(selector, body, merged)
+            if after == merged and "all" not in selector:
+                raise CatalogError(f"redundant patch for {key}")
+            merged = after
         records[key] = merged
 
 
 def merge_sdl_records(
     records: dict[tuple[int, int], dict[str, Any]],
-    overrides: list[tuple[str, tuple[int, int], dict[str, Any]]],
+    adds: dict[tuple[int, int], dict[str, Any]],
     rows: list[tuple[int, int, str]],
 ) -> dict[str, int]:
-    """Adds SDL identities to Linux `records`; Linux rows and add overrides win."""
+    """Adds SDL identities to Linux `records`; Linux rows and authored controllers win."""
     existing = {key: record["protocol"]["family"] for key, record in records.items()}
-    for operation, key, payload in overrides:
-        if operation == "add":
-            existing[key] = payload["protocol"]["family"]
+    for key, record in adds.items():
+        existing[key] = record["protocol"]["family"]
     sdl_records, counts = build_sdl_records(rows, existing)
     records.update(sdl_records)
     return counts
@@ -595,10 +585,10 @@ def build_catalog() -> dict[tuple[int, int], dict[str, Any]]:
             raise CatalogError(f"Linux sources produced duplicate identity {key}")
         records[key] = record
 
-    overrides = load_overrides(validator)
+    adds, patches = load_authored(validator)
     sdl_rows = parse_sdl_controllers(load_locked_files(lock["sdl"])["controller_list"])
-    sdl_counts = merge_sdl_records(records, overrides, sdl_rows)
-    apply_overrides(records, overrides)
+    sdl_counts = merge_sdl_records(records, adds, sdl_rows)
+    apply_patches(records, adds, patches)
 
     if not records:
         raise CatalogError("generation produced no controller records")

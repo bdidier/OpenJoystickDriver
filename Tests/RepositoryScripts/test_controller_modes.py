@@ -60,6 +60,10 @@ class ControllerModeSchemaTests(unittest.TestCase):
             "empty modes": record(modes=[]),
             "default is reserved": record(modes=[mode("default")]),
             "uppercase id": record(modes=[mode("XInput")]),
+            "id with a trailing newline": record(modes=[mode("abc\n")]),
+            "bytes with a trailing newline": record(
+                modes=[mode("x", {**bytes_probe, "offset": 0, "bytes": "AB\n"})]
+            ),
             "no probes": record(
                 modes=[{"id": "x", "protocol": SIXAXIS, "match": {"probes": []}}]
             ),

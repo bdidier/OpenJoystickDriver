@@ -21,6 +21,7 @@ extension DeviceManager {
   ) async -> ControllerModeSelection {
     await protocolDriverRegistry.selectMode(
       of: ControllerModelID(vendorID: vendorID, productID: productID),
+      backend: connection.accessBackend,
       reader: HIDConnectionModeProbeReader(hidManager: hidManager, connection: connection)
     )
   }

@@ -22,7 +22,7 @@ private final class ScriptedProbeReader: ControllerModeProbeReader {
 }
 
 private let stall = PhysicalHIDReportResult<Data>.failed(
-  .ioReturn(IOReturn(bitPattern: 0xE000_5000))
+  .ioReturn(IOReturn(bitPattern: 0xE000_404F))
 )
 private let timeout = PhysicalHIDReportResult<Data>.failed(.ioReturn(kIOReturnTimeout))
 
@@ -65,11 +65,8 @@ struct ControllerModeTests {
       "protocol": ["family": family],
     ]
     record["modes"] = modes
-    let data = try JSONSerialization.data(withJSONObject: [
-      "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
-      "operation": "add", "record": record,
-    ])
-    return try ControllerRecordSet.validate(data).record.profile
+    let data = try JSONSerialization.data(withJSONObject: record)
+    return try #require(try ControllerRecordSet.validate(data).record).profile
   }
 
   private static func select(
@@ -80,6 +77,7 @@ struct ControllerModeTests {
     await ControllerModeSelector.select(
       from: profile,
       model: model,
+      backend: .ioHID,
       reader: reader
     ) { line in log.withLock { $0.append(line) } }
   }
@@ -192,6 +190,95 @@ struct ControllerModeTests {
   }
 
   @Test
+  func aStallWhereAnAnswerIsExpectedFallsBackToTheDefaultMode() async throws {
+    let profile = try Self.profile(modes: Self.twoModes)
+    let log = Locked<[String]>([])
+    let selection = await Self.select(
+      profile,
+      reader: ScriptedProbeReader([160: stall, 161: stall]),
+      log: log
+    )
+    #expect(selection == .noModeMatched)
+    #expect(selection.modeID == nil)
+    #expect(log.withLock { $0 }.last?.contains("default mode") == true)
+    #expect(profile.applying(modeID: selection.modeID)?.physicalProtocolID == .hidDescriptor)
+  }
+
+  @Test
+  func onlyTheDevicesOwnRefusalIsAStall() async throws {
+    let profile = try Self.profile(modes: [
+      Self.mode(
+        "quiet",
+        family: "sony.dualshock4",
+        probe: ["report": 5, "length": 4, "expect": "stalls"]
+      )
+    ])
+    let unsupported = PhysicalHIDReportResult<Data>.failed(.ioReturn(kIOReturnUnsupported))
+    #expect(
+      await Self.select(profile, reader: ScriptedProbeReader([5: unsupported])) == .matched("quiet")
+    )
+    let notTheDevices: [IOReturn] = [
+      kIOReturnNotOpen, kIOReturnNoDevice, kIOReturnAborted, kIOReturnNotPermitted,
+      kIOReturnExclusiveAccess, kIOReturnError,
+    ]
+    for code in notTheDevices {
+      let log = Locked<[String]>([])
+      let selection = await Self.select(
+        profile,
+        reader: ScriptedProbeReader([5: .failed(.ioReturn(code))]),
+        log: log
+      )
+      #expect(selection == .probeInconclusive(reportID: 5), "\(code)")
+      #expect(log.withLock { $0 }.count == 1)
+    }
+  }
+
+  @Test
+  func aDeviceOffTheIOHIDRouteIsNotProbed() async throws {
+    let profile = try Self.profile(modes: Self.twoModes)
+    let reader = ScriptedProbeReader([160: .success(Data([1]))])
+    let log = Locked<[String]>([])
+    let selection = await ControllerModeSelector.select(
+      from: profile,
+      model: Self.model,
+      backend: .coreBluetoothGATT,
+      reader: reader
+    ) { line in log.withLock { $0.append(line) } }
+    #expect(selection == .noProbeRoute)
+    #expect(selection.modeID == nil)
+    #expect(reader.readReports.isEmpty)
+    #expect(log.withLock { $0 }.first?.contains("coreBluetoothGATT") == true)
+  }
+
+  @Test
+  func aReadThatNeverReturnsGivesUpAtTheDeadline() async {
+    let release = DispatchSemaphore(value: 0)
+    let started = ContinuousClock.now
+    let result = await BoundedHIDRead.run(timeout: 0.05) {
+      release.wait()
+      return .success(Data([1]))
+    }
+    release.signal()
+    guard case .failed(.ioReturn(let code)) = result else {
+      Issue.record("expected a timeout")
+      return
+    }
+    #expect(code == kIOReturnTimeout)
+    #expect(ContinuousClock.now - started < .seconds(5))
+    // A read inside the deadline keeps its own answer, and a timeout is no stall.
+    let fast = await BoundedHIDRead.run(timeout: 5) { .success(Data([7])) }
+    guard case .success(let data) = fast else {
+      Issue.record("expected the answer")
+      return
+    }
+    #expect(data == Data([7]))
+    #expect(
+      ControllerModeProbe(reportID: 1, length: 1, expectation: .stalls).verdict(for: result)
+        == .inconclusive
+    )
+  }
+
+  @Test
   func aRecordWithoutModesReadsNothing() async throws {
     let profile = try Self.profile(modes: nil)
     let reader = ScriptedProbeReader([:])
@@ -212,12 +299,14 @@ struct ControllerModeTests {
     let answering = await ControllerModeSelector.select(
       from: profile,
       model: ds3,
+      backend: .ioHID,
       reader: ScriptedProbeReader([0xEF: .success(Data(repeating: 0, count: 49))])
     ) { _ in }
     #expect(answering == .matched(mode.id))
     let stalling = await ControllerModeSelector.select(
       from: profile,
       model: ds3,
+      backend: .ioHID,
       reader: ScriptedProbeReader([0xEF: stall])
     ) { _ in }
     #expect(stalling == .noModeMatched)
@@ -234,12 +323,13 @@ struct ControllerModeTests {
 
   @Test
   func aUserPatchMayReplaceTheModes() throws {
-    let patch = try JSONSerialization.data(withJSONObject: [
-      "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordSet.overrideKind,
-      "operation": "patch", "vendorID": 0x2C22, "productID": 0x2000,
-      "set": ["modes": Self.twoModes],
-    ])
-    let patched = try ControllerRecordSet.validate(patch).record.profile
+    let patch = try JSONSerialization.data(
+      withJSONObject: ControllerPatch.document(
+        selector: .identity(ControllerModelID(vendorID: 0x2C22, productID: 0x2000)),
+        body: ["modes": Self.twoModes]
+      )
+    )
+    let patched = try #require(try ControllerRecordSet.validate(patch).record).profile
     #expect(patched.modes.map(\.id) == ["dualshock", "dualsense"])
   }
 
@@ -258,6 +348,16 @@ struct ControllerModeTests {
       ("duplicate ID", [mode("a"), mode("a")], "hid.descriptor"),
       ("reserved ID", [mode("default")], "hid.descriptor"),
       ("uppercase ID", [mode("Mode")], "hid.descriptor"),
+      ("ID with a trailing newline", [mode("abc\n")], "hid.descriptor"),
+      (
+        "bytes with a trailing newline",
+        [
+          mode(
+            "a",
+            probe: ["report": 1, "length": 8, "expect": "bytes", "offset": 0, "bytes": "AB\n"]
+          )
+        ], "hid.descriptor"
+      ),
       ("raw-USB mode", [mode("a", family: "xbox.gip")], "hid.descriptor"),
       ("raw-USB default", [mode("a")], "xbox.gip"),
       (

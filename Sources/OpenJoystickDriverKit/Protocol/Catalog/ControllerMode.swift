@@ -39,6 +39,9 @@ public enum ControllerModeSelection: Equatable, Sendable {
   case matched(String)
   /// No mode's probes all held, so the default mode runs.
   case noModeMatched
+  /// The device is not on an IOHID route, which is the only route a probe can read, so the
+  /// default mode runs.
+  case noProbeRoute
   /// A probe got no usable reply, so the default mode runs.
   case probeInconclusive(reportID: UInt8)
 
@@ -57,11 +60,19 @@ public enum ControllerModeSelector {
   public static func select(
     from profile: DeviceRuntimeProfile,
     model: ControllerModelID,
+    backend: DeviceAccessBackend,
     reader: any ControllerModeProbeReader,
     log: @Sendable (String) -> Void = { print($0) }
   ) async -> ControllerModeSelection {
     guard !profile.modes.isEmpty else { return .noModes }
     let name = String(format: "%04X:%04X", model.vendorID, model.productID)
+    guard backend == .ioHID else {
+      log(
+        "[DeviceManager] Mode probes of \(name) read HID feature reports; the \(backend.rawValue)"
+          + " route has none, so the default mode is used"
+      )
+      return .noProbeRoute
+    }
     // One read per report serves every probe of that report.
     var replies: [Int: PhysicalHIDReportResult<Data>] = [:]
     for mode in profile.modes {

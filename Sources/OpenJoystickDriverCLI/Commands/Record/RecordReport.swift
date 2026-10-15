@@ -99,7 +99,7 @@ struct SkippedRecord: Encodable, Equatable {
     problem = file.problem ?? ""
   }
 
-  /// The `Defaults.json` OJD ignored, or nil when it applied the file or the file is absent.
+  /// The `all.patch.json` OJD ignored, or nil when it applied the file or the file is absent.
   init?(_ defaults: ControllerDefaults?) {
     guard let defaults, let problem = defaults.problem else { return nil }
     file = defaults.url.path

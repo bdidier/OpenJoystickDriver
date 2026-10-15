@@ -94,7 +94,7 @@ extension DeviceManager {
     guard !Task.isCancelled, isCurrentHIDInitialization(connection) else { return }
     let classification = protocolDriverRegistry.classify(
       physicalDevice,
-      backend: .ioHID,
+      backend: connection.accessBackend,
       modeID: modeSelection.modeID
     )
     let binding: ProtocolBinding

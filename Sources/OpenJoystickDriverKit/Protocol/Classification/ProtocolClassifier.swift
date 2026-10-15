@@ -67,6 +67,9 @@ public enum PhysicalProtocolID: String, CaseIterable, Codable, Sendable {
   /// Whether this family's driver encodes rumble from a record's rumble template.
   var encodesRumbleTemplate: Bool { self == .hidReportLayout || self == .vendorPS3ThirdParty }
 
+  /// Whether a protocol description may carry a declarative input layout for this family.
+  var describesInputLayout: Bool { self == .hidReportLayout || self == .xboxXID }
+
   /// Whether catalog records store this family's variant; otherwise the family has one
   /// contract or classification derives the variant from the observed transport.
   public var storesVariant: Bool {
@@ -181,7 +184,7 @@ enum ProtocolClassifier {
     {
       return result
     }
-    guard backend == .ioHID else { return .unsupported(.noProtocolMatch) }
+    guard !backend.usesRawUSB else { return .unsupported(.noProtocolMatch) }
     guard let interface = descriptorInterface(interfaces) else {
       return .unsupported(.descriptorContractMismatch)
     }
@@ -203,7 +206,7 @@ enum ProtocolClassifier {
     interfaces: [PhysicalInterfaceSignature],
     backend: DeviceAccessBackend
   ) -> ProtocolClassification {
-    let isRawUSB = backend != .ioHID
+    let isRawUSB = backend.usesRawUSB
     func reject(_ reason: ProtocolBindingReason) -> ProtocolClassification {
       .unsupported(
         reason,
@@ -330,7 +333,7 @@ enum ProtocolClassifier {
     }
     // These are raw-USB variants; HID access cannot drive them and must not reach
     // `hid.descriptor`.
-    guard backend != .ioHID else {
+    guard backend.usesRawUSB else {
       return .unsupported(
         .unsupportedTransportVariant,
         rejected: ProtocolBindingResult.RejectedCandidate(

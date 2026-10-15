@@ -6,7 +6,7 @@ import Testing
 @testable import OpenJoystickDriverCLI
 
 struct ConfigCommandTests {
-  /// A directory that holds `Controllers/` and `Defaults.json` for one test.
+  /// A directory that holds `Controllers/` and its `all.patch.json` for one test.
   private final class Root {
     let url = FileManager.default.temporaryDirectory.appendingPathComponent(
       "ojd-config-\(UUID().uuidString)",
@@ -14,11 +14,12 @@ struct ConfigCommandTests {
     )
 
     func writeDefaults(_ tuning: String) throws {
-      try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+      let controllers = url.appendingPathComponent("Controllers", isDirectory: true)
+      try FileManager.default.createDirectory(at: controllers, withIntermediateDirectories: true)
       let json =
-        #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(ControllerDefaults.kind)","#
-        + #""tuning":\#(tuning)}"#
-      try Data(json.utf8).write(to: url.appendingPathComponent("Defaults.json"))
+        #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"ControllerPatch","#
+        + #""selector":{"all":true},"patch":{"tuning":\#(tuning)}}"#
+      try Data(json.utf8).write(to: ControllerDefaults.file(in: controllers))
     }
 
     deinit { try? FileManager.default.removeItem(at: url) }

@@ -94,16 +94,16 @@ The generators read their family lists, flag sets, name maps and exclusions from
 Override inputs live at:
 
 ```text
-Resources/ControllerOverrides/<vid>/<vid>-<pid>.json
+Resources/Controllers/<vid>/<vid>-<pid>.json
 ```
 
-An add operation supplies a complete canonical record missing from the pinned source. A patch operation changes only selected top-level sections of an existing imported record. The generator rejects:
+A `Controller` file supplies a complete canonical record missing from the pinned source. A `ControllerPatch` file in `Resources/ControllerPatches/<vid>/<vid>-<pid>.patch.json` merges a patch into an existing imported record. The generator rejects:
 
-- add operations that collide with upstream;
-- patch operations without an upstream record;
-- duplicate override identities;
+- `Controller` files that collide with upstream;
+- patches without an upstream record;
+- duplicate authored identities;
 - redundant patches;
-- malformed or misplaced override files.
+- malformed or misplaced authored files.
 
 Review evidence belongs in the controller's testing document, upstream issue, and Git history. Do not copy it into runtime controller records.
 

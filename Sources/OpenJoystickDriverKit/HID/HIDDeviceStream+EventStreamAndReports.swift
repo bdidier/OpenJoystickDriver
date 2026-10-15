@@ -302,20 +302,26 @@ extension HIDDeviceStream {
   }
 
   /// Reads a feature report only from the exact connection lifetime, never a sibling at its
-  /// location.
+  /// location. The read runs off the main actor and gives up after `timeout` seconds, so a
+  /// device that never answers cannot block it.
   public func getFeatureReport(
     connection: HIDDeviceConnection,
-    request: PhysicalHIDFeatureReadRequest
+    request: PhysicalHIDFeatureReadRequest,
+    timeout: TimeInterval = 2
   ) async -> PhysicalHIDReportResult<Data> {
-    await MainActor.run {
-      guard let device = exactDevice(for: connection, type: kIOHIDReportTypeFeature, reads: true)
-      else { return .unavailable }
+    let device = await MainActor.run {
+      exactDevice(for: connection, type: kIOHIDReportTypeFeature, reads: true).map(
+        UncheckedSendableDevice.init
+      )
+    }
+    guard let device else { return .unavailable }
+    return await BoundedHIDRead.run(timeout: timeout) {
       var bytes = [UInt8](repeating: 0, count: request.length)
       var reportLength = request.length
       let result = bytes.withUnsafeMutableBufferPointer { pointer in
         guard let baseAddress = pointer.baseAddress else { return kIOReturnBadArgument }
         return IOHIDDeviceGetReport(
-          device,
+          device.device,
           kIOHIDReportTypeFeature,
           CFIndex(request.reportID),
           baseAddress,
@@ -381,4 +387,9 @@ extension HIDDeviceStream {
   }
 
   // MARK: - Event handlers
+}
+
+/// An `IOHIDDevice` handed to the queue that reads it. IOKit device calls are thread-safe.
+private struct UncheckedSendableDevice: @unchecked Sendable {
+  let device: IOHIDDevice
 }

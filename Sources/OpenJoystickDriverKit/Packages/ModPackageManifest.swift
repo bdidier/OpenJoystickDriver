@@ -101,7 +101,9 @@ extension ModPackageManifest: Decodable {
 
   // The patterns of `mod-package.schema.json`, with `\A` and `\z` for the ECMA `^` and `$`, so
   // that a trailing newline fails. `ModPackageManifestSchemaTests` feeds both the same manifests.
-  private static let recordFilePattern = "\\A[0-9a-f]{4}-[0-9a-f]{4}\\.json\\z"
+  private static let recordFilePattern =
+    "\\A(?:[0-9a-f]{4}-[0-9a-f]{4}\\.json|(?:model-)?[0-9a-f]{4}-[0-9a-f]{4}\\.patch\\.json"
+    + "|all\\.patch\\.json)\\z"
   private static let profileFilePattern = "\\A[A-Za-z0-9][A-Za-z0-9._-]*\\.json\\z"
   private static let personaFilePattern =
     "\\A[0-9a-f]{4}-[0-9a-f]{4}(-U-[A-Za-z0-9_-]{16})?\\.json\\z"

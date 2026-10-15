@@ -81,10 +81,16 @@ public final class ProtocolDriverRegistry: Sendable {
   /// for a model whose record has none.
   func selectMode(
     of model: ControllerModelID,
+    backend: DeviceAccessBackend,
     reader: any ControllerModeProbeReader
   ) async -> ControllerModeSelection {
     guard let record = catalog.record(for: model) else { return .noModes }
-    return await ControllerModeSelector.select(from: record, model: model, reader: reader)
+    return await ControllerModeSelector.select(
+      from: record,
+      model: model,
+      backend: backend,
+      reader: reader
+    )
   }
 
   /// Whether passively observed USB facts carry a known Xbox USB interface or device signature.
@@ -138,7 +144,7 @@ public final class ProtocolDriverRegistry: Sendable {
       )
     }
     var transportProfile = record.transportProfile
-    if binding.accessBackend != .ioHID {
+    if binding.accessBackend.usesRawUSB {
       guard let claimed else { return .failure(.interfaceContractMismatch) }
       if let violation = Self.claimedInterfaceViolation(
         of: binding,

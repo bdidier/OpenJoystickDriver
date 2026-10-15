@@ -50,9 +50,9 @@ The service answers with one line and then either streams or closes the connecti
 {"apiVersion":"openjoystickdriver/v1alpha1","kind":"Status","status":"Failure","code":"E1002","message":"..."}
 ```
 
-- `apiVersion` negotiates the version. The service accepts only `openjoystickdriver/v1alpha1`. For any other value it answers `E1003` with `details.supportedAPIVersions: ["openjoystickdriver/v1alpha1"]` and closes. The proof label `OpenJoystickDriver endpoint hello 1` is a fixed domain-separation label, not a version.
+- `apiVersion` negotiates the version. The service accepts only `openjoystickdriver/v1alpha1`. For any other value it answers `E1010` with `details.supportedAPIVersions: ["openjoystickdriver/v1alpha1"]` and closes. The proof label `OpenJoystickDriver endpoint hello 1` is a fixed domain-separation label, not a version.
 - `scopes` lists the scopes the client asks for. The service grants all of them or refuses with `E1002`. It never grants a subset silently.
-- Error codes are stable identifiers, `E1001` to `E1009`, listed in `Resources/ErrorCodes.json` and explained on the wiki page Error-Codes. `message` is English text for logs, not for parsing. An error line is a `Status` with `status` `Failure`.
+- Error codes are stable identifiers, `E1001` to `E1012`, listed in `Resources/ErrorCodes.json` and explained on the wiki page Error-Codes. `message` is English text for logs, not for parsing. An error line is a `Status` with `status` `Failure`.
 
 ## Read Stream (Slice 3.3)
 
@@ -67,8 +67,8 @@ After the `Welcome`, the client sends `{"apiVersion":"openjoystickdriver/v1alpha
 With the `control` scope, the client sends a `FeedRequest`. The service answers a `FeedSession` once the virtual gamepad exists. Each following line is one `Frame`, the keys of an `ojd virtual feed` input line with `apiVersion` and `kind`, and the service sends `RumbleCommand` lines in the `virtualFeed` shape. `endpoint.schema.json` describes `FeedRequest`, `FeedSession`, and `Frame`.
 
 ```json
-{"apiVersion":"openjoystickdriver/v1alpha1","kind":"FeedRequest","as":"hid-generic"}
-{"apiVersion":"openjoystickdriver/v1alpha1","kind":"FeedSession","as":"hid-generic"}
+{"apiVersion":"openjoystickdriver/v1alpha1","kind":"FeedRequest","as":"Generic"}
+{"apiVersion":"openjoystickdriver/v1alpha1","kind":"FeedSession","as":"Generic"}
 {"apiVersion":"openjoystickdriver/v1alpha1","kind":"Status","status":"Failure","code":"E1008","message":"..."}
 ```
 
@@ -118,7 +118,7 @@ Swift tests run the endpoint on a private socket, as `FakeService` does for the 
 - A client without a grant is refused with `E1002`, and an ad-hoc signed client is refused.
 - A granted client receives `ADDED`, `MODIFIED`, and `DELETED` watch lines that validate against the schema.
 - A revoked client is disconnected with `E1006`.
-- A disabled endpoint has no socket, and a `Hello` with another `apiVersion` gets `E1003`.
+- A disabled endpoint has no socket, and a line with another `apiVersion` gets `E1010`.
 
 The signature checks need a client signed with a team ID, which a unit test cannot create. The tests inject the identity lookup, as `LocalServiceRPCServer` takes `authentication` today. A live check with a Developer ID signed client is a manual step.
 

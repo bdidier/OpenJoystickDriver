@@ -36,8 +36,16 @@ public struct ControllerModeProbe: Equatable, Sendable {
     PhysicalHIDFeatureReadRequest(reportID: reportID, length: length)
   }
 
-  /// A timeout, a device that stopped responding, or an unavailable route proves nothing; any
-  /// other IOKit refusal is the device declining the read, which is a stall.
+  /// The IOKit results that mean the device itself declined the read: a stalled control pipe, or
+  /// a request it does not support. No recorded DualShock 3 evidence says which of the two it
+  /// returns, so both count.
+  static let stallResults: Set<IOReturn> = [
+    IOReturn(bitPattern: 0xE000_404F), kIOReturnUnsupported,
+  ]
+
+  /// Only the device's own refusal is a stall. A timeout, an unavailable route, and every other
+  /// failure (not open, no device, aborted, not permitted, exclusive access) say nothing about
+  /// the device, so they are inconclusive.
   func verdict(for result: PhysicalHIDReportResult<Data>) -> Verdict {
     switch result {
     case .success(let data):
@@ -53,7 +61,7 @@ public struct ControllerModeProbe: Equatable, Sendable {
     case .unavailable:
       return .inconclusive
     case .failed(.ioReturn(let code)):
-      if code == kIOReturnTimeout || code == kIOReturnNotResponding { return .inconclusive }
+      guard Self.stallResults.contains(code) else { return .inconclusive }
       return expectation == .stalls ? .satisfied : .unsatisfied
     }
   }

@@ -49,6 +49,6 @@ None as deltas. Requirements in the old capabilities `driverkit-signing`, `mod-l
 ## Impact
 
 - `Sources/OpenJoystickDriverKit` (protocol catalog, USB, output profiles, identity types, endpoint payloads), `Sources/OpenJoystickDriver` (CLI), `Sources/OpenJoystickDriverService`, the app target, DriverKit sources.
-- `Resources/Schemas/`, `Resources/ControllerOverrides/`, `Scripts/Catalog/`, `Scripts/Quality/`, `crowdin.yml`, 22 localization bundles, `wiki/`, `docs/`.
+- `Resources/Schemas/`, `Resources/ControllerPatches/`, `Scripts/Catalog/`, `Scripts/Quality/`, `crowdin.yml`, 22 localization bundles, `wiki/`, `docs/`.
 - 696 generated controller records are regenerated; user files from 0.5.x are not read.
 - Release checks listed in the repository `CLAUDE.md` all run on the final tree.

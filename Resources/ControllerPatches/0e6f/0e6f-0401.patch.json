@@ -1,0 +1,17 @@
+{
+	"apiVersion": "openjoystickdriver/v1alpha1",
+	"kind": "ControllerPatch",
+	"selector": {
+		"vendorID": 3695,
+		"productID": 1025
+	},
+	"patch": {
+		"usb": {
+			"configuration": "set1-before-claim",
+			"endpoints": {
+				"in": 129,
+				"out": 2
+			}
+		}
+	}
+}

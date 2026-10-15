@@ -8,11 +8,9 @@ import Testing
 struct ControllerRecordWatcherTests {
   private static let addRecord = Data(
     """
-    {"apiVersion": "\(OpenJoystickDriverAPI.version)",
-    "kind": "\(ControllerRecordSet.overrideKind)", "operation": "add",
-     "record": {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "Controller",
+    {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "Controller",
      "vendorID": 4660, "productID": 43981,
-     "protocol": {"family": "xbox.gip"}}}
+     "protocol": {"family": "xbox.gip"}}
     """.utf8
   )
 
