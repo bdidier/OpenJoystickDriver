@@ -13,7 +13,8 @@ struct Switch1SubcommandBytesTests {
     var lines = driver.startupWrites().map(hex)
     lines += driver.startupRecoveryWrites().map(hex)
     let rumble = RumbleIntensities(
-      leftMain: UnipolarValue(200 << 8), rightMain: UnipolarValue(90 << 8)
+      leftMain: UnipolarValue(200 << 8),
+      rightMain: UnipolarValue(90 << 8)
     )
     lines += try driver.encode(.setRumble(rumble, duration: .milliseconds(200))).writes.map(hex)
     for indicator in [

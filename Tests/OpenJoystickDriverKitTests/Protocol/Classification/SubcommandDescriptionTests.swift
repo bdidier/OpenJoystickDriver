@@ -44,7 +44,8 @@ struct SubcommandDescriptionTests {
     modulus: Int = 16,
     _ requests: [String]
   ) -> String {
-    #"{"reportId": 1, "counterModulus": \#(modulus), "requests": [\#(requests.joined(separator: ","))]}"#
+    let list = requests.joined(separator: ",")
+    return #"{"reportId": 1, "counterModulus": \#(modulus), "requests": [\#(list)]}"#
   }
 
   @Test
