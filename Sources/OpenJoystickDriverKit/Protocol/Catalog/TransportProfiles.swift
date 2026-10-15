@@ -145,8 +145,6 @@ public struct ControllerTuning: Codable, Equatable, Sendable {
   public let hidStartupRecoveryIntervalMilliseconds: Int?
   /// Switch 1 startup recovery rounds before the session expires.
   public let hidStartupRecoveryRounds: Int?
-  /// Interval between keep-alive writes, or between rumble resends for a family that resends.
-  public let keepAliveIntervalMilliseconds: Int?
   /// Keep-alive ticks between Steam Triton lizard-mode resends.
   public let lizardResendTicks: Int?
   /// Timeout of one USB command transfer.
@@ -174,7 +172,6 @@ public struct ControllerTuning: Codable, Equatable, Sendable {
     minimumHIDOutputIntervalMilliseconds: Int? = nil,
     hidStartupRecoveryIntervalMilliseconds: Int? = nil,
     hidStartupRecoveryRounds: Int? = nil,
-    keepAliveIntervalMilliseconds: Int? = nil,
     lizardResendTicks: Int? = nil,
     usbCommandTimeoutMilliseconds: Int? = nil,
     presenceResendReports: Int? = nil,
@@ -190,7 +187,6 @@ public struct ControllerTuning: Codable, Equatable, Sendable {
     self.minimumHIDOutputIntervalMilliseconds = minimumHIDOutputIntervalMilliseconds
     self.hidStartupRecoveryIntervalMilliseconds = hidStartupRecoveryIntervalMilliseconds
     self.hidStartupRecoveryRounds = hidStartupRecoveryRounds
-    self.keepAliveIntervalMilliseconds = keepAliveIntervalMilliseconds
     self.lizardResendTicks = lizardResendTicks
     self.usbCommandTimeoutMilliseconds = usbCommandTimeoutMilliseconds
     self.presenceResendReports = presenceResendReports

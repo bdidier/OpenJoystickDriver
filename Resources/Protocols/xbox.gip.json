@@ -33,7 +33,6 @@
     "add": ["Guide"]
   },
   "rawUSBTuningKeys": [
-    "keepAliveIntervalMs",
     "presenceResendReports",
     "usbStartupIntervalMs",
     "usbStartupRetryDelayMs",
@@ -43,8 +42,18 @@
     "rumbleAbsent": true
   },
   "defaults": {
+    "session": {
+      "keepAlive": {
+        "intervalMilliseconds": 4000,
+        "writes": [
+          {
+            "bytes": [3, 32, 0, 3, 0, 0, 0],
+            "sessionByte": 2
+          }
+        ]
+      }
+    },
     "tuning": {
-      "keepAliveIntervalMs": 4000,
       "presenceResendReports": 4,
       "usbStartupIntervalMs": 50,
       "usbStartupRetryDelayMs": 1000,

@@ -1,6 +1,6 @@
 extension ControllerRecordDocument {
-  /// The output section: a rumble template, startup writes, or both. A write with a `report` is
-  /// a HID write; one without is a raw-USB write.
+  /// The output section: a rumble template, startup writes, or both. A write with a `report` is a
+  /// HID write; one without is a raw-USB write.
   struct Output: Decodable {
     let rumble: RumbleOutputTemplate?
     let startup: [RecordStartupWrite]
@@ -13,8 +13,8 @@ extension ControllerRecordDocument {
       let startup = try container.decodeOptional([StartupWrite].self, for: "startup")
       self.startup = startup?.compactMap(\.hid) ?? []
       usbStartup = startup?.compactMap(\.usb) ?? []
-      guard rumble != nil || startup != nil, startup.map({ (1...16).contains($0.count) }) ?? true
-      else {
+      let startupCountIsValid = startup.map { (1...16).contains($0.count) } ?? true
+      guard rumble != nil || startup != nil, startupCountIsValid else {
         throw DecodingError.dataCorrupted(
           .init(
             codingPath: decoder.codingPath,
@@ -64,7 +64,7 @@ extension ControllerRecordDocument {
       }
     }
 
-    private static func bytes(
+    static func bytes(
       _ container: KeyedDecodingContainer<DocumentKey>
     ) throws -> [UInt8] {
       let values = try container.decode([Int].self, for: "bytes")
@@ -75,7 +75,7 @@ extension ControllerRecordDocument {
       return bytes
     }
 
-    private static func hidWrite(
+    static func hidWrite(
       _ container: KeyedDecodingContainer<DocumentKey>,
       condition: StartupWriteCondition
     ) throws -> RecordStartupWrite {
@@ -107,7 +107,7 @@ extension ControllerRecordDocument {
       )
     }
 
-    private static func usbWrite(
+    static func usbWrite(
       _ container: KeyedDecodingContainer<DocumentKey>,
       condition: StartupWriteCondition
     ) throws -> USBStartupWrite {

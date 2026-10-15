@@ -165,8 +165,7 @@ public final class Switch2Driver: PhysicalProtocolDriver {
   /// runs.
   public var sessionPlan: DriverSessionPlan {
     DriverSessionPlan(
-      hidKeepAliveIntervalNanoseconds: PhysicalProtocolID.nintendoSwitch2
-        .keepAliveIntervalNanoseconds(),
+      keepAliveChannels: [.hid],
       usbCommandChannel: USBCommandChannel(
         interfaceNumber: 1,
         outEndpoint: Self.commandOutEndpoint,
@@ -174,7 +173,7 @@ public final class Switch2Driver: PhysicalProtocolDriver {
         replyLength: 0x50,
         replyTimeoutMilliseconds: link == .usb ? 100 : 500
       )
-    )
+    ).withKeepAlive(of: .nintendoSwitch2)
   }
 
   public func consumeInputConnectionStateChange() -> ControllerInputConnectionState? { nil }

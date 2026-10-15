@@ -64,6 +64,32 @@ func offPool<Result: Sendable>(_ work: @escaping @Sendable () -> Result) async -
   }
 }
 
+/// Parks blocked work items on Grand Central Dispatch's global queues until its thread pool stops
+/// growing, runs `body`, then releases them. A connection that depends on a pool thread starves
+/// meanwhile, which is how the endpoint behaved when connections ran on a concurrent queue.
+func withSaturatedDispatchPool(_ body: () async throws -> Void) async rethrows {
+  let release = DispatchSemaphore(value: 0)
+  let started = NSLock()
+  nonisolated(unsafe) var count = 0
+  let items = 512
+  for _ in 0..<items {
+    DispatchQueue.global().async {
+      started.withLock { count += 1 }
+      release.wait()
+    }
+  }
+  defer { for _ in 0..<items { release.signal() } }
+  var last = -1
+  var stable = 0
+  while stable < 5 {
+    try? await Task.sleep(nanoseconds: 100_000_000)
+    let now = started.withLock { count }
+    stable = now == last ? stable + 1 : 0
+    last = now
+  }
+  try await body()
+}
+
 /// The `hello` of a token client, with the proof the endpoint documents: HMAC-SHA256, keyed with
 /// the token's SHA-256, of the domain line, the nonce, the origin, and the port, each ended with a
 /// newline; the origin and the port are empty on the Unix socket.

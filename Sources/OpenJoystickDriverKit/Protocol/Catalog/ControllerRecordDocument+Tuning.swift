@@ -10,7 +10,6 @@ extension ControllerRecordDocument {
       try container.rejectUnknown(allowed: [
         "stickDeadzone", "inputLivenessTimeoutMs", "hidStartupIntervalMs",
         "minimumHIDOutputIntervalMs", "hidStartupRecoveryIntervalMs", "hidStartupRecoveryRounds",
-        "keepAliveIntervalMs",
         "lizardResendTicks",
         "usbCommandTimeoutMs",
         "presenceResendReports",
@@ -56,7 +55,6 @@ extension ControllerRecordDocument {
           1...60_000
         ),
         hidStartupRecoveryRounds: try integer("hidStartupRecoveryRounds", 1...10),
-        keepAliveIntervalMilliseconds: try integer("keepAliveIntervalMs", 1...60_000),
         lizardResendTicks: try integer("lizardResendTicks", 1...100_000),
         usbCommandTimeoutMilliseconds: try integer("usbCommandTimeoutMs", 1...60_000),
         presenceResendReports: try integer("presenceResendReports", 1...1_000),
