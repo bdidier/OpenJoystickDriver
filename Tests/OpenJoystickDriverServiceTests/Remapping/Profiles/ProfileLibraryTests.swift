@@ -456,7 +456,7 @@ struct ProfileLibraryTests {
   func withLibrary(
     _ body: @Sendable (RemappingProfileLibrary, URL) async throws -> Void
   ) async throws {
-    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
+    let directory = MacOSDataDirectory().url(for: .temporary).appendingPathComponent(
       UUID().uuidString,
       isDirectory: true
     )

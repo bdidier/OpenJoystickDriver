@@ -161,11 +161,7 @@ public struct ControllerRecordSet: Sendable {
 
   /// `~/Library/Application Support/OpenJoystickDriver/Controllers`.
   public static var userDirectory: URL {
-    let manager = FileManager.default
-    let support =
-      manager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
-      ?? manager.homeDirectoryForCurrentUser.appendingPathComponent("Library/Application Support")
-    return support.appendingPathComponent("OpenJoystickDriver", isDirectory: true)
+    MacOSDataDirectory().url(for: .applicationData)
       .appendingPathComponent("Controllers", isDirectory: true)
   }
 

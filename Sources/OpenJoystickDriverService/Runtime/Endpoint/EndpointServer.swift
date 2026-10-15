@@ -26,14 +26,7 @@ final class EndpointServer: @unchecked Sendable {
 
   /// The socket in the per-user temporary folder, which only the user can open.
   static var defaultSocketPath: String {
-    var buffer = [CChar](repeating: 0, count: Int(PATH_MAX))
-    let length = confstr(_CS_DARWIN_USER_TEMP_DIR, &buffer, buffer.count)
-    let directory =
-      length > 0
-      ? String(bytes: buffer.prefix(length - 1).map(UInt8.init(bitPattern:)), encoding: .utf8)
-      : nil
-    return URL(fileURLWithPath: directory ?? NSTemporaryDirectory())
-      .appendingPathComponent(socketName).path
+    MacOSDataDirectory().fileURL(socketName, in: .runtime).path
   }
 
   let socketPath: String
