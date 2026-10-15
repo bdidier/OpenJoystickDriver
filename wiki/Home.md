@@ -38,6 +38,7 @@ OpenJoystickDriver (OJD) lets you use game controllers on macOS that macOS does 
 - [Command line](Command-Line.md): Control OJD from Terminal, and read its output formats and exit codes.
 - [Command reference](Command-Reference.md): Look up every `ojd` command and option.
 - [Automating OpenJoystickDriver](Automating-OpenJoystickDriver.md): Use `ojd` in scripts, read its JSON output, change profiles, and drive a virtual gamepad.
+- [WebRTC bridge](WebRTC-Bridge.md): Play on one Mac with a controller that is connected to another Mac.
 
 ## Help
 
