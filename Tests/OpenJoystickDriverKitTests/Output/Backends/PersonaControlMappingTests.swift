@@ -71,4 +71,99 @@ struct PersonaControlMappingTests {
     let sdl = try VirtualHIDProfileID.sdlCompatible.makeProfile()
     #expect(sdl.inputReport(for: capture) == sdl.inputReport(for: .neutral))
   }
+
+  /// The rule reads the resolved record: a record or patch that changes the capability changes it.
+  @Test
+  func theRuleFollowsTheRecordsCapabilities() throws {
+    func record(_ identifier: LogicalControllerID) throws -> DeviceRuntimeProfile {
+      try #require(DeviceCatalog.current.withLock { $0 }.record(for: identifier.model))
+    }
+    let classic = try record(Self.steamControllerWired)
+    let deck = try record(Self.steamDeck)
+    #expect(Dispatcher.rightPadIsRightStick(record: classic))
+    #expect(!Dispatcher.rightPadIsRightStick(record: deck))
+    #expect(!Dispatcher.rightPadIsRightStick(record: nil))
+
+    // A record that gives the classic controller a real R3 keeps its pad click as its own control.
+    #expect(
+      !Dispatcher.rightPadIsRightStick(
+        record: classic.withCapabilityDelta(absent: [], present: [.rightStickClick])
+      )
+    )
+    // A record that removes the Deck's R3 makes its right pad the right stick.
+    #expect(
+      Dispatcher.rightPadIsRightStick(
+        record: deck.withCapabilityDelta(absent: [.rightStickClick], present: [])
+      )
+    )
+    // A record without the pad click has nothing to move onto R3.
+    #expect(
+      !Dispatcher.rightPadIsRightStick(
+        record: classic.withCapabilityDelta(absent: [.rightTrackpadClick], present: [])
+      )
+    )
+  }
+
+  /// The passthrough reads the catalog record once per update, however many buttons are held, and
+  /// maps the held pad click by that one answer.
+  @Test(arguments: [true, false])
+  func passthroughLooksTheRecordUpOncePerUpdate(padIsRightStick: Bool) throws {
+    final class Lookups: @unchecked Sendable { var count = 0 }
+    let lookups = Lookups()
+    let profile = RemappingProfile(
+      name: "Pad passthrough",
+      device: RemappingDeviceScope(vendorID: 0x28DE, productID: 0x1102),
+      applicationScope: .global,
+      outputPolicy: RemappingOutputPolicy(virtualGamepad: .passthrough),
+      bindings: []
+    )
+    var device = RemappingDeviceState(profile: profile, identifier: Self.steamControllerWired)
+    device.activeSources = [
+      .button(.south), .button(.east), .button(.north), .button(.rightTrackpadClick),
+    ]
+    let actions = device.updatePassthrough(rightPadIsRightStick: { _ in
+      lookups.count += 1
+      return padIsRightStick
+    })
+    #expect(lookups.count == 1)
+    let expected: Set<Control> =
+      padIsRightStick
+      ? [.south, .east, .north, .rightStickClick] : [.south, .east, .north, .rightTrackpadClick]
+    #expect(
+      actions == [.gamepad(RemappingGamepadState(buttons: expected), Self.steamControllerWired)]
+    )
+  }
+}
+
+extension DeviceRuntimeProfile {
+  /// This record with another capability delta; everything else it runs with is unchanged.
+  fileprivate func withCapabilityDelta(
+    absent: Set<Control>,
+    present: Set<Control>
+  ) -> DeviceRuntimeProfile {
+    DeviceRuntimeProfile(
+      recordID: recordID,
+      transportProfile: transportProfile,
+      physicalProtocolID: physicalProtocolID,
+      physicalProtocolVariant: physicalProtocolVariant,
+      parameters: parameters,
+      capabilityDelta: ControllerCapabilityDelta(
+        absentControls: absent,
+        presentControls: present,
+        rumbleAbsent: capabilityDelta.rumbleAbsent
+      ),
+      preferredBackends: preferredBackends,
+      gipStartupPackets: gipStartupPackets,
+      gipKeepAlivePolicy: gipKeepAlivePolicy,
+      assemblyPolicy: assemblyPolicy,
+      server: server,
+      rumbleTemplate: rumbleTemplate,
+      startupWrites: startupWrites,
+      usbStartupWrites: usbStartupWrites,
+      inputLayout: inputLayout,
+      hidUsageMap: hidUsageMap,
+      tuning: tuning,
+      modes: modes
+    )
+  }
 }

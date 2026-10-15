@@ -92,16 +92,23 @@ extension UserSpaceOutputDispatcher {
 
   // MARK: - Button mapping (XInput semantic order)
 
-  /// Whether the controller's right pad is its right stick: its family has a right pad click and
-  /// no right stick click, as the classic Steam Controller's record (`remove: ["RightStickClick"]`)
-  /// declares. Its pad click is then R3. A Steam Deck or Triton has both controls, so its pad click
-  /// stays its own control, which no virtual persona carries.
+  /// Whether the controller's right pad is its right stick, read from its resolved record: the
+  /// controls it has (the family's, corrected by the record's `capabilityDelta`) include a right
+  /// pad click and no right stick click. The classic Steam Controller's record
+  /// (`remove: ["RightStickClick"]`) is that, so its pad click is R3. A Steam Deck or Triton has
+  /// both controls, so its pad click stays its own control, which no virtual persona carries. A
+  /// record or patch that adds or removes either control changes the answer.
   static func rightPadIsRightStick(_ identifier: LogicalControllerID) -> Bool {
     let catalog = DeviceCatalog.current.withLock { $0 }
-    guard
-      let controls = catalog.record(for: identifier.model)?.physicalProtocolID.protocolDescription
-        .controls?.controls
+    return rightPadIsRightStick(record: catalog.record(for: identifier.model))
+  }
+
+  /// ``rightPadIsRightStick(_:)`` for an already resolved record; false without one.
+  static func rightPadIsRightStick(record: DeviceRuntimeProfile?) -> Bool {
+    guard let record, let family = record.physicalProtocolID.protocolDescription.controls?.controls
     else { return false }
+    let delta = record.capabilityDelta
+    let controls = family.subtracting(delta.absentControls).union(delta.presentControls)
     return controls.contains(.rightTrackpadClick) && !controls.contains(.rightStickClick)
   }
 

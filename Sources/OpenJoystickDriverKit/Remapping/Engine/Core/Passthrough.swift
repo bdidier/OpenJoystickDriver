@@ -3,7 +3,9 @@ import Foundation
 extension RemappingDeviceState {
   /// Rebuilds the unmapped contribution using the same aggregate as explicit destinations.
   mutating func updatePassthrough(
-    replayingAxis: (RemappingAxis, Float)? = nil
+    replayingAxis: (RemappingAxis, Float)? = nil,
+    rightPadIsRightStick lookup: (LogicalControllerID) -> Bool =
+      UserSpaceOutputDispatcher.rightPadIsRightStick
   ) -> [RemappingEngineAction] {
     guard profile.outputPolicy.virtualGamepad == .passthrough else { return [] }
     var reserved = reservedPassthroughSources
@@ -13,18 +15,20 @@ extension RemappingDeviceState {
     where trigger.passthroughSources.contains(where: {
       reserved.contains($0) || binding(for: $0) != nil
     }) { reserved.formUnion(trigger.passthroughSources) }
+    // The catalog record is read once per update, not once per pressed button.
+    let rightPadIsRightStick = lookup(identifier)
     var buttons: Set<Control> = []
     var directions: Set<RemappingDpadDirection> = []
     for source in activeSources where !reserved.contains(source) && binding(for: source) == nil {
       switch source {
       case .button(let button):
-        // The classic Steam Controller's right pad is its right stick, so its pad click is R3;
-        // a controller with a real R3 keeps the pad click as its own control, which no virtual
-        // persona carries. One rule with the report mapping.
+        // A controller whose right pad is its right stick has the pad click as R3; one with a
+        // real R3 keeps it as its own control, which no virtual persona carries. One rule with
+        // the report mapping.
         buttons.insert(
           UserSpaceOutputDispatcher.virtualControl(
             button,
-            rightPadIsRightStick: UserSpaceOutputDispatcher.rightPadIsRightStick(identifier)
+            rightPadIsRightStick: rightPadIsRightStick
           )
         )
       case .dpad(let direction): directions.insert(direction)
