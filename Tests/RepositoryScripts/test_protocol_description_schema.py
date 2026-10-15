@@ -805,6 +805,54 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             protocol_descriptions.initialization_problem(without, ["xbox.gip/power-on"])
         )
 
+    def packet_startup_body(self, startup: Any, family: str = "xbox.gip") -> Any:
+        return self.with_body(
+            family,
+            defaults={
+                "session": {"namedPackets": [self.named_packet()]},
+                "output": {"startup": startup},
+            },
+        )
+
+    def test_accepts_startup_that_refers_to_named_packets(self) -> None:
+        for startup in (
+            [{"packet": "xbox.gip/power-on"}],
+            [{"packet": "xbox.gip/power-on"}, {"packet": "xbox.gip/power-on"}],
+            [{"packet": "xbox.gip/power-on", "variants": ["usb"]}],
+        ):
+            with self.subTest(startup=startup):
+                self.check(self.packet_startup_body(startup))
+
+    def test_rejects_startup_that_refers_to_an_unknown_packet(self) -> None:
+        self.assert_rejected(
+            self.packet_startup_body([{"packet": "xbox.gip/missing"}]), code="E5002"
+        )
+        self.assert_rejected(
+            self.with_body(
+                "xbox.gip",
+                defaults={"output": {"startup": [{"packet": "xbox.gip/power-on"}]}},
+            ),
+            code="E5002",
+        )
+
+    def test_rejects_malformed_or_mixed_packet_startup(self) -> None:
+        for startup in (
+            [{"packet": "power-on"}],
+            [{"packet": "xbox.gip/power-on", "bytes": [1, 2, 3]}],
+            [{"packet": "xbox.gip/power-on"}, self.usb_write()],
+            [self.usb_write(), {"packet": "xbox.gip/power-on"}],
+            [{"packet": "xbox.gip/power-on"}, self.hid_write()],
+        ):
+            with self.subTest(startup=startup):
+                self.assert_rejected(self.packet_startup_body(startup))
+
+    def test_the_bundled_gip_startup_refers_to_named_packets_only(self) -> None:
+        description = protocol_descriptions.bundled()["xbox.gip"]
+        self.assertEqual(
+            [write["packet"] for write in description["defaults"]["output"]["startup"]],
+            ["xbox.gip/power-on", "xbox.gip/led-on", "xbox.gip/auth-done"],
+        )
+
     def test_rejects_startup_only_members_in_a_keep_alive_write(self) -> None:
         for write in (
             self.usb_write(delayMilliseconds=5),

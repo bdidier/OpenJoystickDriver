@@ -89,6 +89,64 @@ struct NamedPacketDescriptionTests {
     }
   }
 
+  private func decodeStartup(_ startup: String, packets: Bool = true) throws
+    -> ProtocolDescription
+  {
+    let session = packets ? #""session": {"namedPackets": [\#(Self.powerOn)]}, "# : ""
+    return try decode(
+      family: .xboxGIP,
+      #""defaults": {\#(session)"output": {"startup": \#(startup)}}"#
+    )
+  }
+
+  @Test
+  func startupReferencesNamedPacketsWithTheirBytes() throws {
+    let description = try decodeStartup(
+      #"[{"packet": "xbox.gip/power-on"}, {"packet": "xbox.gip/power-on", "variants": ["usb"]}]"#
+    )
+    #expect(description.usbStartupWrites.map(\.bytes) == [[5, 32, 0, 1, 0], [5, 32, 0, 1, 0]])
+    #expect(description.usbStartupWrites.allSatisfy { $0.sessionByte == 2 })
+    #expect(description.usbStartupWrites[0].condition == .always)
+    #expect(description.usbStartupWrites[1].condition != .always)
+  }
+
+  @Test
+  func startupRejectsWhatItCannotResolveOrMix() {
+    let usb = #"{"bytes": [1, 2, 3]}"#
+    let reference = #"{"packet": "xbox.gip/power-on"}"#
+    for startup in [
+      #"[{"packet": "xbox.gip/missing"}]"#,
+      #"[{"packet": "xbox.gip/power-on", "bytes": [1, 2, 3]}]"#,
+      #"[{"packet": 7}]"#,
+      "[\(reference), \(usb)]",
+      "[\(usb), \(reference)]",
+    ] {
+      #expect((try? decodeStartup(startup)) == nil, "\(startup)")
+    }
+    #expect((try? decodeStartup("[\(reference)]", packets: false)) == nil)
+  }
+
+  @Test
+  func aRecordCannotReferToAPacketInItsStartup() {
+    #expect(throws: (any Error).self) {
+      _ = try JSONDecoder().decode(
+        ControllerRecordDocument.Output.self,
+        from: Data(#"{"startup": [{"packet": "xbox.gip/power-on"}]}"#.utf8)
+      )
+    }
+  }
+
+  @Test
+  func theBundledGIPStartupIsTheThreeReferencedPackets() throws {
+    let description = PhysicalProtocolID.xboxGIP.protocolDescription
+    let plan = try #require(description.namedPackets)
+    let expected = ["power-on", "led-on", "auth-done"].compactMap {
+      plan.packet(named: "xbox.gip/\($0)")?.write
+    }
+    #expect(expected.count == 3)
+    #expect(description.usbStartupWrites == expected)
+  }
+
   @Test
   func theBundledGIPDescriptionHoldsTheEightPackets() throws {
     let plan = try #require(PhysicalProtocolID.xboxGIP.protocolDescription.namedPackets)

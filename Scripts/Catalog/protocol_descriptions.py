@@ -116,13 +116,27 @@ def semantic_violations(
 def startup_violations(
     description: dict[str, Any], variants: list[str]
 ) -> list[tuple[str, str]]:
-    """The `variants` and `when` of each startup write must name things the family declares."""
+    """The `variants` and `when` of each startup write must name things the family declares,
+    and a `packet` must name one of its `defaults.session.namedPackets`."""
     found: list[tuple[str, str]] = []
     parameters = description.get("parameters", {})
+    named = {
+        packet["id"]
+        for packet in description.get("defaults", {})
+        .get("session", {})
+        .get("namedPackets", ())
+    }
     for index, write in enumerate(
         description.get("defaults", {}).get("output", {}).get("startup", [])
     ):
         where = f"defaults.output.startup[{index}]"
+        if "packet" in write and write["packet"] not in named:
+            found.append(
+                (
+                    "E5002",
+                    f"{where}.packet: {write['packet']} is not a named packet of the family",
+                )
+            )
         found += [
             ("E5004", f"{where}.variants names {name}, which the family does not have")
             for name in write.get("variants", ())

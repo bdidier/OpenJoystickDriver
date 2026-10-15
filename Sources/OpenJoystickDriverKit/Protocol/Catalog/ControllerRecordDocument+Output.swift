@@ -5,6 +5,9 @@ extension ControllerRecordDocument {
     let rumble: RumbleOutputTemplate?
     let startup: [RecordStartupWrite]
     let usbStartup: [USBStartupWrite]
+    /// The named packets a protocol description sends at startup, in order. A record never has
+    /// them: it names its packets in `protocol.initialization`.
+    let packetStartup: [StartupPacketReference]
 
     init(from decoder: any Decoder) throws {
       let container = try decoder.container(keyedBy: DocumentKey.self)
@@ -13,6 +16,7 @@ extension ControllerRecordDocument {
       let startup = try container.decodeOptional([StartupWrite].self, for: "startup")
       self.startup = startup?.compactMap(\.hid) ?? []
       usbStartup = startup?.compactMap(\.usb) ?? []
+      packetStartup = startup?.compactMap(\.packet) ?? []
       let startupCountIsValid = startup.map { (1...16).contains($0.count) } ?? true
       guard rumble != nil || startup != nil, startupCountIsValid else {
         throw DecodingError.dataCorrupted(
@@ -22,33 +26,56 @@ extension ControllerRecordDocument {
           )
         )
       }
-      guard self.startup.isEmpty || usbStartup.isEmpty else {
+      guard [self.startup.isEmpty, usbStartup.isEmpty, packetStartup.isEmpty].filter({ !$0 })
+        .count <= 1
+      else {
         throw DecodingError.dataCorrupted(
           .init(
             codingPath: decoder.codingPath,
-            debugDescription: "startup writes are all HID reports or all raw-USB packets"
+            debugDescription:
+              "startup writes are all HID reports, all raw-USB packets or all named packets"
           )
         )
       }
     }
   }
 
-  /// One startup write of either format.
+  /// A startup write that names one of the family's packets (`defaults.session.namedPackets`)
+  /// instead of repeating its bytes. Only a protocol description has them.
+  struct StartupPacketReference: Equatable, Sendable {
+    let id: String
+    let condition: StartupWriteCondition
+  }
+
+  /// One startup write of either format, or a reference to a named packet.
   struct StartupWrite: Decodable {
     let hid: RecordStartupWrite?
     let usb: USBStartupWrite?
+    let packet: StartupPacketReference?
 
     init(from decoder: any Decoder) throws {
       let container = try decoder.container(keyedBy: DocumentKey.self)
       let condition = try StartupWriteCondition.decode(from: container, decoder: decoder)
       do {
-        if container.contains(DocumentKey("report")) {
+        if container.contains(DocumentKey("packet")) {
+          guard decoder.userInfo[.startupConditionsAllowed] as? Bool == true else {
+            throw ControllerRecordProblem("a startup packet reference is for protocol descriptions")
+          }
+          try container.rejectUnknown(allowed: ["packet", "variants", "when"])
+          packet = StartupPacketReference(
+            id: try container.decode(String.self, for: "packet"),
+            condition: condition
+          )
+          hid = nil
+          usb = nil
+        } else if container.contains(DocumentKey("report")) {
           try container.rejectUnknown(allowed: [
             "report", "bytes", "delayMilliseconds", "transport", "phase", "crc32Seed", "variants",
             "when",
           ])
           hid = try Self.hidWrite(container, condition: condition)
           usb = nil
+          packet = nil
         } else {
           try container.rejectUnknown(allowed: [
             "bytes", "endpoint", "timeoutMilliseconds", "delayMilliseconds", "sessionByte",
@@ -56,6 +83,7 @@ extension ControllerRecordDocument {
           ])
           usb = try Self.usbWrite(container, condition: condition)
           hid = nil
+          packet = nil
         }
       } catch let problem as ControllerRecordProblem {
         throw DecodingError.dataCorrupted(

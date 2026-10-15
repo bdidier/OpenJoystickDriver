@@ -1493,6 +1493,23 @@
         }
       }
     },
+    "descriptionPacketStartupWrite": {
+      "description": "A startup write that sends one of the family's named packets, in the order listed, instead of repeating its bytes.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["packet"],
+      "properties": {
+        "packet": {
+          "$ref": "controller.schema.json#/$defs/gipInitializationAction"
+        },
+        "variants": {
+          "$ref": "#/$defs/startupVariants"
+        },
+        "when": {
+          "$ref": "#/$defs/startupWhen"
+        }
+      }
+    },
     "descriptionOutput": {
       "type": "object",
       "additionalProperties": false,
@@ -1512,32 +1529,61 @@
               },
               {
                 "$ref": "#/$defs/descriptionUSBStartupWrite"
+              },
+              {
+                "$ref": "#/$defs/descriptionPacketStartupWrite"
               }
             ]
           }
         }
       },
-      "not": {
-        "required": ["startup"],
-        "properties": {
-          "startup": {
-            "allOf": [
-              {
-                "contains": {
-                  "required": ["report"]
-                }
-              },
-              {
-                "contains": {
-                  "not": {
-                    "required": ["report"]
+      "allOf": [
+        {
+          "not": {
+            "required": ["startup"],
+            "properties": {
+              "startup": {
+                "allOf": [
+                  {
+                    "contains": {
+                      "required": ["report"]
+                    }
+                  },
+                  {
+                    "contains": {
+                      "not": {
+                        "required": ["report"]
+                      }
+                    }
                   }
-                }
+                ]
               }
-            ]
+            }
+          }
+        },
+        {
+          "not": {
+            "required": ["startup"],
+            "properties": {
+              "startup": {
+                "allOf": [
+                  {
+                    "contains": {
+                      "required": ["packet"]
+                    }
+                  },
+                  {
+                    "contains": {
+                      "required": ["bytes"]
+                    }
+                  }
+                ]
+              }
+            }
           }
         }
-      }
+      ],
+      "description": "Startup writes are all HID reports, all raw-USB packets, or all references to the family's named packets; a reference names an id that defaults.session.namedPackets lists, which a schema cannot say and the validators check."
     },
     "descriptionSession": {
       "description": "What runs while the device is open. Today the keep-alive, for nintendo.switch1 its subcommands, and for xbox.gip its named packets; the startup writes join them with the session task.",

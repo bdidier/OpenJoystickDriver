@@ -104,18 +104,9 @@
     },
     "output": {
       "startup": [
-        {
-          "bytes": [5, 32, 0, 1, 0],
-          "sessionByte": 2
-        },
-        {
-          "bytes": [10, 32, 0, 3, 0, 1, 20],
-          "sessionByte": 2
-        },
-        {
-          "bytes": [6, 32, 0, 2, 1, 0],
-          "sessionByte": 2
-        }
+        { "packet": "xbox.gip/power-on" },
+        { "packet": "xbox.gip/led-on" },
+        { "packet": "xbox.gip/auth-done" }
       ]
     }
   }
