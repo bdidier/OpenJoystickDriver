@@ -11,8 +11,12 @@ extension UserSpaceOutputDispatcher {
     let sender: UserSpaceReportSender
     let inputReportState: UserSpaceInputReportState
 
-    init(backend: any VirtualDeviceBackend, inputReportState: UserSpaceInputReportState) {
-      sender = UserSpaceReportSender()
+    init(
+      backend: any VirtualDeviceBackend,
+      inputReportState: UserSpaceInputReportState,
+      frameQueueCapacity: Int = UserSpaceReportSender.fallbackQueueCapacity
+    ) {
+      sender = UserSpaceReportSender(queueCapacity: frameQueueCapacity)
       self.inputReportState = inputReportState
       sender.attach(backend)
     }

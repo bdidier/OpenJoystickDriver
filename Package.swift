@@ -163,7 +163,8 @@ let package = Package(
     .testTarget(
       name: "OpenJoystickDriverServiceTests",
       dependencies: [
-        "OpenJoystickDriverKit", "OpenJoystickDriverService", "OpenJoystickDriverTestSupport",
+        "OpenJoystickDriverKit", "OpenJoystickDriverService", "OpenJoystickDriverCLI",
+        "OpenJoystickDriverPresentation", "OpenJoystickDriverTestSupport",
       ],
       path: "Tests/OpenJoystickDriverServiceTests",
       swiftSettings: [.unsafeFlags(["-target", testTargetTriple])],

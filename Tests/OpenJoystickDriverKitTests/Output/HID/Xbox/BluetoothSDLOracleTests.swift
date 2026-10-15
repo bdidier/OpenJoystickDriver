@@ -2,7 +2,7 @@ import Testing
 
 @testable import OpenJoystickDriverKit
 
-/// Decodes `hid-xbox-one-s-bt` reports the way SDL's HIDAPI Xbox One driver does for a 16-byte
+/// Decodes `SdlCompatible` reports the way SDL's HIDAPI Xbox One driver does for a 16-byte
 /// Bluetooth packet (`src/joystick/hidapi/SDL_hidapi_xboxone.c`, SDL 3 line numbers; the SDL 2
 /// branch has the same size dispatch and `HandleButtons16`).
 private struct SDLXboxOneS16Decoder {

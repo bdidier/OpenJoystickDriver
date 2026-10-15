@@ -15,5 +15,10 @@
       "type": "enum",
       "values": ["StrikePad"]
     }
+  },
+  "defaults": {
+    "tuning": {
+      "frameQueueCapacity": 64
+    }
   }
 }

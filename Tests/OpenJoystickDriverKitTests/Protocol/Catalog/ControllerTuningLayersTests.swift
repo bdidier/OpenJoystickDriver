@@ -87,6 +87,23 @@ struct ControllerTuningLayersTests {
   }
 
   @Test
+  func aPatchOverridesTheFrameQueueCapacityOfOneModelOnly() throws {
+    let root = Root()
+    let bare = try bareRecord()
+    try root.writeDefaults(#"{"frameQueueCapacity":16}"#)
+    try root.writePatch(#"{"tuning":{"frameQueueCapacity":4}}"#, for: bare.model)
+
+    let set = root.load()
+    let patched = try #require(set.records[bare.model])
+    let other = try #require(set.records.values.first { $0.model != bare.model })
+
+    #expect(patched.tuning.frameQueueCapacity == 4)
+    #expect(patched.tuningLayers["frameQueueCapacity"] == .user)
+    #expect(other.tuning.frameQueueCapacity == 16)
+    #expect(other.tuningLayers["frameQueueCapacity"] == .global)
+  }
+
+  @Test
   func aGlobalDefaultBeatsTheBundledTuningOfAKey() throws {
     let root = Root()
     // The bundled HID record 11C1:5600 sets `stickDeadzone` to 0.02.

@@ -80,10 +80,10 @@
         "bluetoothLE": {
           "type": ["object", "null"]
         },
-        "ownership": {
+        "server": {
           "anyOf": [
             {
-              "$ref": "controller.schema.json#/$defs/ownership"
+              "$ref": "controller.schema.json#/$defs/server"
             },
             {
               "type": "null"
@@ -164,6 +164,16 @@
               "anyOf": [
                 {
                   "$ref": "controller.schema.json#/$defs/tuning/properties/hidStartupRecoveryRounds"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "frameQueueCapacity": {
+              "anyOf": [
+                {
+                  "$ref": "controller.schema.json#/$defs/tuning/properties/frameQueueCapacity"
                 },
                 {
                   "type": "null"

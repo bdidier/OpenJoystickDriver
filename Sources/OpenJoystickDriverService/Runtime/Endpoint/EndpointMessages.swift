@@ -35,7 +35,7 @@ struct EndpointRequest: Decodable, Sendable {
   let stream: String?
   /// `Subscription` only; adds the virtual gamepad's values to the objects of the watch lines.
   let output: Bool?
-  /// `FeedRequest` only; the persona id of the gamepad, an ``EndpointPersona`` raw value.
+  /// `FeedRequest` only; the persona id of the gamepad, a ``VirtualHIDProfileID`` raw value.
   let `as`: String?
 }
 
@@ -50,21 +50,7 @@ struct EndpointWelcome: Encodable, Sendable {
 struct EndpointFeedSession: Encodable, Sendable {
   let apiVersion = OpenJoystickDriverAPI.version
   let kind = "FeedSession"
-  let `as`: EndpointPersona
-}
-
-/// The persona ids that `FeedRequest` and `FeedSession` carry in `as`, neutral of any OS name.
-enum EndpointPersona: String, Encodable, CaseIterable, Sendable {
-  case generic = "Generic"
-  case sdlCompatible = "SdlCompatible"
-
-  /// The built-in virtual HID profile that publishes this persona.
-  var profileName: String {
-    switch self {
-    case .generic: "hid-generic"
-    case .sdlCompatible: "hid-xbox-one-s-bt"
-    }
-  }
+  let `as`: VirtualHIDProfileID
 }
 
 /// A `RumbleCommand` line: the host's rumble command with `apiVersion` and `kind`.

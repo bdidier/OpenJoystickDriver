@@ -10,5 +10,10 @@
       "type": "enum",
       "values": ["ProfileSlots"]
     }
+  },
+  "defaults": {
+    "tuning": {
+      "frameQueueCapacity": 64
+    }
   }
 }

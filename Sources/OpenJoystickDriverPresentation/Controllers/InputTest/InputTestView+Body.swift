@@ -90,7 +90,7 @@
     }
 
     private var publishedProfile: VirtualDeviceProfile {
-      model.device?.publishedVirtualProfile ?? .openJoystickDriverGenericHID
+      model.device?.publishedVirtualProfile ?? .generic
     }
 
     var liveInput: some View {

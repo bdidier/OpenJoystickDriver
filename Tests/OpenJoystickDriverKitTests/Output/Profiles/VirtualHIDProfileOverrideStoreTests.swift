@@ -24,7 +24,7 @@ struct VirtualHIDProfileOverrideStoreTests {
     vendorID: Int,
     productID: Int,
     unit: String? = nil,
-    descriptor: String = "hid-generic",
+    descriptor: String = "Generic",
     identity: String? = nil
   ) -> String {
     let match =
@@ -32,13 +32,13 @@ struct VirtualHIDProfileOverrideStoreTests {
       + (unit.map { #","unit":"\#($0)""# } ?? "") + "}"
     return
       #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(Store.kind)","#
-      + #""match":\#(match),"descriptor":"\#(descriptor)""#
+      + #""match":\#(match),"persona":"\#(descriptor)""#
       + (identity.map { #","identity":\#($0)"# } ?? "") + "}"
   }
 
   private static let identityJSON =
     #"{"vendorID":4660,"productID":22136,"productName":"Arcade Stick","#
-    + #""manufacturer":"Acme","glyphFamily":"generic"}"#
+    + #""manufacturer":"Acme"}"#
 
   @Test
   func anAbsentDirectoryHasNoPersonas() throws {
@@ -62,7 +62,7 @@ struct VirtualHIDProfileOverrideStoreTests {
       #expect(document["$schema"] == nil)
       #expect(document["apiVersion"] as? String == OpenJoystickDriverAPI.version)
       #expect(document["kind"] as? String == Store.kind)
-      #expect(document["descriptor"] as? String == "hid-generic")
+      #expect(document["persona"] as? String == "Generic")
       let match = try #require(document["match"] as? [String: Any])
       #expect(match["vendorID"] as? Int == 0x045E)
       #expect(match["productID"] as? Int == 0x02EA)
@@ -75,12 +75,12 @@ struct VirtualHIDProfileOverrideStoreTests {
     try withDirectory { directory in
       let store = Store(directory: directory)
       try store.set(.generic, vendorID: 0x045E, productID: 0x02EA)
-      try store.set(.xboxOneSBluetooth, vendorID: 0x054C, productID: 0x0CE6)
+      try store.set(.sdlCompatible, vendorID: 0x054C, productID: 0x0CE6)
 
       try store.reset(vendorID: 0x045E, productID: 0x02EA)
 
       #expect(store.override(vendorID: 0x045E, productID: 0x02EA) == nil)
-      #expect(store.override(vendorID: 0x054C, productID: 0x0CE6) == .xboxOneSBluetooth)
+      #expect(store.override(vendorID: 0x054C, productID: 0x0CE6) == .sdlCompatible)
       #expect(store.override(vendorID: 0x054C, productID: 0x02EA) == nil)
     }
   }
@@ -90,10 +90,10 @@ struct VirtualHIDProfileOverrideStoreTests {
     try withDirectory { directory in
       let store = Store(directory: directory)
       try store.set(.generic, vendorID: 1, productID: 2)
-      try store.set(.xboxOneSBluetooth, vendorID: 1, productID: 2, unit: Self.unit)
+      try store.set(.sdlCompatible, vendorID: 1, productID: 2, unit: Self.unit)
 
       #expect(
-        store.override(vendorID: 1, productID: 2, unit: Self.unit) == .xboxOneSBluetooth
+        store.override(vendorID: 1, productID: 2, unit: Self.unit) == .sdlCompatible
       )
       #expect(store.override(vendorID: 1, productID: 2, unit: "U-0000000000000000") == .generic)
       #expect(store.override(vendorID: 1, productID: 2) == .generic)
@@ -150,7 +150,7 @@ struct VirtualHIDProfileOverrideStoreTests {
     try withDirectory { directory in
       try write(persona(vendorID: 1, productID: 2), named: "a.json", in: directory)
       try write(
-        persona(vendorID: 1, productID: 2, descriptor: "hid-xbox-one-s-bt"),
+        persona(vendorID: 1, productID: 2, descriptor: "SdlCompatible"),
         named: "b.json",
         in: directory
       )
@@ -226,10 +226,10 @@ struct VirtualHIDProfileOverrideStoreTests {
       )
       let store = Store(directory: directory)
 
-      try store.set(.xboxOneSBluetooth, vendorID: 1, productID: 2)
+      try store.set(.sdlCompatible, vendorID: 1, productID: 2)
 
       let found = try #require(store.persona(vendorID: 1, productID: 2))
-      #expect(found.descriptor == .xboxOneSBluetooth)
+      #expect(found.descriptor == .sdlCompatible)
       #expect(found.identity?.productName == "Arcade Stick")
       #expect(store.files.map(\.url.lastPathComponent) == ["stick.json"])
     }

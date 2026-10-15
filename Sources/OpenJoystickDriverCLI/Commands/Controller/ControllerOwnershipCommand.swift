@@ -8,12 +8,12 @@ enum OwnershipChoice: String, ExpressibleByArgument, CaseIterable, Encodable, Se
   case native
   case virtual
 
-  init(_ ownership: ControllerOwnership) {
-    self = ownership == .macOS ? .native : .virtual
+  init(_ ownership: ControllerServer) {
+    self = ownership == .system ? .native : .virtual
   }
 
   /// The record's `ownership` value for this choice.
-  var ownership: ControllerOwnership { self == .native ? .macOS : .ojd }
+  var ownership: ControllerServer { self == .native ? .system : .ojd }
 }
 
 struct ControllerOwnershipCommand: AsyncParsableCommand {
@@ -60,7 +60,11 @@ struct ControllerOwnershipCommand: AsyncParsableCommand {
       let device = try await ServiceConnection.request { try await selector.resolve(with: $0) }
       let model = ControllerModelID(vendorID: device.vendorID, productID: device.productID)
       let records = RecordStore.load()
-      try Self.checkSupported(device, record: records.records[model])
+      try Self.checkSupported(
+        device,
+        server: records.records[model]?.server ?? .system,
+        accessRoute: records.records[model]?.accessRoute ?? .system
+      )
       let change = try Self.change(model, to: choice.ownership, records: records, device: device)
       if !dryRun { try Self.write(change) }
       let result = Result(
@@ -104,15 +108,19 @@ struct ControllerOwnershipCommand: AsyncParsableCommand {
   /// counts as native, because OJD seized a controller macOS would serve.
   static func checkSupported(
     _ device: ApplicationServiceDeviceDescription,
-    record: ControllerRecord?
+    server: ControllerServer,
+    accessRoute: ControllerAccessRoute
   ) throws {
-    if record?.usesRawUSB == true {
+    var input = ServingInput(device)
+    input.server = server
+    input.accessRoute = accessRoute
+    if accessRoute != .system {
       throw CLIFailure(
         .ownershipToggleUnsupported,
         CLILocalized.format("cli.controller.ownership.raw_usb", device.identity)
       )
     }
-    guard device.physicalOwnership == .nativeGamepad || record?.ownership == .ojd else {
+    guard ServingPolicy.offersServerChoice(input) else {
       throw CLIFailure(
         .ownershipToggleUnsupported,
         CLILocalized.format("cli.controller.ownership.not_native", device.identity)
@@ -122,7 +130,7 @@ struct ControllerOwnershipCommand: AsyncParsableCommand {
 
   private static func change(
     _ model: ControllerModelID,
-    to ownership: ControllerOwnership,
+    to ownership: ControllerServer,
     records: ControllerRecordSet,
     device: ApplicationServiceDeviceDescription
   ) throws -> ControllerOwnershipWriter.Change {

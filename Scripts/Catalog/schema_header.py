@@ -14,7 +14,7 @@ SCHEMA_SUFFIX = ".schema.json"
 KINDS = {
     "controller": "Controller",
     "controller-patch": "ControllerPatch",
-    "persona": "Persona",
+    "virtual-device": "VirtualDevice",
     "profile": "Profile",
     "mod-package": "ModPackage",
     "error-codes": "ErrorCatalog",

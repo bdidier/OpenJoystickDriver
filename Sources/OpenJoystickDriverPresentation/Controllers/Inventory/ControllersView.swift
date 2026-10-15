@@ -257,7 +257,9 @@
 
   extension ApplicationServiceDeviceDescription {
     /// The identity of the virtual HID profile this controller publishes; nil when none is live.
-    var publishedVirtualProfile: VirtualDeviceProfile? { virtualHIDProfile?.profile?.identity }
+    var publishedVirtualProfile: VirtualDeviceProfile? {
+      servingDecision.selection?.profileID.identity
+    }
 
     /// The identity shown for this controller, computed once so icon and caption always agree.
     var presentedIdentity: PresentedControllerIdentity {

@@ -84,7 +84,7 @@ The maintainer approves each commit.
    - `ojd mod validate|install|list|remove`, with `--dry-run`, `--force`, and `--json` as in the other commands.
      A package is installed into its own folder, so `remove` takes out only its files.
    - Design (maintainer decisions, 2026-10-07):
-     - A package is a folder: `mod.json` (schema `mod-package.schema.json`) and the subfolders `Controllers/`, `Profiles/`, and `Personas/`, whose files follow the record, profile, and persona schemas and the file-name rules of the user folders.
+     - A package is a folder: `mod.json` (schema `mod-package.schema.json`) and the subfolders `Controllers/`, `Profiles/`, and `Personas/`, whose files follow the record, profile, and virtual device (`virtual-device.schema.json`) schemas and the file-name rules of the user folders.
      - The manifest holds `name` (lowercase letters, digits, and hyphens), `version` (SemVer), `author`, `requires` as `{"minimum": "0.6.0-alpha.1", "below": "0.7.0"}` with `below` optional and SemVer prerelease ordering, and the file names it holds in `records`, `profiles`, and `personas`; a missing or unlisted file refuses the package.
      - `install` copies the folder to `~/Library/Application Support/OpenJoystickDriver/Packages/<name>/` and swaps it in atomically; the running service watches `Packages/` and reloads.
      - Packages are a read-only layer between the bundled catalog and the user's files: precedence is driver default, global file, bundled record, package record, user record, active profile.

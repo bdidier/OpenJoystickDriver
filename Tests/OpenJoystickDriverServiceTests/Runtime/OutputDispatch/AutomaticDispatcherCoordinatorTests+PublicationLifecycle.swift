@@ -217,7 +217,7 @@ extension AutomaticDispatcherCoordinatorTests {
     await lease?.release()
     async let replaced = coordinator.leaseForDispatch(
       controller: identifier,
-      profile: .xboxOneSBluetooth,
+      profile: .sdlCompatible,
       isEligible: { _, _ in true },
       factory: { _ in replacement }
     )
@@ -276,7 +276,7 @@ extension AutomaticDispatcherCoordinatorTests {
     // The held lease and blocked native close make the original slot's retirement time out.
     try await coordinator.retarget(
       identifier,
-      target: .xboxOneSBluetooth,
+      target: .sdlCompatible,
       isEligible: { _, _ in true },
       factory: factory
     )
@@ -292,7 +292,7 @@ extension AutomaticDispatcherCoordinatorTests {
       )
     }
     // ...while the live replacement keeps publishing.
-    #expect(await coordinator.installedTargets() == [identifier: .xboxOneSBluetooth])
+    #expect(await coordinator.installedTargets() == [identifier: .sdlCompatible])
 
     // Once the native close finishes, the slot is cleared and the next retarget publishes.
     await gate.release()
@@ -339,7 +339,7 @@ extension AutomaticDispatcherCoordinatorTests {
     let restored = InstallationBackend(stage: .none, gate: InstallationGate())
     let canonicalBuilds = AutomaticBuildCounter()
     let factory: AutomaticDispatcherCoordinator.Factory = { profile in
-      if profile == .xboxOneSBluetooth { return failed }
+      if profile == .sdlCompatible { return failed }
       return canonicalBuilds.next() == 0 ? original : restored
     }
 
@@ -353,7 +353,7 @@ extension AutomaticDispatcherCoordinatorTests {
     await first?.release()
     let replacement = await coordinator.leaseForDispatch(
       controller: identifier,
-      profile: .xboxOneSBluetooth,
+      profile: .sdlCompatible,
       isEligible: { _, _ in true },
       factory: factory
     )

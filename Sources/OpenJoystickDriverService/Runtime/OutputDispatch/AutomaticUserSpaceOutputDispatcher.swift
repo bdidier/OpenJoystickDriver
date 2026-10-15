@@ -319,14 +319,12 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
     return selection?.profileID
   }
 
-  /// Selection from the controller's declared controls and its Advanced override.
+  /// The persona the serving policy decides OJD publishes for the controller, from its declared
+  /// controls and its Advanced override; nil when no persona can represent it.
   private func select(
     for description: ApplicationServiceDeviceDescription
   ) -> VirtualHIDProfileSelector.Selection? {
-    try? VirtualHIDProfileSelector.select(
-      controls: description.capabilities.controls,
-      override: overrideProvider(description)
-    )
+    ServingPolicy.publishedPersona(for: description, override: overrideProvider(description))
   }
 
   /// Records the controller's selection, or records it as unavailable when no profile can
@@ -452,12 +450,12 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
     _ identifier: LogicalControllerID,
     profile: VirtualHIDProfileID
   ) async -> Bool {
-    guard await cachedDescription(for: identifier) != nil,
+    guard let description = await cachedDescription(for: identifier),
       await sessionStateProvider(identifier) == .active
     else { return false }
-    let ownership = await ownershipProvider(identifier)
-    return ControllerExposureDecision.decide(ownership: ownership, intent: .profile(profile))
-      .eligibility == .eligible
+    var input = ServingInput(description, override: profile)
+    input.observation = await ownershipProvider(identifier)
+    return ServingPolicy.route(input).publishesVirtualDevice
   }
 
   func close() async {

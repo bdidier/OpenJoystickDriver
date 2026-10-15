@@ -7,7 +7,7 @@ extension ApplicationServiceServer {
   public func setControllerOwnership(
     vendorID: Int,
     productID: Int,
-    ownership: ControllerOwnership
+    ownership: ControllerServer
   ) async -> ControllerOwnershipResult {
     let nativeGamepadConnected = await connectedDevices().contains {
       $0.vendorID == vendorID && $0.productID == productID
@@ -27,14 +27,14 @@ extension ApplicationServiceServer {
   static func setControllerOwnership(
     vendorID: Int,
     productID: Int,
-    ownership: ControllerOwnership,
+    ownership: ControllerServer,
     nativeGamepadConnected: Bool,
     directory: URL = ControllerRecordSet.userDirectory
   ) -> ControllerOwnershipResult {
     let records = ControllerRecordSet.load(userDirectory: directory)
     func refused(
       _ failure: ControllerOwnershipFailure,
-      _ previous: ControllerOwnership = .macOS,
+      _ previous: ControllerServer = .system,
       detail: String? = nil
     ) -> ControllerOwnershipResult {
       ControllerOwnershipResult(
@@ -51,7 +51,7 @@ extension ApplicationServiceServer {
     }
     let model = ControllerModelID(vendorID: vendor, productID: product)
     let record = records.records[model]
-    let previous = record?.ownership ?? .macOS
+    let previous = record?.server ?? .system
     if record?.usesRawUSB == true { return refused(.rawUSB, previous) }
     guard nativeGamepadConnected || previous == .ojd else { return refused(.notNative, previous) }
     let change: ControllerOwnershipWriter.Change

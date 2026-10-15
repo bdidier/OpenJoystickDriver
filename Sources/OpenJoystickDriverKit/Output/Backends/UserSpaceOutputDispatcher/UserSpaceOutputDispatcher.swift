@@ -57,7 +57,7 @@ public final class UserSpaceOutputDispatcher: VirtualOutputDispatching,
     format: any VirtualGamepadReportFormat = OJDGenericGamepadFormat(),
     onControllerDidStop: (@Sendable (LogicalControllerID) async -> Void)? = nil
   ) {
-    profile = .openJoystickDriverGenericHID
+    profile = .generic
     self.format = format
     onOutputCommand = nil
     self.onControllerDidStop = onControllerDidStop

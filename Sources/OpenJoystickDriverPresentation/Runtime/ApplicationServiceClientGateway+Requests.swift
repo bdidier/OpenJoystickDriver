@@ -155,7 +155,7 @@ extension ApplicationServiceClientGateway {
 
   func setControllerOwnership(
     model: ControllerModelID,
-    ownership: ControllerOwnership
+    ownership: ControllerServer
   ) async throws -> ControllerOwnershipResult {
     await ensureConnection()
     return try await client.setControllerOwnership(model: model, ownership: ownership)

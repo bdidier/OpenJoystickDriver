@@ -43,9 +43,9 @@ extension EquivalenceSnapshotCatalogTests {
     }
   }
 
-  static func label(_ ownership: ControllerOwnership) -> String {
+  static func label(_ ownership: ControllerServer) -> String {
     switch ownership {
-    case .macOS: "macos"
+    case .system: "macos"
     case .ojd: "ojd"
     }
   }
@@ -83,6 +83,7 @@ extension EquivalenceSnapshotCatalogTests {
     case .hidStartupRecoveryRounds: "hidStartupRecoveryRounds"
     case .hidStartupIntervalMs: "hidStartupIntervalMs"
     case .minimumHIDOutputIntervalMs: "minimumHIDOutputIntervalMs"
+    case .frameQueueCapacity: "frameQueueCapacity"
     }
   }
 

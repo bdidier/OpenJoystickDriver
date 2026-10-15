@@ -36,8 +36,8 @@
     "capabilities": {
       "$ref": "#/$defs/capabilities"
     },
-    "ownership": {
-      "$ref": "#/$defs/ownership"
+    "server": {
+      "$ref": "#/$defs/server"
     },
     "route": {
       "$ref": "#/$defs/route"
@@ -769,11 +769,16 @@
           "type": "integer",
           "minimum": 1,
           "maximum": 10
+        },
+        "frameQueueCapacity": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1024
         }
       }
     },
-    "ownership": {
-      "enum": ["macos", "ojd"]
+    "server": {
+      "enum": ["system", "ojd"]
     },
     "route": {
       "enum": ["ExtensionOwned"]
@@ -1626,7 +1631,7 @@
       "if": {
         "anyOf": [
           {
-            "required": ["ownership"]
+            "required": ["server"]
           },
           {
             "properties": {

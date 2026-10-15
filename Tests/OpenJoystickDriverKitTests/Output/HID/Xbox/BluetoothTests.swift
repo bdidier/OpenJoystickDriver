@@ -37,7 +37,7 @@ struct XboxOneHIDReportFormatTests {
 
   @Test
   func identityAndReportShapeRemainXboxOneS() throws {
-    let profile = VirtualHIDProfileID.xboxOneSBluetooth.identity
+    let profile = VirtualHIDProfileID.sdlCompatible.identity
     let parsed = try #require(
       HIDReportDescriptorParser.parse(descriptor: XboxOneBluetoothHIDDescriptor.oneSDescriptor)
     )

@@ -28,7 +28,7 @@ SECTIONS = frozenset(
         "modes",
         "usb",
         "bluetoothLE",
-        "ownership",
+        "server",
         "route",
         "output",
         "input",
@@ -116,7 +116,7 @@ def tuning_scope(record: dict[str, Any]) -> frozenset[str]:
     """The `tuning` keys that a controller of `record`'s family reads.
 
     `ControllerTuning.scope(ofDocument:)` in Swift is the same rule. A record with no known
-    family reads only `stickDeadzone`.
+    family reads only `stickDeadzone` and `frameQueueCapacity`.
     """
     info = record.get("protocol")
     info = info if isinstance(info, dict) else {}
@@ -125,7 +125,7 @@ def tuning_scope(record: dict[str, Any]) -> frozenset[str]:
     raw_usb = family in RAW_USB_FAMILIES or (
         family == "vendor.gamesir" and info.get("variant") == "usb"
     )
-    scope = {"stickDeadzone"}
+    scope = {"stickDeadzone", "frameQueueCapacity"}
     if family == "sony.dualshock4":
         scope.add("inputLivenessTimeoutMs")
     if family == "nintendo.switch1":
@@ -196,7 +196,7 @@ def parse_patch(document: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any
     rank = selector_rank(selector)
     if not patch or not set(patch) <= SECTIONS:
         raise PatchError(
-            "patch must hold protocol, modes, usb, bluetoothLE, ownership, route, "
+            "patch must hold protocol, modes, usb, bluetoothLE, server, route, "
             "output, input, or tuning"
         )
     if rank == RANK_ALL and set(patch) != {"tuning"}:

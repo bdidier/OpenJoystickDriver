@@ -40,7 +40,11 @@ extension UserSpaceOutputDispatcher {
       lifecycle.isOpen && (!isOutputSuppressed(remapped: remapped) || neutralizing)
     }
     do {
-      try await activeEntry.sender.submit(whileActive: isActive, requireActive: true) {
+      try await activeEntry.sender.submit(
+        isFrame: true,
+        whileActive: isActive,
+        requireActive: true
+      ) {
         [self, activeEntry] in
         guard isActive() else { throw CancellationError() }
         let primaryReport = activeEntry.inputReportState.update(remapped: remapped) { state in
@@ -56,6 +60,9 @@ extension UserSpaceOutputDispatcher {
       }.value()
       onPublished()
       registryLock.withLock { recomputeStatusLocked() }
+    } catch UserSpaceReportSender.Failure.superseded {
+      // A newer frame in the queue carries the complete state, so the device stays open.
+      return
     } catch {
       let removed = registryLock.withLock { () -> Entry? in
         guard entries[identifier] === activeEntry else { return nil }

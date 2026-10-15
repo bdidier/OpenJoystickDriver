@@ -7,5 +7,10 @@
       "type": "enum",
       "values": ["Pro", "JoyConLeft", "JoyConRight", "GameCube"]
     }
+  },
+  "defaults": {
+    "tuning": {
+      "frameQueueCapacity": 64
+    }
   }
 }

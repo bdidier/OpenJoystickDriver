@@ -7,5 +7,10 @@
       "type": "enum",
       "values": ["DpadPressure"]
     }
+  },
+  "defaults": {
+    "tuning": {
+      "frameQueueCapacity": 64
+    }
   }
 }
