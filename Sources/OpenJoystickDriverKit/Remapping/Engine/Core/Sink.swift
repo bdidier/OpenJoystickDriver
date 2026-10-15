@@ -278,7 +278,7 @@ public enum RemappingEventEngineError: Error, Equatable, LocalizedError, Sendabl
 /// Delivers a complete remapped gamepad state through the existing virtual output backend.
 /// Completion must mean delivery has finished; enqueueing a detached send is insufficient.
 public protocol RemappingGamepadSink: AnyObject, Sendable {
-  func send(_ state: RemappingGamepadState, for identifier: DeviceIdentifier) async throws
+  func send(_ state: RemappingGamepadState, for identifier: LogicalControllerID) async throws
 }
 
 /// Delivers mapping-owned physical-controller channel claims for one exact input device.
@@ -287,24 +287,24 @@ public protocol RemappingPhysicalOutputSink: AnyObject, Sendable {
     _ output: RemappingPhysicalOutput,
     active: Bool,
     owner: UUID,
-    for identifier: DeviceIdentifier
+    for identifier: LogicalControllerID
   ) async throws
-  func releaseAll(for identifier: DeviceIdentifier) async throws
-  func setProfileColor(_ color: ControllerColor?, for identifier: DeviceIdentifier) async throws
+  func releaseAll(for identifier: LogicalControllerID) async throws
+  func setProfileColor(_ color: ControllerColor?, for identifier: LogicalControllerID) async throws
 }
 
 extension RemappingPhysicalOutputSink {
   public func setProfileColor(
     _ color: ControllerColor?,
-    for identifier: DeviceIdentifier
+    for identifier: LogicalControllerID
   ) async throws { await Task.yield() }
 }
 
 /// Preserves the order of transient presses, releases, and mixed destination actions.
 enum RemappingEngineAction: Equatable, Sendable {
   case system(RemappingSystemInputAction)
-  case gamepad(RemappingGamepadState, DeviceIdentifier)
-  case physical(RemappingPhysicalOutput, active: Bool, owner: UUID, DeviceIdentifier)
+  case gamepad(RemappingGamepadState, LogicalControllerID)
+  case physical(RemappingPhysicalOutput, active: Bool, owner: UUID, LogicalControllerID)
 }
 
 /// Separates remapping admission from the virtual output passthrough gate of a shared backend.

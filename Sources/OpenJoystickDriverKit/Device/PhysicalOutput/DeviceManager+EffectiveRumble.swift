@@ -14,7 +14,7 @@ enum PhysicalOutputRequest: Equatable, Sendable {
 extension DeviceManager {
   /// Sends every motor's effective intensity; all zero is a stop.
   internal func sendEffectiveRumble(
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     pipeline: DevicePipeline,
     duration: RumbleDuration,
     detachedInfo: DeviceInfo? = nil
@@ -30,7 +30,7 @@ extension DeviceManager {
   /// Sends the effective output of one channel. Rumble re-encodes are held until the next command.
   internal func applyPhysicalChannel(
     _ channel: PhysicalOutputChannel,
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     pipeline: DevicePipeline,
     detachedInfo: DeviceInfo? = nil
   ) async -> ControllerOutputResult.Outcome {
@@ -51,7 +51,7 @@ extension DeviceManager {
   /// The command `request` stands for now. Called inside the queue operation that writes it.
   internal func resolve(
     _ request: PhysicalOutputRequest,
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     pipeline: DevicePipeline
   ) async throws(ControllerOutputError) -> ControllerOutputCommand {
     let channel: PhysicalOutputChannel

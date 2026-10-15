@@ -40,7 +40,7 @@ struct XboxOne02D1DetectionTests {
     #expect(
       await manager.handleUSBDeviceAdded(device, provider: provider)
         == .claimed([
-          DeviceIdentifier(
+          LogicalControllerID(
             vendorID: Self.vendorID,
             productID: Self.productID,
             locationID: 40,
@@ -124,7 +124,7 @@ struct XboxOne02D1DetectionTests {
     #expect(devices == [Self.dextDevice])
     #expect(observations.count == 1)
     let observation = try #require(observations.first)
-    #expect(observation.serviceIdentity == Self.dextDevice.serviceIdentity)
+    #expect(observation.serviceAddress == Self.dextDevice.serviceAddress)
     #expect(observation.vendorID == Self.vendorID)
     #expect(observation.productID == Self.productID)
     #expect(observation.productName == Self.dextDevice.productName)

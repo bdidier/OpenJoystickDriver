@@ -8,7 +8,7 @@ extension DeviceManager {
   /// gate. Stops at the first failed run.
   internal func performPhysicalOutputPlan(
     _ plan: PhysicalOutputPlan,
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     pipeline: DevicePipeline,
     detachedInfo: DeviceInfo?,
     in operation: PhysicalOutputQueueOperation
@@ -45,11 +45,11 @@ extension DeviceManager {
           guard case .hidOutput(let report) = write else { return nil }
           return report
         }
-        guard let locationID = identifier.locationID else { return false }
+        guard let address = identifier.hidRoutingAddress else { return false }
         sent = await performHIDOutputPlan(
           reports,
           intervalNanoseconds: plan.intervalNanoseconds,
-          locationID: locationID,
+          address: address,
           identifier: identifier,
           pipeline: pipeline,
           startupConnection: nil,
@@ -62,10 +62,10 @@ extension DeviceManager {
           guard case .hidFeature(let report) = write else { return nil }
           return report
         }
-        guard let locationID = identifier.locationID else { return false }
+        guard let address = identifier.hidRoutingAddress else { return false }
         sent = await performHIDFeatureReports(
           reports,
-          locationID: locationID,
+          address: address,
           identifier: identifier,
           pipeline: pipeline,
           startupConnection: nil,

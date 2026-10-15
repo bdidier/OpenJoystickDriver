@@ -34,7 +34,7 @@ extension DriverLifecycleCharacterizationTests {
         physicalLocationIdentifier: locationID,
         interfaces: [interface ?? gamepadHIDInterface(host: subject.host)]
       ),
-      routingLocationID: locationID
+      routingAddress: .ioKit(locationID: locationID, interfaceNumber: nil)
     )
     await backend.setConnectionSnapshots([
       HIDDeviceConnectionSnapshot(connection: connection, ownership: .exclusive)
@@ -110,7 +110,7 @@ extension DriverLifecycleCharacterizationTests {
     let startup = await recordedSteps(recording)
     await recording.manager.handleHIDEvent(
       .inputReport(
-        locationID: 204,
+        address: .ioKit(locationID: 204, interfaceNumber: nil),
         connectionID: recording.connection.connectionID,
         reportID: 1,
         data: ProtocolPacketFixtures.Steam.wirelessReport(status: 0x02)

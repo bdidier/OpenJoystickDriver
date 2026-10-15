@@ -169,12 +169,12 @@
       switch viewModel.statusState {
       case .available(let status):
         controllers = Dictionary(
-          uniqueKeysWithValues: status.devices.map { ($0.runtimeIdentifier, $0.name) }
+          uniqueKeysWithValues: status.devices.map { ($0.sessionToken.rawValue, $0.name) }
         )
         controllerHealth = Dictionary(
           uniqueKeysWithValues: status.devices.map {
             (
-              $0.runtimeIdentifier,
+              $0.sessionToken.rawValue,
               RuntimeControllerHealthSnapshot(name: $0.name, state: $0.inputHealth.state)
             )
           }

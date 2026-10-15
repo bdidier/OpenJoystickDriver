@@ -5,7 +5,7 @@ struct StickRoutingTests {
   @Test
   func aimSchedulesAndConsumesOnlyMappedStick() {
     var engine = RemappingEngineState()
-    let device = DeviceIdentifier(vendorID: 1, productID: 2)
+    let device = LogicalControllerID(vendorID: 1, productID: 2)
     let profile = profile(mode: .aim)
     let initial = engine.process(
       inputs: [.leftStick(x: 1, y: 0), .rightStick(x: 0.5, y: 0)],
@@ -38,7 +38,7 @@ struct StickRoutingTests {
   @Test(arguments: [false, true])
   func flickCancelsOnDisconnectOrProfileReplacement(replaceProfile: Bool) {
     var engine = RemappingEngineState()
-    let device = DeviceIdentifier(vendorID: 1, productID: 2)
+    let device = LogicalControllerID(vendorID: 1, productID: 2)
     let profile = profile(mode: .flick)
     let initial = engine.process(
       inputs: [.leftStick(x: 1, y: 0)],
@@ -68,7 +68,7 @@ struct StickRoutingTests {
   @Test
   func centeredFlickFinishesWithoutFurtherInput() {
     var engine = RemappingEngineState()
-    let device = DeviceIdentifier(vendorID: 1, productID: 2)
+    let device = LogicalControllerID(vendorID: 1, productID: 2)
     let profile = profile(mode: .flickOnly)
     _ = engine.process(
       inputs: [.leftStick(x: 1, y: 0), .leftStick(x: 0, y: 0)],
@@ -86,7 +86,7 @@ struct StickRoutingTests {
   @Test
   func steeringOwnsOnlyItsVirtualAxisAndReplacementNeutralizesIt() {
     var engine = RemappingEngineState()
-    let device = DeviceIdentifier(vendorID: 1, productID: 2)
+    let device = LogicalControllerID(vendorID: 1, productID: 2)
     let steering = RemappingProfile(
       name: "Steering",
       device: RemappingDeviceScope(vendorID: 1, productID: 2),

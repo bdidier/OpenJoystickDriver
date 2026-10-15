@@ -2,7 +2,7 @@ import Foundation
 import IOKit
 
 /// Serves IOHID devices and Switch 2 Bluetooth LE controllers as one HID backend, routing each call
-/// by the routing location of its connection.
+/// by the address of its connection.
 final class BluetoothLECompositeHIDBackend: HIDAccessBackend {
   private let primary: any HIDAccessBackend
   private let hub: Switch2BluetoothLEHub
@@ -36,31 +36,33 @@ final class BluetoothLECompositeHIDBackend: HIDAccessBackend {
   }
 
   func setOutputReport(
-    locationID: UInt32,
+    address: ControllerConnectionAddress,
     report: PhysicalHIDOutputReport
   ) async -> PhysicalHIDReportResult<Void> {
-    guard hub.owns(locationID: locationID) else {
-      return await primary.setOutputReport(locationID: locationID, report: report)
+    guard hub.owns(address), case .gattPeripheral(let peripheralID) = address else {
+      return await primary.setOutputReport(address: address, report: report)
     }
-    return hub.setOutputReport(locationID: locationID, report: report)
+    return hub.setOutputReport(peripheralID: peripheralID, report: report)
   }
 
   func setOutputReport(
     connection: HIDDeviceConnection,
     report: PhysicalHIDOutputReport
   ) async -> PhysicalHIDReportResult<Void> {
-    guard hub.owns(locationID: connection.routingLocationID) else {
+    guard hub.owns(connection.routingAddress),
+      case .gattPeripheral(let peripheralID) = connection.routingAddress
+    else {
       return await primary.setOutputReport(connection: connection, report: report)
     }
-    return hub.setOutputReport(locationID: connection.routingLocationID, report: report)
+    return hub.setOutputReport(peripheralID: peripheralID, report: report)
   }
 
   func setFeatureReport(
-    locationID: UInt32,
+    address: ControllerConnectionAddress,
     report: PhysicalHIDOutputReport
   ) async -> PhysicalHIDReportResult<Void> {
-    guard hub.owns(locationID: locationID) else {
-      return await primary.setFeatureReport(locationID: locationID, report: report)
+    guard hub.owns(address) else {
+      return await primary.setFeatureReport(address: address, report: report)
     }
     return .unavailable
   }
@@ -69,18 +71,18 @@ final class BluetoothLECompositeHIDBackend: HIDAccessBackend {
     connection: HIDDeviceConnection,
     report: PhysicalHIDOutputReport
   ) async -> PhysicalHIDReportResult<Void> {
-    guard hub.owns(locationID: connection.routingLocationID) else {
+    guard hub.owns(connection.routingAddress) else {
       return await primary.setFeatureReport(connection: connection, report: report)
     }
     return .unavailable
   }
 
   func getFeatureReport(
-    locationID: UInt32,
+    address: ControllerConnectionAddress,
     request: PhysicalHIDFeatureReadRequest
   ) async -> PhysicalHIDReportResult<Data> {
-    guard hub.owns(locationID: locationID) else {
-      return await primary.getFeatureReport(locationID: locationID, request: request)
+    guard hub.owns(address) else {
+      return await primary.getFeatureReport(address: address, request: request)
     }
     return .unavailable
   }
@@ -89,34 +91,34 @@ final class BluetoothLECompositeHIDBackend: HIDAccessBackend {
     connection: HIDDeviceConnection,
     request: PhysicalHIDFeatureReadRequest
   ) async -> PhysicalHIDReportResult<Data> {
-    guard hub.owns(locationID: connection.routingLocationID) else {
+    guard hub.owns(connection.routingAddress) else {
       return await primary.getFeatureReport(connection: connection, request: request)
     }
     return .unavailable
   }
 
   // macOS has no HID client for a GATT link, so OJD always owns its input.
-  func releaseInputClaim(locationID: UInt32) async -> PhysicalHIDClaimResult {
-    guard hub.owns(locationID: locationID) else {
-      return await primary.releaseInputClaim(locationID: locationID)
+  func releaseInputClaim(address: ControllerConnectionAddress) async -> PhysicalHIDClaimResult {
+    guard hub.owns(address) else {
+      return await primary.releaseInputClaim(address: address)
     }
     return .released
   }
 
-  func reacquireInputClaim(locationID: UInt32) async -> PhysicalHIDClaimResult {
-    guard hub.owns(locationID: locationID) else {
-      return await primary.reacquireInputClaim(locationID: locationID)
+  func reacquireInputClaim(address: ControllerConnectionAddress) async -> PhysicalHIDClaimResult {
+    guard hub.owns(address) else {
+      return await primary.reacquireInputClaim(address: address)
     }
     return .reacquired
   }
 
-  func retryInputClaim(locationID: UInt32) async {
-    guard !hub.owns(locationID: locationID) else { return }
-    await primary.retryInputClaim(locationID: locationID)
+  func retryInputClaim(address: ControllerConnectionAddress) async {
+    guard !hub.owns(address) else { return }
+    await primary.retryInputClaim(address: address)
   }
 
   func routeElementValues(connection: HIDDeviceConnection) async {
-    guard !hub.owns(locationID: connection.routingLocationID) else { return }
+    guard !hub.owns(connection.routingAddress) else { return }
     await primary.routeElementValues(connection: connection)
   }
 
@@ -143,11 +145,20 @@ final class BluetoothLECompositeUSBTransportProvider: USBTransportProvider {
     _ device: USBTransportDevice,
     options: USBTransportOpenOptions
   ) async throws -> any USBTransportSession {
-    if hub.owns(locationID: device.locationID) {
-      return Switch2BluetoothLECommandSession(hub: hub, locationID: device.locationID)
-    }
     guard let base else { throw USBTransportError.notFound }
     return try await base.open(device, options: options)
+  }
+
+  func openCommandChannel(
+    at address: ControllerConnectionAddress,
+    model: ControllerModelID,
+    options: USBTransportOpenOptions
+  ) async throws -> any USBTransportSession {
+    if case .gattPeripheral(let peripheralID) = address, hub.owns(address) {
+      return Switch2BluetoothLECommandSession(hub: hub, peripheralID: peripheralID)
+    }
+    guard let base else { throw USBTransportError.notFound }
+    return try await base.openCommandChannel(at: address, model: model, options: options)
   }
 
   func resolveTransport(
@@ -183,11 +194,11 @@ final class BluetoothLECompositeUSBTransportProvider: USBTransportProvider {
 /// return command-reply notifications.
 final class Switch2BluetoothLECommandSession: USBTransportSession {
   private let hub: Switch2BluetoothLEHub
-  private let locationID: UInt32
+  private let peripheralID: UUID
 
-  init(hub: Switch2BluetoothLEHub, locationID: UInt32) {
+  init(hub: Switch2BluetoothLEHub, peripheralID: UUID) {
     self.hub = hub
-    self.locationID = locationID
+    self.peripheralID = peripheralID
   }
 
   var inputOwnership: HIDInputOwnership { .exclusive }
@@ -196,7 +207,7 @@ final class Switch2BluetoothLECommandSession: USBTransportSession {
     guard USBEndpointDirection(endpointAddress: endpoint) == .out else {
       throw USBTransportError.notSupported
     }
-    try hub.writeCommand(locationID: locationID, bytes: data)
+    try hub.writeCommand(peripheralID: peripheralID, bytes: data)
     return data.count
   }
 
@@ -205,7 +216,7 @@ final class Switch2BluetoothLECommandSession: USBTransportSession {
       throw USBTransportError.notSupported
     }
     return try await hub.readReply(
-      locationID: locationID,
+      peripheralID: peripheralID,
       length: length,
       timeoutMilliseconds: timeout
     )

@@ -2,7 +2,7 @@ extension RemappingEngineState {
   mutating func processAdvancedTrigger(
     _ source: RemappingTriggerSource,
     value: Float,
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     at uptime: UInt64
   ) -> [RemappingEngineAction] {
     guard var device = devices[identifier],
@@ -17,7 +17,7 @@ extension RemappingEngineState {
   }
 
   mutating func advanceTriggers(
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     at uptime: UInt64
   ) -> [RemappingEngineAction] {
     guard var device = devices[identifier] else { return [] }
@@ -43,7 +43,7 @@ extension RemappingEngineState {
   private mutating func applyTriggerChanges(
     _ changes: [RemappingTriggerStageChange],
     source: RemappingTriggerSource,
-    identifier: DeviceIdentifier,
+    identifier: LogicalControllerID,
     at uptime: UInt64
   ) -> [RemappingEngineAction] {
     var actions: [RemappingEngineAction] = []

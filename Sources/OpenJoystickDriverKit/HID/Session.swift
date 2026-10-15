@@ -55,12 +55,13 @@ public struct HIDDeviceConnectionSnapshot: Equatable, Sendable {
       guard presentDeviceIDs.contains(deviceID) else { return nil }
       return Self(
         connection: connection,
-        ownership: ownershipByLocation[connection.routingLocationID] ?? .unknown
+        ownership: connection.routingAddress.locationID.flatMap { ownershipByLocation[$0] }
+          ?? .unknown
       )
     }.sorted {
-      let leftLocation = $0.connection.routingLocationID
-      let rightLocation = $1.connection.routingLocationID
-      if leftLocation != rightLocation { return leftLocation < rightLocation }
+      let leftAddress = $0.connection.routingAddress
+      let rightAddress = $1.connection.routingAddress
+      if leftAddress != rightAddress { return leftAddress < rightAddress }
       return $0.connection.connectionID.uuidString < $1.connection.connectionID.uuidString
     }
   }
@@ -70,7 +71,7 @@ protocol HIDAccessBackend: Sendable {
   func deviceEvents() async -> AsyncStream<HIDDeviceEvent>
   func currentConnectionSnapshots() async -> [HIDDeviceConnectionSnapshot]?
   func setOutputReport(
-    locationID: UInt32,
+    address: ControllerConnectionAddress,
     report: PhysicalHIDOutputReport
   ) async -> PhysicalHIDReportResult<Void>
   func setOutputReport(
@@ -78,7 +79,7 @@ protocol HIDAccessBackend: Sendable {
     report: PhysicalHIDOutputReport
   ) async -> PhysicalHIDReportResult<Void>
   func setFeatureReport(
-    locationID: UInt32,
+    address: ControllerConnectionAddress,
     report: PhysicalHIDOutputReport
   ) async -> PhysicalHIDReportResult<Void>
   func setFeatureReport(
@@ -86,17 +87,17 @@ protocol HIDAccessBackend: Sendable {
     report: PhysicalHIDOutputReport
   ) async -> PhysicalHIDReportResult<Void>
   func getFeatureReport(
-    locationID: UInt32,
+    address: ControllerConnectionAddress,
     request: PhysicalHIDFeatureReadRequest
   ) async -> PhysicalHIDReportResult<Data>
   func getFeatureReport(
     connection: HIDDeviceConnection,
     request: PhysicalHIDFeatureReadRequest
   ) async -> PhysicalHIDReportResult<Data>
-  func releaseInputClaim(locationID: UInt32) async -> PhysicalHIDClaimResult
-  func reacquireInputClaim(locationID: UInt32) async -> PhysicalHIDClaimResult
-  /// Re-runs the seize of a location's devices whose earlier attempt was refused or failed.
-  func retryInputClaim(locationID: UInt32) async
+  func releaseInputClaim(address: ControllerConnectionAddress) async -> PhysicalHIDClaimResult
+  func reacquireInputClaim(address: ControllerConnectionAddress) async -> PhysicalHIDClaimResult
+  /// Re-runs the seize of an address's devices whose earlier attempt was refused or failed.
+  func retryInputClaim(address: ControllerConnectionAddress) async
   func routeElementValues(connection: HIDDeviceConnection) async
   /// Admits again each device of a model in `models` whose native pass-through changed with
   /// the current records, and returns the connections it admitted.
@@ -130,10 +131,11 @@ private final class IOHIDAccessBackend: HIDAccessBackend, Sendable {
   }
 
   func setOutputReport(
-    locationID: UInt32,
+    address: ControllerConnectionAddress,
     report: PhysicalHIDOutputReport
   ) -> PhysicalHIDReportResult<Void> {
-    stream.setOutputReport(locationID: locationID, report: report)
+    guard let locationID = address.locationID else { return .unavailable }
+    return stream.setOutputReport(locationID: locationID, report: report)
   }
 
   func setOutputReport(
@@ -144,10 +146,11 @@ private final class IOHIDAccessBackend: HIDAccessBackend, Sendable {
   }
 
   func setFeatureReport(
-    locationID: UInt32,
+    address: ControllerConnectionAddress,
     report: PhysicalHIDOutputReport
   ) -> PhysicalHIDReportResult<Void> {
-    stream.setFeatureReport(locationID: locationID, report: report)
+    guard let locationID = address.locationID else { return .unavailable }
+    return stream.setFeatureReport(locationID: locationID, report: report)
   }
 
   func setFeatureReport(
@@ -158,10 +161,11 @@ private final class IOHIDAccessBackend: HIDAccessBackend, Sendable {
   }
 
   func getFeatureReport(
-    locationID: UInt32,
+    address: ControllerConnectionAddress,
     request: PhysicalHIDFeatureReadRequest
   ) -> PhysicalHIDReportResult<Data> {
-    stream.getFeatureReport(locationID: locationID, request: request)
+    guard let locationID = address.locationID else { return .unavailable }
+    return stream.getFeatureReport(locationID: locationID, request: request)
   }
 
   func getFeatureReport(
@@ -174,15 +178,18 @@ private final class IOHIDAccessBackend: HIDAccessBackend, Sendable {
   // Seizes and closes run on main, where the manager's run loop removes devices: a device that
   // detaches mid-open must not lose its plug-in on another thread, and `retryInputClaim` yields to
   // the main-confined stream continuation.
-  func releaseInputClaim(locationID: UInt32) async -> PhysicalHIDClaimResult {
-    await MainActor.run { stream.releaseInputClaim(locationID: locationID) }
+  func releaseInputClaim(address: ControllerConnectionAddress) async -> PhysicalHIDClaimResult {
+    guard let locationID = address.locationID else { return .unavailable }
+    return await MainActor.run { stream.releaseInputClaim(locationID: locationID) }
   }
 
-  func reacquireInputClaim(locationID: UInt32) async -> PhysicalHIDClaimResult {
-    await MainActor.run { stream.reacquireInputClaim(locationID: locationID) }
+  func reacquireInputClaim(address: ControllerConnectionAddress) async -> PhysicalHIDClaimResult {
+    guard let locationID = address.locationID else { return .unavailable }
+    return await MainActor.run { stream.reacquireInputClaim(locationID: locationID) }
   }
 
-  func retryInputClaim(locationID: UInt32) async {
+  func retryInputClaim(address: ControllerConnectionAddress) async {
+    guard let locationID = address.locationID else { return }
     await MainActor.run { stream.retryInputClaim(locationID: locationID) }
   }
 
@@ -230,10 +237,10 @@ public final class HIDManager: Sendable {
   }
 
   public func setOutputReport(
-    locationID: UInt32,
+    address: ControllerConnectionAddress,
     report: PhysicalHIDOutputReport
   ) async -> PhysicalHIDReportResult<Void> {
-    await backend.setOutputReport(locationID: locationID, report: report)
+    await backend.setOutputReport(address: address, report: report)
   }
 
   /// Sends a report only to the exact connection lifetime previously observed by the backend.
@@ -246,10 +253,10 @@ public final class HIDManager: Sendable {
   }
 
   public func setFeatureReport(
-    locationID: UInt32,
+    address: ControllerConnectionAddress,
     report: PhysicalHIDOutputReport
   ) async -> PhysicalHIDReportResult<Void> {
-    await backend.setFeatureReport(locationID: locationID, report: report)
+    await backend.setFeatureReport(address: address, report: report)
   }
 
   /// Sends a feature report only to the exact connection lifetime previously observed by the
@@ -262,10 +269,10 @@ public final class HIDManager: Sendable {
   }
 
   public func getFeatureReport(
-    locationID: UInt32,
+    address: ControllerConnectionAddress,
     request: PhysicalHIDFeatureReadRequest
   ) async -> PhysicalHIDReportResult<Data> {
-    await backend.getFeatureReport(locationID: locationID, request: request)
+    await backend.getFeatureReport(address: address, request: request)
   }
 
   /// Reads a feature report only from the exact connection lifetime previously observed by the
@@ -277,16 +284,20 @@ public final class HIDManager: Sendable {
     await backend.getFeatureReport(connection: connection, request: request)
   }
 
-  public func releaseInputClaim(locationID: UInt32) async -> PhysicalHIDClaimResult {
-    await backend.releaseInputClaim(locationID: locationID)
+  public func releaseInputClaim(
+    address: ControllerConnectionAddress
+  ) async -> PhysicalHIDClaimResult {
+    await backend.releaseInputClaim(address: address)
   }
 
-  public func reacquireInputClaim(locationID: UInt32) async -> PhysicalHIDClaimResult {
-    await backend.reacquireInputClaim(locationID: locationID)
+  public func reacquireInputClaim(
+    address: ControllerConnectionAddress
+  ) async -> PhysicalHIDClaimResult {
+    await backend.reacquireInputClaim(address: address)
   }
 
-  public func retryInputClaim(locationID: UInt32) async {
-    await backend.retryInputClaim(locationID: locationID)
+  public func retryInputClaim(address: ControllerConnectionAddress) async {
+    await backend.retryInputClaim(address: address)
   }
 
   /// Delivers a connection's decoded element values, for a driver that parses them.

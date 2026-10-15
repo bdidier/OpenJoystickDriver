@@ -14,26 +14,26 @@ struct RemappingMotionCalibrationRoutingTests {
       try await harness.router.dispatchCausally(changes: [sample(0)], from: device)
     }
     let started = try await harness.router.motionCalibration(
-      for: first.runtimeIdentifier,
+      for: first,
       command: .start
     )
     #expect(started.isCollecting)
     try await harness.router.dispatchCausally(changes: [sample(1)], from: first)
-    let firstStatus = try await harness.router.motionCalibration(for: first.runtimeIdentifier)
-    let secondStatus = try await harness.router.motionCalibration(for: second.runtimeIdentifier)
+    let firstStatus = try await harness.router.motionCalibration(for: first)
+    let secondStatus = try await harness.router.motionCalibration(for: second)
     #expect(firstStatus.offsetDegreesPerSecond.y == 3)
     #expect(!secondStatus.isCollecting && secondStatus.offsetDegreesPerSecond.y == 0)
     let paused = try await harness.router.motionCalibration(
-      for: first.runtimeIdentifier,
+      for: first,
       command: .pause
     )
     #expect(!paused.isCollecting && paused.offsetDegreesPerSecond.y == 3)
     try await harness.router.stopController(first)
     await #expect(throws: RemappingMotionCalibrationError.controllerUnavailable) {
-      try await harness.router.motionCalibration(for: first.runtimeIdentifier, command: .start)
+      try await harness.router.motionCalibration(for: first, command: .start)
     }
     try await harness.router.dispatchCausally(changes: [sample(0)], from: first)
-    let reconnected = try await harness.router.motionCalibration(for: first.runtimeIdentifier)
+    let reconnected = try await harness.router.motionCalibration(for: first)
     #expect(reconnected.hasMotionBaseline && !reconnected.isCollecting)
     #expect(reconnected.offsetDegreesPerSecond.y == 0)
     try await harness.router.shutdown()

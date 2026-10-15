@@ -210,7 +210,7 @@ public struct PhysicalInterfaceSignature: Equatable, Sendable {
 
 /// One enumerated physical device with distinct, non-collapsed interface signatures.
 public struct PhysicalDevice: Equatable, Sendable {
-  public let serviceIdentity: USBTransportServiceIdentity?
+  public let serviceAddress: ControllerConnectionAddress?
   public let platformUniqueIdentifier: String?
   public let vendorID: UInt16?
   public let productID: UInt16?
@@ -233,7 +233,7 @@ public struct PhysicalDevice: Equatable, Sendable {
   public let nativePassThrough: Bool
 
   public init(
-    serviceIdentity: USBTransportServiceIdentity? = nil,
+    serviceAddress: ControllerConnectionAddress? = nil,
     platformUniqueIdentifier: String? = nil,
     vendorID: UInt16? = nil,
     productID: UInt16? = nil,
@@ -251,7 +251,7 @@ public struct PhysicalDevice: Equatable, Sendable {
     interfaces: [PhysicalInterfaceSignature]? = nil,
     nativePassThrough: Bool = false
   ) {
-    self.serviceIdentity = serviceIdentity
+    self.serviceAddress = serviceAddress
     self.platformUniqueIdentifier = platformUniqueIdentifier
     self.vendorID = vendorID
     self.productID = productID

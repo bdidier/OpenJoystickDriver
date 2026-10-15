@@ -3,7 +3,7 @@ import Foundation
 public struct RemappingDeviceScope: Codable, Equatable, Hashable, Sendable {
   public let vendorID: UInt16
   public let productID: UInt16
-  /// The one unit of the model the profile is for (see ``UnitIdentity``); nil for every unit.
+  /// The one unit of the model the profile is for (see ``ControllerPortKey``); nil for every unit.
   public let unit: String?
 
   public init(vendorID: UInt16, productID: UInt16, unit: String? = nil) {
@@ -24,11 +24,11 @@ public struct RemappingDeviceScope: Codable, Equatable, Hashable, Sendable {
     vendorID = try values.decode(UInt16.self, forKey: .vendorID)
     productID = try values.decode(UInt16.self, forKey: .productID)
     unit = try values.decodeIfPresent(String.self, forKey: .unit)
-    if let unit, !UnitIdentity.isWellFormed(unit) {
+    if let unit, ControllerPortKey(rawValue: unit) == nil {
       throw DecodingError.dataCorruptedError(
         forKey: .unit,
         in: values,
-        debugDescription: "A unit ID is U- and 16 base64url characters."
+        debugDescription: "A port key is U- and 16 base64url characters."
       )
     }
   }

@@ -99,19 +99,19 @@ public struct ApplicationServiceRemappingModelArguments: Codable, Sendable {
 }
 
 public struct ApplicationServiceJoyConPairArguments: Codable, Sendable {
-  public let leftRuntimeIdentifier: String
-  public let rightRuntimeIdentifier: String
+  public let left: ControllerReference
+  public let right: ControllerReference
   public let profileID: UUID
 
-  public init(leftRuntimeIdentifier: String, rightRuntimeIdentifier: String, profileID: UUID) {
-    self.leftRuntimeIdentifier = leftRuntimeIdentifier
-    self.rightRuntimeIdentifier = rightRuntimeIdentifier
+  public init(left: ControllerReference, right: ControllerReference, profileID: UUID) {
+    self.left = left
+    self.right = right
     self.profileID = profileID
   }
 
   private enum CodingKeys: String, CodingKey {
-    case leftRuntimeIdentifier
-    case rightRuntimeIdentifier
+    case left
+    case right
     case profileID
   }
 }
@@ -126,23 +126,25 @@ public struct ApplicationServiceJoyConUnpairArguments: Codable, Sendable {
 
 public struct ApplicationServiceJoyConPairPayload: Codable, Equatable, Sendable {
   public let sessionID: UUID
-  public let leftRuntimeIdentifier: String
-  public let rightRuntimeIdentifier: String
+  /// The session token of the left Joy-Con.
+  public let left: ControllerSessionToken
+  /// The session token of the right Joy-Con.
+  public let right: ControllerSessionToken
   public let profileID: UUID
   public let profileName: String
   public let gyroSelection: RemappingJoyConGyroSelection
 
   public init(
     sessionID: UUID,
-    leftRuntimeIdentifier: String,
-    rightRuntimeIdentifier: String,
+    left: ControllerSessionToken,
+    right: ControllerSessionToken,
     profileID: UUID,
     profileName: String,
     gyroSelection: RemappingJoyConGyroSelection
   ) {
     self.sessionID = sessionID
-    self.leftRuntimeIdentifier = leftRuntimeIdentifier
-    self.rightRuntimeIdentifier = rightRuntimeIdentifier
+    self.left = left
+    self.right = right
     self.profileID = profileID
     self.profileName = profileName
     self.gyroSelection = gyroSelection
@@ -150,8 +152,8 @@ public struct ApplicationServiceJoyConPairPayload: Codable, Equatable, Sendable 
 
   private enum CodingKeys: String, CodingKey {
     case sessionID
-    case leftRuntimeIdentifier
-    case rightRuntimeIdentifier
+    case left
+    case right
     case profileID
     case profileName
     case gyroSelection
@@ -229,7 +231,8 @@ public struct ApplicationServiceRemappingFailurePayload: Codable, Equatable, Sen
 public struct ApplicationServiceRemappingRoutePayload: Codable, Equatable, Sendable {
   public let vendorID: UInt16
   public let productID: UInt16
-  public let runtimeIdentifier: String
+  /// The session token of the routed controller.
+  public let sessionToken: ControllerSessionToken
   public let selection: ApplicationServiceRemappingRouteSelection
   public let eligibility: ApplicationServiceRemappingRouteEligibility
   public let activeProfileID: UUID?
@@ -242,7 +245,7 @@ public struct ApplicationServiceRemappingRoutePayload: Codable, Equatable, Senda
   public init(
     vendorID: UInt16,
     productID: UInt16,
-    runtimeIdentifier: String,
+    sessionToken: ControllerSessionToken,
     selection: ApplicationServiceRemappingRouteSelection,
     eligibility: ApplicationServiceRemappingRouteEligibility,
     activeProfileID: UUID?,
@@ -254,7 +257,7 @@ public struct ApplicationServiceRemappingRoutePayload: Codable, Equatable, Senda
   ) {
     self.vendorID = vendorID
     self.productID = productID
-    self.runtimeIdentifier = runtimeIdentifier
+    self.sessionToken = sessionToken
     self.selection = selection
     self.eligibility = eligibility
     self.activeProfileID = activeProfileID
@@ -268,7 +271,7 @@ public struct ApplicationServiceRemappingRoutePayload: Codable, Equatable, Senda
   private enum CodingKeys: String, CodingKey {
     case vendorID
     case productID
-    case runtimeIdentifier
+    case sessionToken
     case selection
     case eligibility
     case activeProfileID

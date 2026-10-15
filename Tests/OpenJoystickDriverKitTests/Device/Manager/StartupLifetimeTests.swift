@@ -72,11 +72,11 @@ struct StartupLifetimeTests {
         physicalLocationIdentifier: 84,
         interfaces: [steamHIDInterface(number: 2)]
       ),
-      routingLocationID: 84
+      routingAddress: .ioKit(locationID: 84, interfaceNumber: nil)
     )
     let overlappingConnection = HIDDeviceConnection(
       physicalDevice: oldConnection.physicalDevice,
-      routingLocationID: oldConnection.routingLocationID
+      routingAddress: oldConnection.routingAddress
     )
     await backend.setConnectionSnapshots([
       HIDDeviceConnectionSnapshot(connection: oldConnection, ownership: .exclusive),
@@ -84,7 +84,7 @@ struct StartupLifetimeTests {
     ])
     await backend.enableFeatureReports()
     await manager.handleHIDEvent(.connected(connection: oldConnection, ownership: .exclusive))
-    let identifier = try #require(await manager.connectedDeviceIdentifiers().first)
+    let identifier = try #require(await manager.connectedLogicalControllerIDs().first)
     #expect(
       await manager.sendOutputForTest(
         .setLightBrightness(UnipolarValue(byte: 128)),
@@ -147,7 +147,7 @@ struct StartupLifetimeTests {
         physicalLocationIdentifier: 80,
         interfaces: [hostHIDInterface(.bluetoothClassic)]
       ),
-      routingLocationID: 80
+      routingAddress: .ioKit(locationID: 80, interfaceNumber: nil)
     )
     await manager.scheduleHIDDeviceInitialization(connection: connection, ownership: .exclusive)
 
@@ -175,7 +175,7 @@ struct StartupLifetimeTests {
     await manager.handleHIDEvent(.disconnected(connection: oldConnection))
     try await Task.sleep(nanoseconds: 400_000_000)
 
-    let identifier = DeviceIdentifier(
+    let identifier = LogicalControllerID(
       vendorID: 0x057E,
       productID: 0x2009,
       serialNumber: "same-device",
@@ -201,7 +201,7 @@ struct StartupLifetimeTests {
       id: "00000000-0000-0000-0000-000000000004",
       productName: "Reconnected controller"
     )
-    let identifier = DeviceIdentifier(
+    let identifier = LogicalControllerID(
       vendorID: 0x057E,
       productID: 0x2009,
       serialNumber: "same-device",
@@ -218,6 +218,26 @@ struct StartupLifetimeTests {
     await manager.handleHIDEvent(.disconnected(connection: newConnection))
     #expect(await manager.deviceInfos[identifier] == nil)
     #expect(await manager.pipelines[identifier] == nil)
+    await manager.stop()
+  }
+
+  @Test
+  func aReconnectKeepsTheLogicalControllerIDAndGetsANewSessionToken() async throws {
+    let manager = DeviceManager(dispatcher: LoggingOutputDispatcher())
+    let connection = hidConnection(
+      id: "00000000-0000-0000-0000-000000000006",
+      productName: "Reconnecting controller"
+    )
+
+    await manager.handleHIDEvent(.connected(connection: connection, ownership: .exclusive))
+    let first = try #require(await manager.connectedControllers().first)
+    await manager.handleHIDEvent(.disconnected(connection: connection))
+    await manager.handleHIDEvent(.connected(connection: connection, ownership: .exclusive))
+    let second = try #require(await manager.connectedControllers().first)
+
+    #expect(second.logicalControllerID == first.logicalControllerID)
+    #expect(second.sessionToken != first.sessionToken)
+    #expect(await manager.connectedIdentifier(for: .session(first.sessionToken)) == nil)
     await manager.stop()
   }
 

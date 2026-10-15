@@ -16,12 +16,12 @@
             Picker(
               OJDLocalized.string("developer.controller"),
               selection: Binding(
-                get: { model.selectedDevice?.runtimeIdentifier ?? "" },
-                set: { model.selectDevice(runtimeIdentifier: $0) }
+                get: { model.selectedDevice?.sessionToken.rawValue ?? "" },
+                set: { model.selectDevice(sessionToken: $0) }
               )
             ) {
-              ForEach(model.devices, id: \.runtimeIdentifier) { device in
-                Text(device.name).tag(device.runtimeIdentifier)
+              ForEach(model.devices, id: \.sessionToken) { device in
+                Text(device.name).tag(device.sessionToken.rawValue)
               }
             }.labelsHidden().frame(maxWidth: 360)
             Spacer()

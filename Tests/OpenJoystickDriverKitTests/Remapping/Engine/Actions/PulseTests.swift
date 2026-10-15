@@ -94,7 +94,7 @@ struct RemappingPulseTests {
     )
   }
 
-  private func device() -> DeviceIdentifier {
-    DeviceIdentifier(vendorID: 1, productID: 2, locationID: 1)
+  private func device() -> LogicalControllerID {
+    LogicalControllerID(vendorID: 1, productID: 2, locationID: 1)
   }
 }

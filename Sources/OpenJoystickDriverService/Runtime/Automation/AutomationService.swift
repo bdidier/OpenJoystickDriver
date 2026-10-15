@@ -20,8 +20,8 @@ package protocol AutomationService: Sendable {
 
 /// A connected controller as Shortcuts shows it.
 package struct AutomationController: Equatable, Sendable {
-  /// The unit ID, which lasts while the controller stays on the same port, or the runtime ID
-  /// when the controller reports no unit ID; for a match by model, the `VVVV:PPPP` text itself.
+  /// The port key, which lasts while the controller stays on the same port, or the session token
+  /// when the controller has no port key; for a match by model, the `VVVV:PPPP` text itself.
   package let id: String
   package let name: String
   /// `VVVV:PPPP`, the vendor and product ID as `ojd` prints them.
@@ -32,7 +32,7 @@ package struct AutomationController: Equatable, Sendable {
   package let battery: ClosedRange<UInt8>?
 
   package init(_ device: ApplicationServiceDeviceDescription) {
-    id = device.unitIdentifier ?? device.runtimeIdentifier
+    id = device.portKey?.rawValue ?? device.sessionToken.rawValue
     name = device.name
     model = automationModel(vendorID: device.vendorID, productID: device.productID)
     isModelMatch = false
@@ -100,19 +100,17 @@ extension AutomationService {
 
   /// The connected controllers that `ids` name, in the order of `ids`.
   ///
-  /// An ID matches a unit ID or a runtime ID, so an ID saved before the controller had a unit ID
-  /// still resolves. An ID in the form `VVVV:PPPP` matches the one connected controller of that
-  /// model, as in `ojd`. IDs that match no connected controller are left out.
+  /// Each ID is a ``ControllerReference``: a port key, a session token, or a `VVVV:PPPP` model,
+  /// which matches the one connected controller of that model, as in `ojd`. IDs that match no
+  /// connected controller are left out.
   ///
   /// - Throws: ``AutomationAmbiguousModelError`` when a model matches several controllers.
   package func controllers(ids: [String]) async throws -> [AutomationController] {
     let devices = await connectedDevices()
     return try ids.compactMap { id in
-      if let device = ControllerSelection.id(id).matches(in: devices).first {
-        return AutomationController(device)
-      }
-      guard let model = ControllerSelection(id), case .model = model else { return nil }
-      let matches = model.matches(in: devices)
+      guard let reference = ControllerReference(id) else { return nil }
+      let matches = reference.matches(in: devices)
+      guard case .model = reference else { return matches.first.map(AutomationController.init) }
       guard matches.count <= 1 else {
         throw AutomationAmbiguousModelError(
           model: id,

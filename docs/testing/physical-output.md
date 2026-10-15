@@ -11,21 +11,19 @@ ojd controller list
 ojd controller show 3537:1010
 ```
 
-The selector uses the GameSir G7 SE `VVVV:PPPP` as an example. Replace it with the hexadecimal vendor and product ID of the connected controller, or with the ID printed by `ojd controller list`. `VVVV:PPPP` is enough when one matching controller is connected. If identical models are connected, a `VVVV:PPPP` selector is rejected and the error lists them; use the ID from `ojd controller list` in `show` and every output command.
+The selector uses the GameSir G7 SE `VVVV:PPPP` as an example. Replace it with the hexadecimal vendor and product ID of the connected controller, or with the session token (`E-…`) or port key (`U-…`) printed by `ojd controller list`. `VVVV:PPPP` is enough when one matching controller is connected. If identical models are connected, a `VVVV:PPPP` selector is rejected and the error lists them; use the session token or port key in `show` and every output command.
 
-The ID is valid only for the current runtime session. Do not record it as hardware evidence.
+The session token lasts until the controller disconnects, and the port key lasts while the controller stays on the same port. Do not record either as hardware evidence.
 
 The `controller` output commands depend on the device capabilities. `rumble`, `player`, and `light` each send one output command to the app, which decides support: a controller without the capability fails with a "has no ..." message that points at `ojd controller show`. `rumble` applies the channels the controller has and warns about each requested trigger motor it lacks (for example `--left-trigger` on a DualShock 4), then exits successfully; when the controller has none of the requested channels, it fails with that message instead. The main motors are mirrored onto the Steam Controller trackpad haptics. The command returns as soon as the app accepts it, and the app stops the rumble when `--duration` ends; an all-zero request is a stop. `ojd controller show` prints the same generated validation steps in its Output checks section. A redacted support report lists each connected device's output capabilities but not the generated steps.
 
 ## Output Command Request
 
-The CLI and the GUI send each output through the app's `sendControllerOutput` application-service request. Its arguments select one connected controller and carry one command:
+The CLI and the GUI send each output through the app's `sendControllerOutput` application-service request. Its arguments select one connected controller by its session token, port key, or `VVVV:PPPP`, and carry one command:
 
 ```json
 {
-  "vendorID": 1356,
-  "productID": 2508,
-  "runtimeIdentifier": null,
+  "controller": "054C:09CC",
   "command": {
     "type": "set-rumble",
     "intensities": {

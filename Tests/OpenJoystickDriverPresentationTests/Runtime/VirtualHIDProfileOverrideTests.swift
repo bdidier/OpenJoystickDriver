@@ -10,7 +10,7 @@ struct VirtualHIDProfileOverrideTests {
   private static let model = RuntimeControllerModel(vendorID: 0x1234, productID: 0x5678)
 
   private static func device(
-    runtimeIdentifier: String = "session-device-override",
+    sessionToken: String = "device-override",
     profile: ApplicationServiceVirtualHIDProfileStatus? = nil,
     protocolBinding: ProtocolBindingID = ProtocolBindingID(.hidDescriptor),
     ownership: ControllerOwnershipObservation = .unknown
@@ -25,7 +25,7 @@ struct VirtualHIDProfileOverrideTests {
       physicalOwnership: ownership,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
-      runtimeIdentifier: runtimeIdentifier
+      sessionToken: .fixture(sessionToken)
     )
     device.virtualHIDProfile = profile
     return device
@@ -56,11 +56,7 @@ struct VirtualHIDProfileOverrideTests {
     #expect(requests.first?.profile == .generic)
     #expect(
       requests.first?.selector
-        == RuntimeDeviceSelector(
-          vendorID: 0x1234,
-          productID: 0x5678,
-          runtimeIdentifier: "session-device-override"
-        )
+        == ControllerReference.session(.fixture("device-override"))
     )
     #expect(viewModel.virtualHIDProfileOverrideStates[Self.model] == nil)
     #expect(await gateway.statusCallCount == 1)
@@ -165,8 +161,8 @@ struct VirtualHIDProfileOverrideTests {
     let gateway = GatewayStub(overrideFailure: .controllerNotFound)
     await gateway.gateOverrideRequests()
     let viewModel = RuntimeViewModel(gateway: gateway)
-    let first = Self.device(runtimeIdentifier: "pad-1")
-    let second = Self.device(runtimeIdentifier: "pad-2")
+    let first = Self.device(sessionToken: "pad-1")
+    let second = Self.device(sessionToken: "pad-2")
 
     let request = Task { await viewModel.setVirtualHIDProfileOverride(nil, for: first) }
     while await gateway.overrideRequests.isEmpty { await Task.yield() }
@@ -292,7 +288,7 @@ struct VirtualHIDProfileOverrideTests {
       physicalOwnership: .nativeGamepad,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
-      runtimeIdentifier: "session-native"
+      sessionToken: .fixture("session-native")
     )
     sixaxis.virtualHIDProfile = ApplicationServiceVirtualHIDProfileStatus(
       profile: .xboxOneSBluetooth,

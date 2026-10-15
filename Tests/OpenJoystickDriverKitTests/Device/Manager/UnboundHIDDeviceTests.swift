@@ -175,7 +175,7 @@ struct UnboundHIDDeviceTests {
         physicalLocationIdentifier: locationID,
         interfaces: [interface]
       ),
-      routingLocationID: locationID
+      routingAddress: .ioKit(locationID: locationID, interfaceNumber: nil)
     )
   }
 }

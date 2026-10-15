@@ -28,7 +28,7 @@ public enum RemappingMotionCalibrationRefusal: Error, Equatable, Sendable {
 
 extension RemappingEngineState {
   func motionCalibrationStatus(
-    for identifier: DeviceIdentifier
+    for identifier: LogicalControllerID
   ) -> RemappingMotionCalibrationStatus? {
     guard let motion = devices[identifier]?.motion else { return nil }
     return RemappingMotionCalibrationStatus(
@@ -40,7 +40,7 @@ extension RemappingEngineState {
 
   mutating func calibrateMotion(
     _ command: RemappingMotionCalibrationCommand,
-    for identifier: DeviceIdentifier
+    for identifier: LogicalControllerID
   ) throws -> RemappingMotionCalibrationStatus {
     guard var device = devices[identifier] else {
       throw RemappingMotionCalibrationError.controllerUnavailable

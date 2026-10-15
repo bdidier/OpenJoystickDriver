@@ -7,14 +7,14 @@ import Testing
 extension VirtualOutputTests {
   @Test
   func unrelatedControllerStopLeavesOtherControllerUsable() async {
-    let first = DeviceIdentifier(vendorID: 0x3537, productID: 0x1010)
-    let second = DeviceIdentifier(vendorID: 0x3537, productID: 0x1011)
+    let first = LogicalControllerID(vendorID: 0x3537, productID: 0x1010)
+    let second = LogicalControllerID(vendorID: 0x3537, productID: 0x1011)
     let probe = ConcurrentFactoryProbe()
     let dispatcher = AutomaticUserSpaceOutputDispatcher(
       deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),
       ownershipProvider: { _ in .exclusiveRawUSB },
       builder: { _ in probe.make() },
-      descriptionsProvider: provider([description(first), description(second)])
+      descriptionsProvider: provider([first, second])
     )
     await dispatcher.activateOutput(for: second)
     await dispatcher.controllerDidStop(first)
@@ -26,13 +26,13 @@ extension VirtualOutputTests {
   /// System sleep stops every controller session, and wake starts the same controller again.
   @Test
   func sameControllerPublishesAgainAfterItsSessionStops() async {
-    let id = DeviceIdentifier(vendorID: 0x3537, productID: 0x1010, locationID: 0x0013_0000)
+    let id = LogicalControllerID(vendorID: 0x3537, productID: 0x1010, locationID: 0x0013_0000)
     let log = AutomaticProfileLog()
     let dispatcher = AutomaticUserSpaceOutputDispatcher(
       deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),
       ownershipProvider: { _ in .exclusiveRawUSB },
       builder: { log.record($0) },
-      descriptionsProvider: provider([description(id)])
+      descriptionsProvider: provider([id])
     )
     await dispatcher.activateOutput(for: id)
     await dispatcher.controllerDidStop(id)
@@ -44,7 +44,7 @@ extension VirtualOutputTests {
 
   @Test
   func stoppingDuringAnInFlightDescriptionLookupDoesNotRepopulateItsCache() async {
-    let id = DeviceIdentifier(vendorID: 0x3537, productID: 0x1010)
+    let id = LogicalControllerID(vendorID: 0x3537, productID: 0x1010)
     let deviceDescription = description(id)
     let gate = DescriptionLookupGate()
     let probe = ConcurrentFactoryProbe()
@@ -55,7 +55,7 @@ extension VirtualOutputTests {
       descriptionsProvider: {
         await gate.recordLookup()
         await gate.waitForRelease()
-        return [deviceDescription]
+        return [id: deviceDescription]
       }
     )
     let activation = Task { await dispatcher.activateOutput(for: id) }
@@ -73,14 +73,14 @@ extension VirtualOutputTests {
 
   @Test
   func automaticBuildsTheXboxProfileForTheXboxLayout() async {
-    let id = DeviceIdentifier(vendorID: 0x045E, productID: 0x0B12)
+    let id = LogicalControllerID(vendorID: 0x045E, productID: 0x0B12)
     let log = AutomaticProfileLog()
     let dispatcher = AutomaticUserSpaceOutputDispatcher(
       deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),
       ownershipProvider: { _ in .exclusiveRawUSB },
       builder: { log.record($0) },
       descriptionsProvider: provider([
-        description(id, binding: ProtocolBindingID(.xboxGIP, variant: .usb))
+        id: description(id, binding: ProtocolBindingID(.xboxGIP, variant: .usb))
       ])
     )
     await dispatcher.activateOutput(for: id)
@@ -90,16 +90,16 @@ extension VirtualOutputTests {
 
   @Test
   func automaticProfileIgnoresTheProtocolBinding() async {
-    let gip = DeviceIdentifier(vendorID: 0x045E, productID: 0x0B12)
-    let sony = DeviceIdentifier(vendorID: 0x054C, productID: 0x09CC)
+    let gip = LogicalControllerID(vendorID: 0x045E, productID: 0x0B12)
+    let sony = LogicalControllerID(vendorID: 0x054C, productID: 0x09CC)
     let log = AutomaticProfileLog()
     let dispatcher = AutomaticUserSpaceOutputDispatcher(
       deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),
       ownershipProvider: { _ in .exclusiveRawUSB },
       builder: { log.record($0) },
       descriptionsProvider: provider([
-        description(gip, binding: ProtocolBindingID(.xboxGIP, variant: .usb)),
-        description(sony, binding: ProtocolBindingID(.sonyDualShock4, variant: .usb)),
+        gip: description(gip, binding: ProtocolBindingID(.xboxGIP, variant: .usb)),
+        sony: description(sony, binding: ProtocolBindingID(.sonyDualShock4, variant: .usb)),
       ])
     )
     await dispatcher.activateOutput(for: gip)
@@ -112,14 +112,14 @@ extension VirtualOutputTests {
 
   @Test
   func automaticStatusNamesTheInstalledProfile() async {
-    let id = DeviceIdentifier(vendorID: 0x045E, productID: 0x0B12)
+    let id = LogicalControllerID(vendorID: 0x045E, productID: 0x0B12)
     let log = AutomaticProfileLog()
     let dispatcher = AutomaticUserSpaceOutputDispatcher(
       deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),
       ownershipProvider: { _ in .exclusiveRawUSB },
       builder: { log.record($0) },
       descriptionsProvider: provider([
-        description(id, binding: ProtocolBindingID(.xboxGIP, variant: .usb))
+        id: description(id, binding: ProtocolBindingID(.xboxGIP, variant: .usb))
       ])
     )
     await dispatcher.activateOutput(for: id)
@@ -130,13 +130,13 @@ extension VirtualOutputTests {
 
   @Test
   func repeatedDispatchReusesTheBackendUntilControllerStops() async {
-    let id = DeviceIdentifier(vendorID: 0x3537, productID: 0x1010)
+    let id = LogicalControllerID(vendorID: 0x3537, productID: 0x1010)
     let probe = ConcurrentFactoryProbe()
     let dispatcher = AutomaticUserSpaceOutputDispatcher(
       deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),
       ownershipProvider: { _ in .exclusiveRawUSB },
       builder: { _ in probe.make() },
-      descriptionsProvider: provider([description(id)])
+      descriptionsProvider: provider([id])
     )
     await dispatcher.activateOutput(for: id)
     await dispatcher.activateOutput(for: id)
@@ -152,13 +152,13 @@ extension VirtualOutputTests {
   @Test
   func coalescingStressRunsTwentyFiveIterations() async {
     for _ in 0..<25 {
-      let id = DeviceIdentifier(vendorID: 0x3537, productID: 0x1010)
+      let id = LogicalControllerID(vendorID: 0x3537, productID: 0x1010)
       let probe = ConcurrentFactoryProbe()
       let dispatcher = AutomaticUserSpaceOutputDispatcher(
         deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),
         ownershipProvider: { _ in .exclusiveRawUSB },
         builder: { _ in probe.make() },
-        descriptionsProvider: provider([description(id)])
+        descriptionsProvider: provider([id])
       )
       await dispatcher.activateOutput(for: id)
       #expect(probe.snapshot().0 == 1)

@@ -4,19 +4,19 @@ extension DeviceManager {
   func handleHIDDeviceConnected(connection: HIDDeviceConnection, ownership: HIDInputOwnership) async
   {
     let physicalDevice = connection.physicalDevice
-    let routingLocationID = connection.routingLocationID
+    let routingAddress = connection.routingAddress
     guard !Task.isCancelled, !isStopping else { return }
     guard let vendorID = physicalDevice.vendorID else {
       print(
         "[DeviceManager] Skipping HID device without an observed vendor ID"
-          + " at route loc=\(routingLocationID)"
+          + " at route route=\(routingAddress)"
       )
       return
     }
     guard let productID = physicalDevice.productID else {
       print(
         "[DeviceManager] Skipping HID device without an observed product ID"
-          + " at route loc=\(routingLocationID)"
+          + " at route route=\(routingAddress)"
       )
       return
     }
@@ -27,10 +27,10 @@ extension DeviceManager {
     if physicalDevice.nativePassThrough {
       await yieldRawUSBPipelines(toNative: identifier)
       await prepareNativeHIDLocation(connection)
-    } else if hasNativeHIDDevice(atLocation: routingLocationID) {
+    } else if hasNativeHIDDevice(at: routingAddress) {
       guard isCurrentHIDInitialization(connection) else { return }
       recordPassThroughDevice(connection, vendorID: vendorID, productID: productID)
-      _ = await hidManager.releaseInputClaim(locationID: routingLocationID)
+      _ = await hidManager.releaseInputClaim(address: routingAddress)
       return
     }
     // A family's non-role interface carries no controller; its claim is held while a sibling
@@ -47,12 +47,12 @@ extension DeviceManager {
 
     if let existingPipeline = pipelines[identifier] {
       guard let existingInfo = deviceInfos[identifier] else {
-        await updateHIDOwnership(ownership, locationID: routingLocationID)
+        await updateHIDOwnership(ownership, address: routingAddress)
         return
       }
       if case .hid = existingInfo.discoverySource {
         guard existingInfo.hidConnectionID != connection.connectionID else {
-          await updateHIDOwnership(ownership, locationID: routingLocationID)
+          await updateHIDOwnership(ownership, address: routingAddress)
           return
         }
         let existingOutputQueue = hidOutputQueues[identifier]
@@ -164,13 +164,13 @@ extension DeviceManager {
 
     let name = controllerDisplayName(
       productName: physicalDevice.productName,
-      vendorID: identifier.controllerIdentity.vendorID,
-      productID: identifier.controllerIdentity.productID
+      vendorID: identifier.model.vendorID,
+      productID: identifier.model.productID
     )
     deviceInfos[identifier] = DeviceInfo(
       name: name,
       connection: connectionName,
-      serialNumber: identifier.controllerIdentity.serialNumber,
+      serialNumber: identifier.hardware.serialNumber,
       discoverySource: .hid,
       binding: binding,
       hidInputOwnership: ownership,
@@ -182,7 +182,7 @@ extension DeviceManager {
       deviceInfos.removeValue(forKey: identifier)
       return
     }
-    await updateHIDOwnership(ownership, locationID: routingLocationID)
+    await updateHIDOwnership(ownership, address: routingAddress)
     guard !Task.isCancelled, deviceInfos[identifier]?.hidConnectionID == connection.connectionID,
       pipelines[identifier] == nil
     else { return }
@@ -190,7 +190,7 @@ extension DeviceManager {
     let plan = driver.sessionPlan
     let pipeline = DevicePipeline(
       identifier: identifier,
-      transport: .hid(locationID: routingLocationID),
+      transport: .hid(address: routingAddress),
       driver: driver,
       dispatcher: dispatcher,
       binding: binding,
@@ -258,7 +258,7 @@ extension DeviceManager {
     }
     if requiresSuccessfulStartupOutput {
       guard startupOutputSucceeded else {
-        print("[DeviceManager] Required HID startup output failed for loc=\(routingLocationID)")
+        print("[DeviceManager] Required HID startup output failed for route=\(routingAddress)")
         return
       }
       await pipeline.setExternalOutputAllowed(externalOutputAllowed)
@@ -285,12 +285,12 @@ extension DeviceManager {
   }
 
   func scheduleHIDPeriodicOutput(
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     pipeline: DevicePipeline,
     connection: HIDDeviceConnection
   ) {
     guard isCurrentHIDStartupConnection(pipeline, connection: connection) else { return }
-    let locationID = connection.routingLocationID
+    let address = connection.routingAddress
     hidPeriodicOutputTasks.removeValue(forKey: identifier)?.cancel()
     hidPeriodicOutputTasks[identifier] = Task { [weak self] in
       guard let self else { return }
@@ -307,11 +307,11 @@ extension DeviceManager {
         else { return }
         if !(await self.sendHIDWrites(
           keepAlive.writes,
-          locationID: locationID,
+          address: address,
           identifier: identifier,
           pipeline: pipeline
         )) {
-          print("[DeviceManager] HID periodic output failed for loc=\(locationID)")
+          print("[DeviceManager] HID periodic output failed for route=\(address)")
         }
       }
     }

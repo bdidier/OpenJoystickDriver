@@ -7,8 +7,9 @@ extension UserSpaceOutputDispatcherLifecycleTests {
   @Test
   func activationCreationFailureClosesPartialDevicesForEveryFailurePosition() async {
     let identifiers = [
-      DeviceIdentifier(vendorID: 1, productID: 2), DeviceIdentifier(vendorID: 3, productID: 4),
-      DeviceIdentifier(vendorID: 5, productID: 6),
+      LogicalControllerID(vendorID: 1, productID: 2),
+      LogicalControllerID(vendorID: 3, productID: 4),
+      LogicalControllerID(vendorID: 5, productID: 6),
     ]
     for failureIndex in identifiers.indices {
       let created = LockedBackends()
@@ -36,7 +37,7 @@ extension UserSpaceOutputDispatcherLifecycleTests {
     let dispatcher = UserSpaceOutputDispatcher { _ in backend }
 
     do {
-      try await dispatcher.activate(for: [DeviceIdentifier(vendorID: 1, productID: 2)])
+      try await dispatcher.activate(for: [LogicalControllerID(vendorID: 1, productID: 2)])
       Issue.record("Activation unexpectedly succeeded")
     } catch is UserSpaceDispatcherTestBackend.SendFailure {
       #expect(backend.counts().close == 1)
@@ -52,7 +53,7 @@ extension UserSpaceOutputDispatcherLifecycleTests {
     let dispatchTask = Task {
       await dispatcher.dispatch(
         changes: [.press(.faceSouth)],
-        from: DeviceIdentifier(vendorID: 1, productID: 2)
+        from: LogicalControllerID(vendorID: 1, productID: 2)
       )
     }
     await sendGate.waitUntilWaiting()
@@ -76,7 +77,7 @@ extension UserSpaceOutputDispatcherLifecycleTests {
       await creationGate.wait()
       return backend
     }
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2)
 
     let dispatchTask = Task { await dispatcher.activateOutput(for: identifier) }
     await creationGate.waitUntilWaiting()
@@ -101,7 +102,7 @@ extension UserSpaceOutputDispatcherLifecycleTests {
       testBackendFactory: { _ in backend },
       onControllerDidStop: { _ in if backend.counts().close == 1 { _ = observedCloseCount.next() } }
     )
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2)
 
     try await dispatcher.activate(for: [identifier])
     await dispatcher.controllerDidStop(identifier)
@@ -126,7 +127,7 @@ extension UserSpaceOutputDispatcherLifecycleTests {
         if backend.counts().close == 1 { _ = callbackCloseCount.next() }
       }
     )
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2)
 
     let dispatchTask = Task { await dispatcher.activateOutput(for: identifier) }
     await creationGate.waitUntilWaiting()
@@ -162,7 +163,7 @@ extension UserSpaceOutputDispatcherLifecycleTests {
     let backend = UserSpaceDispatcherTestBackend()
     let format = ContinuitySnapshotReportFormat()
     let dispatcher = UserSpaceOutputDispatcher(testBackendFactory: { _ in backend }, format: format)
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2)
 
     for (stage, event) in [pressed, heldWith, released, later].enumerated() {
       await dispatcher.dispatch(changes: [event], from: identifier)

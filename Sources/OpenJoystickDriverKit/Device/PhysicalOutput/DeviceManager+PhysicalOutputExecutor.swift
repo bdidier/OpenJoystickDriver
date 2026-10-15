@@ -2,7 +2,7 @@ import Foundation
 
 extension DeviceManager {
   /// The output queue of the interface `identifier` names, created on first use.
-  func physicalOutputQueue(for identifier: DeviceIdentifier) -> PhysicalHIDOutputSerialQueue {
+  func physicalOutputQueue(for identifier: LogicalControllerID) -> PhysicalHIDOutputSerialQueue {
     if let queue = hidOutputQueues[identifier] { return queue }
     let queue = PhysicalHIDOutputSerialQueue(
       after: retiredHIDOutputQueues.removeValue(forKey: identifier)
@@ -15,7 +15,7 @@ extension DeviceManager {
   /// (any queue when nil). An operation may still be running on it, so the next queue created for
   /// the interface waits until it drains.
   func retireOutputQueue(
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     expected: PhysicalHIDOutputSerialQueue? = nil
   ) {
     guard let queue = hidOutputQueues[identifier], expected.map({ $0 === queue }) ?? true else {
@@ -35,8 +35,8 @@ extension DeviceManager {
   func sendHIDWrites(
     _ writes: [PhysicalOutputWrite],
     intervalNanoseconds: UInt64 = 0,
-    locationID: UInt32,
-    identifier: DeviceIdentifier,
+    address: ControllerConnectionAddress,
+    identifier: LogicalControllerID,
     pipeline: DevicePipeline,
     startupConnection: HIDDeviceConnection? = nil,
     detachedInfo: DeviceInfo? = nil
@@ -54,7 +54,7 @@ extension DeviceManager {
       return await self.performHIDWrites(
         writes,
         intervalNanoseconds: intervalNanoseconds,
-        locationID: locationID,
+        address: address,
         identifier: identifier,
         pipeline: pipeline,
         startupConnection: startupConnection,
@@ -68,8 +68,8 @@ extension DeviceManager {
   private func performHIDWrites(
     _ writes: [PhysicalOutputWrite],
     intervalNanoseconds: UInt64,
-    locationID: UInt32,
-    identifier: DeviceIdentifier,
+    address: ControllerConnectionAddress,
+    identifier: LogicalControllerID,
     pipeline: DevicePipeline,
     startupConnection: HIDDeviceConnection?,
     detachedInfo: DeviceInfo?,
@@ -96,7 +96,7 @@ extension DeviceManager {
         sent = await performHIDOutputPlan(
           reports,
           intervalNanoseconds: intervalNanoseconds,
-          locationID: locationID,
+          address: address,
           identifier: identifier,
           pipeline: pipeline,
           startupConnection: startupConnection,
@@ -111,7 +111,7 @@ extension DeviceManager {
         }
         sent = await performHIDFeatureReports(
           reports,
-          locationID: locationID,
+          address: address,
           identifier: identifier,
           pipeline: pipeline,
           startupConnection: startupConnection,
@@ -129,8 +129,8 @@ extension DeviceManager {
   /// first failed report; a `lifecycle` batch sends every report and fails if any report failed.
   func performHIDFeatureReports(
     _ reports: [PhysicalHIDOutputReport],
-    locationID: UInt32,
-    identifier: DeviceIdentifier,
+    address: ControllerConnectionAddress,
+    identifier: LogicalControllerID,
     pipeline: DevicePipeline,
     startupConnection: HIDDeviceConnection?,
     detachedInfo: DeviceInfo?,
@@ -170,12 +170,12 @@ extension DeviceManager {
         else { return false }
         result = await hidManager.setFeatureReport(connection: connection, report: report)
       } else if writesExactHIDConnection(identifier, pipeline: pipeline) {
-        guard let connection = currentHIDConnection(for: identifier, locationID: locationID) else {
+        guard let connection = currentHIDConnection(for: identifier, address: address) else {
           return false
         }
         result = await hidManager.setFeatureReport(connection: connection, report: report)
       } else {
-        result = await hidManager.setFeatureReport(locationID: locationID, report: report)
+        result = await hidManager.setFeatureReport(address: address, report: report)
       }
       guard
         isCurrentHIDFeatureOutput(
@@ -188,7 +188,7 @@ extension DeviceManager {
       if !result.succeeded {
         print(
           "[DeviceManager] HID feature report failed for controller=\(identifier) "
-            + "loc=\(locationID) report=\(report.reportID): \(result.failureDescription)"
+            + "route=\(address) report=\(report.reportID): \(result.failureDescription)"
         )
         guard lifecycle else { return false }
         succeeded = false
@@ -198,7 +198,7 @@ extension DeviceManager {
   }
 
   private func isCurrentHIDFeatureOutput(
-    identifier: DeviceIdentifier,
+    identifier: LogicalControllerID,
     pipeline: DevicePipeline,
     startupConnection: HIDDeviceConnection?,
     detachedInfo: DeviceInfo?

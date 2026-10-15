@@ -24,7 +24,7 @@ extension VirtualOutputTests {
   }
 
   private func personaDispatcher(
-    _ identifiers: [DeviceIdentifier],
+    _ identifiers: [LogicalControllerID],
     store: VirtualHIDProfileOverrideStore,
     log: RetargetEventLog
   ) -> AutomaticUserSpaceOutputDispatcher {
@@ -40,12 +40,12 @@ extension VirtualOutputTests {
           activationGate: nil
         )
       },
-      descriptionsProvider: provider(identifiers.map { description($0) }),
+      descriptionsProvider: provider(identifiers),
       overrideProvider: {
-        store.override(vendorID: $0.vendorID, productID: $0.productID, unit: $0.unitIdentifier)
+        store.override(vendorID: $0.vendorID, productID: $0.productID, unit: $0.portKey?.rawValue)
       },
       identityProvider: {
-        store.persona(vendorID: $0.vendorID, productID: $0.productID, unit: $0.unitIdentifier)?
+        store.persona(vendorID: $0.vendorID, productID: $0.productID, unit: $0.portKey?.rawValue)?
           .identity
       },
       identityBuilder: { profile, identity in
@@ -66,8 +66,8 @@ extension VirtualOutputTests {
     let directory = FileManager.default.temporaryDirectory
       .appendingPathComponent("persona-identity-\(UUID().uuidString)", isDirectory: true)
     defer { try? FileManager.default.removeItem(at: directory) }
-    let custom = DeviceIdentifier(vendorID: 1, productID: 2)
-    let plain = DeviceIdentifier(vendorID: 3, productID: 4)
+    let custom = LogicalControllerID(vendorID: 1, productID: 2)
+    let plain = LogicalControllerID(vendorID: 3, productID: 4)
     let log = RetargetEventLog()
     let dispatcher = personaDispatcher(
       [custom, plain],
@@ -103,8 +103,8 @@ extension VirtualOutputTests {
     let directory = FileManager.default.temporaryDirectory
       .appendingPathComponent("persona-identity-\(UUID().uuidString)", isDirectory: true)
     defer { try? FileManager.default.removeItem(at: directory) }
-    let custom = DeviceIdentifier(vendorID: 1, productID: 2)
-    let plain = DeviceIdentifier(vendorID: 3, productID: 4)
+    let custom = LogicalControllerID(vendorID: 1, productID: 2)
+    let plain = LogicalControllerID(vendorID: 3, productID: 4)
     let log = RetargetEventLog()
     let dispatcher = personaDispatcher(
       [custom, plain],

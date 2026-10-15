@@ -161,7 +161,7 @@ struct RemappingChordSequenceTests {
     #expect(!state.hasScheduledOutput)
   }
 
-  private let identifier = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 1)
+  private let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 1)
 
   private func profile(
     sequence: [RemappingSource],

@@ -2,13 +2,10 @@ import Foundation
 
 extension DeviceManager {
   public func suspendController(
-    vendorID: UInt16,
-    productID: UInt16,
-    runtimeIdentifier: String?
+    _ controller: ControllerReference
   ) async -> ControllerSuspendResult {
-    let model = ControllerModelID(vendorID: vendorID, productID: productID)
     guard
-      let identifier = connectedIdentifier(matching: model, runtimeIdentifier: runtimeIdentifier),
+      let identifier = connectedIdentifier(for: controller),
       let pipeline = pipelines[identifier]
     else { return ControllerSuspendResult(state: .active, failure: .notFound) }
     guard await pipeline.controllerSessionState() == .active else {
@@ -24,25 +21,22 @@ extension DeviceManager {
   }
 
   public func resumeController(
-    vendorID: UInt16,
-    productID: UInt16,
-    runtimeIdentifier: String?
+    _ controller: ControllerReference
   ) async -> ControllerResumeResult {
-    let model = ControllerModelID(vendorID: vendorID, productID: productID)
     guard
-      let identifier = connectedIdentifier(matching: model, runtimeIdentifier: runtimeIdentifier),
+      let identifier = connectedIdentifier(for: controller),
       let pipeline = pipelines[identifier], let info = deviceInfos[identifier]
     else { return ControllerResumeResult(state: .suspended, failure: .notFound) }
     let hidConnection: HIDDeviceConnection?
     switch info.discoverySource {
     case .hid:
       guard let physicalDevice = info.physicalDevice, let connectionID = info.hidConnectionID,
-        let locationID = identifier.locationID
+        let address = identifier.hidRoutingAddress
       else { return ControllerResumeResult(state: .suspended, failure: .notFound) }
       hidConnection = HIDDeviceConnection(
         connectionID: connectionID,
         physicalDevice: physicalDevice,
-        routingLocationID: locationID
+        routingAddress: address
       )
     case .rawUSB: hidConnection = nil
     }
@@ -83,14 +77,11 @@ extension DeviceManager {
   }
 
   public func disconnectWirelessController(
-    vendorID: UInt16,
-    productID: UInt16,
-    runtimeIdentifier: String?,
+    _ controller: ControllerReference,
     timeoutNanoseconds: UInt64 = UInt64(ServiceTimeouts.bluetoothDisconnect * 1_000_000_000)
   ) async -> WirelessControllerDisconnectResult {
-    let model = ControllerModelID(vendorID: vendorID, productID: productID)
     guard
-      let identifier = connectedIdentifier(matching: model, runtimeIdentifier: runtimeIdentifier),
+      let identifier = connectedIdentifier(for: controller),
       let pipeline = pipelines[identifier], let info = deviceInfos[identifier]
     else { return WirelessControllerDisconnectResult(state: .active, failure: .notFound) }
     guard info.connection.caseInsensitiveCompare("Bluetooth") == .orderedSame else {
@@ -99,7 +90,9 @@ extension DeviceManager {
         failure: .notBluetooth
       )
     }
-    guard let address = Self.bluetoothAddress(from: info.serialNumber) else {
+    guard let address = Self.bluetoothAddress(from: info.serialNumber),
+      let routingAddress = identifier.hidRoutingAddress
+    else {
       return WirelessControllerDisconnectResult(
         state: await pipeline.controllerSessionState(),
         failure: .missingAddress
@@ -120,7 +113,7 @@ extension DeviceManager {
       }
     }
 
-    let claimResult = await hidManager.releaseInputClaim(locationID: identifier.locationID ?? 0)
+    let claimResult = await hidManager.releaseInputClaim(address: routingAddress)
     if case .failed = claimResult {
       if priorState == .active { _ = await pipeline.resumeControllerSession() }
       notifyControllerInventoryChanged()
@@ -140,9 +133,9 @@ extension DeviceManager {
     ) {
     case .disconnected:
       await handleHIDDeviceDisconnected(
-        vendorID: identifier.controllerIdentity.vendorID,
-        productID: identifier.controllerIdentity.productID,
-        locationID: identifier.locationID ?? 0
+        vendorID: identifier.model.vendorID,
+        productID: identifier.model.productID,
+        address: routingAddress
       )
       return WirelessControllerDisconnectResult(state: .suspended)
     case .failed(let code):
@@ -180,7 +173,7 @@ extension DeviceManager {
   }
 
   func restoreAfterFailedWirelessDisconnect(
-    identifier: DeviceIdentifier,
+    identifier: LogicalControllerID,
     pipeline: DevicePipeline,
     priorState: ControllerSessionState,
     failure: WirelessControllerDisconnectFailure,
@@ -189,9 +182,12 @@ extension DeviceManager {
     detail: String,
     restoreHIDClaim: Bool
   ) async -> WirelessControllerDisconnectResult {
-    let claimResult =
-      restoreHIDClaim
-      ? await hidManager.reacquireInputClaim(locationID: identifier.locationID ?? 0) : .reacquired
+    let claimResult: PhysicalHIDClaimResult =
+      if restoreHIDClaim, let routingAddress = identifier.hidRoutingAddress {
+        await hidManager.reacquireInputClaim(address: routingAddress)
+      } else {
+        .reacquired
+      }
     guard claimResult == .reacquired else {
       return WirelessControllerDisconnectResult(
         state: .suspended,

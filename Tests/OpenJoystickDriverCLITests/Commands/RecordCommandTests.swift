@@ -1,5 +1,6 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverCLI
@@ -237,7 +238,7 @@ struct RecordCommandTests {
       return encoded(Data((reads.next() == 0 ? "[]" : packets).utf8))
     }
     let result = await RecordDraftCommand.$descriptor.withValue(Self.noDescriptor) {
-      await service.run(["record", "draft", "pad-1", "--duration", "0.3", "--json"])
+      await service.run(["record", "draft", token("pad-1"), "--duration", "0.3", "--json"])
     }
     #expect(result.code == 0, "\(result.standardError)")
     let json = try result.json()
@@ -259,7 +260,7 @@ struct RecordCommandTests {
       method == .getPacketLog ? encoded(Data("[]".utf8)) : nil
     }
     let result = await RecordDraftCommand.$descriptor.withValue(Self.noDescriptor) {
-      await service.run(["record", "draft", "pad-1", "--duration", "0.2"])
+      await service.run(["record", "draft", token("pad-1"), "--duration", "0.2"])
     }
     #expect(result.code == 1)
     #expect(result.standardError.contains("ojd record show 045E:028E"))

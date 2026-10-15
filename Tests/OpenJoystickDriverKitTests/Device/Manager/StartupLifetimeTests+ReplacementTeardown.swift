@@ -12,7 +12,7 @@ extension StartupLifetimeTests {
       dispatcher: LoggingOutputDispatcher(),
       hidManager: HIDManager(backend: backend)
     )
-    let identifier = DeviceIdentifier(
+    let identifier = LogicalControllerID(
       vendorID: 0x054C,
       productID: 0x09CC,
       serialNumber: "teardown-race",
@@ -130,7 +130,7 @@ extension StartupLifetimeTests {
       dispatcher: LoggingOutputDispatcher(),
       hidManager: HIDManager(backend: backend)
     )
-    let identifier = DeviceIdentifier(
+    let identifier = LogicalControllerID(
       vendorID: 0x054C,
       productID: 0x09CC,
       serialNumber: "teardown-race",
@@ -196,7 +196,8 @@ extension StartupLifetimeTests {
     }
     #expect(replacementSuspended)
     let supersededInitialization = try #require(
-      await manager.hidInitializationTasks[.location(82)]?.task
+      await manager.hidInitializationTasks[.address(.ioKit(locationID: 82, interfaceNumber: nil))]?
+        .task
     )
 
     await manager.scheduleHIDDeviceInitialization(

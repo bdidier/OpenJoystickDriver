@@ -10,16 +10,12 @@ extension RemappingRequestCoordinator {
     _ arguments: ApplicationServiceMotionCalibrationArguments
   ) async -> RemappingRequestResult<RemappingMotionCalibrationStatus> {
     await exclusively {
-      guard !arguments.runtimeIdentifier.isEmpty,
-        arguments.runtimeIdentifier.utf8.count <= Self.maximumRuntimeIdentifierBytes
-      else {
-        throw ApplicationServiceRemappingRPCError(
-          code: .invalidArguments,
-          message: "A valid controller runtime identifier is required."
-        )
+      let connected = await connectedControllers()
+      guard let controller = try? arguments.controller.resolve(in: connected) else {
+        throw RemappingMotionCalibrationError.controllerUnavailable
       }
       let status = try await router.motionCalibration(
-        for: arguments.runtimeIdentifier,
+        for: controller.logicalControllerID,
         command: arguments.command
       )
       try ensurePayloadFits(status)
@@ -31,21 +27,16 @@ extension RemappingRequestCoordinator {
     _ arguments: ApplicationServiceJoyConPairArguments
   ) async -> RemappingRequestResult<ApplicationServiceRemappingSnapshotPayload> {
     await exclusively {
-      guard !arguments.leftRuntimeIdentifier.isEmpty, !arguments.rightRuntimeIdentifier.isEmpty,
-        arguments.leftRuntimeIdentifier.utf8.count <= Self.maximumRuntimeIdentifierBytes,
-        arguments.rightRuntimeIdentifier.utf8.count <= Self.maximumRuntimeIdentifierBytes
-      else {
-        throw ApplicationServiceRemappingRPCError(
-          code: .invalidArguments,
-          message: "Two valid Joy-Con runtime identifiers are required."
-        )
-      }
+      let connected = await connectedControllers()
+      guard let left = try? arguments.left.resolve(in: connected),
+        let right = try? arguments.right.resolve(in: connected)
+      else { throw RemappingJoyConPairError.controllerUnavailable }
       guard let profile = try await library.profile(id: arguments.profileID) else {
         throw RemappingProfileLibraryError.profileNotFound(arguments.profileID)
       }
       _ = try await router.pairJoyCons(
-        leftRuntimeIdentifier: arguments.leftRuntimeIdentifier,
-        rightRuntimeIdentifier: arguments.rightRuntimeIdentifier,
+        left: left.logicalControllerID,
+        right: right.logicalControllerID,
         profile: profile
       )
       return try await makeSnapshot()
@@ -216,12 +207,23 @@ extension RemappingRequestCoordinator {
       .map { ApplicationServiceRemappingPackageProfile(profileID: $0.key, package: $0.value) }
       .sorted { $0.profileID.uuidString < $1.profileID.uuidString }
     let routerSnapshot = await router.statusSnapshot()
-    let routes = routerSnapshot.routes.map(Self.routePayload)
+    // A controller that disconnected since the router last saw it has no token and is left out.
+    let tokens = Dictionary(
+      uniqueKeysWithValues: await connectedControllers().map {
+        ($0.logicalControllerID, $0.sessionToken)
+      }
+    )
+    let routes = routerSnapshot.routes.compactMap { status in
+      tokens[status.identifier].map { Self.routePayload(status, sessionToken: $0) }
+    }
+    let joyConPairs = routerSnapshot.joyConPairs.compactMap { session in
+      Self.joyConPairPayload(session, tokens: tokens)
+    }
     let payload = ApplicationServiceRemappingSnapshotPayload(
       profiles: librarySnapshot.profiles,
       activeProfiles: activeProfiles,
       routes: routes,
-      joyConPairs: routerSnapshot.joyConPairs,
+      joyConPairs: joyConPairs,
       profileIssues: librarySnapshot.issues,
       packageProfiles: packageProfiles,
       postEventAccess: routerSnapshot.postEventAccessState
@@ -312,8 +314,26 @@ extension RemappingRequestCoordinator {
     models.sorted { ($0.vendorID, $0.productID) < ($1.vendorID, $1.productID) }
   }
 
+  private static func joyConPairPayload(
+    _ session: RemappingJoyConPairSession,
+    tokens: [LogicalControllerID: ControllerSessionToken]
+  ) -> ApplicationServiceJoyConPairPayload? {
+    guard let settings = session.profile.joyConPair, let left = tokens[session.left],
+      let right = tokens[session.right]
+    else { return nil }
+    return ApplicationServiceJoyConPairPayload(
+      sessionID: session.id,
+      left: left,
+      right: right,
+      profileID: session.profile.id,
+      profileName: session.profile.name,
+      gyroSelection: settings.gyroSelection
+    )
+  }
+
   private static func routePayload(
-    _ status: RemappingRouteStatus
+    _ status: RemappingRouteStatus,
+    sessionToken: ControllerSessionToken
   ) -> ApplicationServiceRemappingRoutePayload {
     let selection: ApplicationServiceRemappingRouteSelection
     switch status.selection {
@@ -326,9 +346,9 @@ extension RemappingRequestCoordinator {
       return ApplicationServiceRemappingFailurePayload(code: error.code, message: error.message)
     }
     return ApplicationServiceRemappingRoutePayload(
-      vendorID: status.identifier.controllerIdentity.vendorID,
-      productID: status.identifier.controllerIdentity.productID,
-      runtimeIdentifier: status.identifier.runtimeIdentifier,
+      vendorID: status.identifier.model.vendorID,
+      productID: status.identifier.model.productID,
+      sessionToken: sessionToken,
       selection: selection,
       eligibility: routeEligibility(status.eligibility),
       activeProfileID: status.activeProfileID,

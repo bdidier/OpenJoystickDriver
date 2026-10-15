@@ -10,10 +10,10 @@ public actor RemappingEventEngine {
   let sink: any RemappingSystemInputSink
   let gamepadSink: (any RemappingGamepadSink)?
   let physicalOutputSink: (any RemappingPhysicalOutputSink)?
-  var heldGamepadDevices: Set<DeviceIdentifier> = []
-  var uncertainGamepadDevices: Set<DeviceIdentifier> = []
-  var heldPhysicalOwners: [DeviceIdentifier: Set<UUID>] = [:]
-  var uncertainPhysicalDevices: Set<DeviceIdentifier> = []
+  var heldGamepadDevices: Set<LogicalControllerID> = []
+  var uncertainGamepadDevices: Set<LogicalControllerID> = []
+  var heldPhysicalOwners: [LogicalControllerID: Set<UUID>] = [:]
+  var uncertainPhysicalDevices: Set<LogicalControllerID> = []
   nonisolated public let emissionBarrier: RemappingEmissionBarrier
   var state = RemappingEngineState()
   var faulted = false

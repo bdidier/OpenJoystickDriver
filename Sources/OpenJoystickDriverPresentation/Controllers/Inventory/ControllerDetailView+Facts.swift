@@ -14,7 +14,7 @@
             controllerHeader
             controllerSessionAction
             if isBluetooth { wirelessDisconnectAction }
-            if let failure = viewModel.controllerActionFailures[device.runtimeIdentifier] {
+            if let failure = viewModel.controllerActionFailures[device.sessionToken.rawValue] {
               controllerActionFailure(failure)
             }
             activeProfileRow
@@ -32,7 +32,7 @@
               Divider()
               // A per-controller identity collapses Advanced again on a new selection.
               VirtualHIDProfileOverrideView(viewModel: viewModel, device: device).id(
-                device.runtimeIdentifier
+                device.sessionToken.rawValue
               )
             }
           }.padding(28).frame(maxWidth: .infinity, alignment: .leading)

@@ -69,35 +69,41 @@ public struct HIDDeviceConnection: Equatable, Sendable {
   public let connectionID: UUID
   /// Exact immutable physical facts captured when this connection was admitted.
   public let physicalDevice: PhysicalDevice
-  /// Backend routing key, distinct from the optional physical location in `physicalDevice`.
-  public let routingLocationID: UInt32
+  /// Backend routing key, distinct from the optional physical location in `physicalDevice`:
+  /// an IOKit location without an interface for IOHID, or a GATT peripheral.
+  public let routingAddress: ControllerConnectionAddress
 
   public init(
     connectionID: UUID = UUID(),
     physicalDevice: PhysicalDevice,
-    routingLocationID: UInt32
+    routingAddress: ControllerConnectionAddress
   ) {
     self.connectionID = connectionID
     self.physicalDevice = physicalDevice
-    self.routingLocationID = routingLocationID
+    self.routingAddress = routingAddress
   }
 }
 
 public enum HIDDeviceEvent: Sendable {
   /// A HID controller was plugged in with the immutable facts available from its
-  /// OS HID service. `routingLocationID` remains the backend's runtime routing key;
+  /// OS HID service. `routingAddress` remains the backend's runtime routing key;
   /// the physical location in `physicalDevice` can be unavailable.
   case connected(connection: HIDDeviceConnection, ownership: HIDInputOwnership = .unknown)
   /// Access changed while the physical controller remains connected.
-  case ownershipChanged(locationID: UInt32, ownership: HIDInputOwnership)
+  case ownershipChanged(address: ControllerConnectionAddress, ownership: HIDInputOwnership)
   /// The active HID access stream failed. Cancellation is not reported as an access failure.
   case accessFailure(PhysicalHIDFailure)
   /// A previously connected HID controller was unplugged; this is the same snapshot and
   /// connection token that were emitted when it connected.
   case disconnected(connection: HIDDeviceConnection)
   /// The controller sent a raw input report (button presses, stick positions, etc.) on the
-  /// connection `connectionID` at routing location `locationID`.
-  case inputReport(locationID: UInt32, connectionID: UUID, reportID: UInt8, data: Data)
+  /// connection `connectionID` at routing address `address`.
+  case inputReport(
+    address: ControllerConnectionAddress,
+    connectionID: UUID,
+    reportID: UInt8,
+    data: Data
+  )
   /// IOKit decoded one descriptor-defined input element of the connection `connectionID`.
-  case inputValue(locationID: UInt32, connectionID: UUID, value: HIDElementValue)
+  case inputValue(address: ControllerConnectionAddress, connectionID: UUID, value: HIDElementValue)
 }

@@ -3,7 +3,7 @@ import Foundation
 extension UserSpaceOutputDispatcher {
   /// The virtual gamepad state last built for `identifier`'s input report; nil when no virtual
   /// device exists for it.
-  public func virtualOutputState(for identifier: DeviceIdentifier) -> VirtualGamepadState? {
+  public func virtualOutputState(for identifier: LogicalControllerID) -> VirtualGamepadState? {
     registryLock.withLock { entries[identifier]?.inputReportState.currentState() }
   }
 

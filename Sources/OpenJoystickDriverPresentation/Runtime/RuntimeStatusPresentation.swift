@@ -297,9 +297,9 @@ enum RuntimeMutationOperation: Sendable, Equatable {
 
 enum RuntimeInputCaptureState: Sendable {
   case idle
-  case listening(RuntimeDeviceSelector)
-  case received(RuntimeDeviceSelector, ControllerState)
-  case detected(RuntimeDeviceSelector, ControllerState, RemappingSource)
-  case unavailable(RuntimeDeviceSelector, String)
-  case error(RuntimeDeviceSelector, String)
+  case listening(ControllerReference)
+  case received(ControllerReference, ControllerState)
+  case detected(ControllerReference, ControllerState, RemappingSource)
+  case unavailable(ControllerReference, String)
+  case error(ControllerReference, String)
 }

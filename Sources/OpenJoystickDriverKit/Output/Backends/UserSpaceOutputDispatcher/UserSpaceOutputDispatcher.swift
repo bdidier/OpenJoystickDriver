@@ -16,15 +16,16 @@ public final class UserSpaceOutputDispatcher: VirtualOutputDispatching,
   internal let profile: VirtualDeviceProfile
   internal let format: any VirtualGamepadReportFormat
   internal let onOutputCommand: OutputCommandHandler?
-  internal let onControllerDidStop: (@Sendable (DeviceIdentifier) async -> Void)?
+  internal let onControllerDidStop: (@Sendable (LogicalControllerID) async -> Void)?
   internal let lifecycle = LifecycleState()
   internal let testBackendFactory:
-    (@Sendable (DeviceIdentifier) async throws -> any VirtualDeviceBackend)?
+    (@Sendable (LogicalControllerID) async throws -> any VirtualDeviceBackend)?
   internal let registryLock = NSLock()
-  internal var entries: [DeviceIdentifier: Entry] = [:]
-  internal var creationTasks: [DeviceIdentifier: Task<Entry, Error>] = [:]
-  internal var creationRetryPolicies: [DeviceIdentifier: UserSpaceDeviceCreationRetryPolicy] = [:]
-  internal var lifecycleGenerations: [DeviceIdentifier: UInt64] = [:]
+  internal var entries: [LogicalControllerID: Entry] = [:]
+  internal var creationTasks: [LogicalControllerID: Task<Entry, Error>] = [:]
+  internal var creationRetryPolicies: [LogicalControllerID: UserSpaceDeviceCreationRetryPolicy] =
+    [:]
+  internal var lifecycleGenerations: [LogicalControllerID: UInt64] = [:]
   internal var shutdownTask: Task<Void, Never>?
   internal var _suppressOutput = false
   internal var remappingOutputSuppressed = false
@@ -37,7 +38,7 @@ public final class UserSpaceOutputDispatcher: VirtualOutputDispatching,
     profile: VirtualDeviceProfile,
     format: any VirtualGamepadReportFormat,
     onOutputCommand: OutputCommandHandler? = nil,
-    onControllerDidStop: (@Sendable (DeviceIdentifier) async -> Void)? = nil
+    onControllerDidStop: (@Sendable (LogicalControllerID) async -> Void)? = nil
   ) throws {
     self.profile = profile
     self.format = format
@@ -52,9 +53,9 @@ public final class UserSpaceOutputDispatcher: VirtualOutputDispatching,
 
   init(
     testBackendFactory:
-      @escaping @Sendable (DeviceIdentifier) async throws -> any VirtualDeviceBackend,
+      @escaping @Sendable (LogicalControllerID) async throws -> any VirtualDeviceBackend,
     format: any VirtualGamepadReportFormat = OJDGenericGamepadFormat(),
-    onControllerDidStop: (@Sendable (DeviceIdentifier) async -> Void)? = nil
+    onControllerDidStop: (@Sendable (LogicalControllerID) async -> Void)? = nil
   ) {
     profile = .openJoystickDriverGenericHID
     self.format = format
@@ -67,7 +68,7 @@ public final class UserSpaceOutputDispatcher: VirtualOutputDispatching,
 }
 
 extension UserSpaceOutputDispatcher: ControllerLifecycleListener {
-  public func controllerDidStop(_ identifier: DeviceIdentifier) async {
+  public func controllerDidStop(_ identifier: LogicalControllerID) async {
     let resources = registryLock.withLock { () -> (Entry?, Task<Entry, Error>?) in
       lifecycleGenerations[identifier, default: 0] &+= 1
       let creationTask = creationTasks.removeValue(forKey: identifier)

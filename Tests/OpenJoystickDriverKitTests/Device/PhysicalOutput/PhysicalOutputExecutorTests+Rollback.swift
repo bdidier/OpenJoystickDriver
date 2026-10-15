@@ -29,7 +29,7 @@ extension PhysicalOutputExecutorTests {
         Task {
           await manager.sendControllerOutput(
             .setRumble(RumbleIntensities(leftMain: UnipolarValue(byte: byte)), duration: .held),
-            for: identifier.model
+            for: .model(identifier.model)
           ).outcome
         }
       )
@@ -106,13 +106,19 @@ extension PhysicalOutputExecutorTests {
     #expect(await send(.setRumble(rumble, duration: .held), to: started).value)
     await started.backend.disableOutputReports()
 
-    let failed = await manager.sendControllerOutput(.stopRumble, for: started.identifier.model)
+    let failed = await manager.sendControllerOutput(
+      .stopRumble,
+      for: .model(started.identifier.model)
+    )
 
     #expect(failed == ControllerOutputResult(.writeFailed))
     #expect(await leftMain(started) == nil)
     await started.backend.enableOutputReports()
     let before = await started.backend.recordedOutputReports().count
-    let retried = await manager.sendControllerOutput(.stopRumble, for: started.identifier.model)
+    let retried = await manager.sendControllerOutput(
+      .stopRumble,
+      for: .model(started.identifier.model)
+    )
     #expect(retried == ControllerOutputResult(.delivered))
     let written = await started.backend.recordedOutputReports().dropFirst(before).map(sixaxisFields)
     #expect(written.map(\.rumble) == [[0, 0]])

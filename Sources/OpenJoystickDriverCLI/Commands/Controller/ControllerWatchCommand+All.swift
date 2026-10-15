@@ -74,11 +74,7 @@ private struct ServiceWatchSource: ControllerWatchSource {
 
   func state(of device: ApplicationServiceDeviceDescription) async throws -> ControllerState? {
     try await ServiceConnection.withDeadline(seconds: timeout) {
-      try await client.controllerState(
-        vendorID: device.vendorID,
-        productID: device.productID,
-        runtimeIdentifier: device.runtimeIdentifier
-      )
+      try await client.controllerState(for: .session(device.sessionToken))
     }
   }
 
@@ -88,11 +84,7 @@ private struct ServiceWatchSource: ControllerWatchSource {
     -> ApplicationServiceVirtualOutputState?
   {
     try await ServiceConnection.withDeadline(seconds: timeout) {
-      try await client.virtualOutputState(
-        vendorID: device.vendorID,
-        productID: device.productID,
-        runtimeIdentifier: device.runtimeIdentifier
-      )
+      try await client.virtualOutputState(for: .session(device.sessionToken))
     }
   }
 }

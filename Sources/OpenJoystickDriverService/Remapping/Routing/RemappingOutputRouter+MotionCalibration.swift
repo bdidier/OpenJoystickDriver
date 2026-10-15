@@ -2,7 +2,7 @@ import OpenJoystickDriverKit
 
 extension RemappingOutputRouter {
   func motionCalibration(
-    for runtimeIdentifier: String,
+    for identifier: LogicalControllerID,
     command: RemappingMotionCalibrationCommand? = nil
   ) async throws -> RemappingMotionCalibrationStatus {
     guard let lease = try outputLeaseIfOpen() else {
@@ -12,7 +12,7 @@ extension RemappingOutputRouter {
     do {
       try await synchronizeControls(requiring: lease.permit)
       let status = try await core.motionCalibration(
-        for: runtimeIdentifier,
+        for: identifier,
         command: command,
         requiring: lease.permit
       )
@@ -27,16 +27,13 @@ extension RemappingOutputRouter {
 
 extension RemappingRoutingCore {
   func motionCalibration(
-    for runtimeIdentifier: String,
+    for identifier: LogicalControllerID,
     command: RemappingMotionCalibrationCommand?,
     requiring permit: RemappingEmissionPermit
   ) async throws -> RemappingMotionCalibrationStatus {
     defer { schedulingRevision &+= 1 }
     try requireOperationalPermit(permit)
-    guard
-      let identifier = connectedIdentifiers.first(where: {
-        $0.runtimeIdentifier == runtimeIdentifier
-      })
+    guard connectedIdentifiers.contains(identifier)
     else { throw RemappingMotionCalibrationError.controllerUnavailable }
     let pair = pairSession(for: identifier)
     if let pair {

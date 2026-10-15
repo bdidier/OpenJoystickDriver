@@ -34,7 +34,7 @@ struct NativePassThroughTests {
       let report = makeDS4BluetoothReport(buttons0: buttons, sensorTimestamp: timestamp)
       await manager.handleHIDEvent(
         .inputReport(
-          locationID: 70,
+          address: .ioKit(locationID: 70, interfaceNumber: nil),
           connectionID: connection.connectionID,
           reportID: 0x11,
           data: report
@@ -53,7 +53,12 @@ struct NativePassThroughTests {
         durationMs: 100
       ))
     )
-    await manager.handleHIDEvent(.ownershipChanged(locationID: 70, ownership: .exclusive))
+    await manager.handleHIDEvent(
+      .ownershipChanged(
+        address: .ioKit(locationID: 70, interfaceNumber: nil),
+        ownership: .exclusive
+      )
+    )
     #expect(await manager.ownershipObservation(for: identifier) == .nativeGamepad)
     await manager.handleHIDEvent(.disconnected(connection: connection))
     #expect(await manager.connectedDeviceDescriptions().isEmpty)
@@ -267,7 +272,7 @@ struct NativePassThroughTests {
         interfaces: [gamepadHIDInterface(host: .bluetoothClassic)],
         nativePassThrough: true
       ),
-      routingLocationID: locationID
+      routingAddress: .ioKit(locationID: locationID, interfaceNumber: nil)
     )
   }
 
@@ -286,7 +291,7 @@ struct NativePassThroughTests {
         interfaces: [binds ? gamepadHIDInterface(host: .usb) : hostHIDInterface(.usb)],
         nativePassThrough: nativePassThrough
       ),
-      routingLocationID: locationID
+      routingAddress: .ioKit(locationID: locationID, interfaceNumber: nil)
     )
   }
 }

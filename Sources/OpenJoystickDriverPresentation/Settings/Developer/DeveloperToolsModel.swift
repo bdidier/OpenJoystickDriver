@@ -127,8 +127,9 @@
           return
         }
 
-        let selectedIdentifier = selectedDevice?.runtimeIdentifier
-        selectedDevice = devices.first { $0.runtimeIdentifier == selectedIdentifier } ?? devices[0]
+        let selectedIdentifier = selectedDevice?.sessionToken.rawValue
+        selectedDevice =
+          devices.first { $0.sessionToken.rawValue == selectedIdentifier } ?? devices[0]
         loadState = .ready
         if let selectedDevice { await refreshSnapshot(for: selectedDevice, generation: generation) }
       } catch {
@@ -137,9 +138,9 @@
       }
     }
 
-    func selectDevice(runtimeIdentifier: String) {
-      guard let device = devices.first(where: { $0.runtimeIdentifier == runtimeIdentifier }),
-        device.runtimeIdentifier != selectedDevice?.runtimeIdentifier
+    func selectDevice(sessionToken: String) {
+      guard let device = devices.first(where: { $0.sessionToken.rawValue == sessionToken }),
+        device.sessionToken.rawValue != selectedDevice?.sessionToken.rawValue
       else { return }
       selectedDevice = device
       latestInput = nil
@@ -244,7 +245,7 @@
       for device: ApplicationServiceDeviceDescription,
       generation: UInt64
     ) async {
-      let selector = RuntimeDeviceSelector(device: device)
+      let selector = ControllerReference.session(device.sessionToken)
       do {
         async let input = gateway.controllerState(for: selector)
         async let packetLog = gateway.packetLog(for: selector)
@@ -262,7 +263,7 @@
 
     private func captureLoop(device: ApplicationServiceDeviceDescription, generation: UInt64) async
     {
-      let selector = RuntimeDeviceSelector(device: device)
+      let selector = ControllerReference.session(device.sessionToken)
       do {
         var cursor = PacketLogSnapshotCursor(snapshot: try await gateway.packetLog(for: selector))
         guard operationIsCurrent(generation, device: device) else { return }
@@ -309,7 +310,7 @@
     ) -> Bool {
       guard !Task.isCancelled, operationGeneration == generation else { return false }
       guard let device else { return true }
-      return selectedDevice?.runtimeIdentifier == device.runtimeIdentifier
+      return selectedDevice?.sessionToken.rawValue == device.sessionToken.rawValue
     }
 
     private func updateObservedExtraInputs(from state: ControllerState?) {

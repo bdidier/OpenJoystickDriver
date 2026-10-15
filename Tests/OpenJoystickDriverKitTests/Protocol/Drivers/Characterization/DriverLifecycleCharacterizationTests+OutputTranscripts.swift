@@ -35,7 +35,7 @@ extension DriverLifecycleCharacterizationTests {
     for data in input {
       await recording.manager.handleHIDEvent(
         .inputReport(
-          locationID: locationID,
+          address: .ioKit(locationID: locationID, interfaceNumber: nil),
           connectionID: recording.connection.connectionID,
           reportID: data.first ?? 0,
           data: data
@@ -58,11 +58,7 @@ extension DriverLifecycleCharacterizationTests {
     await stopKeepAlive(recording)
     let counts = await recordedCounts(recording)
     let model = subject.model
-    let result = await recording.manager.suspendController(
-      vendorID: model.vendorID,
-      productID: model.productID,
-      runtimeIdentifier: nil
-    )
+    let result = await recording.manager.suspendController(.model(model))
     let steps = await recordedSteps(recording, since: counts)
     await recording.manager.stop()
     return ["suspend state=\(result.state) failure=\(result.failure.map { "\($0)" } ?? "nil")"]
@@ -87,7 +83,7 @@ extension DriverLifecycleCharacterizationTests {
         interfaces: [gamepadHIDInterface(host: .usb)],
         nativePassThrough: true
       ),
-      routingLocationID: locationID
+      routingAddress: .ioKit(locationID: locationID, interfaceNumber: nil)
     )
     await backend.setConnectionSnapshots([
       HIDDeviceConnectionSnapshot(connection: connection, ownership: .unknown)
@@ -101,7 +97,7 @@ extension DriverLifecycleCharacterizationTests {
     return HIDStartupRecording(backend: backend, manager: manager, connection: connection)
   }
 
-  func connectedIdentifier(_ recording: HIDStartupRecording) async throws -> DeviceIdentifier {
+  func connectedIdentifier(_ recording: HIDStartupRecording) async throws -> LogicalControllerID {
     try #require(await recording.manager.pipelines.keys.first)
   }
 

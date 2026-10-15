@@ -19,7 +19,7 @@ struct RemappingTouchSurfaceState {
 extension RemappingEngineState {
   mutating func processTouch(
     _ sample: ControllerTouchSample,
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     at uptime: UInt64
   ) -> [RemappingEngineAction] {
     guard var device = devices[identifier] else { return [] }

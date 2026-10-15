@@ -4,7 +4,7 @@ import OpenJoystickDriverKit
 /// Owns installation requests until activation, retirement, and suppression have completed.
 actor AutomaticDispatcherCoordinator {
 
-  var entries: [DeviceIdentifier: Entry] = [:]
+  var entries: [LogicalControllerID: Entry] = [:]
   var closed = false
   var closeFinished = false
   var closeWaiters: [CheckedContinuation<Void, Never>] = []

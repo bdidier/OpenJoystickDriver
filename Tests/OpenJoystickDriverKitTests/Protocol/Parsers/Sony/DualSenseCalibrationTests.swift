@@ -78,8 +78,8 @@ struct DualSenseCalibrationTests {
   func stoppedPipelineRejectsCalibrationReplies() async throws {
     let parser = DualSenseDriver()
     let pipeline = DevicePipeline(
-      identifier: DeviceIdentifier(vendorID: 0x054C, productID: 0x0CE6),
-      transport: .hid(locationID: 1),
+      identifier: LogicalControllerID(vendorID: 0x054C, productID: 0x0CE6),
+      transport: .hid(address: .ioKit(locationID: 1, interfaceNumber: nil)),
       driver: parser,
       dispatcher: LoggingOutputDispatcher()
     )

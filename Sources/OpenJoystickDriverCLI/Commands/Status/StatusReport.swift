@@ -117,7 +117,7 @@ struct StatusReport: Encodable, Equatable {
     )
     controllers = payload.connectedDevices.map {
       Controller(
-        id: $0.runtimeIdentifier,
+        id: $0.sessionToken.rawValue,
         name: $0.name,
         vendorID: Int($0.vendorID),
         productID: Int($0.productID),

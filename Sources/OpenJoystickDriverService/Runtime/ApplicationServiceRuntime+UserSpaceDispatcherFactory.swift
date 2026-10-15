@@ -19,11 +19,19 @@ extension ApplicationServiceRuntime {
         )
       },
       overrideProvider: {
-        overrides.override(vendorID: $0.vendorID, productID: $0.productID, unit: $0.unitIdentifier)
+        overrides.override(
+          vendorID: $0.vendorID,
+          productID: $0.productID,
+          unit: $0.portKey?.rawValue
+        )
       },
       identityProvider: {
-        overrides.persona(vendorID: $0.vendorID, productID: $0.productID, unit: $0.unitIdentifier)?
-          .identity
+        overrides.persona(
+          vendorID: $0.vendorID,
+          productID: $0.productID,
+          unit: $0.portKey?.rawValue
+        )?
+        .identity
       },
       identityBuilder: { profileID, identity in
         let profile = try profileID.makeProfile()

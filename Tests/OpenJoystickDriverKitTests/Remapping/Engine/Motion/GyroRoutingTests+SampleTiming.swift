@@ -6,7 +6,7 @@ extension GyroRoutingTests {
   @Test
   func gyroStickUsesAngularSpeedAndNeutralizesAtSampleTimeout() {
     var engine = RemappingEngineState()
-    let device = DeviceIdentifier(vendorID: 1, productID: 2)
+    let device = LogicalControllerID(vendorID: 1, productID: 2)
     let profile = RemappingProfile(
       name: "Gyro stick",
       device: RemappingDeviceScope(vendorID: 1, productID: 2),
@@ -42,7 +42,7 @@ extension GyroRoutingTests {
   @Test
   func mouseUsesSampleTimeAndDoesNotReplayBaselineOrDuplicateSamples() {
     var engine = RemappingEngineState()
-    let device = DeviceIdentifier(vendorID: 1, productID: 2)
+    let device = LogicalControllerID(vendorID: 1, productID: 2)
     let profile = RemappingProfile(
       name: "Gyro mouse",
       device: RemappingDeviceScope(vendorID: 1, productID: 2),

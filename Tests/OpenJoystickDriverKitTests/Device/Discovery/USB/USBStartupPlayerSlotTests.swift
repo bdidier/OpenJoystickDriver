@@ -57,7 +57,7 @@ struct USBStartupPlayerSlotTests {
     )
     func observation(_ interface: PhysicalInterfaceSignature) -> PhysicalDevice {
       PhysicalDevice(
-        serviceIdentity: device.serviceIdentity,
+        serviceAddress: device.serviceAddress,
         vendorID: vendorID,
         productID: productID,
         configurationValue: 1,
@@ -74,8 +74,8 @@ struct USBStartupPlayerSlotTests {
     )
   }
 
-  private static func identifier(_ device: USBTransportDevice) -> DeviceIdentifier {
-    DeviceIdentifier(
+  private static func identifier(_ device: USBTransportDevice) -> LogicalControllerID {
+    LogicalControllerID(
       vendorID: device.vendorID,
       productID: device.productID,
       locationID: device.locationID,

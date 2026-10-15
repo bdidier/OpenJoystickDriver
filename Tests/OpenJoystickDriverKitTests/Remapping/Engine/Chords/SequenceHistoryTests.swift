@@ -46,7 +46,7 @@ struct RemappingSequenceHistoryTests {
     )
   }
 
-  private let identifier = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 1)
+  private let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 1)
   private let profileID = UUID()
 
   private func profile(hasSequence: Bool = true) -> RemappingProfile {

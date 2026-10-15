@@ -37,7 +37,7 @@ struct HIDLifecycleWriteTests {
           vendorID == 0x28DE ? steamHIDInterface(number: 2) : gamepadHIDInterface(host: host)
         ]
       ),
-      routingLocationID: locationID
+      routingAddress: .ioKit(locationID: locationID, interfaceNumber: nil)
     )
     await backend.setConnectionSnapshots([
       HIDDeviceConnectionSnapshot(connection: connection, ownership: .exclusive)
@@ -68,7 +68,7 @@ struct HIDLifecycleWriteTests {
     )
     // Startup is paced by the plan's 20 ms, not the 50 ms user-output rate limit, which would
     // also stamp the last physical output time and delay the first rumble.
-    let identifier = try #require(await started.manager.connectedDeviceIdentifiers().first)
+    let identifier = try #require(await started.manager.connectedLogicalControllerIDs().first)
     let pipeline = try #require(await started.manager.pipelines[identifier])
     #expect(await pipeline.sessionPlan().hidStartupIntervalNanoseconds == 20_000_000)
     #expect(await pipeline.minimumPhysicalOutputIntervalNanoseconds() == 50_000_000)
@@ -104,7 +104,7 @@ struct HIDLifecycleWriteTests {
       locationID: 303,
       rejecting: [firstRecovery]
     )
-    let identifier = try #require(await started.manager.connectedDeviceIdentifiers().first)
+    let identifier = try #require(await started.manager.connectedLogicalControllerIDs().first)
     let pipeline = try #require(await started.manager.pipelines[identifier])
     #expect(await pipeline.isActive)
     #expect(await pipeline.hidStartupRecoveryWrites().isEmpty)

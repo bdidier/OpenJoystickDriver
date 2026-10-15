@@ -3,7 +3,7 @@ import OpenJoystickDriverKit
 
 extension RemappingRoutingCore {
   func loadSelection(
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     requiring permit: RemappingEmissionPermit?
   ) async throws {
     if let session = pairSession(for: identifier) {
@@ -17,9 +17,9 @@ extension RemappingRoutingCore {
     do {
       let frontmostBundleID = foregroundApplication.frontmostBundleIdentifier()
       let profile = try await library.activeProfile(
-        vendorID: identifier.controllerIdentity.vendorID,
-        productID: identifier.controllerIdentity.productID,
-        unit: identifier.unitIdentifier,
+        vendorID: identifier.model.vendorID,
+        productID: identifier.model.productID,
+        unit: identifier.portKey?.rawValue,
         frontmostBundleIdentifier: frontmostBundleID
       )
       _ = try requireOperationalPermit(permit)
@@ -36,7 +36,7 @@ extension RemappingRoutingCore {
 
   internal func transition(
     to selection: RemappingSelectedRoute,
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     requiring proposedPermit: RemappingEmissionPermit?
   ) async throws {
     _ = try requireOperationalPermit(proposedPermit)
@@ -105,7 +105,7 @@ extension RemappingRoutingCore {
 
   func updateInputOwnership(
     _ ownership: HIDInputOwnership,
-    for identifier: DeviceIdentifier
+    for identifier: LogicalControllerID
   ) async throws {
     guard !terminationRequested else { return }
     inputOwnership[identifier] = ownership
@@ -118,7 +118,7 @@ extension RemappingRoutingCore {
 
   func remappingEligibility(
     _ profile: RemappingProfile,
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     environment: RemappingEligibilityEnvironment
   ) -> RemappingRouteEligibility {
     let eligibility = RemappingForegroundPolicy.eligibility(
@@ -136,7 +136,7 @@ extension RemappingRoutingCore {
   }
 
   func reconcileEligibility(
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     environment proposedEnvironment: RemappingEligibilityEnvironment? = nil,
     requiring proposedPermit: RemappingEmissionPermit?,
     forceOutputState: Bool = false
@@ -219,7 +219,7 @@ extension RemappingRoutingCore {
 
   internal func markLibraryUnavailable(
     _ libraryError: RemappingProfileLibraryError,
-    identifiers: [DeviceIdentifier],
+    identifiers: [LogicalControllerID],
     requiring permit: RemappingEmissionPermit?
   ) async throws {
     for identifier in identifiers {

@@ -20,8 +20,8 @@ struct JoyConPairingRoutingTests {
     harness.recorder.removeAll()
 
     let sessionID = try await harness.router.pairJoyCons(
-      leftRuntimeIdentifier: left.runtimeIdentifier,
-      rightRuntimeIdentifier: right.runtimeIdentifier,
+      left: left,
+      right: right,
       profile: profile
     )
     try await harness.router.dispatchCausally(changes: [.press(.auxiliary3)], from: left)
@@ -33,7 +33,7 @@ struct JoyConPairingRoutingTests {
         .gamepad(RemappingGamepadState(buttons: [.leftShoulder, .north]), left),
       ]
     )
-    #expect(await harness.router.statusSnapshot().joyConPairs.map(\.sessionID) == [sessionID])
+    #expect(await harness.router.statusSnapshot().joyConPairs.map(\.id) == [sessionID])
 
     harness.recorder.removeAll()
     try await harness.router.stopController(right)
@@ -66,27 +66,27 @@ struct JoyConPairingRoutingTests {
     try await harness.router.dispatchCausally(.activation, from: left)
     await #expect(throws: RemappingJoyConPairError.controllerUnavailable) {
       _ = try await harness.router.pairJoyCons(
-        leftRuntimeIdentifier: left.runtimeIdentifier,
-        rightRuntimeIdentifier: right.runtimeIdentifier,
+        left: left,
+        right: right,
         profile: profile
       )
     }
     try await harness.router.dispatchCausally(.activation, from: right)
     let first = try await harness.router.pairJoyCons(
-      leftRuntimeIdentifier: left.runtimeIdentifier,
-      rightRuntimeIdentifier: right.runtimeIdentifier,
+      left: left,
+      right: right,
       profile: profile
     )
     try await harness.router.unpairJoyCons(first)
     let replacement = try await harness.router.pairJoyCons(
-      leftRuntimeIdentifier: left.runtimeIdentifier,
-      rightRuntimeIdentifier: right.runtimeIdentifier,
+      left: left,
+      right: right,
       profile: profile
     )
     await #expect(throws: RemappingJoyConPairError.sessionUnavailable) {
       try await harness.router.unpairJoyCons(first)
     }
-    #expect(await harness.router.statusSnapshot().joyConPairs.map(\.sessionID) == [replacement])
+    #expect(await harness.router.statusSnapshot().joyConPairs.map(\.id) == [replacement])
   }
 
   @Test
@@ -102,17 +102,17 @@ struct JoyConPairingRoutingTests {
     }
     await #expect(throws: RemappingJoyConPairError.invalidControllerSide) {
       _ = try await harness.router.pairJoyCons(
-        leftRuntimeIdentifier: right.runtimeIdentifier,
-        rightRuntimeIdentifier: left.runtimeIdentifier,
+        left: right,
+        right: left,
         profile: profile
       )
     }
     let sessionID = try await harness.router.pairJoyCons(
-      leftRuntimeIdentifier: left.runtimeIdentifier,
-      rightRuntimeIdentifier: right.runtimeIdentifier,
+      left: left,
+      right: right,
       profile: profile
     )
-    #expect(await harness.router.statusSnapshot().joyConPairs.map(\.sessionID) == [sessionID])
+    #expect(await harness.router.statusSnapshot().joyConPairs.map(\.id) == [sessionID])
   }
 
   @Test
@@ -128,17 +128,17 @@ struct JoyConPairingRoutingTests {
       try await harness.router.dispatchCausally(.activation, from: member)
     }
     _ = try await harness.router.pairJoyCons(
-      leftRuntimeIdentifier: left.runtimeIdentifier,
-      rightRuntimeIdentifier: right.runtimeIdentifier,
+      left: left,
+      right: right,
       profile: profile
     )
     try await harness.router.dispatchCausally(changes: [gyroMotion()], from: left)
     await #expect(throws: RemappingMotionCalibrationRefusal.gyroNotSelected) {
-      try await harness.router.motionCalibration(for: left.runtimeIdentifier)
+      try await harness.router.motionCalibration(for: left)
     }
     try await harness.router.dispatchCausally(changes: [gyroMotion()], from: right)
     #expect(
-      try await harness.router.motionCalibration(for: right.runtimeIdentifier).hasMotionBaseline
+      try await harness.router.motionCalibration(for: right).hasMotionBaseline
     )
 
     let transaction = try await harness.router.beginProfileTransaction()
@@ -164,8 +164,8 @@ struct JoyConPairingRoutingTests {
     )
   }
 
-  private func joyCon(productID: UInt16, location: UInt32) -> DeviceIdentifier {
-    DeviceIdentifier(vendorID: 0x057E, productID: productID, locationID: location)
+  private func joyCon(productID: UInt16, location: UInt32) -> LogicalControllerID {
+    LogicalControllerID(vendorID: 0x057E, productID: productID, locationID: location)
   }
 
   private func gyroMotion() -> InputChange {

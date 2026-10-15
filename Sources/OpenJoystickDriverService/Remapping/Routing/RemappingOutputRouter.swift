@@ -61,13 +61,13 @@ final class RemappingOutputRouter: OutputDispatcher, ControllerLifecycleListener
 
   /// Only a remapping route consumes a native controller's input; virtual gamepad output never
   /// publishes for it.
-  func wantsObservedInput(from identifier: DeviceIdentifier) -> Bool {
+  func wantsObservedInput(from identifier: LogicalControllerID) -> Bool {
     core.observedInputDemand.contains(identifier)
   }
 
   func controllerInputOwnershipChanged(
     _ ownership: HIDInputOwnership,
-    for identifier: DeviceIdentifier
+    for identifier: LogicalControllerID
   ) async {
     do { try await core.updateInputOwnership(ownership, for: identifier) } catch {
       // Engine failures are retained in the typed route status by the core.
@@ -78,7 +78,7 @@ final class RemappingOutputRouter: OutputDispatcher, ControllerLifecycleListener
   func dispatch(
     _ event: ControllerEvent,
     labels: ControllerButtonLabels,
-    from identifier: DeviceIdentifier
+    from identifier: LogicalControllerID
   ) async {
     do { try await dispatchCausally(.input(event, labels), from: identifier) } catch {
       // OutputDispatcher cannot surface errors. Callers that need causal failure
@@ -86,7 +86,7 @@ final class RemappingOutputRouter: OutputDispatcher, ControllerLifecycleListener
     }
   }
 
-  func activateOutput(for identifier: DeviceIdentifier) async {
+  func activateOutput(for identifier: LogicalControllerID) async {
     do { try await dispatchCausally(.activation, from: identifier) } catch {
       // As for dispatch: the typed route status retains the failure.
     }
@@ -94,7 +94,7 @@ final class RemappingOutputRouter: OutputDispatcher, ControllerLifecycleListener
 
   func dispatchCausally(
     _ input: RemappingRoutedInput,
-    from identifier: DeviceIdentifier
+    from identifier: LogicalControllerID
   ) async throws {
     guard let lease = try outputLeaseIfOpen() else {
       try await core.recordConnectedIdentifierWhileOutputClosed(identifier)
@@ -118,7 +118,7 @@ final class RemappingOutputRouter: OutputDispatcher, ControllerLifecycleListener
     await reconcileTickerWithEngine()
   }
 
-  func refresh(_ identifier: DeviceIdentifier) async throws {
+  func refresh(_ identifier: LogicalControllerID) async throws {
     guard let lease = try outputLeaseIfOpen() else { return }
     defer { lease.finish() }
     let permit = lease.permit
@@ -133,8 +133,8 @@ final class RemappingOutputRouter: OutputDispatcher, ControllerLifecycleListener
   }
 
   func pairJoyCons(
-    leftRuntimeIdentifier: String,
-    rightRuntimeIdentifier: String,
+    left: LogicalControllerID,
+    right: LogicalControllerID,
     profile: RemappingProfile
   ) async throws -> UUID {
     guard let lease = try outputLeaseIfOpen() else {
@@ -143,8 +143,8 @@ final class RemappingOutputRouter: OutputDispatcher, ControllerLifecycleListener
     defer { lease.finish() }
     try await synchronizeControls(requiring: lease.permit)
     let sessionID = try await core.pairJoyCons(
-      leftRuntimeIdentifier: leftRuntimeIdentifier,
-      rightRuntimeIdentifier: rightRuntimeIdentifier,
+      left: left,
+      right: right,
       profile: profile,
       requiring: lease.permit
     )
@@ -305,7 +305,7 @@ final class RemappingOutputRouter: OutputDispatcher, ControllerLifecycleListener
     await reconcileTickerWithEngine()
   }
 
-  func status(for identifier: DeviceIdentifier) async -> RemappingRouteStatus? {
+  func status(for identifier: LogicalControllerID) async -> RemappingRouteStatus? {
     let permit = emissionBarrier.currentPermit()
     try? await synchronizeControls(requiring: permit)
     try? await core.refreshEligibility(requiring: permit)
@@ -328,12 +328,12 @@ final class RemappingOutputRouter: OutputDispatcher, ControllerLifecycleListener
     return snapshot
   }
 
-  func controllerDidStop(_ identifier: DeviceIdentifier) async {
+  func controllerDidStop(_ identifier: LogicalControllerID) async {
     try? await core.stopController(identifier, requiring: emissionBarrier.currentPermit())
     await reconcileTickerWithEngine()
   }
 
-  func stopController(_ identifier: DeviceIdentifier) async throws {
+  func stopController(_ identifier: LogicalControllerID) async throws {
     let permit = emissionBarrier.currentPermit()
     do { try await core.stopController(identifier, requiring: permit) } catch {
       await reconcileTickerWithEngine()

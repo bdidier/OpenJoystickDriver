@@ -120,7 +120,7 @@ struct SupportReportBindingTests {
     )
     func observation(_ endpoints: [PhysicalEndpointSignature]?) -> PhysicalDevice {
       PhysicalDevice(
-        serviceIdentity: device.serviceIdentity,
+        serviceAddress: device.serviceAddress,
         vendorID: device.vendorID,
         productID: device.productID,
         configurationValue: 1,
@@ -163,7 +163,7 @@ struct SupportReportBindingTests {
         physicalLocationIdentifier: 91,
         interfaces: [gamepadHIDInterface(host: .usb)]
       ),
-      routingLocationID: 91
+      routingAddress: .ioKit(locationID: 91, interfaceNumber: nil)
     )
     await manager.handleHIDEvent(.connected(connection: hid, ownership: .exclusive))
 

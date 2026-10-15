@@ -19,9 +19,9 @@ struct VirtualFeedRegistryTests {
     let device = try #require(factory.devices.first)
     #expect(device.profile == .generic)
     let identifier = try #require(device.activated)
-    #expect(identifier.controllerIdentity.vendorID == VirtualHIDProfileID.generic.identity.vendorID)
+    #expect(identifier.model.vendorID == VirtualHIDProfileID.generic.identity.vendorID)
     #expect(
-      identifier.controllerIdentity.productID == VirtualHIDProfileID.generic.identity.productID
+      identifier.model.productID == VirtualHIDProfileID.generic.identity.productID
     )
 
     device.receive(.setRumble(.off, duration: .held))

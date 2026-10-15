@@ -18,7 +18,7 @@ struct VirtualControllerBackendTests {
 
   @Test
   func testUserSpaceSerialUsesStableHashedPhysicalIdentity() {
-    let identifier = DeviceIdentifier(
+    let identifier = LogicalControllerID(
       vendorID: 13623,
       productID: 4112,
       serialNumber: "physical-serial"
@@ -51,7 +51,7 @@ struct VirtualControllerBackendTests {
     let properties = UserSpaceOutputDispatcher.deviceProperties(
       profile: .xboxOneS,
       format: format,
-      identifier: DeviceIdentifier(vendorID: 13623, productID: 4112)
+      identifier: LogicalControllerID(vendorID: 13623, productID: 4112)
     )
 
     let inputSize = properties[kIOHIDMaxInputReportSizeKey as String] as? Int
@@ -67,7 +67,7 @@ struct VirtualControllerBackendTests {
     let properties = UserSpaceOutputDispatcher.deviceProperties(
       profile: profile,
       format: format,
-      identifier: DeviceIdentifier(vendorID: 13623, productID: 4112)
+      identifier: LogicalControllerID(vendorID: 13623, productID: 4112)
     )
 
     #expect(properties[kIOHIDReportDescriptorKey as String] as? Data == Data(format.descriptor))

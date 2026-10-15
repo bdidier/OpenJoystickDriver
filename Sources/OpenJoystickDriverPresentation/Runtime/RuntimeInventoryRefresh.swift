@@ -141,9 +141,9 @@ extension RuntimeViewModel {
       !state.inFlight && !connectedModels.contains(model)
     }.keys
     for model in staleModels { virtualHIDProfileOverrideStates[model] = nil }
-    let identifiers = devices.map(\.runtimeIdentifier)
-    guard identifiers != controllerRuntimeIdentifiers else { return }
-    controllerRuntimeIdentifiers = identifiers
+    let identifiers = devices.map(\.sessionToken)
+    guard identifiers != controllerSessionTokens else { return }
+    controllerSessionTokens = identifiers
     controllerInventoryGeneration &+= 1
   }
 

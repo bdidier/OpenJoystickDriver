@@ -165,7 +165,7 @@ struct ReportSenderTests {
     let outputs = OutputRecorder()
     let isOpen: @Sendable () -> Bool = { true }
     let handler = UserSpaceHostReportHandler(
-      identifier: DeviceIdentifier(vendorID: 1, productID: 2),
+      identifier: LogicalControllerID(vendorID: 1, productID: 2),
       input: input,
       sender: entry.sender,
       isOpen: isOpen,
@@ -226,7 +226,7 @@ struct ReportSenderTests {
     let sentBeforeOutput = OutputRecorder()
     let isOpen: @Sendable () -> Bool = { true }
     let handler = UserSpaceHostReportHandler(
-      identifier: DeviceIdentifier(vendorID: 1, productID: 2),
+      identifier: LogicalControllerID(vendorID: 1, productID: 2),
       input: input,
       sender: entry.sender,
       isOpen: isOpen,

@@ -71,7 +71,7 @@ struct USBSignatureDiscoveryTests {
     // A catalogued model classifies on identity alone; its interfaces come from resolution.
     let device = usbDevice(vendorID: 0x1532, productID: 0x0A43, route: .ioUSBHost)
     let wrongInterface = PhysicalDevice(
-      serviceIdentity: device.serviceIdentity,
+      serviceAddress: device.serviceAddress,
       vendorID: device.vendorID,
       productID: device.productID,
       interfaces: [descriptorInterface(0, 0xFF, 0x5D, 0x01, input: 0x81, output: 0x01)]
@@ -146,7 +146,7 @@ struct USBSignatureDiscoveryTests {
   func descriptorContractViolationLeavesTheDeviceUnboundBeforeAnyWrite() async {
     let device = usbDevice(vendorID: 0x1234, productID: 0x5678, route: .ioUSBHost)
     let wrongInterface = PhysicalDevice(
-      serviceIdentity: device.serviceIdentity,
+      serviceAddress: device.serviceAddress,
       vendorID: device.vendorID,
       productID: device.productID,
       interfaces: [descriptorInterface(0, 0xFF, 0x5D, 0x01, input: 0x81, output: 0x01)]
@@ -176,18 +176,24 @@ struct USBSignatureDiscoveryTests {
   }
 
   @Test(arguments: [
-    (DeviceIdentifier(vendorID: 0x1234, productID: 0x5678), USBTransportError?.some(.accessDenied)),
-    (DeviceIdentifier(vendorID: 0x1234, productID: 0x5678), USBTransportError?.none),
-    (DeviceIdentifier(vendorID: 0x1532, productID: 0x0A43), USBTransportError?.some(.inputOutput)),
+    (
+      LogicalControllerID(vendorID: 0x1234, productID: 0x5678),
+      USBTransportError?.some(.accessDenied)
+    ),
+    (LogicalControllerID(vendorID: 0x1234, productID: 0x5678), USBTransportError?.none),
+    (
+      LogicalControllerID(vendorID: 0x1532, productID: 0x0A43),
+      USBTransportError?.some(.inputOutput)
+    ),
   ])
   func unreadableDescriptorOfAnUnpinnedDeviceIsRetried(
-    model: DeviceIdentifier,
+    model: LogicalControllerID,
     error: USBTransportError?
   ) async {
     // Never family-default endpoints and never a permanent unbound state for a failed read.
     let device = usbDevice(
-      vendorID: model.controllerIdentity.vendorID,
-      productID: model.controllerIdentity.productID,
+      vendorID: model.model.vendorID,
+      productID: model.model.productID,
       route: .ioUSBHost
     )
     let provider = SignatureDiscoveryProvider(
@@ -223,7 +229,7 @@ struct USBSignatureDiscoveryTests {
   func uncataloguedDeviceWithoutASignatureIsReportedWithNoProtocolMatch() async {
     let device = usbDevice(vendorID: 0x1234, productID: 0x5678, route: .ioUSBHost)
     let plain = PhysicalDevice(
-      serviceIdentity: device.serviceIdentity,
+      serviceAddress: device.serviceAddress,
       vendorID: device.vendorID,
       productID: device.productID,
       configurationValue: 1,
@@ -262,7 +268,7 @@ struct USBSignatureDiscoveryTests {
 
   private func configuredRegistryOnly(_ device: USBTransportDevice) -> PhysicalDevice {
     PhysicalDevice(
-      serviceIdentity: device.serviceIdentity,
+      serviceAddress: device.serviceAddress,
       vendorID: device.vendorID,
       productID: device.productID,
       deviceClass: 0xFF,
@@ -287,8 +293,8 @@ struct USBSignatureDiscoveryTests {
     )
   }
 
-  private func runtimeIdentifier(_ device: USBTransportDevice) -> DeviceIdentifier {
-    DeviceIdentifier(
+  private func runtimeIdentifier(_ device: USBTransportDevice) -> LogicalControllerID {
+    LogicalControllerID(
       vendorID: device.vendorID,
       productID: device.productID,
       locationID: device.locationID,
@@ -298,7 +304,7 @@ struct USBSignatureDiscoveryTests {
 
   private func unconfiguredGIP(_ device: USBTransportDevice) -> PhysicalDevice {
     PhysicalDevice(
-      serviceIdentity: device.serviceIdentity,
+      serviceAddress: device.serviceAddress,
       vendorID: device.vendorID,
       productID: device.productID,
       deviceRelease: 0x0101,
@@ -314,7 +320,7 @@ struct USBSignatureDiscoveryTests {
     output: UInt8
   ) -> PhysicalDevice {
     PhysicalDevice(
-      serviceIdentity: device.serviceIdentity,
+      serviceAddress: device.serviceAddress,
       vendorID: device.vendorID,
       productID: device.productID,
       deviceClass: 0xFF,

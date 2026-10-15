@@ -14,7 +14,7 @@ struct USBControllerScannerTests {
       locationID: 9
     )
     let physicalDevice = PhysicalDevice(
-      serviceIdentity: device.serviceIdentity,
+      serviceAddress: device.serviceAddress,
       vendorID: device.vendorID,
       productID: device.productID,
       interfaces: [
@@ -72,7 +72,7 @@ struct USBControllerScannerTests {
       locationID: 42
     )
     let physicalDevice = PhysicalDevice(
-      serviceIdentity: device.serviceIdentity,
+      serviceAddress: device.serviceAddress,
       vendorID: device.vendorID,
       productID: device.productID,
       interfaces: [
@@ -102,7 +102,7 @@ struct USBControllerScannerTests {
       locationID: 10
     )
     let physicalDevice = PhysicalDevice(
-      serviceIdentity: device.serviceIdentity,
+      serviceAddress: device.serviceAddress,
       vendorID: device.vendorID,
       productID: device.productID,
       interfaces: [
@@ -154,7 +154,7 @@ struct USBControllerScannerTests {
         locationID: UInt32(20 + index)
       )
       let physicalDevice = PhysicalDevice(
-        serviceIdentity: device.serviceIdentity,
+        serviceAddress: device.serviceAddress,
         vendorID: device.vendorID,
         productID: device.productID,
         interfaces: [
@@ -189,7 +189,7 @@ struct USBControllerScannerTests {
       locationID: 30
     )
     let physicalDevice = PhysicalDevice(
-      serviceIdentity: device.serviceIdentity,
+      serviceAddress: device.serviceAddress,
       vendorID: device.vendorID,
       productID: device.productID,
       interfaces: [
@@ -228,7 +228,7 @@ struct USBControllerScannerTests {
     // A parsed configuration with no interfaces is represented by [];
     // unavailable configuration facts are represented by nil.
     let physicalDevice = PhysicalDevice(
-      serviceIdentity: device.serviceIdentity,
+      serviceAddress: device.serviceAddress,
       vendorID: device.vendorID,
       productID: device.productID,
       interfaces: []
@@ -251,7 +251,7 @@ struct USBControllerScannerTests {
       locationID: 42
     )
     let physicalDevice = PhysicalDevice(
-      serviceIdentity: device.serviceIdentity,
+      serviceAddress: device.serviceAddress,
       vendorID: device.vendorID,
       productID: device.productID,
       deviceClass: 0xFF,

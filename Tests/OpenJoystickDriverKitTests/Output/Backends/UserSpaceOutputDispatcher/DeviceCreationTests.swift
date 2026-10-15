@@ -54,7 +54,7 @@ struct UserSpaceDeviceCreationTests {
     let properties = UserSpaceOutputDispatcher.deviceProperties(
       profile: profile,
       format: OJDGenericGamepadFormat(),
-      identifier: DeviceIdentifier(vendorID: 1, productID: 1)
+      identifier: LogicalControllerID(vendorID: 1, productID: 1)
     )
     #expect(properties[kIOHIDTransportKey as String] as? String == expected)
   }
@@ -91,7 +91,7 @@ struct UserSpaceDeviceCreationTests {
     let properties = UserSpaceOutputDispatcher.deviceProperties(
       profile: profile.identity,
       format: profile.reportFormat,
-      identifier: DeviceIdentifier(vendorID: 1, productID: 2)
+      identifier: LogicalControllerID(vendorID: 1, productID: 2)
     )
     #expect(properties[kIOHIDVendorIDKey as String] as? Int == vendorID)
     #expect(properties[kIOHIDProductIDKey as String] as? Int == productID)
@@ -121,7 +121,7 @@ struct UserSpaceDeviceCreationTests {
       manufacturer: "Custom Maker",
       glyphFamily: .xbox
     )
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 3)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 3)
     func properties(_ profile: VirtualDeviceProfile) -> [String: Any] {
       UserSpaceOutputDispatcher.deviceProperties(
         profile: profile,
@@ -157,7 +157,7 @@ struct UserSpaceDeviceCreationTests {
     let profile = try profileID.makeProfile()
     let identity = profile.identity
     let format = profile.reportFormat
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 3)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 3)
 
     let properties = UserSpaceOutputDispatcher.deviceProperties(
       profile: identity,
@@ -219,7 +219,7 @@ struct UserSpaceDeviceCreationTests {
     _ profileID: VirtualHIDProfileID
   ) throws {
     let profile = try profileID.makeProfile()
-    let identifier = DeviceIdentifier(vendorID: 7, productID: 9, locationID: 11)
+    let identifier = LogicalControllerID(vendorID: 7, productID: 9, locationID: 11)
 
     let first = UserSpaceOutputDispatcher.deviceProperties(
       profile: profile.identity,
@@ -238,8 +238,8 @@ struct UserSpaceDeviceCreationTests {
   @Test(arguments: VirtualHIDProfileID.allCases)
   func differentIdentifiersDifferOnlyInSerialAndLocation(_ profileID: VirtualHIDProfileID) throws {
     let profile = try profileID.makeProfile()
-    let first = DeviceIdentifier(vendorID: 7, productID: 9, locationID: 11)
-    let second = DeviceIdentifier(vendorID: 7, productID: 9, locationID: 12)
+    let first = LogicalControllerID(vendorID: 7, productID: 9, locationID: 11)
+    let second = LogicalControllerID(vendorID: 7, productID: 9, locationID: 12)
 
     var firstProperties = UserSpaceOutputDispatcher.deviceProperties(
       profile: profile.identity,

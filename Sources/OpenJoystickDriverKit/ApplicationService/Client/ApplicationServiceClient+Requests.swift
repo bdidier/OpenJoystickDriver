@@ -34,16 +34,12 @@ extension ApplicationServiceClient {
   }
 
   public func controllerState(
-    vendorID: UInt16,
-    productID: UInt16,
-    runtimeIdentifier: String? = nil
+    for controller: ControllerReference
   ) async throws -> ControllerState? {
     let data: Data? = try await call(
       .getControllerState,
       LocalServiceRPCDeviceArguments(
-        vendorID: Int(vendorID),
-        productID: Int(productID),
-        runtimeIdentifier: runtimeIdentifier
+        controller: controller
       )
     )
     guard let data else { return nil }
@@ -53,16 +49,12 @@ extension ApplicationServiceClient {
   /// The values the controller's virtual gamepad last reported; nil when no virtual gamepad
   /// publishes the controller.
   public func virtualOutputState(
-    vendorID: UInt16,
-    productID: UInt16,
-    runtimeIdentifier: String? = nil
+    for controller: ControllerReference
   ) async throws -> ApplicationServiceVirtualOutputState? {
     let data: Data? = try await call(
       .getVirtualOutputState,
       LocalServiceRPCDeviceArguments(
-        vendorID: Int(vendorID),
-        productID: Int(productID),
-        runtimeIdentifier: runtimeIdentifier
+        controller: controller
       )
     )
     guard let data else { return nil }
@@ -70,16 +62,12 @@ extension ApplicationServiceClient {
   }
 
   public func packetLog(
-    vendorID: UInt16,
-    productID: UInt16,
-    runtimeIdentifier: String? = nil
+    for controller: ControllerReference
   ) async throws -> [PacketLogEntry] {
     let data: Data = try await call(
       .getPacketLog,
       LocalServiceRPCDeviceArguments(
-        vendorID: Int(vendorID),
-        productID: Int(productID),
-        runtimeIdentifier: runtimeIdentifier
+        controller: controller
       )
     )
     guard let entries = try? JSONDecoder().decode([PacketLogEntry].self, from: data) else {
@@ -91,25 +79,19 @@ extension ApplicationServiceClient {
   /// Sends one output command to the selected controller through the running app.
   public func sendControllerOutput(
     _ command: ControllerOutputCommand,
-    vendorID: UInt16,
-    productID: UInt16,
-    runtimeIdentifier: String? = nil
+    for controller: ControllerReference
   ) async throws -> ControllerOutputResult {
     try await call(
       .sendControllerOutput,
       LocalServiceRPCControllerOutputArguments(
-        vendorID: vendorID,
-        productID: productID,
-        runtimeIdentifier: runtimeIdentifier,
+        controller: controller,
         command: command
       )
     )
   }
 
   public func previewPhysicalColor(
-    vendorID: UInt16,
-    productID: UInt16,
-    runtimeIdentifier: String? = nil,
+    for controller: ControllerReference,
     token: UUID,
     red: UInt8,
     green: UInt8,
@@ -118,9 +100,7 @@ extension ApplicationServiceClient {
     try await call(
       .previewPhysicalColor,
       LocalServiceRPCColorPreviewArguments(
-        vendorID: Int(vendorID),
-        productID: Int(productID),
-        runtimeIdentifier: runtimeIdentifier,
+        controller: controller,
         token: token,
         red: Int(red),
         green: Int(green),
@@ -130,17 +110,13 @@ extension ApplicationServiceClient {
   }
 
   public func releasePhysicalColorPreview(
-    vendorID: UInt16,
-    productID: UInt16,
-    runtimeIdentifier: String? = nil,
+    for controller: ControllerReference,
     token: UUID
   ) async throws -> Bool {
     try await call(
       .releasePhysicalColorPreview,
       LocalServiceRPCColorPreviewReleaseArguments(
-        vendorID: Int(vendorID),
-        productID: Int(productID),
-        runtimeIdentifier: runtimeIdentifier,
+        controller: controller,
         token: token
       )
     )
@@ -163,17 +139,13 @@ extension ApplicationServiceClient {
   /// or for that unit only when `unit` is true, and applies it to the connected controller.
   public func setVirtualHIDProfileOverride(
     _ profile: String,
-    vendorID: UInt16,
-    productID: UInt16,
-    runtimeIdentifier: String? = nil,
+    for controller: ControllerReference,
     unit: Bool = false
   ) async throws -> VirtualHIDProfileOverrideResult {
     try await call(
       .setVirtualHIDProfileOverride,
       LocalServiceRPCVirtualHIDProfileOverrideArguments(
-        vendorID: Int(vendorID),
-        productID: Int(productID),
-        runtimeIdentifier: runtimeIdentifier,
+        controller: controller,
         profile: profile,
         unit: unit
       )
@@ -199,17 +171,13 @@ extension ApplicationServiceClient {
   /// Returns the selected controller's model, or that unit only when `unit` is true, to automatic
   /// virtual HID profile selection.
   public func resetVirtualHIDProfileOverride(
-    vendorID: UInt16,
-    productID: UInt16,
-    runtimeIdentifier: String? = nil,
+    for controller: ControllerReference,
     unit: Bool = false
   ) async throws -> VirtualHIDProfileOverrideResult {
     try await call(
       .resetVirtualHIDProfileOverride,
       LocalServiceRPCVirtualHIDProfileOverrideResetArguments(
-        vendorID: Int(vendorID),
-        productID: Int(productID),
-        runtimeIdentifier: runtimeIdentifier,
+        controller: controller,
         unit: unit
       )
     )
@@ -250,16 +218,12 @@ extension ApplicationServiceClient {
   }
 
   public func suspendController(
-    vendorID: UInt16,
-    productID: UInt16,
-    runtimeIdentifier: String?
+    _ controller: ControllerReference
   ) async throws -> ControllerSuspendResult {
     let data: Data = try await call(
       .suspendController,
       LocalServiceRPCDeviceArguments(
-        vendorID: Int(vendorID),
-        productID: Int(productID),
-        runtimeIdentifier: runtimeIdentifier
+        controller: controller
       )
     )
     guard let result = try? JSONDecoder().decode(ControllerSuspendResult.self, from: data) else {
@@ -269,16 +233,12 @@ extension ApplicationServiceClient {
   }
 
   public func resumeController(
-    vendorID: UInt16,
-    productID: UInt16,
-    runtimeIdentifier: String?
+    _ controller: ControllerReference
   ) async throws -> ControllerResumeResult {
     let data: Data = try await call(
       .resumeController,
       LocalServiceRPCDeviceArguments(
-        vendorID: Int(vendorID),
-        productID: Int(productID),
-        runtimeIdentifier: runtimeIdentifier
+        controller: controller
       )
     )
     guard let result = try? JSONDecoder().decode(ControllerResumeResult.self, from: data) else {
@@ -288,16 +248,12 @@ extension ApplicationServiceClient {
   }
 
   public func disconnectWirelessController(
-    vendorID: UInt16,
-    productID: UInt16,
-    runtimeIdentifier: String?
+    _ controller: ControllerReference
   ) async throws -> WirelessControllerDisconnectResult {
     let data: Data = try await call(
       .disconnectWirelessController,
       LocalServiceRPCDeviceArguments(
-        vendorID: Int(vendorID),
-        productID: Int(productID),
-        runtimeIdentifier: runtimeIdentifier
+        controller: controller
       ),
       timeoutSeconds: 5
     )
@@ -377,13 +333,13 @@ extension ApplicationServiceClient {
   }
 
   public func remappingMotionCalibration(
-    runtimeIdentifier: String,
+    for controller: ControllerReference,
     command: RemappingMotionCalibrationCommand? = nil
   ) async throws -> RemappingMotionCalibrationStatus {
     try await call(
       .remappingMotionCalibration,
       ApplicationServiceMotionCalibrationArguments(
-        runtimeIdentifier: runtimeIdentifier,
+        controller: controller,
         command: command
       )
     )

@@ -40,7 +40,7 @@ struct USBHIDYieldRecoveryTests {
 
   private var observation: PhysicalDevice {
     PhysicalDevice(
-      serviceIdentity: device.serviceIdentity,
+      serviceAddress: device.serviceAddress,
       vendorID: device.vendorID,
       productID: device.productID,
       configurationValue: 1,
@@ -78,7 +78,7 @@ struct USBHIDYieldRecoveryTests {
         physicalLocationIdentifier: 93,
         interfaces: [gamepadHIDInterface(host: .usb)]
       ),
-      routingLocationID: 93
+      routingAddress: .ioKit(locationID: 93, interfaceNumber: nil)
     )
     await manager.handleHIDEvent(.connected(connection: hid, ownership: .exclusive))
     #expect(await manager.handleUSBDeviceAdded(device, provider: provider) != .retry)

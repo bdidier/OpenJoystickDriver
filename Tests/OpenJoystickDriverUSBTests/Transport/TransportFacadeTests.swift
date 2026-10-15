@@ -105,7 +105,7 @@ struct TransportFacadeTests {
       serialNumber: "serial"
     )
     let observation = PhysicalDevice(
-      serviceIdentity: device.serviceIdentity,
+      serviceAddress: device.serviceAddress,
       vendorID: device.vendorID,
       productID: device.productID,
       productName: device.productName,
@@ -146,7 +146,7 @@ struct TransportFacadeTests {
   func driverKitObservationRejectsDifferentServiceIdentity() async throws {
     let device = device(route: .usbDriverKit, serviceID: 42)
     let mismatchedObservation = PhysicalDevice(
-      serviceIdentity: USBTransportServiceIdentity(route: .usbDriverKit, serviceID: 43),
+      serviceAddress: ControllerConnectionAddress.usbService(route: .usbDriverKit, serviceID: 43),
       vendorID: device.vendorID,
       productID: device.productID,
       interfaces: [

@@ -5,7 +5,7 @@ extension DevicePipeline {
     /// Vendor-specific interface owned by the selected Apple USB transport backend.
     case usb(device: USBTransportDevice)
     /// Class 0x03 via IOKit
-    case hid(locationID: UInt32)
+    case hid(address: ControllerConnectionAddress)
   }
 
   /// Start pipeline: open device, handshake, begin input loop. A stopped pipeline stays stopped:

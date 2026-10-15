@@ -49,21 +49,14 @@ extension DevicePipeline {
     _ channel: USBCommandChannel
   ) async -> (any USBTransportSession)? {
     if let usbCommandSession { return usbCommandSession }
-    guard case .hid(let locationID) = transport, let provider = usbTransportProvider else {
+    guard case .hid(let address) = transport, let provider = usbTransportProvider else {
       return nil
     }
-    let identity = identifier.controllerIdentity
-    let device = USBTransportDevice(
-      route: .ioUSBHost,
-      serviceID: 0,
-      vendorID: identity.vendorID,
-      productID: identity.productID,
-      locationID: locationID
-    )
     let session: any USBTransportSession
     do {
-      session = try await provider.open(
-        device,
+      session = try await provider.openCommandChannel(
+        at: address,
+        model: identifier.hardware.model,
         options: USBTransportOpenOptions(interfaceNumber: channel.interfaceNumber)
       )
     } catch {

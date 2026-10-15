@@ -122,8 +122,8 @@ struct RemappingEmissionBarrierTests {
     #expect(sink.actions() == [.keyDown(.space), .keyUp(.space)])
   }
 
-  private func device() -> DeviceIdentifier {
-    DeviceIdentifier(vendorID: 1, productID: 2, locationID: 3)
+  private func device() -> LogicalControllerID {
+    LogicalControllerID(vendorID: 1, productID: 2, locationID: 3)
   }
 
   private func profile() -> RemappingProfile {

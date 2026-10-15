@@ -6,7 +6,7 @@ extension GyroRoutingTests {
   @Test
   func layerTuningNeutralizesStickAndResumesAfterFreshBaseline() {
     var engine = RemappingEngineState()
-    let device = DeviceIdentifier(vendorID: 1, productID: 2)
+    let device = LogicalControllerID(vendorID: 1, productID: 2)
     let profile = RemappingProfile(
 
       name: "Layer sensitivity",
@@ -81,7 +81,7 @@ extension GyroRoutingTests {
   @Test
   func trackballMouseRetainsVelocityAndDropsItAcrossSampleGaps() {
     var engine = RemappingEngineState()
-    let device = DeviceIdentifier(vendorID: 1, productID: 2)
+    let device = LogicalControllerID(vendorID: 1, productID: 2)
     let profile = RemappingProfile(
       name: "Trackball",
       device: RemappingDeviceScope(vendorID: 1, productID: 2),
@@ -130,7 +130,7 @@ extension GyroRoutingTests {
     mode: RemappingGyroOutputMode
   ) {
     var engine = RemappingEngineState()
-    let device = DeviceIdentifier(vendorID: 1, productID: 2)
+    let device = LogicalControllerID(vendorID: 1, productID: 2)
     let profile = RemappingProfile(
       name: "Gyro consumption",
       device: RemappingDeviceScope(vendorID: 1, productID: 2),
@@ -167,7 +167,7 @@ extension GyroRoutingTests {
   func activationWaitsForFreshBaselineAndDeactivationClearsStick(mode: RemappingGyroActivationMode)
   {
     var engine = RemappingEngineState()
-    let device = DeviceIdentifier(vendorID: 1, productID: 2)
+    let device = LogicalControllerID(vendorID: 1, productID: 2)
     let profile = RemappingProfile(
 
       name: "Gyro activation",
@@ -218,7 +218,7 @@ extension GyroRoutingTests {
   @Test
   func gyroTimeoutPreservesOtherBindingsOnTheSameStick() {
     var engine = RemappingEngineState()
-    let device = DeviceIdentifier(vendorID: 1, productID: 2)
+    let device = LogicalControllerID(vendorID: 1, productID: 2)
     let profile = RemappingProfile(
       name: "Combined stick",
       device: RemappingDeviceScope(vendorID: 1, productID: 2),
@@ -268,7 +268,7 @@ extension GyroRoutingTests {
   func calibrationResetImmediatelyNeutralizesGyroStick(rejectReset: Bool) async throws {
     let virtual = GyroResetGamepadSink()
     let engine = RemappingEventEngine(sink: RemappingTestSink(), gamepadSink: virtual)
-    let device = DeviceIdentifier(vendorID: 1, productID: 2)
+    let device = LogicalControllerID(vendorID: 1, productID: 2)
     let profile = RemappingProfile(
       name: "Gyro reset",
       device: RemappingDeviceScope(vendorID: 1, productID: 2),

@@ -9,14 +9,14 @@ import Testing
 extension InputTestTests {
   @Test
   @MainActor
-  func lightingUsesExactRuntimeIdentifierAndDeclaredValues() async {
+  func lightingUsesTheSessionTokenAndDeclaredValues() async {
     let capabilities = PhysicalControllerOutputCapabilities(lightingFeatures: [
       .playerIndicator, .programmableColor, .programmableBrightness,
     ])
     let gateway = InputTestGatewayStub()
     let model = InputTestViewModel(gateway: gateway)
     let device = makeInputTestDevice(capabilities: capabilities)
-    let selector = RuntimeDeviceSelector(device: device)
+    let selector = ControllerReference.session(device.sessionToken)
     model.selectDevice(device)
     model.playerIndicator = .player3
     model.red = 12
@@ -226,7 +226,7 @@ extension InputTestTests {
 
   func makeInputTestDevice(
     capabilities: PhysicalControllerOutputCapabilities = .dualMainRumble,
-    runtimeIdentifier: String = "input-test-device",
+    sessionToken: String = "input-device",
     connection: String = "USB",
     discoverySource: DeviceDiscoverySource = .rawUSB
   ) -> ApplicationServiceDeviceDescription {
@@ -240,7 +240,7 @@ extension InputTestTests {
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
       physicalOutputCapabilities: capabilities,
-      runtimeIdentifier: runtimeIdentifier
+      sessionToken: .fixture(sessionToken)
     )
   }
 

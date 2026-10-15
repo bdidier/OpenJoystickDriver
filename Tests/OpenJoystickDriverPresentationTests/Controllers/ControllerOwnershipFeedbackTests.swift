@@ -21,7 +21,7 @@ struct ControllerOwnershipFeedbackTests {
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
       recordOwnership: recordOwnership,
-      runtimeIdentifier: "session-device-feedback"
+      sessionToken: .fixture("device-feedback")
     )
   }
 
@@ -105,7 +105,7 @@ struct ControllerOwnershipFeedbackTests {
 
     await viewModel.setControllerOwnership(.ojd, for: device)
 
-    let message = viewModel.controllerActionFailures[device.runtimeIdentifier]
+    let message = viewModel.controllerActionFailures[device.sessionToken.rawValue]
     #expect(message == expected)
   }
 

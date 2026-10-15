@@ -1,6 +1,7 @@
 #if canImport(SwiftUI)
   import Foundation
   import OpenJoystickDriverKit
+  import OpenJoystickDriverTestSupport
   import Testing
 
   @testable import OpenJoystickDriverPresentation
@@ -11,7 +12,7 @@
     func unavailableMotionClearsBusyStateAndProvidesRecoveryGuidance() async {
       let gateway = DelayedMotionCalibrationGateway()
       let model = MotionCalibrationViewModel(gateway: gateway)
-      model.select(RuntimeDeviceSelector(vendorID: 1, productID: 2, runtimeIdentifier: "first"))
+      model.select(ControllerReference.session(.fixture("first")))
       let request = Task { await model.refresh() }
       await gateway.waitForRequest()
       await gateway.fail()
@@ -36,7 +37,7 @@
     ) async {
       let gateway = DelayedMotionCalibrationGateway()
       let model = MotionCalibrationViewModel(gateway: gateway)
-      model.select(RuntimeDeviceSelector(vendorID: 1, productID: 2, runtimeIdentifier: "first"))
+      model.select(ControllerReference.session(.fixture("first")))
       let request = Task { await model.refresh() }
       await gateway.waitForRequest()
       await gateway.fail(ApplicationServiceRemappingRPCError(code: code, message: "service text"))
@@ -48,7 +49,7 @@
     func serviceMotionUnavailableGivesTheRecoveryGuidance() async {
       let gateway = DelayedMotionCalibrationGateway()
       let model = MotionCalibrationViewModel(gateway: gateway)
-      model.select(RuntimeDeviceSelector(vendorID: 1, productID: 2, runtimeIdentifier: "first"))
+      model.select(ControllerReference.session(.fixture("first")))
       let request = Task { await model.refresh() }
       await gateway.waitForRequest()
       await gateway.fail(
@@ -64,7 +65,7 @@
     func discardedSelectionIgnoresLateCalibrationResult() async throws {
       let gateway = DelayedMotionCalibrationGateway()
       let model = MotionCalibrationViewModel(gateway: gateway)
-      model.select(RuntimeDeviceSelector(vendorID: 1, productID: 2, runtimeIdentifier: "first"))
+      model.select(ControllerReference.session(.fixture("first")))
       let request = Task { await model.refresh() }
       await gateway.waitForRequest()
       #expect(model.isBusy)
@@ -80,7 +81,7 @@
     func selectedControllerReceivesCalibrationStatus() async throws {
       let gateway = DelayedMotionCalibrationGateway()
       let model = MotionCalibrationViewModel(gateway: gateway)
-      let selector = RuntimeDeviceSelector(vendorID: 1, productID: 2, runtimeIdentifier: "second")
+      let selector = ControllerReference.session(.fixture("second"))
       model.select(selector)
       let request = Task { await model.perform(.start) }
       await gateway.waitForRequest()
@@ -97,12 +98,12 @@
 
   private actor DelayedMotionCalibrationGateway: MotionCalibrationGateway {
     var command: RemappingMotionCalibrationCommand?
-    var selector: RuntimeDeviceSelector?
+    var selector: ControllerReference?
     private var pending: CheckedContinuation<RemappingMotionCalibrationStatus, any Error>?
     private var observer: CheckedContinuation<Void, Never>?
 
     func motionCalibration(
-      for selector: RuntimeDeviceSelector,
+      for selector: ControllerReference,
       command: RemappingMotionCalibrationCommand?
     ) async throws -> RemappingMotionCalibrationStatus {
       self.selector = selector

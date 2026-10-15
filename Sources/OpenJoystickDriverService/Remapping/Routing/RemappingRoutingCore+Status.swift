@@ -2,7 +2,7 @@ import Foundation
 import OpenJoystickDriverKit
 
 extension RemappingRoutingCore {
-  func status(for identifier: DeviceIdentifier) -> RemappingRouteStatus? {
+  func status(for identifier: LogicalControllerID) -> RemappingRouteStatus? {
     guard let route = routes[identifier] else { return nil }
     return makeStatus(identifier: identifier, route: route)
   }
@@ -39,7 +39,7 @@ extension RemappingRoutingCore {
     }
     return RemappingRouterStatusSnapshot(
       routes: statuses(),
-      joyConPairs: joyConPairPayloads(),
+      joyConPairs: sortedJoyConPairs(),
       postEventAccessState: environment.postEventAccessState
     )
   }
@@ -54,7 +54,7 @@ extension RemappingRoutingCore {
   }
 
   private func makeStatus(
-    identifier: DeviceIdentifier,
+    identifier: LogicalControllerID,
     route: RemappingControllerRoute
   ) -> RemappingRouteStatus {
     let selection: RemappingRouteSelection

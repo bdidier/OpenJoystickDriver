@@ -12,11 +12,11 @@ extension InputTestTests {
     let model = InputTestViewModel(gateway: InputTestGatewayStub())
     let device = makeInputTestDevice()
     model.selectDevice(device)
-    #expect(model.motionCalibration.selector == RuntimeDeviceSelector(device: device))
+    #expect(model.motionCalibration.selector == ControllerReference.session(device.sessionToken))
     model.reconcileConnectedDevices([])
     #expect(model.motionCalibration.selector == nil)
     model.reconcileConnectedDevices([device])
-    #expect(model.motionCalibration.selector == RuntimeDeviceSelector(device: device))
+    #expect(model.motionCalibration.selector == ControllerReference.session(device.sessionToken))
     model.close()
     #expect(model.motionCalibration.selector == nil)
   }
@@ -84,7 +84,11 @@ extension InputTestTests {
 
     #expect(model.sessionState == .live)
     #expect(model.latestInput == pressed)
-    #expect(await gateway.inputSelectors == [RuntimeDeviceSelector(device: makeInputTestDevice())])
+    #expect(
+      await gateway.inputSelectors == [
+        ControllerReference.session(makeInputTestDevice().sessionToken)
+      ]
+    )
     model.close()
   }
 
@@ -239,8 +243,8 @@ extension InputTestTests {
   func switchingDevicesTransfersAutomaticSamplingOwnership() async {
     let gateway = InputTestGatewayStub(inputDelayNanoseconds: 200_000_000)
     let model = InputTestViewModel(gateway: gateway)
-    let oldDevice = makeInputTestDevice(runtimeIdentifier: "input-test-old")
-    let newDevice = makeInputTestDevice(runtimeIdentifier: "input-test-new")
+    let oldDevice = makeInputTestDevice(sessionToken: "input-test-old")
+    let newDevice = makeInputTestDevice(sessionToken: "input-test-new")
     model.selectDevice(oldDevice)
     model.open()
     try? await Task.sleep(nanoseconds: 20_000_000)
@@ -248,12 +252,13 @@ extension InputTestTests {
     model.selectDevice(newDevice)
     try? await Task.sleep(nanoseconds: 20_000_000)
 
-    #expect(model.device?.runtimeIdentifier == newDevice.runtimeIdentifier)
+    #expect(model.device?.sessionToken.rawValue == newDevice.sessionToken.rawValue)
     #expect(model.sessionState == .starting)
     #expect(await gateway.counts().cancelled == 1)
     #expect(
       await gateway.inputSelectors == [
-        RuntimeDeviceSelector(device: oldDevice), RuntimeDeviceSelector(device: newDevice),
+        ControllerReference.session(oldDevice.sessionToken),
+        ControllerReference.session(newDevice.sessionToken),
       ]
     )
     model.close()
@@ -301,7 +306,7 @@ extension InputTestTests {
     let active = calls.first {
       $0.left != 0 || $0.right != 0 || $0.leftTrigger != 0 || $0.rightTrigger != 0
     }
-    #expect(active?.selector == RuntimeDeviceSelector(device: device))
+    #expect(active?.selector == ControllerReference.session(device.sessionToken))
     #expect(active?.left == 127)
     #expect(active?.right == 0)
     #expect(active?.leftTrigger == 0)

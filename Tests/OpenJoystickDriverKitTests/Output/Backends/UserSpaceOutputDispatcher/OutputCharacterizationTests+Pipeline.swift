@@ -24,7 +24,7 @@ extension OutputCharacterizationTests {
     func dispatch(
       _ event: ControllerEvent,
       labels: ControllerButtonLabels,
-      from identifier: DeviceIdentifier
+      from identifier: LogicalControllerID
     ) async {
       let changes = lock.withLock {
         defer { previous = event.state }
@@ -34,9 +34,9 @@ extension OutputCharacterizationTests {
       await output.dispatch(event, from: identifier)
     }
 
-    func activateOutput(for _: DeviceIdentifier) { record("  activate") }
+    func activateOutput(for _: LogicalControllerID) { record("  activate") }
 
-    func controllerDidStop(_ identifier: DeviceIdentifier) async {
+    func controllerDidStop(_ identifier: LogicalControllerID) async {
       record("  stop")
       await output.stateDispatcher.controllerDidStop(identifier)
       await output.reportDispatcher.controllerDidStop(identifier)
@@ -87,7 +87,7 @@ extension OutputCharacterizationTests {
       let dispatcher = PipelineOutput()
       let pipeline = DevicePipeline(
         identifier: Self.standard,
-        transport: .hid(locationID: 1),
+        transport: .hid(address: .ioKit(locationID: 1, interfaceNumber: nil)),
         driver: ScriptedBatches([held]),
         dispatcher: dispatcher,
         idleTimeoutNanoseconds: 5_000_000_000,

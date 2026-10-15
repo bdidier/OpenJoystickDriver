@@ -54,7 +54,7 @@ final class RuntimeViewModel: ObservableObject {
   private(set) var mutationInFlight = false
   var fullRefreshInFlight = false
   var pendingScopedRefreshes: ScopedRefresh = []
-  var controllerRuntimeIdentifiers: [String] = []
+  var controllerSessionTokens: [ControllerSessionToken] = []
   var scopedRefreshWaiters: [CheckedContinuation<Void, Never>] = []
   var exclusiveOperationWaiters: [CheckedContinuation<Void, Never>] = []
   private let systemExtensionSetup: SystemExtensionSetupCoordinator

@@ -3,18 +3,16 @@ import OpenJoystickDriverKit
 
 extension RuntimeViewModel {
   /// The button labels of the connected controller `selector` names; standard when unknown.
-  func buttonLabels(for selector: RuntimeDeviceSelector) -> ControllerButtonLabels {
+  func buttonLabels(for selector: ControllerReference) -> ControllerButtonLabels {
     guard case .available(let status) = statusState,
       let device = status.devices.first(where: { device in
-        device.vendorID == selector.vendorID && device.productID == selector.productID
-          && (selector.runtimeIdentifier == nil
-            || selector.runtimeIdentifier == device.runtimeIdentifier)
+        selector.names(device)
       })
     else { return .standard }
     return ControllerButtonLabels(protocolID: device.protocolBinding.protocolID)
   }
 
-  func listenForInput(for selector: RuntimeDeviceSelector) async {
+  func listenForInput(for selector: ControllerReference) async {
     inputGeneration += 1
     let generation = inputGeneration
     inputCaptureState = .listening(selector)
@@ -66,7 +64,11 @@ extension RuntimeViewModel {
     inputCaptureState = .idle
   }
 
-  func pairRemappingJoyCons(left: String, right: String, profileID: UUID) async -> String? {
+  func pairRemappingJoyCons(
+    left: ControllerReference,
+    right: ControllerReference,
+    profileID: UUID
+  ) async -> String? {
     guard !mutationInFlight else {
       return OJDLocalized.string(
         "error.actionInProgress"
@@ -105,7 +107,7 @@ extension RuntimeViewModel {
     virtualHIDProfileOverrideStates[model] = RuntimeVirtualHIDProfileOverrideState(
       request: profile.map { .set($0) } ?? .reset
     )
-    let selector = RuntimeDeviceSelector(device: device)
+    let selector = ControllerReference.session(device.sessionToken)
     var failure: String?
     do {
       let result: VirtualHIDProfileOverrideResult
@@ -168,7 +170,9 @@ extension RuntimeViewModel {
 
   func suspendController(_ device: ApplicationServiceDeviceDescription) async {
     await performControllerAction(device) {
-      let result = try await gateway.suspendController(RuntimeDeviceSelector(device: device))
+      let result = try await gateway.suspendController(
+        ControllerReference.session(device.sessionToken)
+      )
       guard result.succeeded || result.failure == .alreadySuspended else {
         throw ApplicationServiceGatewayError.controllerSessionChangeRejected
       }
@@ -178,7 +182,9 @@ extension RuntimeViewModel {
 
   func resumeController(_ device: ApplicationServiceDeviceDescription) async {
     await performControllerAction(device) {
-      let result = try await gateway.resumeController(RuntimeDeviceSelector(device: device))
+      let result = try await gateway.resumeController(
+        ControllerReference.session(device.sessionToken)
+      )
       guard result.succeeded || result.failure == .alreadyActive else {
         throw ApplicationServiceGatewayError.controllerSessionChangeRejected
       }
@@ -189,7 +195,7 @@ extension RuntimeViewModel {
   func disconnectWirelessController(_ device: ApplicationServiceDeviceDescription) async {
     await performControllerAction(device) {
       let result = try await gateway.disconnectWirelessController(
-        RuntimeDeviceSelector(device: device)
+        ControllerReference.session(device.sessionToken)
       )
       guard !result.succeeded else { return nil }
       let stage = result.failedStage?.rawValue ?? "disconnect-wireless-controller"
@@ -207,12 +213,12 @@ extension RuntimeViewModel {
     _ device: ApplicationServiceDeviceDescription,
     _ action: () async throws -> String?
   ) async {
-    controllerActionFailures[device.runtimeIdentifier] = nil
+    controllerActionFailures[device.sessionToken.rawValue] = nil
     var failure: String?
     do { failure = try await action() } catch {
       failure = RuntimePresentation.userFacingError(error)
     }
     await refreshControllerInventory()
-    controllerActionFailures[device.runtimeIdentifier] = failure
+    controllerActionFailures[device.sessionToken.rawValue] = failure
   }
 }

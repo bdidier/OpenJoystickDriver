@@ -7,7 +7,7 @@ struct PhysicalOutputOwnershipTests {
   @Test
   func newestMappingClaimWinsAndReleasingItRestoresPreviousClaim() {
     var ownership = PhysicalOutputOwnership()
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 3)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 3)
     let first = UUID()
     let second = UUID()
     let channel = PhysicalOutputChannel.rumble(.leftMain)
@@ -44,7 +44,7 @@ struct PhysicalOutputOwnershipTests {
   @Test
   func manualOverrideHasPriorityUntilItsNeutralValueReleasesIt() {
     var ownership = PhysicalOutputOwnership()
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 3)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 3)
     let channel = PhysicalOutputChannel.playerIndicator
 
     ownership.setMapping(.playerIndicator(.player2), active: true, owner: UUID(), for: identifier)
@@ -62,8 +62,8 @@ struct PhysicalOutputOwnershipTests {
   @Test
   func deviceCleanupCannotAffectAReplacementIdentifier() {
     var ownership = PhysicalOutputOwnership()
-    let stale = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 3)
-    let replacement = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 4)
+    let stale = LogicalControllerID(vendorID: 1, productID: 2, locationID: 3)
+    let replacement = LogicalControllerID(vendorID: 1, productID: 2, locationID: 4)
     let channel = PhysicalOutputChannel.color
 
     ownership.setMapping(
@@ -90,7 +90,7 @@ struct PhysicalOutputOwnershipTests {
   @Test
   func colorPrecedenceRestoresMappingThenProfileAndTreatsBlackAsSelected() {
     var ownership = PhysicalOutputOwnership()
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 3)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 3)
     let mappingOwner = UUID()
     let previewToken = UUID()
 
@@ -132,8 +132,8 @@ struct PhysicalOutputOwnershipTests {
   @Test
   func rollingBackOneChannelKeepsOtherChannelsAndControllers() {
     var ownership = PhysicalOutputOwnership()
-    let first = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 3)
-    let second = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 4)
+    let first = LogicalControllerID(vendorID: 1, productID: 2, locationID: 3)
+    let second = LogicalControllerID(vendorID: 1, productID: 2, locationID: 4)
     let rumble = PhysicalOutputChannel.rumble(.leftMain)
     let colorBefore = ownership.state(of: [.color], for: first)
 
@@ -161,7 +161,7 @@ struct PhysicalOutputOwnershipTests {
   @Test
   func rollbackCapturedBeforeClearingRestoresNothing() {
     var ownership = PhysicalOutputOwnership()
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 3)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 3)
     ownership.setMapping(.playerIndicator(.player1), active: true, owner: UUID(), for: identifier)
     let beforeDevice = ownership.state(of: [.playerIndicator], for: identifier)
     ownership.removeDevice(identifier)

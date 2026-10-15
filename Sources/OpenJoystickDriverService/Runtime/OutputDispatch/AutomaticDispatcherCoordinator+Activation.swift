@@ -2,14 +2,14 @@ import Foundation
 import OpenJoystickDriverKit
 
 extension AutomaticDispatcherCoordinator {
-  typealias Eligibility = @Sendable (DeviceIdentifier, VirtualHIDProfileID) async -> Bool
+  typealias Eligibility = @Sendable (LogicalControllerID, VirtualHIDProfileID) async -> Bool
   typealias Factory = @Sendable (VirtualHIDProfileID) throws -> any VirtualOutputDispatching
   /// The controller's selected profile; nil when no profile can represent it.
   typealias ProfileProvider =
-    @Sendable (ApplicationServiceDeviceDescription) -> VirtualHIDProfileID?
+    @Sendable (LogicalControllerID, ApplicationServiceDeviceDescription) -> VirtualHIDProfileID?
 
   struct Request: Sendable {
-    let controller: DeviceIdentifier
+    let controller: LogicalControllerID
     let token: UUID
     let sessionGeneration: UInt64
     let publicationGeneration: UInt64
@@ -48,17 +48,16 @@ extension AutomaticDispatcherCoordinator {
   }
 
   func activateOne(
-    identifier: DeviceIdentifier,
-    descriptions: [ApplicationServiceDeviceDescription],
+    identifier: LogicalControllerID,
+    descriptions: [LogicalControllerID: ApplicationServiceDeviceDescription],
     isEligible: @escaping Eligibility,
     profileProvider: @escaping ProfileProvider,
     factory: @escaping Factory
   ) async throws {
     guard !closed else { throw CancellationError() }
     guard
-      let description = descriptions.first(where: {
-        $0.runtimeIdentifier == identifier.runtimeIdentifier
-      }), let profile = profileProvider(description)
+      let description = descriptions[identifier],
+      let profile = profileProvider(identifier, description)
     else { return }
     beginSession(identifier)
     let lease = try await acquire(
@@ -72,7 +71,7 @@ extension AutomaticDispatcherCoordinator {
 
   /// Starts a new physical session for a controller that `stop` ended, as when the same
   /// controller starts again after system sleep. Work from the ended session stays invalid.
-  func beginSession(_ identifier: DeviceIdentifier) {
+  func beginSession(_ identifier: LogicalControllerID) {
     guard !closed, entries[identifier]?.physicalSessionActive == false else { return }
     entries[identifier]?.physicalSessionActive = true
     entries[identifier]?.sessionGeneration &+= 1
@@ -80,16 +79,16 @@ extension AutomaticDispatcherCoordinator {
   }
 
   func activate(
-    identifiers: [DeviceIdentifier],
-    descriptions: [ApplicationServiceDeviceDescription],
+    identifiers: [LogicalControllerID],
+    descriptions: [LogicalControllerID: ApplicationServiceDeviceDescription],
     isEligible: @escaping Eligibility,
     profileProvider: @escaping ProfileProvider,
-    factory: @escaping (DeviceIdentifier) -> Factory
+    factory: @escaping (LogicalControllerID) -> Factory
   ) async throws {
     guard !closed, entries.isEmpty else {
       throw UserSpaceOutputDispatcher.CreationError.createFailed
     }
-    var seen = Set<DeviceIdentifier>()
+    var seen = Set<LogicalControllerID>()
     do {
       for identifier in identifiers where seen.insert(identifier).inserted {
         try await activateOne(
@@ -107,7 +106,7 @@ extension AutomaticDispatcherCoordinator {
   }
 
   /// Acquires only an existing backend so cleanup cannot create a replacement controller.
-  func leaseForNeutralization(_ controller: DeviceIdentifier) async -> AutomaticBackendLease? {
+  func leaseForNeutralization(_ controller: LogicalControllerID) async -> AutomaticBackendLease? {
     if closed {
       await close()
       return nil
@@ -118,7 +117,7 @@ extension AutomaticDispatcherCoordinator {
   }
 
   func leaseForDispatch(
-    controller: DeviceIdentifier,
+    controller: LogicalControllerID,
     profile: VirtualHIDProfileID,
     isEligible: @escaping Eligibility,
     factory: @escaping Factory
@@ -136,7 +135,7 @@ extension AutomaticDispatcherCoordinator {
   /// - Throws: The build or activation failure, or `CancellationError` when the controller
   ///   stopped, the coordinator closed, or the replacement could not be installed.
   func retarget(
-    _ controller: DeviceIdentifier,
+    _ controller: LogicalControllerID,
     target: VirtualHIDProfileID,
     rebuildsLiveTarget: Bool = false,
     isEligible: @escaping Eligibility,
@@ -170,7 +169,7 @@ extension AutomaticDispatcherCoordinator {
   }
 
   func acquire(
-    _ controller: DeviceIdentifier,
+    _ controller: LogicalControllerID,
     target: VirtualHIDProfileID,
     isEligible: @escaping Eligibility,
     factory: @escaping Factory,
@@ -332,7 +331,7 @@ extension AutomaticDispatcherCoordinator {
 
   /// Returns the controller's virtual device to rest before its backend is retired, so no
   /// consumer is left holding pressed input from a device that disappears.
-  private func neutralize(_ slot: AutomaticBackendSlot, controller: DeviceIdentifier) async {
+  private func neutralize(_ slot: AutomaticBackendSlot, controller: LogicalControllerID) async {
     guard let lease = slot.acquire() else { return }
     if let sink = lease.backend as? any RemappingGamepadSink {
       try? await sink.send(RemappingGamepadState.neutral, for: controller)

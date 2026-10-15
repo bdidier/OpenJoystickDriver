@@ -35,10 +35,10 @@ actor GatewayStub: ApplicationServiceGateway {
   let statusReadDelayNanoseconds: UInt64
   let inputState: ControllerState?
   let inputSequence: [ControllerState]?
-  let inputStatesByRuntimeIdentifier: [String: ControllerState]
+  let inputStatesBySessionToken: [String: ControllerState]
   var packetEntries: [PacketLogEntry]
   let packetSequence: [[PacketLogEntry]]?
-  let packetEntriesByRuntimeIdentifier: [String: [PacketLogEntry]]
+  let packetEntriesBySessionToken: [String: [PacketLogEntry]]
   let deviceReadDelaysNanoseconds: [String: UInt64]
   let updateShouldConflict: Bool
   let updateDelayNanoseconds: UInt64
@@ -46,7 +46,7 @@ actor GatewayStub: ApplicationServiceGateway {
   var overrideFailure: VirtualHIDProfileOverrideFailure?
   var overrideError: ApplicationServiceClientError?
   var lastExpectedCurrent: RemappingProfile?
-  var lastInputSelector: RuntimeDeviceSelector?
+  var lastInputSelector: ControllerReference?
   var updateCallCount = 0
   var deleteCallCount = 0
   var lastDeletedProfileID: UUID?
@@ -61,7 +61,7 @@ actor GatewayStub: ApplicationServiceGateway {
   var statusReadContinuations: [CheckedContinuation<Void, Never>] = []
   var statusCallWaiters: [(count: Int, continuation: CheckedContinuation<Void, Never>)] = []
   var remappingSnapshotCallCount = 0
-  var overrideRequests: [(profile: VirtualHIDProfileID?, selector: RuntimeDeviceSelector)] = []
+  var overrideRequests: [(profile: VirtualHIDProfileID?, selector: ControllerReference)] = []
   var ownershipRequests: [(model: ControllerModelID, ownership: ControllerOwnership)] = []
   var ownershipFailure: (failure: ControllerOwnershipFailure, detail: String?)?
   var overrideRequestsAreGated = false
@@ -86,10 +86,10 @@ actor GatewayStub: ApplicationServiceGateway {
     statusReadDelayNanoseconds: UInt64 = 0,
     inputState: ControllerState? = nil,
     inputSequence: [ControllerState]? = nil,
-    inputStatesByRuntimeIdentifier: [String: ControllerState] = [:],
+    inputStatesBySessionToken: [String: ControllerState] = [:],
     packetEntries: [PacketLogEntry] = [],
     packetSequence: [[PacketLogEntry]]? = nil,
-    packetEntriesByRuntimeIdentifier: [String: [PacketLogEntry]] = [:],
+    packetEntriesBySessionToken: [String: [PacketLogEntry]] = [:],
     deviceReadDelaysNanoseconds: [String: UInt64] = [:],
     updateShouldConflict: Bool = false,
     updateDelayNanoseconds: UInt64 = 0,
@@ -102,10 +102,10 @@ actor GatewayStub: ApplicationServiceGateway {
     self.statusReadDelayNanoseconds = statusReadDelayNanoseconds
     self.inputState = inputState
     self.inputSequence = inputSequence
-    self.inputStatesByRuntimeIdentifier = inputStatesByRuntimeIdentifier
+    self.inputStatesBySessionToken = inputStatesBySessionToken
     self.packetEntries = packetEntries
     self.packetSequence = packetSequence
-    self.packetEntriesByRuntimeIdentifier = packetEntriesByRuntimeIdentifier
+    self.packetEntriesBySessionToken = packetEntriesBySessionToken
     self.deviceReadDelaysNanoseconds = deviceReadDelaysNanoseconds
     self.updateShouldConflict = updateShouldConflict
     self.updateDelayNanoseconds = updateDelayNanoseconds
@@ -165,16 +165,16 @@ actor GatewayStub: ApplicationServiceGateway {
     _ requirement: PermissionManager.Requirement
   ) throws -> PermissionManager.Snapshot { try requestPermissions() }
 
-  func controllerState(for selector: RuntimeDeviceSelector) async throws -> ControllerState? {
+  func controllerState(for selector: ControllerReference) async throws -> ControllerState? {
     activeDeviceReads += 1
     maximumConcurrentDeviceReads = max(maximumConcurrentDeviceReads, activeDeviceReads)
     defer { activeDeviceReads -= 1 }
     lastInputSelector = selector
-    if let runtimeIdentifier = selector.runtimeIdentifier {
-      if let delay = deviceReadDelaysNanoseconds[runtimeIdentifier] {
+    if case .session(let token) = selector {
+      if let delay = deviceReadDelaysNanoseconds[token.rawValue] {
         try await Task.sleep(nanoseconds: delay)
       }
-      if let mapped = inputStatesByRuntimeIdentifier[runtimeIdentifier] { return mapped }
+      if let mapped = inputStatesBySessionToken[token.rawValue] { return mapped }
     }
     if let inputSequence, !inputSequence.isEmpty {
       let index = min(inputReadCount, inputSequence.count - 1)
@@ -184,16 +184,16 @@ actor GatewayStub: ApplicationServiceGateway {
     return inputState
   }
 
-  func packetLog(for selector: RuntimeDeviceSelector) async throws -> [PacketLogEntry] {
+  func packetLog(for selector: ControllerReference) async throws -> [PacketLogEntry] {
     activeDeviceReads += 1
     maximumConcurrentDeviceReads = max(maximumConcurrentDeviceReads, activeDeviceReads)
     defer { activeDeviceReads -= 1 }
     lastInputSelector = selector
-    if let runtimeIdentifier = selector.runtimeIdentifier {
-      if let delay = deviceReadDelaysNanoseconds[runtimeIdentifier] {
+    if case .session(let token) = selector {
+      if let delay = deviceReadDelaysNanoseconds[token.rawValue] {
         try await Task.sleep(nanoseconds: delay)
       }
-      if let mapped = packetEntriesByRuntimeIdentifier[runtimeIdentifier] { return mapped }
+      if let mapped = packetEntriesBySessionToken[token.rawValue] { return mapped }
     }
     if let packetSequence, !packetSequence.isEmpty {
       let index = min(packetReadCount, packetSequence.count - 1)
@@ -302,8 +302,8 @@ actor GatewayStub: ApplicationServiceGateway {
   }
 
   func pairRemappingJoyCons(
-    left: String,
-    right: String,
+    left: ControllerReference,
+    right: ControllerReference,
     profileID: UUID
   ) throws -> ApplicationServiceRemappingSnapshotPayload { snapshotPayload }
 
@@ -312,7 +312,7 @@ actor GatewayStub: ApplicationServiceGateway {
 
   func setVirtualHIDProfileOverride(
     _ profile: VirtualHIDProfileID,
-    for selector: RuntimeDeviceSelector
+    for selector: ControllerReference
   ) async throws -> VirtualHIDProfileOverrideResult {
     try await recordOverrideRequest(profile, selector: selector)
     return VirtualHIDProfileOverrideResult(
@@ -324,7 +324,7 @@ actor GatewayStub: ApplicationServiceGateway {
   }
 
   func resetVirtualHIDProfileOverride(
-    for selector: RuntimeDeviceSelector
+    for selector: ControllerReference
   ) async throws -> VirtualHIDProfileOverrideResult {
     try await recordOverrideRequest(nil, selector: selector)
     return VirtualHIDProfileOverrideResult(
@@ -371,7 +371,7 @@ actor GatewayStub: ApplicationServiceGateway {
 
   private func recordOverrideRequest(
     _ profile: VirtualHIDProfileID?,
-    selector: RuntimeDeviceSelector
+    selector: ControllerReference
   ) async throws {
     overrideRequests.append((profile, selector))
     if overrideRequestsAreGated {

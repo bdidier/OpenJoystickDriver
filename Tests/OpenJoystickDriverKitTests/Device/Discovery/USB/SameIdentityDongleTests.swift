@@ -47,7 +47,7 @@ struct SameIdentityDongleTests {
   }
 
   @Test
-  func rumbleForOneWiredSignaturePadReachesOnlyThatPad() async {
+  func rumbleForOneWiredSignaturePadReachesOnlyThatPad() async throws {
     let manager = DeviceManager(dispatcher: LoggingOutputDispatcher())
     let first = Self.pad(serviceID: 510, interfaceProtocol: 0x01, outEndpoint: 0x01)
     let second = Self.pad(serviceID: 520, interfaceProtocol: 0x01, outEndpoint: 0x01)
@@ -61,11 +61,10 @@ struct SameIdentityDongleTests {
     )
 
     for pad in [first, second] {
-      let identifier = Self.identifier(pad.device)
+      let portKey = try #require(Self.identifier(pad.device).portKey)
       let result = await manager.sendControllerOutput(
         rumble,
-        for: identifier.model,
-        runtimeIdentifier: identifier.runtimeIdentifier
+        for: .port(portKey)
       )
       #expect(result == ControllerOutputResult(.delivered))
     }
@@ -77,7 +76,7 @@ struct SameIdentityDongleTests {
   }
 
   @Test
-  func rumbleForOneConnectedReceiverReachesOnlyThatReceiver() async {
+  func rumbleForOneConnectedReceiverReachesOnlyThatReceiver() async throws {
     let manager = DeviceManager(dispatcher: LoggingOutputDispatcher())
     let first = Self.pad(serviceID: 610, interfaceProtocol: 0x81, outEndpoint: 0x01)
     let second = Self.pad(serviceID: 620, interfaceProtocol: 0x81, outEndpoint: 0x01)
@@ -87,7 +86,7 @@ struct SameIdentityDongleTests {
     }
 
     for (pad, left, right) in [(first, UInt8(0x80), UInt8(0x10)), (second, 0x20, 0x40)] {
-      let identifier = Self.identifier(pad.device)
+      let portKey = try #require(Self.identifier(pad.device).portKey)
       let result = await manager.sendControllerOutput(
         .setRumble(
           RumbleIntensities(
@@ -96,8 +95,7 @@ struct SameIdentityDongleTests {
           ),
           duration: .milliseconds(5_000)
         ),
-        for: identifier.model,
-        runtimeIdentifier: identifier.runtimeIdentifier
+        for: .port(portKey)
       )
       #expect(result == ControllerOutputResult(.delivered))
     }
@@ -110,20 +108,19 @@ struct SameIdentityDongleTests {
   }
 
   @Test
-  func wiredSignaturePadWithOutEndpointTwoIsAdmittedAndTakesRumble() async {
+  func wiredSignaturePadWithOutEndpointTwoIsAdmittedAndTakesRumble() async throws {
     let manager = DeviceManager(dispatcher: LoggingOutputDispatcher())
     let pad = Self.pad(serviceID: 710, interfaceProtocol: 0x01, outEndpoint: 0x02)
     _ = await manager.handleUSBDeviceAdded(pad.device, provider: pad.provider)
     #expect(await Self.waitUntil { await pad.session.writeCount >= 1 })
 
-    let identifier = Self.identifier(pad.device)
+    let portKey = try #require(Self.identifier(pad.device).portKey)
     let result = await manager.sendControllerOutput(
       .setRumble(
         RumbleIntensities(leftMain: UnipolarValue(byte: 0x80)),
         duration: .milliseconds(5_000)
       ),
-      for: identifier.model,
-      runtimeIdentifier: identifier.runtimeIdentifier
+      for: .port(portKey)
     )
 
     #expect(result == ControllerOutputResult(.delivered))
@@ -156,7 +153,7 @@ struct SameIdentityDongleTests {
       locationID: UInt32(serviceID) + 1
     )
     let descriptor = PhysicalDevice(
-      serviceIdentity: device.serviceIdentity,
+      serviceAddress: device.serviceAddress,
       vendorID: vendorID,
       productID: productID,
       configurationValue: 1,
@@ -188,8 +185,8 @@ struct SameIdentityDongleTests {
     )
   }
 
-  private static func identifier(_ device: USBTransportDevice) -> DeviceIdentifier {
-    DeviceIdentifier(
+  private static func identifier(_ device: USBTransportDevice) -> LogicalControllerID {
+    LogicalControllerID(
       vendorID: device.vendorID,
       productID: device.productID,
       locationID: device.locationID,

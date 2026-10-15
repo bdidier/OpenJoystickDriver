@@ -95,19 +95,24 @@ struct ControllerOutputCommandCodableTests {
     }
   }
 
-  /// A selector ID outside `UInt16` fails the request instead of matching no controller.
+  /// A controller reference outside the three text forms fails the request instead of matching no
+  /// controller.
   @Test
-  func requestArgumentsRejectOutOfRangeIDs() throws {
+  func requestArgumentsRejectMalformedControllerReferences() throws {
     let command = #""command":{"type":"stop-rumble"}"#
-    let valid = #"{"vendorID":65535,"productID":0,"# + command + "}"
+    let valid = #"{"controller":"FFFF:0000","# + command + "}"
     let decoded = try JSONDecoder().decode(
       LocalServiceRPCControllerOutputArguments.self,
       from: Data(valid.utf8)
     )
-    #expect(decoded.vendorID == 0xFFFF && decoded.command == .stopRumble)
+    #expect(
+      decoded.controller == .model(ControllerModelID(vendorID: 0xFFFF, productID: 0))
+        && decoded.command == .stopRumble
+    )
     for invalid in [
-      #"{"vendorID":65536,"productID":0,"# + command + "}",
-      #"{"vendorID":1,"productID":-1,"# + command + "}",
+      #"{"controller":"1FFFF:0000","# + command + "}",
+      #"{"controller":"0001:-001","# + command + "}",
+      #"{"controller":"pad-1","# + command + "}",
     ] {
       #expect(throws: DecodingError.self) {
         try JSONDecoder().decode(

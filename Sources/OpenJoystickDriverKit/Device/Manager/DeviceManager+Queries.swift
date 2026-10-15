@@ -1,14 +1,13 @@
 import Foundation
 
 extension DeviceManager {
-  /// Returns the latest controller state for a device matched by vendor and product ID.
+  /// Returns the latest controller state of the one connected controller `controller` names.
   ///
-  /// Returns nil if no pipeline is active for the device.
+  /// Returns nil when no controller, or more than one, matches.
   public func controllerState(
-    for model: ControllerModelID,
-    runtimeIdentifier: String? = nil
+    for controller: ControllerReference
   ) async -> ControllerState? {
-    guard let key = connectedIdentifier(matching: model, runtimeIdentifier: runtimeIdentifier)
+    guard let key = connectedIdentifier(for: controller)
     else { return nil }
     return await pipelines[key]?.inputState()
   }
@@ -17,17 +16,16 @@ extension DeviceManager {
   ///
   /// Missing identifiers intentionally fail closed to unknown ownership.
   public func ownershipObservation(
-    for identifier: DeviceIdentifier
+    for identifier: LogicalControllerID
   ) -> ControllerOwnershipObservation { deviceInfos[identifier]?.ownershipObservation ?? .unknown }
 
-  /// Returns recent raw USB packets for a device matched by vendor and product ID.
+  /// Returns recent raw USB packets of the one connected controller `controller` names.
   ///
-  /// Returns an empty array if no pipeline is active for the device.
+  /// Returns an empty array when no controller, or more than one, matches.
   public func packetLog(
-    for model: ControllerModelID,
-    runtimeIdentifier: String? = nil
+    for controller: ControllerReference
   ) async -> [PacketLogEntry] {
-    guard let key = connectedIdentifier(matching: model, runtimeIdentifier: runtimeIdentifier)
+    guard let key = connectedIdentifier(for: controller)
     else { return [] }
     return await pipelines[key]?.getPacketLog() ?? []
   }
@@ -44,23 +42,16 @@ extension DeviceManager {
     return descriptions
   }
 
-  /// Describes one connected controller, matched exactly or by runtime identity.
+  /// Describes one connected controller, matched by its exact key.
   ///
   /// Output routing calls this per input report, so it builds only the requested description.
-  public func deviceDescription(for identifier: DeviceIdentifier) async -> ConnectedDeviceSnapshot?
-  {
-    // Identifiers without a serial or location share the model-only token; only exact keys match.
-    let key =
-      pipelines[identifier] != nil
-      ? identifier
-      : identifier.locationID != nil || identifier.controllerIdentity.serialNumber?.isEmpty == false
-        ? pipelines.keys.first { $0.runtimeIdentifier == identifier.runtimeIdentifier } : nil
-    guard let key else { return nil }
-    return await deviceDescription(forPipeline: key)
-  }
+  public func deviceDescription(
+    for identifier: LogicalControllerID
+  ) async -> ConnectedDeviceSnapshot? { await deviceDescription(forPipeline: identifier) }
 
-  private func deviceDescription(forPipeline id: DeviceIdentifier) async -> ConnectedDeviceSnapshot?
-  {
+  private func deviceDescription(
+    forPipeline id: LogicalControllerID
+  ) async -> ConnectedDeviceSnapshot? {
     // A pipeline is registered only after its DeviceInfo; a missing one is mid-teardown.
     guard let pipeline = pipelines[id], let info = deviceInfos[id] else { return nil }
     let record = protocolDriverRegistry.runtimeProfile(for: info.binding)
@@ -72,13 +63,14 @@ extension DeviceManager {
     let observedInterface: UInt8? =
       if case .hid = info.discoverySource {
         info.physicalDevice?.interfaces?.first?.interfaceNumber
-      } else { id.interfaceNumber }
+      } else { id.address?.interfaceNumber }
     return ConnectedDeviceSnapshot(
-      runtimeIdentifier: id.runtimeIdentifier,
-      unitIdentifier: id.unitIdentifier,
+      logicalControllerID: id,
+      sessionToken: info.sessionToken,
+      portKey: id.portKey,
       name: info.name,
-      vendorID: id.controllerIdentity.vendorID,
-      productID: id.controllerIdentity.productID,
+      vendorID: id.model.vendorID,
+      productID: id.model.productID,
       protocolBinding: info.binding.id,
       connection: info.connection,
       interfaceNumber: observedInterface,
@@ -122,11 +114,11 @@ extension DeviceManager {
   }
 
   /// Returns live identifiers for connected controller pipelines.
-  public func connectedDeviceIdentifiers() -> [DeviceIdentifier] { Array(pipelines.keys) }
+  public func connectedLogicalControllerIDs() -> [LogicalControllerID] { Array(pipelines.keys) }
 
   /// Returns controllers whose sessions can currently publish virtual output.
-  public func activeDeviceIdentifiers() async -> [DeviceIdentifier] {
-    var identifiers: [DeviceIdentifier] = []
+  public func activeLogicalControllerIDs() async -> [LogicalControllerID] {
+    var identifiers: [LogicalControllerID] = []
     for (identifier, pipeline) in pipelines where await pipeline.controllerSessionState() == .active
     { identifiers.append(identifier) }
     return identifiers

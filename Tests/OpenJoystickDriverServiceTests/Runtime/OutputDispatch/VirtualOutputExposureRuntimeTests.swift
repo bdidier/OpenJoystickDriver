@@ -7,7 +7,7 @@ import Testing
 private final class ExposureBackendProbe: VirtualOutputDispatching,
   VirtualOutputControllerActivating, ControllerLifecycleListener, @unchecked Sendable
 {
-  private(set) var activations: [[DeviceIdentifier]] = []
+  private(set) var activations: [[LogicalControllerID]] = []
   private(set) var dispatches = 0
   private(set) var stops = 0
   private(set) var closes = 0
@@ -15,43 +15,42 @@ private final class ExposureBackendProbe: VirtualOutputDispatching,
   var status: VirtualOutputBackendStatus { .backend("probe") }
   var lastRumbleStatus: String? { nil }
 
-  func activate(for identifiers: [DeviceIdentifier]) { activations.append(identifiers) }
-  func activate(controller identifier: DeviceIdentifier) { activations.append([identifier]) }
-  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: DeviceIdentifier) {
+  func activate(for identifiers: [LogicalControllerID]) { activations.append(identifiers) }
+  func activate(controller identifier: LogicalControllerID) { activations.append([identifier]) }
+  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: LogicalControllerID) {
     dispatches += 1
   }
-  func activateOutput(for _: DeviceIdentifier) { dispatches += 1 }
-  func controllerDidStop(_: DeviceIdentifier) { stops += 1 }
+  func activateOutput(for _: LogicalControllerID) { dispatches += 1 }
+  func controllerDidStop(_: LogicalControllerID) { stops += 1 }
   func close() { closes += 1 }
 }
 
 private final class ExposureState: @unchecked Sendable {
   var ownership: ControllerOwnershipObservation = .exclusiveRawUSB
-  var descriptions: [ApplicationServiceDeviceDescription] = []
+  var descriptions: [LogicalControllerID: ApplicationServiceDeviceDescription] = [:]
 }
 
 @Suite(.serialized)
 struct VirtualOutputExposureRuntimeTests {
-  private let identifier = DeviceIdentifier(vendorID: 0x3537, productID: 0x1010)
+  private let identifier = LogicalControllerID(vendorID: 0x3537, productID: 0x1010)
 
   private func gipDescription() -> ApplicationServiceDeviceDescription {
     ApplicationServiceDeviceDescription(
       name: "GIP",
-      vendorID: identifier.controllerIdentity.vendorID,
-      productID: identifier.controllerIdentity.productID,
+      vendorID: identifier.model.vendorID,
+      productID: identifier.model.productID,
       protocolBinding: ProtocolBindingID(.xboxGIP, variant: .usb),
       connection: "USB",
       discoverySource: .rawUSB,
       serialNumber: nil,
-      bindingResult: .hidDescriptorFixture,
-      runtimeIdentifier: identifier.runtimeIdentifier
+      bindingResult: .hidDescriptorFixture
     )
   }
 
   @Test
   func automaticSelectedProfileUsesTheSameEligibilityGate() async {
     let state = ExposureState()
-    state.descriptions = [gipDescription()]
+    state.descriptions = [identifier: gipDescription()]
     let backend = ExposureBackendProbe()
     let dispatcher = AutomaticUserSpaceOutputDispatcher(
       deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),

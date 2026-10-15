@@ -84,27 +84,21 @@ extension ApplicationServiceServer {
       let value = try decode(LocalServiceRPCDeviceArguments.self)
       return try send(
         await getControllerState(
-          vendorID: value.vendorID,
-          productID: value.productID,
-          runtimeIdentifier: value.runtimeIdentifier
+          for: value.controller
         )
       )
     case .getVirtualOutputState:
       let value = try decode(LocalServiceRPCDeviceArguments.self)
       return try send(
         await getVirtualOutputState(
-          vendorID: value.vendorID,
-          productID: value.productID,
-          runtimeIdentifier: value.runtimeIdentifier
+          for: value.controller
         )
       )
     case .getPacketLog:
       let value = try decode(LocalServiceRPCDeviceArguments.self)
       return try send(
         await getPacketLog(
-          vendorID: value.vendorID,
-          productID: value.productID,
-          runtimeIdentifier: value.runtimeIdentifier
+          for: value.controller
         )
       )
     case .sendControllerOutput:
@@ -112,18 +106,14 @@ extension ApplicationServiceServer {
       return try send(
         await sendControllerOutput(
           value.command,
-          vendorID: value.vendorID,
-          productID: value.productID,
-          runtimeIdentifier: value.runtimeIdentifier
+          for: value.controller
         )
       )
     case .previewPhysicalColor:
       let value = try decode(LocalServiceRPCColorPreviewArguments.self)
       return try send(
         await previewPhysicalColor(
-          vendorID: value.vendorID,
-          productID: value.productID,
-          runtimeIdentifier: value.runtimeIdentifier,
+          for: value.controller,
           token: value.token,
           red: value.red,
           green: value.green,
@@ -134,9 +124,7 @@ extension ApplicationServiceServer {
       let value = try decode(LocalServiceRPCColorPreviewReleaseArguments.self)
       return try send(
         await releasePhysicalColorPreview(
-          vendorID: value.vendorID,
-          productID: value.productID,
-          runtimeIdentifier: value.runtimeIdentifier,
+          for: value.controller,
           token: value.token
         )
       )
@@ -148,9 +136,7 @@ extension ApplicationServiceServer {
       return try send(
         await setVirtualHIDProfileOverride(
           value.profile,
-          vendorID: value.vendorID,
-          productID: value.productID,
-          runtimeIdentifier: value.runtimeIdentifier,
+          for: value.controller,
           unit: value.unit
         )
       )
@@ -158,9 +144,7 @@ extension ApplicationServiceServer {
       let value = try decode(LocalServiceRPCVirtualHIDProfileOverrideResetArguments.self)
       return try send(
         await resetVirtualHIDProfileOverride(
-          vendorID: value.vendorID,
-          productID: value.productID,
-          runtimeIdentifier: value.runtimeIdentifier,
+          for: value.controller,
           unit: value.unit
         )
       )
@@ -186,27 +170,21 @@ extension ApplicationServiceServer {
       let value = try decode(LocalServiceRPCDeviceArguments.self)
       return try send(
         await suspendController(
-          vendorID: value.vendorID,
-          productID: value.productID,
-          runtimeIdentifier: value.runtimeIdentifier
+          value.controller
         )
       )
     case .resumeController:
       let value = try decode(LocalServiceRPCDeviceArguments.self)
       return try send(
         await resumeController(
-          vendorID: value.vendorID,
-          productID: value.productID,
-          runtimeIdentifier: value.runtimeIdentifier
+          value.controller
         )
       )
     case .disconnectWirelessController:
       let value = try decode(LocalServiceRPCDeviceArguments.self)
       return try send(
         await disconnectWirelessController(
-          vendorID: value.vendorID,
-          productID: value.productID,
-          runtimeIdentifier: value.runtimeIdentifier
+          value.controller
         )
       )
     case .resetSettings:

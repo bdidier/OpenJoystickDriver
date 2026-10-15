@@ -33,8 +33,8 @@ public struct VirtualPersonaFile: Equatable, Sendable {
 /// Per-controller-model and per-unit personas, stored as `Personas/<id>.json` files that follow
 /// `persona.schema.json`.
 ///
-/// A file matches a VID:PID model, or one unit of it (see ``UnitIdentity``). A unit's persona wins
-/// over its model's. A file that fails validation, or repeats the match of an earlier file in
+/// A file matches a VID:PID model, or one unit of it (see ``ControllerPortKey``). A unit's persona
+/// wins over its model's. A file that fails validation, or repeats the match of an earlier file in
 /// file-name order, is skipped and listed in ``problems``. A missing directory holds no personas.
 /// `set` writes `vvvv-pppp.json` or `vvvv-pppp-<unit>.json`, and keeps the identity of a persona
 /// that already matches.
@@ -296,7 +296,7 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
     else { throw ControllerRecordProblem("descriptor must be hid-xbox-one-s-bt or hid-generic") }
     let match = try fields(document["match"], named: "match", optional: ["unit"])
     let unit = match["unit"] as? String
-    if match["unit"] != nil, !(unit.map(UnitIdentity.isWellFormed) ?? false) {
+    if match["unit"] != nil, unit.flatMap(ControllerPortKey.init(rawValue:)) == nil {
       throw ControllerRecordProblem("match.unit is not a unit ID")
     }
     let model = Model(

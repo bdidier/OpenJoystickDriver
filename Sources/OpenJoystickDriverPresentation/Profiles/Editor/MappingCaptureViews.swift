@@ -164,7 +164,7 @@
     @State
     private var name: String
     @State
-    private var selectedRuntimeIdentifier: String?
+    private var selectedSessionToken: String?
     @State
     private var vendorID = ""
     @State
@@ -210,8 +210,8 @@
             Text(OJDLocalized.string("profiles.manualDevice")).tag(
               Self.manualDeviceIdentifier
             )
-            ForEach(devices, id: \.runtimeIdentifier) { device in
-              Text(device.name).tag(device.runtimeIdentifier)
+            ForEach(devices, id: \.sessionToken) { device in
+              Text(device.name).tag(device.sessionToken.rawValue)
             }
           }
         }
@@ -266,7 +266,7 @@
           }.disabled(!canCreate)
         }
       }.padding(28).frame(width: 390).onAppear {
-        selectedRuntimeIdentifier = devices.first?.runtimeIdentifier
+        selectedSessionToken = devices.first?.sessionToken.rawValue
         applySelectedDevice(devices.first)
       }
     }
@@ -300,10 +300,10 @@
 
     private var selectedDeviceBinding: Binding<String> {
       Binding(
-        get: { selectedRuntimeIdentifier ?? Self.manualDeviceIdentifier },
+        get: { selectedSessionToken ?? Self.manualDeviceIdentifier },
         set: { identifier in
-          selectedRuntimeIdentifier = identifier
-          applySelectedDevice(devices.first { $0.runtimeIdentifier == identifier })
+          selectedSessionToken = identifier
+          applySelectedDevice(devices.first { $0.sessionToken.rawValue == identifier })
         }
       )
     }

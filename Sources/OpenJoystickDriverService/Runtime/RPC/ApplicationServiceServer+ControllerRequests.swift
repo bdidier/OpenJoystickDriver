@@ -6,7 +6,11 @@ extension ApplicationServiceServer {
   /// connected devices.
   public func getStatus() async -> Data {
     let permissions = await permissionManager.refreshAccessState()
-    let devices = describingVirtualHIDProfiles(await connectedDevices())
+    let devices = describingVirtualHIDProfiles(
+      await deviceManager.connectedDeviceDescriptions().map {
+        ($0.logicalControllerID, ApplicationServiceDeviceDescription(snapshot: $0))
+      }
+    )
     let unboundDevices = await deviceManager.unboundDeviceDescriptions().map(
       ApplicationServiceUnboundDevice.init(snapshot:)
     )
@@ -38,47 +42,24 @@ extension ApplicationServiceServer {
     _ requirement: PermissionManager.Requirement
   ) async -> PermissionManager.Snapshot { await permissionManager.requestAccess(requirement) }
 
-  /// Returns the current input state for the specified device as encoded JSON data.
-  public func getControllerState(
-    vendorID: Int,
-    productID: Int,
-    runtimeIdentifier: String?
-  ) async -> Data? {
-    guard let vendor = UInt16(exactly: vendorID), let product = UInt16(exactly: productID) else {
-      return nil
-    }
-    let model = ControllerModelID(vendorID: vendor, productID: product)
-    let state = await deviceManager.controllerState(
-      for: model,
-      runtimeIdentifier: runtimeIdentifier
-    )
+  /// Returns the current input state of the controller `controller` names as encoded JSON data.
+  public func getControllerState(for controller: ControllerReference) async -> Data? {
+    let state = await deviceManager.controllerState(for: controller)
     return try? JSONEncoder().encode(state)
   }
 
-  /// Returns the values the device's virtual gamepad last reported as encoded JSON data; nil
-  /// when no virtual gamepad publishes the device.
-  public func getVirtualOutputState(
-    vendorID: Int,
-    productID: Int,
-    runtimeIdentifier: String?
-  ) async -> Data? {
-    guard let vendor = UInt16(exactly: vendorID), let product = UInt16(exactly: productID),
-      let state = await automaticUserSpaceDispatcher()?.virtualOutputState(
-        matching: ControllerModelID(vendorID: vendor, productID: product),
-        runtimeIdentifier: runtimeIdentifier
-      )
+  /// Returns the values the controller's virtual gamepad last reported as encoded JSON data; nil
+  /// when no virtual gamepad publishes the controller.
+  public func getVirtualOutputState(for controller: ControllerReference) async -> Data? {
+    guard let identifier = await deviceManager.connectedIdentifier(for: controller),
+      let state = await automaticUserSpaceDispatcher()?.virtualOutputState(for: identifier)
     else { return nil }
     return try? JSONEncoder().encode(ApplicationServiceVirtualOutputState(state))
   }
 
-  /// Returns the recent packet log for the specified device as encoded JSON data.
-  public func getPacketLog(vendorID: Int, productID: Int, runtimeIdentifier: String?) async -> Data
-  {
-    guard let vendor = UInt16(exactly: vendorID), let product = UInt16(exactly: productID) else {
-      return Data()
-    }
-    let model = ControllerModelID(vendorID: vendor, productID: product)
-    let log = await deviceManager.packetLog(for: model, runtimeIdentifier: runtimeIdentifier)
+  /// Returns the recent packet log of the controller `controller` names as encoded JSON data.
+  public func getPacketLog(for controller: ControllerReference) async -> Data {
+    let log = await deviceManager.packetLog(for: controller)
     do { return try JSONEncoder().encode(log) } catch {
       print("[ApplicationServiceServer] getPacketLog encode error: \(error)")
       return Data()
@@ -89,53 +70,23 @@ extension ApplicationServiceServer {
   /// became of it, including the rumble channels the controller lacks.
   public func sendControllerOutput(
     _ command: ControllerOutputCommand,
-    vendorID: UInt16,
-    productID: UInt16,
-    runtimeIdentifier: String?
+    for controller: ControllerReference
   ) async -> ControllerOutputResult {
-    await deviceManager.sendControllerOutput(
-      command,
-      for: ControllerModelID(vendorID: vendorID, productID: productID),
-      runtimeIdentifier: runtimeIdentifier
-    )
+    await deviceManager.sendControllerOutput(command, for: controller)
   }
 
-  public func suspendController(
-    vendorID: Int,
-    productID: Int,
-    runtimeIdentifier: String?
-  ) async -> Data {
-    let result = await deviceManager.suspendController(
-      vendorID: UInt16(clamping: vendorID),
-      productID: UInt16(clamping: productID),
-      runtimeIdentifier: runtimeIdentifier
-    )
+  public func suspendController(_ controller: ControllerReference) async -> Data {
+    let result = await deviceManager.suspendController(controller)
     return (try? JSONEncoder().encode(result)) ?? Data()
   }
 
-  public func resumeController(
-    vendorID: Int,
-    productID: Int,
-    runtimeIdentifier: String?
-  ) async -> Data {
-    let result = await deviceManager.resumeController(
-      vendorID: UInt16(clamping: vendorID),
-      productID: UInt16(clamping: productID),
-      runtimeIdentifier: runtimeIdentifier
-    )
+  public func resumeController(_ controller: ControllerReference) async -> Data {
+    let result = await deviceManager.resumeController(controller)
     return (try? JSONEncoder().encode(result)) ?? Data()
   }
 
-  public func disconnectWirelessController(
-    vendorID: Int,
-    productID: Int,
-    runtimeIdentifier: String?
-  ) async -> Data {
-    let result = await deviceManager.disconnectWirelessController(
-      vendorID: UInt16(clamping: vendorID),
-      productID: UInt16(clamping: productID),
-      runtimeIdentifier: runtimeIdentifier
-    )
+  public func disconnectWirelessController(_ controller: ControllerReference) async -> Data {
+    let result = await deviceManager.disconnectWirelessController(controller)
     return (try? JSONEncoder().encode(result)) ?? Data()
   }
 

@@ -80,7 +80,7 @@ final class InputScript: @unchecked Sendable {
   }
 
   private let lock = NSLock()
-  private var states: [DeviceIdentifier: ControllerState] = [:]
+  private var states: [LogicalControllerID: ControllerState] = [:]
 
   /// The script bound to `owner` for as long as it lives.
   static func of(_ owner: AnyObject) -> InputScript {
@@ -94,12 +94,12 @@ final class InputScript: @unchecked Sendable {
   }
 
   /// The snapshot `identifier` last received.
-  func state(for identifier: DeviceIdentifier) -> ControllerState {
+  func state(for identifier: LogicalControllerID) -> ControllerState {
     lock.withLock { states[identifier] ?? .neutral }
   }
 
   /// The next snapshot of `identifier`: its last one with `changes` applied.
-  func event(_ changes: [InputChange], for identifier: DeviceIdentifier) -> ControllerEvent {
+  func event(_ changes: [InputChange], for identifier: LogicalControllerID) -> ControllerEvent {
     lock.withLock {
       let event = ControllerEvent(changes, after: states[identifier] ?? .neutral)
       states[identifier] = event.state
@@ -108,7 +108,7 @@ final class InputScript: @unchecked Sendable {
   }
 
   /// Forgets `identifier`, as a pipeline does once its controller stops.
-  func reset(_ identifier: DeviceIdentifier) {
+  func reset(_ identifier: LogicalControllerID) {
     lock.withLock { _ = states.removeValue(forKey: identifier) }
   }
 }
@@ -133,7 +133,7 @@ extension OutputDispatcher {
   /// Dispatches one scripted snapshot of `identifier` per change, in order.
   func dispatch(
     changes: [InputChange],
-    from identifier: DeviceIdentifier,
+    from identifier: LogicalControllerID,
     labels: ControllerButtonLabels = .standard
   ) async {
     let script = InputScript.of(self)
@@ -147,7 +147,7 @@ extension RemappingEventEngine {
   /// Processes one snapshot per change, each applied to the snapshot `source` last delivered.
   func process(
     inputs changes: [InputChange],
-    from source: DeviceIdentifier,
+    from source: LogicalControllerID,
     labels: ControllerButtonLabels = .standard,
     using profile: RemappingProfile,
     at uptimeNanoseconds: UInt64
@@ -166,7 +166,7 @@ extension RemappingEventEngine {
 
   func process(
     inputs changes: [InputChange],
-    from source: DeviceIdentifier,
+    from source: LogicalControllerID,
     labels: ControllerButtonLabels = .standard,
     using profile: RemappingProfile,
     at uptimeNanoseconds: UInt64,
@@ -190,7 +190,7 @@ extension RemappingEngineState {
   /// Applies `changes` to the snapshot `source` last delivered, through the snapshot diff.
   mutating func process(
     inputs changes: [InputChange],
-    from source: DeviceIdentifier,
+    from source: LogicalControllerID,
     labels: ControllerButtonLabels = .standard,
     profile: RemappingProfile,
     at uptimeNanoseconds: UInt64
@@ -271,7 +271,7 @@ extension RemappingEngineState {
   mutating func process(
     parsed event: ControllerEvent?,
     labels: ControllerButtonLabels = .standard,
-    from source: DeviceIdentifier,
+    from source: LogicalControllerID,
     profile: RemappingProfile,
     at uptimeNanoseconds: UInt64
   ) -> [RemappingEngineAction] {

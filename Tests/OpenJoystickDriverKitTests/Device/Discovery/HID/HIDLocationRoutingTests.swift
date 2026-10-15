@@ -25,7 +25,7 @@ struct HIDLocationRoutingTests {
     await manager.handleHIDEvent(.connected(connection: second, ownership: .exclusive))
 
     // The later connection replaces the earlier one under the one location key.
-    let identifier = DeviceIdentifier(
+    let identifier = LogicalControllerID(
       vendorID: 0x3537,
       productID: 0x100B,
       locationID: Self.locationID
@@ -38,7 +38,7 @@ struct HIDLocationRoutingTests {
     // Input from either interface reaches the location's controller, here the replaced one's.
     await manager.handleHIDEvent(
       .inputReport(
-        locationID: Self.locationID,
+        address: .ioKit(locationID: Self.locationID, interfaceNumber: nil),
         connectionID: first.connectionID,
         reportID: 0x12,
         data: Self.aPressed
@@ -81,7 +81,7 @@ struct HIDLocationRoutingTests {
           )
         ]
       ),
-      routingLocationID: locationID
+      routingAddress: .ioKit(locationID: locationID, interfaceNumber: nil)
     )
   }
 }

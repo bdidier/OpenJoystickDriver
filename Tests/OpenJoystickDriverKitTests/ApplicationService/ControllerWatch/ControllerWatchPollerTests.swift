@@ -21,13 +21,16 @@ struct ControllerWatchPollerTests {
     )
 
     #expect(
-      first.map(\.summary) == ["ADDED pad-1", "ADDED pad-2", "MODIFIED pad-1", "MODIFIED pad-2"]
+      first.map(\.summary) == [
+        "ADDED \(token("pad-1"))", "ADDED \(token("pad-2"))", "MODIFIED \(token("pad-1"))",
+        "MODIFIED \(token("pad-2"))",
+      ]
     )
     #expect(second.isEmpty)
     // The list is read again only after the interval, so pad-2 is still read until then.
-    #expect(third.map(\.summary) == ["MODIFIED pad-1", "MODIFIED pad-2"])
-    #expect(fourth.map(\.summary) == ["DELETED pad-2"])
-    #expect(first[0].event.object.id == "pad-1")
+    #expect(third.map(\.summary) == ["MODIFIED \(token("pad-1"))", "MODIFIED \(token("pad-2"))"])
+    #expect(fourth.map(\.summary) == ["DELETED \(token("pad-2"))"])
+    #expect(first[0].event.object.id == token("pad-1"))
     #expect(first[0].event.object.input == nil)
     #expect(first[2].event.object.input == ControllerState(pressed: [.faceSouth]))
     // A deleted controller's object is the last one the watch saw.
@@ -45,7 +48,7 @@ struct ControllerWatchPollerTests {
 
     #expect(source.outputReads == 1)
     #expect(without.last?.event.object.output == nil)
-    #expect(with.map(\.summary) == ["MODIFIED pad-1"])
+    #expect(with.map(\.summary) == ["MODIFIED \(token("pad-1"))"])
     #expect(with.last?.event.object.output == source.output)
   }
 }

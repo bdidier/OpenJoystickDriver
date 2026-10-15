@@ -73,7 +73,7 @@ struct VirtualHostReportTests {
     let sender = UserSpaceReportSender()
     let isOpen: @Sendable () -> Bool = { true }
     let handler = UserSpaceHostReportHandler(
-      identifier: DeviceIdentifier(vendorID: 1, productID: 2),
+      identifier: LogicalControllerID(vendorID: 1, productID: 2),
       input: input,
       sender: sender,
       isOpen: isOpen,
@@ -92,7 +92,7 @@ struct VirtualHostReportTests {
     let sender = UserSpaceReportSender()
     let isOpen: @Sendable () -> Bool = { true }
     let handler = UserSpaceHostReportHandler(
-      identifier: DeviceIdentifier(vendorID: 1, productID: 2),
+      identifier: LogicalControllerID(vendorID: 1, productID: 2),
       input: input,
       sender: sender,
       isOpen: isOpen,

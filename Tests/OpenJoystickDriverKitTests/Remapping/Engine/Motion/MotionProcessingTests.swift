@@ -102,8 +102,8 @@ struct MotionProcessingTests {
   @Test
   func engineOwnsIndependentMotionAndReleaseStartsFresh() throws {
     var engine = RemappingEngineState()
-    let first = DeviceIdentifier(vendorID: 1, productID: 1, locationID: 1)
-    let second = DeviceIdentifier(vendorID: 1, productID: 1, locationID: 2)
+    let first = LogicalControllerID(vendorID: 1, productID: 1, locationID: 1)
+    let second = LogicalControllerID(vendorID: 1, productID: 1, locationID: 2)
     let profile = RemappingProfile(
       name: "Motion state",
       device: RemappingDeviceScope(vendorID: 1, productID: 1),

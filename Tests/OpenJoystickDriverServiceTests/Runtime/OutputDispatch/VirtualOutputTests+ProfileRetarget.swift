@@ -8,7 +8,7 @@ extension VirtualOutputTests {
   private struct BuildFailure: Error {}
 
   private func retargetDispatcher(
-    _ identifiers: [DeviceIdentifier],
+    _ identifiers: [LogicalControllerID],
     overrides: ProfileOverrideBox,
     log: RetargetEventLog,
     failure: (VirtualHIDProfileID, ProfileRetargetFailure)? = nil,
@@ -30,14 +30,14 @@ extension VirtualOutputTests {
         log.append(backend)
         return backend
       },
-      descriptionsProvider: provider(identifiers.map { description($0) }),
+      descriptionsProvider: provider(identifiers),
       overrideProvider: overrideProvider
     )
   }
 
   @Test
   func profileOverrideChangesTheBuiltProfile() async throws {
-    let id = DeviceIdentifier(vendorID: 1, productID: 2)
+    let id = LogicalControllerID(vendorID: 1, productID: 2)
     let overrides = ProfileOverrideBox()
     overrides.set(.generic, vendorID: 1)
     let log = RetargetEventLog()
@@ -53,8 +53,8 @@ extension VirtualOutputTests {
 
   @Test
   func retargetRebuildsOnlyTheTargetController() async throws {
-    let first = DeviceIdentifier(vendorID: 1, productID: 2)
-    let second = DeviceIdentifier(vendorID: 3, productID: 4)
+    let first = LogicalControllerID(vendorID: 1, productID: 2)
+    let second = LogicalControllerID(vendorID: 3, productID: 4)
     let overrides = ProfileOverrideBox()
     let log = RetargetEventLog()
     let dispatcher = retargetDispatcher([first, second], overrides: overrides, log: log)
@@ -75,7 +75,7 @@ extension VirtualOutputTests {
 
   @Test
   func retargetActivatesTheReplacementThenNeutralizesBeforeRetiring() async throws {
-    let id = DeviceIdentifier(vendorID: 1, productID: 2)
+    let id = LogicalControllerID(vendorID: 1, productID: 2)
     let overrides = ProfileOverrideBox()
     let log = RetargetEventLog()
     let dispatcher = retargetDispatcher([id], overrides: overrides, log: log)
@@ -95,7 +95,7 @@ extension VirtualOutputTests {
 
   @Test(arguments: [ProfileRetargetFailure.build, .activation])
   func failedRetargetKeepsThePriorBackend(failure: ProfileRetargetFailure) async throws {
-    let id = DeviceIdentifier(vendorID: 1, productID: 2)
+    let id = LogicalControllerID(vendorID: 1, productID: 2)
     let overrides = ProfileOverrideBox()
     let log = RetargetEventLog()
     let dispatcher = retargetDispatcher(
@@ -127,7 +127,7 @@ extension VirtualOutputTests {
 
   @Test
   func dispatchAfterAnOverrideChangeKeepsTheBackendUntilRetarget() async throws {
-    let id = DeviceIdentifier(vendorID: 1, productID: 2)
+    let id = LogicalControllerID(vendorID: 1, productID: 2)
     let overrides = ProfileOverrideBox()
     let log = RetargetEventLog()
     let dispatcher = retargetDispatcher([id], overrides: overrides, log: log)
@@ -150,7 +150,7 @@ extension VirtualOutputTests {
 
   @Test
   func retargetCarriesRemappingSuppressionToTheReplacement() async throws {
-    let id = DeviceIdentifier(vendorID: 1, productID: 2)
+    let id = LogicalControllerID(vendorID: 1, productID: 2)
     let overrides = ProfileOverrideBox()
     let log = RetargetEventLog()
     let dispatcher = retargetDispatcher([id], overrides: overrides, log: log)
@@ -167,7 +167,7 @@ extension VirtualOutputTests {
 
   @Test
   func retargetWhileSuppressedPublishesTheNewProfileOnResume() async throws {
-    let id = DeviceIdentifier(vendorID: 1, productID: 2)
+    let id = LogicalControllerID(vendorID: 1, productID: 2)
     let overrides = ProfileOverrideBox()
     let log = RetargetEventLog()
     let dispatcher = retargetDispatcher([id], overrides: overrides, log: log)
@@ -192,7 +192,7 @@ extension VirtualOutputTests {
 
   @Test
   func retargetOfAStoppedControllerBuildsNothingAndTheNextSessionUsesTheOverride() async throws {
-    let id = DeviceIdentifier(vendorID: 1, productID: 2)
+    let id = LogicalControllerID(vendorID: 1, productID: 2)
     let overrides = ProfileOverrideBox()
     let log = RetargetEventLog()
     let dispatcher = retargetDispatcher([id], overrides: overrides, log: log)
@@ -211,7 +211,7 @@ extension VirtualOutputTests {
 
   @Test(.timeLimit(.minutes(1)))
   func stoppingDuringAnInFlightRetargetKeepsNoSelectionOrBackend() async throws {
-    let id = DeviceIdentifier(vendorID: 1, productID: 2)
+    let id = LogicalControllerID(vendorID: 1, productID: 2)
     let overrides = ProfileOverrideBox()
     let log = RetargetEventLog()
     let gate = InstallationGate()
@@ -241,7 +241,7 @@ extension VirtualOutputTests {
 
   @Test
   func retargetWithAnUnchangedProfileIsANoOp() async throws {
-    let id = DeviceIdentifier(vendorID: 1, productID: 2)
+    let id = LogicalControllerID(vendorID: 1, productID: 2)
     let overrides = ProfileOverrideBox()
     let log = RetargetEventLog()
     let dispatcher = retargetDispatcher([id], overrides: overrides, log: log)

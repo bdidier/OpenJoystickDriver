@@ -38,7 +38,8 @@ public final class VirtualOutputRouter: OutputDispatcher, RemappingGamepadSink,
     }
   }
 
-  public func send(_ state: RemappingGamepadState, for identifier: DeviceIdentifier) async throws {
+  public func send(_ state: RemappingGamepadState, for identifier: LogicalControllerID) async throws
+  {
     let target = lock.withLock { remappingOutputSuppressed && state != .neutral ? nil : backend }
     guard let sink = target as? any RemappingGamepadSink else {
       throw RemappingEventEngineError.sinkUnavailable
@@ -52,20 +53,20 @@ public final class VirtualOutputRouter: OutputDispatcher, RemappingGamepadSink,
   public func dispatch(
     _ event: ControllerEvent,
     labels: ControllerButtonLabels,
-    from identifier: DeviceIdentifier
+    from identifier: LogicalControllerID
   ) async {
     let target = lock.withLock { _suppressOutput ? nil : backend }
     await target?.dispatch(event, labels: labels, from: identifier)
   }
 
-  public func activateOutput(for identifier: DeviceIdentifier) async {
+  public func activateOutput(for identifier: LogicalControllerID) async {
     let target = lock.withLock { _suppressOutput ? nil : backend }
     await target?.activateOutput(for: identifier)
   }
 }
 
 extension VirtualOutputRouter: ControllerLifecycleListener {
-  public func controllerDidStop(_ identifier: DeviceIdentifier) async {
+  public func controllerDidStop(_ identifier: LogicalControllerID) async {
     let target = lock.withLock { backend }
     if let listener = target as? any ControllerLifecycleListener {
       await listener.controllerDidStop(identifier)

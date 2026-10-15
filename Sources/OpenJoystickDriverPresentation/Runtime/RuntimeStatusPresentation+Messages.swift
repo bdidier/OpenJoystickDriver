@@ -99,7 +99,7 @@ extension RuntimeStatusPresentation {
     _ lhs: ApplicationServiceDeviceDescription,
     _ rhs: ApplicationServiceDeviceDescription
   ) -> Bool {
-    lhs.runtimeIdentifier == rhs.runtimeIdentifier && lhs.name == rhs.name
+    lhs.sessionToken.rawValue == rhs.sessionToken.rawValue && lhs.name == rhs.name
       && lhs.vendorID == rhs.vendorID && lhs.productID == rhs.productID
       && lhs.connection == rhs.connection && lhs.discoverySource == rhs.discoverySource
       && lhs.physicalOwnership == rhs.physicalOwnership

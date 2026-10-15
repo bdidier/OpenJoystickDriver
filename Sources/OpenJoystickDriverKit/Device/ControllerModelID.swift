@@ -37,18 +37,6 @@ extension ControllerModelID: CustomStringConvertible {
   public var description: String { String(format: "%04X:%04X", vendorID, productID) }
 }
 
-extension ControllerIdentity {
-  /// The model this identity belongs to, without its serial number.
-  public var model: ControllerModelID {
-    ControllerModelID(vendorID: vendorID, productID: productID)
-  }
-}
-
-extension DeviceIdentifier {
-  /// The model of this logical controller, without its serial number, location or interface.
-  public var model: ControllerModelID { controllerIdentity.model }
-}
-
 extension PhysicalDevice {
   /// The model of this device, or nil when it reports no vendor ID or product ID.
   public var model: ControllerModelID? {

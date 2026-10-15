@@ -40,7 +40,7 @@ Commands take a `CONTROLLER` operand. Use one of these forms:
 
 - A unit ID, such as `U-` and 16 characters. It stays the same across reconnects and service restarts while the controller uses the same USB port. It changes when you connect the controller to a different port. Scripts can store it. A controller with no location ID has no unit ID.
 - `VVVV:PPPP`, the hexadecimal vendor and product ID. It names a controller model. When two connected controllers have the same model, the command fails and lists them.
-- An ID from `ojd controller list`. It lasts only until the service restarts, so do not store it.
+- An ID from `ojd controller list`, such as `E-` and 16 characters. It lasts only until the controller disconnects, so do not store it.
 
 `ojd controller list --json` gives the unit ID of each controller in `unit`.
 
@@ -381,7 +381,7 @@ The actions run in the app, so the app must be installed. They do not use `ojd`.
 
 When you pick a controller, the list shows each connected controller, and then one entry for each connected model. A shortcut stores the controller in the same forms as `CONTROLLER` in [Name a Controller](#name-a-controller):
 
-- A single controller is stored by its unit ID, or by its `ojd controller list` ID when it has no unit ID. The unit ID changes when you connect the controller to a different USB port, and the list ID changes when the service restarts.
+- A single controller is stored by its unit ID, or by its `ojd controller list` ID when it has no unit ID. The unit ID changes when you connect the controller to a different USB port, and the list ID changes each time the controller connects.
 - A model entry is stored as `VVVV:PPPP`. It finds the connected controller of that model on any port. When two connected controllers have the same model, the action fails and lists them. You can also type `VVVV:PPPP` in the search field.
 
 Get Battery Level fails when the controller reports no battery level. When the controller reports a range, such as `30-39%`, the action returns the lowest value of the range.

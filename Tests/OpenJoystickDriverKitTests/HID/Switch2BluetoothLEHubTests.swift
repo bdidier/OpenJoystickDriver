@@ -35,7 +35,7 @@ struct Switch2BluetoothLEHubTests {
   static func connectedHub(
     productID: UInt16 = 0x2069,
     writer: RecordingSwitch2Writer = RecordingSwitch2Writer()
-  ) -> (Switch2BluetoothLEHub, UInt32) {
+  ) -> (Switch2BluetoothLEHub, ControllerConnectionAddress) {
     let hub = Switch2BluetoothLEHub()
     hub.linkConnected(
       peripheralID: peripheral,
@@ -43,7 +43,7 @@ struct Switch2BluetoothLEHubTests {
       productName: "Pro Controller",
       writer: writer
     )
-    return (hub, hub.connectionSnapshots()[0].connection.routingLocationID)
+    return (hub, hub.connectionSnapshots()[0].connection.routingAddress)
   }
 
   @Test
@@ -75,8 +75,8 @@ struct Switch2BluetoothLEHubTests {
 
   @Test
   func connectionsAreExclusiveBluetoothLEHIDConnectionsReplayedToEachStream() async {
-    let (hub, location) = Self.connectedHub()
-    #expect(location == Switch2BluetoothLEHub.firstRoutingLocationID)
+    let (hub, address) = Self.connectedHub()
+    #expect(address == .gattPeripheral(Self.peripheral))
     var events = hub.events().makeAsyncIterator()
     guard case .connected(let connection, let ownership) = await events.next() else {
       Issue.record("expected the replayed connection")
@@ -89,13 +89,13 @@ struct Switch2BluetoothLEHubTests {
 
     hub.receivedInput(peripheralID: Self.peripheral, bytes: [UInt8](repeating: 0x11, count: 63))
     guard
-      case .inputReport(let inputLocation, let connectionID, let reportID, let data) =
+      case .inputReport(let inputAddress, let connectionID, let reportID, let data) =
         await events.next()
     else {
       Issue.record("expected an input report")
       return
     }
-    #expect(inputLocation == location && connectionID == connection.connectionID)
+    #expect(inputAddress == address && connectionID == connection.connectionID)
     #expect(reportID == 0x05 && data.count == 64 && data.first == 0x05 && data.last == 0x11)
 
     hub.linkDisconnected(peripheralID: Self.peripheral)
@@ -104,14 +104,14 @@ struct Switch2BluetoothLEHubTests {
       return
     }
     #expect(gone == connection)
-    #expect(!hub.owns(locationID: location))
+    #expect(!hub.owns(address))
   }
 
   @Test
   func commandRepliesReadInChunksAndEndAtEachReply() async throws {
     let writer = RecordingSwitch2Writer()
-    let (hub, location) = Self.connectedHub(writer: writer)
-    let session = Switch2BluetoothLECommandSession(hub: hub, locationID: location)
+    let hub = Self.connectedHub(writer: writer).0
+    let session = Switch2BluetoothLECommandSession(hub: hub, peripheralID: Self.peripheral)
 
     // A stale reply is dropped when the next command is written.
     hub.receivedReply(peripheralID: Self.peripheral, bytes: [0xEE])
@@ -154,8 +154,8 @@ struct Switch2BluetoothLEHubTests {
 
   @Test
   func disconnectEndsAWaitingRead() async throws {
-    let (hub, location) = Self.connectedHub()
-    let session = Switch2BluetoothLECommandSession(hub: hub, locationID: location)
+    let hub = Self.connectedHub().0
+    let session = Switch2BluetoothLECommandSession(hub: hub, peripheralID: Self.peripheral)
     let waiting = Task { try await session.read(endpoint: 0x82, length: 64, timeout: 5_000) }
     try await Task.sleep(nanoseconds: 20_000_000)
     hub.linkDisconnected(peripheralID: Self.peripheral)
@@ -165,61 +165,58 @@ struct Switch2BluetoothLEHubTests {
   @Test
   func vibrationKeepsTheUSBLayoutWithAZeroReportIDSlotIn42Bytes() {
     let writer = RecordingSwitch2Writer()
-    let (hub, location) = Self.connectedHub(writer: writer)
+    let hub = Self.connectedHub(writer: writer).0
     let driver = Switch2Driver(layout: .pro, link: .bluetoothLE)
     let full = RumbleIntensities(leftMain: .max, rightMain: .max)
     let report = driver.encoded(.setRumble(full, duration: .milliseconds(100))).onlyReport
 
-    #expect(hub.setOutputReport(locationID: location, report: report).succeeded)
+    #expect(hub.setOutputReport(peripheralID: Self.peripheral, report: report).succeeded)
     let sent = writer.vibrations.first
     #expect(sent?.count == 42 && sent?.first == 0)
     #expect(sent.map { Array($0[1...]) } == Array(report.bytes[1..<42]))
-    #expect(hub.setOutputReport(locationID: location &+ 1, report: report).succeeded == false)
+    #expect(hub.setOutputReport(peripheralID: UUID(), report: report).succeeded == false)
   }
 
   @Test
-  func compositeRoutingSendsHubLocationsToGATTAndTheRestToIOHID() async throws {
+  func compositeRoutingSendsHubAddressesToGATTAndTheRestToIOHID() async throws {
     let writer = RecordingSwitch2Writer()
-    let (hub, location) = Self.connectedHub(writer: writer)
+    let (hub, address) = Self.connectedHub(writer: writer)
     let primary = ScriptedHIDAccessBackend()
     await primary.enableOutputReports()
     let composite = BluetoothLECompositeHIDBackend(primary: primary, hub: hub)
     let report = PhysicalHIDOutputReport(reportID: 0x02, bytes: [UInt8](repeating: 2, count: 64))
+    let ioKit = ControllerConnectionAddress.ioKit(locationID: 0x0021_0000, interfaceNumber: nil)
 
-    #expect(await composite.setOutputReport(locationID: location, report: report).succeeded)
-    #expect(await composite.setOutputReport(locationID: 0x0021_0000, report: report).succeeded)
+    #expect(connection(of: hub).routingAddress == .gattPeripheral(Self.peripheral))
+    #expect(await composite.setOutputReport(address: address, report: report).succeeded)
+    #expect(await composite.setOutputReport(address: ioKit, report: report).succeeded)
     #expect(writer.vibrations.count == 1)
     #expect(await primary.recordedOutputReports() == [report])
-    #expect(await composite.releaseInputClaim(locationID: location) == .released)
+    #expect(await composite.releaseInputClaim(address: address) == .released)
     #expect(
-      await composite.currentConnectionSnapshots()?.map(\.connection.routingLocationID) == [
-        location
-      ]
+      await composite.currentConnectionSnapshots()?.map(\.connection.routingAddress) == [address]
     )
 
     let provider = BluetoothLECompositeUSBTransportProvider(base: nil, hub: hub)
-    let device = USBTransportDevice(
-      route: .ioUSBHost,
-      serviceID: 0,
-      vendorID: 0x057E,
-      productID: 0x2069,
-      locationID: location
+    let model = ControllerModelID(vendorID: 0x057E, productID: 0x2069)
+    let session = try await provider.openCommandChannel(
+      at: address,
+      model: model,
+      options: USBTransportOpenOptions()
     )
-    let session = try await provider.open(device, options: USBTransportOpenOptions())
     try await session.write(endpoint: 0x02, data: [0x0C], timeout: 500)
     #expect(writer.commands == [[0x0C]])
     await #expect(throws: USBTransportError.notFound) {
-      _ = try await provider.open(
-        USBTransportDevice(
-          route: .ioUSBHost,
-          serviceID: 0,
-          vendorID: 0x057E,
-          productID: 0x2069,
-          locationID: 0x0021_0000
-        ),
+      _ = try await provider.openCommandChannel(
+        at: ioKit,
+        model: model,
         options: USBTransportOpenOptions()
       )
     }
+  }
+
+  private func connection(of hub: Switch2BluetoothLEHub) -> HIDDeviceConnection {
+    hub.connectionSnapshots()[0].connection
   }
 
   /// End to end over the manager: the catalog binds the GATT connection to the Bluetooth LE
@@ -227,7 +224,7 @@ struct Switch2BluetoothLEHubTests {
   @Test
   func managerDrivesABluetoothLEProController() async throws {
     let writer = RecordingSwitch2Writer()
-    let (hub, location) = Self.connectedHub(writer: writer)
+    let (hub, address) = Self.connectedHub(writer: writer)
     writer.reply = { command in
       var reply = [UInt8](repeating: 0, count: 0x50)
       reply[0] = command[0]
@@ -247,7 +244,13 @@ struct Switch2BluetoothLEHubTests {
     let connection = hub.connectionSnapshots()[0].connection
     await manager.handleHIDEvent(.connected(connection: connection, ownership: .exclusive))
 
-    let identifier = DeviceIdentifier(vendorID: 0x057E, productID: 0x2069, locationID: location)
+    let identifier = LogicalControllerID(
+      hardware: ControllerHardwareIdentity(
+        model: ControllerModelID(vendorID: 0x057E, productID: 0x2069),
+        serialNumber: nil
+      ),
+      address: address
+    )
     #expect(Array(await manager.pipelines.keys) == [identifier])
     #expect(await waitUntil { writer.commands.count >= 9 })
     #expect(writer.commands.allSatisfy { $0.count > 2 && $0[2] == 0x01 })
@@ -256,7 +259,7 @@ struct Switch2BluetoothLEHubTests {
     input[5 - 1] = 0x04
     await manager.handleHIDEvent(
       .inputReport(
-        locationID: location,
+        address: address,
         connectionID: connection.connectionID,
         reportID: 0x05,
         data: Data([0x05] + input)

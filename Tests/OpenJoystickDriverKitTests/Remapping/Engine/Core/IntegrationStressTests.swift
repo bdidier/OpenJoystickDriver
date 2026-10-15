@@ -12,7 +12,7 @@ struct RemappingIntegrationStressTests {
     let controllerCount = 256
 
     for location in 1...controllerCount {
-      let identifier = DeviceIdentifier(vendorID: 1, productID: 2, locationID: UInt32(location))
+      let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: UInt32(location))
       actionCount +=
         state.process(
           inputs: [
@@ -39,7 +39,7 @@ struct RemappingIntegrationStressTests {
   @Test(.timeLimit(.minutes(1)))
   func repeatedInputKeepsHistoryAndScheduledStorageBounded() throws {
     let profile = try stressProfile()
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 1)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 1)
     var state = RemappingEngineState()
 
     for time in 0..<10_000 {
@@ -63,7 +63,7 @@ struct RemappingIntegrationStressTests {
 
   @Test(.timeLimit(.minutes(1)))
   func repeatedPhysicalUpdatesReplaceClaimsInsteadOfAccumulating() {
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 1)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 1)
     let owner = UUID()
     var ownership = PhysicalOutputOwnership()
 

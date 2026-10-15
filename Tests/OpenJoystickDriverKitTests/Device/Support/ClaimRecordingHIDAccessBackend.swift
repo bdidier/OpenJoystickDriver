@@ -18,7 +18,7 @@ actor ClaimRecordingHIDAccessBackend: HIDAccessBackend {
   func currentConnectionSnapshots() -> [HIDDeviceConnectionSnapshot]? { [] }
 
   func setOutputReport(
-    locationID _: UInt32,
+    address _: ControllerConnectionAddress,
     report _: PhysicalHIDOutputReport
   ) -> PhysicalHIDReportResult<Void> { .unavailable }
 
@@ -28,7 +28,7 @@ actor ClaimRecordingHIDAccessBackend: HIDAccessBackend {
   ) -> PhysicalHIDReportResult<Void> { .unavailable }
 
   func setFeatureReport(
-    locationID _: UInt32,
+    address _: ControllerConnectionAddress,
     report _: PhysicalHIDOutputReport
   ) -> PhysicalHIDReportResult<Void> { .unavailable }
 
@@ -38,7 +38,7 @@ actor ClaimRecordingHIDAccessBackend: HIDAccessBackend {
   ) -> PhysicalHIDReportResult<Void> { .unavailable }
 
   func getFeatureReport(
-    locationID _: UInt32,
+    address _: ControllerConnectionAddress,
     request _: PhysicalHIDFeatureReadRequest
   ) -> PhysicalHIDReportResult<Data> { .unavailable }
 
@@ -47,19 +47,21 @@ actor ClaimRecordingHIDAccessBackend: HIDAccessBackend {
     request _: PhysicalHIDFeatureReadRequest
   ) -> PhysicalHIDReportResult<Data> { .unavailable }
 
-  func releaseInputClaim(locationID: UInt32) -> PhysicalHIDClaimResult {
-    released.append(locationID)
+  func releaseInputClaim(address: ControllerConnectionAddress) -> PhysicalHIDClaimResult {
+    released.append(contentsOf: [address.locationID].compactMap { $0 })
     return .released
   }
 
-  func reacquireInputClaim(locationID: UInt32) -> PhysicalHIDClaimResult {
-    reacquired.append(locationID)
+  func reacquireInputClaim(address: ControllerConnectionAddress) -> PhysicalHIDClaimResult {
+    reacquired.append(contentsOf: [address.locationID].compactMap { $0 })
     return .reacquired
   }
 
-  func retryInputClaim(locationID: UInt32) { retried.append(locationID) }
+  func retryInputClaim(address: ControllerConnectionAddress) {
+    retried.append(contentsOf: [address.locationID].compactMap { $0 })
+  }
 
   func routeElementValues(connection: HIDDeviceConnection) {
-    elementValueRoutes.append(connection.routingLocationID)
+    elementValueRoutes.append(contentsOf: [connection.routingAddress.locationID].compactMap { $0 })
   }
 }

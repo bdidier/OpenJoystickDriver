@@ -10,7 +10,7 @@ import Testing
 struct StatusTests {
   @Test
   func translatesStatus() async throws {
-    let device = testPad(runtimeIdentifier: "session-device-7")
+    let device = testPad(sessionToken: "device-7")
     let gateway = GatewayStub(
       statusPayload: ApplicationServiceStatusPayload(
         inputMonitoring: "granted",
@@ -34,7 +34,7 @@ struct StatusTests {
 
   @Test
   func statusReadinessWaitsForPostEventAccess() async {
-    let device = testPad(runtimeIdentifier: "session-device-8")
+    let device = testPad(sessionToken: "device-8")
     let profile = makeProfile(name: "Mapped")
     let activeProfile = ApplicationServiceRemappingActiveProfilePayload(
       vendorID: profile.device.vendorID,
@@ -73,7 +73,7 @@ struct StatusTests {
 
   @Test
   func liveStatusRefreshPublishesControllerDisconnectionWithoutLoadingTheUI() async {
-    let device = testPad(runtimeIdentifier: "session-device-live")
+    let device = testPad(sessionToken: "device-live")
     let connected = ApplicationServiceStatusPayload(
       inputMonitoring: "granted",
       accessibility: "granted",
@@ -105,7 +105,7 @@ struct StatusTests {
 
   @Test
   func liveStatusFailureRetainsLastKnownControllerState() async {
-    let device = testPad(runtimeIdentifier: "session-device-retained")
+    let device = testPad(sessionToken: "device-retained")
     let gateway = GatewayStub(
       statusPayload: ApplicationServiceStatusPayload(
         inputMonitoring: "granted",
@@ -126,7 +126,7 @@ struct StatusTests {
       Issue.record("Expected the last available status to remain visible")
       return
     }
-    #expect(status.devices.map(\.runtimeIdentifier) == [device.runtimeIdentifier])
+    #expect(status.devices.map(\.sessionToken.rawValue) == [device.sessionToken.rawValue])
     #expect(await MainActor.run { viewModel.liveStatusError } != nil)
 
     await gateway.setStatusShouldFail(false)
@@ -196,7 +196,7 @@ struct StatusTests {
       discoverySource: .rawUSB,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
-      runtimeIdentifier: "ds4-bluetooth"
+      sessionToken: .fixture("ds4-bluetooth")
     )
     await gateway.setStatusPayload(
       ApplicationServiceStatusPayload(
@@ -215,7 +215,7 @@ struct StatusTests {
       Issue.record("Expected the trailing inventory to publish available status")
       return
     }
-    #expect(status.devices.map(\.runtimeIdentifier) == [ds4.runtimeIdentifier])
+    #expect(status.devices.map(\.sessionToken.rawValue) == [ds4.sessionToken.rawValue])
   }
 
   @Test
@@ -300,7 +300,7 @@ struct StatusTests {
 
   @Test
   func statusReadinessIgnoresPostEventAccessWithoutActiveMappings() async {
-    let device = testPad(runtimeIdentifier: "session-device-9")
+    let device = testPad(sessionToken: "device-9")
     let gateway = GatewayStub(
       statusPayload: ApplicationServiceStatusPayload(
         inputMonitoring: "granted",
@@ -340,7 +340,7 @@ struct StatusTests {
     #expect(presentation.readiness == .needsAttention)
   }
 
-  private func testPad(runtimeIdentifier: String) -> ApplicationServiceDeviceDescription {
+  private func testPad(sessionToken: String) -> ApplicationServiceDeviceDescription {
     ApplicationServiceDeviceDescription(
       name: "Test Pad",
       vendorID: 0x1234,
@@ -350,7 +350,7 @@ struct StatusTests {
       discoverySource: .rawUSB,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
-      runtimeIdentifier: runtimeIdentifier
+      sessionToken: .fixture(sessionToken)
     )
   }
 }

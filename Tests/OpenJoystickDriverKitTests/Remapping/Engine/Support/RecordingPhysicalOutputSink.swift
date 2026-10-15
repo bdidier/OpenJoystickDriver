@@ -4,8 +4,8 @@ import Foundation
 
 final class RecordingPhysicalOutputSink: RemappingPhysicalOutputSink, @unchecked Sendable {
   enum Event: Equatable {
-    case set(RemappingPhysicalOutput, Bool, UUID, DeviceIdentifier)
-    case releaseAll(DeviceIdentifier)
+    case set(RemappingPhysicalOutput, Bool, UUID, LogicalControllerID)
+    case releaseAll(LogicalControllerID)
   }
 
   private let lock = NSLock()
@@ -18,13 +18,13 @@ final class RecordingPhysicalOutputSink: RemappingPhysicalOutputSink, @unchecked
     _ output: RemappingPhysicalOutput,
     active: Bool,
     owner: UUID,
-    for identifier: DeviceIdentifier
+    for identifier: LogicalControllerID
   ) throws {
     lock.withLock { recorded.append(.set(output, active, owner, identifier)) }
     if rejectSets { throw RemappingEventEngineError.sinkUnavailable }
   }
 
-  func releaseAll(for identifier: DeviceIdentifier) throws {
+  func releaseAll(for identifier: LogicalControllerID) throws {
     lock.withLock { recorded.append(.releaseAll(identifier)) }
   }
 

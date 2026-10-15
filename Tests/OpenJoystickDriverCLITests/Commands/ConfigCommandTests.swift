@@ -28,16 +28,17 @@ struct ConfigCommandTests {
     }
   }
 
-  private func bareIdentity() throws -> String {
-    let record = try #require(
+  private func bareModel() throws -> ControllerModelID {
+    try #require(
       ControllerRecordSet.bundled.records.values.first {
         $0.family == "xbox.gip" && $0.tuning.stickDeadzone == nil
       }
-    )
-    return deviceIdentity(
-      vendorID: Int(record.model.vendorID),
-      productID: Int(record.model.productID)
-    )
+    ).model
+  }
+
+  private func bareIdentity() throws -> String {
+    let model = try bareModel()
+    return deviceIdentity(vendorID: Int(model.vendorID), productID: Int(model.productID))
   }
 
   private func values(_ run: CLIRun) throws -> [String: [String: Any]] {
@@ -99,11 +100,11 @@ struct ConfigCommandTests {
   func showForAControllerAddsTheActiveProfilesStickDeadzonesInTheProfileLayer() async throws {
     let root = Root()
     let identity = try bareIdentity()
-    let (vendorID, productID) = try #require(ControllerSelection.model(identity))
+    let model = try bareModel()
     let profile = RemappingProfile(
       id: UUID(),
       name: "Aim",
-      device: RemappingDeviceScope(vendorID: vendorID, productID: productID),
+      device: RemappingDeviceScope(vendorID: model.vendorID, productID: model.productID),
       applicationScope: .global,
       stickMappings: [
         RemappingStickMapping(source: .left),

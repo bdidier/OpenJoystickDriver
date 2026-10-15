@@ -24,8 +24,8 @@ extension DeviceManager {
       case .accepted: break
       case .stopped: return
       case .retry:
-        let locationID = connection.routingLocationID
-        print("[DeviceManager] HID startup feature read exhausted for loc=\(locationID)")
+        let address = connection.routingAddress
+        print("[DeviceManager] HID startup feature read exhausted for route=\(address)")
       }
     }
   }
@@ -36,7 +36,7 @@ extension DeviceManager {
     connection: HIDDeviceConnection,
     validatesReply: Bool
   ) async -> HIDFeatureReadAttempt {
-    let locationID = connection.routingLocationID
+    let address = connection.routingAddress
     guard await isCurrentHIDStartupPipeline(pipeline, connection: connection) else {
       return .stopped
     }
@@ -48,7 +48,7 @@ extension DeviceManager {
       else { return nil }
       return await self.writesExactHIDConnection(pipeline.identifier, pipeline: pipeline)
         ? await self.hidManager.getFeatureReport(connection: connection, request: request)
-        : await self.hidManager.getFeatureReport(locationID: locationID, request: request)
+        : await self.hidManager.getFeatureReport(address: address, request: request)
     }
     guard case .completed(let result?) = outcome,
       await isCurrentHIDStartupPipeline(pipeline, connection: connection)
@@ -56,7 +56,7 @@ extension DeviceManager {
     guard let data = result.value else {
       print(
         "[DeviceManager] HID startup feature read failed for controller=\(pipeline.identifier) "
-          + "loc=\(locationID) report=\(request.reportID): \(result.failureDescription)"
+          + "route=\(address) report=\(request.reportID): \(result.failureDescription)"
       )
       return .retry
     }
@@ -74,7 +74,7 @@ extension DeviceManager {
     guard await isCurrentHIDStartupPipeline(pipeline, connection: connection) else { return }
     _ = await sendHIDWrites(
       writes,
-      locationID: connection.routingLocationID,
+      address: connection.routingAddress,
       identifier: pipeline.identifier,
       pipeline: pipeline,
       startupConnection: connection
@@ -99,7 +99,7 @@ extension DeviceManager {
       guard await isCurrentHIDStartupPipeline(pipeline, connection: connection) else { return }
       let sent = await sendHIDWrites(
         [write.write],
-        locationID: connection.routingLocationID,
+        address: connection.routingAddress,
         identifier: pipeline.identifier,
         pipeline: pipeline,
         startupConnection: connection
@@ -108,7 +108,7 @@ extension DeviceManager {
       if !sent {
         print(
           "[DeviceManager] Record startup write failed for controller=\(pipeline.identifier) "
-            + "loc=\(connection.routingLocationID) report=\(write.report.reportID)"
+            + "route=\(connection.routingAddress) report=\(write.report.reportID)"
         )
       }
     }
@@ -125,7 +125,7 @@ extension DeviceManager {
     let succeeded = await sendHIDWrites(
       writes,
       intervalNanoseconds: plan.hidStartupIntervalNanoseconds,
-      locationID: connection.routingLocationID,
+      address: connection.routingAddress,
       identifier: pipeline.identifier,
       pipeline: pipeline,
       startupConnection: connection
@@ -142,7 +142,7 @@ extension DeviceManager {
     connection: HIDDeviceConnection,
     plan: DriverSessionPlan
   ) async {
-    let locationID = connection.routingLocationID
+    let address = connection.routingAddress
     let interval = plan.hidStartupIntervalNanoseconds
     for round in 0...plan.hidStartupRecoveryRounds {
       do { try await Task.sleep(nanoseconds: plan.hidStartupRecoveryIntervalNanoseconds) } catch {
@@ -163,7 +163,7 @@ extension DeviceManager {
         // A failed recovery write is not retried within the round; expiry still follows.
         _ = await sendHIDWrites(
           [write],
-          locationID: locationID,
+          address: address,
           identifier: pipeline.identifier,
           pipeline: pipeline,
           startupConnection: connection
@@ -187,7 +187,7 @@ extension DeviceManager {
   ) -> Bool {
     let identifier = pipeline.identifier
     guard !Task.isCancelled, !isStopping, isCurrentHIDInitialization(connection),
-      pipelines[identifier] === pipeline, identifier.locationID == connection.routingLocationID,
+      pipelines[identifier] === pipeline, identifier.hidRoutingAddress == connection.routingAddress,
       let info = deviceInfos[identifier], case .hid = info.discoverySource,
       info.hidConnectionID == connection.connectionID,
       info.physicalDevice == connection.physicalDevice,
@@ -200,13 +200,13 @@ extension DeviceManager {
     pipeline: DevicePipeline,
     connection: HIDDeviceConnection
   ) async {
-    let locationID = connection.routingLocationID
+    let address = connection.routingAddress
     guard await isCurrentHIDStartupPipeline(pipeline, connection: connection) else { return }
     guard let write = await pipeline.hidPresenceRequestWrite() else { return }
     guard await isCurrentHIDStartupPipeline(pipeline, connection: connection) else { return }
     let result = await sendHIDWrites(
       [write],
-      locationID: locationID,
+      address: address,
       identifier: pipeline.identifier,
       pipeline: pipeline,
       startupConnection: connection
@@ -215,7 +215,7 @@ extension DeviceManager {
     if !result {
       print(
         "[DeviceManager] HID connection-status request failed for"
-          + " controller=\(pipeline.identifier) loc=\(locationID)"
+          + " controller=\(pipeline.identifier) route=\(address)"
       )
     }
   }

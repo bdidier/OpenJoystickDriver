@@ -98,7 +98,7 @@ struct SteamHIDRoleTests {
           physicalLocationIdentifier: location,
           interfaces: [steamHIDInterface(number: number, gamepad: number == 2)]
         ),
-        routingLocationID: location
+        routingAddress: .ioKit(locationID: location, interfaceNumber: nil)
       )
     }
 
@@ -108,7 +108,7 @@ struct SteamHIDRoleTests {
       await manager.handleHIDEvent(.connected(connection: connection, ownership: .exclusive))
     }
 
-    let role = DeviceIdentifier(
+    let role = LogicalControllerID(
       vendorID: 0x28DE,
       productID: 0x1102,
       locationID: location,
@@ -211,8 +211,8 @@ struct SteamHIDRoleTests {
     #expect(registry.hidConnectionRole(of: bluetooth) == .location)
   }
 
-  static func slot(_ number: UInt8) -> DeviceIdentifier {
-    DeviceIdentifier(
+  static func slot(_ number: UInt8) -> LogicalControllerID {
+    LogicalControllerID(
       vendorID: 0x28DE,
       productID: 0x1142,
       locationID: dongleLocation,
@@ -230,7 +230,7 @@ struct SteamHIDRoleTests {
         physicalLocationIdentifier: dongleLocation,
         interfaces: [steamHIDInterface(number: number, gamepad: number != 0)]
       ),
-      routingLocationID: dongleLocation
+      routingAddress: .ioKit(locationID: dongleLocation, interfaceNumber: nil)
     )
   }
 
@@ -241,7 +241,7 @@ struct SteamHIDRoleTests {
   ) async {
     await manager.handleHIDEvent(
       .inputReport(
-        locationID: connection.routingLocationID,
+        address: connection.routingAddress,
         connectionID: connection.connectionID,
         reportID: 1,
         data: report

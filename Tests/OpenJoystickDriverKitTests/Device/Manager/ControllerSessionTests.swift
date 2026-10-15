@@ -67,8 +67,8 @@ struct ControllerSessionTests {
   func absoluteSnapshotsCenterTheStickWithoutAReleaseDelta() async {
     let output = ControllerSessionOutputProbe()
     let pipeline = DevicePipeline(
-      identifier: DeviceIdentifier(vendorID: 1, productID: 2),
-      transport: .hid(locationID: 6),
+      identifier: LogicalControllerID(vendorID: 1, productID: 2),
+      transport: .hid(address: .ioKit(locationID: 6, interfaceNumber: nil)),
       driver: AbsoluteStickParser(),
       dispatcher: output,
       uptimeNanoseconds: ManualUptime().now
@@ -109,18 +109,14 @@ struct ControllerSessionTests {
             physicalLocationIdentifier: 71,
             interfaces: [hostHIDInterface(.bluetoothClassic)]
           ),
-          routingLocationID: 71,
+          routingAddress: .ioKit(locationID: 71, interfaceNumber: nil),
         ),
         ownership: .exclusive
       )
     )
     let device = try #require(await manager.connectedDeviceDescriptions().first)
 
-    let result = await manager.disconnectWirelessController(
-      vendorID: device.vendorID,
-      productID: device.productID,
-      runtimeIdentifier: device.runtimeIdentifier
-    )
+    let result = await manager.disconnectWirelessController(.session(device.sessionToken))
 
     #expect(result.state == (expectedFailure == nil ? .suspended : .active))
 
@@ -167,18 +163,14 @@ struct ControllerSessionTests {
               hostHIDInterface(HIDDeviceStream.hostTransport(forTransportProperty: connection))
             ]
           ),
-          routingLocationID: 72,
+          routingAddress: .ioKit(locationID: 72, interfaceNumber: nil),
         ),
         ownership: .exclusive
       )
     )
     let device = try #require(await manager.connectedDeviceDescriptions().first)
 
-    let result = await manager.disconnectWirelessController(
-      vendorID: device.vendorID,
-      productID: device.productID,
-      runtimeIdentifier: device.runtimeIdentifier
-    )
+    let result = await manager.disconnectWirelessController(.session(device.sessionToken))
 
     #expect(result.state == .active)
     #expect(result.failure == expectedFailure)
@@ -188,12 +180,12 @@ struct ControllerSessionTests {
 
   @Test
   func suspensionNeutralizesHeldInputAndIgnoresReportsUntilResume() async {
-    let identifier = DeviceIdentifier(vendorID: 0x054C, productID: 0x09CC)
+    let identifier = LogicalControllerID(vendorID: 0x054C, productID: 0x09CC)
     let clock = ManualUptime()
     let output = ControllerSessionOutputProbe()
     let pipeline = DevicePipeline(
       identifier: identifier,
-      transport: .hid(locationID: 1),
+      transport: .hid(address: .ioKit(locationID: 1, interfaceNumber: nil)),
       driver: DualShock4Driver(),
       dispatcher: output,
       uptimeNanoseconds: clock.now
@@ -230,22 +222,18 @@ struct ControllerSessionTests {
             physicalLocationIdentifier: 73,
             interfaces: [hostHIDInterface(.usb)]
           ),
-          routingLocationID: 73,
+          routingAddress: .ioKit(locationID: 73, interfaceNumber: nil),
         ),
         ownership: .exclusive
       )
     )
     let device = try #require(await manager.connectedDeviceDescriptions().first)
-    #expect(await manager.activeDeviceIdentifiers().count == 1)
+    #expect(await manager.activeLogicalControllerIDs().count == 1)
 
-    _ = await manager.suspendController(
-      vendorID: device.vendorID,
-      productID: device.productID,
-      runtimeIdentifier: device.runtimeIdentifier
-    )
+    _ = await manager.suspendController(.session(device.sessionToken))
 
     #expect(await manager.connectedDeviceDescriptions().count == 1)
-    #expect(await manager.activeDeviceIdentifiers().isEmpty)
+    #expect(await manager.activeLogicalControllerIDs().isEmpty)
     await manager.stop()
   }
 

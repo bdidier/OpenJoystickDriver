@@ -114,7 +114,7 @@ struct VirtualInputEventTests {
   /// and the game.
   @Test
   func unprofiledSticksReachTheVirtualReportWithoutADeadZone() {
-    let zd = DeviceIdentifier(vendorID: 0x413D, productID: 0x2104)
+    let zd = LogicalControllerID(vendorID: 0x413D, productID: 0x2104)
     for (x, y) in [(Float(0.12), Float(0.12)), (0.14, 0)] {
       var state = VirtualGamepadState()
       UserSpaceOutputDispatcher.apply(
@@ -131,7 +131,7 @@ struct VirtualInputEventTests {
   /// A record's `tuning.stickDeadzone` reaches the dispatcher as a rescaling dead zone.
   @Test
   func recordTuningSetsTheStickDeadZone() {
-    let tuned = DeviceIdentifier(vendorID: 0x11C1, productID: 0x5600)
+    let tuned = LogicalControllerID(vendorID: 0x11C1, productID: 0x5600)
     #expect(
       UserSpaceOutputDispatcher.stickTransfer(for: tuned)
         == .init(deadzone: 0.02, rescalesDeadzone: true)

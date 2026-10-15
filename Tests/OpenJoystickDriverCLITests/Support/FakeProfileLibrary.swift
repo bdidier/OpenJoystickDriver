@@ -60,7 +60,7 @@ final class FakeProfileLibrary: @unchecked Sendable {
         return ApplicationServiceRemappingRoutePayload(
           vendorID: device.vendorID,
           productID: device.productID,
-          runtimeIdentifier: device.runtimeIdentifier,
+          sessionToken: device.sessionToken,
           selection: profile == nil ? .unavailable : .remapping,
           eligibility: profile == nil ? .unavailable : .eligible,
           activeProfileID: profile?.profileID,
@@ -160,14 +160,16 @@ final class FakeProfileLibrary: @unchecked Sendable {
           let pair = try? decoder.decode(
             ApplicationServiceJoyConPairArguments.self,
             from: arguments
-          )
+          ),
+          case .session(let left) = pair.left,
+          case .session(let right) = pair.right
         else { return nil }
         lock.withLock {
           pairs.append(
             ApplicationServiceJoyConPairPayload(
               sessionID: UUID(),
-              leftRuntimeIdentifier: pair.leftRuntimeIdentifier,
-              rightRuntimeIdentifier: pair.rightRuntimeIdentifier,
+              left: left,
+              right: right,
               profileID: pair.profileID,
               profileName: profiles.first { $0.id == pair.profileID }?.name ?? "",
               gyroSelection: .left

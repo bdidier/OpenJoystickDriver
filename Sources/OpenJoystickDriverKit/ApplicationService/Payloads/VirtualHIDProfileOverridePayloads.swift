@@ -1,59 +1,45 @@
 import Foundation
 
-/// Arguments of `setVirtualHIDProfileOverride`: the controller selector, the requested
+/// Arguments of `setVirtualHIDProfileOverride`: the controller reference, the requested
 /// profile's raw identifier, such as `hid-generic`, and whether the override is for the selected
-/// unit only (see ``UnitIdentity``) instead of its model. An absent `unit` means the model.
+/// unit only (see ``ControllerPortKey``) instead of its model. An absent `unit` means the model.
 public struct LocalServiceRPCVirtualHIDProfileOverrideArguments: Codable, Sendable {
-  public let vendorID: Int
-  public let productID: Int
-  public let runtimeIdentifier: String?
+  public let controller: ControllerReference
   public let profile: String
   public let unit: Bool
 
   public init(
-    vendorID: Int,
-    productID: Int,
-    runtimeIdentifier: String? = nil,
+    controller: ControllerReference,
     profile: String,
     unit: Bool = false
   ) {
-    self.vendorID = vendorID
-    self.productID = productID
-    self.runtimeIdentifier = runtimeIdentifier
+    self.controller = controller
     self.profile = profile
     self.unit = unit
   }
 
   public init(from decoder: any Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
-    vendorID = try container.decode(Int.self, forKey: .vendorID)
-    productID = try container.decode(Int.self, forKey: .productID)
-    runtimeIdentifier = try container.decodeIfPresent(String.self, forKey: .runtimeIdentifier)
+    controller = try container.decode(ControllerReference.self, forKey: .controller)
     profile = try container.decode(String.self, forKey: .profile)
     unit = try container.decodeIfPresent(Bool.self, forKey: .unit) ?? false
   }
 }
 
-/// Arguments of `resetVirtualHIDProfileOverride`: the controller selector and whether to reset
+/// Arguments of `resetVirtualHIDProfileOverride`: the controller reference and whether to reset
 /// the selected unit's override instead of its model's. An absent `unit` means the model.
 public struct LocalServiceRPCVirtualHIDProfileOverrideResetArguments: Codable, Sendable {
-  public let vendorID: Int
-  public let productID: Int
-  public let runtimeIdentifier: String?
+  public let controller: ControllerReference
   public let unit: Bool
 
-  public init(vendorID: Int, productID: Int, runtimeIdentifier: String? = nil, unit: Bool = false) {
-    self.vendorID = vendorID
-    self.productID = productID
-    self.runtimeIdentifier = runtimeIdentifier
+  public init(controller: ControllerReference, unit: Bool = false) {
+    self.controller = controller
     self.unit = unit
   }
 
   public init(from decoder: any Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
-    vendorID = try container.decode(Int.self, forKey: .vendorID)
-    productID = try container.decode(Int.self, forKey: .productID)
-    runtimeIdentifier = try container.decodeIfPresent(String.self, forKey: .runtimeIdentifier)
+    controller = try container.decode(ControllerReference.self, forKey: .controller)
     unit = try container.decodeIfPresent(Bool.self, forKey: .unit) ?? false
   }
 }
@@ -64,8 +50,9 @@ public struct LocalServiceRPCVirtualHIDProfileOverrideResetArguments: Codable, S
 public enum VirtualHIDProfileOverrideFailure: Codable, Equatable, Sendable {
   /// The requested profile identifier names no profile. Nothing was stored.
   case unknownProfile
-  /// No connected controller of the model matches the selector, a unit request selected a
-  /// controller without a unit ID, or the selected controller disconnected during the request.
+  /// No connected controller matches the reference, a port reference or a unit request matches
+  /// more than one, a unit request selects a controller without a port key, or the selected
+  /// controller disconnected during the request.
   /// The stored override is unchanged, except when the controller disconnected after every
   /// retarget succeeded.
   case controllerNotFound

@@ -2,14 +2,14 @@ import Foundation
 
 /// The connection lifetime that reported an unbound device.
 enum UnboundDeviceKey: Hashable {
-  case usb(USBTransportServiceIdentity)
+  case usb(ControllerConnectionAddress)
   case hid(UUID)
 }
 
 /// OJD's input claim on one rejected HID connection.
 struct UnboundHIDClaim: Equatable {
-  let identifier: DeviceIdentifier
-  let routingLocationID: UInt32
+  let identifier: LogicalControllerID
+  let routingAddress: ControllerConnectionAddress
   var isReleased = false
 }
 
@@ -23,7 +23,7 @@ extension DeviceManager {
       let device = entry.value
       let lifetime =
         switch entry.key {
-        case .usb(let service): "usb-\(service.route)-\(service.serviceID)"
+        case .usb(let service): "usb-\(service)"
         case .hid(let connectionID): "hid-\(connectionID.uuidString)"
         }
       return (
@@ -81,7 +81,7 @@ extension DeviceManager {
   /// driver binds is left to macOS instead; OJD never claimed it.
   func rejectHIDDevice(
     _ connection: HIDDeviceConnection,
-    identifier: DeviceIdentifier,
+    identifier: LogicalControllerID,
     reason: ProtocolBindingReason,
     rejectedCandidates: [ProtocolBindingResult.RejectedCandidate]
   ) async {
@@ -89,15 +89,15 @@ extension DeviceManager {
     guard !connection.physicalDevice.nativePassThrough else {
       recordPassThroughDevice(
         connection,
-        vendorID: identifier.controllerIdentity.vendorID,
-        productID: identifier.controllerIdentity.productID
+        vendorID: identifier.model.vendorID,
+        productID: identifier.model.productID
       )
       return
     }
     recordUnboundDevice(
       .hid(connection.connectionID),
-      vendorID: identifier.controllerIdentity.vendorID,
-      productID: identifier.controllerIdentity.productID,
+      vendorID: identifier.model.vendorID,
+      productID: identifier.model.productID,
       connection: connection.physicalDevice.transportProperty ?? "HID",
       backend: .ioHID,
       reason: reason,
@@ -106,7 +106,7 @@ extension DeviceManager {
     )
     unboundHIDClaims[connection.connectionID] = UnboundHIDClaim(
       identifier: identifier,
-      routingLocationID: connection.routingLocationID
+      routingAddress: connection.routingAddress
     )
     await reconcileUnboundHIDClaims()
   }
@@ -124,16 +124,16 @@ extension DeviceManager {
       changed = false
       let claimingKeys = pipelines.filter { !$0.value.observesOnly }.keys
       for (connectionID, claim) in unboundHIDClaims {
-        let identity = claim.identifier.controllerIdentity
+        let identity = claim.identifier.hardware
         let shared = claimingKeys.contains {
-          $0.locationID == claim.routingLocationID
-            || identity.identifiesPhysicalDevice && $0.controllerIdentity == identity
+          $0.hidRoutingAddress == claim.routingAddress
+            || identity.identifiesPhysicalDevice && $0.hardware == identity
         }
         guard shared == claim.isReleased else { continue }
         let result =
           shared
-          ? await hidManager.reacquireInputClaim(locationID: claim.routingLocationID)
-          : await hidManager.releaseInputClaim(locationID: claim.routingLocationID)
+          ? await hidManager.reacquireInputClaim(address: claim.routingAddress)
+          : await hidManager.releaseInputClaim(address: claim.routingAddress)
         guard unboundHIDClaims[connectionID] == claim else { continue }
         switch result {
         case .released, .reacquired:
@@ -142,7 +142,7 @@ extension DeviceManager {
         case .unavailable: break
         case .failed:
           print(
-            "[DeviceManager] HID claim reconciliation failed for loc=\(claim.routingLocationID):"
+            "[DeviceManager] HID claim reconciliation failed for route=\(claim.routingAddress):"
               + " \(Self.hidClaimFailureDescription(result))"
           )
         }

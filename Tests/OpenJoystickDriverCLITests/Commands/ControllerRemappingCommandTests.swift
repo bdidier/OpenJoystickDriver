@@ -1,5 +1,6 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverCLI
@@ -18,11 +19,11 @@ struct ControllerRemappingCommandTests {
       method == .remappingMotionCalibration ? status : nil
     }
 
-    let result = await service.run(["controller", "calibrate", "pad-1", "start", "--json"])
+    let result = await service.run(["controller", "calibrate", token("pad-1"), "start", "--json"])
 
     #expect(result.code == 0, "\(result.standardError)")
     let json = try result.json()
-    #expect(json["controller"] as? String == "pad-1")
+    #expect(json["controller"] as? String == token("pad-1"))
     #expect(json["collecting"] as? Bool == true)
     #expect(json["calibrated"] as? Bool == false)
     let arguments = try #require(service.arguments(of: .remappingMotionCalibration).first)
@@ -31,7 +32,7 @@ struct ControllerRemappingCommandTests {
       from: arguments
     )
     #expect(sent.command == .start)
-    #expect(sent.runtimeIdentifier == "pad-1")
+    #expect(sent.controller == .session(.fixture("pad-1")))
   }
 
   @Test(arguments: [
@@ -85,15 +86,15 @@ struct ControllerRemappingCommandTests {
     )
 
     let paired = await service.run([
-      "controller", "pair", "057E:2006", "right-1", "--profile", "Pair", "--json",
+      "controller", "pair", "057E:2006", token("right-1"), "--profile", "Pair", "--json",
     ])
-    let unpaired = await service.run(["controller", "unpair", "right-1", "--json"])
-    let missing = await service.run(["controller", "unpair", "right-1"])
+    let unpaired = await service.run(["controller", "unpair", token("right-1"), "--json"])
+    let missing = await service.run(["controller", "unpair", token("right-1")])
 
     #expect(paired.code == 0, "\(paired.standardError)")
     let pair = try paired.json()
-    #expect(pair["left"] as? String == "left-1")
-    #expect(pair["right"] as? String == "right-1")
+    #expect(pair["left"] as? String == token("left-1"))
+    #expect(pair["right"] as? String == token("right-1"))
     #expect(pair["profile"] as? String == "Pair")
     #expect(unpaired.code == 0, "\(unpaired.standardError)")
     #expect(try unpaired.json()["session"] as? String == pair["session"] as? String)

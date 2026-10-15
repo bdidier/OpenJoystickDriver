@@ -195,7 +195,7 @@ struct ControllerRecordSetTests {
     #expect(set.records.count == ControllerRecordSet.bundled.records.count + 1)
 
     let catalog = DeviceCatalog(records: set)
-    let unit = DeviceIdentifier(vendorID: 0x1234, productID: 0xABCD, serialNumber: "S")
+    let unit = LogicalControllerID(vendorID: 0x1234, productID: 0xABCD, serialNumber: "S")
     #expect(catalog.record(for: unit.model)?.physicalProtocolID == .xboxGIP)
     #expect(
       catalog.rawUSBModels.contains(

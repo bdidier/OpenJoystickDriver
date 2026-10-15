@@ -141,8 +141,8 @@ struct RemappingScheduleTests {
     #expect(await engine.hasScheduledOutput() == false)
   }
 
-  private var device: DeviceIdentifier {
-    DeviceIdentifier(vendorID: 1, productID: 2, locationID: 1)
+  private var device: LogicalControllerID {
+    LogicalControllerID(vendorID: 1, productID: 2, locationID: 1)
   }
 
   private func deadline(

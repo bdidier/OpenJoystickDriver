@@ -38,19 +38,19 @@ public let maxRumbleDurationMs = 5_000
 let usbVendorSpecificClass: UInt8 = 0xFF
 
 struct RumbleStopTokenRegistry {
-  private var generations: [DeviceIdentifier: UInt64] = [:]
+  private var generations: [LogicalControllerID: UInt64] = [:]
 
-  mutating func replace(for identifier: DeviceIdentifier) -> UInt64 {
+  mutating func replace(for identifier: LogicalControllerID) -> UInt64 {
     let generation = (generations[identifier] ?? 0) &+ 1
     generations[identifier] = generation
     return generation
   }
 
-  func isCurrent(_ generation: UInt64, for identifier: DeviceIdentifier) -> Bool {
+  func isCurrent(_ generation: UInt64, for identifier: LogicalControllerID) -> Bool {
     generations[identifier] == generation
   }
 
-  mutating func remove(_ identifier: DeviceIdentifier) {
+  mutating func remove(_ identifier: LogicalControllerID) {
     generations.removeValue(forKey: identifier)
   }
 
@@ -74,23 +74,23 @@ public actor DeviceManager {
   let hidManager: HIDManager
   let usbTransportProvider: (any USBTransportProvider)?
   let wirelessControllerDisconnector: (any WirelessControllerDisconnecting)?
-  var pipelines: [DeviceIdentifier: DevicePipeline] = [:]
-  var deviceInfos: [DeviceIdentifier: DeviceInfo] = [:]
+  var pipelines: [LogicalControllerID: DevicePipeline] = [:]
+  var deviceInfos: [LogicalControllerID: DeviceInfo] = [:]
   /// The startup player indicator each native controller holds, one per controller and freed on
   /// its detach.
-  var startupPlayerSlots: [DeviceIdentifier: PhysicalPlayerIndicator] = [:]
+  var startupPlayerSlots: [LogicalControllerID: PhysicalPlayerIndicator] = [:]
   var detectionTasks: [Task<Void, Never>] = []
   var hidDetectionTask: Task<Void, Never>?
   var hidDetectionSessionID: UUID?
   var hidInitializationTasks: [HIDInitializationKey: HIDDeviceInitialization] = [:]
   /// The controller each bound HID protocol role serves, keyed by its connection ID; input from
   /// a role's connection routes only to it.
-  var hidRoleConnections: [UUID: DeviceIdentifier] = [:]
-  var hidPeriodicOutputTasks: [DeviceIdentifier: Task<Void, Never>] = [:]
+  var hidRoleConnections: [UUID: LogicalControllerID] = [:]
+  var hidPeriodicOutputTasks: [LogicalControllerID: Task<Void, Never>] = [:]
   /// One output queue per interface, for HID and raw-USB controllers alike.
-  var hidOutputQueues: [DeviceIdentifier: PhysicalHIDOutputSerialQueue] = [:]
+  var hidOutputQueues: [LogicalControllerID: PhysicalHIDOutputSerialQueue] = [:]
   /// The last removed queue per interface; the interface's next queue starts after it drains.
-  var retiredHIDOutputQueues: [DeviceIdentifier: PhysicalHIDOutputSerialQueue] = [:]
+  var retiredHIDOutputQueues: [LogicalControllerID: PhysicalHIDOutputSerialQueue] = [:]
   var permissionWatchTask: Task<Void, Never>?
   var lifecycleGeneration: UInt64 = 0
   var isStopping = false
@@ -99,13 +99,13 @@ public actor DeviceManager {
   var isSystemSleeping = false
   /// Controllers the user suspended; a pipeline for one of these identities starts suspended.
   /// Resume, physical disconnect, and `stop()` remove entries; sleep keeps them.
-  var suspendedControllerIdentities: Set<DeviceIdentifier> = []
+  var suspendedControllerIdentities: Set<LogicalControllerID> = []
   /// HID connections of suspended controllers that a record reload may admit again through the HID
   /// backend; their disconnect keeps the suspension for the connection that replaces them.
   var ownershipCycledHIDConnections: Set<UUID> = []
   var externalOutputAllowed = true
-  var lastPhysicalHIDOutputNanoseconds: [DeviceIdentifier: UInt64] = [:]
-  var rumbleStopTasks: [DeviceIdentifier: Task<Void, Never>] = [:]
+  var lastPhysicalHIDOutputNanoseconds: [LogicalControllerID: UInt64] = [:]
+  var rumbleStopTasks: [LogicalControllerID: Task<Void, Never>] = [:]
   var rumbleStopTokens = RumbleStopTokenRegistry()
   var physicalOutputOwnership = PhysicalOutputOwnership()
   /// Observed devices that did not bind, keyed by the connection that reported them.
@@ -117,7 +117,7 @@ public actor DeviceManager {
   var yieldedHIDConnections: [UUID: YieldedHIDConnection] = [:]
   /// Raw-USB services left acknowledged unclaimed because a native HID controller serves the
   /// same physical controller, keyed by service with the key the service would have claimed.
-  var nativeShadowedUSBServices: [USBTransportServiceIdentity: DeviceIdentifier] = [:]
+  var nativeShadowedUSBServices: [ControllerConnectionAddress: LogicalControllerID] = [:]
   /// HID connections left to macOS by native pass-through, keyed by connection ID.
   var passThroughDevices: [UUID: PassThroughHIDDevice] = [:]
   /// Models whose controller records changed, for raw-USB detection to re-admit on its next poll.
@@ -181,6 +181,6 @@ public actor DeviceManager {
 extension DeviceManager {
   /// The session state of one connected controller; output routing checks it per input report.
   public func controllerSessionState(
-    for identifier: DeviceIdentifier
+    for identifier: LogicalControllerID
   ) async -> ControllerSessionState? { await pipelines[identifier]?.controllerSessionState() }
 }

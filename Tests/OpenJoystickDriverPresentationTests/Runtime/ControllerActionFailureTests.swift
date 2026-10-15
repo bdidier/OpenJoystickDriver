@@ -7,7 +7,7 @@ import Testing
 
 @MainActor
 struct ControllerActionFailureTests {
-  private static func device(runtimeIdentifier: String) -> ApplicationServiceDeviceDescription {
+  private static func device(sessionToken: String) -> ApplicationServiceDeviceDescription {
     ApplicationServiceDeviceDescription(
       name: "Test Pad",
       vendorID: 0x1234,
@@ -17,7 +17,7 @@ struct ControllerActionFailureTests {
       discoverySource: .rawUSB,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
-      runtimeIdentifier: runtimeIdentifier
+      sessionToken: .fixture(sessionToken)
     )
   }
 
@@ -27,12 +27,12 @@ struct ControllerActionFailureTests {
     let gateway = GatewayStub()
     let viewModel = RuntimeViewModel(gateway: gateway)
 
-    await viewModel.suspendController(Self.device(runtimeIdentifier: "pad-a"))
+    await viewModel.suspendController(Self.device(sessionToken: "pad-a"))
 
     #expect(await gateway.statusCallCount == 1)
     #expect(
       viewModel.controllerActionFailures == [
-        "pad-a": RuntimePresentation.userFacingError(
+        token("pad-a"): RuntimePresentation.userFacingError(
           ApplicationServiceGatewayError.controllerSessionChangeRejected
         )
       ]
@@ -43,20 +43,20 @@ struct ControllerActionFailureTests {
   func failedWirelessDisconnectShowsTheServiceStageAndCause() async {
     let viewModel = RuntimeViewModel(gateway: GatewayStub())
 
-    await viewModel.disconnectWirelessController(Self.device(runtimeIdentifier: "pad-b"))
+    await viewModel.disconnectWirelessController(Self.device(sessionToken: "pad-b"))
 
-    let failure = viewModel.controllerActionFailures["pad-b"]
+    let failure = viewModel.controllerActionFailures[token("pad-b")]
     #expect(failure?.contains(WirelessControllerDisconnectFailure.notFound.rawValue) == true)
   }
 
   @Test
   func theNextActionClearsTheControllersPreviousFailure() async {
     let viewModel = RuntimeViewModel(gateway: GatewayStub())
-    viewModel.controllerActionFailures = ["pad-c": "earlier", "pad-d": "other"]
+    viewModel.controllerActionFailures = [token("pad-c"): "earlier", token("pad-d"): "other"]
 
-    await viewModel.resumeController(Self.device(runtimeIdentifier: "pad-c"))
+    await viewModel.resumeController(Self.device(sessionToken: "pad-c"))
 
-    #expect(viewModel.controllerActionFailures["pad-c"] != "earlier")
-    #expect(viewModel.controllerActionFailures["pad-d"] == "other")
+    #expect(viewModel.controllerActionFailures[token("pad-c")] != "earlier")
+    #expect(viewModel.controllerActionFailures[token("pad-d")] == "other")
   }
 }

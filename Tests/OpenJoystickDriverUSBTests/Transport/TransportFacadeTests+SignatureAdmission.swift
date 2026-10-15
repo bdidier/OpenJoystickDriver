@@ -16,7 +16,7 @@ extension TransportFacadeTests {
       requiredDriverKitModels: []
     ) { device in
       PhysicalDevice(
-        serviceIdentity: device.serviceIdentity,
+        serviceAddress: device.serviceAddress,
         vendorID: device.vendorID,
         productID: device.productID,
         deviceClass: 0xFF,
@@ -41,13 +41,13 @@ extension TransportFacadeTests {
       ioUSBHostObservation: { _ in nil },
       ioUSBHostConfigurationObservation: { device, value in
         calls.record(value)
-        return PhysicalDevice(serviceIdentity: device.serviceIdentity)
+        return PhysicalDevice(serviceAddress: device.serviceAddress)
       }
     )
 
     #expect(
       try await provider.configurationObservation(for: direct, configurationValue: 1)?
-        .serviceIdentity == direct.serviceIdentity
+        .serviceAddress == direct.serviceAddress
     )
     await #expect(throws: USBTransportError.notSupported) {
       try await provider.configurationObservation(
@@ -90,20 +90,20 @@ extension TransportFacadeTests {
       switch device.serviceID {
       case 5:
         return PhysicalDevice(
-          serviceIdentity: device.serviceIdentity,
+          serviceAddress: device.serviceAddress,
           deviceClass: 0xFF,
           deviceSubclass: 0x47,
           deviceProtocol: 0xD0
         )
       case 6:
         return PhysicalDevice(
-          serviceIdentity: device.serviceIdentity,
+          serviceAddress: device.serviceAddress,
           configurationValue: 1,
           interfaces: [PhysicalInterfaceSignature(interfaceNumber: 0, interfaceClass: 0x03)]
         )
       default:
         // Unconfigured without a signature: looked at again on the next poll.
-        return PhysicalDevice(serviceIdentity: device.serviceIdentity, deviceClass: 0x00)
+        return PhysicalDevice(serviceAddress: device.serviceAddress, deviceClass: 0x00)
       }
     }
 

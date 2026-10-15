@@ -60,7 +60,7 @@ struct RemappingMonotonicTimeTests {
   @Test
   func controllerClocksRemainIndependent() {
     var state = RemappingEngineState()
-    let other = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 2)
+    let other = LogicalControllerID(vendorID: 1, productID: 2, locationID: 2)
     _ = state.process(
       inputs: [.press(.faceSouth)],
       from: identifier,
@@ -94,7 +94,7 @@ struct RemappingMonotonicTimeTests {
     )
   }
 
-  private let identifier = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 1)
+  private let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 1)
 
   private func pulseProfile(key: RemappingKeyboardKey) -> RemappingProfile {
     profile(

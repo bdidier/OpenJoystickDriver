@@ -9,14 +9,15 @@ struct ApplicationServiceWatchSource: ControllerWatchSource {
 
   func devices() async throws -> [ApplicationServiceDeviceDescription] {
     guard let server else { return [] }
-    return server.describingVirtualHIDProfiles(await server.connectedDevices())
+    return server.describingVirtualHIDProfiles(
+      await server.deviceManager.connectedDeviceDescriptions().map {
+        ($0.logicalControllerID, ApplicationServiceDeviceDescription(snapshot: $0))
+      }
+    )
   }
 
   func state(of device: ApplicationServiceDeviceDescription) async throws -> ControllerState? {
-    await server?.deviceManager.controllerState(
-      for: ControllerModelID(vendorID: device.vendorID, productID: device.productID),
-      runtimeIdentifier: device.runtimeIdentifier
-    )
+    await server?.deviceManager.controllerState(for: .session(device.sessionToken))
   }
 
   func output(
@@ -24,11 +25,11 @@ struct ApplicationServiceWatchSource: ControllerWatchSource {
   ) async throws
     -> ApplicationServiceVirtualOutputState?
   {
-    guard
-      let state = await server?.automaticUserSpaceDispatcher()?.virtualOutputState(
-        matching: ControllerModelID(vendorID: device.vendorID, productID: device.productID),
-        runtimeIdentifier: device.runtimeIdentifier
-      )
+    guard let server,
+      let identifier = await server.deviceManager.connectedIdentifier(
+        for: .session(device.sessionToken)
+      ),
+      let state = await server.automaticUserSpaceDispatcher()?.virtualOutputState(for: identifier)
     else { return nil }
     return ApplicationServiceVirtualOutputState(state)
   }

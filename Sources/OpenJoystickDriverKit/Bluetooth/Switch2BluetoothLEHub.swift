@@ -45,10 +45,9 @@ public enum Switch2BluetoothLEProfile {
 /// command channel and vibration output over GATT.
 ///
 /// The CoreBluetooth central calls the `link` and `received` methods on its serial queue, so input
-/// keeps its order. Each connection gets a routing location above
-/// ``firstRoutingLocationID``, a range that IOHID locations are assumed not to use.
+/// keeps its order. Each connection is addressed by its peripheral's Core Bluetooth identifier,
+/// as ``ControllerConnectionAddress/gattPeripheral(_:)``.
 public final class Switch2BluetoothLEHub: @unchecked Sendable {
-  public static let firstRoutingLocationID: UInt32 = 0xB1E0_0000
   /// The console's vibration report length on every model.
   static let vibrationReportLength = 0x2A
 
@@ -68,9 +67,7 @@ public final class Switch2BluetoothLEHub: @unchecked Sendable {
   }
 
   private let lock = NSLock()
-  private var links: [UInt32: Link] = [:]
-  private var locationByPeripheral: [UUID: UInt32] = [:]
-  private var nextLocationOffset: UInt32 = 0
+  private var links: [UUID: Link] = [:]
   private var nextWaiterToken: UInt64 = 0
   private var continuation: AsyncStream<HIDDeviceEvent>.Continuation?
   private var streamGeneration: UInt64 = 0
@@ -90,8 +87,6 @@ public final class Switch2BluetoothLEHub: @unchecked Sendable {
     linkDisconnected(peripheralID: peripheralID)
     let (event, stream): (HIDDeviceEvent, AsyncStream<HIDDeviceEvent>.Continuation?) = lock.withLock
     {
-      let location = Self.firstRoutingLocationID &+ nextLocationOffset
-      nextLocationOffset &+= 1
       let device = PhysicalDevice(
         vendorID: Switch2BluetoothLEProfile.nintendoVendorID,
         productID: productID,
@@ -106,9 +101,11 @@ public final class Switch2BluetoothLEHub: @unchecked Sendable {
           )
         ]
       )
-      let connection = HIDDeviceConnection(physicalDevice: device, routingLocationID: location)
-      links[location] = Link(peripheralID: peripheralID, connection: connection, writer: writer)
-      locationByPeripheral[peripheralID] = location
+      let connection = HIDDeviceConnection(
+        physicalDevice: device,
+        routingAddress: .gattPeripheral(peripheralID)
+      )
+      links[peripheralID] = Link(peripheralID: peripheralID, connection: connection, writer: writer)
       return (.connected(connection: connection, ownership: .exclusive), continuation)
     }
     stream?.yield(event)
@@ -118,15 +115,13 @@ public final class Switch2BluetoothLEHub: @unchecked Sendable {
   public func receivedInput(peripheralID: UUID, bytes: [UInt8]) {
     let target = lock.withLock {
       () -> (HIDDeviceConnection, AsyncStream<HIDDeviceEvent>.Continuation)? in
-      guard let location = locationByPeripheral[peripheralID], let link = links[location],
-        let continuation
-      else { return nil }
+      guard let link = links[peripheralID], let continuation else { return nil }
       return (link.connection, continuation)
     }
     guard let (connection, stream) = target else { return }
     stream.yield(
       .inputReport(
-        locationID: connection.routingLocationID,
+        address: connection.routingAddress,
         connectionID: connection.connectionID,
         reportID: 0x05,
         data: Data([0x05] + bytes)
@@ -137,12 +132,12 @@ public final class Switch2BluetoothLEHub: @unchecked Sendable {
   /// Delivers one command-reply notification.
   public func receivedReply(peripheralID: UUID, bytes: [UInt8]) {
     let waiter = lock.withLock { () -> ReplyWaiter? in
-      guard let location = locationByPeripheral[peripheralID] else { return nil }
-      guard let waiter = links[location]?.waiter else {
-        links[location]?.replies.append(bytes)
+      guard links[peripheralID] != nil else { return nil }
+      guard let waiter = links[peripheralID]?.waiter else {
+        links[peripheralID]?.replies.append(bytes)
         return nil
       }
-      links[location]?.waiter = nil
+      links[peripheralID]?.waiter = nil
       return waiter
     }
     waiter?.continuation.resume(returning: bytes)
@@ -150,9 +145,7 @@ public final class Switch2BluetoothLEHub: @unchecked Sendable {
 
   public func linkDisconnected(peripheralID: UUID) {
     let removed = lock.withLock { () -> (Link, AsyncStream<HIDDeviceEvent>.Continuation?)? in
-      guard let location = locationByPeripheral.removeValue(forKey: peripheralID),
-        let link = links.removeValue(forKey: location)
-      else { return nil }
+      guard let link = links.removeValue(forKey: peripheralID) else { return nil }
       return (link, continuation)
     }
     guard let (link, stream) = removed else { return }
@@ -162,7 +155,11 @@ public final class Switch2BluetoothLEHub: @unchecked Sendable {
 
   // MARK: - HID backend
 
-  func owns(locationID: UInt32) -> Bool { lock.withLock { links[locationID] != nil } }
+  /// Whether `address` names a connected Switch 2 controller's GATT link.
+  func owns(_ address: ControllerConnectionAddress) -> Bool {
+    guard case .gattPeripheral(let peripheralID) = address else { return false }
+    return lock.withLock { links[peripheralID] != nil }
+  }
 
   /// Starts a new event stream, ending the previous one, and replays the connected controllers.
   func events() -> AsyncStream<HIDDeviceEvent> {
@@ -172,7 +169,7 @@ public final class Switch2BluetoothLEHub: @unchecked Sendable {
       continuation = newContinuation
       streamGeneration &+= 1
       let connections = links.values.map(\.connection).sorted {
-        $0.routingLocationID < $1.routingLocationID
+        $0.routingAddress < $1.routingAddress
       }
       return (previous, connections, streamGeneration)
     }
@@ -192,16 +189,16 @@ public final class Switch2BluetoothLEHub: @unchecked Sendable {
       links.values.map {
         HIDDeviceConnectionSnapshot(connection: $0.connection, ownership: .exclusive)
       }
-    }.sorted { $0.connection.routingLocationID < $1.connection.routingLocationID }
+    }.sorted { $0.connection.routingAddress < $1.connection.routingAddress }
   }
 
   /// Sends a USB-layout vibration report. Over Bluetooth LE the report-ID byte is zero and the
   /// report is 42 bytes on every model.
   func setOutputReport(
-    locationID: UInt32,
+    peripheralID: UUID,
     report: PhysicalHIDOutputReport
   ) -> PhysicalHIDReportResult<Void> {
-    guard let writer = lock.withLock({ links[locationID]?.writer }) else { return .unavailable }
+    guard let writer = lock.withLock({ links[peripheralID]?.writer }) else { return .unavailable }
     var bytes = Array(report.bytes.prefix(Self.vibrationReportLength))
     guard !bytes.isEmpty else { return .unavailable }
     bytes[0] = 0
@@ -212,11 +209,11 @@ public final class Switch2BluetoothLEHub: @unchecked Sendable {
   // MARK: - Command channel
 
   /// Writes one command, dropping replies to earlier commands that nobody read.
-  func writeCommand(locationID: UInt32, bytes: [UInt8]) throws {
+  func writeCommand(peripheralID: UUID, bytes: [UInt8]) throws {
     let writer = lock.withLock { () -> (any Switch2BluetoothLEWriter)? in
-      links[locationID]?.replies.removeAll()
-      links[locationID]?.current = nil
-      return links[locationID]?.writer
+      links[peripheralID]?.replies.removeAll()
+      links[peripheralID]?.current = nil
+      return links[peripheralID]?.writer
     }
     guard let writer else { throw USBTransportError.disconnected }
     guard writer.writeCommand(bytes) else { throw USBTransportError.inputOutput }
@@ -225,26 +222,27 @@ public final class Switch2BluetoothLEHub: @unchecked Sendable {
   /// Reads at most `length` bytes of the next reply. A read that ends exactly at a reply's end is
   /// followed by one empty read, so a caller reading until a short transfer stops at each reply.
   func readReply(
-    locationID: UInt32,
+    peripheralID: UUID,
     length: Int,
     timeoutMilliseconds: UInt32
   ) async throws -> [UInt8] {
     let pending = try lock.withLock { () -> [UInt8]? in
-      guard links[locationID] != nil else { throw USBTransportError.disconnected }
-      return links[locationID]?.current
+      guard links[peripheralID] != nil else { throw USBTransportError.disconnected }
+      return links[peripheralID]?.current
     }
-    if let pending { return take(length, of: pending, locationID: locationID) }
-    guard let reply = await nextReply(locationID: locationID, timeout: timeoutMilliseconds) else {
-      throw lock.withLock { links[locationID] == nil }
+    if let pending { return take(length, of: pending, peripheralID: peripheralID) }
+    guard let reply = await nextReply(peripheralID: peripheralID, timeout: timeoutMilliseconds)
+    else {
+      throw lock.withLock { links[peripheralID] == nil }
         ? USBTransportError.disconnected : USBTransportError.timeout
     }
-    return take(length, of: reply, locationID: locationID)
+    return take(length, of: reply, peripheralID: peripheralID)
   }
 
-  private func take(_ length: Int, of reply: [UInt8], locationID: UInt32) -> [UInt8] {
+  private func take(_ length: Int, of reply: [UInt8], peripheralID: UUID) -> [UInt8] {
     let chunk = Array(reply.prefix(length))
     lock.withLock {
-      links[locationID]?.current = chunk.count < length ? nil : Array(reply.dropFirst(length))
+      links[peripheralID]?.current = chunk.count < length ? nil : Array(reply.dropFirst(length))
     }
     return chunk
   }
@@ -254,20 +252,20 @@ public final class Switch2BluetoothLEHub: @unchecked Sendable {
     case waiting(token: UInt64)
   }
 
-  private func nextReply(locationID: UInt32, timeout: UInt32) async -> [UInt8]? {
+  private func nextReply(peripheralID: UUID, timeout: UInt32) async -> [UInt8]? {
     await withCheckedContinuation { (continuation: CheckedContinuation<[UInt8]?, Never>) in
       let (start, abandoned) = lock.withLock { () -> (WaitStart, ReplyWaiter?) in
-        guard var link = links[locationID] else { return (.ready(nil), nil) }
+        guard var link = links[peripheralID] else { return (.ready(nil), nil) }
         if !link.replies.isEmpty {
           let reply = link.replies.removeFirst()
-          links[locationID] = link
+          links[peripheralID] = link
           return (.ready(reply), nil)
         }
         // One read at a time: a newer read replaces a waiter that its caller abandoned.
         let abandoned = link.waiter
         nextWaiterToken &+= 1
         link.waiter = ReplyWaiter(token: nextWaiterToken, continuation: continuation)
-        links[locationID] = link
+        links[peripheralID] = link
         return (.waiting(token: nextWaiterToken), abandoned)
       }
       abandoned?.continuation.resume(returning: nil)
@@ -278,8 +276,10 @@ public final class Switch2BluetoothLEHub: @unchecked Sendable {
           [weak self] in
           guard let self else { return }
           let expired = lock.withLock { () -> ReplyWaiter? in
-            guard let waiter = links[locationID]?.waiter, waiter.token == token else { return nil }
-            links[locationID]?.waiter = nil
+            guard let waiter = links[peripheralID]?.waiter, waiter.token == token else {
+              return nil
+            }
+            links[peripheralID]?.waiter = nil
             return waiter
           }
           expired?.continuation.resume(returning: nil)

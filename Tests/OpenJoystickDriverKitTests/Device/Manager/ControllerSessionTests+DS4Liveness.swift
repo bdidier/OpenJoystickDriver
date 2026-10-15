@@ -7,12 +7,12 @@ import Testing
 extension ControllerSessionTests {
   @Test
   func ds4LivenessLossNeutralizesAndRequiresFreshNeutralReport() async throws {
-    let identifier = DeviceIdentifier(vendorID: 0x054C, productID: 0x09CC)
+    let identifier = LogicalControllerID(vendorID: 0x054C, productID: 0x09CC)
     let clock = ManualUptime()
     let output = ControllerSessionOutputProbe()
     let pipeline = DevicePipeline(
       identifier: identifier,
-      transport: .hid(locationID: 2),
+      transport: .hid(address: .ioKit(locationID: 2, interfaceNumber: nil)),
       driver: DualShock4Driver(),
       dispatcher: output,
       uptimeNanoseconds: clock.now
@@ -30,12 +30,12 @@ extension ControllerSessionTests {
 
   @Test
   func freshHeldReportsDoNotRecoverRetiredDS4Output() async throws {
-    let identifier = DeviceIdentifier(vendorID: 0x054C, productID: 0x09CC)
+    let identifier = LogicalControllerID(vendorID: 0x054C, productID: 0x09CC)
     let clock = ManualUptime()
     let output = ControllerSessionOutputProbe()
     let pipeline = DevicePipeline(
       identifier: identifier,
-      transport: .hid(locationID: 3),
+      transport: .hid(address: .ioKit(locationID: 3, interfaceNumber: nil)),
       driver: DualShock4Driver(),
       dispatcher: output,
       uptimeNanoseconds: clock.now
@@ -62,12 +62,12 @@ extension ControllerSessionTests {
 
   @Test
   func repeatedNonAdvancingDS4ReportsBecomeStaleAndRetireOnce() async throws {
-    let identifier = DeviceIdentifier(vendorID: 0x054C, productID: 0x09CC)
+    let identifier = LogicalControllerID(vendorID: 0x054C, productID: 0x09CC)
     let clock = ManualUptime()
     let output = ControllerSessionOutputProbe()
     let pipeline = DevicePipeline(
       identifier: identifier,
-      transport: .hid(locationID: 4),
+      transport: .hid(address: .ioKit(locationID: 4, interfaceNumber: nil)),
       driver: DualShock4Driver(),
       dispatcher: output,
       uptimeNanoseconds: clock.now
@@ -87,12 +87,12 @@ extension ControllerSessionTests {
 
   @Test
   func missingDS4ReportsRetireOutputAndFreshNeutralRecovers() async throws {
-    let identifier = DeviceIdentifier(vendorID: 0x054C, productID: 0x09CC)
+    let identifier = LogicalControllerID(vendorID: 0x054C, productID: 0x09CC)
     let clock = ManualUptime()
     let output = ControllerSessionOutputProbe()
     let pipeline = DevicePipeline(
       identifier: identifier,
-      transport: .hid(locationID: 5),
+      transport: .hid(address: .ioKit(locationID: 5, interfaceNumber: nil)),
       driver: DualShock4Driver(),
       dispatcher: output,
       uptimeNanoseconds: clock.now
@@ -113,12 +113,12 @@ extension ControllerSessionTests {
 
   @Test
   func minimalBluetoothDS4ReportsKeepInputLivePastTheLivenessTimeout() async throws {
-    let identifier = DeviceIdentifier(vendorID: 0x054C, productID: 0x09CC)
+    let identifier = LogicalControllerID(vendorID: 0x054C, productID: 0x09CC)
     let clock = ManualUptime()
     let output = ControllerSessionOutputProbe()
     let pipeline = DevicePipeline(
       identifier: identifier,
-      transport: .hid(locationID: 6),
+      transport: .hid(address: .ioKit(locationID: 6, interfaceNumber: nil)),
       driver: DualShock4Driver(prefersBluetooth: true),
       dispatcher: output,
       uptimeNanoseconds: clock.now

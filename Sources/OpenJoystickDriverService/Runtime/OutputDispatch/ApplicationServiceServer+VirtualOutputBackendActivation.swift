@@ -71,7 +71,7 @@ extension ApplicationServiceServer {
   /// - Throws: `CancellationError` when the server stops before a controller's activation.
   private func activateVirtualOutputDispatcher(
     _ candidate: any VirtualOutputDispatching,
-    for identifiers: [DeviceIdentifier]
+    for identifiers: [LogicalControllerID]
   ) async throws {
     let timeout = virtualOutputTransitionTimeouts.activationNanoseconds(for: identifiers.count)
     guard !identifiers.isEmpty, let scoped = candidate as? any VirtualOutputControllerActivating
@@ -106,8 +106,8 @@ extension ApplicationServiceServer {
   }
 
   /// Every connected controller once, in provider order.
-  func connectedIdentifiers() async -> [DeviceIdentifier] {
-    var seen = Set<DeviceIdentifier>()
+  func connectedIdentifiers() async -> [LogicalControllerID] {
+    var seen = Set<LogicalControllerID>()
     return (await connectedIdentifierProvider()).filter { seen.insert($0).inserted }
   }
 }

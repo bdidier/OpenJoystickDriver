@@ -4,8 +4,9 @@ import Foundation
 ///
 /// The serial number is never printed; `hasSerialNumber` says whether the controller reports one.
 public struct ControllerSummary: Encodable, Equatable, Sendable {
+  /// The session token; see ``ControllerSessionToken``.
   public let id: String
-  /// The persistent unit ID; see ``UnitIdentity``.
+  /// The port key; see ``ControllerPortKey``.
   public let unit: String?
   public let name: String
   public let vendorID: Int
@@ -18,8 +19,8 @@ public struct ControllerSummary: Encodable, Equatable, Sendable {
   public let power: ControllerConnectionState.Power?
 
   public init(_ device: ApplicationServiceDeviceDescription) {
-    id = device.runtimeIdentifier
-    unit = device.unitIdentifier
+    id = device.sessionToken.rawValue
+    unit = device.portKey?.rawValue
     name = device.name
     vendorID = Int(device.vendorID)
     productID = Int(device.productID)

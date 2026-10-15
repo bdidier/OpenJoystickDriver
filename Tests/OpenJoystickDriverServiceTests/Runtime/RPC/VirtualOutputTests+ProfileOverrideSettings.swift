@@ -15,9 +15,7 @@ extension VirtualOutputTests {
     let set = Task {
       await server.changeVirtualHIDProfileOverride(
         .set("hid-generic"),
-        vendorID: 1,
-        productID: 2,
-        runtimeIdentifier: nil
+        for: .model(ControllerModelID(vendorID: 1, productID: 2))
       )
     }
     await gate.waitForEntry()
@@ -35,7 +33,7 @@ extension VirtualOutputTests {
     #expect(await reset.value)
     #expect(fixture.store.files.isEmpty)
     let state = fixture.server.automaticUserSpaceDispatcher()?.profileState(
-      runtimeIdentifier: DeviceIdentifier(vendorID: 1, productID: 2).runtimeIdentifier
+      for: LogicalControllerID(vendorID: 1, productID: 2)
     )
     #expect(state?.selection?.profileID == .xboxOneSBluetooth)
     await fixture.tearDown()
@@ -89,9 +87,7 @@ extension VirtualOutputTests {
     let change = Task {
       await server.changeVirtualHIDProfileOverride(
         .set("hid-xbox-one-s-bt"),
-        vendorID: 1,
-        productID: 2,
-        runtimeIdentifier: nil
+        for: .model(ControllerModelID(vendorID: 1, productID: 2))
       )
     }
     await gate.waitForEntry()
@@ -126,12 +122,13 @@ extension VirtualOutputTests {
 
   @Test
   func statusReportsEachControllersProfileAndTheStoredOverride() async throws {
-    let id = DeviceIdentifier(vendorID: 1, productID: 2)
+    let id = LogicalControllerID(vendorID: 1, productID: 2)
     let fixture = try await profileOverrideServer([id])
     _ = await fixture.change(.set("hid-generic"))
 
+    let other = LogicalControllerID(vendorID: 5, productID: 6)
     let devices = fixture.server.describingVirtualHIDProfiles([
-      description(id), description(DeviceIdentifier(vendorID: 5, productID: 6)),
+      (id, description(id)), (other, description(other)),
     ])
 
     #expect(
@@ -158,23 +155,24 @@ extension VirtualOutputTests {
   func statusDropsAStaleSelectionExactlyWhenTheSystemServesTheController(
     ownership: ControllerOwnershipObservation
   ) async throws {
-    let id = DeviceIdentifier(vendorID: 1, productID: 2)
+    let id = LogicalControllerID(vendorID: 1, productID: 2)
     let fixture = try await profileOverrideServer([id])
     _ = await fixture.change(.set("hid-generic"))
     let native = ApplicationServiceDeviceDescription(
       name: "probe",
-      vendorID: id.controllerIdentity.vendorID,
-      productID: id.controllerIdentity.productID,
+      vendorID: id.model.vendorID,
+      productID: id.model.productID,
       protocolBinding: ProtocolBindingID(.sonySixaxis, variant: .usb),
       connection: "USB",
       discoverySource: .hid,
       physicalOwnership: ownership,
       serialNumber: nil,
-      bindingResult: .hidDescriptorFixture,
-      runtimeIdentifier: id.runtimeIdentifier
+      bindingResult: .hidDescriptorFixture
     )
 
-    let described = fixture.server.describingVirtualHIDProfiles([native, description(id)])
+    let described = fixture.server.describingVirtualHIDProfiles([
+      (id, native), (id, description(id)),
+    ])
 
     #expect(described[0].virtualHIDProfile?.override == .generic)
     if ownership.isServedBySystem {
@@ -212,7 +210,7 @@ extension VirtualOutputTests {
     #expect(reset)
     #expect(fixture.store.files.isEmpty)
     let state = fixture.server.automaticUserSpaceDispatcher()?.profileState(
-      runtimeIdentifier: DeviceIdentifier(vendorID: 1, productID: 2).runtimeIdentifier
+      for: LogicalControllerID(vendorID: 1, productID: 2)
     )
     #expect(state?.selection?.profileID == .xboxOneSBluetooth)
     await fixture.tearDown()

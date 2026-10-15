@@ -1,5 +1,6 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverCLI
@@ -21,11 +22,11 @@ struct VirtualCommandTests {
           )
         ) : nil
     }
-    let result = await service.run(["virtual", "set", "hid-generic", "pad-1", "--json"])
+    let result = await service.run(["virtual", "set", "hid-generic", token("pad-1"), "--json"])
 
     #expect(result.code == 0, "\(result.standardError)")
     let json = try result.json()
-    #expect(json["controller"] as? String == "pad-1")
+    #expect(json["controller"] as? String == token("pad-1"))
     #expect(json["live"] as? String == "hid-generic")
     #expect(json["source"] as? String == "override")
     let arguments = try #require(service.arguments(of: .setVirtualHIDProfileOverride).first)
@@ -34,7 +35,7 @@ struct VirtualCommandTests {
       from: arguments
     )
     #expect(sent.profile == "hid-generic")
-    #expect(sent.runtimeIdentifier == "pad-1")
+    #expect(sent.controller == .session(.fixture("pad-1")))
   }
 
   @Test
@@ -52,7 +53,7 @@ struct VirtualCommandTests {
           )
         ) : nil
     }
-    let result = await service.run(["virtual", "set", "hid-generic", "pad-1"])
+    let result = await service.run(["virtual", "set", "hid-generic", token("pad-1")])
     #expect(result.code == 1)
     #expect(result.standardOutput.isEmpty)
     #expect(result.standardError.contains("no fit"))
@@ -60,7 +61,7 @@ struct VirtualCommandTests {
 
   /// With virtual output off, the service stores the choice and reports `output-disabled`.
   @Test(arguments: [
-    ["virtual", "set", "hid-generic", "pad-1"], ["virtual", "reset", "pad-1"],
+    ["virtual", "set", "hid-generic", token("pad-1")], ["virtual", "reset", token("pad-1")],
   ])
   func aChoiceStoredWhileVirtualOutputIsOffSucceeds(arguments: [String]) async throws {
     let service = try FakeService(devices: [
@@ -102,7 +103,7 @@ struct VirtualCommandTests {
   }
 
   @Test(arguments: [
-    ["virtual", "reset", "--all", "--dry-run"], ["virtual", "reset", "pad-1", "-n"],
+    ["virtual", "reset", "--all", "--dry-run"], ["virtual", "reset", token("pad-1"), "-n"],
   ])
   func aDryRunDescribesTheResetAndChangesNothing(arguments: [String]) async throws {
     let service = try FakeService(devices: [
@@ -118,8 +119,8 @@ struct VirtualCommandTests {
   }
 
   @Test(arguments: [
-    ["virtual", "reset"], ["virtual", "reset", "pad-1", "--all"],
-    ["virtual", "set", "hid-unknown", "pad-1"],
+    ["virtual", "reset"], ["virtual", "reset", token("pad-1"), "--all"],
+    ["virtual", "set", "hid-unknown", token("pad-1")],
   ])
   func aMissingOrInvalidTargetExitsSixtyFour(arguments: [String]) async throws {
     let service = try FakeService(devices: [
@@ -139,7 +140,7 @@ struct VirtualCommandTests {
     #expect(result.code == 0, "\(result.standardError)")
     let json = try result.json()
     let controllers = try #require(json["controllers"] as? [[String: Any]])
-    #expect(controllers.map { $0["id"] as? String } == ["pad-1"])
+    #expect(controllers.map { $0["id"] as? String } == [token("pad-1")])
     #expect(json["profiles"] as? [String] == VirtualHIDProfileID.allCases.map(\.rawValue))
   }
 }

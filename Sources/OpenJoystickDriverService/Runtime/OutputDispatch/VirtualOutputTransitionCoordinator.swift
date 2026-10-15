@@ -95,18 +95,19 @@ actor VirtualOutputTransitionCoordinator {
 }
 
 final class VirtualOutputFeedbackGate: Sendable {
-  typealias SendFeedback = @Sendable (DeviceIdentifier, ControllerOutputCommand) async -> Void
+  typealias SendFeedback = @Sendable (LogicalControllerID, ControllerOutputCommand) async -> Void
 
   private struct Admission {
     var accepting = true
     var generation: UInt64 = 0
-    var cancellationHandlers: [UUID: (identifier: DeviceIdentifier, cancel: @Sendable () -> Void)] =
-      [:]
+    var cancellationHandlers:
+      [UUID: (identifier: LogicalControllerID, cancel: @Sendable () -> Void)] =
+        [:]
     /// Controllers whose own feedback is quiesced while the rest keep flowing.
-    var quiescedControllers: [DeviceIdentifier: Int] = [:]
-    var controllerGenerations: [DeviceIdentifier: UInt64] = [:]
+    var quiescedControllers: [LogicalControllerID: Int] = [:]
+    var controllerGenerations: [LogicalControllerID: UInt64] = [:]
 
-    func isCurrent(_ identifier: DeviceIdentifier, generation: Generation) -> Bool {
+    func isCurrent(_ identifier: LogicalControllerID, generation: Generation) -> Bool {
       accepting && self.generation == generation.gate && quiescedControllers[identifier] == nil
         && controllerGenerations[identifier, default: 0] == generation.controller
     }
@@ -123,12 +124,7 @@ final class VirtualOutputFeedbackGate: Sendable {
   init(deviceManager: DeviceManager) {
     sendFeedback = { identifier, command in
       guard let command = Self.physicalFeedback(for: command) else { return }
-      // The exact runtime identifier: the model alone is ambiguous when two controllers match.
-      _ = await deviceManager.sendControllerOutput(
-        command,
-        for: identifier.model,
-        runtimeIdentifier: identifier.runtimeIdentifier
-      )
+      _ = await deviceManager.sendControllerOutput(command, toConnected: identifier)
     }
   }
 
@@ -146,7 +142,7 @@ final class VirtualOutputFeedbackGate: Sendable {
     }
   }
 
-  func submit(identifier: DeviceIdentifier, command: ControllerOutputCommand) {
+  func submit(identifier: LogicalControllerID, command: ControllerOutputCommand) {
     let token = UUID()
     let currentGeneration = admission.withLock { admission -> Generation? in
       guard admission.accepting, admission.quiescedControllers[identifier] == nil else {
@@ -178,7 +174,7 @@ final class VirtualOutputFeedbackGate: Sendable {
   /// each reopens afterwards, so other controllers' feedback is untouched; otherwise the whole
   /// gate closes and stays closed until `resume()`.
   func quiesceAndNeutralize(
-    _ identifiers: [DeviceIdentifier],
+    _ identifiers: [LogicalControllerID],
     timeout: UInt64 = VirtualOutputTransitionTimeouts.standard.feedbackNanoseconds,
     clock: VirtualOutputTransitionClock = .system,
     resumeWhenComplete: Bool = false
@@ -241,7 +237,7 @@ final class VirtualOutputFeedbackGate: Sendable {
     }
   }
 
-  private func isCurrent(_ identifier: DeviceIdentifier, generation: Generation) -> Bool {
+  private func isCurrent(_ identifier: LogicalControllerID, generation: Generation) -> Bool {
     admission.withLock { $0.isCurrent(identifier, generation: generation) }
   }
 

@@ -34,8 +34,8 @@
             OJDLocalized.string("common.controller"),
             selection: selectedDeviceBinding
           ) {
-            ForEach(connectedDevices, id: \.runtimeIdentifier) { device in
-              Text(device.name).tag(device.runtimeIdentifier)
+            ForEach(connectedDevices, id: \.sessionToken) { device in
+              Text(device.name).tag(device.sessionToken.rawValue)
             }
           }
           if let selector = selectedDeviceSelector {
@@ -245,27 +245,27 @@
 
     private var selectedDeviceBinding: Binding<String> {
       Binding(
-        get: { selectedRuntimeIdentifier ?? connectedDevices.first?.runtimeIdentifier ?? "" },
+        get: { selectedSessionToken ?? connectedDevices.first?.sessionToken.rawValue ?? "" },
         set: {
-          if selectedRuntimeIdentifier != $0 { stopListening() }
-          selectedRuntimeIdentifier = $0
+          if selectedSessionToken != $0 { stopListening() }
+          selectedSessionToken = $0
         }
       )
     }
 
-    var selectedDeviceSelector: RuntimeDeviceSelector? {
+    var selectedDeviceSelector: ControllerReference? {
       guard
         let device = connectedDevices.first(where: {
-          $0.runtimeIdentifier
-            == (selectedRuntimeIdentifier ?? connectedDevices.first?.runtimeIdentifier)
+          $0.sessionToken.rawValue
+            == (selectedSessionToken ?? connectedDevices.first?.sessionToken.rawValue)
         })
       else { return nil }
-      return RuntimeDeviceSelector(device: device)
+      return ControllerReference.session(device.sessionToken)
     }
 
     private func selectInitialDevice() {
-      guard selectedRuntimeIdentifier == nil else { return }
-      selectedRuntimeIdentifier = connectedDevices.first?.runtimeIdentifier
+      guard selectedSessionToken == nil else { return }
+      selectedSessionToken = connectedDevices.first?.sessionToken.rawValue
     }
 
     private func cancelCapture() {
@@ -274,7 +274,7 @@
       presentationMode.wrappedValue.dismiss()
     }
 
-    private func beginListening(for selector: RuntimeDeviceSelector) {
+    private func beginListening(for selector: ControllerReference) {
       viewModel.cancelInputCapture()
       Task { @MainActor in await viewModel.listenForInput(for: selector) }
     }

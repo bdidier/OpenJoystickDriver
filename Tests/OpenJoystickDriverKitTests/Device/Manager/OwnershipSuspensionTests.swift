@@ -9,7 +9,7 @@ import Testing
 struct OwnershipSuspensionTests {
   private static let model = ControllerModelID(vendorID: 0x3537, productID: 0x100B)
   private static let locationID: UInt32 = 0x0021_0000
-  private static let identifier = DeviceIdentifier(
+  private static let identifier = LogicalControllerID(
     vendorID: 0x3537,
     productID: 0x100B,
     locationID: locationID
@@ -87,11 +87,7 @@ struct OwnershipSuspensionTests {
     await backend.setSnapshots([connection])
     await manager.handleHIDEvent(.connected(connection: connection, ownership: .exclusive))
     _ = try #require(await manager.pipelines[identifier])
-    let result = await manager.suspendController(
-      vendorID: model.vendorID,
-      productID: model.productID,
-      runtimeIdentifier: nil
-    )
+    let result = await manager.suspendController(.model(model))
     #expect(result.failure == nil)
     #expect(await manager.suspendedControllerIdentities.contains(identifier))
     return (manager, backend, connection)
@@ -122,7 +118,7 @@ struct OwnershipSuspensionTests {
         ],
         nativePassThrough: false
       ),
-      routingLocationID: locationID
+      routingAddress: .ioKit(locationID: locationID, interfaceNumber: nil)
     )
   }
 }
@@ -168,10 +164,10 @@ private actor ReplacingHIDBackend: HIDAccessBackend {
   }
 
   func setOutputReport(
-    locationID: UInt32,
+    address: ControllerConnectionAddress,
     report: PhysicalHIDOutputReport
   ) async -> PhysicalHIDReportResult<Void> {
-    await scripted.setOutputReport(locationID: locationID, report: report)
+    await scripted.setOutputReport(address: address, report: report)
   }
 
   func setOutputReport(
@@ -182,10 +178,10 @@ private actor ReplacingHIDBackend: HIDAccessBackend {
   }
 
   func setFeatureReport(
-    locationID: UInt32,
+    address: ControllerConnectionAddress,
     report: PhysicalHIDOutputReport
   ) async -> PhysicalHIDReportResult<Void> {
-    await scripted.setFeatureReport(locationID: locationID, report: report)
+    await scripted.setFeatureReport(address: address, report: report)
   }
 
   func setFeatureReport(
@@ -196,10 +192,10 @@ private actor ReplacingHIDBackend: HIDAccessBackend {
   }
 
   func getFeatureReport(
-    locationID: UInt32,
+    address: ControllerConnectionAddress,
     request: PhysicalHIDFeatureReadRequest
   ) async -> PhysicalHIDReportResult<Data> {
-    await scripted.getFeatureReport(locationID: locationID, request: request)
+    await scripted.getFeatureReport(address: address, request: request)
   }
 
   func getFeatureReport(
@@ -209,16 +205,16 @@ private actor ReplacingHIDBackend: HIDAccessBackend {
     await scripted.getFeatureReport(connection: connection, request: request)
   }
 
-  func releaseInputClaim(locationID: UInt32) async -> PhysicalHIDClaimResult {
-    await scripted.releaseInputClaim(locationID: locationID)
+  func releaseInputClaim(address: ControllerConnectionAddress) async -> PhysicalHIDClaimResult {
+    await scripted.releaseInputClaim(address: address)
   }
 
-  func reacquireInputClaim(locationID: UInt32) async -> PhysicalHIDClaimResult {
-    await scripted.reacquireInputClaim(locationID: locationID)
+  func reacquireInputClaim(address: ControllerConnectionAddress) async -> PhysicalHIDClaimResult {
+    await scripted.reacquireInputClaim(address: address)
   }
 
-  func retryInputClaim(locationID: UInt32) async {
-    await scripted.retryInputClaim(locationID: locationID)
+  func retryInputClaim(address: ControllerConnectionAddress) async {
+    await scripted.retryInputClaim(address: address)
   }
 
   func routeElementValues(connection: HIDDeviceConnection) async {

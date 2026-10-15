@@ -40,8 +40,8 @@ extension HIDDeviceStream {
     let trackedConnections = seizeLock.withLock { connectionsByDeviceID }
     var ownershipByLocation: [UInt32: HIDInputOwnership] = [:]
     for connection in trackedConnections.values {
-      ownershipByLocation[connection.routingLocationID] = eventAdapter.ownership(
-        locationID: connection.routingLocationID
+      ownershipByLocation[connection.ioKitLocationID] = eventAdapter.ownership(
+        locationID: connection.ioKitLocationID
       )
     }
     return HIDDeviceConnectionSnapshot.reconcile(
@@ -244,7 +244,7 @@ extension HIDDeviceStream {
     let candidates: [(deviceID: UInt64, device: IOHIDDevice)] = seizeLock.withLock {
       guard releasedByLocation[locationID]?.isEmpty ?? true else { return [] }
       return sharedOpenByDeviceID.compactMap { deviceID, sharedOpen in
-        connectionsByDeviceID[deviceID]?.routingLocationID == locationID
+        connectionsByDeviceID[deviceID]?.ioKitLocationID == locationID
           ? (deviceID, sharedOpen.device) : nil
       }
     }
@@ -258,7 +258,12 @@ extension HIDDeviceStream {
     }
     let after = eventAdapter.ownership(locationID: locationID)
     if after != before {
-      continuation?.yield(.ownershipChanged(locationID: locationID, ownership: after))
+      continuation?.yield(
+        .ownershipChanged(
+          address: .ioKit(locationID: locationID, interfaceNumber: nil),
+          ownership: after
+        )
+      )
     }
   }
 
@@ -367,7 +372,7 @@ extension HIDDeviceStream {
           let permitted = reads ? type == kIOHIDReportTypeFeature : type == kIOHIDReportTypeOutput
           return permitted && sharedOpenByDeviceID[deviceID] != nil
         }
-        return seizedByLocation[connection.routingLocationID]?.contains(where: {
+        return seizedByLocation[connection.ioKitLocationID]?.contains(where: {
           CFEqual($0, device)
         }) == true
       })

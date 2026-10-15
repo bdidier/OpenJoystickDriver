@@ -78,7 +78,7 @@ extension HIDDeviceStream {
     )
     let connection = HIDDeviceConnection(
       physicalDevice: physicalDevice,
-      routingLocationID: locationID
+      routingAddress: .ioKit(locationID: locationID, interfaceNumber: nil)
     )
     seizeLock.withLock { connectionsByDeviceID[deviceID] = connection }
 
@@ -140,10 +140,10 @@ extension HIDDeviceStream {
         guard let model = connection.physicalDevice.model, models.contains(model),
           nativePassThrough(deviceID, connection) != connection.physicalDevice.nativePassThrough
         else { return nil }
-        return connection.routingLocationID
+        return connection.ioKitLocationID
       }
     )
-    return Set(tracked.filter { changedLocations.contains($0.value.routingLocationID) }.keys)
+    return Set(tracked.filter { changedLocations.contains($0.value.ioKitLocationID) }.keys)
   }
 
   /// Seizes a shared-open device and records whether isolation was acquired; a failed seize keeps
@@ -279,8 +279,8 @@ extension HIDDeviceStream {
     if !removal.locationRemoved {
       continuation?.yield(
         .ownershipChanged(
-          locationID: connection.routingLocationID,
-          ownership: eventAdapter.ownership(locationID: connection.routingLocationID)
+          address: connection.routingAddress,
+          ownership: eventAdapter.ownership(locationID: connection.ioKitLocationID)
         )
       )
     }
@@ -303,7 +303,7 @@ extension HIDDeviceStream {
     )
     continuation?.yield(
       .inputReport(
-        locationID: locationID,
+        address: .ioKit(locationID: locationID, interfaceNumber: nil),
         connectionID: connectionID,
         reportID: reportID,
         data: Data(bytes)
@@ -335,7 +335,7 @@ extension HIDDeviceStream {
     )
     continuation?.yield(
       .inputValue(
-        locationID: connection.routingLocationID,
+        address: connection.routingAddress,
         connectionID: connection.connectionID,
         value: semanticValue
       )
@@ -345,4 +345,10 @@ extension HIDDeviceStream {
   func trackingID(for device: IOHIDDevice) -> UInt64 {
     UInt64(UInt(bitPattern: Unmanaged.passUnretained(device).toOpaque()))
   }
+}
+
+extension HIDDeviceConnection {
+  /// The IOKit location of a connection ``HIDDeviceStream`` admitted; each one has an IOKit
+  /// routing address.
+  var ioKitLocationID: UInt32 { routingAddress.locationID ?? 0 }
 }

@@ -1,9 +1,11 @@
 /// Point-in-time state of one connected controller pipeline, as ``DeviceManager`` observes it.
 public struct ConnectedDeviceSnapshot: Sendable {
-  /// Opaque selector for one connected controller during the current runtime session.
-  public let runtimeIdentifier: String
-  /// Persistent selector for this controller on its USB port; nil without a location ID.
-  public let unitIdentifier: String?
+  /// The controller's key inside the process; it never leaves the service.
+  public let logicalControllerID: LogicalControllerID
+  /// The token of this attachment; a reconnect gets a new one.
+  public let sessionToken: ControllerSessionToken
+  /// The controller's port key; nil without a location ID.
+  public let portKey: ControllerPortKey?
   /// Human-readable controller name.
   public let name: String
   /// USB vendor ID.

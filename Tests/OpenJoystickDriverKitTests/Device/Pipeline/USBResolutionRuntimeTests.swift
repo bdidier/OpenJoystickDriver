@@ -6,7 +6,7 @@ import Testing
 struct USBResolutionRuntimeTests {
   @Test
   func deviceManagerResolvedProfileReachesOpenStartupWriteAndFirstRead() async throws {
-    let identifier = DeviceIdentifier(vendorID: 0x045E, productID: 0x028E)
+    let identifier = LogicalControllerID(vendorID: 0x045E, productID: 0x028E)
     let resolved = DeviceTransportProfile(
       inputEndpoint: 0x84,
       outputEndpoint: 0x04,
@@ -17,12 +17,12 @@ struct USBResolutionRuntimeTests {
     let device = USBTransportDevice(
       route: .ioUSBHost,
       serviceID: 7,
-      vendorID: identifier.controllerIdentity.vendorID,
-      productID: identifier.controllerIdentity.productID,
+      vendorID: identifier.model.vendorID,
+      productID: identifier.model.productID,
       locationID: 8
     )
     let physicalDevice = PhysicalDevice(
-      serviceIdentity: device.serviceIdentity,
+      serviceAddress: device.serviceAddress,
       vendorID: device.vendorID,
       productID: device.productID,
       physicalLocationIdentifier: device.locationID
@@ -37,9 +37,9 @@ struct USBResolutionRuntimeTests {
       usbTransportProvider: provider
     )
 
-    let runtimeIdentifier = DeviceIdentifier(
-      vendorID: identifier.controllerIdentity.vendorID,
-      productID: identifier.controllerIdentity.productID,
+    let runtimeIdentifier = LogicalControllerID(
+      vendorID: identifier.model.vendorID,
+      productID: identifier.model.productID,
       locationID: device.locationID,
       interfaceNumber: resolved.interfaceNumber
     )
@@ -71,7 +71,7 @@ struct USBResolutionRuntimeTests {
       locationID: 28
     )
     let physicalDevice = PhysicalDevice(
-      serviceIdentity: device.serviceIdentity,
+      serviceAddress: device.serviceAddress,
       vendorID: device.vendorID,
       productID: device.productID,
       deviceRelease: 0x0110,
@@ -87,7 +87,7 @@ struct USBResolutionRuntimeTests {
       usbTransportProvider: provider
     )
     let detection = Task { await manager.runUSBDetection() }
-    let identifier = DeviceIdentifier(
+    let identifier = LogicalControllerID(
       vendorID: device.vendorID,
       productID: device.productID,
       locationID: device.locationID,
@@ -133,7 +133,7 @@ struct USBResolutionRuntimeTests {
       usbTransportProvider: provider
     )
     let detection = Task { await manager.runUSBDetection() }
-    let identifier = DeviceIdentifier(
+    let identifier = LogicalControllerID(
       vendorID: original.vendorID,
       productID: original.productID,
       locationID: original.locationID,
@@ -167,7 +167,7 @@ struct USBResolutionRuntimeTests {
       usbTransportProvider: provider
     )
     let detection = Task { await manager.runUSBDetection() }
-    let identifier = DeviceIdentifier(
+    let identifier = LogicalControllerID(
       vendorID: device.vendorID,
       productID: device.productID,
       locationID: device.locationID,
@@ -220,7 +220,7 @@ struct USBResolutionRuntimeTests {
 
   @Test
   func resolvedProfileReachesOpenHandshakeReadAndWrite() async throws {
-    let identifier = DeviceIdentifier(vendorID: 0x045E, productID: 0x028E)
+    let identifier = LogicalControllerID(vendorID: 0x045E, productID: 0x028E)
     let resolved = DeviceTransportProfile(
       inputEndpoint: 0x84,
       outputEndpoint: 0x04,
@@ -231,8 +231,8 @@ struct USBResolutionRuntimeTests {
     let device = USBTransportDevice(
       route: .ioUSBHost,
       serviceID: 7,
-      vendorID: identifier.controllerIdentity.vendorID,
-      productID: identifier.controllerIdentity.productID,
+      vendorID: identifier.model.vendorID,
+      productID: identifier.model.productID,
       locationID: 8
     )
     let provider = USBRuntimeRecordingProvider()

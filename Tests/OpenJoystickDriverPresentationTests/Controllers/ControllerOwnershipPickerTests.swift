@@ -23,7 +23,7 @@ struct ControllerOwnershipPickerTests {
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
       recordOwnership: recordOwnership,
-      runtimeIdentifier: "session-device-ownership"
+      sessionToken: .fixture("device-ownership")
     )
   }
 
@@ -69,7 +69,7 @@ struct ControllerOwnershipPickerTests {
     #expect(requests.count == 1)
     #expect(requests.first?.model == ControllerModelID(vendorID: 0x3537, productID: 0x100B))
     #expect(requests.first?.ownership == ownership)
-    #expect(viewModel.controllerActionFailures[device.runtimeIdentifier] == nil)
+    #expect(viewModel.controllerActionFailures[device.sessionToken.rawValue] == nil)
   }
 
   @Test
@@ -81,7 +81,7 @@ struct ControllerOwnershipPickerTests {
 
     await viewModel.setControllerOwnership(.ojd, for: device)
 
-    let message = viewModel.controllerActionFailures[device.runtimeIdentifier]
+    let message = viewModel.controllerActionFailures[device.sessionToken.rawValue]
     #expect(message == OJDLocalized.string("controllers.ownership.invalidRecord") + " bad record")
   }
 }

@@ -1,19 +1,29 @@
 import Foundation
 
 extension DeviceManager {
-  /// Sends one output command to the connected controller of `model` that `runtimeIdentifier`
-  /// (when given) selects exactly once. The command is admitted against the
-  /// pipeline's (native-narrowed) capabilities, then its values are checked, then it is recorded
-  /// as the manual claim and the effective output of its channel is written. A failed command
-  /// withdraws only its own claim.
+  /// Sends one output command to the one connected controller `controller` names. The command
+  /// is admitted against the pipeline's (native-narrowed) capabilities, then its values are
+  /// checked, then it is recorded as the manual claim and the effective output of its channel is
+  /// written. A failed command withdraws only its own claim.
   public func sendControllerOutput(
     _ command: ControllerOutputCommand,
-    for model: ControllerModelID,
-    runtimeIdentifier: String? = nil
+    for controller: ControllerReference
   ) async -> ControllerOutputResult {
-    guard let key = connectedIdentifier(matching: model, runtimeIdentifier: runtimeIdentifier),
-      let pipeline = pipelines[key]
-    else { return ControllerOutputResult(.notFound) }
+    guard let key = connectedIdentifier(for: controller) else {
+      return ControllerOutputResult(.notFound)
+    }
+    return await sendControllerOutput(command, toConnected: key)
+  }
+
+  /// Sends one output command to the connected controller `key`, as
+  /// ``sendControllerOutput(_:for:)`` does.
+  package func sendControllerOutput(
+    _ command: ControllerOutputCommand,
+    toConnected key: LogicalControllerID
+  ) async -> ControllerOutputResult {
+    guard !isStopping, let pipeline = pipelines[key] else {
+      return ControllerOutputResult(.notFound)
+    }
     let admission: (command: ControllerOutputCommand, droppedRumbleChannels: [PhysicalRumbleMotor])
     do { admission = try await pipeline.physicalOutputCapabilities().admit(command) } catch {
       return ControllerOutputResult(ControllerOutputResult.Outcome(error))
@@ -39,7 +49,7 @@ extension DeviceManager {
   private func applyManualOutput(
     _ admitted: ControllerOutputCommand,
     requested command: ControllerOutputCommand,
-    for key: DeviceIdentifier,
+    for key: LogicalControllerID,
     pipeline: DevicePipeline
   ) async -> ControllerOutputResult.Outcome {
     let output: RemappingPhysicalOutput
@@ -73,7 +83,7 @@ extension DeviceManager {
     _ claim: UInt64,
     on channels: Set<PhysicalOutputChannel>,
     outcome: ControllerOutputResult.Outcome,
-    for key: DeviceIdentifier,
+    for key: LogicalControllerID,
     _ pipeline: DevicePipeline
   ) async {
     guard outcome != .delivered else {
@@ -93,7 +103,7 @@ extension DeviceManager {
     _ intensities: RumbleIntensities,
     duration: RumbleDuration,
     hasActiveMotor: Bool,
-    for key: DeviceIdentifier,
+    for key: LogicalControllerID,
     pipeline: DevicePipeline
   ) async -> ControllerOutputResult.Outcome {
     let supportedMotors = await pipeline.physicalOutputCapabilities().rumbleMotors
@@ -131,7 +141,7 @@ extension DeviceManager {
   /// rumble once, so an active mapping claim still shows through. A failed write does not restore
   /// the claim: its scheduled stop is gone, so the restored rumble would never stop.
   private func stopManualRumble(
-    for key: DeviceIdentifier,
+    for key: LogicalControllerID,
     pipeline: DevicePipeline
   ) async -> ControllerOutputResult.Outcome {
     scheduleRumbleStop(for: key, pipeline: pipeline, durationMs: 0, hasActiveMotor: false)
@@ -146,7 +156,7 @@ extension DeviceManager {
   /// (unsupported or not ready), or one cancelled while queued, fails without writing.
   internal func sendPhysicalOutput(
     _ request: PhysicalOutputRequest,
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     pipeline: DevicePipeline,
     detachedInfo: DeviceInfo? = nil
   ) async -> ControllerOutputResult.Outcome {
@@ -175,7 +185,7 @@ extension DeviceManager {
 
   private func performPhysicalOutput(
     _ request: PhysicalOutputRequest,
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     pipeline: DevicePipeline,
     detachedInfo: DeviceInfo?,
     in operation: PhysicalOutputQueueOperation

@@ -2,7 +2,7 @@ import Foundation
 
 extension DeviceManager {
   internal func scheduleRumbleStop(
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     pipeline: DevicePipeline,
     durationMs: Int,
     hasActiveMotor: Bool
@@ -28,7 +28,7 @@ extension DeviceManager {
   }
 
   internal func finishScheduledRumbleStop(
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     pipeline: DevicePipeline,
     generation: UInt64
   ) async {
@@ -43,14 +43,13 @@ extension DeviceManager {
   }
 
   public func previewPhysicalColor(
-    for model: ControllerModelID,
-    runtimeIdentifier: String? = nil,
+    for controller: ControllerReference,
     token: UUID,
     red: UInt8,
     green: UInt8,
     blue: UInt8
   ) async -> Bool {
-    guard let key = connectedIdentifier(matching: model, runtimeIdentifier: runtimeIdentifier),
+    guard let key = connectedIdentifier(for: controller),
       let pipeline = pipelines[key],
       await pipeline.physicalOutputCapabilities().lightingFeatures.contains(.programmableColor)
     else { return false }
@@ -67,11 +66,10 @@ extension DeviceManager {
   }
 
   public func releasePhysicalColorPreview(
-    for model: ControllerModelID,
-    runtimeIdentifier: String? = nil,
+    for controller: ControllerReference,
     token: UUID
   ) async -> Bool {
-    guard let key = connectedIdentifier(matching: model, runtimeIdentifier: runtimeIdentifier)
+    guard let key = connectedIdentifier(for: controller)
     else { return true }
     physicalOutputOwnership.releaseTemporaryColor(token: token, for: key)
     guard let pipeline = pipelines[key] else { return true }
@@ -80,7 +78,7 @@ extension DeviceManager {
 
   public func setProfilePhysicalColor(
     _ color: ControllerColor?,
-    for identifier: DeviceIdentifier
+    for identifier: LogicalControllerID
   ) async -> Bool {
     let output = color.map { RemappingPhysicalOutput.color($0) }
     guard !isStopping else { return false }
@@ -96,7 +94,7 @@ extension DeviceManager {
     _ output: RemappingPhysicalOutput,
     active: Bool,
     owner: UUID,
-    for identifier: DeviceIdentifier
+    for identifier: LogicalControllerID
   ) async -> Bool {
     do { try output.validate() } catch { return false }
     guard let pipeline = pipelines[identifier] else {
@@ -122,7 +120,7 @@ extension DeviceManager {
   }
 
   /// Releases every remapping claim for an exact controller without targeting a replacement.
-  public func releaseMappingPhysicalOutputs(for identifier: DeviceIdentifier) async -> Bool {
+  public func releaseMappingPhysicalOutputs(for identifier: LogicalControllerID) async -> Bool {
     let channels = physicalOutputOwnership.releaseMappings(for: identifier)
     guard let pipeline = pipelines[identifier] else { return true }
     var delivered = true

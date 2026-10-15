@@ -77,8 +77,8 @@ extension DeviceManager {
   static func usbIdentifier(
     for device: USBTransportDevice,
     claiming profile: DeviceTransportProfile
-  ) -> DeviceIdentifier {
-    DeviceIdentifier(
+  ) -> LogicalControllerID {
+    LogicalControllerID(
       vendorID: device.vendorID,
       productID: device.productID,
       serialNumber: device.serialNumber,
@@ -91,20 +91,20 @@ extension DeviceManager {
   /// `yieldHIDPipelines(to:)` stops it before the raw-USB pipeline starts. A native pass-through
   /// HID controller is never yielded.
   func hasUSBPipelineConflict(
-    for identifier: DeviceIdentifier,
-    service: USBTransportServiceIdentity,
+    for identifier: LogicalControllerID,
+    service: ControllerConnectionAddress,
     yieldingHID: Bool = false
   ) -> Bool {
     Self.hasUSBPipelineConflict(
       for: identifier,
       service: service,
       among: pipelines.keys.filter { !yieldingHID || !yieldsToRawUSB($0) }.map {
-        ($0, deviceInfos[$0]?.usbTransportDevice?.serviceIdentity)
+        ($0, deviceInfos[$0]?.usbTransportDevice?.serviceAddress)
       }
     )
   }
 
-  private func yieldsToRawUSB(_ key: DeviceIdentifier) -> Bool {
+  private func yieldsToRawUSB(_ key: LogicalControllerID) -> Bool {
     guard let info = deviceInfos[key], case .hid = info.discoverySource else { return false }
     return info.physicalDevice?.nativePassThrough != true
   }
@@ -112,14 +112,14 @@ extension DeviceManager {
   /// Raw USB takes precedence over HID for a controller reachable by both, so the route does not
   /// depend on which admission ran first. Stops each HID pipeline that serves the same physical
   /// controller as `identifier` and releases its input claim, leaving the device unseized.
-  func yieldHIDPipelines(to identifier: DeviceIdentifier) async {
+  func yieldHIDPipelines(to identifier: LogicalControllerID) async {
     let yielded = deviceInfos.keys.filter {
       yieldsToRawUSB($0) && Self.isSamePhysicalController($0, identifier)
     }
     for key in yielded {
       print("[DeviceManager] Raw USB takes precedence over HID for \(key)")
       if let info = deviceInfos[key], let physicalDevice = info.physicalDevice,
-        let connectionID = info.hidConnectionID, let locationID = key.locationID
+        let connectionID = info.hidConnectionID, let address = key.hidRoutingAddress
       {
         yieldedHIDConnections[connectionID] = YieldedHIDConnection(
           identifier: key,
@@ -127,22 +127,22 @@ extension DeviceManager {
             connection: HIDDeviceConnection(
               connectionID: connectionID,
               physicalDevice: physicalDevice,
-              routingLocationID: locationID
+              routingAddress: address
             ),
             ownership: info.hidInputOwnership
           )
         )
       }
       await tearDownHIDDevice(identifier: key)
-      if let locationID = key.locationID {
-        _ = await hidManager.releaseInputClaim(locationID: locationID)
+      if let address = key.hidRoutingAddress {
+        _ = await hidManager.releaseInputClaim(address: address)
       }
     }
   }
 
   /// Whether a native pass-through HID controller serves the same physical controller as
   /// `identifier`. macOS serves it, so raw USB does not claim it.
-  func hasNativeHIDController(sameAs identifier: DeviceIdentifier) -> Bool {
+  func hasNativeHIDController(sameAs identifier: LogicalControllerID) -> Bool {
     deviceInfos.contains { key, info in
       guard case .hid = info.discoverySource, info.physicalDevice?.nativePassThrough == true else {
         return false
@@ -154,9 +154,9 @@ extension DeviceManager {
   /// Leaves a raw-USB service unclaimed while a native HID controller serves its controller. The
   /// caller acknowledges the service, so the poll does not retry it or repeat the log line;
   /// `releaseNativeShadowedUSBServices(in:)` admits it again once the native controller is gone.
-  func deferToNativeHID(_ device: USBTransportDevice, identifier: DeviceIdentifier) -> Bool {
+  func deferToNativeHID(_ device: USBTransportDevice, identifier: LogicalControllerID) -> Bool {
     guard hasNativeHIDController(sameAs: identifier) else { return false }
-    if nativeShadowedUSBServices.updateValue(identifier, forKey: device.serviceIdentity) == nil {
+    if nativeShadowedUSBServices.updateValue(identifier, forKey: device.serviceAddress) == nil {
       print("[DeviceManager] Native HID serves \(identifier); raw USB left unclaimed")
     }
     return true
@@ -177,14 +177,14 @@ extension DeviceManager {
   /// same physical controller as `identifier`, which closes its USB claim, and drops the HID
   /// connections that had yielded to them. The service stays acknowledged and is remembered as
   /// shadowed, so it is admitted again if the native controller goes away.
-  func yieldRawUSBPipelines(toNative identifier: DeviceIdentifier) async {
+  func yieldRawUSBPipelines(toNative identifier: LogicalControllerID) async {
     let raw = deviceInfos.filter { key, info in
       info.usbTransportDevice != nil && Self.isSamePhysicalController(key, identifier)
     }
     guard !raw.isEmpty else { return }
     for (key, info) in raw {
       print("[DeviceManager] Native HID takes precedence over raw USB for \(key)")
-      if let service = info.usbTransportDevice?.serviceIdentity {
+      if let service = info.usbTransportDevice?.serviceAddress {
         nativeShadowedUSBServices[service] = key
       }
     }
@@ -233,7 +233,7 @@ extension DeviceManager {
       guard !isStopping, yieldedHIDConnections[connectionID] != nil else { continue }
       yieldedHIDConnections.removeValue(forKey: connectionID)
       let connection = yielded.snapshot.connection
-      _ = await hidManager.reacquireInputClaim(locationID: connection.routingLocationID)
+      _ = await hidManager.reacquireInputClaim(address: connection.routingAddress)
       scheduleHIDDeviceInitialization(connection: connection, ownership: yielded.snapshot.ownership)
       await reconcileUnboundHIDClaims()
     }
@@ -244,9 +244,9 @@ extension DeviceManager {
   /// location, or HID, whose pipelines carry no service. Interfaces of one service never conflict
   /// with each other, so each receiver slot can hold its own pipeline.
   static func hasUSBPipelineConflict(
-    for identifier: DeviceIdentifier,
-    service: USBTransportServiceIdentity,
-    among pipelines: [(key: DeviceIdentifier, service: USBTransportServiceIdentity?)]
+    for identifier: LogicalControllerID,
+    service: ControllerConnectionAddress,
+    among pipelines: [(key: LogicalControllerID, service: ControllerConnectionAddress?)]
   ) -> Bool {
     pipelines.contains { key, keyService in
       key == identifier || keyService != service && isSamePhysicalController(key, identifier)
@@ -256,13 +256,19 @@ extension DeviceManager {
   /// Whether two keys reached through different services belong to one physical controller: the
   /// same identity with a serial number, or, since a serial-less identity names only a model, the
   /// same identity at the same location. A USB device's HID interfaces report its USB location.
-  static func isSamePhysicalController(_ lhs: DeviceIdentifier, _ rhs: DeviceIdentifier) -> Bool {
-    lhs.controllerIdentity == rhs.controllerIdentity
-      && (lhs.controllerIdentity.identifiesPhysicalDevice || lhs.locationID == rhs.locationID)
+  static func isSamePhysicalController(
+    _ lhs: LogicalControllerID,
+    _ rhs: LogicalControllerID
+  ) -> Bool {
+    lhs.hardware == rhs.hardware
+      && (lhs.hardware.identifiesPhysicalDevice
+        || lhs.address?.locationID == rhs.address?.locationID)
   }
 
   /// The running raw-USB pipeline that serves the same physical controller as a HID key, if any.
-  func rawUSBIdentifier(servingSameControllerAs identifier: DeviceIdentifier) -> DeviceIdentifier? {
+  func rawUSBIdentifier(
+    servingSameControllerAs identifier: LogicalControllerID
+  ) -> LogicalControllerID? {
     pipelines.keys.first {
       deviceInfos[$0]?.usbTransportDevice != nil && Self.isSamePhysicalController($0, identifier)
     }
@@ -271,7 +277,7 @@ extension DeviceManager {
 
 /// A HID connection stopped for a raw-USB pipeline of its controller, with the key it ran under.
 struct YieldedHIDConnection {
-  let identifier: DeviceIdentifier
+  let identifier: LogicalControllerID
   let snapshot: HIDDeviceConnectionSnapshot
   var failedPolls = 0
 }

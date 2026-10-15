@@ -99,8 +99,8 @@
           ProfileJoyConPairSheet(profile: profile, devices: connectedDevices) { left, right in
             Task { @MainActor in
               profileActionError = await viewModel.pairRemappingJoyCons(
-                left: left,
-                right: right,
+                left: .session(left),
+                right: .session(right),
                 profileID: profile.id
               )
             }

@@ -26,7 +26,7 @@ struct USBDetectionAdmissionTests {
     let provider = USBDiscoveryRecordingProvider(
       devices: [device],
       physicalDevice: PhysicalDevice(
-        serviceIdentity: device.serviceIdentity,
+        serviceAddress: device.serviceAddress,
         vendorID: device.vendorID,
         productID: device.productID,
         interfaces: [xusbInterface]
@@ -38,7 +38,7 @@ struct USBDetectionAdmissionTests {
     )
 
     #expect(await manager.handleUSBDeviceAdded(device, provider: provider) == .ignored)
-    #expect(await manager.connectedDeviceIdentifiers().isEmpty)
+    #expect(await manager.connectedLogicalControllerIDs().isEmpty)
     #expect(await manager.unboundDeviceDescriptions().map(\.reason) == [.interfaceContractMismatch])
     await manager.stop()
   }
@@ -55,7 +55,7 @@ struct USBDetectionAdmissionTests {
     let provider = USBDiscoveryRecordingProvider(
       devices: [],
       physicalDevice: PhysicalDevice(
-        serviceIdentity: unknown.serviceIdentity,
+        serviceAddress: unknown.serviceAddress,
         vendorID: unknown.vendorID,
         productID: unknown.productID
       )
@@ -110,7 +110,7 @@ struct USBDetectionAdmissionTests {
     #expect(
       await manager.handleUSBDeviceAdded(direct, provider: provider)
         == .claimed([
-          DeviceIdentifier(
+          LogicalControllerID(
             vendorID: 1_118,
             productID: 721,
             serialNumber: "serial",
@@ -135,7 +135,7 @@ struct USBDetectionAdmissionTests {
       productID: 721,
       locationID: 9
     )
-    let claimed = DeviceIdentifier(
+    let claimed = LogicalControllerID(
       vendorID: 1_118,
       productID: 721,
       locationID: 9,
@@ -245,7 +245,7 @@ struct USBDetectionAdmissionTests {
       locationID: 9
     )
     let otherService = PhysicalDevice(
-      serviceIdentity: USBTransportServiceIdentity(route: .ioUSBHost, serviceID: 12),
+      serviceAddress: ControllerConnectionAddress.usbService(route: .ioUSBHost, serviceID: 12),
       vendorID: device.vendorID,
       productID: device.productID,
       physicalLocationIdentifier: device.locationID
@@ -270,7 +270,7 @@ struct USBDetectionAdmissionTests {
       productID: 721,
       locationID: 9
     )
-    let claimed = DeviceIdentifier(
+    let claimed = LogicalControllerID(
       vendorID: 1_118,
       productID: 721,
       locationID: 9,

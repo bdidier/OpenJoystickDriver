@@ -1,7 +1,7 @@
 import Foundation
 
 private struct HIDTeardownCandidate {
-  let identifier: DeviceIdentifier
+  let identifier: LogicalControllerID
   let info: DeviceManager.DeviceInfo
   let physicalDevice: PhysicalDevice
   let connectionID: UUID
@@ -65,9 +65,9 @@ extension DeviceManager {
             hidInitializationTasks.removeValue(forKey: key)?.task.cancel()
           }
           await handleHIDEvent(event)
-        case .inputReport(let locationID, let connectionID, _, let data):
+        case .inputReport(let address, let connectionID, _, let data):
           await routeHIDInputReport(
-            locationID: locationID,
+            address: address,
             connectionID: connectionID,
             data: data,
             laterReportQueued: followed.contains(index)
@@ -85,17 +85,17 @@ extension DeviceManager {
   /// follows, with no other event between them.
   static func inputReportsFollowedByLaterReport(in batch: [HIDDeviceEvent]) -> Set<Int> {
     struct Source: Hashable {
-      let locationID: UInt32
+      let address: ControllerConnectionAddress
       let connectionID: UUID
     }
     var laterReports: Set<Source> = []
     var followed: Set<Int> = []
     for (index, event) in batch.enumerated().reversed() {
-      guard case .inputReport(let locationID, let connectionID, _, _) = event else {
+      guard case .inputReport(let address, let connectionID, _, _) = event else {
         laterReports.removeAll()
         continue
       }
-      let source = Source(locationID: locationID, connectionID: connectionID)
+      let source = Source(address: address, connectionID: connectionID)
       if !laterReports.insert(source).inserted { followed.insert(index) }
     }
     return followed
@@ -194,16 +194,16 @@ extension DeviceManager {
     switch event {
     case .connected(let connection, let ownership):
       await handleHIDDeviceConnected(connection: connection, ownership: ownership)
-    case .ownershipChanged(let locationID, let ownership):
-      await updateHIDOwnership(ownership, locationID: locationID)
+    case .ownershipChanged(let address, let ownership):
+      await updateHIDOwnership(ownership, address: address)
     case .accessFailure(let failure):
       print("[DeviceManager] HID access stream failed: \(String(reflecting: failure))")
       await removeHIDPipelines()
     case .disconnected(let connection): await handleHIDDeviceDisconnected(connection: connection)
     case .inputReport(let loc, let connectionID, _, let data):
-      await routeHIDInputReport(locationID: loc, connectionID: connectionID, data: data)
+      await routeHIDInputReport(address: loc, connectionID: connectionID, data: data)
     case .inputValue(let loc, let connectionID, let value):
-      await routeHIDElementValue(locationID: loc, connectionID: connectionID, value: value)
+      await routeHIDElementValue(address: loc, connectionID: connectionID, value: value)
     }
   }
 
@@ -222,26 +222,29 @@ extension DeviceManager {
   /// Asks the backend to seize again for each bound, active, non-native HID controller that
   /// lacks its seize and whose claim was not released on purpose.
   func retryHIDInputClaims() async {
-    var locationIDs: Set<UInt32> = []
+    var addresses: Set<ControllerConnectionAddress> = []
     for (identifier, info) in deviceInfos {
       guard case .hid = info.discoverySource, info.physicalDevice?.nativePassThrough != true,
         info.hidInputOwnership == .ownedByAnotherClient
           || info.hidInputOwnership == .acquisitionFailed, let pipeline = pipelines[identifier],
         !pipeline.observesOnly, !suspendedControllerIdentities.contains(identifier),
-        let locationID = identifier.locationID,
+        let address = identifier.hidRoutingAddress,
         !unboundHIDClaims.values.contains(where: {
-          $0.routingLocationID == locationID && $0.isReleased
+          $0.routingAddress == address && $0.isReleased
         })
       else { continue }
-      locationIDs.insert(locationID)
+      addresses.insert(address)
     }
-    for locationID in locationIDs.sorted() {
-      await hidManager.retryInputClaim(locationID: locationID)
+    for address in addresses.sorted() {
+      await hidManager.retryInputClaim(address: address)
     }
   }
 
-  func updateHIDOwnership(_ ownership: HIDInputOwnership, locationID: UInt32) async {
-    let identifiers = deviceInfos.keys.filter { $0.locationID == locationID }
+  func updateHIDOwnership(
+    _ ownership: HIDInputOwnership,
+    address: ControllerConnectionAddress
+  ) async {
+    let identifiers = deviceInfos.keys.filter { $0.hidRoutingAddress == address }
     for identifier in identifiers {
       // A location's ownership describes OJD's seize of other interfaces, never a native one.
       guard let info = deviceInfos[identifier], case .hid = info.discoverySource,
@@ -261,7 +264,7 @@ extension DeviceManager {
             connection: HIDDeviceConnection(
               connectionID: connectionID,
               physicalDevice: physicalDevice,
-              routingLocationID: locationID
+              routingAddress: address
             ),
             ownership: ownership
           )

@@ -5,24 +5,28 @@ import Testing
 struct ControllerModelIDTests {
   @Test
   func twoUnitsOfOneModelShareOneModelIDAndRecord() throws {
-    let firstUnit = DeviceIdentifier(
+    let firstUnit = LogicalControllerID(
       vendorID: 0x054C,
       productID: 0x09CC,
       serialNumber: "unit-a",
       locationID: 1,
       interfaceNumber: 0
     )
-    let secondUnit = DeviceIdentifier(
+    let secondUnit = LogicalControllerID(
       vendorID: 0x054C,
       productID: 0x09CC,
       serialNumber: "unit-b",
       locationID: 2,
       interfaceNumber: 3
     )
-    let otherModel = DeviceIdentifier(vendorID: 0x054C, productID: 0x05C4, serialNumber: "unit-a")
+    let otherModel = LogicalControllerID(
+      vendorID: 0x054C,
+      productID: 0x05C4,
+      serialNumber: "unit-a"
+    )
 
     #expect(firstUnit != secondUnit)
-    #expect(firstUnit.controllerIdentity != secondUnit.controllerIdentity)
+    #expect(firstUnit.hardware != secondUnit.hardware)
     #expect(firstUnit.model == secondUnit.model)
     #expect(firstUnit.model == ControllerModelID(vendorID: 0x054C, productID: 0x09CC))
     #expect(Set([firstUnit.model, secondUnit.model]).count == 1)

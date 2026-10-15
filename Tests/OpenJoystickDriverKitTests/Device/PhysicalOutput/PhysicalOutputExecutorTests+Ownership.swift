@@ -20,7 +20,10 @@ extension PhysicalOutputExecutorTests {
     #expect(await manager.rumbleStopTasks[started.identifier] != nil)
     let before = await started.backend.recordedOutputReports().count
 
-    let result = await manager.sendControllerOutput(.stopRumble, for: started.identifier.model)
+    let result = await manager.sendControllerOutput(
+      .stopRumble,
+      for: .model(started.identifier.model)
+    )
 
     #expect(result == ControllerOutputResult(.delivered))
     #expect(await manager.rumbleStopTasks[started.identifier] == nil)
@@ -68,12 +71,12 @@ extension PhysicalOutputExecutorTests {
     )
     let result = await started.manager.sendControllerOutput(
       .setRumble(rumble, duration: .held),
-      for: started.identifier.model
+      for: .model(started.identifier.model)
     )
     #expect(result == ControllerOutputResult(.delivered, droppedRumbleChannels: [.leftTrigger]))
     let missing = await started.manager.sendControllerOutput(
       .stopRumble,
-      for: ControllerModelID(vendorID: 0x1234, productID: 0x5678)
+      for: .model(ControllerModelID(vendorID: 0x1234, productID: 0x5678))
     )
     #expect(missing == ControllerOutputResult(.notFound))
     await started.manager.stop()
@@ -89,7 +92,7 @@ extension PhysicalOutputExecutorTests {
     for milliseconds in [-1, maxRumbleDurationMs + 1] {
       let result = await manager.sendControllerOutput(
         .setRumble(rumble, duration: .milliseconds(milliseconds)),
-        for: started.identifier.model
+        for: .model(started.identifier.model)
       )
       #expect(result == ControllerOutputResult(.invalidValue))
     }
@@ -100,7 +103,7 @@ extension PhysicalOutputExecutorTests {
     )
     let trigger = await manager.sendControllerOutput(
       .setAdaptiveTrigger(.left, invalidTrigger),
-      for: started.identifier.model
+      for: .model(started.identifier.model)
     )
     #expect(trigger == ControllerOutputResult(.unsupportedCapability))
     await manager.stop()

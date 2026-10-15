@@ -9,7 +9,7 @@ actor SuspendedGamepadSink: RemappingGamepadSink {
   private var startedWaiter: CheckedContinuation<Void, Never>?
   private var sendWaiter: CheckedContinuation<Void, Never>?
 
-  func send(_ state: RemappingGamepadState, for identifier: DeviceIdentifier) async {
+  func send(_ state: RemappingGamepadState, for identifier: LogicalControllerID) async {
     states.append(state)
     guard !suspended else { return }
     suspended = true

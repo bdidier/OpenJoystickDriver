@@ -15,7 +15,7 @@ final class NativeEventRecorder: OutputDispatcher, ObservedInputDemand, @uncheck
     set { lock.withLock { demanded = newValue } }
   }
 
-  func wantsObservedInput(from _: DeviceIdentifier) -> Bool { demandsInput }
+  func wantsObservedInput(from _: LogicalControllerID) -> Bool { demandsInput }
   var suppressOutput: Bool {
     get { lock.withLock { suppressed } }
     set { lock.withLock { suppressed = newValue } }
@@ -24,8 +24,8 @@ final class NativeEventRecorder: OutputDispatcher, ObservedInputDemand, @uncheck
   func dispatch(
     _ event: ControllerEvent,
     labels _: ControllerButtonLabels,
-    from _: DeviceIdentifier
+    from _: LogicalControllerID
   ) { lock.withLock { recorded.append(event.state) } }
 
-  func activateOutput(for _: DeviceIdentifier) {}
+  func activateOutput(for _: LogicalControllerID) {}
 }

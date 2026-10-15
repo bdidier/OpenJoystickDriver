@@ -152,7 +152,7 @@ extension DualSenseDriverTests {
     source: RemappingButton
   ) throws {
     for bluetooth in [false, true] {
-      let identifier = DeviceIdentifier(vendorID: 0x054C, productID: 0x0DF2)
+      let identifier = LogicalControllerID(vendorID: 0x054C, productID: 0x0DF2)
       let parser = try catalogParser(identifier.model)
       let report =
         bluetooth

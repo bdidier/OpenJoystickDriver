@@ -10,7 +10,7 @@ extension OutputCharacterizationTests {
   func familyLabelsReachTheirBits() async {
     var lines: [String] = []
     // Each family's former parser button name and the control it now reports under its labels.
-    let families: [(String, DeviceIdentifier, [(String, ControlID)])] = [
+    let families: [(String, LogicalControllerID, [(String, ControlID)])] = [
       (
         "ps", Self.playStation,
         [
@@ -85,7 +85,7 @@ extension OutputCharacterizationTests {
   @Test
   func axesTriggersAndHat() async {
     var lines: [String] = []
-    let steps: [(String, DeviceIdentifier, [InputChange])] = [
+    let steps: [(String, LogicalControllerID, [InputChange])] = [
       ("ls.1", Self.standard, [.leftStick(x: 0.1, y: -0.1)]),
       ("ls.2", Self.standard, [.leftStick(x: 0.2, y: -1)]),
       ("ls.1,-1", Self.standard, [.leftStick(x: 0.1, y: -1)]),

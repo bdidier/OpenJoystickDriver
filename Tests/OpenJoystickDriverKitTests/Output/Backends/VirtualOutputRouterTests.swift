@@ -9,7 +9,7 @@ struct VirtualOutputRouterTests {
     let previous = RecordingVirtualOutputDispatcher()
     let current = RecordingVirtualOutputDispatcher()
     let dispatcher = VirtualOutputRouter()
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2)
 
     dispatcher.setBackend(previous)
     dispatcher.setBackend(current)
@@ -36,9 +36,9 @@ struct VirtualOutputRouterTests {
     await dispatcher.dispatch(
       ControllerEvent([.press(.faceSouth)]),
       labels: .standard,
-      from: DeviceIdentifier(vendorID: 1, productID: 2)
+      from: LogicalControllerID(vendorID: 1, productID: 2)
     )
-    await dispatcher.activateOutput(for: DeviceIdentifier(vendorID: 1, productID: 2))
+    await dispatcher.activateOutput(for: LogicalControllerID(vendorID: 1, productID: 2))
 
     #expect(backend.states.isEmpty && backend.activations.isEmpty)
     #expect(backend.suppressOutput)
@@ -49,22 +49,22 @@ private final class RecordingVirtualOutputDispatcher: OutputDispatcher, @uncheck
   var suppressOutput = false
   private let lock = NSLock()
   private var recorded: [(ControllerState, ControllerButtonLabels)] = []
-  private var recordedActivations: [DeviceIdentifier] = []
+  private var recordedActivations: [LogicalControllerID] = []
 
   var states: [ControllerState] { lock.withLock { recorded.map(\.0) } }
   var labels: [ControllerButtonLabels] { lock.withLock { recorded.map(\.1) } }
-  var activations: [DeviceIdentifier] { lock.withLock { recordedActivations } }
+  var activations: [LogicalControllerID] { lock.withLock { recordedActivations } }
 
   func dispatch(
     _ event: ControllerEvent,
     labels: ControllerButtonLabels,
-    from _: DeviceIdentifier
+    from _: LogicalControllerID
   ) async {
     await Task.yield()
     lock.withLock { recorded.append((event.state, labels)) }
   }
 
-  func activateOutput(for identifier: DeviceIdentifier) {
+  func activateOutput(for identifier: LogicalControllerID) {
     lock.withLock { recordedActivations.append(identifier) }
   }
 }

@@ -8,7 +8,7 @@ actor GyroResetGamepadSink: RemappingGamepadSink {
 
   func rejectNextSend() { rejectNext = true }
 
-  func send(_ state: RemappingGamepadState, for identifier: DeviceIdentifier) throws {
+  func send(_ state: RemappingGamepadState, for identifier: LogicalControllerID) throws {
     if rejectNext {
       rejectNext = false
       throw RemappingEventEngineError.sinkUnavailable

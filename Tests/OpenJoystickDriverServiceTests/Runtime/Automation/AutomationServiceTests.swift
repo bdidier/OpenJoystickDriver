@@ -100,9 +100,17 @@ struct AutomationServiceTests {
           wiredPower: nil
         )
       ),
-      runtimeIdentifier: runtimeID,
-      unitIdentifier: unitID
+      sessionToken: .fixture(runtimeID),
+      portKey: unitID.map(ControllerPortKey.fixture)
     )
+  }
+
+  private static func token(_ label: String) -> String {
+    ControllerSessionToken.fixture(label).rawValue
+  }
+
+  private static func port(_ label: String) -> String {
+    ControllerPortKey.fixture(label).rawValue
   }
 
   private static func profile(_ name: String) -> RemappingProfile {
@@ -119,13 +127,13 @@ struct AutomationServiceTests {
   @Test
   func controllersUseTheUnitIDAndFallBackToTheRuntimeID() async {
     let service = FakeService(devices: [
-      Self.device("Pad A", runtimeID: "pad-1", unitID: "U-1"),
+      Self.device("Pad A", runtimeID: "pad-1", unitID: "unit-1"),
       Self.device("Pad B", runtimeID: "pad-2", unitID: nil),
     ])
 
     let controllers = await service.controllers()
 
-    #expect(controllers.map(\.id) == ["U-1", "pad-2", "045E:028E"])
+    #expect(controllers.map(\.id) == [Self.port("unit-1"), Self.token("pad-2"), "045E:028E"])
     #expect(controllers.map(\.name) == ["Pad A", "Pad B", "Pad A"])
     #expect(controllers.map(\.model) == ["045E:028E", "045E:028E", "045E:028E"])
     #expect(controllers.map(\.isModelMatch) == [false, false, true])
@@ -163,7 +171,7 @@ struct AutomationServiceTests {
   @Test
   func aModelIDResolvesToTheOneConnectedControllerOfThatModel() async throws {
     let service = FakeService(devices: [
-      Self.device("Pad A", runtimeID: "pad-1", unitID: "U-1"),
+      Self.device("Pad A", runtimeID: "pad-1", unitID: "unit-1"),
       Self.device("Pad B", runtimeID: "pad-2", unitID: nil, productID: 0x0B12),
     ])
 
@@ -178,7 +186,7 @@ struct AutomationServiceTests {
   @Test
   func aModelIDThatMatchesSeveralControllersThrows() async {
     let service = FakeService(devices: [
-      Self.device("Pad A", runtimeID: "pad-1", unitID: "U-1"),
+      Self.device("Pad A", runtimeID: "pad-1", unitID: "unit-1"),
       Self.device("Pad B", runtimeID: "pad-2", unitID: nil),
     ])
 
@@ -193,13 +201,15 @@ struct AutomationServiceTests {
   @Test
   func controllerIDsResolveByUnitOrRuntimeIDInRequestOrder() async throws {
     let service = FakeService(devices: [
-      Self.device("Pad A", runtimeID: "pad-1", unitID: "U-1"),
+      Self.device("Pad A", runtimeID: "pad-1", unitID: "unit-1"),
       Self.device("Pad B", runtimeID: "pad-2", unitID: nil),
     ])
 
-    let controllers = try await service.controllers(ids: ["pad-2", "missing", "pad-1"])
+    let controllers = try await service.controllers(ids: [
+      Self.token("pad-2"), "missing", Self.token("pad-1"),
+    ])
 
-    #expect(controllers.map(\.id) == ["pad-2", "U-1"])
+    #expect(controllers.map(\.id) == [Self.token("pad-2"), Self.port("unit-1")])
   }
 
   @Test

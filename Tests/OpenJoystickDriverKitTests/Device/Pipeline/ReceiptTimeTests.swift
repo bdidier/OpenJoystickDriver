@@ -10,8 +10,8 @@ struct ReceiptTimeTests {
     var iterator = calls.makeAsyncIterator()
     let parser = ReceiptTimeParser(continuation: continuation)
     let pipeline = DevicePipeline(
-      identifier: DeviceIdentifier(vendorID: 1, productID: 2),
-      transport: .hid(locationID: 77),
+      identifier: LogicalControllerID(vendorID: 1, productID: 2),
+      transport: .hid(address: .ioKit(locationID: 77, interfaceNumber: nil)),
       driver: parser,
       dispatcher: LoggingOutputDispatcher()
     )

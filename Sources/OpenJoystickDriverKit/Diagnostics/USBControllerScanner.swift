@@ -56,7 +56,7 @@ public enum USBControllerScanner {
     let registry = ProtocolDriverRegistry()
     var descriptions: [USBControllerDescription] = []
     for device in devices {
-      let physicalDevice = observations.first { $0.serviceIdentity == device.serviceIdentity }
+      let physicalDevice = observations.first { $0.serviceAddress == device.serviceAddress }
       // Endpoints are resolved from the device's configuration descriptor, as runtime binding
       // resolves them; the registry never carries endpoint descriptors.
       let configuration =

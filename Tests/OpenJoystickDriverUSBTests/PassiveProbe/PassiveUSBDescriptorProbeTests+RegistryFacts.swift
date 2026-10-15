@@ -205,7 +205,7 @@ extension PassiveUSBDescriptorProbeTests {
     #expect(signatures.compactMap { $0.endpoints?.first?.address } == [0x81, 0x02])
     #expect(signatures.allSatisfy { $0.hostTransport == .usb && $0.usbRoute == .ioUSBHost })
     #expect(signatures.allSatisfy { $0.physicalTransport == nil && $0.accessBackend == nil })
-    #expect(physicalDevice.serviceIdentity == device.serviceIdentity)
+    #expect(physicalDevice.serviceAddress == device.serviceAddress)
     #expect(physicalDevice.physicalLocationIdentifier == 42)
     #expect(physicalDevice.stableParentDeviceIdentifier == nil)
     #expect(physicalDevice.deviceRelease == nil)

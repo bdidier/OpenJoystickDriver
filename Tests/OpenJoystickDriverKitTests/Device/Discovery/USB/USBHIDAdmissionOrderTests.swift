@@ -21,7 +21,7 @@ struct USBHIDAdmissionOrderTests {
 
   private func observation(_ endpoints: [PhysicalEndpointSignature]?) -> PhysicalDevice {
     PhysicalDevice(
-      serviceIdentity: device.serviceIdentity,
+      serviceAddress: device.serviceAddress,
       vendorID: device.vendorID,
       productID: device.productID,
       configurationValue: 1,
@@ -60,7 +60,7 @@ struct USBHIDAdmissionOrderTests {
         interfaces: [gamepadHIDInterface(host: .usb)],
         nativePassThrough: native
       ),
-      routingLocationID: 91
+      routingAddress: .ioKit(locationID: 91, interfaceNumber: nil)
     )
   }
 
@@ -134,7 +134,7 @@ struct USBHIDAdmissionOrderTests {
     var enumeration = USBEnumerationTracker()
     enumeration.acknowledge(device)
     await manager.releaseNativeShadowedUSBServices(in: &enumeration)
-    #expect(enumeration.acknowledgedDevices[device.serviceIdentity] != nil)
+    #expect(enumeration.acknowledgedDevices[device.serviceAddress] != nil)
 
     await manager.handleHIDEvent(.disconnected(connection: hid))
     await manager.releaseNativeShadowedUSBServices(in: &enumeration)

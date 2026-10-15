@@ -10,7 +10,7 @@ struct PhysicalOutputExecutorTests {
     let backend: ScriptedHIDAccessBackend
     let manager: DeviceManager
     let connection: HIDDeviceConnection
-    let identifier: DeviceIdentifier
+    let identifier: LogicalControllerID
   }
 
   /// Connects a USB Sixaxis, whose report 0x01 carries rumble and LEDs from stored state.
@@ -27,7 +27,7 @@ struct PhysicalOutputExecutorTests {
         physicalLocationIdentifier: locationID,
         interfaces: [gamepadHIDInterface(host: .usb)]
       ),
-      routingLocationID: locationID
+      routingAddress: .ioKit(locationID: locationID, interfaceNumber: nil)
     )
     await backend.setConnectionSnapshots([
       HIDDeviceConnectionSnapshot(connection: connection, ownership: .exclusive)
@@ -73,14 +73,14 @@ struct PhysicalOutputExecutorTests {
       await withTaskGroup(of: Bool.self) { group in
         for _ in 0..<16 {
           group.addTask(priority: .high) {
-            _ = await manager.controllerState(for: identifier.model)
+            _ = await manager.controllerState(for: .model(identifier.model))
             return true
           }
         }
         for (index, command) in commands.enumerated() {
           let priority: TaskPriority = index.isMultiple(of: 3) ? .background : .high
           group.addTask(priority: priority) {
-            await manager.sendOutputForTest(command, for: identifier, runtimeIdentifier: nil)
+            await manager.sendOutputForTest(command, for: identifier)
           }
         }
         for await delivered in group where !delivered { violations.append("undelivered") }
@@ -131,8 +131,7 @@ struct PhysicalOutputExecutorTests {
     Task {
       await started.manager.sendOutputForTest(
         command,
-        for: started.identifier,
-        runtimeIdentifier: nil
+        for: started.identifier
       )
     }
   }

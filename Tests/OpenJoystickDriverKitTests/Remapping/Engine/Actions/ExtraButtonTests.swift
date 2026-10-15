@@ -23,7 +23,7 @@ struct RemappingExtraButtonTests {
       from: JSONEncoder().encode(profile)
     )
     var engine = RemappingEngineState()
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2)
     #expect(
       engine.process(inputs: [.press(physical)], from: identifier, profile: decoded, at: 0) == [
         .system(.keyDown(.space))
@@ -56,7 +56,7 @@ struct RemappingExtraButtonTests {
 
   @Test
   func rightPadPassthroughIsConsumedByAnExplicitMapping() throws {
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2)
     for mapped in [false, true] {
       let bindings = mapped ? profile(source: .rightPadClick).bindings : []
       let profile = RemappingProfile(

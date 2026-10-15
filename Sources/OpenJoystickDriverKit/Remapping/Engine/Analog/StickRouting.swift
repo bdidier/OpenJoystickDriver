@@ -5,7 +5,7 @@ extension RemappingEngineState {
     _ source: RemappingStickSource,
     x: Float,
     y: Float,
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     at uptime: UInt64
   ) -> [RemappingEngineAction] {
     guard var device = devices[identifier],

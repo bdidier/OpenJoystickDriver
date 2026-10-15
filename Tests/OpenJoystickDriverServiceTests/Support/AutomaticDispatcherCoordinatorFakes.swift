@@ -78,7 +78,7 @@ final class InstallationBackend: VirtualOutputDispatching, @unchecked Sendable {
     self.failsActivation = failsActivation
   }
 
-  func activate(for identifiers: [DeviceIdentifier]) async throws {
+  func activate(for identifiers: [LogicalControllerID]) async throws {
     lock.withLock { activations += 1 }
     if stage == .activation { await gate.suspend() }
     if failsActivation { throw UserSpaceOutputDispatcher.CreationError.createFailed }
@@ -89,8 +89,9 @@ final class InstallationBackend: VirtualOutputDispatching, @unchecked Sendable {
     suppressOutput = value
   }
 
-  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: DeviceIdentifier) {}
-  func activateOutput(for _: DeviceIdentifier) {}
+  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: LogicalControllerID) {
+  }
+  func activateOutput(for _: LogicalControllerID) {}
 
   func close() async {
     if stage == .retirement { await gate.suspend() }

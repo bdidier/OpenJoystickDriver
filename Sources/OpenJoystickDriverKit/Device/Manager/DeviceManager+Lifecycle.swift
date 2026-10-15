@@ -119,7 +119,7 @@ extension DeviceManager {
       clearUnboundDevice(.hid(connection.connectionID))
       clearPassThroughDevice(connection.connectionID)
       if yieldedHIDConnections.removeValue(forKey: connection.connectionID) != nil {
-        _ = await hidManager.reacquireInputClaim(locationID: connection.routingLocationID)
+        _ = await hidManager.reacquireInputClaim(address: connection.routingAddress)
       }
       let bound = deviceInfos.filter { $0.value.hidConnectionID == connection.connectionID }.keys
       for identifier in bound {

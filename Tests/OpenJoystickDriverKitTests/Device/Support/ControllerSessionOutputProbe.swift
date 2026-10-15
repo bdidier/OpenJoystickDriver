@@ -18,7 +18,7 @@ final class ControllerSessionOutputProbe: OutputDispatcher, ControllerLifecycleL
   private let lock = NSLock()
   private var storedSuppression = false
   private var states: [ControllerState] = []
-  private var stopped: [DeviceIdentifier] = []
+  private var stopped: [LogicalControllerID] = []
 
   var suppressOutput: Bool {
     get { lock.withLock { storedSuppression } }
@@ -28,16 +28,16 @@ final class ControllerSessionOutputProbe: OutputDispatcher, ControllerLifecycleL
   func dispatch(
     _ event: ControllerEvent,
     labels _: ControllerButtonLabels,
-    from _: DeviceIdentifier
+    from _: LogicalControllerID
   ) { lock.withLock { states.append(event.state) } }
 
-  func activateOutput(for _: DeviceIdentifier) {}
+  func activateOutput(for _: LogicalControllerID) {}
 
-  func controllerDidStop(_ identifier: DeviceIdentifier) {
+  func controllerDidStop(_ identifier: LogicalControllerID) {
     lock.withLock { stopped.append(identifier) }
   }
 
-  func snapshot() -> (states: [ControllerState], stopped: [DeviceIdentifier]) {
+  func snapshot() -> (states: [ControllerState], stopped: [LogicalControllerID]) {
     lock.withLock { (states, stopped) }
   }
 }

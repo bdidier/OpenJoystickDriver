@@ -34,7 +34,7 @@ struct NativeObservedInputTests {
     input.replaceSubrange(6...9, with: [0x80, 0x80, 0x80, 0x80])
     for _ in 0..<2 {
       await manager.routeHIDInputReport(
-        locationID: connection.routingLocationID,
+        address: connection.routingAddress,
         connectionID: connection.connectionID,
         data: Data(input)
       )
@@ -84,7 +84,7 @@ struct NativeObservedInputTests {
     func ledByte(afterConnecting connection: HIDDeviceConnection) async -> UInt8? {
       await manager.handleHIDEvent(.connected(connection: connection, ownership: .unknown))
       await manager.routeHIDInputReport(
-        locationID: connection.routingLocationID,
+        address: connection.routingAddress,
         connectionID: connection.connectionID,
         data: Data(input)
       )
@@ -243,7 +243,12 @@ struct NativeObservedInputTests {
         sensorTimestamp: timestamp + UInt16(offset)
       )
       await manager.handleHIDEvent(
-        .inputReport(locationID: locationID, connectionID: UUID(), reportID: 0x11, data: report)
+        .inputReport(
+          address: .ioKit(locationID: locationID, interfaceNumber: nil),
+          connectionID: UUID(),
+          reportID: 0x11,
+          data: report
+        )
       )
     }
   }
@@ -264,7 +269,7 @@ struct NativeObservedInputTests {
         interfaces: [gamepadHIDInterface(host: .usb)],
         nativePassThrough: native
       ),
-      routingLocationID: locationID
+      routingAddress: .ioKit(locationID: locationID, interfaceNumber: nil)
     )
   }
 }

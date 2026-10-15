@@ -5,7 +5,7 @@
 
   protocol MotionCalibrationGateway: Sendable {
     func motionCalibration(
-      for selector: RuntimeDeviceSelector,
+      for selector: ControllerReference,
       command: RemappingMotionCalibrationCommand?
     ) async throws -> RemappingMotionCalibrationStatus
   }
@@ -19,13 +19,13 @@
     @Published
     private(set) var isBusy = false
     @Published
-    private(set) var selector: RuntimeDeviceSelector?
+    private(set) var selector: ControllerReference?
     private let gateway: any MotionCalibrationGateway
     private var generation: UInt64 = 0
 
     init(gateway: any MotionCalibrationGateway) { self.gateway = gateway }
 
-    func select(_ selector: RuntimeDeviceSelector?) {
+    func select(_ selector: ControllerReference?) {
       guard self.selector != selector else { return }
       generation &+= 1
       self.selector = selector

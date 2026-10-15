@@ -72,7 +72,7 @@ private final class FirstStickDispatchHeldRecorder: OutputDispatcher, @unchecked
   func dispatch(
     _ event: ControllerEvent,
     labels _: ControllerButtonLabels,
-    from _: DeviceIdentifier
+    from _: LogicalControllerID
   ) async {
     let holds = lock.withLock {
       guard !held, event.state.leftStick != .center else { return false }
@@ -83,7 +83,7 @@ private final class FirstStickDispatchHeldRecorder: OutputDispatcher, @unchecked
     lock.withLock { events.append(event) }
   }
 
-  func activateOutput(for _: DeviceIdentifier) {}
+  func activateOutput(for _: LogicalControllerID) {}
 
   func waitForHeldDispatch() async { await gate.waitForEntry() }
   func openHeldDispatch() async { await gate.open() }
@@ -102,7 +102,7 @@ private final class FirstStickDispatchHeldRecorder: OutputDispatcher, @unchecked
 /// pipeline, `UserSpaceOutputDispatcher`, and `UserSpaceReportSender`. The Service target's
 /// `AutomaticUserSpaceOutputDispatcher` is not reachable from Kit tests.
 struct StickDeliveryLatencyTests {
-  private static let identifier = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 1)
+  private static let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 1)
   private static let connectionID = UUID()
   private static let format = ContinuitySnapshotReportFormat()
 
@@ -117,7 +117,12 @@ struct StickDeliveryLatencyTests {
   /// An input report whose bytes `ScriptedBatches` parses; empty bytes carry no input.
   private static func report(_ bytes: [UInt8], connectionID: UUID = connectionID) -> HIDDeviceEvent
   {
-    .inputReport(locationID: 1, connectionID: connectionID, reportID: 0, data: Data(bytes))
+    .inputReport(
+      address: .ioKit(locationID: 1, interfaceNumber: nil),
+      connectionID: connectionID,
+      reportID: 0,
+      data: Data(bytes)
+    )
   }
 
   private static func pipeline(
@@ -126,7 +131,7 @@ struct StickDeliveryLatencyTests {
   ) -> DevicePipeline {
     DevicePipeline(
       identifier: identifier,
-      transport: .hid(locationID: 1),
+      transport: .hid(address: .ioKit(locationID: 1, interfaceNumber: nil)),
       driver: OutputCharacterizationTests.ScriptedBatches(batches),
       dispatcher: dispatcher,
       idleTimeoutNanoseconds: 5_000_000_000,
@@ -246,7 +251,10 @@ struct StickDeliveryLatencyTests {
     let other = UUID()
     let batch: [HIDDeviceEvent] = [
       Self.report([1]), Self.report([1], connectionID: other), Self.report([2]),
-      .ownershipChanged(locationID: 1, ownership: .exclusive), Self.report([3]),
+      .ownershipChanged(
+        address: .ioKit(locationID: 1, interfaceNumber: nil),
+        ownership: .exclusive
+      ), Self.report([3]),
       Self.report([4], connectionID: other), Self.report([5]),
     ]
 
@@ -339,7 +347,7 @@ struct StickDeliveryLatencyTests {
     let recorder = FirstStickDispatchHeldRecorder()
     let pipeline = DevicePipeline(
       identifier: Self.identifier,
-      transport: .hid(locationID: 1),
+      transport: .hid(address: .ioKit(locationID: 1, interfaceNumber: nil)),
       driver: OutputCharacterizationTests.ScriptedBatches(batches),
       dispatcher: recorder,
       idleTimeoutNanoseconds: 5_000_000_000,
@@ -365,7 +373,7 @@ struct StickDeliveryLatencyTests {
     let recorder = NativeEventRecorder()
     let pipeline = DevicePipeline(
       identifier: Self.identifier,
-      transport: .hid(locationID: 1),
+      transport: .hid(address: .ioKit(locationID: 1, interfaceNumber: nil)),
       driver: OutputCharacterizationTests.ScriptedBatches([
         [.leftStick(x: 0.1, y: 0)], [.leftStick(x: 0.9, y: 0)], [.leftStick(x: 0.1, y: 0)],
       ]),
@@ -390,7 +398,7 @@ struct StickDeliveryLatencyTests {
     let recorder = FirstStickDispatchHeldRecorder()
     let pipeline = DevicePipeline(
       identifier: Self.identifier,
-      transport: .hid(locationID: 1),
+      transport: .hid(address: .ioKit(locationID: 1, interfaceNumber: nil)),
       driver: OutputCharacterizationTests.ScriptedBatches([
         [.leftStick(x: 0.1, y: 0)], [.leftStick(x: 0.9, y: 0)],
       ]),
@@ -504,7 +512,7 @@ struct StickDeliveryLatencyTests {
           )
         ]
       ),
-      routingLocationID: gamepadLocationID
+      routingAddress: .ioKit(locationID: gamepadLocationID, interfaceNumber: nil)
     )
   }
 
@@ -516,7 +524,7 @@ struct StickDeliveryLatencyTests {
     var report = [UInt8](repeating: 0, count: 64)
     report.replaceSubrange(0..<6, with: [0x12, leftX, 0x80, 0x80, 0x80, 0x00])
     return .inputReport(
-      locationID: gamepadLocationID,
+      address: .ioKit(locationID: gamepadLocationID, interfaceNumber: nil),
       connectionID: connection.connectionID,
       reportID: 0x12,
       data: Data(report)

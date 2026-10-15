@@ -19,7 +19,7 @@ public final class ApplicationServiceServer: @unchecked Sendable {
   let virtualOutputTransitionCoordinator = VirtualOutputTransitionCoordinator()
   let virtualOutputTransitionTimeouts: VirtualOutputTransitionTimeouts
   let virtualOutputTransitionClock: VirtualOutputTransitionClock
-  let connectedIdentifierProvider: @Sendable () async -> [DeviceIdentifier]
+  let connectedIdentifierProvider: @Sendable () async -> [LogicalControllerID]
   let feedbackGate: VirtualOutputFeedbackGate
   /// Service settings storage; also backs `virtualHIDProfileOverrides`.
   let defaults: UserDefaults
@@ -54,7 +54,7 @@ public final class ApplicationServiceServer: @unchecked Sendable {
     postEventAccess: CoreGraphicsPostEventAccess,
     userSpaceDispatcherFactory: @escaping UserSpaceDispatcherFactory,
     virtualFeeds: VirtualFeedRegistry? = nil,
-    connectedIdentifierProvider: (@Sendable () async -> [DeviceIdentifier])? = nil,
+    connectedIdentifierProvider: (@Sendable () async -> [LogicalControllerID])? = nil,
     virtualOutputTransitionTimeouts: VirtualOutputTransitionTimeouts = .standard,
     virtualOutputTransitionClock: VirtualOutputTransitionClock = .system,
     defaults: UserDefaults = .standard,
@@ -70,13 +70,14 @@ public final class ApplicationServiceServer: @unchecked Sendable {
     self.remappingRequests = RemappingRequestCoordinator(
       library: remappingProfileLibrary,
       router: remappingRouter,
+      connectedControllers: { await deviceManager.connectedControllers() },
       postEventAccess: postEventAccess
     )
     self.userSpaceDispatcherFactory = userSpaceDispatcherFactory
     self.virtualFeeds =
       virtualFeeds ?? VirtualFeedRegistry(factory: ApplicationServiceRuntime.makeVirtualFeedDevice)
     self.connectedIdentifierProvider =
-      connectedIdentifierProvider ?? { await deviceManager.activeDeviceIdentifiers() }
+      connectedIdentifierProvider ?? { await deviceManager.activeLogicalControllerIDs() }
     self.virtualOutputTransitionTimeouts = virtualOutputTransitionTimeouts
     self.virtualOutputTransitionClock = virtualOutputTransitionClock
     self.feedbackGate = VirtualOutputFeedbackGate(deviceManager: deviceManager)

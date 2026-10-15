@@ -76,7 +76,7 @@ final class InputScript: @unchecked Sendable {
   }
 
   private let lock = NSLock()
-  private var states: [DeviceIdentifier: ControllerState] = [:]
+  private var states: [LogicalControllerID: ControllerState] = [:]
 
   /// The script bound to `owner` for as long as it lives.
   static func of(_ owner: AnyObject) -> InputScript {
@@ -90,17 +90,17 @@ final class InputScript: @unchecked Sendable {
   }
 
   /// Forgets `identifier`, as its pipeline does once the controller stops.
-  func reset(_ identifier: DeviceIdentifier) {
+  func reset(_ identifier: LogicalControllerID) {
     lock.withLock { _ = states.removeValue(forKey: identifier) }
   }
 
   /// The snapshot `identifier` last received.
-  func state(for identifier: DeviceIdentifier) -> ControllerState {
+  func state(for identifier: LogicalControllerID) -> ControllerState {
     lock.withLock { states[identifier] ?? .neutral }
   }
 
   /// The next snapshot of `identifier`: its last one with `changes` applied.
-  func event(_ changes: [InputChange], for identifier: DeviceIdentifier) -> ControllerEvent {
+  func event(_ changes: [InputChange], for identifier: LogicalControllerID) -> ControllerEvent {
     lock.withLock {
       let event = ControllerEvent(changes, after: states[identifier] ?? .neutral)
       states[identifier] = event.state
@@ -129,7 +129,7 @@ extension OutputDispatcher {
   /// Dispatches one scripted snapshot of `identifier` per change, in order.
   func dispatch(
     changes: [InputChange],
-    from identifier: DeviceIdentifier,
+    from identifier: LogicalControllerID,
     labels: ControllerButtonLabels = .standard
   ) async {
     let script = InputScript.of(self)
@@ -143,7 +143,7 @@ extension RemappingOutputRouter {
   /// Routes one scripted snapshot of `identifier` per change, in order.
   func dispatchCausally(
     changes: [InputChange],
-    from identifier: DeviceIdentifier,
+    from identifier: LogicalControllerID,
     labels: ControllerButtonLabels = .standard
   ) async throws {
     let script = InputScript.of(self)

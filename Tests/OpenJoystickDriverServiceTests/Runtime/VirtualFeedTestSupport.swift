@@ -16,7 +16,7 @@ final class FakeFeedDevice: VirtualFeedDevice, @unchecked Sendable {
   /// The hung activation, sends, and closes, resumed by `release`.
   private var hung: [CheckedContinuation<Void, Never>] = []
   private var released = false
-  private var activatedValue: DeviceIdentifier?
+  private var activatedValue: LogicalControllerID?
   private var sentValue: [RemappingGamepadState] = []
   /// `ProcessInfo.systemUptime` of each send.
   private var sentTimesValue: [TimeInterval] = []
@@ -34,13 +34,13 @@ final class FakeFeedDevice: VirtualFeedDevice, @unchecked Sendable {
     self.hangsActivation = hangsActivation
   }
 
-  var activated: DeviceIdentifier? { lock.withLock { activatedValue } }
+  var activated: LogicalControllerID? { lock.withLock { activatedValue } }
   var sent: [RemappingGamepadState] { lock.withLock { sentValue } }
   var sentTimes: [TimeInterval] { lock.withLock { sentTimesValue } }
   var closeCount: Int { lock.withLock { closeCountValue } }
 
   /// A hanging activation ignores cancellation and returns only after `release`.
-  func activate(controller identifier: DeviceIdentifier) async throws {
+  func activate(controller identifier: LogicalControllerID) async throws {
     if hangsActivation {
       await waitForRelease()
       return
@@ -49,7 +49,7 @@ final class FakeFeedDevice: VirtualFeedDevice, @unchecked Sendable {
     lock.withLock { activatedValue = identifier }
   }
 
-  func send(_ state: RemappingGamepadState, for identifier: DeviceIdentifier) async throws {
+  func send(_ state: RemappingGamepadState, for identifier: LogicalControllerID) async throws {
     if hangsSending { await waitForRelease() }
     if failsSending { throw UserSpaceOutputDispatcher.CreationError.createFailed }
     lock.withLock {
@@ -86,7 +86,7 @@ final class FakeFeedDevice: VirtualFeedDevice, @unchecked Sendable {
 
   /// The host writes `command` to this device.
   func receive(_ command: ControllerOutputCommand) {
-    output(activated ?? DeviceIdentifier(vendorID: 0, productID: 0), command)
+    output(activated ?? LogicalControllerID(vendorID: 0, productID: 0), command)
   }
 }
 

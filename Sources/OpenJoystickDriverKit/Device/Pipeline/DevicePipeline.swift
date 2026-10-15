@@ -53,7 +53,7 @@ private let defaultIdleMonitorIntervalNanoseconds: UInt64 = 1_000_000_000
 /// failure never affects others.
 actor DevicePipeline {
 
-  let identifier: DeviceIdentifier
+  let identifier: LogicalControllerID
   let transport: Transport
   let driver: any PhysicalProtocolDriver
   /// The driver's session plan with the bound record's tuning applied.
@@ -133,7 +133,7 @@ actor DevicePipeline {
   let usbStartupPlayerIndicator: PhysicalPlayerIndicator?
 
   init(
-    identifier: DeviceIdentifier,
+    identifier: LogicalControllerID,
     transport: Transport,
     driver: sending any PhysicalProtocolDriver,
     dispatcher: any OutputDispatcher,

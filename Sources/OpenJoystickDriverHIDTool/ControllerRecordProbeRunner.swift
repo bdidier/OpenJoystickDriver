@@ -66,7 +66,7 @@ func runControllerRecordProbe(recordPath: String, seconds: Int, validateOnly: Bo
       // Validate the claimed interface as discovery does, before open can set the configuration.
       let passive = await provider.resolveTransport(for: device, configured: plan.transportProfile)
       guard let claimed = await provider.resolveUSBConfiguration(device, passive: passive),
-        claimed.physicalDevice.map({ $0.serviceIdentity == device.serviceIdentity }) ?? true
+        claimed.physicalDevice.map({ $0.serviceAddress == device.serviceAddress }) ?? true
       else {
         refuseProbeDevice(
           reason: "configuration-unobserved",
