@@ -1,5 +1,6 @@
 import XCTest
 
+@testable import BridgeCore
 @testable import WebRTCBridgeCore
 
 /// A data channel in memory: the test plays the peer.

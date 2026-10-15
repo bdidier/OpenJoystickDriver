@@ -1,5 +1,6 @@
 import Darwin
 import Foundation
+import BridgeCore
 import WebRTCBridgeCore
 
 /// A stand-in endpoint on a Unix socket. It speaks the handshake of `docs/sdk/endpoint.md`,

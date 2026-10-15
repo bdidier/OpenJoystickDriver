@@ -19,8 +19,6 @@ public protocol PeerChannel: AnyObject, Sendable {
   func send(_ data: Data) -> Bool
 }
 
-extension PeerLink: PeerChannel {}
-
 /// The bridge on the Mac that runs the game. It needs the `control` scope. A `Frame` from the
 /// peer's data channel goes to the endpoint's virtual gamepad, and each `RumbleCommand` of the
 /// endpoint goes back over the data channel.
