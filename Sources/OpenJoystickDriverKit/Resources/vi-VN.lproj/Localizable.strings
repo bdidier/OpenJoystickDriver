@@ -1336,6 +1336,10 @@
 "cli.virtual.discussion.unit" = "Với --unit, “set” áp dụng cho một bộ điều khiển theo ID thiết bị của nó, và “reset” đưa bộ điều khiển đó về lựa chọn của kiểu máy.";
 "cli.virtual.error.failed" = "Tay cầm ảo cho %@ không thay đổi (%@). Hãy kiểm tra bằng “ojd virtual show”.";
 "cli.virtual.error.no_unit" = "%@ không có ID thiết bị, nên một lựa chọn chỉ có thể áp dụng cho cả kiểu máy. Hãy chạy lệnh không có --unit.";
+"cli.virtual.export_mapping.abstract" = "In ánh xạ SDL hoặc mô tả W3C mà một hồ sơ tay cầm ảo suy ra.";
+"cli.virtual.export_mapping.discussion" = "SDL in một dòng ánh xạ cho mỗi hồ sơ, đó là một tệp ánh xạ SDL hợp lệ. W3C in mô tả bố cục chuẩn dưới dạng JSON. Cả hai đều được suy ra từ bộ mô tả báo cáo của hồ sơ.";
+"cli.virtual.export_mapping.format" = "Định dạng cần in: sdl hoặc w3c.";
+"cli.virtual.export_mapping.profile" = "Hồ sơ tay cầm ảo cần in. Bỏ qua để in mọi hồ sơ.";
 "cli.virtual.feed.abstract" = "Cung cấp một tay cầm ảo do đầu vào chuẩn điều khiển.";
 "cli.virtual.feed.discussion" = "Đọc một đối tượng JSON mỗi dòng: “buttons” và “dpad” liệt kê các thành phần được nhấn, như South và up, và “axes” ánh xạ tên trục, như LeftStickX, tới giá trị. Thành phần bị thiếu ở trạng thái trung tính. Các cần chạy từ -1 đến 1 với Y hướng xuống; các cò chạy từ 0 đến 1. Các khung được phát theo thứ tự, mỗi khung ít nhất 8 ms; “holdMilliseconds” giữ một khung lâu hơn, tối đa 60000. In mỗi lệnh đầu ra mà trò chơi gửi đến tay cầm, như rung, thành một đối tượng JSON mỗi dòng. Dừng khi mọi khung đã phát xong sau khi đầu vào kết thúc.";
 "cli.virtual.feed.error.closed" = "Dịch vụ đã đóng tay cầm ảo. Hãy kiểm tra bằng “ojd status”.";
@@ -1354,6 +1358,7 @@
 "cli.virtual.reset.error.unit_all" = "--unit cần một CONTROLLER, không phải --all.";
 "cli.virtual.set.abstract" = "Chọn tay cầm ảo cho kiểu máy của một bộ điều khiển.";
 "cli.virtual.set.profile" = "Cấu hình tay cầm ảo.";
+"cli.virtual.sdl_hints_note" = "Lưu ý: %@ không hoạt động với các gợi ý (hint) mặc định của SDL.";
 "cli.virtual.show.abstract" = "Hiển thị tay cầm ảo của từng bộ điều khiển và các cấu hình bạn có thể chọn.";
 "cli.virtual.show.none" = "không có tay cầm ảo";
 "cli.virtual.show.profiles" = "Cấu hình: %@";

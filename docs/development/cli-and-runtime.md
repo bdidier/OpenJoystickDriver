@@ -28,7 +28,7 @@ CLI command families:
 ojd status
 ojd service start|stop|wait
 ojd controller list|show|watch|capture|rumble|light|player|suspend|resume|disconnect
-ojd virtual show|set|reset
+ojd virtual show|set|reset|feed|export-mapping
 ojd permission list|request
 ojd transport-extension status|activate|deactivate
 ojd setting list|get|set
@@ -65,7 +65,7 @@ Keep raw packets, runtime soaking, catalog inspection, permission audits, and vi
 
 Parsers that expose complete report observations also expose typed input health in status and support reports. DualShock 4 health uses the advancing device sensor timestamp rather than host packet arrival alone. Missing or non-advancing complete reports become stale after one second, neutralize OJD-published output, and wait for a fresh neutral report before recovery. A fresh held control is not guessed to be accidental. Native HID pass-through may still be visible directly to another app, so stale health remains a Needs attention condition even after OJD retires its own publication.
 
-Each controller model (vendor/product) has a virtual HID profile: `SdlCompatible` (`045E:02FD`, selected automatically when the controller's declared controls fit) or `Generic`. Automatic selection runs unless the model has a stored override. `ojd virtual set <SdlCompatible|Generic> <controller>` stores an override for the selected controller's model; `ojd virtual reset <controller>` clears it, and `ojd virtual reset --all` clears every model's override (it cannot combine with a controller). `ojd virtual show [<controller>]` shows each controller's live profile and the choices. Both commands print the resulting live profile line, then print a failure to stderr and exit 1 if the request did not fully take effect (for example `controllerNotFound`, `overrideRejectedByController`, or `activationFailed`).
+Each controller model (vendor/product) has a virtual HID profile: `SdlCompatible` (`045E:02FD`, selected automatically when the controller's declared controls fit) or `Generic`. Automatic selection runs unless the model has a stored override. `ojd virtual set <SdlCompatible|Generic> <controller>` stores an override for the selected controller's model; `ojd virtual reset <controller>` clears it, and `ojd virtual reset --all` clears every model's override (it cannot combine with a controller). `ojd virtual show [<controller>]` shows each controller's live profile and the choices. `ojd virtual export-mapping [<profile>] [--format sdl|w3c]` prints each profile's SDL mapping or W3C description, which `VirtualHIDProfileID.gamepadMapping()` derives from the profile's descriptor and report codec. `set` and `reset` print the resulting live profile line, then print a failure to stderr and exit 1 if the request did not fully take effect (for example `controllerNotFound`, `overrideRejectedByController`, or `activationFailed`).
 
 `ApplicationServiceVirtualHIDProfileStatus` reports each connected controller's selected profile, its source (`automatic`, `override`, or `automaticAfterRejecting`), its stored override, and whether no profile is available for its declared controls.
 

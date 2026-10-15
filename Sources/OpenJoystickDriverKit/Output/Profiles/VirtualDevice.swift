@@ -27,6 +27,8 @@ struct VirtualDevice: Equatable, Sendable {
   let layout: VirtualDeviceLayout?
   let transport: String?
   let labels: VirtualIdentityGlyphFamily?
+  /// Whether SDL recognizes the published device with its default hints; nil for a selection.
+  let worksWithDefaultSDLHints: Bool?
   let identity: Identity?
 
   /// The bundled definitions, by persona.

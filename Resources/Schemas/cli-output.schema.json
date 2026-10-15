@@ -3127,6 +3127,67 @@
         }
       ]
     },
+    "sharedVirtualSdl": {
+      "description": "The SDL mapping of a virtual gamepad profile, derived from its report descriptor and report codec. The GUID carries a zero CRC.",
+      "type": "object",
+      "required": ["guid", "mapping", "worksWithDefaultSDLHints"],
+      "additionalProperties": false,
+      "properties": {
+        "guid": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{32}$"
+        },
+        "mapping": {
+          "description": "One SDL mapping line: the GUID, the name, the bindings, and platform:Mac OS X, ending in a comma.",
+          "type": "string"
+        },
+        "worksWithDefaultSDLHints": {
+          "description": "Whether SDL recognizes the profile with its default hints, as the profile's definition states. False for SdlCompatible.",
+          "type": "boolean"
+        }
+      }
+    },
+    "sharedVirtualW3c": {
+      "description": "The W3C Gamepad description of a virtual gamepad profile: for each index of the standard layout, the control and the input of the virtual gamepad that supplies it. A source is bN for a button, aN for an axis and h0.MASK for a hat direction, numbered as SDL numbers them.",
+      "type": "object",
+      "required": ["id", "buttons", "axes"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "buttons": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sharedVirtualW3cEntry"
+          }
+        },
+        "axes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sharedVirtualW3cEntry"
+          }
+        }
+      }
+    },
+    "sharedVirtualW3cEntry": {
+      "type": "object",
+      "required": ["index", "control", "source"],
+      "additionalProperties": false,
+      "properties": {
+        "index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "control": {
+          "$ref": "vocabulary.schema.json#/$defs/control"
+        },
+        "source": {
+          "type": "string",
+          "pattern": "^(b|a)[0-9]+$|^h0\\.[0-9]+$"
+        }
+      }
+    },
     "sharedVirtualOutput": {
       "description": "What the virtual gamepad last reported, after stick transfer and remapping. Stick Y points down, as in the HID report.",
       "type": "object",
@@ -3402,6 +3463,42 @@
         }
       }
     },
+    "virtualExportMapping": {
+      "type": "object",
+      "required": ["apiVersion", "kind", "format", "mappings"],
+      "additionalProperties": false,
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/sharedAPIVersion"
+        },
+        "kind": {
+          "const": "VirtualGamepadMapping"
+        },
+        "format": {
+          "enum": ["sdl", "w3c"]
+        },
+        "mappings": {
+          "description": "One entry per virtual gamepad profile, with only the member of the requested format.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["profile"],
+            "additionalProperties": false,
+            "properties": {
+              "profile": {
+                "enum": ["SdlCompatible", "Generic"]
+              },
+              "sdl": {
+                "$ref": "#/$defs/sharedVirtualSdl"
+              },
+              "w3c": {
+                "$ref": "#/$defs/sharedVirtualW3c"
+              }
+            }
+          }
+        }
+      }
+    },
     "virtualFeed": {
       "$ref": "#/$defs/sharedVirtualFeedLine",
       "required": ["apiVersion", "kind"],
@@ -3488,6 +3585,10 @@
               "profile": {
                 "enum": ["SdlCompatible", "Generic"]
               },
+              "sdl": {
+                "$ref": "#/$defs/sharedVirtualSdl",
+                "description": "The SDL mapping of the controller's live virtual gamepad. Absent with no virtual gamepad."
+              },
               "source": {
                 "type": "string"
               },
@@ -3498,6 +3599,10 @@
                 "type": "integer",
                 "minimum": 0,
                 "maximum": 65535
+              },
+              "w3c": {
+                "$ref": "#/$defs/sharedVirtualW3c",
+                "description": "The W3C Gamepad description of the controller's live virtual gamepad. Absent with no virtual gamepad."
               }
             }
           }
