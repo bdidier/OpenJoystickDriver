@@ -319,7 +319,7 @@ Verify: the full check list.
 - [ ] 24.5 Show the serving route and persona in `ojd controller show` (text and `--json`, in `cli-output.schema.json`). Verify: CLI tests for each route, and the GUI coverage matrix names the field's GUI place.
 - [ ] 24.6 Include the per-stage timings in `ojd diagnose --bundle`. Verify: a test reads the five stage stamps from the bundle.
 - [ ] 24.7 Give every rule that Python's schema tests reject a Swift decoder test rejecting the same input. Verify: a repository test lists the Python negative cases for `controller.schema.json` and the protocol descriptions and fails when one has no Swift counterpart.
-- [ ] 24.8 Pin Biome in `package.json` and run the pinned binary in the hook, the JSON writers and CI. Verify: `biome --version` from each path prints the pinned version, and the `biome.json` `$schema` names the same version.
+- [x] 24.8 Pin Biome in `package.json` and run the pinned binary in the hook, the JSON writers and CI. Verify: `biome --version` from each path prints the pinned version, and the `biome.json` `$schema` names the same version. Done: `@biomejs/biome` 2.5.15 exact in `package.json`; `Scripts/Quality/biome_binary.py` resolves the checkout's or the main checkout's `node_modules/.bin/biome`, refuses a version other than the pin and never uses PATH; the hook, `biome_format.py`, the capability check, the check lines and CI use it; `test_biome_pin.py` checks the pin equals the `biome.json` `$schema` version.
 
 ## Hardware checks (maintainer)
 
