@@ -83,7 +83,7 @@ struct USBPipelineRecoveryTests {
     #expect(parser.resetCount == 3)
     let states = [ControllerState.neutral] + dispatcher.dispatchedStates
     let releases = zip(states, states.dropFirst()).filter {
-      $0.pressed.contains(.faceSouth) && !$1.pressed.contains(.faceSouth)
+      $0.pressed.contains(.south) && !$1.pressed.contains(.south)
     }
     #expect(releases.count == 1)
 

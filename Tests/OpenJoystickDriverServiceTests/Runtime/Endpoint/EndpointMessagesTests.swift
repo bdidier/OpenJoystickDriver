@@ -113,8 +113,8 @@ struct EndpointMessagesTests {
     clientLine("Frame"),
     clientLine(
       "Frame",
-      #","buttons":["south","east"],"dpad":["left"],"#
-        + #""axes":{"left_stick_x":-1,"left_trigger":1},"holdMilliseconds":8"#
+      #","buttons":["South","East"],"dpad":["left"],"#
+        + #""axes":{"LeftStickX":-1,"LeftTrigger":1},"holdMilliseconds":8"#
     ),
   ])
   func aFrameLineTheSchemaAcceptsDecodesInSwift(line: String) throws {

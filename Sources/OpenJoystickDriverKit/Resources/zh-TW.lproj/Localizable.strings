@@ -962,7 +962,7 @@
 "cli.controller.light.examples" = "範例：\n  # 將燈條設為橘色\n  ojd controller light 054C:09CC --color FF8000\n  # 設定顏色和較低的亮度\n  ojd controller light 054C:09CC --color 0000FF --brightness 40";
 "cli.profile.create.examples" = "範例：\n  # 為某一控制器型號建立設定檔\n  ojd profile create Racing --controller 045E:028E\n  # 只在 Safari 位於最前面時套用\n  ojd profile create Browsing --controller 045E:028E --app com.apple.Safari";
 "cli.profile.set.examples" = "範例：\n  # 重新命名設定檔\n  ojd profile set Racing name Rally\n  # 設定第一個搖桿對應的內死區\n  ojd profile set Racing stickMappings.0.tuning.innerDeadzone 0.2";
-"cli.binding.set.examples" = "範例：\n  # 按住南鍵時按住空白鍵\n  ojd binding set Racing button:south key:space\n  # 每按一次切換 J 的開關\n  ojd binding set Racing button:west key:j --behavior toggle\n  # 按住時每秒重複 J 10 次\n  ojd binding set Racing button:west key:j --turbo-rate 10 --turbo-duty 0.5";
+"cli.binding.set.examples" = "範例：\n  # 按住南鍵時按住空白鍵\n  ojd binding set Racing button:South key:space\n  # 每按一次切換 J 的開關\n  ojd binding set Racing button:West key:j --behavior toggle\n  # 按住時每秒重複 J 10 次\n  ojd binding set Racing button:West key:j --turbo-rate 10 --turbo-duty 0.5";
 "cli.record.install.examples" = "範例：\n  # 安裝記錄檔\n  ojd record install 045E-028E.json\n  # 從標準輸入讀取記錄\n  ojd record install - < 045E-028E.json";
 "cli.access.grant.examples" = "範例：\n  # 允許某個程式使用服務\n  ojd access grant /Applications/Example.app\n  # 為來自某個來源的頁面建立權杖\n  ojd access grant --token overlay --origin http://127.0.0.1:8080";
 "cli.service.abstract" = "啟動或停止 OpenJoystickDriver 服務，或等待其開始接受要求。";
@@ -1339,7 +1339,7 @@
 "cli.virtual.error.failed" = "%@ 的虛擬遊戲控制器未變更 (%@)。請用 「ojd virtual show」 檢查。";
 "cli.virtual.error.no_unit" = "%@ 沒有單元 ID，因此所做選擇只能套用至其整個型號。請不使用 --unit 來執行該指令。";
 "cli.virtual.feed.abstract" = "發布由 stdin 驅動的虛擬遊戲控制器。";
-"cli.virtual.feed.discussion" = "每行讀取一個 JSON 物件：「buttons」 和 「dpad」 列出被按下的控制項，例如 south 和 up；「axes」 將軸名稱（例如 left_stick_x）對應到數值。缺少的控制項保持中立。搖桿範圍為 -1 到 1，Y 軸向上；扳機範圍為 0 到 1。影格依序播放，每個影格至少持續 8 ms；「holdMilliseconds」 可讓影格維持更久，最長 60000。將遊戲傳送給遊戲控制器的每個輸出指令（例如震動）以每行一個 JSON 物件的形式輸出。輸入結束且所有影格播放完畢後停止。";
+"cli.virtual.feed.discussion" = "每行讀取一個 JSON 物件：「buttons」 和 「dpad」 列出被按下的控制項，例如 South 和 up；「axes」 將軸名稱（例如 LeftStickX）對應到數值。缺少的控制項保持中立。搖桿範圍為 -1 到 1，Y 軸向上；扳機範圍為 0 到 1。影格依序播放，每個影格至少持續 8 ms；「holdMilliseconds」 可讓影格維持更久，最長 60000。將遊戲傳送給遊戲控制器的每個輸出指令（例如震動）以每行一個 JSON 物件的形式輸出。輸入結束且所有影格播放完畢後停止。";
 "cli.virtual.feed.error.closed" = "服務已關閉虛擬遊戲控制器。請用 「ojd status」 檢查。";
 "cli.virtual.feed.error.frame" = "第 %@ 行不是有效的影格。「ojd virtual feed --help」 會顯示格式。";
 "cli.virtual.feed.profile" = "要發布的虛擬遊戲控制器設定檔。";
@@ -1452,7 +1452,7 @@
 "cli.binding.option.turbo_rate" = "按住期間每秒重複目標的次數。需要 --turbo-duty。";
 "cli.binding.set.abstract" = "將控制器來源對應到目標，並取代該來源目前的對應。";
 "cli.binding.set.done" = "「%@」現在對應到 %@。";
-"cli.binding.set.source" = "控制器上的控制項，例如 button:south。";
+"cli.binding.set.source" = "控制器上的控制項，例如 button:South。";
 "cli.binding.set.target" = "它傳送的內容，例如 key:space。";
 "cli.binding.source_invalid" = "「%@」不是來源。「ojd binding set --help」 會列出來源的寫法。";
 "cli.binding.target_invalid" = "「%@」不是目標。「ojd binding set --help」 會列出目標的寫法。";

@@ -100,10 +100,10 @@ extension DualShock4Driver {
   }
 
   /// Payload byte, mask and PlayStation-label control of each button.
-  private static let buttonTable: [(Int, UInt8, ControlID)] = [
-    (4, 0x10, .faceWest), (4, 0x20, .faceSouth), (4, 0x40, .faceEast), (4, 0x80, .faceNorth),
-    (5, 0x01, .leftShoulder), (5, 0x02, .rightShoulder), (5, 0x04, .leftTriggerButton),
-    (5, 0x08, .rightTriggerButton), (5, 0x10, .view), (5, 0x20, .menu), (5, 0x40, .leftStickClick),
+  private static let buttonTable: [(Int, UInt8, Control)] = [
+    (4, 0x10, .west), (4, 0x20, .south), (4, 0x40, .east), (4, 0x80, .north),
+    (5, 0x01, .leftShoulder), (5, 0x02, .rightShoulder), (5, 0x04, .leftTrigger),
+    (5, 0x08, .rightTrigger), (5, 0x10, .back), (5, 0x20, .start), (5, 0x40, .leftStickClick),
     (5, 0x80, .rightStickClick), (6, 0x01, .guide), (6, 0x02, .touchpadClick),
   ]
 

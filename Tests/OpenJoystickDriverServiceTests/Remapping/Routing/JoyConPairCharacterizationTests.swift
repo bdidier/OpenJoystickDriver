@@ -98,7 +98,7 @@ struct JoyConPairCharacterizationTests {
   /// binding maps left SL to L.
   func pairedSession(
     bindings: [RemappingBinding] = [
-      RemappingBinding(source: .button(.leftSL), destination: .gamepadButton(.leftShoulder))
+      RemappingBinding(source: .button(.auxiliary3), destination: .gamepadButton(.leftShoulder))
     ]
   ) async throws -> Session {
     let profile = RemappingProfile(

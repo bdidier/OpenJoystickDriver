@@ -962,7 +962,7 @@
 "cli.controller.light.examples" = "أمثلة:\n  # ضبط شريط الإضاءة على اللون البرتقالي\n  ojd controller light 054C:09CC --color FF8000\n  # ضبط اللون مع سطوع منخفض\n  ojd controller light 054C:09CC --color 0000FF --brightness 40";
 "cli.profile.create.examples" = "أمثلة:\n  # إنشاء ملف تعريف لطراز وحدة تحكم\n  ojd profile create Racing --controller 045E:028E\n  # تطبيقه فقط أثناء ظهور Safari في المقدمة\n  ojd profile create Browsing --controller 045E:028E --app com.apple.Safari";
 "cli.profile.set.examples" = "أمثلة:\n  # إعادة تسمية ملف تعريف\n  ojd profile set Racing name Rally\n  # ضبط المنطقة الميتة الداخلية لأول تعيين للعصا\n  ojd profile set Racing stickMappings.0.tuning.innerDeadzone 0.2";
-"cli.binding.set.examples" = "أمثلة:\n  # الضغط مطولًا على Space أثناء الضغط على الزر الجنوبي\n  ojd binding set Racing button:south key:space\n  # تبديل J عند كل ضغطة\n  ojd binding set Racing button:west key:j --behavior toggle\n  # تكرار J عشر مرات في الثانية أثناء الضغط\n  ojd binding set Racing button:west key:j --turbo-rate 10 --turbo-duty 0.5";
+"cli.binding.set.examples" = "أمثلة:\n  # الضغط مطولًا على Space أثناء الضغط على الزر الجنوبي\n  ojd binding set Racing button:South key:space\n  # تبديل J عند كل ضغطة\n  ojd binding set Racing button:West key:j --behavior toggle\n  # تكرار J عشر مرات في الثانية أثناء الضغط\n  ojd binding set Racing button:West key:j --turbo-rate 10 --turbo-duty 0.5";
 "cli.record.install.examples" = "أمثلة:\n  # تثبيت ملف سجل\n  ojd record install 045E-028E.json\n  # قراءة السجل من الإدخال القياسي\n  ojd record install - < 045E-028E.json";
 "cli.access.grant.examples" = "أمثلة:\n  # السماح لبرنامج باستخدام الخدمة\n  ojd access grant /Applications/Example.app\n  # إنشاء رمز مميز لصفحات تُقدَّم من أصل واحد\n  ojd access grant --token overlay --origin http://127.0.0.1:8080";
 "cli.service.abstract" = "ابدأ خدمة OpenJoystickDriver أو أوقفها، أو انتظر حتى تقبل الطلبات.";
@@ -1339,7 +1339,7 @@
 "cli.virtual.error.failed" = "لم تتغير وحدة التحكم الافتراضية لـ %@ (%@). افحصها باستخدام «ojd virtual show».";
 "cli.virtual.error.no_unit" = "%@ ليس له معرّف جهاز، لذا لا يمكن تطبيق الاختيار إلا على طرازه بالكامل. شغّل الأمر بدون --unit.";
 "cli.virtual.feed.abstract" = "انشر وحدة تحكم افتراضية يتحكم فيها stdin.";
-"cli.virtual.feed.discussion" = "يقرأ كائن JSON واحدًا في كل سطر: يسرد «buttons» و«dpad» عناصر التحكم المضغوطة، مثل south و up، ويربط «axes» أسماء المحاور، مثل left_stick_x، بالقيم. عناصر التحكم المفقودة محايدة. تتراوح العصي من -1 إلى 1 مع اتجاه Y للأعلى؛ وتتراوح الزنادات من 0 إلى 1. تُشغَّل الإطارات بالترتيب، كل إطار لمدة 8 مللي ثانية على الأقل؛ ويُبقي «holdMilliseconds» الإطار مدة أطول، حتى 60000. يطبع كل أمر إخراج ترسله الألعاب إلى وحدة التحكم الافتراضية، مثل الاهتزاز، ككائن JSON واحد في كل سطر. يتوقف عندما يتم تشغيل كل الإطارات بعد انتهاء الإدخال.";
+"cli.virtual.feed.discussion" = "يقرأ كائن JSON واحدًا في كل سطر: يسرد «buttons» و«dpad» عناصر التحكم المضغوطة، مثل South و up، ويربط «axes» أسماء المحاور، مثل LeftStickX، بالقيم. عناصر التحكم المفقودة محايدة. تتراوح العصي من -1 إلى 1 مع اتجاه Y للأعلى؛ وتتراوح الزنادات من 0 إلى 1. تُشغَّل الإطارات بالترتيب، كل إطار لمدة 8 مللي ثانية على الأقل؛ ويُبقي «holdMilliseconds» الإطار مدة أطول، حتى 60000. يطبع كل أمر إخراج ترسله الألعاب إلى وحدة التحكم الافتراضية، مثل الاهتزاز، ككائن JSON واحد في كل سطر. يتوقف عندما يتم تشغيل كل الإطارات بعد انتهاء الإدخال.";
 "cli.virtual.feed.error.closed" = "أغلقت الخدمة وحدة التحكم الافتراضية. تحقق منها باستخدام «ojd status».";
 "cli.virtual.feed.error.frame" = "السطر %@ ليس إطارًا صالحًا. يعرض «ojd virtual feed --help» التنسيق.";
 "cli.virtual.feed.profile" = "ملف تعريف وحدة التحكم الافتراضية المراد نشرها.";
@@ -1452,7 +1452,7 @@
 "cli.binding.option.turbo_rate" = "كرّر الهدف هذا العدد من المرات في الثانية أثناء الضغط المستمر. يحتاج --turbo-duty.";
 "cli.binding.set.abstract" = "عيّن لمصدر من وحدة التحكم هدفًا، مع استبدال التعيين الحالي للمصدر.";
 "cli.binding.set.done" = "«%@» معيَّن الآن إلى %@.";
-"cli.binding.set.source" = "عنصر التحكم في وحدة التحكم، مثل button:south.";
+"cli.binding.set.source" = "عنصر التحكم في وحدة التحكم، مثل button:South.";
 "cli.binding.set.target" = "ما يرسله، مثل key:space.";
 "cli.binding.source_invalid" = "«%@» ليس مصدرًا. يعرض «ojd binding set --help» صيغ المصادر.";
 "cli.binding.target_invalid" = "«%@» ليس هدفًا. يعرض «ojd binding set --help» صيغ الأهداف.";

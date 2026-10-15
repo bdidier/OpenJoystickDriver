@@ -10,7 +10,7 @@ extension OutputCharacterizationTests {
   @Test
   func neutralizeReleasesSubThresholdInput() async {
     let held: [InputChange] = [
-      .press(.faceWest), .press(.faceSouth), .press(.leftShoulder), .hat(.northEast),
+      .press(.west), .press(.south), .press(.leftShoulder), .hat(.northEast),
       .leftStick(x: 0.1, y: -0.12), .rightStick(x: 0.5, y: 0), .leftTrigger(0.04),
       .rightTrigger(0.3),
     ]
@@ -41,12 +41,12 @@ extension OutputCharacterizationTests {
       lines == [
         "std held b=4815 h=2 ls=3276,-3932 rs=16383,0 t=1310,9829 f=00 +1",
         "  out 1524cc0ca4f0ff3f00001e056526",
-        "  events -south -west -left_shoulder hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "  events -South -West -LeftShoulder hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "std neutralized b=0000 h=0 ls=0,0 rs=0,0 t=0,0 f=00 +1",
         "  out 0000000000000000000000000000", "std residual [] ls=0,0 rs=0,0 t=0,0 neutral=true",
         "std again []", "11c1 held b=4815 h=2 ls=2674,-3343 rs=16048,0 t=1310,9829 f=00 +1",
         "  out 1524720af1f2b03e00001e056526",
-        "  events -south -west -left_shoulder hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "  events -South -West -LeftShoulder hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "11c1 neutralized b=0000 h=0 ls=0,0 rs=0,0 t=0,0 f=00 +1",
         "  out 0000000000000000000000000000", "11c1 residual [] ls=0,0 rs=0,0 t=0,0 neutral=true",
         "11c1 again []",

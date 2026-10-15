@@ -269,7 +269,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 defaults={
                     "input": {
                         "report": {"length": 1},
-                        "buttons": [{"control": "face-south", "byte": 0, "mask": 1}],
+                        "buttons": [{"control": "South", "byte": 0, "mask": 1}],
                     }
                 },
             )
@@ -282,7 +282,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                         "report": {"length": 4},
                         "axes": [
                             {
-                                "control": "left-stick-x",
+                                "control": "LeftStickX",
                                 "byte": 0,
                                 "bits": 16,
                                 "signed": True,
@@ -333,7 +333,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def test_rejects_defaults_a_driver_does_not_read(self) -> None:
         input_layout = {
             "report": {"length": 1},
-            "buttons": [{"control": "face-south", "byte": 0, "mask": 1}],
+            "buttons": [{"control": "South", "byte": 0, "mask": 1}],
         }
         for family, defaults in (
             ("hid.descriptor", {"input": input_layout}),
@@ -344,7 +344,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                     "input": {
                         "report": {"length": 4},
                         "axes": [
-                            {"control": "left-stick-x", "byte": 0, "symmetric": True}
+                            {"control": "LeftStickX", "byte": 0, "symmetric": True}
                         ],
                     }
                 },

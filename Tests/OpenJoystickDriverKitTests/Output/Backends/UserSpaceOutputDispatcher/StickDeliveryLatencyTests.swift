@@ -208,9 +208,9 @@ struct StickDeliveryLatencyTests {
   func everyButtonEdgeInsideABurstIsDelivered(persona: VirtualHIDProfileID) async throws {
     let format = try RecordingReportFormat(persona: persona)
     let batches: [[InputChange]] = [
-      [.leftStick(x: 0.1, y: 0)], [.press(.faceSouth)], [.leftStick(x: 0.2, y: 0)],
-      [.release(.faceSouth)], [.leftStick(x: 0.3, y: 0)], [.press(.faceSouth)],
-      [.release(.faceSouth)], [.leftStick(x: 0.4, y: 0)],
+      [.leftStick(x: 0.1, y: 0)], [.press(.south)], [.leftStick(x: 0.2, y: 0)],
+      [.release(.south)], [.leftStick(x: 0.3, y: 0)], [.press(.south)],
+      [.release(.south)], [.leftStick(x: 0.4, y: 0)],
     ]
     let result = await Self.deliverBurst(batches, format: format)
     let south = result.reports.compactMap { format.state(of: $0).map { $0.buttons & 1 == 1 } }

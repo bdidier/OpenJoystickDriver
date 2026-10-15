@@ -33,16 +33,16 @@ struct LayerMotionRoutingTests {
     func send(_ event: InputChange) {
       _ = engine.process(inputs: [event], from: identifier, profile: profile, at: 0)
     }
-    send(.press(.faceSouth))
+    send(.press(.south))
     #expect(engine.devices[identifier]?.effectiveMotionTuning == first)
-    send(.press(.faceEast))
+    send(.press(.east))
     #expect(engine.devices[identifier]?.effectiveMotionTuning == second)
-    send(.press(.faceWest))
+    send(.press(.west))
     #expect(engine.devices[identifier]?.effectiveMotionTuning == second)
-    send(.release(.faceEast))
-    send(.press(.faceEast))
+    send(.release(.east))
+    send(.press(.east))
     #expect(engine.devices[identifier]?.effectiveMotionTuning == first)
-    send(.release(.faceSouth))
+    send(.release(.south))
     #expect(engine.devices[identifier]?.effectiveMotionTuning == base)
     #expect(engine.devices[identifier]?.motion.gyroAwaitingBaseline == true)
   }

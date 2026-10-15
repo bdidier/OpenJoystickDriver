@@ -114,11 +114,11 @@
       return "\(stick.x.rawValue), \(stick.y.rawValue)"
     }
 
-    private func buttonValue(_ pressed: Set<ControlID>?) -> String {
+    private func buttonValue(_ pressed: Set<Control>?) -> String {
       guard let pressed, !pressed.isEmpty else {
         return OJDLocalized.string("common.none")
       }
-      return ControlID.allCases.filter(pressed.contains).map(\.rawValue).joined(separator: ", ")
+      return Control.allCases.filter(pressed.contains).map(\.rawValue).joined(separator: ", ")
     }
 
     /// Family label; transport variants share their family's label.

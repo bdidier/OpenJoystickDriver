@@ -21,8 +21,8 @@ public enum VirtualHIDProfileSelector {
   /// Controls whose representation decides the profile: the Xbox layout plus the digital trigger
   /// buttons. System controls other than `view` and `menu`, and every extended control, stay in
   /// OJD's normalized API and never force a persona.
-  public static let primaryControls: Set<ControlID> = ControlID.xboxLayout.union([
-    .leftTriggerButton, .rightTriggerButton,
+  public static let primaryControls: Set<Control> = Control.xboxLayout.union([
+    .leftTrigger, .rightTrigger,
   ])
 
   /// Selects the profile for a controller that declares `controls`.
@@ -30,7 +30,7 @@ public enum VirtualHIDProfileSelector {
   /// - Throws: `ProtocolBindingReason.virtualProfileUnavailable` when the selected profile cannot
   ///   represent the controller's primary controls.
   static func select(
-    controls: Set<ControlID>,
+    controls: Set<Control>,
     override: VirtualHIDProfileID?
   ) throws(ProtocolBindingReason) -> Selection {
     try select(controls: controls, override: override, slots: \.representableControls)
@@ -39,9 +39,9 @@ public enum VirtualHIDProfileSelector {
   /// `select(controls:override:)` over explicit profile slots, so tests can reach the branches
   /// today's two profiles never take.
   static func select(
-    controls: Set<ControlID>,
+    controls: Set<Control>,
     override: VirtualHIDProfileID?,
-    slots: (VirtualHIDProfileID) -> Set<ControlID>
+    slots: (VirtualHIDProfileID) -> Set<Control>
   ) throws(ProtocolBindingReason) -> Selection {
     let required = controls.intersection(primaryControls)
     func fits(_ profile: VirtualHIDProfileID) -> Bool { represents(required, in: slots(profile)) }
@@ -57,11 +57,11 @@ public enum VirtualHIDProfileSelector {
   /// Whether `slots` carry every control in `required`. A trigger button fits the analog trigger
   /// slot, published at `0` or `65535` when the trigger is digital-only; a controller declaring
   /// both shares that one slot, because the report encoder merges them.
-  static func represents(_ required: Set<ControlID>, in slots: Set<ControlID>) -> Bool {
+  static func represents(_ required: Set<Control>, in slots: Set<Control>) -> Bool {
     required.allSatisfy { control in
       switch control {
-      case .leftTriggerButton: return slots.contains(control) || slots.contains(.leftTrigger)
-      case .rightTriggerButton: return slots.contains(control) || slots.contains(.rightTrigger)
+      case .leftTrigger: return slots.contains(control) || slots.contains(.leftTrigger)
+      case .rightTrigger: return slots.contains(control) || slots.contains(.rightTrigger)
       default: return slots.contains(control)
       }
     }

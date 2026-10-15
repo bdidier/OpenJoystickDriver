@@ -22,7 +22,7 @@ struct RemappingLayerTests {
     )
 
     try await engine.process(
-      inputs: [.press(.faceSouth), .release(.faceSouth)],
+      inputs: [.press(.south), .release(.south)],
       from: device(1),
       using: currentProfile,
       at: 0
@@ -38,13 +38,13 @@ struct RemappingLayerTests {
       at: 1
     )
     try await engine.process(
-      inputs: [.press(.faceSouth)],
+      inputs: [.press(.south)],
       from: device(1),
       using: currentProfile,
       at: 2
     )
     try await engine.process(
-      inputs: [.release(.faceSouth)],
+      inputs: [.release(.south)],
       from: device(1),
       using: currentProfile,
       at: 3
@@ -60,7 +60,7 @@ struct RemappingLayerTests {
       at: 4
     )
     try await engine.process(
-      inputs: [.press(.faceSouth), .release(.faceSouth)],
+      inputs: [.press(.south), .release(.south)],
       from: device(1),
       using: currentProfile,
       at: 5
@@ -94,7 +94,7 @@ struct RemappingLayerTests {
     _ = sink.removeActions()
 
     try await engine.process(
-      inputs: [.press(.faceSouth), .release(.faceSouth)],
+      inputs: [.press(.south), .release(.south)],
       from: device(1),
       using: currentProfile,
       at: 1
@@ -112,7 +112,7 @@ struct RemappingLayerTests {
     _ = sink.removeActions()
 
     try await engine.process(
-      inputs: [.press(.faceSouth), .release(.faceSouth)],
+      inputs: [.press(.south), .release(.south)],
       from: device(1),
       using: currentProfile,
       at: 3

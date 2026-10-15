@@ -16,9 +16,9 @@ struct RemappingIntegrationStressTests {
       actionCount +=
         state.process(
           inputs: [
-            .press(.faceSouth), .press(.faceEast), .press(.faceWest), .press(.faceNorth),
-            .press(.leftShoulder), .press(.rightShoulder), .press(.view), .press(.menu),
-            .press(.share), .press(.menu),
+            .press(.south), .press(.east), .press(.west), .press(.north),
+            .press(.leftShoulder), .press(.rightShoulder), .press(.back), .press(.start),
+            .press(.capture), .press(.start),
           ],
           from: identifier,
           profile: profile,
@@ -44,7 +44,7 @@ struct RemappingIntegrationStressTests {
 
     for time in 0..<10_000 {
       _ = state.process(
-        inputs: [.press(.view), .release(.view)],
+        inputs: [.press(.back), .release(.back)],
         from: identifier,
         profile: profile,
         at: UInt64(time) * 1_000_000
@@ -118,7 +118,7 @@ struct RemappingIntegrationStressTests {
       ],
       sequences: [
         RemappingSequence(
-          sources: [.button(.back), .button(.start), .button(.share), .button(.options)],
+          sources: [.button(.back), .button(.start), .button(.capture), .button(.start)],
           windowMs: 1_000,
           destination: .gamepadButton(.south)
         )

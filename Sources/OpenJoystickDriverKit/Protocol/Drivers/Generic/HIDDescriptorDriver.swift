@@ -53,7 +53,7 @@ public final class HIDDescriptorDriver: PhysicalProtocolDriver {
     self.usageMap = resolved
     hasShareButton = usages.contains { (hidUsage: HIDUsage) in
       resolved.binding(page: UInt32(hidUsage.usagePage), usage: UInt32(hidUsage.usage))
-        == .button(.share)
+        == .button(.capture)
     }
     print("[HIDDescriptorDriver] Unrecognized controller \(model), using HID descriptors")
   }
@@ -71,15 +71,14 @@ public final class HIDDescriptorDriver: PhysicalProtocolDriver {
   public func consumeInputConnectionStateChange() -> ControllerInputConnectionState? { nil }
 
   public var capabilities: ControllerCapabilities {
-    guard usageMap.controls.contains(.leftTriggerButton) else {
+    guard usageMap.digitalTriggers.contains(.leftTrigger) else {
       return ControllerCapabilities(
-        controls: ControlID.xboxLayout.union(hasShareButton ? [.guide, .share] : [.guide])
+        controls: Control.xboxLayout.union(hasShareButton ? [.guide, .capture] : [.guide])
       )
     }
     return ControllerCapabilities(
-      controls: ControlID.xboxLayout.subtracting([.leftTrigger, .rightTrigger]).union([
-        .leftTriggerButton, .rightTriggerButton,
-      ])
+      controls: Control.xboxLayout,
+      digitalTriggers: [.leftTrigger, .rightTrigger]
     )
   }
 

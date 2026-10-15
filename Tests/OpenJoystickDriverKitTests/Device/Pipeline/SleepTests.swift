@@ -6,8 +6,8 @@ import Testing
 struct DevicePipelineSleepTests {
   /// The analog-only scripted trigger also gets its normalization-derived trigger button.
   @Test(arguments: [
-    (UInt8(3), [InputChange.leftStick(x: 0.8, y: 0)]), (UInt8(4), [.press(.faceEast)]),
-    (UInt8(6), [.hat(.north)]), (UInt8(7), [.leftTrigger(0.75), .press(.leftTriggerButton)]),
+    (UInt8(3), [InputChange.leftStick(x: 0.8, y: 0)]), (UInt8(4), [.press(.east)]),
+    (UInt8(6), [.hat(.north)]), (UInt8(7), [.leftTrigger(0.75), .press(.leftTrigger)]),
   ])
   func testIdlePipelineForwardsTheFirstWakeInput(code: UInt8, expected: [InputChange]) async {
     let dispatcher = RecordingOutputDispatcher()
@@ -30,7 +30,7 @@ struct DevicePipelineSleepTests {
 
     #expect(
       dispatcher.states == [
-        snapshot(.press(.faceSouth)), .neutral, ControllerState.neutral.applying(expected),
+        snapshot(.press(.south)), .neutral, ControllerState.neutral.applying(expected),
       ]
     )
   }
@@ -49,18 +49,18 @@ struct DevicePipelineSleepTests {
 
     await pipeline.start()
     await pipeline.feedHIDData(Data([1]))
-    #expect(dispatcher.states == [snapshot(.press(.faceSouth))])
+    #expect(dispatcher.states == [snapshot(.press(.south))])
 
     await pipeline.setExternalOutputAllowed(false)
-    #expect(dispatcher.states == [snapshot(.press(.faceSouth)), .neutral])
+    #expect(dispatcher.states == [snapshot(.press(.south)), .neutral])
 
     await pipeline.setExternalOutputAllowed(true)
     await pipeline.feedHIDData(Data([2]))
-    #expect(dispatcher.states == [snapshot(.press(.faceSouth)), .neutral])
+    #expect(dispatcher.states == [snapshot(.press(.south)), .neutral])
 
     await pipeline.feedHIDData(Data([4]))
     #expect(
-      dispatcher.states == [snapshot(.press(.faceSouth)), .neutral, snapshot(.press(.faceEast))]
+      dispatcher.states == [snapshot(.press(.south)), .neutral, snapshot(.press(.east))]
     )
   }
 
@@ -91,7 +91,7 @@ struct DevicePipelineSleepTests {
     // The stick held across the gate stays hidden until it changes.
     #expect(
       dispatcher.states == [
-        snapshot(.leftStick(x: 0.8, y: 0)), .neutral, snapshot(.press(.faceEast)),
+        snapshot(.leftStick(x: 0.8, y: 0)), .neutral, snapshot(.press(.east)),
       ]
     )
   }
@@ -112,7 +112,7 @@ struct DevicePipelineSleepTests {
     await pipeline.setExternalOutputAllowed(true)
     await pipeline.feedHIDData(Data([4]))
 
-    #expect(dispatcher.states == [snapshot(.press(.faceEast))])
+    #expect(dispatcher.states == [snapshot(.press(.east))])
   }
 
   @Test
@@ -134,7 +134,7 @@ struct DevicePipelineSleepTests {
 
     await pipeline.feedHIDData(Data([1]))
     await pipeline.feedHIDData(Data([10]))
-    #expect(dispatcher.states == [snapshot(.press(.faceSouth))])
+    #expect(dispatcher.states == [snapshot(.press(.south))])
   }
 
   @Test
@@ -154,7 +154,7 @@ struct DevicePipelineSleepTests {
     await pipeline.stop()
     try? await Task.sleep(nanoseconds: 20_000_000)
 
-    #expect(dispatcher.states == [snapshot(.press(.faceSouth)), .neutral])
+    #expect(dispatcher.states == [snapshot(.press(.south)), .neutral])
   }
 
   @Test
@@ -205,7 +205,7 @@ struct DevicePipelineSleepTests {
     await pipeline.feedHIDData(Data([1]))
 
     // The reconnected controller's first press is visible; the old connection's mask is gone.
-    #expect(dispatcher.states.last == snapshot(.press(.faceSouth)))
+    #expect(dispatcher.states.last == snapshot(.press(.south)))
     await pipeline.stop()
   }
 
@@ -232,12 +232,12 @@ struct DevicePipelineSleepTests {
     #expect(connectReports == [.hidFeature(PhysicalHIDOutputReport(reportID: 0, bytes: [0xAA]))])
 
     await pipeline.feedHIDData(Data([1]))
-    #expect(dispatcher.states == [snapshot(.press(.faceSouth))])
+    #expect(dispatcher.states == [snapshot(.press(.south))])
     let shutdownReports = await pipeline.hidDeactivationWrites()
     #expect(shutdownReports == [.hidFeature(PhysicalHIDOutputReport(reportID: 0, bytes: [0xBB]))])
 
     let disconnectReports = await pipeline.feedHIDData(Data([8]))
-    #expect(dispatcher.states == [snapshot(.press(.faceSouth)), .neutral])
+    #expect(dispatcher.states == [snapshot(.press(.south)), .neutral])
     #expect(disconnectReports == [.hidFeature(PhysicalHIDOutputReport(reportID: 0, bytes: [0xBB]))])
     #expect(await pipeline.hidDeactivationWrites().isEmpty)
     #expect(
@@ -248,7 +248,7 @@ struct DevicePipelineSleepTests {
 }
 
 private final class ScriptedInputParser: PhysicalProtocolDriver {
-  let capabilities = ControllerCapabilities(controls: ControlID.xboxLayout)
+  let capabilities = ControllerCapabilities(controls: Control.xboxLayout)
   let sessionPlan = DriverSessionPlan()
   let outputCapabilities = PhysicalControllerOutputCapabilities.none
   let defaultColor: ControllerColor? = nil
@@ -257,15 +257,15 @@ private final class ScriptedInputParser: PhysicalProtocolDriver {
   func parse(report data: Data, receivedAt: MonotonicTimestamp) throws -> ControllerEvent? {
     let changes: [InputChange]
     switch data.first {
-    case 1: changes = [.press(.faceSouth)]
-    case 2: changes = [.release(.faceSouth)]
+    case 1: changes = [.press(.south)]
+    case 2: changes = [.release(.south)]
     case 3: changes = [.leftStick(x: 0.8, y: 0)]
-    case 4: changes = [.press(.faceEast)]
+    case 4: changes = [.press(.east)]
     case 5: changes = [.leftStick(x: 0.6, y: 0)]
     case 6: changes = [.hat(.north)]
     case 7: changes = [.leftTrigger(0.75)]
-    case 9: changes = [.press(.faceSouth), .release(.faceSouth)]
-    case 10: changes = [.press(.faceSouth), .press(.faceSouth)]
+    case 9: changes = [.press(.south), .release(.south)]
+    case 10: changes = [.press(.south), .press(.south)]
     case 11: changes = [.leftStick(x: .nan, y: .infinity)]
     default: return nil
     }
@@ -274,7 +274,7 @@ private final class ScriptedInputParser: PhysicalProtocolDriver {
 }
 
 private final class ScriptedLifecycleInputParser: PhysicalProtocolDriver {
-  let capabilities = ControllerCapabilities(controls: ControlID.xboxLayout)
+  let capabilities = ControllerCapabilities(controls: Control.xboxLayout)
   let sessionPlan = DriverSessionPlan(requiresInputConnectionBeforeOutput: true)
   let outputCapabilities = PhysicalControllerOutputCapabilities.none
   let defaultColor: ControllerColor? = nil
@@ -311,7 +311,7 @@ private final class ScriptedLifecycleInputParser: PhysicalProtocolDriver {
       pendingState = .disconnected
       script = ScriptedState()
       return nil
-    case 1 where connected: return script.event([.press(.faceSouth)], at: receivedAt)
+    case 1 where connected: return script.event([.press(.south)], at: receivedAt)
     default: return nil
     }
   }

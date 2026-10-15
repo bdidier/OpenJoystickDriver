@@ -99,7 +99,7 @@ struct ProtocolDescription: Sendable {
   /// The capability deltas a record may declare: exactly this set of present controls (or none),
   /// and rumble absent.
   struct RecordCapabilityRules: Equatable, Sendable {
-    let presentControls: Set<ControlID>
+    let presentControls: Set<Control>
     let rumbleAbsent: Bool
 
     static let none = Self(presentControls: [], rumbleAbsent: false)

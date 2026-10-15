@@ -20,15 +20,15 @@ final class BridgeTests: XCTestCase {
   }
 
   func testAWatchLineBecomesAFrame() throws {
-    let line = Self.modified(pressed: ["face-south", "unknown-control"], hat: "northEast")
+    let line = Self.modified(pressed: ["South", "unknown-control"], hat: "northEast")
     let (id, frame) = try XCTUnwrap(FrameTranslation.frame(fromWatchLine: line))
     XCTAssertEqual(id, "pad-1")
     XCTAssertEqual(frame["kind"] as? String, "Frame")
-    XCTAssertEqual(frame["buttons"] as? [String], ["south"])
+    XCTAssertEqual(frame["buttons"] as? [String], ["South"])
     XCTAssertEqual(frame["dpad"] as? [String], ["up", "right"])
     let axes = try XCTUnwrap(frame["axes"] as? [String: Double])
-    XCTAssertEqual(axes["left_stick_y"], 1)
-    XCTAssertEqual(axes["right_trigger"], 1)
+    XCTAssertEqual(axes["LeftStickY"], 1)
+    XCTAssertEqual(axes["RightTrigger"], 1)
     XCTAssertNil(FrameTranslation.frame(fromWatchLine: ["type": "ADDED", "object": [:]]))
   }
 
@@ -64,7 +64,7 @@ final class BridgeTests: XCTestCase {
         "type": "ADDED",
         "object": ["apiVersion": endpointAPIVersion, "kind": "Controller", "id": "pad-1"],
       ],
-      Self.modified(pressed: ["face-south"], hat: "neutral"),
+      Self.modified(pressed: ["South"], hat: "neutral"),
     ])
     hostEndpoint.serve(connections: 1)
     playerEndpoint.serve(connections: 1)
@@ -108,7 +108,7 @@ final class BridgeTests: XCTestCase {
     let host1 = hostEndpoint.snapshot()
     XCTAssertEqual(host1.requests.first?["kind"] as? String, "FeedRequest")
     XCTAssertEqual(host1.proofs, [true])
-    XCTAssertTrue(host1.frames.contains { ($0["buttons"] as? [String]) == ["south"] })
+    XCTAssertTrue(host1.frames.contains { ($0["buttons"] as? [String]) == ["South"] })
     let player1 = playerEndpoint.snapshot()
     XCTAssertEqual(player1.requests.first?["kind"] as? String, "Subscription")
     XCTAssertEqual(player1.proofs, [true])

@@ -44,7 +44,7 @@ struct HIDLocationRoutingTests {
         data: Self.aPressed
       )
     )
-    #expect(recorder.pressed(from: identifier).contains(.faceSouth))
+    #expect(recorder.pressed(from: identifier).contains(.south))
 
     // Removing the replaced interface tears nothing down.
     await manager.handleHIDEvent(.disconnected(connection: first))

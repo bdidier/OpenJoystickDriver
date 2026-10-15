@@ -167,7 +167,7 @@ struct NativeObservedInputTests {
 
     dispatcher.demandsInput = true
     await Self.sendDS4Reports(to: manager, locationID: 91, buttons: [0x08, 0x48], from: 3)
-    #expect(dispatcher.states.contains { $0.pressed.contains(.faceEast) })
+    #expect(dispatcher.states.contains { $0.pressed.contains(.east) })
     await manager.stop()
   }
 

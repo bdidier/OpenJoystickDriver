@@ -33,16 +33,16 @@ struct VirtualControllerBackendTests {
 
   @Test
   func nonStandardButtonsKeepDistinctNormalizedBits() {
-    func bit(_ control: ControlID, _ labels: ControllerButtonLabels) -> UInt32? {
-      UserSpaceOutputDispatcher.buttonBit(for: control, labels: labels)
+    func bit(_ control: Control) -> UInt32? {
+      UserSpaceOutputDispatcher.buttonBit(for: control)
     }
 
-    #expect(bit(.share, .standard) == 15)
-    #expect(bit(.view, .playStation) == 15)
-    #expect(bit(.capture, .nintendo) == 15)
-    #expect(bit(.view, .standard) == 9)
-    #expect(bit(.microphone, .standard) == nil)
-    #expect(bit(.touchpadClick, .standard) == nil)
+    #expect(bit(.capture) == 15)
+    #expect(bit(.back) == 9)
+    #expect(bit(.start) == 8)
+    #expect(bit(.rightTrackpadClick) == 7)
+    #expect(bit(.microphone) == nil)
+    #expect(bit(.touchpadClick) == nil)
   }
 
   @Test

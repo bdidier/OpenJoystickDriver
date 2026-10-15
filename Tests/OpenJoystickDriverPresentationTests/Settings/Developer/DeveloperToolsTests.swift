@@ -41,14 +41,14 @@ struct DeveloperToolsTests {
   func sharePressIsListedAsAnExtraInput() async throws {
     let gateway = GatewayStub(
       statusPayload: statusPayload(device: device()),
-      inputState: inputState(button: .share),
+      inputState: inputState(button: .capture),
       packetEntries: []
     )
     let model = DeveloperToolsViewModel(gateway: gateway)
 
     await model.refresh()
 
-    #expect(model.observedExtraInputs == [.share])
+    #expect(model.observedExtraInputs == [.capture])
   }
 
   @Test
@@ -299,7 +299,7 @@ struct DeveloperToolsTests {
     )
   }
 
-  private func inputState(button: ControlID?) -> ControllerState {
+  private func inputState(button: Control?) -> ControllerState {
     var state = ControllerState.neutral
     if let button { state.pressed = [button] }
     return state

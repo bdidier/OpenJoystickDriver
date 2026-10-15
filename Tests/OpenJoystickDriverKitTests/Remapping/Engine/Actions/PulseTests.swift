@@ -12,7 +12,7 @@ struct RemappingPulseTests {
     let identifier = device()
     #expect(
       state.process(
-        inputs: [.press(.faceSouth), .release(.faceSouth)],
+        inputs: [.press(.south), .release(.south)],
         from: identifier,
         profile: profile,
         at: 10
@@ -33,14 +33,14 @@ struct RemappingPulseTests {
     let profile = profile()
     let identifier = device()
     _ = state.process(
-      inputs: [.press(.faceSouth), .release(.faceSouth)],
+      inputs: [.press(.south), .release(.south)],
       from: identifier,
       profile: profile,
       at: 0
     )
     #expect(
       state.process(
-        inputs: [.press(.faceSouth)],
+        inputs: [.press(.south)],
         from: identifier,
         profile: profile,
         at: 50_000_000
@@ -59,7 +59,7 @@ struct RemappingPulseTests {
   func pulseDeadlineSaturatesWithoutOverflow() {
     var state = RemappingEngineState()
     _ = state.process(
-      inputs: [.press(.faceSouth)],
+      inputs: [.press(.south)],
       from: device(),
       profile: profile(),
       at: UInt64.max - 10

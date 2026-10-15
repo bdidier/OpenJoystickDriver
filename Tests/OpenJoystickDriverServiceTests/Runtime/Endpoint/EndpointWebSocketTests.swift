@@ -14,7 +14,7 @@ struct EndpointWebSocketTests {
   @Test
   func aTokenClientStreamsControllerEventsOverTheWebSocket() async throws {
     try await withWeb { server, fixture, port, token in
-      fixture.source.set(devices: ["pad-1"], state: ControllerState(pressed: [.faceSouth]))
+      fixture.source.set(devices: ["pad-1"], state: ControllerState(pressed: [.south]))
       let client = try await EndpointWebTestClient(port: port)
       let response = try #require(
         await client.request(

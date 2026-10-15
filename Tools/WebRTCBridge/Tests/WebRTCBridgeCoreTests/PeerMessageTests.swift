@@ -18,14 +18,14 @@ final class PeerMessageTests: XCTestCase {
     let line = try XCTUnwrap(
       PeerMessage.frame(
         from: frame(
-          #","buttons":["south"],"dpad":["up"],"axes":{"left_stick_x":0.5}"#
+          #","buttons":["South"],"dpad":["up"],"axes":{"LeftStickX":0.5}"#
             + #","holdMilliseconds":60000"#
         )
       )
     )
-    XCTAssertEqual(line["buttons"] as? [String], ["south"])
+    XCTAssertEqual(line["buttons"] as? [String], ["South"])
     XCTAssertEqual(line["holdMilliseconds"] as? Int, 60000)
-    XCTAssertEqual((line["axes"] as? [String: Double])?["left_stick_x"], 0.5)
+    XCTAssertEqual((line["axes"] as? [String: Double])?["LeftStickX"], 0.5)
   }
 
   func testAFrameThatIsTooLongIsRejected() {
@@ -45,14 +45,15 @@ final class PeerMessageTests: XCTestCase {
       frame(#","holdMilliseconds":-1"#),
       frame(#","holdMilliseconds":1.5"#),
       frame(#","holdMilliseconds":true"#),
-      frame(#","buttons":["nope"]"#),
-      frame(#","buttons":["south","south"]"#),
-      frame(#","buttons":"south""#),
+      frame(#","buttons":["nope"]"#), frame(#","buttons":["south"]"#),
+      frame(#","axes":{"left_stick_x":0.5}"#),
+      frame(#","buttons":["South","South"]"#),
+      frame(#","buttons":"South""#),
       frame(#","dpad":["diagonal"]"#),
       frame(#","axes":{"nope":0.5}"#),
-      frame(#","axes":{"left_stick_x":true}"#),
-      frame(#","axes":{"left_stick_x":"0.5"}"#),
-      frame(#","axes":{"left_stick_x":1e999}"#),
+      frame(#","axes":{"LeftStickX":true}"#),
+      frame(#","axes":{"LeftStickX":"0.5"}"#),
+      frame(#","axes":{"LeftStickX":1e999}"#),
     ]
     for data in rejected {
       XCTAssertNil(PeerMessage.frame(from: data), data.utf8String)

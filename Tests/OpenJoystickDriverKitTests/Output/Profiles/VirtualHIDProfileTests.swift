@@ -65,7 +65,7 @@ struct VirtualHIDProfileTests {
 
     // South, Y-up canonical stick at full up, which the report carries Y-down.
     let pressed = ControllerState(
-      pressed: [.faceSouth],
+      pressed: [.south],
       leftStick: StickPosition(x: .center, y: BipolarValue(Int16.max))
     )
     #expect(
@@ -135,32 +135,33 @@ struct VirtualHIDProfileTests {
   @Test
   func xboxProfileRepresentsTheSpecXboxLayout() {
     let profile = VirtualHIDProfileID.sdlCompatible
-    let layout: Set<ControlID> = [
-      .dpad, .faceSouth, .faceEast, .faceWest, .faceNorth, .leftShoulder, .rightShoulder,
+    let layout: Set<Control> = Control.dpad.union([
+      .south, .east, .west, .north, .leftShoulder, .rightShoulder,
       .leftTrigger, .rightTrigger, .leftStickX, .leftStickY, .rightStickX, .rightStickY,
-      .leftStickClick, .rightStickClick, .view, .menu,
-    ]
+      .leftStickClick, .rightStickClick, .back, .start,
+    ])
     #expect(profile.representableControls == layout)
   }
 
   @Test
   func genericProfileRepresentsTheSpecGenericLayout() {
     let profile = VirtualHIDProfileID.generic
-    let buttons: [ControlID] = [
-      .faceSouth, .faceEast, .faceWest, .faceNorth, .leftShoulder, .rightShoulder,
-      .leftTriggerButton, .rightTriggerButton, .view, .menu, .leftStickClick, .rightStickClick,
-      .guide, .share, .capture, .touchpadClick, .paddleLeft1, .paddleLeft2, .paddleRight1,
-      .paddleRight2, .auxiliary1, .auxiliary2, .auxiliary3, .auxiliary4, .auxiliary5, .auxiliary6,
+    let buttons: [Control] = [
+      .south, .east, .west, .north, .leftShoulder, .rightShoulder,
+      .leftTrigger, .rightTrigger, .back, .start, .leftStickClick, .rightStickClick,
+      .guide, .capture, .touchpadClick, .leftPaddle1, .leftPaddle2, .rightPaddle1,
+      .rightPaddle2, .auxiliary1, .auxiliary2, .auxiliary3, .auxiliary4, .auxiliary5, .auxiliary6,
       .auxiliary7, .auxiliary8, .leftStickTouch, .rightStickTouch, .leftTrackpadClick,
       .rightTrackpadClick,
     ]
-    let hatAndAxes: Set<ControlID> = [
-      .dpad, .leftStickX, .leftStickY, .rightStickX, .rightStickY, .leftTrigger, .rightTrigger,
-    ]
-    #expect(buttons.count == 32)
+    let hatAndAxes = Control.dpad.union([
+      .leftStickX, .leftStickY, .rightStickX, .rightStickY, .leftTrigger, .rightTrigger,
+    ])
+    // The frozen 32 button slots held Share and Capture apart; one id, Capture, now fills both.
+    #expect(buttons.count == 31)
     #expect(profile.representableControls == Set(buttons).union(hatAndAxes))
     #expect(
-      Set(ControlID.allCases).subtracting(profile.representableControls) == [
+      Set(Control.allCases).subtracting(profile.representableControls) == [
         .microphone, .leftTrackpadTouch, .rightTrackpadTouch,
       ]
     )

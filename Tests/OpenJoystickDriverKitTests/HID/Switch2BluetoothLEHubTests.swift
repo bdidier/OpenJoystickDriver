@@ -265,7 +265,7 @@ struct Switch2BluetoothLEHubTests {
         data: Data([0x05] + input)
       )
     )
-    #expect(await waitUntil { recorder.pressed(from: identifier).contains(.faceSouth) })
+    #expect(await waitUntil { recorder.pressed(from: identifier).contains(.south) })
     await manager.stop()
   }
 

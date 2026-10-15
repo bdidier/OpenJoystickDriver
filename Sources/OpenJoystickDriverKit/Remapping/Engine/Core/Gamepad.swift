@@ -2,12 +2,12 @@ import Foundation
 
 /// Normalized gamepad output owned by one exact remapping session.
 public struct RemappingGamepadState: Equatable, Sendable {
-  public let buttons: Set<RemappingButton>
+  public let buttons: Set<Control>
   public let dpad: Set<RemappingDpadDirection>
   public let axes: [RemappingAxis: Double]
 
   public init(
-    buttons: Set<RemappingButton> = [],
+    buttons: Set<Control> = [],
     dpad: Set<RemappingDpadDirection> = [],
     axes: [RemappingAxis: Double] = [:]
   ) {
@@ -65,7 +65,7 @@ struct RemappingGamepadAccumulator: Sendable {
   }
 
   private mutating func recompute() -> RemappingGamepadState? {
-    var buttons: Set<RemappingButton> = []
+    var buttons: Set<Control> = []
     var dpad: Set<RemappingDpadDirection> = []
     var axes: [RemappingAxis: Double] = [:]
     // A stable order makes floating-point aggregation independent of dictionary insertion order.

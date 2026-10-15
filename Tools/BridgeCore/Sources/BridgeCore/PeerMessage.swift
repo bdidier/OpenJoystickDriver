@@ -11,17 +11,18 @@ public enum PeerMessage {
   /// The longest `durationMilliseconds` of a `setRumble`, as in `cli-output.schema.json`.
   public static let maximumRumbleMilliseconds = 5000
 
-  private static let buttons: Set<String> = [
-    "south", "east", "west", "north", "left_shoulder", "right_shoulder", "left_stick",
-    "right_stick", "start", "back", "guide", "share", "options", "touchpad", "mute",
-    "left_trigger_click", "right_trigger_click", "left_grip", "right_grip", "left_pad_click",
-    "right_pad_click", "left_sl", "left_sr", "right_sl", "right_sr", "left_function",
-    "right_function", "left_paddle", "right_paddle",
+  /// The control ids of `Resources/Schemas/vocabulary.schema.json` that a `Frame` lists as buttons.
+  static let buttons: Set<String> = [
+    "South", "East", "West", "North", "LeftShoulder", "RightShoulder", "LeftTrigger",
+    "RightTrigger", "Back", "Start", "LeftStickClick", "RightStickClick", "Guide", "Capture",
+    "Microphone", "TouchpadClick", "LeftPaddle1", "LeftPaddle2", "RightPaddle1", "RightPaddle2",
+    "Auxiliary1", "Auxiliary2", "Auxiliary3", "Auxiliary4", "Auxiliary5", "Auxiliary6",
+    "Auxiliary7", "Auxiliary8", "LeftStickTouch", "RightStickTouch", "LeftTrackpadClick",
+    "RightTrackpadClick", "LeftTrackpadTouch", "RightTrackpadTouch",
   ]
   private static let dpad: Set<String> = ["up", "down", "left", "right"]
   private static let axes: Set<String> = [
-    "left_stick_x", "left_stick_y", "right_stick_x", "right_stick_y", "left_trigger",
-    "right_trigger",
+    "LeftStickX", "LeftStickY", "RightStickX", "RightStickY", "LeftTrigger", "RightTrigger",
   ]
   private static let frameKeys: Set<String> = [
     "apiVersion", "kind", "buttons", "dpad", "axes", "holdMilliseconds",
