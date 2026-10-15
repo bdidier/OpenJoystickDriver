@@ -45,7 +45,12 @@ struct SystemWordsTests {
   }
 
   static let renames = [
-    Rename(container: ["data", "system"], old: "macOSVersion", new: "osVersion", namesNewWord: true),
+    Rename(
+      container: ["data", "system"],
+      old: "macOSVersion",
+      new: "osVersion",
+      namesNewWord: true
+    ),
     Rename(
       container: ["data"],
       old: "appleGameControllerAudit",
@@ -143,7 +148,7 @@ struct SystemWordsTests {
     #expect(system["osVersion"] as? String == "26.0.0")
   }
 
-  @Test(arguments: SystemWordsTests.renames.indices)
+  @Test(arguments: Self.renames.indices)
   func aReportWithTheOldWordIsRefused(index: Int) throws {
     let rename = Self.renames[index]
     let changed =

@@ -4,7 +4,7 @@ import copy
 import json
 import unittest
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from Scripts.Quality import validate_schemas
 
@@ -104,7 +104,6 @@ class ReportSchemaTests(unittest.TestCase):
         with self.assertRaises(validate_schemas.ValidationError):
             self.validator.validate(report)
 
-
     def system_words_report(self) -> dict[str, Any]:
         report = copy.deepcopy(load_fixture())
         report["data"]["systemGamepadAudit"] = {
@@ -186,7 +185,7 @@ class ReportSchemaTests(unittest.TestCase):
         )
 
     def test_has_no_apple_record_definition(self) -> None:
-        defs = self.documents["report.schema.json"]["$defs"]
+        defs = cast(dict[str, Any], self.documents["report.schema.json"]["$defs"])
 
         self.assertNotIn("appleRecord", defs)
         self.assertIn("systemRecord", defs)
