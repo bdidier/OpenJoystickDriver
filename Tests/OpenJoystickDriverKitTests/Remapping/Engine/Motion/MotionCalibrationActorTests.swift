@@ -8,7 +8,7 @@ struct MotionCalibrationActorTests {
   func calibrationHonorsAdmissionAndReleaseWithoutEmittingOutput() async throws {
     let sink = RemappingTestSink()
     let engine = RemappingEventEngine(sink: sink)
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 3)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 3)
     let profile = RemappingProfile(
       name: "Calibration",
       device: RemappingDeviceScope(vendorID: 1, productID: 2),

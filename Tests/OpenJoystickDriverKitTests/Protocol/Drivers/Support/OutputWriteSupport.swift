@@ -78,18 +78,15 @@ extension DeviceManager {
   /// Sends one manual output command and reports whether it was delivered.
   func sendOutputForTest(
     _ command: ControllerOutputCommand,
-    for identifier: DeviceIdentifier,
-    runtimeIdentifier: String? = nil
+    for identifier: LogicalControllerID
   ) async -> Bool {
-    await sendControllerOutput(command, for: identifier.model, runtimeIdentifier: runtimeIdentifier)
-      .isDelivered
+    await sendControllerOutput(command, toConnected: identifier).isDelivered
   }
 
   /// A manual main-and-trigger rumble with the main motors mirrored onto the Steam haptics, as
   /// the CLI, the GUI and consumer feedback send it.
   func sendManualRumble(
-    for identifier: DeviceIdentifier,
-    runtimeIdentifier: String? = nil,
+    for identifier: LogicalControllerID,
     left: UInt8,
     right: UInt8,
     lt: UInt8,
@@ -104,8 +101,7 @@ extension DeviceManager {
     ).mirroringMainOntoHaptics()
     return await sendOutputForTest(
       .setRumble(intensities, duration: .milliseconds(durationMs)),
-      for: identifier,
-      runtimeIdentifier: runtimeIdentifier
+      for: identifier
     )
   }
 }

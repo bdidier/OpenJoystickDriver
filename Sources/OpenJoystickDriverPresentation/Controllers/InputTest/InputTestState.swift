@@ -5,19 +5,19 @@
   import OpenJoystickDriverKit
 
   protocol InputTestDeviceGateway: MotionCalibrationGateway {
-    func controllerState(for selector: RuntimeDeviceSelector) async throws -> ControllerState?
+    func controllerState(for selector: ControllerReference) async throws -> ControllerState?
     func sendControllerOutput(
       _ command: ControllerOutputCommand,
-      for selector: RuntimeDeviceSelector
+      for selector: ControllerReference
     ) async throws -> ControllerOutputResult
     func previewColor(
-      for selector: RuntimeDeviceSelector,
+      for selector: ControllerReference,
       token: UUID,
       red: UInt8,
       green: UInt8,
       blue: UInt8
     ) async throws -> Bool
-    func releaseColorPreview(for selector: RuntimeDeviceSelector, token: UUID) async throws -> Bool
+    func releaseColorPreview(for selector: ControllerReference, token: UUID) async throws -> Bool
   }
 
   /// View-owned physical-output values are isolated from session state so continuous controls do
@@ -65,10 +65,10 @@
     var samplingGeneration: UInt64 = 0
     var isWindowActive = false
     var outputGeneration: UInt64 = 0
-    var outputSelector: RuntimeDeviceSelector?
+    var outputSelector: ControllerReference?
     var outputMayRequireRumbleStop = false
     let colorPreviewToken = UUID()
-    var colorPreviewSelector: RuntimeDeviceSelector?
+    var colorPreviewSelector: ControllerReference?
 
     init(
       gateway: any InputTestDeviceGateway,

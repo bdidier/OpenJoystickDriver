@@ -12,8 +12,8 @@ struct DevicePipelineSleepTests {
   func testIdlePipelineForwardsTheFirstWakeInput(code: UInt8, expected: [InputChange]) async {
     let dispatcher = RecordingOutputDispatcher()
     let pipeline = DevicePipeline(
-      identifier: DeviceIdentifier(vendorID: 100, productID: 200),
-      transport: .hid(locationID: 1),
+      identifier: LogicalControllerID(vendorID: 100, productID: 200),
+      transport: .hid(address: .ioKit(locationID: 1, interfaceNumber: nil)),
       driver: ScriptedInputParser(),
       dispatcher: dispatcher,
       idleTimeoutNanoseconds: 5_000_000,
@@ -39,8 +39,8 @@ struct DevicePipelineSleepTests {
   func testForegroundGateNeutralizesOutputAndWaitsForNeutralBeforeResuming() async {
     let dispatcher = RecordingOutputDispatcher()
     let pipeline = DevicePipeline(
-      identifier: DeviceIdentifier(vendorID: 100, productID: 200),
-      transport: .hid(locationID: 1),
+      identifier: LogicalControllerID(vendorID: 100, productID: 200),
+      transport: .hid(address: .ioKit(locationID: 1, interfaceNumber: nil)),
       driver: ScriptedInputParser(),
       dispatcher: dispatcher,
       idleTimeoutNanoseconds: 5_000_000_000,
@@ -68,8 +68,8 @@ struct DevicePipelineSleepTests {
   func testForegroundGateRearmsAfterFirstPostFocusChangeWithoutFullNeutral() async {
     let dispatcher = RecordingOutputDispatcher()
     let pipeline = DevicePipeline(
-      identifier: DeviceIdentifier(vendorID: 100, productID: 200),
-      transport: .hid(locationID: 1),
+      identifier: LogicalControllerID(vendorID: 100, productID: 200),
+      transport: .hid(address: .ioKit(locationID: 1, interfaceNumber: nil)),
       driver: ScriptedInputParser(),
       dispatcher: dispatcher,
       idleTimeoutNanoseconds: 5_000_000_000,
@@ -100,8 +100,8 @@ struct DevicePipelineSleepTests {
   func testRepeatedAllowedSignalDoesNotRearmForegroundGate() async {
     let dispatcher = RecordingOutputDispatcher()
     let pipeline = DevicePipeline(
-      identifier: DeviceIdentifier(vendorID: 100, productID: 200),
-      transport: .hid(locationID: 1),
+      identifier: LogicalControllerID(vendorID: 100, productID: 200),
+      transport: .hid(address: .ioKit(locationID: 1, interfaceNumber: nil)),
       driver: ScriptedInputParser(),
       dispatcher: dispatcher,
       idleTimeoutNanoseconds: 5_000_000_000,
@@ -119,8 +119,8 @@ struct DevicePipelineSleepTests {
   func testPipelineSkipsSnapshotsThatDoNotChangeTheDispatchedState() async {
     let dispatcher = RecordingOutputDispatcher()
     let pipeline = DevicePipeline(
-      identifier: DeviceIdentifier(vendorID: 100, productID: 200),
-      transport: .hid(locationID: 1),
+      identifier: LogicalControllerID(vendorID: 100, productID: 200),
+      transport: .hid(address: .ioKit(locationID: 1, interfaceNumber: nil)),
       driver: ScriptedInputParser(),
       dispatcher: dispatcher,
       idleTimeoutNanoseconds: 5_000_000_000,
@@ -141,8 +141,8 @@ struct DevicePipelineSleepTests {
   func testStopNeutralizesForwardedButtonState() async {
     let dispatcher = RecordingOutputDispatcher()
     let pipeline = DevicePipeline(
-      identifier: DeviceIdentifier(vendorID: 100, productID: 200),
-      transport: .hid(locationID: 1),
+      identifier: LogicalControllerID(vendorID: 100, productID: 200),
+      transport: .hid(address: .ioKit(locationID: 1, interfaceNumber: nil)),
       driver: ScriptedInputParser(),
       dispatcher: dispatcher,
       idleTimeoutNanoseconds: 5_000_000_000,
@@ -161,8 +161,8 @@ struct DevicePipelineSleepTests {
   func testStopNeutralizesForwardedDpadAndAxesState() async {
     let dispatcher = RecordingOutputDispatcher()
     let pipeline = DevicePipeline(
-      identifier: DeviceIdentifier(vendorID: 100, productID: 200),
-      transport: .hid(locationID: 1),
+      identifier: LogicalControllerID(vendorID: 100, productID: 200),
+      transport: .hid(address: .ioKit(locationID: 1, interfaceNumber: nil)),
       driver: ScriptedInputParser(),
       dispatcher: dispatcher,
       idleTimeoutNanoseconds: 5_000_000_000,
@@ -186,8 +186,8 @@ struct DevicePipelineSleepTests {
   func testReconnectDoesNotKeepAForegroundMaskFromTheEndedConnection() async {
     let dispatcher = RecordingOutputDispatcher()
     let pipeline = DevicePipeline(
-      identifier: DeviceIdentifier(vendorID: 10462, productID: 4418),
-      transport: .hid(locationID: 1),
+      identifier: LogicalControllerID(vendorID: 10462, productID: 4418),
+      transport: .hid(address: .ioKit(locationID: 1, interfaceNumber: nil)),
       driver: ScriptedLifecycleInputParser(),
       dispatcher: dispatcher,
       idleTimeoutNanoseconds: 5_000_000_000,
@@ -213,8 +213,8 @@ struct DevicePipelineSleepTests {
   func testInputConnectionLifecycleDefersAndStopsOutput() async {
     let dispatcher = RecordingOutputDispatcher()
     let pipeline = DevicePipeline(
-      identifier: DeviceIdentifier(vendorID: 10462, productID: 4418),
-      transport: .hid(locationID: 1),
+      identifier: LogicalControllerID(vendorID: 10462, productID: 4418),
+      transport: .hid(address: .ioKit(locationID: 1, interfaceNumber: nil)),
       driver: ScriptedLifecycleInputParser(),
       dispatcher: dispatcher,
       idleTimeoutNanoseconds: 5_000_000_000,
@@ -240,7 +240,9 @@ struct DevicePipelineSleepTests {
     #expect(dispatcher.states == [snapshot(.press(.faceSouth)), .neutral])
     #expect(disconnectReports == [.hidFeature(PhysicalHIDOutputReport(reportID: 0, bytes: [0xBB]))])
     #expect(await pipeline.hidDeactivationWrites().isEmpty)
-    #expect(dispatcher.stoppedIdentifiers == [DeviceIdentifier(vendorID: 10462, productID: 4418)])
+    #expect(
+      dispatcher.stoppedIdentifiers == [LogicalControllerID(vendorID: 10462, productID: 4418)]
+    )
   }
 
 }
@@ -321,23 +323,23 @@ private final class RecordingOutputDispatcher: OutputDispatcher, @unchecked Send
   private let lock = NSLock()
   private var recordedStates: [ControllerState] = []
   private var recordedActivations = 0
-  private var recordedStops: [DeviceIdentifier] = []
+  private var recordedStops: [LogicalControllerID] = []
 
   var states: [ControllerState] { lock.withLock { recordedStates } }
   var activations: Int { lock.withLock { recordedActivations } }
-  var stoppedIdentifiers: [DeviceIdentifier] { lock.withLock { recordedStops } }
+  var stoppedIdentifiers: [LogicalControllerID] { lock.withLock { recordedStops } }
 
   func dispatch(
     _ event: ControllerEvent,
     labels _: ControllerButtonLabels,
-    from _: DeviceIdentifier
+    from _: LogicalControllerID
   ) { lock.withLock { recordedStates.append(event.state) } }
 
-  func activateOutput(for _: DeviceIdentifier) { lock.withLock { recordedActivations += 1 } }
+  func activateOutput(for _: LogicalControllerID) { lock.withLock { recordedActivations += 1 } }
 }
 
 extension RecordingOutputDispatcher: ControllerLifecycleListener {
-  func controllerDidStop(_ identifier: DeviceIdentifier) {
+  func controllerDidStop(_ identifier: LogicalControllerID) {
     lock.withLock { recordedStops.append(identifier) }
   }
 }

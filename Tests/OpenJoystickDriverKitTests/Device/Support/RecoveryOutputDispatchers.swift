@@ -41,18 +41,19 @@ final class RecoveryGatedOutputDispatcher: OutputDispatcher, ControllerInputOwne
 
   init(gate: RecoveryOwnershipGate) { self.gate = gate }
 
-  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: DeviceIdentifier) {}
-  func activateOutput(for _: DeviceIdentifier) {}
+  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: LogicalControllerID) {
+  }
+  func activateOutput(for _: LogicalControllerID) {}
 
   func controllerInputOwnershipChanged(
     _ ownership: HIDInputOwnership,
-    for identifier: DeviceIdentifier
+    for identifier: LogicalControllerID
   ) async {
     if ownership == .accessDenied { await gate.blockAccessDeniedReport() }
     stateLock.withLock { storedOwnershipReports.append(ownership) }
   }
 
-  func controllerDidStop(_ identifier: DeviceIdentifier) {
+  func controllerDidStop(_ identifier: LogicalControllerID) {
     stateLock.withLock { storedDidStopController = true }
   }
 }
@@ -74,13 +75,15 @@ final class RecoveryOutputDispatcher: OutputDispatcher, ControllerInputOwnership
   func dispatch(
     _ event: ControllerEvent,
     labels _: ControllerButtonLabels,
-    from _: DeviceIdentifier
+    from _: LogicalControllerID
   ) { stateLock.withLock { storedDispatchedStates.append(event.state) } }
 
-  func activateOutput(for _: DeviceIdentifier) { stateLock.withLock { storedPresenceCount += 1 } }
+  func activateOutput(for _: LogicalControllerID) {
+    stateLock.withLock { storedPresenceCount += 1 }
+  }
 
   func controllerInputOwnershipChanged(
     _ ownership: HIDInputOwnership,
-    for identifier: DeviceIdentifier
+    for identifier: LogicalControllerID
   ) { stateLock.withLock { storedOwnershipReports.append(ownership) } }
 }

@@ -3,7 +3,7 @@ import Foundation
 struct RemappingDeviceState {
   let sessionID = UUID()
   let profile: RemappingProfile
-  let identifier: DeviceIdentifier
+  let identifier: LogicalControllerID
   let passthroughBindingID = UUID()
   var motion = RemappingMotionState()
   var analog = RemappingAnalogState()

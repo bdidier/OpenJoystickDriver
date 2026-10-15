@@ -5,7 +5,7 @@ extension DeviceManager {
     clearUnboundDevice(.hid(connection.connectionID))
     clearPassThroughDevice(connection.connectionID)
     yieldedHIDConnections.removeValue(forKey: connection.connectionID)
-    let locationID = connection.routingLocationID
+    let address = connection.routingAddress
     let key = hidInitializationKey(for: connection)
     if hidInitializationTasks[key]?.connection.connectionID == connection.connectionID {
       hidInitializationTasks.removeValue(forKey: key)?.task.cancel()
@@ -19,11 +19,11 @@ extension DeviceManager {
       let current = await hidManager.currentConnectionSnapshots() ?? []
       keepsSuspension = current.contains {
         $0.connection.connectionID != connection.connectionID
-          && $0.connection.routingLocationID == locationID
+          && $0.connection.routingAddress == address
       }
     }
 
-    let identifiers = deviceInfos.keys.filter { $0.locationID == locationID }
+    let identifiers = deviceInfos.keys.filter { $0.hidRoutingAddress == address }
     for identifier in identifiers {
       guard role == nil || role == identifier, let info = deviceInfos[identifier],
         case .hid = info.discoverySource, info.hidConnectionID == connection.connectionID,
@@ -35,15 +35,19 @@ extension DeviceManager {
     }
   }
 
-  /// User-requested wireless disconnects are keyed by the selected DeviceIdentifier, not by a
+  /// User-requested wireless disconnects are keyed by the selected LogicalControllerID, not by a
   /// backend detach event. They retain their existing location-scoped behavior.
-  func handleHIDDeviceDisconnected(vendorID: UInt16, productID: UInt16, locationID: UInt32) async {
-    for initialization in removeHIDInitializations(atLocation: locationID) {
+  func handleHIDDeviceDisconnected(
+    vendorID: UInt16,
+    productID: UInt16,
+    address: ControllerConnectionAddress
+  ) async {
+    for initialization in removeHIDInitializations(at: address) {
       initialization.task.cancel()
     }
     let identifiers = Set(
-      pipelines.keys.filter { $0.locationID == locationID }
-        + deviceInfos.keys.filter { $0.locationID == locationID }
+      pipelines.keys.filter { $0.hidRoutingAddress == address }
+        + deviceInfos.keys.filter { $0.hidRoutingAddress == address }
     )
     for identifier in identifiers {
       guard let info = deviceInfos[identifier], case .hid = info.discoverySource else { continue }
@@ -56,7 +60,7 @@ extension DeviceManager {
   }
 
   func tearDownHIDDevice(
-    identifier: DeviceIdentifier,
+    identifier: LogicalControllerID,
     connection: HIDDeviceConnection? = nil,
     logVendorID: UInt16? = nil,
     logProductID: UInt16? = nil
@@ -85,12 +89,14 @@ extension DeviceManager {
       await pipeline?.stop()
       return
     }
-    await sendHIDDeactivationWritesIfCurrent(
-      pipeline: pipeline,
-      locationID: identifier.locationID ?? connection?.routingLocationID ?? 0,
-      identifier: identifier,
-      expectedInfo: info
-    )
+    if let address = identifier.hidRoutingAddress ?? connection?.routingAddress {
+      await sendHIDDeactivationWritesIfCurrent(
+        pipeline: pipeline,
+        address: address,
+        identifier: identifier,
+        expectedInfo: info
+      )
+    }
     guard isCurrentHIDDeviceInfo(info, for: identifier), pipelines[identifier] == nil else {
       await pipeline?.stop()
       return
@@ -103,15 +109,18 @@ extension DeviceManager {
     await reconcileUnboundHIDClaims()
     let vendorID = connection?.physicalDevice.vendorID ?? logVendorID
     let productID = connection?.physicalDevice.productID ?? logProductID
+    let route = connection?.routingAddress ?? identifier.hidRoutingAddress
     print(
       "[DeviceManager] HID device disconnected:" + " VID=\(vendorID.map(String.init) ?? "unknown")"
         + " PID=\(productID.map(String.init) ?? "unknown")"
-        + " loc=\(connection?.routingLocationID ?? identifier.locationID ?? 0)"
+        + " route=\(route.map { "\($0)" } ?? "unknown")"
     )
   }
 
-  func isCurrentHIDDeviceInfo(_ expectedInfo: DeviceInfo, for identifier: DeviceIdentifier) -> Bool
-  {
+  func isCurrentHIDDeviceInfo(
+    _ expectedInfo: DeviceInfo,
+    for identifier: LogicalControllerID
+  ) -> Bool {
     guard case .hid = expectedInfo.discoverySource, let currentInfo = deviceInfos[identifier],
       case .hid = currentInfo.discoverySource
     else { return false }
@@ -121,33 +130,40 @@ extension DeviceManager {
 
   private func sendHIDDeactivationWritesIfCurrent(
     pipeline: DevicePipeline?,
-    locationID: UInt32,
-    identifier: DeviceIdentifier,
+    address: ControllerConnectionAddress,
+    identifier: LogicalControllerID,
     expectedInfo: DeviceInfo
   ) async {
     guard let pipeline else { return }
     let writes = await pipeline.hidDeactivationWrites()
     _ = await sendHIDWrites(
       writes,
-      locationID: locationID,
+      address: address,
       identifier: identifier,
       pipeline: pipeline,
       detachedInfo: expectedInfo
     )
   }
 
-  func sendHIDDeactivationWritesIfNeeded(pipeline: DevicePipeline?, locationID: UInt32) async {
+  func sendHIDDeactivationWritesIfNeeded(
+    pipeline: DevicePipeline?,
+    address: ControllerConnectionAddress
+  ) async {
     guard let pipeline else { return }
     _ = await sendHIDWrites(
       await pipeline.hidDeactivationWrites(),
-      locationID: locationID,
+      address: address,
       identifier: pipeline.identifier,
       pipeline: pipeline
     )
   }
 
-  func routeHIDElementValue(locationID: UInt32, connectionID: UUID, value: HIDElementValue) async {
-    guard let key = hidPipelineKey(forInputFrom: connectionID, locationID: locationID),
+  func routeHIDElementValue(
+    address: ControllerConnectionAddress,
+    connectionID: UUID,
+    value: HIDElementValue
+  ) async {
+    guard let key = hidPipelineKey(forInputFrom: connectionID, address: address),
       let pipeline = pipelines[key]
     else { return }
     await pipeline.feedHIDElementValue(value)
@@ -156,19 +172,19 @@ extension DeviceManager {
   /// Feeds one input report to its pipeline; `laterReportQueued` tells that a later report of
   /// the same connection already waits behind it.
   func routeHIDInputReport(
-    locationID: UInt32,
+    address: ControllerConnectionAddress,
     connectionID: UUID,
     data: Data,
     laterReportQueued: Bool = false
   ) async {
-    guard let key = hidPipelineKey(forInputFrom: connectionID, locationID: locationID),
+    guard let key = hidPipelineKey(forInputFrom: connectionID, address: address),
       let pipeline = pipelines[key], let info = deviceInfos[key], case .hid = info.discoverySource,
       let physicalDevice = info.physicalDevice, let boundConnectionID = info.hidConnectionID
     else { return }
     let connection = HIDDeviceConnection(
       connectionID: boundConnectionID,
       physicalDevice: physicalDevice,
-      routingLocationID: locationID
+      routingAddress: address
     )
     let connectionWrites = await pipeline.feedHIDData(data, laterReportQueued: laterReportQueued)
     guard pipelines[key] === pipeline,
@@ -176,7 +192,7 @@ extension DeviceManager {
     else { return }
     _ = await sendHIDWrites(
       connectionWrites,
-      locationID: locationID,
+      address: address,
       identifier: key,
       pipeline: pipeline,
       startupConnection: connection
@@ -185,16 +201,12 @@ extension DeviceManager {
       await pipeline.takeStartupPlayerIndicatorDue(), pipelines[key] === pipeline,
       let indicator = claimStartupPlayerSlot(for: key)
     else { return }
-    _ = await sendControllerOutput(
-      .setPlayerIndicator(indicator),
-      for: key.model,
-      runtimeIdentifier: key.runtimeIdentifier
-    )
+    _ = await sendControllerOutput(.setPlayerIndicator(indicator), toConnected: key)
   }
 
   /// The lowest player slot no other native controller holds, kept for `identifier` until it
   /// detaches; nil when all four are taken.
-  func claimStartupPlayerSlot(for identifier: DeviceIdentifier) -> PhysicalPlayerIndicator? {
+  func claimStartupPlayerSlot(for identifier: LogicalControllerID) -> PhysicalPlayerIndicator? {
     if let held = startupPlayerSlots[identifier] { return held }
     let taken = Set(startupPlayerSlots.values)
     guard

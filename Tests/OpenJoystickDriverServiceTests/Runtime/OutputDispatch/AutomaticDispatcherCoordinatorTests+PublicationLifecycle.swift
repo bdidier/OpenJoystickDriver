@@ -10,14 +10,13 @@ extension AutomaticDispatcherCoordinatorTests {
   var description: ApplicationServiceDeviceDescription {
     ApplicationServiceDeviceDescription(
       name: "probe",
-      vendorID: identifier.controllerIdentity.vendorID,
-      productID: identifier.controllerIdentity.productID,
+      vendorID: identifier.model.vendorID,
+      productID: identifier.model.productID,
       protocolBinding: ProtocolBindingID(.xboxGIP, variant: .usb),
       connection: "USB",
       discoverySource: .rawUSB,
       serialNumber: nil,
-      bindingResult: .hidDescriptorFixture,
-      runtimeIdentifier: identifier.runtimeIdentifier
+      bindingResult: .hidDescriptorFixture
     )
   }
 
@@ -155,9 +154,9 @@ extension AutomaticDispatcherCoordinatorTests {
 
     try await coordinator.activateOne(
       identifier: identifier,
-      descriptions: [description],
+      descriptions: [identifier: description],
       isEligible: { _, _ in true },
-      profileProvider: { _ in .generic },
+      profileProvider: { _, _ in .generic },
       factory: factory
     )
     #expect(second.counts().activations == 1)
@@ -385,16 +384,16 @@ extension AutomaticDispatcherCoordinatorTests {
 
     try await coordinator.activateOne(
       identifier: identifier,
-      descriptions: [description],
+      descriptions: [identifier: description],
       isEligible: { _, _ in true },
-      profileProvider: { _ in nil },
+      profileProvider: { _, _ in nil },
       factory: factory
     )
     try await coordinator.activate(
       identifiers: [identifier],
-      descriptions: [description],
+      descriptions: [identifier: description],
       isEligible: { _, _ in true },
-      profileProvider: { _ in nil },
+      profileProvider: { _, _ in nil },
       factory: { _ in factory }
     )
 

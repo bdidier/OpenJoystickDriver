@@ -7,7 +7,7 @@ struct RemappingMotionLeanChange {
 
 extension RemappingEngineState {
   mutating func expireMotionStick(
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     at uptime: UInt64
   ) -> [RemappingEngineAction] {
     guard let deadline = devices[identifier]?.motion.motionStickDeadline, uptime >= deadline else {
@@ -17,7 +17,7 @@ extension RemappingEngineState {
   }
 
   mutating func clearMotionStick(
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     at uptime: UInt64
   ) -> [RemappingEngineAction] {
     guard var device = devices[identifier] else { return [] }

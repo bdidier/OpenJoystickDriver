@@ -6,7 +6,7 @@ struct TriggerRoutingTests {
   @Test
   func exclusiveStagesReleaseSoftBeforePressingFullAndConsumeAnalogInput() {
     var engine = RemappingEngineState()
-    let device = DeviceIdentifier(vendorID: 1, productID: 2)
+    let device = LogicalControllerID(vendorID: 1, productID: 2)
     let profile = profile(mode: .exclusive)
     #expect(
       engine.process(inputs: [.leftTrigger(0.2)], from: device, profile: profile, at: 0) == [
@@ -28,7 +28,7 @@ struct TriggerRoutingTests {
   @Test
   func bufferedSoftPullUsesTheSharedMonotonicSchedulerAndDisconnectCancelsIt() {
     var engine = RemappingEngineState()
-    let device = DeviceIdentifier(vendorID: 1, productID: 2)
+    let device = LogicalControllerID(vendorID: 1, productID: 2)
     let profile = profile(mode: .preferFull)
     #expect(
       engine.process(inputs: [.leftTrigger(0.2)], from: device, profile: profile, at: 10).isEmpty
@@ -48,7 +48,7 @@ struct TriggerRoutingTests {
   @Test
   func explicitTriggerPassthroughRetainsTheAnalogVirtualContribution() {
     var engine = RemappingEngineState()
-    let device = DeviceIdentifier(vendorID: 1, productID: 2)
+    let device = LogicalControllerID(vendorID: 1, productID: 2)
     let profile = profile(mode: .simultaneous, passthrough: true)
     let actions = engine.process(inputs: [.leftTrigger(0.5)], from: device, profile: profile, at: 0)
     #expect(
@@ -62,7 +62,7 @@ struct TriggerRoutingTests {
   @Test
   func consumedTriggerMappingAlsoWithholdsTheTriggerClickFromPassthrough() {
     var engine = RemappingEngineState()
-    let device = DeviceIdentifier(vendorID: 1, productID: 2)
+    let device = LogicalControllerID(vendorID: 1, productID: 2)
     let actions = engine.process(
       inputs: [.leftTrigger(0.6), .press(.leftTriggerButton)],
       from: device,
@@ -75,7 +75,7 @@ struct TriggerRoutingTests {
   @Test
   func boundTriggerAxisAlsoWithholdsTheTriggerClickFromPassthrough() {
     var engine = RemappingEngineState()
-    let device = DeviceIdentifier(vendorID: 1, productID: 2)
+    let device = LogicalControllerID(vendorID: 1, productID: 2)
     let profile = passthroughProfile(
       binding: RemappingBinding(
         source: .axisDirection(.leftTrigger, .positive),
@@ -94,7 +94,7 @@ struct TriggerRoutingTests {
   @Test
   func boundTriggerClickAlsoWithholdsTheAnalogTriggerFromPassthrough() {
     var engine = RemappingEngineState()
-    let device = DeviceIdentifier(vendorID: 1, productID: 2)
+    let device = LogicalControllerID(vendorID: 1, productID: 2)
     let profile = passthroughProfile(
       binding: RemappingBinding(
         source: .button(.leftTriggerClick),

@@ -93,15 +93,15 @@ struct JoyConParserTests {
     source: RemappingButton
   ) throws {
     let parser = Switch1Driver(layout: layout)
-    let identifier = DeviceIdentifier(
+    let identifier = LogicalControllerID(
       vendorID: 0x057E,
       productID: layout == .leftJoyCon ? 0x2006 : 0x2007
     )
     let profile = RemappingProfile(
       name: "Rail mapping",
       device: RemappingDeviceScope(
-        vendorID: identifier.controllerIdentity.vendorID,
-        productID: identifier.controllerIdentity.productID
+        vendorID: identifier.model.vendorID,
+        productID: identifier.model.productID
       ),
       applicationScope: .global,
       outputPolicy: RemappingOutputPolicy(virtualGamepad: .passthrough),

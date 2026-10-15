@@ -96,7 +96,7 @@ struct USBPinnedRowDiscoveryTests {
       device: device,
       passive: registryOnly(device, row),
       configured: PhysicalDevice(
-        serviceIdentity: device.serviceIdentity,
+        serviceAddress: device.serviceAddress,
         vendorID: device.vendorID,
         productID: device.productID,
         configurationValue: 1,
@@ -108,7 +108,7 @@ struct USBPinnedRowDiscoveryTests {
   /// IORegistry facts: the row's triple on interface 0, without endpoints.
   private func registryOnly(_ device: USBTransportDevice, _ row: PinnedRow) -> PhysicalDevice {
     PhysicalDevice(
-      serviceIdentity: device.serviceIdentity,
+      serviceAddress: device.serviceAddress,
       vendorID: device.vendorID,
       productID: device.productID,
       configurationValue: 1,
@@ -148,8 +148,8 @@ struct USBPinnedRowDiscoveryTests {
     )
   }
 
-  private func runtimeIdentifier(_ device: USBTransportDevice) -> DeviceIdentifier {
-    DeviceIdentifier(
+  private func runtimeIdentifier(_ device: USBTransportDevice) -> LogicalControllerID {
+    LogicalControllerID(
       vendorID: device.vendorID,
       productID: device.productID,
       locationID: device.locationID,

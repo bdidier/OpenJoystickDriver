@@ -1,7 +1,7 @@
 extension RemappingEngineState {
   mutating func processMotion(
     _ sample: ControllerMotionSample,
-    for identifier: DeviceIdentifier
+    for identifier: LogicalControllerID
   ) -> [RemappingEngineAction] {
     guard var device = devices[identifier] else { return [] }
     let processed = device.motion.motion.process(sample, tuning: device.effectiveMotionTuning)

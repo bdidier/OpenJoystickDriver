@@ -11,22 +11,23 @@ final class AutomaticBackendProbe: VirtualOutputDispatching, ControllerLifecycle
 
   let failsActivation: Bool
   private(set) var closed = false
-  private(set) var activations: [[DeviceIdentifier]] = []
+  private(set) var activations: [[LogicalControllerID]] = []
   var suppressOutput = false
   var status: VirtualOutputBackendStatus { .backend("probe") }
   var lastRumbleStatus: String? { nil }
 
   init(failsActivation: Bool = false) { self.failsActivation = failsActivation }
 
-  func activate(for identifiers: [DeviceIdentifier]) throws {
+  func activate(for identifiers: [LogicalControllerID]) throws {
     activations.append(identifiers)
     if failsActivation { throw ActivationFailure() }
   }
 
-  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: DeviceIdentifier) {}
-  func activateOutput(for _: DeviceIdentifier) {}
+  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: LogicalControllerID) {
+  }
+  func activateOutput(for _: LogicalControllerID) {}
 
-  func controllerDidStop(_ identifier: DeviceIdentifier) {}
+  func controllerDidStop(_ identifier: LogicalControllerID) {}
 
   func close() { closed = true }
 }
@@ -53,15 +54,15 @@ final class ConcurrentBackendProbe: VirtualOutputDispatching, @unchecked Sendabl
   var status: VirtualOutputBackendStatus { .backend("probe") }
   var lastRumbleStatus: String? { nil }
 
-  func activate(for identifiers: [DeviceIdentifier]) throws {}
+  func activate(for identifiers: [LogicalControllerID]) throws {}
 
-  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: DeviceIdentifier) {
+  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: LogicalControllerID) {
     lock.withLock { dispatchCount += 1 }
   }
 
-  func activateOutput(for _: DeviceIdentifier) { lock.withLock { dispatchCount += 1 } }
+  func activateOutput(for _: LogicalControllerID) { lock.withLock { dispatchCount += 1 } }
 
-  func controllerDidStop(_ identifier: DeviceIdentifier) {}
+  func controllerDidStop(_ identifier: LogicalControllerID) {}
 
   func close() { lock.withLock { closeCount += 1 } }
 

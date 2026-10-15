@@ -106,7 +106,7 @@ struct SupportDiagnosticsTests {
       discoverySource: .rawUSB,
       serialNumber: "private-serial",
       bindingResult: .hidDescriptorFixture,
-      runtimeIdentifier: "session-device-report"
+      sessionToken: .fixture("device-report")
     )
     let diagnostics = ApplicationServiceVirtualDeviceDiagnosticsPayload(
       userSpaceVirtualDeviceEnabled: true,
@@ -247,9 +247,9 @@ private actor SupportDiagnosticsGatewayStub: ApplicationServiceGateway {
     _ requirement: PermissionManager.Requirement
   ) throws -> PermissionManager.Snapshot { try requestPermissions() }
 
-  func controllerState(for _: RuntimeDeviceSelector) throws -> ControllerState? { nil }
+  func controllerState(for _: ControllerReference) throws -> ControllerState? { nil }
 
-  func packetLog(for _: RuntimeDeviceSelector) throws -> [PacketLogEntry] { [] }
+  func packetLog(for _: ControllerReference) throws -> [PacketLogEntry] { [] }
 
   func remappingSnapshot() throws -> ApplicationServiceRemappingSnapshotPayload {
     ApplicationServiceRemappingSnapshotPayload(
@@ -299,8 +299,8 @@ private actor SupportDiagnosticsGatewayStub: ApplicationServiceGateway {
   func requestRemappingPostEventAccess() throws -> RemappingPostEventAccessState { .granted }
 
   func pairRemappingJoyCons(
-    left: String,
-    right: String,
+    left: ControllerReference,
+    right: ControllerReference,
     profileID: UUID
   ) throws -> ApplicationServiceRemappingSnapshotPayload { try remappingSnapshot() }
 
@@ -309,7 +309,7 @@ private actor SupportDiagnosticsGatewayStub: ApplicationServiceGateway {
 
   func setVirtualHIDProfileOverride(
     _ profile: VirtualHIDProfileID,
-    for selector: RuntimeDeviceSelector
+    for selector: ControllerReference
   ) throws -> VirtualHIDProfileOverrideResult {
     VirtualHIDProfileOverrideResult(
       requested: profile,
@@ -320,7 +320,7 @@ private actor SupportDiagnosticsGatewayStub: ApplicationServiceGateway {
   }
 
   func resetVirtualHIDProfileOverride(
-    for selector: RuntimeDeviceSelector
+    for selector: ControllerReference
   ) throws -> VirtualHIDProfileOverrideResult {
     VirtualHIDProfileOverrideResult(
       requested: nil,

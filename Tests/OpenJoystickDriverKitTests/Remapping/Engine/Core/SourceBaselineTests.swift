@@ -5,8 +5,8 @@ import Testing
 
 /// Each physical source is diffed against its own last snapshot.
 struct SourceBaselineTests {
-  private let first = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 1)
-  private let second = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 2)
+  private let first = LogicalControllerID(vendorID: 1, productID: 2, locationID: 1)
+  private let second = LogicalControllerID(vendorID: 1, productID: 2, locationID: 2)
 
   private let profile = RemappingProfile(
     name: "Baselines",
@@ -23,8 +23,12 @@ struct SourceBaselineTests {
     var engine = RemappingEngineState()
     let held = ControllerEvent([.press(.faceSouth)])
     let neutral = ControllerEvent([])
-    func process(_ event: ControllerEvent, from source: DeviceIdentifier) -> [RemappingEngineAction]
-    { engine.process(event, labels: .standard, from: source, into: first, profile: profile, at: 0) }
+    func process(
+      _ event: ControllerEvent,
+      from source: LogicalControllerID
+    ) -> [RemappingEngineAction] {
+      engine.process(event, labels: .standard, from: source, into: first, profile: profile, at: 0)
+    }
     #expect(process(held, from: first) == [.system(.keyDown(.a))])
     // The second source's neutral snapshot changes nothing of its own baseline.
     #expect(process(neutral, from: second).isEmpty)

@@ -11,22 +11,22 @@ extension RemappingOutputRouterTests {
     defer { harness.removeFiles() }
     let device = remappingRouterDevice(1)
     await #expect(throws: RemappingMotionCalibrationError.controllerUnavailable) {
-      try await harness.router.motionCalibration(for: device.runtimeIdentifier, command: .start)
+      try await harness.router.motionCalibration(for: device, command: .start)
     }
     try await harness.router.dispatchCausally(.activation, from: device)
-    let status = try await harness.router.motionCalibration(for: device.runtimeIdentifier)
+    let status = try await harness.router.motionCalibration(for: device)
     #expect(!status.hasMotionBaseline && !status.isCollecting)
     await #expect(throws: RemappingMotionCalibrationError.motionUnavailable) {
-      try await harness.router.motionCalibration(for: device.runtimeIdentifier, command: .start)
+      try await harness.router.motionCalibration(for: device, command: .start)
     }
     harness.foreground.set("com.example.Other")
     await #expect(throws: RemappingMotionCalibrationRefusal.profileInactive) {
-      try await harness.router.motionCalibration(for: device.runtimeIdentifier, command: .reset)
+      try await harness.router.motionCalibration(for: device, command: .reset)
     }
     #expect(await harness.router.status(for: device)?.eligibility == .targetApplicationNotFrontmost)
     try await harness.router.stopController(device)
     await #expect(throws: RemappingMotionCalibrationError.controllerUnavailable) {
-      try await harness.router.motionCalibration(for: device.runtimeIdentifier)
+      try await harness.router.motionCalibration(for: device)
     }
     try await harness.router.shutdown()
   }

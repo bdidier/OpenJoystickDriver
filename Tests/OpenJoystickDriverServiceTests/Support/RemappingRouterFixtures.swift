@@ -1,14 +1,15 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
 
 @testable import OpenJoystickDriverService
 
 enum RemappingRouterTrace: Equatable {
-  case virtualGamepad(ControllerState, DeviceIdentifier)
-  case virtualOutputActivation(DeviceIdentifier)
-  case virtualOutputStop(DeviceIdentifier)
+  case virtualGamepad(ControllerState, LogicalControllerID)
+  case virtualOutputActivation(LogicalControllerID)
+  case virtualOutputStop(LogicalControllerID)
   case system(RemappingSystemInputAction)
-  case gamepad(RemappingGamepadState, DeviceIdentifier)
+  case gamepad(RemappingGamepadState, LogicalControllerID)
 }
 
 final class RemappingRouterRecorder: @unchecked Sendable {
@@ -55,10 +56,10 @@ final class RemappingRouterVirtualOutput: OutputDispatcher, ControllerLifecycleL
   func dispatch(
     _ event: ControllerEvent,
     labels _: ControllerButtonLabels,
-    from identifier: DeviceIdentifier
+    from identifier: LogicalControllerID
   ) async { await record(.virtualGamepad(event.state, identifier)) }
 
-  func activateOutput(for identifier: DeviceIdentifier) async {
+  func activateOutput(for identifier: LogicalControllerID) async {
     await record(.virtualOutputActivation(identifier))
   }
 
@@ -79,7 +80,7 @@ final class RemappingRouterVirtualOutput: OutputDispatcher, ControllerLifecycleL
     lock.withLock { remappingSuppressed = suppressed }
   }
 
-  func send(_ state: RemappingGamepadState, for identifier: DeviceIdentifier) throws {
+  func send(_ state: RemappingGamepadState, for identifier: LogicalControllerID) throws {
     guard state == .neutral || !lock.withLock({ remappingSuppressed }) else {
       throw CancellationError()
     }
@@ -87,7 +88,7 @@ final class RemappingRouterVirtualOutput: OutputDispatcher, ControllerLifecycleL
     recorder.append(.gamepad(state, identifier))
   }
 
-  func controllerDidStop(_ identifier: DeviceIdentifier) {
+  func controllerDidStop(_ identifier: LogicalControllerID) {
     recorder.append(.virtualOutputStop(identifier))
   }
 }
@@ -311,8 +312,33 @@ func remappingRouterDevice(
   _ location: UInt32,
   vendorID: UInt16 = 1118,
   productID: UInt16 = 654
-) -> DeviceIdentifier {
-  DeviceIdentifier(vendorID: vendorID, productID: productID, locationID: location)
+) -> LogicalControllerID {
+  LogicalControllerID(vendorID: vendorID, productID: productID, locationID: location)
+}
+
+/// The session token the coordinator harnesses report for `device`.
+func remappingRouterToken(_ device: LogicalControllerID) -> ControllerSessionToken {
+  let identity = device.hardware
+  return .fixture(
+    String(
+      format: "%04X%04X%08X",
+      identity.model.vendorID,
+      identity.model.productID,
+      device.address?.locationID ?? 0
+    )
+  )
+}
+
+/// The controllers the coordinator harnesses report as connected: the default model at locations
+/// 1 and 2, and a left and a right Joy-Con at locations 1 and 2.
+@Sendable
+func remappingRouterConnectedControllers() -> [ConnectedController] {
+  [
+    remappingRouterDevice(1),
+    remappingRouterDevice(2),
+    remappingRouterDevice(1, vendorID: 0x057E, productID: 0x2006),
+    remappingRouterDevice(2, vendorID: 0x057E, productID: 0x2007),
+  ].map { ConnectedController(logicalControllerID: $0, sessionToken: remappingRouterToken($0)) }
 }
 
 func remappingRouterProfile(

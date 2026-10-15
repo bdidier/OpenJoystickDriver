@@ -99,8 +99,8 @@ struct TriggerButtonDerivationTests {
       [.leftTrigger(0.6)], [.leftTrigger(0.47)], [.leftTrigger(0.4)], [.leftTrigger(0.47)],
     ])
     let pipeline = DevicePipeline(
-      identifier: DeviceIdentifier(vendorID: 0x045E, productID: 0x028E),
-      transport: .hid(locationID: 1),
+      identifier: LogicalControllerID(vendorID: 0x045E, productID: 0x028E),
+      transport: .hid(address: .ioKit(locationID: 1, interfaceNumber: nil)),
       driver: driver,
       dispatcher: OutputCharacterizationTests.PipelineOutput(),
       idleTimeoutNanoseconds: 5_000_000_000,

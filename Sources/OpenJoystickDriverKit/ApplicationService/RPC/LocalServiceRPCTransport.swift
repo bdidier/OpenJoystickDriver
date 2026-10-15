@@ -37,81 +37,59 @@ public struct LocalServiceRPCPermissionArguments: Codable, Sendable {
   public init(requirement: PermissionManager.Requirement) { self.requirement = requirement }
 }
 public struct LocalServiceRPCDeviceArguments: Codable, Sendable {
-  public let vendorID: Int
-  public let productID: Int
-  public let runtimeIdentifier: String?
+  public let controller: ControllerReference
 
-  public init(vendorID: Int, productID: Int, runtimeIdentifier: String? = nil) {
-    self.vendorID = vendorID
-    self.productID = productID
-    self.runtimeIdentifier = runtimeIdentifier
+  public init(controller: ControllerReference) {
+    self.controller = controller
   }
 }
-/// Arguments of `sendControllerOutput`: the controller selector and one output command, whose
-/// JSON shape `ControllerOutputCommand` documents. An ID outside `UInt16` fails decoding.
+/// Arguments of `sendControllerOutput`: the controller reference and one output command, whose
+/// JSON shape `ControllerOutputCommand` documents.
 public struct LocalServiceRPCControllerOutputArguments: Codable, Sendable {
-  public let vendorID: UInt16
-  public let productID: UInt16
-  public let runtimeIdentifier: String?
+  public let controller: ControllerReference
   public let command: ControllerOutputCommand
 
   public init(
-    vendorID: UInt16,
-    productID: UInt16,
-    runtimeIdentifier: String? = nil,
+    controller: ControllerReference,
     command: ControllerOutputCommand
   ) {
-    self.vendorID = vendorID
-    self.productID = productID
-    self.runtimeIdentifier = runtimeIdentifier
+    self.controller = controller
     self.command = command
   }
 }
 public struct LocalServiceRPCColorArguments: Codable, Sendable {
-  public let vendorID: Int
-  public let productID: Int
-  public let runtimeIdentifier: String?
+  public let controller: ControllerReference
   public let red: Int
   public let green: Int
   public let blue: Int
 
   public init(
-    vendorID: Int,
-    productID: Int,
-    runtimeIdentifier: String? = nil,
+    controller: ControllerReference,
     red: Int,
     green: Int,
     blue: Int
   ) {
-    self.vendorID = vendorID
-    self.productID = productID
-    self.runtimeIdentifier = runtimeIdentifier
+    self.controller = controller
     self.red = red
     self.green = green
     self.blue = blue
   }
 }
 public struct LocalServiceRPCColorPreviewArguments: Codable, Sendable {
-  public let vendorID: Int
-  public let productID: Int
-  public let runtimeIdentifier: String?
+  public let controller: ControllerReference
   public let token: UUID
   public let red: Int
   public let green: Int
   public let blue: Int
 
   public init(
-    vendorID: Int,
-    productID: Int,
-    runtimeIdentifier: String? = nil,
+    controller: ControllerReference,
     token: UUID,
     red: Int,
     green: Int,
     blue: Int
   ) {
-    self.vendorID = vendorID
-    self.productID = productID
-    self.runtimeIdentifier = runtimeIdentifier
+    self.controller = controller
     self.token = token
     self.red = red
     self.green = green
@@ -119,15 +97,11 @@ public struct LocalServiceRPCColorPreviewArguments: Codable, Sendable {
   }
 }
 public struct LocalServiceRPCColorPreviewReleaseArguments: Codable, Sendable {
-  public let vendorID: Int
-  public let productID: Int
-  public let runtimeIdentifier: String?
+  public let controller: ControllerReference
   public let token: UUID
 
-  public init(vendorID: Int, productID: Int, runtimeIdentifier: String? = nil, token: UUID) {
-    self.vendorID = vendorID
-    self.productID = productID
-    self.runtimeIdentifier = runtimeIdentifier
+  public init(controller: ControllerReference, token: UUID) {
+    self.controller = controller
     self.token = token
   }
 }

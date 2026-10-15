@@ -54,11 +54,7 @@ struct ControllerSuspendCommand: AsyncParsableCommand {
       let selector = controller
       let (device, result) = try await ServiceConnection.request { client in
         let device = try await selector.resolve(with: client)
-        let result = try await client.suspendController(
-          vendorID: device.vendorID,
-          productID: device.productID,
-          runtimeIdentifier: device.runtimeIdentifier
-        )
+        let result = try await client.suspendController(.session(device.sessionToken))
         return (device, result)
       }
       guard result.succeeded || result.failure == .alreadySuspended else {
@@ -66,7 +62,7 @@ struct ControllerSuspendCommand: AsyncParsableCommand {
       }
       try printSession(
         ControllerSessionReport(
-          controller: device.runtimeIdentifier,
+          controller: device.sessionToken.rawValue,
           session: .suspended,
           changed: result.succeeded
         ),
@@ -100,11 +96,7 @@ struct ControllerResumeCommand: AsyncParsableCommand {
       let selector = controller
       let (device, result) = try await ServiceConnection.request { client in
         let device = try await selector.resolve(with: client)
-        let result = try await client.resumeController(
-          vendorID: device.vendorID,
-          productID: device.productID,
-          runtimeIdentifier: device.runtimeIdentifier
-        )
+        let result = try await client.resumeController(.session(device.sessionToken))
         return (device, result)
       }
       guard result.succeeded || result.failure == .alreadyActive else {
@@ -112,7 +104,7 @@ struct ControllerResumeCommand: AsyncParsableCommand {
       }
       try printSession(
         ControllerSessionReport(
-          controller: device.runtimeIdentifier,
+          controller: device.sessionToken.rawValue,
           session: .active,
           changed: result.succeeded
         ),
@@ -153,17 +145,13 @@ struct ControllerDisconnectCommand: AsyncParsableCommand {
       )
       let (device, result) = try await ServiceConnection.request(timeout: timeout) { client in
         let device = try await selector.resolve(with: client)
-        let result = try await client.disconnectWirelessController(
-          vendorID: device.vendorID,
-          productID: device.productID,
-          runtimeIdentifier: device.runtimeIdentifier
-        )
+        let result = try await client.disconnectWirelessController(.session(device.sessionToken))
         return (device, result)
       }
       guard result.succeeded else { throw Self.failure(result, device) }
       try printSession(
         ControllerSessionReport(
-          controller: device.runtimeIdentifier,
+          controller: device.sessionToken.rawValue,
           session: .disconnected,
           changed: true
         ),
@@ -193,7 +181,7 @@ struct ControllerDisconnectCommand: AsyncParsableCommand {
         .controllerRequestFailed,
         CLILocalized.format(
           "cli.controller.session.not_found",
-          device.runtimeIdentifier
+          device.sessionToken.rawValue
         )
       )
     default:

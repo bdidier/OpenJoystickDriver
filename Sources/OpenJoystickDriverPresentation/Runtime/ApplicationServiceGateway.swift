@@ -9,12 +9,12 @@ protocol RuntimeStatusGateway: Sendable {
   func requestPermission(
     _ requirement: PermissionManager.Requirement
   ) async throws -> PermissionManager.Snapshot
-  func controllerState(for selector: RuntimeDeviceSelector) async throws -> ControllerState?
+  func controllerState(for selector: ControllerReference) async throws -> ControllerState?
 }
 
 protocol ControllerDiagnosticsGateway: Sendable {
-  func controllerState(for selector: RuntimeDeviceSelector) async throws -> ControllerState?
-  func packetLog(for selector: RuntimeDeviceSelector) async throws -> [PacketLogEntry]
+  func controllerState(for selector: ControllerReference) async throws -> ControllerState?
+  func packetLog(for selector: ControllerReference) async throws -> [PacketLogEntry]
 }
 
 protocol RemappingGateway: Sendable {
@@ -48,8 +48,8 @@ protocol RemappingGateway: Sendable {
   func remappingPostEventAccess() async throws -> RemappingPostEventAccessState
   func requestRemappingPostEventAccess() async throws -> RemappingPostEventAccessState
   func pairRemappingJoyCons(
-    left: String,
-    right: String,
+    left: ControllerReference,
+    right: ControllerReference,
     profileID: UUID
   ) async throws -> ApplicationServiceRemappingSnapshotPayload
   func unpairRemappingJoyCons(
@@ -60,19 +60,19 @@ protocol RemappingGateway: Sendable {
 protocol VirtualOutputGateway: Sendable {
   func setVirtualHIDProfileOverride(
     _ profile: VirtualHIDProfileID,
-    for selector: RuntimeDeviceSelector
+    for selector: ControllerReference
   ) async throws -> VirtualHIDProfileOverrideResult
   func resetVirtualHIDProfileOverride(
-    for selector: RuntimeDeviceSelector
+    for selector: ControllerReference
   ) async throws -> VirtualHIDProfileOverrideResult
   func setControllerOwnership(
     model: ControllerModelID,
     ownership: ControllerOwnership
   ) async throws -> ControllerOwnershipResult
-  func suspendController(_ selector: RuntimeDeviceSelector) async throws -> ControllerSuspendResult
-  func resumeController(_ selector: RuntimeDeviceSelector) async throws -> ControllerResumeResult
+  func suspendController(_ selector: ControllerReference) async throws -> ControllerSuspendResult
+  func resumeController(_ selector: ControllerReference) async throws -> ControllerResumeResult
   func disconnectWirelessController(
-    _ selector: RuntimeDeviceSelector
+    _ selector: ControllerReference
   ) async throws -> WirelessControllerDisconnectResult
 }
 
@@ -90,16 +90,16 @@ extension VirtualOutputGateway {
     )
   }
 
-  func suspendController(_ selector: RuntimeDeviceSelector) throws -> ControllerSuspendResult {
+  func suspendController(_ selector: ControllerReference) throws -> ControllerSuspendResult {
     ControllerSuspendResult(state: .active, failure: .notFound)
   }
 
-  func resumeController(_ selector: RuntimeDeviceSelector) throws -> ControllerResumeResult {
+  func resumeController(_ selector: ControllerReference) throws -> ControllerResumeResult {
     ControllerResumeResult(state: .suspended, failure: .notFound)
   }
 
   func disconnectWirelessController(
-    _ selector: RuntimeDeviceSelector
+    _ selector: ControllerReference
   ) throws -> WirelessControllerDisconnectResult {
     WirelessControllerDisconnectResult(state: .active, failure: .notFound)
   }
@@ -153,19 +153,17 @@ extension RemappingGateway {
 extension ApplicationServiceClientGateway: InputTestDeviceGateway {
   func sendControllerOutput(
     _ command: ControllerOutputCommand,
-    for selector: RuntimeDeviceSelector
+    for selector: ControllerReference
   ) async throws -> ControllerOutputResult {
     await ensureConnection()
     return try await client.sendControllerOutput(
       command,
-      vendorID: selector.vendorID,
-      productID: selector.productID,
-      runtimeIdentifier: selector.runtimeIdentifier
+      for: selector
     )
   }
 
   func previewColor(
-    for selector: RuntimeDeviceSelector,
+    for selector: ControllerReference,
     token: UUID,
     red: UInt8,
     green: UInt8,
@@ -173,9 +171,7 @@ extension ApplicationServiceClientGateway: InputTestDeviceGateway {
   ) async throws -> Bool {
     await ensureConnection()
     return try await client.previewPhysicalColor(
-      vendorID: selector.vendorID,
-      productID: selector.productID,
-      runtimeIdentifier: selector.runtimeIdentifier,
+      for: selector,
       token: token,
       red: red,
       green: green,
@@ -183,51 +179,19 @@ extension ApplicationServiceClientGateway: InputTestDeviceGateway {
     )
   }
 
-  func releaseColorPreview(for selector: RuntimeDeviceSelector, token: UUID) async throws -> Bool {
+  func releaseColorPreview(for selector: ControllerReference, token: UUID) async throws -> Bool {
     await ensureConnection()
     return try await client.releasePhysicalColorPreview(
-      vendorID: selector.vendorID,
-      productID: selector.productID,
-      runtimeIdentifier: selector.runtimeIdentifier,
+      for: selector,
       token: token
     )
   }
 
   func motionCalibration(
-    for selector: RuntimeDeviceSelector,
+    for selector: ControllerReference,
     command: RemappingMotionCalibrationCommand?
   ) async throws -> RemappingMotionCalibrationStatus {
-    guard let runtimeIdentifier = selector.runtimeIdentifier else {
-      throw RemappingMotionCalibrationError.controllerUnavailable
-    }
     await ensureConnection()
-    return try await client.remappingMotionCalibration(
-      runtimeIdentifier: runtimeIdentifier,
-      command: command
-    )
-  }
-}
-
-struct RuntimeDeviceSelector: Codable, Equatable, Hashable, Sendable {
-  let vendorID: UInt16
-  let productID: UInt16
-  let runtimeIdentifier: String?
-
-  init(vendorID: UInt16, productID: UInt16, runtimeIdentifier: String? = nil) {
-    self.vendorID = vendorID
-    self.productID = productID
-    self.runtimeIdentifier = runtimeIdentifier
-  }
-
-  init(device: ApplicationServiceDeviceDescription) {
-    self.init(
-      vendorID: device.vendorID,
-      productID: device.productID,
-      runtimeIdentifier: device.runtimeIdentifier
-    )
-  }
-
-  var displayIdentifier: String {
-    runtimeIdentifier ?? String(format: "%04X:%04X", vendorID, productID)
+    return try await client.remappingMotionCalibration(for: selector, command: command)
   }
 }

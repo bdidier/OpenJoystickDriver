@@ -20,7 +20,7 @@
     @State
     var keyboardCaptureActive = false
     @State
-    var selectedRuntimeIdentifier: String?
+    var selectedSessionToken: String?
   }
 
 #endif

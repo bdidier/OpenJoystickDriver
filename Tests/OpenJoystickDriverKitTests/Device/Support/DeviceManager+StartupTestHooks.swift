@@ -12,7 +12,7 @@ extension DeviceManager {
 
   func setStoppingForTest(_ stopping: Bool) { isStopping = stopping }
 
-  func setManualRumbleForTest(on identifier: DeviceIdentifier) {
+  func setManualRumbleForTest(on identifier: LogicalControllerID) {
     _ = physicalOutputOwnership.setManual(.rumble(motor: .leftMain, intensity: 1), for: identifier)
   }
 
@@ -32,12 +32,12 @@ extension DeviceManager {
     hidInitializationTasks[hidInitializationKey(for: initialization.connection)] = initialization
   }
 
-  func outputQueueForTest(for identifier: DeviceIdentifier) -> PhysicalHIDOutputSerialQueue? {
+  func outputQueueForTest(for identifier: LogicalControllerID) -> PhysicalHIDOutputSerialQueue? {
     hidOutputQueues[identifier]
   }
 
   func installOutputQueueForTest(
     _ queue: PhysicalHIDOutputSerialQueue,
-    for identifier: DeviceIdentifier
+    for identifier: LogicalControllerID
   ) { hidOutputQueues[identifier] = queue }
 }

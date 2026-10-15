@@ -27,22 +27,14 @@ extension ApplicationServiceClientGateway {
     return try await client.requestAccess(requirement)
   }
 
-  func controllerState(for selector: RuntimeDeviceSelector) async throws -> ControllerState? {
+  func controllerState(for selector: ControllerReference) async throws -> ControllerState? {
     await ensureConnection()
-    return try await client.controllerState(
-      vendorID: selector.vendorID,
-      productID: selector.productID,
-      runtimeIdentifier: selector.runtimeIdentifier
-    )
+    return try await client.controllerState(for: selector)
   }
 
-  func packetLog(for selector: RuntimeDeviceSelector) async throws -> [PacketLogEntry] {
+  func packetLog(for selector: ControllerReference) async throws -> [PacketLogEntry] {
     await ensureConnection()
-    return try await client.packetLog(
-      vendorID: selector.vendorID,
-      productID: selector.productID,
-      runtimeIdentifier: selector.runtimeIdentifier
-    )
+    return try await client.packetLog(for: selector)
   }
 
   func remappingSnapshot() async throws -> ApplicationServiceRemappingSnapshotPayload {
@@ -128,16 +120,12 @@ extension ApplicationServiceClientGateway {
   }
 
   func pairRemappingJoyCons(
-    left: String,
-    right: String,
+    left: ControllerReference,
+    right: ControllerReference,
     profileID: UUID
   ) async throws -> ApplicationServiceRemappingSnapshotPayload {
     await ensureConnection()
-    return try await client.pairRemappingJoyCons(
-      leftRuntimeIdentifier: left,
-      rightRuntimeIdentifier: right,
-      profileID: profileID
-    )
+    return try await client.pairRemappingJoyCons(left: left, right: right, profileID: profileID)
   }
 
   func unpairRemappingJoyCons(
@@ -149,26 +137,20 @@ extension ApplicationServiceClientGateway {
 
   func setVirtualHIDProfileOverride(
     _ profile: VirtualHIDProfileID,
-    for selector: RuntimeDeviceSelector
+    for selector: ControllerReference
   ) async throws -> VirtualHIDProfileOverrideResult {
     await ensureConnection()
     return try await client.setVirtualHIDProfileOverride(
       profile.rawValue,
-      vendorID: selector.vendorID,
-      productID: selector.productID,
-      runtimeIdentifier: selector.runtimeIdentifier
+      for: selector
     )
   }
 
   func resetVirtualHIDProfileOverride(
-    for selector: RuntimeDeviceSelector
+    for selector: ControllerReference
   ) async throws -> VirtualHIDProfileOverrideResult {
     await ensureConnection()
-    return try await client.resetVirtualHIDProfileOverride(
-      vendorID: selector.vendorID,
-      productID: selector.productID,
-      runtimeIdentifier: selector.runtimeIdentifier
-    )
+    return try await client.resetVirtualHIDProfileOverride(for: selector)
   }
 
   func setControllerOwnership(
@@ -179,34 +161,21 @@ extension ApplicationServiceClientGateway {
     return try await client.setControllerOwnership(model: model, ownership: ownership)
   }
 
-  func suspendController(_ selector: RuntimeDeviceSelector) async throws -> ControllerSuspendResult
-  {
+  func suspendController(_ selector: ControllerReference) async throws -> ControllerSuspendResult {
     await ensureConnection()
-    return try await client.suspendController(
-      vendorID: selector.vendorID,
-      productID: selector.productID,
-      runtimeIdentifier: selector.runtimeIdentifier
-    )
+    return try await client.suspendController(selector)
   }
 
-  func resumeController(_ selector: RuntimeDeviceSelector) async throws -> ControllerResumeResult {
+  func resumeController(_ selector: ControllerReference) async throws -> ControllerResumeResult {
     await ensureConnection()
-    return try await client.resumeController(
-      vendorID: selector.vendorID,
-      productID: selector.productID,
-      runtimeIdentifier: selector.runtimeIdentifier
-    )
+    return try await client.resumeController(selector)
   }
 
   func disconnectWirelessController(
-    _ selector: RuntimeDeviceSelector
+    _ selector: ControllerReference
   ) async throws -> WirelessControllerDisconnectResult {
     await ensureConnection()
-    return try await client.disconnectWirelessController(
-      vendorID: selector.vendorID,
-      productID: selector.productID,
-      runtimeIdentifier: selector.runtimeIdentifier
-    )
+    return try await client.disconnectWirelessController(selector)
   }
 
   func ensureConnection() async {

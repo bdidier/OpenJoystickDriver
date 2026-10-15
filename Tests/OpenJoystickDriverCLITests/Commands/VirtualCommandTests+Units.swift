@@ -1,16 +1,18 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverCLI
 
 extension VirtualCommandTests {
-  private static let unit = "U-AbCd_123-xyzW09q"
+  private static let unitLabel = "AbCd_123-xyzW09q"
+  private static let unit = ControllerPortKey.fixture(unitLabel).rawValue
 
   private static func unitService() throws -> FakeService {
     try FakeService(
       devices: [
-        ApplicationServiceDeviceDescription.fixture(id: "pad-1", unit: unit),
+        ApplicationServiceDeviceDescription.fixture(id: "pad-1", unit: unitLabel),
         ApplicationServiceDeviceDescription.fixture(id: "pad-2"),
       ]
     ) { method, _ in
@@ -33,13 +35,13 @@ extension VirtualCommandTests {
     let result = await service.run(["virtual", "set", "hid-generic", Self.unit, "--unit", "--json"])
 
     #expect(result.code == 0, "\(result.standardError)")
-    #expect(try result.json()["controller"] as? String == "pad-1")
+    #expect(try result.json()["controller"] as? String == token("pad-1"))
     let arguments = try #require(service.arguments(of: .setVirtualHIDProfileOverride).first)
     let sent = try JSONDecoder().decode(
       LocalServiceRPCVirtualHIDProfileOverrideArguments.self,
       from: arguments
     )
-    #expect(sent.runtimeIdentifier == "pad-1")
+    #expect(sent.controller == .session(.fixture("pad-1")))
     #expect(sent.unit)
   }
 
@@ -47,7 +49,7 @@ extension VirtualCommandTests {
   func resetWithUnitSendsTheUnitFlag() async throws {
     let service = try Self.unitService()
 
-    let result = await service.run(["virtual", "reset", "pad-1", "--unit"])
+    let result = await service.run(["virtual", "reset", token("pad-1"), "--unit"])
 
     #expect(result.code == 0, "\(result.standardError)")
     let arguments = try #require(service.arguments(of: .resetVirtualHIDProfileOverride).first)
@@ -55,12 +57,13 @@ extension VirtualCommandTests {
       LocalServiceRPCVirtualHIDProfileOverrideResetArguments.self,
       from: arguments
     )
-    #expect(sent.runtimeIdentifier == "pad-1")
+    #expect(sent.controller == .session(.fixture("pad-1")))
     #expect(sent.unit)
   }
 
   @Test(arguments: [
-    ["virtual", "set", "hid-generic", "pad-2", "--unit"], ["virtual", "reset", "pad-2", "--unit"],
+    ["virtual", "set", "hid-generic", token("pad-2"), "--unit"],
+    ["virtual", "reset", token("pad-2"), "--unit"],
   ])
   func unitForAControllerWithoutAUnitIDFailsBeforeAsking(arguments: [String]) async throws {
     let service = try Self.unitService()

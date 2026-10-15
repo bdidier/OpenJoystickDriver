@@ -227,10 +227,10 @@ struct ProfileCreateCommand: AsyncParsableCommand {
       let name = name
       let (created, snapshot) = try await ServiceConnection.request { client in
         let device: RemappingDeviceScope
-        switch selector.kind {
-        case .model(let vendorID, let productID):
-          device = RemappingDeviceScope(vendorID: vendorID, productID: productID)
-        case .id:
+        switch selector.reference {
+        case .model(let model):
+          device = RemappingDeviceScope(vendorID: model.vendorID, productID: model.productID)
+        case .session, .port:
           let found = try await selector.resolve(with: client)
           device = RemappingDeviceScope(vendorID: found.vendorID, productID: found.productID)
         }

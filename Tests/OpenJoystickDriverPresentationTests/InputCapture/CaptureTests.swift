@@ -1,5 +1,6 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverPresentation
@@ -8,11 +9,7 @@ import Testing
 struct InputCaptureTests {
   @Test
   func listensUntilItFindsAControllerControl() async {
-    let selector = RuntimeDeviceSelector(
-      vendorID: 0x1234,
-      productID: 0x5678,
-      runtimeIdentifier: "live"
-    )
+    let selector = ControllerReference.session(.fixture("live"))
     let released = ControllerState.neutral
     var pressed = released
     pressed.pressed = [.faceSouth]
@@ -36,11 +33,7 @@ struct InputCaptureTests {
 
   @Test
   func listenIgnoresAControlHeldBeforeListening() async {
-    let selector = RuntimeDeviceSelector(
-      vendorID: 0x1234,
-      productID: 0x5678,
-      runtimeIdentifier: "live"
-    )
+    let selector = ControllerReference.session(.fixture("live"))
     var held = ControllerState.neutral
     held.pressed = [.faceSouth]
     let released = ControllerState.neutral
@@ -62,11 +55,7 @@ struct InputCaptureTests {
 
   @Test
   func listenPublishesTheTransitionSourceWhenAnotherControlWasAlreadyHeld() async {
-    let selector = RuntimeDeviceSelector(
-      vendorID: 0x1234,
-      productID: 0x5678,
-      runtimeIdentifier: "live"
-    )
+    let selector = ControllerReference.session(.fixture("live"))
     var baseline = ControllerState.neutral
     baseline.pressed = [.faceSouth]
     var changed = baseline

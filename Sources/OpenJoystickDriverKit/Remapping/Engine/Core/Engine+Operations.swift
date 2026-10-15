@@ -10,8 +10,8 @@ extension RemappingEventEngine {
   public func process(
     _ event: ControllerEvent,
     labels: ControllerButtonLabels,
-    from source: DeviceIdentifier,
-    into target: DeviceIdentifier? = nil,
+    from source: LogicalControllerID,
+    into target: LogicalControllerID? = nil,
     using profile: RemappingProfile,
     at uptimeNanoseconds: UInt64
   ) async throws {
@@ -32,8 +32,8 @@ extension RemappingEventEngine {
   public func process(
     _ event: ControllerEvent,
     labels: ControllerButtonLabels,
-    from source: DeviceIdentifier,
-    into target: DeviceIdentifier? = nil,
+    from source: LogicalControllerID,
+    into target: LogicalControllerID? = nil,
     using profile: RemappingProfile,
     at uptimeNanoseconds: UInt64,
     requiring permit: RemappingEmissionPermit
@@ -53,7 +53,7 @@ extension RemappingEventEngine {
   }
 
   /// Forgets the baseline of a stopped source, so its next snapshot is diffed against neutral.
-  public func endSource(_ source: DeviceIdentifier) async {
+  public func endSource(_ source: LogicalControllerID) async {
     await acquireOperation()
     defer { finishOperation() }
     state.sourceBaselines.removeValue(forKey: source)
@@ -62,7 +62,7 @@ extension RemappingEventEngine {
   /// Replaces or deactivates the profile for one exact controller.
   public func setProfile(
     _ profile: RemappingProfile?,
-    for identifier: DeviceIdentifier
+    for identifier: LogicalControllerID
   ) async throws {
     guard let permit = emissionBarrier.currentPermit() else {
       throw RemappingEventEngineError.outputSuspended
@@ -72,7 +72,7 @@ extension RemappingEventEngine {
 
   public func setProfile(
     _ profile: RemappingProfile?,
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     requiring permit: RemappingEmissionPermit
   ) async throws {
     try ensureAvailable()
@@ -104,17 +104,17 @@ extension RemappingEventEngine {
   public func hasScheduledOutput() -> Bool { state.hasScheduledOutput }
 
   public func motionCalibrationStatus(
-    for identifier: DeviceIdentifier
+    for identifier: LogicalControllerID
   ) -> RemappingMotionCalibrationStatus? { state.motionCalibrationStatus(for: identifier) }
 
   /// Identifies the current mapping lifetime, including profile replacement and reconnect.
-  public func motionSessionIdentifier(for identifier: DeviceIdentifier) -> UUID? {
+  public func motionSessionIdentifier(for identifier: LogicalControllerID) -> UUID? {
     state.devices[identifier]?.sessionID
   }
 
   public func calibrateMotion(
     _ command: RemappingMotionCalibrationCommand,
-    for identifier: DeviceIdentifier
+    for identifier: LogicalControllerID
   ) async throws -> RemappingMotionCalibrationStatus {
     guard let permit = emissionBarrier.currentPermit() else {
       throw RemappingEventEngineError.outputSuspended
@@ -124,7 +124,7 @@ extension RemappingEventEngine {
 
   public func calibrateMotion(
     _ command: RemappingMotionCalibrationCommand,
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     requiring permit: RemappingEmissionPermit,
     expectedSessionID: UUID? = nil
   ) async throws -> RemappingMotionCalibrationStatus {
@@ -175,7 +175,7 @@ extension RemappingEventEngine {
   }
 
   /// Releases every output owned by one exact controller and forgets its profile.
-  public func releaseAll(for identifier: DeviceIdentifier) async throws {
+  public func releaseAll(for identifier: LogicalControllerID) async throws {
     guard let permit = emissionBarrier.currentPermit() else {
       throw RemappingEventEngineError.outputSuspended
     }
@@ -183,7 +183,7 @@ extension RemappingEventEngine {
   }
 
   public func releaseAll(
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     requiring permit: RemappingEmissionPermit
   ) async throws {
     try ensureAvailable()
@@ -192,7 +192,7 @@ extension RemappingEventEngine {
 
   public func setProfileColor(
     _ color: ControllerColor?,
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     requiring permit: RemappingEmissionPermit
   ) async throws {
     await acquireOperation()
@@ -269,18 +269,14 @@ extension RemappingEventEngine {
         break
       }
     }
-    for identifier in uncertainGamepadDevices.sorted(by: {
-      $0.runtimeIdentifier < $1.runtimeIdentifier
-    }) {
+    for identifier in uncertainGamepadDevices.sorted() {
       do {
         guard let gamepadSink else { throw RemappingEventEngineError.sinkUnavailable }
         try await gamepadSink.send(.neutral, for: identifier)
         uncertainGamepadDevices.remove(identifier)
       } catch { failed = true }
     }
-    for identifier in uncertainPhysicalDevices.sorted(by: {
-      $0.runtimeIdentifier < $1.runtimeIdentifier
-    }) {
+    for identifier in uncertainPhysicalDevices.sorted() {
       do {
         guard let physicalOutputSink else { throw RemappingEventEngineError.sinkUnavailable }
         try await physicalOutputSink.releaseAll(for: identifier)

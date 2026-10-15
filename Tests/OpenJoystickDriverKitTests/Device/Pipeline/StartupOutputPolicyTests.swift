@@ -7,7 +7,7 @@ struct USBStartupOutputPolicyTests {
   /// The ring LED write a wired Xbox 360 pipeline sends after the manager assigns it a slot.
   private func xbox360RingLEDWrite() async throws -> PhysicalOutputWrite {
     let pipeline = DevicePipeline(
-      identifier: DeviceIdentifier(vendorID: 0x045E, productID: 0x028E),
+      identifier: LogicalControllerID(vendorID: 0x045E, productID: 0x028E),
       transport: .usb(device: Self.device),
       driver: XUSBDriver(),
       dispatcher: LoggingOutputDispatcher(),
@@ -18,7 +18,7 @@ struct USBStartupOutputPolicyTests {
 
   @Test
   func defersVirtualOutputUntilThePhysicalUSBSessionOpens() async {
-    let identifier = DeviceIdentifier(vendorID: 0x3537, productID: 0x1010)
+    let identifier = LogicalControllerID(vendorID: 0x3537, productID: 0x1010)
     let provider = ScriptedUSBTransportProvider(failuresBeforeSuccess: .max)
     let dispatcher = StartupRecordingOutputDispatcher()
     let pipeline = DevicePipeline(
@@ -43,7 +43,7 @@ struct USBStartupOutputPolicyTests {
 
   @Test
   func publishesVirtualOutputAfterARecoveredPhysicalUSBHandshake() async {
-    let identifier = DeviceIdentifier(vendorID: 0x3537, productID: 0x1010)
+    let identifier = LogicalControllerID(vendorID: 0x3537, productID: 0x1010)
     let provider = ScriptedUSBTransportProvider(failuresBeforeSuccess: 3)
     let dispatcher = StartupRecordingOutputDispatcher()
     let pipeline = DevicePipeline(
@@ -87,7 +87,7 @@ struct USBStartupOutputPolicyTests {
   func accessContentionSkipsWastefulImmediateOpenRetries() async {
     let provider = ScriptedUSBTransportProvider(failuresBeforeSuccess: .max)
     let pipeline = DevicePipeline(
-      identifier: DeviceIdentifier(vendorID: 0x3537, productID: 0x1010),
+      identifier: LogicalControllerID(vendorID: 0x3537, productID: 0x1010),
       transport: .usb(device: Self.device),
       driver: StartupInputParser(),
       dispatcher: StartupRecordingOutputDispatcher(),
@@ -115,7 +115,7 @@ struct USBStartupOutputPolicyTests {
     let provider = SuspendedSuccessfulUSBTransportProvider(session: session)
     let dispatcher = StartupRecordingOutputDispatcher()
     let pipeline = DevicePipeline(
-      identifier: DeviceIdentifier(vendorID: 0x3537, productID: 0x1010),
+      identifier: LogicalControllerID(vendorID: 0x3537, productID: 0x1010),
       transport: .usb(device: Self.device),
       driver: StartupInputParser(),
       dispatcher: dispatcher,
@@ -328,14 +328,15 @@ private final class StartupRecordingOutputDispatcher: OutputDispatcher,
 
   func controllerInputOwnershipChanged(
     _ ownership: HIDInputOwnership,
-    for identifier: DeviceIdentifier
+    for identifier: LogicalControllerID
   ) { lock.withLock { recordedOwnership.append(ownership) } }
 
   var activations: Int { lock.withLock { recordedActivations } }
 
-  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: DeviceIdentifier) {}
+  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: LogicalControllerID) {
+  }
 
-  func activateOutput(for _: DeviceIdentifier) {
+  func activateOutput(for _: LogicalControllerID) {
     lock.withLock {
       recordedActivations += 1
       dispatchedOwnership.append(recordedOwnership.last ?? .unknown)

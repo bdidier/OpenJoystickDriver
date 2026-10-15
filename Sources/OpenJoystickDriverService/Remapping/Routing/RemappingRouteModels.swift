@@ -43,7 +43,7 @@ enum RemappingRouteEligibility: String, Equatable, Sendable {
 }
 
 struct RemappingRouteStatus: Equatable, Sendable {
-  let identifier: DeviceIdentifier
+  let identifier: LogicalControllerID
   let selection: RemappingRouteSelection
   let eligibility: RemappingRouteEligibility
   let activeProfileID: UUID?
@@ -72,7 +72,7 @@ struct RemappingProfileTransaction: Equatable, Hashable, Sendable {
 
 struct RemappingRouterStatusSnapshot: Equatable, Sendable {
   let routes: [RemappingRouteStatus]
-  let joyConPairs: [ApplicationServiceJoyConPairPayload]
+  let joyConPairs: [RemappingJoyConPairSession]
   let postEventAccessState: RemappingPostEventAccessState
 }
 
@@ -86,7 +86,7 @@ enum RemappingJoyConPairError: Error, Equatable, LocalizedError, Sendable {
   var errorDescription: String? {
     switch self {
     case .controllerUnavailable:
-      "Both selected Joy-Cons must be connected by exact runtime identity."
+      "Both selected Joy-Cons must be connected."
     case .invalidControllerSide: "Select one left Joy-Con and one right Joy-Con."
     case .memberAlreadyPaired: "A selected Joy-Con already belongs to a paired session."
     case .profileNotPairable: "The selected profile is not configured for paired Joy-Cons."
@@ -97,11 +97,11 @@ enum RemappingJoyConPairError: Error, Equatable, LocalizedError, Sendable {
 
 struct RemappingJoyConPairSession: Equatable, Sendable {
   let id: UUID
-  let left: DeviceIdentifier
-  let right: DeviceIdentifier
+  let left: LogicalControllerID
+  let right: LogicalControllerID
   let profile: RemappingProfile
 
-  var members: [DeviceIdentifier] { [left, right] }
+  var members: [LogicalControllerID] { [left, right] }
 }
 
 enum RemappingProfileTransactionState: Equatable, Sendable {
@@ -169,13 +169,13 @@ enum RemappingRoutingCheckpoint: Equatable, Sendable {
 /// Controllers whose input a remapping route consumes, readable per input report without
 /// entering the routing actor.
 final class RemappingObservedInputDemand: Sendable {
-  private let identifiers = Locked<Set<DeviceIdentifier>>([])
+  private let identifiers = Locked<Set<LogicalControllerID>>([])
 
-  func contains(_ identifier: DeviceIdentifier) -> Bool {
+  func contains(_ identifier: LogicalControllerID) -> Bool {
     self.identifiers.withLock { $0.contains(identifier) }
   }
 
-  func replace(with identifiers: Set<DeviceIdentifier>) {
+  func replace(with identifiers: Set<LogicalControllerID>) {
     self.identifiers.withLock { $0 = identifiers }
   }
 }

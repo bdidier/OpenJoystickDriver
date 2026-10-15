@@ -147,20 +147,12 @@ struct ControllerWatchCommand: AsyncParsableCommand {
         let timeout = CLIContext.current.requestTimeout
         let read: @Sendable () async throws -> ControllerState? = {
           try await ServiceConnection.withDeadline(seconds: timeout) {
-            try await client.controllerState(
-              vendorID: device.vendorID,
-              productID: device.productID,
-              runtimeIdentifier: device.runtimeIdentifier
-            )
+            try await client.controllerState(for: .session(device.sessionToken))
           }
         }
         let readOutput: @Sendable () async throws -> ApplicationServiceVirtualOutputState? = {
           try await ServiceConnection.withDeadline(seconds: timeout) {
-            try await client.virtualOutputState(
-              vendorID: device.vendorID,
-              productID: device.productID,
-              runtimeIdentifier: device.runtimeIdentifier
-            )
+            try await client.virtualOutputState(for: .session(device.sessionToken))
           }
         }
         if firstPress {
@@ -327,11 +319,7 @@ struct ControllerCaptureCommand: AsyncParsableCommand {
         let timeout = CLIContext.current.requestTimeout
         let read: @Sendable () async throws -> [PacketLogEntry] = {
           try await ServiceConnection.withDeadline(seconds: timeout) {
-            try await client.packetLog(
-              vendorID: device.vendorID,
-              productID: device.productID,
-              runtimeIdentifier: device.runtimeIdentifier
-            )
+            try await client.packetLog(for: .session(device.sessionToken))
           }
         }
         var cursor = PacketLogSnapshotCursor(snapshot: try await read())

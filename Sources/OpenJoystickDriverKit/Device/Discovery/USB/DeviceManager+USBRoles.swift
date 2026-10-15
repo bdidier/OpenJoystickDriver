@@ -4,14 +4,14 @@ import Foundation
 /// built again when the pipeline is created, since a driver is not sendable across the actor
 /// suspensions between roles; construction is pure, so it repeats the validated result.
 struct USBRoleAdmission {
-  let identifier: DeviceIdentifier
+  let identifier: LogicalControllerID
   let resolution: USBTransportResolution
   let slotOrdinal: Int
 }
 
 extension DeviceManager {
   /// Whether a raw-USB role of this exact enumerated service is still in the inventory.
-  func isRunningUSBRole(_ identifier: DeviceIdentifier, of device: USBTransportDevice) -> Bool {
+  func isRunningUSBRole(_ identifier: LogicalControllerID, of device: USBTransportDevice) -> Bool {
     guard let info = deviceInfos[identifier], case .rawUSB(let route) = info.discoverySource else {
       return false
     }
@@ -33,11 +33,11 @@ extension DeviceManager {
       vendorID: device.vendorID,
       productID: device.productID
     )
-    var started: [(identifier: DeviceIdentifier, pipeline: DevicePipeline)] = []
+    var started: [(identifier: LogicalControllerID, pipeline: DevicePipeline)] = []
     for role in roles {
       // Starting an earlier role suspends the actor; the key may be taken meanwhile.
       guard isCurrentUSBDetection(generation),
-        !hasUSBPipelineConflict(for: role.identifier, service: device.serviceIdentity)
+        !hasUSBPipelineConflict(for: role.identifier, service: device.serviceAddress)
       else { return await discardUSBRoles(started, of: device) }
       guard
         case .success(let driver) = protocolDriverRegistry.makeDriver(
@@ -50,7 +50,7 @@ extension DeviceManager {
       deviceInfos[role.identifier] = DeviceInfo(
         name: productName,
         connection: "USB",
-        serialNumber: role.identifier.controllerIdentity.serialNumber,
+        serialNumber: role.identifier.hardware.serialNumber,
         discoverySource: .rawUSB(route: device.route),
         binding: binding,
         physicalDevice: role.resolution.physicalDevice,
@@ -89,7 +89,7 @@ extension DeviceManager {
 
   /// Removes one raw-USB role from the inventory and returns its pipeline for the caller to stop.
   /// Detach and admission rollback share it, so both clear the role's output state alike.
-  func removeUSBRole(_ identifier: DeviceIdentifier) -> DevicePipeline? {
+  func removeUSBRole(_ identifier: LogicalControllerID) -> DevicePipeline? {
     let pipeline = pipelines.removeValue(forKey: identifier)
     startupPlayerSlots.removeValue(forKey: identifier)
     retireOutputQueue(for: identifier)
@@ -102,7 +102,7 @@ extension DeviceManager {
   /// Stops the started roles of an admission that must be retried, removing those still owned.
   /// Every started pipeline is stopped; a pipeline already stopped elsewhere ignores it.
   private func discardUSBRoles(
-    _ started: [(identifier: DeviceIdentifier, pipeline: DevicePipeline)],
+    _ started: [(identifier: LogicalControllerID, pipeline: DevicePipeline)],
     of device: USBTransportDevice
   ) async -> USBDeviceHandlingOutcome {
     guard !started.isEmpty else { return .retry }

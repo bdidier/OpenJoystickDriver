@@ -16,13 +16,15 @@ actor RemappingRoutingCore {
   let operationCheckpoint: @Sendable (RemappingRoutingCheckpoint) async -> Void
   var emissionBarrier: RemappingEmissionBarrier { engine.emissionBarrier }
   var controls = RemappingRoutingControls(outputSuppressed: false, revision: 0)
-  var routes: [DeviceIdentifier: RemappingControllerRoute] = [:] {
+  var routes: [LogicalControllerID: RemappingControllerRoute] = [:] {
     didSet { publishObservedInputDemand() }
   }
-  var connectedIdentifiers: Set<DeviceIdentifier> = []
-  var inputOwnership: [DeviceIdentifier: HIDInputOwnership] = [:]
+  var connectedIdentifiers: Set<LogicalControllerID> = []
+  var inputOwnership: [LogicalControllerID: HIDInputOwnership] = [:]
   var joyConPairs: [UUID: RemappingJoyConPairSession] = [:]
-  var joyConPairByMember: [DeviceIdentifier: UUID] = [:] { didSet { publishObservedInputDemand() } }
+  var joyConPairByMember: [LogicalControllerID: UUID] = [:] {
+    didSet { publishObservedInputDemand() }
+  }
   /// Controllers a remapping route or Joy-Con pair consumes, for observe-only pipelines.
   let observedInputDemand = RemappingObservedInputDemand()
   var profileTransactionState = RemappingProfileTransactionState.inactive
@@ -76,7 +78,7 @@ actor RemappingRoutingCore {
 
   func dispatch(
     _ input: RemappingRoutedInput,
-    from identifier: DeviceIdentifier,
+    from identifier: LogicalControllerID,
     at uptimeNanoseconds: UInt64,
     requiring proposedPermit: RemappingEmissionPermit?
   ) async throws {
@@ -138,7 +140,7 @@ actor RemappingRoutingCore {
   ///
   /// This operation never selects a route or reaches either output sink. Accepted and rolled-back
   /// transactions use the retained identity when installing their completed route set.
-  func recordConnectedIdentifierWhileOutputClosed(_ identifier: DeviceIdentifier) throws {
+  func recordConnectedIdentifierWhileOutputClosed(_ identifier: LogicalControllerID) throws {
     defer { schedulingRevision &+= 1 }
     try ensureRunning()
     connectedIdentifiers.insert(identifier)
@@ -146,7 +148,7 @@ actor RemappingRoutingCore {
   }
 
   func refresh(
-    _ identifier: DeviceIdentifier,
+    _ identifier: LogicalControllerID,
     requiring permit: RemappingEmissionPermit?
   ) async throws {
     defer { schedulingRevision &+= 1 }
@@ -168,7 +170,7 @@ actor RemappingRoutingCore {
     try ensureRunning()
     if case .unreconciled(_, let error) = profileTransactionState { throw error }
     let affected = sortedIdentifiers.filter {
-      $0.controllerIdentity.vendorID == vendorID && $0.controllerIdentity.productID == productID
+      $0.model.vendorID == vendorID && $0.model.productID == productID
     }
     var profiles: [RemappingProfile?] = []
     do {
@@ -178,7 +180,7 @@ actor RemappingRoutingCore {
           try await library.activeProfile(
             vendorID: vendorID,
             productID: productID,
-            unit: identifier.unitIdentifier,
+            unit: identifier.portKey?.rawValue,
             frontmostBundleIdentifier: frontmostBundleID
           )
         )
@@ -258,7 +260,7 @@ actor RemappingRoutingCore {
   }
 
   func stopController(
-    _ identifier: DeviceIdentifier,
+    _ identifier: LogicalControllerID,
     requiring proposedPermit: RemappingEmissionPermit?
   ) async throws {
     defer { schedulingRevision &+= 1 }
@@ -281,7 +283,7 @@ actor RemappingRoutingCore {
     connectedIdentifiers.remove(identifier)
   }
 
-  internal var terminalRetiredIdentifiers = Set<DeviceIdentifier>()
+  internal var terminalRetiredIdentifiers = Set<LogicalControllerID>()
 
   func shutdown() async throws {
     defer { schedulingRevision &+= 1 }

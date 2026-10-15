@@ -12,11 +12,7 @@ extension USBPipelineRecoveryTests {
     let manager = makeManager(using: provider, dispatcher: dispatcher)
     await manager.start()
     #expect(await waitUntil { await sessions[0].writeCount > 0 })
-    let suspended = await manager.suspendController(
-      vendorID: identifier.controllerIdentity.vendorID,
-      productID: identifier.controllerIdentity.productID,
-      runtimeIdentifier: identifier.runtimeIdentifier
-    )
+    let suspended = await manager.suspendController(.model(identifier.model))
     #expect(suspended.state == .suspended)
 
     // Two cycles: the intent must survive a sleep during which the controller stayed suspended.
@@ -32,11 +28,7 @@ extension USBPipelineRecoveryTests {
       #expect(dispatcher.presenceCount == presenceBeforeWake)
     }
 
-    let resumed = await manager.resumeController(
-      vendorID: identifier.controllerIdentity.vendorID,
-      productID: identifier.controllerIdentity.productID,
-      runtimeIdentifier: identifier.runtimeIdentifier
-    )
+    let resumed = await manager.resumeController(.model(identifier.model))
     #expect(resumed.state == .active)
     await manager.systemWillSleep()
     await manager.systemDidWake()
@@ -96,11 +88,7 @@ extension USBPipelineRecoveryTests {
     let manager = makeManager(using: provider)
     await manager.start()
     #expect(await waitUntil { await sessions[0].writeCount > 0 })
-    let suspended = await manager.suspendController(
-      vendorID: identifier.controllerIdentity.vendorID,
-      productID: identifier.controllerIdentity.productID,
-      runtimeIdentifier: identifier.runtimeIdentifier
-    )
+    let suspended = await manager.suspendController(.model(identifier.model))
     #expect(suspended.state == .suspended)
 
     await provider.setDevices([])
@@ -193,7 +181,7 @@ extension USBPipelineRecoveryTests {
     await manager.reloadControllerRecords(changing: [identifier.model])
     #expect(await first.closeCount == 1)
     #expect(await waitUntil(timeout: .seconds(5)) { await second.writeCount > 0 })
-    #expect(await manager.connectedDeviceIdentifiers() == [identifier])
+    #expect(await manager.connectedLogicalControllerIDs() == [identifier])
     #expect(await provider.openedDevices == [device, device])
     await manager.stop()
   }
@@ -212,11 +200,7 @@ extension USBPipelineRecoveryTests {
     let manager = makeManager(using: provider)
     await manager.start()
     #expect(await waitUntil(timeout: .seconds(5)) { await provider.openCount == 2 })
-    let suspended = await manager.suspendController(
-      vendorID: identifier.controllerIdentity.vendorID,
-      productID: identifier.controllerIdentity.productID,
-      runtimeIdentifier: identifier.runtimeIdentifier
-    )
+    let suspended = await manager.suspendController(.model(identifier.model))
     #expect(suspended.state == .suspended)
     let opened = await provider.openedDevices
     let changedSession = sessions[try #require(opened.firstIndex(of: device))]
@@ -245,7 +229,7 @@ extension USBPipelineRecoveryTests {
       ControllerModelID(vendorID: 0x1234, productID: 0xabcd)
     ])
     #expect(await first.closeCount == 0)
-    #expect(await manager.connectedDeviceIdentifiers() == [identifier])
+    #expect(await manager.connectedLogicalControllerIDs() == [identifier])
     #expect(await provider.openedDevices == [device])
     await manager.stop()
   }

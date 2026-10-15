@@ -20,8 +20,8 @@ extension RemappingEngineState {
   mutating func process(
     _ event: ControllerEvent,
     labels: ControllerButtonLabels,
-    from source: DeviceIdentifier,
-    into target: DeviceIdentifier,
+    from source: LogicalControllerID,
+    into target: LogicalControllerID,
     profile: RemappingProfile,
     at uptimeNanoseconds: UInt64
   ) -> [RemappingEngineAction] {

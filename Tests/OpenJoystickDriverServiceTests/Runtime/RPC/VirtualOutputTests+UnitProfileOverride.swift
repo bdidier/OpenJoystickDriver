@@ -7,17 +7,17 @@ import Testing
 extension VirtualOutputTests {
   @Test
   func aUnitOverrideRetargetsOnlyThatUnitAndResettingItFallsBackToTheModel() async throws {
-    let first = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 1)
-    let second = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 2)
+    let first = LogicalControllerID(vendorID: 1, productID: 2, locationID: 1)
+    let second = LogicalControllerID(vendorID: 1, productID: 2, locationID: 2)
     let fixture = try await profileOverrideServer([first, second])
     let automatic = fixture.server.automaticUserSpaceDispatcher()
-    func live(_ identifier: DeviceIdentifier) -> VirtualHIDProfileID? {
-      automatic?.profileState(runtimeIdentifier: identifier.runtimeIdentifier).selection?.profileID
+    func live(_ identifier: LogicalControllerID) -> VirtualHIDProfileID? {
+      automatic?.profileState(for: identifier).selection?.profileID
     }
 
     let set = await fixture.change(
       .set("hid-generic"),
-      runtimeIdentifier: first.runtimeIdentifier,
+      controller: .port(try #require(first.portKey)),
       unit: true
     )
 
@@ -26,12 +26,12 @@ extension VirtualOutputTests {
     #expect(live(second) == .xboxOneSBluetooth)
     #expect(fixture.store.override(vendorID: 1, productID: 2) == nil)
     #expect(
-      fixture.store.override(vendorID: 1, productID: 2, unit: first.unitIdentifier) == .generic
+      fixture.store.override(vendorID: 1, productID: 2, unit: first.portKey?.rawValue) == .generic
     )
 
     let reset = await fixture.change(
       .reset,
-      runtimeIdentifier: first.runtimeIdentifier,
+      controller: .port(try #require(first.portKey)),
       unit: true
     )
 

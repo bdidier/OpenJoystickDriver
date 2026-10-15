@@ -1,5 +1,6 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverCLI
@@ -19,9 +20,9 @@ struct ControllerShowAppliedTests {
       ApplicationServiceDeviceDescription.fixture(id: "pad-1", tuning: Self.tuning)
     ])
 
-    let json = await service.run(["controller", "show", "pad-1", "--json"])
-    let plain = await service.run(["controller", "show", "pad-1", "--plain"])
-    let human = await service.run(["controller", "show", "pad-1"])
+    let json = await service.run(["controller", "show", token("pad-1"), "--json"])
+    let plain = await service.run(["controller", "show", token("pad-1"), "--plain"])
+    let human = await service.run(["controller", "show", token("pad-1")])
 
     #expect(json.code == 0, "\(json.standardError)")
     let controller = try json.json()
@@ -48,8 +49,8 @@ struct ControllerShowAppliedTests {
       ApplicationServiceDeviceDescription.fixture(id: "pad-1")
     ])
 
-    let json = await service.run(["controller", "show", "pad-1", "--json"])
-    let plain = await service.run(["controller", "show", "pad-1", "--plain"])
+    let json = await service.run(["controller", "show", token("pad-1"), "--json"])
+    let plain = await service.run(["controller", "show", token("pad-1"), "--plain"])
 
     let controller = try json.json()
     #expect(controller["tuning"] == nil)
@@ -62,9 +63,9 @@ struct ControllerShowAppliedTests {
       ApplicationServiceDeviceDescription.fixture(id: "pad-1", physicalOutputOwner: .macOS)
     ])
 
-    let json = await service.run(["controller", "show", "pad-1", "--json"])
-    let plain = await service.run(["controller", "show", "pad-1", "--plain"])
-    let human = await service.run(["controller", "show", "pad-1"])
+    let json = await service.run(["controller", "show", token("pad-1"), "--json"])
+    let plain = await service.run(["controller", "show", token("pad-1"), "--plain"])
+    let human = await service.run(["controller", "show", token("pad-1")])
 
     let controller = try json.json()
     let capabilities = try #require(controller["capabilities"] as? [String: Any])
@@ -82,8 +83,8 @@ struct ControllerShowAppliedTests {
       ApplicationServiceDeviceDescription.fixture(id: "pad-1")
     ])
 
-    let json = await service.run(["controller", "show", "pad-1", "--json"])
-    let human = await service.run(["controller", "show", "pad-1"])
+    let json = await service.run(["controller", "show", token("pad-1"), "--json"])
+    let human = await service.run(["controller", "show", token("pad-1")])
 
     let controller = try json.json()
     let capabilities = try #require(controller["capabilities"] as? [String: Any])

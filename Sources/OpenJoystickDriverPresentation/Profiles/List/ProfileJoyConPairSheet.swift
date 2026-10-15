@@ -5,28 +5,24 @@
   struct ProfileJoyConPairSheet: View {
     let profile: RemappingProfile
     let devices: [ApplicationServiceDeviceDescription]
-    let onPair: (String, String) -> Void
+    let onPair: (ControllerSessionToken, ControllerSessionToken) -> Void
     @Environment(\.presentationMode)
     private var presentationMode
     @State
-    private var leftRuntimeIdentifier: String
+    private var leftSessionToken: ControllerSessionToken?
     @State
-    private var rightRuntimeIdentifier: String
+    private var rightSessionToken: ControllerSessionToken?
 
     init(
       profile: RemappingProfile,
       devices: [ApplicationServiceDeviceDescription],
-      onPair: @escaping (String, String) -> Void
+      onPair: @escaping (ControllerSessionToken, ControllerSessionToken) -> Void
     ) {
       self.profile = profile
       self.devices = devices
       self.onPair = onPair
-      _leftRuntimeIdentifier = State(
-        initialValue: Self.leftDevices(devices).first?.runtimeIdentifier ?? ""
-      )
-      _rightRuntimeIdentifier = State(
-        initialValue: Self.rightDevices(devices).first?.runtimeIdentifier ?? ""
-      )
+      _leftSessionToken = State(initialValue: Self.leftDevices(devices).first?.sessionToken)
+      _rightSessionToken = State(initialValue: Self.rightDevices(devices).first?.sessionToken)
     }
 
     var body: some View {
@@ -36,18 +32,20 @@
         Text(profile.name).font(.caption).foregroundColor(.secondary)
         Picker(
           OJDLocalized.string("profiles.joyConLeft"),
-          selection: $leftRuntimeIdentifier
+          selection: $leftSessionToken
         ) {
-          ForEach(Self.leftDevices(devices), id: \.runtimeIdentifier) { device in
-            Text(device.name + " · " + device.runtimeIdentifier).tag(device.runtimeIdentifier)
+          ForEach(Self.leftDevices(devices), id: \.sessionToken) { device in
+            Text(device.name + " · " + device.sessionToken.rawValue)
+              .tag(Optional(device.sessionToken))
           }
         }
         Picker(
           OJDLocalized.string("profiles.joyConRight"),
-          selection: $rightRuntimeIdentifier
+          selection: $rightSessionToken
         ) {
-          ForEach(Self.rightDevices(devices), id: \.runtimeIdentifier) { device in
-            Text(device.name + " · " + device.runtimeIdentifier).tag(device.runtimeIdentifier)
+          ForEach(Self.rightDevices(devices), id: \.sessionToken) { device in
+            Text(device.name + " · " + device.sessionToken.rawValue)
+              .tag(Optional(device.sessionToken))
           }
         }
         Text(
@@ -59,9 +57,11 @@
           Spacer()
           Button(OJDLocalized.string("common.cancel")) { dismiss() }
           Button(OJDLocalized.string("profiles.pair")) {
-            onPair(leftRuntimeIdentifier, rightRuntimeIdentifier)
+            if let leftSessionToken, let rightSessionToken {
+              onPair(leftSessionToken, rightSessionToken)
+            }
             dismiss()
-          }.disabled(leftRuntimeIdentifier.isEmpty || rightRuntimeIdentifier.isEmpty)
+          }.disabled(leftSessionToken == nil || rightSessionToken == nil)
         }
       }.padding(28).frame(width: 480)
     }

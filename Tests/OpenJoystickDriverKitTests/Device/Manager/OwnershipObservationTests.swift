@@ -24,7 +24,10 @@ struct OwnershipObservationTests {
 
     await manager.handleHIDEvent(
       .connected(
-        connection: HIDDeviceConnection(physicalDevice: physicalDevice, routingLocationID: 91),
+        connection: HIDDeviceConnection(
+          physicalDevice: physicalDevice,
+          routingAddress: .ioKit(locationID: 91, interfaceNumber: nil)
+        ),
         ownership: .exclusive
       )
     )
@@ -39,10 +42,10 @@ struct OwnershipObservationTests {
   func ownershipLossStopsOutputAndReacquisitionUsesFreshState() async throws {
     let dispatcher = OwnershipOutputRecorder()
     let manager = DeviceManager(dispatcher: dispatcher)
-    let identifier = DeviceIdentifier(vendorID: 0x1234, productID: 0x5678, locationID: 77)
+    let identifier = LogicalControllerID(vendorID: 0x1234, productID: 0x5678, locationID: 77)
     let physicalDevice = PhysicalDevice(
-      vendorID: identifier.controllerIdentity.vendorID,
-      productID: identifier.controllerIdentity.productID,
+      vendorID: identifier.model.vendorID,
+      productID: identifier.model.productID,
       manufacturer: "Observed manufacturer",
       productName: "Test",
       transportProperty: "USB",
@@ -60,7 +63,10 @@ struct OwnershipObservationTests {
         )
       ]
     )
-    let connection = HIDDeviceConnection(physicalDevice: physicalDevice, routingLocationID: 77)
+    let connection = HIDDeviceConnection(
+      physicalDevice: physicalDevice,
+      routingAddress: .ioKit(locationID: 77, interfaceNumber: nil)
+    )
     await manager.handleHIDEvent(.connected(connection: connection, ownership: .exclusive))
     #expect(await manager.deviceInfos[identifier]?.physicalDevice == physicalDevice)
     #expect(
@@ -76,15 +82,26 @@ struct OwnershipObservationTests {
     let first = try #require(await manager.pipelines[identifier])
     #expect(await first.isActive)
     await manager.handleHIDEvent(
-      .ownershipChanged(locationID: 77, ownership: .ownedByAnotherClient)
+      .ownershipChanged(
+        address: .ioKit(locationID: 77, interfaceNumber: nil),
+        ownership: .ownedByAnotherClient
+      )
     )
     #expect(await first.isActive == false)
     #expect(dispatcher.stops == 1)
     await manager.handleHIDEvent(
-      .ownershipChanged(locationID: 77, ownership: .ownedByAnotherClient)
+      .ownershipChanged(
+        address: .ioKit(locationID: 77, interfaceNumber: nil),
+        ownership: .ownedByAnotherClient
+      )
     )
     #expect(dispatcher.stops == 1)
-    await manager.handleHIDEvent(.ownershipChanged(locationID: 77, ownership: .exclusive))
+    await manager.handleHIDEvent(
+      .ownershipChanged(
+        address: .ioKit(locationID: 77, interfaceNumber: nil),
+        ownership: .exclusive
+      )
+    )
     let second = try #require(await manager.pipelines[identifier])
     #expect(await manager.deviceInfos[identifier]?.physicalDevice == physicalDevice)
     #expect(
@@ -105,19 +122,19 @@ struct OwnershipObservationTests {
   func competingOwnerIsVisibleWithoutStartingOrPublishingThePipeline() async throws {
     let dispatcher = OwnershipOutputRecorder()
     let manager = DeviceManager(dispatcher: dispatcher)
-    let identifier = DeviceIdentifier(vendorID: 0x1234, productID: 0x5678, locationID: 77)
+    let identifier = LogicalControllerID(vendorID: 0x1234, productID: 0x5678, locationID: 77)
     await manager.handleHIDEvent(
       .connected(
         connection: HIDDeviceConnection(
           physicalDevice: PhysicalDevice(
-            vendorID: identifier.controllerIdentity.vendorID,
-            productID: identifier.controllerIdentity.productID,
+            vendorID: identifier.model.vendorID,
+            productID: identifier.model.productID,
             productName: "Test",
             transportProperty: "USB",
             physicalLocationIdentifier: 77,
             interfaces: [gamepadHIDInterface(host: .usb)]
           ),
-          routingLocationID: 77,
+          routingAddress: .ioKit(locationID: 77, interfaceNumber: nil),
         ),
         ownership: .ownedByAnotherClient
       )
@@ -138,17 +155,17 @@ struct OwnershipObservationTests {
     let backend = ClaimRecordingHIDAccessBackend()
     let dispatcher = OwnershipOutputRecorder()
     let manager = DeviceManager(dispatcher: dispatcher, hidManager: HIDManager(backend: backend))
-    let identifier = DeviceIdentifier(vendorID: 0x1234, productID: 0x5678, locationID: 77)
+    let identifier = LogicalControllerID(vendorID: 0x1234, productID: 0x5678, locationID: 77)
     let connection = HIDDeviceConnection(
       physicalDevice: PhysicalDevice(
-        vendorID: identifier.controllerIdentity.vendorID,
-        productID: identifier.controllerIdentity.productID,
+        vendorID: identifier.model.vendorID,
+        productID: identifier.model.productID,
         productName: "Test",
         transportProperty: "USB",
         physicalLocationIdentifier: 77,
         interfaces: [gamepadHIDInterface(host: .usb)]
       ),
-      routingLocationID: 77
+      routingAddress: .ioKit(locationID: 77, interfaceNumber: nil)
     )
     await manager.handleHIDEvent(.connected(connection: connection, ownership: initial))
     let first = try #require(await manager.pipelines[identifier])
@@ -156,7 +173,12 @@ struct OwnershipObservationTests {
     await manager.retryHIDInputClaims()
     #expect(await backend.retriedLocations() == [77])
 
-    await manager.handleHIDEvent(.ownershipChanged(locationID: 77, ownership: .exclusive))
+    await manager.handleHIDEvent(
+      .ownershipChanged(
+        address: .ioKit(locationID: 77, interfaceNumber: nil),
+        ownership: .exclusive
+      )
+    )
     let second = try #require(await manager.pipelines[identifier])
     #expect(first !== second)
     #expect(await first.isActive == false)
@@ -171,17 +193,17 @@ struct OwnershipObservationTests {
   @Test
   func exclusiveHIDOwnershipIsReportedByTheLiveManagerAndPayload() async throws {
     let manager = DeviceManager(dispatcher: LoggingOutputDispatcher())
-    let identifier = DeviceIdentifier(vendorID: 0x1234, productID: 0x5678, locationID: 77)
+    let identifier = LogicalControllerID(vendorID: 0x1234, productID: 0x5678, locationID: 77)
     let connection = HIDDeviceConnection(
       physicalDevice: PhysicalDevice(
-        vendorID: identifier.controllerIdentity.vendorID,
-        productID: identifier.controllerIdentity.productID,
+        vendorID: identifier.model.vendorID,
+        productID: identifier.model.productID,
         productName: "Test",
         transportProperty: "USB",
         physicalLocationIdentifier: 77,
         interfaces: [gamepadHIDInterface(host: .usb)]
       ),
-      routingLocationID: 77
+      routingAddress: .ioKit(locationID: 77, interfaceNumber: nil)
     )
     await manager.handleHIDEvent(.connected(connection: connection, ownership: .exclusive))
     #expect(await manager.ownershipObservation(for: identifier) == .exclusiveHID)
@@ -195,7 +217,10 @@ struct OwnershipObservationTests {
     #expect(decoded.hidInputOwnership == .exclusive)
     #expect(decoded.duplicateExposureRisk == .none)
     await manager.handleHIDEvent(
-      .ownershipChanged(locationID: 77, ownership: .ownedByAnotherClient)
+      .ownershipChanged(
+        address: .ioKit(locationID: 77, interfaceNumber: nil),
+        ownership: .ownedByAnotherClient
+      )
     )
     #expect(await manager.ownershipObservation(for: identifier) == .nativeHIDVisible)
     let lost = await manager.connectedDeviceDescriptions()
@@ -265,7 +290,7 @@ struct OwnershipObservationTests {
   @Test
   func missingDeviceLookupIsUnknown() async {
     let manager = DeviceManager(dispatcher: LoggingOutputDispatcher())
-    let identifier = DeviceIdentifier(vendorID: 0x1234, productID: 0x5678)
+    let identifier = LogicalControllerID(vendorID: 0x1234, productID: 0x5678)
 
     #expect(await manager.ownershipObservation(for: identifier) == .unknown)
   }
@@ -312,16 +337,16 @@ private final class OwnershipOutputRecorder: OutputDispatcher, ControllerLifecyc
     set { lock.withLock { suppressed = newValue } }
   }
 
-  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: DeviceIdentifier) {
+  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: LogicalControllerID) {
     lock.withLock { sentCount += 1 }
   }
 
-  func activateOutput(for _: DeviceIdentifier) { lock.withLock { sentCount += 1 } }
+  func activateOutput(for _: LogicalControllerID) { lock.withLock { sentCount += 1 } }
 
-  func controllerDidStop(_ identifier: DeviceIdentifier) { lock.withLock { stoppedCount += 1 } }
+  func controllerDidStop(_ identifier: LogicalControllerID) { lock.withLock { stoppedCount += 1 } }
 
   func controllerInputOwnershipChanged(
     _ ownership: HIDInputOwnership,
-    for identifier: DeviceIdentifier
+    for identifier: LogicalControllerID
   ) { lock.withLock { recordedOwnerships.append(ownership) } }
 }

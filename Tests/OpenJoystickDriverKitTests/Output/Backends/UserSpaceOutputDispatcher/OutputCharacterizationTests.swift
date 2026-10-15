@@ -21,12 +21,12 @@ import Testing
 struct OutputCharacterizationTests {}
 
 extension OutputCharacterizationTests {
-  static let standard = DeviceIdentifier(vendorID: 0x045E, productID: 0x028E, locationID: 1)
-  static let playStation = DeviceIdentifier(vendorID: 0x054C, productID: 0x0CE6, locationID: 2)
-  static let nintendo = DeviceIdentifier(vendorID: 0x057E, productID: 0x2009, locationID: 3)
+  static let standard = LogicalControllerID(vendorID: 0x045E, productID: 0x028E, locationID: 1)
+  static let playStation = LogicalControllerID(vendorID: 0x054C, productID: 0x0CE6, locationID: 2)
+  static let nintendo = LogicalControllerID(vendorID: 0x057E, productID: 0x2009, locationID: 3)
   /// The one controller whose sticks use the rescaled 0.02 transfer instead of no dead zone.
-  static let rescaled = DeviceIdentifier(vendorID: 0x11C1, productID: 0x5600, locationID: 4)
-  static let engineDevice = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 5)
+  static let rescaled = LogicalControllerID(vendorID: 0x11C1, productID: 0x5600, locationID: 4)
+  static let engineDevice = LogicalControllerID(vendorID: 1, productID: 2, locationID: 5)
 
   /// Two dispatchers fed identically: one publishes the state snapshot, one the generic report.
   final class VirtualOutput: @unchecked Sendable {
@@ -36,7 +36,7 @@ extension OutputCharacterizationTests {
     let reportDispatcher: UserSpaceOutputDispatcher
     private let lock = NSLock()
     private var reported = 0
-    private var inputs: [DeviceIdentifier: ControllerState] = [:]
+    private var inputs: [LogicalControllerID: ControllerState] = [:]
 
     init() {
       stateDispatcher = UserSpaceOutputDispatcher(
@@ -53,7 +53,7 @@ extension OutputCharacterizationTests {
     /// the family labels of its test device.
     func dispatch(
       _ changes: [InputChange],
-      from identifier: DeviceIdentifier,
+      from identifier: LogicalControllerID,
       labels: ControllerButtonLabels? = nil
     ) async {
       let event = lock.withLock {
@@ -67,14 +67,14 @@ extension OutputCharacterizationTests {
     }
 
     /// Dispatches `event` as it stands, as a pipeline does.
-    func dispatch(_ event: ControllerEvent, from identifier: DeviceIdentifier) async {
+    func dispatch(_ event: ControllerEvent, from identifier: LogicalControllerID) async {
       lock.withLock { inputs[identifier] = event.state }
       let labels = OutputCharacterizationTests.labels(for: identifier)
       await stateDispatcher.dispatch(event, labels: labels, from: identifier)
       await reportDispatcher.dispatch(event, labels: labels, from: identifier)
     }
 
-    func send(_ state: RemappingGamepadState, for identifier: DeviceIdentifier) async throws {
+    func send(_ state: RemappingGamepadState, for identifier: LogicalControllerID) async throws {
       try await stateDispatcher.send(state, for: identifier)
       try await reportDispatcher.send(state, for: identifier)
     }
@@ -117,7 +117,7 @@ extension OutputCharacterizationTests {
       append(["  sys \(OutputCharacterizationTests.render(action))"])
     }
 
-    func send(_ state: RemappingGamepadState, for identifier: DeviceIdentifier) async throws {
+    func send(_ state: RemappingGamepadState, for identifier: LogicalControllerID) async throws {
       append(["  pad \(OutputCharacterizationTests.render(state))"])
       try await output.send(state, for: identifier)
       append(output.render("   "))
@@ -139,9 +139,9 @@ extension OutputCharacterizationTests {
     let recorder = EngineRecorder()
     let engine: RemappingEventEngine
     let profile: RemappingProfile
-    let device: DeviceIdentifier
+    let device: LogicalControllerID
 
-    init(_ profile: RemappingProfile, device: DeviceIdentifier = engineDevice) {
+    init(_ profile: RemappingProfile, device: LogicalControllerID = engineDevice) {
       self.profile = profile
       self.device = device
       engine = RemappingEventEngine(sink: recorder, gamepadSink: recorder)
@@ -182,7 +182,7 @@ extension OutputCharacterizationTests {
   }
 
   /// The family labels the pipeline binds for each test device.
-  static func labels(for identifier: DeviceIdentifier) -> ControllerButtonLabels {
+  static func labels(for identifier: LogicalControllerID) -> ControllerButtonLabels {
     switch identifier {
     case playStation: .playStation
     case nintendo: .nintendo

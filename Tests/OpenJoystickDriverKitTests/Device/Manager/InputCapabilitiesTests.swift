@@ -18,7 +18,7 @@ struct InputCapabilitiesTests {
             physicalLocationIdentifier: 77,
             interfaces: [hostHIDInterface(.usb)]
           ),
-          routingLocationID: 77,
+          routingAddress: .ioKit(locationID: 77, interfaceNumber: nil),
         ),
         ownership: .exclusive
       )
@@ -44,7 +44,7 @@ struct InputCapabilitiesTests {
     )
     let decoded = try JSONDecoder().decode(ApplicationServiceDeviceDescription.self, from: encoded)
     #expect(decoded.capabilities == description.capabilities)
-    #expect(decoded.runtimeIdentifier == description.runtimeIdentifier)
+    #expect(decoded.sessionToken == description.sessionToken)
     await manager.stop()
   }
 

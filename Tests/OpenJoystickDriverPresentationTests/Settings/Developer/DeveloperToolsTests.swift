@@ -172,33 +172,36 @@ struct DeveloperToolsTests {
   @Test
   @MainActor
   func staleSnapshotCannotReplaceTheSelectedController() async throws {
-    let firstDevice = device(runtimeIdentifier: "controller-1")
-    let secondDevice = device(runtimeIdentifier: "controller-2")
+    let firstDevice = device(sessionToken: "controller-1")
+    let secondDevice = device(sessionToken: "controller-2")
     let firstPacket = try packetEntry(timestamp: 1, hex: "01")
     let secondPacket = try packetEntry(timestamp: 2, hex: "02")
     let gateway = GatewayStub(
       statusPayload: statusPayload(devices: [firstDevice, secondDevice]),
-      inputStatesByRuntimeIdentifier: [
-        firstDevice.runtimeIdentifier: inputState(button: .microphone),
-        secondDevice.runtimeIdentifier: inputState(button: .touchpadClick),
+      inputStatesBySessionToken: [
+        firstDevice.sessionToken.rawValue: inputState(button: .microphone),
+        secondDevice.sessionToken.rawValue: inputState(button: .touchpadClick),
       ],
-      packetEntriesByRuntimeIdentifier: [
-        firstDevice.runtimeIdentifier: [firstPacket],
-        secondDevice.runtimeIdentifier: [secondPacket],
+      packetEntriesBySessionToken: [
+        firstDevice.sessionToken.rawValue: [firstPacket],
+        secondDevice.sessionToken.rawValue: [secondPacket],
       ],
       deviceReadDelaysNanoseconds: [
-        firstDevice.runtimeIdentifier: 50_000_000, secondDevice.runtimeIdentifier: 1_000_000,
+        firstDevice.sessionToken.rawValue: 50_000_000,
+        secondDevice.sessionToken.rawValue: 1_000_000,
       ]
     )
     let model = DeveloperToolsViewModel(gateway: gateway)
 
     let firstRefresh = Task { await model.refresh() }
-    await waitUntil { model.selectedDevice?.runtimeIdentifier == firstDevice.runtimeIdentifier }
-    model.selectDevice(runtimeIdentifier: secondDevice.runtimeIdentifier)
+    await waitUntil {
+      model.selectedDevice?.sessionToken.rawValue == firstDevice.sessionToken.rawValue
+    }
+    model.selectDevice(sessionToken: secondDevice.sessionToken.rawValue)
     await firstRefresh.value
     await waitUntil { model.packets.map(\.hex) == ["02"] }
 
-    #expect(model.selectedDevice?.runtimeIdentifier == secondDevice.runtimeIdentifier)
+    #expect(model.selectedDevice?.sessionToken.rawValue == secondDevice.sessionToken.rawValue)
     #expect(model.latestInput?.pressed == [.touchpadClick])
     #expect(model.packets.map(\.hex) == ["02"])
   }
@@ -217,28 +220,28 @@ struct DeveloperToolsTests {
     await waitUntil { model.loadState == .ready }
 
     #expect(model.loadState == .ready)
-    #expect(model.selectedDevice?.runtimeIdentifier == "controller-1")
+    #expect(model.selectedDevice?.sessionToken == .fixture("controller-1"))
   }
 
   @Test
   @MainActor
   func repeatedSwitchingJoinsPredecessorsAndCloseLeavesNoOperation() async throws {
-    let firstDevice = device(runtimeIdentifier: "controller-1")
-    let secondDevice = device(runtimeIdentifier: "controller-2")
+    let firstDevice = device(sessionToken: "controller-1")
+    let secondDevice = device(sessionToken: "controller-2")
     let firstPacket = try packetEntry(timestamp: 1, hex: "11")
     let secondPacket = try packetEntry(timestamp: 2, hex: "12")
     let gateway = GatewayStub(
       statusPayload: statusPayload(devices: [firstDevice, secondDevice]),
-      inputStatesByRuntimeIdentifier: [
-        firstDevice.runtimeIdentifier: inputState(button: .microphone),
-        secondDevice.runtimeIdentifier: inputState(button: .touchpadClick),
+      inputStatesBySessionToken: [
+        firstDevice.sessionToken.rawValue: inputState(button: .microphone),
+        secondDevice.sessionToken.rawValue: inputState(button: .touchpadClick),
       ],
-      packetEntriesByRuntimeIdentifier: [
-        firstDevice.runtimeIdentifier: [firstPacket],
-        secondDevice.runtimeIdentifier: [secondPacket],
+      packetEntriesBySessionToken: [
+        firstDevice.sessionToken.rawValue: [firstPacket],
+        secondDevice.sessionToken.rawValue: [secondPacket],
       ],
       deviceReadDelaysNanoseconds: [
-        firstDevice.runtimeIdentifier: 5_000_000, secondDevice.runtimeIdentifier: 5_000_000,
+        firstDevice.sessionToken.rawValue: 5_000_000, secondDevice.sessionToken.rawValue: 5_000_000,
       ]
     )
     let model = DeveloperToolsViewModel(gateway: gateway)
@@ -246,11 +249,11 @@ struct DeveloperToolsTests {
 
     for index in 0..<20 {
       model.selectDevice(
-        runtimeIdentifier: index.isMultiple(of: 2)
-          ? secondDevice.runtimeIdentifier : firstDevice.runtimeIdentifier
+        sessionToken: index.isMultiple(of: 2)
+          ? secondDevice.sessionToken.rawValue : firstDevice.sessionToken.rawValue
       )
     }
-    model.selectDevice(runtimeIdentifier: secondDevice.runtimeIdentifier)
+    model.selectDevice(sessionToken: secondDevice.sessionToken.rawValue)
     await waitUntil { model.packets.map(\.hex) == [secondPacket.hex] }
 
     #expect(await gateway.maximumConcurrentDeviceReads <= 2)
@@ -263,7 +266,7 @@ struct DeveloperToolsTests {
   }
 
   private func device(
-    runtimeIdentifier: String = "controller-1"
+    sessionToken: String = "controller-1"
   ) -> ApplicationServiceDeviceDescription {
     ApplicationServiceDeviceDescription(
       name: "Controller",
@@ -276,7 +279,7 @@ struct DeveloperToolsTests {
       bindingResult: .hidDescriptorFixture,
       inputEndpoint: 0x82,
       outputEndpoint: 0x02,
-      runtimeIdentifier: runtimeIdentifier
+      sessionToken: .fixture(sessionToken)
     )
   }
 

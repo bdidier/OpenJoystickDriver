@@ -51,8 +51,12 @@ struct OwnershipReapplyTests {
     await backend.replace(native, with: seized)
     await manager.handleHIDEvent(.connected(connection: native, ownership: .unknown))
     await manager.handleHIDEvent(.connected(connection: other, ownership: .exclusive))
-    let changedID = DeviceIdentifier(vendorID: 0x3537, productID: 0x100B, locationID: 0x0021_0000)
-    let otherID = DeviceIdentifier(vendorID: 0x3537, productID: 0x1053, locationID: 0x0022_0000)
+    let changedID = LogicalControllerID(
+      vendorID: 0x3537,
+      productID: 0x100B,
+      locationID: 0x0021_0000
+    )
+    let otherID = LogicalControllerID(vendorID: 0x3537, productID: 0x1053, locationID: 0x0022_0000)
     let otherPipeline = try #require(await manager.pipelines[otherID])
 
     await manager.reloadControllerRecords(changing: [Self.changedModel])
@@ -117,7 +121,7 @@ struct OwnershipReapplyTests {
     for report in [HIDLocationRoutingTests.aPressed, neutral] {
       await manager.handleHIDEvent(
         .inputReport(
-          locationID: locationID,
+          address: .ioKit(locationID: locationID, interfaceNumber: nil),
           connectionID: connection.connectionID,
           reportID: 0x12,
           data: report
@@ -177,7 +181,7 @@ struct OwnershipReapplyTests {
         ],
         nativePassThrough: native
       ),
-      routingLocationID: locationID
+      routingAddress: .ioKit(locationID: locationID, interfaceNumber: nil)
     )
   }
 }
@@ -201,12 +205,12 @@ private final class UnroutedDispatcher: OutputDispatcher, ObservedInputDemand,
   func dispatch(
     _: ControllerEvent,
     labels _: ControllerButtonLabels,
-    from _: DeviceIdentifier
+    from _: LogicalControllerID
   ) { lock.withLock { dispatched += 1 } }
 
-  func activateOutput(for _: DeviceIdentifier) {}
+  func activateOutput(for _: LogicalControllerID) {}
 
-  func wantsObservedInput(from _: DeviceIdentifier) -> Bool { false }
+  func wantsObservedInput(from _: LogicalControllerID) -> Bool { false }
 }
 
 /// Forwards to the scripted fake and, like `HIDDeviceStream`, admits a changed model again by
@@ -217,7 +221,7 @@ private actor OwnershipReapplyBackend: HIDAccessBackend {
   private var snapshots: [HIDDeviceConnection] = []
   private var replacements: [UUID: HIDDeviceConnection] = [:]
   private var calls: [Set<ControllerModelID>] = []
-  private var admitted: [DeviceIdentifier: DevicePipeline] = [:]
+  private var admitted: [LogicalControllerID: DevicePipeline] = [:]
 
   init(_ scripted: ScriptedHIDAccessBackend) { self.scripted = scripted }
 
@@ -237,7 +241,7 @@ private actor OwnershipReapplyBackend: HIDAccessBackend {
   func reevaluated() -> [Set<ControllerModelID>] { calls }
 
   /// The manager's pipelines once the admissions this backend sent have finished.
-  func admittedPipelines() -> [DeviceIdentifier: DevicePipeline] { admitted }
+  func admittedPipelines() -> [LogicalControllerID: DevicePipeline] { admitted }
 
   func reevaluateOwnership(of models: Set<ControllerModelID>) async -> Set<UUID> {
     calls.append(models)
@@ -266,10 +270,10 @@ private actor OwnershipReapplyBackend: HIDAccessBackend {
   }
 
   func setOutputReport(
-    locationID: UInt32,
+    address: ControllerConnectionAddress,
     report: PhysicalHIDOutputReport
   ) async -> PhysicalHIDReportResult<Void> {
-    await scripted.setOutputReport(locationID: locationID, report: report)
+    await scripted.setOutputReport(address: address, report: report)
   }
 
   func setOutputReport(
@@ -280,10 +284,10 @@ private actor OwnershipReapplyBackend: HIDAccessBackend {
   }
 
   func setFeatureReport(
-    locationID: UInt32,
+    address: ControllerConnectionAddress,
     report: PhysicalHIDOutputReport
   ) async -> PhysicalHIDReportResult<Void> {
-    await scripted.setFeatureReport(locationID: locationID, report: report)
+    await scripted.setFeatureReport(address: address, report: report)
   }
 
   func setFeatureReport(
@@ -294,10 +298,10 @@ private actor OwnershipReapplyBackend: HIDAccessBackend {
   }
 
   func getFeatureReport(
-    locationID: UInt32,
+    address: ControllerConnectionAddress,
     request: PhysicalHIDFeatureReadRequest
   ) async -> PhysicalHIDReportResult<Data> {
-    await scripted.getFeatureReport(locationID: locationID, request: request)
+    await scripted.getFeatureReport(address: address, request: request)
   }
 
   func getFeatureReport(
@@ -307,16 +311,16 @@ private actor OwnershipReapplyBackend: HIDAccessBackend {
     await scripted.getFeatureReport(connection: connection, request: request)
   }
 
-  func releaseInputClaim(locationID: UInt32) async -> PhysicalHIDClaimResult {
-    await scripted.releaseInputClaim(locationID: locationID)
+  func releaseInputClaim(address: ControllerConnectionAddress) async -> PhysicalHIDClaimResult {
+    await scripted.releaseInputClaim(address: address)
   }
 
-  func reacquireInputClaim(locationID: UInt32) async -> PhysicalHIDClaimResult {
-    await scripted.reacquireInputClaim(locationID: locationID)
+  func reacquireInputClaim(address: ControllerConnectionAddress) async -> PhysicalHIDClaimResult {
+    await scripted.reacquireInputClaim(address: address)
   }
 
-  func retryInputClaim(locationID: UInt32) async {
-    await scripted.retryInputClaim(locationID: locationID)
+  func retryInputClaim(address: ControllerConnectionAddress) async {
+    await scripted.retryInputClaim(address: address)
   }
 
   func routeElementValues(connection: HIDDeviceConnection) async {

@@ -7,22 +7,22 @@ final class ReceiverSlotDispatcher: OutputDispatcher, ControllerLifecycleListene
   @unchecked Sendable
 {
   private let lock = NSLock()
-  private var recordedDispatches: [DeviceIdentifier: [ControllerState]] = [:]
-  private var recordedStops: [DeviceIdentifier] = []
+  private var recordedDispatches: [LogicalControllerID: [ControllerState]] = [:]
+  private var recordedStops: [LogicalControllerID] = []
 
   var suppressOutput = false
-  var dispatches: [DeviceIdentifier: [ControllerState]] { lock.withLock { recordedDispatches } }
-  var stops: [DeviceIdentifier] { lock.withLock { recordedStops } }
+  var dispatches: [LogicalControllerID: [ControllerState]] { lock.withLock { recordedDispatches } }
+  var stops: [LogicalControllerID] { lock.withLock { recordedStops } }
 
   func dispatch(
     _ event: ControllerEvent,
     labels _: ControllerButtonLabels,
-    from identifier: DeviceIdentifier
+    from identifier: LogicalControllerID
   ) { lock.withLock { recordedDispatches[identifier, default: []].append(event.state) } }
 
-  func activateOutput(for _: DeviceIdentifier) {}
+  func activateOutput(for _: LogicalControllerID) {}
 
-  func controllerDidStop(_ identifier: DeviceIdentifier) {
+  func controllerDidStop(_ identifier: LogicalControllerID) {
     lock.withLock { recordedStops.append(identifier) }
   }
 }

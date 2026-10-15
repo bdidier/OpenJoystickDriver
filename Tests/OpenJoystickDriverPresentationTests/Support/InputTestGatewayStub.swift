@@ -5,7 +5,7 @@ import OpenJoystickDriverKit
 @testable import OpenJoystickDriverPresentation
 
 struct RecordedRumble: Equatable, Sendable {
-  let selector: RuntimeDeviceSelector
+  let selector: ControllerReference
   let left: UInt8
   let right: UInt8
   let leftTrigger: UInt8
@@ -17,7 +17,7 @@ enum InputTestGatewayError: Error { case outputFailed }
 
 actor InputTestGatewayStub: InputTestDeviceGateway {
   func motionCalibration(
-    for selector: RuntimeDeviceSelector,
+    for selector: ControllerReference,
     command: RemappingMotionCalibrationCommand?
   ) throws -> RemappingMotionCalibrationStatus {
     throw RemappingMotionCalibrationError.motionUnavailable
@@ -29,12 +29,12 @@ actor InputTestGatewayStub: InputTestDeviceGateway {
   var cancelledInputCalls = 0
   var activeInputCalls = 0
   var maximumConcurrentInputCalls = 0
-  var inputSelectors: [RuntimeDeviceSelector] = []
+  var inputSelectors: [ControllerReference] = []
   var rumbleCalls: [RecordedRumble] = []
-  var playerCalls: [(RuntimeDeviceSelector, PhysicalPlayerIndicator)] = []
-  var colorCalls: [(RuntimeDeviceSelector, UInt8, UInt8, UInt8)] = []
-  var colorReleaseCalls: [(RuntimeDeviceSelector, UUID)] = []
-  var brightnessCalls: [(RuntimeDeviceSelector, UInt8)] = []
+  var playerCalls: [(ControllerReference, PhysicalPlayerIndicator)] = []
+  var colorCalls: [(ControllerReference, UInt8, UInt8, UInt8)] = []
+  var colorReleaseCalls: [(ControllerReference, UUID)] = []
+  var brightnessCalls: [(ControllerReference, UInt8)] = []
   var outputResult = true
   var outputThrows = false
   var activeOutputCalls = 0
@@ -50,7 +50,7 @@ actor InputTestGatewayStub: InputTestDeviceGateway {
     self.outputDelayNanoseconds = outputDelayNanoseconds
   }
 
-  func controllerState(for selector: RuntimeDeviceSelector) async throws -> ControllerState? {
+  func controllerState(for selector: ControllerReference) async throws -> ControllerState? {
     inputCalls += 1
     activeInputCalls += 1
     maximumConcurrentInputCalls = max(maximumConcurrentInputCalls, activeInputCalls)
@@ -70,7 +70,7 @@ actor InputTestGatewayStub: InputTestDeviceGateway {
   /// 0 ms the model sent before the single output command.
   func sendControllerOutput(
     _ command: ControllerOutputCommand,
-    for selector: RuntimeDeviceSelector
+    for selector: ControllerReference
   ) async throws -> ControllerOutputResult {
     try await beginOutputCall()
     defer { finishOutputCall() }
@@ -110,7 +110,7 @@ actor InputTestGatewayStub: InputTestDeviceGateway {
   }
 
   func previewColor(
-    for selector: RuntimeDeviceSelector,
+    for selector: ControllerReference,
     token _: UUID,
     red: UInt8,
     green: UInt8,
@@ -122,7 +122,7 @@ actor InputTestGatewayStub: InputTestDeviceGateway {
     return outputResult
   }
 
-  func releaseColorPreview(for selector: RuntimeDeviceSelector, token: UUID) async throws -> Bool {
+  func releaseColorPreview(for selector: ControllerReference, token: UUID) async throws -> Bool {
     await Task.yield()
     colorReleaseCalls.append((selector, token))
     return outputResult

@@ -2,11 +2,11 @@ import Foundation
 
 /// Structured description of a connected controller, used in ``ApplicationServiceStatusPayload``.
 public struct ApplicationServiceDeviceDescription: Codable, Sendable {
-  /// Opaque selector for one connected controller during the current runtime session.
-  public let runtimeIdentifier: String
-  /// Persistent selector for this controller on its USB port, which lasts across reconnects and
-  /// service restarts; nil when the controller reports no location ID. See ``UnitIdentity``.
-  public let unitIdentifier: String?
+  /// The token of this attachment; a reconnect gets a new one. See ``ControllerSessionToken``.
+  public let sessionToken: ControllerSessionToken
+  /// The controller's port key, which lasts across reconnects and service restarts; nil when the
+  /// controller reports no location ID. See ``ControllerPortKey``.
+  public let portKey: ControllerPortKey?
   /// Human-readable controller name.
   public let name: String
   /// USB vendor ID.
@@ -100,11 +100,11 @@ public struct ApplicationServiceDeviceDescription: Codable, Sendable {
     sessionState: ControllerSessionState = .active,
     startupCommandStatus: String? = nil,
     inputHealth: ControllerInputHealth = ControllerInputHealth(state: .healthy),
-    runtimeIdentifier: String? = nil,
-    unitIdentifier: String? = nil
+    sessionToken: ControllerSessionToken = .issue(),
+    portKey: ControllerPortKey? = nil
   ) {
-    self.runtimeIdentifier = runtimeIdentifier ?? String(format: "%04X:%04X:M", vendorID, productID)
-    self.unitIdentifier = unitIdentifier
+    self.sessionToken = sessionToken
+    self.portKey = portKey
     self.name = name
     self.vendorID = vendorID
     self.productID = productID
@@ -136,8 +136,8 @@ public struct ApplicationServiceDeviceDescription: Codable, Sendable {
 
   public init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
-    self.runtimeIdentifier = try container.decode(String.self, forKey: .runtimeIdentifier)
-    self.unitIdentifier = try container.decodeIfPresent(String.self, forKey: .unitIdentifier)
+    self.sessionToken = try container.decode(ControllerSessionToken.self, forKey: .sessionToken)
+    self.portKey = try container.decodeIfPresent(ControllerPortKey.self, forKey: .portKey)
     self.name = try container.decode(String.self, forKey: .name)
     self.vendorID = try container.decode(UInt16.self, forKey: .vendorID)
     self.productID = try container.decode(UInt16.self, forKey: .productID)
@@ -203,8 +203,8 @@ public struct ApplicationServiceDeviceDescription: Codable, Sendable {
 
   private enum CodingKeys: String, CodingKey {
     case name
-    case runtimeIdentifier
-    case unitIdentifier
+    case sessionToken
+    case portKey
     case vendorID
     case productID
     case protocolBinding
@@ -267,8 +267,15 @@ extension ApplicationServiceDeviceDescription {
       sessionState: snapshot.sessionState,
       startupCommandStatus: snapshot.startupCommandStatus,
       inputHealth: snapshot.inputHealth,
-      runtimeIdentifier: snapshot.runtimeIdentifier,
-      unitIdentifier: snapshot.unitIdentifier
+      sessionToken: snapshot.sessionToken,
+      portKey: snapshot.portKey
     )
+  }
+}
+
+extension ApplicationServiceDeviceDescription: ControllerReferenceable {
+  /// The controller's model.
+  public var model: ControllerModelID {
+    ControllerModelID(vendorID: vendorID, productID: productID)
   }
 }

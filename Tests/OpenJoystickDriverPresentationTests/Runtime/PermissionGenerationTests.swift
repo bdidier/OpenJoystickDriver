@@ -192,9 +192,9 @@ private actor PermissionRaceGatewayStub: ApplicationServiceGateway {
     _ requirement: PermissionManager.Requirement
   ) throws -> PermissionManager.Snapshot { try requestPermissions() }
 
-  func controllerState(for selector: RuntimeDeviceSelector) throws -> ControllerState? { nil }
+  func controllerState(for selector: ControllerReference) throws -> ControllerState? { nil }
 
-  func packetLog(for selector: RuntimeDeviceSelector) throws -> [PacketLogEntry] { [] }
+  func packetLog(for selector: ControllerReference) throws -> [PacketLogEntry] { [] }
 
   func remappingSnapshot() async throws -> ApplicationServiceRemappingSnapshotPayload {
     markReadStarted()
@@ -252,8 +252,8 @@ private actor PermissionRaceGatewayStub: ApplicationServiceGateway {
   }
 
   func pairRemappingJoyCons(
-    left: String,
-    right: String,
+    left: ControllerReference,
+    right: ControllerReference,
     profileID: UUID
   ) throws -> ApplicationServiceRemappingSnapshotPayload { snapshotPayload }
 
@@ -262,7 +262,7 @@ private actor PermissionRaceGatewayStub: ApplicationServiceGateway {
 
   func setVirtualHIDProfileOverride(
     _ profile: VirtualHIDProfileID,
-    for selector: RuntimeDeviceSelector
+    for selector: ControllerReference
   ) throws -> VirtualHIDProfileOverrideResult {
     VirtualHIDProfileOverrideResult(
       requested: profile,
@@ -273,7 +273,7 @@ private actor PermissionRaceGatewayStub: ApplicationServiceGateway {
   }
 
   func resetVirtualHIDProfileOverride(
-    for selector: RuntimeDeviceSelector
+    for selector: ControllerReference
   ) throws -> VirtualHIDProfileOverrideResult {
     VirtualHIDProfileOverrideResult(
       requested: nil,

@@ -52,7 +52,7 @@ struct ControllerCalibrateCommand: AsyncParsableCommand {
           return (
             device,
             try await client.remappingMotionCalibration(
-              runtimeIdentifier: device.runtimeIdentifier,
+              for: .session(device.sessionToken),
               command: action
             )
           )
@@ -62,7 +62,7 @@ struct ControllerCalibrateCommand: AsyncParsableCommand {
       }
       let offset = status.offsetDegreesPerSecond
       let result = Result(
-        controller: device.runtimeIdentifier,
+        controller: device.sessionToken.rawValue,
         calibrated: status.hasMotionBaseline,
         collecting: status.isCollecting,
         offsetDegreesPerSecond: Result.Offset(x: offset.x, y: offset.y, z: offset.z)
@@ -138,8 +138,8 @@ struct JoyConPairResult: Encodable, Equatable {
 
   init(_ pair: ApplicationServiceJoyConPairPayload) {
     session = pair.sessionID.uuidString
-    left = pair.leftRuntimeIdentifier
-    right = pair.rightRuntimeIdentifier
+    left = pair.left.rawValue
+    right = pair.right.rawValue
     profile = pair.profileName
     gyro = pair.gyroSelection.rawValue
   }
@@ -188,15 +188,15 @@ struct ControllerPairCommand: AsyncParsableCommand {
         let rightDevice = try await right.resolve(with: client)
         let (profile, _) = try await selector.resolve(with: client)
         let snapshot = try await client.pairRemappingJoyCons(
-          leftRuntimeIdentifier: leftDevice.runtimeIdentifier,
-          rightRuntimeIdentifier: rightDevice.runtimeIdentifier,
+          left: .session(leftDevice.sessionToken),
+          right: .session(rightDevice.sessionToken),
           profileID: profile.id
         )
-        return (leftDevice.runtimeIdentifier, rightDevice.runtimeIdentifier, snapshot)
+        return (leftDevice.sessionToken, rightDevice.sessionToken, snapshot)
       }
       guard
         let pair = snapshot.joyConPairs.first(where: {
-          $0.leftRuntimeIdentifier == leftID && $0.rightRuntimeIdentifier == rightID
+          $0.left == leftID && $0.right == rightID
         })
       else {
         throw CLIFailure(
@@ -255,7 +255,7 @@ struct ControllerUnpairCommand: AsyncParsableCommand {
         guard
           let pair = snapshot.joyConPairs.first(where: {
             $0.sessionID.uuidString.caseInsensitiveCompare(text) == .orderedSame
-              || $0.leftRuntimeIdentifier == text || $0.rightRuntimeIdentifier == text
+              || $0.left.rawValue == text || $0.right.rawValue == text
           })
         else {
           throw CLIFailure(

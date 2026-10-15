@@ -5,7 +5,7 @@ import IOKit.hid
 import Security
 
 extension UserSpaceOutputDispatcher {
-  internal func createEntry(for identifier: DeviceIdentifier) async throws -> Entry {
+  internal func createEntry(for identifier: LogicalControllerID) async throws -> Entry {
     guard lifecycle.isOpen else { throw CancellationError() }
     if let testBackendFactory {
       let backend = try await testBackendFactory(identifier)
@@ -19,7 +19,7 @@ extension UserSpaceOutputDispatcher {
   }
 
   internal func hostReportHandler(
-    identifier: DeviceIdentifier,
+    identifier: LogicalControllerID,
     input: UserSpaceInputReportState,
     sender: UserSpaceReportSender
   ) -> UserSpaceHostReportHandler {
@@ -47,7 +47,7 @@ extension UserSpaceOutputDispatcher {
   /// Deferred creation until `IOHIDUserDeviceActivate` avoids dropped get/set report calls.
   static let deviceCreationOptions = IOOptionBits(IOHIDUserDeviceOptions.createOnActivate.rawValue)
 
-  internal func createIOKitEntry(for identifier: DeviceIdentifier) throws -> Entry {
+  internal func createIOKitEntry(for identifier: LogicalControllerID) throws -> Entry {
     let properties = Self.deviceProperties(profile: profile, format: format, identifier: identifier)
     let device = IOHIDUserDeviceCreateWithProperties(
       kCFAllocatorDefault,
@@ -62,9 +62,10 @@ extension UserSpaceOutputDispatcher {
       throw CancellationError()
     }
 
-    let identity = identifier.controllerIdentity
+    let identity = identifier.hardware
     let queue = DispatchQueue(
-      label: "com.openjoystickdriver.iokit-hid.\(identity.vendorID).\(identity.productID)"
+      label:
+        "com.openjoystickdriver.iokit-hid.\(identity.model.vendorID).\(identity.model.productID)"
     )
     let inputReportState = UserSpaceInputReportState(format: format)
     let entry = Entry(
@@ -127,7 +128,7 @@ extension UserSpaceOutputDispatcher {
   static func deviceProperties(
     profile: VirtualDeviceProfile,
     format: any VirtualGamepadReportFormat,
-    identifier: DeviceIdentifier
+    identifier: LogicalControllerID
   ) -> [String: Any] {
     let primaryUsage = Int(kHIDUsage_GD_GamePad)
     var properties: [String: Any] = [

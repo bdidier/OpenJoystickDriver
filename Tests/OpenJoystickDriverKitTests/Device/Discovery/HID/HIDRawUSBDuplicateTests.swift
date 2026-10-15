@@ -61,7 +61,7 @@ struct HIDRawUSBDuplicateTests {
     // The registry publishes the GIP triple; the configuration descriptor adds its endpoints.
     func observation(_ endpoints: [PhysicalEndpointSignature]?) -> PhysicalDevice {
       PhysicalDevice(
-        serviceIdentity: device.serviceIdentity,
+        serviceAddress: device.serviceAddress,
         vendorID: device.vendorID,
         productID: device.productID,
         configurationValue: 1,
@@ -127,7 +127,7 @@ struct HIDRawUSBDuplicateTests {
         physicalLocationIdentifier: locationID,
         interfaces: [gamepadHIDInterface(host: .usb)]
       ),
-      routingLocationID: locationID
+      routingAddress: .ioKit(locationID: locationID, interfaceNumber: nil)
     )
   }
 }

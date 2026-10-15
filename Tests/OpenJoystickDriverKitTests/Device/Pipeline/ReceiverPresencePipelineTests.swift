@@ -8,7 +8,7 @@ import Testing
 struct ReceiverPresencePipelineTests {
   private typealias Receiver = ProtocolPacketFixtures.XUSBReceiver
 
-  let identifier = DeviceIdentifier(vendorID: 0x045E, productID: 0x0719, locationID: 7)
+  let identifier = LogicalControllerID(vendorID: 0x045E, productID: 0x0719, locationID: 7)
   let device = USBTransportDevice(
     route: .ioUSBHost,
     serviceID: 1,
@@ -147,21 +147,21 @@ private final class ReceiverRecordingDispatcher: OutputDispatcher, ControllerLif
 {
   private let lock = NSLock()
   private var recordedStates: [ControllerState] = []
-  private var recordedStops: [DeviceIdentifier] = []
+  private var recordedStops: [LogicalControllerID] = []
 
   var suppressOutput = false
   var states: [ControllerState] { lock.withLock { recordedStates } }
-  var stops: [DeviceIdentifier] { lock.withLock { recordedStops } }
+  var stops: [LogicalControllerID] { lock.withLock { recordedStops } }
 
   func dispatch(
     _ event: ControllerEvent,
     labels _: ControllerButtonLabels,
-    from _: DeviceIdentifier
+    from _: LogicalControllerID
   ) { lock.withLock { recordedStates.append(event.state) } }
 
-  func activateOutput(for _: DeviceIdentifier) {}
+  func activateOutput(for _: LogicalControllerID) {}
 
-  func controllerDidStop(_ identifier: DeviceIdentifier) {
+  func controllerDidStop(_ identifier: LogicalControllerID) {
     lock.withLock { recordedStops.append(identifier) }
   }
 }

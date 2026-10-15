@@ -149,8 +149,8 @@ struct NintendoCalibrationTests {
   @Test
   func pipelineStopExpiresOutstandingSPIReads() async {
     let pipeline = DevicePipeline(
-      identifier: DeviceIdentifier(vendorID: 0x057E, productID: 0x2009),
-      transport: .hid(locationID: 84),
+      identifier: LogicalControllerID(vendorID: 0x057E, productID: 0x2009),
+      transport: .hid(address: .ioKit(locationID: 84, interfaceNumber: nil)),
       driver: Switch1Driver(isBluetooth: true),
       dispatcher: LoggingOutputDispatcher()
     )

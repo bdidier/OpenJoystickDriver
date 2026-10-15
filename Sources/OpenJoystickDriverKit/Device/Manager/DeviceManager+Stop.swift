@@ -52,8 +52,8 @@ extension DeviceManager {
     await ControllerTeardownOutput.$isActive.withValue(true) {
       for (identifier, pipeline) in pipelines {
         await neutralizePhysicalOutputs(for: identifier, pipeline: pipeline)
-        if let locationID = identifier.locationID {
-          await sendHIDDeactivationWritesIfNeeded(pipeline: pipeline, locationID: locationID)
+        if let address = identifier.hidRoutingAddress {
+          await sendHIDDeactivationWritesIfNeeded(pipeline: pipeline, address: address)
         }
         await pipeline.stop()
       }

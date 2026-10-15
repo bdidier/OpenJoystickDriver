@@ -34,8 +34,8 @@ extension RemappingRoutingCore {
     )
   }
 
-  var sortedIdentifiers: [DeviceIdentifier] {
-    connectedIdentifiers.sorted { $0.runtimeIdentifier < $1.runtimeIdentifier }
+  var sortedIdentifiers: [LogicalControllerID] {
+    connectedIdentifiers.sorted()
   }
 
   /// The eligibility of a virtual-gamepad route: suppressed when output is suppressed, eligible
@@ -46,11 +46,11 @@ extension RemappingRoutingCore {
 
   /// Forgets the engine baselines of sources the route no longer feeds to the engine, so input
   /// that changed meanwhile is diffed against neutral when feeding resumes.
-  func endSources(_ sources: some Sequence<DeviceIdentifier>) async {
+  func endSources(_ sources: some Sequence<LogicalControllerID>) async {
     for source in sources { await engine.endSource(source) }
   }
 
-  func notifyVirtualGamepadStop(_ identifier: DeviceIdentifier) async {
+  func notifyVirtualGamepadStop(_ identifier: LogicalControllerID) async {
     await (virtualOutput as? any ControllerLifecycleListener)?.controllerDidStop(identifier)
   }
 
@@ -70,7 +70,7 @@ extension RemappingRoutingCore {
   }
 
   func releaseAndRetire(
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     profile: RemappingProfile,
     requiring permit: RemappingEmissionPermit?
   ) async throws {
@@ -85,7 +85,7 @@ extension RemappingRoutingCore {
   }
 
   func releaseAllSafely(
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     requiring proposedPermit: RemappingEmissionPermit?
   ) async throws {
     let permit = try requireOperationalPermit(proposedPermit)

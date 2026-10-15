@@ -21,8 +21,8 @@ struct ConnectionStampTests {
   func aStatusFrameWithoutInputStillChangesTheReadAndDispatchedPower() async throws {
     let dispatcher = StampRecorder()
     let pipeline = DevicePipeline(
-      identifier: DeviceIdentifier(vendorID: 0x045E, productID: 0x02EA),
-      transport: .hid(locationID: 1),
+      identifier: LogicalControllerID(vendorID: 0x045E, productID: 0x02EA),
+      transport: .hid(address: .ioKit(locationID: 1, interfaceNumber: nil)),
       driver: StatusFrameDriver(),
       dispatcher: dispatcher,
       binding: Self.binding,
@@ -53,8 +53,8 @@ struct ConnectionStampTests {
     let dispatcher = NativeEventRecorder()
     dispatcher.demandsInput = false
     let pipeline = DevicePipeline(
-      identifier: DeviceIdentifier(vendorID: 0x045E, productID: 0x02EA),
-      transport: .hid(locationID: 1),
+      identifier: LogicalControllerID(vendorID: 0x045E, productID: 0x02EA),
+      transport: .hid(address: .ioKit(locationID: 1, interfaceNumber: nil)),
       driver: StatusFrameDriver(),
       dispatcher: dispatcher,
       macOSOwnedOutput: MacOSOwnedOutput.none
@@ -118,8 +118,8 @@ private final class StampRecorder: OutputDispatcher, @unchecked Sendable {
   func dispatch(
     _ event: ControllerEvent,
     labels _: ControllerButtonLabels,
-    from _: DeviceIdentifier
+    from _: LogicalControllerID
   ) { lock.withLock { recorded.append(event.state) } }
 
-  func activateOutput(for _: DeviceIdentifier) {}
+  func activateOutput(for _: LogicalControllerID) {}
 }

@@ -8,7 +8,7 @@ struct RemappingPhysicalOutputTests {
   func pressAndReleaseDeliverOneExactOwnedChannelClaim() async throws {
     let sink = RecordingPhysicalOutputSink()
     let engine = RemappingEventEngine(sink: RemappingTestSink(), physicalOutputSink: sink)
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 3)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 3)
     let bindingID = UUID()
     let output = RemappingPhysicalOutput.rumble(motor: .leftMain, intensity: 0.5)
     let profile = RemappingProfile(
@@ -38,7 +38,7 @@ struct RemappingPhysicalOutputTests {
   func drainReleasesAnActivePhysicalClaim() async throws {
     let sink = RecordingPhysicalOutputSink()
     let engine = RemappingEventEngine(sink: RemappingTestSink(), physicalOutputSink: sink)
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 3)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 3)
     let output = RemappingPhysicalOutput.playerIndicator(.player1)
     let profile = RemappingProfile(
       name: "Physical",
@@ -57,7 +57,7 @@ struct RemappingPhysicalOutputTests {
   func rejectedPhysicalDeliveryFailsClosedForTheExactDevice() async {
     let sink = RecordingPhysicalOutputSink(rejectSets: true)
     let engine = RemappingEventEngine(sink: RemappingTestSink(), physicalOutputSink: sink)
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 3)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 3)
     let profile = RemappingProfile(
       name: "Physical",
       device: RemappingDeviceScope(vendorID: 1, productID: 2),

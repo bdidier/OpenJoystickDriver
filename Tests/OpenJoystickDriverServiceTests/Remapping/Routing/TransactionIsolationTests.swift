@@ -270,6 +270,7 @@ private struct TransactionIsolationHarness {
       coordinator: RemappingRequestCoordinator(
         library: library,
         router: router,
+        connectedControllers: remappingRouterConnectedControllers,
         postEventAccess: access,
         maximumResponseBytes: maximumResponseBytes,
         beforeMutationResponseAcceptance: responseHook

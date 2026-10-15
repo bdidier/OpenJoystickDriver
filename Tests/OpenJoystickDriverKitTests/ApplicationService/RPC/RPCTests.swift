@@ -1,5 +1,6 @@
 import Darwin
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -226,9 +227,7 @@ struct LocalServiceRPCTests {
               LocalServiceRPCColorPreviewArguments.self,
               from: request.arguments
             )
-            #expect(arguments.vendorID == 0x054C)
-            #expect(arguments.productID == 0x0CE6)
-            #expect(arguments.runtimeIdentifier == "controller-1")
+            #expect(arguments.controller == .session(.fixture("controller-1")))
             #expect(arguments.token == token)
             #expect(arguments.red == 1)
             #expect(arguments.green == 2)
@@ -254,9 +253,7 @@ struct LocalServiceRPCTests {
     await client.connect()
     #expect(
       try await client.previewPhysicalColor(
-        vendorID: 0x054C,
-        productID: 0x0CE6,
-        runtimeIdentifier: "controller-1",
+        for: .session(.fixture("controller-1")),
         token: token,
         red: 1,
         green: 2,
@@ -265,9 +262,7 @@ struct LocalServiceRPCTests {
     )
     #expect(
       try await client.releasePhysicalColorPreview(
-        vendorID: 0x054C,
-        productID: 0x0CE6,
-        runtimeIdentifier: "controller-1",
+        for: .session(.fixture("controller-1")),
         token: token
       )
     )

@@ -1,8 +1,8 @@
 import Foundation
 
-/// A HID connection left to macOS, with the routing location that identifies its controller.
+/// A HID connection left to macOS, with the routing address that identifies its controller.
 struct PassThroughHIDDevice: Equatable {
-  let routingLocationID: UInt32
+  let routingAddress: ControllerConnectionAddress
   /// True for a native gamepad no driver bound; false for another interface of a native one.
   let nativePassThrough: Bool
   let description: PassThroughDeviceSnapshot
@@ -17,27 +17,28 @@ extension DeviceManager {
     }
   }
 
-  /// Whether a native controller holds the routing location, bound or left to macOS. Location 0
+  /// Whether a native controller holds the routing address, bound or left to macOS. Location 0
   /// identifies no controller.
-  func hasNativeHIDDevice(atLocation locationID: UInt32) -> Bool {
-    guard locationID != 0 else { return false }
+  func hasNativeHIDDevice(at address: ControllerConnectionAddress) -> Bool {
+    guard address.locationID != 0 else { return false }
     return passThroughDevices.values.contains {
-      $0.nativePassThrough && $0.routingLocationID == locationID
+      $0.nativePassThrough && $0.routingAddress == address
     }
       || deviceInfos.contains { identifier, info in
-        identifier.locationID == locationID && info.physicalDevice?.nativePassThrough == true
+        identifier.hidRoutingAddress == address && info.physicalDevice?.nativePassThrough == true
       }
   }
 
-  /// Gives a native connection its routing location before it binds: cancels a sibling
+  /// Gives a native connection its routing address before it binds: cancels a sibling
   /// interface's initialization and tears down any other HID device OJD bound there (a sibling
   /// interface or a stale connection of the same controller), releasing its input claim, so
-  /// macOS keeps every other interface of the controller. Location 0 identifies no controller.
+  /// macOS keeps every other interface of the controller. IOKit location 0 identifies no
+  /// controller.
   func prepareNativeHIDLocation(_ connection: HIDDeviceConnection) async {
-    let locationID = connection.routingLocationID
-    guard locationID != 0 else { return }
+    let address = connection.routingAddress
+    guard address.locationID != 0 else { return }
     let siblingInitializations = removeHIDInitializations(
-      atLocation: locationID,
+      at: address,
       except: connection.connectionID
     )
     for initialization in siblingInitializations { initialization.task.cancel() }
@@ -46,7 +47,7 @@ extension DeviceManager {
     // cancellation check, and nothing in it waits on a continuation this caller resumes.
     for initialization in siblingInitializations { await initialization.task.value }
     let siblings = deviceInfos.filter { identifier, info in
-      guard identifier.locationID == locationID, case .hid = info.discoverySource else {
+      guard identifier.hidRoutingAddress == address, case .hid = info.discoverySource else {
         return false
       }
       return info.hidConnectionID != connection.connectionID
@@ -54,7 +55,7 @@ extension DeviceManager {
     guard !siblings.isEmpty else { return }
     // Teardown reconciles rejected siblings' claims; the bound siblings' claim is released here.
     for identifier in siblings.keys { await tearDownHIDDevice(identifier: identifier) }
-    _ = await hidManager.releaseInputClaim(locationID: locationID)
+    _ = await hidManager.releaseInputClaim(address: address)
   }
 
   /// Records a HID connection left to macOS. OJD does not bind it, so it gets no pipeline, no
@@ -66,7 +67,7 @@ extension DeviceManager {
   ) {
     guard !Task.isCancelled, !isStopping else { return }
     passThroughDevices[connection.connectionID] = PassThroughHIDDevice(
-      routingLocationID: connection.routingLocationID,
+      routingAddress: connection.routingAddress,
       nativePassThrough: connection.physicalDevice.nativePassThrough,
       description: PassThroughDeviceSnapshot(
         vendorID: vendorID,

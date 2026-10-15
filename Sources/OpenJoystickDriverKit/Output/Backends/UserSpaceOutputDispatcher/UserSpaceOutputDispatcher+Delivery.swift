@@ -9,7 +9,7 @@ extension UserSpaceOutputDispatcher {
   internal func deliver(
     input: ControllerState?,
     labels: ControllerButtonLabels,
-    from identifier: DeviceIdentifier,
+    from identifier: LogicalControllerID,
     remappedState: RemappingGamepadState?
   ) async throws {
     let neutralizing = remappedState == .neutral
@@ -65,7 +65,7 @@ extension UserSpaceOutputDispatcher {
     }
   }
 
-  internal func entry(for identifier: DeviceIdentifier) async throws -> Entry {
+  internal func entry(for identifier: LogicalControllerID) async throws -> Entry {
     let result: (task: Task<Entry, Error>, generation: UInt64) = try registryLock.withLock {
       guard lifecycle.isOpen else { throw CancellationError() }
       let generation = lifecycleGenerations[identifier, default: 0]

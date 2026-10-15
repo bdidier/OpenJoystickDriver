@@ -37,6 +37,9 @@ extension DeviceManager {
     let hidConnectionID: UUID?
     /// Exact enumerated service snapshot used for USB route ownership, not descriptor evidence.
     let usbTransportDevice: USBTransportDevice?
+    /// This attachment's token: each new `DeviceInfo` issues a new one, so a reconnect never
+    /// reuses the token of an earlier attachment.
+    let sessionToken = ControllerSessionToken.issue()
 
     init(
       name: String,

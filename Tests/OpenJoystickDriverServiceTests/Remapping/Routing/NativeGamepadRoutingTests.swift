@@ -15,14 +15,14 @@ private final class NativePublicationProbe: VirtualOutputDispatching,
   var lastRumbleStatus: String? { nil }
   var publications: Int { lock.withLock { activationCount + dispatchCount } }
 
-  func activate(for identifiers: [DeviceIdentifier]) {
+  func activate(for identifiers: [LogicalControllerID]) {
     lock.withLock { activationCount += identifiers.count }
   }
-  func activate(controller _: DeviceIdentifier) { lock.withLock { activationCount += 1 } }
-  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: DeviceIdentifier) {
+  func activate(controller _: LogicalControllerID) { lock.withLock { activationCount += 1 } }
+  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: LogicalControllerID) {
     lock.withLock { dispatchCount += 1 }
   }
-  func activateOutput(for _: DeviceIdentifier) { lock.withLock { dispatchCount += 1 } }
+  func activateOutput(for _: LogicalControllerID) { lock.withLock { dispatchCount += 1 } }
   func close() {}
 }
 
@@ -39,9 +39,9 @@ struct NativeGamepadRoutingTests {
       deviceManager: manager,
       builder: { _ in probe },
       descriptionsProvider: {
-        await manager.connectedDeviceDescriptions().map(
-          ApplicationServiceDeviceDescription.init(snapshot:)
-        )
+        await manager.connectedDeviceDescriptions().reduce(into: [:]) {
+          $0[$1.logicalControllerID] = ApplicationServiceDeviceDescription(snapshot: $1)
+        }
       }
     )
 
@@ -108,7 +108,7 @@ struct NativeGamepadRoutingTests {
     native: Bool,
     to manager: DeviceManager,
     locationID: UInt32
-  ) async throws -> DeviceIdentifier {
+  ) async throws -> LogicalControllerID {
     let connection = HIDDeviceConnection(
       physicalDevice: PhysicalDevice(
         vendorID: 0x054C,
@@ -125,12 +125,12 @@ struct NativeGamepadRoutingTests {
         ],
         nativePassThrough: native
       ),
-      routingLocationID: locationID
+      routingAddress: .ioKit(locationID: locationID, interfaceNumber: nil)
     )
     await manager.handleHIDEvent(
       .connected(connection: connection, ownership: native ? .unknown : .exclusive)
     )
-    return try #require(await manager.pipelines.keys.first { $0.locationID == locationID })
+    return try #require(await manager.pipelines.keys.first { $0.address?.locationID == locationID })
   }
 
   private static func profile(policy: RemappingOutputPolicy) -> RemappingProfile {
@@ -157,7 +157,7 @@ struct NativeGamepadRoutingTests {
       report[10] = timestamp
       await manager.handleHIDEvent(
         .inputReport(
-          locationID: locationID,
+          address: .ioKit(locationID: locationID, interfaceNumber: nil),
           connectionID: UUID(),
           reportID: 0x01,
           data: Data(report)

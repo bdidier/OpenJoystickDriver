@@ -6,7 +6,7 @@ import Security
 
 extension UserSpaceOutputDispatcher {
   public typealias OutputCommandHandler =
-    @Sendable (DeviceIdentifier, ControllerOutputCommand) -> Void
+    @Sendable (LogicalControllerID, ControllerOutputCommand) -> Void
 
   public enum CreationError: Error, CustomStringConvertible, Sendable {
     case createFailed
@@ -179,9 +179,9 @@ extension UserSpaceOutputDispatcher {
   public func close() async { await beginClose().value }
 
   /// Creates and neutrally activates one virtual device for each supplied controller.
-  public func activate(for identifiers: [DeviceIdentifier]) async throws {
+  public func activate(for identifiers: [LogicalControllerID]) async throws {
     guard lifecycle.isOpen else { throw CancellationError() }
-    var seen = Set<DeviceIdentifier>()
+    var seen = Set<LogicalControllerID>()
     let identifiers = identifiers.filter { seen.insert($0).inserted }
     do {
 
@@ -199,7 +199,7 @@ extension UserSpaceOutputDispatcher {
     }
   }
 
-  public func activate(controller identifier: DeviceIdentifier) async throws {
+  public func activate(controller identifier: LogicalControllerID) async throws {
     guard lifecycle.isOpen else { throw CancellationError() }
     do {
       let entry = try await entry(for: identifier)
@@ -239,28 +239,29 @@ extension UserSpaceOutputDispatcher {
   public func dispatch(
     _ event: ControllerEvent,
     labels: ControllerButtonLabels,
-    from identifier: DeviceIdentifier
+    from identifier: LogicalControllerID
   ) async {
     try? await deliver(input: event.state, labels: labels, from: identifier, remappedState: nil)
   }
 
-  public func activateOutput(for identifier: DeviceIdentifier) async {
+  public func activateOutput(for identifier: LogicalControllerID) async {
     try? await deliver(input: nil, labels: .standard, from: identifier, remappedState: nil)
   }
 
-  public func activateOutputReportingFailure(for identifier: DeviceIdentifier) async throws {
+  public func activateOutputReportingFailure(for identifier: LogicalControllerID) async throws {
     try await deliver(input: nil, labels: .standard, from: identifier, remappedState: nil)
   }
 
   public func dispatchReportingFailure(
     _ event: ControllerEvent,
     labels: ControllerButtonLabels,
-    from identifier: DeviceIdentifier
+    from identifier: LogicalControllerID
   ) async throws {
     try await deliver(input: event.state, labels: labels, from: identifier, remappedState: nil)
   }
 
-  public func send(_ state: RemappingGamepadState, for identifier: DeviceIdentifier) async throws {
+  public func send(_ state: RemappingGamepadState, for identifier: LogicalControllerID) async throws
+  {
     if state == .neutral, !lifecycle.isOpen {
       await close()
       return

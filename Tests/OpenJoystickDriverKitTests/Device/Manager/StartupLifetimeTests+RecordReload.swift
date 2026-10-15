@@ -27,8 +27,12 @@ extension StartupLifetimeTests {
     )
     await manager.handleHIDEvent(.connected(connection: changed, ownership: .exclusive))
     await manager.handleHIDEvent(.connected(connection: other, ownership: .exclusive))
-    let changedID = DeviceIdentifier(vendorID: 0x3537, productID: 0x100B, locationID: 0x0021_0000)
-    let otherID = DeviceIdentifier(vendorID: 0x3537, productID: 0x1053, locationID: 0x0022_0000)
+    let changedID = LogicalControllerID(
+      vendorID: 0x3537,
+      productID: 0x100B,
+      locationID: 0x0021_0000
+    )
+    let otherID = LogicalControllerID(vendorID: 0x3537, productID: 0x1053, locationID: 0x0022_0000)
     let changedPipeline = try #require(await manager.pipelines[changedID])
     let otherPipeline = try #require(await manager.pipelines[otherID])
 
@@ -70,7 +74,7 @@ extension StartupLifetimeTests {
           )
         ]
       ),
-      routingLocationID: locationID
+      routingAddress: .ioKit(locationID: locationID, interfaceNumber: nil)
     )
   }
 }

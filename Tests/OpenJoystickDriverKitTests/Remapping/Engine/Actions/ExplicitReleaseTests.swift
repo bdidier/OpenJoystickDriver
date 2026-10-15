@@ -64,8 +64,8 @@ struct RemappingExplicitReleaseTests {
     #expect(state.tick(at: 100_000_000).isEmpty)
   }
 
-  private func identifier(_ location: UInt32) -> DeviceIdentifier {
-    DeviceIdentifier(vendorID: 1, productID: 2, locationID: location)
+  private func identifier(_ location: UInt32) -> LogicalControllerID {
+    LogicalControllerID(vendorID: 1, productID: 2, locationID: location)
   }
 
   private func profile(behavior: RemappingBindingBehavior = .press) -> RemappingProfile {

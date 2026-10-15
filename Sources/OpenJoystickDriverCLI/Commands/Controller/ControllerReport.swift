@@ -149,8 +149,8 @@ struct ControllerShowReport: Encodable, Equatable {
   ) {
     let output = device.physicalOutputCapabilities
     controller = Detail(
-      id: device.runtimeIdentifier,
-      unit: device.unitIdentifier,
+      id: device.sessionToken.rawValue,
+      unit: device.portKey?.rawValue,
       name: device.name,
       vendorID: Int(device.vendorID),
       productID: Int(device.productID),
@@ -208,7 +208,7 @@ struct ControllerShowReport: Encodable, Equatable {
       },
       outputChecks: PhysicalOutputValidationPlan(
         device: device,
-        selector: sharesModel ? device.runtimeIdentifier : nil
+        selector: sharesModel ? device.sessionToken.rawValue : nil
       ).steps.map {
         OutputCheck(id: $0.id, command: $0.command, expected: $0.expectedObservation)
       }

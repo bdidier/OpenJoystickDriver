@@ -3,12 +3,15 @@ import Testing
 @testable import OpenJoystickDriverKit
 
 struct USBPipelineConflictTests {
-  private let service = USBTransportServiceIdentity(route: .ioUSBHost, serviceID: 1)
-  private let otherService = USBTransportServiceIdentity(route: .ioUSBHost, serviceID: 2)
+  private let service = ControllerConnectionAddress.usbService(route: .ioUSBHost, serviceID: 1)
+  private let otherService = ControllerConnectionAddress.usbService(route: .ioUSBHost, serviceID: 2)
 
-  private func key(serial: String?, location: UInt32 = 9, interface: UInt8? = 0) -> DeviceIdentifier
-  {
-    DeviceIdentifier(
+  private func key(
+    serial: String?,
+    location: UInt32 = 9,
+    interface: UInt8? = 0
+  ) -> LogicalControllerID {
+    LogicalControllerID(
       vendorID: 0x045E,
       productID: 0x0719,
       serialNumber: serial,
@@ -30,7 +33,7 @@ struct USBPipelineConflictTests {
 
   @Test
   func exactKeyConflictsWhateverItsService() {
-    for existing in [service, otherService, nil] as [USBTransportServiceIdentity?] {
+    for existing in [service, otherService, nil] as [ControllerConnectionAddress?] {
       for serial in ["pad", nil] as [String?] {
         #expect(
           DeviceManager.hasUSBPipelineConflict(
@@ -45,7 +48,7 @@ struct USBPipelineConflictTests {
 
   @Test
   func samePhysicalControllerThroughAnotherServiceOrHIDConflicts() {
-    for existing in [otherService, nil] as [USBTransportServiceIdentity?] {
+    for existing in [otherService, nil] as [ControllerConnectionAddress?] {
       #expect(
         DeviceManager.hasUSBPipelineConflict(
           for: key(serial: "pad", location: 257, interface: 0),
@@ -119,7 +122,7 @@ struct USBPipelineConflictTests {
       dispatcher: LoggingOutputDispatcher(),
       usbTransportProvider: provider
     )
-    let claimed = DeviceIdentifier(
+    let claimed = LogicalControllerID(
       vendorID: 1_118,
       productID: 721,
       serialNumber: "serial",
@@ -130,7 +133,7 @@ struct USBPipelineConflictTests {
     #expect(await manager.handleUSBDeviceAdded(device, provider: provider) == .claimed([claimed]))
     #expect(await manager.handleUSBDeviceAdded(device, provider: provider) == .retry)
     #expect(await provider.resolutionCount == 1)
-    #expect(await manager.connectedDeviceIdentifiers() == [claimed])
+    #expect(await manager.connectedLogicalControllerIDs() == [claimed])
     await manager.stop()
   }
 

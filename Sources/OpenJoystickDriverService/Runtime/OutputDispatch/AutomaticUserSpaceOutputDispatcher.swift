@@ -7,11 +7,12 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
 {
   private let deviceManager: DeviceManager
   private let ownershipProvider:
-    @Sendable (DeviceIdentifier) async -> ControllerOwnershipObservation
-  private let descriptionsProvider: @Sendable () async -> [ApplicationServiceDeviceDescription]
+    @Sendable (LogicalControllerID) async -> ControllerOwnershipObservation
+  private let descriptionsProvider:
+    @Sendable () async -> [LogicalControllerID: ApplicationServiceDeviceDescription]
   private let descriptionProvider:
-    @Sendable (DeviceIdentifier) async -> ApplicationServiceDeviceDescription?
-  private let sessionStateProvider: @Sendable (DeviceIdentifier) async -> ControllerSessionState?
+    @Sendable (LogicalControllerID) async -> ApplicationServiceDeviceDescription?
+  private let sessionStateProvider: @Sendable (LogicalControllerID) async -> ControllerSessionState?
   private let builder: @Sendable (VirtualHIDProfileID) throws -> any VirtualOutputDispatching
   private let overrideProvider:
     @Sendable (ApplicationServiceDeviceDescription) -> VirtualHIDProfileID?
@@ -26,29 +27,30 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
   private let stateLock = NSLock()
   private var suppressedOutput = false
   private var remappingSuppressedOutput = false
-  private var diagnosticTargets: [DeviceIdentifier: VirtualHIDProfileID] = [:]
+  private var diagnosticTargets: [LogicalControllerID: VirtualHIDProfileID] = [:]
   private var publicationDiagnostics: [String] = []
-  private var publicationStatuses: [DeviceIdentifier: ApplicationServicePublicationStatus] = [:]
+  private var publicationStatuses: [LogicalControllerID: ApplicationServicePublicationStatus] = [:]
   /// Per-controller descriptions whose declared controls are fixed for the controller's binding.
-  private var descriptionCache: [DeviceIdentifier: ApplicationServiceDeviceDescription] = [:]
+  private var descriptionCache: [LogicalControllerID: ApplicationServiceDeviceDescription] = [:]
   /// Bumped by `controllerDidStop` so a description lookup in flight at that point cannot
   /// re-insert a cache entry for a controller that already stopped.
-  private var descriptionCacheGeneration: [DeviceIdentifier: UInt64] = [:]
+  private var descriptionCacheGeneration: [LogicalControllerID: UInt64] = [:]
   /// Controllers whose declared controls no profile can represent, surfaced through `status`.
-  private var unavailableControllers: Set<DeviceIdentifier> = []
+  private var unavailableControllers: Set<LogicalControllerID> = []
   /// Each controller's selected profile and how it was selected. Selection runs once per
   /// physical session, and only a successful `retarget` changes it, so delivery never reselects.
-  private var selections: [DeviceIdentifier: VirtualHIDProfileSelector.Selection] = [:]
+  private var selections: [LogicalControllerID: VirtualHIDProfileSelector.Selection] = [:]
   /// The persona identity each controller's backends publish. It changes through `retarget`,
   /// which a change to the persona files triggers, and a new session reads it again.
-  private var identities: [DeviceIdentifier: VirtualPersona.Identity] = [:]
+  private var identities: [LogicalControllerID: VirtualPersona.Identity] = [:]
 
   init(
     deviceManager: DeviceManager,
-    ownershipProvider: (@Sendable (DeviceIdentifier) async -> ControllerOwnershipObservation)? =
+    ownershipProvider: (@Sendable (LogicalControllerID) async -> ControllerOwnershipObservation)? =
       nil,
     builder: @escaping @Sendable (VirtualHIDProfileID) throws -> any VirtualOutputDispatching,
-    descriptionsProvider: (@Sendable () async -> [ApplicationServiceDeviceDescription])? = nil,
+    descriptionsProvider:
+      (@Sendable () async -> [LogicalControllerID: ApplicationServiceDeviceDescription])? = nil,
     overrideProvider:
       @escaping @Sendable (ApplicationServiceDeviceDescription) -> VirtualHIDProfileID? = { _ in nil
       },
@@ -68,19 +70,18 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
       }
     self.descriptionsProvider =
       descriptionsProvider ?? {
-        await deviceManager.connectedDeviceDescriptions().map(
-          ApplicationServiceDeviceDescription.init(snapshot:)
-        )
+        await deviceManager.connectedDeviceDescriptions().reduce(into: [:]) {
+          $0[$1.logicalControllerID] = ApplicationServiceDeviceDescription(snapshot: $1)
+        }
       }
     // Delivery looks up one controller per input report; building every description there
     // dominated runtime CPU.
     if let descriptionsProvider {
       self.descriptionProvider = { @Sendable identifier in
-        await descriptionsProvider().first { $0.runtimeIdentifier == identifier.runtimeIdentifier }
+        await descriptionsProvider()[identifier]
       }
       self.sessionStateProvider = { @Sendable identifier in
-        await descriptionsProvider().first { $0.runtimeIdentifier == identifier.runtimeIdentifier }?
-          .sessionState
+        await descriptionsProvider()[identifier]?.sessionState
       }
     } else {
       self.descriptionProvider = { @Sendable identifier in
@@ -100,7 +101,9 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
 
   /// Builds a backend for `identifier`'s selected profile, with its persona identity when it has
   /// one. The identity is read when the backend is built, after selection recorded it.
-  private func factory(for identifier: DeviceIdentifier) -> AutomaticDispatcherCoordinator.Factory {
+  private func factory(
+    for identifier: LogicalControllerID
+  ) -> AutomaticDispatcherCoordinator.Factory {
     { [self] profileID in
       guard let identity = stateLock.withLock({ identities[identifier] }) else {
         return try builder(profileID)
@@ -114,7 +117,7 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
     set { stateLock.withLock { suppressedOutput = newValue } }
   }
 
-  func activate(controller identifier: DeviceIdentifier) async throws {
+  func activate(controller identifier: LogicalControllerID) async throws {
     let generation = cacheGeneration(for: identifier)
     try await coordinator.activateOne(
 
@@ -123,7 +126,7 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
       isEligible: { [weak self] identifier, profile in
         await self?.isEligible(identifier, profile: profile) ?? false
       },
-      profileProvider: { [weak self] description in
+      profileProvider: { [weak self] identifier, description in
         self?.profile(for: identifier, description: description, generation: generation)
       },
       factory: factory(for: identifier)
@@ -131,9 +134,9 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
     await synchronizeDiagnostics()
   }
 
-  func activate(for identifiers: [DeviceIdentifier]) async throws {
+  func activate(for identifiers: [LogicalControllerID]) async throws {
     let generations = stateLock.withLock {
-      identifiers.reduce(into: [DeviceIdentifier: UInt64]()) { generations, identifier in
+      identifiers.reduce(into: [LogicalControllerID: UInt64]()) { generations, identifier in
         generations[identifier] = descriptionCacheGeneration[identifier, default: 0]
       }
     }
@@ -143,12 +146,8 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
       isEligible: { [weak self] identifier, profile in
         await self?.isEligible(identifier, profile: profile) ?? false
       },
-      profileProvider: { [weak self] description in
-        guard let self,
-          let identifier = identifiers.first(where: {
-            $0.runtimeIdentifier == description.runtimeIdentifier
-          }), let generation = generations[identifier]
-        else { return nil }
+      profileProvider: { [weak self] identifier, description in
+        guard let self, let generation = generations[identifier] else { return nil }
         return self.profile(for: identifier, description: description, generation: generation)
       },
       factory: { [self] in factory(for: $0) }
@@ -183,7 +182,7 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
   func dispatch(
     _ event: ControllerEvent,
     labels: ControllerButtonLabels,
-    from identifier: DeviceIdentifier
+    from identifier: LogicalControllerID
   ) async {
     try? await deliver(.input(event, labels), from: identifier)
     await synchronizeDiagnostics()
@@ -191,13 +190,13 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
 
   /// Activation marks the start of a controller session, so it also starts a new physical
   /// session for a controller whose earlier session stopped.
-  func activateOutput(for identifier: DeviceIdentifier) async {
+  func activateOutput(for identifier: LogicalControllerID) async {
     await coordinator.beginSession(identifier)
     try? await deliver(.activation, from: identifier)
     await synchronizeDiagnostics()
   }
 
-  func send(_ state: RemappingGamepadState, for identifier: DeviceIdentifier) async throws {
+  func send(_ state: RemappingGamepadState, for identifier: LogicalControllerID) async throws {
     guard state == .neutral else {
       try await activate(controller: identifier)
 
@@ -224,7 +223,7 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
 
   private func deliver(
     _ delivery: AutomaticOutputDelivery,
-    from identifier: DeviceIdentifier
+    from identifier: LogicalControllerID
   ) async throws {
     await coordinator.synchronizeSuppression { self.suppressOutput }
     let generation = cacheGeneration(for: identifier)
@@ -253,7 +252,7 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
     await synchronizeDiagnostics()
   }
 
-  func controllerDidStop(_ identifier: DeviceIdentifier) async {
+  func controllerDidStop(_ identifier: LogicalControllerID) async {
     stateLock.withLock {
       _ = descriptionCache.removeValue(forKey: identifier)
       descriptionCacheGeneration[identifier, default: 0] &+= 1
@@ -280,7 +279,7 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
   /// controls, which leaves the controller without a virtual device. Selects only when the
   /// physical session has no selection yet.
   private func profile(
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     description: ApplicationServiceDeviceDescription,
     generation: UInt64
   ) -> VirtualHIDProfileID? {
@@ -312,7 +311,7 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
   private func commit(
     _ selection: VirtualHIDProfileSelector.Selection?,
     identity: VirtualPersona.Identity?,
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     generation: UInt64
   ) {
     stateLock.withLock {
@@ -328,54 +327,40 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
     }
   }
 
-  private func cacheGeneration(for identifier: DeviceIdentifier) -> UInt64 {
+  private func cacheGeneration(for identifier: LogicalControllerID) -> UInt64 {
     stateLock.withLock { descriptionCacheGeneration[identifier, default: 0] }
   }
 
   /// How `identifier`'s current profile was selected; nil before selection or when no profile
   /// can represent the controller.
   func selectionSource(
-    for identifier: DeviceIdentifier
+    for identifier: LogicalControllerID
   ) -> VirtualHIDProfileSelector.Selection.Source? {
     stateLock.withLock { selections[identifier]?.source }
   }
 
-  /// The current selection of the controller with `runtimeIdentifier`, and whether no profile can
-  /// represent it.
+  /// The current selection of `identifier`, and whether no profile can represent it.
   func profileState(
-    runtimeIdentifier: String
+    for identifier: LogicalControllerID
   ) -> (selection: VirtualHIDProfileSelector.Selection?, unavailable: Bool) {
     stateLock.withLock {
-      (
-        selections.first { $0.key.runtimeIdentifier == runtimeIdentifier }?.value,
-        unavailableControllers.contains { $0.runtimeIdentifier == runtimeIdentifier }
-      )
+      (selections[identifier], unavailableControllers.contains(identifier))
     }
   }
 
-  /// The publication state of the controller with `runtimeIdentifier` at the last delivery,
-  /// activation, or stop; nil before the controller has a target profile.
-  func publicationStatus(runtimeIdentifier: String) -> ApplicationServicePublicationStatus? {
-    stateLock.withLock {
-      publicationStatuses.first { $0.key.runtimeIdentifier == runtimeIdentifier }?.value
-    }
+  /// The publication state of `identifier` at the last delivery, activation, or stop; nil before
+  /// the controller has a target profile.
+  func publicationStatus(
+    for identifier: LogicalControllerID
+  ) -> ApplicationServicePublicationStatus? {
+    stateLock.withLock { publicationStatuses[identifier] }
   }
 
-  /// The values the matching controller's virtual gamepad last reported; nil when no user-space
-  /// virtual gamepad publishes it.
-  func virtualOutputState(
-    matching model: ControllerModelID,
-    runtimeIdentifier: String?
-  ) async -> VirtualGamepadState? {
-    guard
-      let installed = await coordinator.installedBackend(
-        matching: model,
-        runtimeIdentifier: runtimeIdentifier
-      )
-    else { return nil }
-    return (installed.backend as? UserSpaceOutputDispatcher)?.virtualOutputState(
-      for: installed.controller
-    )
+  /// The values `identifier`'s virtual gamepad last reported; nil when no user-space virtual
+  /// gamepad publishes it.
+  func virtualOutputState(for identifier: LogicalControllerID) async -> VirtualGamepadState? {
+    guard let backend = await coordinator.installedBackend(for: identifier) else { return nil }
+    return (backend as? UserSpaceOutputDispatcher)?.virtualOutputState(for: identifier)
   }
 
   /// Reselects the profile for one controller and, when the profile changes, replaces only that
@@ -387,7 +372,7 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
   /// that order: for a moment both virtual devices exist with the same serial number and
   /// LocationID, and consumers may see a second pad. A controller with no live backend (during
   /// suppression, recovery, or before activation) publishes the new profile when it next installs.
-  func retarget(controller identifier: DeviceIdentifier) async throws {
+  func retarget(controller identifier: LogicalControllerID) async throws {
     let generation = cacheGeneration(for: identifier)
     guard let description = await cachedDescription(for: identifier),
       let selection = select(for: description)
@@ -425,7 +410,7 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
   }
 
   private func cachedDescription(
-    for identifier: DeviceIdentifier
+    for identifier: LogicalControllerID
   ) async -> ApplicationServiceDeviceDescription? {
     if let cached = stateLock.withLock({ descriptionCache[identifier] }) { return cached }
     let generation = stateLock.withLock { descriptionCacheGeneration[identifier, default: 0] }
@@ -439,7 +424,7 @@ final class AutomaticUserSpaceOutputDispatcher: VirtualOutputDispatching,
   }
 
   private func isEligible(
-    _ identifier: DeviceIdentifier,
+    _ identifier: LogicalControllerID,
     profile: VirtualHIDProfileID
   ) async -> Bool {
     guard await cachedDescription(for: identifier) != nil,

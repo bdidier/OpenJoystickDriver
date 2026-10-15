@@ -23,41 +23,35 @@ extension RemappingRequestCoordinatorTests {
   }
 
   @Test
-  func calibrationRequestsValidateIdentifiersAndReportUnavailableMotion() async throws {
+  func calibrationRequestsResolveReferencesAndReportUnavailableMotion() async throws {
     let harness = try await makeHarness()
     defer { harness.routerHarness.removeFiles() }
-    for identifier in ["", String(repeating: "é", count: 257)] {
-      let result = await harness.coordinator.motionCalibration(
-        .init(runtimeIdentifier: identifier, command: .start)
-      )
+    let device = remappingRouterDevice(1)
+    let references: [ControllerReference] = [
+      .session(.fixture("unknown")),
+      .model(ControllerModelID(vendorID: 0x1234, productID: 0x5678)),
+      .session(remappingRouterToken(device)),
+    ]
+    for reference in references {
+      let result = await harness.coordinator.motionCalibration(.init(controller: reference))
       guard case .failure(let error) = result else {
-        Issue.record("Expected invalid calibration arguments.")
+        Issue.record("Expected an unavailable controller for \(reference).")
         continue
       }
-      #expect(error.code == .invalidArguments)
+      #expect(error.code == .controllerUnavailable)
     }
-
-    let device = remappingRouterDevice(1)
-    let absent = await harness.coordinator.motionCalibration(
-      .init(runtimeIdentifier: device.runtimeIdentifier)
-    )
-    guard case .failure(let absentError) = absent else {
-      Issue.record("Expected an unavailable controller.")
-      return
-    }
-    #expect(absentError.code == .controllerUnavailable)
 
     let original = profile(name: "Calibration")
     _ = try await harness.coordinator.create(original).get()
     _ = try await harness.coordinator.activate(id: original.id, allowEmpty: false).get()
     try await harness.routerHarness.router.dispatchCausally(.activation, from: device)
     let status = try await harness.coordinator.motionCalibration(
-      .init(runtimeIdentifier: device.runtimeIdentifier)
+      .init(controller: .session(remappingRouterToken(device)))
     ).get()
     #expect(!status.hasMotionBaseline)
     #expect(!status.isCollecting)
     let start = await harness.coordinator.motionCalibration(
-      .init(runtimeIdentifier: device.runtimeIdentifier, command: .start)
+      .init(controller: .session(remappingRouterToken(device)), command: .start)
     )
     guard case .failure(let startError) = start else {
       Issue.record("Expected unavailable motion before the first sample.")
@@ -81,6 +75,7 @@ extension RemappingRequestCoordinatorTests {
       coordinator: RemappingRequestCoordinator(
         library: routerHarness.library,
         router: routerHarness.router,
+        connectedControllers: remappingRouterConnectedControllers,
         postEventAccess: postEventAccess,
         maximumResponseBytes: maximumResponseBytes
       )
@@ -115,6 +110,7 @@ extension RemappingRequestCoordinatorTests {
       coordinator: RemappingRequestCoordinator(
         library: library,
         router: router,
+        connectedControllers: remappingRouterConnectedControllers,
         postEventAccess: access
       ),
       sink: sink

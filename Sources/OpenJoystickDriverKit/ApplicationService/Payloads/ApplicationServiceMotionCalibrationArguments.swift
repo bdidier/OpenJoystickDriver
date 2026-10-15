@@ -1,15 +1,15 @@
-/// Selects one runtime controller; an omitted command reads calibration status.
+/// Names one connected controller; an omitted command reads calibration status.
 public struct ApplicationServiceMotionCalibrationArguments: Codable, Sendable {
-  public let runtimeIdentifier: String
+  public let controller: ControllerReference
   public let command: RemappingMotionCalibrationCommand?
 
-  public init(runtimeIdentifier: String, command: RemappingMotionCalibrationCommand? = nil) {
-    self.runtimeIdentifier = runtimeIdentifier
+  public init(controller: ControllerReference, command: RemappingMotionCalibrationCommand? = nil) {
+    self.controller = controller
     self.command = command
   }
 
   private enum CodingKeys: String, CodingKey {
-    case runtimeIdentifier
+    case controller
     case command
   }
 }

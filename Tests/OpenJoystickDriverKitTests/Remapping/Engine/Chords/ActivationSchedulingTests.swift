@@ -102,7 +102,7 @@ struct RemappingActivationSchedulingTests {
     #expect(!state.hasScheduledOutput)
   }
 
-  private let identifier = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 1)
+  private let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 1)
 
   private func profile(doubleTap: Bool) -> RemappingProfile {
     let alternate = RemappingDestination.keyboard(key: .b, modifiers: [])

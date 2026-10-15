@@ -223,7 +223,7 @@ extension RemappingMixedOutputTests {
     )
   }
 
-  var device: DeviceIdentifier { DeviceIdentifier(vendorID: 1, productID: 2, locationID: 1) }
+  var device: LogicalControllerID { LogicalControllerID(vendorID: 1, productID: 2, locationID: 1) }
 
   func makeProfile(
     bindings: [RemappingBinding] = [],

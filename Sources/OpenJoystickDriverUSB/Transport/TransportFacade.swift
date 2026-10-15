@@ -136,7 +136,7 @@ public actor OpenJoystickDriverUSBTransportProvider: USBTransportProvider,
         continue
       }
       guard let observation = try? ioUSBHostObservation(device),
-        observation.serviceIdentity == device.serviceIdentity
+        observation.serviceAddress == device.serviceAddress
       else { continue }
       let carriesSignature = ProtocolDriverRegistry.carriesProtocolSignature(observation)
       if carriesSignature || !(observation.interfaces ?? []).isEmpty {
@@ -151,7 +151,7 @@ public actor OpenJoystickDriverUSBTransportProvider: USBTransportProvider,
     switch device.route {
     case .ioUSBHost:
       guard let observation = try? ioUSBHostObservation(device),
-        observation.serviceIdentity == device.serviceIdentity
+        observation.serviceAddress == device.serviceAddress
       else { return nil }
       return observation
     case .usbDriverKit: return await usbDriverKitObservation(for: device)
@@ -165,7 +165,7 @@ public actor OpenJoystickDriverUSBTransportProvider: USBTransportProvider,
   ) throws -> PhysicalDevice? {
     guard device.route == .ioUSBHost else { throw USBTransportError.notSupported }
     let observation = try ioUSBHostConfigurationObservation(device, configurationValue)
-    return observation?.serviceIdentity == device.serviceIdentity ? observation : nil
+    return observation?.serviceAddress == device.serviceAddress ? observation : nil
   }
 
   public func open(
@@ -194,7 +194,7 @@ public actor OpenJoystickDriverUSBTransportProvider: USBTransportProvider,
     case .ioUSBHost:
       do {
         guard let observation = try ioUSBHostObservation(device),
-          observation.serviceIdentity == device.serviceIdentity
+          observation.serviceAddress == device.serviceAddress
         else { return USBTransportResolution(profile: configured) }
         let profile = Self.resolveTransportProfile(
           route: device.route,
@@ -245,7 +245,7 @@ public actor OpenJoystickDriverUSBTransportProvider: USBTransportProvider,
       switch device.route {
       case .ioUSBHost:
         guard let observation = try? ioUSBHostObservation(device),
-          observation.serviceIdentity == device.serviceIdentity
+          observation.serviceAddress == device.serviceAddress
         else { return nil }
         return observation
       case .usbDriverKit:
@@ -265,7 +265,7 @@ public actor OpenJoystickDriverUSBTransportProvider: USBTransportProvider,
     _ observation: PhysicalDevice,
     matches device: USBTransportDevice
   ) -> Bool {
-    observation.serviceIdentity == device.serviceIdentity && observation.vendorID == device.vendorID
+    observation.serviceAddress == device.serviceAddress && observation.vendorID == device.vendorID
       && observation.productID == device.productID && observation.productName == device.productName
       && observation.serialNumber == device.serialNumber
       && observation.physicalLocationIdentifier == device.observedPhysicalLocationIdentifier

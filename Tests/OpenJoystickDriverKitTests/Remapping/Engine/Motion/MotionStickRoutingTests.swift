@@ -7,7 +7,7 @@ struct MotionStickRoutingTests {
   @Test
   func gravityLeanDrivesIndependentDigitalAndVirtualOutputsThenTimesOut() {
     var engine = RemappingEngineState()
-    let device = DeviceIdentifier(vendorID: 1, productID: 2)
+    let device = LogicalControllerID(vendorID: 1, productID: 2)
     let profile = RemappingProfile(
       name: "Motion steering",
       device: RemappingDeviceScope(vendorID: 1, productID: 2),
@@ -53,7 +53,7 @@ struct MotionStickRoutingTests {
   @Test
   func profileReplacementReleasesMotionStickOwnershipImmediately() {
     var engine = RemappingEngineState()
-    let device = DeviceIdentifier(vendorID: 1, productID: 2)
+    let device = LogicalControllerID(vendorID: 1, productID: 2)
     let profile = RemappingProfile(
       name: "Motion lean",
       device: RemappingDeviceScope(vendorID: 1, productID: 2),

@@ -48,7 +48,7 @@ actor ScriptedHIDAccessBackend: HIDAccessBackend {
   func currentConnectionSnapshots() -> [HIDDeviceConnectionSnapshot]? { connectionSnapshots }
 
   func setOutputReport(
-    locationID _: UInt32,
+    address _: ControllerConnectionAddress,
     report: PhysicalHIDOutputReport
   ) async -> PhysicalHIDReportResult<Void> {
     guard outputReportsEnabled, !rejectedReports.contains(report), !failsOutputReport() else {
@@ -81,7 +81,7 @@ actor ScriptedHIDAccessBackend: HIDAccessBackend {
   }
 
   func setFeatureReport(
-    locationID _: UInt32,
+    address _: ControllerConnectionAddress,
     report: PhysicalHIDOutputReport
   ) -> PhysicalHIDReportResult<Void> {
     guard featureReportsEnabled, !session.isClosed, !rejectedReports.contains(report) else {
@@ -105,7 +105,7 @@ actor ScriptedHIDAccessBackend: HIDAccessBackend {
   }
 
   func getFeatureReport(
-    locationID _: UInt32,
+    address _: ControllerConnectionAddress,
     request: PhysicalHIDFeatureReadRequest
   ) -> PhysicalHIDReportResult<Data> {
     featureReads += 1
@@ -124,11 +124,15 @@ actor ScriptedHIDAccessBackend: HIDAccessBackend {
     return .unavailable
   }
 
-  func releaseInputClaim(locationID _: UInt32) -> PhysicalHIDClaimResult { .unavailable }
+  func releaseInputClaim(address _: ControllerConnectionAddress) -> PhysicalHIDClaimResult {
+    .unavailable
+  }
 
-  func reacquireInputClaim(locationID _: UInt32) -> PhysicalHIDClaimResult { .unavailable }
+  func reacquireInputClaim(address _: ControllerConnectionAddress) -> PhysicalHIDClaimResult {
+    .unavailable
+  }
 
-  func retryInputClaim(locationID _: UInt32) {}
+  func retryInputClaim(address _: ControllerConnectionAddress) {}
 
   func routeElementValues(connection _: HIDDeviceConnection) {}
 

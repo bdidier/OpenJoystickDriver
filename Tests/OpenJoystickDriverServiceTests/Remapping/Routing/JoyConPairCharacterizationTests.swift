@@ -13,19 +13,22 @@ import Testing
 /// d-pad directions, then each changed axis quantized to `Int16((v * 32767).rounded())`, so a
 /// release of a held control shows as a `-` entry.
 struct JoyConPairCharacterizationTests {
-  static let left = DeviceIdentifier(vendorID: 0x057E, productID: 0x2006, locationID: 31)
-  static let right = DeviceIdentifier(vendorID: 0x057E, productID: 0x2007, locationID: 32)
+  static let left = LogicalControllerID(vendorID: 0x057E, productID: 0x2006, locationID: 31)
+  static let right = LogicalControllerID(vendorID: 0x057E, productID: 0x2007, locationID: 32)
 
   /// Left-half bits: SL `0x200000`, SR `0x100000`, L `0x400000`, ZL `0x800000`, Minus `0x100`,
   /// stick click `0x800`, Capture `0x2000`, d-pad `0xf0000` (up `0x20000`). Right-half bits: A
   /// `0x4`, B `0x8`, X `0x1`, Y `0x2`, R `0x40`, ZR `0x80`, Plus `0x200`, Home `0x1000`.
   struct Step {
-    let half: DeviceIdentifier
+    let half: LogicalControllerID
     let buttons: UInt32
     let stick: (x: UInt16, y: UInt16)
 
-    init(_ half: DeviceIdentifier, _ buttons: UInt32, stick: (x: UInt16, y: UInt16) = (2048, 2048))
-    {
+    init(
+      _ half: LogicalControllerID,
+      _ buttons: UInt32,
+      stick: (x: UInt16, y: UInt16) = (2048, 2048)
+    ) {
       self.half = half
       self.buttons = buttons
       self.stick = stick
@@ -34,12 +37,12 @@ struct JoyConPairCharacterizationTests {
 
   final class Session {
     let harness: RemappingRouterHarness
-    let drivers: [DeviceIdentifier: Switch1Driver] = [
+    let drivers: [LogicalControllerID: Switch1Driver] = [
       JoyConPairCharacterizationTests.left: Switch1Driver(layout: .leftJoyCon),
       JoyConPairCharacterizationTests.right: Switch1Driver(layout: .rightJoyCon),
     ]
     private var previous = RemappingGamepadState.neutral
-    private var parsed: [DeviceIdentifier: ControllerState] = [:]
+    private var parsed: [LogicalControllerID: ControllerState] = [:]
 
     init(harness: RemappingRouterHarness) { self.harness = harness }
 
@@ -113,8 +116,8 @@ struct JoyConPairCharacterizationTests {
       try await harness.router.dispatchCausally(.activation, from: member)
     }
     _ = try await harness.router.pairJoyCons(
-      leftRuntimeIdentifier: Self.left.runtimeIdentifier,
-      rightRuntimeIdentifier: Self.right.runtimeIdentifier,
+      left: Self.left,
+      right: Self.right,
       profile: profile
     )
     harness.recorder.removeAll()
@@ -143,7 +146,7 @@ struct JoyConPairCharacterizationTests {
     return parts.joined(separator: " ")
   }
 
-  static func side(_ identifier: DeviceIdentifier) -> String { identifier == left ? "L" : "R" }
+  static func side(_ identifier: LogicalControllerID) -> String { identifier == left ? "L" : "R" }
 
   static func render(_ trace: RemappingRouterTrace) -> String {
     switch trace {

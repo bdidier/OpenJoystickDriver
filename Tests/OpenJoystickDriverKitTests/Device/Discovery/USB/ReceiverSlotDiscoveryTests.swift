@@ -182,7 +182,7 @@ struct ReceiverSlotDiscoveryTests {
   }
 
   @Test
-  func eachSlotIsSelectedByItsOwnRuntimeIdentifier() async throws {
+  func eachSlotIsSelectedByItsOwnPortKey() async throws {
     // Synthetic interface layout (ReceiverSlotProvider); receiver slot numbers are uncaptured.
     let provider = ReceiverSlotProvider(sessions: slotSessions { _ in [] })
     let manager = makeManager(provider)
@@ -192,21 +192,15 @@ struct ReceiverSlotDiscoveryTests {
     )
 
     let descriptions = await manager.connectedDeviceDescriptions()
-    #expect(Set(descriptions.map(\.runtimeIdentifier)).count == 4)
+    #expect(Set(descriptions.map(\.sessionToken)).count == 4)
     #expect(Set(descriptions.map(\.inputEndpoint)) == [0x81, 0x83, 0x85, 0x87])
-    // Four slots of one model: a request without a token selects none of them.
+    // Four slots of one model: a model reference selects none of them.
     let untokened = await manager.suspendController(
-      vendorID: 0x045E,
-      productID: 0x0719,
-      runtimeIdentifier: nil
+      .model(ControllerModelID(vendorID: 0x045E, productID: 0x0719))
     )
     #expect(untokened.failure == .notFound)
     let slot = ReceiverSlotProvider.identifier(interface: 4)
-    let suspended = await manager.suspendController(
-      vendorID: 0x045E,
-      productID: 0x0719,
-      runtimeIdentifier: slot.runtimeIdentifier
-    )
+    let suspended = await manager.suspendController(.port(try #require(slot.portKey)))
     #expect(suspended.state == .suspended)
     for identifier in slotIdentifiers {
       let pipeline = try #require(await manager.pipelines[identifier])

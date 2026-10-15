@@ -113,14 +113,14 @@ struct EndpointServerTests {
       let added = try #require(objects[1]["object"] as? [String: Any])
       #expect(added["apiVersion"] as? String == OpenJoystickDriverAPI.version)
       #expect(added["kind"] as? String == "Controller")
-      #expect(added["id"] as? String == "pad-1")
+      #expect(added["id"] as? String == token("pad-1"))
       #expect(objects[1]["kind"] == nil)
       let modified = try #require(objects[2]["object"] as? [String: Any])
-      #expect(modified["id"] as? String == "pad-1")
+      #expect(modified["id"] as? String == token("pad-1"))
       #expect((modified["input"] as? [String: Any])?["pressed"] as? [String] == ["face-south"])
       #expect(modified["output"] == nil)
       let deleted = try #require(objects[3]["object"] as? [String: Any])
-      #expect(deleted["id"] as? String == "pad-1")
+      #expect(deleted["id"] as? String == token("pad-1"))
       #expect(deleted["input"] != nil)
       #expect(
         try server.status().connections == [AccessConnection(identity: Self.tool, scopes: [.read])]
@@ -141,7 +141,7 @@ struct EndpointServerTests {
       let snapshot = try await second.readObject()
       let object = try #require(snapshot["object"] as? [String: Any])
       #expect(snapshot["type"] as? String == "ADDED")
-      #expect(object["id"] as? String == "pad-1")
+      #expect(object["id"] as? String == token("pad-1"))
       #expect((object["input"] as? [String: Any])?["pressed"] as? [String] == ["face-south"])
     }
   }

@@ -130,7 +130,7 @@ struct PhysicalHIDPolicyTests {
   func physicalHIDAdmissionRejectsEveryIndependentVirtualDeviceMarker() {
     let physicalLocation: UInt32 = 1_114_112
     let virtualLocation = UserSpaceVirtualDeviceConstants.locationID(
-      for: DeviceIdentifier(vendorID: 0x3537, productID: 0x1010, locationID: physicalLocation)
+      for: LogicalControllerID(vendorID: 0x3537, productID: 0x1010, locationID: physicalLocation)
     )
 
     func accepts(
@@ -161,7 +161,7 @@ struct PhysicalHIDPolicyTests {
 
   @Test
   func virtualOutputSpoofRemainsExcludedWhenAppleOmitsSerialAndSyntheticProperties() {
-    let physical = DeviceIdentifier(
+    let physical = LogicalControllerID(
       vendorID: 0x3537,
       productID: 0x1010,
       serialNumber: "physical-serial",

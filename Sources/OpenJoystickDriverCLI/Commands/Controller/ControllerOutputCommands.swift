@@ -32,9 +32,7 @@ private func sendOutput(_ requests: [OutputRequest], to selector: ControllerSele
     for request in requests {
       let result = try await client.sendControllerOutput(
         request.command,
-        vendorID: device.vendorID,
-        productID: device.productID,
-        runtimeIdentifier: device.runtimeIdentifier
+        for: .session(device.sessionToken)
       )
       try check(result, request, device)
       entries.append(
@@ -47,7 +45,10 @@ private func sendOutput(_ requests: [OutputRequest], to selector: ControllerSele
     }
     return (device, entries)
   }
-  let report = ControllerOutputReport(controller: entries.0.runtimeIdentifier, results: entries.1)
+  let report = ControllerOutputReport(
+    controller: entries.0.sessionToken.rawValue,
+    results: entries.1
+  )
   switch CLIContext.current.format {
   case .json: try CLIOutput.json(CLIStatus(details: report))
   case .plain:
@@ -81,7 +82,7 @@ private func check(
         "cli.controller.output.unsupported",
         device.name,
         request.feature,
-        device.runtimeIdentifier
+        device.sessionToken.rawValue
       )
     )
   case .notReady:
@@ -213,9 +214,7 @@ struct ControllerRumbleCommand: AsyncParsableCommand {
       let device = try await selector.resolve(with: client)
       let result = try await client.sendControllerOutput(
         request.command,
-        vendorID: device.vendorID,
-        productID: device.productID,
-        runtimeIdentifier: device.runtimeIdentifier
+        for: .session(device.sessionToken)
       )
       return (device, result)
     }
@@ -246,12 +245,12 @@ struct ControllerRumbleCommand: AsyncParsableCommand {
         CLILocalized.format(
           "cli.controller.rumble.none_ran",
           device.name,
-          device.runtimeIdentifier
+          device.sessionToken.rawValue
         )
       )
     }
     let report = ControllerOutputReport(
-      controller: device.runtimeIdentifier,
+      controller: device.sessionToken.rawValue,
       results: [
         ControllerOutputReport.Entry(
           command: request.name,

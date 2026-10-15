@@ -3,9 +3,7 @@ import OpenJoystickDriverKit
 
 extension ApplicationServiceServer {
   public func previewPhysicalColor(
-    vendorID: Int,
-    productID: Int,
-    runtimeIdentifier: String?,
+    for controller: ControllerReference,
     token: UUID,
     red: Int,
     green: Int,
@@ -14,13 +12,8 @@ extension ApplicationServiceServer {
     guard let red = UInt8(exactly: red), let green = UInt8(exactly: green),
       let blue = UInt8(exactly: blue)
     else { return false }
-    let model = ControllerModelID(
-      vendorID: UInt16(clamping: vendorID),
-      productID: UInt16(clamping: productID)
-    )
     return await deviceManager.previewPhysicalColor(
-      for: model,
-      runtimeIdentifier: runtimeIdentifier,
+      for: controller,
       token: token,
       red: red,
       green: green,
@@ -29,18 +22,11 @@ extension ApplicationServiceServer {
   }
 
   public func releasePhysicalColorPreview(
-    vendorID: Int,
-    productID: Int,
-    runtimeIdentifier: String?,
+    for controller: ControllerReference,
     token: UUID
   ) async -> Bool {
-    let model = ControllerModelID(
-      vendorID: UInt16(clamping: vendorID),
-      productID: UInt16(clamping: productID)
-    )
     return await deviceManager.releasePhysicalColorPreview(
-      for: model,
-      runtimeIdentifier: runtimeIdentifier,
+      for: controller,
       token: token
     )
   }

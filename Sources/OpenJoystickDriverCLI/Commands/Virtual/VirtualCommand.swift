@@ -42,7 +42,7 @@ struct VirtualShowReport: Encodable, Equatable {
     let unavailable: Bool
 
     init(_ device: ApplicationServiceDeviceDescription) {
-      id = device.runtimeIdentifier
+      id = device.sessionToken.rawValue
       name = device.name
       vendorID = Int(device.vendorID)
       productID = Int(device.productID)
@@ -141,7 +141,7 @@ private let unitFlagHelp = ArgumentHelp(
 
 /// Throws when `unit` is set and `device` has no unit ID, which the service would refuse.
 private func requireUnit(_ unit: Bool, _ device: ApplicationServiceDeviceDescription) throws {
-  guard unit, device.unitIdentifier == nil else { return }
+  guard unit, device.portKey == nil else { return }
   throw CLIFailure(
     .controllerRequestFailed,
     CLILocalized.format(
@@ -170,7 +170,7 @@ private func printChange(
     )
   }
   let report = VirtualChangeReport(
-    controller: device.runtimeIdentifier,
+    controller: device.sessionToken.rawValue,
     requested: result.requested?.rawValue,
     live: result.live?.rawValue,
     source: result.source
@@ -234,9 +234,7 @@ struct VirtualSetCommand: AsyncParsableCommand {
         try requireUnit(unit, device)
         let result = try await client.setVirtualHIDProfileOverride(
           profile.rawValue,
-          vendorID: device.vendorID,
-          productID: device.productID,
-          runtimeIdentifier: device.runtimeIdentifier,
+          for: .session(device.sessionToken),
           unit: unit
         )
         return (device, result)
@@ -326,9 +324,7 @@ struct VirtualResetCommand: AsyncParsableCommand {
       let device = try await selector.resolve(with: client)
       try requireUnit(unit, device)
       let result = try await client.resetVirtualHIDProfileOverride(
-        vendorID: device.vendorID,
-        productID: device.productID,
-        runtimeIdentifier: device.runtimeIdentifier,
+        for: .session(device.sessionToken),
         unit: unit
       )
       return (device, result)

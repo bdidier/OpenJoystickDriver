@@ -3,8 +3,8 @@ import OpenJoystickDriverKit
 
 /// The virtual controller one feed publishes.
 protocol VirtualFeedDevice: AnyObject, Sendable {
-  func activate(controller identifier: DeviceIdentifier) async throws
-  func send(_ state: RemappingGamepadState, for identifier: DeviceIdentifier) async throws
+  func activate(controller identifier: LogicalControllerID) async throws
+  func send(_ state: RemappingGamepadState, for identifier: LogicalControllerID) async throws
   func close() async
 }
 
@@ -63,7 +63,7 @@ final class VirtualFeedRegistry: @unchecked Sendable {
 
   private final class Session {
     let device: any VirtualFeedDevice
-    let identifier: DeviceIdentifier
+    let identifier: LogicalControllerID
     let pool: VirtualFeedPool
     var feedback: [ControllerOutputCommand] = []
     /// Frames that wait for `player`, oldest first.
@@ -76,7 +76,7 @@ final class VirtualFeedRegistry: @unchecked Sendable {
     var lastExchange: TimeInterval
     var watchdog: Task<Void, Never>?
 
-    init(device: any VirtualFeedDevice, identifier: DeviceIdentifier, pool: VirtualFeedPool) {
+    init(device: any VirtualFeedDevice, identifier: LogicalControllerID, pool: VirtualFeedPool) {
       self.device = device
       self.identifier = identifier
       self.pool = pool
@@ -122,7 +122,7 @@ final class VirtualFeedRegistry: @unchecked Sendable {
     let identity = profile.identity
     let session = Session(
       device: device,
-      identifier: DeviceIdentifier(
+      identifier: LogicalControllerID(
         vendorID: identity.vendorID,
         productID: identity.productID,
         serialNumber: "feed-\(token.uuidString)"

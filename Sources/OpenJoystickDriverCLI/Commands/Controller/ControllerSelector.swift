@@ -3,18 +3,18 @@ import Foundation
 import OpenJoystickDriverKit
 import OpenJoystickDriverService
 
-/// The `CONTROLLER` argument: an ID from `ojd controller list`, or `VVVV:PPPP` when exactly one
-/// connected controller has that vendor and product ID. An ID lasts until the service restarts and
-/// can change when the controller is unplugged and replugged (see `RuntimeDeviceIdentity`). A unit
-/// ID (`U-…`) lasts while the controller stays on the same port (see ``UnitIdentity``).
+/// The `CONTROLLER` argument: a ``ControllerReference``. That is a session token (`E-…`) from
+/// `ojd controller list`, which lasts until the controller is unplugged; a port key (`U-…`), which
+/// lasts while the controller stays on the same port; or `VVVV:PPPP` when exactly one connected
+/// controller has that vendor and product ID.
 struct ControllerSelector: ExpressibleByArgument, Equatable, Sendable {
-  let kind: ControllerSelection
+  let reference: ControllerReference
   let text: String
 
   init?(argument: String) {
-    guard let kind = ControllerSelection(argument) else { return nil }
+    guard let reference = ControllerReference(argument) else { return nil }
     text = argument
-    self.kind = kind
+    self.reference = reference
   }
 
   static var defaultCompletionKind: CompletionKind { .default }
@@ -25,7 +25,7 @@ struct ControllerSelector: ExpressibleByArgument, Equatable, Sendable {
   func resolve(
     in devices: [ApplicationServiceDeviceDescription]
   ) throws -> ApplicationServiceDeviceDescription {
-    let matches = kind.matches(in: devices)
+    let matches = reference.matches(in: devices)
     if matches.count == 1, let device = matches.first { return device }
     let message: String
     let listed: [ApplicationServiceDeviceDescription]
@@ -49,7 +49,10 @@ struct ControllerSelector: ExpressibleByArgument, Equatable, Sendable {
         matches.count
       )
     }
-    let lines = listed.map { "  \($0.runtimeIdentifier)  \($0.identity)  \($0.name)" }
+    let lines = listed.map { device in
+      let ids = [device.sessionToken.rawValue] + [device.portKey?.rawValue].compactMap { $0 }
+      return "  \(ids.joined(separator: "  "))  \(device.identity)  \(device.name)"
+    }
     throw CLIFailure(.notFound, ([message] + lines).joined(separator: "\n"))
   }
 

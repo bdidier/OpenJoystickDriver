@@ -64,7 +64,7 @@ struct ControllerOwnershipCommand: AsyncParsableCommand {
       let change = try Self.change(model, to: choice.ownership, records: records, device: device)
       if !dryRun { try Self.write(change) }
       let result = Result(
-        controller: device.runtimeIdentifier,
+        controller: device.sessionToken.rawValue,
         identity: device.identity,
         ownership: choice,
         previous: OwnershipChoice(change.previous),

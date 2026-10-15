@@ -5,7 +5,7 @@ import Testing
 struct RumbleStopTokenTests {
   @Test
   func replacingTokenInvalidatesPreviousDelayedStop() {
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 3)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 3)
     var registry = RumbleStopTokenRegistry()
 
     let previous = registry.replace(for: identifier)
@@ -17,8 +17,8 @@ struct RumbleStopTokenTests {
 
   @Test
   func tokensAreIndependentPerPhysicalController() {
-    let first = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 3)
-    let second = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 4)
+    let first = LogicalControllerID(vendorID: 1, productID: 2, locationID: 3)
+    let second = LogicalControllerID(vendorID: 1, productID: 2, locationID: 4)
     var registry = RumbleStopTokenRegistry()
 
     let firstToken = registry.replace(for: first)
@@ -31,7 +31,7 @@ struct RumbleStopTokenTests {
 
   @Test
   func removingTokenPreventsDelayedStop() {
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 3)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 3)
     var registry = RumbleStopTokenRegistry()
     let token = registry.replace(for: identifier)
 

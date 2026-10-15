@@ -46,8 +46,8 @@ actor ReceiverSlotProvider: USBTransportProvider {
     currentConfiguration = isConfigured ? 1 : nil
   }
 
-  static func identifier(interface: UInt8) -> DeviceIdentifier {
-    DeviceIdentifier(
+  static func identifier(interface: UInt8) -> LogicalControllerID {
+    LogicalControllerID(
       vendorID: device.vendorID,
       productID: device.productID,
       locationID: device.locationID,
@@ -97,7 +97,7 @@ actor ReceiverSlotProvider: USBTransportProvider {
     isConfigured
       ? Self.descriptor
       : PhysicalDevice(
-        serviceIdentity: Self.device.serviceIdentity,
+        serviceAddress: Self.device.serviceAddress,
         vendorID: Self.device.vendorID,
         productID: Self.device.productID,
         deviceClass: 0xFF
@@ -105,7 +105,7 @@ actor ReceiverSlotProvider: USBTransportProvider {
   }
 
   private static let descriptor = PhysicalDevice(
-    serviceIdentity: device.serviceIdentity,
+    serviceAddress: device.serviceAddress,
     vendorID: device.vendorID,
     productID: device.productID,
     deviceClass: 0xFF,

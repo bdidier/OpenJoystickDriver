@@ -3,25 +3,23 @@ import OpenJoystickDriverKit
 
 extension RemappingRoutingCore {
   func pairJoyCons(
-    leftRuntimeIdentifier: String,
-    rightRuntimeIdentifier: String,
+    left: LogicalControllerID,
+    right: LogicalControllerID,
     profile: RemappingProfile,
     requiring proposedPermit: RemappingEmissionPermit?
   ) async throws -> UUID {
     defer { schedulingRevision &+= 1 }
     try ensureRunning()
     let permit = try requireOperationalPermit(proposedPermit)
-    guard
-      let left = connectedIdentifiers.first(where: { $0.runtimeIdentifier == leftRuntimeIdentifier }
-      ),
-      let right = connectedIdentifiers.first(where: {
-        $0.runtimeIdentifier == rightRuntimeIdentifier
-      })
+    guard connectedIdentifiers.contains(left), connectedIdentifiers.contains(right)
     else { throw RemappingJoyConPairError.controllerUnavailable }
-    let leftIdentity = left.controllerIdentity
-    let rightIdentity = right.controllerIdentity
-    guard JoyConHalf(vendorID: leftIdentity.vendorID, productID: leftIdentity.productID) == .left,
-      JoyConHalf(vendorID: rightIdentity.vendorID, productID: rightIdentity.productID) == .right,
+    let leftIdentity = left.hardware
+    let rightIdentity = right.hardware
+    guard
+      JoyConHalf(vendorID: leftIdentity.model.vendorID, productID: leftIdentity.model.productID)
+        == .left,
+      JoyConHalf(vendorID: rightIdentity.model.vendorID, productID: rightIdentity.model.productID)
+        == .right,
       left != right
     else { throw RemappingJoyConPairError.invalidControllerSide }
     guard joyConPairByMember[left] == nil, joyConPairByMember[right] == nil else {
@@ -82,7 +80,7 @@ extension RemappingRoutingCore {
   }
 
   func stopPairedJoyCon(
-    _ identifier: DeviceIdentifier,
+    _ identifier: LogicalControllerID,
     requiring proposedPermit: RemappingEmissionPermit?
   ) async throws -> Bool {
     guard let sessionID = joyConPairByMember[identifier], let session = joyConPairs[sessionID]
@@ -98,12 +96,13 @@ extension RemappingRoutingCore {
     return true
   }
 
-  func pairSession(for identifier: DeviceIdentifier) -> RemappingJoyConPairSession? {
+  func pairSession(for identifier: LogicalControllerID) -> RemappingJoyConPairSession? {
     joyConPairByMember[identifier].flatMap { joyConPairs[$0] }
   }
 
   /// A paired half's snapshot with its motion kept only when the pair takes gyro from it.
-  func pairEvent(_ event: ControllerEvent, from identifier: DeviceIdentifier) -> ControllerEvent {
+  func pairEvent(_ event: ControllerEvent, from identifier: LogicalControllerID) -> ControllerEvent
+  {
     guard let session = pairSession(for: identifier), let settings = session.profile.joyConPair
     else { return event }
     let keepsMotion =
@@ -121,18 +120,8 @@ extension RemappingRoutingCore {
     )
   }
 
-  func joyConPairPayloads() -> [ApplicationServiceJoyConPairPayload] {
-    joyConPairs.values.sorted { $0.id.uuidString < $1.id.uuidString }.compactMap { session in
-      guard let settings = session.profile.joyConPair else { return nil }
-      return ApplicationServiceJoyConPairPayload(
-        sessionID: session.id,
-        leftRuntimeIdentifier: session.left.runtimeIdentifier,
-        rightRuntimeIdentifier: session.right.runtimeIdentifier,
-        profileID: session.profile.id,
-        profileName: session.profile.name,
-        gyroSelection: settings.gyroSelection
-      )
-    }
+  func sortedJoyConPairs() -> [RemappingJoyConPairSession] {
+    joyConPairs.values.sorted { $0.id.uuidString < $1.id.uuidString }
   }
 
   func reconcileJoyConPair(
@@ -188,7 +177,7 @@ extension RemappingRoutingCore {
   }
 
   private func retireCurrentRoute(
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     requiring permit: RemappingEmissionPermit
   ) async throws {
     guard let route = routes.removeValue(forKey: identifier) else { return }

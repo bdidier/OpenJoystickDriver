@@ -7,7 +7,7 @@ public protocol VirtualOutputDispatching: OutputDispatcher {
   /// Most recent app-originated rumble report summary, or `nil` before any rumble report.
   var lastRumbleStatus: String? { get }
   /// Forces creation and neutral activation of every supplied virtual device.
-  func activate(for identifiers: [DeviceIdentifier]) async throws
+  func activate(for identifiers: [LogicalControllerID]) async throws
   /// Updates suppression and waits for any required output barrier.
   func setOutputSuppressed(_ suppressed: Bool) async
   /// Drains and tears down user-space virtual HID devices owned by this output.
@@ -16,15 +16,15 @@ public protocol VirtualOutputDispatching: OutputDispatcher {
   func dispatchReportingFailure(
     _ event: ControllerEvent,
     labels: ControllerButtonLabels,
-    from identifier: DeviceIdentifier
+    from identifier: LogicalControllerID
   ) async throws
   /// Activates output for one controller while preserving publication failures.
-  func activateOutputReportingFailure(for identifier: DeviceIdentifier) async throws
+  func activateOutputReportingFailure(for identifier: LogicalControllerID) async throws
 }
 
 /// Optional activation surface used to enforce a deadline for each controller in a set.
 public protocol VirtualOutputControllerActivating: AnyObject, Sendable {
-  func activate(controller identifier: DeviceIdentifier) async throws
+  func activate(controller identifier: LogicalControllerID) async throws
 }
 
 /// Optional output-dispatcher hook for controller lifecycle events.
@@ -32,14 +32,14 @@ public protocol VirtualOutputControllerActivating: AnyObject, Sendable {
 /// `DevicePipeline` calls this when a physical controller pipeline stops so output backends
 /// can tear down any per-controller virtual devices.
 public protocol ControllerLifecycleListener: AnyObject, Sendable {
-  func controllerDidStop(_ identifier: DeviceIdentifier) async
+  func controllerDidStop(_ identifier: LogicalControllerID) async
 }
 
 /// Receives physical input ownership before controller input or virtual activation is admitted.
 public protocol ControllerInputOwnershipListener: AnyObject, Sendable {
   func controllerInputOwnershipChanged(
     _ ownership: HIDInputOwnership,
-    for identifier: DeviceIdentifier
+    for identifier: LogicalControllerID
   ) async
 }
 
@@ -48,9 +48,9 @@ extension VirtualOutputDispatching {
   public func dispatchReportingFailure(
     _ event: ControllerEvent,
     labels: ControllerButtonLabels,
-    from identifier: DeviceIdentifier
+    from identifier: LogicalControllerID
   ) async throws { await dispatch(event, labels: labels, from: identifier) }
-  public func activateOutputReportingFailure(for identifier: DeviceIdentifier) async throws {
+  public func activateOutputReportingFailure(for identifier: LogicalControllerID) async throws {
     await activateOutput(for: identifier)
   }
 }
@@ -59,7 +59,7 @@ extension VirtualOutputDispatching {
 /// gamepad with no remapping costs no per-report dispatch. The answer follows route changes, so
 /// a profile selected later takes effect without reconnecting.
 public protocol ObservedInputDemand: AnyObject, Sendable {
-  func wantsObservedInput(from identifier: DeviceIdentifier) -> Bool
+  func wantsObservedInput(from identifier: LogicalControllerID) -> Bool
 }
 
 /// Takes controller state snapshots and sends them to an output target.
@@ -85,14 +85,14 @@ public protocol OutputDispatcher: AnyObject, Sendable {
   func dispatch(
     _ event: ControllerEvent,
     labels: ControllerButtonLabels,
-    from identifier: DeviceIdentifier
+    from identifier: LogicalControllerID
   ) async
 
   /// Ensures output exists for the controller, for example a virtual device, without new input.
   ///
   /// Called by the pipeline and discovery once a controller's session can publish, and again
   /// after it resumes or reconnects.
-  func activateOutput(for identifier: DeviceIdentifier) async
+  func activateOutput(for identifier: LogicalControllerID) async
 }
 
 extension OutputDispatcher {
@@ -118,15 +118,15 @@ public final class LoggingOutputDispatcher: OutputDispatcher, Sendable {
   public func dispatch(
     _ event: ControllerEvent,
     labels _: ControllerButtonLabels,
-    from identifier: DeviceIdentifier
+    from identifier: LogicalControllerID
   ) {
     print(
       "[Output] "
-        + "\(identifier.controllerIdentity.vendorID):\(identifier.controllerIdentity.productID)"
+        + "\(identifier.model.vendorID):\(identifier.model.productID)"
         + " -> \(event.state)"
     )
   }
 
   /// Nothing to activate: this dispatcher only logs.
-  public func activateOutput(for _: DeviceIdentifier) {}
+  public func activateOutput(for _: LogicalControllerID) {}
 }

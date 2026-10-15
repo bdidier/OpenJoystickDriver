@@ -9,8 +9,8 @@ final class CapturingOutputDispatcher: OutputDispatcher, @unchecked Sendable {
   func dispatch(
     _ event: ControllerEvent,
     labels _: ControllerButtonLabels,
-    from _: DeviceIdentifier
+    from _: LogicalControllerID
   ) { events.append(event) }
 
-  func activateOutput(for _: DeviceIdentifier) {}
+  func activateOutput(for _: LogicalControllerID) {}
 }

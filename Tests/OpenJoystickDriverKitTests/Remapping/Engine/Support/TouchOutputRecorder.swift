@@ -15,7 +15,7 @@ final class TouchOutputRecorder: RemappingSystemInputSink, RemappingGamepadSink,
     lock.withLock { recordedSystemActions.append(action) }
   }
 
-  func send(_ state: RemappingGamepadState, for _: DeviceIdentifier) async {
+  func send(_ state: RemappingGamepadState, for _: LogicalControllerID) async {
     await Task.yield()
     lock.withLock { recordedGamepadStates.append(state) }
   }

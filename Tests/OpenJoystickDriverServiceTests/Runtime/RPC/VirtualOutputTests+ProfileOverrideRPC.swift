@@ -8,7 +8,7 @@ import Testing
 /// defaults.
 extension VirtualOutputTests {
   func profileOverrideServer(
-    _ identifiers: [DeviceIdentifier] = [DeviceIdentifier(vendorID: 1, productID: 2)],
+    _ identifiers: [LogicalControllerID] = [LogicalControllerID(vendorID: 1, productID: 2)],
     failure: (VirtualHIDProfileID, ProfileRetargetFailure)? = nil,
     outputEnabled: Bool = true,
     activationGate: (VirtualHIDProfileID, InstallationGate)? = nil,
@@ -23,9 +23,9 @@ extension VirtualOutputTests {
     configure(personaDirectory)
     let store = VirtualHIDProfileOverrideStore(directory: personaDirectory)
     let log = RetargetEventLog()
-    let descriptions = provider(identifiers.map { description($0) })
+    let descriptions = provider(identifiers)
     let overrideProvider: @Sendable (ApplicationServiceDeviceDescription) -> VirtualHIDProfileID? =
-      { store.override(vendorID: $0.vendorID, productID: $0.productID, unit: $0.unitIdentifier) }
+      { store.override(vendorID: $0.vendorID, productID: $0.productID, unit: $0.portKey?.rawValue) }
     let dispatcher = VirtualOutputRouter()
     let profileLibrary = RemappingProfileLibrary()
     let postEventAccess = CoreGraphicsPostEventAccess()
@@ -136,8 +136,14 @@ extension VirtualOutputTests {
   func anUnmatchedControllerIsNotFoundAndNothingIsPersisted() async throws {
     let fixture = try await profileOverrideServer()
 
-    let otherModel = await fixture.change(.set("hid-generic"), vendorID: 3)
-    let otherSession = await fixture.change(.set("hid-generic"), runtimeIdentifier: "missing")
+    let otherModel = await fixture.change(
+      .set("hid-generic"),
+      controller: .model(ControllerModelID(vendorID: 3, productID: 2))
+    )
+    let otherSession = await fixture.change(
+      .set("hid-generic"),
+      controller: .session(.fixture("missing"))
+    )
 
     #expect(otherModel.failure == .controllerNotFound)
     #expect(otherSession.failure == .controllerNotFound)
@@ -201,18 +207,18 @@ extension VirtualOutputTests {
 
   @Test
   func anOverrideRetargetsEveryControllerOfTheModel() async throws {
-    let first = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 1)
-    let second = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 2)
+    let first = LogicalControllerID(vendorID: 1, productID: 2, locationID: 1)
+    let second = LogicalControllerID(vendorID: 1, productID: 2, locationID: 2)
     let fixture = try await profileOverrideServer([first, second])
 
     let result = await fixture.change(.set("hid-generic"))
-    let unmatched = await fixture.change(.reset, runtimeIdentifier: "missing")
+    let unmatched = await fixture.change(.reset, controller: .session(.fixture("missing")))
 
     #expect(result.failure == nil)
     #expect(result.live == .generic)
     let automatic = fixture.server.automaticUserSpaceDispatcher()
     for identifier in [first, second] {
-      let state = automatic?.profileState(runtimeIdentifier: identifier.runtimeIdentifier)
+      let state = automatic?.profileState(for: identifier)
       #expect(state?.selection?.profileID == .generic)
     }
     #expect(unmatched.failure == .controllerNotFound)
@@ -227,15 +233,16 @@ extension VirtualOutputTests {
       fixture.server,
       method: "setVirtualHIDProfileOverride",
       arguments: LocalServiceRPCVirtualHIDProfileOverrideArguments(
-        vendorID: 1,
-        productID: 2,
+        controller: .model(ControllerModelID(vendorID: 1, productID: 2)),
         profile: "hid-generic"
       )
     )
     let reset = try await localRPC(
       fixture.server,
       method: "resetVirtualHIDProfileOverride",
-      arguments: LocalServiceRPCDeviceArguments(vendorID: 1, productID: 2)
+      arguments: LocalServiceRPCDeviceArguments(
+        controller: .model(ControllerModelID(vendorID: 1, productID: 2))
+      )
     )
 
     #expect(

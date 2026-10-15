@@ -172,7 +172,7 @@ struct USBLifecycleWriteTests {
     recoveryPolicy: USBPipelineRecoveryPolicy = .standard
   ) -> DevicePipeline {
     DevicePipeline(
-      identifier: DeviceIdentifier(vendorID: 0x1532, productID: 0x0A15),
+      identifier: LogicalControllerID(vendorID: 0x1532, productID: 0x0A15),
       transport: .usb(device: device),
       driver: driver,
       dispatcher: LoggingOutputDispatcher(),

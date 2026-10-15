@@ -16,7 +16,7 @@ final class MixedOutputRecorder: RemappingSystemInputSink, RemappingGamepadSink,
     lock.withLock { recorded.append(.system(action)) }
   }
 
-  func send(_ state: RemappingGamepadState, for identifier: DeviceIdentifier) async throws {
+  func send(_ state: RemappingGamepadState, for identifier: LogicalControllerID) async throws {
     let reject = lock.withLock {
       recorded.append(.gamepad(state, identifier))
       defer { rejectsNextGamepad = false }

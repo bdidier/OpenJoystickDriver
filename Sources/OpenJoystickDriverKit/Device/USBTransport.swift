@@ -136,17 +136,6 @@ public enum USBTransportRoute: String, Hashable, Sendable {
   case usbDriverKit
 }
 
-/// Stable identity for a service whose numeric registry ID may overlap another backend.
-public struct USBTransportServiceIdentity: Hashable, Sendable {
-  public let route: USBTransportRoute
-  public let serviceID: UInt64
-
-  public init(route: USBTransportRoute, serviceID: UInt64) {
-    self.route = route
-    self.serviceID = serviceID
-  }
-}
-
 /// Options that must be applied before a transport session is exposed to protocol code.
 public struct USBTransportOpenOptions: Equatable, Sendable {
   public let configurationValue: UInt8?
@@ -214,8 +203,9 @@ public struct USBTransportDevice: Hashable, Sendable {
     self.serialNumber = serialNumber
   }
 
-  public var serviceIdentity: USBTransportServiceIdentity {
-    USBTransportServiceIdentity(route: route, serviceID: serviceID)
+  /// The address of this service.
+  public var serviceAddress: ControllerConnectionAddress {
+    .usbService(route: route, serviceID: serviceID)
   }
 }
 
@@ -235,6 +225,14 @@ public protocol USBTransportProvider: Sendable {
   func devices() async throws -> [USBTransportDevice]
   func open(
     _ device: USBTransportDevice,
+    options: USBTransportOpenOptions
+  ) async throws -> any USBTransportSession
+
+  /// Opens the USB command channel of the controller at `address`, which a HID-bound pipeline
+  /// uses to send commands the HID interface cannot carry.
+  func openCommandChannel(
+    at address: ControllerConnectionAddress,
+    model: ControllerModelID,
     options: USBTransportOpenOptions
   ) async throws -> any USBTransportSession
 
@@ -262,6 +260,24 @@ public protocol USBTransportProvider: Sendable {
 }
 
 extension USBTransportProvider {
+  /// Opens the device at an IOKit location through ``open(_:options:)``; any other address has no
+  /// USB device and throws ``USBTransportError/notFound``.
+  public func openCommandChannel(
+    at address: ControllerConnectionAddress,
+    model: ControllerModelID,
+    options: USBTransportOpenOptions
+  ) async throws -> any USBTransportSession {
+    guard case .ioKit(let locationID, _) = address else { throw USBTransportError.notFound }
+    let device = USBTransportDevice(
+      route: .ioUSBHost,
+      serviceID: 0,
+      vendorID: model.vendorID,
+      productID: model.productID,
+      locationID: locationID
+    )
+    return try await open(device, options: options)
+  }
+
   public func resolveTransport(
     for device: USBTransportDevice,
     configured: DeviceTransportProfile

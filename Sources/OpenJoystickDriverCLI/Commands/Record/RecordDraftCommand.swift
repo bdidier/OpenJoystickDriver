@@ -98,11 +98,7 @@ struct RecordDraftCommand: AsyncParsableCommand {
     let timeout = CLIContext.current.requestTimeout
     let read: @Sendable () async throws -> [PacketLogEntry] = {
       try await ServiceConnection.withDeadline(seconds: timeout) {
-        try await client.packetLog(
-          vendorID: device.vendorID,
-          productID: device.productID,
-          runtimeIdentifier: device.runtimeIdentifier
-        )
+        try await client.packetLog(for: .session(device.sessionToken))
       }
     }
     var cursor = PacketLogSnapshotCursor(snapshot: try await read())

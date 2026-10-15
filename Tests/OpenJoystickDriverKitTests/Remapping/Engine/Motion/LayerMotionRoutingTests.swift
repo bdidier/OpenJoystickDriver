@@ -28,7 +28,7 @@ struct LayerMotionRoutingTests {
         ), RemappingLayer(name: "Bindings only", activationMode: .hold, activator: .button(.west)),
       ]
     )
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2)
     var engine = RemappingEngineState()
     func send(_ event: InputChange) {
       _ = engine.process(inputs: [event], from: identifier, profile: profile, at: 0)

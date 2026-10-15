@@ -26,7 +26,7 @@ extension PassiveUSBDescriptorProbeTests {
     )
     let observation = try #require(maybeObservation)
 
-    #expect(observation.serviceIdentity == device.serviceIdentity)
+    #expect(observation.serviceAddress == device.serviceAddress)
     #expect(observation.deviceRelease == 0x0220)
     #expect(observation.interfaces?.first?.endpoints?.first?.address == 0x01)
     #expect(

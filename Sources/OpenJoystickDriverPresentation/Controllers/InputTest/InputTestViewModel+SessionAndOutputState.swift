@@ -84,13 +84,13 @@
     var canStopRumble: Bool { outputMayRequireRumbleStop }
 
     func selectDevice(_ selectedDevice: ApplicationServiceDeviceDescription) {
-      motionCalibration.select(RuntimeDeviceSelector(device: selectedDevice))
-      guard device?.runtimeIdentifier != selectedDevice.runtimeIdentifier else {
+      motionCalibration.select(ControllerReference.session(selectedDevice.sessionToken))
+      guard device?.sessionToken.rawValue != selectedDevice.sessionToken.rawValue else {
         device = selectedDevice
         startSamplingIfNeeded()
         return
       }
-      let oldSelector = device.map(RuntimeDeviceSelector.init(device:))
+      let oldSelector = device.map { ControllerReference.session($0.sessionToken) }
       cancelSampling(nextState: .idle)
       cancelOutput(stopSelector: oldSelector)
       device = selectedDevice
@@ -112,17 +112,19 @@
     func reconcileConnectedDevices(_ devices: [ApplicationServiceDeviceDescription]) {
       guard let current = device else { return }
       guard
-        let refreshed = devices.first(where: { $0.runtimeIdentifier == current.runtimeIdentifier })
+        let refreshed = devices.first(where: {
+          $0.sessionToken.rawValue == current.sessionToken.rawValue
+        })
       else {
         isDeviceConnected = false
         motionCalibration.select(nil)
         cancelSampling(nextState: .disconnected)
-        cancelOutput(stopSelector: RuntimeDeviceSelector(device: current))
+        cancelOutput(stopSelector: ControllerReference.session(current.sessionToken))
         return
       }
       device = refreshed
       isDeviceConnected = true
-      motionCalibration.select(RuntimeDeviceSelector(device: refreshed))
+      motionCalibration.select(ControllerReference.session(refreshed.sessionToken))
       if sessionState == .disconnected || sessionState == .permissionRequired {
         sessionState = .idle
       }
@@ -150,7 +152,7 @@
       }
       samplingGeneration &+= 1
       let generation = samplingGeneration
-      let selector = RuntimeDeviceSelector(device: device)
+      let selector = ControllerReference.session(device.sessionToken)
       sessionState = .starting
       samplingTask = Task { [weak self] in
         await self?.sampleLoop(selector: selector, generation: generation)
@@ -160,14 +162,14 @@
     func close() {
       isWindowActive = false
       cancelSampling(nextState: device == nil ? .disconnected : .idle)
-      cancelOutput(stopSelector: device.map(RuntimeDeviceSelector.init(device:)))
+      cancelOutput(stopSelector: device.map { ControllerReference.session($0.sessionToken) })
       motionCalibration.select(nil)
     }
 
     func testRumble() {
       guard let device, canSendOutput, capabilities.supportsRumble else { return }
       let command = rumbleCommand()
-      let selector = RuntimeDeviceSelector(device: device)
+      let selector = ControllerReference.session(device.sessionToken)
       let duration = max(100, min(2_000, Int(rumbleDurationMilliseconds.rounded())))
       beginOutputOperation(.rumble, selector: selector) { [gateway, rumbleSleep] in
         let intensities = RumbleIntensities(
@@ -189,12 +191,12 @@
 
     func stopRumble() {
       guard outputMayRequireRumbleStop, let device else { return }
-      cancelOutput(stopSelector: RuntimeDeviceSelector(device: device))
+      cancelOutput(stopSelector: ControllerReference.session(device.sessionToken))
     }
 
     func applyPlayerIndicator() {
       guard let device, canSendOutput, capabilities.supportsPlayerIndicator else { return }
-      let selector = RuntimeDeviceSelector(device: device)
+      let selector = ControllerReference.session(device.sessionToken)
       let indicator = playerIndicator
       beginOutputOperation(.playerIndicator, selector: selector) { [gateway] in
         try await gateway.sendControllerOutput(.setPlayerIndicator(indicator), for: selector)
@@ -205,7 +207,7 @@
     func applyColor() {
       guard let device, canSendOutput, capabilities.lightingFeatures.contains(.programmableColor)
       else { return }
-      let selector = RuntimeDeviceSelector(device: device)
+      let selector = ControllerReference.session(device.sessionToken)
       let components = (Self.byte(red), Self.byte(green), Self.byte(blue))
       let token = colorPreviewToken
       colorPreviewSelector = selector
@@ -222,7 +224,7 @@
 
     func applyBrightness() {
       guard let device, canSendOutput, capabilities.supportsProgrammableBrightness else { return }
-      let selector = RuntimeDeviceSelector(device: device)
+      let selector = ControllerReference.session(device.sessionToken)
       let value = Self.byte(brightness)
       beginOutputOperation(.brightness, selector: selector) { [gateway] in
         try await gateway.sendControllerOutput(
@@ -232,7 +234,7 @@
       }
     }
 
-    private func sampleLoop(selector: RuntimeDeviceSelector, generation: UInt64) async {
+    private func sampleLoop(selector: ControllerReference, generation: UInt64) async {
       var receivedSnapshot = false
       var consecutiveFailures = 0
       while !Task.isCancelled, generation == samplingGeneration {
@@ -274,7 +276,7 @@
 
     private func beginOutputOperation(
       _ operation: OutputOperation,
-      selector: RuntimeDeviceSelector,
+      selector: ControllerReference,
       body: @escaping @Sendable () async throws -> Bool
     ) {
       outputGeneration &+= 1
@@ -325,7 +327,7 @@
       outputMayRequireRumbleStop = false
     }
 
-    private func cancelOutput(stopSelector selector: RuntimeDeviceSelector?) {
+    private func cancelOutput(stopSelector selector: ControllerReference?) {
       outputGeneration &+= 1
       let previousTask = outputTask
       let activeSelector = outputSelector ?? selector

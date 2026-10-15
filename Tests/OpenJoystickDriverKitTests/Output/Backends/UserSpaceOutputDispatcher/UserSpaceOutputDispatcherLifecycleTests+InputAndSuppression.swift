@@ -35,7 +35,7 @@ extension UserSpaceOutputDispatcherLifecycleTests {
         testBackendFactory: { _ in backend },
         format: format
       )
-      let identifier = DeviceIdentifier(vendorID: 1, productID: 2)
+      let identifier = LogicalControllerID(vendorID: 1, productID: 2)
       var expected = VirtualGamepadState()
 
       await dispatcher.dispatch(changes: [.press(control)], from: identifier, labels: labels)
@@ -64,7 +64,7 @@ extension UserSpaceOutputDispatcherLifecycleTests {
     let backend = UserSpaceDispatcherTestBackend()
     let format = ContinuitySnapshotReportFormat()
     let dispatcher = UserSpaceOutputDispatcher(testBackendFactory: { _ in backend }, format: format)
-    let identifier = DeviceIdentifier(vendorID: 3, productID: 4)
+    let identifier = LogicalControllerID(vendorID: 3, productID: 4)
     let neutral = format.buildInputReport(from: VirtualGamepadState())
     for control in unsupported {
       await dispatcher.dispatch(changes: [.press(control)], from: identifier)
@@ -155,7 +155,7 @@ extension UserSpaceOutputDispatcherLifecycleTests {
       _ = creations.next()
       return backend
     }
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2)
     await dispatcher.setOutputSuppressed(true)
 
     await dispatcher.dispatch(changes: [.press(.faceSouth)], from: identifier)
@@ -170,7 +170,7 @@ extension UserSpaceOutputDispatcherLifecycleTests {
   func virtualOutputSuppressionNeutralizesWithoutRetiringDevice() async throws {
     let backend = UserSpaceDispatcherTestBackend()
     let dispatcher = UserSpaceOutputDispatcher { _ in backend }
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2)
     await dispatcher.dispatch(changes: [.press(.faceSouth)], from: identifier)
 
     await dispatcher.setOutputSuppressed(true)
@@ -201,7 +201,7 @@ extension UserSpaceOutputDispatcherLifecycleTests {
       _ = creations.next()
       return UserSpaceDispatcherTestBackend()
     }
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2)
     try await dispatcher.send(.neutral, for: identifier)
     #expect(creations.current() == 0)
     try await dispatcher.send(RemappingGamepadState(buttons: [.south]), for: identifier)
@@ -215,7 +215,7 @@ extension UserSpaceOutputDispatcherLifecycleTests {
   func stateHeldBeforeSuppressionIsRepublishedAfterItLifts() async throws {
     let backend = UserSpaceDispatcherTestBackend()
     let dispatcher = UserSpaceOutputDispatcher { _ in backend }
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2)
     await dispatcher.dispatch(changes: [.press(.faceSouth)], from: identifier)
     let pressed = try #require(backend.publishedReports().last)
 
@@ -232,7 +232,7 @@ extension UserSpaceOutputDispatcherLifecycleTests {
   func remappedReportsUseTheirOwnSuppressionGate() async throws {
     let backend = UserSpaceDispatcherTestBackend()
     let dispatcher = UserSpaceOutputDispatcher { _ in backend }
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2)
     await dispatcher.setOutputSuppressed(true)
     await dispatcher.dispatch(changes: [.press(.faceSouth)], from: identifier)
     #expect(backend.publishedReports().isEmpty)
@@ -254,7 +254,7 @@ extension UserSpaceOutputDispatcherLifecycleTests {
   func remappedStatePreservesSmallAxesAndDistinctShareThenReplacesHeldState() async throws {
     let backend = UserSpaceDispatcherTestBackend()
     let dispatcher = UserSpaceOutputDispatcher { _ in backend }
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2)
     try await dispatcher.send(
       RemappingGamepadState(buttons: [.share], axes: [.leftStickX: 0.01]),
       for: identifier
@@ -287,7 +287,7 @@ extension UserSpaceOutputDispatcherLifecycleTests {
     await #expect(throws: UserSpaceDispatcherTestBackend.SendFailure.self) {
       try await dispatcher.send(
         RemappingGamepadState(buttons: [.south]),
-        for: DeviceIdentifier(vendorID: 1, productID: 2)
+        for: LogicalControllerID(vendorID: 1, productID: 2)
       )
     }
     #expect(backend.counts().close == 1)
@@ -303,8 +303,9 @@ extension UserSpaceOutputDispatcherLifecycleTests {
       return backend
     }
     let identifiers = [
-      DeviceIdentifier(vendorID: 1, productID: 2), DeviceIdentifier(vendorID: 3, productID: 4),
-      DeviceIdentifier(vendorID: 5, productID: 6),
+      LogicalControllerID(vendorID: 1, productID: 2),
+      LogicalControllerID(vendorID: 3, productID: 4),
+      LogicalControllerID(vendorID: 5, productID: 6),
     ]
 
     try await dispatcher.activate(for: identifiers)
@@ -318,7 +319,7 @@ extension UserSpaceOutputDispatcherLifecycleTests {
   func idleDevicePublishesOnlyOnInput() async throws {
     let backend = UserSpaceDispatcherTestBackend()
     let dispatcher = UserSpaceOutputDispatcher { _ in backend }
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2)
 
     try await dispatcher.activate(for: [identifier])
     let idleSends = backend.counts().send
@@ -346,8 +347,9 @@ extension UserSpaceOutputDispatcherLifecycleTests {
 
   func activationSendFailureClosesPartialDevicesForEveryFailurePosition() async {
     let identifiers = [
-      DeviceIdentifier(vendorID: 1, productID: 2), DeviceIdentifier(vendorID: 3, productID: 4),
-      DeviceIdentifier(vendorID: 5, productID: 6),
+      LogicalControllerID(vendorID: 1, productID: 2),
+      LogicalControllerID(vendorID: 3, productID: 4),
+      LogicalControllerID(vendorID: 5, productID: 6),
     ]
     for failureIndex in identifiers.indices {
       let created = LockedBackends()

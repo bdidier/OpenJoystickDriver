@@ -3,7 +3,7 @@ import Foundation
 extension DeviceManager {
 
   func neutralizePhysicalOutputs(
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     pipeline: DevicePipeline,
     detachedInfo: DeviceInfo? = nil
   ) async {
@@ -38,38 +38,36 @@ extension DeviceManager {
     }
   }
 
-  func discardPhysicalOutputs(for identifier: DeviceIdentifier) {
+  func discardPhysicalOutputs(for identifier: LogicalControllerID) {
     rumbleStopTasks.removeValue(forKey: identifier)?.cancel()
     rumbleStopTokens.remove(identifier)
     physicalOutputOwnership.removeDevice(identifier)
   }
 
-  internal func connectedIdentifier(
-    matching model: ControllerModelID,
-    runtimeIdentifier: String?
-  ) -> DeviceIdentifier? {
+  /// The one connected controller `controller` names; nil when none, or more than one, does.
+  package func connectedIdentifier(for controller: ControllerReference) -> LogicalControllerID? {
     guard !isStopping else { return nil }
-    return Self.connectedIdentifier(
-      among: pipelines.keys,
-      matching: model,
-      runtimeIdentifier: runtimeIdentifier
-    )
+    return try? resolve(controller)
   }
 
-  package static func connectedIdentifier<Identifiers: Sequence>(
-    among identifiers: Identifiers,
-    matching model: ControllerModelID,
-    runtimeIdentifier: String?
-  ) -> DeviceIdentifier? where Identifiers.Element == DeviceIdentifier {
-    let matches = identifiers.filter {
-      $0.model == model
-        && (runtimeIdentifier == nil || $0.runtimeIdentifier == runtimeIdentifier)
+  /// The one connected controller `controller` names.
+  package func resolve(
+    _ controller: ControllerReference
+  ) throws(ControllerReferenceError) -> LogicalControllerID {
+    try controller.resolve(in: connectedControllers()).logicalControllerID
+  }
+
+  /// Every connected controller with the token of its attachment, sorted by key.
+  package func connectedControllers() -> [ConnectedController] {
+    pipelines.keys.sorted().compactMap { identifier in
+      deviceInfos[identifier].map {
+        ConnectedController(logicalControllerID: identifier, sessionToken: $0.sessionToken)
+      }
     }
-    return matches.count == 1 ? matches.first : nil
   }
 
   internal func enforcePhysicalHIDOutputInterval(
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     pipeline: DevicePipeline
   ) async throws {
     let minimum = await pipeline.minimumPhysicalOutputIntervalNanoseconds()
@@ -89,7 +87,7 @@ extension DeviceManager {
   /// Whether output for `identifier` may be queued: a HID pipeline is current, or `detachedInfo`
   /// names a detached HID connection this manager still owns for neutralization.
   internal func acceptsPhysicalOutput(
-    identifier: DeviceIdentifier,
+    identifier: LogicalControllerID,
     pipeline: DevicePipeline,
     startupConnection: HIDDeviceConnection? = nil,
     detachedInfo: DeviceInfo?
@@ -118,8 +116,8 @@ extension DeviceManager {
   internal func performHIDOutputPlan(
     _ reports: [PhysicalHIDOutputReport],
     intervalNanoseconds: UInt64,
-    locationID: UInt32,
-    identifier: DeviceIdentifier,
+    address: ControllerConnectionAddress,
+    identifier: LogicalControllerID,
     pipeline: DevicePipeline,
     startupConnection: HIDDeviceConnection?,
     detachedInfo: DeviceInfo?,
@@ -168,18 +166,18 @@ extension DeviceManager {
         else { return false }
         result = await hidManager.setOutputReport(connection: connection, report: report)
       } else if writesExactHIDConnection(identifier, pipeline: pipeline) {
-        guard let connection = currentHIDConnection(for: identifier, locationID: locationID) else {
+        guard let connection = currentHIDConnection(for: identifier, address: address) else {
           return false
         }
         result = await hidManager.setOutputReport(connection: connection, report: report)
       } else {
-        result = await hidManager.setOutputReport(locationID: locationID, report: report)
+        result = await hidManager.setOutputReport(address: address, report: report)
       }
       if !result.succeeded {
         guard lifecycle else { return false }
         print(
           "[DeviceManager] HID lifecycle output report failed for controller=\(identifier) "
-            + "loc=\(locationID) report=\(report.reportID): \(result.failureDescription)"
+            + "route=\(address) report=\(report.reportID): \(result.failureDescription)"
         )
         succeeded = false
       }
@@ -196,16 +194,17 @@ extension DeviceManager {
   }
 
   func currentDetachedHIDConnection(
-    identifier: DeviceIdentifier,
+    identifier: LogicalControllerID,
     pipeline: DevicePipeline,
     detachedInfo: DeviceInfo
   ) async -> HIDDeviceConnection? {
-    guard let locationID = identifier.locationID, let connectionID = detachedInfo.hidConnectionID,
+    guard let address = identifier.hidRoutingAddress,
+      let connectionID = detachedInfo.hidConnectionID,
       let physicalDevice = detachedInfo.physicalDevice,
       let snapshots = await hidManager.currentConnectionSnapshots(),
       let snapshot = snapshots.first(where: {
         $0.connection.connectionID == connectionID && $0.connection.physicalDevice == physicalDevice
-          && $0.connection.routingLocationID == locationID
+          && $0.connection.routingAddress == address
       }),
       await isCurrentPhysicalHIDOutput(
         identifier: identifier,
@@ -218,7 +217,7 @@ extension DeviceManager {
   }
 
   func isCurrentPhysicalHIDOutput(
-    identifier: DeviceIdentifier,
+    identifier: LogicalControllerID,
     pipeline: DevicePipeline,
     startupConnection: HIDDeviceConnection?,
     detachedInfo: DeviceInfo?
@@ -232,7 +231,7 @@ extension DeviceManager {
           detachedInfo: detachedInfo
         )
       else { return false }
-      guard let locationID = identifier.locationID,
+      guard let address = identifier.hidRoutingAddress,
         let expectedConnectionID = detachedInfo.hidConnectionID,
         let key = hidInitializationKey(for: identifier, connectionID: expectedConnectionID),
         let expectedPhysicalDevice = detachedInfo.physicalDevice
@@ -247,7 +246,7 @@ extension DeviceManager {
         snapshots.contains(where: {
           $0.connection.connectionID == expectedConnectionID
             && $0.connection.physicalDevice == expectedPhysicalDevice
-            && $0.connection.routingLocationID == locationID
+            && $0.connection.routingAddress == address
         }),
         isOwnedDetachedHIDNeutralization(
           identifier: identifier,
@@ -271,7 +270,7 @@ extension DeviceManager {
   }
 
   private func isOwnedDetachedHIDNeutralization(
-    identifier: DeviceIdentifier,
+    identifier: LogicalControllerID,
     pipeline: DevicePipeline,
     detachedInfo: DeviceInfo
   ) -> Bool {

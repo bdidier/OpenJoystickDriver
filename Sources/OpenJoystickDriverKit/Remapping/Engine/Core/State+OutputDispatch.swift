@@ -76,7 +76,7 @@ extension RemappingEngineState {
 
   mutating func tick(at uptimeNanoseconds: UInt64) -> [RemappingEngineAction] {
     var actions: [RemappingEngineAction] = []
-    for identifier in sortedDeviceIdentifiers {
+    for identifier in sortedLogicalControllerIDs {
       actions += advanceTriggers(for: identifier, at: uptimeNanoseconds)
       actions += expireMotionStick(for: identifier, at: uptimeNanoseconds)
       guard var device = devices[identifier] else { continue }
@@ -158,7 +158,7 @@ extension RemappingEngineState {
     return actions
   }
 
-  mutating func releaseController(_ identifier: DeviceIdentifier) -> [RemappingEngineAction] {
+  mutating func releaseController(_ identifier: LogicalControllerID) -> [RemappingEngineAction] {
     guard var device = devices[identifier] else { return [] }
     let oldContinuous = continuousTotals()
     devices.removeValue(forKey: identifier)
@@ -175,7 +175,7 @@ extension RemappingEngineState {
   mutating func drain() -> [RemappingEngineAction] {
     sourceBaselines.removeAll()
     var actions: [RemappingEngineAction] = []
-    for identifier in sortedDeviceIdentifiers { actions += releaseController(identifier) }
+    for identifier in sortedLogicalControllerIDs { actions += releaseController(identifier) }
     return actions
   }
 
@@ -300,8 +300,8 @@ extension RemappingEngineState {
     return count
   }
 
-  private var sortedDeviceIdentifiers: [DeviceIdentifier] {
-    devices.keys.sorted { $0.runtimeIdentifier < $1.runtimeIdentifier }
+  private var sortedLogicalControllerIDs: [LogicalControllerID] {
+    devices.keys.sorted()
   }
 
   private static func sortedModifiers(

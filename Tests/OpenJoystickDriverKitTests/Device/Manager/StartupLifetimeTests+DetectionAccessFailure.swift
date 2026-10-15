@@ -12,17 +12,17 @@ extension StartupLifetimeTests {
       dispatcher: LoggingOutputDispatcher(),
       hidManager: HIDManager(backend: backend)
     )
-    let identifier = DeviceIdentifier(vendorID: 0x1234, productID: 0x5678, locationID: 85)
+    let identifier = LogicalControllerID(vendorID: 0x1234, productID: 0x5678, locationID: 85)
     let connection = HIDDeviceConnection(
       physicalDevice: PhysicalDevice(
-        vendorID: identifier.controllerIdentity.vendorID,
-        productID: identifier.controllerIdentity.productID,
+        vendorID: identifier.model.vendorID,
+        productID: identifier.model.productID,
         productName: "Access-failure test controller",
         transportProperty: "USB",
         physicalLocationIdentifier: 85,
         interfaces: [gamepadHIDInterface(host: .usb)]
       ),
-      routingLocationID: 85
+      routingAddress: .ioKit(locationID: 85, interfaceNumber: nil)
     )
 
     await manager.ensureHIDDetectionState(for: .granted)
@@ -120,7 +120,7 @@ extension StartupLifetimeTests {
   @Test
   func reconnectDuringNeutralizationRetainsNewDeviceInfoAndPipeline() async throws {
     let manager = DeviceManager(dispatcher: LoggingOutputDispatcher())
-    let identifier = DeviceIdentifier(
+    let identifier = LogicalControllerID(
       vendorID: 0x054C,
       productID: 0x09CC,
       serialNumber: "teardown-race",

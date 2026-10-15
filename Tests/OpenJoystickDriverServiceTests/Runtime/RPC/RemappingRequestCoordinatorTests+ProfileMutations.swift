@@ -30,8 +30,8 @@ extension RemappingRequestCoordinatorTests {
 
     var snapshot = try await harness.coordinator.pairJoyCons(
       .init(
-        leftRuntimeIdentifier: left.runtimeIdentifier,
-        rightRuntimeIdentifier: right.runtimeIdentifier,
+        left: .session(remappingRouterToken(left)),
+        right: .session(remappingRouterToken(right)),
         profileID: profile.id
       )
     ).get()
@@ -202,8 +202,8 @@ extension RemappingRequestCoordinatorTests {
     let snapshot = try await harness.coordinator.snapshot().get()
     #expect(snapshot.routes.count == 2)
     #expect(
-      Set(snapshot.routes.map(\.runtimeIdentifier)) == [
-        first.runtimeIdentifier, second.runtimeIdentifier,
+      Set(snapshot.routes.map(\.sessionToken)) == [
+        remappingRouterToken(first), remappingRouterToken(second),
       ]
     )
     #expect(snapshot.routes.allSatisfy { $0.selection == .remapping })

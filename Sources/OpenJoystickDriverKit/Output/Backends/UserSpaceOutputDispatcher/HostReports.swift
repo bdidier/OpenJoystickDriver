@@ -5,7 +5,7 @@ import IOKit.hid
 final class UserSpaceHostReportHandler: Sendable {
   /// Serializes consuming a request with enqueueing it, so publication follows callback order.
   private let lock = NSLock()
-  private let identifier: DeviceIdentifier
+  private let identifier: LogicalControllerID
   private let input: UserSpaceInputReportState
   private let sender: UserSpaceReportSender
   private let isOpen: @Sendable () -> Bool
@@ -13,7 +13,7 @@ final class UserSpaceHostReportHandler: Sendable {
   private let onRumbleStatus: @Sendable (String) -> Void
 
   init(
-    identifier: DeviceIdentifier,
+    identifier: LogicalControllerID,
     input: UserSpaceInputReportState,
     sender: UserSpaceReportSender,
     isOpen: @escaping @Sendable () -> Bool,

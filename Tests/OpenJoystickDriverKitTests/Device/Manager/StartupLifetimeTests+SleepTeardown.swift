@@ -23,7 +23,7 @@ extension StartupLifetimeTests {
         physicalLocationIdentifier: 90,
         interfaces: [steamHIDInterface(number: 2)]
       ),
-      routingLocationID: 90
+      routingAddress: .ioKit(locationID: 90, interfaceNumber: nil)
     )
     // A Steam role writes to its exact connection, which the backend must observe.
     await backend.setConnectionSnapshots([
@@ -31,7 +31,7 @@ extension StartupLifetimeTests {
     ])
     await manager.markStartedForTest()
     await manager.handleHIDEvent(.connected(connection: connection, ownership: .exclusive))
-    let identifier = try #require(await manager.connectedDeviceIdentifiers().first)
+    let identifier = try #require(await manager.connectedLogicalControllerIDs().first)
     #expect(
       await manager.sendOutputForTest(
         .setLightBrightness(UnipolarValue(byte: 128)),
@@ -74,7 +74,7 @@ extension StartupLifetimeTests {
         physicalLocationIdentifier: 91,
         interfaces: [steamHIDInterface(number: 2)]
       ),
-      routingLocationID: 91
+      routingAddress: .ioKit(locationID: 91, interfaceNumber: nil)
     )
     // A Steam role writes to its exact connection, which the backend must observe.
     await backend.setConnectionSnapshots([
@@ -92,7 +92,7 @@ extension StartupLifetimeTests {
       if await !manager.pipelines.isEmpty { break }
       try? await Task.sleep(nanoseconds: 2_000_000)
     }
-    let identifier = try #require(await manager.connectedDeviceIdentifiers().first)
+    let identifier = try #require(await manager.connectedLogicalControllerIDs().first)
     #expect(
       await manager.sendOutputForTest(
         .setLightBrightness(UnipolarValue(byte: 128)),
@@ -122,7 +122,7 @@ extension StartupLifetimeTests {
       dispatcher: LoggingOutputDispatcher(),
       hidManager: HIDManager(backend: backend)
     )
-    let identifier = DeviceIdentifier(
+    let identifier = LogicalControllerID(
       vendorID: 0x054C,
       productID: 0x09CC,
       serialNumber: "teardown-race",
@@ -184,7 +184,7 @@ extension StartupLifetimeTests {
       dispatcher: LoggingOutputDispatcher(),
       hidManager: HIDManager(backend: backend)
     )
-    let identifier = DeviceIdentifier(
+    let identifier = LogicalControllerID(
       vendorID: 0x054C,
       productID: 0x09CC,
       serialNumber: "teardown-race",
@@ -243,7 +243,7 @@ extension StartupLifetimeTests {
       dispatcher: dispatcher,
       hidManager: HIDManager(backend: ScriptedHIDAccessBackend())
     )
-    let identifier = DeviceIdentifier(
+    let identifier = LogicalControllerID(
       vendorID: 0x3537,
       productID: 0x1053,
       serialNumber: "gamesir-reconnect",

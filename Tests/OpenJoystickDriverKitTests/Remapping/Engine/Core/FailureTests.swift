@@ -120,7 +120,7 @@ struct RemappingFailureTests {
         )
       ]
     )
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 1)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 1)
 
     await #expect(throws: RemappingEventEngineError.sinkUnavailable) {
       try await engine.process(
@@ -169,7 +169,7 @@ struct RemappingFailureTests {
     )
   }
 
-  private func device() -> DeviceIdentifier {
-    DeviceIdentifier(vendorID: 1, productID: 2, locationID: 1)
+  private func device() -> LogicalControllerID {
+    LogicalControllerID(vendorID: 1, productID: 2, locationID: 1)
   }
 }

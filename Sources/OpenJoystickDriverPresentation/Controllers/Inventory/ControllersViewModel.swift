@@ -7,7 +7,7 @@
   @MainActor
   final class ControllersViewModel: ObservableObject {
     @Published
-    private(set) var selectedRuntimeIdentifier: String?
+    private(set) var selectedSessionToken: String?
 
     let runtime: RuntimeViewModel
     private var runtimeObservation: AnyCancellable?
@@ -30,21 +30,21 @@
     var isRefreshing: Bool { runtime.isScopedRefreshInFlight }
 
     var selectedDevice: ApplicationServiceDeviceDescription? {
-      guard let selectedRuntimeIdentifier else { return devices.first }
-      return devices.first { $0.runtimeIdentifier == selectedRuntimeIdentifier } ?? devices.first
+      guard let selectedSessionToken else { return devices.first }
+      return devices.first { $0.sessionToken.rawValue == selectedSessionToken } ?? devices.first
     }
 
     func synchronizeSelection() {
-      guard let selectedRuntimeIdentifier,
-        devices.contains(where: { $0.runtimeIdentifier == selectedRuntimeIdentifier })
+      guard let selectedSessionToken,
+        devices.contains(where: { $0.sessionToken.rawValue == selectedSessionToken })
       else {
-        self.selectedRuntimeIdentifier = devices.first?.runtimeIdentifier
+        self.selectedSessionToken = devices.first?.sessionToken.rawValue
         return
       }
     }
 
     func select(_ device: ApplicationServiceDeviceDescription) {
-      selectedRuntimeIdentifier = device.runtimeIdentifier
+      selectedSessionToken = device.sessionToken.rawValue
     }
 
     func refresh() { Task { await runtime.refreshControllerInventory() } }

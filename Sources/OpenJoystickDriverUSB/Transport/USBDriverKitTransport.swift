@@ -148,7 +148,7 @@ public actor USBDriverKitTransportProvider: USBPhysicalDeviceObservationProvider
   ) -> PhysicalDevice? {
     guard let device = device(service, parent: parent) else { return nil }
     return PhysicalDevice(
-      serviceIdentity: device.serviceIdentity,
+      serviceAddress: device.serviceAddress,
       vendorID: device.vendorID,
       productID: device.productID,
       productName: device.productName,

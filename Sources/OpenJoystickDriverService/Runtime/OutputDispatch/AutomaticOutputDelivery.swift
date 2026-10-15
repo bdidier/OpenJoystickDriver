@@ -8,7 +8,7 @@ enum AutomaticOutputDelivery: Sendable {
 
   func publish(
     through backend: any VirtualOutputDispatching,
-    for identifier: DeviceIdentifier
+    for identifier: LogicalControllerID
   ) async throws {
     switch self {
     case .remapped(let state):

@@ -114,9 +114,9 @@ extension RemappingRoutingCore {
       let profile: RemappingProfile?
       do {
         profile = try await library.activeProfile(
-          vendorID: identifier.controllerIdentity.vendorID,
-          productID: identifier.controllerIdentity.productID,
-          unit: identifier.unitIdentifier,
+          vendorID: identifier.model.vendorID,
+          productID: identifier.model.productID,
+          unit: identifier.portKey?.rawValue,
           frontmostBundleIdentifier: environment.frontmostBundleIdentifier
         )
       } catch let error as RemappingProfileLibraryError {
@@ -161,7 +161,7 @@ extension RemappingRoutingCore {
 
   private func route(
     for selection: RemappingSelectedRoute,
-    identifier: DeviceIdentifier,
+    identifier: LogicalControllerID,
     environment: RemappingEligibilityEnvironment
   ) -> RemappingControllerRoute {
     switch selection {
@@ -207,7 +207,7 @@ extension RemappingRoutingCore {
     }
   }
 
-  func recordUnreconciledRouteIfNeeded(for identifier: DeviceIdentifier) {
+  func recordUnreconciledRouteIfNeeded(for identifier: LogicalControllerID) {
     guard case .unreconciled(_, let error) = profileTransactionState else { return }
     routes[identifier] = unavailableRoute(error, environment: sampleEligibilityEnvironment())
   }

@@ -4,7 +4,7 @@ import Testing
 @testable import OpenJoystickDriverKit
 
 struct USBPipelineRecoveryTests {
-  let identifier = DeviceIdentifier(
+  let identifier = LogicalControllerID(
     vendorID: 0x3537,
     productID: 0x1010,
     locationID: 7,
@@ -182,7 +182,7 @@ struct USBPipelineRecoveryTests {
     let manager = makeManager(using: provider)
     await manager.start()
     #expect(await waitUntil(timeout: .seconds(5)) { await first.writeCount > 0 })
-    #expect(await manager.connectedDeviceIdentifiers() == [identifier])
+    #expect(await manager.connectedLogicalControllerIDs() == [identifier])
 
     await manager.systemWillSleep()
     #expect(await manager.isSystemSleeping)
@@ -195,7 +195,7 @@ struct USBPipelineRecoveryTests {
     await manager.systemDidWake()
     #expect(!(await manager.isSystemSleeping))
     #expect(await waitUntil(timeout: .seconds(5)) { await second.writeCount > 0 })
-    #expect(await manager.connectedDeviceIdentifiers() == [identifier])
+    #expect(await manager.connectedLogicalControllerIDs() == [identifier])
     #expect(await provider.openedDevices == [device, device])
     await manager.stop()
     #expect(await second.closeCount == 1)
@@ -253,7 +253,7 @@ struct USBPipelineRecoveryTests {
 
     await manager.systemDidWake()
     #expect(await waitUntil(timeout: .seconds(5)) { await session.writeCount > 0 })
-    #expect(await manager.connectedDeviceIdentifiers() == [identifier])
+    #expect(await manager.connectedLogicalControllerIDs() == [identifier])
     await manager.stop()
   }
 

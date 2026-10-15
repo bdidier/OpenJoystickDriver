@@ -1,5 +1,6 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverCLI
@@ -35,10 +36,10 @@ struct ControllerCommandTests {
 
     #expect(jsonRun.code == 0, "\(jsonRun.standardError)")
     let controllers = try #require(try jsonRun.json()["items"] as? [[String: Any]])
-    #expect(controllers.map { $0["id"] as? String } == ["pad-1"])
+    #expect(controllers.map { $0["id"] as? String } == [token("pad-1")])
     #expect(plainRun.code == 0, "\(plainRun.standardError)")
     let row = plainRun.standardOutput.split(separator: "\t").map(String.init)
-    #expect(row.prefix(2) == ["pad-1", "045E:028E"])
+    #expect(row.prefix(2) == [token("pad-1"), "045E:028E"])
   }
 
   @Test
@@ -46,24 +47,29 @@ struct ControllerCommandTests {
     let service = try FakeService(devices: [
       ApplicationServiceDeviceDescription.fixture(id: "pad-1")
     ])
-    let result = await service.run(["controller", "show", "pad-9"])
+    let result = await service.run(["controller", "show", token("pad-9")])
     #expect(result.code == 1)
     #expect(result.standardOutput.isEmpty)
     #expect(result.standardError.hasPrefix("error[E2012]: "))
-    #expect(result.standardError.contains("pad-9"))
-    #expect(result.standardError.contains("pad-1  045E:028E  Test Pad"))
+    #expect(result.standardError.contains(token("pad-9")))
+    #expect(result.standardError.contains("\(token("pad-1"))  045E:028E  Test Pad"))
   }
 
   @Test
   func aModelSelectorMatchingTwoControllersFailsAndListsBoth() async throws {
     let service = try FakeService(devices: [
       ApplicationServiceDeviceDescription.fixture(id: "pad-1", outputs: .dualMainRumble),
-      ApplicationServiceDeviceDescription.fixture(id: "pad-2", outputs: .dualMainRumble),
+      ApplicationServiceDeviceDescription.fixture(
+        id: "pad-2",
+        outputs: .dualMainRumble,
+        unit: "port-2"
+      ),
     ])
     let result = await service.run(["controller", "show", "045e:028e"])
+    let portKey = ControllerPortKey.fixture("port-2").rawValue
     #expect(result.code == 1)
-    #expect(result.standardError.contains("pad-1"))
-    #expect(result.standardError.contains("pad-2"))
+    #expect(result.standardError.contains("  \(token("pad-1"))  045E:028E  Test Pad"))
+    #expect(result.standardError.contains("  \(token("pad-2"))  \(portKey)  045E:028E  Test Pad"))
   }
 
   @Test
@@ -82,13 +88,13 @@ struct ControllerCommandTests {
     let result = await service.run(["controller", "player", "054C:0CE6", "2", "--json"])
     #expect(result.code == 0, "\(result.standardError)")
     let details = try #require(try result.json()["details"] as? [String: Any])
-    #expect(details["controller"] as? String == "pad-2")
+    #expect(details["controller"] as? String == token("pad-2"))
     let arguments = try #require(service.arguments(of: .sendControllerOutput).first)
     let sent = try JSONDecoder().decode(
       LocalServiceRPCControllerOutputArguments.self,
       from: arguments
     )
-    #expect(sent.runtimeIdentifier == "pad-2")
+    #expect(sent.controller == .session(.fixture("pad-2")))
   }
 
   @Test
@@ -98,7 +104,7 @@ struct ControllerCommandTests {
       respond: Self.delivered(dropping: [.leftTrigger, .leftHaptic, .rightHaptic])
     )
     let result = await service.run([
-      "controller", "rumble", "pad-1", "--left", "100", "--left-trigger", "100",
+      "controller", "rumble", token("pad-1"), "--left", "100", "--left-trigger", "100",
     ])
     #expect(result.code == 0, "\(result.standardError)")
     let lines = result.standardError.split(separator: "\n")
@@ -120,7 +126,7 @@ struct ControllerCommandTests {
       devices: [ApplicationServiceDeviceDescription.fixture(id: "pad-1")],
       respond: Self.delivered()
     )
-    let result = await service.run(["controller", "player", "pad-1", "1"])
+    let result = await service.run(["controller", "player", token("pad-1"), "1"])
     #expect(result.code == 0, "\(result.standardError)")
     #expect(result.standardError.contains("Test Pad"))
   }
@@ -131,7 +137,9 @@ struct ControllerCommandTests {
       devices: [ApplicationServiceDeviceDescription.fixture(id: "pad-1")],
       respond: Self.delivered(dropping: [.leftTrigger])
     )
-    let result = await service.run(["controller", "rumble", "pad-1", "--left-trigger", "100"])
+    let result = await service.run([
+      "controller", "rumble", token("pad-1"), "--left-trigger", "100",
+    ])
     #expect(result.code == 1)
     #expect(result.standardOutput.isEmpty)
   }
@@ -142,7 +150,9 @@ struct ControllerCommandTests {
       devices: [ApplicationServiceDeviceDescription.fixture(id: "pad-1")],
       respond: Self.delivered()
     )
-    let result = await service.run(["controller", "rumble", "pad-1", "--left", "0", "--right", "0"])
+    let result = await service.run([
+      "controller", "rumble", token("pad-1"), "--left", "0", "--right", "0",
+    ])
     #expect(result.code == 0, "\(result.standardError)")
     #expect(try Self.sentCommands(service) == [.stopRumble])
   }
@@ -155,7 +165,7 @@ struct ControllerCommandTests {
       method == .sendControllerOutput
         ? encoded(ControllerOutputResult(.unsupportedCapability)) : nil
     }
-    let result = await service.run(["controller", "light", "pad-1", "--color", "#00FF00"])
+    let result = await service.run(["controller", "light", token("pad-1"), "--color", "#00FF00"])
     #expect(result.code == 1)
     #expect(result.standardOutput.isEmpty)
   }
@@ -174,7 +184,7 @@ struct ControllerCommandTests {
       return doubleEncoded(state)
     }
     let result = await service.run([
-      "controller", "watch", "pad-1", "--first-press", "--duration", "3", "--json",
+      "controller", "watch", token("pad-1"), "--first-press", "--duration", "3", "--json",
     ])
     #expect(result.code == 0, "\(result.standardError)")
     #expect(try result.json()["control"] as? String == "face-south")
@@ -192,7 +202,7 @@ struct ControllerCommandTests {
       }
     }
     let result = await service.run([
-      "controller", "watch", "pad-1", "--first-press", "--duration", "0.2",
+      "controller", "watch", token("pad-1"), "--first-press", "--duration", "0.2",
     ])
     #expect(result.code == 1)
     #expect(result.standardOutput.isEmpty)
@@ -208,7 +218,7 @@ struct ControllerCommandTests {
         ? doubleEncoded(ControllerSuspendResult(state: .suspended, failure: .alreadySuspended))
         : nil
     }
-    let result = await service.run(["controller", "suspend", "pad-1", "--json"])
+    let result = await service.run(["controller", "suspend", token("pad-1"), "--json"])
     #expect(result.code == 0, "\(result.standardError)")
     let json = try result.json()
     #expect(json["session"] as? String == "suspended")
@@ -220,10 +230,10 @@ struct ControllerCommandTests {
     let service = try FakeService(devices: [
       ApplicationServiceDeviceDescription.fixture(id: "pad-1")
     ])
-    let result = await service.run(["controller", "show", "pad-1", "--json"])
+    let result = await service.run(["controller", "show", token("pad-1"), "--json"])
     #expect(result.code == 0, "\(result.standardError)")
     let controller = try result.json()
-    #expect(controller["id"] as? String == "pad-1")
+    #expect(controller["id"] as? String == token("pad-1"))
   }
 
   @Test
@@ -231,7 +241,7 @@ struct ControllerCommandTests {
     let service = try FakeService(devices: [
       ApplicationServiceDeviceDescription.fixture(id: "pad-1")
     ])
-    let result = await service.run(["controller", "show", "pad-1"])
+    let result = await service.run(["controller", "show", token("pad-1")])
     #expect(result.code == 0, "\(result.standardError)")
     let ownership = CLILocalized.format(
       "cli.controller.show.ownership",
@@ -252,9 +262,9 @@ struct ControllerCommandTests {
     )
     let service = try FakeService(devices: [device])
 
-    let json = await service.run(["controller", "show", "pad-1", "--json"])
-    let plain = await service.run(["controller", "show", "pad-1", "--plain"])
-    let human = await service.run(["controller", "show", "pad-1"])
+    let json = await service.run(["controller", "show", token("pad-1"), "--json"])
+    let plain = await service.run(["controller", "show", token("pad-1"), "--plain"])
+    let human = await service.run(["controller", "show", token("pad-1")])
 
     #expect(json.code == 0, "\(json.standardError)")
     let controller = try json.json()
@@ -271,7 +281,7 @@ struct ControllerCommandTests {
     let service = try FakeService(devices: [
       ApplicationServiceDeviceDescription.fixture(id: "pad-1")
     ])
-    let plain = await service.run(["controller", "show", "pad-1", "--plain"])
+    let plain = await service.run(["controller", "show", token("pad-1"), "--plain"])
     #expect(plain.code == 0, "\(plain.standardError)")
     #expect(!plain.standardOutput.contains("publication"))
   }
@@ -326,12 +336,12 @@ struct ControllerCommandTests {
   @Test
   func showPrintsThePowerState() async throws {
     let service = try FakeService(devices: Self.poweredDevices())
-    let json = await service.run(["controller", "show", "pad-1", "--json"])
-    let plain = await service.run(["controller", "show", "pad-2", "--plain"])
-    let human = await service.run(["controller", "show", "pad-1"])
-    let unknown = await service.run(["controller", "show", "pad-3"])
-    let absent = await service.run(["controller", "show", "pad-4", "--plain"])
-    let absentHuman = await service.run(["controller", "show", "pad-4"])
+    let json = await service.run(["controller", "show", token("pad-1"), "--json"])
+    let plain = await service.run(["controller", "show", token("pad-2"), "--plain"])
+    let human = await service.run(["controller", "show", token("pad-1")])
+    let unknown = await service.run(["controller", "show", token("pad-3")])
+    let absent = await service.run(["controller", "show", token("pad-4"), "--plain"])
+    let absentHuman = await service.run(["controller", "show", token("pad-4")])
 
     #expect(json.code == 0, "\(json.standardError)")
     let controller = try json.json()
@@ -366,13 +376,13 @@ struct ControllerCommandTests {
       default: nil
       }
     }
-    let args = ["controller", "watch", "pad-1", "--output", "--duration", "0.1"]
+    let args = ["controller", "watch", token("pad-1"), "--output", "--duration", "0.1"]
 
     let human = await service.run(args)
     let json = await service.run(args + ["--json"])
     let plain = await service.run(args + ["--plain"])
     let inputOnly = await service.run([
-      "controller", "watch", "pad-1", "--duration", "0.1", "--json",
+      "controller", "watch", token("pad-1"), "--duration", "0.1", "--json",
     ])
 
     #expect(human.code == 0, "\(human.standardError)")
@@ -406,7 +416,7 @@ struct ControllerCommandTests {
       }
     }
     let human = await service.run([
-      "controller", "watch", "pad-1", "--output", "--duration", "0.1",
+      "controller", "watch", token("pad-1"), "--output", "--duration", "0.1",
     ])
     #expect(human.code == 0, "\(human.standardError)")
     #expect(human.standardOutput.hasSuffix("\nout none\n"))
@@ -418,14 +428,14 @@ struct ControllerCommandTests {
       ApplicationServiceDeviceDescription.fixture(id: "pad-1", outputs: .dualMainRumble),
       ApplicationServiceDeviceDescription.fixture(id: "pad-2", outputs: .dualMainRumble),
     ])
-    let shared = await service.run(["controller", "show", "pad-2", "--json"])
+    let shared = await service.run(["controller", "show", token("pad-2"), "--json"])
     #expect(shared.code == 0, "\(shared.standardError)")
-    #expect(shared.standardOutput.contains("ojd controller rumble pad-2 "))
+    #expect(shared.standardOutput.contains("ojd controller rumble \(token("pad-2")) "))
     #expect(!shared.standardOutput.contains("045E:028E --"))
     let alone = try FakeService(devices: [
       ApplicationServiceDeviceDescription.fixture(id: "pad-1", outputs: .dualMainRumble)
     ])
-    let single = await alone.run(["controller", "show", "pad-1", "--json"])
+    let single = await alone.run(["controller", "show", token("pad-1"), "--json"])
     #expect(single.standardOutput.contains("ojd controller rumble 045E:028E "))
   }
 
@@ -462,7 +472,7 @@ struct ControllerCommandTests {
       )
     ])
     let result = await RecordStore.$directory.withValue(directory) {
-      await service.run(["controller", "show", "pad-1"] + flags)
+      await service.run(["controller", "show", token("pad-1")] + flags)
     }
     return (result, "\(directory.lastPathComponent)/366c-0005.json")
   }
@@ -522,8 +532,8 @@ struct ControllerCommandTests {
   }
 
   @Test(arguments: [
-    ["controller", "rumble", "pad-1", "--left", "100"],
-    ["controller", "light", "pad-1", "--color", "#00FF00"],
+    ["controller", "rumble", token("pad-1"), "--left", "100"],
+    ["controller", "light", token("pad-1"), "--color", "#00FF00"],
   ])
   func outputCommandsReportEachDeliveredCommand(arguments: [String]) async throws {
     let service = try FakeService(
@@ -552,8 +562,8 @@ struct ControllerCommandTests {
       default: nil
       }
     }
-    let resume = await service.run(["controller", "resume", "pad-1", "--json"])
-    let disconnect = await service.run(["controller", "disconnect", "pad-1", "--json"])
+    let resume = await service.run(["controller", "resume", token("pad-1"), "--json"])
+    let disconnect = await service.run(["controller", "disconnect", token("pad-1"), "--json"])
     #expect(resume.code == 0, "\(resume.standardError)")
     #expect(try resume.json()["session"] as? String == "active")
     #expect(disconnect.code == 0, "\(disconnect.standardError)")
@@ -571,7 +581,7 @@ struct ControllerCommandTests {
       return encoded(Data((reads.next() == 0 ? "[]" : "[\(packet)]").utf8))
     }
     let result = await service.run([
-      "controller", "capture", "pad-1", "--duration", "0.3", "--json",
+      "controller", "capture", token("pad-1"), "--duration", "0.3", "--json",
     ])
     #expect(result.code == 0, "\(result.standardError)")
     #expect(
@@ -588,7 +598,9 @@ struct ControllerCommandTests {
     ]) { method, _ in
       method == .getControllerState ? doubleEncoded(ControllerState(pressed: [.faceSouth])) : nil
     }
-    let result = await service.run(["controller", "watch", "pad-1", "--duration", "0.2", "--json"])
+    let result = await service.run([
+      "controller", "watch", token("pad-1"), "--duration", "0.2", "--json",
+    ])
     #expect(result.code == 0, "\(result.standardError)")
     #expect(!result.standardOutput.isEmpty)
   }
@@ -596,14 +608,15 @@ struct ControllerCommandTests {
   @Test
   func watchAllReportsControllersThatConnectAndDisconnect() async throws {
     let lists = Counter()
-    let unit = "U-0123456789abcdef"
+    let unitLabel = "0123456789abcdef"
+    let unit = ControllerPortKey.fixture(unitLabel).rawValue
     // pad-2 is connected for the first device list only.
     let service = try FakeService(
       devices: {
         lists.next() == 0
           ? [
             ApplicationServiceDeviceDescription.fixture(id: "pad-1"),
-            ApplicationServiceDeviceDescription.fixture(id: "pad-2", unit: unit),
+            ApplicationServiceDeviceDescription.fixture(id: "pad-2", unit: unitLabel),
           ]
           : [ApplicationServiceDeviceDescription.fixture(id: "pad-1")]
       },
@@ -621,7 +634,8 @@ struct ControllerCommandTests {
     let events = zip(lines, objects).map { "\($0["type"] ?? "") \($1["id"] ?? "")" }
     #expect(
       events == [
-        "ADDED pad-1", "ADDED pad-2", "MODIFIED pad-1", "MODIFIED pad-2", "DELETED pad-2",
+        "ADDED \(token("pad-1"))", "ADDED \(token("pad-2"))", "MODIFIED \(token("pad-1"))",
+        "MODIFIED \(token("pad-2"))", "DELETED \(token("pad-2"))",
       ]
     )
     #expect(lines.allSatisfy { $0["apiVersion"] == nil && $0["kind"] == nil })
@@ -651,20 +665,23 @@ struct ControllerCommandTests {
     #expect(human.code == 0, "\(human.standardError)")
     let humanLines = human.standardOutput.split(separator: "\n")
     #expect(humanLines.count == 2)
-    #expect(["pad-1", "Test Pad", "045E:028E"].allSatisfy { humanLines[0].contains($0) })
-    #expect(humanLines[1] == "pad-1 " + ControllerWatchCommand.formatted(input))
+    #expect([token("pad-1"), "Test Pad", "045E:028E"].allSatisfy { humanLines[0].contains($0) })
+    #expect(humanLines[1] == "\(token("pad-1")) " + ControllerWatchCommand.formatted(input))
     let rows = plain.standardOutput.split(separator: "\n").map {
       $0.split(separator: "\t", omittingEmptySubsequences: false).map(String.init)
     }
-    #expect(rows.first == ["connected", "pad-1", "045E:028E", "Test Pad"])
-    #expect(rows.last == ["input", "pad-1"] + ControllerWatchCommand.plainRow(input))
+    #expect(rows.first == ["connected", token("pad-1"), "045E:028E", "Test Pad"])
+    #expect(rows.last == ["input", token("pad-1")] + ControllerWatchCommand.plainRow(input))
   }
 
   @Test(arguments: [
-    ["controller", "rumble", "pad-1", "--duration", "9"], ["controller", "player", "pad-1", "7"],
-    ["controller", "light", "pad-1"], ["controller", "light", "pad-1", "--color", "red"],
-    ["controller", "watch", "pad-1", "--duration", "0"], ["controller", "watch"],
-    ["controller", "watch", "pad-1", "--all"], ["controller", "watch", "--all", "--first-press"],
+    ["controller", "rumble", token("pad-1"), "--duration", "9"],
+    ["controller", "player", token("pad-1"), "7"],
+    ["controller", "light", token("pad-1")],
+    ["controller", "light", token("pad-1"), "--color", "red"],
+    ["controller", "watch", token("pad-1"), "--duration", "0"], ["controller", "watch"],
+    ["controller", "watch", token("pad-1"), "--all"],
+    ["controller", "watch", "--all", "--first-press"],
   ])
   func invalidOperandsExitSixtyFourBeforeAnyRequest(arguments: [String]) async throws {
     let service = try FakeService(devices: [

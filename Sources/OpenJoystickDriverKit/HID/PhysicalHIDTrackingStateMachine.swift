@@ -68,13 +68,13 @@ public enum UserSpaceVirtualDeviceConstants {
   /// Builds a stable, non-sensitive serial number for a virtual device.
   ///
   /// We hash the physical identifier so we don't leak hardware serial numbers.
-  public static func serialNumber(for identifier: DeviceIdentifier) -> String {
+  public static func serialNumber(for identifier: LogicalControllerID) -> String {
     let physicalHash = hex64(fnv1a64(stableKey(for: identifier)))
     return serialPrefix + physicalHash
   }
 
   /// Computes a stable LocationID in the OJD namespace for this physical identifier.
-  public static func locationID(for identifier: DeviceIdentifier) -> UInt32 {
+  public static func locationID(for identifier: LogicalControllerID) -> UInt32 {
     let h = fnv1a64(stableKey(for: identifier))
     let low16 = UInt32(truncatingIfNeeded: h & 0xFFFF)
     // Avoid 0/1 because some consumers treat these as special/invalid.
@@ -84,16 +84,16 @@ public enum UserSpaceVirtualDeviceConstants {
 
   // MARK: - Private helpers
 
-  private static func stableKey(for identifier: DeviceIdentifier) -> String {
+  private static func stableKey(for identifier: LogicalControllerID) -> String {
     // Prefer physical serial when available, fall back to locationID. A serial identifies the
     // controller across reconnects on another port, so the port must not change the virtual
     // identity. The interface keeps each logical controller of one physical device distinct.
     // IMPORTANT: this key is only used as hash input; it is not exposed to consumers.
-    let identity = identifier.controllerIdentity
+    let identity = identifier.hardware
     let sn = identity.serialNumber ?? ""
-    let loc = sn.isEmpty ? (identifier.locationID.map { "\($0)" } ?? "") : ""
-    let interface = identifier.interfaceNumber.map { "\($0)" } ?? ""
-    return "\(identity.vendorID):\(identity.productID):\(sn):\(loc):\(interface)"
+    let loc = sn.isEmpty ? ((identifier.address?.locationID).map { "\($0)" } ?? "") : ""
+    let interface = identifier.address?.interfaceNumber.map { "\($0)" } ?? ""
+    return "\(identity.model.vendorID):\(identity.model.productID):\(sn):\(loc):\(interface)"
   }
 
   private static func fnv1a64(_ s: String) -> UInt64 {

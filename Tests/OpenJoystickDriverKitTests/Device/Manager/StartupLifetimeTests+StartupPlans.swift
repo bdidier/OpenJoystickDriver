@@ -8,27 +8,35 @@ extension StartupLifetimeTests {
   @Test
   func stoppedAndReplacedPipelinesCannotContinueStartup() async throws {
     let manager = DeviceManager(dispatcher: LoggingOutputDispatcher())
-    let identifier = DeviceIdentifier(vendorID: 0x1234, productID: 0x5678, locationID: 81)
+    let identifier = LogicalControllerID(vendorID: 0x1234, productID: 0x5678, locationID: 81)
     let connection = HIDDeviceConnection(
       physicalDevice: PhysicalDevice(
-        vendorID: identifier.controllerIdentity.vendorID,
-        productID: identifier.controllerIdentity.productID,
+        vendorID: identifier.model.vendorID,
+        productID: identifier.model.productID,
         productName: "Startup test",
         transportProperty: "USB",
         physicalLocationIdentifier: 81,
         interfaces: [gamepadHIDInterface(host: .usb)]
       ),
-      routingLocationID: 81
+      routingAddress: .ioKit(locationID: 81, interfaceNumber: nil)
     )
     let connected = HIDDeviceEvent.connected(connection: connection, ownership: .exclusive)
     await manager.handleHIDEvent(connected)
     let original = try #require(await manager.pipelines[identifier])
     #expect(await manager.isCurrentHIDStartupPipeline(original, connection: connection))
     await manager.handleHIDEvent(
-      .ownershipChanged(locationID: 81, ownership: .ownedByAnotherClient)
+      .ownershipChanged(
+        address: .ioKit(locationID: 81, interfaceNumber: nil),
+        ownership: .ownedByAnotherClient
+      )
     )
     #expect(await manager.isCurrentHIDStartupPipeline(original, connection: connection) == false)
-    await manager.handleHIDEvent(.ownershipChanged(locationID: 81, ownership: .exclusive))
+    await manager.handleHIDEvent(
+      .ownershipChanged(
+        address: .ioKit(locationID: 81, interfaceNumber: nil),
+        ownership: .exclusive
+      )
+    )
     let replacement = try #require(await manager.pipelines[identifier])
     #expect(replacement !== original)
     // Even restarting the stale actor must not authorize its delayed reports on the new device.
@@ -54,7 +62,7 @@ extension StartupLifetimeTests {
       id: "00000000-0000-0000-0000-000000000012",
       productName: "Replacement GameSir connection"
     )
-    let identifier = DeviceIdentifier(
+    let identifier = LogicalControllerID(
       vendorID: 0x3537,
       productID: 0x1053,
       serialNumber: "gamesir-reconnect",
@@ -112,8 +120,8 @@ extension StartupLifetimeTests {
   @Test
   func startupPlanRequiresAnActivePipeline() async {
     let pipeline = DevicePipeline(
-      identifier: DeviceIdentifier(vendorID: 0x057E, productID: 0x2009),
-      transport: .hid(locationID: 82),
+      identifier: LogicalControllerID(vendorID: 0x057E, productID: 0x2009),
+      transport: .hid(address: .ioKit(locationID: 82, interfaceNumber: nil)),
       driver: Switch1Driver(isBluetooth: true),
       dispatcher: LoggingOutputDispatcher()
     )
@@ -129,7 +137,7 @@ extension StartupLifetimeTests {
   /// defaults.
   @Test
   func pipelinePlanAppliesTheRecordTuning() async throws {
-    let identifier = DeviceIdentifier(vendorID: 0x057E, productID: 0x2009)
+    let identifier = LogicalControllerID(vendorID: 0x057E, productID: 0x2009)
     let record = try #require(ProtocolDriverRegistry().record(for: identifier.model))
     let tuning = ControllerTuning(
       hidStartupIntervalMilliseconds: 40,
@@ -140,7 +148,7 @@ extension StartupLifetimeTests {
     let defaults = Switch1Driver(isBluetooth: true).sessionPlan
     let pipeline = DevicePipeline(
       identifier: identifier,
-      transport: .hid(locationID: 83),
+      transport: .hid(address: .ioKit(locationID: 83, interfaceNumber: nil)),
       driver: Switch1Driver(isBluetooth: true),
       dispatcher: LoggingOutputDispatcher(),
       binding: ProtocolBinding(
@@ -207,7 +215,7 @@ extension StartupLifetimeTests {
           )
         ]
       ),
-      routingLocationID: 80
+      routingAddress: .ioKit(locationID: 80, interfaceNumber: nil)
     )
   }
 
@@ -223,7 +231,7 @@ extension StartupLifetimeTests {
         physicalLocationIdentifier: nil,
         interfaces: [hostHIDInterface(.bluetoothClassic)]
       ),
-      routingLocationID: 82
+      routingAddress: .ioKit(locationID: 82, interfaceNumber: nil)
     )
   }
 
@@ -238,7 +246,7 @@ extension StartupLifetimeTests {
         transportProperty: "USB",
         physicalLocationIdentifier: 83
       ),
-      routingLocationID: 83
+      routingAddress: .ioKit(locationID: 83, interfaceNumber: nil)
     )
   }
 
@@ -256,11 +264,11 @@ extension StartupLifetimeTests {
       id: "00000000-0000-0000-0000-000000000014",
       productName: "New access session"
     )
-    let identifier = DeviceIdentifier(
+    let identifier = LogicalControllerID(
       vendorID: oldConnection.physicalDevice.vendorID!,
       productID: oldConnection.physicalDevice.productID!,
       serialNumber: "same-device",
-      locationID: oldConnection.routingLocationID
+      locationID: oldConnection.routingAddress.locationID
     )
 
     await manager.ensureHIDDetectionState(for: .granted)

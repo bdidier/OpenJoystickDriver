@@ -5,7 +5,7 @@ import Foundation
 /// Records every event batch with the controller that dispatched it.
 final class HIDRoleEventRecorder: OutputDispatcher, @unchecked Sendable {
   private let lock = NSLock()
-  private var dispatched: [(DeviceIdentifier, ControllerState)] = []
+  private var dispatched: [(LogicalControllerID, ControllerState)] = []
   private var suppressed = false
 
   var suppressOutput: Bool {
@@ -16,13 +16,13 @@ final class HIDRoleEventRecorder: OutputDispatcher, @unchecked Sendable {
   func dispatch(
     _ event: ControllerEvent,
     labels _: ControllerButtonLabels,
-    from identifier: DeviceIdentifier
+    from identifier: LogicalControllerID
   ) { lock.withLock { dispatched.append((identifier, event.state)) } }
 
-  func activateOutput(for _: DeviceIdentifier) {}
+  func activateOutput(for _: LogicalControllerID) {}
 
   /// Controls pressed in any state dispatched from `identifier`.
-  func pressed(from identifier: DeviceIdentifier) -> Set<ControlID> {
+  func pressed(from identifier: LogicalControllerID) -> Set<ControlID> {
     lock.withLock {
       dispatched.filter { $0.0 == identifier }.reduce(into: []) { $0.formUnion($1.1.pressed) }
     }

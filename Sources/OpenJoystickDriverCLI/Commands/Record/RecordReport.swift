@@ -56,8 +56,8 @@ enum RecordStore {
 /// The `VVVV:PPPP` operand of `record show` and `record remove`.
 extension ControllerModelID: ExpressibleByArgument {
   public init?(argument: String) {
-    guard let (vendorID, productID) = ControllerSelection.model(argument) else { return nil }
-    self.init(vendorID: vendorID, productID: productID)
+    guard case .model(let model) = ControllerReference(argument) else { return nil }
+    self = model
   }
 }
 

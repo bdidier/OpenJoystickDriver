@@ -61,7 +61,7 @@ struct ControllerOwnershipCommandTests {
   func virtualWritesTheUserRecord() async throws {
     let directory = Directory()
     let result = try await Self.run(
-      ["controller", "ownership", "pad-1", "virtual", "--json"],
+      ["controller", "ownership", token("pad-1"), "virtual", "--json"],
       device: Self.device(native: true),
       in: directory
     )
@@ -82,13 +82,13 @@ struct ControllerOwnershipCommandTests {
     let directory = Directory()
     let device = try Self.device(native: false)
     _ = try await Self.run(
-      ["controller", "ownership", "pad-1", "virtual"],
+      ["controller", "ownership", token("pad-1"), "virtual"],
       device: Self.device(native: true),
       in: directory
     )
     // OJD seized the controller, so it no longer reports as a native gamepad.
     let result = try await Self.run(
-      ["controller", "ownership", "pad-1", "native", "--plain"],
+      ["controller", "ownership", token("pad-1"), "native", "--plain"],
       device: device,
       in: directory
     )
@@ -101,7 +101,7 @@ struct ControllerOwnershipCommandTests {
   func dryRunWritesNothing() async throws {
     let directory = Directory()
     let result = try await Self.run(
-      ["controller", "ownership", "pad-1", "virtual", "--dry-run", "--json"],
+      ["controller", "ownership", token("pad-1"), "virtual", "--dry-run", "--json"],
       device: Self.device(native: true),
       in: directory
     )
@@ -114,7 +114,7 @@ struct ControllerOwnershipCommandTests {
   func rawUSBControllerIsRefused() async throws {
     let directory = Directory()
     let result = try await Self.run(
-      ["controller", "ownership", "pad-1", "native"],
+      ["controller", "ownership", token("pad-1"), "native"],
       device: Self.device(vendorID: 0x366C, productID: 0x0005, native: true),
       in: directory
     )
@@ -127,7 +127,7 @@ struct ControllerOwnershipCommandTests {
   func controllerMacOSDoesNotServeIsRefused() async throws {
     let directory = Directory()
     let result = try await Self.run(
-      ["controller", "ownership", "pad-1", "virtual"],
+      ["controller", "ownership", token("pad-1"), "virtual"],
       device: Self.device(native: false),
       in: directory
     )
@@ -140,7 +140,7 @@ struct ControllerOwnershipCommandTests {
   func modelWithoutARecordIsRefused() async throws {
     let directory = Directory()
     let result = try await Self.run(
-      ["controller", "ownership", "pad-1", "virtual"],
+      ["controller", "ownership", token("pad-1"), "virtual"],
       device: Self.device(vendorID: 0x1234, productID: 0xABCD, native: true),
       in: directory
     )
@@ -154,7 +154,7 @@ struct ControllerOwnershipCommandTests {
     let directory = Directory()
     let device = try Self.device(native: true)
     let before = try await Self.run(
-      ["controller", "show", "pad-1", "--json"],
+      ["controller", "show", token("pad-1"), "--json"],
       device: device,
       in: directory
     )
@@ -163,12 +163,12 @@ struct ControllerOwnershipCommandTests {
     #expect(beforeOwnership["choiceSource"] as? String == "default")
 
     _ = try await Self.run(
-      ["controller", "ownership", "pad-1", "virtual"],
+      ["controller", "ownership", token("pad-1"), "virtual"],
       device: device,
       in: directory
     )
     let after = try await Self.run(
-      ["controller", "show", "pad-1", "--json"],
+      ["controller", "show", token("pad-1"), "--json"],
       device: device,
       in: directory
     )
@@ -177,7 +177,7 @@ struct ControllerOwnershipCommandTests {
     #expect(afterOwnership["choiceSource"] as? String == "user")
 
     let plain = try await Self.run(
-      ["controller", "show", "pad-1", "--plain"],
+      ["controller", "show", token("pad-1"), "--plain"],
       device: device,
       in: directory
     )

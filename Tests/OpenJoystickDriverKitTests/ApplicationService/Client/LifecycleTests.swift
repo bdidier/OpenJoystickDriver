@@ -17,7 +17,7 @@ struct LifecycleTests {
   }
 
   @Test("main app has a stable service identity")
-  func serviceIdentity() { #expect(ApplicationServiceManager.label == "com.openjoystickdriver") }
+  func serviceAddress() { #expect(ApplicationServiceManager.label == "com.openjoystickdriver") }
 
   @Test("login registration uses the main-app registration client")
   func registrationUsesClient() throws {

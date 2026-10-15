@@ -12,7 +12,7 @@ extension DeviceManager {
   func setPhysicalOutputForTesting(
     _ output: RemappingPhysicalOutput,
     owner: UUID,
-    identifier: DeviceIdentifier
+    identifier: LogicalControllerID
   ) -> PhysicalOutputChannel {
     physicalOutputOwnership.setMapping(output, active: true, owner: owner, for: identifier)
   }

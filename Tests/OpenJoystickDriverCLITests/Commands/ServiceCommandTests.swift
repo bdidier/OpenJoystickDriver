@@ -113,7 +113,7 @@ struct ServiceCommandTests {
           discoverySource: .rawUSB,
           serialNumber: nil,
           bindingResult: .hidDescriptorFixture,
-          runtimeIdentifier: "pad-1"
+          sessionToken: .fixture("pad-1")
         )
       ],
       userSpaceVirtualDeviceEnabled: true
@@ -147,7 +147,7 @@ struct ServiceCommandTests {
     #expect(permissions["accessibility"] as? String == "denied")
     let controllers = try #require(json["controllers"] as? [[String: Any]])
     #expect(controllers.count == 1)
-    #expect(controllers.first?["id"] as? String == "pad-1")
+    #expect(controllers.first?["id"] as? String == token("pad-1"))
     #expect(controllers.first?["vendorID"] as? Int == 0x045E)
 
     #expect(plainRun.code == 0, "\(plainRun.standardError)")
@@ -156,7 +156,7 @@ struct ServiceCommandTests {
     }
     #expect(rows.first?.prefix(2) == ["service", "running"])
     #expect(rows.contains(["permission", "accessibility", "denied"]))
-    #expect(rows.contains(["controller", "pad-1", "045E:028E", "USB", "Test Pad"]))
+    #expect(rows.contains(["controller", token("pad-1"), "045E:028E", "USB", "Test Pad"]))
   }
 
   @Test(arguments: ["start", "wait"])

@@ -4,7 +4,7 @@ extension RemappingEngineState {
 
   mutating func setProfile(
     _ profile: RemappingProfile?,
-    for identifier: DeviceIdentifier
+    for identifier: LogicalControllerID
   ) -> [RemappingEngineAction] {
     guard devices[identifier]?.profile != profile else { return [] }
     let actions = releaseController(identifier)
@@ -17,7 +17,7 @@ extension RemappingEngineState {
   /// Applies the changes of one snapshot in order, as one transition of `identifier`.
   mutating func process(
     changes: [RemappingInputChange],
-    from identifier: DeviceIdentifier,
+    from identifier: LogicalControllerID,
     profile: RemappingProfile,
     at uptimeNanoseconds: UInt64
   ) -> [RemappingEngineAction] {
@@ -41,7 +41,7 @@ extension RemappingEngineState {
 
   mutating func process(
     change: RemappingInputChange,
-    from identifier: DeviceIdentifier,
+    from identifier: LogicalControllerID,
     at uptimeNanoseconds: UInt64
   ) -> [RemappingEngineAction] {
     switch change {
@@ -73,7 +73,7 @@ extension RemappingEngineState {
 
   mutating func setDpad(
     _ direction: HatDirection,
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     at uptimeNanoseconds: UInt64
   ) -> [RemappingEngineAction] {
     guard var device = devices[identifier] else { return [] }
@@ -100,7 +100,7 @@ extension RemappingEngineState {
 
   mutating func processAxes(
     _ values: [(RemappingAxis, Float)],
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     at uptimeNanoseconds: UInt64
   ) -> [RemappingEngineAction] {
     var actions: [RemappingEngineAction] = []
@@ -113,7 +113,7 @@ extension RemappingEngineState {
   mutating func processAxis(
     _ axis: RemappingAxis,
     value rawValue: Float,
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     at uptimeNanoseconds: UInt64
   ) -> [RemappingEngineAction] {
     guard var device = devices[identifier] else { return [] }
@@ -172,7 +172,7 @@ extension RemappingEngineState {
   mutating func setSource(
     _ source: RemappingSource,
     isActive: Bool,
-    for identifier: DeviceIdentifier,
+    for identifier: LogicalControllerID,
     at uptimeNanoseconds: UInt64
   ) -> [RemappingEngineAction] {
     guard var device = devices[identifier] else { return [] }

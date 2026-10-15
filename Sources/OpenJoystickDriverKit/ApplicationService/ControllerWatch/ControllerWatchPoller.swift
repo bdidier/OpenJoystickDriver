@@ -98,9 +98,9 @@ public struct ControllerWatchPoller {
 
   private let source: any ControllerWatchSource
   private var connected: [ApplicationServiceDeviceDescription] = []
-  private var previous: [String: Sample] = [:]
+  private var previous: [ControllerSessionToken: Sample] = [:]
   /// The latest object of each connected controller, which a `DELETED` line carries.
-  private var objects: [String: WatchedController] = [:]
+  private var objects: [ControllerSessionToken: WatchedController] = [:]
   private var listedAt: UInt64?
 
   public init(source: any ControllerWatchSource) { self.source = source }
@@ -114,19 +114,19 @@ public struct ControllerWatchPoller {
     if listedAt.map({ now - $0 >= Self.deviceListInterval }) ?? true {
       listedAt = now
       let devices = try await source.devices()
-      let ids = Set(devices.map(\.runtimeIdentifier))
-      for device in connected where !ids.contains(device.runtimeIdentifier) {
-        previous[device.runtimeIdentifier] = nil
-        let last = objects.removeValue(forKey: device.runtimeIdentifier)
+      let ids = Set(devices.map(\.sessionToken))
+      for device in connected where !ids.contains(device.sessionToken) {
+        previous[device.sessionToken] = nil
+        let last = objects.removeValue(forKey: device.sessionToken)
         let object = last ?? WatchedController(summary: ControllerSummary(device))
         updates.append(
           Update(event: ControllerWatchEvent(type: .deleted, object: object), device: device)
         )
       }
-      let known = Set(connected.map(\.runtimeIdentifier))
-      for device in devices where !known.contains(device.runtimeIdentifier) {
+      let known = Set(connected.map(\.sessionToken))
+      for device in devices where !known.contains(device.sessionToken) {
         let object = WatchedController(summary: ControllerSummary(device))
-        objects[device.runtimeIdentifier] = object
+        objects[device.sessionToken] = object
         updates.append(
           Update(event: ControllerWatchEvent(type: .added, object: object), device: device)
         )
@@ -137,14 +137,14 @@ public struct ControllerWatchPoller {
       guard let input = try await source.state(of: device) else { continue }
       let output = includeOutput ? try await source.output(of: device) : nil
       let sample = Sample(input: input, output: output)
-      guard sample != previous[device.runtimeIdentifier] else { continue }
-      previous[device.runtimeIdentifier] = sample
+      guard sample != previous[device.sessionToken] else { continue }
+      previous[device.sessionToken] = sample
       let object = WatchedController(
         summary: ControllerSummary(device),
         input: input,
         output: output
       )
-      objects[device.runtimeIdentifier] = object
+      objects[device.sessionToken] = object
       updates.append(
         Update(event: ControllerWatchEvent(type: .modified, object: object), device: device)
       )

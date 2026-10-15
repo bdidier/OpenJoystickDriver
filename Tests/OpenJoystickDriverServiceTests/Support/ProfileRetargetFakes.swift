@@ -50,8 +50,8 @@ final class RetargetBackendProbe: VirtualOutputDispatching, RemappingGamepadSink
 
   private func record(_ event: String) { log.record("\(profile.rawValue) \(event)") }
 
-  func activate(for identifiers: [DeviceIdentifier]) async throws {
-    record("activate \(identifiers.map(\.controllerIdentity.vendorID))")
+  func activate(for identifiers: [LogicalControllerID]) async throws {
+    record("activate \(identifiers.map(\.model.vendorID))")
     await activationGate?.suspend()
     if failsActivation { throw AutomaticBackendProbe.ActivationFailure() }
   }
@@ -60,12 +60,13 @@ final class RetargetBackendProbe: VirtualOutputDispatching, RemappingGamepadSink
     lock.withLock { isRemappingSuppressed = suppressed }
   }
 
-  func send(_ state: RemappingGamepadState, for _: DeviceIdentifier) {
+  func send(_ state: RemappingGamepadState, for _: LogicalControllerID) {
     record(state == .neutral ? "neutral" : "state")
   }
 
-  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: DeviceIdentifier) {}
-  func activateOutput(for _: DeviceIdentifier) {}
+  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: LogicalControllerID) {
+  }
+  func activateOutput(for _: LogicalControllerID) {}
 
   func close() {
     lock.withLock { isClosed = true }

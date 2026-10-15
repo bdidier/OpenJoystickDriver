@@ -3,15 +3,15 @@ import Foundation
 extension ApplicationServiceClient {
 
   public func pairRemappingJoyCons(
-    leftRuntimeIdentifier: String,
-    rightRuntimeIdentifier: String,
+    left: ControllerReference,
+    right: ControllerReference,
     profileID: UUID
   ) async throws -> ApplicationServiceRemappingSnapshotPayload {
     try await call(
       .pairRemappingJoyCons,
       ApplicationServiceJoyConPairArguments(
-        leftRuntimeIdentifier: leftRuntimeIdentifier,
-        rightRuntimeIdentifier: rightRuntimeIdentifier,
+        left: left,
+        right: right,
         profileID: profileID
       )
     )

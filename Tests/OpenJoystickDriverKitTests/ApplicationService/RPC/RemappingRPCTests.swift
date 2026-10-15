@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -16,7 +17,7 @@ struct RemappingRPCTests {
 
     #expect(route["selection"] as? String == "remapping")
     #expect(route["eligibility"] as? String == "eligible")
-    #expect(route["runtimeIdentifier"] as? String == "045e:028e:location:1")
+    #expect(route["sessionToken"] as? String == ControllerSessionToken.fixture("pad-1").rawValue)
     #expect(route["serialNumber"] == nil)
     #expect(
       try JSONDecoder().decode(ApplicationServiceRemappingSnapshotPayload.self, from: data)
@@ -92,7 +93,7 @@ struct RemappingRPCTests {
               ApplicationServiceMotionCalibrationArguments.self,
               from: request.arguments
             )
-            #expect(arguments.runtimeIdentifier == "045e:028e:location:1")
+            #expect(arguments.controller == .session(.fixture("pad-1")))
             #expect(arguments.command == .start)
             result = try JSONEncoder().encode(calibration)
           case .pairRemappingJoyCons:
@@ -100,8 +101,8 @@ struct RemappingRPCTests {
               ApplicationServiceJoyConPairArguments.self,
               from: request.arguments
             )
-            #expect(arguments.leftRuntimeIdentifier == "left")
-            #expect(arguments.rightRuntimeIdentifier == "right")
+            #expect(arguments.left == .session(.fixture("left")))
+            #expect(arguments.right == .session(.fixture("right")))
             #expect(arguments.profileID == profile.id)
             result = try JSONEncoder().encode(snapshot)
           case .unpairRemappingJoyCons:
@@ -202,14 +203,14 @@ struct RemappingRPCTests {
     #expect(try await client.requestRemappingPostEventAccess() == .granted)
     #expect(
       try await client.remappingMotionCalibration(
-        runtimeIdentifier: "045e:028e:location:1",
+        for: .session(.fixture("pad-1")),
         command: .start
       ) == calibration
     )
     #expect(
       try await client.pairRemappingJoyCons(
-        leftRuntimeIdentifier: "left",
-        rightRuntimeIdentifier: "right",
+        left: .session(.fixture("left")),
+        right: .session(.fixture("right")),
         profileID: profile.id
       ) == snapshot
     )
@@ -374,7 +375,7 @@ struct RemappingRPCTests {
         ApplicationServiceRemappingRoutePayload(
           vendorID: 1118,
           productID: 654,
-          runtimeIdentifier: "045e:028e:location:1",
+          sessionToken: .fixture("pad-1"),
           selection: .remapping,
           eligibility: .eligible,
           activeProfileID: profile.id,

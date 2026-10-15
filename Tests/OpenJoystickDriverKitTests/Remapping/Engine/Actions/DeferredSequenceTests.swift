@@ -51,7 +51,7 @@ struct RemappingDeferredSequenceTests {
     #expect(state.tick(at: 500_000_001) == [.system(.keyDown(.d)), .system(.keyUp(.d))])
   }
 
-  private let identifier = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 1)
+  private let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 1)
 
   private func profile() -> RemappingProfile {
     RemappingProfile(

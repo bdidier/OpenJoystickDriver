@@ -38,7 +38,7 @@ final class VirtualOutputTransitionProbe: VirtualOutputDispatching,
   let failsActivation: Bool
   private let lock = NSLock()
   private var closeCount = 0
-  private var activations: [[DeviceIdentifier]] = []
+  private var activations: [[LogicalControllerID]] = []
 
   init(activationGate: VirtualOutputTransitionGate? = nil, failsActivation: Bool = false) {
     self.activationGate = activationGate
@@ -46,23 +46,24 @@ final class VirtualOutputTransitionProbe: VirtualOutputDispatching,
   }
 
   var closeCountValue: Int { lock.withLock { closeCount } }
-  var activationValues: [[DeviceIdentifier]] { lock.withLock { activations } }
+  var activationValues: [[LogicalControllerID]] { lock.withLock { activations } }
   var suppressOutput = false
   var status: VirtualOutputBackendStatus { .backend("probe") }
   var lastRumbleStatus: String? { nil }
 
-  func activate(for identifiers: [DeviceIdentifier]) async throws {
+  func activate(for identifiers: [LogicalControllerID]) async throws {
     lock.withLock { activations.append(identifiers) }
     await activationGate?.wait()
     if failsActivation { throw ActivationFailure() }
   }
 
-  func activate(controller identifier: DeviceIdentifier) async throws {
+  func activate(controller identifier: LogicalControllerID) async throws {
     try await activate(for: [identifier])
   }
 
-  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: DeviceIdentifier) {}
-  func activateOutput(for _: DeviceIdentifier) {}
+  func dispatch(_: ControllerEvent, labels _: ControllerButtonLabels, from _: LogicalControllerID) {
+  }
+  func activateOutput(for _: LogicalControllerID) {}
   func setOutputSuppressed(_ suppressed: Bool) { suppressOutput = suppressed }
   func close() { lock.withLock { closeCount += 1 } }
 }
@@ -122,7 +123,7 @@ struct VirtualOutputTransitionFixture {
 
   init(
     factory: VirtualOutputTransitionFactory,
-    identifiers: [DeviceIdentifier],
+    identifiers: [LogicalControllerID],
     timeouts: VirtualOutputTransitionTimeouts = .standard,
     clock: VirtualOutputTransitionClock = .system
   ) throws {

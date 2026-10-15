@@ -11,7 +11,9 @@
     @objc
     func disconnectWirelessControllerFromStatus(_ sender: Any?) {
       guard let identifier = (sender as? NSMenuItem)?.representedObject as? String,
-        let device = menuBarViewModel.devices.first(where: { $0.runtimeIdentifier == identifier })
+        let device = menuBarViewModel.devices.first(where: {
+          $0.sessionToken.rawValue == identifier
+        })
       else { return }
       let alert = NSAlert()
       alert.alertStyle = .warning

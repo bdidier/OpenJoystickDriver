@@ -56,7 +56,7 @@ struct USBDriverKitExtensionConfigurationTests {
     let observation = try #require(
       USBDriverKitTransportProvider.physicalDeviceObservation(from: service)
     )
-    #expect(observation.serviceIdentity == device.serviceIdentity)
+    #expect(observation.serviceAddress == device.serviceAddress)
     #expect(observation.physicalLocationIdentifier == 77)
     #expect(observation.deviceRelease == nil)
     #expect(observation.configurationValue == nil)
@@ -92,7 +92,10 @@ struct USBDriverKitExtensionConfigurationTests {
     #expect(
       observation
         == PhysicalDevice(
-          serviceIdentity: USBTransportServiceIdentity(route: .usbDriverKit, serviceID: 42),
+          serviceAddress: ControllerConnectionAddress.usbService(
+            route: .usbDriverKit,
+            serviceID: 42
+          ),
           vendorID: 0x3537,
           productID: 0x1010,
           productName: "GameSir G7 SE",

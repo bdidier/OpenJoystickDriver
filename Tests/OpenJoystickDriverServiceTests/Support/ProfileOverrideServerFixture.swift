@@ -18,18 +18,10 @@ struct ProfileOverrideServerFixture {
 
   func change(
     _ change: ApplicationServiceServer.VirtualHIDProfileOverrideChange,
-    vendorID: Int = 1,
-    productID: Int = 2,
-    runtimeIdentifier: String? = nil,
+    controller: ControllerReference = .model(ControllerModelID(vendorID: 1, productID: 2)),
     unit: Bool = false
   ) async -> VirtualHIDProfileOverrideResult {
-    await server.changeVirtualHIDProfileOverride(
-      change,
-      vendorID: vendorID,
-      productID: productID,
-      runtimeIdentifier: runtimeIdentifier,
-      unit: unit
-    )
+    await server.changeVirtualHIDProfileOverride(change, for: controller, unit: unit)
   }
 
   func tearDown() async {

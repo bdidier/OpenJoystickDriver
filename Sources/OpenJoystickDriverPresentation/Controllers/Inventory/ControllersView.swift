@@ -113,7 +113,7 @@
 
     private var controllerListRows: some View {
       List(selection: selectedDeviceIdentifier) {
-        ForEach(devices, id: \.runtimeIdentifier) { device in
+        ForEach(devices, id: \.sessionToken) { device in
           let presentation = device.publishedIdentityPresentation
           HStack(spacing: 8) {
             OJDListGlyphSlot {
@@ -130,20 +130,22 @@
               ).lineLimit(1)
             }
             Spacer(minLength: 0)
-          }.padding(.vertical, 4).tag(device.runtimeIdentifier).ojdAccessibilityLabel(device.name)
-            .ojdAccessibilityValue(
-              "\(device.publishedIdentityLabel). \(device.protocolBinding.displayLabel)"
-            )
+          }.padding(.vertical, 4).tag(device.sessionToken.rawValue).ojdAccessibilityLabel(
+            device.name
+          )
+          .ojdAccessibilityValue(
+            "\(device.publishedIdentityLabel). \(device.protocolBinding.displayLabel)"
+          )
         }
       }.listStyle(SidebarListStyle())
     }
 
     private var selectedDeviceIdentifier: Binding<String?> {
       Binding(
-        get: { selectedDevice?.runtimeIdentifier },
+        get: { selectedDevice?.sessionToken.rawValue },
         set: { identifier in
           guard let identifier,
-            let device = devices.first(where: { $0.runtimeIdentifier == identifier })
+            let device = devices.first(where: { $0.sessionToken.rawValue == identifier })
           else { return }
           screen.select(device)
         }

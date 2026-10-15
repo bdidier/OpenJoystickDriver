@@ -2,7 +2,7 @@ import Foundation
 
 enum USBDeviceHandlingOutcome: Equatable {
   /// Every role pipeline of the service, in slot order.
-  case claimed([DeviceIdentifier])
+  case claimed([LogicalControllerID])
   case ignored
   case retry
 }
@@ -37,15 +37,15 @@ func pollUSBEnumeration(from provider: any USBTransportProvider) async -> USBEnu
 }
 
 struct USBEnumerationTracker {
-  private(set) var acknowledgedDevices: [USBTransportServiceIdentity: USBTransportDevice] = [:]
+  private(set) var acknowledgedDevices: [ControllerConnectionAddress: USBTransportDevice] = [:]
 
   mutating func acknowledge(_ device: USBTransportDevice) {
-    acknowledgedDevices[device.serviceIdentity] = device
+    acknowledgedDevices[device.serviceAddress] = device
   }
 
   /// Forgets a device's acknowledgement without a detach, so the next poll attaches it again.
   mutating func unacknowledge(_ device: USBTransportDevice) {
-    acknowledgedDevices.removeValue(forKey: device.serviceIdentity)
+    acknowledgedDevices.removeValue(forKey: device.serviceAddress)
   }
 
   mutating func events(for poll: USBEnumerationPoll) -> [USBEnumerationEvent] {
@@ -54,11 +54,11 @@ struct USBEnumerationTracker {
       return [.accessFailure(failure)]
     }
 
-    var currentDevices: [USBTransportServiceIdentity: USBTransportDevice] = [:]
-    for device in devices { currentDevices[device.serviceIdentity] = device }
+    var currentDevices: [ControllerConnectionAddress: USBTransportDevice] = [:]
+    for device in devices { currentDevices[device.serviceAddress] = device }
 
     var events: [USBEnumerationEvent] = []
-    for identity in acknowledgedDevices.keys.sorted(by: Self.precedes) {
+    for identity in acknowledgedDevices.keys.sorted() {
       guard let previous = acknowledgedDevices[identity] else { continue }
       guard let current = currentDevices[identity] else {
         acknowledgedDevices.removeValue(forKey: identity)
@@ -71,19 +71,11 @@ struct USBEnumerationTracker {
       }
     }
 
-    for identity in currentDevices.keys.sorted(by: Self.precedes)
+    for identity in currentDevices.keys.sorted()
     where acknowledgedDevices[identity] == nil {
       if let device = currentDevices[identity] { events.append(.attached(device)) }
     }
     return events
-  }
-
-  private static func precedes(
-    _ lhs: USBTransportServiceIdentity,
-    _ rhs: USBTransportServiceIdentity
-  ) -> Bool {
-    if lhs.route != rhs.route { return lhs.route.rawValue < rhs.route.rawValue }
-    return lhs.serviceID < rhs.serviceID
   }
 }
 
@@ -101,7 +93,7 @@ extension DeviceManager {
     print("[DeviceManager] Raw USB detection started")
 
     var enumeration = USBEnumerationTracker()
-    var serviceToIdentifiers: [USBTransportServiceIdentity: [DeviceIdentifier]] = [:]
+    var serviceToIdentifiers: [ControllerConnectionAddress: [LogicalControllerID]] = [:]
 
     while isCurrentUSBDetection(generation) {
       await reloadPendingRecords(in: &enumeration, serviceToIdentifiers: &serviceToIdentifiers)
@@ -127,7 +119,7 @@ extension DeviceManager {
           guard isCurrentUSBDetection(generation) else { return }
           switch outcome {
           case .claimed(let identifiers):
-            serviceToIdentifiers[device.serviceIdentity] = identifiers
+            serviceToIdentifiers[device.serviceAddress] = identifiers
             guard identifiers.allSatisfy({ isRunningUSBRole($0, of: device) }) else {
               // A role ended during admission. Tear down the survivors and keep the service
               // unacknowledged, so the next poll admits the whole device again.
@@ -155,7 +147,7 @@ extension DeviceManager {
   /// the user's suspension.
   private func reloadPendingRecords(
     in enumeration: inout USBEnumerationTracker,
-    serviceToIdentifiers: inout [USBTransportServiceIdentity: [DeviceIdentifier]]
+    serviceToIdentifiers: inout [ControllerConnectionAddress: [LogicalControllerID]]
   ) async {
     guard !pendingRecordReloads.isEmpty else { return }
     let changed = pendingRecordReloads
@@ -165,7 +157,7 @@ extension DeviceManager {
     }
     for device in devices {
       let suspended = suspendedControllerIdentities.intersection(
-        serviceToIdentifiers[device.serviceIdentity] ?? []
+        serviceToIdentifiers[device.serviceAddress] ?? []
       )
       await removeUSBDevice(device, serviceToIdentifiers: &serviceToIdentifiers)
       suspendedControllerIdentities.formUnion(suspended)
@@ -184,11 +176,11 @@ extension DeviceManager {
   /// before any pipeline is awaited, so losing the device is atomic for its slots.
   private func removeUSBDevice(
     _ device: USBTransportDevice,
-    serviceToIdentifiers: inout [USBTransportServiceIdentity: [DeviceIdentifier]]
+    serviceToIdentifiers: inout [ControllerConnectionAddress: [LogicalControllerID]]
   ) async {
-    clearUnboundDevice(.usb(device.serviceIdentity))
-    nativeShadowedUSBServices.removeValue(forKey: device.serviceIdentity)
-    let identifiers = (serviceToIdentifiers.removeValue(forKey: device.serviceIdentity) ?? [])
+    clearUnboundDevice(.usb(device.serviceAddress))
+    nativeShadowedUSBServices.removeValue(forKey: device.serviceAddress)
+    let identifiers = (serviceToIdentifiers.removeValue(forKey: device.serviceAddress) ?? [])
       .filter { isRunningUSBRole($0, of: device) }
     guard !identifiers.isEmpty else { return }
     let removed = identifiers.compactMap(removeUSBRole)
@@ -259,7 +251,7 @@ extension DeviceManager {
     guard
       !hasUSBPipelineConflict(
         for: configuredIdentifier,
-        service: device.serviceIdentity,
+        service: device.serviceAddress,
         yieldingHID: true
       )
     else {
@@ -285,14 +277,14 @@ extension DeviceManager {
     let currentDevices = try? await provider.devices()
     guard isCurrentUSBDetection(generation),
       currentDevices?.contains(where: {
-        $0.serviceIdentity == device.serviceIdentity && $0 == device
+        $0.serviceAddress == device.serviceAddress && $0 == device
       }) == true
     else { return .retry }
 
     // Descriptor facts are retained only when they identify this exact
     // enumerated service. A provider without passive observations returns nil.
     if let physicalDevice = resolution.physicalDevice,
-      physicalDevice.serviceIdentity != device.serviceIdentity
+      physicalDevice.serviceAddress != device.serviceAddress
     {
       return .retry
     }
@@ -308,7 +300,7 @@ extension DeviceManager {
       let identifier = Self.usbIdentifier(for: device, claiming: role.profile)
       guard !deferToNativeHID(device, identifier: identifier) else { return .ignored }
       guard
-        !hasUSBPipelineConflict(for: identifier, service: device.serviceIdentity, yieldingHID: true)
+        !hasUSBPipelineConflict(for: identifier, service: device.serviceAddress, yieldingHID: true)
       else {
         print("[DeviceManager] Pipeline already exists for \(identifier)")
         return .retry
@@ -375,7 +367,7 @@ extension DeviceManager {
     interfaces: [PhysicalInterfaceSignature]
   ) {
     recordUnboundDevice(
-      .usb(device.serviceIdentity),
+      .usb(device.serviceAddress),
       vendorID: device.vendorID,
       productID: device.productID,
       connection: "USB",

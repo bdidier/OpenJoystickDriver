@@ -18,8 +18,8 @@ extension DualShock4DriverTests {
   func testControllerStateExposesTheDS4Hat() async throws {
     let dispatcher = CapturingOutputDispatcher()
     let pipeline = DevicePipeline(
-      identifier: DeviceIdentifier(vendorID: 1356, productID: 2508),
-      transport: .hid(locationID: 1),
+      identifier: LogicalControllerID(vendorID: 1356, productID: 2508),
+      transport: .hid(address: .ioKit(locationID: 1, interfaceNumber: nil)),
       driver: DualShock4Driver(),
       dispatcher: dispatcher
     )
@@ -41,8 +41,8 @@ extension DualShock4DriverTests {
   func testPipelineSnapshotsPowerWithoutDispatchingItAsInput() async throws {
     let dispatcher = CapturingOutputDispatcher()
     let pipeline = DevicePipeline(
-      identifier: DeviceIdentifier(vendorID: 1356, productID: 2508),
-      transport: .hid(locationID: 1),
+      identifier: LogicalControllerID(vendorID: 1356, productID: 2508),
+      transport: .hid(address: .ioKit(locationID: 1, interfaceNumber: nil)),
       driver: DualShock4Driver(),
       dispatcher: dispatcher
     ) { 0 }

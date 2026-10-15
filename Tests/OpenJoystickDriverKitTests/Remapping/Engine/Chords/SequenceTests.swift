@@ -82,7 +82,7 @@ struct RemappingSequenceTests {
     )
   }
 
-  private func device(_ locationID: UInt32) -> DeviceIdentifier {
-    DeviceIdentifier(vendorID: 1, productID: 2, locationID: locationID)
+  private func device(_ locationID: UInt32) -> LogicalControllerID {
+    LogicalControllerID(vendorID: 1, productID: 2, locationID: locationID)
   }
 }

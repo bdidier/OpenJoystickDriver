@@ -7,7 +7,7 @@ import Testing
 extension VirtualOutputTransitionTests {
   @Test(.timeLimit(.minutes(1)))
   func noncooperativeFeedbackIsQuarantinedBeforeNeutralization() async {
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2)
     let stalledWrite = VirtualOutputTransitionGate()
     let probe = VirtualOutputFeedbackProbe()
     let feedbackGate = VirtualOutputFeedbackGate { _, command in
@@ -42,10 +42,10 @@ extension VirtualOutputTransitionTests {
 
   @Test
   func quiescingOneControllerLeavesIdenticalControllerFeedbackFlowing() async {
-    let first = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 1)
-    let second = DeviceIdentifier(vendorID: 1, productID: 2, locationID: 2)
+    let first = LogicalControllerID(vendorID: 1, productID: 2, locationID: 1)
+    let second = LogicalControllerID(vendorID: 1, productID: 2, locationID: 2)
     let stalledNeutralization = VirtualOutputTransitionGate()
-    let sent = Locked<[DeviceIdentifier]>([])
+    let sent = Locked<[LogicalControllerID]>([])
     let feedbackGate = VirtualOutputFeedbackGate { identifier, _ in
       sent.withLock { $0.append(identifier) }
       if identifier == first { await stalledNeutralization.wait() }
@@ -110,8 +110,8 @@ extension VirtualOutputTransitionTests {
 
   @Test
   func startupActivationPublishesForConnectedControllers() async throws {
-    let first = DeviceIdentifier(vendorID: 1, productID: 2)
-    let second = DeviceIdentifier(vendorID: 3, productID: 4)
+    let first = LogicalControllerID(vendorID: 1, productID: 2)
+    let second = LogicalControllerID(vendorID: 3, productID: 4)
     let factory = VirtualOutputTransitionFactory()
     let fixture = try VirtualOutputTransitionFixture(
       factory: factory,
@@ -147,7 +147,7 @@ extension VirtualOutputTransitionTests {
     let factory = VirtualOutputTransitionFactory()
     let fixture = try VirtualOutputTransitionFixture(
       factory: factory,
-      identifiers: [DeviceIdentifier(vendorID: 1, productID: 2)]
+      identifiers: [LogicalControllerID(vendorID: 1, productID: 2)]
     )
     let server = fixture.server
     let live = VirtualOutputTransitionProbe()
@@ -167,7 +167,7 @@ extension VirtualOutputTransitionTests {
     factory.buildFails = true
     let fixture = try VirtualOutputTransitionFixture(
       factory: factory,
-      identifiers: [DeviceIdentifier(vendorID: 1, productID: 2)]
+      identifiers: [LogicalControllerID(vendorID: 1, productID: 2)]
     )
     let server = fixture.server
 
@@ -185,7 +185,7 @@ extension VirtualOutputTransitionTests {
     factory.activationFails = true
     let fixture = try VirtualOutputTransitionFixture(
       factory: factory,
-      identifiers: [DeviceIdentifier(vendorID: 1, productID: 2)]
+      identifiers: [LogicalControllerID(vendorID: 1, productID: 2)]
     )
     let server = fixture.server
 
@@ -205,7 +205,7 @@ extension VirtualOutputTransitionTests {
     factory.firstActivationGate = gate
     let fixture = try VirtualOutputTransitionFixture(
       factory: factory,
-      identifiers: [DeviceIdentifier(vendorID: 1, productID: 2)],
+      identifiers: [LogicalControllerID(vendorID: 1, productID: 2)],
       timeouts: VirtualOutputTransitionTimeouts(
         stageNanoseconds: 100_000_000,
         perControllerNanoseconds: 5_000_000,
@@ -231,10 +231,10 @@ extension VirtualOutputTransitionTests {
     let gate = VirtualOutputTransitionGate()
     let factory = VirtualOutputTransitionFactory()
     factory.firstActivationGate = gate
-    let first = DeviceIdentifier(vendorID: 1, productID: 2)
+    let first = LogicalControllerID(vendorID: 1, productID: 2)
     let fixture = try VirtualOutputTransitionFixture(
       factory: factory,
-      identifiers: [first, DeviceIdentifier(vendorID: 3, productID: 4)]
+      identifiers: [first, LogicalControllerID(vendorID: 3, productID: 4)]
     )
     let server = fixture.server
     let activation = Task { await server.activateVirtualOutputBackendForCurrentDevices() }
@@ -264,7 +264,7 @@ extension VirtualOutputTransitionTests {
     let factory = VirtualOutputTransitionFactory()
     let fixture = try VirtualOutputTransitionFixture(
       factory: factory,
-      identifiers: [DeviceIdentifier(vendorID: 1, productID: 2)]
+      identifiers: [LogicalControllerID(vendorID: 1, productID: 2)]
     )
     let server = fixture.server
     let live = VirtualOutputTransitionProbe()
@@ -286,7 +286,7 @@ extension VirtualOutputTransitionTests {
     factory.buildFails = true
     let fixture = try VirtualOutputTransitionFixture(
       factory: factory,
-      identifiers: [DeviceIdentifier(vendorID: 1, productID: 2)]
+      identifiers: [LogicalControllerID(vendorID: 1, productID: 2)]
     )
     let server = fixture.server
     #expect(await server.activateVirtualOutputBackendForCurrentDevices() == false)
@@ -302,7 +302,7 @@ extension VirtualOutputTransitionTests {
 
   @Test
   func aNewServerPublishesOutputOnlyThroughActivation() async throws {
-    let identifier = DeviceIdentifier(vendorID: 1, productID: 2)
+    let identifier = LogicalControllerID(vendorID: 1, productID: 2)
     let factory = VirtualOutputTransitionFactory()
     let fixture = try VirtualOutputTransitionFixture(factory: factory, identifiers: [identifier])
     let server = fixture.server
@@ -318,7 +318,7 @@ extension VirtualOutputTransitionTests {
 
   @Test
   func theTotalBudgetBoundsActivationAcrossControllers() async throws {
-    let identifiers = (1...3).map { DeviceIdentifier(vendorID: UInt16($0), productID: 2) }
+    let identifiers = (1...3).map { LogicalControllerID(vendorID: UInt16($0), productID: 2) }
     let factory = VirtualOutputTransitionFactory()
     // Each reading advances the clock 40 ns, so every activation takes 40 ns against a 60 ns
     // per-controller and a 100 ns total budget; three controllers would need 120 ns.

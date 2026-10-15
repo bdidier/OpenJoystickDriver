@@ -331,7 +331,7 @@
           keyEquivalent: ""
         )
         disconnect.target = self
-        disconnect.representedObject = device.runtimeIdentifier
+        disconnect.representedObject = device.sessionToken.rawValue
         disconnect.image = menuImage(symbol: "antenna.radiowaves.left.and.right.slash")
         menu.addItem(disconnect)
       }

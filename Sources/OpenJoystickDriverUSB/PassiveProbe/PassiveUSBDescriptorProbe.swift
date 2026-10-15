@@ -180,7 +180,7 @@ public enum PassiveUSBDescriptorProbe {
         route: device.route
       )
     return PhysicalDevice(
-      serviceIdentity: device.serviceIdentity,
+      serviceAddress: device.serviceAddress,
       vendorID: device.vendorID,
       productID: device.productID,
       deviceRelease: result.observedUSBFacts.deviceRelease,
