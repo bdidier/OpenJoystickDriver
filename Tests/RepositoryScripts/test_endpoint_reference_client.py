@@ -102,11 +102,11 @@ class EndpointReferenceClientTests(unittest.TestCase):
                 "durationMilliseconds": 200,
             },
             self.envelope("RumbleCommand", type="stopRumble"),
-            self.envelope("Status", status="Failure", code="E1008", message="Full."),
+            self.envelope("Status", status="Failure", code="E1007", message="Full."),
             self.envelope(
                 "Status",
                 status="Failure",
-                code="E1010",
+                code="E1009",
                 message="Unsupported.",
                 details={"supportedAPIVersions": [self.client["API_VERSION"]]},
             ),
@@ -225,12 +225,12 @@ class EndpointReferenceClientTests(unittest.TestCase):
         error = self.envelope(
             "Status",
             status="Failure",
-            code="E1009",
+            code="E1008",
             message="The virtual gamepad closed.",
         )
         exit_info = self.run_until_feeding(lambda send, _reset: send(error))
 
-        self.assertIn("E1009", str(exit_info.code))
+        self.assertIn("E1008", str(exit_info.code))
         self.assertNotIn(exit_info.code, (0, None))
 
     def test_client_exits_when_the_endpoint_closes_before_the_release_has_played(
@@ -300,7 +300,7 @@ class EndpointReferenceClientTests(unittest.TestCase):
         self.assertIn("within 0.3 seconds", str(exit_info.exception.code))
 
     def test_client_reports_the_supported_versions_on_a_header_error(self) -> None:
-        for code in ("E1010", "E1011", "E1012"):
+        for code in ("E1009", "E1010", "E1011"):
             error = self.envelope(
                 "Status",
                 status="Failure",
@@ -318,11 +318,11 @@ class EndpointReferenceClientTests(unittest.TestCase):
                 self.assertIn("Supported apiVersion values", str(exit_info.code))
 
     def test_client_refuses_a_line_with_another_api_version(self) -> None:
-        old = {"apiVersion": "openjoystickdriver.io/v1beta1", "kind": "Challenge"}
+        line = {"apiVersion": "unsupported.example/v9", "kind": "Challenge"}
         with self.assertRaises(SystemExit) as exit_info:
-            reference_client.parse_line(json.dumps(old))
+            reference_client.parse_line(json.dumps(line))
 
-        self.assertIn("openjoystickdriver.io/v1beta1", str(exit_info.exception.code))
+        self.assertIn("unsupported.example/v9", str(exit_info.exception.code))
         self.assertIn(reference_client.API_VERSION, str(exit_info.exception.code))
 
     def test_client_checks_the_header_of_a_watch_lines_object(self) -> None:

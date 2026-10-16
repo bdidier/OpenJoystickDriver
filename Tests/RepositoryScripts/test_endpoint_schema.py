@@ -43,10 +43,10 @@ class EndpointSchemaTests(unittest.TestCase):
             line("Frame", buttons=["South"], axes={"LeftStickX": 0.5}),
             line("KeepAlive"),
             failure("E1001"),
-            failure("E1004"),
+            failure("E1003"),
+            failure("E1009", **DETAILS),
             failure("E1010", **DETAILS),
             failure("E1011", **DETAILS),
-            failure("E1012", **DETAILS),
         ]
         for message in messages:
             self.assertTrue(self.valid(message), message)
@@ -59,28 +59,24 @@ class EndpointSchemaTests(unittest.TestCase):
     def test_the_header_codes_need_the_supported_versions_and_no_other_code_has_them(
         self,
     ) -> None:
-        for code in ("E1010", "E1011", "E1012"):
+        for code in ("E1009", "E1010", "E1011"):
             self.assertFalse(self.valid(failure(code)), code)
         empty = {"details": {"supportedAPIVersions": []}}
-        self.assertFalse(self.valid(failure("E1010", **empty)))
-        for code in ("E1001", "E1002", "E1004", "E1009"):
+        self.assertFalse(self.valid(failure("E1009", **empty)))
+        for code in ("E1001", "E1002", "E1003", "E1008"):
             self.assertFalse(self.valid(failure(code, **DETAILS)), code)
-
-    def test_the_retired_unsupported_protocol_code_is_not_a_status_code(self) -> None:
-        self.assertFalse(self.valid(failure("E1003", **DETAILS)))
-        self.assertFalse(self.valid(failure("E1003")))
 
     def test_an_unknown_persona_id_is_refused(self) -> None:
         for name in ("NotAPersona", "generic", "Xbox"):
             self.assertFalse(self.valid(line("FeedRequest", **{"as": name})), name)
             self.assertFalse(self.valid(line("FeedSession", **{"as": name})), name)
 
-    def test_the_old_api_version_is_not_accepted(self) -> None:
-        old = "openjoystickdriver.io/v1beta1"
+    def test_an_unsupported_api_version_is_not_accepted(self) -> None:
+        unsupported = "unsupported.example/v9"
         self.assertFalse(
-            self.valid({"apiVersion": old, "kind": "Hello", "scopes": ["read"]})
+            self.valid({"apiVersion": unsupported, "kind": "Hello", "scopes": ["read"]})
         )
-        self.assertFalse(self.valid({**failure("E1010", **DETAILS), "apiVersion": old}))
+        self.assertFalse(self.valid({**failure("E1009", **DETAILS), "apiVersion": unsupported}))
 
     def test_a_line_needs_both_header_members(self) -> None:
         hello = line("Hello", scopes=["read"])

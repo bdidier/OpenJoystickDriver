@@ -23,7 +23,7 @@ COPIED = (
 
 
 def entry(code: str, domain: str, name: str, **extra: Any) -> dict[str, Any]:
-    return {"code": code, "domain": domain, "name": name, "status": "active", **extra}
+    return {"code": code, "domain": domain, "name": name, **extra}
 
 
 class ErrorCodeTests(unittest.TestCase):
@@ -43,7 +43,7 @@ class ErrorCodeTests(unittest.TestCase):
     def test_the_repository_is_current(self) -> None:
         self.assertEqual(errors.regenerate(ROOT, write=False), [])
 
-    def test_the_endpoint_codes_are_in_order_with_the_old_numbers_kept(self) -> None:
+    def test_the_endpoint_codes_are_in_order_(self) -> None:
         items = [
             item for item in errors.load_catalog(ROOT) if item["domain"] == "endpoint"
         ]
@@ -52,20 +52,16 @@ class ErrorCodeTests(unittest.TestCase):
             [
                 ("E1001", "endpointDisabled"),
                 ("E1002", "notGranted"),
-                ("E1003", "unsupportedProtocol"),
-                ("E1004", "invalidMessage"),
-                ("E1005", "tooManyConnections"),
-                ("E1006", "revoked"),
-                ("E1007", "tooSlow"),
-                ("E1008", "tooManyFeeds"),
-                ("E1009", "feedClosed"),
-                ("E1010", "unsupportedEndpointVersion"),
-                ("E1011", "unexpectedKind"),
-                ("E1012", "missingHeader"),
+                ("E1003", "invalidMessage"),
+                ("E1004", "tooManyConnections"),
+                ("E1005", "revoked"),
+                ("E1006", "tooSlow"),
+                ("E1007", "tooManyFeeds"),
+                ("E1008", "feedClosed"),
+                ("E1009", "unsupportedEndpointVersion"),
+                ("E1010", "unexpectedKind"),
+                ("E1011", "missingHeader"),
             ],
-        )
-        self.assertEqual(
-            [item["code"] for item in items if item["status"] == "retired"], ["E1003"]
         )
 
     def test_a_code_with_the_wrong_prefix_for_its_domain_is_refused(self) -> None:
@@ -122,8 +118,7 @@ class ErrorCodeTests(unittest.TestCase):
             entry("E2001", "cli", "noExit"),
             entry("E3001", "remapping", "noWire"),
             entry("E1001", "endpoint", "extraExit", exitCode=64),
-            {**entry("E1001", "endpoint", "noVersion"), "status": "retired"},
-            entry("E1001", "endpoint", "extraVersion", retiredIn="0.5.0"),
+            entry("E1001", "endpoint", "extraField", extra="x"),
         ):
             with self.subTest(item=item["name"]):
                 self.write_catalog(root, [item])
@@ -164,7 +159,7 @@ class ErrorCodeTests(unittest.TestCase):
             entry("E1001", "endpoint", "a"),
             entry("E1002", "endpoint", "b"),
         ]
-        with self.assertRaisesRegex(errors.ErrorCodeError, "E1002 .* was deleted"):
+        with self.assertRaisesRegex(errors.ErrorCodeError, "E1002 .* is missing from the catalog"):
             errors.check_not_reused(fake_previous, [entry("E1001", "endpoint", "a")])
 
     def test_a_released_code_given_another_meaning_is_refused(self) -> None:
@@ -178,11 +173,11 @@ class ErrorCodeTests(unittest.TestCase):
                 fake_previous, [entry("E1001", "cli", "a", exitCode=1)]
             )
 
-    def test_a_retired_or_new_code_passes_the_reuse_guard(self) -> None:
+    def test_a_new_code_passes_the_reuse_guard(self) -> None:
         fake_previous = [entry("E1001", "endpoint", "a")]
-        retired = {**entry("E1001", "endpoint", "a"), "status": "retired"}
         errors.check_not_reused(
-            fake_previous, [retired, entry("E1002", "endpoint", "b")]
+            fake_previous,
+            [entry("E1001", "endpoint", "a"), entry("E1002", "endpoint", "b")],
         )
 
     def test_the_released_catalog_is_read_at_the_last_tag_before_head(self) -> None:
@@ -244,18 +239,15 @@ class ErrorCodeTests(unittest.TestCase):
         catalog.append(entry(new_endpoint, "endpoint", "newCode"))
         catalog.append(entry(new_cli, "cli", "newUsage", exitCode=64))
         catalog.append(
-            {
-                **entry(new_remapping, "remapping", "oldWire", wire="old_wire"),
-                "status": "retired",
-                "retiredIn": "0.5.0",
-            }
+            entry(new_remapping, "remapping", "otherWire", wire="other_wire")
         )
         self.write_catalog(root, sorted(catalog, key=lambda item: item["code"]))
         template = root / errors.TEMPLATE
         template.write_text(
             template.read_text(encoding="utf-8")
             + f'"error.{new_endpoint}" = "A new code. Fix it.";\n'
-            + f'"error.{new_cli}" = "Wrong usage. Read the help.";\n',
+            + f'"error.{new_cli}" = "Wrong usage. Read the help.";\n'
+            + f'"error.{new_remapping}" = "Other wire. Fix it.";\n',
             encoding="utf-8",
         )
         with patch.object(errors, "released_catalog", return_value=None):
@@ -277,7 +269,7 @@ class ErrorCodeTests(unittest.TestCase):
             f"| {new_cli} | Command line | Wrong usage. Read the help. Exit code 64. |",
             page,
         )
-        self.assertIn(f"| {new_remapping} | Remapping | Retired in 0.5.0. |", page)
+        self.assertIn(f"| {new_remapping} | Remapping | Other wire. Fix it. Wire value `other_wire`. |", page)
 
     def test_escapes_in_the_english_text_are_decoded(self) -> None:
         root = self.copy_repository()

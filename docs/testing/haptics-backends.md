@@ -11,7 +11,7 @@ Use the supported diagnostics routes to distinguish backend inventory, GameContr
 
 The final example uses the GameSir G7 SE decimal VID/PID; substitute the vendor and product IDs of the connected device, in decimal or `0x` hexadecimal. It drives `ojd controller rumble` with a `VVVV:PPPP` selector built from them, which sends one `sendControllerOutput` command per step; the app ends each bounded rumble itself, so the script waits out the duration before its explicit stop. The SDL route can exercise OJD's first-party Microsoft Xbox 360 Wired `045E:028E` with the Xbox 360 HIDAPI descriptor/report format. OJD publishes it through `IOHIDUserDevice` on every supported macOS. The probe uses the installed OJD CLI to change identities so its application-service protocol always matches the running installed app.
 
-The retired isolated probe also tested Apple's legacy Force Feedback API. Its dated observations remain below as evidence, but that unsupported executable is no longer a live route. A nonzero HID output-report size is only a raw-report candidate; it does not imply Force Feedback compatibility or physical rumble.
+An isolated probe tested Apple's legacy Force Feedback API. Its dated observations below are evidence only; OJD has no Force Feedback route. A nonzero HID output-report size is only a raw-report candidate; it does not imply Force Feedback compatibility or physical rumble.
 
 Rumble that an application writes to a virtual controller reaches the physical controller as one output command: a bounded set-rumble, with the main motors mirrored onto the Steam Controller trackpad haptics, or a stop-rumble. A stop writes the physical controller once, and an active remapping rumble claim keeps running through it. Other consumer reports, such as a DualSense lightbar, do not drive physical output.
 
@@ -46,7 +46,7 @@ August 25, 2026 observations for the connected GameSir G7 SE (`3537:1010`) using
 | Exact ASTRO SDL HIDAPI Xbox 360 | The `sdl2-3` profile published `9886:0024` and exposed its eight-byte output report | Input and physical rumble worked. |
 | Microsoft Xbox One S Bluetooth revision 1 | Probe published `045E:02E0` with Bluetooth transport and the matching descriptor | LED and application discovery worked, but input did not; rumble was unavailable. |
 | Microsoft Xbox One S Bluetooth revision 2 | Probe published `045E:02FD` with Bluetooth transport and the matching descriptor | LED and application discovery worked, but input did not; rumble was unavailable. |
-| Historical Xbox One HID experiment | Retired probe/identity experiments published `045E:02EA` / `045E:02FD` Bluetooth-shaped HID tuples | LED and discovery sometimes worked, but usable input and rumble did not. Historical evidence only; no live product route remains. |
+| Xbox One HID experiment | Probe and identity experiments published `045E:02EA` / `045E:02FD` Bluetooth-shaped HID tuples | LED and discovery sometimes worked, but usable input and rumble did not. Evidence only; OJD has no route for it. |
 
 These results apply to this controller, OS, consumer, and OJD build. They show that exact HIDAPI-compatible reports are the working cross-application path for this setup. They do not establish that every application accepts the spoofed identity or that PID and GameController haptics are unavailable for every real controller.
 

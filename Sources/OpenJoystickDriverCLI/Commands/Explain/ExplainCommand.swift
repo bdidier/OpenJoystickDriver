@@ -31,10 +31,9 @@ struct ExplainCommand: AsyncParsableCommand {
     let explanation: String
     let exitCode: Int32?
     let wire: String?
-    let retiredIn: String?
 
     private enum CodingKeys: String, CodingKey {
-      case code, area, explanation, exitCode, wire, retiredIn
+      case code, area, explanation, exitCode, wire
     }
   }
 
@@ -79,19 +78,7 @@ struct ExplainCommand: AsyncParsableCommand {
         exitCode: id.domain == .commandLine ? CLIExitCode(for: id).rawValue : nil,
         wire: id.domain == .remapping
           ? ApplicationServiceRemappingRPCError.Code.allCases.first { $0.errorCode == id }?.rawValue
-          : nil,
-        retiredIn: nil
-      )
-    }
-    if let retired = RetiredErrorCode.named(code) {
-      return Result(
-        code: retired.code,
-        domain: retired.domain.rawValue,
-        area: area(of: retired.domain),
-        explanation: CLILocalized.format("cli.explain.retired", retired.retiredIn),
-        exitCode: nil,
-        wire: nil,
-        retiredIn: retired.retiredIn
+          : nil
       )
     }
     throw CLIFailure.usage(CLILocalized.format("cli.explain.unknown", code))

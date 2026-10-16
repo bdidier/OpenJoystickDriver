@@ -84,7 +84,7 @@ final class EndpointConnection: @unchecked Sendable {
     for event in snapshot { deliver(event) }
   }
 
-  /// Queues `line`; a `bounded` line closes the connection with `E1007` when the queue is full
+  /// Queues `line`; a `bounded` line closes the connection with `E1006` when the queue is full
   /// and is dropped when the connection closes first.
   func send(_ line: some Encodable, bounded: Bool = false) {
     guard let data = try? Self.encoder().encode(line) else { return }
@@ -100,7 +100,7 @@ final class EndpointConnection: @unchecked Sendable {
   }
 
   /// Queues `event`, replacing a waiting `MODIFIED` line of the same controller; closes the
-  /// connection with `E1007` when the queue is full.
+  /// connection with `E1006` when the queue is full.
   func deliver(_ event: ControllerWatchEvent) {
     lock.withLock {
       guard subscribed, !closing else { return }

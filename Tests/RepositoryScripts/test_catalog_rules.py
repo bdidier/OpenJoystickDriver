@@ -33,7 +33,7 @@ class CatalogRulesLoadingTests(unittest.TestCase):
             loaded = catalog_rules.load_rules("rules.json", "Example", keys, path)
             self.assertEqual(loaded["values"], [])
             for change in (
-                {"apiVersion": "openjoystickdriver.io/v1beta1"},
+                {"apiVersion": "unsupported.example/v9"},
                 {"kind": "Other"},
                 {"extra": 1},
             ):

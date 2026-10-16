@@ -97,8 +97,7 @@ public struct ControllerPatch: Equatable, Sendable {
     ]
   }
 
-  /// Checks and reads a patch document. A document of another kind, such as the removed
-  /// `ControllerOverride`, fails the header check.
+  /// Checks and reads a patch document. A document of another kind fails the header check.
   static func parse(_ document: [String: Any], file: String? = nil) throws -> Self {
     try OpenJoystickDriverAPI.requireHeader(document, kind: kind, file: file)
     guard Set(document.keys) == ["apiVersion", "kind", "selector", "patch"],

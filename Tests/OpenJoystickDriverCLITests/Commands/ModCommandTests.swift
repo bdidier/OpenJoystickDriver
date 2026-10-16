@@ -98,14 +98,14 @@ struct ModCommandTests {
   }
 
   @Test
-  func aManifestWithAnOldAPIVersionIsRefusedWithE5001() async throws {
+  func aManifestWithAnUnsupportedAPIVersionIsRefusedWithE5001() async throws {
     let support = Support()
     let folder = try support.makePackage()
     let manifestURL = URL(fileURLWithPath: folder).appendingPathComponent("mod.json")
     var manifest = try #require(
       JSONSerialization.jsonObject(with: Data(contentsOf: manifestURL)) as? [String: Any]
     )
-    manifest["apiVersion"] = "openjoystickdriver.io/v1beta1"
+    manifest["apiVersion"] = "unsupported.example/v9"
     try JSONSerialization.data(withJSONObject: manifest).write(to: manifestURL)
 
     let json = await run(["validate", folder, "--json"], in: support)
@@ -116,7 +116,7 @@ struct ModCommandTests {
     #expect(try json.json()["code"] as? String == "E5001")
     let problem = try #require(try json.json()["problem"] as? String)
     #expect(problem.contains("mod.json"))
-    #expect(problem.contains("openjoystickdriver.io/v1beta1"))
+    #expect(problem.contains("unsupported.example/v9"))
     #expect(problem.contains(OpenJoystickDriverAPI.version))
     #expect(json.standardError.hasPrefix("error[E5001]: "))
     #expect(install.code == 1)

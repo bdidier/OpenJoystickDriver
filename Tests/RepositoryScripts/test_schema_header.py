@@ -17,7 +17,7 @@ SWIFT_API = (
 )
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
 SAMPLE = ROOT / "docs" / "sdk" / "sample"
-WRONG_VERSIONS = ("openjoystickdriver.io/v1beta1", "openjoystickdriver/v1", "")
+WRONG_VERSIONS = ("unsupported.example/v9", "openjoystickdriver/v1", "")
 
 
 def load(path: Path) -> dict[str, Any]:

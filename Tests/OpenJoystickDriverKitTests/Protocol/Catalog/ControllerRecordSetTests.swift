@@ -160,12 +160,11 @@ struct ControllerRecordSetTests {
   }
 
   /// A file declares its version through `apiVersion` and its type through `kind`. A missing or
-  /// unsupported version, or a kind that is not one it is read as, is rejected and named. The
-  /// removed `ControllerOverride` and `ControllerDefaults` kinds are wrong kinds like any other.
+  /// unsupported version, or a kind that is not one it is read as, is rejected and named.
   @Test
   func aMissingOrUnsupportedHeaderIsRejected() throws {
     let supported = "the supported apiVersion is \(OpenJoystickDriverAPI.version)"
-    let old = "openjoystickdriver.io/v1beta1"
+    let unsupportedAPIVersionValue = "unsupported.example/v9"
     let body = ControllerPatch.document(
       selector: .identity(Self.bundledGIP),
       body: ["usb": ["postHandshakeSettleMs": 5]]
@@ -175,39 +174,39 @@ struct ControllerRecordSetTests {
       Self.problem(try Self.json(noVersion)) == "E5001: no apiVersion found; \(supported)"
     )
     #expect(Self.problemCode(try Self.json(noVersion)) == .unsupportedAPIVersion)
-    let oldVersion = body.merging(["apiVersion": old]) { $1 }
+    let unsupportedVersion = body.merging(["apiVersion": unsupportedAPIVersionValue]) { $1 }
     #expect(
-      Self.problem(try Self.json(oldVersion))
-        == "E5001: apiVersion \(old) is not supported; \(supported)"
+      Self.problem(try Self.json(unsupportedVersion))
+        == "E5001: apiVersion \(unsupportedAPIVersionValue) is not supported; \(supported)"
     )
-    #expect(Self.problemCode(try Self.json(oldVersion)) == .unsupportedAPIVersion)
+    #expect(Self.problemCode(try Self.json(unsupportedVersion)) == .unsupportedAPIVersion)
     let noKind = body.filter { $0.key != "kind" }
     #expect(
       Self.problem(try Self.json(noKind)) == "no kind found; expected \(ControllerPatch.kind)"
     )
-    for removed in ["ControllerOverride", "ControllerDefaults", "Persona"] {
-      let wrongKind = body.merging(["kind": removed]) { $1 }
+    for other in ["NotAKind", "OtherKind"] {
+      let wrongKind = body.merging(["kind": other]) { $1 }
       #expect(
         Self.problem(try Self.json(wrongKind))
-          == "expected \(ControllerPatch.kind), found \(removed)"
+          == "expected \(ControllerPatch.kind), found \(other)"
       )
     }
-    let oldRecord = try Self.json([
-      "apiVersion": old, "kind": ControllerRecordDocument.kind, "vendorID": 0x1234,
+    let unsupportedRecord = try Self.json([
+      "apiVersion": unsupportedAPIVersionValue, "kind": ControllerRecordDocument.kind, "vendorID": 0x1234,
       "productID": 0xABCD, "protocol": ["family": "xbox.gip"],
     ])
-    #expect(Self.problem(oldRecord)?.contains("apiVersion \(old) is not supported") == true)
-    #expect(Self.problemCode(oldRecord) == .unsupportedAPIVersion)
-    let oldDefaults = try Self.json(
+    #expect(Self.problem(unsupportedRecord)?.contains("apiVersion \(unsupportedAPIVersionValue) is not supported") == true)
+    #expect(Self.problemCode(unsupportedRecord) == .unsupportedAPIVersion)
+    let unsupportedDefaults = try Self.json(
       ControllerPatch.document(selector: .all, body: ["tuning": ["stickDeadzone": 0.1]])
-        .merging(["apiVersion": old]) { $1 }
+        .merging(["apiVersion": unsupportedAPIVersionValue]) { $1 }
     )
     do {
-      _ = try ControllerDefaults.validate(oldDefaults)
-      Issue.record("the old defaults were accepted")
+      _ = try ControllerDefaults.validate(unsupportedDefaults)
+      Issue.record("the defaults with an unsupported apiVersion were accepted")
     } catch { #expect(ControllerRecordSet.problemCode(error) == .unsupportedAPIVersion) }
     let defaultsWrongKind = Data(
-      #"{"apiVersion": "\#(OpenJoystickDriverAPI.version)", "kind": "Persona", "tuning": {}}"#.utf8
+      #"{"apiVersion": "\#(OpenJoystickDriverAPI.version)", "kind": "NotAKind", "tuning": {}}"#.utf8
     )
     do {
       _ = try ControllerDefaults.validate(defaultsWrongKind)
@@ -270,17 +269,17 @@ struct ControllerRecordSetTests {
     )
     let currentURL = directory.appendingPathComponent("366c-0005.patch.json")
     try current.write(to: currentURL)
-    // A Controller file in the `openjoystickdriver.io/v1beta1` schema.
+    // A Controller file with an unsupported apiVersion.
     let released = Data(
-      (#"{"apiVersion":"openjoystickdriver.io/v1beta1","#
+      (#"{"apiVersion":"unsupported.example/v9","#
         + #""kind":"\#(ControllerRecordDocument.kind)","vendorID":4660,"productID":43981,"#
         + #""protocol":{"family":"xbox.gip"}}"#).utf8
     )
     let releasedURL = directory.appendingPathComponent("1234-abcd.json")
     try released.write(to: releasedURL)
-    // A file of the removed `ControllerOverride` kind.
+    // A file of an unknown kind.
     let removed = Data(
-      (#"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"ControllerOverride","#
+      (#"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"NotAKind","#
         + #""operation":"patch","vendorID":13932,"productID":5,"set":{"usb":{}}}"#).utf8
     )
     let removedURL = directory.appendingPathComponent("366c-0005.json")
@@ -295,12 +294,12 @@ struct ControllerRecordSetTests {
     #expect(set.problems.map(\.url.lastPathComponent) == ["1234-abcd.json", "366c-0005.json"])
     #expect(
       set.problems.first?.problem
-        == "E5001: 1234-abcd.json: apiVersion openjoystickdriver.io/v1beta1 is not supported; "
+        == "E5001: 1234-abcd.json: apiVersion unsupported.example/v9 is not supported; "
         + "the supported apiVersion is \(OpenJoystickDriverAPI.version)"
     )
     #expect(
       set.problems.last?.problem
-        == "366c-0005.json: expected ControllerPatch, found ControllerOverride"
+        == "366c-0005.json: expected ControllerPatch, found NotAKind"
     )
     #expect(try Data(contentsOf: releasedURL) == released)
     #expect(try Data(contentsOf: currentURL) == current)

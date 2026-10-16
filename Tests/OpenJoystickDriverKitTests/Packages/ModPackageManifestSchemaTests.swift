@@ -55,7 +55,7 @@ struct ModPackageManifestSchemaTests {
       manifest(["author": ""]),
       manifest(["extra": 1]),
       manifest(["apiVersion": nil]),
-      manifest(["apiVersion": "openjoystickdriver.io/v1beta1"]),
+      manifest(["apiVersion": "unsupported.example/v9"]),
       manifest(["kind": nil]),
       manifest(["kind": "Controller"]),
       manifest(["$schema": "https://example.com/mod-package.schema.json"]),

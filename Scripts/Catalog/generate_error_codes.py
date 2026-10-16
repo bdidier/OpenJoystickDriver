@@ -114,7 +114,7 @@ def check_invariants(entries: list[Entry]) -> None:
     ]
     if codes != sorted(codes):
         problems.append("entries are not sorted by code")
-    # A code is never deleted, so the codes of an area run from 001 without a gap.
+    # The codes of an area run from 001 without a gap.
     for prefix in DOMAIN_PREFIX.values():
         area = sorted(code for code in codes if code.startswith(prefix))
         problems += [
@@ -136,7 +136,7 @@ def check_not_reused(previous: list[Entry], entries: list[Entry]) -> None:
         new = current.get(old["code"])
         if new is None:
             problems.append(
-                f"{old['code']} ({old['name']}) was deleted; retire it instead"
+                f"{old['code']} ({old['name']}) is missing from the catalog"
             )
         elif (new["domain"], new["name"]) != (old["domain"], old["name"]):
             problems.append(
@@ -172,8 +172,6 @@ def english_strings(root: Path) -> dict[str, str]:
 
 
 def meaning(entry: Entry, strings: dict[str, str]) -> str:
-    if entry["status"] == "retired":
-        return f"Retired in {entry['retiredIn']}."
     key = f"error.{entry['code']}"
     if key not in strings:
         raise ErrorCodeError(f"{TEMPLATE.name} has no key {key}")
@@ -206,7 +204,7 @@ def render_endpoint_schema(text: str, entries: list[Entry]) -> str:
     codes = [
         entry["code"]
         for entry in entries
-        if entry["domain"] == "endpoint" and entry["status"] == "active"
+        if entry["domain"] == "endpoint"
     ]
     enum = ", ".join(json.dumps(code) for code in codes)
     expected = json.loads(text)

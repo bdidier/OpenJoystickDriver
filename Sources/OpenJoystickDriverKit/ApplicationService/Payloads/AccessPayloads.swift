@@ -362,7 +362,7 @@ public struct AccessRevokeResult: Codable, Equatable, Sendable {
   public let grant: AccessGrantSummary?
   /// The token grant left after the revoke; nil when no scope is left or `id` is a client.
   public let token: AccessTokenSummary?
-  /// Live connections that were closed with `E1006`.
+  /// Live connections that were closed with `E1005`.
   public let closedConnections: Int
 
   public init(

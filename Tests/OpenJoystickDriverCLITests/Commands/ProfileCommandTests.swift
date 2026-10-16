@@ -248,16 +248,16 @@ struct ProfileCommandTests {
     #expect(try invalidJSON.json()["problem"] is String)
     #expect(invalid.code == 1)
     #expect(invalid.standardError.hasPrefix("error[E5001]: "))
-    let oldVersion = await run(
+    let unsupportedVersion = await run(
       Data(
-        #"{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"Profile","name":"Pad"}"#.utf8
+        #"{"apiVersion":"unsupported.example/v9","kind":"Profile","name":"Pad"}"#.utf8
       ),
       ["--json"]
     )
-    #expect(oldVersion.code == 1)
-    #expect(oldVersion.standardError.hasPrefix("error[E5001]: "))
-    #expect(oldVersion.standardError.contains("openjoystickdriver.io/v1beta1"))
-    #expect(oldVersion.standardError.contains(OpenJoystickDriverAPI.version))
+    #expect(unsupportedVersion.code == 1)
+    #expect(unsupportedVersion.standardError.hasPrefix("error[E5001]: "))
+    #expect(unsupportedVersion.standardError.contains("unsupported.example/v9"))
+    #expect(unsupportedVersion.standardError.contains(OpenJoystickDriverAPI.version))
   }
 
   @Test

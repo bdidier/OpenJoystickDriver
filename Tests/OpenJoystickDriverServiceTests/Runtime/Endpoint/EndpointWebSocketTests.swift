@@ -376,7 +376,7 @@ struct EndpointWebSocketTests {
       #expect(frame.opcode == 0x1)
       #expect(
         try client.object(String(bytes: frame.payload, encoding: .utf8) ?? "")["code"] as? String
-          == "E1004"
+          == "E1003"
       )
       #expect(await client.readFrame()?.opcode == 0x8)
     }
@@ -437,7 +437,7 @@ struct EndpointWebSocketTests {
 
       _ = try server.revoke(id: "token:overlay", scopes: nil)
 
-      #expect(try await client.readObject()["code"] as? String == "E1006")
+      #expect(try await client.readObject()["code"] as? String == "E1005")
     }
   }
 
@@ -542,7 +542,7 @@ struct EndpointWebSocketTests {
       let socketClient = try await EndpointTestClient.subscribed(to: server.socketPath)
       let ninth = try await upgraded(port: port)
 
-      #expect(try await ninth.readObject()["code"] as? String == "E1005")
+      #expect(try await ninth.readObject()["code"] as? String == "E1004")
       #expect(try server.status().connections.map(\.transport) == [.socket])
       _ = (pages, socketClient)
     }
@@ -560,7 +560,7 @@ struct EndpointWebSocketTests {
         }
         let ninth = try await upgraded(port: port)
 
-        #expect(try await ninth.readObject()["code"] as? String == "E1005")
+        #expect(try await ninth.readObject()["code"] as? String == "E1004")
         _ = pages
       }
     }

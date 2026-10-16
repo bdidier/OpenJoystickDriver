@@ -168,9 +168,9 @@ struct AccessGrantStoreTests {
         "no apiVersion found; \(supported)"
       ),
       (
-        #"{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"AccessGrants","# + body,
+        #"{"apiVersion":"unsupported.example/v9","kind":"AccessGrants","# + body,
         .unsupportedAPIVersion,
-        "apiVersion openjoystickdriver.io/v1beta1 is not supported; \(supported)"
+        "apiVersion unsupported.example/v9 is not supported; \(supported)"
       ),
       (
         #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","# + body,

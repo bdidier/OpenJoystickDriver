@@ -201,7 +201,7 @@ final class EndpointServer: @unchecked Sendable {
   }
 
   /// Removes `scopes`, or the whole grant when nil, from a client or a `token:NAME` grant, and
-  /// closes with `E1006` every connection that holds a scope no longer granted.
+  /// closes with `E1005` every connection that holds a scope no longer granted.
   func revoke(id: String, scopes: [EndpointScope]?) throws -> AccessRevokeResult {
     try lock.withLock {
       var file = try store.load()

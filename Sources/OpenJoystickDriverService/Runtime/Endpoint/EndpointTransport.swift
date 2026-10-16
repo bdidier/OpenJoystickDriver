@@ -19,7 +19,7 @@ enum EndpointReadResult: Equatable {
   case message(Data)
   case end
   case tooLong
-  /// A frame the endpoint does not accept, described for the `E1004` error.
+  /// A frame the endpoint does not accept, described for the `E1003` error.
   case invalid(String)
 }
 
