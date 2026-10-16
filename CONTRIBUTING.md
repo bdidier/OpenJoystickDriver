@@ -62,9 +62,19 @@ GUI and CLI copy: `LOCALIZATION.md`. Tests check codes, routes, identifiers, pat
 - The host profile's `com.apple.developer.driverkit.userclient-access` list must include `com.openjoystickdriver.XboxUSBDevice` and may name other bundle IDs; `Host.entitlements` claims exactly `com.openjoystickdriver.XboxUSBDevice`.
 - `com.openjoystickdriver.XboxUSBDevice` is the only DEXT. It has one personality, `XboxUSB` (Microsoft GIP USB interfaces), and only the `com.apple.developer.driverkit` and `com.apple.developer.driverkit.transport.usb` entitlements. `./Scripts/ojd driverkit generate [path]` generates it. The app and service publish virtual gamepads through `IOHIDUserDevice`, which needs `com.apple.developer.hid.virtual.device` on the app profile; that entitlement never goes in the DEXT.
 
+## Target Branch
+
+`main` holds the last release. While a `feat/<version>` branch carries a later version, for example `main` at `0.5.0-beta.4` and `feat/0.6.0-alpha.1`, development happens on that branch, and `main` and every earlier `feat/` branch are outdated. Their code differs from the development branch, so a change made there does not carry over and has to be made again.
+
+- Base every pull request on the newest `feat/<version>` branch. Do not open a pull request against `main` or an earlier `feat/` branch.
+- Check a bug against the newest `feat/<version>` branch before you open an issue. Do not open an issue about code that exists only on an outdated branch.
+- List the branches with `git ls-remote --heads origin 'feat/*'`. The highest version wins.
+
+These rules apply to humans and AI agents alike.
+
 ## Pull Requests
 
-Submit one logical change. Fill every section of the pull request template. List checks run and whether you tested on your own hardware.
+Submit one logical change. Base it on the branch named in [Target Branch](#target-branch). Fill every section of the pull request template. List checks run and whether you tested on your own hardware.
 
 ## Issues and Pull Requests
 

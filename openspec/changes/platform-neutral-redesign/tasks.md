@@ -1,6 +1,6 @@
 # Tasks: platform-neutral redesign
 
-This is a plan. No task here is done. Each work package (WP) lists what it owns, what it depends on, and the checks that prove it. Order follows dependencies: tests first, then data, then identity, then behavior, then surfaces.
+Each work package (WP) lists what it owns, what it depends on, and the checks that prove it. Order follows dependencies: tests first, then data, then identity, then behavior, then surfaces.
 
 ## Working agreements
 
@@ -368,6 +368,7 @@ Verify: the full check list.
 - [x] 24.29 Make `VirtualFeedRegistry.play` keep the minimum spacing between sends: it sleeps until the start time plus the hold taken before the send, so a delayed send shortens the next gap below the minimum. Pace each frame from its actual send time, and state the pacing contract in `docs/sdk/endpoint.md`. Verify: `VirtualFeedRegistryTests.framesPlayInOrderEachForItsHoldAndAtLeastTheMinimum` uses an injected clock and a test delays one send and asserts the next gap is at least the minimum; 20/20 under load. Done: `play` sleeps until the send's return time plus the hold, and the idle time starts at the scheduled end of the last frame; `aDelayedSendDoesNotShortenTheNextGapBelowTheMinimum` uses `ManualVirtualFeedClock`; `docs/sdk/endpoint.md` states the contract; `EndpointServerTests|EndpointFeedTests|VirtualFeedRegistryTests` passed 20/20 alongside the full `swift test`; 24/24 checks at 696dc38d.
 - [ ] 24.30 Give the waits with no observable signal a real signal: a "reset queued behind activation" signal for `VirtualOutputTransitionTests+Activation`, an endpoint connection count for `EndpointServerTests`, and the same for `VirtualOutputTests+ProfileOverrideSettings`, `EndpointTestSupport` (stable-count heuristic), `RPCCancellationTests` (connect retry), `StickDeliveryLatencyTests` (yield nudges) and `ReceiverSlotProvider`. Verify: those tests wait on the signal with `waitUntil` and keep no sleep or yield loop; 20/20 under load.
 - [x] 24.31 Make `Scripts/SDK/reference_client.py` end a feed on a signal from the service instead of an estimate: `play_seconds` sums `max(hold, 8)` plus a margin, so sends slower than the margin disconnect the client and drop frames. Use or add the service's end-of-play signal, document it in `docs/sdk/endpoint.md`, and test that a slow feed plays every frame. Done: the client sends `Drain` after its frames and ends on `Drained`, which the service sends once every earlier frame has played its full hold; `Drain` before `FeedSession` or on a subscription gives E1010, an extra member E1003, and the idle time counts from the end of the last frame; `play_seconds` and `MARGIN_SECONDS` are gone; `EndpointFeedTests+Drain.swift` covers it with `ManualVirtualFeedClock`; 24/24 checks at dcd23ae2, Python 438 OK.
+- [x] 24.32 State in `CONTRIBUTING.md` that pull requests and issues target the newest `feat/<version>` branch and never `main` or an earlier `feat/` branch while a later one exists, and say so in the pull request template and all six issue forms. Verify: markdownlint, the issue forms parse as YAML. Done: `CONTRIBUTING.md#target-branch`, a checklist line in `.github/pull_request_template.md` and an intro line in each form under `.github/ISSUE_TEMPLATE/`.
 
 ## Hardware checks (maintainer)
 
@@ -390,3 +391,31 @@ These need the maintainer and a device. Each result is recorded in `wiki` or the
 - Push, tag, notarize and publish are the maintainer's actions and need confirmation.
 - Turn on GitHub Pages so the schema `$id` URLs resolve (open item 8).
 - Archive this change after `release-0-6-0-alpha-1` is archived, then convert `pending-deltas.md` into MODIFIED and REMOVED deltas.
+- GitHub shows the issue forms, the pull request template and `CONTRIBUTING.md` from `main`, so the Target Branch rule (24.32) reaches contributors only after it lands on `main`. Publishing it there is the maintainer's action.
+- Remote branches `feat/0.5.0-beta.5`, `feat/dual-corehid-iohid-and-swiftusb-removal`, `feat/new-gui` and `feat/ui-fixes-and-new-ui-menubar-feature-additions` are outdated by the Target Branch rule; deleting them publishes and needs the maintainer.
+- Pull request #51 targets `main`; it belongs on `feat/0.6.0-alpha.1`.
+- After every branch is merged into `feat/0.6.0-alpha.1`: confirm with the maintainer the exact range of the history rewrite that adds the `Co-Authored-By` trailer to earlier commits, then rewrite and force-push. Delete `backup/pre-reword-4ab4c241` after the rewritten history is checked. Keep `recovery/monolithic-controller-workbench-20260914-003355`.
+
+## Continuing the work
+
+State at `feat/0.6.0-alpha.1`: 120 of 167 tasks done; every work branch is merged; one solo worktree remains (`.claude/worktrees/self-2424`, branch `feat/0.6.0-alpha.1-wiki-case`, merged). Nothing is pushed.
+
+How to work:
+
+- One session works alone, with no parallel agents unless the maintainer asks. Run one Swift build or test at a time at low priority (`nice -n 15`, `-j 3`); leave no monitor or polling loop running.
+- Write all code for a task first, then build once, run the changed area's tests, and run `just check` once on the merged tree. Rerun only what failed. Inside a worktree, select the toolchain with `TOOLCHAINS=swift` if SwiftPM reports a tools-version mismatch.
+- `just check` passes when every step exits 0 and the Python run ends in `OK`. The `key not scanned` notes for `ServingRouteLabelTests.swift:35,44` are expected.
+- Every extra found while working becomes a task in section 24 and gets done. A partly done task stays open with a "Partial:" note naming what is left; a done task gets a "Done:" note with the evidence and the commit it passed on.
+- Commits: Conventional Commits, lines at most 100 characters, the `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>` trailer; merges use `git merge --no-ff`; CHANGELOG conflicts keep both sides; nothing is pushed without the maintainer.
+- Before merging a branch: search its added lines for history and compatibility words (AGENTS.md) and for tests naming removed keys, then run `git merge-tree --write-tree`.
+
+Order of the open tasks:
+
+1. 24.20: the remaining audit hits (fallback names in `InputTestControllerSymbols.swift`, `WorkbenchComponents.swift`, `GlobalOptions.swift`, `MacOSDataDirectory.swift` `fallbackPath`, `ReportSender.swift` `fallbackQueueCapacity`), the two `UserDefaults` stores (`ControllerPortKeyInstallationKey`, `OpenJoystickDriver.settings.lastPane`), `AccessGrants.json` wrong `apiVersion`/`kind` (E5001 or E5006), the `ApplicationServiceRemappingSnapshotPayload.init(from:)` empty-list defaults, unknown persisted identities sanitized to `automatic` (`VirtualHIDProfileOverrideStore`), `schema_compatibility.py` and the `--json` release check (`wiki/Controller-Records.md`), the `source-topology.md` legacy-defaults line, and the release-catalog skip recorded on 24.20.
+2. 11.4: the output-template fields; then fix `docs/development/wire-protocols.md` line 33, which names task 11.4.
+3. 24.26 (touches `cases.json`, after 11.4).
+4. 15.8, 24.30, 9.1a, 9.1h, 9.3, 24.7, 17.1 with 17.1d, 17.4a, 17.2a.
+5. 20.1 to 20.5 and 21.1 to 21.4: each screen ends with the maintainer's visual check.
+6. 22.1 to 22.5 and 22.7.
+7. 24.16 after 17.1 and section 15; 24.18 after H6; 16.4 after H5; 16.5 after H7.
+8. 23.1 to 23.4 last.
