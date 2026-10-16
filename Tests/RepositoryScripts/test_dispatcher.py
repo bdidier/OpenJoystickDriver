@@ -130,8 +130,18 @@ class DispatcherTests(unittest.TestCase):
                 self.assertIn("error:", result.stderr)
                 self.assertNotIn("ERROR:", result.stderr)
 
-    def test_build_help_route_succeeds(self) -> None:
-        self.assertEqual(self.run_ojd("build", "help").returncode, 0)
+    def test_build_help_lists_every_build_route(self) -> None:
+        result = self.run_ojd("build", "help")
+        self.assertEqual(result.returncode, 0)
+        for route in (
+            "build dev",
+            "build release",
+            "build dext",
+            "build install dev|release",
+            "build install-fast dev",
+        ):
+            with self.subTest(route=route):
+                self.assertIn(f"./Scripts/ojd {route}\n", result.stdout)
 
     def test_build_routes_forward_arguments(self) -> None:
         routes = (
