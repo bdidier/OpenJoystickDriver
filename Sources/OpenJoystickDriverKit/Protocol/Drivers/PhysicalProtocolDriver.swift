@@ -205,6 +205,15 @@ extension PhysicalProtocolID {
     }
     return value
   }
+
+  /// The count `limit` that the family's description sets for its driver. A description that sets
+  /// none for a count its driver reads is a defect.
+  func described(limit: KeyPath<ProtocolDescription, Int?>) -> Int {
+    guard let value = protocolDescription[keyPath: limit] else {
+      preconditionFailure("\(rawValue).json sets no \(limit)")
+    }
+    return value
+  }
 }
 
 extension PhysicalProtocolID {
