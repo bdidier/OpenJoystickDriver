@@ -143,9 +143,7 @@ struct EndpointServerTests {
       for _ in 0..<2 {
         types.append(try await client.readObject()["type"] as? String)
       }
-      for _ in 0..<500 where delivered.withLock({ $0.isEmpty }) {
-        try await Task.sleep(nanoseconds: 2_000_000)
-      }
+      await waitUntil("the feedback is delivered") { delivered.withLock { !$0.isEmpty } }
 
       #expect(types == ["ADDED", "MODIFIED"])
       #expect(delivered.withLock { $0 } == [.fixture("pad-1")])

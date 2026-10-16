@@ -1,5 +1,6 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverPresentation
@@ -215,10 +216,9 @@ struct ProfileMutationTests {
         request: firstRequest
       )
     }
-    let deadline = ContinuousClock.now.advanced(by: .seconds(5))
-    while await MainActor.run(body: { library.activeMutationID }) == nil,
-      ContinuousClock.now < deadline
-    { try? await Task.sleep(nanoseconds: 2_000_000) }
+    await waitUntil("the mutation is active") {
+      await MainActor.run { library.activeMutationID } != nil
+    }
     let firstMutationID = await MainActor.run { library.activeMutationID }
     #expect(
       await MainActor.run { library.activeMutationOperation == .update(profileID: original.id) }

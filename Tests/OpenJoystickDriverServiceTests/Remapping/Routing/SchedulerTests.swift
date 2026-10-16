@@ -1,5 +1,6 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverService
@@ -19,7 +20,7 @@ struct RemappingOutputSchedulerTests {
       harness.removeFiles()
     }
     harness.router.startTicker()
-    _ = await yieldUntil { false }
+    await letPendingWorkRun()
     #expect(probe.sleepCount == 0)
     #expect(!harness.router.tickerIsRunning)
 
@@ -27,7 +28,7 @@ struct RemappingOutputSchedulerTests {
       changes: [.press(.south)],
       from: remappingRouterDevice(1)
     )
-    _ = await yieldUntil { false }
+    await letPendingWorkRun()
     #expect(probe.sleepCount == 0)
     #expect(!harness.router.tickerIsRunning)
   }
@@ -49,18 +50,18 @@ struct RemappingOutputSchedulerTests {
     let device = remappingRouterDevice(1)
     harness.router.startTicker()
     try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
-    #expect(await yieldUntil { probe.sleepCount == 1 })
+    await waitUntil("probe.sleepCount == 1") { probe.sleepCount == 1 }
     #expect(harness.router.tickerIsRunning)
 
     // A repeated report of the held button starts no second ticker.
     try await harness.router.dispatchCausally(changes: [], from: device)
-    _ = await yieldUntil { false }
+    await letPendingWorkRun()
     #expect(probe.sleepCount == 1)
     try await harness.router.dispatchCausally(changes: [.release(.south)], from: device)
     #expect(!harness.router.tickerIsRunning)
 
     try await harness.router.dispatchCausally(changes: [.press(.south)], from: device)
-    #expect(await yieldUntil { probe.sleepCount == 2 })
+    await waitUntil("probe.sleepCount == 2") { probe.sleepCount == 2 }
     #expect(harness.router.tickerIsRunning)
   }
 
@@ -86,14 +87,16 @@ struct RemappingOutputSchedulerTests {
       changes: [.press(.south)],
       from: remappingRouterDevice(1)
     )
-    #expect(await yieldUntil { probe.sleepCount == 1 })
+    await waitUntil("probe.sleepCount == 1") { probe.sleepCount == 1 }
     #expect(probe.sleepDurations == [833_333])
 
     probe.resumeNext()
-    #expect(await yieldUntil { probe.sleepCount == 2 })
+    await waitUntil("probe.sleepCount == 2") { probe.sleepCount == 2 }
     #expect(probe.sleepDurations == [833_333, 15_833_334])
     probe.resumeNext()
-    #expect(await yieldUntil { harness.recorder.snapshot().count >= 3 })
+    await waitUntil("harness.recorder.snapshot().count >= 3") {
+      harness.recorder.snapshot().count >= 3
+    }
 
     #expect(
       Array(harness.recorder.snapshot().prefix(3)) == [
@@ -130,7 +133,7 @@ struct RemappingOutputSchedulerTests {
     let device = remappingRouterDevice(1)
     harness.router.startTicker()
     try await harness.router.dispatchCausally(changes: [.rightStick(x: 0.75, y: 0)], from: device)
-    #expect(await yieldUntil { probe.sleepCount == 1 })
+    await waitUntil("probe.sleepCount == 1") { probe.sleepCount == 1 }
     #expect(harness.router.tickerIsRunning)
 
     try await harness.router.dispatchCausally(changes: [.rightStick(x: 0, y: 0)], from: device)
@@ -139,10 +142,8 @@ struct RemappingOutputSchedulerTests {
 
 }
 
-private func yieldUntil(_ condition: @escaping @Sendable () -> Bool) async -> Bool {
-  for _ in 0..<1_000 {
-    if condition() { return true }
-    await Task.yield()
-  }
-  return condition()
+/// Gives already-scheduled work many turns to run. Callers assert that nothing happened, so no
+/// signal exists to wait on.
+private func letPendingWorkRun() async {
+  for _ in 0..<1_000 { await Task.yield() }
 }

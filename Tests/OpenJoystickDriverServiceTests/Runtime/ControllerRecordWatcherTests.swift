@@ -1,5 +1,6 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverService
@@ -41,7 +42,7 @@ struct ControllerRecordWatcherTests {
       to: directory.appendingPathComponent("1234-abcd.json"),
       options: .atomic
     )
-    for _ in 0..<50 where changes == 0 { try await Task.sleep(nanoseconds: 100_000_000) }
+    await waitUntil("a file change is reported") { changes >= 1 }
     #expect(applied.last == 1)
     #expect(changes == 1)
   }
@@ -75,7 +76,7 @@ struct ControllerRecordWatcherTests {
     try handle.truncate(atOffset: 0)
     try handle.write(contentsOf: Data(Self.addRecord.dropLast()) + Data(" }".utf8))
     try handle.close()
-    for _ in 0..<30 where changes == 0 { try await Task.sleep(nanoseconds: 100_000_000) }
+    await waitUntil("the rewrite is reported") { changes >= 1 }
     #expect(applied == 2)
     #expect(changes == 1)
   }
@@ -102,14 +103,14 @@ struct ControllerRecordWatcherTests {
 
     try FileManager.default.removeItem(at: directory)
     // Let the deletion settle, so the watch on the old directory is gone before the new one exists.
-    for _ in 0..<30 where applied.count < 2 { try await Task.sleep(nanoseconds: 100_000_000) }
+    await waitUntil("the deletion is applied") { applied.count >= 2 }
     #expect(applied == [0, 0])
     try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
     try Self.addRecord.write(
       to: directory.appendingPathComponent("1234-abcd.json"),
       options: .atomic
     )
-    for _ in 0..<50 where applied.last != 1 { try await Task.sleep(nanoseconds: 100_000_000) }
+    await waitUntil("the recreated directory is applied") { applied.last == 1 }
     #expect(applied.last == 1)
   }
 
@@ -145,7 +146,7 @@ struct ControllerRecordWatcherTests {
       to: directory.appendingPathComponent("1234-abcd.json"),
       options: .atomic
     )
-    for _ in 0..<50 where applied.last != 1 { try await Task.sleep(nanoseconds: 100_000_000) }
+    await waitUntil("the created directory is applied") { applied.last == 1 }
     #expect(applied.last == 1)
     #expect(changes >= 1)
   }

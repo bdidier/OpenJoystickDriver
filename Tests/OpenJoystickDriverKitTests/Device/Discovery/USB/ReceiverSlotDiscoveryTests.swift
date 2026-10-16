@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import ProtocolPacketFixtures
 import Testing
 
@@ -28,7 +29,7 @@ struct ReceiverSlotDiscoveryTests {
     )
     for (ordinal, interface) in ReceiverSlotProvider.slotInterfaces.enumerated() {
       let session = sessions[interface]
-      #expect(await waitUntil { await session?.writeCount == 2 })
+      await waitUntil("session?.writeCount == 2") { await session?.writeCount == 2 }
       // Slot n asks for presence, then lights player n+1 (0x46 + n) once a pad is present.
       #expect(await session?.writes == [inquiry, ledPacket(0x46 + UInt8(ordinal))])
     }
@@ -50,7 +51,7 @@ struct ReceiverSlotDiscoveryTests {
       await manager.handleUSBDeviceAdded(ReceiverSlotProvider.device, provider: provider)
         == .claimed(slotIdentifiers)
     )
-    #expect(await waitUntil { await provider.openedOptions.count == 4 })
+    await waitUntil("provider.openedOptions.count == 4") { await provider.openedOptions.count == 4 }
     // SET_CONFIGURATION terminates every open interface, so later slots must not send it.
     let configured = await provider.openedOptions.filter { $0.configurationValue == 1 }
     #expect(configured.map(\.interfaceNumber) == [0])
@@ -78,7 +79,7 @@ struct ReceiverSlotDiscoveryTests {
       await manager.handleUSBDeviceAdded(ReceiverSlotProvider.device, provider: provider)
         == .claimed(slotIdentifiers)
     )
-    #expect(await waitUntil { await reopened.writeCount > 0 })
+    await waitUntil("reopened.writeCount > 0") { await reopened.writeCount > 0 }
 
     let slotZeroOpens = await provider.openedOptions.filter { $0.interfaceNumber == 0 }
     #expect(slotZeroOpens.map(\.configurationValue) == [1, 1])
@@ -121,7 +122,7 @@ struct ReceiverSlotDiscoveryTests {
       await manager.handleUSBDeviceAdded(ReceiverSlotProvider.device, provider: provider)
         == .claimed(slotIdentifiers)
     )
-    #expect(await waitUntil { dispatcher.stops == [slot] })
+    await waitUntil("dispatcher.stops == [slot]") { dispatcher.stops == [slot] }
 
     #expect(Array(dispatcher.dispatches.keys) == [slot])
     #expect(dispatcher.dispatches[slot]?.map(\.pressed) == [[.south], []])
@@ -143,12 +144,14 @@ struct ReceiverSlotDiscoveryTests {
     let manager = makeManager(provider)
     let detection = Task { await manager.runUSBDetection() }
 
-    #expect(await waitUntil { await manager.pipelines.count == 4 })
+    await waitUntil("manager.pipelines.count == 4") { await manager.pipelines.count == 4 }
     await provider.setDevices([])
-    #expect(await waitUntil { await manager.pipelines.isEmpty })
+    await waitUntil("manager.pipelines.isEmpty") { await manager.pipelines.isEmpty }
 
     #expect(await manager.deviceInfos.isEmpty)
-    for session in sessions.values { #expect(await waitUntil { await session.closeCount == 1 }) }
+    for session in sessions.values {
+      await waitUntil("a session closes") { await session.closeCount == 1 }
+    }
     detection.cancel()
     await detection.value
     await manager.stop()
@@ -245,14 +248,5 @@ struct ReceiverSlotDiscoveryTests {
 
   private func makeManager(_ provider: ReceiverSlotProvider) -> DeviceManager {
     DeviceManager(dispatcher: LoggingOutputDispatcher(), usbTransportProvider: provider)
-  }
-
-  private func waitUntil(condition: @escaping @Sendable () async -> Bool) async -> Bool {
-    let deadline = ContinuousClock.now.advanced(by: .seconds(10))
-    while ContinuousClock.now < deadline {
-      if await condition() { return true }
-      try? await Task.sleep(for: .milliseconds(1))
-    }
-    return await condition()
   }
 }

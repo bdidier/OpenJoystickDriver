@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -140,7 +141,7 @@ extension RemappingMixedOutputTests {
       await engine.emissionBarrier.terminate()
       await virtual.markTerminationCompleted()
     }
-    while !engine.emissionBarrier.isTerminated { await Task.yield() }
+    await waitUntil("the barrier terminates") { engine.emissionBarrier.isTerminated }
     #expect(await !virtual.terminationCompleted)
     await virtual.resumeSend()
     try await sending.value

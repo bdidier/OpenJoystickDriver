@@ -1,5 +1,6 @@
 import Foundation
 import IOKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -81,15 +82,15 @@ extension StartupLifetimeTests {
     )
 
     var replacementHeartbeat: Task<Void, Never>?
-    for _ in 0..<1_000 {
+    await waitUntil("the replacement connection has a heartbeat") {
       if await manager.deviceInfos[identifier]?.hidConnectionID
         == replacementConnection.connectionID,
         let task = await manager.hidPeriodicOutputTasks[identifier]
       {
         replacementHeartbeat = task
-        break
+        return true
       }
-      try await Task.sleep(nanoseconds: 2_000_000)
+      return false
     }
     #expect(replacementHeartbeat != nil)
     guard let replacementHeartbeat else {

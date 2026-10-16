@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -86,6 +87,7 @@ private final class FirstStickDispatchHeldRecorder: OutputDispatcher, @unchecked
 
   func waitForHeldDispatch() async { await gate.waitForEntry() }
   func openHeldDispatch() async { await gate.open() }
+  func dispatchedCount() -> Int { lock.withLock { events.count } }
   /// The dispatched events whose left stick is off center, in order.
   func stickEvents() -> [ControllerEvent] {
     lock.withLock { events.filter { $0.state.leftStick != .center } }
@@ -495,11 +497,17 @@ struct StickDeliveryLatencyTests {
     for leftX: UInt8 in [0xB0, 0xC0, 0xD0, 0xE0, 0xF0] {
       await backend.yield(Self.gamepadReport(leftX: leftX, connection: connection), attempt: 1)
     }
-    // Lets the detection loop's reader take the queued reports before the dispatch completes.
-    try? await Task.sleep(nanoseconds: 50_000_000)
+    // The detection loop's reader takes the queued reports before the dispatch completes.
+    await backend.waitUntilConsumed(attempt: 1)
     await recorder.openHeldDispatch()
     await waitUntil("two stick events dispatched") { recorder.stickEvents().count >= 2 }
-    try? await Task.sleep(nanoseconds: 20_000_000)
+    // The loop handles events in order, so a dispatched centered report shows that the loop
+    // has handled every earlier report.
+    let dispatchedBeforeCenter = recorder.dispatchedCount()
+    await backend.yield(Self.gamepadReport(leftX: 0x80, connection: connection), attempt: 1)
+    await waitUntil("centered report dispatched") {
+      recorder.dispatchedCount() > dispatchedBeforeCenter
+    }
     let xs = recorder.stickEvents().map(\.state.leftStick.x.rawValue)
     await manager.stop()
 

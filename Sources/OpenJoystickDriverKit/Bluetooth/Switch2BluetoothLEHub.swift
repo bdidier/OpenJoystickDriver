@@ -239,6 +239,11 @@ public final class Switch2BluetoothLEHub: @unchecked Sendable {
     return take(length, of: reply, peripheralID: peripheralID)
   }
 
+  /// Whether a read is suspended until the next reply of `peripheralID`.
+  func hasWaitingReadForTesting(peripheralID: UUID) -> Bool {
+    lock.withLock { links[peripheralID]?.waiter != nil }
+  }
+
   private func take(_ length: Int, of reply: [UInt8], peripheralID: UUID) -> [UInt8] {
     let chunk = Array(reply.prefix(length))
     lock.withLock {

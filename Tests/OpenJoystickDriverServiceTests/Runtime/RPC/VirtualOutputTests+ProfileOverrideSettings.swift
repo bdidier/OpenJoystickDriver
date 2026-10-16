@@ -1,5 +1,6 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverService
@@ -113,9 +114,7 @@ extension VirtualOutputTests {
 
     await blocker.release()
     #expect(await queued.value)
-    for _ in 0..<200 where fixture.log.built().count < 3 {
-      try await Task.sleep(nanoseconds: 10_000_000)
-    }
+    await waitUntil("the third build happens") { fixture.log.built().count >= 3 }
     #expect(fixture.log.built().map(\.profile) == [.sdlCompatible, .generic, .sdlCompatible])
     await fixture.tearDown()
   }

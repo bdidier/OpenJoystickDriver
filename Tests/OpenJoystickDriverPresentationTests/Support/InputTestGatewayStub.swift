@@ -1,6 +1,8 @@
 import Combine
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
+import Testing
 
 @testable import OpenJoystickDriverPresentation
 
@@ -142,28 +144,18 @@ actor InputTestGatewayStub: InputTestDeviceGateway {
   func setOutputThrows(_ value: Bool) { outputThrows = value }
   func setOutputDelay(_ nanoseconds: UInt64) { outputDelayNanoseconds = nanoseconds }
 
-  func waitForActiveOutputCall() async -> Bool {
-    for _ in 0..<10_000 {
-      if activeOutputCalls > 0 { return true }
-      try? await Task.sleep(nanoseconds: 1_000_000)
-    }
-    return activeOutputCalls > 0
+  func waitForActiveOutputCall() async {
+    await waitUntil("an output call is active") { activeOutputCalls > 0 }
   }
 
-  func waitForInputCalls(_ expectedCount: Int) async -> Bool {
-    for _ in 0..<10_000 {
-      if inputCalls >= expectedCount { return true }
-      try? await Task.sleep(nanoseconds: 1_000_000)
-    }
-    return inputCalls >= expectedCount
+  func waitForInputCalls(_ expectedCount: Int) async {
+    await waitUntil("\(expectedCount) input calls are made") { inputCalls >= expectedCount }
   }
 
-  func waitForRumbleCalls(_ expectedCount: Int) async -> Bool {
-    for _ in 0..<10_000 {
-      if rumbleCalls.count >= expectedCount { return true }
-      try? await Task.sleep(nanoseconds: 1_000_000)
+  func waitForRumbleCalls(_ expectedCount: Int) async {
+    await waitUntil("\(expectedCount) rumble calls are made") {
+      rumbleCalls.count >= expectedCount
     }
-    return rumbleCalls.count >= expectedCount
   }
 
   private func beginOutputCall() async throws {

@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverPresentation
@@ -29,7 +30,7 @@ extension InputTestTests {
 
     model.selectDevice(makeInputTestDevice())
     model.open()
-    try? await Task.sleep(nanoseconds: 10_000_000)
+    await gateway.waitForInputCalls(1)
 
     #expect(model.sessionState == .starting)
     #expect(await gateway.counts().input > 0)
@@ -46,18 +47,12 @@ extension InputTestTests {
     model.selectDevice(makeInputTestDevice())
 
     model.open()
-    var deadline = ContinuousClock.now.advanced(by: .seconds(5))
-    while await gateway.counts().input == 0, ContinuousClock.now < deadline {
-      try? await Task.sleep(nanoseconds: 5_000_000)
-    }
+    await gateway.waitForInputCalls(1)
     #expect(model.sessionState == .starting)
     #expect(await gateway.counts().input == 1)
 
     model.close()
-    deadline = ContinuousClock.now.advanced(by: .seconds(5))
-    while await gateway.counts().cancelled == 0, ContinuousClock.now < deadline {
-      try? await Task.sleep(nanoseconds: 5_000_000)
-    }
+    await waitUntil("the lookup is cancelled") { await gateway.counts().cancelled > 0 }
 
     #expect(model.sessionState == .idle)
     #expect(await gateway.counts().cancelled == 1)
@@ -77,10 +72,7 @@ extension InputTestTests {
     model.selectDevice(makeInputTestDevice())
 
     model.open()
-    let deadline = ContinuousClock.now.advanced(by: .seconds(5))
-    while model.latestInput != pressed, ContinuousClock.now < deadline {
-      try? await Task.sleep(nanoseconds: 5_000_000)
-    }
+    await waitUntil("the sample is published") { model.latestInput == pressed }
 
     #expect(model.sessionState == .live)
     #expect(model.latestInput == pressed)
@@ -106,10 +98,9 @@ extension InputTestTests {
     let observation = model.liveState.$snapshot.dropFirst().sink { _ in publishedSnapshots += 1 }
 
     model.open()
-    let receivedAllSnapshots = await gateway.waitForInputCalls(4)
+    await gateway.waitForInputCalls(4)
     model.close()
 
-    #expect(receivedAllSnapshots)
     #expect(publishedSnapshots == 0)
     withExtendedLifetime(observation) {}
   }
@@ -156,7 +147,7 @@ extension InputTestTests {
     model.selectDevice(makeInputTestDevice())
 
     model.open()
-    await waitUntil { model.sessionState == .unavailable }
+    await waitUntil("model.sessionState == .unavailable") { model.sessionState == .unavailable }
     let callsAtStop = await gateway.counts().input
     try? await Task.sleep(nanoseconds: 5_000_000)
 
@@ -173,11 +164,11 @@ extension InputTestTests {
     let device = makeInputTestDevice()
     model.selectDevice(device)
     model.open()
-    await waitUntil { model.sessionState == .unavailable }
+    await waitUntil("model.sessionState == .unavailable") { model.sessionState == .unavailable }
 
     model.reconcileConnectedDevices([device])
 
-    #expect(await gateway.waitForInputCalls(4))
+    await gateway.waitForInputCalls(4)
     model.close()
   }
 
@@ -211,7 +202,7 @@ extension InputTestTests {
     model.open()
     // One live sample then three nils stops the loop. Wait for all four requests
     // because `.stale` is also the transient state after the first nil.
-    #expect(await gateway.waitForInputCalls(4))
+    await gateway.waitForInputCalls(4)
 
     #expect(model.sessionState == .stale)
     #expect(model.latestInput == snapshot)
@@ -231,7 +222,7 @@ extension InputTestTests {
     model.selectDevice(makeInputTestDevice())
 
     model.open()
-    #expect(await gateway.waitForInputCalls(2))
+    await gateway.waitForInputCalls(2)
     model.close()
 
     #expect(await gateway.counts().input > 1)
@@ -247,10 +238,13 @@ extension InputTestTests {
     let newDevice = makeInputTestDevice(sessionToken: "input-test-new")
     model.selectDevice(oldDevice)
     model.open()
-    try? await Task.sleep(nanoseconds: 20_000_000)
+    await gateway.waitForInputCalls(1)
 
     model.selectDevice(newDevice)
-    try? await Task.sleep(nanoseconds: 20_000_000)
+    await gateway.waitForInputCalls(2)
+    await waitUntil("the first device sampling is cancelled") {
+      await gateway.counts().cancelled == 1
+    }
 
     #expect(model.device?.sessionToken.rawValue == newDevice.sessionToken.rawValue)
     #expect(model.sessionState == .starting)
@@ -300,7 +294,7 @@ extension InputTestTests {
     model.rumbleDurationMilliseconds = 100
 
     model.testRumble()
-    try? await Task.sleep(nanoseconds: 30_000_000)
+    await gateway.waitForRumbleCalls(1)
 
     let calls = await gateway.rumbleCalls
     let active = calls.first {
@@ -326,7 +320,9 @@ extension InputTestTests {
 
     for expectedCount in 1...3 {
       model.testRumble()
-      await waitUntil { model.outputState == .succeeded(.rumble) }
+      await waitUntil("model.outputState == .succeeded(.rumble)") {
+        model.outputState == .succeeded(.rumble)
+      }
       #expect(await gateway.rumbleCalls.count == expectedCount)
       #expect(!model.canStopRumble)
     }
@@ -346,10 +342,10 @@ extension InputTestTests {
     model.rumbleIntensities[.leftMain] = 200
 
     model.testRumble()
-    #expect(await gateway.waitForRumbleCalls(1))
+    await gateway.waitForRumbleCalls(1)
     #expect(model.canStopRumble)
     model.stopRumble()
-    #expect(await gateway.waitForRumbleCalls(2))
+    await gateway.waitForRumbleCalls(2)
 
     let calls = await gateway.rumbleCalls
     #expect(calls.count == 2)
