@@ -47,7 +47,7 @@ extension DevicePipeline {
     }
   }
 
-  /// The interval of the mode's keep-alive, which a family's own keep-alive replaces.
+  /// The interval of the mode's keep-alive, used when the family's description declares none.
   var sessionKeepAliveIntervalNanoseconds: UInt64? {
     recordSession.keepAlive.map {
       UInt64($0.intervalMilliseconds) * DeviceTransportProfile.nanosecondsPerMillisecond
