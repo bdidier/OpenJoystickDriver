@@ -64,7 +64,7 @@ public struct ApplicationServiceRemappingProfileIssue: Codable, Equatable, Senda
   public init(from decoder: any Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
     id = try container.decode(UUID.self, forKey: .id)
-    kind = try container.decodeIfPresent(Kind.self, forKey: .kind) ?? .damagedProfile
+    kind = try container.decode(Kind.self, forKey: .kind)
     code = try container.decode(ErrorCode.self, forKey: .code)
     message = try container.decode(String.self, forKey: .message)
   }
@@ -106,11 +106,18 @@ public struct ApplicationServiceRemappingProfileUpdateArguments: Codable, Sendab
 }
 
 extension KeyedDecodingContainer {
-  /// Decodes a profile of a remapping request. A profile that does not decode fails with
-  /// ``ApplicationServiceRemappingRPCError/Code/invalidProfile``, the code that the service gives
-  /// a profile that does not validate.
+  /// Decodes a profile of a remapping request. A profile with a missing or unsupported
+  /// `apiVersion` fails with ``ApplicationServiceRemappingRPCError/Code/unsupportedAPIVersion``;
+  /// any other profile that does not decode fails with
+  /// ``ApplicationServiceRemappingRPCError/Code/invalidProfile``.
   func decodeRequestProfile(forKey key: Key) throws -> RemappingProfile {
     do { return try decode(RemappingProfile.self, forKey: key) } catch {
+      if RemappingProfileFileStore.problemCode(error) == .unsupportedAPIVersion {
+        throw ApplicationServiceRemappingRPCError(
+          code: .unsupportedAPIVersion,
+          message: "The remapping profile has a missing or unsupported apiVersion."
+        )
+      }
       throw ApplicationServiceRemappingRPCError(
         code: .invalidProfile,
         message: "The remapping profile is not valid."
@@ -432,6 +439,7 @@ public struct ApplicationServiceRemappingRPCError: Error, Codable, Equatable, Lo
     case motionProfileInactive = "motion_profile_inactive"
     case motionSessionChanged = "motion_session_changed"
     case packageProfileReadOnly = "package_profile_read_only"
+    case unsupportedAPIVersion = "unsupported_api_version"
 
     /// The stable error code of this failure, listed in `Resources/ErrorCodes.json`.
     public var errorCode: ErrorCode {
@@ -444,6 +452,7 @@ public struct ApplicationServiceRemappingRPCError: Error, Codable, Equatable, Lo
       case .duplicateName: .duplicateName
       case .invalidArguments: .invalidArguments
       case .invalidProfile: .invalidProfile
+      case .unsupportedAPIVersion: .unsupportedAPIVersion
       case .librarySizeExceeded: .librarySizeExceeded
       case .profileAlreadyExists: .profileAlreadyExists
       case .profileUpdateConflict: .profileUpdateConflict

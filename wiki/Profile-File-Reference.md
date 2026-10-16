@@ -33,8 +33,6 @@ A profile that cannot be used gets the same code wherever OJD reads it: `ojd pro
 - `E3006`: another profile already uses the name.
 - `E3005`: the file name does not match the profile `id`, or a selection cannot be used.
 
-A service request cannot carry `E5001`, so it gives `E3008` for a profile with a missing or unsupported `apiVersion`.
-
 ## File Shape
 
 A profile file contains one profile object. An exported profile file has the same shape.
