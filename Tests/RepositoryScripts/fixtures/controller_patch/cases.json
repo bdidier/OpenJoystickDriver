@@ -1735,9 +1735,14 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip"
-        },
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip"
+            }
+          }
+        ],
         "usb": {
           "interface": 0
         },
@@ -1766,9 +1771,14 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip"
-        },
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip"
+            }
+          }
+        ],
         "usb": {
           "interface": 0
         },
@@ -1786,9 +1796,14 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.xusb"
-        },
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.xusb"
+            }
+          }
+        ],
         "usb": {
           "interface": 0
         },
@@ -1818,9 +1833,14 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.xusb"
-        },
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.xusb"
+            }
+          }
+        ],
         "usb": {
           "interface": 0
         },
@@ -1839,9 +1859,14 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "sony.dualsense"
-        },
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "sony.dualsense"
+            }
+          }
+        ],
         "usb": {
           "interface": 0
         },
@@ -1870,9 +1895,14 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "sony.dualsense"
-        },
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "sony.dualsense"
+            }
+          }
+        ],
         "usb": {
           "interface": 0
         },
@@ -1890,9 +1920,14 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.xusb"
-        },
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.xusb"
+            }
+          }
+        ],
         "usb": {
           "interface": 0
         },
@@ -1924,9 +1959,14 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.xusb"
-        },
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.xusb"
+            }
+          }
+        ],
         "usb": {
           "interface": 0
         },
