@@ -1346,6 +1346,16 @@
 "cli.virtual.feed.error.frame" = "%@. satır geçerli bir kare değil. “ojd virtual feed --help” biçimi gösterir.";
 "cli.virtual.feed.profile" = "Yayımlanacak sanal oyun kontrolcüsünün profili.";
 "cli.virtual.feed.started" = "Sanal bir oyun kontrolcüsü (%@) yayımlanıyor. Kareleri stdin’e yazın; durdurmak için girdiyi bitirin veya Control-C tuşlarına basın.";
+"cli.virtual.launch.abstract" = "Bağlı sanal oyun kollarının SDL eşlemesiyle bir program çalıştırır.";
+"cli.virtual.launch.command" = "Çalıştırılacak program ve bağımsız değişkenleri. Program bir yol, PATH'in bulduğu bir ad veya bir .app olabilir. Programın bağımsız değişkenleri aynı zamanda ojd seçenekleriyse programdan önce -- yazın.";
+"cli.virtual.launch.discussion" = "SDL_GAMECONTROLLERCONFIG değerini bağlı her denetleyicinin sanal oyun kolu eşlemesine ayarlar; böylece programdaki SDL onları listeler. Önceden ayarlı bir değer başta kalır, eşlemeler onu izler. Bir .app ana yürütülebilir dosyasını çalıştırır. Program bu terminali korur. ojd'yi durdurmak programı durdurur ve ojd programın durumuyla çıkar.";
+"cli.virtual.launch.error.failed" = "%@ başlamadı (%@). Yürütülebilir bir dosya veya uygulama olduğunu ve çalıştırma izniniz olduğunu kontrol edin.";
+"cli.virtual.launch.error.no_executable" = "uygulamanın yürütülebilir dosyası yok";
+"cli.virtual.launch.error.no_gamepad" = "Bağlı hiçbir denetleyicinin sanal oyun kolu yok, bu yüzden ayarlanacak eşleme yok. Bir denetleyici bağlayın ve 'ojd virtual show' komutunu kontrol edin.";
+"cli.virtual.launch.error.no_program" = "Çalıştırılacak bir program verin, örneğin 'ojd virtual launch ./game'.";
+"cli.virtual.launch.error.not_executable" = "bu yolda yürütülebilir dosya yok";
+"cli.virtual.launch.error.not_found" = "PATH içinde bu adda program yok";
+"cli.virtual.launch.error.output" = "--json ve --plain geçerli değildir, çünkü program standart çıktıyı yazar.";
 "cli.virtual.reset.abstract" = "Bir kontrolcünün modelini veya tüm modelleri sanal oyun kontrolcüsünün otomatik seçimine döndürür.";
 "cli.virtual.reset.all" = "Tüm kontrolcü modellerini sıfırlar.";
 "cli.virtual.reset.all.done" = "Her kontrolcü modeli artık sanal oyun kontrolcüsünü otomatik seçiyor.";
@@ -1424,6 +1434,7 @@
 "error.E2030" = "Bu bir web kaynağı değil. http veya https ile scheme://host[:port] biçimini kullanın, örneğin `http://127.0.0.1:8080`.";
 "error.E2031" = "127.0.0.1 üzerindeki bu bağlantı noktası kullanımda veya açılamıyor. --port ile başka birini seçin.";
 "error.E2032" = "Kaynakları olan bir belirteç control kapsamına sahip olamaz, çünkü bir sayfa asla sanal bir oyun kumandasını sürmemelidir. control kapsamını kaynağı olmayan bir belirtece verin.";
+"error.E2033" = "Program başlatılamadı. Yolunun yürütülebilir bir dosyayı veya uygulamayı gösterdiğini ve çalıştırma izniniz olduğunu kontrol edin.";
 "cli.record.usb_not_claimed" = "Bu aile ham USB kullanır ve ürün listesi Apple tarafından imzalandığı için USB uzantısı bu kontrolcüyü sahiplenemez. OJD ona yalnızca macOS izin verdiğinde doğrudan USB erişimiyle ulaşır.";
 "cli.record.usb_only_switch2" = "Yalnızca USB: Kontrolcüyü Bluetooth LE üzerinden bağlamak için bu Switch 2 kaydına bluetoothLE.vibrationCharacteristic ekleyin.";
 "cli.record.validate.abstract" = "Bir kontrolcü kaydını yüklemeden denetler.";

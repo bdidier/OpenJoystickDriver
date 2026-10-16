@@ -1346,6 +1346,16 @@
 "cli.virtual.feed.error.frame" = "Regel %@ is geen geldig frame. ‘ojd virtual feed --help’ toont het formaat.";
 "cli.virtual.feed.profile" = "Het profiel van het virtuele gamepad dat moet worden gepubliceerd.";
 "cli.virtual.feed.started" = "Een virtueel gamepad (%@) wordt gepubliceerd. Schrijf frames naar stdin; beëindig de invoer of druk op Control-C om te stoppen.";
+"cli.virtual.launch.abstract" = "Voert een programma uit met de SDL-toewijzing van de verbonden virtuele gamepads.";
+"cli.virtual.launch.command" = "Het programma dat wordt uitgevoerd en de argumenten ervan. Een programma is een pad, een naam die PATH vindt of een .app. Zet -- voor het programma als de argumenten ervan ook ojd-opties zijn.";
+"cli.virtual.launch.discussion" = "Stelt SDL_GAMECONTROLLERCONFIG in op de toewijzing van de virtuele gamepad van elke verbonden controller, zodat SDL in het programma ze toont. Een al ingestelde waarde blijft eerst staan en de toewijzingen volgen. Een .app voert het hoofduitvoerbestand uit. Het programma houdt deze terminal. Als je ojd stopt, stopt het programma, en ojd eindigt met de status van het programma.";
+"cli.virtual.launch.error.failed" = "%@ is niet gestart (%@). Controleer of het een uitvoerbaar bestand of een app is en of je het mag uitvoeren.";
+"cli.virtual.launch.error.no_executable" = "de app heeft geen uitvoerbaar bestand";
+"cli.virtual.launch.error.no_gamepad" = "Geen verbonden controller heeft een virtuele gamepad, dus er is geen toewijzing om in te stellen. Verbind een controller en controleer ‘ojd virtual show’.";
+"cli.virtual.launch.error.no_program" = "Geef een programma op om uit te voeren, zoals ‘ojd virtual launch ./game’.";
+"cli.virtual.launch.error.not_executable" = "geen uitvoerbaar bestand op dat pad";
+"cli.virtual.launch.error.not_found" = "geen programma met die naam in PATH";
+"cli.virtual.launch.error.output" = "--json en --plain zijn hier niet van toepassing, omdat het programma de standaarduitvoer schrijft.";
 "cli.virtual.reset.abstract" = "Het model van een controller, of elk model, terugzetten op automatische selectie van het virtuele gamepad.";
 "cli.virtual.reset.all" = "Elk controllermodel resetten.";
 "cli.virtual.reset.all.done" = "Elk controllermodel kiest nu automatisch zijn virtuele gamepad.";
@@ -1424,6 +1434,7 @@
 "error.E2030" = "Dit is geen webherkomst. Gebruik scheme://host[:port] met http of https, zoals `http://127.0.0.1:8080`.";
 "error.E2031" = "Deze poort op 127.0.0.1 is in gebruik of kan niet worden geopend. Kies een andere met --port.";
 "error.E2032" = "Een token met herkomsten kan het bereik control niet hebben, omdat een pagina nooit een virtuele gamepad mag besturen. Verleen control aan een token zonder herkomsten.";
+"error.E2033" = "Het programma kon niet worden gestart. Controleer of het pad een uitvoerbaar bestand of een app aanwijst en of je het mag uitvoeren.";
 "cli.record.usb_not_claimed" = "De familie gebruikt onbewerkte USB en de USB-extensie kan deze controller niet claimen, omdat de productlijst door Apple is ondertekend. OJD bereikt hem alleen via directe USB-toegang, wanneer macOS dat toestaat.";
 "cli.record.usb_only_switch2" = "Alleen USB: voeg bluetoothLE.vibrationCharacteristic toe aan dit Switch 2-record om de controller via Bluetooth LE te verbinden.";
 "cli.record.validate.abstract" = "Controleert een controllerrecord zonder het te installeren.";
