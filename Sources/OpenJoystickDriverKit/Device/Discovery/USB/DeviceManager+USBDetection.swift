@@ -343,7 +343,8 @@ extension DeviceManager {
     )
   }
 
-  /// A catalogued model classifies on its identity, which is all its raw-USB row reads. An
+  /// A catalogued model classifies on its identity, which is all its raw-USB row reads, and runs
+  /// the mode its record's match keys select from the passive facts of the enumerated device. An
   /// uncatalogued model classifies on its passive facts, so an interface signature can bind it.
   /// Returns the classification with the observation it read.
   private func classifyUSBDevice(
@@ -352,12 +353,27 @@ extension DeviceManager {
   ) async -> (ProtocolClassification, PhysicalDevice) {
     let backend = DeviceAccessBackend(route: device.route)
     let identity = PhysicalDevice(vendorID: device.vendorID, productID: device.productID)
-    guard
-      protocolDriverRegistry.record(
-        for: ControllerModelID(vendorID: device.vendorID, productID: device.productID)
-      ) == nil, let observed = await provider.physicalDeviceObservation(for: device)
+    let model = ControllerModelID(vendorID: device.vendorID, productID: device.productID)
+    guard let record = protocolDriverRegistry.record(for: model) else {
+      guard let observed = await provider.physicalDeviceObservation(for: device) else {
+        return (protocolDriverRegistry.classify(identity, backend: backend), identity)
+      }
+      return (protocolDriverRegistry.classify(observed, backend: backend), observed)
+    }
+    guard !record.modes.isEmpty,
+      let observed = await provider.physicalDeviceObservation(for: device)
     else { return (protocolDriverRegistry.classify(identity, backend: backend), identity) }
-    return (protocolDriverRegistry.classify(observed, backend: backend), observed)
+    // A raw-USB route has no feature-report read, so a mode with a probe never holds.
+    let selection = await protocolDriverRegistry.selectMode(
+      of: model,
+      backend: backend,
+      reader: UnreadableModeProbeReader(),
+      device: observed
+    )
+    return (
+      protocolDriverRegistry.classify(identity, backend: backend, modeID: selection.modeID),
+      observed
+    )
   }
 
   private func recordUnboundUSBDevice(

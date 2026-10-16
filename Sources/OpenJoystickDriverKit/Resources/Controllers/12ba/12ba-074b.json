@@ -3,7 +3,12 @@
   "kind": "Controller",
   "vendorID": 4794,
   "productID": 1867,
-  "protocol": {
-    "family": "vendor.ps3-third-party"
-  }
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "vendor.ps3-third-party"
+      }
+    }
+  ]
 }

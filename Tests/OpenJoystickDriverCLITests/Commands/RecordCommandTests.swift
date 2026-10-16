@@ -110,10 +110,10 @@ struct RecordCommandTests {
     #expect(list.standardOutput.contains("\tbundled\t"))
     let shown = try show.json()
     #expect(shown["layer"] as? String == "user")
-    #expect(shown["fields"] as? [String: String] == ["protocol": "bundled", "usb": "user"])
+    #expect(shown["fields"] as? [String: String] == ["modes": "bundled", "usb": "user"])
     let record = try #require(shown["record"] as? [String: Any])
     #expect((record["usb"] as? [String: Int])?["postHandshakeSettleMs"] == 5)
-    #expect(plainShow.standardOutput == "protocol\tbundled\nusb\tuser\n")
+    #expect(plainShow.standardOutput == "modes\tbundled\nusb\tuser\n")
   }
 
   @Test
@@ -150,7 +150,7 @@ struct RecordCommandTests {
       """
       {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "Controller",
        "vendorID": 1406, "productID": 8447,
-       "protocol": {"family": "nintendo.switch2"}}
+       "modes": [{"id": "default", "protocol": {"family": "nintendo.switch2"}}]}
       """.utf8
     )
     try directory.write(switch2, as: "057e-20ff.json")

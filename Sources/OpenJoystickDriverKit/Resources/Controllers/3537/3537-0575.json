@@ -3,11 +3,16 @@
   "kind": "Controller",
   "vendorID": 13623,
   "productID": 1397,
-  "protocol": {
-    "family": "vendor.gamesir",
-    "variant": "enhanced-hid",
-    "parameters": {
-      "lightingMemory": "ProfileSlots"
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "vendor.gamesir",
+        "variant": "enhanced-hid",
+        "parameters": {
+          "lightingMemory": "ProfileSlots"
+        }
+      }
     }
-  }
+  ]
 }

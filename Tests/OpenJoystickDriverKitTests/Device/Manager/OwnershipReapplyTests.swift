@@ -61,7 +61,7 @@ struct OwnershipReapplyTests {
     let otherPipeline = try #require(await manager.pipelines[otherID])
 
     await manager.reloadControllerRecords(changing: [Self.changedModel])
-    try await Self.waitForHIDInitializations(of: manager)
+    await Self.waitForHIDInitializations(of: manager)
 
     #expect(await backend.reevaluated() == [[Self.changedModel]])
     #expect(Set(await manager.pipelines.keys) == [changedID, otherID])
@@ -154,11 +154,10 @@ struct OwnershipReapplyTests {
     return records
   }
 
-  private static func waitForHIDInitializations(of manager: DeviceManager) async throws {
-    for _ in 0..<400 where await !manager.hidInitializationTasks.isEmpty {
-      try await Task.sleep(for: .milliseconds(5))
+  private static func waitForHIDInitializations(of manager: DeviceManager) async {
+    await waitUntil("manager.hidInitializationTasks.isEmpty") {
+      await manager.hidInitializationTasks.isEmpty
     }
-    #expect(await manager.hidInitializationTasks.isEmpty)
   }
 
   private static func gameSir(
@@ -257,8 +256,8 @@ private actor OwnershipReapplyBackend: HIDAccessBackend {
       admittedIDs.insert(new.connectionID)
     }
     if let manager {
-      for _ in 0..<400 where await !manager.hidInitializationTasks.isEmpty {
-        try? await Task.sleep(for: .milliseconds(5))
+      await waitUntil("manager.hidInitializationTasks.isEmpty") {
+        await manager.hidInitializationTasks.isEmpty
       }
       admitted = await manager.pipelines
     }

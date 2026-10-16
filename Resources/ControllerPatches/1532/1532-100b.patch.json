@@ -6,13 +6,18 @@
     "productID": 4107
   },
   "patch": {
-    "protocol": {
-      "family": "sony.dualsense",
-      "parameters": {
-        "maker": "ThirdParty",
-        "unprobedSensors": true,
-        "unprobedTouchpad": true
+    "modes": [
+      {
+        "id": "default",
+        "protocol": {
+          "family": "sony.dualsense",
+          "parameters": {
+            "maker": "ThirdParty",
+            "unprobedSensors": true,
+            "unprobedTouchpad": true
+          }
+        }
       }
-    }
+    ]
   }
 }

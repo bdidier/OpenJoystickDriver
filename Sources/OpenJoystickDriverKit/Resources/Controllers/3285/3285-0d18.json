@@ -3,12 +3,17 @@
   "kind": "Controller",
   "vendorID": 12933,
   "productID": 3352,
-  "protocol": {
-    "family": "sony.dualsense",
-    "parameters": {
-      "maker": "ThirdParty",
-      "forcedVibration": true,
-      "role": "Receiver"
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "sony.dualsense",
+        "parameters": {
+          "maker": "ThirdParty",
+          "forcedVibration": true,
+          "role": "Receiver"
+        }
+      }
     }
-  }
+  ]
 }

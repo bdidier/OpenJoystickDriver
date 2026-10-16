@@ -6,7 +6,8 @@ import Testing
 
 /// The record's `output.startup` writes, the reports they send, and the transports they apply to.
 struct ControllerRecordStartupWriteTests {
-  private static let sixaxis = #""protocol": {"family": "sony.sixaxis"}"#
+  private static let sixaxis =
+    #""modes": [{"id": "default", "protocol": {"family": "sony.sixaxis"}}]"#
   private static let enable = #"""
     {"report": {"kind": "feature", "id": 244, "length": 5}, "bytes": [66, 3, 0, 0],
       "transport": "bluetooth-classic"}
@@ -115,7 +116,10 @@ struct ControllerRecordStartupWriteTests {
       #"{"bytes": [1, 2], "endpoint": 2, "timeoutMilliseconds": 500, "#
       + #""delayMilliseconds": 5, "sessionByte": 1, "toleratesRejection": true}"#
     for family in [Self.gip, #"{"family": "nintendo.switch2"}"#] {
-      let document = try decode("\"protocol\": \(family), \"output\": {\"startup\": [\(write)]}")
+      let document = try decode(
+        "\"modes\": [{\"id\": \"default\", \"protocol\": \(family)}], "
+          + "\"output\": {\"startup\": [\(write)]}"
+      )
       #expect(document.startupWrites.isEmpty)
       #expect(document.usbStartupWrites.count == 1)
       #expect(document.usbStartupWrites.first?.endpoint == 2)
@@ -132,7 +136,8 @@ struct ControllerRecordStartupWriteTests {
   func rejectsAMalformedRawUSBStartupWrite(field: String) {
     #expect(throws: DecodingError.self) {
       try decode(
-        "\"protocol\": \(Self.gip), \"output\": {\"startup\": [{\"bytes\": [1], \(field)}]}"
+        "\"modes\": [{\"id\": \"default\", \"protocol\": \(Self.gip)}], "
+          + "\"output\": {\"startup\": [{\"bytes\": [1], \(field)}]}"
       )
     }
   }
@@ -143,7 +148,10 @@ struct ControllerRecordStartupWriteTests {
       #"{"family": "sony.sixaxis"}"#, #"{"family": "vendor.gamesir", "variant": "usb"}"#,
     ] {
       #expect(throws: DecodingError.self) {
-        try decode("\"protocol\": \(family), \"output\": {\"startup\": [{\"bytes\": [1]}]}")
+        try decode(
+          "\"modes\": [{\"id\": \"default\", \"protocol\": \(family)}], "
+            + "\"output\": {\"startup\": [{\"bytes\": [1]}]}"
+        )
       }
     }
   }
@@ -152,13 +160,15 @@ struct ControllerRecordStartupWriteTests {
   func rejectsRawUSBStartupWritesNextToInitializationOrHIDWrites() {
     #expect(throws: DecodingError.self) {
       try decode(
-        #""protocol": {"family": "xbox.gip", "initialization": ["xbox.gip/power-on"]}, "#
+        #""modes": [{"id": "default", "protocol": {"family": "xbox.gip", "#
+          + #""initialization": ["xbox.gip/power-on"]}}], "#
           + #""output": {"startup": [{"bytes": [1]}]}"#
       )
     }
     #expect(throws: DecodingError.self) {
       try decode(
-        "\"protocol\": \(Self.gip), \"output\": {\"startup\": [{\"bytes\": [1]}, "
+        "\"modes\": [{\"id\": \"default\", \"protocol\": \(Self.gip)}], "
+          + "\"output\": {\"startup\": [{\"bytes\": [1]}, "
           + "{\(Self.hidReport)}]}"
       )
     }
@@ -178,7 +188,10 @@ struct ControllerRecordStartupWriteTests {
   )
   func rejectsStartupWritesOnRawUSBFamilies(protocolInfo: String) {
     #expect(throws: DecodingError.self) {
-      try decode("\"protocol\": \(protocolInfo), \"output\": {\"startup\": [\(Self.enable)]}")
+      try decode(
+        "\"modes\": [{\"id\": \"default\", \"protocol\": \(protocolInfo)}], "
+          + "\"output\": {\"startup\": [\(Self.enable)]}"
+      )
     }
   }
 
@@ -192,15 +205,35 @@ struct ControllerRecordStartupWriteTests {
     #expect(any.applies(to: .usb) && any.applies(to: .bluetoothLE) && any.applies(to: nil))
   }
 
-  /// Both Sixaxis identities carry the Bluetooth enable report `hid-sony.c` sends.
+  /// Both Sixaxis identities carry the Bluetooth enable report `hid-sony.c` sends, in the
+  /// `bluetooth` mode that a Bluetooth link selects; neither record sends it at record level.
   @Test(arguments: [UInt16(0x0268), 0x0523])
-  func sixaxisRecordsEnableBluetooth(productID: UInt16) throws {
+  func sixaxisRecordsEnableBluetooth(productID: UInt16) async throws {
     let vendorID: UInt16 = productID == 0x0268 ? 0x054C : 0x2563
-    let record = try #require(
-      DeviceCatalog().record(for: ControllerModelID(vendorID: vendorID, productID: productID))
-    )
+    let model = ControllerModelID(vendorID: vendorID, productID: productID)
+    let base = try #require(DeviceCatalog().record(for: model))
+    #expect(base.startupWrites.isEmpty)
+    let record = try #require(DeviceCatalog().record(for: model, modeID: "bluetooth"))
     #expect(record.physicalProtocolID == .sonySixaxis)
-    #expect(record.startupWrites.map(\.transport) == [.bluetoothClassic])
+    #expect(record.startupWrites.map(\.transport) == [nil])
+    func device(_ link: PhysicalTransport) -> PhysicalDevice {
+      PhysicalDevice(
+        vendorID: vendorID,
+        productID: productID,
+        interfaces: [PhysicalInterfaceSignature(interfaceNumber: 0, hostTransport: link)]
+      )
+    }
+    // The DS3 also has a probed mode, which a wired link reaches and the reader cannot answer.
+    for (link, expected) in [(PhysicalTransport.bluetoothClassic, "bluetooth"), (.usb, nil)] {
+      let selected = await ControllerModeSelector.select(
+        from: base,
+        model: model,
+        backend: .ioHID,
+        reader: UnansweredProbeReader(),
+        device: device(link)
+      ) { _ in }
+      #expect(selected.modeID == expected)
+    }
     #expect(
       record.startupWrites.map(\.write) == [
         .hidFeature(
@@ -221,5 +254,14 @@ struct ControllerRecordStartupWriteTests {
       \(fields)}
       """
     return try JSONDecoder().decode(ControllerRecordDocument.self, from: Data(json.utf8))
+  }
+}
+
+/// A reader that never answers, so a probed mode is never selected.
+private struct UnansweredProbeReader: ControllerModeProbeReader {
+  func readFeatureReport(
+    _ request: PhysicalHIDFeatureReadRequest
+  ) -> PhysicalHIDReportResult<Data> {
+    return .unavailable
   }
 }

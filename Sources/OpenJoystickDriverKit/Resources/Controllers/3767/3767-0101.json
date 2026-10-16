@@ -3,8 +3,13 @@
   "kind": "Controller",
   "vendorID": 14183,
   "productID": 257,
-  "protocol": {
-    "family": "xbox.xid",
-    "variant": "gamepad"
-  }
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "xbox.xid",
+        "variant": "gamepad"
+      }
+    }
+  ]
 }

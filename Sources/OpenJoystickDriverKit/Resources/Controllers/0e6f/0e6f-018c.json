@@ -3,7 +3,12 @@
   "kind": "Controller",
   "vendorID": 3695,
   "productID": 396,
-  "protocol": {
-    "family": "nintendo.switch1"
-  }
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "nintendo.switch1"
+      }
+    }
+  ]
 }

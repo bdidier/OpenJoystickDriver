@@ -24,7 +24,7 @@ struct SteamHIDRoleTests {
     // Back-to-back arrivals, as the detection loop schedules them: a slot's initialization is
     // keyed by its connection, so a later sibling does not cancel it.
     await manager.scheduleHIDInitializationsForTest(connections)
-    try await Self.waitForInitializations(of: manager)
+    await Self.waitForInitializations(of: manager)
 
     // Interface 0 has no feature report, so it is no role; slots 1–4 each run a pipeline.
     let slots = (1...4).map { Self.slot($0) }
@@ -73,11 +73,10 @@ struct SteamHIDRoleTests {
     await manager.stop()
   }
 
-  static func waitForInitializations(of manager: DeviceManager) async throws {
-    for _ in 0..<400 where await !manager.hidInitializationTasks.isEmpty {
-      try await Task.sleep(for: .milliseconds(5))
+  static func waitForInitializations(of manager: DeviceManager) async {
+    await waitUntil("manager.hidInitializationTasks.isEmpty") {
+      await manager.hidInitializationTasks.isEmpty
     }
-    #expect(await manager.hidInitializationTasks.isEmpty)
   }
 
   @Test

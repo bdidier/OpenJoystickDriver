@@ -6,12 +6,17 @@
     "productID": 2976
   },
   "patch": {
-    "protocol": {
-      "family": "sony.dualshock4",
-      "parameters": {
-        "motionCalibration": "Factory",
-        "role": "WirelessAdapter"
+    "modes": [
+      {
+        "id": "default",
+        "protocol": {
+          "family": "sony.dualshock4",
+          "parameters": {
+            "motionCalibration": "Factory",
+            "role": "WirelessAdapter"
+          }
+        }
       }
-    }
+    ]
   }
 }

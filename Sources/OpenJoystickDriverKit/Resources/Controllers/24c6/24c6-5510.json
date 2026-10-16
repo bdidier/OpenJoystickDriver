@@ -3,10 +3,15 @@
   "kind": "Controller",
   "vendorID": 9414,
   "productID": 21776,
-  "protocol": {
-    "family": "xbox.xusb",
-    "variant": "wired"
-  },
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "xbox.xusb",
+        "variant": "wired"
+      }
+    }
+  ],
   "capabilities": {
     "absent": ["LeftTrigger", "RightTrigger"]
   }

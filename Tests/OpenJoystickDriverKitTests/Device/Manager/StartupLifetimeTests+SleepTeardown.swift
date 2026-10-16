@@ -83,15 +83,9 @@ extension StartupLifetimeTests {
     await manager.markStartedForTest()
     await manager.holdPermissionWatchForTest()
     await manager.ensureHIDDetectionState(for: .granted)
-    for _ in 0..<500 {
-      if await backend.attemptCount() == 1 { break }
-      await Task.yield()
-    }
+    await backend.waitForAttempt(1)
     await backend.yield(.connected(connection: connection, ownership: .exclusive), attempt: 1)
-    for _ in 0..<500 {
-      if await !manager.pipelines.isEmpty { break }
-      try? await Task.sleep(nanoseconds: 2_000_000)
-    }
+    await waitUntil("!manager.pipelines.isEmpty") { await !manager.pipelines.isEmpty }
     let identifier = try #require(await manager.connectedLogicalControllerIDs().first)
     #expect(
       await manager.sendOutputForTest(

@@ -59,7 +59,7 @@ public struct ControllerPatch: Equatable, Sendable {
   public static let kind = "ControllerPatch"
   /// The top-level record sections a patch may set.
   static let sections: Set<String> = [
-    "protocol", "modes", "usb", "bluetoothLE", "server", "route", "output", "input",
+    "modes", "usb", "bluetoothLE", "server", "route", "output", "input",
     "tuning",
   ]
 
@@ -111,7 +111,7 @@ public struct ControllerPatch: Equatable, Sendable {
     let parsed = try parseSelector(selector)
     guard !body.isEmpty, Set(body.keys).isSubset(of: sections) else {
       throw ControllerRecordProblem(
-        "patch must hold protocol, modes, usb, bluetoothLE, server, "
+        "patch must hold modes, usb, bluetoothLE, server, "
           + "route, output, input, or tuning"
       )
     }
