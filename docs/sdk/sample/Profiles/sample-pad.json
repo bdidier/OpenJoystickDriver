@@ -14,7 +14,7 @@
     {
       "id": "3B0F9C52-6E1D-4A8B-9C27-5D4E8F1A0B02",
       "source": { "type": "button", "button": "Start" },
-      "destination": { "type": "keyboard", "key": "space", "modifiers": [] }
+      "destination": { "type": "keyboard", "key": "Space", "modifiers": [] }
     }
   ]
 }

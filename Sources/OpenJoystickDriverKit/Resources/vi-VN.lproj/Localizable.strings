@@ -959,7 +959,7 @@
 "cli.controller.light.examples" = "Ví dụ:\n  # Đặt thanh đèn sang màu cam\n  ojd controller light 054C:09CC --color FF8000\n  # Đặt màu và độ sáng thấp\n  ojd controller light 054C:09CC --color 0000FF --brightness 40";
 "cli.profile.create.examples" = "Ví dụ:\n  # Tạo hồ sơ cho một mẫu tay cầm\n  ojd profile create Racing --controller 045E:028E\n  # Chỉ áp dụng khi Safari đang ở phía trước\n  ojd profile create Browsing --controller 045E:028E --app com.apple.Safari";
 "cli.profile.set.examples" = "Ví dụ:\n  # Đổi tên hồ sơ\n  ojd profile set Racing name Rally\n  # Đặt vùng chết bên trong của ánh xạ cần analog đầu tiên\n  ojd profile set Racing stickMappings.0.tuning.innerDeadzone 0.2";
-"cli.binding.set.examples" = "Ví dụ:\n  # Giữ Space trong khi nút phía nam đang được giữ\n  ojd binding set Racing button:South key:space\n  # Bật/tắt J mỗi lần nhấn\n  ojd binding set Racing button:West key:j --behavior toggle\n  # Lặp lại J 10 lần mỗi giây khi đang giữ\n  ojd binding set Racing button:West key:j --turbo-rate 10 --turbo-duty 0.5";
+"cli.binding.set.examples" = "Ví dụ:\n  # Giữ Space trong khi nút phía nam đang được giữ\n  ojd binding set Racing button:South key:Space\n  # Bật/tắt J mỗi lần nhấn\n  ojd binding set Racing button:West key:KeyJ --behavior toggle\n  # Lặp lại J 10 lần mỗi giây khi đang giữ\n  ojd binding set Racing button:West key:KeyJ --turbo-rate 10 --turbo-duty 0.5";
 "cli.record.install.examples" = "Ví dụ:\n  # Cài đặt một tệp bản ghi\n  ojd record install 045E-028E.json\n  # Đọc bản ghi từ stdin\n  ojd record install - < 045E-028E.json";
 "cli.access.grant.examples" = "Ví dụ:\n  # Cho phép một chương trình dùng dịch vụ\n  ojd access grant /Applications/Example.app\n  # Tạo token cho các trang được phục vụ từ một origin\n  ojd access grant --token overlay --origin http://127.0.0.1:8080";
 "cli.service.abstract" = "Khởi động hoặc dừng dịch vụ OpenJoystickDriver, hoặc chờ đến khi dịch vụ nhận yêu cầu.";
@@ -1355,6 +1355,7 @@
 "cli.virtual.launch.error.not_executable" = "không có tệp thực thi ở đường dẫn đó";
 "cli.virtual.launch.error.not_found" = "không có chương trình nào tên đó trong PATH";
 "cli.virtual.launch.error.output" = "--json và --plain không áp dụng, vì chương trình ghi ra đầu ra chuẩn.";
+"cli.virtual.launch.sdl_gamecontroller_backend" = "Đồng thời đặt các gợi ý SDL khiến SDL chỉ đọc tay cầm qua khung GameController của Apple: SDL_JOYSTICK_MFI=1, SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1, SDL_JOYSTICK_IOKIT=0, SDL_JOYSTICK_HIDAPI=0. Chúng chỉ áp dụng cho chương trình và thay thế các giá trị đã đặt.";
 "cli.virtual.reset.abstract" = "Đưa kiểu máy của một bộ điều khiển, hoặc mọi kiểu máy, về lựa chọn tay cầm ảo tự động.";
 "cli.virtual.reset.all" = "Đặt lại mọi kiểu máy bộ điều khiển.";
 "cli.virtual.reset.all.done" = "Mọi kiểu máy bộ điều khiển giờ tự động chọn tay cầm ảo của nó.";
@@ -1445,7 +1446,7 @@
 "cli.binding.abstract" = "Liệt kê, đặt và xóa các liên kết của một cấu hình ánh xạ lại.";
 "cli.binding.actions_invalid" = "--actions-json không phải là danh sách thao tác hợp lệ: %@";
 "cli.binding.actions_too_large" = "--actions-json quá lớn.";
-"cli.binding.alternate_format" = "%@ nhận MS:TARGET, như 500:key:b.";
+"cli.binding.alternate_format" = "%@ nhận MS:TARGET, như 500:key:KeyB.";
 "cli.binding.axis_options_source" = "--deadzone, --gain, --invert, --response-curve và --digital-threshold cần một nguồn trục.";
 "cli.binding.clear.abstract" = "Gỡ các liên kết của các nguồn đã cho, hoặc mọi liên kết.";
 "cli.binding.clear.all" = "Gỡ mọi liên kết, tổ hợp, chuỗi và lớp.";
@@ -1457,17 +1458,17 @@
 "cli.binding.clear.missing" = "“%@” không có liên kết nào cho %@. Không có gì thay đổi.";
 "cli.binding.clear.sources" = "Các nguồn có liên kết cần gỡ.";
 "cli.binding.clear.usage" = "Hãy đưa một hoặc nhiều nguồn, hoặc --all.";
-"cli.binding.discussion" = "Một liên kết gửi một TARGET khi một SOURCE của bộ điều khiển được dùng.\n\nSOURCE: button:NAME, dpad:DIRECTION, axis:NAME[:negative|positive], trigger:NAME:STAGE, motion:lean:DIRECTION, touch:SURFACE:contact, touch:SURFACE:grid:COLUMNS:ROWS:COLUMN:ROW, hoặc touch:SURFACE:swipe:DIRECTION:DISTANCE.\n\nTARGET: key:KEY[:mods=command,control,option,shift], mouse:BUTTON, move:x|y, scroll:x|y, gamepad:button:NAME, gamepad:dpad:DIRECTION, gamepad:axis:NAME, hoặc physical:... cho rung, đèn và cò thích ứng.\n\n“ojd profile show” in các liên kết theo các dạng này. Chỉnh sửa tổ hợp, chuỗi và lớp bằng “ojd profile edit”.";
+"cli.binding.discussion" = "Một liên kết gửi một TARGET khi một SOURCE của bộ điều khiển được dùng.\n\nSOURCE: button:NAME, dpad:DIRECTION, axis:NAME[:Negative|Positive], trigger:NAME:STAGE, motion:lean:DIRECTION, touch:SURFACE:contact, touch:SURFACE:grid:COLUMNS:ROWS:COLUMN:ROW, hoặc touch:SURFACE:swipe:DIRECTION:DISTANCE.\n\nTARGET: key:KEY[:mods=Meta,Control,Alt,Shift], mouse:BUTTON, move:x|y, scroll:x|y, gamepad:button:NAME, gamepad:dpad:DIRECTION, gamepad:axis:NAME, hoặc physical:... cho rung, đèn và cò thích ứng.\n\n“ojd profile show” in các liên kết theo các dạng này. Chỉnh sửa tổ hợp, chuỗi và lớp bằng “ojd profile edit”.";
 "cli.binding.list.abstract" = "Liệt kê các liên kết của một cấu hình.";
 "cli.binding.list.empty" = "“%@” không có liên kết nào. Hãy thêm một liên kết bằng “ojd binding set”.";
 "cli.binding.option.actions_json" = "Các thao tác bổ sung dưới dạng mảng JSON, theo dạng mà “ojd profile export” ghi ra.";
 "cli.binding.option.behavior" = "Khi nào đích được kích hoạt. Mặc định: hành vi của liên kết hiện tại, hoặc hold.";
 "cli.binding.option.deadzone" = "Nguồn trục: phần hành trình bị bỏ qua, từ 0 đến 0.95. Mặc định: 0.1.";
 "cli.binding.option.digital_threshold" = "Nguồn trục: hành trình được tính là một lần nhấn đối với đích dạng nút. Mặc định: 0.5.";
-"cli.binding.option.double_tap" = "Gửi một đích khác khi nguồn được nhấn hai lần trong khoảng thời gian này, như 300:key:c.";
+"cli.binding.option.double_tap" = "Gửi một đích khác khi nguồn được nhấn hai lần trong khoảng thời gian này, như 300:key:KeyC.";
 "cli.binding.option.gain" = "Nguồn trục: hệ số đầu ra, từ 0.1 đến 10. Mặc định: 1.";
 "cli.binding.option.invert" = "Nguồn trục: đảo chiều.";
-"cli.binding.option.long_hold" = "Gửi một đích khác khi nguồn được giữ lâu như vậy, như 500:key:b.";
+"cli.binding.option.long_hold" = "Gửi một đích khác khi nguồn được giữ lâu như vậy, như 500:key:KeyB.";
 "cli.binding.option.pulse_ms" = "Một xung giữ đích trong bao lâu, từ 1 đến 5000 ms. Mặc định: 100.";
 "cli.binding.option.response_curve" = "Nguồn trục: đầu ra tăng theo hành trình như thế nào. Mặc định: linear.";
 "cli.binding.option.turbo_duty" = "Phần của mỗi chu kỳ turbo mà đích được giữ, lớn hơn 0 và nhỏ hơn 1.";
@@ -1475,7 +1476,7 @@
 "cli.binding.set.abstract" = "Liên kết một nguồn của bộ điều khiển với một đích, thay thế liên kết hiện tại của nguồn.";
 "cli.binding.set.done" = "“%@” hiện liên kết %@.";
 "cli.binding.set.source" = "Thành phần của bộ điều khiển, như button:South.";
-"cli.binding.set.target" = "Điều nó gửi, như key:space.";
+"cli.binding.set.target" = "Điều nó gửi, như key:Space.";
 "cli.binding.source_invalid" = "“%@” không phải là một nguồn. “ojd binding set --help” liệt kê các dạng nguồn.";
 "cli.binding.target_invalid" = "“%@” không phải là một đích. “ojd binding set --help” liệt kê các dạng đích.";
 "cli.binding.turbo_pair" = "--turbo-rate và --turbo-duty phải được đưa cùng nhau.";

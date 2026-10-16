@@ -123,9 +123,7 @@ extension AutomaticDispatcherCoordinatorTests {
       failure: UserSpaceOutputDispatcher.CreationError.createFailed
     )
 
-    for _ in 0..<100 where recovered.counts().activations == 0 {
-      try await Task.sleep(nanoseconds: 1_000_000)
-    }
+    await waitUntil("the recovered dispatcher activates") { recovered.counts().activations != 0 }
     #expect(failed.counts() == (1, 1))
     #expect(recovered.counts().activations == 1)
     await coordinator.close()
@@ -251,7 +249,9 @@ extension AutomaticDispatcherCoordinatorTests {
     #expect(await coordinator.entries[identifier]?.retiring != nil)
 
     await gate.release()
-    while await coordinator.entries[identifier]?.retiring != nil { await Task.yield() }
+    await waitUntil("the slot stops retiring") {
+      await coordinator.entries[identifier]?.retiring == nil
+    }
     #expect(original.counts().closes == 1)
     await lease?.release()
     await coordinator.close()
@@ -296,7 +296,9 @@ extension AutomaticDispatcherCoordinatorTests {
 
     // Once the native close finishes, the slot is cleared and the next retarget publishes.
     await gate.release()
-    while await coordinator.entries[identifier]?.retiring != nil { await Task.yield() }
+    await waitUntil("the slot stops retiring") {
+      await coordinator.entries[identifier]?.retiring == nil
+    }
     #expect(original.counts().closes == 1)
     try await coordinator.retarget(
       identifier,

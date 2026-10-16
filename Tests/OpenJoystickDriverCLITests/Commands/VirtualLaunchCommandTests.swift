@@ -77,6 +77,49 @@ struct VirtualLaunchCommandTests {
   }
 
   @Test
+  func theGameControllerBackendOptionAddsExactlyItsHintsToTheProgramEnvironment() async throws {
+    let service = try FakeService(devices: [Self.device("pad-1", .sdlCompatible)])
+    let (run, printed) = try await Self.launch(
+      service,
+      ["virtual", "launch", "--sdl-gamecontroller-backend", "/usr/bin/env"],
+      environment: Self.baseEnvironment.merging(["SDL_JOYSTICK_HIDAPI": "1"]) { $1 }
+    )
+
+    #expect(run.code == 0, "\(run.standardError)")
+    let mapping = try VirtualHIDProfileID.sdlCompatible.gamepadMapping().sdlMapping
+    var expected = Self.baseEnvironment
+    expected.merge(SDLLaunchEnvironment.gameControllerBackend) { $1 }
+    expected[SDLLaunchEnvironment.variable] = mapping
+    let variables = Self.variables(printed)
+    for (name, value) in expected { #expect(variables[name] == value, "\(name)") }
+    let hints = variables.keys.filter { $0.hasPrefix("SDL_JOYSTICK_") }
+    #expect(Set(hints) == Set(SDLLaunchEnvironment.gameControllerBackend.keys))
+    #expect(!run.standardError.contains(sdlHintsNote("SdlCompatible")))
+  }
+
+  @Test
+  func withoutTheOptionNoJoystickHintIsSet() async throws {
+    let service = try FakeService(devices: [Self.device("pad-1", .generic)])
+    let (run, printed) = try await Self.launch(service, ["virtual", "launch", "/usr/bin/env"])
+
+    #expect(run.code == 0, "\(run.standardError)")
+    #expect(!Self.variables(printed).keys.contains { $0.hasPrefix("SDL_JOYSTICK_") })
+  }
+
+  @Test
+  func theGameControllerBackendOptionStillFailsWithoutAVirtualGamepad() async throws {
+    let service = try FakeService(devices: [])
+    let (run, printed) = try await Self.launch(
+      service,
+      ["virtual", "launch", "--sdl-gamecontroller-backend", "/usr/bin/env"]
+    )
+
+    #expect(run.code == 1)
+    #expect(run.standardError.contains(CLIFailure.prefix(.controllerRequestFailed)))
+    #expect(printed.isEmpty)
+  }
+
+  @Test
   func aNameOnPathAndTheArgumentsOfTheProgramReachIt() async throws {
     let service = try FakeService(devices: [Self.device("pad-1", .generic)])
     let (run, printed) = try await Self.launch(

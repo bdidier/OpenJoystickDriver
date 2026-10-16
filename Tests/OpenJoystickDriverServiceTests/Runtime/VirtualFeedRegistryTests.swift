@@ -1,16 +1,12 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverService
 
 @Suite(.serialized)
 struct VirtualFeedRegistryTests {
-  /// Waits until `condition` holds.
-  private static func wait(until condition: () -> Bool) async throws {
-    while !condition() { try await Task.sleep(nanoseconds: 2_000_000) }
-  }
-
   @Test
   func theProductionIdleTimeoutIsTwoSecondsAndIsTheRegistryDefault() {
     #expect(VirtualFeedExchangeResult.idleTimeoutSeconds == 2)
@@ -45,13 +41,15 @@ struct VirtualFeedRegistryTests {
           queued: 1
         )
     )
-    try await Self.wait { !device.sent.isEmpty }
+    await waitUntil("!device.sent.isEmpty") { !device.sent.isEmpty }
     #expect(
       device.sent == [
         RemappingGamepadState(buttons: [.south], axes: [.leftStickY: 0.5, .leftStickX: 0.25])
       ]
     )
-    try await Self.wait { registry.exchange(token: session.token, frames: []).queued == 0 }
+    await waitUntil("registry.exchange(token: session.token, frames: []).queued == 0") {
+      registry.exchange(token: session.token, frames: []).queued == 0
+    }
     let empty = registry.exchange(token: session.token, frames: [])
     #expect(empty == VirtualFeedExchangeResult(feedback: [], closed: false))
     #expect(device.sent.count == 1)
@@ -60,7 +58,8 @@ struct VirtualFeedRegistryTests {
   @Test(.timeLimit(.minutes(1)))
   func framesPlayInOrderEachForItsHoldAndAtLeastTheMinimum() async throws {
     let factory = FakeFeedFactory()
-    let registry = factory.registry()
+    let time = ManualVirtualFeedClock()
+    let registry = factory.registry(clock: time.clock)
     let session = try await registry.open(profile: "Generic")
     let device = try #require(factory.devices.first)
     let frames = [
@@ -71,14 +70,46 @@ struct VirtualFeedRegistryTests {
     let result = registry.exchange(token: session.token, frames: frames)
     #expect(result.accepted == 4)
     #expect(result.queued == 4)
-    try await Self.wait { device.sent.count == 4 }
+    let minimum = Double(VirtualFeedExchangeResult.minimumFrameMilliseconds) / 1000
+    // The first frame goes out at once; each later one goes out when the previous one's time ends.
+    for (index, step) in [0.1, minimum, minimum].enumerated() {
+      await waitUntil("device.sent.count == \(index + 1)") { device.sent.count == index + 1 }
+      await time.waitForSleeper(due: time.now + step)
+      #expect(device.sent.count == index + 1)
+      time.advance(by: step)
+    }
+    await waitUntil("device.sent.count == 4") { device.sent.count == 4 }
 
     #expect(device.sent == frames.map(\.gamepadState))
     let times = device.sentTimes
-    #expect(times[1] - times[0] >= 0.1)
+    #expect(times.first == 0)
+    #expect(times[1] - times[0] >= 0.1 - 1e-9)
+    #expect(times[2] - times[1] >= minimum - 1e-9)
+    #expect(times[3] - times[2] >= minimum - 1e-9)
+  }
+
+  @Test(.timeLimit(.minutes(1)))
+  func aDelayedSendDoesNotShortenTheNextGapBelowTheMinimum() async throws {
+    let factory = FakeFeedFactory()
+    let time = ManualVirtualFeedClock()
+    let registry = factory.registry(clock: time.clock)
+    let session = try await registry.open(profile: "Generic")
+    let device = try #require(factory.devices.first)
     let minimum = Double(VirtualFeedExchangeResult.minimumFrameMilliseconds) / 1000
-    #expect(times[2] - times[1] >= minimum)
-    #expect(times[3] - times[2] >= minimum)
+    let delay = minimum * 4
+    // The first send takes four minimums on the clock before it returns.
+    device.duringSend = { sent in if sent == 0 { time.advance(by: delay) } }
+    let frames = [VirtualFeedFrame(buttons: [.south]), VirtualFeedFrame(buttons: [.east])]
+
+    #expect(registry.exchange(token: session.token, frames: frames).accepted == 2)
+    await waitUntil("device.sent.count == 1") { device.sent.count == 1 }
+    await time.waitForSleeper(due: delay + minimum)
+    #expect(device.sent.count == 1)
+    time.advance(by: minimum)
+    await waitUntil("device.sent.count == 2") { device.sent.count == 2 }
+
+    let times = device.sentTimes
+    #expect(times[1] - times[0] >= minimum - 1e-9)
   }
 
   @Test(.timeLimit(.minutes(1)))
@@ -98,7 +129,9 @@ struct VirtualFeedRegistryTests {
     let result = registry.exchange(token: session.token, frames: frames)
     #expect(result.accepted == frames.count)
     #expect(result.queued == 4)
-    try await Self.wait { registry.exchange(token: session.token, frames: []).queued == 0 }
+    await waitUntil("registry.exchange(token: session.token, frames: []).queued == 0") {
+      registry.exchange(token: session.token, frames: []).queued == 0
+    }
 
     #expect(
       device.sent
@@ -132,7 +165,7 @@ struct VirtualFeedRegistryTests {
       token: session.token,
       frames: [VirtualFeedFrame(buttons: [.south], holdMilliseconds: 60_000), VirtualFeedFrame()]
     )
-    try await Self.wait { !device.sent.isEmpty }
+    await waitUntil("!device.sent.isEmpty") { !device.sent.isEmpty }
 
     #expect(await registry.close(token: session.token))
     try await Task.sleep(nanoseconds: 50_000_000)
@@ -151,7 +184,9 @@ struct VirtualFeedRegistryTests {
     _ = registry.exchange(token: session.token, frames: [VirtualFeedFrame()])
     // The registry drops the feed before it awaits the device's close, so the count alone does
     // not say the device is closed.
-    try await Self.wait { registry.openFeedCount == 0 && device.closeCount > 0 }
+    await waitUntil("registry.openFeedCount == 0 && device.closeCount > 0") {
+      registry.openFeedCount == 0 && device.closeCount > 0
+    }
 
     #expect(device.closeCount == 1)
     #expect(registry.exchange(token: session.token, frames: []).closed)
@@ -184,7 +219,9 @@ struct VirtualFeedRegistryTests {
     await time.waitForSleepers(1)
     #expect(registry.openFeedCount == 1)
     time.advance(by: 0.0625)
-    try await Self.wait { registry.openFeedCount == 0 && device.closeCount > 0 }
+    await waitUntil("registry.openFeedCount == 0 && device.closeCount > 0") {
+      registry.openFeedCount == 0 && device.closeCount > 0
+    }
 
     #expect(device.closeCount == 1)
     #expect(registry.exchange(token: session.token, frames: []).closed)
@@ -204,7 +241,7 @@ struct VirtualFeedRegistryTests {
 
     // Each step plays one frame; the burst takes 0.75 seconds, three times the idle timeout.
     for played in 1...frames.count {
-      try await Self.wait { device.sent.count == played }
+      await waitUntil("device.sent.count == played") { device.sent.count == played }
       // The frame's own wait ends at its start plus its hold; wait for that one by name.
       await time.waitForSleeper(due: 0.125 * Double(played))
       #expect(registry.openFeedCount == 1)
@@ -212,12 +249,14 @@ struct VirtualFeedRegistryTests {
     }
     #expect(device.closeCount == 0)
     // The idle time counts from the end of the last frame, which the player records.
-    try await Self.wait { registry.lastExchangeTimes.contains(time.now) }
+    await waitUntil("registry.lastExchangeTimes.contains(time.now)") {
+      registry.lastExchangeTimes.contains(time.now)
+    }
     time.advance(by: 0.1875)
     await time.waitForSleepers(1)
     #expect(registry.openFeedCount == 1)
     time.advance(by: 0.0625)
-    try await Self.wait { registry.openFeedCount == 0 }
+    await waitUntil("registry.openFeedCount == 0") { registry.openFeedCount == 0 }
     #expect(device.sent.count == frames.count)
   }
 
@@ -232,7 +271,7 @@ struct VirtualFeedRegistryTests {
       token: session.token,
       frames: [VirtualFeedFrame(buttons: [.south], holdMilliseconds: 750)]
     )
-    try await Self.wait { device.sent.count == 1 }
+    await waitUntil("device.sent.count == 1") { device.sent.count == 1 }
     await time.waitForSleepers(2)
 
     // Two idle timeouts pass while the frame is still held.
@@ -241,12 +280,15 @@ struct VirtualFeedRegistryTests {
     #expect(registry.openFeedCount == 1)
     // The hold ends at 0.75; the idle time counts from there, not from the exchange.
     time.advance(by: 0.25)
+    await waitUntil("registry.lastExchangeTimes.contains(0.75)") {
+      registry.lastExchangeTimes.contains(0.75)
+    }
     await time.waitForSleepers(1)
     time.advance(by: 0.1875)
     await time.waitForSleepers(1)
     #expect(registry.openFeedCount == 1)
     time.advance(by: 0.0625)
-    try await Self.wait { registry.openFeedCount == 0 }
+    await waitUntil("registry.openFeedCount == 0") { registry.openFeedCount == 0 }
     #expect(factory.devices.first?.closeCount == 1)
   }
 
@@ -263,7 +305,7 @@ struct VirtualFeedRegistryTests {
       token: session.token,
       frames: [VirtualFeedFrame(buttons: [.south], holdMilliseconds: 250)]
     )
-    try await Self.wait { device.hungCount == 1 }
+    await waitUntil("device.hungCount == 1") { device.hungCount == 1 }
     await time.waitForSleepers(1)
 
     // The frame time is 0.25 and the idle timeout 0.25, so the feed closes at 0.5.
@@ -271,7 +313,7 @@ struct VirtualFeedRegistryTests {
     await time.waitForSleepers(1)
     #expect(registry.openFeedCount == 1)
     time.advance(by: 0.0625)
-    try await Self.wait { registry.openFeedCount == 0 }
+    await waitUntil("registry.openFeedCount == 0") { registry.openFeedCount == 0 }
     #expect(device.closeCount == 1)
     #expect(registry.exchange(token: session.token, frames: []).closed)
   }
@@ -319,7 +361,9 @@ struct VirtualFeedRegistryTests {
       try await registry.open(profile: "Generic")
     }
     #expect(registry.openFeedCount == 0)
-    try await Self.wait { factory.devices.first?.closeCount == 1 }
+    await waitUntil("factory.devices.first?.closeCount == 1") {
+      factory.devices.first?.closeCount == 1
+    }
   }
 
   @Test(.timeLimit(.minutes(1)))
@@ -329,12 +373,14 @@ struct VirtualFeedRegistryTests {
     let registry = factory.registry(activationTimeout: 60)
     defer { factory.release() }
     let opening = Task { try await registry.open(profile: "Generic") }
-    try await Self.wait { !factory.devices.isEmpty }
+    await waitUntil("!factory.devices.isEmpty") { !factory.devices.isEmpty }
 
     opening.cancel()
     await #expect(throws: CancellationError.self) { try await opening.value }
     #expect(registry.openFeedCount == 0)
-    try await Self.wait { factory.devices.first?.closeCount == 1 }
+    await waitUntil("factory.devices.first?.closeCount == 1") {
+      factory.devices.first?.closeCount == 1
+    }
   }
 
   @Test
@@ -358,7 +404,9 @@ struct VirtualFeedRegistryTests {
       try await registry.open(profile: "Generic")
     }
     #expect(registry.openFeedCount == 0)
-    try await Self.wait { factory.devices.first?.closeCount == 1 }
+    await waitUntil("factory.devices.first?.closeCount == 1") {
+      factory.devices.first?.closeCount == 1
+    }
   }
 
   @Test

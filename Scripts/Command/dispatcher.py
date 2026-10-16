@@ -68,7 +68,7 @@ COMMAND_HELP = """Commands:
                               Print an authorized device's USB descriptor facts (debug build)
   diagnose sdl3 [--seconds N] Run SDL3 probe against the virtual device
   diagnose sdl3-gamecontroller [--seconds N]
-                              Run SDL3 through GameController/MFI and test rumble
+                              Run SDL3 through `ojd virtual launch --sdl-gamecontroller-backend` and test rumble
   diagnose sdl3-hidapi-x360 [--seconds N]
                               Run SDL3 through Xbox 360 HIDAPI and test rumble
   diagnose gamecontroller     Run GameController.framework probe
@@ -91,8 +91,6 @@ COMMAND_HELP = """Commands:
   test parsers-macos14        Run focused parser regressions without Swift Testing
   snapshots check             Diff the tree against the equivalence snapshots, per record
   snapshots write             Rewrite the equivalence snapshots from the tree
-  launch sdl-gamecontroller <app>
-                              Launch an SDL app through GameController/MFI rumble route
 
   hooks install|validate      Install or validate repository Git hooks
   setup                       Install required command runner and hooks
@@ -107,6 +105,7 @@ Examples:
 
 Notes:
   - Most commands expect the app to be installed to /Applications.
+  - diagnose sdl3-gamecontroller and diagnose backends fail when it is not installed.
   - DriverKit upgrades can require a reboot; use build install-fast while streaming.
 """
 
@@ -426,12 +425,6 @@ def dispatch(argv: list[str]) -> int:
                 require("repair swiftpm-module-cache", tail, count=0)
                 return repair_swiftpm_cache()
             die(f"Unknown: repair {sub} (expected: stale-dext | swiftpm-module-cache)")
-        case "launch":
-            if not rest or rest[0] != "sdl-gamecontroller":
-                die(
-                    f"Unknown: launch {rest[0] if rest else ''} (expected: sdl-gamecontroller)"
-                )
-            exec_target("Diagnostics/sdl/gamecontroller.sh", rest[1:])
         case "hooks":
             if rest not in (["install"], ["validate"]):
                 die(

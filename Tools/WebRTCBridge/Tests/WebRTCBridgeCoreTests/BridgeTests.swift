@@ -25,7 +25,7 @@ final class BridgeTests: XCTestCase {
     XCTAssertEqual(id, "pad-1")
     XCTAssertEqual(frame["kind"] as? String, "Frame")
     XCTAssertEqual(frame["buttons"] as? [String], ["South"])
-    XCTAssertEqual(frame["dpad"] as? [String], ["up", "right"])
+    XCTAssertEqual(frame["dpad"] as? [String], ["DpadUp", "DpadRight"])
     let axes = try XCTUnwrap(frame["axes"] as? [String: Double])
     XCTAssertEqual(axes["LeftStickY"], 1)
     XCTAssertEqual(axes["RightTrigger"], 1)

@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -110,7 +111,7 @@ extension RemappingMixedOutputTests {
       from: JSONEncoder().encode(profile)
     )
     #expect(decoded == profile)
-    #expect(try RemappingCommandValueParser.destination("gamepad:dpad:up") == .gamepadDpad(.up))
+    #expect(try RemappingCommandValueParser.destination("gamepad:dpad:DpadUp") == .gamepadDpad(.up))
     #expect(!profile.requiresSystemInputAccess)
     try await engine.process(inputs: [.press(.south)], from: device, using: decoded, at: 0)
     try await engine.process(inputs: [.press(.east)], from: device, using: decoded, at: 1)
@@ -140,7 +141,7 @@ extension RemappingMixedOutputTests {
       await engine.emissionBarrier.terminate()
       await virtual.markTerminationCompleted()
     }
-    while !engine.emissionBarrier.isTerminated { await Task.yield() }
+    await waitUntil("the barrier terminates") { engine.emissionBarrier.isTerminated }
     #expect(await !virtual.terminationCompleted)
     await virtual.resumeSend()
     try await sending.value

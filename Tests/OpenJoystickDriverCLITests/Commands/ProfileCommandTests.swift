@@ -122,10 +122,15 @@ struct ProfileCommandTests {
 
   @Test
   func recoverActsOnEachIssueAndNeedsForceWithoutATerminal() async throws {
-    let damaged = ApplicationServiceRemappingProfileIssue(id: UUID(), message: "damaged")
+    let damaged = ApplicationServiceRemappingProfileIssue(
+      id: UUID(),
+      code: .invalidProfile,
+      message: "damaged"
+    )
     let selections = ApplicationServiceRemappingProfileIssue(
       id: UUID(),
       kind: .unusableLibrary,
+      code: .corruptLibrary,
       message: "selections"
     )
     let library = FakeProfileLibrary([], issues: [damaged, selections])
@@ -291,7 +296,8 @@ struct ProfileCommandTests {
     #expect(try behavior.json()["changed"] as? Bool == true)
     #expect(color.code == 0, "\(color.standardError)")
     #expect(try same.json()["changed"] as? Bool == false)
-    #expect(invalid.code == 64)
+    #expect(invalid.code == 1)
+    #expect(invalid.standardError.hasPrefix(CLIFailure.prefix(.invalidProfile)))
     #expect(noParent.code == 64)
     #expect(id.code == 64)
     #expect(removed.code == 0, "\(removed.standardError)")
@@ -353,6 +359,34 @@ struct ProfileCommandTests {
       ProfileEditor.command(environment: ["VISUAL": "code -w", "EDITOR": "nano"]) == "code -w"
     )
     #expect(ProfileEditor.command(environment: [:]) == "vi")
+  }
+
+  /// The same refused profile gets the same code from import, validate, and edit.
+  @Test
+  func everyCommandGivesAnInvalidProfileTheInvalidProfileCode() async throws {
+    let invalid = Data(
+      #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"Profile","name":"Pad"}"#.utf8
+    )
+    let service = try Self.service(FakeProfileLibrary([]))
+    let imported = await RecordStore.$standardInput.withValue(
+      { invalid },
+      operation: { await service.run(["profile", "import", "-"]) }
+    )
+    let validated = await RecordStore.$standardInput.withValue(
+      { invalid },
+      operation: { await CLIRun.run(["profile", "validate", "-"]) }
+    )
+    let edited = ProfileEditor.$open.withValue(
+      { url in try invalid.write(to: url) },
+      operation: { Result { try ProfileEditCommand.edit(FakeProfileLibrary.profile("Pad")) } }
+    )
+
+    let prefix = CLIFailure.prefix(.invalidProfile)
+    #expect(imported.standardError.hasPrefix(prefix), "\(imported.standardError)")
+    #expect(validated.standardError.hasPrefix(prefix), "\(validated.standardError)")
+    #expect(throws: CLIFailure.self) { try edited.get() }
+    if case .failure(let failure as CLIFailure) = edited { #expect(failure.id == .invalidProfile) }
+    #expect(service.arguments(of: .importRemappingProfile).isEmpty)
   }
 
   @Test

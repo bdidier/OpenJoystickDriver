@@ -1,4 +1,6 @@
 import Foundation
+import OpenJoystickDriverTestSupport
+import Testing
 
 @testable import OpenJoystickDriverService
 
@@ -57,9 +59,8 @@ final class ManualVirtualFeedClock: @unchecked Sendable {
   /// Unlike ``waitForSleepers(_:)`` this names the wait, so a test cannot be released by a
   /// different wait that happens to be parked.
   func waitForSleeper(due: TimeInterval) async {
-    while !lock.withLock({ sleepers.contains { $0.due == due } }) {
-      if Task.isCancelled { return }
-      try? await Task.sleep(nanoseconds: 1_000_000)
+    await waitUntil("a wait ends at \(due)") {
+      lock.withLock { sleepers.contains { $0.due == due } }
     }
   }
 

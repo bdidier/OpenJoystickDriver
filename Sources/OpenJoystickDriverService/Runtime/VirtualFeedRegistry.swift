@@ -43,8 +43,9 @@ enum VirtualFeedError: LocalizedError, Equatable {
 /// frames and that queues the host's output commands for the client.
 ///
 /// Each feed shows its frames in order, each for at least its hold and at least
-/// `VirtualFeedExchangeResult.minimumFrameMilliseconds`. A queued frame without a hold gives way
-/// to a newer one with the same buttons and d-pad, so that only axis changes coalesce.
+/// `VirtualFeedExchangeResult.minimumFrameMilliseconds`, counted from when its send returns, so a
+/// slow send does not shorten the frame's time or the next one's. A queued frame without a hold
+/// gives way to a newer one with the same buttons and d-pad, so that only axis changes coalesce.
 ///
 /// A feed closes when its client closes it, when it gets no exchange for `idleTimeout`, or when
 /// the service stops. The idle time counts from the end of the last queued frame's time, so a
@@ -87,6 +88,9 @@ final class VirtualFeedRegistry: @unchecked Sendable {
     /// `clock` time of the last exchange.
     var lastExchange: TimeInterval
     var watchdog: Task<Void, Never>?
+    /// Callers of ``VirtualFeedRegistry/waitUntilPlayed(token:)``; each resumes with whether the
+    /// queued frames played.
+    var playWaiters: [UUID: CheckedContinuation<Bool, Never>] = [:]
 
     init(
       device: any VirtualFeedDevice,
@@ -260,12 +264,45 @@ final class VirtualFeedRegistry: @unchecked Sendable {
     }
   }
 
+  /// Suspends until every frame queued so far has played, the last one for its full time, and
+  /// returns true. Returns false when the feed closes first, when no open feed has the token, or
+  /// when the calling task is cancelled.
+  func waitUntilPlayed(token: UUID) async -> Bool {
+    let waiter = UUID()
+    return await withTaskCancellationHandler {
+      await withCheckedContinuation { (continuation: CheckedContinuation<Bool, Never>) in
+        let answer = lock.withLock { () -> Bool? in
+          guard let session = sessions[token], !Task.isCancelled else { return false }
+          if session.pending.isEmpty, session.player == nil { return true }
+          session.playWaiters[waiter] = continuation
+          return nil
+        }
+        if let answer { continuation.resume(returning: answer) }
+      }
+    } onCancel: {
+      let continuation = lock.withLock {
+        sessions[token]?.playWaiters.removeValue(forKey: waiter)
+      }
+      continuation?.resume(returning: false)
+    }
+  }
+
+  /// Resumes and forgets the waiters of `session`. The caller does not hold `lock`.
+  private func resumePlayWaiters(of session: Session, played: Bool) {
+    let waiters = lock.withLock { () -> [CheckedContinuation<Bool, Never>] in
+      defer { session.playWaiters.removeAll() }
+      return Array(session.playWaiters.values)
+    }
+    for waiter in waiters { waiter.resume(returning: played) }
+  }
+
   /// Removes the feed's virtual controller; false when no open feed has the token.
   @discardableResult
   func close(token: UUID) async -> Bool {
     guard let session = lock.withLock({ sessions.removeValue(forKey: token) }) else {
       return false
     }
+    resumePlayWaiters(of: session, played: false)
     session.watchdog?.cancel()
     session.player?.cancel()
     session.returner?.cancel()
@@ -281,6 +318,7 @@ final class VirtualFeedRegistry: @unchecked Sendable {
       return Array(sessions.values)
     }
     for session in closing {
+      resumePlayWaiters(of: session, played: false)
       session.watchdog?.cancel()
       session.player?.cancel()
       session.returner?.cancel()
@@ -354,18 +392,22 @@ final class VirtualFeedRegistry: @unchecked Sendable {
       && last.buttons == frame.buttons && last.dpad == frame.dpad
   }
 
-  /// Sends the feed's queued frames in order and waits out each one's time; stops when the queue
-  /// is empty. A failed send closes the feed.
+  /// Sends the feed's queued frames in order and waits out each one's time from the moment its send
+  /// returns; stops when the queue is empty. A failed send closes the feed.
   private func play(_ token: UUID) async {
+    var playedUntil: TimeInterval?
+    var finished: Session?
     while !Task.isCancelled {
-      let next = lock.withLock { () -> (Session, VirtualFeedFrame, Int, TimeInterval)? in
+      let next = lock.withLock { () -> (Session, VirtualFeedFrame, Int)? in
         guard let session = sessions[token] else { return nil }
         let now = clock.now()
         guard !session.pending.isEmpty else {
           session.player = nil
           session.frameDeadline = nil
-          // The idle time starts once the last frame's time has played.
-          session.lastExchange = now
+          // The idle time starts at the end of the last frame's time, not at the later moment
+          // this task runs.
+          session.lastExchange = max(session.lastExchange, playedUntil ?? now)
+          finished = session
           return nil
         }
         let frame = session.pending.removeFirst()
@@ -374,12 +416,17 @@ final class VirtualFeedRegistry: @unchecked Sendable {
           VirtualFeedExchangeResult.minimumFrameMilliseconds
         )
         session.frameDeadline = now + TimeInterval(milliseconds) / 1000 + idleTimeout
-        return (session, frame, milliseconds, now)
+        return (session, frame, milliseconds)
       }
-      guard let (session, frame, milliseconds, startedAt) = next else { return }
+      guard let (session, frame, milliseconds) = next else {
+        if let finished { resumePlayWaiters(of: finished, played: true) }
+        return
+      }
       do {
         try await session.produce(.gamepad(frame.gamepadState, for: session.identifier))
-        try await clock.sleep(startedAt + TimeInterval(milliseconds) / 1000)
+        let end = clock.now() + TimeInterval(milliseconds) / 1000
+        try await clock.sleep(end)
+        playedUntil = end
       } catch is CancellationError {
         return
       } catch {

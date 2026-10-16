@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -155,7 +156,7 @@ private final class ManualDeadlineTimer: @unchecked Sendable {
   }
 
   func waitUntilScheduled() async {
-    while lock.withLock({ entries.isEmpty }) { await Task.yield() }
+    await waitUntil("a delay is scheduled") { lock.withLock { !entries.isEmpty } }
   }
 
   func scheduledDelays() -> [UInt64] { lock.withLock { entries.map(\.delay) } }

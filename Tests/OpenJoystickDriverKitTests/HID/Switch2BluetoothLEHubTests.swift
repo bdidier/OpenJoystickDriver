@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -131,7 +132,9 @@ struct Switch2BluetoothLEHubTests {
     // A reply that arrives while the read waits resumes it.
     _ = try session.write(endpoint: 0x02, data: [0x04], timeout: 500)
     let waiting = Task { try await session.read(endpoint: 0x82, length: 64, timeout: 2_000) }
-    try await Task.sleep(nanoseconds: 20_000_000)
+    await waitUntil("the read is waiting") {
+      hub.hasWaitingReadForTesting(peripheralID: Self.peripheral)
+    }
     hub.receivedReply(peripheralID: Self.peripheral, bytes: [1, 2, 3])
     #expect(try await waiting.value == [1, 2, 3])
 
@@ -157,7 +160,9 @@ struct Switch2BluetoothLEHubTests {
     let hub = Self.connectedHub().0
     let session = Switch2BluetoothLECommandSession(hub: hub, peripheralID: Self.peripheral)
     let waiting = Task { try await session.read(endpoint: 0x82, length: 64, timeout: 5_000) }
-    try await Task.sleep(nanoseconds: 20_000_000)
+    await waitUntil("the read is waiting") {
+      hub.hasWaitingReadForTesting(peripheralID: Self.peripheral)
+    }
     hub.linkDisconnected(peripheralID: Self.peripheral)
     await #expect(throws: USBTransportError.disconnected) { try await waiting.value }
   }
@@ -252,7 +257,7 @@ struct Switch2BluetoothLEHubTests {
       address: address
     )
     #expect(Array(await manager.pipelines.keys) == [identifier])
-    #expect(await waitUntil { writer.commands.count >= 9 })
+    await waitUntil("writer.commands.count >= 9") { writer.commands.count >= 9 }
     #expect(writer.commands.allSatisfy { $0.count > 2 && $0[2] == 0x01 })
 
     var input = [UInt8](repeating: 0, count: 63)
@@ -265,16 +270,9 @@ struct Switch2BluetoothLEHubTests {
         data: Data([0x05] + input)
       )
     )
-    #expect(await waitUntil { recorder.pressed(from: identifier).contains(.south) })
-    await manager.stop()
-  }
-
-  private func waitUntil(condition: @escaping @Sendable () async -> Bool) async -> Bool {
-    let deadline = ContinuousClock.now.advanced(by: .seconds(10))
-    while ContinuousClock.now < deadline {
-      if await condition() { return true }
-      try? await Task.sleep(for: .milliseconds(1))
+    await waitUntil("recorder.pressed(from: identifier).contains(.south)") {
+      recorder.pressed(from: identifier).contains(.south)
     }
-    return await condition()
+    await manager.stop()
   }
 }

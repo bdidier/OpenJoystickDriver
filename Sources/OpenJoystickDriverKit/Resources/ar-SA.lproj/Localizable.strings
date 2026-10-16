@@ -959,7 +959,7 @@
 "cli.controller.light.examples" = "أمثلة:\n  # ضبط شريط الإضاءة على اللون البرتقالي\n  ojd controller light 054C:09CC --color FF8000\n  # ضبط اللون مع سطوع منخفض\n  ojd controller light 054C:09CC --color 0000FF --brightness 40";
 "cli.profile.create.examples" = "أمثلة:\n  # إنشاء ملف تعريف لطراز وحدة تحكم\n  ojd profile create Racing --controller 045E:028E\n  # تطبيقه فقط أثناء ظهور Safari في المقدمة\n  ojd profile create Browsing --controller 045E:028E --app com.apple.Safari";
 "cli.profile.set.examples" = "أمثلة:\n  # إعادة تسمية ملف تعريف\n  ojd profile set Racing name Rally\n  # ضبط المنطقة الميتة الداخلية لأول تعيين للعصا\n  ojd profile set Racing stickMappings.0.tuning.innerDeadzone 0.2";
-"cli.binding.set.examples" = "أمثلة:\n  # الضغط مطولًا على Space أثناء الضغط على الزر الجنوبي\n  ojd binding set Racing button:South key:space\n  # تبديل J عند كل ضغطة\n  ojd binding set Racing button:West key:j --behavior toggle\n  # تكرار J عشر مرات في الثانية أثناء الضغط\n  ojd binding set Racing button:West key:j --turbo-rate 10 --turbo-duty 0.5";
+"cli.binding.set.examples" = "أمثلة:\n  # الضغط مطولًا على Space أثناء الضغط على الزر الجنوبي\n  ojd binding set Racing button:South key:Space\n  # تبديل J عند كل ضغطة\n  ojd binding set Racing button:West key:KeyJ --behavior toggle\n  # تكرار J عشر مرات في الثانية أثناء الضغط\n  ojd binding set Racing button:West key:KeyJ --turbo-rate 10 --turbo-duty 0.5";
 "cli.record.install.examples" = "أمثلة:\n  # تثبيت ملف سجل\n  ojd record install 045E-028E.json\n  # قراءة السجل من الإدخال القياسي\n  ojd record install - < 045E-028E.json";
 "cli.access.grant.examples" = "أمثلة:\n  # السماح لبرنامج باستخدام الخدمة\n  ojd access grant /Applications/Example.app\n  # إنشاء رمز مميز لصفحات تُقدَّم من أصل واحد\n  ojd access grant --token overlay --origin http://127.0.0.1:8080";
 "cli.service.abstract" = "ابدأ خدمة OpenJoystickDriver أو أوقفها، أو انتظر حتى تقبل الطلبات.";
@@ -1355,6 +1355,7 @@
 "cli.virtual.launch.error.not_executable" = "لا يوجد ملف تنفيذي في هذا المسار";
 "cli.virtual.launch.error.not_found" = "لا يوجد برنامج بهذا الاسم في PATH";
 "cli.virtual.launch.error.output" = "الخياران --json و--plain لا ينطبقان، لأن البرنامج يكتب إلى المخرج القياسي.";
+"cli.virtual.launch.sdl_gamecontroller_backend" = "يضبط أيضًا تلميحات SDL التي تجعل SDL تقرأ وحدات التحكم عبر إطار عمل GameController من Apple فقط: SDL_JOYSTICK_MFI=1, SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1, SDL_JOYSTICK_IOKIT=0, SDL_JOYSTICK_HIDAPI=0. تسري على البرنامج وحده وتستبدل القيم المضبوطة مسبقًا.";
 "cli.virtual.reset.abstract" = "أعد طراز وحدة تحكم، أو كل الطُرز، إلى الاختيار التلقائي لوحدة التحكم الافتراضية.";
 "cli.virtual.reset.all" = "أعد ضبط كل طُرز وحدات التحكم.";
 "cli.virtual.reset.all.done" = "يختار كل طراز وحدة تحكم الآن وحدة التحكم الافتراضية تلقائيًا.";
@@ -1445,7 +1446,7 @@
 "cli.binding.abstract" = "اعرض تعيينات ملف تعريف إعادة التعيين واضبطها وامسحها.";
 "cli.binding.actions_invalid" = "--actions-json ليس قائمة إجراءات صالحة: %@";
 "cli.binding.actions_too_large" = "--actions-json كبير جدًا.";
-"cli.binding.alternate_format" = "%@ يقبل MS:TARGET، مثل 500:key:b.";
+"cli.binding.alternate_format" = "%@ يقبل MS:TARGET، مثل 500:key:KeyB.";
 "cli.binding.axis_options_source" = "تحتاج --deadzone و--gain و--invert و--response-curve و--digital-threshold إلى مصدر محور.";
 "cli.binding.clear.abstract" = "أزل تعيينات المصادر المحددة، أو كل التعيينات.";
 "cli.binding.clear.all" = "أزل كل التعيينات والتركيبات والتسلسلات والطبقات.";
@@ -1457,17 +1458,17 @@
 "cli.binding.clear.missing" = "لا يوجد في «%@» تعيين لـ %@. لم يتغير شيء.";
 "cli.binding.clear.sources" = "المصادر التي تُزال تعييناتها.";
 "cli.binding.clear.usage" = "حدّد مصدرًا واحدًا أو أكثر، أو --all.";
-"cli.binding.discussion" = "يرسل التعيين TARGET عند استخدام SOURCE من وحدة التحكم.\n\nSOURCE: button:NAME أو dpad:DIRECTION أو axis:NAME[:negative|positive] أو trigger:NAME:STAGE أو motion:lean:DIRECTION أو touch:SURFACE:contact أو touch:SURFACE:grid:COLUMNS:ROWS:COLUMN:ROW أو touch:SURFACE:swipe:DIRECTION:DISTANCE.\n\nTARGET: key:KEY[:mods=command,control,option,shift] أو mouse:BUTTON أو move:x|y أو scroll:x|y أو gamepad:button:NAME أو gamepad:dpad:DIRECTION أو gamepad:axis:NAME أو physical:... للاهتزاز والإضاءة والزنادات التكيفية.\n\nيطبع «ojd profile show» التعيينات بهذه الصيغ. عدّل التركيبات والتسلسلات والطبقات باستخدام «ojd profile edit».";
+"cli.binding.discussion" = "يرسل التعيين TARGET عند استخدام SOURCE من وحدة التحكم.\n\nSOURCE: button:NAME أو dpad:DIRECTION أو axis:NAME[:Negative|Positive] أو trigger:NAME:STAGE أو motion:lean:DIRECTION أو touch:SURFACE:contact أو touch:SURFACE:grid:COLUMNS:ROWS:COLUMN:ROW أو touch:SURFACE:swipe:DIRECTION:DISTANCE.\n\nTARGET: key:KEY[:mods=Meta,Control,Alt,Shift] أو mouse:BUTTON أو move:x|y أو scroll:x|y أو gamepad:button:NAME أو gamepad:dpad:DIRECTION أو gamepad:axis:NAME أو physical:... للاهتزاز والإضاءة والزنادات التكيفية.\n\nيطبع «ojd profile show» التعيينات بهذه الصيغ. عدّل التركيبات والتسلسلات والطبقات باستخدام «ojd profile edit».";
 "cli.binding.list.abstract" = "اعرض تعيينات ملف تعريف.";
 "cli.binding.list.empty" = "لا توجد تعيينات في «%@». أضف تعيينًا باستخدام «ojd binding set».";
 "cli.binding.option.actions_json" = "إجراءات إضافية كمصفوفة JSON، بالصيغة التي يكتبها «ojd profile export».";
 "cli.binding.option.behavior" = "متى يُطلَق الهدف. الافتراضي: سلوك التعيين الحالي، أو hold.";
 "cli.binding.option.deadzone" = "مصادر المحاور: الجزء المُهمَل من مدى الحركة، من 0 إلى 0.95. الافتراضي: 0.1.";
 "cli.binding.option.digital_threshold" = "مصادر المحاور: مدى الحركة الذي يُعدّ ضغطة لأهداف الأزرار. الافتراضي: 0.5.";
-"cli.binding.option.double_tap" = "أرسل هدفًا آخر عند الضغط على المصدر مرتين خلال هذه المدة، مثل 300:key:c.";
+"cli.binding.option.double_tap" = "أرسل هدفًا آخر عند الضغط على المصدر مرتين خلال هذه المدة، مثل 300:key:KeyC.";
 "cli.binding.option.gain" = "مصادر المحاور: مقياس الإخراج، من 0.1 إلى 10. الافتراضي: 1.";
 "cli.binding.option.invert" = "مصادر المحاور: اعكس الاتجاه.";
-"cli.binding.option.long_hold" = "أرسل هدفًا آخر عند الإبقاء على الضغط على المصدر هذه المدة، مثل 500:key:b.";
+"cli.binding.option.long_hold" = "أرسل هدفًا آخر عند الإبقاء على الضغط على المصدر هذه المدة، مثل 500:key:KeyB.";
 "cli.binding.option.pulse_ms" = "المدة التي تُبقي فيها النبضة الهدف فعّالًا، من 1 إلى 5000 مللي ثانية. الافتراضي: 100.";
 "cli.binding.option.response_curve" = "مصادر المحاور: كيف ينمو الإخراج مع مدى الحركة. الافتراضي: linear.";
 "cli.binding.option.turbo_duty" = "نسبة كل دورة توربو التي يبقى فيها الهدف مضغوطًا، أكبر من 0 وأقل من 1.";
@@ -1475,7 +1476,7 @@
 "cli.binding.set.abstract" = "عيّن لمصدر من وحدة التحكم هدفًا، مع استبدال التعيين الحالي للمصدر.";
 "cli.binding.set.done" = "«%@» معيَّن الآن إلى %@.";
 "cli.binding.set.source" = "عنصر التحكم في وحدة التحكم، مثل button:South.";
-"cli.binding.set.target" = "ما يرسله، مثل key:space.";
+"cli.binding.set.target" = "ما يرسله، مثل key:Space.";
 "cli.binding.source_invalid" = "«%@» ليس مصدرًا. يعرض «ojd binding set --help» صيغ المصادر.";
 "cli.binding.target_invalid" = "«%@» ليس هدفًا. يعرض «ojd binding set --help» صيغ الأهداف.";
 "cli.binding.turbo_pair" = "يجب إعطاء --turbo-rate و--turbo-duty معًا.";

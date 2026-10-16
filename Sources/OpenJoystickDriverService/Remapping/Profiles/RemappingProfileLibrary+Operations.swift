@@ -18,14 +18,20 @@ extension RemappingProfileLibrary {
         )
       }.sorted(by: Self.activeProfileOrder),
       issues: profileIssues.keys.sorted { $0.uuidString < $1.uuidString }.map { issueID in
-        let kind: ApplicationServiceRemappingProfileIssue.Kind =
-          switch profileIssues[issueID] {
-          case .damagedProfile: .damagedProfile
-          case .unusableLibrary, nil: .unusableLibrary
-          }
+        let kind: ApplicationServiceRemappingProfileIssue.Kind
+        let code: ErrorCode
+        switch profileIssues[issueID] {
+        case .damagedProfile(_, _, let damageCode):
+          kind = .damagedProfile
+          code = damageCode
+        case .unusableLibrary, nil:
+          kind = .unusableLibrary
+          code = .corruptLibrary
+        }
         return ApplicationServiceRemappingProfileIssue(
           id: issueID,
           kind: kind,
+          code: code,
           message: kind == .damagedProfile
             ? "This saved profile could not be read and can be removed."
             : "The list of active profiles could not be read and must be reset."

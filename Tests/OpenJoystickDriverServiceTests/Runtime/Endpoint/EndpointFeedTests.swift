@@ -8,7 +8,7 @@ import Testing
 
 @Suite(.serialized)
 struct EndpointFeedTests {
-  private static let tool = EndpointFixture.tool
+  static let tool = EndpointFixture.tool
 
   @Test
   func aFrameReachesTheVirtualGamepad() async throws {
@@ -21,7 +21,9 @@ struct EndpointFeedTests {
 
       let device = try #require(factory.devices.first)
       #expect(device.profile == .generic)
-      try await Self.wait { device.sent.contains { $0.buttons.contains(.south) } }
+      await waitUntil("device.sent.contains { $0.buttons.contains(.south) }") {
+        device.sent.contains { $0.buttons.contains(.south) }
+      }
       let state = try #require(device.sent.last { $0.buttons.contains(.south) })
       #expect(state.axes[.leftStickY] == 0.5)
     }
@@ -58,7 +60,7 @@ struct EndpointFeedTests {
       client = nil
       _ = client
 
-      try await Self.wait { device.closeCount == 1 }
+      await waitUntil("device.closeCount == 1") { device.closeCount == 1 }
       #expect(feeds.openFeedCount == 0)
     }
   }
@@ -76,11 +78,11 @@ struct EndpointFeedTests {
           clientLine("Frame", #","buttons":["\#(button)"],"holdMilliseconds":60000"#)
         )
       }
-      try await Self.wait { !device.sent.isEmpty }
+      await waitUntil("!device.sent.isEmpty") { !device.sent.isEmpty }
       client = nil
       _ = client
 
-      try await Self.wait { device.closeCount == 1 }
+      await waitUntil("device.closeCount == 1") { device.closeCount == 1 }
       #expect(feeds.openFeedCount == 0)
     }
   }
@@ -94,11 +96,13 @@ struct EndpointFeedTests {
     try await withEndpointServer(feeds: feeds) { server, _ in
       let client = try await welcomed(server)
       await client.send(clientLine("FeedRequest", #","as":"Generic""#))
-      try await Self.wait { !factory.devices.isEmpty }
+      await waitUntil("!factory.devices.isEmpty") { !factory.devices.isEmpty }
       #expect(try server.revoke(id: Self.tool.accessID, scopes: [.control]).closedConnections == 1)
 
       #expect(try await client.readObject()["code"] as? String == "E1005")
-      try await Self.wait { factory.devices.first?.closeCount == 1 }
+      await waitUntil("factory.devices.first?.closeCount == 1") {
+        factory.devices.first?.closeCount == 1
+      }
       #expect(feeds.openFeedCount == 0)
     }
   }
@@ -112,11 +116,13 @@ struct EndpointFeedTests {
     try await withEndpointServer(feeds: feeds) { server, _ in
       var client: EndpointTestClient? = try await welcomed(server)
       await client?.send(clientLine("FeedRequest", #","as":"Generic""#))
-      try await Self.wait { !factory.devices.isEmpty }
+      await waitUntil("!factory.devices.isEmpty") { !factory.devices.isEmpty }
       client = nil
       _ = client
 
-      try await Self.wait { factory.devices.first?.closeCount == 1 }
+      await waitUntil("factory.devices.first?.closeCount == 1") {
+        factory.devices.first?.closeCount == 1
+      }
       #expect(feeds.openFeedCount == 0)
     }
   }
@@ -135,10 +141,14 @@ struct EndpointFeedTests {
         server.feed(connection, persona: .generic)
         finished.signal()
       }
-      try await Self.wait { factory.devices.first?.activated != nil }
+      await waitUntil("factory.devices.first?.activated != nil") {
+        factory.devices.first?.activated != nil
+      }
       connection.close(EndpointError(code: .revoked, message: "Revoked."))
 
-      try await Self.wait { factory.devices.first?.closeCount == 1 }
+      await waitUntil("factory.devices.first?.closeCount == 1") {
+        factory.devices.first?.closeCount == 1
+      }
       #expect(feeds.openFeedCount == 0)
       transport.release()
       #expect(await offPool { finished.wait(timeout: .now() + 5) } == .success)
@@ -155,7 +165,9 @@ struct EndpointFeedTests {
 
       #expect(try await client.readObject()["code"] as? String == "E1005")
       #expect(await client.readLine() == nil)
-      try await Self.wait { factory.devices.first?.closeCount == 1 }
+      await waitUntil("factory.devices.first?.closeCount == 1") {
+        factory.devices.first?.closeCount == 1
+      }
       #expect(feeds.openFeedCount == 0)
     }
   }
@@ -169,16 +181,21 @@ struct EndpointFeedTests {
       let client = try await feeding(server)
       await client.send(clientLine("Frame", #","buttons":["East"]"#))
       let device = try #require(factory.devices.first)
-      try await Self.wait { device.sent.contains { $0.buttons.contains(.east) } }
+      await waitUntil("device.sent.contains { $0.buttons.contains(.east) }") {
+        device.sent.contains { $0.buttons.contains(.east) }
+      }
       await time.waitForSleepers(2)
 
       // The frame's time passes first; the idle timeout counts from its end.
       time.advance(by: 0.05)
-      try await Self.wait { feeds.lastExchangeTimes.contains(time.now) }
+      let frameEnd = Double(VirtualFeedExchangeResult.minimumFrameMilliseconds) / 1000
+      await waitUntil("feeds.lastExchangeTimes.contains(frameEnd)") {
+        feeds.lastExchangeTimes.contains(frameEnd)
+      }
       await time.waitForSleepers(1)
       time.advance(by: 0.3)
       #expect(try await client.readObject()["code"] as? String == "E1008")
-      try await Self.wait { device.closeCount == 1 }
+      await waitUntil("device.closeCount == 1") { device.closeCount == 1 }
       #expect(feeds.openFeedCount == 0)
     }
   }
@@ -192,11 +209,12 @@ struct EndpointFeedTests {
       let client = try await feeding(server)
       let device = try #require(factory.devices.first)
       // Eight frames 0.2 seconds apart span 1.6 seconds, more than three idle timeouts.
-      for _ in 0..<8 {
+      for index in 0..<8 {
         time.advance(by: 0.2)
         await client.send(clientLine("Frame", #","buttons":["East"]"#))
-        // The line has reached the registry once the feed's last exchange is the current time.
-        try await Self.wait { feeds.lastExchangeTimes.contains(time.now) }
+        // The idle deadline moves only after the device has taken the frame, so the clock
+        // advances only once the previous frame is sent.
+        await waitUntil("device.sent.count == \(index + 1)") { device.sent.count == index + 1 }
       }
 
       #expect(feeds.openFeedCount == 1)
@@ -213,17 +231,24 @@ struct EndpointFeedTests {
       let client = try await feeding(server)
       await client.send(clientLine("Frame", #","buttons":["East"]"#))
       let device = try #require(factory.devices.first)
-      try await Self.wait { device.sent.contains { $0.buttons.contains(.east) } }
+      await waitUntil("device.sent.contains { $0.buttons.contains(.east) }") {
+        device.sent.contains { $0.buttons.contains(.east) }
+      }
       await time.waitForSleepers(2)
       // Let the frame's time pass, so the feed is idle before the first KeepAlive.
       time.advance(by: 0.05)
-      try await Self.wait { feeds.lastExchangeTimes.contains(time.now) }
+      let frameEnd = Double(VirtualFeedExchangeResult.minimumFrameMilliseconds) / 1000
+      await waitUntil("feeds.lastExchangeTimes.contains(frameEnd)") {
+        feeds.lastExchangeTimes.contains(frameEnd)
+      }
       let sentBefore = device.sent.count
       for _ in 0..<8 {
         time.advance(by: 0.2)
         await client.send(clientLine("KeepAlive"))
         // The line has reached the registry once the feed's last exchange is the current time.
-        try await Self.wait { feeds.lastExchangeTimes.contains(time.now) }
+        await waitUntil("feeds.lastExchangeTimes.contains(time.now)") {
+          feeds.lastExchangeTimes.contains(time.now)
+        }
       }
 
       #expect(feeds.openFeedCount == 1)
@@ -243,11 +268,15 @@ struct EndpointFeedTests {
       // Move off time 0 so the KeepAlive's exchange is visible as the current time.
       time.advance(by: 0.0625)
       await client.send(clientLine("KeepAlive"))
-      try await Self.wait { feeds.lastExchangeTimes.contains(time.now) }
+      await waitUntil("feeds.lastExchangeTimes.contains(time.now)") {
+        feeds.lastExchangeTimes.contains(time.now)
+      }
 
       time.advance(by: 0.5)
       #expect(try await client.readObject()["code"] as? String == "E1008")
-      try await Self.wait { factory.devices.first?.closeCount == 1 }
+      await waitUntil("factory.devices.first?.closeCount == 1") {
+        factory.devices.first?.closeCount == 1
+      }
       #expect(feeds.openFeedCount == 0)
     }
   }
@@ -262,7 +291,9 @@ struct EndpointFeedTests {
       let error = try #require(await client.readLine())
       #expect(try JSONSchemaFiles.issues(in: error, against: "endpoint.schema.json").isEmpty)
       #expect(try client.object(error)["code"] as? String == "E1003")
-      try await Self.wait { factory.devices.first?.closeCount == 1 }
+      await waitUntil("factory.devices.first?.closeCount == 1") {
+        factory.devices.first?.closeCount == 1
+      }
     }
   }
 
@@ -304,7 +335,8 @@ struct EndpointFeedTests {
     (clientLine("Frame", #","axes":{"throttle":1}"#), "E1003"),
     (clientLine("Frame", #","holdMilliseconds":60001"#), "E1003"),
     (clientLine("Frame", #","buttons":["South","South"]"#), "E1003"),
-    (clientLine("Frame", #","dpad":["up","up"]"#), "E1003"),
+    (clientLine("Frame", #","dpad":["DpadUp","DpadUp"]"#), "E1003"),
+    (clientLine("Frame", #","dpad":["notAName"]"#), "E1003"),
     (clientLine("Frame", #","buttons":["South"],"turbo":true"#), "E1003"),
     (#"{"buttons":["South"]}"#, "E1011"),
     (#"{"apiVersion":"openjoystickdriver.io/v2","kind":"Frame","buttons":["South"]}"#, "E1009"),
@@ -332,7 +364,9 @@ struct EndpointFeedTests {
         details?["supportedAPIVersions"] as? [String]
           == (code == "E1003" ? nil : [OpenJoystickDriverAPI.version])
       )
-      try await Self.wait { factory.devices.first?.closeCount == 1 }
+      await waitUntil("factory.devices.first?.closeCount == 1") {
+        factory.devices.first?.closeCount == 1
+      }
       #expect(feeds.openFeedCount == 0)
     }
   }
@@ -381,17 +415,19 @@ struct EndpointFeedTests {
       let feeding = try #require(await client.readLine())
       #expect(try JSONSchemaFiles.issues(in: feeding, against: "endpoint.schema.json").isEmpty)
       #expect(try client.object(feeding)["as"] as? String == "SdlCompatible")
-      await client.send(clientLine("Frame", #","dpad":["up"]"#))
+      await client.send(clientLine("Frame", #","dpad":["DpadUp"]"#))
 
       let device = try #require(factory.devices.first)
-      try await Self.wait { device.sent.contains { $0.dpad.contains(.up) } }
+      await waitUntil("device.sent.contains { $0.dpad.contains(.up) }") {
+        device.sent.contains { $0.dpad.contains(.up) }
+      }
     }
   }
 
   // MARK: - Helpers
 
   /// A signed client granted `control`, welcomed with it.
-  private func welcomed(_ server: EndpointServer) async throws -> EndpointTestClient {
+  func welcomed(_ server: EndpointServer) async throws -> EndpointTestClient {
     try server.setEnabled(true)
     try server.grant(Self.tool, path: "/Tool", scopes: [.control])
     let client = try await EndpointTestClient(path: server.socketPath)
@@ -401,7 +437,7 @@ struct EndpointFeedTests {
   }
 
   /// A welcomed client that started a `Generic` feed and read `feeding`.
-  private func feeding(_ server: EndpointServer) async throws -> EndpointTestClient {
+  func feeding(_ server: EndpointServer) async throws -> EndpointTestClient {
     let client = try await welcomed(server)
     await client.send(clientLine("FeedRequest", #","as":"Generic""#))
     let line = try #require(await client.readLine())
@@ -413,14 +449,6 @@ struct EndpointFeedTests {
     return client
   }
 
-  /// Waits up to 5 seconds until `condition` holds, without holding a thread.
-  private static func wait(until condition: () -> Bool) async throws {
-    let deadline = Date() + 5
-    while !condition() {
-      guard Date() < deadline else { throw POSIXError(.ETIMEDOUT) }
-      try await Task.sleep(nanoseconds: 2_000_000)
-    }
-  }
 }
 
 /// A transport whose reads and writes block until `release`; then reads end and writes fail.

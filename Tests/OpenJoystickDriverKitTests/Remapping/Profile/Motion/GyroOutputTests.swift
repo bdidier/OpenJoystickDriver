@@ -65,7 +65,7 @@ struct GyroOutputTests {
     #expect(throws: DecodingError.self) {
       try JSONDecoder().decode(
         RemappingGyroOutput.self,
-        from: Data(#"{"mode":"mouse","virtualMotion":true}"#.utf8)
+        from: Data(#"{"mode":"Mouse","virtualMotion":true}"#.utf8)
       )
     }
   }
@@ -85,7 +85,7 @@ struct GyroOutputTests {
     #expect(throws: RemappingGyroOutputError.invalidField("full_stick_degrees_per_second")) {
       try JSONDecoder().decode(
         RemappingGyroOutput.self,
-        from: Data(#"{"mode":"right_stick","fullStickDegreesPerSecond":0}"#.utf8)
+        from: Data(#"{"mode":"RightStick","fullStickDegreesPerSecond":0}"#.utf8)
       )
     }
   }

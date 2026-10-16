@@ -42,6 +42,8 @@ class EndpointSchemaTests(unittest.TestCase):
             line("FeedSession", **{"as": "SdlCompatible"}),
             line("Frame", buttons=["South"], axes={"LeftStickX": 0.5}),
             line("KeepAlive"),
+            line("Drain"),
+            line("Drained"),
             failure("E1001"),
             failure("E1003"),
             failure("E1009", **DETAILS),
@@ -53,8 +55,14 @@ class EndpointSchemaTests(unittest.TestCase):
 
     def test_a_keep_alive_has_no_member_besides_the_header(self) -> None:
         self.assertTrue(self.valid(line("KeepAlive")))
-        self.assertFalse(self.valid(line("KeepAlive", buttons=["south"])))
+        self.assertFalse(self.valid(line("KeepAlive", buttons=["notAName"])))
         self.assertFalse(self.valid({"kind": "KeepAlive"}))
+
+    def test_a_drain_and_a_drained_have_no_member_besides_the_header(self) -> None:
+        for kind in ("Drain", "Drained"):
+            self.assertTrue(self.valid(line(kind)), kind)
+            self.assertFalse(self.valid(line(kind, buttons=["South"])), kind)
+            self.assertFalse(self.valid({"kind": kind}), kind)
 
     def test_the_header_codes_need_the_supported_versions_and_no_other_code_has_them(
         self,

@@ -205,7 +205,7 @@ extension GIPDriverTests {
     var payload = Data(repeating: 0, count: 14)
     // buttons0: A(16) + B(32) = 48
     payload[0] = 48
-    // buttons1: LB(16) + dpad_up(1) = 17
+    // buttons1: LB(16) + DpadUp(1) = 17
     payload[1] = 17
     let packet = ProtocolPacketFixtures.GIP.inputPacket(payload: payload)
     let events = try parser.parseReport(packet)

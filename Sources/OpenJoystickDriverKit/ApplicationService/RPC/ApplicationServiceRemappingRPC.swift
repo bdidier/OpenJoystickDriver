@@ -43,20 +43,29 @@ public struct ApplicationServiceRemappingProfileIssue: Codable, Equatable, Senda
 
   public let id: UUID
   public let kind: Kind
+  /// Why the profile file or the selections could not be used. A profile file has
+  /// ``ErrorCode/unsupportedAPIVersion`` for an unsupported `apiVersion`,
+  /// ``ErrorCode/invalidProfile`` when it does not decode or validate,
+  /// ``ErrorCode/duplicateName`` when another profile has its name, and
+  /// ``ErrorCode/corruptLibrary`` when its file name is not that of its ID. Unusable selections
+  /// have ``ErrorCode/corruptLibrary``.
+  public let code: ErrorCode
   public let message: String
 
-  public init(id: UUID, kind: Kind = .damagedProfile, message: String) {
+  public init(id: UUID, kind: Kind = .damagedProfile, code: ErrorCode, message: String) {
     self.id = id
     self.kind = kind
+    self.code = code
     self.message = message
   }
 
-  private enum CodingKeys: String, CodingKey { case id, kind, message }
+  private enum CodingKeys: String, CodingKey { case id, kind, code, message }
 
   public init(from decoder: any Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
     id = try container.decode(UUID.self, forKey: .id)
-    kind = try container.decodeIfPresent(Kind.self, forKey: .kind) ?? .damagedProfile
+    kind = try container.decode(Kind.self, forKey: .kind)
+    code = try container.decode(ErrorCode.self, forKey: .code)
     message = try container.decode(String.self, forKey: .message)
   }
 }
@@ -65,6 +74,13 @@ public struct ApplicationServiceRemappingProfileArguments: Codable, Sendable {
   public let profile: RemappingProfile
 
   public init(profile: RemappingProfile) { self.profile = profile }
+
+  private enum CodingKeys: String, CodingKey { case profile }
+
+  public init(from decoder: any Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    profile = try container.decodeRequestProfile(forKey: .profile)
+  }
 }
 
 /// Compare-and-swap arguments for an ordinary profile update.
@@ -80,6 +96,33 @@ public struct ApplicationServiceRemappingProfileUpdateArguments: Codable, Sendab
   private enum CodingKeys: String, CodingKey {
     case profile
     case expectedCurrent
+  }
+
+  public init(from decoder: any Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    profile = try container.decodeRequestProfile(forKey: .profile)
+    expectedCurrent = try container.decodeRequestProfile(forKey: .expectedCurrent)
+  }
+}
+
+extension KeyedDecodingContainer {
+  /// Decodes a profile of a remapping request. A profile with a missing or unsupported
+  /// `apiVersion` fails with ``ApplicationServiceRemappingRPCError/Code/unsupportedAPIVersion``;
+  /// any other profile that does not decode fails with
+  /// ``ApplicationServiceRemappingRPCError/Code/invalidProfile``.
+  func decodeRequestProfile(forKey key: Key) throws -> RemappingProfile {
+    do { return try decode(RemappingProfile.self, forKey: key) } catch {
+      if RemappingProfileFileStore.problemCode(error) == .unsupportedAPIVersion {
+        throw ApplicationServiceRemappingRPCError(
+          code: .unsupportedAPIVersion,
+          message: "The remapping profile has a missing or unsupported apiVersion."
+        )
+      }
+      throw ApplicationServiceRemappingRPCError(
+        code: .invalidProfile,
+        message: "The remapping profile is not valid."
+      )
+    }
   }
 }
 
@@ -396,6 +439,7 @@ public struct ApplicationServiceRemappingRPCError: Error, Codable, Equatable, Lo
     case motionProfileInactive = "motion_profile_inactive"
     case motionSessionChanged = "motion_session_changed"
     case packageProfileReadOnly = "package_profile_read_only"
+    case unsupportedAPIVersion = "unsupported_api_version"
 
     /// The stable error code of this failure, listed in `Resources/ErrorCodes.json`.
     public var errorCode: ErrorCode {
@@ -408,6 +452,7 @@ public struct ApplicationServiceRemappingRPCError: Error, Codable, Equatable, Lo
       case .duplicateName: .duplicateName
       case .invalidArguments: .invalidArguments
       case .invalidProfile: .invalidProfile
+      case .unsupportedAPIVersion: .unsupportedAPIVersion
       case .librarySizeExceeded: .librarySizeExceeded
       case .profileAlreadyExists: .profileAlreadyExists
       case .profileUpdateConflict: .profileUpdateConflict

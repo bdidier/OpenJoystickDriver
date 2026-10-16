@@ -959,7 +959,7 @@
 "cli.controller.light.examples" = "उदाहरण:\n  # लाइटबार को नारंगी करें\n  ojd controller light 054C:09CC --color FF8000\n  # रंग और कम ब्राइटनेस सेट करें\n  ojd controller light 054C:09CC --color 0000FF --brightness 40";
 "cli.profile.create.examples" = "उदाहरण:\n  # किसी कंट्रोलर मॉडल के लिए प्रोफ़ाइल बनाएँ\n  ojd profile create Racing --controller 045E:028E\n  # इसे केवल तब लागू करें जब Safari सबसे आगे हो\n  ojd profile create Browsing --controller 045E:028E --app com.apple.Safari";
 "cli.profile.set.examples" = "उदाहरण:\n  # प्रोफ़ाइल का नाम बदलें\n  ojd profile set Racing name Rally\n  # पहले स्टिक मैपिंग का आंतरिक डेडज़ोन सेट करें\n  ojd profile set Racing stickMappings.0.tuning.innerDeadzone 0.2";
-"cli.binding.set.examples" = "उदाहरण:\n  # साउथ बटन दबाए रखने पर Space दबाए रखें\n  ojd binding set Racing button:South key:space\n  # हर प्रेस पर J टॉगल करें\n  ojd binding set Racing button:West key:j --behavior toggle\n  # दबाए रखने पर J को प्रति सेकंड 10 बार दोहराएँ\n  ojd binding set Racing button:West key:j --turbo-rate 10 --turbo-duty 0.5";
+"cli.binding.set.examples" = "उदाहरण:\n  # साउथ बटन दबाए रखने पर Space दबाए रखें\n  ojd binding set Racing button:South key:Space\n  # हर प्रेस पर J टॉगल करें\n  ojd binding set Racing button:West key:KeyJ --behavior toggle\n  # दबाए रखने पर J को प्रति सेकंड 10 बार दोहराएँ\n  ojd binding set Racing button:West key:KeyJ --turbo-rate 10 --turbo-duty 0.5";
 "cli.record.install.examples" = "उदाहरण:\n  # रिकॉर्ड फ़ाइल इंस्टॉल करें\n  ojd record install 045E-028E.json\n  # रिकॉर्ड stdin से पढ़ें\n  ojd record install - < 045E-028E.json";
 "cli.access.grant.examples" = "उदाहरण:\n  # किसी प्रोग्राम को सेवा इस्तेमाल करने दें\n  ojd access grant /Applications/Example.app\n  # एक ऑरिजिन से परोसे गए पेजों के लिए टोकन बनाएँ\n  ojd access grant --token overlay --origin http://127.0.0.1:8080";
 "cli.service.abstract" = "OpenJoystickDriver सेवा शुरू या बंद करें, या उसके अनुरोध स्वीकार करने तक प्रतीक्षा करें।";
@@ -1355,6 +1355,7 @@
 "cli.virtual.launch.error.not_executable" = "उस पाथ पर कोई एक्ज़ीक्यूटेबल फ़ाइल नहीं है";
 "cli.virtual.launch.error.not_found" = "PATH में इस नाम का कोई प्रोग्राम नहीं है";
 "cli.virtual.launch.error.output" = "--json और --plain लागू नहीं होते, क्योंकि प्रोग्राम स्टैंडर्ड आउटपुट लिखता है।";
+"cli.virtual.launch.sdl_gamecontroller_backend" = "SDL के वे संकेत भी सेट करता है जिनसे SDL नियंत्रकों को केवल Apple के GameController फ़्रेमवर्क से पढ़ता है: SDL_JOYSTICK_MFI=1, SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1, SDL_JOYSTICK_IOKIT=0, SDL_JOYSTICK_HIDAPI=0। ये केवल प्रोग्राम पर लागू होते हैं और पहले से सेट मानों को बदल देते हैं।";
 "cli.virtual.reset.abstract" = "किसी कंट्रोलर मॉडल, या हर मॉडल, को स्वचालित वर्चुअल गेमपैड चयन पर लौटाएँ।";
 "cli.virtual.reset.all" = "हर कंट्रोलर मॉडल रीसेट करें।";
 "cli.virtual.reset.all.done" = "अब हर कंट्रोलर मॉडल अपना वर्चुअल गेमपैड स्वचालित रूप से चुनता है।";
@@ -1445,7 +1446,7 @@
 "cli.binding.abstract" = "रीमैपिंग प्रोफ़ाइल के असाइनमेंट की सूची दिखाएँ, उन्हें सेट करें और साफ़ करें।";
 "cli.binding.actions_invalid" = "--actions-json मान्य कार्रवाई सूची नहीं है: %@";
 "cli.binding.actions_too_large" = "--actions-json बहुत बड़ा है।";
-"cli.binding.alternate_format" = "%@ को MS:TARGET चाहिए, जैसे 500:key:b।";
+"cli.binding.alternate_format" = "%@ को MS:TARGET चाहिए, जैसे 500:key:KeyB।";
 "cli.binding.axis_options_source" = "--deadzone, --gain, --invert, --response-curve और --digital-threshold के लिए एक्सिस स्रोत चाहिए।";
 "cli.binding.clear.abstract" = "दिए गए स्रोतों के असाइनमेंट, या सभी असाइनमेंट हटाएँ।";
 "cli.binding.clear.all" = "सभी असाइनमेंट, कॉर्ड, सीक्वेंस और लेयर हटाएँ।";
@@ -1457,17 +1458,17 @@
 "cli.binding.clear.missing" = "“%@” में %@ के लिए कोई असाइनमेंट नहीं है। कुछ नहीं बदला।";
 "cli.binding.clear.sources" = "वे स्रोत जिनके असाइनमेंट हटाने हैं।";
 "cli.binding.clear.usage" = "एक या अधिक स्रोत दें, या --all दें।";
-"cli.binding.discussion" = "असाइनमेंट तब TARGET भेजता है जब कंट्रोलर का कोई SOURCE इस्तेमाल होता है।\n\nSOURCE: button:NAME, dpad:DIRECTION, axis:NAME[:negative|positive], trigger:NAME:STAGE, motion:lean:DIRECTION, touch:SURFACE:contact, touch:SURFACE:grid:COLUMNS:ROWS:COLUMN:ROW, या touch:SURFACE:swipe:DIRECTION:DISTANCE।\n\nTARGET: key:KEY[:mods=command,control,option,shift], mouse:BUTTON, move:x|y, scroll:x|y, gamepad:button:NAME, gamepad:dpad:DIRECTION, gamepad:axis:NAME, या रंबल, लाइट और एडैप्टिव ट्रिगर के लिए physical:...।\n\n“ojd profile show” असाइनमेंट को इन्हीं रूपों में प्रिंट करता है। कॉर्ड, सीक्वेंस और लेयर को “ojd profile edit” से बदलें।";
+"cli.binding.discussion" = "असाइनमेंट तब TARGET भेजता है जब कंट्रोलर का कोई SOURCE इस्तेमाल होता है।\n\nSOURCE: button:NAME, dpad:DIRECTION, axis:NAME[:Negative|Positive], trigger:NAME:STAGE, motion:lean:DIRECTION, touch:SURFACE:contact, touch:SURFACE:grid:COLUMNS:ROWS:COLUMN:ROW, या touch:SURFACE:swipe:DIRECTION:DISTANCE।\n\nTARGET: key:KEY[:mods=Meta,Control,Alt,Shift], mouse:BUTTON, move:x|y, scroll:x|y, gamepad:button:NAME, gamepad:dpad:DIRECTION, gamepad:axis:NAME, या रंबल, लाइट और एडैप्टिव ट्रिगर के लिए physical:...।\n\n“ojd profile show” असाइनमेंट को इन्हीं रूपों में प्रिंट करता है। कॉर्ड, सीक्वेंस और लेयर को “ojd profile edit” से बदलें।";
 "cli.binding.list.abstract" = "प्रोफ़ाइल के असाइनमेंट की सूची दिखाएँ।";
 "cli.binding.list.empty" = "“%@” में कोई असाइनमेंट नहीं है। “ojd binding set” से जोड़ें।";
 "cli.binding.option.actions_json" = "अतिरिक्त कार्रवाइयाँ JSON ऐरे के रूप में, उसी रूप में जिसमें “ojd profile export” उन्हें लिखता है।";
 "cli.binding.option.behavior" = "लक्ष्य कब सक्रिय हो। डिफ़ॉल्ट: मौजूदा असाइनमेंट का व्यवहार, या hold।";
 "cli.binding.option.deadzone" = "एक्सिस स्रोत: गति का वह हिस्सा जिसे अनदेखा किया जाता है, 0 से 0.95। डिफ़ॉल्ट: 0.1।";
 "cli.binding.option.digital_threshold" = "एक्सिस स्रोत: गति की वह मात्रा जो बटन लक्ष्यों के लिए दबाना मानी जाती है। डिफ़ॉल्ट: 0.5।";
-"cli.binding.option.double_tap" = "स्रोत को इतने समय में दो बार दबाने पर एक और लक्ष्य भेजें, जैसे 300:key:c।";
+"cli.binding.option.double_tap" = "स्रोत को इतने समय में दो बार दबाने पर एक और लक्ष्य भेजें, जैसे 300:key:KeyC।";
 "cli.binding.option.gain" = "एक्सिस स्रोत: आउटपुट का स्केल, 0.1 से 10। डिफ़ॉल्ट: 1।";
 "cli.binding.option.invert" = "एक्सिस स्रोत: दिशा उलटें।";
-"cli.binding.option.long_hold" = "स्रोत को इतनी देर दबाए रखने पर एक और लक्ष्य भेजें, जैसे 500:key:b।";
+"cli.binding.option.long_hold" = "स्रोत को इतनी देर दबाए रखने पर एक और लक्ष्य भेजें, जैसे 500:key:KeyB।";
 "cli.binding.option.pulse_ms" = "पल्स लक्ष्य को कितनी देर थामे रखता है, 1 से 5000 ms। डिफ़ॉल्ट: 100।";
 "cli.binding.option.response_curve" = "एक्सिस स्रोत: गति के साथ आउटपुट कैसे बढ़ता है। डिफ़ॉल्ट: linear।";
 "cli.binding.option.turbo_duty" = "हर टर्बो चक्र का वह हिस्सा जिसमें लक्ष्य थामा जाता है, 0 से अधिक और 1 से कम।";
@@ -1475,7 +1476,7 @@
 "cli.binding.set.abstract" = "कंट्रोलर के स्रोत को किसी लक्ष्य से असाइन करें, और उस स्रोत का मौजूदा असाइनमेंट बदल दें।";
 "cli.binding.set.done" = "“%@” अब %@ से असाइन है।";
 "cli.binding.set.source" = "कंट्रोलर का नियंत्रण, जैसे button:South।";
-"cli.binding.set.target" = "वह जो यह भेजता है, जैसे key:space।";
+"cli.binding.set.target" = "वह जो यह भेजता है, जैसे key:Space।";
 "cli.binding.source_invalid" = "“%@” कोई स्रोत नहीं है। “ojd binding set --help” स्रोत के रूप दिखाता है।";
 "cli.binding.target_invalid" = "“%@” कोई लक्ष्य नहीं है। “ojd binding set --help” लक्ष्य के रूप दिखाता है।";
 "cli.binding.turbo_pair" = "--turbo-rate और --turbo-duty साथ में देने होंगे।";

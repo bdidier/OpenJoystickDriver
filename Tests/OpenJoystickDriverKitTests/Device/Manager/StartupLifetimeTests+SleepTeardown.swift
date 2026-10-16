@@ -1,5 +1,6 @@
 import Foundation
 import IOKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -255,7 +256,7 @@ extension StartupLifetimeTests {
     #expect(await manager.deviceInfos[identifier] != nil)
 
     let sleep = Task { await manager.systemWillSleep() }
-    while await !manager.isSystemSleeping { await Task.yield() }
+    await waitUntil("the system is sleeping") { await manager.isSystemSleeping }
     await dispatcher.releaseBlockedDispatch()
     await sleep.value
     #expect(await manager.pipelines.isEmpty)
@@ -293,7 +294,7 @@ extension StartupLifetimeTests {
     await dispatcher.waitForBlockedDispatch()
 
     let sleep = Task { await manager.systemWillSleep() }
-    while await !manager.isSystemSleeping { await Task.yield() }
+    await waitUntil("the system is sleeping") { await manager.isSystemSleeping }
     await manager.stop()
     await dispatcher.releaseBlockedDispatch()
     await sleep.value

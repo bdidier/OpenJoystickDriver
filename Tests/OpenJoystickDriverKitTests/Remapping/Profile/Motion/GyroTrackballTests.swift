@@ -10,8 +10,10 @@ struct GyroTrackballTests {
     let output = RemappingGyroOutput(mode: .mouse, trackball: trackball)
     let encoded = try JSONEncoder().encode(output)
     #expect(try JSONDecoder().decode(RemappingGyroOutput.self, from: encoded) == output)
-    let legacy = Data(#"{"mode":"mouse"}"#.utf8)
-    #expect(try JSONDecoder().decode(RemappingGyroOutput.self, from: legacy).trackball == nil)
+    let withoutTrackball = Data(#"{"mode":"Mouse"}"#.utf8)
+    #expect(
+      try JSONDecoder().decode(RemappingGyroOutput.self, from: withoutTrackball).trackball == nil
+    )
     let partial = Data(#"{"source":{"type":"button","button":"South"}}"#.utf8)
     let decoded = try JSONDecoder().decode(RemappingGyroTrackball.self, from: partial)
     #expect(decoded.axes == .both)

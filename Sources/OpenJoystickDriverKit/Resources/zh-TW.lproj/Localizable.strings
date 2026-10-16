@@ -959,7 +959,7 @@
 "cli.controller.light.examples" = "範例：\n  # 將燈條設為橘色\n  ojd controller light 054C:09CC --color FF8000\n  # 設定顏色和較低的亮度\n  ojd controller light 054C:09CC --color 0000FF --brightness 40";
 "cli.profile.create.examples" = "範例：\n  # 為某一控制器型號建立設定檔\n  ojd profile create Racing --controller 045E:028E\n  # 只在 Safari 位於最前面時套用\n  ojd profile create Browsing --controller 045E:028E --app com.apple.Safari";
 "cli.profile.set.examples" = "範例：\n  # 重新命名設定檔\n  ojd profile set Racing name Rally\n  # 設定第一個搖桿對應的內死區\n  ojd profile set Racing stickMappings.0.tuning.innerDeadzone 0.2";
-"cli.binding.set.examples" = "範例：\n  # 按住南鍵時按住空白鍵\n  ojd binding set Racing button:South key:space\n  # 每按一次切換 J 的開關\n  ojd binding set Racing button:West key:j --behavior toggle\n  # 按住時每秒重複 J 10 次\n  ojd binding set Racing button:West key:j --turbo-rate 10 --turbo-duty 0.5";
+"cli.binding.set.examples" = "範例：\n  # 按住南鍵時按住空白鍵\n  ojd binding set Racing button:South key:Space\n  # 每按一次切換 J 的開關\n  ojd binding set Racing button:West key:KeyJ --behavior toggle\n  # 按住時每秒重複 J 10 次\n  ojd binding set Racing button:West key:KeyJ --turbo-rate 10 --turbo-duty 0.5";
 "cli.record.install.examples" = "範例：\n  # 安裝記錄檔\n  ojd record install 045E-028E.json\n  # 從標準輸入讀取記錄\n  ojd record install - < 045E-028E.json";
 "cli.access.grant.examples" = "範例：\n  # 允許某個程式使用服務\n  ojd access grant /Applications/Example.app\n  # 為來自某個來源的頁面建立權杖\n  ojd access grant --token overlay --origin http://127.0.0.1:8080";
 "cli.service.abstract" = "啟動或停止 OpenJoystickDriver 服務，或等待其開始接受要求。";
@@ -1355,6 +1355,7 @@
 "cli.virtual.launch.error.not_executable" = "該路徑下沒有可執行檔";
 "cli.virtual.launch.error.not_found" = "PATH 中沒有該名稱的程式";
 "cli.virtual.launch.error.output" = "--json 和 --plain 不適用，因為程式會寫入標準輸出。";
+"cli.virtual.launch.sdl_gamecontroller_backend" = "同時設定讓 SDL 只透過 Apple 的 GameController 框架讀取控制器的 SDL 提示：SDL_JOYSTICK_MFI=1, SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1, SDL_JOYSTICK_IOKIT=0, SDL_JOYSTICK_HIDAPI=0。這些提示只對該程式生效，並會取代已設定的值。";
 "cli.virtual.reset.abstract" = "讓控制器的型號或所有型號恢復自動選擇虛擬遊戲控制器。";
 "cli.virtual.reset.all" = "重設所有控制器型號。";
 "cli.virtual.reset.all.done" = "現在每個控制器型號都會自動選擇其虛擬遊戲控制器。";
@@ -1445,7 +1446,7 @@
 "cli.binding.abstract" = "列出、設定和清除重新對應設定檔的對應。";
 "cli.binding.actions_invalid" = "--actions-json 不是有效的動作清單：%@";
 "cli.binding.actions_too_large" = "--actions-json 太大。";
-"cli.binding.alternate_format" = "%@ 需要 MS:TARGET，例如 500:key:b。";
+"cli.binding.alternate_format" = "%@ 需要 MS:TARGET，例如 500:key:KeyB。";
 "cli.binding.axis_options_source" = "--deadzone、--gain、--invert、--response-curve 和 --digital-threshold 需要軸來源。";
 "cli.binding.clear.abstract" = "移除指定來源的對應，或移除所有對應。";
 "cli.binding.clear.all" = "移除所有對應、組合鍵、序列和層。";
@@ -1457,17 +1458,17 @@
 "cli.binding.clear.missing" = "「%@」沒有 %@ 的對應。未變更任何內容。";
 "cli.binding.clear.sources" = "要移除其對應的來源。";
 "cli.binding.clear.usage" = "請提供一個或多個來源，或使用 --all。";
-"cli.binding.discussion" = "對應會在使用控制器的 SOURCE 時傳送 TARGET。\n\nSOURCE：button:NAME、dpad:DIRECTION、axis:NAME[:negative|positive]、trigger:NAME:STAGE、motion:lean:DIRECTION、touch:SURFACE:contact、touch:SURFACE:grid:COLUMNS:ROWS:COLUMN:ROW，或 touch:SURFACE:swipe:DIRECTION:DISTANCE。\n\nTARGET：key:KEY[:mods=command,control,option,shift]、mouse:BUTTON、move:x|y、scroll:x|y、gamepad:button:NAME、gamepad:dpad:DIRECTION、gamepad:axis:NAME，或用於震動、燈光和自適應扳機的 physical:...。\n\n「ojd profile show」 會以這些形式輸出對應。請用 「ojd profile edit」 編輯組合鍵、序列和層。";
+"cli.binding.discussion" = "對應會在使用控制器的 SOURCE 時傳送 TARGET。\n\nSOURCE：button:NAME、dpad:DIRECTION、axis:NAME[:Negative|Positive]、trigger:NAME:STAGE、motion:lean:DIRECTION、touch:SURFACE:contact、touch:SURFACE:grid:COLUMNS:ROWS:COLUMN:ROW，或 touch:SURFACE:swipe:DIRECTION:DISTANCE。\n\nTARGET：key:KEY[:mods=Meta,Control,Alt,Shift]、mouse:BUTTON、move:x|y、scroll:x|y、gamepad:button:NAME、gamepad:dpad:DIRECTION、gamepad:axis:NAME，或用於震動、燈光和自適應扳機的 physical:...。\n\n「ojd profile show」 會以這些形式輸出對應。請用 「ojd profile edit」 編輯組合鍵、序列和層。";
 "cli.binding.list.abstract" = "列出設定檔的對應。";
 "cli.binding.list.empty" = "「%@」沒有對應。請用 「ojd binding set」 加入。";
 "cli.binding.option.actions_json" = "額外動作，以 JSON 陣列表示，格式與 「ojd profile export」 寫出的相同。";
 "cli.binding.option.behavior" = "目標何時觸發。預設：目前對應的行為，或 hold。";
 "cli.binding.option.deadzone" = "軸來源：忽略的行程部分，0 到 0.95。預設：0.1。";
 "cli.binding.option.digital_threshold" = "軸來源：對按鈕目標而言算作按下的行程。預設：0.5。";
-"cli.binding.option.double_tap" = "在此時間內按下來源兩次時，傳送另一個目標，例如 300:key:c。";
+"cli.binding.option.double_tap" = "在此時間內按下來源兩次時，傳送另一個目標，例如 300:key:KeyC。";
 "cli.binding.option.gain" = "軸來源：輸出縮放，0.1 到 10。預設：1。";
 "cli.binding.option.invert" = "軸來源：反轉方向。";
-"cli.binding.option.long_hold" = "按住來源達到此時間時，傳送另一個目標，例如 500:key:b。";
+"cli.binding.option.long_hold" = "按住來源達到此時間時，傳送另一個目標，例如 500:key:KeyB。";
 "cli.binding.option.pulse_ms" = "脈衝讓目標維持多久，1 到 5000 毫秒。預設：100。";
 "cli.binding.option.response_curve" = "軸來源：輸出如何隨行程增長。預設：linear。";
 "cli.binding.option.turbo_duty" = "每個連發週期中目標維持按下的比例，大於 0 且小於 1。";
@@ -1475,7 +1476,7 @@
 "cli.binding.set.abstract" = "將控制器來源對應到目標，並取代該來源目前的對應。";
 "cli.binding.set.done" = "「%@」現在對應到 %@。";
 "cli.binding.set.source" = "控制器上的控制項，例如 button:South。";
-"cli.binding.set.target" = "它傳送的內容，例如 key:space。";
+"cli.binding.set.target" = "它傳送的內容，例如 key:Space。";
 "cli.binding.source_invalid" = "「%@」不是來源。「ojd binding set --help」 會列出來源的寫法。";
 "cli.binding.target_invalid" = "「%@」不是目標。「ojd binding set --help」 會列出目標的寫法。";
 "cli.binding.turbo_pair" = "--turbo-rate 和 --turbo-duty 必須一起提供。";

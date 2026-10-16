@@ -166,10 +166,14 @@ final class EndpointConnection: @unchecked Sendable {
 
   private func drain() {
     let encoder = Self.encoder()
+    // `closing` is read in the same lock that ends the drain: a close that queues its error after
+    // that point starts the next drain, which then owns the shutdown.
+    var closed = false
     while true {
       let next = lock.withLock { () -> Outgoing? in
         guard !pending.isEmpty else {
           draining = false
+          closed = closing
           return nil
         }
         return pending.removeFirst()
@@ -192,7 +196,7 @@ final class EndpointConnection: @unchecked Sendable {
         return
       }
     }
-    if lock.withLock({ closing }) {
+    if closed {
       transport.writeClose()
       shutdown(descriptor, SHUT_RDWR)
     }

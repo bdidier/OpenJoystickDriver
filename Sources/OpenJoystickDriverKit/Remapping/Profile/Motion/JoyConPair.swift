@@ -2,9 +2,9 @@ import Foundation
 
 /// Selects the motion source for an explicitly paired left/right Joy-Con session.
 public enum RemappingJoyConGyroSelection: String, Codable, CaseIterable, Sendable {
-  case disabled
-  case left
-  case right
+  case disabled = "Disabled"
+  case left = "Left"
+  case right = "Right"
 }
 
 /// Profile behavior used only after two exact runtime Joy-Con identities are paired.

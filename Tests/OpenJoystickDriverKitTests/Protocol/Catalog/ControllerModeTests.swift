@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -338,10 +339,9 @@ struct ControllerModeTests {
     // Once the blocked read returns, the device can be read again.
     release.signal()
     var again: PhysicalHIDReportResult<Data> = second
-    for _ in 0..<200 {
+    await waitUntil("the released device can be read again") {
       again = await reads.run(key: device, timeout: 5) { .success(Data([4])) }
-      if again.value != nil { break }
-      try? await Task.sleep(nanoseconds: 10_000_000)
+      return again.value != nil
     }
     #expect(again.value == Data([4]))
   }

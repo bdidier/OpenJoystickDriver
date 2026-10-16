@@ -12,10 +12,6 @@ import Testing
 struct StreamBoundaryServiceTests {
   private static let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 1)
 
-  private static func wait(until condition: () -> Bool) async throws {
-    while !condition() { try await Task.sleep(nanoseconds: 2_000_000) }
-  }
-
   /// A connected pair of sockets that raise no `SIGPIPE` when the other end is gone.
   private static func socketPair() -> [Int32] {
     var descriptors: [Int32] = [0, 0]
@@ -135,12 +131,16 @@ struct StreamBoundaryServiceTests {
     #expect(sink.commands.isEmpty)
 
     registry.startReturningFeedback(token: session.token)
-    try await Self.wait { sink.commands.count == commands.count }
+    await waitUntil("sink.commands.count == commands.count") {
+      sink.commands.count == commands.count
+    }
 
     #expect(sink.commands == commands)
     #expect(registry.exchange(token: session.token, frames: []).feedback.isEmpty)
     device.receive(.stopRumble)
-    try await Self.wait { sink.commands.count == commands.count + 1 }
+    await waitUntil("sink.commands.count == commands.count + 1") {
+      sink.commands.count == commands.count + 1
+    }
     #expect(sink.commands.last == .stopRumble)
   }
 
@@ -155,7 +155,9 @@ struct StreamBoundaryServiceTests {
     for _ in 0..<VirtualFeedRegistry.maximumQueuedFeedback { device.receive(.stopRumble) }
 
     registry.startReturningFeedback(token: session.token)
-    try await Self.wait { sink.commands.count == VirtualFeedRegistry.maximumQueuedFeedback }
+    await waitUntil("sink.commands.count == VirtualFeedRegistry.maximumQueuedFeedback") {
+      sink.commands.count == VirtualFeedRegistry.maximumQueuedFeedback
+    }
 
     #expect(sink.commands.allSatisfy { $0 == .stopRumble })
   }
@@ -210,7 +212,7 @@ struct StreamBoundaryServiceTests {
     }
     #expect(delivered.withLock { $0 } == 1)
     let device = try #require(factory.devices.first)
-    try await Self.wait { device.sent.count == 1 }
+    await waitUntil("device.sent.count == 1") { device.sent.count == 1 }
     await #expect(throws: StreamBoundaryError.unsupported(.virtualDevice)) {
       try await sink.consume(.activation(Self.identifier)) {}
     }

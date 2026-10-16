@@ -261,7 +261,7 @@ struct StatusTests {
     let gateway = GatewayStub(statusReadDelayNanoseconds: 100_000_000)
     let viewModel = RuntimeViewModel(gateway: gateway)
     let fullRefresh = Task { await viewModel.refresh() }
-    await Task.yield()
+    await gateway.waitForStatusCall(count: 1)
 
     await viewModel.refreshLiveStatus()
     await fullRefresh.value

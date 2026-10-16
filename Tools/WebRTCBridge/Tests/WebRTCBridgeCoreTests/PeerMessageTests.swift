@@ -31,14 +31,14 @@ final class PeerMessageTests: XCTestCase {
       .union(schemaEnum("vocabulary.schema.json", "stickAxis"))
     XCTAssertEqual(PeerMessage.buttons, control.subtracting(withoutButtons))
     XCTAssertEqual(PeerMessage.axes, try schemaEnum("vocabulary.schema.json", "axis"))
-    XCTAssertEqual(PeerMessage.dpad, try schemaEnum("profile.schema.json", "dpadDirection"))
+    XCTAssertEqual(PeerMessage.dpad, try schemaEnum("vocabulary.schema.json", "dpadControl"))
   }
 
   func testAValidFrameIsRebuiltFromTheCheckedFields() throws {
     let line = try XCTUnwrap(
       PeerMessage.frame(
         from: frame(
-          #","buttons":["South"],"dpad":["up"],"axes":{"LeftStickX":0.5}"#
+          #","buttons":["South"],"dpad":["DpadUp"],"axes":{"LeftStickX":0.5}"#
             + #","holdMilliseconds":60000"#
         )
       )
@@ -66,7 +66,7 @@ final class PeerMessageTests: XCTestCase {
       frame(#","holdMilliseconds":1.5"#),
       frame(#","holdMilliseconds":true"#),
       frame(#","buttons":["nope"]"#), frame(#","buttons":["south"]"#),
-      frame(#","axes":{"left_stick_x":0.5}"#),
+      frame(#","axes":{"notAName":0.5}"#),
       frame(#","buttons":["South","South"]"#),
       frame(#","buttons":"South""#),
       frame(#","dpad":["diagonal"]"#),

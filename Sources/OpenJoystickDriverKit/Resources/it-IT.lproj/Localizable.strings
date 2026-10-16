@@ -959,7 +959,7 @@
 "cli.controller.light.examples" = "Esempi:\n  # Imposta la barra luminosa su arancione\n  ojd controller light 054C:09CC --color FF8000\n  # Imposta il colore e una luminosità bassa\n  ojd controller light 054C:09CC --color 0000FF --brightness 40";
 "cli.profile.create.examples" = "Esempi:\n  # Crea un profilo per un modello di controller\n  ojd profile create Racing --controller 045E:028E\n  # Applicalo solo quando Safari è in primo piano\n  ojd profile create Browsing --controller 045E:028E --app com.apple.Safari";
 "cli.profile.set.examples" = "Esempi:\n  # Rinomina un profilo\n  ojd profile set Racing name Rally\n  # Imposta la zona morta interna della prima mappatura dello stick\n  ojd profile set Racing stickMappings.0.tuning.innerDeadzone 0.2";
-"cli.binding.set.examples" = "Esempi:\n  # Tieni premuto Spazio mentre il pulsante sud è premuto\n  ojd binding set Racing button:South key:space\n  # Attiva/disattiva J a ogni pressione\n  ojd binding set Racing button:West key:j --behavior toggle\n  # Ripeti J 10 volte al secondo finché è premuto\n  ojd binding set Racing button:West key:j --turbo-rate 10 --turbo-duty 0.5";
+"cli.binding.set.examples" = "Esempi:\n  # Tieni premuto Spazio mentre il pulsante sud è premuto\n  ojd binding set Racing button:South key:Space\n  # Attiva/disattiva J a ogni pressione\n  ojd binding set Racing button:West key:KeyJ --behavior toggle\n  # Ripeti J 10 volte al secondo finché è premuto\n  ojd binding set Racing button:West key:KeyJ --turbo-rate 10 --turbo-duty 0.5";
 "cli.record.install.examples" = "Esempi:\n  # Installa un file di registrazione\n  ojd record install 045E-028E.json\n  # Leggi la registrazione dallo stdin\n  ojd record install - < 045E-028E.json";
 "cli.access.grant.examples" = "Esempi:\n  # Consenti a un programma di usare il servizio\n  ojd access grant /Applications/Example.app\n  # Crea un token per le pagine servite da una sola origine\n  ojd access grant --token overlay --origin http://127.0.0.1:8080";
 "cli.service.abstract" = "Avvia o arresta il servizio OpenJoystickDriver, oppure attendi che accetti richieste.";
@@ -1355,6 +1355,7 @@
 "cli.virtual.launch.error.not_executable" = "nessun file eseguibile in quel percorso";
 "cli.virtual.launch.error.not_found" = "nessun programma con quel nome in PATH";
 "cli.virtual.launch.error.output" = "--json e --plain non si applicano, perché il programma scrive lo standard output.";
+"cli.virtual.launch.sdl_gamecontroller_backend" = "Imposta anche i suggerimenti SDL che fanno leggere a SDL i controller solo tramite il framework GameController di Apple: SDL_JOYSTICK_MFI=1, SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1, SDL_JOYSTICK_IOKIT=0, SDL_JOYSTICK_HIDAPI=0. Valgono solo per il programma e sostituiscono i valori già impostati.";
 "cli.virtual.reset.abstract" = "Riporta un controller, o ogni modello, alla selezione automatica del gamepad virtuale.";
 "cli.virtual.reset.all" = "Reimposta ogni modello di controller.";
 "cli.virtual.reset.all.done" = "Ogni modello di controller ora seleziona automaticamente il proprio gamepad virtuale.";
@@ -1445,7 +1446,7 @@
 "cli.binding.abstract" = "Elenca, imposta e cancella le assegnazioni di un profilo di rimappatura.";
 "cli.binding.actions_invalid" = "--actions-json non è un elenco di azioni valido: %@";
 "cli.binding.actions_too_large" = "--actions-json è troppo grande.";
-"cli.binding.alternate_format" = "%@ richiede MS:TARGET, ad esempio 500:key:b.";
+"cli.binding.alternate_format" = "%@ richiede MS:TARGET, ad esempio 500:key:KeyB.";
 "cli.binding.axis_options_source" = "--deadzone, --gain, --invert, --response-curve e --digital-threshold richiedono una sorgente ad asse.";
 "cli.binding.clear.abstract" = "Rimuove le assegnazioni delle sorgenti indicate, oppure tutte.";
 "cli.binding.clear.all" = "Rimuove ogni assegnazione, combinazione, sequenza e livello.";
@@ -1457,17 +1458,17 @@
 "cli.binding.clear.missing" = "«%@» non ha nessuna assegnazione per %@. Nessuna modifica.";
 "cli.binding.clear.sources" = "Le sorgenti di cui rimuovere le assegnazioni.";
 "cli.binding.clear.usage" = "Indica una o più sorgenti, oppure --all.";
-"cli.binding.discussion" = "Un’assegnazione invia un TARGET quando si usa una SOURCE del controller.\n\nSOURCE: button:NAME, dpad:DIRECTION, axis:NAME[:negative|positive], trigger:NAME:STAGE, motion:lean:DIRECTION, touch:SURFACE:contact, touch:SURFACE:grid:COLUMNS:ROWS:COLUMN:ROW oppure touch:SURFACE:swipe:DIRECTION:DISTANCE.\n\nTARGET: key:KEY[:mods=command,control,option,shift], mouse:BUTTON, move:x|y, scroll:x|y, gamepad:button:NAME, gamepad:dpad:DIRECTION, gamepad:axis:NAME oppure physical:... per vibrazione, luci e grilletti adattivi.\n\n’ojd profile show’ stampa le assegnazioni in queste forme. Modifica combinazioni, sequenze e livelli con «ojd profile edit».";
+"cli.binding.discussion" = "Un’assegnazione invia un TARGET quando si usa una SOURCE del controller.\n\nSOURCE: button:NAME, dpad:DIRECTION, axis:NAME[:Negative|Positive], trigger:NAME:STAGE, motion:lean:DIRECTION, touch:SURFACE:contact, touch:SURFACE:grid:COLUMNS:ROWS:COLUMN:ROW oppure touch:SURFACE:swipe:DIRECTION:DISTANCE.\n\nTARGET: key:KEY[:mods=Meta,Control,Alt,Shift], mouse:BUTTON, move:x|y, scroll:x|y, gamepad:button:NAME, gamepad:dpad:DIRECTION, gamepad:axis:NAME oppure physical:... per vibrazione, luci e grilletti adattivi.\n\n’ojd profile show’ stampa le assegnazioni in queste forme. Modifica combinazioni, sequenze e livelli con «ojd profile edit».";
 "cli.binding.list.abstract" = "Elenca le assegnazioni di un profilo.";
 "cli.binding.list.empty" = "«%@» non ha assegnazioni. Aggiungine una con «ojd binding set».";
 "cli.binding.option.actions_json" = "Azioni aggiuntive come array JSON, nella forma in cui le scrive «ojd profile export».";
 "cli.binding.option.behavior" = "Quando viene inviata la destinazione. Predefinito: il comportamento dell’assegnazione attuale, oppure hold.";
 "cli.binding.option.deadzone" = "Sorgenti ad asse: la parte della corsa che viene ignorata, da 0 a 0.95. Predefinito: 0.1.";
 "cli.binding.option.digital_threshold" = "Sorgenti ad asse: la corsa che conta come pressione per le destinazioni a pulsante. Predefinito: 0.5.";
-"cli.binding.option.double_tap" = "Invia un’altra destinazione quando la sorgente viene premuta due volte entro questo tempo, ad esempio 300:key:c.";
+"cli.binding.option.double_tap" = "Invia un’altra destinazione quando la sorgente viene premuta due volte entro questo tempo, ad esempio 300:key:KeyC.";
 "cli.binding.option.gain" = "Sorgenti ad asse: la scala dell’output, da 0.1 a 10. Predefinito: 1.";
 "cli.binding.option.invert" = "Sorgenti ad asse: inverte la direzione.";
-"cli.binding.option.long_hold" = "Invia un’altra destinazione quando la sorgente resta premuta per questo tempo, ad esempio 500:key:b.";
+"cli.binding.option.long_hold" = "Invia un’altra destinazione quando la sorgente resta premuta per questo tempo, ad esempio 500:key:KeyB.";
 "cli.binding.option.pulse_ms" = "Per quanto tempo un impulso mantiene la destinazione, da 1 a 5000 ms. Predefinito: 100.";
 "cli.binding.option.response_curve" = "Sorgenti ad asse: come cresce l’output con la corsa. Predefinito: linear.";
 "cli.binding.option.turbo_duty" = "La quota di ogni ciclo turbo in cui la destinazione resta premuta, maggiore di 0 e minore di 1.";
@@ -1475,7 +1476,7 @@
 "cli.binding.set.abstract" = "Associa una sorgente del controller a una destinazione, sostituendo l’assegnazione attuale della sorgente.";
 "cli.binding.set.done" = "Ora «%@» è assegnato a %@.";
 "cli.binding.set.source" = "Il controllo del controller, ad esempio button:South.";
-"cli.binding.set.target" = "Cosa invia, ad esempio key:space.";
+"cli.binding.set.target" = "Cosa invia, ad esempio key:Space.";
 "cli.binding.source_invalid" = "«%@» non è una sorgente. «ojd binding set --help» elenca le forme delle sorgenti.";
 "cli.binding.target_invalid" = "«%@» non è una destinazione. «ojd binding set --help» elenca le forme delle destinazioni.";
 "cli.binding.turbo_pair" = "--turbo-rate e --turbo-duty vanno indicati insieme.";

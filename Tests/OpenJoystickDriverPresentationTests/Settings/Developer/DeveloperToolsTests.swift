@@ -137,7 +137,7 @@ struct DeveloperToolsTests {
     await model.refresh()
 
     model.startCapture()
-    await waitUntil { model.packets.map(\.hex) == ["02"] }
+    await waitUntil("model.packets.map(\\.hex) == [\"02\"]") { model.packets.map(\.hex) == ["02"] }
     model.stopCapture()
 
     #expect(model.packets.map(\.hex) == ["02"])
@@ -160,7 +160,7 @@ struct DeveloperToolsTests {
     await model.refresh()
 
     model.startCapture()
-    await waitUntil { model.isCapturing }
+    await waitUntil("model.isCapturing") { model.isCapturing }
     await model.refresh()
     await gateway.setPacketEntries([baseline, later])
     for _ in 0..<100 { await Task.yield() }
@@ -194,12 +194,12 @@ struct DeveloperToolsTests {
     let model = DeveloperToolsViewModel(gateway: gateway)
 
     let firstRefresh = Task { await model.refresh() }
-    await waitUntil {
+    await waitUntil("the first device is selected") {
       model.selectedDevice?.sessionToken.rawValue == firstDevice.sessionToken.rawValue
     }
     model.selectDevice(sessionToken: secondDevice.sessionToken.rawValue)
     await firstRefresh.value
-    await waitUntil { model.packets.map(\.hex) == ["02"] }
+    await waitUntil("model.packets.map(\\.hex) == [\"02\"]") { model.packets.map(\.hex) == ["02"] }
 
     #expect(model.selectedDevice?.sessionToken.rawValue == secondDevice.sessionToken.rawValue)
     #expect(model.latestInput?.pressed == [.touchpadClick])
@@ -217,7 +217,7 @@ struct DeveloperToolsTests {
     let model = DeveloperToolsViewModel(gateway: gateway)
 
     for _ in 0..<20 { model.requestRefresh() }
-    await waitUntil { model.loadState == .ready }
+    await waitUntil("model.loadState == .ready") { model.loadState == .ready }
 
     #expect(model.loadState == .ready)
     #expect(model.selectedDevice?.sessionToken == .fixture("controller-1"))
@@ -254,13 +254,15 @@ struct DeveloperToolsTests {
       )
     }
     model.selectDevice(sessionToken: secondDevice.sessionToken.rawValue)
-    await waitUntil { model.packets.map(\.hex) == [secondPacket.hex] }
+    await waitUntil("model.packets.map(\\.hex) == [secondPacket.hex]") {
+      model.packets.map(\.hex) == [secondPacket.hex]
+    }
 
     #expect(await gateway.maximumConcurrentDeviceReads <= 2)
     model.startCapture()
-    await waitUntil { model.isCapturing }
+    await waitUntil("model.isCapturing") { model.isCapturing }
     model.close()
-    await waitUntil { !model.hasActiveOperation }
+    await waitUntil("!model.hasActiveOperation") { !model.hasActiveOperation }
     #expect(!model.isCapturing)
     #expect(!model.hasActiveOperation)
   }
@@ -315,10 +317,5 @@ struct DeveloperToolsTests {
       "timestamp": timestamp, "direction": direction, "hex": hex, "length": length,
     ])
     return try JSONDecoder().decode(PacketLogEntry.self, from: data)
-  }
-
-  @MainActor
-  private func waitUntil(_ condition: @escaping @MainActor () -> Bool) async {
-    for _ in 0..<1_000 where !condition() { await Task.yield() }
   }
 }

@@ -4,7 +4,7 @@ import OpenJoystickDriverKit
 extension RemappingProfileLibrary {
   /// A file the library could not use, with the bytes it read so recovery acts on that content.
   enum RecoveryIssue: Equatable, Sendable {
-    case damagedProfile(fileName: String, data: Data)
+    case damagedProfile(fileName: String, data: Data, code: ErrorCode)
     case unusableLibrary(data: Data)
   }
 
@@ -24,7 +24,7 @@ extension RemappingProfileLibrary {
   @discardableResult
   func deleteDamagedProfile(issueID: UUID) throws -> RemappingProfileMutationImpact {
     _ = try loadIfNeeded()
-    guard case .damagedProfile(let fileName, let data) = profileIssues[issueID] else {
+    guard case .damagedProfile(let fileName, let data, _) = profileIssues[issueID] else {
       throw RemappingProfileLibraryError.profileIssueNotFound(issueID)
     }
     let url = profilesDirectory.appendingPathComponent(fileName, isDirectory: false)

@@ -2712,7 +2712,7 @@
           "type": "string"
         },
         "gyro": {
-          "enum": ["disabled", "left", "right"]
+          "enum": ["Disabled", "Left", "Right"]
         },
         "left": {
           "type": "string"
@@ -2804,7 +2804,7 @@
     },
     "sharedProfileIssue": {
       "type": "object",
-      "required": ["id", "kind", "message"],
+      "required": ["id", "kind", "code", "message"],
       "additionalProperties": false,
       "properties": {
         "id": {
@@ -2813,6 +2813,10 @@
         },
         "kind": {
           "enum": ["damagedProfile", "unusableLibrary"]
+        },
+        "code": {
+          "type": "string",
+          "pattern": "^E[0-9]{4}$"
         },
         "message": {
           "type": "string"

@@ -54,7 +54,7 @@ These settings apply to every mode:
 - **Keep physical stick passthrough**. This keeps the physical stick axes in the passthrough output.
 - **Positive rotation**: **Clockwise** or **Counterclockwise**.
 
-To change these settings with the command line, run `ojd profile edit PROFILE` and change `stickMappings` in the profile file. For the file format, see [Profile file reference](Profile-File-Reference.md). The stick modes are `aim`, `flick`, `flick_only`, `rotate_only`, `pointer_area`, `pointer_ring`, `scroll_wheel`, `steering`, and `none`. If a mapping is invalid while the profile runs, OJD sends neutral output.
+To change these settings with the command line, run `ojd profile edit PROFILE` and change `stickMappings` in the profile file. For the file format, see [Profile file reference](Profile-File-Reference.md). The stick modes are `Aim`, `Flick`, `FlickOnly`, `RotateOnly`, `PointerArea`, `PointerRing`, `ScrollWheel`, and `Steering`. If a mapping is invalid while the profile runs, OJD sends neutral output.
 
 ## Set Trigger Stages
 
@@ -115,7 +115,7 @@ Motion tuning has these values. The ranges come from the profile validation.
 
 To change these settings with the command line, run `ojd profile edit PROFILE` and change `motionTuning` in the profile file.
 
-**Gyro output** sends motion to the mouse pointer, the left stick, or the right stick. The modes are `disabled`, `mouse`, `left_stick`, and `right_stick`. The activation is **Always active**, **While held**, **While released**, or **Toggle on press**. Any activation other than **Always active** needs an **Activation control**. The default is disabled. To change it with the command line, run `ojd profile edit PROFILE` and change `gyroOutput` in the profile file.
+**Gyro output** sends motion to the mouse pointer, the left stick, or the right stick. The modes are `Disabled`, `Mouse`, `LeftStick`, and `RightStick`. The activation is **Always active**, **While held**, **While released**, or **Toggle on press**. Any activation other than **Always active** needs an **Activation control**. The default is disabled. To change it with the command line, run `ojd profile edit PROFILE` and change `gyroOutput` in the profile file.
 
 A gyro trackball keeps motion going after you hold a control. **Velocity halvings per second** ranges from 0 to 1000. Zero keeps a constant speed.
 

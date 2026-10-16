@@ -141,7 +141,9 @@ struct VirtualHIDProfileOverrideTests {
     let device = Self.device()
 
     let request = Task { await viewModel.setVirtualHIDProfileOverride(.generic, for: device) }
-    while await gateway.overrideRequests.isEmpty { await Task.yield() }
+    await waitUntil("the override request reaches the gateway") {
+      await !gateway.overrideRequests.isEmpty
+    }
 
     let state = viewModel.virtualHIDProfileOverrideStates[Self.model]
     #expect(state?.inFlight == true)
@@ -165,7 +167,9 @@ struct VirtualHIDProfileOverrideTests {
     let second = Self.device(sessionToken: "pad-2")
 
     let request = Task { await viewModel.setVirtualHIDProfileOverride(nil, for: first) }
-    while await gateway.overrideRequests.isEmpty { await Task.yield() }
+    await waitUntil("the override request reaches the gateway") {
+      await !gateway.overrideRequests.isEmpty
+    }
 
     let secondState = viewModel.virtualHIDProfileOverrideStates[RuntimeControllerModel(second)]
     #expect(secondState?.inFlight == true)
@@ -194,7 +198,9 @@ struct VirtualHIDProfileOverrideTests {
     let request = Task {
       await viewModel.setVirtualHIDProfileOverride(.generic, for: Self.device())
     }
-    while await gateway.overrideRequests.isEmpty { await Task.yield() }
+    await waitUntil("the override request reaches the gateway") {
+      await !gateway.overrideRequests.isEmpty
+    }
 
     // The full refresh read began before the override and returns the old status.
     await gateway.resumeNextStatusRead()

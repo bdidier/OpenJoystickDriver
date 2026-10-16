@@ -1,5 +1,6 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverService
@@ -105,7 +106,7 @@ final class VirtualOutputTransitionFactory: @unchecked Sendable {
   func values() -> [VirtualOutputTransitionProbe] { lock.withLock { probes } }
 
   func waitForCount(_ count: Int) async {
-    while lock.withLock({ probes.count }) < count { await Task.yield() }
+    await waitUntil("\(count) backends are built") { lock.withLock { probes.count } >= count }
   }
 }
 

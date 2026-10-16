@@ -1,6 +1,6 @@
-"""One check list: AGENTS.md is canonical.
+"""One check list: the `check` recipe of the justfile is canonical.
 
-The README, justfile, CI, and the release gate must run the same commands.
+The Scripts README, CI, and the release gate must run the same commands.
 
 Documented exemptions, kept deliberately small:
 - the justfile's whitespace check on the working tree (`JUSTFILE_ONLY`) has no CI or README
@@ -143,7 +143,7 @@ def workflow_commands(key: str) -> list[str]:
 
 class CheckListTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.canonical = markdown_commands(Path("AGENTS.md"), "## Checks")
+        self.canonical = justfile_commands()
 
     def assert_same(self, name: str, actual: list[str]) -> None:
         self.assertEqual(len(actual), len(set(actual)), f"{name} repeats a command")
@@ -153,7 +153,7 @@ class CheckListTests(unittest.TestCase):
         self.assertEqual(
             sorted(set(actual) - set(self.canonical)),
             [],
-            f"{name} has commands that AGENTS.md does not list",
+            f"{name} has commands that `just check` does not run",
         )
 
     def test_the_canonical_list_has_no_repeats_and_names_the_core_checks(self) -> None:
@@ -172,9 +172,6 @@ class CheckListTests(unittest.TestCase):
         self.assert_same(
             "Scripts/README.md", markdown_commands(Path("Scripts/README.md"), None)
         )
-
-    def test_just_check_runs_the_canonical_list(self) -> None:
-        self.assert_same("justfile", justfile_commands())
 
     def test_ci_runs_the_canonical_list(self) -> None:
         self.assert_same(WORKFLOWS["ci"][0], workflow_commands("ci"))

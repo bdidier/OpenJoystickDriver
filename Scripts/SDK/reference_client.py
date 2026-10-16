@@ -2,8 +2,8 @@
 
 `watch` subscribes to the controllers stream and prints the first watch lines. `feed` drives a
 virtual gamepad: it presses the South button for 100 ms, prints the rumble commands that the
-endpoint sends, and stays connected until the release has played. The client uses only the Python
-standard library. Set OJD_TOKEN to the token that `ojd access grant --token NAME` printed.
+endpoint sends, and asks the endpoint to report when both frames have played before it closes. The
+client uses only the Python standard library. Set OJD_TOKEN to the token that `ojd access grant --token NAME` printed.
 
 The client does not guess a version. A line with another `apiVersion`, and an E1009, E1010 or
 E1011 error, end the run with the versions that the endpoint supports.
@@ -26,7 +26,6 @@ from typing import Any, TextIO
 API_VERSION = "openjoystickdriver/v1alpha1"
 HEADER_ERRORS = ("E1009", "E1010", "E1011")
 FRAMES: list[dict[str, Any]] = [{"buttons": ["South"], "holdMilliseconds": 100}, {}]
-MARGIN_SECONDS = 1.0
 
 
 def proof(token: str, nonce: str) -> str:
@@ -44,10 +43,6 @@ def hello(nonce: str, token: str, token_name: str, scope: str) -> dict[str, Any]
         "tokenName": token_name,
         "proof": proof(token, nonce),
     }
-
-
-def play_seconds(frames: list[dict[str, Any]]) -> float:
-    return sum(max(frame.get("holdMilliseconds", 0), 8) for frame in frames) / 1000
 
 
 def failure(message: dict[str, Any]) -> str:
@@ -134,7 +129,7 @@ def feed(arguments: argparse.Namespace) -> None:
         endpoint.connect(socket_path(arguments))
         reader = endpoint.makefile("r")
         receive = connect(endpoint, reader, arguments, "control")
-        failed = threading.Event()
+        finished = threading.Event()
         reasons: list[str] = []
 
         def print_lines() -> None:
@@ -144,6 +139,8 @@ def feed(arguments: argparse.Namespace) -> None:
                     if message.get("kind") == "Status":
                         reasons.append(failure(message))
                         break
+                    if message.get("kind") == "Drained":
+                        break
                     print(line, end="")
                 else:
                     reasons.append("The endpoint closed the connection.")
@@ -151,7 +148,7 @@ def feed(arguments: argparse.Namespace) -> None:
                 reasons.append(str(error.code))
             except OSError as error:
                 reasons.append(f"The connection to the endpoint failed: {error}")
-            failed.set()
+            finished.set()
 
         send(
             endpoint,
@@ -162,11 +159,13 @@ def feed(arguments: argparse.Namespace) -> None:
         try:
             for frame in FRAMES:
                 send(endpoint, {"apiVersion": API_VERSION, "kind": "Frame", **frame})
+            send(endpoint, {"apiVersion": API_VERSION, "kind": "Drain"})
         except OSError:
             pass  # The reader reports why the endpoint closed the connection.
-        # The service starts the first frame a moment after it arrives. An error line or the end
-        # of the connection before the release has played ends the wait early and fails.
-        if failed.wait(timeout=play_seconds(FRAMES) + MARGIN_SECONDS):
+        # The endpoint answers Drained once every frame has played; closing earlier drops the
+        # frames that wait. An error line or the end of the connection before that fails.
+        finished.wait()
+        if reasons:
             sys.exit(reasons[0])
         endpoint.shutdown(socket.SHUT_RDWR)  # The reader thread keeps the socket open.
 

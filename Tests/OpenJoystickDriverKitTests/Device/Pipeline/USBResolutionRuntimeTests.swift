@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -98,9 +99,8 @@ struct USBResolutionRuntimeTests {
     #expect(await manager.deviceInfos[identifier]?.physicalDevice == physicalDevice)
 
     await provider.setDevices([])
-    for _ in 0..<100 {
-      if await manager.deviceInfos[identifier] == nil { break }
-      try await Task.sleep(nanoseconds: 10_000_000)
+    await waitUntil("the removed device is dropped") {
+      await manager.deviceInfos[identifier] == nil
     }
     #expect(await manager.deviceInfos[identifier] == nil)
 

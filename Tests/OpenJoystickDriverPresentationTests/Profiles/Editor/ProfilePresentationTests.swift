@@ -64,11 +64,13 @@ struct ProfilePresentationTests {
     let damaged = ApplicationServiceRemappingProfileIssue(
       id: UUID(),
       kind: .damagedProfile,
+      code: .invalidProfile,
       message: "damaged"
     )
     let unusable = ApplicationServiceRemappingProfileIssue(
       id: UUID(),
       kind: .unusableLibrary,
+      code: .corruptLibrary,
       message: "unusable"
     )
     let model = ProfilesViewModel()

@@ -5,6 +5,7 @@ import os
 import subprocess
 import sys
 import tempfile
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -166,7 +167,9 @@ def validate_documents(
     schema: dict[str, object],
     registry: Registry,
     paths: list[Path],
+    code_of: Callable[[ValidationError], str] | None = None,
 ) -> None:
+    """Validates documents; a failure names its error catalog code when `code_of` gives one."""
     validator = Draft202012Validator(schema, registry=registry)
     for path in paths:
         document = load_json(path)
@@ -175,8 +178,9 @@ def validate_documents(
         except ValidationError as error:
             location = ".".join(str(component) for component in error.absolute_path)
             suffix = f" at {location}" if location else ""
+            lead = f"{code_of(error)}: " if code_of else ""
             raise ValidationError(
-                f"{path.relative_to(ROOT)}{suffix}: {error.message}"
+                f"{lead}{path.relative_to(ROOT)}{suffix}: {error.message}"
             ) from error
 
 
@@ -218,6 +222,28 @@ def protocol_description_code(error: ValidationError) -> str:
         )
     )
     return UNKNOWN_PROTOCOL_VARIANT if names_variant else INVALID_PROTOCOL_DESCRIPTION
+
+
+# The error code of a profile document that is not valid, as
+# `RemappingProfileFileStore.problemCode` reports it in Swift.
+INVALID_PROFILE = "E3008"
+# The error code of a `Frame` line that does not match the endpoint schema.
+FRAME_PROBLEM_CODE = "E1003"
+
+
+def profile_problem_code(error: ValidationError) -> str:
+    """The catalog code for a profile schema failure.
+
+    E5001 when apiVersion is missing or not the supported one, and E3008 for every other
+    invalid field.
+    """
+    path = list(error.absolute_path)
+    missing_version = (
+        error.validator == "required" and not path and "'apiVersion'" in error.message
+    )
+    if path == ["apiVersion"] or missing_version:
+        return UNSUPPORTED_API_VERSION
+    return INVALID_PROFILE
 
 
 def validate_protocol_descriptions(
@@ -368,7 +394,12 @@ def main() -> int:
         )
         samples = sample_documents()
         for stem, path in samples:
-            validate_documents(documents[f"{stem}{SCHEMA_SUFFIX}"], registry, [path])
+            validate_documents(
+                documents[f"{stem}{SCHEMA_SUFFIX}"],
+                registry,
+                [path],
+                profile_problem_code if stem == "profile" else None,
+            )
         validate_documents(
             documents["access-grants.schema.json"],
             registry,

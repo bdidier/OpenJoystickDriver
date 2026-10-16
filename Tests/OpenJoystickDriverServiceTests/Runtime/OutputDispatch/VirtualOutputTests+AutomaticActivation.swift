@@ -181,9 +181,9 @@ extension VirtualOutputTests {
     let stop = Task { await dispatcher.controllerDidStop(id) }
     // Release the build only after the stop has advanced the session; otherwise the build can
     // finish first and legitimately activate before the stop closes it.
-    while !(await dispatcher.coordinator.publicationDiagnostics()).contains(where: {
-      $0.contains("session=1,")
-    }) { await Task.yield() }
+    await waitUntil("the stop advances the session") {
+      await dispatcher.coordinator.publicationDiagnostics().contains { $0.contains("session=1,") }
+    }
     #expect(probe.snapshot().2.isEmpty)
     probe.gate?.signal()
     await stop.value
