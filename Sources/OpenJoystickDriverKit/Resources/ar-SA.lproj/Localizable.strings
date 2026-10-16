@@ -1355,6 +1355,7 @@
 "cli.virtual.launch.error.not_executable" = "لا يوجد ملف تنفيذي في هذا المسار";
 "cli.virtual.launch.error.not_found" = "لا يوجد برنامج بهذا الاسم في PATH";
 "cli.virtual.launch.error.output" = "الخياران --json و--plain لا ينطبقان، لأن البرنامج يكتب إلى المخرج القياسي.";
+"cli.virtual.launch.sdl_gamecontroller_backend" = "يضبط أيضًا تلميحات SDL التي تجعل SDL تقرأ وحدات التحكم عبر إطار عمل GameController من Apple فقط: SDL_JOYSTICK_MFI=1, SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1, SDL_JOYSTICK_IOKIT=0, SDL_JOYSTICK_HIDAPI=0. تسري على البرنامج وحده وتستبدل القيم المضبوطة مسبقًا.";
 "cli.virtual.reset.abstract" = "أعد طراز وحدة تحكم، أو كل الطُرز، إلى الاختيار التلقائي لوحدة التحكم الافتراضية.";
 "cli.virtual.reset.all" = "أعد ضبط كل طُرز وحدات التحكم.";
 "cli.virtual.reset.all.done" = "يختار كل طراز وحدة تحكم الآن وحدة التحكم الافتراضية تلقائيًا.";

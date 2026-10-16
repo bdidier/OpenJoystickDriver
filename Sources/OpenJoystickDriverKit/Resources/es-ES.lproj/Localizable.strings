@@ -1355,6 +1355,7 @@
 "cli.virtual.launch.error.not_executable" = "no hay ningún archivo ejecutable en esa ruta";
 "cli.virtual.launch.error.not_found" = "no hay ningún programa con ese nombre en PATH";
 "cli.virtual.launch.error.output" = "--json y --plain no se aplican, porque el programa escribe la salida estándar.";
+"cli.virtual.launch.sdl_gamecontroller_backend" = "Establece además las sugerencias de SDL que hacen que SDL lea los mandos solo a través del framework GameController de Apple: SDL_JOYSTICK_MFI=1, SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1, SDL_JOYSTICK_IOKIT=0, SDL_JOYSTICK_HIDAPI=0. Se aplican solo al programa y sustituyen los valores ya establecidos.";
 "cli.virtual.reset.abstract" = "Devolver el modelo de un mando, o todos los modelos, a la selección automática de mando virtual.";
 "cli.virtual.reset.all" = "Restablecer todos los modelos de mando.";
 "cli.virtual.reset.all.done" = "Ahora todos los modelos de mando seleccionan su mando virtual automáticamente.";

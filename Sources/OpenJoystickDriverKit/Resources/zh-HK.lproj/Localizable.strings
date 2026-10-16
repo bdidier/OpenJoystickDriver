@@ -1355,6 +1355,7 @@
 "cli.virtual.launch.error.not_executable" = "該路徑下沒有可執行檔";
 "cli.virtual.launch.error.not_found" = "PATH 中沒有該名稱的程式";
 "cli.virtual.launch.error.output" = "--json 和 --plain 不適用，因為程式會寫入標準輸出。";
+"cli.virtual.launch.sdl_gamecontroller_backend" = "同時設定讓 SDL 只透過 Apple 的 GameController 框架讀取控制器的 SDL 提示：SDL_JOYSTICK_MFI=1, SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1, SDL_JOYSTICK_IOKIT=0, SDL_JOYSTICK_HIDAPI=0。這些提示只對該程式生效，並會取代已設定的值。";
 "cli.virtual.reset.abstract" = "讓控制器的型號或所有型號恢復自動選擇虛擬遊戲控制器。";
 "cli.virtual.reset.all" = "重設所有控制器型號。";
 "cli.virtual.reset.all.done" = "所有控制器型號現在都會自動選擇虛擬遊戲控制器。";

@@ -1355,6 +1355,7 @@
 "cli.virtual.launch.error.not_executable" = "해당 경로에 실행 파일이 없습니다";
 "cli.virtual.launch.error.not_found" = "PATH에 해당 이름의 프로그램이 없습니다";
 "cli.virtual.launch.error.output" = "프로그램이 표준 출력에 쓰므로 --json과 --plain은 적용되지 않습니다.";
+"cli.virtual.launch.sdl_gamecontroller_backend" = "SDL이 Apple의 GameController 프레임워크로만 컨트롤러를 읽게 하는 SDL 힌트도 설정합니다: SDL_JOYSTICK_MFI=1, SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1, SDL_JOYSTICK_IOKIT=0, SDL_JOYSTICK_HIDAPI=0. 힌트는 프로그램에만 적용되며 이미 설정된 값을 대체합니다.";
 "cli.virtual.reset.abstract" = "컨트롤러 모델 또는 모든 모델을 가상 게임패드 자동 선택으로 되돌립니다.";
 "cli.virtual.reset.all" = "모든 컨트롤러 모델을 초기화합니다.";
 "cli.virtual.reset.all.done" = "이제 모든 컨트롤러 모델이 가상 게임패드를 자동으로 선택합니다.";
