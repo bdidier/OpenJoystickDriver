@@ -82,6 +82,8 @@ COMMAND_HELP = """Commands:
   catalog xpad [options]      Generate review-only records from a pinned Linux xpad.c
   errors regenerate --check   Verify the error code schema enum and wiki table against the catalog
   errors regenerate --write   Rebuild the error code schema enum and wiki table from the catalog
+  vocabulary regenerate --check   Verify the wiki control crosswalk table against crosswalk.json
+  vocabulary regenerate --write   Rebuild the wiki control crosswalk table from crosswalk.json
   check profiles              Check canonical controller records
   check schemas               Validate canonical schemas and a live support report
   check driverkit             Verify generated DriverKit reproducibility and build
@@ -325,6 +327,11 @@ def dispatch(argv: list[str]) -> int:
             exec_target(
                 "Catalog/generate_error_codes.py", tail, python=True, schema_python=True
             )
+        case "vocabulary":
+            sub, tail = (rest[0], rest[1:]) if rest else ("", [])
+            if sub != "regenerate":
+                die(f"Unknown: vocabulary {sub} (expected: regenerate)")
+            exec_target("Catalog/generate_crosswalk.py", tail, python=True)
         case "diagnose":
             sub, tail = (rest[0], rest[1:]) if rest else ("", [])
             if sub in {"", "-h", "--help", "help"}:

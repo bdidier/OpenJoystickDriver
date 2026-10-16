@@ -26,6 +26,7 @@
 - `settings.schema.json`: the `Settings.json` file, the user file that `ojd setting set` and the app write. Every setting is optional in the file; a setting it leaves out takes its built-in default.
 - `endpoint.schema.json`: the JSON lines that a granted client and the service exchange on the endpoint socket. The stream lines are the `ojd controller watch --all` events from `cli-output.schema.json`.
 - `error-codes.schema.json`: the authored catalog `Resources/ErrorCodes.json`, which gives every E#### error code its domain and name. `./Scripts/ojd errors regenerate` copies the endpoint codes into `endpoint.schema.json` and the table into `wiki/Error-Codes.md`, and refuses to reuse or delete a released code.
+- `crosswalk.schema.json`: the authored table `Resources/Vocabulary/crosswalk.json`, which maps each control id to its W3C, SDL, evdev, HID and Apple names and records the source of each column. It describes the shape of that file only; no schema accepts or maps a name in it.
 - `vocabulary.schema.json`: only `$defs`, no `kind`. The one definition of the control ids (`$defs/control`) and the subsets other schemas `$ref`: D-pad ids, stick axes, axes, horizontal stick axes and triggers. The Swift enum `Control` mirrors it, and `Resources/Vocabulary/crosswalk.json` documents the SDL, evdev, HID and Apple names of each id.
 
 Each artifact class has one current contract, a flat `<kind>.schema.json` here. Its `$id` is `https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/<kind>.schema.json`; the ID is a name for the schema and nothing publishes or fetches it yet. A document declares `apiVersion: openjoystickdriver/v1alpha1` and its `kind`, and does not declare `$schema`. OJD rejects a missing or unknown `apiVersion`, and a `kind` that is not the one it reads. The error names the file, the version found, and the supported version.
@@ -39,6 +40,7 @@ Each artifact class has one current contract, a flat `<kind>.schema.json` here. 
 | `mod-package.schema.json` | `ModPackage` |
 | `protocol-description.schema.json` | `ProtocolDescription` |
 | `error-codes.schema.json` | `ErrorCatalog` |
+| `crosswalk.schema.json` | `Crosswalk` |
 | `access-grants.schema.json` | `AccessGrants` |
 | `settings.schema.json` | `Settings` |
 | `report.schema.json` | `SupportDiagnostic`, on the `data` payload; the CloudEvents envelope has none |
