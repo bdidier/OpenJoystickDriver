@@ -263,6 +263,7 @@
         "required": ["family"]
       },
       "then": {
+        "required": ["defaults"],
         "properties": {
           "rawUSB": {
             "anyOf": [
@@ -277,7 +278,11 @@
             ]
           },
           "defaults": {
+            "required": ["session"],
             "properties": {
+              "session": {
+                "required": ["receiverInquiryResendLimit"]
+              },
               "variants": {
                 "propertyNames": {
                   "enum": ["wired", "receiver"]
@@ -308,6 +313,7 @@
         "required": ["family"]
       },
       "then": {
+        "required": ["defaults"],
         "properties": {
           "rawUSB": {
             "anyOf": [
@@ -322,7 +328,11 @@
             ]
           },
           "defaults": {
+            "required": ["session"],
             "properties": {
+              "session": {
+                "required": ["handshakeAttempts", "announceResendLimit"]
+              },
               "variants": {
                 "propertyNames": {
                   "enum": ["usb"]
@@ -945,7 +955,34 @@
             "properties": {
               "session": {
                 "properties": {
-                  "namedPackets": false
+                  "namedPackets": false,
+                  "handshakeAttempts": false,
+                  "announceResendLimit": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "not": {
+          "properties": {
+            "family": {
+              "const": "xbox.xusb"
+            }
+          },
+          "required": ["family"]
+        }
+      },
+      "then": {
+        "properties": {
+          "defaults": {
+            "properties": {
+              "session": {
+                "properties": {
+                  "receiverInquiryResendLimit": false
                 }
               }
             }
@@ -1583,7 +1620,7 @@
       "description": "Startup writes are all HID reports, all raw-USB packets, or all references to the family's named packets; a reference names an id that defaults.session.namedPackets lists, which a schema cannot say and the validators check."
     },
     "descriptionSession": {
-      "description": "What runs while the device is open. Today the keep-alive, for nintendo.switch1 its subcommands, and for xbox.gip its named packets; the startup writes join them with the session task.",
+      "description": "What runs while the device is open: the keep-alive, for nintendo.switch1 its subcommands, for xbox.gip its named packets, handshake attempts and announce resend limit, and for xbox.xusb its receiver inquiry resend limit. The startup writes join them with the session task.",
       "type": "object",
       "additionalProperties": false,
       "minProperties": 1,
@@ -1596,6 +1633,24 @@
         },
         "subcommands": {
           "$ref": "#/$defs/descriptionSubcommands"
+        },
+        "handshakeAttempts": {
+          "description": "The startup attempts a raw-USB handshake makes before it fails.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "announceResendLimit": {
+          "description": "The most startup resends after announces before the first input.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "receiverInquiryResendLimit": {
+          "description": "The most presence inquiry resends for a receiver slot.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
         }
       }
     },
