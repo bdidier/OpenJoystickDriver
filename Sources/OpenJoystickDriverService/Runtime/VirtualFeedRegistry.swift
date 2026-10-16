@@ -44,8 +44,8 @@ enum VirtualFeedError: LocalizedError, Equatable {
 ///
 /// Each feed shows its frames in order, each for at least its hold and at least
 /// `VirtualFeedExchangeResult.minimumFrameMilliseconds`, counted from when its send returns, so a
-/// slow send does not shorten the frame's time or the next one's. A queued frame without a hold gives way
-/// to a newer one with the same buttons and d-pad, so that only axis changes coalesce.
+/// slow send does not shorten the frame's time or the next one's. A queued frame without a hold
+/// gives way to a newer one with the same buttons and d-pad, so that only axis changes coalesce.
 ///
 /// A feed closes when its client closes it, when it gets no exchange for `idleTimeout`, or when
 /// the service stops. The idle time counts from the end of the last queued frame's time, so a
