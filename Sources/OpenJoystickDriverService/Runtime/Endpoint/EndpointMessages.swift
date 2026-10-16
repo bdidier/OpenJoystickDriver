@@ -53,6 +53,12 @@ struct EndpointFeedSession: Encodable, Sendable {
   let `as`: VirtualHIDProfileID
 }
 
+/// The answer to `Drain`: every frame sent before it has played, the last one for its full time.
+struct EndpointDrained: Encodable, Sendable {
+  let apiVersion = OpenJoystickDriverAPI.version
+  let kind = "Drained"
+}
+
 /// A `RumbleCommand` line: the host's rumble command with `apiVersion` and `kind`.
 struct EndpointRumbleCommand: Encodable, Sendable {
   let command: RumbleCommandLine

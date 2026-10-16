@@ -8,7 +8,7 @@ import Testing
 
 @Suite(.serialized)
 struct EndpointFeedTests {
-  private static let tool = EndpointFixture.tool
+  static let tool = EndpointFixture.tool
 
   @Test
   func aFrameReachesTheVirtualGamepad() async throws {
@@ -427,7 +427,7 @@ struct EndpointFeedTests {
   // MARK: - Helpers
 
   /// A signed client granted `control`, welcomed with it.
-  private func welcomed(_ server: EndpointServer) async throws -> EndpointTestClient {
+  func welcomed(_ server: EndpointServer) async throws -> EndpointTestClient {
     try server.setEnabled(true)
     try server.grant(Self.tool, path: "/Tool", scopes: [.control])
     let client = try await EndpointTestClient(path: server.socketPath)
@@ -437,7 +437,7 @@ struct EndpointFeedTests {
   }
 
   /// A welcomed client that started a `Generic` feed and read `feeding`.
-  private func feeding(_ server: EndpointServer) async throws -> EndpointTestClient {
+  func feeding(_ server: EndpointServer) async throws -> EndpointTestClient {
     let client = try await welcomed(server)
     await client.send(clientLine("FeedRequest", #","as":"Generic""#))
     let line = try #require(await client.readLine())

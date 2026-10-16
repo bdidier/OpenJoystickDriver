@@ -110,7 +110,7 @@ After the `FeedSession`, the program sends one `Frame` for each line. A frame ha
 {"apiVersion":"openjoystickdriver/v1alpha1","kind":"Frame","buttons":["South"],"axes":{"LeftStickY":0.5},"holdMilliseconds":100}
 ```
 
-The service shows the frames in order, each for at least 8 ms or its `holdMilliseconds`. It counts that time from the moment the send of the frame returns, so a slow send does not shorten the frame or the gap before the next one. While 256 frames wait, the endpoint stops reading lines. The endpoint does not report when a frame has played, so the program stays connected until its last frame has played, because closing the connection drops the frames that wait. When the program sends no frame line for 2 seconds after its last frame has played, the endpoint closes the connection with `E1008`. A program that has no frame to send keeps the feed open with a `KeepAlive` line (see below). The endpoint runs at most 4 virtual gamepads at the same time and answers another `FeedRequest` with `E1007`.
+The service shows the frames in order, each for at least 8 ms or its `holdMilliseconds`. It counts that time from the moment the send of the frame returns, so a slow send does not shorten the frame or the gap before the next one. While 256 frames wait, the endpoint stops reading lines. Closing the connection drops the frames that wait, so a program that sends its last frame sends a `Drain` line and stays connected until the endpoint answers `Drained` (see below). When the program sends no frame line for 2 seconds after its last frame has played, the endpoint closes the connection with `E1008`. A program that has no frame to send keeps the feed open with a `KeepAlive` line (see below). The endpoint runs at most 4 virtual gamepads at the same time and answers another `FeedRequest` with `E1007`.
 
 ### KeepAlive
 
@@ -118,6 +118,22 @@ After the `FeedSession`, a program that has no new frame sends `KeepAlive` to ke
 
 ```json
 {"apiVersion":"openjoystickdriver/v1alpha1","kind":"KeepAlive"}
+```
+
+### Drain
+
+After its last `Frame`, a program sends `Drain` to learn when every frame has played. The endpoint answers with `Drained` once every `Frame` that the program sent before the `Drain` has played, the last one for its full `holdMilliseconds` (at least 8 ms). A slow send of a frame delays `Drained` and never shortens a frame. The endpoint reads no line while it waits, and the wait does not count as idle time: the 2-second idle timeout counts from the end of the last frame's time, so a program that sends nothing after `Drained` gets `E1008`. A `Drain` that finds no frame waiting is answered at once, and a program may send `Drain` again. When the program closes the connection during the wait, the feed ends and the virtual gamepad is removed. A `Drain` has no member besides `apiVersion` and `kind`; one that has another member is refused with `E1003`. Before the `FeedSession`, and on a `Subscription` connection, the endpoint answers it with `E1010` and closes the connection.
+
+```json
+{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Drain"}
+```
+
+### Drained
+
+The endpoint sends `Drained` as the answer to a `Drain`. It has no member besides `apiVersion` and `kind`. The program may close the connection after it reads `Drained`.
+
+```json
+{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Drained"}
 ```
 
 ### RumbleCommand
@@ -159,7 +175,7 @@ An error is a `Status` line, and then the endpoint closes the connection. Each c
 | `E1005` | `revoked` | A user revoked the grant while the connection was open. |
 | `E1006` | `tooSlow` | The program reads too slowly, and 256 lines wait. |
 | `E1007` | `tooManyFeeds` | The endpoint runs the maximum number of virtual gamepads. |
-| `E1008` | `feedClosed` | The virtual gamepad closed: it did not start, the service stopped it, or the program sent no frame or `KeepAlive` line in time. |
+| `E1008` | `feedClosed` | The virtual gamepad closed: it did not start, the service stopped it, or the program sent no frame, `KeepAlive`, or `Drain` line in time. |
 | `E1009` | `unsupportedEndpointVersion` | `apiVersion` is a string that the endpoint does not accept. |
 | `E1010` | `unexpectedKind` | `kind` is unknown, or the endpoint does not accept it at this point. |
 | `E1011` | `missingHeader` | `apiVersion` or `kind` is missing, `null`, or not a string. |
@@ -200,7 +216,7 @@ OJD_TOKEN=ojd_… python3 Scripts/SDK/reference_client.py feed
 ```
 
 - `watch` subscribes to the `controllers` stream and prints the first watch line. `--count N` prints `N` lines. `--timeout SECONDS` ends the run with a non-zero exit when the endpoint sends nothing for that long, for example when no controller is connected.
-- `feed` presses the South button for 100 ms, prints the rumble commands that the endpoint sends, and stays connected until the release has played.
+- `feed` presses the South button for 100 ms, prints the rumble commands that the endpoint sends, sends a `Drain` line after the release, and stays connected until the endpoint answers `Drained`.
 - On `E1009`, `E1010`, or `E1011`, or when a line has another `apiVersion`, the client stops and reports the supported versions.
 - `--socket PATH` names the socket; without it, the client runs `ojd --json access status`.
 

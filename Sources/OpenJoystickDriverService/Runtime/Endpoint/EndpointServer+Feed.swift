@@ -8,8 +8,10 @@ extension EndpointServer {
   /// A pump exchanges with the feed each poll to send rumble, but that does not count as activity:
   /// a feed whose client sends no frame line for ``VirtualFeedExchangeResult/idleTimeoutSeconds``
   /// is closed with `E1008`, so a stalled client does not hold a button or a slot. A `KeepAlive`
-  /// line counts as activity and does nothing else. When the feed's
-  /// frame queue is full, reading waits, which pushes back on the client.
+  /// line counts as activity and does nothing else. A `Drain` line counts as activity, and the
+  /// feed answers `Drained` once the frames before it have played; reading waits meanwhile, and
+  /// the queued frames keep the feed from going idle. When the feed's frame queue is full,
+  /// reading waits, which pushes back on the client.
   /// A client that closes the connection meanwhile ends the feed, though its unread lines wait.
   func feed(_ connection: EndpointConnection, persona: VirtualHIDProfileID) {
     guard let feeds else {
@@ -55,6 +57,11 @@ extension EndpointServer {
         case .success(.keepAlive):
           if !source.keepAlive() { return }
           continue
+        case .success(.drain):
+          let drained = (try? Self.waitFor(connection) { await source.drain() }) ?? false
+          if !drained { return }
+          connection.send(EndpointDrained())
+          continue
         case .success(.frame(let decoded)): frame = decoded
         case .failure(let refusal):
           connection.close(refusal)
@@ -76,25 +83,27 @@ extension EndpointServer {
     case frame(VirtualFeedFrame)
     /// `KeepAlive`: it resets the idle timeout and changes nothing else.
     case keepAlive
+    /// `Drain`: the endpoint answers `Drained` once the frames sent before it have played.
+    case drain
   }
 
-  /// The `Frame` or `KeepAlive` on the line, or the error that refuses the line: the header errors
-  /// of ``EndpointHeader``, or `E1003` for a `Frame` that does not decode and a `KeepAlive` that
-  /// has a member besides `apiVersion` and `kind`.
+  /// The `Frame`, `KeepAlive` or `Drain` on the line, or the error that refuses the line: the
+  /// header errors of ``EndpointHeader``, or `E1003` for a `Frame` that does not decode and a
+  /// `KeepAlive` or `Drain` that has a member besides `apiVersion` and `kind`.
   ///
   /// ``VirtualFeedFrame`` takes the envelope as optional for the CLI's stdin lines, so the header
   /// is checked first.
   private static func feedLine(_ data: Data) -> Result<FeedLine, EndpointError> {
-    let accepted = [VirtualFeedFrame.kind, "KeepAlive"]
+    let accepted = [VirtualFeedFrame.kind, "KeepAlive", "Drain"]
     if let refusal = EndpointHeader.refusal(of: data, accepting: accepted) {
       return .failure(refusal)
     }
     let object = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any]
-    if object?["kind"] as? String == "KeepAlive" {
+    if let kind = object?["kind"] as? String, kind == "KeepAlive" || kind == "Drain" {
       guard object?.count == 2 else {
-        return .failure(invalid("KeepAlive has no member besides apiVersion and kind."))
+        return .failure(invalid("\(kind) has no member besides apiVersion and kind."))
       }
-      return .success(.keepAlive)
+      return .success(kind == "Drain" ? .drain : .keepAlive)
     }
     guard let frame = try? JSONDecoder().decode(VirtualFeedFrame.self, from: data) else {
       return .failure(invalid("Send Frame lines that match the endpoint schema after FeedSession."))
