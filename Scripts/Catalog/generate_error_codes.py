@@ -201,11 +201,7 @@ def render_wiki(page: str, block: str) -> str:
 
 
 def render_endpoint_schema(text: str, entries: list[Entry]) -> str:
-    codes = [
-        entry["code"]
-        for entry in entries
-        if entry["domain"] == "endpoint"
-    ]
+    codes = [entry["code"] for entry in entries if entry["domain"] == "endpoint"]
     enum = ", ".join(json.dumps(code) for code in codes)
     expected = json.loads(text)
     try:

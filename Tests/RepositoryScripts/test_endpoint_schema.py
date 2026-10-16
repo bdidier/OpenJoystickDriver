@@ -76,7 +76,9 @@ class EndpointSchemaTests(unittest.TestCase):
         self.assertFalse(
             self.valid({"apiVersion": unsupported, "kind": "Hello", "scopes": ["read"]})
         )
-        self.assertFalse(self.valid({**failure("E1009", **DETAILS), "apiVersion": unsupported}))
+        self.assertFalse(
+            self.valid({**failure("E1009", **DETAILS), "apiVersion": unsupported})
+        )
 
     def test_a_line_needs_both_header_members(self) -> None:
         hello = line("Hello", scopes=["read"])

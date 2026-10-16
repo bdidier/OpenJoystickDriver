@@ -159,7 +159,9 @@ class ErrorCodeTests(unittest.TestCase):
             entry("E1001", "endpoint", "a"),
             entry("E1002", "endpoint", "b"),
         ]
-        with self.assertRaisesRegex(errors.ErrorCodeError, "E1002 .* is missing from the catalog"):
+        with self.assertRaisesRegex(
+            errors.ErrorCodeError, "E1002 .* is missing from the catalog"
+        ):
             errors.check_not_reused(fake_previous, [entry("E1001", "endpoint", "a")])
 
     def test_a_released_code_given_another_meaning_is_refused(self) -> None:
@@ -269,7 +271,10 @@ class ErrorCodeTests(unittest.TestCase):
             f"| {new_cli} | Command line | Wrong usage. Read the help. Exit code 64. |",
             page,
         )
-        self.assertIn(f"| {new_remapping} | Remapping | Other wire. Fix it. Wire value `other_wire`. |", page)
+        self.assertIn(
+            f"| {new_remapping} | Remapping | Other wire. Fix it. Wire value `other_wire`. |",
+            page,
+        )
 
     def test_escapes_in_the_english_text_are_decoded(self) -> None:
         root = self.copy_repository()

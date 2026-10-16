@@ -192,10 +192,15 @@ struct ControllerRecordSetTests {
       )
     }
     let unsupportedRecord = try Self.json([
-      "apiVersion": unsupportedAPIVersionValue, "kind": ControllerRecordDocument.kind, "vendorID": 0x1234,
+      "apiVersion": unsupportedAPIVersionValue, "kind": ControllerRecordDocument.kind,
+      "vendorID": 0x1234,
       "productID": 0xABCD, "protocol": ["family": "xbox.gip"],
     ])
-    #expect(Self.problem(unsupportedRecord)?.contains("apiVersion \(unsupportedAPIVersionValue) is not supported") == true)
+    #expect(
+      Self.problem(unsupportedRecord)?.contains(
+        "apiVersion \(unsupportedAPIVersionValue) is not supported"
+      ) == true
+    )
     #expect(Self.problemCode(unsupportedRecord) == .unsupportedAPIVersion)
     let unsupportedDefaults = try Self.json(
       ControllerPatch.document(selector: .all, body: ["tuning": ["stickDeadzone": 0.1]])

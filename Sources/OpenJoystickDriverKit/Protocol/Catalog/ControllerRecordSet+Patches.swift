@@ -146,7 +146,8 @@ extension ControllerRecordSet {
     case patch(ControllerPatch)
   }
 
-  /// Reads one Controller or ControllerPatch file. A document of any other kind is refused by the ControllerPatch header check.
+  /// Reads one Controller or ControllerPatch file. A document of any other kind is refused by
+  /// the ControllerPatch header check.
   static func parse(_ data: Data, file: URL?, layer: ControllerRecordLayer) throws -> ParsedFile {
     guard let object = try? JSONSerialization.jsonObject(with: data),
       let document = object as? [String: Any]

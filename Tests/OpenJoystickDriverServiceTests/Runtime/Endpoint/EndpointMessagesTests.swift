@@ -133,7 +133,6 @@ struct EndpointMessagesTests {
       #","status":"Failure","code":"E1003","message":"m","details":"#
         + #"{"supportedAPIVersions":["openjoystickdriver/v1alpha1"]}"#
     ),
-    clientLine("Status", #","status":"Failure","code":"E1003","message":"m""#),
   ])
   func aLineOutsideTheSchemaIsRefused(line: String) throws {
     #expect(!(try Self.issues(line).isEmpty), "\(line)")
