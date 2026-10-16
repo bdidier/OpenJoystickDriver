@@ -3,10 +3,15 @@
   "kind": "Controller",
   "vendorID": 3853,
   "productID": 246,
-  "protocol": {
-    "family": "nintendo.switch1",
-    "parameters": {
-      "usbProtocol": "ChargingOnly"
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "nintendo.switch1",
+        "parameters": {
+          "usbProtocol": "ChargingOnly"
+        }
+      }
     }
-  }
+  ]
 }

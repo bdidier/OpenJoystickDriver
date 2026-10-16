@@ -83,12 +83,57 @@ def usage_map_problem(usage_map: dict[str, Any]) -> str | None:
     return None
 
 
+def default_mode(record: dict[str, Any]) -> dict[str, Any]:
+    return next(mode for mode in record["modes"] if mode["id"] == "default")
+
+
+def validate_mode_session(
+    path: pathlib.Path,
+    mode: dict[str, Any],
+    *,
+    record_startup: list[Any],
+    record_usb_startup: list[Any],
+) -> None:
+    """A session names HID reports for a HID mode and USB packets for a raw-USB mode, and
+    `interface` selects among HID interfaces, so a raw-USB mode has none."""
+    protocol = mode["protocol"]
+    session = mode.get("session", {})
+    if not uses_raw_usb(protocol):
+        require(
+            "usbStartup" not in session,
+            f"{path}: a HID mode's session names startup reports, not usbStartup packets",
+        )
+        return
+    require(
+        "interface" not in mode,
+        f"{path}: interface selects among HID interfaces; a raw-USB mode claims the "
+        "interface its usb transport resolves",
+    )
+    require(
+        "startup" not in session,
+        f"{path}: a raw-USB mode's session names usbStartup packets, not HID reports",
+    )
+    require(
+        not record_startup,
+        f"{path}: HID startup writes apply only to HID controllers, so not to a raw-USB mode",
+    )
+    if session.get("usbStartup", record_usb_startup):
+        described = (
+            description_of(protocol["family"]).get("defaults", {}).get("output", {})
+        )
+        carries = any("report" not in write for write in described.get("startup", []))
+        require(
+            carries and "initialization" not in protocol,
+            f"{path}: raw-USB startup writes need a family that reads them and no "
+            "initialization list",
+        )
+
+
 def validate_initialization(path: pathlib.Path, record: dict[str, Any]) -> None:
-    """Every action a protocol names is a named packet of its family, as `ProtocolInfo` in Swift."""
-    for protocol in [
-        record["protocol"],
-        *(m["protocol"] for m in record.get("modes", [])),
-    ]:
+    """Every action a mode's protocol names is a named packet of its family, as `ProtocolInfo`
+    in Swift."""
+    for mode in record["modes"]:
+        protocol = mode["protocol"]
         problem = protocol_descriptions.initialization_problem(
             description_of(protocol["family"]), protocol.get("initialization", [])
         )
@@ -96,22 +141,29 @@ def validate_initialization(path: pathlib.Path, record: dict[str, Any]) -> None:
 
 
 def validate_modes(path: pathlib.Path, record: dict[str, Any]) -> None:
-    """The record-level rules every mode's protocol obeys, as `validateModes` in Swift."""
-    modes = record.get("modes", [])
-    if not modes:
-        return
+    """The record-level rules every mode obeys, as `validateModes` in Swift."""
+    modes = record["modes"]
     identifiers = [mode["id"] for mode in modes]
     require(
         len(set(identifiers)) == len(identifiers),
         f"{path}: mode IDs must be unique: {identifiers}",
     )
-    has_layout = "input" in record
+    require(
+        identifiers.count("default") == 1,
+        f"{path}: modes need exactly one mode with the id default: {identifiers}",
+    )
+    has_layout = "report" in record.get("input", {})
     has_template = "rumble" in record.get("output", {})
-    for protocol in [record["protocol"], *(mode["protocol"] for mode in modes)]:
-        family = protocol["family"]
-        require(
-            not uses_raw_usb(protocol),
-            f"{path}: modes apply only to HID controllers",
+    written = record.get("output", {}).get("startup", [])
+    record_startup = [write for write in written if "report" in write]
+    record_usb_startup = [write for write in written if "report" not in write]
+    for mode in modes:
+        family = mode["protocol"]["family"]
+        validate_mode_session(
+            path,
+            mode,
+            record_startup=record_startup,
+            record_usb_startup=record_usb_startup,
         )
         require(
             has_layout == requires_record_input_layout(family),
@@ -126,8 +178,24 @@ def validate_modes(path: pathlib.Path, record: dict[str, Any]) -> None:
             capabilities_are_declared(record, family),
             f"{path}: capabilities must be deltas the driver of every mode declares",
         )
-    for mode in modes:
-        for probe in mode["match"]["probes"]:
+        match = mode.get("match", {})
+        require(
+            uses_raw_usb(mode["protocol"])
+            or "endpoints" not in match.get("interfaceSignature", {}),
+            f"{path}: mode {mode['id']} is a HID mode, whose interfaceSignature has no "
+            "endpoints; only the raw USB scanner reads an interface's endpoint set",
+        )
+        bcd = match.get("bcdDevice")
+        require(
+            bcd is None or bcd["min"] <= bcd["max"],
+            f"{path}: mode {mode['id']} bcdDevice min must not exceed max",
+        )
+        interface = mode.get("interface")
+        require(
+            interface is None or interface["first"] <= interface["last"],
+            f"{path}: mode {mode['id']} interface first must not exceed last",
+        )
+        for probe in match.get("probes", []):
             if probe["expect"] == "bytes":
                 end = probe["offset"] + len(probe["bytes"].split(" "))
                 require(
@@ -207,7 +275,7 @@ def validate_record(
         expected = expected_relative_path(vendor_id, product_id)
         require(relative == expected, f"{path}: path must be {expected}")
 
-    return vendor_id, product_id, record["protocol"]["family"]
+    return vendor_id, product_id, default_mode(record)["protocol"]["family"]
 
 
 def validate_catalog(record_dir: pathlib.Path = RECORD_DIR) -> list[pathlib.Path]:

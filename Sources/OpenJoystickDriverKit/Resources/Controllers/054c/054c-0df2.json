@@ -3,9 +3,14 @@
   "kind": "Controller",
   "vendorID": 1356,
   "productID": 3570,
-  "protocol": {
-    "family": "sony.dualsense"
-  },
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "sony.dualsense"
+      }
+    }
+  ],
   "capabilities": {
     "present": ["LeftPaddle1", "RightPaddle1", "Auxiliary1", "Auxiliary2"]
   }

@@ -3,9 +3,14 @@
   "kind": "Controller",
   "vendorID": 3695,
   "productID": 348,
-  "protocol": {
-    "family": "xbox.gip"
-  },
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "xbox.gip"
+      }
+    }
+  ],
   "capabilities": {
     "absent": ["LeftTrigger", "RightTrigger"]
   }

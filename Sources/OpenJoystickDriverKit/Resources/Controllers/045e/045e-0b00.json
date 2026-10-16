@@ -3,15 +3,20 @@
   "kind": "Controller",
   "vendorID": 1118,
   "productID": 2816,
-  "protocol": {
-    "family": "xbox.gip",
-    "initialization": [
-      "xbox.gip/power-on",
-      "xbox.gip/s-init",
-      "xbox.gip/enable-extra-input",
-      "xbox.gip/led-on",
-      "xbox.gip/auth-done"
-    ]
-  },
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "xbox.gip",
+        "initialization": [
+          "xbox.gip/power-on",
+          "xbox.gip/s-init",
+          "xbox.gip/enable-extra-input",
+          "xbox.gip/led-on",
+          "xbox.gip/auth-done"
+        ]
+      }
+    }
+  ],
   "route": "ExtensionOwned"
 }

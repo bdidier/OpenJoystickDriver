@@ -3,10 +3,34 @@
   "kind": "Controller",
   "vendorID": 1356,
   "productID": 616,
-  "protocol": {
-    "family": "sony.sixaxis"
-  },
   "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "sony.sixaxis"
+      }
+    },
+    {
+      "id": "bluetooth",
+      "protocol": {
+        "family": "sony.sixaxis"
+      },
+      "match": {
+        "link": "bluetooth-classic"
+      },
+      "session": {
+        "startup": [
+          {
+            "report": {
+              "kind": "feature",
+              "id": 244,
+              "length": 5
+            },
+            "bytes": [66, 3, 0, 0]
+          }
+        ]
+      }
+    },
     {
       "id": "feature-ef-answers",
       "protocol": {
@@ -22,18 +46,5 @@
         ]
       }
     }
-  ],
-  "output": {
-    "startup": [
-      {
-        "report": {
-          "kind": "feature",
-          "id": 244,
-          "length": 5
-        },
-        "bytes": [66, 3, 0, 0],
-        "transport": "bluetooth-classic"
-      }
-    ]
-  }
+  ]
 }

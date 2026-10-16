@@ -3,9 +3,14 @@
   "kind": "Controller",
   "vendorID": 13623,
   "productID": 4130,
-  "protocol": {
-    "family": "xbox.gip"
-  },
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "xbox.gip"
+      }
+    }
+  ],
   "capabilities": {
     "rumble": "absent"
   }

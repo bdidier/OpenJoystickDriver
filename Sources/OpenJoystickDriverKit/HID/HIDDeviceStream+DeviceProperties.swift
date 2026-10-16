@@ -104,15 +104,7 @@ extension HIDDeviceStream {
   /// none. Callers read it only for USB-hosted devices, since a Bluetooth radio can itself sit on
   /// an internal USB interface.
   static func usbInterfaceNumber(for device: IOHIDDevice) -> UInt8? {
-    var entry = IOHIDDeviceGetService(device)
-    guard entry != 0, IOObjectRetain(entry) == KERN_SUCCESS else { return nil }
-    while IOObjectConformsTo(entry, "IOUSBHostInterface") == 0 {
-      var parent: io_registry_entry_t = 0
-      let result = IORegistryEntryGetParentEntry(entry, kIOServicePlane, &parent)
-      IOObjectRelease(entry)
-      guard result == KERN_SUCCESS else { return nil }
-      entry = parent
-    }
+    guard let entry = retainedUSBInterfaceEntry(for: device) else { return nil }
     defer { IOObjectRelease(entry) }
     let value = IORegistryEntryCreateCFProperty(
       entry,

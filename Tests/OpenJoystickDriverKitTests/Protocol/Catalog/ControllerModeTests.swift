@@ -61,9 +61,8 @@ struct ControllerModeTests {
     var record: [String: Any] = [
       "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordDocument.kind,
       "vendorID": Int(model.vendorID), "productID": Int(model.productID),
-      "protocol": ["family": family],
     ]
-    record["modes"] = modes
+    record["modes"] = [["id": "default", "protocol": ["family": family]]] + (modes ?? [])
     return try JSONSerialization.data(withJSONObject: record.merging(extras) { $1 })
   }
 
@@ -360,8 +359,8 @@ struct ControllerModeTests {
   func theDualShock3EFProbeIsDecodedFromTheBundledRecord() async throws {
     let ds3 = ControllerModelID(vendorID: 0x054C, productID: 0x0268)
     let profile = try #require(ControllerRecordSet.bundled.records[ds3]?.profile)
-    let mode = try #require(profile.modes.first)
-    #expect(profile.modes.count == 1)
+    #expect(profile.modes.map(\.id) == ["bluetooth", "feature-ef-answers"])
+    let mode = try #require(profile.modes.last)
     #expect(mode.probes == [ControllerModeProbe(reportID: 0xEF, length: 49, expectation: .answers)])
     #expect(mode.physicalProtocolID == .sonySixaxis)
 
@@ -395,7 +394,9 @@ struct ControllerModeTests {
     let patch = try JSONSerialization.data(
       withJSONObject: ControllerPatch.document(
         selector: .identity(ControllerModelID(vendorID: 0x2C22, productID: 0x2000)),
-        body: ["modes": Self.twoModes]
+        body: [
+          "modes": [["id": "default", "protocol": ["family": "hid.descriptor"]]] + Self.twoModes
+        ]
       )
     )
     let patched = try #require(try ControllerRecordSet.validate(patch).record).profile
@@ -432,26 +433,25 @@ struct ControllerModeTests {
     let needsLayout =
       "every mode needs the record's input layout exactly when it is hid.report-layout"
     let rejected: [Case] = [
-      Case(name: "empty", modes: [], expected: "modes must not be empty"),
       Case(
         name: "duplicate ID",
         modes: [mode("a"), mode("a")],
         expected: "mode IDs must be unique"
       ),
       Case(
-        name: "reserved ID",
+        name: "default with a match",
         modes: [mode("default")],
-        expected: "a mode id is lowercase words joined by hyphens and is not default"
+        expected: "the default mode has no match"
       ),
       Case(
         name: "uppercase ID",
         modes: [mode("Mode")],
-        expected: "a mode id is lowercase words joined by hyphens and is not default"
+        expected: "a mode id is lowercase words joined by hyphens"
       ),
       Case(
         name: "ID with a trailing newline",
         modes: [mode("abc\n")],
-        expected: "a mode id is lowercase words joined by hyphens and is not default"
+        expected: "a mode id is lowercase words joined by hyphens"
       ),
       Case(
         name: "bytes with a trailing newline",
@@ -462,17 +462,6 @@ struct ControllerModeTests {
           )
         ],
         expected: "probe bytes are uppercase hex pairs that fit the read length"
-      ),
-      Case(
-        name: "raw-USB mode",
-        modes: [mode("a", family: "xbox.gip")],
-        expected: "modes apply only to HID controllers"
-      ),
-      Case(
-        name: "raw-USB default",
-        modes: [mode("a")],
-        family: "xbox.gip",
-        expected: "modes apply only to HID controllers"
       ),
       Case(
         name: "unknown write key",

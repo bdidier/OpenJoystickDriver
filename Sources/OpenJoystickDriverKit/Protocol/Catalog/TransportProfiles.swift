@@ -219,9 +219,9 @@ public struct DeviceRuntimeProfile: Equatable, Sendable {
   /// The record's rumble report, for a driver that encodes rumble from it.
   public let rumbleTemplate: RumbleOutputTemplate?
   /// The record's fixed startup reports, in order; OJD sends them only to a controller it owns.
-  public let startupWrites: [RecordStartupWrite]
+  public internal(set) var startupWrites: [RecordStartupWrite]
   /// The record's raw-USB startup packets; empty runs the family description's.
-  public let usbStartupWrites: [USBStartupWrite]
+  public internal(set) var usbStartupWrites: [USBStartupWrite]
   /// The record's input-report layout; set exactly for the `hid.report-layout` family.
   public let inputLayout: ControllerInputLayout?
   /// The record's HID usage map; set only for a `hid.descriptor` record that declares one.
@@ -233,8 +233,12 @@ public struct DeviceRuntimeProfile: Equatable, Sendable {
   /// The record's Bluetooth LE vibration characteristic UUID; set only for Switch 2 controllers.
   public var bluetoothLEVibrationCharacteristic: String?
 
-  /// The record's alternative modes, in the order their probes are tried; empty for most records.
-  /// The protocol fields above are the default mode's.
+  /// The interface numbers the selected mode drives; nil binds the one interface the device
+  /// exposes.
+  public internal(set) var interfaceRange: ClosedRange<UInt8>?
+
+  /// The record's modes other than `default`, in the order their match keys are tried; empty for
+  /// most records. The protocol fields above are the default mode's.
   public internal(set) var modes: [ControllerMode] = []
   /// The selected mode's ID; nil while the default mode runs.
   public internal(set) var modeID: String?

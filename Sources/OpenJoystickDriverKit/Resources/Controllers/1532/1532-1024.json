@@ -3,11 +3,16 @@
   "kind": "Controller",
   "vendorID": 5426,
   "productID": 4132,
-  "protocol": {
-    "family": "sony.dualsense",
-    "parameters": {
-      "maker": "ThirdParty",
-      "unprobedTouchpad": true
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "sony.dualsense",
+        "parameters": {
+          "maker": "ThirdParty",
+          "unprobedTouchpad": true
+        }
+      }
     }
-  }
+  ]
 }

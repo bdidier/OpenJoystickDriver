@@ -8,18 +8,24 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip",
-          "parameters": {
-            "shareButton": {
-              "fromEnd": 26
-            },
-            "keepAlive": true,
-            "modes": [1, 2, 3]
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip",
+              "parameters": {
+                "shareButton": {
+                  "fromEnd": 26
+                },
+                "keepAlive": true,
+                "modes": [1, 2, 3]
+              }
+            }
           }
-        },
+        ],
         "usb": {
-          "interface": 0
+          "interface": 0,
+          "configuration": "set1-before-claim"
         },
         "server": "system"
       },
@@ -34,10 +40,8 @@
             "productID": 746
           },
           "patch": {
-            "protocol": {
-              "parameters": {
-                "keepAlive": null
-              }
+            "usb": {
+              "configuration": null
             }
           }
         }
@@ -48,15 +52,21 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip",
-          "parameters": {
-            "shareButton": {
-              "fromEnd": 26
-            },
-            "modes": [1, 2, 3]
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip",
+              "parameters": {
+                "shareButton": {
+                  "fromEnd": 26
+                },
+                "keepAlive": true,
+                "modes": [1, 2, 3]
+              }
+            }
           }
-        },
+        ],
         "usb": {
           "interface": 0
         },
@@ -71,16 +81,21 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip",
-          "parameters": {
-            "shareButton": {
-              "fromEnd": 26
-            },
-            "keepAlive": true,
-            "modes": [1, 2, 3]
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip",
+              "parameters": {
+                "shareButton": {
+                  "fromEnd": 26
+                },
+                "keepAlive": true,
+                "modes": [1, 2, 3]
+              }
+            }
           }
-        },
+        ],
         "usb": {
           "interface": 0
         },
@@ -107,16 +122,21 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip",
-          "parameters": {
-            "shareButton": {
-              "fromEnd": 26
-            },
-            "keepAlive": true,
-            "modes": [1, 2, 3]
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip",
+              "parameters": {
+                "shareButton": {
+                  "fromEnd": 26
+                },
+                "keepAlive": true,
+                "modes": [1, 2, 3]
+              }
+            }
           }
-        },
+        ],
         "server": "system"
       }
     },
@@ -128,18 +148,26 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip",
-          "parameters": {
-            "shareButton": {
-              "fromEnd": 26
-            },
-            "keepAlive": true,
-            "modes": [1, 2, 3]
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip",
+              "parameters": {
+                "shareButton": {
+                  "fromEnd": 26
+                },
+                "keepAlive": true,
+                "modes": [1, 2, 3]
+              }
+            }
           }
-        },
+        ],
         "usb": {
-          "interface": 0
+          "interface": 0,
+          "endpoints": {
+            "in": 131
+          }
         },
         "server": "system"
       },
@@ -152,11 +180,9 @@
             "productID": 746
           },
           "patch": {
-            "protocol": {
-              "parameters": {
-                "shareButton": {
-                  "fromStart": 3
-                }
+            "usb": {
+              "endpoints": {
+                "out": 3
               }
             }
           }
@@ -170,19 +196,27 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip",
-          "parameters": {
-            "shareButton": {
-              "fromEnd": 26,
-              "fromStart": 3
-            },
-            "keepAlive": true,
-            "modes": [1, 2, 3]
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip",
+              "parameters": {
+                "shareButton": {
+                  "fromEnd": 26
+                },
+                "keepAlive": true,
+                "modes": [1, 2, 3]
+              }
+            }
           }
-        },
+        ],
         "usb": {
-          "interface": 0
+          "interface": 0,
+          "endpoints": {
+            "in": 131,
+            "out": 3
+          }
         },
         "server": "system"
       }
@@ -195,16 +229,30 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip",
-          "parameters": {
-            "shareButton": {
-              "fromEnd": 26
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip",
+              "parameters": {
+                "shareButton": {
+                  "fromEnd": 26
+                },
+                "keepAlive": true,
+                "modes": [1, 2, 3]
+              }
+            }
+          },
+          {
+            "id": "bluetooth",
+            "protocol": {
+              "family": "xbox.gip"
             },
-            "keepAlive": true,
-            "modes": [1, 2, 3]
+            "match": {
+              "link": "bluetooth-classic"
+            }
           }
-        },
+        ],
         "usb": {
           "interface": 0
         },
@@ -220,11 +268,21 @@
             "productID": 746
           },
           "patch": {
-            "protocol": {
-              "parameters": {
-                "modes": [4]
+            "modes": [
+              {
+                "id": "default",
+                "protocol": {
+                  "family": "xbox.gip",
+                  "parameters": {
+                    "shareButton": {
+                      "fromEnd": 26
+                    },
+                    "keepAlive": true,
+                    "modes": [1, 2, 3]
+                  }
+                }
               }
-            }
+            ]
           }
         }
       ],
@@ -235,16 +293,21 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip",
-          "parameters": {
-            "shareButton": {
-              "fromEnd": 26
-            },
-            "keepAlive": true,
-            "modes": [4]
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip",
+              "parameters": {
+                "shareButton": {
+                  "fromEnd": 26
+                },
+                "keepAlive": true,
+                "modes": [1, 2, 3]
+              }
+            }
           }
-        },
+        ],
         "usb": {
           "interface": 0
         },
@@ -259,16 +322,21 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip",
-          "parameters": {
-            "shareButton": {
-              "fromEnd": 26
-            },
-            "keepAlive": true,
-            "modes": [1, 2, 3]
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip",
+              "parameters": {
+                "shareButton": {
+                  "fromEnd": 26
+                },
+                "keepAlive": true,
+                "modes": [1, 2, 3]
+              }
+            }
           }
-        },
+        ],
         "usb": {
           "interface": 0
         },
@@ -299,16 +367,21 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip",
-          "parameters": {
-            "shareButton": {
-              "fromEnd": 26
-            },
-            "keepAlive": true,
-            "modes": [1, 2, 3]
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip",
+              "parameters": {
+                "shareButton": {
+                  "fromEnd": 26
+                },
+                "keepAlive": true,
+                "modes": [1, 2, 3]
+              }
+            }
           }
-        },
+        ],
         "usb": {
           "interface": 0
         },
@@ -326,16 +399,21 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip",
-          "parameters": {
-            "shareButton": {
-              "fromEnd": 26
-            },
-            "keepAlive": true,
-            "modes": [1, 2, 3]
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip",
+              "parameters": {
+                "shareButton": {
+                  "fromEnd": 26
+                },
+                "keepAlive": true,
+                "modes": [1, 2, 3]
+              }
+            }
           }
-        },
+        ],
         "usb": {
           "interface": 0
         },
@@ -378,16 +456,21 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip",
-          "parameters": {
-            "shareButton": {
-              "fromEnd": 26
-            },
-            "keepAlive": true,
-            "modes": [1, 2, 3]
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip",
+              "parameters": {
+                "shareButton": {
+                  "fromEnd": 26
+                },
+                "keepAlive": true,
+                "modes": [1, 2, 3]
+              }
+            }
           }
-        },
+        ],
         "usb": {
           "interface": 0
         },
@@ -405,16 +488,21 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip",
-          "parameters": {
-            "shareButton": {
-              "fromEnd": 26
-            },
-            "keepAlive": true,
-            "modes": [1, 2, 3]
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip",
+              "parameters": {
+                "shareButton": {
+                  "fromEnd": 26
+                },
+                "keepAlive": true,
+                "modes": [1, 2, 3]
+              }
+            }
           }
-        },
+        ],
         "usb": {
           "interface": 0
         },
@@ -458,16 +546,21 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip",
-          "parameters": {
-            "shareButton": {
-              "fromEnd": 26
-            },
-            "keepAlive": true,
-            "modes": [1, 2, 3]
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip",
+              "parameters": {
+                "shareButton": {
+                  "fromEnd": 26
+                },
+                "keepAlive": true,
+                "modes": [1, 2, 3]
+              }
+            }
           }
-        },
+        ],
         "usb": {
           "interface": 0
         },
@@ -486,16 +579,21 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip",
-          "parameters": {
-            "shareButton": {
-              "fromEnd": 26
-            },
-            "keepAlive": true,
-            "modes": [1, 2, 3]
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip",
+              "parameters": {
+                "shareButton": {
+                  "fromEnd": 26
+                },
+                "keepAlive": true,
+                "modes": [1, 2, 3]
+              }
+            }
           }
-        },
+        ],
         "usb": {
           "interface": 0
         },
@@ -538,16 +636,21 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip",
-          "parameters": {
-            "shareButton": {
-              "fromEnd": 26
-            },
-            "keepAlive": true,
-            "modes": [1, 2, 3]
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip",
+              "parameters": {
+                "shareButton": {
+                  "fromEnd": 26
+                },
+                "keepAlive": true,
+                "modes": [1, 2, 3]
+              }
+            }
           }
-        },
+        ],
         "usb": {
           "interface": 0
         },
@@ -563,16 +666,21 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip",
-          "parameters": {
-            "shareButton": {
-              "fromEnd": 26
-            },
-            "keepAlive": true,
-            "modes": [1, 2, 3]
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip",
+              "parameters": {
+                "shareButton": {
+                  "fromEnd": 26
+                },
+                "keepAlive": true,
+                "modes": [1, 2, 3]
+              }
+            }
           }
-        },
+        ],
         "usb": {
           "interface": 0
         },
@@ -628,16 +736,21 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip",
-          "parameters": {
-            "shareButton": {
-              "fromEnd": 26
-            },
-            "keepAlive": true,
-            "modes": [1, 2, 3]
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip",
+              "parameters": {
+                "shareButton": {
+                  "fromEnd": 26
+                },
+                "keepAlive": true,
+                "modes": [1, 2, 3]
+              }
+            }
           }
-        },
+        ],
         "usb": {
           "interface": 0
         },
@@ -656,16 +769,21 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip",
-          "parameters": {
-            "shareButton": {
-              "fromEnd": 26
-            },
-            "keepAlive": true,
-            "modes": [1, 2, 3]
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip",
+              "parameters": {
+                "shareButton": {
+                  "fromEnd": 26
+                },
+                "keepAlive": true,
+                "modes": [1, 2, 3]
+              }
+            }
           }
-        },
+        ],
         "usb": {
           "interface": 0
         },
@@ -706,16 +824,21 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip",
-          "parameters": {
-            "shareButton": {
-              "fromEnd": 26
-            },
-            "keepAlive": true,
-            "modes": [1, 2, 3]
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip",
+              "parameters": {
+                "shareButton": {
+                  "fromEnd": 26
+                },
+                "keepAlive": true,
+                "modes": [1, 2, 3]
+              }
+            }
           }
-        },
+        ],
         "usb": {
           "interface": 0
         },
@@ -733,16 +856,21 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip",
-          "parameters": {
-            "shareButton": {
-              "fromEnd": 26
-            },
-            "keepAlive": true,
-            "modes": [1, 2, 3]
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip",
+              "parameters": {
+                "shareButton": {
+                  "fromEnd": 26
+                },
+                "keepAlive": true,
+                "modes": [1, 2, 3]
+              }
+            }
           }
-        },
+        ],
         "usb": {
           "interface": 0
         },
@@ -779,16 +907,21 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip",
-          "parameters": {
-            "shareButton": {
-              "fromEnd": 26
-            },
-            "keepAlive": true,
-            "modes": [1, 2, 3]
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip",
+              "parameters": {
+                "shareButton": {
+                  "fromEnd": 26
+                },
+                "keepAlive": true,
+                "modes": [1, 2, 3]
+              }
+            }
           }
-        },
+        ],
         "usb": {
           "interface": 0
         },
@@ -803,16 +936,21 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip",
-          "parameters": {
-            "shareButton": {
-              "fromEnd": 26
-            },
-            "keepAlive": true,
-            "modes": [1, 2, 3]
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip",
+              "parameters": {
+                "shareButton": {
+                  "fromEnd": 26
+                },
+                "keepAlive": true,
+                "modes": [1, 2, 3]
+              }
+            }
           }
-        },
+        ],
         "usb": {
           "interface": 0
         },
@@ -827,16 +965,21 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip",
-          "parameters": {
-            "shareButton": {
-              "fromEnd": 26
-            },
-            "keepAlive": true,
-            "modes": [1, 2, 3]
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip",
+              "parameters": {
+                "shareButton": {
+                  "fromEnd": 26
+                },
+                "keepAlive": true,
+                "modes": [1, 2, 3]
+              }
+            }
           }
-        },
+        ],
         "usb": {
           "interface": 0
         },
@@ -851,9 +994,14 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip"
-        },
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip"
+            }
+          }
+        ],
         "usb": {
           "interface": 0
         },
@@ -886,9 +1034,14 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip"
-        },
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip"
+            }
+          }
+        ],
         "usb": {
           "interface": 0
         },
@@ -906,9 +1059,14 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "sony.dualshock4"
-        },
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "sony.dualshock4"
+            }
+          }
+        ],
         "usb": {
           "interface": 0
         },
@@ -941,9 +1099,14 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "sony.dualshock4"
-        },
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "sony.dualshock4"
+            }
+          }
+        ],
         "usb": {
           "interface": 0
         },
@@ -964,9 +1127,14 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "nintendo.switch1"
-        },
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "nintendo.switch1"
+            }
+          }
+        ],
         "usb": {
           "interface": 0
         },
@@ -999,9 +1167,14 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "nintendo.switch1"
-        },
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "nintendo.switch1"
+            }
+          }
+        ],
         "usb": {
           "interface": 0
         },
@@ -1023,10 +1196,15 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "vendor.gamesir",
-          "variant": "usb"
-        },
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "vendor.gamesir",
+              "variant": "usb"
+            }
+          }
+        ],
         "usb": {
           "interface": 0
         },
@@ -1059,10 +1237,15 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "vendor.gamesir",
-          "variant": "usb"
-        },
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "vendor.gamesir",
+              "variant": "usb"
+            }
+          }
+        ],
         "usb": {
           "interface": 0
         },
@@ -1080,10 +1263,15 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "vendor.gamesir",
-          "variant": "bluetooth-le"
-        },
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "vendor.gamesir",
+              "variant": "bluetooth-le"
+            }
+          }
+        ],
         "usb": {
           "interface": 0
         },
@@ -1117,10 +1305,15 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "vendor.gamesir",
-          "variant": "bluetooth-le"
-        },
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "vendor.gamesir",
+              "variant": "bluetooth-le"
+            }
+          }
+        ],
         "usb": {
           "interface": 0
         },
@@ -1141,9 +1334,14 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "vendor.unknown"
-        },
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "vendor.unknown"
+            }
+          }
+        ],
         "usb": {
           "interface": 0
         },
@@ -1177,9 +1375,14 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "vendor.unknown"
-        },
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "vendor.unknown"
+            }
+          }
+        ],
         "usb": {
           "interface": 0
         },
@@ -1198,9 +1401,14 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip"
-        },
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip"
+            }
+          }
+        ],
         "usb": {
           "interface": 0
         },
@@ -1228,9 +1436,14 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip"
-        },
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip"
+            }
+          }
+        ],
         "usb": {
           "interface": 0
         },
@@ -1245,9 +1458,14 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "sony.dualshock4"
-        },
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "sony.dualshock4"
+            }
+          }
+        ],
         "usb": {
           "interface": 0
         },
@@ -1280,9 +1498,14 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "sony.dualshock4"
-        },
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "sony.dualshock4"
+            }
+          }
+        ],
         "usb": {
           "interface": 0
         },
@@ -1300,9 +1523,14 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip"
-        },
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip"
+            }
+          }
+        ],
         "usb": {
           "interface": 0
         },
@@ -1344,9 +1572,14 @@
         "vendorID": 1118,
         "productID": 746,
         "name": "Fixture",
-        "protocol": {
-          "family": "xbox.gip"
-        },
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip"
+            }
+          }
+        ],
         "usb": {
           "interface": 0
         },
@@ -1359,9 +1592,14 @@
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "Controller",
         "name": "No identity",
-        "protocol": {
-          "family": "xbox.gip"
-        }
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip"
+            }
+          }
+        ]
       },
       "builtin": [],
       "package": [],
@@ -1383,9 +1621,14 @@
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "Controller",
         "name": "No identity",
-        "protocol": {
-          "family": "xbox.gip"
-        }
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.gip"
+            }
+          }
+        ]
       }
     },
     {
@@ -1601,7 +1844,7 @@
         },
         "patch": {}
       },
-      "message": "patch must hold protocol, modes, usb, bluetoothLE, server, route, output, input, or tuning"
+      "message": "patch must hold modes, usb, bluetoothLE, server, route, output, input, or tuning"
     },
     {
       "name": "an unknown section",
@@ -1616,7 +1859,7 @@
           "name": "x"
         }
       },
-      "message": "patch must hold protocol, modes, usb, bluetoothLE, server, route, output, input, or tuning"
+      "message": "patch must hold modes, usb, bluetoothLE, server, route, output, input, or tuning"
     },
     {
       "name": "a model that is not vvvv-pppp lowercase hex",

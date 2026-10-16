@@ -3,7 +3,12 @@
   "kind": "Controller",
   "vendorID": 3695,
   "productID": 385,
-  "protocol": {
-    "family": "nintendo.switch-input-only"
-  }
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "nintendo.switch-input-only"
+      }
+    }
+  ]
 }

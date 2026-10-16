@@ -6,11 +6,16 @@
     "productID": 1476
   },
   "patch": {
-    "protocol": {
-      "family": "sony.dualshock4",
-      "parameters": {
-        "motionCalibration": "Factory"
+    "modes": [
+      {
+        "id": "default",
+        "protocol": {
+          "family": "sony.dualshock4",
+          "parameters": {
+            "motionCalibration": "Factory"
+          }
+        }
       }
-    }
+    ]
   }
 }

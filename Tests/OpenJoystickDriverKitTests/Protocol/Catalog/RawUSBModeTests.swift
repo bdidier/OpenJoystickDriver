@@ -1,0 +1,227 @@
+import Foundation
+import Testing
+
+@testable import OpenJoystickDriverKit
+
+/// Raw-USB records may list alternative modes, selected from the passive facts of the enumerated
+/// device, and a raw-USB mode's session names USB packets. Every mode obeys the record-level rules
+/// the same way in a record with one mode and a record with several.
+struct RawUSBModeTests {
+  private static let model = ControllerModelID(vendorID: 0x1234, productID: 0xABCD)
+
+  private static func record(
+    modes: [[String: Any]],
+    extras: [String: Any] = [:]
+  ) -> [String: Any] {
+    [
+      "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordDocument.kind,
+      "vendorID": Int(model.vendorID), "productID": Int(model.productID), "modes": modes,
+    ].merging(extras) { $1 }
+  }
+
+  private static func problem(_ record: [String: Any]) throws -> String? {
+    do {
+      _ = try ControllerRecordSet.validate(JSONSerialization.data(withJSONObject: record))
+      return nil
+    } catch { return ControllerRecordSet.problemDescription(error) }
+  }
+
+  private static func gip(
+    _ id: String,
+    match: [String: Any]? = nil,
+    extras: [String: Any] = [:]
+  ) -> [String: Any] {
+    var mode: [String: Any] = ["id": id, "protocol": ["family": "xbox.gip"]]
+    mode["match"] = match
+    return mode.merging(extras) { $1 }
+  }
+
+  private static var usbWrite: [String: Any] { ["bytes": [1, 2]] }
+
+  @Test
+  func aRawUSBRecordSelectsAnAlternativeModeFromItsInterfaceSignature() async throws {
+    let signature: [String: Any] = [
+      "interfaceClass": 255, "interfaceSubclass": 71, "interfaceProtocol": 208,
+      "endpoints": [["direction": "in", "transferType": "interrupt"]],
+    ]
+    let document = Self.record(modes: [
+      Self.gip("default"),
+      Self.gip(
+        "alternative",
+        match: ["interfaceSignature": signature],
+        extras: ["session": ["usbStartup": [Self.usbWrite]]]
+      ),
+    ])
+    let profile = try #require(
+      try ControllerRecordSet.validate(JSONSerialization.data(withJSONObject: document)).record
+    ).profile
+    let matching = PhysicalDevice(
+      vendorID: Self.model.vendorID,
+      productID: Self.model.productID,
+      interfaces: [
+        PhysicalInterfaceSignature(
+          interfaceNumber: 0,
+          interfaceClass: 255,
+          interfaceSubclass: 71,
+          interfaceProtocol: 208,
+          hostTransport: .usb,
+          endpoints: [PhysicalEndpointSignature(direction: .in, transferType: .interrupt)]
+        )
+      ]
+    )
+    let plain = PhysicalDevice(
+      vendorID: Self.model.vendorID,
+      productID: Self.model.productID,
+      interfaces: [PhysicalInterfaceSignature(interfaceNumber: 0, hostTransport: .usb)]
+    )
+    for backend in [DeviceAccessBackend.ioUSBHost, .usbDriverKit] {
+      let selected = await ControllerModeSelector.select(
+        from: profile,
+        model: Self.model,
+        backend: backend,
+        reader: UnreadableModeProbeReader(),
+        device: matching
+      ) { _ in }
+      let unmatched = await ControllerModeSelector.select(
+        from: profile,
+        model: Self.model,
+        backend: backend,
+        reader: UnreadableModeProbeReader(),
+        device: plain
+      ) { _ in }
+      #expect(selected == .matched("alternative"))
+      #expect(unmatched == .noModeMatched)
+    }
+    let running = try #require(profile.applying(modeID: "alternative"))
+    #expect(running.usbStartupWrites.map(\.bytes) == [[1, 2]])
+    #expect(profile.applying(modeID: nil)?.usbStartupWrites.isEmpty == true)
+  }
+
+  /// A raw-USB route has no feature-report read, so a mode that needs a probe never holds.
+  @Test
+  func aRawUSBRouteNeverRunsAProbeMode() async throws {
+    let probe: [String: Any] = ["report": 1, "length": 8, "expect": "answers"]
+    let document = Self.record(modes: [
+      Self.gip("default"), Self.gip("probed", match: ["probes": [probe]]),
+    ])
+    let profile = try #require(
+      try ControllerRecordSet.validate(JSONSerialization.data(withJSONObject: document)).record
+    ).profile
+    let selection = await ControllerModeSelector.select(
+      from: profile,
+      model: Self.model,
+      backend: .ioUSBHost,
+      reader: UnreadableModeProbeReader(),
+      device: PhysicalDevice(vendorID: Self.model.vendorID, productID: Self.model.productID)
+    ) { _ in }
+    #expect(selection == .noProbeRoute)
+  }
+
+  @Test
+  func aRawUSBModeKeepsAnInterfaceAndAHIDSessionOut() throws {
+    let hidWrite: [String: Any] = [
+      "report": ["kind": "feature", "id": 1, "length": 2], "bytes": [2],
+    ]
+    let link: [String: Any] = ["link": "usb"]
+    let rejected: [(String, [String: Any], String)] = [
+      (
+        "interface",
+        Self.record(modes: [
+          Self.gip("default"),
+          Self.gip("a", match: link, extras: ["interface": ["first": 0, "last": 1]]),
+        ]),
+        "interface selects among HID interfaces"
+      ),
+      (
+        "HID session",
+        Self.record(modes: [
+          Self.gip("default"),
+          Self.gip("a", match: link, extras: ["session": ["startup": [hidWrite]]]),
+        ]),
+        "a raw-USB mode's session names usbStartup packets, not HID reports"
+      ),
+      (
+        "interface on a lone default",
+        Self.record(modes: [
+          Self.gip("default", extras: ["interface": ["first": 0, "last": 1]])
+        ]),
+        "interface selects among HID interfaces"
+      ),
+      (
+        "USB packets in a HID mode",
+        Self.record(modes: [
+          [
+            "id": "default", "protocol": ["family": "sony.sixaxis"],
+            "session": ["usbStartup": [Self.usbWrite]],
+          ]
+        ]),
+        "a HID mode's session names startup reports, not usbStartup packets"
+      ),
+      (
+        "a session naming both kinds",
+        Self.record(modes: [
+          Self.gip(
+            "default",
+            extras: ["session": ["startup": [hidWrite], "usbStartup": [Self.usbWrite]]]
+          )
+        ]),
+        "exactly one of startup"
+      ),
+      (
+        "a session naming neither",
+        Self.record(modes: [Self.gip("default", extras: ["session": [String: Any]()])]),
+        "exactly one of startup"
+      ),
+      (
+        "HID startup writes beside a raw-USB mode",
+        Self.record(
+          modes: [
+            ["id": "default", "protocol": ["family": "sony.sixaxis"]],
+            Self.gip("a", match: link),
+          ],
+          extras: ["output": ["startup": [hidWrite]]]
+        ),
+        "HID startup writes apply only to HID controllers"
+      ),
+    ]
+    for (name, document, expected) in rejected {
+      let problem = try Self.problem(document)
+      #expect(
+        problem?.contains(expected) == true,
+        Comment(rawValue: "\(name): \(problem ?? "accepted")")
+      )
+    }
+  }
+
+  /// A record with one mode gets the same per-mode layout, template and capability checks as a
+  /// record with several.
+  @Test
+  func aSingleModeRecordObeysTheSamePerModeChecks() throws {
+    let layout: [String: Any] = [
+      "report": ["length": 8],
+      "buttons": [["control": "South", "byte": 0, "mask": 1]],
+    ]
+    let rumble: [String: Any] = [
+      "rumble": [
+        "report": ["kind": "output", "id": 2, "length": 8],
+        "leftMain": ["byte": 3],
+      ]
+    ]
+    func single(_ family: String, _ extras: [String: Any] = [:]) -> [String: Any] {
+      Self.record(modes: [["id": "default", "protocol": ["family": family]]], extras: extras)
+    }
+    let rejected: [(String, [String: Any])] = [
+      ("report-layout without a layout", single("hid.report-layout")),
+      ("layout under another family", single("sony.sixaxis", ["input": layout])),
+      ("template under hid.descriptor", single("hid.descriptor", ["output": rumble])),
+      ("template under a raw-USB family", single("xbox.gip", ["output": rumble])),
+    ]
+    for (name, document) in rejected {
+      #expect(try Self.problem(document) != nil, Comment(rawValue: name))
+    }
+    #expect(try Self.problem(single("hid.report-layout", ["input": layout])) == nil)
+    #expect(
+      try Self.problem(single("hid.report-layout", ["input": layout, "output": rumble])) == nil
+    )
+  }
+}

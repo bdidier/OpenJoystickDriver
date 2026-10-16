@@ -76,19 +76,21 @@ public final class ProtocolDriverRegistry: Sendable {
     ProtocolClassifier.classify(device, backend: backend, catalog: catalog, modeID: modeID)
   }
 
-  /// Chooses the mode of a catalogued model by its probes; ``ControllerModeSelection/noModes``
+  /// Chooses the mode of a catalogued model by its match keys; ``ControllerModeSelection/noModes``
   /// for a model whose record has none.
   func selectMode(
     of model: ControllerModelID,
     backend: DeviceAccessBackend,
-    reader: any ControllerModeProbeReader
+    reader: any ControllerModeProbeReader,
+    device: PhysicalDevice = PhysicalDevice()
   ) async -> ControllerModeSelection {
     guard let record = catalog.record(for: model) else { return .noModes }
     return await ControllerModeSelector.select(
       from: record,
       model: model,
       backend: backend,
-      reader: reader
+      reader: reader,
+      device: device
     )
   }
 

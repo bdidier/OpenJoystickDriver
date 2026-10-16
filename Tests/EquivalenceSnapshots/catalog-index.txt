@@ -885,7 +885,6 @@ tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
 output rumble=[left-main,right-main] binary=[right-main] lighting=[player-indicator] adaptiveTriggers=[]
 session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=0 recoveryRounds=0 livenessMs=-
-recordStartup[0] feature id=244 length=5 delayMs=0 transport=bluetooth-classic 42030000
 parameters=
 
 ## 054C:05C4
@@ -6361,7 +6360,6 @@ tuning -
 controls [Back,DpadDown,DpadLeft,DpadRight,DpadUp,East,Guide,LeftShoulder,LeftStickClick,LeftStickX,LeftStickY,LeftTrigger,North,RightShoulder,RightStickClick,RightStickX,RightStickY,RightTrigger,South,Start,West]
 output rumble=[left-main,right-main] binary=[right-main] lighting=[player-indicator] adaptiveTriggers=[]
 session usbStartupMs=0 usbKeepAliveMs=- hidStartupMs=0 hidKeepAliveMs=- minimumHIDOutputMs=0 recoveryMs=0 recoveryRounds=0 livenessMs=-
-recordStartup[0] feature id=244 length=5 delayMs=0 transport=bluetooth-classic 42030000
 parameters=
 
 ## 2563:0575

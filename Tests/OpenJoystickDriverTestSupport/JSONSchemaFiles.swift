@@ -57,7 +57,11 @@ package enum JSONSchemaFiles {
       }
       var issues: [String] = []
       for (keyword, argument) in schema {
-        if Self.annotations.contains(keyword) || keyword == "then" || keyword == "else" { continue }
+        if Self.annotations.contains(keyword)
+          || ["then", "else", "minContains", "maxContains"].contains(keyword)
+        {
+          continue
+        }
         issues += try check(keyword, argument, schema: schema, value, in: file, at: path)
       }
       return issues
@@ -89,7 +93,7 @@ package enum JSONSchemaFiles {
       case "properties", "additionalProperties", "required", "propertyNames", "minProperties":
         guard let object = value as? [String: Any] else { return [] }
         return try checkObject(keyword, argument, schema: schema, object, in: file, at: path)
-      case "prefixItems", "items", "minItems", "maxItems", "uniqueItems":
+      case "prefixItems", "items", "minItems", "maxItems", "uniqueItems", "contains":
         guard let array = value as? [Any] else { return [] }
         return try checkArray(keyword, argument, schema: schema, array, in: file, at: path)
       case "minLength", "maxLength", "pattern":
@@ -189,6 +193,14 @@ package enum JSONSchemaFiles {
         return array.count >= (argument as? Int ?? 0) ? [] : ["\(path): too few items"]
       case "maxItems":
         return array.count <= (argument as? Int ?? .max) ? [] : ["\(path): too many items"]
+      case "contains":
+        let matching = try array.filter {
+          try validate($0, against: argument, in: file, at: path).isEmpty
+        }.count
+        let low = schema["minContains"] as? Int ?? 1
+        let high = schema["maxContains"] as? Int ?? .max
+        return (low...high).contains(matching)
+          ? [] : ["\(path): \(matching) items match contains, expected \(low)...\(high)"]
       default:
         guard argument as? Bool == true else { return [] }
         let unique = array.enumerated().allSatisfy { index, element in
