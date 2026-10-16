@@ -91,8 +91,6 @@ COMMAND_HELP = """Commands:
   test parsers-macos14        Run focused parser regressions without Swift Testing
   snapshots check             Diff the tree against the equivalence snapshots, per record
   snapshots write             Rewrite the equivalence snapshots from the tree
-  launch sdl-gamecontroller <app>
-                              Launch an SDL app through GameController/MFI rumble route
 
   hooks install|validate      Install or validate repository Git hooks
   setup                       Install required command runner and hooks
@@ -426,12 +424,6 @@ def dispatch(argv: list[str]) -> int:
                 require("repair swiftpm-module-cache", tail, count=0)
                 return repair_swiftpm_cache()
             die(f"Unknown: repair {sub} (expected: stale-dext | swiftpm-module-cache)")
-        case "launch":
-            if not rest or rest[0] != "sdl-gamecontroller":
-                die(
-                    f"Unknown: launch {rest[0] if rest else ''} (expected: sdl-gamecontroller)"
-                )
-            exec_target("Diagnostics/sdl/gamecontroller.sh", rest[1:])
         case "hooks":
             if rest not in (["install"], ["validate"]):
                 die(

@@ -1355,6 +1355,7 @@
 "cli.virtual.launch.error.not_executable" = "keine ausführbare Datei unter diesem Pfad";
 "cli.virtual.launch.error.not_found" = "kein Programm mit diesem Namen in PATH";
 "cli.virtual.launch.error.output" = "--json und --plain gelten hier nicht, weil das Programm die Standardausgabe schreibt.";
+"cli.virtual.launch.sdl_gamecontroller_backend" = "Setzt zusätzlich die SDL-Hinweise, mit denen SDL Controller nur über Apples GameController-Framework liest: SDL_JOYSTICK_MFI=1, SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1, SDL_JOYSTICK_IOKIT=0, SDL_JOYSTICK_HIDAPI=0. Sie gelten nur für das Programm und ersetzen bereits gesetzte Werte.";
 "cli.virtual.reset.abstract" = "Das Modell eines Controllers oder jedes Modell auf die automatische Auswahl des virtuellen Gamepads zurücksetzen.";
 "cli.virtual.reset.all" = "Jedes Controller-Modell zurücksetzen.";
 "cli.virtual.reset.all.done" = "Jedes Controller-Modell wählt sein virtuelles Gamepad jetzt automatisch.";

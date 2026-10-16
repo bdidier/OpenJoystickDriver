@@ -1355,6 +1355,7 @@
 "cli.virtual.launch.error.not_executable" = "tidak ada berkas eksekutabel di jalur itu";
 "cli.virtual.launch.error.not_found" = "tidak ada program dengan nama itu di PATH";
 "cli.virtual.launch.error.output" = "--json dan --plain tidak berlaku, karena program menulis ke keluaran standar.";
+"cli.virtual.launch.sdl_gamecontroller_backend" = "Juga menetapkan petunjuk SDL yang membuat SDL membaca pengontrol hanya melalui kerangka kerja GameController milik Apple: SDL_JOYSTICK_MFI=1, SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1, SDL_JOYSTICK_IOKIT=0, SDL_JOYSTICK_HIDAPI=0. Petunjuk ini hanya berlaku untuk program dan menggantikan nilai yang sudah ditetapkan.";
 "cli.virtual.reset.abstract" = "Kembalikan model pengontrol, atau semua model, ke pemilihan gamepad virtual otomatis.";
 "cli.virtual.reset.all" = "Atur ulang setiap model pengontrol.";
 "cli.virtual.reset.all.done" = "Setiap model pengontrol sekarang memilih gamepad virtualnya secara otomatis.";

@@ -1355,6 +1355,7 @@
 "cli.virtual.launch.error.not_executable" = "không có tệp thực thi ở đường dẫn đó";
 "cli.virtual.launch.error.not_found" = "không có chương trình nào tên đó trong PATH";
 "cli.virtual.launch.error.output" = "--json và --plain không áp dụng, vì chương trình ghi ra đầu ra chuẩn.";
+"cli.virtual.launch.sdl_gamecontroller_backend" = "Đồng thời đặt các gợi ý SDL khiến SDL chỉ đọc tay cầm qua khung GameController của Apple: SDL_JOYSTICK_MFI=1, SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1, SDL_JOYSTICK_IOKIT=0, SDL_JOYSTICK_HIDAPI=0. Chúng chỉ áp dụng cho chương trình và thay thế các giá trị đã đặt.";
 "cli.virtual.reset.abstract" = "Đưa kiểu máy của một bộ điều khiển, hoặc mọi kiểu máy, về lựa chọn tay cầm ảo tự động.";
 "cli.virtual.reset.all" = "Đặt lại mọi kiểu máy bộ điều khiển.";
 "cli.virtual.reset.all.done" = "Mọi kiểu máy bộ điều khiển giờ tự động chọn tay cầm ảo của nó.";

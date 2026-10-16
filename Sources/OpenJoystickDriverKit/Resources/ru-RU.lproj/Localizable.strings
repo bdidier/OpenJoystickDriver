@@ -1355,6 +1355,7 @@
 "cli.virtual.launch.error.not_executable" = "по этому пути нет исполняемого файла";
 "cli.virtual.launch.error.not_found" = "в PATH нет программы с таким именем";
 "cli.virtual.launch.error.output" = "--json и --plain не применяются, потому что программа пишет в стандартный вывод.";
+"cli.virtual.launch.sdl_gamecontroller_backend" = "Также задаёт подсказки SDL, из-за которых SDL читает контроллеры только через фреймворк Apple GameController: SDL_JOYSTICK_MFI=1, SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1, SDL_JOYSTICK_IOKIT=0, SDL_JOYSTICK_HIDAPI=0. Они действуют только для программы и заменяют уже заданные значения.";
 "cli.virtual.reset.abstract" = "Возвращает модель контроллера или все модели к автоматическому выбору виртуального геймпада.";
 "cli.virtual.reset.all" = "Сбросить все модели контроллеров.";
 "cli.virtual.reset.all.done" = "Каждая модель контроллера теперь выбирает виртуальный геймпад автоматически.";
