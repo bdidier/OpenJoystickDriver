@@ -64,12 +64,13 @@ class WikiBuildTests(unittest.TestCase):
             self.build()
 
     def test_rejects_names_that_differ_only_in_case(self) -> None:
-        self.write("Home.md", "# Home\n")
-        self.write("home.md", "# Home\n")
-        if len(list(self.source.iterdir())) == 1:
-            self.skipTest("case-insensitive file system")
-        with self.assertRaisesRegex(wiki.WikiBuildError, "case"):
-            self.build()
+        with self.assertRaisesRegex(
+            wiki.WikiBuildError, "differ only in case: Home.md, home.md"
+        ):
+            wiki.reject_case_collisions(["Guide.md", "Home.md", "home.md"])
+
+    def test_accepts_names_that_differ_in_more_than_case(self) -> None:
+        wiki.reject_case_collisions(["Guide.md", "Home.md", "Homes.md"])
 
     def test_rejects_missing_pages_and_nested_paths(self) -> None:
         for link in ("Missing.md", "guides/Page.md", "Page"):
