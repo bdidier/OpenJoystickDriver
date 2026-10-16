@@ -127,9 +127,9 @@ def startup_violations(
         .get("namedPackets", ())
     }
     for index, write in enumerate(
-        description.get("defaults", {}).get("output", {}).get("startup", [])
+        description.get("defaults", {}).get("session", {}).get("startup", [])
     ):
-        where = f"defaults.output.startup[{index}]"
+        where = f"defaults.session.startup[{index}]"
         if "packet" in write and write["packet"] not in named:
             found.append(
                 (

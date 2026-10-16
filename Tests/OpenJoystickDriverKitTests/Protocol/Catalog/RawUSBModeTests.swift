@@ -36,7 +36,7 @@ struct RawUSBModeTests {
     return mode.merging(extras) { $1 }
   }
 
-  private static var usbWrite: [String: Any] { ["bytes": [1, 2]] }
+  private static var usbWrite: [String: Any] { ["bytes": "01 02"] }
 
   @Test
   func aRawUSBRecordSelectsAnAlternativeModeFromItsInterfaceSignature() async throws {
@@ -49,7 +49,7 @@ struct RawUSBModeTests {
       Self.gip(
         "alternative",
         match: ["interfaceSignature": signature],
-        extras: ["session": ["usbStartup": [Self.usbWrite]]]
+        extras: ["session": ["startup": [Self.usbWrite]]]
       ),
     ])
     let profile = try #require(
@@ -120,7 +120,7 @@ struct RawUSBModeTests {
   @Test
   func aRawUSBModeKeepsAnInterfaceAndAHIDSessionOut() throws {
     let hidWrite: [String: Any] = [
-      "report": ["kind": "feature", "id": 1, "length": 2], "bytes": [2],
+      "report": ["kind": "feature", "id": 1, "length": 2], "bytes": "02",
     ]
     let link: [String: Any] = ["link": "usb"]
     let rejected: [(String, [String: Any], String)] = [
@@ -138,7 +138,7 @@ struct RawUSBModeTests {
           Self.gip("default"),
           Self.gip("a", match: link, extras: ["session": ["startup": [hidWrite]]]),
         ]),
-        "a raw-USB mode's session names usbStartup packets, not HID reports"
+        "HID startup writes apply only to HID controllers, so not to a raw-USB mode"
       ),
       (
         "interface on a lone default",
@@ -152,36 +152,15 @@ struct RawUSBModeTests {
         Self.record(modes: [
           [
             "id": "default", "protocol": ["family": "sony.sixaxis"],
-            "session": ["usbStartup": [Self.usbWrite]],
+            "session": ["startup": [Self.usbWrite]],
           ]
         ]),
-        "a HID mode's session names startup reports, not usbStartup packets"
+        "startup"
       ),
       (
-        "a session naming both kinds",
-        Self.record(modes: [
-          Self.gip(
-            "default",
-            extras: ["session": ["startup": [hidWrite], "usbStartup": [Self.usbWrite]]]
-          )
-        ]),
-        "exactly one of startup"
-      ),
-      (
-        "a session naming neither",
+        "a session naming nothing",
         Self.record(modes: [Self.gip("default", extras: ["session": [String: Any]()])]),
-        "exactly one of startup"
-      ),
-      (
-        "HID startup writes beside a raw-USB mode",
-        Self.record(
-          modes: [
-            ["id": "default", "protocol": ["family": "sony.sixaxis"]],
-            Self.gip("a", match: link),
-          ],
-          extras: ["output": ["startup": [hidWrite]]]
-        ),
-        "HID startup writes apply only to HID controllers"
+        "session"
       ),
     ]
     for (name, document, expected) in rejected {
@@ -207,21 +186,27 @@ struct RawUSBModeTests {
         "leftMain": ["byte": 3],
       ]
     ]
-    func single(_ family: String, _ extras: [String: Any] = [:]) -> [String: Any] {
-      Self.record(modes: [["id": "default", "protocol": ["family": family]]], extras: extras)
+    func single(
+      _ family: String,
+      _ extras: [String: Any] = [:],
+      session: [String: Any]? = nil
+    ) -> [String: Any] {
+      var mode: [String: Any] = ["id": "default", "protocol": ["family": family]]
+      mode["session"] = session
+      return Self.record(modes: [mode], extras: extras)
     }
     let rejected: [(String, [String: Any])] = [
       ("report-layout without a layout", single("hid.report-layout")),
       ("layout under another family", single("sony.sixaxis", ["input": layout])),
-      ("template under hid.descriptor", single("hid.descriptor", ["output": rumble])),
-      ("template under a raw-USB family", single("xbox.gip", ["output": rumble])),
+      ("template under hid.descriptor", single("hid.descriptor", session: rumble)),
+      ("template under a raw-USB family", single("xbox.gip", session: rumble)),
     ]
     for (name, document) in rejected {
       #expect(try Self.problem(document) != nil, Comment(rawValue: name))
     }
     #expect(try Self.problem(single("hid.report-layout", ["input": layout])) == nil)
     #expect(
-      try Self.problem(single("hid.report-layout", ["input": layout, "output": rumble])) == nil
+      try Self.problem(single("hid.report-layout", ["input": layout], session: rumble)) == nil
     )
   }
 }

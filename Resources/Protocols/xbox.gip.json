@@ -43,13 +43,24 @@
   },
   "defaults": {
     "session": {
+      "startup": [
+        {
+          "packet": "xbox.gip/power-on"
+        },
+        {
+          "packet": "xbox.gip/led-on"
+        },
+        {
+          "packet": "xbox.gip/auth-done"
+        }
+      ],
       "handshakeAttempts": 3,
       "announceResendLimit": 8,
       "keepAlive": {
         "intervalMilliseconds": 4000,
         "writes": [
           {
-            "bytes": [3, 32, 0, 3, 0, 0, 0],
+            "bytes": "03 20 00 03 00 00 00",
             "sessionByte": 2
           }
         ]
@@ -57,42 +68,42 @@
       "namedPackets": [
         {
           "id": "xbox.gip/power-on",
-          "bytes": [5, 32, 0, 1, 0],
+          "bytes": "05 20 00 01 00",
           "sessionByte": 2
         },
         {
           "id": "xbox.gip/s-init",
-          "bytes": [5, 32, 0, 15, 6],
+          "bytes": "05 20 00 0F 06",
           "sessionByte": 2
         },
         {
           "id": "xbox.gip/enable-extra-input",
-          "bytes": [77, 16, 0, 2, 7, 0],
+          "bytes": "4D 10 00 02 07 00",
           "sessionByte": 2
         },
         {
           "id": "xbox.gip/hori-ack",
-          "bytes": [1, 32, 0, 9, 0, 4, 32, 58, 0, 0, 0, 128, 0],
+          "bytes": "01 20 00 09 00 04 20 3A 00 00 00 80 00",
           "sessionByte": 2
         },
         {
           "id": "xbox.gip/led-on",
-          "bytes": [10, 32, 0, 3, 0, 1, 20],
+          "bytes": "0A 20 00 03 00 01 14",
           "sessionByte": 2
         },
         {
           "id": "xbox.gip/auth-done",
-          "bytes": [6, 32, 0, 2, 1, 0],
+          "bytes": "06 20 00 02 01 00",
           "sessionByte": 2
         },
         {
           "id": "xbox.gip/rumble-begin",
-          "bytes": [9, 0, 0, 9, 0, 15, 0, 0, 29, 29, 255, 0, 0],
+          "bytes": "09 00 00 09 00 0F 00 00 1D 1D FF 00 00",
           "sessionByte": 2
         },
         {
           "id": "xbox.gip/rumble-end",
-          "bytes": [9, 0, 0, 9, 0, 15, 0, 0, 0, 0, 0, 0, 0],
+          "bytes": "09 00 00 09 00 0F 00 00 00 00 00 00 00",
           "sessionByte": 2
         }
       ]
@@ -103,13 +114,6 @@
       "usbStartupRetryDelayMs": 1000,
       "usbTransferTimeoutMs": 2000,
       "frameQueueCapacity": 64
-    },
-    "output": {
-      "startup": [
-        { "packet": "xbox.gip/power-on" },
-        { "packet": "xbox.gip/led-on" },
-        { "packet": "xbox.gip/auth-done" }
-      ]
     }
   }
 }

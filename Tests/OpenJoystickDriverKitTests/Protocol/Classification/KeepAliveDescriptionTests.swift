@@ -3,20 +3,20 @@ import Testing
 
 @testable import OpenJoystickDriverKit
 
-/// Task 9.1d: the keep-alive interval and fixed writes of GameSir, GIP, Switch 2 and the Steam
+/// The keep-alive interval and fixed writes of GameSir, GIP, Switch 2 and the Steam
 /// Deck and Triton come from `defaults.session.keepAlive` in the family's description. The decoder
 /// accepts and rejects the documents the Python validator does (the protocol description tests),
-/// and each driver sends the bytes, at the interval, that it sent before the move.
+/// and each driver sends the description's bytes at the description's interval.
 private let writes500 = #"{"intervalMilliseconds": 500, "writes": ["#
 private let hidWriteHead =
-  #"{"report": {"kind": "feature", "id": 1, "length": 4}, "bytes": [1, 2, 3], "#
+  #"{"report": {"kind": "feature", "id": 1, "length": 4}, "bytes": "01 02 03", "#
 private let nineWrites = Array(repeating: keepAliveUSBWrite, count: 9).joined(separator: ",")
-private let keepAliveUSBWrite = #"{"bytes": [3, 32, 0, 3], "sessionByte": 2}"#
+private let keepAliveUSBWrite = #"{"bytes": "03 20 00 03", "sessionByte": 2}"#
 
 struct KeepAliveDescriptionTests {
   private static let usbWrite = keepAliveUSBWrite
   private static let hidWrite =
-    #"{"report": {"kind": "feature", "id": 1, "length": 4}, "bytes": [1, 2, 3]}"#
+    #"{"report": {"kind": "feature", "id": 1, "length": 4}, "bytes": "01 02 03"}"#
 
   private func decode(
     family: PhysicalProtocolID,
@@ -60,15 +60,15 @@ struct KeepAliveDescriptionTests {
       #"{"intervalMilliseconds": "500"}"#, #"{"intervalMilliseconds": 500, "unknown": 1}"#,
       #"{"intervalMilliseconds": 500, "writes": []}"#,
       writes500 + nineWrites + "]}",
-      #"{"intervalMilliseconds": 500, "writes": [{"bytes": []}]}"#,
-      #"{"intervalMilliseconds": 500, "writes": [{"bytes": [1], "sessionByte": 64}]}"#,
-      #"{"intervalMilliseconds": 500, "writes": [{"bytes": [1], "endpoint": 0}]}"#,
-      #"{"intervalMilliseconds": 500, "writes": [{"bytes": [1], "variants": []}]}"#,
-      #"{"intervalMilliseconds": 500, "writes": [{"bytes": [1], "resendTuning": "x"}]}"#,
-      writes500 + #"{"bytes": [1], "resendTuning": "keepAliveIntervalMs"}]}"#,
-      #"{"intervalMilliseconds": 500, "writes": [{"bytes": [1], "delayMilliseconds": 5}]}"#,
-      #"{"intervalMilliseconds": 500, "writes": [{"bytes": [1], "toleratesRejection": true}]}"#,
-      writes500 + #"{"bytes": [1], "when": {"parameter": "layout", "is": ["Pro"]}}]}"#,
+      #"{"intervalMilliseconds": 500, "writes": [{"bytes": ""}]}"#,
+      #"{"intervalMilliseconds": 500, "writes": [{"bytes": "01", "sessionByte": 64}]}"#,
+      #"{"intervalMilliseconds": 500, "writes": [{"bytes": "01", "endpoint": 0}]}"#,
+      #"{"intervalMilliseconds": 500, "writes": [{"bytes": "01", "variants": []}]}"#,
+      #"{"intervalMilliseconds": 500, "writes": [{"bytes": "01", "resendTuning": "x"}]}"#,
+      writes500 + #"{"bytes": "01", "resendTuning": "keepAliveIntervalMs"}]}"#,
+      #"{"intervalMilliseconds": 500, "writes": [{"bytes": "01", "delayMilliseconds": 5}]}"#,
+      #"{"intervalMilliseconds": 500, "writes": [{"bytes": "01", "toleratesRejection": true}]}"#,
+      writes500 + #"{"bytes": "01", "when": {"parameter": "layout", "is": ["Pro"]}}]}"#,
     ]
   )
   func rejectsAMalformedKeepAlive(keepAlive: String) {
@@ -83,7 +83,7 @@ struct KeepAliveDescriptionTests {
       hidWriteHead + #""phase": "startup"}"#,
       hidWriteHead + #""delayMilliseconds": 5}"#,
       hidWriteHead + #""transport": "usb"}"#,
-      #"{"report": {"kind": "feature", "id": 1, "length": 4}, "bytes": [1, 2, 3], "crc32Seed": 1}"#,
+      hidWriteHead + #""crc32Seed": 1}"#,
     ]
   )
   func rejectsStartupOnlyMembersInAKeepAliveWrite(write: String) {
@@ -110,11 +110,11 @@ struct KeepAliveDescriptionTests {
     #expect(rejection(family: .sonyDualSense, hidFamily)?.code == .invalidProtocolDescription)
     // A variant the family lacks.
     let variant =
-      #"{"intervalMilliseconds": 500, "writes": [{"bytes": [1], "variants": ["wired"]}]}"#
+      #"{"intervalMilliseconds": 500, "writes": [{"bytes": "01", "variants": ["wired"]}]}"#
     #expect(rejection(family: .xboxGIP, gip(variant))?.code == .unknownProtocolVariant)
     // A cadence key the family does not default.
     let cadence =
-      writes500 + #"{"bytes": [1], "resendTuning": "lizardResendTicks"}]}"#
+      writes500 + #"{"bytes": "01", "resendTuning": "lizardResendTicks"}]}"#
     #expect(rejection(family: .xboxGIP, gip(cadence))?.code == .invalidProtocolDescription)
     // Records never carry keep-alive writes.
     #expect(

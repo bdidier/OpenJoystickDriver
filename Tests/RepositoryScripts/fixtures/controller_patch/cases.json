@@ -341,7 +341,7 @@
           "interface": 0
         },
         "server": "system",
-        "output": 5
+        "input": 5
       },
       "builtin": [],
       "package": [],
@@ -354,7 +354,7 @@
             "productID": 746
           },
           "patch": {
-            "output": {
+            "input": {
               "rumble": true,
               "light": null
             }
@@ -386,7 +386,7 @@
           "interface": 0
         },
         "server": "system",
-        "output": {
+        "input": {
           "rumble": true
         }
       }
@@ -2081,7 +2081,7 @@
         },
         "patch": {}
       },
-      "message": "patch must hold modes, usb, bluetoothLE, server, route, output, input, or tuning"
+      "message": "patch must hold modes, usb, bluetoothLE, server, route, input, or tuning"
     },
     {
       "name": "an unknown section",
@@ -2096,7 +2096,7 @@
           "name": "x"
         }
       },
-      "message": "patch must hold modes, usb, bluetoothLE, server, route, output, input, or tuning"
+      "message": "patch must hold modes, usb, bluetoothLE, server, route, input, or tuning"
     },
     {
       "name": "a model that is not vvvv-pppp lowercase hex",

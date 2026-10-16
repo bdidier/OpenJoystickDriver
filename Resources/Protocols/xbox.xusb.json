@@ -28,22 +28,20 @@
   "rawUSBTuningKeys": ["presenceResendReports", "usbTransferTimeoutMs"],
   "defaults": {
     "session": {
+      "startup": [
+        {
+          "bytes": "08 00 0F C0 00 00 00 00 00 00 00 00",
+          "timeoutMilliseconds": 2000,
+          "toleratesRejection": true,
+          "variants": ["receiver"]
+        }
+      ],
       "receiverInquiryResendLimit": 8
     },
     "tuning": {
       "presenceResendReports": 16,
       "usbTransferTimeoutMs": 2000,
       "frameQueueCapacity": 64
-    },
-    "output": {
-      "startup": [
-        {
-          "bytes": [8, 0, 15, 192, 0, 0, 0, 0, 0, 0, 0, 0],
-          "timeoutMilliseconds": 2000,
-          "toleratesRejection": true,
-          "variants": ["receiver"]
-        }
-      ]
     }
   }
 }

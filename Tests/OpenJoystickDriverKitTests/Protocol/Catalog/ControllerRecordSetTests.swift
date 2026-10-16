@@ -159,13 +159,15 @@ struct ControllerRecordSetTests {
         == "the patch changes nothing in the record"
     )
     #expect(
-      Self.problem(try Self.patch(Self.bundledHID, set: ["usb": ["postHandshakeSettleMs": 5]]))
-        == "USB overrides require a raw-USB protocol family"
+      Self.problem(
+        try Self.patch(Self.bundledHID, set: ["usb": ["configuration": "set1-before-claim"]])
+      )
+        == "record.usb: USB overrides require a raw-USB protocol family"
     )
     #expect(
       Self.problem(try Self.patch(Self.bundledGIP, set: ["capabilities": ["rumble": "absent"]]))
         == "patch must hold modes, usb, bluetoothLE, server, "
-        + "route, output, input, or tuning"
+        + "route, input, or tuning"
     )
     #expect(
       Self.problem(try Self.patch(Self.bundledGIP, set: ["tuning": ["hidStartupIntervalMs": 5]]))
@@ -174,7 +176,7 @@ struct ControllerRecordSetTests {
     #expect(Self.problem(Data("[]".utf8)) == "the file is not a JSON object")
     var withNote = ControllerPatch.document(
       selector: .identity(Self.bundledGIP),
-      body: ["usb": ["postHandshakeSettleMs": 5]]
+      body: ["usb": ["configuration": "set1-before-claim"]]
     )
     withNote["note"] = "x"
     #expect(
@@ -193,7 +195,7 @@ struct ControllerRecordSetTests {
     let unsupportedAPIVersionValue = "unsupported.example/v9"
     let body = ControllerPatch.document(
       selector: .identity(Self.bundledGIP),
-      body: ["usb": ["postHandshakeSettleMs": 5]]
+      body: ["usb": ["configuration": "set1-before-claim"]]
     )
     let noVersion = body.filter { $0.key != "apiVersion" }
     #expect(
@@ -256,7 +258,7 @@ struct ControllerRecordSetTests {
     try Self.add(Self.unbundled, family: "xbox.gip").write(
       to: directory.appendingPathComponent("1234-abcd.json")
     )
-    try Self.patch(Self.bundledGIP, set: ["usb": ["postHandshakeSettleMs": 5]]).write(
+    try Self.patch(Self.bundledGIP, set: ["usb": ["configuration": "set1-before-claim"]]).write(
       to: directory.appendingPathComponent("wrong-name.json")
     )
     try Data("{".utf8).write(to: directory.appendingPathComponent("broken.json"))

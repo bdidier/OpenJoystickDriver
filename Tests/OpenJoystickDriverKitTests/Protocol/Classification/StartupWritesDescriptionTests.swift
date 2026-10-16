@@ -3,7 +3,7 @@ import Testing
 
 @testable import OpenJoystickDriverKit
 
-/// Task 9.1a: a driver sends no startup write that its family's description does not carry. A
+/// A driver sends no startup write that its family's description does not carry. A
 /// family with raw-USB startup packets returns exactly the description's packets; a family with HID
 /// startup writes returns none of them itself, only the reports that depend on session state.
 struct StartupWritesDescriptionTests {

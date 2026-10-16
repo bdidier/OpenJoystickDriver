@@ -1,6 +1,6 @@
 /// A family's keep-alive (`defaults.session.keepAlive` in its protocol description): how often the
-/// driver's keep-alive runs, and the fixed packets each run sends. A record never carries one, so
-/// no record replaces these writes.
+/// driver's keep-alive runs, and the fixed packets each run sends. A mode's `session.keepAlive`
+/// declares one for a raw-USB family whose description declares none.
 struct KeepAlive: Equatable, Sendable {
   static let intervalRange = 1...60_000
   static let writesRange = 1...8

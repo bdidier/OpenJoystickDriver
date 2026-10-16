@@ -391,21 +391,22 @@ struct ControllerModeMatchTests {
     #expect(reader.readCount == 0)
   }
 
-  /// A mode's `session.startup` overrides the record's own writes while the mode runs, and a mode
-  /// without a session keeps them.
+  /// A mode runs the steps of its own `session` only; a mode without a session runs none.
   @Test
-  func aModeSessionOverridesTheRecordStartupWrites() throws {
+  func aModeRunsOnlyItsOwnSession() throws {
     let write: [String: Any] = [
-      "report": ["kind": "feature", "id": 244, "length": 5], "bytes": [66, 3, 0, 0],
+      "report": ["kind": "feature", "id": 244, "length": 5], "bytes": "42 03 00 00",
     ]
     let record: [String: Any] = [
       "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordDocument.kind,
       "vendorID": Int(Self.model.vendorID), "productID": Int(Self.model.productID),
-      "output": [
-        "startup": [["report": ["kind": "output", "id": 0, "length": 2], "bytes": [1, 2]]]
-      ],
       "modes": [
-        ["id": "default", "protocol": ["family": "sony.sixaxis"]],
+        [
+          "id": "default", "protocol": ["family": "sony.sixaxis"],
+          "session": [
+            "startup": [["report": ["kind": "output", "id": 0, "length": 2], "bytes": "01 02"]]
+          ],
+        ],
         Self.mode("plain", match: ["link": "usb"]),
         Self.mode(
           "session",
@@ -418,7 +419,7 @@ struct ControllerModeMatchTests {
       try ControllerRecordSet.validate(JSONSerialization.data(withJSONObject: record)).record
     ).profile
     #expect(profile.startupWrites.count == 1)
-    #expect(profile.applying(modeID: "plain")?.startupWrites == profile.startupWrites)
+    #expect(profile.applying(modeID: "plain")?.startupWrites.isEmpty == true)
     let session = try #require(profile.applying(modeID: "session"))
     #expect(
       session.startupWrites.map(\.write) == [
@@ -635,7 +636,7 @@ struct ControllerModeMatchTests {
   @Test
   func interfaceAndSessionApplyOnlyToHIDModes() throws {
     let write: [String: Any] = [
-      "report": ["kind": "feature", "id": 1, "length": 2], "bytes": [1, 2],
+      "report": ["kind": "feature", "id": 1, "length": 2], "bytes": "01 02",
     ]
     let rawDefault: [String: Any] = ["id": "default", "protocol": ["family": "xbox.gip"]]
     for (name, extras) in [

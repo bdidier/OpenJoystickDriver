@@ -18,7 +18,7 @@ extension NamedPacket: Decodable {
     do {
       try self.init(
         id: container.decode(String.self, for: "id"),
-        bytes: container.decode([UInt8].self, for: "bytes"),
+        bytes: HexBytes.decode(container, for: "bytes", what: "named packet"),
         sessionByte: container.decode(Int.self, for: "sessionByte")
       )
     } catch let problem as ControllerRecordProblem {

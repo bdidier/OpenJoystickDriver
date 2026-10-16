@@ -57,6 +57,7 @@ extension DevicePipeline {
     await neutralizeOutput()
     await closeUSBCommandSession()
     await notifyControllerDidStop()
+    if let handle { await sendUSBShutdownWrites(handle: handle) }
     await handle?.close()
     driver.resetProtocolState()
     if shouldAwaitRunTask { await task?.value }

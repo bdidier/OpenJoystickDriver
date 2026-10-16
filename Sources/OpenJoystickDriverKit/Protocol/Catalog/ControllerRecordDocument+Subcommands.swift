@@ -22,7 +22,19 @@ extension SubcommandRequest: Decodable {
     let container = try decoder.container(keyedBy: DocumentKey.self)
     try container.rejectUnknown(allowed: ["subcommand", "data", "spiRead"])
     let subcommand = try container.decode(UInt8.self, for: "subcommand")
-    let data = try container.decodeOptional([UInt8].self, for: "data")
+    var data: [UInt8]?
+    if container.contains(DocumentKey("data")) {
+      do {
+        data = try HexBytes.decode(container, for: "data", what: "subcommand request data")
+      } catch let problem as ControllerRecordProblem {
+        throw DecodingError.dataCorrupted(
+          .init(
+            codingPath: decoder.codingPath + [DocumentKey("data")],
+            debugDescription: problem.description
+          )
+        )
+      }
+    }
     let read = try container.decodeOptional(SPIRead.self, for: "spiRead")
     do {
       switch (data, read) {

@@ -30,7 +30,6 @@ SECTIONS = frozenset(
         "bluetoothLE",
         "server",
         "route",
-        "output",
         "input",
         "tuning",
     }
@@ -99,20 +98,30 @@ def default_protocol(record: dict[str, Any]) -> dict[str, Any]:
 
 
 def tuning_scope(record: dict[str, Any]) -> frozenset[str]:
-    """The `tuning` keys that a controller of `record`'s family reads.
+    """The `tuning` keys that a controller of `record` reads: those the family and variant of
+    every mode read.
 
     `ControllerTuning.scope(ofDocument:)` in Swift is the same rule, and both read the family's
-    description (`Resources/Protocols`). A record with no known family reads only
+    description (`Resources/Protocols`). A mode with no known family reads only
     `stickDeadzone` and `frameQueueCapacity`.
     """
-    info = default_protocol(record)
-    family, variant = info.get("family"), info.get("variant")
-    return protocol_descriptions.tuning_scope(
-        protocol_descriptions.bundled().get(family)
-        if isinstance(family, str)
-        else None,
-        variant if isinstance(variant, str) else None,
-    )
+    modes = record.get("modes")
+    scopes = []
+    for mode in modes if isinstance(modes, list) else []:
+        info = mode.get("protocol") if isinstance(mode, dict) else None
+        info = info if isinstance(info, dict) else {}
+        family, variant = info.get("family"), info.get("variant")
+        scopes.append(
+            protocol_descriptions.tuning_scope(
+                protocol_descriptions.bundled().get(family)
+                if isinstance(family, str)
+                else None,
+                variant if isinstance(variant, str) else None,
+            )
+        )
+    if not scopes:
+        return protocol_descriptions.tuning_scope(None, None)
+    return frozenset.intersection(*scopes)
 
 
 def selector_rank(selector: dict[str, Any]) -> int:
@@ -176,8 +185,7 @@ def parse_patch(document: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any
     rank = selector_rank(selector)
     if not patch or not set(patch) <= SECTIONS:
         raise PatchError(
-            "patch must hold modes, usb, bluetoothLE, server, route, "
-            "output, input, or tuning"
+            "patch must hold modes, usb, bluetoothLE, server, route, input, or tuning"
         )
     if rank == RANK_ALL and set(patch) != {"tuning"}:
         raise PatchError("an all patch may set only tuning")

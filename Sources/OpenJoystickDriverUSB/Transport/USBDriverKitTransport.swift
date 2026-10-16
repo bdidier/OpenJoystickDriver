@@ -9,6 +9,8 @@ struct USBDriverKitParentDevice: Sendable, Hashable {
   var locationID: UInt32?
   var productName: String?
   var serialNumber: String?
+  var manufacturer: String?
+  var deviceRelease: UInt16?
 }
 
 /// Host adapter for services owned by OJD's restricted USBDriverKit extension.
@@ -137,7 +139,9 @@ public actor USBDriverKitTransportProvider: USBPhysicalDeviceObservationProvider
       serialNumber: parent?.serialNumber
         ?? stringProperty(
           service.properties["USB Serial Number"] ?? service.properties["Serial Number"]
-        )
+        ),
+      manufacturer: parent?.manufacturer,
+      deviceRelease: parent?.deviceRelease
     )
   }
 
@@ -200,7 +204,9 @@ public actor USBDriverKitTransportProvider: USBPhysicalDeviceObservationProvider
       productID: productID,
       locationID: (value("locationID") as? UInt64).flatMap(UInt32.init(exactly:)),
       productName: string(["USB Product Name", "Product Name"]),
-      serialNumber: string(["USB Serial Number", "Serial Number"])
+      serialNumber: string(["USB Serial Number", "Serial Number"]),
+      manufacturer: string(["USB Vendor Name", "Vendor Name"]),
+      deviceRelease: (value("bcdDevice") as? UInt64).flatMap(UInt16.init(exactly:))
     )
   }
 

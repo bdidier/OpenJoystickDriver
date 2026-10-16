@@ -182,6 +182,10 @@ public struct USBTransportDevice: Hashable, Sendable {
   public let observedPhysicalLocationIdentifier: UInt32?
   public let productName: String?
   public let serialNumber: String?
+  /// The manufacturer string of the device descriptor, if the device reports one.
+  public let manufacturer: String?
+  /// The device release number (`bcdDevice`), if the device reports one.
+  public let deviceRelease: UInt16?
 
   public init(
     route: USBTransportRoute,
@@ -191,7 +195,9 @@ public struct USBTransportDevice: Hashable, Sendable {
     locationID: UInt32,
     observedPhysicalLocationIdentifier: UInt32? = nil,
     productName: String? = nil,
-    serialNumber: String? = nil
+    serialNumber: String? = nil,
+    manufacturer: String? = nil,
+    deviceRelease: UInt16? = nil
   ) {
     self.route = route
     self.serviceID = serviceID
@@ -201,6 +207,8 @@ public struct USBTransportDevice: Hashable, Sendable {
     self.observedPhysicalLocationIdentifier = observedPhysicalLocationIdentifier
     self.productName = productName
     self.serialNumber = serialNumber
+    self.manufacturer = manufacturer
+    self.deviceRelease = deviceRelease
   }
 
   /// The address of this service.

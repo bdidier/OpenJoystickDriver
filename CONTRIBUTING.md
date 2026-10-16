@@ -53,7 +53,7 @@ Style: `.swift-format` and `.swiftlint.yml`. Do not copy them here. Do not add S
 
 GUI and CLI copy: `LOCALIZATION.md`. Tests check codes, routes, identifiers, paths, and structure — not help text, and not `.swift` source via `String(contentsOf:)`.
 
-- Decimal integers in JSON. No hex.
+- Decimal integers in JSON. No hex numbers. Raw byte strings in a `session` (`bytes`, `data`, and a probe's expected bytes) are the one exception: uppercase hex pairs separated by single spaces, such as `42 03 00 00`.
 - Keep the existing `print` diagnostics. No new logging stack.
 - Parser errors stay local: log and skip.
 - Deployment floor: macOS 12. Future iOS and iPadOS companion apps: iOS 15 and iPadOS 15.

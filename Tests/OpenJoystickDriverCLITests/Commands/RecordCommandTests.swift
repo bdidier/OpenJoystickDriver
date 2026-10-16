@@ -11,7 +11,7 @@ struct RecordCommandTests {
     """
     {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "ControllerPatch",
      "selector": {"vendorID": 13932, "productID": 5},
-     "patch": {"usb": {"postHandshakeSettleMs": 5}}}
+     "patch": {"tuning": {"stickDeadzone": 0.08}}}
     """.utf8
   )
 
@@ -110,10 +110,10 @@ struct RecordCommandTests {
     #expect(list.standardOutput.contains("\tbundled\t"))
     let shown = try show.json()
     #expect(shown["layer"] as? String == "user")
-    #expect(shown["fields"] as? [String: String] == ["modes": "bundled", "usb": "user"])
+    #expect(shown["fields"] as? [String: String] == ["modes": "bundled", "tuning": "user"])
     let record = try #require(shown["record"] as? [String: Any])
-    #expect((record["usb"] as? [String: Int])?["postHandshakeSettleMs"] == 5)
-    #expect(plainShow.standardOutput == "modes\tbundled\nusb\tuser\n")
+    #expect((record["tuning"] as? [String: Double])?["stickDeadzone"] == 0.08)
+    #expect(plainShow.standardOutput == "modes\tbundled\ntuning\tuser\n")
   }
 
   @Test

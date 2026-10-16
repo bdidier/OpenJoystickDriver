@@ -26,12 +26,6 @@ struct ControllerRecordDocument: Decodable {
   let server: ControllerServer?
   /// Set only on raw-USB records that OJD's USB extension serves.
   let route: ControllerRecordRoute?
-  let rumbleTemplate: RumbleOutputTemplate?
-  /// Fixed reports OJD sends when it starts the controller; empty when the record has none.
-  let startupWrites: [RecordStartupWrite]
-  /// Fixed raw-USB packets OJD sends when it starts the controller; empty when the record has
-  /// none. Only a family whose description carries raw-USB startup packets takes them.
-  let usbStartupWrites: [USBStartupWrite]
   /// Present exactly for the `hid.report-layout` family.
   let inputLayout: ControllerInputLayout?
   /// Present only for the `hid.descriptor` family, which then replaces the description's map.
@@ -42,7 +36,7 @@ struct ControllerRecordDocument: Decodable {
     let container = try decoder.container(keyedBy: DocumentKey.self)
     try container.rejectUnknown(allowed: [
       "apiVersion", "kind", "vendorID", "productID", "modes", "usb",
-      "bluetoothLE", "capabilities", "server", "route", "output", "input", "tuning",
+      "bluetoothLE", "capabilities", "server", "route", "input", "tuning",
     ])
     let apiVersion = try container.decodeOptional(String.self, for: "apiVersion")
     let kind = try container.decodeOptional(String.self, for: "kind")
@@ -94,10 +88,6 @@ struct ControllerRecordDocument: Decodable {
       }
       return route
     }
-    let output = try container.decodeOptional(Output.self, for: "output")
-    rumbleTemplate = output?.rumble
-    startupWrites = output?.startup ?? []
-    usbStartupWrites = output?.usbStartup ?? []
     let input = try container.decodeOptional(Input.self, for: "input")
     inputLayout = input?.layout
     hidUsageMap = input?.usageMap
@@ -110,103 +100,14 @@ struct ControllerRecordDocument: Decodable {
       )
     }
     tuning = try container.decodeOptional(Tuning.self, for: "tuning")?.tuning ?? .none
-    try validateOwnershipAndOutput(codingPath: decoder.codingPath)
     try validateTuning(codingPath: decoder.codingPath)
-    try validateBluetoothLE(codingPath: decoder.codingPath)
-    guard capabilitiesAreDeclared(by: protocolInfo.protocolID) else {
-      throw DecodingError.dataCorrupted(
-        .init(
-          codingPath: decoder.codingPath + [DocumentKey("capabilities")],
-          debugDescription: "capabilities must be deltas their driver declares"
-        )
-      )
-    }
+    try validateTransportSections(codingPath: decoder.codingPath)
     try validateModes(codingPath: decoder.codingPath)
-    if let endpoints = usb?.endpoints {
-      let defaultEndpoints = protocolInfo.protocolID.protocolDescription.endpoints
-      guard (endpoints.input, endpoints.output) != (defaultEndpoints.input, defaultEndpoints.output)
-      else {
-        throw DecodingError.dataCorrupted(
-          .init(
-            codingPath: decoder.codingPath + [DocumentKey("usb"), DocumentKey("endpoints")],
-            debugDescription: "protocol-default endpoints must be omitted"
-          )
-        )
-      }
-    }
   }
 
   /// Only the deltas the family's description declares have a driver that acts on them.
   func capabilitiesAreDeclared(by protocolID: PhysicalProtocolID) -> Bool {
     protocolID.protocolDescription.recordCapabilities.permits(capabilities)
-  }
-
-  /// macOS cannot serve a raw-USB family, HID startup writes go to HID controllers while raw-USB
-  /// startup packets go to families that read them, only a driver that encodes rumble from a
-  /// template may name one, and the report-layout family alone has, and needs, an input layout.
-  private func validateOwnershipAndOutput(codingPath: [any CodingKey]) throws {
-    let rawUSB = protocolInfo.protocolID.usesRawUSB(storedVariant: protocolInfo.protocolVariant)
-    if server != nil, rawUSB {
-      throw DecodingError.dataCorrupted(
-        .init(
-          codingPath: codingPath + [DocumentKey("server")],
-          debugDescription: "server applies only to HID controllers"
-        )
-      )
-    }
-    if route != nil, !rawUSB {
-      throw DecodingError.dataCorrupted(
-        .init(
-          codingPath: codingPath + [DocumentKey("route")],
-          debugDescription: "route ExtensionOwned applies only to raw-USB controllers"
-        )
-      )
-    }
-    if !startupWrites.isEmpty, rawUSB {
-      throw DecodingError.dataCorrupted(
-        .init(
-          codingPath: codingPath + [DocumentKey("output"), DocumentKey("startup")],
-          debugDescription: "HID startup writes apply only to HID controllers"
-        )
-      )
-    }
-    if !usbStartupWrites.isEmpty {
-      let carriesUSBWrites =
-        ProtocolDescription.bundled[protocolInfo.protocolID]?.usbStartupWrites.isEmpty == false
-      guard carriesUSBWrites, protocolInfo.initialization == nil else {
-        throw DecodingError.dataCorrupted(
-          .init(
-            codingPath: codingPath + [DocumentKey("output"), DocumentKey("startup")],
-            debugDescription:
-              "raw-USB startup writes need a family that reads them and no initialization list"
-          )
-        )
-      }
-    }
-    if (inputLayout != nil) != protocolInfo.protocolID.requiresRecordInputLayout {
-      throw DecodingError.dataCorrupted(
-        .init(
-          codingPath: codingPath + [DocumentKey("input")],
-          debugDescription: "an input layout is required for hid.report-layout and only there"
-        )
-      )
-    }
-    if hidUsageMap != nil, protocolInfo.protocolID != .hidDescriptor {
-      throw DecodingError.dataCorrupted(
-        .init(
-          codingPath: codingPath + [DocumentKey("input")],
-          debugDescription: "a HID usage map applies only to hid.descriptor"
-        )
-      )
-    }
-    if rumbleTemplate != nil, !protocolInfo.protocolID.encodesRumbleTemplate {
-      throw DecodingError.dataCorrupted(
-        .init(
-          codingPath: codingPath + [DocumentKey("output"), DocumentKey("rumble")],
-          debugDescription: "rumble templates require a driver that encodes them"
-        )
-      )
-    }
   }
 
   struct RumbleTemplate: Decodable {
@@ -368,31 +269,18 @@ struct ControllerRecordDocument: Decodable {
 
   struct USBOverride: Decodable {
     let configuration: String?
-    let postHandshakeSettleMilliseconds: Int?
     let endpoints: Endpoints?
 
     init(from decoder: any Decoder) throws {
       let container = try decoder.container(keyedBy: DocumentKey.self)
-      try container.rejectUnknown(allowed: ["configuration", "postHandshakeSettleMs", "endpoints"])
+      try container.rejectUnknown(allowed: ["configuration", "endpoints"])
       guard !container.allKeys.isEmpty else {
         throw DecodingError.dataCorrupted(
           .init(codingPath: decoder.codingPath, debugDescription: "usb must not be empty")
         )
       }
       configuration = try container.decodeOptional(String.self, for: "configuration")
-      postHandshakeSettleMilliseconds = try container.decodeOptional(
-        Int.self,
-        for: "postHandshakeSettleMs"
-      )
       endpoints = try container.decodeOptional(Endpoints.self, for: "endpoints")
-      guard postHandshakeSettleMilliseconds.map({ (1...60_000).contains($0) }) ?? true else {
-        throw DecodingError.dataCorrupted(
-          .init(
-            codingPath: decoder.codingPath + [DocumentKey("postHandshakeSettleMs")],
-            debugDescription: "postHandshakeSettleMs must be in 1...60000"
-          )
-        )
-      }
     }
   }
 

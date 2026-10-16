@@ -109,7 +109,8 @@ extension DevicePipeline {
   /// controller reports, which an idle controller may not do for many seconds.
   func startUSBKeepAlive(handle: any USBTransportSession, generation: UInt64) {
     stopUSBKeepAlive()
-    guard let interval = plan.usbKeepAliveIntervalNanoseconds else { return }
+    guard let interval = plan.usbKeepAliveIntervalNanoseconds ?? sessionKeepAliveIntervalNanoseconds
+    else { return }
     usbKeepAliveTask = Task {
       while true {
         do { try await Task.sleep(nanoseconds: interval) } catch { return }
@@ -130,7 +131,7 @@ extension DevicePipeline {
     guard isCurrentUSBRun(generation), usbHandle === handle, sessionState != .suspended else {
       return
     }
-    for write in driver.keepAliveWrites() {
+    for write in driver.keepAliveWrites() + sessionKeepAliveWrites() {
       guard isCurrentUSBRun(generation), usbHandle === handle else { return }
       do { try await performUSBWrite(write, handle: handle, runGeneration: generation) } catch {
         print("[DevicePipeline] Keep-alive failed" + " for \(identifier): \(error)")
@@ -182,6 +183,7 @@ extension DevicePipeline {
     }
     usbHandle = nil
     stopUSBKeepAlive()
+    await sendUSBShutdownWrites(handle: handle)
     await handle.close()
     driver.resetProtocolState()
     // The driver forgot presence with the session, so the next session's presence reply must
