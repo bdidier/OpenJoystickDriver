@@ -190,6 +190,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The pr
 
 ### Fixed
 
+- An endpoint client that the service refuses or closes with an error, such as `E1004` for a ninth connection, always reads that error line before the connection ends; a close that came while the service finished writing an earlier line could end the connection without it.
 - The native-send deadline of a virtual gamepad, the 2-second wait for a virtual device to report cancellation, and the deadline of `withTimeout` in the command line now run on a timer thread of their own instead of `Task.sleep` on the cooperative pool, so a busy pool no longer delays them past their limit.
 - The idle and hung-send deadline of a virtual feed, the frame-hold pacing of its player, and the timeouts of a virtual output transition now run on the same timer thread, so a busy pool no longer delays them.
 - Merge the stick reports that queue behind a slow virtual-gamepad publication to the newest state while keeping every button edge, so sticks no longer stutter. A remapping route's controller still gets every queued report, and ending a session drops held input. Not verified on hardware.
