@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/endpoint.schema.json",
   "title": "OpenJoystickDriver endpoint protocol",
-  "description": "One JSON object per line on the endpoint socket, or per text message on the WebSocket. Every line except a watch line carries apiVersion and kind. A client sends Hello, waits for Welcome, then sends Subscription or FeedRequest. After Subscription the service sends watch lines, {type, object}, identical to 'ojd controller watch --all --json'; after FeedRequest and FeedSession the client sends Frame lines, and KeepAlive lines while it has no frame to send, and the service sends the host's RumbleCommand lines. A Status line with status Failure is the last line before the service closes the connection. A line that is not a JSON object is answered with Status E1003. For any other line the service reads the header first: a line without apiVersion or kind is answered with E1011, another apiVersion with E1009, and an unknown kind, or one that is not accepted at that point, with E1010; each of these carries details.supportedAPIVersions.",
+  "description": "One JSON object per line on the endpoint socket, or per text message on the WebSocket. Every line except a watch line carries apiVersion and kind. A client sends Hello, waits for Welcome, then sends Subscription or FeedRequest. After Subscription the service sends watch lines, {type, object}, identical to 'ojd controller watch --all --json'; after FeedRequest and FeedSession the client sends Frame lines, and KeepAlive lines while it has no frame to send, and a Drain line to learn when its frames have played, which the service answers with Drained; the service also sends the host's RumbleCommand lines. A Status line with status Failure is the last line before the service closes the connection. A line that is not a JSON object is answered with Status E1003. For any other line the service reads the header first: a line without apiVersion or kind is answered with E1011, another apiVersion with E1009, and an unknown kind, or one that is not accepted at that point, with E1010; each of these carries details.supportedAPIVersions.",
   "oneOf": [
     {
       "$ref": "#/$defs/clientLine"
@@ -28,6 +28,9 @@
         },
         {
           "$ref": "#/$defs/keepAlive"
+        },
+        {
+          "$ref": "#/$defs/drain"
         }
       ]
     },
@@ -47,6 +50,9 @@
         },
         {
           "$ref": "#/$defs/feedSession"
+        },
+        {
+          "$ref": "#/$defs/drained"
         },
         {
           "$ref": "cli-output.schema.json#/$defs/sharedVirtualFeedLine"
@@ -251,6 +257,34 @@
         },
         "kind": {
           "const": "KeepAlive"
+        }
+      }
+    },
+    "drain": {
+      "type": "object",
+      "required": ["apiVersion", "kind"],
+      "additionalProperties": false,
+      "description": "Accepted after FeedSession. It asks the service to answer Drained once every Frame sent before it has played, the last one for its full time. It counts as activity for the 2-second idle timeout, and the frames that wait keep the feed from going idle. The service reads no line while it waits. Before FeedSession it is answered with E1010.",
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/apiVersion"
+        },
+        "kind": {
+          "const": "Drain"
+        }
+      }
+    },
+    "drained": {
+      "type": "object",
+      "required": ["apiVersion", "kind"],
+      "additionalProperties": false,
+      "description": "The answer to Drain: every Frame sent before it has played, the last one for its full time. Closing the connection after it drops no frame.",
+      "properties": {
+        "apiVersion": {
+          "$ref": "#/$defs/apiVersion"
+        },
+        "kind": {
+          "const": "Drained"
         }
       }
     },

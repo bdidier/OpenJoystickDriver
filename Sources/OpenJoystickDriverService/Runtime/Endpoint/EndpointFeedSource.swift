@@ -2,7 +2,7 @@ import Foundation
 import OpenJoystickDriverKit
 
 /// A feed client as a source: each `Frame` line it sends goes to the feed's queue through
-/// ``VirtualFeedIntakeSink``, and a `KeepAlive` line counts as activity.
+/// ``VirtualFeedIntakeSink``, and a `KeepAlive` or `Drain` line counts as activity.
 ///
 /// The source also ends the feed when its connection closes and the connection when its feed
 /// closes (`E1008`), as the pump of the former exchange did.
@@ -58,6 +58,17 @@ final class EndpointFeedSource: InputSource, @unchecked Sendable {
       return false
     }
     return true
+  }
+
+  /// Counts a `Drain` as activity and waits until every frame queued so far has played, the last
+  /// for its full time; false once the feed or its connection is closed.
+  func drain() async -> Bool {
+    guard keepAlive() else { return false }
+    guard await feeds.waitUntilPlayed(token: token) else {
+      if !Task.isCancelled { feedClosed() }
+      return false
+    }
+    return live()
   }
 
   /// Watches the feed until the task is cancelled: a connection that is closing closes the feed

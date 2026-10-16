@@ -3,10 +3,12 @@ from __future__ import annotations
 import io
 import json
 import os
+import queue
 import socket
 import struct
 import tempfile
 import threading
+import time
 import unittest
 from contextlib import redirect_stdout
 from pathlib import Path
@@ -26,7 +28,6 @@ class EndpointReferenceClientTests(unittest.TestCase):
             "API_VERSION": reference_client.API_VERSION,
             "FRAMES": reference_client.FRAMES,
             "proof": reference_client.proof,
-            "play_seconds": reference_client.play_seconds,
             "hello": lambda nonce: reference_client.hello(
                 nonce, vector["token"], "driver", "control"
             ),
@@ -69,6 +70,7 @@ class EndpointReferenceClientTests(unittest.TestCase):
             self.client["hello"](nonce),
             self.feed_request(),
             *self.frame_lines(),
+            self.envelope("Drain"),
         ]
         for line in lines:
             with self.subTest(line=line):
@@ -87,6 +89,7 @@ class EndpointReferenceClientTests(unittest.TestCase):
     def test_service_lines_match_the_schema(self) -> None:
         lines = [
             self.envelope("FeedSession", **{"as": "Generic"}),
+            self.envelope("Drained"),
             {
                 "apiVersion": self.client["API_VERSION"],
                 "kind": "RumbleCommand",
@@ -157,7 +160,10 @@ class EndpointReferenceClientTests(unittest.TestCase):
                         received.append(json.loads(lines.readline()))
                         send(self.envelope("FeedSession", **{"as": "Generic"}))
                         send(rumble)
-                        received.extend(json.loads(line) for line in lines)
+                        for line in lines:
+                            received.append(json.loads(line))
+                            if received[-1]["kind"] == "Drain":
+                                send(self.envelope("Drained"))
 
                 server = threading.Thread(target=serve, daemon=True)
                 server.start()
@@ -170,9 +176,64 @@ class EndpointReferenceClientTests(unittest.TestCase):
         self.assertEqual(received[0], self.client["hello"](nonce))
         self.assertEqual(
             received[1:],
-            [self.feed_request(), *self.frame_lines()],
+            [self.feed_request(), *self.frame_lines(), self.envelope("Drain")],
         )
         self.assertEqual(json.loads(output.getvalue()), rumble)
+
+    def test_client_closes_only_after_a_slow_endpoint_has_played_every_frame(
+        self,
+    ) -> None:
+        """The fake endpoint plays one frame at a time, slowly, and drops the frames that
+        wait when the client closes the connection."""
+        nonce = json.loads(VECTOR.read_text(encoding="utf-8"))["nonce"]
+        waiting: queue.Queue[dict[str, Any]] = queue.Queue()
+        played: list[dict[str, Any]] = []
+        played_at_close: list[list[dict[str, Any]]] = []
+        with tempfile.TemporaryDirectory(dir="/tmp") as directory:
+            path = str(Path(directory) / "endpoint.sock")
+            with socket.socket(socket.AF_UNIX) as listener:
+                listener.bind(path)
+                listener.listen(1)
+                listener.settimeout(5)
+
+                def play() -> None:
+                    while True:
+                        frame = waiting.get()
+                        time.sleep(0.15)
+                        played.append(frame)
+                        waiting.task_done()
+
+                threading.Thread(target=play, daemon=True).start()
+
+                def serve() -> None:
+                    connection, _ = listener.accept()
+                    with connection, connection.makefile("rw") as lines:
+
+                        def send(message: dict[str, Any]) -> None:
+                            lines.write(json.dumps(message) + "\n")
+                            lines.flush()
+
+                        send(self.envelope("Challenge", nonce=nonce))
+                        lines.readline()
+                        send(self.envelope("Welcome", version="test", scopes=[]))
+                        lines.readline()
+                        send(self.envelope("FeedSession", **{"as": "Generic"}))
+                        for line in lines:
+                            message = json.loads(line)
+                            if message["kind"] == "Frame":
+                                waiting.put(message)
+                            elif message["kind"] == "Drain":
+                                waiting.join()
+                                send(self.envelope("Drained"))
+                        played_at_close.append(list(played))
+
+                server = threading.Thread(target=serve, daemon=True)
+                server.start()
+                with self.client_environment(), redirect_stdout(io.StringIO()):
+                    reference_client.main(["--socket", path, "feed"])
+                server.join(timeout=5)
+
+        self.assertEqual(played_at_close, [self.frame_lines()])
 
     def run_until_feeding(self, after_feeding: Any) -> SystemExit:
         """Runs the client against a fake endpoint that calls `after_feeding(send, reset)` once
@@ -346,11 +407,9 @@ class EndpointReferenceClientTests(unittest.TestCase):
             reference_client.main(["--socket", "/tmp/none.sock", "watch"])
         self.assertIn("OJD_TOKEN", str(exit_info.exception.code))
 
-    def test_client_stays_connected_until_the_last_frame_has_played(self) -> None:
-        # The 100 ms press, then the release for the 8 ms minimum.
-        self.assertAlmostEqual(
-            self.client["play_seconds"](self.client["FRAMES"]), 0.108
-        )
+    def test_client_has_no_play_time_estimate(self) -> None:
+        self.assertFalse(hasattr(reference_client, "play_seconds"))
+        self.assertFalse(hasattr(reference_client, "MARGIN_SECONDS"))
 
 
 if __name__ == "__main__":
