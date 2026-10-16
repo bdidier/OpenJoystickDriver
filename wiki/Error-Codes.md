@@ -105,7 +105,7 @@ The table is generated from the code catalog and the English text of OJD. The ta
 | E4005 | Mod | A package with this name is already installed. Run the command with --force to replace it. |
 | E4006 | Mod | No installed package has this name. Run 'ojd mod list' to see the installed packages. |
 | E4007 | Mod | The package folder could not be changed. Check the free disk space and the folder permissions. |
-| E5001 | Document | A document has no apiVersion, or its apiVersion is not supported by this version of OpenJoystickDriver. Change the document to the supported apiVersion that the message names, and run the command again. |
+| E5001 | Document | A document has no apiVersion, or its apiVersion is not supported by this version of OpenJoystickDriver. Change the document to the supported apiVersion that the message names, and run the command again. Wire value `unsupported_api_version`. |
 | E5002 | Document | A protocol description is invalid. Check the file against the protocol-description schema and fix the field that the message names. |
 | E5003 | Document | A protocol description names a family that differs from its file name. Name the file after its family. |
 | E5004 | Document | A protocol description lists a variant that its family does not have. Use one of the variants of the family. |

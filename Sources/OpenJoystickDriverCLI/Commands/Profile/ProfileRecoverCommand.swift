@@ -65,6 +65,7 @@ struct ProfileRecoverCommand: AsyncParsableCommand {
           ProfileListCommand.Result.Issue(
             id: $0.id.uuidString,
             kind: $0.kind.rawValue,
+            code: $0.code.rawValue,
             message: $0.message
           )
         },

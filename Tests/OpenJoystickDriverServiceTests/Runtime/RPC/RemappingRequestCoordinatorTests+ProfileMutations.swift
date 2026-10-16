@@ -6,6 +6,26 @@ import Testing
 
 extension RemappingRequestCoordinatorTests {
   @Test
+  func aProfileThatFailsValidationFailsWithTheInvalidProfileCode() async throws {
+    let harness = try await makeHarness()
+    defer { harness.routerHarness.removeFiles() }
+    let profile = RemappingProfile(
+      name: "",
+      device: RemappingDeviceScope(vendorID: 0x057E, productID: 0x2006),
+      applicationScope: .global,
+      bindings: []
+    )
+
+    let result = await harness.coordinator.create(profile)
+
+    guard case .failure(let error) = result else {
+      Issue.record("Expected the invalid profile to be refused.")
+      return
+    }
+    #expect(error.code.errorCode == .invalidProfile)
+  }
+
+  @Test
   func pairingMutationUsesLibraryProfileAndReturnsTheAuthoritativeSessionSnapshot() async throws {
     let harness = try await makeHarness()
     defer { harness.routerHarness.removeFiles() }

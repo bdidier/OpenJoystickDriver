@@ -44,7 +44,7 @@ struct ErrorCodeTests {
   func eachRemappingCodeIsTheCatalogEntryOfItsWireValue() throws {
     let data = try Data(contentsOf: repositoryResource("Resources/ErrorCodes.json"))
     let remapping = try JSONDecoder().decode(Catalog.self, from: data).codes.filter {
-      $0.domain == "remapping"
+      $0.wire != nil
     }
     // One catalog entry per RPC code, in the declaration order of the enum.
     #expect(

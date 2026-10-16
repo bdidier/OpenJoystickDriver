@@ -2,11 +2,12 @@ import ArgumentParser
 import Foundation
 import OpenJoystickDriverKit
 
-/// Decodes and validates a profile document, turning any error into a usage error.
+/// Decodes and validates a profile document, turning any error into a failure with the code of
+/// ``RemappingProfileFileStore/problemCode(_:)``.
 func decodeProfile(_ data: Data, source: String) throws -> RemappingProfile {
   do { return try RemappingProfileFileStore.load(from: data) } catch {
     throw CLIFailure(
-      DocumentProblem.code(error) ?? .usage,
+      RemappingProfileFileStore.problemCode(error),
       CLILocalized.format(
         "cli.profile.document_invalid",
         source,
@@ -140,7 +141,7 @@ struct ProfileValidateCommand: AsyncParsableCommand {
         let problem = DocumentProblem.describe(error)
         if CLIContext.current.format == .json { try CLIOutput.json(Result(problem: problem)) }
         throw CLIFailure(
-          DocumentProblem.code(error) ?? .invalidInputFile,
+          RemappingProfileFileStore.problemCode(error),
           CLILocalized.format(
             "cli.profile.document_invalid",
             file == "-" ? "stdin" : file,

@@ -240,9 +240,7 @@ struct ProfileSchemaTests {
       _ = try RemappingProfileFileStore.load(from: Data(broken.utf8))
       Issue.record("\(problem): the profile loads")
     } catch {
-      if replacement.contains("notAName") {
-        #expect(DocumentProblem.code(error) == nil, "\(problem)")
-      }
+      #expect(RemappingProfileFileStore.problemCode(error) == .invalidProfile, "\(problem)")
     }
     #expect(try !CLIOutputSchema.profileIssues(in: broken).isEmpty, "\(problem)")
   }

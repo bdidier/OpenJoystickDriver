@@ -60,6 +60,39 @@ extension ProfileLibraryTests {
     }
   }
 
+  /// Each profile file the library cannot use is reported with the code a request gives the same
+  /// failure.
+  @Test
+  func damagedProfileIssuesCarryTheCodeOfTheirSituation() async throws {
+    try await withLibrary { library, _ in
+      let valid = makeProfile(name: "Valid")
+      try await library.create(valid)
+      let invalidHeader = Data(
+        #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"Profile","name":"Pad"}"#.utf8
+      )
+      let unsupported = Data(#"{"apiVersion":"unsupported.example/v9","kind":"Profile"}"#.utf8)
+      let misnamed = makeProfile(name: "Misnamed")
+      let duplicate = makeProfile(name: "valid")
+      try invalidHeader.write(to: library.profileURL(UUID()))
+      try unsupported.write(to: library.profileURL(UUID()))
+      try Data(RemappingProfileFileStore.encodedJSON(misnamed).utf8)
+        .write(to: library.profileURL(UUID()))
+      try Data(RemappingProfileFileStore.encodedJSON(duplicate).utf8)
+        .write(to: library.profileURL(duplicate.id))
+      _ = try await library.reload()
+
+      let snapshot = try await library.snapshot()
+
+      #expect(snapshot.issues.allSatisfy { $0.kind == .damagedProfile })
+      let codes = Set(snapshot.issues.map(\.code))
+      let expected: Set<ErrorCode> = [
+        .corruptLibrary, .duplicateName, .invalidProfile, .unsupportedAPIVersion,
+      ]
+      #expect(codes == expected)
+      #expect(snapshot.issues.count == 4)
+    }
+  }
+
   @Test
   func profileWithCurrentControlNameLoads() async throws {
     try await withLibrary { library, _ in

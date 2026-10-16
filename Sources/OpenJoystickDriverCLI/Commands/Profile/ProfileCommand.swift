@@ -66,6 +66,7 @@ struct ProfileListCommand: AsyncParsableCommand {
     struct Issue: Encodable, Equatable {
       let id: String
       let kind: String
+      let code: String
       let message: String
     }
 
@@ -82,7 +83,12 @@ struct ProfileListCommand: AsyncParsableCommand {
       let result = Result(
         profiles: snapshot.profiles.map { ProfileSummary($0, snapshot: snapshot) },
         issues: snapshot.profileIssues.map {
-          Result.Issue(id: $0.id.uuidString, kind: $0.kind.rawValue, message: $0.message)
+          Result.Issue(
+            id: $0.id.uuidString,
+            kind: $0.kind.rawValue,
+            code: $0.code.rawValue,
+            message: $0.message
+          )
         }
       )
       switch CLIContext.current.format {

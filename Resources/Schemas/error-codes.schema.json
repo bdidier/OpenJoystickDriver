@@ -48,7 +48,7 @@
         "wire": {
           "type": "string",
           "pattern": "^[a-z][a-z0-9_]*$",
-          "description": "The code value of the remapping RPC that this code stands for; remapping entries only."
+          "description": "The code value of the remapping RPC that this code stands for; remapping and document entries only."
         }
       },
       "allOf": [
@@ -79,8 +79,17 @@
           },
           "then": {
             "required": ["wire"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "domain": {
+                "enum": ["cli", "endpoint", "mod"]
+              }
+            }
           },
-          "else": {
+          "then": {
             "not": {
               "required": ["wire"]
             }

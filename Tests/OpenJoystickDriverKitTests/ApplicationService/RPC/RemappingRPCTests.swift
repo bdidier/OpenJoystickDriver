@@ -25,6 +25,86 @@ struct RemappingRPCTests {
     )
   }
 
+  /// A profile that fails to decode in a request gets the invalid-profile code, the same code the
+  /// store gives the same document.
+  @Test
+  func aRequestWithAnInvalidProfileFailsWithTheInvalidProfileCode() throws {
+    let version = OpenJoystickDriverAPI.version
+    let document = #"{"apiVersion":"\#(version)","kind":"Profile","name":"Pad"}"#
+    let request = Data(#"{"profile":\#(document)}"#.utf8)
+    let update = Data(#"{"profile":\#(document),"expectedCurrent":\#(document)}"#.utf8)
+
+    for decode in [
+      {
+        _ = try JSONDecoder().decode(
+          ApplicationServiceRemappingProfileArguments.self,
+          from: request
+        )
+      },
+      {
+        _ = try JSONDecoder().decode(
+          ApplicationServiceRemappingProfileUpdateArguments.self,
+          from: update
+        )
+      },
+    ] {
+      do {
+        try decode()
+        Issue.record("The invalid profile decoded.")
+      } catch let error as ApplicationServiceRemappingRPCError {
+        #expect(error.code.errorCode == .invalidProfile)
+      }
+    }
+    do { _ = try RemappingProfileFileStore.load(from: Data(document.utf8)) } catch {
+      #expect(RemappingProfileFileStore.problemCode(error) == .invalidProfile)
+    }
+  }
+
+  /// A profile with a missing or unsupported `apiVersion` gets the unsupported-version code in a
+  /// request, the same code the store gives the same document.
+  @Test
+  func aRequestWithAnUnsupportedAPIVersionFailsWithTheUnsupportedAPIVersionCode() throws {
+    let documents = [
+      #"{"kind":"Profile","name":"Pad"}"#,
+      #"{"apiVersion":"ojd/v0","kind":"Profile","name":"Pad"}"#,
+    ]
+    for document in documents {
+      let request = Data(#"{"profile":\#(document)}"#.utf8)
+      let update = Data(#"{"profile":\#(document),"expectedCurrent":\#(document)}"#.utf8)
+      do {
+        _ = try JSONDecoder().decode(
+          ApplicationServiceRemappingProfileArguments.self,
+          from: request
+        )
+        Issue.record("The profile decoded.")
+      } catch let error as ApplicationServiceRemappingRPCError {
+        #expect(error.code == .unsupportedAPIVersion)
+        #expect(error.code.errorCode == .unsupportedAPIVersion)
+      }
+      do {
+        _ = try JSONDecoder().decode(
+          ApplicationServiceRemappingProfileUpdateArguments.self,
+          from: update
+        )
+        Issue.record("The profile decoded.")
+      } catch let error as ApplicationServiceRemappingRPCError {
+        #expect(error.code.errorCode == .unsupportedAPIVersion)
+      }
+      do { _ = try RemappingProfileFileStore.load(from: Data(document.utf8)) } catch {
+        #expect(RemappingProfileFileStore.problemCode(error) == .unsupportedAPIVersion)
+      }
+    }
+  }
+
+  @Test
+  func aProfileIssueWithoutAKindFailsToDecode() {
+    let id = UUID().uuidString
+    let issue = Data(#"{"id":"\#(id)","code":"E3008","message":"m"}"#.utf8)
+    #expect(throws: DecodingError.self) {
+      _ = try JSONDecoder().decode(ApplicationServiceRemappingProfileIssue.self, from: issue)
+    }
+  }
+
   @Test
   func routingActiveProfilePrefersGlobalScopeForSharedModel() {
     func entry(

@@ -110,7 +110,9 @@ class VocabularyNameTests(unittest.TestCase):
         errors = list(self.validator("profile.schema.json").iter_errors(profile()))
         self.assertEqual(errors, [])
 
-    def test_every_profile_kind_refuses_an_unknown_name_without_a_code(self) -> None:
+    def test_every_profile_kind_refuses_an_unknown_name_with_the_invalid_profile_code(
+        self,
+    ) -> None:
         validator = self.validator("profile.schema.json")
         for kind, path in PROFILE_KINDS.items():
             document = copy.deepcopy(profile())
@@ -118,7 +120,30 @@ class VocabularyNameTests(unittest.TestCase):
             errors = list(validator.iter_errors(document))
             self.assertTrue(errors, kind)
             for error in errors:
-                self.assertIsNone(validate_schemas.profile_problem_code(error), kind)
+                self.assertEqual(
+                    validate_schemas.profile_problem_code(error), "E3008", kind
+                )
+
+    def test_a_profile_with_a_missing_or_unsupported_api_version_has_its_own_code(
+        self,
+    ) -> None:
+        validator = self.validator("profile.schema.json")
+        missing = profile()
+        del missing["apiVersion"]
+        unsupported = {**profile(), "apiVersion": "unsupported.example/v9"}
+        for document in (missing, unsupported):
+            errors = list(validator.iter_errors(document))
+            self.assertTrue(errors)
+            self.assertIn(
+                "E5001", {validate_schemas.profile_problem_code(e) for e in errors}
+            )
+
+    def test_a_profile_of_another_kind_has_the_invalid_profile_code(self) -> None:
+        document = {**profile(), "kind": "Controller"}
+        errors = list(self.validator("profile.schema.json").iter_errors(document))
+        self.assertTrue(errors)
+        for error in errors:
+            self.assertEqual(validate_schemas.profile_problem_code(error), "E3008")
 
     def test_a_gyro_activation_that_is_not_always_needs_a_source(self) -> None:
         document = profile()
