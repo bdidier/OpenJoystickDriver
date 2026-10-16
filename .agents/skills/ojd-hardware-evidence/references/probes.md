@@ -16,7 +16,7 @@
 | Does the record open, handshake, and decode on this device? | `./Scripts/ojd diagnose record <json> --seconds N` |
 | Is the DEXT activated, signed, in IORegistry, and connected to the app service? | `./Scripts/ojd diagnose dext` |
 | Does SDL3 see the virtual device? | `./Scripts/ojd diagnose sdl3 [--seconds N]` |
-| Does SDL3 through GameController/MFI see it, and does rumble reach it? | `./Scripts/ojd diagnose sdl3-gamecontroller [--seconds N]` |
+| Does SDL3 through GameController/MFI see it, and does rumble reach it? | `./Scripts/ojd diagnose sdl3-gamecontroller [--seconds N]` (needs a published gamepad) |
 | Does SDL3's Xbox 360 HIDAPI path see it, and does rumble reach it? | `./Scripts/ojd diagnose sdl3-hidapi-x360 [--seconds N]` |
 | Does GameController.framework list it? | `./Scripts/ojd diagnose gamecontroller` |
 | Which physical motor is which? | `./Scripts/ojd diagnose rumble-motors <vid> <pid> [intensity] [duration-ms]` (interactive, drives motors) |

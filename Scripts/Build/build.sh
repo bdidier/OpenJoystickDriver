@@ -19,6 +19,8 @@ Usage:
   ./Scripts/ojd build dev
   ./Scripts/ojd build release
   ./Scripts/ojd build dext
+  ./Scripts/ojd build install dev|release
+  ./Scripts/ojd build install-fast dev
 TXT
 }
 

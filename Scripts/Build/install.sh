@@ -139,7 +139,6 @@ install_full() {
   # from the installed one. sysextd rejects a second request for the same
   # extension while the first is in progress (OSSystemExtensionErrorDomain 4),
   # so submit one only when the app's request does not appear.
-  local APP_BIN="/Applications/OpenJoystickDriver.app/Contents/MacOS/OpenJoystickDriver"
   local REQUEST_WAIT=0
   until sysext_listed "$NEW_SHORT_VERSION" "$NEW_BUILD_VERSION" || (( REQUEST_WAIT >= 10 )); do
     sleep 1
@@ -148,7 +147,7 @@ install_full() {
   if sysext_listed "$NEW_SHORT_VERSION" "$NEW_BUILD_VERSION"; then
     echo "  ✓ The app requested activation of ${NEW_SHORT_VERSION} (${NEW_BUILD_VERSION})"
   # argv[0] "ojd" selects the command line in the app executable.
-  elif (exec -a ojd "$APP_BIN" transport-extension activate); then
+  elif (exec -a ojd "$OJD_APP_CLI" transport-extension activate); then
     echo "  ✓ Sysext activation request submitted"
   else
     echo "  ✗ Sysext activation request failed"
