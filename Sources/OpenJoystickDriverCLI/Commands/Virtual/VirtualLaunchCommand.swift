@@ -120,7 +120,8 @@ enum ProgramLauncher {
     process.arguments = arguments
     process.environment = environment
     if let standardOutput { process.standardOutput = standardOutput }
-    return try await withCLIShutdownCleanup({ process.terminate() }) {
+    let stop: @Sendable () async -> Void = { process.terminate() }
+    return try await withCLIShutdownCleanup(stop) {
       try await withCheckedThrowingContinuation { continuation in
         process.terminationHandler = { finished in
           continuation.resume(

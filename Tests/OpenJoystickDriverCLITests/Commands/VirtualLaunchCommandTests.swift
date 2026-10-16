@@ -38,8 +38,8 @@ struct VirtualLaunchCommandTests {
       }
     }
     try pipe.fileHandleForWriting.close()
-    let data = try #require(try pipe.fileHandleForReading.readToEnd() ?? Data())
-    return (run, String(decoding: data, as: UTF8.self))
+    let data = try pipe.fileHandleForReading.readToEnd() ?? Data()
+    return (run, try #require(String(bytes: data, encoding: .utf8)))
   }
 
   /// The variables `env` printed. A value may span lines, so a line without a name continues
@@ -48,7 +48,7 @@ struct VirtualLaunchCommandTests {
     var result: [String: String] = [:]
     var name: String?
     var lines = printed.split(separator: "\n", omittingEmptySubsequences: false)
-    if lines.last == "" { lines.removeLast() }
+    if lines.last?.isEmpty == true { lines.removeLast() }
     for line in lines {
       if let equals = line.firstIndex(of: "="),
         line[..<equals].allSatisfy({ $0.isUppercase || $0.isNumber || $0 == "_" }),
