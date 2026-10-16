@@ -47,8 +47,8 @@ extension OutputCharacterizationTests {
     lines += try await session.step("-a", [.release(.south)])
     #expect(
       lines == [
-        "+a", "  sys modifier-down meta", "  sys modifier-down shift", "  sys key-down c", "-a",
-        "  sys key-up c", "  sys modifier-up shift", "  sys modifier-up meta",
+        "+a", "  sys modifier-down Meta", "  sys modifier-down Shift", "  sys key-down KeyC", "-a",
+        "  sys key-up KeyC", "  sys modifier-up Shift", "  sys modifier-up Meta",
       ]
     )
   }
@@ -124,8 +124,9 @@ extension OutputCharacterizationTests {
     lines += try await session.tick("tick@2000", at: 2_000 * ms)
     #expect(
       lines == [
-        "+a@0", "+b@10", "  sys key-down c", "-a-b@20", "  sys key-up c", "+a@1000", "tick@1100",
-        "-a@1110", "+y@1120", "  sys key-down d", "  sys key-up d", "tick@1500", "-y@1510",
+        "+a@0", "+b@10", "  sys key-down KeyC", "-a-b@20", "  sys key-up KeyC", "+a@1000",
+        "tick@1100",
+        "-a@1110", "+y@1120", "  sys key-down KeyD", "  sys key-up KeyD", "tick@1500", "-y@1510",
         "tick@2000",
       ]
     )
@@ -243,8 +244,8 @@ extension OutputCharacterizationTests {
     lines += try await session.step("+a", [.press(.south)])
     #expect(
       lines == [
-        "+b", "  sys key-down y", "+a-b", "  sys key-up y", "  sys key-down x", "-a+b",
-        "  sys key-up x", "  sys key-down y", "+a", "  sys key-down x",
+        "+b", "  sys key-down KeyY", "+a-b", "  sys key-up KeyY", "  sys key-down KeyX", "-a+b",
+        "  sys key-up KeyX", "  sys key-down KeyY", "+a", "  sys key-down KeyX",
       ]
     )
   }

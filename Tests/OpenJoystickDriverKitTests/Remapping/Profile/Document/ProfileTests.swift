@@ -113,8 +113,8 @@ struct RemappingProfileTests {
     let firstBinding = try #require(bindings.first)
     let destination = try #require(firstBinding["destination"] as? [String: Any])
     #expect(destination["type"] as? String == "keyboard")
-    #expect(destination["key"] as? String == "w")
-    #expect(destination["modifiers"] as? [String] == ["meta", "shift"])
+    #expect(destination["key"] as? String == "KeyW")
+    #expect(destination["modifiers"] as? [String] == ["Meta", "Shift"])
     #expect(destination["key_code"] == nil)
   }
 
@@ -202,9 +202,9 @@ struct RemappingProfileTests {
 
     #expect(
       rawValues == [
-        "caps_lock", "help", "insert", "f13", "f20", "keypad_0", "keypad_9", "keypad_decimal",
-        "keypad_multiply", "keypad_plus", "keypad_clear", "keypad_divide", "keypad_enter",
-        "keypad_minus", "keypad_equal",
+        "CapsLock", "Help", "Insert", "F13", "F20", "Numpad0", "Numpad9", "NumpadDecimal",
+        "NumpadMultiply", "NumpadAdd", "NumLock", "NumpadDivide", "NumpadEnter",
+        "NumpadSubtract", "NumpadEqual",
       ]
     )
     #expect(Set(RemappingKeyboardKey.allCases).isSuperset(of: keys))

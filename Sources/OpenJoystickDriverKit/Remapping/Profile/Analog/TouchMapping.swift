@@ -61,9 +61,9 @@ public struct RemappingTouchSwipeSource: Codable, Equatable, Hashable, Sendable 
 }
 
 public enum RemappingTouchMode: String, Codable, CaseIterable, Hashable, Sendable {
-  case pointer
-  case leftStick = "left_stick"
-  case rightStick = "right_stick"
+  case pointer = "Pointer"
+  case leftStick = "LeftStick"
+  case rightStick = "RightStick"
 }
 
 /// Continuous behavior for one physical touch surface.

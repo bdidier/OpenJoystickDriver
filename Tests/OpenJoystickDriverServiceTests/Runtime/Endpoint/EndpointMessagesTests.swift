@@ -113,7 +113,7 @@ struct EndpointMessagesTests {
     clientLine("Frame"),
     clientLine(
       "Frame",
-      #","buttons":["South","East"],"dpad":["left"],"#
+      #","buttons":["South","East"],"dpad":["DpadLeft"],"#
         + #""axes":{"LeftStickX":-1,"LeftTrigger":1},"holdMilliseconds":8"#
     ),
   ])

@@ -6,14 +6,14 @@ public enum RemappingStickSource: String, Codable, CaseIterable, Hashable, Senda
 }
 
 public enum RemappingStickMode: String, Codable, CaseIterable, Hashable, Sendable {
-  case aim
-  case flick
-  case flickOnly = "flick_only"
-  case rotateOnly = "rotate_only"
-  case pointerArea = "pointer_area"
-  case pointerRing = "pointer_ring"
-  case scrollWheel = "scroll_wheel"
-  case steering
+  case aim = "Aim"
+  case flick = "Flick"
+  case flickOnly = "FlickOnly"
+  case rotateOnly = "RotateOnly"
+  case pointerArea = "PointerArea"
+  case pointerRing = "PointerRing"
+  case scrollWheel = "ScrollWheel"
+  case steering = "Steering"
 }
 
 public enum RemappingStickScrollAxis: String, Codable, CaseIterable, Hashable, Sendable {

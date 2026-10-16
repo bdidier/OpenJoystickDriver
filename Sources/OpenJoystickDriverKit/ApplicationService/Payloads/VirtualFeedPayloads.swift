@@ -3,7 +3,7 @@ import Foundation
 /// One input frame for a virtual feed: the pressed buttons and d-pad directions, the axis
 /// values, and how long the frame lasts at least. Missing controls are neutral.
 ///
-/// JSON: `{"buttons":["South"],"dpad":["up"],"axes":{"LeftStickX":0.5},"holdMilliseconds":50}`,
+/// JSON: `{"buttons":["South"],"dpad":["DpadUp"],"axes":{"LeftStickX":0.5},"holdMilliseconds":50}`,
 /// with the names of ``Control``, ``RemappingDpadDirection``, and ``RemappingAxis``.
 /// Stick axes run from `-1` to `1` with positive Y down; triggers run from `0` to `1`. Values out
 /// of range are clamped. Buttons without virtual output, such as paddles, are ignored. Decoding

@@ -80,7 +80,7 @@ struct VirtualFeedCommandTests {
       service,
       input: [
         #"{"buttons":["South"],"holdMilliseconds":50}"#, "{}", "",
-        #"{"buttons":["East"],"dpad":["up"],"axes":{"LeftStickY":0.5}}"#, "{}",
+        #"{"buttons":["East"],"dpad":["DpadUp"],"axes":{"LeftStickY":0.5}}"#, "{}",
       ]
     )
 
@@ -104,7 +104,7 @@ struct VirtualFeedCommandTests {
   @Test
   func framesTheFeedDidNotAcceptAreSentAgainInOrder() async throws {
     let service = try Self.service(accepting: 1)
-    let input = [#"{"buttons":["South"]}"#, "{}", #"{"dpad":["up"]}"#, "{}"]
+    let input = [#"{"buttons":["South"]}"#, "{}", #"{"dpad":["DpadUp"]}"#, "{}"]
     let result = await Self.run(service, input: input)
 
     #expect(result.code == 0, "\(result.standardError)")
@@ -157,7 +157,8 @@ struct VirtualFeedCommandTests {
 
   @Test(arguments: [
     #"{"buttons":["jump"]}"#, "not json", #"{"axes":{"x":1}}"#, #"{"holdMilliseconds":60001}"#,
-    #"{"holdMilliseconds":-1}"#, #"{"buttons":["South","South"]}"#, #"{"dpad":["up","up"]}"#,
+    #"{"holdMilliseconds":-1}"#, #"{"buttons":["South","South"]}"#,
+    #"{"dpad":["DpadUp","DpadUp"]}"#,
     #"{"button":["South"]}"#,
   ])
   func aLineThatIsNotAFrameExitsSixtyFourAndClosesTheFeed(line: String) async throws {

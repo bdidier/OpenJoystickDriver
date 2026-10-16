@@ -11,7 +11,7 @@ struct BindingCommandTests {
     let library = FakeProfileLibrary([FakeProfileLibrary.profile("Pad")])
     let service = try FakeService(devices: [], respond: library.respond)
 
-    let added = await service.run(["binding", "set", "Pad", "button:South", "key:space", "--json"])
+    let added = await service.run(["binding", "set", "Pad", "button:South", "key:Space", "--json"])
     let firstID = try #require(library.stored.first?.bindings.first?.id)
     let replaced = await service.run([
       "binding", "set", "Pad", "button:South", "mouse:left", "--behavior", "pulse", "--pulse-ms",
@@ -39,15 +39,17 @@ struct BindingCommandTests {
     let service = try FakeService(devices: [], respond: library.respond)
 
     let axis = await service.run([
-      "binding", "set", "Pad", "axis:LeftStickX:positive", "key:d", "--deadzone", "0.2",
+      "binding", "set", "Pad", "axis:LeftStickX:Positive", "key:KeyD", "--deadzone", "0.2",
       "--invert",
     ])
     let turbo = await service.run([
-      "binding", "set", "Pad", "button:West", "key:j", "--turbo-rate", "10", "--turbo-duty", "0.5",
+      "binding", "set", "Pad", "button:West", "key:KeyJ", "--turbo-rate", "10", "--turbo-duty",
+      "0.5",
     ])
     let alternates = await service.run([
-      "binding", "set", "Pad", "button:North", "key:k", "--long-hold", "500:key:b", "--double-tap",
-      "300:key:c",
+      "binding", "set", "Pad", "button:North", "key:KeyK", "--long-hold", "500:key:KeyB",
+      "--double-tap",
+      "300:key:KeyC",
     ])
 
     #expect(axis.code == 0, "\(axis.standardError)")
@@ -81,7 +83,7 @@ struct BindingCommandTests {
     #expect((bindings.first?["profile"] as? [String: Any])?["name"] as? String == "Pad")
     #expect(bindings.first?["kind"] == nil)
     #expect((try json.json()["metadata"] as? [String: Any])?.isEmpty == true)
-    #expect(human.standardOutput == "button:South -> key:space\n")
+    #expect(human.standardOutput == "button:South -> key:Space\n")
   }
 
   @Test

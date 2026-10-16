@@ -38,7 +38,7 @@ final class PeerMessageTests: XCTestCase {
     let line = try XCTUnwrap(
       PeerMessage.frame(
         from: frame(
-          #","buttons":["South"],"dpad":["up"],"axes":{"LeftStickX":0.5}"#
+          #","buttons":["South"],"dpad":["DpadUp"],"axes":{"LeftStickX":0.5}"#
             + #","holdMilliseconds":60000"#
         )
       )
@@ -66,7 +66,7 @@ final class PeerMessageTests: XCTestCase {
       frame(#","holdMilliseconds":1.5"#),
       frame(#","holdMilliseconds":true"#),
       frame(#","buttons":["nope"]"#), frame(#","buttons":["south"]"#),
-      frame(#","axes":{"left_stick_x":0.5}"#),
+      frame(#","axes":{"notAName":0.5}"#),
       frame(#","buttons":["South","South"]"#),
       frame(#","buttons":"South""#),
       frame(#","dpad":["diagonal"]"#),

@@ -1,10 +1,10 @@
 import Foundation
 
 public enum RemappingDpadDirection: String, Codable, CaseIterable, Hashable, Sendable {
-  case up
-  case down
-  case left
-  case right
+  case up = "DpadUp"
+  case down = "DpadDown"
+  case left = "DpadLeft"
+  case right = "DpadRight"
 }
 
 /// A stick axis or a trigger of the control vocabulary; the raw value is its control id.
@@ -30,8 +30,8 @@ public enum RemappingAxis: String, Codable, CaseIterable, Hashable, Sendable {
 }
 
 public enum RemappingAxisDirection: String, Codable, Hashable, Sendable {
-  case negative
-  case positive
+  case negative = "Negative"
+  case positive = "Positive"
 }
 
 /// The controller-side origin of a binding.
@@ -174,76 +174,119 @@ public enum RemappingSource: Codable, Equatable, Hashable, Sendable {
   }
 }
 
-/// A symbolic keyboard key. Platform adapters translate this value to an OS key code.
+/// A symbolic keyboard key; the raw value is its W3C `KeyboardEvent.code`. Platform adapters
+/// translate this value to an OS key code.
 public enum RemappingKeyboardKey: String, Codable, CaseIterable, Hashable, Sendable {
-  case a, b, c, d, e, f, g, h, i, j, k, l, m
-  case n, o, p, q, r, s, t, u, v, w, x, y, z
-  case digit0 = "0"
-  case digit1 = "1"
-  case digit2 = "2"
-  case digit3 = "3"
-  case digit4 = "4"
-  case digit5 = "5"
-  case digit6 = "6"
-  case digit7 = "7"
-  case digit8 = "8"
-  case digit9 = "9"
-  case escape
-  case tab
-  case capsLock = "caps_lock"
-  case space
-  case returnKey = "return"
-  case deleteBackward = "delete_backward"
-  case deleteForward = "delete_forward"
-  case help
-  case insert
-  case home
-  case end
-  case pageUp = "page_up"
-  case pageDown = "page_down"
-  case arrowUp = "arrow_up"
-  case arrowDown = "arrow_down"
-  case arrowLeft = "arrow_left"
-  case arrowRight = "arrow_right"
-  case minus
-  case equal
-  case leftBracket = "left_bracket"
-  case rightBracket = "right_bracket"
-  case backslash
-  case semicolon
-  case quote
-  case comma
-  case period
-  case slash
-  case grave
-  case section
-  case f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12
-  case f13, f14, f15, f16, f17, f18, f19, f20
-  case keypad0 = "keypad_0"
-  case keypad1 = "keypad_1"
-  case keypad2 = "keypad_2"
-  case keypad3 = "keypad_3"
-  case keypad4 = "keypad_4"
-  case keypad5 = "keypad_5"
-  case keypad6 = "keypad_6"
-  case keypad7 = "keypad_7"
-  case keypad8 = "keypad_8"
-  case keypad9 = "keypad_9"
-  case keypadDecimal = "keypad_decimal"
-  case keypadMultiply = "keypad_multiply"
-  case keypadPlus = "keypad_plus"
-  case keypadClear = "keypad_clear"
-  case keypadDivide = "keypad_divide"
-  case keypadEnter = "keypad_enter"
-  case keypadMinus = "keypad_minus"
-  case keypadEqual = "keypad_equal"
+  case a = "KeyA"
+  case b = "KeyB"
+  case c = "KeyC"
+  case d = "KeyD"
+  case e = "KeyE"
+  case f = "KeyF"
+  case g = "KeyG"
+  case h = "KeyH"
+  case i = "KeyI"
+  case j = "KeyJ"
+  case k = "KeyK"
+  case l = "KeyL"
+  case m = "KeyM"
+  case n = "KeyN"
+  case o = "KeyO"
+  case p = "KeyP"
+  case q = "KeyQ"
+  case r = "KeyR"
+  case s = "KeyS"
+  case t = "KeyT"
+  case u = "KeyU"
+  case v = "KeyV"
+  case w = "KeyW"
+  case x = "KeyX"
+  case y = "KeyY"
+  case z = "KeyZ"
+  case digit0 = "Digit0"
+  case digit1 = "Digit1"
+  case digit2 = "Digit2"
+  case digit3 = "Digit3"
+  case digit4 = "Digit4"
+  case digit5 = "Digit5"
+  case digit6 = "Digit6"
+  case digit7 = "Digit7"
+  case digit8 = "Digit8"
+  case digit9 = "Digit9"
+  case escape = "Escape"
+  case tab = "Tab"
+  case capsLock = "CapsLock"
+  case space = "Space"
+  case returnKey = "Enter"
+  case deleteBackward = "Backspace"
+  case deleteForward = "Delete"
+  case help = "Help"
+  case insert = "Insert"
+  case home = "Home"
+  case end = "End"
+  case pageUp = "PageUp"
+  case pageDown = "PageDown"
+  case arrowUp = "ArrowUp"
+  case arrowDown = "ArrowDown"
+  case arrowLeft = "ArrowLeft"
+  case arrowRight = "ArrowRight"
+  case minus = "Minus"
+  case equal = "Equal"
+  case leftBracket = "BracketLeft"
+  case rightBracket = "BracketRight"
+  case backslash = "Backslash"
+  case semicolon = "Semicolon"
+  case quote = "Quote"
+  case comma = "Comma"
+  case period = "Period"
+  case slash = "Slash"
+  case grave = "Backquote"
+  case section = "IntlBackslash"
+  case f1 = "F1"
+  case f2 = "F2"
+  case f3 = "F3"
+  case f4 = "F4"
+  case f5 = "F5"
+  case f6 = "F6"
+  case f7 = "F7"
+  case f8 = "F8"
+  case f9 = "F9"
+  case f10 = "F10"
+  case f11 = "F11"
+  case f12 = "F12"
+  case f13 = "F13"
+  case f14 = "F14"
+  case f15 = "F15"
+  case f16 = "F16"
+  case f17 = "F17"
+  case f18 = "F18"
+  case f19 = "F19"
+  case f20 = "F20"
+  case keypad0 = "Numpad0"
+  case keypad1 = "Numpad1"
+  case keypad2 = "Numpad2"
+  case keypad3 = "Numpad3"
+  case keypad4 = "Numpad4"
+  case keypad5 = "Numpad5"
+  case keypad6 = "Numpad6"
+  case keypad7 = "Numpad7"
+  case keypad8 = "Numpad8"
+  case keypad9 = "Numpad9"
+  case keypadDecimal = "NumpadDecimal"
+  case keypadMultiply = "NumpadMultiply"
+  case keypadPlus = "NumpadAdd"
+  case keypadClear = "NumLock"
+  case keypadDivide = "NumpadDivide"
+  case keypadEnter = "NumpadEnter"
+  case keypadMinus = "NumpadSubtract"
+  case keypadEqual = "NumpadEqual"
 }
 
 public enum RemappingKeyModifier: String, Codable, CaseIterable, Hashable, Sendable {
-  case meta
-  case control
-  case alt
-  case shift
+  case meta = "Meta"
+  case control = "Control"
+  case alt = "Alt"
+  case shift = "Shift"
 }
 
 public enum RemappingMouseButton: String, Codable, CaseIterable, Hashable, Sendable {

@@ -219,7 +219,7 @@
           "type": "array",
           "uniqueItems": true,
           "items": {
-            "$ref": "profile.schema.json#/$defs/dpadDirection"
+            "$ref": "vocabulary.schema.json#/$defs/dpadControl"
           }
         },
         "axes": {
