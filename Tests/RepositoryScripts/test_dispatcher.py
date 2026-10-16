@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+import os
+import shutil
 import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+from typing import Self
 from unittest.mock import patch
 
 from Scripts.Command import dispatcher, execution
@@ -23,6 +26,70 @@ Test run with 0 tests in 0 suites passed after 0.001 seconds.
 
 class TargetInvoked(Exception):
     pass
+
+
+class ScriptTree:
+    """A copy of the scripts whose installed app executable is a stub in a temporary directory."""
+
+    def __init__(self, root: Path) -> None:
+        self.root = root
+        self.directory = tempfile.TemporaryDirectory()
+        self.path = Path(self.directory.name).resolve()
+
+    def __enter__(self) -> Self:
+        shutil.copytree(
+            self.root / "Scripts", self.path / "Scripts", ignore=ignore_cache
+        )
+        info = self.path / "Sources/OpenJoystickDriver/App/Info.plist"
+        info.parent.mkdir(parents=True)
+        shutil.copy(self.root / "Sources/OpenJoystickDriver/App/Info.plist", info)
+        self.set_cli(self.path / "bin/OpenJoystickDriver")
+        return self
+
+    def __exit__(self, *_: object) -> None:
+        self.directory.cleanup()
+
+    def set_cli(self, cli: Path) -> None:
+        environment = self.path / "Scripts/Platform/environment.sh"
+        lines = environment.read_text().splitlines()
+        lines = [
+            f'OJD_APP_CLI="{cli}"' if line.startswith("OJD_APP_CLI=") else line
+            for line in lines
+        ]
+        environment.write_text("\n".join(lines) + "\n")
+
+    def stub(self, path: Path, body: str) -> None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(f"#!/usr/bin/env bash\n{body}\n")
+        path.chmod(0o755)
+
+    def write_stubs(self, dext_status: int) -> None:
+        self.stub(self.path / "bin/OpenJoystickDriver", "exit 0")
+        self.stub(self.path / "stubs/xmake", "exit 0")
+        self.stub(
+            self.path / "Scripts/Diagnostics/dext/diagnose.sh", f"exit {dext_status}"
+        )
+        self.stub(
+            self.path / ".build/debug/OpenJoystickDriverGameControllerProbe", "exit 0"
+        )
+        (self.path / "Tools/SDLGamepadProbe").mkdir(parents=True)
+        (self.path / "Tools/SDLGamepadProbe/xmake.lua").write_text("")
+
+    def run(self, script: str, *arguments: str) -> subprocess.CompletedProcess[str]:
+        environment = {**os.environ, "PATH": f"{self.path}/stubs:{os.environ['PATH']}"}
+        return subprocess.run(
+            ["/bin/bash", str(self.path / "Scripts" / script), *arguments],
+            cwd=self.path,
+            env=environment,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=120,
+        )
+
+
+def ignore_cache(_: str, names: list[str]) -> list[str]:
+    return [name for name in names if name == "__pycache__"]
 
 
 class DispatcherTests(unittest.TestCase):
@@ -169,9 +236,51 @@ class DispatcherTests(unittest.TestCase):
 
     def test_backend_script_has_one_cli_path_and_no_hidden_reset(self) -> None:
         script = (self.root / "Scripts/Diagnostics/backend.sh").read_text()
-        self.assertEqual(script.count("/Applications/OpenJoystickDriver.app"), 1)
+        self.assertNotIn("/Applications/OpenJoystickDriver.app", script)
+        self.assertIn("require_ojd_app_cli", script)
         for text in ("OJD_CLI", "CLI_BIN", "virtual reset"):
             self.assertNotIn(text, script)
+
+    def test_app_cli_path_is_defined_only_in_the_environment_script(self) -> None:
+        path = "/Applications/OpenJoystickDriver.app/Contents/MacOS/OpenJoystickDriver"
+        owners = [
+            script.relative_to(self.root).as_posix()
+            for script in sorted((self.root / "Scripts").rglob("*"))
+            if script.is_file()
+            and script.suffix in {".sh", ""}
+            and path in script.read_text(errors="ignore")
+        ]
+        self.assertEqual(owners, ["Scripts/Platform/environment.sh"])
+
+    def test_rumble_motors_fails_when_the_installed_cli_is_missing(self) -> None:
+        with ScriptTree(self.root) as tree:
+            tree.set_cli(tree.path / "missing/OpenJoystickDriver")
+            completed = tree.run("Diagnostics/rumble-motors.sh", "0x045E", "0x028E")
+        self.assertEqual(completed.returncode, 2)
+        self.assertIn(
+            f"OpenJoystickDriver is not installed at {tree.path}/missing/OpenJoystickDriver",
+            completed.stderr,
+        )
+        self.assertNotIn("Testing", completed.stdout)
+
+    def test_backends_reports_each_step_and_fails_when_a_step_failed(self) -> None:
+        with ScriptTree(self.root) as tree:
+            tree.write_stubs(dext_status=3)
+            completed = tree.run("Diagnostics/backend.sh", "backends", "--seconds", "1")
+        self.assertEqual(completed.returncode, 1)
+        self.assertEqual(completed.stdout.count("Step exit status:"), 4)
+        self.assertIn(
+            "3) DriverKit backend diagnostics:\nStep exit status: 3", completed.stdout
+        )
+        self.assertEqual(completed.stdout.count("Step exit status: 0"), 3)
+        self.assertIn("1 backend step(s) failed.", completed.stdout)
+
+    def test_backends_exits_zero_when_every_step_passed(self) -> None:
+        with ScriptTree(self.root) as tree:
+            tree.write_stubs(dext_status=0)
+            completed = tree.run("Diagnostics/backend.sh", "backends", "--seconds", "1")
+        self.assertEqual(completed.returncode, 0, completed.stdout + completed.stderr)
+        self.assertEqual(completed.stdout.count("Step exit status: 0"), 4)
 
     def test_unknown_route_fails_with_usage_status(self) -> None:
         self.assertEqual(self.run_ojd("unknown").returncode, 2)

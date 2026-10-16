@@ -7,7 +7,8 @@
 # Subcommands:
 #   dext (default), sdl3, sdl3-gamecontroller, sdl3-hidapi-x360, backends
 #
-# Runs all checks regardless of individual failures.
+# The backends command runs every step, prints each step's exit status, and exits 1 when a step
+# failed.
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../Platform/environment.sh"
@@ -26,13 +27,6 @@ Usage:
 TXT
   exit 0
 fi
-
-OJD_APP_CLI="/Applications/OpenJoystickDriver.app/Contents/MacOS/OpenJoystickDriver"
-
-require_ojd_cli() {
-  [[ -x "$OJD_APP_CLI" ]] ||
-    die "OpenJoystickDriver is not installed at $OJD_APP_CLI; run ./Scripts/ojd build install dev"
-}
 
 SDL3_PROBE_DIR="$PROJECT_DIR/Tools/SDLGamepadProbe"
 
@@ -59,7 +53,7 @@ run_sdl3_probe_native() {
 # The SDL hints that make SDL read controllers through GameController come from
 # `ojd virtual launch --sdl-gamecontroller-backend`, which also needs a published gamepad.
 run_sdl3_gamecontroller_probe() {
-  require_ojd_cli
+  require_ojd_app_cli
   build_sdl3_probe
   print_sdl3_probe_banner --gc-prewarm --wait-devices 8 --rumble --expect-rumble "$@"
   (ojd_cli "$OJD_APP_CLI" virtual launch --sdl-gamecontroller-backend -- \
@@ -101,7 +95,7 @@ run_gamecontroller_probe() {
 }
 
 run_backend_acceptance_loop() {
-  require_ojd_cli
+  require_ojd_app_cli
   local seconds="${1:-5}"
   local step_timeout="$((seconds + 15))"
 
@@ -127,21 +121,31 @@ run_backend_acceptance_loop() {
     wait "$pid"
   }
 
-  echo "0) CLI status:"
-  run_limited "$step_timeout" ojd_cli "$OJD_APP_CLI" status || true
-  echo
+  local failed=0
+  run_step() {
+    local label="$1" status=0
+    shift
+    echo "$label"
+    run_limited "$step_timeout" "$@" || status=$?
+    echo "Step exit status: $status"
+    if (( status != 0 )); then
+      failed=$((failed + 1))
+    fi
+    echo
+  }
 
-  echo "3) DriverKit backend diagnostics:"
-  run_limited "$step_timeout" /usr/bin/env bash "$SCRIPT_DIR/dext/diagnose.sh" || true
-  echo
+  run_step "0) CLI status:" ojd_cli "$OJD_APP_CLI" status
+  run_step "3) DriverKit backend diagnostics:" /usr/bin/env bash "$SCRIPT_DIR/dext/diagnose.sh"
+  run_step "4) SDL3 consumer probe:" /usr/bin/env bash "$0" sdl3 --seconds "$seconds" \
+    --expect-single-neutral-ojd
+  run_step "5) GameController.framework consumer probe:" /usr/bin/env bash "$0" gamecontroller \
+    --seconds "$seconds"
 
-  echo "4) SDL3 consumer probe:"
-  run_limited "$step_timeout" /usr/bin/env bash "$0" sdl3 --seconds "$seconds" \
-    --expect-single-neutral-ojd || true
-  echo
-
-  echo "5) GameController.framework consumer probe:"
-  run_limited "$step_timeout" /usr/bin/env bash "$0" gamecontroller --seconds "$seconds" || true
+  if (( failed != 0 )); then
+    echo "$failed backend step(s) failed."
+    return 1
+  fi
+  echo "All backend steps passed."
 }
 
 if [[ "$cmd" == "sdl3" ]]; then
@@ -188,7 +192,7 @@ if [[ "$cmd" == "backends" ]]; then
     seconds="$2"
   fi
   run_backend_acceptance_loop "$seconds"
-  exit 0
+  exit $?
 fi
 
 die "Unknown diagnostics command: $cmd"
