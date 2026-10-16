@@ -113,7 +113,8 @@ struct ConsumerOutputCodecTests {
 
   @Test
   func theInputOnlyGenericFormatRejectsEveryOutputReport() {
-    // An unnumbered vendor report (marker `0x4F`), the short Xbox 360 forms, and a numbered Xbox One report.
+    // An unnumbered vendor report (marker `0x4F`), the short Xbox 360 forms, and a numbered Xbox
+    // One report.
     let reports: [(UInt32, [UInt8])] = [
       (0, [0x4F, 1, 2, 3, 4, 0xF4, 0x01]), (0, [0x4F, 1, 2, 3, 4]), (0, [0x08, 0x00, 10, 20]),
       (0, [0x08, 0x00, 10, 20, 0, 0, 0]), (3, [0x03, 0x0F, 0, 0, 10, 20, 5, 0, 0]),
