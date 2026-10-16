@@ -23,7 +23,7 @@ FORBIDDEN_DEXT_KEYS = (
 )
 USERCLIENT = "com.apple.developer.driverkit.userclient-access"
 ALLOW_ANY = "com.apple.developer.driverkit.allow-any-userclient-access"
-VIRTUAL_HID = "com.openjoystickdriver.VirtualHIDDevice"
+OTHER_DRIVER = "com.example.OtherDriver"
 HOST = {
     "com.apple.developer.system-extension.install": True,
     "com.apple.developer.hid.virtual.device": True,
@@ -96,7 +96,7 @@ class ConfigureProfileTests(unittest.TestCase):
 
     def test_host_profile_accepts_grant_that_includes_virtual_hid(self) -> None:
         self.check(
-            configure.require_host_profile, {**HOST, USERCLIENT: [DEXT, VIRTUAL_HID]}
+            configure.require_host_profile, {**HOST, USERCLIENT: [DEXT, OTHER_DRIVER]}
         )
 
     def test_host_profile_refuses_allow_any_userclient_access(self) -> None:
@@ -104,7 +104,7 @@ class ConfigureProfileTests(unittest.TestCase):
             self.check(configure.require_host_profile, {**HOST, ALLOW_ANY: True})
 
     def test_release_host_profile_without_dext_grant_is_refused(self) -> None:
-        for value in (None, [VIRTUAL_HID]):
+        for value in (None, [OTHER_DRIVER]):
             entitlements = {**HOST, USERCLIENT: value}
             with self.subTest(value=value), self.assertRaises(SystemExit):
                 self.check(configure.require_host_profile, entitlements)
@@ -119,9 +119,9 @@ class DoctorProfileTests(unittest.TestCase):
         self.assertEqual(
             doctor.userclient_access_errors("host", absent, allow_ungranted=True), []
         )
-        renamed = {"Entitlements": {**HOST, USERCLIENT: ["com.example.OldDriver"]}}
+        other = {"Entitlements": {**HOST, USERCLIENT: ["com.example.OtherDriver"]}}
         self.assertEqual(
-            doctor.userclient_access_errors("host", renamed, allow_ungranted=True), []
+            doctor.userclient_access_errors("host", other, allow_ungranted=True), []
         )
         self.assertEqual(len(doctor.userclient_access_errors("host", absent)), 1)
         self.assertEqual(
@@ -129,7 +129,7 @@ class DoctorProfileTests(unittest.TestCase):
         )
 
     def test_userclient_access_accepts_grant_that_includes_virtual_hid(self) -> None:
-        profile = {"Entitlements": {**HOST, USERCLIENT: [DEXT, VIRTUAL_HID]}}
+        profile = {"Entitlements": {**HOST, USERCLIENT: [DEXT, OTHER_DRIVER]}}
         self.assertEqual(doctor.userclient_access_errors("host", profile), [])
 
     def test_userclient_access_refuses_wildcard_and_non_string_items(self) -> None:
@@ -142,7 +142,7 @@ class DoctorProfileTests(unittest.TestCase):
                 self.assertEqual(len(errors), 1)
 
     def test_userclient_access_refuses_release_grant_without_dext(self) -> None:
-        profile = {"Entitlements": {**HOST, USERCLIENT: [VIRTUAL_HID]}}
+        profile = {"Entitlements": {**HOST, USERCLIENT: [OTHER_DRIVER]}}
         self.assertEqual(len(doctor.userclient_access_errors("host", profile)), 1)
 
     def test_dext_profile_accepts_exact_usb_grant(self) -> None:
@@ -215,7 +215,7 @@ if __name__ == "__main__":
 
 DRIVERKIT_SCRIPT = Path(__file__).resolve().parents[2] / "Scripts/Build/driverkit.sh"
 DEXT = "com.openjoystickdriver.XboxUSBDevice"
-VIRTUAL_HID = "com.openjoystickdriver.VirtualHIDDevice"
+OTHER_DRIVER = "com.example.OtherDriver"
 
 
 def _signed_host_access_check() -> str:
@@ -243,10 +243,10 @@ class SignedHostAccessTests(unittest.TestCase):
     def test_host_signed_for_the_dext_passes_with_a_profile_that_also_grants_virtual_hid(
         self,
     ) -> None:
-        self.assertEqual(self._check([DEXT], [DEXT, VIRTUAL_HID]), 0)
+        self.assertEqual(self._check([DEXT], [DEXT, OTHER_DRIVER]), 0)
         self.assertEqual(self._check([DEXT], [DEXT]), 0)
 
     def test_host_must_claim_only_a_dext_the_profile_grants(self) -> None:
-        self.assertNotEqual(self._check([DEXT, VIRTUAL_HID], [DEXT, VIRTUAL_HID]), 0)
-        self.assertNotEqual(self._check([DEXT], [VIRTUAL_HID]), 0)
+        self.assertNotEqual(self._check([DEXT, OTHER_DRIVER], [DEXT, OTHER_DRIVER]), 0)
+        self.assertNotEqual(self._check([DEXT], [OTHER_DRIVER]), 0)
         self.assertNotEqual(self._check(None, [DEXT]), 0)
