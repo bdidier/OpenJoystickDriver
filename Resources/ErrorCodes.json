@@ -253,7 +253,6 @@
       "code": "E2033",
       "domain": "cli",
       "name": "launchFailed",
-      "status": "active",
       "exitCode": 1
     },
     {
