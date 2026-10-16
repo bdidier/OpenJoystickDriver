@@ -27,55 +27,47 @@ TXT
   exit 0
 fi
 
-run_sdl3_probe_native() {
-  local ROOT
-  ROOT="$PROJECT_DIR"
-  local PROBE_DIR="$ROOT/Tools/SDLGamepadProbe"
-  [[ -f "$PROBE_DIR/xmake.lua" ]] || die "Missing probe project: $PROBE_DIR"
+OJD_APP_CLI="/Applications/OpenJoystickDriver.app/Contents/MacOS/OpenJoystickDriver"
 
+require_ojd_cli() {
+  [[ -x "$OJD_APP_CLI" ]] ||
+    die "OpenJoystickDriver is not installed at $OJD_APP_CLI; run ./Scripts/ojd build install dev"
+}
+
+SDL3_PROBE_DIR="$PROJECT_DIR/Tools/SDLGamepadProbe"
+
+build_sdl3_probe() {
+  [[ -f "$SDL3_PROBE_DIR/xmake.lua" ]] || die "Missing probe project: $SDL3_PROBE_DIR"
   echo "Building SDL3 probe (native)..."
-  xmake build -P "$PROBE_DIR" SDLGamepadProbe
+  xmake build -P "$SDL3_PROBE_DIR" SDLGamepadProbe
+}
 
+print_sdl3_probe_banner() {
   echo
   echo "Running SDLGamepadProbe $*"
   echo "Tip: if it prints 'Found 0 joystick(s)', grant Input Monitoring to your terminal app:"
   echo "  System Settings -> Privacy & Security -> Input Monitoring"
   echo
-  xmake run -P "$PROBE_DIR" SDLGamepadProbe -- "$@"
 }
 
-reset_ojd_virtual_profile_overrides() {
-  local ROOT
-  ROOT="$PROJECT_DIR"
-  local APP_BIN="/Applications/OpenJoystickDriver.app/Contents/MacOS/OpenJoystickDriver"
-  local CLI_BIN="${OJD_CLI:-$APP_BIN}"
-  if [[ ! -x "$CLI_BIN" ]]; then
-    CLI_BIN="$ROOT/.build/debug/OpenJoystickDriver"
-  fi
-
-  [[ -x "$CLI_BIN" ]] || die "OpenJoystickDriver CLI not found at $CLI_BIN or $APP_BIN"
-
-  run_limited_command 8 ojd_cli "$CLI_BIN" virtual reset --all --force >/dev/null || {
-    echo "WARN: could not reset OJD virtual HID profile overrides" >&2
-  }
+run_sdl3_probe_native() {
+  build_sdl3_probe
+  print_sdl3_probe_banner "$@"
+  xmake run -P "$SDL3_PROBE_DIR" SDLGamepadProbe -- "$@"
 }
 
+# The SDL hints that make SDL read controllers through GameController come from
+# `ojd virtual launch --sdl-gamecontroller-backend`, which also needs a published gamepad.
 run_sdl3_gamecontroller_probe() {
-  reset_ojd_virtual_profile_overrides
-  SDL_JOYSTICK_MFI=1 \
-    SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1 \
-    SDL_JOYSTICK_IOKIT=0 \
-    SDL_JOYSTICK_HIDAPI=0 \
-    SDL_JOYSTICK_HIDAPI_XBOX=0 \
-    SDL_JOYSTICK_HIDAPI_XBOX_360=0 \
-    SDL_JOYSTICK_HIDAPI_XBOX_360_WIRELESS=0 \
-    SDL_JOYSTICK_HIDAPI_XBOX_ONE=0 \
-    SDL_JOYSTICK_HIDAPI_GIP=0 \
-    run_sdl3_probe_native --gc-prewarm --wait-devices 8 --rumble --expect-rumble "$@"
+  require_ojd_cli
+  build_sdl3_probe
+  print_sdl3_probe_banner --gc-prewarm --wait-devices 8 --rumble --expect-rumble "$@"
+  (ojd_cli "$OJD_APP_CLI" virtual launch --sdl-gamecontroller-backend -- \
+    xmake run -P "$SDL3_PROBE_DIR" SDLGamepadProbe -- \
+    --gc-prewarm --wait-devices 8 --rumble --expect-rumble "$@")
 }
 
 run_sdl3_hidapi_x360_probe() {
-  reset_ojd_virtual_profile_overrides
   SDL_GAMECONTROLLER_ALLOW_STEAM_VIRTUAL_GAMEPAD=1 \
     SDL_JOYSTICK_MFI=0 \
     SDL_JOYSTICK_IOKIT=0 \
@@ -86,25 +78,6 @@ run_sdl3_hidapi_x360_probe() {
     SDL_JOYSTICK_HIDAPI_XBOX_ONE=0 \
     SDL_JOYSTICK_HIDAPI_GIP=0 \
     run_sdl3_probe_native --wait-devices 8 --rumble --expect-rumble "$@"
-}
-
-run_limited_command() {
-  local limit="$1"
-  shift
-  "$@" &
-  local pid=$!
-  local elapsed=0
-  while kill -0 "$pid" 2>/dev/null; do
-    if (( elapsed >= limit )); then
-      echo "WARN: timed out after ${limit}s: $*"
-      kill "$pid" 2>/dev/null || true
-      wait "$pid" 2>/dev/null || true
-      return 124
-    fi
-    sleep 1
-    elapsed=$((elapsed + 1))
-  done
-  wait "$pid"
 }
 
 run_gamecontroller_probe() {
@@ -128,13 +101,7 @@ run_gamecontroller_probe() {
 }
 
 run_backend_acceptance_loop() {
-  local APP_BIN="/Applications/OpenJoystickDriver.app/Contents/MacOS/OpenJoystickDriver"
-  local ROOT
-  ROOT="$PROJECT_DIR"
-  local CLI_BIN="$ROOT/.build/debug/OpenJoystickDriver"
-  if [[ ! -x "$CLI_BIN" ]]; then
-    CLI_BIN="$APP_BIN"
-  fi
+  require_ojd_cli
   local seconds="${1:-5}"
   local step_timeout="$((seconds + 15))"
 
@@ -160,16 +127,9 @@ run_backend_acceptance_loop() {
     wait "$pid"
   }
 
-  if [[ -x "$CLI_BIN" ]]; then
-    echo "0) CLI status:"
-    run_limited "$step_timeout" ojd_cli "$CLI_BIN" status || true
-    echo
-
-  else
-    echo "0) SKIP: OpenJoystickDriver CLI not found at:"
-    echo "   $APP_BIN"
-    echo
-  fi
+  echo "0) CLI status:"
+  run_limited "$step_timeout" ojd_cli "$OJD_APP_CLI" status || true
+  echo
 
   echo "3) DriverKit backend diagnostics:"
   run_limited "$step_timeout" /usr/bin/env bash "$SCRIPT_DIR/dext/diagnose.sh" || true

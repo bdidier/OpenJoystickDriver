@@ -68,7 +68,7 @@ COMMAND_HELP = """Commands:
                               Print an authorized device's USB descriptor facts (debug build)
   diagnose sdl3 [--seconds N] Run SDL3 probe against the virtual device
   diagnose sdl3-gamecontroller [--seconds N]
-                              Run SDL3 through GameController/MFI and test rumble
+                              Run SDL3 through `ojd virtual launch --sdl-gamecontroller-backend` and test rumble
   diagnose sdl3-hidapi-x360 [--seconds N]
                               Run SDL3 through Xbox 360 HIDAPI and test rumble
   diagnose gamecontroller     Run GameController.framework probe
@@ -105,6 +105,7 @@ Examples:
 
 Notes:
   - Most commands expect the app to be installed to /Applications.
+  - diagnose sdl3-gamecontroller and diagnose backends fail when it is not installed.
   - DriverKit upgrades can require a reboot; use build install-fast while streaming.
 """
 

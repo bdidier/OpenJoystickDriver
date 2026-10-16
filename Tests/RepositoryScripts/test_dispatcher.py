@@ -140,6 +140,39 @@ class DispatcherTests(unittest.TestCase):
                     python=True,
                 )
 
+    def test_sdl_probe_routes_forward_to_the_backend_script(self) -> None:
+        for route in ("sdl3", "sdl3-gamecontroller", "sdl3-hidapi-x360"):
+            with self.subTest(route=route):
+                with (
+                    patch.object(
+                        dispatcher,
+                        "exec_target",
+                        side_effect=TargetInvoked,
+                    ) as execute,
+                    self.assertRaises(TargetInvoked),
+                ):
+                    dispatcher.dispatch(["diagnose", route, "--seconds", "3"])
+                execute.assert_called_once_with(
+                    "Diagnostics/backend.sh", [route, "--seconds", "3"]
+                )
+
+    def test_backend_script_takes_the_gamecontroller_hints_from_virtual_launch(
+        self,
+    ) -> None:
+        script = (self.root / "Scripts/Diagnostics/backend.sh").read_text()
+        self.assertIn("virtual launch --sdl-gamecontroller-backend --", script)
+        self.assertNotIn("SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS", script)
+        gamecontroller = script.split("run_sdl3_gamecontroller_probe() {")[1].split(
+            "run_sdl3_hidapi_x360_probe() {"
+        )[0]
+        self.assertNotIn("SDL_JOYSTICK_", gamecontroller)
+
+    def test_backend_script_has_one_cli_path_and_no_hidden_reset(self) -> None:
+        script = (self.root / "Scripts/Diagnostics/backend.sh").read_text()
+        self.assertEqual(script.count("/Applications/OpenJoystickDriver.app"), 1)
+        for text in ("OJD_CLI", "CLI_BIN", "virtual reset"):
+            self.assertNotIn(text, script)
+
     def test_unknown_route_fails_with_usage_status(self) -> None:
         self.assertEqual(self.run_ojd("unknown").returncode, 2)
 
