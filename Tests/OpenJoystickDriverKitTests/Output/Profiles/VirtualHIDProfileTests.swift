@@ -12,7 +12,7 @@ struct VirtualHIDProfileTests {
 
   @Test(arguments: [
     "generic-hid", "automatic", "sdl2-3", "apple-gamecontroller", "SdlCompatible-v2",
-    "HID-GENERIC", "",
+    "NotAPersona", "",
   ])
   func anyOtherProfileIDIsRejected(rawValue: String) throws {
     #expect(VirtualHIDProfileID(rawValue: rawValue) == nil)

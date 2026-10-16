@@ -18,8 +18,6 @@ Each profile file is named after the profile's `id`, in uppercase, such as `Prof
 
 OJD watches the folder. When you add, change, or remove a profile file while OJD runs, OJD reads the folder again and applies the change to connected controllers.
 
-Earlier versions stored all profiles in one file, `RemappingProfiles.json`. OJD does not read that file, and it deletes the file when the service starts. Recreate those profiles.
-
 ## Damaged Files
 
 OJD skips a profile file that it cannot read, that fails validation, or whose name does not match its `id`. OJD drops an active selection that names a missing or skipped profile. The other profiles stay available. If OJD cannot read `ActiveProfiles.json`, no profile is active.

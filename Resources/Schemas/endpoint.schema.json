@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/endpoint.schema.json",
   "title": "OpenJoystickDriver endpoint protocol",
-  "description": "One JSON object per line on the endpoint socket, or per text message on the WebSocket. Every line except a watch line carries apiVersion and kind. A client sends Hello, waits for Welcome, then sends Subscription or FeedRequest. After Subscription the service sends watch lines, {type, object}, identical to 'ojd controller watch --all --json'; after FeedRequest and FeedSession the client sends Frame lines, and KeepAlive lines while it has no frame to send, and the service sends the host's RumbleCommand lines. A Status line with status Failure is the last line before the service closes the connection. A line that is not a JSON object is answered with Status E1004. For any other line the service reads the header first: a line without apiVersion or kind is answered with E1012, another apiVersion with E1010, and an unknown kind, or one that is not accepted at that point, with E1011; each of these carries details.supportedAPIVersions.",
+  "description": "One JSON object per line on the endpoint socket, or per text message on the WebSocket. Every line except a watch line carries apiVersion and kind. A client sends Hello, waits for Welcome, then sends Subscription or FeedRequest. After Subscription the service sends watch lines, {type, object}, identical to 'ojd controller watch --all --json'; after FeedRequest and FeedSession the client sends Frame lines, and KeepAlive lines while it has no frame to send, and the service sends the host's RumbleCommand lines. A Status line with status Failure is the last line before the service closes the connection. A line that is not a JSON object is answered with Status E1003. For any other line the service reads the header first: a line without apiVersion or kind is answered with E1011, another apiVersion with E1009, and an unknown kind, or one that is not accepted at that point, with E1010; each of these carries details.supportedAPIVersions.",
   "oneOf": [
     {
       "$ref": "#/$defs/clientLine"
@@ -244,7 +244,7 @@
       "type": "object",
       "required": ["apiVersion", "kind"],
       "additionalProperties": false,
-      "description": "Accepted after FeedSession. It resets the 2-second idle timeout of the feed and changes nothing else: the service sends no reply and the virtual gamepad keeps its state. Before FeedSession it is answered with E1011.",
+      "description": "Accepted after FeedSession. It resets the 2-second idle timeout of the feed and changes nothing else: the service sends no reply and the virtual gamepad keeps its state. Before FeedSession it is answered with E1010.",
       "properties": {
         "apiVersion": {
           "$ref": "#/$defs/apiVersion"
@@ -274,6 +274,7 @@
           "enum": [
             "E1001",
             "E1002",
+            "E1003",
             "E1004",
             "E1005",
             "E1006",
@@ -281,8 +282,7 @@
             "E1008",
             "E1009",
             "E1010",
-            "E1011",
-            "E1012"
+            "E1011"
           ]
         },
         "message": {
@@ -300,7 +300,7 @@
               "items": {
                 "$ref": "#/$defs/apiVersion"
               },
-              "description": "The apiVersion values the service speaks; only with E1010, E1011 and E1012."
+              "description": "The apiVersion values the service speaks; only with E1009, E1010 and E1011."
             }
           }
         }
@@ -308,7 +308,7 @@
       "if": {
         "properties": {
           "code": {
-            "enum": ["E1010", "E1011", "E1012"]
+            "enum": ["E1009", "E1010", "E1011"]
           }
         }
       },

@@ -147,8 +147,8 @@ struct RemappingProfileTests {
     let cases: [(member: String, value: String?, code: ErrorCode?, message: String)] = [
       ("apiVersion", nil, .unsupportedAPIVersion, "no apiVersion found; \(supported)"),
       (
-        "apiVersion", "openjoystickdriver.io/v1beta1", .unsupportedAPIVersion,
-        "apiVersion openjoystickdriver.io/v1beta1 is not supported; \(supported)"
+        "apiVersion", "unsupported.example/v9", .unsupportedAPIVersion,
+        "apiVersion unsupported.example/v9 is not supported; \(supported)"
       ),
       ("kind", nil, nil, "no kind found; expected Profile"),
       ("kind", "Controller", nil, "expected Profile, found Controller"),

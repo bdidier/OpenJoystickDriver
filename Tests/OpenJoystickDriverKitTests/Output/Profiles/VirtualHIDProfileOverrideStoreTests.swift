@@ -129,7 +129,7 @@ struct VirtualHIDProfileOverrideStoreTests {
     try withDirectory { directory in
       let unversioned = persona(vendorID: 1, productID: 2).replacingOccurrences(
         of: OpenJoystickDriverAPI.version,
-        with: "openjoystickdriver.io/v1beta1"
+        with: "unsupported.example/v9"
       )
       try write(unversioned, named: "old.json", in: directory)
       let store = Store(directory: directory)
@@ -138,7 +138,7 @@ struct VirtualHIDProfileOverrideStoreTests {
       #expect(store.problems.first?.problem?.hasPrefix("E5001: ") == true)
       #expect(
         store.problems.first?.problem?.contains(
-          "apiVersion openjoystickdriver.io/v1beta1 is not supported"
+          "apiVersion unsupported.example/v9 is not supported"
         ) == true
       )
       #expect(store.problems.first?.problem?.contains(OpenJoystickDriverAPI.version) == true)

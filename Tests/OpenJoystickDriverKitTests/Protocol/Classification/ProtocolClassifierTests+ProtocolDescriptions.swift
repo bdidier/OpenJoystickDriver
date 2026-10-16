@@ -69,9 +69,9 @@ extension ProtocolClassifierTests {
       (
         protocolDescription(
           signature: #""variant": "usb""#,
-          apiVersion: "openjoystickdriver.io/v1beta1"
+          apiVersion: "unsupported.example/v9"
         ),
-        "apiVersion openjoystickdriver.io/v1beta1 is not supported; "
+        "apiVersion unsupported.example/v9 is not supported; "
           + "the supported apiVersion is \(OpenJoystickDriverAPI.version)",
         .unsupportedAPIVersion
       ),

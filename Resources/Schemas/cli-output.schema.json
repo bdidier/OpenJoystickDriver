@@ -1190,10 +1190,6 @@
         "wire": {
           "description": "The wire value of a remapping error.",
           "type": "string"
-        },
-        "retiredIn": {
-          "description": "The release that retired the code; only for a retired code, whose explanation says so.",
-          "type": "string"
         }
       }
     },

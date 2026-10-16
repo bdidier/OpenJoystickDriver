@@ -90,7 +90,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def test_rejects_a_missing_or_foreign_header(self) -> None:
         for member, value in (
             ("apiVersion", None),
-            ("apiVersion", "openjoystickdriver.io/v1beta1"),
+            ("apiVersion", "unsupported.example/v9"),
             ("kind", None),
             ("kind", "Controller"),
         ):

@@ -941,7 +941,6 @@
 "cli.error.timeout_value" = "--timeout richiede un numero di secondi maggiore di 0.";
 "cli.error.unexpected" = "Errore imprevisto: %@. Esegui «ojd diagnose --output PATH» e allega il pacchetto alla segnalazione del bug.";
 "cli.error.unknown_command" = "Comando sconosciuto «%@». Intendevi «%@»?";
-"cli.error.renamed_flag" = "«%@» è stato rinominato in «%@».";
 "cli.option.json" = "Stampa JSON su stdout.";
 "cli.option.no_color" = "Non usare i colori.";
 "cli.option.no_input" = "Non chiedere mai input; fallisci se manca un valore.";
@@ -1586,15 +1585,15 @@
 "cli.profile.vanished" = "Il servizio non ha conservato il profilo. Controllalo con «ojd profile list».";
 "error.E1001" = "L’endpoint è disattivato. Attivalo con «ojd access enable» e riconnettiti.";
 "error.E1002" = "Il servizio ha rifiutato questo client. Non ha l’autorizzazione per gli ambiti richiesti, oppure la sua firma o la sua prova non è valida. Esegui «ojd access list», autorizza il client con «ojd access grant» e riconnettiti.";
-"error.E1004" = "Il servizio non ha potuto accettare la riga. Non è valida oppure è arrivata nel momento sbagliato. Invia prima hello, poi una sola richiesta, e controlla ogni riga con lo schema dell’endpoint.";
-"error.E1005" = "L’endpoint serve già 8 connessioni per trasporto (socket e WebSocket, ciascuno). Chiudi una connessione che non ti serve e riconnettiti.";
-"error.E1006" = "L’autorizzazione di questo client è stata rimossa mentre era connesso. Autorizzalo di nuovo con «ojd access grant» e riconnettiti.";
-"error.E1007" = "Il client ha letto le righe troppo lentamente e 256 righe sono rimaste in attesa. Leggi le righe alla stessa velocità con cui arrivano e riconnettiti.";
-"error.E1008" = "Il servizio esegue già 4 gamepad virtuali. Chiudi un feed che non ti serve e invia di nuovo feed.";
-"error.E1009" = "Il gamepad virtuale si è chiuso, oppure il servizio non ne esegue nessuno. Riconnettiti e invia feed.";
-"error.E1010" = "Il servizio non supporta l’apiVersion di una riga. Invia una delle versioni in details.supportedAPIVersions e connettiti di nuovo.";
-"error.E1011" = "Una riga ha un kind che il servizio non conosce o non accetta a questo punto. Invia prima Hello, poi Subscription o FeedRequest, poi righe Frame, e connettiti di nuovo.";
-"error.E1012" = "A una riga mancano apiVersion o kind. Ogni riga li porta entrambi. Aggiungili e connettiti di nuovo.";
+"error.E1003" = "Il servizio non ha potuto accettare la riga. Non è valida oppure è arrivata nel momento sbagliato. Invia prima hello, poi una sola richiesta, e controlla ogni riga con lo schema dell’endpoint.";
+"error.E1004" = "L’endpoint serve già 8 connessioni per trasporto (socket e WebSocket, ciascuno). Chiudi una connessione che non ti serve e riconnettiti.";
+"error.E1005" = "L’autorizzazione di questo client è stata rimossa mentre era connesso. Autorizzalo di nuovo con «ojd access grant» e riconnettiti.";
+"error.E1006" = "Il client ha letto le righe troppo lentamente e 256 righe sono rimaste in attesa. Leggi le righe alla stessa velocità con cui arrivano e riconnettiti.";
+"error.E1007" = "Il servizio esegue già 4 gamepad virtuali. Chiudi un feed che non ti serve e invia di nuovo feed.";
+"error.E1008" = "Il gamepad virtuale si è chiuso, oppure il servizio non ne esegue nessuno. Riconnettiti e invia feed.";
+"error.E1009" = "Il servizio non supporta l’apiVersion di una riga. Invia una delle versioni in details.supportedAPIVersions e connettiti di nuovo.";
+"error.E1010" = "Una riga ha un kind che il servizio non conosce o non accetta a questo punto. Invia prima Hello, poi Subscription o FeedRequest, poi righe Frame, e connettiti di nuovo.";
+"error.E1011" = "A una riga mancano apiVersion o kind. Ogni riga li porta entrambi. Aggiungili e connettiti di nuovo.";
 "shortcuts.action.activate_profile.description" = "Attiva un profilo di rimappatura per il modello del suo controller.";
 "shortcuts.action.activate_profile.title" = "Attiva profilo";
 "shortcuts.action.app_version.description" = "Restituisce la versione dell’app installata.";
@@ -1616,7 +1615,7 @@
 "shortcuts.profile.name" = "Nome";
 "shortcuts.profile.type" = "Profilo di rimappatura";
 "cli.explain.abstract" = "Spiega un codice di errore: cosa significa e come risolverlo.";
-"cli.explain.discussion" = "ojd explain copre i codici attivi e quelli ritirati. Funziona offline e le maiuscole o minuscole del codice non contano.";
+"cli.explain.discussion" = "ojd explain copre tutti i codici di errore. Funziona offline e le maiuscole o minuscole del codice non contano.";
 "cli.explain.code" = "Il codice di errore, ad esempio E2004.";
 "cli.explain.unknown" = "%@ non è un codice di errore attivo. Controlla l’ortografia; la pagina Error-Codes della wiki elenca tutti i codici.";
 "cli.explain.area" = "Ambito: %@";
@@ -1627,7 +1626,6 @@
 "cli.explain.area.document" = "Documenti";
 "cli.explain.exit_code" ="Codice di uscita: %@";
 "cli.explain.wire" = "Valore di trasmissione: %@";
-"cli.explain.retired" = "Ritirato in %@.";
 "cli.error.stale_installation" = "L’app OpenJoystickDriver.app installata è più vecchia di questi sorgenti del repository. Esegui «./Scripts/ojd build install-fast dev» oppure imposta OJD_RUN_REPOSITORY_CLI=1 per eseguire questa build.";
 "cli.error.forwarder_allocation" = "Impossibile riservare gli argomenti per l’ojd installato. Esegui di nuovo il comando.";
 "cli.error.forwarder_exec" = "Impossibile eseguire l’ojd installato: %@. Reinstalla OpenJoystickDriver.app.";
@@ -1693,6 +1691,5 @@
 "error.E5003" = "Una descrizione di protocollo indica una famiglia diversa dal nome del suo file. Dai al file il nome della sua famiglia.";
 "error.E5004" = "Una descrizione di protocollo elenca una variante che la sua famiglia non ha. Usa una delle varianti della famiglia.";
 "error.E5005" = "Il file di accesso AccessGrants.json è danneggiato. Correggi il file o eliminalo, poi concedi di nuovo l’accesso.";
-"error.E5006" = "Un documento usa parole che sono state rinominate. Sostituisci ogni parola vecchia con la nuova parola indicata dal messaggio, oppure elimina il file, poi esegui di nuovo il comando.";
-"error.E5007" = "Il file di accesso AccessGrants.json non è supportato. Eliminalo, poi concedi di nuovo l’accesso.";
+"error.E5006" = "Il file di accesso AccessGrants.json non è supportato. Eliminalo, poi concedi di nuovo l’accesso.";
 "error.withCode" ="%@ (%@)";

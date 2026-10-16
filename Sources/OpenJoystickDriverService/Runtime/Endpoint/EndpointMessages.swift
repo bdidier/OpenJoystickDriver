@@ -12,9 +12,9 @@ struct EndpointChallenge: Encodable, Sendable {
 
 /// A line that a client sends: `Hello` first, then `Subscription` or `FeedRequest`.
 ///
-/// A line is checked by ``EndpointHeader`` first: a missing header is answered with `E1012`, an
-/// unsupported `apiVersion` with `E1010`, and an unknown kind, or one that is not accepted at
-/// that point, with `E1011`. A line that fails to decode after that gets `E1004`.
+/// A line is checked by ``EndpointHeader`` first: a missing header is answered with `E1011`, an
+/// unsupported `apiVersion` with `E1009`, and an unknown kind, or one that is not accepted at
+/// that point, with `E1010`. A line that fails to decode after that gets `E1003`.
 struct EndpointRequest: Decodable, Sendable {
   enum Kind: String, Decodable, Sendable {
     case hello = "Hello"
@@ -95,7 +95,7 @@ struct EndpointFrame: Encodable, Sendable {
 /// `endpoint.schema.json`.
 struct EndpointError: Encodable, Error, Sendable {
   struct Details: Encodable, Sendable {
-    /// The `apiVersion` values the service accepts; `E1010`, `E1011` and `E1012` only.
+    /// The `apiVersion` values the service accepts; `E1009`, `E1010` and `E1011` only.
     let supportedAPIVersions: [String]
   }
 

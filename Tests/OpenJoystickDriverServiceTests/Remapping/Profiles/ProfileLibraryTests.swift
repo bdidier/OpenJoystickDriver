@@ -358,24 +358,6 @@ struct ProfileLibraryTests {
   }
 
   @Test
-  func legacyLibraryIsIgnoredAndDiscarded() async throws {
-    try await withLibrary { library, directory in
-      let legacyURL = directory.appendingPathComponent("RemappingProfiles.json")
-      let profile = try JSONSerialization.jsonObject(
-        with: JSONEncoder().encode(makeProfile(name: "Primary"))
-      )
-      try JSONSerialization.data(withJSONObject: ["profiles": [profile], "activeProfiles": []])
-        .write(to: legacyURL)
-
-      let snapshot = try await library.snapshot()
-      #expect(snapshot.profiles.isEmpty)
-      #expect(snapshot.issues.isEmpty)
-      library.discardLegacyLibrary()
-      #expect(!FileManager.default.fileExists(atPath: legacyURL.path))
-    }
-  }
-
-  @Test
   func reloadReportsModelsWhoseActiveProfilesChanged() async throws {
     try await withLibrary { library, _ in
       let active = makeProfile(name: "Active")

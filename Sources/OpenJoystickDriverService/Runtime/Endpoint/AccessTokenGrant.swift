@@ -19,6 +19,21 @@ struct AccessTokenGrant: Codable, Equatable, Sendable {
   /// with a `control` scope but no mark is damaged.
   let controlGrantedAt: String?
 
+  private enum CodingKeys: String, CodingKey, CaseIterable {
+    case name, tokenSHA256, origins, scopes, grantedAt, controlGrantedAt
+  }
+
+  init(from decoder: any Decoder) throws {
+    try decoder.rejectUnknownKeys(CodingKeys.self)
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    name = try container.decode(String.self, forKey: .name)
+    tokenSHA256 = try container.decode(String.self, forKey: .tokenSHA256)
+    origins = try container.decode([String].self, forKey: .origins)
+    scopes = try container.decode([EndpointScope].self, forKey: .scopes)
+    grantedAt = try container.decode(String.self, forKey: .grantedAt)
+    controlGrantedAt = try container.decodeIfPresent(String.self, forKey: .controlGrantedAt)
+  }
+
   init(
     name: String,
     tokenSHA256: String,
@@ -133,6 +148,22 @@ package struct AccessWebSettings: Codable, Equatable, Sendable {
   var enabled = false
   /// Nil until the first enable, which saves the port the system picked unless one was given.
   var port: Int?
+
+  private enum CodingKeys: String, CodingKey, CaseIterable {
+    case enabled, port
+  }
+
+  package init(enabled: Bool = false, port: Int? = nil) {
+    self.enabled = enabled
+    self.port = port
+  }
+
+  package init(from decoder: any Decoder) throws {
+    try decoder.rejectUnknownKeys(CodingKeys.self)
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    enabled = try container.decode(Bool.self, forKey: .enabled)
+    port = try container.decodeIfPresent(Int.self, forKey: .port)
+  }
 }
 
 extension AccessGrantFile {

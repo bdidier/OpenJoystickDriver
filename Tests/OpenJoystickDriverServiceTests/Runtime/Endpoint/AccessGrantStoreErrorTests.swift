@@ -44,7 +44,7 @@ struct AccessGrantStoreErrorTests {
 
   @Test
   func everyErrorCaseHasItsOwnCode() {
-    let codes = Self.cases.map(\.code) + [.damagedAccessGrants, .renamedWordsInDocument]
+    let codes = Self.cases.map(\.code) + [.damagedAccessGrants]
     #expect(Set(codes).count == codes.count)
   }
 }

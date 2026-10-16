@@ -101,19 +101,15 @@ class ControllerSchemaTests(unittest.TestCase):
             with self.subTest(name):
                 self.assertTrue(self.validator.is_valid(document))
 
-    def test_rejects_removed_vocabulary(self) -> None:
+    def test_rejects_unknown_vocabulary(self) -> None:
         removed = {
-            "legacy driver": record({"driver": "GIP", "variant": "xboxOne"}),
-            "legacy variant": record({**GIP, "variant": "xboxOne"}),
-            "legacy XUSB variant": record(
-                {"family": "xbox.xusb", "variant": "xbox360"}
-            ),
-            "transport field": record(GIP, transport="usb"),
-            "Steam wirelessReceiver parameter": record(
+            "unknown field": record(GIP, notAField="usb"),
+            "unknown variant": record({**GIP, "variant": "notAVariant"}),
+            "unknown Steam parameter": record(
                 {
                     "family": "valve.steam-controller",
                     "variant": "wired",
-                    "parameters": {"wirelessReceiver": True},
+                    "parameters": {"notAParameter": True},
                 }
             ),
             "unknown family": record({"family": "xbox.adaptive-joystick"}),
@@ -230,8 +226,8 @@ class ControllerSchemaTests(unittest.TestCase):
             "Switch 2 with a variant": record(
                 {"family": "nintendo.switch2", "variant": "bluetooth-le"}
             ),
-            "Switch 1 with a removed parameter": record(
-                {"family": "nintendo.switch1", "parameters": {"switch2": True}}
+            "Switch 1 with an unknown parameter": record(
+                {"family": "nintendo.switch1", "parameters": {"notAParameter": True}}
             ),
             "Bluetooth-only with a layout": record(
                 {
@@ -250,29 +246,20 @@ class ControllerSchemaTests(unittest.TestCase):
                 DUALSENSE, capabilities={"present": ["LeftPaddle1", "Auxiliary1"]}
             ),
         }
-        for protocol, parameters in (
-            (GIP, ["shareOffset", "triggersToButtons", "inputOnly"]),
-            (XUSB, ["dpadToButtons", "triggersToButtons"]),
-            (
-                {"family": "xbox.xid", "variant": "gamepad"},
-                ["dpadToButtons", "sticksToNull", "triggersToButtons"],
-            ),
-            (DUALSENSE, ["edgeButtons", "microphoneMute", "touchpad"]),
-            (
-                {"family": "valve.steam-controller", "variant": "wired"},
-                ["lizardMode", "trackpads"],
-            ),
-            (
-                {"family": "nintendo.switch1"},
-                ["usbHandshake", "joyConLeft", "joyConRight"],
-            ),
+        for protocol in (
+            GIP,
+            XUSB,
+            {"family": "xbox.xid", "variant": "gamepad"},
+            DUALSENSE,
+            {"family": "valve.steam-controller", "variant": "wired"},
+            {"family": "nintendo.switch1"},
         ):
-            for parameter in parameters:
-                removed[f"{protocol['family']} {parameter}"] = record(
-                    {**protocol, "parameters": {parameter: True}}
-                )
-        for variant in ("gameSirG7ProUSB", "gameSirEnhancedHID", "enhanced-hid-8k"):
-            removed[variant] = record({"family": "vendor.gamesir", "variant": variant})
+            removed[f"{protocol['family']} unknown parameter"] = record(
+                {**protocol, "parameters": {"notAParameter": True}}
+            )
+        removed["unknown GameSir variant"] = record(
+            {"family": "vendor.gamesir", "variant": "notAVariant"}
+        )
         for name, document in removed.items():
             with self.subTest(name):
                 self.assertFalse(self.validator.is_valid(document))
@@ -840,7 +827,7 @@ class SwiftParityTests(unittest.TestCase):
         recovery = {"hidStartupRecoveryIntervalMs": 100, "hidStartupRecoveryRounds": 2}
         interval = {"hidStartupIntervalMs": 10}
         output = {"minimumHIDOutputIntervalMs": 8}
-        removed = {"keepAliveIntervalMs": 500}
+        unknown_key = {"notATuningKey": 500}
         self.check(
             {
                 "liveness on DualShock 4": record(DS4, tuning=liveness),
@@ -872,14 +859,13 @@ class SwiftParityTests(unittest.TestCase):
                 ),
             },
             {
-                # The interval is session.keepAlive.intervalMilliseconds in the family's
-                # description; a record has no tuning key for it, on any family.
-                "interval on GIP": record(GIP, tuning=removed),
+                # A record has no tuning key outside the schema, on any family.
+                "interval on GIP": record(GIP, tuning=unknown_key),
                 "interval on GameSir USB": record(
-                    {"family": "vendor.gamesir", "variant": "usb"}, tuning=removed
+                    {"family": "vendor.gamesir", "variant": "usb"}, tuning=unknown_key
                 ),
-                "interval on DualSense": record(DUALSENSE, tuning=removed),
-                "interval on XUSB": record(XUSB, tuning=removed),
+                "interval on DualSense": record(DUALSENSE, tuning=unknown_key),
+                "interval on XUSB": record(XUSB, tuning=unknown_key),
                 "empty frame queue": record(GIP, tuning={"frameQueueCapacity": 0}),
                 "oversized frame queue": record(
                     GIP, tuning={"frameQueueCapacity": 1025}

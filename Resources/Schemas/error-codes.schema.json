@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/error-codes.schema.json",
   "title": "OpenJoystickDriver error codes",
-  "description": "The authored catalog Resources/ErrorCodes.json. Each entry gives one stable E#### code. A code is never reused: an entry that stops being used is retired and stays. The English explanation of a code is the localization key error.E####.",
+  "description": "The authored catalog Resources/ErrorCodes.json. Each entry gives one stable E#### code. A code is never reused for another error. The English explanation of a code is the localization key error.E####.",
   "type": "object",
   "required": ["apiVersion", "kind", "codes"],
   "additionalProperties": false,
@@ -23,7 +23,7 @@
   "$defs": {
     "entry": {
       "type": "object",
-      "required": ["code", "domain", "name", "status"],
+      "required": ["code", "domain", "name"],
       "additionalProperties": false,
       "properties": {
         "code": {
@@ -39,9 +39,6 @@
           "pattern": "^[a-z][A-Za-z0-9]*$",
           "description": "The lowerCamelCase name of the Swift ErrorCode case."
         },
-        "status": {
-          "enum": ["active", "retired"]
-        },
         "exitCode": {
           "type": "integer",
           "minimum": 1,
@@ -52,10 +49,6 @@
           "type": "string",
           "pattern": "^[a-z][a-z0-9_]*$",
           "description": "The code value of the remapping RPC that this code stands for; remapping entries only."
-        },
-        "retiredIn": {
-          "type": "string",
-          "description": "The version that stopped using the code; retired entries only."
         }
       },
       "allOf": [
@@ -90,23 +83,6 @@
           "else": {
             "not": {
               "required": ["wire"]
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "status": {
-                "const": "retired"
-              }
-            }
-          },
-          "then": {
-            "required": ["retiredIn"]
-          },
-          "else": {
-            "not": {
-              "required": ["retiredIn"]
             }
           }
         }

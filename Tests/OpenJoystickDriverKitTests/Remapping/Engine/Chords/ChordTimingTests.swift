@@ -71,7 +71,7 @@ struct RemappingChordTimingTests {
   }
 
   @Test
-  func legacyChordDecodesWithoutTimingFields() throws {
+  func chordDecodesWithoutTimingFields() throws {
     let chord = try #require(profile(mode: .modifier).chords.first)
     let data = try JSONEncoder().encode(chord)
     let object = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])

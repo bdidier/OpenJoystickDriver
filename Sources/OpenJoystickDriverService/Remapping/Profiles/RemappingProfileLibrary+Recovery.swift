@@ -63,18 +63,6 @@ extension RemappingProfileLibrary {
     return Set(previous.keys).union(current.keys).filter { previous[$0] != current[$0] }
   }
 
-  /// Deletes the single-file library that earlier versions wrote. Its profiles are not migrated.
-  nonisolated func discardLegacyLibrary() {
-    let url = directory.appendingPathComponent(Self.legacyLibraryFileName, isDirectory: false)
-    guard FileManager.default.fileExists(atPath: url.path) else { return }
-    do {
-      try FileManager.default.removeItem(at: url)
-      print("[Profiles] Deleted the earlier profile library \(url.path)")
-    } catch {
-      fputs("[Profiles] Cannot delete \(url.path): \(error.localizedDescription)\n", stderr)
-    }
-  }
-
   func checkpoint() throws -> RemappingProfileLibraryCheckpoint {
     let manager = FileManager.default
     var profileFiles: [String: RemappingProfileLibraryCheckpoint.File] = [:]

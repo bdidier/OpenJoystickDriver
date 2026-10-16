@@ -45,7 +45,7 @@ struct EndpointConnectionTests {
 
     let objects = Self.readAll(reader)
     #expect(objects.count < 1_000)
-    #expect(objects.last?["code"] as? String == "E1007")
+    #expect(objects.last?["code"] as? String == "E1006")
     connection.finish()
   }
 
@@ -66,7 +66,7 @@ struct EndpointConnectionTests {
 
     let objects = Self.readAll(reader)
     #expect(objects.count < count)
-    #expect(objects.last?["code"] as? String == "E1006")
+    #expect(objects.last?["code"] as? String == "E1005")
     connection.finish()
   }
 

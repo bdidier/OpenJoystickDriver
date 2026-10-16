@@ -52,16 +52,16 @@ The service answers with one line and then either streams or closes the connecti
 {"apiVersion":"openjoystickdriver/v1alpha1","kind":"Status","status":"Failure","code":"E1002","message":"..."}
 ```
 
-- `apiVersion` negotiates the version. The service accepts only `openjoystickdriver/v1alpha1`. For any other value it answers `E1010` with `details.supportedAPIVersions: ["openjoystickdriver/v1alpha1"]` and closes. The proof label `OpenJoystickDriver endpoint hello 1` is a fixed domain-separation label, not a version.
+- `apiVersion` negotiates the version. The service accepts only `openjoystickdriver/v1alpha1`. For any other value it answers `E1009` with `details.supportedAPIVersions: ["openjoystickdriver/v1alpha1"]` and closes. The proof label `OpenJoystickDriver endpoint hello 1` is a fixed domain-separation label, not a version.
 - `scopes` lists the scopes the client asks for. The service grants all of them or refuses with `E1002`. It never grants a subset silently.
-- Error codes are stable identifiers, `E1001` to `E1012`, listed in `Resources/ErrorCodes.json` and explained on the wiki page Error-Codes. `message` is English text for logs, not for parsing. An error line is a `Status` with `status` `Failure`.
+- Error codes are stable identifiers, `E1001` to `E1011`, listed in `Resources/ErrorCodes.json` and explained on the wiki page Error-Codes. `message` is English text for logs, not for parsing. An error line is a `Status` with `status` `Failure`.
 
 ## Read Stream (Slice 3.3)
 
 After the `Welcome`, the client sends `{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Subscription","stream":"controllers","output":false}`. The service then sends the same lines as `ojd controller watch --all --json`: watch lines with `type` (`ADDED`, `MODIFIED`, or `DELETED`) and `object`, a `Controller` with its own `apiVersion` and `kind`, and no `apiVersion` or `kind` on the line. `output: true` adds `output` to the object, as `--output` does.
 
 - One poller in the service serves every subscriber. It starts with the first subscriber and stops with the last, so an idle endpoint costs nothing. The polling logic of `watchAll()` moves into `OpenJoystickDriverKit`, so the CLI and the endpoint use the same code.
-- A client that reads too slowly gets the latest `input` line for each controller, and earlier ones are dropped. `connected` and `disconnected` lines are never dropped. When 256 lines are waiting, the service closes the connection with the error `E1007`.
+- A client that reads too slowly gets the latest `input` line for each controller, and earlier ones are dropped. `connected` and `disconnected` lines are never dropped. When 256 lines are waiting, the service closes the connection with the error `E1006`.
 - `cli-output.schema.json` already describes the event lines. A new `endpoint.schema.json` describes `Hello`, `Welcome`, `Status`, and `Subscription`, and refers to the `sharedControllerWatchEvent` and `sharedVirtualFeedLine` shapes, so the two cannot drift apart.
 
 ## Control Stream (Milestone 4)
@@ -71,13 +71,13 @@ With the `control` scope, the client sends a `FeedRequest`. The service answers 
 ```json
 {"apiVersion":"openjoystickdriver/v1alpha1","kind":"FeedRequest","as":"Generic"}
 {"apiVersion":"openjoystickdriver/v1alpha1","kind":"FeedSession","as":"Generic"}
-{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Status","status":"Failure","code":"E1008","message":"..."}
+{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Status","status":"Failure","code":"E1007","message":"..."}
 ```
 
 - **Transport:** `control` works on the Unix socket, for a signed client or a token. On the WebSocket, it works only with a token that has no origins, from a client that sends no `Origin` header. Any site can script a page, so a page never drives a pad. A `hello` that this rule refuses is recorded in `refusals`. `ojd access grant --token` refuses `--origin` together with `--scope control`. A grants file from an earlier build that holds the combination still loads; the service drops `control` from that token, and the token itself when `control` was its only scope. A grants file with a `control` scope that lacks `controlGrantedAt`, which a build before the scope worked wrote, is damaged, so the service never honors that scope.
-- **Errors:** a `feed` without `control` gets `E1002`. A fifth endpoint feed gets `E1008`. A virtual gamepad that fails to start, or that the service stops, ends the connection with `E1009`.
+- **Errors:** a `feed` without `control` gets `E1002`. A fifth endpoint feed gets `E1007`. A virtual gamepad that fails to start, or that the service stops, ends the connection with `E1008`.
 
-- One connection is one feed. Closing the connection removes the virtual gamepad. A client that stalls without closing, such as a stopped process or a half-open connection, would keep the last frame's buttons held and its feed slot, so the endpoint closes a feed with `E1009` and removes the virtual gamepad when the client sends no frame line and no `KeepAlive` line for 2 seconds (`VirtualFeedExchangeResult.idleTimeoutSeconds`). The idle time starts only when the frame queue is empty and the last frame's play time (its `holdMilliseconds`, at least 8 ms) has elapsed, so a burst of frames or a long hold is never cut short. A `KeepAlive` line counts as activity and does nothing else, so a client with no new frame keeps its feed without repeating one. The service's own polls for rumble do not count as activity, and `ojd virtual feed` keeps its own exchange-based timeout.
+- One connection is one feed. Closing the connection removes the virtual gamepad. A client that stalls without closing, such as a stopped process or a half-open connection, would keep the last frame's buttons held and its feed slot, so the endpoint closes a feed with `E1008` and removes the virtual gamepad when the client sends no frame line and no `KeepAlive` line for 2 seconds (`VirtualFeedExchangeResult.idleTimeoutSeconds`). The idle time starts only when the frame queue is empty and the last frame's play time (its `holdMilliseconds`, at least 8 ms) has elapsed, so a burst of frames or a long hold is never cut short. A `KeepAlive` line counts as activity and does nothing else, so a client with no new frame keeps its feed without repeating one. The service's own polls for rumble do not count as activity, and `ojd virtual feed` keeps its own exchange-based timeout.
 - Unlike `ojd virtual feed`, which waits until every line has played, closing the connection drops the frames that have not played. A client that sends a macro and then closes loses most of it, so the client stays connected until its last frame has played. Each frame plays for its `holdMilliseconds` and at least 8 ms.
 - `VirtualFeedRegistry` is reused. Endpoint clients and `ojd virtual feed` each have their own limit of 4 feeds, so a 4-player setup works over either and one cannot take the feeds of the other.
 - When 256 frames wait, the service stops reading the connection. A client that closes the connection meanwhile still ends the feed at once.
@@ -110,7 +110,7 @@ ojd access revoke CLIENT [--scope SCOPE]
 
 - `CLIENT` is an app or executable path, such as `/Applications/Overlay.app`, from which `ojd` reads the signature, or the ID of a refused client from `ojd access list`.
 - `grant` and `enable` ask for confirmation on a terminal and need `--force` with `--no-input`, like other commands that change what other programs can do. Granting `control` names the risk: the client can press buttons in any game.
-- `revoke` closes that client's live connections with the error `E1006`.
+- `revoke` closes that client's live connections with the error `E1005`.
 - Every command supports `--json`, described in `cli-output.schema.json`.
 
 ## Tests (Slice 3.3)
@@ -119,8 +119,8 @@ Swift tests run the endpoint on a private socket, as `FakeService` does for the 
 
 - A client without a grant is refused with `E1002`, and an ad-hoc signed client is refused.
 - A granted client receives `ADDED`, `MODIFIED`, and `DELETED` watch lines that validate against the schema.
-- A revoked client is disconnected with `E1006`.
-- A disabled endpoint has no socket, and a line with another `apiVersion` gets `E1010`.
+- A revoked client is disconnected with `E1005`.
+- A disabled endpoint has no socket, and a line with another `apiVersion` gets `E1009`.
 
 The signature checks need a client signed with a team ID, which a unit test cannot create. The tests inject the identity lookup, as `LocalServiceRPCServer` takes `authentication` today. A live check with a Developer ID signed client is a manual step.
 
@@ -138,7 +138,7 @@ The signature checks need a client signed with a team ID, which a unit test cann
 - `AccessGrants.json` is a secret. Its SHA-256 hashes are the HMAC keys, so whoever reads the file can sign challenges as any token in it. The service writes it with mode 0600 in a 0700 folder, and the support report does not include it. Keep it out of shared reports, exports, and backups; when it leaks, revoke every token.
 - `--origin` binds the token to web pages. A token without origins works on the Unix socket, and on the WebSocket only for a client that sends no `Origin`. The service stores each origin as `scheme://host[:port]`, with `http` or `https` only. `null` is never accepted: any website can make a browser send `Origin: null` from a sandboxed frame or a `data:` URL, so it proves nothing.
 - A wrong proof, an unknown token name, or a token used from another origin gets `E1002`. `ojd access list` shows the refusal by token name only when the proof was right, such as for a missing scope or origin; otherwise it shows an unknown token, so a guessed name is not recorded. Refusals are kept for 24 hours.
-- `ojd access revoke token:NAME` removes the grant and closes its connections with `E1006`.
+- `ojd access revoke token:NAME` removes the grant and closes its connections with `E1005`.
 
 ### WebSocket
 
@@ -146,8 +146,8 @@ The signature checks need a client signed with a team ID, which a unit test cann
 
 - WebSocket clients connect to `ws://127.0.0.1:PORT/endpoint`. The upgrade is refused unless `Host` is `127.0.0.1:PORT`, which stops DNS rebinding, and `Origin` is an origin of some token grant. An upgrade without `Origin` is accepted when some token grant has no origins.
 - The challenge is the first WebSocket message after the `101`. `hello` must carry the name of a token whose grant names the connection's `Origin`, and a proof over that origin and the port. Without `Origin`, the token's grant must have no origins, and the proof has an empty origin line and the port. The token never goes on the wire, so it stays out of logs, browser history, and any listener that impersonates the service.
-- One text frame, or one message split over continuation frames, is one line of the Unix protocol, at most 64 KiB. A binary frame or a longer message ends the connection with `E1004`. Client frames must be masked, as RFC 6455 requires.
-- The limits of the Unix socket apply, with each transport counting its own 8 clients: a 5-second handshake, and `E1007` after 256 waiting lines.
+- One text frame, or one message split over continuation frames, is one line of the Unix protocol, at most 64 KiB. A binary frame or a longer message ends the connection with `E1003`. Client frames must be masked, as RFC 6455 requires.
+- The limits of the Unix socket apply, with each transport counting its own 8 clients: a 5-second handshake, and `E1006` after 256 waiting lines.
 - The service implements the upgrade and framing itself on a BSD socket. Network.framework's `NWProtocolWebSocket` shows request headers only to a handler that is shared by every connection, so it cannot tie a connection's `Origin` to the token in its `hello`.
 
 ### Overlay Pages

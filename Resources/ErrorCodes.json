@@ -5,298 +5,248 @@
     {
       "code": "E1001",
       "domain": "endpoint",
-      "name": "endpointDisabled",
-      "status": "active"
+      "name": "endpointDisabled"
     },
     {
       "code": "E1002",
       "domain": "endpoint",
-      "name": "notGranted",
-      "status": "active"
+      "name": "notGranted"
     },
     {
       "code": "E1003",
       "domain": "endpoint",
-      "name": "unsupportedProtocol",
-      "status": "retired",
-      "retiredIn": "0.6.0-alpha.1"
+      "name": "invalidMessage"
     },
     {
       "code": "E1004",
       "domain": "endpoint",
-      "name": "invalidMessage",
-      "status": "active"
+      "name": "tooManyConnections"
     },
     {
       "code": "E1005",
       "domain": "endpoint",
-      "name": "tooManyConnections",
-      "status": "active"
+      "name": "revoked"
     },
     {
       "code": "E1006",
       "domain": "endpoint",
-      "name": "revoked",
-      "status": "active"
+      "name": "tooSlow"
     },
     {
       "code": "E1007",
       "domain": "endpoint",
-      "name": "tooSlow",
-      "status": "active"
+      "name": "tooManyFeeds"
     },
     {
       "code": "E1008",
       "domain": "endpoint",
-      "name": "tooManyFeeds",
-      "status": "active"
+      "name": "feedClosed"
     },
     {
       "code": "E1009",
       "domain": "endpoint",
-      "name": "feedClosed",
-      "status": "active"
+      "name": "unsupportedEndpointVersion"
     },
     {
       "code": "E1010",
       "domain": "endpoint",
-      "name": "unsupportedEndpointVersion",
-      "status": "active"
+      "name": "unexpectedKind"
     },
     {
       "code": "E1011",
       "domain": "endpoint",
-      "name": "unexpectedKind",
-      "status": "active"
-    },
-    {
-      "code": "E1012",
-      "domain": "endpoint",
-      "name": "missingHeader",
-      "status": "active"
+      "name": "missingHeader"
     },
     {
       "code": "E2001",
       "domain": "cli",
       "name": "unexpected",
-      "status": "active",
       "exitCode": 1
     },
     {
       "code": "E2002",
       "domain": "cli",
       "name": "unknownCommand",
-      "status": "active",
       "exitCode": 64
     },
     {
       "code": "E2003",
       "domain": "cli",
       "name": "usage",
-      "status": "active",
       "exitCode": 64
     },
     {
       "code": "E2004",
       "domain": "cli",
       "name": "serviceUnavailable",
-      "status": "active",
       "exitCode": 69
     },
     {
       "code": "E2005",
       "domain": "cli",
       "name": "serviceTimeout",
-      "status": "active",
       "exitCode": 1
     },
     {
       "code": "E2006",
       "domain": "cli",
       "name": "serviceRequestFailed",
-      "status": "active",
       "exitCode": 1
     },
     {
       "code": "E2007",
       "domain": "cli",
       "name": "peerRejected",
-      "status": "active",
       "exitCode": 1
     },
     {
       "code": "E2008",
       "domain": "cli",
       "name": "permissionMissing",
-      "status": "active",
       "exitCode": 77
     },
     {
       "code": "E2009",
       "domain": "cli",
       "name": "confirmationRequired",
-      "status": "active",
       "exitCode": 64
     },
     {
       "code": "E2010",
       "domain": "cli",
       "name": "aborted",
-      "status": "active",
       "exitCode": 1
     },
     {
       "code": "E2011",
       "domain": "cli",
       "name": "invalidInputFile",
-      "status": "active",
       "exitCode": 1
     },
     {
       "code": "E2012",
       "domain": "cli",
       "name": "notFound",
-      "status": "active",
       "exitCode": 1
     },
     {
       "code": "E2013",
       "domain": "cli",
       "name": "controllerRequestFailed",
-      "status": "active",
       "exitCode": 1
     },
     {
       "code": "E2014",
       "domain": "cli",
       "name": "installationProblem",
-      "status": "active",
       "exitCode": 1
     },
     {
       "code": "E2015",
       "domain": "cli",
       "name": "systemRequestFailed",
-      "status": "active",
       "exitCode": 1
     },
     {
       "code": "E2016",
       "domain": "cli",
       "name": "fileAccessFailed",
-      "status": "active",
       "exitCode": 1
     },
     {
       "code": "E2017",
       "domain": "cli",
       "name": "unsignedClient",
-      "status": "active",
       "exitCode": 1
     },
     {
       "code": "E2018",
       "domain": "cli",
       "name": "diagnoseFailed",
-      "status": "active",
       "exitCode": 1
     },
     {
       "code": "E2019",
       "domain": "cli",
       "name": "updateCheckFailed",
-      "status": "active",
       "exitCode": 1
     },
     {
       "code": "E2020",
       "domain": "cli",
       "name": "staleInstallation",
-      "status": "active",
       "exitCode": 1
     },
     {
       "code": "E2021",
       "domain": "cli",
       "name": "installedCLIFailed",
-      "status": "active",
       "exitCode": 127
     },
     {
       "code": "E2022",
       "domain": "cli",
       "name": "recordTestMismatch",
-      "status": "active",
       "exitCode": 1
     },
     {
       "code": "E2023",
       "domain": "cli",
       "name": "claimUnsupported",
-      "status": "active",
       "exitCode": 1
     },
     {
       "code": "E2024",
       "domain": "cli",
       "name": "unknownAccessClient",
-      "status": "active",
       "exitCode": 1
     },
     {
       "code": "E2025",
       "domain": "cli",
       "name": "ungrantableClient",
-      "status": "active",
       "exitCode": 1
     },
     {
       "code": "E2026",
       "domain": "cli",
       "name": "noAccessScope",
-      "status": "active",
       "exitCode": 64
     },
     {
       "code": "E2027",
       "domain": "cli",
       "name": "serviceStopping",
-      "status": "active",
       "exitCode": 1
     },
     {
       "code": "E2028",
       "domain": "cli",
       "name": "duplicateTokenName",
-      "status": "active",
       "exitCode": 64
     },
     {
       "code": "E2029",
       "domain": "cli",
       "name": "invalidTokenName",
-      "status": "active",
       "exitCode": 64
     },
     {
       "code": "E2030",
       "domain": "cli",
       "name": "invalidWebOrigin",
-      "status": "active",
       "exitCode": 64
     },
     {
       "code": "E2031",
       "domain": "cli",
       "name": "webPortUnavailable",
-      "status": "active",
       "exitCode": 64
     },
     {
       "code": "E2032",
       "domain": "cli",
       "name": "controlScopeWithOrigins",
-      "status": "active",
       "exitCode": 64
     },
     {
@@ -310,288 +260,240 @@
       "code": "E3001",
       "domain": "remapping",
       "name": "controllerUnavailable",
-      "status": "active",
       "wire": "controller_unavailable"
     },
     {
       "code": "E3002",
       "domain": "remapping",
       "name": "joyConPairUnavailable",
-      "status": "active",
       "wire": "joy_con_pair_unavailable"
     },
     {
       "code": "E3003",
       "domain": "remapping",
       "name": "motionUnavailable",
-      "status": "active",
       "wire": "motion_unavailable"
     },
     {
       "code": "E3004",
       "domain": "remapping",
       "name": "argumentTooLarge",
-      "status": "active",
       "wire": "argument_too_large"
     },
     {
       "code": "E3005",
       "domain": "remapping",
       "name": "corruptLibrary",
-      "status": "active",
       "wire": "library_corrupt"
     },
     {
       "code": "E3006",
       "domain": "remapping",
       "name": "duplicateName",
-      "status": "active",
       "wire": "duplicate_name"
     },
     {
       "code": "E3007",
       "domain": "remapping",
       "name": "invalidArguments",
-      "status": "active",
       "wire": "invalid_arguments"
     },
     {
       "code": "E3008",
       "domain": "remapping",
       "name": "invalidProfile",
-      "status": "active",
       "wire": "invalid_profile"
     },
     {
       "code": "E3009",
       "domain": "remapping",
       "name": "librarySizeExceeded",
-      "status": "active",
       "wire": "library_size_exceeded"
     },
     {
       "code": "E3010",
       "domain": "remapping",
       "name": "profileAlreadyExists",
-      "status": "active",
       "wire": "profile_already_exists"
     },
     {
       "code": "E3011",
       "domain": "remapping",
       "name": "profileUpdateConflict",
-      "status": "active",
       "wire": "profile_update_conflict"
     },
     {
       "code": "E3012",
       "domain": "remapping",
       "name": "profileCountExceeded",
-      "status": "active",
       "wire": "profile_count_exceeded"
     },
     {
       "code": "E3013",
       "domain": "remapping",
       "name": "profileNotFound",
-      "status": "active",
       "wire": "profile_not_found"
     },
     {
       "code": "E3014",
       "domain": "remapping",
       "name": "responseEncodingFailed",
-      "status": "active",
       "wire": "response_encoding_failed"
     },
     {
       "code": "E3015",
       "domain": "remapping",
       "name": "responseTooLarge",
-      "status": "active",
       "wire": "response_too_large"
     },
     {
       "code": "E3016",
       "domain": "remapping",
       "name": "routerEngineUnavailable",
-      "status": "active",
       "wire": "router_engine_unavailable"
     },
     {
       "code": "E3017",
       "domain": "remapping",
       "name": "routerLibraryAndEngineUnavailable",
-      "status": "active",
       "wire": "router_library_and_engine_unavailable"
     },
     {
       "code": "E3018",
       "domain": "remapping",
       "name": "routerLibraryUnavailable",
-      "status": "active",
       "wire": "router_library_unavailable"
     },
     {
       "code": "E3019",
       "domain": "remapping",
       "name": "routerShutDown",
-      "status": "active",
       "wire": "router_shut_down"
     },
     {
       "code": "E3020",
       "domain": "remapping",
       "name": "transactionUnreconciled",
-      "status": "active",
       "wire": "transaction_unreconciled"
     },
     {
       "code": "E3021",
       "domain": "remapping",
       "name": "unreadableLibrary",
-      "status": "active",
       "wire": "library_unreadable"
     },
     {
       "code": "E3022",
       "domain": "remapping",
       "name": "profileRecoveryRequired",
-      "status": "active",
       "wire": "profile_recovery_required"
     },
     {
       "code": "E3023",
       "domain": "remapping",
       "name": "unwritableLibrary",
-      "status": "active",
       "wire": "library_unwritable"
     },
     {
       "code": "E3024",
       "domain": "remapping",
       "name": "remappingUnexpected",
-      "status": "active",
       "wire": "unexpected"
     },
     {
       "code": "E3025",
       "domain": "remapping",
       "name": "profileProducesNoOutput",
-      "status": "active",
       "wire": "profile_produces_no_output"
     },
     {
       "code": "E3026",
       "domain": "remapping",
       "name": "motionGyroNotSelected",
-      "status": "active",
       "wire": "motion_gyro_not_selected"
     },
     {
       "code": "E3027",
       "domain": "remapping",
       "name": "motionProfileInactive",
-      "status": "active",
       "wire": "motion_profile_inactive"
     },
     {
       "code": "E3028",
       "domain": "remapping",
       "name": "motionSessionChanged",
-      "status": "active",
       "wire": "motion_session_changed"
     },
     {
       "code": "E3029",
       "domain": "remapping",
       "name": "packageProfileReadOnly",
-      "status": "active",
       "wire": "package_profile_read_only"
     },
     {
       "code": "E4001",
       "domain": "mod",
-      "name": "invalidManifest",
-      "status": "active"
+      "name": "invalidManifest"
     },
     {
       "code": "E4002",
       "domain": "mod",
-      "name": "requiresExcludesVersion",
-      "status": "active"
+      "name": "requiresExcludesVersion"
     },
     {
       "code": "E4003",
       "domain": "mod",
-      "name": "invalidPackageContent",
-      "status": "active"
+      "name": "invalidPackageContent"
     },
     {
       "code": "E4004",
       "domain": "mod",
-      "name": "packageClash",
-      "status": "active"
+      "name": "packageClash"
     },
     {
       "code": "E4005",
       "domain": "mod",
-      "name": "packageAlreadyInstalled",
-      "status": "active"
+      "name": "packageAlreadyInstalled"
     },
     {
       "code": "E4006",
       "domain": "mod",
-      "name": "packageNotInstalled",
-      "status": "active"
+      "name": "packageNotInstalled"
     },
     {
       "code": "E4007",
       "domain": "mod",
-      "name": "packageStoreUnwritable",
-      "status": "active"
+      "name": "packageStoreUnwritable"
     },
     {
       "code": "E5001",
       "domain": "document",
-      "name": "unsupportedAPIVersion",
-      "status": "active"
+      "name": "unsupportedAPIVersion"
     },
     {
       "code": "E5002",
       "domain": "document",
-      "name": "invalidProtocolDescription",
-      "status": "active"
+      "name": "invalidProtocolDescription"
     },
     {
       "code": "E5003",
       "domain": "document",
-      "name": "protocolDescriptionFamilyMismatch",
-      "status": "active"
+      "name": "protocolDescriptionFamilyMismatch"
     },
     {
       "code": "E5004",
       "domain": "document",
-      "name": "unknownProtocolVariant",
-      "status": "active"
+      "name": "unknownProtocolVariant"
     },
     {
       "code": "E5005",
       "domain": "document",
-      "name": "damagedAccessGrants",
-      "status": "active"
+      "name": "damagedAccessGrants"
     },
     {
       "code": "E5006",
       "domain": "document",
-      "name": "renamedWordsInDocument",
-      "status": "active"
-    },
-    {
-      "code": "E5007",
-      "domain": "document",
-      "name": "unsupportedAccessGrants",
-      "status": "active"
+      "name": "unsupportedAccessGrants"
     }
   ]
 }
