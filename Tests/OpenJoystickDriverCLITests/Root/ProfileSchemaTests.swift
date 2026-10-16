@@ -238,7 +238,7 @@ struct ProfileSchemaTests {
     let broken = Self.richDocument.replacingOccurrences(of: original, with: replacement)
     do {
       _ = try RemappingProfileFileStore.load(from: Data(broken.utf8))
-      Issue.record("\(problem) was accepted")
+      Issue.record("\(problem): the profile loads")
     } catch {
       if replacement.contains("notAName") {
         #expect(DocumentProblem.code(error) == nil, "\(problem)")
