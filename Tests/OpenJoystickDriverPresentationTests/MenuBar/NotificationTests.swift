@@ -48,7 +48,7 @@ struct NotificationTests {
     let model = NotificationPermissionModel(authorization: authorization)
 
     model.refresh()
-    for _ in 0..<100 where model.state == .checking { await Task.yield() }
+    await waitUntil("the permission state resolves") { model.state != .checking }
 
     #expect(model.state == .allowed)
   }
@@ -64,7 +64,7 @@ struct NotificationTests {
     let model = NotificationPermissionModel(authorization: authorization)
 
     model.refresh()
-    for _ in 0..<100 where model.state == .checking { await Task.yield() }
+    await waitUntil("the permission state resolves") { model.state != .checking }
 
     #expect(model.settings.alertStyle == .none)
     #expect(model.settings.soundsEnabled == false)

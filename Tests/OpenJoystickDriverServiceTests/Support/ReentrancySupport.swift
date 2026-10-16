@@ -1,5 +1,7 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
+import Testing
 
 @testable import OpenJoystickDriverService
 
@@ -25,7 +27,7 @@ actor RoutingCheckpointGate {
     await withCheckedContinuation { continuation = $0 }
   }
 
-  func waitUntilPaused() async { while !paused { await Task.yield() } }
+  func waitUntilPaused() async { await waitUntil("the checkpoint pauses") { paused } }
 
   nonisolated func resume() { Task { await release() } }
 
@@ -59,7 +61,7 @@ final class BlockingReleaseSink: RemappingSystemInputSink, @unchecked Sendable {
   }
 
   func waitUntilReleaseIsBlocked() async {
-    while !lock.withLock({ releaseBlocked }) { await Task.yield() }
+    await waitUntil("the release is blocked") { lock.withLock { releaseBlocked } }
   }
 
   func resumeRelease() { releaseGate.signal() }
@@ -84,17 +86,4 @@ final class TransientTerminalFailureSink: RemappingSystemInputSink, @unchecked S
   }
 
   private enum TransientSinkError: Error { case rejected }
-}
-
-/// Waits until `condition` holds and returns true.
-///
-/// The wait has no count or clock budget of its own, so whether it passes cannot depend on how
-/// many scheduler turns the machine grants. A condition that never holds ends only when the
-/// enclosing test's time limit cancels the task, and then the result is false.
-func eventually(_ condition: @escaping @Sendable () -> Bool) async -> Bool {
-  while !condition() {
-    if Task.isCancelled { return false }
-    try? await Task.sleep(nanoseconds: 1_000_000)
-  }
-  return true
 }

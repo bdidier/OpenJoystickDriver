@@ -14,7 +14,7 @@ Testers and users can add or fix a controller without a new OJD build. Most per-
 | User controller records | `~/Library/Application Support/OpenJoystickDriver/Controllers/<vvvv>-<pppp>.json` | user | `controller.schema.json` for a `Controller`, `controller-patch.schema.json` for a `ControllerPatch` |
 | Remapping profiles | `~/Library/Application Support/OpenJoystickDriver/Profiles/<uuid>.json` | user | remapping profile, one file per profile |
 | Active profile selections | `~/Library/Application Support/OpenJoystickDriver/ActiveProfiles.json` | user | selection list |
-| App preferences | `UserDefaults` for the app's bundle identifier | app | unchanged |
+| App settings | `~/Library/Application Support/OpenJoystickDriver/Settings.json` | user | `settings.schema.json` |
 
 This follows Apple's file-system layout: shipped data stays in the signed bundle, and user-owned data goes in Application Support under the app's name. User records use the same ControllerPatch schema as the repository, so a user patch that works can be copied into `Resources/ControllerPatches/` in a pull request without changes.
 

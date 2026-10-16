@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -24,7 +25,7 @@ struct DevicePipelineSleepTests {
     await pipeline.feedHIDData(Data([1]))
     await pipeline.feedHIDData(Data([2]))
 
-    try? await Task.sleep(nanoseconds: 80_000_000)
+    await waitUntil("the idle pipeline neutralizes") { dispatcher.states.last == .neutral }
 
     await pipeline.feedHIDData(Data([code]))
 
@@ -152,7 +153,7 @@ struct DevicePipelineSleepTests {
     await pipeline.start()
     await pipeline.feedHIDData(Data([1]))
     await pipeline.stop()
-    try? await Task.sleep(nanoseconds: 20_000_000)
+    await waitUntil("the stop neutralizes") { dispatcher.states.last == .neutral }
 
     #expect(dispatcher.states == [snapshot(.press(.south)), .neutral])
   }
@@ -173,7 +174,7 @@ struct DevicePipelineSleepTests {
     await pipeline.feedHIDData(Data([6]))
     await pipeline.feedHIDData(Data([3]))
     await pipeline.stop()
-    try? await Task.sleep(nanoseconds: 20_000_000)
+    await waitUntil("the stop neutralizes") { dispatcher.states.last == .neutral }
 
     #expect(
       dispatcher.states == [

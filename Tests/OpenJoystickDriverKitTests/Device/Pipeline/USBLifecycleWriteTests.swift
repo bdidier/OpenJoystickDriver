@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -18,7 +19,7 @@ struct USBLifecycleWriteTests {
 
     await pipeline.start()
     // Reads never return, so every keep-alive comes from the keep-alive timer.
-    #expect(await waitUntil { await session.writes.count >= 3 })
+    await waitUntil("session.writes.count >= 3") { await session.writes.count >= 3 }
     await pipeline.stop()
     try? await Task.sleep(nanoseconds: 60_000_000)
     let countAfterStop = await session.writes.count
@@ -42,7 +43,7 @@ struct USBLifecycleWriteTests {
     let pipeline = Self.pipeline(driver: driver, session: session)
 
     await pipeline.start()
-    #expect(await waitUntil { await session.writes.count >= 1 })
+    await waitUntil("session.writes.count >= 1") { await session.writes.count >= 1 }
     #expect(await pipeline.suspendControllerSession())
     try? await Task.sleep(nanoseconds: 60_000_000)
     let countWhileSuspended = await session.writes.count
@@ -50,7 +51,9 @@ struct USBLifecycleWriteTests {
     #expect(await session.writes.count == countWhileSuspended)
 
     #expect(await pipeline.resumeControllerSession())
-    #expect(await waitUntil { await session.writes.count > countWhileSuspended })
+    await waitUntil("session.writes.count > countWhileSuspended") {
+      await session.writes.count > countWhileSuspended
+    }
     await pipeline.stop()
   }
 
@@ -132,7 +135,7 @@ struct USBLifecycleWriteTests {
     )
 
     await pipeline.start()
-    #expect(await waitUntil { await provider.openCount >= 3 })
+    await waitUntil("provider.openCount >= 3") { await provider.openCount >= 3 }
     await pipeline.stop()
 
     #expect(await provider.resetCount == 1)
@@ -186,18 +189,6 @@ struct USBLifecycleWriteTests {
       transportProfile: .gipDefault,
       usbRecoveryPolicy: recoveryPolicy
     )
-  }
-
-  private func waitUntil(
-    timeoutNanoseconds: UInt64 = 5_000_000_000,
-    condition: @escaping @Sendable () async -> Bool
-  ) async -> Bool {
-    let deadline = DispatchTime.now().uptimeNanoseconds &+ timeoutNanoseconds
-    while DispatchTime.now().uptimeNanoseconds < deadline {
-      if await condition() { return true }
-      try? await Task.sleep(nanoseconds: 1_000_000)
-    }
-    return await condition()
   }
 }
 

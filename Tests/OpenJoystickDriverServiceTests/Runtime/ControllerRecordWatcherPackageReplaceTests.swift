@@ -1,5 +1,6 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverService
@@ -62,12 +63,12 @@ struct ControllerRecordWatcherPackageReplaceTests {
       runningVersion: "0.6.0"
     )
     try store.install(Self.package(in: root, [0xabcd]))
-    for _ in 0..<50 where applied.last != 1 { try await Task.sleep(nanoseconds: 100_000_000) }
+    await waitUntil("the install is applied") { applied.last == 1 }
     #expect(applied.last == 1)
 
     let installedChanges = changes
     try store.install(Self.package(in: root, [0xabcd, 0xabce]), replace: true)
-    for _ in 0..<50 where applied.last != 2 { try await Task.sleep(nanoseconds: 100_000_000) }
+    await waitUntil("the replacement is applied") { applied.last == 2 }
     #expect(applied.last == 2)
     #expect(changes > installedChanges)
   }

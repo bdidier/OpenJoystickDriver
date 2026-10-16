@@ -68,7 +68,7 @@ struct SupportDiagnosticsTests {
     )
     let supportReport = await MainActor.run { SupportReportModel(gateway: gateway) }
     let first = Task { @MainActor in await supportReport.loadSupportDiagnostics() }
-    try? await Task.sleep(nanoseconds: 10_000_000)
+    await waitUntil("the first diagnostics read starts") { await gateway.diagnosticsReadCount >= 1 }
 
     await supportReport.loadSupportDiagnostics()
     await first.value
@@ -214,7 +214,7 @@ struct SupportDiagnosticsTests {
     defer { try? FileManager.default.removeItem(at: outputURL) }
 
     let report = Task { @MainActor in await supportReport.saveSupportReport(to: outputURL) }
-    try? await Task.sleep(nanoseconds: 10_000_000)
+    await waitUntil("the first diagnostics read starts") { await gateway.diagnosticsReadCount >= 1 }
     await supportReport.loadSupportDiagnostics()
     await report.value
 

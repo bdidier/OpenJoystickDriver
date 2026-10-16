@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -17,7 +18,7 @@ struct RemappingEmissionBarrierTests {
       await completion.finish()
       return admission
     }
-    while barrier.currentPermit() != nil { await Task.yield() }
+    await waitUntil("the suspension closes admission") { barrier.currentPermit() == nil }
 
     #expect(barrier.acquireLease() == nil)
     #expect(!(await completion.isFinished))

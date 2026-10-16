@@ -35,7 +35,7 @@ struct PreferencesTests {
     )
 
     model.setControllerNotifications(true)
-    await waitUntil { model.controllerNotifications }
+    await waitUntil("model.controllerNotifications") { model.controllerNotifications }
 
     #expect(authorization.requestCount == 1)
     #expect(try settings.value(of: .notifyControllerConnected))
@@ -55,7 +55,7 @@ struct PreferencesTests {
     for await _ in authorization.settingsStarted { break }
 
     model.setControllerNotifications(true)
-    await waitUntil { model.controllerNotifications }
+    await waitUntil("model.controllerNotifications") { model.controllerNotifications }
     #expect(model.notificationAuthorization == .allowed)
 
     authorization.releaseSettings()
@@ -96,7 +96,7 @@ struct PreferencesTests {
     model.setControllerDisconnectedNotifications(true)
     model.setProfileDeactivatedNotifications(true)
     model.setNotificationSounds(false)
-    await waitUntil {
+    await waitUntil("the notification settings are applied") {
       model.controllerDisconnectedNotifications && model.profileDeactivatedNotifications
     }
 
@@ -120,7 +120,7 @@ struct PreferencesTests {
     )
 
     model.sendTestNotification()
-    await waitUntil { delivery.deliveryCount == 1 }
+    await waitUntil("delivery.deliveryCount == 1") { delivery.deliveryCount == 1 }
 
     #expect(authorization.requestCount == 1)
     #expect(delivery.deliveryCount == 1)
@@ -139,7 +139,9 @@ struct PreferencesTests {
     authorization.currentState = .allowed
 
     model.refreshNotificationAuthorization()
-    await waitUntil { model.notificationAuthorization == .allowed }
+    await waitUntil("model.notificationAuthorization == .allowed") {
+      model.notificationAuthorization == .allowed
+    }
 
     #expect(model.notificationAuthorization == .allowed)
   }
@@ -174,7 +176,9 @@ struct PreferencesTests {
 
     model.setIncludePrereleaseUpdates(true)
     model.checkForUpdates()
-    await waitUntil { model.updateState == .upToDate("v1.2.3") }
+    await waitUntil("model.updateState == .upToDate(\"v1.2.3\")") {
+      model.updateState == .upToDate("v1.2.3")
+    }
 
     #expect(try settings.value(of: .updatesIncludePrereleases))
     #expect(await checker.includePrereleaseArguments == [true])
@@ -215,8 +219,8 @@ struct PreferencesTests {
       .notifyControllerConnected: true, .launchAtLogin: true,
     ])
 
-    for _ in 0..<100 where !(model.controllerNotifications && model.startAtLogin) {
-      try await Task.sleep(nanoseconds: 50_000_000)
+    await waitUntil("the model reloads the changed settings") {
+      model.controllerNotifications && model.startAtLogin
     }
     #expect(model.controllerNotifications)
     #expect(model.startAtLogin)
@@ -243,11 +247,6 @@ struct PreferencesTests {
     try FileManager.default.removeItem(at: settings.userFileURL)
     model.reloadSettings()
     #expect(model.errorMessage == nil)
-  }
-
-  @MainActor
-  private func waitUntil(_ condition: @escaping @MainActor () -> Bool) async {
-    for _ in 0..<100 where !condition() { await Task.yield() }
   }
 }
 

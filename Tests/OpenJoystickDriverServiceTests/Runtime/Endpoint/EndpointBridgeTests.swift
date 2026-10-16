@@ -1,6 +1,7 @@
 import BridgeCore
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverService
@@ -43,7 +44,9 @@ struct EndpointBridgeTests {
 
       let device = try #require(factory.devices.first)
       #expect(device.profile == .generic)
-      try await Self.wait { device.sent.contains { $0.buttons.contains(.south) } }
+      await waitUntil("device.sent.contains { $0.buttons.contains(.south) }") {
+        device.sent.contains { $0.buttons.contains(.south) }
+      }
       let sentBefore = device.sent.count
       // Without a KeepAlive the endpoint closes the feed after 1 second; the bridge sends one
       // every 0.5 second while the peer sends no frame.
@@ -111,12 +114,4 @@ struct EndpointBridgeTests {
     }
   }
 
-  /// Waits up to 5 seconds until `condition` holds, without holding a thread.
-  private static func wait(until condition: () -> Bool) async throws {
-    let deadline = Date() + 5
-    while !condition() {
-      guard Date() < deadline else { throw POSIXError(.ETIMEDOUT) }
-      try await Task.sleep(nanoseconds: 2_000_000)
-    }
-  }
 }

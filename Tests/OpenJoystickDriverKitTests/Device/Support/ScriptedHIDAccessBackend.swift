@@ -23,6 +23,7 @@ actor ScriptedHIDAccessBackend: HIDAccessBackend {
   private var neutralMotorOutputGate: (started: StartupTestGate, release: StartupTestGate)?
   private var streams: [Int: AsyncStream<HIDDeviceEvent>] = [:]
   private var continuations: [Int: AsyncStream<HIDDeviceEvent>.Continuation] = [:]
+  private var relays: [Int: ScriptedEventRelay] = [:]
   private var delayedFirstStream: CheckedContinuation<AsyncStream<HIDDeviceEvent>, Never>?
   private var attemptWaiters: [(attempt: Int, continuation: CheckedContinuation<Void, Never>)] = []
 
@@ -36,10 +37,13 @@ actor ScriptedHIDAccessBackend: HIDAccessBackend {
   func deviceEvents() async -> AsyncStream<HIDDeviceEvent> {
     attempts += 1
     let attempt = attempts
-    let (stream, continuation) = AsyncStream<HIDDeviceEvent>.makeStream()
+    let (source, continuation) = AsyncStream<HIDDeviceEvent>.makeStream()
     if closesSessionWhenStreamEnds {
       continuation.onTermination = { [session] _ in session.close() }
     }
+    let relay = ScriptedEventRelay(source)
+    let stream = AsyncStream<HIDDeviceEvent> { await relay.next() }
+    relays[attempt] = relay
     streams[attempt] = stream
     continuations[attempt] = continuation
     let ready = attemptWaiters.filter { $0.attempt <= attempt }
@@ -194,9 +198,19 @@ actor ScriptedHIDAccessBackend: HIDAccessBackend {
     connectionSnapshots = snapshots
   }
 
-  func yield(_ event: HIDDeviceEvent, attempt: Int) { continuations[attempt]?.yield(event) }
+  func yield(_ event: HIDDeviceEvent, attempt: Int) {
+    relays[attempt]?.willYield()
+    continuations[attempt]?.yield(event)
+  }
+
+  /// Returns once the consumer of attempt `attempt`'s stream has taken every yielded event and
+  /// asked for the next one.
+  func waitUntilConsumed(attempt: Int) async {
+    await relays[attempt]?.waitUntilConsumed()
+  }
 
   func fail(_ failure: PhysicalHIDFailure, attempt: Int) {
+    relays[attempt]?.willYield()
     continuations[attempt]?.yield(.accessFailure(failure))
     continuations[attempt]?.finish()
   }
@@ -212,6 +226,43 @@ actor ScriptedHIDAccessBackend: HIDAccessBackend {
   private func isNeutralMotorReport(_ report: PhysicalHIDOutputReport) -> Bool {
     report.reportID == 0x11 && report.bytes.count > 7 && report.bytes[3] == 0x01
       && report.bytes[6] == 0 && report.bytes[7] == 0
+  }
+}
+
+/// Hands a stream's events to its consumer and counts what the consumer asked for, so a test can
+/// tell that the consumer has taken every event yielded so far.
+private final class ScriptedEventRelay: @unchecked Sendable {
+  private var iterator: AsyncStream<HIDDeviceEvent>.AsyncIterator
+  private let lock = NSLock()
+  private var yielded = 0
+  private var requests = 0
+  private var waiters: [CheckedContinuation<Void, Never>] = []
+
+  init(_ source: AsyncStream<HIDDeviceEvent>) { iterator = source.makeAsyncIterator() }
+
+  func willYield() { lock.withLock { yielded += 1 } }
+
+  /// Called by the single consumer of the stream.
+  func next() async -> HIDDeviceEvent? {
+    let ready: [CheckedContinuation<Void, Never>] = lock.withLock {
+      requests += 1
+      guard requests > yielded else { return [] }
+      defer { waiters.removeAll() }
+      return waiters
+    }
+    for waiter in ready { waiter.resume() }
+    return await iterator.next()
+  }
+
+  func waitUntilConsumed() async {
+    await withCheckedContinuation { continuation in
+      let consumed = lock.withLock {
+        guard requests <= yielded else { return true }
+        waiters.append(continuation)
+        return false
+      }
+      if consumed { continuation.resume() }
+    }
   }
 }
 

@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -11,7 +12,7 @@ extension USBPipelineRecoveryTests {
     let dispatcher = RecoveryOutputDispatcher()
     let manager = makeManager(using: provider, dispatcher: dispatcher)
     await manager.start()
-    #expect(await waitUntil { await sessions[0].writeCount > 0 })
+    await waitUntil("sessions[0].writeCount > 0") { await sessions[0].writeCount > 0 }
     let suspended = await manager.suspendController(.model(identifier.model))
     #expect(suspended.state == .suspended)
 
@@ -21,7 +22,9 @@ extension USBPipelineRecoveryTests {
       let presenceBeforeWake = dispatcher.presenceCount
       let ownershipBeforeWake = dispatcher.ownershipReports.count
       await manager.systemDidWake()
-      #expect(await waitUntil { dispatcher.ownershipReports.count > ownershipBeforeWake })
+      await waitUntil("dispatcher.ownershipReports.count > ownershipBeforeWake") {
+        dispatcher.ownershipReports.count > ownershipBeforeWake
+      }
       #expect(await sessions[cycle].writeCount > 0)
       let pipeline = try #require(await manager.pipelines[identifier])
       #expect(await pipeline.controllerSessionState() == .suspended)
@@ -32,7 +35,7 @@ extension USBPipelineRecoveryTests {
     #expect(resumed.state == .active)
     await manager.systemWillSleep()
     await manager.systemDidWake()
-    #expect(await waitUntil { await sessions[3].writeCount > 0 })
+    await waitUntil("sessions[3].writeCount > 0") { await sessions[3].writeCount > 0 }
     let pipeline = try #require(await manager.pipelines[identifier])
     #expect(await pipeline.controllerSessionState() == .active)
     await manager.stop()
@@ -55,7 +58,7 @@ extension USBPipelineRecoveryTests {
 
     await pipeline.stop()
     await pipeline.start()
-    try? await Task.sleep(for: .milliseconds(50))
+    await pipeline.usbRunTaskForTesting()?.value
 
     #expect(await provider.openCount == 0)
     #expect(await !pipeline.isActive)
@@ -87,15 +90,15 @@ extension USBPipelineRecoveryTests {
     let provider = RecoveryUSBProvider(sessions: sessions, devices: [device])
     let manager = makeManager(using: provider)
     await manager.start()
-    #expect(await waitUntil { await sessions[0].writeCount > 0 })
+    await waitUntil("sessions[0].writeCount > 0") { await sessions[0].writeCount > 0 }
     let suspended = await manager.suspendController(.model(identifier.model))
     #expect(suspended.state == .suspended)
 
     await provider.setDevices([])
-    #expect(await waitUntil { await manager.pipelines.isEmpty })
+    await waitUntil("manager.pipelines.isEmpty") { await manager.pipelines.isEmpty }
     #expect(await manager.suspendedControllerIdentities.isEmpty)
     await provider.setDevices([device])
-    #expect(await waitUntil { await sessions[1].writeCount > 0 })
+    await waitUntil("sessions[1].writeCount > 0") { await sessions[1].writeCount > 0 }
     let pipeline = try #require(await manager.pipelines[identifier])
     #expect(await pipeline.controllerSessionState() == .active)
     await manager.stop()
@@ -177,10 +180,10 @@ extension USBPipelineRecoveryTests {
     #expect(await manager.detectionTasks.isEmpty)
 
     await manager.start()
-    #expect(await waitUntil(timeout: .seconds(5)) { await first.writeCount > 0 })
+    await waitUntil("first.writeCount > 0") { await first.writeCount > 0 }
     await manager.reloadControllerRecords(changing: [identifier.model])
     #expect(await first.closeCount == 1)
-    #expect(await waitUntil(timeout: .seconds(5)) { await second.writeCount > 0 })
+    await waitUntil("second.writeCount > 0") { await second.writeCount > 0 }
     #expect(await manager.connectedLogicalControllerIDs() == [identifier])
     #expect(await provider.openedDevices == [device, device])
     await manager.stop()
@@ -199,7 +202,7 @@ extension USBPipelineRecoveryTests {
     let provider = RecoveryUSBProvider(sessions: sessions, devices: [device, other])
     let manager = makeManager(using: provider)
     await manager.start()
-    #expect(await waitUntil(timeout: .seconds(5)) { await provider.openCount == 2 })
+    await waitUntil("provider.openCount == 2") { await provider.openCount == 2 }
     let suspended = await manager.suspendController(.model(identifier.model))
     #expect(suspended.state == .suspended)
     let opened = await provider.openedDevices
@@ -207,7 +210,7 @@ extension USBPipelineRecoveryTests {
     let otherSession = sessions[try #require(opened.firstIndex(of: other))]
 
     await manager.reloadControllerRecords(changing: [identifier.model])
-    #expect(await waitUntil(timeout: .seconds(5)) { await provider.openCount == 3 })
+    await waitUntil("provider.openCount == 3") { await provider.openCount == 3 }
     #expect(await changedSession.closeCount == 1)
     #expect(await otherSession.closeCount == 0)
     #expect(await provider.openedDevices.last == device)
@@ -223,7 +226,7 @@ extension USBPipelineRecoveryTests {
     let provider = RecoveryUSBProvider(sessions: [first, second], devices: [device])
     let manager = makeManager(using: provider)
     await manager.start()
-    #expect(await waitUntil(timeout: .seconds(5)) { await first.writeCount > 0 })
+    await waitUntil("first.writeCount > 0") { await first.writeCount > 0 }
 
     await manager.reloadControllerRecords(changing: [
       ControllerModelID(vendorID: 0x1234, productID: 0xabcd)

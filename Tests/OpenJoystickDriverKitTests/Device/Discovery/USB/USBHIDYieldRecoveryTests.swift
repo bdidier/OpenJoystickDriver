@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -84,11 +85,10 @@ struct USBHIDYieldRecoveryTests {
     #expect(await manager.handleUSBDeviceAdded(device, provider: provider) != .retry)
 
     var sources: [DeviceDiscoverySource] = []
-    for _ in 0..<200 {
+    await waitUntil("the yielded HID route is restored") {
       await manager.restoreYieldedHIDRoutes()
       sources = await manager.connectedDeviceDescriptions().map(\.discoverySource)
-      if sources == [.hid] { break }
-      try await Task.sleep(nanoseconds: 10_000_000)
+      return sources == [.hid]
     }
 
     #expect(sources == [.hid])

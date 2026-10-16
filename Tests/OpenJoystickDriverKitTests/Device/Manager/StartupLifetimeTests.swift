@@ -1,5 +1,6 @@
 import Foundation
 import IOKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -264,7 +265,7 @@ struct StartupLifetimeTests {
     )
 
     let stopTask = Task { await manager.stop() }
-    while await !manager.isStopping { await Task.yield() }
+    await waitUntil("the manager is stopping") { await manager.isStopping }
     await permissionWatchGate.open()
     await permissionWatcher.value
 
