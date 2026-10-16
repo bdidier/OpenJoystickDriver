@@ -11,6 +11,15 @@ die() {
   exit 2
 }
 
+# The installed app executable, the only command line the repository scripts run.
+OJD_APP_CLI="/Applications/OpenJoystickDriver.app/Contents/MacOS/OpenJoystickDriver"
+
+# Stop with an error when the installed app executable is missing.
+require_ojd_app_cli() {
+  [[ -x "$OJD_APP_CLI" ]] ||
+    die "OpenJoystickDriver is not installed at $OJD_APP_CLI; run ./Scripts/ojd build install dev"
+}
+
 # Run the app executable as the `ojd` command line, which it selects by argv[0].
 # The function replaces its shell, so call it in a subshell: `(ojd_cli ...)`, `$(ojd_cli ...)`,
 # or `ojd_cli ... &`. Usage: ojd_cli <executable> <arguments...>
