@@ -6,6 +6,7 @@ import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+from typing import Self
 from unittest.mock import patch
 
 from Scripts.Command import dispatcher, execution
@@ -35,8 +36,10 @@ class ScriptTree:
         self.directory = tempfile.TemporaryDirectory()
         self.path = Path(self.directory.name).resolve()
 
-    def __enter__(self) -> ScriptTree:
-        shutil.copytree(self.root / "Scripts", self.path / "Scripts", ignore=ignore_cache)
+    def __enter__(self) -> Self:
+        shutil.copytree(
+            self.root / "Scripts", self.path / "Scripts", ignore=ignore_cache
+        )
         info = self.path / "Sources/OpenJoystickDriver/App/Info.plist"
         info.parent.mkdir(parents=True)
         shutil.copy(self.root / "Sources/OpenJoystickDriver/App/Info.plist", info)
@@ -63,8 +66,12 @@ class ScriptTree:
     def write_stubs(self, dext_status: int) -> None:
         self.stub(self.path / "bin/OpenJoystickDriver", "exit 0")
         self.stub(self.path / "stubs/xmake", "exit 0")
-        self.stub(self.path / "Scripts/Diagnostics/dext/diagnose.sh", f"exit {dext_status}")
-        self.stub(self.path / ".build/debug/OpenJoystickDriverGameControllerProbe", "exit 0")
+        self.stub(
+            self.path / "Scripts/Diagnostics/dext/diagnose.sh", f"exit {dext_status}"
+        )
+        self.stub(
+            self.path / ".build/debug/OpenJoystickDriverGameControllerProbe", "exit 0"
+        )
         (self.path / "Tools/SDLGamepadProbe").mkdir(parents=True)
         (self.path / "Tools/SDLGamepadProbe/xmake.lua").write_text("")
 
@@ -262,7 +269,9 @@ class DispatcherTests(unittest.TestCase):
             completed = tree.run("Diagnostics/backend.sh", "backends", "--seconds", "1")
         self.assertEqual(completed.returncode, 1)
         self.assertEqual(completed.stdout.count("Step exit status:"), 4)
-        self.assertIn("3) DriverKit backend diagnostics:\nStep exit status: 3", completed.stdout)
+        self.assertIn(
+            "3) DriverKit backend diagnostics:\nStep exit status: 3", completed.stdout
+        )
         self.assertEqual(completed.stdout.count("Step exit status: 0"), 3)
         self.assertIn("1 backend step(s) failed.", completed.stdout)
 
