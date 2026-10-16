@@ -52,7 +52,6 @@ Parser/protocol: `./Scripts/ojd test parsers-macos14`. Cache: `./Scripts/ojd rep
 - [Xbox identities](docs/development/xbox-identities.md): Xbox-family identity notes
 - [Experimental controllers](docs/development/experimental-controllers.md): source-backed unfinished support
 - [Implementation status](docs/development/implementation-status.md): remaining product gaps
-- [Issue audit](docs/development/issue-audit.md): tracked issue review
 - [Schema instructions](Resources/Schemas/AGENTS.md): JSON contract ownership
 - [Scripts](Scripts/README.md): `./Scripts/ojd` build, install, DriverKit, and release
 - [Package graph](Package.swift): SwiftPM targets and deployment floor

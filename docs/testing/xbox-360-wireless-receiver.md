@@ -1,6 +1,6 @@
 # Test an Xbox 360 Wireless Receiver
 
-This request covers [OpenJoystickDriver issue #9][1]. Linux `xpad.c` identifies three Microsoft receiver IDs that OJD now imports as unverified records:
+This request covers [OpenJoystickDriver issue #9][1]. Linux `xpad.c` identifies three Microsoft receiver IDs that OJD imports as unverified records:
 
 - `045e:0291` — Xbox 360 Wireless Receiver (XBOX)
 - `045e:02a9` — unofficial receiver identity

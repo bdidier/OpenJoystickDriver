@@ -2,8 +2,6 @@
 
 Learn what OpenJoystickDriver is, install it, and use your first controller.
 
-> **Note:** This page applies to OpenJoystickDriver 0.6.0-alpha.1 and later. Version 0.5.0-beta.4 and earlier do not have all of the features on this page.
-
 ## Contents
 
 - [About OpenJoystickDriver](#about-openjoystickdriver)

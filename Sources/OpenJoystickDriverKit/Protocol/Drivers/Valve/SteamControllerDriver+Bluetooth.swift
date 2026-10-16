@@ -1,6 +1,6 @@
 import Foundation
 
-/// The legacy Steam Controller's Bluetooth LE framing, from SDL `SDL_hidapi_steam.c`
+/// The classic Steam Controller's Bluetooth LE framing, from SDL `SDL_hidapi_steam.c`
 /// (`WriteSegmentToSteamControllerPacketAssembler`, `SetFeatureReport`,
 /// `UpdateBLESteamControllerState`) and `steam/controller_structs.h`.
 ///

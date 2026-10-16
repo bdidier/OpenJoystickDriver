@@ -91,7 +91,7 @@ struct VirtualHIDProfileTests {
     )
     #expect(try consumerOutput(3, report, in: XboxGeckoHIDReportFormat()) == expected)
     #expect(
-      profile.consumerOutput(type: kIOHIDReportTypeOutput, reportID: 0, bytes: Self.ojdRumble)
+      profile.consumerOutput(type: kIOHIDReportTypeOutput, reportID: 0, bytes: Self.unnumberedVendorReport)
         == nil
     )
     #expect(profile.consumerOutput(type: kIOHIDReportTypeInput, reportID: 3, bytes: report) == nil)
@@ -122,7 +122,7 @@ struct VirtualHIDProfileTests {
     #expect(profile.identity.productID == 0x4A4F)
     #expect(profile.reportFormat.outputReportPayloadSize == nil)
     let reports: [(UInt32, [UInt8])] = [
-      (0, Self.ojdRumble), (0, [0x08, 0x00, 10, 20]), (3, [0x03, 0x0F, 10, 20, 30, 40, 50, 0, 0]),
+      (0, Self.unnumberedVendorReport), (0, [0x08, 0x00, 10, 20]), (3, [0x03, 0x0F, 10, 20, 30, 40, 50, 0, 0]),
     ]
     for (reportID, bytes) in reports {
       #expect(
@@ -167,7 +167,7 @@ struct VirtualHIDProfileTests {
     )
   }
 
-  /// The former OJD vendor rumble report: marker, left, right, left trigger, right trigger,
-  /// duration 500 ms LE.
-  private static let ojdRumble: [UInt8] = [0x4F, 1, 2, 3, 4, 0xF4, 0x01]
+  /// An unnumbered vendor report: marker `0x4F`, four motor bytes, and a little-endian 500.
+  /// No virtual HID profile reads it.
+  private static let unnumberedVendorReport: [UInt8] = [0x4F, 1, 2, 3, 4, 0xF4, 0x01]
 }

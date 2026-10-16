@@ -42,7 +42,7 @@ Implemented:
 - left and right trackpad haptics
 - home-button LED brightness
 
-The issue #8 wired report reaches macOS as lizard-mode keyboard input; gamepad-only monitoring does not find it. Profile-backed discovery covers that case. Run [the Steam Controller request](../testing/steam-controller.md) to check it.
+The Steam Controller wired report reaches macOS as lizard-mode keyboard input; gamepad-only monitoring does not find it. Profile-backed discovery covers that case. Run [the Steam Controller request](../testing/steam-controller.md) to check it.
 
 ## Switch Pro
 
@@ -59,7 +59,7 @@ Needed: calibration, IMU, reconnect, rumble, and LED checks on USB and Bluetooth
 
 ## Joy-Con
 
-The pinned Nintendo source now supplies left `057e:2006` and right `057e:2007` HID records. Each selects a side-specific layout in the Nintendo parser. Primary controls and raw IMU samples are decoded; absent sticks and opposite-half button fields are ignored. Rumble capabilities expose only the available motor. SL/SR are distinct remapping sources for each half. Constructed tests cover calibration, motion actions, and explicit paired sessions. See [Joy-Con validation](../testing/joy-con.md) for the source revision, product evidence, and outstanding physical acceptance.
+The pinned Nintendo source supplies left `057e:2006` and right `057e:2007` HID records. Each selects a side-specific layout in the Nintendo parser. Primary controls and raw IMU samples are decoded; absent sticks and opposite-half button fields are ignored. Rumble capabilities expose only the available motor. SL/SR are distinct remapping sources for each half. Constructed tests cover calibration, motion actions, and explicit paired sessions. See [Joy-Con validation](../testing/joy-con.md) for the source revision, product evidence, and outstanding physical acceptance.
 
 ## Xbox 360 Wireless Receiver
 
@@ -92,7 +92,7 @@ Current Linux `xpad.c` supports the Nacon vendor and Xbox One fallback, but does
 
 ## ZD Ultimate Legend
 
-The Linux xpad XUSB record for `413D:2104` stays. A local-hardware patch pins interrupt endpoints `0x81`/`0x02` because rumble and player-indicator writes to the Xbox 360 default OUT `0x01` fail with `notFound`. Input on IN `0x81` was already working. The published virtual profile is separate; the automatic selector publishes `SdlCompatible`. See [issue #22](https://github.com/xsyetopz/OpenJoystickDriver/issues/22).
+The Linux xpad XUSB record for `413D:2104` stays. A local-hardware patch pins interrupt endpoints `0x81`/`0x02` because rumble and player-indicator writes to the Xbox 360 default OUT `0x01` fail with `notFound`. Input on IN `0x81` works without the patch. The published virtual profile is separate; the automatic selector publishes `SdlCompatible`. See [issue #22](https://github.com/xsyetopz/OpenJoystickDriver/issues/22).
 
 ## Xbox Adaptive Joystick
 

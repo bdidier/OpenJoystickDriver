@@ -12,11 +12,7 @@ This directory holds the development notes and hardware-evidence records for Ope
 - [Environment Files](development/environment.md): The optional local environment file that repository scripts load.
 - [Experimental Controller Status](development/experimental-controllers.md): Entries with implementation work but incomplete hardware evidence.
 - [Implementation Status](development/implementation-status.md): The persistent application runtime and what it owns.
-- [Controller Configuration Plan](development/controller-config-plan.md): User controller records, output templates, input layouts, and where configuration lives.
-- [CLI Redesign Plan](development/cli-redesign-plan.md): The `ojd` command tree, output contract, and exit codes that every app feature builds on.
-- [GUI Redesign Plan](development/gui-redesign-plan.md): The menu bar extra, main window, and Settings as a layer over the CLI, planned for macOS and later iPadOS and iOS.
 - [Public Endpoint Design](development/public-endpoint-design.md): The socket, handshake, and grants that let approved programs read controllers and drive a virtual gamepad.
-- [Controller Issue Audit](development/issue-audit.md): Implemented behavior versus observations on reported hardware.
 - [Menu-Bar and Settings UI Architecture](development/menu-bar-settings-architecture.md): The architecture decision for the menu-bar and settings UI.
 - [Reconcile A GitHub Release](development/releases.md): The procedure after the release commit and changelog are complete.
 - [Remapping](development/remapping.md): Profile actions and chord timing, with links to the focused remapping pages.
@@ -47,11 +43,11 @@ This directory holds the development notes and hardware-evidence records for Ope
 - [Test The GameSir G7 Pro, Cyclone 2, and G7 Pro 8K PC](testing/gamesir-family.md): Source-backed records that are not hardware-verified.
 - [Probe macOS Haptics Backends](testing/haptics-backends.md): Diagnostics that separate backend inventory, GameController haptics, SDL output, and direct rumble.
 - [Joy-Con Input Validation](testing/joy-con.md): The left and right Joy-Con records imported from pinned Nintendo sources.
-- [Test Logitech F310 XInput Mapping](testing/logitech-f310.md): The F310 test for issue #11.
-- [Test The Nacon Revolution X Pro](testing/nacon-revolution-x.md): The test for issue #21.
+- [Test Logitech F310 XInput Mapping](testing/logitech-f310.md): The F310 XInput mapping test.
+- [Test The Nacon Revolution X Pro](testing/nacon-revolution-x.md): The Revolution X Pro USB test.
 - [Test Physical Output](testing/physical-output.md): Manual output tests generated from a connected controller's capabilities.
-- [Test Razer Wolverine V3 Tournament Edition](testing/razer/v3-te.md): The test for issue #14.
-- [Testing The Razer Wolverine V2](testing/razer/wolverine-v2.md): The test procedure for issue #19.
+- [Test Razer Wolverine V3 Tournament Edition](testing/razer/v3-te.md): The V3 Tournament Edition USB test.
+- [Testing The Razer Wolverine V2](testing/razer/wolverine-v2.md): The Wolverine V2 USB test.
 - [Test The SCUF Envision Pro](testing/scuf-envision-pro.md): The wired record for HID identity `2E95:434D`.
 - [SIXAXIS and DUALSHOCK 3](testing/sixaxis-vs-ds3.md): What the host can read to tell the two `054C:0268` models apart.
 - [Third-party PS3 controllers](testing/ps3-third-party.md): Non-Sony PS3 pads, sticks and adapters that do not speak Sony's protocol.
@@ -62,7 +58,7 @@ This directory holds the development notes and hardware-evidence records for Ope
 - [Test Steam Controller Hardware](testing/steam-controller.md): The original Steam Controller over USB, its wireless receiver, and Bluetooth LE.
 - [Test the Steam Deck Controller](testing/steam-deck.md): The Deck's built-in controller when macOS runs on Deck hardware.
 - [Test A Tester Build](testing/tester-builds.md): How testers check a fix with a notarized tester DMG.
-- [Test WR-007 USB HID Receiver](testing/wr-007.md): The test for issue #31.
-- [Test An Xbox 360 Wireless Receiver](testing/xbox-360-wireless-receiver.md): The request for issue #9 about three Microsoft receiver IDs.
+- [Test WR-007 USB HID Receiver](testing/wr-007.md): The WR-007 receiver test.
+- [Test An Xbox 360 Wireless Receiver](testing/xbox-360-wireless-receiver.md): The test of three Microsoft receiver IDs.
 - [Capture Xbox Adaptive Joystick Packets](testing/xbox-adaptive-joystick.md): The USB identity and packets needed before adding a device record.
-- [Test Microsoft Xbox One Controller (Model 1537)](testing/xbox/1537.md): The procedure for issue #18.
+- [Test Microsoft Xbox One Controller (Model 1537)](testing/xbox/1537.md): The Model 1537 USB test.

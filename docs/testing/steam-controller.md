@@ -12,7 +12,7 @@ The Bluetooth LE path comes from SDL only. Linux `hid-steam.c` does not drive it
 
 Keep Steam fully quit for the first pass. If you later repeat with Steam open, say so in the notes.
 
-OJD production discovery now matches both normal GamePad top-level collections and exact HID VID/PID identities loaded from bundled records. This specifically covers Steam Controller collections that remain exposed as keyboard or mouse lizard-mode devices.
+OJD production discovery matches both normal GamePad top-level collections and exact HID VID/PID identities loaded from bundled records. This specifically covers Steam Controller collections that remain exposed as keyboard or mouse lizard-mode devices.
 
 ## What To Send Back
 
