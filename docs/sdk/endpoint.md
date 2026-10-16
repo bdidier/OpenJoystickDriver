@@ -110,7 +110,7 @@ After the `FeedSession`, the program sends one `Frame` for each line. A frame ha
 {"apiVersion":"openjoystickdriver/v1alpha1","kind":"Frame","buttons":["South"],"axes":{"LeftStickY":0.5},"holdMilliseconds":100}
 ```
 
-The service shows the frames in order, each for at least 8 ms. While 256 frames wait, the endpoint stops reading lines. The endpoint does not report when a frame has played, so the program stays connected until its last frame has played, because closing the connection drops the frames that wait. When the program sends no frame line for 2 seconds after its last frame has played, the endpoint closes the connection with `E1008`. A program that has no frame to send keeps the feed open with a `KeepAlive` line (see below). The endpoint runs at most 4 virtual gamepads at the same time and answers another `FeedRequest` with `E1007`.
+The service shows the frames in order, each for at least 8 ms or its `holdMilliseconds`. It counts that time from the moment the send of the frame returns, so a slow send does not shorten the frame or the gap before the next one. While 256 frames wait, the endpoint stops reading lines. The endpoint does not report when a frame has played, so the program stays connected until its last frame has played, because closing the connection drops the frames that wait. When the program sends no frame line for 2 seconds after its last frame has played, the endpoint closes the connection with `E1008`. A program that has no frame to send keeps the feed open with a `KeepAlive` line (see below). The endpoint runs at most 4 virtual gamepads at the same time and answers another `FeedRequest` with `E1007`.
 
 ### KeepAlive
 

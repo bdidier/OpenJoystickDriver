@@ -43,7 +43,8 @@ enum VirtualFeedError: LocalizedError, Equatable {
 /// frames and that queues the host's output commands for the client.
 ///
 /// Each feed shows its frames in order, each for at least its hold and at least
-/// `VirtualFeedExchangeResult.minimumFrameMilliseconds`. A queued frame without a hold gives way
+/// `VirtualFeedExchangeResult.minimumFrameMilliseconds`, counted from when its send returns, so a
+/// slow send does not shorten the frame's time or the next one's. A queued frame without a hold gives way
 /// to a newer one with the same buttons and d-pad, so that only axis changes coalesce.
 ///
 /// A feed closes when its client closes it, when it gets no exchange for `idleTimeout`, or when
@@ -354,18 +355,20 @@ final class VirtualFeedRegistry: @unchecked Sendable {
       && last.buttons == frame.buttons && last.dpad == frame.dpad
   }
 
-  /// Sends the feed's queued frames in order and waits out each one's time; stops when the queue
-  /// is empty. A failed send closes the feed.
+  /// Sends the feed's queued frames in order and waits out each one's time from the moment its send
+  /// returns; stops when the queue is empty. A failed send closes the feed.
   private func play(_ token: UUID) async {
+    var playedUntil: TimeInterval?
     while !Task.isCancelled {
-      let next = lock.withLock { () -> (Session, VirtualFeedFrame, Int, TimeInterval)? in
+      let next = lock.withLock { () -> (Session, VirtualFeedFrame, Int)? in
         guard let session = sessions[token] else { return nil }
         let now = clock.now()
         guard !session.pending.isEmpty else {
           session.player = nil
           session.frameDeadline = nil
-          // The idle time starts once the last frame's time has played.
-          session.lastExchange = now
+          // The idle time starts at the end of the last frame's time, not at the later moment
+          // this task runs.
+          session.lastExchange = max(session.lastExchange, playedUntil ?? now)
           return nil
         }
         let frame = session.pending.removeFirst()
@@ -374,12 +377,14 @@ final class VirtualFeedRegistry: @unchecked Sendable {
           VirtualFeedExchangeResult.minimumFrameMilliseconds
         )
         session.frameDeadline = now + TimeInterval(milliseconds) / 1000 + idleTimeout
-        return (session, frame, milliseconds, now)
+        return (session, frame, milliseconds)
       }
-      guard let (session, frame, milliseconds, startedAt) = next else { return }
+      guard let (session, frame, milliseconds) = next else { return }
       do {
         try await session.produce(.gamepad(frame.gamepadState, for: session.identifier))
-        try await clock.sleep(startedAt + TimeInterval(milliseconds) / 1000)
+        let end = clock.now() + TimeInterval(milliseconds) / 1000
+        try await clock.sleep(end)
+        playedUntil = end
       } catch is CancellationError {
         return
       } catch {
