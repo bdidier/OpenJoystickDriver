@@ -4,10 +4,6 @@ import OpenJoystickDriverKit
 /// Describes why a JSON document did not decode, naming the field. Foundation's own
 /// description of a `DecodingError` names neither the field nor the reason.
 enum DocumentProblem {
-  /// The error code of a document that is refused for its `apiVersion`, or nil when `error` has
-  /// none. The caller reports the code, so ``describe(_:)`` leaves it out of the text.
-  static func code(_ error: any Error) -> ErrorCode? { ControllerRecordSet.problemCode(error) }
-
   static func describe(_ error: any Error) -> String {
     if let problem = error as? DocumentHeaderProblem { return problem.message }
     guard let error = error as? DecodingError else { return error.localizedDescription }

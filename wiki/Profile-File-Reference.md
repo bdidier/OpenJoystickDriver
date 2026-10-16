@@ -24,6 +24,17 @@ OJD skips a profile file that it cannot read, that fails validation, or whose na
 
 OJD reports each damaged file in Settings and in `ojd profile list`. You cannot create, change, or activate profiles until every damaged file is resolved. When you remove a damaged profile file, OJD saves a backup named `<file>.backup-<time>-<UUID>` beside it and then deletes the file. When you reset damaged selections, OJD saves a backup of `ActiveProfiles.json` the same way and replaces it with an empty list. Your profiles are kept.
 
+## Error Codes
+
+A profile that cannot be used gets the same code wherever OJD reads it: `ojd profile import`, `edit`, `set`, and `validate`, the damaged-file report of `ojd profile list` and `ojd profile recover`, the service requests that carry a profile, and `Scripts/Quality/validate_schemas.py`.
+
+- `E5001`: `apiVersion` is missing or not supported.
+- `E3008`: the file is too large, is not JSON, or does not decode or validate as a profile. This includes a `kind` other than `Profile`, an unknown field, and an unknown control name.
+- `E3006`: another profile already uses the name.
+- `E3005`: the file name does not match the profile `id`, or a selection cannot be used.
+
+A service request cannot carry `E5001`, so it gives `E3008` for a profile with a missing or unsupported `apiVersion`.
+
 ## File Shape
 
 A profile file contains one profile object. An exported profile file has the same shape.

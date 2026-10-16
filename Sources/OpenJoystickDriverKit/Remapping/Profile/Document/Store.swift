@@ -14,6 +14,13 @@ public enum RemappingProfileFileStore {
     return profile
   }
 
+  /// The error code of a profile that ``load(from:)`` refused: the code of a document header
+  /// problem when it has one, otherwise ``ErrorCode/invalidProfile`` for a profile that is too
+  /// large, does not decode, or does not validate.
+  public static func problemCode(_ error: any Error) -> ErrorCode {
+    (error as? DocumentHeaderProblem)?.code ?? .invalidProfile
+  }
+
   public static func encodedJSON(_ profile: RemappingProfile) throws -> String {
     let data = try encodedData(profile)
     guard let text = String(data: data, encoding: .utf8) else {

@@ -86,11 +86,11 @@ struct ProfileSummary: Encodable, Equatable {
 }
 
 extension RemappingProfile {
-  /// Validates the profile and turns a validation error into a failure with exit code 1.
+  /// Validates the profile and turns a validation error into an invalid-profile failure.
   func validatedForCLI() throws -> Self {
     do { try validate() } catch {
       throw CLIFailure(
-        .invalidInputFile,
+        .invalidProfile,
         CLILocalized.format(
           "cli.profile.invalid",
           error.localizedDescription

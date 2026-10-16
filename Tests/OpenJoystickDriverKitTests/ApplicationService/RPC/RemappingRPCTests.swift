@@ -25,6 +25,35 @@ struct RemappingRPCTests {
     )
   }
 
+  /// A profile that fails to decode in a request gets the invalid-profile code, the same code the
+  /// store gives the same document.
+  @Test
+  func aRequestWithAnInvalidProfileFailsWithTheInvalidProfileCode() throws {
+    let document = #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"Profile","name":"Pad"}"#
+    let request = Data(#"{"profile":\#(document)}"#.utf8)
+    let update = Data(#"{"profile":\#(document),"expectedCurrent":\#(document)}"#.utf8)
+
+    for decode in [
+      { _ = try JSONDecoder().decode(ApplicationServiceRemappingProfileArguments.self, from: request) },
+      {
+        _ = try JSONDecoder().decode(
+          ApplicationServiceRemappingProfileUpdateArguments.self,
+          from: update
+        )
+      },
+    ] {
+      do {
+        try decode()
+        Issue.record("The invalid profile decoded.")
+      } catch let error as ApplicationServiceRemappingRPCError {
+        #expect(error.code.errorCode == .invalidProfile)
+      }
+    }
+    do { _ = try RemappingProfileFileStore.load(from: Data(document.utf8)) } catch {
+      #expect(RemappingProfileFileStore.problemCode(error) == .invalidProfile)
+    }
+  }
+
   @Test
   func routingActiveProfilePrefersGlobalScopeForSharedModel() {
     func entry(
