@@ -9,7 +9,7 @@ Use this overview for profile actions and chord timing. Open the focused page fo
 
 ## `0.5.0-beta.5` Design
 
-Advanced remapping extends the existing OJD profile library, deterministic Kit engine, app output router, and profile editor. The software scope below is implemented; external runtime and hardware validation are not claimed.
+Advanced remapping builds on the OJD profile library, deterministic Kit engine, app output router, and profile editor. The software scope below is implemented; external runtime and hardware validation are not claimed.
 
 Physical input flows through normalization and remapping to virtual-controller and/or keyboard, pointer, and scroll output. OJD owns the complete session. There is no JSM process, JSM configuration interpreter, SDL dependency, or third-party state-injection endpoint.
 
@@ -32,7 +32,7 @@ Filtering OJD's virtual reports does not hide the physical controller from anoth
 
 ## Status
 
-Software scope implemented and covered by constructed tests: the schema-3 profile and action contract, deterministic combinations, consumption, replay, scheduling and cleanup, typed touch input and mappings, exact-identity paired Joy-Con sessions, calibrated motion processing, advanced stick, motion-steering, lean, and dual-stage trigger modes, capability-gated mapping-owned physical output, and one validated mutation path shared by the editor and CLI.
+Software scope implemented and covered by constructed tests: the `openjoystickdriver/v1alpha1` profile and action contract, deterministic combinations, consumption, replay, scheduling and cleanup, typed touch input and mappings, exact-identity paired Joy-Con sessions, calibrated motion processing, advanced stick, motion-steering, lean, and dual-stage trigger modes, capability-gated mapping-owned physical output, and one validated mutation path shared by the editor and CLI.
 
 Not yet validated, because constructed tests cannot establish them:
 
@@ -43,7 +43,7 @@ Not yet validated, because constructed tests cannot establish them:
 
 ## Native Action Collections
 
-Only schema 3 profiles are accepted. The decoder rejects any other version immediately, before decoding profile fields; OJD does not migrate, reinterpret, or reset older profiles. Schema 3 assignments retain their primary destination and can contain an ordered `additional_actions` array. Each additional action has its own UUID, destination, behavior, and optional turbo, long-hold, double-tap, or pulse settings. Action IDs share the profile-wide uniqueness requirement. Additional actions count toward the 512-item mapping limit. Continuous actions use the assignment's axis tuning. Permission requirements include every action and its alternate destinations, including actions in inactive layers.
+Profiles must declare `apiVersion: openjoystickdriver/v1alpha1`. The decoder rejects any other value before decoding profile fields. Assignments have a primary destination and can contain an ordered `additionalActions` array. Each additional action has its own UUID, destination, behavior, and optional turbo, long-hold, double-tap, or pulse settings. Action IDs share the profile-wide uniqueness requirement. Additional actions count toward the 512-item mapping limit. Continuous actions use the assignment's axis tuning. Permission requirements include every action and its alternate destinations, including actions in inactive layers.
 
 The assignment behavior sheet supports adding, removing, reordering, and editing additional actions. CLI `ojd binding set` accepts `--actions-json <JSON-array>` in the native action format. An omitted option preserves the collection; `[]` removes all additional actions. Layer bindings are edited with `ojd profile edit <profile>`.
 
@@ -52,7 +52,7 @@ Implemented behaviors:
 - `hold`: follow the physical control's press and release.
 - `toggle`: alternate the owned output between pressed and released on each new press.
 - `tap_on_press` and `tap_on_release`: emit a press/release pair on the selected edge. A release tap requires a matching press and is canceled when its assignment loses ownership.
-- `pulse`: press for `pulse_duration_ms` (1...5000 ms, default 100). Physical release does not shorten the pulse. A new press extends the same action's deadline.
+- `pulse`: press for `pulseDurationMs` (1...5000 ms, default 100). Physical release does not shorten the pulse. A new press extends the same action's deadline.
 - `press`: press until an explicit release or lifecycle cleanup.
 - `release`: release matching held destinations owned by the same controller and cancel their pulse/turbo timers. Contributions from other controllers remain owned by those controllers.
 
@@ -81,7 +81,7 @@ Upstream reports guide regression tests, not automatic feature additions or acce
 
 ## Chord Timing
 
-Native schema-3 chords accept `mode: "simultaneous"` and `window_ms` from 1 to 1000 (default 50). All constituent presses must fall within that inclusive window. Releasing and pressing a source again replaces its press timestamp. Omitted mode retains the legacy `modifier` behavior, which requires held sources without a simultaneous-press deadline.
+Chords accept `mode: "simultaneous"` and `windowMs` from 1 to 1000 (default 50). All constituent presses must fall within that inclusive window. Releasing and pressing a source again replaces its press timestamp. Omitted mode selects `modifier`, which requires held sources without a simultaneous-press deadline.
 
 Modifier-chord sources are owned by the modifier recognizer while that chord is effective. Their individual assignments, additional actions, and raw passthrough contributions stay suppressed. When the chord completes, it consumes its constituent presses and any sequence completion that depends on them. Releasing a constituent retires the chord without replaying the suppressed source action.
 

@@ -15,8 +15,8 @@ struct LayerMotionProfileTests {
     #expect(try JSONDecoder().decode(RemappingLayer.self, from: data) == layer)
     var object = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
     object.removeValue(forKey: "motionTuning")
-    let legacy = try JSONSerialization.data(withJSONObject: object)
-    #expect(try JSONDecoder().decode(RemappingLayer.self, from: legacy).motionTuning == nil)
+    let untuned = try JSONSerialization.data(withJSONObject: object)
+    #expect(try JSONDecoder().decode(RemappingLayer.self, from: untuned).motionTuning == nil)
   }
 
   @Test

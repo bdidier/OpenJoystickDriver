@@ -2,8 +2,6 @@
 
 Bindings connect controller controls to destinations, and combinations and layers let one profile do more with the same controls.
 
-> **Note:** This page applies to OpenJoystickDriver 0.6.0-alpha.1 and later. Version 0.5.0-beta.4 and earlier do not have all of the features on this page.
-
 ## Contents
 
 - [Assigning Buttons and Actions](#assigning-buttons-and-actions)

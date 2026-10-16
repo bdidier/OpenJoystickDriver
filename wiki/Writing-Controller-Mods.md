@@ -2,8 +2,6 @@
 
 The product list of the [Xbox USB driver extension](Connecting-Controllers.md#xbox-usb-driver-extension) is signed by Apple, and a mod package cannot add a controller to it.
 
-> **Note:** This page applies to OpenJoystickDriver 0.6.0-alpha.1 and later. Version 0.5.0-beta.4 and earlier do not have mod packages.
-
 ## Contents
 
 - [Package Layout](#package-layout)

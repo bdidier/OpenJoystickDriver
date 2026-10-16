@@ -17,7 +17,7 @@ Both enhanced HID models bind `vendor.gamesir:enhanced-hid`; their catalog param
 
 2026-09-25, owner hardware, macOS 27, unsigned debug build of branch `feat/0.5.0-beta.5` (Xcode 26.6): the G7 SE `3537:1010` ("GameSir-G7 SE Controller for Xbox", `bcdDevice` `0x0640`, device class `FF/FF/FF`, unconfigured at attach) on a Genesys USB 2.1 hub was admitted through the `iousbhost` backend. OJD configured it, completed the handshake, and started the USB input loop on endpoint `0x82`. A development-signed build then reported the controller active on the GIP protocol with `startup=succeeded`, and its packet log showed the GIP keep-alive exchange every 20 seconds (host `03 20 00 03 00 00 00`, controller `03 20 03 04 80 00 00 00`) while idle. Parsed button, stick, and trigger input, physical output, and reconnect are not yet observed.
 
-2026-09-26, the same G7 SE after the owner connected it to GameSir Nexus 2.5.8 on Windows 10 and then back to macOS 27. It now enumerates as `3537:1082`, `bcdDevice` `0x0664`, device class `00/00/00`, with two class-3 interfaces:
+2026-09-26, the same G7 SE after the owner connected it to GameSir Nexus 2.5.8 on Windows 10 and then back to macOS 27. After that, it enumerates as `3537:1082`, `bcdDevice` `0x0664`, device class `00/00/00`, with two class-3 interfaces:
 
 - **Interface 0:** a Game Pad collection, bound by Apple's HID driver.
   - Report `0x05` is 10 bytes: 15 buttons, a 4-bit hat, 8-bit X/Y/Z/Rz, 8-bit accelerator and brake, and four 8-bit LED outputs (`0x43`–`0x46`).
@@ -113,7 +113,7 @@ Input is standard 20-byte XUSB (`00 14 …`); triggers reach 255. The owner pres
 
 This static analysis is unverified on hardware.
 
-Everything below was the original capture plan. Scenario 1 above has been run. It plans a capture on Windows 10 under Boot Camp on an Intel Mac, recording USB traffic between GameSir Nexus or GameSir Connect and the controller. The capture should provide evidence OJD cannot get on macOS:
+Everything below is a capture plan; Scenario 1 above records its run. It plans a capture on Windows 10 under Boot Camp on an Intel Mac, recording USB traffic between GameSir Nexus or GameSir Connect and the controller. The capture should provide evidence OJD cannot get on macOS:
 
 - the configuration commands the apps send to enable gyro, paddle, or extra-button reporting and to switch modes; OJD may never send them, which would explain inputs its packet tracer never sees
 - the firmware update transfer; GameSir publishes no standalone firmware files, and the apps fetch updates at runtime, so an unencrypted image could be extracted to identify the IMU part and its full-scale ranges
@@ -121,7 +121,7 @@ Everything below was the original capture plan. Scenario 1 above has been run. I
 
 It should settle these open questions:
 
-- Motion layout and byte order: OJD publishes no GameSir motion. Its former decoder read gyro at offset 14 and accel at offset 20 as little-endian. SDL's GameSir driver reads accel at 14 and gyro at 20 as big-endian, for different PIDs, with a `0xA1 0xC8` header.
+- Motion layout and byte order: OJD publishes no GameSir motion. The two candidates are gyro at offset 14 and accel at offset 20 as little-endian, and the layout of SDL's GameSir driver, accel at 14 and gyro at 20 as big-endian, for different PIDs, with a `0xA1 0xC8` header.
 - Motion scale and axis signs.
 - The IMU sample counter.
 - Whether back buttons report as separate bits.

@@ -21,7 +21,6 @@ Five plurals.
 Every non-English locale began as a machine translation and needs review against the rules in [Meaning](#meaning).
 English source catalogs are `en-US` and `C`.
 Ship only languages that macOS itself offers.
-Do not restore retired catalogs.
 
 ## Punctuation
 

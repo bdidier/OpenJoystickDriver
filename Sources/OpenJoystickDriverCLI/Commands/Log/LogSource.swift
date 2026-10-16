@@ -70,7 +70,7 @@ enum LogFollower {
   }
 
   /// Reads what `url` gained after `position` and moves `position` to the end; a file that shrank
-  /// was replaced by a new session, so it is read from the start.
+  /// belongs to a later session, so it is read from the start.
   private static func readAppended(_ url: URL, position: inout UInt64) -> Data? {
     guard let handle = try? FileHandle(forReadingFrom: url) else { return nil }
     defer { handle.closeFile() }

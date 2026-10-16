@@ -20,7 +20,7 @@ Virtual controllers are published only through `IOHIDUserDevice`. Record the mac
 
 ## Generic HID Browser Contract
 
-Generic HID publishes the stable OJD identity `1209:4A4F`, allocated by pid.codes, product name `OpenJoystickDriver Generic HID Gamepad`, and a device-neutral, input-only HID Game Pad descriptor. `4F4A:4449` was the earlier layout with a vendor rumble output report; its input layout is unchanged. It does not impersonate a retail controller and does not guarantee Gamepad API `mapping: "standard"`. For this PID, the frozen raw layout is:
+Generic HID publishes the stable OJD identity `1209:4A4F`, allocated by pid.codes, product name `OpenJoystickDriver Generic HID Gamepad`, and a device-neutral, input-only HID Game Pad descriptor. The recorded `4F4A:4449` results below used the same input layout plus a vendor rumble output report. It does not impersonate a retail controller and does not guarantee Gamepad API `mapping: "standard"`. For this PID, the frozen raw layout is:
 
 - axes 0–3: left X/Y, then right X/Y;
 - axes 4–5: LT/RT on the positive half of signed axes, with idle `0`, partial pressure preserved, and full pressure `1` after browser normalization;
@@ -39,25 +39,25 @@ Do not create or submit browser-engine patches as part of OJD's Generic HID fall
 
 ## Current Accepted Browser Evidence
 
-Blink's fully correct Apple GameController result is the canonical report-layout oracle. Explicit Apple GameController keeps the Xbox Series `045E:0B13` descriptor, report bytes, button usages, sticks, triggers, hat, Guide, and Share. Automatic now publishes `SdlCompatible` (`045E:02FD`) for every browser and has no browser result yet. The former Gecko Automatic row below published Xbox One S `045E:02E0`, kept the matching axis/trigger order, emitted D-pad through the hat only, and left Share unavailable because Firefox's remapper does not expose B17.
+Blink's fully correct result for the published Xbox Series `045E:0B13` identity is the canonical report-layout oracle: descriptor, report bytes, button usages, sticks, triggers, hat, Guide, and Share. Automatic selection publishes `SdlCompatible` (`045E:02FD`) for every browser, which has no browser result. The Gecko row for the published Xbox One S `045E:02E0` identity kept the matching axis/trigger order, emitted D-pad through the hat only, and left Share unavailable because Firefox's remapper does not expose B17.
 
-| Browser | Mode | ID/mapping/counts | LT | RT | Issues/reconnect/switch |
+| Browser | Published identity | ID/mapping/counts | LT | RT | Issues/reconnect/switch |
 | --- | --- | --- | --- | --- | --- |
-| Blink | Apple GameController | `045E:0B13`; standard; Xbox Series counts | correct | correct | All controls hardware-verified; report layout frozen |
-| Firefox/Gecko | Former Automatic | `045E:02E0`; standard B0–B16 | analog trigger | analog trigger | Hat-only D-pad and Guide; Share unavailable |
-| Firefox/Gecko | Explicit Apple GameController | `045E:0B13`; fixed explicit contract | confused with right-stick data | confused with right-stick data | Historical engine mapping failure; explicit profiles do not vary |
-| Blink | Generic HID | `4F4A:4449` (former); raw/non-standard; 18 buttons, 6 axes | axis 4 | axis 5 | Retest required on input-only `1209:4A4F` |
+| Blink | Xbox Series | `045E:0B13`; standard; Xbox Series counts | correct | correct | All controls hardware-verified; report layout frozen |
+| Firefox/Gecko | Xbox One S | `045E:02E0`; standard B0–B16 | analog trigger | analog trigger | Hat-only D-pad and Guide; Share unavailable |
+| Firefox/Gecko | Xbox Series | `045E:0B13`; fixed contract | confused with right-stick data | confused with right-stick data | Engine mapping failure |
+| Blink | Generic HID with rumble report | `4F4A:4449`; raw/non-standard; 18 buttons, 6 axes | axis 4 | axis 5 | Retest required on input-only `1209:4A4F` |
 | Safari/WebKit | Generic HID | not enumerated | n/a | n/a | Record as WebKit non-enumeration, not an OJD report reorder |
 
-Re-test each row in a fresh document after reconnect and after compatibility switching. Engine classification comes from bundle structure rather than a browser allowlist; unknown or ambiguous fingerprints must use the canonical row.
+Re-test each row in a fresh document after reconnect and after a profile override change. Engine classification comes from bundle structure rather than a browser allowlist; unknown or ambiguous fingerprints must use the canonical row.
 
 ## Post-Reinstall `0.5.0-beta.4` Observations
 
 User-reported observations after a full development reinstall with a GameSir G7 SE, Chrome 153, macOS 26.6.2, and OJD `0.5.0-beta.4`; the complete clean-state protocol above was not followed:
 
-- Generic HID enumerated with `mapping: n/a`. The left stick occupied axes 0–1, the right stick occupied axes 2–3, LT/RT appeared as binary B6/B7, and no trigger or D-pad axis appeared. The remaining controls occupied B0–B5 and B8–B17. The revised descriptor keeps those sticks and digital controls but moves LT/RT pressure to axes 4–5 and omits B6/B7; this revised layout still requires the clean-state retest below.
-- DualShock 4 and DualSense stick Y directions were correct after the report encoding fix.
-- Apple GameController and Sony system controls could still be delayed, reserved, or omitted: View was delayed and Guide or Share did not always reach the page. This is controlled by the receiving application's GameController system-gesture policy rather than by OJD's encoded input report. Blink uses [GameController.framework on macOS][1], and applications control gesture delivery through Apple's [`preferredSystemGestureState`][2].
+- Generic HID enumerated with `mapping: n/a`. The left stick occupied axes 0–1, the right stick occupied axes 2–3, LT/RT appeared as binary B6/B7, and no trigger or D-pad axis appeared. The remaining controls occupied B0–B5 and B8–B17. The `1209:4A4F` descriptor keeps those sticks and digital controls, puts LT/RT pressure on axes 4–5, and omits B6/B7; it requires the clean-state retest below.
+- DualShock 4 and DualSense stick Y directions were correct.
+- Apple GameController and Sony system controls could be delayed, reserved, or omitted: View was delayed and Guide or Share did not always reach the page. This is controlled by the receiving application's GameController system-gesture policy rather than by OJD's encoded input report. Blink uses [GameController.framework on macOS][1], and applications control gesture delivery through Apple's [`preferredSystemGestureState`][2].
 
 Repeat these observations with the complete protocol before treating them as clean-state verification.
 

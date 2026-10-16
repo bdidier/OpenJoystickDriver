@@ -5,7 +5,7 @@ import OpenJoystickDriverKit
 /// ``VirtualFeedIntakeSink``, and a `KeepAlive` or `Drain` line counts as activity.
 ///
 /// The source also ends the feed when its connection closes and the connection when its feed
-/// closes (`E1008`), as the pump of the former exchange did.
+/// closes (`E1008`).
 /// - Note: `@unchecked Sendable` because `closed` is guarded by `lock`.
 final class EndpointFeedSource: InputSource, @unchecked Sendable {
   /// What the feed did with a frame.

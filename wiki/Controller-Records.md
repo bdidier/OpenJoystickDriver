@@ -2,8 +2,6 @@
 
 This page explains how to add a controller that OpenJoystickDriver does not know, or change how it drives a known one, with your own controller record.
 
-> **Note:** This page applies to OpenJoystickDriver 0.6.0-alpha.1 and later. Version 0.5.0-beta.4 and earlier do not have all of the features on this page.
-
 ## Contents
 
 - [How Records Work](#how-records-work)
@@ -21,7 +19,7 @@ This page explains how to add a controller that OpenJoystickDriver does not know
 - [Install a Record](#install-a-record)
 - [Check Which Records Apply](#check-which-records-apply)
 - [Remove a Record](#remove-a-record)
-- [Schema Versions and Compatibility](#schema-versions-and-compatibility)
+- [Schema Versions and Compatibility](#schema-versions)
 - [Further Reading](#further-reading)
 
 [toc-1]: #draft-a-record-from-a-connected-controller
@@ -461,9 +459,9 @@ OpenJoystickDriver skips a file that is not valid and uses the bundled record fo
 
 The command removes the `Controller` file and the patch file of that model. A bundled model then goes back to its bundled record.
 
-## Schema Versions and Compatibility
+## Schema Versions
 
-Each file that OJD reads declares `apiVersion: openjoystickdriver/v1alpha1` and its `kind`, such as `Controller`, `ControllerPatch`, `VirtualDevice`, `Profile`, or `ModPackage`. Files do not declare `$schema`. OJD accepts only the `apiVersion` it supports and rejects every other one, a missing one, and a `kind` it does not read there. The error names the file, the version it found, and the supported one. It does not convert files. The schemas are flat files in `Resources/Schemas/`, and each `$id` is `https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/<kind>.schema.json`. Nothing publishes those IDs yet.
+Each file that OJD reads declares `apiVersion: openjoystickdriver/v1alpha1` and its `kind`, such as `Controller`, `ControllerPatch`, `VirtualDevice`, `Profile`, or `ModPackage`. Files do not declare `$schema`. OJD accepts only the `apiVersion` it supports and rejects every other one, a missing one, and a `kind` it does not read there. The error names the file, the version it found, and the supported one. It does not convert files. The schemas are flat files in `Resources/Schemas/`, and each `$id` is `https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/<kind>.schema.json`. Those IDs are not published.
 
 - Before 1.0, a `v1alpha1` schema may change incompatibly. The release notes list each such change.
 - At 1.0 the schemas are promoted to `v1`. A `v1` schema takes only additive changes: a new optional field, or a new value where a reader can ignore it.

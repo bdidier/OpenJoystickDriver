@@ -2,8 +2,6 @@
 
 Use `ojd-webrtc-bridge` to play a game on one Mac with a controller that is connected to another Mac.
 
-> **Note:** This page applies to OpenJoystickDriver 0.6.0-alpha.1 and later. Version 0.5.0-beta.4 and earlier do not have all of the features on this page.
-
 The bridge is a separate program. It sends the input of one controller over a WebRTC data channel to a virtual gamepad on the other Mac, and sends rumble back. The app, the service, and `ojd` do not include WebRTC code. The bridge gets only the access that you give it with `ojd access`.
 
 For the message formats, the sockets, and the limits, see the [WebRTC bridge reference](../docs/sdk/webrtc-bridge.md).

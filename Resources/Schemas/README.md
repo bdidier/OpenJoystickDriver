@@ -49,7 +49,7 @@ Each artifact class has one current contract, a flat `<kind>.schema.json` here. 
 
 OJD-owned property names use lowerCamelCase, including `vendorID`, `profileID`, `initialization`, `keepAlive`, and `postHandshakeSettleMs`. JSON Schema keywords, CloudEvents context attributes, external API fields, and dynamic map keys retain their standards' or sources' spelling. Do not recase values: enums, protocol identifiers, hashes, URLs, or user text.
 
-Change a schema atomically with every producer, consumer, authored input, generated output, and test. Do not add a second live version, aliases, migrations, upcasters, fallback readers, crosswalks, or dual writers. Git history preserves obsolete contracts.
+Change a schema atomically with every producer, consumer, authored input, generated output, and test. Do not add a second live version, aliases, migrations, upcasters, fallback readers, crosswalks, or dual writers.
 
 ## Boundaries
 

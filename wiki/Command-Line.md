@@ -2,8 +2,6 @@
 
 Use `ojd`, the OpenJoystickDriver command line, to check status, start or stop the service, and manage controllers and controller records.
 
-> **Note:** This page applies to OpenJoystickDriver 0.6.0-alpha.1 and later. Version 0.5.0-beta.4 and earlier do not have all of the features on this page.
-
 This page explains how to run `ojd`, which options apply to every command, how to read its output, and what its exit codes mean.
 
 ## Contents

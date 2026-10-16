@@ -53,7 +53,7 @@ public final class SteamControllerDriver: PhysicalProtocolDriver {
   /// The left stick's last raw position, which a report interleaving pad and stick keeps.
   var leftStickRaw: (x: Int16, y: Int16) = (0, 0)
   let isWirelessReceiver: Bool
-  /// The legacy controller paired over Bluetooth LE: segmented report-`0x03` framing.
+  /// The classic controller paired over Bluetooth LE: segmented report-`0x03` framing.
   let isBluetooth: Bool
   var bluetoothAssembler = SteamBluetoothAssembler()
   var bluetoothState = SteamBluetoothState()
