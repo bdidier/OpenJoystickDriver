@@ -50,6 +50,7 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
   case invalidWebOrigin = "E2030"
   case webPortUnavailable = "E2031"
   case controlScopeWithOrigins = "E2032"
+  case launchFailed = "E2033"
   case controllerUnavailable = "E3001"
   case joyConPairUnavailable = "E3002"
   case motionUnavailable = "E3003"
@@ -115,7 +116,7 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
       .updateCheckFailed, .staleInstallation, .installedCLIFailed, .recordTestMismatch,
       .claimUnsupported, .unknownAccessClient, .ungrantableClient, .noAccessScope,
       .serviceStopping, .duplicateTokenName, .invalidTokenName, .invalidWebOrigin,
-      .webPortUnavailable, .controlScopeWithOrigins:
+      .webPortUnavailable, .controlScopeWithOrigins, .launchFailed:
       .commandLine
     case .controllerUnavailable, .joyConPairUnavailable, .motionUnavailable, .argumentTooLarge,
       .corruptLibrary, .duplicateName, .invalidArguments, .invalidProfile, .librarySizeExceeded,

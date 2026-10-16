@@ -15,6 +15,8 @@ enum CLIOutputSchema {
     ["profile", "export"],
     // Opens an editor and needs a terminal, so tests never reach its output.
     ["profile", "edit"],
+    // The launched program writes the standard output.
+    ["virtual", "launch"],
   ]
 
   static func definitionName(for path: [String]) -> String {

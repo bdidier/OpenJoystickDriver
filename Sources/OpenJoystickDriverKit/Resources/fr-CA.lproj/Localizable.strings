@@ -1346,6 +1346,16 @@
 "cli.virtual.feed.error.frame" = "La ligne %@ n’est pas une trame valide. « ojd virtual feed --help » indique le format.";
 "cli.virtual.feed.profile" = "Le profil de la manette virtuelle à publier.";
 "cli.virtual.feed.started" = "Publication d’une manette virtuelle %@. Écrivez des trames sur stdin; terminez l’entrée ou appuyez sur Control-C pour arrêter.";
+"cli.virtual.launch.abstract" = "Exécute un programme avec le mappage SDL des manettes virtuelles connectées.";
+"cli.virtual.launch.command" = "Le programme à exécuter et ses arguments. Un programme est un chemin, un nom que PATH trouve ou une .app. Mettez -- avant le programme si ses arguments sont aussi des options d'ojd.";
+"cli.virtual.launch.discussion" = "Définit SDL_GAMECONTROLLERCONFIG avec le mappage de la manette virtuelle de chaque contrôleur connecté, afin que SDL dans le programme les liste. Une valeur déjà définie reste en premier et les mappages la suivent. Une .app exécute son exécutable principal. Le programme garde ce terminal. Arrêter ojd arrête le programme, et ojd se termine avec l'état du programme.";
+"cli.virtual.launch.error.failed" = "%@ ne s'est pas lancé (%@). Vérifiez que c'est un fichier exécutable ou une app, et que vous avez le droit de l'exécuter.";
+"cli.virtual.launch.error.no_executable" = "l'app n'a pas d'exécutable";
+"cli.virtual.launch.error.no_gamepad" = "Aucun contrôleur connecté n'a de manette virtuelle, donc il n'y a aucun mappage à définir. Connectez un contrôleur et vérifiez « ojd virtual show ».";
+"cli.virtual.launch.error.no_program" = "Indiquez un programme à exécuter, par exemple « ojd virtual launch ./game ».";
+"cli.virtual.launch.error.not_executable" = "aucun fichier exécutable à ce chemin";
+"cli.virtual.launch.error.not_found" = "aucun programme de ce nom dans PATH";
+"cli.virtual.launch.error.output" = "--json et --plain ne s'appliquent pas, car le programme écrit la sortie standard.";
 "cli.virtual.reset.abstract" = "Remettre le modèle d’une manette, ou tous les modèles, en sélection automatique de manette virtuelle.";
 "cli.virtual.reset.all" = "Réinitialiser tous les modèles de manette.";
 "cli.virtual.reset.all.done" = "Tous les modèles de manette sélectionnent maintenant leur manette virtuelle automatiquement.";
@@ -1424,6 +1434,7 @@
 "error.E2030" = "Ce n’est pas une origine web. Utilisez scheme://host[:port] avec http ou https, par exemple `http://127.0.0.1:8080`.";
 "error.E2031" = "Ce port sur 127.0.0.1 est utilisé ou ne peut pas être ouvert. Choisissez-en un autre avec --port.";
 "error.E2032" = "Un jeton avec des origines ne peut pas avoir la portée control, car une page ne doit jamais piloter une manette virtuelle. Accordez control à un jeton sans origines.";
+"error.E2033" = "Le programme n'a pas pu être lancé. Vérifiez que son chemin désigne un fichier exécutable ou une app, et que vous avez le droit de l'exécuter.";
 "cli.record.usb_not_claimed" = "La famille utilise l’USB brut, et l’extension USB ne peut pas prendre en charge cette manette, car sa liste de produits est signée par Apple. OJD ne l’atteint que par un accès USB direct, lorsque macOS l’autorise.";
 "cli.record.usb_only_switch2" = "USB uniquement. Ajoutez bluetoothLE.vibrationCharacteristic à cette fiche Switch 2 pour connecter la manette en Bluetooth LE.";
 "cli.record.validate.abstract" = "Vérifier une fiche de manette sans l’installer.";

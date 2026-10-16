@@ -1346,6 +1346,16 @@
 "cli.virtual.feed.error.frame" = "第 %@ 行不是有效的帧。“ojd virtual feed --help” 会显示格式。";
 "cli.virtual.feed.profile" = "要发布的虚拟游戏手柄配置文件。";
 "cli.virtual.feed.started" = "正在发布 %@ 虚拟游戏手柄。请将帧写入 stdin；结束输入或按 Control-C 即可停止。";
+"cli.virtual.launch.abstract" = "使用已连接虚拟游戏手柄的 SDL 映射运行程序。";
+"cli.virtual.launch.command" = "要运行的程序及其参数。程序可以是路径、PATH 能找到的名称或 .app。如果程序的参数同时也是 ojd 的选项，请在程序前加上 --。";
+"cli.virtual.launch.discussion" = "将 SDL_GAMECONTROLLERCONFIG 设置为每个已连接控制器的虚拟游戏手柄映射，使程序中的 SDL 列出它们。已设置的值保持在最前，映射接在其后。.app 会运行其主可执行文件。程序继续使用此终端。停止 ojd 会停止程序，ojd 以程序的状态退出。";
+"cli.virtual.launch.error.failed" = "%@ 未能启动（%@）。请检查它是可执行文件或 App，并且你有权运行它。";
+"cli.virtual.launch.error.no_executable" = "App 没有可执行文件";
+"cli.virtual.launch.error.no_gamepad" = "没有已连接的控制器带有虚拟游戏手柄，因此没有可设置的映射。请连接控制器并查看“ojd virtual show”。";
+"cli.virtual.launch.error.no_program" = "请给出要运行的程序，例如“ojd virtual launch ./game”。";
+"cli.virtual.launch.error.not_executable" = "该路径下没有可执行文件";
+"cli.virtual.launch.error.not_found" = "PATH 中没有该名称的程序";
+"cli.virtual.launch.error.output" = "--json 和 --plain 不适用，因为程序会写入标准输出。";
 "cli.virtual.reset.abstract" = "让控制器的型号或所有型号恢复自动选择虚拟游戏手柄。";
 "cli.virtual.reset.all" = "重置所有控制器型号。";
 "cli.virtual.reset.all.done" = "现在每个控制器型号都会自动选择其虚拟游戏手柄。";
@@ -1424,6 +1434,7 @@
 "error.E2030" = "这不是 Web 源。请使用带 http 或 https 的 scheme://host[:port]，例如 `http://127.0.0.1:8080`。";
 "error.E2031" = "127.0.0.1 上的这个端口已被占用或无法打开。请用 --port 选择另一个。";
 "error.E2032" = "带源的令牌不能拥有 control 范围，因为网页绝不能操控虚拟游戏手柄。请把 control 授予不带源的令牌。";
+"error.E2033" = "无法启动程序。请检查其路径指向可执行文件或 App，并且你有权运行它。";
 "cli.record.usb_not_claimed" = "该系列使用原始 USB，USB 扩展无法接管此控制器，因为其产品列表由 Apple 签名。只有在 macOS 允许时，OJD 才能通过直接 USB 访问使用它。";
 "cli.record.usb_only_switch2" = "仅限 USB：要通过低功耗蓝牙连接控制器，请将 bluetoothLE.vibrationCharacteristic 添加到此 Switch 2 记录。";
 "cli.record.validate.abstract" = "检查控制器记录，但不安装。";

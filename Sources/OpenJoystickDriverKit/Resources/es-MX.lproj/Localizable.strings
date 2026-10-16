@@ -1346,6 +1346,16 @@
 "cli.virtual.feed.error.frame" = "La línea %@ no es un fotograma válido. “ojd virtual feed --help” muestra el formato.";
 "cli.virtual.feed.profile" = "El perfil del control virtual que se va a publicar.";
 "cli.virtual.feed.started" = "Publicando un control virtual %@. Escribe fotogramas en stdin; termina la entrada o presiona Control-C para detener.";
+"cli.virtual.launch.abstract" = "Ejecuta un programa con la asignación SDL de los mandos virtuales conectados.";
+"cli.virtual.launch.command" = "El programa que se ejecuta y sus argumentos. Un programa es una ruta, un nombre que PATH encuentra o una .app. Escribe -- antes del programa si sus argumentos también son opciones de ojd.";
+"cli.virtual.launch.discussion" = "Establece SDL_GAMECONTROLLERCONFIG con la asignación del mando virtual de cada controlador conectado, para que SDL en el programa los liste. Un valor ya establecido queda primero y las asignaciones lo siguen. Una .app ejecuta su ejecutable principal. El programa conserva este terminal. Si detienes ojd, se detiene el programa, y ojd termina con el estado del programa.";
+"cli.virtual.launch.error.failed" = "%@ no se inició (%@). Comprueba que sea un archivo ejecutable o una app y que tengas permiso para ejecutarlo.";
+"cli.virtual.launch.error.no_executable" = "la app no tiene ejecutable";
+"cli.virtual.launch.error.no_gamepad" = "Ningún controlador conectado tiene un mando virtual, así que no hay asignación que establecer. Conecta un controlador y revisa «ojd virtual show».";
+"cli.virtual.launch.error.no_program" = "Indica un programa que ejecutar, como «ojd virtual launch ./game».";
+"cli.virtual.launch.error.not_executable" = "no hay ningún archivo ejecutable en esa ruta";
+"cli.virtual.launch.error.not_found" = "no hay ningún programa con ese nombre en PATH";
+"cli.virtual.launch.error.output" = "--json y --plain no se aplican, porque el programa escribe la salida estándar.";
 "cli.virtual.reset.abstract" = "Devuelve el modelo de un control, o todos los modelos, a la selección automática de control virtual.";
 "cli.virtual.reset.all" = "Restablece todos los modelos de control.";
 "cli.virtual.reset.all.done" = "Ahora todos los modelos de control seleccionan su control virtual automáticamente.";
@@ -1424,6 +1434,7 @@
 "error.E2030" = "Esto no es un origen web. Usa scheme://host[:port] con http o https, por ejemplo `http://127.0.0.1:8080`.";
 "error.E2031" = "Este puerto en 127.0.0.1 está en uso o no se puede abrir. Elige otro con --port.";
 "error.E2032" = "Un token con orígenes no puede tener el alcance control, porque una página nunca debe manejar un control virtual. Concede control a un token sin orígenes.";
+"error.E2033" = "No se pudo iniciar el programa. Comprueba que su ruta indique un archivo ejecutable o una app y que tengas permiso para ejecutarlo.";
 "cli.record.usb_not_claimed" = "La familia usa USB sin procesar, y la extensión USB no puede reclamar este control, porque su lista de productos está firmada por Apple. OJD solo llega a él mediante acceso USB directo, cuando macOS lo permite.";
 "cli.record.usb_only_switch2" = "Solo USB: agrega bluetoothLE.vibrationCharacteristic a este registro de Switch 2 para conectar el control por Bluetooth LE.";
 "cli.record.validate.abstract" = "Comprueba un registro de control sin instalarlo.";

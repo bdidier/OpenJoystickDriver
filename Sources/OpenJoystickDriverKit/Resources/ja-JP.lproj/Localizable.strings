@@ -1346,6 +1346,16 @@
 "cli.virtual.feed.error.frame" = "%@ 行目は有効なフレームではありません。「ojd virtual feed --help」 で形式を確認できます。";
 "cli.virtual.feed.profile" = "公開する仮想ゲームパッドのプロファイル。";
 "cli.virtual.feed.started" = "%@ の仮想ゲームパッドを公開しています。フレームを stdin に書き込みます。停止するには、入力を終了するか Control-C を押してください。";
+"cli.virtual.launch.abstract" = "接続中の仮想ゲームパッドの SDL マッピングを付けてプログラムを実行します。";
+"cli.virtual.launch.command" = "実行するプログラムとその引数。プログラムは、パス、PATH で見つかる名前、または .app です。プログラムの引数が ojd のオプションと同じ場合は、プログラムの前に -- を置いてください。";
+"cli.virtual.launch.discussion" = "接続中の各コントローラの仮想ゲームパッドのマッピングを SDL_GAMECONTROLLERCONFIG に設定し、プログラム内の SDL がそれらを列挙できるようにします。すでに設定されている値は先頭に残り、マッピングがその後に続きます。.app はメインの実行ファイルを実行します。プログラムはこのターミナルを引き続き使います。ojd を停止するとプログラムも停止し、ojd はプログラムの終了ステータスで終了します。";
+"cli.virtual.launch.error.failed" = "%@ を起動できませんでした (%@)。実行可能ファイルまたは App であること、実行する権限があることを確認してください。";
+"cli.virtual.launch.error.no_executable" = "App に実行ファイルがありません";
+"cli.virtual.launch.error.no_gamepad" = "仮想ゲームパッドを持つ接続中のコントローラがないため、設定するマッピングがありません。コントローラを接続して「ojd virtual show」を確認してください。";
+"cli.virtual.launch.error.no_program" = "実行するプログラムを指定してください。例:「ojd virtual launch ./game」";
+"cli.virtual.launch.error.not_executable" = "そのパスに実行可能ファイルがありません";
+"cli.virtual.launch.error.not_found" = "その名前のプログラムが PATH にありません";
+"cli.virtual.launch.error.output" = "プログラムが標準出力に書き込むため、--json と --plain は使えません。";
 "cli.virtual.reset.abstract" = "コントローラのモデル、またはすべてのモデルを、仮想ゲームパッドの自動選択に戻します。";
 "cli.virtual.reset.all" = "すべてのコントローラモデルをリセットします。";
 "cli.virtual.reset.all.done" = "すべてのコントローラモデルが、仮想ゲームパッドを自動で選択するようになりました。";
@@ -1424,6 +1434,7 @@
 "error.E2030" = "Web オリジンではありません。http または https で scheme://host[:port] の形式（例：`http://127.0.0.1:8080`）にしてください。";
 "error.E2031" = "127.0.0.1 のこのポートは使用中か、開けません。--port で別のポートを選んでください。";
 "error.E2032" = "オリジンを持つトークンには control スコープを付けられません。ページが仮想ゲームパッドを操作してはならないためです。オリジンのないトークンに control を許可してください。";
+"error.E2033" = "プログラムを起動できませんでした。パスが実行可能ファイルまたは App を指していること、実行する権限があることを確認してください。";
 "cli.record.usb_not_claimed" = "このファミリーは生の USB を使用しますが、製品リストが Apple によって署名されているため、USB 機能拡張はこのコントローラを占有できません。OJD は、macOS が許可する場合にのみ、直接 USB アクセスでこのコントローラに接続します。";
 "cli.record.usb_only_switch2" = "USB のみ。コントローラを Bluetooth LE で接続するには、この Switch 2 レコードに bluetoothLE.vibrationCharacteristic を追加してください。";
 "cli.record.validate.abstract" = "コントローラのレコードをインストールせずに確認します。";

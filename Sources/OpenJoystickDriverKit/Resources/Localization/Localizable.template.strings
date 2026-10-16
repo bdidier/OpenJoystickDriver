@@ -1349,6 +1349,16 @@
 "cli.virtual.feed.error.frame" = "Line %@ is not a valid frame. 'ojd virtual feed --help' shows the format.";
 "cli.virtual.feed.profile" = "The virtual gamepad profile to publish.";
 "cli.virtual.feed.started" = "Publishing a %@ virtual gamepad. Write frames on standard input; end the input or press Control-C to stop.";
+"cli.virtual.launch.abstract" = "Run a program with the SDL mapping of the connected virtual gamepads.";
+"cli.virtual.launch.command" = "The program to run and its arguments. A program is a path, a name that PATH finds, or an .app. Put -- before the program when its arguments are also ojd options.";
+"cli.virtual.launch.discussion" = "Sets SDL_GAMECONTROLLERCONFIG to the mapping of each connected controller's virtual gamepad, so SDL in the program lists them. A value already set stays first and the mappings follow it. An .app runs its main executable. The program keeps this terminal. Stopping ojd stops the program, and ojd exits with the program's status.";
+"cli.virtual.launch.error.failed" = "%@ did not start (%@). Check that it is an executable file or an app, and that you may run it.";
+"cli.virtual.launch.error.no_executable" = "the app has no executable";
+"cli.virtual.launch.error.no_gamepad" = "No connected controller has a virtual gamepad, so there is no mapping to set. Connect a controller and check 'ojd virtual show'.";
+"cli.virtual.launch.error.no_program" = "Give a program to run, such as 'ojd virtual launch ./game'.";
+"cli.virtual.launch.error.not_executable" = "no executable file at that path";
+"cli.virtual.launch.error.not_found" = "no program of that name on PATH";
+"cli.virtual.launch.error.output" = "--json and --plain do not apply, because the program writes the standard output.";
 "cli.virtual.reset.abstract" = "Return a controller's model, or every model, to automatic virtual gamepad selection.";
 "cli.virtual.reset.all" = "Reset every controller model.";
 "cli.virtual.reset.all.done" = "Every controller model now selects its virtual gamepad automatically.";
@@ -1644,6 +1654,7 @@
 "error.E2030" = "This is not a web origin. Use scheme://host[:port] with http or https, such as `http://127.0.0.1:8080`.";
 "error.E2031" = "This port on 127.0.0.1 is in use or cannot be opened. Choose another with --port.";
 "error.E2032" = "A token with origins cannot have the control scope, because a page must never drive a virtual gamepad. Grant control to a token without origins.";
+"error.E2033" = "The program could not be started. Check that its path names an executable file or an app, and that you may run it.";
 "error.E3001" = "The controller is not connected or not ready for remapping. Reconnect it and try again.";
 "error.E3002" = "The selected Joy-Cons could not be paired. Refresh the connected controllers and try again.";
 "error.E3003" = "The controller does not report motion data. Choose a controller with motion sensors, or leave motion options off.";

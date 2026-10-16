@@ -1346,6 +1346,16 @@
 "cli.virtual.feed.error.frame" = "السطر %@ ليس إطارًا صالحًا. يعرض «ojd virtual feed --help» التنسيق.";
 "cli.virtual.feed.profile" = "ملف تعريف وحدة التحكم الافتراضية المراد نشرها.";
 "cli.virtual.feed.started" = "جارٍ نشر وحدة تحكم افتراضية (%@). اكتب الإطارات إلى stdin؛ أنهِ الإدخال أو اضغط Control-C للإيقاف.";
+"cli.virtual.launch.abstract" = "يشغّل برنامجًا مع تعيين SDL لأذرع الألعاب الافتراضية المتصلة.";
+"cli.virtual.launch.command" = "البرنامج المراد تشغيله ومعاملاته. البرنامج مسار أو اسم يجده PATH أو ‎.app. ضع -- قبل البرنامج عندما تكون معاملاته أيضًا خيارات لـ ojd.";
+"cli.virtual.launch.discussion" = "يضبط SDL_GAMECONTROLLERCONFIG على تعيين ذراع الألعاب الافتراضي لكل وحدة تحكم متصلة، ليسردها SDL داخل البرنامج. تبقى القيمة المضبوطة مسبقًا أولًا وتأتي التعيينات بعدها. يشغّل ‎.app ملفه التنفيذي الرئيسي. يحتفظ البرنامج بهذه الطرفية. إيقاف ojd يوقف البرنامج، وينتهي ojd بحالة البرنامج.";
+"cli.virtual.launch.error.failed" = "لم يبدأ %@ (%@). تحقق من أنه ملف تنفيذي أو تطبيق، ومن أنك مخوّل بتشغيله.";
+"cli.virtual.launch.error.no_executable" = "ليس للتطبيق ملف تنفيذي";
+"cli.virtual.launch.error.no_gamepad" = "لا توجد وحدة تحكم متصلة لديها ذراع ألعاب افتراضي، لذلك لا يوجد تعيين لضبطه. صل وحدة تحكم وتحقق من «ojd virtual show».";
+"cli.virtual.launch.error.no_program" = "حدّد برنامجًا لتشغيله، مثل «ojd virtual launch ./game».";
+"cli.virtual.launch.error.not_executable" = "لا يوجد ملف تنفيذي في هذا المسار";
+"cli.virtual.launch.error.not_found" = "لا يوجد برنامج بهذا الاسم في PATH";
+"cli.virtual.launch.error.output" = "الخياران --json و--plain لا ينطبقان، لأن البرنامج يكتب إلى المخرج القياسي.";
 "cli.virtual.reset.abstract" = "أعد طراز وحدة تحكم، أو كل الطُرز، إلى الاختيار التلقائي لوحدة التحكم الافتراضية.";
 "cli.virtual.reset.all" = "أعد ضبط كل طُرز وحدات التحكم.";
 "cli.virtual.reset.all.done" = "يختار كل طراز وحدة تحكم الآن وحدة التحكم الافتراضية تلقائيًا.";
@@ -1424,6 +1434,7 @@
 "error.E2030" = "هذا ليس أصل ويب. استخدم scheme://host[:port] مع http أو https، مثل `http://127.0.0.1:8080`.";
 "error.E2031" = "المنفذ هذا على 127.0.0.1 قيد الاستخدام أو لا يمكن فتحه. اختر منفذًا آخر باستخدام --port.";
 "error.E2032" = "لا يمكن أن يملك رمز وصول له أصول نطاق control، لأن الصفحة يجب ألا تتحكم أبدًا في يد تحكم افتراضية. امنح control لرمز بلا أصول.";
+"error.E2033" = "تعذر بدء البرنامج. تحقق من أن مساره يشير إلى ملف تنفيذي أو تطبيق، ومن أنك مخوّل بتشغيله.";
 "cli.record.usb_not_claimed" = "تستخدم العائلة USB الخام، ولا يمكن لامتداد USB الاستحواذ على وحدة التحكم هذه لأن قائمة منتجاته موقّعة من Apple. لا يصل OJD إليها إلا عبر الوصول المباشر إلى USB، عندما يسمح macOS بذلك.";
 "cli.record.usb_only_switch2" = "USB فقط: أضف bluetoothLE.vibrationCharacteristic إلى سجل Switch 2 هذا لتوصيل وحدة التحكم عبر Bluetooth LE.";
 "cli.record.validate.abstract" = "افحص سجل وحدة تحكم دون تثبيته.";
