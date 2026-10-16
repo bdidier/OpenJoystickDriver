@@ -265,38 +265,99 @@ A `hid.descriptor` record maps the usages of its report descriptor to controls i
 
 ## Control Names and Other Vocabularies
 
-Every document, profile, endpoint message and record names a control with one UpperCamelCase id. `Resources/Schemas/vocabulary.schema.json` defines the ids, and `Resources/Vocabulary/crosswalk.json` holds the names the same control has elsewhere. The crosswalk is documentation: it is not a schema alias, and a document that uses another spelling is refused. A `-` means the other vocabulary has no name for the control. The W3C index is the `buttons` index of the standard gamepad mapping. `Capture` and `Microphone` share the SDL3 name `MISC1`. The JSON file also lists the HID page and usage of each control. A `null` usage means the device descriptor assigns it.
+Every document, profile, endpoint message and record names a control with one UpperCamelCase id. `Resources/Schemas/vocabulary.schema.json` defines the ids, and `Resources/Vocabulary/crosswalk.json` holds the names the same control has elsewhere. The crosswalk is documentation: it is not a schema alias, and a document that uses another spelling is refused. A `-` means the other vocabulary has no name for the control, and the crosswalk guesses none. The W3C column is the `buttons` or `axes` index of the standard gamepad mapping. In the HID column a usage is hexadecimal, and `device` means the report descriptor assigns the usage number. `Capture` and `Microphone` share the SDL3 name `MISC1`. A stick's Y axis is positive down in the W3C, SDL3 and evdev columns; Apple's `y` axis is positive up. The table below is generated from the JSON file, so edit the JSON and run `./Scripts/ojd vocabulary regenerate --write`.
 
-| Control | W3C index | SDL3 | evdev | Apple GameController |
+<!-- BEGIN GENERATED: control-crosswalk -->
+
+| Control | W3C | SDL3 | evdev | HID page:usage | Apple GameController |
+| --- | --- | --- | --- | --- | --- |
+| `South` | button 0 | `SOUTH` | `BTN_SOUTH` | `Button:0x1` | `ButtonA` |
+| `East` | button 1 | `EAST` | `BTN_EAST` | `Button:0x2` | `ButtonB` |
+| `West` | button 2 | `WEST` | `BTN_WEST` | `Button:0x3` | `ButtonX` |
+| `North` | button 3 | `NORTH` | `BTN_NORTH` | `Button:0x4` | `ButtonY` |
+| `LeftShoulder` | button 4 | `LEFT_SHOULDER` | `BTN_TL` | `Button:device` | `LeftShoulder` |
+| `RightShoulder` | button 5 | `RIGHT_SHOULDER` | `BTN_TR` | `Button:device` | `RightShoulder` |
+| `LeftTrigger` | button 6 | `LEFT_TRIGGER` | `ABS_Z` | `GenericDesktop:0x32`, `Simulation:0xc5` | `LeftTrigger` |
+| `RightTrigger` | button 7 | `RIGHT_TRIGGER` | `ABS_RZ` | `GenericDesktop:0x35`, `Simulation:0xc4` | `RightTrigger` |
+| `Back` | button 8 | `BACK` | `BTN_SELECT` | `GenericDesktop:0x3e`, `Consumer:0x224`, `Button:device` | `ButtonOptions` |
+| `Start` | button 9 | `START` | `BTN_START` | `GenericDesktop:0x3d` | `ButtonMenu` |
+| `LeftStickClick` | button 10 | `LEFT_STICK` | `BTN_THUMBL` | `Button:device` | `LeftThumbstickButton` |
+| `RightStickClick` | button 11 | `RIGHT_STICK` | `BTN_THUMBR` | `Button:device` | `RightThumbstickButton` |
+| `DpadUp` | button 12 | `DPAD_UP` | `BTN_DPAD_UP` | `GenericDesktop:0x90`, `GenericDesktop:0x39` | `DirectionPad` |
+| `DpadDown` | button 13 | `DPAD_DOWN` | `BTN_DPAD_DOWN` | `GenericDesktop:0x91`, `GenericDesktop:0x39` | `DirectionPad` |
+| `DpadLeft` | button 14 | `DPAD_LEFT` | `BTN_DPAD_LEFT` | `GenericDesktop:0x93`, `GenericDesktop:0x39` | `DirectionPad` |
+| `DpadRight` | button 15 | `DPAD_RIGHT` | `BTN_DPAD_RIGHT` | `GenericDesktop:0x92`, `GenericDesktop:0x39` | `DirectionPad` |
+| `Guide` | button 16 | `GUIDE` | `BTN_MODE` | `GenericDesktop:0x85`, `Consumer:0x223` | `ButtonHome` |
+| `Capture` | - | `MISC1` | `KEY_RECORD` | `Consumer:0xb2` | `ButtonShare` |
+| `Microphone` | - | `MISC1` | - | `Telephony:0x2f`, `Consumer:0xe2` | - |
+| `TouchpadClick` | - | `TOUCHPAD` | `BTN_LEFT` | `Button:device` | `DualShockTouchpadButton` |
+| `LeftPaddle1` | - | `LEFT_PADDLE1` | `BTN_GRIPL` | `Button:device` | `XboxPaddleThree` |
+| `LeftPaddle2` | - | `LEFT_PADDLE2` | `BTN_GRIPL2` | `Button:device` | `XboxPaddleFour` |
+| `RightPaddle1` | - | `RIGHT_PADDLE1` | `BTN_GRIPR` | `Button:device` | `XboxPaddleOne` |
+| `RightPaddle2` | - | `RIGHT_PADDLE2` | `BTN_GRIPR2` | `Button:device` | `XboxPaddleTwo` |
+| `Auxiliary1` | - | `MISC2` | `BTN_TRIGGER_HAPPY1` | `Button:device` | - |
+| `Auxiliary2` | - | `MISC3` | `BTN_TRIGGER_HAPPY2` | `Button:device` | - |
+| `Auxiliary3` | - | `MISC4` | `BTN_TRIGGER_HAPPY3` | `Button:device` | - |
+| `Auxiliary4` | - | `MISC5` | `BTN_TRIGGER_HAPPY4` | `Button:device` | - |
+| `Auxiliary5` | - | `MISC6` | `BTN_TRIGGER_HAPPY5` | `Button:device` | - |
+| `Auxiliary6` | - | - | `BTN_TRIGGER_HAPPY6` | `Button:device` | - |
+| `Auxiliary7` | - | - | `BTN_TRIGGER_HAPPY7` | `Button:device` | - |
+| `Auxiliary8` | - | - | `BTN_TRIGGER_HAPPY8` | `Button:device` | - |
+| `LeftStickX` | axis 0 | `LEFTX` | `ABS_X` | `GenericDesktop:0x30` | `LeftThumbstick` |
+| `LeftStickY` | axis 1 | `LEFTY` | `ABS_Y` | `GenericDesktop:0x31` | `LeftThumbstick` |
+| `RightStickX` | axis 2 | `RIGHTX` | `ABS_RX` | `GenericDesktop:0x33` | `RightThumbstick` |
+| `RightStickY` | axis 3 | `RIGHTY` | `ABS_RY` | `GenericDesktop:0x34` | `RightThumbstick` |
+| `LeftStickTouch` | - | - | - | - | - |
+| `RightStickTouch` | - | - | - | - | - |
+| `LeftTrackpadClick` | - | - | - | - | - |
+| `RightTrackpadClick` | - | - | - | - | - |
+| `LeftTrackpadTouch` | - | - | - | - | - |
+| `RightTrackpadTouch` | - | - | - | - | - |
+
+Each column is checked against this source:
+
+| Column | Document | Version | Revision | Checked on |
 | --- | --- | --- | --- | --- |
-| `South` | 0 | `SOUTH` | `BTN_SOUTH` | `ButtonA` |
-| `East` | 1 | `EAST` | `BTN_EAST` | `ButtonB` |
-| `West` | 2 | `WEST` | `BTN_WEST` | `ButtonX` |
-| `North` | 3 | `NORTH` | `BTN_NORTH` | `ButtonY` |
-| `LeftShoulder` | 4 | `LEFT_SHOULDER` | `BTN_TL` | `LeftShoulder` |
-| `RightShoulder` | 5 | `RIGHT_SHOULDER` | `BTN_TR` | `RightShoulder` |
-| `LeftTrigger` | 6 | `LEFT_TRIGGER` | `ABS_Z` | `LeftTrigger` |
-| `RightTrigger` | 7 | `RIGHT_TRIGGER` | `ABS_RZ` | `RightTrigger` |
-| `Back` | 8 | `BACK` | `BTN_SELECT` | `ButtonOptions` |
-| `Start` | 9 | `START` | `BTN_START` | `ButtonMenu` |
-| `LeftStickClick` | 10 | `LEFT_STICK` | `BTN_THUMBL` | `LeftThumbstickButton` |
-| `RightStickClick` | 11 | `RIGHT_STICK` | `BTN_THUMBR` | `RightThumbstickButton` |
-| `DpadUp` | 12 | `DPAD_UP` | `BTN_DPAD_UP` | `DirectionPad` |
-| `DpadDown` | 13 | `DPAD_DOWN` | `BTN_DPAD_DOWN` | `DirectionPad` |
-| `DpadLeft` | 14 | `DPAD_LEFT` | `BTN_DPAD_LEFT` | `DirectionPad` |
-| `DpadRight` | 15 | `DPAD_RIGHT` | `BTN_DPAD_RIGHT` | `DirectionPad` |
-| `Guide` | 16 | `GUIDE` | `BTN_MODE` | `ButtonHome` |
-| `Capture` | - | `MISC1` | `KEY_RECORD` | `ButtonShare` |
-| `Microphone` | - | `MISC1` | - | - |
-| `TouchpadClick` | - | `TOUCHPAD` | `BTN_TOUCH` | `TouchpadButton` |
-| `LeftPaddle1` | - | `LEFT_PADDLE1` | `BTN_GRIPL` | `XboxPaddleOne` |
-| `LeftPaddle2` | - | `LEFT_PADDLE2` | `BTN_GRIPL2` | `XboxPaddleTwo` |
-| `RightPaddle1` | - | `RIGHT_PADDLE1` | `BTN_GRIPR` | `XboxPaddleThree` |
-| `RightPaddle2` | - | `RIGHT_PADDLE2` | `BTN_GRIPR2` | `XboxPaddleFour` |
-| `Auxiliary1` | - | `MISC2` | `BTN_TRIGGER_HAPPY1` | - |
-| `Auxiliary2` | - | `MISC3` | `BTN_TRIGGER_HAPPY2` | - |
-| `Auxiliary3` | - | `MISC4` | `BTN_TRIGGER_HAPPY3` | - |
-| `Auxiliary4` | - | `MISC5` | `BTN_TRIGGER_HAPPY4` | - |
+| W3C | [W3C Gamepad, Standard Gamepad (section 'Standard Gamepad')](https://www.w3.org/TR/2025/WD-gamepad-20250710/#remapping) | Working Draft 10 July 2025 | - | 2026-10-16 |
+| SDL3 | [SDL3 SDL_gamepad.h, enums SDL_GamepadButton and SDL_GamepadAxis](https://github.com/libsdl-org/SDL/blob/release-3.4.18/include/SDL3/SDL_gamepad.h) | release-3.4.18 | `829a65d769d935c4852f8159e964312c0957260a` | 2026-10-16 |
+| evdev | [Linux include/uapi/linux/input-event-codes.h, with Documentation/input/gamepad.rst](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/linux/input-event-codes.h?h=v7.2) | v7.2 | `8d3ae59288f1e7d58d76558a6ee96d533bc5019f` | 2026-10-16 |
+| HID page:usage | [USB-IF HID Usage Tables for Universal Serial Bus (USB)](https://usb.org/document-library/hid-usage-tables-17) | 1.7 | - | 2026-10-16 |
+| Apple GameController | [Apple GameController framework, GCInput element name constants (names shown without the GCInput prefix)](https://developer.apple.com/documentation/gamecontroller) | developer.apple.com documentation, macOS 11 and later | - | 2026-10-16 |
+
+Notes on single cells:
+
+| Control | Column | Note |
+| --- | --- | --- |
+| `LeftShoulder` | HID page:usage | A Button page usage number is assigned by the device descriptor. |
+| `LeftTrigger` | evdev | ABS_Z is what the xpad and hid-playstation drivers report; the Linux gamepad documentation names BTN_TL2 or ABS_HAT2Y. |
+| `LeftTrigger` | HID page:usage | Brake is the left trigger and Accelerator the right, as the standard HID usage map maps them. |
+| `RightTrigger` | evdev | ABS_RZ is what the xpad and hid-playstation drivers report; the Linux gamepad documentation names BTN_TR2 or ABS_HAT2X. |
+| `RightTrigger` | HID page:usage | Accelerator is the right trigger and Brake the left, as the standard HID usage map maps them. |
+| `Back` | HID page:usage | Select is the HID Usage Tables name; the Xbox Bluetooth descriptor reports AC Back (Consumer 0x224). |
+| `Start` | HID page:usage | Start is the HID Usage Tables name; Gamepad usages use Start and Select (section 8.4). |
+| `DpadUp` | evdev | For all four D-pad ids, a driver may report ABS_HAT0X and ABS_HAT0Y instead (Linux gamepad documentation). |
+| `DpadUp` | HID page:usage | For all four D-pad ids, the D-pad usage comes first; a Hat Switch (0x39) carries all four directions as one value. |
+| `DpadUp` | Apple GameController | DpadUp, DpadDown, DpadLeft and DpadRight are one GCControllerDirectionPad element. |
+| `Guide` | HID page:usage | System Main Menu is the HID Usage Tables name; the Xbox Bluetooth descriptor reports AC Home (Consumer 0x223). |
+| `Capture` | evdev | KEY_RECORD is the Xbox Share button (Linux xpad driver); a Nintendo Switch controller reports its Capture button as BTN_Z (Linux hid-nintendo driver). |
+| `Capture` | HID page:usage | Record (Consumer 0xB2) is how the standard HID usage map maps Share and Capture. |
+| `Microphone` | evdev | No gamepad code: hid-playstation reports no mute button, and KEY_MICMUTE is a keyboard key. |
+| `Microphone` | Apple GameController | The GameController documentation has no microphone button name. |
+| `Microphone` | HID page:usage | Phone Mute (Telephony 0x2F) and Mute (Consumer 0xE2) are the HID Usage Tables mute usages. |
+| `TouchpadClick` | evdev | The click is BTN_LEFT on the touchpad input device, not on the gamepad device (Linux hid-playstation driver). |
+| `TouchpadClick` | Apple GameController | GCInputDualShockTouchpadButton also names the DualSense touchpad button. |
+| `TouchpadClick` | HID page:usage | A Button page usage number is assigned by the device descriptor. |
+| `LeftPaddle1` | Apple GameController | Apple names the Xbox Elite paddle P3; SDL3 and the Linux xpad driver number the paddles the same way. |
+| `LeftPaddle2` | Apple GameController | Apple names the Xbox Elite paddle P4; SDL3 and the Linux xpad driver number the paddles the same way. |
+| `RightPaddle1` | Apple GameController | Apple names the Xbox Elite paddle P1; SDL3 and the Linux xpad driver number the paddles the same way. |
+| `RightPaddle2` | Apple GameController | Apple names the Xbox Elite paddle P2; SDL3 and the Linux xpad driver number the paddles the same way. |
+| `Auxiliary1` | evdev | BTN_TRIGGER_HAPPYn for Auxiliary1 to Auxiliary8 is an OpenJoystickDriver choice: no source gives the Auxiliary buttons a role. |
+| `Auxiliary6` | SDL3 | SDL3 has the buttons MISC1 to MISC6 only, so Auxiliary6 to Auxiliary8 have no SDL3 name. |
+| `LeftStickX` | W3C | Axes 0 to 3 of the standard mapping; negative is left or up and positive is right or down. |
+| `LeftStickY` | Apple GameController | Apple's y axis is positive up; every other column is positive down. |
+| `RightStickY` | Apple GameController | Apple's y axis is positive up; every other column is positive down. |
+
+<!-- END GENERATED: control-crosswalk -->
 
 PlayStation Share (Create) and Xbox View are `Back`. PlayStation Options, Xbox Menu and Switch Plus are `Start`. Xbox Share and Switch Capture are `Capture`. The names `Share` and `Options` are not controls.
 

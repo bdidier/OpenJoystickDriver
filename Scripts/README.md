@@ -9,6 +9,7 @@ Use `./Scripts/ojd --help` for supported routes and `./Scripts/ojd --version` fo
 ```bash
 ./Scripts/ojd catalog regenerate --check
 ./Scripts/ojd errors regenerate --check
+./Scripts/ojd vocabulary regenerate --check
 ./Scripts/ojd check profiles
 ./Scripts/ojd check schemas
 ./Scripts/ojd check tools
@@ -34,4 +35,4 @@ swift test --no-parallel
 
 `snapshots check` runs the equivalence snapshot tests and prints the changed, added, and removed records against the files in `Tests/EquivalenceSnapshots/` (parsed frames, catalog index, record routes, DriverKit match list, SDL mappings, and the virtual report bytes each persona produces from canonical frames, with a control that has no bit in a persona recorded as `unmapped`); it exits non-zero on any difference. `snapshots write` rewrites those files from the current tree, so run it after any intended behavior change and review the resulting diff.
 
-`catalog regenerate --write` writes generated controller records. DriverKit project generation writes DriverKit output. All other commands retain their documented route-specific effects and requirements.
+`vocabulary regenerate --write` rewrites the control crosswalk table in `wiki/Controller-Records.md` from `Resources/Vocabulary/crosswalk.json`, and `--check` fails when the table differs from the JSON. `catalog regenerate --write` writes generated controller records. DriverKit project generation writes DriverKit output. All other commands retain their documented route-specific effects and requirements.

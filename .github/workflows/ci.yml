@@ -60,6 +60,7 @@ jobs:
         run: |
           ./Scripts/ojd catalog regenerate --check
           ./Scripts/ojd errors regenerate --check
+          ./Scripts/ojd vocabulary regenerate --check
 
       - name: Check controller records
         run: |
