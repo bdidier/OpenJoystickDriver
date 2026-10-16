@@ -55,6 +55,7 @@
 ```bash
 ./Scripts/ojd catalog regenerate --check
 ./Scripts/ojd errors regenerate --check
+./Scripts/ojd vocabulary regenerate --check
 ./Scripts/ojd check profiles
 ./Scripts/ojd check schemas
 ./Scripts/ojd check tools
