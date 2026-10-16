@@ -217,7 +217,7 @@ struct ControlVocabularyTests {
   }
 
   @Test
-  func crosswalkKeepsTheCorrectedCells() throws {
+  func crosswalkHoldsTheSourcedCells() throws {
     let rows = try Self.crosswalk().controls
     #expect(rows["LeftTrigger"]?.hid.contains(.init(page: "Simulation", usage: 197)) == true)
     #expect(rows["RightTrigger"]?.hid.contains(.init(page: "Simulation", usage: 196)) == true)

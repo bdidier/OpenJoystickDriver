@@ -110,7 +110,7 @@ class ControlVocabularyTests(unittest.TestCase):
             for column in row.get("notes", {}):
                 self.assertIn(column, self.sources, control)
 
-    def test_the_corrected_cells_hold(self) -> None:
+    def test_the_sourced_cells_hold(self) -> None:
         rows = self.crosswalk
         simulation = {"page": "Simulation"}
         self.assertIn({**simulation, "usage": 197}, rows["LeftTrigger"]["hid"])
