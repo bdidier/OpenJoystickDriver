@@ -17,7 +17,7 @@ SWIFT_API = (
 )
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
 SAMPLE = ROOT / "docs" / "sdk" / "sample"
-WRONG_VERSIONS = ("openjoystickdriver.io/v1beta1", "openjoystickdriver/v1", "")
+WRONG_VERSIONS = ("unsupported.example/v9", "openjoystickdriver/v1", "")
 
 
 def load(path: Path) -> dict[str, Any]:
@@ -111,7 +111,7 @@ class SchemaHeaderTests(unittest.TestCase):
                     with self.assertRaises(validate_schemas.ValidationError):
                         self.validator(stem).validate(changed)
 
-    def test_rejects_the_old_schema_member(self) -> None:
+    def test_rejects_a_schema_member(self) -> None:
         for stem, document in instances().items():
             with self.subTest(kind=schema_header.KINDS[stem]):
                 changed = {**document, "$schema": schema_header.schema_id(stem)}

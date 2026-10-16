@@ -26,14 +26,6 @@ If you unplug a USB controller or dongle while OJD runs, OJD may crash. It may a
 
 The virtual controller override in the controller detail applies to every connected controller with the same VID:PID. This is by design.
 
-## An Old Virtual HID Extension Is Still Active
-
-An earlier beta installed a different extension, `com.openjoystickdriver.VirtualHIDDevice`. It no longer exists. OJD now has one extension, `com.openjoystickdriver.XboxUSBDevice`, and the app publishes the virtual controller itself. OJD does not remove the old extension, so it can stay listed after you update.
-
-To turn it off, open **System Settings** > **General** > **Login Items & Extensions** > **Driver Extensions** and turn off `com.openjoystickdriver.VirtualHIDDevice`.
-
-Do not turn off SIP or AMFI.
-
 ## The USB Extension Serves Only Seven Xbox Controllers
 
 The `com.openjoystickdriver.XboxUSBDevice` extension can only match the seven Microsoft USB IDs in Apple's grant: `045E:02D1`, `045E:02DD`, `045E:02E3`, `045E:02EA`, `045E:0B00`, `045E:0B0A`, and `045E:0B12`. OJD reaches every other wired Xbox controller through raw USB access or leaves it to macOS. Adding an ID to the extension needs a new request to Apple, so the list stays as it is until Apple grants more.

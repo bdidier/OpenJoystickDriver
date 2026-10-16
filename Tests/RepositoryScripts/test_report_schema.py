@@ -135,59 +135,16 @@ class ReportSchemaTests(unittest.TestCase):
 
         self.validator.validate(report)
 
-    def assert_old_word_is_rejected(
-        self, report: dict[str, Any], old: str, new: str, names_new_word: bool
-    ) -> None:
-        errors = [error.message for error in self.validator.iter_errors(report)]
-        self.assertTrue(errors, f"{old} was accepted")
-        self.assertTrue(any(old in message for message in errors), errors)
-        if names_new_word:
-            self.assertTrue(any(new in message for message in errors), errors)
-
-    def test_rejects_macos_version_and_names_os_version(self) -> None:
-        report = self.system_words_report()
-        system = report["data"]["system"]
-        system["macOSVersion"] = system.pop("osVersion")
-
-        self.assert_old_word_is_rejected(report, "macOSVersion", "osVersion", True)
-
     def test_rejects_a_report_without_os_name(self) -> None:
         report = self.system_words_report()
         del report["data"]["system"]["osName"]
 
-        self.assert_old_word_is_rejected(report, "osName", "osName", True)
+        errors = [error.message for error in self.validator.iter_errors(report)]
+        self.assertTrue(any("osName" in message for message in errors), errors)
 
-    def test_rejects_apple_game_controller_audit(self) -> None:
-        report = self.system_words_report()
-        data = report["data"]
-        data["appleGameControllerAudit"] = data.pop("systemGamepadAudit")
-
-        self.assert_old_word_is_rejected(
-            report, "appleGameControllerAudit", "systemGamepadAudit", False
-        )
-
-    def test_rejects_apple_exact_device_count_and_names_the_new_word(self) -> None:
-        report = self.system_words_report()
-        audit = report["data"]["systemGamepadAudit"]
-        audit["appleExactDeviceCount"] = audit.pop("systemExactDeviceCount")
-
-        self.assert_old_word_is_rejected(
-            report, "appleExactDeviceCount", "systemExactDeviceCount", True
-        )
-
-    def test_rejects_apple_identifiers_and_names_the_new_word(self) -> None:
-        report = self.system_words_report()
-        record = report["data"]["systemGamepadAudit"]["records"][0]
-        record["appleIdentifiers"] = record.pop("systemIdentifiers")
-
-        self.assert_old_word_is_rejected(
-            report, "appleIdentifiers", "systemIdentifiers", True
-        )
-
-    def test_has_no_apple_record_definition(self) -> None:
+    def test_has_a_system_record_definition(self) -> None:
         defs = cast(dict[str, Any], self.documents["report.schema.json"]["$defs"])
 
-        self.assertNotIn("appleRecord", defs)
         self.assertIn("systemRecord", defs)
 
 

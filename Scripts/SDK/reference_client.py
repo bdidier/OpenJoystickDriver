@@ -5,8 +5,8 @@ virtual gamepad: it presses the South button for 100 ms, prints the rumble comma
 endpoint sends, and stays connected until the release has played. The client uses only the Python
 standard library. Set OJD_TOKEN to the token that `ojd access grant --token NAME` printed.
 
-The client does not guess a version. A line with another `apiVersion`, and an E1010, E1011 or
-E1012 error, end the run with the versions that the endpoint supports.
+The client does not guess a version. A line with another `apiVersion`, and an E1009, E1010 or
+E1011 error, end the run with the versions that the endpoint supports.
 """
 
 from __future__ import annotations
@@ -24,7 +24,7 @@ from collections.abc import Callable
 from typing import Any, TextIO
 
 API_VERSION = "openjoystickdriver/v1alpha1"
-HEADER_ERRORS = ("E1010", "E1011", "E1012")
+HEADER_ERRORS = ("E1009", "E1010", "E1011")
 FRAMES: list[dict[str, Any]] = [{"buttons": ["South"], "holdMilliseconds": 100}, {}]
 MARGIN_SECONDS = 1.0
 

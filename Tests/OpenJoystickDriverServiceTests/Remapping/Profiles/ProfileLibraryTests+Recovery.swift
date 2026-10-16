@@ -6,19 +6,19 @@ import Testing
 
 extension ProfileLibraryTests {
   @Test
-  func profileWithRemovedGyroFieldIsRecoveredAsDamaged() async throws {
+  func profileWithUnknownFieldIsRecoveredAsDamaged() async throws {
     try await withLibrary { library, _ in
       let valid = makeProfile(name: "Valid")
-      let legacy = makeProfile(name: "Legacy")
+      let stored = makeProfile(name: "Unknown")
       try await library.create(valid)
-      var legacyObject = try #require(
+      var storedObject = try #require(
         JSONSerialization.jsonObject(
-          with: Data(RemappingProfileFileStore.encodedJSON(legacy).utf8)
+          with: Data(RemappingProfileFileStore.encodedJSON(stored).utf8)
         ) as? [String: Any]
       )
-      legacyObject["gyroOutput"] = ["mode": "mouse", "virtualMotion": true]
-      try JSONSerialization.data(withJSONObject: legacyObject)
-        .write(to: library.profileURL(legacy.id))
+      storedObject["notAField"] = true
+      try JSONSerialization.data(withJSONObject: storedObject)
+        .write(to: library.profileURL(stored.id))
       _ = try await library.reload()
 
       let snapshot = try await library.snapshot()
@@ -28,10 +28,10 @@ extension ProfileLibraryTests {
     }
   }
 
-  /// A stored profile that still names a control by a removed spelling is refused like any
-  /// other damaged profile: dropped from the snapshot, reported, its bytes left as they were.
-  @Test(arguments: ["south", "face-south", "share", "options", "left_trigger_click", "view"])
-  func profileWithRemovedControlNameIsRecoveredAsDamaged(oldName: String) async throws {
+  /// A stored profile that names a control the vocabulary does not have is damaged like any
+  /// other: dropped from the snapshot, reported, its bytes left as they were.
+  @Test(arguments: ["NotAControl", "a", ""])
+  func profileWithUnknownControlNameIsRecoveredAsDamaged(name: String) async throws {
     try await withLibrary { library, _ in
       let valid = makeProfile(name: "Valid")
       let stored = makeProfile(name: "Stored")
@@ -44,7 +44,7 @@ extension ProfileLibraryTests {
       object["bindings"] = [
         [
           "id": UUID().uuidString,
-          "source": ["type": "button", "button": oldName],
+          "source": ["type": "button", "button": name],
           "destination": ["type": "keyboard", "key": "space", "modifiers": [String]()],
         ] as [String: Any]
       ]

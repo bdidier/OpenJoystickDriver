@@ -9,15 +9,15 @@ import Foundation
 public enum ErrorCode: String, Codable, Sendable, CaseIterable {
   case endpointDisabled = "E1001"
   case notGranted = "E1002"
-  case invalidMessage = "E1004"
-  case tooManyConnections = "E1005"
-  case revoked = "E1006"
-  case tooSlow = "E1007"
-  case tooManyFeeds = "E1008"
-  case feedClosed = "E1009"
-  case unsupportedEndpointVersion = "E1010"
-  case unexpectedKind = "E1011"
-  case missingHeader = "E1012"
+  case invalidMessage = "E1003"
+  case tooManyConnections = "E1004"
+  case revoked = "E1005"
+  case tooSlow = "E1006"
+  case tooManyFeeds = "E1007"
+  case feedClosed = "E1008"
+  case unsupportedEndpointVersion = "E1009"
+  case unexpectedKind = "E1010"
+  case missingHeader = "E1011"
   case unexpected = "E2001"
   case unknownCommand = "E2002"
   case usage = "E2003"
@@ -50,6 +50,7 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
   case invalidWebOrigin = "E2030"
   case webPortUnavailable = "E2031"
   case controlScopeWithOrigins = "E2032"
+  case launchFailed = "E2033"
   case controllerUnavailable = "E3001"
   case joyConPairUnavailable = "E3002"
   case motionUnavailable = "E3003"
@@ -91,8 +92,7 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
   case protocolDescriptionFamilyMismatch = "E5003"
   case unknownProtocolVariant = "E5004"
   case damagedAccessGrants = "E5005"
-  case renamedWordsInDocument = "E5006"
-  case unsupportedAccessGrants = "E5007"
+  case unsupportedAccessGrants = "E5006"
 
   /// The part of the product that raises a code; the first digit of the number.
   public enum Domain: String, Sendable {
@@ -115,7 +115,7 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
       .updateCheckFailed, .staleInstallation, .installedCLIFailed, .recordTestMismatch,
       .claimUnsupported, .unknownAccessClient, .ungrantableClient, .noAccessScope,
       .serviceStopping, .duplicateTokenName, .invalidTokenName, .invalidWebOrigin,
-      .webPortUnavailable, .controlScopeWithOrigins:
+      .webPortUnavailable, .controlScopeWithOrigins, .launchFailed:
       .commandLine
     case .controllerUnavailable, .joyConPairUnavailable, .motionUnavailable, .argumentTooLarge,
       .corruptLibrary, .duplicateName, .invalidArguments, .invalidProfile, .librarySizeExceeded,
@@ -130,8 +130,7 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
       .packageAlreadyInstalled, .packageNotInstalled, .packageStoreUnwritable:
       .mod
     case .unsupportedAPIVersion, .invalidProtocolDescription, .protocolDescriptionFamilyMismatch,
-      .unknownProtocolVariant, .damagedAccessGrants, .renamedWordsInDocument,
-      .unsupportedAccessGrants:
+      .unknownProtocolVariant, .damagedAccessGrants, .unsupportedAccessGrants:
       .document
     }
   }

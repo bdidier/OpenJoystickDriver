@@ -8,11 +8,9 @@ struct ExplainCommandTests {
   private struct Catalog: Decodable {
     struct Entry: Decodable {
       let code: String
-      let domain: String
       let exitCode: Int32?
-      let status: String
-      let retiredIn: String?
     }
+
     let codes: [Entry]
   }
 
@@ -40,42 +38,6 @@ struct ExplainCommandTests {
     #expect(try json.json()["code"] as? String == "E3013")
     #expect(try json.json()["wire"] as? String == "profile_not_found")
     #expect(try json.json()["exitCode"] == nil)
-  }
-
-  @Test
-  func aRetiredCodeSaysInWhichVersionItWasRetired() async throws {
-    let human = await CLIRun.run(["explain", "e1003"])
-    let json = await CLIRun.run(["explain", "E1003", "--json"])
-    let plain = await CLIRun.run(["explain", "E1003", "--plain"])
-
-    #expect(human.code == 0)
-    #expect(human.standardOutput.hasPrefix("E1003\n"))
-    #expect(human.standardOutput.contains("Retired in 0.6.0-alpha.1."))
-    #expect(human.standardError.isEmpty)
-    #expect(try json.json()["code"] as? String == "E1003")
-    #expect(try json.json()["retiredIn"] as? String == "0.6.0-alpha.1")
-    #expect(try json.json()["explanation"] as? String == "Retired in 0.6.0-alpha.1.")
-    #expect(try json.json()["exitCode"] == nil)
-    #expect(plain.code == 0)
-    #expect(plain.standardOutput.hasPrefix("E1003"))
-  }
-
-  @Test
-  func everyRetiredCatalogCodeIsExplained() async throws {
-    let url = URL(fileURLWithPath: #filePath).deletingLastPathComponent()  // Commands
-      .deletingLastPathComponent()  // OpenJoystickDriverCLITests
-      .deletingLastPathComponent()  // Tests
-      .deletingLastPathComponent()  // repository root
-      .appendingPathComponent("Resources/ErrorCodes.json")
-    let catalog = try JSONDecoder().decode(Catalog.self, from: Data(contentsOf: url))
-    let retired = catalog.codes.filter { $0.status == "retired" }
-
-    #expect(!retired.isEmpty)
-    for entry in retired {
-      let run = await CLIRun.run(["explain", entry.code, "--json"])
-      #expect(run.code == 0, "\(entry.code)")
-      #expect(try run.json()["retiredIn"] as? String == entry.retiredIn, "\(entry.code)")
-    }
   }
 
   @Test

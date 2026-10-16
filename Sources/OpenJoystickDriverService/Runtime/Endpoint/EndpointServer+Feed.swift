@@ -7,7 +7,7 @@ extension EndpointServer {
   ///
   /// A pump exchanges with the feed each poll to send rumble, but that does not count as activity:
   /// a feed whose client sends no frame line for ``VirtualFeedExchangeResult/idleTimeoutSeconds``
-  /// is closed with `E1009`, so a stalled client does not hold a button or a slot. A `KeepAlive`
+  /// is closed with `E1008`, so a stalled client does not hold a button or a slot. A `KeepAlive`
   /// line counts as activity and does nothing else. When the feed's
   /// frame queue is full, reading waits, which pushes back on the client.
   /// A client that closes the connection meanwhile ends the feed, though its unread lines wait.
@@ -79,7 +79,7 @@ extension EndpointServer {
   }
 
   /// The `Frame` or `KeepAlive` on the line, or the error that refuses the line: the header errors
-  /// of ``EndpointHeader``, or `E1004` for a `Frame` that does not decode and a `KeepAlive` that
+  /// of ``EndpointHeader``, or `E1003` for a `Frame` that does not decode and a `KeepAlive` that
   /// has a member besides `apiVersion` and `kind`.
   ///
   /// ``VirtualFeedFrame`` takes the envelope as optional for the CLI's stdin lines, so the header

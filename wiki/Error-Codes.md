@@ -12,32 +12,30 @@ Each code has the form `E` and four digits. The first digit gives the area:
 - `E4xxx` is mod packages.
 - `E5xxx` is documents: the files and lines that OJD reads, such as a profile, a controller record, or a mod manifest.
 
-A code never changes its meaning. When OJD stops using a code, the code is retired. OJD never gives a retired code to a different error.
+A code never changes its meaning.
 
 To look up a code offline, run `ojd explain E####`.
-It also answers for a retired code, and says in which version it was retired.
 
 Branch on the code in your program. The English message that comes with a code can change.
 
 ## Codes
 
-The table is generated from the code catalog and the English text of OJD. The table lists every code, and marks a retired code.
+The table is generated from the code catalog and the English text of OJD. The table lists every code.
 
 <!-- BEGIN GENERATED: error-codes -->
 | Code | Area | Meaning |
 | --- | --- | --- |
 | E1001 | Endpoint | The endpoint is off. Turn it on with 'ojd access enable' and connect again. |
 | E1002 | Endpoint | The service refused this client. It has no grant for the scopes it asked for, or its signature or proof is not valid. Run 'ojd access list', grant the client with 'ojd access grant', and connect again. |
-| E1003 | Endpoint | Retired in 0.6.0-alpha.1. |
-| E1004 | Endpoint | The service could not accept the line. It is not valid, or it came at the wrong time. Send hello first, then one request, and check each line against the endpoint schema. |
-| E1005 | Endpoint | The endpoint already serves 8 connections per transport (socket and WebSocket each). Close a connection that you do not need, and connect again. |
-| E1006 | Endpoint | The grant of this client was removed while it was connected. Grant it again with 'ojd access grant', and connect again. |
-| E1007 | Endpoint | The client read lines too slowly, and 256 lines waited. Read lines as fast as they arrive, and connect again. |
-| E1008 | Endpoint | The service already runs 4 virtual gamepads. Close a feed that you do not need, and send feed again. |
-| E1009 | Endpoint | The virtual gamepad closed, or the service runs none. Connect again and send feed. |
-| E1010 | Endpoint | The service does not speak the apiVersion in a line. Send one of the versions in details.supportedAPIVersions, and connect again. |
-| E1011 | Endpoint | A line has a kind that the service does not know, or does not accept at this point. Send Hello first, then Subscription or FeedRequest, then Frame lines, and connect again. |
-| E1012 | Endpoint | A line has no apiVersion or no kind. Every line carries both. Add them, and connect again. |
+| E1003 | Endpoint | The service could not accept the line. It is not valid, or it came at the wrong time. Send hello first, then one request, and check each line against the endpoint schema. |
+| E1004 | Endpoint | The endpoint already serves 8 connections per transport (socket and WebSocket each). Close a connection that you do not need, and connect again. |
+| E1005 | Endpoint | The grant of this client was removed while it was connected. Grant it again with 'ojd access grant', and connect again. |
+| E1006 | Endpoint | The client read lines too slowly, and 256 lines waited. Read lines as fast as they arrive, and connect again. |
+| E1007 | Endpoint | The service already runs 4 virtual gamepads. Close a feed that you do not need, and send feed again. |
+| E1008 | Endpoint | The virtual gamepad closed, or the service runs none. Connect again and send feed. |
+| E1009 | Endpoint | The service does not speak the apiVersion in a line. Send one of the versions in details.supportedAPIVersions, and connect again. |
+| E1010 | Endpoint | A line has a kind that the service does not know, or does not accept at this point. Send Hello first, then Subscription or FeedRequest, then Frame lines, and connect again. |
+| E1011 | Endpoint | A line has no apiVersion or no kind. Every line carries both. Add them, and connect again. |
 | E2001 | Command line | ojd hit an error it does not recognize. Run 'ojd diagnose' and report the problem with its output. Exit code 1. |
 | E2002 | Command line | That is not an ojd command. Run 'ojd --help' to see the commands. Exit code 64. |
 | E2003 | Command line | The command line has a wrong or missing option or value. Run the command with --help to see what it takes. Exit code 64. |
@@ -70,6 +68,7 @@ The table is generated from the code catalog and the English text of OJD. The ta
 | E2030 | Command line | This is not a web origin. Use scheme://host[:port] with http or https, such as `http://127.0.0.1:8080`. Exit code 64. |
 | E2031 | Command line | This port on 127.0.0.1 is in use or cannot be opened. Choose another with --port. Exit code 64. |
 | E2032 | Command line | A token with origins cannot have the control scope, because a page must never drive a virtual gamepad. Grant control to a token without origins. Exit code 64. |
+| E2033 | Command line | The program could not be started. Check that its path names an executable file or an app, and that you may run it. Exit code 1. |
 | E3001 | Remapping | The controller is not connected or not ready for remapping. Reconnect it and try again. Wire value `controller_unavailable`. |
 | E3002 | Remapping | The selected Joy-Cons could not be paired. Refresh the connected controllers and try again. Wire value `joy_con_pair_unavailable`. |
 | E3003 | Remapping | The controller does not report motion data. Choose a controller with motion sensors, or leave motion options off. Wire value `motion_unavailable`. |
@@ -111,8 +110,7 @@ The table is generated from the code catalog and the English text of OJD. The ta
 | E5003 | Document | A protocol description names a family that differs from its file name. Name the file after its family. |
 | E5004 | Document | A protocol description lists a variant that its family does not have. Use one of the variants of the family. |
 | E5005 | Document | The access file AccessGrants.json is damaged. Fix the file or delete it, then grant access again. |
-| E5006 | Document | A document uses words that were renamed. Replace each old word with the new word that the message names, or delete the file, then run the command again. |
-| E5007 | Document | The access file AccessGrants.json is not supported. Delete it, then grant access again. |
+| E5006 | Document | The access file AccessGrants.json is not supported. Delete it, then grant access again. |
 <!-- END GENERATED: error-codes -->
 
 ## Further reading

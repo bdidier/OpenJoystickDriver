@@ -206,7 +206,7 @@ extension EndpointServer {
   }
 
   /// The next request, one of the `accepted` kinds; nil after the client closed, the timeout
-  /// passed, or a line that is refused: see ``EndpointHeader`` for `E1010` to `E1012`, and `E1004`
+  /// passed, or a line that is refused: see ``EndpointHeader`` for `E1009` to `E1011`, and `E1003`
   /// for a line that is not a request. With no `accepted` kind, any request is refused.
   private func readRequest(
     _ connection: EndpointConnection,

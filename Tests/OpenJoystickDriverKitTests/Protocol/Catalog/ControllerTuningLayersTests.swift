@@ -173,11 +173,11 @@ struct ControllerTuningLayersTests {
   @Test
   func anUnsupportedAPIVersionMakesTheDefaultsFileInvalid() throws {
     let root = Root()
-    try root.writeDefaults(#"{"stickDeadzone":0.2}"#, apiVersion: "openjoystickdriver.io/v1beta1")
+    try root.writeDefaults(#"{"stickDeadzone":0.2}"#, apiVersion: "unsupported.example/v9")
 
     let problem = root.load().defaults?.problem
     #expect(problem?.hasPrefix("E5001: ") == true)
-    #expect(problem?.contains("openjoystickdriver.io/v1beta1") == true)
+    #expect(problem?.contains("unsupported.example/v9") == true)
   }
 
   @Test

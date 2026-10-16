@@ -55,7 +55,6 @@ actor RemappingProfileLibrary {
   static let maximumProfileCount = RemappingPayloadLimits.maximumProfileCount
   static let maximumEncodedBytes = RemappingPayloadLimits.maximumEncodedBytes
   static let selectionsFileName = "ActiveProfiles.json"
-  static let legacyLibraryFileName = "RemappingProfiles.json"
 
   let directory: URL
   var library: RemappingProfileLibraryState?

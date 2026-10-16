@@ -5,7 +5,7 @@ import OpenJoystickDriverKit
 /// ``VirtualFeedIntakeSink``, and a `KeepAlive` line counts as activity.
 ///
 /// The source also ends the feed when its connection closes and the connection when its feed
-/// closes (`E1009`), as the pump of the former exchange did.
+/// closes (`E1008`), as the pump of the former exchange did.
 /// - Note: `@unchecked Sendable` because `closed` is guarded by `lock`.
 final class EndpointFeedSource: InputSource, @unchecked Sendable {
   /// What the feed did with a frame.
@@ -36,7 +36,7 @@ final class EndpointFeedSource: InputSource, @unchecked Sendable {
   }
 
   /// Queues `frame` on the feed. A closing connection closes the feed, and a closed feed closes
-  /// the connection with `E1009`.
+  /// the connection with `E1008`.
   func submit(_ frame: VirtualFeedFrame) async -> Outcome {
     guard live() else { return .closed }
     do {

@@ -120,6 +120,7 @@ enum CLICommandTree {
     case ["controller", "player"]: ["045E:028E", "1"]
     case ["virtual", "set"]: ["generic", "045E:028E"]
     case ["virtual", "feed"]: ["--as", "generic"]
+    case ["virtual", "launch"]: ["/usr/bin/true"]
     case ["record", "draft"], ["record", "show"], ["record", "remove"]: ["045E:028E"]
     case ["record", "test"]: ["045E:028E", "--packets", "-", "--expect", "-"]
     case ["record", "validate"], ["record", "install"], ["profile", "import"],

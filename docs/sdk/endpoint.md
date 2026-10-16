@@ -28,7 +28,7 @@ The program and the endpoint exchange JSON objects, one per line, each at most 6
 4. The program sends one request: a `Subscription` to read, or a `FeedRequest` to drive a virtual gamepad. A `FeedRequest` needs the `control` scope.
 5. A subscription gets watch lines. A feed gets a `FeedSession`, and then the program sends `Frame` lines.
 
-A connection that sends a line at the wrong point gets `E1011`. The endpoint serves at most 8 socket connections and 8 WebSocket connections at the same time. When a program reads too slowly, the endpoint keeps only the newest `MODIFIED` line of each controller. When 256 lines wait, it sends `E1007` and closes the connection.
+A connection that sends a line at the wrong point gets `E1010`. The endpoint serves at most 8 socket connections and 8 WebSocket connections at the same time. When a program reads too slowly, the endpoint keeps only the newest `MODIFIED` line of each controller. When 256 lines wait, it sends `E1006` and closes the connection.
 
 ### Token proof
 
@@ -110,11 +110,11 @@ After the `FeedSession`, the program sends one `Frame` for each line. A frame ha
 {"apiVersion":"openjoystickdriver/v1alpha1","kind":"Frame","buttons":["South"],"axes":{"LeftStickY":0.5},"holdMilliseconds":100}
 ```
 
-The service shows the frames in order, each for at least 8 ms. While 256 frames wait, the endpoint stops reading lines. The endpoint does not report when a frame has played, so the program stays connected until its last frame has played, because closing the connection drops the frames that wait. When the program sends no frame line for 2 seconds after its last frame has played, the endpoint closes the connection with `E1009`. A program that has no frame to send keeps the feed open with a `KeepAlive` line (see below). The endpoint runs at most 4 virtual gamepads at the same time and answers another `FeedRequest` with `E1008`.
+The service shows the frames in order, each for at least 8 ms. While 256 frames wait, the endpoint stops reading lines. The endpoint does not report when a frame has played, so the program stays connected until its last frame has played, because closing the connection drops the frames that wait. When the program sends no frame line for 2 seconds after its last frame has played, the endpoint closes the connection with `E1008`. A program that has no frame to send keeps the feed open with a `KeepAlive` line (see below). The endpoint runs at most 4 virtual gamepads at the same time and answers another `FeedRequest` with `E1007`.
 
 ### KeepAlive
 
-After the `FeedSession`, a program that has no new frame sends `KeepAlive` to keep the feed open. It resets the 2-second idle timeout and changes nothing else: the endpoint sends no reply, and the virtual gamepad keeps its state. A `KeepAlive` has no member besides `apiVersion` and `kind`; one that has another member is refused with `E1004`. Before the `FeedSession`, and on a `Subscription` connection, the endpoint answers it with `E1011` and closes the connection.
+After the `FeedSession`, a program that has no new frame sends `KeepAlive` to keep the feed open. It resets the 2-second idle timeout and changes nothing else: the endpoint sends no reply, and the virtual gamepad keeps its state. A `KeepAlive` has no member besides `apiVersion` and `kind`; one that has another member is refused with `E1003`. Before the `FeedSession`, and on a `Subscription` connection, the endpoint answers it with `E1010` and closes the connection.
 
 ```json
 {"apiVersion":"openjoystickdriver/v1alpha1","kind":"KeepAlive"}
@@ -137,13 +137,13 @@ The endpoint sends each rumble command that a game sends to the virtual gamepad.
 The endpoint sends a `Status` when it refuses a line or ends the connection. `status` is `Failure`, `code` is an [error code](#errors), and `message` is English text for logs. Branch on `code`, not on `message`.
 
 ```json
-{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Status","status":"Failure","code":"E1008","message":"The endpoint runs 4 virtual gamepads already."}
+{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Status","status":"Failure","code":"E1007","message":"The endpoint runs 4 virtual gamepads already."}
 ```
 
-With `E1010`, `E1011`, and `E1012`, `details.supportedAPIVersions` lists the `apiVersion` values that the endpoint accepts.
+With `E1009`, `E1010`, and `E1011`, `details.supportedAPIVersions` lists the `apiVersion` values that the endpoint accepts.
 
 ```json
-{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Status","status":"Failure","code":"E1010","message":"The apiVersion is not supported.","details":{"supportedAPIVersions":["openjoystickdriver/v1alpha1"]}}
+{"apiVersion":"openjoystickdriver/v1alpha1","kind":"Status","status":"Failure","code":"E1009","message":"The apiVersion is not supported.","details":{"supportedAPIVersions":["openjoystickdriver/v1alpha1"]}}
 ```
 
 ## Errors
@@ -154,18 +154,17 @@ An error is a `Status` line, and then the endpoint closes the connection. Each c
 | --- | --- | --- |
 | `E1001` | `endpointDisabled` | The endpoint is off, or its WebSocket is off. |
 | `E1002` | `notGranted` | The program, or its token, has no grant for the scopes in the `Hello`. |
-| `E1003` | `unsupportedProtocol` | Retired in 0.6.0-alpha.1. `E1010` replaced it. |
-| `E1004` | `invalidMessage` | The line is not valid for its `kind`. |
-| `E1005` | `tooManyConnections` | The endpoint serves the maximum number of connections. |
-| `E1006` | `revoked` | A user revoked the grant while the connection was open. |
-| `E1007` | `tooSlow` | The program reads too slowly, and 256 lines wait. |
-| `E1008` | `tooManyFeeds` | The endpoint runs the maximum number of virtual gamepads. |
-| `E1009` | `feedClosed` | The virtual gamepad closed: it did not start, the service stopped it, or the program sent no frame or `KeepAlive` line in time. |
-| `E1010` | `unsupportedEndpointVersion` | `apiVersion` is a string that the endpoint does not accept. |
-| `E1011` | `unexpectedKind` | `kind` is unknown, or the endpoint does not accept it at this point. |
-| `E1012` | `missingHeader` | `apiVersion` or `kind` is missing, `null`, or not a string. |
+| `E1003` | `invalidMessage` | The line is not valid for its `kind`. |
+| `E1004` | `tooManyConnections` | The endpoint serves the maximum number of connections. |
+| `E1005` | `revoked` | A user revoked the grant while the connection was open. |
+| `E1006` | `tooSlow` | The program reads too slowly, and 256 lines wait. |
+| `E1007` | `tooManyFeeds` | The endpoint runs the maximum number of virtual gamepads. |
+| `E1008` | `feedClosed` | The virtual gamepad closed: it did not start, the service stopped it, or the program sent no frame or `KeepAlive` line in time. |
+| `E1009` | `unsupportedEndpointVersion` | `apiVersion` is a string that the endpoint does not accept. |
+| `E1010` | `unexpectedKind` | `kind` is unknown, or the endpoint does not accept it at this point. |
+| `E1011` | `missingHeader` | `apiVersion` or `kind` is missing, `null`, or not a string. |
 
-A program must not guess a version. On `E1010`, `E1011`, or `E1012`, it reads `details.supportedAPIVersions`, and it either speaks one of those versions or reports them and stops.
+A program must not guess a version. On `E1009`, `E1010`, or `E1011`, it reads `details.supportedAPIVersions`, and it either speaks one of those versions or reports them and stops.
 
 ## AccessGrants
 
@@ -186,9 +185,9 @@ The file is a secret, because the hashes are the keys of the proofs. The service
 
 The `apiVersion` of the endpoint is `openjoystickdriver/v1alpha1`. It is the same value that the schemas and the user files use. The endpoint accepts exactly the versions in `details.supportedAPIVersions`, today only this one.
 
-- The endpoint does not translate between versions. A line with another `apiVersion`, such as the old `openjoystickdriver.io/v1beta1`, gets `E1010` with the supported list.
+- The endpoint does not translate between versions. A line with another `apiVersion` gets `E1009` with the supported list.
 - An alpha version can change without a compatibility promise. The release notes list each change.
-- A change that older programs cannot read gets a new `apiVersion`. Error codes and persona ids do not change meaning: a retired code stays in the catalog, and `ojd explain` still resolves it.
+- A change that older programs cannot read gets a new `apiVersion`. Error codes and persona ids do not change meaning.
 - Persona ids in `as` are `Generic` and `SdlCompatible`. They name no operating system.
 
 ## Reference client
@@ -202,7 +201,7 @@ OJD_TOKEN=ojd_… python3 Scripts/SDK/reference_client.py feed
 
 - `watch` subscribes to the `controllers` stream and prints the first watch line. `--count N` prints `N` lines. `--timeout SECONDS` ends the run with a non-zero exit when the endpoint sends nothing for that long, for example when no controller is connected.
 - `feed` presses the South button for 100 ms, prints the rumble commands that the endpoint sends, and stays connected until the release has played.
-- On `E1010`, `E1011`, or `E1012`, or when a line has another `apiVersion`, the client stops and reports the supported versions.
+- On `E1009`, `E1010`, or `E1011`, or when a line has another `apiVersion`, the client stops and reports the supported versions.
 - `--socket PATH` names the socket; without it, the client runs `ojd --json access status`.
 
 The test `EndpointReferenceClientTests` runs the client against a real endpoint server: the client subscribes and receives a watch line, and it feeds a frame to a virtual gamepad.

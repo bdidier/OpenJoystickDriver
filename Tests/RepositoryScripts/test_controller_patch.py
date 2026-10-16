@@ -49,11 +49,15 @@ class ControllerPatchTests(unittest.TestCase):
             "E5001: no apiVersion found; "
             "the supported apiVersion is openjoystickdriver/v1alpha1",
         )
-        old = "openjoystickdriver.io/v1beta1"
+        unsupported = "unsupported.example/v9"
         with self.assertRaises(controller_patch.PatchError) as raised:
-            controller_patch.parse_patch({**missing["document"], "apiVersion": old})
+            controller_patch.parse_patch(
+                {**missing["document"], "apiVersion": unsupported}
+            )
         self.assertEqual(raised.exception.code, "E5001")
-        self.assertIn(f"apiVersion {old} is not supported", str(raised.exception))
+        self.assertIn(
+            f"apiVersion {unsupported} is not supported", str(raised.exception)
+        )
 
     def test_every_swift_protocol_id_has_a_description(self) -> None:
         source = (

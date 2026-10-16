@@ -4,73 +4,15 @@ import Testing
 
 @testable import OpenJoystickDriverKit
 
-/// The control vocabulary: the Swift enum, the schema definitions, the renamed ids, and the
+/// The control vocabulary: the Swift enum, the schema definitions, and the
 /// crosswalk to SDL and the system HID names.
 struct ControlVocabularyTests {
-  /// Every id of the vocabulary before 15.1, mapped to its id now. A nil target is a name the
-  /// vocabulary no longer has.
-  private static let renamed: [String: Control?] = [
-    // `ControlID`, kebab-case.
-    "left-stick-x": .leftStickX, "left-stick-y": .leftStickY,
-    "right-stick-x": .rightStickX, "right-stick-y": .rightStickY,
-    "left-stick-click": .leftStickClick, "right-stick-click": .rightStickClick,
-    "face-south": .south, "face-east": .east, "face-west": .west, "face-north": .north,
-    "left-shoulder": .leftShoulder, "right-shoulder": .rightShoulder,
-    "left-trigger": .leftTrigger, "right-trigger": .rightTrigger,
-    "left-trigger-button": .leftTrigger, "right-trigger-button": .rightTrigger,
-    "view": .back, "menu": .start, "guide": .guide, "share": .capture, "capture": .capture,
-    "touchpad-click": .touchpadClick, "microphone": .microphone,
-    "paddle-left-1": .leftPaddle1, "paddle-left-2": .leftPaddle2,
-    "paddle-right-1": .rightPaddle1, "paddle-right-2": .rightPaddle2,
-    "auxiliary-1": .auxiliary1, "auxiliary-2": .auxiliary2, "auxiliary-3": .auxiliary3,
-    "auxiliary-4": .auxiliary4, "auxiliary-5": .auxiliary5, "auxiliary-6": .auxiliary6,
-    "auxiliary-7": .auxiliary7, "auxiliary-8": .auxiliary8,
-    "left-stick-touch": .leftStickTouch, "right-stick-touch": .rightStickTouch,
-    "left-trackpad-click": .leftTrackpadClick, "right-trackpad-click": .rightTrackpadClick,
-    "left-trackpad-touch": .leftTrackpadTouch, "right-trackpad-touch": .rightTrackpadTouch,
-    // `RemappingButton`, snake_case; `share` and `options` have no id.
-    "south": .south, "east": .east, "west": .west, "north": .north,
-    "left_shoulder": .leftShoulder, "right_shoulder": .rightShoulder,
-    "left_stick": .leftStickClick, "right_stick": .rightStickClick,
-    "start": .start, "back": .back, "options": nil,
-    "touchpad": .touchpadClick, "mute": .microphone,
-    "left_trigger_click": .leftTrigger, "right_trigger_click": .rightTrigger,
-    "left_grip": .leftPaddle2, "right_grip": .rightPaddle2,
-    "left_pad_click": .leftTrackpadClick, "right_pad_click": .rightTrackpadClick,
-    "left_sl": .auxiliary3, "left_sr": .auxiliary4, "right_sl": .auxiliary5,
-    "right_sr": .auxiliary6, "left_function": .auxiliary1, "right_function": .auxiliary2,
-    "left_paddle": .leftPaddle1, "right_paddle": .rightPaddle1,
-    // `RemappingAxis`.
-    "left_stick_x": .leftStickX, "left_stick_y": .leftStickY,
-    "right_stick_x": .rightStickX, "right_stick_y": .rightStickY,
-    "left_trigger": .leftTrigger, "right_trigger": .rightTrigger,
-  ]
-
-  /// The old single `dpad` id became four ids.
-  private static let oldDpad: Set<Control> = [.dpadUp, .dpadDown, .dpadLeft, .dpadRight]
-
   @Test
-  func everyOldNameMapsToANewIDAndNoneIsLeftOver() {
-    var targets = Self.oldDpad
-    for (old, new) in Self.renamed {
-      guard let new else {
-        #expect(Control(rawValue: old) == nil, "\(old) is a removed name")
-        continue
-      }
-      #expect(Control.allCases.contains(new), "\(old)")
-      #expect(old != new.rawValue, "\(old) keeps its spelling")
-      targets.insert(new)
-    }
-    #expect(targets == Set(Control.allCases), "every id has an old name")
-  }
+  func anIDOutsideTheVocabularyDoesNotDecode() {
+    let data = Data("\"x\(UUID().uuidString)\"".utf8)
 
-  @Test
-  func noOldNameDecodesAsAControl() throws {
-    for old in Set(Self.renamed.keys).union(["dpad"]) {
-      let data = Data("\"\(old)\"".utf8)
-      #expect(throws: DecodingError.self, "\(old)") {
-        try JSONDecoder().decode(Control.self, from: data)
-      }
+    #expect(throws: DecodingError.self) {
+      try JSONDecoder().decode(Control.self, from: data)
     }
   }
 

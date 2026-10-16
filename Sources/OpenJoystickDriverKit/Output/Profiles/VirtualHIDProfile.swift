@@ -3,8 +3,7 @@ import IOKit.hid
 /// Identifier of one exact published virtual HID ABI.
 ///
 /// These are the only two personas OJD recognizes: `Generic`, the default, and `SdlCompatible`.
-/// Decoding any other raw value fails, including the retired names `hid-generic` and
-/// `hid-xbox-one-s-bt`.
+/// Decoding any other raw value fails.
 public enum VirtualHIDProfileID: String, CaseIterable, Codable, Sendable {
   case sdlCompatible = "SdlCompatible"
   case generic = "Generic"

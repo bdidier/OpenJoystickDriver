@@ -79,6 +79,10 @@ Games read controllers through different programming interfaces. The interface d
 
 OJD is designed to make one automatic choice work across these interfaces. The failures above are known issues, not settings that you must change. For more information, see [How games see your controller](#how-games-see-your-controller).
 
+### Start an App With the SDL Mapping
+
+`ojd virtual launch PROGRAM` runs a program and sets `SDL_GAMECONTROLLERCONFIG` for it to the SDL mapping of each virtual controller that OJD publishes, so SDL in that program lists them. The `SdlCompatible` profile does not work with the default SDL hints, and the command prints a note when it serves that profile. OJD sets the variable only for programs that it starts. The maintainer has not verified on hardware that a game lists a controller this way. For more information, see [Command reference](Command-Reference.md).
+
 ### Workaround For One Controller
 
 The tester switched the ZD Ultimate Legend itself to Switch Pro mode (`057E:2009`). In that mode macOS handles the controller natively. The controller detail shows **Left to macOS**, and OJD does not publish a virtual controller. RPCS3, the browser, and System Settings then work. HD Rumble in that mode drives only the linear haptics.

@@ -1746,10 +1746,10 @@
       "message": "E5001: no apiVersion found; the supported apiVersion is openjoystickdriver/v1alpha1"
     },
     {
-      "name": "a patch with the unsupported apiVersion openjoystickdriver.io/v1beta1",
+      "name": "a patch with the unsupported apiVersion unsupported.example/v9",
       "code": "E5001",
       "document": {
-        "apiVersion": "openjoystickdriver.io/v1beta1",
+        "apiVersion": "unsupported.example/v9",
         "kind": "ControllerPatch",
         "selector": {
           "all": true
@@ -1760,32 +1760,20 @@
           }
         }
       },
-      "message": "E5001: apiVersion openjoystickdriver.io/v1beta1 is not supported; the supported apiVersion is openjoystickdriver/v1alpha1"
+      "message": "E5001: apiVersion unsupported.example/v9 is not supported; the supported apiVersion is openjoystickdriver/v1alpha1"
     },
     {
-      "name": "the removed ControllerOverride kind",
+      "name": "an unknown kind",
       "document": {
         "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ControllerOverride",
-        "operation": "patch",
-        "vendorID": 1118,
-        "productID": 746,
-        "set": {
-          "server": "ojd"
-        }
+        "kind": "NotAKind",
+        "selector": {
+          "vendorID": 1118,
+          "productID": 746
+        },
+        "patch": {}
       },
-      "message": "expected ControllerPatch, found ControllerOverride"
-    },
-    {
-      "name": "the removed ControllerDefaults kind",
-      "document": {
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ControllerDefaults",
-        "tuning": {
-          "stickDeadzone": 0.1
-        }
-      },
-      "message": "expected ControllerPatch, found ControllerDefaults"
+      "message": "expected ControllerPatch, found NotAKind"
     },
     {
       "name": "a selector that mixes model and identity",

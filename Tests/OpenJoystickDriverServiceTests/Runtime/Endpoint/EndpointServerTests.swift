@@ -180,7 +180,7 @@ struct EndpointServerTests {
       #expect(
         result == AccessRevokeResult(id: Self.tool.accessID, grant: nil, closedConnections: 1)
       )
-      #expect(try await client.readObject()["code"] as? String == "E1006")
+      #expect(try await client.readObject()["code"] as? String == "E1005")
       #expect(await client.readLine() == nil)
     }
   }
@@ -269,27 +269,27 @@ struct EndpointServerTests {
 
       #expect(result.closedConnections == 1)
       #expect(result.token == nil)
-      #expect(try await client.readObject()["code"] as? String == "E1006")
+      #expect(try await client.readObject()["code"] as? String == "E1005")
       #expect(try server.status().tokens.isEmpty)
     }
   }
 
   @Test(arguments: [
-    (#"{"apiVersion":"openjoystickdriver.io/v2","kind":"Hello","scopes":["read"]}"#, "E1010"),
-    (#"{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"Hello","scopes":["read"]}"#, "E1010"),
-    (#"nonsense"#, "E1004"),
-    (clientLine("Hello", #","scopes":[]"#), "E1004"),
-    (clientLine("Subscription", #","stream":"controllers""#), "E1011"),
-    (#"{"kind":"Hello","scopes":["read"]}"#, "E1012"),
-    (#"{"apiVersion":"openjoystickdriver/v1alpha1","scopes":["read"]}"#, "E1012"),
-    (#"{}"#, "E1012"),
-    (#"{"apiVersion":null,"kind":"Hello","scopes":["read"]}"#, "E1012"),
-    (#"{"apiVersion":"openjoystickdriver/v1alpha1","kind":null,"scopes":["read"]}"#, "E1012"),
-    (#"{"apiVersion":1,"kind":"Hello","scopes":["read"]}"#, "E1012"),
-    (#"{"apiVersion":"openjoystickdriver/v1alpha1","kind":["Hello"],"scopes":["read"]}"#, "E1012"),
-    (#"[1]"#, "E1004"),
-    (clientLine("Welcome", #","scopes":["read"]"#), "E1011"),
-    (clientLine("Greeting", #","scopes":["read"]"#), "E1011"),
+    (#"{"apiVersion":"openjoystickdriver.io/v2","kind":"Hello","scopes":["read"]}"#, "E1009"),
+    (#"{"apiVersion":"unsupported.example/v9","kind":"Hello","scopes":["read"]}"#, "E1009"),
+    (#"nonsense"#, "E1003"),
+    (clientLine("Hello", #","scopes":[]"#), "E1003"),
+    (clientLine("Subscription", #","stream":"controllers""#), "E1010"),
+    (#"{"kind":"Hello","scopes":["read"]}"#, "E1011"),
+    (#"{"apiVersion":"openjoystickdriver/v1alpha1","scopes":["read"]}"#, "E1011"),
+    (#"{}"#, "E1011"),
+    (#"{"apiVersion":null,"kind":"Hello","scopes":["read"]}"#, "E1011"),
+    (#"{"apiVersion":"openjoystickdriver/v1alpha1","kind":null,"scopes":["read"]}"#, "E1011"),
+    (#"{"apiVersion":1,"kind":"Hello","scopes":["read"]}"#, "E1011"),
+    (#"{"apiVersion":"openjoystickdriver/v1alpha1","kind":["Hello"],"scopes":["read"]}"#, "E1011"),
+    (#"[1]"#, "E1003"),
+    (clientLine("Welcome", #","scopes":["read"]"#), "E1010"),
+    (clientLine("Greeting", #","scopes":["read"]"#), "E1010"),
     (clientLine("Hello", #","scopes":["read","control"]"#), "E1002"),
   ])
   func aBadHelloGetsAnError(hello: String, code: String) async throws {
@@ -309,7 +309,7 @@ struct EndpointServerTests {
       let details = object["details"] as? [String: Any]
       #expect(
         details?["supportedAPIVersions"] as? [String]
-          == (["E1010", "E1011", "E1012"].contains(code) ? [OpenJoystickDriverAPI.version] : nil)
+          == (["E1009", "E1010", "E1011"].contains(code) ? [OpenJoystickDriverAPI.version] : nil)
       )
       #expect(await client.readLine() == nil)
     }
@@ -367,14 +367,14 @@ struct EndpointServerTests {
   }
 
   @Test
-  func aKeepAliveOutsideAFeedIsRefusedWithE1011() async throws {
+  func aKeepAliveOutsideAFeedIsRefusedWithE1010() async throws {
     try await withEndpointServer { server, _ in
       try server.setEnabled(true)
       try server.grant(Self.tool, path: "/Tool", scopes: [.read])
       let client = try await EndpointTestClient.subscribed(to: server.socketPath)
       await client.send(clientLine("KeepAlive"))
 
-      #expect(try await client.readObject()["code"] as? String == "E1011")
+      #expect(try await client.readObject()["code"] as? String == "E1010")
       #expect(await client.readLine() == nil)
     }
   }
@@ -387,7 +387,7 @@ struct EndpointServerTests {
       let client = try await EndpointTestClient.subscribed(to: server.socketPath)
       await client.send(clientLine("Subscription", #","stream":"controllers""#))
 
-      #expect(try await client.readObject()["code"] as? String == "E1011")
+      #expect(try await client.readObject()["code"] as? String == "E1010")
       #expect(await client.readLine() == nil)
     }
   }
@@ -404,7 +404,7 @@ struct EndpointServerTests {
 
       let ninth = try await EndpointTestClient(path: server.socketPath)
 
-      #expect(try await ninth.readObject()["code"] as? String == "E1005")
+      #expect(try await ninth.readObject()["code"] as? String == "E1004")
       #expect(await ninth.readLine() == nil)
       _ = clients
     }
@@ -423,7 +423,7 @@ struct EndpointServerTests {
 
       let ninth = try await EndpointTestClient(path: server.socketPath)
 
-      #expect(try await ninth.readObject()["code"] as? String == "E1005")
+      #expect(try await ninth.readObject()["code"] as? String == "E1004")
       #expect(Date().timeIntervalSince(start) < 2)
       // A slot freed by a closed client is served at once, behind the idle ones.
       clients.removeLast()
@@ -446,7 +446,7 @@ struct EndpointServerTests {
         }
         let ninth = try await EndpointTestClient(path: server.socketPath)
 
-        #expect(try await ninth.readObject()["code"] as? String == "E1005")
+        #expect(try await ninth.readObject()["code"] as? String == "E1004")
         _ = clients
       }
     }

@@ -218,11 +218,13 @@ class HIDRecordTests(unittest.TestCase):
         )
         return path
 
-    def test_patch_rejects_the_removed_transport_field(self) -> None:
+    def test_patch_rejects_an_unknown_field(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             self.write_patch(
-                root, {"vendorID": 0x045E, "productID": 0x02EA}, {"transport": "hid"}
+                root,
+                {"vendorID": 0x045E, "productID": 0x02EA},
+                {"notAField": "hid"},
             )
             with self.assertRaises(catalog.CatalogError):
                 catalog.load_authored(

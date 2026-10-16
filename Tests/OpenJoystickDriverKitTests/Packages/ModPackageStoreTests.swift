@@ -105,11 +105,11 @@ struct ModPackageStoreTests {
         let folder = try fixture.makePackage(records: [record], manifest: overrides)
         #expect(code { try store.validate(folder) } == .invalidManifest, "\(overrides)")
       }
-      let oldVersion = try fixture.makePackage(
+      let unsupportedVersion = try fixture.makePackage(
         records: [record],
-        manifest: ["apiVersion": "openjoystickdriver.io/v1beta1"]
+        manifest: ["apiVersion": "unsupported.example/v9"]
       )
-      #expect(code { try store.validate(oldVersion) } == .unsupportedAPIVersion)
+      #expect(code { try store.validate(unsupportedVersion) } == .unsupportedAPIVersion)
       let noManifest = try fixture.makePackage(records: [record])
       try FileManager.default.removeItem(at: noManifest.appendingPathComponent("mod.json"))
       #expect(code { try store.validate(noManifest) } == .invalidManifest)

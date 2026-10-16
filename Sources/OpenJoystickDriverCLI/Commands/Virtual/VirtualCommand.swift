@@ -17,7 +17,7 @@ struct VirtualCommand: AsyncParsableCommand {
     subcommands: [
       VirtualShowCommand.self, VirtualSetCommand.self, VirtualResetCommand.self,
       VirtualFeedCommand.self,
-      VirtualExportMappingCommand.self,
+      VirtualExportMappingCommand.self, VirtualLaunchCommand.self,
     ]
   )
 

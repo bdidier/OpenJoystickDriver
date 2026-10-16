@@ -148,10 +148,9 @@ package final class ApplicationServiceRuntime {
     serviceLog("[Service] Stopped")
   }
 
-  /// Deletes the earlier single-file library and reloads profiles when their files change.
+  /// Reloads profiles when their files change.
   private func startProfileWatcher() {
     let library = remappingProfileLibrary
-    library.discardLegacyLibrary()
     let targets = Self.profileWatchTargets(for: library)
     for directory in targets.directories {
       do { try RemappingProfileLibrary.createPrivateDirectory(directory) } catch {

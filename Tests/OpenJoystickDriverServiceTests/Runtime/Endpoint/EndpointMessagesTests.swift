@@ -123,17 +123,16 @@ struct EndpointMessagesTests {
   }
 
   @Test(arguments: [
-    clientLine("FeedRequest", #","as":"hid-generic""#),
-    clientLine("FeedSession", #","as":"hid-xbox-one-s-bt""#),
+    clientLine("FeedRequest", #","as":"NotAPersona""#),
+    clientLine("FeedSession", #","as":"NotAPersona""#),
     clientLine("Hello", #","scopes":[]"#),
-    #"{"apiVersion":"openjoystickdriver.io/v1beta1","kind":"Hello","scopes":["read"]}"#,
-    clientLine("Status", #","status":"Failure","code":"E1010","message":"m""#),
+    #"{"apiVersion":"unsupported.example/v9","kind":"Hello","scopes":["read"]}"#,
+    clientLine("Status", #","status":"Failure","code":"E1009","message":"m""#),
     clientLine(
       "Status",
-      #","status":"Failure","code":"E1004","message":"m","details":"#
+      #","status":"Failure","code":"E1003","message":"m","details":"#
         + #"{"supportedAPIVersions":["openjoystickdriver/v1alpha1"]}"#
     ),
-    clientLine("Status", #","status":"Failure","code":"E1003","message":"m""#),
   ])
   func aLineOutsideTheSchemaIsRefused(line: String) throws {
     #expect(!(try Self.issues(line).isEmpty), "\(line)")
