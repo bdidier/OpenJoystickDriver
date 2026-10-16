@@ -2,8 +2,6 @@ import Foundation
 
 private let gipDpadMask: UInt8 = 0x0F
 private let gipGuideButtonMask: UInt8 = 0x03
-private let gipHandshakeMaxAttempts = 3
-private let gipAnnounceResendLimit = 8
 private let gipStickMax: Float = 32767
 private let gipTriggerMax: Float = 1023
 private let gipMaximumVarintBytes = 5
@@ -100,10 +98,12 @@ public final class GIPDriver: PhysicalProtocolDriver {
   // MARK: - PhysicalProtocolDriver
 
   public var sessionPlan: DriverSessionPlan {
-    // The retry count is the driver's algorithm; the description sets the delays and the
-    // keep-alive interval.
+    // The description sets the attempt count, the delays and the keep-alive interval.
     DriverSessionPlan(
-      usbStartupRetryDelays: Array(repeating: 0, count: gipHandshakeMaxAttempts - 1),
+      usbStartupRetryDelays: Array(
+        repeating: 0,
+        count: PhysicalProtocolID.xboxGIP.described(limit: \.handshakeAttempts) - 1
+      ),
       keepAliveChannels: keepAlivePolicy == .enabled ? [.usb] : []
     ).withDefaults(of: .xboxGIP)
   }
@@ -256,7 +256,8 @@ public final class GIPDriver: PhysicalProtocolDriver {
     guard !hasReceivedInput else { return }
     defer { announcesBeforeInput += 1 }
     guard announcesBeforeInput.isMultiple(of: announceResendInterval),
-      announcesBeforeInput / announceResendInterval < gipAnnounceResendLimit
+      announcesBeforeInput / announceResendInterval
+        < PhysicalProtocolID.xboxGIP.described(limit: \.announceResendLimit)
     else { return }
     pendingWrites += startupWrites()
   }

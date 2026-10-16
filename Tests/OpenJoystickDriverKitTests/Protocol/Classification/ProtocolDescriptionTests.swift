@@ -12,20 +12,30 @@ struct ProtocolDescriptionTests {
   private static let startupWrite =
     #"{"startup": [{"report": {"kind": "output", "id": 1, "length": 4}, "bytes": [1, 2, 3]}]}"#
 
-  /// Decodes a description of `family` whose body after the header is `body`.
+  /// Decodes a description of `family` whose body after the header is `body`, with the family's
+  /// session counts added to any the body leaves unstated.
   private func decode(
     family: PhysicalProtocolID,
     _ body: String
   ) throws(ProtocolDescriptionProblem) -> ProtocolDescription {
-    let json = """
-      {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "ProtocolDescription",
-       "family": "\(family.rawValue)", "endpoints": {"in": 130, "out": 2}, \(body)}
-      """
-    return try ProtocolDescription.decode(
-      Data(json.utf8),
-      protocolID: family,
-      fileName: "\(family.rawValue).json"
-    )
+    try ProtocolDescriptionFixture.decode(family: family, body)
+  }
+
+  private func decodeExactly(
+    family: PhysicalProtocolID,
+    _ body: String
+  ) throws(ProtocolDescriptionProblem) -> ProtocolDescription {
+    try ProtocolDescriptionFixture.decodeExactly(family: family, body)
+  }
+
+  private func rejection(
+    exactly family: PhysicalProtocolID,
+    _ body: String
+  ) -> ProtocolDescriptionProblem? {
+    do {
+      _ = try decodeExactly(family: family, body)
+      return nil
+    } catch { return error }
   }
 
   private func rejection(family: PhysicalProtocolID, _ body: String) -> ProtocolDescriptionProblem?
@@ -78,6 +88,11 @@ struct ProtocolDescriptionTests {
     #expect(bundled[.xboxXUSB]?.tuning?.presenceResendReports == 16)
     #expect(bundled[.xboxGIP]?.tuning?.usbStartupIntervalMilliseconds == 50)
     #expect(bundled[.xboxGIP]?.tuning?.usbStartupRetryDelayMilliseconds == 1_000)
+    #expect(bundled[.xboxGIP]?.tuning?.usbTransferTimeoutMilliseconds == 2_000)
+    #expect(bundled[.xboxXUSB]?.tuning?.usbTransferTimeoutMilliseconds == 2_000)
+    #expect(bundled[.xboxGIP]?.handshakeAttempts == 3)
+    #expect(bundled[.xboxGIP]?.announceResendLimit == 8)
+    #expect(bundled[.xboxXUSB]?.receiverInquiryResendLimit == 8)
     #expect(bundled[.sonyDualShock4]?.tuning?.adapterDisconnectDelayMilliseconds == 500)
     #expect(bundled[.sonyDualSense]?.tuning?.adapterDisconnectDelayMilliseconds == 500)
     let switch1 = try #require(bundled[.nintendoSwitch1])
@@ -110,6 +125,12 @@ struct ProtocolDescriptionTests {
         == [
           .stickDeadzone, .frameQueueCapacity, .presenceResendReports, .usbStartupIntervalMs,
           .usbStartupRetryDelayMs, .usbTransferTimeoutMs,
+        ]
+    )
+    #expect(
+      ControllerTuning.scope(protocolID: .xboxXUSB, variant: nil)
+        == [
+          .stickDeadzone, .frameQueueCapacity, .presenceResendReports, .usbTransferTimeoutMs,
         ]
     )
     #expect(
@@ -260,7 +281,6 @@ struct ProtocolDescriptionTests {
         #""parameters": {"shareButton": {"type": "object", "fields": "#
           + #"{"fromEnd": {"type": "integer", "minimum": 9, "maximum": 1}}}}"#
       ),
-      (.xboxGIP, #""defaults": {}"#),
       (.xboxGIP, #""defaults": {"output": {}}"#),
       (.xboxGIP, #""defaults": {"unknown": {}}"#),
       (.xboxGIP, #""defaults": {"capabilities": {"rumble": "absent"}}"#),
@@ -277,6 +297,68 @@ struct ProtocolDescriptionTests {
   )
   func rejectsAMalformedBody(family: PhysicalProtocolID, body: String) {
     #expect(rejection(family: family, body)?.code == .invalidProtocolDescription, "\(body)")
+  }
+
+  @Test
+  func sessionLimitsBelongToTheirFamily() throws {
+    let gip = try decode(family: .xboxGIP, #""rawUSB": true"#)
+    #expect(gip.handshakeAttempts == 3 && gip.announceResendLimit == 8)
+    #expect(gip.receiverInquiryResendLimit == nil)
+    let xusb = try decode(family: .xboxXUSB, #""rawUSB": true"#)
+    #expect(xusb.receiverInquiryResendLimit == 8)
+    #expect(xusb.handshakeAttempts == nil && xusb.announceResendLimit == nil)
+
+    let missing: [(PhysicalProtocolID, String)] = [
+      (.xboxGIP, #""rawUSB": true"#),
+      (.xboxGIP, #""rawUSB": true, "defaults": {"session": {"handshakeAttempts": 3}}"#),
+      (.xboxGIP, #""rawUSB": true, "defaults": {"session": {"announceResendLimit": 8}}"#),
+      (.xboxXUSB, #""rawUSB": true"#),
+    ]
+    for (family, body) in missing {
+      #expect(
+        rejection(exactly: family, body)?.code == .invalidProtocolDescription,
+        "\(family) \(body)"
+      )
+    }
+
+    let foreign: [(PhysicalProtocolID, String)] = [
+      (.xboxXUSB, "handshakeAttempts"), (.xboxXUSB, "announceResendLimit"),
+      (.xboxGIP, "receiverInquiryResendLimit"), (.xboxXID, "handshakeAttempts"),
+      (.sonyDualSense, "announceResendLimit"), (.sonyDualSense, "receiverInquiryResendLimit"),
+    ]
+    for (family, key) in foreign {
+      let body = #""defaults": {"session": {"\#(key)": 3}}"#
+      #expect(
+        rejection(family: family, body)?.code == .invalidProtocolDescription,
+        "\(family) \(key)"
+      )
+    }
+  }
+
+  @Test(
+    arguments: [
+      (PhysicalProtocolID.xboxGIP, "handshakeAttempts", 1, 10),
+      (.xboxGIP, "announceResendLimit", 1, 100),
+      (.xboxXUSB, "receiverInquiryResendLimit", 1, 100),
+    ]
+  )
+  func sessionLimitsHaveRanges(
+    family: PhysicalProtocolID,
+    key: String,
+    low: Int,
+    high: Int
+  ) {
+    for value in [low, high] {
+      let body = #""rawUSB": true, "defaults": {"session": {"\#(key)": \#(value)}}"#
+      #expect(rejection(family: family, body) == nil, "\(key) \(value)")
+    }
+    for value in [low - 1, high + 1] {
+      let body = #""rawUSB": true, "defaults": {"session": {"\#(key)": \#(value)}}"#
+      #expect(
+        rejection(family: family, body)?.code == .invalidProtocolDescription,
+        "\(key) \(value)"
+      )
+    }
   }
 
   @Test
@@ -499,5 +581,56 @@ struct ProtocolDescriptionTests {
     #expect(ErrorCode.invalidProtocolDescription.domain == .document)
     #expect(ErrorCode.protocolDescriptionFamilyMismatch.domain == .document)
     #expect(ErrorCode.unknownProtocolVariant.domain == .document)
+  }
+}
+
+/// Builds protocol description documents for tests.
+enum ProtocolDescriptionFixture {
+  /// The session counts each family's description must state.
+  static let sessionLimits: [PhysicalProtocolID: [String: Int]] = [
+    .xboxGIP: ["handshakeAttempts": 3, "announceResendLimit": 8],
+    .xboxXUSB: ["receiverInquiryResendLimit": 8],
+  ]
+
+  /// Decodes a description of `family` whose body after the header is `body`, with the family's
+  /// session counts added to any the body leaves unstated.
+  static func decode(
+    family: PhysicalProtocolID,
+    _ body: String
+  ) throws(ProtocolDescriptionProblem) -> ProtocolDescription {
+    try decodeExactly(family: family, withSessionLimits(family: family, body))
+  }
+
+  /// Decodes a description of `family` whose body after the header is exactly `body`.
+  static func decodeExactly(
+    family: PhysicalProtocolID,
+    _ body: String
+  ) throws(ProtocolDescriptionProblem) -> ProtocolDescription {
+    let json = """
+      {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "ProtocolDescription",
+       "family": "\(family.rawValue)", "endpoints": {"in": 130, "out": 2}, \(body)}
+      """
+    return try ProtocolDescription.decode(
+      Data(json.utf8),
+      protocolID: family,
+      fileName: "\(family.rawValue).json"
+    )
+  }
+
+  private static func withSessionLimits(family: PhysicalProtocolID, _ body: String) -> String {
+    guard let limits = sessionLimits[family] else { return body }
+    let json = "{\(body)}"
+    guard var object = try? JSONSerialization.jsonObject(with: Data(json.utf8)) as? [String: Any]
+    else { return body }
+    var defaults = object["defaults"] as? [String: Any] ?? [:]
+    var session = defaults["session"] as? [String: Any] ?? [:]
+    for (key, value) in limits where session[key] == nil { session[key] = value }
+    defaults["session"] = session
+    object["defaults"] = defaults
+    guard
+      let data = try? JSONSerialization.data(withJSONObject: object),
+      let text = String(data: data, encoding: .utf8)
+    else { return body }
+    return String(text.dropFirst().dropLast())
   }
 }

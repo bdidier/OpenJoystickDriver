@@ -43,6 +43,8 @@
   },
   "defaults": {
     "session": {
+      "handshakeAttempts": 3,
+      "announceResendLimit": 8,
       "keepAlive": {
         "intervalMilliseconds": 4000,
         "writes": [

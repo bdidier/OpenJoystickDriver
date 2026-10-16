@@ -113,18 +113,19 @@ extension GIPDriverTests {
   func announceBeforeFirstInputResendsTheStartupSequenceBounded() throws {
     let parser = GIPDriver()
     let startupCommands = parser.startupWrites().usbBytes.map(\.first)
+    let limit = PhysicalProtocolID.xboxGIP.described(limit: \.announceResendLimit)
     var resends = 0
     for sequence in 0..<UInt8(64) {
       #expect(try parser.parseReport(Self.announce(sequence: sequence)) == nil)
       let output = parser.drainPendingWrites().usbBytes
-      if sequence.isMultiple(of: 4) && sequence < 32 {
+      if sequence.isMultiple(of: 4) && Int(sequence) < 4 * limit {
         #expect(output.map(\.first) == startupCommands)
         resends += 1
       } else {
         #expect(output.isEmpty)
       }
     }
-    #expect(resends == 8)
+    #expect(resends == limit)
   }
 
   @Test
