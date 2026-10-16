@@ -3,9 +3,14 @@
   "kind": "Controller",
   "vendorID": 9571,
   "productID": 1397,
-  "protocol": {
-    "family": "hid.report-layout"
-  },
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "hid.report-layout"
+      }
+    }
+  ],
   "input": {
     "report": {
       "length": 19

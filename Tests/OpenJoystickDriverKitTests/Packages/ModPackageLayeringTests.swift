@@ -22,7 +22,7 @@ struct ModPackageLayeringTests {
       let set = ControllerRecordSet.load(userDirectory: fixture.controllers)
       let loaded = try #require(set.records[Self.identity])
       #expect(loaded.layer == .package)
-      #expect(loaded.fieldLayers == ["protocol": .package])
+      #expect(loaded.fieldLayers == ["modes": .package])
       #expect(loaded.file?.lastPathComponent == record.name)
       #expect(set.records.count == ControllerRecordSet.bundled.records.count + 1)
       #expect(set.problems.isEmpty)
@@ -88,7 +88,7 @@ struct ModPackageLayeringTests {
 
       let set = ControllerRecordSet.load(userDirectory: fixture.controllers)
       let loaded = try #require(set.records[Self.identity])
-      #expect(loaded.fieldLayers == ["protocol": .package, "tuning": .user])
+      #expect(loaded.fieldLayers == ["modes": .package, "tuning": .user])
       #expect(loaded.tuning.stickDeadzone == 0.3)
       #expect(set.problems.isEmpty)
     }

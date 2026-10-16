@@ -87,7 +87,8 @@ struct ControllerServerWriterTests {
       let record: [String: Any] = [
         "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordDocument.kind,
         "vendorID": 0x1234,
-        "productID": 0xABCD, "protocol": ["family": "hid.descriptor"],
+        "productID": 0xABCD,
+        "modes": [["id": "default", "protocol": ["family": "hid.descriptor"]]],
       ]
       let package = try fixture.makePackage(
         records: [("1234-abcd.json", try JSONSerialization.data(withJSONObject: record))]
@@ -99,7 +100,7 @@ struct ControllerServerWriterTests {
       let loaded = ControllerRecordSet.load(userDirectory: directory)
       let effective = try #require(loaded.records[Self.unbundled])
       #expect(effective.profile.server == .ojd)
-      #expect(effective.fieldLayers == ["protocol": .package, "server": .user])
+      #expect(effective.fieldLayers == ["modes": .package, "server": .user])
       #expect(loaded.problems.isEmpty)
     }
   }

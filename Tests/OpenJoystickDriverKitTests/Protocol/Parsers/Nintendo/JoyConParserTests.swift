@@ -140,8 +140,13 @@ struct JoyConParserTests {
     let record: [String: Any] = [
       "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordDocument.kind,
       "vendorID": 1406, "productID": 8198,
-      "protocol": [
-        "family": "nintendo.switch1", "parameters": ["layout": ["JoyConLeft", "JoyConRight"]],
+      "modes": [
+        [
+          "id": "default",
+          "protocol": [
+            "family": "nintendo.switch1", "parameters": ["layout": ["JoyConLeft", "JoyConRight"]],
+          ],
+        ]
       ],
     ]
     let encoded = try JSONSerialization.data(withJSONObject: record)

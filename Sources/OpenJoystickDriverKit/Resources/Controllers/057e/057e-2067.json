@@ -3,12 +3,17 @@
   "kind": "Controller",
   "vendorID": 1406,
   "productID": 8295,
-  "protocol": {
-    "family": "nintendo.switch2",
-    "parameters": {
-      "layout": "JoyConLeft"
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "nintendo.switch2",
+        "parameters": {
+          "layout": "JoyConLeft"
+        }
+      }
     }
-  },
+  ],
   "bluetoothLE": {
     "vibrationCharacteristic": "289326CB-A471-485D-A8F4-240C14F18241"
   }

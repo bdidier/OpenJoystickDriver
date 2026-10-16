@@ -3,14 +3,19 @@
   "kind": "Controller",
   "vendorID": 9414,
   "productID": 21530,
-  "protocol": {
-    "family": "xbox.gip",
-    "initialization": [
-      "xbox.gip/power-on",
-      "xbox.gip/led-on",
-      "xbox.gip/auth-done",
-      "xbox.gip/rumble-begin",
-      "xbox.gip/rumble-end"
-    ]
-  }
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "xbox.gip",
+        "initialization": [
+          "xbox.gip/power-on",
+          "xbox.gip/led-on",
+          "xbox.gip/auth-done",
+          "xbox.gip/rumble-begin",
+          "xbox.gip/rumble-end"
+        ]
+      }
+    }
+  ]
 }

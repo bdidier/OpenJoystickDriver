@@ -3,10 +3,15 @@
   "kind": "Controller",
   "vendorID": 12933,
   "productID": 1588,
-  "protocol": {
-    "family": "xbox.gip",
-    "keepAlive": false
-  },
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "xbox.gip",
+        "keepAlive": false
+      }
+    }
+  ],
   "usb": {
     "endpoints": {
       "in": 135,

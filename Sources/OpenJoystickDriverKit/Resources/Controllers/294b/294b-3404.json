@@ -3,7 +3,12 @@
   "kind": "Controller",
   "vendorID": 10571,
   "productID": 13316,
-  "protocol": {
-    "family": "xbox.gip"
-  }
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "xbox.gip"
+      }
+    }
+  ]
 }

@@ -553,7 +553,7 @@ struct ControllerRecordDocumentTests {
     var record: [String: Any] = [
       "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordDocument.kind,
       "vendorID": vendorID, "productID": 0x02EA,
-      "protocol": protocolInfo,
+      "modes": [["id": "default", "protocol": protocolInfo]],
     ]
     record.merge(extra) { current, _ in current }
     record["usb"] = usb

@@ -3,7 +3,12 @@
   "kind": "Controller",
   "vendorID": 1118,
   "productID": 2848,
-  "protocol": {
-    "family": "hid.descriptor"
-  }
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "hid.descriptor"
+      }
+    }
+  ]
 }

@@ -3,10 +3,15 @@
   "kind": "Controller",
   "vendorID": 3853,
   "productID": 388,
-  "protocol": {
-    "family": "sony.dualsense",
-    "parameters": {
-      "maker": "ThirdParty"
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "sony.dualsense",
+        "parameters": {
+          "maker": "ThirdParty"
+        }
+      }
     }
-  }
+  ]
 }

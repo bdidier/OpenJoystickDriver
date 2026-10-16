@@ -61,9 +61,8 @@ extension StartupLifetimeTests {
     )
     let teardownTask = Task { await manager.ensureHIDDetectionState(for: .denied) }
     await initializationStarted.wait()
-    for _ in 0..<500 {
-      if await manager.hidInitializationTasks.isEmpty { break }
-      await Task.yield()
+    await waitUntil("manager.hidInitializationTasks.isEmpty") {
+      await manager.hidInitializationTasks.isEmpty
     }
     #expect(await manager.hidInitializationTasks.isEmpty)
 
@@ -83,17 +82,11 @@ extension StartupLifetimeTests {
     let replacementTask = Task {
       await manager.handleHIDEvent(.connected(connection: abortedConnection, ownership: .exclusive))
     }
-    var replacementSuspendedWithOldInfo = false
-    for _ in 0..<500 {
-      if await manager.pipelines[identifier] == nil,
-        await manager.deviceInfos[identifier]?.hidConnectionID == oldConnection.connectionID
-      {
-        replacementSuspendedWithOldInfo = true
-        break
-      }
-      try await Task.sleep(nanoseconds: 2_000_000)
+    await waitUntil("replacementSuspendedWithOldInfo") {
+      let pipeline = await manager.pipelines[identifier]
+      let connectionID = await manager.deviceInfos[identifier]?.hidConnectionID
+      return pipeline == nil && connectionID == oldConnection.connectionID
     }
-    #expect(replacementSuspendedWithOldInfo)
 
     await manager.handleHIDEvent(.disconnected(connection: abortedConnection))
     replacementTask.cancel()
@@ -184,17 +177,11 @@ extension StartupLifetimeTests {
       connection: replacedConnection,
       ownership: .exclusive
     )
-    var replacementSuspended = false
-    for _ in 0..<500 {
+    await waitUntil("replacementSuspended") {
       let currentPipeline = await manager.pipelines[identifier]
       let currentConnectionID = await manager.deviceInfos[identifier]?.hidConnectionID
-      if currentPipeline == nil, currentConnectionID == oldConnection.connectionID {
-        replacementSuspended = true
-        break
-      }
-      try await Task.sleep(nanoseconds: 2_000_000)
+      return currentPipeline == nil && currentConnectionID == oldConnection.connectionID
     }
-    #expect(replacementSuspended)
     let supersededInitialization = try #require(
       await manager.hidInitializationTasks[.address(.ioKit(locationID: 82, interfaceNumber: nil))]?
         .task
@@ -204,17 +191,11 @@ extension StartupLifetimeTests {
       connection: currentConnection,
       ownership: .exclusive
     )
-    var currentReconnectInstalled = false
-    for _ in 0..<500 {
+    await waitUntil("currentReconnectInstalled") {
       let currentConnectionID = await manager.deviceInfos[identifier]?.hidConnectionID
       let currentPipeline = await manager.pipelines[identifier]
-      if currentConnectionID == currentConnection.connectionID, currentPipeline != nil {
-        currentReconnectInstalled = true
-        break
-      }
-      try await Task.sleep(nanoseconds: 2_000_000)
+      return currentConnectionID == currentConnection.connectionID && currentPipeline != nil
     }
-    #expect(currentReconnectInstalled)
     await backend.setConnectionSnapshots([
       HIDDeviceConnectionSnapshot(connection: currentConnection, ownership: .exclusive)
     ])

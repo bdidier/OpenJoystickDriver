@@ -3,10 +3,15 @@
   "kind": "Controller",
   "vendorID": 2389,
   "productID": 29200,
-  "protocol": {
-    "family": "vendor.nvidia-shield",
-    "parameters": {
-      "reportRevision": "Shield2015"
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "vendor.nvidia-shield",
+        "parameters": {
+          "reportRevision": "Shield2015"
+        }
+      }
     }
-  }
+  ]
 }

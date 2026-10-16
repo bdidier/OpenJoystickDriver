@@ -3,8 +3,13 @@
   "kind": "Controller",
   "vendorID": 1118,
   "productID": 657,
-  "protocol": {
-    "family": "xbox.xusb",
-    "variant": "receiver"
-  }
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "xbox.xusb",
+        "variant": "receiver"
+      }
+    }
+  ]
 }

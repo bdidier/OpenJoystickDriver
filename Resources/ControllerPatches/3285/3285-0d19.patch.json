@@ -6,12 +6,17 @@
     "productID": 3353
   },
   "patch": {
-    "protocol": {
-      "family": "sony.dualsense",
-      "parameters": {
-        "maker": "ThirdParty",
-        "forcedVibration": true
+    "modes": [
+      {
+        "id": "default",
+        "protocol": {
+          "family": "sony.dualsense",
+          "parameters": {
+            "maker": "ThirdParty",
+            "forcedVibration": true
+          }
+        }
       }
-    }
+    ]
   }
 }

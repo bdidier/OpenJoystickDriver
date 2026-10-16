@@ -24,6 +24,7 @@ actor ScriptedHIDAccessBackend: HIDAccessBackend {
   private var streams: [Int: AsyncStream<HIDDeviceEvent>] = [:]
   private var continuations: [Int: AsyncStream<HIDDeviceEvent>.Continuation] = [:]
   private var delayedFirstStream: CheckedContinuation<AsyncStream<HIDDeviceEvent>, Never>?
+  private var attemptWaiters: [(attempt: Int, continuation: CheckedContinuation<Void, Never>)] = []
 
   /// `closesSessionWhenStreamEnds` models the IOHID backend, which closes its devices and rejects
   /// reports once the detection stream's consumer ends.
@@ -41,6 +42,9 @@ actor ScriptedHIDAccessBackend: HIDAccessBackend {
     }
     streams[attempt] = stream
     continuations[attempt] = continuation
+    let ready = attemptWaiters.filter { $0.attempt <= attempt }
+    attemptWaiters.removeAll { $0.attempt <= attempt }
+    for waiter in ready { waiter.continuation.resume() }
     guard delaysFirstStream, attempt == 1 else { return stream }
     return await withCheckedContinuation { delayedFirstStream = $0 }
   }
@@ -137,6 +141,12 @@ actor ScriptedHIDAccessBackend: HIDAccessBackend {
   func routeElementValues(connection _: HIDDeviceConnection) {}
 
   func attemptCount() -> Int { attempts }
+
+  /// Returns once `deviceEvents()` has been called at least `attempt` times.
+  func waitForAttempt(_ attempt: Int) async {
+    guard attempts < attempt else { return }
+    await withCheckedContinuation { attemptWaiters.append((attempt, $0)) }
+  }
 
   func isSessionClosed() -> Bool { session.isClosed }
 

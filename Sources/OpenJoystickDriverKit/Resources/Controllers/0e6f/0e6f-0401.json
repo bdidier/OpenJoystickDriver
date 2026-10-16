@@ -3,10 +3,15 @@
   "kind": "Controller",
   "vendorID": 3695,
   "productID": 1025,
-  "protocol": {
-    "family": "xbox.xusb",
-    "variant": "wired"
-  },
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "xbox.xusb",
+        "variant": "wired"
+      }
+    }
+  ],
   "usb": {
     "configuration": "set1-before-claim",
     "endpoints": {

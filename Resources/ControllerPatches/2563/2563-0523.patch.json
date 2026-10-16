@@ -6,18 +6,34 @@
     "productID": 1315
   },
   "patch": {
-    "output": {
-      "startup": [
-        {
-          "report": {
-            "kind": "feature",
-            "id": 244,
-            "length": 5
-          },
-          "bytes": [66, 3, 0, 0],
-          "transport": "bluetooth-classic"
+    "modes": [
+      {
+        "id": "default",
+        "protocol": {
+          "family": "sony.sixaxis"
         }
-      ]
-    }
+      },
+      {
+        "id": "bluetooth",
+        "protocol": {
+          "family": "sony.sixaxis"
+        },
+        "match": {
+          "link": "bluetooth-classic"
+        },
+        "session": {
+          "startup": [
+            {
+              "report": {
+                "kind": "feature",
+                "id": 244,
+                "length": 5
+              },
+              "bytes": [66, 3, 0, 0]
+            }
+          ]
+        }
+      }
+    ]
   }
 }

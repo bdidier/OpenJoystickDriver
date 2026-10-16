@@ -3,9 +3,14 @@
   "kind": "Controller",
   "vendorID": 13623,
   "productID": 4112,
-  "protocol": {
-    "family": "xbox.gip"
-  },
+  "modes": [
+    {
+      "id": "default",
+      "protocol": {
+        "family": "xbox.gip"
+      }
+    }
+  ],
   "usb": {
     "configuration": "set1-before-claim"
   }
