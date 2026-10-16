@@ -307,8 +307,8 @@ struct IOUSBHostDeviceFacts: Equatable, Sendable {
   let locationID: UInt32
   let productName: String?
   let serialNumber: String?
-  var manufacturer: String? = nil
-  var deviceRelease: UInt16? = nil
+  var manufacturer: String?
+  var deviceRelease: UInt16?
 }
 
 // `@unchecked Sendable` because `IOUSBHostPipe` is not annotated `Sendable`, and awaiting its

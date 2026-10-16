@@ -18,7 +18,7 @@ public struct ControllerSession: Equatable, Sendable {
   public let rumbleTemplate: RumbleOutputTemplate?
 
   /// A session that runs nothing.
-  public static let none = ControllerSession()
+  public static let none = Self()
 
   init(
     startupWrites: [RecordStartupWrite] = [],

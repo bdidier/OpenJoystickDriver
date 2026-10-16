@@ -83,7 +83,7 @@ struct KeepAliveDescriptionTests {
       hidWriteHead + #""phase": "startup"}"#,
       hidWriteHead + #""delayMilliseconds": 5}"#,
       hidWriteHead + #""transport": "usb"}"#,
-      #"{"report": {"kind": "feature", "id": 1, "length": 4}, "bytes": "01 02 03", "crc32Seed": 1}"#,
+      hidWriteHead + #""crc32Seed": 1}"#,
     ]
   )
   func rejectsStartupOnlyMembersInAKeepAliveWrite(write: String) {

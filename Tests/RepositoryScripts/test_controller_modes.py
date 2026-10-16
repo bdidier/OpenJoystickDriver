@@ -4,7 +4,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
-from typing import Any
+from typing import Any, ClassVar
 
 from Scripts.Catalog import validate_profiles
 from Scripts.Catalog.schema_header import header
@@ -536,7 +536,7 @@ class RawUSBModeTests(unittest.TestCase):
 class SessionTests(unittest.TestCase):
     """One session shape serves every mode; its keys follow the mode's own protocol."""
 
-    SHANWAN = {"manufacturer": "SHANWAN"}
+    SHANWAN: ClassVar[dict[str, Any]] = {"manufacturer": "SHANWAN"}
 
     def setUp(self) -> None:
         self.schema = validate_profiles.validator()
@@ -556,7 +556,9 @@ class SessionTests(unittest.TestCase):
         protocol = {"family": family}
         if family == "xbox.xusb":
             protocol["variant"] = "wired"
-        return record(modes=[{"id": "default", "protocol": protocol, "session": session}])
+        return record(
+            modes=[{"id": "default", "protocol": protocol, "session": session}]
+        )
 
     def reads(self) -> list[dict[str, Any]]:
         return [self.read(n, match=self.SHANWAN) for n in (1, 2, 3)]
@@ -571,9 +573,7 @@ class SessionTests(unittest.TestCase):
     def test_byte_format_is_uppercase_hex_pairs_with_single_spaces(self) -> None:
         for text in ("0x1a 2b", "1a 2b", "1A  2B", "1A2B", " 1A", "1A ", "1A\n", ""):
             with self.subTest(text):
-                document = self.document(
-                    "xbox.xusb", {"startup": [{"bytes": text}]}
-                )
+                document = self.document("xbox.xusb", {"startup": [{"bytes": text}]})
                 self.assertFalse(self.schema.is_valid(document))
         accepted = self.document("xbox.xusb", {"startup": [{"bytes": "1A 2B"}]})
         self.assertTrue(self.schema.is_valid(accepted))
@@ -595,9 +595,7 @@ class SessionTests(unittest.TestCase):
         }
         for name, (family, session) in rejected.items():
             with self.subTest(name):
-                self.assertFalse(
-                    self.schema.is_valid(self.document(family, session))
-                )
+                self.assertFalse(self.schema.is_valid(self.document(family, session)))
 
     def test_validator_rejects_control_transfers_that_disagree_with_themselves(
         self,
@@ -647,10 +645,10 @@ class EveryModeConditionalTests(unittest.TestCase):
     """A record-level section that depends on a mode's protocol holds for every mode: the
     default mode satisfies each rule here and a second mode breaks it."""
 
-    HID = {"family": "sony.sixaxis"}
-    GIP = {"family": "xbox.gip"}
-    HID_MATCH = {"probes": [ANSWERS]}
-    USB_MATCH = {"link": "usb"}
+    HID: ClassVar[dict[str, Any]] = {"family": "sony.sixaxis"}
+    GIP: ClassVar[dict[str, Any]] = {"family": "xbox.gip"}
+    HID_MATCH: ClassVar[dict[str, Any]] = {"probes": [ANSWERS]}
+    USB_MATCH: ClassVar[dict[str, Any]] = {"link": "usb"}
 
     def second_mode(
         self,
@@ -676,7 +674,10 @@ class EveryModeConditionalTests(unittest.TestCase):
     def test_usb_needs_every_mode_raw_usb(self) -> None:
         self.assert_rejected(
             self.second_mode(
-                self.GIP, self.HID, self.HID_MATCH, usb={"configuration": "set1-before-claim"}
+                self.GIP,
+                self.HID,
+                self.HID_MATCH,
+                usb={"configuration": "set1-before-claim"},
             ),
             "USB overrides require a raw-USB protocol family",
         )
@@ -698,7 +699,9 @@ class EveryModeConditionalTests(unittest.TestCase):
     def test_session_follows_the_protocol_of_its_own_mode(self) -> None:
         document = self.second_mode(self.GIP, self.HID, self.HID_MATCH)
         document["modes"][1]["session"] = {"settleMilliseconds": 200}
-        self.assert_rejected(document, "session settleMilliseconds applies only to raw-USB modes")
+        self.assert_rejected(
+            document, "session settleMilliseconds applies only to raw-USB modes"
+        )
 
     def test_tuning_keys_are_read_by_every_mode(self) -> None:
         self.assert_rejected(
@@ -744,7 +747,12 @@ class EveryModeConditionalTests(unittest.TestCase):
                 input={
                     "hidUsageMap": {
                         "usages": [
-                            {"kind": "button", "page": 9, "usage": 1, "control": "South"}
+                            {
+                                "kind": "button",
+                                "page": 9,
+                                "usage": 1,
+                                "control": "South",
+                            }
                         ]
                     }
                 },
