@@ -304,7 +304,8 @@ struct EndpointFeedTests {
     (clientLine("Frame", #","axes":{"throttle":1}"#), "E1003"),
     (clientLine("Frame", #","holdMilliseconds":60001"#), "E1003"),
     (clientLine("Frame", #","buttons":["South","South"]"#), "E1003"),
-    (clientLine("Frame", #","dpad":["up","up"]"#), "E1003"),
+    (clientLine("Frame", #","dpad":["DpadUp","DpadUp"]"#), "E1003"),
+    (clientLine("Frame", #","dpad":["notAName"]"#), "E1003"),
     (clientLine("Frame", #","buttons":["South"],"turbo":true"#), "E1003"),
     (#"{"buttons":["South"]}"#, "E1011"),
     (#"{"apiVersion":"openjoystickdriver.io/v2","kind":"Frame","buttons":["South"]}"#, "E1009"),
@@ -381,7 +382,7 @@ struct EndpointFeedTests {
       let feeding = try #require(await client.readLine())
       #expect(try JSONSchemaFiles.issues(in: feeding, against: "endpoint.schema.json").isEmpty)
       #expect(try client.object(feeding)["as"] as? String == "SdlCompatible")
-      await client.send(clientLine("Frame", #","dpad":["up"]"#))
+      await client.send(clientLine("Frame", #","dpad":["DpadUp"]"#))
 
       let device = try #require(factory.devices.first)
       try await Self.wait { device.sent.contains { $0.dpad.contains(.up) } }

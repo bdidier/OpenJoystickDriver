@@ -1,9 +1,9 @@
 import Foundation
 
 public enum RemappingGyroTrackballAxes: String, Codable, CaseIterable, Sendable {
-  case pitch
-  case yaw
-  case both
+  case pitch = "Pitch"
+  case yaw = "Yaw"
+  case both = "Both"
 }
 
 /// Holds the selected angular velocities while the source is pressed.

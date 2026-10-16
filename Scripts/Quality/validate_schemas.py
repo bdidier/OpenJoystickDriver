@@ -220,6 +220,24 @@ def protocol_description_code(error: ValidationError) -> str:
     return UNKNOWN_PROTOCOL_VARIANT if names_variant else INVALID_PROTOCOL_DESCRIPTION
 
 
+# The error code of a profile document that is invalid, as `DocumentProblem.code` reports it in
+# Swift: only a document refused for its apiVersion has one.
+PROFILE_PROBLEM_CODES = {"apiVersion": UNSUPPORTED_API_VERSION}
+# The error code of a `Frame` line that does not match the endpoint schema.
+FRAME_PROBLEM_CODE = "E1003"
+
+
+def profile_problem_code(error: ValidationError) -> str | None:
+    """The catalog code for a profile schema failure, or None when the failure has none."""
+    path = list(error.absolute_path)
+    missing_version = (
+        error.validator == "required" and not path and "'apiVersion'" in error.message
+    )
+    if path == ["apiVersion"] or missing_version:
+        return PROFILE_PROBLEM_CODES["apiVersion"]
+    return None
+
+
 def validate_protocol_descriptions(
     schema: dict[str, object],
     registry: Registry,

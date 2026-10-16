@@ -12,7 +12,7 @@ CROSSWALK = ROOT / "Resources" / "Vocabulary" / "crosswalk.json"
 SAMPLE_PROFILE = ROOT / "docs" / "sdk" / "sample" / "Profiles" / "sample-pad.json"
 
 # Names that are not control ids.
-UNKNOWN_NAMES = ["south", "NotAControl", "left_stick_x", ""]
+UNKNOWN_NAMES = ["notAName", "NotAControl", ""]
 
 
 class ControlVocabularyTests(unittest.TestCase):

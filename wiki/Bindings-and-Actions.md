@@ -50,20 +50,20 @@ The section groups assignments as **Face buttons**, **Shoulders**, **D-pad**, **
 ### Add an Assignment With the Command Line
 
 ```shell
-ojd binding set "My controller" button:South key:space
+ojd binding set "My controller" button:South key:Space
 ```
 
 A control has one assignment, so this command replaces the control's assignment. The `SOURCE` and `TARGET` values use this syntax:
 
 ```text
 SOURCE: button:NAME | dpad:DIRECTION
-        axis:NAME[:negative|positive]
+        axis:NAME[:Negative|Positive]
         trigger:left|right:soft|full
         touch:SURFACE:contact
         touch:SURFACE:grid:COLUMNS:ROWS:COLUMN:ROW
         touch:SURFACE:swipe:DIRECTION:MIN-DISTANCE
         motion:lean:left|right
-TARGET: key:KEY[:mods=command,control,option,shift]
+TARGET: key:KEY[:mods=Alt,Control,Meta,Shift]
         mouse:BUTTON | move:x|y | scroll:x|y
         gamepad:button:NAME | gamepad:dpad:DIRECTION
         gamepad:axis:NAME
@@ -105,7 +105,7 @@ These options are in the **Assignment behavior** sheet. They work only when the 
 
 Long hold and double tap need a discrete source, such as a button, and a destination that is not continuous.
 
-The command line options are `--turbo-rate`, `--turbo-duty`, `--long-hold MS:TARGET`, and `--double-tap MS:TARGET`. For example, `--long-hold 500:key:b`. The command line help lists these options for keyboard and mouse button destinations only. Whether the command line accepts them for gamepad destinations is not verified.
+The command line options are `--turbo-rate`, `--turbo-duty`, `--long-hold MS:TARGET`, and `--double-tap MS:TARGET`. For example, `--long-hold 500:key:KeyB`. The command line help lists these options for keyboard and mouse button destinations only. Whether the command line accepts them for gamepad destinations is not verified.
 
 You can also add more actions to one assignment. In the behavior sheet, use **Add action**, **Move up**, **Move down**, and **Remove**. The command line option is `--actions-json`.
 

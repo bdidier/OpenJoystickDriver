@@ -110,7 +110,7 @@ extension RemappingMixedOutputTests {
       from: JSONEncoder().encode(profile)
     )
     #expect(decoded == profile)
-    #expect(try RemappingCommandValueParser.destination("gamepad:dpad:up") == .gamepadDpad(.up))
+    #expect(try RemappingCommandValueParser.destination("gamepad:dpad:DpadUp") == .gamepadDpad(.up))
     #expect(!profile.requiresSystemInputAccess)
     try await engine.process(inputs: [.press(.south)], from: device, using: decoded, at: 0)
     try await engine.process(inputs: [.press(.east)], from: device, using: decoded, at: 1)

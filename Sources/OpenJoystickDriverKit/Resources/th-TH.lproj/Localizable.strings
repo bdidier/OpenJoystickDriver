@@ -959,7 +959,7 @@
 "cli.controller.light.examples" = "ตัวอย่าง:\n  # ตั้งไลต์บาร์เป็นสีส้ม\n  ojd controller light 054C:09CC --color FF8000\n  # ตั้งสีและความสว่างต่ำ\n  ojd controller light 054C:09CC --color 0000FF --brightness 40";
 "cli.profile.create.examples" = "ตัวอย่าง:\n  # สร้างโปรไฟล์สำหรับคอนโทรลเลอร์รุ่นหนึ่ง\n  ojd profile create Racing --controller 045E:028E\n  # ใช้เฉพาะเมื่อ Safari อยู่ด้านหน้าสุด\n  ojd profile create Browsing --controller 045E:028E --app com.apple.Safari";
 "cli.profile.set.examples" = "ตัวอย่าง:\n  # เปลี่ยนชื่อโปรไฟล์\n  ojd profile set Racing name Rally\n  # ตั้งเดดโซนด้านในของการแมปสติ๊กแรก\n  ojd profile set Racing stickMappings.0.tuning.innerDeadzone 0.2";
-"cli.binding.set.examples" = "ตัวอย่าง:\n  # กด Space ค้างไว้ขณะที่กดปุ่มทิศใต้ค้างไว้\n  ojd binding set Racing button:South key:space\n  # สลับ J ทุกครั้งที่กด\n  ojd binding set Racing button:West key:j --behavior toggle\n  # กด J ซ้ำ 10 ครั้งต่อวินาทีขณะกดค้างไว้\n  ojd binding set Racing button:West key:j --turbo-rate 10 --turbo-duty 0.5";
+"cli.binding.set.examples" = "ตัวอย่าง:\n  # กด Space ค้างไว้ขณะที่กดปุ่มทิศใต้ค้างไว้\n  ojd binding set Racing button:South key:Space\n  # สลับ J ทุกครั้งที่กด\n  ojd binding set Racing button:West key:KeyJ --behavior toggle\n  # กด J ซ้ำ 10 ครั้งต่อวินาทีขณะกดค้างไว้\n  ojd binding set Racing button:West key:KeyJ --turbo-rate 10 --turbo-duty 0.5";
 "cli.record.install.examples" = "ตัวอย่าง:\n  # ติดตั้งไฟล์เรคคอร์ด\n  ojd record install 045E-028E.json\n  # อ่านเรคคอร์ดจาก stdin\n  ojd record install - < 045E-028E.json";
 "cli.access.grant.examples" = "ตัวอย่าง:\n  # อนุญาตให้โปรแกรมใช้บริการ\n  ojd access grant /Applications/Example.app\n  # สร้างโทเค็นสำหรับหน้าเว็บที่ให้บริการจากต้นทางเดียว\n  ojd access grant --token overlay --origin http://127.0.0.1:8080";
 "cli.service.abstract" = "เริ่มหรือหยุดบริการ OpenJoystickDriver หรือรอจนกว่าบริการจะรับคำขอ";
@@ -1445,7 +1445,7 @@
 "cli.binding.abstract" = "แสดงรายการ ตั้งค่า และล้างการกำหนดของโปรไฟล์การแมปใหม่";
 "cli.binding.actions_invalid" = "--actions-json ไม่ใช่รายการการทำงานที่ถูกต้อง: %@";
 "cli.binding.actions_too_large" = "--actions-json ใหญ่เกินไป";
-"cli.binding.alternate_format" = "%@ รับ MS:TARGET เช่น 500:key:b";
+"cli.binding.alternate_format" = "%@ รับ MS:TARGET เช่น 500:key:KeyB";
 "cli.binding.axis_options_source" = "--deadzone, --gain, --invert, --response-curve และ --digital-threshold ต้องใช้ต้นทางที่เป็นแกน";
 "cli.binding.clear.abstract" = "เอาการกำหนดของต้นทางที่ระบุออก หรือเอาการกำหนดทั้งหมดออก";
 "cli.binding.clear.all" = "เอาการกำหนด คอร์ด ลำดับ และเลเยอร์ทั้งหมดออก";
@@ -1457,17 +1457,17 @@
 "cli.binding.clear.missing" = "“%@” ไม่มีการกำหนดสำหรับ %@ ไม่มีการเปลี่ยนแปลง";
 "cli.binding.clear.sources" = "ต้นทางที่จะเอาการกำหนดออก";
 "cli.binding.clear.usage" = "ระบุต้นทางอย่างน้อยหนึ่งรายการ หรือ --all";
-"cli.binding.discussion" = "การกำหนดจะส่ง TARGET เมื่อมีการใช้ SOURCE ของคอนโทรลเลอร์\n\nSOURCE: button:NAME, dpad:DIRECTION, axis:NAME[:negative|positive], trigger:NAME:STAGE, motion:lean:DIRECTION, touch:SURFACE:contact, touch:SURFACE:grid:COLUMNS:ROWS:COLUMN:ROW หรือ touch:SURFACE:swipe:DIRECTION:DISTANCE\n\nTARGET: key:KEY[:mods=command,control,option,shift], mouse:BUTTON, move:x|y, scroll:x|y, gamepad:button:NAME, gamepad:dpad:DIRECTION, gamepad:axis:NAME หรือ physical:... สำหรับแรงสั่น ไฟ และทริกเกอร์แบบปรับได้\n\n“ojd profile show” พิมพ์การกำหนดในรูปแบบเหล่านี้ แก้ไขคอร์ด ลำดับ และเลเยอร์ด้วย “ojd profile edit”";
+"cli.binding.discussion" = "การกำหนดจะส่ง TARGET เมื่อมีการใช้ SOURCE ของคอนโทรลเลอร์\n\nSOURCE: button:NAME, dpad:DIRECTION, axis:NAME[:Negative|Positive], trigger:NAME:STAGE, motion:lean:DIRECTION, touch:SURFACE:contact, touch:SURFACE:grid:COLUMNS:ROWS:COLUMN:ROW หรือ touch:SURFACE:swipe:DIRECTION:DISTANCE\n\nTARGET: key:KEY[:mods=Meta,Control,Alt,Shift], mouse:BUTTON, move:x|y, scroll:x|y, gamepad:button:NAME, gamepad:dpad:DIRECTION, gamepad:axis:NAME หรือ physical:... สำหรับแรงสั่น ไฟ และทริกเกอร์แบบปรับได้\n\n“ojd profile show” พิมพ์การกำหนดในรูปแบบเหล่านี้ แก้ไขคอร์ด ลำดับ และเลเยอร์ด้วย “ojd profile edit”";
 "cli.binding.list.abstract" = "แสดงรายการการกำหนดของโปรไฟล์";
 "cli.binding.list.empty" = "“%@” ไม่มีการกำหนด เพิ่มด้วย “ojd binding set”";
 "cli.binding.option.actions_json" = "การทำงานเพิ่มเติมเป็นอาร์เรย์ JSON ในรูปแบบที่ “ojd profile export” เขียน";
 "cli.binding.option.behavior" = "เวลาที่ปลายทางทำงาน ค่าเริ่มต้น: พฤติกรรมของการกำหนดปัจจุบัน หรือ hold";
 "cli.binding.option.deadzone" = "ต้นทางที่เป็นแกน: ส่วนของระยะเคลื่อนที่ที่ถูกละเว้น 0 ถึง 0.95 ค่าเริ่มต้น: 0.1";
 "cli.binding.option.digital_threshold" = "ต้นทางที่เป็นแกน: ระยะเคลื่อนที่ที่นับเป็นการกดสำหรับปลายทางที่เป็นปุ่ม ค่าเริ่มต้น: 0.5";
-"cli.binding.option.double_tap" = "ส่งปลายทางอีกรายการเมื่อกดต้นทางสองครั้งภายในเวลานี้ เช่น 300:key:c";
+"cli.binding.option.double_tap" = "ส่งปลายทางอีกรายการเมื่อกดต้นทางสองครั้งภายในเวลานี้ เช่น 300:key:KeyC";
 "cli.binding.option.gain" = "ต้นทางที่เป็นแกน: สเกลของเอาต์พุต 0.1 ถึง 10 ค่าเริ่มต้น: 1";
 "cli.binding.option.invert" = "ต้นทางที่เป็นแกน: กลับทิศทาง";
-"cli.binding.option.long_hold" = "ส่งปลายทางอีกรายการเมื่อกดต้นทางค้างไว้นานเท่านี้ เช่น 500:key:b";
+"cli.binding.option.long_hold" = "ส่งปลายทางอีกรายการเมื่อกดต้นทางค้างไว้นานเท่านี้ เช่น 500:key:KeyB";
 "cli.binding.option.pulse_ms" = "ระยะเวลาที่พัลส์ค้างปลายทางไว้ 1 ถึง 5000 มิลลิวินาที ค่าเริ่มต้น: 100";
 "cli.binding.option.response_curve" = "ต้นทางที่เป็นแกน: เอาต์พุตเพิ่มขึ้นตามระยะเคลื่อนที่อย่างไร ค่าเริ่มต้น: linear";
 "cli.binding.option.turbo_duty" = "สัดส่วนของแต่ละรอบเทอร์โบที่ปลายทางถูกค้างไว้ มากกว่า 0 และน้อยกว่า 1";
@@ -1475,7 +1475,7 @@
 "cli.binding.set.abstract" = "กำหนดต้นทางของคอนโทรลเลอร์ให้กับปลายทาง โดยแทนที่การกำหนดปัจจุบันของต้นทาง";
 "cli.binding.set.done" = "ตอนนี้ “%@” กำหนดเป็น %@";
 "cli.binding.set.source" = "ตัวควบคุมของคอนโทรลเลอร์ เช่น button:South";
-"cli.binding.set.target" = "สิ่งที่ส่ง เช่น key:space";
+"cli.binding.set.target" = "สิ่งที่ส่ง เช่น key:Space";
 "cli.binding.source_invalid" = "“%@” ไม่ใช่ต้นทาง “ojd binding set --help” แสดงรูปแบบของต้นทาง";
 "cli.binding.target_invalid" = "“%@” ไม่ใช่ปลายทาง “ojd binding set --help” แสดงรูปแบบของปลายทาง";
 "cli.binding.turbo_pair" = "ต้องระบุ --turbo-rate และ --turbo-duty ด้วยกัน";

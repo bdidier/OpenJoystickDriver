@@ -147,10 +147,10 @@
       if let key = keyCodeMap(event.keyCode) { return key }
       if let character = event.charactersIgnoringModifiers?.lowercased().first {
         if ("a"..."z").contains(character) {
-          return RemappingKeyboardKey(rawValue: String(character))
+          return RemappingKeyboardKey(rawValue: "Key" + String(character).uppercased())
         }
         if ("0"..."9").contains(character) {
-          return RemappingKeyboardKey(rawValue: String(character))
+          return RemappingKeyboardKey(rawValue: "Digit" + String(character))
         }
         switch character {
         case " ": return .space

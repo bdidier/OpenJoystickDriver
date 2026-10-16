@@ -2712,7 +2712,7 @@
           "type": "string"
         },
         "gyro": {
-          "enum": ["disabled", "left", "right"]
+          "enum": ["Disabled", "Left", "Right"]
         },
         "left": {
           "type": "string"

@@ -98,7 +98,7 @@
       "additionalProperties": false,
       "properties": {
         "gyroSelection": {
-          "enum": ["disabled", "left", "right"]
+          "enum": ["Disabled", "Left", "Right"]
         }
       }
     },
@@ -393,115 +393,115 @@
           "properties": {
             "key": {
               "enum": [
-                "a",
-                "b",
-                "c",
-                "d",
-                "e",
-                "f",
-                "g",
-                "h",
-                "i",
-                "j",
-                "k",
-                "l",
-                "m",
-                "n",
-                "o",
-                "p",
-                "q",
-                "r",
-                "s",
-                "t",
-                "u",
-                "v",
-                "w",
-                "x",
-                "y",
-                "z",
-                "0",
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "escape",
-                "tab",
-                "caps_lock",
-                "space",
-                "return",
-                "delete_backward",
-                "delete_forward",
-                "help",
-                "insert",
-                "home",
-                "end",
-                "page_up",
-                "page_down",
-                "arrow_up",
-                "arrow_down",
-                "arrow_left",
-                "arrow_right",
-                "minus",
-                "equal",
-                "left_bracket",
-                "right_bracket",
-                "backslash",
-                "semicolon",
-                "quote",
-                "comma",
-                "period",
-                "slash",
-                "grave",
-                "section",
-                "f1",
-                "f2",
-                "f3",
-                "f4",
-                "f5",
-                "f6",
-                "f7",
-                "f8",
-                "f9",
-                "f10",
-                "f11",
-                "f12",
-                "f13",
-                "f14",
-                "f15",
-                "f16",
-                "f17",
-                "f18",
-                "f19",
-                "f20",
-                "keypad_0",
-                "keypad_1",
-                "keypad_2",
-                "keypad_3",
-                "keypad_4",
-                "keypad_5",
-                "keypad_6",
-                "keypad_7",
-                "keypad_8",
-                "keypad_9",
-                "keypad_decimal",
-                "keypad_multiply",
-                "keypad_plus",
-                "keypad_clear",
-                "keypad_divide",
-                "keypad_enter",
-                "keypad_minus",
-                "keypad_equal"
+                "KeyA",
+                "KeyB",
+                "KeyC",
+                "KeyD",
+                "KeyE",
+                "KeyF",
+                "KeyG",
+                "KeyH",
+                "KeyI",
+                "KeyJ",
+                "KeyK",
+                "KeyL",
+                "KeyM",
+                "KeyN",
+                "KeyO",
+                "KeyP",
+                "KeyQ",
+                "KeyR",
+                "KeyS",
+                "KeyT",
+                "KeyU",
+                "KeyV",
+                "KeyW",
+                "KeyX",
+                "KeyY",
+                "KeyZ",
+                "Digit0",
+                "Digit1",
+                "Digit2",
+                "Digit3",
+                "Digit4",
+                "Digit5",
+                "Digit6",
+                "Digit7",
+                "Digit8",
+                "Digit9",
+                "Escape",
+                "Tab",
+                "CapsLock",
+                "Space",
+                "Enter",
+                "Backspace",
+                "Delete",
+                "Help",
+                "Insert",
+                "Home",
+                "End",
+                "PageUp",
+                "PageDown",
+                "ArrowUp",
+                "ArrowDown",
+                "ArrowLeft",
+                "ArrowRight",
+                "Minus",
+                "Equal",
+                "BracketLeft",
+                "BracketRight",
+                "Backslash",
+                "Semicolon",
+                "Quote",
+                "Comma",
+                "Period",
+                "Slash",
+                "Backquote",
+                "IntlBackslash",
+                "F1",
+                "F2",
+                "F3",
+                "F4",
+                "F5",
+                "F6",
+                "F7",
+                "F8",
+                "F9",
+                "F10",
+                "F11",
+                "F12",
+                "F13",
+                "F14",
+                "F15",
+                "F16",
+                "F17",
+                "F18",
+                "F19",
+                "F20",
+                "Numpad0",
+                "Numpad1",
+                "Numpad2",
+                "Numpad3",
+                "Numpad4",
+                "Numpad5",
+                "Numpad6",
+                "Numpad7",
+                "Numpad8",
+                "Numpad9",
+                "NumpadDecimal",
+                "NumpadMultiply",
+                "NumpadAdd",
+                "NumLock",
+                "NumpadDivide",
+                "NumpadEnter",
+                "NumpadSubtract",
+                "NumpadEqual"
               ]
             },
             "modifiers": {
               "type": "array",
               "items": {
-                "enum": ["alt", "control", "meta", "shift"]
+                "enum": ["Alt", "Control", "Meta", "Shift"]
               }
             },
             "type": {
@@ -529,7 +529,7 @@
           "additionalProperties": false,
           "properties": {
             "direction": {
-              "$ref": "#/$defs/dpadDirection"
+              "$ref": "vocabulary.schema.json#/$defs/dpadControl"
             },
             "type": {
               "const": "gamepad_dpad"
@@ -637,17 +637,14 @@
         }
       }
     },
-    "dpadDirection": {
-      "enum": ["up", "down", "left", "right"]
-    },
     "gyroOutput": {
       "type": "object",
       "description": "activationSource is set exactly when activationMode is not always.",
       "additionalProperties": false,
       "properties": {
         "activationMode": {
-          "enum": ["always", "while_held", "while_released", "toggle"],
-          "default": "always"
+          "enum": ["Always", "WhileHeld", "WhileReleased", "Toggle"],
+          "default": "Always"
         },
         "activationSource": {
           "$ref": "#/$defs/discreteSource"
@@ -663,8 +660,8 @@
           "default": 360
         },
         "mode": {
-          "enum": ["disabled", "mouse", "left_stick", "right_stick"],
-          "default": "disabled"
+          "enum": ["Disabled", "Mouse", "LeftStick", "RightStick"],
+          "default": "Disabled"
         },
         "pointerPointsPerDegree": {
           "type": "number",
@@ -679,7 +676,7 @@
       "if": {
         "properties": {
           "activationMode": {
-            "const": "always"
+            "const": "Always"
           }
         }
       },
@@ -698,8 +695,8 @@
       "additionalProperties": false,
       "properties": {
         "axes": {
-          "enum": ["pitch", "yaw", "both"],
-          "default": "both"
+          "enum": ["Pitch", "Yaw", "Both"],
+          "default": "Both"
         },
         "consumesSource": {
           "type": "boolean",
@@ -1008,7 +1005,7 @@
           "additionalProperties": false,
           "properties": {
             "direction": {
-              "$ref": "#/$defs/dpadDirection"
+              "$ref": "vocabulary.schema.json#/$defs/dpadControl"
             },
             "type": {
               "const": "dpad"
@@ -1037,7 +1034,7 @@
               "$ref": "#/$defs/axis"
             },
             "direction": {
-              "enum": ["negative", "positive"]
+              "enum": ["Negative", "Positive"]
             },
             "type": {
               "const": "axis_direction"
@@ -1210,16 +1207,16 @@
         },
         "mode": {
           "enum": [
-            "aim",
-            "flick",
-            "flick_only",
-            "rotate_only",
-            "pointer_area",
-            "pointer_ring",
-            "scroll_wheel",
-            "steering"
+            "Aim",
+            "Flick",
+            "FlickOnly",
+            "RotateOnly",
+            "PointerArea",
+            "PointerRing",
+            "ScrollWheel",
+            "Steering"
           ],
-          "default": "aim"
+          "default": "Aim"
         },
         "passthrough": {
           "type": "boolean",
@@ -1332,7 +1329,7 @@
           "$ref": "#/$defs/uuid"
         },
         "mode": {
-          "enum": ["pointer", "left_stick", "right_stick"]
+          "enum": ["Pointer", "LeftStick", "RightStick"]
         },
         "pointerSensitivity": {
           "type": "number",

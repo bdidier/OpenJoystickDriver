@@ -22,7 +22,7 @@ public enum PeerMessage {
     "Auxiliary7", "Auxiliary8", "LeftStickTouch", "RightStickTouch", "LeftTrackpadClick",
     "RightTrackpadClick", "LeftTrackpadTouch", "RightTrackpadTouch",
   ]
-  static let dpad: Set<String> = ["up", "down", "left", "right"]
+  static let dpad: Set<String> = ["DpadUp", "DpadDown", "DpadLeft", "DpadRight"]
   static let axes: Set<String> = [
     "LeftStickX", "LeftStickY", "RightStickX", "RightStickY", "LeftTrigger", "RightTrigger",
   ]

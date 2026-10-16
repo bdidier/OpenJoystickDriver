@@ -1,17 +1,17 @@
 import Foundation
 
 public enum RemappingGyroOutputMode: String, Codable, CaseIterable, Sendable {
-  case disabled
-  case mouse
-  case leftStick = "left_stick"
-  case rightStick = "right_stick"
+  case disabled = "Disabled"
+  case mouse = "Mouse"
+  case leftStick = "LeftStick"
+  case rightStick = "RightStick"
 }
 
 public enum RemappingGyroActivationMode: String, Codable, CaseIterable, Sendable {
-  case always
-  case whileHeld = "while_held"
-  case whileReleased = "while_released"
-  case toggle
+  case always = "Always"
+  case whileHeld = "WhileHeld"
+  case whileReleased = "WhileReleased"
+  case toggle = "Toggle"
 }
 
 /// Converts tuned angular motion to a native output with explicit physical units.

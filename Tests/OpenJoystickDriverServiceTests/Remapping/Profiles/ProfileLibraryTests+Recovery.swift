@@ -45,7 +45,7 @@ extension ProfileLibraryTests {
         [
           "id": UUID().uuidString,
           "source": ["type": "button", "button": name],
-          "destination": ["type": "keyboard", "key": "space", "modifiers": [String]()],
+          "destination": ["type": "keyboard", "key": "Space", "modifiers": [String]()],
         ] as [String: Any]
       ]
       let bytes = try JSONSerialization.data(withJSONObject: object)
@@ -75,7 +75,7 @@ extension ProfileLibraryTests {
         [
           "id": UUID().uuidString,
           "source": ["type": "button", "button": "South"],
-          "destination": ["type": "keyboard", "key": "space", "modifiers": [String]()],
+          "destination": ["type": "keyboard", "key": "Space", "modifiers": [String]()],
         ] as [String: Any]
       ]
       try JSONSerialization.data(withJSONObject: object).write(to: library.profileURL(stored.id))

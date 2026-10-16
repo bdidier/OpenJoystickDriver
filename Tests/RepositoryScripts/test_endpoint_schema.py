@@ -53,7 +53,7 @@ class EndpointSchemaTests(unittest.TestCase):
 
     def test_a_keep_alive_has_no_member_besides_the_header(self) -> None:
         self.assertTrue(self.valid(line("KeepAlive")))
-        self.assertFalse(self.valid(line("KeepAlive", buttons=["south"])))
+        self.assertFalse(self.valid(line("KeepAlive", buttons=["notAName"])))
         self.assertFalse(self.valid({"kind": "KeepAlive"}))
 
     def test_the_header_codes_need_the_supported_versions_and_no_other_code_has_them(
