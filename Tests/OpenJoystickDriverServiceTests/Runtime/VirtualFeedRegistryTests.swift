@@ -58,7 +58,8 @@ struct VirtualFeedRegistryTests {
   @Test(.timeLimit(.minutes(1)))
   func framesPlayInOrderEachForItsHoldAndAtLeastTheMinimum() async throws {
     let factory = FakeFeedFactory()
-    let registry = factory.registry()
+    let time = ManualVirtualFeedClock()
+    let registry = factory.registry(clock: time.clock)
     let session = try await registry.open(profile: "Generic")
     let device = try #require(factory.devices.first)
     let frames = [
@@ -69,14 +70,46 @@ struct VirtualFeedRegistryTests {
     let result = registry.exchange(token: session.token, frames: frames)
     #expect(result.accepted == 4)
     #expect(result.queued == 4)
+    let minimum = Double(VirtualFeedExchangeResult.minimumFrameMilliseconds) / 1000
+    // The first frame goes out at once; each later one goes out when the previous one's time ends.
+    for (index, step) in [0.1, minimum, minimum].enumerated() {
+      await waitUntil("device.sent.count == \(index + 1)") { device.sent.count == index + 1 }
+      await time.waitForSleeper(due: time.now + step)
+      #expect(device.sent.count == index + 1)
+      time.advance(by: step)
+    }
     await waitUntil("device.sent.count == 4") { device.sent.count == 4 }
 
     #expect(device.sent == frames.map(\.gamepadState))
     let times = device.sentTimes
-    #expect(times[1] - times[0] >= 0.1)
+    #expect(times.first == 0)
+    #expect(times[1] - times[0] >= 0.1 - 1e-9)
+    #expect(times[2] - times[1] >= minimum - 1e-9)
+    #expect(times[3] - times[2] >= minimum - 1e-9)
+  }
+
+  @Test(.timeLimit(.minutes(1)))
+  func aDelayedSendDoesNotShortenTheNextGapBelowTheMinimum() async throws {
+    let factory = FakeFeedFactory()
+    let time = ManualVirtualFeedClock()
+    let registry = factory.registry(clock: time.clock)
+    let session = try await registry.open(profile: "Generic")
+    let device = try #require(factory.devices.first)
     let minimum = Double(VirtualFeedExchangeResult.minimumFrameMilliseconds) / 1000
-    #expect(times[2] - times[1] >= minimum)
-    #expect(times[3] - times[2] >= minimum)
+    let delay = minimum * 4
+    // The first send takes four minimums on the clock before it returns.
+    device.duringSend = { sent in if sent == 0 { time.advance(by: delay) } }
+    let frames = [VirtualFeedFrame(buttons: [.south]), VirtualFeedFrame(buttons: [.east])]
+
+    #expect(registry.exchange(token: session.token, frames: frames).accepted == 2)
+    await waitUntil("device.sent.count == 1") { device.sent.count == 1 }
+    await time.waitForSleeper(due: delay + minimum)
+    #expect(device.sent.count == 1)
+    time.advance(by: minimum)
+    await waitUntil("device.sent.count == 2") { device.sent.count == 2 }
+
+    let times = device.sentTimes
+    #expect(times[1] - times[0] >= minimum - 1e-9)
   }
 
   @Test(.timeLimit(.minutes(1)))
@@ -247,6 +280,9 @@ struct VirtualFeedRegistryTests {
     #expect(registry.openFeedCount == 1)
     // The hold ends at 0.75; the idle time counts from there, not from the exchange.
     time.advance(by: 0.25)
+    await waitUntil("registry.lastExchangeTimes.contains(0.75)") {
+      registry.lastExchangeTimes.contains(0.75)
+    }
     await time.waitForSleepers(1)
     time.advance(by: 0.1875)
     await time.waitForSleepers(1)

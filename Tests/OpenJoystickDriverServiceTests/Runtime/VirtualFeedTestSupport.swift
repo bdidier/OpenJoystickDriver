@@ -9,6 +9,10 @@ final class FakeFeedDevice: VirtualFeedDevice, @unchecked Sendable {
   let output: UserSpaceOutputDispatcher.OutputCommandHandler
   let failsActivation: Bool
   let hangsActivation: Bool
+  /// Reads the registry clock, which stamps each send.
+  let now: @Sendable () -> TimeInterval
+  /// Runs inside every send with the number of sends before it, standing in for a slow device.
+  var duringSend: (@Sendable (Int) -> Void)?
   var failsSending = false
   /// A hanging send returns only after `release`.
   var hangsSending = false
@@ -18,7 +22,7 @@ final class FakeFeedDevice: VirtualFeedDevice, @unchecked Sendable {
   private var released = false
   private var activatedValue: LogicalControllerID?
   private var sentValue: [RemappingGamepadState] = []
-  /// `ProcessInfo.systemUptime` of each send.
+  /// The registry clock's time at the end of each send.
   private var sentTimesValue: [TimeInterval] = []
   private var closeCountValue = 0
 
@@ -29,8 +33,10 @@ final class FakeFeedDevice: VirtualFeedDevice, @unchecked Sendable {
     profile: VirtualHIDProfileID,
     output: @escaping UserSpaceOutputDispatcher.OutputCommandHandler,
     failsActivation: Bool,
-    hangsActivation: Bool
+    hangsActivation: Bool,
+    now: @escaping @Sendable () -> TimeInterval
   ) {
+    self.now = now
     self.profile = profile
     self.output = output
     self.failsActivation = failsActivation
@@ -55,9 +61,11 @@ final class FakeFeedDevice: VirtualFeedDevice, @unchecked Sendable {
   func send(_ state: RemappingGamepadState, for identifier: LogicalControllerID) async throws {
     if hangsSending { await waitForRelease() }
     if failsSending { throw UserSpaceOutputDispatcher.CreationError.createFailed }
+    duringSend?(sent.count)
+    let time = now()
     lock.withLock {
       sentValue.append(state)
-      sentTimesValue.append(ProcessInfo.processInfo.systemUptime)
+      sentTimesValue.append(time)
     }
   }
 
@@ -117,7 +125,8 @@ final class FakeFeedFactory: @unchecked Sendable {
             profile: profile,
             output: output,
             failsActivation: self.failsActivation,
-            hangsActivation: self.hangsActivation
+            hangsActivation: self.hangsActivation,
+            now: clock.now
           )
           self.devicesValue.append(device)
           return device

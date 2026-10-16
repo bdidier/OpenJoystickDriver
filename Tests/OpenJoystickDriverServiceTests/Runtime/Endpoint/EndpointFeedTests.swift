@@ -188,8 +188,9 @@ struct EndpointFeedTests {
 
       // The frame's time passes first; the idle timeout counts from its end.
       time.advance(by: 0.05)
-      await waitUntil("feeds.lastExchangeTimes.contains(time.now)") {
-        feeds.lastExchangeTimes.contains(time.now)
+      let frameEnd = Double(VirtualFeedExchangeResult.minimumFrameMilliseconds) / 1000
+      await waitUntil("feeds.lastExchangeTimes.contains(frameEnd)") {
+        feeds.lastExchangeTimes.contains(frameEnd)
       }
       await time.waitForSleepers(1)
       time.advance(by: 0.3)
@@ -236,8 +237,9 @@ struct EndpointFeedTests {
       await time.waitForSleepers(2)
       // Let the frame's time pass, so the feed is idle before the first KeepAlive.
       time.advance(by: 0.05)
-      await waitUntil("feeds.lastExchangeTimes.contains(time.now)") {
-        feeds.lastExchangeTimes.contains(time.now)
+      let frameEnd = Double(VirtualFeedExchangeResult.minimumFrameMilliseconds) / 1000
+      await waitUntil("feeds.lastExchangeTimes.contains(frameEnd)") {
+        feeds.lastExchangeTimes.contains(frameEnd)
       }
       let sentBefore = device.sent.count
       for _ in 0..<8 {
