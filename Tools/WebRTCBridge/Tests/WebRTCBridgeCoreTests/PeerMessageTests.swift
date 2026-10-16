@@ -31,7 +31,7 @@ final class PeerMessageTests: XCTestCase {
       .union(schemaEnum("vocabulary.schema.json", "stickAxis"))
     XCTAssertEqual(PeerMessage.buttons, control.subtracting(withoutButtons))
     XCTAssertEqual(PeerMessage.axes, try schemaEnum("vocabulary.schema.json", "axis"))
-    XCTAssertEqual(PeerMessage.dpad, try schemaEnum("profile.schema.json", "dpadDirection"))
+    XCTAssertEqual(PeerMessage.dpad, try schemaEnum("vocabulary.schema.json", "dpadControl"))
   }
 
   func testAValidFrameIsRebuiltFromTheCheckedFields() throws {
