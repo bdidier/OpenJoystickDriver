@@ -70,13 +70,6 @@ final class HeadlessApplicationHost {
   }
 
   private func registerForLoginIfNeeded() {
-    // Before the opt-out is read: an older version kept it in UserDefaults.
-    do { try SettingsStore().importLegacyDefaults() } catch {
-      fputs(
-        "[OpenJoystickDriver] Settings import unavailable: \(error.localizedDescription)\n",
-        stderr
-      )
-    }
     guard Bundle.main.bundleURL.pathExtension == "app" else { return }
     do { try ApplicationServiceManager.installByDefaultIfNeeded() } catch {
       fputs(

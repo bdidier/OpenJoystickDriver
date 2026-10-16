@@ -173,6 +173,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The pr
 
 ### Removed
 
+- Settings live only in `Settings.json`. The app reads no setting from macOS preferences, and `SettingsStore.importLegacyDefaults` is removed. A missing file starts with the built-in defaults.
 - The `buttonLabels` key of a protocol description and the `ControllerButtonLabels` type are removed. Simultaneous button changes from one report reach the remapping engine with every release before any press, each in one fixed order for every controller, so a report that swaps one held button for another never holds both.
 - **Breaking:** `ojd controller claim` makes OJD serve a controller and `ojd controller release` leaves it to macOS. In `ojd controller show --json`, `ownership.server` is `system` or `ojd` and `ownership.serverSource` names where the choice came from. The `claim` and `release` output has the kind `ControllerServer` and carries `server`.
 - **BREAKING:** The executable is `ojd`, and its commands are:
