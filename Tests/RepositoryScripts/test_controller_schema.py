@@ -337,7 +337,9 @@ class OwnershipAndSessionTests(unittest.TestCase):
             "GameSir USB ownership": record(
                 {"family": "vendor.gamesir", "variant": "usb"}, server="ojd"
             ),
-            "template on DualSense": record(DUALSENSE, session={"rumble": GP100_RUMBLE}),
+            "template on DualSense": record(
+                DUALSENSE, session={"rumble": GP100_RUMBLE}
+            ),
             "keep-alive in a record": record(
                 THIRD_PARTY, session={"keepAlive": {"intervalMilliseconds": 500}}
             ),

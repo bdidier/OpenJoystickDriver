@@ -16,6 +16,7 @@ from Scripts.Quality import validate_schemas
 def zeros(count: int) -> str:
     return " ".join(["00"] * count)
 
+
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -915,7 +916,10 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def test_the_bundled_gip_startup_refers_to_named_packets_only(self) -> None:
         description = protocol_descriptions.bundled()["xbox.gip"]
         self.assertEqual(
-            [write["packet"] for write in description["defaults"]["session"]["startup"]],
+            [
+                write["packet"]
+                for write in description["defaults"]["session"]["startup"]
+            ],
             ["xbox.gip/power-on", "xbox.gip/led-on", "xbox.gip/auth-done"],
         )
 
