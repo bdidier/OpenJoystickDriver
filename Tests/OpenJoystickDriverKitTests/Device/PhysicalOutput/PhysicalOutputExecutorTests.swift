@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -125,7 +126,9 @@ struct PhysicalOutputExecutorTests {
   }
 
   func waitForSubmittedOperations(_ count: Int, on queue: PhysicalHIDOutputSerialQueue) async {
-    while await queue.submittedOperationCount < count { await Task.yield() }
+    await waitUntil("\(count) operations are submitted") {
+      await queue.submittedOperationCount >= count
+    }
   }
 
   func send(_ command: ControllerOutputCommand, to started: Started) -> Task<Bool, Never> {

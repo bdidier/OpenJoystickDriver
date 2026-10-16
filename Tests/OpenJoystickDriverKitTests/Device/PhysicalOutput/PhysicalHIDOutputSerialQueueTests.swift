@@ -1,3 +1,4 @@
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -87,7 +88,9 @@ struct PhysicalHIDOutputSerialQueueTests {
         return true
       }
     }
-    while await queue.submittedOperationCount < 2 { await Task.yield() }
+    await waitUntil("two operations are submitted") {
+      await queue.submittedOperationCount >= 2
+    }
     queue.cancelAll()
     let later = Task {
       await queue.perform { _ in
@@ -95,7 +98,9 @@ struct PhysicalHIDOutputSerialQueueTests {
         return true
       }
     }
-    while await queue.submittedOperationCount < 3 { await Task.yield() }
+    await waitUntil("three operations are submitted") {
+      await queue.submittedOperationCount >= 3
+    }
     await release.open()
 
     #expect(await running.value == .completed(true))

@@ -23,7 +23,8 @@ struct LocalServiceRPCCancellationTests {
         socketPath: socketPath
       )
     }
-    try await Task.sleep(nanoseconds: 200_000_000)
+    let connection = await acceptConnection(on: listener)
+    defer { Darwin.close(connection) }
 
     let cancellationStart = ContinuousClock.now
     task.cancel()
@@ -42,6 +43,13 @@ struct LocalServiceRPCCancellationTests {
     await task.value
     #expect(ContinuousClock.now - cancellationStart < .seconds(2))
     #expect(!client.isConnected)
+  }
+
+  /// Returns the descriptor of the next client connection to `listener`.
+  private func acceptConnection(on listener: Int32) async -> Int32 {
+    await withCheckedContinuation { continuation in
+      DispatchQueue.global().async { continuation.resume(returning: accept(listener, nil, nil)) }
+    }
   }
 
   /// A socket that accepts connections into its backlog but never reads or replies.

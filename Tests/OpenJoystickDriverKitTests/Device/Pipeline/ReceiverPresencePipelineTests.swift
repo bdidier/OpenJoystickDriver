@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import ProtocolPacketFixtures
 import Testing
 
@@ -35,7 +36,7 @@ struct ReceiverPresencePipelineTests {
     let pipeline = makePipeline(sessions: [session], dispatcher: dispatcher)
 
     let start = Task { await pipeline.start() }
-    #expect(await waitUntil { dispatcher.stops == [identifier] })
+    await waitUntil("dispatcher.stops == [identifier]") { dispatcher.stops == [identifier] }
 
     #expect(dispatcher.states == [snapshot(.press(.south)), .neutral])
     #expect(await session.writes == [inquiry, playerOneLED])
@@ -63,7 +64,7 @@ struct ReceiverPresencePipelineTests {
     let pipeline = makePipeline(sessions: [first, second], dispatcher: dispatcher)
 
     let start = Task { await pipeline.start() }
-    #expect(await waitUntil { dispatcher.states.count == 3 })
+    await waitUntil("dispatcher.states.count == 3") { dispatcher.states.count == 3 }
 
     // The held button is released with the lost session and pressed again by the next one.
     #expect(
@@ -101,11 +102,9 @@ struct ReceiverPresencePipelineTests {
     #expect(await pipeline.connectionState(binding: binding, interface: usbInterface) == empty)
 
     let start = Task { await pipeline.start() }
-    #expect(
-      await waitUntil {
-        await pipeline.connectionState(binding: binding, interface: usbInterface).isConnected
-      }
-    )
+    await waitUntil("the pipeline reports a connection") {
+      await pipeline.connectionState(binding: binding, interface: usbInterface).isConnected
+    }
     await pipeline.stop()
     await start.value
   }
@@ -129,15 +128,6 @@ struct ReceiverPresencePipelineTests {
         accessContentionDelayNanoseconds: 1_000_000
       )
     )
-  }
-
-  private func waitUntil(condition: @escaping @Sendable () async -> Bool) async -> Bool {
-    let deadline = ContinuousClock.now.advanced(by: .seconds(10))
-    while ContinuousClock.now < deadline {
-      if await condition() { return true }
-      try? await Task.sleep(for: .milliseconds(1))
-    }
-    return await condition()
   }
 }
 

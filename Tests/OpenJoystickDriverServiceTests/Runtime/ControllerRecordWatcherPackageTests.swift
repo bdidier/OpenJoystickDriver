@@ -1,5 +1,6 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverService
@@ -56,15 +57,13 @@ struct ControllerRecordWatcherPackageTests {
       runningVersion: "0.6.0"
     )
     try store.install(staged)
-    for _ in 0..<50 where changes == 0 { try await Task.sleep(nanoseconds: 100_000_000) }
+    await waitUntil("the install is reported") { changes >= 1 }
     #expect(applied.last == 1)
     #expect(changes >= 1)
 
     let installedChanges = changes
     try store.remove("arcade-pack")
-    for _ in 0..<50 where changes == installedChanges {
-      try await Task.sleep(nanoseconds: 100_000_000)
-    }
+    await waitUntil("the removal is reported") { changes > installedChanges }
     #expect(applied.last == 0)
     #expect(changes > installedChanges)
   }

@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import ProtocolPacketFixtures
 import Testing
 

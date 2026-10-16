@@ -1,5 +1,6 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverService
@@ -296,7 +297,7 @@ private actor ResponseAcceptanceGate {
     await withCheckedContinuation { continuation = $0 }
   }
 
-  func waitUntilPaused() async { while !paused { await Task.yield() } }
+  func waitUntilPaused() async { await waitUntil("the transaction pauses") { paused } }
 
   nonisolated func resume() { Task { await release() } }
 

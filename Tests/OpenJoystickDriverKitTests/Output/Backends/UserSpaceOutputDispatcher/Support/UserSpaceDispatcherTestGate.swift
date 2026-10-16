@@ -1,4 +1,6 @@
 import Foundation
+import OpenJoystickDriverTestSupport
+import Testing
 
 @testable import OpenJoystickDriverKit
 
@@ -13,7 +15,9 @@ actor UserSpaceDispatcherTestGate {
     await withCheckedContinuation { waiters.append($0) }
   }
 
-  func waitUntilWaiting() async { while !waiting && !isOpen { await Task.yield() } }
+  func waitUntilWaiting() async {
+    await waitUntil("a task waits at the gate") { waiting || isOpen }
+  }
 
   func open() {
     isOpen = true

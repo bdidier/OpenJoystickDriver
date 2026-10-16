@@ -1,5 +1,6 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverService
@@ -20,7 +21,7 @@ extension VirtualOutputTransitionTests {
       identifier: identifier,
       command: .setRumble(rumble, duration: .milliseconds(250))
     )
-    while await probe.count() < 1 { await Task.yield() }
+    await waitUntil("the feedback write starts") { await probe.count() >= 1 }
 
     // The feedback timeout cannot fire within the test's time limit, so the call returns only
     // once the neutral write completes, without waiting for the stalled write or the timeout.
@@ -58,19 +59,23 @@ extension VirtualOutputTransitionTests {
         resumeWhenComplete: true
       )
     }
-    while sent.withLock({ $0.isEmpty }) { await Task.yield() }
+    await waitUntil("the neutralization write starts") { sent.withLock { !$0.isEmpty } }
 
     // Mid-transition, the other controller's feedback is admitted and the first one's is not.
     feedbackGate.submit(identifier: first, command: .stopRumble)
     feedbackGate.submit(identifier: second, command: .stopRumble)
-    while !sent.withLock({ $0.contains(second) }) { await Task.yield() }
+    await waitUntil("the second controller's feedback is sent") {
+      sent.withLock { $0.contains(second) }
+    }
     #expect(sent.withLock { $0 } == [first, second])
 
     await stalledNeutralization.open()
     #expect(await quiesce.value)
 
     feedbackGate.submit(identifier: first, command: .stopRumble)
-    while sent.withLock({ $0.count }) < 3 { await Task.yield() }
+    await waitUntil("the first controller's feedback is sent again") {
+      sent.withLock { $0.count >= 3 }
+    }
     #expect(sent.withLock { $0 } == [first, second, first])
   }
 
@@ -245,7 +250,7 @@ extension VirtualOutputTransitionTests {
     try await Task.sleep(nanoseconds: 50_000_000)
 
     let stop = Task { await server.stop() }
-    while !server.isVirtualOutputServerStopped() { await Task.yield() }
+    await waitUntil("the server is stopped") { server.isVirtualOutputServerStopped() }
     await gate.open()
     await stop.value
     #expect(await activation.value == false)

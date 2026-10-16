@@ -25,11 +25,11 @@ extension InputTestTests {
     model.brightness = 78
 
     model.applyPlayerIndicator()
-    #expect(await eventually { await !gateway.playerCalls.isEmpty })
+    await waitUntil("!gateway.playerCalls.isEmpty") { await !gateway.playerCalls.isEmpty }
     model.applyColor()
-    #expect(await eventually { await !gateway.colorCalls.isEmpty })
+    await waitUntil("!gateway.colorCalls.isEmpty") { await !gateway.colorCalls.isEmpty }
     model.applyBrightness()
-    #expect(await eventually { await !gateway.brightnessCalls.isEmpty })
+    await waitUntil("!gateway.brightnessCalls.isEmpty") { await !gateway.brightnessCalls.isEmpty }
 
     #expect(await gateway.playerCalls.first?.0 == selector)
     #expect(await gateway.playerCalls.first?.1 == .player3)
@@ -42,7 +42,9 @@ extension InputTestTests {
     #expect(await gateway.rumbleCalls.isEmpty)
 
     model.close()
-    #expect(await eventually { await !gateway.colorReleaseCalls.isEmpty })
+    await waitUntil("!gateway.colorReleaseCalls.isEmpty") {
+      await !gateway.colorReleaseCalls.isEmpty
+    }
     #expect(await gateway.colorReleaseCalls.first?.0 == selector)
   }
 
@@ -59,10 +61,12 @@ extension InputTestTests {
     model.selectDevice(makeInputTestDevice(capabilities: capabilities))
 
     model.applyColor()
-    #expect(await gateway.waitForActiveOutputCall())
+    await gateway.waitForActiveOutputCall()
     await gateway.setOutputDelay(0)
     model.applyBrightness()
-    #expect(await eventually { await gateway.brightnessCalls.count == 1 })
+    await waitUntil("gateway.brightnessCalls.count == 1") {
+      await gateway.brightnessCalls.count == 1
+    }
 
     #expect(await gateway.counts().maximumConcurrentOutput == 1)
     #expect(await gateway.colorCalls.isEmpty)
@@ -79,11 +83,11 @@ extension InputTestTests {
     model.rumbleIntensities[.leftMain] = 200
 
     model.testRumble()
-    #expect(await gateway.waitForActiveOutputCall())
+    await gateway.waitForActiveOutputCall()
     await gateway.setOutputDelay(0)
     model.stopRumble()
 
-    #expect(await gateway.waitForRumbleCalls(1))
+    await gateway.waitForRumbleCalls(1)
     #expect(await gateway.counts().maximumConcurrentOutput == 1)
     #expect(await gateway.rumbleCalls.count == 1)
     #expect(await gateway.rumbleCalls.first?.left == 0)
@@ -126,10 +130,10 @@ extension InputTestTests {
     let model = InputTestViewModel(gateway: gateway, sampleIntervalNanoseconds: 1_000_000_000)
     model.selectDevice(makeInputTestDevice())
     model.open()
-    try? await Task.sleep(nanoseconds: 20_000_000)
+    await waitUntil("the sample is published") { model.latestInput == snapshot }
 
     model.testRumble()
-    try? await Task.sleep(nanoseconds: 20_000_000)
+    await waitUntil("the rumble fails") { model.outputState == .failed(.rumble) }
 
     #expect(model.latestInput == snapshot)
     #expect(model.outputState == .failed(.rumble))
@@ -148,7 +152,9 @@ extension InputTestTests {
     model.selectDevice(makeInputTestDevice())
 
     model.testRumble()
-    await waitUntil { model.outputState == .failed(.rumble) }
+    await waitUntil("model.outputState == .failed(.rumble)") {
+      model.outputState == .failed(.rumble)
+    }
 
     #expect(model.outputError != nil)
     #expect(!model.isOutputBusy)
@@ -163,15 +169,15 @@ extension InputTestTests {
     let device = makeInputTestDevice(connection: "HID")
     model.selectDevice(device)
     model.open()
-    try? await Task.sleep(nanoseconds: 20_000_000)
+    await gateway.waitForInputCalls(1)
 
     model.reconcileConnectedDevices([])
-    try? await Task.sleep(nanoseconds: 20_000_000)
+    await waitUntil("the sampling is cancelled") { await gateway.counts().cancelled == 1 }
 
     #expect(model.sessionState == .disconnected)
     #expect(await gateway.counts().cancelled == 1)
     model.reconcileConnectedDevices([device])
-    #expect(await gateway.waitForInputCalls(2))
+    await gateway.waitForInputCalls(2)
     #expect(model.sessionState == .starting)
     #expect(model.isSampling)
     model.close()
@@ -208,7 +214,7 @@ extension InputTestTests {
     let device = makeInputTestDevice(connection: "USB", discoverySource: .hid)
     model.selectDevice(device)
     model.open()
-    try? await Task.sleep(nanoseconds: 20_000_000)
+    await gateway.waitForInputCalls(1)
     let status = RuntimeStatusPresentation(
       payload: ApplicationServiceStatusPayload(
         inputRead: "denied",
@@ -220,7 +226,7 @@ extension InputTestTests {
     )
 
     model.reconcileStatus(status)
-    try? await Task.sleep(nanoseconds: 20_000_000)
+    await waitUntil("the sampling is cancelled") { await gateway.counts().cancelled == 1 }
 
     #expect(model.sessionState == .permissionRequired)
     #expect(await gateway.counts().cancelled == 1)
@@ -245,26 +251,5 @@ extension InputTestTests {
       physicalOutputCapabilities: capabilities,
       sessionToken: .fixture(sessionToken)
     )
-  }
-
-  @MainActor
-  func waitUntil(
-    timeoutNanoseconds: UInt64 = 10_000_000_000,
-    _ condition: @escaping @MainActor () -> Bool
-  ) async {
-    let deadline = DispatchTime.now().uptimeNanoseconds &+ timeoutNanoseconds
-    while !condition() {
-      if DispatchTime.now().uptimeNanoseconds >= deadline { return }
-      try? await Task.sleep(nanoseconds: 1_000_000)
-    }
-  }
-
-  func eventually(_ condition: @escaping @Sendable () async -> Bool) async -> Bool {
-    let deadline = DispatchTime.now().uptimeNanoseconds &+ 10_000_000_000
-    while DispatchTime.now().uptimeNanoseconds < deadline {
-      if await condition() { return true }
-      try? await Task.sleep(nanoseconds: 1_000_000)
-    }
-    return await condition()
   }
 }

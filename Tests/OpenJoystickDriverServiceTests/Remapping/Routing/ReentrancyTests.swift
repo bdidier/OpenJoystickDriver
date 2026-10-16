@@ -1,5 +1,6 @@
 import Foundation
 import OpenJoystickDriverKit
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverService
@@ -33,7 +34,7 @@ struct RemappingRouterReentrancyTests {
       await completion.finish()
       return transaction
     }
-    #expect(await eventually { harness.virtualOutput.suppressOutput })
+    await waitUntil("harness.virtualOutput.suppressOutput") { harness.virtualOutput.suppressOutput }
     #expect(!(await completion.isFinished))
 
     try await harness.router.dispatchCausally(changes: [.press(.south)], from: virtualOutput)
@@ -82,8 +83,10 @@ struct RemappingRouterReentrancyTests {
     let begin = Task { try await harness.router.beginProfileTransaction() }
     // Suppression turns on before the barrier closes, so resume only once admission is closed;
     // resuming earlier lets the paused operation emit as an admitted one.
-    #expect(await eventually { harness.virtualOutput.suppressOutput })
-    #expect(await eventually { harness.engine.emissionBarrier.currentPermit() == nil })
+    await waitUntil("harness.virtualOutput.suppressOutput") { harness.virtualOutput.suppressOutput }
+    await waitUntil("harness.engine.emissionBarrier.currentPermit() == nil") {
+      harness.engine.emissionBarrier.currentPermit() == nil
+    }
     gate.resume()
 
     try await dispatch.value
@@ -116,8 +119,10 @@ struct RemappingRouterReentrancyTests {
     let begin = Task { try await harness.router.beginProfileTransaction() }
     // Suppression turns on before the barrier closes, so resume only once admission is closed;
     // resuming earlier lets the paused operation emit as an admitted one.
-    #expect(await eventually { harness.virtualOutput.suppressOutput })
-    #expect(await eventually { harness.engine.emissionBarrier.currentPermit() == nil })
+    await waitUntil("harness.virtualOutput.suppressOutput") { harness.virtualOutput.suppressOutput }
+    await waitUntil("harness.engine.emissionBarrier.currentPermit() == nil") {
+      harness.engine.emissionBarrier.currentPermit() == nil
+    }
     gate.resume()
 
     try await dispatch.value
@@ -146,8 +151,10 @@ struct RemappingRouterReentrancyTests {
     let begin = Task { try await harness.router.beginProfileTransaction() }
     // Suppression turns on before the barrier closes, so resume only once admission is closed;
     // resuming earlier lets the paused operation emit as an admitted one.
-    #expect(await eventually { harness.virtualOutput.suppressOutput })
-    #expect(await eventually { harness.engine.emissionBarrier.currentPermit() == nil })
+    await waitUntil("harness.virtualOutput.suppressOutput") { harness.virtualOutput.suppressOutput }
+    await waitUntil("harness.engine.emissionBarrier.currentPermit() == nil") {
+      harness.engine.emissionBarrier.currentPermit() == nil
+    }
     gate.resume()
 
     try await dispatch.value
@@ -180,8 +187,10 @@ struct RemappingRouterReentrancyTests {
     let begin = Task { try await harness.router.beginProfileTransaction() }
     // Suppression turns on before the barrier closes, so resume only once admission is closed;
     // resuming earlier lets the paused operation emit as an admitted one.
-    #expect(await eventually { harness.virtualOutput.suppressOutput })
-    #expect(await eventually { harness.engine.emissionBarrier.currentPermit() == nil })
+    await waitUntil("harness.virtualOutput.suppressOutput") { harness.virtualOutput.suppressOutput }
+    await waitUntil("harness.engine.emissionBarrier.currentPermit() == nil") {
+      harness.engine.emissionBarrier.currentPermit() == nil
+    }
     gate.resume()
 
     try await tick.value
@@ -208,7 +217,9 @@ struct RemappingRouterReentrancyTests {
     }
     await gate.waitUntilPaused()
     let shutdown = Task { try await harness.router.shutdown() }
-    #expect(await eventually { harness.engine.emissionBarrier.isTerminated })
+    await waitUntil("harness.engine.emissionBarrier.isTerminated") {
+      harness.engine.emissionBarrier.isTerminated
+    }
     gate.resume()
 
     try? await dispatch.value
@@ -246,7 +257,9 @@ struct RemappingRouterReentrancyTests {
       try await harness.router.shutdown()
       await completion.finish()
     }
-    #expect(await eventually { harness.engine.emissionBarrier.isTerminated })
+    await waitUntil("harness.engine.emissionBarrier.isTerminated") {
+      harness.engine.emissionBarrier.isTerminated
+    }
     #expect(harness.virtualOutput.suppressOutput)
     #expect(!(await completion.isFinished))
 
@@ -349,7 +362,9 @@ struct RemappingRouterReentrancyTests {
     }
     await gate.waitUntilPaused()
     let shutdown = Task { try await harness.router.shutdown() }
-    #expect(await eventually { harness.engine.emissionBarrier.isTerminated })
+    await waitUntil("harness.engine.emissionBarrier.isTerminated") {
+      harness.engine.emissionBarrier.isTerminated
+    }
     gate.resume()
 
     await #expect(throws: RemappingOutputRoutingError.shutDown) { try await completionTask.value }
@@ -375,7 +390,9 @@ struct RemappingRouterReentrancyTests {
     let recovery = Task { try await harness.router.recoverProfileTransaction() }
     await gate.waitUntilPaused()
     let shutdown = Task { try await harness.router.shutdown() }
-    #expect(await eventually { harness.engine.emissionBarrier.isTerminated })
+    await waitUntil("harness.engine.emissionBarrier.isTerminated") {
+      harness.engine.emissionBarrier.isTerminated
+    }
     gate.resume()
 
     await #expect(throws: RemappingOutputRoutingError.shutDown) { try await recovery.value }

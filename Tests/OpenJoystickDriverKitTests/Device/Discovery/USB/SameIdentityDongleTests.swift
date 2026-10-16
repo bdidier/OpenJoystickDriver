@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import ProtocolPacketFixtures
 import Testing
 
@@ -21,7 +22,7 @@ struct SameIdentityDongleTests {
 
     for pad in [first, second] {
       _ = await manager.handleUSBDeviceAdded(pad.device, provider: pad.provider)
-      #expect(await Self.waitUntil { await pad.session.writeCount >= 1 })
+      await waitUntil("pad.session.writeCount >= 1") { await pad.session.writeCount >= 1 }
     }
 
     #expect(await first.session.writes.first == [0x01, 0x03, 0x06])
@@ -38,7 +39,7 @@ struct SameIdentityDongleTests {
     for pad in [first, second] {
       _ = await manager.handleUSBDeviceAdded(pad.device, provider: pad.provider)
       // Presence inquiry, then the ring LED once the pad reports itself connected.
-      #expect(await Self.waitUntil { await pad.session.writeCount >= 2 })
+      await waitUntil("pad.session.writeCount >= 2") { await pad.session.writeCount >= 2 }
     }
 
     #expect(await first.session.writes.last.map(Self.receiverLED) == 0x46)
@@ -53,7 +54,7 @@ struct SameIdentityDongleTests {
     let second = Self.pad(serviceID: 520, interfaceProtocol: 0x01, outEndpoint: 0x01)
     for pad in [first, second] {
       _ = await manager.handleUSBDeviceAdded(pad.device, provider: pad.provider)
-      #expect(await Self.waitUntil { await pad.session.writeCount >= 1 })
+      await waitUntil("pad.session.writeCount >= 1") { await pad.session.writeCount >= 1 }
     }
     let rumble = ControllerOutputCommand.setRumble(
       RumbleIntensities(leftMain: UnipolarValue(byte: 0x80)),
@@ -82,7 +83,7 @@ struct SameIdentityDongleTests {
     let second = Self.pad(serviceID: 620, interfaceProtocol: 0x81, outEndpoint: 0x01)
     for pad in [first, second] {
       _ = await manager.handleUSBDeviceAdded(pad.device, provider: pad.provider)
-      #expect(await Self.waitUntil { await pad.session.writeCount >= 2 })
+      await waitUntil("pad.session.writeCount >= 2") { await pad.session.writeCount >= 2 }
     }
 
     for (pad, left, right) in [(first, UInt8(0x80), UInt8(0x10)), (second, 0x20, 0x40)] {
@@ -112,7 +113,7 @@ struct SameIdentityDongleTests {
     let manager = DeviceManager(dispatcher: LoggingOutputDispatcher())
     let pad = Self.pad(serviceID: 710, interfaceProtocol: 0x01, outEndpoint: 0x02)
     _ = await manager.handleUSBDeviceAdded(pad.device, provider: pad.provider)
-    #expect(await Self.waitUntil { await pad.session.writeCount >= 1 })
+    await waitUntil("pad.session.writeCount >= 1") { await pad.session.writeCount >= 1 }
 
     let portKey = try #require(Self.identifier(pad.device).portKey)
     let result = await manager.sendControllerOutput(
@@ -192,15 +193,6 @@ struct SameIdentityDongleTests {
       locationID: device.locationID,
       interfaceNumber: 0
     )
-  }
-
-  private static func waitUntil(condition: @escaping @Sendable () async -> Bool) async -> Bool {
-    let deadline = ContinuousClock.now.advanced(by: .seconds(10))
-    while ContinuousClock.now < deadline {
-      if await condition() { return true }
-      try? await Task.sleep(for: .milliseconds(1))
-    }
-    return await condition()
   }
 }
 

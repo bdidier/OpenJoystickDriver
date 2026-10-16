@@ -1,4 +1,5 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -31,9 +32,8 @@ struct USBStartupOutputPolicyTests {
     )
 
     let startTask = Task { await pipeline.start() }
-    let retried = await waitUntil { await provider.openAttempts() >= 4 }
+    await waitUntil("four open attempts") { await provider.openAttempts() >= 4 }
 
-    #expect(retried)
     #expect(dispatcher.activations == 0)
     #expect(dispatcher.ownershipStates.contains(.accessDenied))
     #expect(!dispatcher.ownershipStates.contains(.exclusive))
@@ -56,9 +56,8 @@ struct USBStartupOutputPolicyTests {
     )
 
     let startTask = Task { await pipeline.start() }
-    let published = await waitUntil { dispatcher.activations == 1 }
+    await waitUntil("the output is published") { dispatcher.activations == 1 }
 
-    #expect(published)
     #expect(await provider.openAttempts() == 4)
     #expect(dispatcher.activations == 1)
     #expect(dispatcher.ownershipAtDispatch == [.exclusive])
@@ -124,14 +123,14 @@ struct USBStartupOutputPolicyTests {
     )
 
     let startTask = Task { await pipeline.start() }
-    #expect(await waitUntil { await provider.hasStartedOpen() })
+    await waitUntil("provider.hasStartedOpen()") { await provider.hasStartedOpen() }
 
     await pipeline.stop()
     await provider.resumeOpen()
     await startTask.value
 
     #expect(dispatcher.activations == 0)
-    #expect(await waitUntil { await session.closeCount() == 1 })
+    await waitUntil("session.closeCount() == 1") { await session.closeCount() == 1 }
     #expect(!dispatcher.ownershipStates.contains(.exclusive))
   }
 
@@ -212,18 +211,6 @@ struct USBStartupOutputPolicyTests {
     reconnectMaximumDelayNanoseconds: 4_000_000,
     accessContentionDelayNanoseconds: 1_000_000
   )
-
-  private func waitUntil(
-    timeoutNanoseconds: UInt64 = 10_000_000_000,
-    condition: @escaping @Sendable () async -> Bool
-  ) async -> Bool {
-    let deadline = DispatchTime.now().uptimeNanoseconds &+ timeoutNanoseconds
-    while DispatchTime.now().uptimeNanoseconds < deadline {
-      if await condition() { return true }
-      try? await Task.sleep(nanoseconds: 1_000_000)
-    }
-    return await condition()
-  }
 }
 
 private final class StartupInputParser: PhysicalProtocolDriver {
