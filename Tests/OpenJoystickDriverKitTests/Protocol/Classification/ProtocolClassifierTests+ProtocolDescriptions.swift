@@ -156,6 +156,7 @@ extension ProtocolClassifierTests {
         "kind": "\(kind)",
         "family": "\(family)",
         "endpoints": {"in": 130, "out": 2},
+        "defaults": {"session": {"handshakeAttempts": 3, "announceResendLimit": 8}},
         "interfaceSignatures": [
           {\(signature), "interfaceClass": 255, "interfaceSubclass": 71, "interfaceProtocol": 208}
         ]

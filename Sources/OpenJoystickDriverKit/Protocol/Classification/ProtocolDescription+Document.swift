@@ -59,15 +59,21 @@ extension ProtocolDescription {
     }
 
     /// `defaults.session`: what runs while the device is open. The keep-alive, the Switch 1
-    /// subcommands and the GIP named packets.
+    /// subcommands, the GIP named packets and the counts that bound the startup resends.
     struct Session: Decodable {
       let keepAlive: KeepAlive?
       let subcommands: SubcommandPlan?
       let namedPackets: NamedPacketPlan?
+      let handshakeAttempts: Int?
+      let announceResendLimit: Int?
+      let receiverInquiryResendLimit: Int?
 
       init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: DocumentKey.self)
-        try container.rejectUnknown(allowed: ["keepAlive", "subcommands", "namedPackets"])
+        try container.rejectUnknown(allowed: [
+          "keepAlive", "subcommands", "namedPackets", "handshakeAttempts", "announceResendLimit",
+          "receiverInquiryResendLimit",
+        ])
         guard !container.allKeys.isEmpty else {
           throw DecodingError.dataCorrupted(
             .init(codingPath: decoder.codingPath, debugDescription: "session must not be empty")
@@ -76,6 +82,21 @@ extension ProtocolDescription {
         keepAlive = try container.decodeOptional(KeepAlive.self, for: "keepAlive")
         subcommands = try container.decodeOptional(SubcommandPlan.self, for: "subcommands")
         namedPackets = try container.decodeOptional(NamedPacketPlan.self, for: "namedPackets")
+        func count(_ key: String, _ range: ClosedRange<Int>) throws -> Int? {
+          let value = try container.decodeOptional(Int.self, for: key)
+          guard value.map(range.contains) ?? true else {
+            throw DecodingError.dataCorrupted(
+              .init(
+                codingPath: decoder.codingPath + [DocumentKey(key)],
+                debugDescription: "\(key) must be in \(range.lowerBound)...\(range.upperBound)"
+              )
+            )
+          }
+          return value
+        }
+        handshakeAttempts = try count("handshakeAttempts", 1...10)
+        announceResendLimit = try count("announceResendLimit", 1...100)
+        receiverInquiryResendLimit = try count("receiverInquiryResendLimit", 1...100)
       }
     }
 

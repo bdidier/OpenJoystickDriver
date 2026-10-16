@@ -25,10 +25,14 @@
     "base": "xbox",
     "add": ["Guide"]
   },
-  "rawUSBTuningKeys": ["presenceResendReports"],
+  "rawUSBTuningKeys": ["presenceResendReports", "usbTransferTimeoutMs"],
   "defaults": {
+    "session": {
+      "receiverInquiryResendLimit": 8
+    },
     "tuning": {
       "presenceResendReports": 16,
+      "usbTransferTimeoutMs": 2000,
       "frameQueueCapacity": 64
     },
     "output": {

@@ -337,6 +337,18 @@ struct ControllerRecordDocumentTests {
         )
     )
     #expect(try decode(protocol: ["family": "xbox.gip"]).tuning == .none)
+    for protocolInfo in [
+      ["family": "xbox.gip"], ["family": "xbox.xusb", "variant": "wired"],
+    ] {
+      let transfer = try decode(
+        protocol: protocolInfo,
+        extra: ["tuning": ["usbTransferTimeoutMs": 750]]
+      )
+      #expect(
+        transfer.tuning == ControllerTuning(usbTransferTimeoutMilliseconds: 750),
+        "\(protocolInfo)"
+      )
+    }
   }
 
   @Test(arguments: ["xbox.gip", "sony.dualsense", "nintendo.switch2", "hid.descriptor"])
@@ -375,6 +387,11 @@ struct ControllerRecordDocumentTests {
       ("xbox.gip", ["usbStartupRetryDelayMs": 60_001]),
       ("xbox.gip", ["usbTransferTimeoutMs": 0]),
       ("xbox.gip", ["usbTransferTimeoutMs": 60_001]),
+      ("xbox.xusb", ["usbTransferTimeoutMs": 0]),
+      ("xbox.xusb", ["usbTransferTimeoutMs": 60_001]),
+      ("sony.dualsense", ["usbTransferTimeoutMs": 2_000]),
+      ("xbox.gip", ["zephyrQuill": 5]),
+      ("xbox.xusb", ["zephyrQuill": 5]),
       ("xbox.gip", ["frameQueueCapacity": 0]),
       ("hid.descriptor", ["frameQueueCapacity": 1_025]),
       ("sony.dualsense", ["frameQueueCapacity": 1.5]),
@@ -382,7 +399,11 @@ struct ControllerRecordDocumentTests {
   )
   func rejectsTuningOutOfRangeOrOutsideItsFamily(family: String, tuning: [String: any Sendable]) {
     #expect(throws: DecodingError.self) {
-      try decode(protocol: ["family": family], extra: ["tuning": tuning])
+      try decode(
+        protocol: family == "xbox.xusb"
+          ? ["family": family, "variant": "wired"] : ["family": family],
+        extra: ["tuning": tuning]
+      )
     }
   }
 

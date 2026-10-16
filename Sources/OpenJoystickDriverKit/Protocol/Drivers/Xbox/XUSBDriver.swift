@@ -9,10 +9,6 @@ private let xbox360InputReportLength = 20
 private let xbox360TriggerMax: Float = 255
 /// Maximum positive value for a signed stick axis.
 private let xbox360StickMax = Float(Int16.max)
-/// The timeout of one output packet that names none.
-private let xbox360OutputTimeoutMs = 2_000
-/// The most presence inquiry resends.
-private let xbox360ReceiverInquiryResendLimit = 8
 
 /// Xbox 360 ring-of-light LED patterns.
 public enum Xbox360LEDPattern: UInt8, Sendable {
@@ -102,6 +98,8 @@ public final class XUSBDriver: PhysicalProtocolDriver {
   private var padReportsWithoutPresence = 0
   /// Pad reports seen without presence between inquiry resends (`presenceResendReports`).
   let inquiryResendInterval: Int
+  /// The timeout of one output packet that names none (`usbTransferTimeoutMs`).
+  let usbTimeoutMilliseconds: Int
   /// The record's own startup packets; the description's when empty.
   private let recordStartup: [USBStartupWrite]
 
@@ -124,6 +122,10 @@ public final class XUSBDriver: PhysicalProtocolDriver {
     self.isWirelessReceiver = isWirelessReceiver
     inquiryResendInterval = PhysicalProtocolID.xboxXUSB.described(
       \.presenceResendReports,
+      in: tuning
+    )
+    usbTimeoutMilliseconds = PhysicalProtocolID.xboxXUSB.described(
+      \.usbTransferTimeoutMilliseconds,
       in: tuning
     )
   }
@@ -220,7 +222,7 @@ public final class XUSBDriver: PhysicalProtocolDriver {
       variant: isWirelessReceiver ? .receiver : .wired,
       parameters: .none
     ).map {
-      $0.write(defaultEndpoint: outEndpoint, defaultTimeoutMilliseconds: xbox360OutputTimeoutMs)
+      $0.write(defaultEndpoint: outEndpoint, defaultTimeoutMilliseconds: usbTimeoutMilliseconds)
     }
   }
 
@@ -228,7 +230,7 @@ public final class XUSBDriver: PhysicalProtocolDriver {
     defer { padReportsWithoutPresence += 1 }
     guard padReportsWithoutPresence.isMultiple(of: inquiryResendInterval),
       padReportsWithoutPresence / inquiryResendInterval
-        < xbox360ReceiverInquiryResendLimit
+        < PhysicalProtocolID.xboxXUSB.described(limit: \.receiverInquiryResendLimit)
     else { return }
     pendingWrites.append(contentsOf: presenceInquiryWrites)
   }
@@ -334,7 +336,7 @@ public final class XUSBDriver: PhysicalProtocolDriver {
     PhysicalUSBOutputPacket(
       endpoint: outEndpoint,
       bytes: bytes,
-      timeoutMilliseconds: UInt32(xbox360OutputTimeoutMs)
+      timeoutMilliseconds: UInt32(usbTimeoutMilliseconds)
     )
   }
 
