@@ -74,7 +74,9 @@ extension DevicePipeline {
       consecutiveUSBIOErrors = 0
       driver.resetProtocolState()
 
-      guard await performUSBHandshake(handle: handle, runGeneration: generation) else {
+      guard
+        await performUSBHandshake(handle: handle, device: device, runGeneration: generation)
+      else {
         guard isCurrentUSBRun(generation) else { return }
         usbSessionStartFailed = true
         await resetUSBDeviceIfUnresponsive(device, provider: provider)
@@ -137,6 +139,7 @@ extension DevicePipeline {
 
   func performUSBHandshake(
     handle: any USBTransportSession,
+    device: USBTransportDevice? = nil,
     runGeneration: UInt64? = nil
   ) async -> Bool {
     let retryDelays = plan.usbStartupRetryDelays
@@ -144,6 +147,11 @@ extension DevicePipeline {
     for attempt in 0...retryDelays.count {
       guard isCurrentUSBOperation(runGeneration) else { return false }
       do {
+        try await performControlTransfers(
+          handle: handle,
+          device: device,
+          runGeneration: runGeneration
+        )
         try await sendUSBStartupOutputPackets(handle: handle, runGeneration: runGeneration)
         guard isCurrentUSBOperation(runGeneration) else { return false }
         startupOutputStatus = "succeeded"

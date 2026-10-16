@@ -24,13 +24,80 @@
   },
   "defaults": {
     "session": {
+      "startup": [
+        {
+          "report": {
+            "kind": "output",
+            "id": 128,
+            "length": 2
+          },
+          "bytes": "02",
+          "phase": "startup",
+          "variants": ["usb"],
+          "when": {
+            "parameter": "layout",
+            "isNot": ["JoyConLeft", "JoyConRight"]
+          }
+        },
+        {
+          "report": {
+            "kind": "output",
+            "id": 128,
+            "length": 2
+          },
+          "bytes": "03",
+          "phase": "startup",
+          "variants": ["usb"],
+          "when": {
+            "parameter": "layout",
+            "isNot": ["JoyConLeft", "JoyConRight"]
+          }
+        },
+        {
+          "report": {
+            "kind": "output",
+            "id": 128,
+            "length": 2
+          },
+          "bytes": "02",
+          "phase": "startup",
+          "variants": ["usb"],
+          "when": {
+            "parameter": "layout",
+            "isNot": ["JoyConLeft", "JoyConRight"]
+          }
+        },
+        {
+          "report": {
+            "kind": "output",
+            "id": 128,
+            "length": 2
+          },
+          "bytes": "04",
+          "phase": "startup",
+          "variants": ["usb"],
+          "when": {
+            "parameter": "layout",
+            "isNot": ["JoyConLeft", "JoyConRight"]
+          }
+        }
+      ],
       "subcommands": {
         "reportId": 1,
         "counterModulus": 16,
         "requests": [
-          { "subcommand": 3, "data": [48] },
-          { "subcommand": 64, "data": [1] },
-          { "subcommand": 72, "data": [1] },
+          {
+            "subcommand": 3,
+            "data": "30"
+          },
+          {
+            "subcommand": 64,
+            "data": "01"
+          },
+          {
+            "subcommand": 72,
+            "data": "01"
+          },
           {
             "subcommand": 16,
             "spiRead": {
@@ -67,66 +134,6 @@
           "hidStartupIntervalMs": 20
         }
       }
-    },
-    "output": {
-      "startup": [
-        {
-          "report": {
-            "kind": "output",
-            "id": 128,
-            "length": 2
-          },
-          "bytes": [2],
-          "phase": "startup",
-          "variants": ["usb"],
-          "when": {
-            "parameter": "layout",
-            "isNot": ["JoyConLeft", "JoyConRight"]
-          }
-        },
-        {
-          "report": {
-            "kind": "output",
-            "id": 128,
-            "length": 2
-          },
-          "bytes": [3],
-          "phase": "startup",
-          "variants": ["usb"],
-          "when": {
-            "parameter": "layout",
-            "isNot": ["JoyConLeft", "JoyConRight"]
-          }
-        },
-        {
-          "report": {
-            "kind": "output",
-            "id": 128,
-            "length": 2
-          },
-          "bytes": [2],
-          "phase": "startup",
-          "variants": ["usb"],
-          "when": {
-            "parameter": "layout",
-            "isNot": ["JoyConLeft", "JoyConRight"]
-          }
-        },
-        {
-          "report": {
-            "kind": "output",
-            "id": 128,
-            "length": 2
-          },
-          "bytes": [4],
-          "phase": "startup",
-          "variants": ["usb"],
-          "when": {
-            "parameter": "layout",
-            "isNot": ["JoyConLeft", "JoyConRight"]
-          }
-        }
-      ]
     }
   }
 }

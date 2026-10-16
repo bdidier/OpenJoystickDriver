@@ -3,12 +3,12 @@ import Testing
 
 @testable import OpenJoystickDriverKit
 
-/// Task 9.1e: the Switch 1 subcommand report, its rolling counter rule and its startup requests
+/// The Switch 1 subcommand report, its rolling counter rule and its startup requests
 /// come from `defaults.session.subcommands` in the family's description. The decoder accepts and
 /// rejects the documents the Python validator does (the protocol description tests); the bytes
 /// the driver sends are pinned in `Switch1SubcommandBytesTests`.
 struct SubcommandDescriptionTests {
-  private static let plain = #"{"subcommand": 3, "data": [48]}"#
+  private static let plain = #"{"subcommand": 3, "data": "30"}"#
   private static let factoryRead =
     #"{"subcommand": 16, "spiRead": {"address": 24608, "length": 24, "#
     + #""purpose": "factoryMotionCalibration"}}"#
@@ -80,12 +80,12 @@ struct SubcommandDescriptionTests {
   func rejectsMalformedSubcommands() {
     let badRequests = [
       #"{"subcommand": 3}"#,
-      #"{"subcommand": 3, "data": [1], "spiRead": {"address": 0, "length": 1, "#
+      #"{"subcommand": 3, "data": "01", "spiRead": {"address": 0, "length": 1, "#
         + #""purpose": "factoryMotionCalibration"}}"#,
-      #"{"subcommand": 3, "data": []}"#,
-      #"{"subcommand": 3, "data": [256]}"#,
-      #"{"subcommand": 256, "data": [1]}"#,
-      #"{"subcommand": 3, "data": [1], "extra": 1}"#,
+      #"{"subcommand": 3, "data": ""}"#,
+      #"{"subcommand": 3, "data": "100"}"#,
+      #"{"subcommand": 256, "data": "01"}"#,
+      #"{"subcommand": 3, "data": "01", "extra": 1}"#,
       #"{"subcommand": 16, "spiRead": {"address": 0, "length": 0, "#
         + #""purpose": "factoryMotionCalibration"}}"#,
       #"{"subcommand": 16, "spiRead": {"address": 0, "length": 30, "#

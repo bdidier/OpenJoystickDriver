@@ -8,6 +8,21 @@
       "id": "default",
       "protocol": {
         "family": "hid.report-layout"
+      },
+      "session": {
+        "rumble": {
+          "report": {
+            "kind": "output",
+            "id": 2,
+            "length": 8
+          },
+          "leftMain": {
+            "byte": 3
+          },
+          "rightMain": {
+            "byte": 2
+          }
+        }
       }
     }
   ],
@@ -116,21 +131,6 @@
     },
     "rightTrigger": {
       "byte": 18
-    }
-  },
-  "output": {
-    "rumble": {
-      "report": {
-        "kind": "output",
-        "id": 2,
-        "length": 8
-      },
-      "leftMain": {
-        "byte": 3
-      },
-      "rightMain": {
-        "byte": 2
-      }
     }
   }
 }

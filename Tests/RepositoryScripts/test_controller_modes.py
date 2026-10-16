@@ -96,7 +96,7 @@ class ControllerModeSchemaTests(unittest.TestCase):
                         "startup": [
                             {
                                 "report": {"kind": "feature", "id": 244, "length": 5},
-                                "bytes": [66, 3, 0, 0],
+                                "bytes": "42 03 00 00",
                             }
                         ]
                     },
@@ -152,9 +152,8 @@ class ControllerModeSchemaTests(unittest.TestCase):
         self.assertTrue(self.validator.is_valid(generated))
         modes = {entry["id"]: entry for entry in generated["modes"]}
         self.assertEqual(modes["bluetooth"]["match"], {"link": "bluetooth-classic"})
-        self.assertNotIn("startup", generated.get("output", {}))
         self.assertEqual(
-            modes["bluetooth"]["session"]["startup"][0]["bytes"], [66, 3, 0, 0]
+            modes["bluetooth"]["session"]["startup"][0]["bytes"], "42 03 00 00"
         )
 
     def test_rejects_invalid_modes(self) -> None:
@@ -340,11 +339,16 @@ class ControllerModeSchemaTests(unittest.TestCase):
             "buttons": [{"control": "South", "byte": 0, "mask": 1}],
         }
         rumble = {
-            "rumble": {
-                "report": {"kind": "output", "id": 2, "length": 8},
-                "leftMain": {"byte": 3},
-            }
+            "report": {"kind": "output", "id": 2, "length": 8},
+            "leftMain": {"byte": 3},
         }
+
+        def with_session_mode(
+            family: str, default: str, session: dict[str, Any]
+        ) -> dict[str, Any]:
+            document = with_mode(family, default)
+            document["modes"][1]["session"] = session
+            return document
 
         def with_mode(family: str, default: str, **fields: Any) -> dict[str, Any]:
             return {
@@ -370,8 +374,10 @@ class ControllerModeSchemaTests(unittest.TestCase):
                 needs_layout,
             ),
             "rumble template on a mode whose driver does not encode it": (
-                with_mode("hid.descriptor", "vendor.ps3-third-party", output=rumble),
-                "rumble templates require a driver that encodes them in every mode",
+                with_session_mode(
+                    "hid.descriptor", "vendor.ps3-third-party", {"rumble": rumble}
+                ),
+                "rumble templates require a driver that encodes them",
             ),
             "present controls on a mode whose driver does not declare them": (
                 with_mode(
@@ -400,23 +406,26 @@ class ControllerModeSchemaTests(unittest.TestCase):
             "buttons": [{"control": "South", "byte": 0, "mask": 1}],
         }
         rumble = {
-            "rumble": {
-                "report": {"kind": "output", "id": 2, "length": 8},
-                "leftMain": {"byte": 3},
-            }
+            "report": {"kind": "output", "id": 2, "length": 8},
+            "leftMain": {"byte": 3},
         }
 
-        def single(family: str, **fields: Any) -> dict[str, Any]:
-            return record(
-                modes=[{"id": "default", "protocol": {"family": family}}], **fields
-            )
+        def single(
+            family: str, session: dict[str, Any] | None = None, **fields: Any
+        ) -> dict[str, Any]:
+            default: dict[str, Any] = {"id": "default", "protocol": {"family": family}}
+            if session is not None:
+                default["session"] = session
+            return record(modes=[default], **fields)
 
         schema = validate_profiles.validator()
         rejected = {
             "report-layout without a layout": single("hid.report-layout"),
             "layout under another family": single("sony.sixaxis", input=layout),
-            "template under hid.descriptor": single("hid.descriptor", output=rumble),
-            "template under a raw-USB family": single("xbox.gip", output=rumble),
+            "template under hid.descriptor": single(
+                "hid.descriptor", {"rumble": rumble}
+            ),
+            "template under a raw-USB family": single("xbox.gip", {"rumble": rumble}),
         }
         for name, document in rejected.items():
             with self.subTest(name):
@@ -426,7 +435,7 @@ class ControllerModeSchemaTests(unittest.TestCase):
         for name, document in {
             "layout": single("hid.report-layout", input=layout),
             "layout and template": single(
-                "hid.report-layout", input=layout, output=rumble
+                "hid.report-layout", {"rumble": rumble}, input=layout
             ),
         }.items():
             with self.subTest(name):
@@ -446,10 +455,10 @@ class RawUSBModeTests(unittest.TestCase):
         return record(modes=list(modes))
 
     def test_accepts_alternative_modes_and_usb_sessions_on_raw_usb(self) -> None:
-        usb_write = {"bytes": [1, 2]}
+        usb_write = {"bytes": "01 02"}
         document = self.usb_record(
             self.gip(),
-            self.gip("alt", match={"link": "usb"}, session={"usbStartup": [usb_write]}),
+            self.gip("alt", match={"link": "usb"}, session={"startup": [usb_write]}),
         )
         self.assertTrue(self.schema.is_valid(document))
         validate_profiles.validate_modes(Path("record.json"), document)
@@ -475,9 +484,9 @@ class RawUSBModeTests(unittest.TestCase):
     def test_rejects_what_a_raw_usb_mode_cannot_carry(self) -> None:
         hid_write = {
             "report": {"kind": "feature", "id": 1, "length": 2},
-            "bytes": [1, 2],
+            "bytes": "01 02",
         }
-        usb_write = {"bytes": [1, 2]}
+        usb_write = {"bytes": "01 02"}
         rejected = {
             "interface on raw USB": (
                 self.usb_record(
@@ -487,7 +496,7 @@ class RawUSBModeTests(unittest.TestCase):
                     ),
                 ),
                 "interface selects among HID interfaces",
-                True,
+                False,
             ),
             "HID session on raw USB": (
                 self.usb_record(
@@ -496,26 +505,20 @@ class RawUSBModeTests(unittest.TestCase):
                         "a", match={"link": "usb"}, session={"startup": [hid_write]}
                     ),
                 ),
-                "names usbStartup packets, not HID reports",
-                True,
-            ),
-            "USB packets in a HID mode": (
-                self.usb_record(
-                    {**DEFAULT, "session": {"usbStartup": [usb_write]}},
-                ),
-                "names startup reports, not usbStartup packets",
-                True,
-            ),
-            "session naming both kinds": (
-                self.usb_record(
-                    self.gip(
-                        session={"startup": [hid_write], "usbStartup": [usb_write]}
-                    )
-                ),
                 "",
                 False,
             ),
-            "session naming neither": (
+            "USB packets in a HID mode": (
+                self.usb_record({**DEFAULT, "session": {"startup": [usb_write]}}),
+                "",
+                False,
+            ),
+            "session naming both kinds": (
+                self.usb_record(self.gip(session={"startup": [hid_write, usb_write]})),
+                "",
+                False,
+            ),
+            "session naming nothing": (
                 self.usb_record(self.gip(session={})),
                 "",
                 False,
@@ -524,10 +527,230 @@ class RawUSBModeTests(unittest.TestCase):
         for name, (document, message, schema_accepts) in rejected.items():
             with self.subTest(name):
                 self.assertEqual(self.schema.is_valid(document), schema_accepts)
-                if schema_accepts:
+                if message:
                     with self.assertRaises(validate_profiles.ValidationError) as caught:
                         validate_profiles.validate_modes(Path("record.json"), document)
                     self.assertIn(message, str(caught.exception))
+
+
+class SessionTests(unittest.TestCase):
+    """One session shape serves every mode; its keys follow the mode's own protocol."""
+
+    SHANWAN = {"manufacturer": "SHANWAN"}
+
+    def setUp(self) -> None:
+        self.schema = validate_profiles.validator()
+
+    @staticmethod
+    def read(request: int, **fields: Any) -> dict[str, Any]:
+        return {
+            "bmRequestType": 192,
+            "bRequest": request,
+            "wValue": 0,
+            "wIndex": 0,
+            "wLength": 8,
+            **fields,
+        }
+
+    def document(self, family: str, session: dict[str, Any]) -> dict[str, Any]:
+        protocol = {"family": family}
+        if family == "xbox.xusb":
+            protocol["variant"] = "wired"
+        return record(modes=[{"id": "default", "protocol": protocol, "session": session}])
+
+    def reads(self) -> list[dict[str, Any]]:
+        return [self.read(n, match=self.SHANWAN) for n in (1, 2, 3)]
+
+    def test_gated_vendor_reads_are_accepted_on_a_raw_usb_mode(self) -> None:
+        document = self.document("xbox.xusb", {"control": self.reads()})
+        self.assertTrue(self.schema.is_valid(document))
+        validate_profiles.validate_modes(Path("record.json"), document)
+        gates = [t["match"] for t in document["modes"][0]["session"]["control"]]
+        self.assertEqual(gates, [self.SHANWAN] * 3)
+
+    def test_byte_format_is_uppercase_hex_pairs_with_single_spaces(self) -> None:
+        for text in ("0x1a 2b", "1a 2b", "1A  2B", "1A2B", " 1A", "1A ", "1A\n", ""):
+            with self.subTest(text):
+                document = self.document(
+                    "xbox.xusb", {"startup": [{"bytes": text}]}
+                )
+                self.assertFalse(self.schema.is_valid(document))
+        accepted = self.document("xbox.xusb", {"startup": [{"bytes": "1A 2B"}]})
+        self.assertTrue(self.schema.is_valid(accepted))
+
+    def test_rejects_sessions_a_mode_cannot_run(self) -> None:
+        write = {"bytes": "01 02"}
+        rejected = {
+            "control on a HID mode": ("sony.sixaxis", {"control": self.reads()}),
+            "settle on a HID mode": ("sony.sixaxis", {"settleMilliseconds": 200}),
+            "shutdown on a HID mode": ("sony.sixaxis", {"shutdown": [write]}),
+            "keep-alive on a HID mode": (
+                "sony.sixaxis",
+                {"keepAlive": {"intervalMilliseconds": 100, "writes": [write]}},
+            ),
+            "keep-alive on a family that declares one": (
+                "xbox.gip",
+                {"keepAlive": {"intervalMilliseconds": 100, "writes": [write]}},
+            ),
+        }
+        for name, (family, session) in rejected.items():
+            with self.subTest(name):
+                self.assertFalse(
+                    self.schema.is_valid(self.document(family, session))
+                )
+
+    def test_validator_rejects_control_transfers_that_disagree_with_themselves(
+        self,
+    ) -> None:
+        out = {
+            "bmRequestType": 64,
+            "bRequest": 1,
+            "wValue": 0,
+            "wIndex": 0,
+            "wLength": 3,
+            "data": "01 02",
+        }
+        inverted = self.read(1, match={"bcdDevice": {"min": 5, "max": 4}})
+        rejected = {
+            "data count differs from wLength": (
+                out,
+                "control transfer data has 2 bytes, but wLength is 3",
+            ),
+            "bcdDevice min above max": (
+                inverted,
+                "control transfer bcdDevice min must not exceed max",
+            ),
+        }
+        for name, (transfer, message) in rejected.items():
+            with self.subTest(name):
+                document = self.document("xbox.xusb", {"control": [transfer]})
+                self.assertTrue(self.schema.is_valid(document))
+                with self.assertRaises(validate_profiles.ValidationError) as caught:
+                    validate_profiles.validate_modes(Path("record.json"), document)
+                self.assertIn(message, str(caught.exception))
+
+    def test_accepts_settle_shutdown_and_keep_alive_on_raw_usb(self) -> None:
+        write = {"bytes": "01 02"}
+        document = self.document(
+            "xbox.xusb",
+            {
+                "settleMilliseconds": 200,
+                "shutdown": [write],
+                "keepAlive": {"intervalMilliseconds": 100, "writes": [write]},
+            },
+        )
+        self.assertTrue(self.schema.is_valid(document))
+        validate_profiles.validate_modes(Path("record.json"), document)
+
+
+class EveryModeConditionalTests(unittest.TestCase):
+    """A record-level section that depends on a mode's protocol holds for every mode: the
+    default mode satisfies each rule here and a second mode breaks it."""
+
+    HID = {"family": "sony.sixaxis"}
+    GIP = {"family": "xbox.gip"}
+    HID_MATCH = {"probes": [ANSWERS]}
+    USB_MATCH = {"link": "usb"}
+
+    def second_mode(
+        self,
+        default: dict[str, Any],
+        second: dict[str, Any],
+        match: dict[str, Any],
+        **fields: Any,
+    ) -> dict[str, Any]:
+        return record(
+            modes=[
+                {"id": "default", "protocol": default},
+                {"id": "second", "protocol": second, "match": match},
+            ],
+            **fields,
+        )
+
+    def assert_rejected(self, document: dict[str, Any], message: str) -> None:
+        self.assertFalse(validate_profiles.validator().is_valid(document))
+        with self.assertRaises(validate_profiles.ValidationError) as caught:
+            validate_profiles.validate_modes(Path("record.json"), document)
+        self.assertIn(message, str(caught.exception))
+
+    def test_usb_needs_every_mode_raw_usb(self) -> None:
+        self.assert_rejected(
+            self.second_mode(
+                self.GIP, self.HID, self.HID_MATCH, usb={"configuration": "set1-before-claim"}
+            ),
+            "USB overrides require a raw-USB protocol family",
+        )
+
+    def test_server_needs_every_mode_hid(self) -> None:
+        self.assert_rejected(
+            self.second_mode(self.HID, self.GIP, self.USB_MATCH, server="ojd"),
+            "server applies only to HID controllers",
+        )
+
+    def test_route_needs_every_mode_raw_usb(self) -> None:
+        self.assert_rejected(
+            self.second_mode(
+                self.GIP, self.HID, self.HID_MATCH, route="ExtensionOwned"
+            ),
+            "route ExtensionOwned applies only to raw-USB controllers",
+        )
+
+    def test_session_follows_the_protocol_of_its_own_mode(self) -> None:
+        document = self.second_mode(self.GIP, self.HID, self.HID_MATCH)
+        document["modes"][1]["session"] = {"settleMilliseconds": 200}
+        self.assert_rejected(document, "session settleMilliseconds applies only to raw-USB modes")
+
+    def test_tuning_keys_are_read_by_every_mode(self) -> None:
+        self.assert_rejected(
+            self.second_mode(
+                {"family": "sony.dualshock4"},
+                self.HID,
+                self.HID_MATCH,
+                tuning={"inputLivenessTimeoutMs": 500},
+            ),
+            "inputLivenessTimeoutMs is not read by the sony.sixaxis driver",
+        )
+
+    def test_bluetooth_le_needs_every_mode_switch_2(self) -> None:
+        self.assert_rejected(
+            self.second_mode(
+                {"family": "nintendo.switch2"},
+                self.HID,
+                self.HID_MATCH,
+                bluetoothLE={
+                    "vibrationCharacteristic": "00000000-0000-0000-0000-000000000000"
+                },
+            ),
+            "bluetoothLE requires a Switch 2 controller",
+        )
+
+    def test_usb_endpoints_differ_from_every_mode_default(self) -> None:
+        self.assert_rejected(
+            self.second_mode(
+                self.GIP,
+                {"family": "xbox.xusb", "variant": "wired"},
+                self.USB_MATCH,
+                usb={"endpoints": {"in": 129, "out": 1}},
+            ),
+            "protocol-default endpoints must be omitted",
+        )
+
+    def test_hid_usage_map_needs_every_mode_hid_descriptor(self) -> None:
+        self.assert_rejected(
+            self.second_mode(
+                {"family": "hid.descriptor"},
+                self.HID,
+                self.HID_MATCH,
+                input={
+                    "hidUsageMap": {
+                        "usages": [
+                            {"kind": "button", "page": 9, "usage": 1, "control": "South"}
+                        ]
+                    }
+                },
+            ),
+            "a HID usage map applies only to hid.descriptor in every mode",
+        )
 
 
 if __name__ == "__main__":

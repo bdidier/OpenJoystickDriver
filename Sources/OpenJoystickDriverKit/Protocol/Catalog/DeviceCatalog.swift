@@ -54,15 +54,10 @@ struct DeviceCatalog: Sendable {
     let defaultEndpoints = protocolInfo.protocolID.protocolDescription.endpoints
     let inputEndpoint = record.usb?.endpoints?.input ?? defaultEndpoints.input
     let outputEndpoint = record.usb?.endpoints?.output ?? defaultEndpoints.output
-    if record.usb != nil
-      && !protocolInfo.protocolID.usesRawUSB(storedVariant: protocolInfo.protocolVariant)
-    {
-      throw ControllerRecordProblem("USB overrides require a raw-USB protocol family")
-    }
     if let configuration = record.usb?.configuration, configuration != "set1-before-claim" {
       throw ControllerRecordProblem("unsupported USB configuration \(configuration)")
     }
-    let settleMilliseconds = record.usb?.postHandshakeSettleMilliseconds ?? 0
+    let session = record.defaultMode.session
     let keepAlivePolicy: GIPKeepAlivePolicy =
       protocolInfo.keepAliveEnabled.map { $0 ? .enabled : .disabled } ?? .enabled
 
@@ -73,8 +68,9 @@ struct DeviceCatalog: Sendable {
         outputEndpoint: UInt8(outputEndpoint),
         hasEndpointOverride: record.usb?.endpoints != nil,
         needsSetConfiguration: record.usb?.configuration == "set1-before-claim",
-        postHandshakeSettleNanoseconds: UInt64(settleMilliseconds)
-          * DeviceTransportProfile.nanosecondsPerMillisecond
+        postHandshakeSettleNanoseconds: DeviceTransportProfile.settleNanoseconds(
+          milliseconds: session.settleMilliseconds
+        )
       ),
       physicalProtocolID: protocolInfo.protocolID,
       physicalProtocolVariant: protocolInfo.protocolVariant,
@@ -85,9 +81,7 @@ struct DeviceCatalog: Sendable {
       gipKeepAlivePolicy: keepAlivePolicy,
       assemblyPolicy: protocolInfo.assembly,
       server: record.server ?? .system,
-      rumbleTemplate: record.rumbleTemplate,
-      startupWrites: record.defaultMode.startupWrites ?? record.startupWrites,
-      usbStartupWrites: record.defaultMode.usbStartupWrites ?? record.usbStartupWrites,
+      session: session,
       inputLayout: record.inputLayout,
       hidUsageMap: record.hidUsageMap,
       tuning: record.tuning,
@@ -123,9 +117,7 @@ struct DeviceCatalog: Sendable {
       gipKeepAlivePolicy: .enabled,
       assemblyPolicy: nil,
       server: .system,
-      rumbleTemplate: nil,
-      startupWrites: [],
-      usbStartupWrites: [],
+      session: .none,
       inputLayout: nil,
       tuning: .none
     )

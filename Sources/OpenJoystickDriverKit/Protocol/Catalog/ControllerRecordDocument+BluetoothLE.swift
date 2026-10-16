@@ -22,15 +22,4 @@ extension ControllerRecordDocument {
       vibrationCharacteristic = uuid
     }
   }
-
-  /// Only the Switch 2 Bluetooth LE central reads the section.
-  func validateBluetoothLE(codingPath: [any CodingKey]) throws {
-    guard bluetoothLE != nil, protocolInfo.protocolID != .nintendoSwitch2 else { return }
-    throw DecodingError.dataCorrupted(
-      .init(
-        codingPath: codingPath + [DocumentKey("bluetoothLE")],
-        debugDescription: "bluetoothLE requires a Switch 2 controller"
-      )
-    )
-  }
 }

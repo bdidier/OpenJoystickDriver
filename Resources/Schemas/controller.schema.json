@@ -39,9 +39,6 @@
     "route": {
       "$ref": "#/$defs/route"
     },
-    "output": {
-      "$ref": "#/$defs/output"
-    },
     "input": {
       "anyOf": [
         {
@@ -94,7 +91,7 @@
           "$ref": "#/$defs/modeInterface"
         },
         "session": {
-          "$ref": "#/$defs/modeSession"
+          "$ref": "#/$defs/session"
         }
       },
       "if": {
@@ -150,6 +147,110 @@
                     "properties": {
                       "endpoints": false
                     }
+                  }
+                }
+              },
+              "session": {
+                "properties": {
+                  "shutdown": false,
+                  "control": false,
+                  "settleMilliseconds": false,
+                  "keepAlive": false
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "interface": false,
+              "session": {
+                "properties": {
+                  "startup": {
+                    "items": {
+                      "not": {
+                        "required": ["report"]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "protocol": {
+                "properties": {
+                  "family": {
+                    "enum": ["xbox.xid", "xbox.xusb"]
+                  }
+                },
+                "required": ["family"]
+              }
+            },
+            "required": ["protocol"]
+          },
+          "else": {
+            "properties": {
+              "session": {
+                "properties": {
+                  "keepAlive": false
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "session": {
+                "required": ["startup"],
+                "properties": {
+                  "startup": {
+                    "contains": {
+                      "not": {
+                        "required": ["report"]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "required": ["session"]
+          },
+          "then": {
+            "properties": {
+              "protocol": {
+                "required": ["family"],
+                "properties": {
+                  "family": {
+                    "enum": ["xbox.xusb", "xbox.gip", "nintendo.switch2"]
+                  }
+                },
+                "not": {
+                  "required": ["initialization"]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "session": {
+                "required": ["rumble"]
+              }
+            },
+            "required": ["session"]
+          },
+          "then": {
+            "properties": {
+              "protocol": {
+                "required": ["family"],
+                "properties": {
+                  "family": {
+                    "enum": ["hid.report-layout", "vendor.ps3-third-party"]
                   }
                 }
               }
@@ -270,37 +371,6 @@
         }
       }
     },
-    "modeSession": {
-      "description": "Session steps of this mode. startup overrides the record's output.startup while a HID mode runs; usbStartup overrides the record's raw-USB output.startup writes while a raw-USB mode runs. A session names exactly one.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "startup": {
-          "type": "array",
-          "minItems": 1,
-          "maxItems": 16,
-          "items": {
-            "$ref": "#/$defs/startupWrite"
-          }
-        },
-        "usbStartup": {
-          "type": "array",
-          "minItems": 1,
-          "maxItems": 16,
-          "items": {
-            "$ref": "#/$defs/usbStartupWrite"
-          }
-        }
-      },
-      "oneOf": [
-        {
-          "required": ["startup"]
-        },
-        {
-          "required": ["usbStartup"]
-        }
-      ]
-    },
     "modeProbe": {
       "description": "A read of one feature report. A probe never writes. answers: the read succeeds. stalls: the device refuses the read. bytes: the reply holds the given bytes at offset.",
       "type": "object",
@@ -326,8 +396,7 @@
           "maximum": 65534
         },
         "bytes": {
-          "type": "string",
-          "pattern": "^[0-9A-F]{2}( [0-9A-F]{2})*(?!\\n)$"
+          "$ref": "#/$defs/hexBytes"
         }
       },
       "allOf": [
@@ -845,11 +914,6 @@
         "configuration": {
           "const": "set1-before-claim"
         },
-        "postHandshakeSettleMs": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 60000
-        },
         "endpoints": {
           "type": "object",
           "required": ["in", "out"],
@@ -961,52 +1025,6 @@
     "route": {
       "enum": ["ExtensionOwned"]
     },
-    "output": {
-      "type": "object",
-      "additionalProperties": false,
-      "minProperties": 1,
-      "properties": {
-        "rumble": {
-          "$ref": "#/$defs/rumbleTemplate"
-        },
-        "startup": {
-          "type": "array",
-          "minItems": 1,
-          "maxItems": 16,
-          "items": {
-            "oneOf": [
-              {
-                "$ref": "#/$defs/startupWrite"
-              },
-              {
-                "$ref": "#/$defs/usbStartupWrite"
-              }
-            ]
-          }
-        }
-      },
-      "not": {
-        "required": ["startup"],
-        "properties": {
-          "startup": {
-            "allOf": [
-              {
-                "contains": {
-                  "required": ["report"]
-                }
-              },
-              {
-                "contains": {
-                  "not": {
-                    "required": ["report"]
-                  }
-                }
-              }
-            ]
-          }
-        }
-      }
-    },
     "rumbleTemplate": {
       "type": "object",
       "additionalProperties": false,
@@ -1039,14 +1057,8 @@
           "$ref": "#/$defs/startupReport"
         },
         "bytes": {
-          "type": "array",
-          "minItems": 1,
-          "maxItems": 128,
-          "items": {
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 255
-          }
+          "$ref": "#/$defs/hexBytes",
+          "maxLength": 383
         },
         "delayMilliseconds": {
           "type": "integer",
@@ -1577,14 +1589,8 @@
       "required": ["bytes"],
       "properties": {
         "bytes": {
-          "type": "array",
-          "minItems": 1,
-          "maxItems": 64,
-          "items": {
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 255
-          }
+          "$ref": "#/$defs/hexBytes",
+          "maxLength": 191
         },
         "endpoint": {
           "type": "integer",
@@ -1635,6 +1641,231 @@
           "maximum": 65535
         }
       }
+    },
+    "hexBytes": {
+      "description": "Raw bytes as uppercase hex pairs separated by single spaces.",
+      "type": "string",
+      "pattern": "^[0-9A-F]{2}( [0-9A-F]{2})*(?!\\n)$"
+    },
+    "sessionKeepAlive": {
+      "description": "Fixed writes repeated at an interval while a raw-USB session runs.",
+      "type": "object",
+      "required": ["intervalMilliseconds", "writes"],
+      "additionalProperties": false,
+      "properties": {
+        "intervalMilliseconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60000
+        },
+        "writes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": {
+            "$ref": "#/$defs/keepAliveWrite"
+          }
+        }
+      }
+    },
+    "controlTransfer": {
+      "description": "A vendor control transfer on the device. An IN transfer reads wLength bytes; an OUT transfer writes data, whose byte count equals wLength. match gates the transfer: it runs only for a device whose strings and bcdDevice hold.",
+      "type": "object",
+      "required": ["bmRequestType", "bRequest", "wValue", "wIndex", "wLength"],
+      "additionalProperties": false,
+      "properties": {
+        "bmRequestType": {
+          "enum": [64, 65, 66, 67, 192, 193, 194, 195]
+        },
+        "bRequest": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "wValue": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "wIndex": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "wLength": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 64
+        },
+        "data": {
+          "$ref": "#/$defs/hexBytes",
+          "maxLength": 191
+        },
+        "timeoutMilliseconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60000
+        },
+        "delayMilliseconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "toleratesRejection": {
+          "type": "boolean"
+        },
+        "match": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": false,
+          "properties": {
+            "manufacturer": {
+              "type": "string",
+              "minLength": 1
+            },
+            "product": {
+              "type": "string",
+              "minLength": 1
+            },
+            "bcdDevice": {
+              "$ref": "#/$defs/bcdDeviceRange"
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "bmRequestType": {
+                "enum": [192, 193, 194, 195]
+              }
+            },
+            "required": ["bmRequestType"]
+          },
+          "then": {
+            "not": {
+              "required": ["data"]
+            },
+            "properties": {
+              "wLength": {
+                "minimum": 1
+              }
+            }
+          },
+          "else": {
+            "if": {
+              "properties": {
+                "wLength": {
+                  "const": 0
+                }
+              },
+              "required": ["wLength"]
+            },
+            "then": {
+              "not": {
+                "required": ["data"]
+              }
+            },
+            "else": {
+              "required": ["data"]
+            }
+          }
+        }
+      ]
+    },
+    "session": {
+      "description": "The steps one mode runs. startup is one list of HID report writes or of raw-USB packets. keepAlive, settleMilliseconds, shutdown and control apply to raw-USB modes. control runs before startup, in order. rumble is the rumble report template.",
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "startup": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/startupWrite"
+              },
+              {
+                "$ref": "#/$defs/usbStartupWrite"
+              }
+            ]
+          },
+          "not": {
+            "allOf": [
+              {
+                "contains": {
+                  "required": ["report"]
+                }
+              },
+              {
+                "contains": {
+                  "not": {
+                    "required": ["report"]
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "keepAlive": {
+          "$ref": "#/$defs/sessionKeepAlive"
+        },
+        "settleMilliseconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60000
+        },
+        "shutdown": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": {
+            "$ref": "#/$defs/usbStartupWrite"
+          }
+        },
+        "control": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/controlTransfer"
+          }
+        },
+        "rumble": {
+          "$ref": "#/$defs/rumbleTemplate"
+        }
+      }
+    },
+    "keepAliveWrite": {
+      "$comment": "A raw-USB keep-alive packet: a startup packet without the members only a startup sequence uses.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bytes"],
+      "properties": {
+        "bytes": {
+          "$ref": "#/$defs/hexBytes",
+          "maxLength": 191
+        },
+        "endpoint": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 127
+        },
+        "timeoutMilliseconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60000
+        },
+        "sessionByte": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 63
+        }
+      }
     }
   },
   "allOf": [
@@ -1645,11 +1876,8 @@
       "then": {
         "properties": {
           "modes": {
-            "contains": {
+            "items": {
               "properties": {
-                "id": {
-                  "const": "default"
-                },
                 "protocol": {
                   "anyOf": [
                     {
@@ -1673,7 +1901,7 @@
                   ]
                 }
               },
-              "required": ["id", "protocol"]
+              "required": ["protocol"]
             }
           }
         }
@@ -1716,9 +1944,6 @@
           "modes": {
             "contains": {
               "properties": {
-                "id": {
-                  "const": "default"
-                },
                 "protocol": {
                   "properties": {
                     "family": {
@@ -1731,7 +1956,7 @@
                   "type": "object"
                 }
               },
-              "required": ["id", "protocol"]
+              "required": ["protocol"]
             }
           }
         },
@@ -1761,9 +1986,6 @@
           "modes": {
             "contains": {
               "properties": {
-                "id": {
-                  "const": "default"
-                },
                 "protocol": {
                   "properties": {
                     "family": {
@@ -1774,7 +1996,7 @@
                   "type": "object"
                 }
               },
-              "required": ["id", "protocol"]
+              "required": ["protocol"]
             }
           }
         },
@@ -1804,9 +2026,6 @@
           "modes": {
             "contains": {
               "properties": {
-                "id": {
-                  "const": "default"
-                },
                 "protocol": {
                   "properties": {
                     "family": {
@@ -1817,7 +2036,7 @@
                   "type": "object"
                 }
               },
-              "required": ["id", "protocol"]
+              "required": ["protocol"]
             }
           }
         },
@@ -1847,9 +2066,6 @@
           "modes": {
             "contains": {
               "properties": {
-                "id": {
-                  "const": "default"
-                },
                 "protocol": {
                   "properties": {
                     "family": {
@@ -1862,7 +2078,7 @@
                   "type": "object"
                 }
               },
-              "required": ["id", "protocol"]
+              "required": ["protocol"]
             }
           }
         },
@@ -1884,9 +2100,6 @@
           "modes": {
             "contains": {
               "properties": {
-                "id": {
-                  "const": "default"
-                },
                 "protocol": {
                   "properties": {
                     "family": {
@@ -1897,7 +2110,7 @@
                   "type": "object"
                 }
               },
-              "required": ["id", "protocol"]
+              "required": ["protocol"]
             }
           }
         },
@@ -1918,35 +2131,6 @@
                   ]
                 }
               }
-            }
-          }
-        }
-      }
-    },
-    {
-      "if": {
-        "properties": {
-          "output": {
-            "required": ["rumble"]
-          }
-        },
-        "required": ["output"]
-      },
-      "then": {
-        "properties": {
-          "modes": {
-            "items": {
-              "properties": {
-                "protocol": {
-                  "properties": {
-                    "family": {
-                      "enum": ["hid.report-layout", "vendor.ps3-third-party"]
-                    }
-                  },
-                  "required": ["family"]
-                }
-              },
-              "required": ["protocol"]
             }
           }
         }
@@ -2036,11 +2220,8 @@
       "then": {
         "properties": {
           "modes": {
-            "contains": {
+            "items": {
               "properties": {
-                "id": {
-                  "const": "default"
-                },
                 "protocol": {
                   "not": {
                     "anyOf": [
@@ -2067,107 +2248,7 @@
                   }
                 }
               },
-              "required": ["id", "protocol"]
-            }
-          }
-        }
-      }
-    },
-    {
-      "if": {
-        "required": ["output"],
-        "properties": {
-          "output": {
-            "required": ["startup"],
-            "properties": {
-              "startup": {
-                "contains": {
-                  "required": ["report"]
-                }
-              }
-            }
-          }
-        }
-      },
-      "then": {
-        "properties": {
-          "modes": {
-            "contains": {
-              "properties": {
-                "id": {
-                  "const": "default"
-                },
-                "protocol": {
-                  "not": {
-                    "anyOf": [
-                      {
-                        "properties": {
-                          "family": {
-                            "enum": ["xbox.xid", "xbox.xusb", "xbox.gip"]
-                          }
-                        },
-                        "required": ["family"]
-                      },
-                      {
-                        "properties": {
-                          "family": {
-                            "const": "vendor.gamesir"
-                          },
-                          "variant": {
-                            "const": "usb"
-                          }
-                        },
-                        "required": ["family", "variant"]
-                      }
-                    ]
-                  }
-                }
-              },
-              "required": ["id", "protocol"]
-            }
-          }
-        }
-      }
-    },
-    {
-      "if": {
-        "required": ["output"],
-        "properties": {
-          "output": {
-            "required": ["startup"],
-            "properties": {
-              "startup": {
-                "contains": {
-                  "not": {
-                    "required": ["report"]
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "then": {
-        "properties": {
-          "modes": {
-            "contains": {
-              "properties": {
-                "id": {
-                  "const": "default"
-                },
-                "protocol": {
-                  "required": ["family"],
-                  "properties": {
-                    "family": {
-                      "enum": ["xbox.xusb", "xbox.gip", "nintendo.switch2"]
-                    }
-                  },
-                  "not": {
-                    "required": ["initialization"]
-                  }
-                }
-              },
-              "required": ["id", "protocol"]
+              "required": ["protocol"]
             }
           }
         }
@@ -2180,11 +2261,8 @@
       "then": {
         "properties": {
           "modes": {
-            "contains": {
+            "items": {
               "properties": {
-                "id": {
-                  "const": "default"
-                },
                 "protocol": {
                   "anyOf": [
                     {
@@ -2209,7 +2287,7 @@
                   ]
                 }
               },
-              "required": ["id", "protocol"]
+              "required": ["protocol"]
             }
           }
         }
@@ -2227,11 +2305,8 @@
       "then": {
         "properties": {
           "modes": {
-            "contains": {
+            "items": {
               "properties": {
-                "id": {
-                  "const": "default"
-                },
                 "protocol": {
                   "properties": {
                     "family": {
@@ -2240,7 +2315,7 @@
                   }
                 }
               },
-              "required": ["id", "protocol"]
+              "required": ["protocol"]
             }
           }
         }
@@ -2265,11 +2340,8 @@
       "then": {
         "properties": {
           "modes": {
-            "contains": {
+            "items": {
               "properties": {
-                "id": {
-                  "const": "default"
-                },
                 "protocol": {
                   "properties": {
                     "family": {
@@ -2278,7 +2350,7 @@
                   }
                 }
               },
-              "required": ["id", "protocol"]
+              "required": ["protocol"]
             }
           }
         }
@@ -2296,11 +2368,8 @@
       "then": {
         "properties": {
           "modes": {
-            "contains": {
+            "items": {
               "properties": {
-                "id": {
-                  "const": "default"
-                },
                 "protocol": {
                   "properties": {
                     "family": {
@@ -2309,7 +2378,7 @@
                   }
                 }
               },
-              "required": ["id", "protocol"]
+              "required": ["protocol"]
             }
           }
         }
@@ -2327,11 +2396,8 @@
       "then": {
         "properties": {
           "modes": {
-            "contains": {
+            "items": {
               "properties": {
-                "id": {
-                  "const": "default"
-                },
                 "protocol": {
                   "properties": {
                     "family": {
@@ -2340,7 +2406,7 @@
                   }
                 }
               },
-              "required": ["id", "protocol"]
+              "required": ["protocol"]
             }
           }
         }
@@ -2358,11 +2424,8 @@
       "then": {
         "properties": {
           "modes": {
-            "contains": {
+            "items": {
               "properties": {
-                "id": {
-                  "const": "default"
-                },
                 "protocol": {
                   "properties": {
                     "family": {
@@ -2371,7 +2434,7 @@
                   }
                 }
               },
-              "required": ["id", "protocol"]
+              "required": ["protocol"]
             }
           }
         }
@@ -2389,11 +2452,8 @@
       "then": {
         "properties": {
           "modes": {
-            "contains": {
+            "items": {
               "properties": {
-                "id": {
-                  "const": "default"
-                },
                 "protocol": {
                   "properties": {
                     "family": {
@@ -2402,7 +2462,7 @@
                   }
                 }
               },
-              "required": ["id", "protocol"]
+              "required": ["protocol"]
             }
           }
         }
@@ -2420,11 +2480,8 @@
       "then": {
         "properties": {
           "modes": {
-            "contains": {
+            "items": {
               "properties": {
-                "id": {
-                  "const": "default"
-                },
                 "protocol": {
                   "properties": {
                     "family": {
@@ -2433,7 +2490,7 @@
                   }
                 }
               },
-              "required": ["id", "protocol"]
+              "required": ["protocol"]
             }
           }
         }
@@ -2451,11 +2508,8 @@
       "then": {
         "properties": {
           "modes": {
-            "contains": {
+            "items": {
               "properties": {
-                "id": {
-                  "const": "default"
-                },
                 "protocol": {
                   "properties": {
                     "family": {
@@ -2464,7 +2518,7 @@
                   }
                 }
               },
-              "required": ["id", "protocol"]
+              "required": ["protocol"]
             }
           }
         }
@@ -2482,11 +2536,8 @@
       "then": {
         "properties": {
           "modes": {
-            "contains": {
+            "items": {
               "properties": {
-                "id": {
-                  "const": "default"
-                },
                 "protocol": {
                   "properties": {
                     "family": {
@@ -2495,7 +2546,7 @@
                   }
                 }
               },
-              "required": ["id", "protocol"]
+              "required": ["protocol"]
             }
           }
         }
@@ -2520,11 +2571,8 @@
       "then": {
         "properties": {
           "modes": {
-            "contains": {
+            "items": {
               "properties": {
-                "id": {
-                  "const": "default"
-                },
                 "protocol": {
                   "not": {
                     "anyOf": [
@@ -2551,7 +2599,7 @@
                   }
                 }
               },
-              "required": ["id", "protocol"]
+              "required": ["protocol"]
             }
           }
         }
@@ -2564,11 +2612,8 @@
       "then": {
         "properties": {
           "modes": {
-            "contains": {
+            "items": {
               "properties": {
-                "id": {
-                  "const": "default"
-                },
                 "protocol": {
                   "properties": {
                     "family": {
@@ -2578,7 +2623,38 @@
                   "required": ["family"]
                 }
               },
-              "required": ["id", "protocol"]
+              "required": ["protocol"]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "input": {
+            "required": ["hidUsageMap"],
+            "type": "object"
+          }
+        },
+        "required": ["input"]
+      },
+      "then": {
+        "properties": {
+          "modes": {
+            "items": {
+              "properties": {
+                "protocol": {
+                  "properties": {
+                    "family": {
+                      "const": "hid.descriptor"
+                    }
+                  },
+                  "required": ["family"],
+                  "type": "object"
+                }
+              },
+              "required": ["protocol"]
             }
           }
         }

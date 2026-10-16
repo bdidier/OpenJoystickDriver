@@ -227,7 +227,9 @@ struct ControllerRecordProbePlanTests {
     for mutation in [
       { (record: inout [String: Any]) in record["usb"] = [:] },
       { (record: inout [String: Any]) in record["usb"] = ["interface": 0] },
-      { (record: inout [String: Any]) in record["usb"] = ["postHandshakeSettleMs": 60_001] },
+      { (record: inout [String: Any]) in
+        Self.setSession(["settleMilliseconds": 60_001], in: &record)
+      },
       { (record: inout [String: Any]) in record["usb"] = NSNull() },
       { (record: inout [String: Any]) in
         var protocolConfig = Self.defaultProtocol(of: record)
@@ -261,6 +263,12 @@ struct ControllerRecordProbePlanTests {
     return modes?.first?["protocol"] as? [String: Any] ?? [:]
   }
 
+  private static func setSession(_ session: [String: Any], in record: inout [String: Any]) {
+    var modes = record["modes"] as? [[String: Any]] ?? []
+    modes[0]["session"] = session
+    record["modes"] = modes
+  }
+
   private static func setDefaultProtocol(_ info: [String: Any], in record: inout [String: Any]) {
     record["modes"] = [["id": "default", "protocol": info]]
   }
@@ -285,7 +293,6 @@ struct ControllerRecordProbePlanTests {
       usb["endpoints"] = ["in": inputEndpoint, "out": outputEndpoint]
     }
     if let configuration { usb["configuration"] = configuration }
-    if let settleMilliseconds { usb["postHandshakeSettleMs"] = settleMilliseconds }
 
     var protocolConfig: [String: Any] = ["family": family]
     if let variant { protocolConfig["variant"] = variant }
@@ -295,6 +302,9 @@ struct ControllerRecordProbePlanTests {
 
     var record: [String: Any] = ["vendorID": 5_426, "productID": 2_627]
     Self.setDefaultProtocol(protocolConfig, in: &record)
+    if let settleMilliseconds {
+      Self.setSession(["settleMilliseconds": settleMilliseconds], in: &record)
+    }
     if let apiVersion { record["apiVersion"] = apiVersion }
     if let kind { record["kind"] = kind }
     if let extraRootField { record[extraRootField] = ["source": "unknown"] }

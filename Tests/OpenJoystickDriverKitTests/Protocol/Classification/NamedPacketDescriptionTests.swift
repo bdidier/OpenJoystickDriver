@@ -9,7 +9,7 @@ import Testing
 /// `GIPStartupPacketBytesTests`.
 struct NamedPacketDescriptionTests {
   private static let powerOn =
-    #"{"id": "xbox.gip/power-on", "bytes": [5, 32, 0, 1, 0], "sessionByte": 2}"#
+    #"{"id": "xbox.gip/power-on", "bytes": "05 20 00 01 00", "sessionByte": 2}"#
 
   private func decode(
     family: PhysicalProtocolID,
@@ -27,7 +27,7 @@ struct NamedPacketDescriptionTests {
 
   private func packet(
     id: String = "xbox.gip/power-on",
-    bytes: String = "[5, 32, 0, 1, 0]",
+    bytes: String = #""05 20 00 01 00""#,
     members: String = #""sessionByte": 2"#
   ) -> String {
     #"{"id": "\#(id)", "bytes": \#(bytes), \#(members)}"#
@@ -35,7 +35,7 @@ struct NamedPacketDescriptionTests {
 
   @Test
   func acceptsWellFormedPackets() throws {
-    let ledOn = packet(id: "xbox.gip/led-on", bytes: "[10, 32, 0]")
+    let ledOn = packet(id: "xbox.gip/led-on", bytes: #""0A 20 00""#)
     let description = try decode(
       family: .xboxGIP,
       #""defaults": {"session": {"namedPackets": [\#(Self.powerOn), \#(ledOn)]}}"#
@@ -55,19 +55,19 @@ struct NamedPacketDescriptionTests {
     for packets in [
       "[]",
       "[\(seventeen.joined(separator: ","))]",
-      #"[{"bytes": [5, 32, 0], "sessionByte": 2}]"#,
+      #"[{"bytes": "05 20 00", "sessionByte": 2}]"#,
       #"[{"id": "xbox.gip/power-on", "sessionByte": 2}]"#,
-      #"[{"id": "xbox.gip/power-on", "bytes": [5, 32, 0]}]"#,
+      #"[{"id": "xbox.gip/power-on", "bytes": "05 20 00"}]"#,
       "[\(packet(id: "power-on"))]",
       "[\(packet(id: "xbox.gip/Power-On"))]",
       "[\(packet(id: "xbox.gip/power--on"))]",
       "[\(packet(id: "xbox.gip/"))]",
-      "[\(packet(bytes: "[5, 32]"))]",
-      "[\(packet(bytes: "[5, 32, 256]"))]",
+      "[\(packet(bytes: #""05 20""#))]",
+      "[\(packet(bytes: #""05 20 100""#))]",
       "[\(packet(members: #""sessionByte": 1"#))]",
       "[\(packet(members: #""sessionByte": 3"#))]",
       "[\(packet(members: #""sessionByte": 2, "endpoint": 2"#))]",
-      "[\(Self.powerOn), \(packet(bytes: "[5, 32, 0, 2]"))]",
+      "[\(Self.powerOn), \(packet(bytes: #""05 20 00 02""#))]",
       "[\(packet(id: "xbox.xusb/power-on"))]",
     ] {
       #expect(rejects(packets), "\(packets)")
@@ -87,10 +87,10 @@ struct NamedPacketDescriptionTests {
   ) throws
     -> ProtocolDescription
   {
-    let session = packets ? #""session": {"namedPackets": [\#(Self.powerOn)]}, "# : ""
+    let named = packets ? #""namedPackets": [\#(Self.powerOn)], "# : ""
     return try decode(
       family: .xboxGIP,
-      #""defaults": {\#(session)"output": {"startup": \#(startup)}}"#
+      #""defaults": {"session": {\#(named)"startup": \#(startup)}}"#
     )
   }
 
@@ -107,11 +107,11 @@ struct NamedPacketDescriptionTests {
 
   @Test
   func startupRejectsWhatItCannotResolveOrMix() {
-    let usb = #"{"bytes": [1, 2, 3]}"#
+    let usb = #"{"bytes": "01 02 03"}"#
     let reference = #"{"packet": "xbox.gip/power-on"}"#
     for startup in [
       #"[{"packet": "xbox.gip/missing"}]"#,
-      #"[{"packet": "xbox.gip/power-on", "bytes": [1, 2, 3]}]"#,
+      #"[{"packet": "xbox.gip/power-on", "bytes": "01 02 03"}]"#,
       #"[{"packet": 7}]"#,
       "[\(reference), \(usb)]",
       "[\(usb), \(reference)]",
@@ -125,7 +125,7 @@ struct NamedPacketDescriptionTests {
   func aRecordCannotReferToAPacketInItsStartup() {
     #expect(throws: (any Error).self) {
       _ = try JSONDecoder().decode(
-        ControllerRecordDocument.Output.self,
+        ControllerRecordDocument.SessionDocument.self,
         from: Data(#"{"startup": [{"packet": "xbox.gip/power-on"}]}"#.utf8)
       )
     }

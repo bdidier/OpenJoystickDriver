@@ -38,12 +38,7 @@
     "digitalTriggers": ["LeftTrigger", "RightTrigger"]
   },
   "defaults": {
-    "tuning": {
-      "inputLivenessTimeoutMs": 1000,
-      "adapterDisconnectDelayMs": 500,
-      "frameQueueCapacity": 64
-    },
-    "output": {
+    "session": {
       "startup": [
         {
           "report": {
@@ -51,17 +46,17 @@
             "id": 17,
             "length": 78
           },
-          "bytes": [
-            196, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0
-          ],
+          "bytes": "C4 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
           "phase": "startup",
           "variants": ["bluetooth-classic"],
           "crc32Seed": 162
         }
       ]
+    },
+    "tuning": {
+      "inputLivenessTimeoutMs": 1000,
+      "adapterDisconnectDelayMs": 500,
+      "frameQueueCapacity": 64
     }
   }
 }

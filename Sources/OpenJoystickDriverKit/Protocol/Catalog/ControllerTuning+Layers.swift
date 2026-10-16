@@ -134,24 +134,30 @@ extension ControllerTuning {
     return description.tuningScope(variant: variant)
   }
 
-  /// The keys that a controller of the record `document` reads, from the family and variant of
-  /// its `default` mode.
+  /// The keys that a controller of the record `document` reads: those every mode's family and
+  /// variant reads.
   static func scope(ofDocument document: [String: Any]) -> Set<Key> {
-    let modes = document["modes"] as? [[String: Any]]
-    let info = modes?.first { $0["id"] as? String == "default" }?["protocol"] as? [String: Any]
-    let protocolID = (info?["family"] as? String).flatMap(PhysicalProtocolID.init(rawValue:))
-    let variant = (info?["variant"] as? String).flatMap(PhysicalProtocolVariantID.init(rawValue:))
-    return scope(protocolID: protocolID, variant: variant)
+    let modes = (document["modes"] as? [[String: Any]]) ?? []
+    let scopes = modes.map { mode -> Set<Key> in
+      let info = mode["protocol"] as? [String: Any]
+      let protocolID = (info?["family"] as? String).flatMap(PhysicalProtocolID.init(rawValue:))
+      let variant = (info?["variant"] as? String).flatMap(PhysicalProtocolVariantID.init(rawValue:))
+      return scope(protocolID: protocolID, variant: variant)
+    }
+    return scopes.dropFirst().reduce(scopes.first ?? Key.alwaysRead) { $0.intersection($1) }
   }
 }
 
 extension ControllerRecordDocument {
-  /// Why `key` does not apply to this record's family, or nil when a driver reads it.
+  /// Why `key` does not apply to a mode of this record, or nil when the driver of every mode
+  /// reads it.
   func tuningScopeViolation(_ key: ControllerTuning.Key) -> String? {
-    ControllerTuning.scopeViolation(
-      key,
-      protocolID: protocolInfo.protocolID,
-      variant: protocolInfo.protocolVariant
-    )
+    modes.lazy.compactMap { mode in
+      ControllerTuning.scopeViolation(
+        key,
+        protocolID: mode.protocolInfo.protocolID,
+        variant: mode.protocolInfo.protocolVariant
+      )
+    }.first
   }
 }

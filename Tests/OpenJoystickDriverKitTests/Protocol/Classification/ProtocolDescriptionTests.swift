@@ -10,7 +10,7 @@ struct ProtocolDescriptionTests {
   private static let rumbleTemplate =
     #"{"report": {"kind": "output", "id": 1, "length": 4}, "leftMain": {"byte": 1}}"#
   private static let startupWrite =
-    #"{"startup": [{"report": {"kind": "output", "id": 1, "length": 4}, "bytes": [1, 2, 3]}]}"#
+    #"{"startup": [{"report": {"kind": "output", "id": 1, "length": 4}, "bytes": "01 02 03"}]}"#
 
   /// Decodes a description of `family` whose body after the header is `body`, with the family's
   /// session counts added to any the body leaves unstated.
@@ -206,7 +206,7 @@ struct ProtocolDescriptionTests {
 
     let hid = try decode(
       family: .sonyDualShock4,
-      #""defaults": {"output": \#(Self.startupWrite)}"#
+      #""defaults": {"session": \#(Self.startupWrite)}"#
     )
     #expect(hid.startupWrites.count == 1)
 
@@ -281,7 +281,6 @@ struct ProtocolDescriptionTests {
         #""parameters": {"shareButton": {"type": "object", "fields": "#
           + #"{"fromEnd": {"type": "integer", "minimum": 9, "maximum": 1}}}}"#
       ),
-      (.xboxGIP, #""defaults": {"output": {}}"#),
       (.xboxGIP, #""defaults": {"unknown": {}}"#),
       (.xboxGIP, #""defaults": {"capabilities": {"rumble": "absent"}}"#),
       (.xboxGIP, #""defaults": {"tuning": {"stickDeadzone": 5}}"#),
@@ -290,7 +289,7 @@ struct ProtocolDescriptionTests {
       (.sonyDualSense, #""rawUSBTuningKeys": ["keepAliveIntervalMs"]"#),
       (.sonyDualSense, #""defaults": {"variants": {"usb": {"tuning": {"stickDeadzone": 5}}}}"#),
       (.sonyDualSense, #""macOSOwnedOutput": {"rationale": 5}"#),
-      (.xboxGIP, #""defaults": {"output": {"rumble": \#(Self.rumbleTemplate)}}"#),
+      (.xboxGIP, #""defaults": {"session": {"rumble": \#(Self.rumbleTemplate)}}"#),
       (.sonyDualSense, #""tuningKeys": ["stickDeadzone"]"#),
       (.xboxGIP, #""rawUSB": true, "rawUSBTuningKeys": ["stickDeadzone"]"#),
     ]
@@ -366,7 +365,7 @@ struct ProtocolDescriptionTests {
     let cases: [(PhysicalProtocolID, String)] = [
       (.hidDescriptor, #""defaults": {"input": \#(Self.minimalInput)}"#),
       (.xboxXUSB, #""defaults": {"input": \#(Self.minimalInput)}"#),
-      (.xboxGIP, #""rawUSB": true, "defaults": {"output": \#(Self.startupWrite)}"#),
+      (.xboxGIP, #""rawUSB": true, "defaults": {"session": \#(Self.startupWrite)}"#),
       (.xboxXID, #""rawUSB": true, "defaults": {"tuning": {"hidStartupIntervalMs": 5}}"#),
       (.sonyDualSense, #""defaults": {"tuning": {"hidStartupIntervalMs": 5}}"#),
       (
@@ -384,11 +383,11 @@ struct ProtocolDescriptionTests {
   private static let hidReport = #""report": {"kind": "output", "id": 1, "length": 4}"#
 
   private func startup(_ write: String) -> String {
-    #""defaults": {"output": {"startup": ["# + write + "]}}"
+    #""defaults": {"session": {"startup": ["# + write + "]}}"
   }
 
   private func hidWrite(_ field: String) -> String {
-    "{\(Self.hidReport), \"bytes\": [1, 2, 3]" + (field.isEmpty ? "}" : ", \(field)}")
+    "{\(Self.hidReport), \"bytes\": \"01 02 03\"" + (field.isEmpty ? "}" : ", \(field)}")
   }
 
   @Test
@@ -410,7 +409,7 @@ struct ProtocolDescriptionTests {
       family: .xboxGIP,
       #""rawUSB": true, "#
         + startup(
-          #"{"bytes": [1, 2], "endpoint": 2, "timeoutMilliseconds": 500, "#
+          #"{"bytes": "01 02", "endpoint": 2, "timeoutMilliseconds": 500, "#
             + #""delayMilliseconds": 5, "sessionByte": 1, "toleratesRejection": true}"#
         )
     )
@@ -437,13 +436,13 @@ struct ProtocolDescriptionTests {
     ]
   )
   func rejectsAMalformedUSBStartupWrite(field: String) {
-    let body = #""rawUSB": true, "# + startup(#"{"bytes": [1], "# + field + "}")
+    let body = #""rawUSB": true, "# + startup(#"{"bytes": "01", "# + field + "}")
     #expect(rejection(family: .xboxGIP, body)?.code == .invalidProtocolDescription, "\(field)")
   }
 
   @Test
   func rejectsStartupWritesMixingBothFormats() {
-    let body = startup(hidWrite("") + #", {"bytes": [1]}"#)
+    let body = startup(hidWrite("") + #", {"bytes": "01"}"#)
     #expect(rejection(family: .sonyDualSense, body)?.code == .invalidProtocolDescription)
   }
 
@@ -478,10 +477,18 @@ struct ProtocolDescriptionTests {
   }
 
   @Test
+  func rejectsAnEmptySession() {
+    #expect(
+      rejection(exactly: .xboxGIP, #""defaults": {"session": {}}"#)?.code
+        == .invalidProtocolDescription
+    )
+  }
+
+  @Test
   func rejectsRumbleDefaultsAndStickDeadzoneForTheRightReason() {
     let rumble = rejection(
       family: .xboxGIP,
-      #""defaults": {"output": {"rumble": \#(Self.rumbleTemplate)}}"#
+      #""defaults": {"session": {"rumble": \#(Self.rumbleTemplate)}}"#
     )
     #expect(rumble?.description.contains("rumble templates require") == true)
     let deadzone = rejection(family: .sonyDualSense, #""tuningKeys": ["stickDeadzone"]"#)

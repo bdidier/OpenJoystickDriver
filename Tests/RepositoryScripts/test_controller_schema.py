@@ -7,12 +7,21 @@ from Scripts.Catalog import validate_profiles
 from Scripts.Catalog.schema_header import header
 
 
-def record(protocol: dict[str, Any], **fields: Any) -> dict[str, Any]:
+def zeros(count: int) -> str:
+    return " ".join(["00"] * count)
+
+
+def record(
+    protocol: dict[str, Any], session: dict[str, Any] | None = None, **fields: Any
+) -> dict[str, Any]:
+    mode: dict[str, Any] = {"id": "default", "protocol": protocol}
+    if session is not None:
+        mode["session"] = session
     return {
         **header("Controller"),
         "vendorID": 0x045E,
         "productID": 0x02EA,
-        "modes": [{"id": "default", "protocol": protocol}],
+        "modes": [mode],
         **fields,
     }
 
@@ -296,18 +305,18 @@ GP100_RUMBLE = {
 }
 
 
-class OwnershipAndOutputTests(unittest.TestCase):
+class OwnershipAndSessionTests(unittest.TestCase):
     def setUp(self) -> None:
         self.validator = validate_profiles.validator()
 
     def test_accepts_ownership_and_rumble_template(self) -> None:
         accepted = {
-            "third-party rumble": record(THIRD_PARTY, output={"rumble": GP100_RUMBLE}),
+            "third-party rumble": record(THIRD_PARTY, session={"rumble": GP100_RUMBLE}),
             "OJD ownership": record(THIRD_PARTY, server="ojd"),
             "macOS ownership": record(DUALSENSE, server="system"),
             "feature report": record(
                 THIRD_PARTY,
-                output={
+                session={
                     "rumble": {
                         "report": {"kind": "feature", "id": 0, "length": 2},
                         "rightTrigger": {"byte": 1},
@@ -319,7 +328,7 @@ class OwnershipAndOutputTests(unittest.TestCase):
             with self.subTest(name):
                 self.assertTrue(self.validator.is_valid(document))
 
-    def test_rejects_invalid_ownership_and_output(self) -> None:
+    def test_rejects_invalid_ownership_and_session(self) -> None:
         report = GP100_RUMBLE["report"]
         rejected = {
             "unknown ownership": record(THIRD_PARTY, server="native"),
@@ -328,28 +337,28 @@ class OwnershipAndOutputTests(unittest.TestCase):
             "GameSir USB ownership": record(
                 {"family": "vendor.gamesir", "variant": "usb"}, server="ojd"
             ),
-            "template on DualSense": record(DUALSENSE, output={"rumble": GP100_RUMBLE}),
+            "template on DualSense": record(DUALSENSE, session={"rumble": GP100_RUMBLE}),
             "keep-alive in a record": record(
-                THIRD_PARTY, output={"keepAlive": {"intervalMilliseconds": 500}}
+                THIRD_PARTY, session={"keepAlive": {"intervalMilliseconds": 500}}
             ),
             "input report": record(
                 THIRD_PARTY,
-                output={
+                session={
                     "rumble": {
                         "report": {**report, "kind": "input"},
                         "leftMain": {"byte": 3},
                     }
                 },
             ),
-            "no motor": record(THIRD_PARTY, output={"rumble": {"report": report}}),
+            "no motor": record(THIRD_PARTY, session={"rumble": {"report": report}}),
             "haptic motor": record(
                 THIRD_PARTY,
-                output={"rumble": {"report": report, "leftHaptic": {"byte": 3}}},
+                session={"rumble": {"report": report, "leftHaptic": {"byte": 3}}},
             ),
             "unknown template": record(
-                THIRD_PARTY, output={"rumble": GP100_RUMBLE, "lighting": {}}
+                THIRD_PARTY, session={"rumble": GP100_RUMBLE, "lighting": {}}
             ),
-            "empty output": record(THIRD_PARTY, output={}),
+            "empty session": record(THIRD_PARTY, session={}),
         }
         for name, document in rejected.items():
             with self.subTest(name):
@@ -370,7 +379,7 @@ class OwnershipAndOutputTests(unittest.TestCase):
 SIXAXIS = {"family": "sony.sixaxis"}
 ENABLE = {
     "report": {"kind": "feature", "id": 244, "length": 5},
-    "bytes": [66, 3, 0, 0],
+    "bytes": "42 03 00 00",
     "transport": "bluetooth-classic",
 }
 
@@ -381,41 +390,41 @@ class StartupWriteTests(unittest.TestCase):
 
     def test_accepts_startup_writes(self) -> None:
         accepted = {
-            "Sixaxis enable": record(SIXAXIS, output={"startup": [ENABLE]}),
+            "Sixaxis enable": record(SIXAXIS, session={"startup": [ENABLE]}),
             "delayed output": record(
                 DUALSENSE,
-                output={
+                session={
                     "startup": [
                         {
                             "report": {"kind": "output", "id": 0, "length": 2},
-                            "bytes": [1, 2],
+                            "bytes": "01 02",
                             "delayMilliseconds": 1000,
                         }
                     ]
                 },
             ),
             "startup with rumble": record(
-                THIRD_PARTY, output={"rumble": GP100_RUMBLE, "startup": [ENABLE]}
+                THIRD_PARTY, session={"rumble": GP100_RUMBLE, "startup": [ENABLE]}
             ),
             "phased write": record(
-                SIXAXIS, output={"startup": [{**ENABLE, "phase": "startup"}]}
+                SIXAXIS, session={"startup": [{**ENABLE, "phase": "startup"}]}
             ),
             "long report with a CRC": record(
                 DS4,
-                output={
+                session={
                     "startup": [
                         {
                             "report": {"kind": "output", "id": 17, "length": 78},
-                            "bytes": [0] * 73,
+                            "bytes": zeros(73),
                             "crc32Seed": 162,
                         }
                     ]
                 },
             ),
-            "GIP packet": record(GIP, output={"startup": [USB_WRITE]}),
-            "XUSB packet": record(XUSB, output={"startup": [USB_WRITE]}),
+            "GIP packet": record(GIP, session={"startup": [USB_WRITE]}),
+            "XUSB packet": record(XUSB, session={"startup": [USB_WRITE]}),
             "Switch 2 packet": record(
-                {"family": "nintendo.switch2"}, output={"startup": [USB_WRITE]}
+                {"family": "nintendo.switch2"}, session={"startup": [USB_WRITE]}
             ),
         }
         for name, document in accepted.items():
@@ -424,54 +433,54 @@ class StartupWriteTests(unittest.TestCase):
 
     def test_rejects_invalid_startup_writes(self) -> None:
         rejected = {
-            "empty list": record(SIXAXIS, output={"startup": []}),
-            "too many": record(SIXAXIS, output={"startup": [ENABLE] * 17}),
+            "empty list": record(SIXAXIS, session={"startup": []}),
+            "too many": record(SIXAXIS, session={"startup": [ENABLE] * 17}),
             "input report": record(
                 SIXAXIS,
-                output={
+                session={
                     "startup": [
                         {**ENABLE, "report": {**ENABLE["report"], "kind": "input"}}
                     ]
                 },
             ),
             "byte above 255": record(
-                SIXAXIS, output={"startup": [{**ENABLE, "bytes": [256]}]}
+                SIXAXIS, session={"startup": [{**ENABLE, "bytes": "100"}]}
             ),
-            "no bytes": record(SIXAXIS, output={"startup": [{**ENABLE, "bytes": []}]}),
+            "no bytes": record(SIXAXIS, session={"startup": [{**ENABLE, "bytes": ""}]}),
             "long delay": record(
-                SIXAXIS, output={"startup": [{**ENABLE, "delayMilliseconds": 1001}]}
+                SIXAXIS, session={"startup": [{**ENABLE, "delayMilliseconds": 1001}]}
             ),
             "radio transport": record(
                 SIXAXIS,
-                output={
+                session={
                     "startup": [{**ENABLE, "transport": "proprietary-radio-receiver"}]
                 },
             ),
             "unknown key": record(
-                SIXAXIS, output={"startup": [{**ENABLE, "repeat": 2}]}
+                SIXAXIS, session={"startup": [{**ENABLE, "repeat": 2}]}
             ),
-            "GIP": record(GIP, output={"startup": [ENABLE]}),
-            "XUSB": record(XUSB, output={"startup": [ENABLE]}),
+            "GIP": record(GIP, session={"startup": [ENABLE]}),
+            "XUSB": record(XUSB, session={"startup": [ENABLE]}),
             "GameSir USB": record(
                 {"family": "vendor.gamesir", "variant": "usb"},
-                output={"startup": [ENABLE]},
+                session={"startup": [ENABLE]},
             ),
             "rumble on Sixaxis": record(
-                SIXAXIS, output={"rumble": GP100_RUMBLE, "startup": [ENABLE]}
+                SIXAXIS, session={"rumble": GP100_RUMBLE, "startup": [ENABLE]}
             ),
             "unknown phase": record(
-                SIXAXIS, output={"startup": [{**ENABLE, "phase": "later"}]}
+                SIXAXIS, session={"startup": [{**ENABLE, "phase": "later"}]}
             ),
             "CRC seed above 255": record(
-                SIXAXIS, output={"startup": [{**ENABLE, "crc32Seed": 256}]}
+                SIXAXIS, session={"startup": [{**ENABLE, "crc32Seed": 256}]}
             ),
             "CRC without room": record(
                 DS4,
-                output={
+                session={
                     "startup": [
                         {
                             "report": {"kind": "output", "id": 1, "length": 4},
-                            "bytes": [1, 2, 3],
+                            "bytes": "01 02 03",
                             "crc32Seed": 1,
                         }
                     ]
@@ -479,7 +488,7 @@ class StartupWriteTests(unittest.TestCase):
             ),
             "report above 128 bytes": record(
                 SIXAXIS,
-                output={
+                session={
                     "startup": [
                         {
                             **ENABLE,
@@ -489,54 +498,54 @@ class StartupWriteTests(unittest.TestCase):
                 },
             ),
             "family-only variants": record(
-                SIXAXIS, output={"startup": [{**ENABLE, "variants": ["usb"]}]}
+                SIXAXIS, session={"startup": [{**ENABLE, "variants": ["usb"]}]}
             ),
             "family-only condition": record(
                 SIXAXIS,
-                output={
+                session={
                     "startup": [{**ENABLE, "when": {"parameter": "role", "is": ["A"]}}]
                 },
             ),
             "packet endpoint 0": record(
-                GIP, output={"startup": [{**USB_WRITE, "endpoint": 0}]}
+                GIP, session={"startup": [{**USB_WRITE, "endpoint": 0}]}
             ),
             "packet endpoint 128": record(
-                GIP, output={"startup": [{**USB_WRITE, "endpoint": 128}]}
+                GIP, session={"startup": [{**USB_WRITE, "endpoint": 128}]}
             ),
             "packet timeout 0": record(
-                GIP, output={"startup": [{**USB_WRITE, "timeoutMilliseconds": 0}]}
+                GIP, session={"startup": [{**USB_WRITE, "timeoutMilliseconds": 0}]}
             ),
             "packet timeout above 60000": record(
                 GIP,
-                output={"startup": [{**USB_WRITE, "timeoutMilliseconds": 60001}]},
+                session={"startup": [{**USB_WRITE, "timeoutMilliseconds": 60001}]},
             ),
             "packet delay above 1000": record(
-                GIP, output={"startup": [{**USB_WRITE, "delayMilliseconds": 1001}]}
+                GIP, session={"startup": [{**USB_WRITE, "delayMilliseconds": 1001}]}
             ),
             "packet session byte above 63": record(
-                GIP, output={"startup": [{**USB_WRITE, "sessionByte": 64}]}
+                GIP, session={"startup": [{**USB_WRITE, "sessionByte": 64}]}
             ),
             "packet above 64 bytes": record(
-                GIP, output={"startup": [{**USB_WRITE, "bytes": [0] * 65}]}
+                GIP, session={"startup": [{**USB_WRITE, "bytes": zeros(65)}]}
             ),
             "packet with a condition": record(
                 GIP,
-                output={
+                session={
                     "startup": [
                         {**USB_WRITE, "variants": ["usb"]},
                     ]
                 },
             ),
-            "packet on a HID family": record(SIXAXIS, output={"startup": [USB_WRITE]}),
+            "packet on a HID family": record(SIXAXIS, session={"startup": [USB_WRITE]}),
             "packet on XID": record(
-                {"family": "xbox.xid"}, output={"startup": [USB_WRITE]}
+                {"family": "xbox.xid"}, session={"startup": [USB_WRITE]}
             ),
             "packet with an initialization list": record(
                 {**GIP, "initialization": ["xbox.gip/power-on"]},
-                output={"startup": [USB_WRITE]},
+                session={"startup": [USB_WRITE]},
             ),
             "packet mixed with a report": record(
-                GIP, output={"startup": [USB_WRITE, ENABLE]}
+                GIP, session={"startup": [USB_WRITE, ENABLE]}
             ),
         }
         for name, document in rejected.items():
@@ -544,7 +553,7 @@ class StartupWriteTests(unittest.TestCase):
                 self.assertFalse(self.validator.is_valid(document))
 
 
-USB_WRITE = {"bytes": [5, 32, 0, 1, 0]}
+USB_WRITE = {"bytes": "05 20 00 01 00"}
 
 REPORT_LAYOUT = {"family": "hid.report-layout"}
 BUTTON = {"control": "South", "byte": 1, "mask": 1}
@@ -616,7 +625,7 @@ class InputLayoutTests(unittest.TestCase):
                 },
             ),
             "layout with rumble": record(
-                REPORT_LAYOUT, input=LAYOUT, output={"rumble": GP100_RUMBLE}
+                REPORT_LAYOUT, input=LAYOUT, session={"rumble": GP100_RUMBLE}
             ),
             "dpad pressure": record(
                 {**THIRD_PARTY, "parameters": {"hatSource": "DpadPressure"}}

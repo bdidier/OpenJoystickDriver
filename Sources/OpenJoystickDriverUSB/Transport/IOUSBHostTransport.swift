@@ -71,7 +71,9 @@ public actor IOUSBHostTransportProvider: USBTransportProvider {
         locationID: device.locationID,
         observedPhysicalLocationIdentifier: device.locationID,
         productName: device.productName,
-        serialNumber: device.serialNumber
+        serialNumber: device.serialNumber,
+        manufacturer: device.manufacturer,
+        deviceRelease: device.deviceRelease
       )
     }.sorted { lhs, rhs in
       (lhs.vendorID, lhs.productID, lhs.locationID, lhs.serviceID) < (
@@ -142,7 +144,9 @@ public actor IOUSBHostTransportProvider: USBTransportProvider {
         productID: productID,
         locationID: locationID,
         productName: stringProperty(service, keys: ["USB Product Name", "Product Name"]),
-        serialNumber: stringProperty(service, keys: ["USB Serial Number", "Serial Number"])
+        serialNumber: stringProperty(service, keys: ["USB Serial Number", "Serial Number"]),
+        manufacturer: stringProperty(service, keys: ["USB Vendor Name", "Vendor Name"]),
+        deviceRelease: uint16Property(service, key: "bcdDevice")
       )
     }
   }
@@ -303,6 +307,8 @@ struct IOUSBHostDeviceFacts: Equatable, Sendable {
   let locationID: UInt32
   let productName: String?
   let serialNumber: String?
+  var manufacturer: String? = nil
+  var deviceRelease: UInt16? = nil
 }
 
 // `@unchecked Sendable` because `IOUSBHostPipe` is not annotated `Sendable`, and awaiting its

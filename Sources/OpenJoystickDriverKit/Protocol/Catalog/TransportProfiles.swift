@@ -38,6 +38,25 @@ public struct DeviceTransportProfile: Equatable, Sendable {
     self.postHandshakeSettleNanoseconds = postHandshakeSettleNanoseconds
   }
 
+  /// The settle wait for a session's `settleMilliseconds`; zero when the session names none.
+  static func settleNanoseconds(milliseconds: Int?) -> UInt64 {
+    UInt64(milliseconds ?? 0) * nanosecondsPerMillisecond
+  }
+
+  /// This profile with the settle wait of a session's `settleMilliseconds`.
+  func settling(milliseconds: Int?) -> Self {
+    Self(
+      inputEndpoint: inputEndpoint,
+      outputEndpoint: outputEndpoint,
+      interfaceNumber: interfaceNumber,
+      alternateSetting: alternateSetting,
+      hasInterfaceOverride: hasInterfaceOverride,
+      hasEndpointOverride: hasEndpointOverride,
+      needsSetConfiguration: needsSetConfiguration,
+      postHandshakeSettleNanoseconds: Self.settleNanoseconds(milliseconds: milliseconds)
+    )
+  }
+
   /// The `xbox.gip` family's default endpoints, from its protocol description.
   public static let gipDefault = Self(
     inputEndpoint: UInt8(PhysicalProtocolID.xboxGIP.protocolDescription.endpoints.input),
@@ -202,7 +221,7 @@ public struct ControllerTuning: Codable, Equatable, Sendable {
 public struct DeviceRuntimeProfile: Equatable, Sendable {
   /// The catalog record's `vvvv-pppp` file stem; nil for a family profile, which has no record.
   public let recordID: String?
-  public let transportProfile: DeviceTransportProfile
+  public internal(set) var transportProfile: DeviceTransportProfile
   public internal(set) var physicalProtocolID: PhysicalProtocolID
   /// Nil when the family has one contract or its variant is a transport variant,
   /// which classification derives from the observed transport.
@@ -216,12 +235,15 @@ public struct DeviceRuntimeProfile: Equatable, Sendable {
   /// The assembly policy the row names; nil runs each protocol role as its own controller.
   public internal(set) var assemblyPolicy: ControllerAssemblyPolicy?
   public let server: ControllerServer
-  /// The record's rumble report, for a driver that encodes rumble from it.
-  public let rumbleTemplate: RumbleOutputTemplate?
-  /// The record's fixed startup reports, in order; OJD sends them only to a controller it owns.
-  public internal(set) var startupWrites: [RecordStartupWrite]
-  /// The record's raw-USB startup packets; empty runs the family description's.
-  public internal(set) var usbStartupWrites: [USBStartupWrite]
+  /// The selected mode's session: startup, keep-alive, settle, shutdown, control transfers and
+  /// rumble template. A family profile runs none.
+  public internal(set) var session: ControllerSession
+  /// The rumble report, for a driver that encodes rumble from it.
+  public var rumbleTemplate: RumbleOutputTemplate? { session.rumbleTemplate }
+  /// Fixed startup reports, in order; OJD sends them only to a controller it owns.
+  public var startupWrites: [RecordStartupWrite] { session.startupWrites }
+  /// Raw-USB startup packets; empty runs the family description's.
+  public var usbStartupWrites: [USBStartupWrite] { session.usbStartupWrites }
   /// The record's input-report layout; set exactly for the `hid.report-layout` family.
   public let inputLayout: ControllerInputLayout?
   /// The record's HID usage map; set only for a `hid.descriptor` record that declares one.

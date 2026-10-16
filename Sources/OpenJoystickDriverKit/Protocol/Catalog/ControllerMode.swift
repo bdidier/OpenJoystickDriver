@@ -126,10 +126,8 @@ public struct ControllerMode: Equatable, Sendable {
   public let match: ControllerModeMatch
   /// The interface numbers this mode drives; nil keeps the default binding.
   public let interfaceRange: ClosedRange<UInt8>?
-  /// The session's startup writes, which override the record's; nil keeps the record's.
-  public let startupWrites: [RecordStartupWrite]?
-  /// The session's raw-USB startup packets, which override the record's; nil keeps the record's.
-  public let usbStartupWrites: [USBStartupWrite]?
+  /// The steps this mode runs; the profile's session is replaced by it as a whole.
+  public let session: ControllerSession
 
   /// The probes of this mode's match.
   public var probes: [ControllerModeProbe] { match.probes }
@@ -149,8 +147,10 @@ extension DeviceRuntimeProfile {
     profile.gipKeepAlivePolicy = mode.gipKeepAlivePolicy
     profile.assemblyPolicy = mode.assemblyPolicy
     profile.interfaceRange = mode.interfaceRange ?? interfaceRange
-    profile.startupWrites = mode.startupWrites ?? startupWrites
-    profile.usbStartupWrites = mode.usbStartupWrites ?? usbStartupWrites
+    profile.session = mode.session
+    profile.transportProfile = transportProfile.settling(
+      milliseconds: mode.session.settleMilliseconds
+    )
     profile.modeID = modeID
     return profile
   }

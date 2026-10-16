@@ -243,7 +243,7 @@ struct ProtocolDescription: Sendable {
       variantTuning[variant] = tuning
     }
     let usbStartupWrites = try resolvedUSBStartup(
-      document.defaults?.output,
+      document.defaults?.session?.startup,
       namedPackets: document.defaults?.session?.namedPackets,
       fileName: fileName
     )
@@ -259,8 +259,8 @@ struct ProtocolDescription: Sendable {
       parameters: document.parameters,
       controls: document.controls,
       recordCapabilities: document.recordCapabilities,
-      rumbleTemplate: document.defaults?.output?.rumble,
-      startupWrites: document.defaults?.output?.startup ?? [],
+      rumbleTemplate: document.defaults?.session?.rumble,
+      startupWrites: document.defaults?.session?.startup?.hid ?? [],
       usbStartupWrites: usbStartupWrites,
       keepAlive: document.defaults?.session?.keepAlive,
       subcommands: document.defaults?.session?.subcommands,
@@ -288,16 +288,16 @@ struct ProtocolDescription: Sendable {
     return description
   }
 
-  /// The raw-USB startup packets of `output`: its own, or the named packets it refers to, each
+  /// The raw-USB startup packets of `startup`: its own, or the named packets it refers to, each
   /// with the condition of its reference. A reference to a packet the description lacks fails.
   private static func resolvedUSBStartup(
-    _ output: ControllerRecordDocument.Output?,
+    _ startup: ControllerRecordDocument.StartupList?,
     namedPackets: NamedPacketPlan?,
     fileName: String
   ) throws(ProtocolDescriptionProblem) -> [USBStartupWrite] {
-    guard let output, !output.packetStartup.isEmpty else { return output?.usbStartup ?? [] }
+    guard let startup, !startup.packets.isEmpty else { return startup?.usb ?? [] }
     var writes: [USBStartupWrite] = []
-    for reference in output.packetStartup {
+    for reference in startup.packets {
       guard let packet = namedPackets?.packet(named: reference.id) else {
         throw ProtocolDescriptionProblem(
           .invalidProtocolDescription,
@@ -317,8 +317,8 @@ struct ProtocolDescription: Sendable {
   }
 
   /// The fixed keep-alive writes that a controller on `variant` receives from this description.
-  /// A keep-alive write has no `when`, and a record carries none of its own, so nothing replaces
-  /// these.
+  /// A keep-alive write has no `when`. A record's mode adds a keep-alive only for a family whose
+  /// description declares none.
   func keepAliveWrites(variant: PhysicalProtocolVariantID?) -> [KeepAliveWrite] {
     (keepAlive?.writes ?? []).filter {
       $0.payload.condition.matches(variant: variant, parameters: .none)

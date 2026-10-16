@@ -12,6 +12,10 @@ from Scripts.Catalog import protocol_descriptions
 from Scripts.Catalog.schema_header import header
 from Scripts.Quality import validate_schemas
 
+
+def zeros(count: int) -> str:
+    return " ".join(["00"] * count)
+
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -456,14 +460,14 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                     }
                 },
             ),
-            ("xbox.xid", {"output": {"startup": [self.startup_write()]}}),
+            ("xbox.xid", {"session": {"startup": [self.startup_write()]}}),
             ("sony.dualsense", {"tuning": {"inputLivenessTimeoutMs": 5}}),
             ("sony.dualsense", {"tuning": {"hidStartupRecoveryRounds": 2}}),
             ("xbox.xusb", {"tuning": {"hidStartupIntervalMs": 5}}),
             ("xbox.gip", {"unknown": {}}),
             ("xbox.gip", {"tuning": {"stickDeadzone": 5}}),
-            ("xbox.gip", {"output": {"rumble": self.rumble_template()}}),
-            ("xbox.xusb", {"output": {"rumble": self.rumble_template()}}),
+            ("xbox.gip", {"session": {"rumble": self.rumble_template()}}),
+            ("xbox.xusb", {"session": {"rumble": self.rumble_template()}}),
         ):
             with self.subTest(family=family, defaults=defaults):
                 self.assert_rejected(self.with_body(family, defaults=defaults))
@@ -491,10 +495,10 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                     self.assert_rejected(document, path.name)
 
     def startup_write(self) -> dict[str, Any]:
-        return {"report": {"kind": "output", "id": 1, "length": 4}, "bytes": [1, 2, 3]}
+        return {"report": {"kind": "output", "id": 1, "length": 4}, "bytes": "01 02 03"}
 
     def usb_write(self, **members: Any) -> dict[str, Any]:
-        return {"bytes": [5, 32, 0, 1, 0], **members}
+        return {"bytes": "05 20 00 01 00", **members}
 
     def hid_write(self, **members: Any) -> dict[str, Any]:
         return {**self.startup_write(), **members}
@@ -511,7 +515,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 "sony.dualsense",
                 self.hid_write(
                     report={"kind": "output", "id": 17, "length": 78},
-                    bytes=[0] * 73,
+                    bytes=zeros(73),
                     crc32Seed=162,
                     variants=["bluetooth-classic"],
                 ),
@@ -519,7 +523,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         ):
             with self.subTest(family=family, write=write):
                 self.check(
-                    self.with_body(family, defaults={"output": {"startup": [write]}})
+                    self.with_body(family, defaults={"session": {"startup": [write]}})
                 )
 
     def test_rejects_malformed_startup_writes(self) -> None:
@@ -531,8 +535,8 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             ("xbox.gip", self.usb_write(delayMilliseconds=1001)),
             ("xbox.gip", self.usb_write(delayMilliseconds=-1)),
             ("xbox.gip", self.usb_write(sessionByte=64)),
-            ("xbox.gip", self.usb_write(bytes=[0] * 65)),
-            ("xbox.gip", self.usb_write(bytes=[])),
+            ("xbox.gip", self.usb_write(bytes=zeros(65))),
+            ("xbox.gip", self.usb_write(bytes="")),
             ("xbox.gip", self.usb_write(toleratesRejection="yes")),
             (
                 "xbox.gip",
@@ -561,21 +565,21 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         ):
             with self.subTest(family=family, write=write):
                 self.assert_rejected(
-                    self.with_body(family, defaults={"output": {"startup": [write]}})
+                    self.with_body(family, defaults={"session": {"startup": [write]}})
                 )
 
     def test_rejects_startup_writes_mixing_hid_and_usb_formats(self) -> None:
         self.assert_rejected(
             self.with_body(
                 "sony.dualsense",
-                defaults={"output": {"startup": [self.hid_write(), self.usb_write()]}},
+                defaults={"session": {"startup": [self.hid_write(), self.usb_write()]}},
             )
         )
 
     def test_rejects_hid_startup_writes_for_a_raw_usb_family(self) -> None:
         self.assert_rejected(
             self.with_body(
-                "xbox.gip", defaults={"output": {"startup": [self.hid_write()]}}
+                "xbox.gip", defaults={"session": {"startup": [self.hid_write()]}}
             )
         )
 
@@ -591,7 +595,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                     self.with_body(
                         "sony.dualshock4",
                         parameters=role,
-                        defaults={"output": {"startup": [write]}},
+                        defaults={"session": {"startup": [write]}},
                     ),
                     code=code,
                 )
@@ -639,7 +643,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                     "writes": [
                         {
                             "report": feature,
-                            "bytes": [0] * 63,
+                            "bytes": zeros(63),
                             "resendTuning": "lizardResendTicks",
                         }
                     ],
@@ -661,8 +665,8 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             {"intervalMilliseconds": 500, "unknown": 1},
             {"intervalMilliseconds": 500, "writes": []},
             {"intervalMilliseconds": 500, "writes": [usb] * 9},
-            {"intervalMilliseconds": 500, "writes": [self.usb_write(bytes=[])]},
-            {"intervalMilliseconds": 500, "writes": [self.usb_write(bytes=[0] * 65)]},
+            {"intervalMilliseconds": 500, "writes": [self.usb_write(bytes="")]},
+            {"intervalMilliseconds": 500, "writes": [self.usb_write(bytes=zeros(65))]},
             {"intervalMilliseconds": 500, "writes": [self.usb_write(sessionByte=64)]},
             {"intervalMilliseconds": 500, "writes": [self.usb_write(endpoint=0)]},
             {"intervalMilliseconds": 500, "writes": [self.usb_write(variants=[])]},
@@ -701,12 +705,12 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         return {
             "reportId": 1,
             "counterModulus": 16,
-            "requests": [{"subcommand": 3, "data": [48]}],
+            "requests": [{"subcommand": 3, "data": "30"}],
             **members,
         }
 
     def test_accepts_subcommands(self) -> None:
-        plain = {"subcommand": 3, "data": [48]}
+        plain = {"subcommand": 3, "data": "30"}
         for subcommands in (
             self.subcommands(),
             self.subcommands(counterModulus=2),
@@ -725,7 +729,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 self.check(self.subcommand_body(subcommands))
 
     def test_rejects_malformed_subcommands(self) -> None:
-        plain = {"subcommand": 3, "data": [48]}
+        plain = {"subcommand": 3, "data": "30"}
         both = {**plain, "spiRead": self.spi_read()["spiRead"]}
         for subcommands in (
             {"counterModulus": 16, "requests": [plain]},
@@ -740,10 +744,10 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             self.subcommands(unknown=1),
             self.subcommands(requests=[{"subcommand": 3}]),
             self.subcommands(requests=[both]),
-            self.subcommands(requests=[{"subcommand": 256, "data": [1]}]),
-            self.subcommands(requests=[{"subcommand": 3, "data": []}]),
-            self.subcommands(requests=[{"subcommand": 3, "data": [0] * 17}]),
-            self.subcommands(requests=[{"subcommand": 3, "data": [256]}]),
+            self.subcommands(requests=[{"subcommand": 256, "data": "01"}]),
+            self.subcommands(requests=[{"subcommand": 3, "data": ""}]),
+            self.subcommands(requests=[{"subcommand": 3, "data": zeros(17)}]),
+            self.subcommands(requests=[{"subcommand": 3, "data": "100"}]),
             self.subcommands(requests=[{**plain, "unknown": 1}]),
             self.subcommands(requests=[self.spi_read(length=0)]),
             self.subcommands(requests=[self.spi_read(length=30)]),
@@ -774,7 +778,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def named_packet(**members: Any) -> dict[str, Any]:
         return {
             "id": "xbox.gip/power-on",
-            "bytes": [5, 32, 0, 1, 0],
+            "bytes": "05 20 00 01 00",
             "sessionByte": 2,
             **members,
         }
@@ -787,8 +791,8 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             [self.named_packet()],
             [self.named_packet(), self.named_packet(id="xbox.gip/led-on")],
             [self.named_packet(id=f"xbox.gip/packet-{i}") for i in range(16)],
-            [self.named_packet(bytes=[0, 0, 0])],
-            [self.named_packet(bytes=[0] * 64)],
+            [self.named_packet(bytes="00 00 00")],
+            [self.named_packet(bytes=zeros(64))],
         ):
             with self.subTest(packets=packets):
                 self.check(self.named_packet_body(packets))
@@ -797,22 +801,22 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         for packets in (
             [],
             [self.named_packet(id=f"xbox.gip/packet-{i}") for i in range(17)],
-            [{"bytes": [5, 32, 0], "sessionByte": 2}],
+            [{"bytes": "05 20 00", "sessionByte": 2}],
             [{"id": "xbox.gip/power-on", "sessionByte": 2}],
-            [{"id": "xbox.gip/power-on", "bytes": [5, 32, 0]}],
+            [{"id": "xbox.gip/power-on", "bytes": "05 20 00"}],
             [self.named_packet(id="power-on")],
             [self.named_packet(id="xbox.gip/Power-On")],
             [self.named_packet(id="xbox.gip/power--on")],
             [self.named_packet(id="xbox.gip/")],
-            [self.named_packet(bytes=[5, 32])],
-            [self.named_packet(bytes=[0] * 65)],
-            [self.named_packet(bytes=[5, 32, 256])],
+            [self.named_packet(bytes="05 20")],
+            [self.named_packet(bytes=zeros(65))],
+            [self.named_packet(bytes="05 20 100")],
             [self.named_packet(sessionByte=1)],
             [self.named_packet(sessionByte=3)],
             [self.named_packet(endpoint=2)],
             [self.named_packet(unknown=1)],
             # Each id appears at most once, and starts with the family name.
-            [self.named_packet(), self.named_packet(bytes=[5, 32, 0, 2])],
+            [self.named_packet(), self.named_packet(bytes="05 20 00 02")],
             [self.named_packet(id="xbox.xusb/power-on")],
         ):
             with self.subTest(packets=packets):
@@ -869,8 +873,10 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         return self.with_body(
             family,
             defaults={
-                "session": {"namedPackets": [self.named_packet()]},
-                "output": {"startup": startup},
+                "session": {
+                    "namedPackets": [self.named_packet()],
+                    "startup": startup,
+                },
             },
         )
 
@@ -890,7 +896,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         self.assert_rejected(
             self.with_body(
                 "xbox.gip",
-                defaults={"output": {"startup": [{"packet": "xbox.gip/power-on"}]}},
+                defaults={"session": {"startup": [{"packet": "xbox.gip/power-on"}]}},
             ),
             code="E5002",
         )
@@ -898,7 +904,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def test_rejects_malformed_or_mixed_packet_startup(self) -> None:
         for startup in (
             [{"packet": "power-on"}],
-            [{"packet": "xbox.gip/power-on", "bytes": [1, 2, 3]}],
+            [{"packet": "xbox.gip/power-on", "bytes": "01 02 03"}],
             [{"packet": "xbox.gip/power-on"}, self.usb_write()],
             [self.usb_write(), {"packet": "xbox.gip/power-on"}],
             [{"packet": "xbox.gip/power-on"}, self.hid_write()],
@@ -909,7 +915,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def test_the_bundled_gip_startup_refers_to_named_packets_only(self) -> None:
         description = protocol_descriptions.bundled()["xbox.gip"]
         self.assertEqual(
-            [write["packet"] for write in description["defaults"]["output"]["startup"]],
+            [write["packet"] for write in description["defaults"]["session"]["startup"]],
             ["xbox.gip/power-on", "xbox.gip/led-on", "xbox.gip/auth-done"],
         )
 

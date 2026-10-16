@@ -481,7 +481,7 @@ struct ControllerCommandTests {
     """
     {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "ControllerPatch",
      "selector": {"vendorID": 13932, "productID": 5},
-     "patch": {"usb": {"postHandshakeSettleMs": 5}}}
+     "patch": {"tuning": {"stickDeadzone": 0.08}}}
     """.utf8
   )
 

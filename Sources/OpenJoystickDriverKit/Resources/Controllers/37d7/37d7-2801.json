@@ -8,6 +8,9 @@
       "id": "default",
       "protocol": {
         "family": "xbox.gip"
+      },
+      "session": {
+        "settleMilliseconds": 200
       }
     }
   ],
@@ -16,7 +19,6 @@
       "in": 129,
       "out": 1
     },
-    "configuration": "set1-before-claim",
-    "postHandshakeSettleMs": 200
+    "configuration": "set1-before-claim"
   }
 }

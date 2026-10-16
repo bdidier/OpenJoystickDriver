@@ -1,0 +1,97 @@
+import Foundation
+
+/// The transfer timeout of a session step that names none, in milliseconds.
+let usbSessionDefaultTimeoutMilliseconds: UInt32 = 1000
+
+extension DevicePipeline {
+  /// The session of the mode this pipeline runs; a pipeline without a record runs none.
+  var recordSession: ControllerSession { binding?.record?.session ?? .none }
+
+  /// Runs the mode's vendor control transfers in the order listed, each only when its `match`
+  /// holds for `device`. A rejected transfer fails startup unless it tolerates rejection.
+  func performControlTransfers(
+    handle: any USBTransportSession,
+    device: USBTransportDevice?,
+    runGeneration: UInt64?
+  ) async throws {
+    for transfer in recordSession.controlTransfers
+    where
+      transfer.match.holds(
+        manufacturer: device?.manufacturer,
+        product: device?.productName,
+        release: device?.deviceRelease
+      )
+    {
+      guard isCurrentUSBOperation(runGeneration) else { throw CancellationError() }
+      do {
+        let reply = try await handle.controlTransfer(
+          try transfer.request(),
+          timeout: transfer.timeoutMilliseconds.map(UInt32.init)
+            ?? usbSessionDefaultTimeoutMilliseconds
+        )
+        appendToPacketLog(
+          bytes: transfer.isInput ? reply : transfer.data ?? [],
+          direction: transfer.isInput ? .received : .transmitted
+        )
+      } catch let error as USBTransportError
+        where transfer.toleratesRejection && error.isIgnorableForTolerantStep
+      {
+        print("[DevicePipeline] Optional control transfer rejected for \(identifier): \(error)")
+      }
+      if let delay = transfer.delayMilliseconds, delay > 0 {
+        try await Task.sleep(
+          nanoseconds: UInt64(delay) * DeviceTransportProfile.nanosecondsPerMillisecond
+        )
+        guard isCurrentUSBOperation(runGeneration) else { throw CancellationError() }
+      }
+    }
+  }
+
+  /// The interval of the mode's keep-alive, which a family's own keep-alive replaces.
+  var sessionKeepAliveIntervalNanoseconds: UInt64? {
+    recordSession.keepAlive.map {
+      UInt64($0.intervalMilliseconds) * DeviceTransportProfile.nanosecondsPerMillisecond
+    }
+  }
+
+  /// The packets of the mode's keep-alive.
+  func sessionKeepAliveWrites() -> [PhysicalOutputWrite] {
+    (recordSession.keepAlive?.writes ?? []).map {
+      $0.output(
+        defaultEndpoint: transportProfile.outputEndpoint,
+        defaultTimeoutMilliseconds: Int(usbSessionDefaultTimeoutMilliseconds)
+      )
+    }
+  }
+
+  /// Sends the mode's shutdown packets. The session is closing, so a failed packet is logged and
+  /// the rest still go out.
+  func sendUSBShutdownWrites(handle: any USBTransportSession) async {
+    for write in recordSession.shutdownWrites {
+      guard
+        case .usb(let packet, _) = write.write(
+          defaultEndpoint: transportProfile.outputEndpoint,
+          defaultTimeoutMilliseconds: Int(usbSessionDefaultTimeoutMilliseconds)
+        )
+      else { continue }
+      do {
+        try await handle.write(
+          endpoint: packet.endpoint,
+          data: packet.bytes,
+          timeout: packet.timeoutMilliseconds
+        )
+        appendToPacketLog(bytes: packet.bytes, direction: .transmitted)
+      } catch { print("[DevicePipeline] Shutdown write failed for \(identifier): \(error)") }
+    }
+  }
+}
+
+extension USBTransportError {
+  /// Whether a step that tolerates rejection skips this failure.
+  var isIgnorableForTolerantStep: Bool {
+    switch self {
+    case .inputOutput, .notFound, .notSupported, .timeout: true
+    default: false
+    }
+  }
+}

@@ -87,45 +87,69 @@ def default_mode(record: dict[str, Any]) -> dict[str, Any]:
     return next(mode for mode in record["modes"] if mode["id"] == "default")
 
 
-def validate_mode_session(
-    path: pathlib.Path,
-    mode: dict[str, Any],
-    *,
-    record_startup: list[Any],
-    record_usb_startup: list[Any],
-) -> None:
-    """A session names HID reports for a HID mode and USB packets for a raw-USB mode, and
-    `interface` selects among HID interfaces, so a raw-USB mode has none."""
+def hex_byte_count(text: str) -> int:
+    return len(text.split(" "))
+
+
+def validate_mode_session(path: pathlib.Path, mode: dict[str, Any]) -> None:
+    """The session of one mode obeys the conditionals of that mode's own protocol, as
+    `validateSession` in Swift. A HID mode names startup reports, a raw-USB mode startup
+    packets, and `interface` selects among HID interfaces, so a raw-USB mode has none."""
     protocol = mode["protocol"]
+    family = protocol["family"]
     session = mode.get("session", {})
-    if not uses_raw_usb(protocol):
+    startup = session.get("startup", [])
+    description = description_of(family)
+    if uses_raw_usb(protocol):
         require(
-            "usbStartup" not in session,
-            f"{path}: a HID mode's session names startup reports, not usbStartup packets",
+            "interface" not in mode,
+            f"{path}: interface selects among HID interfaces; a raw-USB mode claims the "
+            "interface its usb transport resolves",
         )
-        return
-    require(
-        "interface" not in mode,
-        f"{path}: interface selects among HID interfaces; a raw-USB mode claims the "
-        "interface its usb transport resolves",
-    )
-    require(
-        "startup" not in session,
-        f"{path}: a raw-USB mode's session names usbStartup packets, not HID reports",
-    )
-    require(
-        not record_startup,
-        f"{path}: HID startup writes apply only to HID controllers, so not to a raw-USB mode",
-    )
-    if session.get("usbStartup", record_usb_startup):
-        described = (
-            description_of(protocol["family"]).get("defaults", {}).get("output", {})
+        require(
+            all("report" not in write for write in startup),
+            f"{path}: HID startup writes apply only to HID controllers, so not to a "
+            "raw-USB mode",
         )
+        described_keep_alive = "keepAlive" in description.get("defaults", {}).get(
+            "session", {}
+        )
+        require(
+            "keepAlive" not in session or not described_keep_alive,
+            f"{path}: a session keepAlive needs a raw-USB family whose description "
+            "declares none",
+        )
+    else:
+        for key in ("keepAlive", "settleMilliseconds", "shutdown", "control"):
+            require(
+                key not in session,
+                f"{path}: session {key} applies only to raw-USB modes",
+            )
+    packets = [write for write in startup if "report" not in write]
+    if packets:
+        described = description.get("defaults", {}).get("session", {})
         carries = any("report" not in write for write in described.get("startup", []))
         require(
             carries and "initialization" not in protocol,
             f"{path}: raw-USB startup writes need a family that reads them and no "
             "initialization list",
+        )
+    require(
+        "rumble" not in session or encodes_rumble_template(family),
+        f"{path}: rumble templates require a driver that encodes them",
+    )
+    for transfer in session.get("control", []):
+        outgoing = transfer["bmRequestType"] < 128
+        count = hex_byte_count(transfer["data"]) if "data" in transfer else 0
+        require(
+            not outgoing or count == transfer["wLength"],
+            f"{path}: control transfer data has {count} bytes, "
+            f"but wLength is {transfer['wLength']}",
+        )
+        bcd = transfer.get("match", {}).get("bcdDevice")
+        require(
+            bcd is None or bcd["min"] <= bcd["max"],
+            f"{path}: control transfer bcdDevice min must not exceed max",
         )
 
 
@@ -138,6 +162,56 @@ def validate_initialization(path: pathlib.Path, record: dict[str, Any]) -> None:
             description_of(protocol["family"]), protocol.get("initialization", [])
         )
         require(problem is None, f"{path}: {problem}")
+
+
+def validate_transport_sections(path: pathlib.Path, record: dict[str, Any]) -> None:
+    """The record-level sections that depend on a mode's transport hold for every mode, as
+    `validateTransportSections` in Swift."""
+    protocols = [mode["protocol"] for mode in record["modes"]]
+    raw = [uses_raw_usb(protocol) for protocol in protocols]
+    require(
+        "usb" not in record or all(raw),
+        f"{path}: USB overrides require a raw-USB protocol family",
+    )
+    require(
+        "server" not in record or not any(raw),
+        f"{path}: server applies only to HID controllers",
+    )
+    require(
+        "route" not in record or all(raw),
+        f"{path}: route ExtensionOwned applies only to raw-USB controllers",
+    )
+    require(
+        "bluetoothLE" not in record
+        or all(protocol["family"] == "nintendo.switch2" for protocol in protocols),
+        f"{path}: bluetoothLE requires a Switch 2 controller",
+    )
+    endpoints = record.get("usb", {}).get("endpoints")
+    if endpoints is not None:
+        defaults = [
+            description_of(protocol["family"])["endpoints"] for protocol in protocols
+        ]
+        require(
+            all(
+                (endpoints["in"], endpoints["out"]) != (d["in"], d["out"])
+                for d in defaults
+            ),
+            f"{path}: protocol-default endpoints must be omitted",
+        )
+
+
+def validate_tuning_scope(path: pathlib.Path, record: dict[str, Any]) -> None:
+    """Each `tuning` key is read by the driver of every mode, as `validateTuning` in Swift."""
+    for key in record.get("tuning", {}):
+        for mode in record["modes"]:
+            protocol = mode["protocol"]
+            scope = protocol_descriptions.tuning_scope(
+                description_of(protocol["family"]), protocol.get("variant")
+            )
+            require(
+                key in scope,
+                f"{path}: {key} is not read by the {protocol['family']} driver",
+            )
 
 
 def validate_modes(path: pathlib.Path, record: dict[str, Any]) -> None:
@@ -153,26 +227,19 @@ def validate_modes(path: pathlib.Path, record: dict[str, Any]) -> None:
         f"{path}: modes need exactly one mode with the id default: {identifiers}",
     )
     has_layout = "report" in record.get("input", {})
-    has_template = "rumble" in record.get("output", {})
-    written = record.get("output", {}).get("startup", [])
-    record_startup = [write for write in written if "report" in write]
-    record_usb_startup = [write for write in written if "report" not in write]
+    validate_transport_sections(path, record)
+    validate_tuning_scope(path, record)
     for mode in modes:
         family = mode["protocol"]["family"]
-        validate_mode_session(
-            path,
-            mode,
-            record_startup=record_startup,
-            record_usb_startup=record_usb_startup,
+        validate_mode_session(path, mode)
+        require(
+            "hidUsageMap" not in record.get("input", {}) or family == "hid.descriptor",
+            f"{path}: a HID usage map applies only to hid.descriptor in every mode",
         )
         require(
             has_layout == requires_record_input_layout(family),
             f"{path}: every mode needs the record's input layout exactly when it is "
             "hid.report-layout",
-        )
-        require(
-            not has_template or encodes_rumble_template(family),
-            f"{path}: rumble templates require a driver that encodes them in every mode",
         )
         require(
             capabilities_are_declared(record, family),

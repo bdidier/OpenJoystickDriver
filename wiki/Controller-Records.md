@@ -43,7 +43,7 @@ A patch follows RFC 7396 JSON Merge Patch. An object in `patch` merges into the 
   "apiVersion": "openjoystickdriver/v1alpha1",
   "kind": "ControllerPatch",
   "selector": { "vendorID": 1118, "productID": 746 },
-  "patch": { "tuning": { "stickDeadzone": 0.08 }, "usb": { "postHandshakeSettleMs": 5 } }
+  "patch": { "tuning": { "stickDeadzone": 0.08 } }
 }
 ```
 
@@ -104,10 +104,10 @@ Name at least one control. `ojd record validate` checks that every field lies in
 
 ## Add Rumble To a Controller
 
-A `hid.report-layout` or `vendor.ps3-third-party` controller is input-only unless its record names its rumble report in `output.rumble`:
+A `hid.report-layout` or `vendor.ps3-third-party` controller is input-only unless its mode names its rumble report in `session.rumble`:
 
 ```json
-"output": {
+"session": {
   "rumble": {
     "report": { "kind": "output", "id": 2, "length": 8 },
     "leftMain": { "byte": 3 },
@@ -119,36 +119,74 @@ A `hid.report-layout` or `vendor.ps3-third-party` controller is input-only unles
 - `report` names the HID report: `kind` is `output` or `feature`, `id` is the report ID, and `length` counts every byte, including the report ID.
 - `leftMain`, `rightMain`, `leftTrigger`, and `rightTrigger` each give the byte offset of that motor's intensity, from 0 to 255. Name at least one.
 
-OpenJoystickDriver sets the report ID in byte 0 when the ID is not 0, writes each motor's intensity, and sends 0 in every other byte. It sends this report even when macOS drives the controller, because macOS does not drive these motors.
+OpenJoystickDriver sets the report ID in byte 0 when the ID is not 0, writes each motor's intensity, and sends 0 in every other byte. It sends this report even when macOS drives the controller, because macOS does not drive these motors. Only a family that encodes rumble from a template takes `session.rumble`.
+
+## Describe a Mode's Session
+
+A mode's `session` is the one shape that lists everything OpenJoystickDriver does around a controller session. A protocol description's `defaults.session` and a record's modes use the same keys. A mode runs exactly the steps its own `session` names; a mode without a `session` runs none of a record's steps, and no mode inherits another mode's session.
+
+- `startup`: 1 to 16 startup writes of one format. See [Send Fixed Reports At Startup](#send-fixed-reports-at-startup).
+- `rumble`: the rumble report template. See [Add Rumble To a Controller](#add-rumble-to-a-controller).
+- `control` (raw-USB modes): 1 to 16 vendor control transfers, run in order before the startup packets, inside each handshake attempt.
+- `settleMilliseconds` (raw-USB modes, 1 to 60000): the wait after the handshake before the first input transfer.
+- `shutdown` (raw-USB modes): 1 to 8 raw-USB packets, sent when the session closes. A failed packet is logged and the next one is still sent.
+- `keepAlive` (raw-USB modes of `xbox.xid` and `xbox.xusb`, whose descriptions declare none): `intervalMilliseconds` (1 to 60000) and 1 to 8 `writes`, each a raw-USB packet with `bytes` and optionally `endpoint`, `timeoutMilliseconds` and `sessionByte`.
+
+A HID mode takes only `startup` and `rumble`.
+
+Raw bytes are uppercase hex pairs separated by single spaces, such as `42 03 00 00`. A byte string with lowercase digits, a `0x` prefix, or other separators fails validation.
+
+### Vendor Control Transfers
+
+```json
+"session": {
+  "control": [
+    {
+      "bmRequestType": 192,
+      "bRequest": 1,
+      "wValue": 0,
+      "wIndex": 0,
+      "wLength": 8,
+      "match": { "manufacturer": "SHANWAN" }
+    }
+  ]
+}
+```
+
+- `bmRequestType` is a vendor request type: 64 to 67 (host to device) or 192 to 195 (device to host). `bRequest` is 0 to 255, `wValue` and `wIndex` are 0 to 65535.
+- `wLength` is 0 to 64. An IN transfer (192 to 195) reads `wLength` bytes, needs `wLength` of at least 1, and carries no `data`. An OUT transfer (64 to 67) writes `data`, whose byte count equals `wLength`; with `wLength` 0 it has no data stage.
+- `timeoutMilliseconds` is 1 to 60000. A step that names none waits 1000 ms.
+- `delayMilliseconds` (0 to 1000) waits after the transfer. `toleratesRejection` logs a rejected transfer and goes on instead of failing startup.
+- `match` gates the transfer with `manufacturer`, `product` (non-empty text) and `bcdDevice` (`min` and `max`). The transfer runs only for a device where every key present holds; a device that does not report a keyed value never receives it. A transfer without `match` runs for every device.
 
 ## Send Fixed Reports At Startup
 
-A HID controller that needs a fixed report before it sends input can name it in `output.startup`. A mode's `session.startup` overrides these writes while that mode runs; the DualShock 3 record `054c:0268` and the Sixaxis clone record `2563:0523` use that form in a `bluetooth` mode. The example below is the record-level form, which applies on every link unless a `transport` limits it (`usb`, `bluetooth-classic`, or `bluetooth-le`; a write never names `proprietary-radio-receiver`):
+A HID controller that needs a fixed report before it sends input names it in the `session.startup` of its mode. The DualShock 3 record `054c:0268` and the Sixaxis clone record `2563:0523` use it in a `bluetooth` mode. A write applies on every link unless a `transport` limits it (`usb`, `bluetooth-classic`, or `bluetooth-le`; a write never names `proprietary-radio-receiver`):
 
 ```json
-"output": {
+"session": {
   "startup": [
     {
       "report": { "kind": "feature", "id": 244, "length": 5 },
-      "bytes": [66, 3, 0, 0],
+      "bytes": "42 03 00 00",
       "transport": "bluetooth-classic"
     }
   ]
 }
 ```
 
-- `report` names the HID report as in `output.rumble`. `length` is 2 to 128 bytes.
-- `bytes` lists every byte after the report ID, or every byte of the report when `id` is 0, from 0 to 255.
+- `report` names the HID report as in `session.rumble`. `length` is 2 to 128 bytes.
+- `bytes` lists every byte after the report ID, or every byte of the report when `id` is 0, as uppercase hex pairs.
 - `delayMilliseconds` waits before this write, from 0 to 1000. Without it, a `startup`-phase write waits the family's startup interval and an `activation`-phase write does not wait.
 - `phase` is `activation`, the default, or `startup`. An `activation` write is sent after the protocol driver's own startup, when the controller opens; a `startup` write is sent with the driver's startup writes.
 - `crc32Seed` (0 to 255) makes OpenJoystickDriver write the Sony Bluetooth CRC-32 of the report, with this seed, in its last 4 bytes. `length` then counts those 4 bytes and must exceed 4. The DualShock 4 Bluetooth report uses it.
 - `transport` limits the write to `usb`, `bluetooth-classic`, or `bluetooth-le`. Without it, OpenJoystickDriver sends the write on every transport.
 
-List 1 to 16 writes. OpenJoystickDriver sends them in order after the protocol driver's own startup, only when it opens the controller. A failed write is logged and the next one is still sent. A family's description may also carry startup writes, which a record's writes of the same format replace. In a description a HID write may add `variants` (the family variants it applies to) and `when` (`{"parameter": "layout", "is": ["Pro"]}` or `isNot`, naming a declared enumeration parameter). A record may not use `variants` or `when`.
+List 1 to 16 writes. OpenJoystickDriver sends them in order after the protocol driver's own startup, only when it opens the controller. A failed write is logged and the next one is still sent. A family's description may also carry startup writes in its `defaults.session.startup`, which a mode's writes of the same format replace. In a description a HID write may add `variants` (the family variants it applies to) and `when` (`{"parameter": "layout", "is": ["Pro"]}` or `isNot`, naming a declared enumeration parameter). A record may not use `variants` or `when`.
 
 ### Raw-USB Startup Writes
 
-A raw-USB family that carries startup packets in its description (`xbox.xusb`, `xbox.gip`, `nintendo.switch2`) takes them in `output.startup` too, in place of the description's. A raw-USB write has no `report`: `bytes` (1 to 64), `endpoint` (1 to 127, default the family's output endpoint), `timeoutMilliseconds` (1 to 60000, default the family's timeout), `delayMilliseconds` (0 to 1000), `sessionByte` (the index of a byte the driver fills with its per-session value, such as the GIP sequence), and `toleratesRejection`. One list holds one format only, and a record that names `protocol.initialization` takes no raw-USB writes.
+A raw-USB family that carries startup packets in its description (`xbox.xusb`, `xbox.gip`, `nintendo.switch2`) takes them in a raw-USB mode's `session.startup` too, in place of the description's. A raw-USB write has no `report`: `bytes` (1 to 64 bytes), `endpoint` (1 to 127, default the family's output endpoint), `timeoutMilliseconds` (1 to 60000, default the family's timeout), `delayMilliseconds` (0 to 1000), `sessionByte` (the index of a byte the driver fills with its per-session value, such as the GIP sequence), and `toleratesRejection`. One list holds one format only, and a mode that names `protocol.initialization` takes no raw-USB writes.
 
 ## Tune Timings and the Stick Deadzone
 
@@ -196,10 +234,10 @@ A family's default timings and control set are data in `Resources/Protocols/<fam
 - `controls`: the controls the driver reports. `recordCapabilities` names the control deltas (`present`, `rumbleAbsent`) that a record of the family may declare; the driver adds the record-derived parts.
 - `defaults.tuning`: the default value of each tuning key, such as `lizardResendTicks`. The keep-alive interval is not a tuning key: `defaults.session.keepAlive.intervalMilliseconds` is its only source, and a description or record that names `keepAliveIntervalMs` anywhere is rejected. `defaults.variants.<variant>.tuning` gives another value for a transport, for example the Switch 1 `hidStartupIntervalMs` of 60 over Bluetooth and 20 over USB.
 
-- `defaults.session.keepAlive`: the family's keep-alive. `intervalMilliseconds` (1 to 60000) is the period, and the optional `writes` (1 to 8) are the fixed packets of each run, in the formats of `output.startup` (a HID report with `report` and `bytes`, or a raw-USB packet with `bytes`, `endpoint`, `timeoutMilliseconds` and `sessionByte`) without `phase`, `delayMilliseconds`, `transport`, `crc32Seed`, `toleratesRejection` and `when`. Unlike startup, one list may mix both formats, each limited with `variants` (`vendor.gamesir` sends a HID report on `enhanced-hid` and a raw-USB packet on `usb`). `resendTuning: "lizardResendTicks"` sends a write only every that-many runs (`valve.steam-triton`); the family must read the key and default it in `defaults.tuning`. A record carries no keep-alive writes, so nothing replaces them; a record cannot change the period either, because the interval has no record key. The writes that follow driver state, such as a running rumble, stay in the driver (see [Wire Protocols](../docs/development/wire-protocols.md#coded-behavior)). A HID write needs a family with HID variants, and a raw-USB write needs one with raw-USB variants.
+- `defaults.session.keepAlive`: the family's keep-alive. `intervalMilliseconds` (1 to 60000) is the period, and the optional `writes` (1 to 8) are the fixed packets of each run, in the formats of `session.startup` (a HID report with `report` and `bytes`, or a raw-USB packet with `bytes`, `endpoint`, `timeoutMilliseconds` and `sessionByte`) without `phase`, `delayMilliseconds`, `transport`, `crc32Seed`, `toleratesRejection` and `when`. Unlike startup, one list may mix both formats, each limited with `variants` (`vendor.gamesir` sends a HID report on `enhanced-hid` and a raw-USB packet on `usb`). `resendTuning: "lizardResendTicks"` sends a write only every that-many runs (`valve.steam-triton`); the family must read the key and default it in `defaults.tuning`. A mode's `session.keepAlive` is allowed only where the description declares none, so it never replaces a description's writes, and the interval of a description's keep-alive has no record key. The writes that follow driver state, such as a running rumble, stay in the driver (see [Wire Protocols](../docs/development/wire-protocols.md#coded-behavior)). A HID write needs a family with HID variants, and a raw-USB write needs one with raw-USB variants.
 - `defaults.session.subcommands` (`nintendo.switch1` only, and it must have it): the subcommand report. `reportId` is the output report that carries a subcommand, `counterModulus` (2 to 256) is the rule of the rolling packet counter (it starts at 0, the next value is `(n + 1)` modulo the modulus, and the rumble-only report shares the counter), and `requests` (1 to 16) are sent in order at startup. A request has a `subcommand` byte and exactly one of `data` (1 to 16 bytes) or `spiRead` (`address`, `length` of 1 to 29, and a `purpose` of `factoryMotionCalibration` or `userMotionCalibration`, each at most once). An SPI read sends the address as four little-endian bytes and then the length. A startup recovery round re-sends the reads whose reply has not arrived. The rumble bytes in the header and the player-indicator subcommand stay in the driver (see [Wire Protocols](../docs/development/wire-protocols.md#coded-behavior)).
 - `defaults.session.handshakeAttempts` (1 to 10) and `defaults.session.announceResendLimit` (1 to 100) (`xbox.gip` only, and it must have both): the number of startup handshake attempts, and the most resends of the request that makes a controller announce itself. `defaults.session.receiverInquiryResendLimit` (1 to 100) (`xbox.xusb` only, and it must have it) is the most resends of the wireless receiver's presence inquiry. They are protocol limits, so a record's `tuning` cannot change them, and a description that lacks one, or sets one on another family, is rejected.
-- `defaults.session.namedPackets` (`xbox.gip` only): the GIP packets a record can select by name in `protocol.initialization` (1 to 16). Each has an `id` (the family name, a slash and a lowercase hyphenated name, such as `xbox.gip/power-on`, each at most once), `bytes` (3 to 64) and `sessionByte`, which is 2: the driver stamps byte 2 with the next sequence number of the packet's command. A record that names an id the description lacks is rejected. The description's own default startup (`defaults.output.startup`) still lists its packets as bytes.
+- `defaults.session.namedPackets` (`xbox.gip` only): the GIP packets a record can select by name in `protocol.initialization` (1 to 16). Each has an `id` (the family name, a slash and a lowercase hyphenated name, such as `xbox.gip/power-on`, each at most once), `bytes` (3 to 64) and `sessionByte`, which is 2: the driver stamps byte 2 with the next sequence number of the packet's command. A record that names an id the description lacks is rejected. The description's own default startup (`defaults.session.startup`) lists its packets as bytes.
 
 Change a default by editing the description: every record of the family follows it, and a record's or patch's own `tuning` still wins. Then run `./Scripts/ojd catalog regenerate --write`, which copies the descriptions into the Kit bundle.
 
@@ -391,7 +429,7 @@ Every record has a `modes` list, and the protocol a controller runs is the `prot
 - `protocol` names the protocol that mode runs.
 - `match` is required in every mode except `default`, and names at least one key. A mode is selected only when all of its keys hold.
 - `interface` (`first` and `last`, inclusive, from 0 to 255) limits which USB interface a HID mode binds to: the lowest interface in the range that the controller exposes. A raw-USB mode has none, because it claims the interface its `usb` transport resolves.
-- `session.startup` (HID modes) lists 1 to 16 startup writes, in the form of [`output.startup`](#send-fixed-reports-at-startup). While the mode runs they override the record's `output.startup`. `session.usbStartup` (raw-USB modes) lists 1 to 16 raw-USB packets, in the raw-USB form of `output.startup`, and overrides the record's raw-USB writes. A session names exactly one of the two, and the kind must fit the mode. A mode with no `session` keeps the record's writes.
+- `session` lists the mode's steps (see [Describe a Mode's Session](#describe-a-modes-session)). A mode names every step it runs; it inherits nothing from the default mode.
 
 The `match` keys are:
 
@@ -405,7 +443,7 @@ OpenJoystickDriver never switches a controller's mode. It tries the modes in rec
 
 A probe only reads. It cannot write to the controller. Each read gives up after 2 seconds. When a probe gets no usable reply, the selection stops, the controller stays enabled in its default mode, and OpenJoystickDriver logs a line that names the report. No usable reply means a timeout, an unavailable route, or any failure other than the controller's own refusal, such as a device that is not open, gone, or held exclusively. Only a stalled pipe (`0xE000404F`) or an unsupported request (`kIOReturnUnsupported`) is a refusal. It satisfies `stalls` and fails the other expectations, so a stall where a mode expects `answers` leaves the default mode running.
 
-A raw-USB record may list alternative modes too. They are selected at USB detection from the passive keys (`link`, `interfaceSignature`, `endpoints`, and the strings); a probe never holds on a raw-USB route, because it has no feature-report read, so a mode with probes there leaves the default running. Every mode follows the record-level rules of its own protocol for `input.layout`, `output.rumble`, and `capabilities`, in a record with one mode as in a record with several. Exactly one mode has the id `default`, and the schema, the decoder, and the Python validator all reject zero or two. A patch overrides `modes` as an array, so it restates every mode it keeps.
+A raw-USB record may list alternative modes too. They are selected at USB detection from the passive keys (`link`, `interfaceSignature`, `endpoints`, and the strings); a probe never holds on a raw-USB route, because it has no feature-report read, so a mode with probes there leaves the default running. Every mode follows the record-level rules of its own protocol for `input.layout`, `session.rumble`, `usb`, `server`, `route`, `tuning`, and `capabilities`, in a record with one mode as in a record with several. Exactly one mode has the id `default`, and the schema, the decoder, and the Python validator all reject zero or two. A patch overrides `modes` as an array, so it restates every mode it keeps.
 
 macOS reports a radio dongle as a USB device, so the `proprietary-radio-receiver` link comes from the model's own record: a model whose default mode runs a `receiver` or `dongle` variant reports it, and a mode keyed on that link refines the receiver. No bundled record attaches one product ID both through a dongle and over USB: the six receiver and dongle records (`045e:0291`, `045e:02a9`, `045e:0719`, `28de:1142`, `28de:1304`, `28de:1305`) each hold one default mode. A model that did would need an observed radio link, which nothing reports yet. Endpoint sets come from the raw USB scanner only. The IOKit registry publishes just the interface's `bNumEndpoints`, with no pipe or endpoint descriptor entries, so HID discovery reports no endpoints. A HID mode that names `endpoints` could never be selected, so the schema, the decoder and the Python validator refuse the record; only a raw-USB mode may name them.
 

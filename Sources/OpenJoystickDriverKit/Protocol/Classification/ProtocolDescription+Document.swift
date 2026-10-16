@@ -23,7 +23,6 @@ extension ProtocolDescription {
     }
 
     struct Defaults: Decodable {
-      let output: ControllerRecordDocument.Output?
       let session: Session?
       let input: ControllerRecordDocument.Input?
       let tuning: ControllerTuning?
@@ -33,14 +32,13 @@ extension ProtocolDescription {
       init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: DocumentKey.self)
         try container.rejectUnknown(allowed: [
-          "output", "session", "input", "tuning", "variants",
+          "session", "input", "tuning", "variants",
         ])
         guard !container.allKeys.isEmpty else {
           throw DecodingError.dataCorrupted(
             .init(codingPath: decoder.codingPath, debugDescription: "defaults must not be empty")
           )
         }
-        output = try container.decodeOptional(ControllerRecordDocument.Output.self, for: "output")
         session = try container.decodeOptional(Session.self, for: "session")
         input = try container.decodeOptional(ControllerRecordDocument.Input.self, for: "input")
         tuning = try container.decodeOptional(ControllerRecordDocument.Tuning.self, for: "tuning")?
@@ -58,9 +56,12 @@ extension ProtocolDescription {
       }
     }
 
-    /// `defaults.session`: what runs while the device is open. The keep-alive, the Switch 1
-    /// subcommands, the GIP named packets and the counts that bound the startup resends.
+    /// `defaults.session`: what runs while the device is open. The startup writes and rumble
+    /// template, the keep-alive, the Switch 1 subcommands, the GIP named packets and the counts
+    /// that bound the startup resends.
     struct Session: Decodable {
+      let startup: ControllerRecordDocument.StartupList?
+      let rumble: RumbleOutputTemplate?
       let keepAlive: KeepAlive?
       let subcommands: SubcommandPlan?
       let namedPackets: NamedPacketPlan?
@@ -71,14 +72,22 @@ extension ProtocolDescription {
       init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: DocumentKey.self)
         try container.rejectUnknown(allowed: [
-          "keepAlive", "subcommands", "namedPackets", "handshakeAttempts", "announceResendLimit",
-          "receiverInquiryResendLimit",
+          "startup", "rumble", "keepAlive", "subcommands", "namedPackets", "handshakeAttempts",
+          "announceResendLimit", "receiverInquiryResendLimit",
         ])
         guard !container.allKeys.isEmpty else {
           throw DecodingError.dataCorrupted(
             .init(codingPath: decoder.codingPath, debugDescription: "session must not be empty")
           )
         }
+        startup = try container.decodeOptional(
+          ControllerRecordDocument.StartupList.self,
+          for: "startup"
+        )
+        rumble = try container.decodeOptional(
+          ControllerRecordDocument.RumbleTemplate.self,
+          for: "rumble"
+        )?.template
         keepAlive = try container.decodeOptional(KeepAlive.self, for: "keepAlive")
         subcommands = try container.decodeOptional(SubcommandPlan.self, for: "subcommands")
         namedPackets = try container.decodeOptional(NamedPacketPlan.self, for: "namedPackets")

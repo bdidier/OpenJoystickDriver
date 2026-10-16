@@ -3,11 +3,18 @@ import Testing
 
 @testable import OpenJoystickDriverKit
 
-/// The record's `server` and `output` fields, the rumble template they decode into, and the
+/// The record's `server` field, the rumble template a mode's `session` decodes into, and the
 /// writes OJD keeps for a controller macOS serves.
 struct ControllerRecordOutputTests {
-  private static let thirdParty =
-    #""modes": [{"id": "default", "protocol": {"family": "vendor.ps3-third-party"}}]"#
+  private static let thirdParty = thirdPartyModes(session: nil)
+
+  /// The `modes` field of a PS3 third-party record whose default mode runs `session`.
+  private static func thirdPartyModes(session: String?) -> String {
+    let session = session.map { ", \"session\": \($0)" } ?? ""
+    return """
+      "modes": [{"id": "default", "protocol": {"family": "vendor.ps3-third-party"}\(session)}]
+      """
+  }
   private static let gp100Rumble = #"""
     "rumble": {"report": {"kind": "output", "id": 2, "length": 8},
       "leftMain": {"byte": 3}, "rightMain": {"byte": 2}}
@@ -16,10 +23,10 @@ struct ControllerRecordOutputTests {
   @Test
   func decodesOwnershipAndARumbleTemplate() throws {
     let document = try decode(
-      "\(Self.thirdParty), \"server\": \"ojd\", \"output\": {\(Self.gp100Rumble)}"
+      "\(Self.thirdPartyModes(session: "{\(Self.gp100Rumble)}")), \"server\": \"ojd\""
     )
     #expect(document.server == .ojd)
-    let template = try #require(document.rumbleTemplate)
+    let template = try #require(document.defaultMode.session.rumbleTemplate)
     #expect(template.report == ControllerTemplateReport(kind: .output, reportID: 2, length: 8))
     #expect(template.motorBytes == [.leftMain: 3, .rightMain: 2])
     #expect(template.outputCapabilities == .dualMainRumble)
@@ -60,8 +67,8 @@ struct ControllerRecordOutputTests {
       ?? "{\"family\": \"\(family.rawValue)\"}"
     #expect(throws: DecodingError.self) {
       try decode(
-        "\"modes\": [{\"id\": \"default\", \"protocol\": \(protocolInfo)}], "
-          + "\"output\": {\(Self.gp100Rumble)}"
+        "\"modes\": [{\"id\": \"default\", \"protocol\": \(protocolInfo), "
+          + "\"session\": {\(Self.gp100Rumble)}}]"
       )
     }
   }
@@ -83,23 +90,23 @@ struct ControllerRecordOutputTests {
   )
   func rejectsInvalidRumbleTemplates(rumble: String) {
     #expect(throws: DecodingError.self) {
-      try decode("\(Self.thirdParty), \"output\": {\"rumble\": \(rumble)}")
+      try decode(Self.thirdPartyModes(session: "{\"rumble\": \(rumble)}"))
     }
   }
 
   @Test
   func rejectsUnknownOutputTemplates() {
     #expect(throws: DecodingError.self) {
-      try decode("\(Self.thirdParty), \"output\": {\(Self.gp100Rumble), \"lighting\": {}}")
+      try decode(Self.thirdPartyModes(session: "{\(Self.gp100Rumble), \"lighting\": {}}"))
     }
   }
 
-  /// A keep-alive belongs to a family's description; a record has none to replace it with.
+  /// A HID mode has no raw-USB session to keep alive.
   @Test
-  func rejectsAKeepAliveInARecord() {
-    let keepAlive = #"{"intervalMilliseconds": 500}"#
+  func rejectsAKeepAliveInAHIDMode() {
+    let keepAlive = #"{"intervalMilliseconds": 500, "writes": [{"bytes": "01"}]}"#
     #expect(throws: DecodingError.self) {
-      try decode("\(Self.thirdParty), \"output\": {\"keepAlive\": \(keepAlive)}")
+      try decode(Self.thirdPartyModes(session: "{\"keepAlive\": \(keepAlive)}"))
     }
   }
 

@@ -64,7 +64,7 @@ The maintainer approves each commit.
    - the `11C1:5600` stick deadzone (`UserSpaceOutputDispatcher+ReportMapping.swift`);
    - DualShock 4 factory calibration by vendor (`ProtocolDriverRegistry.swift`) and `DualShock4Model` by VID:PID (`DualShock4Driver+Models.swift`, `DualShock4Driver.swift`);
    - the Shield PID (`NVIDIAShieldDriver.swift`);
-   - timings: DualShock 4 liveness, Switch 1 (`Switch1Driver.swift`), GIP announce (`GIPDriver.swift`), XUSB inquiry (`XUSBDriver.swift`), and HID startup retries (`DeviceManager+HIDStartupOutput.swift`), next to the existing `postHandshakeSettleMs`.
+   - timings: DualShock 4 liveness, Switch 1 (`Switch1Driver.swift`), GIP announce (`GIPDriver.swift`), XUSB inquiry (`XUSBDriver.swift`), and HID startup retries (`DeviceManager+HIDStartupOutput.swift`), next to the `session.settleMilliseconds` of a raw-USB mode.
    - the glyph family by Microsoft vendor ID (`VirtualIdentityPresentation.swift`), which the persona declares instead.
    Protocol defaults stay in the driver; a record value overrides them.
    The GIP announce and XUSB inquiry resend counters stay in Swift, with the stateful framing of those protocols.

@@ -1,46 +1,4 @@
 extension ControllerRecordDocument {
-  /// The output section: a rumble template, startup writes, or both. A write with a `report` is a
-  /// HID write; one without is a raw-USB write.
-  struct Output: Decodable {
-    let rumble: RumbleOutputTemplate?
-    let startup: [RecordStartupWrite]
-    let usbStartup: [USBStartupWrite]
-    /// The named packets a protocol description sends at startup, in order. A record never has
-    /// them: it names its packets in `protocol.initialization`.
-    let packetStartup: [StartupPacketReference]
-
-    init(from decoder: any Decoder) throws {
-      let container = try decoder.container(keyedBy: DocumentKey.self)
-      try container.rejectUnknown(allowed: ["rumble", "startup"])
-      rumble = try container.decodeOptional(RumbleTemplate.self, for: "rumble")?.template
-      let startup = try container.decodeOptional([StartupWrite].self, for: "startup")
-      self.startup = startup?.compactMap(\.hid) ?? []
-      usbStartup = startup?.compactMap(\.usb) ?? []
-      packetStartup = startup?.compactMap(\.packet) ?? []
-      let startupCountIsValid = startup.map { (1...16).contains($0.count) } ?? true
-      guard rumble != nil || startup != nil, startupCountIsValid else {
-        throw DecodingError.dataCorrupted(
-          .init(
-            codingPath: decoder.codingPath,
-            debugDescription: "output names a rumble template or 1...16 startup writes"
-          )
-        )
-      }
-      guard
-        [self.startup.isEmpty, usbStartup.isEmpty, packetStartup.isEmpty].filter({ !$0 })
-          .count <= 1
-      else {
-        throw DecodingError.dataCorrupted(
-          .init(
-            codingPath: decoder.codingPath,
-            debugDescription:
-              "startup writes are all HID reports, all raw-USB packets or all named packets"
-          )
-        )
-      }
-    }
-  }
-
   /// A startup write that names one of the family's packets (`defaults.session.namedPackets`).
   /// Only a protocol description has them.
   struct StartupPacketReference: Equatable, Sendable {
@@ -96,12 +54,7 @@ extension ControllerRecordDocument {
     static func bytes(
       _ container: KeyedDecodingContainer<DocumentKey>
     ) throws -> [UInt8] {
-      let values = try container.decode([Int].self, for: "bytes")
-      let bytes = values.compactMap(UInt8.init(exactly:))
-      guard bytes.count == values.count else {
-        throw ControllerRecordProblem("startup bytes are 0...255")
-      }
-      return bytes
+      try HexBytes.decode(container, for: "bytes", what: "startup")
     }
 
     static func hidWrite(
@@ -111,7 +64,6 @@ extension ControllerRecordDocument {
       let report = try container.decode(TemplateReport.self, for: "report").report
       let transportName = try container.decodeOptional(String.self, for: "transport")
       let transport = transportName.flatMap(PhysicalTransport.init(rawValue:))
-        .flatMap { $0 == .proprietaryRadioReceiver ? nil : $0 }
         .flatMap { $0 == .proprietaryRadioReceiver ? nil : $0 }
       guard transportName == nil || transport != nil else {
         throw ControllerRecordProblem(

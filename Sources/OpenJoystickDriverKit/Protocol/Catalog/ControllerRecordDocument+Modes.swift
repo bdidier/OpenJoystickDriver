@@ -11,10 +11,8 @@ extension ControllerRecordDocument {
     /// Nil exactly for the `default` mode.
     let match: ControllerModeMatch?
     let interfaceRange: ClosedRange<UInt8>?
-    /// The session's HID startup writes; nil leaves the record's `output.startup` in force.
-    let startupWrites: [RecordStartupWrite]?
-    /// The session's raw-USB startup packets; nil leaves the record's `output.usbStartup` in force.
-    let usbStartupWrites: [USBStartupWrite]?
+    /// The steps this mode runs; a mode without a `session` runs none.
+    let session: ControllerSession
 
     var isDefault: Bool { id == Self.defaultID }
 
@@ -42,9 +40,8 @@ extension ControllerRecordDocument {
       protocolInfo = try container.decode(ProtocolInfo.self, for: "protocol")
       interfaceRange = try container.decodeOptional(ModeInterfaceDocument.self, for: "interface")?
         .range
-      let session = try container.decodeOptional(ModeSessionDocument.self, for: "session")
-      startupWrites = session?.startup
-      usbStartupWrites = session?.usbStartup
+      session =
+        try container.decodeOptional(SessionDocument.self, for: "session")?.session ?? .none
     }
 
     static func invalid(
@@ -82,8 +79,7 @@ extension ControllerRecordDocument {
         assemblyPolicy: protocolInfo.assembly,
         match: match ?? ControllerModeMatch(),
         interfaceRange: interfaceRange,
-        startupWrites: startupWrites,
-        usbStartupWrites: usbStartupWrites
+        session: session
       )
     }
   }
@@ -106,45 +102,6 @@ extension ControllerRecordDocument {
         )
       }
       range = low...high
-    }
-  }
-
-  /// A mode's `session`: the steps it runs in place of the record's own. A HID mode names
-  /// `startup` (HID reports); a raw-USB mode names `usbStartup` (USB packets).
-  struct ModeSessionDocument: Decodable {
-    let startup: [RecordStartupWrite]?
-    let usbStartup: [USBStartupWrite]?
-
-    init(from decoder: any Decoder) throws {
-      let container = try decoder.container(keyedBy: DocumentKey.self)
-      try container.rejectUnknown(allowed: ["startup", "usbStartup"])
-      guard
-        container.contains(DocumentKey("startup")) != container.contains(DocumentKey("usbStartup"))
-      else {
-        throw ModeDocument.invalid(
-          "startup",
-          "a session names exactly one of startup (HID reports) and usbStartup (USB packets)",
-          decoder
-        )
-      }
-      let key = container.contains(DocumentKey("startup")) ? "startup" : "usbStartup"
-      let writes = try container.decode([StartupWrite].self, for: key)
-      guard (1...16).contains(writes.count) else {
-        throw ModeDocument.invalid(key, "a session names 1...16 startup writes", decoder)
-      }
-      if key == "startup" {
-        guard writes.allSatisfy({ $0.hid != nil }) else {
-          throw ModeDocument.invalid(key, "startup names HID reports, not USB packets", decoder)
-        }
-        startup = writes.compactMap(\.hid)
-        usbStartup = nil
-      } else {
-        guard writes.allSatisfy({ $0.usb != nil }) else {
-          throw ModeDocument.invalid(key, "usbStartup names USB packets, not HID reports", decoder)
-        }
-        startup = nil
-        usbStartup = writes.compactMap(\.usb)
-      }
     }
   }
 
@@ -340,7 +297,8 @@ extension ControllerRecordDocument {
       case ("answers", nil, nil): expectation = .answers
       case ("stalls", nil, nil): expectation = .stalls
       case ("bytes", let offset?, let hex?):
-        guard let expected = Self.bytes(hex), offset >= 0, offset + expected.count <= length else {
+        guard let expected = HexBytes.parse(hex), offset >= 0, offset + expected.count <= length
+        else {
           throw Self.invalid(
             "probe bytes are uppercase hex pairs that fit the read length",
             decoder
@@ -359,21 +317,11 @@ extension ControllerRecordDocument {
     private static func invalid(_ message: String, _ decoder: any Decoder) -> DecodingError {
       .dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: message))
     }
-
-    /// Uppercase hex pairs separated by single spaces; nil for anything else.
-    private static func bytes(_ text: String) -> [UInt8]? {
-      let pairs = text.split(separator: " ", omittingEmptySubsequences: false)
-      let digits = Set("0123456789ABCDEF")
-      let values = pairs.compactMap { pair -> UInt8? in
-        pair.count == 2 && pair.allSatisfy(digits.contains) ? UInt8(pair, radix: 16) : nil
-      }
-      return values.count == pairs.count ? values : nil
-    }
   }
 
   /// The record's modes: unique IDs and exactly one `default`; every mode's protocol obeys the
   /// same record-level rules the default protocol does, whether the record has one mode or many.
-  /// A session names HID reports for a HID mode and USB packets for a raw-USB mode, and
+  /// A mode's session runs only what its own protocol can (see `sessionViolation`), and
   /// `interface` selects among HID interfaces, so a raw-USB mode has none. A HID route reports
   /// no endpoint set, so only a raw-USB mode's interface signature may carry `endpoints`.
   func validateModes(codingPath: [any CodingKey]) throws {
@@ -389,6 +337,7 @@ extension ControllerRecordDocument {
     for mode in modes {
       let info = mode.protocolInfo
       let rawUSB = info.protocolID.usesRawUSB(storedVariant: info.protocolVariant)
+      if let message = mode.sessionViolation() { throw fail(message) }
       if rawUSB {
         if mode.interfaceRange != nil {
           throw fail(
@@ -396,39 +345,19 @@ extension ControllerRecordDocument {
               + " usb transport resolves"
           )
         }
-        if mode.startupWrites != nil {
-          throw fail("a raw-USB mode's session names usbStartup packets, not HID reports")
-        }
-        if !startupWrites.isEmpty {
-          throw fail("HID startup writes apply only to HID controllers, so not to a raw-USB mode")
-        }
-        let carriesUSBWrites =
-          ProtocolDescription.bundled[info.protocolID]?.usbStartupWrites.isEmpty == false
-        if !(mode.usbStartupWrites ?? usbStartupWrites).isEmpty,
-          !carriesUSBWrites || info.initialization != nil
-        {
-          throw fail(
-            "raw-USB startup writes need a family that reads them and no initialization list"
-          )
-        }
-      } else {
-        if mode.usbStartupWrites != nil {
-          throw fail("a HID mode's session names startup reports, not usbStartup packets")
-        }
-        if mode.match?.interfaceSignature?.endpoints != nil {
-          throw fail(
-            "a HID mode's interfaceSignature has no endpoints; only the raw USB scanner reads"
-              + " an interface's endpoint set"
-          )
-        }
+      } else if mode.match?.interfaceSignature?.endpoints != nil {
+        throw fail(
+          "a HID mode's interfaceSignature has no endpoints; only the raw USB scanner reads"
+            + " an interface's endpoint set"
+        )
       }
       if (inputLayout != nil) != info.protocolID.requiresRecordInputLayout {
         throw fail(
           "every mode needs the record's input layout exactly when it is hid.report-layout"
         )
       }
-      if rumbleTemplate != nil, !info.protocolID.encodesRumbleTemplate {
-        throw fail("rumble templates require a driver that encodes them in every mode")
+      if hidUsageMap != nil, info.protocolID != .hidDescriptor {
+        throw fail("a HID usage map applies only to hid.descriptor in every mode")
       }
       guard capabilitiesAreDeclared(by: info.protocolID) else {
         throw fail("capabilities must be deltas the driver of every mode declares")
