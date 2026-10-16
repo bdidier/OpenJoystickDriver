@@ -26,15 +26,13 @@ public struct ProtocolInterfaceSignature: Equatable, Sendable {
 }
 
 extension ProtocolClassifier {
-  typealias InterfaceSignature = ProtocolInterfaceSignature
-
   /// The `interfaceSignatures` of the bundled protocol descriptions (`Resources/Protocols/`),
   /// in family order, as ``ProtocolDescription`` decodes them. The Xbox triples are pinned against
   /// Linux `xpad.c` at the `ControllerSources.lock.json` commit: the `'X','B',0` table entry,
   /// `XPAD_XBOX360_VENDOR` (subclass 93, protocols 1 and 129), `XPAD_XBOXONE_VENDOR` (subclass 71,
   /// protocol 208), the GIP data interface number, and the interrupt IN+OUT endpoint requirement
   /// in `xpad_probe`.
-  static let signatures: [InterfaceSignature] = PhysicalProtocolID.allCases.flatMap {
+  static let signatures: [ProtocolInterfaceSignature] = PhysicalProtocolID.allCases.flatMap {
     ProtocolDescription.bundled[$0]?.interfaceSignatures ?? []
   }
 }

@@ -91,8 +91,11 @@ struct VirtualHIDProfileTests {
     )
     #expect(try consumerOutput(3, report, in: XboxGeckoHIDReportFormat()) == expected)
     #expect(
-      profile.consumerOutput(type: kIOHIDReportTypeOutput, reportID: 0, bytes: Self.unnumberedVendorReport)
-        == nil
+      profile.consumerOutput(
+        type: kIOHIDReportTypeOutput,
+        reportID: 0,
+        bytes: Self.unnumberedVendorReport
+      ) == nil
     )
     #expect(profile.consumerOutput(type: kIOHIDReportTypeInput, reportID: 3, bytes: report) == nil)
     #expect(
@@ -122,7 +125,8 @@ struct VirtualHIDProfileTests {
     #expect(profile.identity.productID == 0x4A4F)
     #expect(profile.reportFormat.outputReportPayloadSize == nil)
     let reports: [(UInt32, [UInt8])] = [
-      (0, Self.unnumberedVendorReport), (0, [0x08, 0x00, 10, 20]), (3, [0x03, 0x0F, 10, 20, 30, 40, 50, 0, 0]),
+      (0, Self.unnumberedVendorReport), (0, [0x08, 0x00, 10, 20]),
+      (3, [0x03, 0x0F, 10, 20, 30, 40, 50, 0, 0]),
     ]
     for (reportID, bytes) in reports {
       #expect(

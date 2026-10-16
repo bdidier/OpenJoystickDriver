@@ -332,7 +332,7 @@ enum ProtocolClassifier {
     _ interfaces: [PhysicalInterfaceSignature],
     backend: DeviceAccessBackend
   ) -> ProtocolClassification? {
-    var matched: [InterfaceSignature] = []
+    var matched: [ProtocolInterfaceSignature] = []
     for interface in interfaces {
       for signature in signatures where signature.matches(interface) && !matched.contains(signature)
       { matched.append(signature) }
