@@ -391,7 +391,7 @@ These need the maintainer and a device. Each result is recorded in `wiki` or the
 - Push, tag, notarize and publish are the maintainer's actions and need confirmation.
 - Turn on GitHub Pages so the schema `$id` URLs resolve (open item 8).
 - Archive this change after `release-0-6-0-alpha-1` is archived, then convert `pending-deltas.md` into MODIFIED and REMOVED deltas.
-- GitHub shows the issue forms, the pull request template and `CONTRIBUTING.md` from `main`, so the Target Branch rule (24.32) reaches contributors only after it lands on `main`. Publishing it there is the maintainer's action.
+- GitHub shows the issue forms, the pull request template and `CONTRIBUTING.md` from `main`, so the Target Branch rule (24.32) reaches contributors only when the 0.6.0 release lands on `main`. Decided: `main` stays untouched until then; nothing is copied to it and the default branch stays `main`.
 - Remote branches `feat/0.5.0-beta.5`, `feat/dual-corehid-iohid-and-swiftusb-removal`, `feat/new-gui` and `feat/ui-fixes-and-new-ui-menubar-feature-additions` are outdated by the Target Branch rule; deleting them publishes and needs the maintainer.
 - Pull request #51 targets `main`; it belongs on `feat/0.6.0-alpha.1`.
 - After every branch is merged into `feat/0.6.0-alpha.1`: confirm with the maintainer the exact range of the history rewrite that adds the `Co-Authored-By` trailer to earlier commits, then rewrite and force-push. Delete `backup/pre-reword-4ab4c241` after the rewritten history is checked. Keep `recovery/monolithic-controller-workbench-20260914-003355`.
