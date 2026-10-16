@@ -120,7 +120,9 @@ class VocabularyNameTests(unittest.TestCase):
             errors = list(validator.iter_errors(document))
             self.assertTrue(errors, kind)
             for error in errors:
-                self.assertEqual(validate_schemas.profile_problem_code(error), "E3008", kind)
+                self.assertEqual(
+                    validate_schemas.profile_problem_code(error), "E3008", kind
+                )
 
     def test_a_profile_with_a_missing_or_unsupported_api_version_has_its_own_code(
         self,

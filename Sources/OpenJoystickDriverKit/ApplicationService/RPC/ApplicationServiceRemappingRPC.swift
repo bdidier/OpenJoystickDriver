@@ -109,7 +109,7 @@ extension KeyedDecodingContainer {
   /// Decodes a profile of a remapping request. A profile that does not decode fails with
   /// ``ApplicationServiceRemappingRPCError/Code/invalidProfile``, the code that the service gives
   /// a profile that does not validate.
-  fileprivate func decodeRequestProfile(forKey key: Key) throws -> RemappingProfile {
+  func decodeRequestProfile(forKey key: Key) throws -> RemappingProfile {
     do { return try decode(RemappingProfile.self, forKey: key) } catch {
       throw ApplicationServiceRemappingRPCError(
         code: .invalidProfile,

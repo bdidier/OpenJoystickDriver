@@ -2,7 +2,8 @@ import ArgumentParser
 import Foundation
 import OpenJoystickDriverKit
 
-/// Decodes and validates a profile document, turning any error into a failure with the code of ``RemappingProfileFileStore/problemCode(_:)``.
+/// Decodes and validates a profile document, turning any error into a failure with the code of
+/// ``RemappingProfileFileStore/problemCode(_:)``.
 func decodeProfile(_ data: Data, source: String) throws -> RemappingProfile {
   do { return try RemappingProfileFileStore.load(from: data) } catch {
     throw CLIFailure(

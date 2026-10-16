@@ -29,12 +29,18 @@ struct RemappingRPCTests {
   /// store gives the same document.
   @Test
   func aRequestWithAnInvalidProfileFailsWithTheInvalidProfileCode() throws {
-    let document = #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"Profile","name":"Pad"}"#
+    let version = OpenJoystickDriverAPI.version
+    let document = #"{"apiVersion":"\#(version)","kind":"Profile","name":"Pad"}"#
     let request = Data(#"{"profile":\#(document)}"#.utf8)
     let update = Data(#"{"profile":\#(document),"expectedCurrent":\#(document)}"#.utf8)
 
     for decode in [
-      { _ = try JSONDecoder().decode(ApplicationServiceRemappingProfileArguments.self, from: request) },
+      {
+        _ = try JSONDecoder().decode(
+          ApplicationServiceRemappingProfileArguments.self,
+          from: request
+        )
+      },
       {
         _ = try JSONDecoder().decode(
           ApplicationServiceRemappingProfileUpdateArguments.self,
