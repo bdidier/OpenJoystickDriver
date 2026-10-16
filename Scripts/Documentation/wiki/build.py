@@ -36,15 +36,18 @@ def page_files(source: pathlib.Path) -> list[pathlib.Path]:
         and entry.suffix == ".md"
         and entry.name not in EXCLUDED_FILES
     )
-    seen: dict[str, str] = {}
-    for page in pages:
-        key = page.stem.casefold()
-        if key in seen:
-            raise WikiBuildError(
-                f"page names differ only in case: {seen[key]}, {page.name}"
-            )
-        seen[key] = page.name
+    reject_case_collisions([page.name for page in pages])
     return pages
+
+
+def reject_case_collisions(names: list[str]) -> None:
+    """Reject page names that differ only in case, which name one wiki page."""
+    seen: dict[str, str] = {}
+    for name in names:
+        key = pathlib.PurePath(name).stem.casefold()
+        if key in seen:
+            raise WikiBuildError(f"page names differ only in case: {seen[key]}, {name}")
+        seen[key] = name
 
 
 def rewrite_target(
