@@ -50,6 +50,9 @@
 ## Checks
 
 - Run the applicable commands from the repository root.
+- Write all the code for a task first. Then build once, run the tests of the changed area, and run the full checks once. Rerun only what failed.
+- Do not build or test after each small edit.
+- Do not leave monitors or polling loops running; wait for the background command to finish.
 - Use `./Scripts/ojd repair swiftpm-module-cache` only to repair a SwiftPM module-cache mismatch.
 
 ```bash
