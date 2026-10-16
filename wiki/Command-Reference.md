@@ -309,7 +309,7 @@ The keys are:
 - `updates.includePrereleases`: include prereleases when checking for updates.
 - `developerTools`: show the developer tools.
 
-Settings live in `Settings.json`. A setting your file at `~/Library/Application Support/OpenJoystickDriver/Settings.json` leaves out takes its built-in default. `setting set` writes that file. The first time a newer version starts and finds no file, the app copies the settings an older version kept in macOS preferences into it and removes the old preferences, so a login-item opt-out survives the upgrade. A file with an unsupported `apiVersion` is refused with `E5001`. `setting get` prints `true` or `false` alone. With `--json`, `setting list` prints a `SettingList` with `items`, each with `key`, `value`, and `description`, and `setting get` and `setting set` print a `Setting` with `key` and `value`.
+Settings live in `Settings.json`. A setting your file at `~/Library/Application Support/OpenJoystickDriver/Settings.json` leaves out takes its built-in default. `setting set` writes that file. A file with an unsupported `apiVersion` is refused with `E5001`. `setting get` prints `true` or `false` alone. With `--json`, `setting list` prints a `SettingList` with `items`, each with `key`, `value`, and `description`, and `setting get` and `setting set` print a `Setting` with `key` and `value`.
 
 ## config
 
