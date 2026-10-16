@@ -40,6 +40,7 @@ GENERATED_RECORDS = (
 AUTHORED_CONTROLLERS = ROOT / "Resources" / "Controllers"
 AUTHORED_PATCHES = ROOT / "Resources" / "ControllerPatches"
 ERROR_CODES = ROOT / "Resources" / "ErrorCodes.json"
+CROSSWALK = ROOT / "Resources" / "Vocabulary" / "crosswalk.json"
 PROTOCOL_DESCRIPTIONS = ROOT / "Resources" / "Protocols"
 VIRTUAL_DEVICES = ROOT / "Resources" / "VirtualDevices"
 SAMPLE_PACKAGE = ROOT / "docs" / "sdk" / "sample"
@@ -358,6 +359,7 @@ def main() -> int:
         validate_documents(
             documents["error-codes.schema.json"], registry, [ERROR_CODES]
         )
+        validate_documents(documents["crosswalk.schema.json"], registry, [CROSSWALK])
         validate_protocol_descriptions(
             documents["protocol-description.schema.json"], registry, protocols
         )
@@ -397,7 +399,7 @@ def main() -> int:
         f"{len(protocols)} protocol descriptions, "
         f"{len(virtual_devices)} virtual devices, {len(samples)} sample mod files, "
         f"{len(ACCESS_GRANT_FIXTURES)} access grant fixtures, "
-        f"{len(SETTINGS_FIXTURES)} settings fixtures, the error code catalog, "
+        f"{len(SETTINGS_FIXTURES)} settings fixtures, the error code catalog, the control crosswalk, "
         "and one live support report."
     )
     print(compatibility)

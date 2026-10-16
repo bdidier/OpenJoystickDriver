@@ -1,5 +1,54 @@
 {
-  "$comment": "Documentation, not schema aliases. Each control id mapped to its W3C Gamepad index, SDL3 name, Linux evdev code, HID page and usage, and Apple GameController element. null means the system has no such name; a null HID usage is the one the device's report descriptor assigns. One id per row; two ids may share an SDL, evdev or Apple name.",
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "Crosswalk",
+  "$comment": "Documentation, not schema aliases. Each control id mapped to its W3C Gamepad index, SDL3 name, Linux evdev code, HID page and usage, and Apple GameController element. null means the system has no such name; a null HID usage is the one the device's report descriptor assigns. One id per row; two ids may share an SDL, evdev or Apple name. sources records, per column, the document each cell is checked against. notes explains a cell that a name alone does not. Y axes are positive down in the W3C, SDL3 and evdev columns. The wiki table in wiki/Controller-Records.md is generated from this file by ./Scripts/ojd vocabulary regenerate --write.",
+  "sources": {
+    "w3c": {
+      "document": "W3C Gamepad, Standard Gamepad (section 'Standard Gamepad')",
+      "version": "Working Draft 10 July 2025",
+      "url": "https://www.w3.org/TR/2025/WD-gamepad-20250710/#remapping",
+      "checkedOn": "2026-10-16"
+    },
+    "sdl": {
+      "document": "SDL3 SDL_gamepad.h, enums SDL_GamepadButton and SDL_GamepadAxis",
+      "version": "release-3.4.18",
+      "revision": "829a65d769d935c4852f8159e964312c0957260a",
+      "url": "https://github.com/libsdl-org/SDL/blob/release-3.4.18/include/SDL3/SDL_gamepad.h",
+      "checkedOn": "2026-10-16"
+    },
+    "evdev": {
+      "document": "Linux include/uapi/linux/input-event-codes.h, with Documentation/input/gamepad.rst",
+      "version": "v7.2",
+      "revision": "8d3ae59288f1e7d58d76558a6ee96d533bc5019f",
+      "url": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/linux/input-event-codes.h?h=v7.2",
+      "references": [
+        "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/input/gamepad.rst?h=v7.2",
+        "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/input/joystick/xpad.c?h=v7.2",
+        "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/hid/hid-playstation.c?h=v7.2",
+        "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/hid/hid-nintendo.c?h=v7.2"
+      ],
+      "checkedOn": "2026-10-16"
+    },
+    "hid": {
+      "document": "USB-IF HID Usage Tables for Universal Serial Bus (USB)",
+      "version": "1.7",
+      "url": "https://usb.org/document-library/hid-usage-tables-17",
+      "pages": {
+        "GenericDesktop": 1,
+        "Simulation": 2,
+        "Button": 9,
+        "Telephony": 11,
+        "Consumer": 12
+      },
+      "checkedOn": "2026-10-16"
+    },
+    "apple": {
+      "document": "Apple GameController framework, GCInput element name constants (names shown without the GCInput prefix)",
+      "version": "developer.apple.com documentation, macOS 11 and later",
+      "url": "https://developer.apple.com/documentation/gamecontroller",
+      "checkedOn": "2026-10-16"
+    }
+  },
   "controls": {
     "South": {
       "w3cButton": 0,
@@ -64,7 +113,10 @@
           "usage": null
         }
       ],
-      "apple": "LeftShoulder"
+      "apple": "LeftShoulder",
+      "notes": {
+        "hid": "A Button page usage number is assigned by the device descriptor."
+      }
     },
     "RightShoulder": {
       "w3cButton": 5,
@@ -91,10 +143,14 @@
         },
         {
           "page": "Simulation",
-          "usage": 196
+          "usage": 197
         }
       ],
-      "apple": "LeftTrigger"
+      "apple": "LeftTrigger",
+      "notes": {
+        "evdev": "ABS_Z is what the xpad and hid-playstation drivers report; the Linux gamepad documentation names BTN_TL2 or ABS_HAT2Y.",
+        "hid": "Brake is the left trigger and Accelerator the right, as the standard HID usage map maps them."
+      }
     },
     "RightTrigger": {
       "w3cButton": 7,
@@ -108,10 +164,14 @@
         },
         {
           "page": "Simulation",
-          "usage": 197
+          "usage": 196
         }
       ],
-      "apple": "RightTrigger"
+      "apple": "RightTrigger",
+      "notes": {
+        "evdev": "ABS_RZ is what the xpad and hid-playstation drivers report; the Linux gamepad documentation names BTN_TR2 or ABS_HAT2X.",
+        "hid": "Accelerator is the right trigger and Brake the left, as the standard HID usage map maps them."
+      }
     },
     "Back": {
       "w3cButton": 8,
@@ -120,11 +180,22 @@
       "evdev": "BTN_SELECT",
       "hid": [
         {
+          "page": "GenericDesktop",
+          "usage": 62
+        },
+        {
+          "page": "Consumer",
+          "usage": 548
+        },
+        {
           "page": "Button",
           "usage": null
         }
       ],
-      "apple": "ButtonOptions"
+      "apple": "ButtonOptions",
+      "notes": {
+        "hid": "Select is the HID Usage Tables name; the Xbox Bluetooth descriptor reports AC Back (Consumer 0x224)."
+      }
     },
     "Start": {
       "w3cButton": 9,
@@ -137,7 +208,10 @@
           "usage": 61
         }
       ],
-      "apple": "ButtonMenu"
+      "apple": "ButtonMenu",
+      "notes": {
+        "hid": "Start is the HID Usage Tables name; Gamepad usages use Start and Select (section 8.4)."
+      }
     },
     "LeftStickClick": {
       "w3cButton": 10,
@@ -173,10 +247,19 @@
       "hid": [
         {
           "page": "GenericDesktop",
+          "usage": 144
+        },
+        {
+          "page": "GenericDesktop",
           "usage": 57
         }
       ],
-      "apple": "DirectionPad"
+      "apple": "DirectionPad",
+      "notes": {
+        "evdev": "For all four D-pad ids, a driver may report ABS_HAT0X and ABS_HAT0Y instead (Linux gamepad documentation).",
+        "hid": "For all four D-pad ids, the D-pad usage comes first; a Hat Switch (0x39) carries all four directions as one value.",
+        "apple": "DpadUp, DpadDown, DpadLeft and DpadRight are one GCControllerDirectionPad element."
+      }
     },
     "DpadDown": {
       "w3cButton": 13,
@@ -184,6 +267,10 @@
       "sdl": "DPAD_DOWN",
       "evdev": "BTN_DPAD_DOWN",
       "hid": [
+        {
+          "page": "GenericDesktop",
+          "usage": 145
+        },
         {
           "page": "GenericDesktop",
           "usage": 57
@@ -199,6 +286,10 @@
       "hid": [
         {
           "page": "GenericDesktop",
+          "usage": 147
+        },
+        {
+          "page": "GenericDesktop",
           "usage": 57
         }
       ],
@@ -210,6 +301,10 @@
       "sdl": "DPAD_RIGHT",
       "evdev": "BTN_DPAD_RIGHT",
       "hid": [
+        {
+          "page": "GenericDesktop",
+          "usage": 146
+        },
         {
           "page": "GenericDesktop",
           "usage": 57
@@ -226,9 +321,16 @@
         {
           "page": "GenericDesktop",
           "usage": 133
+        },
+        {
+          "page": "Consumer",
+          "usage": 547
         }
       ],
-      "apple": "ButtonHome"
+      "apple": "ButtonHome",
+      "notes": {
+        "hid": "System Main Menu is the HID Usage Tables name; the Xbox Bluetooth descriptor reports AC Home (Consumer 0x223)."
+      }
     },
     "Capture": {
       "w3cButton": null,
@@ -238,10 +340,14 @@
       "hid": [
         {
           "page": "Consumer",
-          "usage": null
+          "usage": 178
         }
       ],
-      "apple": "ButtonShare"
+      "apple": "ButtonShare",
+      "notes": {
+        "evdev": "KEY_RECORD is the Xbox Share button (Linux xpad driver); a Nintendo Switch controller reports its Capture button as BTN_Z (Linux hid-nintendo driver).",
+        "hid": "Record (Consumer 0xB2) is how the standard HID usage map maps Share and Capture."
+      }
     },
     "Microphone": {
       "w3cButton": null,
@@ -258,20 +364,30 @@
           "usage": 226
         }
       ],
-      "apple": null
+      "apple": null,
+      "notes": {
+        "evdev": "No gamepad code: hid-playstation reports no mute button, and KEY_MICMUTE is a keyboard key.",
+        "apple": "The GameController documentation has no microphone button name.",
+        "hid": "Phone Mute (Telephony 0x2F) and Mute (Consumer 0xE2) are the HID Usage Tables mute usages."
+      }
     },
     "TouchpadClick": {
       "w3cButton": null,
       "w3cAxis": null,
       "sdl": "TOUCHPAD",
-      "evdev": "BTN_TOUCH",
+      "evdev": "BTN_LEFT",
       "hid": [
         {
           "page": "Button",
           "usage": null
         }
       ],
-      "apple": "TouchpadButton"
+      "apple": "DualShockTouchpadButton",
+      "notes": {
+        "evdev": "The click is BTN_LEFT on the touchpad input device, not on the gamepad device (Linux hid-playstation driver).",
+        "apple": "GCInputDualShockTouchpadButton also names the DualSense touchpad button.",
+        "hid": "A Button page usage number is assigned by the device descriptor."
+      }
     },
     "LeftPaddle1": {
       "w3cButton": null,
@@ -284,7 +400,10 @@
           "usage": null
         }
       ],
-      "apple": "XboxPaddleOne"
+      "apple": "XboxPaddleThree",
+      "notes": {
+        "apple": "Apple names the Xbox Elite paddle P3; SDL3 and the Linux xpad driver number the paddles the same way."
+      }
     },
     "LeftPaddle2": {
       "w3cButton": null,
@@ -297,7 +416,10 @@
           "usage": null
         }
       ],
-      "apple": "XboxPaddleTwo"
+      "apple": "XboxPaddleFour",
+      "notes": {
+        "apple": "Apple names the Xbox Elite paddle P4; SDL3 and the Linux xpad driver number the paddles the same way."
+      }
     },
     "RightPaddle1": {
       "w3cButton": null,
@@ -310,7 +432,10 @@
           "usage": null
         }
       ],
-      "apple": "XboxPaddleThree"
+      "apple": "XboxPaddleOne",
+      "notes": {
+        "apple": "Apple names the Xbox Elite paddle P1; SDL3 and the Linux xpad driver number the paddles the same way."
+      }
     },
     "RightPaddle2": {
       "w3cButton": null,
@@ -323,7 +448,10 @@
           "usage": null
         }
       ],
-      "apple": "XboxPaddleFour"
+      "apple": "XboxPaddleTwo",
+      "notes": {
+        "apple": "Apple names the Xbox Elite paddle P2; SDL3 and the Linux xpad driver number the paddles the same way."
+      }
     },
     "Auxiliary1": {
       "w3cButton": null,
@@ -336,7 +464,10 @@
           "usage": null
         }
       ],
-      "apple": null
+      "apple": null,
+      "notes": {
+        "evdev": "BTN_TRIGGER_HAPPYn for Auxiliary1 to Auxiliary8 is an OpenJoystickDriver choice: no source gives the Auxiliary buttons a role."
+      }
     },
     "Auxiliary2": {
       "w3cButton": null,
@@ -401,7 +532,10 @@
           "usage": null
         }
       ],
-      "apple": null
+      "apple": null,
+      "notes": {
+        "sdl": "SDL3 has the buttons MISC1 to MISC6 only, so Auxiliary6 to Auxiliary8 have no SDL3 name."
+      }
     },
     "Auxiliary7": {
       "w3cButton": null,
@@ -440,7 +574,10 @@
           "usage": 48
         }
       ],
-      "apple": "LeftThumbstick"
+      "apple": "LeftThumbstick",
+      "notes": {
+        "w3c": "Axes 0 to 3 of the standard mapping; negative is left or up and positive is right or down."
+      }
     },
     "LeftStickY": {
       "w3cButton": null,
@@ -453,7 +590,10 @@
           "usage": 49
         }
       ],
-      "apple": "LeftThumbstick"
+      "apple": "LeftThumbstick",
+      "notes": {
+        "apple": "Apple's y axis is positive up; every other column is positive down."
+      }
     },
     "RightStickX": {
       "w3cButton": null,
@@ -479,7 +619,10 @@
           "usage": 52
         }
       ],
-      "apple": "RightThumbstick"
+      "apple": "RightThumbstick",
+      "notes": {
+        "apple": "Apple's y axis is positive up; every other column is positive down."
+      }
     },
     "LeftStickTouch": {
       "w3cButton": null,

@@ -18,6 +18,7 @@ KINDS = {
     "profile": "Profile",
     "mod-package": "ModPackage",
     "error-codes": "ErrorCatalog",
+    "crosswalk": "Crosswalk",
     "access-grants": "AccessGrants",
     "protocol-description": "ProtocolDescription",
     "settings": "Settings",
