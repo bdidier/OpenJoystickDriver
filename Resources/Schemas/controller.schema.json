@@ -2038,7 +2038,7 @@
           "protocol": {
             "properties": {
               "family": {
-                "const": "xbox.gip"
+                "enum": ["xbox.gip", "xbox.xusb"]
               }
             }
           }

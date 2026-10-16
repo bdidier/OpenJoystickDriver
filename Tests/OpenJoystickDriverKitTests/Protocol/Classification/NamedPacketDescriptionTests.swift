@@ -15,15 +15,7 @@ struct NamedPacketDescriptionTests {
     family: PhysicalProtocolID,
     _ body: String
   ) throws(ProtocolDescriptionProblem) -> ProtocolDescription {
-    let json = """
-      {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "ProtocolDescription",
-       "family": "\(family.rawValue)", "endpoints": {"in": 130, "out": 2}, \(body)}
-      """
-    return try ProtocolDescription.decode(
-      Data(json.utf8),
-      protocolID: family,
-      fileName: "\(family.rawValue).json"
-    )
+    try ProtocolDescriptionFixture.decode(family: family, body)
   }
 
   private func rejects(family: PhysicalProtocolID = .xboxGIP, _ packets: String) -> Bool {

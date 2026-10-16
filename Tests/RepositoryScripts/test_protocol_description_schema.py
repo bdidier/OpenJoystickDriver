@@ -15,6 +15,13 @@ from Scripts.Quality import validate_schemas
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 
 
+# The counts a family's description sets for its driver.
+SESSION_LIMITS: dict[str, dict[str, int]] = {
+    "xbox.gip": {"handshakeAttempts": 3, "announceResendLimit": 8},
+    "xbox.xusb": {"receiverInquiryResendLimit": 8},
+}
+
+
 def xusb_description() -> dict[str, Any]:
     return {
         **header("ProtocolDescription"),
@@ -29,6 +36,7 @@ def xusb_description() -> dict[str, Any]:
                 "interfaceProtocol": 1,
             }
         ],
+        "defaults": {"session": dict(SESSION_LIMITS["xbox.xusb"])},
     }
 
 
@@ -181,8 +189,11 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         document = xusb_description()
         document["family"] = family
         document["interfaceSignatures"][0]["variant"] = variant
+        document.pop("defaults")
         if family == "nintendo.switch1":
             document["defaults"] = {"session": {"subcommands": self.subcommands()}}
+        elif family in SESSION_LIMITS:
+            document["defaults"] = {"session": dict(SESSION_LIMITS[family])}
         return document
 
     def test_every_family_has_a_variant_rule(self) -> None:
@@ -230,13 +241,18 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
 
     def with_body(self, family: str, **members: Any) -> dict[str, Any]:
         facts: dict[str, Any] = FAMILY_FACTS.get(family, {})
-        return {
+        document = {
             **header("ProtocolDescription"),
             "family": family,
             "endpoints": {"in": 130, "out": 2},
             **facts,
             **members,
         }
+        if limits := SESSION_LIMITS.get(family):
+            defaults = dict(document.get("defaults", {}))
+            defaults["session"] = {**limits, **defaults.get("session", {})}
+            document["defaults"] = defaults
+        return document
 
     def test_accepts_parameters_and_defaults(self) -> None:
         self.check(
@@ -333,6 +349,51 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         self.assert_rejected(self.with_body("xbox.xid", parameters={"layout": flag}))
         self.assert_rejected(self.with_body("sony.dualsense", parameters={}))
 
+    def test_session_limits_belong_to_their_family(self) -> None:
+        for family, limits in SESSION_LIMITS.items():
+            document = self.with_body(family)
+            self.check(document)
+            for key in limits:
+                with self.subTest(family=family, key=key, case="required"):
+                    missing = self.with_body(family)
+                    del missing["defaults"]["session"][key]
+                    self.assert_rejected(missing)
+            with self.subTest(family=family, case="no session"):
+                bare = self.with_body(family)
+                del bare["defaults"]
+                self.assert_rejected(bare)
+        for family in ("xbox.gip", "xbox.xusb", "xbox.xid", "sony.dualsense"):
+            for key in (
+                "handshakeAttempts",
+                "announceResendLimit",
+                "receiverInquiryResendLimit",
+            ):
+                if key in SESSION_LIMITS.get(family, {}):
+                    continue
+                with self.subTest(family=family, key=key, case="forbidden"):
+                    document = self.with_body(family)
+                    document.setdefault("defaults", {}).setdefault("session", {})[
+                        key
+                    ] = 3
+                    self.assert_rejected(document)
+
+    def test_session_limits_have_ranges(self) -> None:
+        for family, key, low, high in (
+            ("xbox.gip", "handshakeAttempts", 1, 10),
+            ("xbox.gip", "announceResendLimit", 1, 100),
+            ("xbox.xusb", "receiverInquiryResendLimit", 1, 100),
+        ):
+            for value in (low, high):
+                with self.subTest(key=key, value=value):
+                    document = self.with_body(family)
+                    document["defaults"]["session"][key] = value
+                    self.check(document)
+            for value in (low - 1, high + 1):
+                with self.subTest(key=key, value=value):
+                    document = self.with_body(family)
+                    document["defaults"]["session"][key] = value
+                    self.assert_rejected(document)
+
     def test_rejects_defaults_a_driver_does_not_read(self) -> None:
         input_layout = {
             "report": {"length": 1},
@@ -399,7 +460,6 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             ("sony.dualsense", {"tuning": {"inputLivenessTimeoutMs": 5}}),
             ("sony.dualsense", {"tuning": {"hidStartupRecoveryRounds": 2}}),
             ("xbox.xusb", {"tuning": {"hidStartupIntervalMs": 5}}),
-            ("xbox.gip", {}),
             ("xbox.gip", {"unknown": {}}),
             ("xbox.gip", {"tuning": {"stickDeadzone": 5}}),
             ("xbox.gip", {"output": {"rumble": self.rumble_template()}}),

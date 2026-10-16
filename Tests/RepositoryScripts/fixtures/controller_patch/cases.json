@@ -1483,6 +1483,215 @@
           "usbStartupRetryDelayMs": 500
         }
       }
+    },
+    {
+      "name": "an all patch gives a GIP record its USB transfer timeout",
+      "record": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "xbox.gip"
+        },
+        "usb": {
+          "interface": 0
+        },
+        "server": "system"
+      },
+      "builtin": [],
+      "package": [],
+      "user": [
+        {
+          "apiVersion": "openjoystickdriver/v1alpha1",
+          "kind": "ControllerPatch",
+          "selector": {
+            "all": true
+          },
+          "patch": {
+            "tuning": {
+              "usbTransferTimeoutMs": 750,
+              "hidStartupIntervalMs": 5
+            }
+          }
+        }
+      ],
+      "expected": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "xbox.gip"
+        },
+        "usb": {
+          "interface": 0
+        },
+        "server": "system",
+        "tuning": {
+          "usbTransferTimeoutMs": 750
+        }
+      }
+    },
+    {
+      "name": "an all patch gives an XUSB record its USB transfer timeout and inquiry resend",
+      "record": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "xbox.xusb"
+        },
+        "usb": {
+          "interface": 0
+        },
+        "server": "system"
+      },
+      "builtin": [],
+      "package": [],
+      "user": [
+        {
+          "apiVersion": "openjoystickdriver/v1alpha1",
+          "kind": "ControllerPatch",
+          "selector": {
+            "all": true
+          },
+          "patch": {
+            "tuning": {
+              "usbTransferTimeoutMs": 750,
+              "presenceResendReports": 4,
+              "hidStartupIntervalMs": 5
+            }
+          }
+        }
+      ],
+      "expected": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "xbox.xusb"
+        },
+        "usb": {
+          "interface": 0
+        },
+        "server": "system",
+        "tuning": {
+          "usbTransferTimeoutMs": 750,
+          "presenceResendReports": 4
+        }
+      }
+    },
+    {
+      "name": "an all patch skips the USB transfer timeout for a family that does not read it",
+      "record": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "sony.dualsense"
+        },
+        "usb": {
+          "interface": 0
+        },
+        "server": "system"
+      },
+      "builtin": [],
+      "package": [],
+      "user": [
+        {
+          "apiVersion": "openjoystickdriver/v1alpha1",
+          "kind": "ControllerPatch",
+          "selector": {
+            "all": true
+          },
+          "patch": {
+            "tuning": {
+              "usbTransferTimeoutMs": 750,
+              "stickDeadzone": 0.1
+            }
+          }
+        }
+      ],
+      "expected": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "sony.dualsense"
+        },
+        "usb": {
+          "interface": 0
+        },
+        "server": "system",
+        "tuning": {
+          "stickDeadzone": 0.1
+        }
+      }
+    },
+    {
+      "name": "an all patch null deletes the USB transfer timeout of an XUSB record",
+      "record": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "xbox.xusb"
+        },
+        "usb": {
+          "interface": 0
+        },
+        "server": "system",
+        "tuning": {
+          "usbTransferTimeoutMs": 750,
+          "presenceResendReports": 4
+        }
+      },
+      "builtin": [],
+      "package": [],
+      "user": [
+        {
+          "apiVersion": "openjoystickdriver/v1alpha1",
+          "kind": "ControllerPatch",
+          "selector": {
+            "all": true
+          },
+          "patch": {
+            "tuning": {
+              "usbTransferTimeoutMs": null
+            }
+          }
+        }
+      ],
+      "expected": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "name": "Fixture",
+        "protocol": {
+          "family": "xbox.xusb"
+        },
+        "usb": {
+          "interface": 0
+        },
+        "server": "system",
+        "tuning": {
+          "presenceResendReports": 4
+        }
+      }
     }
   ],
   "rejected": [

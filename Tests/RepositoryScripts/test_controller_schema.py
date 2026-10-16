@@ -937,6 +937,7 @@ class SwiftParityTests(unittest.TestCase):
                 "disconnect delay on DualSense": record(DUALSENSE, tuning=disconnect),
                 "handshake pacing on GIP": record(GIP, tuning=handshake),
                 "transfer timeout on GIP": record(GIP, tuning=transfer),
+                "transfer timeout on XUSB": record(XUSB, tuning=transfer),
             },
             {
                 "lizard resend on GIP": record(GIP, tuning=lizard),
@@ -944,8 +945,15 @@ class SwiftParityTests(unittest.TestCase):
                 "presence resend on DualSense": record(DUALSENSE, tuning=presence),
                 "disconnect delay on GIP": record(GIP, tuning=disconnect),
                 "handshake pacing on XUSB": record(XUSB, tuning=handshake),
-                "transfer timeout on XUSB": record(XUSB, tuning=transfer),
                 "transfer timeout on DualSense": record(DUALSENSE, tuning=transfer),
+                "transfer timeout on XUSB below range": record(
+                    XUSB, tuning={"usbTransferTimeoutMs": 0}
+                ),
+                "transfer timeout on XUSB above range": record(
+                    XUSB, tuning={"usbTransferTimeoutMs": 60001}
+                ),
+                "unknown tuning key on GIP": record(GIP, tuning={"zephyrQuill": 5}),
+                "unknown tuning key on XUSB": record(XUSB, tuning={"zephyrQuill": 5}),
                 "transfer timeout below range": record(
                     GIP, tuning={"usbTransferTimeoutMs": 0}
                 ),

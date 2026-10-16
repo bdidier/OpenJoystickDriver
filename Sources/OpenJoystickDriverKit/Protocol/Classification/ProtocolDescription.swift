@@ -95,6 +95,12 @@ struct ProtocolDescription: Sendable {
   /// The family's named packets, which a record selects by id in `protocol.initialization`.
   /// Only `xbox.gip` has them.
   let namedPackets: NamedPacketPlan?
+  /// The startup attempts a raw-USB handshake makes before it fails. Only `xbox.gip` has it.
+  let handshakeAttempts: Int?
+  /// The most startup resends after announces before the first input. Only `xbox.gip` has it.
+  let announceResendLimit: Int?
+  /// The most presence inquiry resends for a receiver slot. Only `xbox.xusb` has it.
+  let receiverInquiryResendLimit: Int?
   let inputLayout: ControllerInputLayout?
   /// The map every `hid.descriptor` record layers over (``HIDUsageMap``).
   let hidUsageMap: HIDUsageMap?
@@ -259,6 +265,9 @@ struct ProtocolDescription: Sendable {
       keepAlive: document.defaults?.session?.keepAlive,
       subcommands: document.defaults?.session?.subcommands,
       namedPackets: document.defaults?.session?.namedPackets,
+      handshakeAttempts: document.defaults?.session?.handshakeAttempts,
+      announceResendLimit: document.defaults?.session?.announceResendLimit,
+      receiverInquiryResendLimit: document.defaults?.session?.receiverInquiryResendLimit,
       inputLayout: document.defaults?.input?.layout,
       hidUsageMap: document.defaults?.input?.usageMap,
       hidUsageShapes: document.defaults?.input?.shapes ?? [],
@@ -390,6 +399,14 @@ struct ProtocolDescription: Sendable {
     }
     if let namedPackets, !namedPackets.allIDs(startWith: "\(family.rawValue)/") {
       return "each named packet id starts with \(family.rawValue)/"
+    }
+    if (handshakeAttempts != nil) != (family == .xboxGIP)
+      || (announceResendLimit != nil) != (family == .xboxGIP)
+    {
+      return "only xbox.gip has handshakeAttempts and announceResendLimit, and it must have them"
+    }
+    if (receiverInquiryResendLimit != nil) != (family == .xboxXUSB) {
+      return "only xbox.xusb has receiverInquiryResendLimit, and it must have it"
     }
     if rawUSB == .always, !tuningKeys.isEmpty {
       return "a family that is always raw USB reads its tuning through rawUSBTuningKeys"
