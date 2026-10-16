@@ -256,14 +256,6 @@ repair-swiftpm-module-cache:
     ./Scripts/ojd repair swiftpm-module-cache
 
 # =========================================================================
-# Launch
-# =========================================================================
-
-# Launch an SDL app through GameController/MFI rumble route
-launch-sdl-gamecontroller *args:
-    ./Scripts/ojd launch sdl-gamecontroller {{ args }}
-
-# =========================================================================
 # Release
 # =========================================================================
 

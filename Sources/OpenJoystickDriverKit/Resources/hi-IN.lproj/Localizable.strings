@@ -1355,6 +1355,7 @@
 "cli.virtual.launch.error.not_executable" = "उस पाथ पर कोई एक्ज़ीक्यूटेबल फ़ाइल नहीं है";
 "cli.virtual.launch.error.not_found" = "PATH में इस नाम का कोई प्रोग्राम नहीं है";
 "cli.virtual.launch.error.output" = "--json और --plain लागू नहीं होते, क्योंकि प्रोग्राम स्टैंडर्ड आउटपुट लिखता है।";
+"cli.virtual.launch.sdl_gamecontroller_backend" = "SDL के वे संकेत भी सेट करता है जिनसे SDL नियंत्रकों को केवल Apple के GameController फ़्रेमवर्क से पढ़ता है: SDL_JOYSTICK_MFI=1, SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1, SDL_JOYSTICK_IOKIT=0, SDL_JOYSTICK_HIDAPI=0। ये केवल प्रोग्राम पर लागू होते हैं और पहले से सेट मानों को बदल देते हैं।";
 "cli.virtual.reset.abstract" = "किसी कंट्रोलर मॉडल, या हर मॉडल, को स्वचालित वर्चुअल गेमपैड चयन पर लौटाएँ।";
 "cli.virtual.reset.all" = "हर कंट्रोलर मॉडल रीसेट करें।";
 "cli.virtual.reset.all.done" = "अब हर कंट्रोलर मॉडल अपना वर्चुअल गेमपैड स्वचालित रूप से चुनता है।";

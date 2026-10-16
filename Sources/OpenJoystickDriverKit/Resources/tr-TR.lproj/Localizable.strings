@@ -1355,6 +1355,7 @@
 "cli.virtual.launch.error.not_executable" = "bu yolda yürütülebilir dosya yok";
 "cli.virtual.launch.error.not_found" = "PATH içinde bu adda program yok";
 "cli.virtual.launch.error.output" = "--json ve --plain geçerli değildir, çünkü program standart çıktıyı yazar.";
+"cli.virtual.launch.sdl_gamecontroller_backend" = "SDL’in denetleyicileri yalnızca Apple’ın GameController çerçevesi üzerinden okumasını sağlayan SDL ipuçlarını da ayarlar: SDL_JOYSTICK_MFI=1, SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1, SDL_JOYSTICK_IOKIT=0, SDL_JOYSTICK_HIDAPI=0. Yalnızca programa uygulanır ve önceden ayarlanmış değerlerin yerine geçer.";
 "cli.virtual.reset.abstract" = "Bir kontrolcünün modelini veya tüm modelleri sanal oyun kontrolcüsünün otomatik seçimine döndürür.";
 "cli.virtual.reset.all" = "Tüm kontrolcü modellerini sıfırlar.";
 "cli.virtual.reset.all.done" = "Her kontrolcü modeli artık sanal oyun kontrolcüsünü otomatik seçiyor.";

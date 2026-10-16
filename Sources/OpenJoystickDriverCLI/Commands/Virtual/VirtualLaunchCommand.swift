@@ -21,6 +21,12 @@ struct VirtualLaunchCommand: AsyncParsableCommand {
   @OptionGroup(visibility: GlobalOptions.subcommandVisibility)
   var global: GlobalOptions
 
+  @Flag(
+    name: .customLong("sdl-gamecontroller-backend"),
+    help: ArgumentHelp(CLILocalized.text("cli.virtual.launch.sdl_gamecontroller_backend"))
+  )
+  var sdlGameControllerBackend = false
+
   @Argument(
     parsing: .remaining,
     help: ArgumentHelp(CLILocalized.text("cli.virtual.launch.command"), valueName: "program")
@@ -48,7 +54,8 @@ struct VirtualLaunchCommand: AsyncParsableCommand {
       do {
         environment = try SDLLaunchEnvironment.environment(
           adding: profiles,
-          to: Self.baseEnvironment
+          to: Self.baseEnvironment,
+          gameControllerBackend: sdlGameControllerBackend
         )
       } catch SDLLaunchEnvironment.Failure.noProfile {
         throw CLIFailure(
@@ -56,7 +63,7 @@ struct VirtualLaunchCommand: AsyncParsableCommand {
           CLILocalized.text("cli.virtual.launch.error.no_gamepad")
         )
       }
-      if !CLIContext.current.quiet {
+      if !CLIContext.current.quiet, !sdlGameControllerBackend {
         for profile in VirtualHIDProfileID.allCases where profiles.contains(profile) {
           if try !profile.gamepadMapping().worksWithDefaultSDLHints {
             CLIOutput.stderr(sdlHintsNote(profile.rawValue))

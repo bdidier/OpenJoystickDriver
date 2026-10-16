@@ -1355,6 +1355,7 @@
 "cli.virtual.launch.error.not_executable" = "ไม่มีไฟล์ปฏิบัติการที่พาธนั้น";
 "cli.virtual.launch.error.not_found" = "ไม่มีโปรแกรมชื่อนั้นใน PATH";
 "cli.virtual.launch.error.output" = "--json และ --plain ใช้ไม่ได้ เพราะโปรแกรมเขียนเอาต์พุตมาตรฐาน";
+"cli.virtual.launch.sdl_gamecontroller_backend" = "ตั้งค่าคำใบ้ของ SDL ที่ทำให้ SDL อ่านตัวควบคุมผ่านเฟรมเวิร์ก GameController ของ Apple เท่านั้นด้วย: SDL_JOYSTICK_MFI=1, SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1, SDL_JOYSTICK_IOKIT=0, SDL_JOYSTICK_HIDAPI=0 คำใบ้มีผลกับโปรแกรมเท่านั้นและแทนที่ค่าที่ตั้งไว้แล้ว";
 "cli.virtual.reset.abstract" = "คืนรุ่นของคอนโทรลเลอร์ หรือทุกรุ่น ให้เป็นการเลือกเกมแพดเสมือนอัตโนมัติ";
 "cli.virtual.reset.all" = "รีเซ็ตทุกรุ่นของคอนโทรลเลอร์";
 "cli.virtual.reset.all.done" = "ทุกรุ่นของคอนโทรลเลอร์เลือกเกมแพดเสมือนอัตโนมัติแล้ว";
