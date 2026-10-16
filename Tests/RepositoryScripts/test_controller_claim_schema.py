@@ -47,8 +47,8 @@ class ControllerClaimSchemaTests(unittest.TestCase):
             ):
                 self.validator(name).validate(claim_document(server))
 
-    def test_rejects_the_removed_ownership_words(self) -> None:
-        for word in ("native", "virtual"):
+    def test_rejects_an_unknown_ownership_word(self) -> None:
+        for word in ("notAnOwner", "other"):
             with (
                 self.subTest(word=word),
                 self.assertRaises(validate_schemas.ValidationError),

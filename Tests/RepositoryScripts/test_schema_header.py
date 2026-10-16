@@ -111,7 +111,7 @@ class SchemaHeaderTests(unittest.TestCase):
                     with self.assertRaises(validate_schemas.ValidationError):
                         self.validator(stem).validate(changed)
 
-    def test_rejects_the_old_schema_member(self) -> None:
+    def test_rejects_a_schema_member(self) -> None:
         for stem, document in instances().items():
             with self.subTest(kind=schema_header.KINDS[stem]):
                 changed = {**document, "$schema": schema_header.schema_id(stem)}

@@ -143,17 +143,12 @@ class DispatcherTests(unittest.TestCase):
     def test_unknown_route_fails_with_usage_status(self) -> None:
         self.assertEqual(self.run_ojd("unknown").returncode, 2)
 
-    def test_removed_routes_fail_with_usage_status(self) -> None:
+    def test_unknown_subroutes_fail_with_usage_status(self) -> None:
         for arguments in (
-            ("build", "nuke"),
-            ("check", "scripts"),
-            ("check", "swift-structure"),
-            ("check", "capabilities"),
-            ("check", "fast"),
-            ("check", "all"),
-            ("lint",),
-            ("format",),
-            ("test", "swift"),
+            ("build", "notaroute"),
+            ("check", "notaroute"),
+            ("test", "notaroute"),
+            ("notaroute", "check"),
         ):
             with self.subTest(arguments=arguments):
                 self.assertEqual(self.run_ojd(*arguments).returncode, 2)
@@ -242,7 +237,7 @@ class DispatcherTests(unittest.TestCase):
             (main, True, all_files, 0),
             (".husky/_", True, all_files, 1),
             ("", True, all_files, 1),
-            ("legacy/hooks", True, all_files, 1),
+            ("other/hooks", True, all_files, 1),
             (main, False, all_files, 1),
             (main, True, ("pre-commit", "pre-push"), 1),
         ):

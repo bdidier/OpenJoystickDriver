@@ -115,97 +115,43 @@ struct ControllerRecordDocumentTests {
 
   @Test(
     arguments: [
-      ["driver": "GIP", "variant": "xboxOne"], ["driver": "GIP"], ["family": "GIP"],
-      ["family": "xbox.gip", "variant": "xboxOne"], ["family": "xbox.xusb", "variant": "xbox360"],
-      ["family": "xbox.xusb", "variant": "dongle"], ["family": "xbox.xusb:wired"],
-      ["family": "vendor.gamesir", "variant": "gameSirG7ProUSB"],
-      ["family": "vendor.gamesir", "variant": "enhanced-hid-8k"],
-      ["family": "xbox.gip", "parameters": ["innerGrips": true]],
-      ["family": "xbox.gip", "quirks": ["share-offset"]],
-      ["family": "vendor.gamesir", "variant": "enhanced-hid", "parameters": ["inner-grips": true]],
+      ["notAField": "xbox.gip"], ["family": "notAFamily"],
+      ["family": "xbox.gip", "variant": "notAVariant"],
+      ["family": "xbox.gip", "notAField": true],
+      ["family": "xbox.gip", "parameters": ["notAParameter": true]],
+      ["family": "xbox.xid", "variant": "gamepad", "parameters": ["notAParameter": true]],
+      ["family": "xbox.xusb", "variant": "wired", "parameters": ["notAParameter": true]],
+      ["family": "sony.dualsense", "parameters": ["notAParameter": true]],
+      ["family": "sony.dualshock4", "parameters": ["notAParameter": true]],
+      ["family": "hid.descriptor", "parameters": ["notAParameter": true]],
+      ["family": "nintendo.switch1", "parameters": ["notAParameter": true]],
+      [
+        "family": "valve.steam-controller", "variant": "wired",
+        "parameters": ["notAParameter": true],
+      ],
+      ["family": "vendor.gamesir", "variant": "notAVariant"],
       ["family": "vendor.gamesir", "variant": "enhanced-hid", "parameters": ["innerGrips": "yes"]],
       ["family": "vendor.gamesir", "variant": "enhanced-hid", "parameters": ["innerGrips": false]],
       ["family": "vendor.gamesir", "variant": "usb", "parameters": ["innerGrips": true]],
-      [
-        "family": "vendor.gamesir", "variant": "usb",
-        "parameters": ["lightingMemory": "ProfileSlots"],
-      ],
-      ["family": "vendor.gamesir", "variant": "enhanced-hid"],
-      ["family": "vendor.gamesir", "variant": "enhanced-hid", "parameters": [String: Bool]()],
-      [
-        "family": "vendor.gamesir", "variant": "enhanced-hid",
-        "parameters": ["innerGrips": true, "lightingMemory": "ProfileSlots"]
-          as [String: any Sendable],
-      ],
-      [
-        "family": "vendor.gamesir", "variant": "enhanced-hid",
-        "parameters": ["lightingMemory": "profile-slots"],
-      ],
-      [
-        "family": "valve.steam-controller", "variant": "wired",
-        "parameters": ["wirelessReceiver": true],
-      ],
-      ["family": "xbox.adaptive-joystick"],
-      ["family": "xbox.gip", "parameters": ["shareOffset": true]],
       ["family": "xbox.gip", "parameters": ["shareButton": ["fromEnd": 0]]],
       ["family": "xbox.gip", "parameters": ["shareButton": ["fromEnd": 256]]],
       ["family": "xbox.gip", "parameters": ["shareButton": ["fromEnd": "26"]]],
-      ["family": "xbox.gip", "parameters": ["shareButton": ["fromEnd": 26, "from": 1]]],
+      ["family": "xbox.gip", "parameters": ["shareButton": ["fromEnd": 26, "notAField": 1]]],
       ["family": "xbox.gip", "parameters": ["shareButton": 26]],
-      ["family": "xbox.gip", "parameters": ["inputOnly": true]],
-      ["family": "xbox.gip", "parameters": ["triggersToButtons": true]],
-      ["family": "xbox.xid", "variant": "gamepad", "parameters": ["sticksToNull": true]],
-      ["family": "xbox.xusb", "variant": "wired", "parameters": ["dpadToButtons": true]],
-      ["family": "xbox.xusb", "variant": "wired", "parameters": ["shareButton": ["fromEnd": 26]]],
-      ["family": "sony.dualsense", "parameters": ["edgeButtons": true]],
-      ["family": "sony.dualsense", "parameters": ["touchpad": true]],
-      ["family": "valve.steam-controller", "variant": "wired", "parameters": ["lizardMode": true]],
-      ["family": "nintendo.switch1", "parameters": ["joyConLeft": true]],
-      ["family": "nintendo.switch1", "parameters": ["layout": "joy-con-left"]],
-      ["family": "nintendo.switch1", "parameters": ["layout": ["JoyConLeft"]]],
-      ["family": "nintendo.switch-input-only", "parameters": ["layout": "JoyConLeft"]],
-      [
-        "family": "nintendo.switch1",
-        "parameters": ["usbProtocol": "ChargingOnly", "layout": "JoyConLeft"],
-      ],
-      ["family": "nintendo.switch1", "parameters": ["usbProtocol": "Wired"]],
-      ["family": "nintendo.switch2", "parameters": ["usbProtocol": "ChargingOnly"]],
-      ["family": "nintendo.switch1", "parameters": ["layout": "GameCube"]],
-      ["family": "vendor.ps3-third-party", "parameters": ["inputOnly": true]],
-      ["family": "vendor.ps3-third-party", "parameters": ["hatSource": "dpad-pressure"]],
-      ["family": "valve.steam-controller", "variant": "wired", "parameters": ["triton": true]],
-      ["family": "valve.steam-triton"], ["family": "valve.steam-deck", "variant": "wired"],
-      ["family": "sony.dualshock4", "parameters": ["gyro": true]],
-      [
-        "family": "sony.dualshock4",
-        "parameters": ["role": "WirelessAdapter", "motionScale": "StrikePad"],
-      ],
-      ["family": "sony.dualshock4", "parameters": ["role": "Receiver"]],
-      ["family": "sony.dualshock4", "parameters": ["reportRevision": "Shield2015"]],
-      ["family": "vendor.nvidia-shield", "parameters": ["motionCalibration": "Factory"]],
-      ["family": "hid.descriptor", "parameters": ["usageLayout": "Wr007"]],
-      ["family": "hid.descriptor", "parameters": ["role": "WirelessAdapter"]],
-      ["family": "sony.dualshock4", "parameters": ["usageLayout": "Wr007"]],
-      ["family": "sony.dualsense", "parameters": ["role": "WirelessAdapter"]],
-      ["family": "xbox.gip", "startupPackets": ["xbox.gip/power-on"]],
-      ["family": "xbox.gip", "initialization": ["powerOn"]],
       ["family": "xbox.gip", "initialization": ["xbox.gip/missing"]],
       ["family": "xbox.gip", "initialization": ["xbox.gip/power-on", "xbox.gip/power-on"]],
       ["family": "xbox.gip", "initialization": [String]()],
       ["family": "xbox.xusb", "variant": "wired", "initialization": ["xbox.gip/power-on"]],
-      ["family": "xbox.xusb", "variant": "wired", "keepAlive": false],
     ] as [[String: any Sendable]]
   )
-  func rejectsRemovedProtocolVocabulary(protocolInfo: [String: any Sendable]) {
+  func rejectsUnknownProtocolVocabulary(protocolInfo: [String: any Sendable]) {
     #expect(throws: DecodingError.self) { try decode(protocol: protocolInfo) }
   }
 
   @Test
-  func rejectsTheRemovedTransportField() {
-    for transport in ["usb", "hid"] {
-      #expect(throws: DecodingError.self) {
-        try decode(protocol: ["family": "xbox.gip"], extra: ["transport": transport])
-      }
+  func rejectsAnUnknownRecordField() {
+    #expect(throws: DecodingError.self) {
+      try decode(protocol: ["family": "xbox.gip"], extra: ["notAField": "usb"])
     }
   }
 

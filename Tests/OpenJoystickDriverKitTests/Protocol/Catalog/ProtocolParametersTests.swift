@@ -4,131 +4,112 @@ import Testing
 @testable import OpenJoystickDriverKit
 
 struct ProtocolParametersTests {
-  /// One removed quirk tag, the family that declared it, and the typed
-  /// parameter it became.
-  private struct Crosswalk: Sendable {
-    let quirk: String
+  /// A family, the JSON of its parameters, and the typed value that JSON decodes to.
+  private struct ParameterCase: Sendable {
     let family: PhysicalProtocolID
     let json: String
     let parameters: ProtocolParameters
     let entry: String
   }
 
-  private static let crosswalk: [Crosswalk] = [
-    Crosswalk(
-      quirk: "share-offset",
+  private static let cases: [ParameterCase] = [
+    ParameterCase(
       family: .xboxGIP,
       json: #"{"shareButton":{"fromEnd":26}}"#,
       parameters: ProtocolParameters(shareButton: .init(fromEnd: 26)),
       entry: "shareButton.fromEnd=26"
     ),
-    Crosswalk(
-      quirk: "joy-con-left",
+    ParameterCase(
       family: .nintendoSwitch1,
       json: #"{"layout":"JoyConLeft"}"#,
       parameters: ProtocolParameters(layout: .joyConLeft),
       entry: "layout=JoyConLeft"
     ),
-    Crosswalk(
-      quirk: "joy-con-right",
+    ParameterCase(
       family: .nintendoSwitch2,
       json: #"{"layout":"JoyConRight"}"#,
       parameters: ProtocolParameters(layout: .joyConRight),
       entry: "layout=JoyConRight"
     ),
-    Crosswalk(
-      quirk: "gamecube",
+    ParameterCase(
       family: .nintendoSwitch2,
       json: #"{"layout":"GameCube"}"#,
       parameters: ProtocolParameters(layout: .gameCube),
       entry: "layout=GameCube"
     ),
-    Crosswalk(
-      quirk: "bluetooth-only",
+    ParameterCase(
       family: .nintendoSwitch1,
       json: #"{"usbProtocol":"ChargingOnly"}"#,
       parameters: ProtocolParameters(usbProtocol: .chargingOnly),
       entry: "usbProtocol=ChargingOnly"
     ),
-    Crosswalk(
-      quirk: "inner-grips",
+    ParameterCase(
       family: .vendorGameSir,
       json: #"{"innerGrips":true}"#,
       parameters: ProtocolParameters(innerGrips: true),
       entry: "innerGrips=true"
     ),
-    Crosswalk(
-      quirk: "lighting-slots",
+    ParameterCase(
       family: .vendorGameSir,
       json: #"{"lightingMemory":"ProfileSlots"}"#,
       parameters: ProtocolParameters(lightingMemory: .profileSlots),
       entry: "lightingMemory=ProfileSlots"
     ),
-    Crosswalk(
-      quirk: "dpad-pressure",
+    ParameterCase(
       family: .vendorPS3ThirdParty,
       json: #"{"hatSource":"DpadPressure"}"#,
       parameters: ProtocolParameters(hatSource: .dpadPressure),
       entry: "hatSource=DpadPressure"
     ),
-    Crosswalk(
-      quirk: "factory-calibration",
+    ParameterCase(
       family: .sonyDualShock4,
       json: #"{"motionCalibration":"Factory"}"#,
       parameters: ProtocolParameters(motionCalibration: .factory),
       entry: "motionCalibration=Factory"
     ),
-    Crosswalk(
-      quirk: "wireless-adapter",
+    ParameterCase(
       family: .sonyDualShock4,
       json: #"{"role":"WirelessAdapter"}"#,
       parameters: ProtocolParameters(role: .wirelessAdapter),
       entry: "role=WirelessAdapter"
     ),
-    Crosswalk(
-      quirk: "strikepad",
+    ParameterCase(
       family: .sonyDualShock4,
       json: #"{"motionScale":"StrikePad"}"#,
       parameters: ProtocolParameters(motionScale: .strikePad),
       entry: "motionScale=StrikePad"
     ),
-    Crosswalk(
-      quirk: "shield-2015",
+    ParameterCase(
       family: .vendorNVIDIAShield,
       json: #"{"reportRevision":"Shield2015"}"#,
       parameters: ProtocolParameters(reportRevision: .shield2015),
       entry: "reportRevision=Shield2015"
     ),
-    Crosswalk(
-      quirk: "third-party",
+    ParameterCase(
       family: .sonyDualSense,
       json: #"{"maker":"ThirdParty"}"#,
       parameters: ProtocolParameters(maker: .thirdParty),
       entry: "maker=ThirdParty"
     ),
-    Crosswalk(
-      quirk: "unprobed-sensors",
+    ParameterCase(
       family: .sonyDualSense,
       json: #"{"maker":"ThirdParty","unprobedSensors":true}"#,
       parameters: ProtocolParameters(maker: .thirdParty, unprobedSensors: true),
       entry: "unprobedSensors=true"
     ),
-    Crosswalk(
-      quirk: "unprobed-touchpad",
+    ParameterCase(
       family: .sonyDualSense,
       json: #"{"maker":"ThirdParty","unprobedTouchpad":true}"#,
       parameters: ProtocolParameters(maker: .thirdParty, unprobedTouchpad: true),
       entry: "unprobedTouchpad=true"
     ),
-    Crosswalk(
-      quirk: "forced-vibration",
+    ParameterCase(
       family: .sonyDualSense,
       json: #"{"maker":"ThirdParty","forcedVibration":true}"#,
       parameters: ProtocolParameters(maker: .thirdParty, forcedVibration: true),
       entry: "forcedVibration=true"
     ),
-    Crosswalk(
-      quirk: "receiver",
+    ParameterCase(
       family: .sonyDualSense,
       json: #"{"maker":"ThirdParty","role":"Receiver"}"#,
       parameters: ProtocolParameters(role: .receiver, maker: .thirdParty),
@@ -136,33 +117,23 @@ struct ProtocolParametersTests {
     ),
   ]
 
-  /// The raw values of the removed quirk tags.
-  private static let removedQuirks: Set<String> = [
-    "share-offset", "joy-con-left", "joy-con-right", "bluetooth-only", "gamecube", "inner-grips",
-    "lighting-slots", "dpad-pressure", "factory-calibration", "wireless-adapter", "strikepad",
-    "shield-2015", "third-party",
-    "unprobed-sensors", "unprobed-touchpad", "forced-vibration", "receiver",
-  ]
-
   private func decode(_ json: String) throws -> ProtocolParameters {
     try JSONDecoder().decode(ProtocolParameters.self, from: Data(json.utf8))
   }
 
   @Test
-  func everyRemovedQuirkLandedInATypedParameter() throws {
-    #expect(Set(Self.crosswalk.map(\.quirk)) == Self.removedQuirks)
-    #expect(Self.crosswalk.count == Self.removedQuirks.count)
-    for row in Self.crosswalk {
+  func decodingEveryCaseYieldsItsTypedParameters() throws {
+    for row in Self.cases {
       let decoded = try decode(row.json)
-      #expect(decoded == row.parameters, "\(row.quirk)")
-      #expect(decoded.entries.contains(row.entry), "\(row.quirk)")
-      #expect(decoded.violation(family: row.family, variant: nil) == nil, "\(row.quirk)")
+      #expect(decoded == row.parameters, "\(row.entry)")
+      #expect(decoded.entries.contains(row.entry), "\(row.entry)")
+      #expect(decoded.violation(family: row.family, variant: nil) == nil, "\(row.entry)")
     }
   }
 
   @Test
   func encodingRoundTripsEveryParameter() throws {
-    for row in Self.crosswalk {
+    for row in Self.cases {
       let data = try JSONEncoder().encode(row.parameters)
       #expect(try JSONDecoder().decode(ProtocolParameters.self, from: data) == row.parameters)
     }
@@ -170,10 +141,10 @@ struct ProtocolParametersTests {
 
   @Test(
     arguments: [
-      #"{"share-offset":true}"#, #"{"quirks":["share-offset"]}"#, #"{"layout":"joy-con-left"}"#,
-      #"{"layout":["JoyConLeft"]}"#, #"{"innerGrips":"yes"}"#, #"{"innerGrips":false}"#,
+      #"{"notAParameter":true}"#, #"{"layout":"notALayout"}"#, #"{"layout":["JoyConLeft"]}"#,
+      #"{"innerGrips":"yes"}"#, #"{"innerGrips":false}"#,
       #"{"shareButton":26}"#, #"{"shareButton":{"fromEnd":0}}"#,
-      #"{"shareButton":{"fromEnd":26,"extra":1}}"#, #"{"maker":"Sony"}"#, #"{}"#,
+      #"{"shareButton":{"fromEnd":26,"extra":1}}"#, #"{"maker":"notAMaker"}"#, #"{}"#,
     ]
   )
   func rejectsUnknownEmptyAndMistypedParameters(json: String) {

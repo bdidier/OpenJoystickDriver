@@ -68,9 +68,9 @@ class StatusSchemaTests(unittest.TestCase):
         with self.assertRaises(validate_schemas.ValidationError):
             self.validator.validate(document)
 
-    def test_rejects_the_old_extension_field(self) -> None:
+    def test_rejects_an_unknown_member(self) -> None:
         document = status_document()
-        document["extension"] = document.pop("transportExtension")
+        document["notAMember"] = 1
 
         with self.assertRaises(validate_schemas.ValidationError):
             self.validator.validate(document)

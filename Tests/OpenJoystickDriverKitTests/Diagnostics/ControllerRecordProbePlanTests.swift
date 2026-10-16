@@ -138,8 +138,8 @@ struct ControllerRecordProbePlanTests {
   }
 
   @Test
-  func rejectsUnknownOrRemovedGIPInitializationAction() {
-    for action in ["xbox.gip/not-a-real-action", "powerOn"] {
+  func rejectsUnknownGIPInitializationAction() {
+    for action in ["xbox.gip/not-a-real-action", "notAnAction"] {
       #expect(throws: ControllerRecordProbeError.self) {
         try ControllerRecordProbePlan(data: try recordData(initialization: [action]))
       }
@@ -161,9 +161,9 @@ struct ControllerRecordProbePlanTests {
   }
 
   @Test
-  func rejectsRemovedTransportField() {
+  func rejectsAnUnknownRecordField() {
     #expect(throws: ControllerRecordProbeError.self) {
-      try ControllerRecordProbePlan(data: try mutatedRecord { $0["transport"] = "usb" })
+      try ControllerRecordProbePlan(data: try mutatedRecord { $0["notAField"] = "usb" })
     }
   }
 
@@ -208,17 +208,17 @@ struct ControllerRecordProbePlanTests {
       try ControllerRecordProbePlan(data: try recordData(kind: nil))
     }
     #expect(throws: ControllerRecordProbeError.self) {
-      try ControllerRecordProbePlan(data: try recordData(kind: "Persona"))
+      try ControllerRecordProbePlan(data: try recordData(kind: "NotAKind"))
     }
   }
 
   @Test
-  func rejectsRemovedOrUnknownFields() {
+  func rejectsUnknownFields() {
     #expect(throws: ControllerRecordProbeError.self) {
-      try ControllerRecordProbePlan(data: try recordData(extraRootField: "provenance"))
+      try ControllerRecordProbePlan(data: try recordData(extraRootField: "notAField"))
     }
     #expect(throws: ControllerRecordProbeError.self) {
-      try ControllerRecordProbePlan(data: try recordData(extraProtocolField: "confidence"))
+      try ControllerRecordProbePlan(data: try recordData(extraProtocolField: "notAField"))
     }
   }
 
@@ -297,7 +297,7 @@ struct ControllerRecordProbePlanTests {
     Self.setDefaultProtocol(protocolConfig, in: &record)
     if let apiVersion { record["apiVersion"] = apiVersion }
     if let kind { record["kind"] = kind }
-    if let extraRootField { record[extraRootField] = ["source": "legacy"] }
+    if let extraRootField { record[extraRootField] = ["source": "unknown"] }
     if !usb.isEmpty { record["usb"] = usb }
     return try JSONSerialization.data(withJSONObject: record)
   }
