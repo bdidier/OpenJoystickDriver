@@ -42,7 +42,7 @@ struct OwnershipSuspensionTests {
     let (manager, _, old) = try await Self.suspendedController()
 
     await manager.reloadControllerRecords(changing: [Self.model])
-    try await Self.waitForHIDInitializations(of: manager)
+    await Self.waitForHIDInitializations(of: manager)
     let current = try #require(await manager.deviceInfos[Self.identifier]?.hidConnectionID)
     #expect(current == old.connectionID)
     #expect(await manager.ownershipCycledHIDConnections.isEmpty)
@@ -94,11 +94,10 @@ struct OwnershipSuspensionTests {
     return (manager, backend, connection)
   }
 
-  private static func waitForHIDInitializations(of manager: DeviceManager) async throws {
-    for _ in 0..<400 where await !manager.hidInitializationTasks.isEmpty {
-      try await Task.sleep(for: .milliseconds(5))
+  private static func waitForHIDInitializations(of manager: DeviceManager) async {
+    await waitUntil("manager.hidInitializationTasks.isEmpty") {
+      await manager.hidInitializationTasks.isEmpty
     }
-    #expect(await manager.hidInitializationTasks.isEmpty)
   }
 
   private static func gameSir() -> HIDDeviceConnection {

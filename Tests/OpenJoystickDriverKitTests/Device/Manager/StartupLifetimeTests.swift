@@ -151,9 +151,10 @@ struct StartupLifetimeTests {
       routingAddress: .ioKit(locationID: 80, interfaceNumber: nil)
     )
     await manager.scheduleHIDDeviceInitialization(connection: connection, ownership: .exclusive)
+    let initialization = await manager.hidInitializationTasks.values.first?.task
 
     await manager.handleHIDEvent(.disconnected(connection: connection))
-    try await Task.sleep(nanoseconds: 400_000_000)
+    await initialization?.value
 
     #expect(await manager.connectedDeviceDescriptions().isEmpty)
     await manager.stop()
@@ -173,8 +174,9 @@ struct StartupLifetimeTests {
 
     await manager.scheduleHIDDeviceInitialization(connection: oldConnection, ownership: .exclusive)
     await manager.scheduleHIDDeviceInitialization(connection: newConnection, ownership: .exclusive)
+    let newInitialization = await manager.hidInitializationTasks.values.first?.task
     await manager.handleHIDEvent(.disconnected(connection: oldConnection))
-    try await Task.sleep(nanoseconds: 400_000_000)
+    await newInitialization?.value
 
     let identifier = LogicalControllerID(
       vendorID: 0x057E,

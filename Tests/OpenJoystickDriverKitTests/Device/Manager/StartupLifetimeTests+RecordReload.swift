@@ -39,7 +39,7 @@ extension StartupLifetimeTests {
     await manager.reloadControllerRecords(
       changing: [ControllerModelID(vendorID: 0x3537, productID: 0x100B)]
     )
-    try await Self.waitForHIDInitializations(of: manager)
+    await Self.waitForHIDInitializations(of: manager)
 
     #expect(Set(await manager.pipelines.keys) == [changedID, otherID])
     let reloadedChanged = try #require(await manager.pipelines[changedID])
@@ -50,11 +50,10 @@ extension StartupLifetimeTests {
     await manager.stop()
   }
 
-  private static func waitForHIDInitializations(of manager: DeviceManager) async throws {
-    for _ in 0..<400 where await !manager.hidInitializationTasks.isEmpty {
-      try await Task.sleep(for: .milliseconds(5))
+  private static func waitForHIDInitializations(of manager: DeviceManager) async {
+    await waitUntil("manager.hidInitializationTasks.isEmpty") {
+      await manager.hidInitializationTasks.isEmpty
     }
-    #expect(await manager.hidInitializationTasks.isEmpty)
   }
 
   private static func gameSir(productID: UInt16, locationID: UInt32) -> HIDDeviceConnection {
