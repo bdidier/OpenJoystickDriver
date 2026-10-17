@@ -1018,7 +1018,8 @@
         "frameQueueCapacity": {
           "type": "integer",
           "minimum": 1,
-          "maximum": 1024
+          "maximum": 1024,
+          "default": 64
         }
       }
     },

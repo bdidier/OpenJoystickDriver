@@ -22,10 +22,5 @@
     "touchContactCount": 1,
     "motion": true,
     "digitalTriggers": ["LeftTrigger", "RightTrigger"]
-  },
-  "defaults": {
-    "tuning": {
-      "frameQueueCapacity": 64
-    }
   }
 }

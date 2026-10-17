@@ -105,8 +105,7 @@
       }
     },
     "tuning": {
-      "usbCommandTimeoutMs": 1000,
-      "frameQueueCapacity": 64
+      "usbCommandTimeoutMs": 1000
     }
   }
 }

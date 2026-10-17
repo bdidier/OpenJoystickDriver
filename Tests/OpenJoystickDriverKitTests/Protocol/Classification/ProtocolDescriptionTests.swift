@@ -185,16 +185,6 @@ struct ProtocolDescriptionTests {
   // MARK: - Defaults
 
   @Test
-  func everyBundledDescriptionDefaultsTheFrameQueueCapacityToTheSenderFallback() {
-    for (family, description) in ProtocolDescription.bundled {
-      #expect(
-        description.tuning?.frameQueueCapacity == UserSpaceReportSender.fallbackQueueCapacity,
-        "\(family)"
-      )
-    }
-  }
-
-  @Test
   func decodesDefaultsTheirDriverReads() throws {
     let layout = try decode(
       family: .hidReportLayout,

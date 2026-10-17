@@ -26,10 +26,6 @@ final class UserSpaceReportSender: Sendable {
     }
   }
 
-  /// The capacity when neither a record nor a protocol description names one. The bundled
-  /// descriptions' `frameQueueCapacity` carries the same value; `ProtocolDescriptionTests` keeps
-  /// them equal.
-  static let fallbackQueueCapacity = 64
   /// Matches the virtual output transition deadline used to retire native virtual devices.
   static let defaultNativeSendDeadlineNanoseconds: UInt64 = 2_000_000_000
 
@@ -170,12 +166,17 @@ final class UserSpaceReportSender: Sendable {
 
   init(
     nativeSendDeadlineNanoseconds: UInt64 = defaultNativeSendDeadlineNanoseconds,
-    queueCapacity: Int = fallbackQueueCapacity,
+    queueCapacity: Int = ControllerTuning.defaultFrameQueueCapacity,
     deadlineTimer: DeadlineTimer = .dispatch
   ) {
+    // Decoding refuses a capacity outside the range, so another value is a programming error.
+    precondition(
+      ControllerTuning.frameQueueCapacityRange.contains(queueCapacity),
+      "frame queue capacity \(queueCapacity) is outside \(ControllerTuning.frameQueueCapacityRange)"
+    )
     self.nativeSendDeadlineNanoseconds = nativeSendDeadlineNanoseconds
     self.deadlineTimer = deadlineTimer
-    self.queueCapacity = max(1, queueCapacity)
+    self.queueCapacity = queueCapacity
     let (wakes, continuation) = AsyncStream.makeStream(
       of: Void.self,
       bufferingPolicy: .bufferingNewest(1)

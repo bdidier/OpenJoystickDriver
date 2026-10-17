@@ -112,8 +112,7 @@
       "presenceResendReports": 4,
       "usbStartupIntervalMs": 50,
       "usbStartupRetryDelayMs": 1000,
-      "usbTransferTimeoutMs": 2000,
-      "frameQueueCapacity": 64
+      "usbTransferTimeoutMs": 2000
     }
   }
 }

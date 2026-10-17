@@ -14,17 +14,23 @@ extension UserSpaceOutputDispatcher {
     return StickTransfer(deadzone: 0, rescalesDeadzone: false)
   }
 
-  /// How many frames may wait behind a send for `identifier`'s virtual device: the effective
-  /// `frameQueueCapacity` of its record, else the `defaults.tuning` of its family's protocol
-  /// description, else ``UserSpaceReportSender/fallbackQueueCapacity``.
+  /// How many frames may wait behind a send for `identifier`'s virtual device.
   static func frameQueueCapacity(for identifier: LogicalControllerID) -> Int {
     let catalog = DeviceCatalog.current.withLock { $0 }
-    guard let record = catalog.record(for: identifier.model) else {
-      return UserSpaceReportSender.fallbackQueueCapacity
-    }
-    if let capacity = record.tuning.frameQueueCapacity { return capacity }
-    return ProtocolDescription.bundled[record.physicalProtocolID]?.tuning?.frameQueueCapacity
-      ?? UserSpaceReportSender.fallbackQueueCapacity
+    return frameQueueCapacity(of: catalog.record(for: identifier.model))
+  }
+
+  /// The effective `frameQueueCapacity` of `record`, else the `defaults.tuning` of its family's
+  /// protocol description, else ``ControllerTuning/defaultFrameQueueCapacity``. A controller
+  /// with no record gets the default.
+  static func frameQueueCapacity(
+    of record: DeviceRuntimeProfile?,
+    descriptions: [PhysicalProtocolID: ProtocolDescription] = ProtocolDescription.bundled
+  ) -> Int {
+    guard let record else { return ControllerTuning.defaultFrameQueueCapacity }
+    return record.tuning.frameQueueCapacity
+      ?? descriptions[record.physicalProtocolID]?.tuning?.frameQueueCapacity
+      ?? ControllerTuning.defaultFrameQueueCapacity
   }
 
   // MARK: - State mapping (called inside reportLock.withLock)

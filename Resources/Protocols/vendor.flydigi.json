@@ -11,10 +11,5 @@
     "base": "xbox",
     "add": ["Guide"],
     "digitalTriggers": ["LeftTrigger", "RightTrigger"]
-  },
-  "defaults": {
-    "tuning": {
-      "frameQueueCapacity": 64
-    }
   }
 }

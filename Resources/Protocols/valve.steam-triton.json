@@ -49,8 +49,7 @@
       }
     },
     "tuning": {
-      "lizardResendTicks": 75,
-      "frameQueueCapacity": 64
+      "lizardResendTicks": 75
     }
   }
 }

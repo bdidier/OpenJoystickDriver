@@ -73,8 +73,7 @@
     "tuning": {
       "hidStartupIntervalMs": 20,
       "minimumHIDOutputIntervalMs": 20,
-      "usbCommandTimeoutMs": 2000,
-      "frameQueueCapacity": 64
+      "usbCommandTimeoutMs": 2000
     }
   }
 }

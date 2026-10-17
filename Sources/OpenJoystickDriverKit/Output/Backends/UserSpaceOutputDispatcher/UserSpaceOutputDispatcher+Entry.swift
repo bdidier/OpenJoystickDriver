@@ -14,7 +14,7 @@ extension UserSpaceOutputDispatcher {
     init(
       backend: any VirtualDeviceBackend,
       inputReportState: UserSpaceInputReportState,
-      frameQueueCapacity: Int = UserSpaceReportSender.fallbackQueueCapacity
+      frameQueueCapacity: Int = ControllerTuning.defaultFrameQueueCapacity
     ) {
       sender = UserSpaceReportSender(queueCapacity: frameQueueCapacity)
       self.inputReportState = inputReportState

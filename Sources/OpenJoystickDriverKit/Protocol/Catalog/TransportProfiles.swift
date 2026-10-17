@@ -184,6 +184,13 @@ public struct ControllerTuning: Codable, Equatable, Sendable {
 
   public static let none = Self()
 
+  /// The frame-queue capacity when no record, patch or family description sets one: the
+  /// `default` of `tuning.frameQueueCapacity` in `controller.schema.json`.
+  public static let defaultFrameQueueCapacity = 64
+  /// The frame-queue capacities a record, patch or description may set: the schema's `minimum`
+  /// and `maximum`.
+  public static let frameQueueCapacityRange = 1...1024
+
   public init(
     stickDeadzone: Float? = nil,
     inputLivenessTimeoutMilliseconds: Int? = nil,

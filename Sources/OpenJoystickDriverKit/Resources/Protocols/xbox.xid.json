@@ -20,9 +20,6 @@
     "base": "xbox"
   },
   "defaults": {
-    "tuning": {
-      "frameQueueCapacity": 64
-    },
     "input": {
       "report": {
         "length": 20

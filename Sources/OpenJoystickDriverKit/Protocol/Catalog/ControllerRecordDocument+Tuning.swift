@@ -62,7 +62,10 @@ extension ControllerRecordDocument {
         usbStartupIntervalMilliseconds: try integer("usbStartupIntervalMs", 0...60_000),
         usbStartupRetryDelayMilliseconds: try integer("usbStartupRetryDelayMs", 1...60_000),
         usbTransferTimeoutMilliseconds: try integer("usbTransferTimeoutMs", 1...60_000),
-        frameQueueCapacity: try integer("frameQueueCapacity", 1...1024)
+        frameQueueCapacity: try integer(
+          "frameQueueCapacity",
+          ControllerTuning.frameQueueCapacityRange
+        )
       )
     }
   }
