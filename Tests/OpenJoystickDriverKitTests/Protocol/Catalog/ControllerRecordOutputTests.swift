@@ -28,7 +28,9 @@ struct ControllerRecordOutputTests {
     #expect(document.server == .ojd)
     let template = try #require(document.defaultMode.session.rumbleTemplate)
     #expect(template.report == ControllerTemplateReport(kind: .output, reportID: 2, length: 8))
-    #expect(template.motorBytes == [.leftMain: 3, .rightMain: 2])
+    #expect(template.motors == [.leftMain: .init(byte: 3), .rightMain: .init(byte: 2)])
+    #expect(template.bytes == [2, 0, 0, 0, 0, 0, 0, 0])
+    #expect(template.counterByte == nil && template.resendIntervalMilliseconds == nil)
     #expect(template.outputCapabilities == .dualMainRumble)
     #expect(try decode(Self.thirdParty).server == nil)
     let sixaxis = try decode(
@@ -73,21 +75,49 @@ struct ControllerRecordOutputTests {
     }
   }
 
-  @Test(
-    arguments: [
-      #"{"report": {"kind": "input", "id": 2, "length": 8}, "leftMain": {"byte": 3}}"#,
-      #"{"report": {"kind": "output", "id": 256, "length": 8}, "leftMain": {"byte": 3}}"#,
-      #"{"report": {"kind": "output", "id": 2, "length": 1}, "leftMain": {"byte": 0}}"#,
-      #"{"report": {"kind": "output", "id": 2, "length": 65}, "leftMain": {"byte": 3}}"#,
-      #"{"report": {"kind": "output", "id": 2, "length": 8}}"#,
-      #"{"report": {"kind": "output", "id": 2, "length": 8}, "leftMain": {"byte": 0}}"#,
-      #"{"report": {"kind": "output", "id": 2, "length": 8}, "leftMain": {"byte": 8}}"#,
-      #"{"report": {"kind": "output", "id": 2, "length": 8}, "leftMain": {"byte": 3}, "#
-        + #""rightMain": {"byte": 3}}"#,
-      #"{"report": {"kind": "output", "id": 2, "length": 8}, "leftMain": {"byte": 3, "max": 9}}"#,
-      #"{"report": {"kind": "output", "id": 2, "length": 8}, "leftHaptic": {"byte": 3}}"#,
-    ]
-  )
+  /// Rumble templates that fail to decode.
+  private static let invalidRumbleTemplates: [String] = [
+    #"{"report": {"kind": "input", "id": 2, "length": 8}, "leftMain": {"byte": 3}}"#,
+    #"{"report": {"kind": "output", "id": 256, "length": 8}, "leftMain": {"byte": 3}}"#,
+    #"{"report": {"kind": "output", "id": 2, "length": 1}, "leftMain": {"byte": 0}}"#,
+    #"{"report": {"kind": "output", "id": 2, "length": 65}, "leftMain": {"byte": 3}}"#,
+    #"{"report": {"kind": "output", "id": 2, "length": 8}}"#,
+    #"{"report": {"kind": "output", "id": 2, "length": 8}, "leftMain": {"byte": 0}}"#,
+    #"{"report": {"kind": "output", "id": 2, "length": 8}, "leftMain": {"byte": 8}}"#,
+    #"{"report": {"kind": "output", "id": 2, "length": 8}, "leftMain": {"byte": 3}, "#
+      + #""rightMain": {"byte": 3}}"#,
+    #"{"report": {"kind": "output", "id": 2, "length": 8}, "leftMain": {"byte": 3, "max": 9}}"#,
+    #"{"report": {"kind": "output", "id": 2, "length": 8}, "leftHaptic": {"byte": 3}}"#,
+    // A motor's encoding must be named and its bytes must fit and not overlap.
+    #"{"report": {"kind": "output", "id": 2, "length": 8}, "#
+      + #""leftMain": {"byte": 3, "encoding": "UInt16"}}"#,
+    #"{"report": {"kind": "output", "id": 2, "length": 8}, "#
+      + #""leftMain": {"byte": 7, "encoding": "UInt16BigEndian"}}"#,
+    #"{"report": {"kind": "output", "id": 2, "length": 8}, "#
+      + #""leftMain": {"byte": 2, "encoding": "SwitchHDRumble"}, "rightMain": {"byte": 5}}"#,
+    // Fixed bytes cover the whole report and lead with its ID.
+    #"{"report": {"kind": "output", "id": 2, "length": 3}, "bytes": "02 00", "#
+      + #""leftMain": {"byte": 1}}"#,
+    #"{"report": {"kind": "output", "id": 2, "length": 3}, "bytes": "03 00 00", "#
+      + #""leftMain": {"byte": 1}}"#,
+    #"{"report": {"kind": "output", "id": 2, "length": 3}, "bytes": "02 0a 00", "#
+      + #""leftMain": {"byte": 1}}"#,
+    // The counter is one free byte after the report ID.
+    #"{"report": {"kind": "output", "id": 2, "length": 8}, "counter": {"byte": 3}, "#
+      + #""leftMain": {"byte": 3}}"#,
+    #"{"report": {"kind": "output", "id": 2, "length": 8}, "counter": {"byte": 0}, "#
+      + #""leftMain": {"byte": 3}}"#,
+    // The resend interval is a keep-alive's.
+    #"{"report": {"kind": "output", "id": 2, "length": 8}, "#
+      + #""resendIntervalMilliseconds": 0, "leftMain": {"byte": 3}}"#,
+    #"{"report": {"kind": "output", "id": 2, "length": 8}, "#
+      + #""resendIntervalMilliseconds": 60001, "leftMain": {"byte": 3}}"#,
+    // A usb packet has a length only, and a HID mode sends no usb packet.
+    #"{"report": {"kind": "usb", "id": 2, "length": 8}, "leftMain": {"byte": 3}}"#,
+    #"{"report": {"kind": "usb", "length": 8}, "leftMain": {"byte": 3}}"#,
+  ]
+
+  @Test(arguments: invalidRumbleTemplates)
   func rejectsInvalidRumbleTemplates(rumble: String) {
     #expect(throws: DecodingError.self) {
       try decode(Self.thirdPartyModes(session: "{\"rumble\": \(rumble)}"))
@@ -114,8 +144,8 @@ struct ControllerRecordOutputTests {
   @Test
   func writesReportsWithoutAnIDAndFeatureReports() throws {
     let unnumbered = try RumbleOutputTemplate(
-      report: ControllerTemplateReport(kind: .output, reportID: 0, length: 4),
-      motorBytes: [.leftMain: 0, .rightTrigger: 3]
+      target: .hid(ControllerTemplateReport(kind: .output, reportID: 0, length: 4)),
+      motors: [.leftMain: .init(byte: 0), .rightTrigger: .init(byte: 3)]
     )
     let intensities = RumbleIntensities(
       leftMain: UnipolarValue(byte: 0x11),
@@ -130,14 +160,76 @@ struct ControllerRecordOutputTests {
     #expect(report.bytes == [0x11, 0, 0, 0x33])
 
     let feature = try RumbleOutputTemplate(
-      report: ControllerTemplateReport(kind: .feature, reportID: 5, length: 3),
-      motorBytes: [.rightMain: 1]
+      target: .hid(ControllerTemplateReport(kind: .feature, reportID: 5, length: 3)),
+      motors: [.rightMain: .init(byte: 1)]
     )
     guard case .hidFeature(let featureReport) = feature.write(intensities) else {
       Issue.record("expected a feature report")
       return
     }
     #expect(featureReport.bytes == [5, 0x22, 0])
+  }
+
+  /// Fixed bytes stay, each motor writes its encoding at its byte, and the counter fills its byte.
+  @Test
+  func decodesFixedBytesEncodingsAndACounter() throws {
+    let rumble = #"""
+      "rumble": {"report": {"kind": "output", "id": 2, "length": 12},
+        "bytes": "02 00 AA 00 00 00 00 00 00 00 00 BB", "counter": {"byte": 1},
+        "leftMain": {"byte": 3, "encoding": "UInt16BigEndian"},
+        "rightMain": {"byte": 5, "encoding": "UInt16LittleEndian"},
+        "leftTrigger": {"byte": 7, "encoding": "SwitchHDRumble"},
+        "resendIntervalMilliseconds": 250}
+      """#
+    let document = try decode(Self.thirdPartyModes(session: "{\(rumble)}"))
+    let template = try #require(document.defaultMode.session.rumbleTemplate)
+    #expect(template.counterByte == 1 && template.resendIntervalMilliseconds == 250)
+    let intensities = RumbleIntensities(
+      leftMain: UnipolarValue(0x1234),
+      rightMain: UnipolarValue(0x5678),
+      leftTrigger: UnipolarValue(byte: 0xFF)
+    )
+    let hd = SwitchProRumbleCodec.encode(intensity: 0xFF)
+    #expect(
+      template.reportBytes(intensities, counter: 0x0C)
+        == [0x02, 0x0C, 0xAA, 0x12, 0x34, 0x78, 0x56] + hd + [0xBB]
+    )
+    #expect(
+      template.reportBytes(.off)
+        == [0x02, 0x00, 0xAA, 0, 0, 0, 0] + SwitchProRumbleCodec.encode(intensity: 0) + [0xBB]
+    )
+  }
+
+  /// A usb packet has no report ID, so byte 0 is free and the bytes need not lead with an ID.
+  @Test
+  func buildsRawUSBPackets() throws {
+    let packet = try RumbleOutputTemplate(
+      target: .usb(length: 6),
+      bytes: [0x0F, 0x20, 0x66, 0x55, 0, 0],
+      motors: [.leftMain: .init(byte: 4), .rightMain: .init(byte: 5)]
+    )
+    #expect(packet.report == nil)
+    let intensities = RumbleIntensities(
+      leftMain: UnipolarValue(byte: 0x40),
+      rightMain: UnipolarValue(byte: 0x80)
+    )
+    #expect(packet.reportBytes(intensities) == [0x0F, 0x20, 0x66, 0x55, 0x40, 0x80])
+    #expect(throws: ControllerRecordProblem.self) {
+      try RumbleOutputTemplate(target: .usb(length: 65), motors: [.leftMain: .init(byte: 0)])
+    }
+  }
+
+  /// A raw-USB mode names a usb packet, never a HID report.
+  @Test
+  func rejectsAHIDTemplateInARawUSBMode() {
+    let protocolInfo = #"{"family": "xbox.xusb", "variant": "wired"}"#
+    let rumble = #"{"report": {"kind": "output", "id": 2, "length": 8}, "leftMain": {"byte": 3}}"#
+    #expect(throws: DecodingError.self) {
+      try decode(
+        "\"modes\": [{\"id\": \"default\", \"protocol\": \(protocolInfo), "
+          + "\"session\": {\"rumble\": \(rumble)}}]"
+      )
+    }
   }
 
   /// Sixaxis keeps its family writes; a record template adds exactly its own report.

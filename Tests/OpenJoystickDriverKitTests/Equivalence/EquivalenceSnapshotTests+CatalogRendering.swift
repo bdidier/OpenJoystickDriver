@@ -169,11 +169,7 @@ extension EquivalenceSnapshotCatalogTests {
       )
     }
     if let template = profile.rumbleTemplate {
-      let motors = template.motorBytes.map { "\(label($0.key))@\($0.value)" }.sorted()
-      lines.append(
-        "rumbleTemplate \(label(template.report.kind)) id=\(template.report.reportID)"
-          + " length=\(template.report.length) motors=\(motors.joined(separator: ","))"
-      )
+      lines.append(rumbleTemplateLine(template))
     }
     if let layout = profile.inputLayout { lines += layoutLines(layout) }
     if let uuid = profile.bluetoothLEVibrationCharacteristic {
@@ -202,5 +198,26 @@ extension EquivalenceSnapshotCatalogTests {
       }
     }
     return ["usageLayout=unknown"]
+  }
+
+  /// A rumble template: its target, the motor fields, and the bytes, counter and resend
+  /// interval it names beyond a zeroed report.
+  static func rumbleTemplateLine(_ template: RumbleOutputTemplate) -> String {
+    let motors = template.motors.map { motor, field in
+      let encoding = field.encoding == .uInt8 ? "" : ":\(field.encoding.rawValue)"
+      return "\(label(motor))@\(field.byte)\(encoding)"
+    }.sorted()
+    var line =
+      switch template.target {
+      case .hid(let report):
+        "rumbleTemplate \(label(report.kind)) id=\(report.reportID) length=\(report.length)"
+      case .usb(let length): "rumbleTemplate usb length=\(length)"
+      }
+    line += " motors=\(motors.joined(separator: ","))"
+    let blank = RumbleOutputTemplate.zeroedBytes(for: template.target)
+    if template.bytes != blank { line += " bytes=\(hex(template.bytes))" }
+    if let counter = template.counterByte { line += " counter@\(counter)" }
+    if let interval = template.resendIntervalMilliseconds { line += " resendMs=\(interval)" }
+    return line
   }
 }

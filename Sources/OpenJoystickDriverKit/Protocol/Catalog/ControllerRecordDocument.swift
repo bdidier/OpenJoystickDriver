@@ -116,20 +116,72 @@ struct ControllerRecordDocument: Decodable {
     init(from decoder: any Decoder) throws {
       let container = try decoder.container(keyedBy: DocumentKey.self)
       let motors = RumbleOutputTemplate.templateMotors
-      try container.rejectUnknown(allowed: Set(["report"] + motors.map(\.rawValue)))
-      let report = try container.decode(TemplateReport.self, for: "report").report
-      var motorBytes: [PhysicalRumbleMotor: Int] = [:]
+      try container.rejectUnknown(
+        allowed: Set(
+          ["report", "bytes", "counter", "resendIntervalMilliseconds"] + motors.map(\.rawValue)
+        )
+      )
+      let target = try container.decode(RumbleTarget.self, for: "report").target
+      var fields: [PhysicalRumbleMotor: RumbleOutputTemplate.MotorField] = [:]
       for motor in motors {
-        motorBytes[motor] = try container.decodeOptional(TemplateByte.self, for: motor.rawValue)?
-          .byte
+        fields[motor] = try container.decodeOptional(MotorField.self, for: motor.rawValue)?.field
       }
       do {
-        template = try RumbleOutputTemplate(report: report, motorBytes: motorBytes)
-      } catch {
+        let bytes =
+          container.contains(DocumentKey("bytes"))
+          ? try HexBytes.decode(container, for: "bytes", what: "rumble template") : nil
+        template = try RumbleOutputTemplate(
+          target: target,
+          bytes: bytes,
+          motors: fields,
+          counterByte: try container.decodeOptional(TemplateByte.self, for: "counter")?.byte,
+          resendIntervalMilliseconds: try container.decodeOptional(
+            Int.self,
+            for: "resendIntervalMilliseconds"
+          )
+        )
+      } catch let problem as ControllerRecordProblem {
         throw DecodingError.dataCorrupted(
-          .init(codingPath: decoder.codingPath, debugDescription: error.description)
+          .init(codingPath: decoder.codingPath, debugDescription: problem.description)
         )
       }
+    }
+  }
+
+  /// A rumble template's report: a HID output or feature report, or a raw-USB packet of
+  /// `length` bytes to the family's output endpoint.
+  struct RumbleTarget: Decodable {
+    let target: RumbleOutputTemplate.Target
+
+    init(from decoder: any Decoder) throws {
+      let container = try decoder.container(keyedBy: DocumentKey.self)
+      if try container.decode(String.self, for: "kind") == "usb" {
+        try container.rejectUnknown(allowed: ["kind", "length"])
+        target = .usb(length: try container.decode(Int.self, for: "length"))
+      } else {
+        target = .hid(try TemplateReport(from: decoder).report)
+      }
+    }
+  }
+
+  /// Where a rumble template writes one motor: its first byte and the value's encoding.
+  struct MotorField: Decodable {
+    let field: RumbleOutputTemplate.MotorField
+
+    init(from decoder: any Decoder) throws {
+      let container = try decoder.container(keyedBy: DocumentKey.self)
+      try container.rejectUnknown(allowed: ["byte", "encoding"])
+      let name = try container.decodeOptional(String.self, for: "encoding")
+      guard let encoding = name.map(RumbleMotorEncoding.init(rawValue:)) ?? .uInt8 else {
+        throw DecodingError.dataCorrupted(
+          .init(
+            codingPath: decoder.codingPath,
+            debugDescription: "a rumble motor encoding is "
+              + RumbleMotorEncoding.allCases.map(\.rawValue).joined(separator: ", ")
+          )
+        )
+      }
+      field = .init(byte: try container.decode(Int.self, for: "byte"), encoding: encoding)
     }
   }
 

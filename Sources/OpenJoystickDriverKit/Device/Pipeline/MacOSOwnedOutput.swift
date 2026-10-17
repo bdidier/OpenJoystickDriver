@@ -28,11 +28,11 @@ struct MacOSOwnedOutput: Equatable, Sendable {
   /// The family default with the record's rumble template added.
   static func allowance(for protocolID: PhysicalProtocolID, record: DeviceRuntimeProfile?) -> Self {
     let family = protocolID.protocolDescription.macOSOwnedOutput
-    guard let template = record?.rumbleTemplate else { return family }
+    guard let report = record?.rumbleTemplate?.report else { return family }
     return Self(
       lightingFeatures: family.lightingFeatures,
       drivesRumble: true,
-      reports: family.reports.union([template.report]),
+      reports: family.reports.union([report]),
       setsStartupPlayerIndicator: family.setsStartupPlayerIndicator,
       readsStartupFeatures: family.readsStartupFeatures,
       rationale: family.rationale
