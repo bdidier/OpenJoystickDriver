@@ -1,3 +1,4 @@
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -69,6 +70,7 @@ struct USBHIDAdmissionOrderTests {
     let provider = makeProvider()
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend),
       usbTransportProvider: provider
     )
@@ -121,6 +123,7 @@ struct USBHIDAdmissionOrderTests {
     let provider = makeProvider()
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: ClaimRecordingHIDAccessBackend()),
       usbTransportProvider: provider
     )

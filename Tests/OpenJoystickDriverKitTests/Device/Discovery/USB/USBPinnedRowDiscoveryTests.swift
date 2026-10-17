@@ -1,3 +1,4 @@
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -135,7 +136,11 @@ struct USBPinnedRowDiscoveryTests {
   }
 
   private func makeManager(_ provider: SignatureDiscoveryProvider) -> DeviceManager {
-    DeviceManager(dispatcher: LoggingOutputDispatcher(), usbTransportProvider: provider)
+    DeviceManager(
+      dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
+      usbTransportProvider: provider
+    )
   }
 
   private func usbDevice(_ row: PinnedRow) -> USBTransportDevice {

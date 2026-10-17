@@ -1,3 +1,4 @@
+import OpenJoystickDriverTestSupport
 import Foundation
 import Testing
 
@@ -11,6 +12,7 @@ struct NativeObservedInputTests {
     await backend.enableFeatureReports()
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     await manager.markStartedForTest()
@@ -76,6 +78,7 @@ struct NativeObservedInputTests {
     await backend.enableFeatureReports()
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     await manager.markStartedForTest()
@@ -114,6 +117,7 @@ struct NativeObservedInputTests {
     await backend.enableFeatureReports()
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     await manager.markStartedForTest()
@@ -156,6 +160,7 @@ struct NativeObservedInputTests {
     dispatcher.demandsInput = false
     let manager = DeviceManager(
       dispatcher: dispatcher,
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: ClaimRecordingHIDAccessBackend())
     )
     let connection = NativePassThroughTests.dualShock4Bluetooth(locationID: 91)
@@ -176,6 +181,7 @@ struct NativeObservedInputTests {
     let backend = ClaimRecordingHIDAccessBackend()
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     let generic = Self.connection(0x1234, 0x5678, locationID: 92, native: true)
@@ -193,6 +199,7 @@ struct NativeObservedInputTests {
     let backend = ClaimRecordingHIDAccessBackend()
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     let native = Self.connection(0x1234, 0x5678, locationID: 94, native: true)
@@ -215,6 +222,7 @@ struct NativeObservedInputTests {
   func locationZeroIsNeverTreatedAsANativeController() async {
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: ClaimRecordingHIDAccessBackend())
     )
     let native = Self.connection(0x1234, 0x5678, locationID: 0, native: true)

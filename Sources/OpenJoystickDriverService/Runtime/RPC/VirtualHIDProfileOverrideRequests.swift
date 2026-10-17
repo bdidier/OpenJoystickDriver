@@ -82,7 +82,10 @@ extension ApplicationServiceServer {
     var matches = await connectedControllers(of: target.model)
     var scope = OverrideScope(model: target.model, unit: nil)
     if unit {
-      guard let unitIdentifier = target.portKey?.rawValue else {
+      guard
+        let unitIdentifier = ControllerPortKey.of(target, installationKey: installationKey)?
+          .rawValue
+      else {
         return result(requested, .controllerNotFound)
       }
       scope.unit = unitIdentifier
@@ -209,7 +212,9 @@ extension ApplicationServiceServer {
     case .session:
       return await deviceManager.connectedIdentifier(for: controller)
     case .port(let portKey):
-      matches = await connectedIdentifierProvider().filter { $0.portKey == portKey }
+      matches = await connectedIdentifierProvider().filter {
+        ControllerPortKey.of($0, installationKey: installationKey) == portKey
+      }
     case .model(let model):
       matches = await connectedControllers(of: model)
       if !unit { return matches.first }
@@ -235,7 +240,7 @@ extension ApplicationServiceServer {
       virtualHIDProfileOverrides.override(
         vendorID: $0.model.vendorID,
         productID: $0.model.productID,
-        unit: $0.portKey?.rawValue
+        unit: ControllerPortKey.of($0, installationKey: installationKey)?.rawValue
       )
     }
     let source: VirtualHIDProfileSelector.Selection.Source

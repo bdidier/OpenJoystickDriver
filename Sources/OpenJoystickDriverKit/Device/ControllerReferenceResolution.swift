@@ -1,3 +1,5 @@
+import CryptoKit
+
 /// A connected controller that a ``ControllerReference`` can name.
 public protocol ControllerReferenceable {
   /// The token of the controller's current attachment.
@@ -8,19 +10,25 @@ public protocol ControllerReferenceable {
   var model: ControllerModelID { get }
 }
 
-/// A connected controller's key with the token of its current attachment.
+/// A connected controller's key with the token of its current attachment and its port key.
 package struct ConnectedController: ControllerReferenceable, Hashable, Sendable {
   /// The controller's key.
   package let logicalControllerID: LogicalControllerID
   /// The token of the controller's current attachment.
   package let sessionToken: ControllerSessionToken
+  /// The controller's port key under the installation key; nil when it has no location ID.
+  package let portKey: ControllerPortKey?
 
-  package init(logicalControllerID: LogicalControllerID, sessionToken: ControllerSessionToken) {
+  package init(
+    logicalControllerID: LogicalControllerID,
+    sessionToken: ControllerSessionToken,
+    installationKey: SymmetricKey
+  ) {
     self.logicalControllerID = logicalControllerID
     self.sessionToken = sessionToken
+    self.portKey = ControllerPortKey.of(logicalControllerID, installationKey: installationKey)
   }
 
-  package var portKey: ControllerPortKey? { logicalControllerID.portKey }
   package var model: ControllerModelID { logicalControllerID.model }
 }
 

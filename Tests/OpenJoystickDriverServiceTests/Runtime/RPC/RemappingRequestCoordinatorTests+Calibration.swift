@@ -1,3 +1,4 @@
+import OpenJoystickDriverTestSupport
 import Foundation
 import OpenJoystickDriverKit
 import Testing
@@ -98,6 +99,7 @@ extension RemappingRequestCoordinatorTests {
       virtualOutput: RemappingRouterVirtualOutput(recorder: recorder),
       foregroundApplication: RemappingRouterForeground("com.example.Game"),
       postEventAccess: RemappingRouterAccess(.granted),
+      installationKey: testPortKeyInstallationKey,
       tickerIntervalNanoseconds: nil
     ) { 1_000_000_000 }
     let access = CoreGraphicsPostEventAccess(

@@ -67,6 +67,7 @@ struct USBHIDYieldRecoveryTests {
     let provider = OpenRefusingProvider(device: device, observation: observation)
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend),
       usbTransportProvider: provider
     )

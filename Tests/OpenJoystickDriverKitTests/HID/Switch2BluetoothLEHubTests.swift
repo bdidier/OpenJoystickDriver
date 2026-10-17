@@ -240,6 +240,7 @@ struct Switch2BluetoothLEHubTests {
     let recorder = HIDRoleEventRecorder()
     let manager = DeviceManager(
       dispatcher: recorder,
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(
         backend: BluetoothLECompositeHIDBackend(primary: ScriptedHIDAccessBackend(), hub: hub)
       ),

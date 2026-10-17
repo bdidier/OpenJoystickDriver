@@ -36,6 +36,7 @@ struct PhysicalOutputExecutorTests {
     ])
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     await manager.markStartedForTest()

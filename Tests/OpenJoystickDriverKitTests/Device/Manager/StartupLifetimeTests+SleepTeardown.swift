@@ -13,6 +13,7 @@ extension StartupLifetimeTests {
     await backend.enableFeatureReports()
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     let connection = HIDDeviceConnection(
@@ -64,6 +65,7 @@ extension StartupLifetimeTests {
     await backend.enableFeatureReports()
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     let connection = HIDDeviceConnection(
@@ -115,6 +117,7 @@ extension StartupLifetimeTests {
     let backend = ScriptedHIDAccessBackend()
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     let identifier = LogicalControllerID(
@@ -177,6 +180,7 @@ extension StartupLifetimeTests {
     let backend = ScriptedHIDAccessBackend()
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     let identifier = LogicalControllerID(
@@ -218,6 +222,7 @@ extension StartupLifetimeTests {
   func startIssuedAfterSleepBeforeTheFirstStartWaitsForWake() async {
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: ScriptedHIDAccessBackend())
     )
     await manager.systemWillSleep()
@@ -236,6 +241,7 @@ extension StartupLifetimeTests {
     let dispatcher = GatedStartupOutputDispatcher()
     let manager = DeviceManager(
       dispatcher: dispatcher,
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: ScriptedHIDAccessBackend())
     )
     let identifier = LogicalControllerID(
@@ -281,6 +287,7 @@ extension StartupLifetimeTests {
     let dispatcher = GatedStartupOutputDispatcher()
     let manager = DeviceManager(
       dispatcher: dispatcher,
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: ScriptedHIDAccessBackend())
     )
     await manager.markStartedForTest()

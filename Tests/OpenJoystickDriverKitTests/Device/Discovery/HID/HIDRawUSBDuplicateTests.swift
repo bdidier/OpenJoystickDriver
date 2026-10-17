@@ -1,3 +1,4 @@
+import OpenJoystickDriverTestSupport
 import Foundation
 import Testing
 
@@ -19,6 +20,7 @@ struct HIDRawUSBDuplicateTests {
     let provider = USBDiscoveryRecordingProvider(devices: [device])
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend),
       usbTransportProvider: provider
     )
@@ -88,6 +90,7 @@ struct HIDRawUSBDuplicateTests {
     )
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend),
       usbTransportProvider: provider
     )

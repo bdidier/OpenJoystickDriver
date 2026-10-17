@@ -42,6 +42,7 @@ struct OwnershipReapplyTests {
     let backend = OwnershipReapplyBackend(scripted)
     let manager = DeviceManager(
       dispatcher: HIDRoleEventRecorder(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     await backend.attach(manager)
@@ -104,7 +105,11 @@ struct OwnershipReapplyTests {
     await backend.enableOutputReports()
     await backend.enableFeatureReports()
     let dispatcher = UnroutedDispatcher()
-    let manager = DeviceManager(dispatcher: dispatcher, hidManager: HIDManager(backend: backend))
+    let manager = DeviceManager(
+      dispatcher: dispatcher,
+      installationKey: testPortKeyInstallationKey,
+      hidManager: HIDManager(backend: backend)
+    )
     await manager.markStartedForTest()
     let locationID: UInt32 = 0x0021_0000
     let connection = gameSir(

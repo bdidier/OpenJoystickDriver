@@ -131,15 +131,17 @@ struct SettingsRPCTests {
       engine: RemappingEventEngine(sink: CoreGraphicsSystemInputSink(access: postEventAccess)),
       virtualOutput: dispatcher,
       foregroundApplication: WorkspaceRemappingForegroundApplication(),
-      postEventAccess: postEventAccess
+      postEventAccess: postEventAccess,
+      installationKey: testPortKeyInstallationKey
     )
     let server = ApplicationServiceServer(
-      deviceManager: DeviceManager(dispatcher: router),
+      deviceManager: DeviceManager(dispatcher: router, installationKey: testPortKeyInstallationKey),
       permissionManager: PermissionManager(),
       dispatcher: dispatcher,
       remappingProfileLibrary: library,
       remappingRouter: router,
       postEventAccess: postEventAccess,
+      installationKey: testPortKeyInstallationKey,
       userSpaceDispatcherFactory: ApplicationServiceRuntime.makeAutomaticUserSpaceDispatcher(
         context:
       ),

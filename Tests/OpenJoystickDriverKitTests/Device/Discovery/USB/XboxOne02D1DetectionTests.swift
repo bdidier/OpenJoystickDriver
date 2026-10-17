@@ -1,3 +1,4 @@
+import OpenJoystickDriverTestSupport
 import SwifterKit
 import Testing
 
@@ -34,6 +35,7 @@ struct XboxOne02D1DetectionTests {
     let provider = USBDiscoveryRecordingProvider(devices: [device])
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       usbTransportProvider: provider
     )
 

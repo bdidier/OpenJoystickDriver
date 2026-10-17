@@ -19,7 +19,7 @@ extension RemappingRoutingCore {
       let profile = try await library.activeProfile(
         vendorID: identifier.model.vendorID,
         productID: identifier.model.productID,
-        unit: identifier.portKey?.rawValue,
+        unit: ControllerPortKey.of(identifier, installationKey: installationKey)?.rawValue,
         frontmostAppID: frontmostBundleID
       )
       _ = try requireOperationalPermit(permit)

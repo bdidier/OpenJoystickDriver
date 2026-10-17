@@ -11,6 +11,7 @@ extension StartupLifetimeTests {
     let backend = ScriptedHIDAccessBackend()
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     let identifier = LogicalControllerID(vendorID: 0x1234, productID: 0x5678, locationID: 85)
@@ -63,6 +64,7 @@ extension StartupLifetimeTests {
     let backend = ScriptedHIDAccessBackend(delaysFirstStream: true)
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
 
@@ -103,7 +105,10 @@ extension StartupLifetimeTests {
 
   @Test
   func reconnectDuringNeutralizationRetainsNewDeviceInfoAndPipeline() async throws {
-    let manager = DeviceManager(dispatcher: LoggingOutputDispatcher())
+    let manager = DeviceManager(
+      dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey
+    )
     let identifier = LogicalControllerID(
       vendorID: 0x054C,
       productID: 0x09CC,

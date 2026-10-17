@@ -1,3 +1,4 @@
+import OpenJoystickDriverTestSupport
 import Foundation
 import OpenJoystickDriverKit
 import Testing
@@ -29,7 +30,10 @@ extension VirtualOutputTests {
     log: RetargetEventLog
   ) -> AutomaticUserSpaceOutputDispatcher {
     AutomaticUserSpaceOutputDispatcher(
-      deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),
+      deviceManager: DeviceManager(
+        dispatcher: LoggingOutputDispatcher(),
+        installationKey: testPortKeyInstallationKey
+      ),
       ownershipProvider: { _ in .exclusiveRawUSB },
       builder: { profile in
         log.record("built \(profile.rawValue)")

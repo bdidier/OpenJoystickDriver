@@ -15,13 +15,14 @@ import OpenJoystickDriverService
 /// controller discovery, output, and the authenticated local RPC endpoint.
 @MainActor
 final class HeadlessApplicationHost {
-  private let runtime = ApplicationServiceRuntime()
   #if canImport(AppKit) && canImport(SwiftUI)
     private var presentation: MenuBarCoordinator?
   #endif
 
   func run() -> Never {
     registerForLoginIfNeeded()
+    let runtime: ApplicationServiceRuntime
+    do { runtime = try ApplicationServiceRuntime() } catch { failStartup(error) }
     #if canImport(AppKit) && canImport(SwiftUI)
       runtime.handleShutdownSignal { [weak runtime] in
         // terminate(_:) waits in a nested event loop for applicationShouldTerminate's asynchronous
@@ -42,13 +43,7 @@ final class HeadlessApplicationHost {
         }
       }
     #endif
-    do { try runtime.start() } catch {
-      fputs(
-        "[OpenJoystickDriver] Main-app service startup failed: \(error.localizedDescription)\n",
-        stderr
-      )
-      exit(EXIT_FAILURE)
-    }
+    do { try runtime.start() } catch { failStartup(error) }
     #if canImport(AppIntents)
       if #available(macOS 13, *) {
         // The Shortcuts entity queries read the running service through this dependency.
@@ -67,6 +62,16 @@ final class HeadlessApplicationHost {
     #else
       dispatchMain()
     #endif
+  }
+
+  /// Prints why the service cannot start and exits.
+  /// The service never runs without its port key or its runtime.
+  private func failStartup(_ error: any Error) -> Never {
+    fputs(
+      "[OpenJoystickDriver] Main-app service startup failed: \(error.localizedDescription)\n",
+      stderr
+    )
+    exit(EXIT_FAILURE)
   }
 
   private func registerForLoginIfNeeded() {

@@ -480,7 +480,11 @@ struct StickDeliveryLatencyTests {
     await backend.enableOutputReports()
     await backend.enableFeatureReports()
     let recorder = FirstStickDispatchHeldRecorder()
-    let manager = DeviceManager(dispatcher: recorder, hidManager: HIDManager(backend: backend))
+    let manager = DeviceManager(
+      dispatcher: recorder,
+      installationKey: testPortKeyInstallationKey,
+      hidManager: HIDManager(backend: backend)
+    )
     await manager.markStartedForTest()
     let connection = Self.gamepadConnection()
     await backend.setConnectionSnapshots([

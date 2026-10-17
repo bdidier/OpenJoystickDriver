@@ -21,7 +21,8 @@ package final class ApplicationServiceRuntime {
   private var shutdownSignalSources: [DispatchSourceSignal] = []
   private var shutdownSignalHandler: (@MainActor @Sendable () -> Void)?
 
-  package init() {
+  package init() throws {
+    let installationKey = try PortKeyInstallationStore(directory: MacOSDataDirectory()).load()
     let permissionManager = PermissionManager()
     let dispatcher = VirtualOutputRouter()
     let remappingProfileLibrary = RemappingProfileLibrary()
@@ -37,11 +38,13 @@ package final class ApplicationServiceRuntime {
       engine: remappingEngine,
       virtualOutput: dispatcher,
       foregroundApplication: WorkspaceRemappingForegroundApplication(),
-      postEventAccess: postEventAccess
+      postEventAccess: postEventAccess,
+      installationKey: installationKey
     )
     let bluetoothLEHub = Switch2BluetoothLEHub()
     let manager = DeviceManager(
       dispatcher: remappingRouter,
+      installationKey: installationKey,
       usbTransportProvider: OpenJoystickDriverUSBTransportProvider(),
       wirelessControllerDisconnector: BluetoothControllerDisconnector(),
       bluetoothLEHub: bluetoothLEHub
@@ -55,6 +58,7 @@ package final class ApplicationServiceRuntime {
       remappingProfileLibrary: remappingProfileLibrary,
       remappingRouter: remappingRouter,
       postEventAccess: postEventAccess,
+      installationKey: installationKey,
       userSpaceDispatcherFactory: Self.makeAutomaticUserSpaceDispatcher(context:)
     )
 

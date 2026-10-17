@@ -110,6 +110,7 @@ The table is generated from the code catalog and the English text of OJD. The ta
 | E5003 | Document | A protocol description names a family that differs from its file name. Name the file after its family. |
 | E5004 | Document | A protocol description lists a variant that its family does not have. Use one of the variants of the family. |
 | E5005 | Document | The access file AccessGrants.json is damaged. Fix the file or delete it, then grant access again. |
+| E5006 | Document | The key file of the unit IDs, PortKeyInstallation.key, cannot be read or is not 32 bytes. Restore the file from a backup. If you delete it instead, OpenJoystickDriver creates a new key and every unit ID changes. |
 <!-- END GENERATED: error-codes -->
 
 ## Further reading

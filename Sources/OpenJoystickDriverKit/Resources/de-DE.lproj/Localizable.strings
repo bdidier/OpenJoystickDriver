@@ -1692,4 +1692,5 @@
 "error.E5003" = "Eine Protokollbeschreibung nennt eine Familie, die vom Dateinamen abweicht. Benenne die Datei nach ihrer Familie.";
 "error.E5004" = "Eine Protokollbeschreibung führt eine Variante auf, die ihre Familie nicht hat. Verwende eine der Varianten der Familie.";
 "error.E5005" = "Die Zugriffsdatei AccessGrants.json ist beschädigt. Repariere die Datei oder lösche sie und erteile den Zugriff dann erneut.";
+"error.E5006" = "Die Schlüsseldatei der Geräte-IDs, PortKeyInstallation.key, kann nicht gelesen werden oder ist nicht 32 Byte groß. Stellen Sie die Datei aus einer Sicherung wieder her. Wenn Sie sie stattdessen löschen, erstellt OpenJoystickDriver einen neuen Schlüssel, und jede Geräte-ID ändert sich.";
 "error.withCode" ="%@ (%@)";

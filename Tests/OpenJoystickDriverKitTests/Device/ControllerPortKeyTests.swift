@@ -54,20 +54,6 @@ struct ControllerPortKeyTests {
     #expect(portKey(location: nil, interface: nil) == nil)
   }
 
-  @Test
-  func theInstallationKeyIsCreatedOnceAndKeptInDefaults() throws {
-    let suite = "ControllerPortKeyTests.\(UUID().uuidString)"
-    let defaults = try #require(UserDefaults(suiteName: suite))
-    defer { defaults.removePersistentDomain(forName: suite) }
-
-    let first = ControllerPortKey.installationKey(in: defaults)
-    #expect(defaults.data(forKey: ControllerPortKey.installationKeyDefaultsKey)?.count == 32)
-    #expect(
-      portKey(installationKey: ControllerPortKey.installationKey(in: defaults))
-        == portKey(installationKey: first)
-    )
-  }
-
   @Test(arguments: [
     ("U-AbCd_123-xyzW09q", true), ("U-AbCd_123-xyzW09", false), ("U-AbCd+123-xyzW09q", false),
     ("E-AbCd_123-xyzW09q", false), ("", false),

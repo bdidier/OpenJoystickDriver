@@ -36,7 +36,7 @@ Do not parse the human-readable output. It is translated, and it can change in e
 
 Commands take a `CONTROLLER` operand. Use one of these forms:
 
-- A unit ID, such as `U-` and 16 characters. It stays the same across reconnects and service restarts while the controller uses the same USB port. It changes when you connect the controller to a different port. Scripts can store it. A controller with no location ID has no unit ID.
+- A unit ID, such as `U-` and 16 characters. It stays the same across reconnects and service restarts while the controller uses the same USB port. It changes when you connect the controller to a different port, and every unit ID changes when the key file `~/Library/Application Support/OpenJoystickDriver/PortKeyInstallation.key` is replaced. Scripts can store it. A controller with no location ID has no unit ID.
 - `VVVV:PPPP`, the hexadecimal vendor and product ID. It names a controller model. When two connected controllers have the same model, the command fails and lists them.
 - An ID from `ojd controller list`, such as `E-` and 16 characters. It lasts only until the controller disconnects, so do not store it.
 

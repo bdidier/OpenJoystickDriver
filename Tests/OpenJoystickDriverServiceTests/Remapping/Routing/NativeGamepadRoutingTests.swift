@@ -1,3 +1,4 @@
+import OpenJoystickDriverTestSupport
 import Foundation
 import Testing
 
@@ -32,7 +33,10 @@ private final class NativePublicationProbe: VirtualOutputDispatching,
 struct NativeGamepadRoutingTests {
   @Test
   func automaticIdentityNeverPublishesForANativePad() async throws {
-    let manager = DeviceManager(dispatcher: LoggingOutputDispatcher())
+    let manager = DeviceManager(
+      dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey
+    )
     let identifier = try await Self.connect(native: true, to: manager, locationID: 181)
     let probe = NativePublicationProbe()
     let automatic = AutomaticUserSpaceOutputDispatcher(
@@ -58,7 +62,10 @@ struct NativeGamepadRoutingTests {
     let profile = Self.profile(policy: .systemInput)
     let harness = try await RemappingRouterHarness.make(profile: profile)
     defer { harness.removeFiles() }
-    let manager = DeviceManager(dispatcher: harness.router)
+    let manager = DeviceManager(
+      dispatcher: harness.router,
+      installationKey: testPortKeyInstallationKey
+    )
     _ = try await Self.connect(native: true, to: manager, locationID: 182)
 
     await Self.pressCross(on: manager, locationID: 182)
@@ -72,7 +79,10 @@ struct NativeGamepadRoutingTests {
   func noProfileMeansNoDispatchUntilAProfileIsSelected() async throws {
     let harness = try await RemappingRouterHarness.make()
     defer { harness.removeFiles() }
-    let manager = DeviceManager(dispatcher: harness.router)
+    let manager = DeviceManager(
+      dispatcher: harness.router,
+      installationKey: testPortKeyInstallationKey
+    )
     let identifier = try await Self.connect(native: true, to: manager, locationID: 184)
     #expect(!harness.router.wantsObservedInput(from: identifier))
 
@@ -93,7 +103,10 @@ struct NativeGamepadRoutingTests {
     let profile = Self.profile(policy: RemappingOutputPolicy(virtualGamepad: .mapped))
     let harness = try await RemappingRouterHarness.make(profile: profile)
     defer { harness.removeFiles() }
-    let manager = DeviceManager(dispatcher: harness.router)
+    let manager = DeviceManager(
+      dispatcher: harness.router,
+      installationKey: testPortKeyInstallationKey
+    )
     let identifier = try await Self.connect(native: true, to: manager, locationID: 183)
 
     await Self.pressCross(on: manager, locationID: 183)

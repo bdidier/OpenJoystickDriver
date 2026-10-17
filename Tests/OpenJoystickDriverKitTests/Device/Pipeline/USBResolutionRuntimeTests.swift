@@ -35,6 +35,7 @@ struct USBResolutionRuntimeTests {
     )
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       usbTransportProvider: provider
     )
 
@@ -85,6 +86,7 @@ struct USBResolutionRuntimeTests {
     )
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       usbTransportProvider: provider
     )
     let detection = Task { await manager.runUSBDetection() }
@@ -130,6 +132,7 @@ struct USBResolutionRuntimeTests {
     let provider = USBManagerResolutionProvider(device: original, resolvedProfile: .gipDefault)
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       usbTransportProvider: provider
     )
     let detection = Task { await manager.runUSBDetection() }
@@ -164,6 +167,7 @@ struct USBResolutionRuntimeTests {
     let provider = USBManagerResolutionProvider(device: device, resolvedProfile: .gipDefault)
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       usbTransportProvider: provider
     )
     let detection = Task { await manager.runUSBDetection() }
@@ -201,6 +205,7 @@ struct USBResolutionRuntimeTests {
     await provider.suspendResolutions()
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       usbTransportProvider: provider
     )
     let detection = Task { await manager.runUSBDetection() }

@@ -1,3 +1,4 @@
+import OpenJoystickDriverTestSupport
 import Foundation
 import Testing
 
@@ -44,6 +45,7 @@ struct HIDLifecycleWriteTests {
     ])
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     await manager.markStartedForTest()

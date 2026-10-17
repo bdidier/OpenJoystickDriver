@@ -1695,4 +1695,5 @@
 "error.E5003" = "A protocol description names a family that differs from its file name. Name the file after its family.";
 "error.E5004" = "A protocol description lists a variant that its family does not have. Use one of the variants of the family.";
 "error.E5005" = "The access file AccessGrants.json is damaged. Fix the file or delete it, then grant access again.";
+"error.E5006" = "The key file of the unit IDs, PortKeyInstallation.key, cannot be read or is not 32 bytes. Restore the file from a backup. If you delete it instead, OpenJoystickDriver creates a new key and every unit ID changes.";
 "error.withCode" = "%@ (%@)";

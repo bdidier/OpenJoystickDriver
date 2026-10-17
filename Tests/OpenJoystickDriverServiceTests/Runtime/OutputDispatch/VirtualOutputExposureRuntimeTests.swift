@@ -53,7 +53,10 @@ struct VirtualOutputExposureRuntimeTests {
     state.descriptions = [identifier: gipDescription()]
     let backend = ExposureBackendProbe()
     let dispatcher = AutomaticUserSpaceOutputDispatcher(
-      deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),
+      deviceManager: DeviceManager(
+        dispatcher: LoggingOutputDispatcher(),
+        installationKey: testPortKeyInstallationKey
+      ),
       ownershipProvider: { _ in state.ownership },
       builder: { _ in backend },
       descriptionsProvider: { state.descriptions }

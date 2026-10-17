@@ -1,3 +1,4 @@
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -10,7 +11,10 @@ struct USBStartupPlayerSlotTests {
 
   @Test
   func wiredXbox360ControllersOfOneModelTakeDistinctReusablePlayerSlots() async {
-    let manager = DeviceManager(dispatcher: LoggingOutputDispatcher())
+    let manager = DeviceManager(
+      dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey
+    )
     let first = Self.wiredPad(serviceID: 90)
     let second = Self.wiredPad(serviceID: 95)
     let third = Self.wiredPad(serviceID: 96)

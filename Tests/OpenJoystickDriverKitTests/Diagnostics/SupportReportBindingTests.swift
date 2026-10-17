@@ -1,3 +1,4 @@
+import OpenJoystickDriverTestSupport
 import Foundation
 import Testing
 
@@ -163,6 +164,7 @@ struct SupportReportBindingTests {
     )
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend),
       usbTransportProvider: provider
     )

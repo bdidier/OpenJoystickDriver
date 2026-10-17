@@ -14,6 +14,7 @@ extension StartupLifetimeTests {
     await backend.enableFeatureReports()
     let manager = DeviceManager(
       dispatcher: HIDRoleEventRecorder(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     await manager.markStartedForTest()

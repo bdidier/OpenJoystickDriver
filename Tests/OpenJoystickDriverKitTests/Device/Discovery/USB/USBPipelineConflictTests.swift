@@ -1,3 +1,4 @@
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -120,6 +121,7 @@ struct USBPipelineConflictTests {
     let provider = USBDiscoveryRecordingProvider(devices: [device])
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       usbTransportProvider: provider
     )
     let claimed = LogicalControllerID(
@@ -158,6 +160,7 @@ struct USBPipelineConflictTests {
     let provider = USBDiscoveryRecordingProvider(devices: [first, second])
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       usbTransportProvider: provider
     )
 

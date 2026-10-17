@@ -139,7 +139,10 @@ extension USBPipelineRecoveryTests {
     )
     await pipeline.activateForTesting()
     await pipeline.setUSBHandleForTesting(session)
-    let manager = DeviceManager(dispatcher: RecoveryOutputDispatcher())
+    let manager = DeviceManager(
+      dispatcher: RecoveryOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey
+    )
 
     await manager.neutralizePhysicalOutputs(for: identifier, pipeline: pipeline)
 
@@ -156,7 +159,10 @@ extension USBPipelineRecoveryTests {
       dispatcher: RecoveryOutputDispatcher()
     )
     await pipeline.setUSBHandleForTesting(session)
-    let manager = DeviceManager(dispatcher: RecoveryOutputDispatcher())
+    let manager = DeviceManager(
+      dispatcher: RecoveryOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey
+    )
     let owner = UUID()
     _ = await manager.setPhysicalOutputForTesting(
       .rumble(motor: .leftMain, intensity: 1),

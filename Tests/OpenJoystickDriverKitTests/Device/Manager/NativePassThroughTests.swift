@@ -1,3 +1,4 @@
+import OpenJoystickDriverTestSupport
 import Foundation
 import Testing
 
@@ -10,7 +11,11 @@ struct NativePassThroughTests {
     await backend.enableOutputReports()
     await backend.enableFeatureReports()
     let dispatcher = NativeEventRecorder()
-    let manager = DeviceManager(dispatcher: dispatcher, hidManager: HIDManager(backend: backend))
+    let manager = DeviceManager(
+      dispatcher: dispatcher,
+      installationKey: testPortKeyInstallationKey,
+      hidManager: HIDManager(backend: backend)
+    )
     await manager.markStartedForTest()
     let connection = Self.dualShock4Bluetooth(locationID: 70)
     await backend.setConnectionSnapshots([
@@ -77,6 +82,7 @@ struct NativePassThroughTests {
     let backend = ClaimRecordingHIDAccessBackend()
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     let connection = Self.connection(locationID: 71, nativePassThrough: true, binds: false)
@@ -104,6 +110,7 @@ struct NativePassThroughTests {
     let backend = ClaimRecordingHIDAccessBackend()
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     let bound = Self.connection(locationID: 74, nativePassThrough: false)
@@ -126,6 +133,7 @@ struct NativePassThroughTests {
     let backend = ClaimRecordingHIDAccessBackend()
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     let native = Self.connection(locationID: 75, nativePassThrough: true)
@@ -150,6 +158,7 @@ struct NativePassThroughTests {
   func nativeBindsWhenItCancelsASiblingInitializationAtItsLocation() async throws {
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: ClaimRecordingHIDAccessBackend())
     )
     let sibling = Self.connection(locationID: 79, nativePassThrough: false)
@@ -168,6 +177,7 @@ struct NativePassThroughTests {
     let backend = ClaimRecordingHIDAccessBackend()
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     let sibling = Self.connection(locationID: 78, nativePassThrough: false, binds: false)
@@ -205,6 +215,7 @@ struct NativePassThroughTests {
   func stopClearsPassThroughDevices() async {
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: ClaimRecordingHIDAccessBackend())
     )
     let connection = Self.connection(locationID: 72, nativePassThrough: true, binds: false)
@@ -220,6 +231,7 @@ struct NativePassThroughTests {
   func hidAccessFailureClearsPassThroughDevices() async {
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: ClaimRecordingHIDAccessBackend())
     )
     let connection = Self.connection(locationID: 73, nativePassThrough: true, binds: false)

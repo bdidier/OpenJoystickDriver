@@ -1,3 +1,4 @@
+import OpenJoystickDriverTestSupport
 import Foundation
 import Testing
 
@@ -9,6 +10,7 @@ struct UnboundHIDDeviceTests {
     let backend = ClaimRecordingHIDAccessBackend()
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     let connection = Self.connection(vendorID: 0x1234, productID: 0x5678, locationID: 90)
@@ -41,6 +43,7 @@ struct UnboundHIDDeviceTests {
     let backend = ClaimRecordingHIDAccessBackend()
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     let bound = Self.connection(
@@ -67,6 +70,7 @@ struct UnboundHIDDeviceTests {
   func stopClearsUnboundDevices() async {
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: ClaimRecordingHIDAccessBackend())
     )
     let connection = Self.connection(vendorID: 0x1234, productID: 0x5678, locationID: 92)
@@ -84,6 +88,7 @@ struct UnboundHIDDeviceTests {
     let backend = ClaimRecordingHIDAccessBackend()
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     let rejected = Self.connection(
@@ -116,6 +121,7 @@ struct UnboundHIDDeviceTests {
   func hidAccessFailureClearsUnboundHIDDevices() async {
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: ClaimRecordingHIDAccessBackend())
     )
     let connection = Self.connection(vendorID: 0x1234, productID: 0x5678, locationID: 93)

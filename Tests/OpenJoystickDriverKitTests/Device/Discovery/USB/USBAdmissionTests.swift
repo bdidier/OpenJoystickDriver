@@ -1,3 +1,4 @@
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -35,6 +36,7 @@ struct USBDetectionAdmissionTests {
     )
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       usbTransportProvider: provider
     )
 
@@ -63,6 +65,7 @@ struct USBDetectionAdmissionTests {
     )
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       usbTransportProvider: provider
     )
 
@@ -105,6 +108,7 @@ struct USBDetectionAdmissionTests {
     let provider = USBDiscoveryRecordingProvider(devices: [direct, driverKit])
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       usbTransportProvider: provider
     )
 
@@ -145,6 +149,7 @@ struct USBDetectionAdmissionTests {
     let provider = USBDiscoveryRecordingProvider(devices: [])
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       usbTransportProvider: provider
     )
 
@@ -173,6 +178,7 @@ struct USBDetectionAdmissionTests {
     let provider = USBDiscoveryRecordingProvider(devices: [replacement])
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       usbTransportProvider: provider
     )
 
@@ -254,6 +260,7 @@ struct USBDetectionAdmissionTests {
     let provider = USBDiscoveryRecordingProvider(devices: [device], physicalDevice: otherService)
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       usbTransportProvider: provider
     )
 
@@ -280,6 +287,7 @@ struct USBDetectionAdmissionTests {
     let provider = USBResolutionRaceProvider(device: device)
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       usbTransportProvider: provider
     )
 

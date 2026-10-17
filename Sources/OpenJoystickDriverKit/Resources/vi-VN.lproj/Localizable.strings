@@ -1692,4 +1692,5 @@
 "error.E5003" = "Mô tả giao thức nêu một họ khác với tên tệp. Đặt tên tệp theo họ của nó.";
 "error.E5004" = "Mô tả giao thức liệt kê một biến thể mà họ của nó không có. Hãy dùng một trong các biến thể của họ.";
 "error.E5005" = "Tệp truy cập AccessGrants.json bị hỏng. Hãy sửa hoặc xóa tệp, rồi cấp quyền truy cập lại.";
+"error.E5006" = "Không thể đọc tệp khóa của ID thiết bị, PortKeyInstallation.key, hoặc tệp không có kích thước 32 byte. Hãy khôi phục tệp từ bản sao lưu. Nếu bạn xóa tệp, OpenJoystickDriver sẽ tạo khóa mới và mọi ID thiết bị đều thay đổi.";
 "error.withCode" ="%@ (%@)";

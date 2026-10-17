@@ -1,3 +1,4 @@
+import CryptoKit
 import Foundation
 
 /// Revocable authority for power notifications delivered by one runtime start.
@@ -70,6 +71,8 @@ public actor DeviceManager {
 
   let protocolDriverRegistry: ProtocolDriverRegistry
   let dispatcher: any OutputDispatcher
+  /// The key under which each controller's port key is computed.
+  let installationKey: SymmetricKey
   let permissionManager: PermissionManager
   let hidManager: HIDManager
   let usbTransportProvider: (any USBTransportProvider)?
@@ -131,17 +134,20 @@ public actor DeviceManager {
   ///
   /// - Parameters:
   ///   - dispatcher: Output dispatcher for sending HID reports.
+  ///   - installationKey: The key under which port keys are computed.
   ///   - usbTransportProvider: Native raw-USB transport provider, or nil to disable raw USB
   ///     discovery.
   ///   - bluetoothLEHub: Switch 2 controllers connected over Bluetooth LE GATT, or nil to serve
   ///     IOHID devices only.
   public init(
     dispatcher: any OutputDispatcher,
+    installationKey: SymmetricKey,
     usbTransportProvider: (any USBTransportProvider)? = nil,
     wirelessControllerDisconnector: (any WirelessControllerDisconnecting)? = nil,
     bluetoothLEHub: Switch2BluetoothLEHub? = nil
   ) {
     self.dispatcher = dispatcher
+    self.installationKey = installationKey
     self.usbTransportProvider =
       bluetoothLEHub.map {
         BluetoothLECompositeUSBTransportProvider(base: usbTransportProvider, hub: $0)
@@ -157,8 +163,9 @@ public actor DeviceManager {
     )
   }
 
-  init(dispatcher: any OutputDispatcher, hidManager: HIDManager) {
+  init(dispatcher: any OutputDispatcher, installationKey: SymmetricKey, hidManager: HIDManager) {
     self.dispatcher = dispatcher
+    self.installationKey = installationKey
     self.usbTransportProvider = nil
     self.wirelessControllerDisconnector = nil
     self.protocolDriverRegistry = ProtocolDriverRegistry()
@@ -168,10 +175,12 @@ public actor DeviceManager {
 
   init(
     dispatcher: any OutputDispatcher,
+    installationKey: SymmetricKey,
     hidManager: HIDManager,
     usbTransportProvider: any USBTransportProvider
   ) {
     self.dispatcher = dispatcher
+    self.installationKey = installationKey
     self.usbTransportProvider = usbTransportProvider
     self.wirelessControllerDisconnector = nil
     self.protocolDriverRegistry = ProtocolDriverRegistry()

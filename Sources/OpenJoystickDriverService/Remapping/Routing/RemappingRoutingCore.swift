@@ -1,3 +1,4 @@
+import CryptoKit
 import Foundation
 import OpenJoystickDriverKit
 
@@ -14,6 +15,8 @@ actor RemappingRoutingCore {
   let foregroundApplication: any RemappingForegroundApplicationProviding
   let postEventAccess: any RemappingPostEventAccessProviding
   let operationCheckpoint: @Sendable (RemappingRoutingCheckpoint) async -> Void
+  /// The key under which the port keys of profile units are computed.
+  let installationKey: SymmetricKey
   var emissionBarrier: RemappingEmissionBarrier { engine.emissionBarrier }
   var controls = RemappingRoutingControls(outputSuppressed: false, revision: 0)
   var routes: [LogicalControllerID: RemappingControllerRoute] = [:] {
@@ -38,6 +41,7 @@ actor RemappingRoutingCore {
     virtualOutput: any OutputDispatcher,
     foregroundApplication: any RemappingForegroundApplicationProviding,
     postEventAccess: any RemappingPostEventAccessProviding,
+    installationKey: SymmetricKey,
     operationCheckpoint: @escaping @Sendable (RemappingRoutingCheckpoint) async -> Void
   ) {
     self.library = library
@@ -45,6 +49,7 @@ actor RemappingRoutingCore {
     self.virtualOutput = virtualOutput
     self.foregroundApplication = foregroundApplication
     self.postEventAccess = postEventAccess
+    self.installationKey = installationKey
     self.operationCheckpoint = operationCheckpoint
   }
 
@@ -180,7 +185,7 @@ actor RemappingRoutingCore {
           try await library.activeProfile(
             vendorID: vendorID,
             productID: productID,
-            unit: identifier.portKey?.rawValue,
+            unit: ControllerPortKey.of(identifier, installationKey: installationKey)?.rawValue,
             frontmostAppID: frontmostBundleID
           )
         )

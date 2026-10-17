@@ -256,6 +256,7 @@ struct USBPipelineRecoveryTests {
   ) -> DeviceManager {
     DeviceManager(
       dispatcher: dispatcher,
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: RecoveryHIDBackend()),
       usbTransportProvider: provider
     )

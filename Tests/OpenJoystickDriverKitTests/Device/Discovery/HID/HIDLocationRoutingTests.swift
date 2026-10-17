@@ -1,3 +1,4 @@
+import OpenJoystickDriverTestSupport
 import Foundation
 import Testing
 
@@ -13,7 +14,11 @@ struct HIDLocationRoutingTests {
     await backend.enableOutputReports()
     await backend.enableFeatureReports()
     let recorder = HIDRoleEventRecorder()
-    let manager = DeviceManager(dispatcher: recorder, hidManager: HIDManager(backend: backend))
+    let manager = DeviceManager(
+      dispatcher: recorder,
+      installationKey: testPortKeyInstallationKey,
+      hidManager: HIDManager(backend: backend)
+    )
     await manager.markStartedForTest()
     let first = Self.gameSir(interfaceNumber: 0)
     let second = Self.gameSir(interfaceNumber: 1)

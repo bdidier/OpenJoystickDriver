@@ -115,7 +115,11 @@ struct ReceiverSlotDiscoveryTests {
     }
     let provider = ReceiverSlotProvider(sessions: sessions)
     let dispatcher = ReceiverSlotDispatcher()
-    let manager = DeviceManager(dispatcher: dispatcher, usbTransportProvider: provider)
+    let manager = DeviceManager(
+      dispatcher: dispatcher,
+      installationKey: testPortKeyInstallationKey,
+      usbTransportProvider: provider
+    )
     let slot = ReceiverSlotProvider.identifier(interface: 2)
 
     #expect(
@@ -204,7 +208,7 @@ struct ReceiverSlotDiscoveryTests {
     )
     #expect(untokened.failure == .notFound)
     let slot = ReceiverSlotProvider.identifier(interface: 4)
-    let suspended = await manager.suspendController(.port(try #require(slot.portKey)))
+    let suspended = await manager.suspendController(.port(try #require(slot.testPortKey)))
     #expect(suspended.state == .suspended)
     for identifier in slotIdentifiers {
       let pipeline = try #require(await manager.pipelines[identifier])
@@ -247,6 +251,10 @@ struct ReceiverSlotDiscoveryTests {
   }
 
   private func makeManager(_ provider: ReceiverSlotProvider) -> DeviceManager {
-    DeviceManager(dispatcher: LoggingOutputDispatcher(), usbTransportProvider: provider)
+    DeviceManager(
+      dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
+      usbTransportProvider: provider
+    )
   }
 }

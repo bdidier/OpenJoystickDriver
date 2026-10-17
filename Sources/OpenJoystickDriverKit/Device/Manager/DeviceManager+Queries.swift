@@ -87,7 +87,7 @@ extension DeviceManager {
     return ConnectedDeviceSnapshot(
       logicalControllerID: id,
       sessionToken: info.sessionToken,
-      portKey: id.portKey,
+      portKey: ControllerPortKey.of(id, installationKey: installationKey),
       name: info.name,
       vendorID: id.model.vendorID,
       productID: id.model.productID,

@@ -1,3 +1,4 @@
+import CryptoKit
 import Foundation
 import OpenJoystickDriverKit
 import Security
@@ -15,6 +16,8 @@ public final class ApplicationServiceServer: @unchecked Sendable {
   let remappingProfileLibrary: RemappingProfileLibrary
   let remappingRouter: RemappingOutputRouter
   let postEventAccess: CoreGraphicsPostEventAccess
+  /// The key under which the port keys of connected controllers are computed.
+  let installationKey: SymmetricKey
   let remappingRequests: RemappingRequestCoordinator
   let virtualOutputTransitionCoordinator = VirtualOutputTransitionCoordinator()
   let virtualOutputTransitionTimeouts: VirtualOutputTransitionTimeouts
@@ -52,6 +55,7 @@ public final class ApplicationServiceServer: @unchecked Sendable {
     remappingProfileLibrary: RemappingProfileLibrary,
     remappingRouter: RemappingOutputRouter,
     postEventAccess: CoreGraphicsPostEventAccess,
+    installationKey: SymmetricKey,
     userSpaceDispatcherFactory: @escaping UserSpaceDispatcherFactory,
     virtualFeeds: VirtualFeedRegistry? = nil,
     connectedIdentifierProvider: (@Sendable () async -> [LogicalControllerID])? = nil,
@@ -67,6 +71,7 @@ public final class ApplicationServiceServer: @unchecked Sendable {
     self.remappingProfileLibrary = remappingProfileLibrary
     self.remappingRouter = remappingRouter
     self.postEventAccess = postEventAccess
+    self.installationKey = installationKey
     self.remappingRequests = RemappingRequestCoordinator(
       library: remappingProfileLibrary,
       router: remappingRouter,

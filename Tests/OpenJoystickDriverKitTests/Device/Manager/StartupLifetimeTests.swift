@@ -63,6 +63,7 @@ struct StartupLifetimeTests {
     let backend = ScriptedHIDAccessBackend()
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     let oldConnection = HIDDeviceConnection(
@@ -139,7 +140,10 @@ struct StartupLifetimeTests {
 
   @Test
   func immediateRemovalCancelsDelayedInitialization() async throws {
-    let manager = DeviceManager(dispatcher: LoggingOutputDispatcher())
+    let manager = DeviceManager(
+      dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey
+    )
     let connection = HIDDeviceConnection(
       physicalDevice: PhysicalDevice(
         vendorID: 0x057E,
@@ -163,7 +167,10 @@ struct StartupLifetimeTests {
 
   @Test
   func staleDetachDoesNotCancelANewerPendingConnectionAtTheSameRoute() async throws {
-    let manager = DeviceManager(dispatcher: LoggingOutputDispatcher())
+    let manager = DeviceManager(
+      dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey
+    )
     let oldConnection = hidConnection(
       id: "00000000-0000-0000-0000-000000000001",
       productName: "Old connection"
@@ -196,7 +203,10 @@ struct StartupLifetimeTests {
 
   @Test
   func staleDetachCannotTearDownTheCurrentReconnectedSnapshot() async throws {
-    let manager = DeviceManager(dispatcher: LoggingOutputDispatcher())
+    let manager = DeviceManager(
+      dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey
+    )
     let oldConnection = hidConnection(
       id: "00000000-0000-0000-0000-000000000003",
       productName: "Old connection"
@@ -227,7 +237,10 @@ struct StartupLifetimeTests {
 
   @Test
   func aReconnectKeepsTheLogicalControllerIDAndGetsANewSessionToken() async throws {
-    let manager = DeviceManager(dispatcher: LoggingOutputDispatcher())
+    let manager = DeviceManager(
+      dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey
+    )
     let connection = hidConnection(
       id: "00000000-0000-0000-0000-000000000006",
       productName: "Reconnecting controller"
@@ -247,7 +260,10 @@ struct StartupLifetimeTests {
 
   @Test
   func stopCancelsPermissionWatcherBeforeWaitingForHIDInitialization() async {
-    let manager = DeviceManager(dispatcher: LoggingOutputDispatcher())
+    let manager = DeviceManager(
+      dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey
+    )
     let permissionWatchGate = StartupTestGate()
     let initializationGate = StartupTestGate()
     let connection = hidConnection(

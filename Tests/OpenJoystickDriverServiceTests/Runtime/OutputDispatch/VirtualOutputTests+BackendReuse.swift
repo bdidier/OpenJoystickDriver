@@ -1,3 +1,4 @@
+import OpenJoystickDriverTestSupport
 import Foundation
 import OpenJoystickDriverKit
 import Testing
@@ -11,7 +12,10 @@ extension VirtualOutputTests {
     let second = LogicalControllerID(vendorID: 0x3537, productID: 0x1011)
     let probe = ConcurrentFactoryProbe()
     let dispatcher = AutomaticUserSpaceOutputDispatcher(
-      deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),
+      deviceManager: DeviceManager(
+        dispatcher: LoggingOutputDispatcher(),
+        installationKey: testPortKeyInstallationKey
+      ),
       ownershipProvider: { _ in .exclusiveRawUSB },
       builder: { _ in probe.make() },
       descriptionsProvider: provider([first, second])
@@ -29,7 +33,10 @@ extension VirtualOutputTests {
     let id = LogicalControllerID(vendorID: 0x3537, productID: 0x1010, locationID: 0x0013_0000)
     let log = AutomaticProfileLog()
     let dispatcher = AutomaticUserSpaceOutputDispatcher(
-      deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),
+      deviceManager: DeviceManager(
+        dispatcher: LoggingOutputDispatcher(),
+        installationKey: testPortKeyInstallationKey
+      ),
       ownershipProvider: { _ in .exclusiveRawUSB },
       builder: { log.record($0) },
       descriptionsProvider: provider([id])
@@ -49,7 +56,10 @@ extension VirtualOutputTests {
     let gate = DescriptionLookupGate()
     let probe = ConcurrentFactoryProbe()
     let dispatcher = AutomaticUserSpaceOutputDispatcher(
-      deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),
+      deviceManager: DeviceManager(
+        dispatcher: LoggingOutputDispatcher(),
+        installationKey: testPortKeyInstallationKey
+      ),
       ownershipProvider: { _ in .exclusiveRawUSB },
       builder: { _ in probe.make() },
       descriptionsProvider: {
@@ -76,7 +86,10 @@ extension VirtualOutputTests {
     let id = LogicalControllerID(vendorID: 0x045E, productID: 0x0B12)
     let log = AutomaticProfileLog()
     let dispatcher = AutomaticUserSpaceOutputDispatcher(
-      deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),
+      deviceManager: DeviceManager(
+        dispatcher: LoggingOutputDispatcher(),
+        installationKey: testPortKeyInstallationKey
+      ),
       ownershipProvider: { _ in .exclusiveRawUSB },
       builder: { log.record($0) },
       descriptionsProvider: provider([
@@ -94,7 +107,10 @@ extension VirtualOutputTests {
     let sony = LogicalControllerID(vendorID: 0x054C, productID: 0x09CC)
     let log = AutomaticProfileLog()
     let dispatcher = AutomaticUserSpaceOutputDispatcher(
-      deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),
+      deviceManager: DeviceManager(
+        dispatcher: LoggingOutputDispatcher(),
+        installationKey: testPortKeyInstallationKey
+      ),
       ownershipProvider: { _ in .exclusiveRawUSB },
       builder: { log.record($0) },
       descriptionsProvider: provider([
@@ -115,7 +131,10 @@ extension VirtualOutputTests {
     let id = LogicalControllerID(vendorID: 0x045E, productID: 0x0B12)
     let log = AutomaticProfileLog()
     let dispatcher = AutomaticUserSpaceOutputDispatcher(
-      deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),
+      deviceManager: DeviceManager(
+        dispatcher: LoggingOutputDispatcher(),
+        installationKey: testPortKeyInstallationKey
+      ),
       ownershipProvider: { _ in .exclusiveRawUSB },
       builder: { log.record($0) },
       descriptionsProvider: provider([
@@ -133,7 +152,10 @@ extension VirtualOutputTests {
     let id = LogicalControllerID(vendorID: 0x3537, productID: 0x1010)
     let probe = ConcurrentFactoryProbe()
     let dispatcher = AutomaticUserSpaceOutputDispatcher(
-      deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),
+      deviceManager: DeviceManager(
+        dispatcher: LoggingOutputDispatcher(),
+        installationKey: testPortKeyInstallationKey
+      ),
       ownershipProvider: { _ in .exclusiveRawUSB },
       builder: { _ in probe.make() },
       descriptionsProvider: provider([id])
@@ -155,7 +177,10 @@ extension VirtualOutputTests {
       let id = LogicalControllerID(vendorID: 0x3537, productID: 0x1010)
       let probe = ConcurrentFactoryProbe()
       let dispatcher = AutomaticUserSpaceOutputDispatcher(
-        deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),
+        deviceManager: DeviceManager(
+          dispatcher: LoggingOutputDispatcher(),
+          installationKey: testPortKeyInstallationKey
+        ),
         ownershipProvider: { _ in .exclusiveRawUSB },
         builder: { _ in probe.make() },
         descriptionsProvider: provider([id])

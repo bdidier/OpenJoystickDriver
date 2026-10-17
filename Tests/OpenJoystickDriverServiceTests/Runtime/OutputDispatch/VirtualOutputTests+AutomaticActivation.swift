@@ -29,7 +29,7 @@ extension VirtualOutputTests {
       discoverySource: .rawUSB,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
-      portKey: id.portKey
+      portKey: id.testPortKey
     )
   }
 
@@ -61,7 +61,10 @@ extension VirtualOutputTests {
     let created = AutomaticBackendBox()
     let descriptionsProvider = provider(identifiers)
     let dispatcher = AutomaticUserSpaceOutputDispatcher(
-      deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),
+      deviceManager: DeviceManager(
+        dispatcher: LoggingOutputDispatcher(),
+        installationKey: testPortKeyInstallationKey
+      ),
       ownershipProvider: { _ in .exclusiveRawUSB },
       builder: { _ in
         let backend = AutomaticBackendProbe()
@@ -89,7 +92,10 @@ extension VirtualOutputTests {
     let created = AutomaticBackendBox()
     let descriptionsProvider = provider(identifiers)
     let dispatcher = AutomaticUserSpaceOutputDispatcher(
-      deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),
+      deviceManager: DeviceManager(
+        dispatcher: LoggingOutputDispatcher(),
+        installationKey: testPortKeyInstallationKey
+      ),
       ownershipProvider: { _ in .exclusiveRawUSB },
       builder: { _ in
         let backend = AutomaticBackendProbe(failsActivation: created.created.count == 1)
@@ -116,7 +122,10 @@ extension VirtualOutputTests {
     let probe = ConcurrentFactoryProbe()
     probe.gate = DispatchSemaphore(value: 0)
     let dispatcher = AutomaticUserSpaceOutputDispatcher(
-      deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),
+      deviceManager: DeviceManager(
+        dispatcher: LoggingOutputDispatcher(),
+        installationKey: testPortKeyInstallationKey
+      ),
       ownershipProvider: { _ in .exclusiveRawUSB },
       builder: { _ in probe.make() },
       descriptionsProvider: provider([id])
@@ -144,7 +153,10 @@ extension VirtualOutputTests {
     probe.gate = DispatchSemaphore(value: 0)
     let dispatcher = AutomaticUserSpaceOutputDispatcher(
 
-      deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),
+      deviceManager: DeviceManager(
+        dispatcher: LoggingOutputDispatcher(),
+        installationKey: testPortKeyInstallationKey
+      ),
       ownershipProvider: { _ in .exclusiveRawUSB },
       builder: { _ in probe.make() },
       descriptionsProvider: provider([first, second])
@@ -171,7 +183,10 @@ extension VirtualOutputTests {
     let probe = ConcurrentFactoryProbe()
     probe.gate = DispatchSemaphore(value: 0)
     let dispatcher = AutomaticUserSpaceOutputDispatcher(
-      deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),
+      deviceManager: DeviceManager(
+        dispatcher: LoggingOutputDispatcher(),
+        installationKey: testPortKeyInstallationKey
+      ),
       ownershipProvider: { _ in .exclusiveRawUSB },
       builder: { _ in probe.make() },
       descriptionsProvider: provider([id])
@@ -200,7 +215,10 @@ extension VirtualOutputTests {
     let probe = ConcurrentFactoryProbe()
     probe.gate = DispatchSemaphore(value: 0)
     let dispatcher = AutomaticUserSpaceOutputDispatcher(
-      deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),
+      deviceManager: DeviceManager(
+        dispatcher: LoggingOutputDispatcher(),
+        installationKey: testPortKeyInstallationKey
+      ),
       ownershipProvider: { _ in .exclusiveRawUSB },
       builder: { _ in probe.make() },
       descriptionsProvider: provider([id])
@@ -234,7 +252,10 @@ extension VirtualOutputTests {
     let id = LogicalControllerID(vendorID: 0x3537, productID: 0x1010)
     let probe = ConcurrentFactoryProbe()
     let dispatcher = AutomaticUserSpaceOutputDispatcher(
-      deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),
+      deviceManager: DeviceManager(
+        dispatcher: LoggingOutputDispatcher(),
+        installationKey: testPortKeyInstallationKey
+      ),
       ownershipProvider: { _ in .exclusiveRawUSB },
       builder: { _ in probe.make() },
       descriptionsProvider: provider([id])

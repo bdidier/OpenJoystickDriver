@@ -1692,4 +1692,5 @@
 "error.E5003" = "Uma descrição de protocolo indica uma família diferente do nome do arquivo. Dê ao arquivo o nome da sua família.";
 "error.E5004" = "Uma descrição de protocolo lista uma variante que a família não tem. Use uma das variantes da família.";
 "error.E5005" = "O arquivo de acesso AccessGrants.json está danificado. Corrija o arquivo ou exclua-o e conceda o acesso novamente.";
+"error.E5006" = "Não é possível ler o arquivo de chave dos IDs da Unidade, PortKeyInstallation.key, ou ele não tem 32 bytes. Restaure o arquivo a partir de um backup. Se você o apagar, o OpenJoystickDriver cria uma nova chave e todos os IDs da Unidade mudam.";
 "error.withCode" ="%@ (%@)";

@@ -1,3 +1,4 @@
+import OpenJoystickDriverTestSupport
 import Foundation
 import IOKit
 import Testing
@@ -96,6 +97,7 @@ struct ControllerSessionTests {
     let probe = WirelessDisconnectProbe(outcome: outcome)
     let manager = DeviceManager(
       dispatcher: ControllerSessionOutputProbe(),
+      installationKey: testPortKeyInstallationKey,
       wirelessControllerDisconnector: probe
     )
     await manager.handleHIDEvent(
@@ -148,6 +150,7 @@ struct ControllerSessionTests {
     let probe = WirelessDisconnectProbe(outcome: .disconnected)
     let manager = DeviceManager(
       dispatcher: ControllerSessionOutputProbe(),
+      installationKey: testPortKeyInstallationKey,
       wirelessControllerDisconnector: probe
     )
     await manager.handleHIDEvent(
@@ -211,7 +214,10 @@ struct ControllerSessionTests {
 
   @Test
   func suspendedControllersRemainInInventoryButAreNotVirtualOutputTargets() async throws {
-    let manager = DeviceManager(dispatcher: ControllerSessionOutputProbe())
+    let manager = DeviceManager(
+      dispatcher: ControllerSessionOutputProbe(),
+      installationKey: testPortKeyInstallationKey
+    )
     await manager.handleHIDEvent(
       .connected(
         connection: HIDDeviceConnection(
@@ -242,6 +248,7 @@ struct ControllerSessionTests {
   func delayedPowerEventFromStoppedSessionCannotMutateRestartedManager() async {
     let manager = DeviceManager(
       dispatcher: ControllerSessionOutputProbe(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: RecoveryHIDBackend())
     )
     let stoppedSession = DeviceManagerSystemPowerEventSession()

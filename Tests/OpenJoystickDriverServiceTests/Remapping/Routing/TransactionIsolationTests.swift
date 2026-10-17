@@ -262,6 +262,7 @@ private struct TransactionIsolationHarness {
       virtualOutput: RemappingRouterVirtualOutput(recorder: recorder),
       foregroundApplication: RemappingRouterForeground("com.example.Game"),
       postEventAccess: access,
+      installationKey: testPortKeyInstallationKey,
       tickerIntervalNanoseconds: nil
     ) { 1_000_000_000 }
     return Self(

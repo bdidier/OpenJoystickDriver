@@ -1,3 +1,4 @@
+import OpenJoystickDriverTestSupport
 import Foundation
 import Testing
 
@@ -15,7 +16,10 @@ struct OwnershipObservationTests {
 
   @Test(arguments: [true, false])
   func missingHIDIdentifiersAreSkippedWithoutInventingZero(_ missingVendorID: Bool) async {
-    let manager = DeviceManager(dispatcher: LoggingOutputDispatcher())
+    let manager = DeviceManager(
+      dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey
+    )
     let physicalDevice = PhysicalDevice(
       vendorID: missingVendorID ? nil : 0x1234,
       productID: missingVendorID ? 0x5678 : nil,
@@ -41,7 +45,7 @@ struct OwnershipObservationTests {
   @Test
   func ownershipLossStopsOutputAndReacquisitionUsesFreshState() async throws {
     let dispatcher = OwnershipOutputRecorder()
-    let manager = DeviceManager(dispatcher: dispatcher)
+    let manager = DeviceManager(dispatcher: dispatcher, installationKey: testPortKeyInstallationKey)
     let identifier = LogicalControllerID(vendorID: 0x1234, productID: 0x5678, locationID: 77)
     let physicalDevice = PhysicalDevice(
       vendorID: identifier.model.vendorID,
@@ -121,7 +125,7 @@ struct OwnershipObservationTests {
   @Test
   func competingOwnerIsVisibleWithoutStartingOrPublishingThePipeline() async throws {
     let dispatcher = OwnershipOutputRecorder()
-    let manager = DeviceManager(dispatcher: dispatcher)
+    let manager = DeviceManager(dispatcher: dispatcher, installationKey: testPortKeyInstallationKey)
     let identifier = LogicalControllerID(vendorID: 0x1234, productID: 0x5678, locationID: 77)
     await manager.handleHIDEvent(
       .connected(
@@ -154,7 +158,11 @@ struct OwnershipObservationTests {
   ) async throws {
     let backend = ClaimRecordingHIDAccessBackend()
     let dispatcher = OwnershipOutputRecorder()
-    let manager = DeviceManager(dispatcher: dispatcher, hidManager: HIDManager(backend: backend))
+    let manager = DeviceManager(
+      dispatcher: dispatcher,
+      installationKey: testPortKeyInstallationKey,
+      hidManager: HIDManager(backend: backend)
+    )
     let identifier = LogicalControllerID(vendorID: 0x1234, productID: 0x5678, locationID: 77)
     let connection = HIDDeviceConnection(
       physicalDevice: PhysicalDevice(
@@ -192,7 +200,10 @@ struct OwnershipObservationTests {
 
   @Test
   func exclusiveHIDOwnershipIsReportedByTheLiveManagerAndPayload() async throws {
-    let manager = DeviceManager(dispatcher: LoggingOutputDispatcher())
+    let manager = DeviceManager(
+      dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey
+    )
     let identifier = LogicalControllerID(vendorID: 0x1234, productID: 0x5678, locationID: 77)
     let connection = HIDDeviceConnection(
       physicalDevice: PhysicalDevice(
@@ -289,7 +300,10 @@ struct OwnershipObservationTests {
 
   @Test
   func missingDeviceLookupIsUnknown() async {
-    let manager = DeviceManager(dispatcher: LoggingOutputDispatcher())
+    let manager = DeviceManager(
+      dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey
+    )
     let identifier = LogicalControllerID(vendorID: 0x1234, productID: 0x5678)
 
     #expect(await manager.ownershipObservation(for: identifier) == .unknown)

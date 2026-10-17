@@ -1,3 +1,4 @@
+import OpenJoystickDriverTestSupport
 import Foundation
 import ProtocolPacketFixtures
 import Testing
@@ -41,6 +42,7 @@ extension DriverLifecycleCharacterizationTests {
     ])
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     await manager.markStartedForTest()

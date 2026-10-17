@@ -137,15 +137,20 @@ struct VirtualOutputTransitionFixture {
       engine: RemappingEventEngine(sink: CoreGraphicsSystemInputSink(access: postEventAccess)),
       virtualOutput: virtualOutputDispatcher,
       foregroundApplication: WorkspaceRemappingForegroundApplication(),
-      postEventAccess: postEventAccess
+      postEventAccess: postEventAccess,
+      installationKey: testPortKeyInstallationKey
     )
     server = ApplicationServiceServer(
-      deviceManager: DeviceManager(dispatcher: remappingRouter),
+      deviceManager: DeviceManager(
+        dispatcher: remappingRouter,
+        installationKey: testPortKeyInstallationKey
+      ),
       permissionManager: PermissionManager(),
       dispatcher: virtualOutputDispatcher,
       remappingProfileLibrary: profileLibrary,
       remappingRouter: remappingRouter,
       postEventAccess: postEventAccess,
+      installationKey: testPortKeyInstallationKey,
       userSpaceDispatcherFactory: { _ in try factory.make() },
       connectedIdentifierProvider: { identifiers },
       virtualOutputTransitionTimeouts: timeouts,

@@ -1,3 +1,4 @@
+import OpenJoystickDriverTestSupport
 import Foundation
 import OpenJoystickDriverKit
 import Testing
@@ -36,18 +37,26 @@ extension VirtualOutputTests {
       engine: RemappingEventEngine(sink: CoreGraphicsSystemInputSink(access: postEventAccess)),
       virtualOutput: dispatcher,
       foregroundApplication: WorkspaceRemappingForegroundApplication(),
-      postEventAccess: postEventAccess
+      postEventAccess: postEventAccess,
+      installationKey: testPortKeyInstallationKey
     )
     let server = ApplicationServiceServer(
-      deviceManager: DeviceManager(dispatcher: remappingRouter),
+      deviceManager: DeviceManager(
+        dispatcher: remappingRouter,
+        installationKey: testPortKeyInstallationKey
+      ),
       permissionManager: PermissionManager(),
       dispatcher: dispatcher,
       remappingProfileLibrary: profileLibrary,
       remappingRouter: remappingRouter,
       postEventAccess: postEventAccess,
+      installationKey: testPortKeyInstallationKey,
       userSpaceDispatcherFactory: { _ in
         AutomaticUserSpaceOutputDispatcher(
-          deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),
+          deviceManager: DeviceManager(
+            dispatcher: LoggingOutputDispatcher(),
+            installationKey: testPortKeyInstallationKey
+          ),
           ownershipProvider: { _ in .exclusiveRawUSB },
           builder: { profile in
             let backend = RetargetBackendProbe(

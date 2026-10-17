@@ -8,7 +8,10 @@ import Testing
 extension StartupLifetimeTests {
   @Test
   func stoppedAndReplacedPipelinesCannotContinueStartup() async throws {
-    let manager = DeviceManager(dispatcher: LoggingOutputDispatcher())
+    let manager = DeviceManager(
+      dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey
+    )
     let identifier = LogicalControllerID(vendorID: 0x1234, productID: 0x5678, locationID: 81)
     let connection = HIDDeviceConnection(
       physicalDevice: PhysicalDevice(
@@ -54,7 +57,7 @@ extension StartupLifetimeTests {
   @Test
   func staleStartupDoesNotReplaceTheReconnectHeartbeatTask() async throws {
     let dispatcher = GatedStartupOutputDispatcher()
-    let manager = DeviceManager(dispatcher: dispatcher)
+    let manager = DeviceManager(dispatcher: dispatcher, installationKey: testPortKeyInstallationKey)
     let firstConnection = gameSirConnection(
       id: "00000000-0000-0000-0000-000000000011",
       productName: "First GameSir connection"
@@ -266,6 +269,7 @@ extension StartupLifetimeTests {
     let backend = ScriptedHIDAccessBackend()
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     let oldConnection = hidConnection(

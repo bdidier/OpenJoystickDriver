@@ -33,6 +33,7 @@ struct DeviceManagerFrameTimingsTests {
     await backend.enableFeatureReports()
     let manager = DeviceManager(
       dispatcher: PublishedFrameDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     await manager.markStartedForTest()

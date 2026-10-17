@@ -1,3 +1,4 @@
+import OpenJoystickDriverTestSupport
 import Foundation
 import Testing
 
@@ -78,7 +79,10 @@ struct LogicalControllerIDTests {
       ),
       routingAddress: .ioKit(locationID: 0x5A00_0000, interfaceNumber: nil)
     )
-    let manager = DeviceManager(dispatcher: LoggingOutputDispatcher())
+    let manager = DeviceManager(
+      dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey
+    )
     let bluetooth = try #require(
       await manager.hidIdentifier(for: bluetoothConnection, role: .location)
     )
@@ -123,8 +127,8 @@ struct LogicalControllerIDTests {
     let unspecified = LogicalControllerID(vendorID: 0x045E, productID: 0x0719, locationID: 7)
 
     #expect(Set([slot0, slot1, unspecified]).count == 3)
-    #expect(slot0.portKey != slot1.portKey)
-    #expect(slot0.portKey != unspecified.portKey)
+    #expect(slot0.testPortKey != slot1.testPortKey)
+    #expect(slot0.testPortKey != unspecified.testPortKey)
     #expect(
       UserSpaceVirtualDeviceConstants.serialNumber(for: slot0)
         != UserSpaceVirtualDeviceConstants.serialNumber(for: slot1)

@@ -82,6 +82,7 @@ struct OwnershipSuspensionTests {
     let backend = ReplacingHIDBackend(scripted)
     let manager = DeviceManager(
       dispatcher: HIDRoleEventRecorder(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     await manager.markStartedForTest()

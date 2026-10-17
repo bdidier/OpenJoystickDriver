@@ -4,21 +4,14 @@ import Foundation
 /// The stable, user-facing slot of one controller: its model, the USB port it is plugged into,
 /// and the interface it is reached through.
 ///
-/// A port key is `U-` and an HMAC of `vid:pid:locationID:interface` under a key that is created
-/// once per installation and kept in the service's defaults. It stays the same across reconnects
-/// and service restarts while the controller uses the same port, and changes when it moves to
-/// another port. It never includes the serial number. A controller with no location ID has no
-/// port key.
+/// A port key is `U-` and an HMAC of `vid:pid:locationID:interface` under the installation key,
+/// which the service loads from its private file `PortKeyInstallation.key` in the application data
+/// directory (see ``PortKeyInstallationStore``). It stays the same across reconnects and service
+/// restarts while the controller uses the same port, and changes when it moves to another port.
+/// It never includes the serial number. A controller with no location ID has no port key.
 public struct ControllerPortKey: Hashable, Sendable {
-  /// The defaults key that holds the installation's 32-byte key.
-  public static let installationKeyDefaultsKey = "ControllerPortKeyInstallationKey"
   /// The prefix of every port key.
   static let prefix = "U-"
-
-  /// Swift initializes a static `let` once, on first use, so concurrent first calls share it.
-  private static let installationKey = installationKey(in: .standard)
-  // Output routing and profile selection ask for port keys repeatedly, and each is an HMAC.
-  private static let cachedKeys = Locked<[LogicalControllerID: Self?]>([:])
 
   /// The text form: `U-` and 16 base64url characters.
   public let rawValue: String
@@ -27,14 +20,6 @@ public struct ControllerPortKey: Hashable, Sendable {
   public init?(rawValue text: String) {
     guard PrefixedIdentifierText.isWellFormed(text, prefix: Self.prefix) else { return nil }
     rawValue = text
-  }
-
-  /// The port key of `controller` under the installation key; nil without a location ID.
-  public static func of(_ controller: LogicalControllerID) -> Self? {
-    if let cached = cachedKeys.withLock({ $0[controller] }) { return cached }
-    let portKey = of(controller, installationKey: installationKey)
-    cachedKeys.withLock { $0[controller] = portKey }
-    return portKey
   }
 
   /// The port key of `controller` under `installationKey`; nil without a location ID.
@@ -54,17 +39,6 @@ public struct ControllerPortKey: Hashable, Sendable {
     )
     let digest = HMAC<SHA256>.authenticationCode(for: Data(preimage.utf8), using: installationKey)
     return Self(rawValue: PrefixedIdentifierText.make(prefix: prefix, bytes: digest))
-  }
-
-  /// The installation key stored in `defaults`, created and stored there when it is absent or
-  /// malformed.
-  public static func installationKey(in defaults: UserDefaults) -> SymmetricKey {
-    if let data = defaults.data(forKey: installationKeyDefaultsKey), data.count == 32 {
-      return SymmetricKey(data: data)
-    }
-    let key = SymmetricKey(size: .bits256)
-    defaults.set(key.withUnsafeBytes { Data($0) }, forKey: installationKeyDefaultsKey)
-    return key
   }
 }
 
@@ -92,9 +66,4 @@ extension ControllerPortKey: Codable {
 extension ControllerPortKey: CustomStringConvertible {
   /// The text form.
   public var description: String { rawValue }
-}
-
-extension LogicalControllerID {
-  /// The port key of this controller; nil without a location ID. See ``ControllerPortKey``.
-  public var portKey: ControllerPortKey? { ControllerPortKey.of(self) }
 }

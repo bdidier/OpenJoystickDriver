@@ -17,7 +17,7 @@ extension VirtualOutputTests {
 
     let set = await fixture.change(
       .set("SdlCompatible"),
-      controller: .port(try #require(first.portKey)),
+      controller: .port(try #require(first.testPortKey)),
       unit: true
     )
 
@@ -26,13 +26,13 @@ extension VirtualOutputTests {
     #expect(live(second) == .generic)
     #expect(fixture.store.override(vendorID: 1, productID: 2) == nil)
     #expect(
-      fixture.store.override(vendorID: 1, productID: 2, unit: first.portKey?.rawValue)
+      fixture.store.override(vendorID: 1, productID: 2, unit: first.testPortKey?.rawValue)
         == .sdlCompatible
     )
 
     let reset = await fixture.change(
       .reset,
-      controller: .port(try #require(first.portKey)),
+      controller: .port(try #require(first.testPortKey)),
       unit: true
     )
 

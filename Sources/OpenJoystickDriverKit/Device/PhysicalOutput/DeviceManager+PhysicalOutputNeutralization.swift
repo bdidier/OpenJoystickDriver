@@ -61,7 +61,11 @@ extension DeviceManager {
   package func connectedControllers() -> [ConnectedController] {
     pipelines.keys.sorted().compactMap { identifier in
       deviceInfos[identifier].map {
-        ConnectedController(logicalControllerID: identifier, sessionToken: $0.sessionToken)
+        ConnectedController(
+          logicalControllerID: identifier,
+          sessionToken: $0.sessionToken,
+          installationKey: installationKey
+        )
       }
     }
   }

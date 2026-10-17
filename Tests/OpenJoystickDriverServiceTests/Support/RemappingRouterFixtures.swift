@@ -271,6 +271,7 @@ struct RemappingRouterHarness {
       virtualOutput: virtualOutput,
       foregroundApplication: foreground,
       postEventAccess: access,
+      installationKey: testPortKeyInstallationKey,
       tickerIntervalNanoseconds: tickerIntervalNanoseconds,
       uptime: uptime,
       tickerSleeper: { try await tickerSleeper($0) },
@@ -337,7 +338,13 @@ func remappingRouterConnectedControllers() -> [ConnectedController] {
     remappingRouterDevice(2),
     remappingRouterDevice(1, vendorID: 0x057E, productID: 0x2006),
     remappingRouterDevice(2, vendorID: 0x057E, productID: 0x2007),
-  ].map { ConnectedController(logicalControllerID: $0, sessionToken: remappingRouterToken($0)) }
+  ].map {
+    ConnectedController(
+      logicalControllerID: $0,
+      sessionToken: remappingRouterToken($0),
+      installationKey: testPortKeyInstallationKey
+    )
+  }
 }
 
 func remappingRouterProfile(

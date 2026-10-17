@@ -16,7 +16,11 @@ struct SteamHIDRoleTests {
     let backend = ScriptedHIDAccessBackend()
     await backend.enableFeatureReports()
     let recorder = HIDRoleEventRecorder()
-    let manager = DeviceManager(dispatcher: recorder, hidManager: HIDManager(backend: backend))
+    let manager = DeviceManager(
+      dispatcher: recorder,
+      installationKey: testPortKeyInstallationKey,
+      hidManager: HIDManager(backend: backend)
+    )
     await manager.markStartedForTest()
     let connections = (0...4).map { Self.dongle(interface: $0) }
     await backend.setConnectionSnapshots(
@@ -85,6 +89,7 @@ struct SteamHIDRoleTests {
     let backend = ClaimRecordingHIDAccessBackend()
     let manager = DeviceManager(
       dispatcher: LoggingOutputDispatcher(),
+      installationKey: testPortKeyInstallationKey,
       hidManager: HIDManager(backend: backend)
     )
     let location: UInt32 = 0x0032_0000

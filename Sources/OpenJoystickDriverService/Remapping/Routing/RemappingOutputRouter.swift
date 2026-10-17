@@ -1,3 +1,4 @@
+import CryptoKit
 import Dispatch
 import Foundation
 import OpenJoystickDriverKit
@@ -37,6 +38,7 @@ final class RemappingOutputRouter: OutputDispatcher, ControllerLifecycleListener
     virtualOutput: any OutputDispatcher,
     foregroundApplication: any RemappingForegroundApplicationProviding,
     postEventAccess: any RemappingPostEventAccessProviding,
+    installationKey: SymmetricKey,
     tickerIntervalNanoseconds: UInt64? = 8_000_000,
     uptime: @escaping UptimeReader = { DispatchTime.now().uptimeNanoseconds },
     tickerSleeper: @escaping TickerSleeper = { try await Task.sleep(nanoseconds: $0) },
@@ -53,6 +55,7 @@ final class RemappingOutputRouter: OutputDispatcher, ControllerLifecycleListener
       virtualOutput: virtualOutput,
       foregroundApplication: foregroundApplication,
       postEventAccess: postEventAccess,
+      installationKey: installationKey,
       operationCheckpoint: operationCheckpoint
     )
   }

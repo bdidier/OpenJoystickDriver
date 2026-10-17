@@ -1,3 +1,4 @@
+import OpenJoystickDriverTestSupport
 import Foundation
 import OpenJoystickDriverKit
 import Testing
@@ -17,7 +18,10 @@ extension VirtualOutputTests {
     let overrideProvider: @Sendable (ApplicationServiceDeviceDescription) -> VirtualHIDProfileID? =
       { overrides.profile(for: $0) }
     return AutomaticUserSpaceOutputDispatcher(
-      deviceManager: DeviceManager(dispatcher: LoggingOutputDispatcher()),
+      deviceManager: DeviceManager(
+        dispatcher: LoggingOutputDispatcher(),
+        installationKey: testPortKeyInstallationKey
+      ),
       ownershipProvider: { _ in .exclusiveRawUSB },
       builder: { profile in
         if let failure, failure.0 == profile, failure.1 == .build { throw BuildFailure() }
