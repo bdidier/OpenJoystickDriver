@@ -24,15 +24,15 @@ struct DataDirectoryTests {
   func macOSDirectoryKeepsTheShippedLocations() {
     let directory = MacOSDataDirectory()
     let home = FileManager.default.homeDirectoryForCurrentUser.path
-    #expect(directory.url(for: .applicationData).path.hasSuffix("/OpenJoystickDriver"))
+    #expect(
+      directory.url(for: .applicationData).path
+        == home + "/Library/Application Support/OpenJoystickDriver"
+    )
+    #expect(directory.url(for: .cache).path == home + "/Library/Caches/OpenJoystickDriver")
     #expect(directory.url(for: .logs).path == home + "/Library/Logs/OpenJoystickDriver")
     #expect(directory.url(for: .home).path == home)
     #expect(directory.url(for: .sharedTemporary).path == "/tmp")
     #expect(directory.url(for: .runtime).path.hasPrefix("/var/folders/"))
-    #expect(
-      directory.url(for: .applicationData).deletingLastPathComponent().path
-        == home + "/Library/Application Support"
-    )
     #expect(
       ControllerRecordSet.userDirectory
         == directory.url(for: .applicationData).appendingPathComponent("Controllers")

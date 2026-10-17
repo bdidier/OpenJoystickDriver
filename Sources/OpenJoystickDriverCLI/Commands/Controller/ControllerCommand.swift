@@ -169,7 +169,7 @@ struct ControllerShowCommand: AsyncParsableCommand {
     rows.append(["record", detail.record?.layer ?? "none", detail.record?.file ?? ""])
     if let tuning = detail.tuning { rows.append(["tuning"] + tuning.rows) }
     if let virtual = detail.virtual {
-      rows.append(["virtual-profile", virtual.profile ?? "", virtual.source ?? ""])
+      rows.append(["virtual-profile", virtual.profile ?? "", virtual.source?.rawValue ?? ""])
     }
     if let publication = detail.publication {
       rows.append(["publication", publication.state, publication.reason ?? ""])
@@ -296,7 +296,7 @@ struct ControllerShowCommand: AsyncParsableCommand {
       rows.append(
         (
           CLILocalized.text("cli.controller.show.label.virtual"),
-          virtual.profile.map { "\($0) (\(virtual.source ?? ""))" } ?? none
+          virtual.profile.map { "\($0) (\(virtual.source?.rawValue ?? ""))" } ?? none
         )
       )
     }

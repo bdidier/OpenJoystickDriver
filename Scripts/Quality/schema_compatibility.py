@@ -16,7 +16,7 @@ from __future__ import annotations
 import json
 import plistlib
 import subprocess
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any, NamedTuple
 
 ROOT_SCHEMA = "cli-output.schema.json"
@@ -38,9 +38,26 @@ def git(root: Path, *args: str) -> str:
     ).stdout
 
 
-def last_release_tag(root: Path) -> str:
+def last_release_tag(root: Path) -> str | None:
+    """The newest release tag before HEAD, or None when HEAD has no parent or no release tag
+    precedes it. Any other git failure raises `CalledProcessError`."""
     # Starting at HEAD^ skips a tag on HEAD, so a release commit is compared with the release
-    # before it.
+    # before it. `rev-parse --verify --quiet` exits 1 only when the commit does not exist.
+    parent = subprocess.run(
+        ["git", "rev-parse", "--verify", "--quiet", "HEAD^"],
+        check=False,
+        cwd=root,
+        capture_output=True,
+        text=True,
+    )
+    if parent.returncode == 1:
+        return None
+    if parent.returncode != 0:
+        raise subprocess.CalledProcessError(
+            parent.returncode, parent.args, parent.stdout, parent.stderr
+        )
+    if not git(root, "tag", "--list", "[0-9]*", "--merged", "HEAD^").strip():
+        return None
     return git(
         root, "describe", "--tags", "--abbrev=0", "--match", "[0-9]*", "HEAD^"
     ).strip()
@@ -48,10 +65,10 @@ def last_release_tag(root: Path) -> str:
 
 def documents_at(root: Path, tag: str) -> Documents | None:
     """The schema documents at `tag`, or None when `tag` has no `cli-output.schema.json`."""
-    try:
-        names = git(root, "ls-tree", "--name-only", f"{tag}:{SCHEMA_DIRECTORY}").split()
-    except subprocess.CalledProcessError:
-        return None
+    # With a trailing slash, `ls-tree` lists the directory's entries, and prints nothing when
+    # the directory is absent.
+    paths = git(root, "ls-tree", "--name-only", tag, "--", f"{SCHEMA_DIRECTORY}/")
+    names = [PurePosixPath(path).name for path in paths.splitlines()]
     if ROOT_SCHEMA not in names:
         return None
     return {
@@ -262,6 +279,8 @@ def check(root: Path, current: Documents) -> str:
     Raises `IncompatibleSchemaError` when a change breaks readers of the release's output.
     """
     tag = last_release_tag(root)
+    if tag is None:
+        return "No release tag precedes HEAD, so no release output to stay compatible with."
     with (root / INFO_PLIST).open("rb") as source:
         version = str(plistlib.load(source)["CFBundleShortVersionString"])
     if major_version(version) != major_version(tag):

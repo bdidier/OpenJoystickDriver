@@ -14,14 +14,24 @@ struct AccessGrantStoreErrorTests {
     var testDescription: String { code.rawValue }
   }
 
-  private static let problem = OpenJoystickDriverAPI.headerProblem(
+  private static let versionProblem = OpenJoystickDriverAPI.headerProblem(
     apiVersion: "x",
+    kind: "AccessGrants",
+    expected: "AccessGrants"
+  )!
+  private static let kindProblem = OpenJoystickDriverAPI.headerProblem(
+    apiVersion: OpenJoystickDriverAPI.version,
     kind: "X",
     expected: "AccessGrants"
   )!
 
   static let cases: [Case] = [
-    Case(error: .unsupported(problem), code: .unsupportedAccessGrants, detail: problem.description),
+    Case(
+      error: .unsupported(versionProblem),
+      code: .unsupportedAPIVersion,
+      detail: versionProblem.message
+    ),
+    Case(error: .unsupported(kindProblem), code: .damagedAccessGrants, detail: kindProblem.message),
     Case(error: .unknownClient("a1b2c3d4"), code: .unknownAccessClient, detail: "a1b2c3d4"),
     Case(error: .notGrantable(.adHoc), code: .ungrantableClient, detail: "adHoc"),
     Case(error: .noScope, code: .noAccessScope, detail: nil),
@@ -44,7 +54,7 @@ struct AccessGrantStoreErrorTests {
 
   @Test
   func everyErrorCaseHasItsOwnCode() {
-    let codes = Self.cases.map(\.code) + [.damagedAccessGrants]
+    let codes = Self.cases.map(\.code)
     #expect(Set(codes).count == codes.count)
   }
 }

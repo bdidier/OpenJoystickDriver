@@ -88,7 +88,7 @@ extension VirtualOutputTests {
         == VirtualHIDProfileOverrideResult(
           requested: .sdlCompatible,
           live: .sdlCompatible,
-          source: "override",
+          source: .override,
           failure: nil
         )
     )
@@ -109,7 +109,7 @@ extension VirtualOutputTests {
         == VirtualHIDProfileOverrideResult(
           requested: nil,
           live: .generic,
-          source: "automatic",
+          source: .automatic,
           failure: nil
         )
     )
@@ -162,7 +162,7 @@ extension VirtualOutputTests {
         == VirtualHIDProfileOverrideResult(
           requested: .sdlCompatible,
           live: nil,
-          source: "override",
+          source: .override,
           failure: .outputDisabled
         )
     )
@@ -199,7 +199,7 @@ extension VirtualOutputTests {
     #expect(!detail.isEmpty)
     #expect(result.requested == .generic)
     #expect(result.live == .sdlCompatible)
-    #expect(result.source == "override")
+    #expect(result.source == .override)
     #expect(fixture.store.override(vendorID: 1, productID: 2) == .sdlCompatible)
     #expect(fixture.log.built().first?.closed == false)
     await fixture.tearDown()
@@ -250,7 +250,7 @@ extension VirtualOutputTests {
         == VirtualHIDProfileOverrideResult(
           requested: .sdlCompatible,
           live: .sdlCompatible,
-          source: "override",
+          source: .override,
           failure: nil
         )
     )
@@ -259,7 +259,7 @@ extension VirtualOutputTests {
         == VirtualHIDProfileOverrideResult(
           requested: nil,
           live: .generic,
-          source: "automatic",
+          source: .automatic,
           failure: nil
         )
     )

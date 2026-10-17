@@ -123,13 +123,13 @@ public struct VirtualHIDProfileOverrideResult: Codable, Equatable, Sendable {
   /// How the live profile was selected: `automatic`, `override`, or `automaticAfterRejecting`.
   /// With no live profile, `override` when virtual output is disabled and the model has a stored
   /// override, else `automatic`.
-  public let source: String
+  public let source: VirtualHIDProfileSource
   public let failure: VirtualHIDProfileOverrideFailure?
 
   public init(
     requested: VirtualHIDProfileID?,
     live: VirtualHIDProfileID?,
-    source: String,
+    source: VirtualHIDProfileSource,
     failure: VirtualHIDProfileOverrideFailure?
   ) {
     self.requested = requested
@@ -147,20 +147,20 @@ public struct ApplicationServiceVirtualHIDProfileStatus: Codable, Equatable, Sen
   public let profile: VirtualHIDProfileID?
   /// How `profile` was selected: `automatic`, `override`, or `automaticAfterRejecting`; nil
   /// when no profile is selected.
-  public let source: String?
+  public let source: VirtualHIDProfileSource?
   /// The stored Advanced override in effect for this controller: its unit's, else its model's;
   /// nil when it selects automatically.
   public let override: VirtualHIDProfileID?
   /// Whose override `override` is: `unit` or `model`; nil without an override.
-  public let overrideScope: String?
+  public let overrideScope: VirtualHIDProfileOverrideScope?
   /// Whether no virtual profile can represent the controller's declared controls.
   public let unavailable: Bool
 
   public init(
     profile: VirtualHIDProfileID?,
-    source: String?,
+    source: VirtualHIDProfileSource?,
     override: VirtualHIDProfileID?,
-    overrideScope: String? = nil,
+    overrideScope: VirtualHIDProfileOverrideScope? = nil,
     unavailable: Bool
   ) {
     self.profile = profile
@@ -180,13 +180,27 @@ extension VirtualHIDProfileOverrideError {
   }
 }
 
+/// How a controller's virtual HID profile was selected, as status and override results report it.
+public enum VirtualHIDProfileSource: String, Codable, Equatable, Sendable {
+  case automatic
+  case override
+  /// The controller could not satisfy its override, so automatic selection ran instead.
+  case automaticAfterRejecting
+}
+
+/// Whose stored override is in effect for a controller: its unit's or its model's.
+public enum VirtualHIDProfileOverrideScope: String, Codable, Equatable, Sendable {
+  case unit
+  case model
+}
+
 extension VirtualHIDProfileSelector.Selection.Source {
-  /// The wire name reported in status and override results.
-  public var wireName: String {
+  /// The source reported in status and override results.
+  public var reported: VirtualHIDProfileSource {
     switch self {
-    case .automatic: "automatic"
-    case .override: "override"
-    case .automaticAfterRejecting: "automaticAfterRejecting"
+    case .automatic: .automatic
+    case .override: .override
+    case .automaticAfterRejecting: .automaticAfterRejecting
     }
   }
 }

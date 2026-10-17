@@ -1692,5 +1692,4 @@
 "error.E5003" = "Een protocolbeschrijving noemt een familie die afwijkt van de bestandsnaam. Noem het bestand naar zijn familie.";
 "error.E5004" = "Een protocolbeschrijving noemt een variant die de familie niet heeft. Gebruik een van de varianten van de familie.";
 "error.E5005" = "Het toegangsbestand AccessGrants.json is beschadigd. Herstel het bestand of verwijder het, en verleen daarna opnieuw toegang.";
-"error.E5006" = "Het toegangsbestand AccessGrants.json wordt niet ondersteund. Verwijder het en verleen daarna opnieuw toegang.";
 "error.withCode" ="%@ (%@)";

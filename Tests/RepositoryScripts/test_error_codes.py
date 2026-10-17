@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import io
 import json
 import shutil
 import subprocess
 import tempfile
 import unittest
+from contextlib import redirect_stderr
 from pathlib import Path
 from typing import Any
 from unittest.mock import patch
@@ -82,7 +84,6 @@ class ErrorCodeTests(unittest.TestCase):
                 ("E5003", "protocolDescriptionFamilyMismatch"),
                 ("E5004", "unknownProtocolVariant"),
                 ("E5005", "damagedAccessGrants"),
-                ("E5006", "unsupportedAccessGrants"),
             ],
         )
         with self.assertRaisesRegex(errors.ErrorCodeError, "E4001 is in the document"):
@@ -217,6 +218,43 @@ class ErrorCodeTests(unittest.TestCase):
         run_git("commit", "-q", "-am", "next")
 
         self.assertEqual(errors.released_catalog(root), ("0.4.0", released))
+
+    def test_a_release_without_a_catalog_has_no_baseline_and_says_so(self) -> None:
+        root = Path(tempfile.mkdtemp(prefix="ojd-errors-git-"))
+        self.addCleanup(shutil.rmtree, root)
+        for args in (
+            ("init", "-q"),
+            ("commit", "-q", "--allow-empty", "-m", "release"),
+            ("tag", "0.4.0"),
+            ("commit", "-q", "--allow-empty", "-m", "next"),
+        ):
+            subprocess.run(
+                [
+                    "git",
+                    "-c",
+                    "user.name=test",
+                    "-c",
+                    "user.email=test@example.invalid",
+                    "-c",
+                    "commit.gpgsign=false",
+                    "-c",
+                    "tag.gpgsign=false",
+                    *args,
+                ],
+                cwd=root,
+                check=True,
+                capture_output=True,
+            )
+        stderr = io.StringIO()
+        with redirect_stderr(stderr):
+            self.assertIsNone(errors.released_catalog(root))
+        self.assertIn("0.4.0 has no Resources/ErrorCodes.json", stderr.getvalue())
+
+    def test_a_git_failure_fails_the_reuse_check(self) -> None:
+        root = Path(tempfile.mkdtemp(prefix="ojd-errors-nogit-"))
+        self.addCleanup(shutil.rmtree, root)
+        with self.assertRaises(subprocess.CalledProcessError):
+            errors.released_catalog(root)
 
     def test_the_guard_runs_against_the_released_catalog(self) -> None:
         root = self.copy_repository()

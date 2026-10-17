@@ -102,17 +102,19 @@ struct CommandTreeTests {
     ["OJD_TIMEOUT": "abc"], ["OJD_TIMEOUT": "0"], ["OJD_TIMEOUT": "nan"], ["OJD_COLOR": "yes"],
     ["OJD_NO_INPUT": "2"], ["OJD_NO_INPUT": "on"],
   ])
-  func anInvalidVariableIsRejected(environment: [String: String]) {
-    #expect(throws: ValidationError.self) { try EnvironmentFallback(environment) }
+  func anInvalidVariableIsRejected(environment: [String: String]) throws {
+    #expect(throws: ValidationError.self) { try EnvironmentOptions(environment) }
+    let options = try GlobalOptions.parse([])
+    #expect(throws: ValidationError.self) { try options.context(environment: environment) }
   }
 
   @Test
   func noInputAcceptsTheUsualBooleanWords() throws {
     for value in ["1", "true", "YES"] {
-      #expect(try EnvironmentFallback(["OJD_NO_INPUT": value]).noInput, "\(value)")
+      #expect(try EnvironmentOptions(["OJD_NO_INPUT": value]).noInput, "\(value)")
     }
     for value in ["", "0", "False", "no"] {
-      #expect(try !EnvironmentFallback(["OJD_NO_INPUT": value]).noInput, "\(value)")
+      #expect(try !EnvironmentOptions(["OJD_NO_INPUT": value]).noInput, "\(value)")
     }
   }
 
@@ -123,7 +125,7 @@ struct CommandTreeTests {
     for arguments in [flags + leaf, leaf + flags] {
       let command = try OJDCommand.parseAsRoot(arguments)
       let global = try #require(CLICommandTree.globalOptions(of: command), "\(arguments)")
-      let context = global.context
+      let context = try global.context(environment: [:])
       #expect(context.format == .json, "\(arguments)")
       #expect(context.quiet && context.noColor && context.noInput, "\(arguments)")
       #expect(context.timeout == 2.5, "\(arguments)")

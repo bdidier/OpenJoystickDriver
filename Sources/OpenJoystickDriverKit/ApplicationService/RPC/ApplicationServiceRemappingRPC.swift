@@ -364,45 +364,6 @@ public struct ApplicationServiceRemappingSnapshotPayload: Codable, Equatable, Se
     self.packageProfiles = packageProfiles
     self.postEventAccess = postEventAccess
   }
-
-  private enum CodingKeys: String, CodingKey {
-    case profiles
-    case activeProfiles
-    case routes
-    case joyConPairs
-    case profileIssues
-    case packageProfiles
-    case postEventAccess
-  }
-
-  public init(from decoder: any Decoder) throws {
-    let container = try decoder.container(keyedBy: CodingKeys.self)
-    profiles = try container.decode([RemappingProfile].self, forKey: .profiles)
-    activeProfiles = try container.decode(
-      [ApplicationServiceRemappingActiveProfilePayload].self,
-      forKey: .activeProfiles
-    )
-    routes = try container.decode([ApplicationServiceRemappingRoutePayload].self, forKey: .routes)
-    joyConPairs =
-      try container.decodeIfPresent(
-        [ApplicationServiceJoyConPairPayload].self,
-        forKey: .joyConPairs
-      ) ?? []
-    profileIssues =
-      try container.decodeIfPresent(
-        [ApplicationServiceRemappingProfileIssue].self,
-        forKey: .profileIssues
-      ) ?? []
-    packageProfiles =
-      try container.decodeIfPresent(
-        [ApplicationServiceRemappingPackageProfile].self,
-        forKey: .packageProfiles
-      ) ?? []
-    postEventAccess = try container.decode(
-      RemappingPostEventAccessState.self,
-      forKey: .postEventAccess
-    )
-  }
 }
 
 /// A deterministic, code-bearing remapping failure carried in the RPC response `remappingError`.

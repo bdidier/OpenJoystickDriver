@@ -1692,5 +1692,4 @@
 "error.E5003" = "Une description de protocole nomme une famille différente du nom de son fichier. Nommez le fichier d’après sa famille.";
 "error.E5004" = "Une description de protocole liste une variante que sa famille n’a pas. Utilisez l’une des variantes de la famille.";
 "error.E5005" = "Le fichier d’accès AccessGrants.json est endommagé. Corrigez le fichier ou supprimez-le, puis accordez de nouveau l’accès.";
-"error.E5006" = "Le fichier d’accès AccessGrants.json n’est pas pris en charge. Supprimez-le, puis accordez de nouveau l’accès.";
 "error.withCode" ="%@ (%@)";

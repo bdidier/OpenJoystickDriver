@@ -50,18 +50,13 @@ enum RuntimePresentation {
     OJDLocalized.string("virtualProfile.none")
   }
 
-  /// The wire source of a virtual HID profile: `automatic`, `override`, or
-  /// `automaticAfterRejecting`.
-  static func virtualHIDProfileSourceLabel(_ source: String) -> String {
+  /// The label of how a virtual HID profile was selected.
+  static func virtualHIDProfileSourceLabel(_ source: VirtualHIDProfileSource) -> String {
     switch source {
-    case "automatic": return OJDLocalized.string("mapping.automatic")
-    case "override":
-      return OJDLocalized.string("virtualProfile.sourceOverride")
-    case "automaticAfterRejecting":
-      return OJDLocalized.string(
-        "virtualProfile.sourceAutomaticAfterRejecting"
-      )
-    default: return source
+    case .automatic: OJDLocalized.string("mapping.automatic")
+    case .override: OJDLocalized.string("virtualProfile.sourceOverride")
+    case .automaticAfterRejecting:
+      OJDLocalized.string("virtualProfile.sourceAutomaticAfterRejecting")
     }
   }
 

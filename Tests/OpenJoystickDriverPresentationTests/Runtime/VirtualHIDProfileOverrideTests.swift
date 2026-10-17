@@ -210,7 +210,7 @@ struct VirtualHIDProfileOverrideTests {
     await gateway.waitForStatusCall(count: 2)
     let overridden = ApplicationServiceVirtualHIDProfileStatus(
       profile: .generic,
-      source: "override",
+      source: .override,
       override: .generic,
       unavailable: false
     )
@@ -265,7 +265,7 @@ struct VirtualHIDProfileOverrideTests {
     var xbox = Self.device(
       profile: ApplicationServiceVirtualHIDProfileStatus(
         profile: .sdlCompatible,
-        source: "override",
+        source: .override,
         override: .sdlCompatible,
         unavailable: false
       )
@@ -301,7 +301,7 @@ struct VirtualHIDProfileOverrideTests {
     )
     sixaxis.virtualHIDProfile = ApplicationServiceVirtualHIDProfileStatus(
       profile: .sdlCompatible,
-      source: "automatic",
+      source: .automatic,
       override: nil,
       unavailable: false
     )
@@ -318,7 +318,7 @@ struct VirtualHIDProfileOverrideTests {
   func iconAndLabelComeFromOnePresentedIdentity() {
     let profile = ApplicationServiceVirtualHIDProfileStatus(
       profile: .sdlCompatible,
-      source: "override",
+      source: .override,
       override: .sdlCompatible,
       unavailable: false
     )

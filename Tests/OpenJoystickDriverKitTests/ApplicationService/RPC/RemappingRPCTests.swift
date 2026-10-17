@@ -135,19 +135,6 @@ struct RemappingRPCTests {
   }
 
   @Test
-  func olderSnapshotPayloadDoesNotInventPairedSessions() throws {
-    let encoded = try JSONEncoder().encode(makeSnapshot(profile: makeProfile()))
-    var object = try #require(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
-    object.removeValue(forKey: "joyConPairs")
-    let data = try JSONSerialization.data(withJSONObject: object)
-
-    #expect(
-      try JSONDecoder().decode(ApplicationServiceRemappingSnapshotPayload.self, from: data)
-        .joyConPairs.isEmpty
-    )
-  }
-
-  @Test
   func clientUsesEveryStableMethodAndDecodesTypedResults() async throws {
     let socketPath = temporarySocketPath()
     let profile = makeProfile()

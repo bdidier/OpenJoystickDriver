@@ -45,9 +45,9 @@ struct VirtualShowReport: Encodable, Equatable {
     let vendorID: Int
     let productID: Int
     let profile: String?
-    let source: String?
+    let source: VirtualHIDProfileSource?
     let override: String?
-    let overrideScope: String?
+    let overrideScope: VirtualHIDProfileOverrideScope?
     let unavailable: Bool
     /// The SDL mapping and W3C description of the live persona; absent with no persona.
     let sdl: VirtualSDLReport?
@@ -60,7 +60,7 @@ struct VirtualShowReport: Encodable, Equatable {
       productID = Int(device.productID)
       let decision = device.servingDecision
       profile = decision.selection?.profileID.rawValue
-      source = decision.selection?.source.wireName
+      source = decision.selection?.source.reported
       override = device.virtualHIDProfile?.override?.rawValue
       overrideScope = device.virtualHIDProfile?.overrideScope
       unavailable = decision.route == .outputDisabled(.noVirtualProfile)
@@ -79,7 +79,7 @@ struct VirtualChangeReport: Encodable, Equatable {
   let controller: String
   let requested: String?
   let live: String?
-  let source: String
+  let source: VirtualHIDProfileSource
 }
 
 struct VirtualShowCommand: AsyncParsableCommand {
@@ -112,7 +112,7 @@ struct VirtualShowCommand: AsyncParsableCommand {
       case .plain:
         CLIOutput.plain(
           report.controllers.map {
-            [$0.id, $0.profile ?? "", $0.source ?? "", $0.override ?? "", $0.name]
+            [$0.id, $0.profile ?? "", $0.source?.rawValue ?? "", $0.override ?? "", $0.name]
           }
         )
       case .human: Self.printHuman(report)
@@ -133,7 +133,7 @@ struct VirtualShowCommand: AsyncParsableCommand {
       if controller.unavailable {
         profile = CLILocalized.text("cli.virtual.show.unavailable")
       } else if let live = controller.profile {
-        profile = "\(live) (\(controller.source ?? ""))"
+        profile = "\(live) (\(controller.source?.rawValue ?? ""))"
       } else {
         profile = CLILocalized.text("cli.virtual.show.none")
       }
@@ -196,7 +196,7 @@ private func printChange(
   )
   switch CLIContext.current.format {
   case .json: try CLIOutput.json(report)
-  case .plain: CLIOutput.plain([[report.controller, report.live ?? "", report.source]])
+  case .plain: CLIOutput.plain([[report.controller, report.live ?? "", report.source.rawValue]])
   case .human where stored:
     CLIOutput.success(
       CLILocalized.format(
@@ -210,7 +210,7 @@ private func printChange(
         "cli.virtual.changed",
         device.name,
         report.live ?? CLILocalized.text("cli.virtual.show.none"),
-        report.source
+        report.source.rawValue
       )
     )
   }

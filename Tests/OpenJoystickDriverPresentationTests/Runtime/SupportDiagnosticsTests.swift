@@ -363,7 +363,7 @@ private actor SupportDiagnosticsGatewayStub: ApplicationServiceGateway {
     VirtualHIDProfileOverrideResult(
       requested: profile,
       live: profile,
-      source: "override",
+      source: .override,
       failure: nil
     )
   }
@@ -374,7 +374,7 @@ private actor SupportDiagnosticsGatewayStub: ApplicationServiceGateway {
     VirtualHIDProfileOverrideResult(
       requested: nil,
       live: .generic,
-      source: "automatic",
+      source: .automatic,
       failure: nil
     )
   }

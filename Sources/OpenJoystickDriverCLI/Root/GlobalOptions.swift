@@ -62,34 +62,33 @@ struct GlobalOptions: ParsableArguments {
         CLILocalized.text("cli.error.timeout_value")
       )
     }
-    _ = try EnvironmentFallback(ProcessInfo.processInfo.environment)
+    _ = try EnvironmentOptions(ProcessInfo.processInfo.environment)
   }
 
-  var context: CLIContext { context(environment: ProcessInfo.processInfo.environment) }
-
   /// The context these flags give, with `environment` filling in unset flags; a flag beats its
-  /// variable. ``validate()`` has already rejected an invalid variable.
-  func context(environment: [String: String]) -> CLIContext {
-    let fallback = (try? EnvironmentFallback(environment)) ?? EnvironmentFallback()
+  /// variable. An invalid variable throws the same error ``validate()`` gives.
+  func context(environment: [String: String]) throws -> CLIContext {
+    let variables = try EnvironmentOptions(environment)
     return CLIContext(
       format: json ? .json : plain ? .plain : .human,
       quiet: quiet,
-      noColor: noColor || fallback.color == .never,
-      forceColor: !noColor && fallback.color == .always,
-      noInput: noInput || fallback.noInput,
-      timeout: timeout ?? fallback.timeout
+      noColor: noColor || variables.color == .never,
+      forceColor: !noColor && variables.color == .always,
+      noInput: noInput || variables.noInput,
+      timeout: timeout ?? variables.timeout
     )
   }
 
   /// Runs `body` with these options as the task's `CLIContext`.
   func run(_ body: () async throws -> Void) async throws {
-    try await CLIContext.$current.withValue(context) { try await body() }
+    let resolved = try context(environment: ProcessInfo.processInfo.environment)
+    try await CLIContext.$current.withValue(resolved) { try await body() }
   }
 }
 
 /// The `OJD_NO_INPUT`, `OJD_TIMEOUT`, and `OJD_COLOR` variables that stand in for unset flags.
 /// An empty variable is unset.
-struct EnvironmentFallback {
+struct EnvironmentOptions {
   enum Color: String {
     case auto
     case always
@@ -99,8 +98,6 @@ struct EnvironmentFallback {
   var noInput = false
   var timeout: Double?
   var color: Color?
-
-  init() {}
 
   init(_ environment: [String: String]) throws {
     switch (environment["OJD_NO_INPUT"] ?? "").lowercased() {

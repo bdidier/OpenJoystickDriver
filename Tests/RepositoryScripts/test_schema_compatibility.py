@@ -257,6 +257,23 @@ class BaselineTests(unittest.TestCase):
         self.assertEqual(schema_compatibility.last_release_tag(root), "0.1.0")
         self.assertIsNone(schema_compatibility.documents_at(root, "0.1.0"))
 
+    def test_has_no_release_tag_before_the_first_release(self) -> None:
+        root = self.make_repository()
+        self.commit(root, ROOT, {"$defs": {}})
+        self.assertIsNone(schema_compatibility.last_release_tag(root))
+        self.commit(root, ROOT, {"$defs": {"a": {}}})
+        self.assertIsNone(schema_compatibility.last_release_tag(root))
+
+    def test_a_git_failure_is_an_error_and_not_a_missing_baseline(self) -> None:
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        with self.assertRaises(subprocess.CalledProcessError):
+            schema_compatibility.last_release_tag(Path(directory.name))
+        root = self.make_repository()
+        self.commit(root, ROOT, {"$defs": {}})
+        with self.assertRaises(subprocess.CalledProcessError):
+            schema_compatibility.documents_at(root, "9.9.9")
+
     def test_a_release_commit_compares_with_the_release_before_it(self) -> None:
         root = self.make_repository()
         self.commit(root, ROOT, {"$defs": {"a": {}}})

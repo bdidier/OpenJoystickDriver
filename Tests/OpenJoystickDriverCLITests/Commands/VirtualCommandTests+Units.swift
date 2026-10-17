@@ -21,7 +21,7 @@ extension VirtualCommandTests {
           VirtualHIDProfileOverrideResult(
             requested: nil,
             live: .generic,
-            source: "override",
+            source: .override,
             failure: nil
           )
         ) : nil

@@ -18,7 +18,7 @@ struct VirtualLaunchCommandTests {
     var device = ApplicationServiceDeviceDescription.fixture(id: id)
     device.virtualHIDProfile = ApplicationServiceVirtualHIDProfileStatus(
       profile: profile,
-      source: "override",
+      source: .override,
       override: profile,
       unavailable: false
     )

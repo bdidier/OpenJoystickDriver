@@ -1692,5 +1692,4 @@
 "error.E5003" = "Una descripción de protocolo nombra una familia distinta del nombre de su archivo. Da al archivo el nombre de su familia.";
 "error.E5004" = "Una descripción de protocolo enumera una variante que su familia no tiene. Usa una de las variantes de la familia.";
 "error.E5005" = "El archivo de acceso AccessGrants.json está dañado. Corrige el archivo o elimínalo y concede el acceso de nuevo.";
-"error.E5006" = "El archivo de acceso AccessGrants.json no es compatible. Elimínalo y concede el acceso de nuevo.";
 "error.withCode" ="%@ (%@)";

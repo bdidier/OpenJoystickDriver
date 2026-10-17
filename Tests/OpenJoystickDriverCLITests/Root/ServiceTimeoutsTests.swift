@@ -45,12 +45,12 @@ struct ServiceTimeoutsTests {
   @Test(arguments: ["0", "-1", "nan", "inf", "x"])
   func theEnvironmentTimeoutUsesTheSameRule(value: String) {
     #expect(throws: (any Error).self) {
-      try EnvironmentFallback(["OJD_TIMEOUT": value])
+      try EnvironmentOptions(["OJD_TIMEOUT": value])
     }
   }
 
   @Test
   func aPositiveEnvironmentTimeoutIsAccepted() throws {
-    #expect(try EnvironmentFallback(["OJD_TIMEOUT": "2.5"]).timeout == 2.5)
+    #expect(try EnvironmentOptions(["OJD_TIMEOUT": "2.5"]).timeout == 2.5)
   }
 }

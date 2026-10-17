@@ -92,7 +92,6 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
   case protocolDescriptionFamilyMismatch = "E5003"
   case unknownProtocolVariant = "E5004"
   case damagedAccessGrants = "E5005"
-  case unsupportedAccessGrants = "E5006"
 
   /// The part of the product that raises a code; the first digit of the number.
   public enum Domain: String, Sendable {
@@ -130,7 +129,7 @@ public enum ErrorCode: String, Codable, Sendable, CaseIterable {
       .packageAlreadyInstalled, .packageNotInstalled, .packageStoreUnwritable:
       .mod
     case .unsupportedAPIVersion, .invalidProtocolDescription, .protocolDescriptionFamilyMismatch,
-      .unknownProtocolVariant, .damagedAccessGrants, .unsupportedAccessGrants:
+      .unknownProtocolVariant, .damagedAccessGrants:
       .document
     }
   }

@@ -489,11 +489,6 @@
       "code": "E5005",
       "domain": "document",
       "name": "damagedAccessGrants"
-    },
-    {
-      "code": "E5006",
-      "domain": "document",
-      "name": "unsupportedAccessGrants"
     }
   ]
 }

@@ -322,7 +322,7 @@ actor GatewayStub: ApplicationServiceGateway {
     return VirtualHIDProfileOverrideResult(
       requested: profile,
       live: overrideFailure == nil ? profile : .generic,
-      source: overrideFailure == nil ? "override" : "automatic",
+      source: overrideFailure == nil ? .override : .automatic,
       failure: overrideFailure
     )
   }
@@ -334,7 +334,7 @@ actor GatewayStub: ApplicationServiceGateway {
     return VirtualHIDProfileOverrideResult(
       requested: nil,
       live: .generic,
-      source: "automatic",
+      source: .automatic,
       failure: overrideFailure
     )
   }

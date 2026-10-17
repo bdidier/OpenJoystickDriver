@@ -10,13 +10,9 @@ public struct MacOSDataDirectory: DataDirectory {
 
   public func url(for location: DataLocation) -> URL {
     switch location {
-    case .applicationData: return library(.applicationSupportDirectory, "Application Support")
-    case .cache: return library(.cachesDirectory, "Caches")
-    case .logs:
-      return FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(
-        "Library/Logs/\(Self.directoryName)",
-        isDirectory: true
-      )
+    case .applicationData: return library("Application Support")
+    case .cache: return library("Caches")
+    case .logs: return library("Logs")
     case .runtime: return URL(fileURLWithPath: Self.userTemporaryPath(), isDirectory: true)
     case .sharedTemporary: return URL(fileURLWithPath: "/tmp", isDirectory: true)
     case .temporary: return FileManager.default.temporaryDirectory
@@ -24,22 +20,25 @@ public struct MacOSDataDirectory: DataDirectory {
     }
   }
 
-  private func library(_ directory: FileManager.SearchPathDirectory, _ fallback: String) -> URL {
-    let manager = FileManager.default
-    let base =
-      manager.urls(for: directory, in: .userDomainMask).first
-      ?? manager.homeDirectoryForCurrentUser.appendingPathComponent("Library/\(fallback)")
-    return base.appendingPathComponent(Self.directoryName, isDirectory: true)
+  /// `~/Library/<folder>/OpenJoystickDriver`.
+  private func library(_ folder: String) -> URL {
+    FileManager.default.homeDirectoryForCurrentUser
+      .appendingPathComponent("Library", isDirectory: true)
+      .appendingPathComponent(folder, isDirectory: true)
+      .appendingPathComponent(Self.directoryName, isDirectory: true)
   }
 
-  /// The per-user temporary folder, which only the user can open.
+  /// The per-user temporary folder, which only the user can open. `TMPDIR` does not move it, so
+  /// every process of one user reaches the same folder.
   private static func userTemporaryPath() -> String {
     var buffer = [CChar](repeating: 0, count: Int(PATH_MAX))
     let length = confstr(_CS_DARWIN_USER_TEMP_DIR, &buffer, buffer.count)
-    let directory =
-      length > 0
-      ? String(bytes: buffer.prefix(length - 1).map(UInt8.init(bitPattern:)), encoding: .utf8)
-      : nil
-    return directory ?? NSTemporaryDirectory()
+    guard length > 0,
+      let directory = String(
+        bytes: buffer.prefix(length - 1).map(UInt8.init(bitPattern:)),
+        encoding: .utf8
+      )
+    else { preconditionFailure("confstr(_CS_DARWIN_USER_TEMP_DIR) gave no per-user folder") }
+    return directory
   }
 }

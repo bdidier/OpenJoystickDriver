@@ -134,14 +134,14 @@ extension VirtualOutputTests {
       devices.map(\.virtualHIDProfile) == [
         ApplicationServiceVirtualHIDProfileStatus(
           profile: .sdlCompatible,
-          source: "override",
+          source: .override,
           override: .sdlCompatible,
-          overrideScope: "model",
+          overrideScope: .model,
           unavailable: false
         ),
         ApplicationServiceVirtualHIDProfileStatus(
           profile: .generic,
-          source: "automatic",
+          source: .automatic,
           override: nil,
           unavailable: false
         ),
@@ -228,16 +228,16 @@ extension VirtualOutputTests {
       VirtualHIDProfileOverrideResult(
         requested: .sdlCompatible,
         live: .generic,
-        source: "automaticAfterRejecting",
+        source: .automaticAfterRejecting,
         failure: .overrideRejectedByController
       ),
       VirtualHIDProfileOverrideResult(
         requested: .generic,
         live: .sdlCompatible,
-        source: "override",
+        source: .override,
         failure: .activationFailed(detail: "backend unavailable")
       ),
-      VirtualHIDProfileOverrideResult(requested: nil, live: nil, source: "automatic", failure: nil),
+      VirtualHIDProfileOverrideResult(requested: nil, live: nil, source: .automatic, failure: nil),
     ]
     for result in results {
       let data = try JSONEncoder().encode(result)
@@ -263,7 +263,7 @@ extension VirtualOutputTests {
 
     let status = ApplicationServiceVirtualHIDProfileStatus(
       profile: .sdlCompatible,
-      source: "override",
+      source: .override,
       override: .sdlCompatible,
       unavailable: false
     )

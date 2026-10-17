@@ -12,7 +12,6 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import subprocess
 import sys
 from pathlib import Path
 from typing import Any
@@ -150,14 +149,19 @@ def check_not_reused(previous: list[Entry], entries: list[Entry]) -> None:
 
 
 def released_catalog(root: Path) -> tuple[str, list[Entry]] | None:
-    """The catalog at the last release tag, or None when there is no tag or no catalog."""
-    try:
-        tag = last_release_tag(root)
-        text = git(root, "show", f"{tag}:{CATALOG.as_posix()}")
-    except (subprocess.CalledProcessError, OSError):
-        print("No release catalog found; skipped the reuse check.", file=sys.stderr)
+    """The catalog at the last release tag, or None when there is no tag or no catalog.
+
+    A git failure raises `CalledProcessError`, so the reuse check never passes unchecked.
+    """
+    tag = last_release_tag(root)
+    if tag is None:
+        print("No release tag precedes HEAD; skipped the reuse check.", file=sys.stderr)
         return None
-    return tag, json.loads(text)["codes"]
+    path = CATALOG.as_posix()
+    if not git(root, "ls-tree", "--name-only", tag, "--", path).strip():
+        print(f"{tag} has no {path}; skipped the reuse check.", file=sys.stderr)
+        return None
+    return tag, json.loads(git(root, "show", f"{tag}:{path}"))["codes"]
 
 
 def english_strings(root: Path) -> dict[str, str]:

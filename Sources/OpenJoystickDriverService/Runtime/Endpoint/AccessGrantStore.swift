@@ -3,7 +3,9 @@ import OpenJoystickDriverKit
 
 enum AccessGrantStoreError: Error, Equatable, LocalizedError, Sendable {
   case damaged
-  /// The file's `apiVersion` or `kind` is not the supported one; the text says what was found.
+  /// The file's `apiVersion` or `kind` is not the supported one; the text says what was found. A
+  /// missing or unknown `apiVersion` is E5001, as for every document; a wrong `kind` is a damaged
+  /// file.
   case unsupported(DocumentHeaderProblem)
   case unknownClient(String)
   case notGrantable(CodeSigningIdentity.Kind)
@@ -25,7 +27,7 @@ enum AccessGrantStoreError: Error, Equatable, LocalizedError, Sendable {
   var code: ErrorCode {
     switch self {
     case .damaged: .damagedAccessGrants
-    case .unsupported: .unsupportedAccessGrants
+    case .unsupported(let problem): problem.code ?? .damagedAccessGrants
     case .unknownClient: .unknownAccessClient
     case .notGrantable: .ungrantableClient
     case .noScope: .noAccessScope
@@ -43,7 +45,7 @@ enum AccessGrantStoreError: Error, Equatable, LocalizedError, Sendable {
     case .damaged, .noScope, .serviceStopped, .originsWithControl:
       Self.coded(code)
     case .unsupported(let problem):
-      Self.coded(code, detail: problem.description)
+      Self.coded(code, detail: problem.message)
     case .unknownClient(let id): Self.coded(code, detail: id)
     case .notGrantable(let kind): Self.coded(code, detail: kind.rawValue)
     case .duplicateToken(let name), .invalidTokenName(let name): Self.coded(code, detail: name)
@@ -111,39 +113,14 @@ struct AccessGrantFile: Equatable, Sendable {
     return grants[index]
   }
 
-  /// Whether every `control` scope carries `controlGrantedAt`, which the service writes with it.
-  ///
-  /// Builds before the scope worked stored it without effect, so honoring it now would turn on
-  /// input to a virtual gamepad that the user never saw work. A file with such a scope is damaged
-  /// instead, and the user grants again.
-  var controlScopesAreMarked: Bool {
+  /// Whether every `control` scope carries `controlGrantedAt`, which the service writes with it,
+  /// and no token with origins holds `control`, because a page never drives a virtual gamepad. A
+  /// file that breaks either rule is damaged, and the user grants again.
+  var controlScopesAreValid: Bool {
     grants.allSatisfy { !$0.scopes.contains(.control) || $0.controlGrantedAt != nil }
-      && tokens.allSatisfy { !$0.scopes.contains(.control) || $0.controlGrantedAt != nil }
-  }
-
-  /// Removes `control` from tokens that have origins, and tokens left with no scope; returns the
-  /// names of the removed tokens.
-  ///
-  /// Earlier builds allowed the combination; a page never drives a pad, so the stored scope has no
-  /// use, and dropping it keeps the rest of the file valid.
-  mutating func dropControlFromTokensWithOrigins() -> [String] {
-    var removed: [String] = []
-    tokens = tokens.compactMap { grant in
-      guard grant.scopes.contains(.control), !grant.origins.isEmpty else { return grant }
-      let scopes = grant.scopes.filter { $0 != .control }
-      guard !scopes.isEmpty else {
-        removed.append(grant.name)
-        return nil
+      && tokens.allSatisfy {
+        !$0.scopes.contains(.control) || ($0.controlGrantedAt != nil && $0.origins.isEmpty)
       }
-      return AccessTokenGrant(
-        name: grant.name,
-        tokenSHA256: grant.tokenSHA256,
-        origins: grant.origins,
-        scopes: scopes,
-        grantedAt: grant.grantedAt
-      )
-    }
-    return removed
   }
 }
 
@@ -213,13 +190,10 @@ struct AccessGrantStore: Sendable {
     } catch {
       decoded = nil
     }
-    guard var file = decoded,
+    guard let file = decoded,
       file.grants.allSatisfy({ $0.identity.requirement != nil && !$0.scopes.isEmpty }),
-      file.hasValidTokensAndWeb, file.controlScopesAreMarked
+      file.hasValidTokensAndWeb, file.controlScopesAreValid
     else { throw AccessGrantStoreError.damaged }
-    for name in file.dropControlFromTokensWithOrigins() {
-      print("[AccessGrantStore] Ignored token \(name): only control scope, with origins")
-    }
     return file
   }
 

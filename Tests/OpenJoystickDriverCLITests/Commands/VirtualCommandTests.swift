@@ -17,7 +17,7 @@ struct VirtualCommandTests {
           VirtualHIDProfileOverrideResult(
             requested: .generic,
             live: .generic,
-            source: "override",
+            source: .override,
             failure: nil
           )
         ) : nil
@@ -48,7 +48,7 @@ struct VirtualCommandTests {
           VirtualHIDProfileOverrideResult(
             requested: .generic,
             live: nil,
-            source: "automatic",
+            source: .automatic,
             failure: .activationFailed(detail: "no fit")
           )
         ) : nil
@@ -72,7 +72,7 @@ struct VirtualCommandTests {
           VirtualHIDProfileOverrideResult(
             requested: arguments[1] == "set" ? .generic : nil,
             live: nil,
-            source: "override",
+            source: .override,
             failure: .outputDisabled
           )
         ) : nil
@@ -255,7 +255,7 @@ struct VirtualCommandTests {
     var device = ApplicationServiceDeviceDescription.fixture(id: "pad-1")
     device.virtualHIDProfile = ApplicationServiceVirtualHIDProfileStatus(
       profile: .sdlCompatible,
-      source: "override",
+      source: .override,
       override: .sdlCompatible,
       unavailable: false
     )
@@ -272,7 +272,7 @@ struct VirtualCommandTests {
     var generic = ApplicationServiceDeviceDescription.fixture(id: "pad-2")
     generic.virtualHIDProfile = ApplicationServiceVirtualHIDProfileStatus(
       profile: .generic,
-      source: "override",
+      source: .override,
       override: .generic,
       unavailable: false
     )

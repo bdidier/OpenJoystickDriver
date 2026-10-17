@@ -191,6 +191,9 @@ struct AccessGrantStoreTests {
         } catch let AccessGrantStoreError.unsupported(problem) {
           #expect(problem.code == code)
           #expect(problem.message == reason)
+          #expect(
+            AccessGrantStoreError.unsupported(problem).code == code ?? .damagedAccessGrants
+          )
         }
         #expect(try String(contentsOf: store.url, encoding: .utf8) == text)
       }
@@ -399,29 +402,21 @@ struct AccessGrantStoreTests {
     #expect(file.tokens.isEmpty)
   }
 
-  @Test
-  func controlOnATokenWithOriginsIsDroppedOnLoadWithoutInvalidatingTheFile() throws {
+  @Test(arguments: [#"["read","control"]"#, #"["control"]"#])
+  func aTokenWithOriginsHoldingControlIsDamagedAndLeftAsItWas(scopes: String) throws {
     try withStore { store, directory in
       try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-      let hash = String(repeating: "a", count: 64)
-      func token(_ name: String, _ origins: String, _ scopes: String) -> String {
-        #"{"name":"\#(name)","tokenSHA256":"\#(hash)","origins":\#(origins),"#
-          + #""scopes":\#(scopes),"grantedAt":"1970-01-01T00:00:00Z","#
-          + #""controlGrantedAt":"1970-01-01T00:00:00Z"}"#
-      }
-      let page = #"["http://localhost:8080"]"#
       let text =
         #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(AccessGrantFile.kind)","#
-        + #""enabled":true,"grants":[],"tokens":["#
-        + token("both", page, #"["read","control"]"#) + ","
-        + token("page", page, #"["control"]"#) + ","
-        + token("native", "[]", #"["control"]"#) + #"],"web":{"enabled":false}}"#
+        + #""enabled":true,"grants":[],"tokens":[{"name":"page","#
+        + #""tokenSHA256":"\#(String(repeating: "a", count: 64))","#
+        + #""origins":["http://localhost:8080"],"scopes":\#(scopes),"#
+        + #""grantedAt":"1970-01-01T00:00:00Z","controlGrantedAt":"1970-01-01T00:00:00Z"}],"#
+        + #""web":{"enabled":false}}"#
       try Data(text.utf8).write(to: store.url)
 
-      let file = try store.load()
-      #expect(file.tokens.map(\.name) == ["both", "native"])
-      #expect(file.tokens.first?.scopes == [.read])
-      #expect(file.tokens.last?.scopes == [.control])
+      #expect(throws: AccessGrantStoreError.damaged) { try store.load() }
+      #expect(try String(contentsOf: store.url, encoding: .utf8) == text)
     }
   }
 

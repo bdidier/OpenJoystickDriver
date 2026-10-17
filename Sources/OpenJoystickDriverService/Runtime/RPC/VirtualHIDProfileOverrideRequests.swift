@@ -52,7 +52,7 @@ extension ApplicationServiceServer {
     return VirtualHIDProfileOverrideResult(
       requested: requested,
       live: nil,
-      source: VirtualHIDProfileSelector.Selection.Source.automatic.wireName,
+      source: .automatic,
       failure: .serverStopped
     )
   }
@@ -247,7 +247,7 @@ extension ApplicationServiceServer {
     return VirtualHIDProfileOverrideResult(
       requested: requested,
       live: selection?.profileID,
-      source: source.wireName,
+      source: source.reported,
       failure: failure
     )
   }
@@ -287,9 +287,9 @@ extension ApplicationServiceServer {
       let unavailable = decision.route == .outputDisabled(.noVirtualProfile)
       described.virtualHIDProfile = ApplicationServiceVirtualHIDProfileStatus(
         profile: decision.selection?.profileID,
-        source: decision.selection?.source.wireName,
+        source: decision.selection?.source.reported,
         override: override,
-        overrideScope: override == nil ? nil : unitOverride == nil ? "model" : "unit",
+        overrideScope: override == nil ? nil : unitOverride == nil ? .model : .unit,
         unavailable: unavailable
       )
       described.publication = Self.publication(

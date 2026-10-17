@@ -95,10 +95,10 @@ struct ControllerShowReport: Encodable, Equatable {
 
   struct Virtual: Encodable, Equatable {
     let profile: String?
-    let source: String?
+    let source: VirtualHIDProfileSource?
     let override: String?
     /// `unit` or `model`: which choice `override` is.
-    let overrideScope: String?
+    let overrideScope: VirtualHIDProfileOverrideScope?
     let unavailable: Bool
   }
 
@@ -233,7 +233,7 @@ struct ControllerShowReport: Encodable, Equatable {
       virtual: device.virtualHIDProfile.map {
         Virtual(
           profile: device.servingDecision.selection?.profileID.rawValue,
-          source: device.servingDecision.selection?.source.wireName,
+          source: device.servingDecision.selection?.source.reported,
           override: $0.override?.rawValue,
           overrideScope: $0.overrideScope,
           unavailable: device.servingDecision.route == .outputDisabled(.noVirtualProfile)

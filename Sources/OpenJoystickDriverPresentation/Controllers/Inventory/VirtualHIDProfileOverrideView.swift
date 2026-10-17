@@ -100,7 +100,7 @@
         return RuntimePresentation.noVirtualHIDProfileLabel
       }
       let profile = selection.profileID
-      let source = RuntimePresentation.virtualHIDProfileSourceLabel(selection.source.wireName)
+      let source = RuntimePresentation.virtualHIDProfileSourceLabel(selection.source.reported)
       return [profile.identity.publishedUSBIdentityLabel, source].compactMap { $0 }.joined(
         separator: " · "
       )
