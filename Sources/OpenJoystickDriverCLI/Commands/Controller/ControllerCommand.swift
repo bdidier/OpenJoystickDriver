@@ -190,24 +190,6 @@ struct ControllerShowCommand: AsyncParsableCommand {
     }
   }
 
-  /// A JSON value such as `exclusiveRawUSB` in the kebab-case the other rows use:
-  /// `exclusive-raw-usb`.
-  static func kebabCase(_ value: String) -> String {
-    var result = ""
-    let characters = Array(value)
-    for (index, character) in characters.enumerated() {
-      if character.isUppercase, index > 0 {
-        let previous = characters[index - 1]
-        let next = index + 1 < characters.count ? characters[index + 1] : nil
-        if previous.isLowercase || previous.isNumber || (next?.isLowercase ?? false) {
-          result.append("-")
-        }
-      }
-      result.append(Character(character.lowercased()))
-    }
-    return result
-  }
-
   private static func printHuman(_ detail: ControllerShowReport.Detail) {
     let none = CLILocalized.text("cli.controller.show.none")
     func list(_ values: [String]) -> String {
@@ -243,9 +225,9 @@ struct ControllerShowCommand: AsyncParsableCommand {
         CLILocalized.text("cli.controller.show.label.ownership"),
         CLILocalized.format(
           "cli.controller.show.ownership",
-          kebabCase(detail.ownership.discoverySource),
-          kebabCase(detail.ownership.physical),
-          kebabCase(detail.ownership.hidInput)
+          CommandLineName.kebab(detail.ownership.discoverySource),
+          CommandLineName.kebab(detail.ownership.physical),
+          CommandLineName.kebab(detail.ownership.hidInput)
         )
       ),
       (
@@ -271,11 +253,11 @@ struct ControllerShowCommand: AsyncParsableCommand {
       ),
       (
         CLILocalized.text("cli.controller.show.label.rumble"),
-        list(detail.capabilities.rumbleMotors.map(kebabCase))
+        list(detail.capabilities.rumbleMotors.map(CommandLineName.kebab))
       ),
       (
         CLILocalized.text("cli.controller.show.label.lighting"),
-        list(detail.capabilities.lightingFeatures.map(kebabCase))
+        list(detail.capabilities.lightingFeatures.map(CommandLineName.kebab))
       ),
     ]
     // The output lists above hold only what macOS leaves undone, so say why.

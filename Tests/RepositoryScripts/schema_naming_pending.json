@@ -1,0 +1,1067 @@
+{
+  "access-grants": {
+    "/$defs/controlIsMarked/if/properties/scopes/items/const": ["read"],
+    "/$defs/grant/properties/publisher/if/properties/kind/const": ["signed"],
+    "/$defs/grant/properties/publisher/properties/kind/enum": [
+      "signed",
+      "platform"
+    ],
+    "/$defs/scope/enum": ["read", "control"]
+  },
+  "cli-output": {
+    "/$defs/accessStatus/properties/connections/items/properties/scopes/items/enum": [
+      "read",
+      "control"
+    ],
+    "/$defs/accessStatus/properties/connections/items/properties/transport/enum": [
+      "socket",
+      "web"
+    ],
+    "/$defs/configShow/properties/values/items/properties/layer/enum": [
+      "driver",
+      "bundled",
+      "package",
+      "global",
+      "user",
+      "profile"
+    ],
+    "/$defs/controllerCapture/properties/direction/enum": ["rx", "tx"],
+    "/$defs/controllerClaim/properties/server/const": ["ojd"],
+    "/$defs/controllerList/properties/items/items/properties/session/enum": [
+      "active",
+      "suspended"
+    ],
+    "/$defs/controllerRelease/properties/server/const": ["system"],
+    "/$defs/controllerShow/properties/capabilities/properties/outputOwner/enum": [
+      "system",
+      "ojd"
+    ],
+    "/$defs/controllerShow/properties/ownership/properties/discoverySource/enum": [
+      "hid",
+      "rawUSB"
+    ],
+    "/$defs/controllerShow/properties/ownership/properties/duplicateExposureRisk/enum": [
+      "none",
+      "SystemHidVisible",
+      "upstreamVirtualDevice",
+      "unknownOwnership"
+    ],
+    "/$defs/controllerShow/properties/ownership/properties/hidInput/enum": [
+      "unknown",
+      "exclusive",
+      "shared",
+      "accessDenied",
+      "ownedByAnotherClient",
+      "acquisitionFailed"
+    ],
+    "/$defs/controllerShow/properties/ownership/properties/physical/enum": [
+      "exclusiveHID",
+      "exclusiveRawUSB",
+      "ExtensionOwnedUsb",
+      "SystemHidVisible",
+      "upstreamVirtualDevice",
+      "unknown"
+    ],
+    "/$defs/controllerShow/properties/ownership/properties/serverSource/enum": [
+      "bundled",
+      "package",
+      "user",
+      "default"
+    ],
+    "/$defs/controllerShow/properties/publication/properties/state/enum": [
+      "published",
+      "notPublished",
+      "failed"
+    ],
+    "/$defs/controllerShow/properties/publication/properties/target/enum": [
+      "SdlCompatible"
+    ],
+    "/$defs/controllerShow/properties/record/properties/layer/enum": [
+      "bundled",
+      "package",
+      "user"
+    ],
+    "/$defs/controllerShow/properties/serving/properties/persona/enum": [
+      "SdlCompatible"
+    ],
+    "/$defs/controllerShow/properties/serving/properties/reason/enum": [
+      "userDisabled",
+      "upstreamVirtualDevice",
+      "noVirtualProfile"
+    ],
+    "/$defs/controllerShow/properties/serving/properties/route/enum": [
+      "VirtualHid"
+    ],
+    "/$defs/controllerShow/properties/session/enum": ["active", "suspended"],
+    "/$defs/controllerShow/properties/virtual/properties/override/enum": [
+      "SdlCompatible"
+    ],
+    "/$defs/controllerShow/properties/virtual/properties/overrideScope/enum": [
+      "unit",
+      "model"
+    ],
+    "/$defs/controllerShow/properties/virtual/properties/profile/enum": [
+      "SdlCompatible"
+    ],
+    "/$defs/controllerWatch/oneOf/0/properties/direction/enum": [
+      "north",
+      "northEast",
+      "east",
+      "southEast",
+      "south",
+      "southWest",
+      "west",
+      "northWest"
+    ],
+    "/$defs/diagnose/properties/checks/items/properties/status/enum": [
+      "pass",
+      "warn",
+      "fail",
+      "skip"
+    ],
+    "/$defs/diagnose/properties/timings/items/properties/frames/items/properties/stages/items/properties/stage/enum": [
+      "read",
+      "parse",
+      "dispatch",
+      "delivery-virtual-device",
+      "delivery-endpoint"
+    ],
+    "/$defs/logShow/oneOf/0/properties/logs/items/properties/stream/enum": [
+      "standardOutput",
+      "standardError"
+    ],
+    "/$defs/logShow/oneOf/1/properties/stream/enum": [
+      "standardOutput",
+      "standardError"
+    ],
+    "/$defs/recordDraft/properties/family/enum": [
+      "hid.descriptor",
+      "hid.report-layout"
+    ],
+    "/$defs/recordDraft/properties/operation/enum": ["add", "patch"],
+    "/$defs/recordList/properties/items/items/properties/layer/enum": [
+      "bundled",
+      "package",
+      "user"
+    ],
+    "/$defs/recordShow/properties/fields/additionalProperties/enum": [
+      "bundled",
+      "package",
+      "user"
+    ],
+    "/$defs/recordShow/properties/layer/enum": ["bundled", "package", "user"],
+    "/$defs/recordShow/properties/transport/enum": ["hid", "usb"],
+    "/$defs/recordShow/properties/transportClaim/enum": [
+      "claimed",
+      "unclaimed"
+    ],
+    "/$defs/sharedAccessGrant/properties/publisher/properties/kind/enum": [
+      "signed",
+      "platform"
+    ],
+    "/$defs/sharedAccessGrant/properties/scopes/items/enum": [
+      "read",
+      "control"
+    ],
+    "/$defs/sharedAccessRefusedClient/properties/publisher/properties/kind/enum": [
+      "signed",
+      "platform",
+      "adHoc"
+    ],
+    "/$defs/sharedAccessRefusedClient/properties/scopes/items/enum": [
+      "read",
+      "control"
+    ],
+    "/$defs/sharedAccessRefusedToken/properties/scopes/items/enum": [
+      "read",
+      "control"
+    ],
+    "/$defs/sharedAccessRefusedToken/properties/transport/enum": [
+      "socket",
+      "web"
+    ],
+    "/$defs/sharedAccessToken/properties/scopes/items/enum": [
+      "read",
+      "control"
+    ],
+    "/$defs/sharedBindingSummary/properties/behavior/enum": [
+      "hold",
+      "toggle",
+      "tap_on_press",
+      "tap_on_release",
+      "pulse",
+      "press",
+      "release"
+    ],
+    "/$defs/sharedControllerOutput/properties/results/items/properties/outcome/enum": [
+      "delivered",
+      "notFound",
+      "unsupportedCapability",
+      "notReady",
+      "invalidValue",
+      "writeFailed",
+      "cancelled"
+    ],
+    "/$defs/sharedControllerSession/properties/session/enum": [
+      "active",
+      "suspended",
+      "disconnected"
+    ],
+    "/$defs/sharedControllerState/properties/hat/enum": [
+      "neutral",
+      "north",
+      "northEast",
+      "east",
+      "southEast",
+      "south",
+      "southWest",
+      "west",
+      "northWest"
+    ],
+    "/$defs/sharedControllerState/properties/touch/items/properties/surface/enum": [
+      "primary",
+      "left",
+      "right"
+    ],
+    "/$defs/sharedPermissions/properties/permissions/items/properties/id/enum": [
+      "input-read",
+      "input-inject",
+      "usb-transport"
+    ],
+    "/$defs/sharedPermissions/properties/permissions/items/properties/state/enum": [
+      "granted",
+      "denied",
+      "unknown"
+    ],
+    "/$defs/sharedProfileIssue/properties/kind/enum": [
+      "damagedProfile",
+      "unusableLibrary"
+    ],
+    "/$defs/sharedRecordValidation/properties/operation/enum": ["add", "patch"],
+    "/$defs/sharedRecordValidation/properties/transport/enum": ["hid", "usb"],
+    "/$defs/sharedRecordValidation/properties/transportClaim/enum": [
+      "claimed",
+      "unclaimed"
+    ],
+    "/$defs/sharedServer/enum": ["system", "ojd"],
+    "/$defs/sharedServiceState/properties/state/enum": ["running", "stopped"],
+    "/$defs/sharedTransportExtensionState/properties/state/enum": [
+      "active",
+      "inactive",
+      "awaitingApproval"
+    ],
+    "/$defs/sharedVirtualChange/properties/live/enum": ["SdlCompatible"],
+    "/$defs/sharedVirtualChange/properties/requested/enum": ["SdlCompatible"],
+    "/$defs/sharedVirtualFeedLine/oneOf/0/properties/type/const": ["setRumble"],
+    "/$defs/sharedVirtualFeedLine/oneOf/1/properties/type/const": [
+      "stopRumble"
+    ],
+    "/$defs/sharedVirtualOutput/properties/hat/enum": [
+      "neutral",
+      "north",
+      "northEast",
+      "east",
+      "southEast",
+      "south",
+      "southWest",
+      "west",
+      "northWest"
+    ],
+    "/$defs/status/properties/commandLineTool/properties/state/enum": [
+      "installed",
+      "linkedElsewhere",
+      "broken",
+      "blockedByFile",
+      "missing"
+    ],
+    "/$defs/status/properties/permissions/properties/inputInject/enum": [
+      "granted",
+      "denied",
+      "unknown"
+    ],
+    "/$defs/status/properties/permissions/properties/inputRead/enum": [
+      "granted",
+      "denied",
+      "unknown"
+    ],
+    "/$defs/status/properties/service/properties/state/enum": [
+      "running",
+      "stopped"
+    ],
+    "/$defs/status/properties/transportExtension/properties/bundle/enum": [
+      "present",
+      "missing",
+      "invalid"
+    ],
+    "/$defs/status/properties/transportExtension/properties/registration/enum": [
+      "active",
+      "inactive",
+      "absent",
+      "unavailable"
+    ],
+    "/$defs/transportExtensionStatus/properties/bundle/enum": [
+      "present",
+      "missing",
+      "invalid"
+    ],
+    "/$defs/transportExtensionStatus/properties/registration/enum": [
+      "active",
+      "inactive",
+      "absent",
+      "unavailable"
+    ],
+    "/$defs/updateCheck/properties/status/enum": ["upToDate", "available"],
+    "/$defs/virtualExportMapping/properties/format/enum": ["sdl", "w3c"],
+    "/$defs/virtualExportMapping/properties/mappings/items/properties/profile/enum": [
+      "SdlCompatible"
+    ],
+    "/$defs/virtualReset/oneOf/0/properties/details/properties/reset/const": [
+      "all"
+    ],
+    "/$defs/virtualShow/properties/controllers/items/properties/override/enum": [
+      "SdlCompatible"
+    ],
+    "/$defs/virtualShow/properties/controllers/items/properties/overrideScope/enum": [
+      "unit",
+      "model"
+    ],
+    "/$defs/virtualShow/properties/controllers/items/properties/profile/enum": [
+      "SdlCompatible"
+    ],
+    "/$defs/virtualShow/properties/profiles/items/enum": ["SdlCompatible"]
+  },
+  "controller": {
+    "/$defs/capabilities/properties/rumble/const": ["absent"],
+    "/$defs/hidAxisUsage/properties/kind/const": ["axis"],
+    "/$defs/hidButtonUsage/properties/kind/const": ["button"],
+    "/$defs/hidHatUsage/properties/kind/const": ["hat"],
+    "/$defs/inputHatSource/oneOf/0/properties/encoding/const": ["8-way"],
+    "/$defs/inputHatSource/oneOf/1/properties/encoding/const": ["directions"],
+    "/$defs/inputHatSource/oneOf/2/properties/encoding/const": ["table"],
+    "/$defs/inputHatSource/oneOf/2/properties/values/additionalProperties/enum": [
+      "north",
+      "northEast",
+      "east",
+      "southEast",
+      "south",
+      "southWest",
+      "west",
+      "northWest"
+    ],
+    "/$defs/mode/allOf/0/if/properties/protocol/anyOf/0/properties/family/enum": [
+      "xbox.xid",
+      "xbox.xusb",
+      "xbox.gip"
+    ],
+    "/$defs/mode/allOf/0/if/properties/protocol/anyOf/1/properties/family/const": [
+      "vendor.gamesir"
+    ],
+    "/$defs/mode/allOf/0/if/properties/protocol/anyOf/1/properties/variant/const": [
+      "usb"
+    ],
+    "/$defs/mode/allOf/1/if/properties/protocol/properties/family/enum": [
+      "xbox.xid",
+      "xbox.xusb"
+    ],
+    "/$defs/mode/allOf/2/then/properties/protocol/properties/family/enum": [
+      "xbox.xusb",
+      "xbox.gip",
+      "nintendo.switch2"
+    ],
+    "/$defs/mode/allOf/4/not/properties/protocol/properties/family/enum": [
+      "vendor.gamesir"
+    ],
+    "/$defs/mode/allOf/5/then/properties/protocol/properties/family/enum": [
+      "hid.report-layout",
+      "vendor.ps3-third-party",
+      "xbox.xid",
+      "xbox.xusb",
+      "vendor.nvidia-shield",
+      "vendor.gamesir",
+      "nintendo.switch1"
+    ],
+    "/$defs/modeEndpoint/properties/direction/enum": ["in", "out"],
+    "/$defs/modeEndpoint/properties/transferType/enum": [
+      "control",
+      "isochronous",
+      "bulk",
+      "interrupt"
+    ],
+    "/$defs/modeMatch/properties/link/enum": [
+      "usb",
+      "bluetooth-classic",
+      "bluetooth-le",
+      "proprietary-radio-receiver"
+    ],
+    "/$defs/modeProbe/allOf/0/if/properties/expect/const": ["bytes"],
+    "/$defs/modeProbe/properties/expect/enum": ["answers", "stalls", "bytes"],
+    "/$defs/protocol/allOf/0/if/properties/family/const": ["xbox.xid"],
+    "/$defs/protocol/allOf/0/then/properties/variant/enum": ["gamepad"],
+    "/$defs/protocol/allOf/1/if/properties/family/const": ["xbox.xusb"],
+    "/$defs/protocol/allOf/1/then/properties/variant/enum": [
+      "wired",
+      "receiver"
+    ],
+    "/$defs/protocol/allOf/10/if/properties/family/const": ["sony.dualshock4"],
+    "/$defs/protocol/allOf/11/if/properties/family/const": [
+      "vendor.nvidia-shield"
+    ],
+    "/$defs/protocol/allOf/12/if/properties/family/const": ["sony.dualsense"],
+    "/$defs/protocol/allOf/13/if/properties/family/not/enum": [
+      "xbox.gip",
+      "nintendo.switch1",
+      "nintendo.switch2",
+      "vendor.gamesir",
+      "vendor.ps3-third-party",
+      "sony.dualshock4",
+      "vendor.nvidia-shield",
+      "sony.dualsense"
+    ],
+    "/$defs/protocol/allOf/2/if/properties/family/enum": [
+      "valve.steam-controller",
+      "valve.steam-triton"
+    ],
+    "/$defs/protocol/allOf/2/then/properties/variant/enum": [
+      "wired",
+      "dongle",
+      "bluetooth-le"
+    ],
+    "/$defs/protocol/allOf/3/if/properties/family/const": ["vendor.gamesir"],
+    "/$defs/protocol/allOf/3/then/allOf/0/if/properties/variant/const": ["usb"],
+    "/$defs/protocol/allOf/3/then/allOf/1/if/properties/variant/const": [
+      "enhanced-hid"
+    ],
+    "/$defs/protocol/allOf/3/then/properties/variant/enum": [
+      "usb",
+      "enhanced-hid"
+    ],
+    "/$defs/protocol/allOf/4/if/properties/family/not/enum": [
+      "xbox.xid",
+      "xbox.xusb",
+      "valve.steam-controller",
+      "valve.steam-triton",
+      "vendor.gamesir"
+    ],
+    "/$defs/protocol/allOf/5/if/properties/family/not/const": ["xbox.gip"],
+    "/$defs/protocol/allOf/6/if/properties/family/const": ["xbox.gip"],
+    "/$defs/protocol/allOf/7/if/properties/family/const": [
+      "vendor.ps3-third-party"
+    ],
+    "/$defs/protocol/allOf/8/if/properties/family/const": ["nintendo.switch1"],
+    "/$defs/protocol/allOf/9/if/properties/family/const": ["nintendo.switch2"],
+    "/$defs/protocol/properties/family/enum": [
+      "hid.descriptor",
+      "hid.report-layout",
+      "xbox.xid",
+      "xbox.xusb",
+      "xbox.gip",
+      "sony.sixaxis",
+      "sony.dualshock4",
+      "sony.dualsense",
+      "nintendo.switch1",
+      "nintendo.switch2",
+      "nintendo.switch-input-only",
+      "valve.steam-controller",
+      "valve.steam-triton",
+      "valve.steam-deck",
+      "vendor.flydigi",
+      "vendor.ps3-third-party",
+      "vendor.gamesir",
+      "vendor.nvidia-shield"
+    ],
+    "/$defs/protocol/properties/variant/enum": [
+      "gamepad",
+      "wired",
+      "receiver",
+      "dongle",
+      "usb",
+      "bluetooth-le",
+      "enhanced-hid"
+    ],
+    "/$defs/server/enum": ["system", "ojd"],
+    "/$defs/startupReport/properties/kind/enum": ["output", "feature"],
+    "/$defs/startupWrite/properties/phase/enum": ["startup", "activation"],
+    "/$defs/startupWrite/properties/transport/enum": [
+      "usb",
+      "bluetooth-classic",
+      "bluetooth-le"
+    ],
+    "/$defs/templateReport/properties/kind/enum": ["output", "feature"],
+    "/$defs/templateUSBPacket/properties/kind/const": ["usb"],
+    "/$defs/usbOverride/properties/configuration/const": ["set1-before-claim"],
+    "/allOf/0/then/properties/modes/items/properties/protocol/anyOf/0/properties/family/enum": [
+      "xbox.xid",
+      "xbox.xusb",
+      "xbox.gip"
+    ],
+    "/allOf/0/then/properties/modes/items/properties/protocol/anyOf/1/properties/family/const": [
+      "vendor.gamesir"
+    ],
+    "/allOf/0/then/properties/modes/items/properties/protocol/anyOf/1/properties/variant/const": [
+      "usb"
+    ],
+    "/allOf/1/then/properties/modes/items/properties/protocol/properties/family/const": [
+      "xbox.gip"
+    ],
+    "/allOf/10/then/properties/modes/items/properties/protocol/properties/family/const": [
+      "sony.dualshock4"
+    ],
+    "/allOf/11/then/properties/modes/items/properties/protocol/properties/family/const": [
+      "nintendo.switch1"
+    ],
+    "/allOf/12/then/properties/modes/items/properties/protocol/properties/family/const": [
+      "valve.steam-triton"
+    ],
+    "/allOf/13/then/properties/modes/items/properties/protocol/properties/family/enum": [
+      "nintendo.switch2",
+      "vendor.gamesir"
+    ],
+    "/allOf/14/then/properties/modes/items/properties/protocol/properties/family/enum": [
+      "xbox.gip",
+      "xbox.xusb"
+    ],
+    "/allOf/15/then/properties/modes/items/properties/protocol/properties/family/enum": [
+      "sony.dualshock4",
+      "sony.dualsense"
+    ],
+    "/allOf/16/then/properties/modes/items/properties/protocol/properties/family/const": [
+      "xbox.gip"
+    ],
+    "/allOf/17/then/properties/modes/items/properties/protocol/properties/family/const": [
+      "xbox.gip"
+    ],
+    "/allOf/18/then/properties/modes/items/properties/protocol/properties/family/enum": [
+      "xbox.gip",
+      "xbox.xusb"
+    ],
+    "/allOf/19/then/properties/modes/items/properties/protocol/not/anyOf/0/properties/family/enum": [
+      "xbox.xid",
+      "xbox.xusb",
+      "xbox.gip"
+    ],
+    "/allOf/19/then/properties/modes/items/properties/protocol/not/anyOf/1/properties/family/const": [
+      "vendor.gamesir"
+    ],
+    "/allOf/19/then/properties/modes/items/properties/protocol/not/anyOf/1/properties/variant/const": [
+      "usb"
+    ],
+    "/allOf/2/if/properties/modes/contains/properties/protocol/properties/family/not/enum": [
+      "xbox.xusb",
+      "xbox.xid"
+    ],
+    "/allOf/20/then/properties/modes/items/properties/protocol/properties/family/const": [
+      "nintendo.switch2"
+    ],
+    "/allOf/21/then/properties/modes/items/properties/protocol/properties/family/const": [
+      "hid.descriptor"
+    ],
+    "/allOf/3/if/properties/modes/contains/properties/protocol/properties/family/const": [
+      "xbox.xid"
+    ],
+    "/allOf/4/if/properties/modes/contains/properties/protocol/properties/family/const": [
+      "xbox.xusb"
+    ],
+    "/allOf/5/if/properties/modes/contains/properties/protocol/properties/family/not/const": [
+      "sony.dualsense"
+    ],
+    "/allOf/6/if/properties/modes/contains/properties/protocol/properties/family/const": [
+      "sony.dualsense"
+    ],
+    "/allOf/7/else/if/properties/modes/contains/properties/protocol/properties/family/const": [
+      "hid.descriptor"
+    ],
+    "/allOf/7/if/properties/modes/contains/properties/protocol/properties/family/const": [
+      "hid.report-layout"
+    ],
+    "/allOf/7/then/properties/modes/items/properties/protocol/properties/family/const": [
+      "hid.report-layout"
+    ],
+    "/allOf/8/then/properties/modes/items/properties/protocol/not/anyOf/0/properties/family/enum": [
+      "xbox.xid",
+      "xbox.xusb",
+      "xbox.gip"
+    ],
+    "/allOf/8/then/properties/modes/items/properties/protocol/not/anyOf/1/properties/family/const": [
+      "vendor.gamesir"
+    ],
+    "/allOf/8/then/properties/modes/items/properties/protocol/not/anyOf/1/properties/variant/const": [
+      "usb"
+    ],
+    "/allOf/9/then/properties/modes/items/properties/protocol/anyOf/0/properties/family/enum": [
+      "xbox.xid",
+      "xbox.xusb",
+      "xbox.gip"
+    ],
+    "/allOf/9/then/properties/modes/items/properties/protocol/anyOf/1/properties/family/const": [
+      "vendor.gamesir"
+    ],
+    "/allOf/9/then/properties/modes/items/properties/protocol/anyOf/1/properties/variant/const": [
+      "usb"
+    ]
+  },
+  "endpoint": {
+    "/$defs/persona/enum": ["SdlCompatible"],
+    "/$defs/subscription/properties/stream/const": ["controllers"]
+  },
+  "error-codes": {
+    "/$defs/entry/allOf/0/if/properties/domain/const": ["cli"],
+    "/$defs/entry/allOf/1/if/properties/domain/const": ["remapping"],
+    "/$defs/entry/allOf/2/if/properties/domain/enum": [
+      "cli",
+      "endpoint",
+      "mod"
+    ],
+    "/$defs/entry/properties/domain/enum": [
+      "endpoint",
+      "cli",
+      "remapping",
+      "mod",
+      "document"
+    ]
+  },
+  "profile": {
+    "/$defs/action/properties/behavior/default": ["hold"],
+    "/$defs/action/properties/behavior/enum": [
+      "hold",
+      "toggle",
+      "tap_on_press",
+      "tap_on_release",
+      "pulse",
+      "press",
+      "release"
+    ],
+    "/$defs/adaptiveTriggerEffect/if/properties/kind/const": ["off"],
+    "/$defs/adaptiveTriggerEffect/properties/kind/enum": ["off", "resistance"],
+    "/$defs/axisTuning/properties/responseCurve/enum": [
+      "linear",
+      "ease_in",
+      "ease_out",
+      "smooth_step"
+    ],
+    "/$defs/binding/properties/behavior/default": ["hold"],
+    "/$defs/binding/properties/behavior/enum": [
+      "hold",
+      "toggle",
+      "tap_on_press",
+      "tap_on_release",
+      "pulse",
+      "press",
+      "release"
+    ],
+    "/$defs/chord/properties/mode/default": ["modifier"],
+    "/$defs/chord/properties/mode/enum": ["modifier", "simultaneous"],
+    "/$defs/destination/oneOf/0/properties/type/const": ["keyboard"],
+    "/$defs/destination/oneOf/1/properties/type/const": ["gamepad_button"],
+    "/$defs/destination/oneOf/2/properties/type/const": ["gamepad_dpad"],
+    "/$defs/destination/oneOf/3/properties/type/const": ["gamepad_axis"],
+    "/$defs/destination/oneOf/4/properties/button/enum": [
+      "left",
+      "right",
+      "middle",
+      "back",
+      "forward"
+    ],
+    "/$defs/destination/oneOf/4/properties/type/const": ["mouse_button"],
+    "/$defs/destination/oneOf/5/properties/axis/enum": ["x", "y"],
+    "/$defs/destination/oneOf/5/properties/type/const": ["mouse_movement"],
+    "/$defs/destination/oneOf/6/properties/axis/enum": ["x", "y"],
+    "/$defs/destination/oneOf/6/properties/type/const": ["scroll"],
+    "/$defs/destination/oneOf/7/properties/type/const": ["physical"],
+    "/$defs/discreteSource/allOf/1/not/properties/type/const": ["axis"],
+    "/$defs/layer/properties/activationMode/enum": ["hold", "toggle"],
+    "/$defs/motionTuning/properties/space/default": ["player"],
+    "/$defs/motionTuning/properties/space/enum": ["local", "player", "world"],
+    "/$defs/physicalOutput/oneOf/0/properties/motor/enum": [
+      "leftMain",
+      "rightMain",
+      "leftTrigger",
+      "rightTrigger",
+      "leftHaptic",
+      "rightHaptic"
+    ],
+    "/$defs/physicalOutput/oneOf/0/properties/type/const": ["rumble"],
+    "/$defs/physicalOutput/oneOf/1/properties/type/const": ["player_indicator"],
+    "/$defs/physicalOutput/oneOf/2/properties/type/const": ["color"],
+    "/$defs/physicalOutput/oneOf/3/properties/type/const": ["brightness"],
+    "/$defs/physicalOutput/oneOf/4/properties/trigger/enum": ["left", "right"],
+    "/$defs/physicalOutput/oneOf/4/properties/type/const": ["adaptive_trigger"],
+    "/$defs/source/oneOf/0/properties/type/const": ["button"],
+    "/$defs/source/oneOf/1/properties/type/const": ["dpad"],
+    "/$defs/source/oneOf/2/properties/type/const": ["axis"],
+    "/$defs/source/oneOf/3/properties/type/const": ["axis_direction"],
+    "/$defs/source/oneOf/4/properties/stage/enum": ["soft", "full"],
+    "/$defs/source/oneOf/4/properties/type/const": ["trigger_stage"],
+    "/$defs/source/oneOf/5/properties/direction/enum": ["left", "right"],
+    "/$defs/source/oneOf/5/properties/type/const": ["motion_lean"],
+    "/$defs/source/oneOf/6/properties/type/const": ["touch_contact"],
+    "/$defs/source/oneOf/7/properties/type/const": ["touch_grid"],
+    "/$defs/source/oneOf/8/properties/direction/enum": [
+      "up",
+      "down",
+      "left",
+      "right"
+    ],
+    "/$defs/source/oneOf/8/properties/type/const": ["touch_swipe"],
+    "/$defs/stickMapping/properties/rotationDirection/default": ["clockwise"],
+    "/$defs/stickMapping/properties/rotationDirection/enum": [
+      "clockwise",
+      "counterclockwise"
+    ],
+    "/$defs/stickMapping/properties/scrollAxis/default": ["vertical"],
+    "/$defs/stickMapping/properties/scrollAxis/enum": [
+      "horizontal",
+      "vertical"
+    ],
+    "/$defs/stickSide/enum": ["left", "right"],
+    "/$defs/touchSurface/enum": ["primary", "left", "right"],
+    "/$defs/triggerMapping/properties/mode/default": ["simultaneous"],
+    "/$defs/triggerMapping/properties/mode/enum": [
+      "simultaneous",
+      "exclusive",
+      "prefer_full",
+      "prefer_full_combined",
+      "responsive_prefer_full",
+      "responsive_prefer_full_combined"
+    ],
+    "/$defs/triggerSide/enum": ["left", "right"],
+    "/properties/applicationScope/oneOf/0/properties/type/const": ["global"],
+    "/properties/applicationScope/oneOf/1/properties/type/const": [
+      "application"
+    ],
+    "/properties/outputPolicy/properties/physicalInput/enum": [
+      "shared",
+      "exclusive"
+    ],
+    "/properties/outputPolicy/properties/virtualGamepad/enum": [
+      "disabled",
+      "mapped",
+      "passthrough"
+    ]
+  },
+  "protocol-description": {
+    "/$defs/controls/properties/base/enum": ["xbox"],
+    "/$defs/descriptionSubcommandRequest/properties/spiRead/properties/purpose/enum": [
+      "factoryMotionCalibration",
+      "userMotionCalibration"
+    ],
+    "/$defs/integerField/properties/type/const": ["integer"],
+    "/$defs/interfaceSignature/properties/variant/enum": [
+      "usb",
+      "bluetooth-classic",
+      "bluetooth-le",
+      "gamepad",
+      "wired",
+      "receiver",
+      "dongle",
+      "enhanced-hid"
+    ],
+    "/$defs/macOSOwnedOutput/properties/lightingFeatures/items/enum": [
+      "playerIndicator",
+      "programmableColor",
+      "programmableBrightness"
+    ],
+    "/$defs/parameterDeclaration/oneOf/0/properties/type/const": ["flag"],
+    "/$defs/parameterDeclaration/oneOf/1/properties/type/const": ["enum"],
+    "/$defs/parameterDeclaration/oneOf/2/properties/type/const": ["object"],
+    "/allOf/0/if/properties/family/const": ["hid.descriptor"],
+    "/allOf/1/if/properties/family/const": ["hid.report-layout"],
+    "/allOf/10/if/properties/family/const": ["nintendo.switch-input-only"],
+    "/allOf/10/then/properties/defaults/properties/variants/propertyNames/enum": [
+      "usb",
+      "bluetooth-classic"
+    ],
+    "/allOf/10/then/properties/interfaceSignatures/items/properties/variant/enum": [
+      "usb",
+      "bluetooth-classic"
+    ],
+    "/allOf/10/then/properties/rawUSB/anyOf/1/items/enum": [
+      "usb",
+      "bluetooth-classic"
+    ],
+    "/allOf/11/if/properties/family/const": ["valve.steam-controller"],
+    "/allOf/11/then/properties/defaults/properties/variants/propertyNames/enum": [
+      "wired",
+      "dongle",
+      "bluetooth-le"
+    ],
+    "/allOf/11/then/properties/interfaceSignatures/items/properties/variant/enum": [
+      "wired",
+      "dongle",
+      "bluetooth-le"
+    ],
+    "/allOf/11/then/properties/rawUSB/anyOf/1/items/enum": [
+      "wired",
+      "dongle",
+      "bluetooth-le"
+    ],
+    "/allOf/12/if/properties/family/const": ["valve.steam-triton"],
+    "/allOf/12/then/properties/defaults/properties/variants/propertyNames/enum": [
+      "wired",
+      "dongle",
+      "bluetooth-le"
+    ],
+    "/allOf/12/then/properties/interfaceSignatures/items/properties/variant/enum": [
+      "wired",
+      "dongle",
+      "bluetooth-le"
+    ],
+    "/allOf/12/then/properties/rawUSB/anyOf/1/items/enum": [
+      "wired",
+      "dongle",
+      "bluetooth-le"
+    ],
+    "/allOf/13/if/properties/family/const": ["valve.steam-deck"],
+    "/allOf/14/if/properties/family/const": ["vendor.flydigi"],
+    "/allOf/15/if/properties/family/const": ["vendor.ps3-third-party"],
+    "/allOf/16/if/properties/family/const": ["vendor.gamesir"],
+    "/allOf/16/then/properties/defaults/properties/variants/propertyNames/enum": [
+      "usb",
+      "enhanced-hid"
+    ],
+    "/allOf/16/then/properties/interfaceSignatures/items/properties/variant/enum": [
+      "usb",
+      "enhanced-hid"
+    ],
+    "/allOf/16/then/properties/rawUSB/anyOf/1/items/enum": [
+      "usb",
+      "enhanced-hid"
+    ],
+    "/allOf/17/if/properties/family/const": ["vendor.nvidia-shield"],
+    "/allOf/18/if/not/properties/family/const": ["nintendo.switch1"],
+    "/allOf/19/if/not/properties/family/const": ["xbox.gip"],
+    "/allOf/2/if/properties/family/const": ["xbox.xid"],
+    "/allOf/2/then/properties/defaults/properties/variants/propertyNames/enum": [
+      "gamepad"
+    ],
+    "/allOf/2/then/properties/interfaceSignatures/items/properties/variant/enum": [
+      "gamepad"
+    ],
+    "/allOf/2/then/properties/rawUSB/anyOf/1/items/enum": ["gamepad"],
+    "/allOf/20/if/not/properties/family/const": ["xbox.xusb"],
+    "/allOf/21/if/not/anyOf/1/properties/family/const": ["hid.descriptor"],
+    "/allOf/3/if/properties/family/const": ["xbox.xusb"],
+    "/allOf/3/then/properties/defaults/properties/variants/propertyNames/enum": [
+      "wired",
+      "receiver"
+    ],
+    "/allOf/3/then/properties/interfaceSignatures/items/properties/variant/enum": [
+      "wired",
+      "receiver"
+    ],
+    "/allOf/3/then/properties/rawUSB/anyOf/1/items/enum": ["wired", "receiver"],
+    "/allOf/4/if/properties/family/const": ["xbox.gip"],
+    "/allOf/4/then/properties/defaults/properties/variants/propertyNames/enum": [
+      "usb"
+    ],
+    "/allOf/4/then/properties/interfaceSignatures/items/properties/variant/enum": [
+      "usb"
+    ],
+    "/allOf/4/then/properties/rawUSB/anyOf/1/items/enum": ["usb"],
+    "/allOf/5/if/properties/family/const": ["sony.sixaxis"],
+    "/allOf/5/then/properties/defaults/properties/variants/propertyNames/enum": [
+      "usb",
+      "bluetooth-classic"
+    ],
+    "/allOf/5/then/properties/interfaceSignatures/items/properties/variant/enum": [
+      "usb",
+      "bluetooth-classic"
+    ],
+    "/allOf/5/then/properties/rawUSB/anyOf/1/items/enum": [
+      "usb",
+      "bluetooth-classic"
+    ],
+    "/allOf/6/if/properties/family/const": ["sony.dualshock4"],
+    "/allOf/6/then/properties/defaults/properties/variants/propertyNames/enum": [
+      "usb",
+      "bluetooth-classic"
+    ],
+    "/allOf/6/then/properties/interfaceSignatures/items/properties/variant/enum": [
+      "usb",
+      "bluetooth-classic"
+    ],
+    "/allOf/6/then/properties/rawUSB/anyOf/1/items/enum": [
+      "usb",
+      "bluetooth-classic"
+    ],
+    "/allOf/7/if/properties/family/const": ["sony.dualsense"],
+    "/allOf/7/then/properties/defaults/properties/variants/propertyNames/enum": [
+      "usb",
+      "bluetooth-classic"
+    ],
+    "/allOf/7/then/properties/interfaceSignatures/items/properties/variant/enum": [
+      "usb",
+      "bluetooth-classic"
+    ],
+    "/allOf/7/then/properties/rawUSB/anyOf/1/items/enum": [
+      "usb",
+      "bluetooth-classic"
+    ],
+    "/allOf/8/if/properties/family/const": ["nintendo.switch1"],
+    "/allOf/8/then/properties/defaults/properties/variants/propertyNames/enum": [
+      "usb",
+      "bluetooth-classic"
+    ],
+    "/allOf/8/then/properties/interfaceSignatures/items/properties/variant/enum": [
+      "usb",
+      "bluetooth-classic"
+    ],
+    "/allOf/8/then/properties/rawUSB/anyOf/1/items/enum": [
+      "usb",
+      "bluetooth-classic"
+    ],
+    "/allOf/9/if/properties/family/const": ["nintendo.switch2"],
+    "/allOf/9/then/properties/defaults/properties/variants/propertyNames/enum": [
+      "usb",
+      "bluetooth-le"
+    ],
+    "/allOf/9/then/properties/interfaceSignatures/items/properties/variant/enum": [
+      "usb",
+      "bluetooth-le"
+    ],
+    "/allOf/9/then/properties/rawUSB/anyOf/1/items/enum": [
+      "usb",
+      "bluetooth-le"
+    ]
+  },
+  "report": {
+    "/$defs/bindingInterface/properties/hostTransport/enum": [
+      "usb",
+      "bluetoothClassic",
+      "bluetoothLE",
+      "proprietaryRadioReceiver"
+    ],
+    "/$defs/bindingReason/enum": [
+      "noProtocolMatch",
+      "ambiguousProtocolMatch",
+      "interfaceContractMismatch",
+      "descriptorContractMismatch",
+      "packetContractMismatch",
+      "unsupportedProtocolVariant",
+      "unsupportedTransportVariant",
+      "requiredInitializationFailed",
+      "catalogConflict",
+      "virtualProfileUnavailable"
+    ],
+    "/$defs/bindingResult/if/properties/outcome/const": ["bound"],
+    "/$defs/bindingResult/properties/accessBackend/enum": [
+      "ioHID",
+      "ioUSBHost",
+      "usbDriverKit",
+      "coreBluetoothGATT"
+    ],
+    "/$defs/bindingResult/properties/matchedPredicates/items/enum": [
+      "catalogIdentity",
+      "catalogAccessPath",
+      "hostTransport",
+      "interfaceSignature",
+      "deviceClassSignature",
+      "interruptEndpointPair",
+      "hidDescriptorContract"
+    ],
+    "/$defs/bindingResult/properties/outcome/enum": ["bound", "unsupported"],
+    "/$defs/bindingResult/properties/rule/enum": [
+      "catalogRecord",
+      "interfaceSignature",
+      "hidDescriptor"
+    ],
+    "/$defs/buildIdentity/properties/sourceState/enum": [
+      "clean",
+      "dirty",
+      "unknown"
+    ],
+    "/$defs/controller/properties/binding/allOf/1/properties/outcome/const": [
+      "bound"
+    ],
+    "/$defs/controller/properties/sessionState/enum": ["active", "suspended"],
+    "/$defs/controllerConnectionState/properties/backend/enum": [
+      "ioHID",
+      "ioUSBHost",
+      "usbDriverKit",
+      "coreBluetoothGATT"
+    ],
+    "/$defs/controllerConnectionState/properties/power/properties/charging/enum": [
+      "unknown",
+      "discharging",
+      "charging",
+      "full",
+      "notChargeable"
+    ],
+    "/$defs/controllerConnectionState/properties/transport/enum": [
+      "usb",
+      "bluetoothClassic",
+      "bluetoothLE",
+      "proprietaryRadioReceiver"
+    ],
+    "/$defs/controllerFrameTimings/properties/frames/items/properties/stages/items/properties/stage/enum": [
+      "read",
+      "parse",
+      "dispatch",
+      "delivery-virtual-device",
+      "delivery-endpoint"
+    ],
+    "/$defs/controllerInputHealth/properties/failureReason/enum": [
+      "missingReports",
+      "freshnessNotAdvancing"
+    ],
+    "/$defs/controllerInputHealth/properties/state/enum": [
+      "healthy",
+      "stale",
+      "waitingForNeutral"
+    ],
+    "/$defs/hidGamepad/properties/serialKind/enum": [
+      "none",
+      "ojdUserSpace",
+      "present"
+    ],
+    "/$defs/physicalOutputCapabilities/properties/adaptiveTriggers/items/enum": [
+      "left",
+      "right"
+    ],
+    "/$defs/physicalOutputCapabilities/properties/lightingFeatures/items/enum": [
+      "playerIndicator",
+      "programmableColor",
+      "programmableBrightness"
+    ],
+    "/$defs/rejectedCandidate/properties/protocolID/enum": [
+      "hid.descriptor",
+      "hid.report-layout",
+      "xbox.xid",
+      "xbox.xusb",
+      "xbox.gip",
+      "sony.sixaxis",
+      "sony.dualshock4",
+      "sony.dualsense",
+      "nintendo.switch1",
+      "nintendo.switch2",
+      "nintendo.switch-input-only",
+      "valve.steam-controller",
+      "valve.steam-triton",
+      "valve.steam-deck",
+      "vendor.flydigi",
+      "vendor.ps3-third-party",
+      "vendor.gamesir",
+      "vendor.nvidia-shield"
+    ],
+    "/$defs/rumbleMotor/enum": [
+      "leftMain",
+      "rightMain",
+      "leftTrigger",
+      "rightTrigger",
+      "leftHaptic",
+      "rightHaptic"
+    ],
+    "/$defs/systemGamepadAudit/properties/source/enum": [
+      "downloadedMobileAsset",
+      "preinstalledMobileAsset",
+      "unavailable"
+    ],
+    "/$defs/unboundDevice/properties/binding/allOf/1/properties/outcome/const": [
+      "unsupported"
+    ]
+  },
+  "virtual-device": {
+    "/properties/labels/enum": ["xbox", "generic"],
+    "/properties/layout/enum": ["ojd-generic-gamepad", "xbox-one-s-bluetooth"],
+    "/properties/persona/enum": ["SdlCompatible"]
+  }
+}

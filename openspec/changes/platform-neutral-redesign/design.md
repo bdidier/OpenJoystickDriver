@@ -50,14 +50,14 @@ Layers, each with one owner type. A device is observed, linked, bound to a recor
 | Layer | Content | Today's problem |
 | --- | --- | --- |
 | L0 Observation | Raw OS facts: IOHID properties, USB descriptors, BLE advertisement | Observed facts are mixed with identity |
-| L1 Link | `kind` (`usb`, `bluetoothClassic`, `bluetoothLE`, `radioReceiver`), `access` (`ioHid`, `ioUsbHost`, `usbDriverKit`, `coreBluetoothGatt`), address | Switch 2 invents locations `0xB1E0_0000` |
+| L1 Link | `kind` (`USB`, `BluetoothClassic`, `BluetoothLE`, `ProprietaryRadioReceiver`), `access` (`HID`, `RawUSB`, `USBExtension`, `GATT`), address | Switch 2 invents locations `0xB1E0_0000` |
 | L2 Binding | Model record, `modes[]` chosen by link kind and interface signature, and extra match keys; roles | `DeviceIdentifier` carries VID:PID and location |
 | L3 Protocol | A protocol description (data) plus driver code with typed parameters | 25 `ControllerQuirk` tags in `Sources/OpenJoystickDriverKit/Protocol/Catalog/TransportProfiles.swift:99-183` |
 | L4 Canonical state | Controls from the vocabulary, motion, touch, battery | Two vocabularies (`ControlID`, `RemappingButton`) |
 | L5 Mapping | User profile over canonical state | none |
 | L6 Serving | One `ServingRoute` per controller from a pure policy | Decided in several places |
 
-Record flow: observed device, then link, then record `modes[]` with match keys (interface signature, manufacturer and product strings, read-only behavioral probes for same-ID clones), then a protocol description, then canonical state, then user mapping, then one serving-route policy, then a persona. Personas are `Generic` `1209:4A4F` (default) and `SdlCompatible` `045E:02FD`, with an OJD-published SDL mapping.
+Record flow: observed device, then link, then record `modes[]` with match keys (interface signature, manufacturer and product strings, read-only behavioral probes for same-ID clones), then a protocol description, then canonical state, then user mapping, then one serving-route policy, then a persona. Personas are `Generic` `1209:4A4F` (default) and `SDLCompatible` `045E:02FD`, with an OJD-published SDL mapping.
 
 ### D2 Record and schema model
 
@@ -128,6 +128,13 @@ Assumed (veto-able) and recorded here:
 | `apiVersion: openjoystickdriver/v1alpha1` (Kubernetes `group/version` grammar, group is the project name) | No domain is owned. Kubernetes alpha means "may break without notice", which matches `0.6.0-alpha.1`. Promote to `v1beta1` when frozen. |
 | `$id: https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/<kind>.schema.json`, published from flat sources `Resources/Schemas/<kind>.schema.json`, version written in each file, no version folder | Decision 2 (biome.js style). The task prepares the Pages publish; the user turns Pages on. |
 | Fields lowerCamelCase, enum values UpperCamelCase, CLI argument values lowercase kebab-case mapped 1:1 (for example `ojd virtual set generic`) | Kubernetes API conventions plus clig.dev. |
+| Acronyms stay upper case inside UpperCamelCase values: `XboxGIP`, `HIDDescriptor`, `BluetoothLE`, `USB`, `SDL`, `OJD`, `SDLCompatible`, `VirtualHID`, `ExtensionOwnedUSB`, `SystemHIDVisible`, `RawUSB`, `USBExtension`, `GATT` | One spelling in documents and Swift cases. The CLI mapping splits acronym runs, so no per-type table exists. |
+| One kebab function maps a value to its CLI argument: a run of capitals and digits is one acronym, and a word starts at a capital that follows a lowercase letter or is followed by one (`HIDDescriptor` is `hid-descriptor`, `XboxGIP` is `xbox-gip`, `OJDGenericGamepad` is `ojd-generic-gamepad`, `VendorPS3ThirdParty` is `vendor-ps3-third-party`, `W3C` is `w3c`; a digit stays with the word before it). A CLI argument selects the case whose kebab form equals it over `allCases`. The mapping is one-to-one within each type: no two values of one enum share a kebab form, which a Python test checks over every schema enum and `CommandLineName.collisions(in:)` checks over every Swift type. Swift (`CommandLineName`) and Python (`Scripts/Catalog/command_line_name.py`) share one sample table, and a test checks that the mapping is injective and round-trips. | "Mapped 1:1" holds by construction, with no hand tables to drift. |
+| Protocol description files are named by the kebab form of the family value (`xbox-gip.json` for `XboxGIP`) | The file name and the family value stay one mapping. |
+| Names that are not enum values keep their own grammar: controller mode ids (`default`, an RFC 1123 label pattern), `apiVersion`, the CloudEvents attributes of the support report, and the HID usage page names and `$comment` in the crosswalk schema | External formats and names. `Tests/RepositoryScripts/test_schema_naming.py` lists each by schema and JSON pointer with its reason. |
+| Values that name a field (tuning keys, protocol parameters, record sections, dotted setting paths such as `notify.controllerConnected`) stay lowerCamelCase and must be a property name of the schema they point at; `launchAtLogin` has an explicit entry because the login-item state is not a settings property | The value is a field, so the field rule applies. The same test checks each such list against its source. |
+| `Tests/RepositoryScripts/test_schema_naming.py` walks every `Resources/Schemas/*.schema.json` and fails on an enum value, string constant or enum default that is not UpperCamelCase, and on a property or `required` entry that is not lowerCamelCase. Values that still break the rule sit in `schema_naming_pending.json`, which only shrinks and is empty when the rule holds everywhere | The rule is enforced by a test, not by review. |
+| `publisher.kind` values `Signed` and `Platform` are hashed into the short access ID, so the spelling fixes every displayed short access ID; `CHANGELOG.md` records the change | The hashed spelling is the document spelling. |
 | Raw bytes are uppercase hex pairs with single spaces, pattern `^[0-9A-F]{2}( [0-9A-F]{2})*$` | Kubernetes uses base64; these bytes are read against USB traces. |
 | An unknown or missing `apiVersion` is rejected with a new error code | No runtime upgrade (decision 2). |
 | Stored files are not migrated; `U-` and `E-` prefixes may change | Decision 4. |
@@ -136,15 +143,15 @@ The 0.5.0-beta.4 audit shows `v1beta1` never shipped, so rewriting the layout br
 
 ### D5 Serving routes and personas
 
-`ServingRoute` is `NativePassThrough(allowance)`, `VirtualHid(persona)`, `ExtensionOwned`, or `OutputDisabled`, decided once by a pure `ServingPolicy` from record, link, user setting and the controller's allowance (`PhysicalControllerOutputCapabilities`). There is no per-app input: a virtual HID device is a system-wide `IOHIDUserDevice`, and macOS gives the service no way to know which app reads it. The current automatic profile default (`VirtualHIDProfileSelector.swift:50`, spoof `045E:02FD`) becomes `Generic`.
+`ServingRoute` is `NativePassThrough(allowance)`, `VirtualHID(persona)`, `ExtensionOwned`, or `OutputDisabled`, decided once by a pure `ServingPolicy` from record, link, user setting and the controller's allowance (`PhysicalControllerOutputCapabilities`). There is no per-app input: a virtual HID device is a system-wide `IOHIDUserDevice`, and macOS gives the service no way to know which app reads it. The current automatic profile default (`VirtualHIDProfileSelector.swift:50`, spoof `045E:02FD`) becomes `Generic`.
 
-Assumed (veto-able): default persona is `Generic` everywhere; `SdlCompatible` is opt-in per model or by user setting. Reason: SDL 3.4.18 does not list the `045E:02FD` persona with default hints, nor with `SDL_JOYSTICK_HIDAPI_XBOX(_ONE)=1`, `SDL_JOYSTICK_MFI=1` or `--gc-prewarm`; it appears only with `SDL_JOYSTICK_HIDAPI=0` (through MFi, as `045E:02E0`). The reading is that SDL's HIDAPI Xbox driver claims the device and then fails to open it, which matches the wiki's Steam and SDL failure reports. The `1209:4A4F` persona enumerates and, with the mapping line below, SDL reports `is_gamepad=yes` with axes at 0 at rest. Button and axis directions are not yet confirmed by presses.
+Assumed (veto-able): default persona is `Generic` everywhere; `SDLCompatible` is opt-in per model or by user setting. Reason: SDL 3.4.18 does not list the `045E:02FD` persona with default hints, nor with `SDL_JOYSTICK_HIDAPI_XBOX(_ONE)=1`, `SDL_JOYSTICK_MFI=1` or `--gc-prewarm`; it appears only with `SDL_JOYSTICK_HIDAPI=0` (through MFi, as `045E:02E0`). The reading is that SDL's HIDAPI Xbox driver claims the device and then fails to open it, which matches the wiki's Steam and SDL failure reports. The `1209:4A4F` persona enumerates and, with the mapping line below, SDL reports `is_gamepad=yes` with axes at 0 at rest. Button and axis directions are not yet confirmed by presses.
 
-The `SdlCompatible` persona needs a hardware-evidenced fix so SDL's HIDAPI Xbox driver opens it. Until the fix lands it is documented as not working with default SDL hints. No Microsoft ID appears outside this persona: `1209:0001` (SDK sample), `4F4A:4449` (retired) and the 045E values in the HIDTool subcommands are reconciled (sample uses a documented sample ID; retired ID removed; HIDTool takes IDs from records).
+The `SDLCompatible` persona needs a hardware-evidenced fix so SDL's HIDAPI Xbox driver opens it. Until the fix lands it is documented as not working with default SDL hints. No Microsoft ID appears outside this persona: `1209:0001` (SDK sample), `4F4A:4449` (retired) and the 045E values in the HIDTool subcommands are reconciled (sample uses a documented sample ID; retired ID removed; HIDTool takes IDs from records).
 
 ### D6 SDL, Wine/CrossOver and browsers
 
-| Consumer | `Generic` `1209:4A4F` | `SdlCompatible` `045E:02FD` |
+| Consumer | `Generic` `1209:4A4F` | `SDLCompatible` `045E:02FD` |
 | --- | --- | --- |
 | SDL3 app (Steam, games) | Enumerated; gamepad only with OJD's mapping (CRC-less GUID `03000000091200004f4a000008040000`). Supplied by environment variable for apps OJD launches and by a mapping file the CLI prints or exports. | Not listed with default hints (live evidence); needs the hardware-evidenced fix. |
 | GameController framework | Seen as a generic HID gamepad. | `supportsHIDDevice` yes, "Xbox Wireless Controller", category "Xbox One", haptics yes. |
@@ -197,20 +204,20 @@ Follows clig.dev plus Apple conventions; global flags `--json --plain -q --no-co
 | Old | New |
 | --- | --- |
 | `controller ownership native\|virtual`, `outputOwner macos\|ojd`, record `ownership` | `controller claim <ref>` / `controller release <ref>`, record field `server` |
-| `ownership.physical` `driverKitOwnedUSB`, `nativeGamepad`, `nativeHIDVisible` | `ExtensionOwnedUsb`, `SystemGamepad`, `SystemHidVisible` |
+| `ownership.physical` `driverKitOwnedUSB`, `nativeGamepad`, `nativeHIDVisible` | `ExtensionOwnedUSB`, `SystemGamepad`, `SystemHIDVisible` |
 | `extension` command, kind `DriverExtension` | `transport-extension`, kind `TransportExtension` |
 | `usbExtension claims\|doesNotClaim` | `transportClaim claimed\|unclaimed` |
 | permission ids `input-monitoring`, `accessibility`, `driver-extension` | `input-read`, `input-inject`, `usb-transport` |
-| `identityKind team\|apple`, `teamIdentifier` | `publisher.kind signed\|platform`, `publisher.id` |
+| `identityKind team\|apple`, `teamIdentifier` | `publisher.kind Signed\|Platform`, `publisher.id` |
 | `--app <bundle-id>`, `bundleIdentifier` | `--app <app-id>`, `appID` |
 | modifier names `command`, `option` | `meta`, `alt` |
 | `diagnose --bundle` | `diagnose --output` |
-| `accessBackend ioHID\|ioUSBHost\|usbDriverKit\|coreBluetoothGATT` | `hid\|rawUsb\|usbExtension\|gatt` |
+| `accessBackend ioHID\|ioUSBHost\|usbDriverKit\|coreBluetoothGATT` | `HID\|RawUSB\|USBExtension\|GATT` |
 | `macOSVersion` | `osVersion` plus `osName` |
 | `appleGameControllerAudit`, `appleExactDeviceCount`, `appleRecord`, `appleIdentifiers` | `systemGamepadAudit`, `systemExactDeviceCount`, `systemRecord`, `systemIdentifiers` |
 | kinds `USBPacket`, `JoyConPair` | `RawReport`, `ControllerPair` |
 | socket in `DARWIN_USER_TEMP_DIR` | runtime-directory port |
-| endpoint `as: SdlCompatible` | persona ids |
+| endpoint `as: SDLCompatible` | persona ids |
 
 New: `ojd virtual export-mapping`, `ojd setting` keys for every GUI-only switch (per-event notifications, Send Test Notification, Copy Support Report as `diagnose` on stdout, which the GUI copies), a settings file schema (settings move out of `UserDefaults` into layered files), and a single `DataDirectory` port that every store uses. The CLI target imports the Service in 9 files and USB in 2; the neutral core is split from a macOS host adapter so that `Sources/OpenJoystickDriver` has no macOS-only imports outside `platform`. The command tree is checked by a test that lists every command and flags any without a GUI place (D10).
 
@@ -295,7 +302,7 @@ Issues the data model must make expressible: #38 (ShanWan vendor control reads, 
 - [The release is very large and touches nearly every file] -> ordered task groups, each with a Verify line; the equivalence harness comes first.
 - [Data-driven records cannot express some protocol] -> keep that protocol as code and give it a typed-parameter record; list it in `protocol-descriptions`.
 - [Probe-based clone detection misfires on a firmware revision nobody tested] -> probes are read-only, a failed probe falls back to the model's default mode, and the hardware check covers the two DS3 units.
-- [`SdlCompatible` still not opened by SDL] -> it is opt-in and documented as not working with default hints until a hardware-evidenced fix exists.
+- [`SDLCompatible` still not opened by SDL] -> it is opt-in and documented as not working with default hints until a hardware-evidenced fix exists.
 - [Default persona change surprises users of 0.5.x] -> it is a breaking release; release notes say so.
 - [GUI visual quality cannot be machine-checked] -> user approval gates per screen group.
 - [Machine-translated strings drift while keys move] -> re-keying is a mechanical rename first; translation review is a separate task.

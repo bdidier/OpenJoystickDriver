@@ -108,7 +108,7 @@ private func check(
         "cli.controller.output.failed",
         device.name,
         request.name,
-        ControllerShowCommand.kebabCase(result.outcome.rawValue)
+        CommandLineName.kebab(result.outcome.rawValue)
       )
     )
   }
@@ -235,7 +235,7 @@ struct ControllerRumbleCommand: AsyncParsableCommand {
         CLILocalized.format(
           "cli.controller.rumble.dropped",
           device.name,
-          ControllerShowCommand.kebabCase(motor.rawValue)
+          CommandLineName.kebab(motor.rawValue)
         )
       )
     }
@@ -277,7 +277,7 @@ struct ControllerRumbleCommand: AsyncParsableCommand {
           )
           : CLILocalized.format(
             "cli.controller.rumble.sent",
-            ran.map { ControllerShowCommand.kebabCase($0.rawValue) }.joined(separator: ", "),
+            ran.map { CommandLineName.kebab($0.rawValue) }.joined(separator: ", "),
             device.name
           )
       )

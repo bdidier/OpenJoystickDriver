@@ -9,8 +9,8 @@ Live evidence from 2026-10-14 (macOS 27, SDL 3.4.18) also shows that the current
 
 - **BREAKING** Controller knowledge becomes data. A `Controller` record lists `modes[]` with match keys (interface signature, strings, read-only behavioral probes), declarative bit-level input layouts, init and keepalive sequences, output templates and vendor control transfers. `ControllerQuirk`, family tables in Swift and Python, and VID:PID literals in code are removed. Code keeps only algorithmic protocols (GIP authentication, Switch subcommands, Sony CRC, Steam, descriptor interpreters).
 - **BREAKING** Same-ID clones are told apart by records through read-only probes (the DS3 clone case).
-- **BREAKING** One serving-route decision (`NativePassThrough`, `VirtualHid`, `ExtensionOwned`, `OutputDisabled`) is made by one pure policy.
-- **BREAKING** Two virtual personas: `Generic` (`1209:4A4F`, default) and `SdlCompatible` (`045E:02FD`, opt-in). OJD publishes an SDL mapping for `1209:4A4F`. No Microsoft ID appears outside the `SdlCompatible` persona.
+- **BREAKING** One serving-route decision (`NativePassThrough`, `VirtualHID`, `ExtensionOwned`, `OutputDisabled`) is made by one pure policy.
+- **BREAKING** Two virtual personas: `Generic` (`1209:4A4F`, default) and `SDLCompatible` (`045E:02FD`, opt-in). OJD publishes an SDL mapping for `1209:4A4F`. No Microsoft ID appears outside the `SDLCompatible` persona.
 - **BREAKING** Identity types are renamed: `ControllerModelID`, `ControllerHardwareIdentity`, `ControllerConnectionAddress`, `LogicalControllerID`, `ControllerSessionToken`, `ControllerPortKey`, `ControllerReference`. No aliases.
 - **BREAKING** One control vocabulary (position-based, UpperCamelCase values) replaces `ControlID` and `RemappingButton`, with a crosswalk to W3C Gamepad, SDL3, Linux evdev, HID usages and Apple GameController.
 - **BREAKING** Every OJD document carries `apiVersion: openjoystickdriver/v1alpha1` and `kind`. Schemas are flat files in `Resources/Schemas/`, published with `$id` on GitHub Pages. Unknown versions are rejected; there is no upgrader.
@@ -30,7 +30,7 @@ Out of scope: submitting the mapping to SDL_GameControllerDB or SDL upstream; en
 - `protocol-descriptions`: protocols as data, typed parameters, and the code/data boundary.
 - `device-matching`: observed device to link to record mode, including same-ID clone probes and DEXT match generation.
 - `serving-routes`: the single serving-route policy.
-- `virtual-personas`: the `Generic` and `SdlCompatible` personas and the `VirtualDevice` document.
+- `virtual-personas`: the `Generic` and `SDLCompatible` personas and the `VirtualDevice` document.
 - `sdl-consumer-support`: SDL mapping publication, Wine/CrossOver and browser behavior per persona.
 - `control-vocabulary`: canonical control ids and the crosswalk.
 - `schema-versioning`: `apiVersion`/`kind`, hosting, loader behavior, value formats.

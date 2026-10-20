@@ -32,7 +32,7 @@ GIP authentication, Switch subcommands, Sony CRC, the Steam protocol and the des
 - **WHEN** the equivalence harness builds the driver for every bundled record before and after the change
 - **THEN** driver type and configuration are equal for all 696 records, or the difference is listed and accepted
 
-### Requirement: Hid usage maps
+### Requirement: HID usage maps
 
 A record SHALL be able to remap HID usages to canonical controls (replacing the tags `wr007`, `scuf-envision`, `z-rz-brake-left`, `dragonrise`).
 

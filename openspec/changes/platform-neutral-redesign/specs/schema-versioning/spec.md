@@ -48,7 +48,7 @@ Field names SHALL be lowerCamelCase, enum values UpperCamelCase, CLI argument va
 #### Scenario: CLI mapping
 
 - **WHEN** the CLI receives `sdl-compatible`
-- **THEN** it maps to `SdlCompatible` in documents
+- **THEN** it maps to `SDLCompatible` in documents
 
 ### Requirement: Validation coverage
 

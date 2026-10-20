@@ -439,14 +439,6 @@ struct ControllerCommandTests {
     #expect(single.standardOutput.contains("ojd controller rumble 045E:028E "))
   }
 
-  @Test(arguments: [
-    ("exclusiveRawUSB", "exclusive-raw-usb"), ("leftMain", "left-main"), ("raw-usb", "raw-usb"),
-    ("playerIndicator", "player-indicator"), ("ExtensionOwnedUsb", "extension-owned-usb"),
-  ])
-  func kebabCaseMatchesTheControlNames(value: String, expected: String) {
-    #expect(ControllerShowCommand.kebabCase(value) == expected)
-  }
-
   /// `controller show` for a `366C:0005` pad, with the user directory holding `userRecord` if any.
   private static func show(
     _ flags: [String],

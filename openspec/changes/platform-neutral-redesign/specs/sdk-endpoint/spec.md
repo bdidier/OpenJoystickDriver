@@ -57,4 +57,4 @@ Endpoint messages SHALL use persona ids and neutral vocabulary and SHALL NOT exp
 #### Scenario: Persona field
 
 - **WHEN** a Status message names a persona
-- **THEN** it uses `Generic` or `SdlCompatible`
+- **THEN** it uses `Generic` or `SDLCompatible`

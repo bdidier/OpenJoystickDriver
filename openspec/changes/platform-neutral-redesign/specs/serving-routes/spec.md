@@ -2,7 +2,7 @@
 
 ### Requirement: One serving route per controller
 
-Each controller SHALL have exactly one serving route: `NativePassThrough` (with an allowance), `VirtualHid` (with a persona), `ExtensionOwned`, or `OutputDisabled`. A single pure policy SHALL decide it from the record, the link, the user setting and the controller's allowance. It SHALL NOT take a per-app input: a virtual HID device is system-wide, and macOS does not tell the service which app reads it. No other component SHALL decide it.
+Each controller SHALL have exactly one serving route: `NativePassThrough` (with an allowance), `VirtualHID` (with a persona), `ExtensionOwned`, or `OutputDisabled`. A single pure policy SHALL decide it from the record, the link, the user setting and the controller's allowance. It SHALL NOT take a per-app input: a virtual HID device is system-wide, and macOS does not tell the service which app reads it. No other component SHALL decide it.
 
 #### Scenario: Same inputs
 
@@ -12,7 +12,7 @@ Each controller SHALL have exactly one serving route: `NativePassThrough` (with 
 #### Scenario: Passthrough profile on native controller
 
 - **WHEN** a controller served natively has a passthrough profile and the user sets `server` to `ojd`
-- **THEN** the route becomes `VirtualHid` and a virtual gamepad appears
+- **THEN** the route becomes `VirtualHID` and a virtual gamepad appears
 
 ### Requirement: Ownership vocabulary
 
