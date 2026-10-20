@@ -1,18 +1,12 @@
 # Documentation Instructions
 
-`wiki/` is product documentation for people who use OpenJoystickDriver. Developer and hardware-evidence pages belong in `docs/`.
+`wiki/` is user documentation and the GitHub wiki source (`./Scripts/ojd docs build-wiki OUTDIR`; publish with `just wiki`, `--dry-run` to preview). Developer and hardware-evidence pages go in `docs/`. This file is not published.
 
-`wiki/` is also the source of the GitHub wiki. `./Scripts/ojd docs build-wiki OUTDIR` converts it, and the `wiki` workflow publishes it after each push to `main`. `just wiki` (`./Scripts/ojd docs publish-wiki`) publishes the same pages from a local machine with your Git credentials; `just wiki --dry-run` builds them and shows the diff stat without pushing. Both use `Scripts/Documentation/wiki/publish.py`. GitHub creates the wiki repository with its first page, so create that page in the web UI before the first publish. This file is not published.
-
-- Write for users first. Follow the GitHub Docs style guide and content model, and write prose in ASD-STE100 style.
-- Keep every page flat in `wiki/`, with no subfolders. Name each page in Title-Case-With-Hyphens, for example `Known-Issues.md`, because the wiki uses the file name as the page name.
-- List every page in `Home.md` and `_Sidebar.md`, in the same groups.
-- Use one H1 per page, in sentence case. Open with a one-sentence intro. End each page with `## Further reading` when related pages exist.
-- Give a page longer than about 100 lines a `## Contents` heading after the intro, and fill it with a TOC generator. Update the list after each heading change.
-- Link to another page as `Page.md` or `Page.md#anchor`. Link to a file outside `wiki/` with a relative path, for example `../docs/README.md`. The wiki build rewrites both forms.
-- Do not use footnotes or images, because the wiki does not render them from this folder.
-- Use numbered lists for procedures, with one action per step. Put UI labels in bold.
-- Do not hard-wrap Markdown. Write one line per paragraph or list item.
-- Do not cite source file paths or line numbers. Ground every claim in source, tests, or recorded hardware evidence. Write "not verified" when evidence is missing.
-- Do not add JSON schemas, evidence dumps, generated matrices, or dated agent artifacts under `wiki/`. Record hardware observations in the relevant page under `docs/testing/`. `Error-Codes.md` and `Controller-Records.md` are the exceptions: `./Scripts/ojd errors regenerate --write` rewrites the block between the `BEGIN GENERATED` and `END GENERATED` lines of `Error-Codes.md` from `Resources/ErrorCodes.json`, and `./Scripts/ojd vocabulary regenerate --write` rewrites the control crosswalk block of `Controller-Records.md` from `Resources/Vocabulary/crosswalk.json`, so edit those blocks only through their sources.
-- `docs/external/` is a gitignored local archive from `./Scripts/ojd docs export-external-issues`. Do not link it from tracked files. Cite the upstream URL instead. It lives outside `wiki/`, so the wiki build never reads it.
+- Write for users: GitHub Docs style, ASD-STE100 prose. No hard wraps.
+- Flat folder, `Title-Case-With-Hyphens.md`. List every page in `Home.md` and `_Sidebar.md` in the same groups.
+- One sentence-case H1, a one-sentence intro, `## Further reading` when related pages exist. Pages over ~100 lines get a generated `## Contents`.
+- Link as `Page.md#anchor` or a relative path outside `wiki/`. No footnotes, images, source paths or line numbers.
+- Procedures: numbered, one action per step, UI labels in bold.
+- Ground claims in source, tests or hardware evidence; otherwise write "not verified". Hardware observations go in `docs/testing/`.
+- No schemas, evidence dumps or generated matrices, except the generated blocks of `Error-Codes.md` (`./Scripts/ojd errors regenerate --write`) and `Controller-Records.md` (`./Scripts/ojd vocabulary regenerate --write`); edit those only via their sources.
+- Never link `docs/external/` (local, gitignored); cite upstream URLs.
