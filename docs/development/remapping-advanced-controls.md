@@ -32,12 +32,12 @@ Motion lean and steering require a calibrated physical reading. Invalid or missi
 
 Interaction modes:
 
-- `simultaneous`: soft remains active when full activates.
-- `exclusive`: full releases and replaces soft.
-- `prefer_full`: soft waits for `skipWindowMs`; a quick full pull selects full only, while a late full pull is ignored until release.
-- `prefer_full_combined`: the same quick-pull selection, but a full pull after committed soft joins it.
-- `responsive_prefer_full`: soft emits immediately, a quick full replaces it, and a late full is ignored.
-- `responsive_prefer_full_combined`: immediate soft, quick replacement, and late combination.
+- `Simultaneous`: soft remains active when full activates.
+- `Exclusive`: full releases and replaces soft.
+- `PreferFull`: soft waits for `skipWindowMs`; a quick full pull selects full only, while a late full pull is ignored until release.
+- `PreferFullCombined`: the same quick-pull selection, but a full pull after committed soft joins it.
+- `ResponsivePreferFull`: soft emits immediately, a quick full replaces it, and a late full is ignored.
+- `ResponsivePreferFullCombined`: immediate soft, quick replacement, and late combination.
 
 Buffered stages use the controller's monotonic shared scheduler; no per-mapping timer is created. Release, profile replacement, disconnect, permission loss, suspension, shutdown, and delivery failure cancel pending deadlines and release both stage sources. A configured trigger suppresses its analog virtual axis unless `passthrough` is true; explicit ordinary axis bindings still run. The CLI `--trigger-*` options and native Trigger stages sheet create, update, and remove one trigger configuration at a time. Every mutation validates the complete profile, so a stage source cannot outlive its trigger configuration.
 
@@ -45,7 +45,7 @@ Focused coverage distinguishes anchor return, shortest-angle wrap, fractional sc
 
 ### Mapping-Owned Physical Output
 
-A discrete destination may own one source-controller output channel while its action is active: `rumble`, `player_indicator`, `color`, `brightness`, or `adaptive_trigger`. Each claim is scoped to the exact runtime `LogicalControllerID`; a stale claim cannot select another controller of the same model or a replacement at a new session location. Unsupported motors, lights, or trigger sides fail delivery instead of being emulated. Profile validation accepts physical destinations without requiring virtual output, rejects non-finite or out-of-range normalized values, and prohibits continuous sources and turbo.
+A discrete destination may own one source-controller output channel while its action is active: `Rumble`, `PlayerIndicator`, `Color`, `Brightness`, or `AdaptiveTrigger`. Each claim is scoped to the exact runtime `LogicalControllerID`; a stale claim cannot select another controller of the same model or a replacement at a new session location. Unsupported motors, lights, or trigger sides fail delivery instead of being emulated. Profile validation accepts physical destinations without requiring virtual output, rejects non-finite or out-of-range normalized values, and prohibits continuous sources and turbo.
 
 Channels arbitrate independently. The most recently activated mapping claim wins and releasing it restores the preceding active claim. Input Test output is a higher-priority manual override: timed rumble restores mapping output when its bounded timer expires, while an off player indicator, black color, or zero brightness releases the corresponding manual override. Disconnect, permission loss, pipeline replacement, profile replacement, suspension, failed remapping delivery, and shutdown remove mapping ownership and attempt a neutral report before transport teardown. Successful delivery means the supported transport accepted its report, not that the physical actuator or light responded.
 

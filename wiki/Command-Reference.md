@@ -166,9 +166,9 @@ ojd binding clear PROFILE --all [--force] [--dry-run]
 
 - `binding list`: List a profile's bindings.
 - `binding set`: Bind a source to a target. A source has one binding, so this replaces the binding that the source has, and keeps its ID. The options are:
-  - `--behavior`: When the target fires: `hold` (the default for a new binding), `toggle`, `tap_on_press`, `tap_on_release`, `pulse`, `press`, or `release`.
+  - `--behavior`: When the target fires: `hold` (the default for a new binding), `toggle`, `tap-on-press`, `tap-on-release`, `pulse`, `press`, or `release`.
   - `--pulse-ms`: How long `pulse` holds the target, 1 to 5000 ms. The default is 100.
-  - `--deadzone`, `--gain`, `--invert`, `--response-curve`, and `--digital-threshold`: Tuning for axis sources. The dead zone is 0 to 0.95 (default 0.1), the gain is 0.1 to 10 (default 1), and the response curve is `linear` (the default), `ease_in`, `ease_out`, or `smooth_step`. The digital threshold is the travel that counts as a press for button targets (default 0.5).
+  - `--deadzone`, `--gain`, `--invert`, `--response-curve`, and `--digital-threshold`: Tuning for axis sources. The dead zone is 0 to 0.95 (default 0.1), the gain is 0.1 to 10 (default 1), and the response curve is `linear` (the default), `ease-in`, `ease-out`, or `smooth-step`. The digital threshold is the travel that counts as a press for button targets (default 0.5).
   - `--turbo-rate` and `--turbo-duty`: Repeat the target this many times a second while the source is held. The duty is the part of each cycle that the target is held, above 0 and below 1. Turbo cannot be used with `--long-hold` or `--double-tap`.
   - `--long-hold MS:TARGET`: Send another target when the source is held this long, such as `500:key:KeyB`.
   - `--double-tap MS:TARGET`: Send another target when the source is pressed twice in this time, such as `300:key:KeyC`.

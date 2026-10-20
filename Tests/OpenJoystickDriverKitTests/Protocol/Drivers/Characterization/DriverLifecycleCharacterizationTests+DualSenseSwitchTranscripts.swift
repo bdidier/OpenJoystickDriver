@@ -9,9 +9,9 @@ extension DriverLifecycleCharacterizationTests {
   func dualSenseUSBTranscript() throws {
     #expect(
       try transcript(Self.dualSenseUSB) == [
-        "capabilities rumble=[leftMain,rightMain] binary=[]",
+        "capabilities rumble=[LowFrequency,HighFrequency] binary=[]",
         "capabilities lighting=[playerIndicator,programmableColor]",
-        "capabilities triggers=[left,right]", "usb.startup interval=0 retries=[] packets=0",
+        "capabilities triggers=[Left,Right]", "usb.startup interval=0 retries=[] packets=0",
         "usb.keepAlive nil", "usb.deferred inputs=0 packets=0", "usb.deferred drained=0",
         "usb.connection[connected] packets=0", "usb.connection[disconnected] packets=0",
         "hid.startupOutput[USB] interval=0 required=false beforeReads=false reports=0",
@@ -26,7 +26,8 @@ extension DriverLifecycleCharacterizationTests {
         "hid.recovery[USB] supported=false beforeStartup=0 afterStartup=0",
         "hid.recovery afterExpiry=0", "presence requiresConnection=false", "liveness timeout=nil",
         "liveness observation=nil", "liveness format=nil", "battery=nil",
-        "out[cold].hidRumble motors=[leftMain,rightMain] binary=[] minInterval=0", "  id=0x02 n=63",
+        "out[cold].hidRumble motors=[LowFrequency,HighFrequency] binary=[] minInterval=0",
+        "  id=0x02 n=63",
         "    0203008040000000000000000000000000000000000000000000000000000000",
         "    00000000000000000000000000000000000000000000000000000000000000",
         "out[cold].color default=0,0,255", "  plan interval=0 reports=1", "  id=0x02 n=63",
@@ -47,10 +48,10 @@ extension DriverLifecycleCharacterizationTests {
         "out[cold].hidPlayer[player4]", "  id=0x02 n=63",
         "    0200100000000000000000000000000000000000000000000000000000000000",
         "    0000000000000000000000001b000000000000000000000000000000000000",
-        "out[cold].trigger[left] resistance(0.25,0.75)", "  id=0x02 n=63",
+        "out[cold].trigger[Left] resistance(0.25,0.75)", "  id=0x02 n=63",
         "    0208000000000000000000000000000000000000000001020600000000000000",
         "    00000000000000000000000000000000000000000000000000000000000000",
-        "out[cold].trigger[right] off", "  id=0x02 n=63",
+        "out[cold].trigger[Right] off", "  id=0x02 n=63",
         "    0204000000000000000000000000000000000000000000000000000000000000",
         "    00000000000000000000000000000000000000000000000000000000000000",
       ]
@@ -61,9 +62,9 @@ extension DriverLifecycleCharacterizationTests {
   func dualSenseBluetoothTranscript() throws {
     #expect(
       try transcript(Self.dualSenseBluetooth) == [
-        "capabilities rumble=[leftMain,rightMain] binary=[]",
+        "capabilities rumble=[LowFrequency,HighFrequency] binary=[]",
         "capabilities lighting=[playerIndicator,programmableColor]",
-        "capabilities triggers=[left,right]", "usb.startup interval=0 retries=[] packets=0",
+        "capabilities triggers=[Left,Right]", "usb.startup interval=0 retries=[] packets=0",
         "usb.keepAlive nil", "usb.deferred inputs=0 packets=0", "usb.deferred drained=0",
         "usb.connection[connected] packets=0", "usb.connection[disconnected] packets=0",
         "hid.startupOutput[USB] interval=0 required=false beforeReads=false reports=0",
@@ -78,7 +79,8 @@ extension DriverLifecycleCharacterizationTests {
         "hid.recovery[Bluetooth] supported=false beforeStartup=0 afterStartup=0",
         "hid.recovery afterExpiry=0", "presence requiresConnection=false", "liveness timeout=nil",
         "liveness observation=nil", "liveness format=nil", "battery=nil",
-        "out[cold].hidRumble motors=[leftMain,rightMain] binary=[] minInterval=0", "  id=0x31 n=78",
+        "out[cold].hidRumble motors=[LowFrequency,HighFrequency] binary=[] minInterval=0",
+        "  id=0x31 n=78",
         "    3100100300804000000000000000000000000000000000000000000000000000",
         "    0000000000000000000000000000000000000000000000000000000000000000",
         "    00000000000000000000cbd1e087", "out[cold].color default=0,0,255",
@@ -100,10 +102,10 @@ extension DriverLifecycleCharacterizationTests {
         "    00000000000000000000376ca2fe", "out[cold].hidPlayer[player4]", "  id=0x31 n=78",
         "    3160100010000000000000000000000000000000000000000000000000000000",
         "    00000000000000000000000000001b0000000000000000000000000000000000",
-        "    000000000000000000006a97f472", "out[cold].trigger[left] resistance(0.25,0.75)",
+        "    000000000000000000006a97f472", "out[cold].trigger[Left] resistance(0.25,0.75)",
         "  id=0x31 n=78", "    3170100800000000000000000000000000000000000000000102060000000000",
         "    0000000000000000000000000000000000000000000000000000000000000000",
-        "    00000000000000000000f00bfd27", "out[cold].trigger[right] off", "  id=0x31 n=78",
+        "    00000000000000000000f00bfd27", "out[cold].trigger[Right] off", "  id=0x31 n=78",
         "    3180100400000000000000000000000000000000000000000000000000000000",
         "    0000000000000000000000000000000000000000000000000000000000000000",
         "    000000000000000000005ddf15aa",
@@ -115,7 +117,7 @@ extension DriverLifecycleCharacterizationTests {
   func switchUSBTranscript() throws {
     #expect(
       try transcript(Self.switchUSB) == [
-        "capabilities rumble=[leftMain,rightMain] binary=[]",
+        "capabilities rumble=[LowFrequency,HighFrequency] binary=[]",
         "capabilities lighting=[playerIndicator]", "capabilities triggers=[]",
         "usb.startup interval=0 retries=[] packets=0", "usb.keepAlive nil",
         "usb.deferred inputs=0 packets=0", "usb.deferred drained=0",
@@ -142,7 +144,7 @@ extension DriverLifecycleCharacterizationTests {
         "    01060001404000014040102680000014", "hid.recovery afterExpiry=0",
         "presence requiresConnection=false", "liveness timeout=nil", "liveness observation=nil",
         "liveness format=nil", "battery=nil",
-        "out[cold].hidRumble motors=[leftMain,rightMain] binary=[] minInterval=50000000",
+        "out[cold].hidRumble motors=[LowFrequency,HighFrequency] binary=[] minInterval=50000000",
         "  id=0x10 n=10", "    100000494052008bc063", "out[cold].hidPlayer[off]", "  id=0x01 n=12",
         "    010100494052008bc0633000", "out[cold].hidPlayer[player1]", "  id=0x01 n=12",
         "    010200494052008bc0633001", "out[cold].hidPlayer[player2]", "  id=0x01 n=12",

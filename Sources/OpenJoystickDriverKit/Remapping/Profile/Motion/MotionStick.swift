@@ -1,8 +1,8 @@
 import Foundation
 
 public enum RemappingMotionLeanDirection: String, Codable, CaseIterable, Hashable, Sendable {
-  case left
-  case right
+  case left = "Left"
+  case right = "Right"
 }
 
 public struct RemappingMotionLean: Codable, Equatable, Hashable, Sendable {

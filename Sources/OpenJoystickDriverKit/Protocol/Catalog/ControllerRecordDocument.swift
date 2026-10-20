@@ -118,13 +118,13 @@ struct ControllerRecordDocument: Decodable {
       let motors = RumbleOutputTemplate.templateMotors
       try container.rejectUnknown(
         allowed: Set(
-          ["report", "bytes", "counter", "resendIntervalMilliseconds"] + motors.map(\.rawValue)
+          ["report", "bytes", "counter", "resendIntervalMilliseconds"] + motors.map(\.fieldName)
         )
       )
       let target = try container.decode(RumbleTarget.self, for: "report").target
       var fields: [PhysicalRumbleMotor: RumbleOutputTemplate.MotorField] = [:]
       for motor in motors {
-        fields[motor] = try container.decodeOptional(MotorField.self, for: motor.rawValue)?.field
+        fields[motor] = try container.decodeOptional(MotorField.self, for: motor.fieldName)?.field
       }
       do {
         let bytes =

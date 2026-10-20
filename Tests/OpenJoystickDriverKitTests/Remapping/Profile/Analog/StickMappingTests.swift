@@ -5,7 +5,7 @@ import Testing
 struct StickMappingTests {
   @Test
   func defaultsAndAllModesRoundTrip() throws {
-    let minimal = Data(#"{"source":"right"}"#.utf8)
+    let minimal = Data(#"{"source":"Right"}"#.utf8)
     let decoded = try JSONDecoder().decode(RemappingStickMapping.self, from: minimal)
     #expect(decoded == RemappingStickMapping(source: .right))
     for mode in RemappingStickMode.allCases {

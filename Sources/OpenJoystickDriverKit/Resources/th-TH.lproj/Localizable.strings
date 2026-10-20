@@ -573,7 +573,7 @@
 "inputTest.leftBumper" = "บัมเปอร์ซ้าย";
 "inputTest.leftBumperGeneric" = "LB / L1";
 "inputTest.leftHaptic" = "แฮปติกซ้าย";
-"inputTest.leftMain" = "ซ้ายหลัก";
+"inputTest.lowFrequency" = "ซ้ายหลัก";
 "inputTest.leftStick" = "สติ๊กซ้าย";
 "inputTest.leftStickButton" = "ปุ่มสติ๊กซ้าย";
 "inputTest.leftTrigger" = "ทริกเกอร์ซ้าย";
@@ -595,7 +595,7 @@
 "inputTest.rightBumper" = "บัมเปอร์ขวา";
 "inputTest.rightBumperGeneric" = "RB / R1";
 "inputTest.rightHaptic" = "แฮปติกขวา";
-"inputTest.rightMain" = "ขวาหลัก";
+"inputTest.highFrequency" = "ขวาหลัก";
 "inputTest.rightStick" = "สติ๊กขวา";
 "inputTest.rightStickButton" = "ปุ่มสติ๊กขวา";
 "inputTest.rightTrigger" = "ทริกเกอร์ขวา";

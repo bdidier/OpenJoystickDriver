@@ -27,7 +27,7 @@ struct ControllerProfileCapabilitiesTests {
         motion: true
       ),
       physicalOutput: PhysicalControllerOutputCapabilities(
-        rumbleMotors: [.leftMain, .rightMain],
+        rumbleMotors: [.lowFrequency, .highFrequency],
         lightingFeatures: [.programmableColor, .programmableBrightness],
         adaptiveTriggers: [.left, .right]
       )
@@ -38,7 +38,7 @@ struct ControllerProfileCapabilitiesTests {
         touchContactCount: 1
       ),
       physicalOutput: PhysicalControllerOutputCapabilities(
-        rumbleMotors: [.rightMain],
+        rumbleMotors: [.highFrequency],
         lightingFeatures: [.programmableColor],
         adaptiveTriggers: [.right]
       )
@@ -49,7 +49,7 @@ struct ControllerProfileCapabilitiesTests {
     #expect(result.physicalInput.touchContactCount == 1)
     #expect(result.physicalInput.controls == [.south, .leftTrigger, .touchpadClick])
     #expect(result.physicalInput.touchSurfaces == [.primary])
-    #expect(result.physicalOutput.rumbleMotors == [.rightMain])
+    #expect(result.physicalOutput.rumbleMotors == [.highFrequency])
     #expect(result.physicalOutput.lightingFeatures == [.programmableColor])
     #expect(result.physicalOutput.adaptiveTriggers == [.right])
     #expect(!result.supportsStickAxes)

@@ -47,15 +47,15 @@ public enum RemappingSource: Codable, Equatable, Hashable, Sendable {
   case touchSwipe(RemappingTouchSwipeSource)
 
   private enum Kind: String, Codable {
-    case button
-    case dpad
-    case axis
-    case axisDirection = "axis_direction"
-    case triggerStage = "trigger_stage"
-    case motionLean = "motion_lean"
-    case touchContact = "touch_contact"
-    case touchGrid = "touch_grid"
-    case touchSwipe = "touch_swipe"
+    case button = "Button"
+    case dpad = "Dpad"
+    case axis = "Axis"
+    case axisDirection = "AxisDirection"
+    case triggerStage = "TriggerStage"
+    case motionLean = "MotionLean"
+    case touchContact = "TouchContact"
+    case touchGrid = "TouchGrid"
+    case touchSwipe = "TouchSwipe"
 
     var fields: [CodingKeys] {
       switch self {
@@ -290,14 +290,14 @@ public enum RemappingKeyModifier: String, Codable, CaseIterable, Hashable, Senda
 }
 
 public enum RemappingMouseButton: String, Codable, CaseIterable, Hashable, Sendable {
-  case left
-  case right
-  case middle
-  case back
-  case forward
+  case left = "Left"
+  case right = "Right"
+  case middle = "Middle"
+  case back = "Back"
+  case forward = "Forward"
 }
 
-public enum RemappingPointerAxis: String, Codable, Hashable, Sendable {
-  case x
-  case y
+public enum RemappingPointerAxis: String, Codable, CaseIterable, Hashable, Sendable {
+  case x = "X"
+  case y = "Y"
 }

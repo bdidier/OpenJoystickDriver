@@ -229,7 +229,7 @@ struct Switch2DriverTests {
   @Test
   func proRumbleEncodesHDRumbleForBothActuators() {
     let driver = Switch2Driver(layout: .pro)
-    let full = RumbleIntensities(leftMain: .max, rightMain: .max)
+    let full = RumbleIntensities(lowFrequency: .max, highFrequency: .max)
     let report = driver.encoded(.setRumble(full, duration: .milliseconds(100))).onlyReport
     #expect(report.reportID == 0x02 && report.bytes.count == 64)
     let expected: [UInt8] = [0x50, 0x87, 0x15, 0x27, 0x51, 0x71]
@@ -246,7 +246,7 @@ struct Switch2DriverTests {
   func rumbleRefreshRunsWhileActiveAndSendsTrailingStops() {
     let driver = Switch2Driver(layout: .pro)
     #expect(driver.keepAliveWrites().isEmpty)
-    let half = RumbleIntensities(leftMain: UnipolarValue(0x8000), rightMain: .min)
+    let half = RumbleIntensities(lowFrequency: UnipolarValue(0x8000), highFrequency: .min)
     _ = driver.encoded(.setRumble(half, duration: .milliseconds(100)))
     let sequences = (0..<3).map { _ in driver.keepAliveWrites().hidOutputs.first?.bytes[1] }
     #expect(sequences == [0x51, 0x52, 0x53])
@@ -261,7 +261,7 @@ struct Switch2DriverTests {
   @Test
   func gameCubeRumbleDithersItsSingleMotor() {
     let driver = Switch2Driver(layout: .gameCube)
-    let half = RumbleIntensities(leftMain: .min, rightMain: UnipolarValue(0x8000))
+    let half = RumbleIntensities(lowFrequency: .min, highFrequency: UnipolarValue(0x8000))
     let first = driver.encoded(.setRumble(half, duration: .milliseconds(100))).onlyReport
     #expect(first.reportID == 0x03)
     let states =

@@ -7,10 +7,10 @@ import Testing
 struct DocumentProblemTests {
   private static let profile = """
     {"apiVersion":"\(OpenJoystickDriverAPI.version)","kind":"Profile",\
-    "applicationScope":{"type":"global"},"bindings":[],"chords":[],\
+    "applicationScope":{"type":"Global"},"bindings":[],"chords":[],\
     "device":{"productID":616,"vendorID":1356},"id":"1364CBAC-B60B-4E11-B3E7-C38AD809FE42",\
-    "layers":[],"name":"Pad","outputPolicy":{"physicalInput":"shared",\
-    "virtualGamepad":"passthrough"},"sequences":[]}
+    "layers":[],"name":"Pad","outputPolicy":{"physicalInput":"Shared",\
+    "virtualGamepad":"Passthrough"},"sequences":[]}
     """
 
   private func problem(_ text: String) -> String? {

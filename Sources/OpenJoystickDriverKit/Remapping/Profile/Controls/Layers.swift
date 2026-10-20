@@ -3,9 +3,9 @@ import Foundation
 /// How a layer is activated by its activator source.
 public enum RemappingLayerActivation: String, Codable, Equatable, Hashable, Sendable {
   /// Active while the activator is held.
-  case hold
+  case hold = "Hold"
   /// Toggled on/off on each activator press.
-  case toggle
+  case toggle = "Toggle"
 }
 
 /// An alternate mapping set activated by a designated button or dpad direction.

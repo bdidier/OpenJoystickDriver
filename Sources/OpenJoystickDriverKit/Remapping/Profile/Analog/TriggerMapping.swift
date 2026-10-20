@@ -1,8 +1,8 @@
 import Foundation
 
 public enum RemappingTriggerSource: String, Codable, CaseIterable, Hashable, Sendable {
-  case left
-  case right
+  case left = "Left"
+  case right = "Right"
 
   var axis: RemappingAxis {
     switch self {
@@ -13,24 +13,24 @@ public enum RemappingTriggerSource: String, Codable, CaseIterable, Hashable, Sen
 }
 
 public enum RemappingTriggerStage: String, Codable, CaseIterable, Hashable, Sendable {
-  case soft
-  case full
+  case soft = "Soft"
+  case full = "Full"
 }
 
 /// Determines how a full pull interacts with the soft-pull stage.
 public enum RemappingDualStageTriggerMode: String, Codable, CaseIterable, Hashable, Sendable {
   /// Soft and full stages may remain active together.
-  case simultaneous
+  case simultaneous = "Simultaneous"
   /// Full pull replaces soft pull without buffering.
-  case exclusive
+  case exclusive = "Exclusive"
   /// Buffer soft pull; a quick full pull selects only full, otherwise full is ignored.
-  case preferFull = "prefer_full"
+  case preferFull = "PreferFull"
   /// Buffer soft pull; a late full pull joins soft pull.
-  case preferFullCombined = "prefer_full_combined"
+  case preferFullCombined = "PreferFullCombined"
   /// Emit soft immediately, but replace it when a quick full pull arrives.
-  case responsivePreferFull = "responsive_prefer_full"
+  case responsivePreferFull = "ResponsivePreferFull"
   /// Emit soft immediately; a quick full pull replaces it and a late full pull joins it.
-  case responsivePreferFullCombined = "responsive_prefer_full_combined"
+  case responsivePreferFullCombined = "ResponsivePreferFullCombined"
 
   public var buffersSoftPull: Bool {
     switch self {

@@ -184,15 +184,6 @@
       "read",
       "control"
     ],
-    "/$defs/sharedBindingSummary/properties/behavior/enum": [
-      "hold",
-      "toggle",
-      "tap_on_press",
-      "tap_on_release",
-      "pulse",
-      "press",
-      "release"
-    ],
     "/$defs/sharedControllerOutput/properties/results/items/properties/outcome/enum": [
       "delivered",
       "notFound",
@@ -217,11 +208,6 @@
       "southWest",
       "west",
       "northWest"
-    ],
-    "/$defs/sharedControllerState/properties/touch/items/properties/surface/enum": [
-      "primary",
-      "left",
-      "right"
     ],
     "/$defs/sharedPermissions/properties/permissions/items/properties/id/enum": [
       "input-read",
@@ -619,125 +605,6 @@
       "document"
     ]
   },
-  "profile": {
-    "/$defs/action/properties/behavior/default": ["hold"],
-    "/$defs/action/properties/behavior/enum": [
-      "hold",
-      "toggle",
-      "tap_on_press",
-      "tap_on_release",
-      "pulse",
-      "press",
-      "release"
-    ],
-    "/$defs/adaptiveTriggerEffect/if/properties/kind/const": ["off"],
-    "/$defs/adaptiveTriggerEffect/properties/kind/enum": ["off", "resistance"],
-    "/$defs/axisTuning/properties/responseCurve/enum": [
-      "linear",
-      "ease_in",
-      "ease_out",
-      "smooth_step"
-    ],
-    "/$defs/binding/properties/behavior/default": ["hold"],
-    "/$defs/binding/properties/behavior/enum": [
-      "hold",
-      "toggle",
-      "tap_on_press",
-      "tap_on_release",
-      "pulse",
-      "press",
-      "release"
-    ],
-    "/$defs/chord/properties/mode/default": ["modifier"],
-    "/$defs/chord/properties/mode/enum": ["modifier", "simultaneous"],
-    "/$defs/destination/oneOf/0/properties/type/const": ["keyboard"],
-    "/$defs/destination/oneOf/1/properties/type/const": ["gamepad_button"],
-    "/$defs/destination/oneOf/2/properties/type/const": ["gamepad_dpad"],
-    "/$defs/destination/oneOf/3/properties/type/const": ["gamepad_axis"],
-    "/$defs/destination/oneOf/4/properties/button/enum": [
-      "left",
-      "right",
-      "middle",
-      "back",
-      "forward"
-    ],
-    "/$defs/destination/oneOf/4/properties/type/const": ["mouse_button"],
-    "/$defs/destination/oneOf/5/properties/axis/enum": ["x", "y"],
-    "/$defs/destination/oneOf/5/properties/type/const": ["mouse_movement"],
-    "/$defs/destination/oneOf/6/properties/axis/enum": ["x", "y"],
-    "/$defs/destination/oneOf/6/properties/type/const": ["scroll"],
-    "/$defs/destination/oneOf/7/properties/type/const": ["physical"],
-    "/$defs/discreteSource/allOf/1/not/properties/type/const": ["axis"],
-    "/$defs/layer/properties/activationMode/enum": ["hold", "toggle"],
-    "/$defs/motionTuning/properties/space/default": ["player"],
-    "/$defs/motionTuning/properties/space/enum": ["local", "player", "world"],
-    "/$defs/physicalOutput/oneOf/0/properties/motor/enum": [
-      "leftMain",
-      "rightMain",
-      "leftTrigger",
-      "rightTrigger",
-      "leftHaptic",
-      "rightHaptic"
-    ],
-    "/$defs/physicalOutput/oneOf/0/properties/type/const": ["rumble"],
-    "/$defs/physicalOutput/oneOf/1/properties/type/const": ["player_indicator"],
-    "/$defs/physicalOutput/oneOf/2/properties/type/const": ["color"],
-    "/$defs/physicalOutput/oneOf/3/properties/type/const": ["brightness"],
-    "/$defs/physicalOutput/oneOf/4/properties/trigger/enum": ["left", "right"],
-    "/$defs/physicalOutput/oneOf/4/properties/type/const": ["adaptive_trigger"],
-    "/$defs/source/oneOf/0/properties/type/const": ["button"],
-    "/$defs/source/oneOf/1/properties/type/const": ["dpad"],
-    "/$defs/source/oneOf/2/properties/type/const": ["axis"],
-    "/$defs/source/oneOf/3/properties/type/const": ["axis_direction"],
-    "/$defs/source/oneOf/4/properties/stage/enum": ["soft", "full"],
-    "/$defs/source/oneOf/4/properties/type/const": ["trigger_stage"],
-    "/$defs/source/oneOf/5/properties/direction/enum": ["left", "right"],
-    "/$defs/source/oneOf/5/properties/type/const": ["motion_lean"],
-    "/$defs/source/oneOf/6/properties/type/const": ["touch_contact"],
-    "/$defs/source/oneOf/7/properties/type/const": ["touch_grid"],
-    "/$defs/source/oneOf/8/properties/direction/enum": [
-      "up",
-      "down",
-      "left",
-      "right"
-    ],
-    "/$defs/source/oneOf/8/properties/type/const": ["touch_swipe"],
-    "/$defs/stickMapping/properties/rotationDirection/default": ["clockwise"],
-    "/$defs/stickMapping/properties/rotationDirection/enum": [
-      "clockwise",
-      "counterclockwise"
-    ],
-    "/$defs/stickMapping/properties/scrollAxis/default": ["vertical"],
-    "/$defs/stickMapping/properties/scrollAxis/enum": [
-      "horizontal",
-      "vertical"
-    ],
-    "/$defs/stickSide/enum": ["left", "right"],
-    "/$defs/touchSurface/enum": ["primary", "left", "right"],
-    "/$defs/triggerMapping/properties/mode/default": ["simultaneous"],
-    "/$defs/triggerMapping/properties/mode/enum": [
-      "simultaneous",
-      "exclusive",
-      "prefer_full",
-      "prefer_full_combined",
-      "responsive_prefer_full",
-      "responsive_prefer_full_combined"
-    ],
-    "/$defs/triggerSide/enum": ["left", "right"],
-    "/properties/applicationScope/oneOf/0/properties/type/const": ["global"],
-    "/properties/applicationScope/oneOf/1/properties/type/const": [
-      "application"
-    ],
-    "/properties/outputPolicy/properties/physicalInput/enum": [
-      "shared",
-      "exclusive"
-    ],
-    "/properties/outputPolicy/properties/virtualGamepad/enum": [
-      "disabled",
-      "mapped",
-      "passthrough"
-    ]
-  },
   "protocol-description": {
     "/$defs/controls/properties/base/enum": ["xbox"],
     "/$defs/descriptionSubcommandRequest/properties/spiRead/properties/purpose/enum": [
@@ -1013,10 +880,6 @@
       "ojdUserSpace",
       "present"
     ],
-    "/$defs/physicalOutputCapabilities/properties/adaptiveTriggers/items/enum": [
-      "left",
-      "right"
-    ],
     "/$defs/physicalOutputCapabilities/properties/lightingFeatures/items/enum": [
       "playerIndicator",
       "programmableColor",
@@ -1041,14 +904,6 @@
       "vendor.ps3-third-party",
       "vendor.gamesir",
       "vendor.nvidia-shield"
-    ],
-    "/$defs/rumbleMotor/enum": [
-      "leftMain",
-      "rightMain",
-      "leftTrigger",
-      "rightTrigger",
-      "leftHaptic",
-      "rightHaptic"
     ],
     "/$defs/systemGamepadAudit/properties/source/enum": [
       "downloadedMobileAsset",

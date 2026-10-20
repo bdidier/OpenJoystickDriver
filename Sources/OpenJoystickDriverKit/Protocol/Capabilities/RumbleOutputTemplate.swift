@@ -54,7 +54,7 @@ public enum RumbleMotorEncoding: String, CaseIterable, Sendable {
 public struct RumbleOutputTemplate: Equatable, Sendable {
   /// Motors a template may name. Trackpad haptics belong to the Steam drivers.
   static let templateMotors: [PhysicalRumbleMotor] = [
-    .leftMain, .rightMain, .leftTrigger, .rightTrigger,
+    .lowFrequency, .highFrequency, .leftTrigger, .rightTrigger,
   ]
   /// The resend intervals a template may name, as a keep-alive's.
   static let resendIntervalRange = KeepAlive.intervalRange

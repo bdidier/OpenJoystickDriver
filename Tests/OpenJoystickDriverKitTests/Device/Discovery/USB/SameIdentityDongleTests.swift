@@ -66,7 +66,7 @@ struct SameIdentityDongleTests {
       await waitUntil("pad.session.writeCount >= 1") { await pad.session.writeCount >= 1 }
     }
     let rumble = ControllerOutputCommand.setRumble(
-      RumbleIntensities(leftMain: UnipolarValue(byte: 0x80)),
+      RumbleIntensities(lowFrequency: UnipolarValue(byte: 0x80)),
       duration: .milliseconds(5_000)
     )
 
@@ -103,8 +103,8 @@ struct SameIdentityDongleTests {
       let result = await manager.sendControllerOutput(
         .setRumble(
           RumbleIntensities(
-            leftMain: UnipolarValue(byte: left),
-            rightMain: UnipolarValue(byte: right)
+            lowFrequency: UnipolarValue(byte: left),
+            highFrequency: UnipolarValue(byte: right)
           ),
           duration: .milliseconds(5_000)
         ),
@@ -133,7 +133,7 @@ struct SameIdentityDongleTests {
     let portKey = try #require(Self.identifier(pad.device).testPortKey)
     let result = await manager.sendControllerOutput(
       .setRumble(
-        RumbleIntensities(leftMain: UnipolarValue(byte: 0x80)),
+        RumbleIntensities(lowFrequency: UnipolarValue(byte: 0x80)),
         duration: .milliseconds(5_000)
       ),
       for: .port(portKey)

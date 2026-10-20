@@ -573,7 +573,7 @@
 "inputTest.leftBumper" = "बायाँ बंपर";
 "inputTest.leftBumperGeneric" = "LB / L1";
 "inputTest.leftHaptic" = "बायाँ हैप्टिक";
-"inputTest.leftMain" = "बायाँ मुख्य";
+"inputTest.lowFrequency" = "बायाँ मुख्य";
 "inputTest.leftStick" = "बाएँ स्टिक";
 "inputTest.leftStickButton" = "बाएँ स्टिक बटन";
 "inputTest.leftTrigger" = "बायाँ ट्रिगर";
@@ -595,7 +595,7 @@
 "inputTest.rightBumper" = "दायाँ बंपर";
 "inputTest.rightBumperGeneric" = "RB / R1";
 "inputTest.rightHaptic" = "दायाँ हैप्टिक";
-"inputTest.rightMain" = "दायाँ मुख्य";
+"inputTest.highFrequency" = "दायाँ मुख्य";
 "inputTest.rightStick" = "दाएँ स्टिक";
 "inputTest.rightStickButton" = "दाएँ स्टिक बटन";
 "inputTest.rightTrigger" = "दायाँ ट्रिगर";

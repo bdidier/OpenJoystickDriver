@@ -71,7 +71,10 @@ struct PhysicalOutputExecutorTests {
       let commands: [ControllerOutputCommand] = (0..<8).map { index in
         guard index.isMultiple(of: 2) else { return .setPlayerIndicator(players[index / 2]) }
         let level = UnipolarValue(byte: UInt8(1 + (iteration * 4 + index / 2) % 250))
-        return .setRumble(RumbleIntensities(leftMain: level, leftHaptic: level), duration: .held)
+        return .setRumble(
+          RumbleIntensities(lowFrequency: level, leftHaptic: level),
+          duration: .held
+        )
       }
       await withTaskGroup(of: Bool.self) { group in
         for _ in 0..<16 {
@@ -153,7 +156,7 @@ struct PhysicalOutputExecutorTests {
     let before = await started.backend.recordedOutputReports().count
     let player = send(.setPlayerIndicator(.player2), to: started)
     let rumble = send(
-      .setRumble(RumbleIntensities(leftMain: UnipolarValue(byte: 0x80)), duration: .held),
+      .setRumble(RumbleIntensities(lowFrequency: UnipolarValue(byte: 0x80)), duration: .held),
       to: started
     )
     await waitForSubmittedOperations(3, on: queue)

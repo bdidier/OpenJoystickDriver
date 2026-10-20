@@ -16,7 +16,7 @@
               selection: rumbleMotor(motor, intensity: intensity)
             ) {
               ForEach(PhysicalRumbleMotor.allCases, id: \.self) {
-                Text(RuntimePresentation.humanized($0.rawValue)).tag($0)
+                Text(RuntimePresentation.upperCamelWords($0.rawValue)).tag($0)
               }
             }
             unitSlider(

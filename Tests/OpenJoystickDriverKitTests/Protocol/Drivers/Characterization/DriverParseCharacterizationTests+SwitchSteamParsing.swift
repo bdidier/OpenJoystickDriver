@@ -238,7 +238,7 @@ extension DriverParseCharacterizationTests {
       lines == [
         "neutral [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=2",
         "  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000",
-        "  touch left [0:0:32768,32767]", "  touch right [0:0:32768,32767]",
+        "  touch Left [0:0:32768,32767]", "  touch Right [0:0:32768,32767]",
         "b8.0 [RightTrigger] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "b8.1 [LeftTrigger] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
         "b8.2 [RightShoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",

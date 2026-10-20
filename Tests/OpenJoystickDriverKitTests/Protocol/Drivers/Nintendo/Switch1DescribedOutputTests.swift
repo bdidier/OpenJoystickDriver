@@ -22,8 +22,8 @@ struct Switch1DescribedOutputTests {
     var lines: [String] = []
     for motors in Self.intensities {
       let rumble = RumbleIntensities(
-        leftMain: UnipolarValue(UInt16(motors.left) << 8),
-        rightMain: UnipolarValue(UInt16(motors.right) << 8)
+        lowFrequency: UnipolarValue(UInt16(motors.left) << 8),
+        highFrequency: UnipolarValue(UInt16(motors.right) << 8)
       )
       lines += try driver.encode(.setRumble(rumble, duration: .held)).writes.map(hex)
     }
@@ -106,7 +106,7 @@ struct Switch1DescribedOutputTests {
     let template = try #require(description.rumbleTemplate(variant: .usb))
     #expect(template.report == ControllerTemplateReport(kind: .output, reportID: 0x10, length: 10))
     #expect(template.counterByte == 1)
-    #expect(template.motors[.leftMain]?.encoding == .switchHDRumble)
+    #expect(template.motors[.lowFrequency]?.encoding == .switchHDRumble)
     let indicator = try #require(description.subcommands?.playerIndicator)
     #expect(indicator.subcommand == 0x30)
     #expect(indicator.pattern(for: .player3) == 0x07)
@@ -117,13 +117,13 @@ struct Switch1DescribedOutputTests {
   func aRecordTemplateOverridesTheDescriptionsTemplate() throws {
     let template = try RumbleOutputTemplate(
       target: .hid(ControllerTemplateReport(kind: .output, reportID: 0x10, length: 10)),
-      motors: [.leftMain: .init(byte: 2, encoding: .switchHDRumble)],
+      motors: [.lowFrequency: .init(byte: 2, encoding: .switchHDRumble)],
       counterByte: 1
     )
     let driver = Switch1Driver(rumbleTemplate: template)
     let rumble = RumbleIntensities(
-      leftMain: UnipolarValue(0xFF00),
-      rightMain: UnipolarValue(0xFF00)
+      lowFrequency: UnipolarValue(0xFF00),
+      highFrequency: UnipolarValue(0xFF00)
     )
     let writes = try driver.encode(.setRumble(rumble, duration: .held)).writes
     #expect(writes.map(hex) == ["16:100000c9407200000000"])
@@ -133,8 +133,8 @@ struct Switch1DescribedOutputTests {
     try RumbleOutputTemplate(
       target: .hid(ControllerTemplateReport(kind: .output, reportID: 0x10, length: 10)),
       motors: [
-        .leftMain: .init(byte: 6, encoding: .switchHDRumble),
-        .rightMain: .init(byte: 2, encoding: .switchHDRumble),
+        .lowFrequency: .init(byte: 6, encoding: .switchHDRumble),
+        .highFrequency: .init(byte: 2, encoding: .switchHDRumble),
       ],
       counterByte: 1
     )
@@ -146,8 +146,8 @@ struct Switch1DescribedOutputTests {
   func aRecordTemplateOnAJoyConKeepsTheOtherSideOff() throws {
     let driver = Switch1Driver(layout: .leftJoyCon, rumbleTemplate: try Self.recordTemplate())
     let rumble = RumbleIntensities(
-      leftMain: UnipolarValue(0xFF00),
-      rightMain: UnipolarValue(0xFF00)
+      lowFrequency: UnipolarValue(0xFF00),
+      highFrequency: UnipolarValue(0xFF00)
     )
     let writes = try driver.encode(.setRumble(rumble, duration: .held)).writes
     #expect(writes.map(hex) == ["16:10000001404000c94072"])
@@ -158,8 +158,8 @@ struct Switch1DescribedOutputTests {
   func theBluetoothDriverEncodesFromTheDescriptionsTemplate() throws {
     let driver = Switch1Driver(layout: .rightJoyCon, isBluetooth: true)
     let rumble = RumbleIntensities(
-      leftMain: UnipolarValue(0xFF00),
-      rightMain: UnipolarValue(0xFF00)
+      lowFrequency: UnipolarValue(0xFF00),
+      highFrequency: UnipolarValue(0xFF00)
     )
     let writes = try driver.encode(.setRumble(rumble, duration: .held)).writes
     #expect(writes.map(hex) == ["16:10000001404000c94072"])
@@ -186,7 +186,7 @@ struct Switch1DescribedOutputTests {
       return
     }
     let driver = try #require(built as? Switch1Driver)
-    let rumble = RumbleIntensities(leftMain: UnipolarValue(0xFF00), rightMain: .min)
+    let rumble = RumbleIntensities(lowFrequency: UnipolarValue(0xFF00), highFrequency: .min)
     let writes = try driver.encode(.setRumble(rumble, duration: .held)).writes
     guard case .hidOutput(let report) = writes[0] else {
       Issue.record("expected a HID output report")

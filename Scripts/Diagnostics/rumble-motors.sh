@@ -18,7 +18,7 @@ stop_rumble() {
 }
 trap stop_rumble EXIT INT TERM
 
-channels=(left-main right-main left-trigger right-trigger)
+channels=(low-frequency high-frequency left-trigger right-trigger)
 options=(--left --right --left-trigger --right-trigger)
 echo "Testing $vid:$pid at intensity $intensity for $duration_ms ms."
 echo "Hold the controller normally and note the exact location for each numbered step."

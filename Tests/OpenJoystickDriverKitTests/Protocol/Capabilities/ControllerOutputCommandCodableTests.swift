@@ -13,7 +13,7 @@ struct ControllerOutputCommandCodableTests {
 
   @Test
   func commandsEncodeToTheDocumentedShape() throws {
-    let rumble = RumbleIntensities(leftMain: .max, rightTrigger: UnipolarValue(257))
+    let rumble = RumbleIntensities(lowFrequency: .max, rightTrigger: UnipolarValue(257))
     let cases: [(ControllerOutputCommand, String)] = [
       (
         .setRumble(rumble, duration: .milliseconds(450)),
@@ -40,7 +40,7 @@ struct ControllerOutputCommandCodableTests {
           .left,
           PhysicalAdaptiveTriggerEffect(kind: .resistance, startPosition: 0.5, strength: 1)
         ),
-        #"{"effect":{"kind":"resistance","startPosition":0.5,"strength":1},"trigger":"left","#
+        #"{"effect":{"kind":"Resistance","startPosition":0.5,"strength":1},"trigger":"Left","#
           + #""type":"set-adaptive-trigger"}"#
       ),
     ]
@@ -59,7 +59,7 @@ struct ControllerOutputCommandCodableTests {
     let partial = #"{"type":"set-rumble","intensities":{"leftMain":65535},"duration":"held"}"#
     #expect(
       try JSONDecoder().decode(ControllerOutputCommand.self, from: Data(partial.utf8))
-        == .setRumble(RumbleIntensities(leftMain: .max), duration: .held)
+        == .setRumble(RumbleIntensities(lowFrequency: .max), duration: .held)
     )
     for invalid in [
       #"{"type":"set-rumble","intensities":{},"duration":"forever"}"#, #"{"type":"blink"}"#,
@@ -127,7 +127,7 @@ struct ControllerOutputCommandCodableTests {
   func resultsEncodeTheOutcomeAndDroppedChannels() throws {
     #expect(
       try json(ControllerOutputResult(.delivered, droppedRumbleChannels: [.leftTrigger]))
-        == #"{"droppedRumbleChannels":["leftTrigger"],"outcome":"delivered"}"#
+        == #"{"droppedRumbleChannels":["LeftTrigger"],"outcome":"delivered"}"#
     )
     #expect(
       ControllerOutputResult.Outcome.allCases.map(\.rawValue) == [

@@ -573,7 +573,7 @@
 "inputTest.leftBumper" = "Bumper kiri";
 "inputTest.leftBumperGeneric" = "LB / L1";
 "inputTest.leftHaptic" = "Haptik kiri";
-"inputTest.leftMain" = "Utama kiri";
+"inputTest.lowFrequency" = "Utama kiri";
 "inputTest.leftStick" = "Stik kiri";
 "inputTest.leftStickButton" = "Tombol stik kiri";
 "inputTest.leftTrigger" = "Pemicu kiri";
@@ -595,7 +595,7 @@
 "inputTest.rightBumper" = "Bumper kanan";
 "inputTest.rightBumperGeneric" = "RB / R1";
 "inputTest.rightHaptic" = "Haptik kanan";
-"inputTest.rightMain" = "Utama kanan";
+"inputTest.highFrequency" = "Utama kanan";
 "inputTest.rightStick" = "Stik kanan";
 "inputTest.rightStickButton" = "Tombol stik kanan";
 "inputTest.rightTrigger" = "Pemicu kanan";

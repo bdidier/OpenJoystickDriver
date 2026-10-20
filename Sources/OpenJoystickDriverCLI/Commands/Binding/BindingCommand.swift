@@ -77,7 +77,9 @@ struct BindingListCommand: AsyncParsableCommand {
         )
       case .plain:
         CLIOutput.plain(
-          document.bindings.map(BindingSummary.init).map { [$0.source, $0.target, $0.behavior] }
+          document.bindings.map(BindingSummary.init).map {
+            [$0.source, $0.target, CommandLineName.kebab($0.behavior)]
+          }
         )
       case .human:
         if document.bindings.isEmpty {

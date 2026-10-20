@@ -1,7 +1,7 @@
 /// Intensity for every rumble channel a `set-rumble` command can name; `.min` is off.
 public struct RumbleIntensities: Equatable, Hashable, Sendable {
-  public var leftMain: UnipolarValue
-  public var rightMain: UnipolarValue
+  public var lowFrequency: UnipolarValue
+  public var highFrequency: UnipolarValue
   public var leftTrigger: UnipolarValue
   public var rightTrigger: UnipolarValue
   /// Steam Controller trackpad haptics.
@@ -9,15 +9,15 @@ public struct RumbleIntensities: Equatable, Hashable, Sendable {
   public var rightHaptic: UnipolarValue
 
   public init(
-    leftMain: UnipolarValue = .min,
-    rightMain: UnipolarValue = .min,
+    lowFrequency: UnipolarValue = .min,
+    highFrequency: UnipolarValue = .min,
     leftTrigger: UnipolarValue = .min,
     rightTrigger: UnipolarValue = .min,
     leftHaptic: UnipolarValue = .min,
     rightHaptic: UnipolarValue = .min
   ) {
-    self.leftMain = leftMain
-    self.rightMain = rightMain
+    self.lowFrequency = lowFrequency
+    self.highFrequency = highFrequency
     self.leftTrigger = leftTrigger
     self.rightTrigger = rightTrigger
     self.leftHaptic = leftHaptic
@@ -29,8 +29,8 @@ public struct RumbleIntensities: Equatable, Hashable, Sendable {
   public subscript(motor: PhysicalRumbleMotor) -> UnipolarValue {
     get {
       switch motor {
-      case .leftMain: leftMain
-      case .rightMain: rightMain
+      case .lowFrequency: lowFrequency
+      case .highFrequency: highFrequency
       case .leftTrigger: leftTrigger
       case .rightTrigger: rightTrigger
       case .leftHaptic: leftHaptic
@@ -39,8 +39,8 @@ public struct RumbleIntensities: Equatable, Hashable, Sendable {
     }
     set {
       switch motor {
-      case .leftMain: leftMain = newValue
-      case .rightMain: rightMain = newValue
+      case .lowFrequency: lowFrequency = newValue
+      case .highFrequency: highFrequency = newValue
       case .leftTrigger: leftTrigger = newValue
       case .rightTrigger: rightTrigger = newValue
       case .leftHaptic: leftHaptic = newValue
@@ -57,16 +57,18 @@ public struct RumbleIntensities: Equatable, Hashable, Sendable {
   /// The intensities of a manual rumble test: each named channel at its byte, and both main
   /// motors at 180 when no channel is named.
   public static func manualTest(
-    leftMain: UInt8?,
-    rightMain: UInt8?,
+    lowFrequency: UInt8?,
+    highFrequency: UInt8?,
     leftTrigger: UInt8?,
     rightTrigger: UInt8?
   ) -> Self {
-    let noneGiven = [leftMain, rightMain, leftTrigger, rightTrigger].allSatisfy { $0 == nil }
+    let noneGiven = [lowFrequency, highFrequency, leftTrigger, rightTrigger].allSatisfy {
+      $0 == nil
+    }
     let fallback: UInt8 = noneGiven ? 180 : 0
     return Self(
-      leftMain: UnipolarValue(byte: leftMain ?? fallback),
-      rightMain: UnipolarValue(byte: rightMain ?? fallback),
+      lowFrequency: UnipolarValue(byte: lowFrequency ?? fallback),
+      highFrequency: UnipolarValue(byte: highFrequency ?? fallback),
       leftTrigger: UnipolarValue(byte: leftTrigger ?? 0),
       rightTrigger: UnipolarValue(byte: rightTrigger ?? 0)
     )
@@ -95,11 +97,11 @@ public enum ControllerOutputCommand: Equatable, Hashable, Sendable {
   case setAdaptiveTrigger(PhysicalAdaptiveTrigger, PhysicalAdaptiveTriggerEffect)
 
   /// The capability a controller needs to carry out this command; a rumble command names its
-  /// first active channel, or the left main motor when none is active.
+  /// first active channel, or the low-frequency motor when none is active.
   public var capability: ControllerOutputCapability {
     switch self {
-    case .setRumble(let intensities, _): .rumble(intensities.activeMotors.first ?? .leftMain)
-    case .stopRumble: .rumble(.leftMain)
+    case .setRumble(let intensities, _): .rumble(intensities.activeMotors.first ?? .lowFrequency)
+    case .stopRumble: .rumble(.lowFrequency)
     case .setPlayerIndicator: .playerIndicator
     case .setRGB: .rgb
     case .setLightBrightness: .lightBrightness

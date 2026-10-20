@@ -152,7 +152,7 @@ public final class Switch2Driver: PhysicalProtocolDriver {
   /// at the larger of the two.
   public var outputCapabilities: PhysicalControllerOutputCapabilities {
     PhysicalControllerOutputCapabilities(
-      rumbleMotors: [.leftMain, .rightMain],
+      rumbleMotors: [.lowFrequency, .highFrequency],
       lightingFeatures: [.playerIndicator]
     )
   }
@@ -239,7 +239,9 @@ public final class Switch2Driver: PhysicalProtocolDriver {
   ) throws(ControllerOutputError) -> PhysicalOutputPlan {
     switch command {
     case .setRumble(let intensities, _):
-      (rumbleLow, rumbleHigh) = (intensities.leftMain.rawValue, intensities.rightMain.rawValue)
+      (rumbleLow, rumbleHigh) = (
+        intensities.lowFrequency.rawValue, intensities.highFrequency.rawValue
+      )
     case .stopRumble: (rumbleLow, rumbleHigh) = (0, 0)
     case .setPlayerIndicator(let indicator):
       // SDL `UpdateSlotLED` patterns for the first four players.

@@ -110,13 +110,13 @@ struct ControllerCommandTests {
     let lines = result.standardError.split(separator: "\n")
     #expect(lines.count == 2)
     #expect(lines.first?.contains("left-trigger") == true)
-    #expect(lines.last?.contains("left-main") == true)
+    #expect(lines.last?.contains("low-frequency") == true)
     #expect(!result.standardError.contains("haptic"))
     guard case .setRumble(let intensities, _) = try Self.sentCommands(service).first else {
       Issue.record("expected setRumble")
       return
     }
-    #expect(intensities.leftMain == UnipolarValue(byte: 100))
+    #expect(intensities.lowFrequency == UnipolarValue(byte: 100))
     #expect(intensities.leftHaptic == UnipolarValue(byte: 100))
   }
 

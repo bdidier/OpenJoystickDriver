@@ -3,19 +3,19 @@ import Foundation
 /// Selects the virtual contribution of controls that have no active mapping.
 public enum RemappingVirtualGamepadPolicy: String, Codable, CaseIterable, Hashable, Sendable {
   /// Synthesizes system input without creating a virtual gamepad.
-  case disabled
+  case disabled = "Disabled"
   /// Emits only destinations explicitly assigned by the profile.
-  case mapped
+  case mapped = "Mapped"
   /// Also forwards controls that the active mapping does not consume.
-  case passthrough
+  case passthrough = "Passthrough"
 }
 
 /// Physical ownership required before the profile may emit input.
 public enum RemappingPhysicalInputPolicy: String, Codable, CaseIterable, Hashable, Sendable {
   /// Allows system-input mappings while native physical input remains visible.
-  case shared
+  case shared = "Shared"
   /// Requires confirmed exclusive physical ownership.
-  case exclusive
+  case exclusive = "Exclusive"
 }
 
 /// Declares output routing and physical isolation independently of individual bindings.

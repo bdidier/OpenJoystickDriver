@@ -96,7 +96,10 @@ struct NVIDIAShieldDriverTests {
   @Test
   func v103RumbleUsesTheSDLOutputReport() throws {
     let command = ControllerOutputCommand.setRumble(
-      RumbleIntensities(leftMain: UnipolarValue(byte: 0x40), rightMain: UnipolarValue(byte: 0xC0)),
+      RumbleIntensities(
+        lowFrequency: UnipolarValue(byte: 0x40),
+        highFrequency: UnipolarValue(byte: 0xC0)
+      ),
       duration: .held
     )
     #expect(

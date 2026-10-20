@@ -13,7 +13,10 @@ extension DeviceManager {
   func setStoppingForTest(_ stopping: Bool) { isStopping = stopping }
 
   func setManualRumbleForTest(on identifier: LogicalControllerID) {
-    _ = physicalOutputOwnership.setManual(.rumble(motor: .leftMain, intensity: 1), for: identifier)
+    _ = physicalOutputOwnership.setManual(
+      .rumble(motor: .lowFrequency, intensity: 1),
+      for: identifier
+    )
   }
 
   func holdPermissionWatchForTest() {

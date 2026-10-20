@@ -5,9 +5,9 @@ import Testing
 
 /// Failed manual commands withdraw only their own claims, and timed rumble stops.
 extension PhysicalOutputExecutorTests {
-  func leftMain(_ started: Started) async -> RemappingPhysicalOutput? {
+  func lowFrequency(_ started: Started) async -> RemappingPhysicalOutput? {
     await started.manager.physicalOutputOwnership.effectiveOutput(
-      for: .rumble(.leftMain),
+      for: .rumble(.lowFrequency),
       device: started.identifier
     )
   }
@@ -28,7 +28,7 @@ extension PhysicalOutputExecutorTests {
       tasks.append(
         Task {
           await manager.sendControllerOutput(
-            .setRumble(RumbleIntensities(leftMain: UnipolarValue(byte: byte)), duration: .held),
+            .setRumble(RumbleIntensities(lowFrequency: UnipolarValue(byte: byte)), duration: .held),
             for: .model(identifier.model)
           ).outcome
         }
@@ -52,7 +52,7 @@ extension PhysicalOutputExecutorTests {
       await started.backend.disableOutputReports()
     }
     #expect(outcomes == [.writeFailed, .writeFailed])
-    #expect(await leftMain(started) == nil)
+    #expect(await lowFrequency(started) == nil)
     await started.manager.stop()
   }
 
@@ -65,7 +65,9 @@ extension PhysicalOutputExecutorTests {
       await started.backend.failNextOutputReports(1)
     }
     #expect(outcomes == [.writeFailed, .delivered])
-    #expect(await leftMain(started) == .rumble(motor: .leftMain, intensity: Double(0x80) / 255))
+    #expect(
+      await lowFrequency(started) == .rumble(motor: .lowFrequency, intensity: Double(0x80) / 255)
+    )
     let written = await started.backend.recordedOutputReports().map(sixaxisFields)
     #expect(written.last?.rumble == [0, 0x80])
     await started.manager.stop()
@@ -77,12 +79,12 @@ extension PhysicalOutputExecutorTests {
   func failedNewestRumbleRewritesTheEffectiveRumble() async throws {
     let started = try await startSixaxis(locationID: 534)
     let manager = started.manager
-    let earlier = RumbleIntensities(leftMain: UnipolarValue(byte: 0x40))
+    let earlier = RumbleIntensities(lowFrequency: UnipolarValue(byte: 0x40))
     #expect(await send(.setRumble(earlier, duration: .held), to: started).value)
     let (queue, release, blocker) = await blockOutputQueue(started)
     let before = await started.backend.recordedOutputReports().count
     let later = send(
-      .setRumble(RumbleIntensities(leftMain: UnipolarValue(byte: 0x80)), duration: .held),
+      .setRumble(RumbleIntensities(lowFrequency: UnipolarValue(byte: 0x80)), duration: .held),
       to: started
     )
     await waitForSubmittedOperations(2, on: queue)
@@ -93,7 +95,9 @@ extension PhysicalOutputExecutorTests {
     #expect(!(await later.value))
     let written = await started.backend.recordedOutputReports().dropFirst(before).map(sixaxisFields)
     #expect(written.map(\.rumble) == [[0, 0x40]])
-    #expect(await leftMain(started) == .rumble(motor: .leftMain, intensity: Double(0x40) / 255))
+    #expect(
+      await lowFrequency(started) == .rumble(motor: .lowFrequency, intensity: Double(0x40) / 255)
+    )
     await manager.stop()
   }
 
@@ -102,7 +106,7 @@ extension PhysicalOutputExecutorTests {
   func failedStopRumbleLeavesNoClaimAndRetryWrites() async throws {
     let started = try await startSixaxis(locationID: 530)
     let manager = started.manager
-    let rumble = RumbleIntensities(leftMain: UnipolarValue(byte: 0x80))
+    let rumble = RumbleIntensities(lowFrequency: UnipolarValue(byte: 0x80))
     #expect(await send(.setRumble(rumble, duration: .held), to: started).value)
     await started.backend.disableOutputReports()
 
@@ -112,7 +116,7 @@ extension PhysicalOutputExecutorTests {
     )
 
     #expect(failed == ControllerOutputResult(.writeFailed))
-    #expect(await leftMain(started) == nil)
+    #expect(await lowFrequency(started) == nil)
     await started.backend.enableOutputReports()
     let before = await started.backend.recordedOutputReports().count
     let retried = await manager.sendControllerOutput(
@@ -130,7 +134,7 @@ extension PhysicalOutputExecutorTests {
   func timedRumbleStopsAfterItsDuration() async throws {
     let started = try await startSixaxis(locationID: 531)
     let manager = started.manager
-    let rumble = RumbleIntensities(leftMain: UnipolarValue(byte: 0x80))
+    let rumble = RumbleIntensities(lowFrequency: UnipolarValue(byte: 0x80))
     #expect(await send(.setRumble(rumble, duration: .milliseconds(20)), to: started).value)
     let stop = try #require(await manager.rumbleStopTasks[started.identifier])
     let before = await started.backend.recordedOutputReports().count
@@ -139,7 +143,7 @@ extension PhysicalOutputExecutorTests {
 
     let written = await started.backend.recordedOutputReports().dropFirst(before).map(sixaxisFields)
     #expect(written.map(\.rumble) == [[0, 0]])
-    #expect(await leftMain(started) == nil)
+    #expect(await lowFrequency(started) == nil)
     #expect(await manager.rumbleStopTasks[started.identifier] == nil)
     await manager.stop()
   }

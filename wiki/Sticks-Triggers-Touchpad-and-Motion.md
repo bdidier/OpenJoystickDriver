@@ -66,18 +66,18 @@ A dual-stage trigger has a soft stage and a full stage. You can assign each stag
 6. Click **Save**.
 7. In the **Assignments** section, assign the `trigger:SIDE:soft` and `trigger:SIDE:full` controls.
 
-| Stage interaction | CLI value |
+| Stage interaction | Profile value |
 | --- | --- |
-| **Soft and full together** | `simultaneous` |
-| **Full replaces soft** | `exclusive` |
-| **Prefer quick full** | `prefer_full` |
-| **Prefer quick full; combine late** | `prefer_full_combined` |
-| **Responsive soft; prefer quick full** | `responsive_prefer_full` |
-| **Responsive soft; combine late** | `responsive_prefer_full_combined` |
+| **Soft and full together** | `Simultaneous` |
+| **Full replaces soft** | `Exclusive` |
+| **Prefer quick full** | `PreferFull` |
+| **Prefer quick full; combine late** | `PreferFullCombined` |
+| **Responsive soft; prefer quick full** | `ResponsivePreferFull` |
+| **Responsive soft; combine late** | `ResponsivePreferFullCombined` |
 
 The soft threshold range is 0.01 to 0.95 (default 0.1). The full threshold range is 0.05 to 1 (default 0.95). The soft threshold must be less than the full threshold. The **Quick-pull window (ms)** range is 1 to 1000 (default 150). **Keep analog trigger passthrough** keeps the analog trigger in the passthrough output.
 
-On the command line, the settings are the `triggerMappings` entries of the profile. Change one with `ojd profile set`, for example `ojd profile set Racing triggerMappings.0.mode prefer_full`, or open the profile with `ojd profile edit`.
+On the command line, the settings are the `triggerMappings` entries of the profile. Change one with `ojd profile set`, for example `ojd profile set Racing triggerMappings.0.mode PreferFull`, or open the profile with `ojd profile edit`.
 
 ## Set Touch Mapping
 
@@ -92,7 +92,7 @@ On the command line, the settings are the `triggerMappings` entries of the profi
 
 You can also use touch contact, touch grid, and touch swipe as assignment sources. A grid has 1 to 16 columns and rows. A swipe has a minimum distance from 0.01 to 1 (default 0.2). For the source syntax, see [Assigning buttons and actions](Bindings-and-Actions.md#assigning-buttons-and-actions).
 
-On the command line, the settings are the `touchMappings` entries of the profile. Change one with `ojd profile set`, for example `ojd profile set Racing touchMappings.0.mode pointer`, or open the profile with `ojd profile edit`.
+On the command line, the settings are the `touchMappings` entries of the profile. Change one with `ojd profile set`, for example `ojd profile set Racing touchMappings.0.mode Pointer`, or open the profile with `ojd profile edit`.
 
 ## Set Motion Tuning and Gyro Output
 
@@ -105,7 +105,7 @@ Motion tuning has these values. The ranges come from the profile validation.
 
 | Setting | Range | Default |
 | --- | --- | --- |
-| Space | `local`, `player`, `world` | `player` |
+| Space | `Local`, `Player`, `World` | `Player` |
 | Pitch and yaw sensitivity | 0 to 100 | 1 |
 | Smoothing half-time (ms) | 0 to 1000 | 0 |
 | Threshold (degrees per second) | 0 to 1000 | 0 |

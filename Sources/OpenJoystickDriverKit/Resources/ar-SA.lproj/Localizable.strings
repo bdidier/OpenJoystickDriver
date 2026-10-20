@@ -573,7 +573,7 @@
 "inputTest.leftBumper" = "المصد الأيسر";
 "inputTest.leftBumperGeneric" = "LB / L1";
 "inputTest.leftHaptic" = "الاهتزاز اللمسي الأيسر";
-"inputTest.leftMain" = "الرئيسي الأيسر";
+"inputTest.lowFrequency" = "الرئيسي الأيسر";
 "inputTest.leftStick" = "العصا اليسرى";
 "inputTest.leftStickButton" = "زر العصا اليسرى";
 "inputTest.leftTrigger" = "الزناد الأيسر";
@@ -595,7 +595,7 @@
 "inputTest.rightBumper" = "المصد الأيمن";
 "inputTest.rightBumperGeneric" = "RB / R1";
 "inputTest.rightHaptic" = "الاهتزاز اللمسي الأيمن";
-"inputTest.rightMain" = "الرئيسي الأيمن";
+"inputTest.highFrequency" = "الرئيسي الأيمن";
 "inputTest.rightStick" = "العصا اليمنى";
 "inputTest.rightStickButton" = "زر العصا اليمنى";
 "inputTest.rightTrigger" = "الزناد الأيمن";

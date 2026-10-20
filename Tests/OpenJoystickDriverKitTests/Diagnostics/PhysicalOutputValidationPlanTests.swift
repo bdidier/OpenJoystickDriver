@@ -15,14 +15,14 @@ struct PhysicalOutputValidationPlanTests {
       serialNumber: "SERIAL-SECRET",
       bindingResult: .hidDescriptorFixture,
       physicalOutputCapabilities: PhysicalControllerOutputCapabilities(
-        rumbleMotors: [.leftMain, .rightMain, .leftTrigger, .rightTrigger],
+        rumbleMotors: [.lowFrequency, .highFrequency, .leftTrigger, .rightTrigger],
         lightingFeatures: [.playerIndicator, .programmableColor, .programmableBrightness]
       )
     )
     let plan = PhysicalOutputValidationPlan(device: device)
     #expect(
       plan.steps.map(\.id) == [
-        "left-main", "right-main", "left-trigger", "right-trigger", "player-indicators",
+        "low-frequency", "high-frequency", "left-trigger", "right-trigger", "player-indicators",
         "player-indicators-off", "color-red", "color-green", "color-blue", "brightness-low",
         "brightness-high",
       ]

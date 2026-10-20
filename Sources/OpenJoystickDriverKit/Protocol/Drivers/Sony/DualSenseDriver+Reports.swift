@@ -46,7 +46,7 @@ extension DualSenseDriver {
     if features.contains(.playerIndicator) { lighting.append(.playerIndicator) }
     if features.contains(.lightbar) { lighting.append(.programmableColor) }
     return PhysicalControllerOutputCapabilities(
-      rumbleMotors: features.contains(.vibration) ? [.leftMain, .rightMain] : [],
+      rumbleMotors: features.contains(.vibration) ? [.lowFrequency, .highFrequency] : [],
       lightingFeatures: lighting,
       adaptiveTriggers: thirdParty == nil ? PhysicalAdaptiveTrigger.allCases : []
     )
@@ -163,8 +163,8 @@ extension DualSenseDriver {
     case .setRumble(let intensities, _):
       return output(
         validFlag0: dualSenseCompatibleVibrationFlags,
-        motorRight: intensities.rightMain.byte,
-        motorLeft: intensities.leftMain.byte
+        motorRight: intensities.highFrequency.byte,
+        motorLeft: intensities.lowFrequency.byte
       )
     case .stopRumble: return output(validFlag0: dualSenseCompatibleVibrationFlags)
     case .setPlayerIndicator(let indicator):

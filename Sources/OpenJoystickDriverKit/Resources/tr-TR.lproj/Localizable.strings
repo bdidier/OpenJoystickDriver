@@ -573,7 +573,7 @@
 "inputTest.leftBumper" = "Sol Tampon";
 "inputTest.leftBumperGeneric" = "LB / L1";
 "inputTest.leftHaptic" = "Sol Dokunsal";
-"inputTest.leftMain" = "Sol Ana";
+"inputTest.lowFrequency" = "Sol Ana";
 "inputTest.leftStick" = "Sol Çubuk";
 "inputTest.leftStickButton" = "Sol Çubuk Düğmesi";
 "inputTest.leftTrigger" = "Sol Tetik";
@@ -595,7 +595,7 @@
 "inputTest.rightBumper" = "Sağ Tampon";
 "inputTest.rightBumperGeneric" = "RB / R1";
 "inputTest.rightHaptic" = "Sağ Dokunsal";
-"inputTest.rightMain" = "Sağ Ana";
+"inputTest.highFrequency" = "Sağ Ana";
 "inputTest.rightStick" = "Sağ Çubuk";
 "inputTest.rightStickButton" = "Sağ Çubuk Düğmesi";
 "inputTest.rightTrigger" = "Sağ Tetik";

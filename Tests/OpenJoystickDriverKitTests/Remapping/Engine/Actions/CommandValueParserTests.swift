@@ -50,8 +50,8 @@ struct CommandValueParserTests {
   @Test
   func parsesBoundedPhysicalOutputTargets() throws {
     #expect(
-      try RemappingCommandValueParser.destination("physical:rumble:leftMain:0.5")
-        == .physical(.rumble(motor: .leftMain, intensity: 0.5))
+      try RemappingCommandValueParser.destination("physical:rumble:low-frequency:0.5")
+        == .physical(.rumble(motor: .lowFrequency, intensity: 0.5))
     )
     #expect(
       try RemappingCommandValueParser.destination("physical:adaptive:right:resistance:0.4:0.8")

@@ -573,7 +573,7 @@
 "inputTest.leftBumper" = "Linke Schultertaste";
 "inputTest.leftBumperGeneric" = "LB / L1";
 "inputTest.leftHaptic" = "Haptik links";
-"inputTest.leftMain" = "Haupt links";
+"inputTest.lowFrequency" = "Haupt links";
 "inputTest.leftStick" = "Linker Stick";
 "inputTest.leftStickButton" = "Taste linker Stick";
 "inputTest.leftTrigger" = "Linker Trigger";
@@ -595,7 +595,7 @@
 "inputTest.rightBumper" = "Rechte Schultertaste";
 "inputTest.rightBumperGeneric" = "RB / R1";
 "inputTest.rightHaptic" = "Haptik rechts";
-"inputTest.rightMain" = "Haupt rechts";
+"inputTest.highFrequency" = "Haupt rechts";
 "inputTest.rightStick" = "Rechter Stick";
 "inputTest.rightStickButton" = "Taste rechter Stick";
 "inputTest.rightTrigger" = "Rechter Trigger";

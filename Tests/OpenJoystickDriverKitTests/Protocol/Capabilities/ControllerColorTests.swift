@@ -17,7 +17,7 @@ struct ControllerColorTests {
     #expect(try json(color) == #"{"blue":255,"green":2,"red":1}"#)
     #expect(
       try json(RemappingPhysicalOutput.color(color))
-        == #"{"blue":255,"green":2,"red":1,"type":"color"}"#
+        == #"{"blue":255,"green":2,"red":1,"type":"Color"}"#
     )
     #expect(
       try JSONDecoder().decode(

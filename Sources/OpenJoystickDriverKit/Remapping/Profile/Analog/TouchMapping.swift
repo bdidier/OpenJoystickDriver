@@ -2,9 +2,9 @@ import Foundation
 
 /// A stable touch-surface identity used by profile sources and mappings.
 public enum RemappingTouchSurface: String, Codable, CaseIterable, Hashable, Sendable {
-  case primary
-  case left
-  case right
+  case primary = "Primary"
+  case left = "Left"
+  case right = "Right"
 
   public init(_ surface: ControllerTouchSurface) {
     switch surface {
@@ -16,10 +16,10 @@ public enum RemappingTouchSurface: String, Codable, CaseIterable, Hashable, Send
 }
 
 public enum RemappingTouchSwipeDirection: String, Codable, CaseIterable, Hashable, Sendable {
-  case up
-  case down
-  case left
-  case right
+  case up = "Up"
+  case down = "Down"
+  case left = "Left"
+  case right = "Right"
 }
 
 public struct RemappingTouchGridSource: Codable, Equatable, Hashable, Sendable {

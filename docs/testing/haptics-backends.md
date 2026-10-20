@@ -29,10 +29,10 @@ The connected GameSir G7 SE produced this one-to-one actuator map:
 
 | Logical channel | Physical observation |
 | --- | --- |
-| `leftMain` | Left grip motor |
-| `rightMain` | Right grip motor |
-| `leftTrigger` | Left trigger motor |
-| `rightTrigger` | Right trigger motor |
+| `LowFrequency` | Left grip motor |
+| `HighFrequency` | Right grip motor |
+| `LeftTrigger` | Left trigger motor |
+| `RightTrigger` | Right trigger motor |
 
 Every step explicitly stopped all four channels before and after its bounded pulse. This verifies independent addressing of all four motors through OJD's physical raw-USB GIP output path. It does not imply that every virtual consumer or API supplies four independent motor values.
 

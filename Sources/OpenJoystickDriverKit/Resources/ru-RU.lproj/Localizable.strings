@@ -573,7 +573,7 @@
 "inputTest.leftBumper" = "Левый бампер";
 "inputTest.leftBumperGeneric" = "LB / L1";
 "inputTest.leftHaptic" = "Левый тактильный отклик";
-"inputTest.leftMain" = "Левый основной";
+"inputTest.lowFrequency" = "Левый основной";
 "inputTest.leftStick" = "Левый стик";
 "inputTest.leftStickButton" = "Кнопка левого стика";
 "inputTest.leftTrigger" = "Левый триггер";
@@ -595,7 +595,7 @@
 "inputTest.rightBumper" = "Правый бампер";
 "inputTest.rightBumperGeneric" = "RB / R1";
 "inputTest.rightHaptic" = "Правый тактильный отклик";
-"inputTest.rightMain" = "Правый основной";
+"inputTest.highFrequency" = "Правый основной";
 "inputTest.rightStick" = "Правый стик";
 "inputTest.rightStickButton" = "Кнопка правого стика";
 "inputTest.rightTrigger" = "Правый триггер";

@@ -174,8 +174,8 @@ struct ControllerRumbleCommand: AsyncParsableCommand {
   /// The requested intensities; both main motors at 180 when no option names one.
   var intensities: RumbleIntensities {
     .manualTest(
-      leftMain: left,
-      rightMain: right,
+      lowFrequency: left,
+      highFrequency: right,
       leftTrigger: leftTrigger,
       rightTrigger: rightTrigger
     )
@@ -225,8 +225,8 @@ struct ControllerRumbleCommand: AsyncParsableCommand {
     }
     let ran = requested.filter { motor in
       switch motor {
-      case .leftMain: !dropped.contains(.leftMain) || !dropped.contains(.leftHaptic)
-      case .rightMain: !dropped.contains(.rightMain) || !dropped.contains(.rightHaptic)
+      case .lowFrequency: !dropped.contains(.lowFrequency) || !dropped.contains(.leftHaptic)
+      case .highFrequency: !dropped.contains(.highFrequency) || !dropped.contains(.rightHaptic)
       default: !dropped.contains(motor)
       }
     }
@@ -265,7 +265,7 @@ struct ControllerRumbleCommand: AsyncParsableCommand {
       CLIOutput.plain([
         [
           request.name, result.outcome.rawValue,
-          droppedTriggers.map(\.rawValue).joined(separator: ","),
+          droppedTriggers.map { CommandLineName.kebab($0.rawValue) }.joined(separator: ","),
         ]
       ])
     case .human:

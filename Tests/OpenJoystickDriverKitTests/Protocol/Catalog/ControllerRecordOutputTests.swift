@@ -28,7 +28,7 @@ struct ControllerRecordOutputTests {
     #expect(document.server == .ojd)
     let template = try #require(document.defaultMode.session.rumbleTemplate)
     #expect(template.report == ControllerTemplateReport(kind: .output, reportID: 2, length: 8))
-    #expect(template.motors == [.leftMain: .init(byte: 3), .rightMain: .init(byte: 2)])
+    #expect(template.motors == [.lowFrequency: .init(byte: 3), .highFrequency: .init(byte: 2)])
     #expect(template.bytes == [2, 0, 0, 0, 0, 0, 0, 0])
     #expect(template.counterByte == nil && template.resendIntervalMilliseconds == nil)
     #expect(template.outputCapabilities == .dualMainRumble)
@@ -145,11 +145,11 @@ struct ControllerRecordOutputTests {
   func writesReportsWithoutAnIDAndFeatureReports() throws {
     let unnumbered = try RumbleOutputTemplate(
       target: .hid(ControllerTemplateReport(kind: .output, reportID: 0, length: 4)),
-      motors: [.leftMain: .init(byte: 0), .rightTrigger: .init(byte: 3)]
+      motors: [.lowFrequency: .init(byte: 0), .rightTrigger: .init(byte: 3)]
     )
     let intensities = RumbleIntensities(
-      leftMain: UnipolarValue(byte: 0x11),
-      rightMain: UnipolarValue(byte: 0x22),
+      lowFrequency: UnipolarValue(byte: 0x11),
+      highFrequency: UnipolarValue(byte: 0x22),
       rightTrigger: UnipolarValue(byte: 0x33)
     )
     guard case .hidOutput(let report) = unnumbered.write(intensities) else {
@@ -161,7 +161,7 @@ struct ControllerRecordOutputTests {
 
     let feature = try RumbleOutputTemplate(
       target: .hid(ControllerTemplateReport(kind: .feature, reportID: 5, length: 3)),
-      motors: [.rightMain: .init(byte: 1)]
+      motors: [.highFrequency: .init(byte: 1)]
     )
     guard case .hidFeature(let featureReport) = feature.write(intensities) else {
       Issue.record("expected a feature report")
@@ -185,8 +185,8 @@ struct ControllerRecordOutputTests {
     let template = try #require(document.defaultMode.session.rumbleTemplate)
     #expect(template.counterByte == 1 && template.resendIntervalMilliseconds == 250)
     let intensities = RumbleIntensities(
-      leftMain: UnipolarValue(0x1234),
-      rightMain: UnipolarValue(0x5678),
+      lowFrequency: UnipolarValue(0x1234),
+      highFrequency: UnipolarValue(0x5678),
       leftTrigger: UnipolarValue(byte: 0xFF)
     )
     let hd = SwitchProRumbleCodec.encode(intensity: 0xFF)
@@ -206,16 +206,16 @@ struct ControllerRecordOutputTests {
     let packet = try RumbleOutputTemplate(
       target: .usb(length: 6),
       bytes: [0x0F, 0x20, 0x66, 0x55, 0, 0],
-      motors: [.leftMain: .init(byte: 4), .rightMain: .init(byte: 5)]
+      motors: [.lowFrequency: .init(byte: 4), .highFrequency: .init(byte: 5)]
     )
     #expect(packet.report == nil)
     let intensities = RumbleIntensities(
-      leftMain: UnipolarValue(byte: 0x40),
-      rightMain: UnipolarValue(byte: 0x80)
+      lowFrequency: UnipolarValue(byte: 0x40),
+      highFrequency: UnipolarValue(byte: 0x80)
     )
     #expect(packet.reportBytes(intensities) == [0x0F, 0x20, 0x66, 0x55, 0x40, 0x80])
     #expect(throws: ControllerRecordProblem.self) {
-      try RumbleOutputTemplate(target: .usb(length: 65), motors: [.leftMain: .init(byte: 0)])
+      try RumbleOutputTemplate(target: .usb(length: 65), motors: [.lowFrequency: .init(byte: 0)])
     }
   }
 

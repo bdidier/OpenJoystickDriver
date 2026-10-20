@@ -1,11 +1,28 @@
 /// A physical rumble actuator that the active protocol implementation can address.
 public enum PhysicalRumbleMotor: String, Codable, CaseIterable, Hashable, Sendable {
-  case leftMain
-  case rightMain
-  case leftTrigger
-  case rightTrigger
-  case leftHaptic
-  case rightHaptic
+  case lowFrequency = "LowFrequency"
+  case highFrequency = "HighFrequency"
+  case leftTrigger = "LeftTrigger"
+  case rightTrigger = "RightTrigger"
+  case leftHaptic = "LeftHaptic"
+  case rightHaptic = "RightHaptic"
+
+  /// Lists of motors are in declaration order.
+  static func isDeclaredBefore(_ lhs: Self, _ rhs: Self) -> Bool {
+    allCases.firstIndex(of: lhs)! < allCases.firstIndex(of: rhs)!
+  }
+
+  /// The key that names this motor in controller records and in endpoint rumble intensities.
+  public var fieldName: String {
+    switch self {
+    case .lowFrequency: "leftMain"
+    case .highFrequency: "rightMain"
+    case .leftTrigger: "leftTrigger"
+    case .rightTrigger: "rightTrigger"
+    case .leftHaptic: "leftHaptic"
+    case .rightHaptic: "rightHaptic"
+    }
+  }
 }
 
 /// A physical lighting feature with a source-backed output implementation.
@@ -25,13 +42,13 @@ public enum PhysicalPlayerIndicator: Int, Codable, CaseIterable, Hashable, Senda
 }
 
 public enum PhysicalAdaptiveTrigger: String, Codable, CaseIterable, Hashable, Sendable {
-  case left
-  case right
+  case left = "Left"
+  case right = "Right"
 }
 
 public enum PhysicalAdaptiveTriggerEffectKind: String, Codable, CaseIterable, Hashable, Sendable {
-  case off
-  case resistance
+  case off = "Off"
+  case resistance = "Resistance"
 }
 
 /// A bounded DualSense-style trigger effect. Positions and strength are normalized to `0...1`.
@@ -91,17 +108,16 @@ public struct PhysicalControllerOutputCapabilities: Codable, Equatable, Hashable
     binaryRumbleMotors: [PhysicalRumbleMotor] = [],
     adaptiveTriggers: [PhysicalAdaptiveTrigger] = []
   ) {
-    self.rumbleMotors = Array(Set(rumbleMotors)).sorted { $0.rawValue < $1.rawValue }
+    self.rumbleMotors = Set(rumbleMotors).sorted(by: PhysicalRumbleMotor.isDeclaredBefore)
     self.lightingFeatures = Array(Set(lightingFeatures)).sorted { $0.rawValue < $1.rawValue }
     let supportedMotors = Set(self.rumbleMotors)
-    self.binaryRumbleMotors = Array(Set(binaryRumbleMotors).intersection(supportedMotors)).sorted {
-      $0.rawValue < $1.rawValue
-    }
+    self.binaryRumbleMotors = Array(Set(binaryRumbleMotors).intersection(supportedMotors))
+      .sorted(by: PhysicalRumbleMotor.isDeclaredBefore)
     self.adaptiveTriggers = Array(Set(adaptiveTriggers)).sorted { $0.rawValue < $1.rawValue }
   }
 
   public static let none = Self()
-  public static let dualMainRumble = Self(rumbleMotors: [.leftMain, .rightMain])
+  public static let dualMainRumble = Self(rumbleMotors: [.lowFrequency, .highFrequency])
 
   public var supportsRumble: Bool { !rumbleMotors.isEmpty }
   public var supportsTriggerRumble: Bool {

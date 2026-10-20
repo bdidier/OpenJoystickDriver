@@ -96,8 +96,8 @@ extension EquivalenceSnapshotCatalogTests {
 
   static func label(_ motor: PhysicalRumbleMotor) -> String {
     switch motor {
-    case .leftMain: "left-main"
-    case .rightMain: "right-main"
+    case .lowFrequency: "low-frequency"
+    case .highFrequency: "high-frequency"
     case .leftTrigger: "left-trigger"
     case .rightTrigger: "right-trigger"
     case .leftHaptic: "left-haptic"

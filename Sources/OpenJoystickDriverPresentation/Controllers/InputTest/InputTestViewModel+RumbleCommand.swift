@@ -16,8 +16,8 @@
         let raw = rumbleIntensities[motor] ?? 0
         let value: UInt8 = binary.contains(motor) ? (raw > 0 ? 255 : 0) : Self.byte(raw)
         switch motor {
-        case .leftMain, .leftHaptic: left = max(left, value)
-        case .rightMain, .rightHaptic: right = max(right, value)
+        case .lowFrequency, .leftHaptic: left = max(left, value)
+        case .highFrequency, .rightHaptic: right = max(right, value)
         case .leftTrigger: leftTrigger = value
         case .rightTrigger: rightTrigger = value
         }

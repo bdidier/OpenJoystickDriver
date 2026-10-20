@@ -12,6 +12,9 @@ public enum RemappingCommandValueError: Error, Equatable, LocalizedError, Sendab
   }
 }
 
+/// Parses the colon-separated source and target operands of `ojd binding`. Controls, axes, dpad
+/// directions and keys are spelled as in profiles; every other enumerated word is the lowercase
+/// kebab-case form of its profile value (`CommandLineName`).
 public enum RemappingCommandValueParser {
   public static func source(_ raw: String) throws -> RemappingSource {
     let parts = raw.split(separator: ":", omittingEmptySubsequences: false).map(String.init)
@@ -32,23 +35,25 @@ public enum RemappingCommandValueParser {
       return .axisDirection(axis, direction)
     }
     if parts.count == 3, parts[0] == "trigger",
-      let trigger = RemappingTriggerSource(rawValue: parts[1]),
-      let stage = RemappingTriggerStage(rawValue: parts[2])
+      let trigger = CommandLineName.value(of: parts[1], in: RemappingTriggerSource.self),
+      let stage = CommandLineName.value(of: parts[2], in: RemappingTriggerStage.self)
     {
       return .triggerStage(trigger, stage)
     }
     if parts.count == 3, parts[0] == "motion", parts[1] == "lean",
-      let direction = RemappingMotionLeanDirection(rawValue: parts[2])
+      let direction = CommandLineName.value(of: parts[2], in: RemappingMotionLeanDirection.self)
     {
       return .motionLean(direction)
     }
     if parts.count == 3, parts[0] == "touch",
-      let surface = RemappingTouchSurface(rawValue: parts[1]), parts[2] == "contact"
+      let surface = CommandLineName.value(of: parts[1], in: RemappingTouchSurface.self),
+      parts[2] == "contact"
     {
       return .touchContact(surface)
     }
     if parts.count == 7, parts[0] == "touch",
-      let surface = RemappingTouchSurface(rawValue: parts[1]), parts[2] == "grid",
+      let surface = CommandLineName.value(of: parts[1], in: RemappingTouchSurface.self),
+      parts[2] == "grid",
       let columns = Int(parts[3]), let rows = Int(parts[4]), let column = Int(parts[5]),
       let row = Int(parts[6])
     {
@@ -63,8 +68,9 @@ public enum RemappingCommandValueParser {
       )
     }
     if parts.count == 5, parts[0] == "touch",
-      let surface = RemappingTouchSurface(rawValue: parts[1]), parts[2] == "swipe",
-      let direction = RemappingTouchSwipeDirection(rawValue: parts[3]),
+      let surface = CommandLineName.value(of: parts[1], in: RemappingTouchSurface.self),
+      parts[2] == "swipe",
+      let direction = CommandLineName.value(of: parts[3], in: RemappingTouchSwipeDirection.self),
       let minimumDistance = Double(parts[4]), minimumDistance.isFinite
     {
       return .touchSwipe(
@@ -107,18 +113,24 @@ public enum RemappingCommandValueParser {
         return .keyboard(key: key, modifiers: Set(modifiers))
       }
     }
-    if parts.count == 2, parts[0] == "mouse", let button = RemappingMouseButton(rawValue: parts[1])
+    if parts.count == 2, parts[0] == "mouse",
+      let button = CommandLineName.value(of: parts[1], in: RemappingMouseButton.self)
     {
       return .mouseButton(button)
     }
-    if parts.count == 2, parts[0] == "move", let axis = RemappingPointerAxis(rawValue: parts[1]) {
+    if parts.count == 2, parts[0] == "move",
+      let axis = CommandLineName.value(of: parts[1], in: RemappingPointerAxis.self)
+    {
       return .mouseMovement(axis)
     }
-    if parts.count == 2, parts[0] == "scroll", let axis = RemappingPointerAxis(rawValue: parts[1]) {
+    if parts.count == 2, parts[0] == "scroll",
+      let axis = CommandLineName.value(of: parts[1], in: RemappingPointerAxis.self)
+    {
       return .scroll(axis)
     }
     if parts.count == 4, parts[0] == "physical", parts[1] == "rumble",
-      let motor = PhysicalRumbleMotor(rawValue: parts[2]), let intensity = boundedUnit(parts[3])
+      let motor = CommandLineName.value(of: parts[2], in: PhysicalRumbleMotor.self),
+      let intensity = boundedUnit(parts[3])
     {
       return .physical(.rumble(motor: motor, intensity: intensity))
     }
@@ -139,12 +151,14 @@ public enum RemappingCommandValueParser {
       return .physical(.brightness(intensity))
     }
     if parts.count == 4, parts[0] == "physical", parts[1] == "adaptive",
-      let trigger = PhysicalAdaptiveTrigger(rawValue: parts[2]), parts[3] == "off"
+      let trigger = CommandLineName.value(of: parts[2], in: PhysicalAdaptiveTrigger.self),
+      parts[3] == "off"
     {
       return .physical(.adaptiveTrigger(trigger, .off))
     }
     if parts.count == 6, parts[0] == "physical", parts[1] == "adaptive",
-      let trigger = PhysicalAdaptiveTrigger(rawValue: parts[2]), parts[3] == "resistance",
+      let trigger = CommandLineName.value(of: parts[2], in: PhysicalAdaptiveTrigger.self),
+      parts[3] == "resistance",
       let startPosition = boundedUnit(parts[4]), let strength = boundedUnit(parts[5])
     {
       return .physical(

@@ -188,7 +188,7 @@ struct RemappingValidationTests {
     #expect(throws: DecodingError.self) {
       _ = try JSONDecoder().decode(
         RemappingSource.self,
-        from: Data(#"{"type":"button","button":"auxiliary_1"}"#.utf8)
+        from: Data(#"{"type":"Button","button":"auxiliary_1"}"#.utf8)
       )
     }
   }
@@ -198,7 +198,7 @@ struct RemappingValidationTests {
     let valid = makeProfile(bindings: [
       RemappingBinding(
         source: .button(.south),
-        destination: .physical(.rumble(motor: .leftMain, intensity: 0.5))
+        destination: .physical(.rumble(motor: .lowFrequency, intensity: 0.5))
       )
     ])
     try valid.validate()

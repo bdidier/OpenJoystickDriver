@@ -46,8 +46,8 @@ public enum RemappingApplicationScope: Codable, Equatable, Hashable, Sendable {
   case global
 
   private enum Kind: String, Codable {
-    case application
-    case global
+    case application = "Application"
+    case global = "Global"
   }
 
   enum CodingKeys: String, CodingKey, CaseIterable {
@@ -82,10 +82,10 @@ public enum RemappingApplicationScope: Codable, Equatable, Hashable, Sendable {
 }
 
 public enum RemappingResponseCurve: String, Codable, CaseIterable, Hashable, Sendable {
-  case linear
-  case easeIn = "ease_in"
-  case easeOut = "ease_out"
-  case smoothStep = "smooth_step"
+  case linear = "Linear"
+  case easeIn = "EaseIn"
+  case easeOut = "EaseOut"
+  case smoothStep = "SmoothStep"
 }
 
 /// Axis processing applied before a binding reaches its destination.
@@ -164,13 +164,13 @@ public struct RemappingTurbo: Codable, Equatable, Hashable, Sendable {
 }
 
 public enum RemappingBindingBehavior: String, Codable, CaseIterable, Hashable, Sendable {
-  case hold
-  case toggle
-  case tapOnPress = "tap_on_press"
-  case tapOnRelease = "tap_on_release"
-  case pulse
-  case press
-  case release
+  case hold = "Hold"
+  case toggle = "Toggle"
+  case tapOnPress = "TapOnPress"
+  case tapOnRelease = "TapOnRelease"
+  case pulse = "Pulse"
+  case press = "Press"
+  case release = "Release"
 }
 
 public struct RemappingBinding: Codable, Equatable, Hashable, Identifiable, Sendable {

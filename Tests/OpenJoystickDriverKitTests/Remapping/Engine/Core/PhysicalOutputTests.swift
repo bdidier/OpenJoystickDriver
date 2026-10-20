@@ -10,7 +10,7 @@ struct RemappingPhysicalOutputTests {
     let engine = RemappingEventEngine(sink: RemappingTestSink(), physicalOutputSink: sink)
     let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 3)
     let bindingID = UUID()
-    let output = RemappingPhysicalOutput.rumble(motor: .leftMain, intensity: 0.5)
+    let output = RemappingPhysicalOutput.rumble(motor: .lowFrequency, intensity: 0.5)
     let profile = RemappingProfile(
       name: "Physical",
       device: RemappingDeviceScope(vendorID: 1, productID: 2),

@@ -68,9 +68,9 @@ public final class SixaxisDriver: PhysicalProtocolDriver {
 
   public var outputCapabilities: PhysicalControllerOutputCapabilities {
     PhysicalControllerOutputCapabilities(
-      rumbleMotors: [.leftMain, .rightMain],
+      rumbleMotors: [.lowFrequency, .highFrequency],
       lightingFeatures: [.playerIndicator],
-      binaryRumbleMotors: [.rightMain]
+      binaryRumbleMotors: [.highFrequency]
     )
   }
 
@@ -97,8 +97,8 @@ public final class SixaxisDriver: PhysicalProtocolDriver {
   ) throws(ControllerOutputError) -> PhysicalOutputPlan {
     switch command {
     case .setRumble(let intensities, _):
-      physicalRumbleLeft = intensities.leftMain.byte
-      physicalRumbleRightOn = intensities.rightMain.byte > 0
+      physicalRumbleLeft = intensities.lowFrequency.byte
+      physicalRumbleRightOn = intensities.highFrequency.byte > 0
     case .stopRumble:
       physicalRumbleLeft = 0
       physicalRumbleRightOn = false

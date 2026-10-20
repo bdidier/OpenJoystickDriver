@@ -3,6 +3,10 @@ import OpenJoystickDriverKit
 
 /// Profile values as the text that `binding set` accepts and `profile show` prints.
 enum ProfileText {
+  /// The command-line spelling of an enumerated word: its lowercase kebab-case form.
+  private static func word<Value: RawRepresentable>(_ value: Value) -> String
+  where Value.RawValue == String { CommandLineName.kebab(value.rawValue) }
+
   static func scope(_ scope: RemappingApplicationScope) -> String {
     switch scope {
     case .global: "global"
@@ -16,13 +20,13 @@ enum ProfileText {
     case .dpad(let value): "dpad:\(value.rawValue)"
     case .axis(let value): "axis:\(value.rawValue)"
     case .axisDirection(let axis, let direction): "axis:\(axis.rawValue):\(direction.rawValue)"
-    case .triggerStage(let trigger, let stage): "trigger:\(trigger.rawValue):\(stage.rawValue)"
-    case .motionLean(let direction): "motion:lean:\(direction.rawValue)"
-    case .touchContact(let surface): "touch:\(surface.rawValue):contact"
+    case .triggerStage(let trigger, let stage): "trigger:\(word(trigger)):\(word(stage))"
+    case .motionLean(let direction): "motion:lean:\(word(direction))"
+    case .touchContact(let surface): "touch:\(word(surface)):contact"
     case .touchGrid(let grid):
-      "touch:\(grid.surface.rawValue):grid:\(grid.columns):\(grid.rows):\(grid.column):\(grid.row)"
+      "touch:\(word(grid.surface)):grid:\(grid.columns):\(grid.rows):\(grid.column):\(grid.row)"
     case .touchSwipe(let swipe):
-      "touch:\(swipe.surface.rawValue):swipe:\(swipe.direction.rawValue):\(swipe.minimumDistance)"
+      "touch:\(word(swipe.surface)):swipe:\(word(swipe.direction)):\(swipe.minimumDistance)"
     }
   }
 
@@ -36,24 +40,24 @@ enum ProfileText {
         modifiers.isEmpty
         ? "" : ":mods=" + modifiers.map(\.rawValue).sorted().joined(separator: ",")
       return "key:\(key.rawValue)\(suffix)"
-    case .mouseButton(let value): return "mouse:\(value.rawValue)"
-    case .mouseMovement(let value): return "move:\(value.rawValue)"
-    case .scroll(let value): return "scroll:\(value.rawValue)"
+    case .mouseButton(let value): return "mouse:\(word(value))"
+    case .mouseMovement(let value): return "move:\(word(value))"
+    case .scroll(let value): return "scroll:\(word(value))"
     case .physical(let output): return physicalOutput(output)
     }
   }
 
   private static func physicalOutput(_ output: RemappingPhysicalOutput) -> String {
     switch output {
-    case .rumble(let motor, let intensity): return "physical:rumble:\(motor.rawValue):\(intensity)"
+    case .rumble(let motor, let intensity): return "physical:rumble:\(word(motor)):\(intensity)"
     case .playerIndicator(let indicator): return "physical:player:\(indicator.rawValue)"
     case .color(let color): return "physical:color:\(color.red):\(color.green):\(color.blue)"
     case .brightness(let intensity): return "physical:brightness:\(intensity)"
     case .adaptiveTrigger(let trigger, let effect):
       switch effect.kind {
-      case .off: return "physical:adaptive:\(trigger.rawValue):off"
+      case .off: return "physical:adaptive:\(word(trigger)):off"
       case .resistance:
-        return "physical:adaptive:\(trigger.rawValue):resistance:"
+        return "physical:adaptive:\(word(trigger)):resistance:"
           + "\(effect.startPosition):\(effect.strength)"
       }
     }
@@ -62,7 +66,7 @@ enum ProfileText {
   /// One binding as `SOURCE -> TARGET`, followed by its behavior and alternate targets.
   static func binding(_ binding: RemappingBinding) -> String {
     var line = "\(source(binding.source)) -> \(destination(binding.destination))"
-    if binding.behavior != .hold { line += "  behavior:\(binding.behavior.rawValue)" }
+    if binding.behavior != .hold { line += "  behavior:\(word(binding.behavior))" }
     if binding.behavior == .pulse { line += "  pulse:\(binding.pulseDurationMs)ms" }
     if let turbo = binding.turbo { line += "  turbo:\(turbo.repeatRateHz)Hz/\(turbo.dutyCycle)" }
     if let longHold = binding.longHold {
@@ -78,8 +82,8 @@ enum ProfileText {
   /// Everything in the profile other than its header, one item per line.
   static func details(_ profile: RemappingProfile) -> [String] {
     var lines = [
-      "output virtual-gamepad:\(profile.outputPolicy.virtualGamepad.rawValue) "
-        + "physical-input:\(profile.outputPolicy.physicalInput.rawValue)"
+      "output virtual-gamepad:\(word(profile.outputPolicy.virtualGamepad)) "
+        + "physical-input:\(word(profile.outputPolicy.physicalInput))"
     ]
     if let settings = profile.joyConPair {
       lines.append("joy-con-pair gyro:\(settings.gyroSelection.rawValue)")
@@ -99,13 +103,13 @@ enum ProfileText {
       )
     }
     lines += profile.stickMappings.map {
-      "stick:\($0.source.rawValue) mode:\($0.mode.rawValue) passthrough:\($0.passthrough)"
+      "stick:\(word($0.source)) mode:\($0.mode.rawValue) passthrough:\($0.passthrough)"
     }
     lines += profile.triggerMappings.map {
-      "trigger:\($0.source.rawValue) mode:\($0.mode.rawValue) soft:\($0.softThreshold) "
+      "trigger:\(word($0.source)) mode:\(word($0.mode)) soft:\($0.softThreshold) "
         + "full:\($0.fullThreshold) passthrough:\($0.passthrough)"
     }
-    lines += profile.touchMappings.map { "touch:\($0.surface.rawValue) mode:\($0.mode.rawValue)" }
+    lines += profile.touchMappings.map { "touch:\(word($0.surface)) mode:\($0.mode.rawValue)" }
     lines += profile.bindings.map(binding)
     lines += profile.chords.map { chord in
       let sources = chord.sources.map(source).sorted().joined(separator: "+")
@@ -117,7 +121,7 @@ enum ProfileText {
         + destination(sequence.destination)
     }
     lines += profile.layers.map { layer in
-      "layer \(layer.name) \(layer.activationMode.rawValue):\(source(layer.activator)) "
+      "layer \(layer.name) \(word(layer.activationMode)):\(source(layer.activator)) "
         + "bindings:\(layer.bindings.count)"
     }
     return lines

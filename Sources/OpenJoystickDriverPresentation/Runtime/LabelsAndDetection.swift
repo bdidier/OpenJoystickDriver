@@ -204,7 +204,7 @@ enum RuntimePresentation {
     case .rumble(let motor, let intensity):
       return OJDLocalized.formatted(
         "mapping.physicalRumble",
-        humanized(motor.rawValue),
+        upperCamelWords(motor.rawValue),
         String(Int((intensity * 100).rounded()))
       )
     case .playerIndicator(let indicator):

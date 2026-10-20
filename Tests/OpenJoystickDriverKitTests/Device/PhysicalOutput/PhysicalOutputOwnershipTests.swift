@@ -10,34 +10,34 @@ struct PhysicalOutputOwnershipTests {
     let identifier = LogicalControllerID(vendorID: 1, productID: 2, locationID: 3)
     let first = UUID()
     let second = UUID()
-    let channel = PhysicalOutputChannel.rumble(.leftMain)
+    let channel = PhysicalOutputChannel.rumble(.lowFrequency)
 
     ownership.setMapping(
-      .rumble(motor: .leftMain, intensity: 0.25),
+      .rumble(motor: .lowFrequency, intensity: 0.25),
       active: true,
       owner: first,
       for: identifier
     )
     ownership.setMapping(
-      .rumble(motor: .leftMain, intensity: 0.75),
+      .rumble(motor: .lowFrequency, intensity: 0.75),
       active: true,
       owner: second,
       for: identifier
     )
     #expect(
       ownership.effectiveOutput(for: channel, device: identifier)
-        == .rumble(motor: .leftMain, intensity: 0.75)
+        == .rumble(motor: .lowFrequency, intensity: 0.75)
     )
 
     ownership.setMapping(
-      .rumble(motor: .leftMain, intensity: 0.75),
+      .rumble(motor: .lowFrequency, intensity: 0.75),
       active: false,
       owner: second,
       for: identifier
     )
     #expect(
       ownership.effectiveOutput(for: channel, device: identifier)
-        == .rumble(motor: .leftMain, intensity: 0.25)
+        == .rumble(motor: .lowFrequency, intensity: 0.25)
     )
   }
 
@@ -134,7 +134,7 @@ struct PhysicalOutputOwnershipTests {
     var ownership = PhysicalOutputOwnership()
     let first = LogicalControllerID(vendorID: 1, productID: 2, locationID: 3)
     let second = LogicalControllerID(vendorID: 1, productID: 2, locationID: 4)
-    let rumble = PhysicalOutputChannel.rumble(.leftMain)
+    let rumble = PhysicalOutputChannel.rumble(.lowFrequency)
     let colorBefore = ownership.state(of: [.color], for: first)
 
     ownership.setTemporaryColor(
@@ -142,18 +142,18 @@ struct PhysicalOutputOwnershipTests {
       token: UUID(),
       for: first
     )
-    _ = ownership.setManual(.rumble(motor: .leftMain, intensity: 1), for: first)
-    _ = ownership.setManual(.rumble(motor: .leftMain, intensity: 0.5), for: second)
+    _ = ownership.setManual(.rumble(motor: .lowFrequency, intensity: 1), for: first)
+    _ = ownership.setManual(.rumble(motor: .lowFrequency, intensity: 0.5), for: second)
     ownership.restore(colorBefore)
 
     #expect(ownership.effectiveOutput(for: .color, device: first) == nil)
     #expect(
       ownership.effectiveOutput(for: rumble, device: first)
-        == .rumble(motor: .leftMain, intensity: 1)
+        == .rumble(motor: .lowFrequency, intensity: 1)
     )
     #expect(
       ownership.effectiveOutput(for: rumble, device: second)
-        == .rumble(motor: .leftMain, intensity: 0.5)
+        == .rumble(motor: .lowFrequency, intensity: 0.5)
     )
   }
 

@@ -11,7 +11,7 @@ extension PhysicalOutputExecutorTests {
     let started = try await startSixaxis(locationID: 540)
     let manager = started.manager
     let claim = MappingOutputClaim(
-      .rumble(motor: .leftMain, intensity: 0.5),
+      .rumble(motor: .lowFrequency, intensity: 0.5),
       active: true,
       owner: UUID()
     )
@@ -42,7 +42,7 @@ extension PhysicalOutputExecutorTests {
     let started = try await startSixaxis(locationID: 542)
     let manager = started.manager
     let claim = MappingOutputClaim(
-      .rumble(motor: .leftMain, intensity: 0.5),
+      .rumble(motor: .lowFrequency, intensity: 0.5),
       active: true,
       owner: UUID()
     )

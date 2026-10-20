@@ -38,8 +38,8 @@
 
     func motorLabel(_ motor: PhysicalRumbleMotor) -> String {
       switch motor {
-      case .leftMain: return OJDLocalized.string("inputTest.leftMain")
-      case .rightMain: return OJDLocalized.string("inputTest.rightMain")
+      case .lowFrequency: return OJDLocalized.string("inputTest.lowFrequency")
+      case .highFrequency: return OJDLocalized.string("inputTest.highFrequency")
       case .leftTrigger:
         return OJDLocalized.string("inputTest.leftTrigger")
       case .rightTrigger:

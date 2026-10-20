@@ -2331,13 +2331,13 @@
       "properties": {
         "behavior": {
           "enum": [
-            "hold",
-            "toggle",
-            "tap_on_press",
-            "tap_on_release",
-            "pulse",
-            "press",
-            "release"
+            "Hold",
+            "Toggle",
+            "TapOnPress",
+            "TapOnRelease",
+            "Pulse",
+            "Press",
+            "Release"
           ]
         },
         "id": {
@@ -2564,7 +2564,7 @@
                 }
               },
               "surface": {
-                "enum": ["primary", "left", "right"]
+                "enum": ["Primary", "Left", "Right"]
               },
               "timestamp": {
                 "type": "object",

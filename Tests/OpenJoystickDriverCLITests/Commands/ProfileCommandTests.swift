@@ -276,14 +276,14 @@ struct ProfileCommandTests {
     let device = await service.run(["profile", "get", "Pad", "device", "--json"])
     let missing = await service.run(["profile", "get", "Pad", "physicalColor"])
     let behavior = await service.run([
-      "profile", "set", "Pad", "bindings.0.behavior", "tap_on_press", "--json",
+      "profile", "set", "Pad", "bindings.0.behavior", "TapOnPress", "--json",
     ])
     let color = await service.run([
       "profile", "set", "Pad", "physicalColor", #"{"red":1,"green":2,"blue":3}"#,
     ])
     let same = await service.run(["profile", "set", "Pad", "physicalColor.red", "1", "--json"])
     let invalid = await service.run(["profile", "set", "Pad", "physicalColor.red", "256"])
-    let noParent = await service.run(["profile", "set", "Pad", "motionTuning.space", "world"])
+    let noParent = await service.run(["profile", "set", "Pad", "motionTuning.space", "World"])
     let id = await service.run(["profile", "set", "Pad", "id", UUID().uuidString])
     let removed = await service.run(["profile", "set", "Pad", "physicalColor", "null"])
 

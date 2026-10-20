@@ -5,7 +5,7 @@ extension DualShock4Driver {
 
   public var outputCapabilities: PhysicalControllerOutputCapabilities {
     PhysicalControllerOutputCapabilities(
-      rumbleMotors: [.leftMain, .rightMain],
+      rumbleMotors: [.lowFrequency, .highFrequency],
       lightingFeatures: [.programmableColor]
     )
   }
@@ -133,8 +133,8 @@ extension DualShock4Driver {
     case .setRumble(let intensities, _):
       report = makeOutputReport(
         validFlags: ds4OutputValidFlagMotor,
-        leftMotor: intensities.leftMain.byte,
-        rightMotor: intensities.rightMain.byte
+        leftMotor: intensities.lowFrequency.byte,
+        rightMotor: intensities.highFrequency.byte
       )
     case .stopRumble: report = makeOutputReport(validFlags: ds4OutputValidFlagMotor)
     case .setRGB(let color):

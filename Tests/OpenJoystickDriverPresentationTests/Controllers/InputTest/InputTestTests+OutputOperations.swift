@@ -80,7 +80,7 @@ extension InputTestTests {
     let gateway = InputTestGatewayStub(outputDelayNanoseconds: 60_000_000_000)
     let model = InputTestViewModel(gateway: gateway)
     model.selectDevice(makeInputTestDevice())
-    model.rumbleIntensities[.leftMain] = 200
+    model.rumbleIntensities[.lowFrequency] = 200
 
     model.testRumble()
     await gateway.waitForActiveOutputCall()
@@ -98,7 +98,7 @@ extension InputTestTests {
   @MainActor
   func disconnectedDeviceRejectsEveryPhysicalOutputAction() async {
     let capabilities = PhysicalControllerOutputCapabilities(
-      rumbleMotors: [.leftMain],
+      rumbleMotors: [.lowFrequency],
       lightingFeatures: [.playerIndicator, .programmableColor, .programmableBrightness]
     )
     let gateway = InputTestGatewayStub()

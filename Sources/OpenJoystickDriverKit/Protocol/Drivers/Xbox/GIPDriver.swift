@@ -290,7 +290,7 @@ public final class GIPDriver: PhysicalProtocolDriver {
     }
     let packet = rumbleFrame(
       sequence: sequencer.next(for: GIPCommand.rumble, options: 0),
-      mainMotors: (intensities.leftMain.byte, intensities.rightMain.byte),
+      mainMotors: (intensities.lowFrequency.byte, intensities.highFrequency.byte),
       triggerMotors: (intensities.leftTrigger.byte, intensities.rightTrigger.byte)
     )
     let write = PhysicalUSBOutputPacket(

@@ -26,14 +26,14 @@ public enum RemappingDestination: Codable, Equatable, Hashable, Sendable {
   }
 
   private enum Kind: String, Codable {
-    case keyboard
-    case gamepadButton = "gamepad_button"
-    case gamepadDpad = "gamepad_dpad"
-    case gamepadAxis = "gamepad_axis"
-    case mouseButton = "mouse_button"
-    case mouseMovement = "mouse_movement"
-    case scroll
-    case physical
+    case keyboard = "Keyboard"
+    case gamepadButton = "GamepadButton"
+    case gamepadDpad = "GamepadDpad"
+    case gamepadAxis = "GamepadAxis"
+    case mouseButton = "MouseButton"
+    case mouseMovement = "MouseMovement"
+    case scroll = "Scroll"
+    case physical = "Physical"
 
     var fields: [CodingKeys] {
       switch self {

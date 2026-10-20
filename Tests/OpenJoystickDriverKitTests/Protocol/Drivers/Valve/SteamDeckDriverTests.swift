@@ -148,8 +148,8 @@ struct SteamDeckDriverTests {
     #expect(shutdown == [0x85, 0x8E])
 
     let intensities = RumbleIntensities(
-      leftMain: UnipolarValue(0x1234),
-      rightMain: UnipolarValue(0xABCD)
+      lowFrequency: UnipolarValue(0x1234),
+      highFrequency: UnipolarValue(0xABCD)
     )
     let rumble = driver.encoded(.setRumble(intensities, duration: .milliseconds(500))).onlyReport
     #expect(rumble.reportID == 0)

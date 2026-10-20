@@ -29,7 +29,7 @@
           "additionalProperties": false,
           "properties": {
             "type": {
-              "const": "global"
+              "const": "Global"
             }
           }
         },
@@ -45,7 +45,7 @@
               "pattern": "^[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?(\\.[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?)+$"
             },
             "type": {
-              "const": "application"
+              "const": "Application"
             }
           }
         }
@@ -123,10 +123,10 @@
       "additionalProperties": false,
       "properties": {
         "physicalInput": {
-          "enum": ["shared", "exclusive"]
+          "enum": ["Shared", "Exclusive"]
         },
         "virtualGamepad": {
-          "enum": ["disabled", "mapped", "passthrough"]
+          "enum": ["Disabled", "Mapped", "Passthrough"]
         }
       }
     },
@@ -167,15 +167,15 @@
       "properties": {
         "behavior": {
           "enum": [
-            "hold",
-            "toggle",
-            "tap_on_press",
-            "tap_on_release",
-            "pulse",
-            "press",
-            "release"
+            "Hold",
+            "Toggle",
+            "TapOnPress",
+            "TapOnRelease",
+            "Pulse",
+            "Press",
+            "Release"
           ],
-          "default": "hold"
+          "default": "Hold"
         },
         "destination": {
           "$ref": "#/$defs/destination"
@@ -208,7 +208,7 @@
       "additionalProperties": false,
       "properties": {
         "kind": {
-          "enum": ["off", "resistance"]
+          "enum": ["Off", "Resistance"]
         },
         "startPosition": {
           "$ref": "#/$defs/unitInterval"
@@ -220,7 +220,7 @@
       "if": {
         "properties": {
           "kind": {
-            "const": "off"
+            "const": "Off"
           }
         }
       },
@@ -271,7 +271,7 @@
           "type": "boolean"
         },
         "responseCurve": {
-          "enum": ["linear", "ease_in", "ease_out", "smooth_step"]
+          "enum": ["Linear", "EaseIn", "EaseOut", "SmoothStep"]
         }
       }
     },
@@ -291,15 +291,15 @@
         },
         "behavior": {
           "enum": [
-            "hold",
-            "toggle",
-            "tap_on_press",
-            "tap_on_release",
-            "pulse",
-            "press",
-            "release"
+            "Hold",
+            "Toggle",
+            "TapOnPress",
+            "TapOnRelease",
+            "Pulse",
+            "Press",
+            "Release"
           ],
-          "default": "hold"
+          "default": "Hold"
         },
         "destination": {
           "$ref": "#/$defs/destination"
@@ -349,8 +349,8 @@
           "$ref": "#/$defs/uuid"
         },
         "mode": {
-          "enum": ["modifier", "simultaneous"],
-          "default": "modifier"
+          "enum": ["Modifier", "Simultaneous"],
+          "default": "Modifier"
         },
         "sources": {
           "type": "array",
@@ -505,7 +505,7 @@
               }
             },
             "type": {
-              "const": "keyboard"
+              "const": "Keyboard"
             }
           },
           "description": "OJD writes modifiers sorted and without repeats."
@@ -519,7 +519,7 @@
               "$ref": "#/$defs/button"
             },
             "type": {
-              "const": "gamepad_button"
+              "const": "GamepadButton"
             }
           }
         },
@@ -532,7 +532,7 @@
               "$ref": "vocabulary.schema.json#/$defs/dpadControl"
             },
             "type": {
-              "const": "gamepad_dpad"
+              "const": "GamepadDpad"
             }
           }
         },
@@ -545,7 +545,7 @@
               "$ref": "#/$defs/axis"
             },
             "type": {
-              "const": "gamepad_axis"
+              "const": "GamepadAxis"
             }
           }
         },
@@ -555,10 +555,10 @@
           "additionalProperties": false,
           "properties": {
             "button": {
-              "enum": ["left", "right", "middle", "back", "forward"]
+              "enum": ["Left", "Right", "Middle", "Back", "Forward"]
             },
             "type": {
-              "const": "mouse_button"
+              "const": "MouseButton"
             }
           }
         },
@@ -568,10 +568,10 @@
           "additionalProperties": false,
           "properties": {
             "axis": {
-              "enum": ["x", "y"]
+              "enum": ["X", "Y"]
             },
             "type": {
-              "const": "mouse_movement"
+              "const": "MouseMovement"
             }
           }
         },
@@ -581,10 +581,10 @@
           "additionalProperties": false,
           "properties": {
             "axis": {
-              "enum": ["x", "y"]
+              "enum": ["X", "Y"]
             },
             "type": {
-              "const": "scroll"
+              "const": "Scroll"
             }
           }
         },
@@ -597,7 +597,7 @@
               "$ref": "#/$defs/physicalOutput"
             },
             "type": {
-              "const": "physical"
+              "const": "Physical"
             }
           }
         }
@@ -615,7 +615,7 @@
             "required": ["type"],
             "properties": {
               "type": {
-                "const": "axis"
+                "const": "Axis"
               }
             }
           }
@@ -728,7 +728,7 @@
       "additionalProperties": false,
       "properties": {
         "activationMode": {
-          "enum": ["hold", "toggle"]
+          "enum": ["Hold", "Toggle"]
         },
         "activator": {
           "$ref": "#/$defs/discreteSource"
@@ -842,8 +842,8 @@
           "default": 0
         },
         "space": {
-          "enum": ["local", "player", "world"],
-          "default": "player"
+          "enum": ["Local", "Player", "World"],
+          "default": "Player"
         },
         "steering": {
           "$ref": "#/$defs/steering"
@@ -881,16 +881,16 @@
             },
             "motor": {
               "enum": [
-                "leftMain",
-                "rightMain",
-                "leftTrigger",
-                "rightTrigger",
-                "leftHaptic",
-                "rightHaptic"
+                "LowFrequency",
+                "HighFrequency",
+                "LeftTrigger",
+                "RightTrigger",
+                "LeftHaptic",
+                "RightHaptic"
               ]
             },
             "type": {
-              "const": "rumble"
+              "const": "Rumble"
             }
           }
         },
@@ -903,7 +903,7 @@
               "enum": [0, 1, 2, 3, 4]
             },
             "type": {
-              "const": "player_indicator"
+              "const": "PlayerIndicator"
             }
           }
         },
@@ -922,7 +922,7 @@
               "$ref": "#/$defs/byte"
             },
             "type": {
-              "const": "color"
+              "const": "Color"
             }
           }
         },
@@ -935,7 +935,7 @@
               "$ref": "#/$defs/unitInterval"
             },
             "type": {
-              "const": "brightness"
+              "const": "Brightness"
             }
           }
         },
@@ -948,10 +948,10 @@
               "$ref": "#/$defs/adaptiveTriggerEffect"
             },
             "trigger": {
-              "enum": ["left", "right"]
+              "enum": ["Left", "Right"]
             },
             "type": {
-              "const": "adaptive_trigger"
+              "const": "AdaptiveTrigger"
             }
           }
         }
@@ -995,7 +995,7 @@
               "$ref": "#/$defs/button"
             },
             "type": {
-              "const": "button"
+              "const": "Button"
             }
           }
         },
@@ -1008,7 +1008,7 @@
               "$ref": "vocabulary.schema.json#/$defs/dpadControl"
             },
             "type": {
-              "const": "dpad"
+              "const": "Dpad"
             }
           }
         },
@@ -1021,7 +1021,7 @@
               "$ref": "#/$defs/axis"
             },
             "type": {
-              "const": "axis"
+              "const": "Axis"
             }
           }
         },
@@ -1037,7 +1037,7 @@
               "enum": ["Negative", "Positive"]
             },
             "type": {
-              "const": "axis_direction"
+              "const": "AxisDirection"
             }
           }
         },
@@ -1047,13 +1047,13 @@
           "additionalProperties": false,
           "properties": {
             "stage": {
-              "enum": ["soft", "full"]
+              "enum": ["Soft", "Full"]
             },
             "trigger": {
               "$ref": "#/$defs/triggerSide"
             },
             "type": {
-              "const": "trigger_stage"
+              "const": "TriggerStage"
             }
           }
         },
@@ -1063,10 +1063,10 @@
           "additionalProperties": false,
           "properties": {
             "direction": {
-              "enum": ["left", "right"]
+              "enum": ["Left", "Right"]
             },
             "type": {
-              "const": "motion_lean"
+              "const": "MotionLean"
             }
           }
         },
@@ -1079,7 +1079,7 @@
               "$ref": "#/$defs/touchSurface"
             },
             "type": {
-              "const": "touch_contact"
+              "const": "TouchContact"
             }
           }
         },
@@ -1112,7 +1112,7 @@
               "$ref": "#/$defs/touchSurface"
             },
             "type": {
-              "const": "touch_grid"
+              "const": "TouchGrid"
             }
           },
           "description": "column is less than columns, and row is less than rows."
@@ -1123,7 +1123,7 @@
           "additionalProperties": false,
           "properties": {
             "direction": {
-              "enum": ["up", "down", "left", "right"]
+              "enum": ["Up", "Down", "Left", "Right"]
             },
             "minimumDistance": {
               "type": "number",
@@ -1134,7 +1134,7 @@
               "$ref": "#/$defs/touchSurface"
             },
             "type": {
-              "const": "touch_swipe"
+              "const": "TouchSwipe"
             }
           }
         }
@@ -1235,12 +1235,12 @@
           "default": 128
         },
         "rotationDirection": {
-          "enum": ["clockwise", "counterclockwise"],
-          "default": "clockwise"
+          "enum": ["Clockwise", "Counterclockwise"],
+          "default": "Clockwise"
         },
         "scrollAxis": {
-          "enum": ["horizontal", "vertical"],
-          "default": "vertical"
+          "enum": ["Horizontal", "Vertical"],
+          "default": "Vertical"
         },
         "scrollDegreesPerLine": {
           "type": "number",
@@ -1273,7 +1273,7 @@
       }
     },
     "stickSide": {
-      "enum": ["left", "right"]
+      "enum": ["Left", "Right"]
     },
     "stickTuning": {
       "type": "object",
@@ -1347,7 +1347,7 @@
       }
     },
     "touchSurface": {
-      "enum": ["primary", "left", "right"]
+      "enum": ["Primary", "Left", "Right"]
     },
     "triggerMapping": {
       "type": "object",
@@ -1369,14 +1369,14 @@
         },
         "mode": {
           "enum": [
-            "simultaneous",
-            "exclusive",
-            "prefer_full",
-            "prefer_full_combined",
-            "responsive_prefer_full",
-            "responsive_prefer_full_combined"
+            "Simultaneous",
+            "Exclusive",
+            "PreferFull",
+            "PreferFullCombined",
+            "ResponsivePreferFull",
+            "ResponsivePreferFullCombined"
           ],
-          "default": "simultaneous"
+          "default": "Simultaneous"
         },
         "passthrough": {
           "type": "boolean",
@@ -1400,7 +1400,7 @@
       }
     },
     "triggerSide": {
-      "enum": ["left", "right"]
+      "enum": ["Left", "Right"]
     },
     "turbo": {
       "type": "object",

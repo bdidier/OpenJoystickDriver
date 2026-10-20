@@ -12,7 +12,7 @@ extension GIPDriver {
   public var outputCapabilities: PhysicalControllerOutputCapabilities {
     allowsPhysicalOutput
       ? PhysicalControllerOutputCapabilities(rumbleMotors: [
-        .leftMain, .rightMain, .leftTrigger, .rightTrigger,
+        .lowFrequency, .highFrequency, .leftTrigger, .rightTrigger,
       ]) : .none
   }
 

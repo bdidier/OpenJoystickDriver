@@ -573,7 +573,7 @@
 "inputTest.leftBumper" = "Bumper trái";
 "inputTest.leftBumperGeneric" = "LB / L1";
 "inputTest.leftHaptic" = "Phản hồi xúc giác trái";
-"inputTest.leftMain" = "Mô-tơ chính trái";
+"inputTest.lowFrequency" = "Mô-tơ chính trái";
 "inputTest.leftStick" = "Cần trái";
 "inputTest.leftStickButton" = "Nút cần trái";
 "inputTest.leftTrigger" = "Cò trái";
@@ -595,7 +595,7 @@
 "inputTest.rightBumper" = "Bumper phải";
 "inputTest.rightBumperGeneric" = "RB / R1";
 "inputTest.rightHaptic" = "Phản hồi xúc giác phải";
-"inputTest.rightMain" = "Mô-tơ chính phải";
+"inputTest.highFrequency" = "Mô-tơ chính phải";
 "inputTest.rightStick" = "Cần phải";
 "inputTest.rightStickButton" = "Nút cần phải";
 "inputTest.rightTrigger" = "Cò phải";

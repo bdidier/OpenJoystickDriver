@@ -23,25 +23,25 @@ struct RemappingProfileStrictDecodingTests {
     #expect(throws: DecodingError.self) {
       try decoder.decode(
         RemappingSource.self,
-        from: Data(#"{"type":"axis","axis":"LeftStickX","button":"South"}"#.utf8)
+        from: Data(#"{"type":"Axis","axis":"LeftStickX","button":"South"}"#.utf8)
       )
     }
     #expect(throws: DecodingError.self) {
       try decoder.decode(
         RemappingDestination.self,
-        from: Data(#"{"type":"gamepad_button","button":"South","axis":"LeftStickX"}"#.utf8)
+        from: Data(#"{"type":"GamepadButton","button":"South","axis":"LeftStickX"}"#.utf8)
       )
     }
     #expect(throws: DecodingError.self) {
       try decoder.decode(
         RemappingPhysicalOutput.self,
-        from: Data(#"{"type":"brightness","intensity":0.5,"red":1}"#.utf8)
+        from: Data(#"{"type":"Brightness","intensity":0.5,"red":1}"#.utf8)
       )
     }
     #expect(throws: DecodingError.self) {
       try decoder.decode(
         RemappingApplicationScope.self,
-        from: Data(#"{"type":"global","appID":"com.example.app"}"#.utf8)
+        from: Data(#"{"type":"Global","appID":"com.example.app"}"#.utf8)
       )
     }
   }

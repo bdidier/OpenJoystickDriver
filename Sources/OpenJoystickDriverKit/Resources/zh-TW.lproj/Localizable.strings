@@ -573,7 +573,7 @@
 "inputTest.leftBumper" = "左肩鍵";
 "inputTest.leftBumperGeneric" = "LB / L1";
 "inputTest.leftHaptic" = "左觸覺";
-"inputTest.leftMain" = "左主馬達";
+"inputTest.lowFrequency" = "左主馬達";
 "inputTest.leftStick" = "左搖桿";
 "inputTest.leftStickButton" = "左搖桿按鈕";
 "inputTest.leftTrigger" = "左扳機";
@@ -595,7 +595,7 @@
 "inputTest.rightBumper" = "右肩鍵";
 "inputTest.rightBumperGeneric" = "RB / R1";
 "inputTest.rightHaptic" = "右觸覺";
-"inputTest.rightMain" = "右主馬達";
+"inputTest.highFrequency" = "右主馬達";
 "inputTest.rightStick" = "右搖桿";
 "inputTest.rightStickButton" = "右搖桿按鈕";
 "inputTest.rightTrigger" = "右扳機";

@@ -16,7 +16,7 @@ extension VirtualOutputTransitionTests {
       if command != .stopRumble { await stalledWrite.wait() }
     }
 
-    let rumble = RumbleIntensities(leftMain: UnipolarValue(byte: 1))
+    let rumble = RumbleIntensities(lowFrequency: UnipolarValue(byte: 1))
     feedbackGate.submit(
       identifier: identifier,
       command: .setRumble(rumble, duration: .milliseconds(250))
@@ -82,15 +82,15 @@ extension VirtualOutputTransitionTests {
   @Test
   func consumerFeedbackMapsOntoThePhysicalCommand() {
     let rumble = RumbleIntensities(
-      leftMain: UnipolarValue(byte: 1),
-      rightMain: UnipolarValue(byte: 2),
+      lowFrequency: UnipolarValue(byte: 1),
+      highFrequency: UnipolarValue(byte: 2),
       leftTrigger: UnipolarValue(byte: 3),
       rightTrigger: UnipolarValue(byte: 4)
     )
     // The main motors are mirrored onto the Steam trackpad haptics, as the manual path does.
     let mirrored = RumbleIntensities(
-      leftMain: UnipolarValue(byte: 1),
-      rightMain: UnipolarValue(byte: 2),
+      lowFrequency: UnipolarValue(byte: 1),
+      highFrequency: UnipolarValue(byte: 2),
       leftTrigger: UnipolarValue(byte: 3),
       rightTrigger: UnipolarValue(byte: 4),
       leftHaptic: UnipolarValue(byte: 1),

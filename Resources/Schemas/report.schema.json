@@ -497,19 +497,19 @@
         "adaptiveTriggers": {
           "type": "array",
           "items": {
-            "enum": ["left", "right"]
+            "enum": ["Left", "Right"]
           }
         }
       }
     },
     "rumbleMotor": {
       "enum": [
-        "leftMain",
-        "rightMain",
-        "leftTrigger",
-        "rightTrigger",
-        "leftHaptic",
-        "rightHaptic"
+        "LowFrequency",
+        "HighFrequency",
+        "LeftTrigger",
+        "RightTrigger",
+        "LeftHaptic",
+        "RightHaptic"
       ]
     },
     "unboundDevice": {

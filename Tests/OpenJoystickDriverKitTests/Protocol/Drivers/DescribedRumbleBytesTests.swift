@@ -89,8 +89,8 @@ struct DescribedRumbleBytesTests {
   @Test
   func xidRumbleWritesTheFull16BitIntensity() {
     let intensities = RumbleIntensities(
-      leftMain: UnipolarValue(0x1234),
-      rightMain: UnipolarValue(0xFEDC)
+      lowFrequency: UnipolarValue(0x1234),
+      highFrequency: UnipolarValue(0xFEDC)
     )
     let plan = try? XIDDriver().encode(.setRumble(intensities, duration: .held))
     #expect(plan.onlyPacket.bytes == [0x00, 0x06, 0x12, 0x34, 0xFE, 0xDC])
@@ -102,7 +102,7 @@ struct DescribedRumbleBytesTests {
     let template = try RumbleOutputTemplate(
       target: .usb(length: 4),
       bytes: [0x00, 0x04, 0x00, 0x00],
-      motors: [.leftMain: .init(byte: 2), .rightMain: .init(byte: 3)]
+      motors: [.lowFrequency: .init(byte: 2), .highFrequency: .init(byte: 3)]
     )
     let driver = XIDDriver(outEndpoint: 0x07, rumbleTemplate: template)
     #expect(

@@ -91,7 +91,7 @@ The behavior decides how a press turns into output.
 | **Press only** | OJD sends only the press. |
 | **Release only** | OJD sends only the release. |
 
-The table describes each behavior by its name. Hardware results are not verified. The command line option is `--behavior hold|toggle|tap_on_press|tap_on_release|pulse|press|release`. Use `--pulse-ms 1...5000` with `pulse`.
+The table describes each behavior by its name. Hardware results are not verified. The command line option is `--behavior hold|toggle|tap-on-press|tap-on-release|pulse|press|release`. Use `--pulse-ms 1...5000` with `pulse`.
 
 ### Turbo, Long Hold, and Double Tap
 
@@ -114,7 +114,7 @@ When you assign a stick axis or trigger axis, the row has an **Adjust...** butto
 - Deadzone, 0 to 0.95. The default is 0.1.
 - **Gain**, 0.1 to 10. The default is 1.
 - **Invert axis**.
-- **Response curve**: `linear`, `ease_in`, `ease_out`, or `smooth_step`.
+- **Response curve**: `linear`, `ease-in`, `ease-out`, or `smooth-step` on the command line.
 - **Digital threshold**, 0.01 to 1. The default is 0.5. The threshold decides when an axis counts as pressed for a button destination.
 
 The command line options are `--deadzone`, `--gain`, `--invert`, `--response-curve`, and `--digital-threshold`. An axis source needs these settings. A non-axis source cannot have them.

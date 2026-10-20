@@ -48,10 +48,10 @@
           "binaryRumbleMotors": [],
           "lightingFeatures": [],
           "rumbleMotors": [
-            "leftMain",
-            "leftTrigger",
-            "rightMain",
-            "rightTrigger"
+            "LowFrequency",
+            "HighFrequency",
+            "LeftTrigger",
+            "RightTrigger"
           ]
         },
         "postHandshakeSettleMilliseconds": 0,

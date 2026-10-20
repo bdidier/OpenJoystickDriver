@@ -13,7 +13,7 @@ struct JoyConParserTests {
     #expect(parser.layout == (isLeft ? .leftJoyCon : .rightJoyCon))
     #expect(registry.hidModels.contains(model))
     #expect(parser.capabilities.motion)
-    #expect(parser.outputCapabilities.rumbleMotors == (isLeft ? [.leftMain] : [.rightMain]))
+    #expect(parser.outputCapabilities.rumbleMotors == (isLeft ? [.lowFrequency] : [.highFrequency]))
     var report = [UInt8](repeating: 0, count: 49)
     report[0] = 0x30
     // The unused stick field remains zero; only the present stick moves right.

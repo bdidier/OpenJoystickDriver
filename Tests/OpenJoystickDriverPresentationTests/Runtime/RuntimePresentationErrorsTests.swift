@@ -27,4 +27,18 @@ struct RuntimePresentationErrorsTests {
     #expect(!message.contains(error.message))
     #expect(message.contains("E3029"))
   }
+
+  @Test
+  func anUpperCamelValueBecomesWordsAndAKeyboardKeyLabelIsUnchanged() {
+    #expect(
+      RuntimePresentation.upperCamelWords(PhysicalRumbleMotor.lowFrequency.rawValue)
+        == "Low Frequency"
+    )
+    #expect(
+      RuntimePresentation.upperCamelWords(PhysicalRumbleMotor.leftTrigger.rawValue)
+        == "Left Trigger"
+    )
+    #expect(RuntimePresentation.keyboardKeyLabel(.a) == "KeyA")
+    #expect(RuntimePresentation.keyboardKeyLabel(.digit1) == "Digit1")
+  }
 }

@@ -42,7 +42,7 @@ The CLI and the GUI send each output through the app's `sendControllerOutput` ap
 - `set-player-indicator`: `player` `0...4`, where `0` is off.
 - `set-rgb`: `red`, `green`, and `blue`, each `0...255`.
 - `set-light-brightness`: `brightness` `0...65535`.
-- `set-adaptive-trigger`: `trigger` (`left` or `right`) and `effect` (`kind` `off` or `resistance`, `startPosition`, and `strength`, each `0...1`).
+- `set-adaptive-trigger`: `trigger` (`Left` or `Right`) and `effect` (`kind` `Off` or `Resistance`, `startPosition`, and `strength`, each `0...1`).
 
 The reply is a result, for example `{"outcome": "delivered", "droppedRumbleChannels": ["leftHaptic", "rightHaptic"]}`. `outcome` is `delivered`, `notFound`, `unsupportedCapability`, `notReady`, `invalidValue`, `writeFailed`, or `cancelled`. `invalidValue` reports a value that decodes but is out of range, such as an adaptive-trigger position above 1. A controller that lacks the capability is `unsupportedCapability` before any value is checked. Malformed JSON, an unknown `type`, or a component outside its integer range fails the request itself instead of returning a result.
 

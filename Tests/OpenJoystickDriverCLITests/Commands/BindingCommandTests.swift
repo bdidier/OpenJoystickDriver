@@ -87,6 +87,26 @@ struct BindingCommandTests {
   }
 
   @Test
+  func listSpellsABehaviorInKebabCaseForPlainAndAsTheDocumentValueForJSON() async throws {
+    let binding = RemappingBinding(
+      source: .button(.south),
+      destination: .keyboard(key: .space, modifiers: []),
+      behavior: .tapOnPress
+    )
+    let library = FakeProfileLibrary([FakeProfileLibrary.profile("Pad", bindings: [binding])])
+    let service = try FakeService(devices: [], respond: library.respond)
+
+    let plain = await service.run(["binding", "list", "Pad", "--plain"])
+    let json = await service.run(["binding", "list", "Pad", "--json"])
+
+    #expect(plain.code == 0, "\(plain.standardError)")
+    #expect(plain.standardOutput.contains("tap-on-press"))
+    #expect(!plain.standardOutput.contains("TapOnPress"))
+    let items = try #require(try json.json()["items"] as? [[String: Any]])
+    #expect(items.first?["behavior"] as? String == "TapOnPress")
+  }
+
+  @Test
   func clearRemovesNamedSourcesAndFailsForAnUnboundOne() async throws {
     let bindings = [
       RemappingBinding(source: .button(.south), destination: .keyboard(key: .space, modifiers: [])),

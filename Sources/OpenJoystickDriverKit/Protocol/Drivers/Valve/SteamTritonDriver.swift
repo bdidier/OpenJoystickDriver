@@ -50,7 +50,7 @@ public final class SteamTritonDriver: PhysicalProtocolDriver {
   /// SDL declares rumble only: no LED, no trigger rumble.
   public var outputCapabilities: PhysicalControllerOutputCapabilities {
     PhysicalControllerOutputCapabilities(
-      rumbleMotors: [.leftMain, .rightMain],
+      rumbleMotors: [.lowFrequency, .highFrequency],
       lightingFeatures: []
     )
   }
@@ -123,7 +123,7 @@ public final class SteamTritonDriver: PhysicalProtocolDriver {
   ) throws(ControllerOutputError) -> PhysicalOutputPlan {
     switch command {
     case .setRumble(let intensities, _):
-      rumble = (intensities.leftMain.rawValue, intensities.rightMain.rawValue)
+      rumble = (intensities.lowFrequency.rawValue, intensities.highFrequency.rawValue)
     case .stopRumble: rumble = (0, 0)
     default: throw .unsupportedCapability(command.capability)
     }

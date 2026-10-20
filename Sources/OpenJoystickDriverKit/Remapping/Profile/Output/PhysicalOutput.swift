@@ -21,11 +21,11 @@ public enum RemappingPhysicalOutput: Codable, Equatable, Hashable, Sendable {
   }
 
   private enum Kind: String, Codable {
-    case rumble
-    case playerIndicator = "player_indicator"
-    case color
-    case brightness
-    case adaptiveTrigger = "adaptive_trigger"
+    case rumble = "Rumble"
+    case playerIndicator = "PlayerIndicator"
+    case color = "Color"
+    case brightness = "Brightness"
+    case adaptiveTrigger = "AdaptiveTrigger"
 
     var fields: [CodingKeys] {
       switch self {

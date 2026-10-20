@@ -573,7 +573,7 @@
 "inputTest.leftBumper" = "左肩键";
 "inputTest.leftBumperGeneric" = "LB / L1";
 "inputTest.leftHaptic" = "左触觉";
-"inputTest.leftMain" = "左主马达";
+"inputTest.lowFrequency" = "左主马达";
 "inputTest.leftStick" = "左摇杆";
 "inputTest.leftStickButton" = "左摇杆按钮";
 "inputTest.leftTrigger" = "左扳机";
@@ -595,7 +595,7 @@
 "inputTest.rightBumper" = "右肩键";
 "inputTest.rightBumperGeneric" = "RB / R1";
 "inputTest.rightHaptic" = "右触觉";
-"inputTest.rightMain" = "右主马达";
+"inputTest.highFrequency" = "右主马达";
 "inputTest.rightStick" = "右摇杆";
 "inputTest.rightStickButton" = "右摇杆按钮";
 "inputTest.rightTrigger" = "右扳机";

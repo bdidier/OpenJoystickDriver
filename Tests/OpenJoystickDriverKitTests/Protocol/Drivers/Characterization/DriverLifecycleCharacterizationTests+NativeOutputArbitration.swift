@@ -13,7 +13,8 @@ extension DriverLifecycleCharacterizationTests {
     let stopped = "    0101ff00ff000000000002ff27100032ff27100032ff27100032ff2710003200"
     #expect(
       try await nativeSixaxisOutputSteps() == [
-        "capabilities rumble=[leftMain,rightMain] lighting=[playerIndicator]", "rumble=true",
+        "capabilities rumble=[LowFrequency,HighFrequency] lighting=[playerIndicator]",
+        "rumble=true",
         "outputs=1", "  id=0x01 n=49",
         "    0101ff01ffff0000000002ff27100032ff27100032ff27100032ff2710003200", row2, "features=0",
         "stop=true", "outputs=1", "  id=0x01 n=49", stopped, row2, "features=0", "teardown",

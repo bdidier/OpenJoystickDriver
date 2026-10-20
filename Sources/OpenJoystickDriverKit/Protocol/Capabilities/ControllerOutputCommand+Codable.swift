@@ -45,9 +45,8 @@ public struct ControllerOutputResult: Codable, Equatable, Hashable, Sendable {
 extension RumbleIntensities: Codable {
   public init(from decoder: any Decoder) throws {
     let container = try decoder.container(keyedBy: PhysicalRumbleMotorKey.self)
-    if let unknown = container.allKeys.first(where: {
-      PhysicalRumbleMotor(rawValue: $0.stringValue) == nil
-    }) {
+    let names = Set(PhysicalRumbleMotor.allCases.map(\.fieldName))
+    if let unknown = container.allKeys.first(where: { !names.contains($0.stringValue) }) {
       throw DecodingError.dataCorrupted(
         .init(
           codingPath: container.codingPath + [unknown],
@@ -73,7 +72,7 @@ extension RumbleIntensities: Codable {
   private struct PhysicalRumbleMotorKey: CodingKey {
     let stringValue: String
     var intValue: Int? { nil }
-    init(_ motor: PhysicalRumbleMotor) { stringValue = motor.rawValue }
+    init(_ motor: PhysicalRumbleMotor) { stringValue = motor.fieldName }
     init?(stringValue: String) { self.stringValue = stringValue }
     init?(intValue: Int) { nil }
   }
@@ -125,7 +124,7 @@ extension RumbleDuration: Codable {
 /// - `{"type":"set-player-indicator","player":2}` (`0` is off)
 /// - `{"type":"set-rgb","red":17,"green":34,"blue":51}`
 /// - `{"type":"set-light-brightness","brightness":32896}`
-/// - `{"type":"set-adaptive-trigger","trigger":"left","effect":{"kind":"resistance",...}}`
+/// - `{"type":"set-adaptive-trigger","trigger":"Left","effect":{"kind":"Resistance",...}}`
 extension ControllerOutputCommand: Codable {
   private enum Kind: String, Codable {
     case setRumble = "set-rumble"
@@ -208,12 +207,12 @@ extension ControllerOutputCommand: Codable {
 }
 
 extension RumbleIntensities {
-  /// These intensities with the main motors mirrored onto the trackpad haptics, so a Steam
-  /// Controller answers a main-motor request.
+  /// These intensities with the low- and high-frequency motors mirrored onto the trackpad
+  /// haptics, so a Steam Controller answers a request for either.
   public func mirroringMainOntoHaptics() -> Self {
     var mirrored = self
-    mirrored.leftHaptic = leftMain
-    mirrored.rightHaptic = rightMain
+    mirrored.leftHaptic = lowFrequency
+    mirrored.rightHaptic = highFrequency
     return mirrored
   }
 }

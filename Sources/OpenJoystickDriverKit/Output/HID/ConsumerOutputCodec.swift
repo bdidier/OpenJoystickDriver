@@ -54,8 +54,8 @@ enum ConsumerOutputCodec {
       UnipolarValue(unitInterval: Double(value) / rumbleMagnitudeMax)
     }
     let intensities = RumbleIntensities(
-      leftMain: magnitude(left),
-      rightMain: magnitude(right),
+      lowFrequency: magnitude(left),
+      highFrequency: magnitude(right),
       leftTrigger: magnitude(leftTrigger),
       rightTrigger: magnitude(rightTrigger)
     )

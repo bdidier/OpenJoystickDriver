@@ -9,7 +9,7 @@ extension DriverLifecycleCharacterizationTests {
   func gipUSBTranscript() throws {
     #expect(
       try transcript(Self.gipUSB) == [
-        "capabilities rumble=[leftMain,leftTrigger,rightMain,rightTrigger] binary=[]",
+        "capabilities rumble=[LowFrequency,HighFrequency,LeftTrigger,RightTrigger] binary=[]",
         "capabilities lighting=[]", "capabilities triggers=[]",
         "usb.startup interval=50000000 retries=[1000000000, 2000000000] packets=3", "  n=5",
         "    0520010100", "  n=7", "    0a200203000114", "  n=6", "    062001020100",
@@ -36,7 +36,7 @@ extension DriverLifecycleCharacterizationTests {
         "hid.recovery afterExpiry=0", "presence requiresConnection=false",
         "presence input#0 change=nil", "liveness timeout=nil", "liveness observation=nil",
         "liveness format=nil", "battery=nil",
-        "out[cold].usbRumble motors=[leftMain,rightMain,leftTrigger,rightTrigger]",
+        "out[cold].usbRumble motors=[LowFrequency,HighFrequency,LeftTrigger,RightTrigger]",
         "  ep=0x01 timeout=2000 n=13", "    09000109000f20104080ff00ff",
       ]
     )
@@ -46,7 +46,7 @@ extension DriverLifecycleCharacterizationTests {
   func gipKeepAliveDisabledTranscript() throws {
     #expect(
       try transcript(Self.gipKeepAliveDisabled) == [
-        "capabilities rumble=[leftMain,leftTrigger,rightMain,rightTrigger] binary=[]",
+        "capabilities rumble=[LowFrequency,HighFrequency,LeftTrigger,RightTrigger] binary=[]",
         "capabilities lighting=[]", "capabilities triggers=[]",
         "usb.startup interval=50000000 retries=[1000000000, 2000000000] packets=3", "  n=5",
         "    0520010100", "  n=7", "    0a200203000114", "  n=6", "    062001020100",
@@ -72,7 +72,7 @@ extension DriverLifecycleCharacterizationTests {
         "hid.recovery afterExpiry=0", "presence requiresConnection=false",
         "presence input#0 change=nil", "liveness timeout=nil", "liveness observation=nil",
         "liveness format=nil", "battery=nil",
-        "out[cold].usbRumble motors=[leftMain,rightMain,leftTrigger,rightTrigger]",
+        "out[cold].usbRumble motors=[LowFrequency,HighFrequency,LeftTrigger,RightTrigger]",
         "  ep=0x07 timeout=2000 n=13", "    09000109000f20104080ff00ff",
       ]
     )
@@ -82,7 +82,7 @@ extension DriverLifecycleCharacterizationTests {
   func xidGamepadTranscript() throws {
     #expect(
       try transcript(Self.xidGamepad) == [
-        "capabilities rumble=[leftMain,rightMain] binary=[]", "capabilities lighting=[]",
+        "capabilities rumble=[LowFrequency,HighFrequency] binary=[]", "capabilities lighting=[]",
         "capabilities triggers=[]", "usb.startup interval=0 retries=[] packets=0",
         "usb.keepAlive nil", "usb.deferred inputs=0 packets=0", "usb.deferred drained=0",
         "usb.connection[connected] packets=0", "usb.connection[disconnected] packets=0",
@@ -103,7 +103,7 @@ extension DriverLifecycleCharacterizationTests {
         "hid.recovery[USB] supported=false beforeStartup=0 afterStartup=0",
         "hid.recovery afterExpiry=0", "presence requiresConnection=false", "liveness timeout=nil",
         "liveness observation=nil", "liveness format=nil", "battery=nil",
-        "out[cold].usbRumble motors=[leftMain,rightMain]", "  ep=0x02 timeout=2000 n=6",
+        "out[cold].usbRumble motors=[LowFrequency,HighFrequency]", "  ep=0x02 timeout=2000 n=6",
         "    000640408080",
       ]
     )
@@ -113,7 +113,7 @@ extension DriverLifecycleCharacterizationTests {
   func xusbWiredTranscript() throws {
     #expect(
       try transcript(Self.xusbWired) == [
-        "capabilities rumble=[leftMain,rightMain] binary=[]",
+        "capabilities rumble=[LowFrequency,HighFrequency] binary=[]",
         "capabilities lighting=[playerIndicator]", "capabilities triggers=[]",
         "usb.startup interval=0 retries=[] packets=0", "usb.startup playerSlot",
         "usb.keepAlive nil", "usb.deferred inputs=0 packets=0", "usb.deferred drained=0",
@@ -135,7 +135,7 @@ extension DriverLifecycleCharacterizationTests {
         "hid.recovery[USB] supported=false beforeStartup=0 afterStartup=0",
         "hid.recovery afterExpiry=0", "presence requiresConnection=false", "liveness timeout=nil",
         "liveness observation=nil", "liveness format=nil", "battery=nil",
-        "out[cold].usbRumble motors=[leftMain,rightMain]", "  ep=0x01 timeout=2000 n=8",
+        "out[cold].usbRumble motors=[LowFrequency,HighFrequency]", "  ep=0x01 timeout=2000 n=8",
         "    0008004080000000", "out[cold].usbPlayer[off]", "  ep=0x01 timeout=2000 n=3",
         "    010300", "out[cold].usbPlayer[player1]", "  ep=0x01 timeout=2000 n=3", "    010306",
         "out[cold].usbPlayer[player2]", "  ep=0x01 timeout=2000 n=3", "    010307",
@@ -149,7 +149,7 @@ extension DriverLifecycleCharacterizationTests {
   func xusbReceiverTranscript() throws {
     #expect(
       try transcript(Self.xusbReceiver) == [
-        "capabilities rumble=[leftMain,rightMain] binary=[]",
+        "capabilities rumble=[LowFrequency,HighFrequency] binary=[]",
         "capabilities lighting=[playerIndicator]", "capabilities triggers=[]",
         "usb.startup interval=0 retries=[] packets=1", "  n=12", "    08000fc00000000000000000",
         "usb.keepAlive nil", "usb.deferred inputs=3 packets=1", "  n=12",
@@ -174,7 +174,8 @@ extension DriverLifecycleCharacterizationTests {
         "hid.recovery afterExpiry=0", "presence requiresConnection=true",
         "presence input#0 change=nil", "presence input#1 change=connected",
         "presence input#2 change=disconnected", "liveness timeout=nil", "liveness observation=nil",
-        "liveness format=nil", "battery=nil", "out[cold].usbRumble motors=[leftMain,rightMain]",
+        "liveness format=nil", "battery=nil",
+        "out[cold].usbRumble motors=[LowFrequency,HighFrequency]",
         "  ep=0x01 timeout=2000 n=12", "    00010fc00040800000000000", "out[cold].usbPlayer[off]",
         "  ep=0x01 timeout=2000 n=12", "    000008400000000000000000",
         "out[cold].usbPlayer[player1]", "  ep=0x01 timeout=2000 n=12",

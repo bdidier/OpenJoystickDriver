@@ -165,7 +165,7 @@ extension USBPipelineRecoveryTests {
     )
     let owner = UUID()
     _ = await manager.setPhysicalOutputForTesting(
-      .rumble(motor: .leftMain, intensity: 1),
+      .rumble(motor: .lowFrequency, intensity: 1),
       owner: owner,
       identifier: identifier
     )

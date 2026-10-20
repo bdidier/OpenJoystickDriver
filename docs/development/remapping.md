@@ -49,12 +49,12 @@ The assignment behavior sheet supports adding, removing, reordering, and editing
 
 Implemented behaviors:
 
-- `hold`: follow the physical control's press and release.
-- `toggle`: alternate the owned output between pressed and released on each new press.
-- `tap_on_press` and `tap_on_release`: emit a press/release pair on the selected edge. A release tap requires a matching press and is canceled when its assignment loses ownership.
-- `pulse`: press for `pulseDurationMs` (1...5000 ms, default 100). Physical release does not shorten the pulse. A new press extends the same action's deadline.
-- `press`: press until an explicit release or lifecycle cleanup.
-- `release`: release matching held destinations owned by the same controller and cancel their pulse/turbo timers. Contributions from other controllers remain owned by those controllers.
+- `Hold`: follow the physical control's press and release.
+- `Toggle`: alternate the owned output between pressed and released on each new press.
+- `TapOnPress` and `TapOnRelease`: emit a press/release pair on the selected edge. A release tap requires a matching press and is canceled when its assignment loses ownership.
+- `Pulse`: press for `pulseDurationMs` (1...5000 ms, default 100). Physical release does not shorten the pulse. A new press extends the same action's deadline.
+- `Press`: press until an explicit release or lifecycle cleanup.
+- `Release`: release matching held destinations owned by the same controller and cancel their pulse/turbo timers. Contributions from other controllers remain owned by those controllers.
 
 Collections dispatch in profile order. Independent actions retain separate activation timers; shared keyboard/modifier outputs use reference counts, and virtual contributions use the gamepad aggregator. Combination, motion, touch, and paired-controller behavior follows below.
 
@@ -81,7 +81,7 @@ Upstream reports guide regression tests, not automatic feature additions or acce
 
 ## Chord Timing
 
-Chords accept `mode: "simultaneous"` and `windowMs` from 1 to 1000 (default 50). All constituent presses must fall within that inclusive window. Releasing and pressing a source again replaces its press timestamp. Omitted mode selects `modifier`, which requires held sources without a simultaneous-press deadline.
+Chords accept `mode: "Simultaneous"` and `windowMs` from 1 to 1000 (default 50). All constituent presses must fall within that inclusive window. Releasing and pressing a source again replaces its press timestamp. Omitted mode selects `Modifier`, which requires held sources without a simultaneous-press deadline.
 
 Modifier-chord sources are owned by the modifier recognizer while that chord is effective. Their individual assignments, additional actions, and raw passthrough contributions stay suppressed. When the chord completes, it consumes its constituent presses and any sequence completion that depends on them. Releasing a constituent retires the chord without replaying the suppressed source action.
 

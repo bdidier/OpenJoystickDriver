@@ -158,7 +158,7 @@ extension DriverLifecycleCharacterizationTests {
       for: identifier
     )
     let mapping = await manager.setMappingPhysicalOutput(
-      .rumble(motor: .leftMain, intensity: 0.5),
+      .rumble(motor: .lowFrequency, intensity: 0.5),
       active: true,
       owner: UUID(),
       for: identifier
@@ -184,7 +184,7 @@ extension DriverLifecycleCharacterizationTests {
     let identifier = try await connectedIdentifier(recording)
     var counts = await recordedCounts(recording)
     let mapping = await recording.manager.setMappingPhysicalOutput(
-      .rumble(motor: .leftMain, intensity: 0.5),
+      .rumble(motor: .lowFrequency, intensity: 0.5),
       active: true,
       owner: UUID(),
       for: identifier

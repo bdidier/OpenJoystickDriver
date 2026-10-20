@@ -9,7 +9,7 @@ extension DriverLifecycleCharacterizationTests {
   func switchBluetoothTranscript() throws {
     #expect(
       try transcript(Self.switchBluetooth) == [
-        "capabilities rumble=[leftMain,rightMain] binary=[]",
+        "capabilities rumble=[LowFrequency,HighFrequency] binary=[]",
         "capabilities lighting=[playerIndicator]", "capabilities triggers=[]",
         "usb.startup interval=0 retries=[] packets=0", "usb.keepAlive nil",
         "usb.deferred inputs=0 packets=0", "usb.deferred drained=0",
@@ -36,7 +36,7 @@ extension DriverLifecycleCharacterizationTests {
         "    01060001404000014040102680000014", "hid.recovery afterExpiry=0",
         "presence requiresConnection=false", "liveness timeout=nil", "liveness observation=nil",
         "liveness format=nil", "battery=nil",
-        "out[cold].hidRumble motors=[leftMain,rightMain] binary=[] minInterval=50000000",
+        "out[cold].hidRumble motors=[LowFrequency,HighFrequency] binary=[] minInterval=50000000",
         "  id=0x10 n=10", "    100000494052008bc063", "out[cold].hidPlayer[off]", "  id=0x01 n=12",
         "    010100494052008bc0633000", "out[cold].hidPlayer[player1]", "  id=0x01 n=12",
         "    010200494052008bc0633001", "out[cold].hidPlayer[player2]", "  id=0x01 n=12",
@@ -51,7 +51,7 @@ extension DriverLifecycleCharacterizationTests {
   func steamWiredTranscript() throws {
     #expect(
       try transcript(Self.steamWired) == [
-        "capabilities rumble=[leftHaptic,rightHaptic] binary=[]",
+        "capabilities rumble=[LeftHaptic,RightHaptic] binary=[]",
         "capabilities lighting=[programmableBrightness]", "capabilities triggers=[]",
         "usb.startup interval=0 retries=[] packets=0", "usb.keepAlive nil",
         "usb.deferred inputs=0 packets=0", "usb.deferred drained=0",
@@ -97,7 +97,7 @@ extension DriverLifecycleCharacterizationTests {
         "hid.statusRequest nil", "hid.recovery[USB] supported=false beforeStartup=0 afterStartup=0",
         "hid.recovery afterExpiry=0", "presence requiresConnection=false", "liveness timeout=nil",
         "liveness observation=nil", "liveness format=nil", "battery=nil",
-        "out[cold].haptics motors=[leftHaptic,rightHaptic]", "out[cold].haptics reports=2",
+        "out[cold].haptics motors=[LeftHaptic,RightHaptic]", "out[cold].haptics reports=2",
         "  id=0x00 n=64", "    8f0801ffff00000200f000000000000000000000000000000000000000000000",
         "    0000000000000000000000000000000000000000000000000000000000000000", "  id=0x00 n=64",
         "    8f0800ffff00000200f700000000000000000000000000000000000000000000",
@@ -113,7 +113,7 @@ extension DriverLifecycleCharacterizationTests {
   func steamDongleTranscript() throws {
     #expect(
       try transcript(Self.steamDongle) == [
-        "capabilities rumble=[leftHaptic,rightHaptic] binary=[]",
+        "capabilities rumble=[LeftHaptic,RightHaptic] binary=[]",
         "capabilities lighting=[programmableBrightness]", "capabilities triggers=[]",
         "usb.startup interval=0 retries=[] packets=0", "usb.keepAlive nil",
         "usb.deferred inputs=2 packets=0", "usb.deferred drained=0",
@@ -163,11 +163,11 @@ extension DriverLifecycleCharacterizationTests {
         "hid.recovery afterExpiry=0", "presence requiresConnection=true",
         "presence input#0 change=connected", "presence input#1 change=disconnected",
         "liveness timeout=nil", "liveness observation=nil", "liveness format=nil", "battery=nil",
-        "out[cold].haptics motors=[leftHaptic,rightHaptic]", "out[cold].haptics reports=0",
+        "out[cold].haptics motors=[LeftHaptic,RightHaptic]", "out[cold].haptics reports=0",
         "out[cold].hidFeatureBrightness", "  id=0x00 n=64",
         "    87032d8000000000000000000000000000000000000000000000000000000000",
         "    0000000000000000000000000000000000000000000000000000000000000000",
-        "out[ready].haptics motors=[leftHaptic,rightHaptic]", "out[ready].haptics reports=2",
+        "out[ready].haptics motors=[LeftHaptic,RightHaptic]", "out[ready].haptics reports=2",
         "  id=0x00 n=64", "    8f0801ffff00000200f000000000000000000000000000000000000000000000",
         "    0000000000000000000000000000000000000000000000000000000000000000", "  id=0x00 n=64",
         "    8f0800ffff00000200f700000000000000000000000000000000000000000000",
@@ -175,7 +175,7 @@ extension DriverLifecycleCharacterizationTests {
         "out[ready].hidFeatureBrightness", "  id=0x00 n=64",
         "    87032d8000000000000000000000000000000000000000000000000000000000",
         "    0000000000000000000000000000000000000000000000000000000000000000",
-        "out[reset].haptics motors=[leftHaptic,rightHaptic]", "out[reset].haptics reports=2",
+        "out[reset].haptics motors=[LeftHaptic,RightHaptic]", "out[reset].haptics reports=2",
         "  id=0x00 n=64", "    8f0801ffff00000200f000000000000000000000000000000000000000000000",
         "    0000000000000000000000000000000000000000000000000000000000000000", "  id=0x00 n=64",
         "    8f0800ffff00000200f700000000000000000000000000000000000000000000",

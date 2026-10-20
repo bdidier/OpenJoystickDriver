@@ -15,11 +15,11 @@ struct ProfileSchemaTests {
       "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D5E",
       "name": "Everything",
       "device": {"vendorID": 1356, "productID": 3302, "unit": "U-AbCd_123-xyzW09q"},
-      "applicationScope": {"type": "application", "appID": "com.example.game"},
-      "outputPolicy": {"virtualGamepad": "mapped", "physicalInput": "exclusive"},
+      "applicationScope": {"type": "Application", "appID": "com.example.game"},
+      "outputPolicy": {"virtualGamepad": "Mapped", "physicalInput": "Exclusive"},
       "physicalColor": {"red": 255, "green": 32, "blue": 0},
       "motionTuning": {
-        "space": "world", "lean": {"thresholdDegrees": 20, "hysteresisDegrees": 5},
+        "space": "World", "lean": {"thresholdDegrees": 20, "hysteresisDegrees": 5},
         "steering": {
           "output": "LeftStickX", "fullScaleDegrees": 45, "deadzoneDegrees": 2,
           "responseExponent": 1.5, "inverted": false
@@ -27,159 +27,159 @@ struct ProfileSchemaTests {
       },
       "gyroOutput": {
         "mode": "Mouse", "activationMode": "WhileHeld",
-        "activationSource": {"type": "button", "button": "RightPaddle2"},
-        "trackball": {"source": {"type": "touch_contact", "surface": "primary"}, "axes": "Yaw"}
+        "activationSource": {"type": "Button", "button": "RightPaddle2"},
+        "trackball": {"source": {"type": "TouchContact", "surface": "Primary"}, "axes": "Yaw"}
       },
       "stickMappings": [
         {
-          "source": "right", "mode": "Flick", "flickThreshold": 0.8, "flickHysteresis": 0.2,
+          "source": "Right", "mode": "Flick", "flickThreshold": 0.8, "flickHysteresis": 0.2,
           "tuning": {"innerDeadzone": 0.1, "outerDeadzone": 0.05, "invertY": true}
         }
       ],
       "triggerMappings": [
-        {"source": "left", "mode": "prefer_full", "softThreshold": 0.2, "fullThreshold": 0.9}
+        {"source": "Left", "mode": "PreferFull", "softThreshold": 0.2, "fullThreshold": 0.9}
       ],
       "touchMappings": [
         {
-          "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D60", "surface": "primary", "mode": "Pointer",
+          "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D60", "surface": "Primary", "mode": "Pointer",
           "deadzone": 0.05, "pointerSensitivity": 800, "stickRadius": 0.4
         }
       ],
       "bindings": [
         {
           "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D61",
-          "source": {"type": "button", "button": "South"},
-          "destination": {"type": "keyboard", "key": "Space", "modifiers": ["Shift", "Meta"]},
+          "source": {"type": "Button", "button": "South"},
+          "destination": {"type": "Keyboard", "key": "Space", "modifiers": ["Shift", "Meta"]},
           "longHold": {
-            "durationMs": 500, "destination": {"type": "mouse_button", "button": "right"}
+            "durationMs": 500, "destination": {"type": "MouseButton", "button": "Right"}
           },
           "additionalActions": [
             {
               "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D62",
               "destination": {
-                "type": "physical",
-                "physical": {"type": "rumble", "motor": "leftMain", "intensity": 0.5}
+                "type": "Physical",
+                "physical": {"type": "Rumble", "motor": "LowFrequency", "intensity": 0.5}
               }
             }
           ]
         },
         {
           "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D63",
-          "source": {"type": "axis", "axis": "LeftStickX"},
-          "destination": {"type": "gamepad_axis", "axis": "RightStickX"},
+          "source": {"type": "Axis", "axis": "LeftStickX"},
+          "destination": {"type": "GamepadAxis", "axis": "RightStickX"},
           "axisTuning": {
-            "deadzone": 0.1, "gain": 2, "inverted": true, "responseCurve": "ease_in",
+            "deadzone": 0.1, "gain": 2, "inverted": true, "responseCurve": "EaseIn",
             "digitalActivationThreshold": 0.5
           }
         },
         {
           "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D64",
-          "source": {"type": "axis_direction", "axis": "RightStickY", "direction": "Negative"},
-          "destination": {"type": "keyboard", "key": "ArrowUp", "modifiers": []},
+          "source": {"type": "AxisDirection", "axis": "RightStickY", "direction": "Negative"},
+          "destination": {"type": "Keyboard", "key": "ArrowUp", "modifiers": []},
           "axisTuning": {
-            "deadzone": 0.2, "gain": 1, "inverted": false, "responseCurve": "linear",
+            "deadzone": 0.2, "gain": 1, "inverted": false, "responseCurve": "Linear",
             "digitalActivationThreshold": 0.6
           }
         },
         {
           "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D70",
-          "source": {"type": "axis", "axis": "RightStickX"},
-          "destination": {"type": "mouse_movement", "axis": "x"},
+          "source": {"type": "Axis", "axis": "RightStickX"},
+          "destination": {"type": "MouseMovement", "axis": "X"},
           "axisTuning": {
-            "deadzone": 0.2, "gain": 1, "inverted": false, "responseCurve": "linear",
+            "deadzone": 0.2, "gain": 1, "inverted": false, "responseCurve": "Linear",
             "digitalActivationThreshold": 0.6
           }
         },
         {
           "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D71",
-          "source": {"type": "axis", "axis": "RightTrigger"},
-          "destination": {"type": "scroll", "axis": "y"},
+          "source": {"type": "Axis", "axis": "RightTrigger"},
+          "destination": {"type": "Scroll", "axis": "Y"},
           "axisTuning": {
-            "deadzone": 0.2, "gain": 1, "inverted": false, "responseCurve": "linear",
+            "deadzone": 0.2, "gain": 1, "inverted": false, "responseCurve": "Linear",
             "digitalActivationThreshold": 0.6
           }
         },
         {
           "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D65",
-          "source": {"type": "trigger_stage", "trigger": "left", "stage": "full"},
-          "destination": {"type": "mouse_button", "button": "middle"}
+          "source": {"type": "TriggerStage", "trigger": "Left", "stage": "Full"},
+          "destination": {"type": "MouseButton", "button": "Middle"}
         },
         {
           "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D66",
-          "source": {"type": "motion_lean", "direction": "left"},
-          "destination": {"type": "gamepad_dpad", "direction": "DpadLeft"}
+          "source": {"type": "MotionLean", "direction": "Left"},
+          "destination": {"type": "GamepadDpad", "direction": "DpadLeft"}
         },
         {
           "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D67",
           "source": {
-            "type": "touch_grid", "surface": "primary",
+            "type": "TouchGrid", "surface": "Primary",
             "columns": 2, "rows": 1, "column": 1, "row": 0
           },
           "destination": {
-            "type": "physical", "physical": {"type": "color", "red": 0, "green": 0, "blue": 255}
+            "type": "Physical", "physical": {"type": "Color", "red": 0, "green": 0, "blue": 255}
           },
-          "behavior": "tap_on_press"
+          "behavior": "TapOnPress"
         },
         {
           "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D68",
           "source": {
-            "type": "touch_swipe", "surface": "primary", "direction": "up", "minimumDistance": 0.3
+            "type": "TouchSwipe", "surface": "Primary", "direction": "Up", "minimumDistance": 0.3
           },
           "destination": {
-            "type": "physical", "physical": {"type": "player_indicator", "indicator": 2}
+            "type": "Physical", "physical": {"type": "PlayerIndicator", "indicator": 2}
           },
-          "behavior": "tap_on_press"
+          "behavior": "TapOnPress"
         },
         {
           "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D69",
-          "source": {"type": "dpad", "direction": "DpadUp"},
+          "source": {"type": "Dpad", "direction": "DpadUp"},
           "destination": {
-            "type": "physical", "physical": {"type": "brightness", "intensity": 0.25}
+            "type": "Physical", "physical": {"type": "Brightness", "intensity": 0.25}
           },
-          "behavior": "tap_on_press"
+          "behavior": "TapOnPress"
         },
         {
           "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D6A",
-          "source": {"type": "button", "button": "East"},
+          "source": {"type": "Button", "button": "East"},
           "destination": {
-            "type": "physical",
+            "type": "Physical",
             "physical": {
-              "type": "adaptive_trigger", "trigger": "right",
-              "effect": {"kind": "resistance", "startPosition": 0.3, "strength": 0.7}
+              "type": "AdaptiveTrigger", "trigger": "Right",
+              "effect": {"kind": "Resistance", "startPosition": 0.3, "strength": 0.7}
             }
           },
           "doubleTap": {
-            "windowMs": 250, "destination": {"type": "gamepad_button", "button": "North"}
+            "windowMs": 250, "destination": {"type": "GamepadButton", "button": "North"}
           }
         }
       ],
       "chords": [
         {
           "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D6B",
-          "sources": [{"type": "button", "button": "Back"}, {"type": "button", "button": "Start"}],
-          "destination": {"type": "gamepad_button", "button": "Guide"},
-          "mode": "simultaneous", "windowMs": 40
+          "sources": [{"type": "Button", "button": "Back"}, {"type": "Button", "button": "Start"}],
+          "destination": {"type": "GamepadButton", "button": "Guide"},
+          "mode": "Simultaneous", "windowMs": 40
         }
       ],
       "sequences": [
         {
           "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D6C",
           "sources": [
-            {"type": "dpad", "direction": "DpadDown"}, {"type": "dpad", "direction": "DpadRight"}
+            {"type": "Dpad", "direction": "DpadDown"}, {"type": "Dpad", "direction": "DpadRight"}
           ],
-          "destination": {"type": "keyboard", "key": "F5", "modifiers": []},
+          "destination": {"type": "Keyboard", "key": "F5", "modifiers": []},
           "windowMs": 600
         }
       ],
       "layers": [
         {
           "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D6D", "name": "Menus",
-          "activationMode": "toggle", "activator": {"type": "button", "button": "LeftPaddle1"},
+          "activationMode": "Toggle", "activator": {"type": "Button", "button": "LeftPaddle1"},
           "bindings": [
             {
               "id": "6F1C2D3E-4A5B-4C6D-8E7F-901A2B3C4D6E",
-              "source": {"type": "button", "button": "West"},
-              "destination": {"type": "keyboard", "key": "Escape", "modifiers": []},
+              "source": {"type": "Button", "button": "West"},
+              "destination": {"type": "Keyboard", "key": "Escape", "modifiers": []},
               "turbo": {"repeatRateHz": 10, "dutyCycle": 0.5}
             }
           ],
@@ -200,14 +200,14 @@ struct ProfileSchemaTests {
   @Test(arguments: [
     ("unknown key", #""name": "Everything""#, #""name": "Everything", "unexpected": true"#),
     ("deadzone out of range", #""deadzone": 0.1, "gain""#, #""deadzone": 0.96, "gain""#),
-    ("unknown curve", #""ease_in""#, #""quadratic""#),
+    ("unknown curve", #""EaseIn""#, #""quadratic""#),
     (
-      "unknown D-pad direction", #"{"type": "dpad", "direction": "DpadUp"}"#,
-      #"{"type": "dpad", "direction": "notAName"}"#
+      "unknown D-pad direction", #"{"type": "Dpad", "direction": "DpadUp"}"#,
+      #"{"type": "Dpad", "direction": "notAName"}"#
     ),
     (
-      "unknown destination D-pad direction", #""gamepad_dpad", "direction": "DpadLeft""#,
-      #""gamepad_dpad", "direction": "notAName""#
+      "unknown destination D-pad direction", #""GamepadDpad", "direction": "DpadLeft""#,
+      #""GamepadDpad", "direction": "notAName""#
     ),
     ("unknown gyro mode", #""mode": "Mouse""#, #""mode": "notAName""#),
     (
@@ -225,8 +225,8 @@ struct ProfileSchemaTests {
     ("unknown button", #""button": "South""#, #""button": "a""#),
     ("malformed unit ID", #""U-AbCd_123-xyzW09q""#, #""U-AbCd+123""#),
     (
-      "axis in a chord", #"{"type": "button", "button": "Back"}"#,
-      #"{"type": "axis", "axis": "LeftTrigger"}"#
+      "axis in a chord", #"{"type": "Button", "button": "Back"}"#,
+      #"{"type": "Axis", "axis": "LeftTrigger"}"#
     ),
   ])
   func aBrokenProfileIsRejectedByTheDecoderAndTheSchema(
@@ -313,7 +313,7 @@ struct ProfileSchemaTests {
     let keyboard = try #require(
       destinations.first {
         (($0["properties"] as? [String: Any])?["type"] as? [String: Any])?["const"] as? String
-          == "keyboard"
+          == "Keyboard"
       }?["properties"] as? [String: Any]
     )
     let key = try #require((keyboard["key"] as? [String: Any])?["enum"] as? [String])

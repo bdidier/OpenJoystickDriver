@@ -573,7 +573,7 @@
 "inputTest.leftBumper" = "左バンパー";
 "inputTest.leftBumperGeneric" = "LB / L1";
 "inputTest.leftHaptic" = "左ハプティック";
-"inputTest.leftMain" = "左メイン";
+"inputTest.lowFrequency" = "左メイン";
 "inputTest.leftStick" = "左スティック";
 "inputTest.leftStickButton" = "左スティックボタン";
 "inputTest.leftTrigger" = "左トリガー";
@@ -595,7 +595,7 @@
 "inputTest.rightBumper" = "右バンパー";
 "inputTest.rightBumperGeneric" = "RB / R1";
 "inputTest.rightHaptic" = "右ハプティック";
-"inputTest.rightMain" = "右メイン";
+"inputTest.highFrequency" = "右メイン";
 "inputTest.rightStick" = "右スティック";
 "inputTest.rightStickButton" = "右スティックボタン";
 "inputTest.rightTrigger" = "右トリガー";

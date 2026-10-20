@@ -6,13 +6,13 @@ import Testing
 /// A rumble template's `resendIntervalMilliseconds`: the driver's keep-alive sends the last
 /// rumble report again while a motor runs and stops after a zero report.
 struct RumbleResendTests {
-  private static let running = RumbleIntensities(leftMain: UnipolarValue(0x8000))
+  private static let running = RumbleIntensities(lowFrequency: UnipolarValue(0x8000))
 
   private static func usbTemplate(resend: Int?) throws -> RumbleOutputTemplate {
     try RumbleOutputTemplate(
       target: .usb(length: 4),
       bytes: [0x00, 0x04, 0x00, 0x00],
-      motors: [.leftMain: .init(byte: 2), .rightMain: .init(byte: 3)],
+      motors: [.lowFrequency: .init(byte: 2), .highFrequency: .init(byte: 3)],
       resendIntervalMilliseconds: resend
     )
   }
@@ -20,7 +20,7 @@ struct RumbleResendTests {
   private static func hidTemplate(resend: Int?) throws -> RumbleOutputTemplate {
     try RumbleOutputTemplate(
       target: .hid(ControllerTemplateReport(kind: .output, reportID: 0x10, length: 10)),
-      motors: [.leftMain: .init(byte: 2, encoding: .switchHDRumble)],
+      motors: [.lowFrequency: .init(byte: 2, encoding: .switchHDRumble)],
       counterByte: 1,
       resendIntervalMilliseconds: resend
     )
@@ -164,8 +164,11 @@ struct RumbleResendTests {
 
   @Test
   func aJoyConResendFollowsItsSideFilter() throws {
-    let both = RumbleIntensities(leftMain: UnipolarValue(0x8000), rightMain: UnipolarValue(0x4000))
-    let rightOnly = RumbleIntensities(rightMain: UnipolarValue(0x4000))
+    let both = RumbleIntensities(
+      lowFrequency: UnipolarValue(0x8000),
+      highFrequency: UnipolarValue(0x4000)
+    )
+    let rightOnly = RumbleIntensities(highFrequency: UnipolarValue(0x4000))
     let left = Switch1Driver(
       layout: .leftJoyCon,
       rumbleTemplate: try Self.hidTemplate(resend: 50)

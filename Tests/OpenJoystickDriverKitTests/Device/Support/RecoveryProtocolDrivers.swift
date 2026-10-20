@@ -24,7 +24,7 @@ final class RecoveryRumbleParser: PhysicalProtocolDriver, @unchecked Sendable {
   let capabilities = ControllerCapabilities(controls: Control.xboxLayout)
   let sessionPlan = DriverSessionPlan()
   let outputCapabilities = PhysicalControllerOutputCapabilities(rumbleMotors: [
-    .leftMain, .rightMain, .leftTrigger, .rightTrigger,
+    .lowFrequency, .highFrequency, .leftTrigger, .rightTrigger,
   ])
   let defaultColor: ControllerColor? = nil
   func consumeInputConnectionStateChange() -> ControllerInputConnectionState? { nil }
@@ -42,7 +42,8 @@ final class RecoveryRumbleParser: PhysicalProtocolDriver, @unchecked Sendable {
     case .stopRumble: intensities = .off
     default: throw .unsupportedCapability(command.capability)
     }
-    let bytes = [PhysicalRumbleMotor.leftMain, .rightMain, .leftTrigger, .rightTrigger].map {
+    let bytes = [PhysicalRumbleMotor.lowFrequency, .highFrequency, .leftTrigger, .rightTrigger].map
+    {
       intensities[$0].byte
     }
     return PhysicalOutputPlan(writes: [
@@ -58,7 +59,7 @@ final class RecoveryRumbleParser: PhysicalProtocolDriver, @unchecked Sendable {
     _ rt: UInt8
   ) -> [PhysicalUSBOutputPacket] {
     let intensities: [PhysicalRumbleMotor: UInt8] = [
-      .leftMain: left, .rightMain: right, .leftTrigger: lt, .rightTrigger: rt,
+      .lowFrequency: left, .highFrequency: right, .leftTrigger: lt, .rightTrigger: rt,
     ]
     let command = ControllerOutputCommand.setRumble(
       RumbleIntensities(bytes: intensities),

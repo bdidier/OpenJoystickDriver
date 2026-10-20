@@ -93,7 +93,7 @@ struct CatalogRecordBehaviorTests {
     #expect(inputOnly.outputCapabilities.rumbleMotors.isEmpty)
     #expect(
       Set(standard.outputCapabilities.rumbleMotors) == [
-        .leftMain, .rightMain, .leftTrigger, .rightTrigger,
+        .lowFrequency, .highFrequency, .leftTrigger, .rightTrigger,
       ]
     )
   }

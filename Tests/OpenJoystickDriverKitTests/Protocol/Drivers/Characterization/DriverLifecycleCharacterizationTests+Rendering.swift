@@ -9,7 +9,8 @@ extension DriverLifecycleCharacterizationTests {
 
   /// The representative rumble request: main, trigger and haptic motors all set.
   static let rumbleIntensities: [PhysicalRumbleMotor: UInt8] = [
-    .leftMain: 0x40, .rightMain: 0x80, .leftTrigger: 0x20, .rightTrigger: 0x10, .leftHaptic: 0x40,
+    .lowFrequency: 0x40, .highFrequency: 0x80, .leftTrigger: 0x20, .rightTrigger: 0x10,
+    .leftHaptic: 0x40,
     .rightHaptic: 0x80,
   ]
   static let triggerResistance = PhysicalAdaptiveTriggerEffect(
@@ -27,10 +28,10 @@ extension DriverLifecycleCharacterizationTests {
     lines += brightnessOutputs(driver, prefix: prefix)
     lines += playerIndicatorOutputs(driver, prefix: prefix)
     if let left = driver.encoded(.setAdaptiveTrigger(.left, Self.triggerResistance)) {
-      lines += ["\(prefix).trigger[left] resistance(0.25,0.75)"] + left.writes.flatMap(render)
+      lines += ["\(prefix).trigger[Left] resistance(0.25,0.75)"] + left.writes.flatMap(render)
     }
     if let right = driver.encoded(.setAdaptiveTrigger(.right, .off)) {
-      lines += ["\(prefix).trigger[right] off"] + right.writes.flatMap(render)
+      lines += ["\(prefix).trigger[Right] off"] + right.writes.flatMap(render)
     }
     return lines
   }

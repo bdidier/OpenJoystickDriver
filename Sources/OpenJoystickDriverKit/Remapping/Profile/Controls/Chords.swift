@@ -1,8 +1,8 @@
 import Foundation
 
 public enum RemappingChordMode: String, Codable, Hashable, Sendable, CaseIterable {
-  case modifier
-  case simultaneous
+  case modifier = "Modifier"
+  case simultaneous = "Simultaneous"
 }
 
 /// A multi-button combination that fires a single destination.

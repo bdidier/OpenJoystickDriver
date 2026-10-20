@@ -16,8 +16,8 @@ extension ControllerOutputCommand {
       UnipolarValue(unitInterval: Double(value) / 100)
     }
     let intensities = RumbleIntensities(
-      leftMain: magnitude(left),
-      rightMain: magnitude(right),
+      lowFrequency: magnitude(left),
+      highFrequency: magnitude(right),
       leftTrigger: magnitude(leftTrigger),
       rightTrigger: magnitude(rightTrigger)
     )
@@ -54,12 +54,12 @@ struct ConsumerOutputCodecTests {
   func rumbleDurationComesFromTheReport() throws {
     // Magnitudes span 0...100; 255 clamps to full strength.
     let intensities = RumbleIntensities(
-      leftMain: UnipolarValue(unitInterval: 0.01),
-      rightMain: .max,
+      lowFrequency: UnipolarValue(unitInterval: 0.01),
+      highFrequency: .max,
       leftTrigger: .min,
       rightTrigger: .min
     )
-    #expect(intensities.leftMain.rawValue == 655)
+    #expect(intensities.lowFrequency.rawValue == 655)
     // A duration byte of 0 is an immediate rumble, not a stop.
     #expect(
       try consumerOutput(3, [0x03, 0x0C, 0, 0, 1, 255, 0, 0, 0], in: XboxGeckoHIDReportFormat())
@@ -79,8 +79,8 @@ struct ConsumerOutputCodecTests {
   func sdlRumbleMagnitudesSpanZeroToOneHundred() throws {
     // SDL_RumbleJoystick(0xFFFF, 0x8000): low = 100, high = 50.
     let intensities = RumbleIntensities(
-      leftMain: .max,
-      rightMain: UnipolarValue(unitInterval: 0.5),
+      lowFrequency: .max,
+      highFrequency: UnipolarValue(unitInterval: 0.5),
       leftTrigger: .min,
       rightTrigger: .min
     )

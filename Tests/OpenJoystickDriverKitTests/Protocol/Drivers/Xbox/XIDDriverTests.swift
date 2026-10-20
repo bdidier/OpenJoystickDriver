@@ -45,7 +45,7 @@ struct XIDDriverTests {
       try catalogParser(ControllerModelID(vendorID: 0x045E, productID: 0x0202)) as? XIDDriver
     )
 
-    #expect(parser.outputCapabilities.rumbleMotors == [.leftMain, .rightMain])
+    #expect(parser.outputCapabilities.rumbleMotors == [.lowFrequency, .highFrequency])
     #expect(parser.outputCapabilities.supportsRumble)
     #expect(catalogParser.rumblePlan(left: 0, right: 0, lt: 0, rt: 0).onlyPacket.endpoint == 0x02)
     #expect(

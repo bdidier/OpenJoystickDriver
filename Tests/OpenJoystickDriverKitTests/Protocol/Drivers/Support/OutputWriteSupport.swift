@@ -46,7 +46,7 @@ extension PhysicalProtocolDriver {
   /// A 0 ms rumble for the main and trigger motors.
   func rumblePlan(left: UInt8, right: UInt8, lt: UInt8, rt: UInt8) -> PhysicalOutputPlan? {
     let intensities: [PhysicalRumbleMotor: UInt8] = [
-      .leftMain: left, .rightMain: right, .leftTrigger: lt, .rightTrigger: rt,
+      .lowFrequency: left, .highFrequency: right, .leftTrigger: lt, .rightTrigger: rt,
     ]
     return encoded(.setRumble(RumbleIntensities(bytes: intensities), duration: .milliseconds(0)))
   }
@@ -94,8 +94,8 @@ extension DeviceManager {
     durationMs: Int
   ) async -> Bool {
     let intensities = RumbleIntensities(
-      leftMain: UnipolarValue(byte: left),
-      rightMain: UnipolarValue(byte: right),
+      lowFrequency: UnipolarValue(byte: left),
+      highFrequency: UnipolarValue(byte: right),
       leftTrigger: UnipolarValue(byte: lt),
       rightTrigger: UnipolarValue(byte: rt)
     ).mirroringMainOntoHaptics()

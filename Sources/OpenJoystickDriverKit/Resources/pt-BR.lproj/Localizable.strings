@@ -573,7 +573,7 @@
 "inputTest.leftBumper" = "Botão Superior Esquerdo";
 "inputTest.leftBumperGeneric" = "LB / L1";
 "inputTest.leftHaptic" = "Háptico Esquerdo";
-"inputTest.leftMain" = "Principal Esquerdo";
+"inputTest.lowFrequency" = "Principal Esquerdo";
 "inputTest.leftStick" = "Analógico Esquerdo";
 "inputTest.leftStickButton" = "Botão do Analógico Esquerdo";
 "inputTest.leftTrigger" = "Gatilho Esquerdo";
@@ -595,7 +595,7 @@
 "inputTest.rightBumper" = "Botão Superior Direito";
 "inputTest.rightBumperGeneric" = "RB / R1";
 "inputTest.rightHaptic" = "Háptico Direito";
-"inputTest.rightMain" = "Principal Direito";
+"inputTest.highFrequency" = "Principal Direito";
 "inputTest.rightStick" = "Analógico Direito";
 "inputTest.rightStickButton" = "Botão do Analógico Direito";
 "inputTest.rightTrigger" = "Gatilho Direito";

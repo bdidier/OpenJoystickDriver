@@ -15,7 +15,7 @@ extension PhysicalOutputExecutorTests {
   func stopRumbleCancelsTheScheduledStopAndWritesOnce() async throws {
     let started = try await startSixaxis(locationID: 524)
     let manager = started.manager
-    let rumble = RumbleIntensities(leftMain: UnipolarValue(byte: 0x80))
+    let rumble = RumbleIntensities(lowFrequency: UnipolarValue(byte: 0x80))
     #expect(await send(.setRumble(rumble, duration: .milliseconds(5_000)), to: started).value)
     #expect(await manager.rumbleStopTasks[started.identifier] != nil)
     let before = await started.backend.recordedOutputReports().count
@@ -42,7 +42,7 @@ extension PhysicalOutputExecutorTests {
     let (queue, release, blocker) = await blockOutputQueue(started)
     let before = await started.backend.recordedOutputReports().count
     let owner = UUID()
-    let claim = RemappingPhysicalOutput.rumble(motor: .leftMain, intensity: 0.5)
+    let claim = RemappingPhysicalOutput.rumble(motor: .lowFrequency, intensity: 0.5)
     let on = Task {
       await manager.setMappingPhysicalOutput(claim, active: true, owner: owner, for: identifier)
     }
@@ -66,7 +66,7 @@ extension PhysicalOutputExecutorTests {
   func partialRumbleReportsDroppedChannels() async throws {
     let started = try await startSixaxis(locationID: 526)
     let rumble = RumbleIntensities(
-      leftMain: UnipolarValue(byte: 0x80),
+      lowFrequency: UnipolarValue(byte: 0x80),
       leftTrigger: UnipolarValue(byte: 0x40)
     )
     let result = await started.manager.sendControllerOutput(
@@ -88,7 +88,7 @@ extension PhysicalOutputExecutorTests {
   func outOfRangeDurationIsInvalidAfterAdmission() async throws {
     let started = try await startSixaxis(locationID: 532)
     let manager = started.manager
-    let rumble = RumbleIntensities(leftMain: UnipolarValue(byte: 0x80))
+    let rumble = RumbleIntensities(lowFrequency: UnipolarValue(byte: 0x80))
     for milliseconds in [-1, maxRumbleDurationMs + 1] {
       let result = await manager.sendControllerOutput(
         .setRumble(rumble, duration: .milliseconds(milliseconds)),

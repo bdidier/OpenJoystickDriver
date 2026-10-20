@@ -85,8 +85,8 @@ actor InputTestGatewayStub: InputTestDeviceGateway {
       rumbleCalls.append(
         RecordedRumble(
           selector: selector,
-          left: intensities.leftMain.byte,
-          right: intensities.rightMain.byte,
+          left: intensities.lowFrequency.byte,
+          right: intensities.highFrequency.byte,
           leftTrigger: intensities.leftTrigger.byte,
           rightTrigger: intensities.rightTrigger.byte,
           durationMilliseconds: durationMilliseconds

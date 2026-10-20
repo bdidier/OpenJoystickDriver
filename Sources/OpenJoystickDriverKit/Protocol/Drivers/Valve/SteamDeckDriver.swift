@@ -27,7 +27,7 @@ public final class SteamDeckDriver: PhysicalProtocolDriver {
   /// SDL declares rumble only: no LED, no trigger rumble.
   public var outputCapabilities: PhysicalControllerOutputCapabilities {
     PhysicalControllerOutputCapabilities(
-      rumbleMotors: [.leftMain, .rightMain],
+      rumbleMotors: [.lowFrequency, .highFrequency],
       lightingFeatures: []
     )
   }
@@ -92,7 +92,7 @@ public final class SteamDeckDriver: PhysicalProtocolDriver {
     let right: UInt16
     switch command {
     case .setRumble(let intensities, _):
-      (left, right) = (intensities.leftMain.rawValue, intensities.rightMain.rawValue)
+      (left, right) = (intensities.lowFrequency.rawValue, intensities.highFrequency.rawValue)
     case .stopRumble: (left, right) = (0, 0)
     default: throw .unsupportedCapability(command.capability)
     }

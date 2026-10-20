@@ -171,8 +171,8 @@ struct SteamTritonDriverTests {
     let driver = SteamTritonDriver()
     #expect(driver.sessionPlan.hidKeepAliveIntervalNanoseconds == 40_000_000)
     let intensities = RumbleIntensities(
-      leftMain: UnipolarValue(0x1234),
-      rightMain: UnipolarValue(0xABCD)
+      lowFrequency: UnipolarValue(0x1234),
+      highFrequency: UnipolarValue(0xABCD)
     )
     let report = driver.encoded(.setRumble(intensities, duration: .milliseconds(500))).onlyReport
     #expect(report.reportID == 0x80)

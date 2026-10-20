@@ -59,20 +59,20 @@ public struct PhysicalOutputValidationPlan: Equatable, Sendable {
     let prefix = "ojd controller"
     var result: [Step] = []
     let motors = Set(capabilities.rumbleMotors)
-    if motors.contains(.leftMain) || motors.contains(.leftHaptic) {
+    if motors.contains(.lowFrequency) || motors.contains(.leftHaptic) {
       result.append(
         Step(
-          id: motors.contains(.leftHaptic) ? "left-haptic" : "left-main",
+          id: motors.contains(.leftHaptic) ? "left-haptic" : "low-frequency",
           command: "\(prefix) rumble \(identity) --left 160 --duration 0.3",
           expectedObservation: motors.contains(.leftHaptic)
             ? "Only the left trackpad haptic actuator pulses." : "Only the left main actuator runs."
         )
       )
     }
-    if motors.contains(.rightMain) || motors.contains(.rightHaptic) {
+    if motors.contains(.highFrequency) || motors.contains(.rightHaptic) {
       result.append(
         Step(
-          id: motors.contains(.rightHaptic) ? "right-haptic" : "right-main",
+          id: motors.contains(.rightHaptic) ? "right-haptic" : "high-frequency",
           command: "\(prefix) rumble \(identity) --right 160 --duration 0.3",
           expectedObservation: motors.contains(.rightHaptic)
             ? "Only the right trackpad haptic actuator pulses."

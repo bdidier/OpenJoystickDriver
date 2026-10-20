@@ -147,9 +147,9 @@ public struct ControllerTouchContact: Sendable, Equatable, Codable {
 }
 
 public enum ControllerTouchSurface: String, Sendable, Codable {
-  case primary
-  case left
-  case right
+  case primary = "Primary"
+  case left = "Left"
+  case right = "Right"
 }
 
 /// A complete contact frame of one surface, dated with the report's receipt-anchored sensor time

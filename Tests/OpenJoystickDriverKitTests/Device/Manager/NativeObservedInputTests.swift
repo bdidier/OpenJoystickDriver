@@ -26,7 +26,7 @@ struct NativeObservedInputTests {
     let device = try #require(await manager.connectedDeviceDescriptions().first)
     #expect(device.physicalOutputCapabilities.lightingFeatures == [.playerIndicator])
     // macOS never writes report 0x01, so OJD drives the motors it carries.
-    #expect(device.physicalOutputCapabilities.rumbleMotors == [.leftMain, .rightMain])
+    #expect(device.physicalOutputCapabilities.rumbleMotors == [.lowFrequency, .highFrequency])
     let identifier = try #require(await manager.pipelines.keys.first)
     // A USB Sixaxis ignores its LED report until it streams input, so player 1 follows the first
     // input report, once.
@@ -132,7 +132,7 @@ struct NativeObservedInputTests {
     #expect(device.protocolBinding.protocolID == .hidReportLayout)
     #expect(device.physicalOwnership == .systemGamepad)
     // macOS has no driver for the GP100's vendor rumble report 0x02, so OJD drives it.
-    #expect(device.physicalOutputCapabilities.rumbleMotors == [.leftMain, .rightMain])
+    #expect(device.physicalOutputCapabilities.rumbleMotors == [.lowFrequency, .highFrequency])
     #expect(device.physicalOutputCapabilities.lightingFeatures.isEmpty)
     let identifier = try #require(await manager.pipelines.keys.first)
     #expect(

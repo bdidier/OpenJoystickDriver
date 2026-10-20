@@ -246,6 +246,18 @@ extension RuntimePresentation {
     }
   }
 
+  /// An UpperCamelCase value as words: a word starts at each capital that follows a lowercase
+  /// letter or digit, so `LowFrequency` is "Low Frequency".
+  static func upperCamelWords(_ value: String) -> String {
+    humanized(
+      value.replacingOccurrences(
+        of: "([a-z0-9])([A-Z])",
+        with: "$1_$2",
+        options: .regularExpression
+      )
+    )
+  }
+
   static func humanized(_ value: String) -> String {
     value.split(separator: "_").map { part in
       let value = String(part)

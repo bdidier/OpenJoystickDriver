@@ -573,7 +573,7 @@
 "inputTest.leftBumper" = "Dorsale sinistro";
 "inputTest.leftBumperGeneric" = "LB / L1";
 "inputTest.leftHaptic" = "Feedback tattile sinistro";
-"inputTest.leftMain" = "Principale sinistro";
+"inputTest.lowFrequency" = "Principale sinistro";
 "inputTest.leftStick" = "Levetta sinistra";
 "inputTest.leftStickButton" = "Pulsante levetta sinistra";
 "inputTest.leftTrigger" = "Grilletto sinistro";
@@ -595,7 +595,7 @@
 "inputTest.rightBumper" = "Dorsale destro";
 "inputTest.rightBumperGeneric" = "RB / R1";
 "inputTest.rightHaptic" = "Feedback tattile destro";
-"inputTest.rightMain" = "Principale destro";
+"inputTest.highFrequency" = "Principale destro";
 "inputTest.rightStick" = "Levetta destra";
 "inputTest.rightStickButton" = "Pulsante levetta destra";
 "inputTest.rightTrigger" = "Grilletto destro";

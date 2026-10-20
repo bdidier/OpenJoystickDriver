@@ -171,8 +171,8 @@
       let duration = max(100, min(2_000, Int(rumbleDurationMilliseconds.rounded())))
       beginOutputOperation(.rumble, selector: selector) { [gateway, rumbleSleep] in
         let intensities = RumbleIntensities(
-          leftMain: UnipolarValue(byte: command.left),
-          rightMain: UnipolarValue(byte: command.right),
+          lowFrequency: UnipolarValue(byte: command.left),
+          highFrequency: UnipolarValue(byte: command.right),
           leftTrigger: UnipolarValue(byte: command.leftTrigger),
           rightTrigger: UnipolarValue(byte: command.rightTrigger)
         ).mirroringMainOntoHaptics()

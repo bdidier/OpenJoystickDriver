@@ -18,22 +18,22 @@ struct PhysicalRumbleOutputTests {
 
     #expect(
       Set(gip.outputCapabilities.rumbleMotors)
-        == Set([.leftMain, .rightMain, .leftTrigger, .rightTrigger])
+        == Set([.lowFrequency, .highFrequency, .leftTrigger, .rightTrigger])
     )
-    #expect(Set(xbox360.outputCapabilities.rumbleMotors) == Set([.leftMain, .rightMain]))
-    #expect(Set(xid.outputCapabilities.rumbleMotors) == Set([.leftMain, .rightMain]))
+    #expect(Set(xbox360.outputCapabilities.rumbleMotors) == Set([.lowFrequency, .highFrequency]))
+    #expect(Set(xid.outputCapabilities.rumbleMotors) == Set([.lowFrequency, .highFrequency]))
     #expect(xbox360.outputCapabilities.lightingFeatures == [.playerIndicator])
-    #expect(Set(ds4.outputCapabilities.rumbleMotors) == Set([.leftMain, .rightMain]))
-    #expect(Set(dualSense.outputCapabilities.rumbleMotors) == Set([.leftMain, .rightMain]))
+    #expect(Set(ds4.outputCapabilities.rumbleMotors) == Set([.lowFrequency, .highFrequency]))
+    #expect(Set(dualSense.outputCapabilities.rumbleMotors) == Set([.lowFrequency, .highFrequency]))
     #expect(
       Set(dualSense.outputCapabilities.lightingFeatures)
         == Set([.playerIndicator, .programmableColor])
     )
     #expect(ds4.outputCapabilities.lightingFeatures == [.programmableColor])
-    #expect(Set(ds3.outputCapabilities.rumbleMotors) == Set([.leftMain, .rightMain]))
-    #expect(ds3.outputCapabilities.binaryRumbleMotors == [.rightMain])
+    #expect(Set(ds3.outputCapabilities.rumbleMotors) == Set([.lowFrequency, .highFrequency]))
+    #expect(ds3.outputCapabilities.binaryRumbleMotors == [.highFrequency])
     #expect(ds3.outputCapabilities.lightingFeatures == [.playerIndicator])
-    #expect(Set(switchPro.outputCapabilities.rumbleMotors) == Set([.leftMain, .rightMain]))
+    #expect(Set(switchPro.outputCapabilities.rumbleMotors) == Set([.lowFrequency, .highFrequency]))
     #expect(switchPro.outputCapabilities.lightingFeatures == [.playerIndicator])
     #expect(steamController.outputCapabilities.rumbleMotors == [.leftHaptic, .rightHaptic])
     #expect(steamController.outputCapabilities.lightingFeatures == [.programmableBrightness])
@@ -111,7 +111,7 @@ struct PhysicalRumbleOutputTests {
   @Test
   func testServiceDescriptionDecodesExactOutputCapabilities() throws {
     let capabilities = PhysicalControllerOutputCapabilities(
-      rumbleMotors: [.leftMain, .rightMain, .leftTrigger, .rightTrigger],
+      rumbleMotors: [.lowFrequency, .highFrequency, .leftTrigger, .rightTrigger],
       lightingFeatures: [.playerIndicator]
     )
     let original = ApplicationServiceDeviceDescription(
@@ -204,11 +204,11 @@ struct PhysicalRumbleOutputTests {
   @Test
   func testCapabilitiesRejectBinaryMarkersForUnsupportedMotors() {
     let capabilities = PhysicalControllerOutputCapabilities(
-      rumbleMotors: [.leftMain],
-      binaryRumbleMotors: [.leftMain, .rightMain]
+      rumbleMotors: [.lowFrequency],
+      binaryRumbleMotors: [.lowFrequency, .highFrequency]
     )
 
-    #expect(capabilities.binaryRumbleMotors == [.leftMain])
+    #expect(capabilities.binaryRumbleMotors == [.lowFrequency])
   }
 
   @Test
@@ -346,7 +346,7 @@ struct PhysicalRumbleOutputTests {
   }
 
   func hasPhysicalRumble(_ parser: any PhysicalProtocolDriver) -> Bool {
-    let intensities: [PhysicalRumbleMotor: UInt8] = [.leftMain: 1, .leftHaptic: 1]
+    let intensities: [PhysicalRumbleMotor: UInt8] = [.lowFrequency: 1, .leftHaptic: 1]
     return parser.encoded(
       .setRumble(RumbleIntensities(bytes: intensities), duration: .milliseconds(100))
     ) != nil

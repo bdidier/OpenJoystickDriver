@@ -43,8 +43,9 @@ final class UserSpaceHostReportHandler: Sendable {
         guard isOpen() else { throw VirtualHostReportError.closed }
         if let rumble = Self.rumbleIntensities(command) {
           let status =
-            "app report id=\(reportID) L=\(rumble.leftMain.byte) R=\(rumble.rightMain.byte) "
-            + "LT=\(rumble.leftTrigger.byte) RT=\(rumble.rightTrigger.byte)"
+            "app report id=\(reportID) L=\(rumble.lowFrequency.byte) "
+            + "R=\(rumble.highFrequency.byte) LT=\(rumble.leftTrigger.byte) "
+            + "RT=\(rumble.rightTrigger.byte)"
           onRumbleStatus(status)
           print("[UserSpaceOutputDispatcher] App rumble report: \(identifier) \(status)")
         }

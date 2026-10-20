@@ -1,8 +1,8 @@
 import Foundation
 
 public enum RemappingStickSource: String, Codable, CaseIterable, Hashable, Sendable {
-  case left
-  case right
+  case left = "Left"
+  case right = "Right"
 }
 
 public enum RemappingStickMode: String, Codable, CaseIterable, Hashable, Sendable {
@@ -17,13 +17,13 @@ public enum RemappingStickMode: String, Codable, CaseIterable, Hashable, Sendabl
 }
 
 public enum RemappingStickScrollAxis: String, Codable, CaseIterable, Hashable, Sendable {
-  case horizontal
-  case vertical
+  case horizontal = "Horizontal"
+  case vertical = "Vertical"
 }
 
 public enum RemappingStickRotationDirection: String, Codable, CaseIterable, Hashable, Sendable {
-  case clockwise
-  case counterclockwise
+  case clockwise = "Clockwise"
+  case counterclockwise = "Counterclockwise"
 
   var multiplier: Double { self == .clockwise ? -1 : 1 }
 }

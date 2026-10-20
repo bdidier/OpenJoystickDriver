@@ -172,7 +172,7 @@ struct Switch2BluetoothLEHubTests {
     let writer = RecordingSwitch2Writer()
     let hub = Self.connectedHub(writer: writer).0
     let driver = Switch2Driver(layout: .pro, link: .bluetoothLE)
-    let full = RumbleIntensities(leftMain: .max, rightMain: .max)
+    let full = RumbleIntensities(lowFrequency: .max, highFrequency: .max)
     let report = driver.encoded(.setRumble(full, duration: .milliseconds(100))).onlyReport
 
     #expect(hub.setOutputReport(peripheralID: Self.peripheral, report: report).succeeded)

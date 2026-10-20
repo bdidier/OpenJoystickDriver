@@ -132,7 +132,7 @@ extension InputTestTests {
     let observation = model.objectWillChange.sink { broadInvalidations += 1 }
 
     model.rumbleDurationMilliseconds = 750
-    model.rumbleIntensities[.leftMain] = 128
+    model.rumbleIntensities[.lowFrequency] = 128
     model.brightness = 192
 
     #expect(broadInvalidations == 0)
@@ -316,7 +316,7 @@ extension InputTestTests {
     let rumbleSleep: InputTestViewModel.Sleep = { _ in }
     let model = InputTestViewModel(gateway: gateway, rumbleSleep: rumbleSleep)
     model.selectDevice(makeInputTestDevice())
-    model.rumbleIntensities[.leftMain] = 200
+    model.rumbleIntensities[.lowFrequency] = 200
 
     for expectedCount in 1...3 {
       model.testRumble()
@@ -339,7 +339,7 @@ extension InputTestTests {
     let rumbleSleep: InputTestViewModel.Sleep = { _ in try await Task.sleep(nanoseconds: .max) }
     let model = InputTestViewModel(gateway: gateway, rumbleSleep: rumbleSleep)
     model.selectDevice(makeInputTestDevice())
-    model.rumbleIntensities[.leftMain] = 200
+    model.rumbleIntensities[.lowFrequency] = 200
 
     model.testRumble()
     await gateway.waitForRumbleCalls(1)

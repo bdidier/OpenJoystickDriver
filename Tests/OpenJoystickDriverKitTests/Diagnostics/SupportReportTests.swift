@@ -40,7 +40,7 @@ struct SupportReportTests {
           postHandshakeSettleMs: 50,
           preferredBackends: ["driverKit"],
           physicalOutputCapabilities: PhysicalControllerOutputCapabilities(rumbleMotors: [
-            .leftMain, .rightMain, .leftTrigger, .rightTrigger,
+            .lowFrequency, .highFrequency, .leftTrigger, .rightTrigger,
           ]),
           connectionState: ControllerConnectionState(
             transport: .usb,

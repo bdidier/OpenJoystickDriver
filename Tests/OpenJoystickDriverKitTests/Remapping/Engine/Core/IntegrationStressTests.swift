@@ -101,7 +101,7 @@ struct RemappingIntegrationStressTests {
         ),
         RemappingBinding(
           source: .button(.west),
-          destination: .physical(.rumble(motor: .leftMain, intensity: 0.5))
+          destination: .physical(.rumble(motor: .lowFrequency, intensity: 0.5))
         ),
         RemappingBinding(
           source: .button(.north),

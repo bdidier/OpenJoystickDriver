@@ -118,13 +118,13 @@ extension DriverParseCharacterizationTests {
       lines == [
         "cap0 [] hat=neutral ls=-1279,-1023 rs=767,0 lt=0 rt=0 motion=1 touch=1 fresh",
         "  motion n=12705 w=-0.0076,0.0164,0.0076 a=-0.0204,-2.1452,9.3182",
-        "  touch primary [0:0:53002,6755 1:0:0,0]", "  battery 100% full wired-power=yes",
+        "  touch Primary [0:0:53002,6755 1:0:0,0]", "  battery 100% full wired-power=yes",
         "cap1 [] hat=neutral ls=-255,-1023 rs=511,0 lt=0 rt=0 motion=1 touch=1 fresh",
         "  motion n=13448 w=-0.0087,0.0175,0.0076 a=-0.0287,-2.1632,9.3075",
-        "  touch primary [0:0:53002,6755 1:0:0,0]",
+        "  touch Primary [0:0:53002,6755 1:0:0,0]",
         "cap2 [] hat=neutral ls=-1279,-1023 rs=511,0 lt=0 rt=0 motion=1 touch=1 fresh",
         "  motion n=14191 w=-0.0087,0.0164,0.0076 a=-0.0263,-2.1512,9.3230",
-        "  touch primary [0:0:53002,6755 1:0:0,0]",
+        "  touch Primary [0:0:53002,6755 1:0:0,0]",
       ]
     )
   }
@@ -212,10 +212,10 @@ extension DriverParseCharacterizationTests {
       lines == [
         "neutral [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=2",
         "  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000",
-        "  touch left [0:0:32768,32767]", "  touch right [0:0:32768,32767]",
+        "  touch Left [0:0:32768,32767]", "  touch Right [0:0:32768,32767]",
         "imu [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=2",
         "  motion n=1 w=2.1817,4.3633,8.7266 a=2.4517,-19.6133,14.7100",
-        "  touch left [0:0:32768,32767]", "  touch right [0:0:32768,32767]",
+        "  touch Left [0:0:32768,32767]", "  touch Right [0:0:32768,32767]",
       ]
     )
   }

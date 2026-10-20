@@ -32,15 +32,15 @@ struct ControllerOutputCommandTests {
   func partialRumbleZeroesAndReportsTheChannelsTheControllerLacks() throws {
     let mains = PhysicalControllerOutputCapabilities.dualMainRumble
     let requested = RumbleIntensities(
-      leftMain: UnipolarValue(byte: 0x40),
-      rightMain: .min,
+      lowFrequency: UnipolarValue(byte: 0x40),
+      highFrequency: .min,
       leftTrigger: UnipolarValue(byte: 0x20),
       rightHaptic: .max
     )
     let admitted = try mains.admit(.setRumble(requested, duration: .held))
     #expect(
       admitted.command
-        == .setRumble(RumbleIntensities(leftMain: UnipolarValue(byte: 0x40)), duration: .held)
+        == .setRumble(RumbleIntensities(lowFrequency: UnipolarValue(byte: 0x40)), duration: .held)
     )
     #expect(admitted.droppedRumbleChannels == [.leftTrigger, .rightHaptic])
 
@@ -57,7 +57,8 @@ struct ControllerOutputCommandTests {
     let rumble = RumbleIntensities(rightTrigger: .max)
     let cases: [(ControllerOutputCommand, ControllerOutputCapability)] = [
       (.setRumble(rumble, duration: .held), .rumble(.rightTrigger)),
-      (.setRumble(.off, duration: .held), .rumble(.leftMain)), (.stopRumble, .rumble(.leftMain)),
+      (.setRumble(.off, duration: .held), .rumble(.lowFrequency)),
+      (.stopRumble, .rumble(.lowFrequency)),
       (.setPlayerIndicator(.player1), .playerIndicator),
       (.setRGB(ControllerColor(red: 1, green: 2, blue: 3)), .rgb),
       (.setLightBrightness(.max), .lightBrightness),
@@ -80,7 +81,7 @@ struct ControllerOutputCommandTests {
     #expect(throws: ControllerOutputError.unsupportedCapability(.rgb)) {
       try XIDDriver().encode(.setRGB(ControllerColor(red: 1, green: 2, blue: 3)))
     }
-    #expect(throws: ControllerOutputError.unsupportedCapability(.rumble(.leftMain))) {
+    #expect(throws: ControllerOutputError.unsupportedCapability(.rumble(.lowFrequency))) {
       try FlydigiDriver().encode(.stopRumble)
     }
     #expect(throws: ControllerOutputError.unsupportedCapability(.lightBrightness)) {
@@ -93,15 +94,20 @@ struct ControllerOutputCommandTests {
     let fallback = UnipolarValue(byte: 180)
     #expect(
       RumbleIntensities.manualTest(
-        leftMain: nil,
-        rightMain: nil,
+        lowFrequency: nil,
+        highFrequency: nil,
         leftTrigger: nil,
         rightTrigger: nil
       )
-        == RumbleIntensities(leftMain: fallback, rightMain: fallback)
+        == RumbleIntensities(lowFrequency: fallback, highFrequency: fallback)
     )
     #expect(
-      RumbleIntensities.manualTest(leftMain: nil, rightMain: nil, leftTrigger: 9, rightTrigger: nil)
+      RumbleIntensities.manualTest(
+        lowFrequency: nil,
+        highFrequency: nil,
+        leftTrigger: 9,
+        rightTrigger: nil
+      )
         == RumbleIntensities(leftTrigger: UnipolarValue(byte: 9))
     )
     #expect(RumbleDuration.maximumSeconds == 5)

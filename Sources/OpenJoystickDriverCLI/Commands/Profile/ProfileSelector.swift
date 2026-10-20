@@ -102,19 +102,51 @@ extension RemappingProfile {
 }
 
 extension RemappingVirtualGamepadPolicy: ExpressibleByArgument {
-  public init?(argument: String) { self.init(rawValue: argument) }
+  /// The lowercase kebab-case spelling of a case, such as `tap-on-press`.
+  public init?(argument: String) {
+    guard let value = CommandLineName.value(of: argument, in: Self.self) else { return nil }
+    self = value
+  }
+
+  public static var allValueStrings: [String] {
+    allCases.map { CommandLineName.kebab($0.rawValue) }
+  }
 }
 
 extension RemappingPhysicalInputPolicy: ExpressibleByArgument {
-  public init?(argument: String) { self.init(rawValue: argument) }
+  /// The lowercase kebab-case spelling of a case, such as `tap-on-press`.
+  public init?(argument: String) {
+    guard let value = CommandLineName.value(of: argument, in: Self.self) else { return nil }
+    self = value
+  }
+
+  public static var allValueStrings: [String] {
+    allCases.map { CommandLineName.kebab($0.rawValue) }
+  }
 }
 
 extension RemappingBindingBehavior: ExpressibleByArgument {
-  public init?(argument: String) { self.init(rawValue: argument) }
+  /// The lowercase kebab-case spelling of a case, such as `tap-on-press`.
+  public init?(argument: String) {
+    guard let value = CommandLineName.value(of: argument, in: Self.self) else { return nil }
+    self = value
+  }
+
+  public static var allValueStrings: [String] {
+    allCases.map { CommandLineName.kebab($0.rawValue) }
+  }
 }
 
 extension RemappingResponseCurve: ExpressibleByArgument {
-  public init?(argument: String) { self.init(rawValue: argument) }
+  /// The lowercase kebab-case spelling of a case, such as `tap-on-press`.
+  public init?(argument: String) {
+    guard let value = CommandLineName.value(of: argument, in: Self.self) else { return nil }
+    self = value
+  }
+
+  public static var allValueStrings: [String] {
+    allCases.map { CommandLineName.kebab($0.rawValue) }
+  }
 }
 
 extension RemappingMotionCalibrationCommand: ExpressibleByArgument {

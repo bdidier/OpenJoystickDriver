@@ -74,9 +74,9 @@ public final class Switch1Driver: PhysicalProtocolDriver {
   public var outputCapabilities: PhysicalControllerOutputCapabilities {
     let motors: [PhysicalRumbleMotor]
     switch layout {
-    case .pro: motors = [.leftMain, .rightMain]
-    case .leftJoyCon: motors = [.leftMain]
-    case .rightJoyCon: motors = [.rightMain]
+    case .pro: motors = [.lowFrequency, .highFrequency]
+    case .leftJoyCon: motors = [.lowFrequency]
+    case .rightJoyCon: motors = [.highFrequency]
     }
     return PhysicalControllerOutputCapabilities(
       rumbleMotors: motors,
@@ -152,12 +152,12 @@ public final class Switch1Driver: PhysicalProtocolDriver {
   }
 
   private func rumblePlan(_ intensities: RumbleIntensities) -> PhysicalOutputPlan {
-    let left = layout == .rightJoyCon ? UnipolarValue.min : intensities.leftMain
-    let right = layout == .leftJoyCon ? UnipolarValue.min : intensities.rightMain
+    let left = layout == .rightJoyCon ? UnipolarValue.min : intensities.lowFrequency
+    let right = layout == .leftJoyCon ? UnipolarValue.min : intensities.highFrequency
     physicalRumbleData =
       SwitchProRumbleCodec.encode(intensity: left.byte)
       + SwitchProRumbleCodec.encode(intensity: right.byte)
-    lastRumble = RumbleIntensities(leftMain: left, rightMain: right)
+    lastRumble = RumbleIntensities(lowFrequency: left, highFrequency: right)
     return PhysicalOutputPlan(writes: [
       rumbleTemplate.write(lastRumble, counter: nextPacketNumber())
     ])

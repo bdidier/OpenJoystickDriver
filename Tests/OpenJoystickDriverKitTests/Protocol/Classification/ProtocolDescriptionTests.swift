@@ -586,7 +586,7 @@ struct ProtocolDescriptionTests {
         + #""variants": {"usb": {"session": {"rumble": \#(Self.otherRumbleTemplate)}}}}"#
     )
     #expect(description.rumbleTemplate(variant: .usb)?.report?.reportID == 2)
-    #expect(description.rumbleTemplate(variant: .usb)?.motors[.leftMain]?.byte == 4)
+    #expect(description.rumbleTemplate(variant: .usb)?.motors[.lowFrequency]?.byte == 4)
     #expect(description.rumbleTemplate(variant: .bluetoothClassic)?.report?.reportID == 1)
     #expect(description.rumbleTemplate(variant: nil)?.report?.reportID == 1)
   }
@@ -614,7 +614,7 @@ struct ProtocolDescriptionTests {
     let template = try #require(description.rumbleTemplate(variant: .usb))
     #expect(template.report == nil)
     #expect(template.counterByte == 7 && template.resendIntervalMilliseconds == 100)
-    #expect(template.motors[.leftMain]?.encoding == .uInt16BigEndian)
+    #expect(template.motors[.lowFrequency]?.encoding == .uInt16BigEndian)
   }
 
   @Test

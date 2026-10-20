@@ -89,7 +89,7 @@ struct RemappingOutputPolicyTests {
   func unknownOutputPolicyIsRejected() throws {
     let data = try JSONEncoder().encode(makeProfile())
     var object = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
-    object["outputPolicy"] = ["virtualGamepad": "future", "physicalInput": "shared"]
+    object["outputPolicy"] = ["virtualGamepad": "future", "physicalInput": "Shared"]
     let invalid = try JSONSerialization.data(withJSONObject: object)
     #expect(throws: DecodingError.self) {
       try JSONDecoder().decode(RemappingProfile.self, from: invalid)

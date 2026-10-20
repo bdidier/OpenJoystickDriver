@@ -20,7 +20,9 @@ extension DriverLifecycleCharacterizationTests {
   static let triggerRumbleOnly: [PhysicalRumbleMotor: UInt8] = [
     .leftTrigger: 0x20, .rightTrigger: 0x10,
   ]
-  static let mainRumbleOnly: [PhysicalRumbleMotor: UInt8] = [.leftMain: 0x40, .rightMain: 0x80]
+  static let mainRumbleOnly: [PhysicalRumbleMotor: UInt8] = [
+    .lowFrequency: 0x40, .highFrequency: 0x80,
+  ]
 
   func rumbleLines(
     _ driver: any PhysicalProtocolDriver,

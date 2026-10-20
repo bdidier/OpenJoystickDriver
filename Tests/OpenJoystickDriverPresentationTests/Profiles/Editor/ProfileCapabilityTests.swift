@@ -86,13 +86,13 @@ struct ProfileCapabilityTests {
         motion: true
       ),
       output: PhysicalControllerOutputCapabilities(
-        rumbleMotors: [.leftMain, .rightMain],
+        rumbleMotors: [.lowFrequency, .highFrequency],
         lightingFeatures: [.programmableColor]
       )
     )
     let limited = device(
       input: ControllerCapabilities(controls: Control.dpad.union([.south, .leftStickClick])),
-      output: PhysicalControllerOutputCapabilities(rumbleMotors: [.leftMain])
+      output: PhysicalControllerOutputCapabilities(rumbleMotors: [.lowFrequency])
     )
 
     let result = ProfileCapabilityResolver.resolve(
@@ -101,7 +101,7 @@ struct ProfileCapabilityTests {
       registry: ProtocolDriverRegistry()
     )
 
-    #expect(result?.physicalOutput.rumbleMotors == [.leftMain])
+    #expect(result?.physicalOutput.rumbleMotors == [.lowFrequency])
     #expect(
       result?.physicalInput
         == ControllerCapabilities(controls: Control.dpad.union([.south, .leftStickClick]))
@@ -133,7 +133,7 @@ struct ProfileCapabilityTests {
     let capabilities = ControllerProfileCapabilities(
       physicalInput: ControllerCapabilities(controls: [.south, .leftPaddle1]),
       physicalOutput: PhysicalControllerOutputCapabilities(
-        rumbleMotors: [.leftMain],
+        rumbleMotors: [.lowFrequency],
         lightingFeatures: [.programmableColor]
       )
     )
@@ -161,11 +161,13 @@ struct ProfileCapabilityTests {
       capabilities: capabilities
     )
     #expect(
-      destinations.contains { $0.destination == .physical(.rumble(motor: .leftMain, intensity: 1)) }
+      destinations.contains {
+        $0.destination == .physical(.rumble(motor: .lowFrequency, intensity: 1))
+      }
     )
     #expect(
       !destinations.contains {
-        $0.destination == .physical(.rumble(motor: .rightMain, intensity: 1))
+        $0.destination == .physical(.rumble(motor: .highFrequency, intensity: 1))
       }
     )
     #expect(destinations.last?.destination == retainedDestination)
