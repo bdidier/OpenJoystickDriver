@@ -109,6 +109,8 @@ struct ProtocolDescription: Sendable {
   let tuning: ControllerTuning?
   /// Tuning defaults by stored variant, layered over `tuning` for that variant.
   let variantTuning: [PhysicalProtocolVariantID: ControllerTuning]
+  /// Rumble templates by stored variant, each overriding `rumbleTemplate` for that variant.
+  let variantRumble: [PhysicalProtocolVariantID: RumbleOutputTemplate]
 
   /// The capability deltas a record may declare: exactly this set of present controls (or none),
   /// and rumble absent.
@@ -129,6 +131,12 @@ struct ProtocolDescription: Sendable {
   func tuning(variant: PhysicalProtocolVariantID?) -> ControllerTuning? {
     let layered = (tuning ?? .none).overlaid(by: variant.flatMap { variantTuning[$0] } ?? .none)
     return layered == .none ? nil : layered
+  }
+
+  /// The rumble template a controller of this family and stored variant encodes from: the
+  /// variant's own when the description sets one, otherwise the family's; nil when neither does.
+  func rumbleTemplate(variant: PhysicalProtocolVariantID?) -> RumbleOutputTemplate? {
+    variant.flatMap { variantRumble[$0] } ?? rumbleTemplate
   }
 
   /// The bundled descriptions, by family.
@@ -230,8 +238,8 @@ struct ProtocolDescription: Sendable {
       }
       rawUSB = .variants(variants)
     }
-    var variantTuning: [PhysicalProtocolVariantID: ControllerTuning] = [:]
-    for (name, tuning) in document.defaults?.variantTuning ?? [:] {
+    func variant(named name: String) throws(ProtocolDescriptionProblem) -> PhysicalProtocolVariantID
+    {
       guard let variant = PhysicalProtocolVariantID(rawValue: name),
         protocolID.variants.contains(variant)
       else {
@@ -240,7 +248,15 @@ struct ProtocolDescription: Sendable {
           "\(fileName): \(protocolID.rawValue) has no variant \(name)"
         )
       }
-      variantTuning[variant] = tuning
+      return variant
+    }
+    var variantTuning: [PhysicalProtocolVariantID: ControllerTuning] = [:]
+    for (name, tuning) in document.defaults?.variantTuning ?? [:] {
+      variantTuning[try variant(named: name)] = tuning
+    }
+    var variantRumble: [PhysicalProtocolVariantID: RumbleOutputTemplate] = [:]
+    for (name, template) in document.defaults?.variantRumble ?? [:] {
+      variantRumble[try variant(named: name)] = template
     }
     let usbStartupWrites = try resolvedUSBStartup(
       document.defaults?.session?.startup,
@@ -272,7 +288,8 @@ struct ProtocolDescription: Sendable {
       hidUsageMap: document.defaults?.input?.usageMap,
       hidUsageShapes: document.defaults?.input?.shapes ?? [],
       tuning: document.defaults?.tuning,
-      variantTuning: variantTuning
+      variantTuning: variantTuning,
+      variantRumble: variantRumble
     )
     for condition in description.startupWrites.map(\.condition)
       + description.usbStartupWrites.map(\.condition)
@@ -384,9 +401,10 @@ struct ProtocolDescription: Sendable {
     if hidUsageMap != nil || !hidUsageShapes.isEmpty, family != .hidDescriptor {
       return "a HID usage map applies only to hid.descriptor"
     }
-    if rumbleTemplate != nil, !recordSections.contains(.rumble) {
+    if rumbleTemplate != nil || !variantRumble.isEmpty, !recordSections.contains(.rumble) {
       return "rumble templates require a driver that encodes them"
     }
+    if let violation = rumbleTargetViolation { return violation }
     if !startupWrites.isEmpty, rawUSB == .always {
       return "HID startup writes apply only to HID controllers"
     }
@@ -427,6 +445,27 @@ struct ProtocolDescription: Sendable {
       where tuning.setKeys.contains(key) && !scope.contains(key) {
         return "\(key) is not read by the \(family.rawValue):\(variant.rawValue) driver"
       }
+    }
+    return nil
+  }
+
+  /// Why a rumble template targets a packet kind that its variants do not use, or nil: a raw-USB
+  /// variant's template is a usb packet and a HID variant's is a HID report. The flat template
+  /// is checked against each variant of the family that has no template of its own; a family
+  /// with no variants has the one unnamed variant.
+  private var rumbleTargetViolation: String? {
+    let mismatch =
+      "a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report"
+    if let rumbleTemplate {
+      let flatVariants: [PhysicalProtocolVariantID?] =
+        family.variants.isEmpty ? [nil] : family.variants.map(Optional.some)
+      for variant in flatVariants where variant.map({ variantRumble[$0] == nil }) ?? true {
+        if (rumbleTemplate.report == nil) != rawUSB.applies(to: variant) { return mismatch }
+      }
+    }
+    for (variant, template) in variantRumble.sorted(by: { $0.key.rawValue < $1.key.rawValue })
+    where (template.report == nil) != rawUSB.applies(to: variant) {
+      return mismatch
     }
     return nil
   }

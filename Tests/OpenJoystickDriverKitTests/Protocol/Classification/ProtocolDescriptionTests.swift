@@ -518,6 +518,136 @@ struct ProtocolDescriptionTests {
     )
   }
 
+  private static let usbRumbleTemplate =
+    #"{"report": {"kind": "usb", "length": 8}, "bytes": "00 08 00 00 00 00 00 00", "#
+    + #""leftMain": {"byte": 3, "encoding": "UInt16BigEndian"}, "counter": {"byte": 7}, "#
+    + #""resendIntervalMilliseconds": 100}"#
+  private static let otherRumbleTemplate =
+    #"{"report": {"kind": "output", "id": 2, "length": 8}, "leftMain": {"byte": 4}}"#
+
+  private static func variantRumble(_ variant: String, _ template: String) -> String {
+    #""defaults": {"variants": {"\#(variant)": {"session": {"rumble": \#(template)}}}}"#
+  }
+
+  @Test
+  func aVariantRumbleTemplateOverridesTheFlatOneForThatVariantOnly() throws {
+    let description = try decode(
+      family: .sonyDualSense,
+      #""recordSections": ["rumble"], "#
+        + #""defaults": {"session": {"rumble": \#(Self.rumbleTemplate)}, "#
+        + #""variants": {"usb": {"session": {"rumble": \#(Self.otherRumbleTemplate)}}}}"#
+    )
+    #expect(description.rumbleTemplate(variant: .usb)?.report?.reportID == 2)
+    #expect(description.rumbleTemplate(variant: .usb)?.motors[.leftMain]?.byte == 4)
+    #expect(description.rumbleTemplate(variant: .bluetoothClassic)?.report?.reportID == 1)
+    #expect(description.rumbleTemplate(variant: nil)?.report?.reportID == 1)
+  }
+
+  @Test
+  func aVariantRumbleTemplateStandsWithoutAFlatOneAndBesideVariantTuning() throws {
+    let description = try decode(
+      family: .sonyDualSense,
+      #""recordSections": ["rumble"], "tuningKeys": ["hidStartupIntervalMs"], "#
+        + #""defaults": {"variants": {"usb": {"tuning": {"hidStartupIntervalMs": 7}, "#
+        + #""session": {"rumble": \#(Self.otherRumbleTemplate)}}}}"#
+    )
+    #expect(description.rumbleTemplate(variant: .usb) != nil)
+    #expect(description.rumbleTemplate(variant: .bluetoothClassic) == nil)
+    #expect(description.tuning(variant: .usb)?.hidStartupIntervalMilliseconds == 7)
+  }
+
+  @Test
+  func aRawUSBVariantTakesAUSBPacketTemplate() throws {
+    let description = try decode(
+      family: .sonyDualSense,
+      #""rawUSB": ["usb"], "recordSections": ["rumble"], "#
+        + Self.variantRumble("usb", Self.usbRumbleTemplate)
+    )
+    let template = try #require(description.rumbleTemplate(variant: .usb))
+    #expect(template.report == nil)
+    #expect(template.counterByte == 7 && template.resendIntervalMilliseconds == 100)
+    #expect(template.motors[.leftMain]?.encoding == .uInt16BigEndian)
+  }
+
+  @Test
+  func rejectsAVariantRumbleTemplateTheFamilyCannotUse() {
+    let cases: [(body: String, code: ErrorCode)] = [
+      // A family whose driver reads no rumble section.
+      (Self.variantRumble("usb", Self.otherRumbleTemplate), .invalidProtocolDescription),
+      // A variant the family lacks.
+      (
+        #""recordSections": ["rumble"], "# + Self.variantRumble("wired", Self.otherRumbleTemplate),
+        .unknownProtocolVariant
+      ),
+      // A HID template on a raw-USB variant and a usb packet on a HID variant.
+      (
+        #""rawUSB": ["usb"], "recordSections": ["rumble"], "#
+          + Self.variantRumble("usb", Self.otherRumbleTemplate),
+        .invalidProtocolDescription
+      ),
+      (
+        #""recordSections": ["rumble"], "# + Self.variantRumble("usb", Self.usbRumbleTemplate),
+        .invalidProtocolDescription
+      ),
+      // Bytes that do not start with the report ID.
+      (
+        #""recordSections": ["rumble"], "#
+          + Self.variantRumble(
+            "usb",
+            #"{"report": {"kind": "output", "id": 1, "length": 4}, "bytes": "02 00 00 00", "#
+              + #""leftMain": {"byte": 1}}"#
+          ),
+        .invalidProtocolDescription
+      ),
+      // An empty variant and an empty variant session.
+      (
+        #""recordSections": ["rumble"], "defaults": {"variants": {"usb": {}}}"#,
+        .invalidProtocolDescription
+      ),
+      (
+        #""recordSections": ["rumble"], "defaults": {"variants": {"usb": {"session": {}}}}"#,
+        .invalidProtocolDescription
+      ),
+      // A variant session member other than the rumble template.
+      (
+        #""recordSections": ["rumble"], "defaults": {"variants": {"usb": {"session": "#
+          + #"{"keepAlive": {"intervalMilliseconds": 5, "writes": []}}}}}"#,
+        .invalidProtocolDescription
+      ),
+    ]
+    for (body, code) in cases {
+      #expect(rejection(family: .sonyDualSense, body)?.code == code, "\(body)")
+    }
+  }
+
+  private static func flatRumble(_ template: String) -> String {
+    #""recordSections": ["rumble"], "defaults": {"session": {"rumble": \#(template)}}"#
+  }
+
+  @Test
+  func theFlatRumbleTemplateIsCheckedAgainstEveryVariantWithoutItsOwn() throws {
+    let rejected = [
+      // A HID template with every variant raw USB.
+      #""rawUSB": true, "# + Self.flatRumble(Self.otherRumbleTemplate),
+      // A usb packet with no raw-USB variant.
+      Self.flatRumble(Self.usbRumbleTemplate),
+      // A HID template reaching the raw-USB variant of a mixed family.
+      #""rawUSB": ["usb"], "# + Self.flatRumble(Self.otherRumbleTemplate),
+    ]
+    for body in rejected {
+      let code = rejection(family: .sonyDualSense, body)?.code
+      #expect(code == .invalidProtocolDescription, "\(body)")
+    }
+    let mixed = try decode(
+      family: .sonyDualSense,
+      #""rawUSB": ["usb"], "recordSections": ["rumble"], "defaults": {"session": {"rumble": "#
+        + #"\#(Self.otherRumbleTemplate)}, "variants": {"usb": {"session": {"rumble": "#
+        + #"\#(Self.usbRumbleTemplate)}}}}"#
+    )
+    #expect(mixed.rumbleTemplate(variant: .usb)?.report == nil)
+    #expect(mixed.rumbleTemplate(variant: .bluetoothClassic)?.report?.reportID == 2)
+  }
+
   /// The spec scenario: a family's interval is edited in its description, and every record of
   /// the family follows it. A record has no interval of its own.
   @Test

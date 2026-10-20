@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/protocol-description.schema.json",
-  "$comment": "Each family's variants are PhysicalProtocolID.variants in Swift; a family with none has no interface signatures. The parameter names of each family are those its driver declares in ProtocolParameters. The family facts a driver reads live here and nowhere in code: its default endpoints, whether it is reached through raw USB (for every variant, or only the listed ones), the record sections whose layouts it reads, the tuning keys it reads beyond stickDeadzone (none for a raw-USB variant), its button labels, and what OJD still sends when macOS serves the controller. defaults holds the sections a record layers over, limited to what the family reads: input applies to hid.report-layout and xbox.xid as a byte layout and to hid.descriptor as a HID usage map, a rumble template needs the matching recordSections entry, HID startup writes need a family that is not always raw USB, raw-USB startup writes (bytes, endpoint, timeoutMilliseconds, delayMilliseconds, sessionByte, toleratesRejection) carry the packets a raw-USB driver sends, each startup write is limited by variants and by a when rule on an enumeration parameter the description declares and whose values it lists, which a schema cannot say and the validators check, and each defaults.tuning key must be stickDeadzone or in tuningKeys, which a schema cannot say and the validators check.",
+  "$comment": "Each family's variants are PhysicalProtocolID.variants in Swift; a family with none has no interface signatures. The parameter names of each family are those its driver declares in ProtocolParameters. The family facts a driver reads live here and nowhere in code: its default endpoints, whether it is reached through raw USB (for every variant, or only the listed ones), the record sections whose layouts it reads, the tuning keys it reads beyond stickDeadzone (none for a raw-USB variant), its button labels, and what OJD still sends when macOS serves the controller. defaults holds the sections a record layers over, limited to what the family reads: input applies to hid.report-layout and xbox.xid as a byte layout and to hid.descriptor as a HID usage map, a rumble template, flat or per variant, needs the matching recordSections entry, HID startup writes need a family that is not always raw USB, raw-USB startup writes (bytes, endpoint, timeoutMilliseconds, delayMilliseconds, sessionByte, toleratesRejection) carry the packets a raw-USB driver sends, each startup write is limited by variants and by a when rule on an enumeration parameter the description declares and whose values it lists, which a schema cannot say and the validators check, and each defaults.tuning key must be stickDeadzone or in tuningKeys, which a schema cannot say and the validators check.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "family", "endpoints"],
@@ -1040,6 +1040,13 @@
                 "properties": {
                   "rumble": false
                 }
+              },
+              "variants": {
+                "additionalProperties": {
+                  "properties": {
+                    "session": false
+                  }
+                }
               }
             }
           }
@@ -1221,7 +1228,7 @@
           "$ref": "controller.schema.json#/$defs/tuning"
         },
         "variants": {
-          "description": "Tuning that differs by variant, over the flat tuning.",
+          "description": "Tuning and the rumble template that differ by variant, over the flat tuning and the flat session rumble template.",
           "type": "object",
           "minProperties": 1,
           "propertyNames": {
@@ -1230,10 +1237,20 @@
           "additionalProperties": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["tuning"],
+            "minProperties": 1,
             "properties": {
               "tuning": {
                 "$ref": "controller.schema.json#/$defs/tuning"
+              },
+              "session": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["rumble"],
+                "properties": {
+                  "rumble": {
+                    "$ref": "controller.schema.json#/$defs/rumbleTemplate"
+                  }
+                }
               }
             }
           }

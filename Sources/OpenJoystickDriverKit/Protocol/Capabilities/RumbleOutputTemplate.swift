@@ -145,7 +145,10 @@ public struct RumbleOutputTemplate: Equatable, Sendable {
     let fields = motors.values.map(\.bytes) + (counterByte.map { [$0..<($0 + 1)] } ?? [])
     let writable = target.writableBytes
     let used = fields.flatMap { $0 }
-    guard fields.allSatisfy({ writable.contains($0.lowerBound) && $0.upperBound <= writable.upperBound }),
+    let fitsWritable = fields.allSatisfy {
+      writable.contains($0.lowerBound) && $0.upperBound <= writable.upperBound
+    }
+    guard fitsWritable,
       Set(used).count == used.count
     else {
       throw ControllerRecordProblem(

@@ -138,6 +138,14 @@ def validate_mode_session(path: pathlib.Path, mode: dict[str, Any]) -> None:
         "rumble" not in session or encodes_rumble_template(family),
         f"{path}: rumble templates require a driver that encodes them",
     )
+    if template := session.get("rumble"):
+        problem = protocol_descriptions.rumble_template_problem(template)
+        require(problem is None, f"{path}: {problem}")
+        require(
+            protocol_descriptions.is_usb_template(template) == uses_raw_usb(protocol),
+            f"{path}: a raw-USB mode's rumble template is a usb packet, and a HID mode's is "
+            "a HID report",
+        )
     for transfer in session.get("control", []):
         outgoing = transfer["bmRequestType"] < 128
         count = hex_byte_count(transfer["data"]) if "data" in transfer else 0

@@ -1030,6 +1030,186 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             self.with_body("vendor.gamesir", rawUSB=["wired"]), code="E5004"
         )
 
+    # Rumble templates per variant.
+
+    def variant_rumble(self, template: dict[str, Any], **members: Any) -> Any:
+        return self.with_body(
+            "sony.dualsense",
+            recordSections=["rumble"],
+            defaults={"variants": {"usb": {"session": {"rumble": template}}}},
+            **members,
+        )
+
+    def usb_rumble_template(self) -> dict[str, Any]:
+        return {
+            "report": {"kind": "usb", "length": 8},
+            "bytes": "00 08 00 00 00 00 00 00",
+            "leftMain": {"byte": 3, "encoding": "UInt16BigEndian"},
+            "counter": {"byte": 7},
+            "resendIntervalMilliseconds": 100,
+        }
+
+    def test_accepts_a_variant_rumble_template_over_the_flat_one(self) -> None:
+        self.check(
+            self.with_body(
+                "sony.dualsense",
+                recordSections=["rumble"],
+                defaults={
+                    "session": {"rumble": self.rumble_template()},
+                    "variants": {
+                        "usb": {
+                            "tuning": {"stickDeadzone": 0.2},
+                            "session": {
+                                "rumble": {
+                                    **self.rumble_template(),
+                                    "leftMain": {"byte": 2},
+                                }
+                            },
+                        }
+                    },
+                },
+            )
+        )
+        self.check(self.variant_rumble(self.rumble_template()))
+        self.check(self.variant_rumble(self.usb_rumble_template(), rawUSB=["usb"]))
+
+    def test_rejects_a_variant_rumble_template_the_family_cannot_use(self) -> None:
+        for name, document, code in (
+            (
+                "driver reads no rumble section",
+                self.with_body(
+                    "sony.dualsense",
+                    defaults={
+                        "variants": {
+                            "usb": {"session": {"rumble": self.rumble_template()}}
+                        }
+                    },
+                ),
+                "E5002",
+            ),
+            (
+                "variant the family lacks",
+                self.with_body(
+                    "sony.dualsense",
+                    recordSections=["rumble"],
+                    defaults={
+                        "variants": {
+                            "wired": {"session": {"rumble": self.rumble_template()}}
+                        }
+                    },
+                ),
+                "E5004",
+            ),
+            (
+                "HID report on a raw-USB variant",
+                self.variant_rumble(self.rumble_template(), rawUSB=["usb"]),
+                "E5002",
+            ),
+            (
+                "usb packet on a HID variant",
+                self.variant_rumble(self.usb_rumble_template()),
+                "E5002",
+            ),
+            (
+                "bytes without the report ID",
+                self.variant_rumble({**self.rumble_template(), "bytes": "02 00 00 00"}),
+                "E5002",
+            ),
+            (
+                "counter on a motor byte",
+                self.variant_rumble({**self.rumble_template(), "counter": {"byte": 1}}),
+                "E5002",
+            ),
+            (
+                "member other than rumble",
+                self.with_body(
+                    "sony.dualsense",
+                    recordSections=["rumble"],
+                    defaults={
+                        "variants": {"usb": {"session": {"keepAlive": {"writes": []}}}}
+                    },
+                ),
+                "E5002",
+            ),
+            (
+                "empty variant",
+                self.with_body(
+                    "sony.dualsense",
+                    recordSections=["rumble"],
+                    defaults={"variants": {"usb": {}}},
+                ),
+                "E5002",
+            ),
+            (
+                "empty variant session",
+                self.with_body(
+                    "sony.dualsense",
+                    recordSections=["rumble"],
+                    defaults={"variants": {"usb": {"session": {}}}},
+                ),
+                "E5002",
+            ),
+        ):
+            with self.subTest(name):
+                self.assert_rejected(document, code=code)
+
+    def flat_rumble(self, template: dict[str, Any], **members: Any) -> Any:
+        return self.with_body(
+            "sony.dualsense",
+            recordSections=["rumble"],
+            defaults={"session": {"rumble": template}},
+            **members,
+        )
+
+    def test_checks_the_flat_rumble_template_against_each_variant_without_its_own(
+        self,
+    ) -> None:
+        override = {"usb": {"session": {"rumble": self.usb_rumble_template()}}}
+        for name, document in (
+            (
+                "HID template with every variant raw USB",
+                self.flat_rumble(self.rumble_template(), rawUSB=True),
+            ),
+            (
+                "usb packet with no raw-USB variant",
+                self.flat_rumble(self.usb_rumble_template()),
+            ),
+            (
+                "HID template on the raw-USB variant of a mixed family",
+                self.flat_rumble(self.rumble_template(), rawUSB=["usb"]),
+            ),
+            (
+                "usb packet on the HID variant of a mixed family",
+                self.with_body(
+                    "sony.dualsense",
+                    recordSections=["rumble"],
+                    rawUSB=["usb"],
+                    defaults={
+                        "session": {"rumble": self.usb_rumble_template()},
+                        "variants": {
+                            "bluetooth-classic": {
+                                "session": {"rumble": self.usb_rumble_template()}
+                            }
+                        },
+                    },
+                ),
+            ),
+        ):
+            with self.subTest(name):
+                self.assert_rejected(document, code="E5002")
+        self.check(
+            self.with_body(
+                "sony.dualsense",
+                recordSections=["rumble"],
+                rawUSB=["usb"],
+                defaults={
+                    "session": {"rumble": self.rumble_template()},
+                    "variants": override,
+                },
+            )
+        )
+        self.check(self.flat_rumble(self.usb_rumble_template(), rawUSB=True))
+
     def test_rejects_variant_defaults_the_family_does_not_have(self) -> None:
         self.assert_rejected(
             self.with_body(

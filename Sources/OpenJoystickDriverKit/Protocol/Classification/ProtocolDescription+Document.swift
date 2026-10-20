@@ -26,8 +26,10 @@ extension ProtocolDescription {
       let session: Session?
       let input: ControllerRecordDocument.Input?
       let tuning: ControllerTuning?
-      /// Defaults by variant name, layered over `tuning` for that variant.
+      /// Tuning by variant name, layered over `tuning` for that variant.
       let variantTuning: [String: ControllerTuning]
+      /// Rumble templates by variant name, each overriding the flat `session.rumble`.
+      let variantRumble: [String: RumbleOutputTemplate]
 
       init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: DocumentKey.self)
@@ -52,7 +54,8 @@ extension ProtocolDescription {
             )
           )
         }
-        variantTuning = variants?.mapValues(\.tuning) ?? [:]
+        variantTuning = variants?.compactMapValues(\.tuning) ?? [:]
+        variantRumble = variants?.compactMapValues(\.rumble) ?? [:]
       }
     }
 
@@ -109,14 +112,34 @@ extension ProtocolDescription {
       }
     }
 
-    /// `defaults.variants.<variant>`: the tuning that a variant starts from.
+    /// `defaults.variants.<variant>`: the tuning and rumble template a variant starts from.
     struct VariantDefaults: Decodable {
-      let tuning: ControllerTuning
+      let tuning: ControllerTuning?
+      let rumble: RumbleOutputTemplate?
 
       init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: DocumentKey.self)
-        try container.rejectUnknown(allowed: ["tuning"])
-        tuning = try container.decode(ControllerRecordDocument.Tuning.self, for: "tuning").tuning
+        try container.rejectUnknown(allowed: ["tuning", "session"])
+        guard !container.allKeys.isEmpty else {
+          throw DecodingError.dataCorrupted(
+            .init(codingPath: decoder.codingPath, debugDescription: "a variant must not be empty")
+          )
+        }
+        tuning = try container.decodeOptional(ControllerRecordDocument.Tuning.self, for: "tuning")?
+          .tuning
+        rumble = try container.decodeOptional(VariantSession.self, for: "session")?.rumble
+      }
+    }
+
+    /// `defaults.variants.<variant>.session`: the rumble template that overrides the family's.
+    struct VariantSession: Decodable {
+      let rumble: RumbleOutputTemplate
+
+      init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: DocumentKey.self)
+        try container.rejectUnknown(allowed: ["rumble"])
+        rumble = try container.decode(ControllerRecordDocument.RumbleTemplate.self, for: "rumble")
+          .template
       }
     }
 

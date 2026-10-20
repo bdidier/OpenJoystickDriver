@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import unittest
+from pathlib import Path
 from typing import Any
 
 from Scripts.Catalog import validate_profiles
@@ -327,6 +328,79 @@ class OwnershipAndSessionTests(unittest.TestCase):
         for name, document in accepted.items():
             with self.subTest(name):
                 self.assertTrue(self.validator.is_valid(document))
+
+    def test_accepts_template_bytes_encodings_counter_and_resend(self) -> None:
+        template = {
+            "report": {"kind": "output", "id": 2, "length": 8},
+            "bytes": "02 08 00 00 00 00 00 00",
+            "leftMain": {"byte": 3, "encoding": "UInt16BigEndian"},
+            "rightMain": {"byte": 5, "encoding": "UInt16LittleEndian"},
+            "counter": {"byte": 7},
+            "resendIntervalMilliseconds": 100,
+        }
+        document = record(THIRD_PARTY, session={"rumble": template})
+        self.assertTrue(self.validator.is_valid(document))
+        validate_profiles.validate_modes(Path("record.json"), document)
+        usb = {
+            "report": {"kind": "usb", "length": 8},
+            "leftMain": {"byte": 3, "encoding": "SwitchHDRumble"},
+        }
+        self.assertTrue(
+            self.validator.is_valid(record(THIRD_PARTY, session={"rumble": usb}))
+        )
+
+    def test_rejects_malformed_template_bytes_encodings_counter_and_resend(
+        self,
+    ) -> None:
+        base = {
+            "report": {"kind": "output", "id": 2, "length": 8},
+            "leftMain": {"byte": 3},
+        }
+        schema_rejected = {
+            "unknown encoding": {**base, "leftMain": {"byte": 3, "encoding": "Float"}},
+            "lowercase bytes": {**base, "bytes": "02 0a 00 00 00 00 00 00"},
+            "resend of zero": {**base, "resendIntervalMilliseconds": 0},
+            "usb packet with an id": {
+                **base,
+                "report": {"kind": "usb", "id": 2, "length": 8},
+            },
+            "usb packet of 65 bytes": {
+                **base,
+                "report": {"kind": "usb", "length": 65},
+            },
+        }
+        semantic_rejected = {
+            "bytes shorter than the report": {**base, "bytes": "02 00"},
+            "bytes without the report ID": {
+                **base,
+                "bytes": "03 00 00 00 00 00 00 00",
+            },
+            "counter on a motor byte": {**base, "counter": {"byte": 3}},
+            "counter on the report ID": {**base, "counter": {"byte": 0}},
+            "motor wider than the report": {
+                **base,
+                "leftMain": {"byte": 7, "encoding": "UInt16BigEndian"},
+            },
+            "overlapping motors": {
+                **base,
+                "rightMain": {"byte": 4, "encoding": "UInt16BigEndian"},
+                "leftMain": {"byte": 3, "encoding": "UInt16BigEndian"},
+            },
+            "usb packet in a HID mode": {
+                **base,
+                "report": {"kind": "usb", "length": 8},
+            },
+        }
+        for name, template in schema_rejected.items():
+            with self.subTest(name):
+                document = record(THIRD_PARTY, session={"rumble": template})
+                self.assertFalse(self.validator.is_valid(document))
+        for name, template in semantic_rejected.items():
+            with self.subTest(name):
+                document = record(THIRD_PARTY, session={"rumble": template})
+                self.assertTrue(self.validator.is_valid(document))
+                with self.assertRaises(validate_profiles.ValidationError):
+                    validate_profiles.validate_modes(Path("record.json"), document)
 
     def test_rejects_invalid_ownership_and_session(self) -> None:
         report = GP100_RUMBLE["report"]

@@ -1027,25 +1027,81 @@
       "enum": ["ExtensionOwned"]
     },
     "rumbleTemplate": {
+      "description": "A rumble report: its target, optional fixed bytes covering the whole report (the report ID leads a numbered HID report), one field per motor with the encoding of its value, an optional rolling-counter byte and an optional resend interval. That the bytes cover the report, start with the report ID and leave the motor and counter bytes distinct and inside the report, which a schema cannot say, the validators check.",
       "type": "object",
       "additionalProperties": false,
       "required": ["report"],
       "minProperties": 2,
       "properties": {
         "report": {
-          "$ref": "#/$defs/templateReport"
+          "oneOf": [
+            {
+              "$ref": "#/$defs/templateReport"
+            },
+            {
+              "$ref": "#/$defs/templateUSBPacket"
+            }
+          ]
+        },
+        "bytes": {
+          "$ref": "#/$defs/hexBytes",
+          "maxLength": 191
+        },
+        "counter": {
+          "$ref": "#/$defs/templateByte"
+        },
+        "resendIntervalMilliseconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60000
         },
         "leftMain": {
-          "$ref": "#/$defs/templateByte"
+          "$ref": "#/$defs/templateMotor"
         },
         "rightMain": {
-          "$ref": "#/$defs/templateByte"
+          "$ref": "#/$defs/templateMotor"
         },
         "leftTrigger": {
-          "$ref": "#/$defs/templateByte"
+          "$ref": "#/$defs/templateMotor"
         },
         "rightTrigger": {
-          "$ref": "#/$defs/templateByte"
+          "$ref": "#/$defs/templateMotor"
+        }
+      }
+    },
+    "templateUSBPacket": {
+      "description": "A raw-USB packet to the family's output endpoint.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "length"],
+      "properties": {
+        "kind": {
+          "const": "usb"
+        },
+        "length": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 64
+        }
+      }
+    },
+    "templateMotor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["byte"],
+      "properties": {
+        "byte": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 63
+        },
+        "encoding": {
+          "enum": [
+            "UInt8",
+            "UInt16BigEndian",
+            "UInt16LittleEndian",
+            "SwitchHDRumble"
+          ]
         }
       }
     },

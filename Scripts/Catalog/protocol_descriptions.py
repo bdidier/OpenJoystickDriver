@@ -100,16 +100,120 @@ def semantic_violations(
                 )
             )
             continue
-        unread = sorted(set(body["tuning"]) - tuning_scope(description, variant))
+        unread = sorted(
+            set(body.get("tuning", {})) - tuning_scope(description, variant)
+        )
         if unread:
             where = f"defaults.variants.{variant}.tuning"
             found.append(
                 ("E5002", f"{where}: {', '.join(unread)} not read by the driver")
             )
+    found += rumble_target_violations(description, variants)
     found += startup_violations(description, variants)
     found += keep_alive_violations(description, variants)
     found += subcommand_violations(description)
     found += named_packet_violations(description)
+    return found
+
+
+MOTOR_WIDTHS = {
+    "UInt8": 1,
+    "UInt16BigEndian": 2,
+    "UInt16LittleEndian": 2,
+    "SwitchHDRumble": 4,
+}
+TEMPLATE_MOTORS = ("leftMain", "rightMain", "leftTrigger", "rightTrigger")
+
+
+def is_usb_template(template: dict[str, Any]) -> bool:
+    """Whether the template is a raw-USB packet, not a HID report."""
+    return template["report"]["kind"] == "usb"
+
+
+def rumble_template_problem(template: dict[str, Any]) -> str | None:
+    """What a schema cannot say about a rumble template, as `RumbleOutputTemplate.init` in Swift.
+
+    The bytes cover the whole report and start with a nonzero report ID; at least one motor is
+    named; the motor and counter bytes are distinct and lie inside the report after its ID.
+    """
+    report = template["report"]
+    length = report["length"]
+    hid = report["kind"] != "usb"
+    if hid and length < 2:
+        return "a rumble report is 2...64 bytes long"
+    report_id = report["id"] if hid else 0
+    if "bytes" in template:
+        data = template["bytes"].split(" ")
+        if len(data) != length:
+            return "rumble template bytes must cover the whole report"
+        if report_id != 0 and int(data[0], 16) != report_id:
+            return "rumble template bytes must start with the report ID"
+    motors = [key for key in TEMPLATE_MOTORS if key in template]
+    if not motors:
+        return "a rumble template names at least one motor"
+    used: list[int] = []
+    for key in motors:
+        first = template[key]["byte"]
+        used += range(
+            first, first + MOTOR_WIDTHS[template[key].get("encoding", "UInt8")]
+        )
+    if "counter" in template:
+        used.append(template["counter"]["byte"])
+    first_writable = 1 if report_id != 0 else 0
+    if len(set(used)) != len(used) or any(
+        not first_writable <= byte < length for byte in used
+    ):
+        return (
+            "rumble motor and counter bytes must be distinct and follow the report ID "
+            "inside the report"
+        )
+    return None
+
+
+def rumble_target_violations(
+    description: dict[str, Any], variants: list[str]
+) -> list[tuple[str, str]]:
+    """Where a rumble template may point, as `ProtocolDescription` checks it in Swift.
+
+    A raw-USB variant's template is a usb packet and a HID variant's is a HID report. The flat
+    template is checked against each variant of the family that has no template of its own; a
+    family with no variants has the one unnamed variant. A variant the family lacks is reported
+    by the caller.
+    """
+    mismatch = (
+        "E5002",
+        (
+            "a raw-USB variant's rumble template is a usb packet, "
+            "and a HID variant's is a HID report"
+        ),
+    )
+    defaults = description.get("defaults", {})
+    found: list[tuple[str, str]] = []
+    flat = defaults.get("session", {}).get("rumble")
+    overrides = defaults.get("variants", {})
+    for label, template in [
+        ("defaults.session.rumble", flat),
+        *(
+            (f"defaults.variants.{variant}.session.rumble", body["session"]["rumble"])
+            for variant, body in sorted(overrides.items())
+            if "session" in body and variant in variants
+        ),
+    ]:
+        if template is not None and (problem := rumble_template_problem(template)):
+            found.append(("E5002", f"{label}: {problem}"))
+    if flat is not None:
+        for variant in variants or [None]:
+            if variant in overrides and "session" in overrides[variant]:
+                continue
+            if is_usb_template(flat) != uses_raw_usb(description, variant):
+                found.append(mismatch)
+                break
+    for variant, body in sorted(overrides.items()):
+        template = body.get("session", {}).get("rumble")
+        if template is None or variant not in variants:
+            continue
+        if is_usb_template(template) != uses_raw_usb(description, variant):
+            found.append(mismatch)
     return found
 
 
