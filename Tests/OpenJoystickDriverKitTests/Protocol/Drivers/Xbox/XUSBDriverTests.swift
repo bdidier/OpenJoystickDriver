@@ -268,7 +268,7 @@ struct XUSBDriverTests {
     let parser = XUSBDriver(isWirelessReceiver: true)
 
     #expect(
-      parser.rumblePacket(left: 0x40, right: 0x20) == [
+      parser.rumblePlan(left: 0x40, right: 0x20, lt: 0, rt: 0).onlyPacket.bytes == [
         0x00, 0x01, 0x0F, 0xC0, 0x00, 0x40, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00,
       ]
     )

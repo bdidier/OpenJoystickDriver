@@ -50,6 +50,20 @@ def encodes_rumble_template(family: str) -> bool:
     return "rumble" in description_of(family).get("recordSections", ())
 
 
+def reads_record_rumble_template(protocol: dict[str, Any]) -> bool:
+    """Whether the driver of the protocol's family, variant and parameters encodes rumble from a
+    record's rumble template, as `PhysicalProtocolID.readsRecordRumbleTemplate` in Swift: GameSir
+    reads it only for enhanced HID and NVIDIA SHIELD only for the 2015 controller."""
+    family = protocol["family"]
+    if not encodes_rumble_template(family):
+        return False
+    if family == "vendor.gamesir":
+        return protocol.get("variant") == "enhanced-hid"
+    if family == "vendor.nvidia-shield":
+        return protocol.get("parameters", {}).get("reportRevision") == "Shield2015"
+    return True
+
+
 def requires_record_input_layout(family: str) -> bool:
     """Whether records of the family need an input layout of their own: the driver reads one
     and the description supplies none."""
@@ -135,7 +149,7 @@ def validate_mode_session(path: pathlib.Path, mode: dict[str, Any]) -> None:
             "initialization list",
         )
     require(
-        "rumble" not in session or encodes_rumble_template(family),
+        "rumble" not in session or reads_record_rumble_template(protocol),
         f"{path}: rumble templates require a driver that encodes them",
     )
     if template := session.get("rumble"):

@@ -206,6 +206,27 @@ extension PhysicalProtocolID {
     return value
   }
 
+  /// The rumble template a driver of this family and stored variant encodes from: the record's
+  /// when it sets one, otherwise the description's for the variant; nil when neither does.
+  func rumbleTemplate(
+    variant: PhysicalProtocolVariantID?,
+    record: RumbleOutputTemplate?
+  ) -> RumbleOutputTemplate? {
+    record ?? protocolDescription.rumbleTemplate(variant: variant)
+  }
+
+  /// The rumble template of a family whose description always sets one for `variant`. A
+  /// description that sets none is a defect.
+  func describedRumbleTemplate(
+    variant: PhysicalProtocolVariantID?,
+    record: RumbleOutputTemplate?
+  ) -> RumbleOutputTemplate {
+    guard let template = rumbleTemplate(variant: variant, record: record) else {
+      preconditionFailure("\(rawValue).json sets no rumble template")
+    }
+    return template
+  }
+
   /// The count `limit` that the family's description sets for its driver. A description that sets
   /// none for a count its driver reads is a defect.
   func described(limit: KeyPath<ProtocolDescription, Int?>) -> Int {

@@ -79,7 +79,8 @@ extension GameSirDriver {
       case .enhancedHID: [.programmableColor, .programmableBrightness]
       }
     return PhysicalControllerOutputCapabilities(
-      rumbleMotors: gameSirProtocol == .enhancedHID ? [.leftMain, .rightMain] : [],
+      rumbleMotors: gameSirProtocol == .enhancedHID
+        ? rumbleTemplate.outputCapabilities.rumbleMotors : [],
       lightingFeatures: lighting
     )
   }
@@ -92,9 +93,7 @@ extension GameSirDriver {
     _ command: ControllerOutputCommand
   ) throws(ControllerOutputError) -> PhysicalOutputPlan {
     switch command {
-    case .setRumble(let intensities, _):
-      return rumblePlan(left: intensities.leftMain.byte, right: intensities.rightMain.byte)
-    case .stopRumble: return rumblePlan(left: 0, right: 0)
+    case .setRumble, .stopRumble: return try rumbleTemplate.encode(command)
     case .setRGB(let color):
       guard gameSirProtocol == .enhancedHID else {
         throw .unsupportedCapability(command.capability)
@@ -108,10 +107,6 @@ extension GameSirDriver {
       return plan
     default: throw .unsupportedCapability(command.capability)
     }
-  }
-
-  private func rumblePlan(left: UInt8, right: UInt8) -> PhysicalOutputPlan {
-    PhysicalOutputPlan(writes: [.hidOutput(Self.hidReport([0x0F, 0x20, 0x66, 0x55, left, right]))])
   }
 
   /// Nil until the session is ready and, on slot-based models, the active slot is known.

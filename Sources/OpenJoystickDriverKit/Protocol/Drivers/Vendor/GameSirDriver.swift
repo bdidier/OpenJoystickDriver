@@ -19,6 +19,8 @@ public final class GameSirDriver: PhysicalProtocolDriver {
   /// Enhanced HID lighting memory is slot-based (parameter `lightingMemory: ProfileSlots`).
   let usesLightingSlots: Bool
   let outEndpoint: UInt8
+  /// The enhanced HID rumble report. The wired G7 Pro encodes it too but advertises no rumble.
+  let rumbleTemplate: RumbleOutputTemplate
   /// Raw-USB command timeout (`usbCommandTimeoutMs`).
   let usbTimeoutMilliseconds: UInt32
   var standardParser = XUSBDriver()
@@ -33,19 +35,27 @@ public final class GameSirDriver: PhysicalProtocolDriver {
   var lightingBrightness: UInt8 = 100
   var storedPower: ControllerConnectionState.Power?
 
-  /// - Parameter outEndpoint: Interrupt OUT endpoint of the bound USB interface, for keep-alive
-  ///   and brightness.
+  /// - Parameters:
+  ///   - outEndpoint: Interrupt OUT endpoint of the bound USB interface, for keep-alive and
+  ///     brightness.
+  ///   - rumbleTemplate: The record's rumble template; the description's for enhanced HID when
+  ///     nil.
   public init(
     protocol gameSirProtocol: GameSirProtocol,
     hasInnerGrips: Bool = false,
     usesLightingSlots: Bool = false,
     outEndpoint: UInt8 = 0x02,
-    tuning: ControllerTuning? = nil
+    tuning: ControllerTuning? = nil,
+    rumbleTemplate: RumbleOutputTemplate? = nil
   ) {
     self.gameSirProtocol = gameSirProtocol
     self.hasInnerGrips = hasInnerGrips
     self.usesLightingSlots = usesLightingSlots
     self.outEndpoint = outEndpoint
+    self.rumbleTemplate = PhysicalProtocolID.vendorGameSir.describedRumbleTemplate(
+      variant: .enhancedHID,
+      record: rumbleTemplate
+    )
     usbTimeoutMilliseconds = UInt32(
       PhysicalProtocolID.vendorGameSir.described(\.usbCommandTimeoutMilliseconds, in: tuning)
     )

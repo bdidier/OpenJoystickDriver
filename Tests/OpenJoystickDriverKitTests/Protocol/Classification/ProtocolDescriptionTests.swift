@@ -370,6 +370,24 @@ struct ProtocolDescriptionTests {
     }
   }
 
+  /// The schema limits xbox.xid's `defaults.session` to the rumble template; Swift refuses the
+  /// same startup packets and keep-alive.
+  @Test
+  func anXIDSessionHoldsOnlyARumbleTemplate() {
+    let session = [
+      #""startup": [{"bytes": "01 02"}]"#,
+      #""keepAlive": {"intervalMilliseconds": 500, "writes": [{"bytes": "01 02"}]}"#,
+    ]
+    for member in session {
+      let problem = rejection(
+        family: .xboxXID,
+        #""rawUSB": true, "recordSections": ["rumble"], "defaults": {"session": {\#(member)}}"#
+      )
+      #expect(problem?.code == .invalidProtocolDescription, "\(member)")
+      #expect(problem?.description.contains("holds only a rumble template") == true, "\(member)")
+    }
+  }
+
   private static let hidReport = #""report": {"kind": "output", "id": 1, "length": 4}"#
 
   private func startup(_ write: String) -> String {

@@ -198,14 +198,21 @@ public final class ProtocolDriverRegistry: Sendable {
       // Only a record carries a layout; a family profile has nothing to decode with.
       guard let layout = record.inputLayout else { return .failure(.noProtocolMatch) }
       return .success(ReportLayoutDriver(layout: layout, rumbleTemplate: record.rumbleTemplate))
-    case .xboxXID: return .success(XIDDriver(outEndpoint: transportProfile.outputEndpoint))
+    case .xboxXID:
+      return .success(
+        XIDDriver(
+          outEndpoint: transportProfile.outputEndpoint,
+          rumbleTemplate: record.rumbleTemplate
+        )
+      )
     case .xboxXUSB:
       guard variant == .receiver else {
         return .success(
           XUSBDriver(
             outEndpoint: transportProfile.outputEndpoint,
             tuning: tuning,
-            usbStartupWrites: record.usbStartupWrites
+            usbStartupWrites: record.usbStartupWrites,
+            rumbleTemplate: record.rumbleTemplate
           )
         )
       }
@@ -214,7 +221,8 @@ public final class ProtocolDriverRegistry: Sendable {
           outEndpoint: transportProfile.outputEndpoint,
           slotOrdinal: slotOrdinal,
           tuning: tuning,
-          usbStartupWrites: record.usbStartupWrites
+          usbStartupWrites: record.usbStartupWrites,
+          rumbleTemplate: record.rumbleTemplate
         )
       else { return .failure(.interfaceContractMismatch) }
       return .success(receiverSlot)
@@ -297,7 +305,10 @@ public final class ProtocolDriverRegistry: Sendable {
       )
     case .vendorNVIDIAShield:
       return .success(
-        NVIDIAShieldDriver(isShield2015: record.parameters.reportRevision == .shield2015)
+        NVIDIAShieldDriver(
+          isShield2015: record.parameters.reportRevision == .shield2015,
+          rumbleTemplate: record.rumbleTemplate
+        )
       )
     case .vendorGameSir:
       switch variant {
@@ -315,7 +326,8 @@ public final class ProtocolDriverRegistry: Sendable {
             protocol: .enhancedHID,
             hasInnerGrips: record.parameters.innerGrips == true,
             usesLightingSlots: record.parameters.lightingMemory == .profileSlots,
-            tuning: tuning
+            tuning: tuning,
+            rumbleTemplate: record.rumbleTemplate
           )
         )
       default: return .failure(.unsupportedProtocolVariant)

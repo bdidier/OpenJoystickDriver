@@ -6,6 +6,7 @@
     "in": 130,
     "out": 2
   },
+  "recordSections": ["rumble"],
   "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
   "parameters": {
     "reportRevision": {
@@ -16,5 +17,23 @@
   "controls": {
     "base": "xbox",
     "add": ["Guide"]
+  },
+  "defaults": {
+    "session": {
+      "rumble": {
+        "report": {
+          "kind": "output",
+          "id": 1,
+          "length": 7
+        },
+        "bytes": "01 00 00 00 00 00 00",
+        "leftMain": {
+          "byte": 2
+        },
+        "rightMain": {
+          "byte": 4
+        }
+      }
+    }
   }
 }

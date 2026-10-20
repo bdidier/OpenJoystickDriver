@@ -7,6 +7,7 @@
     "out": 2
   },
   "rawUSB": ["usb"],
+  "recordSections": ["rumble"],
   "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
   "parameters": {
     "innerGrips": {
@@ -74,6 +75,26 @@
       "hidStartupIntervalMs": 20,
       "minimumHIDOutputIntervalMs": 20,
       "usbCommandTimeoutMs": 2000
+    },
+    "variants": {
+      "enhanced-hid": {
+        "session": {
+          "rumble": {
+            "report": {
+              "kind": "output",
+              "id": 15,
+              "length": 64
+            },
+            "bytes": "0F 20 66 55 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+            "leftMain": {
+              "byte": 4
+            },
+            "rightMain": {
+              "byte": 5
+            }
+          }
+        }
+      }
     }
   }
 }

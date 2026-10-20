@@ -67,6 +67,21 @@ public enum PhysicalProtocolID: String, CaseIterable, Codable, Sendable {
   /// Whether this family's driver encodes rumble from a record's rumble template.
   var encodesRumbleTemplate: Bool { protocolDescription.recordSections.contains(.rumble) }
 
+  /// Whether the driver of this family, stored variant and parameters encodes rumble from a
+  /// record's rumble template: the family reads one, and GameSir reads it only for enhanced HID
+  /// and NVIDIA SHIELD only for the 2015 controller.
+  func readsRecordRumbleTemplate(
+    variant: PhysicalProtocolVariantID?,
+    parameters: ProtocolParameters
+  ) -> Bool {
+    guard encodesRumbleTemplate else { return false }
+    switch self {
+    case .vendorGameSir: return variant == .enhancedHID
+    case .vendorNVIDIAShield: return parameters.reportRevision == .shield2015
+    default: return true
+    }
+  }
+
   /// Whether records of this family need an input layout of their own: the driver reads one and
   /// the description supplies none.
   var requiresRecordInputLayout: Bool {

@@ -250,7 +250,14 @@
                 "required": ["family"],
                 "properties": {
                   "family": {
-                    "enum": ["hid.report-layout", "vendor.ps3-third-party"]
+                    "enum": [
+                      "hid.report-layout",
+                      "vendor.ps3-third-party",
+                      "xbox.xid",
+                      "xbox.xusb",
+                      "vendor.nvidia-shield",
+                      "vendor.gamesir"
+                    ]
                   }
                 }
               }

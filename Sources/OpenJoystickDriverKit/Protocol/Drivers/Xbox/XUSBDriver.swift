@@ -73,15 +73,8 @@ public enum Xbox360LEDPattern: UInt8, Sendable {
 ///   bytes 14-19: unused
 /// ```
 ///
-/// Rumble output report (8 bytes, interrupt OUT, EP 0x01):
-/// ```
-///   byte 0 : 0x00 (report type)
-///   byte 1 : 0x08 (length)
-///   byte 2 : 0x00 (reserved)
-///   byte 3 : left motor (0–255)
-///   byte 4 : right motor (0–255)
-///   bytes 5-7 : 0x00 padding
-/// ```
+/// The rumble packet is the rumble template of the controller's variant (`wired` or `receiver`):
+/// the record's when it sets one, otherwise the description's `defaults.variants`.
 ///
 /// LED output report (3 bytes, interrupt OUT, EP 0x01):
 /// ```
@@ -102,6 +95,8 @@ public final class XUSBDriver: PhysicalProtocolDriver {
   let usbTimeoutMilliseconds: Int
   /// The record's own startup packets; the description's when empty.
   private let recordStartup: [USBStartupWrite]
+  /// The packet that carries the motor intensities.
+  private let rumbleTemplate: RumbleOutputTemplate
 
   private var state = ControllerState.neutral
 
@@ -111,14 +106,21 @@ public final class XUSBDriver: PhysicalProtocolDriver {
   ///   - isWirelessReceiver: Whether reports use the Xbox 360 receiver envelope.
   ///   - tuning: The effective tuning of the controller's record; the description's defaults
   ///     when nil.
+  ///   - rumbleTemplate: The record's rumble template; the description's for the variant when
+  ///     nil.
   public init(
     outEndpoint: UInt8 = 0x01,
     isWirelessReceiver: Bool = false,
     tuning: ControllerTuning? = nil,
-    usbStartupWrites: [USBStartupWrite] = []
+    usbStartupWrites: [USBStartupWrite] = [],
+    rumbleTemplate: RumbleOutputTemplate? = nil
   ) {
     self.outEndpoint = outEndpoint
     recordStartup = usbStartupWrites
+    self.rumbleTemplate = PhysicalProtocolID.xboxXUSB.describedRumbleTemplate(
+      variant: isWirelessReceiver ? .receiver : .wired,
+      record: rumbleTemplate
+    )
     self.isWirelessReceiver = isWirelessReceiver
     inquiryResendInterval = PhysicalProtocolID.xboxXUSB.described(
       \.presenceResendReports,
@@ -138,14 +140,16 @@ public final class XUSBDriver: PhysicalProtocolDriver {
     outEndpoint: UInt8 = 0x01,
     slotOrdinal: Int,
     tuning: ControllerTuning? = nil,
-    usbStartupWrites: [USBStartupWrite] = []
+    usbStartupWrites: [USBStartupWrite] = [],
+    rumbleTemplate: RumbleOutputTemplate? = nil
   ) {
     guard (0..<4).contains(slotOrdinal) else { return nil }
     self.init(
       outEndpoint: outEndpoint,
       isWirelessReceiver: true,
       tuning: tuning,
-      usbStartupWrites: usbStartupWrites
+      usbStartupWrites: usbStartupWrites,
+      rumbleTemplate: rumbleTemplate
     )
   }
 
@@ -271,7 +275,7 @@ public final class XUSBDriver: PhysicalProtocolDriver {
 
   public var outputCapabilities: PhysicalControllerOutputCapabilities {
     PhysicalControllerOutputCapabilities(
-      rumbleMotors: [.leftMain, .rightMain],
+      rumbleMotors: rumbleTemplate.outputCapabilities.rumbleMotors,
       lightingFeatures: [.playerIndicator]
     )
   }
@@ -284,22 +288,13 @@ public final class XUSBDriver: PhysicalProtocolDriver {
     let packet: PhysicalUSBOutputPacket
     switch command {
     case .setRumble(let intensities, _):
-      packet = outputPacket(
-        rumblePacket(left: intensities.leftMain.byte, right: intensities.rightMain.byte)
-      )
-    case .stopRumble: packet = outputPacket(rumblePacket(left: 0, right: 0))
+      packet = outputPacket(rumbleTemplate.reportBytes(intensities))
+    case .stopRumble: packet = outputPacket(rumbleTemplate.reportBytes(.off))
     case .setPlayerIndicator(let indicator):
       packet = ledOutputPacket(pattern: Self.ledPattern(for: indicator))
     default: throw .unsupportedCapability(command.capability)
     }
     return PhysicalOutputPlan(writes: [.usb(packet)])
-  }
-
-  func rumblePacket(left: UInt8, right: UInt8) -> [UInt8] {
-    if isWirelessReceiver {
-      return [0x00, 0x01, 0x0F, 0xC0, 0x00, left, right, 0x00, 0x00, 0x00, 0x00, 0x00]
-    }
-    return [0x00, 0x08, 0x00, left, right, 0x00, 0x00, 0x00]
   }
 
   func ledPacket(pattern: Xbox360LEDPattern) -> [UInt8] {

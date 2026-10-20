@@ -402,6 +402,49 @@ class OwnershipAndSessionTests(unittest.TestCase):
                 with self.assertRaises(validate_profiles.ValidationError):
                     validate_profiles.validate_modes(Path("record.json"), document)
 
+    def test_accepts_a_rumble_template_for_each_driver_that_encodes_one(self) -> None:
+        usb = {"report": {"kind": "usb", "length": 6}, "leftMain": {"byte": 2}}
+        hid = {
+            "report": {"kind": "output", "id": 1, "length": 7},
+            "leftMain": {"byte": 2},
+        }
+        accepted = {
+            "XID": ({"family": "xbox.xid", "variant": "gamepad"}, usb),
+            "XUSB wired": (XUSB, usb),
+            "XUSB receiver": ({"family": "xbox.xusb", "variant": "receiver"}, usb),
+            "Shield 2015": (
+                {
+                    "family": "vendor.nvidia-shield",
+                    "parameters": {"reportRevision": "Shield2015"},
+                },
+                hid,
+            ),
+        }
+        for name, (protocol, template) in accepted.items():
+            with self.subTest(name):
+                document = record(protocol, session={"rumble": template})
+                self.assertTrue(self.validator.is_valid(document))
+                validate_profiles.validate_modes(Path("record.json"), document)
+
+    def test_rejects_a_rumble_template_the_driver_ignores(self) -> None:
+        usb = {"report": {"kind": "usb", "length": 6}, "leftMain": {"byte": 2}}
+        hid = {
+            "report": {"kind": "output", "id": 1, "length": 7},
+            "leftMain": {"byte": 2},
+        }
+        refused = {
+            "Shield without Shield2015": ({"family": "vendor.nvidia-shield"}, hid),
+            "GameSir USB": ({"family": "vendor.gamesir", "variant": "usb"}, usb),
+        }
+        for name, (protocol, template) in refused.items():
+            with self.subTest(name):
+                document = record(protocol, session={"rumble": template})
+                with self.assertRaisesRegex(
+                    validate_profiles.ValidationError,
+                    "rumble templates require a driver that encodes them",
+                ):
+                    validate_profiles.validate_modes(Path("record.json"), document)
+
     def test_rejects_invalid_ownership_and_session(self) -> None:
         report = GP100_RUMBLE["report"]
         rejected = {

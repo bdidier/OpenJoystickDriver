@@ -4,6 +4,7 @@ import Foundation
 private let xidInputReportLength = 20
 private let xidTriggerMax: Float = 255
 private let xidStickMax = Float(Int16.max)
+private let xidOutputTimeoutMilliseconds: UInt32 = 2_000
 
 /// Driver for original Xbox XID pads (`xpad` `XTYPE_XBOX`).
 ///
@@ -14,9 +15,19 @@ private let xidStickMax = Float(Int16.max)
 /// value is pressed, matching `input_report_key` in `xpad.c`.
 public final class XIDDriver: PhysicalProtocolDriver {
   private let outEndpoint: UInt8
+  private let rumbleTemplate: RumbleOutputTemplate
   private var state = ControllerState.neutral
 
-  public init(outEndpoint: UInt8 = 0x02) { self.outEndpoint = outEndpoint }
+  /// - Parameters:
+  ///   - outEndpoint: Interrupt OUT endpoint address.
+  ///   - rumbleTemplate: The record's rumble template; the description's when nil.
+  public init(outEndpoint: UInt8 = 0x02, rumbleTemplate: RumbleOutputTemplate? = nil) {
+    self.outEndpoint = outEndpoint
+    self.rumbleTemplate = PhysicalProtocolID.xboxXID.describedRumbleTemplate(
+      variant: .gamepad,
+      record: rumbleTemplate
+    )
+  }
 
   /// A new transport session starts from neutral input.
   public func resetProtocolState() { state = .neutral }
@@ -29,7 +40,9 @@ public final class XIDDriver: PhysicalProtocolDriver {
     PhysicalProtocolID.xboxXID.describedControls
   }
 
-  public var outputCapabilities: PhysicalControllerOutputCapabilities { .dualMainRumble }
+  public var outputCapabilities: PhysicalControllerOutputCapabilities {
+    rumbleTemplate.outputCapabilities
+  }
   public var defaultColor: ControllerColor? { nil }
 
   public func encode(
@@ -41,15 +54,10 @@ public final class XIDDriver: PhysicalProtocolDriver {
     case .stopRumble: intensities = .off
     default: throw .unsupportedCapability(command.capability)
     }
-    let leftValue = UInt16(intensities.leftMain.byte) * 257
-    let rightValue = UInt16(intensities.rightMain.byte) * 257
     let packet = PhysicalUSBOutputPacket(
       endpoint: outEndpoint,
-      bytes: [
-        0x00, 0x06, UInt8(leftValue >> 8), UInt8(leftValue & 0xFF), UInt8(rightValue >> 8),
-        UInt8(rightValue & 0xFF),
-      ],
-      timeoutMilliseconds: 2_000
+      bytes: rumbleTemplate.reportBytes(intensities),
+      timeoutMilliseconds: xidOutputTimeoutMilliseconds
     )
     return PhysicalOutputPlan(writes: [.usb(packet)])
   }

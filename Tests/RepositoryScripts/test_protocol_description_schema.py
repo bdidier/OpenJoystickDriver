@@ -49,7 +49,7 @@ def xusb_description() -> dict[str, Any]:
 FAMILY_FACTS: dict[str, dict[str, Any]] = {
     "hid.report-layout": {"recordSections": ["input", "rumble"]},
     "xbox.gip": {"rawUSB": True},
-    "xbox.xid": {"rawUSB": True, "recordSections": ["input"]},
+    "xbox.xid": {"rawUSB": True, "recordSections": ["input", "rumble"]},
     "xbox.xusb": {"rawUSB": True},
 }
 
@@ -1209,6 +1209,36 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             )
         )
         self.check(self.flat_rumble(self.usb_rumble_template(), rawUSB=True))
+
+    def test_xid_session_carries_only_a_usb_rumble_template(self) -> None:
+        self.check(
+            self.with_body(
+                "xbox.xid",
+                defaults={"session": {"rumble": self.usb_rumble_template()}},
+            )
+        )
+        for name, session in (
+            ("HID template on a raw-USB family", {"rumble": self.rumble_template()}),
+            (
+                "startup beside the template",
+                {
+                    "rumble": self.usb_rumble_template(),
+                    "startup": [{"bytes": "01 02"}],
+                },
+            ),
+        ):
+            with self.subTest(name):
+                self.assert_rejected(
+                    self.with_body("xbox.xid", defaults={"session": session})
+                )
+        self.assert_rejected(
+            self.with_body(
+                "xbox.xid",
+                recordSections=["input"],
+                defaults={"session": {"rumble": self.usb_rumble_template()}},
+            ),
+            code="E5002",
+        )
 
     def test_rejects_variant_defaults_the_family_does_not_have(self) -> None:
         self.assert_rejected(

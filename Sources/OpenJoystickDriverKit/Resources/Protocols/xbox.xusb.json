@@ -7,6 +7,7 @@
     "out": 1
   },
   "rawUSB": true,
+  "recordSections": ["rumble"],
   "interfaceSignatures": [
     {
       "variant": "wired",
@@ -41,6 +42,42 @@
     "tuning": {
       "presenceResendReports": 16,
       "usbTransferTimeoutMs": 2000
+    },
+    "variants": {
+      "wired": {
+        "session": {
+          "rumble": {
+            "report": {
+              "kind": "usb",
+              "length": 8
+            },
+            "bytes": "00 08 00 00 00 00 00 00",
+            "leftMain": {
+              "byte": 3
+            },
+            "rightMain": {
+              "byte": 4
+            }
+          }
+        }
+      },
+      "receiver": {
+        "session": {
+          "rumble": {
+            "report": {
+              "kind": "usb",
+              "length": 12
+            },
+            "bytes": "00 01 0F C0 00 00 00 00 00 00 00 00",
+            "leftMain": {
+              "byte": 5
+            },
+            "rightMain": {
+              "byte": 6
+            }
+          }
+        }
+      }
     }
   }
 }

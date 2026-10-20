@@ -3,8 +3,8 @@ extension ControllerRecordDocument.ModeDocument {
   /// modes, raw-USB startup packets go to raw-USB families that read them and name no
   /// initialization list, a keep-alive extends a raw-USB family whose description declares none,
   /// settle, shutdown and control transfers belong to raw-USB modes, and only a driver that
-  /// encodes a rumble template may name one, a usb packet in a raw-USB mode and a HID report in
-  /// a HID mode.
+  /// encodes a rumble template for the mode's variant and parameters may name one, a usb packet
+  /// in a raw-USB mode and a HID report in a HID mode.
   func sessionViolation() -> String? {
     let info = protocolInfo
     let rawUSB = info.protocolID.usesRawUSB(storedVariant: info.protocolVariant)
@@ -37,7 +37,10 @@ extension ControllerRecordDocument.ModeDocument {
       if (template.report == nil) != rawUSB {
         return "a raw-USB mode's rumble template is a usb packet, and a HID mode's is a HID report"
       }
-      if !info.protocolID.encodesRumbleTemplate {
+      if !info.protocolID.readsRecordRumbleTemplate(
+        variant: info.protocolVariant,
+        parameters: info.parameters
+      ) {
         return "rumble templates require a driver that encodes them"
       }
     }

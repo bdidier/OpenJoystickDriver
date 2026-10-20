@@ -232,6 +232,53 @@ struct ControllerRecordOutputTests {
     }
   }
 
+  private func record(
+    protocolInfo: String,
+    template: String
+  ) throws -> ControllerRecordDocument {
+    try decode(
+      "\"modes\": [{\"id\": \"default\", \"protocol\": \(protocolInfo), "
+        + "\"session\": {\"rumble\": \(template)}}]"
+    )
+  }
+
+  private static let usbRumble =
+    #"{"report": {"kind": "usb", "length": 6}, "leftMain": {"byte": 2}}"#
+  private static let shieldRumble =
+    #"{"report": {"kind": "output", "id": 1, "length": 7}, "leftMain": {"byte": 2}}"#
+
+  /// A record may carry a rumble template for each family whose driver encodes one.
+  @Test
+  func acceptsARumbleTemplateForEachDriverThatEncodesOne() throws {
+    let accepted: [(String, String)] = [
+      (#"{"family": "xbox.xid", "variant": "gamepad"}"#, Self.usbRumble),
+      (#"{"family": "xbox.xusb", "variant": "wired"}"#, Self.usbRumble),
+      (#"{"family": "xbox.xusb", "variant": "receiver"}"#, Self.usbRumble),
+      (
+        #"{"family": "vendor.nvidia-shield", "parameters": {"reportRevision": "Shield2015"}}"#,
+        Self.shieldRumble
+      ),
+    ]
+    for (protocolInfo, template) in accepted {
+      let document = try record(protocolInfo: protocolInfo, template: template)
+      #expect(document.defaultMode.session.rumbleTemplate != nil, "\(protocolInfo)")
+    }
+  }
+
+  /// A record template the driver would ignore is refused, not dropped.
+  @Test
+  func rejectsARumbleTemplateTheDriverIgnores() {
+    let refused: [(String, String)] = [
+      (#"{"family": "vendor.nvidia-shield"}"#, Self.shieldRumble),
+      (#"{"family": "vendor.gamesir", "variant": "usb"}"#, Self.usbRumble),
+    ]
+    for (protocolInfo, template) in refused {
+      #expect(throws: DecodingError.self, "\(protocolInfo)") {
+        try record(protocolInfo: protocolInfo, template: template)
+      }
+    }
+  }
+
   /// Sixaxis keeps its family writes; a record template adds exactly its own report.
   @Test
   func macOSOwnedOutputAddsOnlyTheRecordReport() throws {

@@ -4,7 +4,6 @@ private let shieldStateReportID: UInt8 = 0x01
 private let shieldTouchReportID: UInt8 = 0x02
 private let shieldV103StateLength = 16
 private let shieldV104StateLength = 23
-private let shieldV103RumbleReportID: UInt8 = 0x01
 private let shieldAxisCenter = 0x8000
 private let shieldAxisMagnitude: Float = 32767
 private let shieldTriggerMax: Float = 65535
@@ -31,17 +30,29 @@ public final class NVIDIAShieldDriver: PhysicalProtocolDriver {
   }
 
   private let isV103: Bool
+  /// The V103 rumble report; nil for the 2017 controller, which has no plain rumble.
+  private let rumbleTemplate: RumbleOutputTemplate?
   private var state = ControllerState.neutral
 
   /// Creates a driver for the 2017 controller, or for the 2015 controller when its record declares
   /// the `reportRevision: Shield2015` parameter; only the 2015 controller has plain rumble.
-  public init(isShield2015: Bool) { isV103 = isShield2015 }
+  /// - Parameter rumbleTemplate: The record's rumble template for the 2015 controller; the
+  ///   description's when nil.
+  public init(isShield2015: Bool, rumbleTemplate: RumbleOutputTemplate? = nil) {
+    isV103 = isShield2015
+    self.rumbleTemplate =
+      isShield2015
+      ? PhysicalProtocolID.vendorNVIDIAShield.describedRumbleTemplate(
+        variant: nil,
+        record: rumbleTemplate
+      ) : nil
+  }
 
   public func resetProtocolState() { state = .neutral }
 
   public var sessionPlan: DriverSessionPlan { DriverSessionPlan() }
   public var outputCapabilities: PhysicalControllerOutputCapabilities {
-    isV103 ? .dualMainRumble : .none
+    rumbleTemplate?.outputCapabilities ?? .none
   }
   public var defaultColor: ControllerColor? { nil }
 
@@ -53,22 +64,12 @@ public final class NVIDIAShieldDriver: PhysicalProtocolDriver {
     )
   }
 
-  /// V103 rumble: `[1, 0, low, 0, high, 0, 0]`, one byte per motor.
+  /// V103 rumble through the rumble template; the 2017 controller has none.
   public func encode(
     _ command: ControllerOutputCommand
   ) throws(ControllerOutputError) -> PhysicalOutputPlan {
-    guard isV103 else { throw .unsupportedCapability(command.capability) }
-    let (left, right): (UInt8, UInt8)
-    switch command {
-    case .setRumble(let intensities, _):
-      (left, right) = (intensities.leftMain.byte, intensities.rightMain.byte)
-    case .stopRumble: (left, right) = (0, 0)
-    default: throw .unsupportedCapability(command.capability)
-    }
-    let bytes: [UInt8] = [shieldV103RumbleReportID, 0x00, left, 0x00, right, 0x00, 0x00]
-    return PhysicalOutputPlan(writes: [
-      .hidOutput(PhysicalHIDOutputReport(reportID: shieldV103RumbleReportID, bytes: bytes))
-    ])
+    guard let rumbleTemplate else { throw .unsupportedCapability(command.capability) }
+    return try rumbleTemplate.encode(command)
   }
 
   public func parse(report data: Data, receivedAt: MonotonicTimestamp) throws -> ControllerEvent? {

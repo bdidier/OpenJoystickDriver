@@ -222,7 +222,11 @@
               "input": {
                 "$ref": "controller.schema.json#/$defs/input"
               },
-              "session": false,
+              "session": {
+                "propertyNames": {
+                  "const": "rumble"
+                }
+              },
               "tuning": {
                 "properties": {
                   "inputLivenessTimeoutMs": false,
