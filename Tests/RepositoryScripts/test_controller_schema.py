@@ -123,7 +123,7 @@ class ControllerSchemaTests(unittest.TestCase):
                 self.assertTrue(self.validator.is_valid(document))
 
     def test_rejects_unknown_vocabulary(self) -> None:
-        removed = {
+        refused = {
             "unknown field": record(GIP, notAField="usb"),
             "unknown variant": record({**GIP, "variant": "notAVariant"}),
             "unknown Steam parameter": record(
@@ -182,7 +182,7 @@ class ControllerSchemaTests(unittest.TestCase):
             "wrong-family parameter": record(
                 {**GIP, "parameters": {"innerGrips": True}}
             ),
-            "legacy quirks array": record({**GIP, "quirks": ["share-offset"]}),
+            "unknown quirks array": record({**GIP, "quirks": ["share-offset"]}),
             "unknown DS4 parameter": record(
                 {"family": "sony.dualshock4", "parameters": {"gyro": True}}
             ),
@@ -275,13 +275,13 @@ class ControllerSchemaTests(unittest.TestCase):
             {"family": "valve.steam-controller", "variant": "wired"},
             {"family": "nintendo.switch1"},
         ):
-            removed[f"{protocol['family']} unknown parameter"] = record(
+            refused[f"{protocol['family']} unknown parameter"] = record(
                 {**protocol, "parameters": {"notAParameter": True}}
             )
-        removed["unknown GameSir variant"] = record(
+        refused["unknown GameSir variant"] = record(
             {"family": "vendor.gamesir", "variant": "notAVariant"}
         )
-        for name, document in removed.items():
+        for name, document in refused.items():
             with self.subTest(name):
                 self.assertFalse(self.validator.is_valid(document))
 

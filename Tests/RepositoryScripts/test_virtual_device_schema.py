@@ -60,7 +60,7 @@ class VirtualDeviceSchemaTests(unittest.TestCase):
                 self.refuses({**document, "persona": "Generic"})
 
     def test_an_unknown_persona_is_refused(self) -> None:
-        for persona in ("NotAPersona", "generic", ""):
+        for persona in ("NotAPersona", "quokka", ""):
             with self.subTest(persona=persona):
                 self.refuses(
                     {**load("virtual-device.generic.json"), "persona": persona}

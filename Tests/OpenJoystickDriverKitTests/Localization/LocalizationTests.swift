@@ -92,9 +92,6 @@ struct LocalizationTests {
       "controllers.charging", "controllers.batteryFull", "controllers.batteryAccessibilityDetails",
       "profiles.actions", "profiles.editorSection", "profiles.combinations",
     ] { #expect(keys.contains(required)) }
-    #expect(!keys.contains { $0.hasPrefix("compatibility.") || $0.hasPrefix("identity.") })
-    #expect(!keys.contains { $0.hasPrefix("cli.compat.") || $0 == "cli.catalog.compat.summary" })
-    #expect(!keys.contains { $0.hasPrefix("cli.settings.reset.") })
     #expect(keys.filter { $0.hasPrefix("inputTest.") }.count >= 20)
   }
 

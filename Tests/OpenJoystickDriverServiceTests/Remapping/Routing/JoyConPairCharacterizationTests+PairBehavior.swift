@@ -89,8 +89,8 @@ extension JoyConPairCharacterizationTests {
       lines == [
         "L 220000 2048,2048 [+Auxiliary3 hat=north]", "  pad L +LeftShoulder", "  pad L d+DpadUp",
         "R 4 2048,2048 [+South]", "  pad L +South", "stop R", "  pad L -LeftShoulder",
-        "  pad L -South d-DpadUp", "  compat-stop L", "L 0 2048,2048 [-Auxiliary3 hat=neutral]",
-        "  compat L [neutral]",
+        "  pad L -South d-DpadUp", "  virtual-stop L", "L 0 2048,2048 [-Auxiliary3 hat=neutral]",
+        "  virtual L [neutral]",
       ]
     )
   }

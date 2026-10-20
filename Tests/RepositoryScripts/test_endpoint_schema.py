@@ -75,7 +75,7 @@ class EndpointSchemaTests(unittest.TestCase):
             self.assertFalse(self.valid(failure(code, **DETAILS)), code)
 
     def test_an_unknown_persona_id_is_refused(self) -> None:
-        for name in ("NotAPersona", "generic", "Xbox"):
+        for name in ("NotAPersona", "quokka", "marmalade"):
             self.assertFalse(self.valid(line("FeedRequest", **{"as": name})), name)
             self.assertFalse(self.valid(line("FeedSession", **{"as": name})), name)
 

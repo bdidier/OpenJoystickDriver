@@ -152,9 +152,9 @@ struct JoyConPairCharacterizationTests {
     switch trace {
     case .virtualGamepad(let state, let identifier):
       let held = render(from: .neutral, to: ControllerEvent([], after: state))
-      return "compat \(side(identifier)) [\(held.isEmpty ? "neutral" : held)]"
-    case .virtualOutputActivation(let identifier): return "compat-activate \(side(identifier))"
-    case .virtualOutputStop(let identifier): return "compat-stop \(side(identifier))"
+      return "virtual \(side(identifier)) [\(held.isEmpty ? "neutral" : held)]"
+    case .virtualOutputActivation(let identifier): return "virtual-activate \(side(identifier))"
+    case .virtualOutputStop(let identifier): return "virtual-stop \(side(identifier))"
     case .system(let action): return "system \(action)"
     case .gamepad(let state, let identifier):
       return "pad \(side(identifier)) \(change(from: .neutral, to: state))"
@@ -165,10 +165,12 @@ struct JoyConPairCharacterizationTests {
     from previous: RemappingGamepadState,
     to state: RemappingGamepadState
   ) -> String {
-    func changes<Value: RawRepresentable<String>>(_ old: Set<Value>, _ new: Set<Value>) -> [String]
-    {
-      old.subtracting(new).map { "-\($0.rawValue)" }.sorted()
-        + new.subtracting(old).map { "+\($0.rawValue)" }.sorted()
+    func changes<Value: RawRepresentable<String>>(
+      _ previous: Set<Value>,
+      _ next: Set<Value>
+    ) -> [String] {
+      previous.subtracting(next).map { "-\($0.rawValue)" }.sorted()
+        + next.subtracting(previous).map { "+\($0.rawValue)" }.sorted()
     }
     let axes = RemappingAxis.allCases.filter { previous.value(for: $0) != state.value(for: $0) }.map
     { "\($0.rawValue)=\(Int16((state.value(for: $0) * 32767).rounded()))" }

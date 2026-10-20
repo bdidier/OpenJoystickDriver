@@ -391,12 +391,12 @@ class EndpointReferenceClientTests(unittest.TestCase):
         watch = {"type": "ADDED", "object": self.envelope("Controller", **controller)}
         self.assertEqual(reference_client.parse_line(json.dumps(watch)), watch)
 
-        old = {
+        foreign = {
             "type": "ADDED",
             "object": {"apiVersion": "other/v1", "kind": "Controller"},
         }
         with self.assertRaises(SystemExit) as exit_info:
-            reference_client.parse_line(json.dumps(old))
+            reference_client.parse_line(json.dumps(foreign))
         self.assertIn("other/v1", str(exit_info.exception.code))
 
     def test_client_refuses_to_run_without_a_token(self) -> None:

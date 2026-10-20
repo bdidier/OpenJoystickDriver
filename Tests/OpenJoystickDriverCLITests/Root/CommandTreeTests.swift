@@ -135,7 +135,7 @@ struct CommandTreeTests {
   @Test(arguments: [
     ["status", "--frobnicate"], ["--json", "--plain", "status"], ["status", "--timeout", "0"],
     ["status", "--timeout", "nan"], ["status", "extra"],
-    // Removed with no alias.
+    // Unknown commands and subcommands.
     ["map"], ["app", "status"], ["permissions"], ["test"], ["--headless"], ["controller", "state"],
     ["controller", "packets"], ["controller", "trace"], ["controller", "color"],
     ["controller", "brightness"], ["controller", "disconnect-wireless"], ["controller", "output"],

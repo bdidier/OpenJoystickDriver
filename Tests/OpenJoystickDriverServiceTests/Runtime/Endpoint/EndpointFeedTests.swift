@@ -316,7 +316,7 @@ struct EndpointFeedTests {
     }
   }
 
-  @Test(arguments: ["NotAPersona", "generic"])
+  @Test(arguments: ["NotAPersona", "quokka"])
   func anUnknownProfileIsInvalid(profile: String) async throws {
     let factory = FakeFeedFactory()
     try await withEndpointServer(feeds: factory.registry()) { server, _ in
