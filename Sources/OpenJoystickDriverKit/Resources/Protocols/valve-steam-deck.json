@@ -1,0 +1,55 @@
+{
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "ProtocolDescription",
+  "family": "ValveSteamDeck",
+  "endpoints": {
+    "in": 130,
+    "out": 2
+  },
+  "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
+  "controls": {
+    "base": "Xbox",
+    "add": [
+      "Guide",
+      "Auxiliary1",
+      "LeftPaddle1",
+      "LeftPaddle2",
+      "RightPaddle1",
+      "RightPaddle2",
+      "LeftStickTouch",
+      "RightStickTouch",
+      "LeftTrackpadClick",
+      "RightTrackpadClick",
+      "LeftTrackpadTouch",
+      "RightTrackpadTouch"
+    ],
+    "touchContactCount": 1,
+    "motion": true,
+    "digitalTriggers": ["LeftTrigger", "RightTrigger"]
+  },
+  "defaults": {
+    "session": {
+      "keepAlive": {
+        "intervalMilliseconds": 1000,
+        "writes": [
+          {
+            "report": {
+              "kind": "Feature",
+              "id": 0,
+              "length": 64
+            },
+            "bytes": "81 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"
+          },
+          {
+            "report": {
+              "kind": "Feature",
+              "id": 0,
+              "length": 64
+            },
+            "bytes": "87 03 08 07 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"
+          }
+        ]
+      }
+    }
+  }
+}

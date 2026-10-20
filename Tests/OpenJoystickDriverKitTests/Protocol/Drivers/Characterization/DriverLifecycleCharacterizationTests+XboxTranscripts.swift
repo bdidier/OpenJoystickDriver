@@ -114,7 +114,7 @@ extension DriverLifecycleCharacterizationTests {
     #expect(
       try transcript(Self.xusbWired) == [
         "capabilities rumble=[LowFrequency,HighFrequency] binary=[]",
-        "capabilities lighting=[playerIndicator]", "capabilities triggers=[]",
+        "capabilities lighting=[PlayerIndicator]", "capabilities triggers=[]",
         "usb.startup interval=0 retries=[] packets=0", "usb.startup playerSlot",
         "usb.keepAlive nil", "usb.deferred inputs=0 packets=0", "usb.deferred drained=0",
         "usb.connection[connected] packets=0", "usb.connection[disconnected] packets=0",
@@ -150,7 +150,7 @@ extension DriverLifecycleCharacterizationTests {
     #expect(
       try transcript(Self.xusbReceiver) == [
         "capabilities rumble=[LowFrequency,HighFrequency] binary=[]",
-        "capabilities lighting=[playerIndicator]", "capabilities triggers=[]",
+        "capabilities lighting=[PlayerIndicator]", "capabilities triggers=[]",
         "usb.startup interval=0 retries=[] packets=1", "  n=12", "    08000fc00000000000000000",
         "usb.keepAlive nil", "usb.deferred inputs=3 packets=1", "  n=12",
         "    08000fc00000000000000000", "usb.deferred drained=0",

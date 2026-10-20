@@ -9,7 +9,7 @@ import Testing
 /// `GIPStartupPacketBytesTests`.
 struct NamedPacketDescriptionTests {
   private static let powerOn =
-    #"{"id": "xbox.gip/power-on", "bytes": "05 20 00 01 00", "sessionByte": 2}"#
+    #"{"id": "XboxGIP/power-on", "bytes": "05 20 00 01 00", "sessionByte": 2}"#
 
   private func decode(
     family: PhysicalProtocolID,
@@ -26,7 +26,7 @@ struct NamedPacketDescriptionTests {
   }
 
   private func packet(
-    id: String = "xbox.gip/power-on",
+    id: String = "XboxGIP/power-on",
     bytes: String = #""05 20 00 01 00""#,
     members: String = #""sessionByte": 2"#
   ) -> String {
@@ -35,40 +35,40 @@ struct NamedPacketDescriptionTests {
 
   @Test
   func acceptsWellFormedPackets() throws {
-    let ledOn = packet(id: "xbox.gip/led-on", bytes: #""0A 20 00""#)
+    let ledOn = packet(id: "XboxGIP/led-on", bytes: #""0A 20 00""#)
     let description = try decode(
       family: .xboxGIP,
       #""defaults": {"session": {"namedPackets": [\#(Self.powerOn), \#(ledOn)]}}"#
     )
     let plan = try #require(description.namedPackets)
-    #expect(plan.packets.map(\.id) == ["xbox.gip/power-on", "xbox.gip/led-on"])
-    #expect(plan.packet(named: "xbox.gip/power-on")?.write.bytes == [5, 32, 0, 1, 0])
-    #expect(plan.packet(named: "xbox.gip/power-on")?.write.sessionByte == 2)
-    #expect(plan.packet(named: "xbox.gip/missing") == nil)
+    #expect(plan.packets.map(\.id) == ["XboxGIP/power-on", "XboxGIP/led-on"])
+    #expect(plan.packet(named: "XboxGIP/power-on")?.write.bytes == [5, 32, 0, 1, 0])
+    #expect(plan.packet(named: "XboxGIP/power-on")?.write.sessionByte == 2)
+    #expect(plan.packet(named: "XboxGIP/missing") == nil)
   }
 
   @Test
   func rejectsMalformedPackets() {
-    let sixteen = (0..<16).map { packet(id: "xbox.gip/packet-\($0)") }
-    let seventeen = (0..<17).map { packet(id: "xbox.gip/packet-\($0)") }
+    let sixteen = (0..<16).map { packet(id: "XboxGIP/packet-\($0)") }
+    let seventeen = (0..<17).map { packet(id: "XboxGIP/packet-\($0)") }
     #expect(!rejects("[\(sixteen.joined(separator: ","))]"))
     for packets in [
       "[]",
       "[\(seventeen.joined(separator: ","))]",
       #"[{"bytes": "05 20 00", "sessionByte": 2}]"#,
-      #"[{"id": "xbox.gip/power-on", "sessionByte": 2}]"#,
-      #"[{"id": "xbox.gip/power-on", "bytes": "05 20 00"}]"#,
+      #"[{"id": "XboxGIP/power-on", "sessionByte": 2}]"#,
+      #"[{"id": "XboxGIP/power-on", "bytes": "05 20 00"}]"#,
       "[\(packet(id: "power-on"))]",
-      "[\(packet(id: "xbox.gip/Power-On"))]",
-      "[\(packet(id: "xbox.gip/power--on"))]",
-      "[\(packet(id: "xbox.gip/"))]",
+      "[\(packet(id: "XboxGIP/Power-On"))]",
+      "[\(packet(id: "XboxGIP/power--on"))]",
+      "[\(packet(id: "XboxGIP/"))]",
       "[\(packet(bytes: #""05 20""#))]",
       "[\(packet(bytes: #""05 20 100""#))]",
       "[\(packet(members: #""sessionByte": 1"#))]",
       "[\(packet(members: #""sessionByte": 3"#))]",
       "[\(packet(members: #""sessionByte": 2, "endpoint": 2"#))]",
       "[\(Self.powerOn), \(packet(bytes: #""05 20 00 02""#))]",
-      "[\(packet(id: "xbox.xusb/power-on"))]",
+      "[\(packet(id: "XboxXUSB/power-on"))]",
     ] {
       #expect(rejects(packets), "\(packets)")
     }
@@ -97,7 +97,7 @@ struct NamedPacketDescriptionTests {
   @Test
   func startupReferencesNamedPacketsWithTheirBytes() throws {
     let description = try decodeStartup(
-      #"[{"packet": "xbox.gip/power-on"}, {"packet": "xbox.gip/power-on", "variants": ["usb"]}]"#
+      #"[{"packet": "XboxGIP/power-on"}, {"packet": "XboxGIP/power-on", "variants": ["USB"]}]"#
     )
     #expect(description.usbStartupWrites.map(\.bytes) == [[5, 32, 0, 1, 0], [5, 32, 0, 1, 0]])
     #expect(description.usbStartupWrites.allSatisfy { $0.sessionByte == 2 })
@@ -108,10 +108,10 @@ struct NamedPacketDescriptionTests {
   @Test
   func startupRejectsWhatItCannotResolveOrMix() {
     let usb = #"{"bytes": "01 02 03"}"#
-    let reference = #"{"packet": "xbox.gip/power-on"}"#
+    let reference = #"{"packet": "XboxGIP/power-on"}"#
     for startup in [
-      #"[{"packet": "xbox.gip/missing"}]"#,
-      #"[{"packet": "xbox.gip/power-on", "bytes": "01 02 03"}]"#,
+      #"[{"packet": "XboxGIP/missing"}]"#,
+      #"[{"packet": "XboxGIP/power-on", "bytes": "01 02 03"}]"#,
       #"[{"packet": 7}]"#,
       "[\(reference), \(usb)]",
       "[\(usb), \(reference)]",
@@ -126,7 +126,7 @@ struct NamedPacketDescriptionTests {
     #expect(throws: (any Error).self) {
       _ = try JSONDecoder().decode(
         ControllerRecordDocument.SessionDocument.self,
-        from: Data(#"{"startup": [{"packet": "xbox.gip/power-on"}]}"#.utf8)
+        from: Data(#"{"startup": [{"packet": "XboxGIP/power-on"}]}"#.utf8)
       )
     }
   }
@@ -136,7 +136,7 @@ struct NamedPacketDescriptionTests {
     let description = PhysicalProtocolID.xboxGIP.protocolDescription
     let plan = try #require(description.namedPackets)
     let expected = ["power-on", "led-on", "auth-done"].compactMap {
-      plan.packet(named: "xbox.gip/\($0)")?.write
+      plan.packet(named: "XboxGIP/\($0)")?.write
     }
     #expect(expected.count == 3)
     #expect(description.usbStartupWrites == expected)
@@ -147,9 +147,9 @@ struct NamedPacketDescriptionTests {
     let plan = try #require(PhysicalProtocolID.xboxGIP.protocolDescription.namedPackets)
     #expect(
       plan.packets.map(\.id) == [
-        "xbox.gip/power-on", "xbox.gip/s-init", "xbox.gip/enable-extra-input",
-        "xbox.gip/hori-ack", "xbox.gip/led-on", "xbox.gip/auth-done", "xbox.gip/rumble-begin",
-        "xbox.gip/rumble-end",
+        "XboxGIP/power-on", "XboxGIP/s-init", "XboxGIP/enable-extra-input",
+        "XboxGIP/hori-ack", "XboxGIP/led-on", "XboxGIP/auth-done", "XboxGIP/rumble-begin",
+        "XboxGIP/rumble-end",
       ]
     )
     #expect(plan.packets.allSatisfy { $0.write.sessionByte == 2 })

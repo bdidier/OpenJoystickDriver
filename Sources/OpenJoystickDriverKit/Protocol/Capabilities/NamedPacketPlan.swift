@@ -1,5 +1,5 @@
 /// A family's named packets (`defaults.session.namedPackets` in its protocol description): the
-/// fixed packets a record selects by id in `protocol.initialization`. Only `xbox.gip` has them.
+/// fixed packets a record selects by id in `protocol.initialization`. Only `XboxGIP` has them.
 struct NamedPacketPlan: Equatable, Sendable {
   static let countRange = 1...16
   /// The index of the byte the driver stamps with the GIP sequence number.

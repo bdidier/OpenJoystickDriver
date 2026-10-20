@@ -26,9 +26,9 @@ struct ControllerRecordDocument: Decodable {
   let server: ControllerServer?
   /// Set only on raw-USB records that OJD's USB extension serves.
   let route: ControllerRecordRoute?
-  /// Present exactly for the `hid.report-layout` family.
+  /// Present exactly for the `HIDReportLayout` family.
   let inputLayout: ControllerInputLayout?
-  /// Present only for the `hid.descriptor` family, which then replaces the description's map.
+  /// Present only for the `HIDDescriptor` family, which then replaces the description's map.
   let hidUsageMap: HIDUsageMap?
   let tuning: ControllerTuning
 
@@ -73,7 +73,7 @@ struct ControllerRecordDocument: Decodable {
         throw DecodingError.dataCorruptedError(
           forKey: DocumentKey("server"),
           in: container,
-          debugDescription: "server must be system or ojd"
+          debugDescription: "server must be System or OJD"
         )
       }
       return server
@@ -118,13 +118,13 @@ struct ControllerRecordDocument: Decodable {
       let motors = RumbleOutputTemplate.templateMotors
       try container.rejectUnknown(
         allowed: Set(
-          ["report", "bytes", "counter", "resendIntervalMilliseconds"] + motors.map(\.fieldName)
+          ["report", "bytes", "counter", "resendIntervalMilliseconds"] + motors.map(\.recordKey)
         )
       )
       let target = try container.decode(RumbleTarget.self, for: "report").target
       var fields: [PhysicalRumbleMotor: RumbleOutputTemplate.MotorField] = [:]
       for motor in motors {
-        fields[motor] = try container.decodeOptional(MotorField.self, for: motor.fieldName)?.field
+        fields[motor] = try container.decodeOptional(MotorField.self, for: motor.recordKey)?.field
       }
       do {
         let bytes =
@@ -155,7 +155,7 @@ struct ControllerRecordDocument: Decodable {
 
     init(from decoder: any Decoder) throws {
       let container = try decoder.container(keyedBy: DocumentKey.self)
-      if try container.decode(String.self, for: "kind") == "usb" {
+      if try container.decode(String.self, for: "kind") == "USB" {
         try container.rejectUnknown(allowed: ["kind", "length"])
         target = .usb(length: try container.decode(Int.self, for: "length"))
       } else {
@@ -194,7 +194,7 @@ struct ControllerRecordDocument: Decodable {
       let kind = try container.decode(String.self, for: "kind")
       let reportID = try container.decode(Int.self, for: "id")
       let length = try container.decode(Int.self, for: "length")
-      guard kind == "output" || kind == "feature", let id = UInt8(exactly: reportID) else {
+      guard kind == "Output" || kind == "Feature", let id = UInt8(exactly: reportID) else {
         throw DecodingError.dataCorrupted(
           .init(
             codingPath: decoder.codingPath,
@@ -203,7 +203,7 @@ struct ControllerRecordDocument: Decodable {
         )
       }
       report = ControllerTemplateReport(
-        kind: kind == "output" ? .output : .feature,
+        kind: kind == "Output" ? .output : .feature,
         reportID: id,
         length: length
       )
@@ -301,13 +301,13 @@ struct ControllerRecordDocument: Decodable {
       let present = Set(try container.decodeUniqueList(Control.self, for: "present") ?? [])
       let rumble = try container.decodeOptional(String.self, for: "rumble")
       guard !container.allKeys.isEmpty, absent.isDisjoint(with: present),
-        rumble == nil || rumble == "absent"
+        rumble == nil || rumble == "Absent"
       else {
         throw DecodingError.dataCorrupted(
           .init(
             codingPath: decoder.codingPath,
             debugDescription:
-              "capabilities must be nonempty, disjoint, and declare rumble only as absent"
+              "capabilities must be nonempty, disjoint, and declare rumble only as Absent"
           )
         )
       }

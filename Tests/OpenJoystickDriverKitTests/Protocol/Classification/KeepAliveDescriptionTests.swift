@@ -9,14 +9,14 @@ import Testing
 /// and each driver sends the description's bytes at the description's interval.
 private let writes500 = #"{"intervalMilliseconds": 500, "writes": ["#
 private let hidWriteHead =
-  #"{"report": {"kind": "feature", "id": 1, "length": 4}, "bytes": "01 02 03", "#
+  #"{"report": {"kind": "Feature", "id": 1, "length": 4}, "bytes": "01 02 03", "#
 private let nineWrites = Array(repeating: keepAliveUSBWrite, count: 9).joined(separator: ",")
 private let keepAliveUSBWrite = #"{"bytes": "03 20 00 03", "sessionByte": 2}"#
 
 struct KeepAliveDescriptionTests {
   private static let usbWrite = keepAliveUSBWrite
   private static let hidWrite =
-    #"{"report": {"kind": "feature", "id": 1, "length": 4}, "bytes": "01 02 03"}"#
+    #"{"report": {"kind": "Feature", "id": 1, "length": 4}, "bytes": "01 02 03"}"#
 
   private func decode(
     family: PhysicalProtocolID,
@@ -80,9 +80,9 @@ struct KeepAliveDescriptionTests {
 
   @Test(
     arguments: [
-      hidWriteHead + #""phase": "startup"}"#,
+      hidWriteHead + #""phase": "Startup"}"#,
       hidWriteHead + #""delayMilliseconds": 5}"#,
-      hidWriteHead + #""transport": "usb"}"#,
+      hidWriteHead + #""transport": "USB"}"#,
       hidWriteHead + #""crc32Seed": 1}"#,
     ]
   )
@@ -110,7 +110,7 @@ struct KeepAliveDescriptionTests {
     #expect(rejection(family: .sonyDualSense, hidFamily)?.code == .invalidProtocolDescription)
     // A variant the family lacks.
     let variant =
-      #"{"intervalMilliseconds": 500, "writes": [{"bytes": "01", "variants": ["wired"]}]}"#
+      #"{"intervalMilliseconds": 500, "writes": [{"bytes": "01", "variants": ["Wired"]}]}"#
     #expect(rejection(family: .xboxGIP, gip(variant))?.code == .unknownProtocolVariant)
     // A cadence key the family does not default.
     let cadence =
@@ -134,7 +134,7 @@ struct KeepAliveDescriptionTests {
       #""rawUSB": true, "rawUSBTuningKeys": ["usbCommandTimeoutMs"], "#
         + #""defaults": {"tuning": {"KEY": 500}}"#,
       #""rawUSB": true, "rawUSBTuningKeys": ["usbCommandTimeoutMs"], "#
-        + #""defaults": {"variants": {"usb": {"tuning": {"KEY": 500}}}}"#,
+        + #""defaults": {"variants": {"USB": {"tuning": {"KEY": 500}}}}"#,
     ]
   )
   func rejectsTheIntervalAsATuningKey(template: String) throws {

@@ -151,7 +151,7 @@ struct OwnershipReapplyTests {
     try JSONSerialization.data(
       withJSONObject: ControllerPatch.document(
         selector: .identity(ControllerModelID(vendorID: 0x3537, productID: 0x100B)),
-        body: ["server": "ojd"]
+        body: ["server": "OJD"]
       )
     )
     .write(to: directory.appendingPathComponent("3537-100b.patch.json"))

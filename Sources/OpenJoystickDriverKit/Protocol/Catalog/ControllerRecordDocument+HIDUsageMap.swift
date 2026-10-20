@@ -2,7 +2,7 @@ import Foundation
 
 extension ControllerRecordDocument {
   /// A record's or description's `input` section, which is either a byte layout or, for
-  /// `hid.descriptor`, a HID usage map. The keys decide which: `hidUsageMap` and
+  /// `HIDDescriptor`, a HID usage map. The keys decide which: `hidUsageMap` and
   /// `descriptorShapes` are usage-map keys, any other key belongs to the byte layout.
   struct Input: Decodable {
     let layout: ControllerInputLayout?
@@ -85,10 +85,10 @@ extension ControllerRecordDocument {
       let usage = try Self.usage(in: container, codingPath: decoder.codingPath)
       let binding: HIDUsageMap.Binding
       switch kind {
-      case "button":
+      case "Button":
         try container.rejectUnknown(allowed: ["kind", "page", "usage", "control"])
         binding = .button(try container.decode(Control.self, for: "control"))
-      case "axis":
+      case "Axis":
         let control = try container.decode(Control.self, for: "control")
         try container.rejectUnknown(allowed: [
           "kind", "page", "usage", "control", "inverted", "range", "deadZone",
@@ -102,7 +102,7 @@ extension ControllerRecordDocument {
             deadZone: deadZone.map(Float.init)
           )
         )
-      case "hat":
+      case "Hat":
         try container.rejectUnknown(allowed: ["kind", "page", "usage", "range"])
         binding = .hat(
           HIDUsageMap.Hat(range: try container.decodeOptional(UsageRange.self, for: "range")?.range)
@@ -111,7 +111,7 @@ extension ControllerRecordDocument {
         throw DecodingError.dataCorrupted(
           .init(
             codingPath: decoder.codingPath + [DocumentKey("kind")],
-            debugDescription: "kind is button, axis or hat"
+            debugDescription: "kind is Button, Axis or Hat"
           )
         )
       }

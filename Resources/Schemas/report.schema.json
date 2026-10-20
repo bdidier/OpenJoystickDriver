@@ -315,7 +315,7 @@
         },
         "protocolBinding": {
           "type": "string",
-          "pattern": "^[a-z0-9]+\\.[a-z0-9-]+(:[a-z0-9-]+)?$"
+          "pattern": "^[A-Z][A-Za-z0-9]*(:[A-Z][A-Za-z0-9]*)?$"
         },
         "connection": {
           "type": "string"
@@ -482,9 +482,9 @@
           "type": "array",
           "items": {
             "enum": [
-              "playerIndicator",
-              "programmableColor",
-              "programmableBrightness"
+              "PlayerIndicator",
+              "ProgrammableColor",
+              "ProgrammableBrightness"
             ]
           }
         },
@@ -639,24 +639,24 @@
       "properties": {
         "protocolID": {
           "enum": [
-            "hid.descriptor",
-            "hid.report-layout",
-            "xbox.xid",
-            "xbox.xusb",
-            "xbox.gip",
-            "sony.sixaxis",
-            "sony.dualshock4",
-            "sony.dualsense",
-            "nintendo.switch1",
-            "nintendo.switch2",
-            "nintendo.switch-input-only",
-            "valve.steam-controller",
-            "valve.steam-triton",
-            "valve.steam-deck",
-            "vendor.flydigi",
-            "vendor.ps3-third-party",
-            "vendor.gamesir",
-            "vendor.nvidia-shield"
+            "HIDDescriptor",
+            "HIDReportLayout",
+            "XboxXID",
+            "XboxXUSB",
+            "XboxGIP",
+            "SonySixaxis",
+            "SonyDualShock4",
+            "SonyDualSense",
+            "NintendoSwitch1",
+            "NintendoSwitch2",
+            "NintendoSwitchInputOnly",
+            "ValveSteamController",
+            "ValveSteamTriton",
+            "ValveSteamDeck",
+            "VendorFlydigi",
+            "VendorPS3ThirdParty",
+            "VendorGameSir",
+            "VendorNVIDIAShield"
           ]
         },
         "reason": { "$ref": "#/$defs/bindingReason" },

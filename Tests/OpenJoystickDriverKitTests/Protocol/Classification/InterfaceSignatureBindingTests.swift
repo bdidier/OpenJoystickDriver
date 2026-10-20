@@ -7,10 +7,10 @@ struct InterfaceSignatureBindingTests {
   private let uncatalogued = ControllerModelID(vendorID: 0x1234, productID: 0x5678)
 
   @Test(arguments: [
-    (UInt8(0x58), UInt8(0x42), UInt8(0x00), "xbox.xid:gamepad"),
-    (UInt8(0xFF), UInt8(0x5D), UInt8(0x01), "xbox.xusb:wired"),
-    (UInt8(0xFF), UInt8(0x5D), UInt8(0x81), "xbox.xusb:receiver"),
-    (UInt8(0xFF), UInt8(0x47), UInt8(0xD0), "xbox.gip:usb"),
+    (UInt8(0x58), UInt8(0x42), UInt8(0x00), "XboxXID:Gamepad"),
+    (UInt8(0xFF), UInt8(0x5D), UInt8(0x01), "XboxXUSB:Wired"),
+    (UInt8(0xFF), UInt8(0x5D), UInt8(0x81), "XboxXUSB:Receiver"),
+    (UInt8(0xFF), UInt8(0x47), UInt8(0xD0), "XboxGIP:USB"),
   ])
   func eachRegistryInterfaceSignatureBindsItsFamily(
     interfaceClass: UInt8,
@@ -57,7 +57,7 @@ struct InterfaceSignatureBindingTests {
       deviceProtocol: 0xD0
     )
     let binding = try bound(device)
-    #expect(binding.id.rawValue == "xbox.gip:usb")
+    #expect(binding.id.rawValue == "XboxGIP:USB")
     #expect(binding.interfaceNumber == 0)
     #expect(binding.matchedPredicates == [.deviceClassSignature])
     #expect(
@@ -124,7 +124,7 @@ struct InterfaceSignatureBindingTests {
       registryInterface(1, 0xFF, 0x5D, 0x81), registryInterface(0, 0xFF, 0x5D, 0x01),
     ])
     let binding = try bound(device)
-    #expect(binding.id.rawValue == "xbox.xusb:wired")
+    #expect(binding.id.rawValue == "XboxXUSB:Wired")
     #expect(binding.interfaceNumber == 0)
   }
 

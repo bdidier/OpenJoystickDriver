@@ -53,7 +53,7 @@ ojd controller list
 ojd controller show D7D7:0041
 ```
 
-`show` should report the protocol `vendor.flydigi`. Then check each control:
+`show` should report the protocol `VendorFlydigi`. Then check each control:
 
 ```bash
 ojd controller watch D7D7:0041

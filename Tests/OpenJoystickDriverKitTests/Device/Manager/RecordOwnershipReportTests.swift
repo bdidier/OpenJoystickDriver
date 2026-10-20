@@ -23,7 +23,7 @@ struct RecordOwnershipReportTests {
     try JSONSerialization.data(
       withJSONObject: ControllerPatch.document(
         selector: .identity(ControllerModelID(vendorID: 0x3537, productID: 0x100B)),
-        body: ["server": "ojd"]
+        body: ["server": "OJD"]
       )
     )
     .write(to: directory.appendingPathComponent("3537-100b.patch.json"))
@@ -40,9 +40,9 @@ struct RecordOwnershipReportTests {
     #expect(device.recordServer == .system)
     let object = try Self.object(of: device)
 
-    #expect(object["recordServer"] as? String == "system")
+    #expect(object["recordServer"] as? String == "System")
     var owned = object
-    owned["recordServer"] = "ojd"
+    owned["recordServer"] = "OJD"
     #expect(try Self.decoded(owned).recordServer == .ojd)
   }
 

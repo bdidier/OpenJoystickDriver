@@ -5,33 +5,58 @@ import Foundation
 /// The taxonomy in the protocol specification names more families; a family joins
 /// this enum only when a driver for it exists.
 public enum PhysicalProtocolID: String, CaseIterable, Codable, Sendable {
-  case hidDescriptor = "hid.descriptor"
+  case hidDescriptor = "HIDDescriptor"
   /// A fixed input-report layout from the controller record (``ControllerInputLayout``).
-  case hidReportLayout = "hid.report-layout"
-  case xboxXID = "xbox.xid"
-  case xboxXUSB = "xbox.xusb"
-  case xboxGIP = "xbox.gip"
-  case sonySixaxis = "sony.sixaxis"
-  case sonyDualShock4 = "sony.dualshock4"
-  case sonyDualSense = "sony.dualsense"
-  case nintendoSwitch1 = "nintendo.switch1"
+  case hidReportLayout = "HIDReportLayout"
+  case xboxXID = "XboxXID"
+  case xboxXUSB = "XboxXUSB"
+  case xboxGIP = "XboxGIP"
+  case sonySixaxis = "SonySixaxis"
+  case sonyDualShock4 = "SonyDualShock4"
+  case sonyDualSense = "SonyDualSense"
+  case nintendoSwitch1 = "NintendoSwitch1"
   /// Nintendo Switch 2 controller (SDL `SDL_hidapi_switch2.c`): input report `0x05` after an init
   /// sequence on the vendor bulk interface, or the same state over its Bluetooth LE GATT link.
-  case nintendoSwitch2 = "nintendo.switch2"
+  case nintendoSwitch2 = "NintendoSwitch2"
   /// Wired Switch pad with a fixed HID input report and no subcommand channel (SDL
   /// `SwitchInputOnlyController`).
-  case nintendoSwitchInputOnly = "nintendo.switch-input-only"
-  case valveSteamController = "valve.steam-controller"
+  case nintendoSwitchInputOnly = "NintendoSwitchInputOnly"
+  case valveSteamController = "ValveSteamController"
   /// 2026 Steam Controller (SDL `SteamControllerTriton`): its own report IDs, settings feature
   /// report, and repeated rumble report.
-  case valveSteamTriton = "valve.steam-triton"
+  case valveSteamTriton = "ValveSteamTriton"
   /// Steam Deck built-in controller (SDL `SteamControllerNeptune`): its own state report,
   /// settings, watchdog, and rumble report.
-  case valveSteamDeck = "valve.steam-deck"
-  case vendorFlydigi = "vendor.flydigi"
-  case vendorPS3ThirdParty = "vendor.ps3-third-party"
-  case vendorGameSir = "vendor.gamesir"
-  case vendorNVIDIAShield = "vendor.nvidia-shield"
+  case valveSteamDeck = "ValveSteamDeck"
+  case vendorFlydigi = "VendorFlydigi"
+  case vendorPS3ThirdParty = "VendorPS3ThirdParty"
+  case vendorGameSir = "VendorGameSir"
+  case vendorNVIDIAShield = "VendorNVIDIAShield"
+
+  /// The stem of this family's description file in `Resources/Protocols`: lowercase kebab-case
+  /// with each brand or product name kept as one word.
+  public var descriptionFileStem: String {
+    switch self {
+    case .hidDescriptor: "hid-descriptor"
+    case .hidReportLayout: "hid-report-layout"
+    case .xboxXID: "xbox-xid"
+    case .xboxXUSB: "xbox-xusb"
+    case .xboxGIP: "xbox-gip"
+    case .sonySixaxis: "sony-sixaxis"
+    case .sonyDualShock4: "sony-dualshock4"
+    case .sonyDualSense: "sony-dualsense"
+    case .nintendoSwitch1: "nintendo-switch1"
+    case .nintendoSwitch2: "nintendo-switch2"
+    case .nintendoSwitchInputOnly: "nintendo-switch-input-only"
+    case .valveSteamController: "valve-steam-controller"
+    case .valveSteamTriton: "valve-steam-triton"
+    case .valveSteamDeck: "valve-steam-deck"
+    case .vendorFlydigi: "vendor-flydigi"
+    case .vendorPS3ThirdParty: "vendor-ps3-third-party"
+    case .vendorGameSir: "vendor-gamesir"
+    case .vendorNVIDIAShield: "vendor-nvidia-shield"
+    }
+  }
 
   /// Implemented variants. An empty list means the family has one contract.
   public var variants: [PhysicalProtocolVariantID] {
@@ -106,14 +131,14 @@ public enum PhysicalProtocolID: String, CaseIterable, Codable, Sendable {
 /// catalog records store only variants that transport cannot decide
 /// (``PhysicalProtocolID/storesVariant``).
 public enum PhysicalProtocolVariantID: String, CaseIterable, Sendable {
-  case usb
-  case bluetoothClassic = "bluetooth-classic"
-  case bluetoothLE = "bluetooth-le"
-  case gamepad
-  case wired
-  case receiver
-  case dongle
-  case enhancedHID = "enhanced-hid"
+  case usb = "USB"
+  case bluetoothClassic = "BluetoothClassic"
+  case bluetoothLE = "BluetoothLE"
+  case gamepad = "Gamepad"
+  case wired = "Wired"
+  case receiver = "Receiver"
+  case dongle = "Dongle"
+  case enhancedHID = "EnhancedHID"
 }
 
 /// Machine-readable reasons a device is not bound.
@@ -172,8 +197,8 @@ public enum ProtocolClassification: Equatable, Sendable {
 ///
 /// Precedence: exact catalog record, then a protocol-standard USB interface
 /// signature (the device-descriptor GIP triple only when an unconfigured device
-/// exposes no interface facts), then the `hid.descriptor` contract.
-/// `hid.descriptor` always requires the descriptor contract, including for catalog records.
+/// exposes no interface facts), then the `HIDDescriptor` contract.
+/// `HIDDescriptor` always requires the descriptor contract, including for catalog records.
 /// A validation failure never falls through to a lower level. One exception: a record of one
 /// Xbox USB family whose device exposes only the other family's interface signature binds by
 /// that signature.
@@ -256,7 +281,7 @@ enum ProtocolClassifier {
       isRawUSB
       ? record.transportProfile.interfaceNumber
       : boundInterfaceNumber(of: record, in: interfaces)
-    // A catalog row adds identity to `hid.descriptor`; it never replaces validation.
+    // A catalog row adds identity to `HIDDescriptor`; it never replaces validation.
     if record.physicalProtocolID == .hidDescriptor {
       guard let interface = descriptorInterface(interfaces) else {
         return reject(.descriptorContractMismatch)
@@ -363,7 +388,7 @@ enum ProtocolClassifier {
       return .conflict(.ambiguousProtocolMatch, candidates: candidates)
     }
     // These are raw-USB variants; HID access cannot drive them and must not reach
-    // `hid.descriptor`.
+    // `HIDDescriptor`.
     guard backend.usesRawUSB else {
       return .unsupported(
         .unsupportedTransportVariant,

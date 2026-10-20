@@ -54,7 +54,9 @@ struct DeviceCatalog: Sendable {
     let defaultEndpoints = protocolInfo.protocolID.protocolDescription.endpoints
     let inputEndpoint = record.usb?.endpoints?.input ?? defaultEndpoints.input
     let outputEndpoint = record.usb?.endpoints?.output ?? defaultEndpoints.output
-    if let configuration = record.usb?.configuration, configuration != "set1-before-claim" {
+    if let configuration = record.usb?.configuration,
+      configuration != "SetConfiguration1BeforeClaim"
+    {
       throw ControllerRecordProblem("unsupported USB configuration \(configuration)")
     }
     let session = record.defaultMode.session
@@ -67,7 +69,7 @@ struct DeviceCatalog: Sendable {
         inputEndpoint: UInt8(inputEndpoint),
         outputEndpoint: UInt8(outputEndpoint),
         hasEndpointOverride: record.usb?.endpoints != nil,
-        needsSetConfiguration: record.usb?.configuration == "set1-before-claim",
+        needsSetConfiguration: record.usb?.configuration == "SetConfiguration1BeforeClaim",
         postHandshakeSettleNanoseconds: DeviceTransportProfile.settleNanoseconds(
           milliseconds: session.settleMilliseconds
         )

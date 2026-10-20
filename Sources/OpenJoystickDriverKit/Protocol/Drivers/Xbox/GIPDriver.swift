@@ -72,7 +72,7 @@ public final class GIPDriver: PhysicalProtocolDriver {
     self.outEndpoint = transportProfile.outputEndpoint
     let named = startupPackets.map { identifier in
       guard let write = PhysicalProtocolID.xboxGIP.namedPacketWrite(identifier) else {
-        preconditionFailure("\(identifier) is not a named packet of xbox.gip")
+        preconditionFailure("\(identifier) is not a named packet of XboxGIP")
       }
       return write
     }

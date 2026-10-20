@@ -33,7 +33,7 @@ struct ModPackageFixture {
     let document: [String: Any] = [
       "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordDocument.kind,
       "vendorID": vendorID,
-      "productID": productID, "modes": [["id": "default", "protocol": ["family": "xbox.gip"]]],
+      "productID": productID, "modes": [["id": "default", "protocol": ["family": "XboxGIP"]]],
     ]
     return (
       String(format: "%04x-%04x.json", vendorID, productID),

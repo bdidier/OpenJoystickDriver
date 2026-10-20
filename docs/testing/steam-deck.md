@@ -1,6 +1,6 @@
 # Test the Steam Deck Controller
 
-The Steam Deck's built-in controller is `0x28de:0x1205`, an internal USB device. Its record's `valve.steam-deck` family selects `SteamDeckDriver`. The driver follows SDL `SDL_hidapi_steamdeck.c` and Linux `hid-steam.c` (`STEAM_QUIRK_DECK`). It is not hardware-verified. This path applies only when macOS runs on Deck hardware.
+The Steam Deck's built-in controller is `0x28de:0x1205`, an internal USB device. Its record's `ValveSteamDeck` family selects `SteamDeckDriver`. The driver follows SDL `SDL_hidapi_steamdeck.c` and Linux `hid-steam.c` (`STEAM_QUIRK_DECK`). It is not hardware-verified. This path applies only when macOS runs on Deck hardware.
 
 ## What the Driver Does
 

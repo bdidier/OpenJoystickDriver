@@ -8,7 +8,7 @@ SCHEMA = "cli-output.schema.json"
 ROUTES = ("NativePassThrough", "VirtualHid", "ExtensionOwned", "OutputDisabled")
 
 
-def claim_document(server: str = "ojd", previous: str = "system") -> dict[str, Any]:
+def claim_document(server: str = "OJD", previous: str = "System") -> dict[str, Any]:
     return {
         **schema_header.header("ControllerServer"),
         "controller": "xbox-1",
@@ -35,11 +35,11 @@ class ControllerClaimSchemaTests(unittest.TestCase):
         )
 
     def test_claim_sets_ojd_and_release_sets_system(self) -> None:
-        self.validator("controllerClaim").validate(claim_document("ojd", "system"))
-        self.validator("controllerRelease").validate(claim_document("system", "ojd"))
+        self.validator("controllerClaim").validate(claim_document("OJD", "System"))
+        self.validator("controllerRelease").validate(claim_document("System", "OJD"))
         for name, server in (
-            ("controllerClaim", "system"),
-            ("controllerRelease", "ojd"),
+            ("controllerClaim", "System"),
+            ("controllerRelease", "OJD"),
         ):
             with (
                 self.subTest(name=name),

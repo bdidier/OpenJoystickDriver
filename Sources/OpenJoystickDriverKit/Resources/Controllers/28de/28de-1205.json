@@ -7,7 +7,7 @@
     {
       "id": "default",
       "protocol": {
-        "family": "valve.steam-deck"
+        "family": "ValveSteamDeck"
       }
     }
   ]

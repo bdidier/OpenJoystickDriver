@@ -26,7 +26,7 @@ extension ControllerPortKey {
 }
 
 extension ApplicationServiceDeviceDescription {
-  /// A USB `hid.descriptor` controller whose session token is `.fixture(id)`, for tests that
+  /// A USB `HIDDescriptor` controller whose session token is `.fixture(id)`, for tests that
   /// list controllers.
   package static func fixture(
     id: String,

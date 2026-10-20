@@ -1,10 +1,10 @@
 import Foundation
 
-/// Descriptor-driven driver for the `hid.descriptor` protocol: HID controllers whose
+/// Descriptor-driven driver for the `HIDDescriptor` protocol: HID controllers whose
 /// report descriptor satisfies ``HIDDescriptorContract``.
 ///
 /// Raw report layouts vary between devices, so IOKit decodes descriptor elements and this driver
-/// folds them through a ``HIDUsageMap``: the record's, else the one the `hid.descriptor`
+/// folds them through a ``HIDUsageMap``: the record's, else the one the `HIDDescriptor`
 /// description selects for the report descriptor's shape, else the description's standard map.
 public final class HIDDescriptorDriver: PhysicalProtocolDriver {
   private let model: ControllerModelID
@@ -21,7 +21,7 @@ public final class HIDDescriptorDriver: PhysicalProtocolDriver {
   /// as Consumer Record over Bluetooth.
   private let hasShareButton: Bool
 
-  /// Creates a driver whose usage map the `hid.descriptor` description selects.
+  /// Creates a driver whose usage map the `HIDDescriptor` description selects.
   public convenience init(model: ControllerModelID, reportDescriptor: Data? = nil) {
     self.init(model: model, reportDescriptor: reportDescriptor, usageMap: nil)
   }
@@ -49,7 +49,7 @@ public final class HIDDescriptorDriver: PhysicalProtocolDriver {
       let resolved = usageMap
         ?? description?.hidUsageShapes.first(where: { $0.matches(usages) })?.map
         ?? description?.hidUsageMap
-    else { preconditionFailure("Resources/Protocols/hid.descriptor.json declares no usage map") }
+    else { preconditionFailure("Resources/Protocols/hid-descriptor.json declares no usage map") }
     self.usageMap = resolved
     hasShareButton = usages.contains { (hidUsage: HIDUsage) in
       resolved.binding(page: UInt32(hidUsage.usagePage), usage: UInt32(hidUsage.usage))

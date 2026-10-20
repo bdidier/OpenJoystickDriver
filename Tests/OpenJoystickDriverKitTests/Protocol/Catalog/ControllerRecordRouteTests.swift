@@ -8,12 +8,12 @@ struct ControllerRecordRouteTests {
   @Test
   func decodesExtensionOwnedOnARawUSBFamily() throws {
     let document = try decode(
-      #""modes": [{"id": "default", "protocol": {"family": "xbox.gip"}}], "#
+      #""modes": [{"id": "default", "protocol": {"family": "XboxGIP"}}], "#
         + #""route": "ExtensionOwned""#
     )
     #expect(document.route == .extensionOwned)
     #expect(
-      try decode(#""modes": [{"id": "default", "protocol": {"family": "xbox.gip"}}]"#).route == nil
+      try decode(#""modes": [{"id": "default", "protocol": {"family": "XboxGIP"}}]"#).route == nil
     )
   }
 
@@ -21,14 +21,14 @@ struct ControllerRecordRouteTests {
   func rejectsUnknownRoutes(name: String) {
     #expect(throws: DecodingError.self) {
       try decode(
-        "\"modes\": [{\"id\": \"default\", \"protocol\": {\"family\": \"xbox.gip\"}}], "
+        "\"modes\": [{\"id\": \"default\", \"protocol\": {\"family\": \"XboxGIP\"}}], "
           + "\"route\": \"\(name)\""
       )
     }
   }
 
   /// The extension claims raw USB interfaces, so a HID family cannot route through it.
-  @Test(arguments: [#"{"family": "sony.dualsense"}"#, #"{"family": "vendor.ps3-third-party"}"#])
+  @Test(arguments: [#"{"family": "SonyDualSense"}"#, #"{"family": "VendorPS3ThirdParty"}"#])
   func rejectsExtensionOwnedOnHIDFamilies(protocolInfo: String) {
     #expect(throws: DecodingError.self) {
       try decode(

@@ -16,184 +16,184 @@
   ],
   "controllerTypeFamilies": {
     "PS3Controller": {
-      "family": "sony.sixaxis"
+      "family": "SonySixaxis"
     },
     "PS4Controller": {
-      "family": "sony.dualshock4"
+      "family": "SonyDualShock4"
     },
     "PS5Controller": {
-      "family": "sony.dualsense"
+      "family": "SonyDualSense"
     },
     "SwitchProController": {
-      "family": "nintendo.switch1"
+      "family": "NintendoSwitch1"
     },
     "SwitchJoyConLeft": {
-      "family": "nintendo.switch1"
+      "family": "NintendoSwitch1"
     },
     "SwitchJoyConRight": {
-      "family": "nintendo.switch1"
+      "family": "NintendoSwitch1"
     },
     "XBox360Controller": {
-      "family": "xbox.xusb",
-      "variant": "wired"
+      "family": "XboxXUSB",
+      "variant": "Wired"
     },
     "XBoxOneController": {
-      "family": "xbox.gip"
+      "family": "XboxGIP"
     },
     "SteamController": {
-      "family": "valve.steam-controller"
+      "family": "ValveSteamController"
     },
     "SteamControllerV2": {
-      "family": "valve.steam-controller"
+      "family": "ValveSteamController"
     },
     "SteamControllerNeptune": {
-      "family": "valve.steam-deck"
+      "family": "ValveSteamDeck"
     },
     "SwitchInputOnlyController": {
-      "family": "nintendo.switch-input-only"
+      "family": "NintendoSwitchInputOnly"
     },
     "SteamControllerTriton": {
-      "family": "valve.steam-triton"
+      "family": "ValveSteamTriton"
     }
   },
-  "thirdPartyPS3Family": "vendor.ps3-third-party",
+  "thirdPartyPS3Family": "VendorPS3ThirdParty",
   "interfaceSignatureTypes": ["XInputPS4Controller", "XInputSwitchController"],
   "xboxUsbTypes": ["XBox360Controller", "XBoxOneController"],
   "identityFamilies": [
     {
       "identity": "2563:0523",
       "sdlType": "PS3Controller",
-      "family": "sony.sixaxis",
+      "family": "SonySixaxis",
       "note": "SDL `HIDAPI_DriverPS3_IsSupportedDevice` claims `USB_VENDOR_SHANWAN` / `USB_PRODUCT_SHANWAN_DS3` for the DualShock 3 driver; its `is_shanwan` flag only skips the one-byte `0xF5` echo write, which OJD does not send"
     },
     {
       "identity": "0F0D:0086",
       "sdlType": "PS3Controller",
-      "family": "xbox.xusb",
-      "variant": "wired",
+      "family": "XboxXUSB",
+      "variant": "Wired",
       "note": "SDL `controller_list.h`: \"Uses the Xbox 360 protocol, but has PS3 buttons\""
     },
     {
       "identity": "358A:0304",
       "sdlType": "PS5Controller",
-      "family": "hid.descriptor",
+      "family": "HIDDescriptor",
       "note": "SDL `HIDAPI_DriverPS5_IsSupportedDevice` rejects `USB_PRODUCT_BACKBONE_ONE_PS5_V2`: \"This product doesn't appear to use the DualSense protocol\""
     },
     {
       "identity": "045E:02E0",
       "sdlType": "XBoxOneController",
-      "family": "hid.descriptor",
+      "family": "HIDDescriptor",
       "note": "Xbox One S, Elite 2 and Series pads over Bluetooth (SDL `SDL_IsJoystickBluetoothXboxOne`) send standard HID reports, not GIP; the descriptor driver maps both firmware layouts (xpadneo `docs/descriptors/xb1s_linux.md`, `xb1s_windows.md`, `xbxs .md`)"
     },
     {
       "identity": "045E:02FD",
       "sdlType": "XBoxOneController",
-      "family": "hid.descriptor",
+      "family": "HIDDescriptor",
       "note": "Xbox One S, Elite 2 and Series pads over Bluetooth (SDL `SDL_IsJoystickBluetoothXboxOne`) send standard HID reports, not GIP; the descriptor driver maps both firmware layouts (xpadneo `docs/descriptors/xb1s_linux.md`, `xb1s_windows.md`, `xbxs.md`)"
     },
     {
       "identity": "045E:0B05",
       "sdlType": "XBoxOneController",
-      "family": "hid.descriptor",
+      "family": "HIDDescriptor",
       "note": "Xbox One S, Elite 2 and Series pads over Bluetooth (SDL `SDL_IsJoystickBluetoothXboxOne`) send standard HID reports, not GIP; the descriptor driver maps both firmware layouts (xpadneo `docs/descriptors/xb1s_linux.md`, `xb1s_windows.md`, `xbxs.md`)"
     },
     {
       "identity": "045E:0B0C",
       "sdlType": "XBoxOneController",
-      "family": "hid.descriptor",
+      "family": "HIDDescriptor",
       "note": "Xbox One S, Elite 2 and Series pads over Bluetooth (SDL `SDL_IsJoystickBluetoothXboxOne`) send standard HID reports, not GIP; the descriptor driver maps both firmware layouts (xpadneo `docs/descriptors/xb1s_linux.md`, `xb1s_windows.md`, `xbxs.md`)"
     },
     {
       "identity": "045E:0B13",
       "sdlType": "XBoxOneController",
-      "family": "hid.descriptor",
+      "family": "HIDDescriptor",
       "note": "Xbox One S, Elite 2 and Series pads over Bluetooth (SDL `SDL_IsJoystickBluetoothXboxOne`) send standard HID reports, not GIP; the descriptor driver maps both firmware layouts (xpadneo `docs/descriptors/xb1s_linux.md`, `xb1s_windows.md`, `xbxs.md`)"
     },
     {
       "identity": "045E:0B20",
       "sdlType": "XBoxOneController",
-      "family": "hid.descriptor",
+      "family": "HIDDescriptor",
       "note": "Xbox One S, Elite 2 and Series pads over Bluetooth (SDL `SDL_IsJoystickBluetoothXboxOne`) send standard HID reports, not GIP; the descriptor driver maps both firmware layouts (xpadneo `docs/descriptors/xb1s_linux.md`, `xb1s_windows.md`, `xbxs.md`)"
     },
     {
       "identity": "045E:0B21",
       "sdlType": "XBoxOneController",
-      "family": "hid.descriptor",
+      "family": "HIDDescriptor",
       "note": "Xbox One S, Elite 2 and Series pads over Bluetooth (SDL `SDL_IsJoystickBluetoothXboxOne`) send standard HID reports, not GIP; the descriptor driver maps both firmware layouts (xpadneo `docs/descriptors/xb1s_linux.md`, `xb1s_windows.md`, `xbxs.md`)"
     },
     {
       "identity": "045E:0B22",
       "sdlType": "XBoxOneController",
-      "family": "hid.descriptor",
+      "family": "HIDDescriptor",
       "note": "Xbox One S, Elite 2 and Series pads over Bluetooth (SDL `SDL_IsJoystickBluetoothXboxOne`) send standard HID reports, not GIP; the descriptor driver maps both firmware layouts (xpadneo `docs/descriptors/xb1s_linux.md`, `xb1s_windows.md`, `xbxs.md`)"
     },
     {
       "identity": "0079:0006",
       "sdlType": "UnknownNonSteamController",
-      "family": "hid.descriptor",
+      "family": "HIDDescriptor",
       "note": "SDL `controller_list.h`: \"DragonRise Generic USB PCB\"; a standard HID gamepad whose layout `HIDDescriptorDriver` recognizes"
     },
     {
       "identity": "0955:7210",
       "sdlType": "XBox360Controller",
-      "family": "vendor.nvidia-shield",
+      "family": "VendorNVIDIAShield",
       "note": "SDL `HIDAPI_DriverXbox360_IsSupportedDevice`: \"the NVIDIA Shield controller which doesn't talk Xbox controller protocol\"; `SDL_hidapi_shield.c` drives it"
     }
   ],
   "steamVariants": [
     {
       "identity": "28DE:1101",
-      "variant": "wired",
+      "variant": "Wired",
       "note": "Legacy Steam Controller (CHELL)"
     },
     {
       "identity": "28DE:1102",
-      "variant": "wired",
+      "variant": "Wired",
       "note": "wired Steam Controller (D0G)"
     },
     {
       "identity": "28DE:1105",
-      "variant": "bluetooth-le",
+      "variant": "BluetoothLE",
       "note": "Bluetooth Steam Controller (D0G)"
     },
     {
       "identity": "28DE:1106",
-      "variant": "bluetooth-le",
+      "variant": "BluetoothLE",
       "note": "Bluetooth Steam Controller (D0G)"
     },
     {
       "identity": "28DE:1142",
-      "variant": "dongle",
+      "variant": "Dongle",
       "note": "wireless Steam Controller"
     },
     {
       "identity": "28DE:1201",
-      "variant": "wired",
+      "variant": "Wired",
       "note": "wired Steam Controller (HEADCRAB)"
     },
     {
       "identity": "28DE:1202",
-      "variant": "bluetooth-le",
+      "variant": "BluetoothLE",
       "note": "Bluetooth Steam Controller (HEADCRAB)"
     },
     {
       "identity": "28DE:1302",
-      "variant": "wired",
+      "variant": "Wired",
       "note": "Steam Triton Controller"
     },
     {
       "identity": "28DE:1303",
-      "variant": "bluetooth-le",
+      "variant": "BluetoothLE",
       "note": "Steam Triton Controller (BLE)"
     },
     {
       "identity": "28DE:1304",
-      "variant": "dongle",
+      "variant": "Dongle",
       "note": "Steam Proteus Dongle"
     },
     {
       "identity": "28DE:1305",
-      "variant": "dongle",
+      "variant": "Dongle",
       "note": "Steam Nereid Dongle"
     }
   ],

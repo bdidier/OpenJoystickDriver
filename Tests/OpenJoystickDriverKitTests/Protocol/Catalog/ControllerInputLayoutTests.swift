@@ -12,17 +12,17 @@ private let invalidSymmetricAxesAndTableHats: [String] = [
     + #""axes": [{"control": "LeftStickX", "byte": 1, "symmetric": true}]}"#,
   #"{"report": {"length": 2}, "axes": [{"control": "LeftStickX", "byte": 1, "signed": true, "#
     + #""min": 0, "max": 127, "symmetric": true}]}"#,
-  #"{"report": {"length": 2}, "hat": [{"encoding": "table", "byte": 1, "mask": 15, "#
+  #"{"report": {"length": 2}, "hat": [{"encoding": "Table", "byte": 1, "mask": 15, "#
     + #""values": {}}]}"#,
-  #"{"report": {"length": 2}, "hat": [{"encoding": "table", "byte": 1, "mask": 15, "#
-    + #""values": {"16": "north"}}]}"#,
-  #"{"report": {"length": 2}, "hat": [{"encoding": "table", "byte": 1, "mask": 15, "#
-    + #""values": {"01": "north"}}]}"#,
-  #"{"report": {"length": 2}, "hat": [{"encoding": "table", "byte": 1, "mask": 15, "#
-    + #""values": {"1": "neutral"}}]}"#,
-  #"{"report": {"length": 2}, "hat": [{"encoding": "table", "byte": 1, "mask": 15, "#
+  #"{"report": {"length": 2}, "hat": [{"encoding": "Table", "byte": 1, "mask": 15, "#
+    + #""values": {"16": "North"}}]}"#,
+  #"{"report": {"length": 2}, "hat": [{"encoding": "Table", "byte": 1, "mask": 15, "#
+    + #""values": {"01": "North"}}]}"#,
+  #"{"report": {"length": 2}, "hat": [{"encoding": "Table", "byte": 1, "mask": 15, "#
+    + #""values": {"1": "Neutral"}}]}"#,
+  #"{"report": {"length": 2}, "hat": [{"encoding": "Table", "byte": 1, "mask": 15, "#
     + #""values": {"1": "up"}}]}"#,
-  #"{"report": {"length": 2}, "hat": [{"encoding": "table", "byte": 1, "mask": 15}]}"#,
+  #"{"report": {"length": 2}, "hat": [{"encoding": "Table", "byte": 1, "mask": 15}]}"#,
 ]
 
 @Suite
@@ -50,7 +50,7 @@ struct ControllerInputLayoutTests {
   func opposingDirectionsCancel() throws {
     let layout = try inputLayout(
       """
-      {"report": {"length": 1}, "hat": [{"encoding": "directions",
+      {"report": {"length": 1}, "hat": [{"encoding": "Directions",
         "up": {"byte": 0, "mask": 1}, "right": {"byte": 0, "mask": 2},
         "down": {"byte": 0, "mask": 4}, "left": {"byte": 0, "mask": 8}}]}
       """
@@ -65,8 +65,8 @@ struct ControllerInputLayoutTests {
   func aTableHatNamesDirectionsForMaskedValues() throws {
     let layout = try inputLayout(
       """
-      {"report": {"length": 1}, "hat": [{"encoding": "table", "byte": 0, "mask": 240,
-        "values": {"1": "north", "9": "northEast"}}]}
+      {"report": {"length": 1}, "hat": [{"encoding": "Table", "byte": 0, "mask": 240,
+        "values": {"1": "North", "9": "NorthEast"}}]}
       """
     )
     let driver = ReportLayoutDriver(layout: layout)
@@ -127,8 +127,8 @@ struct ControllerInputLayoutTests {
       #"{"report": {"length": 2}, "buttons": [{"control": "DpadUp", "byte": 1, "mask": 1}]}"#,
       #"{"report": {"length": 2}, "buttons": [{"control": "LeftStickX", "byte": 1, "mask": 1}]}"#,
       // Hat.
-      #"{"report": {"length": 2}, "hat": [{"encoding": "8-way", "byte": 1, "mask": 3}]}"#,
-      #"{"report": {"length": 2}, "hat": [{"encoding": "8-way", "byte": 1, "mask": 11}]}"#,
+      #"{"report": {"length": 2}, "hat": [{"encoding": "EightWay", "byte": 1, "mask": 3}]}"#,
+      #"{"report": {"length": 2}, "hat": [{"encoding": "EightWay", "byte": 1, "mask": 11}]}"#,
       #"{"report": {"length": 2}, "hat": [{"encoding": "4-way", "byte": 1, "mask": 15}]}"#,
       // Axes.
       #"{"report": {"length": 2}, "axes": [{"control": "South", "byte": 1}]}"#,

@@ -2,7 +2,7 @@
 
 This test covers [OpenJoystickDriver issue #14][1] for USB device `5426:2627` (`1532:0A43` in hexadecimal).
 
-The candidate record selects OJD's wired Xbox One GIP parser instead of `hid.descriptor` and uses the parser defaults. It declares no `shareButton` or `paddles` flags. The request proposed those flags without packet evidence, and OJD has no paddle packet decoder.
+The candidate record selects OJD's wired Xbox One GIP parser instead of `HIDDescriptor` and uses the parser defaults. It declares no `shareButton` or `paddles` flags. The request proposed those flags without packet evidence, and OJD has no paddle packet decoder.
 
 The endpoint, input mapping, and output details remain unverified. Validation is signing-free. This pair is not in the current production Apple USB entitlement, so the USB facade tries direct IOUSBHost. Use an exact development DEXT experiment only if live ownership evidence requires it.
 

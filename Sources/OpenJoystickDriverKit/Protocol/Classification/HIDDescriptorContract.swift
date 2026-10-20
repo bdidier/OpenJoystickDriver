@@ -1,6 +1,6 @@
 import Foundation
 
-/// The semantic report-descriptor contract `hid.descriptor` requires before binding.
+/// The semantic report-descriptor contract `HIDDescriptor` requires before binding.
 ///
 /// It fails closed: every control the classifier relies on must be described by a
 /// standard usage, and anything the parser cannot model rejects the descriptor.

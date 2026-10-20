@@ -70,7 +70,7 @@ struct PhysicalRumbleOutputTests {
         "name": "Test",
         "vendorID": 1,
         "productID": 2,
-        "protocolBinding": "hid.descriptor",
+        "protocolBinding": "HIDDescriptor",
         "connection": "USB",
         "serialNumber": null,
         "bindingResult": {
@@ -92,7 +92,7 @@ struct PhysicalRumbleOutputTests {
         "name": "Test",
         "vendorID": 1,
         "productID": 2,
-        "protocolBinding": "hid.descriptor",
+        "protocolBinding": "HIDDescriptor",
         "connection": "USB",
         "serialNumber": null,
         "bindingResult": {

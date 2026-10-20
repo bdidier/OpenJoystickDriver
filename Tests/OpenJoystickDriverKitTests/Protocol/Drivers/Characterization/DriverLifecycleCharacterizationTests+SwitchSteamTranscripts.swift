@@ -10,7 +10,7 @@ extension DriverLifecycleCharacterizationTests {
     #expect(
       try transcript(Self.switchBluetooth) == [
         "capabilities rumble=[LowFrequency,HighFrequency] binary=[]",
-        "capabilities lighting=[playerIndicator]", "capabilities triggers=[]",
+        "capabilities lighting=[PlayerIndicator]", "capabilities triggers=[]",
         "usb.startup interval=0 retries=[] packets=0", "usb.keepAlive nil",
         "usb.deferred inputs=0 packets=0", "usb.deferred drained=0",
         "usb.connection[connected] packets=0", "usb.connection[disconnected] packets=0",
@@ -52,7 +52,7 @@ extension DriverLifecycleCharacterizationTests {
     #expect(
       try transcript(Self.steamWired) == [
         "capabilities rumble=[LeftHaptic,RightHaptic] binary=[]",
-        "capabilities lighting=[programmableBrightness]", "capabilities triggers=[]",
+        "capabilities lighting=[ProgrammableBrightness]", "capabilities triggers=[]",
         "usb.startup interval=0 retries=[] packets=0", "usb.keepAlive nil",
         "usb.deferred inputs=0 packets=0", "usb.deferred drained=0",
         "usb.connection[connected] packets=0", "usb.connection[disconnected] packets=0",
@@ -114,7 +114,7 @@ extension DriverLifecycleCharacterizationTests {
     #expect(
       try transcript(Self.steamDongle) == [
         "capabilities rumble=[LeftHaptic,RightHaptic] binary=[]",
-        "capabilities lighting=[programmableBrightness]", "capabilities triggers=[]",
+        "capabilities lighting=[ProgrammableBrightness]", "capabilities triggers=[]",
         "usb.startup interval=0 retries=[] packets=0", "usb.keepAlive nil",
         "usb.deferred inputs=2 packets=0", "usb.deferred drained=0",
         "usb.connection[connected] packets=0", "usb.connection[disconnected] packets=0",

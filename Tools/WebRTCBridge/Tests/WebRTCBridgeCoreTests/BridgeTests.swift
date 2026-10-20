@@ -20,7 +20,7 @@ final class BridgeTests: XCTestCase {
   }
 
   func testAWatchLineBecomesAFrame() throws {
-    let line = Self.modified(pressed: ["South", "unknown-control"], hat: "northEast")
+    let line = Self.modified(pressed: ["South", "unknown-control"], hat: "NorthEast")
     let (id, frame) = try XCTUnwrap(FrameTranslation.frame(fromWatchLine: line))
     XCTAssertEqual(id, "pad-1")
     XCTAssertEqual(frame["kind"] as? String, "Frame")
@@ -64,7 +64,7 @@ final class BridgeTests: XCTestCase {
         "type": "ADDED",
         "object": ["apiVersion": endpointAPIVersion, "kind": "Controller", "id": "pad-1"],
       ],
-      Self.modified(pressed: ["South"], hat: "neutral"),
+      Self.modified(pressed: ["South"], hat: "Neutral"),
     ])
     hostEndpoint.serve(connections: 1)
     playerEndpoint.serve(connections: 1)

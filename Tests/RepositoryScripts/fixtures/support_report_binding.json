@@ -57,7 +57,7 @@
         "postHandshakeSettleMilliseconds": 0,
         "preferredBackends": ["userSpaceHID"],
         "productID": 22136,
-        "protocolBinding": "xbox.gip:usb",
+        "protocolBinding": "XboxGIP:USB",
         "serialNumberPresent": false,
         "sessionState": "active",
         "vendorID": 4660
@@ -141,7 +141,7 @@
           "reason": "ambiguousProtocolMatch",
           "rejectedCandidates": [
             {
-              "protocolID": "hid.descriptor",
+              "protocolID": "HIDDescriptor",
               "reason": "ambiguousProtocolMatch"
             }
           ]

@@ -7,7 +7,7 @@
     {
       "id": "default",
       "protocol": {
-        "family": "xbox.gip"
+        "family": "XboxGIP"
       }
     }
   ],
@@ -16,7 +16,7 @@
       "in": 129,
       "out": 1
     },
-    "configuration": "set1-before-claim"
+    "configuration": "SetConfiguration1BeforeClaim"
   },
   "route": "ExtensionOwned"
 }

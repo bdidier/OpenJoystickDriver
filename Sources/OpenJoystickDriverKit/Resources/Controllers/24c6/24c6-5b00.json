@@ -7,8 +7,8 @@
     {
       "id": "default",
       "protocol": {
-        "family": "xbox.xusb",
-        "variant": "wired"
+        "family": "XboxXUSB",
+        "variant": "Wired"
       }
     }
   ]

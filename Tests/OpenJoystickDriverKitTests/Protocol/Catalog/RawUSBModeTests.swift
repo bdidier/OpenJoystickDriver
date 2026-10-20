@@ -31,7 +31,7 @@ struct RawUSBModeTests {
     match: [String: Any]? = nil,
     extras: [String: Any] = [:]
   ) -> [String: Any] {
-    var mode: [String: Any] = ["id": id, "protocol": ["family": "xbox.gip"]]
+    var mode: [String: Any] = ["id": id, "protocol": ["family": "XboxGIP"]]
     mode["match"] = match
     return mode.merging(extras) { $1 }
   }
@@ -42,7 +42,7 @@ struct RawUSBModeTests {
   func aRawUSBRecordSelectsAnAlternativeModeFromItsInterfaceSignature() async throws {
     let signature: [String: Any] = [
       "interfaceClass": 255, "interfaceSubclass": 71, "interfaceProtocol": 208,
-      "endpoints": [["direction": "in", "transferType": "interrupt"]],
+      "endpoints": [["direction": "In", "transferType": "Interrupt"]],
     ]
     let document = Self.record(modes: [
       Self.gip("default"),
@@ -100,7 +100,7 @@ struct RawUSBModeTests {
   /// A raw-USB route has no feature-report read, so a mode that needs a probe never holds.
   @Test
   func aRawUSBRouteNeverRunsAProbeMode() async throws {
-    let probe: [String: Any] = ["report": 1, "length": 8, "expect": "answers"]
+    let probe: [String: Any] = ["report": 1, "length": 8, "expect": "Answers"]
     let document = Self.record(modes: [
       Self.gip("default"), Self.gip("probed", match: ["probes": [probe]]),
     ])
@@ -120,9 +120,9 @@ struct RawUSBModeTests {
   @Test
   func aRawUSBModeKeepsAnInterfaceAndAHIDSessionOut() throws {
     let hidWrite: [String: Any] = [
-      "report": ["kind": "feature", "id": 1, "length": 2], "bytes": "02",
+      "report": ["kind": "Feature", "id": 1, "length": 2], "bytes": "02",
     ]
-    let link: [String: Any] = ["link": "usb"]
+    let link: [String: Any] = ["link": "USB"]
     let rejected: [(String, [String: Any], String)] = [
       (
         "interface",
@@ -151,7 +151,7 @@ struct RawUSBModeTests {
         "USB packets in a HID mode",
         Self.record(modes: [
           [
-            "id": "default", "protocol": ["family": "sony.sixaxis"],
+            "id": "default", "protocol": ["family": "SonySixaxis"],
             "session": ["startup": [Self.usbWrite]],
           ]
         ]),
@@ -182,8 +182,8 @@ struct RawUSBModeTests {
     ]
     let rumble: [String: Any] = [
       "rumble": [
-        "report": ["kind": "output", "id": 2, "length": 8],
-        "leftMain": ["byte": 3],
+        "report": ["kind": "Output", "id": 2, "length": 8],
+        "lowFrequency": ["byte": 3],
       ]
     ]
     func single(
@@ -196,17 +196,17 @@ struct RawUSBModeTests {
       return Self.record(modes: [mode], extras: extras)
     }
     let rejected: [(String, [String: Any])] = [
-      ("report-layout without a layout", single("hid.report-layout")),
-      ("layout under another family", single("sony.sixaxis", ["input": layout])),
-      ("template under hid.descriptor", single("hid.descriptor", session: rumble)),
-      ("template under a raw-USB family", single("xbox.gip", session: rumble)),
+      ("report-layout without a layout", single("HIDReportLayout")),
+      ("layout under another family", single("SonySixaxis", ["input": layout])),
+      ("template under HIDDescriptor", single("HIDDescriptor", session: rumble)),
+      ("template under a raw-USB family", single("XboxGIP", session: rumble)),
     ]
     for (name, document) in rejected {
       #expect(try Self.problem(document) != nil, Comment(rawValue: name))
     }
-    #expect(try Self.problem(single("hid.report-layout", ["input": layout])) == nil)
+    #expect(try Self.problem(single("HIDReportLayout", ["input": layout])) == nil)
     #expect(
-      try Self.problem(single("hid.report-layout", ["input": layout], session: rumble)) == nil
+      try Self.problem(single("HIDReportLayout", ["input": layout], session: rumble)) == nil
     )
   }
 }

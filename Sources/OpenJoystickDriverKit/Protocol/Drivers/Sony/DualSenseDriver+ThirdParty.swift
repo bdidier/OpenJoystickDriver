@@ -55,7 +55,7 @@ struct DualSenseThirdPartyModel: Equatable {
   /// A wireless receiver that keeps reporting while no controller is paired to it.
   let isDongle: Bool
 
-  /// The model a controller record describes with its `sony.dualsense` parameters.
+  /// The model a controller record describes with its `SonyDualSense` parameters.
   init(parameters: ProtocolParameters) {
     var features: DualSenseFeatures = []
     if parameters.unprobedSensors == true { features.insert(.sensors) }

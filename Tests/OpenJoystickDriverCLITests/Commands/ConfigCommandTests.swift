@@ -34,7 +34,7 @@ struct ConfigCommandTests {
   private func bareModel() throws -> ControllerModelID {
     try #require(
       ControllerRecordSet.bundled.records.values.first {
-        $0.family == "xbox.gip" && $0.tuning.stickDeadzone == nil
+        $0.family == "XboxGIP" && $0.tuning.stickDeadzone == nil
       }
     ).model
   }
@@ -176,11 +176,11 @@ struct ConfigCommandTests {
 
     #expect(run.code == 0, "\(run.standardError)")
     let values = try values(run)
-    #expect(values["inputLivenessTimeoutMs"]?["families"] as? [String] == ["sony.dualshock4"])
+    #expect(values["inputLivenessTimeoutMs"]?["families"] as? [String] == ["SonyDualShock4"])
     let deadzone = try #require(values["stickDeadzone"]?["families"] as? [String])
-    #expect(deadzone.contains("xbox.gip") && deadzone.contains("sony.dualshock4"))
+    #expect(deadzone.contains("XboxGIP") && deadzone.contains("SonyDualShock4"))
     let recovery = try #require(values["hidStartupRecoveryRounds"]?["families"] as? [String])
-    #expect(recovery == ["nintendo.switch1"])
+    #expect(recovery == ["NintendoSwitch1"])
   }
 
   @Test
@@ -199,12 +199,12 @@ struct ConfigCommandTests {
     let line = try #require(
       run.standardOutput.split(separator: "\n").first { $0.hasPrefix("inputLivenessTimeoutMs") }
     )
-    #expect(line.hasSuffix("sony.dualshock4"))
+    #expect(line.hasSuffix("SonyDualShock4"))
   }
 
   @Test
   func showWarnsWhenNoConnectedControllerReadsAKeyDefaultsJSONSets() async throws {
-    let gip = try record(family: "xbox.gip")
+    let gip = try record(family: "XboxGIP")
 
     let run = try await runWithService(
       defaults: #"{"inputLivenessTimeoutMs":900,"stickDeadzone":0.2}"#,
@@ -213,7 +213,7 @@ struct ConfigCommandTests {
 
     #expect(run.code == 0, "\(run.standardError)")
     #expect(run.standardError.contains("inputLivenessTimeoutMs"))
-    #expect(run.standardError.contains("sony.dualshock4"))
+    #expect(run.standardError.contains("SonyDualShock4"))
     #expect(!run.standardError.contains("stickDeadzone"))
     #expect(try values(run)["inputLivenessTimeoutMs"]?["value"] as? Double == 900)
   }
@@ -222,7 +222,7 @@ struct ConfigCommandTests {
   func showDoesNotWarnWhenAConnectedControllerReadsTheKey() async throws {
     let run = try await runWithService(
       defaults: #"{"inputLivenessTimeoutMs":900}"#,
-      devices: [connected(try record(family: "sony.dualshock4"))]
+      devices: [connected(try record(family: "SonyDualShock4"))]
     )
 
     #expect(run.code == 0, "\(run.standardError)")

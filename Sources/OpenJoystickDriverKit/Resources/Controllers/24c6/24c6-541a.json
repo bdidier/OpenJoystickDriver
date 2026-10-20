@@ -7,13 +7,13 @@
     {
       "id": "default",
       "protocol": {
-        "family": "xbox.gip",
+        "family": "XboxGIP",
         "initialization": [
-          "xbox.gip/power-on",
-          "xbox.gip/led-on",
-          "xbox.gip/auth-done",
-          "xbox.gip/rumble-begin",
-          "xbox.gip/rumble-end"
+          "XboxGIP/power-on",
+          "XboxGIP/led-on",
+          "XboxGIP/auth-done",
+          "XboxGIP/rumble-begin",
+          "XboxGIP/rumble-end"
         ]
       }
     }

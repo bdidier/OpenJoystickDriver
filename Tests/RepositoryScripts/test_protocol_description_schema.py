@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import json
+import re
 import tempfile
 import unittest
 from pathlib import Path
@@ -22,35 +23,35 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 
 # The counts a family's description sets for its driver.
 SESSION_LIMITS: dict[str, dict[str, int]] = {
-    "xbox.gip": {"handshakeAttempts": 3, "announceResendLimit": 8},
-    "xbox.xusb": {"receiverInquiryResendLimit": 8},
+    "XboxGIP": {"handshakeAttempts": 3, "announceResendLimit": 8},
+    "XboxXUSB": {"receiverInquiryResendLimit": 8},
 }
 
 
 def xusb_description() -> dict[str, Any]:
     return {
         **header("ProtocolDescription"),
-        "family": "xbox.xusb",
+        "family": "XboxXUSB",
         "endpoints": {"in": 129, "out": 1},
         "rawUSB": True,
         "interfaceSignatures": [
             {
-                "variant": "wired",
+                "variant": "Wired",
                 "interfaceClass": 255,
                 "interfaceSubclass": 93,
                 "interfaceProtocol": 1,
             }
         ],
-        "defaults": {"session": dict(SESSION_LIMITS["xbox.xusb"])},
+        "defaults": {"session": dict(SESSION_LIMITS["XboxXUSB"])},
     }
 
 
 # The facts a description states about its family, which the schema ties its defaults to.
 FAMILY_FACTS: dict[str, dict[str, Any]] = {
-    "hid.report-layout": {"recordSections": ["input", "rumble"]},
-    "xbox.gip": {"rawUSB": True},
-    "xbox.xid": {"rawUSB": True, "recordSections": ["input", "rumble"]},
-    "xbox.xusb": {"rawUSB": True},
+    "HIDReportLayout": {"recordSections": ["input", "rumble"]},
+    "XboxGIP": {"rawUSB": True},
+    "XboxXID": {"rawUSB": True, "recordSections": ["input", "rumble"]},
+    "XboxXUSB": {"rawUSB": True},
 }
 
 
@@ -67,7 +68,14 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         self.addCleanup(root_patch.stop)
 
     def check(self, document: dict[str, Any], name: str | None = None) -> None:
-        path = self.root / (name or f"{document.get('family')}.json")
+        path = self.root / (
+            name
+            or f"{
+                protocol_descriptions.FILE_STEMS.get(
+                    str(document.get('family')), str(document.get('family'))
+                )
+            }.json"
+        )
         path.write_text(json.dumps(document), encoding="utf-8")
         validate_schemas.validate_protocol_descriptions(
             self.schema, self.registry, [path]
@@ -87,7 +95,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         self.assertEqual(
             [path.stem for path in paths],
             sorted(
-                family["const"]
+                protocol_descriptions.FILE_STEMS[family["const"]]
                 for rule in self.schema["allOf"]
                 if (family := rule["if"].get("properties", {}).get("family"))
             ),
@@ -160,7 +168,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         nested["interfaceSignatures"][0]["endpoint"] = 129
         self.assert_rejected(nested)
         family_delta = xusb_description()
-        family_delta["defaults"] = {"capabilities": {"rumble": "absent"}}
+        family_delta["defaults"] = {"capabilities": {"rumble": "Absent"}}
         self.assert_rejected(family_delta)
 
     def test_rejects_a_duplicate_signature(self) -> None:
@@ -195,7 +203,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         document["family"] = family
         document["interfaceSignatures"][0]["variant"] = variant
         document.pop("defaults")
-        if family == "nintendo.switch1":
+        if family == "NintendoSwitch1":
             document["defaults"] = {"session": {"subcommands": self.subcommands()}}
         elif family in SESSION_LIMITS:
             document["defaults"] = {"session": dict(SESSION_LIMITS[family])}
@@ -208,18 +216,18 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             sorted(families),
             sorted(controller["$defs"]["protocol"]["properties"]["family"]["enum"]),
         )
-        self.assertEqual(families["sony.dualshock4"], ["usb", "bluetooth-classic"])
-        self.assertEqual(families["hid.descriptor"], [])
+        self.assertEqual(families["SonyDualShock4"], ["USB", "BluetoothClassic"])
+        self.assertEqual(families["HIDDescriptor"], [])
 
     def test_variant_lookup_fails_for_an_unknown_family(self) -> None:
         with self.assertRaisesRegex(KeyError, "xbox.unknown"):
             validate_schemas.family_variants(self.schema, "xbox.unknown")
         self.assertEqual(
-            validate_schemas.family_variants(self.schema, "hid.descriptor"), []
+            validate_schemas.family_variants(self.schema, "HIDDescriptor"), []
         )
         self.assertEqual(
-            validate_schemas.family_variants(self.schema, "sony.dualshock4"),
-            ["usb", "bluetooth-classic"],
+            validate_schemas.family_variants(self.schema, "SonyDualShock4"),
+            ["USB", "BluetoothClassic"],
         )
 
     def test_each_family_accepts_only_its_own_variants(self) -> None:
@@ -238,9 +246,103 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def test_rejects_a_file_name_that_differs_from_the_family(self) -> None:
         with self.assertRaisesRegex(
             validate_schemas.ValidationError,
-            r"^E5003: .*file name must be xbox\.xusb\.json",
+            r"^E5003: .*file name must be xbox-xusb\.json",
         ):
-            self.check(xusb_description(), name="xbox.gip.json")
+            self.check(xusb_description(), name="xbox-gip.json")
+
+    def test_file_stems_cover_every_family_and_file(self) -> None:
+        families = self.schema["allOf"]
+        schema_families = {
+            rule["if"]["properties"]["family"]["const"]
+            for rule in families
+            if "const" in rule["if"].get("properties", {}).get("family", {})
+        }
+        self.assertEqual(set(protocol_descriptions.FILE_STEMS), schema_families)
+        self.assertEqual(
+            sorted(protocol_descriptions.FILE_STEMS.values()),
+            sorted(
+                path.stem
+                for path in validate_schemas.PROTOCOL_DESCRIPTIONS.glob("*.json")
+            ),
+        )
+
+    def test_file_stems_match_the_swift_table(self) -> None:
+        source = (
+            REPOSITORY_ROOT
+            / "Sources/OpenJoystickDriverKit/Protocol/Classification/ProtocolClassifier.swift"
+        ).read_text(encoding="utf-8")
+        body = source.split("var descriptionFileStem: String {", 1)[1].split(
+            "\n  }\n", 1
+        )[0]
+        swift = dict(re.findall(r'case \.(\w+): "([a-z0-9-]+)"', body))
+        by_case = {
+            family[0].lower() + family[1:]: stem
+            for family, stem in protocol_descriptions.FILE_STEMS.items()
+        }
+        normalized = {key.lower(): value for key, value in swift.items()}
+        self.assertEqual({k.lower(): v for k, v in by_case.items()}, normalized)
+
+    def test_rejects_the_family_file_name_in_the_family_spelling(self) -> None:
+        with self.assertRaisesRegex(
+            validate_schemas.ValidationError,
+            r"^E5003: .*file name must be xbox-xusb\.json",
+        ):
+            self.check(xusb_description(), name="XboxXUSB.json")
+
+    def test_rejects_a_family_spelled_as_before_the_naming_rule(self) -> None:
+        for old in ("xbox.xusb", "hid.descriptor", "vendor.ps3-third-party"):
+            with self.subTest(family=old):
+                self.assert_rejected({**xusb_description(), "family": old})
+
+    def test_rejects_descriptions_values_spelled_as_before_the_naming_rule(
+        self,
+    ) -> None:
+        valid = {
+            "parameter type": (
+                "SonyDualSense",
+                {"parameters": {"maker": {"type": "Enum", "values": ["ThirdParty"]}}},
+            ),
+            "controls base": ("XboxXID", {"controls": {"base": "Xbox"}}),
+        }
+        invalid = {
+            "parameter type enum": (
+                "SonyDualSense",
+                {"parameters": {"maker": {"type": "enum", "values": ["ThirdParty"]}}},
+            ),
+            "parameter type flag": (
+                "SonyDualSense",
+                {"parameters": {"forcedVibration": {"type": "flag"}}},
+            ),
+            "integer field type": (
+                "XboxGIP",
+                {
+                    "parameters": {
+                        "shareButton": {
+                            "type": "Object",
+                            "fields": {
+                                "fromEnd": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 255,
+                                }
+                            },
+                        }
+                    }
+                },
+            ),
+            "controls base": ("XboxXID", {"controls": {"base": "xbox"}}),
+        }
+        for label, (family, members) in valid.items():
+            with self.subTest(label):
+                self.check(self.with_body(family, **members))
+        for label, (family, members) in invalid.items():
+            with self.subTest(label):
+                self.assert_rejected(self.with_body(family, **members))
+
+    def test_rejects_a_variant_spelled_as_before_the_naming_rule(self) -> None:
+        for old in ("usb", "bluetooth-le", "enhanced-hid"):
+            with self.subTest(variant=old):
+                self.assert_rejected(self.described("XboxGIP", old), code="E5004")
 
     # Parameters and defaults.
 
@@ -262,23 +364,23 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def test_accepts_parameters_and_defaults(self) -> None:
         self.check(
             self.with_body(
-                "sony.dualsense",
+                "SonyDualSense",
                 parameters={
-                    "maker": {"type": "enum", "values": ["ThirdParty"]},
-                    "forcedVibration": {"type": "flag"},
+                    "maker": {"type": "Enum", "values": ["ThirdParty"]},
+                    "forcedVibration": {"type": "Flag"},
                 },
                 defaults={"tuning": {"stickDeadzone": 0.1}},
             )
         )
         self.check(
             self.with_body(
-                "xbox.gip",
+                "XboxGIP",
                 parameters={
                     "shareButton": {
-                        "type": "object",
+                        "type": "Object",
                         "fields": {
                             "fromEnd": {
-                                "type": "integer",
+                                "type": "Integer",
                                 "minimum": 1,
                                 "maximum": 255,
                             }
@@ -289,7 +391,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         )
         self.check(
             self.with_body(
-                "hid.report-layout",
+                "HIDReportLayout",
                 defaults={
                     "input": {
                         "report": {"length": 1},
@@ -300,7 +402,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         )
         self.check(
             self.with_body(
-                "xbox.xid",
+                "XboxXID",
                 defaults={
                     "input": {
                         "report": {"length": 4},
@@ -317,10 +419,10 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                         ],
                         "hat": [
                             {
-                                "encoding": "table",
+                                "encoding": "Table",
                                 "byte": 2,
                                 "mask": 15,
-                                "values": {"1": "north", "9": "northEast"},
+                                "values": {"1": "North", "9": "NorthEast"},
                             }
                         ],
                     }
@@ -331,28 +433,28 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def test_rejects_a_bad_parameter_declaration(self) -> None:
         for declaration in (
             {"type": "string"},
-            {"type": "flag", "values": ["A"]},
-            {"type": "enum"},
-            {"type": "enum", "values": []},
-            {"type": "enum", "values": ["lower"]},
-            {"type": "enum", "values": ["A", "A"]},
-            {"type": "object", "fields": {}},
-            {"type": "object", "fields": {"x": {"type": "integer", "minimum": 1}}},
-            {"type": "object", "fields": {"x": {"type": "string"}}},
+            {"type": "Flag", "values": ["A"]},
+            {"type": "Enum"},
+            {"type": "Enum", "values": []},
+            {"type": "Enum", "values": ["lower"]},
+            {"type": "Enum", "values": ["A", "A"]},
+            {"type": "Object", "fields": {}},
+            {"type": "Object", "fields": {"x": {"type": "Integer", "minimum": 1}}},
+            {"type": "Object", "fields": {"x": {"type": "string"}}},
         ):
             with self.subTest(declaration=declaration):
                 self.assert_rejected(
-                    self.with_body("sony.dualsense", parameters={"maker": declaration})
+                    self.with_body("SonyDualSense", parameters={"maker": declaration})
                 )
 
     def test_rejects_a_parameter_the_family_does_not_declare(self) -> None:
-        flag = {"type": "flag"}
-        self.assert_rejected(self.with_body("sony.dualsense", parameters={"x": flag}))
+        flag = {"type": "Flag"}
+        self.assert_rejected(self.with_body("SonyDualSense", parameters={"x": flag}))
         self.assert_rejected(
-            self.with_body("sony.dualsense", parameters={"layout": flag})
+            self.with_body("SonyDualSense", parameters={"layout": flag})
         )
-        self.assert_rejected(self.with_body("xbox.xid", parameters={"layout": flag}))
-        self.assert_rejected(self.with_body("sony.dualsense", parameters={}))
+        self.assert_rejected(self.with_body("XboxXID", parameters={"layout": flag}))
+        self.assert_rejected(self.with_body("SonyDualSense", parameters={}))
 
     def test_session_limits_belong_to_their_family(self) -> None:
         for family, limits in SESSION_LIMITS.items():
@@ -367,7 +469,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 bare = self.with_body(family)
                 del bare["defaults"]
                 self.assert_rejected(bare)
-        for family in ("xbox.gip", "xbox.xusb", "xbox.xid", "sony.dualsense"):
+        for family in ("XboxGIP", "XboxXUSB", "XboxXID", "SonyDualSense"):
             for key in (
                 "handshakeAttempts",
                 "announceResendLimit",
@@ -384,9 +486,9 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
 
     def test_session_limits_have_ranges(self) -> None:
         for family, key, low, high in (
-            ("xbox.gip", "handshakeAttempts", 1, 10),
-            ("xbox.gip", "announceResendLimit", 1, 100),
-            ("xbox.xusb", "receiverInquiryResendLimit", 1, 100),
+            ("XboxGIP", "handshakeAttempts", 1, 10),
+            ("XboxGIP", "announceResendLimit", 1, 100),
+            ("XboxXUSB", "receiverInquiryResendLimit", 1, 100),
         ):
             for value in (low, high):
                 with self.subTest(key=key, value=value):
@@ -405,10 +507,10 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             "buttons": [{"control": "South", "byte": 0, "mask": 1}],
         }
         for family, defaults in (
-            ("hid.descriptor", {"input": input_layout}),
-            ("xbox.xusb", {"input": input_layout}),
+            ("HIDDescriptor", {"input": input_layout}),
+            ("XboxXUSB", {"input": input_layout}),
             (
-                "xbox.xid",
+                "XboxXID",
                 {
                     "input": {
                         "report": {"length": 4},
@@ -419,64 +521,64 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 },
             ),
             (
-                "xbox.xid",
+                "XboxXID",
                 {
                     "input": {
                         "report": {"length": 4},
                         "hat": [
-                            {"encoding": "table", "byte": 2, "mask": 15, "values": {}}
+                            {"encoding": "Table", "byte": 2, "mask": 15, "values": {}}
                         ],
                     }
                 },
             ),
             (
-                "xbox.xid",
+                "XboxXID",
                 {
                     "input": {
                         "report": {"length": 4},
                         "hat": [
                             {
-                                "encoding": "table",
+                                "encoding": "Table",
                                 "byte": 2,
                                 "mask": 15,
-                                "values": {"01": "north"},
+                                "values": {"01": "North"},
                             }
                         ],
                     }
                 },
             ),
             (
-                "xbox.xid",
+                "XboxXID",
                 {
                     "input": {
                         "report": {"length": 4},
                         "hat": [
                             {
-                                "encoding": "table",
+                                "encoding": "Table",
                                 "byte": 2,
                                 "mask": 15,
-                                "values": {"1": "neutral"},
+                                "values": {"1": "Neutral"},
                             }
                         ],
                     }
                 },
             ),
-            ("xbox.xid", {"session": {"startup": [self.startup_write()]}}),
-            ("sony.dualsense", {"tuning": {"inputLivenessTimeoutMs": 5}}),
-            ("sony.dualsense", {"tuning": {"hidStartupRecoveryRounds": 2}}),
-            ("xbox.xusb", {"tuning": {"hidStartupIntervalMs": 5}}),
-            ("xbox.gip", {"unknown": {}}),
-            ("xbox.gip", {"tuning": {"stickDeadzone": 5}}),
-            ("xbox.gip", {"session": {"rumble": self.rumble_template()}}),
-            ("xbox.xusb", {"session": {"rumble": self.rumble_template()}}),
+            ("XboxXID", {"session": {"startup": [self.startup_write()]}}),
+            ("SonyDualSense", {"tuning": {"inputLivenessTimeoutMs": 5}}),
+            ("SonyDualSense", {"tuning": {"hidStartupRecoveryRounds": 2}}),
+            ("XboxXUSB", {"tuning": {"hidStartupIntervalMs": 5}}),
+            ("XboxGIP", {"unknown": {}}),
+            ("XboxGIP", {"tuning": {"stickDeadzone": 5}}),
+            ("XboxGIP", {"session": {"rumble": self.rumble_template()}}),
+            ("XboxXUSB", {"session": {"rumble": self.rumble_template()}}),
         ):
             with self.subTest(family=family, defaults=defaults):
                 self.assert_rejected(self.with_body(family, defaults=defaults))
 
     def rumble_template(self) -> dict[str, Any]:
         return {
-            "report": {"kind": "output", "id": 1, "length": 4},
-            "leftMain": {"byte": 1},
+            "report": {"kind": "Output", "id": 1, "length": 4},
+            "lowFrequency": {"byte": 1},
         }
 
     def test_every_family_may_set_a_frame_queue_capacity_in_the_schema_range(
@@ -497,7 +599,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                     self.assert_rejected(document, path.name)
 
     def startup_write(self) -> dict[str, Any]:
-        return {"report": {"kind": "output", "id": 1, "length": 4}, "bytes": "01 02 03"}
+        return {"report": {"kind": "Output", "id": 1, "length": 4}, "bytes": "01 02 03"}
 
     def usb_write(self, **members: Any) -> dict[str, Any]:
         return {"bytes": "05 20 00 01 00", **members}
@@ -508,18 +610,18 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def test_accepts_startup_writes_a_family_carries(self) -> None:
         for family, write in (
             (
-                "xbox.gip",
+                "XboxGIP",
                 self.usb_write(endpoint=2, timeoutMilliseconds=2000, sessionByte=2),
             ),
-            ("xbox.xusb", self.usb_write(delayMilliseconds=0, toleratesRejection=True)),
-            ("sony.dualsense", self.hid_write(phase="startup", delayMilliseconds=5)),
+            ("XboxXUSB", self.usb_write(delayMilliseconds=0, toleratesRejection=True)),
+            ("SonyDualSense", self.hid_write(phase="Startup", delayMilliseconds=5)),
             (
-                "sony.dualsense",
+                "SonyDualSense",
                 self.hid_write(
-                    report={"kind": "output", "id": 17, "length": 78},
+                    report={"kind": "Output", "id": 17, "length": 78},
                     bytes=zeros(73),
                     crc32Seed=162,
-                    variants=["bluetooth-classic"],
+                    variants=["BluetoothClassic"],
                 ),
             ),
         ):
@@ -530,38 +632,38 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
 
     def test_rejects_malformed_startup_writes(self) -> None:
         for family, write in (
-            ("xbox.gip", self.usb_write(endpoint=0)),
-            ("xbox.gip", self.usb_write(endpoint=128)),
-            ("xbox.gip", self.usb_write(timeoutMilliseconds=0)),
-            ("xbox.gip", self.usb_write(timeoutMilliseconds=60001)),
-            ("xbox.gip", self.usb_write(delayMilliseconds=1001)),
-            ("xbox.gip", self.usb_write(delayMilliseconds=-1)),
-            ("xbox.gip", self.usb_write(sessionByte=64)),
-            ("xbox.gip", self.usb_write(bytes=zeros(65))),
-            ("xbox.gip", self.usb_write(bytes="")),
-            ("xbox.gip", self.usb_write(toleratesRejection="yes")),
+            ("XboxGIP", self.usb_write(endpoint=0)),
+            ("XboxGIP", self.usb_write(endpoint=128)),
+            ("XboxGIP", self.usb_write(timeoutMilliseconds=0)),
+            ("XboxGIP", self.usb_write(timeoutMilliseconds=60001)),
+            ("XboxGIP", self.usb_write(delayMilliseconds=1001)),
+            ("XboxGIP", self.usb_write(delayMilliseconds=-1)),
+            ("XboxGIP", self.usb_write(sessionByte=64)),
+            ("XboxGIP", self.usb_write(bytes=zeros(65))),
+            ("XboxGIP", self.usb_write(bytes="")),
+            ("XboxGIP", self.usb_write(toleratesRejection="yes")),
             (
-                "xbox.gip",
-                self.usb_write(report={"kind": "output", "id": 1, "length": 4}),
+                "XboxGIP",
+                self.usb_write(report={"kind": "Output", "id": 1, "length": 4}),
             ),
-            ("sony.dualsense", self.hid_write(phase="later")),
-            ("sony.dualsense", self.hid_write(delayMilliseconds=1001)),
-            ("sony.dualsense", self.hid_write(crc32Seed=256)),
-            ("sony.dualsense", self.hid_write(crc32Seed=1)),
+            ("SonyDualSense", self.hid_write(phase="Later")),
+            ("SonyDualSense", self.hid_write(delayMilliseconds=1001)),
+            ("SonyDualSense", self.hid_write(crc32Seed=256)),
+            ("SonyDualSense", self.hid_write(crc32Seed=1)),
             (
-                "sony.dualsense",
-                self.hid_write(report={"kind": "output", "id": 1, "length": 129}),
+                "SonyDualSense",
+                self.hid_write(report={"kind": "Output", "id": 1, "length": 129}),
             ),
-            ("sony.dualsense", self.hid_write(variants=[])),
-            ("sony.dualsense", self.hid_write(variants=["usb", "usb"])),
-            ("sony.dualsense", self.hid_write(when={"parameter": "layout"})),
+            ("SonyDualSense", self.hid_write(variants=[])),
+            ("SonyDualSense", self.hid_write(variants=["USB", "USB"])),
+            ("SonyDualSense", self.hid_write(when={"parameter": "layout"})),
             (
-                "sony.dualsense",
+                "SonyDualSense",
                 self.hid_write(when={"parameter": "role", "is": ["A"], "isNot": ["B"]}),
             ),
-            ("sony.dualsense", self.hid_write(when={"parameter": "role", "is": []})),
+            ("SonyDualSense", self.hid_write(when={"parameter": "role", "is": []})),
             (
-                "sony.dualsense",
+                "SonyDualSense",
                 self.hid_write(when={"parameter": "color", "is": ["A"]}),
             ),
         ):
@@ -573,7 +675,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def test_rejects_startup_writes_mixing_hid_and_usb_formats(self) -> None:
         self.assert_rejected(
             self.with_body(
-                "sony.dualsense",
+                "SonyDualSense",
                 defaults={"session": {"startup": [self.hid_write(), self.usb_write()]}},
             )
         )
@@ -581,21 +683,21 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def test_rejects_hid_startup_writes_for_a_raw_usb_family(self) -> None:
         self.assert_rejected(
             self.with_body(
-                "xbox.gip", defaults={"session": {"startup": [self.hid_write()]}}
+                "XboxGIP", defaults={"session": {"startup": [self.hid_write()]}}
             )
         )
 
     def test_rejects_a_startup_write_naming_what_the_family_lacks(self) -> None:
-        role = {"role": {"type": "enum", "values": ["WirelessAdapter"]}}
+        role = {"role": {"type": "Enum", "values": ["WirelessAdapter"]}}
         for write, code in (
-            (self.usb_write(variants=["wired"]), "E5004"),
+            (self.usb_write(variants=["Wired"]), "E5004"),
             (self.usb_write(when={"parameter": "layout", "is": ["Pro"]}), "E5002"),
             (self.usb_write(when={"parameter": "role", "is": ["Other"]}), "E5002"),
         ):
             with self.subTest(write=write):
                 self.assert_rejected(
                     self.with_body(
-                        "sony.dualshock4",
+                        "SonyDualShock4",
                         parameters=role,
                         defaults={"session": {"startup": [write]}},
                     ),
@@ -605,22 +707,22 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def keep_alive_body(self, family: str, keep_alive: Any, **members: Any) -> Any:
         """A description of `family` that carries `keep_alive` in `defaults.session`."""
         keys = {
-            "vendor.gamesir": {"rawUSB": ["usb"]},
-            "valve.steam-triton": {"tuningKeys": ["lizardResendTicks"]},
+            "VendorGameSir": {"rawUSB": ["USB"]},
+            "ValveSteamTriton": {"tuningKeys": ["lizardResendTicks"]},
         }
         defaults = {"session": {"keepAlive": keep_alive}}
-        if family == "valve.steam-triton":
+        if family == "ValveSteamTriton":
             defaults["tuning"] = {"lizardResendTicks": 75}
         return self.with_body(
             family, **keys.get(family, {}), defaults=defaults, **members
         )
 
     def test_accepts_keep_alives_a_family_carries(self) -> None:
-        feature = {"kind": "feature", "id": 1, "length": 64}
+        feature = {"kind": "Feature", "id": 1, "length": 64}
         for family, keep_alive in (
-            ("xbox.gip", {"intervalMilliseconds": 4000}),
+            ("XboxGIP", {"intervalMilliseconds": 4000}),
             (
-                "xbox.gip",
+                "XboxGIP",
                 {
                     "intervalMilliseconds": 1,
                     "writes": [
@@ -629,17 +731,17 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 },
             ),
             (
-                "vendor.gamesir",
+                "VendorGameSir",
                 {
                     "intervalMilliseconds": 60000,
                     "writes": [
-                        self.usb_write(variants=["usb"]),
-                        self.hid_write(variants=["enhanced-hid"]),
+                        self.usb_write(variants=["USB"]),
+                        self.hid_write(variants=["EnhancedHID"]),
                     ],
                 },
             ),
             (
-                "valve.steam-triton",
+                "ValveSteamTriton",
                 {
                     "intervalMilliseconds": 40,
                     "writes": [
@@ -679,7 +781,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             },
         ):
             with self.subTest(keep_alive=keep_alive):
-                self.assert_rejected(self.keep_alive_body("xbox.gip", keep_alive))
+                self.assert_rejected(self.keep_alive_body("XboxGIP", keep_alive))
 
     # Switch 1 subcommands.
 
@@ -690,14 +792,12 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             "spiRead": {
                 "address": 24608,
                 "length": 24,
-                "purpose": "factoryMotionCalibration",
+                "purpose": "FactoryMotionCalibration",
                 **members,
             },
         }
 
-    def subcommand_body(
-        self, subcommands: Any, family: str = "nintendo.switch1"
-    ) -> Any:
+    def subcommand_body(self, subcommands: Any, family: str = "NintendoSwitch1") -> Any:
         return self.with_body(
             family, defaults={"session": {"subcommands": subcommands}}
         )
@@ -754,7 +854,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             self.subcommands(
                 requests=[
                     self.spi_read(),
-                    self.spi_read(purpose="userMotionCalibration", address=0, length=1),
+                    self.spi_read(purpose="UserMotionCalibration", address=0, length=1),
                 ]
             ),
             self.subcommands(requests=[self.spi_read(address=4294967295, length=29)]),
@@ -824,13 +924,13 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 self.assert_rejected(self.subcommand_body(subcommands))
 
     def test_only_switch_1_has_subcommands_and_it_must_have_them(self) -> None:
-        self.assert_rejected(self.with_body("nintendo.switch1"))
+        self.assert_rejected(self.with_body("NintendoSwitch1"))
         self.assert_rejected(
             self.with_body(
-                "nintendo.switch1", defaults={"tuning": {"stickDeadzone": 0.1}}
+                "NintendoSwitch1", defaults={"tuning": {"stickDeadzone": 0.1}}
             )
         )
-        for family in ("sony.dualsense", "xbox.gip", "xbox.xid", "hid.report-layout"):
+        for family in ("SonyDualSense", "XboxGIP", "XboxXID", "HIDReportLayout"):
             with self.subTest(family=family):
                 self.assert_rejected(self.subcommand_body(self.subcommands(), family))
 
@@ -839,20 +939,20 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     @staticmethod
     def named_packet(**members: Any) -> dict[str, Any]:
         return {
-            "id": "xbox.gip/power-on",
+            "id": "XboxGIP/power-on",
             "bytes": "05 20 00 01 00",
             "sessionByte": 2,
             **members,
         }
 
-    def named_packet_body(self, packets: Any, family: str = "xbox.gip") -> Any:
+    def named_packet_body(self, packets: Any, family: str = "XboxGIP") -> Any:
         return self.with_body(family, defaults={"session": {"namedPackets": packets}})
 
     def test_accepts_named_packets(self) -> None:
         for packets in (
             [self.named_packet()],
-            [self.named_packet(), self.named_packet(id="xbox.gip/led-on")],
-            [self.named_packet(id=f"xbox.gip/packet-{i}") for i in range(16)],
+            [self.named_packet(), self.named_packet(id="XboxGIP/led-on")],
+            [self.named_packet(id=f"XboxGIP/packet-{i}") for i in range(16)],
             [self.named_packet(bytes="00 00 00")],
             [self.named_packet(bytes=zeros(64))],
         ):
@@ -862,14 +962,14 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def test_rejects_malformed_named_packets(self) -> None:
         for packets in (
             [],
-            [self.named_packet(id=f"xbox.gip/packet-{i}") for i in range(17)],
+            [self.named_packet(id=f"XboxGIP/packet-{i}") for i in range(17)],
             [{"bytes": "05 20 00", "sessionByte": 2}],
-            [{"id": "xbox.gip/power-on", "sessionByte": 2}],
-            [{"id": "xbox.gip/power-on", "bytes": "05 20 00"}],
+            [{"id": "XboxGIP/power-on", "sessionByte": 2}],
+            [{"id": "XboxGIP/power-on", "bytes": "05 20 00"}],
             [self.named_packet(id="power-on")],
-            [self.named_packet(id="xbox.gip/Power-On")],
-            [self.named_packet(id="xbox.gip/power--on")],
-            [self.named_packet(id="xbox.gip/")],
+            [self.named_packet(id="XboxGIP/Power-On")],
+            [self.named_packet(id="XboxGIP/power--on")],
+            [self.named_packet(id="XboxGIP/")],
             [self.named_packet(bytes="05 20")],
             [self.named_packet(bytes=zeros(65))],
             [self.named_packet(bytes="05 20 100")],
@@ -879,48 +979,48 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             [self.named_packet(unknown=1)],
             # Each id appears at most once, and starts with the family name.
             [self.named_packet(), self.named_packet(bytes="05 20 00 02")],
-            [self.named_packet(id="xbox.xusb/power-on")],
+            [self.named_packet(id="XboxXUSB/power-on")],
         ):
             with self.subTest(packets=packets):
                 self.assert_rejected(self.named_packet_body(packets))
 
     def test_only_gip_has_named_packets(self) -> None:
-        for family in ("sony.dualsense", "xbox.xusb", "xbox.xid", "nintendo.switch2"):
+        for family in ("SonyDualSense", "XboxXUSB", "XboxXID", "NintendoSwitch2"):
             with self.subTest(family=family):
                 self.assert_rejected(
                     self.named_packet_body([self.named_packet()], family)
                 )
 
     def test_the_bundled_gip_description_names_the_eight_packets(self) -> None:
-        packets = protocol_descriptions.bundled()["xbox.gip"]["defaults"]["session"][
+        packets = protocol_descriptions.bundled()["XboxGIP"]["defaults"]["session"][
             "namedPackets"
         ]
         self.assertEqual(
             [packet["id"] for packet in packets],
             [
-                "xbox.gip/power-on",
-                "xbox.gip/s-init",
-                "xbox.gip/enable-extra-input",
-                "xbox.gip/hori-ack",
-                "xbox.gip/led-on",
-                "xbox.gip/auth-done",
-                "xbox.gip/rumble-begin",
-                "xbox.gip/rumble-end",
+                "XboxGIP/power-on",
+                "XboxGIP/s-init",
+                "XboxGIP/enable-extra-input",
+                "XboxGIP/hori-ack",
+                "XboxGIP/led-on",
+                "XboxGIP/auth-done",
+                "XboxGIP/rumble-begin",
+                "XboxGIP/rumble-end",
             ],
         )
 
     def test_a_record_names_only_packets_the_description_defines(self) -> None:
-        description = protocol_descriptions.bundled()["xbox.gip"]
+        description = protocol_descriptions.bundled()["XboxGIP"]
         self.assertIsNone(
             protocol_descriptions.initialization_problem(
-                description, ["xbox.gip/hori-ack", "xbox.gip/power-on"]
+                description, ["XboxGIP/hori-ack", "XboxGIP/power-on"]
             )
         )
         self.assertIsNone(protocol_descriptions.initialization_problem(description, []))
         self.assertIn(
-            "xbox.gip/missing",
+            "XboxGIP/missing",
             protocol_descriptions.initialization_problem(
-                description, ["xbox.gip/power-on", "xbox.gip/missing"]
+                description, ["XboxGIP/power-on", "XboxGIP/missing"]
             )
             or "",
         )
@@ -928,10 +1028,10 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             key: value for key, value in description.items() if key != "defaults"
         }
         self.assertIsNotNone(
-            protocol_descriptions.initialization_problem(without, ["xbox.gip/power-on"])
+            protocol_descriptions.initialization_problem(without, ["XboxGIP/power-on"])
         )
 
-    def packet_startup_body(self, startup: Any, family: str = "xbox.gip") -> Any:
+    def packet_startup_body(self, startup: Any, family: str = "XboxGIP") -> Any:
         return self.with_body(
             family,
             defaults={
@@ -944,21 +1044,21 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
 
     def test_accepts_startup_that_refers_to_named_packets(self) -> None:
         for startup in (
-            [{"packet": "xbox.gip/power-on"}],
-            [{"packet": "xbox.gip/power-on"}, {"packet": "xbox.gip/power-on"}],
-            [{"packet": "xbox.gip/power-on", "variants": ["usb"]}],
+            [{"packet": "XboxGIP/power-on"}],
+            [{"packet": "XboxGIP/power-on"}, {"packet": "XboxGIP/power-on"}],
+            [{"packet": "XboxGIP/power-on", "variants": ["USB"]}],
         ):
             with self.subTest(startup=startup):
                 self.check(self.packet_startup_body(startup))
 
     def test_rejects_startup_that_refers_to_an_unknown_packet(self) -> None:
         self.assert_rejected(
-            self.packet_startup_body([{"packet": "xbox.gip/missing"}]), code="E5002"
+            self.packet_startup_body([{"packet": "XboxGIP/missing"}]), code="E5002"
         )
         self.assert_rejected(
             self.with_body(
-                "xbox.gip",
-                defaults={"session": {"startup": [{"packet": "xbox.gip/power-on"}]}},
+                "XboxGIP",
+                defaults={"session": {"startup": [{"packet": "XboxGIP/power-on"}]}},
             ),
             code="E5002",
         )
@@ -966,22 +1066,22 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def test_rejects_malformed_or_mixed_packet_startup(self) -> None:
         for startup in (
             [{"packet": "power-on"}],
-            [{"packet": "xbox.gip/power-on", "bytes": "01 02 03"}],
-            [{"packet": "xbox.gip/power-on"}, self.usb_write()],
-            [self.usb_write(), {"packet": "xbox.gip/power-on"}],
-            [{"packet": "xbox.gip/power-on"}, self.hid_write()],
+            [{"packet": "XboxGIP/power-on", "bytes": "01 02 03"}],
+            [{"packet": "XboxGIP/power-on"}, self.usb_write()],
+            [self.usb_write(), {"packet": "XboxGIP/power-on"}],
+            [{"packet": "XboxGIP/power-on"}, self.hid_write()],
         ):
             with self.subTest(startup=startup):
                 self.assert_rejected(self.packet_startup_body(startup))
 
     def test_the_bundled_gip_startup_refers_to_named_packets_only(self) -> None:
-        description = protocol_descriptions.bundled()["xbox.gip"]
+        description = protocol_descriptions.bundled()["XboxGIP"]
         self.assertEqual(
             [
                 write["packet"]
                 for write in description["defaults"]["session"]["startup"]
             ],
-            ["xbox.gip/power-on", "xbox.gip/led-on", "xbox.gip/auth-done"],
+            ["XboxGIP/power-on", "XboxGIP/led-on", "XboxGIP/auth-done"],
         )
 
     def test_rejects_startup_only_members_in_a_keep_alive_write(self) -> None:
@@ -989,16 +1089,16 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             self.usb_write(delayMilliseconds=5),
             self.usb_write(toleratesRejection=True),
             self.usb_write(when={"parameter": "layout", "is": ["Pro"]}),
-            self.hid_write(phase="startup"),
+            self.hid_write(phase="Startup"),
             self.hid_write(delayMilliseconds=5),
-            self.hid_write(transport="usb"),
+            self.hid_write(transport="USB"),
             self.hid_write(crc32Seed=1),
             self.hid_write(when={"parameter": "layout", "is": ["Pro"]}),
         ):
             with self.subTest(write=write):
                 self.assert_rejected(
                     self.keep_alive_body(
-                        "vendor.gamesir",
+                        "VendorGameSir",
                         {"intervalMilliseconds": 500, "writes": [write]},
                     )
                 )
@@ -1007,15 +1107,15 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         interval = {"intervalMilliseconds": 500}
         # A family that has no output at all.
         self.assert_rejected(
-            self.with_body("xbox.xid", defaults={"session": {"keepAlive": interval}})
+            self.with_body("XboxXID", defaults={"session": {"keepAlive": interval}})
         )
         # A HID write for a raw-USB family, and a raw-USB write for a HID family.
         self.assert_rejected(
-            self.keep_alive_body("xbox.gip", {**interval, "writes": [self.hid_write()]})
+            self.keep_alive_body("XboxGIP", {**interval, "writes": [self.hid_write()]})
         )
         self.assert_rejected(
             self.with_body(
-                "sony.dualsense",
+                "SonyDualSense",
                 defaults={
                     "session": {"keepAlive": {**interval, "writes": [self.usb_write()]}}
                 },
@@ -1024,8 +1124,8 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         # A variant the family lacks (E5004) and a cadence it does not default (E5002).
         self.assert_rejected(
             self.keep_alive_body(
-                "xbox.gip",
-                {**interval, "writes": [self.usb_write(variants=["wired"])]},
+                "XboxGIP",
+                {**interval, "writes": [self.usb_write(variants=["Wired"])]},
             ),
             code="E5004",
         )
@@ -1035,14 +1135,14 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         }
         self.assert_rejected(
             self.with_body(
-                "valve.steam-triton",
+                "ValveSteamTriton",
                 tuningKeys=["lizardResendTicks"],
                 defaults={"session": {"keepAlive": resend}},
             )
         )
         self.assert_rejected(
             self.with_body(
-                "valve.steam-triton",
+                "ValveSteamTriton",
                 defaults={
                     "tuning": {"lizardResendTicks": 75},
                     "session": {"keepAlive": resend},
@@ -1061,50 +1161,48 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             },
             lambda key: {
                 "rawUSBTuningKeys": ["usbCommandTimeoutMs"],
-                "defaults": {"variants": {"usb": {"tuning": {key: 500}}}},
+                "defaults": {"variants": {"USB": {"tuning": {key: 500}}}},
             },
         )
         for index, place in enumerate(places):
             with self.subTest(place=index):
-                self.check(self.with_body("xbox.gip", **place("usbCommandTimeoutMs")))
+                self.check(self.with_body("XboxGIP", **place("usbCommandTimeoutMs")))
                 self.assert_rejected(
-                    self.with_body("xbox.gip", **place("keepAliveIntervalMs"))
+                    self.with_body("XboxGIP", **place("keepAliveIntervalMs"))
                 )
-        self.check(
-            self.with_body("sony.dualsense", tuningKeys=["hidStartupIntervalMs"])
-        )
+        self.check(self.with_body("SonyDualSense", tuningKeys=["hidStartupIntervalMs"]))
         self.assert_rejected(
-            self.with_body("sony.dualsense", tuningKeys=["keepAliveIntervalMs"])
+            self.with_body("SonyDualSense", tuningKeys=["keepAliveIntervalMs"])
         )
 
     def test_rejects_raw_usb_rules_that_contradict_each_other(self) -> None:
         for family, members in (
-            ("xbox.gip", {"rawUSB": True, "tuningKeys": ["lizardResendTicks"]}),
-            ("sony.dualsense", {"rawUSBTuningKeys": ["lizardResendTicks"]}),
+            ("XboxGIP", {"rawUSB": True, "tuningKeys": ["lizardResendTicks"]}),
+            ("SonyDualSense", {"rawUSBTuningKeys": ["lizardResendTicks"]}),
         ):
             with self.subTest(family=family):
                 self.assert_rejected(self.with_body(family, **members))
 
     def test_rejects_a_raw_usb_variant_the_family_does_not_have(self) -> None:
         self.assert_rejected(
-            self.with_body("vendor.gamesir", rawUSB=["wired"]), code="E5004"
+            self.with_body("VendorGameSir", rawUSB=["Wired"]), code="E5004"
         )
 
     # Rumble templates per variant.
 
     def variant_rumble(self, template: dict[str, Any], **members: Any) -> Any:
         return self.with_body(
-            "sony.dualsense",
+            "SonyDualSense",
             recordSections=["rumble"],
-            defaults={"variants": {"usb": {"session": {"rumble": template}}}},
+            defaults={"variants": {"USB": {"session": {"rumble": template}}}},
             **members,
         )
 
     def usb_rumble_template(self) -> dict[str, Any]:
         return {
-            "report": {"kind": "usb", "length": 8},
+            "report": {"kind": "USB", "length": 8},
             "bytes": "00 08 00 00 00 00 00 00",
-            "leftMain": {"byte": 3, "encoding": "UInt16BigEndian"},
+            "lowFrequency": {"byte": 3, "encoding": "UInt16BigEndian"},
             "counter": {"byte": 7},
             "resendIntervalMilliseconds": 100,
         }
@@ -1112,17 +1210,17 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def test_accepts_a_variant_rumble_template_over_the_flat_one(self) -> None:
         self.check(
             self.with_body(
-                "sony.dualsense",
+                "SonyDualSense",
                 recordSections=["rumble"],
                 defaults={
                     "session": {"rumble": self.rumble_template()},
                     "variants": {
-                        "usb": {
+                        "USB": {
                             "tuning": {"stickDeadzone": 0.2},
                             "session": {
                                 "rumble": {
                                     **self.rumble_template(),
-                                    "leftMain": {"byte": 2},
+                                    "lowFrequency": {"byte": 2},
                                 }
                             },
                         }
@@ -1131,7 +1229,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             )
         )
         self.check(self.variant_rumble(self.rumble_template()))
-        self.check(self.variant_rumble(self.usb_rumble_template(), rawUSB=["usb"]))
+        self.check(self.variant_rumble(self.usb_rumble_template(), rawUSB=["USB"]))
 
     def test_rejects_a_resend_interval_in_a_family_with_a_keep_alive(self) -> None:
         template = {**self.rumble_template(), "resendIntervalMilliseconds": 100}
@@ -1142,10 +1240,10 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             if flat:
                 session["rumble"] = rumble
             else:
-                variants = {"enhanced-hid": {"session": {"rumble": rumble}}}
+                variants = {"EnhancedHID": {"session": {"rumble": rumble}}}
             return self.with_body(
-                "vendor.gamesir",
-                rawUSB=["usb"],
+                "VendorGameSir",
+                rawUSB=["USB"],
                 recordSections=["rumble"],
                 defaults={"session": session, "variants": variants},
             )
@@ -1162,7 +1260,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 self.assertIn(
                     ("E5002", f"a rumble resendIntervalMilliseconds {message}"),
                     protocol_descriptions.semantic_violations(
-                        document, ["usb", "enhanced-hid"]
+                        document, ["USB", "EnhancedHID"]
                     ),
                 )
 
@@ -1171,10 +1269,10 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             (
                 "driver reads no rumble section",
                 self.with_body(
-                    "sony.dualsense",
+                    "SonyDualSense",
                     defaults={
                         "variants": {
-                            "usb": {"session": {"rumble": self.rumble_template()}}
+                            "USB": {"session": {"rumble": self.rumble_template()}}
                         }
                     },
                 ),
@@ -1183,11 +1281,11 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             (
                 "variant the family lacks",
                 self.with_body(
-                    "sony.dualsense",
+                    "SonyDualSense",
                     recordSections=["rumble"],
                     defaults={
                         "variants": {
-                            "wired": {"session": {"rumble": self.rumble_template()}}
+                            "Wired": {"session": {"rumble": self.rumble_template()}}
                         }
                     },
                 ),
@@ -1195,7 +1293,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             ),
             (
                 "HID report on a raw-USB variant",
-                self.variant_rumble(self.rumble_template(), rawUSB=["usb"]),
+                self.variant_rumble(self.rumble_template(), rawUSB=["USB"]),
                 "E5002",
             ),
             (
@@ -1216,10 +1314,10 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             (
                 "member other than rumble",
                 self.with_body(
-                    "sony.dualsense",
+                    "SonyDualSense",
                     recordSections=["rumble"],
                     defaults={
-                        "variants": {"usb": {"session": {"keepAlive": {"writes": []}}}}
+                        "variants": {"USB": {"session": {"keepAlive": {"writes": []}}}}
                     },
                 ),
                 "E5002",
@@ -1227,18 +1325,18 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             (
                 "empty variant",
                 self.with_body(
-                    "sony.dualsense",
+                    "SonyDualSense",
                     recordSections=["rumble"],
-                    defaults={"variants": {"usb": {}}},
+                    defaults={"variants": {"USB": {}}},
                 ),
                 "E5002",
             ),
             (
                 "empty variant session",
                 self.with_body(
-                    "sony.dualsense",
+                    "SonyDualSense",
                     recordSections=["rumble"],
-                    defaults={"variants": {"usb": {"session": {}}}},
+                    defaults={"variants": {"USB": {"session": {}}}},
                 ),
                 "E5002",
             ),
@@ -1248,7 +1346,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
 
     def flat_rumble(self, template: dict[str, Any], **members: Any) -> Any:
         return self.with_body(
-            "sony.dualsense",
+            "SonyDualSense",
             recordSections=["rumble"],
             defaults={"session": {"rumble": template}},
             **members,
@@ -1257,7 +1355,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def test_checks_the_flat_rumble_template_against_each_variant_without_its_own(
         self,
     ) -> None:
-        override = {"usb": {"session": {"rumble": self.usb_rumble_template()}}}
+        override = {"USB": {"session": {"rumble": self.usb_rumble_template()}}}
         for name, document in (
             (
                 "HID template with every variant raw USB",
@@ -1269,18 +1367,18 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             ),
             (
                 "HID template on the raw-USB variant of a mixed family",
-                self.flat_rumble(self.rumble_template(), rawUSB=["usb"]),
+                self.flat_rumble(self.rumble_template(), rawUSB=["USB"]),
             ),
             (
                 "usb packet on the HID variant of a mixed family",
                 self.with_body(
-                    "sony.dualsense",
+                    "SonyDualSense",
                     recordSections=["rumble"],
-                    rawUSB=["usb"],
+                    rawUSB=["USB"],
                     defaults={
                         "session": {"rumble": self.usb_rumble_template()},
                         "variants": {
-                            "bluetooth-classic": {
+                            "BluetoothClassic": {
                                 "session": {"rumble": self.usb_rumble_template()}
                             }
                         },
@@ -1292,9 +1390,9 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 self.assert_rejected(document, code="E5002")
         self.check(
             self.with_body(
-                "sony.dualsense",
+                "SonyDualSense",
                 recordSections=["rumble"],
-                rawUSB=["usb"],
+                rawUSB=["USB"],
                 defaults={
                     "session": {"rumble": self.rumble_template()},
                     "variants": override,
@@ -1306,7 +1404,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def test_xid_session_carries_only_a_usb_rumble_template(self) -> None:
         self.check(
             self.with_body(
-                "xbox.xid",
+                "XboxXID",
                 defaults={"session": {"rumble": self.usb_rumble_template()}},
             )
         )
@@ -1322,11 +1420,11 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         ):
             with self.subTest(name):
                 self.assert_rejected(
-                    self.with_body("xbox.xid", defaults={"session": session})
+                    self.with_body("XboxXID", defaults={"session": session})
                 )
         self.assert_rejected(
             self.with_body(
-                "xbox.xid",
+                "XboxXID",
                 recordSections=["input"],
                 defaults={"session": {"rumble": self.usb_rumble_template()}},
             ),
@@ -1336,10 +1434,10 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def test_rejects_variant_defaults_the_family_does_not_have(self) -> None:
         self.assert_rejected(
             self.with_body(
-                "sony.dualsense",
+                "SonyDualSense",
                 tuningKeys=["hidStartupIntervalMs"],
                 defaults={
-                    "variants": {"wired": {"tuning": {"hidStartupIntervalMs": 5}}}
+                    "variants": {"Wired": {"tuning": {"hidStartupIntervalMs": 5}}}
                 },
             ),
             code="E5004",
@@ -1348,29 +1446,29 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
     def test_rejects_variant_tuning_outside_the_variant_scope(self) -> None:
         self.assert_rejected(
             self.with_body(
-                "sony.dualsense",
+                "SonyDualSense",
                 tuningKeys=["hidStartupIntervalMs"],
-                defaults={"variants": {"usb": {"tuning": {"usbCommandTimeoutMs": 5}}}},
+                defaults={"variants": {"USB": {"tuning": {"usbCommandTimeoutMs": 5}}}},
             )
         )
 
     def test_rejects_a_variant_tuning_key_the_family_reads_only_elsewhere(self) -> None:
         self.assert_rejected(
             self.with_body(
-                "sony.dualsense",
+                "SonyDualSense",
                 tuningKeys=["hidStartupIntervalMs"],
                 defaults={
-                    "variants": {"usb": {"tuning": {"adapterDisconnectDelayMs": 5}}}
+                    "variants": {"USB": {"tuning": {"adapterDisconnectDelayMs": 5}}}
                 },
             )
         )
 
     def test_rejects_stick_deadzone_as_a_declared_tuning_key(self) -> None:
         self.assert_rejected(
-            self.with_body("sony.dualsense", tuningKeys=["stickDeadzone"])
+            self.with_body("SonyDualSense", tuningKeys=["stickDeadzone"])
         )
         self.assert_rejected(
-            self.with_body("xbox.gip", rawUSB=True, rawUSBTuningKeys=["stickDeadzone"])
+            self.with_body("XboxGIP", rawUSB=True, rawUSBTuningKeys=["stickDeadzone"])
         )
 
     def test_rejects_a_rationale_of_the_wrong_type(self) -> None:
@@ -1378,12 +1476,12 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             with self.subTest(rationale=rationale):
                 self.assert_rejected(
                     self.with_body(
-                        "sony.dualsense", macOSOwnedOutput={"rationale": rationale}
+                        "SonyDualSense", macOSOwnedOutput={"rationale": rationale}
                     )
                 )
 
     def test_rejects_signatures_for_a_family_without_variants(self) -> None:
-        document = self.described("hid.descriptor", "usb")
+        document = self.described("HIDDescriptor", "USB")
         self.assert_rejected(document, code="E5004")
 
     def test_family_parameters_match_the_controller_schema(self) -> None:

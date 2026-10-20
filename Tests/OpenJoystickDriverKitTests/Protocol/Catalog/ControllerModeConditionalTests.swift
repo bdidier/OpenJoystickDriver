@@ -6,12 +6,12 @@ import Testing
 /// A record-level section that depends on a mode's protocol holds for every mode: the default
 /// mode satisfies each rule here and a second mode breaks it.
 struct ControllerModeConditionalTests {
-  private static var hid: [String: Any] { ["family": "sony.sixaxis"] }
-  private static var gip: [String: Any] { ["family": "xbox.gip"] }
+  private static var hid: [String: Any] { ["family": "SonySixaxis"] }
+  private static var gip: [String: Any] { ["family": "XboxGIP"] }
   private static var hidMatch: [String: Any] {
-    ["probes": [["report": 239, "length": 64, "expect": "answers"]]]
+    ["probes": [["report": 239, "length": 64, "expect": "Answers"]]]
   }
-  private static var usbMatch: [String: Any] { ["link": "usb"] }
+  private static var usbMatch: [String: Any] { ["link": "USB"] }
 
   private static func record(
     default first: [String: Any],
@@ -58,7 +58,7 @@ struct ControllerModeConditionalTests {
         default: Self.gip,
         second: Self.hid,
         match: Self.hidMatch,
-        fields: ["usb": ["configuration": "set1-before-claim"]]
+        fields: ["usb": ["configuration": "SetConfiguration1BeforeClaim"]]
       ),
       "USB overrides require a raw-USB protocol family"
     )
@@ -71,7 +71,7 @@ struct ControllerModeConditionalTests {
         default: Self.hid,
         second: Self.gip,
         match: Self.usbMatch,
-        fields: ["server": "ojd"]
+        fields: ["server": "OJD"]
       ),
       "server applies only to HID controllers"
     )
@@ -108,12 +108,12 @@ struct ControllerModeConditionalTests {
   func tuningKeysAreReadByEveryMode() {
     Self.expectRejected(
       Self.record(
-        default: ["family": "sony.dualshock4"],
+        default: ["family": "SonyDualShock4"],
         second: Self.hid,
         match: Self.hidMatch,
         fields: ["tuning": ["inputLivenessTimeoutMs": 500]]
       ),
-      "inputLivenessTimeoutMs is not read by the sony.sixaxis driver"
+      "inputLivenessTimeoutMs is not read by the SonySixaxis driver"
     )
   }
 
@@ -121,7 +121,7 @@ struct ControllerModeConditionalTests {
   func bluetoothLENeedsEveryModeSwitch2() {
     Self.expectRejected(
       Self.record(
-        default: ["family": "nintendo.switch2"],
+        default: ["family": "NintendoSwitch2"],
         second: Self.hid,
         match: Self.hidMatch,
         fields: [
@@ -137,7 +137,7 @@ struct ControllerModeConditionalTests {
     Self.expectRejected(
       Self.record(
         default: Self.gip,
-        second: ["family": "xbox.xusb", "variant": "wired"],
+        second: ["family": "XboxXUSB", "variant": "Wired"],
         match: Self.usbMatch,
         fields: ["usb": ["endpoints": ["in": 129, "out": 1]]]
       ),
@@ -147,15 +147,15 @@ struct ControllerModeConditionalTests {
 
   @Test
   func aHIDUsageMapNeedsEveryModeHIDDescriptor() {
-    let usage: [String: Any] = ["kind": "button", "page": 9, "usage": 1, "control": "South"]
+    let usage: [String: Any] = ["kind": "Button", "page": 9, "usage": 1, "control": "South"]
     Self.expectRejected(
       Self.record(
-        default: ["family": "hid.descriptor"],
+        default: ["family": "HIDDescriptor"],
         second: Self.hid,
         match: Self.hidMatch,
         fields: ["input": ["hidUsageMap": ["usages": [usage]]]]
       ),
-      "a HID usage map applies only to hid.descriptor in every mode"
+      "a HID usage map applies only to HIDDescriptor in every mode"
     )
   }
 
@@ -166,7 +166,7 @@ struct ControllerModeConditionalTests {
       .map(\.rawValue).sorted()
     Self.expectRejected(
       Self.record(
-        default: ["family": "sony.dualsense"],
+        default: ["family": "SonyDualSense"],
         second: Self.hid,
         match: Self.hidMatch,
         fields: ["capabilities": ["present": present]]

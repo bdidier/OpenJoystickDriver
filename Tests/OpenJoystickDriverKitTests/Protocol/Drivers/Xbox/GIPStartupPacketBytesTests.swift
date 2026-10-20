@@ -4,11 +4,11 @@ import Testing
 @testable import OpenJoystickDriverKit
 
 /// The bytes and sequence numbers the GIP driver stamps on each named startup packet of
-/// `defaults.session.namedPackets` in `xbox.gip.json`.
+/// `defaults.session.namedPackets` in `xbox-gip.json`.
 struct GIPStartupPacketBytesTests {
   private static let identifiers = [
-    "xbox.gip/power-on", "xbox.gip/s-init", "xbox.gip/enable-extra-input", "xbox.gip/hori-ack",
-    "xbox.gip/led-on", "xbox.gip/auth-done", "xbox.gip/rumble-begin", "xbox.gip/rumble-end",
+    "XboxGIP/power-on", "XboxGIP/s-init", "XboxGIP/enable-extra-input", "XboxGIP/hori-ack",
+    "XboxGIP/led-on", "XboxGIP/auth-done", "XboxGIP/rumble-begin", "XboxGIP/rumble-end",
   ]
 
   private func driver(_ identifiers: [String]) -> GIPDriver {
@@ -26,14 +26,14 @@ struct GIPStartupPacketBytesTests {
 
   /// Each packet alone, in a fresh driver: the first sequence number of its command counter.
   private static let alone: [String: String] = [
-    "xbox.gip/power-on": "2:0520010100",
-    "xbox.gip/s-init": "2:0520010f06",
-    "xbox.gip/enable-extra-input": "2:4d1001020700",
-    "xbox.gip/hori-ack": "2:012001090004203a0000008000",
-    "xbox.gip/led-on": "2:0a200103000114",
-    "xbox.gip/auth-done": "2:062001020100",
-    "xbox.gip/rumble-begin": "2:09000109000f00001d1dff0000",
-    "xbox.gip/rumble-end": "2:09000109000f00000000000000",
+    "XboxGIP/power-on": "2:0520010100",
+    "XboxGIP/s-init": "2:0520010f06",
+    "XboxGIP/enable-extra-input": "2:4d1001020700",
+    "XboxGIP/hori-ack": "2:012001090004203a0000008000",
+    "XboxGIP/led-on": "2:0a200103000114",
+    "XboxGIP/auth-done": "2:062001020100",
+    "XboxGIP/rumble-begin": "2:09000109000f00001d1dff0000",
+    "XboxGIP/rumble-end": "2:09000109000f00000000000000",
   ]
 
   private static let all = [
@@ -63,7 +63,7 @@ struct GIPStartupPacketBytesTests {
 
   @Test
   func testARepeatedPacketTakesTheNextSequenceNumber() {
-    let twice = startup(["xbox.gip/power-on", "xbox.gip/power-on", "xbox.gip/s-init"])
+    let twice = startup(["XboxGIP/power-on", "XboxGIP/power-on", "XboxGIP/s-init"])
     #expect(twice == ["2:0520010100", "2:0520020100", "2:0520030f06"])
   }
 

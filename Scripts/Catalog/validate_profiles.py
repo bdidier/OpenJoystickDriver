@@ -62,9 +62,9 @@ def reads_record_rumble_template(protocol: dict[str, Any]) -> bool:
     family = protocol["family"]
     if not encodes_rumble_template(family):
         return False
-    if family == "vendor.gamesir":
-        return protocol.get("variant") == "enhanced-hid"
-    if family == "vendor.nvidia-shield":
+    if family == "VendorGameSir":
+        return protocol.get("variant") == "EnhancedHID"
+    if family == "VendorNVIDIAShield":
         return protocol.get("parameters", {}).get("reportRevision") == "Shield2015"
     return True
 
@@ -95,7 +95,7 @@ def usage_map_problem(usage_map: dict[str, Any]) -> str | None:
         if key in seen:
             return f"usage page {key[0]} usage {key[1]} appears more than once"
         seen.add(key)
-        if entry["kind"] == "axis" and "range" in entry:
+        if entry["kind"] == "Axis" and "range" in entry:
             bounds = entry["range"]
             if bounds["min"] >= bounds["max"]:
                 return f"axis range {bounds['min']}...{bounds['max']} must have min below max"
@@ -216,7 +216,7 @@ def validate_transport_sections(path: pathlib.Path, record: dict[str, Any]) -> N
     )
     require(
         "bluetoothLE" not in record
-        or all(protocol["family"] == "nintendo.switch2" for protocol in protocols),
+        or all(protocol["family"] == "NintendoSwitch2" for protocol in protocols),
         f"{path}: bluetoothLE requires a Switch 2 controller",
     )
     endpoints = record.get("usb", {}).get("endpoints")
@@ -266,13 +266,13 @@ def validate_modes(path: pathlib.Path, record: dict[str, Any]) -> None:
         family = mode["protocol"]["family"]
         validate_mode_session(path, mode)
         require(
-            "hidUsageMap" not in record.get("input", {}) or family == "hid.descriptor",
-            f"{path}: a HID usage map applies only to hid.descriptor in every mode",
+            "hidUsageMap" not in record.get("input", {}) or family == "HIDDescriptor",
+            f"{path}: a HID usage map applies only to HIDDescriptor in every mode",
         )
         require(
             has_layout == requires_record_input_layout(family),
             f"{path}: every mode needs the record's input layout exactly when it is "
-            "hid.report-layout",
+            "HIDReportLayout",
         )
         require(
             capabilities_are_declared(record, family),
@@ -296,7 +296,7 @@ def validate_modes(path: pathlib.Path, record: dict[str, Any]) -> None:
             f"{path}: mode {mode['id']} interface first must not exceed last",
         )
         for probe in match.get("probes", []):
-            if probe["expect"] == "bytes":
+            if probe["expect"] == "Bytes":
                 end = probe["offset"] + len(probe["bytes"].split(" "))
                 require(
                     end <= probe["length"],

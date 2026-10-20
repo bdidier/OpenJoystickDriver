@@ -11,69 +11,69 @@ extension DriverParseCharacterizationTests {
     let lines = try transcript(Subjects.hidDescriptor, Self.hidDescriptorSteps)
     #expect(
       lines == [
-        "report [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn1 [South] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn1-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn2 [East] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn2-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn3 [West] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn3-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn4 [North] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn4-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn5 [LeftShoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn5-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn6 [RightShoulder] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn6-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn7 [Back] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn7-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn8 [Start] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn8-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn9 [LeftStickClick] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn9-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn10 [RightStickClick] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn10-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn11 [Guide] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn11-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn12 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "btn12-up [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "u30=0 [] hat=neutral ls=-32767,0 rs=0,0 lt=0 rt=0",
-        "u30=127 [] hat=neutral ls=-128,0 rs=0,0 lt=0 rt=0",
-        "u30=128 [] hat=neutral ls=128,0 rs=0,0 lt=0 rt=0",
-        "u30=255 [] hat=neutral ls=32767,0 rs=0,0 lt=0 rt=0",
-        "u31=0 [] hat=neutral ls=32767,-32767 rs=0,0 lt=0 rt=0",
-        "u31=127 [] hat=neutral ls=32767,-128 rs=0,0 lt=0 rt=0",
-        "u31=128 [] hat=neutral ls=32767,128 rs=0,0 lt=0 rt=0",
-        "u31=255 [] hat=neutral ls=32767,32767 rs=0,0 lt=0 rt=0",
-        "u32=0 [] hat=neutral ls=32767,32767 rs=0,0 lt=0 rt=0",
-        "u32=127 [] hat=neutral ls=32767,32767 rs=0,0 lt=32639 rt=0",
-        "u32=128 [] hat=neutral ls=32767,32767 rs=0,0 lt=32896 rt=0",
-        "u32=255 [] hat=neutral ls=32767,32767 rs=0,0 lt=65535 rt=0",
-        "u33=0 [] hat=neutral ls=32767,32767 rs=-32767,0 lt=65535 rt=0",
-        "u33=127 [] hat=neutral ls=32767,32767 rs=-128,0 lt=65535 rt=0",
-        "u33=128 [] hat=neutral ls=32767,32767 rs=128,0 lt=65535 rt=0",
-        "u33=255 [] hat=neutral ls=32767,32767 rs=32767,0 lt=65535 rt=0",
-        "u34=0 [] hat=neutral ls=32767,32767 rs=32767,-32767 lt=65535 rt=0",
-        "u34=127 [] hat=neutral ls=32767,32767 rs=32767,-128 lt=65535 rt=0",
-        "u34=128 [] hat=neutral ls=32767,32767 rs=32767,128 lt=65535 rt=0",
-        "u34=255 [] hat=neutral ls=32767,32767 rs=32767,32767 lt=65535 rt=0",
-        "u35=0 [] hat=neutral ls=32767,32767 rs=32767,32767 lt=65535 rt=0",
-        "u35=127 [] hat=neutral ls=32767,32767 rs=32767,32767 lt=65535 rt=32639",
-        "u35=128 [] hat=neutral ls=32767,32767 rs=32767,32767 lt=65535 rt=32896",
-        "u35=255 [] hat=neutral ls=32767,32767 rs=32767,32767 lt=65535 rt=65535",
-        "h0 [] hat=north ls=32767,32767 rs=32767,32767 lt=65535 rt=65535",
-        "h1 [] hat=northEast ls=32767,32767 rs=32767,32767 lt=65535 rt=65535",
-        "h2 [] hat=east ls=32767,32767 rs=32767,32767 lt=65535 rt=65535",
-        "h3 [] hat=southEast ls=32767,32767 rs=32767,32767 lt=65535 rt=65535",
-        "h4 [] hat=south ls=32767,32767 rs=32767,32767 lt=65535 rt=65535",
-        "h5 [] hat=southWest ls=32767,32767 rs=32767,32767 lt=65535 rt=65535",
-        "h6 [] hat=west ls=32767,32767 rs=32767,32767 lt=65535 rt=65535",
-        "h7 [] hat=northWest ls=32767,32767 rs=32767,32767 lt=65535 rt=65535",
-        "h8 [] hat=neutral ls=32767,32767 rs=32767,32767 lt=65535 rt=65535",
-        "h15 [] hat=neutral ls=32767,32767 rs=32767,32767 lt=65535 rt=65535",
-        "repeat [] hat=neutral ls=32767,32767 rs=32767,32767 lt=65535 rt=65535",
-        "span0 [] hat=neutral ls=0,32767 rs=32767,32767 lt=65535 rt=65535",
-        "accel [] hat=neutral ls=0,32767 rs=32767,32767 lt=65535 rt=65535",
-        "page7 [] hat=neutral ls=0,32767 rs=32767,32767 lt=65535 rt=65535",
+        "report [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn1 [South] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn1-up [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn2 [East] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn2-up [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn3 [West] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn3-up [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn4 [North] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn4-up [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn5 [LeftShoulder] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn5-up [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn6 [RightShoulder] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn6-up [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn7 [Back] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn7-up [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn8 [Start] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn8-up [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn9 [LeftStickClick] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn9-up [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn10 [RightStickClick] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn10-up [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn11 [Guide] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn11-up [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn12 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "btn12-up [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "u30=0 [] hat=Neutral ls=-32767,0 rs=0,0 lt=0 rt=0",
+        "u30=127 [] hat=Neutral ls=-128,0 rs=0,0 lt=0 rt=0",
+        "u30=128 [] hat=Neutral ls=128,0 rs=0,0 lt=0 rt=0",
+        "u30=255 [] hat=Neutral ls=32767,0 rs=0,0 lt=0 rt=0",
+        "u31=0 [] hat=Neutral ls=32767,-32767 rs=0,0 lt=0 rt=0",
+        "u31=127 [] hat=Neutral ls=32767,-128 rs=0,0 lt=0 rt=0",
+        "u31=128 [] hat=Neutral ls=32767,128 rs=0,0 lt=0 rt=0",
+        "u31=255 [] hat=Neutral ls=32767,32767 rs=0,0 lt=0 rt=0",
+        "u32=0 [] hat=Neutral ls=32767,32767 rs=0,0 lt=0 rt=0",
+        "u32=127 [] hat=Neutral ls=32767,32767 rs=0,0 lt=32639 rt=0",
+        "u32=128 [] hat=Neutral ls=32767,32767 rs=0,0 lt=32896 rt=0",
+        "u32=255 [] hat=Neutral ls=32767,32767 rs=0,0 lt=65535 rt=0",
+        "u33=0 [] hat=Neutral ls=32767,32767 rs=-32767,0 lt=65535 rt=0",
+        "u33=127 [] hat=Neutral ls=32767,32767 rs=-128,0 lt=65535 rt=0",
+        "u33=128 [] hat=Neutral ls=32767,32767 rs=128,0 lt=65535 rt=0",
+        "u33=255 [] hat=Neutral ls=32767,32767 rs=32767,0 lt=65535 rt=0",
+        "u34=0 [] hat=Neutral ls=32767,32767 rs=32767,-32767 lt=65535 rt=0",
+        "u34=127 [] hat=Neutral ls=32767,32767 rs=32767,-128 lt=65535 rt=0",
+        "u34=128 [] hat=Neutral ls=32767,32767 rs=32767,128 lt=65535 rt=0",
+        "u34=255 [] hat=Neutral ls=32767,32767 rs=32767,32767 lt=65535 rt=0",
+        "u35=0 [] hat=Neutral ls=32767,32767 rs=32767,32767 lt=65535 rt=0",
+        "u35=127 [] hat=Neutral ls=32767,32767 rs=32767,32767 lt=65535 rt=32639",
+        "u35=128 [] hat=Neutral ls=32767,32767 rs=32767,32767 lt=65535 rt=32896",
+        "u35=255 [] hat=Neutral ls=32767,32767 rs=32767,32767 lt=65535 rt=65535",
+        "h0 [] hat=North ls=32767,32767 rs=32767,32767 lt=65535 rt=65535",
+        "h1 [] hat=NorthEast ls=32767,32767 rs=32767,32767 lt=65535 rt=65535",
+        "h2 [] hat=East ls=32767,32767 rs=32767,32767 lt=65535 rt=65535",
+        "h3 [] hat=SouthEast ls=32767,32767 rs=32767,32767 lt=65535 rt=65535",
+        "h4 [] hat=South ls=32767,32767 rs=32767,32767 lt=65535 rt=65535",
+        "h5 [] hat=SouthWest ls=32767,32767 rs=32767,32767 lt=65535 rt=65535",
+        "h6 [] hat=West ls=32767,32767 rs=32767,32767 lt=65535 rt=65535",
+        "h7 [] hat=NorthWest ls=32767,32767 rs=32767,32767 lt=65535 rt=65535",
+        "h8 [] hat=Neutral ls=32767,32767 rs=32767,32767 lt=65535 rt=65535",
+        "h15 [] hat=Neutral ls=32767,32767 rs=32767,32767 lt=65535 rt=65535",
+        "repeat [] hat=Neutral ls=32767,32767 rs=32767,32767 lt=65535 rt=65535",
+        "span0 [] hat=Neutral ls=0,32767 rs=32767,32767 lt=65535 rt=65535",
+        "accel [] hat=Neutral ls=0,32767 rs=32767,32767 lt=65535 rt=65535",
+        "page7 [] hat=Neutral ls=0,32767 rs=32767,32767 lt=65535 rt=65535",
       ]
     )
   }
@@ -87,9 +87,9 @@ extension DriverParseCharacterizationTests {
     )
     #expect(
       lines == [
-        "cap0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "input-a [South] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "cap1 [South] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "cap0 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "input-a [South] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "cap1 [South] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
       ]
     )
   }
@@ -103,9 +103,9 @@ extension DriverParseCharacterizationTests {
     )
     #expect(
       lines == [
-        "cap0 [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "input-a [South] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "cap1 [South] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "cap0 [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "input-a [South] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "cap1 [South] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
       ]
     )
   }
@@ -116,13 +116,13 @@ extension DriverParseCharacterizationTests {
     let lines = try transcript(Subjects.dualShock4USB, Self.capturedSteps(Self.capturedDualShock4))
     #expect(
       lines == [
-        "cap0 [] hat=neutral ls=-1279,-1023 rs=767,0 lt=0 rt=0 motion=1 touch=1 fresh",
+        "cap0 [] hat=Neutral ls=-1279,-1023 rs=767,0 lt=0 rt=0 motion=1 touch=1 fresh",
         "  motion n=12705 w=-0.0076,0.0164,0.0076 a=-0.0204,-2.1452,9.3182",
         "  touch Primary [0:0:53002,6755 1:0:0,0]", "  battery 100% full wired-power=yes",
-        "cap1 [] hat=neutral ls=-255,-1023 rs=511,0 lt=0 rt=0 motion=1 touch=1 fresh",
+        "cap1 [] hat=Neutral ls=-255,-1023 rs=511,0 lt=0 rt=0 motion=1 touch=1 fresh",
         "  motion n=13448 w=-0.0087,0.0175,0.0076 a=-0.0287,-2.1632,9.3075",
         "  touch Primary [0:0:53002,6755 1:0:0,0]",
-        "cap2 [] hat=neutral ls=-1279,-1023 rs=511,0 lt=0 rt=0 motion=1 touch=1 fresh",
+        "cap2 [] hat=Neutral ls=-1279,-1023 rs=511,0 lt=0 rt=0 motion=1 touch=1 fresh",
         "  motion n=14191 w=-0.0087,0.0164,0.0076 a=-0.0263,-2.1512,9.3230",
         "  touch Primary [0:0:53002,6755 1:0:0,0]",
       ]
@@ -135,9 +135,9 @@ extension DriverParseCharacterizationTests {
     let lines = try transcript(Subjects.sixaxisUSB, Self.capturedSteps(Self.capturedSixaxis))
     #expect(
       lines == [
-        "cap0 [] hat=neutral ls=-1279,258 rs=258,0 lt=0 rt=0",
-        "cap1 [] hat=neutral ls=-1023,258 rs=258,0 lt=0 rt=0",
-        "cap2 [] hat=neutral ls=-1279,258 rs=258,0 lt=0 rt=0",
+        "cap0 [] hat=Neutral ls=-1279,258 rs=258,0 lt=0 rt=0",
+        "cap1 [] hat=Neutral ls=-1023,258 rs=258,0 lt=0 rt=0",
+        "cap2 [] hat=Neutral ls=-1279,258 rs=258,0 lt=0 rt=0",
       ]
     )
   }
@@ -182,8 +182,8 @@ extension DriverParseCharacterizationTests {
     )
     #expect(
       lines == [
-        "reply [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0",
-        "imu [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0",
+        "reply [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0",
+        "imu [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=3 touch=0",
         "  motion n=0 w=-0.8727,0.1745,-0.5236 a=19.6133,2.4517,-14.7100",
         "  motion n=0 w=-0.0349,-0.0175,-0.0524 a=0.0000,0.0000,0.0000",
         "  motion n=0 w=0.8727,-0.1745,0.5236 a=-19.6133,-2.4517,14.7100",
@@ -210,10 +210,10 @@ extension DriverParseCharacterizationTests {
     let lines = try transcript(Subjects.steamWired, [Step("neutral", base), Step("imu", report)])
     #expect(
       lines == [
-        "neutral [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=2",
+        "neutral [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=2",
         "  motion n=0 w=0.0000,0.0000,0.0000 a=0.0000,0.0000,0.0000",
         "  touch Left [0:0:32768,32767]", "  touch Right [0:0:32768,32767]",
-        "imu [] hat=neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=2",
+        "imu [] hat=Neutral ls=0,0 rs=0,0 lt=0 rt=0 motion=1 touch=2",
         "  motion n=1 w=2.1817,4.3633,8.7266 a=2.4517,-19.6133,14.7100",
         "  touch Left [0:0:32768,32767]", "  touch Right [0:0:32768,32767]",
       ]

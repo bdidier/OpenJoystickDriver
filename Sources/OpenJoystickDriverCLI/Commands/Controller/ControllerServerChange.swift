@@ -43,14 +43,17 @@ enum ControllerServerChange {
       )
       switch CLIContext.current.format {
       case .json: try CLIOutput.json(result)
-      case .plain: CLIOutput.plain([[result.identity, result.server.rawValue, result.file]])
+      case .plain:
+        CLIOutput.plain([
+          [result.identity, CommandLineName.kebab(result.server.rawValue), result.file]
+        ])
       case .human:
         if dryRun {
           CLIOutput.stdout(
             CLILocalized.format(
               "cli.controller.server.dry_run",
               result.identity,
-              result.server.rawValue,
+              CommandLineName.kebab(result.server.rawValue),
               result.file
             )
           )
@@ -59,7 +62,7 @@ enum ControllerServerChange {
             CLILocalized.format(
               "cli.controller.server.success",
               result.identity,
-              result.server.rawValue,
+              CommandLineName.kebab(result.server.rawValue),
               result.file
             )
           )

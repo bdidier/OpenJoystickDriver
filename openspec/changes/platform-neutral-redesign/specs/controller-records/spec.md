@@ -86,7 +86,7 @@ A `ControllerPatch` SHALL apply with RFC 7396 merge semantics in the order catal
 #### Scenario: All patch reaches only families that read the key
 
 - **WHEN** an `all` patch sets `hidStartupRecoveryRounds` and a record's family does not read that tuning key
-- **THEN** that record's effective tuning has no such key, while a `nintendo.switch1` record gets the value
+- **THEN** that record's effective tuning has no such key, while a `NintendoSwitch1` record gets the value
 
 ### Requirement: Generated catalog is not hand-edited
 

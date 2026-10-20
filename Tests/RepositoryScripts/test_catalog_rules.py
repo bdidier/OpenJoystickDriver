@@ -50,16 +50,16 @@ class CatalogRulesLoadingTests(unittest.TestCase):
     def test_sdl_rules_are_loaded_from_data(self) -> None:
         self.assertEqual(catalog.SONY_VENDOR_ID, 0x054C)
         self.assertEqual(
-            catalog.SDL_FAMILIES["XBox360Controller"], ("xbox.xusb", "wired")
+            catalog.SDL_FAMILIES["XBox360Controller"], ("XboxXUSB", "Wired")
         )
         self.assertEqual(
-            catalog.SDL_FAMILIES["PS4Controller"], ("sony.dualshock4", None)
+            catalog.SDL_FAMILIES["PS4Controller"], ("SonyDualShock4", None)
         )
         self.assertEqual(
             catalog.SDL_IDENTITY_FAMILIES[(0x0955, 0x7210)],
-            ("XBox360Controller", "vendor.nvidia-shield", None),
+            ("XBox360Controller", "VendorNVIDIAShield", None),
         )
-        self.assertEqual(catalog.STEAM_VARIANTS[(0x28DE, 0x1304)], "dongle")
+        self.assertEqual(catalog.STEAM_VARIANTS[(0x28DE, 0x1304)], "Dongle")
         self.assertEqual(
             catalog.SDL_PARAMETERS["SwitchJoyConLeft"], {"layout": "JoyConLeft"}
         )
@@ -99,13 +99,13 @@ class CatalogRulesLoadingTests(unittest.TestCase):
             },
         )
         steam = {
-            row[2]: row[4] for row in catalog.HID_RECORDS if row[3].startswith("valve")
+            row[2]: row[4] for row in catalog.HID_RECORDS if row[3].startswith("Valve")
         }
         self.assertEqual(
             steam,
             {
-                "USB_DEVICE_ID_STEAM_CONTROLLER": "wired",
-                "USB_DEVICE_ID_STEAM_CONTROLLER_WIRELESS": "dongle",
+                "USB_DEVICE_ID_STEAM_CONTROLLER": "Wired",
+                "USB_DEVICE_ID_STEAM_CONTROLLER_WIRELESS": "Dongle",
             },
         )
 
@@ -115,19 +115,19 @@ class CatalogRulesLoadingTests(unittest.TestCase):
         )
         self.assertEqual(
             xpad.MAPPING_ORDER,
-            (("MAP_SHARE_OFFSET", {"shareButton": {"fromEnd": 26}}, "xbox.gip"),),
+            (("MAP_SHARE_OFFSET", {"shareButton": {"fromEnd": 26}}, "XboxGIP"),),
         )
         self.assertEqual(xpad.CAPABILITY_ABSENCES[1][0], "MAP_TRIGGERS_TO_BUTTONS")
         self.assertEqual(
-            xpad.SUPPORTED_TYPES["XTYPE_XBOX360W"], ("xbox.xusb", "receiver")
+            xpad.SUPPORTED_TYPES["XTYPE_XBOX360W"], ("XboxXUSB", "Receiver")
         )
-        self.assertEqual(xpad.SUPPORTED_TYPES["XTYPE_XBOXONE"], ("xbox.gip", None))
+        self.assertEqual(xpad.SUPPORTED_TYPES["XTYPE_XBOXONE"], ("XboxGIP", None))
         self.assertIsNone(xpad.TYPE_FILTERS["all"])
-        self.assertEqual(xpad.TYPE_FILTERS["xbox.gip"], "XTYPE_XBOXONE")
+        self.assertEqual(xpad.TYPE_FILTERS["XboxGIP"], "XTYPE_XBOXONE")
         self.assertEqual(len(xpad.INIT_PACKET_NAMES), 8)
         self.assertEqual(
             xpad.DEFAULT_INITIALIZATION,
-            ["xbox.gip/power-on", "xbox.gip/led-on", "xbox.gip/auth-done"],
+            ["XboxGIP/power-on", "XboxGIP/led-on", "XboxGIP/auth-done"],
         )
         self.assertEqual(len(xpad.DANCEPAD_FLAGS), 3)
 

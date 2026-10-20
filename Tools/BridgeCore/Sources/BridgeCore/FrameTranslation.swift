@@ -4,10 +4,10 @@ import Foundation
 /// `FeedRequest` flow accepts.
 public enum FrameTranslation {
   private static let dpad: [String: [String]] = [
-    "north": ["DpadUp"], "northEast": ["DpadUp", "DpadRight"], "east": ["DpadRight"],
-    "southEast": ["DpadDown", "DpadRight"], "south": ["DpadDown"],
-    "southWest": ["DpadDown", "DpadLeft"],
-    "west": ["DpadLeft"], "northWest": ["DpadUp", "DpadLeft"],
+    "North": ["DpadUp"], "NorthEast": ["DpadUp", "DpadRight"], "East": ["DpadRight"],
+    "SouthEast": ["DpadDown", "DpadRight"], "South": ["DpadDown"],
+    "SouthWest": ["DpadDown", "DpadLeft"],
+    "West": ["DpadLeft"], "NorthWest": ["DpadUp", "DpadLeft"],
   ]
 
   /// The watch line's controller `id` and `Frame`, or nil when the line is not a `MODIFIED` line

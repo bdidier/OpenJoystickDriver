@@ -117,10 +117,10 @@ struct ReceiverRoleProfileTests {
   }
 
   @Test(arguments: [
-    (UInt16(0x045E), UInt16(0x02D1)),  // xbox.gip:usb
-    (UInt16(0x0079), UInt16(0x1832)),  // xbox.xusb:wired
-    (UInt16(0x044F), UInt16(0x0F00)),  // xbox.xid:gamepad
-    (UInt16(0x3537), UInt16(0x1003)),  // vendor.gamesir:usb
+    (UInt16(0x045E), UInt16(0x02D1)),  // XboxGIP:USB
+    (UInt16(0x0079), UInt16(0x1832)),  // XboxXUSB:Wired
+    (UInt16(0x044F), UInt16(0x0F00)),  // XboxXID:Gamepad
+    (UInt16(0x3537), UInt16(0x1003)),  // VendorGameSir:USB
   ])
   func everyOtherFamilyRunsItsClaimAsItsOneRole(vendorID: UInt16, productID: UInt16) throws {
     let binding = try bound(vendorID, productID)

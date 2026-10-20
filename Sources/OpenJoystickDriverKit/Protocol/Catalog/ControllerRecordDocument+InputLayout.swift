@@ -1,7 +1,7 @@
 import Foundation
 
 extension ControllerRecordDocument {
-  /// The record's `input` section: a fixed report layout for the `hid.report-layout` family.
+  /// The record's `input` section: a fixed report layout for the `HIDReportLayout` family.
   struct InputLayout: Decodable {
     let layout: ControllerInputLayout
 
@@ -126,14 +126,14 @@ extension ControllerRecordDocument {
       let container = try decoder.container(keyedBy: DocumentKey.self)
       let encoding = try container.decode(String.self, for: "encoding")
       switch encoding {
-      case "8-way":
+      case "EightWay":
         try container.rejectUnknown(allowed: ["encoding", "byte", "mask", "neutralUntilNonzero"])
         source = .eightWay(
           try InputField.field(in: container, codingPath: decoder.codingPath),
           neutralUntilNonzero: try container.decodeOptional(Bool.self, for: "neutralUntilNonzero")
             ?? false
         )
-      case "directions":
+      case "Directions":
         try container.rejectUnknown(allowed: ["encoding", "up", "right", "down", "left"])
         source = .directions(
           up: try container.decode(InputField.self, for: "up").field,
@@ -141,7 +141,7 @@ extension ControllerRecordDocument {
           down: try container.decode(InputField.self, for: "down").field,
           left: try container.decode(InputField.self, for: "left").field
         )
-      case "table":
+      case "Table":
         try container.rejectUnknown(allowed: ["encoding", "byte", "mask", "values"])
         source = .table(
           try InputField.field(in: container, codingPath: decoder.codingPath),
@@ -151,7 +151,7 @@ extension ControllerRecordDocument {
         throw DecodingError.dataCorrupted(
           .init(
             codingPath: decoder.codingPath,
-            debugDescription: "hat encoding must be 8-way, directions or table"
+            debugDescription: "hat encoding must be EightWay, Directions or Table"
           )
         )
       }

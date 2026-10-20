@@ -11,7 +11,7 @@
         "in": 129,
         "out": 1
       },
-      "configuration": "set1-before-claim"
+      "configuration": "SetConfiguration1BeforeClaim"
     },
     "route": "ExtensionOwned"
   }

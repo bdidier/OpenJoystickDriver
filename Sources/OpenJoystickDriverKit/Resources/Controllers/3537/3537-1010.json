@@ -7,11 +7,11 @@
     {
       "id": "default",
       "protocol": {
-        "family": "xbox.gip"
+        "family": "XboxGIP"
       }
     }
   ],
   "usb": {
-    "configuration": "set1-before-claim"
+    "configuration": "SetConfiguration1BeforeClaim"
   }
 }

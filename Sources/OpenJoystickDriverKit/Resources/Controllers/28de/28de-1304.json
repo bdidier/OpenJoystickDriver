@@ -7,8 +7,8 @@
     {
       "id": "default",
       "protocol": {
-        "family": "valve.steam-triton",
-        "variant": "dongle"
+        "family": "ValveSteamTriton",
+        "variant": "Dongle"
       }
     }
   ]

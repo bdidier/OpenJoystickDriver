@@ -1,6 +1,6 @@
 import Foundation
 
-/// Driver for the `hid.report-layout` family: it decodes raw input reports by the byte offsets
+/// Driver for the `HIDReportLayout` family: it decodes raw input reports by the byte offsets
 /// and bit masks the controller record's ``ControllerInputLayout`` names, and drives rumble only
 /// through the record's template. It sends nothing at startup.
 public final class ReportLayoutDriver: PhysicalProtocolDriver {

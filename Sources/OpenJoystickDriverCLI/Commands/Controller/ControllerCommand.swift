@@ -158,13 +158,16 @@ struct ControllerShowCommand: AsyncParsableCommand {
     rows += [
       ["input-health", detail.inputHealth.state],
       ["ownership", detail.ownership.physical],
-      ["server", detail.ownership.server.rawValue, detail.ownership.serverSource],
+      [
+        "server", CommandLineName.kebab(detail.ownership.server.rawValue),
+        detail.ownership.serverSource,
+      ],
       ["serving-route", detail.serving.route, detail.serving.reason ?? ""],
       ["persona", detail.serving.persona ?? ""],
       ["controls", detail.capabilities.controls.joined(separator: ",")],
       ["rumble-motors", detail.capabilities.rumbleMotors.joined(separator: ",")],
       ["lighting", detail.capabilities.lightingFeatures.joined(separator: ",")],
-      ["output-owner", detail.capabilities.outputOwner],
+      ["output-owner", CommandLineName.kebab(detail.capabilities.outputOwner)],
     ]
     rows.append(["record", detail.record?.layer ?? "none", detail.record?.file ?? ""])
     if let tuning = detail.tuning { rows.append(["tuning"] + tuning.rows) }

@@ -27,9 +27,9 @@ def record(
     }
 
 
-GIP = {"family": "xbox.gip"}
-XUSB = {"family": "xbox.xusb", "variant": "wired"}
-DUALSENSE = {"family": "sony.dualsense"}
+GIP = {"family": "XboxGIP"}
+XUSB = {"family": "XboxXUSB", "variant": "Wired"}
+DUALSENSE = {"family": "SonyDualSense"}
 
 
 def schema_clauses(node: Any) -> Any:
@@ -53,34 +53,34 @@ class ControllerSchemaTests(unittest.TestCase):
                 {
                     **GIP,
                     "parameters": {"shareButton": {"fromEnd": 26}},
-                    "initialization": ["xbox.gip/hori-ack", "xbox.gip/power-on"],
+                    "initialization": ["XboxGIP/hori-ack", "XboxGIP/power-on"],
                 },
-                usb={"configuration": "set1-before-claim"},
+                usb={"configuration": "SetConfiguration1BeforeClaim"},
                 capabilities={
                     "absent": ["LeftTrigger", "RightTrigger"],
-                    "rumble": "absent",
+                    "rumble": "Absent",
                 },
             ),
             "Joy-Con side": record(
-                {"family": "nintendo.switch1", "parameters": {"layout": "JoyConLeft"}}
+                {"family": "NintendoSwitch1", "parameters": {"layout": "JoyConLeft"}}
             ),
             "Switch 2 Joy-Con": record(
-                {"family": "nintendo.switch2", "parameters": {"layout": "JoyConRight"}}
+                {"family": "NintendoSwitch2", "parameters": {"layout": "JoyConRight"}}
             ),
-            "Switch 2 Pro": record({"family": "nintendo.switch2"}),
-            "Switch input-only": record({"family": "nintendo.switch-input-only"}),
+            "Switch 2 Pro": record({"family": "NintendoSwitch2"}),
+            "Switch input-only": record({"family": "NintendoSwitchInputOnly"}),
             "Steam Triton wired": record(
-                {"family": "valve.steam-triton", "variant": "wired"}
+                {"family": "ValveSteamTriton", "variant": "Wired"}
             ),
             "Steam Triton dongle": record(
-                {"family": "valve.steam-triton", "variant": "dongle"}
+                {"family": "ValveSteamTriton", "variant": "Dongle"}
             ),
             "Steam Triton Bluetooth LE": record(
-                {"family": "valve.steam-triton", "variant": "bluetooth-le"}
+                {"family": "ValveSteamTriton", "variant": "BluetoothLE"}
             ),
-            "Steam Deck": record({"family": "valve.steam-deck"}),
+            "Steam Deck": record({"family": "ValveSteamDeck"}),
             "Switch 2 GameCube": record(
-                {"family": "nintendo.switch2", "parameters": {"layout": "GameCube"}}
+                {"family": "NintendoSwitch2", "parameters": {"layout": "GameCube"}}
             ),
             "DualSense Edge controls": record(
                 DUALSENSE,
@@ -95,28 +95,28 @@ class ControllerSchemaTests(unittest.TestCase):
             ),
             "GameSir inner grips": record(
                 {
-                    "family": "vendor.gamesir",
-                    "variant": "enhanced-hid",
+                    "family": "VendorGameSir",
+                    "variant": "EnhancedHID",
                     "parameters": {"innerGrips": True},
                 }
             ),
             "GameSir lighting slots": record(
                 {
-                    "family": "vendor.gamesir",
-                    "variant": "enhanced-hid",
+                    "family": "VendorGameSir",
+                    "variant": "EnhancedHID",
                     "parameters": {"lightingMemory": "ProfileSlots"},
                 }
             ),
             "GameSir vendor USB endpoints": record(
-                {"family": "vendor.gamesir", "variant": "usb"},
+                {"family": "VendorGameSir", "variant": "USB"},
                 usb={"endpoints": {"in": 131, "out": 3}},
             ),
-            "XUSB receiver": record({"family": "xbox.xusb", "variant": "receiver"}),
-            "XID gamepad": record({"family": "xbox.xid", "variant": "gamepad"}),
+            "XUSB receiver": record({"family": "XboxXUSB", "variant": "Receiver"}),
+            "XID gamepad": record({"family": "XboxXID", "variant": "Gamepad"}),
             "Steam dongle": record(
-                {"family": "valve.steam-controller", "variant": "dongle"}
+                {"family": "ValveSteamController", "variant": "Dongle"}
             ),
-            "descriptor HID": record({"family": "hid.descriptor"}),
+            "descriptor HID": record({"family": "HIDDescriptor"}),
         }
         for name, document in current.items():
             with self.subTest(name):
@@ -124,40 +124,40 @@ class ControllerSchemaTests(unittest.TestCase):
 
     def test_rejects_unknown_vocabulary(self) -> None:
         refused = {
-            "unknown field": record(GIP, notAField="usb"),
+            "unknown field": record(GIP, notAField="USB"),
             "unknown variant": record({**GIP, "variant": "notAVariant"}),
             "unknown Steam parameter": record(
                 {
-                    "family": "valve.steam-controller",
-                    "variant": "wired",
+                    "family": "ValveSteamController",
+                    "variant": "Wired",
                     "parameters": {"notAParameter": True},
                 }
             ),
             "unknown family": record({"family": "xbox.adaptive-joystick"}),
-            "binding string as family": record({"family": "xbox.xusb:wired"}),
-            "missing stored variant": record({"family": "xbox.xusb"}),
-            "transport variant stored": record({**DUALSENSE, "variant": "usb"}),
+            "binding string as family": record({"family": "XboxXUSB:Wired"}),
+            "missing stored variant": record({"family": "XboxXUSB"}),
+            "transport variant stored": record({**DUALSENSE, "variant": "USB"}),
             "variant of another family": record(
-                {"family": "xbox.xusb", "variant": "dongle"}
+                {"family": "XboxXUSB", "variant": "Dongle"}
             ),
             "usb block on HID family": record(
-                DUALSENSE, usb={"configuration": "set1-before-claim"}
+                DUALSENSE, usb={"configuration": "SetConfiguration1BeforeClaim"}
             ),
             "usb block on GameSir enhanced HID": record(
                 {
-                    "family": "vendor.gamesir",
-                    "variant": "enhanced-hid",
+                    "family": "VendorGameSir",
+                    "variant": "EnhancedHID",
                     "parameters": {"innerGrips": True},
                 },
-                usb={"configuration": "set1-before-claim"},
+                usb={"configuration": "SetConfiguration1BeforeClaim"},
             ),
             "GameSir enhanced HID without a model parameter": record(
-                {"family": "vendor.gamesir", "variant": "enhanced-hid"}
+                {"family": "VendorGameSir", "variant": "EnhancedHID"}
             ),
             "GameSir enhanced HID with both model parameters": record(
                 {
-                    "family": "vendor.gamesir",
-                    "variant": "enhanced-hid",
+                    "family": "VendorGameSir",
+                    "variant": "EnhancedHID",
                     "parameters": {
                         "innerGrips": True,
                         "lightingMemory": "ProfileSlots",
@@ -166,15 +166,15 @@ class ControllerSchemaTests(unittest.TestCase):
             ),
             "GameSir vendor USB inner grips": record(
                 {
-                    "family": "vendor.gamesir",
-                    "variant": "usb",
+                    "family": "VendorGameSir",
+                    "variant": "USB",
                     "parameters": {"innerGrips": True},
                 }
             ),
             "GameSir vendor USB lighting slots": record(
                 {
-                    "family": "vendor.gamesir",
-                    "variant": "usb",
+                    "family": "VendorGameSir",
+                    "variant": "USB",
                     "parameters": {"lightingMemory": "ProfileSlots"},
                 }
             ),
@@ -184,7 +184,7 @@ class ControllerSchemaTests(unittest.TestCase):
             ),
             "unknown quirks array": record({**GIP, "quirks": ["share-offset"]}),
             "unknown DS4 parameter": record(
-                {"family": "sony.dualshock4", "parameters": {"gyro": True}}
+                {"family": "SonyDualShock4", "parameters": {"gyro": True}}
             ),
             "empty parameters": record({**GIP, "parameters": {}}),
             "wrong parameter type": record(
@@ -194,72 +194,72 @@ class ControllerSchemaTests(unittest.TestCase):
                 {**GIP, "parameters": {"shareButton": {"fromEnd": 0}}}
             ),
             "unknown enum value": record(
-                {"family": "nintendo.switch1", "parameters": {"layout": "joy-con-left"}}
+                {"family": "NintendoSwitch1", "parameters": {"layout": "joy-con-left"}}
             ),
             "false flag": record(
                 {
-                    "family": "vendor.gamesir",
-                    "variant": "enhanced-hid",
+                    "family": "VendorGameSir",
+                    "variant": "EnhancedHID",
                     "parameters": {"innerGrips": False},
                 }
             ),
             "usb interface": record(GIP, usb={"interface": 1}),
-            "startupPackets": record({**GIP, "startupPackets": ["xbox.gip/power-on"]}),
+            "startupPackets": record({**GIP, "startupPackets": ["XboxGIP/power-on"]}),
             "camelCase action": record({**GIP, "initialization": ["powerOn"]}),
             "XUSB initialization": record(
-                {**XUSB, "initialization": ["xbox.gip/power-on"]}
+                {**XUSB, "initialization": ["XboxGIP/power-on"]}
             ),
             "both Joy-Con sides": record(
                 {
-                    "family": "nintendo.switch1",
+                    "family": "NintendoSwitch1",
                     "parameters": {"layout": ["JoyConLeft", "JoyConRight"]},
                 }
             ),
             "GameCube on Switch 1": record(
-                {"family": "nintendo.switch1", "parameters": {"layout": "GameCube"}}
+                {"family": "NintendoSwitch1", "parameters": {"layout": "GameCube"}}
             ),
             "Switch 2 with two layouts": record(
                 {
-                    "family": "nintendo.switch2",
+                    "family": "NintendoSwitch2",
                     "parameters": {"layout": ["GameCube", "JoyConLeft"]},
                 }
             ),
             "Switch input-only with a parameter": record(
                 {
-                    "family": "nintendo.switch-input-only",
+                    "family": "NintendoSwitchInputOnly",
                     "parameters": {"layout": "GameCube"},
                 }
             ),
             "Steam Deck with a parameter": record(
-                {"family": "valve.steam-deck", "parameters": {"lizardMode": True}}
+                {"family": "ValveSteamDeck", "parameters": {"lizardMode": True}}
             ),
             "Steam Deck with a variant": record(
-                {"family": "valve.steam-deck", "variant": "wired"}
+                {"family": "ValveSteamDeck", "variant": "Wired"}
             ),
-            "Steam Triton without a variant": record({"family": "valve.steam-triton"}),
+            "Steam Triton without a variant": record({"family": "ValveSteamTriton"}),
             "Steam Triton with a parameter": record(
                 {
-                    "family": "valve.steam-triton",
-                    "variant": "wired",
+                    "family": "ValveSteamTriton",
+                    "variant": "Wired",
                     "parameters": {"lizardMode": True},
                 }
             ),
             "Switch 2 with a variant": record(
-                {"family": "nintendo.switch2", "variant": "bluetooth-le"}
+                {"family": "NintendoSwitch2", "variant": "BluetoothLE"}
             ),
             "Switch 1 with an unknown parameter": record(
-                {"family": "nintendo.switch1", "parameters": {"notAParameter": True}}
+                {"family": "NintendoSwitch1", "parameters": {"notAParameter": True}}
             ),
             "Bluetooth-only with a layout": record(
                 {
-                    "family": "nintendo.switch1",
+                    "family": "NintendoSwitch1",
                     "parameters": {
                         "usbProtocol": "ChargingOnly",
                         "layout": "JoyConLeft",
                     },
                 }
             ),
-            "XUSB rumble absence": record(XUSB, capabilities={"rumble": "absent"}),
+            "XUSB rumble absence": record(XUSB, capabilities={"rumble": "Absent"}),
             "unknown control": record(GIP, capabilities={"absent": ["leftTrigger"]}),
             "empty capabilities": record(GIP, capabilities={}),
             "present on GIP": record(GIP, capabilities={"present": ["LeftPaddle1"]}),
@@ -270,16 +270,16 @@ class ControllerSchemaTests(unittest.TestCase):
         for protocol in (
             GIP,
             XUSB,
-            {"family": "xbox.xid", "variant": "gamepad"},
+            {"family": "XboxXID", "variant": "Gamepad"},
             DUALSENSE,
-            {"family": "valve.steam-controller", "variant": "wired"},
-            {"family": "nintendo.switch1"},
+            {"family": "ValveSteamController", "variant": "Wired"},
+            {"family": "NintendoSwitch1"},
         ):
             refused[f"{protocol['family']} unknown parameter"] = record(
                 {**protocol, "parameters": {"notAParameter": True}}
             )
         refused["unknown GameSir variant"] = record(
-            {"family": "vendor.gamesir", "variant": "notAVariant"}
+            {"family": "VendorGameSir", "variant": "notAVariant"}
         )
         for name, document in refused.items():
             with self.subTest(name):
@@ -289,8 +289,8 @@ class ControllerSchemaTests(unittest.TestCase):
         defaults = (
             (GIP, 130, 2),
             (XUSB, 129, 1),
-            ({"family": "xbox.xid", "variant": "gamepad"}, 129, 2),
-            ({"family": "vendor.gamesir", "variant": "usb"}, 130, 2),
+            ({"family": "XboxXID", "variant": "Gamepad"}, 129, 2),
+            ({"family": "VendorGameSir", "variant": "USB"}, 130, 2),
         )
         for protocol, endpoint_in, endpoint_out in defaults:
             with self.subTest(protocol["family"]):
@@ -309,11 +309,11 @@ class ControllerSchemaTests(unittest.TestCase):
                 )
 
 
-THIRD_PARTY = {"family": "vendor.ps3-third-party"}
+THIRD_PARTY = {"family": "VendorPS3ThirdParty"}
 GP100_RUMBLE = {
-    "report": {"kind": "output", "id": 2, "length": 8},
-    "leftMain": {"byte": 3},
-    "rightMain": {"byte": 2},
+    "report": {"kind": "Output", "id": 2, "length": 8},
+    "lowFrequency": {"byte": 3},
+    "highFrequency": {"byte": 2},
 }
 
 
@@ -324,13 +324,13 @@ class OwnershipAndSessionTests(unittest.TestCase):
     def test_accepts_ownership_and_rumble_template(self) -> None:
         accepted = {
             "third-party rumble": record(THIRD_PARTY, session={"rumble": GP100_RUMBLE}),
-            "OJD ownership": record(THIRD_PARTY, server="ojd"),
-            "macOS ownership": record(DUALSENSE, server="system"),
+            "OJD ownership": record(THIRD_PARTY, server="OJD"),
+            "macOS ownership": record(DUALSENSE, server="System"),
             "feature report": record(
                 THIRD_PARTY,
                 session={
                     "rumble": {
-                        "report": {"kind": "feature", "id": 0, "length": 2},
+                        "report": {"kind": "Feature", "id": 0, "length": 2},
                         "rightTrigger": {"byte": 1},
                     }
                 },
@@ -342,10 +342,10 @@ class OwnershipAndSessionTests(unittest.TestCase):
 
     def test_accepts_template_bytes_encodings_counter_and_resend(self) -> None:
         template = {
-            "report": {"kind": "output", "id": 2, "length": 8},
+            "report": {"kind": "Output", "id": 2, "length": 8},
             "bytes": "02 08 00 00 00 00 00 00",
-            "leftMain": {"byte": 3, "encoding": "UInt16BigEndian"},
-            "rightMain": {"byte": 5, "encoding": "UInt16LittleEndian"},
+            "lowFrequency": {"byte": 3, "encoding": "UInt16BigEndian"},
+            "highFrequency": {"byte": 5, "encoding": "UInt16LittleEndian"},
             "counter": {"byte": 7},
             "resendIntervalMilliseconds": 100,
         }
@@ -353,8 +353,8 @@ class OwnershipAndSessionTests(unittest.TestCase):
         self.assertTrue(self.validator.is_valid(document))
         validate_profiles.validate_modes(Path("record.json"), document)
         usb = {
-            "report": {"kind": "usb", "length": 8},
-            "leftMain": {"byte": 3, "encoding": "SwitchHDRumble"},
+            "report": {"kind": "USB", "length": 8},
+            "lowFrequency": {"byte": 3, "encoding": "SwitchHDRumble"},
         }
         self.assertTrue(
             self.validator.is_valid(record(THIRD_PARTY, session={"rumble": usb}))
@@ -362,8 +362,8 @@ class OwnershipAndSessionTests(unittest.TestCase):
 
     def test_rejects_a_resend_interval_that_a_keep_alive_would_retime(self) -> None:
         usb = {
-            "report": {"kind": "usb", "length": 8},
-            "leftMain": {"byte": 3},
+            "report": {"kind": "USB", "length": 8},
+            "lowFrequency": {"byte": 3},
             "resendIntervalMilliseconds": 100,
         }
         keep_alive = {"intervalMilliseconds": 500}
@@ -374,7 +374,7 @@ class OwnershipAndSessionTests(unittest.TestCase):
                 "cannot be combined with a session keepAlive",
             ),
             "family keepAlive": (
-                {"family": "vendor.gamesir", "variant": "enhanced-hid"},
+                {"family": "VendorGameSir", "variant": "EnhancedHID"},
                 {"rumble": {**GP100_RUMBLE, "resendIntervalMilliseconds": 100}},
                 "needs a family whose description declares no keepAlive",
             ),
@@ -412,20 +412,20 @@ class OwnershipAndSessionTests(unittest.TestCase):
         self,
     ) -> None:
         base = {
-            "report": {"kind": "output", "id": 2, "length": 8},
-            "leftMain": {"byte": 3},
+            "report": {"kind": "Output", "id": 2, "length": 8},
+            "lowFrequency": {"byte": 3},
         }
         schema_rejected = {
-            "unknown encoding": {**base, "leftMain": {"byte": 3, "encoding": "Float"}},
+            "unknown encoding": {**base, "lowFrequency": {"byte": 3, "encoding": "Float"}},
             "lowercase bytes": {**base, "bytes": "02 0a 00 00 00 00 00 00"},
             "resend of zero": {**base, "resendIntervalMilliseconds": 0},
             "usb packet with an id": {
                 **base,
-                "report": {"kind": "usb", "id": 2, "length": 8},
+                "report": {"kind": "USB", "id": 2, "length": 8},
             },
             "usb packet of 65 bytes": {
                 **base,
-                "report": {"kind": "usb", "length": 65},
+                "report": {"kind": "USB", "length": 65},
             },
         }
         semantic_rejected = {
@@ -438,16 +438,16 @@ class OwnershipAndSessionTests(unittest.TestCase):
             "counter on the report ID": {**base, "counter": {"byte": 0}},
             "motor wider than the report": {
                 **base,
-                "leftMain": {"byte": 7, "encoding": "UInt16BigEndian"},
+                "lowFrequency": {"byte": 7, "encoding": "UInt16BigEndian"},
             },
             "overlapping motors": {
                 **base,
-                "rightMain": {"byte": 4, "encoding": "UInt16BigEndian"},
-                "leftMain": {"byte": 3, "encoding": "UInt16BigEndian"},
+                "highFrequency": {"byte": 4, "encoding": "UInt16BigEndian"},
+                "lowFrequency": {"byte": 3, "encoding": "UInt16BigEndian"},
             },
             "usb packet in a HID mode": {
                 **base,
-                "report": {"kind": "usb", "length": 8},
+                "report": {"kind": "USB", "length": 8},
             },
         }
         for name, template in schema_rejected.items():
@@ -462,29 +462,29 @@ class OwnershipAndSessionTests(unittest.TestCase):
                     validate_profiles.validate_modes(Path("record.json"), document)
 
     def test_accepts_a_rumble_template_for_each_driver_that_encodes_one(self) -> None:
-        usb = {"report": {"kind": "usb", "length": 6}, "leftMain": {"byte": 2}}
+        usb = {"report": {"kind": "USB", "length": 6}, "lowFrequency": {"byte": 2}}
         hid = {
-            "report": {"kind": "output", "id": 1, "length": 7},
-            "leftMain": {"byte": 2},
+            "report": {"kind": "Output", "id": 1, "length": 7},
+            "lowFrequency": {"byte": 2},
         }
         accepted = {
-            "XID": ({"family": "xbox.xid", "variant": "gamepad"}, usb),
+            "XID": ({"family": "XboxXID", "variant": "Gamepad"}, usb),
             "XUSB wired": (XUSB, usb),
-            "XUSB receiver": ({"family": "xbox.xusb", "variant": "receiver"}, usb),
+            "XUSB receiver": ({"family": "XboxXUSB", "variant": "Receiver"}, usb),
             "Shield 2015": (
                 {
-                    "family": "vendor.nvidia-shield",
+                    "family": "VendorNVIDIAShield",
                     "parameters": {"reportRevision": "Shield2015"},
                 },
                 hid,
             ),
             "Switch 1": (
-                {"family": "nintendo.switch1"},
+                {"family": "NintendoSwitch1"},
                 {
-                    "report": {"kind": "output", "id": 16, "length": 10},
+                    "report": {"kind": "Output", "id": 16, "length": 10},
                     "counter": {"byte": 1},
-                    "leftMain": {"byte": 2, "encoding": "SwitchHDRumble"},
-                    "rightMain": {"byte": 6, "encoding": "SwitchHDRumble"},
+                    "lowFrequency": {"byte": 2, "encoding": "SwitchHDRumble"},
+                    "highFrequency": {"byte": 6, "encoding": "SwitchHDRumble"},
                 },
             ),
         }
@@ -495,14 +495,14 @@ class OwnershipAndSessionTests(unittest.TestCase):
                 validate_profiles.validate_modes(Path("record.json"), document)
 
     def test_rejects_a_rumble_template_the_driver_ignores(self) -> None:
-        usb = {"report": {"kind": "usb", "length": 6}, "leftMain": {"byte": 2}}
+        usb = {"report": {"kind": "USB", "length": 6}, "lowFrequency": {"byte": 2}}
         hid = {
-            "report": {"kind": "output", "id": 1, "length": 7},
-            "leftMain": {"byte": 2},
+            "report": {"kind": "Output", "id": 1, "length": 7},
+            "lowFrequency": {"byte": 2},
         }
         refused = {
-            "Shield without Shield2015": ({"family": "vendor.nvidia-shield"}, hid),
-            "GameSir USB": ({"family": "vendor.gamesir", "variant": "usb"}, usb),
+            "Shield without Shield2015": ({"family": "VendorNVIDIAShield"}, hid),
+            "GameSir USB": ({"family": "VendorGameSir", "variant": "USB"}, usb),
         }
         for name, (protocol, template) in refused.items():
             with self.subTest(name):
@@ -517,10 +517,10 @@ class OwnershipAndSessionTests(unittest.TestCase):
         report = GP100_RUMBLE["report"]
         rejected = {
             "unknown ownership": record(THIRD_PARTY, server="native"),
-            "GIP ownership": record(GIP, server="ojd"),
-            "XUSB ownership": record(XUSB, server="system"),
+            "GIP ownership": record(GIP, server="OJD"),
+            "XUSB ownership": record(XUSB, server="System"),
             "GameSir USB ownership": record(
-                {"family": "vendor.gamesir", "variant": "usb"}, server="ojd"
+                {"family": "VendorGameSir", "variant": "USB"}, server="OJD"
             ),
             "template on DualSense": record(
                 DUALSENSE, session={"rumble": GP100_RUMBLE}
@@ -533,7 +533,7 @@ class OwnershipAndSessionTests(unittest.TestCase):
                 session={
                     "rumble": {
                         "report": {**report, "kind": "input"},
-                        "leftMain": {"byte": 3},
+                        "lowFrequency": {"byte": 3},
                     }
                 },
             ),
@@ -563,11 +563,11 @@ class OwnershipAndSessionTests(unittest.TestCase):
                 self.assertFalse(self.validator.is_valid(document))
 
 
-SIXAXIS = {"family": "sony.sixaxis"}
+SIXAXIS = {"family": "SonySixaxis"}
 ENABLE = {
-    "report": {"kind": "feature", "id": 244, "length": 5},
+    "report": {"kind": "Feature", "id": 244, "length": 5},
     "bytes": "42 03 00 00",
-    "transport": "bluetooth-classic",
+    "transport": "BluetoothClassic",
 }
 
 
@@ -583,7 +583,7 @@ class StartupWriteTests(unittest.TestCase):
                 session={
                     "startup": [
                         {
-                            "report": {"kind": "output", "id": 0, "length": 2},
+                            "report": {"kind": "Output", "id": 0, "length": 2},
                             "bytes": "01 02",
                             "delayMilliseconds": 1000,
                         }
@@ -594,14 +594,14 @@ class StartupWriteTests(unittest.TestCase):
                 THIRD_PARTY, session={"rumble": GP100_RUMBLE, "startup": [ENABLE]}
             ),
             "phased write": record(
-                SIXAXIS, session={"startup": [{**ENABLE, "phase": "startup"}]}
+                SIXAXIS, session={"startup": [{**ENABLE, "phase": "Startup"}]}
             ),
             "long report with a CRC": record(
                 DS4,
                 session={
                     "startup": [
                         {
-                            "report": {"kind": "output", "id": 17, "length": 78},
+                            "report": {"kind": "Output", "id": 17, "length": 78},
                             "bytes": zeros(73),
                             "crc32Seed": 162,
                         }
@@ -611,7 +611,7 @@ class StartupWriteTests(unittest.TestCase):
             "GIP packet": record(GIP, session={"startup": [USB_WRITE]}),
             "XUSB packet": record(XUSB, session={"startup": [USB_WRITE]}),
             "Switch 2 packet": record(
-                {"family": "nintendo.switch2"}, session={"startup": [USB_WRITE]}
+                {"family": "NintendoSwitch2"}, session={"startup": [USB_WRITE]}
             ),
         }
         for name, document in accepted.items():
@@ -640,7 +640,7 @@ class StartupWriteTests(unittest.TestCase):
             "radio transport": record(
                 SIXAXIS,
                 session={
-                    "startup": [{**ENABLE, "transport": "proprietary-radio-receiver"}]
+                    "startup": [{**ENABLE, "transport": "ProprietaryRadioReceiver"}]
                 },
             ),
             "unknown key": record(
@@ -649,7 +649,7 @@ class StartupWriteTests(unittest.TestCase):
             "GIP": record(GIP, session={"startup": [ENABLE]}),
             "XUSB": record(XUSB, session={"startup": [ENABLE]}),
             "GameSir USB": record(
-                {"family": "vendor.gamesir", "variant": "usb"},
+                {"family": "VendorGameSir", "variant": "USB"},
                 session={"startup": [ENABLE]},
             ),
             "rumble on Sixaxis": record(
@@ -666,7 +666,7 @@ class StartupWriteTests(unittest.TestCase):
                 session={
                     "startup": [
                         {
-                            "report": {"kind": "output", "id": 1, "length": 4},
+                            "report": {"kind": "Output", "id": 1, "length": 4},
                             "bytes": "01 02 03",
                             "crc32Seed": 1,
                         }
@@ -679,13 +679,13 @@ class StartupWriteTests(unittest.TestCase):
                     "startup": [
                         {
                             **ENABLE,
-                            "report": {"kind": "output", "id": 1, "length": 129},
+                            "report": {"kind": "Output", "id": 1, "length": 129},
                         }
                     ]
                 },
             ),
             "family-only variants": record(
-                SIXAXIS, session={"startup": [{**ENABLE, "variants": ["usb"]}]}
+                SIXAXIS, session={"startup": [{**ENABLE, "variants": ["USB"]}]}
             ),
             "family-only condition": record(
                 SIXAXIS,
@@ -719,16 +719,16 @@ class StartupWriteTests(unittest.TestCase):
                 GIP,
                 session={
                     "startup": [
-                        {**USB_WRITE, "variants": ["usb"]},
+                        {**USB_WRITE, "variants": ["USB"]},
                     ]
                 },
             ),
             "packet on a HID family": record(SIXAXIS, session={"startup": [USB_WRITE]}),
             "packet on XID": record(
-                {"family": "xbox.xid"}, session={"startup": [USB_WRITE]}
+                {"family": "XboxXID"}, session={"startup": [USB_WRITE]}
             ),
             "packet with an initialization list": record(
-                {**GIP, "initialization": ["xbox.gip/power-on"]},
+                {**GIP, "initialization": ["XboxGIP/power-on"]},
                 session={"startup": [USB_WRITE]},
             ),
             "packet mixed with a report": record(
@@ -742,7 +742,7 @@ class StartupWriteTests(unittest.TestCase):
 
 USB_WRITE = {"bytes": "05 20 00 01 00"}
 
-REPORT_LAYOUT = {"family": "hid.report-layout"}
+REPORT_LAYOUT = {"family": "HIDReportLayout"}
 BUTTON = {"control": "South", "byte": 1, "mask": 1}
 LAYOUT = {"report": {"length": 2}, "buttons": [BUTTON]}
 
@@ -788,23 +788,23 @@ class InputLayoutTests(unittest.TestCase):
                     ],
                     "hat": [
                         {
-                            "encoding": "8-way",
+                            "encoding": "EightWay",
                             "byte": 5,
                             "mask": 240,
                             "neutralUntilNonzero": True,
                         },
                         {
-                            "encoding": "directions",
+                            "encoding": "Directions",
                             "up": {"byte": 6, "mask": 1},
                             "right": {"byte": 6, "mask": 2},
                             "down": {"byte": 6, "mask": 4},
                             "left": {"byte": 6, "mask": 8},
                         },
                         {
-                            "encoding": "table",
+                            "encoding": "Table",
                             "byte": 5,
                             "mask": 15,
-                            "values": {"1": "north", "9": "northEast"},
+                            "values": {"1": "North", "9": "NorthEast"},
                         },
                     ],
                     "leftTrigger": {"byte": 7},
@@ -863,7 +863,7 @@ class InputLayoutTests(unittest.TestCase):
                 REPORT_LAYOUT,
                 input={
                     **LAYOUT,
-                    "hat": [{"encoding": "table", "byte": 1, "mask": 15, "values": {}}],
+                    "hat": [{"encoding": "Table", "byte": 1, "mask": 15, "values": {}}],
                 },
             ),
             "table hat neutral entry": record(
@@ -872,10 +872,10 @@ class InputLayoutTests(unittest.TestCase):
                     **LAYOUT,
                     "hat": [
                         {
-                            "encoding": "table",
+                            "encoding": "Table",
                             "byte": 1,
                             "mask": 15,
-                            "values": {"0": "neutral"},
+                            "values": {"0": "Neutral"},
                         }
                     ],
                 },
@@ -891,9 +891,9 @@ class InputLayoutTests(unittest.TestCase):
                 self.assertFalse(self.validator.is_valid(document))
 
 
-STEAM = {"family": "valve.steam-controller"}
-SWITCH1 = {"family": "nintendo.switch1"}
-DS4 = {"family": "sony.dualshock4"}
+STEAM = {"family": "ValveSteamController"}
+SWITCH1 = {"family": "NintendoSwitch1"}
+DS4 = {"family": "SonyDualShock4"}
 DUALSENSE_MODEL_PARAMETERS = (
     {"unprobedSensors": True},
     {"unprobedTouchpad": True},
@@ -946,7 +946,7 @@ class SwiftParityTests(unittest.TestCase):
         )
 
     def test_switch_layouts_are_one_value(self) -> None:
-        switch2 = {"family": "nintendo.switch2"}
+        switch2 = {"family": "NintendoSwitch2"}
         self.check(
             {
                 "no parameters": record(switch2),
@@ -1006,15 +1006,15 @@ class SwiftParityTests(unittest.TestCase):
         )
 
     def test_steam_triton_requires_a_variant(self) -> None:
-        triton = {"family": "valve.steam-triton"}
+        triton = {"family": "ValveSteamTriton"}
         self.check(
             {
                 f"triton {variant}": record({**triton, "variant": variant})
-                for variant in ("wired", "dongle", "bluetooth-le")
+                for variant in ("Wired", "Dongle", "BluetoothLE")
             },
             {
                 "triton without variant": record(triton),
-                "triton unknown variant": record({**triton, "variant": "usb"}),
+                "triton unknown variant": record({**triton, "variant": "USB"}),
             },
         )
 
@@ -1036,8 +1036,8 @@ class SwiftParityTests(unittest.TestCase):
                 "output interval on DualSense": record(DUALSENSE, tuning=output),
                 "startup interval on GameSir enhanced HID": record(
                     {
-                        "family": "vendor.gamesir",
-                        "variant": "enhanced-hid",
+                        "family": "VendorGameSir",
+                        "variant": "EnhancedHID",
                         "parameters": {"innerGrips": True},
                     },
                     tuning=interval,
@@ -1050,7 +1050,7 @@ class SwiftParityTests(unittest.TestCase):
                     DUALSENSE, tuning={"frameQueueCapacity": 1024}
                 ),
                 "frame queue on XID": record(
-                    {"family": "xbox.xid", "variant": "gamepad"},
+                    {"family": "XboxXID", "variant": "Gamepad"},
                     tuning={"frameQueueCapacity": 64},
                 ),
             },
@@ -1058,7 +1058,7 @@ class SwiftParityTests(unittest.TestCase):
                 # A record has no tuning key outside the schema, on any family.
                 "interval on GIP": record(GIP, tuning=unknown_key),
                 "interval on GameSir USB": record(
-                    {"family": "vendor.gamesir", "variant": "usb"}, tuning=unknown_key
+                    {"family": "VendorGameSir", "variant": "USB"}, tuning=unknown_key
                 ),
                 "interval on DualSense": record(DUALSENSE, tuning=unknown_key),
                 "interval on XUSB": record(XUSB, tuning=unknown_key),
@@ -1079,29 +1079,29 @@ class SwiftParityTests(unittest.TestCase):
                 ),
                 "recovery on Switch 2": record(
                     {
-                        "family": "nintendo.switch2",
+                        "family": "NintendoSwitch2",
                         "parameters": {"layout": "GameCube"},
                     },
                     tuning=recovery,
                 ),
                 "recovery on Switch input-only": record(
-                    {"family": "nintendo.switch-input-only"}, tuning=recovery
+                    {"family": "NintendoSwitchInputOnly"}, tuning=recovery
                 ),
                 "startup interval on GIP": record(GIP, tuning=interval),
                 "output interval on XUSB": record(XUSB, tuning=output),
                 "startup interval on XID": record(
-                    {"family": "xbox.xid", "variant": "gamepad"}, tuning=interval
+                    {"family": "XboxXID", "variant": "Gamepad"}, tuning=interval
                 ),
                 "output interval on GameSir USB": record(
-                    {"family": "vendor.gamesir", "variant": "usb"}, tuning=output
+                    {"family": "VendorGameSir", "variant": "USB"}, tuning=output
                 ),
             },
         )
 
     def test_family_timings_are_limited_to_their_families(self) -> None:
-        triton = {"family": "valve.steam-triton", "variant": "wired"}
-        switch2 = {"family": "nintendo.switch2"}
-        gamesir = {"family": "vendor.gamesir", "variant": "usb"}
+        triton = {"family": "ValveSteamTriton", "variant": "Wired"}
+        switch2 = {"family": "NintendoSwitch2"}
+        gamesir = {"family": "VendorGameSir", "variant": "USB"}
         lizard = {"lizardResendTicks": 75}
         timeout = {"usbCommandTimeoutMs": 1000}
         presence = {"presenceResendReports": 4}
@@ -1179,8 +1179,8 @@ class CapabilityOverlapTests(unittest.TestCase):
         from pathlib import Path
 
         for action, accepted in (
-            ("xbox.gip/hori-ack", True),
-            ("xbox.gip/missing", False),
+            ("XboxGIP/hori-ack", True),
+            ("XboxGIP/missing", False),
         ):
             with (
                 self.subTest(action=action),

@@ -1,0 +1,15 @@
+{
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "ProtocolDescription",
+  "family": "VendorFlydigi",
+  "endpoints": {
+    "in": 130,
+    "out": 2
+  },
+  "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
+  "controls": {
+    "base": "Xbox",
+    "add": ["Guide"],
+    "digitalTriggers": ["LeftTrigger", "RightTrigger"]
+  }
+}

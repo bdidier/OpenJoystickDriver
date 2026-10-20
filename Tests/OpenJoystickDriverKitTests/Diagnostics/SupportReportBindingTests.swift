@@ -47,7 +47,7 @@ struct SupportReportBindingTests {
       report(connected: [description(binding: binding, result: result)]).data.controllers.first
     )
 
-    #expect(controller.protocolBinding == "xbox.xusb:wired")
+    #expect(controller.protocolBinding == "XboxXUSB:Wired")
     let reported = controller.binding
     #expect(reported.outcome == .bound)
     #expect(reported.reason == nil)

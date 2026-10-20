@@ -4,7 +4,7 @@ import Testing
 
 @testable import OpenJoystickDriverKit
 
-/// Pins the `hid.descriptor` usage tables to the output the coded tables produced.
+/// Pins the `HIDDescriptor` usage tables to the output the coded tables produced.
 ///
 /// `Tests/HIDUsageGolden/hid-usage-layouts.txt` was rendered by the driver before its tables moved
 /// into records. These samples are hand-written element values, not hardware captures: every button

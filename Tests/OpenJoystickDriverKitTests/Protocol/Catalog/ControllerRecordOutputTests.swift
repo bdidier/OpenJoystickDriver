@@ -12,18 +12,18 @@ struct ControllerRecordOutputTests {
   private static func thirdPartyModes(session: String?) -> String {
     let session = session.map { ", \"session\": \($0)" } ?? ""
     return """
-      "modes": [{"id": "default", "protocol": {"family": "vendor.ps3-third-party"}\(session)}]
+      "modes": [{"id": "default", "protocol": {"family": "VendorPS3ThirdParty"}\(session)}]
       """
   }
   private static let gp100Rumble = #"""
-    "rumble": {"report": {"kind": "output", "id": 2, "length": 8},
-      "leftMain": {"byte": 3}, "rightMain": {"byte": 2}}
+    "rumble": {"report": {"kind": "Output", "id": 2, "length": 8},
+      "lowFrequency": {"byte": 3}, "highFrequency": {"byte": 2}}
     """#
 
   @Test
   func decodesOwnershipAndARumbleTemplate() throws {
     let document = try decode(
-      "\(Self.thirdPartyModes(session: "{\(Self.gp100Rumble)}")), \"server\": \"ojd\""
+      "\(Self.thirdPartyModes(session: "{\(Self.gp100Rumble)}")), \"server\": \"OJD\""
     )
     #expect(document.server == .ojd)
     let template = try #require(document.defaultMode.session.rumbleTemplate)
@@ -34,12 +34,12 @@ struct ControllerRecordOutputTests {
     #expect(template.outputCapabilities == .dualMainRumble)
     #expect(try decode(Self.thirdParty).server == nil)
     let sixaxis = try decode(
-      #""modes": [{"id": "default", "protocol": {"family": "sony.sixaxis"}}], "server": "system""#
+      #""modes": [{"id": "default", "protocol": {"family": "SonySixaxis"}}], "server": "System""#
     )
     #expect(sixaxis.server == .system)
   }
 
-  @Test(arguments: ["OJD", "native", ""])
+  @Test(arguments: ["ojd", "system", "native", ""])
   func rejectsUnknownOwnership(name: String) {
     #expect(throws: DecodingError.self) {
       try decode("\(Self.thirdParty), \"server\": \"\(name)\"")
@@ -49,14 +49,14 @@ struct ControllerRecordOutputTests {
   /// macOS cannot serve a raw-USB family, so the record has no ownership to choose.
   @Test(
     arguments: [
-      #"{"family": "xbox.gip"}"#, #"{"family": "xbox.xusb", "variant": "wired"}"#,
-      #"{"family": "vendor.gamesir", "variant": "usb"}"#,
+      #"{"family": "XboxGIP"}"#, #"{"family": "XboxXUSB", "variant": "Wired"}"#,
+      #"{"family": "VendorGameSir", "variant": "USB"}"#,
     ]
   )
   func rejectsOwnershipOnRawUSBFamilies(protocolInfo: String) {
     #expect(throws: DecodingError.self) {
       try decode(
-        "\"modes\": [{\"id\": \"default\", \"protocol\": \(protocolInfo)}], \"server\": \"ojd\""
+        "\"modes\": [{\"id\": \"default\", \"protocol\": \(protocolInfo)}], \"server\": \"OJD\""
       )
     }
   }
@@ -77,44 +77,45 @@ struct ControllerRecordOutputTests {
 
   /// Rumble templates that fail to decode.
   private static let invalidRumbleTemplates: [String] = [
-    #"{"report": {"kind": "input", "id": 2, "length": 8}, "leftMain": {"byte": 3}}"#,
-    #"{"report": {"kind": "output", "id": 256, "length": 8}, "leftMain": {"byte": 3}}"#,
-    #"{"report": {"kind": "output", "id": 2, "length": 1}, "leftMain": {"byte": 0}}"#,
-    #"{"report": {"kind": "output", "id": 2, "length": 65}, "leftMain": {"byte": 3}}"#,
-    #"{"report": {"kind": "output", "id": 2, "length": 8}}"#,
-    #"{"report": {"kind": "output", "id": 2, "length": 8}, "leftMain": {"byte": 0}}"#,
-    #"{"report": {"kind": "output", "id": 2, "length": 8}, "leftMain": {"byte": 8}}"#,
-    #"{"report": {"kind": "output", "id": 2, "length": 8}, "leftMain": {"byte": 3}, "#
-      + #""rightMain": {"byte": 3}}"#,
-    #"{"report": {"kind": "output", "id": 2, "length": 8}, "leftMain": {"byte": 3, "max": 9}}"#,
-    #"{"report": {"kind": "output", "id": 2, "length": 8}, "leftHaptic": {"byte": 3}}"#,
+    #"{"report": {"kind": "input", "id": 2, "length": 8}, "lowFrequency": {"byte": 3}}"#,
+    #"{"report": {"kind": "Output", "id": 256, "length": 8}, "lowFrequency": {"byte": 3}}"#,
+    #"{"report": {"kind": "Output", "id": 2, "length": 1}, "lowFrequency": {"byte": 0}}"#,
+    #"{"report": {"kind": "Output", "id": 2, "length": 65}, "lowFrequency": {"byte": 3}}"#,
+    #"{"report": {"kind": "Output", "id": 2, "length": 8}}"#,
+    #"{"report": {"kind": "Output", "id": 2, "length": 8}, "lowFrequency": {"byte": 0}}"#,
+    #"{"report": {"kind": "Output", "id": 2, "length": 8}, "lowFrequency": {"byte": 8}}"#,
+    #"{"report": {"kind": "Output", "id": 2, "length": 8}, "lowFrequency": {"byte": 3}, "#
+      + #""highFrequency": {"byte": 3}}"#,
+    #"{"report": {"kind": "Output", "id": 2, "length": 8}, "lowFrequency": {"byte": 3, "max": 9}}"#,
+    #"{"report": {"kind": "Output", "id": 2, "length": 8}, "leftHaptic": {"byte": 3}}"#,
     // A motor's encoding must be named and its bytes must fit and not overlap.
-    #"{"report": {"kind": "output", "id": 2, "length": 8}, "#
-      + #""leftMain": {"byte": 3, "encoding": "UInt16"}}"#,
-    #"{"report": {"kind": "output", "id": 2, "length": 8}, "#
-      + #""leftMain": {"byte": 7, "encoding": "UInt16BigEndian"}}"#,
-    #"{"report": {"kind": "output", "id": 2, "length": 8}, "#
-      + #""leftMain": {"byte": 2, "encoding": "SwitchHDRumble"}, "rightMain": {"byte": 5}}"#,
+    #"{"report": {"kind": "Output", "id": 2, "length": 8}, "#
+      + #""lowFrequency": {"byte": 3, "encoding": "UInt16"}}"#,
+    #"{"report": {"kind": "Output", "id": 2, "length": 8}, "#
+      + #""lowFrequency": {"byte": 7, "encoding": "UInt16BigEndian"}}"#,
+    #"{"report": {"kind": "Output", "id": 2, "length": 8}, "#
+      + #""lowFrequency": {"byte": 2, "encoding": "SwitchHDRumble"}, "#
+      + #""highFrequency": {"byte": 5}}"#,
     // Fixed bytes cover the whole report and lead with its ID.
-    #"{"report": {"kind": "output", "id": 2, "length": 3}, "bytes": "02 00", "#
-      + #""leftMain": {"byte": 1}}"#,
-    #"{"report": {"kind": "output", "id": 2, "length": 3}, "bytes": "03 00 00", "#
-      + #""leftMain": {"byte": 1}}"#,
-    #"{"report": {"kind": "output", "id": 2, "length": 3}, "bytes": "02 0a 00", "#
-      + #""leftMain": {"byte": 1}}"#,
+    #"{"report": {"kind": "Output", "id": 2, "length": 3}, "bytes": "02 00", "#
+      + #""lowFrequency": {"byte": 1}}"#,
+    #"{"report": {"kind": "Output", "id": 2, "length": 3}, "bytes": "03 00 00", "#
+      + #""lowFrequency": {"byte": 1}}"#,
+    #"{"report": {"kind": "Output", "id": 2, "length": 3}, "bytes": "02 0a 00", "#
+      + #""lowFrequency": {"byte": 1}}"#,
     // The counter is one free byte after the report ID.
-    #"{"report": {"kind": "output", "id": 2, "length": 8}, "counter": {"byte": 3}, "#
-      + #""leftMain": {"byte": 3}}"#,
-    #"{"report": {"kind": "output", "id": 2, "length": 8}, "counter": {"byte": 0}, "#
-      + #""leftMain": {"byte": 3}}"#,
+    #"{"report": {"kind": "Output", "id": 2, "length": 8}, "counter": {"byte": 3}, "#
+      + #""lowFrequency": {"byte": 3}}"#,
+    #"{"report": {"kind": "Output", "id": 2, "length": 8}, "counter": {"byte": 0}, "#
+      + #""lowFrequency": {"byte": 3}}"#,
     // The resend interval is a keep-alive's.
-    #"{"report": {"kind": "output", "id": 2, "length": 8}, "#
-      + #""resendIntervalMilliseconds": 0, "leftMain": {"byte": 3}}"#,
-    #"{"report": {"kind": "output", "id": 2, "length": 8}, "#
-      + #""resendIntervalMilliseconds": 60001, "leftMain": {"byte": 3}}"#,
+    #"{"report": {"kind": "Output", "id": 2, "length": 8}, "#
+      + #""resendIntervalMilliseconds": 0, "lowFrequency": {"byte": 3}}"#,
+    #"{"report": {"kind": "Output", "id": 2, "length": 8}, "#
+      + #""resendIntervalMilliseconds": 60001, "lowFrequency": {"byte": 3}}"#,
     // A usb packet has a length only, and a HID mode sends no usb packet.
-    #"{"report": {"kind": "usb", "id": 2, "length": 8}, "leftMain": {"byte": 3}}"#,
-    #"{"report": {"kind": "usb", "length": 8}, "leftMain": {"byte": 3}}"#,
+    #"{"report": {"kind": "USB", "id": 2, "length": 8}, "lowFrequency": {"byte": 3}}"#,
+    #"{"report": {"kind": "USB", "length": 8}, "lowFrequency": {"byte": 3}}"#,
   ]
 
   @Test(arguments: invalidRumbleTemplates)
@@ -174,10 +175,10 @@ struct ControllerRecordOutputTests {
   @Test
   func decodesFixedBytesEncodingsAndACounter() throws {
     let rumble = #"""
-      "rumble": {"report": {"kind": "output", "id": 2, "length": 12},
+      "rumble": {"report": {"kind": "Output", "id": 2, "length": 12},
         "bytes": "02 00 AA 00 00 00 00 00 00 00 00 BB", "counter": {"byte": 1},
-        "leftMain": {"byte": 3, "encoding": "UInt16BigEndian"},
-        "rightMain": {"byte": 5, "encoding": "UInt16LittleEndian"},
+        "lowFrequency": {"byte": 3, "encoding": "UInt16BigEndian"},
+        "highFrequency": {"byte": 5, "encoding": "UInt16LittleEndian"},
         "leftTrigger": {"byte": 7, "encoding": "SwitchHDRumble"},
         "resendIntervalMilliseconds": 250}
       """#
@@ -222,8 +223,9 @@ struct ControllerRecordOutputTests {
   /// A raw-USB mode names a usb packet, never a HID report.
   @Test
   func rejectsAHIDTemplateInARawUSBMode() {
-    let protocolInfo = #"{"family": "xbox.xusb", "variant": "wired"}"#
-    let rumble = #"{"report": {"kind": "output", "id": 2, "length": 8}, "leftMain": {"byte": 3}}"#
+    let protocolInfo = #"{"family": "XboxXUSB", "variant": "Wired"}"#
+    let rumble =
+      #"{"report": {"kind": "Output", "id": 2, "length": 8}, "lowFrequency": {"byte": 3}}"#
     #expect(throws: DecodingError.self) {
       try decode(
         "\"modes\": [{\"id\": \"default\", \"protocol\": \(protocolInfo), "
@@ -243,19 +245,19 @@ struct ControllerRecordOutputTests {
   }
 
   private static let usbRumble =
-    #"{"report": {"kind": "usb", "length": 6}, "leftMain": {"byte": 2}}"#
+    #"{"report": {"kind": "USB", "length": 6}, "lowFrequency": {"byte": 2}}"#
   private static let shieldRumble =
-    #"{"report": {"kind": "output", "id": 1, "length": 7}, "leftMain": {"byte": 2}}"#
+    #"{"report": {"kind": "Output", "id": 1, "length": 7}, "lowFrequency": {"byte": 2}}"#
 
   /// A record may carry a rumble template for each family whose driver encodes one.
   @Test
   func acceptsARumbleTemplateForEachDriverThatEncodesOne() throws {
     let accepted: [(String, String)] = [
-      (#"{"family": "xbox.xid", "variant": "gamepad"}"#, Self.usbRumble),
-      (#"{"family": "xbox.xusb", "variant": "wired"}"#, Self.usbRumble),
-      (#"{"family": "xbox.xusb", "variant": "receiver"}"#, Self.usbRumble),
+      (#"{"family": "XboxXID", "variant": "Gamepad"}"#, Self.usbRumble),
+      (#"{"family": "XboxXUSB", "variant": "Wired"}"#, Self.usbRumble),
+      (#"{"family": "XboxXUSB", "variant": "Receiver"}"#, Self.usbRumble),
       (
-        #"{"family": "vendor.nvidia-shield", "parameters": {"reportRevision": "Shield2015"}}"#,
+        #"{"family": "VendorNVIDIAShield", "parameters": {"reportRevision": "Shield2015"}}"#,
         Self.shieldRumble
       ),
     ]
@@ -269,8 +271,8 @@ struct ControllerRecordOutputTests {
   @Test
   func rejectsARumbleTemplateTheDriverIgnores() {
     let refused: [(String, String)] = [
-      (#"{"family": "vendor.nvidia-shield"}"#, Self.shieldRumble),
-      (#"{"family": "vendor.gamesir", "variant": "usb"}"#, Self.usbRumble),
+      (#"{"family": "VendorNVIDIAShield"}"#, Self.shieldRumble),
+      (#"{"family": "VendorGameSir", "variant": "USB"}"#, Self.usbRumble),
     ]
     for (protocolInfo, template) in refused {
       #expect(throws: DecodingError.self, "\(protocolInfo)") {

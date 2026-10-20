@@ -236,15 +236,21 @@ struct ControllerWatchCommand: AsyncParsableCommand {
     }
     switch CLIContext.current.format {
     case .json: try CLIOutput.json(press, kind: "ControlPress")
-    case .plain: CLIOutput.plain([[press.control] + (press.direction.map { [$0] } ?? [])])
-    case .human: CLIOutput.stdout(press.direction.map { "\(press.control) \($0)" } ?? press.control)
+    case .plain:
+      CLIOutput.plain([
+        [press.control] + (press.direction.map { [CommandLineName.kebab($0)] } ?? [])
+      ])
+    case .human:
+      CLIOutput.stdout(
+        press.direction.map { "\(press.control) \(CommandLineName.kebab($0))" } ?? press.control
+      )
     }
   }
 
   /// Pressed controls, hat, sticks, and triggers as tab-separated fields.
   static func plainRow(_ state: ControllerState) -> [String] {
     [
-      pressedControls(state).joined(separator: ","), state.hat.rawValue,
+      pressedControls(state).joined(separator: ","), CommandLineName.kebab(state.hat.rawValue),
       String(state.leftStick.x.rawValue), String(state.leftStick.y.rawValue),
       String(state.rightStick.x.rawValue), String(state.rightStick.y.rawValue),
       String(state.leftTrigger.rawValue), String(state.rightTrigger.rawValue),
@@ -255,7 +261,7 @@ struct ControllerWatchCommand: AsyncParsableCommand {
   static func formatted(_ state: ControllerState) -> String {
     let pressed = pressedControls(state)
     let buttons = pressed.isEmpty ? "none" : pressed.joined(separator: ",")
-    return "buttons=[\(buttons)] hat=\(state.hat.rawValue)"
+    return "buttons=[\(buttons)] hat=\(CommandLineName.kebab(state.hat.rawValue))"
       + " LS=(\(state.leftStick.x.rawValue),\(state.leftStick.y.rawValue))"
       + " RS=(\(state.rightStick.x.rawValue),\(state.rightStick.y.rawValue))"
       + " LT=\(state.leftTrigger.rawValue) RT=\(state.rightTrigger.rawValue)"
@@ -266,7 +272,7 @@ struct ControllerWatchCommand: AsyncParsableCommand {
   static func plainRow(_ state: ApplicationServiceVirtualOutputState?) -> [String] {
     guard let state else { return Array(repeating: "", count: 8) }
     return [
-      hex(state.buttons), state.hat.rawValue,
+      hex(state.buttons), CommandLineName.kebab(state.hat.rawValue),
       String(state.leftStickX), String(state.leftStickY),
       String(state.rightStickX), String(state.rightStickY),
       String(state.leftTrigger), String(state.rightTrigger),
@@ -276,7 +282,7 @@ struct ControllerWatchCommand: AsyncParsableCommand {
   /// The virtual gamepad's values on an `out` line, or `out none` when nothing is published.
   static func formatted(_ state: ApplicationServiceVirtualOutputState?) -> String {
     guard let state else { return "out none" }
-    return "out buttons=\(hex(state.buttons)) hat=\(state.hat.rawValue)"
+    return "out buttons=\(hex(state.buttons)) hat=\(CommandLineName.kebab(state.hat.rawValue))"
       + " LS=(\(state.leftStickX),\(state.leftStickY))"
       + " RS=(\(state.rightStickX),\(state.rightStickY))"
       + " LT=\(state.leftTrigger) RT=\(state.rightTrigger)"

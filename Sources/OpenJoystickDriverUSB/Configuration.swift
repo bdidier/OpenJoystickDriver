@@ -37,11 +37,11 @@ public enum USBDriverKitExtensionConfiguration {
     model.vendorID == microsoftVendorID && microsoftProductIDs.contains(model.productID)
   }
 
-  /// The `xbox.gip` signature from the bundled protocol description, and its data interface.
+  /// The `XboxGIP` signature from the bundled protocol description, and its data interface.
   private static let (gipSignature, gipDataInterface) = {
     guard let signature = ProtocolInterfaceSignature.bundled(.xboxGIP, variant: .usb),
       let interface = signature.requiredInterfaceNumber
-    else { fatalError("[USBDriverKit] The xbox.gip description has no data interface signature") }
+    else { fatalError("[USBDriverKit] The XboxGIP description has no data interface signature") }
     return (signature, interface)
   }()
 

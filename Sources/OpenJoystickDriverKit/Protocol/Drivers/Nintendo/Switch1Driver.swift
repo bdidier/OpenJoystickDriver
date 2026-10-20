@@ -60,7 +60,7 @@ public final class Switch1Driver: PhysicalProtocolDriver {
       record: rumbleTemplate
     )
     guard let subcommands = PhysicalProtocolID.nintendoSwitch1.protocolDescription.subcommands
-    else { fatalError("[ProtocolDescription] nintendo.switch1 has no subcommands") }
+    else { fatalError("[ProtocolDescription] NintendoSwitch1 has no subcommands") }
     self.subcommands = subcommands
   }
 

@@ -24,11 +24,11 @@ private final class CountingProbeReader: ControllerModeProbeReader {
 /// the `interface` and `session` a mode sets.
 struct ControllerModeMatchTests {
   private static let model = ControllerModelID(vendorID: 0x1234, productID: 0xABCD)
-  private static var answers: [String: Any] { ["report": 7, "length": 8, "expect": "answers"] }
+  private static var answers: [String: Any] { ["report": 7, "length": 8, "expect": "Answers"] }
 
   private static func recordData(
     modes: [[String: Any]],
-    family: String = "sony.sixaxis"
+    family: String = "SonySixaxis"
   ) throws
     -> Data
   {
@@ -43,7 +43,7 @@ struct ControllerModeMatchTests {
   private static func mode(
     _ id: String,
     match: [String: Any],
-    family: String = "sony.sixaxis",
+    family: String = "SonySixaxis",
     extras: [String: Any] = [:]
   )
     -> [String: Any]
@@ -53,7 +53,7 @@ struct ControllerModeMatchTests {
 
   private static func profile(
     _ modes: [[String: Any]],
-    family: String = "sony.sixaxis"
+    family: String = "SonySixaxis"
   ) throws -> DeviceRuntimeProfile {
     try #require(
       try ControllerRecordSet.validate(recordData(modes: modes, family: family)).record
@@ -62,7 +62,7 @@ struct ControllerModeMatchTests {
 
   private static func problem(
     _ modes: [[String: Any]],
-    family: String = "sony.sixaxis"
+    family: String = "SonySixaxis"
   ) throws
     -> String?
   {
@@ -116,8 +116,8 @@ struct ControllerModeMatchTests {
   @Test
   func aWiredAndABluetoothLinkSelectTheirOwnMode() async throws {
     let profile = try Self.profile([
-      Self.mode("wired", match: ["link": "usb"]),
-      Self.mode("bluetooth", match: ["link": "bluetooth-classic"]),
+      Self.mode("wired", match: ["link": "USB"]),
+      Self.mode("bluetooth", match: ["link": "BluetoothClassic"]),
     ])
     let wired = await Self.select(profile, Self.device(link: .usb))
     let bluetooth = await Self.select(profile, Self.device(link: .bluetoothClassic))
@@ -131,8 +131,8 @@ struct ControllerModeMatchTests {
   @Test
   func aDongleAndAWiredLinkSelectTheirOwnMode() async throws {
     let profile = try Self.profile([
-      Self.mode("dongle", match: ["link": "proprietary-radio-receiver"]),
-      Self.mode("wired", match: ["link": "usb"]),
+      Self.mode("dongle", match: ["link": "ProprietaryRadioReceiver"]),
+      Self.mode("wired", match: ["link": "USB"]),
     ])
     let dongle = await Self.select(profile, Self.device(link: .proprietaryRadioReceiver))
     let wired = await Self.select(profile, Self.device(link: .usb))
@@ -146,10 +146,10 @@ struct ControllerModeMatchTests {
   @Test
   func aReceiverRecordReportsTheRadioLinkAndSelectsItsMode() async throws {
     func profile(variant: String?) throws -> DeviceRuntimeProfile {
-      var protocolKeys: [String: Any] = ["family": "valve.steam-controller"]
+      var protocolKeys: [String: Any] = ["family": "ValveSteamController"]
       protocolKeys["variant"] = variant
       let radio: [String: Any] = [
-        "id": "radio", "protocol": protocolKeys, "match": ["link": "proprietary-radio-receiver"],
+        "id": "radio", "protocol": protocolKeys, "match": ["link": "ProprietaryRadioReceiver"],
         "interface": ["first": 2, "last": 5],
       ]
       let record: [String: Any] = [
@@ -161,8 +161,8 @@ struct ControllerModeMatchTests {
         try ControllerRecordSet.validate(JSONSerialization.data(withJSONObject: record)).record
       ).profile
     }
-    let dongle = try profile(variant: "dongle")
-    let wired = try profile(variant: "wired")
+    let dongle = try profile(variant: "Dongle")
+    let wired = try profile(variant: "Wired")
     let discovered = Self.device(link: .usb)
     #expect(await Self.select(dongle, discovered) == .matched("radio"))
     #expect(await Self.select(wired, discovered) == .noModeMatched)
@@ -181,7 +181,7 @@ struct ControllerModeMatchTests {
 
   @Test
   func aLinkKeyNeedsEveryInterfaceOnThatLink() async throws {
-    let profile = try Self.profile([Self.mode("bluetooth", match: ["link": "bluetooth-classic"])])
+    let profile = try Self.profile([Self.mode("bluetooth", match: ["link": "BluetoothClassic"])])
     let mixed = Self.device(
       interfaces: [
         PhysicalInterfaceSignature(interfaceNumber: 0, hostTransport: .bluetoothClassic),
@@ -262,23 +262,23 @@ struct ControllerModeMatchTests {
           "pair",
           match: [
             "interfaceSignature": signature([
-              ["direction": "in", "transferType": "interrupt"],
-              ["direction": "out", "transferType": "interrupt"],
+              ["direction": "In", "transferType": "Interrupt"],
+              ["direction": "Out", "transferType": "Interrupt"],
             ])
           ],
-          family: "xbox.gip"
+          family: "XboxGIP"
         ),
         Self.mode(
           "single",
           match: [
             "interfaceSignature": signature([
-              ["address": 129, "direction": "in", "transferType": "bulk", "maxPacketSize": 64]
+              ["address": 129, "direction": "In", "transferType": "Bulk", "maxPacketSize": 64]
             ])
           ],
-          family: "xbox.gip"
+          family: "XboxGIP"
         ),
       ],
-      family: "xbox.gip"
+      family: "XboxGIP"
     )
     func interface(_ endpoints: [PhysicalEndpointSignature]?) -> PhysicalDevice {
       Self.device(
@@ -325,13 +325,13 @@ struct ControllerModeMatchTests {
   /// selected; the record is refused. The same signature on a raw-USB mode is accepted.
   @Test
   func aHIDModeWithEndpointsIsRefusedAndARawUSBModeIsNot() throws {
-    let endpoints: [[String: Any]] = [["direction": "in", "transferType": "interrupt"]]
+    let endpoints: [[String: Any]] = [["direction": "In", "transferType": "Interrupt"]]
     let match: [String: Any] = ["interfaceSignature": Self.signature(endpoints: endpoints)]
     let hid = try Self.problem([Self.mode("x", match: match)])
     #expect(hid?.contains("endpoints") == true)
     let rawUSB = try Self.problem(
-      [Self.mode("x", match: match, family: "xbox.gip")],
-      family: "xbox.gip"
+      [Self.mode("x", match: match, family: "XboxGIP")],
+      family: "XboxGIP"
     )
     #expect(rawUSB == nil)
     let withoutEndpoints = try Self.problem([
@@ -351,7 +351,7 @@ struct ControllerModeMatchTests {
   @Test
   func aProbeIsReadOnlyAfterTheCheapKeysHold() async throws {
     let profile = try Self.profile([
-      Self.mode("probed", match: ["link": "bluetooth-classic", "probes": [Self.answers]])
+      Self.mode("probed", match: ["link": "BluetoothClassic", "probes": [Self.answers]])
     ])
     let reader = CountingProbeReader()
     let usb = await Self.select(profile, Self.device(link: .usb), reader: reader)
@@ -370,7 +370,7 @@ struct ControllerModeMatchTests {
   @Test
   func aModeWithoutAProbeIsSelectableWithoutAnIOHIDRoute() async throws {
     let profile = try Self.profile([
-      Self.mode("bluetooth", match: ["link": "bluetooth-classic"]),
+      Self.mode("bluetooth", match: ["link": "BluetoothClassic"]),
       Self.mode("probed", match: ["probes": [Self.answers]]),
     ])
     let reader = CountingProbeReader()
@@ -395,22 +395,22 @@ struct ControllerModeMatchTests {
   @Test
   func aModeRunsOnlyItsOwnSession() throws {
     let write: [String: Any] = [
-      "report": ["kind": "feature", "id": 244, "length": 5], "bytes": "42 03 00 00",
+      "report": ["kind": "Feature", "id": 244, "length": 5], "bytes": "42 03 00 00",
     ]
     let record: [String: Any] = [
       "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordDocument.kind,
       "vendorID": Int(Self.model.vendorID), "productID": Int(Self.model.productID),
       "modes": [
         [
-          "id": "default", "protocol": ["family": "sony.sixaxis"],
+          "id": "default", "protocol": ["family": "SonySixaxis"],
           "session": [
-            "startup": [["report": ["kind": "output", "id": 0, "length": 2], "bytes": "01 02"]]
+            "startup": [["report": ["kind": "Output", "id": 0, "length": 2], "bytes": "01 02"]]
           ],
         ],
-        Self.mode("plain", match: ["link": "usb"]),
+        Self.mode("plain", match: ["link": "USB"]),
         Self.mode(
           "session",
-          match: ["link": "bluetooth-classic"],
+          match: ["link": "BluetoothClassic"],
           extras: ["session": ["startup": [write]]]
         ),
       ],
@@ -478,7 +478,7 @@ struct ControllerModeMatchTests {
     defer { try? FileManager.default.removeItem(at: directory) }
     let ranged = Self.mode(
       "ranged",
-      match: ["link": "usb"],
+      match: ["link": "USB"],
       extras: ["interface": ["first": 2, "last": 3]]
     )
     try Self.recordData(modes: [ranged]).write(
@@ -511,9 +511,9 @@ struct ControllerModeMatchTests {
 
   @Test
   func theDecoderRejectsTheSameBadModesAsTheSchema() throws {
-    let usb = ["link": "usb"]
+    let usb = ["link": "USB"]
     let cases: [(String, [[String: Any]], String)] = [
-      ("no match", [["id": "x", "protocol": ["family": "sony.sixaxis"]]], "match"),
+      ("no match", [["id": "x", "protocol": ["family": "SonySixaxis"]]], "match"),
       ("empty match", [Self.mode("x", match: [:])], "match"),
       ("unknown link", [Self.mode("x", match: ["link": "serial"])], "link"),
       (
@@ -619,8 +619,8 @@ struct ControllerModeMatchTests {
         return nil
       } catch { return ControllerRecordSet.problemDescription(error) }
     }
-    let other = Self.mode("x", match: ["link": "usb"])
-    let plainDefault: [String: Any] = ["id": "default", "protocol": ["family": "sony.sixaxis"]]
+    let other = Self.mode("x", match: ["link": "USB"])
+    let plainDefault: [String: Any] = ["id": "default", "protocol": ["family": "SonySixaxis"]]
     #expect(try decode(nil) != nil)
     #expect(try decode([]) != nil)
     #expect(try decode([other])?.contains("exactly one mode with the id default") == true)
@@ -636,9 +636,9 @@ struct ControllerModeMatchTests {
   @Test
   func interfaceAndSessionApplyOnlyToHIDModes() throws {
     let write: [String: Any] = [
-      "report": ["kind": "feature", "id": 1, "length": 2], "bytes": "01 02",
+      "report": ["kind": "Feature", "id": 1, "length": 2], "bytes": "01 02",
     ]
-    let rawDefault: [String: Any] = ["id": "default", "protocol": ["family": "xbox.gip"]]
+    let rawDefault: [String: Any] = ["id": "default", "protocol": ["family": "XboxGIP"]]
     for (name, extras) in [
       ("interface", ["interface": ["first": 0, "last": 1]]),
       ("session", ["session": ["startup": [write]]]),

@@ -229,9 +229,9 @@ SDL_PARAMETERS: dict[str, dict[str, Any]] = {
 SWITCH_2_IDENTITIES = frozenset(
     parse_identity(text) for text in _SDL_RULES["switch2Identities"]
 )
-SWITCH_2_FAMILY = "nintendo.switch2"
+SWITCH_2_FAMILY = "NintendoSwitch2"
 # Families whose SDL rows take their stored variant from STEAM_VARIANTS.
-STEAM_VARIANT_FAMILIES = frozenset({"valve.steam-controller", "valve.steam-triton"})
+STEAM_VARIANT_FAMILIES = frozenset({"ValveSteamController", "ValveSteamTriton"})
 
 # Identities that get no record: (identity) -> (expected SDL type, skip reason). Each entry
 # must still be listed with that type at the pinned commit and must not already be catalogued.
@@ -404,7 +404,7 @@ def build_sdl_records(
             parameters["usbProtocol"] = "ChargingOnly"
         parameters.update(SDL_PARAMETERS.get(controller_type, {}))
         # SDL runs a non-Sony PS5Controller through its third-party DualSense path.
-        if family == "sony.dualsense" and key[0] != SONY_VENDOR_ID:
+        if family == "SonyDualSense" and key[0] != SONY_VENDOR_ID:
             parameters["maker"] = "ThirdParty"
         if parameters:
             protocol["parameters"] = parameters

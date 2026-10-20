@@ -15,7 +15,7 @@ struct StandardInputTests {
     ["controller", "watch"], ["diagnose"],
   ]
 
-  /// A patch of the bundled `xbox.gip` record `366C:0005`.
+  /// A patch of the bundled `XboxGIP` record `366C:0005`.
   private static let patch = Data(
     """
     {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "ControllerPatch",

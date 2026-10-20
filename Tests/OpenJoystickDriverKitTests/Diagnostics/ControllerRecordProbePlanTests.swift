@@ -68,10 +68,10 @@ struct ControllerRecordProbePlanTests {
   func loadsRecordSelectedStartupAndTransportOptions() throws {
     let plan = try ControllerRecordProbePlan(
       data: try recordData(
-        configuration: "set1-before-claim",
+        configuration: "SetConfiguration1BeforeClaim",
         settleMilliseconds: 200,
         initialization: [
-          "xbox.gip/power-on", "xbox.gip/s-init", "xbox.gip/led-on", "xbox.gip/auth-done",
+          "XboxGIP/power-on", "XboxGIP/s-init", "XboxGIP/led-on", "XboxGIP/auth-done",
         ]
       )
     )
@@ -80,7 +80,7 @@ struct ControllerRecordProbePlanTests {
     #expect(plan.transportProfile.postHandshakeSettleNanoseconds == 200_000_000)
     #expect(
       plan.startupPackets == [
-        "xbox.gip/power-on", "xbox.gip/s-init", "xbox.gip/led-on", "xbox.gip/auth-done",
+        "XboxGIP/power-on", "XboxGIP/s-init", "XboxGIP/led-on", "XboxGIP/auth-done",
       ]
     )
   }
@@ -88,7 +88,7 @@ struct ControllerRecordProbePlanTests {
   @Test
   func loadsXbox360RecordWithoutGIPStartup() throws {
     let plan = try ControllerRecordProbePlan(
-      data: try recordData(family: "xbox.xusb", variant: "wired")
+      data: try recordData(family: "XboxXUSB", variant: "Wired")
     )
 
     let parser = try #require(plan.makeUnobservedDriver() as? XUSBDriver)
@@ -111,8 +111,8 @@ struct ControllerRecordProbePlanTests {
   func loadsXbox360WirelessReceiverRecord() throws {
     let plan = try ControllerRecordProbePlan(
       data: try recordData(
-        family: "xbox.xusb",
-        variant: "receiver",
+        family: "XboxXUSB",
+        variant: "Receiver",
         inputEndpoint: 129,
         outputEndpoint: 1
       )
@@ -139,7 +139,7 @@ struct ControllerRecordProbePlanTests {
 
   @Test
   func rejectsUnknownGIPInitializationAction() {
-    for action in ["xbox.gip/not-a-real-action", "notAnAction"] {
+    for action in ["XboxGIP/not-a-real-action", "notAnAction"] {
       #expect(throws: ControllerRecordProbeError.self) {
         try ControllerRecordProbePlan(data: try recordData(initialization: [action]))
       }
@@ -149,14 +149,14 @@ struct ControllerRecordProbePlanTests {
   @Test
   func rejectsUnsupportedProtocolBeforeHardwareAccess() {
     #expect(throws: ControllerRecordProbeError.self) {
-      try ControllerRecordProbePlan(data: try recordData(family: "hid.descriptor", variant: nil))
+      try ControllerRecordProbePlan(data: try recordData(family: "HIDDescriptor", variant: nil))
     }
   }
 
   @Test
   func rejectsHIDFamilyBeforeHardwareAccess() {
     #expect(throws: ControllerRecordProbeError.self) {
-      try ControllerRecordProbePlan(data: try recordData(family: "sony.dualshock4", variant: nil))
+      try ControllerRecordProbePlan(data: try recordData(family: "SonyDualShock4", variant: nil))
     }
   }
 
@@ -178,7 +178,7 @@ struct ControllerRecordProbePlanTests {
           var protocolConfig = Self.defaultProtocol(of: record)
           protocolConfig["parameters"] = ["shareButton": ["fromEnd": 26]]
           Self.setDefaultProtocol(protocolConfig, in: &record)
-          record["capabilities"] = ["rumble": "absent"]
+          record["capabilities"] = ["rumble": "Absent"]
         }
       ).makeUnobservedDriver() as? GIPDriver
     )
@@ -238,7 +238,7 @@ struct ControllerRecordProbePlanTests {
       },
       { (record: inout [String: Any]) in
         var protocolConfig = Self.defaultProtocol(of: record)
-        protocolConfig["initialization"] = ["xbox.gip/power-on", "xbox.gip/power-on"]
+        protocolConfig["initialization"] = ["XboxGIP/power-on", "XboxGIP/power-on"]
         Self.setDefaultProtocol(protocolConfig, in: &record)
       },
       { (record: inout [String: Any]) in
@@ -248,7 +248,7 @@ struct ControllerRecordProbePlanTests {
       },
       { (record: inout [String: Any]) in
         var protocolConfig = Self.defaultProtocol(of: record)
-        protocolConfig["startupPackets"] = ["xbox.gip/power-on"]
+        protocolConfig["startupPackets"] = ["XboxGIP/power-on"]
         Self.setDefaultProtocol(protocolConfig, in: &record)
       }, { (record: inout [String: Any]) in record["usb"] = ["endpoints": ["in": 130, "out": 2]] },
     ] {
@@ -274,7 +274,7 @@ struct ControllerRecordProbePlanTests {
   }
 
   private func recordData(
-    family: String = "xbox.gip",
+    family: String = "XboxGIP",
     variant: String? = nil,
     inputEndpoint: Int = 130,
     outputEndpoint: Int = 2,
@@ -287,7 +287,7 @@ struct ControllerRecordProbePlanTests {
     extraRootField: String? = nil,
     extraProtocolField: String? = nil
   ) throws -> Data {
-    let defaults = family == "xbox.xusb" ? (129, 1) : (130, 2)
+    let defaults = family == "XboxXUSB" ? (129, 1) : (130, 2)
     var usb: [String: Any] = [:]
     if (inputEndpoint, outputEndpoint) != defaults {
       usb["endpoints"] = ["in": inputEndpoint, "out": outputEndpoint]

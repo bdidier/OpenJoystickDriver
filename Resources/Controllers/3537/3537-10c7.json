@@ -7,8 +7,8 @@
     {
       "id": "default",
       "protocol": {
-        "family": "vendor.gamesir",
-        "variant": "enhanced-hid",
+        "family": "VendorGameSir",
+        "variant": "EnhancedHID",
         "parameters": {
           "innerGrips": true
         }

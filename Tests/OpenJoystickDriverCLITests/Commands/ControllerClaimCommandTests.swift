@@ -19,7 +19,7 @@ struct ControllerClaimCommandTests {
     deinit { try? FileManager.default.removeItem(at: root) }
   }
 
-  /// A connected `sony.dualshock4` model, a HID family; `native` makes macOS serve it.
+  /// A connected `SonyDualShock4` model, a HID family; `native` makes macOS serve it.
   private static func device(
     vendorID: UInt16 = 0x2C22,
     productID: UInt16 = 0x2000,
@@ -69,8 +69,8 @@ struct ControllerClaimCommandTests {
     let json = try result.json()
     #expect(json["kind"] as? String == "ControllerServer")
     #expect(json["identity"] as? String == "2C22:2000")
-    #expect(json["server"] as? String == "ojd")
-    #expect(json["previous"] as? String == "system")
+    #expect(json["server"] as? String == "OJD")
+    #expect(json["previous"] as? String == "System")
     #expect(json["created"] as? Bool == true)
     #expect(json["dryRun"] as? Bool == false)
     #expect(json["file"] as? String == directory.file.path)
@@ -184,7 +184,7 @@ struct ControllerClaimCommandTests {
       in: directory
     )
     let beforeOwnership = try #require(try before.json()["ownership"] as? [String: Any])
-    #expect(beforeOwnership["server"] as? String == "system")
+    #expect(beforeOwnership["server"] as? String == "System")
     #expect(beforeOwnership["serverSource"] as? String == "default")
 
     _ = try await Self.run(
@@ -198,7 +198,7 @@ struct ControllerClaimCommandTests {
       in: directory
     )
     let afterOwnership = try #require(try after.json()["ownership"] as? [String: Any])
-    #expect(afterOwnership["server"] as? String == "ojd")
+    #expect(afterOwnership["server"] as? String == "OJD")
     #expect(afterOwnership["serverSource"] as? String == "user")
 
     let plain = try await Self.run(

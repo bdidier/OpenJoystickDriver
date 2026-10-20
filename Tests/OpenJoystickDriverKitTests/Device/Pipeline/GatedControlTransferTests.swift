@@ -31,7 +31,7 @@ struct GatedControlTransferTests {
   private static func sentRequests(to device: USBTransportDevice) async throws -> [UInt8] {
     let mode: [String: Any] = [
       "id": "default",
-      "protocol": ["family": "xbox.xusb", "variant": "wired"],
+      "protocol": ["family": "XboxXUSB", "variant": "Wired"],
       "session": ["control": requests.map(read)],
     ]
     let document: [String: Any] = [

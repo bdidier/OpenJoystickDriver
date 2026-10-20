@@ -30,18 +30,18 @@ private let timeout = PhysicalHIDReportResult<Data>.failed(.ioReturn(kIOReturnTi
 struct ControllerModeTests {
   private static let model = ControllerModelID(vendorID: 0x1234, productID: 0xABCD)
 
-  /// A model whose default mode is `hid.descriptor` with two alternatives, each with one probe.
+  /// A model whose default mode is `HIDDescriptor` with two alternatives, each with one probe.
   private static var twoModes: [[String: Any]] {
     [
       mode(
         "dualshock",
-        family: "sony.dualshock4",
-        probe: ["report": 160, "length": 8, "expect": "answers"]
+        family: "SonyDualShock4",
+        probe: ["report": 160, "length": 8, "expect": "Answers"]
       ),
       mode(
         "dualsense",
-        family: "sony.dualsense",
-        probe: ["report": 161, "length": 8, "expect": "bytes", "offset": 1, "bytes": "0A FF"]
+        family: "SonyDualSense",
+        probe: ["report": 161, "length": 8, "expect": "Bytes", "offset": 1, "bytes": "0A FF"]
       ),
     ]
   }
@@ -69,7 +69,7 @@ struct ControllerModeTests {
 
   private static func profile(
     modes: [[String: Any]]?,
-    family: String = "hid.descriptor"
+    family: String = "HIDDescriptor"
   ) throws
     -> DeviceRuntimeProfile
   {
@@ -149,11 +149,11 @@ struct ControllerModeTests {
     let profile = try Self.profile(modes: [
       [
         "id": "both",
-        "protocol": ["family": "sony.dualshock4"],
+        "protocol": ["family": "SonyDualShock4"],
         "match": [
           "probes": [
-            ["report": 160, "length": 8, "expect": "answers"],
-            ["report": 160, "length": 8, "expect": "bytes", "offset": 0, "bytes": "01"],
+            ["report": 160, "length": 8, "expect": "Answers"],
+            ["report": 160, "length": 8, "expect": "Bytes", "offset": 0, "bytes": "01"],
           ]
         ],
       ]
@@ -196,8 +196,8 @@ struct ControllerModeTests {
     let profile = try Self.profile(modes: [
       Self.mode(
         "quiet",
-        family: "sony.dualshock4",
-        probe: ["report": 5, "length": 4, "expect": "stalls"]
+        family: "SonyDualShock4",
+        probe: ["report": 5, "length": 4, "expect": "Stalls"]
       )
     ])
     #expect(
@@ -229,8 +229,8 @@ struct ControllerModeTests {
     let profile = try Self.profile(modes: [
       Self.mode(
         "quiet",
-        family: "sony.dualshock4",
-        probe: ["report": 5, "length": 4, "expect": "stalls"]
+        family: "SonyDualShock4",
+        probe: ["report": 5, "length": 4, "expect": "Stalls"]
       )
     ])
     let unsupported = PhysicalHIDReportResult<Data>.failed(.ioReturn(kIOReturnUnsupported))
@@ -395,7 +395,7 @@ struct ControllerModeTests {
       withJSONObject: ControllerPatch.document(
         selector: .identity(ControllerModelID(vendorID: 0x2C22, productID: 0x2000)),
         body: [
-          "modes": [["id": "default", "protocol": ["family": "hid.descriptor"]]] + Self.twoModes
+          "modes": [["id": "default", "protocol": ["family": "HIDDescriptor"]]] + Self.twoModes
         ]
       )
     )
@@ -405,10 +405,10 @@ struct ControllerModeTests {
 
   @Test
   func invalidModesAreRejected() throws {
-    let probe: [String: Any] = ["report": 160, "length": 8, "expect": "answers"]
+    let probe: [String: Any] = ["report": 160, "length": 8, "expect": "Answers"]
     func mode(
       _ id: String,
-      family: String = "sony.dualshock4",
+      family: String = "SonyDualShock4",
       probe: [String: Any] = probe
     )
       -> [String: Any]
@@ -416,7 +416,7 @@ struct ControllerModeTests {
     struct Case {
       let name: String
       let modes: [[String: Any]]?
-      var family = "hid.descriptor"
+      var family = "HIDDescriptor"
       var extras: [String: Any] = [:]
       let expected: String
     }
@@ -426,12 +426,12 @@ struct ControllerModeTests {
     ]
     let rumble: [String: Any] = [
       "rumble": [
-        "report": ["kind": "output", "id": 2, "length": 8],
-        "leftMain": ["byte": 3],
+        "report": ["kind": "Output", "id": 2, "length": 8],
+        "lowFrequency": ["byte": 3],
       ]
     ]
     let needsLayout =
-      "every mode needs the record's input layout exactly when it is hid.report-layout"
+      "every mode needs the record's input layout exactly when it is HIDReportLayout"
     let rejected: [Case] = [
       Case(
         name: "duplicate ID",
@@ -458,7 +458,7 @@ struct ControllerModeTests {
         modes: [
           mode(
             "a",
-            probe: ["report": 1, "length": 8, "expect": "bytes", "offset": 0, "bytes": "AB\n"]
+            probe: ["report": 1, "length": 8, "expect": "Bytes", "offset": 0, "bytes": "AB\n"]
           )
         ],
         expected: "probe bytes are uppercase hex pairs that fit the read length"
@@ -473,7 +473,7 @@ struct ControllerModeTests {
         modes: [
           mode(
             "a",
-            probe: ["report": 1, "length": 8, "expect": "bytes", "offset": 0, "bytes": "ab"]
+            probe: ["report": 1, "length": 8, "expect": "Bytes", "offset": 0, "bytes": "ab"]
           )
         ],
         expected: "probe bytes are uppercase hex pairs that fit the read length"
@@ -483,7 +483,7 @@ struct ControllerModeTests {
         modes: [
           mode(
             "a",
-            probe: ["report": 1, "length": 2, "expect": "bytes", "offset": 1, "bytes": "01 02"]
+            probe: ["report": 1, "length": 2, "expect": "Bytes", "offset": 1, "bytes": "01 02"]
           )
         ],
         expected: "probe bytes are uppercase hex pairs that fit the read length"
@@ -491,7 +491,7 @@ struct ControllerModeTests {
       Case(
         name: "offset on answers",
         modes: [mode("a", probe: probe.merging(["offset": 0]) { $1 })],
-        expected: "a probe expects answers, stalls, or bytes; only bytes carries offset and bytes"
+        expected: "a probe expects Answers, Stalls, or Bytes; only Bytes carries offset and bytes"
       ),
       Case(
         name: "report above 255",
@@ -499,36 +499,36 @@ struct ControllerModeTests {
         expected: "a probe reads report 0...255 with a length of 1...65535"
       ),
       Case(
-        name: "input layout under a mode that is not hid.report-layout",
-        modes: [mode("a", family: "sony.sixaxis")],
-        family: "hid.report-layout",
+        name: "input layout under a mode that is not HIDReportLayout",
+        modes: [mode("a", family: "SonySixaxis")],
+        family: "HIDReportLayout",
         extras: ["input": layout],
         expected: needsLayout
       ),
       Case(
-        name: "hid.report-layout mode without the input layout",
-        modes: [mode("a", family: "hid.report-layout")],
-        family: "sony.sixaxis",
+        name: "HIDReportLayout mode without the input layout",
+        modes: [mode("a", family: "HIDReportLayout")],
+        family: "SonySixaxis",
         expected: needsLayout
       ),
       Case(
         name: "rumble template under a mode whose driver does not encode it",
         modes: [
-          mode("a", family: "hid.descriptor").merging(["session": rumble]) { first, _ in first }
+          mode("a", family: "HIDDescriptor").merging(["session": rumble]) { first, _ in first }
         ],
-        family: "vendor.ps3-third-party",
+        family: "VendorPS3ThirdParty",
         expected: "rumble templates require a driver that encodes them"
       ),
       Case(
         name: "rumble resend interval beside a session keepAlive",
         modes: [
           [
-            "id": "a", "protocol": ["family": "xbox.xusb", "variant": "wired"],
+            "id": "a", "protocol": ["family": "XboxXUSB", "variant": "Wired"],
             "match": ["probes": [probe]],
             "session": [
               "keepAlive": ["intervalMilliseconds": 500, "writes": [["bytes": "01"]]],
               "rumble": [
-                "report": ["kind": "usb", "length": 8], "leftMain": ["byte": 3],
+                "report": ["kind": "USB", "length": 8], "lowFrequency": ["byte": 3],
                 "resendIntervalMilliseconds": 100,
               ],
             ],
@@ -542,13 +542,13 @@ struct ControllerModeTests {
           [
             "id": "a",
             "protocol": [
-              "family": "vendor.gamesir", "variant": "enhanced-hid",
+              "family": "VendorGameSir", "variant": "EnhancedHID",
               "parameters": ["innerGrips": true],
             ],
             "match": ["probes": [probe]],
             "session": [
               "rumble": [
-                "report": ["kind": "output", "id": 2, "length": 8], "leftMain": ["byte": 3],
+                "report": ["kind": "Output", "id": 2, "length": 8], "lowFrequency": ["byte": 3],
                 "resendIntervalMilliseconds": 100,
               ]
             ],
@@ -559,8 +559,8 @@ struct ControllerModeTests {
       ),
       Case(
         name: "present controls under a mode whose driver does not declare them",
-        modes: [mode("a", family: "sony.sixaxis")],
-        family: "sony.dualsense",
+        modes: [mode("a", family: "SonySixaxis")],
+        family: "SonyDualSense",
         extras: [
           "capabilities": [
             "present": ["LeftPaddle1", "RightPaddle1", "Auxiliary1", "Auxiliary2"]

@@ -10,7 +10,7 @@
       {
         "id": "default",
         "protocol": {
-          "family": "sony.dualshock4",
+          "family": "SonyDualShock4",
           "parameters": {
             "motionCalibration": "Factory"
           }

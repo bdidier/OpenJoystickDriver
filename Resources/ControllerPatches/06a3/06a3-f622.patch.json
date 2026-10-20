@@ -10,7 +10,7 @@
       {
         "id": "default",
         "protocol": {
-          "family": "vendor.ps3-third-party",
+          "family": "VendorPS3ThirdParty",
           "parameters": {
             "hatSource": "DpadPressure"
           }

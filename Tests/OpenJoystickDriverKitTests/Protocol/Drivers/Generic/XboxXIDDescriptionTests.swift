@@ -3,7 +3,7 @@ import Testing
 
 @testable import OpenJoystickDriverKit
 
-/// The xbox.xid protocol description, run through the generic interpreter beside `XIDDriver`.
+/// The XboxXID protocol description, run through the generic interpreter beside `XIDDriver`.
 /// The recorded samples are the characterization steps for the 20-byte XID report: one neutral
 /// report, each digital bit, every D-pad value, analog buttons and triggers at several values, and
 /// each stick word at its signed extremes, plus a repeated report and a short one.

@@ -7,7 +7,7 @@
     {
       "id": "default",
       "protocol": {
-        "family": "nintendo.switch-input-only"
+        "family": "NintendoSwitchInputOnly"
       }
     }
   ]

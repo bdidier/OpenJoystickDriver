@@ -8,9 +8,9 @@ struct ProtocolDescriptionTests {
   private static let minimalInput =
     #"{"report": {"length": 1}, "buttons": [{"control": "South", "byte": 0, "mask": 1}]}"#
   private static let rumbleTemplate =
-    #"{"report": {"kind": "output", "id": 1, "length": 4}, "leftMain": {"byte": 1}}"#
+    #"{"report": {"kind": "Output", "id": 1, "length": 4}, "lowFrequency": {"byte": 1}}"#
   private static let startupWrite =
-    #"{"startup": [{"report": {"kind": "output", "id": 1, "length": 4}, "bytes": "01 02 03"}]}"#
+    #"{"startup": [{"report": {"kind": "Output", "id": 1, "length": 4}, "bytes": "01 02 03"}]}"#
 
   /// Decodes a description of `family` whose body after the header is `body`, with the family's
   /// session counts added to any the body leaves unstated.
@@ -223,8 +223,8 @@ struct ProtocolDescriptionTests {
     let description = try decode(
       family: .sonyDualSense,
       """
-      "parameters": {"maker": {"type": "enum", "values": ["ThirdParty"]},
-                     "forcedVibration": {"type": "flag"}}
+      "parameters": {"maker": {"type": "Enum", "values": ["ThirdParty"]},
+                     "forcedVibration": {"type": "Flag"}}
       """
     )
     #expect(
@@ -235,8 +235,8 @@ struct ProtocolDescriptionTests {
     let gip = try decode(
       family: .xboxGIP,
       """
-      "parameters": {"shareButton": {"type": "object",
-                                      "fields": {"fromEnd": {"type": "integer",
+      "parameters": {"shareButton": {"type": "Object",
+                                      "fields": {"fromEnd": {"type": "Integer",
                                                              "minimum": 1, "maximum": 255}}}}
       """
     )
@@ -261,23 +261,23 @@ struct ProtocolDescriptionTests {
   @Test(
     arguments: [
       (PhysicalProtocolID.sonyDualSense, #""parameters": {"maker": {"type": "string"}}"#),
-      (.sonyDualSense, #""parameters": {"maker": {"type": "enum", "values": []}}"#),
-      (.sonyDualSense, #""parameters": {"maker": {"type": "enum", "values": ["thirdParty"]}}"#),
-      (.sonyDualSense, #""parameters": {"maker": {"type": "flag", "values": ["A"]}}"#),
-      (.sonyDualSense, #""parameters": {"unknown": {"type": "flag"}}"#),
+      (.sonyDualSense, #""parameters": {"maker": {"type": "Enum", "values": []}}"#),
+      (.sonyDualSense, #""parameters": {"maker": {"type": "Enum", "values": ["thirdParty"]}}"#),
+      (.sonyDualSense, #""parameters": {"maker": {"type": "Flag", "values": ["A"]}}"#),
+      (.sonyDualSense, #""parameters": {"unknown": {"type": "Flag"}}"#),
       (.sonyDualSense, #""parameters": {}"#),
       (
         .xboxGIP,
-        #""parameters": {"shareButton": {"type": "object", "fields": "#
-          + #"{"fromEnd": {"type": "integer", "minimum": 9, "maximum": 1}}}}"#
+        #""parameters": {"shareButton": {"type": "Object", "fields": "#
+          + #"{"fromEnd": {"type": "Integer", "minimum": 9, "maximum": 1}}}}"#
       ),
       (.xboxGIP, #""defaults": {"unknown": {}}"#),
-      (.xboxGIP, #""defaults": {"capabilities": {"rumble": "absent"}}"#),
+      (.xboxGIP, #""defaults": {"capabilities": {"rumble": "Absent"}}"#),
       (.xboxGIP, #""defaults": {"tuning": {"stickDeadzone": 5}}"#),
       (.xboxGIP, #""interfaceSignatures": []"#),
       (.xboxGIP, #""rawUSB": true, "tuningKeys": ["keepAliveIntervalMs"]"#),
       (.sonyDualSense, #""rawUSBTuningKeys": ["keepAliveIntervalMs"]"#),
-      (.sonyDualSense, #""defaults": {"variants": {"usb": {"tuning": {"stickDeadzone": 5}}}}"#),
+      (.sonyDualSense, #""defaults": {"variants": {"USB": {"tuning": {"stickDeadzone": 5}}}}"#),
       (.sonyDualSense, #""macOSOwnedOutput": {"rationale": 5}"#),
       (.xboxGIP, #""defaults": {"session": {"rumble": \#(Self.rumbleTemplate)}}"#),
       (.sonyDualSense, #""tuningKeys": ["stickDeadzone"]"#),
@@ -370,7 +370,7 @@ struct ProtocolDescriptionTests {
     }
   }
 
-  /// The schema limits xbox.xid's `defaults.session` to the rumble template; Swift refuses the
+  /// The schema limits XboxXID's `defaults.session` to the rumble template; Swift refuses the
   /// same startup packets and keep-alive.
   @Test
   func anXIDSessionHoldsOnlyARumbleTemplate() {
@@ -388,7 +388,7 @@ struct ProtocolDescriptionTests {
     }
   }
 
-  private static let hidReport = #""report": {"kind": "output", "id": 1, "length": 4}"#
+  private static let hidReport = #""report": {"kind": "Output", "id": 1, "length": 4}"#
 
   private func startup(_ write: String) -> String {
     #""defaults": {"session": {"startup": ["# + write + "]}}"
@@ -404,7 +404,7 @@ struct ProtocolDescriptionTests {
       family: .sonyDualSense,
       startup(
         hidWrite(
-          #""phase": "startup", "delayMilliseconds": 5, "variants": ["usb"]"#
+          #""phase": "Startup", "delayMilliseconds": 5, "variants": ["USB"]"#
         )
       )
     )
@@ -427,7 +427,7 @@ struct ProtocolDescriptionTests {
   @Test(
     arguments: [
       #""phase": "later""#, #""delayMilliseconds": 1001"#, #""crc32Seed": 256"#,
-      #""crc32Seed": 1"#, #""variants": []"#, #""variants": ["usb", "usb"]"#,
+      #""crc32Seed": 1"#, #""variants": []"#, #""variants": ["USB", "USB"]"#,
       #""when": {"parameter": "layout", "is": []}"#, #""when": {"parameter": "layout"}"#,
     ]
   )
@@ -456,7 +456,7 @@ struct ProtocolDescriptionTests {
 
   @Test
   func rejectsAStartupWriteNamingWhatTheFamilyLacks() {
-    let variant = rejection(family: .sonyDualSense, startup(hidWrite(#""variants": ["wired"]"#)))
+    let variant = rejection(family: .sonyDualSense, startup(hidWrite(#""variants": ["Wired"]"#)))
     #expect(variant?.code == .unknownProtocolVariant)
     let layout = #""when": {"parameter": "layout", "is": ["Pro"]}"#
     #expect(
@@ -473,13 +473,13 @@ struct ProtocolDescriptionTests {
   @Test
   func rejectsAVariantTheFamilyDoesNotHave() {
     #expect(
-      rejection(family: .vendorGameSir, #""rawUSB": ["wired"]"#)?.code == .unknownProtocolVariant
+      rejection(family: .vendorGameSir, #""rawUSB": ["Wired"]"#)?.code == .unknownProtocolVariant
     )
     #expect(
       rejection(
         family: .sonyDualSense,
         #""tuningKeys": ["hidStartupIntervalMs"], "#
-          + #""defaults": {"variants": {"wired": {"tuning": {"hidStartupIntervalMs": 5}}}}"#
+          + #""defaults": {"variants": {"Wired": {"tuning": {"hidStartupIntervalMs": 5}}}}"#
       )?.code == .unknownProtocolVariant
     )
   }
@@ -497,16 +497,16 @@ struct ProtocolDescriptionTests {
     let keepAlive = #""keepAlive": {"intervalMilliseconds": 100}"#
     let variant = rejection(
       family: .vendorGameSir,
-      #""rawUSB": ["usb"], "recordSections": ["rumble"], "#
+      #""rawUSB": ["USB"], "recordSections": ["rumble"], "#
         + #""defaults": {"session": {\#(keepAlive)}, "#
-        + #""variants": {"enhanced-hid": {"session": "#
+        + #""variants": {"EnhancedHID": {"session": "#
         + #"{"rumble": \#(Self.rumbleTemplateWithResend)}}}}"#
     )
     let usb = rejection(
       family: .vendorGameSir,
-      #""rawUSB": ["usb"], "recordSections": ["rumble"], "#
+      #""rawUSB": ["USB"], "recordSections": ["rumble"], "#
         + #""defaults": {"session": {\#(keepAlive)}, "#
-        + #""variants": {"usb": {"session": {"rumble": \#(Self.usbRumbleTemplate)}}}}"#
+        + #""variants": {"USB": {"session": {"rumble": \#(Self.usbRumbleTemplate)}}}}"#
     )
     for problem in [variant, usb] {
       #expect(
@@ -537,7 +537,7 @@ struct ProtocolDescriptionTests {
       rejection(
         family: .sonyDualSense,
         #""tuningKeys": ["hidStartupIntervalMs"], "#
-          + #""defaults": {"variants": {"usb": {"tuning": {"adapterDisconnectDelayMs": 7}}}}"#
+          + #""defaults": {"variants": {"USB": {"tuning": {"adapterDisconnectDelayMs": 7}}}}"#
       )?.code == .invalidProtocolDescription
     )
   }
@@ -548,7 +548,7 @@ struct ProtocolDescriptionTests {
       family: .sonyDualSense,
       #""tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"], "#
         + #""defaults": {"tuning": {"hidStartupIntervalMs": 5, "minimumHIDOutputIntervalMs": 9}, "#
-        + #""variants": {"usb": {"tuning": {"hidStartupIntervalMs": 7}}}}"#
+        + #""variants": {"USB": {"tuning": {"hidStartupIntervalMs": 7}}}}"#
     )
     let usb = description.tuning(variant: .usb)
     #expect(usb?.hidStartupIntervalMilliseconds == 7)
@@ -558,20 +558,20 @@ struct ProtocolDescriptionTests {
       rejection(
         family: .sonyDualSense,
         #""tuningKeys": ["hidStartupIntervalMs"], "#
-          + #""defaults": {"variants": {"usb": {"tuning": {"keepAliveIntervalMs": 7}}}}"#
+          + #""defaults": {"variants": {"USB": {"tuning": {"keepAliveIntervalMs": 7}}}}"#
       )?.code == .invalidProtocolDescription
     )
   }
 
   private static let rumbleTemplateWithResend =
-    #"{"report": {"kind": "output", "id": 2, "length": 8}, "leftMain": {"byte": 4}, "#
+    #"{"report": {"kind": "Output", "id": 2, "length": 8}, "lowFrequency": {"byte": 4}, "#
     + #""resendIntervalMilliseconds": 100}"#
   private static let usbRumbleTemplate =
-    #"{"report": {"kind": "usb", "length": 8}, "bytes": "00 08 00 00 00 00 00 00", "#
-    + #""leftMain": {"byte": 3, "encoding": "UInt16BigEndian"}, "counter": {"byte": 7}, "#
+    #"{"report": {"kind": "USB", "length": 8}, "bytes": "00 08 00 00 00 00 00 00", "#
+    + #""lowFrequency": {"byte": 3, "encoding": "UInt16BigEndian"}, "counter": {"byte": 7}, "#
     + #""resendIntervalMilliseconds": 100}"#
   private static let otherRumbleTemplate =
-    #"{"report": {"kind": "output", "id": 2, "length": 8}, "leftMain": {"byte": 4}}"#
+    #"{"report": {"kind": "Output", "id": 2, "length": 8}, "lowFrequency": {"byte": 4}}"#
 
   private static func variantRumble(_ variant: String, _ template: String) -> String {
     #""defaults": {"variants": {"\#(variant)": {"session": {"rumble": \#(template)}}}}"#
@@ -583,7 +583,7 @@ struct ProtocolDescriptionTests {
       family: .sonyDualSense,
       #""recordSections": ["rumble"], "#
         + #""defaults": {"session": {"rumble": \#(Self.rumbleTemplate)}, "#
-        + #""variants": {"usb": {"session": {"rumble": \#(Self.otherRumbleTemplate)}}}}"#
+        + #""variants": {"USB": {"session": {"rumble": \#(Self.otherRumbleTemplate)}}}}"#
     )
     #expect(description.rumbleTemplate(variant: .usb)?.report?.reportID == 2)
     #expect(description.rumbleTemplate(variant: .usb)?.motors[.lowFrequency]?.byte == 4)
@@ -596,7 +596,7 @@ struct ProtocolDescriptionTests {
     let description = try decode(
       family: .sonyDualSense,
       #""recordSections": ["rumble"], "tuningKeys": ["hidStartupIntervalMs"], "#
-        + #""defaults": {"variants": {"usb": {"tuning": {"hidStartupIntervalMs": 7}, "#
+        + #""defaults": {"variants": {"USB": {"tuning": {"hidStartupIntervalMs": 7}, "#
         + #""session": {"rumble": \#(Self.otherRumbleTemplate)}}}}"#
     )
     #expect(description.rumbleTemplate(variant: .usb) != nil)
@@ -608,8 +608,8 @@ struct ProtocolDescriptionTests {
   func aRawUSBVariantTakesAUSBPacketTemplate() throws {
     let description = try decode(
       family: .sonyDualSense,
-      #""rawUSB": ["usb"], "recordSections": ["rumble"], "#
-        + Self.variantRumble("usb", Self.usbRumbleTemplate)
+      #""rawUSB": ["USB"], "recordSections": ["rumble"], "#
+        + Self.variantRumble("USB", Self.usbRumbleTemplate)
     )
     let template = try #require(description.rumbleTemplate(variant: .usb))
     #expect(template.report == nil)
@@ -621,7 +621,7 @@ struct ProtocolDescriptionTests {
   func rejectsAVariantRumbleTemplateTheFamilyCannotUse() {
     let cases: [(body: String, code: ErrorCode)] = [
       // A family whose driver reads no rumble section.
-      (Self.variantRumble("usb", Self.otherRumbleTemplate), .invalidProtocolDescription),
+      (Self.variantRumble("USB", Self.otherRumbleTemplate), .invalidProtocolDescription),
       // A variant the family lacks.
       (
         #""recordSections": ["rumble"], "# + Self.variantRumble("wired", Self.otherRumbleTemplate),
@@ -629,12 +629,12 @@ struct ProtocolDescriptionTests {
       ),
       // A HID template on a raw-USB variant and a usb packet on a HID variant.
       (
-        #""rawUSB": ["usb"], "recordSections": ["rumble"], "#
-          + Self.variantRumble("usb", Self.otherRumbleTemplate),
+        #""rawUSB": ["USB"], "recordSections": ["rumble"], "#
+          + Self.variantRumble("USB", Self.otherRumbleTemplate),
         .invalidProtocolDescription
       ),
       (
-        #""recordSections": ["rumble"], "# + Self.variantRumble("usb", Self.usbRumbleTemplate),
+        #""recordSections": ["rumble"], "# + Self.variantRumble("USB", Self.usbRumbleTemplate),
         .invalidProtocolDescription
       ),
       // Bytes that do not start with the report ID.
@@ -642,23 +642,23 @@ struct ProtocolDescriptionTests {
         #""recordSections": ["rumble"], "#
           + Self.variantRumble(
             "usb",
-            #"{"report": {"kind": "output", "id": 1, "length": 4}, "bytes": "02 00 00 00", "#
-              + #""leftMain": {"byte": 1}}"#
+            #"{"report": {"kind": "Output", "id": 1, "length": 4}, "bytes": "02 00 00 00", "#
+              + #""lowFrequency": {"byte": 1}}"#
           ),
         .invalidProtocolDescription
       ),
       // An empty variant and an empty variant session.
       (
-        #""recordSections": ["rumble"], "defaults": {"variants": {"usb": {}}}"#,
+        #""recordSections": ["rumble"], "defaults": {"variants": {"USB": {}}}"#,
         .invalidProtocolDescription
       ),
       (
-        #""recordSections": ["rumble"], "defaults": {"variants": {"usb": {"session": {}}}}"#,
+        #""recordSections": ["rumble"], "defaults": {"variants": {"USB": {"session": {}}}}"#,
         .invalidProtocolDescription
       ),
       // A variant session member other than the rumble template.
       (
-        #""recordSections": ["rumble"], "defaults": {"variants": {"usb": {"session": "#
+        #""recordSections": ["rumble"], "defaults": {"variants": {"USB": {"session": "#
           + #"{"keepAlive": {"intervalMilliseconds": 5, "writes": []}}}}}"#,
         .invalidProtocolDescription
       ),
@@ -680,7 +680,7 @@ struct ProtocolDescriptionTests {
       // A usb packet with no raw-USB variant.
       Self.flatRumble(Self.usbRumbleTemplate),
       // A HID template reaching the raw-USB variant of a mixed family.
-      #""rawUSB": ["usb"], "# + Self.flatRumble(Self.otherRumbleTemplate),
+      #""rawUSB": ["USB"], "# + Self.flatRumble(Self.otherRumbleTemplate),
     ]
     for body in rejected {
       let code = rejection(family: .sonyDualSense, body)?.code
@@ -688,8 +688,8 @@ struct ProtocolDescriptionTests {
     }
     let mixed = try decode(
       family: .sonyDualSense,
-      #""rawUSB": ["usb"], "recordSections": ["rumble"], "defaults": {"session": {"rumble": "#
-        + #"\#(Self.otherRumbleTemplate)}, "variants": {"usb": {"session": {"rumble": "#
+      #""rawUSB": ["USB"], "recordSections": ["rumble"], "defaults": {"session": {"rumble": "#
+        + #"\#(Self.otherRumbleTemplate)}, "variants": {"USB": {"session": {"rumble": "#
         + #"\#(Self.usbRumbleTemplate)}}}}"#
     )
     #expect(mixed.rumbleTemplate(variant: .usb)?.report == nil)
@@ -744,7 +744,7 @@ struct ProtocolDescriptionTests {
   @Test
   func rejectsASignatureForAFamilyWithNoVariants() {
     let signature =
-      #""interfaceSignatures": [{"variant": "usb", "interfaceClass": 3, "#
+      #""interfaceSignatures": [{"variant": "USB", "interfaceClass": 3, "#
       + #""interfaceSubclass": 0, "interfaceProtocol": 0}]"#
     #expect(rejection(family: .hidDescriptor, signature)?.code == .unknownProtocolVariant)
   }
@@ -752,7 +752,7 @@ struct ProtocolDescriptionTests {
   @Test
   func everyRejectionCarriesACatalogCode() {
     let problem = rejection(family: .xboxGIP, #""interfaceSignatures": []"#)
-    #expect(problem?.description.hasPrefix("E5002: xbox.gip.json: ") == true)
+    #expect(problem?.description.hasPrefix("E5002: xbox-gip.json: ") == true)
     #expect(ErrorCode.invalidProtocolDescription.domain == .document)
     #expect(ErrorCode.protocolDescriptionFamilyMismatch.domain == .document)
     #expect(ErrorCode.unknownProtocolVariant.domain == .document)
@@ -788,7 +788,7 @@ enum ProtocolDescriptionFixture {
     return try ProtocolDescription.decode(
       Data(json.utf8),
       protocolID: family,
-      fileName: "\(family.rawValue).json"
+      fileName: "\(family.descriptionFileStem).json"
     )
   }
 

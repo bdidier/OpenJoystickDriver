@@ -12,7 +12,7 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip",
+              "family": "XboxGIP",
               "parameters": {
                 "shareButton": {
                   "fromEnd": 26
@@ -25,9 +25,9 @@
         ],
         "usb": {
           "interface": 0,
-          "configuration": "set1-before-claim"
+          "configuration": "SetConfiguration1BeforeClaim"
         },
-        "server": "system"
+        "server": "System"
       },
       "builtin": [],
       "package": [],
@@ -56,7 +56,7 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip",
+              "family": "XboxGIP",
               "parameters": {
                 "shareButton": {
                   "fromEnd": 26
@@ -70,7 +70,7 @@
         "usb": {
           "interface": 0
         },
-        "server": "system"
+        "server": "System"
       }
     },
     {
@@ -85,7 +85,7 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip",
+              "family": "XboxGIP",
               "parameters": {
                 "shareButton": {
                   "fromEnd": 26
@@ -99,7 +99,7 @@
         "usb": {
           "interface": 0
         },
-        "server": "system"
+        "server": "System"
       },
       "builtin": [],
       "package": [],
@@ -126,7 +126,7 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip",
+              "family": "XboxGIP",
               "parameters": {
                 "shareButton": {
                   "fromEnd": 26
@@ -137,7 +137,7 @@
             }
           }
         ],
-        "server": "system"
+        "server": "System"
       }
     },
     {
@@ -152,7 +152,7 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip",
+              "family": "XboxGIP",
               "parameters": {
                 "shareButton": {
                   "fromEnd": 26
@@ -169,7 +169,7 @@
             "in": 131
           }
         },
-        "server": "system"
+        "server": "System"
       },
       "builtin": [
         {
@@ -200,7 +200,7 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip",
+              "family": "XboxGIP",
               "parameters": {
                 "shareButton": {
                   "fromEnd": 26
@@ -218,7 +218,7 @@
             "out": 3
           }
         },
-        "server": "system"
+        "server": "System"
       }
     },
     {
@@ -233,7 +233,7 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip",
+              "family": "XboxGIP",
               "parameters": {
                 "shareButton": {
                   "fromEnd": 26
@@ -246,17 +246,17 @@
           {
             "id": "bluetooth",
             "protocol": {
-              "family": "xbox.gip"
+              "family": "XboxGIP"
             },
             "match": {
-              "link": "bluetooth-classic"
+              "link": "BluetoothClassic"
             }
           }
         ],
         "usb": {
           "interface": 0
         },
-        "server": "system"
+        "server": "System"
       },
       "builtin": [],
       "package": [
@@ -272,7 +272,7 @@
               {
                 "id": "default",
                 "protocol": {
-                  "family": "xbox.gip",
+                  "family": "XboxGIP",
                   "parameters": {
                     "shareButton": {
                       "fromEnd": 26
@@ -297,7 +297,7 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip",
+              "family": "XboxGIP",
               "parameters": {
                 "shareButton": {
                   "fromEnd": 26
@@ -311,7 +311,7 @@
         "usb": {
           "interface": 0
         },
-        "server": "system"
+        "server": "System"
       }
     },
     {
@@ -326,7 +326,7 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip",
+              "family": "XboxGIP",
               "parameters": {
                 "shareButton": {
                   "fromEnd": 26
@@ -340,7 +340,7 @@
         "usb": {
           "interface": 0
         },
-        "server": "system",
+        "server": "System",
         "input": 5
       },
       "builtin": [],
@@ -371,7 +371,7 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip",
+              "family": "XboxGIP",
               "parameters": {
                 "shareButton": {
                   "fromEnd": 26
@@ -385,7 +385,7 @@
         "usb": {
           "interface": 0
         },
-        "server": "system",
+        "server": "System",
         "input": {
           "rumble": true
         }
@@ -403,7 +403,7 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip",
+              "family": "XboxGIP",
               "parameters": {
                 "shareButton": {
                   "fromEnd": 26
@@ -417,7 +417,7 @@
         "usb": {
           "interface": 0
         },
-        "server": "system"
+        "server": "System"
       },
       "builtin": [],
       "package": [
@@ -460,7 +460,7 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip",
+              "family": "XboxGIP",
               "parameters": {
                 "shareButton": {
                   "fromEnd": 26
@@ -474,7 +474,7 @@
         "usb": {
           "interface": 0
         },
-        "server": "system",
+        "server": "System",
         "tuning": {
           "stickDeadzone": 0.05
         }
@@ -492,7 +492,7 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip",
+              "family": "XboxGIP",
               "parameters": {
                 "shareButton": {
                   "fromEnd": 26
@@ -506,7 +506,7 @@
         "usb": {
           "interface": 0
         },
-        "server": "system"
+        "server": "System"
       },
       "builtin": [
         {
@@ -550,7 +550,7 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip",
+              "family": "XboxGIP",
               "parameters": {
                 "shareButton": {
                   "fromEnd": 26
@@ -564,7 +564,7 @@
         "usb": {
           "interface": 0
         },
-        "server": "system",
+        "server": "System",
         "tuning": {
           "stickDeadzone": 0.1,
           "hidStartupRecoveryRounds": 2
@@ -583,7 +583,7 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip",
+              "family": "XboxGIP",
               "parameters": {
                 "shareButton": {
                   "fromEnd": 26
@@ -597,7 +597,7 @@
         "usb": {
           "interface": 0
         },
-        "server": "system"
+        "server": "System"
       },
       "builtin": [],
       "package": [
@@ -640,7 +640,7 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip",
+              "family": "XboxGIP",
               "parameters": {
                 "shareButton": {
                   "fromEnd": 26
@@ -654,7 +654,7 @@
         "usb": {
           "interface": 0
         },
-        "server": "system",
+        "server": "System",
         "tuning": {}
       }
     },
@@ -670,7 +670,7 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip",
+              "family": "XboxGIP",
               "parameters": {
                 "shareButton": {
                   "fromEnd": 26
@@ -684,7 +684,7 @@
         "usb": {
           "interface": 0
         },
-        "server": "system"
+        "server": "System"
       },
       "builtin": [],
       "package": [],
@@ -740,7 +740,7 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip",
+              "family": "XboxGIP",
               "parameters": {
                 "shareButton": {
                   "fromEnd": 26
@@ -754,7 +754,7 @@
         "usb": {
           "interface": 0
         },
-        "server": "system",
+        "server": "System",
         "tuning": {
           "stickDeadzone": 0.1,
           "hidStartupIntervalMs": 5
@@ -773,7 +773,7 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip",
+              "family": "XboxGIP",
               "parameters": {
                 "shareButton": {
                   "fromEnd": 26
@@ -787,7 +787,7 @@
         "usb": {
           "interface": 0
         },
-        "server": "system"
+        "server": "System"
       },
       "builtin": [
         {
@@ -828,7 +828,7 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip",
+              "family": "XboxGIP",
               "parameters": {
                 "shareButton": {
                   "fromEnd": 26
@@ -842,7 +842,7 @@
         "usb": {
           "interface": 0
         },
-        "server": "system",
+        "server": "System",
         "tuning": {
           "stickDeadzone": 0.3
         }
@@ -860,7 +860,7 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip",
+              "family": "XboxGIP",
               "parameters": {
                 "shareButton": {
                   "fromEnd": 26
@@ -874,7 +874,7 @@
         "usb": {
           "interface": 0
         },
-        "server": "system"
+        "server": "System"
       },
       "builtin": [],
       "package": [],
@@ -887,7 +887,7 @@
             "productID": 747
           },
           "patch": {
-            "server": "ojd"
+            "server": "OJD"
           }
         },
         {
@@ -897,7 +897,7 @@
             "model": "045e-02eb"
           },
           "patch": {
-            "server": "ojd"
+            "server": "OJD"
           }
         }
       ],
@@ -911,7 +911,7 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip",
+              "family": "XboxGIP",
               "parameters": {
                 "shareButton": {
                   "fromEnd": 26
@@ -925,7 +925,7 @@
         "usb": {
           "interface": 0
         },
-        "server": "system"
+        "server": "System"
       }
     },
     {
@@ -940,7 +940,7 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip",
+              "family": "XboxGIP",
               "parameters": {
                 "shareButton": {
                   "fromEnd": 26
@@ -954,7 +954,7 @@
         "usb": {
           "interface": 0
         },
-        "server": "system"
+        "server": "System"
       },
       "builtin": [],
       "package": [],
@@ -969,7 +969,7 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip",
+              "family": "XboxGIP",
               "parameters": {
                 "shareButton": {
                   "fromEnd": 26
@@ -983,7 +983,7 @@
         "usb": {
           "interface": 0
         },
-        "server": "system"
+        "server": "System"
       }
     },
     {
@@ -998,14 +998,14 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip"
+              "family": "XboxGIP"
             }
           }
         ],
         "usb": {
           "interface": 0
         },
-        "server": "system"
+        "server": "System"
       },
       "builtin": [],
       "package": [],
@@ -1038,14 +1038,14 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip"
+              "family": "XboxGIP"
             }
           }
         ],
         "usb": {
           "interface": 0
         },
-        "server": "system",
+        "server": "System",
         "tuning": {
           "stickDeadzone": 0.1
         }
@@ -1063,14 +1063,14 @@
           {
             "id": "default",
             "protocol": {
-              "family": "sony.dualshock4"
+              "family": "SonyDualShock4"
             }
           }
         ],
         "usb": {
           "interface": 0
         },
-        "server": "system"
+        "server": "System"
       },
       "builtin": [],
       "package": [],
@@ -1103,14 +1103,14 @@
           {
             "id": "default",
             "protocol": {
-              "family": "sony.dualshock4"
+              "family": "SonyDualShock4"
             }
           }
         ],
         "usb": {
           "interface": 0
         },
-        "server": "system",
+        "server": "System",
         "tuning": {
           "stickDeadzone": 0.1,
           "inputLivenessTimeoutMs": 500,
@@ -1131,14 +1131,14 @@
           {
             "id": "default",
             "protocol": {
-              "family": "nintendo.switch1"
+              "family": "NintendoSwitch1"
             }
           }
         ],
         "usb": {
           "interface": 0
         },
-        "server": "system"
+        "server": "System"
       },
       "builtin": [],
       "package": [],
@@ -1171,14 +1171,14 @@
           {
             "id": "default",
             "protocol": {
-              "family": "nintendo.switch1"
+              "family": "NintendoSwitch1"
             }
           }
         ],
         "usb": {
           "interface": 0
         },
-        "server": "system",
+        "server": "System",
         "tuning": {
           "stickDeadzone": 0.1,
           "hidStartupIntervalMs": 5,
@@ -1200,15 +1200,15 @@
           {
             "id": "default",
             "protocol": {
-              "family": "vendor.gamesir",
-              "variant": "usb"
+              "family": "VendorGameSir",
+              "variant": "USB"
             }
           }
         ],
         "usb": {
           "interface": 0
         },
-        "server": "system"
+        "server": "System"
       },
       "builtin": [],
       "package": [],
@@ -1241,15 +1241,15 @@
           {
             "id": "default",
             "protocol": {
-              "family": "vendor.gamesir",
-              "variant": "usb"
+              "family": "VendorGameSir",
+              "variant": "USB"
             }
           }
         ],
         "usb": {
           "interface": 0
         },
-        "server": "system",
+        "server": "System",
         "tuning": {
           "stickDeadzone": 0.1
         }
@@ -1267,15 +1267,15 @@
           {
             "id": "default",
             "protocol": {
-              "family": "vendor.gamesir",
-              "variant": "bluetooth-le"
+              "family": "VendorGameSir",
+              "variant": "BluetoothLE"
             }
           }
         ],
         "usb": {
           "interface": 0
         },
-        "server": "system"
+        "server": "System"
       },
       "builtin": [],
       "package": [],
@@ -1309,15 +1309,15 @@
           {
             "id": "default",
             "protocol": {
-              "family": "vendor.gamesir",
-              "variant": "bluetooth-le"
+              "family": "VendorGameSir",
+              "variant": "BluetoothLE"
             }
           }
         ],
         "usb": {
           "interface": 0
         },
-        "server": "system",
+        "server": "System",
         "tuning": {
           "stickDeadzone": 0.1,
           "hidStartupIntervalMs": 5,
@@ -1345,7 +1345,7 @@
         "usb": {
           "interface": 0
         },
-        "server": "system"
+        "server": "System"
       },
       "builtin": [],
       "package": [],
@@ -1386,7 +1386,7 @@
         "usb": {
           "interface": 0
         },
-        "server": "system",
+        "server": "System",
         "tuning": {
           "stickDeadzone": 0.1,
           "frameQueueCapacity": 4
@@ -1405,14 +1405,14 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip"
+              "family": "XboxGIP"
             }
           }
         ],
         "usb": {
           "interface": 0
         },
-        "server": "system"
+        "server": "System"
       },
       "builtin": [],
       "package": [],
@@ -1440,14 +1440,14 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip"
+              "family": "XboxGIP"
             }
           }
         ],
         "usb": {
           "interface": 0
         },
-        "server": "system"
+        "server": "System"
       }
     },
     {
@@ -1462,14 +1462,14 @@
           {
             "id": "default",
             "protocol": {
-              "family": "sony.dualshock4"
+              "family": "SonyDualShock4"
             }
           }
         ],
         "usb": {
           "interface": 0
         },
-        "server": "system",
+        "server": "System",
         "tuning": {
           "inputLivenessTimeoutMs": 900,
           "stickDeadzone": 0.2
@@ -1502,14 +1502,14 @@
           {
             "id": "default",
             "protocol": {
-              "family": "sony.dualshock4"
+              "family": "SonyDualShock4"
             }
           }
         ],
         "usb": {
           "interface": 0
         },
-        "server": "system",
+        "server": "System",
         "tuning": {
           "stickDeadzone": 0.2
         }
@@ -1527,14 +1527,14 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip"
+              "family": "XboxGIP"
             }
           }
         ],
         "usb": {
           "interface": 0
         },
-        "server": "system"
+        "server": "System"
       },
       "builtin": [],
       "package": [
@@ -1547,7 +1547,7 @@
               "model": "045e-02ea"
             },
             "patch": {
-              "server": "ojd"
+              "server": "OJD"
             }
           }
         },
@@ -1576,14 +1576,14 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip"
+              "family": "XboxGIP"
             }
           }
         ],
         "usb": {
           "interface": 0
         },
-        "server": "ojd"
+        "server": "OJD"
       }
     },
     {
@@ -1596,7 +1596,7 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip"
+              "family": "XboxGIP"
             }
           }
         ]
@@ -1625,7 +1625,7 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip"
+              "family": "XboxGIP"
             }
           }
         ]
@@ -1640,7 +1640,7 @@
         "productID": 746,
         "name": "Fixture",
         "protocol": {
-          "family": "xbox.gip",
+          "family": "XboxGIP",
           "parameters": {
             "shareButton": {
               "fromEnd": 26
@@ -1708,7 +1708,7 @@
         "productID": 746,
         "name": "Fixture",
         "protocol": {
-          "family": "xbox.gip",
+          "family": "XboxGIP",
           "parameters": {
             "shareButton": {
               "fromEnd": 26
@@ -1739,14 +1739,14 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip"
+              "family": "XboxGIP"
             }
           }
         ],
         "usb": {
           "interface": 0
         },
-        "server": "system"
+        "server": "System"
       },
       "builtin": [],
       "package": [],
@@ -1775,14 +1775,14 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.gip"
+              "family": "XboxGIP"
             }
           }
         ],
         "usb": {
           "interface": 0
         },
-        "server": "system",
+        "server": "System",
         "tuning": {
           "usbTransferTimeoutMs": 750
         }
@@ -1800,14 +1800,14 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.xusb"
+              "family": "XboxXUSB"
             }
           }
         ],
         "usb": {
           "interface": 0
         },
-        "server": "system"
+        "server": "System"
       },
       "builtin": [],
       "package": [],
@@ -1837,14 +1837,14 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.xusb"
+              "family": "XboxXUSB"
             }
           }
         ],
         "usb": {
           "interface": 0
         },
-        "server": "system",
+        "server": "System",
         "tuning": {
           "usbTransferTimeoutMs": 750,
           "presenceResendReports": 4
@@ -1863,14 +1863,14 @@
           {
             "id": "default",
             "protocol": {
-              "family": "sony.dualsense"
+              "family": "SonyDualSense"
             }
           }
         ],
         "usb": {
           "interface": 0
         },
-        "server": "system"
+        "server": "System"
       },
       "builtin": [],
       "package": [],
@@ -1899,14 +1899,14 @@
           {
             "id": "default",
             "protocol": {
-              "family": "sony.dualsense"
+              "family": "SonyDualSense"
             }
           }
         ],
         "usb": {
           "interface": 0
         },
-        "server": "system",
+        "server": "System",
         "tuning": {
           "stickDeadzone": 0.1
         }
@@ -1924,14 +1924,14 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.xusb"
+              "family": "XboxXUSB"
             }
           }
         ],
         "usb": {
           "interface": 0
         },
-        "server": "system",
+        "server": "System",
         "tuning": {
           "usbTransferTimeoutMs": 750,
           "presenceResendReports": 4
@@ -1963,14 +1963,14 @@
           {
             "id": "default",
             "protocol": {
-              "family": "xbox.xusb"
+              "family": "XboxXUSB"
             }
           }
         ],
         "usb": {
           "interface": 0
         },
-        "server": "system",
+        "server": "System",
         "tuning": {
           "presenceResendReports": 4
         }
@@ -2035,7 +2035,7 @@
           "productID": 746
         },
         "patch": {
-          "server": "ojd"
+          "server": "OJD"
         }
       },
       "message": "selector must be all, model, or vendorID with productID"
@@ -2065,7 +2065,7 @@
           "all": true
         },
         "patch": {
-          "server": "ojd"
+          "server": "OJD"
         }
       },
       "message": "an all patch may set only tuning"
@@ -2107,7 +2107,7 @@
           "model": "045E-02EA"
         },
         "patch": {
-          "server": "ojd"
+          "server": "OJD"
         }
       },
       "message": "selector.model must be vvvv-pppp in lowercase hex"
@@ -2122,7 +2122,7 @@
           "productID": 746
         },
         "patch": {
-          "server": "ojd"
+          "server": "OJD"
         },
         "operation": "patch"
       },

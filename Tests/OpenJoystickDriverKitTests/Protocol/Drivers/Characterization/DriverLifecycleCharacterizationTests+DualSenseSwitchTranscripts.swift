@@ -10,7 +10,7 @@ extension DriverLifecycleCharacterizationTests {
     #expect(
       try transcript(Self.dualSenseUSB) == [
         "capabilities rumble=[LowFrequency,HighFrequency] binary=[]",
-        "capabilities lighting=[playerIndicator,programmableColor]",
+        "capabilities lighting=[PlayerIndicator,ProgrammableColor]",
         "capabilities triggers=[Left,Right]", "usb.startup interval=0 retries=[] packets=0",
         "usb.keepAlive nil", "usb.deferred inputs=0 packets=0", "usb.deferred drained=0",
         "usb.connection[connected] packets=0", "usb.connection[disconnected] packets=0",
@@ -63,7 +63,7 @@ extension DriverLifecycleCharacterizationTests {
     #expect(
       try transcript(Self.dualSenseBluetooth) == [
         "capabilities rumble=[LowFrequency,HighFrequency] binary=[]",
-        "capabilities lighting=[playerIndicator,programmableColor]",
+        "capabilities lighting=[PlayerIndicator,ProgrammableColor]",
         "capabilities triggers=[Left,Right]", "usb.startup interval=0 retries=[] packets=0",
         "usb.keepAlive nil", "usb.deferred inputs=0 packets=0", "usb.deferred drained=0",
         "usb.connection[connected] packets=0", "usb.connection[disconnected] packets=0",
@@ -118,7 +118,7 @@ extension DriverLifecycleCharacterizationTests {
     #expect(
       try transcript(Self.switchUSB) == [
         "capabilities rumble=[LowFrequency,HighFrequency] binary=[]",
-        "capabilities lighting=[playerIndicator]", "capabilities triggers=[]",
+        "capabilities lighting=[PlayerIndicator]", "capabilities triggers=[]",
         "usb.startup interval=0 retries=[] packets=0", "usb.keepAlive nil",
         "usb.deferred inputs=0 packets=0", "usb.deferred drained=0",
         "usb.connection[connected] packets=0", "usb.connection[disconnected] packets=0",

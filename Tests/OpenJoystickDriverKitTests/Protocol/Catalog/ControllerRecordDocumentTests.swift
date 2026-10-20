@@ -8,17 +8,17 @@ struct ControllerRecordDocumentTests {
   func decodesCurrentVocabulary() throws {
     let document = try decode(
       protocol: [
-        "family": "xbox.gip", "parameters": ["shareButton": ["fromEnd": 26]],
-        "initialization": ["xbox.gip/hori-ack", "xbox.gip/power-on"],
+        "family": "XboxGIP", "parameters": ["shareButton": ["fromEnd": 26]],
+        "initialization": ["XboxGIP/hori-ack", "XboxGIP/power-on"],
       ],
-      usb: ["configuration": "set1-before-claim"],
-      capabilities: ["absent": ["LeftTrigger", "RightTrigger"], "rumble": "absent"]
+      usb: ["configuration": "SetConfiguration1BeforeClaim"],
+      capabilities: ["absent": ["LeftTrigger", "RightTrigger"], "rumble": "Absent"]
     )
 
     #expect(document.protocolInfo.protocolID == .xboxGIP)
     #expect(document.protocolInfo.protocolVariant == nil)
     #expect(document.protocolInfo.parameters == ProtocolParameters(shareButton: .init(fromEnd: 26)))
-    #expect(document.protocolInfo.initialization == ["xbox.gip/hori-ack", "xbox.gip/power-on"])
+    #expect(document.protocolInfo.initialization == ["XboxGIP/hori-ack", "XboxGIP/power-on"])
     #expect(
       document.capabilities
         == ControllerCapabilityDelta(
@@ -27,7 +27,7 @@ struct ControllerRecordDocumentTests {
           rumbleAbsent: true
         )
     )
-    #expect(document.usb?.configuration == "set1-before-claim")
+    #expect(document.usb?.configuration == "SetConfiguration1BeforeClaim")
   }
 
   @Test
@@ -38,7 +38,7 @@ struct ControllerRecordDocumentTests {
     ]
     for (parameters, expected) in cases {
       let document = try decode(protocol: [
-        "family": "vendor.gamesir", "variant": "enhanced-hid", "parameters": parameters,
+        "family": "VendorGameSir", "variant": "EnhancedHID", "parameters": parameters,
       ])
       #expect(document.protocolInfo.protocolVariant == .enhancedHID)
       #expect(document.protocolInfo.parameters == expected)
@@ -49,7 +49,7 @@ struct ControllerRecordDocumentTests {
   func decodesThirdPartyDualSenseModelParameters() throws {
     let document = try decode(
       protocol: [
-        "family": "sony.dualsense",
+        "family": "SonyDualSense",
         "parameters": [
           "maker": "ThirdParty", "unprobedSensors": true, "unprobedTouchpad": true,
           "forcedVibration": true, "role": "Receiver",
@@ -77,7 +77,7 @@ struct ControllerRecordDocumentTests {
       {
         #expect(throws: DecodingError.self) {
           try decode(
-            protocol: ["family": "sony.dualsense", "parameters": parameters],
+            protocol: ["family": "SonyDualSense", "parameters": parameters],
             vendorID: vendorID
           )
         }
@@ -109,39 +109,39 @@ struct ControllerRecordDocumentTests {
     #expect(document.protocolInfo.protocolID == family)
     #expect(document.protocolInfo.protocolVariant == nil)
     #expect(throws: DecodingError.self) {
-      try decode(protocol: ["family": family.rawValue, "variant": "usb"], extra: extra)
+      try decode(protocol: ["family": family.rawValue, "variant": "USB"], extra: extra)
     }
   }
 
   @Test(
     arguments: [
-      ["notAField": "xbox.gip"], ["family": "notAFamily"],
-      ["family": "xbox.gip", "variant": "notAVariant"],
-      ["family": "xbox.gip", "notAField": true],
-      ["family": "xbox.gip", "parameters": ["notAParameter": true]],
-      ["family": "xbox.xid", "variant": "gamepad", "parameters": ["notAParameter": true]],
-      ["family": "xbox.xusb", "variant": "wired", "parameters": ["notAParameter": true]],
-      ["family": "sony.dualsense", "parameters": ["notAParameter": true]],
-      ["family": "sony.dualshock4", "parameters": ["notAParameter": true]],
-      ["family": "hid.descriptor", "parameters": ["notAParameter": true]],
-      ["family": "nintendo.switch1", "parameters": ["notAParameter": true]],
+      ["notAField": "XboxGIP"], ["family": "notAFamily"],
+      ["family": "XboxGIP", "variant": "notAVariant"],
+      ["family": "XboxGIP", "notAField": true],
+      ["family": "XboxGIP", "parameters": ["notAParameter": true]],
+      ["family": "XboxXID", "variant": "Gamepad", "parameters": ["notAParameter": true]],
+      ["family": "XboxXUSB", "variant": "Wired", "parameters": ["notAParameter": true]],
+      ["family": "SonyDualSense", "parameters": ["notAParameter": true]],
+      ["family": "SonyDualShock4", "parameters": ["notAParameter": true]],
+      ["family": "HIDDescriptor", "parameters": ["notAParameter": true]],
+      ["family": "NintendoSwitch1", "parameters": ["notAParameter": true]],
       [
-        "family": "valve.steam-controller", "variant": "wired",
+        "family": "ValveSteamController", "variant": "Wired",
         "parameters": ["notAParameter": true],
       ],
-      ["family": "vendor.gamesir", "variant": "notAVariant"],
-      ["family": "vendor.gamesir", "variant": "enhanced-hid", "parameters": ["innerGrips": "yes"]],
-      ["family": "vendor.gamesir", "variant": "enhanced-hid", "parameters": ["innerGrips": false]],
-      ["family": "vendor.gamesir", "variant": "usb", "parameters": ["innerGrips": true]],
-      ["family": "xbox.gip", "parameters": ["shareButton": ["fromEnd": 0]]],
-      ["family": "xbox.gip", "parameters": ["shareButton": ["fromEnd": 256]]],
-      ["family": "xbox.gip", "parameters": ["shareButton": ["fromEnd": "26"]]],
-      ["family": "xbox.gip", "parameters": ["shareButton": ["fromEnd": 26, "notAField": 1]]],
-      ["family": "xbox.gip", "parameters": ["shareButton": 26]],
-      ["family": "xbox.gip", "initialization": ["xbox.gip/missing"]],
-      ["family": "xbox.gip", "initialization": ["xbox.gip/power-on", "xbox.gip/power-on"]],
-      ["family": "xbox.gip", "initialization": [String]()],
-      ["family": "xbox.xusb", "variant": "wired", "initialization": ["xbox.gip/power-on"]],
+      ["family": "VendorGameSir", "variant": "notAVariant"],
+      ["family": "VendorGameSir", "variant": "EnhancedHID", "parameters": ["innerGrips": "yes"]],
+      ["family": "VendorGameSir", "variant": "EnhancedHID", "parameters": ["innerGrips": false]],
+      ["family": "VendorGameSir", "variant": "USB", "parameters": ["innerGrips": true]],
+      ["family": "XboxGIP", "parameters": ["shareButton": ["fromEnd": 0]]],
+      ["family": "XboxGIP", "parameters": ["shareButton": ["fromEnd": 256]]],
+      ["family": "XboxGIP", "parameters": ["shareButton": ["fromEnd": "26"]]],
+      ["family": "XboxGIP", "parameters": ["shareButton": ["fromEnd": 26, "notAField": 1]]],
+      ["family": "XboxGIP", "parameters": ["shareButton": 26]],
+      ["family": "XboxGIP", "initialization": ["XboxGIP/missing"]],
+      ["family": "XboxGIP", "initialization": ["XboxGIP/power-on", "XboxGIP/power-on"]],
+      ["family": "XboxGIP", "initialization": [String]()],
+      ["family": "XboxXUSB", "variant": "Wired", "initialization": ["XboxGIP/power-on"]],
     ] as [[String: any Sendable]]
   )
   func rejectsUnknownProtocolVocabulary(protocolInfo: [String: any Sendable]) {
@@ -151,7 +151,7 @@ struct ControllerRecordDocumentTests {
   @Test
   func rejectsAnUnknownRecordField() {
     #expect(throws: DecodingError.self) {
-      try decode(protocol: ["family": "xbox.gip"], extra: ["notAField": "usb"])
+      try decode(protocol: ["family": "XboxGIP"], extra: ["notAField": "usb"])
     }
   }
 
@@ -160,26 +160,26 @@ struct ControllerRecordDocumentTests {
       [:], ["absent": [String]()], ["absent": ["LeftTrigger", "LeftTrigger"]],
       ["absent": ["leftTrigger"]], ["present": ["trackpad"]],
       ["absent": ["Guide"], "present": ["Guide"]], ["rumble": "present"],
-      ["rumble": "absent", "controls": ["Guide"]],
+      ["rumble": "Absent", "controls": ["Guide"]],
     ] as [[String: any Sendable]]
   )
   func rejectsInvalidCapabilities(capabilities: [String: any Sendable]) {
     #expect(throws: DecodingError.self) {
-      try decode(protocol: ["family": "xbox.gip"], capabilities: capabilities)
+      try decode(protocol: ["family": "XboxGIP"], capabilities: capabilities)
     }
   }
 
   @Test
   func presentControlsAreOnlyTheDualSenseEdgeSet() throws {
     let edge = ["LeftPaddle1", "RightPaddle1", "Auxiliary1", "Auxiliary2"]
-    let dualSense: [String: any Sendable] = ["family": "sony.dualsense"]
+    let dualSense: [String: any Sendable] = ["family": "SonyDualSense"]
     let document = try decode(protocol: dualSense, capabilities: ["present": edge])
     #expect(document.capabilities.presentControls == DualSenseDriver.edgeControls)
     #expect(throws: DecodingError.self) {
       try decode(protocol: dualSense, capabilities: ["present": Array(edge.prefix(2))])
     }
     #expect(throws: DecodingError.self) {
-      try decode(protocol: ["family": "xbox.gip"], capabilities: ["present": ["LeftPaddle1"]])
+      try decode(protocol: ["family": "XboxGIP"], capabilities: ["present": ["LeftPaddle1"]])
     }
   }
 
@@ -187,8 +187,8 @@ struct ControllerRecordDocumentTests {
   func rejectsRumbleAbsenceForDriversThatDoNotDeclareIt() {
     #expect(throws: DecodingError.self) {
       try decode(
-        protocol: ["family": "xbox.xusb", "variant": "wired"],
-        capabilities: ["rumble": "absent"]
+        protocol: ["family": "XboxXUSB", "variant": "Wired"],
+        capabilities: ["rumble": "Absent"]
       )
     }
   }
@@ -196,7 +196,7 @@ struct ControllerRecordDocumentTests {
   @Test
   func rejectsUSBInterfaceOverride() {
     #expect(throws: DecodingError.self) {
-      try decode(protocol: ["family": "xbox.gip"], usb: ["interface": 1])
+      try decode(protocol: ["family": "XboxGIP"], usb: ["interface": 1])
     }
   }
 
@@ -206,7 +206,7 @@ struct ControllerRecordDocumentTests {
     #expect(ControllerAssemblyPolicy(name: name) == nil)
     #expect(throws: DecodingError.self) {
       try decode(protocol: [
-        "family": "valve.steam-controller", "variant": "dongle", "assembly": name,
+        "family": "ValveSteamController", "variant": "Dongle", "assembly": name,
       ])
     }
   }
@@ -289,17 +289,17 @@ struct ControllerRecordDocumentTests {
     #expect(declaredParameters == ProtocolParameters.names)
   }
 
-  /// An input layout belongs to the `hid.report-layout` family, which cannot run without one.
+  /// An input layout belongs to the `HIDReportLayout` family, which cannot run without one.
   @Test
   func inputLayoutIsRequiredExactlyForTheReportLayoutFamily() throws {
     let document = try decode(
-      protocol: ["family": "hid.report-layout"],
+      protocol: ["family": "HIDReportLayout"],
       extra: ["input": Self.minimalInput]
     )
     #expect(document.inputLayout?.controls == [.south])
-    #expect(throws: DecodingError.self) { try decode(protocol: ["family": "hid.report-layout"]) }
+    #expect(throws: DecodingError.self) { try decode(protocol: ["family": "HIDReportLayout"]) }
     #expect(throws: DecodingError.self) {
-      try decode(protocol: ["family": "hid.descriptor"], extra: ["input": Self.minimalInput])
+      try decode(protocol: ["family": "HIDDescriptor"], extra: ["input": Self.minimalInput])
     }
   }
 
@@ -312,7 +312,7 @@ struct ControllerRecordDocumentTests {
   @Test
   func decodesTuningWhereADriverReadsIt() throws {
     let ds4 = try decode(
-      protocol: ["family": "sony.dualshock4"],
+      protocol: ["family": "SonyDualShock4"],
       extra: ["tuning": ["stickDeadzone": 0.05, "inputLivenessTimeoutMs": 1_500]]
     )
     #expect(
@@ -320,7 +320,7 @@ struct ControllerRecordDocumentTests {
         == ControllerTuning(stickDeadzone: 0.05, inputLivenessTimeoutMilliseconds: 1_500)
     )
     let switch1 = try decode(
-      protocol: ["family": "nintendo.switch1"],
+      protocol: ["family": "NintendoSwitch1"],
       extra: [
         "tuning": [
           "hidStartupIntervalMs": 40, "hidStartupRecoveryIntervalMs": 300,
@@ -336,9 +336,9 @@ struct ControllerRecordDocumentTests {
           hidStartupRecoveryRounds: 4
         )
     )
-    #expect(try decode(protocol: ["family": "xbox.gip"]).tuning == .none)
+    #expect(try decode(protocol: ["family": "XboxGIP"]).tuning == .none)
     for protocolInfo in [
-      ["family": "xbox.gip"], ["family": "xbox.xusb", "variant": "wired"],
+      ["family": "XboxGIP"], ["family": "XboxXUSB", "variant": "Wired"],
     ] {
       let transfer = try decode(
         protocol: protocolInfo,
@@ -351,7 +351,7 @@ struct ControllerRecordDocumentTests {
     }
   }
 
-  @Test(arguments: ["xbox.gip", "sony.dualsense", "nintendo.switch2", "hid.descriptor"])
+  @Test(arguments: ["XboxGIP", "SonyDualSense", "NintendoSwitch2", "HIDDescriptor"])
   func decodesFrameQueueCapacityForEveryFamily(family: String) throws {
     let record = try decode(
       protocol: ["family": family],
@@ -362,52 +362,52 @@ struct ControllerRecordDocumentTests {
 
   @Test(
     arguments: [
-      ("sony.dualshock4", ["stickDeadzone": 0]), ("sony.dualshock4", ["stickDeadzone": 1]),
-      ("sony.dualshock4", ["inputLivenessTimeoutMs": 0]),
-      ("nintendo.switch1", ["hidStartupRecoveryRounds": 11]),
-      ("nintendo.switch1", ["hidStartupRecoveryIntervalMs": 0]),
-      ("hid.descriptor", ["minimumHIDOutputIntervalMs": 60_001]),
-      ("hid.descriptor", ["deadzone": 0.1]), ("hid.descriptor", [:]),
-      ("hid.descriptor", ["inputLivenessTimeoutMs": 1_000]),
-      ("sony.dualsense", ["hidStartupRecoveryRounds": 2]),
-      ("xbox.gip", ["hidStartupIntervalMs": 20]),
-      ("valve.steam-triton", ["lizardResendTicks": 0]),
-      ("valve.steam-triton", ["lizardResendTicks": 100_001]),
-      ("nintendo.switch2", ["usbCommandTimeoutMs": 0]),
-      ("nintendo.switch2", ["usbCommandTimeoutMs": 60_001]),
-      ("xbox.gip", ["presenceResendReports": 0]),
-      ("xbox.gip", ["presenceResendReports": 1_001]),
-      ("xbox.xusb", ["presenceResendReports": 0]),
-      ("xbox.xusb", ["presenceResendReports": 1_001]),
-      ("sony.dualshock4", ["adapterDisconnectDelayMs": 0]),
-      ("sony.dualshock4", ["adapterDisconnectDelayMs": 60_001]),
-      ("xbox.gip", ["usbStartupIntervalMs": -1]),
-      ("xbox.gip", ["usbStartupIntervalMs": 60_001]),
-      ("xbox.gip", ["usbStartupRetryDelayMs": 0]),
-      ("xbox.gip", ["usbStartupRetryDelayMs": 60_001]),
-      ("xbox.gip", ["usbTransferTimeoutMs": 0]),
-      ("xbox.gip", ["usbTransferTimeoutMs": 60_001]),
-      ("xbox.xusb", ["usbTransferTimeoutMs": 0]),
-      ("xbox.xusb", ["usbTransferTimeoutMs": 60_001]),
-      ("sony.dualsense", ["usbTransferTimeoutMs": 2_000]),
-      ("xbox.gip", ["zephyrQuill": 5]),
-      ("xbox.xusb", ["zephyrQuill": 5]),
-      ("xbox.gip", ["frameQueueCapacity": 0]),
-      ("hid.descriptor", ["frameQueueCapacity": 1_025]),
-      ("sony.dualsense", ["frameQueueCapacity": 1.5]),
+      ("SonyDualShock4", ["stickDeadzone": 0]), ("SonyDualShock4", ["stickDeadzone": 1]),
+      ("SonyDualShock4", ["inputLivenessTimeoutMs": 0]),
+      ("NintendoSwitch1", ["hidStartupRecoveryRounds": 11]),
+      ("NintendoSwitch1", ["hidStartupRecoveryIntervalMs": 0]),
+      ("HIDDescriptor", ["minimumHIDOutputIntervalMs": 60_001]),
+      ("HIDDescriptor", ["deadzone": 0.1]), ("HIDDescriptor", [:]),
+      ("HIDDescriptor", ["inputLivenessTimeoutMs": 1_000]),
+      ("SonyDualSense", ["hidStartupRecoveryRounds": 2]),
+      ("XboxGIP", ["hidStartupIntervalMs": 20]),
+      ("ValveSteamTriton", ["lizardResendTicks": 0]),
+      ("ValveSteamTriton", ["lizardResendTicks": 100_001]),
+      ("NintendoSwitch2", ["usbCommandTimeoutMs": 0]),
+      ("NintendoSwitch2", ["usbCommandTimeoutMs": 60_001]),
+      ("XboxGIP", ["presenceResendReports": 0]),
+      ("XboxGIP", ["presenceResendReports": 1_001]),
+      ("XboxXUSB", ["presenceResendReports": 0]),
+      ("XboxXUSB", ["presenceResendReports": 1_001]),
+      ("SonyDualShock4", ["adapterDisconnectDelayMs": 0]),
+      ("SonyDualShock4", ["adapterDisconnectDelayMs": 60_001]),
+      ("XboxGIP", ["usbStartupIntervalMs": -1]),
+      ("XboxGIP", ["usbStartupIntervalMs": 60_001]),
+      ("XboxGIP", ["usbStartupRetryDelayMs": 0]),
+      ("XboxGIP", ["usbStartupRetryDelayMs": 60_001]),
+      ("XboxGIP", ["usbTransferTimeoutMs": 0]),
+      ("XboxGIP", ["usbTransferTimeoutMs": 60_001]),
+      ("XboxXUSB", ["usbTransferTimeoutMs": 0]),
+      ("XboxXUSB", ["usbTransferTimeoutMs": 60_001]),
+      ("SonyDualSense", ["usbTransferTimeoutMs": 2_000]),
+      ("XboxGIP", ["zephyrQuill": 5]),
+      ("XboxXUSB", ["zephyrQuill": 5]),
+      ("XboxGIP", ["frameQueueCapacity": 0]),
+      ("HIDDescriptor", ["frameQueueCapacity": 1_025]),
+      ("SonyDualSense", ["frameQueueCapacity": 1.5]),
     ] as [(String, [String: any Sendable])]
   )
   func rejectsTuningOutOfRangeOrOutsideItsFamily(family: String, tuning: [String: any Sendable]) {
     #expect(throws: DecodingError.self) {
       try decode(
-        protocol: family == "xbox.xusb"
-          ? ["family": family, "variant": "wired"] : ["family": family],
+        protocol: family == "XboxXUSB"
+          ? ["family": family, "variant": "Wired"] : ["family": family],
         extra: ["tuning": tuning]
       )
     }
   }
 
-  @Test(arguments: ["nintendo.switch2", "nintendo.switch-input-only"])
+  @Test(arguments: ["NintendoSwitch2", "NintendoSwitchInputOnly"])
   func rejectsRecoveryTuningForSwitchDriversWithoutRecovery(family: String) throws {
     _ = try decode(protocol: ["family": family])
     #expect(throws: DecodingError.self) {
@@ -420,7 +420,7 @@ struct ControllerRecordDocumentTests {
 
   static let vibrationUUID = "FA19B0FB-CD1F-46A7-84A1-BBB09E00C149"
   static let switch2: [String: any Sendable] = [
-    "family": "nintendo.switch2"
+    "family": "NintendoSwitch2"
   ]
 
   @Test
@@ -438,8 +438,8 @@ struct ControllerRecordDocumentTests {
 
   @Test(
     arguments: [
-      (["family": "nintendo.switch1"], ["vibrationCharacteristic": vibrationUUID]),
-      (["family": "sony.dualsense"], ["vibrationCharacteristic": vibrationUUID]),
+      (["family": "NintendoSwitch1"], ["vibrationCharacteristic": vibrationUUID]),
+      (["family": "SonyDualSense"], ["vibrationCharacteristic": vibrationUUID]),
       (switch2, ["vibrationCharacteristic": vibrationUUID.lowercased()]),
       (switch2, ["vibrationCharacteristic": "FA19B0FB"]),
       (switch2, [:]),

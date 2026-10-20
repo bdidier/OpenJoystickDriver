@@ -20,7 +20,7 @@ extension ProtocolDriverRegistry {
 
   /// The role one observed HID connection plays.
   ///
-  /// Only `valve.steam-controller` declares a role predicate, pinned to Linux `hid-steam.c` at
+  /// Only `ValveSteamController` declares a role predicate, pinned to Linux `hid-steam.c` at
   /// the locked commit: `steam_is_valve_interface` (hid-steam.c:1095–1111) treats an interface
   /// as a real gamepad exactly when its report descriptor declares a feature report. The wired
   /// controller exposes mouse 0, keyboard 1 and gamepad 2; the wireless dongle exposes keyboard
@@ -31,7 +31,7 @@ extension ProtocolDriverRegistry {
   /// A Bluetooth LE link has one HID service and no USB interface number, so that connection is
   /// its location's controller; SDL `HIDAPI_DriverSteam_IsSupportedDevice` and
   /// `HIDAPI_DriverSteamTriton_IsSupportedDevice` accept every Bluetooth interface. The Triton
-  /// (`valve.steam-triton`) dongles carry controllers on interfaces 2–5 only (SDL
+  /// (`ValveSteamTriton`) dongles carry controllers on interfaces 2–5 only (SDL
   /// `SDL_hidapi_steam_triton.c`).
   func hidConnectionRole(of device: PhysicalDevice) -> HIDConnectionRole {
     guard let record = hidRoleRecord(of: device) else { return .location }

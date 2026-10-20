@@ -228,7 +228,7 @@ extension DeviceManager {
     guard
       let configuredProfile = protocolDriverRegistry.runtimeProfile(for: binding)?.transportProfile
     else {
-      // Only a record-less `hid.descriptor` binding has no runtime profile; that family is driven
+      // Only a record-less `HIDDescriptor` binding has no runtime profile; that family is driven
       // through IOHID, never raw USB.
       recordUnboundUSBDevice(
         device,

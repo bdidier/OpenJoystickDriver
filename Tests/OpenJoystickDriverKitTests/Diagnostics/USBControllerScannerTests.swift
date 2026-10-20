@@ -263,7 +263,7 @@ struct USBControllerScannerTests {
     )
 
     let description = try #require(descriptions.first)
-    #expect(description.protocolBinding?.rawValue == "xbox.gip:usb")
+    #expect(description.protocolBinding?.rawValue == "XboxGIP:USB")
     #expect(description.parameters.isEmpty)
     guard case .bound(let binding) = description.classification else {
       Issue.record("expected a binding, got \(String(describing: description.classification))")

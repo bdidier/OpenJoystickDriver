@@ -9,7 +9,7 @@ These records and packet encoders are source-backed, not hardware-verified. Test
 - Cyclone 2 enhanced HID: `3537:0575`, `100B`, and `1053`, with the `lightingMemory` parameter `ProfileSlots`
 - G7 Pro 8K PC enhanced HID: `3537:10C5`, `10C6`, `10C7`, and `10C8`, with the `innerGrips` parameter
 
-Both enhanced HID models bind `vendor.gamesir:enhanced-hid`; their catalog parameters select the model differences.
+Both enhanced HID models bind `VendorGameSir:EnhancedHID`; their catalog parameters select the model differences.
 
 `3537:1004` stays on the existing XUSB route because Linux identifies it as T4 Kaleid and the White G7 Pro dongle report shares that identity. Existing Linux-backed `3537:100F` and `1010` routes are also unchanged.
 
@@ -24,7 +24,7 @@ Both enhanced HID models bind `vendor.gamesir:enhanced-hid`; their catalog param
   - Report `0x02` is consumer volume up/down.
 - **Interface 1:** has no macOS HID driver attached.
 
-GameController accepts the pad natively. OJD binds it as `hid.descriptor` with `physicalOwnership=SystemGamepad`, observes it without seizing it, and publishes no virtual pad.
+GameController accepts the pad natively. OJD binds it as `HIDDescriptor` with `physicalOwnership=SystemGamepad`, observes it without seizing it, and publishes no virtual pad.
 
 Nexus required a firmware update, which the owner applied: firmware 6.4.0 (`bcdDevice` `0x0640`) became 6.6.4 (`0x0664`). The Nexus log names the image `JS_SL3101_V664_Key.ufw`, which is embedded in the app and applied over GIP in 52 s.
 
@@ -51,7 +51,7 @@ The player LED stays dark in HID mode `1082`. OJD does not write to native pads,
 
 Still untested: the raw handshake from Linux, and GameSir Nexus with the pad in this `1010` mode.
 
-2026-10-05, owner hardware, macOS 27.0.1, commit `21e2da3a`, app quit: the G7 SE `3537:1010` (`bcdDevice` `0x0640`) over USB GIP, through `ojd diagnose record`. A 60-second baseline with the generated record printed `RECORD_HANDSHAKE driver=xbox.gip:usb result=complete` and `RECORD_SUMMARY packets=5 events=0 parse_errors=0` and exited 0. A 180-second run of the same record with `"keepAlive": false` printed `RECORD_HANDSHAKE driver=xbox.gip:usb result=complete` and `RECORD_SUMMARY packets=23 events=11 parse_errors=0` and exited 0. Without any host keep-alive, the pad still sent its own status `03 20 nn 04 80 00 00 00` every 20 seconds, all five presses of A decoded as `faceSouth`, nothing disconnected or reconnected, and the owner saw the player LED stay lit throughout. The 20-second keep-alive rhythm noted on 2026-09-25 is therefore the pad's own status cadence, which the probe answers, and not a host requirement. This holds for this model, firmware, and macOS version only; it says nothing about the GameSir `0F F2` heartbeat on other models.
+2026-10-05, owner hardware, macOS 27.0.1, commit `21e2da3a`, app quit: the G7 SE `3537:1010` (`bcdDevice` `0x0640`) over USB GIP, through `ojd diagnose record`. A 60-second baseline with the generated record printed `RECORD_HANDSHAKE driver=XboxGIP:USB result=complete` and `RECORD_SUMMARY packets=5 events=0 parse_errors=0` and exited 0. A 180-second run of the same record with `"keepAlive": false` printed `RECORD_HANDSHAKE driver=XboxGIP:USB result=complete` and `RECORD_SUMMARY packets=23 events=11 parse_errors=0` and exited 0. Without any host keep-alive, the pad still sent its own status `03 20 nn 04 80 00 00 00` every 20 seconds, all five presses of A decoded as `faceSouth`, nothing disconnected or reconnected, and the owner saw the player LED stay lit throughout. The 20-second keep-alive rhythm noted on 2026-09-25 is therefore the pad's own status cadence, which the probe answers, and not a host requirement. This holds for this model, firmware, and macOS version only; it says nothing about the GameSir `0F F2` heartbeat on other models.
 
 ## Validate Records and Input
 

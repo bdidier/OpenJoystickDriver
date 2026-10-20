@@ -124,7 +124,7 @@ extension ControllerRecordDocument {
         guard let link = PhysicalTransport(rawValue: name) else {
           throw ModeDocument.invalid(
             "link",
-            "link is usb, bluetooth-classic, bluetooth-le or proprietary-radio-receiver",
+            "link is USB, BluetoothClassic, BluetoothLE or ProprietaryRadioReceiver",
             decoder
           )
         }
@@ -232,7 +232,7 @@ extension ControllerRecordDocument {
       }
       if let name = try container.decodeOptional(String.self, for: "direction") {
         guard let direction = USBEndpointDirection(rawValue: name) else {
-          throw ModeDocument.invalid("direction", "direction is in or out", decoder)
+          throw ModeDocument.invalid("direction", "direction is In or Out", decoder)
         }
         endpoint.direction = direction
       }
@@ -240,7 +240,7 @@ extension ControllerRecordDocument {
         guard let type = USBEndpointTransferType(rawValue: name), type != .unknown else {
           throw ModeDocument.invalid(
             "transferType",
-            "transferType is control, isochronous, bulk, or interrupt",
+            "transferType is Control, Isochronous, Bulk, or Interrupt",
             decoder
           )
         }
@@ -294,9 +294,9 @@ extension ControllerRecordDocument {
       }
       let expectation: ControllerModeProbe.Expectation
       switch (expect, offset, hex) {
-      case ("answers", nil, nil): expectation = .answers
-      case ("stalls", nil, nil): expectation = .stalls
-      case ("bytes", let offset?, let hex?):
+      case ("Answers", nil, nil): expectation = .answers
+      case ("Stalls", nil, nil): expectation = .stalls
+      case ("Bytes", let offset?, let hex?):
         guard let expected = HexBytes.parse(hex), offset >= 0, offset + expected.count <= length
         else {
           throw Self.invalid(
@@ -307,7 +307,7 @@ extension ControllerRecordDocument {
         expectation = .bytes(offset: offset, expected: expected)
       default:
         throw Self.invalid(
-          "a probe expects answers, stalls, or bytes; only bytes carries offset and bytes",
+          "a probe expects Answers, Stalls, or Bytes; only Bytes carries offset and bytes",
           decoder
         )
       }
@@ -353,11 +353,11 @@ extension ControllerRecordDocument {
       }
       if (inputLayout != nil) != info.protocolID.requiresRecordInputLayout {
         throw fail(
-          "every mode needs the record's input layout exactly when it is hid.report-layout"
+          "every mode needs the record's input layout exactly when it is HIDReportLayout"
         )
       }
       if hidUsageMap != nil, info.protocolID != .hidDescriptor {
-        throw fail("a HID usage map applies only to hid.descriptor in every mode")
+        throw fail("a HID usage map applies only to HIDDescriptor in every mode")
       }
       guard capabilitiesAreDeclared(by: info.protocolID) else {
         throw fail("capabilities must be deltas the driver of every mode declares")

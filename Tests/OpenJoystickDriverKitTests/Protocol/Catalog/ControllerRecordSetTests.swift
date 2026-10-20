@@ -4,9 +4,9 @@ import Testing
 @testable import OpenJoystickDriverKit
 
 struct ControllerRecordSetTests {
-  /// A bundled `xbox.gip` record with no protocol options.
+  /// A bundled `XboxGIP` record with no protocol options.
   private static let bundledGIP = ControllerModelID(vendorID: 0x366C, productID: 0x0005)
-  /// A bundled `sony.dualshock4` record, a HID family.
+  /// A bundled `SonyDualShock4` record, a HID family.
   private static let bundledHID = ControllerModelID(vendorID: 0x2C22, productID: 0x2000)
   private static let unbundled = ControllerModelID(vendorID: 0x1234, productID: 0xABCD)
 
@@ -51,7 +51,7 @@ struct ControllerRecordSetTests {
       Self.patch(
         Self.bundledGIP,
         set: [
-          "modes": [["id": "default", "protocol": ["family": "xbox.gip", "keepAlive": false]]]
+          "modes": [["id": "default", "protocol": ["family": "XboxGIP", "keepAlive": false]]]
         ]
       )
     )
@@ -77,7 +77,7 @@ struct ControllerRecordSetTests {
       Self.patch(
         shareOffsetGIP,
         set: [
-          "modes": [["id": "default", "protocol": ["family": "xbox.gip", "keepAlive": false]]]
+          "modes": [["id": "default", "protocol": ["family": "XboxGIP", "keepAlive": false]]]
         ]
       )
     )
@@ -86,7 +86,7 @@ struct ControllerRecordSetTests {
     let refamilied = try Self.record(
       Self.patch(
         Self.bundledHID,
-        set: ["modes": [["id": "default", "protocol": ["family": "hid.descriptor"]]]]
+        set: ["modes": [["id": "default", "protocol": ["family": "HIDDescriptor"]]]]
       )
     )
     #expect(refamilied.profile.physicalProtocolID == .hidDescriptor)
@@ -104,7 +104,7 @@ struct ControllerRecordSetTests {
             [
               "id": "default",
               "protocol": [
-                "family": "sony.dualshock4", "parameters": ["motionScale": "StrikePad"],
+                "family": "SonyDualShock4", "parameters": ["motionScale": "StrikePad"],
               ],
             ]
           ]
@@ -125,26 +125,26 @@ struct ControllerRecordSetTests {
 
   @Test
   func aControllerFileForANewIdentityIsAUserRecord() throws {
-    let validated = try ControllerRecordSet.validate(Self.add(Self.unbundled, family: "xbox.gip"))
+    let validated = try ControllerRecordSet.validate(Self.add(Self.unbundled, family: "XboxGIP"))
     let record = try #require(validated.record)
     #expect(validated.operation == .add)
     #expect(validated.fileName == "1234-abcd.json")
     #expect(record.model == Self.unbundled)
     #expect(record.fieldLayers == ["modes": .user])
-    #expect(record.family == "xbox.gip")
+    #expect(record.family == "XboxGIP")
   }
 
   @Test
   func recordsThatDoNotFitTheCatalogAreRejected() throws {
     #expect(
-      Self.problem(try Self.add(Self.bundledGIP, family: "xbox.gip"))
+      Self.problem(try Self.add(Self.bundledGIP, family: "XboxGIP"))
         == "366C:0005 is a bundled controller; use a patch to change it"
     )
     #expect(
       Self.problem(
         try Self.patch(
           Self.unbundled,
-          set: ["modes": [["id": "default", "protocol": ["family": "xbox.gip"]]]]
+          set: ["modes": [["id": "default", "protocol": ["family": "XboxGIP"]]]]
         )
       )
         == "1234:ABCD is not a known controller; use a Controller file"
@@ -153,30 +153,33 @@ struct ControllerRecordSetTests {
       Self.problem(
         try Self.patch(
           Self.bundledGIP,
-          set: ["modes": [["id": "default", "protocol": ["family": "xbox.gip"]]]]
+          set: ["modes": [["id": "default", "protocol": ["family": "XboxGIP"]]]]
         )
       )
         == "the patch changes nothing in the record"
     )
     #expect(
       Self.problem(
-        try Self.patch(Self.bundledHID, set: ["usb": ["configuration": "set1-before-claim"]])
+        try Self.patch(
+          Self.bundledHID,
+          set: ["usb": ["configuration": "SetConfiguration1BeforeClaim"]]
+        )
       )
         == "record.usb: USB overrides require a raw-USB protocol family"
     )
     #expect(
-      Self.problem(try Self.patch(Self.bundledGIP, set: ["capabilities": ["rumble": "absent"]]))
+      Self.problem(try Self.patch(Self.bundledGIP, set: ["capabilities": ["rumble": "Absent"]]))
         == "patch must hold modes, usb, bluetoothLE, server, "
         + "route, input, or tuning"
     )
     #expect(
       Self.problem(try Self.patch(Self.bundledGIP, set: ["tuning": ["hidStartupIntervalMs": 5]]))
-        == "record.tuning: hidStartupIntervalMs is not read by the xbox.gip driver"
+        == "record.tuning: hidStartupIntervalMs is not read by the XboxGIP driver"
     )
     #expect(Self.problem(Data("[]".utf8)) == "the file is not a JSON object")
     var withNote = ControllerPatch.document(
       selector: .identity(Self.bundledGIP),
-      body: ["usb": ["configuration": "set1-before-claim"]]
+      body: ["usb": ["configuration": "SetConfiguration1BeforeClaim"]]
     )
     withNote["note"] = "x"
     #expect(
@@ -195,7 +198,7 @@ struct ControllerRecordSetTests {
     let unsupportedAPIVersionValue = "unsupported.example/v9"
     let body = ControllerPatch.document(
       selector: .identity(Self.bundledGIP),
-      body: ["usb": ["configuration": "set1-before-claim"]]
+      body: ["usb": ["configuration": "SetConfiguration1BeforeClaim"]]
     )
     let noVersion = body.filter { $0.key != "apiVersion" }
     #expect(
@@ -222,7 +225,7 @@ struct ControllerRecordSetTests {
     let unsupportedRecord = try Self.json([
       "apiVersion": unsupportedAPIVersionValue, "kind": ControllerRecordDocument.kind,
       "vendorID": 0x1234,
-      "productID": 0xABCD, "modes": [["id": "default", "protocol": ["family": "xbox.gip"]]],
+      "productID": 0xABCD, "modes": [["id": "default", "protocol": ["family": "XboxGIP"]]],
     ])
     #expect(
       Self.problem(unsupportedRecord)?.contains(
@@ -255,12 +258,13 @@ struct ControllerRecordSetTests {
     )
     try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
     defer { try? FileManager.default.removeItem(at: directory) }
-    try Self.add(Self.unbundled, family: "xbox.gip").write(
+    try Self.add(Self.unbundled, family: "XboxGIP").write(
       to: directory.appendingPathComponent("1234-abcd.json")
     )
-    try Self.patch(Self.bundledGIP, set: ["usb": ["configuration": "set1-before-claim"]]).write(
-      to: directory.appendingPathComponent("wrong-name.json")
-    )
+    try Self.patch(Self.bundledGIP, set: ["usb": ["configuration": "SetConfiguration1BeforeClaim"]])
+      .write(
+        to: directory.appendingPathComponent("wrong-name.json")
+      )
     try Data("{".utf8).write(to: directory.appendingPathComponent("broken.json"))
 
     let set = ControllerRecordSet.load(userDirectory: directory)
@@ -299,7 +303,7 @@ struct ControllerRecordSetTests {
       (#"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","#
         + #""kind":"ControllerPatch","selector":{"vendorID":13932,"productID":5},"#
         + #""patch":{"modes":[{"id":"default","#
-        + #""protocol":{"family":"xbox.gip","keepAlive":false}}]}}"#).utf8
+        + #""protocol":{"family":"XboxGIP","keepAlive":false}}]}}"#).utf8
     )
     let currentURL = directory.appendingPathComponent("366c-0005.patch.json")
     try current.write(to: currentURL)
@@ -307,7 +311,7 @@ struct ControllerRecordSetTests {
     let released = Data(
       (#"{"apiVersion":"unsupported.example/v9","#
         + #""kind":"\#(ControllerRecordDocument.kind)","vendorID":4660,"productID":43981,"#
-        + #""modes":[{"id":"default","protocol":{"family":"xbox.gip"}}]}"#).utf8
+        + #""modes":[{"id":"default","protocol":{"family":"XboxGIP"}}]}"#).utf8
     )
     let releasedURL = directory.appendingPathComponent("1234-abcd.json")
     try released.write(to: releasedURL)

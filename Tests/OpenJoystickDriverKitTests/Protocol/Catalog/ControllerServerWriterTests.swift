@@ -4,9 +4,9 @@ import Testing
 @testable import OpenJoystickDriverKit
 
 struct ControllerServerWriterTests {
-  /// A bundled `sony.dualshock4` record, a HID family.
+  /// A bundled `SonyDualShock4` record, a HID family.
   private static let bundledHID = ControllerModelID(vendorID: 0x2C22, productID: 0x2000)
-  /// A bundled `xbox.gip` record, a raw-USB family.
+  /// A bundled `XboxGIP` record, a raw-USB family.
   private static let bundledGIP = ControllerModelID(vendorID: 0x366C, productID: 0x0005)
   private static let unbundled = ControllerModelID(vendorID: 0x1234, productID: 0xABCD)
 
@@ -51,7 +51,7 @@ struct ControllerServerWriterTests {
       #expect(written["kind"] as? String == "ControllerPatch")
       let selector = try #require(written["selector"] as? [String: Int])
       #expect(selector == ["vendorID": 0x2C22, "productID": 0x2000])
-      #expect(written["patch"] as? [String: String] == ["server": "ojd"])
+      #expect(written["patch"] as? [String: String] == ["server": "OJD"])
       let loaded = ControllerRecordSet.load(userDirectory: directory)
       #expect(loaded.records[Self.bundledHID]?.profile.server == .ojd)
       #expect(loaded.records[Self.bundledHID]?.fieldLayers["server"] == .user)
@@ -65,7 +65,7 @@ struct ControllerServerWriterTests {
       try JSONSerialization.data(
         withJSONObject: ControllerPatch.document(
           selector: .identity(Self.bundledHID),
-          body: ["server": "ojd", "tuning": ["stickDeadzone": 0.1]]
+          body: ["server": "OJD", "tuning": ["stickDeadzone": 0.1]]
         )
       )
       .write(to: file)
@@ -74,7 +74,7 @@ struct ControllerServerWriterTests {
       #expect(change.previous == .ojd)
       try ControllerServerWriter.write(change)
       let set = try #require(try Self.object(Data(contentsOf: file))["patch"] as? [String: Any])
-      #expect(set["server"] as? String == "system")
+      #expect(set["server"] as? String == "System")
       #expect(set["tuning"] as? [String: Double] == ["stickDeadzone": 0.1])
     }
   }
@@ -88,7 +88,7 @@ struct ControllerServerWriterTests {
         "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordDocument.kind,
         "vendorID": 0x1234,
         "productID": 0xABCD,
-        "modes": [["id": "default", "protocol": ["family": "hid.descriptor"]]],
+        "modes": [["id": "default", "protocol": ["family": "HIDDescriptor"]]],
       ]
       let package = try fixture.makePackage(
         records: [("1234-abcd.json", try JSONSerialization.data(withJSONObject: record))]

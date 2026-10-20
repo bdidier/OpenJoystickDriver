@@ -4,7 +4,7 @@ import Foundation
 /// and the input reports it sent while you pressed its controls.
 ///
 /// The draft maps what the descriptor states plainly: one-bit buttons 1 to 11 in the order the
-/// `hid.descriptor` family reads them, byte-aligned X, Y, Rx, and Ry sticks, byte-aligned Z and
+/// `HIDDescriptor` family reads them, byte-aligned X, Y, Rx, and Ry sticks, byte-aligned Z and
 /// Rz triggers, and a hat whose value starts at 0. It does not guess at anything else; the bytes
 /// that changed during the capture show where the remaining controls sit.
 public struct ControllerRecordDraft: Sendable {
@@ -18,8 +18,8 @@ public struct ControllerRecordDraft: Sendable {
   /// `add`, a Controller document, for a model without a bundled record, otherwise `patch`, a
   /// ControllerPatch document.
   public let operation: ControllerRecordOperation
-  /// The protocol family the draft names: `hid.report-layout` when a control mapped, otherwise
-  /// `hid.descriptor`.
+  /// The protocol family the draft names: `HIDReportLayout` when a control mapped, otherwise
+  /// `HIDDescriptor`.
   public let family: PhysicalProtocolID
   /// The input report the draft reads, or nil when nothing chose one.
   public let reportID: UInt8?
@@ -34,7 +34,7 @@ public struct ControllerRecordDraft: Sendable {
   /// delivered them, with the report ID in byte 0 of a numbered report.
   ///
   /// Returns nil for a model with a bundled record when no control mapped, because a patch
-  /// that only names `hid.descriptor` would replace the bundled family with nothing better.
+  /// that only names `HIDDescriptor` would replace the bundled family with nothing better.
   public init?(
     model: ControllerModelID,
     bundled: Bool,
@@ -160,7 +160,7 @@ private struct DraftLayout {
     return input
   }
 
-  /// The button order the `hid.descriptor` family reads in its standard layout.
+  /// The button order the `HIDDescriptor` family reads in its standard layout.
   private static let standardButtons: [Control] = [
     .south, .east, .west, .north, .leftShoulder, .rightShoulder, .back, .start,
     .leftStickClick, .rightStickClick, .guide,
@@ -204,7 +204,7 @@ private struct DraftLayout {
         guard hat == nil, (3...8).contains(field.bitSize), shift + field.bitSize <= 8,
           field.logicalMin == 0
         else { continue }
-        hat = ["encoding": "8-way", "byte": byte, "mask": ((1 << field.bitSize) - 1) << shift]
+        hat = ["encoding": "EightWay", "byte": byte, "mask": ((1 << field.bitSize) - 1) << shift]
       default: continue
       }
     }

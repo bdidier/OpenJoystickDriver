@@ -18,7 +18,7 @@ private let ps3ThirdPartyProbeMarker: UInt8 = 0x26
 /// that format, so the driver then decodes raw reports by byte offset. A device that fails the
 /// probe keeps the generic HID descriptor mapping, which SDL also falls back to. Pads SDL
 /// accepts without a probe (Logitech ChillStream, Ant Esports GP100) have records in the
-/// `hid.report-layout` family instead, which ``ReportLayoutDriver`` decodes.
+/// `HIDReportLayout` family instead, which ``ReportLayoutDriver`` decodes.
 ///
 /// Raw reports of 19 or more bytes carry face and shoulder bits and digital triggers in byte 0,
 /// system buttons in byte 1, a hat in the low nibble of byte 2, sticks in bytes 3–6, per-button

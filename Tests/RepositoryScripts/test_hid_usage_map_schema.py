@@ -11,12 +11,12 @@ from Scripts.Catalog import validate_profiles
 from Scripts.Catalog.schema_header import header
 from Scripts.Quality import validate_schemas
 
-BUTTON = {"kind": "button", "page": 9, "usage": 1, "control": "South"}
-AXIS = {"kind": "axis", "page": 1, "usage": 48, "control": "LeftStickX"}
-HAT = {"kind": "hat", "page": 1, "usage": 57}
+BUTTON = {"kind": "Button", "page": 9, "usage": 1, "control": "South"}
+AXIS = {"kind": "Axis", "page": 1, "usage": 48, "control": "LeftStickX"}
+HAT = {"kind": "Hat", "page": 1, "usage": 57}
 
 
-def record(input_section: Any, family: str = "hid.descriptor") -> dict[str, Any]:
+def record(input_section: Any, family: str = "HIDDescriptor") -> dict[str, Any]:
     document: dict[str, Any] = {
         **header("Controller"),
         "vendorID": 0xFFFE,
@@ -101,7 +101,7 @@ class HIDUsageMapRecordSchemaTests(unittest.TestCase):
 
     def test_a_usage_map_belongs_to_hid_descriptor_only(self) -> None:
         self.assertFalse(
-            self.validator.is_valid(record(usage_map(BUTTON), "sony.dualshock4"))
+            self.validator.is_valid(record(usage_map(BUTTON), "SonyDualShock4"))
         )
 
     def test_a_byte_layout_belongs_to_report_layout_only(self) -> None:
@@ -109,10 +109,10 @@ class HIDUsageMapRecordSchemaTests(unittest.TestCase):
             "report": {"length": 1},
             "buttons": [{"control": "South", "byte": 0, "mask": 1}],
         }
-        self.assertTrue(self.validator.is_valid(record(layout, "hid.report-layout")))
+        self.assertTrue(self.validator.is_valid(record(layout, "HIDReportLayout")))
         self.assertFalse(self.validator.is_valid(record(layout)))
         self.assertFalse(
-            self.validator.is_valid(record(usage_map(BUTTON), "hid.report-layout"))
+            self.validator.is_valid(record(usage_map(BUTTON), "HIDReportLayout"))
         )
 
     def validate_file(self, input_section: Any) -> None:
@@ -159,13 +159,13 @@ class HIDUsageMapDescriptionSchemaTests(unittest.TestCase):
     def check(self, defaults: dict[str, Any], **members: Any) -> None:
         document = {
             **header("ProtocolDescription"),
-            "family": "hid.descriptor",
+            "family": "HIDDescriptor",
             "endpoints": {"in": 130, "out": 2},
             "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
             "defaults": defaults,
             **members,
         }
-        path = self.root / "hid.descriptor.json"
+        path = self.root / "hid-descriptor.json"
         path.write_text(json.dumps(document), encoding="utf-8")
         validate_schemas.validate_protocol_descriptions(
             self.schema, self.registry, [path]
@@ -233,10 +233,10 @@ class HIDUsageMapDescriptionSchemaTests(unittest.TestCase):
     def test_rejects_usage_maps_in_other_families(self) -> None:
         document = {
             **header("ProtocolDescription"),
-            "family": "sony.dualsense",
+            "family": "SonyDualSense",
             "defaults": {"input": usage_map(BUTTON)},
         }
-        path = self.root / "sony.dualsense.json"
+        path = self.root / "sony-dualsense.json"
         path.write_text(json.dumps(document), encoding="utf-8")
         with self.assertRaisesRegex(validate_schemas.ValidationError, r"^E5002: "):
             validate_schemas.validate_protocol_descriptions(

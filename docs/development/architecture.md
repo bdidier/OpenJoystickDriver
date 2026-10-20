@@ -87,11 +87,11 @@ The registry delivers the host's output commands to a feed's return sink one tas
 1. the exact catalog row for the VID/PID; its family must match the observed access path (raw USB or HID);
 2. an interface class/subclass/protocol signature pinned to Linux `xpad.c` (XID `58/42/00`, XUSB wired and receiver, GIP on interface 0);
 3. the device-descriptor GIP triple `FF/47/D0`, only on an unconfigured device that exposes no interface facts;
-4. `hid.descriptor`, only on IOHID and only after `HIDDescriptorContract` accepts the report descriptor. A catalog row naming `hid.descriptor` must pass the same contract.
+4. `HIDDescriptor`, only on IOHID and only after `HIDDescriptorContract` accepts the report descriptor. A catalog row naming `HIDDescriptor` must pass the same contract.
 
-A catalog row naming `hid.report-layout` carries a `ControllerInputLayout` in its record, and `ReportLayoutDriver` decodes the raw report from it; no signature selects that family.
+A catalog row naming `HIDReportLayout` carries a `ControllerInputLayout` in its record, and `ReportLayoutDriver` decodes the raw report from it; no signature selects that family.
 
-A validation failure never falls through to a lower level, and no device falls back to a generic HID parser. The result is `.bound(ProtocolBinding)`, `.unsupported(reason)` or `.conflict(reason, candidates:)`. `ProtocolBindingReason` has exactly ten IDs: `noProtocolMatch`, `ambiguousProtocolMatch`, `interfaceContractMismatch`, `descriptorContractMismatch`, `packetContractMismatch`, `unsupportedProtocolVariant`, `unsupportedTransportVariant`, `requiredInitializationFailed`, `catalogConflict` and `virtualProfileUnavailable`. A binding's `ProtocolBindingID` has the form `family[:variant]`, for example `xbox.xusb:receiver` or `hid.descriptor`; the variant is required exactly when the family declares variants. Records store a variant only when the transport cannot decide it; they carry no transport field, since the family and variant determine the access path.
+A validation failure never falls through to a lower level, and no device falls back to a generic HID parser. The result is `.bound(ProtocolBinding)`, `.unsupported(reason)` or `.conflict(reason, candidates:)`. `ProtocolBindingReason` has exactly ten IDs: `noProtocolMatch`, `ambiguousProtocolMatch`, `interfaceContractMismatch`, `descriptorContractMismatch`, `packetContractMismatch`, `unsupportedProtocolVariant`, `unsupportedTransportVariant`, `requiredInitializationFailed`, `catalogConflict` and `virtualProfileUnavailable`. A binding's `ProtocolBindingID` has the form `family[:variant]`, for example `XboxXUSB:Receiver` or `HIDDescriptor`; the variant is required exactly when the family declares variants. Records store a variant only when the transport cannot decide it; they carry no transport field, since the family and variant determine the access path.
 
 `ProtocolDriverRegistry` builds `PhysicalProtocolDriver` values from one exhaustive switch over `PhysicalProtocolID`, and `runtimeProfile(for:)` returns the binding's catalog record or, for a signature binding, the family defaults (GIP sets configuration 1 before the claim). `makeDriver(for:identifier:claimed:)` is the only runtime factory: a raw-USB binding passes its claimed facts (the resolved profile and the observed device), and the claimed interface contract must hold before a driver exists. HID bindings pass no claimed facts; classification already checked their descriptor contract. `makeUnobservedDriver` serves only profile capabilities and record rendering, which have no device. A device that does not bind gets no driver. A driver's `DriverSessionPlan` fixes its report liveness timeout and whether output waits for a receiver presence connect.
 
@@ -132,7 +132,7 @@ Stored files are not migrated. A stored file either keeps working as written, or
 
 ### Raw-USB Roles
 
-`ProtocolDriverRegistry.roleProfiles(for:resolution:)` returns the roles of one claim. An `xbox.xusb:receiver` binding whose row pins no interface or endpoint gets one role per observed alternate-setting-0 interface with triple FF/5D/81 and one interrupt IN and one interrupt OUT endpoint, as `xpad_probe` checks. Roles are sorted by interface number, capped at four, and a role's index is its slot ordinal. Every other family, a pinned receiver row, and a receiver with no qualifying interface run the claim as their single role.
+`ProtocolDriverRegistry.roleProfiles(for:resolution:)` returns the roles of one claim. An `XboxXUSB:Receiver` binding whose row pins no interface or endpoint gets one role per observed alternate-setting-0 interface with triple FF/5D/81 and one interrupt IN and one interrupt OUT endpoint, as `xpad_probe` checks. Roles are sorted by interface number, capped at four, and a role's index is its slot ordinal. Every other family, a pinned receiver row, and a receiver with no qualifying interface run the claim as their single role.
 
 ```mermaid
 flowchart LR
@@ -150,7 +150,7 @@ flowchart LR
 
 ### HID Roles
 
-`ProtocolDriverRegistry.hidConnectionRole(of:)` returns `.location`, `.interface(n)` or `.notARole`. Only `valve.steam-controller` declares roles: a connection is a role when its report descriptor has a Feature item (`steam_is_valve_interface` in `hid-steam.c`) and its parent USB `bInterfaceNumber` was observed; otherwise it fails closed as `.notARole`. Every other family is `.location`: one controller per routing location, keyed without an interface.
+`ProtocolDriverRegistry.hidConnectionRole(of:)` returns `.location`, `.interface(n)` or `.notARole`. Only `ValveSteamController` declares roles: a connection is a role when its report descriptor has a Feature item (`steam_is_valve_interface` in `hid-steam.c`) and its parent USB `bInterfaceNumber` was observed; otherwise it fails closed as `.notARole`. Every other family is `.location`: one controller per routing location, keyed without an interface.
 
 Input from a role connection routes to that connection's key only (`hidPipelineKey`); other connections route by location to keys without an interface. Role writes and startup feature reads target the exact connection, and role-family connections disconnect one at a time. Ownership is still per location: seizing, releasing or reacquiring one role's interface acts on every interface at that location, including sibling roles. Claim release on rejected connections is per location too.
 

@@ -8,7 +8,7 @@ func hostHIDInterface(_ host: PhysicalTransport?) -> PhysicalInterfaceSignature 
   PhysicalInterfaceSignature(hostTransport: host, accessBackend: .ioHID)
 }
 
-/// A HID interface observed over `host` whose descriptor satisfies the `hid.descriptor`
+/// A HID interface observed over `host` whose descriptor satisfies the `HIDDescriptor`
 /// contract.
 func gamepadHIDInterface(host: PhysicalTransport?) -> PhysicalInterfaceSignature {
   PhysicalInterfaceSignature(

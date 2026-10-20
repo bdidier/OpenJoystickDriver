@@ -123,7 +123,7 @@ class EndpointReferenceClientTests(unittest.TestCase):
                     productID=654,
                     connection="usb",
                     hasSerialNumber=False,
-                    protocol="xbox.xbox360",
+                    protocol="XboxXUSB:Wired",
                     session="active",
                 ),
             },

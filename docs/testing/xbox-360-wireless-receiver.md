@@ -63,7 +63,7 @@ OJD runs one pipeline per receiver slot: each interface with triple FF/5D/81 and
    ojd controller list --json
    ```
 
-   Expect four entries with `protocol` `xbox.xusb:receiver`, one per slot. `ojd controller show <ID> --json` gives each entry's `interfaceNumber` (`N`) for a FF/5D/81 interface. Paste the output.
+   Expect four entries with `protocol` `XboxXUSB:Receiver`, one per slot. `ojd controller show <ID> --json` gives each entry's `interfaceNumber` (`N`) for a FF/5D/81 interface. Paste the output.
 3. Pair one controller at a time. For each, record which interface's entry receives input and which ring-light quadrant lights. Slot order is interface order: the lowest interface is player 1.
 4. With controllers paired on slot 0 and a later slot, restart OJD without unplugging the receiver. The device is already configured, so no slot, including slot 0, should send SET_CONFIGURATION. Confirm every paired slot resumes input. If slot 0 alone reconnects during a run (for example after a transfer error), confirm the later slots keep their input.
 5. Power off one controller. Confirm only its slot reports disconnected.

@@ -4,13 +4,13 @@ import Foundation
 /// Transport/link kind; each interface signature distinguishes host-facing from
 /// controller-side evidence.
 ///
-/// The kebab-case `rawValue` is the spelling controller records use. Encoded output (reports,
+/// The UpperCamelCase `rawValue` is the spelling controller records use. Encoded output (reports,
 /// `--json`, the endpoint) uses the lowerCamelCase `outputName`; decoding accepts only that.
 public enum PhysicalTransport: String, CaseIterable, Codable, Equatable, Sendable {
-  case usb
-  case bluetoothClassic = "bluetooth-classic"
-  case bluetoothLE = "bluetooth-le"
-  case proprietaryRadioReceiver = "proprietary-radio-receiver"
+  case usb = "USB"
+  case bluetoothClassic = "BluetoothClassic"
+  case bluetoothLE = "BluetoothLE"
+  case proprietaryRadioReceiver = "ProprietaryRadioReceiver"
 
   public var outputName: String {
     switch self {
@@ -57,16 +57,16 @@ public enum DeviceAccessBackend: String, Codable, Equatable, Sendable {
 }
 
 public enum USBEndpointTransferType: String, Equatable, Sendable {
-  case control
-  case isochronous
-  case bulk
-  case interrupt
-  case unknown
+  case control = "Control"
+  case isochronous = "Isochronous"
+  case bulk = "Bulk"
+  case interrupt = "Interrupt"
+  case unknown = "Unknown"
 }
 
 public enum USBEndpointDirection: String, Equatable, Sendable {
-  case `in`
-  case out
+  case `in` = "In"
+  case out = "Out"
 }
 
 /// Available facts for one USB endpoint. Missing descriptor fields stay nil.

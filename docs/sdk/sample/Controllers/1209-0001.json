@@ -7,7 +7,7 @@
     {
       "id": "default",
       "protocol": {
-        "family": "hid.report-layout"
+        "family": "HIDReportLayout"
       }
     }
   ],
@@ -77,7 +77,7 @@
     ],
     "hat": [
       {
-        "encoding": "8-way",
+        "encoding": "EightWay",
         "byte": 1,
         "mask": 15
       }

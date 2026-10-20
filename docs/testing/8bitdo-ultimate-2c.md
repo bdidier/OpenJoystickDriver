@@ -4,9 +4,9 @@ The Ultimate 2C Wireless enumerates as a different identity in each mode. Test a
 
 | Mode | VID:PID | Route | Status |
 | --- | --- | --- | --- |
-| 2.4 GHz dongle, XInput | `2DC8:310A` | `xbox.xusb` | Hardware-verified by two testers on `0.5.0-beta.4` tester build `1.5.71`: buttons, sticks, triggers at rest, D-pad, stick clicks, rumble |
-| Bluetooth LE | `2DC8:301B` | `hid.descriptor` | Mapping confirmed on hardware from a patch ([#34](https://github.com/xsyetopz/OpenJoystickDriver/issues/34)); this build is not yet tested |
-| HID receiver | `2DC8:301C` | `hid.descriptor` | Assumed to share the Bluetooth layout; not verified |
+| 2.4 GHz dongle, XInput | `2DC8:310A` | `XboxXUSB` | Hardware-verified by two testers on `0.5.0-beta.4` tester build `1.5.71`: buttons, sticks, triggers at rest, D-pad, stick clicks, rumble |
+| Bluetooth LE | `2DC8:301B` | `HIDDescriptor` | Mapping confirmed on hardware from a patch ([#34](https://github.com/xsyetopz/OpenJoystickDriver/issues/34)); this build is not yet tested |
+| HID receiver | `2DC8:301C` | `HIDDescriptor` | Assumed to share the Bluetooth layout; not verified |
 
 ## Why Bluetooth Needs a Record
 
@@ -16,7 +16,7 @@ Over Bluetooth the controller advertises a standard GamePad descriptor. The gene
 - the analog triggers are on Simulation page `0x02`: Accelerator is RT and Brake is LT;
 - button usages follow Android order with gaps.
 
-The record binds `hid.descriptor` with the same layout as the GameSir G7 SE:
+The record binds `HIDDescriptor` with the same layout as the GameSir G7 SE:
 
 | Button usage | Control |
 | --- | --- |
@@ -43,7 +43,7 @@ ojd controller list
 ojd controller show <controller>
 ```
 
-In `show`, Bluetooth and the HID receiver should report the protocol `hid.descriptor`; the XInput dongle reports `xbox.xusb`. Then watch the controls:
+In `show`, Bluetooth and the HID receiver should report the protocol `HIDDescriptor`; the XInput dongle reports `XboxXUSB`. Then watch the controls:
 
 ```bash
 ojd controller watch <controller>

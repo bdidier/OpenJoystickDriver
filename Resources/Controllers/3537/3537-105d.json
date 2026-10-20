@@ -7,8 +7,8 @@
     {
       "id": "default",
       "protocol": {
-        "family": "vendor.gamesir",
-        "variant": "usb"
+        "family": "VendorGameSir",
+        "variant": "USB"
       }
     }
   ]

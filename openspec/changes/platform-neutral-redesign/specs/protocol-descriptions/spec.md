@@ -15,7 +15,7 @@ A protocol SHALL accept typed parameters declared in its description. The `Contr
 
 #### Scenario: Switch 2 layout
 
-- **WHEN** a record selects protocol `nintendo.switch2` with `layout: JoyConLeft`
+- **WHEN** a record selects protocol `NintendoSwitch2` with `layout: JoyConLeft`
 - **THEN** the driver uses the left Joy-Con layout
 
 #### Scenario: Unknown parameter

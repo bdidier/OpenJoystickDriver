@@ -7,7 +7,7 @@
     {
       "id": "default",
       "protocol": {
-        "family": "vendor.flydigi"
+        "family": "VendorFlydigi"
       }
     }
   ]

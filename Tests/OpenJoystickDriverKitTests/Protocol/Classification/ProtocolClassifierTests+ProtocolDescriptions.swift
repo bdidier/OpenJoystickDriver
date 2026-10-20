@@ -9,9 +9,9 @@ extension ProtocolClassifierTests {
   @Test
   func protocolDescriptionDecodesItsSignatures() throws {
     let signatures = try ProtocolDescription.decode(
-      protocolDescription(signature: #""variant": "usb", "interfaceNumber": 0"#),
+      protocolDescription(signature: #""variant": "USB", "interfaceNumber": 0"#),
       protocolID: .xboxGIP,
-      fileName: "xbox.gip.json"
+      fileName: "xbox-gip.json"
     ).interfaceSignatures
     #expect(
       signatures == [
@@ -31,12 +31,12 @@ extension ProtocolClassifierTests {
   @Test(
     arguments: [
       (
-        #""variant": "usb", "endpoint": 129"#, "unknown field(s): endpoint",
+        #""variant": "USB", "endpoint": 129"#, "unknown field(s): endpoint",
         ErrorCode.invalidProtocolDescription
       ),
-      (#""variant": "wired""#, "xbox.gip has no variant wired", ErrorCode.unknownProtocolVariant),
+      (#""variant": "Wired""#, "XboxGIP has no variant Wired", ErrorCode.unknownProtocolVariant),
       (
-        #""variant": "bluetooth""#, "xbox.gip has no variant bluetooth",
+        #""variant": "bluetooth""#, "XboxGIP has no variant bluetooth",
         ErrorCode.unknownProtocolVariant
       ),
     ]
@@ -50,11 +50,11 @@ extension ProtocolClassifierTests {
       try ProtocolDescription.decode(
         protocolDescription(signature: signature),
         protocolID: .xboxGIP,
-        fileName: "xbox.gip.json"
+        fileName: "xbox-gip.json"
       )
     }
     #expect(error?.code == code)
-    #expect(error?.detail.hasPrefix("xbox.gip.json: ") == true)
+    #expect(error?.detail.hasPrefix("xbox-gip.json: ") == true)
     #expect(error?.description.contains(problem) == true)
   }
 
@@ -62,13 +62,13 @@ extension ProtocolClassifierTests {
   func protocolDescriptionRejectsABadHeader() {
     let cases: [(Data, String, ErrorCode)] = [
       (
-        protocolDescription(signature: #""variant": "usb""#, extra: #""vendorID": 1118,"#),
+        protocolDescription(signature: #""variant": "USB""#, extra: #""vendorID": 1118,"#),
         "unknown field(s): vendorID",
         .invalidProtocolDescription
       ),
       (
         protocolDescription(
-          signature: #""variant": "usb""#,
+          signature: #""variant": "USB""#,
           apiVersion: "unsupported.example/v9"
         ),
         "apiVersion unsupported.example/v9 is not supported; "
@@ -76,13 +76,13 @@ extension ProtocolClassifierTests {
         .unsupportedAPIVersion
       ),
       (
-        protocolDescription(signature: #""variant": "usb""#, kind: "Controller"),
+        protocolDescription(signature: #""variant": "USB""#, kind: "Controller"),
         "expected \(ProtocolDescription.kind), found Controller",
         .invalidProtocolDescription
       ),
       (
-        protocolDescription(signature: #""variant": "usb""#, family: "xbox.xusb"),
-        "family must be xbox.gip",
+        protocolDescription(signature: #""variant": "USB""#, family: "XboxXUSB"),
+        "family must be XboxGIP",
         .protocolDescriptionFamilyMismatch
       ),
     ]
@@ -91,7 +91,7 @@ extension ProtocolClassifierTests {
         try ProtocolDescription.decode(
           data,
           protocolID: .xboxGIP,
-          fileName: "xbox.gip.json"
+          fileName: "xbox-gip.json"
         )
       }
       #expect(error?.code == code)
@@ -146,7 +146,7 @@ extension ProtocolClassifierTests {
     extra: String = "",
     apiVersion: String = OpenJoystickDriverAPI.version,
     kind: String = ProtocolDescription.kind,
-    family: String = "xbox.gip"
+    family: String = "XboxGIP"
   ) -> Data {
     Data(
       """

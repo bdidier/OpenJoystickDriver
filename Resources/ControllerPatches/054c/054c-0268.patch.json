@@ -10,22 +10,22 @@
       {
         "id": "default",
         "protocol": {
-          "family": "sony.sixaxis"
+          "family": "SonySixaxis"
         }
       },
       {
         "id": "bluetooth",
         "protocol": {
-          "family": "sony.sixaxis"
+          "family": "SonySixaxis"
         },
         "match": {
-          "link": "bluetooth-classic"
+          "link": "BluetoothClassic"
         },
         "session": {
           "startup": [
             {
               "report": {
-                "kind": "feature",
+                "kind": "Feature",
                 "id": 244,
                 "length": 5
               },
@@ -37,14 +37,14 @@
       {
         "id": "feature-ef-answers",
         "protocol": {
-          "family": "sony.sixaxis"
+          "family": "SonySixaxis"
         },
         "match": {
           "probes": [
             {
               "report": 239,
               "length": 49,
-              "expect": "answers"
+              "expect": "Answers"
             }
           ]
         }

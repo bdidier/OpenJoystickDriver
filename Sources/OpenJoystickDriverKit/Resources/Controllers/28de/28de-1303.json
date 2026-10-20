@@ -7,8 +7,8 @@
     {
       "id": "default",
       "protocol": {
-        "family": "valve.steam-triton",
-        "variant": "bluetooth-le"
+        "family": "ValveSteamTriton",
+        "variant": "BluetoothLE"
       }
     }
   ]

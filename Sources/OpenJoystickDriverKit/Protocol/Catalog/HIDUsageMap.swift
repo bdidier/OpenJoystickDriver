@@ -143,7 +143,7 @@ struct HIDUsageMap: Equatable, Sendable {
   }
 }
 
-/// A descriptor shape and the usage map it selects: the `hid.descriptor` description's way to
+/// A descriptor shape and the usage map it selects: the `HIDDescriptor` description's way to
 /// recognise a family of pads from their report descriptor alone.
 struct HIDUsageShape: Equatable, Sendable {
   /// Usages the descriptor must declare.

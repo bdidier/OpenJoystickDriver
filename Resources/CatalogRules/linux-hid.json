@@ -6,31 +6,31 @@
       "source": "hid_sony",
       "vendorMacro": "USB_VENDOR_ID_SONY",
       "productMacro": "USB_DEVICE_ID_SONY_PS3_CONTROLLER",
-      "family": "sony.sixaxis"
+      "family": "SonySixaxis"
     },
     {
       "source": "hid_playstation",
       "vendorMacro": "USB_VENDOR_ID_SONY",
       "productMacro": "USB_DEVICE_ID_SONY_PS4_CONTROLLER",
-      "family": "sony.dualshock4"
+      "family": "SonyDualShock4"
     },
     {
       "source": "hid_playstation",
       "vendorMacro": "USB_VENDOR_ID_SONY",
       "productMacro": "USB_DEVICE_ID_SONY_PS4_CONTROLLER_2",
-      "family": "sony.dualshock4"
+      "family": "SonyDualShock4"
     },
     {
       "source": "hid_playstation",
       "vendorMacro": "USB_VENDOR_ID_SONY",
       "productMacro": "USB_DEVICE_ID_SONY_PS5_CONTROLLER",
-      "family": "sony.dualsense"
+      "family": "SonyDualSense"
     },
     {
       "source": "hid_playstation",
       "vendorMacro": "USB_VENDOR_ID_SONY",
       "productMacro": "USB_DEVICE_ID_SONY_PS5_CONTROLLER_2",
-      "family": "sony.dualsense",
+      "family": "SonyDualSense",
       "capabilities": {
         "present": ["LeftPaddle1", "RightPaddle1", "Auxiliary1", "Auxiliary2"]
       }
@@ -39,13 +39,13 @@
       "source": "hid_nintendo",
       "vendorMacro": "USB_VENDOR_ID_NINTENDO",
       "productMacro": "USB_DEVICE_ID_NINTENDO_PROCON",
-      "family": "nintendo.switch1"
+      "family": "NintendoSwitch1"
     },
     {
       "source": "hid_nintendo",
       "vendorMacro": "USB_VENDOR_ID_NINTENDO",
       "productMacro": "USB_DEVICE_ID_NINTENDO_JOYCONL",
-      "family": "nintendo.switch1",
+      "family": "NintendoSwitch1",
       "parameters": {
         "layout": "JoyConLeft"
       }
@@ -54,7 +54,7 @@
       "source": "hid_nintendo",
       "vendorMacro": "USB_VENDOR_ID_NINTENDO",
       "productMacro": "USB_DEVICE_ID_NINTENDO_JOYCONR",
-      "family": "nintendo.switch1",
+      "family": "NintendoSwitch1",
       "parameters": {
         "layout": "JoyConRight"
       }
@@ -63,15 +63,15 @@
       "source": "hid_steam",
       "vendorMacro": "USB_VENDOR_ID_VALVE",
       "productMacro": "USB_DEVICE_ID_STEAM_CONTROLLER",
-      "family": "valve.steam-controller",
-      "variant": "wired"
+      "family": "ValveSteamController",
+      "variant": "Wired"
     },
     {
       "source": "hid_steam",
       "vendorMacro": "USB_VENDOR_ID_VALVE",
       "productMacro": "USB_DEVICE_ID_STEAM_CONTROLLER_WIRELESS",
-      "family": "valve.steam-controller",
-      "variant": "dongle"
+      "family": "ValveSteamController",
+      "variant": "Dongle"
     }
   ]
 }

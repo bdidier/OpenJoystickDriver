@@ -7,7 +7,7 @@ private let inputOnlyAxisNegativeMax: Float = 128
 
 /// Driver for wired Switch pads that expose only a fixed HID input report and accept no Switch
 /// subcommands, such as the HORIPAD, PDP Faceoff and PowerA wired pads (family
-/// `nintendo.switch-input-only`).
+/// `NintendoSwitchInputOnly`).
 ///
 /// The report has no report ID: two button bytes, a hat byte and four unsigned stick bytes
 /// centered on 128 with up and left low, the layout SDL's `HandleInputOnlyControllerState`

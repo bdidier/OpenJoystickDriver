@@ -11,7 +11,7 @@ struct SubcommandDescriptionTests {
   private static let plain = #"{"subcommand": 3, "data": "30"}"#
   private static let factoryRead =
     #"{"subcommand": 16, "spiRead": {"address": 24608, "length": 24, "#
-    + #""purpose": "factoryMotionCalibration"}}"#
+    + #""purpose": "FactoryMotionCalibration"}}"#
 
   private static let indicator =
     #"{"subcommand": 48, "patterns": {"off": 0, "player1": 1, "player2": 3, "#
@@ -28,7 +28,7 @@ struct SubcommandDescriptionTests {
     return try ProtocolDescription.decode(
       Data(json.utf8),
       protocolID: family,
-      fileName: "\(family.rawValue).json"
+      fileName: "\(family.descriptionFileStem).json"
     )
   }
 
@@ -87,17 +87,17 @@ struct SubcommandDescriptionTests {
     let badRequests = [
       #"{"subcommand": 3}"#,
       #"{"subcommand": 3, "data": "01", "spiRead": {"address": 0, "length": 1, "#
-        + #""purpose": "factoryMotionCalibration"}}"#,
+        + #""purpose": "FactoryMotionCalibration"}}"#,
       #"{"subcommand": 3, "data": ""}"#,
       #"{"subcommand": 3, "data": "100"}"#,
       #"{"subcommand": 256, "data": "01"}"#,
       #"{"subcommand": 3, "data": "01", "extra": 1}"#,
       #"{"subcommand": 16, "spiRead": {"address": 0, "length": 0, "#
-        + #""purpose": "factoryMotionCalibration"}}"#,
+        + #""purpose": "FactoryMotionCalibration"}}"#,
       #"{"subcommand": 16, "spiRead": {"address": 0, "length": 30, "#
-        + #""purpose": "factoryMotionCalibration"}}"#,
+        + #""purpose": "FactoryMotionCalibration"}}"#,
       #"{"subcommand": 16, "spiRead": {"address": 4294967296, "length": 1, "#
-        + #""purpose": "factoryMotionCalibration"}}"#,
+        + #""purpose": "FactoryMotionCalibration"}}"#,
       #"{"subcommand": 16, "spiRead": {"address": 0, "length": 1, "purpose": "other"}}"#,
       #"{"subcommand": 16, "spiRead": {"address": 0, "length": 1}}"#,
     ]

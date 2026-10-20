@@ -1,9 +1,9 @@
 /// When a HID startup write is sent.
 public enum StartupPhase: String, CaseIterable, Sendable {
   /// With the driver's own startup writes, before activation, paced by the startup interval.
-  case startup
+  case startup = "Startup"
   /// After the driver's activation writes.
-  case activation
+  case activation = "Activation"
 }
 
 /// One fixed HID report sent when OJD starts a controller it owns. A controller record carries
@@ -59,7 +59,7 @@ public struct RecordStartupWrite: Equatable, Sendable {
       throw ControllerRecordProblem("a startup delay is 0...1000 ms")
     }
     guard transport.map(Self.transports.contains) ?? true else {
-      throw ControllerRecordProblem("a startup transport is usb, bluetooth-classic or bluetooth-le")
+      throw ControllerRecordProblem("a startup transport is USB, BluetoothClassic or BluetoothLE")
     }
     guard crc32Seed == nil || report.length > SonyBluetoothCRC32.trailerLength else {
       throw ControllerRecordProblem("a CRC startup report has room for its 4-byte trailer")

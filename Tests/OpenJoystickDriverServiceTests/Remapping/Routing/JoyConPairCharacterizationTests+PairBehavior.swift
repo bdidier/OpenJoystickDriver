@@ -21,7 +21,7 @@ extension JoyConPairCharacterizationTests {
     ])
     #expect(
       lines == [
-        "L a20100 4095,2048 [+Back +LeftTrigger +Auxiliary3 hat=north ls=32767,0]",
+        "L a20100 4095,2048 [+Back +LeftTrigger +Auxiliary3 hat=North ls=32767,0]",
         "  pad L +Back", "  pad L +LeftTrigger", "  pad L +LeftShoulder", "  pad L d+DpadUp",
         "  pad L LeftStickX=32767", "R 4 2048,2048 [+South]", "  pad L +South",
         "R 0 2048,2048 [-South]", "  pad L -South", "R 9 2048,2048 [+East +West]", "  pad L +East",
@@ -33,7 +33,7 @@ extension JoyConPairCharacterizationTests {
         "  pad L -RightShoulder", "  pad L -Start", "  pad L -Guide",
         "  pad L -RightTrigger", "R 0 2048,0 [rs=0,32767]", "  pad L RightStickY=32767",
         "R 0 2048,2048 [rs=0,0]", "  pad L RightStickY=0",
-        "L 0 2048,2048 [-Back -LeftTrigger -Auxiliary3 hat=neutral ls=0,0]", "  pad L -Back",
+        "L 0 2048,2048 [-Back -LeftTrigger -Auxiliary3 hat=Neutral ls=0,0]", "  pad L -Back",
         "  pad L -LeftTrigger", "  pad L -LeftShoulder", "  pad L d-DpadUp",
         "  pad L LeftStickX=0",
       ]
@@ -57,8 +57,8 @@ extension JoyConPairCharacterizationTests {
         "R 244 0,2048 [+South +RightShoulder +Start rs=-32767,0]", "  pad L +South",
         "  pad L +RightShoulder", "  pad L +Start", "  pad L RightStickX=-32767",
         "L 200000 2048,2048 [+Auxiliary3]", "  pad L +LeftShoulder", "L 0 2048,2048 [-Auxiliary3]",
-        "  pad L -LeftShoulder", "L 20100 2048,2048 [+Back hat=north]", "  pad L +Back",
-        "  pad L d+DpadUp", "L 100 2048,2048 [hat=neutral]", "  pad L d-DpadUp",
+        "  pad L -LeftShoulder", "L 20100 2048,2048 [+Back hat=North]", "  pad L +Back",
+        "  pad L d+DpadUp", "L 100 2048,2048 [hat=Neutral]", "  pad L d-DpadUp",
         "L 0 2048,2048 [-Back]",
         "  pad L -Back", "L 402800 2048,2048 [+LeftShoulder +LeftStickClick +Capture]",
         "  pad L +LeftShoulder", "  pad L +LeftStickClick", "  pad L +Capture",
@@ -87,9 +87,9 @@ extension JoyConPairCharacterizationTests {
     lines += try await session.run([Step(Self.left, 0)])
     #expect(
       lines == [
-        "L 220000 2048,2048 [+Auxiliary3 hat=north]", "  pad L +LeftShoulder", "  pad L d+DpadUp",
+        "L 220000 2048,2048 [+Auxiliary3 hat=North]", "  pad L +LeftShoulder", "  pad L d+DpadUp",
         "R 4 2048,2048 [+South]", "  pad L +South", "stop R", "  pad L -LeftShoulder",
-        "  pad L -South d-DpadUp", "  virtual-stop L", "L 0 2048,2048 [-Auxiliary3 hat=neutral]",
+        "  pad L -South d-DpadUp", "  virtual-stop L", "L 0 2048,2048 [-Auxiliary3 hat=Neutral]",
         "  virtual L [neutral]",
       ]
     )

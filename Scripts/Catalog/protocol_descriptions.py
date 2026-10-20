@@ -1,4 +1,4 @@
-"""The family facts that `Resources/Protocols/<family>.json` holds.
+"""The family facts that `Resources/Protocols/<file stem>.json` holds.
 
 `ProtocolDescription` in Swift reads the same files, so a family fact has one home: the
 description. This module answers the questions the Python tools ask of it.
@@ -10,6 +10,29 @@ import json
 from functools import cache
 from pathlib import Path
 from typing import Any
+
+# The file stem of each family's description: lowercase kebab-case with each brand or product
+# name kept as one word. `PhysicalProtocolID.descriptionFileStem` in Swift holds the same table.
+FILE_STEMS = {
+    "HIDDescriptor": "hid-descriptor",
+    "HIDReportLayout": "hid-report-layout",
+    "XboxXID": "xbox-xid",
+    "XboxXUSB": "xbox-xusb",
+    "XboxGIP": "xbox-gip",
+    "SonySixaxis": "sony-sixaxis",
+    "SonyDualShock4": "sony-dualshock4",
+    "SonyDualSense": "sony-dualsense",
+    "NintendoSwitch1": "nintendo-switch1",
+    "NintendoSwitch2": "nintendo-switch2",
+    "NintendoSwitchInputOnly": "nintendo-switch-input-only",
+    "ValveSteamController": "valve-steam-controller",
+    "ValveSteamTriton": "valve-steam-triton",
+    "ValveSteamDeck": "valve-steam-deck",
+    "VendorFlydigi": "vendor-flydigi",
+    "VendorPS3ThirdParty": "vendor-ps3-third-party",
+    "VendorGameSir": "vendor-gamesir",
+    "VendorNVIDIAShield": "vendor-nvidia-shield",
+}
 
 PROTOCOLS = Path(__file__).resolve().parents[2] / "Resources" / "Protocols"
 ALWAYS_READ = frozenset({"stickDeadzone", "frameQueueCapacity"})
@@ -127,12 +150,12 @@ MOTOR_WIDTHS = {
     "UInt16LittleEndian": 2,
     "SwitchHDRumble": 4,
 }
-TEMPLATE_MOTORS = ("leftMain", "rightMain", "leftTrigger", "rightTrigger")
+TEMPLATE_MOTORS = ("lowFrequency", "highFrequency", "leftTrigger", "rightTrigger")
 
 
 def is_usb_template(template: dict[str, Any]) -> bool:
     """Whether the template is a raw-USB packet, not a HID report."""
-    return template["report"]["kind"] == "usb"
+    return template["report"]["kind"] == "USB"
 
 
 def rumble_template_problem(template: dict[str, Any]) -> str | None:
@@ -143,7 +166,7 @@ def rumble_template_problem(template: dict[str, Any]) -> str | None:
     """
     report = template["report"]
     length = report["length"]
-    hid = report["kind"] != "usb"
+    hid = report["kind"] != "USB"
     if hid and length < 2:
         return "a rumble report is 2...64 bytes long"
     report_id = report["id"] if hid else 0
@@ -271,7 +294,7 @@ def startup_violations(
         if when is None:
             continue
         declared = parameters.get(when["parameter"], {})
-        if declared.get("type") != "enum":
+        if declared.get("type") != "Enum":
             found.append(
                 (
                     "E5002",

@@ -7,8 +7,8 @@
     {
       "id": "default",
       "protocol": {
-        "family": "xbox.xid",
-        "variant": "gamepad"
+        "family": "XboxXID",
+        "variant": "Gamepad"
       }
     }
   ]

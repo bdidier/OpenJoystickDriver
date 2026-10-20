@@ -7,7 +7,7 @@
     {
       "id": "default",
       "protocol": {
-        "family": "hid.descriptor"
+        "family": "HIDDescriptor"
       }
     }
   ],
@@ -15,138 +15,138 @@
     "hidUsageMap": {
       "usages": [
         {
-          "kind": "button",
+          "kind": "Button",
           "page": 9,
           "usage": 1,
           "control": "South"
         },
         {
-          "kind": "button",
+          "kind": "Button",
           "page": 9,
           "usage": 2,
           "control": "East"
         },
         {
-          "kind": "button",
+          "kind": "Button",
           "page": 9,
           "usage": 4,
           "control": "West"
         },
         {
-          "kind": "button",
+          "kind": "Button",
           "page": 9,
           "usage": 5,
           "control": "North"
         },
         {
-          "kind": "button",
+          "kind": "Button",
           "page": 9,
           "usage": 7,
           "control": "LeftShoulder"
         },
         {
-          "kind": "button",
+          "kind": "Button",
           "page": 9,
           "usage": 8,
           "control": "RightShoulder"
         },
         {
-          "kind": "button",
+          "kind": "Button",
           "page": 9,
           "usage": 11,
           "control": "Back"
         },
         {
-          "kind": "button",
+          "kind": "Button",
           "page": 9,
           "usage": 12,
           "control": "Start"
         },
         {
-          "kind": "button",
+          "kind": "Button",
           "page": 9,
           "usage": 14,
           "control": "LeftStickClick"
         },
         {
-          "kind": "button",
+          "kind": "Button",
           "page": 9,
           "usage": 15,
           "control": "RightStickClick"
         },
         {
-          "kind": "axis",
+          "kind": "Axis",
           "page": 1,
           "usage": 48,
           "control": "LeftStickX"
         },
         {
-          "kind": "axis",
+          "kind": "Axis",
           "page": 1,
           "usage": 49,
           "control": "LeftStickY"
         },
         {
-          "kind": "axis",
+          "kind": "Axis",
           "page": 1,
           "usage": 50,
           "control": "RightStickX"
         },
         {
-          "kind": "axis",
+          "kind": "Axis",
           "page": 1,
           "usage": 51,
           "control": "RightStickX"
         },
         {
-          "kind": "axis",
+          "kind": "Axis",
           "page": 1,
           "usage": 52,
           "control": "RightStickY"
         },
         {
-          "kind": "axis",
+          "kind": "Axis",
           "page": 1,
           "usage": 53,
           "control": "RightStickY"
         },
         {
-          "kind": "axis",
+          "kind": "Axis",
           "page": 2,
           "usage": 196,
           "control": "LeftTrigger"
         },
         {
-          "kind": "axis",
+          "kind": "Axis",
           "page": 2,
           "usage": 197,
           "control": "RightTrigger"
         },
         {
-          "kind": "hat",
+          "kind": "Hat",
           "page": 1,
           "usage": 57
         },
         {
-          "kind": "button",
+          "kind": "Button",
           "page": 1,
           "usage": 133,
           "control": "Guide"
         },
         {
-          "kind": "button",
+          "kind": "Button",
           "page": 12,
           "usage": 178,
           "control": "Capture"
         },
         {
-          "kind": "button",
+          "kind": "Button",
           "page": 12,
           "usage": 547,
           "control": "Guide"
         },
         {
-          "kind": "button",
+          "kind": "Button",
           "page": 12,
           "usage": 548,
           "control": "Back"

@@ -1,6 +1,6 @@
 {
   "pressed": ["South", "Start"],
-  "hat": "east",
+  "hat": "East",
   "leftStick": {
     "x": 32767,
     "y": -32767

@@ -511,7 +511,7 @@
           "const": "ControllerServer"
         },
         "server": {
-          "const": "ojd"
+          "const": "OJD"
         }
       },
       "$ref": "#/$defs/sharedControllerServer"
@@ -637,7 +637,7 @@
           "const": "ControllerServer"
         },
         "server": {
-          "const": "system"
+          "const": "System"
         }
       },
       "$ref": "#/$defs/sharedControllerServer"
@@ -734,8 +734,8 @@
               "type": "boolean"
             },
             "outputOwner": {
-              "description": "Who drives the controller's output. With system, macOS serves the controller natively, so the rumble and lighting lists hold only what macOS leaves undone.",
-              "enum": ["system", "ojd"]
+              "description": "Who drives the controller's output. With System, macOS serves the controller natively, so the rumble and lighting lists hold only what macOS leaves undone.",
+              "enum": ["System", "OJD"]
             },
             "rumbleMotors": {
               "type": "array",
@@ -1026,14 +1026,14 @@
             },
             "direction": {
               "enum": [
-                "north",
-                "northEast",
-                "east",
-                "southEast",
-                "south",
-                "southWest",
-                "west",
-                "northWest"
+                "North",
+                "NorthEast",
+                "East",
+                "SouthEast",
+                "South",
+                "SouthWest",
+                "West",
+                "NorthWest"
               ]
             }
           }
@@ -1835,7 +1835,7 @@
           }
         },
         "family": {
-          "enum": ["hid.descriptor", "hid.report-layout"]
+          "enum": ["HIDDescriptor", "HIDReportLayout"]
         },
         "identity": {
           "type": "string",
@@ -2490,15 +2490,15 @@
         },
         "hat": {
           "enum": [
-            "neutral",
-            "north",
-            "northEast",
-            "east",
-            "southEast",
-            "south",
-            "southWest",
-            "west",
-            "northWest"
+            "Neutral",
+            "North",
+            "NorthEast",
+            "East",
+            "SouthEast",
+            "South",
+            "SouthWest",
+            "West",
+            "NorthWest"
           ]
         },
         "leftStick": {
@@ -2597,8 +2597,8 @@
       }
     },
     "sharedServer": {
-      "description": "Who serves the controller model, the server setting: system leaves it to the system, ojd lets OpenJoystickDriver seize it and publish a virtual gamepad.",
-      "enum": ["system", "ojd"]
+      "description": "Who serves the controller model, the server setting: System leaves it to the system, OJD lets OpenJoystickDriver seize it and publish a virtual gamepad.",
+      "enum": ["System", "OJD"]
     },
     "sharedWatchedController": {
       "description": "A Controller: the fields of an item of ojd controller list, and the latest input and output once the controller has any.",
@@ -3211,15 +3211,15 @@
         },
         "hat": {
           "enum": [
-            "neutral",
-            "north",
-            "northEast",
-            "east",
-            "southEast",
-            "south",
-            "southWest",
-            "west",
-            "northWest"
+            "Neutral",
+            "North",
+            "NorthEast",
+            "East",
+            "SouthEast",
+            "South",
+            "SouthWest",
+            "West",
+            "NorthWest"
           ]
         },
         "leftStickX": {

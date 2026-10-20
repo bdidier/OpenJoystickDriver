@@ -5,9 +5,9 @@ import Testing
 @testable import OpenJoystickDriverService
 
 struct ControllerServerRequestsTests {
-  /// A bundled `sony.dualshock4` record, a HID family.
+  /// A bundled `SonyDualShock4` record, a HID family.
   private static let bundledHID = (vendorID: 0x2C22, productID: 0x2000)
-  /// A bundled `xbox.gip` record, a raw-USB family.
+  /// A bundled `XboxGIP` record, a raw-USB family.
   private static let bundledGIP = (vendorID: 0x366C, productID: 0x0005)
 
   /// Runs `body` with the `Controllers` folder of a temporary application-support folder, whose
@@ -115,6 +115,6 @@ struct ControllerServerRequestsTests {
       LocalServiceRPCControllerServerArguments(vendorID: 1, productID: 2, server: .system)
     )
     let object = try JSONSerialization.jsonObject(with: arguments) as? [String: Any]
-    #expect(object?["server"] as? String == "system")
+    #expect(object?["server"] as? String == "System")
   }
 }

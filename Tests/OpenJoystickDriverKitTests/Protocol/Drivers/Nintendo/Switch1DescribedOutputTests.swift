@@ -4,7 +4,7 @@ import Testing
 @testable import OpenJoystickDriverKit
 
 /// The 0x10 rumble report and the player-indicator subcommand of the Switch 1 driver, whose
-/// layouts live in `nintendo.switch1.json`.
+/// layouts live in `nintendo-switch1.json`.
 struct Switch1DescribedOutputTests {
   private static let intensities: [(left: UInt8, right: UInt8)] = [
     (0x00, 0x00), (0x12, 0x34), (0x80, 0x40), (0xFF, 0xFF),

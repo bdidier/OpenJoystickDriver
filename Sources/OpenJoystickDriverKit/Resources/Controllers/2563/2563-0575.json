@@ -7,19 +7,19 @@
     {
       "id": "default",
       "protocol": {
-        "family": "hid.report-layout"
+        "family": "HIDReportLayout"
       },
       "session": {
         "rumble": {
           "report": {
-            "kind": "output",
+            "kind": "Output",
             "id": 2,
             "length": 8
           },
-          "leftMain": {
+          "lowFrequency": {
             "byte": 3
           },
-          "rightMain": {
+          "highFrequency": {
             "byte": 2
           }
         }
@@ -107,7 +107,7 @@
     ],
     "hat": [
       {
-        "encoding": "directions",
+        "encoding": "Directions",
         "up": {
           "byte": 9,
           "mask": 128

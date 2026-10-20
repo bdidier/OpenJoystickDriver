@@ -1,0 +1,26 @@
+{
+  "apiVersion": "openjoystickdriver/v1alpha1",
+  "kind": "ProtocolDescription",
+  "family": "ValveSteamController",
+  "endpoints": {
+    "in": 130,
+    "out": 2
+  },
+  "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
+  "controls": {
+    "base": "Xbox",
+    "remove": ["RightStickClick"],
+    "add": [
+      "Guide",
+      "LeftPaddle2",
+      "RightPaddle2",
+      "LeftTrackpadClick",
+      "RightTrackpadClick",
+      "LeftTrackpadTouch",
+      "RightTrackpadTouch"
+    ],
+    "touchContactCount": 1,
+    "motion": true,
+    "digitalTriggers": ["LeftTrigger", "RightTrigger"]
+  }
+}

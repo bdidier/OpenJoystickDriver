@@ -7,8 +7,8 @@
     {
       "id": "default",
       "protocol": {
-        "family": "valve.steam-controller",
-        "variant": "dongle"
+        "family": "ValveSteamController",
+        "variant": "Dongle"
       }
     }
   ]

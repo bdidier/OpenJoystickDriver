@@ -7,7 +7,7 @@
     {
       "id": "default",
       "protocol": {
-        "family": "sony.dualsense",
+        "family": "SonyDualSense",
         "parameters": {
           "maker": "ThirdParty",
           "unprobedTouchpad": true,

@@ -2,7 +2,7 @@ import ArgumentParser
 import Foundation
 import OpenJoystickDriverKit
 
-/// `ojd controller claim`: sets `server` to `ojd` for the controller's model, so OJD serves it.
+/// `ojd controller claim`: sets `server` to `OJD` for the controller's model, so OJD serves it.
 struct ControllerClaimCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "claim",
@@ -32,7 +32,7 @@ struct ControllerClaimCommand: AsyncParsableCommand {
   }
 }
 
-/// `ojd controller release`: sets `server` to `system` for the controller's model, so the system
+/// `ojd controller release`: sets `server` to `System` for the controller's model, so the system
 /// serves it.
 struct ControllerReleaseCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(

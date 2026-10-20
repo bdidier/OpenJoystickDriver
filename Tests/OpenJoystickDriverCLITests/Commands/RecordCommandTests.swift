@@ -6,7 +6,7 @@ import Testing
 @testable import OpenJoystickDriverCLI
 
 struct RecordCommandTests {
-  /// A patch of the bundled `xbox.gip` record `366C:0005`.
+  /// A patch of the bundled `XboxGIP` record `366C:0005`.
   private static let patch = Data(
     """
     {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "ControllerPatch",
@@ -106,7 +106,7 @@ struct RecordCommandTests {
     let row = try #require(
       list.standardOutput.split(separator: "\n").first { $0.hasPrefix("366C:0005\t") }
     )
-    #expect(row.hasPrefix("366C:0005\txbox.gip\tuser\t"))
+    #expect(row.hasPrefix("366C:0005\tXboxGIP\tuser\t"))
     #expect(list.standardOutput.contains("\tbundled\t"))
     let shown = try show.json()
     #expect(shown["layer"] as? String == "user")
@@ -150,7 +150,7 @@ struct RecordCommandTests {
       """
       {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "Controller",
        "vendorID": 1406, "productID": 8447,
-       "modes": [{"id": "default", "protocol": {"family": "nintendo.switch2"}}]}
+       "modes": [{"id": "default", "protocol": {"family": "NintendoSwitch2"}}]}
       """.utf8
     )
     try directory.write(switch2, as: "057e-20ff.json")
@@ -243,7 +243,7 @@ struct RecordCommandTests {
     #expect(result.code == 0, "\(result.standardError)")
     let json = try result.json()
     #expect(json["operation"] as? String == "add")
-    #expect(json["family"] as? String == "hid.descriptor")
+    #expect(json["family"] as? String == "HIDDescriptor")
     #expect(json["capturedReports"] as? Int == 2)
     #expect(json["report"] as? [String: Int] == ["length": 3])
     #expect(json["changedBytes"] as? [[String: Int]] == [["byte": 2, "minimum": 2, "maximum": 5]])

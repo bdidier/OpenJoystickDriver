@@ -39,9 +39,9 @@ extension GIPDriverTests {
         == [[5, 32, 0, 1, 0], [10, 32, 0, 3, 0, 1, 20], [6, 32, 0, 2, 1, 0]]
     )
     #expect(described.allSatisfy { $0.sessionByte == 2 })
-    #expect(Self.named("xbox.gip/power-on") == [5, 32, 0, 1, 0])
-    #expect(Self.named("xbox.gip/led-on") == [10, 32, 0, 3, 0, 1, 20])
-    #expect(Self.named("xbox.gip/auth-done") == [6, 32, 0, 2, 1, 0])
+    #expect(Self.named("XboxGIP/power-on") == [5, 32, 0, 1, 0])
+    #expect(Self.named("XboxGIP/led-on") == [10, 32, 0, 3, 0, 1, 20])
+    #expect(Self.named("XboxGIP/auth-done") == [6, 32, 0, 2, 1, 0])
   }
 
   @Test
@@ -52,11 +52,11 @@ extension GIPDriverTests {
 
   @Test
   func testXpadXboxOneStartupPackets() {
-    #expect(Self.named("xbox.gip/s-init") == [5, 32, 0, 15, 6])
-    #expect(Self.named("xbox.gip/enable-extra-input") == [77, 16, 0, 2, 7, 0])
-    #expect(Self.named("xbox.gip/hori-ack") == [1, 32, 0, 9, 0, 4, 32, 58, 0, 0, 0, 128, 0])
-    #expect(Self.named("xbox.gip/rumble-begin") == [9, 0, 0, 9, 0, 15, 0, 0, 29, 29, 255, 0, 0])
-    #expect(Self.named("xbox.gip/rumble-end") == [9, 0, 0, 9, 0, 15, 0, 0, 0, 0, 0, 0, 0])
+    #expect(Self.named("XboxGIP/s-init") == [5, 32, 0, 15, 6])
+    #expect(Self.named("XboxGIP/enable-extra-input") == [77, 16, 0, 2, 7, 0])
+    #expect(Self.named("XboxGIP/hori-ack") == [1, 32, 0, 9, 0, 4, 32, 58, 0, 0, 0, 128, 0])
+    #expect(Self.named("XboxGIP/rumble-begin") == [9, 0, 0, 9, 0, 15, 0, 0, 29, 29, 255, 0, 0])
+    #expect(Self.named("XboxGIP/rumble-end") == [9, 0, 0, 9, 0, 15, 0, 0, 0, 0, 0, 0, 0])
   }
 
   /// The bytes the description holds for a named packet, with sequence number zero.

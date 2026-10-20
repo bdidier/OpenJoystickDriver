@@ -292,7 +292,7 @@ def build_profile(
         protocol["variant"] = variant
     if parameters:
         protocol["parameters"] = parameters
-    if family == "xbox.gip":
+    if family == "XboxGIP":
         initialization = initialization_for(device, init_rules)
         if initialization != DEFAULT_INITIALIZATION:
             protocol["initialization"] = initialization

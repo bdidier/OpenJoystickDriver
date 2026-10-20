@@ -8,7 +8,7 @@ import Testing
 struct ControllerModeSessionTests {
   private static func record(family: String, session: [String: Any]) -> [String: Any] {
     var mode: [String: Any] = ["id": "default", "protocol": ["family": family], "session": session]
-    if family == "xbox.xusb" { mode["protocol"] = ["family": family, "variant": "wired"] }
+    if family == "XboxXUSB" { mode["protocol"] = ["family": family, "variant": "Wired"] }
     return [
       "apiVersion": OpenJoystickDriverAPI.version, "kind": ControllerRecordDocument.kind,
       "vendorID": 0x1234, "productID": 0xABCD, "modes": [mode],
@@ -38,7 +38,7 @@ struct ControllerModeSessionTests {
     let gate: [String: Any] = ["manufacturer": "SHANWAN"]
     let reads = (1...3).map { Self.read($0, gate: gate) }
     let session = try #require(
-      try Self.validated(Self.record(family: "xbox.xusb", session: ["control": reads])).record
+      try Self.validated(Self.record(family: "XboxXUSB", session: ["control": reads])).record
     ).profile.session
     #expect(session.controlTransfers.map(\.bRequest) == [1, 2, 3])
     for transfer in session.controlTransfers {
@@ -53,7 +53,7 @@ struct ControllerModeSessionTests {
     let session = try #require(
       try Self.validated(
         Self.record(
-          family: "xbox.xusb",
+          family: "XboxXUSB",
           session: ["control": [Self.read(5, gate: ["product": "Pad"])]]
         )
       ).record
@@ -70,7 +70,7 @@ struct ControllerModeSessionTests {
   @Test
   func bytesAreUppercaseHexPairsSeparatedBySingleSpaces() throws {
     func startup(_ bytes: String) -> [String: Any] {
-      Self.record(family: "xbox.xusb", session: ["startup": [["bytes": bytes]]])
+      Self.record(family: "XboxXUSB", session: ["startup": [["bytes": bytes]]])
     }
     for text in ["0x1a 2b", "1a 2b", "1A  2B", "1A2B", " 1A", "1A ", "1A\n", ""] {
       #expect(Self.problem(startup(text)) != nil, "\(text.debugDescription)")
@@ -84,7 +84,7 @@ struct ControllerModeSessionTests {
     let session = try #require(
       try Self.validated(
         Self.record(
-          family: "xbox.xusb",
+          family: "XboxXUSB",
           session: ["settleMilliseconds": 200, "shutdown": [["bytes": "01 02"]]]
         )
       ).record
@@ -99,14 +99,14 @@ struct ControllerModeSessionTests {
     for session: [String: Any] in [
       ["control": reads], ["settleMilliseconds": 200], ["shutdown": [["bytes": "01 02"]]],
     ] {
-      #expect(Self.problem(Self.record(family: "sony.sixaxis", session: session)) != nil)
+      #expect(Self.problem(Self.record(family: "SonySixaxis", session: session)) != nil)
     }
   }
 
   @Test
   func anUnknownSessionKeyIsRejected() {
     #expect(
-      Self.problem(Self.record(family: "xbox.xusb", session: ["unknownKey": 5])) != nil
+      Self.problem(Self.record(family: "XboxXUSB", session: ["unknownKey": 5])) != nil
     )
   }
 }

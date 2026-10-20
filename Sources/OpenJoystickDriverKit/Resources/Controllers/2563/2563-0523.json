@@ -7,22 +7,22 @@
     {
       "id": "default",
       "protocol": {
-        "family": "sony.sixaxis"
+        "family": "SonySixaxis"
       }
     },
     {
       "id": "bluetooth",
       "protocol": {
-        "family": "sony.sixaxis"
+        "family": "SonySixaxis"
       },
       "match": {
-        "link": "bluetooth-classic"
+        "link": "BluetoothClassic"
       },
       "session": {
         "startup": [
           {
             "report": {
-              "kind": "feature",
+              "kind": "Feature",
               "id": 244,
               "length": 5
             },

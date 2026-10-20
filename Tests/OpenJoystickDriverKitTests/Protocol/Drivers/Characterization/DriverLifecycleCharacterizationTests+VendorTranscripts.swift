@@ -38,7 +38,7 @@ extension DriverLifecycleCharacterizationTests {
   func gameSirUSBTranscript() throws {
     #expect(
       try transcript(Self.gameSirUSB) == [
-        "capabilities rumble=[] binary=[]", "capabilities lighting=[programmableBrightness]",
+        "capabilities rumble=[] binary=[]", "capabilities lighting=[ProgrammableBrightness]",
         "capabilities triggers=[]", "usb.startup interval=0 retries=[] packets=0",
         "usb.keepAlive interval=500000000", "  ep=0x02 timeout=2000 n=64",
         "    0f000102f2000000000000000000000000000000000000000000000000000000",
@@ -90,7 +90,7 @@ extension DriverLifecycleCharacterizationTests {
     #expect(
       try transcript(Self.gameSirEnhancedHID) == [
         "capabilities rumble=[LowFrequency,HighFrequency] binary=[]",
-        "capabilities lighting=[programmableBrightness,programmableColor]",
+        "capabilities lighting=[ProgrammableBrightness,ProgrammableColor]",
         "capabilities triggers=[]", "usb.startup interval=0 retries=[] packets=0",
         "usb.keepAlive nil", "usb.deferred inputs=2 packets=0", "usb.deferred drained=0",
         "usb.connection[connected] packets=0", "usb.connection[disconnected] packets=0",
@@ -165,7 +165,7 @@ extension DriverLifecycleCharacterizationTests {
     #expect(
       try transcript(Self.gameSirEnhancedHID8K) == [
         "capabilities rumble=[LowFrequency,HighFrequency] binary=[]",
-        "capabilities lighting=[programmableBrightness,programmableColor]",
+        "capabilities lighting=[ProgrammableBrightness,ProgrammableColor]",
         "capabilities triggers=[]", "usb.startup interval=0 retries=[] packets=0",
         "usb.keepAlive nil", "usb.deferred inputs=2 packets=0", "usb.deferred drained=0",
         "usb.connection[connected] packets=0", "usb.connection[disconnected] packets=0",

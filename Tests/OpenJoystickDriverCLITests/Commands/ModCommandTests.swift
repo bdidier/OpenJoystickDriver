@@ -31,7 +31,7 @@ struct ModCommandTests {
       let record: [String: Any] = [
         "apiVersion": OpenJoystickDriverAPI.version, "kind": "Controller",
         "vendorID": 0xFFF1,
-        "productID": productID, "modes": [["id": "default", "protocol": ["family": "xbox.gip"]]],
+        "productID": productID, "modes": [["id": "default", "protocol": ["family": "XboxGIP"]]],
       ]
       try JSONSerialization.data(withJSONObject: record).write(
         to: controllers.appendingPathComponent(file)

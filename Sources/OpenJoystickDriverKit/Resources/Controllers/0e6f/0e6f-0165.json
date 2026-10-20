@@ -7,12 +7,12 @@
     {
       "id": "default",
       "protocol": {
-        "family": "xbox.gip",
+        "family": "XboxGIP",
         "initialization": [
-          "xbox.gip/hori-ack",
-          "xbox.gip/power-on",
-          "xbox.gip/led-on",
-          "xbox.gip/auth-done"
+          "XboxGIP/hori-ack",
+          "XboxGIP/power-on",
+          "XboxGIP/led-on",
+          "XboxGIP/auth-done"
         ]
       }
     }

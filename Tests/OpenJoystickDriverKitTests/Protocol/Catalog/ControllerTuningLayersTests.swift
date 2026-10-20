@@ -46,7 +46,7 @@ struct ControllerTuningLayersTests {
   private func bareRecord() throws -> ControllerRecord {
     try #require(
       ControllerRecordSet.bundled.records.values.first {
-        $0.family == "xbox.gip" && $0.tuning.stickDeadzone == nil
+        $0.family == "XboxGIP" && $0.tuning.stickDeadzone == nil
       }
     )
   }

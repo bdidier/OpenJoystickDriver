@@ -7,7 +7,7 @@
   },
   "patch": {
     "usb": {
-      "configuration": "set1-before-claim",
+      "configuration": "SetConfiguration1BeforeClaim",
       "endpoints": {
         "in": 129,
         "out": 2

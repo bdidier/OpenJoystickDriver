@@ -48,13 +48,13 @@ struct ControllerRecordDraftTests {
     #expect(axes.map { $0.count } == [2, 2])
     #expect(axes.compactMap { $0["byte"] as? Int } == [3, 4])
     let hat = try #require((input["hat"] as? [[String: Any]])?.first)
-    #expect(hat["encoding"] as? String == "8-way" && hat["byte"] as? Int == 2)
+    #expect(hat["encoding"] as? String == "EightWay" && hat["byte"] as? Int == 2)
     #expect(hat["mask"] as? Int == 15)
     #expect(input["leftTrigger"] as? [String: Int] == ["byte": 5])
     #expect(input["rightTrigger"] == nil)
 
     let validated = try ControllerRecordSet.validate(draft.document)
-    #expect(validated.operation == .add && validated.record?.family == "hid.report-layout")
+    #expect(validated.operation == .add && validated.record?.family == "HIDReportLayout")
   }
 
   /// Only reports with the chosen ID and at least the chosen length count.
@@ -80,7 +80,7 @@ struct ControllerRecordDraftTests {
   @Test
   func patchesABundledModel() throws {
     let bundled = try #require(
-      ControllerRecordSet.bundled.records.values.first { $0.family == "hid.descriptor" }
+      ControllerRecordSet.bundled.records.values.first { $0.family == "HIDDescriptor" }
     )
     let draft = try #require(
       ControllerRecordDraft(
@@ -92,10 +92,10 @@ struct ControllerRecordDraftTests {
     )
     #expect(draft.operation == .patch && draft.capturedReports == 0 && draft.changedBytes.isEmpty)
     let validated = try ControllerRecordSet.validate(draft.document)
-    #expect(validated.operation == .patch && validated.record?.family == "hid.report-layout")
+    #expect(validated.operation == .patch && validated.record?.family == "HIDReportLayout")
   }
 
-  /// Without a usable descriptor, a new model gets `hid.descriptor` and the common report length.
+  /// Without a usable descriptor, a new model gets `HIDDescriptor` and the common report length.
   @Test(arguments: [nil, [0x05, 0x01, 0x09, 0x05, 0xA1, 0x01, 0xC0]] as [[UInt8]?])
   func fallsBackToTheDescriptorFamily(descriptor: [UInt8]?) throws {
     let reports: [[UInt8]] = [[0, 1, 2], [0, 1, 3], [0, 1, 2], [7]]
@@ -110,7 +110,7 @@ struct ControllerRecordDraftTests {
     #expect(draft.operation == .add && draft.family == .hidDescriptor)
     #expect(draft.reportID == nil && draft.reportLength == 3 && draft.capturedReports == 3)
     #expect(draft.changedBytes == [.init(byte: 2, minimum: 2, maximum: 3)])
-    #expect(try ControllerRecordSet.validate(draft.document).record?.family == "hid.descriptor")
+    #expect(try ControllerRecordSet.validate(draft.document).record?.family == "HIDDescriptor")
     #expect(
       ControllerRecordDraft(
         model: Self.unbundled,

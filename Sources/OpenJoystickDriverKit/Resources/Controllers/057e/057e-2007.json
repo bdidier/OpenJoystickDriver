@@ -7,7 +7,7 @@
     {
       "id": "default",
       "protocol": {
-        "family": "nintendo.switch1",
+        "family": "NintendoSwitch1",
         "parameters": {
           "layout": "JoyConRight"
         }

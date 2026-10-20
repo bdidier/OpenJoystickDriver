@@ -131,15 +131,15 @@ public enum Control: String, CaseIterable, Codable, Sendable {
 
 /// One of eight compass directions, or neutral (center) for a hat or D-pad.
 public enum HatDirection: String, Codable, Sendable {
-  case neutral
-  case north
-  case northEast
-  case east
-  case southEast
-  case south
-  case southWest
-  case west
-  case northWest
+  case neutral = "Neutral"
+  case north = "North"
+  case northEast = "NorthEast"
+  case east = "East"
+  case southEast = "SouthEast"
+  case south = "South"
+  case southWest = "SouthWest"
+  case west = "West"
+  case northWest = "NorthWest"
 }
 
 extension HatDirection {

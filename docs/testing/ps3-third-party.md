@@ -1,11 +1,11 @@
 # Third-Party PS3 Controllers
 
-Many pads, fight sticks, instruments and adapters sold for the PS3 are not DualShock 3 controllers and do not speak Sony's protocol. OJD routes every non-Sony `PS3Controller` identity in SDL's controller list to the `vendor.ps3-third-party` family. That family follows SDL's `HIDAPI_DriverPS3ThirdParty` in `SDL_hidapi_ps3.c`. Two SDL `PS3Controller` identities use another SDL driver, so they are catalogued under that driver's family:
+Many pads, fight sticks, instruments and adapters sold for the PS3 are not DualShock 3 controllers and do not speak Sony's protocol. OJD routes every non-Sony `PS3Controller` identity in SDL's controller list to the `VendorPS3ThirdParty` family. That family follows SDL's `HIDAPI_DriverPS3ThirdParty` in `SDL_hidapi_ps3.c`. Two SDL `PS3Controller` identities use another SDL driver, so they are catalogued under that driver's family:
 
 | Controller | VID:PID | Family | SDL source |
 | --- | --- | --- | --- |
-| ShanWan DS3 | `2563:0523` | `sony.sixaxis` | `HIDAPI_DriverPS3_IsSupportedDevice` claims it; `is_shanwan` only skips a 1-byte output write that OJD does not send |
-| HORI pad `0f0d:0086` | `0f0d:0086` | `xbox.xusb` (`wired`) | `controller_list.h`: "Uses the Xbox 360 protocol, but has PS3 buttons" |
+| ShanWan DS3 | `2563:0523` | `SonySixaxis` | `HIDAPI_DriverPS3_IsSupportedDevice` claims it; `is_shanwan` only skips a 1-byte output write that OJD does not send |
+| HORI pad `0f0d:0086` | `0f0d:0086` | `XboxXUSB` (`wired`) | `controller_list.h`: "Uses the Xbox 360 protocol, but has PS3 buttons" |
 
 Only the Ant Esports GP100 (`2563:0575`) has hardware evidence. It starts in XInput mode. In that mode macOS sees no input. Hold **Select** and **B** while plugging it in to switch to PS3/PC mode ([#38](https://github.com/xsyetopz/OpenJoystickDriver/issues/38)).
 
@@ -15,7 +15,7 @@ The descriptor's logical ranges do not match the values these devices send, so t
 
 Once a probe is accepted, the driver decodes raw reports by byte offset. A device that fails both probes keeps the generic HID descriptor mapping, as SDL does. The probe result describes the device, so it survives a reconnect.
 
-The Logitech ChillStream (`046d:cad1`) and the GP100 need no probe: SDL accepts the ChillStream without one, and the GP100's layout is hardware-verified. Their records bind the `hid.report-layout` family and describe their reports in the record's `input` field (see [Adding or changing a controller record](../../wiki/Controller-Records.md)), so `PS3ThirdPartyDriver` holds no identity checks. The ChillStream record uses the 18-byte layout below and the GP100 record the bytes listed under Device quirks.
+The Logitech ChillStream (`046d:cad1`) and the GP100 need no probe: SDL accepts the ChillStream without one, and the GP100's layout is hardware-verified. Their records bind the `HIDReportLayout` family and describe their reports in the record's `input` field (see [Adding or changing a controller record](../../wiki/Controller-Records.md)), so `PS3ThirdPartyDriver` holds no identity checks. The ChillStream record uses the 18-byte layout below and the GP100 record the bytes listed under Device quirks.
 
 ## Report Layout
 
@@ -42,7 +42,7 @@ SDL decodes the hat only when its byte changes from the previous report, startin
 ## Device Quirks
 
 - **Ant Esports GP100 (`2563:0575`).** A GP100 owner's raw HID probe and [PR #42](https://github.com/xsyetopz/OpenJoystickDriver/pull/42) by kartinul verify bytes 1 and 3–18: buttons, D-pad with diagonals, both sticks and both triggers. PR #42 reads byte 0 as a report ID and byte 2 as unused. Its record therefore ignores both and reads its face buttons, shoulders, D-pad and triggers from the pressure and analog bytes alone, and it reads only reports of 19 bytes or more. It is the only third-party pad with rumble: output report 2, `02 00 <right> <left> 00 00 00 00`. A GP100 owner's hidapi script confirmed this report on hardware. The motor order follows [`hid-shanwan`](https://github.com/hbiyik/hid-shanwan), a Linux driver for `2563:0575` that writes the weak motor to byte 2 and the strong motor to byte 3.
-- **Saitek Cyborg V.3 Rumble Pad (`06a3:f622`).** SDL does not trust its hat bits and reads a D-pad direction as held from any nonzero pressure. SDL admits it only after the feature probe, so it stays in `vendor.ps3-third-party`; its record sets the `dpad-pressure` quirk, which makes the driver do the same.
+- **Saitek Cyborg V.3 Rumble Pad (`06a3:f622`).** SDL does not trust its hat bits and reads a D-pad direction as held from any nonzero pressure. SDL admits it only after the feature probe, so it stays in `VendorPS3ThirdParty`; its record sets the `dpad-pressure` quirk, which makes the driver do the same.
 
 ## Not Supported
 
@@ -58,7 +58,7 @@ ojd controller list
 ojd controller show <controller>
 ```
 
-`show` should report the protocol `hid.report-layout` for the GP100 and the ChillStream, and `vendor.ps3-third-party` for any other pad. Then watch the controls:
+`show` should report the protocol `HIDReportLayout` for the GP100 and the ChillStream, and `VendorPS3ThirdParty` for any other pad. Then watch the controls:
 
 ```bash
 ojd controller watch <controller>

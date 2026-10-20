@@ -57,7 +57,7 @@ public struct DeviceTransportProfile: Equatable, Sendable {
     )
   }
 
-  /// The `xbox.gip` family's default endpoints, from its protocol description.
+  /// The `XboxGIP` family's default endpoints, from its protocol description.
   public static let gipDefault = Self(
     inputEndpoint: UInt8(PhysicalProtocolID.xboxGIP.protocolDescription.endpoints.input),
     outputEndpoint: UInt8(PhysicalProtocolID.xboxGIP.protocolDescription.endpoints.output),
@@ -66,8 +66,8 @@ public struct DeviceTransportProfile: Equatable, Sendable {
 }
 
 /// A resolved protocol binding: a family and, exactly when the family has variants, the variant
-/// in use, written `family[:variant]` (for example `xbox.xusb:receiver`, `xbox.gip:usb` or
-/// `vendor.flydigi`).
+/// in use, written `family[:variant]` (for example `XboxXUSB:Receiver`, `XboxGIP:USB` or
+/// `VendorFlydigi`).
 public struct ProtocolBindingID: Hashable, Sendable, RawRepresentable, Codable,
   CustomStringConvertible
 {
@@ -138,9 +138,9 @@ public enum GIPKeepAlivePolicy: String, Codable, Sendable {
 public enum ControllerServer: String, Codable, Sendable {
   /// macOS serves it; OJD publishes no virtual controller and sends only the output macOS
   /// leaves undone. A controller macOS does not support is OJD's either way.
-  case system
+  case system = "System"
   /// OJD seizes it and publishes its own virtual controller.
-  case ojd
+  case ojd = "OJD"
 }
 
 /// How the record asks OJD to reach the controller; a record without one leaves the route to
@@ -251,9 +251,9 @@ public struct DeviceRuntimeProfile: Equatable, Sendable {
   public var startupWrites: [RecordStartupWrite] { session.startupWrites }
   /// Raw-USB startup packets; empty runs the family description's.
   public var usbStartupWrites: [USBStartupWrite] { session.usbStartupWrites }
-  /// The record's input-report layout; set exactly for the `hid.report-layout` family.
+  /// The record's input-report layout; set exactly for the `HIDReportLayout` family.
   public let inputLayout: ControllerInputLayout?
-  /// The record's HID usage map; set only for a `hid.descriptor` record that declares one.
+  /// The record's HID usage map; set only for a `HIDDescriptor` record that declares one.
   var hidUsageMap: HIDUsageMap?
   /// The record's timing and deadzone values; nil fields keep the driver defaults.
   public internal(set) var tuning: ControllerTuning

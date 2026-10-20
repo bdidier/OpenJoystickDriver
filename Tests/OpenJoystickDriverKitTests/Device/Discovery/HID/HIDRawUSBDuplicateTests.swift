@@ -99,7 +99,7 @@ struct HIDRawUSBDuplicateTests {
       return
     }
 
-    // A serial-less HID gamepad interface at the same location passes `hid.descriptor` alone.
+    // A serial-less HID gamepad interface at the same location passes `HIDDescriptor` alone.
     let hid = connection(vendorID: 0x1234, productID: 0x5678, locationID: 91)
     await manager.handleHIDEvent(.connected(connection: hid, ownership: .exclusive))
 

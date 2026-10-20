@@ -29,7 +29,7 @@ Use decimal numbers in the JSON. Before probing, review `protocol.initialization
 - GIP: the named initialization actions (the driver default when omitted); profiles may disable the default keep-alive when hardware evidence requires it.
 - Xbox 360 wired: the steady Player 1 ring-light packet.
 - Xbox 360 wireless receiver: no output until a logical controller connects, then the receiver-wrapped steady Player 1 packet.
-- A record containing `xbox.gip/rumble-begin` and `xbox.gip/rumble-end` sends those brief initialization packets because they are part of that record's declared initialization.
+- A record containing `XboxGIP/rumble-begin` and `XboxGIP/rumble-end` sends those brief initialization packets because they are part of that record's declared initialization.
 
 `protocol.keepAlive` is an optional boolean for GIP records. Omit it to keep the default-enabled behavior. Set it to `false` only when device evidence requires periodic host output to be disabled.
 

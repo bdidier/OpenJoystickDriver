@@ -64,22 +64,22 @@ Record flow: observed device, then link, then record `modes[]` with match keys (
 A `Controller` record (see `specs/controller-records`) declares:
 
 - `model` (`id`, `name`, `manufacturer`) and `modes[]`. Each mode has `match` keys, `protocol` (an id plus typed `parameters`), `interface` selection (for example the HID interface range 2 to 5 of the Steam Deck as data), and optional `session` steps.
-- Declarative input layouts: bit offset and size, signed fields, 10 to 16 bit values, 16-bit triggers, inversion, more than four axes, extra buttons, report ids, trigger rest value -1, hat sources (8-way, directions, and `table` hats mapping a masked value to a direction), `symmetric` axes (signed, divided by the maximum). A layout is carried by `hid.report-layout` records and by the `xbox.xid` protocol description (`input` in `Resources/Protocols/xbox.xid.json`); no other family takes `input`.
+- Declarative input layouts: bit offset and size, signed fields, 10 to 16 bit values, 16-bit triggers, inversion, more than four axes, extra buttons, report ids, trigger rest value -1, hat sources (8-way, directions, and `table` hats mapping a masked value to a direction), `symmetric` axes (signed, divided by the maximum). A layout is carried by `HIDReportLayout` records and by the `XboxXID` protocol description (`input` in `Resources/Protocols/xbox-xid.json`); no other family takes `input`.
 - Vendor control transfers (`bmRequestType`, `bRequest`, `wValue`, `wIndex`, `wLength`), init, keepalive and settle sequences, acknowledgement rules. These come from issues #38 (ShanWan), #22, #21, #35.
-- Output templates: fixed bytes, scale, motor positions, resend interval (the xpad and `hid.report-layout` rumble cases).
+- Output templates: fixed bytes, scale, motor positions, resend interval (the xpad and `HIDReportLayout` rumble cases).
 - Multi-identity linking: one model reachable through several VID:PID pairs and several link kinds (wired, dongle, Bluetooth, and a mode switch changing the PID, as the 8BitDo family does).
 
 Declared full, not as deltas. The record carries facts only (no provenance, per `Resources/Schemas/AGENTS.md`).
 
-What stays in code, because it is an algorithm and not a table: GIP authentication, Switch subcommands, Sony CRC, Steam protocol, the `hid.descriptor` and `hid.report-layout` interpreters, the USB claim and transfer machinery.
+What stays in code, because it is an algorithm and not a table: GIP authentication, Switch subcommands, Sony CRC, Steam protocol, the `HIDDescriptor` and `HIDReportLayout` interpreters, the USB claim and transfer machinery.
 
 Quirk to typed-parameter conversions (examples; the full table is task 5):
 
 | Old `ControllerQuirk` | New |
 | --- | --- |
-| `switch-2` | protocol `nintendo.switch2`, parameter `layout`: `pro`, `joyConLeft`, `joyConRight`, `gameCube` |
-| input-only | protocol `nintendo.switch-input-only` |
-| triton, neptune | protocols `valve.steam-triton`, `valve.steam-deck`; interface range is data |
+| `switch-2` | protocol `NintendoSwitch2`, parameter `layout`: `pro`, `joyConLeft`, `joyConRight`, `gameCube` |
+| input-only | protocol `NintendoSwitchInputOnly` |
+| triton, neptune | protocols `ValveSteamTriton`, `ValveSteamDeck`; interface range is data |
 | GameSir `g7ProUSB` | wire-dialect parameter |
 | `shield-2015` | `reportRevision` parameter |
 | wireless-adapter, strikepad | role and motion-scale parameters |
@@ -91,7 +91,7 @@ Family defaults that lived in Swift (in `MacOSOwnedOutput.swift`, `DeviceCatalog
 
 An equivalence harness builds the driver for every bundled record before and after the change and compares driver type and configuration. It gates the generator and quirk work.
 
-Counts to preserve (families): xbox.gip 210, xbox.xusb 208, vendor.ps3-third-party 75, sony.dualshock4 62, xbox.xid 59, nintendo.switch1 32, vendor.gamesir 26, hid.descriptor 21, sony.dualsense 21, valve.steam-controller 12, nvidia-shield 4, hid.report-layout 4, flydigi 2, sixaxis 2; 696 generated records plus 54 overrides.
+Counts to preserve (families): XboxGIP 210, XboxXUSB 208, VendorPS3ThirdParty 75, SonyDualShock4 62, XboxXID 59, NintendoSwitch1 32, VendorGameSir 26, HIDDescriptor 21, SonyDualSense 21, ValveSteamController 12, nvidia-shield 4, HIDReportLayout 4, flydigi 2, sixaxis 2; 696 generated records plus 54 overrides.
 
 ### D3 Control vocabulary and crosswalk
 

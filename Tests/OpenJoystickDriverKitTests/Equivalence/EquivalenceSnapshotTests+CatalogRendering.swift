@@ -182,7 +182,7 @@ extension EquivalenceSnapshotCatalogTests {
     return lines
   }
 
-  /// The snapshot spelled a `hid.descriptor` record's usage map as the `usageLayout` parameter
+  /// The snapshot spelled a `HIDDescriptor` record's usage map as the `usageLayout` parameter
   /// that selected it. Each name is a record that declares the layout.
   private static let legacyUsageLayouts: [(name: String, vendorID: UInt16, productID: UInt16)] = [
     ("Wr007", 0x11C1, 0x5600), ("ScufEnvision", 0x2E95, 0x434D),

@@ -7,14 +7,14 @@ import Testing
 // `ojd controller capture <controller> --json` against a running dev
 // build. Nobody touched the pads, so these are neutral reports only; the command is read-only.
 extension DriverParseCharacterizationTests {
-  /// GameSir G7 SE (3537:1010, xbox.gip) over USB: the pad sends no 0x20 input while idle, only
+  /// GameSir G7 SE (3537:1010, XboxGIP) over USB: the pad sends no 0x20 input while idle, only
   /// these 0x03 status frames about every 20 s (sequences 0xCD and 0xCE).
   static let capturedG7SEStatus: [[UInt8]] = [
     [0x03, 0x20, 0xCD, 0x04, 0x80, 0x00, 0x00, 0x00],
     [0x03, 0x20, 0xCE, 0x04, 0x80, 0x00, 0x00, 0x00],
   ]
 
-  /// Razer 1532:0A15 (xbox.gip) over USB: idle 0x03 status frames (sequences 0x00 and 0x01).
+  /// Razer 1532:0A15 (XboxGIP) over USB: idle 0x03 status frames (sequences 0x00 and 0x01).
   static let capturedRazerStatus: [[UInt8]] = [
     [0x03, 0x20, 0x00, 0x04, 0x80, 0x00, 0x00, 0x00],
     [0x03, 0x20, 0x01, 0x04, 0x80, 0x00, 0x00, 0x00],

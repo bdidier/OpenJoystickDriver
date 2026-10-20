@@ -43,7 +43,7 @@ public struct ControllerRecord: Sendable {
   /// The file of an installed package that adds or patches this record, or nil when no package
   /// does. A user file over it wins, and ``layer`` names the user.
   public let packageFile: URL?
-  /// The protocol family, such as `xbox.gip`.
+  /// The protocol family, such as `XboxGIP`.
   public let family: String
   /// The tuning keys this record's family reads.
   let tuningScope: Set<ControllerTuning.Key>

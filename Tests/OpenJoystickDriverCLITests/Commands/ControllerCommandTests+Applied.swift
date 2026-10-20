@@ -69,7 +69,7 @@ struct ControllerShowAppliedTests {
 
     let controller = try json.json()
     let capabilities = try #require(controller["capabilities"] as? [String: Any])
-    #expect(capabilities["outputOwner"] as? String == "system")
+    #expect(capabilities["outputOwner"] as? String == "System")
     #expect(plain.standardOutput.contains("\noutput-owner\tsystem\n"))
     #expect(
       Self.rows(human, endingIn: CLILocalized.text("cli.controller.show.output_owner.macos"))
@@ -88,7 +88,7 @@ struct ControllerShowAppliedTests {
 
     let controller = try json.json()
     let capabilities = try #require(controller["capabilities"] as? [String: Any])
-    #expect(capabilities["outputOwner"] as? String == "ojd")
+    #expect(capabilities["outputOwner"] as? String == "OJD")
     let label = CLILocalized.text("cli.controller.show.label.output_owner")
     #expect(!human.standardOutput.contains(label))
   }

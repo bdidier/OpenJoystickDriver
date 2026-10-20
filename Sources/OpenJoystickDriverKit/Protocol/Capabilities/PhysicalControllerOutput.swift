@@ -12,7 +12,11 @@ public enum PhysicalRumbleMotor: String, Codable, CaseIterable, Hashable, Sendab
     allCases.firstIndex(of: lhs)! < allCases.firstIndex(of: rhs)!
   }
 
-  /// The key that names this motor in controller records and in endpoint rumble intensities.
+  /// The key that names this motor in controller records and protocol descriptions: the
+  /// lowerCamelCase form of its actuator name.
+  public var recordKey: String { rawValue.prefix(1).lowercased() + rawValue.dropFirst() }
+
+  /// The key that names this motor in endpoint rumble intensities; only the endpoint uses it.
   public var fieldName: String {
     switch self {
     case .lowFrequency: "leftMain"
@@ -27,9 +31,9 @@ public enum PhysicalRumbleMotor: String, Codable, CaseIterable, Hashable, Sendab
 
 /// A physical lighting feature with a source-backed output implementation.
 public enum PhysicalLightingFeature: String, Codable, CaseIterable, Hashable, Sendable {
-  case playerIndicator
-  case programmableColor
-  case programmableBrightness
+  case playerIndicator = "PlayerIndicator"
+  case programmableColor = "ProgrammableColor"
+  case programmableBrightness = "ProgrammableBrightness"
 }
 
 /// Generic player indicator selection for protocols with numbered controller LEDs.

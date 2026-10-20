@@ -37,7 +37,7 @@ struct HIDUsageMapTests {
   private func decode(
     _ entries: String,
     reportID: Int? = nil,
-    family: String = "hid.descriptor",
+    family: String = "HIDDescriptor",
     key: String = "hidUsageMap"
   ) throws -> ControllerRecordDocument {
     let report = reportID.map { "\"reportID\": \($0)," } ?? ""
@@ -54,7 +54,7 @@ struct HIDUsageMapTests {
 
   @Test
   func aButtonUsagePressesItsControlWhileNonzero() throws {
-    let driver = try makeDriver(#"{"kind":"button","page":9,"usage":3,"control":"West"}"#)
+    let driver = try makeDriver(#"{"kind":"Button","page":9,"usage":3,"control":"West"}"#)
     #expect(
       state(driver, element(page: 9, usage: 3, 1, range: 0...1))?.pressed.contains(.west)
         == true
@@ -70,7 +70,7 @@ struct HIDUsageMapTests {
   @Test
   func aReportIDRestrictsTheMapToThatReport() throws {
     let driver = try makeDriver(
-      #"{"kind":"button","page":9,"usage":1,"control":"South"}"#,
+      #"{"kind":"Button","page":9,"usage":1,"control":"South"}"#,
       reportID: 6
     )
     #expect(state(driver, element(page: 9, usage: 1, 1, range: 0...1, reportID: 5)) == nil)
@@ -86,7 +86,7 @@ struct HIDUsageMapTests {
   // MARK: - Axes
 
   private func axisEntry(control: String, _ options: String = "") -> String {
-    #"{"kind":"axis","page":1,"usage":48,"control":"\#(control)"\#(options)}"#
+    #"{"kind":"Axis","page":1,"usage":48,"control":"\#(control)"\#(options)}"#
   }
 
   @Test
@@ -151,8 +151,8 @@ struct HIDUsageMapTests {
   @Test
   func swappedTriggerAxesFollowTheRecord() throws {
     let driver = try makeDriver(
-      #"{"kind":"axis","page":1,"usage":50,"control":"RightTrigger"},"#
-        + #"{"kind":"axis","page":1,"usage":53,"control":"LeftTrigger"}"#
+      #"{"kind":"Axis","page":1,"usage":50,"control":"RightTrigger"},"#
+        + #"{"kind":"Axis","page":1,"usage":53,"control":"LeftTrigger"}"#
     )
     let pulled = state(driver, element(usage: 50, 255))
     #expect(pulled?.rightTrigger.normalized == 1)
@@ -167,7 +167,7 @@ struct HIDUsageMapTests {
 
   // MARK: - Hats
 
-  private let hatEntry = #"{"kind":"hat","page":1,"usage":57}"#
+  private let hatEntry = #"{"kind":"Hat","page":1,"usage":57}"#
 
   @Test
   func aHatReadsFromTheElementsLogicalMinimumByDefault() throws {
@@ -183,7 +183,7 @@ struct HIDUsageMapTests {
   func aHatRangeNamesWhereNorthIs(first: Int, nullValue: Int) throws {
     let range = "{\"min\":\(first),\"max\":\(first + 7)}"
     let driver = try makeDriver(
-      #"{"kind":"hat","page":1,"usage":57,"range":\#(range)}"#
+      #"{"kind":"Hat","page":1,"usage":57,"range":\#(range)}"#
     )
     #expect(state(driver, element(usage: 57, first, range: 0...15))?.hat == .north)
     #expect(state(driver, element(usage: 57, first + 4, range: 0...15))?.hat == .south)
@@ -195,34 +195,34 @@ struct HIDUsageMapTests {
 
   @Test
   func theDecoderRejectsInvalidUsages() {
-    let button = #"{"kind":"button","page":9,"usage":1,"control":"South"}"#
+    let button = #"{"kind":"Button","page":9,"usage":1,"control":"South"}"#
     let invalid = [
       // The same usage twice.
       button + "," + button,
       // A button cannot drive a stick axis or the dpad.
-      #"{"kind":"button","page":9,"usage":1,"control":"LeftStickX"}"#,
-      #"{"kind":"button","page":9,"usage":1,"control":"DpadUp"}"#,
+      #"{"kind":"Button","page":9,"usage":1,"control":"LeftStickX"}"#,
+      #"{"kind":"Button","page":9,"usage":1,"control":"DpadUp"}"#,
       // An axis needs a stick axis or trigger.
-      #"{"kind":"axis","page":1,"usage":48,"control":"South"}"#,
-      #"{"kind":"axis","page":1,"usage":48,"control":"DpadUp"}"#,
+      #"{"kind":"Axis","page":1,"usage":48,"control":"South"}"#,
+      #"{"kind":"Axis","page":1,"usage":48,"control":"DpadUp"}"#,
       // A hat has no control: it is the four dpad ids.
-      #"{"kind":"hat","page":1,"usage":57,"control":"DpadUp"}"#,
+      #"{"kind":"Hat","page":1,"usage":57,"control":"DpadUp"}"#,
       // Ranges must have min below max, and a hat range is 0...7 or 1...8.
-      #"{"kind":"axis","page":1,"usage":48,"control":"LeftStickX","range":{"min":5,"max":5}}"#,
-      #"{"kind":"axis","page":1,"usage":48,"control":"LeftStickX","range":{"min":9,"max":1}}"#,
-      #"{"kind":"hat","page":1,"usage":57,"range":{"min":2,"max":9}}"#,
+      #"{"kind":"Axis","page":1,"usage":48,"control":"LeftStickX","range":{"min":5,"max":5}}"#,
+      #"{"kind":"Axis","page":1,"usage":48,"control":"LeftStickX","range":{"min":9,"max":1}}"#,
+      #"{"kind":"Hat","page":1,"usage":57,"range":{"min":2,"max":9}}"#,
       // A dead zone is above 0 and below 1.
-      #"{"kind":"axis","page":1,"usage":48,"control":"LeftStickX","deadZone":0}"#,
-      #"{"kind":"axis","page":1,"usage":48,"control":"LeftStickX","deadZone":1}"#,
-      #"{"kind":"axis","page":1,"usage":48,"control":"LeftStickX","deadZone":-0.1}"#,
+      #"{"kind":"Axis","page":1,"usage":48,"control":"LeftStickX","deadZone":0}"#,
+      #"{"kind":"Axis","page":1,"usage":48,"control":"LeftStickX","deadZone":1}"#,
+      #"{"kind":"Axis","page":1,"usage":48,"control":"LeftStickX","deadZone":-0.1}"#,
       // Fields that belong to another kind, unknown kinds and unknown fields.
-      #"{"kind":"button","page":9,"usage":1,"control":"South","deadZone":0.1}"#,
-      #"{"kind":"hat","page":1,"usage":57,"inverted":true}"#,
+      #"{"kind":"Button","page":9,"usage":1,"control":"South","deadZone":0.1}"#,
+      #"{"kind":"Hat","page":1,"usage":57,"inverted":true}"#,
       #"{"kind":"slider","page":1,"usage":48,"control":"LeftStickX"}"#,
-      #"{"kind":"button","page":9,"usage":1,"control":"South","extra":1}"#,
+      #"{"kind":"Button","page":9,"usage":1,"control":"South","extra":1}"#,
       // Page and usage bounds.
-      #"{"kind":"button","page":0,"usage":1,"control":"South"}"#,
-      #"{"kind":"button","page":9,"usage":65536,"control":"South"}"#,
+      #"{"kind":"Button","page":0,"usage":1,"control":"South"}"#,
+      #"{"kind":"Button","page":9,"usage":65536,"control":"South"}"#,
       "",
     ]
     for entries in invalid {
@@ -234,10 +234,10 @@ struct HIDUsageMapTests {
 
   @Test
   func aUsageMapBelongsToHIDDescriptorRecordsOnly() throws {
-    let button = #"{"kind":"button","page":9,"usage":1,"control":"South"}"#
+    let button = #"{"kind":"Button","page":9,"usage":1,"control":"South"}"#
     #expect(try decode(button).hidUsageMap?.entries.count == 1)
-    #expect(throws: (any Error).self) { try decode(button, family: "sony.dualshock4") }
-    #expect(throws: (any Error).self) { try decode(button, family: "hid.report-layout") }
+    #expect(throws: (any Error).self) { try decode(button, family: "SonyDualShock4") }
+    #expect(throws: (any Error).self) { try decode(button, family: "HIDReportLayout") }
     #expect(throws: (any Error).self) { try decode(button, key: "descriptorShapes") }
   }
 }

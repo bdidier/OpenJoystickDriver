@@ -14,7 +14,7 @@ struct ProtocolDescriptionProblem: Error, Equatable, Sendable, CustomStringConve
   var description: String { "\(code.rawValue): \(detail)" }
 }
 
-/// One family's protocol description (`Resources/Protocols/<family>.json`): the interface
+/// One family's protocol description (`Resources/Protocols/<file stem>.json`): the interface
 /// signatures that bind its variants, the typed parameters its records may set, the facts its
 /// driver reads (endpoints, raw USB, record sections, tuning keys, what OJD still
 /// sends when macOS serves the controller), and the defaults its records layer over. Drivers read
@@ -90,19 +90,19 @@ struct ProtocolDescription: Sendable {
   /// writes of each run.
   let keepAlive: KeepAlive?
   /// The family's subcommand reports: the report id, the rolling counter rule and the startup
-  /// requests. Only `nintendo.switch1` has them.
+  /// requests. Only `NintendoSwitch1` has them.
   let subcommands: SubcommandPlan?
   /// The family's named packets, which a record selects by id in `protocol.initialization`.
-  /// Only `xbox.gip` has them.
+  /// Only `XboxGIP` has them.
   let namedPackets: NamedPacketPlan?
-  /// The startup attempts a raw-USB handshake makes before it fails. Only `xbox.gip` has it.
+  /// The startup attempts a raw-USB handshake makes before it fails. Only `XboxGIP` has it.
   let handshakeAttempts: Int?
-  /// The most startup resends after announces before the first input. Only `xbox.gip` has it.
+  /// The most startup resends after announces before the first input. Only `XboxGIP` has it.
   let announceResendLimit: Int?
-  /// The most presence inquiry resends for a receiver slot. Only `xbox.xusb` has it.
+  /// The most presence inquiry resends for a receiver slot. Only `XboxXUSB` has it.
   let receiverInquiryResendLimit: Int?
   let inputLayout: ControllerInputLayout?
-  /// The map every `hid.descriptor` record layers over (``HIDUsageMap``).
+  /// The map every `HIDDescriptor` record layers over (``HIDUsageMap``).
   let hidUsageMap: HIDUsageMap?
   /// Descriptor shapes that select another map, first match first.
   let hidUsageShapes: [HIDUsageShape]
@@ -149,11 +149,15 @@ struct ProtocolDescription: Sendable {
   private static func loadBundled() throws -> [PhysicalProtocolID: Self] {
     var descriptions: [PhysicalProtocolID: Self] = [:]
     for protocolID in PhysicalProtocolID.allCases {
-      guard let url = Bundle.module.url(forResource: protocolID.rawValue, withExtension: "json")
+      guard
+        let url = Bundle.module.url(
+          forResource: protocolID.descriptionFileStem,
+          withExtension: "json"
+        )
       else {
         throw ProtocolDescriptionProblem(
           .invalidProtocolDescription,
-          "\(protocolID.rawValue).json is missing from the bundle"
+          "\(protocolID.descriptionFileStem).json is missing from the bundle"
         )
       }
       descriptions[protocolID] = try decode(
@@ -399,7 +403,7 @@ struct ProtocolDescription: Sendable {
       return "an input layout applies only to a family that reads one"
     }
     if hidUsageMap != nil || !hidUsageShapes.isEmpty, family != .hidDescriptor {
-      return "a HID usage map applies only to hid.descriptor"
+      return "a HID usage map applies only to HIDDescriptor"
     }
     if rumbleTemplate != nil || !variantRumble.isEmpty, !recordSections.contains(.rumble) {
       return "rumble templates require a driver that encodes them"
@@ -416,14 +420,14 @@ struct ProtocolDescription: Sendable {
       return "HID startup writes apply only to HID controllers"
     }
     if family == .xboxXID, !startupWrites.isEmpty || !usbStartupWrites.isEmpty || keepAlive != nil {
-      return "xbox.xid's session holds only a rumble template"
+      return "XboxXID's session holds only a rumble template"
     }
     if let violation = keepAliveViolation { return violation }
     if (subcommands != nil) != (family == .nintendoSwitch1) {
-      return "only nintendo.switch1 has subcommands, and it must have them"
+      return "only NintendoSwitch1 has subcommands, and it must have them"
     }
     if namedPackets != nil, family != .xboxGIP {
-      return "only xbox.gip has named packets"
+      return "only XboxGIP has named packets"
     }
     if let namedPackets, !namedPackets.allIDs(startWith: "\(family.rawValue)/") {
       return "each named packet id starts with \(family.rawValue)/"
@@ -431,10 +435,10 @@ struct ProtocolDescription: Sendable {
     if (handshakeAttempts != nil) != (family == .xboxGIP)
       || (announceResendLimit != nil) != (family == .xboxGIP)
     {
-      return "only xbox.gip has handshakeAttempts and announceResendLimit, and it must have them"
+      return "only XboxGIP has handshakeAttempts and announceResendLimit, and it must have them"
     }
     if (receiverInquiryResendLimit != nil) != (family == .xboxXUSB) {
-      return "only xbox.xusb has receiverInquiryResendLimit, and it must have it"
+      return "only XboxXUSB has receiverInquiryResendLimit, and it must have it"
     }
     if rawUSB == .always, !tuningKeys.isEmpty {
       return "a family that is always raw USB reads its tuning through rawUSBTuningKeys"

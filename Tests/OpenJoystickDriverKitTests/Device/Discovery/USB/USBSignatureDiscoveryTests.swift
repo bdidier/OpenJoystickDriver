@@ -24,7 +24,7 @@ struct USBSignatureDiscoveryTests {
 
     // Discovery only reads configuration 1; the pipeline's open sends SET_CONFIGURATION.
     #expect(await provider.descriptorReads == [1])
-    #expect(await manager.deviceInfos[identifier]?.binding.id.rawValue == "xbox.gip:usb")
+    #expect(await manager.deviceInfos[identifier]?.binding.id.rawValue == "XboxGIP:USB")
     #expect(
       await provider.options
         == USBTransportOpenOptions(configurationValue: 1, interfaceNumber: 0, alternateSetting: 0)
@@ -32,7 +32,7 @@ struct USBSignatureDiscoveryTests {
     #expect(await provider.session.writes.first?.endpoint == 0x01)
     #expect(await provider.session.readEndpoints.first == 0x81)
     let description = try #require(await manager.connectedDeviceDescriptions().first)
-    #expect(description.protocolBinding.rawValue == "xbox.gip:usb")
+    #expect(description.protocolBinding.rawValue == "XboxGIP:USB")
     #expect((description.inputEndpoint, description.outputEndpoint) == (0x81, 0x01))
     let result = description.bindingResult
     #expect((result.outcome, result.rule) == (.bound, .interfaceSignature))

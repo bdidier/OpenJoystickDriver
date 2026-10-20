@@ -303,11 +303,11 @@ extension ProtocolDescription {
       ])
       var controls: Set<Control> = []
       if let base = try container.decodeOptional(String.self, for: "base") {
-        guard base == "xbox" else {
+        guard base == "Xbox" else {
           throw DecodingError.dataCorrupted(
             .init(
               codingPath: decoder.codingPath + [DocumentKey("base")],
-              debugDescription: "base is xbox"
+              debugDescription: "base is Xbox"
             )
           )
         }
@@ -405,7 +405,7 @@ extension ProtocolDescription {
     }
   }
 
-  /// A parameter declaration: `{type: flag}`, `{type: enum, values}` or `{type: object, fields}`.
+  /// A parameter declaration: `{type: Flag}`, `{type: Enum, values}` or `{type: Object, fields}`.
   struct Declaration: Decodable {
     let type: ParameterType
 
@@ -413,10 +413,10 @@ extension ProtocolDescription {
       let container = try decoder.container(keyedBy: DocumentKey.self)
       let name = try container.decode(String.self, for: "type")
       switch name {
-      case "flag":
+      case "Flag":
         try container.rejectUnknown(allowed: ["type"])
         type = .flag
-      case "enum":
+      case "Enum":
         try container.rejectUnknown(allowed: ["type", "values"])
         let values = try container.decode([String].self, for: "values")
         guard !values.isEmpty, Set(values).count == values.count,
@@ -430,7 +430,7 @@ extension ProtocolDescription {
           )
         }
         type = .enumeration(values)
-      case "object":
+      case "Object":
         try container.rejectUnknown(allowed: ["type", "fields"])
         let fields = try container.decode([String: IntegerField].self, for: "fields")
         guard !fields.isEmpty else {
@@ -446,7 +446,7 @@ extension ProtocolDescription {
         throw DecodingError.dataCorrupted(
           .init(
             codingPath: decoder.codingPath + [DocumentKey("type")],
-            debugDescription: "type is flag, enum or object"
+            debugDescription: "type is Flag, Enum or Object"
           )
         )
       }
@@ -459,7 +459,7 @@ extension ProtocolDescription {
     init(from decoder: any Decoder) throws {
       let container = try decoder.container(keyedBy: DocumentKey.self)
       try container.rejectUnknown(allowed: ["type", "minimum", "maximum"])
-      guard try container.decode(String.self, for: "type") == "integer" else {
+      guard try container.decode(String.self, for: "type") == "Integer" else {
         throw DecodingError.dataCorrupted(
           .init(
             codingPath: decoder.codingPath + [DocumentKey("type")],

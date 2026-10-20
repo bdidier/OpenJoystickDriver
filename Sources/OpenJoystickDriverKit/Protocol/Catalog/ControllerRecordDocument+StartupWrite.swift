@@ -67,13 +67,13 @@ extension ControllerRecordDocument {
         .flatMap { $0 == .proprietaryRadioReceiver ? nil : $0 }
       guard transportName == nil || transport != nil else {
         throw ControllerRecordProblem(
-          "a startup transport is usb, bluetooth-classic or bluetooth-le"
+          "a startup transport is USB, BluetoothClassic or BluetoothLE"
         )
       }
       let phaseName = try container.decodeOptional(String.self, for: "phase")
       let phase = phaseName.flatMap(StartupPhase.init(rawValue:))
       guard phaseName == nil || phase != nil else {
-        throw ControllerRecordProblem("a startup phase is startup or activation")
+        throw ControllerRecordProblem("a startup phase is Startup or Activation")
       }
       let seed = try container.decodeOptional(Int.self, for: "crc32Seed")
       guard seed.map({ (0...255).contains($0) }) ?? true else {

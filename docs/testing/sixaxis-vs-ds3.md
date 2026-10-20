@@ -1,6 +1,6 @@
 # SIXAXIS and DUALSHOCK 3
 
-Sony's SIXAXIS (CECHZC1) and DUALSHOCK 3 (CECHZC2) both enumerate as `054C:0268`. The SIXAXIS has no rumble motors. OJD's `sony.sixaxis` driver advertises the left and right motors for every `054C:0268`, so on a SIXAXIS the rumble commands succeed and nothing moves. The doc comment on `SixaxisDriver` records this.
+Sony's SIXAXIS (CECHZC1) and DUALSHOCK 3 (CECHZC2) both enumerate as `054C:0268`. The SIXAXIS has no rumble motors. OJD's `SonySixaxis` driver advertises the left and right motors for every `054C:0268`, so on a SIXAXIS the rumble commands succeed and nothing moves. The doc comment on `SixaxisDriver` records this.
 
 ## What Other Drivers Do
 

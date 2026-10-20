@@ -82,7 +82,7 @@ class XpadTranslationTests(unittest.TestCase):
         profile = xpad.build_profile(
             self.device("XTYPE_XBOX", "DANCEPAD_MAP_CONFIG"), init_rules=[]
         )
-        self.assertEqual(proto(profile), {"family": "xbox.xid", "variant": "gamepad"})
+        self.assertEqual(proto(profile), {"family": "XboxXID", "variant": "Gamepad"})
         self.assertNotIn("transport", profile)
         self.assertEqual(
             profile["capabilities"],
@@ -122,8 +122,8 @@ class XpadTranslationTests(unittest.TestCase):
         self.assertEqual(
             proto(candidates[0].profile),
             {
-                "family": "xbox.gip",
-                "initialization": ["xbox.gip/power-on"],
+                "family": "XboxGIP",
+                "initialization": ["XboxGIP/power-on"],
             },
         )
         _, skipped, _ = xpad.generate_candidates(
@@ -152,13 +152,13 @@ class XpadTranslationTests(unittest.TestCase):
         self.assertEqual(
             proto(profile),
             {
-                "family": "xbox.gip",
+                "family": "XboxGIP",
                 "parameters": {"shareButton": {"fromEnd": 26}},
                 "initialization": [
-                    "xbox.gip/power-on",
-                    "xbox.gip/s-init",
-                    "xbox.gip/led-on",
-                    "xbox.gip/auth-done",
+                    "XboxGIP/power-on",
+                    "XboxGIP/s-init",
+                    "XboxGIP/led-on",
+                    "XboxGIP/auth-done",
                 ],
             },
         )
@@ -172,9 +172,9 @@ class XpadTranslationTests(unittest.TestCase):
 
     def test_xpad_types_map_to_family_and_stored_variant(self) -> None:
         expected = {
-            "XTYPE_XBOX": {"family": "xbox.xid", "variant": "gamepad"},
-            "XTYPE_XBOX360": {"family": "xbox.xusb", "variant": "wired"},
-            "XTYPE_XBOX360W": {"family": "xbox.xusb", "variant": "receiver"},
+            "XTYPE_XBOX": {"family": "XboxXID", "variant": "Gamepad"},
+            "XTYPE_XBOX360": {"family": "XboxXUSB", "variant": "Wired"},
+            "XTYPE_XBOX360W": {"family": "XboxXUSB", "variant": "Receiver"},
         }
         for xtype, protocol in expected.items():
             with self.subTest(xtype):
@@ -204,7 +204,7 @@ class HIDRecordTests(unittest.TestCase):
             )
         self.assertEqual(
             proto(records[0]),
-            {"family": "valve.steam-controller", "variant": "dongle"},
+            {"family": "ValveSteamController", "variant": "Dongle"},
         )
         self.assertNotIn("transport", records[0])
 
@@ -235,7 +235,7 @@ class HIDRecordTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             path = self.write_patch(
-                root, {"vendorID": 0x11C1, "productID": 0x5600}, {"server": "ojd"}
+                root, {"vendorID": 0x11C1, "productID": 0x5600}, {"server": "OJD"}
             )
             path.rename(root / "11c1" / "wrong.patch.json")
             with self.assertRaises(catalog.CatalogError):
@@ -255,16 +255,16 @@ class HIDRecordTests(unittest.TestCase):
         upstream = {
             "vendorID": 0x11C1,
             "productID": 0x5600,
-            "modes": [{"id": "default", "protocol": {"family": "hid.descriptor"}}],
+            "modes": [{"id": "default", "protocol": {"family": "HIDDescriptor"}}],
         }
         records = {(0x11C1, 0x5600): upstream}
         catalog.apply_patches(records, adds, patches)
         self.assertEqual(records[(0x11C1, 0x5600)], {**upstream, "tuning": tuning})
 
     def test_orphan_and_redundant_patches_fail(self) -> None:
-        upstream = {"vendorID": 1, "productID": 2, "server": "ojd"}
-        orphan = ({"vendorID": 1, "productID": 3}, {"server": "ojd"})
-        redundant = ({"vendorID": 1, "productID": 2}, {"server": "ojd"})
+        upstream = {"vendorID": 1, "productID": 2, "server": "OJD"}
+        orphan = ({"vendorID": 1, "productID": 3}, {"server": "OJD"})
+        redundant = ({"vendorID": 1, "productID": 2}, {"server": "OJD"})
         for patches in ([orphan], [redundant]):
             with self.assertRaises(catalog.CatalogError):
                 catalog.apply_patches({(1, 2): dict(upstream)}, {}, patches)
@@ -320,13 +320,13 @@ class SDLControllerListTests(unittest.TestCase):
 
     def test_types_map_to_implemented_families_and_variants(self) -> None:
         expected = {
-            "PS3Controller": {"family": "sony.sixaxis"},
-            "PS4Controller": {"family": "sony.dualshock4"},
-            "PS5Controller": {"family": "sony.dualsense"},
-            "SwitchProController": {"family": "nintendo.switch1"},
-            "XBox360Controller": {"family": "xbox.xusb", "variant": "wired"},
-            "XBoxOneController": {"family": "xbox.gip"},
-            "SwitchInputOnlyController": {"family": "nintendo.switch-input-only"},
+            "PS3Controller": {"family": "SonySixaxis"},
+            "PS4Controller": {"family": "SonyDualShock4"},
+            "PS5Controller": {"family": "SonyDualSense"},
+            "SwitchProController": {"family": "NintendoSwitch1"},
+            "XBox360Controller": {"family": "XboxXUSB", "variant": "Wired"},
+            "XBoxOneController": {"family": "XboxGIP"},
+            "SwitchInputOnlyController": {"family": "NintendoSwitchInputOnly"},
         }
         for controller_type, protocol in expected.items():
             with self.subTest(controller_type):
@@ -349,10 +349,10 @@ class SDLControllerListTests(unittest.TestCase):
         ]
         records, counts = self.build(rows)
         protocols = {key[1]: proto(record) for key, record in records.items()}
-        steam = "valve.steam-controller"
-        triton = "valve.steam-triton"
-        wired = {"family": steam, "variant": "wired"}
-        ble = {"family": steam, "variant": "bluetooth-le"}
+        steam = "ValveSteamController"
+        triton = "ValveSteamTriton"
+        wired = {"family": steam, "variant": "Wired"}
+        ble = {"family": steam, "variant": "BluetoothLE"}
         self.assertEqual(
             protocols,
             {
@@ -361,11 +361,11 @@ class SDLControllerListTests(unittest.TestCase):
                 0x1106: ble,
                 0x1201: wired,
                 0x1202: ble,
-                0x1205: {"family": "valve.steam-deck"},
-                0x1302: {"family": triton, "variant": "wired"},
-                0x1303: {"family": triton, "variant": "bluetooth-le"},
-                0x1304: {"family": triton, "variant": "dongle"},
-                0x1305: {"family": triton, "variant": "dongle"},
+                0x1205: {"family": "ValveSteamDeck"},
+                0x1302: {"family": triton, "variant": "Wired"},
+                0x1303: {"family": triton, "variant": "BluetoothLE"},
+                0x1304: {"family": triton, "variant": "Dongle"},
+                0x1305: {"family": triton, "variant": "Dongle"},
             },
         )
         self.assertEqual(counts, {"added": 10})
@@ -379,8 +379,8 @@ class SDLControllerListTests(unittest.TestCase):
         ]
         records, counts = self.build(rows)
         protocols = {key[1]: proto(record) for key, record in records.items()}
-        switch = "nintendo.switch1"
-        switch2 = "nintendo.switch2"
+        switch = "NintendoSwitch1"
+        switch2 = "NintendoSwitch2"
         self.assertEqual(
             protocols,
             {
@@ -427,7 +427,7 @@ class SDLControllerListTests(unittest.TestCase):
                 [(0x0955, 0x7210, "XBox360Controller")], {}
             )
         self.assertEqual(
-            proto(records[(0x0955, 0x7210)]), {"family": "vendor.nvidia-shield"}
+            proto(records[(0x0955, 0x7210)]), {"family": "VendorNVIDIAShield"}
         )
         self.assertEqual(counts, {"added": 1})
 
@@ -446,9 +446,9 @@ class SDLControllerListTests(unittest.TestCase):
 
     def test_existing_rows_win_as_duplicates_or_conflicts(self) -> None:
         existing = {
-            (0x045E, 0x028E): "xbox.xusb",
-            (0x28DE, 0x1102): "valve.steam-controller",
-            (0x0E6F, 0x0147): "xbox.gip",
+            (0x045E, 0x028E): "XboxXUSB",
+            (0x28DE, 0x1102): "ValveSteamController",
+            (0x0E6F, 0x0147): "XboxGIP",
         }
         records, counts = self.build(
             [
@@ -490,14 +490,14 @@ class SDLControllerListTests(unittest.TestCase):
             with self.assertRaises(catalog.CatalogError):
                 catalog.build_sdl_records([(0x057E, 0x2069, "PS5Controller")], {})
             with self.assertRaises(catalog.CatalogError):
-                catalog.build_sdl_records(rows, {(0x057E, 0x2069): "nintendo.switch1"})
+                catalog.build_sdl_records(rows, {(0x057E, 0x2069): "NintendoSwitch1"})
 
     def test_add_override_wins_over_an_sdl_identity(self) -> None:
         override = {
             **header("Controller"),
             "vendorID": 0x1532,
             "productID": 0x1000,
-            "modes": [{"id": "default", "protocol": {"family": "hid.descriptor"}}],
+            "modes": [{"id": "default", "protocol": {"family": "HIDDescriptor"}}],
         }
         adds = {(0x1532, 0x1000): override}
         records: dict[tuple[int, int], dict[str, object]] = {}
@@ -520,7 +520,7 @@ class SDLControllerListTests(unittest.TestCase):
                 {
                     "id": "default",
                     "protocol": {
-                        "family": "xbox.gip",
+                        "family": "XboxGIP",
                         "parameters": {"shareButton": {"fromEnd": 26}},
                     },
                 }
@@ -528,7 +528,7 @@ class SDLControllerListTests(unittest.TestCase):
             "usb": {"interface": 0},
         }
         records = {(1, 1): upstream}
-        restated = [{"id": "default", "protocol": {"family": "hid.descriptor"}}]
+        restated = [{"id": "default", "protocol": {"family": "HIDDescriptor"}}]
         catalog.apply_patches(
             records, {}, [({"vendorID": 1, "productID": 1}, {"modes": restated})]
         )
@@ -552,9 +552,9 @@ class SDLControllerListTests(unittest.TestCase):
         )
         self.assertEqual(
             proto(records[(0x1532, 0x100B)]),
-            {"family": "sony.dualsense", "parameters": {"maker": "ThirdParty"}},
+            {"family": "SonyDualSense", "parameters": {"maker": "ThirdParty"}},
         )
-        self.assertEqual(proto(records[(0x054C, 0x0CE6)]), {"family": "sony.dualsense"})
+        self.assertEqual(proto(records[(0x054C, 0x0CE6)]), {"family": "SonyDualSense"})
         self.assertEqual(counts, {"added": 3, "interface-signature": 2})
 
     def test_third_party_ps3_rows_bind_the_third_party_family(self) -> None:
@@ -562,15 +562,15 @@ class SDLControllerListTests(unittest.TestCase):
             [(0x0738, 0x3250, "PS3Controller"), (0x054C, 0x0268, "PS3Controller")]
         )
         self.assertEqual(
-            proto(records[(0x0738, 0x3250)]), {"family": "vendor.ps3-third-party"}
+            proto(records[(0x0738, 0x3250)]), {"family": "VendorPS3ThirdParty"}
         )
-        self.assertEqual(proto(records[(0x054C, 0x0268)]), {"family": "sony.sixaxis"})
+        self.assertEqual(proto(records[(0x054C, 0x0268)]), {"family": "SonySixaxis"})
         self.assertEqual(counts, {"added": 2})
 
     def test_identity_families_override_the_type_and_must_stay_listed(self) -> None:
         overrides = {
-            (0x2563, 0x0523): ("PS3Controller", "sony.sixaxis", None),
-            (0x0F0D, 0x0086): ("PS3Controller", "xbox.xusb", "wired"),
+            (0x2563, 0x0523): ("PS3Controller", "SonySixaxis", None),
+            (0x0F0D, 0x0086): ("PS3Controller", "XboxXUSB", "Wired"),
         }
         rows = [(0x2563, 0x0523, "PS3Controller"), (0x0F0D, 0x0086, "PS3Controller")]
         with (
@@ -580,10 +580,10 @@ class SDLControllerListTests(unittest.TestCase):
             records, counts = catalog.build_sdl_records(rows, {})
             with self.assertRaises(catalog.CatalogError):
                 catalog.build_sdl_records(rows[:1], {})
-        self.assertEqual(proto(records[(0x2563, 0x0523)]), {"family": "sony.sixaxis"})
+        self.assertEqual(proto(records[(0x2563, 0x0523)]), {"family": "SonySixaxis"})
         self.assertEqual(
             proto(records[(0x0F0D, 0x0086)]),
-            {"family": "xbox.xusb", "variant": "wired"},
+            {"family": "XboxXUSB", "variant": "Wired"},
         )
         self.assertEqual(counts, {"added": 2})
 
@@ -591,7 +591,7 @@ class SDLControllerListTests(unittest.TestCase):
         with self.assertRaises(catalog.CatalogError):
             self.build([(0x045E, 0x0B99, "XBoxOneController")])
         records, counts = self.build(
-            [(0x045E, 0x0B12, "XBoxOneController")], {(0x045E, 0x0B12): "xbox.gip"}
+            [(0x045E, 0x0B12, "XBoxOneController")], {(0x045E, 0x0B12): "XboxGIP"}
         )
         self.assertEqual((records, counts), ({}, {"duplicate": 1}))
 
@@ -614,7 +614,7 @@ class SDLControllerListTests(unittest.TestCase):
             ),
         ):
             records, _ = catalog.build_sdl_records([(*backbone, "PS5Controller")], {})
-        self.assertEqual(proto(records[(0x358A, 0x0304)]), {"family": "hid.descriptor"})
+        self.assertEqual(proto(records[(0x358A, 0x0304)]), {"family": "HIDDescriptor"})
 
     def test_records_carry_no_provenance(self) -> None:
         records, _ = self.build([(0x1532, 0x1000, "PS4Controller")])
@@ -645,7 +645,7 @@ class ProtocolCopyTests(unittest.TestCase):
         self.authored = root / "Resources" / "Protocols"
         self.bundled = root / "Kit" / "Protocols"
         self.authored.mkdir(parents=True)
-        (self.authored / "xbox.xid.json").write_text('{"family": "xbox.xid"}\n')
+        (self.authored / "xbox-xid.json").write_text('{"family": "XboxXID"}\n')
         for name, value in (
             ("ROOT", root),
             ("OUTPUT_DIR", root / "Kit" / "Controllers"),
@@ -663,27 +663,27 @@ class ProtocolCopyTests(unittest.TestCase):
 
     def test_written_copies_pass_the_check(self) -> None:
         self.assertEqual(
-            (self.bundled / "xbox.xid.json").read_text(), '{"family": "xbox.xid"}\n'
+            (self.bundled / "xbox-xid.json").read_text(), '{"family": "XboxXID"}\n'
         )
         catalog.check_catalog({})
 
     def test_a_missing_copy_is_reported(self) -> None:
-        (self.bundled / "xbox.xid.json").unlink()
-        self.assert_check_reports(r"missing Kit/Protocols/xbox\.xid\.json")
+        (self.bundled / "xbox-xid.json").unlink()
+        self.assert_check_reports(r"missing Kit/Protocols/xbox-xid\.json")
 
     def test_a_stale_copy_is_reported(self) -> None:
         (self.bundled / "xbox.old.json").write_text("{}\n")
         self.assert_check_reports(r"stale Kit/Protocols/xbox\.old\.json")
 
     def test_a_changed_copy_is_reported(self) -> None:
-        (self.bundled / "xbox.xid.json").write_text('{"family": "xbox.xusb"}\n')
-        self.assert_check_reports(r"changed Kit/Protocols/xbox\.xid\.json")
+        (self.bundled / "xbox-xid.json").write_text('{"family": "XboxXUSB"}\n')
+        self.assert_check_reports(r"changed Kit/Protocols/xbox-xid\.json")
 
     def test_write_removes_a_stale_copy(self) -> None:
         (self.bundled / "xbox.old.json").write_text("{}\n")
         catalog.write_catalog({})
         self.assertEqual(
-            sorted(path.name for path in self.bundled.iterdir()), ["xbox.xid.json"]
+            sorted(path.name for path in self.bundled.iterdir()), ["xbox-xid.json"]
         )
 
 
@@ -696,7 +696,7 @@ class CommittedCatalogTests(unittest.TestCase):
     def test_backbone_one_ps5_v2_is_not_catalogued_as_dualsense(self) -> None:
         record = self.records.get((0x358A, 0x0304))
         if record is not None:
-            self.assertEqual(proto(record)["family"], "hid.descriptor")
+            self.assertEqual(proto(record)["family"], "HIDDescriptor")
 
     def test_excluded_sdl_identities_are_not_catalogued(self) -> None:
         self.assertEqual(sorted(set(catalog.SDL_EXCLUSIONS) & set(self.records)), [])
@@ -746,12 +746,12 @@ class PinnedSDLDataTests(unittest.TestCase):
             [
                 key
                 for key, family in families.items()
-                if family == "xbox.gip"
+                if family == "XboxGIP"
                 and key[1] in catalog.MICROSOFT_XBOX_360_PRODUCT_IDS
             ],
             [],
         )
-        self.assertEqual(families.get((0x358A, 0x0304)), "hid.descriptor")
+        self.assertEqual(families.get((0x358A, 0x0304)), "HIDDescriptor")
         self.assertTrue(set(records) <= set(committed_records()))
 
     def test_real_exclusions_hold_and_every_admissible_row_is_committed(self) -> None:

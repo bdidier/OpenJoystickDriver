@@ -6,19 +6,19 @@ import Testing
 struct ProtocolBindingIDTests {
   @Test
   func writesFamilyAndOptionalVariant() {
-    #expect(ProtocolBindingID(.xboxXUSB, variant: .receiver).rawValue == "xbox.xusb:receiver")
-    #expect(ProtocolBindingID(.vendorFlydigi).rawValue == "vendor.flydigi")
+    #expect(ProtocolBindingID(.xboxXUSB, variant: .receiver).rawValue == "XboxXUSB:Receiver")
+    #expect(ProtocolBindingID(.vendorFlydigi).rawValue == "VendorFlydigi")
     #expect(
-      ProtocolBindingID(rawValue: "sony.dualshock4:bluetooth-classic")
+      ProtocolBindingID(rawValue: "SonyDualShock4:BluetoothClassic")
         == ProtocolBindingID(.sonyDualShock4, variant: .bluetoothClassic)
     )
   }
 
   @Test(arguments: [
-    "", "xbox.xusb:", "xboxOne", "GIP", "xbox.gip:usb:usb", "sony.dualsense:receiver",
-    "vendor.flydigi:usb", "xbox.xusb:xbox360Wireless", "vendor.gamesir:enhanced-hid-8k",
+    "", "XboxXUSB:", "xboxOne", "GIP", "XboxGIP:USB:usb", "SonyDualSense:Receiver",
+    "VendorFlydigi:USB", "XboxXUSB:xbox360Wireless", "VendorGameSir:EnhancedHID-8k",
     // A binding is resolved: families with variants always name one.
-    "xbox.gip", "xbox.xusb", "vendor.gamesir", "sony.dualsense",
+    "XboxGIP", "XboxXUSB", "VendorGameSir", "SonyDualSense",
   ])
   func rejectsUnknownFamiliesAndVariantsOutsideTheFamily(_ text: String) throws {
     #expect(ProtocolBindingID(rawValue: text) == nil)
@@ -40,8 +40,8 @@ struct ProtocolBindingIDTests {
     let dualSense = try #require(
       registry.record(for: ControllerModelID(vendorID: 0x054C, productID: 0x0CE6))
     )
-    #expect(gip.rawUSBBinding?.rawValue == "xbox.gip:usb")
-    #expect(receiver.rawUSBBinding?.rawValue == "xbox.xusb:receiver")
+    #expect(gip.rawUSBBinding?.rawValue == "XboxGIP:USB")
+    #expect(receiver.rawUSBBinding?.rawValue == "XboxXUSB:Receiver")
     #expect(dualSense.rawUSBBinding == nil)
   }
 
@@ -49,7 +49,7 @@ struct ProtocolBindingIDTests {
   func encodesAsItsWrittenForm() throws {
     let binding = ProtocolBindingID(.valveSteamController, variant: .dongle)
     let json = try JSONEncoder().encode([binding])
-    #expect(String(bytes: json, encoding: .utf8) == #"["valve.steam-controller:dongle"]"#)
+    #expect(String(bytes: json, encoding: .utf8) == #"["ValveSteamController:Dongle"]"#)
     #expect(try JSONDecoder().decode([ProtocolBindingID].self, from: json) == [binding])
   }
 }

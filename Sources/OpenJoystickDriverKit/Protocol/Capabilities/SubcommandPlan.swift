@@ -80,8 +80,8 @@ struct SubcommandRequest: Equatable, Sendable {
   /// then the length.
   struct SPIRead: Equatable, Sendable {
     enum Purpose: String, Equatable, Sendable {
-      case factoryMotionCalibration
-      case userMotionCalibration
+      case factoryMotionCalibration = "FactoryMotionCalibration"
+      case userMotionCalibration = "UserMotionCalibration"
     }
 
     static let lengthRange = 1...29

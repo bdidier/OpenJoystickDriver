@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/protocol-description.schema.json",
-  "$comment": "Each family's variants are PhysicalProtocolID.variants in Swift; a family with none has no interface signatures. The parameter names of each family are those its driver declares in ProtocolParameters. The family facts a driver reads live here and nowhere in code: its default endpoints, whether it is reached through raw USB (for every variant, or only the listed ones), the record sections whose layouts it reads, the tuning keys it reads beyond stickDeadzone (none for a raw-USB variant), its button labels, and what OJD still sends when macOS serves the controller. defaults holds the sections a record layers over, limited to what the family reads: input applies to hid.report-layout and xbox.xid as a byte layout and to hid.descriptor as a HID usage map, a rumble template, flat or per variant, needs the matching recordSections entry, HID startup writes need a family that is not always raw USB, raw-USB startup writes (bytes, endpoint, timeoutMilliseconds, delayMilliseconds, sessionByte, toleratesRejection) carry the packets a raw-USB driver sends, each startup write is limited by variants and by a when rule on an enumeration parameter the description declares and whose values it lists, which a schema cannot say and the validators check, and each defaults.tuning key must be stickDeadzone or in tuningKeys, which a schema cannot say and the validators check.",
+  "$comment": "Each family's variants are PhysicalProtocolID.variants in Swift; a family with none has no interface signatures. The parameter names of each family are those its driver declares in ProtocolParameters. The family facts a driver reads live here and nowhere in code: its default endpoints, whether it is reached through raw USB (for every variant, or only the listed ones), the record sections whose layouts it reads, the tuning keys it reads beyond stickDeadzone (none for a raw-USB variant), its button labels, and what OJD still sends when macOS serves the controller. defaults holds the sections a record layers over, limited to what the family reads: input applies to HIDReportLayout and XboxXID as a byte layout and to HIDDescriptor as a HID usage map, a rumble template, flat or per variant, needs the matching recordSections entry, HID startup writes need a family that is not always raw USB, raw-USB startup writes (bytes, endpoint, timeoutMilliseconds, delayMilliseconds, sessionByte, toleratesRejection) carry the packets a raw-USB driver sends, each startup write is limited by variants and by a when rule on an enumeration parameter the description declares and whose values it lists, which a schema cannot say and the validators check, and each defaults.tuning key must be stickDeadzone or in tuningKeys, which a schema cannot say and the validators check.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "family", "endpoints"],
@@ -112,7 +112,7 @@
       "if": {
         "properties": {
           "family": {
-            "const": "hid.descriptor"
+            "const": "HIDDescriptor"
           }
         },
         "required": ["family"]
@@ -155,7 +155,7 @@
       "if": {
         "properties": {
           "family": {
-            "const": "hid.report-layout"
+            "const": "HIDReportLayout"
           }
         },
         "required": ["family"]
@@ -193,7 +193,7 @@
       "if": {
         "properties": {
           "family": {
-            "const": "xbox.xid"
+            "const": "XboxXID"
           }
         },
         "required": ["family"]
@@ -207,7 +207,7 @@
               },
               {
                 "items": {
-                  "enum": ["gamepad"]
+                  "enum": ["Gamepad"]
                 }
               }
             ]
@@ -216,7 +216,7 @@
             "properties": {
               "variants": {
                 "propertyNames": {
-                  "enum": ["gamepad"]
+                  "enum": ["Gamepad"]
                 }
               },
               "input": {
@@ -242,7 +242,7 @@
             "items": {
               "properties": {
                 "variant": {
-                  "enum": ["gamepad"]
+                  "enum": ["Gamepad"]
                 }
               }
             }
@@ -255,7 +255,7 @@
       "if": {
         "properties": {
           "family": {
-            "const": "xbox.xusb"
+            "const": "XboxXUSB"
           }
         },
         "required": ["family"]
@@ -270,7 +270,7 @@
               },
               {
                 "items": {
-                  "enum": ["wired", "receiver"]
+                  "enum": ["Wired", "Receiver"]
                 }
               }
             ]
@@ -283,7 +283,7 @@
               },
               "variants": {
                 "propertyNames": {
-                  "enum": ["wired", "receiver"]
+                  "enum": ["Wired", "Receiver"]
                 }
               }
             }
@@ -292,7 +292,7 @@
             "items": {
               "properties": {
                 "variant": {
-                  "enum": ["wired", "receiver"]
+                  "enum": ["Wired", "Receiver"]
                 }
               }
             }
@@ -305,7 +305,7 @@
       "if": {
         "properties": {
           "family": {
-            "const": "xbox.gip"
+            "const": "XboxGIP"
           }
         },
         "required": ["family"]
@@ -320,7 +320,7 @@
               },
               {
                 "items": {
-                  "enum": ["usb"]
+                  "enum": ["USB"]
                 }
               }
             ]
@@ -333,7 +333,7 @@
               },
               "variants": {
                 "propertyNames": {
-                  "enum": ["usb"]
+                  "enum": ["USB"]
                 }
               }
             }
@@ -342,7 +342,7 @@
             "items": {
               "properties": {
                 "variant": {
-                  "enum": ["usb"]
+                  "enum": ["USB"]
                 }
               }
             }
@@ -359,7 +359,7 @@
       "if": {
         "properties": {
           "family": {
-            "const": "sony.sixaxis"
+            "const": "SonySixaxis"
           }
         },
         "required": ["family"]
@@ -373,7 +373,7 @@
               },
               {
                 "items": {
-                  "enum": ["usb", "bluetooth-classic"]
+                  "enum": ["USB", "BluetoothClassic"]
                 }
               }
             ]
@@ -382,7 +382,7 @@
             "properties": {
               "variants": {
                 "propertyNames": {
-                  "enum": ["usb", "bluetooth-classic"]
+                  "enum": ["USB", "BluetoothClassic"]
                 }
               }
             }
@@ -391,7 +391,7 @@
             "items": {
               "properties": {
                 "variant": {
-                  "enum": ["usb", "bluetooth-classic"]
+                  "enum": ["USB", "BluetoothClassic"]
                 }
               }
             }
@@ -404,7 +404,7 @@
       "if": {
         "properties": {
           "family": {
-            "const": "sony.dualshock4"
+            "const": "SonyDualShock4"
           }
         },
         "required": ["family"]
@@ -418,7 +418,7 @@
               },
               {
                 "items": {
-                  "enum": ["usb", "bluetooth-classic"]
+                  "enum": ["USB", "BluetoothClassic"]
                 }
               }
             ]
@@ -427,7 +427,7 @@
             "properties": {
               "variants": {
                 "propertyNames": {
-                  "enum": ["usb", "bluetooth-classic"]
+                  "enum": ["USB", "BluetoothClassic"]
                 }
               }
             }
@@ -436,7 +436,7 @@
             "items": {
               "properties": {
                 "variant": {
-                  "enum": ["usb", "bluetooth-classic"]
+                  "enum": ["USB", "BluetoothClassic"]
                 }
               }
             }
@@ -453,7 +453,7 @@
       "if": {
         "properties": {
           "family": {
-            "const": "sony.dualsense"
+            "const": "SonyDualSense"
           }
         },
         "required": ["family"]
@@ -467,7 +467,7 @@
               },
               {
                 "items": {
-                  "enum": ["usb", "bluetooth-classic"]
+                  "enum": ["USB", "BluetoothClassic"]
                 }
               }
             ]
@@ -476,7 +476,7 @@
             "properties": {
               "variants": {
                 "propertyNames": {
-                  "enum": ["usb", "bluetooth-classic"]
+                  "enum": ["USB", "BluetoothClassic"]
                 }
               }
             }
@@ -485,7 +485,7 @@
             "items": {
               "properties": {
                 "variant": {
-                  "enum": ["usb", "bluetooth-classic"]
+                  "enum": ["USB", "BluetoothClassic"]
                 }
               }
             }
@@ -508,7 +508,7 @@
       "if": {
         "properties": {
           "family": {
-            "const": "nintendo.switch1"
+            "const": "NintendoSwitch1"
           }
         },
         "required": ["family"]
@@ -523,7 +523,7 @@
               },
               {
                 "items": {
-                  "enum": ["usb", "bluetooth-classic"]
+                  "enum": ["USB", "BluetoothClassic"]
                 }
               }
             ]
@@ -536,7 +536,7 @@
               },
               "variants": {
                 "propertyNames": {
-                  "enum": ["usb", "bluetooth-classic"]
+                  "enum": ["USB", "BluetoothClassic"]
                 }
               }
             }
@@ -545,7 +545,7 @@
             "items": {
               "properties": {
                 "variant": {
-                  "enum": ["usb", "bluetooth-classic"]
+                  "enum": ["USB", "BluetoothClassic"]
                 }
               }
             }
@@ -562,7 +562,7 @@
       "if": {
         "properties": {
           "family": {
-            "const": "nintendo.switch2"
+            "const": "NintendoSwitch2"
           }
         },
         "required": ["family"]
@@ -576,7 +576,7 @@
               },
               {
                 "items": {
-                  "enum": ["usb", "bluetooth-le"]
+                  "enum": ["USB", "BluetoothLE"]
                 }
               }
             ]
@@ -585,7 +585,7 @@
             "properties": {
               "variants": {
                 "propertyNames": {
-                  "enum": ["usb", "bluetooth-le"]
+                  "enum": ["USB", "BluetoothLE"]
                 }
               }
             }
@@ -594,7 +594,7 @@
             "items": {
               "properties": {
                 "variant": {
-                  "enum": ["usb", "bluetooth-le"]
+                  "enum": ["USB", "BluetoothLE"]
                 }
               }
             }
@@ -611,7 +611,7 @@
       "if": {
         "properties": {
           "family": {
-            "const": "nintendo.switch-input-only"
+            "const": "NintendoSwitchInputOnly"
           }
         },
         "required": ["family"]
@@ -625,7 +625,7 @@
               },
               {
                 "items": {
-                  "enum": ["usb", "bluetooth-classic"]
+                  "enum": ["USB", "BluetoothClassic"]
                 }
               }
             ]
@@ -634,7 +634,7 @@
             "properties": {
               "variants": {
                 "propertyNames": {
-                  "enum": ["usb", "bluetooth-classic"]
+                  "enum": ["USB", "BluetoothClassic"]
                 }
               }
             }
@@ -643,7 +643,7 @@
             "items": {
               "properties": {
                 "variant": {
-                  "enum": ["usb", "bluetooth-classic"]
+                  "enum": ["USB", "BluetoothClassic"]
                 }
               }
             }
@@ -656,7 +656,7 @@
       "if": {
         "properties": {
           "family": {
-            "const": "valve.steam-controller"
+            "const": "ValveSteamController"
           }
         },
         "required": ["family"]
@@ -670,7 +670,7 @@
               },
               {
                 "items": {
-                  "enum": ["wired", "dongle", "bluetooth-le"]
+                  "enum": ["Wired", "Dongle", "BluetoothLE"]
                 }
               }
             ]
@@ -679,7 +679,7 @@
             "properties": {
               "variants": {
                 "propertyNames": {
-                  "enum": ["wired", "dongle", "bluetooth-le"]
+                  "enum": ["Wired", "Dongle", "BluetoothLE"]
                 }
               }
             }
@@ -688,7 +688,7 @@
             "items": {
               "properties": {
                 "variant": {
-                  "enum": ["wired", "dongle", "bluetooth-le"]
+                  "enum": ["Wired", "Dongle", "BluetoothLE"]
                 }
               }
             }
@@ -701,7 +701,7 @@
       "if": {
         "properties": {
           "family": {
-            "const": "valve.steam-triton"
+            "const": "ValveSteamTriton"
           }
         },
         "required": ["family"]
@@ -715,7 +715,7 @@
               },
               {
                 "items": {
-                  "enum": ["wired", "dongle", "bluetooth-le"]
+                  "enum": ["Wired", "Dongle", "BluetoothLE"]
                 }
               }
             ]
@@ -724,7 +724,7 @@
             "properties": {
               "variants": {
                 "propertyNames": {
-                  "enum": ["wired", "dongle", "bluetooth-le"]
+                  "enum": ["Wired", "Dongle", "BluetoothLE"]
                 }
               }
             }
@@ -733,7 +733,7 @@
             "items": {
               "properties": {
                 "variant": {
-                  "enum": ["wired", "dongle", "bluetooth-le"]
+                  "enum": ["Wired", "Dongle", "BluetoothLE"]
                 }
               }
             }
@@ -746,7 +746,7 @@
       "if": {
         "properties": {
           "family": {
-            "const": "valve.steam-deck"
+            "const": "ValveSteamDeck"
           }
         },
         "required": ["family"]
@@ -774,7 +774,7 @@
       "if": {
         "properties": {
           "family": {
-            "const": "vendor.flydigi"
+            "const": "VendorFlydigi"
           }
         },
         "required": ["family"]
@@ -802,7 +802,7 @@
       "if": {
         "properties": {
           "family": {
-            "const": "vendor.ps3-third-party"
+            "const": "VendorPS3ThirdParty"
           }
         },
         "required": ["family"]
@@ -834,7 +834,7 @@
       "if": {
         "properties": {
           "family": {
-            "const": "vendor.gamesir"
+            "const": "VendorGameSir"
           }
         },
         "required": ["family"]
@@ -848,7 +848,7 @@
               },
               {
                 "items": {
-                  "enum": ["usb", "enhanced-hid"]
+                  "enum": ["USB", "EnhancedHID"]
                 }
               }
             ]
@@ -857,7 +857,7 @@
             "properties": {
               "variants": {
                 "propertyNames": {
-                  "enum": ["usb", "enhanced-hid"]
+                  "enum": ["USB", "EnhancedHID"]
                 }
               }
             }
@@ -866,7 +866,7 @@
             "items": {
               "properties": {
                 "variant": {
-                  "enum": ["usb", "enhanced-hid"]
+                  "enum": ["USB", "EnhancedHID"]
                 }
               }
             }
@@ -883,7 +883,7 @@
       "if": {
         "properties": {
           "family": {
-            "const": "vendor.nvidia-shield"
+            "const": "VendorNVIDIAShield"
           }
         },
         "required": ["family"]
@@ -916,7 +916,7 @@
         "not": {
           "properties": {
             "family": {
-              "const": "nintendo.switch1"
+              "const": "NintendoSwitch1"
             }
           },
           "required": ["family"]
@@ -941,7 +941,7 @@
         "not": {
           "properties": {
             "family": {
-              "const": "xbox.gip"
+              "const": "XboxGIP"
             }
           },
           "required": ["family"]
@@ -968,7 +968,7 @@
         "not": {
           "properties": {
             "family": {
-              "const": "xbox.xusb"
+              "const": "XboxXUSB"
             }
           },
           "required": ["family"]
@@ -1006,7 +1006,7 @@
               "required": ["family"],
               "properties": {
                 "family": {
-                  "const": "hid.descriptor"
+                  "const": "HIDDescriptor"
                 }
               }
             }
@@ -1115,14 +1115,14 @@
       "properties": {
         "variant": {
           "enum": [
-            "usb",
-            "bluetooth-classic",
-            "bluetooth-le",
-            "gamepad",
-            "wired",
-            "receiver",
-            "dongle",
-            "enhanced-hid"
+            "USB",
+            "BluetoothClassic",
+            "BluetoothLE",
+            "Gamepad",
+            "Wired",
+            "Receiver",
+            "Dongle",
+            "EnhancedHID"
           ]
         },
         "interfaceClass": {
@@ -1152,7 +1152,7 @@
           "required": ["type"],
           "properties": {
             "type": {
-              "const": "flag"
+              "const": "Flag"
             }
           }
         },
@@ -1162,7 +1162,7 @@
           "required": ["type", "values"],
           "properties": {
             "type": {
-              "const": "enum"
+              "const": "Enum"
             },
             "values": {
               "type": "array",
@@ -1181,7 +1181,7 @@
           "required": ["type", "fields"],
           "properties": {
             "type": {
-              "const": "object"
+              "const": "Object"
             },
             "fields": {
               "type": "object",
@@ -1200,7 +1200,7 @@
       "required": ["type", "minimum", "maximum"],
       "properties": {
         "type": {
-          "const": "integer"
+          "const": "Integer"
         },
         "minimum": {
           "type": "integer"
@@ -1319,9 +1319,9 @@
           "uniqueItems": true,
           "items": {
             "enum": [
-              "playerIndicator",
-              "programmableColor",
-              "programmableBrightness"
+              "PlayerIndicator",
+              "ProgrammableColor",
+              "ProgrammableBrightness"
             ]
           }
         },
@@ -1350,13 +1350,13 @@
       }
     },
     "controls": {
-      "description": "The controls every controller of the family has: the Xbox layout (without guide) when base is xbox, less remove, plus add, with the touch contacts and motion the family reports. A driver adds only what its record or layout makes true.",
+      "description": "The controls every controller of the family has: the Xbox layout (without guide) when base is Xbox, less remove, plus add, with the touch contacts and motion the family reports. A driver adds only what its record or layout makes true.",
       "type": "object",
       "additionalProperties": false,
       "minProperties": 1,
       "properties": {
         "base": {
-          "enum": ["xbox"]
+          "enum": ["Xbox"]
         },
         "remove": {
           "$ref": "controller.schema.json#/$defs/controlList"
@@ -1397,7 +1397,7 @@
       }
     },
     "hidDescriptorInput": {
-      "$comment": "hid.descriptor's input defaults: hidUsageMap is the map every record layers over, and descriptorShapes picks another map for a controller whose report descriptor has a shape. The first shape whose usages are all present, none of absent present, and at least one of anyOf present (when listed) applies.",
+      "$comment": "HIDDescriptor's input defaults: hidUsageMap is the map every record layers over, and descriptorShapes picks another map for a controller whose report descriptor has a shape. The first shape whose usages are all present, none of absent present, and at least one of anyOf present (when listed) applies.",
       "type": "object",
       "additionalProperties": false,
       "minProperties": 1,
@@ -1604,7 +1604,7 @@
       }
     },
     "descriptionSession": {
-      "description": "What runs while the device is open: startup writes, the rumble template, the keep-alive, for nintendo.switch1 its subcommands, for xbox.gip its named packets, handshake attempts and announce resend limit, and for xbox.xusb its receiver inquiry resend limit. Startup writes are all HID reports, all raw-USB packets, or all references to the family's named packets; a reference names an id that namedPackets lists, which a schema cannot say and the validators check.",
+      "description": "What runs while the device is open: startup writes, the rumble template, the keep-alive, for NintendoSwitch1 its subcommands, for XboxGIP its named packets, handshake attempts and announce resend limit, and for XboxXUSB its receiver inquiry resend limit. Startup writes are all HID reports, all raw-USB packets, or all references to the family's named packets; a reference names an id that namedPackets lists, which a schema cannot say and the validators check.",
       "type": "object",
       "additionalProperties": false,
       "minProperties": 1,
@@ -1822,7 +1822,7 @@
               "maximum": 29
             },
             "purpose": {
-              "enum": ["factoryMotionCalibration", "userMotionCalibration"]
+              "enum": ["FactoryMotionCalibration", "UserMotionCalibration"]
             }
           }
         }

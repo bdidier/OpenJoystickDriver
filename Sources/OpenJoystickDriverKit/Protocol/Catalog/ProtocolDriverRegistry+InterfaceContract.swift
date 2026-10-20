@@ -6,7 +6,7 @@ extension ProtocolDriverRegistry {
 
   /// The protocol roles a raw-USB claim runs, one pipeline each, in slot order.
   ///
-  /// An Xbox 360 wireless receiver (`xbox.xusb:receiver`) has one role per observed interface
+  /// An Xbox 360 wireless receiver (`XboxXUSB:Receiver`) has one role per observed interface
   /// that passes ``claimedInterfaceViolation(of:profile:observed:)`` on its own endpoints: the
   /// receiver triple FF/5D/81 with exactly one interrupt IN and one interrupt OUT endpoint, as
   /// `xpad_probe` requires per interface (xpad.c:2042–2137). Roles are ordered by interface

@@ -122,7 +122,7 @@ OJD runs one controller per Steam interface whose HID report descriptor has a Fe
    ojd controller list --json
    ```
 
-   Expect one entry with `protocol` `valve.steam-controller` per Feature interface: wired `interfaceNumber` 2; dongle up to four entries for interfaces 1 to 4. `ojd controller show <ID> --json` gives each entry's `interfaceNumber`. Paste the output and any interfaces that `ojd status` lists as unbound.
+   Expect one entry with `protocol` `ValveSteamController` per Feature interface: wired `interfaceNumber` 2; dongle up to four entries for interfaces 1 to 4. `ojd controller show <ID> --json` gives each entry's `interfaceNumber`. Paste the output and any interfaces that `ojd status` lists as unbound.
 3. Dongle only: pair controllers one at a time and record which interface's entry receives input. Power one off and confirm only its entry reports disconnected.
 
 ## 6. Bluetooth LE

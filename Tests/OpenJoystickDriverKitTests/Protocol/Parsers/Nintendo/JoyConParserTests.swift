@@ -144,7 +144,7 @@ struct JoyConParserTests {
         [
           "id": "default",
           "protocol": [
-            "family": "nintendo.switch1", "parameters": ["layout": ["JoyConLeft", "JoyConRight"]],
+            "family": "NintendoSwitch1", "parameters": ["layout": ["JoyConLeft", "JoyConRight"]],
           ],
         ]
       ],

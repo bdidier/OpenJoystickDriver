@@ -60,11 +60,11 @@ An ownership choice MUST persist across service and app restarts, MUST apply to 
 
 ### Requirement: REQ-22 Raw-USB families refuse the toggle
 
-`ojd controller ownership` MUST refuse a controller of a raw-USB family, such as `xbox.gip`, or one that macOS does not support natively, with an error code that names why.
+`ojd controller ownership` MUST refuse a controller of a raw-USB family, such as `XboxGIP`, or one that macOS does not support natively, with an error code that names why.
 
 #### Scenario: Raw-USB family
 
-- **WHEN** the user runs `ojd controller ownership` on an `xbox.gip` controller
+- **WHEN** the user runs `ojd controller ownership` on an `XboxGIP` controller
 - **THEN** the command fails with E2023 and names the raw-USB family as the reason
 
 #### Scenario: Not natively supported

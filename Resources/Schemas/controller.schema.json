@@ -119,17 +119,17 @@
                   {
                     "properties": {
                       "family": {
-                        "enum": ["xbox.xid", "xbox.xusb", "xbox.gip"]
+                        "enum": ["XboxXID", "XboxXUSB", "XboxGIP"]
                       }
                     }
                   },
                   {
                     "properties": {
                       "family": {
-                        "const": "vendor.gamesir"
+                        "const": "VendorGameSir"
                       },
                       "variant": {
-                        "const": "usb"
+                        "const": "USB"
                       }
                     },
                     "required": ["variant"]
@@ -183,7 +183,7 @@
               "protocol": {
                 "properties": {
                   "family": {
-                    "enum": ["xbox.xid", "xbox.xusb"]
+                    "enum": ["XboxXID", "XboxXUSB"]
                   }
                 },
                 "required": ["family"]
@@ -225,7 +225,7 @@
                 "required": ["family"],
                 "properties": {
                   "family": {
-                    "enum": ["xbox.xusb", "xbox.gip", "nintendo.switch2"]
+                    "enum": ["XboxXUSB", "XboxGIP", "NintendoSwitch2"]
                   }
                 },
                 "not": {
@@ -267,7 +267,7 @@
                 "required": ["family"],
                 "properties": {
                   "family": {
-                    "enum": ["vendor.gamesir"]
+                    "enum": ["VendorGameSir"]
                   }
                 }
               }
@@ -291,13 +291,13 @@
                 "properties": {
                   "family": {
                     "enum": [
-                      "hid.report-layout",
-                      "vendor.ps3-third-party",
-                      "xbox.xid",
-                      "xbox.xusb",
-                      "vendor.nvidia-shield",
-                      "vendor.gamesir",
-                      "nintendo.switch1"
+                      "HIDReportLayout",
+                      "VendorPS3ThirdParty",
+                      "XboxXID",
+                      "XboxXUSB",
+                      "VendorNVIDIAShield",
+                      "VendorGameSir",
+                      "NintendoSwitch1"
                     ]
                   }
                 }
@@ -315,10 +315,10 @@
       "properties": {
         "link": {
           "enum": [
-            "usb",
-            "bluetooth-classic",
-            "bluetooth-le",
-            "proprietary-radio-receiver"
+            "USB",
+            "BluetoothClassic",
+            "BluetoothLE",
+            "ProprietaryRadioReceiver"
           ]
         },
         "interfaceSignature": {
@@ -436,7 +436,7 @@
           "maximum": 65535
         },
         "expect": {
-          "enum": ["answers", "stalls", "bytes"]
+          "enum": ["Answers", "Stalls", "Bytes"]
         },
         "offset": {
           "type": "integer",
@@ -452,7 +452,7 @@
           "if": {
             "properties": {
               "expect": {
-                "const": "bytes"
+                "const": "Bytes"
               }
             },
             "required": ["expect"]
@@ -476,35 +476,35 @@
       "properties": {
         "family": {
           "enum": [
-            "hid.descriptor",
-            "hid.report-layout",
-            "xbox.xid",
-            "xbox.xusb",
-            "xbox.gip",
-            "sony.sixaxis",
-            "sony.dualshock4",
-            "sony.dualsense",
-            "nintendo.switch1",
-            "nintendo.switch2",
-            "nintendo.switch-input-only",
-            "valve.steam-controller",
-            "valve.steam-triton",
-            "valve.steam-deck",
-            "vendor.flydigi",
-            "vendor.ps3-third-party",
-            "vendor.gamesir",
-            "vendor.nvidia-shield"
+            "HIDDescriptor",
+            "HIDReportLayout",
+            "XboxXID",
+            "XboxXUSB",
+            "XboxGIP",
+            "SonySixaxis",
+            "SonyDualShock4",
+            "SonyDualSense",
+            "NintendoSwitch1",
+            "NintendoSwitch2",
+            "NintendoSwitchInputOnly",
+            "ValveSteamController",
+            "ValveSteamTriton",
+            "ValveSteamDeck",
+            "VendorFlydigi",
+            "VendorPS3ThirdParty",
+            "VendorGameSir",
+            "VendorNVIDIAShield"
           ]
         },
         "variant": {
           "enum": [
-            "gamepad",
-            "wired",
-            "receiver",
-            "dongle",
-            "usb",
-            "bluetooth-le",
-            "enhanced-hid"
+            "Gamepad",
+            "Wired",
+            "Receiver",
+            "Dongle",
+            "USB",
+            "BluetoothLE",
+            "EnhancedHID"
           ]
         },
         "parameters": {
@@ -531,7 +531,7 @@
           "if": {
             "properties": {
               "family": {
-                "const": "xbox.xid"
+                "const": "XboxXID"
               }
             },
             "required": ["family"]
@@ -540,7 +540,7 @@
             "required": ["variant"],
             "properties": {
               "variant": {
-                "enum": ["gamepad"]
+                "enum": ["Gamepad"]
               }
             }
           }
@@ -549,7 +549,7 @@
           "if": {
             "properties": {
               "family": {
-                "const": "xbox.xusb"
+                "const": "XboxXUSB"
               }
             },
             "required": ["family"]
@@ -558,7 +558,7 @@
             "required": ["variant"],
             "properties": {
               "variant": {
-                "enum": ["wired", "receiver"]
+                "enum": ["Wired", "Receiver"]
               }
             }
           }
@@ -567,7 +567,7 @@
           "if": {
             "properties": {
               "family": {
-                "enum": ["valve.steam-controller", "valve.steam-triton"]
+                "enum": ["ValveSteamController", "ValveSteamTriton"]
               }
             },
             "required": ["family"]
@@ -576,7 +576,7 @@
             "required": ["variant"],
             "properties": {
               "variant": {
-                "enum": ["wired", "dongle", "bluetooth-le"]
+                "enum": ["Wired", "Dongle", "BluetoothLE"]
               }
             }
           }
@@ -585,7 +585,7 @@
           "if": {
             "properties": {
               "family": {
-                "const": "vendor.gamesir"
+                "const": "VendorGameSir"
               }
             },
             "required": ["family"]
@@ -594,7 +594,7 @@
             "required": ["variant"],
             "properties": {
               "variant": {
-                "enum": ["usb", "enhanced-hid"]
+                "enum": ["USB", "EnhancedHID"]
               },
               "parameters": {
                 "type": "object",
@@ -614,7 +614,7 @@
                 "if": {
                   "properties": {
                     "variant": {
-                      "const": "usb"
+                      "const": "USB"
                     }
                   },
                   "required": ["variant"]
@@ -629,7 +629,7 @@
                 "if": {
                   "properties": {
                     "variant": {
-                      "const": "enhanced-hid"
+                      "const": "EnhancedHID"
                     }
                   },
                   "required": ["variant"]
@@ -659,11 +659,11 @@
               "family": {
                 "not": {
                   "enum": [
-                    "xbox.xid",
-                    "xbox.xusb",
-                    "valve.steam-controller",
-                    "valve.steam-triton",
-                    "vendor.gamesir"
+                    "XboxXID",
+                    "XboxXUSB",
+                    "ValveSteamController",
+                    "ValveSteamTriton",
+                    "VendorGameSir"
                   ]
                 }
               }
@@ -681,7 +681,7 @@
             "properties": {
               "family": {
                 "not": {
-                  "const": "xbox.gip"
+                  "const": "XboxGIP"
                 }
               }
             },
@@ -704,7 +704,7 @@
           "if": {
             "properties": {
               "family": {
-                "const": "xbox.gip"
+                "const": "XboxGIP"
               }
             },
             "required": ["family"]
@@ -736,7 +736,7 @@
           "if": {
             "properties": {
               "family": {
-                "const": "vendor.ps3-third-party"
+                "const": "VendorPS3ThirdParty"
               }
             },
             "required": ["family"]
@@ -759,7 +759,7 @@
           "if": {
             "properties": {
               "family": {
-                "const": "nintendo.switch1"
+                "const": "NintendoSwitch1"
               }
             },
             "required": ["family"]
@@ -788,7 +788,7 @@
           "if": {
             "properties": {
               "family": {
-                "const": "nintendo.switch2"
+                "const": "NintendoSwitch2"
               }
             },
             "required": ["family"]
@@ -811,7 +811,7 @@
           "if": {
             "properties": {
               "family": {
-                "const": "sony.dualshock4"
+                "const": "SonyDualShock4"
               }
             },
             "required": ["family"]
@@ -843,7 +843,7 @@
           "if": {
             "properties": {
               "family": {
-                "const": "vendor.nvidia-shield"
+                "const": "VendorNVIDIAShield"
               }
             },
             "required": ["family"]
@@ -866,7 +866,7 @@
           "if": {
             "properties": {
               "family": {
-                "const": "sony.dualsense"
+                "const": "SonyDualSense"
               }
             },
             "required": ["family"]
@@ -904,14 +904,14 @@
               "family": {
                 "not": {
                   "enum": [
-                    "xbox.gip",
-                    "nintendo.switch1",
-                    "nintendo.switch2",
-                    "vendor.gamesir",
-                    "vendor.ps3-third-party",
-                    "sony.dualshock4",
-                    "vendor.nvidia-shield",
-                    "sony.dualsense"
+                    "XboxGIP",
+                    "NintendoSwitch1",
+                    "NintendoSwitch2",
+                    "VendorGameSir",
+                    "VendorPS3ThirdParty",
+                    "SonyDualShock4",
+                    "VendorNVIDIAShield",
+                    "SonyDualSense"
                   ]
                 }
               }
@@ -927,9 +927,9 @@
       ]
     },
     "gipInitializationAction": {
-      "$comment": "The ids a family offers are in defaults.session.namedPackets of Resources/Protocols/xbox.gip.json; a record naming one the description lacks is rejected by the validators.",
+      "$comment": "The ids a family offers are in defaults.session.namedPackets of Resources/Protocols/xbox-gip.json; a record naming one the description lacks is rejected by the validators.",
       "type": "string",
-      "pattern": "^xbox\\.gip/[a-z0-9]+(-[a-z0-9]+)*$"
+      "pattern": "^XboxGIP/[a-z0-9]+(-[a-z0-9]+)*$"
     },
     "capabilities": {
       "type": "object",
@@ -943,7 +943,7 @@
           "$ref": "#/$defs/controlList"
         },
         "rumble": {
-          "const": "absent"
+          "const": "Absent"
         }
       }
     },
@@ -960,7 +960,7 @@
       "additionalProperties": false,
       "properties": {
         "configuration": {
-          "const": "set1-before-claim"
+          "const": "SetConfiguration1BeforeClaim"
         },
         "endpoints": {
           "type": "object",
@@ -1103,10 +1103,10 @@
           "minimum": 1,
           "maximum": 60000
         },
-        "leftMain": {
+        "lowFrequency": {
           "$ref": "#/$defs/templateMotor"
         },
-        "rightMain": {
+        "highFrequency": {
           "$ref": "#/$defs/templateMotor"
         },
         "leftTrigger": {
@@ -1124,7 +1124,7 @@
       "required": ["kind", "length"],
       "properties": {
         "kind": {
-          "const": "usb"
+          "const": "USB"
         },
         "length": {
           "type": "integer",
@@ -1171,10 +1171,10 @@
           "maximum": 1000
         },
         "transport": {
-          "enum": ["usb", "bluetooth-classic", "bluetooth-le"]
+          "enum": ["USB", "BluetoothClassic", "BluetoothLE"]
         },
         "phase": {
-          "enum": ["startup", "activation"]
+          "enum": ["Startup", "Activation"]
         },
         "crc32Seed": {
           "type": "integer",
@@ -1203,7 +1203,7 @@
       "required": ["kind", "id", "length"],
       "properties": {
         "kind": {
-          "enum": ["output", "feature"]
+          "enum": ["Output", "Feature"]
         },
         "id": {
           "type": "integer",
@@ -1293,7 +1293,7 @@
       }
     },
     "hidUsageMap": {
-      "$comment": "Maps HID usages to canonical controls for hid.descriptor. A record's map replaces the family's map whole. Each (page, usage) appears once, an axis range has min below max, and a hat range is 0...7 or 1...8: the Swift decoder and the Python validators enforce the first two. reportID, when present, limits the map to element values of that report.",
+      "$comment": "Maps HID usages to canonical controls for HIDDescriptor. A record's map replaces the family's map whole. Each (page, usage) appears once, an axis range has min below max, and a hat range is 0...7 or 1...8: the Swift decoder and the Python validators enforce the first two. reportID, when present, limits the map to element values of that report.",
       "type": "object",
       "additionalProperties": false,
       "required": ["usages"],
@@ -1341,7 +1341,7 @@
       "required": ["kind", "page", "usage", "control"],
       "properties": {
         "kind": {
-          "const": "button"
+          "const": "Button"
         },
         "page": {
           "$ref": "#/$defs/hidUsagePage"
@@ -1377,7 +1377,7 @@
       "required": ["kind", "page", "usage", "control"],
       "properties": {
         "kind": {
-          "const": "axis"
+          "const": "Axis"
         },
         "page": {
           "$ref": "#/$defs/hidUsagePage"
@@ -1425,7 +1425,7 @@
       "required": ["kind", "page", "usage"],
       "properties": {
         "kind": {
-          "const": "hat"
+          "const": "Hat"
         },
         "page": {
           "$ref": "#/$defs/hidUsagePage"
@@ -1571,7 +1571,7 @@
           "required": ["encoding", "byte", "mask"],
           "properties": {
             "encoding": {
-              "const": "8-way"
+              "const": "EightWay"
             },
             "byte": {
               "type": "integer",
@@ -1594,7 +1594,7 @@
           "required": ["encoding", "up", "right", "down", "left"],
           "properties": {
             "encoding": {
-              "const": "directions"
+              "const": "Directions"
             },
             "up": {
               "$ref": "#/$defs/inputField"
@@ -1616,7 +1616,7 @@
           "required": ["encoding", "byte", "mask", "values"],
           "properties": {
             "encoding": {
-              "const": "table"
+              "const": "Table"
             },
             "byte": {
               "type": "integer",
@@ -1637,14 +1637,14 @@
               },
               "additionalProperties": {
                 "enum": [
-                  "north",
-                  "northEast",
-                  "east",
-                  "southEast",
-                  "south",
-                  "southWest",
-                  "west",
-                  "northWest"
+                  "North",
+                  "NorthEast",
+                  "East",
+                  "SouthEast",
+                  "South",
+                  "SouthWest",
+                  "West",
+                  "NorthWest"
                 ]
               }
             }
@@ -1673,7 +1673,7 @@
       "required": ["kind", "id", "length"],
       "properties": {
         "kind": {
-          "enum": ["output", "feature"]
+          "enum": ["Output", "Feature"]
         },
         "id": {
           "type": "integer",
@@ -1723,7 +1723,7 @@
       }
     },
     "server": {
-      "enum": ["system", "ojd"]
+      "enum": ["System", "OJD"]
     },
     "modeEndpoint": {
       "description": "One endpoint of an endpoint set; every key present must hold.",
@@ -1735,10 +1735,10 @@
           "$ref": "#/$defs/modeByte"
         },
         "direction": {
-          "enum": ["in", "out"]
+          "enum": ["In", "Out"]
         },
         "transferType": {
-          "enum": ["control", "isochronous", "bulk", "interrupt"]
+          "enum": ["Control", "Isochronous", "Bulk", "Interrupt"]
         },
         "maxPacketSize": {
           "type": "integer",
@@ -1988,17 +1988,17 @@
                     {
                       "properties": {
                         "family": {
-                          "enum": ["xbox.xid", "xbox.xusb", "xbox.gip"]
+                          "enum": ["XboxXID", "XboxXUSB", "XboxGIP"]
                         }
                       }
                     },
                     {
                       "properties": {
                         "family": {
-                          "const": "vendor.gamesir"
+                          "const": "VendorGameSir"
                         },
                         "variant": {
-                          "const": "usb"
+                          "const": "USB"
                         }
                       },
                       "required": ["variant"]
@@ -2030,7 +2030,7 @@
                 "protocol": {
                   "properties": {
                     "family": {
-                      "const": "xbox.gip"
+                      "const": "XboxGIP"
                     }
                   },
                   "required": ["family"],
@@ -2053,7 +2053,7 @@
                   "properties": {
                     "family": {
                       "not": {
-                        "enum": ["xbox.xusb", "xbox.xid"]
+                        "enum": ["XboxXUSB", "XboxXID"]
                       }
                     }
                   },
@@ -2094,7 +2094,7 @@
                 "protocol": {
                   "properties": {
                     "family": {
-                      "const": "xbox.xid"
+                      "const": "XboxXID"
                     }
                   },
                   "required": ["family"],
@@ -2134,7 +2134,7 @@
                 "protocol": {
                   "properties": {
                     "family": {
-                      "const": "xbox.xusb"
+                      "const": "XboxXUSB"
                     }
                   },
                   "required": ["family"],
@@ -2175,7 +2175,7 @@
                   "properties": {
                     "family": {
                       "not": {
-                        "const": "sony.dualsense"
+                        "const": "SonyDualSense"
                       }
                     }
                   },
@@ -2208,7 +2208,7 @@
                 "protocol": {
                   "properties": {
                     "family": {
-                      "const": "sony.dualsense"
+                      "const": "SonyDualSense"
                     }
                   },
                   "required": ["family"],
@@ -2250,7 +2250,7 @@
                 "protocol": {
                   "properties": {
                     "family": {
-                      "const": "hid.report-layout"
+                      "const": "HIDReportLayout"
                     }
                   },
                   "required": ["family"]
@@ -2273,7 +2273,7 @@
                 "protocol": {
                   "properties": {
                     "family": {
-                      "const": "hid.report-layout"
+                      "const": "HIDReportLayout"
                     }
                   },
                   "required": ["family"]
@@ -2293,7 +2293,7 @@
                   "protocol": {
                     "properties": {
                       "family": {
-                        "const": "hid.descriptor"
+                        "const": "HIDDescriptor"
                       }
                     },
                     "required": ["family"]
@@ -2333,7 +2333,7 @@
                       {
                         "properties": {
                           "family": {
-                            "enum": ["xbox.xid", "xbox.xusb", "xbox.gip"]
+                            "enum": ["XboxXID", "XboxXUSB", "XboxGIP"]
                           }
                         },
                         "required": ["family"]
@@ -2341,10 +2341,10 @@
                       {
                         "properties": {
                           "family": {
-                            "const": "vendor.gamesir"
+                            "const": "VendorGameSir"
                           },
                           "variant": {
-                            "const": "usb"
+                            "const": "USB"
                           }
                         },
                         "required": ["family", "variant"]
@@ -2373,7 +2373,7 @@
                     {
                       "properties": {
                         "family": {
-                          "enum": ["xbox.xid", "xbox.xusb", "xbox.gip"]
+                          "enum": ["XboxXID", "XboxXUSB", "XboxGIP"]
                         }
                       },
                       "required": ["family"]
@@ -2381,10 +2381,10 @@
                     {
                       "properties": {
                         "family": {
-                          "const": "vendor.gamesir"
+                          "const": "VendorGameSir"
                         },
                         "variant": {
-                          "const": "usb"
+                          "const": "USB"
                         }
                       },
                       "required": ["family", "variant"]
@@ -2415,7 +2415,7 @@
                 "protocol": {
                   "properties": {
                     "family": {
-                      "const": "sony.dualshock4"
+                      "const": "SonyDualShock4"
                     }
                   }
                 }
@@ -2450,7 +2450,7 @@
                 "protocol": {
                   "properties": {
                     "family": {
-                      "const": "nintendo.switch1"
+                      "const": "NintendoSwitch1"
                     }
                   }
                 }
@@ -2478,7 +2478,7 @@
                 "protocol": {
                   "properties": {
                     "family": {
-                      "const": "valve.steam-triton"
+                      "const": "ValveSteamTriton"
                     }
                   }
                 }
@@ -2506,7 +2506,7 @@
                 "protocol": {
                   "properties": {
                     "family": {
-                      "enum": ["nintendo.switch2", "vendor.gamesir"]
+                      "enum": ["NintendoSwitch2", "VendorGameSir"]
                     }
                   }
                 }
@@ -2534,7 +2534,7 @@
                 "protocol": {
                   "properties": {
                     "family": {
-                      "enum": ["xbox.gip", "xbox.xusb"]
+                      "enum": ["XboxGIP", "XboxXUSB"]
                     }
                   }
                 }
@@ -2562,7 +2562,7 @@
                 "protocol": {
                   "properties": {
                     "family": {
-                      "enum": ["sony.dualshock4", "sony.dualsense"]
+                      "enum": ["SonyDualShock4", "SonyDualSense"]
                     }
                   }
                 }
@@ -2590,7 +2590,7 @@
                 "protocol": {
                   "properties": {
                     "family": {
-                      "const": "xbox.gip"
+                      "const": "XboxGIP"
                     }
                   }
                 }
@@ -2618,7 +2618,7 @@
                 "protocol": {
                   "properties": {
                     "family": {
-                      "const": "xbox.gip"
+                      "const": "XboxGIP"
                     }
                   }
                 }
@@ -2646,7 +2646,7 @@
                 "protocol": {
                   "properties": {
                     "family": {
-                      "enum": ["xbox.gip", "xbox.xusb"]
+                      "enum": ["XboxGIP", "XboxXUSB"]
                     }
                   }
                 }
@@ -2684,7 +2684,7 @@
                       {
                         "properties": {
                           "family": {
-                            "enum": ["xbox.xid", "xbox.xusb", "xbox.gip"]
+                            "enum": ["XboxXID", "XboxXUSB", "XboxGIP"]
                           }
                         },
                         "required": ["family"]
@@ -2692,10 +2692,10 @@
                       {
                         "properties": {
                           "family": {
-                            "const": "vendor.gamesir"
+                            "const": "VendorGameSir"
                           },
                           "variant": {
-                            "const": "usb"
+                            "const": "USB"
                           }
                         },
                         "required": ["family", "variant"]
@@ -2722,7 +2722,7 @@
                 "protocol": {
                   "properties": {
                     "family": {
-                      "const": "nintendo.switch2"
+                      "const": "NintendoSwitch2"
                     }
                   },
                   "required": ["family"]
@@ -2752,7 +2752,7 @@
                 "protocol": {
                   "properties": {
                     "family": {
-                      "const": "hid.descriptor"
+                      "const": "HIDDescriptor"
                     }
                   },
                   "required": ["family"],

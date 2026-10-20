@@ -1,7 +1,7 @@
 @testable import OpenJoystickDriverKit
 
 extension ProtocolBindingResult {
-  /// A `hid.descriptor` binding with no observed interfaces, for descriptions whose binding
+  /// A `HIDDescriptor` binding with no observed interfaces, for descriptions whose binding
   /// decision a test does not examine.
   static let hidDescriptorFixture = ProtocolBindingResult(
     binding: ProtocolBinding(

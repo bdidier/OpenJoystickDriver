@@ -7,13 +7,13 @@
     {
       "id": "default",
       "protocol": {
-        "family": "xbox.xusb",
-        "variant": "wired"
+        "family": "XboxXUSB",
+        "variant": "Wired"
       }
     }
   ],
   "usb": {
-    "configuration": "set1-before-claim",
+    "configuration": "SetConfiguration1BeforeClaim",
     "endpoints": {
       "in": 129,
       "out": 2

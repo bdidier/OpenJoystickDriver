@@ -104,7 +104,7 @@ public final class ProtocolDriverRegistry: Sendable {
   /// binding, the family defaults. GIP devices enumerate unconfigured on macOS (their device class
   /// is vendor-specific), so a GIP signature binding sets configuration 1 before the claim whether
   /// this attach saw the device or interface signature, like the catalogued G7 SE row. Nil for
-  /// `hid.descriptor` without a record.
+  /// `HIDDescriptor` without a record.
   func runtimeProfile(for binding: ProtocolBinding) -> DeviceRuntimeProfile? {
     if let record = binding.record { return record }
     guard binding.rule == .interfaceSignature else { return nil }
@@ -130,7 +130,7 @@ public final class ProtocolDriverRegistry: Sendable {
   ///
   /// `slotOrdinal` is the role's index in ``roleProfiles(for:resolution:)``; only an Xbox 360
   /// receiver reads it, and only to reject a slot past the fourth. `reportDescriptor` is the bound
-  /// HID interface's report descriptor; only `hid.descriptor` reads it, to choose its layout.
+  /// HID interface's report descriptor; only `HIDDescriptor` reads it, to choose its layout.
   func makeDriver(
     for binding: ProtocolBinding,
     model: ControllerModelID,

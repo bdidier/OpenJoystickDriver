@@ -7,11 +7,11 @@
     {
       "id": "default",
       "protocol": {
-        "family": "xbox.gip"
+        "family": "XboxGIP"
       }
     }
   ],
   "capabilities": {
-    "rumble": "absent"
+    "rumble": "Absent"
   }
 }

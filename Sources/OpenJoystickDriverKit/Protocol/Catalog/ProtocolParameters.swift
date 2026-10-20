@@ -9,7 +9,7 @@ import Foundation
 /// a record never spells a default value.
 public struct ProtocolParameters: Codable, Equatable, Sendable {
   /// Where a GIP packet carries the Share button, counted back from the packet's end (Linux
-  /// xpad `MAP_SHARE_OFFSET`). `xbox.gip`.
+  /// xpad `MAP_SHARE_OFFSET`). `XboxGIP`.
   public struct ShareButton: Codable, Equatable, Sendable {
     public let fromEnd: Int
 
@@ -33,9 +33,9 @@ public struct ProtocolParameters: Codable, Equatable, Sendable {
     }
   }
 
-  /// The axis and button permutation of a Nintendo controller. `nintendo.switch1` takes `Pro`,
-  /// `JoyConLeft` and `JoyConRight`; `nintendo.switch2` also takes `GameCube`, the NSO GameCube
-  /// controller with analog triggers and flash trigger calibration. On `nintendo.switch2` the
+  /// The axis and button permutation of a Nintendo controller. `NintendoSwitch1` takes `Pro`,
+  /// `JoyConLeft` and `JoyConRight`; `NintendoSwitch2` also takes `GameCube`, the NSO GameCube
+  /// controller with analog triggers and flash trigger calibration. On `NintendoSwitch2` the
   /// Joy-Con values select the Joy-Con 2 layout.
   public enum Layout: String, Codable, CaseIterable, Sendable {
     case pro = "Pro"
@@ -47,35 +47,35 @@ public struct ProtocolParameters: Codable, Equatable, Sendable {
   /// What a Switch pad's USB link does. `ChargingOnly` is a pad that enumerates over USB for
   /// charging but speaks the protocol only over Bluetooth (SDL
   /// `HIDAPI_DriverSwitch_IsSupportedDevice`, Linux `hid-nintendo.c` device table).
-  /// `nintendo.switch1`.
+  /// `NintendoSwitch1`.
   public enum USBProtocol: String, Codable, CaseIterable, Sendable {
     case chargingOnly = "ChargingOnly"
   }
 
   /// How GameSir enhanced HID lighting memory is organized. `ProfileSlots`: the driver reads the
   /// active slot at startup, tracks it, and writes color and brightness into that slot.
-  /// `vendor.gamesir` enhanced HID.
+  /// `VendorGameSir` enhanced HID.
   public enum LightingMemory: String, Codable, CaseIterable, Sendable {
     case profileSlots = "ProfileSlots"
   }
 
   /// Where a third-party PS3 pad's hat comes from. `DpadPressure`: its hat bits are untrusted, so
   /// any nonzero D-pad pressure byte holds its direction (SDL `SDL_hidapi_ps3.c`, Saitek Cyborg
-  /// V.3 Rumble Pad). `vendor.ps3-third-party`.
+  /// V.3 Rumble Pad). `VendorPS3ThirdParty`.
   public enum HatSource: String, Codable, CaseIterable, Sendable {
     case dpadPressure = "DpadPressure"
   }
 
   /// Which motion calibration report a DualShock 4 trusts. `Factory`: the report is trusted. SDL
   /// `SDL_hidapi_ps4.c` reads it only on Sony's own controllers; other pads keep the nominal
-  /// scale. `sony.dualshock4`.
+  /// scale. `SonyDualShock4`.
   public enum MotionCalibration: String, Codable, CaseIterable, Sendable {
     case factory = "Factory"
   }
 
-  /// The part a Sony device plays. `WirelessAdapter` (`sony.dualshock4`) is Sony's DualShock 4
+  /// The part a Sony device plays. `WirelessAdapter` (`SonyDualShock4`) is Sony's DualShock 4
   /// wireless adapter (SDL `USB_PRODUCT_SONY_DS4_DONGLE`): output waits for a paired pad, and its
-  /// calibration uses the Bluetooth gyro order. `Receiver` (`sony.dualsense`) is a third-party
+  /// calibration uses the Bluetooth gyro order. `Receiver` (`SonyDualSense`) is a third-party
   /// wireless receiver that keeps reporting with no controller paired.
   public enum Role: String, Codable, CaseIterable, Sendable {
     case wirelessAdapter = "WirelessAdapter"
@@ -84,20 +84,20 @@ public struct ProtocolParameters: Codable, Equatable, Sendable {
 
   /// The motion scale of a DualShock 4 model. `StrikePad` is the STRIKEPAD grip (SDL
   /// `USB_PRODUCT_SONY_DS4_STRIKEPAD`): doubled gyro scale and doubled, negated accelerometer
-  /// scale. `sony.dualshock4`.
+  /// scale. `SonyDualShock4`.
   public enum MotionScale: String, Codable, CaseIterable, Sendable {
     case strikePad = "StrikePad"
   }
 
   /// The input report revision of an NVIDIA SHIELD controller. `Shield2015` is the 2015
   /// controller (SDL `SDL_hidapi_shield.c` V103): plain rumble output report and a touchpad
-  /// click; without it the driver runs the input-only 2017 controller. `vendor.nvidia-shield`.
+  /// click; without it the driver runs the input-only 2017 controller. `VendorNVIDIAShield`.
   public enum ReportRevision: String, Codable, CaseIterable, Sendable {
     case shield2015 = "Shield2015"
   }
 
   /// Who made a DualSense-protocol controller. `ThirdParty` is one that Sony did not make: the
-  /// driver follows SDL's non-Sony path, probing for features. The other `sony.dualsense`
+  /// driver follows SDL's non-Sony path, probing for features. The other `SonyDualSense`
   /// fields describe a third-party DualSense and need this one.
   public enum Maker: String, Codable, CaseIterable, Sendable {
     case thirdParty = "ThirdParty"
