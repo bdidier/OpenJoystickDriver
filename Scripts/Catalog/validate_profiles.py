@@ -45,6 +45,11 @@ def uses_raw_usb(protocol: dict[str, Any]) -> bool:
     )
 
 
+def declares_keep_alive(family: str) -> bool:
+    """Whether the family's description declares its own keep-alive."""
+    return "keepAlive" in description_of(family).get("defaults", {}).get("session", {})
+
+
 def encodes_rumble_template(family: str) -> bool:
     """Whether the family's driver encodes rumble from a record's rumble template."""
     return "rumble" in description_of(family).get("recordSections", ())
@@ -125,11 +130,8 @@ def validate_mode_session(path: pathlib.Path, mode: dict[str, Any]) -> None:
             f"{path}: HID startup writes apply only to HID controllers, so not to a "
             "raw-USB mode",
         )
-        described_keep_alive = "keepAlive" in description.get("defaults", {}).get(
-            "session", {}
-        )
         require(
-            "keepAlive" not in session or not described_keep_alive,
+            "keepAlive" not in session or not declares_keep_alive(family),
             f"{path}: a session keepAlive needs a raw-USB family whose description "
             "declares none",
         )
@@ -155,6 +157,15 @@ def validate_mode_session(path: pathlib.Path, mode: dict[str, Any]) -> None:
     if template := session.get("rumble"):
         problem = protocol_descriptions.rumble_template_problem(template)
         require(problem is None, f"{path}: {problem}")
+        if "resendIntervalMilliseconds" in template:
+            require(
+                "keepAlive" not in session,
+                f"{path}: {protocol_descriptions.RESEND_WITH_KEEP_ALIVE}",
+            )
+            require(
+                not declares_keep_alive(protocol["family"]),
+                f"{path}: {protocol_descriptions.RESEND_WITH_FAMILY_KEEP_ALIVE}",
+            )
         require(
             protocol_descriptions.is_usb_template(template) == uses_raw_usb(protocol),
             f"{path}: a raw-USB mode's rumble template is a usb packet, and a HID mode's is "

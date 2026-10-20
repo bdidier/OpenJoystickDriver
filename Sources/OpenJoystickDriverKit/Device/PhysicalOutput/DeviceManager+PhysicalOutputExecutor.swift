@@ -65,6 +65,36 @@ extension DeviceManager {
     return outcome == .completed(true)
   }
 
+  /// Sends one HID keep-alive run. The pipeline produces the run's writes inside the output
+  /// queue operation, so a rumble command queued before the run is encoded first and the run
+  /// resends the state it left. A run with no writes sends nothing. The result is false if a write
+  /// failed or the operation was cancelled. An inactive session sends nothing and is not a
+  /// failure; the loop ends at its next interval check.
+  func sendHIDKeepAlive(
+    address: ControllerConnectionAddress,
+    identifier: LogicalControllerID,
+    pipeline: DevicePipeline
+  ) async -> Bool {
+    guard
+      await acceptsPhysicalOutput(identifier: identifier, pipeline: pipeline, detachedInfo: nil)
+    else { return false }
+    let outcome = await physicalOutputQueue(for: identifier).perform { [weak self] operation in
+      guard let self else { return false }
+      guard let writes = await pipeline.hidKeepAliveWrites(), !writes.isEmpty else { return true }
+      return await self.performHIDWrites(
+        writes,
+        intervalNanoseconds: 0,
+        address: address,
+        identifier: identifier,
+        pipeline: pipeline,
+        startupConnection: nil,
+        detachedInfo: nil,
+        in: operation
+      )
+    }
+    return outcome == .completed(true)
+  }
+
   private func performHIDWrites(
     _ writes: [PhysicalOutputWrite],
     intervalNanoseconds: UInt64,

@@ -168,11 +168,9 @@ struct Switch1DescribedOutputTests {
   /// A record's template reaches the driver the registry builds.
   @Test
   func theRegistryPassesTheRecordsTemplateToTheDriver() throws {
-    var profile = try #require(
-      ControllerRecordSet.bundled.records.values.map(\.profile).first {
-        $0.physicalProtocolID == .nintendoSwitch1
-      }
-    )
+    let proController = ControllerModelID(vendorID: 0x057E, productID: 0x2009)
+    var profile = try #require(ControllerRecordSet.bundled.records[proController]?.profile)
+    #expect(profile.physicalProtocolID == .nintendoSwitch1)
     profile.session = ControllerSession(rumbleTemplate: try Self.recordTemplate())
     let variant = PhysicalProtocolVariantID.usb
     guard

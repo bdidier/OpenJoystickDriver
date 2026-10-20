@@ -52,7 +52,7 @@ public struct DriverSessionPlan: Equatable, Sendable {
   /// Delays before each repeated USB startup attempt after a failed one; empty means one attempt.
   public internal(set) var usbStartupRetryDelays: [UInt64]
   /// The channels the driver keeps alive; empty when the protocol sends no keep-alive.
-  public let keepAliveChannels: Set<KeepAliveChannel>
+  public internal(set) var keepAliveChannels: Set<KeepAliveChannel>
   /// Interval between keep-alive writes on every channel in ``keepAliveChannels``. The family's
   /// description holds it (`defaults.session.keepAlive.intervalMilliseconds`) and
   /// ``withKeepAlive(of:)`` fills it; nil until then and for a driver without a channel.
@@ -152,6 +152,19 @@ public struct DriverSessionPlan: Equatable, Sendable {
         UInt64($0.intervalMilliseconds) * DeviceTransportProfile.nanosecondsPerMillisecond
       }
     }
+    return plan
+  }
+
+  /// This plan with a keep-alive at `template`'s resend interval on the channel the template
+  /// writes to, when the template names an interval and the plan has no keep-alive of its own.
+  func withRumbleResend(of template: RumbleOutputTemplate?) -> Self {
+    guard let milliseconds = template?.resendIntervalMilliseconds,
+      let target = template?.target, keepAliveChannels.isEmpty
+    else { return self }
+    var plan = self
+    plan.keepAliveChannels = [target.hidReport == nil ? .usb : .hid]
+    plan.keepAliveIntervalNanoseconds =
+      UInt64(milliseconds) * DeviceTransportProfile.nanosecondsPerMillisecond
     return plan
   }
 

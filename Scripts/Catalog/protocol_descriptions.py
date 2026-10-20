@@ -109,6 +109,7 @@ def semantic_violations(
                 ("E5002", f"{where}: {', '.join(unread)} not read by the driver")
             )
     found += rumble_target_violations(description, variants)
+    found += rumble_resend_violations(description)
     found += startup_violations(description, variants)
     found += keep_alive_violations(description, variants)
     found += subcommand_violations(description)
@@ -116,6 +117,12 @@ def semantic_violations(
     return found
 
 
+RESEND_WITH_KEEP_ALIVE = (
+    "a rumble resendIntervalMilliseconds cannot be combined with a session keepAlive"
+)
+RESEND_WITH_FAMILY_KEEP_ALIVE = (
+    "a rumble resendIntervalMilliseconds needs a family whose description declares no keepAlive"
+)
 MOTOR_WIDTHS = {
     "UInt8": 1,
     "UInt16BigEndian": 2,
@@ -215,6 +222,22 @@ def rumble_target_violations(
         if is_usb_template(template) != uses_raw_usb(description, variant):
             found.append(mismatch)
     return found
+
+
+def rumble_resend_violations(description: dict[str, Any]) -> list[tuple[str, str]]:
+    """A resend interval needs a family whose description declares no keep-alive, as
+    `ProtocolDescription` checks it in Swift."""
+    defaults = description.get("defaults", {})
+    session = defaults.get("session", {})
+    if "keepAlive" not in session:
+        return []
+    templates = [session.get("rumble")] + [
+        body.get("session", {}).get("rumble")
+        for body in defaults.get("variants", {}).values()
+    ]
+    if any(t is not None and "resendIntervalMilliseconds" in t for t in templates):
+        return [("E5002", RESEND_WITH_FAMILY_KEEP_ALIVE)]
+    return []
 
 
 def startup_violations(

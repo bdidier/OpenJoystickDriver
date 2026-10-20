@@ -76,6 +76,7 @@ public final class PS3ThirdPartyDriver: PhysicalProtocolDriver {
   /// Set once the device is known to send the third-party report format.
   private(set) var decodesRawReports: Bool
   private var state = ControllerState.neutral
+  private var lastRumble = RumbleIntensities.off
 
   /// Creates a driver for a controller of `model`. `rumbleTemplate` and
   /// `hatFromPressureOnly` (`hatSource: DpadPressure`) come from its record.
@@ -94,12 +95,21 @@ public final class PS3ThirdPartyDriver: PhysicalProtocolDriver {
   /// so it survives.
   public func resetProtocolState() {
     state = .neutral
+    lastRumble = .off
     hatIsLive = false
     descriptorFallback.resetProtocolState()
   }
 
   public var sessionPlan: DriverSessionPlan {
     DriverSessionPlan(parsesHIDElementValues: true, validatesFeatureReplies: true)
+      .withRumbleResend(of: rumbleTemplate)
+  }
+
+  /// The last rumble again while a motor runs, when the template names a resend interval.
+  public func keepAliveWrites() -> [PhysicalOutputWrite] {
+    guard let rumbleTemplate, let intensities = rumbleTemplate.resendIntensities(after: lastRumble)
+    else { return [] }
+    return [rumbleTemplate.write(intensities)]
   }
   public var outputCapabilities: PhysicalControllerOutputCapabilities {
     rumbleTemplate?.outputCapabilities ?? .none
@@ -117,7 +127,9 @@ public final class PS3ThirdPartyDriver: PhysicalProtocolDriver {
     _ command: ControllerOutputCommand
   ) throws(ControllerOutputError) -> PhysicalOutputPlan {
     guard let rumbleTemplate else { throw .unsupportedCapability(command.capability) }
-    return try rumbleTemplate.encode(command)
+    let plan = try rumbleTemplate.encode(command)
+    lastRumble = command.rumbleIntensities
+    return plan
   }
 
   public func startupFeatureReads() -> [PhysicalHIDFeatureReadRequest] {

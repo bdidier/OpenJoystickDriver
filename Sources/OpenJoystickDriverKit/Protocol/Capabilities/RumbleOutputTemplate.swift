@@ -59,6 +59,15 @@ public struct RumbleOutputTemplate: Equatable, Sendable {
   /// The resend intervals a template may name, as a keep-alive's.
   static let resendIntervalRange = KeepAlive.intervalRange
 
+  /// Why a resend interval cannot be honored beside a mode's own keep-alive: the keep-alive's
+  /// interval governs the USB timer.
+  static let resendWithKeepAliveProblem =
+    "a rumble resendIntervalMilliseconds cannot be combined with a session keepAlive"
+  /// Why a resend interval cannot be honored in a family that runs its own keep-alive: the
+  /// description's interval governs the ticks.
+  static let resendWithFamilyKeepAliveProblem =
+    "a rumble resendIntervalMilliseconds needs a family whose description declares no keepAlive"
+
   /// Where the template's bytes go.
   public enum Target: Hashable, Sendable {
     /// A HID output or feature report.
@@ -103,7 +112,11 @@ public struct RumbleOutputTemplate: Equatable, Sendable {
   public let motors: [PhysicalRumbleMotor: MotorField]
   /// The byte that carries the session's rolling output counter; nil when the report has none.
   public let counterByte: Int?
-  /// How often the last report is sent again while a motor runs; nil sends it once.
+  /// How often the driver's keep-alive sends the last report again while a motor runs; nil
+  /// sends it once. A resend encodes the last motor intensities again, so a counter byte takes
+  /// the session's next value. A zero report stops the resends. A template with a resend interval
+  /// is refused beside a mode's keep-alive and in a family whose description declares one, so the
+  /// interval alone times the keep-alive.
   public let resendIntervalMilliseconds: Int?
 
   /// The HID report this template writes; nil for a raw-USB packet.
@@ -189,6 +202,15 @@ public struct RumbleOutputTemplate: Equatable, Sendable {
     return bytes
   }
 
+  /// The intensities a keep-alive tick sends again after `last`, the last rumble the driver
+  /// encoded; nil when the template names no resend interval or no template motor runs.
+  func resendIntensities(after last: RumbleIntensities) -> RumbleIntensities? {
+    guard resendIntervalMilliseconds != nil,
+      motors.keys.contains(where: { last[$0] != .min })
+    else { return nil }
+    return last
+  }
+
   /// Rumble through this HID template; the motors run until the next report.
   func encode(
     _ command: ControllerOutputCommand
@@ -219,5 +241,14 @@ extension RumbleOutputTemplate.Target {
   var hidReport: ControllerTemplateReport? {
     if case .hid(let report) = self { return report }
     return nil
+  }
+}
+
+extension ControllerOutputCommand {
+  /// The motor intensities a rumble command sets: `stopRumble` and any other command leave every
+  /// motor off.
+  var rumbleIntensities: RumbleIntensities {
+    if case .setRumble(let intensities, _) = self { return intensities }
+    return .off
   }
 }

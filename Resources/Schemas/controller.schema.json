@@ -236,6 +236,46 @@
           }
         },
         {
+          "$comment": "a rumble resendIntervalMilliseconds cannot be combined with a session keepAlive",
+          "not": {
+            "properties": {
+              "session": {
+                "required": ["keepAlive", "rumble"],
+                "properties": {
+                  "rumble": {
+                    "required": ["resendIntervalMilliseconds"]
+                  }
+                }
+              }
+            },
+            "required": ["session"]
+          }
+        },
+        {
+          "$comment": "a rumble resendIntervalMilliseconds needs a family whose description declares no keepAlive",
+          "not": {
+            "properties": {
+              "session": {
+                "required": ["rumble"],
+                "properties": {
+                  "rumble": {
+                    "required": ["resendIntervalMilliseconds"]
+                  }
+                }
+              },
+              "protocol": {
+                "required": ["family"],
+                "properties": {
+                  "family": {
+                    "enum": ["vendor.gamesir"]
+                  }
+                }
+              }
+            },
+            "required": ["session", "protocol"]
+          }
+        },
+        {
           "if": {
             "properties": {
               "session": {

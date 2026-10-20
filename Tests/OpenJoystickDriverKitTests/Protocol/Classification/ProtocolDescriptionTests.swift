@@ -493,6 +493,33 @@ struct ProtocolDescriptionTests {
   }
 
   @Test
+  func rejectsARumbleResendIntervalInAFamilyWithAKeepAlive() {
+    let keepAlive = #""keepAlive": {"intervalMilliseconds": 100}"#
+    let variant = rejection(
+      family: .vendorGameSir,
+      #""rawUSB": ["usb"], "recordSections": ["rumble"], "#
+        + #""defaults": {"session": {\#(keepAlive)}, "#
+        + #""variants": {"enhanced-hid": {"session": "#
+        + #"{"rumble": \#(Self.rumbleTemplateWithResend)}}}}"#
+    )
+    let usb = rejection(
+      family: .vendorGameSir,
+      #""rawUSB": ["usb"], "recordSections": ["rumble"], "#
+        + #""defaults": {"session": {\#(keepAlive)}, "#
+        + #""variants": {"usb": {"session": {"rumble": \#(Self.usbRumbleTemplate)}}}}"#
+    )
+    for problem in [variant, usb] {
+      #expect(
+        problem?.description.contains(
+          "a rumble resendIntervalMilliseconds needs a family "
+            + "whose description declares no keepAlive"
+        ) == true,
+        Comment(rawValue: "\(problem?.description ?? "accepted")")
+      )
+    }
+  }
+
+  @Test
   func rejectsRumbleDefaultsAndStickDeadzoneForTheRightReason() {
     let rumble = rejection(
       family: .xboxGIP,
@@ -536,6 +563,9 @@ struct ProtocolDescriptionTests {
     )
   }
 
+  private static let rumbleTemplateWithResend =
+    #"{"report": {"kind": "output", "id": 2, "length": 8}, "leftMain": {"byte": 4}, "#
+    + #""resendIntervalMilliseconds": 100}"#
   private static let usbRumbleTemplate =
     #"{"report": {"kind": "usb", "length": 8}, "bytes": "00 08 00 00 00 00 00 00", "#
     + #""leftMain": {"byte": 3, "encoding": "UInt16BigEndian"}, "counter": {"byte": 7}, "#

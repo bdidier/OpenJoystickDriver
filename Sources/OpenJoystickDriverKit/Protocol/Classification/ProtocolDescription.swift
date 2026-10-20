@@ -405,6 +405,13 @@ struct ProtocolDescription: Sendable {
       return "rumble templates require a driver that encodes them"
     }
     if let violation = rumbleTargetViolation { return violation }
+    if keepAlive != nil,
+      ([rumbleTemplate].compactMap { $0 } + Array(variantRumble.values)).contains(where: {
+        $0.resendIntervalMilliseconds != nil
+      })
+    {
+      return RumbleOutputTemplate.resendWithFamilyKeepAliveProblem
+    }
     if !startupWrites.isEmpty, rawUSB == .always {
       return "HID startup writes apply only to HID controllers"
     }

@@ -32,6 +32,17 @@ XUSB = {"family": "xbox.xusb", "variant": "wired"}
 DUALSENSE = {"family": "sony.dualsense"}
 
 
+def schema_clauses(node: Any) -> Any:
+    """Every object nested in the schema."""
+    if isinstance(node, dict):
+        yield node
+        for value in node.values():
+            yield from schema_clauses(value)
+    elif isinstance(node, list):
+        for value in node:
+            yield from schema_clauses(value)
+
+
 class ControllerSchemaTests(unittest.TestCase):
     def setUp(self) -> None:
         self.validator = validate_profiles.validator()
@@ -348,6 +359,56 @@ class OwnershipAndSessionTests(unittest.TestCase):
         self.assertTrue(
             self.validator.is_valid(record(THIRD_PARTY, session={"rumble": usb}))
         )
+
+    def test_rejects_a_resend_interval_that_a_keep_alive_would_retime(self) -> None:
+        usb = {
+            "report": {"kind": "usb", "length": 8},
+            "leftMain": {"byte": 3},
+            "resendIntervalMilliseconds": 100,
+        }
+        keep_alive = {"intervalMilliseconds": 500}
+        refused = {
+            "session keepAlive": (
+                XUSB,
+                {"rumble": usb, "keepAlive": keep_alive},
+                "cannot be combined with a session keepAlive",
+            ),
+            "family keepAlive": (
+                {"family": "vendor.gamesir", "variant": "enhanced-hid"},
+                {"rumble": {**GP100_RUMBLE, "resendIntervalMilliseconds": 100}},
+                "needs a family whose description declares no keepAlive",
+            ),
+        }
+        self.assertTrue(
+            self.validator.is_valid(record(XUSB, session={"rumble": usb}))
+        )
+        for name, (protocol, session, message) in refused.items():
+            with self.subTest(name):
+                document = record(protocol, session=session)
+                self.assertFalse(self.validator.is_valid(document))
+                with self.assertRaisesRegex(validate_profiles.ValidationError, message):
+                    validate_profiles.validate_modes(Path("record.json"), document)
+
+    def test_schema_lists_the_families_whose_keep_alive_a_resend_would_retime(
+        self,
+    ) -> None:
+        schema = validate_profiles.load_object(validate_profiles.SCHEMA_PATH)
+        refusals = [
+            clause
+            for clause in schema_clauses(schema)
+            if clause.get("$comment", "").endswith("declares no keepAlive")
+        ]
+        self.assertEqual(len(refusals), 1)
+        listed = refusals[0]["not"]["properties"]["protocol"]["properties"]["family"][
+            "enum"
+        ]
+        declared = [
+            family
+            for family in validate_profiles.protocol_descriptions.bundled()
+            if validate_profiles.declares_keep_alive(family)
+            and validate_profiles.encodes_rumble_template(family)
+        ]
+        self.assertEqual(sorted(listed), sorted(declared))
 
     def test_rejects_malformed_template_bytes_encodings_counter_and_resend(
         self,

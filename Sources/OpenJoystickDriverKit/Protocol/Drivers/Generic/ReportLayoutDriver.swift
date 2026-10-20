@@ -9,6 +9,7 @@ public final class ReportLayoutDriver: PhysicalProtocolDriver {
   /// Per hat source, whether its 8-way field has been nonzero in this session.
   private var hatSourceIsLive: [Bool]
   private var state = ControllerState.neutral
+  private var lastRumble = RumbleIntensities.off
 
   /// Creates a driver for one record's input layout and optional rumble template.
   public init(layout: ControllerInputLayout, rumbleTemplate: RumbleOutputTemplate? = nil) {
@@ -20,10 +21,20 @@ public final class ReportLayoutDriver: PhysicalProtocolDriver {
   /// A new transport session starts from neutral input with no live hat.
   public func resetProtocolState() {
     state = .neutral
+    lastRumble = .off
     hatSourceIsLive = Array(repeating: false, count: layout.hat.count)
   }
 
-  public var sessionPlan: DriverSessionPlan { DriverSessionPlan() }
+  public var sessionPlan: DriverSessionPlan {
+    DriverSessionPlan().withRumbleResend(of: rumbleTemplate)
+  }
+
+  /// The last rumble again while a motor runs, when the template names a resend interval.
+  public func keepAliveWrites() -> [PhysicalOutputWrite] {
+    guard let rumbleTemplate, let intensities = rumbleTemplate.resendIntensities(after: lastRumble)
+    else { return [] }
+    return [rumbleTemplate.write(intensities)]
+  }
   public var outputCapabilities: PhysicalControllerOutputCapabilities {
     rumbleTemplate?.outputCapabilities ?? .none
   }
@@ -39,7 +50,9 @@ public final class ReportLayoutDriver: PhysicalProtocolDriver {
     _ command: ControllerOutputCommand
   ) throws(ControllerOutputError) -> PhysicalOutputPlan {
     guard let rumbleTemplate else { throw .unsupportedCapability(command.capability) }
-    return try rumbleTemplate.encode(command)
+    let plan = try rumbleTemplate.encode(command)
+    lastRumble = command.rumbleIntensities
+    return plan
   }
 
   /// Decodes one input report into the full controller state; a report shorter than the layout

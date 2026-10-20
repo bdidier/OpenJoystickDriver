@@ -40,6 +40,8 @@ public final class Switch1Driver: PhysicalProtocolDriver {
   private var userMotionBytes: [UInt8]?
   private var state = ControllerState.neutral
   private var outputPacketNumber: UInt8 = 0
+  /// The motor intensities of the last 0x10 rumble report, after each Joy-Con's side filter.
+  private var lastRumble = RumbleIntensities.off
   /// The rumble bytes embedded in every subcommand report, from `SwitchProRumbleCodec`. A record's
   /// rumble template changes only the 0x10 report, not these.
   private var physicalRumbleData =
@@ -65,6 +67,7 @@ public final class Switch1Driver: PhysicalProtocolDriver {
   /// A new transport session starts from neutral input and re-anchors motion time.
   public func resetProtocolState() {
     state = .neutral
+    lastRumble = .off
     sensorSamples.reset()
   }
 
@@ -86,6 +89,15 @@ public final class Switch1Driver: PhysicalProtocolDriver {
   public var sessionPlan: DriverSessionPlan {
     DriverSessionPlan(hasStartupRecovery: true)
       .withDefaults(of: .nintendoSwitch1, variant: isBluetooth ? .bluetoothClassic : .usb)
+      .withRumbleResend(of: rumbleTemplate)
+  }
+
+  /// The last rumble report again while a motor runs, when the template names a resend interval.
+  /// It carries the session's next output counter value.
+  public func keepAliveWrites() -> [PhysicalOutputWrite] {
+    rumbleTemplate.resendIntensities(after: lastRumble).map {
+      [rumbleTemplate.write($0, counter: nextPacketNumber())]
+    } ?? []
   }
 
   public func consumeInputConnectionStateChange() -> ControllerInputConnectionState? { nil }
@@ -145,11 +157,9 @@ public final class Switch1Driver: PhysicalProtocolDriver {
     physicalRumbleData =
       SwitchProRumbleCodec.encode(intensity: left.byte)
       + SwitchProRumbleCodec.encode(intensity: right.byte)
+    lastRumble = RumbleIntensities(leftMain: left, rightMain: right)
     return PhysicalOutputPlan(writes: [
-      rumbleTemplate.write(
-        RumbleIntensities(leftMain: left, rightMain: right),
-        counter: nextPacketNumber()
-      )
+      rumbleTemplate.write(lastRumble, counter: nextPacketNumber())
     ])
   }
 

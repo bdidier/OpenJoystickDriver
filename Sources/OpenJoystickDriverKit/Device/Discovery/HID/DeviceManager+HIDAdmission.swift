@@ -243,6 +243,10 @@ extension DeviceManager {
       {
         await pipeline.activateOutput()
       }
+      // macOS runs the controller; OJD keeps alive only the rumble its record's template resends.
+      if await pipeline.resendsRumble {
+        scheduleHIDPeriodicOutput(for: identifier, pipeline: pipeline, connection: connection)
+      }
       return
     }
     // Startup writes go before or after the feature reads; activation follows the reads unless
@@ -307,18 +311,17 @@ extension DeviceManager {
     hidPeriodicOutputTasks[identifier] = Task { [weak self] in
       guard let self else { return }
       while !Task.isCancelled {
-        guard let keepAlive = await pipeline.hidKeepAlivePlan(), keepAlive.interval > 0 else {
+        guard let interval = await pipeline.hidKeepAliveInterval(), interval > 0 else {
           return
         }
         guard await self.isCurrentHIDStartupPipeline(pipeline, connection: connection) else {
           return
         }
-        do { try await Task.sleep(nanoseconds: keepAlive.interval) } catch { return }
+        do { try await Task.sleep(nanoseconds: interval) } catch { return }
         guard !Task.isCancelled,
           await self.isCurrentHIDStartupPipeline(pipeline, connection: connection)
         else { return }
-        if !(await self.sendHIDWrites(
-          keepAlive.writes,
+        if !(await self.sendHIDKeepAlive(
           address: address,
           identifier: identifier,
           pipeline: pipeline

@@ -142,15 +142,34 @@ extension DevicePipeline {
     runGeneration: UInt64? = nil
   ) async throws -> Int {
     try await usbOutputWriteQueue.perform { [weak self] in
-      guard let self, await self.isCurrentUSBWrite(handle: handle, runGeneration: runGeneration)
-      else { throw CancellationError() }
-      let written = try await handle.write(endpoint: endpoint, data: data, timeout: timeout)
-      await self.appendToPacketLog(bytes: data, direction: .transmitted)
-      guard await self.isCurrentUSBWrite(handle: handle, runGeneration: runGeneration) else {
-        throw CancellationError()
-      }
-      return written
+      guard let self else { throw CancellationError() }
+      return try await self.writeUSBPacketInQueue(
+        handle: handle,
+        endpoint: endpoint,
+        data: data,
+        timeout: timeout,
+        runGeneration: runGeneration
+      )
     }
+  }
+
+  /// The write itself, for a caller already running inside ``usbOutputWriteQueue``.
+  func writeUSBPacketInQueue(
+    handle: any USBTransportSession,
+    endpoint: UInt8,
+    data: [UInt8],
+    timeout: UInt32,
+    runGeneration: UInt64?
+  ) async throws -> Int {
+    guard isCurrentUSBWrite(handle: handle, runGeneration: runGeneration) else {
+      throw CancellationError()
+    }
+    let written = try await handle.write(endpoint: endpoint, data: data, timeout: timeout)
+    appendToPacketLog(bytes: data, direction: .transmitted)
+    guard isCurrentUSBWrite(handle: handle, runGeneration: runGeneration) else {
+      throw CancellationError()
+    }
+    return written
   }
 
   func isCurrentUSBWrite(handle: any USBTransportSession, runGeneration: UInt64?) -> Bool {

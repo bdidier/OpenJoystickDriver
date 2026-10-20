@@ -99,6 +99,7 @@ public final class XUSBDriver: PhysicalProtocolDriver {
   private let rumbleTemplate: RumbleOutputTemplate
 
   private var state = ControllerState.neutral
+  private var lastRumble = RumbleIntensities.off
 
   /// Creates a new XUSBDriver.
   /// - Parameters:
@@ -161,7 +162,16 @@ public final class XUSBDriver: PhysicalProtocolDriver {
     DriverSessionPlan(
       requiresInputConnectionBeforeOutput: isWirelessReceiver,
       assignsStartupPlayerIndicator: true
-    )
+    ).withRumbleResend(of: rumbleTemplate)
+  }
+
+  /// The last rumble again while a motor runs, when the template names a resend interval. A
+  /// receiver sends it only while its controller is connected.
+  public func keepAliveWrites() -> [PhysicalOutputWrite] {
+    guard !isWirelessReceiver || receiverConnected,
+      let intensities = rumbleTemplate.resendIntensities(after: lastRumble)
+    else { return [] }
+    return [.usb(outputPacket(rumbleTemplate.reportBytes(intensities)))]
   }
 
   public func consumeInputConnectionStateChange() -> ControllerInputConnectionState? {
@@ -185,6 +195,7 @@ public final class XUSBDriver: PhysicalProtocolDriver {
   /// its own connection state with the old session.
   public func resetProtocolState() {
     state = .neutral
+    lastRumble = .off
     guard isWirelessReceiver else { return }
     receiverConnected = false
     pendingConnectionState = nil
@@ -288,8 +299,11 @@ public final class XUSBDriver: PhysicalProtocolDriver {
     let packet: PhysicalUSBOutputPacket
     switch command {
     case .setRumble(let intensities, _):
+      lastRumble = intensities
       packet = outputPacket(rumbleTemplate.reportBytes(intensities))
-    case .stopRumble: packet = outputPacket(rumbleTemplate.reportBytes(.off))
+    case .stopRumble:
+      lastRumble = .off
+      packet = outputPacket(rumbleTemplate.reportBytes(.off))
     case .setPlayerIndicator(let indicator):
       packet = ledOutputPacket(pattern: Self.ledPattern(for: indicator))
     default: throw .unsupportedCapability(command.capability)
@@ -310,7 +324,10 @@ public final class XUSBDriver: PhysicalProtocolDriver {
     receiverConnected = isConnected
     pendingConnectionState = isConnected ? .connected : .disconnected
     padReportsWithoutPresence = 0
-    if !isConnected { state = .neutral }
+    if !isConnected {
+      state = .neutral
+      lastRumble = .off
+    }
   }
 
   static func ledPattern(for indicator: PhysicalPlayerIndicator) -> Xbox360LEDPattern {

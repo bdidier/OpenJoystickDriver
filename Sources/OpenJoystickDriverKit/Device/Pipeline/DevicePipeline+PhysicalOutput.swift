@@ -9,11 +9,26 @@ extension DevicePipeline {
     _ command: ControllerOutputCommand
   ) throws(ControllerOutputError) -> PhysicalOutputPlan { try driver.encode(command) }
 
-  func hidKeepAlivePlan() -> (writes: [PhysicalOutputWrite], interval: UInt64)? {
-    guard isActive, let interval = plan.hidKeepAliveIntervalNanoseconds else {
-      return nil
-    }
-    return (driver.keepAliveWrites(), interval)
+  /// Whether the template the driver encodes from, the record's or else the description's for the
+  /// bound variant, names a resend interval.
+  var resendsRumble: Bool {
+    guard let binding else { return false }
+    return binding.protocolID.rumbleTemplate(
+      variant: binding.variant,
+      record: binding.record?.rumbleTemplate
+    )?.resendIntervalMilliseconds != nil
+  }
+
+  /// The spacing of HID keep-alive runs; nil while the session is inactive or the driver sends
+  /// none over HID.
+  func hidKeepAliveInterval() -> UInt64? {
+    isActive ? plan.hidKeepAliveIntervalNanoseconds : nil
+  }
+
+  /// The writes of one HID keep-alive run, taken when the run is due so they reflect the driver's
+  /// state then; nil while the session is inactive.
+  func hidKeepAliveWrites() -> [PhysicalOutputWrite]? {
+    isActive ? driver.keepAliveWrites() : nil
   }
 
   /// Sends packets in order on the current USB session at `intervalNanoseconds` spacing,

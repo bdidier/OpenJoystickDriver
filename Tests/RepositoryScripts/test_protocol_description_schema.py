@@ -1133,6 +1133,39 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         self.check(self.variant_rumble(self.rumble_template()))
         self.check(self.variant_rumble(self.usb_rumble_template(), rawUSB=["usb"]))
 
+    def test_rejects_a_resend_interval_in_a_family_with_a_keep_alive(self) -> None:
+        template = {**self.rumble_template(), "resendIntervalMilliseconds": 100}
+
+        def gamesir(rumble: dict[str, Any], flat: bool) -> dict[str, Any]:
+            session: dict[str, Any] = {"keepAlive": {"intervalMilliseconds": 100}}
+            variants: dict[str, Any] = {}
+            if flat:
+                session["rumble"] = rumble
+            else:
+                variants = {"enhanced-hid": {"session": {"rumble": rumble}}}
+            return self.with_body(
+                "vendor.gamesir",
+                rawUSB=["usb"],
+                recordSections=["rumble"],
+                defaults={"session": session, "variants": variants},
+            )
+
+        plain = {k: v for k, v in template.items() if k != "resendIntervalMilliseconds"}
+        self.check(gamesir(plain, flat=False))
+        message = "needs a family whose description declares no keepAlive"
+        for name, document in (
+            ("variant template", gamesir(template, flat=False)),
+            ("flat template", gamesir(template, flat=True)),
+        ):
+            with self.subTest(name):
+                self.assert_rejected(document)
+                self.assertIn(
+                    ("E5002", f"a rumble resendIntervalMilliseconds {message}"),
+                    protocol_descriptions.semantic_violations(
+                        document, ["usb", "enhanced-hid"]
+                    ),
+                )
+
     def test_rejects_a_variant_rumble_template_the_family_cannot_use(self) -> None:
         for name, document, code in (
             (

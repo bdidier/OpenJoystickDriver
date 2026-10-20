@@ -520,6 +520,44 @@ struct ControllerModeTests {
         expected: "rumble templates require a driver that encodes them"
       ),
       Case(
+        name: "rumble resend interval beside a session keepAlive",
+        modes: [
+          [
+            "id": "a", "protocol": ["family": "xbox.xusb", "variant": "wired"],
+            "match": ["probes": [probe]],
+            "session": [
+              "keepAlive": ["intervalMilliseconds": 500, "writes": [["bytes": "01"]]],
+              "rumble": [
+                "report": ["kind": "usb", "length": 8], "leftMain": ["byte": 3],
+                "resendIntervalMilliseconds": 100,
+              ],
+            ],
+          ]
+        ],
+        expected: "a rumble resendIntervalMilliseconds cannot be combined with a session keepAlive"
+      ),
+      Case(
+        name: "rumble resend interval in a family with a keep-alive",
+        modes: [
+          [
+            "id": "a",
+            "protocol": [
+              "family": "vendor.gamesir", "variant": "enhanced-hid",
+              "parameters": ["innerGrips": true],
+            ],
+            "match": ["probes": [probe]],
+            "session": [
+              "rumble": [
+                "report": ["kind": "output", "id": 2, "length": 8], "leftMain": ["byte": 3],
+                "resendIntervalMilliseconds": 100,
+              ]
+            ],
+          ]
+        ],
+        expected: "a rumble resendIntervalMilliseconds needs a family "
+          + "whose description declares no keepAlive"
+      ),
+      Case(
         name: "present controls under a mode whose driver does not declare them",
         modes: [mode("a", family: "sony.sixaxis")],
         family: "sony.dualsense",

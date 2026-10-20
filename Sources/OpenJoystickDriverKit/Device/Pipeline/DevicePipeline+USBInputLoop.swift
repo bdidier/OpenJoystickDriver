@@ -131,11 +131,34 @@ extension DevicePipeline {
     guard isCurrentUSBRun(generation), usbHandle === handle, sessionState != .suspended else {
       return
     }
+    // The run's writes are produced inside the write queue, after any command queued before it,
+    // so a rumble stop encoded earlier is not followed by a resend of the state it ended.
+    do {
+      try await usbOutputWriteQueue.perform { [weak self] in
+        await self?.sendKeepAliveWrites(handle: handle, generation: generation)
+      }
+    } catch {
+      print("[DevicePipeline] Keep-alive failed" + " for \(identifier): \(error)")
+    }
+  }
+
+  /// Produces and sends one keep-alive run. Runs inside ``usbOutputWriteQueue``.
+  private func sendKeepAliveWrites(handle: any USBTransportSession, generation: UInt64) async {
+    guard isCurrentUSBRun(generation), usbHandle === handle, sessionState != .suspended else {
+      return
+    }
     for write in driver.keepAliveWrites() + sessionKeepAliveWrites() {
       guard isCurrentUSBRun(generation), usbHandle === handle else { return }
-      do { try await performUSBWrite(write, handle: handle, runGeneration: generation) } catch {
-        print("[DevicePipeline] Keep-alive failed" + " for \(identifier): \(error)")
-      }
+      do {
+        guard case .usb(let packet, _) = write else { throw USBTransportError.notSupported }
+        _ = try await writeUSBPacketInQueue(
+          handle: handle,
+          endpoint: packet.endpoint,
+          data: packet.bytes,
+          timeout: packet.timeoutMilliseconds,
+          runGeneration: generation
+        )
+      } catch { print("[DevicePipeline] Keep-alive failed" + " for \(identifier): \(error)") }
     }
   }
 

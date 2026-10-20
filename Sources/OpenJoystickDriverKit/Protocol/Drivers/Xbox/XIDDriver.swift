@@ -17,6 +17,7 @@ public final class XIDDriver: PhysicalProtocolDriver {
   private let outEndpoint: UInt8
   private let rumbleTemplate: RumbleOutputTemplate
   private var state = ControllerState.neutral
+  private var lastRumble = RumbleIntensities.off
 
   /// - Parameters:
   ///   - outEndpoint: Interrupt OUT endpoint address.
@@ -30,9 +31,19 @@ public final class XIDDriver: PhysicalProtocolDriver {
   }
 
   /// A new transport session starts from neutral input.
-  public func resetProtocolState() { state = .neutral }
+  public func resetProtocolState() {
+    state = .neutral
+    lastRumble = .off
+  }
 
-  public var sessionPlan: DriverSessionPlan { DriverSessionPlan() }
+  public var sessionPlan: DriverSessionPlan {
+    DriverSessionPlan().withRumbleResend(of: rumbleTemplate)
+  }
+
+  /// The last rumble again while a motor runs, when the template names a resend interval.
+  public func keepAliveWrites() -> [PhysicalOutputWrite] {
+    rumbleTemplate.resendIntensities(after: lastRumble).map { [rumblePacket($0)] } ?? []
+  }
 
   public func consumeInputConnectionStateChange() -> ControllerInputConnectionState? { nil }
 
@@ -54,12 +65,18 @@ public final class XIDDriver: PhysicalProtocolDriver {
     case .stopRumble: intensities = .off
     default: throw .unsupportedCapability(command.capability)
     }
-    let packet = PhysicalUSBOutputPacket(
-      endpoint: outEndpoint,
-      bytes: rumbleTemplate.reportBytes(intensities),
-      timeoutMilliseconds: xidOutputTimeoutMilliseconds
+    lastRumble = intensities
+    return PhysicalOutputPlan(writes: [rumblePacket(intensities)])
+  }
+
+  private func rumblePacket(_ intensities: RumbleIntensities) -> PhysicalOutputWrite {
+    .usb(
+      PhysicalUSBOutputPacket(
+        endpoint: outEndpoint,
+        bytes: rumbleTemplate.reportBytes(intensities),
+        timeoutMilliseconds: xidOutputTimeoutMilliseconds
+      )
     )
-    return PhysicalOutputPlan(writes: [.usb(packet)])
   }
 
   public func parse(report data: Data, receivedAt: MonotonicTimestamp) throws -> ControllerEvent? {

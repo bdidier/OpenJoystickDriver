@@ -33,6 +33,7 @@ public final class NVIDIAShieldDriver: PhysicalProtocolDriver {
   /// The V103 rumble report; nil for the 2017 controller, which has no plain rumble.
   private let rumbleTemplate: RumbleOutputTemplate?
   private var state = ControllerState.neutral
+  private var lastRumble = RumbleIntensities.off
 
   /// Creates a driver for the 2017 controller, or for the 2015 controller when its record declares
   /// the `reportRevision: Shield2015` parameter; only the 2015 controller has plain rumble.
@@ -48,9 +49,21 @@ public final class NVIDIAShieldDriver: PhysicalProtocolDriver {
       ) : nil
   }
 
-  public func resetProtocolState() { state = .neutral }
+  public func resetProtocolState() {
+    state = .neutral
+    lastRumble = .off
+  }
 
-  public var sessionPlan: DriverSessionPlan { DriverSessionPlan() }
+  public var sessionPlan: DriverSessionPlan {
+    DriverSessionPlan().withRumbleResend(of: rumbleTemplate)
+  }
+
+  /// The last rumble again while a motor runs, when the template names a resend interval.
+  public func keepAliveWrites() -> [PhysicalOutputWrite] {
+    guard let rumbleTemplate, let intensities = rumbleTemplate.resendIntensities(after: lastRumble)
+    else { return [] }
+    return [rumbleTemplate.write(intensities)]
+  }
   public var outputCapabilities: PhysicalControllerOutputCapabilities {
     rumbleTemplate?.outputCapabilities ?? .none
   }
@@ -69,7 +82,9 @@ public final class NVIDIAShieldDriver: PhysicalProtocolDriver {
     _ command: ControllerOutputCommand
   ) throws(ControllerOutputError) -> PhysicalOutputPlan {
     guard let rumbleTemplate else { throw .unsupportedCapability(command.capability) }
-    return try rumbleTemplate.encode(command)
+    let plan = try rumbleTemplate.encode(command)
+    lastRumble = command.rumbleIntensities
+    return plan
   }
 
   public func parse(report data: Data, receivedAt: MonotonicTimestamp) throws -> ControllerEvent? {
