@@ -33,10 +33,9 @@ struct DataDirectoryTests {
     #expect(directory.url(for: .home).path == home)
     #expect(directory.url(for: .sharedTemporary).path == "/tmp")
     #expect(directory.url(for: .runtime).path.hasPrefix("/var/folders/"))
-    #expect(
-      ControllerRecordSet.userDirectory
-        == directory.url(for: .applicationData).appendingPathComponent("Controllers")
-    )
+    let controllers = directory.url(for: .applicationData)
+      .appendingPathComponent("Controllers", isDirectory: true)
+    #expect(ControllerRecordSet.userDirectory == controllers)
     #expect(
       LocalServiceRPCTransport.defaultSocketPath == "/tmp/com.openjoystickdriver.\(geteuid()).rpc"
     )
