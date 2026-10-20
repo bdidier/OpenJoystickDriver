@@ -283,7 +283,13 @@ public final class ProtocolDriverRegistry: Sendable {
         case .joyConRight: .rightJoyCon
         case .pro, .gameCube, nil: .pro
         }
-      return .success(Switch1Driver(layout: layout, isBluetooth: variant == .bluetoothClassic))
+      return .success(
+        Switch1Driver(
+          layout: layout,
+          isBluetooth: variant == .bluetoothClassic,
+          rumbleTemplate: record.rumbleTemplate
+        )
+      )
     case .valveSteamTriton:
       return .success(SteamTritonDriver(isDongle: variant == .dongle, tuning: tuning))
     case .valveSteamDeck: return .success(SteamDeckDriver())

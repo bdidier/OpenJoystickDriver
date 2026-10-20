@@ -1687,10 +1687,10 @@
       }
     },
     "descriptionSubcommands": {
-      "description": "The Switch 1 subcommand report: its id, the modulus of the rolling packet counter that every output report of the family shares (the counter starts at 0 and wraps to 0 after modulus - 1), and the requests sent in order at startup. A startup recovery round re-sends the SPI reads whose reply has not arrived.",
+      "description": "The Switch 1 subcommand report: its id, the modulus of the rolling packet counter that every output report of the family shares (the counter starts at 0 and wraps to 0 after modulus - 1), the requests sent in order at startup and the player-indicator subcommand. A startup recovery round re-sends the SPI reads whose reply has not arrived.",
       "type": "object",
       "additionalProperties": false,
-      "required": ["reportId", "counterModulus", "requests"],
+      "required": ["reportId", "counterModulus", "requests", "playerIndicator"],
       "properties": {
         "reportId": {
           "$ref": "#/$defs/byte"
@@ -1706,6 +1706,42 @@
           "maxItems": 16,
           "items": {
             "$ref": "#/$defs/descriptionSubcommandRequest"
+          }
+        },
+        "playerIndicator": {
+          "$ref": "#/$defs/descriptionPlayerIndicator"
+        }
+      }
+    },
+    "descriptionPlayerIndicator": {
+      "description": "The player-indicator subcommand: its id and the one data byte that lights each indicator.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["subcommand", "patterns"],
+      "properties": {
+        "subcommand": {
+          "$ref": "#/$defs/byte"
+        },
+        "patterns": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["off", "player1", "player2", "player3", "player4"],
+          "properties": {
+            "off": {
+              "$ref": "#/$defs/byte"
+            },
+            "player1": {
+              "$ref": "#/$defs/byte"
+            },
+            "player2": {
+              "$ref": "#/$defs/byte"
+            },
+            "player3": {
+              "$ref": "#/$defs/byte"
+            },
+            "player4": {
+              "$ref": "#/$defs/byte"
+            }
           }
         }
       }

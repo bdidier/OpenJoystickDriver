@@ -708,8 +708,40 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             "reportId": 1,
             "counterModulus": 16,
             "requests": [{"subcommand": 3, "data": "30"}],
+            "playerIndicator": {
+                "subcommand": 48,
+                "patterns": {
+                    "off": 0,
+                    "player1": 1,
+                    "player2": 3,
+                    "player3": 7,
+                    "player4": 15,
+                },
+            },
             **members,
         }
+
+    @staticmethod
+    def patterns(**members: Any) -> dict[str, Any]:
+        return {
+            "off": 0,
+            "player1": 1,
+            "player2": 3,
+            "player3": 7,
+            "player4": 15,
+            **members,
+        }
+
+    def test_accepts_player_indicator_patterns(self) -> None:
+        for patterns in (self.patterns(), self.patterns(off=255, player4=0)):
+            with self.subTest(patterns=patterns):
+                self.check(
+                    self.subcommand_body(
+                        self.subcommands(
+                            playerIndicator={"subcommand": 255, "patterns": patterns}
+                        )
+                    )
+                )
 
     def test_accepts_subcommands(self) -> None:
         plain = {"subcommand": 3, "data": "30"}
@@ -737,6 +769,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             {"counterModulus": 16, "requests": [plain]},
             {"reportId": 1, "requests": [plain]},
             {"reportId": 1, "counterModulus": 16},
+            {"reportId": 1, "counterModulus": 16, "requests": [plain]},
             self.subcommands(reportId=256),
             self.subcommands(counterModulus=1),
             self.subcommands(counterModulus=257),
@@ -757,6 +790,33 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             self.subcommands(requests=[self.spi_read(address=4294967296)]),
             self.subcommands(requests=[self.spi_read(purpose="other")]),
             self.subcommands(requests=[self.spi_read(unknown=1)]),
+            self.subcommands(playerIndicator={"subcommand": 48}),
+            self.subcommands(playerIndicator={"patterns": self.patterns()}),
+            self.subcommands(
+                playerIndicator={"subcommand": 256, "patterns": self.patterns()}
+            ),
+            self.subcommands(
+                playerIndicator={"subcommand": 48, "patterns": self.patterns(off=256)}
+            ),
+            self.subcommands(
+                playerIndicator={"subcommand": 48, "patterns": self.patterns(off=-1)}
+            ),
+            self.subcommands(
+                playerIndicator={
+                    "subcommand": 48,
+                    "patterns": self.patterns(player5=1),
+                }
+            ),
+            self.subcommands(
+                playerIndicator={"subcommand": 48, "patterns": {"off": 0, "player1": 1}}
+            ),
+            self.subcommands(
+                playerIndicator={
+                    "subcommand": 48,
+                    "patterns": self.patterns(),
+                    "unknown": 1,
+                }
+            ),
             # Each purpose appears at most once.
             self.subcommands(requests=[self.spi_read(), self.spi_read(address=1)]),
         ):

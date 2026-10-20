@@ -419,6 +419,15 @@ class OwnershipAndSessionTests(unittest.TestCase):
                 },
                 hid,
             ),
+            "Switch 1": (
+                {"family": "nintendo.switch1"},
+                {
+                    "report": {"kind": "output", "id": 16, "length": 10},
+                    "counter": {"byte": 1},
+                    "leftMain": {"byte": 2, "encoding": "SwitchHDRumble"},
+                    "rightMain": {"byte": 6, "encoding": "SwitchHDRumble"},
+                },
+            ),
         }
         for name, (protocol, template) in accepted.items():
             with self.subTest(name):

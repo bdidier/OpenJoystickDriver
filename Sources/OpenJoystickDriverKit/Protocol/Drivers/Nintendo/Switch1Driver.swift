@@ -34,16 +34,29 @@ public final class Switch1Driver: PhysicalProtocolDriver {
   private var pendingMotionCalibration: Set<SubcommandRequest.SPIRead.Purpose> = []
   /// The subcommand report, counter rule and startup requests from the family's description.
   private let subcommands: SubcommandPlan
+  /// The 0x10 rumble-only report: the record's template, otherwise the description's.
+  private let rumbleTemplate: RumbleOutputTemplate
   private var factoryMotionBytes: [UInt8]?
   private var userMotionBytes: [UInt8]?
   private var state = ControllerState.neutral
   private var outputPacketNumber: UInt8 = 0
+  /// The rumble bytes embedded in every subcommand report, from `SwitchProRumbleCodec`. A record's
+  /// rumble template changes only the 0x10 report, not these.
   private var physicalRumbleData =
     SwitchProRumbleCodec.encode(intensity: 0) + SwitchProRumbleCodec.encode(intensity: 0)
 
-  public init(layout: NintendoControllerLayout = .pro, isBluetooth: Bool = false) {
+  /// - Parameter rumbleTemplate: The record's rumble template; the description's when nil.
+  public init(
+    layout: NintendoControllerLayout = .pro,
+    isBluetooth: Bool = false,
+    rumbleTemplate: RumbleOutputTemplate? = nil
+  ) {
     self.layout = layout
     self.isBluetooth = isBluetooth
+    self.rumbleTemplate = PhysicalProtocolID.nintendoSwitch1.describedRumbleTemplate(
+      variant: isBluetooth ? .bluetoothClassic : .usb,
+      record: rumbleTemplate
+    )
     guard let subcommands = PhysicalProtocolID.nintendoSwitch1.protocolDescription.subcommands
     else { fatalError("[ProtocolDescription] nintendo.switch1 has no subcommands") }
     self.subcommands = subcommands
@@ -109,7 +122,8 @@ public final class Switch1Driver: PhysicalProtocolDriver {
     startupReports().map { .hidOutput($0) }
   }
 
-  /// Each Joy-Con drives only its own side. The player subcommand repeats the last rumble.
+  /// Each Joy-Con drives only its own side. The player subcommand repeats the last rumble and
+  /// shares the rumble report's counter.
   public func encode(
     _ command: ControllerOutputCommand
   ) throws(ControllerOutputError) -> PhysicalOutputPlan {
@@ -117,27 +131,25 @@ public final class Switch1Driver: PhysicalProtocolDriver {
     case .setRumble(let intensities, _): return rumblePlan(intensities)
     case .stopRumble: return rumblePlan(.off)
     case .setPlayerIndicator(let indicator):
-      let patterns: [PhysicalPlayerIndicator: UInt8] = [
-        .off: 0x00, .player1: 0x01, .player2: 0x03, .player3: 0x07, .player4: 0x0F,
-      ]
+      let player = subcommands.playerIndicator
       return PhysicalOutputPlan(writes: [
-        .hidOutput(subcommand(0x30, data: [patterns[indicator] ?? 0]))
+        .hidOutput(subcommand(player.subcommand, data: [player.pattern(for: indicator)]))
       ])
     default: throw .unsupportedCapability(command.capability)
     }
   }
 
   private func rumblePlan(_ intensities: RumbleIntensities) -> PhysicalOutputPlan {
-    let left = layout == .rightJoyCon ? 0 : intensities.leftMain.byte
-    let right = layout == .leftJoyCon ? 0 : intensities.rightMain.byte
+    let left = layout == .rightJoyCon ? UnipolarValue.min : intensities.leftMain
+    let right = layout == .leftJoyCon ? UnipolarValue.min : intensities.rightMain
     physicalRumbleData =
-      SwitchProRumbleCodec.encode(intensity: left) + SwitchProRumbleCodec.encode(intensity: right)
-    var bytes = [UInt8](repeating: 0, count: 10)
-    bytes[0] = 0x10
-    bytes[1] = nextPacketNumber()
-    bytes.replaceSubrange(2..<10, with: physicalRumbleData)
+      SwitchProRumbleCodec.encode(intensity: left.byte)
+      + SwitchProRumbleCodec.encode(intensity: right.byte)
     return PhysicalOutputPlan(writes: [
-      .hidOutput(PhysicalHIDOutputReport(reportID: 0x10, bytes: bytes))
+      rumbleTemplate.write(
+        RumbleIntensities(leftMain: left, rightMain: right),
+        counter: nextPacketNumber()
+      )
     ])
   }
 

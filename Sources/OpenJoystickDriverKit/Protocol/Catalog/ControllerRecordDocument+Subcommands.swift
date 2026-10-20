@@ -1,12 +1,46 @@
 extension SubcommandPlan: Decodable {
   init(from decoder: any Decoder) throws {
     let container = try decoder.container(keyedBy: DocumentKey.self)
-    try container.rejectUnknown(allowed: ["reportId", "counterModulus", "requests"])
+    try container.rejectUnknown(allowed: [
+      "reportId", "counterModulus", "requests", "playerIndicator",
+    ])
     do {
       try self.init(
         reportID: container.decode(UInt8.self, for: "reportId"),
         counterModulus: container.decode(Int.self, for: "counterModulus"),
-        requests: container.decode([SubcommandRequest].self, for: "requests")
+        requests: container.decode([SubcommandRequest].self, for: "requests"),
+        playerIndicator: container.decode(PlayerIndicatorSubcommand.self, for: "playerIndicator")
+      )
+    } catch let problem as ControllerRecordProblem {
+      throw DecodingError.dataCorrupted(
+        .init(codingPath: decoder.codingPath, debugDescription: problem.description)
+      )
+    }
+  }
+}
+
+extension PlayerIndicatorSubcommand: Decodable {
+  /// The patterns object names `off` and `player1` through `player4`, each a byte.
+  init(from decoder: any Decoder) throws {
+    let container = try decoder.container(keyedBy: DocumentKey.self)
+    try container.rejectUnknown(allowed: ["subcommand", "patterns"])
+    let names: [(String, PhysicalPlayerIndicator)] = [
+      ("off", .off), ("player1", .player1), ("player2", .player2), ("player3", .player3),
+      ("player4", .player4),
+    ]
+    let patternsContainer = try container.nestedContainer(
+      keyedBy: DocumentKey.self,
+      forKey: DocumentKey("patterns")
+    )
+    try patternsContainer.rejectUnknown(allowed: Set(names.map(\.0)))
+    var patterns: [PhysicalPlayerIndicator: UInt8] = [:]
+    for (name, indicator) in names {
+      patterns[indicator] = try patternsContainer.decode(UInt8.self, for: name)
+    }
+    do {
+      try self.init(
+        subcommand: container.decode(UInt8.self, for: "subcommand"),
+        patterns: patterns
       )
     } catch let problem as ControllerRecordProblem {
       throw DecodingError.dataCorrupted(

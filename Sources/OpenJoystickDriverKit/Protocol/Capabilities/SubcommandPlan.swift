@@ -1,6 +1,7 @@
 /// A family's subcommand reports (`defaults.session.subcommands` in its protocol description):
 /// the report id, the rule of the rolling packet counter that every output report of the family
-/// shares, and the requests sent in order at startup. A record never carries one.
+/// shares, the requests sent in order at startup and the player-indicator subcommand. A record
+/// never carries one.
 struct SubcommandPlan: Equatable, Sendable {
   static let counterModulusRange = 2...256
   static let requestsRange = 1...16
@@ -11,11 +12,14 @@ struct SubcommandPlan: Equatable, Sendable {
   let counterModulus: Int
   /// The requests of a startup, in send order.
   let requests: [SubcommandRequest]
+  /// The subcommand that lights the player indicator.
+  let playerIndicator: PlayerIndicatorSubcommand
 
   init(
     reportID: UInt8,
     counterModulus: Int,
-    requests: [SubcommandRequest]
+    requests: [SubcommandRequest],
+    playerIndicator: PlayerIndicatorSubcommand
   ) throws(ControllerRecordProblem) {
     guard Self.counterModulusRange.contains(counterModulus) else {
       throw ControllerRecordProblem("a subcommand counterModulus is 2...256")
@@ -30,6 +34,7 @@ struct SubcommandPlan: Equatable, Sendable {
     self.reportID = reportID
     self.counterModulus = counterModulus
     self.requests = requests
+    self.playerIndicator = playerIndicator
   }
 
   /// The counter value that follows `counter`.
@@ -40,6 +45,32 @@ struct SubcommandPlan: Equatable, Sendable {
   /// The request that reads for `purpose`, if any.
   func spiRead(for purpose: SubcommandRequest.SPIRead.Purpose) -> SubcommandRequest? {
     requests.first { $0.spiRead?.purpose == purpose }
+  }
+}
+
+/// The player-indicator subcommand: its id and the one data byte that lights each player.
+struct PlayerIndicatorSubcommand: Equatable, Sendable {
+  let subcommand: UInt8
+  let patterns: [PhysicalPlayerIndicator: UInt8]
+
+  /// Fails unless every indicator has a pattern.
+  init(
+    subcommand: UInt8,
+    patterns: [PhysicalPlayerIndicator: UInt8]
+  ) throws(ControllerRecordProblem) {
+    guard Set(patterns.keys) == Set(PhysicalPlayerIndicator.allCases) else {
+      throw ControllerRecordProblem("a player indicator names a pattern for every indicator")
+    }
+    self.subcommand = subcommand
+    self.patterns = patterns
+  }
+
+  /// The data byte that lights `indicator`.
+  func pattern(for indicator: PhysicalPlayerIndicator) -> UInt8 {
+    guard let pattern = patterns[indicator] else {
+      preconditionFailure("a player indicator names a pattern for every indicator")
+    }
+    return pattern
   }
 }
 

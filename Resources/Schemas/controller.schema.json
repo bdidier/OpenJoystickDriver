@@ -256,7 +256,8 @@
                       "xbox.xid",
                       "xbox.xusb",
                       "vendor.nvidia-shield",
-                      "vendor.gamesir"
+                      "vendor.gamesir",
+                      "nintendo.switch1"
                     ]
                   }
                 }
