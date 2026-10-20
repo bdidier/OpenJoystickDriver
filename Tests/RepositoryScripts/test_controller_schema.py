@@ -379,9 +379,7 @@ class OwnershipAndSessionTests(unittest.TestCase):
                 "needs a family whose description declares no keepAlive",
             ),
         }
-        self.assertTrue(
-            self.validator.is_valid(record(XUSB, session={"rumble": usb}))
-        )
+        self.assertTrue(self.validator.is_valid(record(XUSB, session={"rumble": usb})))
         for name, (protocol, session, message) in refused.items():
             with self.subTest(name):
                 document = record(protocol, session=session)

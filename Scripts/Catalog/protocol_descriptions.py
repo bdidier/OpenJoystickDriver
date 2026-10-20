@@ -120,9 +120,7 @@ def semantic_violations(
 RESEND_WITH_KEEP_ALIVE = (
     "a rumble resendIntervalMilliseconds cannot be combined with a session keepAlive"
 )
-RESEND_WITH_FAMILY_KEEP_ALIVE = (
-    "a rumble resendIntervalMilliseconds needs a family whose description declares no keepAlive"
-)
+RESEND_WITH_FAMILY_KEEP_ALIVE = "a rumble resendIntervalMilliseconds needs a family whose description declares no keepAlive"
 MOTOR_WIDTHS = {
     "UInt8": 1,
     "UInt16BigEndian": 2,
