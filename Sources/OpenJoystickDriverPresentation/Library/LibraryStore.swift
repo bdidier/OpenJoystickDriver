@@ -182,7 +182,7 @@ final class DirectoryLibraryStore: LibraryStore {
   private static func item(_ record: ControllerRecord) -> LibraryRecordItem {
     LibraryRecordItem(
       model: record.model,
-      family: CommandLineName.kebab(record.family),
+      family: record.protocolID.name,
       layer: record.layer,
       file: record.file
     )
@@ -243,7 +243,7 @@ final class DirectoryLibraryStore: LibraryStore {
     let destination = recordsDirectory.appendingPathComponent(validated.fileName)
     return LibraryRecordCheck(
       identity: Self.identity(of: validated),
-      family: validated.record.map { CommandLineName.kebab($0.family) },
+      family: validated.record.map(\.protocolID.name),
       operation: validated.operation,
       fileName: validated.fileName,
       replaces: FileManager.default.fileExists(atPath: destination.path)

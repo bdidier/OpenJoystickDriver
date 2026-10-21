@@ -2,6 +2,7 @@
   "apiVersion": "openjoystickdriver/v1alpha1",
   "kind": "ProtocolDescription",
   "family": "XboxXUSB",
+  "name": "Xbox 360 (XUSB)",
   "variants": ["Wired", "Receiver"],
   "storesVariant": true,
   "endpoints": {

@@ -2,6 +2,7 @@
   "apiVersion": "openjoystickdriver/v1alpha1",
   "kind": "ProtocolDescription",
   "family": "ValveSteamDeck",
+  "name": "Valve Steam Deck",
   "endpoints": {
     "in": 130,
     "out": 2

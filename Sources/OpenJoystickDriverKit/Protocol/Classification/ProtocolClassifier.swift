@@ -81,30 +81,12 @@ public enum PhysicalProtocolID: String, CaseIterable, Codable, Sendable {
     }
   }
 
-  /// The stem of this family's description file in `Resources/Protocols`: lowercase kebab-case
-  /// with each brand or product name kept as one word.
-  public var descriptionFileStem: String {
-    switch self {
-    case .hidDescriptor: "hid-descriptor"
-    case .hidReportLayout: "hid-report-layout"
-    case .xboxXID: "xbox-xid"
-    case .xboxXUSB: "xbox-xusb"
-    case .xboxGIP: "xbox-gip"
-    case .sonySixaxis: "sony-sixaxis"
-    case .sonyDualShock4: "sony-dualshock4"
-    case .sonyDualSense: "sony-dualsense"
-    case .nintendoSwitch1: "nintendo-switch1"
-    case .nintendoSwitch2: "nintendo-switch2"
-    case .nintendoSwitchInputOnly: "nintendo-switch-input-only"
-    case .valveSteamController: "valve-steam-controller"
-    case .valveSteamTriton: "valve-steam-triton"
-    case .valveSteamDeck: "valve-steam-deck"
-    case .vendorFlydigi: "vendor-flydigi"
-    case .vendorPS3ThirdParty: "vendor-ps3-third-party"
-    case .vendorGameSir: "vendor-gamesir"
-    case .vendorNVIDIAShield: "vendor-nvidia-shield"
-    }
-  }
+  /// The stem of this family's description file in `Resources/Protocols`: the command-line
+  /// spelling of the family, which is also the family's token in `ojd` output and arguments.
+  public var descriptionFileStem: String { CommandLineName.kebab(rawValue) }
+
+  /// The family's name as the app shows it to a person, from its description.
+  public var name: String { protocolDescription.name }
 
   /// Implemented variants, as the family's description lists them. An empty list means the family
   /// has one contract.

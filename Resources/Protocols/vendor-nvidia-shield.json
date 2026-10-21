@@ -2,6 +2,7 @@
   "apiVersion": "openjoystickdriver/v1alpha1",
   "kind": "ProtocolDescription",
   "family": "VendorNVIDIAShield",
+  "name": "NVIDIA SHIELD",
   "endpoints": {
     "in": 130,
     "out": 2

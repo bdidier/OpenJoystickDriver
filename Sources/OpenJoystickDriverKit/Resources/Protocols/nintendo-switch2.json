@@ -2,6 +2,7 @@
   "apiVersion": "openjoystickdriver/v1alpha1",
   "kind": "ProtocolDescription",
   "family": "NintendoSwitch2",
+  "name": "Nintendo Switch 2",
   "variants": ["USB", "BluetoothLE"],
   "endpoints": {
     "in": 130,

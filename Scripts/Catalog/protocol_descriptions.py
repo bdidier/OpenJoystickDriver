@@ -11,29 +11,6 @@ from functools import cache
 from pathlib import Path
 from typing import Any
 
-# The file stem of each family's description: lowercase kebab-case with each brand or product
-# name kept as one word. `PhysicalProtocolID.descriptionFileStem` in Swift holds the same table.
-FILE_STEMS = {
-    "HIDDescriptor": "hid-descriptor",
-    "HIDReportLayout": "hid-report-layout",
-    "XboxXID": "xbox-xid",
-    "XboxXUSB": "xbox-xusb",
-    "XboxGIP": "xbox-gip",
-    "SonySixaxis": "sony-sixaxis",
-    "SonyDualShock4": "sony-dualshock4",
-    "SonyDualSense": "sony-dualsense",
-    "NintendoSwitch1": "nintendo-switch1",
-    "NintendoSwitch2": "nintendo-switch2",
-    "NintendoSwitchInputOnly": "nintendo-switch-input-only",
-    "ValveSteamController": "valve-steam-controller",
-    "ValveSteamTriton": "valve-steam-triton",
-    "ValveSteamDeck": "valve-steam-deck",
-    "VendorFlydigi": "vendor-flydigi",
-    "VendorPS3ThirdParty": "vendor-ps3-third-party",
-    "VendorGameSir": "vendor-gamesir",
-    "VendorNVIDIAShield": "vendor-nvidia-shield",
-}
-
 PROTOCOLS = Path(__file__).resolve().parents[2] / "Resources" / "Protocols"
 ALWAYS_READ = frozenset({"stickDeadzone", "frameQueueCapacity"})
 
@@ -670,3 +647,12 @@ def initialization_problem(
         if action not in offered:
             return f"initialization action {action} is not a named packet of the family"
     return None
+
+
+@cache
+def file_stems() -> dict[str, str]:
+    """The file stem of every bundled description, by family, as the files stand."""
+    stems: dict[str, str] = {}
+    for path in sorted(PROTOCOLS.glob("*.json")):
+        stems[json.loads(path.read_text(encoding="utf-8"))["family"]] = path.stem
+    return stems

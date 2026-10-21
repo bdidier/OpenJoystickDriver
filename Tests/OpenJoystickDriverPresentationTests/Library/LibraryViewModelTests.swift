@@ -9,7 +9,7 @@ final class FakeLibraryStore: LibraryStore, @unchecked Sendable {
   var mods: [LibraryModItem] = []
   var recordCheck = LibraryRecordCheck(
     identity: "045E:028E",
-    family: "xbox-gip",
+    family: "Xbox One (GIP)",
     operation: .add,
     fileName: "045e-028e.json",
     replaces: false
@@ -233,7 +233,7 @@ struct LibraryViewModelTests {
     let store = FakeLibraryStore()
     let item = LibraryRecordItem(
       model: ControllerModelID(vendorID: 0x045E, productID: 0x028E),
-      family: "xbox-gip",
+      family: "Xbox One (GIP)",
       layer: .user,
       file: nil
     )

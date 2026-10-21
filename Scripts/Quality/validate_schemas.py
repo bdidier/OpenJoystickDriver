@@ -187,7 +187,6 @@ def validate_documents(
 # The catalog codes of an invalid protocol description, as ProtocolDescription.decode throws them.
 UNSUPPORTED_API_VERSION = "E5001"
 INVALID_PROTOCOL_DESCRIPTION = "E5002"
-PROTOCOL_DESCRIPTION_FAMILY_MISMATCH = "E5003"
 UNKNOWN_PROTOCOL_VARIANT = "E5004"
 
 
@@ -276,19 +275,6 @@ def validate_protocol_descriptions(
                     f"{INVALID_PROTOCOL_DESCRIPTION}: {path.relative_to(ROOT)} at "
                     f"{label}: {problem}"
                 )
-        # The app loads Resources/Protocols/<file stem of the family>.json, so a renamed file
-        # would otherwise fail only at launch.
-        family = document.get("family") if isinstance(document, dict) else None
-        expected_stem = (
-            protocol_descriptions.FILE_STEMS.get(family)
-            if isinstance(family, str)
-            else None
-        )
-        if path.stem != expected_stem:
-            raise ValidationError(
-                f"{PROTOCOL_DESCRIPTION_FAMILY_MISMATCH}: {path.relative_to(ROOT)}: "
-                f"file name must be {expected_stem}.json"
-            )
         # The schema cannot say that a default tuning key is one the family reads, or that a
         # raw-USB variant is the family's.
         assert isinstance(document, dict)

@@ -65,6 +65,7 @@ def xusb_description() -> dict[str, Any]:
     return {
         **header("ProtocolDescription"),
         "family": "XboxXUSB",
+        "name": "Xbox 360 (XUSB)",
         "variants": ["Wired", "Receiver"],
         "storesVariant": True,
         "endpoints": {"in": 129, "out": 1},
@@ -82,10 +83,12 @@ def xusb_description() -> dict[str, Any]:
 
 
 def with_variant_facts(document: dict[str, Any]) -> dict[str, Any]:
-    """The document with its family's `variants` and `storesVariant` when it states neither, and
-    its `sessionKeys` when it states none, so a test that varies something else need not repeat
+    """The document with its family's `name`, its `variants` and `storesVariant` when it states
+    neither, and its `sessionKeys` when it states none, so a test that varies something else need not repeat
     them."""
     facts = protocol_descriptions.bundled().get(str(document.get("family")), {})
+    if "name" not in document and "name" in facts:
+        document = {"name": facts["name"], **document}
     if "sessionKeys" not in document and "sessionKeys" in facts:
         document = {"sessionKeys": facts["sessionKeys"], **document}
     if "variants" in document or "storesVariant" in document:
@@ -122,7 +125,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         path = self.root / (
             name
             or f"{
-                protocol_descriptions.FILE_STEMS.get(
+                protocol_descriptions.file_stems().get(
                     str(document.get('family')), str(document.get('family'))
                 )
             }.json"
@@ -145,7 +148,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         paths = sorted(validate_schemas.PROTOCOL_DESCRIPTIONS.glob("*.json"))
         self.assertEqual(
             [path.stem for path in paths],
-            sorted(protocol_descriptions.FILE_STEMS.values()),
+            sorted(protocol_descriptions.file_stems().values()),
         )
         with patch.object(validate_schemas, "ROOT", REPOSITORY_ROOT):
             validate_schemas.validate_protocol_descriptions(
@@ -170,6 +173,21 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                     document[member] = value
                 code = "E5001" if member == "apiVersion" else "E5002"
                 self.assert_rejected(document, code=code)
+
+    def test_rejects_a_missing_or_empty_name(self) -> None:
+        for name in (None, ""):
+            with self.subTest(name=name):
+                document = xusb_description()
+                if name is None:
+                    del document["name"]
+                else:
+                    document["name"] = name
+                path = self.root / "xbox-xusb.json"
+                path.write_text(json.dumps(document), encoding="utf-8")
+                with self.assertRaisesRegex(validate_schemas.ValidationError, r"^E5002: "):
+                    validate_schemas.validate_protocol_descriptions(
+                        self.schema, self.registry, [path]
+                    )
 
     def test_rejects_an_unknown_family(self) -> None:
         document = xusb_description()
@@ -317,56 +335,6 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                         self.check(document)
                     else:
                         self.assert_rejected(document, code="E5004")
-
-    def test_rejects_a_file_name_that_differs_from_the_family(self) -> None:
-        with self.assertRaisesRegex(
-            validate_schemas.ValidationError,
-            r"^E5003: .*file name must be xbox-xusb\.json",
-        ):
-            self.check(xusb_description(), name="xbox-gip.json")
-
-    def test_a_document_rule_is_reported_before_the_file_name(self) -> None:
-        duplicated = xusb_description()
-        signatures = duplicated["interfaceSignatures"]
-        signatures.append(copy.deepcopy(signatures[0]))
-        self.assert_rejected(duplicated, name="xbox-gip.json")
-
-    def test_file_stems_cover_every_family_and_file(self) -> None:
-        controller: Any = self.documents["controller.schema.json"]
-        schema_families = controller["$defs"]["protocol"]["properties"]["family"][
-            "enum"
-        ]
-        self.assertEqual(set(protocol_descriptions.FILE_STEMS), set(schema_families))
-        self.assertEqual(
-            sorted(protocol_descriptions.FILE_STEMS.values()),
-            sorted(
-                path.stem
-                for path in validate_schemas.PROTOCOL_DESCRIPTIONS.glob("*.json")
-            ),
-        )
-
-    def test_file_stems_match_the_swift_table(self) -> None:
-        source = (
-            REPOSITORY_ROOT
-            / "Sources/OpenJoystickDriverKit/Protocol/Classification/ProtocolClassifier.swift"
-        ).read_text(encoding="utf-8")
-        body = source.split("var descriptionFileStem: String {", 1)[1].split(
-            "\n  }\n", 1
-        )[0]
-        swift = dict(re.findall(r'case \.(\w+): "([a-z0-9-]+)"', body))
-        by_case = {
-            family[0].lower() + family[1:]: stem
-            for family, stem in protocol_descriptions.FILE_STEMS.items()
-        }
-        normalized = {key.lower(): value for key, value in swift.items()}
-        self.assertEqual({k.lower(): v for k, v in by_case.items()}, normalized)
-
-    def test_rejects_the_family_file_name_in_the_family_spelling(self) -> None:
-        with self.assertRaisesRegex(
-            validate_schemas.ValidationError,
-            r"^E5003: .*file name must be xbox-xusb\.json",
-        ):
-            self.check(xusb_description(), name="XboxXUSB.json")
 
     def test_rejects_a_family_spelled_as_before_the_naming_rule(self) -> None:
         for old in ("xbox.xusb", "hid.descriptor", "vendor.ps3-third-party"):

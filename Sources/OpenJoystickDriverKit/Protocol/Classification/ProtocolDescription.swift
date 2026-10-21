@@ -117,6 +117,8 @@ struct ProtocolDescription: Sendable {
   static let kind = "ProtocolDescription"
 
   let family: PhysicalProtocolID
+  /// The family's name as the app shows it to a person.
+  let name: String
   /// The family's implemented variants; empty when it has one contract.
   let variants: [PhysicalProtocolVariantID]
   /// Whether catalog records store the family's variant; otherwise classification derives it from
@@ -325,8 +327,7 @@ struct ProtocolDescription: Sendable {
           + unreadParameters.sorted().joined(separator: ", ")
       )
     }
-    // The file name is checked after the document's own rules, as the Python validator checks
-    // it after the schema.
+    // The file name is checked after the document's own rules.
     guard let protocolID, family == protocolID else {
       throw ProtocolDescriptionProblem(
         .protocolDescriptionFamilyMismatch,
@@ -400,6 +401,7 @@ struct ProtocolDescription: Sendable {
     )
     let description = Self(
       family: protocolID,
+      name: document.name,
       variants: document.variants,
       storesVariant: document.storesVariant,
       endpoints: document.endpoints,

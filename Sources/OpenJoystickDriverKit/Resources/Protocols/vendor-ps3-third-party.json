@@ -2,6 +2,7 @@
   "apiVersion": "openjoystickdriver/v1alpha1",
   "kind": "ProtocolDescription",
   "family": "VendorPS3ThirdParty",
+  "name": "Third-party PS3",
   "endpoints": {
     "in": 130,
     "out": 2
