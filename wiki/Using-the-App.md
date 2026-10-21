@@ -113,11 +113,11 @@ A field that the controller does not report shows **Not reported**.
 
 ### Session Commands
 
-The Controller menu and the status menu hold the commands for the selected controller:
+The Controller menu, the status menu, and the controller's context menu in the list hold the commands for the selected controller:
 
 - **Test Input** opens the test window. For more information, see [Testing a controller](Testing-a-Controller.md).
 - **Suspend** pauses input, physical effects, and virtual output for this controller. The controller then shows **Suspended**. **Resume** continues. **Test Input** is off while the controller shows **Suspended**.
-- **Disconnect Wireless Link** appears only for classic Bluetooth controllers. It closes the Bluetooth link. The controller stays disconnected until you connect it again by hand. OJD never reconnects Bluetooth by itself. OJD cannot disconnect a Bluetooth Low Energy controller: turn it off or disconnect it in System Settings > Bluetooth.
+- **Disconnect Wireless Link** appears only for classic Bluetooth controllers. It closes the Bluetooth link after you confirm. The controller stays disconnected until you connect it again by hand. OJD never reconnects Bluetooth by itself. OJD cannot disconnect a Bluetooth Low Energy controller: turn it off or disconnect it in System Settings > Bluetooth.
 
 ### Advanced Section
 
