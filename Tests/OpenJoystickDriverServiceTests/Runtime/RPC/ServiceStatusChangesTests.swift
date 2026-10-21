@@ -7,6 +7,15 @@ import Testing
 
 @Suite(.timeLimit(.minutes(1)))
 struct ServiceStatusChangesTests {
+  /// Changes that observe private centers only, so an application another process activates
+  /// during the run is no status change here.
+  private static func isolated(
+    center: NotificationCenter = NotificationCenter(),
+    instance: UUID = UUID()
+  ) -> ServiceStatusChanges {
+    ServiceStatusChanges(center: center, workspaceCenter: NotificationCenter(), instance: instance)
+  }
+
   private static func revision(_ changes: ServiceStatusChanges) async -> ServiceStatusRevision {
     await changes.wait(after: nil, holdSeconds: 30)
   }
@@ -23,7 +32,7 @@ struct ServiceStatusChangesTests {
   @Test
   func aNilRevisionReadsTheCurrentOneAtOnce() async {
     let instance = UUID()
-    let changes = ServiceStatusChanges(center: NotificationCenter(), instance: instance)
+    let changes = Self.isolated(instance: instance)
 
     #expect(
       await changes.wait(after: nil, holdSeconds: 30)
@@ -34,7 +43,7 @@ struct ServiceStatusChangesTests {
   @Test
   func aWaitReturnsWithinOneSecondOfAStatusNotification() async {
     let center = NotificationCenter()
-    let changes = ServiceStatusChanges(center: center)
+    let changes = Self.isolated(center: center)
     let baseline = await Self.revision(changes)
     let clock = ContinuousClock()
 
@@ -50,7 +59,7 @@ struct ServiceStatusChangesTests {
   @Test
   func aChangeBeforeTheWaitAnswersAtOnce() async {
     let center = NotificationCenter()
-    let changes = ServiceStatusChanges(center: center)
+    let changes = Self.isolated(center: center)
     let baseline = await Self.revision(changes)
     center.post(name: .ojdServiceStatusDidChange, object: nil)
 
@@ -59,7 +68,7 @@ struct ServiceStatusChangesTests {
 
   @Test
   func aWaitWithNoChangeReturnsTheSameRevisionAfterTheHoldTime() async {
-    let changes = ServiceStatusChanges(center: NotificationCenter())
+    let changes = Self.isolated()
     let baseline = await Self.revision(changes)
 
     #expect(await changes.wait(after: baseline, holdSeconds: 0.05) == baseline)
@@ -68,7 +77,7 @@ struct ServiceStatusChangesTests {
   @Test
   func aRestartedServiceDiffersEvenWithTheSameGeneration() async {
     let old = ServiceStatusRevision(instance: UUID(), generation: 0)
-    let changes = ServiceStatusChanges(center: NotificationCenter(), instance: UUID())
+    let changes = Self.isolated()
 
     let revision = await changes.wait(after: old, holdSeconds: 30)
 
@@ -89,7 +98,7 @@ struct ServiceStatusChangesTests {
 
   @Test
   func aCancelledWaitReturnsAtOnceWithoutWaitingForTheHoldTime() async {
-    let changes = ServiceStatusChanges(center: NotificationCenter())
+    let changes = Self.isolated()
     let baseline = await Self.revision(changes)
     let clock = ContinuousClock()
     let start = clock.now
