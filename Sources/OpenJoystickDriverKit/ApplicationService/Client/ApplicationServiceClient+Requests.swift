@@ -126,7 +126,7 @@ extension ApplicationServiceClient {
   /// passes with no change, and returns the service's current revision. A nil `after` returns
   /// the current revision at once. When the service closes the connection without a reply during
   /// a wait, the wait throws ``LocalServiceRPCError/serviceClosedConnection``: the first reply
-  /// proved the service accepts this process. A reply that rejects this process still throws
+  /// proved the service accepts this process. A reply that rejects this process throws
   /// ``LocalServiceRPCError/peerRejected``.
   public func waitForServiceStatusChange(
     after: ServiceStatusRevision?

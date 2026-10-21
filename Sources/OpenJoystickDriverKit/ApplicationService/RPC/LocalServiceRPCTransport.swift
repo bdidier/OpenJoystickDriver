@@ -106,6 +106,21 @@ public struct LocalServiceRPCColorPreviewReleaseArguments: Codable, Sendable {
   }
 }
 
+/// What a call reports when the server ends the connection without a reply.
+package enum LocalServiceRPCClosedWithoutReply: Sendable {
+  /// The server turned this process away.
+  case peerRejected
+  /// The server, which had accepted this process, ended the connection.
+  case serviceClosedConnection
+
+  var error: LocalServiceRPCError {
+    switch self {
+    case .peerRejected: return .peerRejected
+    case .serviceClosedConnection: return .serviceClosedConnection
+    }
+  }
+}
+
 package enum LocalServiceRPCError: Error, Equatable, LocalizedError, Sendable {
   case alreadyRunning
   case connectionFailed(Int32)

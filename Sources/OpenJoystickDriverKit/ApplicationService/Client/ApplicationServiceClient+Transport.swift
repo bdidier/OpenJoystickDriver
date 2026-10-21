@@ -5,7 +5,7 @@ extension ApplicationServiceClient {
     _ method: ApplicationServiceRPCMethod,
     _ arguments: Arguments,
     timeoutSeconds: TimeInterval = applicationServiceDefaultReplyTimeoutSeconds,
-    closedWithoutReply: LocalServiceRPCError = .peerRejected
+    closedWithoutReply: LocalServiceRPCClosedWithoutReply = .peerRejected
   ) async throws -> Value {
     guard stateLock.withLock({ connected }) else {
       throw ApplicationServiceClientError.notConnected
