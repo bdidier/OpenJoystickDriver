@@ -1060,6 +1060,7 @@
 "cli.controller.disconnect.abstract" = "Desconecta un control Bluetooth.";
 "cli.controller.disconnect.discussion" = "Cierra la conexión Bluetooth. El control sigue emparejado y se reconecta cuando lo enciendes de nuevo. Espera al menos 6 segundos la confirmación de Bluetooth.";
 "cli.controller.disconnect.done" = "Se desconectó %@.";
+"cli.controller.disconnect.bluetooth_le" = "%@ está conectado mediante Bluetooth Low Energy y el servicio no puede desconectarlo. Apaga el control o desconéctalo en Ajustes del Sistema › Bluetooth.";
 "cli.controller.disconnect.failed" = "Falló la desconexión Bluetooth durante %@: %@.";
 "cli.controller.disconnect.not_bluetooth" = "%@ no está conectado por Bluetooth. Desconecta el cable para desconectarlo.";
 "cli.controller.discussion" = "CONTROLLER es un ID de “ojd controller list” o VVVV:PPPP (ID hexadecimal de proveedor y producto) cuando exactamente un control conectado lo tiene. Todos los comandos de control necesitan el servicio.";

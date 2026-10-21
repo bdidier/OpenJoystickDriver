@@ -1060,6 +1060,7 @@
 "cli.controller.disconnect.abstract" = "Ngắt kết nối bộ điều khiển Bluetooth.";
 "cli.controller.disconnect.discussion" = "Đóng kết nối Bluetooth. Bộ điều khiển vẫn được ghép đôi và kết nối lại khi bạn bật nó lên. Chờ ít nhất 6 giây để Bluetooth xác nhận.";
 "cli.controller.disconnect.done" = "Đã ngắt kết nối %@.";
+"cli.controller.disconnect.bluetooth_le" = "%@ kết nối qua Bluetooth Low Energy và dịch vụ không thể ngắt kết nối. Hãy tắt bộ điều khiển hoặc ngắt kết nối trong Cài đặt hệ thống › Bluetooth.";
 "cli.controller.disconnect.failed" = "Ngắt kết nối Bluetooth thất bại trong %@: %@.";
 "cli.controller.disconnect.not_bluetooth" = "%@ không kết nối qua Bluetooth. Hãy rút cáp để ngắt kết nối.";
 "cli.controller.discussion" = "CONTROLLER là một ID từ “ojd controller list”, hoặc VVVV:PPPP (ID nhà sản xuất và sản phẩm dạng hex) khi chỉ có đúng một bộ điều khiển đã kết nối khớp. Mọi lệnh controller đều cần dịch vụ.";

@@ -1060,6 +1060,7 @@
 "cli.controller.disconnect.abstract" = "Отключает контроллер Bluetooth.";
 "cli.controller.disconnect.discussion" = "Закрывает соединение Bluetooth. Контроллер остаётся сопряжённым и подключается снова при следующем включении. Ждёт подтверждения от Bluetooth не менее 6 секунд.";
 "cli.controller.disconnect.done" = "%@ отключён.";
+"cli.controller.disconnect.bluetooth_le" = "%@ подключён по Bluetooth Low Energy, и служба не может его отключить. Выключите контроллер или отключите его в Системных настройках › Bluetooth.";
 "cli.controller.disconnect.failed" = "Не удалось отключить по Bluetooth во время %@: %@.";
 "cli.controller.disconnect.not_bluetooth" = "%@ не подключён по Bluetooth. Отсоедините его, чтобы отключить.";
 "cli.controller.discussion" = "CONTROLLER — это ID из «ojd controller list» или VVVV:PPPP (шестнадцатеричные ID производителя и продукта), если он есть ровно у одного подключённого контроллера. Любой команде контроллера нужна служба.";

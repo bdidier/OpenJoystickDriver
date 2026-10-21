@@ -1060,6 +1060,7 @@
 "cli.controller.disconnect.abstract" = "Putuskan koneksi pengontrol Bluetooth.";
 "cli.controller.disconnect.discussion" = "Menutup koneksi Bluetooth. Pengontrol tetap dipasangkan dan terhubung kembali saat Anda menyalakannya lagi. Menunggu setidaknya 6 detik hingga Bluetooth mengonfirmasi.";
 "cli.controller.disconnect.done" = "%@ diputus.";
+"cli.controller.disconnect.bluetooth_le" = "%@ terhubung melalui Bluetooth Low Energy dan layanan tidak dapat memutuskannya. Matikan kontroler atau putuskan di Pengaturan Sistem › Bluetooth.";
 "cli.controller.disconnect.failed" = "Pemutusan Bluetooth gagal saat %@: %@.";
 "cli.controller.disconnect.not_bluetooth" = "%@ tidak terhubung melalui Bluetooth. Cabut kabelnya untuk memutuskannya.";
 "cli.controller.discussion" = "CONTROLLER adalah ID dari “ojd controller list”, atau VVVV:PPPP (ID vendor dan produk hex) jika tepat satu pengontrol yang terhubung memilikinya. Setiap perintah pengontrol memerlukan layanan.";

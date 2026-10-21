@@ -178,6 +178,14 @@ struct ControllerDisconnectCommand: AsyncParsableCommand {
           device.name
         )
       )
+    case .bluetoothLEUnsupported:
+      return CLIFailure(
+        .controllerRequestFailed,
+        CLILocalized.format(
+          "cli.controller.disconnect.bluetooth_le",
+          device.name
+        )
+      )
     case .notFound:
       return CLIFailure(
         .controllerRequestFailed,

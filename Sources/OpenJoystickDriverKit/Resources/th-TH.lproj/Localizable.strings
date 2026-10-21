@@ -1060,6 +1060,7 @@
 "cli.controller.disconnect.abstract" = "เลิกเชื่อมต่อคอนโทรลเลอร์บลูทูธ";
 "cli.controller.disconnect.discussion" = "ปิดการเชื่อมต่อบลูทูธ คอนโทรลเลอร์ยังคงจับคู่อยู่และเชื่อมต่อใหม่เมื่อคุณเปิดอีกครั้ง รออย่างน้อย 6 วินาทีให้บลูทูธยืนยัน";
 "cli.controller.disconnect.done" = "เลิกเชื่อมต่อ %@ แล้ว";
+"cli.controller.disconnect.bluetooth_le" = "%@ เชื่อมต่อผ่าน Bluetooth Low Energy และบริการไม่สามารถเลิกเชื่อมต่อได้ ปิดคอนโทรลเลอร์ หรือเลิกเชื่อมต่อในการตั้งค่าระบบ › Bluetooth";
 "cli.controller.disconnect.failed" = "การเลิกเชื่อมต่อบลูทูธล้มเหลวระหว่าง %@: %@";
 "cli.controller.disconnect.not_bluetooth" = "%@ ไม่ได้เชื่อมต่อผ่านบลูทูธ ถอดปลั๊กเพื่อเลิกเชื่อมต่อ";
 "cli.controller.discussion" = "CONTROLLER คือ ID จาก “ojd controller list” หรือ VVVV:PPPP (ID ผู้จำหน่ายและผลิตภัณฑ์แบบเลขฐานสิบหก) เมื่อมีคอนโทรลเลอร์ที่เชื่อมต่อเพียงตัวเดียวที่มี ID นั้น คำสั่ง controller ทุกคำสั่งต้องใช้บริการ";

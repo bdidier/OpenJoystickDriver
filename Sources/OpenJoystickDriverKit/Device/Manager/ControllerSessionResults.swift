@@ -39,6 +39,7 @@ public struct ControllerResumeResult: Codable, Equatable, Sendable {
 public enum WirelessControllerDisconnectFailure: String, Codable, Equatable, Sendable {
   case notFound = "not-found"
   case notBluetooth = "not-bluetooth"
+  case bluetoothLEUnsupported = "bluetooth-le-unsupported"
   case missingAddress = "missing-address"
   case disconnectFailed = "disconnect-failed"
   case timedOut = "timed-out"
