@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import subprocess
 import sys
 from datetime import datetime
@@ -13,6 +14,7 @@ PROJECT_DIR = Path(__file__).resolve().parents[2]
 GUI_DIR = Path(__file__).resolve().parent
 APP = Path("/Applications/OpenJoystickDriver.app")
 PROCESS = "OpenJoystickDriver"
+BUNDLE_ID = "com.openjoystickdriver"
 AREAS = ("Controllers", "Profiles", "Library", "Access", "Activity")
 SETTINGS_PANES = ("General", "Notifications", "Advanced")
 BOUNDS_TOLERANCE = 2.0
@@ -71,7 +73,13 @@ def process_id() -> int:
 
 
 def window_id(pid: int, kind: str) -> int:
-    bounds = [float(value) for value in gui("window-bounds.applescript", kind).split()]
+    reported = gui("window-bounds.applescript", kind)
+    try:
+        bounds = [float(value) for value in reported.split()]
+    except ValueError as error:
+        raise CaptureError(f"window-bounds reported {reported!r}") from error
+    if len(bounds) != 4:
+        raise CaptureError(f"window-bounds reported {reported!r}, expected x y w h")
     listing = run(
         ["osascript", "-l", "JavaScript", str(GUI_DIR / "window-list.js"), str(pid)]
     )
@@ -82,8 +90,44 @@ def window_id(pid: int, kind: str) -> int:
     raise CaptureError(f"no on-screen {kind} window has bounds {bounds}")
 
 
+def require_english_ui() -> None:
+    """The GUI scripts click English labels, so another UI language is refused."""
+    for domain in (BUNDLE_ID, "-g"):
+        result = subprocess.run(
+            ["defaults", "read", domain, "AppleLanguages"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if result.returncode == 0:
+            languages = re.findall(r"[A-Za-z]{2,3}(?:-[A-Za-z0-9]+)*", result.stdout)
+            if languages and languages[0].lower().startswith("en"):
+                return
+            first = languages[0] if languages else "none"
+            raise CaptureError(
+                f"the app UI language is {first} ({domain}): the GUI scripts match "
+                "English labels; put English first in System Settings > General > "
+                "Language & Region"
+            )
+    raise CaptureError("AppleLanguages is unset: cannot tell the app UI language")
+
+
+def read_state() -> tuple[bool, str | None]:
+    """Whether the main window is open and which Settings tab is open, if any."""
+    reported = gui("app-state.applescript")
+    found = re.fullmatch(r"main=(true|false) settings=(\S+)", reported)
+    if not found:
+        raise CaptureError(f"app-state reported {reported!r}")
+    tab = None if found.group(2) == "none" else found.group(2)
+    if tab is not None and tab not in SETTINGS_PANES:
+        raise CaptureError(f"the open Settings window shows unknown tab {tab!r}")
+    return found.group(1) == "true", tab
+
+
 def shoot(pid: int, kind: str, destination: Path) -> None:
-    run(["screencapture", "-l", str(window_id(pid, kind)), "-o", str(destination)])
+    run(
+        ["screencapture", "-x", "-l", str(window_id(pid, kind)), "-o", str(destination)]
+    )
     if not destination.is_file() or destination.stat().st_size == 0:
         raise CaptureError(
             f"screencapture wrote no image to {destination}: grant Screen Recording"
@@ -91,8 +135,35 @@ def shoot(pid: int, kind: str, destination: Path) -> None:
     print(destination)
 
 
+def make_folder() -> Path:
+    root = PROJECT_DIR / ".ojd-shots"
+    stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    root.mkdir(exist_ok=True)
+    for counter in range(1000):
+        folder = root / (stamp if counter == 0 else f"{stamp}-{counter}")
+        try:
+            folder.mkdir()
+        except FileExistsError:
+            continue
+        return folder
+    raise CaptureError(f"no free capture folder for {stamp} in {root}")
+
+
+def restore(steps: list[tuple[str, tuple[str, ...]]]) -> list[str]:
+    """Runs every step, reports each failure to stderr and returns the failures."""
+    failures = []
+    for label, command in steps:
+        try:
+            gui(*command)
+        except (CaptureError, OSError) as error:
+            failures.append(label)
+            print(f"error: restore {label}: {error}", file=sys.stderr)
+    return failures
+
+
 def capture(args: argparse.Namespace) -> int:
     pid = process_id()
+    require_english_ui()
     areas = AREAS if args.all else (args.area,) if args.area else ()
     panes = (
         SETTINGS_PANES
@@ -101,17 +172,32 @@ def capture(args: argparse.Namespace) -> int:
         if args.settings_pane
         else ()
     )
-    folder = PROJECT_DIR / ".ojd-shots" / datetime.now().strftime("%Y%m%d-%H%M%S")
-    folder.mkdir(parents=True)
-    if areas:
-        gui("open-main-window.applescript")
+    main_was_open, settings_tab = read_state()
+    folder = make_folder()
+    sidebar = None
+    opens_settings = False
+    try:
+        gui("open-main-window.applescript", str(APP))
+        sidebar = gui("current-sidebar.applescript")
         for area in areas:
             gui("select-sidebar.applescript", area)
             shoot(pid, "main", folder / f"main-{area.lower()}.png")
-    for pane in panes:
-        gui("open-settings.applescript", pane)
-        shoot(pid, "settings", folder / f"settings-{pane.lower()}.png")
-    return 0
+        for pane in panes:
+            opens_settings = settings_tab is None
+            gui("open-settings.applescript", pane)
+            shoot(pid, "settings", folder / f"settings-{pane.lower()}.png")
+    finally:
+        steps: list[tuple[str, tuple[str, ...]]] = []
+        if sidebar is not None:
+            steps.append(("sidebar area", ("select-sidebar.applescript", sidebar)))
+        if settings_tab is not None and panes:
+            steps.append(("settings tab", ("open-settings.applescript", settings_tab)))
+        if opens_settings:
+            steps.append(("settings window", ("close-window.applescript", "settings")))
+        if not main_was_open:
+            steps.append(("main window", ("close-window.applescript", "main")))
+        failures = restore(steps)
+    return 2 if failures else 0
 
 
 def main(argv: list[str] | None = None) -> int:

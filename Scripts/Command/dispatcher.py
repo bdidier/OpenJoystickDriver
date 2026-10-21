@@ -416,7 +416,8 @@ def dispatch(argv: list[str]) -> int:
             die(f"Unknown: repair {sub} (expected: stale-dext | swiftpm-module-cache)")
         case "shots":
             if not rest or rest[0] != "capture":
-                die(f"Unknown: shots {rest[0] if rest else ''} (expected: capture)")
+                found = f" {rest[0]}" if rest else ""
+                die(f"Unknown: shots{found} (expected: capture)")
             exec_target("GUI/capture.py", rest[1:], python=True)
         case "hooks":
             if rest not in (["install"], ["validate"]):
