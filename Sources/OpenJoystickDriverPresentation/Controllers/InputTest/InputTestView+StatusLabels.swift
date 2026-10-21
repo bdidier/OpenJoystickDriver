@@ -36,20 +36,6 @@
       }
     }
 
-    func motorLabel(_ motor: PhysicalRumbleMotor) -> String {
-      switch motor {
-      case .lowFrequency: return OJDLocalized.string("inputTest.lowFrequency")
-      case .highFrequency: return OJDLocalized.string("inputTest.highFrequency")
-      case .leftTrigger:
-        return OJDLocalized.string("inputTest.leftTrigger")
-      case .rightTrigger:
-        return OJDLocalized.string("inputTest.rightTrigger")
-      case .leftHaptic: return OJDLocalized.string("inputTest.leftHaptic")
-      case .rightHaptic:
-        return OJDLocalized.string("inputTest.rightHaptic")
-      }
-    }
-
     func usbIdentifier(_ device: ApplicationServiceDeviceDescription) -> OJDValue {
       .usbIdentifier(vendorID: device.vendorID, productID: device.productID)
     }

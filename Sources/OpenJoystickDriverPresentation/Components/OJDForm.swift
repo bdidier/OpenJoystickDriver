@@ -35,8 +35,7 @@
         HStack(alignment: .firstTextBaseline) {
           Text(label)
           Spacer(minLength: 8)
-          content.foregroundColor(Color(NSColor.secondaryLabelColor))
-            .multilineTextAlignment(.trailing)
+          content.multilineTextAlignment(.trailing)
         }
       }
     }
@@ -55,7 +54,10 @@
     init(_ label: String, _ value: String?) { self.init(label, OJDValue(value)) }
 
     var body: some View {
-      OJDLabeledRow(label) { OJDValueText(value: value).textSelection(.enabled) }
+      OJDLabeledRow(label) {
+        OJDValueText(value: value).foregroundColor(Color(NSColor.secondaryLabelColor))
+          .textSelection(.enabled)
+      }
     }
   }
 

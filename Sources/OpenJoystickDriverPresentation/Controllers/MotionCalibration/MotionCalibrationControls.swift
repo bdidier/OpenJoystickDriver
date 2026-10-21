@@ -5,10 +5,20 @@
   struct MotionCalibrationControls: View {
     @ObservedObject
     var model: MotionCalibrationViewModel
+    @State
+    private var attempt = 0
 
-    /// Loads the calibration status of the selected controller when it changes.
+    private struct LoadID: Equatable {
+      let selector: ControllerReference?
+      let attempt: Int
+    }
+
+    /// Loads the calibration status of the selected controller, and keeps it current while the
+    /// service can still change it. A new selection or a retry starts the load again.
     var body: some View {
-      content.task(id: model.selector) { await model.refresh() }
+      content.task(id: LoadID(selector: model.selector, attempt: attempt)) {
+        await model.refreshWhileCalibrating()
+      }
     }
 
     private var content: some View {
@@ -54,6 +64,7 @@
             horizontal: false,
             vertical: true
           )
+          Button(OJDLocalized.string("common.tryAgain")) { attempt += 1 }
         }
         HStack {
           Button(OJDLocalized.string("motion.calibration.start")) {

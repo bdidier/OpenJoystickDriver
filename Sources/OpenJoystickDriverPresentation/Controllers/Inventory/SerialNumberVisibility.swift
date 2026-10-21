@@ -42,6 +42,7 @@ struct SerialNumberVisibility: Equatable {
 
 #if canImport(SwiftUI)
 
+  import AppKit
   import SwiftUI
 
   /// The Serial number row of the Controllers detail: blurred until the eye button reveals it.
@@ -56,9 +57,11 @@ struct SerialNumberVisibility: Equatable {
       OJDLabeledRow(label) {
         HStack(spacing: 6) {
           if presentation.isObscured {
-            Text(presentation.displayText).blur(radius: 4).accessibilityHidden(true)
+            Text(presentation.displayText).foregroundColor(Color(NSColor.secondaryLabelColor))
+              .blur(radius: 4).accessibilityHidden(true)
           } else {
-            OJDValueText(value: serial).textSelection(.enabled)
+            OJDValueText(value: serial).foregroundColor(Color(NSColor.secondaryLabelColor))
+              .textSelection(.enabled)
           }
           if presentation.canToggle {
             Button {

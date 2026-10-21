@@ -36,6 +36,33 @@
 
     func refresh() async { await perform(nil) }
 
+    /// How long the status waits between reads while calibration is not settled.
+    static let refreshIntervalNanoseconds: UInt64 = 1_000_000_000
+
+    /// Whether the status can still change on the service side: before the motion baseline
+    /// exists, and while samples are being collected. A failed read stops the loop; the user
+    /// retries it.
+    static func needsRefresh(
+      status: RemappingMotionCalibrationStatus?,
+      errorMessage: String?
+    ) -> Bool {
+      guard errorMessage == nil, let status else { return false }
+      return !status.hasMotionBaseline || status.isCollecting
+    }
+
+    /// Reads the status, then keeps reading it every ``refreshIntervalNanoseconds`` while
+    /// ``needsRefresh(status:errorMessage:)`` holds. Ends when the task is cancelled.
+    func refreshWhileCalibrating(
+      sleep: @Sendable (UInt64) async throws -> Void = { try await Task.sleep(nanoseconds: $0) }
+    ) async {
+      await refresh()
+      while Self.needsRefresh(status: status, errorMessage: errorMessage) {
+        do { try await sleep(Self.refreshIntervalNanoseconds) } catch { return }
+        guard !Task.isCancelled else { return }
+        await refresh()
+      }
+    }
+
     func perform(_ command: RemappingMotionCalibrationCommand?) async {
       guard let selector, !isBusy else { return }
       let requestGeneration = generation

@@ -101,9 +101,12 @@
             lineWidth: 1
           )
         ).ojdAccessibilityLabel(title).ojdAccessibilityValue(
-          active
-            ? OJDLocalized.string("inputTest.pressed")
-            : OJDLocalized.string("inputTest.released")
+          [
+            active
+              ? OJDLocalized.string("inputTest.pressed")
+              : OJDLocalized.string("inputTest.released"),
+            displayedText,
+          ].compactMap { $0 }.joined(separator: ", ")
         )
     }
   }

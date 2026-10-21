@@ -82,10 +82,8 @@
           OJDLabeledValue(fact.label, fact.value)
         }
       } label: {
-        Text(OJDLocalized.string("virtualProfile.advanced")).frame(
-          maxWidth: .infinity,
-          alignment: .leading
-        ).contentShape(Rectangle()).onTapGesture { showsAdvanced.toggle() }
+        Button(OJDLocalized.string("virtualProfile.advanced")) { showsAdvanced.toggle() }
+          .buttonStyle(.plain).frame(maxWidth: .infinity, alignment: .leading)
       }
     }
 

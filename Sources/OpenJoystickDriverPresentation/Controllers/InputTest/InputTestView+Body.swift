@@ -199,7 +199,7 @@
       InputTestRumbleMotorControl(
         settings: model.outputSettings,
         motor: motor,
-        title: motorLabel(motor),
+        title: motor.title,
         isBinary: model.capabilities.binaryRumbleMotors.contains(motor)
       )
     }

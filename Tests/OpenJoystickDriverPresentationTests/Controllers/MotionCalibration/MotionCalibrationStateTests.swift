@@ -96,6 +96,92 @@
     }
   }
 
+  extension MotionCalibrationStateTests {
+    private static func status(
+      baseline: Bool,
+      collecting: Bool
+    ) throws
+      -> RemappingMotionCalibrationStatus
+    {
+      try JSONDecoder().decode(
+        RemappingMotionCalibrationStatus.self,
+        from: Data(
+          """
+          {"hasMotionBaseline":\(baseline),"isCollecting":\(collecting),
+           "offsetDegreesPerSecond":{"x":0,"y":0,"z":0}}
+          """.utf8
+        )
+      )
+    }
+
+    @Test
+    func statusRefreshesOnlyWhileTheBaselineIsMissingOrSamplesAreCollected() throws {
+      let waiting = try Self.status(baseline: false, collecting: false)
+      let collecting = try Self.status(baseline: true, collecting: true)
+      let settled = try Self.status(baseline: true, collecting: false)
+      #expect(MotionCalibrationViewModel.needsRefresh(status: waiting, errorMessage: nil))
+      #expect(MotionCalibrationViewModel.needsRefresh(status: collecting, errorMessage: nil))
+      #expect(!MotionCalibrationViewModel.needsRefresh(status: settled, errorMessage: nil))
+      #expect(!MotionCalibrationViewModel.needsRefresh(status: nil, errorMessage: nil))
+      #expect(!MotionCalibrationViewModel.needsRefresh(status: waiting, errorMessage: "failed"))
+    }
+
+    @Test
+    func refreshLoopReadsUntilCalibrationSettlesThenStops() async throws {
+      let gateway = ScriptedMotionCalibrationGateway(results: [
+        .success(try Self.status(baseline: false, collecting: false)),
+        .success(try Self.status(baseline: true, collecting: true)),
+        .success(try Self.status(baseline: true, collecting: false)),
+      ])
+      let model = MotionCalibrationViewModel(gateway: gateway)
+      model.select(ControllerReference.session(.fixture("first")))
+      let sleeps = SleepCounter()
+      await model.refreshWhileCalibrating { nanoseconds in
+        sleeps.record(nanoseconds)
+      }
+      #expect(await gateway.reads == 3)
+      #expect(
+        sleeps.values
+          == Array(repeating: MotionCalibrationViewModel.refreshIntervalNanoseconds, count: 2)
+      )
+      #expect(model.status?.isCollecting == false)
+    }
+
+    @Test
+    func failedReadStopsTheLoopAndKeepsTheError() async {
+      let gateway = ScriptedMotionCalibrationGateway(results: [
+        .failure(RemappingMotionCalibrationError.motionUnavailable)
+      ])
+      let model = MotionCalibrationViewModel(gateway: gateway)
+      model.select(ControllerReference.session(.fixture("first")))
+      await model.refreshWhileCalibrating { _ in Issue.record("no retry after a failure") }
+      #expect(await gateway.reads == 1)
+      #expect(model.errorMessage == OJDLocalized.string("motion.calibration.motionUnavailable"))
+    }
+  }
+
+  private final class SleepCounter: @unchecked Sendable {
+    private(set) var values: [UInt64] = []
+    func record(_ value: UInt64) { values.append(value) }
+  }
+
+  private actor ScriptedMotionCalibrationGateway: MotionCalibrationGateway {
+    private var results: [Result<RemappingMotionCalibrationStatus, any Error>]
+    private(set) var reads = 0
+
+    init(results: [Result<RemappingMotionCalibrationStatus, any Error>]) { self.results = results }
+
+    // swiftlint:disable async_without_await
+    func motionCalibration(
+      for selector: ControllerReference,
+      command: RemappingMotionCalibrationCommand?
+    ) async throws -> RemappingMotionCalibrationStatus {
+      reads += 1
+      return try results.removeFirst().get()
+    }
+    // swiftlint:enable async_without_await
+  }
+
   private actor DelayedMotionCalibrationGateway: MotionCalibrationGateway {
     var command: RemappingMotionCalibrationCommand?
     var selector: ControllerReference?

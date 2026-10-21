@@ -133,18 +133,8 @@
       }
     }
 
-    func indicator(
-      _ title: String,
-      symbol: String,
-      fallbackSymbol: String? = nil,
-      active: Bool
-    ) -> some View {
-      InputTestIndicator(
-        title: title,
-        symbol: symbol,
-        fallbackSymbol: fallbackSymbol,
-        active: active
-      )
+    func indicator(_ title: String, symbol: String, active: Bool) -> some View {
+      InputTestIndicator(title: title, symbol: symbol, active: active)
     }
 
     func indicator(
