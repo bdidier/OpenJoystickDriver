@@ -144,12 +144,13 @@ extension ApplicationServiceServer {
       )
     case .sendTestNotification:
       _ = try decode(LocalServiceRPCEmptyArguments.self)
-      return try send(await statusChanges.announceTestNotification())
+      guard let outcome = await statusChanges.announceTestNotification() else {
+        throw CancellationError()
+      }
+      return try send(outcome)
     case .reportTestNotificationResult:
       let value = try decode(TestNotificationReport.self)
-      guard value.outcome.kind != .noAnswer else {
-        throw ApplicationServiceClientError.invalidResponse
-      }
+      if case .noAnswer = value.outcome { throw ApplicationServiceClientError.invalidResponse }
       return try send(
         statusChanges.reportTestNotification(value.announcement, outcome: value.outcome)
       )

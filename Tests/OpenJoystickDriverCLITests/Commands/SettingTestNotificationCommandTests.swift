@@ -16,7 +16,7 @@ struct SettingTestNotificationCommandTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: { request, completion in
+      handler: completionHandler { request, completion in
         received.withLock { $0.append(request.method) }
         guard request.method == ApplicationServiceRPCMethod.sendTestNotification.rawValue else {
           completion(LocalServiceRPCResponse(result: nil, error: "unexpected \(request.method)"))

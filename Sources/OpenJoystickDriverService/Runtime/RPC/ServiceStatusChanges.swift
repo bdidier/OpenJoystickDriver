@@ -9,7 +9,9 @@ import OpenJoystickDriverKit
 /// a held one at once or the next to arrive, takes it and the app that sent that wait answers
 /// with `reportTestNotification`; the requests for it end with that outcome. Requests made while
 /// one is pending join it. If no wait takes it within `pickupSeconds`, or the taker does not
-/// report within `answerSeconds`, they end with `noAnswer`.
+/// report within `answerSeconds`, they end with `noAnswer`. A request whose caller leaves is
+/// withdrawn; when the last one is withdrawn the announcement is abandoned: it is dropped, and
+/// a report for it, even from an app that already took it, is refused.
 ///
 /// The count follows `.ojdServiceStatusDidChange`, which the device manager, the permission
 /// manager, the virtual output backends, the device pipelines (including an overdue input report)
@@ -20,11 +22,17 @@ import OpenJoystickDriverKit
 final class ServiceStatusChanges: @unchecked Sendable {
   private final class Announcement {
     let id = UUID()
-    var requests: [CheckedContinuation<TestNotificationOutcome, Never>]
+    /// The requests waiting for the outcome, by identifier. A request whose caller left gets nil.
+    var requests: [UUID: CheckedContinuation<TestNotificationOutcome?, Never>]
     var taken = false
+    /// Names the deadline now running, so an earlier deadline that fires late cannot end the
+    /// announcement in a later phase.
+    var deadlineToken = UUID()
     var deadline: Task<Void, Never>?
 
-    init(_ request: CheckedContinuation<TestNotificationOutcome, Never>) { requests = [request] }
+    init(_ id: UUID, _ request: CheckedContinuation<TestNotificationOutcome?, Never>) {
+      requests = [id: request]
+    }
   }
 
   private final class Waiter {
@@ -148,47 +156,71 @@ final class ServiceStatusChanges: @unchecked Sendable {
     }
   }
 
-  /// Announces a test notification and returns how it ended. A held wait takes it at once;
-  /// otherwise it stays pending until the next wait arrives or `pickupSeconds` pass.
-  func announceTestNotification() async -> TestNotificationOutcome {
-    await withCheckedContinuation { continuation in
-      let handoff = lock.withLock { () -> (Waiter, ServiceStatusReply)? in
-        if let pending {
-          pending.requests.append(continuation)
-          return nil
-        }
-        let announcement = Announcement(continuation)
-        pending = announcement
-        schedule(announcement, after: pickupSeconds)
-        guard let key = waiters.keys.first, let waiter = waiters.removeValue(forKey: key) else {
-          return nil
-        }
-        announcement.taken = true
-        schedule(announcement, after: answerSeconds)
-        return (
-          waiter,
-          ServiceStatusReply(
-            revision: ServiceStatusRevision(instance: instance, generation: generation),
-            event: .testNotification,
-            announcement: announcement.id
+  /// Announces a test notification and returns how it ended, or nil when the caller left first.
+  /// A held wait takes it at once; otherwise it stays pending until the next wait arrives or
+  /// `pickupSeconds` pass.
+  func announceTestNotification() async -> TestNotificationOutcome? {
+    let requestID = UUID()
+    return await withTaskCancellationHandler {
+      await withCheckedContinuation { continuation in
+        let handoff = lock.withLock { () -> (Waiter, ServiceStatusReply)? in
+          if Task.isCancelled {
+            continuation.resume(returning: nil)
+            return nil
+          }
+          if let pending {
+            pending.requests[requestID] = continuation
+            return nil
+          }
+          let announcement = Announcement(requestID, continuation)
+          pending = announcement
+          schedule(announcement, after: pickupSeconds)
+          guard let key = waiters.keys.first, let waiter = waiters.removeValue(forKey: key) else {
+            return nil
+          }
+          announcement.taken = true
+          schedule(announcement, after: answerSeconds)
+          return (
+            waiter,
+            ServiceStatusReply(
+              revision: ServiceStatusRevision(instance: instance, generation: generation),
+              event: .testNotification,
+              announcement: announcement.id
+            )
           )
-        )
+        }
+        if let (waiter, reply) = handoff {
+          waiter.hold?.cancel()
+          waiter.continuation.resume(returning: reply)
+        }
       }
-      if let (waiter, reply) = handoff {
-        waiter.hold?.cancel()
-        waiter.continuation.resume(returning: reply)
-      }
+    } onCancel: {
+      withdrawTestNotificationRequest(requestID)
     }
+  }
+
+  private func withdrawTestNotificationRequest(_ requestID: UUID) {
+    let request = lock.withLock { () -> CheckedContinuation<TestNotificationOutcome?, Never>? in
+      guard let pending, let request = pending.requests.removeValue(forKey: requestID) else {
+        return nil
+      }
+      if pending.requests.isEmpty {
+        pending.deadline?.cancel()
+        self.pending = nil
+      }
+      return request
+    }
+    request?.resume(returning: nil)
   }
 
   /// Ends the pending announcement `id` with `outcome`, which is `shown`, `denied` or `failed`.
   /// Returns false when `id` is not pending and taken, because it ended already or never existed.
   func reportTestNotification(_ id: UUID, outcome: TestNotificationOutcome) -> Bool {
-    let requests = lock.withLock { () -> [CheckedContinuation<TestNotificationOutcome, Never>]? in
+    let requests = lock.withLock { () -> [CheckedContinuation<TestNotificationOutcome?, Never>]? in
       guard let pending, pending.id == id, pending.taken else { return nil }
       pending.deadline?.cancel()
       self.pending = nil
-      return pending.requests
+      return Array(pending.requests.values)
     }
     guard let requests else { return false }
     for request in requests { request.resume(returning: outcome) }
@@ -207,18 +239,21 @@ final class ServiceStatusChanges: @unchecked Sendable {
   private func schedule(_ announcement: Announcement, after seconds: TimeInterval) {
     announcement.deadline?.cancel()
     let id = announcement.id
+    let token = UUID()
+    announcement.deadlineToken = token
     announcement.deadline = Task { [weak self] in
       try? await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
       guard !Task.isCancelled else { return }
-      self?.expire(id)
+      self?.expire(id, token: token)
     }
   }
 
-  private func expire(_ id: UUID) {
-    let requests = lock.withLock { () -> [CheckedContinuation<TestNotificationOutcome, Never>]? in
-      guard let pending, pending.id == id else { return nil }
+  /// Ends announcement `id` with `noAnswer` if `token` is still its running deadline.
+  func expire(_ id: UUID, token: UUID) {
+    let requests = lock.withLock { () -> [CheckedContinuation<TestNotificationOutcome?, Never>]? in
+      guard let pending, pending.id == id, pending.deadlineToken == token else { return nil }
       self.pending = nil
-      return pending.requests
+      return Array(pending.requests.values)
     }
     for request in requests ?? [] { request.resume(returning: .noAnswer) }
   }

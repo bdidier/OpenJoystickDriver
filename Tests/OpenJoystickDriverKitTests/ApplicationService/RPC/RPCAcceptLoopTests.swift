@@ -43,7 +43,7 @@ struct RPCAcceptLoopTests {
     LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: { _, completion in
+      handler: completionHandler { _, completion in
         completion(
           LocalServiceRPCResponse(result: try? JSONEncoder().encode(generation), error: nil)
         )

@@ -102,7 +102,11 @@ class RekeyMapTests(unittest.TestCase):
                     len(parts) > 3 and parts[2] in self.tree.get(group, ()), old
                 )
             else:
-                self.assertIn(parts[2], self.tree[group], old)
+                self.assertIn(
+                    parts[2],
+                    self.tree[group] | {rekey.camel(name) for name in self.tree[group]},
+                    old,
+                )
 
     def test_names_that_are_not_commands_stay_in_the_group(self) -> None:
         for old in (
@@ -153,6 +157,7 @@ class RekeyMapTests(unittest.TestCase):
             "settings.startAtLogin": "ui.settings.general.startAtLogin",
             "settingsPane.advanced.title": "ui.settings.advanced.title",
             "cli.controller.list.abstract": "cli.controller.list.abstract",
+            "cli.setting.testNotification.abstract": "cli.setting.testNotification.abstract",
             "cli.controller.abstract": "cli.controller.group.abstract",
             "cli.error.service_timeout": "cli.shared.error.serviceTimeout",
             "cli.diagnose.output_progress": "cli.diagnose.group.outputProgress",

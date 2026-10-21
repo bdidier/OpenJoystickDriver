@@ -18,7 +18,7 @@ struct LocalServiceRPCTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: { request, completion in
+      handler: completionHandler { request, completion in
         let value = try? JSONDecoder().decode(String.self, from: request.arguments)
         let result = value.flatMap { try? JSONEncoder().encode($0.uppercased()) }
         completion(LocalServiceRPCResponse(result: result, error: result == nil ? "decode" : nil))
@@ -46,7 +46,7 @@ struct LocalServiceRPCTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in false },
-      handler: { _, completion in
+      handler: completionHandler { _, completion in
         handlerCalled.signal()
         completion(LocalServiceRPCResponse(result: Data(), error: nil))
       }
@@ -75,7 +75,7 @@ struct LocalServiceRPCTests {
         peers.record(peer)
         return true
       },
-      handler: { _, completion in
+      handler: completionHandler { _, completion in
         completion(LocalServiceRPCResponse(result: Data("1".utf8), error: nil))
       }
     )
@@ -101,12 +101,16 @@ struct LocalServiceRPCTests {
     let first = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: { _, completion in completion(LocalServiceRPCResponse(result: Data(), error: nil)) }
+      handler: completionHandler { _, completion in
+        completion(LocalServiceRPCResponse(result: Data(), error: nil))
+      }
     )
     let second = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: { _, completion in completion(LocalServiceRPCResponse(result: Data(), error: nil)) }
+      handler: completionHandler { _, completion in
+        completion(LocalServiceRPCResponse(result: Data(), error: nil))
+      }
     )
     try first.start()
     defer { first.stop() }
@@ -128,7 +132,7 @@ struct LocalServiceRPCTests {
       let server = LocalServiceRPCServer(
         socketPath: socketPath,
         authentication: { _ in true },
-        handler: { _, completion in
+        handler: completionHandler { _, completion in
           completion(
             LocalServiceRPCResponse(result: try? JSONEncoder().encode(generation), error: nil)
           )
@@ -211,7 +215,7 @@ struct LocalServiceRPCTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: { request, completion in
+      handler: completionHandler { request, completion in
         #expect(request.method == "requestAccess")
         do {
           let arguments = try JSONDecoder().decode(
@@ -250,7 +254,7 @@ struct LocalServiceRPCTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: { request, completion in
+      handler: completionHandler { request, completion in
         do {
           if request.method == "previewPhysicalColor" {
             let arguments = try JSONDecoder().decode(
@@ -306,7 +310,7 @@ struct LocalServiceRPCTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: { request, completion in
+      handler: completionHandler { request, completion in
         if request.method == "held" {
           requestReceived.signal()
           releaseHeldRequest.wait()
@@ -371,7 +375,9 @@ struct LocalServiceRPCTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in false },
-      handler: { _, completion in completion(LocalServiceRPCResponse(result: Data(), error: nil)) }
+      handler: completionHandler { _, completion in
+        completion(LocalServiceRPCResponse(result: Data(), error: nil))
+      }
     )
     try server.start()
     defer { server.stop() }
@@ -383,6 +389,57 @@ struct LocalServiceRPCTests {
         after: ServiceStatusRevision(instance: UUID(), generation: 1)
       )
     }
+  }
+
+  /// Sends `method` on a raw connection and returns it open; the caller closes it.
+  private func send(method: String, socketPath: String) throws -> Int32 {
+    let descriptor = try LocalServiceRPCTransport.openConnectedSocket(
+      timeoutSeconds: 5,
+      socketPath: socketPath
+    )
+    let request = LocalServiceRPCRequest(
+      method: method,
+      arguments: try JSONEncoder().encode(LocalServiceRPCEmptyArguments())
+    )
+    try LocalServiceRPCTransport.sendFrame(try JSONEncoder().encode(request), to: descriptor)
+    return descriptor
+  }
+
+  @Test
+  func aClientThatLeavesCancelsOnlyTheRequestsThatHoldTheirReplyOpen() async throws {
+    let socketPath = temporarySocketPath()
+    let started = Locked<Set<String>>([])
+    let ended = Locked<[String: Bool]>([:])
+    let server = LocalServiceRPCServer(
+      socketPath: socketPath,
+      authentication: { _ in true },
+      handler: { request in
+        started.withLock { _ = $0.insert(request.method) }
+        try? await Task.sleep(nanoseconds: 300_000_000)
+        ended.withLock { $0[request.method] = Task.isCancelled }
+        return LocalServiceRPCResponse(result: Data(), error: nil)
+      }
+    )
+    try server.start()
+    defer { server.stop() }
+    let held = ApplicationServiceRPCMethod.waitForServiceStatusChange.rawValue
+    let mutation = ApplicationServiceRPCMethod.setSetting.rawValue
+
+    let clients = [
+      try send(method: held, socketPath: socketPath),
+      try send(method: mutation, socketPath: socketPath),
+    ]
+    let deadline = ContinuousClock.now + .seconds(5)
+    while started.withLock({ $0.count }) < 2, ContinuousClock.now < deadline {
+      try await Task.sleep(nanoseconds: 5_000_000)
+    }
+    for client in clients { Darwin.close(client) }
+    while ended.withLock({ $0.count }) < 2, ContinuousClock.now < deadline {
+      try await Task.sleep(nanoseconds: 5_000_000)
+    }
+
+    #expect(ended.withLock { $0[held] } == true)
+    #expect(ended.withLock { $0[mutation] } == false)
   }
 
   private func temporarySocketPath() -> String {

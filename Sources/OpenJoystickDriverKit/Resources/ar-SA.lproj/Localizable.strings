@@ -2062,5 +2062,5 @@
 "cli.setting.testNotification.abstract" = "اعرض إشعارًا تجريبيًا في التطبيق.";
 /* Discussion of the ojd setting test-notification command, in the command help. */
 "cli.setting.testNotification.discussion" = "تطلب من الخدمة إعلان إشعار تجريبي إلى تطبيق OpenJoystickDriver المفتوح وتنتظر أن يعرضه التطبيق. تفشل بخطأ مسمى عند رفض الإشعارات أو فشل التسليم أو عدم رد أي تطبيق في الوقت المناسب.";
-/* Printed by ojd setting test-notification after the service announced the test notification to a waiting app. */
-"cli.setting.testNotification.success" = "تم طلب عرض إشعار تجريبي من التطبيق.";
+/* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
+"cli.setting.testNotification.success" = "عرض التطبيق الإشعار التجريبي.";

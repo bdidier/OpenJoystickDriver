@@ -2063,5 +2063,5 @@
 "cli.setting.testNotification.abstract" = "Muestra una notificación de prueba en la app.";
 /* Discussion of the ojd setting test-notification command, in the command help. */
 "cli.setting.testNotification.discussion" = "Pide al servicio que anuncie una notificación de prueba a la app OpenJoystickDriver abierta y espera a que la app la muestre. Falla con un error con nombre si las notificaciones están negadas, falla la entrega o ninguna app responde a tiempo.";
-/* Printed by ojd setting test-notification after the service announced the test notification to a waiting app. */
-"cli.setting.testNotification.success" = "Se pidió a la app que muestre una notificación de prueba.";
+/* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
+"cli.setting.testNotification.success" = "La app mostró la notificación de prueba.";

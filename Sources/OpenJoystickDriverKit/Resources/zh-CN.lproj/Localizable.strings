@@ -2062,5 +2062,5 @@
 "cli.setting.testNotification.abstract" = "在应用中显示一条测试通知。";
 /* Discussion of the ojd setting test-notification command, in the command help. */
 "cli.setting.testNotification.discussion" = "请求服务向已打开的 OpenJoystickDriver 应用发出测试通知，并等待应用显示。如果通知被拒绝、投递失败或没有应用及时响应，将以具名错误失败。";
-/* Printed by ojd setting test-notification after the service announced the test notification to a waiting app. */
-"cli.setting.testNotification.success" = "已请求应用显示测试通知。";
+/* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
+"cli.setting.testNotification.success" = "应用已显示测试通知。";

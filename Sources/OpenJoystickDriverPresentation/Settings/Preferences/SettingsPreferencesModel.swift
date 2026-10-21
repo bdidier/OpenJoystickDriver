@@ -199,10 +199,10 @@
 
     /// The text of an outcome that is not `shown`.
     static func message(for outcome: TestNotificationOutcome) -> String? {
-      switch outcome.kind {
+      switch outcome {
       case .shown: return nil
       case .denied: return OJDLocalized.string("error.E2038")
-      case .failed: return outcome.reason
+      case .failed(let reason): return reason
       case .noAnswer: return OJDLocalized.string("error.E2037")
       }
     }

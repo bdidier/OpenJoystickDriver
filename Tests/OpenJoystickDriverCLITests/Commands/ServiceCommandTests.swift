@@ -128,7 +128,7 @@ struct ServiceCommandTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: { request, completion in
+      handler: completionHandler { request, completion in
         let isStatus = request.method == ApplicationServiceRPCMethod.getStatus.rawValue
         completion(
           LocalServiceRPCResponse(

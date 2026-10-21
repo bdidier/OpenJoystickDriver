@@ -2062,5 +2062,5 @@
 "cli.setting.testNotification.abstract" = "แสดงการแจ้งเตือนทดสอบในแอป";
 /* Discussion of the ojd setting test-notification command, in the command help. */
 "cli.setting.testNotification.discussion" = "ขอให้บริการประกาศการแจ้งเตือนทดสอบไปยังแอป OpenJoystickDriver ที่เปิดอยู่ และรอให้แอปแสดงการแจ้งเตือนนั้น จะล้มเหลวพร้อมข้อผิดพลาดที่มีชื่อเมื่อการแจ้งเตือนถูกปฏิเสธ การส่งล้มเหลว หรือไม่มีแอปตอบกลับทันเวลา";
-/* Printed by ojd setting test-notification after the service announced the test notification to a waiting app. */
-"cli.setting.testNotification.success" = "ขอให้แอปแสดงการแจ้งเตือนทดสอบแล้ว";
+/* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
+"cli.setting.testNotification.success" = "แอปแสดงการแจ้งเตือนทดสอบแล้ว";

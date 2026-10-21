@@ -226,4 +226,48 @@ struct ServiceStatusChangesTests {
     #expect(!changes.reportTestNotification(UUID(), outcome: .shown))
     #expect(await changes.announceTestNotification() == .noAnswer)
   }
+
+  @Test
+  func aCallerThatLeavesAbandonsTheAnnouncementAndLaterReportsAreRefused() async throws {
+    let changes = ServiceStatusChanges(center: NotificationCenter())
+    let baseline = await Self.revision(changes)
+    let caller = Task { await changes.announceTestNotification() }
+    try await Task.sleep(nanoseconds: 20_000_000)
+    let reply = await changes.wait(after: baseline, holdSeconds: 30)
+    let id = try #require(Self.announcementID(reply))
+
+    caller.cancel()
+
+    #expect(await caller.value == nil)
+    #expect(!changes.reportTestNotification(id, outcome: .shown))
+  }
+
+  @Test
+  func aRequestKeepsTheAnnouncementWhileAnotherCallerStaysAfterOneLeaves() async throws {
+    let changes = ServiceStatusChanges(center: NotificationCenter())
+    let leaving = Task { await changes.announceTestNotification() }
+    try await Task.sleep(nanoseconds: 20_000_000)
+    async let staying = changes.announceTestNotification()
+    try await Task.sleep(nanoseconds: 20_000_000)
+    let id = try #require(Self.announcementID(await changes.wait(after: nil, holdSeconds: 30)))
+
+    leaving.cancel()
+
+    #expect(await leaving.value == nil)
+    #expect(changes.reportTestNotification(id, outcome: .denied))
+    #expect(await staying == .denied)
+  }
+
+  @Test
+  func aStalePickupDeadlineCannotEndATakenAnnouncement() async throws {
+    let changes = ServiceStatusChanges(center: NotificationCenter())
+    async let outcome = changes.announceTestNotification()
+    try await Task.sleep(nanoseconds: 20_000_000)
+    let id = try #require(Self.announcementID(await changes.wait(after: nil, holdSeconds: 30)))
+
+    changes.expire(id, token: UUID())
+
+    #expect(changes.reportTestNotification(id, outcome: .shown))
+    #expect(await outcome == .shown)
+  }
 }

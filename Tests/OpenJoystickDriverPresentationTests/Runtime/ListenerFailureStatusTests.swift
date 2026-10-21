@@ -73,7 +73,7 @@ struct ListenerFailureStatusTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: { request, completion in
+      handler: completionHandler { request, completion in
         if request.method == ApplicationServiceRPCMethod.getStatus.rawValue {
           completion(LocalServiceRPCResponse(result: statusResult, error: nil))
         } else {

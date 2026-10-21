@@ -3,27 +3,13 @@ import Foundation
 
 public final class LocalServiceRPCServer: @unchecked Sendable {
   public typealias Authentication = @Sendable (LocalSocketPeer) -> Bool
-  public typealias Completion = @Sendable (LocalServiceRPCResponse) -> Void
-  public typealias Handler = @Sendable (LocalServiceRPCRequest, @escaping Completion) -> Void
-
-  /// Answers a request and is cancelled when the client closes its end first.
-  package typealias CancellableHandler =
-    @Sendable (LocalServiceRPCRequest) async -> LocalServiceRPCResponse
-
-  /// How a request is answered.
-  private enum Dispatch {
-    /// The handler completes on its own schedule and is never told that the client left.
-    case callback(Handler)
-    /// The server runs the handler in a task and cancels the task when the client hangs up
-    /// before the response, so a held request does not outlive its client.
-    case cancellable(CancellableHandler)
-  }
-
-  /// How often a pending cancellable request checks whether its handler finished.
-  private static let pendingPollMilliseconds: Int32 = 50
+  /// Answers a request. For a method that holds its reply open
+  /// (``ApplicationServiceRPCMethod/holdsReplyOpen``) the task is cancelled when the client
+  /// closes its end first; every other request runs to completion.
+  public typealias Handler = @Sendable (LocalServiceRPCRequest) async -> LocalServiceRPCResponse
 
   private let authentication: Authentication
-  private let dispatch: Dispatch
+  private let handler: Handler
   package let socketPath: String
   private let stateLock = NSLock()
   private var listener: Listener?
@@ -78,20 +64,7 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
   ) {
     self.socketPath = socketPath
     self.authentication = authentication
-    self.dispatch = .callback(handler)
-  }
-
-  /// A server whose handler is cancelled when the client closes its connection before the
-  /// response. A client sends one request and then only reads, so any event on the connection
-  /// while the handler runs, a hang-up, an error or stray bytes, ends the request.
-  package init(
-    socketPath: String = LocalServiceRPCTransport.defaultSocketPath,
-    authentication: @escaping Authentication,
-    cancellableHandler: @escaping CancellableHandler
-  ) {
-    self.socketPath = socketPath
-    self.authentication = authentication
-    self.dispatch = .cancellable(cancellableHandler)
+    self.handler = handler
   }
 
   public func start() throws {
@@ -300,16 +273,7 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
       }
       let data = try LocalServiceRPCTransport.receiveFrame(from: descriptor)
       let request = try JSONDecoder().decode(LocalServiceRPCRequest.self, from: data)
-      switch dispatch {
-      case .callback(let handler):
-        handler(request) { response in
-          defer { Darwin.close(descriptor) }
-          guard let encoded = try? JSONEncoder().encode(response) else { return }
-          try? LocalServiceRPCTransport.sendFrame(encoded, to: descriptor)
-        }
-      case .cancellable(let handler):
-        answer(request, on: descriptor, with: handler)
-      }
+      answer(request, on: descriptor)
     } catch {
       let response = LocalServiceRPCResponse(result: nil, error: error.localizedDescription)
       if let encoded = try? JSONEncoder().encode(response) {
@@ -319,32 +283,43 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
     }
   }
 
-  /// Runs `handler` for `request` and sends its response, cancelling it if the client leaves
-  /// first. Returns after the connection is closed.
-  private func answer(
-    _ request: LocalServiceRPCRequest,
-    on descriptor: Int32,
-    with handler: @escaping CancellableHandler
-  ) {
+  /// Runs the handler for `request`, sends its response and closes the connection.
+  ///
+  /// A client sends one request and then only reads. For a method that holds its reply open, any
+  /// event on the connection before the response, a hang-up, an error or stray bytes, cancels the
+  /// handler's task, so a request does not outlive its client. The wait is event-driven: the
+  /// thread sleeps in `poll` on the connection and on a pipe that the finished task writes to.
+  /// Any other request runs to completion even when the client has left.
+  private func answer(_ request: LocalServiceRPCRequest, on descriptor: Int32) {
     let finished = DispatchSemaphore(value: 0)
-    let done = Locked(false)
+    var wake: [Int32] = [-1, -1]
+    let watches =
+      ApplicationServiceRPCMethod(rawValue: request.method)?.holdsReplyOpen == true
+      && pipe(&wake) == 0
+    let wakeWrite = wake[1]
+    let handler = handler
     let task = Task {
       let response = await handler(request)
       if let encoded = try? JSONEncoder().encode(response) {
         try? LocalServiceRPCTransport.sendFrame(encoded, to: descriptor)
       }
-      done.withLock { $0 = true }
+      if watches { _ = Darwin.write(wakeWrite, "x", 1) }
       finished.signal()
     }
-    var events = pollfd(fd: descriptor, events: Int16(POLLIN), revents: 0)
-    while !done.withLock({ $0 }) {
-      let ready = poll(&events, 1, Self.pendingPollMilliseconds)
-      if ready > 0 || (ready < 0 && errno != EINTR) {
-        task.cancel()
-        break
-      }
+    if watches {
+      var events = [
+        pollfd(fd: descriptor, events: Int16(POLLIN), revents: 0),
+        pollfd(fd: wake[0], events: Int16(POLLIN), revents: 0),
+      ]
+      var ready: Int32
+      repeat { ready = poll(&events, 2, -1) } while ready < 0 && errno == EINTR
+      if events[1].revents == 0 { task.cancel() }
     }
     finished.wait()
+    if watches {
+      Darwin.close(wake[0])
+      Darwin.close(wake[1])
+    }
     Darwin.close(descriptor)
   }
 

@@ -91,8 +91,7 @@ struct LocalRPCBridgeTests {
       let rpcServer = LocalServiceRPCServer(
         socketPath: socketPath,
         authentication: { _ in true },
-        handler: { request, completion in Task { completion(await server.handleLocalRPC(request)) }
-        }
+        handler: { await server.handleLocalRPC($0) }
       )
       try rpcServer.start()
       defer { rpcServer.stop() }
@@ -113,8 +112,7 @@ struct LocalRPCBridgeTests {
       let rpcServer = LocalServiceRPCServer(
         socketPath: socketPath,
         authentication: { _ in true },
-        handler: { request, completion in Task { completion(await server.handleLocalRPC(request)) }
-        }
+        handler: { await server.handleLocalRPC($0) }
       )
       try rpcServer.start()
       defer { rpcServer.stop() }
@@ -140,8 +138,7 @@ struct LocalRPCBridgeTests {
       let rpcServer = LocalServiceRPCServer(
         socketPath: socketPath,
         authentication: { _ in true },
-        handler: { request, completion in Task { completion(await server.handleLocalRPC(request)) }
-        }
+        handler: { await server.handleLocalRPC($0) }
       )
       try rpcServer.start()
       defer { rpcServer.stop() }
@@ -173,7 +170,7 @@ struct LocalRPCBridgeTests {
       let rpcServer = LocalServiceRPCServer(
         socketPath: socketPath,
         authentication: { _ in true },
-        cancellableHandler: { await server.handleLocalRPC($0) }
+        handler: { await server.handleLocalRPC($0) }
       )
       try rpcServer.start()
       defer { rpcServer.stop() }
@@ -294,7 +291,7 @@ struct LocalRPCBridgeTests {
       let listener = LocalServiceRPCServer(
         socketPath: socketPath,
         authentication: { _ in true },
-        handler: { _, completion in
+        handler: completionHandler { _, completion in
           completion(LocalServiceRPCResponse(result: nil, error: nil))
         }
       )

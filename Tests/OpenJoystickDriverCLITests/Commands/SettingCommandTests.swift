@@ -27,7 +27,7 @@ struct SettingCommandTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: { request, completion in
+      handler: completionHandler { request, completion in
         received.withLock { $0.append(request.method) }
         switch request.method {
         case ApplicationServiceRPCMethod.getSettings.rawValue:

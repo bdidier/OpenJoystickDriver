@@ -150,7 +150,7 @@ struct RemappingRPCTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: { request, completion in
+      handler: completionHandler { request, completion in
         methods.append(request.method)
         do {
           let result: Data
@@ -298,7 +298,9 @@ struct RemappingRPCTests {
     let server = LocalServiceRPCServer(
       socketPath: socketPath,
       authentication: { _ in true },
-      handler: { _, completion in completion(LocalServiceRPCResponse(remappingError: expected)) }
+      handler: completionHandler { _, completion in
+        completion(LocalServiceRPCResponse(remappingError: expected))
+      }
     )
     try server.start()
     defer { server.stop() }

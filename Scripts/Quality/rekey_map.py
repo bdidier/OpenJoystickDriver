@@ -230,7 +230,11 @@ def cli_key(parts: list[str], tree: dict[str, frozenset[str]]) -> list[str]:
     if not rest:
         raise ValueError("cli key without a leaf")
     head = rest[0]
-    if len(rest) > 1 and head in tree.get(group, frozenset()):
+    commands = tree.get(group, frozenset())
+    # A key spelled in the new lowerCamelCase names its command the same way.
+    if len(rest) > 1 and (
+        head in commands or head in {camel(name) for name in commands}
+    ):
         return ["cli", camel(group), camel(head), join_leaf(rest[1:])]
     return ["cli", camel(group), "group", join_leaf(rest)]
 

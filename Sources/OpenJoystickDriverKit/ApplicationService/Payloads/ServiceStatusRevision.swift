@@ -80,34 +80,26 @@ public struct ServiceStatusReply: Codable, Equatable, Sendable {
 
 /// How a test notification ended.
 ///
-/// The app reports `shown`, `denied` or `failed`; the service itself decides `noAnswer`.
-public struct TestNotificationOutcome: Codable, Equatable, Sendable {
-  public enum Kind: String, Codable, Equatable, Sendable {
-    /// The app delivered the notification.
-    case shown
-    /// Notifications are not allowed for the app.
-    case denied
-    /// The app tried and the system reported an error, in `reason`.
-    case failed
-    /// No app took the announcement before `TestNotificationDeadlines.pickupSeconds`, or the app
-    /// that took it did not report within `TestNotificationDeadlines.answerSeconds`.
-    case noAnswer
-  }
+/// The app reports `shown`, `denied` or `failed`; the service itself decides `noAnswer`. On the
+/// wire it is `{"kind": ...}`, with `reason` beside `failed` alone.
+public enum TestNotificationOutcome: Codable, Equatable, Sendable {
+  /// The app delivered the notification.
+  case shown
+  /// Notifications are not allowed for the app.
+  case denied
+  /// The app tried and the system reported an error; the associated value is its text.
+  case failed(String)
+  /// No app took the announcement before `TestNotificationDeadlines.pickupSeconds`, or the app
+  /// that took it did not report within `TestNotificationDeadlines.answerSeconds`.
+  case noAnswer
 
-  public let kind: Kind
-  /// The system's own text; present exactly when `kind` is `failed`.
-  public let reason: String?
-
-  public init(_ kind: Kind, reason: String? = nil) {
-    precondition((kind == .failed) == (reason != nil), "A reason belongs to a failed outcome.")
-    self.kind = kind
-    self.reason = reason
-  }
+  private enum CodingKeys: String, CodingKey { case kind, reason }
+  private enum Kind: String, Codable { case shown, denied, failed, noAnswer }
 
   public init(from decoder: any Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
-    kind = try container.decode(Kind.self, forKey: .kind)
-    reason = try container.decodeIfPresent(String.self, forKey: .reason)
+    let reason = try container.decodeIfPresent(String.self, forKey: .reason)
+    let kind = try container.decode(Kind.self, forKey: .kind)
     guard (kind == .failed) == (reason != nil) else {
       throw DecodingError.dataCorruptedError(
         forKey: .reason,
@@ -115,12 +107,25 @@ public struct TestNotificationOutcome: Codable, Equatable, Sendable {
         debugDescription: "A reason belongs to a failed outcome alone."
       )
     }
+    switch kind {
+    case .shown: self = .shown
+    case .denied: self = .denied
+    case .noAnswer: self = .noAnswer
+    case .failed: self = .failed(reason ?? "")
+    }
   }
 
-  public static let shown = Self(.shown)
-  public static let denied = Self(.denied)
-  public static let noAnswer = Self(.noAnswer)
-  public static func failed(_ reason: String) -> Self { Self(.failed, reason: reason) }
+  public func encode(to encoder: any Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    switch self {
+    case .shown: try container.encode(Kind.shown, forKey: .kind)
+    case .denied: try container.encode(Kind.denied, forKey: .kind)
+    case .noAnswer: try container.encode(Kind.noAnswer, forKey: .kind)
+    case .failed(let reason):
+      try container.encode(Kind.failed, forKey: .kind)
+      try container.encode(reason, forKey: .reason)
+    }
+  }
 }
 
 /// How long the service waits on a test notification.

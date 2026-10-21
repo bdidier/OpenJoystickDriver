@@ -315,19 +315,19 @@ struct SettingTestNotificationCommand: AsyncParsableCommand {
       let outcome = try await ServiceConnection.request { client in
         try await client.sendTestNotification()
       }
-      switch outcome.kind {
+      switch outcome {
       case .shown: break
       case .denied:
         throw CLIFailure(.notificationsDenied, CLILocalized.text("error.E2038"))
-      case .failed:
-        throw CLIFailure.serviceRequestFailed(outcome.reason ?? "")
+      case .failed(let reason):
+        throw CLIFailure.serviceRequestFailed(reason)
       case .noAnswer:
         throw CLIFailure(.noApplicationAnswered, CLILocalized.text("error.E2037"))
       }
       switch CLIContext.current.format {
       case .json:
         try CLIOutput.json(CLIStatus(details: Result(outcome: "Shown")))
-      case .plain: CLIOutput.plain([[outcome.kind.rawValue]])
+      case .plain: CLIOutput.plain([["shown"]])
       case .human: CLIOutput.success(CLILocalized.text("cli.setting.testNotification.success"))
       }
     }
