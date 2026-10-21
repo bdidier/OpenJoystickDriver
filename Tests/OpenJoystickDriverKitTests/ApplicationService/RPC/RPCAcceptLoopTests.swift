@@ -103,10 +103,10 @@ struct RPCAcceptLoopTests {
     let server = makeServer(generation: 9)
     let exited = DispatchSemaphore(value: 0)
     server.acceptLoopDidExit = { exited.signal() }
-    server.beforeListenerPublished = { [unowned server] in
-      server.stop()
+    server.beforeListenerPublished = { [weak server] in
+      server?.stop()
       // A start while the first still runs is refused.
-      #expect(throws: LocalServiceRPCError.alreadyRunning) { try server.start() }
+      #expect(throws: LocalServiceRPCError.alreadyRunning) { try server?.start() }
     }
     try server.start()
 
