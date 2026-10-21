@@ -74,10 +74,12 @@ extension ProtocolDescription {
       return "HID startup writes apply only to HID controllers"
     }
     if sessionKeys != family.generalSessionFields {
-      return "\(family.rawValue) reads the session keys "
-        + family.generalSessionFields.sorted().joined(separator: ", ")
+      let read = family.generalSessionFields.map(\.rawValue).sorted()
+      return read.isEmpty
+        ? "\(family.rawValue) reads no session keys"
+        : "\(family.rawValue) reads the session keys \(read.joined(separator: ", "))"
     }
-    if let unlisted = presentGeneralSessionFields.subtracting(sessionKeys).min() {
+    if let unlisted = presentGeneralSessionFields.subtracting(sessionKeys).map(\.rawValue).min() {
       return "defaults.session sets \(unlisted), which sessionKeys does not list"
     }
     if let violation = keepAliveViolation { return violation }
@@ -119,12 +121,11 @@ extension ProtocolDescription {
     return nil
   }
 
-  /// The general `defaults.session` keys the description sets.
-  var presentGeneralSessionFields: Set<String> {
-    var keys: Set<String> = []
-    if !startupWrites.isEmpty || !usbStartupWrites.isEmpty { keys.insert("startup") }
-    if rumbleTemplate != nil || !variantRumble.isEmpty { keys.insert("rumble") }
-    if keepAlive != nil { keys.insert("keepAlive") }
+  /// The general `defaults.session` keys the description sets, rumble aside.
+  var presentGeneralSessionFields: Set<SessionKey> {
+    var keys: Set<SessionKey> = []
+    if !startupWrites.isEmpty || !usbStartupWrites.isEmpty { keys.insert(.startup) }
+    if keepAlive != nil { keys.insert(.keepAlive) }
     return keys
   }
 

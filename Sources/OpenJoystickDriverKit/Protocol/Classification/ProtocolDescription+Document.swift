@@ -204,8 +204,8 @@ extension ProtocolDescription {
     let endpoints: Endpoints
     let rawUSB: RawUSBDeclaration?
     let recordSections: Set<RecordSection>
-    /// The general `defaults.session` keys the description may set.
-    let sessionKeys: Set<String>
+    /// The general `defaults.session` keys the driver reads beyond the rumble template.
+    let sessionKeys: Set<SessionKey>
     let tuningKeys: Set<ControllerTuning.Key>
     let rawUSBTuningKeys: Set<ControllerTuning.Key>
     let controls: ControllerCapabilities?
@@ -305,21 +305,7 @@ extension ProtocolDescription {
       endpoints = try container.decode(EndpointsDocument.self, for: "endpoints").endpoints
       rawUSB = try container.decodeOptional(RawUSBDeclaration.self, for: "rawUSB")
       recordSections = try Self.decodeSet(RecordSection.self, "recordSections", container)
-      let sessionKeyNames = try container.decodeOptional([String].self, for: "sessionKeys")
-      guard
-        sessionKeyNames.map({
-          !$0.isEmpty && Set($0).count == $0.count && Set($0).isSubset(of: Session.generalKeys)
-        }) ?? true
-      else {
-        throw DecodingError.dataCorrupted(
-          .init(
-            codingPath: decoder.codingPath + [DocumentKey("sessionKeys")],
-            debugDescription:
-              "sessionKeys lists unique names of startup, rumble, keepAlive"
-          )
-        )
-      }
-      sessionKeys = sessionKeyNames.map(Set.init) ?? Session.generalKeys
+      sessionKeys = try Self.decodeSet(SessionKey.self, "sessionKeys", container)
       tuningKeys = try Self.decodeSet(ControllerTuning.Key.self, "tuningKeys", container)
       rawUSBTuningKeys = try Self.decodeSet(
         ControllerTuning.Key.self,

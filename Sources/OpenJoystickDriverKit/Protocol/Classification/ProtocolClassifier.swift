@@ -48,12 +48,17 @@ public enum PhysicalProtocolID: String, CaseIterable, Codable, Sendable {
     }
   }
 
-  /// The general `defaults.session` keys this family's driver reads; its description lists
-  /// exactly these as `sessionKeys`, or none when it takes all of them.
-  var generalSessionFields: Set<String> {
+  /// The general `defaults.session` keys this family's driver reads beyond the rumble template,
+  /// which `recordSections` governs. Its description lists exactly these as `sessionKeys`.
+  var generalSessionFields: Set<ProtocolDescription.SessionKey> {
     switch self {
-    case .xboxXID: ["rumble"]
-    default: ProtocolDescription.Document.Session.generalKeys
+    case .xboxXUSB, .nintendoSwitch1, .sonyDualShock4: [.startup]
+    case .xboxGIP, .nintendoSwitch2, .vendorGameSir: [.startup, .keepAlive]
+    case .valveSteamTriton, .valveSteamDeck: [.keepAlive]
+    case .hidDescriptor, .hidReportLayout, .xboxXID, .sonySixaxis, .sonyDualSense,
+      .nintendoSwitchInputOnly, .valveSteamController, .vendorFlydigi, .vendorPS3ThirdParty,
+      .vendorNVIDIAShield:
+      []
     }
   }
 

@@ -388,6 +388,7 @@
       "swift": "E5002: xbox-gip.json: interfaceSignatures names Wired/255/93/1/ twice",
       "fileName": "xbox-gip.json",
       "document": {
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -437,7 +438,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "subcommands": {
@@ -555,6 +555,7 @@
       "document": {
         "variants": ["Wired", "Receiver"],
         "storesVariant": true,
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -608,7 +609,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "namedPackets": [
@@ -687,6 +687,7 @@
       "document": {
         "variants": ["Wired", "Receiver"],
         "storesVariant": true,
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -727,7 +728,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "handshakeAttempts": 3
@@ -788,6 +788,7 @@
       "document": {
         "variants": ["Wired", "Receiver"],
         "storesVariant": true,
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -822,7 +823,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "announceResendLimit": 8
@@ -883,6 +883,7 @@
       "document": {
         "variants": ["Wired", "Receiver"],
         "storesVariant": true,
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -917,7 +918,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "receiverInquiryResendLimit": 8
@@ -977,6 +977,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -1019,7 +1020,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "commandChannel": {
@@ -1098,6 +1098,7 @@
       "document": {
         "variants": ["Wired", "Receiver"],
         "storesVariant": true,
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -1138,7 +1139,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "trailingStopPackets": 2
@@ -1199,6 +1199,7 @@
       "document": {
         "variants": ["Wired", "Receiver"],
         "storesVariant": true,
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -1233,7 +1234,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "activation": [
@@ -1321,6 +1321,7 @@
       "document": {
         "variants": ["Wired", "Receiver"],
         "storesVariant": true,
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -1364,7 +1365,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "deactivation": [
@@ -1452,6 +1452,7 @@
       "document": {
         "variants": ["Wired", "Receiver"],
         "storesVariant": true,
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -1485,6 +1486,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -1515,6 +1517,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -1545,6 +1548,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -1570,6 +1574,7 @@
       "document": {
         "variants": ["Wired", "Receiver"],
         "storesVariant": true,
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -1591,6 +1596,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -1613,6 +1619,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -1641,6 +1648,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -1724,6 +1732,7 @@
       "swift": "E5002: valve-steam-deck.json: ValveSteamDeck must set activation",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -1754,6 +1763,7 @@
       "swift": "E5002: valve-steam-deck.json: ValveSteamDeck must set deactivation",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -1786,6 +1796,7 @@
       "document": {
         "variants": ["Wired", "Dongle", "BluetoothLE"],
         "storesVariant": true,
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamTriton",
@@ -1818,6 +1829,7 @@
       "document": {
         "variants": ["Wired", "Dongle", "BluetoothLE"],
         "storesVariant": true,
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamTriton",
@@ -1936,6 +1948,7 @@
       "swift": "E5002: valve-steam-deck.json: activation and deactivation name only a transport writeTransports lists",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -1977,6 +1990,7 @@
       "swift": "E5002: valve-steam-deck.json: activation and deactivation name only a transport writeTransports lists",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -2020,6 +2034,7 @@
       "document": {
         "variants": ["Wired", "Dongle", "BluetoothLE"],
         "storesVariant": true,
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamTriton",
@@ -2063,6 +2078,7 @@
       "document": {
         "variants": ["Wired", "Dongle", "BluetoothLE"],
         "storesVariant": true,
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamTriton",
@@ -2267,6 +2283,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -2296,6 +2313,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -2325,6 +2343,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -2353,6 +2372,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -2382,6 +2402,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -2411,6 +2432,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -2439,6 +2461,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -2468,6 +2491,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -2497,6 +2521,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -2525,6 +2550,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -2554,6 +2580,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -2583,6 +2610,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -2611,6 +2639,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -2640,6 +2669,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -2669,6 +2699,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -2697,6 +2728,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -3283,6 +3315,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -3333,6 +3366,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -3383,6 +3417,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -3433,6 +3468,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -3483,6 +3519,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -3533,6 +3570,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -3583,6 +3621,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -3621,6 +3660,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -3659,6 +3699,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -3697,6 +3738,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -3735,6 +3777,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -3773,6 +3816,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -3967,6 +4011,7 @@
       "fileName": "sony-dualshock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "SonyDualShock4",
@@ -3993,6 +4038,7 @@
       "fileName": "sony-dualshock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "SonyDualShock4",
@@ -4019,6 +4065,7 @@
       "fileName": "sony-dualshock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "SonyDualShock4",
@@ -4045,6 +4092,7 @@
       "fileName": "sony-dualshock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "SonyDualShock4",
@@ -4071,6 +4119,7 @@
       "fileName": "sony-dualshock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "SonyDualShock4",
@@ -4097,6 +4146,7 @@
       "fileName": "sony-dualshock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "SonyDualShock4",
@@ -4533,6 +4583,7 @@
       "swift": "E5004: valve-steam-deck.json: ValveSteamDeck has no variant USB",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -4582,6 +4633,7 @@
       "swift": "E5004: valve-steam-deck.json: ValveSteamDeck has no variant BluetoothClassic",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -4631,6 +4683,7 @@
       "swift": "E5004: valve-steam-deck.json: ValveSteamDeck has no variant BluetoothLE",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -4680,6 +4733,7 @@
       "swift": "E5004: valve-steam-deck.json: ValveSteamDeck has no variant Gamepad",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -4729,6 +4783,7 @@
       "swift": "E5004: valve-steam-deck.json: ValveSteamDeck has no variant Wired",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -4778,6 +4833,7 @@
       "swift": "E5004: valve-steam-deck.json: ValveSteamDeck has no variant Receiver",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -4827,6 +4883,7 @@
       "swift": "E5004: valve-steam-deck.json: ValveSteamDeck has no variant Dongle",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -4876,6 +4933,7 @@
       "swift": "E5004: valve-steam-deck.json: ValveSteamDeck has no variant EnhancedHID",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -4927,6 +4985,7 @@
       "document": {
         "variants": ["Wired", "Dongle", "BluetoothLE"],
         "storesVariant": true,
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamTriton",
@@ -4978,6 +5037,7 @@
       "document": {
         "variants": ["Wired", "Dongle", "BluetoothLE"],
         "storesVariant": true,
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamTriton",
@@ -5029,6 +5089,7 @@
       "document": {
         "variants": ["Wired", "Dongle", "BluetoothLE"],
         "storesVariant": true,
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamTriton",
@@ -5080,6 +5141,7 @@
       "document": {
         "variants": ["Wired", "Dongle", "BluetoothLE"],
         "storesVariant": true,
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamTriton",
@@ -5131,6 +5193,7 @@
       "document": {
         "variants": ["Wired", "Dongle", "BluetoothLE"],
         "storesVariant": true,
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamTriton",
@@ -5382,6 +5445,7 @@
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "VendorGameSir",
@@ -5409,6 +5473,7 @@
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "VendorGameSir",
@@ -5436,6 +5501,7 @@
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "VendorGameSir",
@@ -5463,6 +5529,7 @@
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "VendorGameSir",
@@ -5490,6 +5557,7 @@
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "VendorGameSir",
@@ -5517,6 +5585,7 @@
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "VendorGameSir",
@@ -5943,6 +6012,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -5982,6 +6052,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -6021,6 +6092,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -6060,6 +6132,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -6099,6 +6172,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -6138,6 +6212,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -6177,6 +6252,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -6232,8 +6308,7 @@
             "interfaceSubclass": 93,
             "interfaceProtocol": 1
           }
-        ],
-        "sessionKeys": ["rumble"]
+        ]
       }
     },
     {
@@ -6260,8 +6335,7 @@
             "interfaceSubclass": 93,
             "interfaceProtocol": 1
           }
-        ],
-        "sessionKeys": ["rumble"]
+        ]
       }
     },
     {
@@ -6288,8 +6362,7 @@
             "interfaceSubclass": 93,
             "interfaceProtocol": 1
           }
-        ],
-        "sessionKeys": ["rumble"]
+        ]
       }
     },
     {
@@ -6316,8 +6389,7 @@
             "interfaceSubclass": 93,
             "interfaceProtocol": 1
           }
-        ],
-        "sessionKeys": ["rumble"]
+        ]
       }
     },
     {
@@ -6344,8 +6416,7 @@
             "interfaceSubclass": 93,
             "interfaceProtocol": 1
           }
-        ],
-        "sessionKeys": ["rumble"]
+        ]
       }
     },
     {
@@ -6372,8 +6443,7 @@
             "interfaceSubclass": 93,
             "interfaceProtocol": 1
           }
-        ],
-        "sessionKeys": ["rumble"]
+        ]
       }
     },
     {
@@ -6400,8 +6470,7 @@
             "interfaceSubclass": 93,
             "interfaceProtocol": 1
           }
-        ],
-        "sessionKeys": ["rumble"]
+        ]
       }
     },
     {
@@ -6413,6 +6482,7 @@
       "document": {
         "variants": ["Wired", "Receiver"],
         "storesVariant": true,
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -6445,6 +6515,7 @@
       "document": {
         "variants": ["Wired", "Receiver"],
         "storesVariant": true,
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -6477,6 +6548,7 @@
       "document": {
         "variants": ["Wired", "Receiver"],
         "storesVariant": true,
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -6509,6 +6581,7 @@
       "document": {
         "variants": ["Wired", "Receiver"],
         "storesVariant": true,
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -6541,6 +6614,7 @@
       "document": {
         "variants": ["Wired", "Receiver"],
         "storesVariant": true,
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -6573,6 +6647,7 @@
       "document": {
         "variants": ["Wired", "Receiver"],
         "storesVariant": true,
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -8180,6 +8255,7 @@
           "out": 2
         },
         "recordSections": ["rumble"],
+        "sessionKeys": ["startup"],
         "tuningKeys": [
           "hidStartupIntervalMs",
           "minimumHIDOutputIntervalMs",
@@ -8363,6 +8439,7 @@
           "out": 2
         },
         "recordSections": ["rumble"],
+        "sessionKeys": ["startup"],
         "tuningKeys": [
           "hidStartupIntervalMs",
           "minimumHIDOutputIntervalMs",
@@ -8546,6 +8623,7 @@
           "out": 2
         },
         "recordSections": ["rumble"],
+        "sessionKeys": ["startup"],
         "tuningKeys": [
           "hidStartupIntervalMs",
           "minimumHIDOutputIntervalMs",
@@ -8729,6 +8807,7 @@
           "out": 2
         },
         "recordSections": ["rumble"],
+        "sessionKeys": ["startup"],
         "tuningKeys": [
           "hidStartupIntervalMs",
           "minimumHIDOutputIntervalMs",
@@ -8912,6 +8991,7 @@
           "out": 2
         },
         "recordSections": ["bluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "tuningKeys": [
           "hidStartupIntervalMs",
           "minimumHIDOutputIntervalMs",
@@ -9041,6 +9121,7 @@
           "out": 2
         },
         "recordSections": ["bluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "tuningKeys": [
           "hidStartupIntervalMs",
           "minimumHIDOutputIntervalMs",
@@ -9170,6 +9251,7 @@
           "out": 2
         },
         "recordSections": ["bluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "tuningKeys": [
           "hidStartupIntervalMs",
           "minimumHIDOutputIntervalMs",
@@ -9299,6 +9381,7 @@
           "out": 2
         },
         "recordSections": ["bluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "tuningKeys": [
           "hidStartupIntervalMs",
           "minimumHIDOutputIntervalMs",
@@ -9679,6 +9762,7 @@
           "in": 130,
           "out": 2
         },
+        "sessionKeys": ["startup"],
         "tuningKeys": [
           "hidStartupIntervalMs",
           "minimumHIDOutputIntervalMs",
@@ -9755,6 +9839,7 @@
           "in": 130,
           "out": 2
         },
+        "sessionKeys": ["startup"],
         "tuningKeys": [
           "hidStartupIntervalMs",
           "minimumHIDOutputIntervalMs",
@@ -9831,6 +9916,7 @@
           "in": 130,
           "out": 2
         },
+        "sessionKeys": ["startup"],
         "tuningKeys": [
           "hidStartupIntervalMs",
           "minimumHIDOutputIntervalMs",
@@ -9907,6 +9993,7 @@
           "in": 130,
           "out": 2
         },
+        "sessionKeys": ["startup"],
         "tuningKeys": [
           "hidStartupIntervalMs",
           "minimumHIDOutputIntervalMs",
@@ -10626,6 +10713,7 @@
           "in": 130,
           "out": 2
         },
+        "sessionKeys": ["keepAlive"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "controls": {
           "base": "Xbox",
@@ -10727,6 +10815,7 @@
           "in": 130,
           "out": 2
         },
+        "sessionKeys": ["keepAlive"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "controls": {
           "base": "Xbox",
@@ -10828,6 +10917,7 @@
           "in": 130,
           "out": 2
         },
+        "sessionKeys": ["keepAlive"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "controls": {
           "base": "Xbox",
@@ -10929,6 +11019,7 @@
           "in": 130,
           "out": 2
         },
+        "sessionKeys": ["keepAlive"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "controls": {
           "base": "Xbox",
@@ -11032,6 +11123,7 @@
           "in": 130,
           "out": 2
         },
+        "sessionKeys": ["keepAlive"],
         "tuningKeys": [
           "hidStartupIntervalMs",
           "minimumHIDOutputIntervalMs",
@@ -11125,6 +11217,7 @@
           "in": 130,
           "out": 2
         },
+        "sessionKeys": ["keepAlive"],
         "tuningKeys": [
           "hidStartupIntervalMs",
           "minimumHIDOutputIntervalMs",
@@ -11218,6 +11311,7 @@
           "in": 130,
           "out": 2
         },
+        "sessionKeys": ["keepAlive"],
         "tuningKeys": [
           "hidStartupIntervalMs",
           "minimumHIDOutputIntervalMs",
@@ -11311,6 +11405,7 @@
           "in": 130,
           "out": 2
         },
+        "sessionKeys": ["keepAlive"],
         "tuningKeys": [
           "hidStartupIntervalMs",
           "minimumHIDOutputIntervalMs",
@@ -11514,6 +11609,7 @@
         },
         "rawUSB": ["USB"],
         "recordSections": ["rumble"],
+        "sessionKeys": ["startup", "keepAlive"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "parameters": {
           "innerGrips": {
@@ -11635,6 +11731,7 @@
         },
         "rawUSB": ["USB"],
         "recordSections": ["rumble"],
+        "sessionKeys": ["startup", "keepAlive"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "parameters": {
           "innerGrips": {
@@ -11756,6 +11853,7 @@
         },
         "rawUSB": ["USB"],
         "recordSections": ["rumble"],
+        "sessionKeys": ["startup", "keepAlive"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "parameters": {
           "innerGrips": {
@@ -11877,6 +11975,7 @@
         },
         "rawUSB": ["USB"],
         "recordSections": ["rumble"],
+        "sessionKeys": ["startup", "keepAlive"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "parameters": {
           "innerGrips": {
@@ -12325,6 +12424,7 @@
         },
         "rawUSB": true,
         "recordSections": ["keepAlive"],
+        "sessionKeys": ["startup", "keepAlive"],
         "interfaceSignatures": [
           {
             "variant": "USB",
@@ -12453,6 +12553,7 @@
         },
         "rawUSB": true,
         "recordSections": ["keepAlive"],
+        "sessionKeys": ["startup", "keepAlive"],
         "interfaceSignatures": [
           {
             "variant": "USB",
@@ -12581,6 +12682,7 @@
         },
         "rawUSB": true,
         "recordSections": ["keepAlive"],
+        "sessionKeys": ["startup", "keepAlive"],
         "interfaceSignatures": [
           {
             "variant": "USB",
@@ -12709,6 +12811,7 @@
         },
         "rawUSB": true,
         "recordSections": ["keepAlive"],
+        "sessionKeys": ["startup", "keepAlive"],
         "interfaceSignatures": [
           {
             "variant": "USB",
@@ -12838,7 +12941,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble"],
         "interfaceSignatures": [
           {
             "variant": "Gamepad",
@@ -13014,7 +13116,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble"],
         "interfaceSignatures": [
           {
             "variant": "Gamepad",
@@ -13190,7 +13291,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble"],
         "interfaceSignatures": [
           {
             "variant": "Gamepad",
@@ -13366,7 +13466,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble"],
         "interfaceSignatures": [
           {
             "variant": "Gamepad",
@@ -13542,6 +13641,7 @@
         },
         "rawUSB": true,
         "recordSections": ["rumble"],
+        "sessionKeys": ["startup"],
         "interfaceSignatures": [
           {
             "variant": "Wired",
@@ -13635,6 +13735,7 @@
         },
         "rawUSB": true,
         "recordSections": ["rumble"],
+        "sessionKeys": ["startup"],
         "interfaceSignatures": [
           {
             "variant": "Wired",
@@ -13728,6 +13829,7 @@
         },
         "rawUSB": true,
         "recordSections": ["rumble"],
+        "sessionKeys": ["startup"],
         "interfaceSignatures": [
           {
             "variant": "Wired",
@@ -13821,6 +13923,7 @@
         },
         "rawUSB": true,
         "recordSections": ["rumble"],
+        "sessionKeys": ["startup"],
         "interfaceSignatures": [
           {
             "variant": "Wired",
@@ -13914,7 +14017,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble"],
         "defaults": {
           "input": {
             "hidUsageMap": {
@@ -14379,6 +14481,7 @@
       "swift": "E5002: xbox-xusb.json: The given data was not valid JSON.",
       "fileName": "xbox-xusb.json",
       "document": {
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -14411,6 +14514,7 @@
       "swift": "E5002: xbox-xusb.json: The given data was not valid JSON.",
       "fileName": "xbox-xusb.json",
       "document": {
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -14443,6 +14547,7 @@
       "swift": "E5002: xbox-xusb.json: The given data was not valid JSON.",
       "fileName": "xbox-xusb.json",
       "document": {
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -14475,6 +14580,7 @@
       "swift": "E5002: xbox-xusb.json: The given data was not valid JSON.",
       "fileName": "xbox-xusb.json",
       "document": {
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -14508,6 +14614,7 @@
       "swift": "E5002: xbox-xusb.json: interfaceSignatures names Wired/255/93/1/ twice",
       "fileName": "xbox-xusb.json",
       "document": {
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -14642,6 +14749,7 @@
       "swift": "E5003: xbox-gip.json: file name must be xbox-xusb.json",
       "fileName": "xbox-gip.json",
       "document": {
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -14685,7 +14793,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "keepAlive": {
@@ -14703,6 +14810,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -14742,20 +14850,40 @@
     {
       "name": "rejects a keep alive the family cannot run (3)",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json: defaults.session.keepAlive.writes[0] is a raw-USB write, and the family has no raw-USB variant",
-      "swift": "E5002: sony-dualsense.json: a raw-USB keep-alive write applies only to a family with a raw-USB variant",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: valve-steam-deck.json: defaults.session.keepAlive.writes[0] is a raw-USB write, and the family has no raw-USB variant",
+      "swift": "E5002: valve-steam-deck.json: a raw-USB keep-alive write applies only to a family with a raw-USB variant",
+      "fileName": "valve-steam-deck.json",
       "document": {
-        "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
-        "family": "SonyDualSense",
+        "family": "ValveSteamDeck",
         "endpoints": {
           "in": 130,
           "out": 2
         },
         "defaults": {
           "session": {
+            "activation": [
+              {
+                "report": {
+                  "kind": "Feature",
+                  "id": 0,
+                  "length": 2
+                },
+                "bytes": "81 00"
+              }
+            ],
+            "deactivation": [
+              {
+                "report": {
+                  "kind": "Feature",
+                  "id": 0,
+                  "length": 2
+                },
+                "bytes": "85 00"
+              }
+            ],
             "keepAlive": {
               "intervalMilliseconds": 500,
               "writes": [
@@ -14776,6 +14904,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -14817,6 +14946,7 @@
       "document": {
         "variants": ["Wired", "Dongle", "BluetoothLE"],
         "storesVariant": true,
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamTriton",
@@ -14874,6 +15004,7 @@
       "document": {
         "variants": ["Wired", "Dongle", "BluetoothLE"],
         "storesVariant": true,
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamTriton",
@@ -14931,6 +15062,7 @@
       "swift": "E5001: xbox-xusb.json: no apiVersion found; the supported apiVersion is openjoystickdriver/v1alpha1",
       "fileName": "xbox-xusb.json",
       "document": {
+        "sessionKeys": ["startup"],
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
         "variants": ["Wired", "Receiver"],
@@ -14962,6 +15094,7 @@
       "swift": "E5001: xbox-xusb.json: apiVersion unsupported.example/v9 is not supported; the supported apiVersion is openjoystickdriver/v1alpha1",
       "fileName": "xbox-xusb.json",
       "document": {
+        "sessionKeys": ["startup"],
         "apiVersion": "unsupported.example/v9",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -14994,6 +15127,7 @@
       "swift": "E5002: xbox-xusb.json: no kind found; expected ProtocolDescription",
       "fileName": "xbox-xusb.json",
       "document": {
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "family": "XboxXUSB",
         "variants": ["Wired", "Receiver"],
@@ -15025,6 +15159,7 @@
       "swift": "E5002: xbox-xusb.json: expected ProtocolDescription, found Controller",
       "fileName": "xbox-xusb.json",
       "document": {
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "Controller",
         "family": "XboxXUSB",
@@ -15120,6 +15255,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -15166,7 +15302,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble"],
         "parameters": {
           "layout": {
             "type": "Flag"
@@ -15182,6 +15317,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -15299,6 +15435,7 @@
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "VendorGameSir",
@@ -15318,6 +15455,7 @@
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "VendorGameSir",
@@ -15362,6 +15500,7 @@
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "VendorGameSir",
@@ -15399,6 +15538,7 @@
       "swift": "E5002: xbox-xusb.json: description.interfaceSignatures.[0]: missing field variant",
       "fileName": "xbox-xusb.json",
       "document": {
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -15430,6 +15570,7 @@
       "swift": "E5002: xbox-xusb.json: description.interfaceSignatures.[0]: missing field interfaceClass",
       "fileName": "xbox-xusb.json",
       "document": {
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -15461,6 +15602,7 @@
       "swift": "E5002: xbox-xusb.json: description.interfaceSignatures.[0]: missing field interfaceSubclass",
       "fileName": "xbox-xusb.json",
       "document": {
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -15493,6 +15635,7 @@
       "fileName": "sony-dualshock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "SonyDualShock4",
@@ -15526,6 +15669,7 @@
       "fileName": "sony-dualshock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "SonyDualShock4",
@@ -15562,6 +15706,7 @@
       "fileName": "sony-dualshock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "SonyDualShock4",
@@ -15900,6 +16045,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -15939,6 +16085,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -15978,6 +16125,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -16075,6 +16223,7 @@
       "swift": "E5002: xbox-xusb.json: description.variants: variants lists unique, known names",
       "fileName": "xbox-xusb.json",
       "document": {
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -16107,6 +16256,7 @@
       "swift": "E5002: xbox-xusb.json: description.variants: variants lists unique, known names",
       "fileName": "xbox-xusb.json",
       "document": {
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -16139,6 +16289,7 @@
       "swift": "E5002: xbox-xusb.json: description.variants: variants lists unique, known names",
       "fileName": "xbox-xusb.json",
       "document": {
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -16203,6 +16354,7 @@
       "document": {
         "variants": ["Wired", "Receiver"],
         "storesVariant": true,
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -16248,7 +16400,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble"],
         "defaults": {
           "input": {
             "report": {
@@ -16283,7 +16434,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble"],
         "defaults": {
           "input": {
             "report": {
@@ -16319,7 +16469,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble"],
         "defaults": {
           "input": {
             "report": {
@@ -16357,7 +16506,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble"],
         "defaults": {
           "input": {
             "report": {
@@ -16395,7 +16543,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "startup": [
@@ -16465,6 +16612,7 @@
       "document": {
         "variants": ["Wired", "Receiver"],
         "storesVariant": true,
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -16491,6 +16639,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -16523,6 +16672,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -16557,6 +16707,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -16599,6 +16750,7 @@
       "document": {
         "variants": ["Wired", "Receiver"],
         "storesVariant": true,
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -16677,6 +16829,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -16730,7 +16883,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble"],
         "controls": {
           "base": "xbox"
         }
@@ -16743,6 +16895,7 @@
       "swift": "E5002: xbox-xusb.json: description.interfaceSignatures: interfaceSignatures must not be empty",
       "fileName": "xbox-xusb.json",
       "document": {
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -16768,6 +16921,7 @@
       "swift": "E5002: xbox-xusb.json: description.parameters: parameters must not be empty",
       "fileName": "xbox-xusb.json",
       "document": {
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -16794,6 +16948,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -16835,6 +16990,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -16867,6 +17023,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -16905,6 +17062,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -16939,6 +17097,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -16973,6 +17132,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17007,6 +17167,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17041,6 +17202,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17076,6 +17238,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17111,6 +17274,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17174,6 +17338,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17213,6 +17378,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17252,6 +17418,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17292,6 +17459,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17332,6 +17500,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17372,6 +17541,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17412,6 +17582,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17452,6 +17623,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17477,6 +17649,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17588,6 +17761,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17618,6 +17792,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17648,6 +17823,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17678,6 +17854,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17709,6 +17886,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17740,6 +17918,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17771,6 +17950,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17802,6 +17982,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17833,6 +18014,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17864,6 +18046,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17895,6 +18078,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17926,6 +18110,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17957,6 +18142,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -17989,6 +18175,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -18021,6 +18208,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -18057,6 +18245,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -18088,6 +18277,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -18124,6 +18314,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -18161,6 +18352,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -18200,6 +18392,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -18239,6 +18432,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -18283,6 +18477,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -18320,6 +18515,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -18357,6 +18553,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -18394,6 +18591,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -18431,6 +18629,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -18468,6 +18667,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -18505,6 +18705,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -18542,6 +18743,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -18578,6 +18780,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -18614,6 +18817,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -18651,6 +18855,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -18685,16 +18890,17 @@
       }
     },
     {
-      "name": "rejects malformed startup writes: family=SonyDualSense, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'phase': 'Later'}",
+      "name": "rejects malformed startup writes: family=SonyDualShock4, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'phase': 'Later'}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'phase': 'Later'} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: description.defaults.session.startup.[0]: a startup phase is Startup or Activation",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dualshock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'phase': 'Later'} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dualshock4.json: description.defaults.session.startup.[0]: a startup phase is Startup or Activation",
+      "fileName": "sony-dualshock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
-        "family": "SonyDualSense",
+        "family": "SonyDualShock4",
         "endpoints": {
           "in": 130,
           "out": 2
@@ -18717,16 +18923,17 @@
       }
     },
     {
-      "name": "rejects malformed startup writes: family=SonyDualSense, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'delayMilliseconds': 1001}",
+      "name": "rejects malformed startup writes: family=SonyDualShock4, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'delayMilliseconds': 1001}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'delayMilliseconds': 1001} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: description.defaults.session.startup.[0]: a startup delay is 0...1000 ms",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dualshock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'delayMilliseconds': 1001} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dualshock4.json: description.defaults.session.startup.[0]: a startup delay is 0...1000 ms",
+      "fileName": "sony-dualshock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
-        "family": "SonyDualSense",
+        "family": "SonyDualShock4",
         "endpoints": {
           "in": 130,
           "out": 2
@@ -18749,16 +18956,17 @@
       }
     },
     {
-      "name": "rejects malformed startup writes: family=SonyDualSense, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'crc32Seed': 256}",
+      "name": "rejects malformed startup writes: family=SonyDualShock4, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'crc32Seed': 256}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'crc32Seed': 256} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: description.defaults.session.startup.[0]: a startup crc32Seed is 0...255",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dualshock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'crc32Seed': 256} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dualshock4.json: description.defaults.session.startup.[0]: a startup crc32Seed is 0...255",
+      "fileName": "sony-dualshock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
-        "family": "SonyDualSense",
+        "family": "SonyDualShock4",
         "endpoints": {
           "in": 130,
           "out": 2
@@ -18781,16 +18989,17 @@
       }
     },
     {
-      "name": "rejects malformed startup writes: family=SonyDualSense, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'crc32Seed': 1}",
+      "name": "rejects malformed startup writes: family=SonyDualShock4, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'crc32Seed': 1}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'crc32Seed': 1} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: description.defaults.session.startup.[0]: a CRC startup report has room for its 4-byte trailer",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dualshock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'crc32Seed': 1} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dualshock4.json: description.defaults.session.startup.[0]: a CRC startup report has room for its 4-byte trailer",
+      "fileName": "sony-dualshock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
-        "family": "SonyDualSense",
+        "family": "SonyDualShock4",
         "endpoints": {
           "in": 130,
           "out": 2
@@ -18813,16 +19022,17 @@
       }
     },
     {
-      "name": "rejects malformed startup writes: family=SonyDualSense, write={'report': {'kind': 'Output', 'id': 1, 'length': 129}, 'bytes': '01 02 03'}",
+      "name": "rejects malformed startup writes: family=SonyDualShock4, write={'report': {'kind': 'Output', 'id': 1, 'length': 129}, 'bytes': '01 02 03'}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 129}, 'bytes': '01 02 03'} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: description.defaults.session.startup.[0]: a startup report is 2...128 bytes long",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dualshock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 129}, 'bytes': '01 02 03'} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dualshock4.json: description.defaults.session.startup.[0]: a startup report is 2...128 bytes long",
+      "fileName": "sony-dualshock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
-        "family": "SonyDualSense",
+        "family": "SonyDualShock4",
         "endpoints": {
           "in": 130,
           "out": 2
@@ -18844,16 +19054,17 @@
       }
     },
     {
-      "name": "rejects malformed startup writes: family=SonyDualSense, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'variants': []}",
+      "name": "rejects malformed startup writes: family=SonyDualShock4, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'variants': []}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'variants': []} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: description.defaults.session.startup.[0].variants: variants lists 1...8 distinct variant names",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dualshock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'variants': []} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dualshock4.json: description.defaults.session.startup.[0].variants: variants lists 1...8 distinct variant names",
+      "fileName": "sony-dualshock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
-        "family": "SonyDualSense",
+        "family": "SonyDualShock4",
         "endpoints": {
           "in": 130,
           "out": 2
@@ -18876,16 +19087,17 @@
       }
     },
     {
-      "name": "rejects malformed startup writes: family=SonyDualSense, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'variants': ['USB', 'USB']}",
+      "name": "rejects malformed startup writes: family=SonyDualShock4, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'variants': ['USB', 'USB']}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'variants': ['USB', 'USB']} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: description.defaults.session.startup.[0].variants: variants lists 1...8 distinct variant names",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dualshock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'variants': ['USB', 'USB']} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dualshock4.json: description.defaults.session.startup.[0].variants: variants lists 1...8 distinct variant names",
+      "fileName": "sony-dualshock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
-        "family": "SonyDualSense",
+        "family": "SonyDualShock4",
         "endpoints": {
           "in": 130,
           "out": 2
@@ -18908,16 +19120,17 @@
       }
     },
     {
-      "name": "rejects malformed startup writes: family=SonyDualSense, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'layout'}}",
+      "name": "rejects malformed startup writes: family=SonyDualShock4, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'layout'}}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'layout'}} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: description.defaults.session.startup.[0].when: when names an enumeration parameter and exactly one of is or isNot, 1...16 values",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dualshock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'layout'}} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dualshock4.json: description.defaults.session.startup.[0].when: when names an enumeration parameter and exactly one of is or isNot, 1...16 values",
+      "fileName": "sony-dualshock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
-        "family": "SonyDualSense",
+        "family": "SonyDualShock4",
         "endpoints": {
           "in": 130,
           "out": 2
@@ -18942,16 +19155,17 @@
       }
     },
     {
-      "name": "rejects malformed startup writes: family=SonyDualSense, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'role', 'is': ['A'], 'isNot': ['B']}}",
+      "name": "rejects malformed startup writes: family=SonyDualShock4, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'role', 'is': ['A'], 'isNot': ['B']}}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'role', 'is': ['A'], 'isNot': ['B']}} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: description.defaults.session.startup.[0].when: when names an enumeration parameter and exactly one of is or isNot, 1...16 values",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dualshock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'role', 'is': ['A'], 'isNot': ['B']}} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dualshock4.json: description.defaults.session.startup.[0].when: when names an enumeration parameter and exactly one of is or isNot, 1...16 values",
+      "fileName": "sony-dualshock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
-        "family": "SonyDualSense",
+        "family": "SonyDualShock4",
         "endpoints": {
           "in": 130,
           "out": 2
@@ -18978,16 +19192,17 @@
       }
     },
     {
-      "name": "rejects malformed startup writes: family=SonyDualSense, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'role', 'is': []}}",
+      "name": "rejects malformed startup writes: family=SonyDualShock4, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'role', 'is': []}}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'role', 'is': []}} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: description.defaults.session.startup.[0].when: when names an enumeration parameter and exactly one of is or isNot, 1...16 values",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dualshock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'role', 'is': []}} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dualshock4.json: description.defaults.session.startup.[0].when: when names an enumeration parameter and exactly one of is or isNot, 1...16 values",
+      "fileName": "sony-dualshock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
-        "family": "SonyDualSense",
+        "family": "SonyDualShock4",
         "endpoints": {
           "in": 130,
           "out": 2
@@ -19013,16 +19228,17 @@
       }
     },
     {
-      "name": "rejects malformed startup writes: family=SonyDualSense, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'color', 'is': ['A']}}",
+      "name": "rejects malformed startup writes: family=SonyDualShock4, write={'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'color', 'is': ['A']}}",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'color', 'is': ['A']}} is not valid under any of the given schemas",
-      "swift": "E5002: sony-dualsense.json: description.defaults.session.startup.[0].when: when names an enumeration parameter and exactly one of is or isNot, 1...16 values",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dualshock4.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03', 'when': {'parameter': 'color', 'is': ['A']}} is not valid under any of the given schemas",
+      "swift": "E5002: sony-dualshock4.json: description.defaults.session.startup.[0].when: when names an enumeration parameter and exactly one of is or isNot, 1...16 values",
+      "fileName": "sony-dualshock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
-        "family": "SonyDualSense",
+        "family": "SonyDualShock4",
         "endpoints": {
           "in": 130,
           "out": 2
@@ -19055,6 +19271,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -19085,6 +19302,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -19115,6 +19333,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -19140,6 +19359,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -19171,6 +19391,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -19212,6 +19433,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -19253,6 +19475,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -19294,6 +19517,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -19335,6 +19559,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -19371,6 +19596,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -19476,6 +19702,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -19518,6 +19745,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -19558,6 +19786,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -19604,6 +19833,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -19645,6 +19875,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -19686,6 +19917,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -19727,6 +19959,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -19768,6 +20001,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -19810,6 +20044,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -19855,6 +20090,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -19900,6 +20136,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -19945,6 +20182,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -19990,6 +20228,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -20035,6 +20274,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -20081,6 +20321,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -20115,6 +20356,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -20155,6 +20397,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -20196,6 +20439,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -20237,6 +20481,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -20278,6 +20523,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -20320,6 +20566,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -20358,6 +20605,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -20400,6 +20648,7 @@
       "fileName": "nintendo-switch1.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch1",
@@ -20452,6 +20701,7 @@
       "swift": "E5002: valve-steam-deck.json: description.defaults.session.activation: activation and deactivation name 1...16 writes",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -20483,6 +20733,7 @@
       "swift": "E5002: valve-steam-deck.json: description.defaults.session.deactivation: activation and deactivation name 1...16 writes",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -20514,6 +20765,7 @@
       "swift": "E5002: valve-steam-deck.json: description.defaults.session.activation: activation and deactivation name 1...16 writes",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -20682,6 +20934,7 @@
       "swift": "E5002: valve-steam-deck.json: description.defaults.session.deactivation: activation and deactivation name 1...16 writes",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -20850,6 +21103,7 @@
       "swift": "E5002: valve-steam-deck.json: description.defaults.session.activation: a startup write lists every byte after the report ID: 2",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -20890,6 +21144,7 @@
       "swift": "E5002: valve-steam-deck.json: description.defaults.session.deactivation: a startup write lists every byte after the report ID: 2",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -20930,6 +21185,7 @@
       "swift": "E5002: valve-steam-deck.json: description.defaults.session.activation: a startup write lists every byte after the report ID: 2",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -20970,6 +21226,7 @@
       "swift": "E5002: valve-steam-deck.json: description.defaults.session.deactivation: a startup write lists every byte after the report ID: 2",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -21010,6 +21267,7 @@
       "swift": "E5002: valve-steam-deck.json: description.defaults.session.activation: a startup transport is USB, BluetoothClassic or BluetoothLE",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -21051,6 +21309,7 @@
       "swift": "E5002: valve-steam-deck.json: description.defaults.session.deactivation: a startup transport is USB, BluetoothClassic or BluetoothLE",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -21092,6 +21351,7 @@
       "swift": "E5002: valve-steam-deck.json: description.defaults.session.activation.[0]: unknown field(s): phase",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -21133,6 +21393,7 @@
       "swift": "E5002: valve-steam-deck.json: description.defaults.session.deactivation.[0]: unknown field(s): phase",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -21174,6 +21435,7 @@
       "swift": "E5002: valve-steam-deck.json: description.defaults.session.activation.[0]: unknown field(s): variants",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -21215,6 +21477,7 @@
       "swift": "E5002: valve-steam-deck.json: description.defaults.session.deactivation.[0]: unknown field(s): variants",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -21256,6 +21519,7 @@
       "swift": "E5002: valve-steam-deck.json: description.defaults.session.activation.[0]: unknown field(s): delayMilliseconds",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -21297,6 +21561,7 @@
       "swift": "E5002: valve-steam-deck.json: description.defaults.session.deactivation.[0]: unknown field(s): delayMilliseconds",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -21338,6 +21603,7 @@
       "swift": "E5002: valve-steam-deck.json: description.defaults.session.activation.[0]: missing field report",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -21373,6 +21639,7 @@
       "swift": "E5002: valve-steam-deck.json: description.defaults.session.deactivation.[0]: missing field report",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -21408,6 +21675,7 @@
       "swift": "E5002: valve-steam-deck.json: description.defaults.session.activation.[0]: missing field bytes",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -21447,6 +21715,7 @@
       "swift": "E5002: valve-steam-deck.json: description.defaults.session.deactivation.[0]: missing field bytes",
       "fileName": "valve-steam-deck.json",
       "document": {
+        "sessionKeys": ["keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "ValveSteamDeck",
@@ -21482,11 +21751,12 @@
     {
       "name": "rejects raw usb rules that contradict each other: family=XboxGIP",
       "code": "E5002",
-      "python": "E5002: xbox-gip.json: {'variants': ['USB'], 'apiVersion': 'openjoystickdriver/v1alpha1', 'kind': 'ProtocolDescription', 'family': 'XboxGIP', 'endpoints': {'in': 130, 'out': 2}, 'rawUSB': True, 'tuningKeys': ['lizardResendTicks'], 'defaults': {'session': {'handshakeAttempts': 3, 'announceResendLimit': 8, 'namedPackets': [{'id': 'XboxGIP/power-on', 'bytes': '05 20 00 01 00', 'sessionByte': 2}]}}} should not be valid under {'required': ['tuningKeys']}",
+      "python": "E5002: xbox-gip.json: {'variants': ['USB'], 'sessionKeys': ['startup', 'keepAlive'], 'apiVersion': 'openjoystickdriver/v1alpha1', 'kind': 'ProtocolDescription', 'family': 'XboxGIP', 'endpoints': {'in': 130, 'out': 2}, 'rawUSB': True, 'tuningKeys': ['lizardResendTicks'], 'defaults': {'session': {'handshakeAttempts': 3, 'announceResendLimit': 8, 'namedPackets': [{'id': 'XboxGIP/power-on', 'bytes': '05 20 00 01 00', 'sessionByte': 2}]}}} should not be valid under {'required': ['tuningKeys']}",
       "swift": "E5002: xbox-gip.json: a family that is always raw USB reads its tuning through rawUSBTuningKeys",
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -21538,6 +21808,7 @@
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "VendorGameSir",
@@ -21570,6 +21841,7 @@
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "VendorGameSir",
@@ -21602,6 +21874,7 @@
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "VendorGameSir",
@@ -21637,6 +21910,7 @@
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "VendorGameSir",
@@ -21674,6 +21948,7 @@
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "VendorGameSir",
@@ -21711,6 +21986,7 @@
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "VendorGameSir",
@@ -21748,6 +22024,7 @@
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "VendorGameSir",
@@ -21785,6 +22062,7 @@
       "document": {
         "variants": ["USB", "EnhancedHID"],
         "storesVariant": true,
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "VendorGameSir",
@@ -21824,6 +22102,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -21855,14 +22134,15 @@
     {
       "name": "rejects startup writes mixing hid and usb formats",
       "code": "E5002",
-      "python": "E5002: sony-dualsense.json at defaults.session: {'startup': [{'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03'}, {'bytes': '05 20 00 01 00'}]} should not be valid under {'required': ['startup'], 'properties': {'startup': {'allOf': [{'contains': {'required': ['report']}}, {'contains': {'not': {'required': ['report']}}}]}}}",
-      "swift": "E5002: sony-dualsense.json: description.defaults.session.startup: startup writes are all HID reports, all raw-USB packets or all named packets",
-      "fileName": "sony-dualsense.json",
+      "python": "E5002: sony-dualshock4.json at defaults.session: {'startup': [{'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03'}, {'bytes': '05 20 00 01 00'}]} should not be valid under {'required': ['startup'], 'properties': {'startup': {'allOf': [{'contains': {'required': ['report']}}, {'contains': {'not': {'required': ['report']}}}]}}}",
+      "swift": "E5002: sony-dualshock4.json: description.defaults.session.startup: startup writes are all HID reports, all raw-USB packets or all named packets",
+      "fileName": "sony-dualshock4.json",
       "document": {
         "variants": ["USB", "BluetoothClassic"],
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
-        "family": "SonyDualSense",
+        "family": "SonyDualShock4",
         "endpoints": {
           "in": 130,
           "out": 2
@@ -21912,6 +22192,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -21943,6 +22224,7 @@
       "swift": "E5002: xbox-xusb.json: description.storesVariant: storesVariant is true and needs variants",
       "fileName": "xbox-xusb.json",
       "document": {
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -21974,6 +22256,7 @@
       "swift": "E5003: XboxXUSB.json: file name must be xbox-xusb.json",
       "fileName": "XboxXUSB.json",
       "document": {
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -22007,6 +22290,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -22039,6 +22323,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -22074,6 +22359,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -22184,7 +22470,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble"],
         "defaults": {
           "tuning": {
             "hidStartupIntervalMs": 5
@@ -22210,7 +22495,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble"],
         "defaults": {
           "tuning": {
             "minimumHIDOutputIntervalMs": 5
@@ -22225,6 +22509,7 @@
       "swift": "E5002: xbox-xusb.json: unknown field(s): vendorID",
       "fileName": "xbox-xusb.json",
       "document": {
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -22258,6 +22543,7 @@
       "swift": "E5002: xbox-xusb.json: description.interfaceSignatures.[0]: unknown field(s): endpoint",
       "fileName": "xbox-xusb.json",
       "document": {
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -22291,6 +22577,7 @@
       "swift": "E5002: xbox-xusb.json: description.defaults: unknown field(s): capabilities",
       "fileName": "xbox-xusb.json",
       "document": {
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -22371,10 +22658,10 @@
       }
     },
     {
-      "name": "session keys are the ones the driver reads",
+      "name": "session keys are the ones the driver reads: family=XboxXID, keys=['keepAlive']",
       "code": "E5002",
-      "python": "E5002: xbox-xid.json: XboxXID reads the session keys rumble",
-      "swift": "E5002: xbox-xid.json: XboxXID reads the session keys rumble",
+      "python": "E5002: xbox-xid.json: XboxXID reads no session keys",
+      "swift": "E5002: xbox-xid.json: XboxXID reads no session keys",
       "fileName": "xbox-xid.json",
       "document": {
         "variants": ["Gamepad"],
@@ -22388,32 +22675,103 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
+        "sessionKeys": ["keepAlive"]
+      }
+    },
+    {
+      "name": "session keys are the ones the driver reads: family=XboxXID, keys=['startup']",
+      "code": "E5002",
+      "python": "E5002: xbox-xid.json: XboxXID reads no session keys",
+      "swift": "E5002: xbox-xid.json: XboxXID reads no session keys",
+      "fileName": "xbox-xid.json",
+      "document": {
+        "variants": ["Gamepad"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXID",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "recordSections": ["input", "rumble"],
+        "sessionKeys": ["startup"]
+      }
+    },
+    {
+      "name": "session keys are the ones the driver reads: family=SonyDualShock4, keys=['keepAlive']",
+      "code": "E5002",
+      "python": "E5002: sony-dualshock4.json: SonyDualShock4 reads the session keys startup",
+      "swift": "E5002: sony-dualshock4.json: SonyDualShock4 reads the session keys startup",
+      "fileName": "sony-dualshock4.json",
+      "document": {
+        "variants": ["USB", "BluetoothClassic"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "SonyDualShock4",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "sessionKeys": ["keepAlive"]
+      }
+    },
+    {
+      "name": "session keys are the ones the driver reads: family=SonyDualShock4, keys=['startup', 'keepAlive']",
+      "code": "E5002",
+      "python": "E5002: sony-dualshock4.json: SonyDualShock4 reads the session keys startup",
+      "swift": "E5002: sony-dualshock4.json: SonyDualShock4 reads the session keys startup",
+      "fileName": "sony-dualshock4.json",
+      "document": {
+        "variants": ["USB", "BluetoothClassic"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "SonyDualShock4",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "sessionKeys": ["startup", "keepAlive"]
+      }
+    },
+    {
+      "name": "session keys are the ones the driver reads: family=XboxGIP, keys=['startup']",
+      "code": "E5002",
+      "python": "E5002: xbox-gip.json: XboxGIP reads the session keys keepAlive, startup",
+      "swift": "E5002: xbox-gip.json: XboxGIP reads the session keys keepAlive, startup",
+      "fileName": "xbox-gip.json",
+      "document": {
+        "variants": ["USB"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxGIP",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "sessionKeys": ["startup"],
         "defaults": {
           "session": {
-            "rumble": {
-              "report": {
-                "kind": "USB",
-                "length": 8
-              },
-              "bytes": "00 08 00 00 00 00 00 00",
-              "lowFrequency": {
-                "byte": 3,
-                "encoding": "UInt16BigEndian"
-              },
-              "counter": {
-                "byte": 7
-              },
-              "resendIntervalMilliseconds": 100
-            }
+            "handshakeAttempts": 3,
+            "announceResendLimit": 8,
+            "namedPackets": [
+              {
+                "id": "XboxGIP/power-on",
+                "bytes": "05 20 00 01 00",
+                "sessionByte": 2
+              }
+            ]
           }
         }
       }
     },
     {
-      "name": "session keys are the ones the driver reads (2)",
+      "name": "session keys are the ones the driver reads: family=XboxXID, keys=['startup', 'startup']",
       "code": "E5002",
-      "python": "E5002: xbox-xid.json: XboxXID reads the session keys rumble",
-      "swift": "E5002: xbox-xid.json: XboxXID reads the session keys rumble",
+      "python": "E5002: xbox-xid.json at sessionKeys: ['startup', 'startup'] has non-unique elements",
+      "swift": "E5002: xbox-xid.json: description.sessionKeys: sessionKeys lists unique, known names",
       "fileName": "xbox-xid.json",
       "document": {
         "variants": ["Gamepad"],
@@ -22427,33 +22785,14 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble", "keepAlive"],
-        "defaults": {
-          "session": {
-            "rumble": {
-              "report": {
-                "kind": "USB",
-                "length": 8
-              },
-              "bytes": "00 08 00 00 00 00 00 00",
-              "lowFrequency": {
-                "byte": 3,
-                "encoding": "UInt16BigEndian"
-              },
-              "counter": {
-                "byte": 7
-              },
-              "resendIntervalMilliseconds": 100
-            }
-          }
-        }
+        "sessionKeys": ["startup", "startup"]
       }
     },
     {
-      "name": "session keys are the ones the driver reads (3)",
+      "name": "session keys are the ones the driver reads: family=XboxXID, keys=['rumble']",
       "code": "E5002",
-      "python": "E5002: xbox-xid.json: XboxXID reads the session keys rumble",
-      "swift": "E5002: xbox-xid.json: XboxXID reads the session keys rumble",
+      "python": "E5002: xbox-xid.json at sessionKeys.0: 'rumble' is not one of ['startup', 'keepAlive']",
+      "swift": "E5002: xbox-xid.json: description.sessionKeys: sessionKeys lists unique, known names",
       "fileName": "xbox-xid.json",
       "document": {
         "variants": ["Gamepad"],
@@ -22467,35 +22806,14 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble", "startup"]
+        "sessionKeys": ["rumble"]
       }
     },
     {
-      "name": "session keys are the ones the driver reads (4)",
+      "name": "session keys are the ones the driver reads: family=XboxXID, keys=['subcommands']",
       "code": "E5002",
-      "python": "E5002: xbox-xid.json at sessionKeys: ['rumble', 'rumble'] has non-unique elements",
-      "swift": "E5002: xbox-xid.json: description.sessionKeys: sessionKeys lists unique names of startup, rumble, keepAlive",
-      "fileName": "xbox-xid.json",
-      "document": {
-        "variants": ["Gamepad"],
-        "storesVariant": true,
-        "apiVersion": "openjoystickdriver/v1alpha1",
-        "kind": "ProtocolDescription",
-        "family": "XboxXID",
-        "endpoints": {
-          "in": 130,
-          "out": 2
-        },
-        "rawUSB": true,
-        "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble", "rumble"]
-      }
-    },
-    {
-      "name": "session keys are the ones the driver reads (5)",
-      "code": "E5002",
-      "python": "E5002: xbox-xid.json at sessionKeys.0: 'subcommands' is not one of ['startup', 'rumble', 'keepAlive']",
-      "swift": "E5002: xbox-xid.json: description.sessionKeys: sessionKeys lists unique names of startup, rumble, keepAlive",
+      "python": "E5002: xbox-xid.json at sessionKeys.0: 'subcommands' is not one of ['startup', 'keepAlive']",
+      "swift": "E5002: xbox-xid.json: description.sessionKeys: sessionKeys lists unique, known names",
       "fileName": "xbox-xid.json",
       "document": {
         "variants": ["Gamepad"],
@@ -22513,21 +22831,53 @@
       }
     },
     {
-      "name": "session keys are the ones the driver reads (6)",
+      "name": "session keys are the ones the driver reads: family=XboxXID, keys=[]",
       "code": "E5002",
-      "python": "E5002: sony-dualshock4.json: SonyDualShock4 reads the session keys keepAlive, rumble, startup",
-      "swift": "E5002: sony-dualshock4.json: SonyDualShock4 reads the session keys keepAlive, rumble, startup",
-      "fileName": "sony-dualshock4.json",
+      "python": "E5002: xbox-xid.json at sessionKeys: [] should be non-empty",
+      "swift": "E5002: xbox-xid.json: description.sessionKeys: sessionKeys lists unique, known names",
+      "fileName": "xbox-xid.json",
       "document": {
-        "variants": ["USB", "BluetoothClassic"],
+        "variants": ["Gamepad"],
+        "storesVariant": true,
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
-        "family": "SonyDualShock4",
+        "family": "XboxXID",
         "endpoints": {
           "in": 130,
           "out": 2
         },
-        "sessionKeys": ["startup"]
+        "rawUSB": true,
+        "recordSections": ["input", "rumble"],
+        "sessionKeys": []
+      }
+    },
+    {
+      "name": "session keys are the ones the driver reads: session={'startup': [{'bytes': '01 02'}]}",
+      "code": "E5002",
+      "python": "E5002: xbox-xid.json: defaults.session sets startup, which sessionKeys does not list",
+      "swift": "E5002: xbox-xid.json: defaults.session sets startup, which sessionKeys does not list",
+      "fileName": "xbox-xid.json",
+      "document": {
+        "variants": ["Gamepad"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXID",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "recordSections": ["input", "rumble"],
+        "defaults": {
+          "session": {
+            "startup": [
+              {
+                "bytes": "01 02"
+              }
+            ]
+          }
+        }
       }
     },
     {
@@ -22538,6 +22888,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -22569,6 +22920,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -22600,6 +22952,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -22631,6 +22984,7 @@
       "fileName": "xbox-gip.json",
       "document": {
         "variants": ["USB"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxGIP",
@@ -22663,6 +23017,7 @@
       "document": {
         "variants": ["Wired", "Receiver"],
         "storesVariant": true,
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -22687,6 +23042,7 @@
       "document": {
         "variants": ["Wired", "Receiver"],
         "storesVariant": true,
+        "sessionKeys": ["startup"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "XboxXUSB",
@@ -22710,6 +23066,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -22739,6 +23096,7 @@
       "fileName": "nintendo-switch2.json",
       "document": {
         "variants": ["USB", "BluetoothLE"],
+        "sessionKeys": ["startup", "keepAlive"],
         "apiVersion": "openjoystickdriver/v1alpha1",
         "kind": "ProtocolDescription",
         "family": "NintendoSwitch2",
@@ -22778,7 +23136,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "rumble": {
@@ -22813,7 +23170,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
-        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "rumble": {
@@ -22858,7 +23214,6 @@
         },
         "rawUSB": true,
         "recordSections": ["input"],
-        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "rumble": {

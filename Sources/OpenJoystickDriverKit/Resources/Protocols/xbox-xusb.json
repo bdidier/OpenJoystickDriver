@@ -10,6 +10,7 @@
   },
   "rawUSB": true,
   "recordSections": ["rumble"],
+  "sessionKeys": ["startup"],
   "interfaceSignatures": [
     {
       "variant": "Wired",

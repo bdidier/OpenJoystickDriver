@@ -8,6 +8,7 @@
     "out": 2
   },
   "recordSections": ["bluetoothLE"],
+  "sessionKeys": ["startup", "keepAlive"],
   "tuningKeys": [
     "hidStartupIntervalMs",
     "minimumHIDOutputIntervalMs",

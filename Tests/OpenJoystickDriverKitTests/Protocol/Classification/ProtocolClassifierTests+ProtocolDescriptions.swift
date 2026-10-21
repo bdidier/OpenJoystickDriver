@@ -121,7 +121,9 @@ extension ProtocolClassifierTests {
     kind: String = ProtocolDescription.kind,
     family: String = "XboxGIP"
   ) -> Data {
-    Data(
+    let protocolID = PhysicalProtocolID(rawValue: family)
+    let keys = protocolID.map(ProtocolDescriptionFixture.sessionKeyMembers) ?? ""
+    return Data(
       """
       {
         \(extra)
@@ -129,6 +131,7 @@ extension ProtocolClassifierTests {
         "kind": "\(kind)",
         "family": "\(family)",
         \(PhysicalProtocolID(rawValue: family).map(ProtocolDescriptionFixture.variantMembers) ?? "")
+        \(keys)
         "endpoints": {"in": 130, "out": 2},
         "defaults": {"session": {"handshakeAttempts": 3, "announceResendLimit": 8,
           "namedPackets": [

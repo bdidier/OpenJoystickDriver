@@ -324,7 +324,10 @@ struct ProtocolDescriptionTests {
       (.valveSteamDeck, ""),
     ]
     for (family, body) in missing {
-      let problem = rejection(exactly: family, body)
+      let problem = rejection(
+        exactly: family,
+        ProtocolDescriptionFixture.sessionKeyMembers(of: family) + body
+      )
       #expect(problem?.code == .invalidProtocolDescription, "\(family) \(body)")
       #expect(problem?.detail.contains("must set") == true, "\(family) \(body)")
     }
@@ -338,6 +341,10 @@ struct ProtocolDescriptionTests {
     #expect(Set(description.parameters.keys) == family.readParameters, "\(family.rawValue)")
     #expect(description.presentSessionFields == family.sessionFields, "\(family.rawValue)")
     #expect(description.sessionKeys == family.generalSessionFields, "\(family.rawValue)")
+    #expect(
+      description.presentGeneralSessionFields.isSubset(of: description.sessionKeys),
+      "\(family.rawValue)"
+    )
   }
 
   /// The general session keys are the schema's list, which Python reads.
@@ -431,18 +438,20 @@ struct ProtocolDescriptionTests {
   @Test
   func sessionKeysAreTheOnesTheDriverReads() {
     let cases: [(PhysicalProtocolID, String)] = [
-      (.xboxXID, #""rawUSB": true, "sessionKeys": ["rumble", "keepAlive"]"#),
-      (.xboxXID, #""rawUSB": true, "sessionKeys": ["rumble", "rumble"]"#),
+      (.xboxXID, #""rawUSB": true, "sessionKeys": ["keepAlive"]"#),
+      (.xboxXID, #""rawUSB": true, "sessionKeys": ["startup", "startup"]"#),
+      (.xboxXID, #""rawUSB": true, "sessionKeys": ["rumble"]"#),
       (.xboxXID, #""rawUSB": true, "sessionKeys": ["subcommands"]"#),
       (.xboxXID, #""rawUSB": true, "sessionKeys": []"#),
-      (.sonyDualShock4, #""sessionKeys": ["startup"]"#),
+      (.sonyDualShock4, #""sessionKeys": ["startup", "keepAlive"]"#),
+      (.sonyDualShock4, #""sessionKeys": ["keepAlive"]"#),
     ]
     for (family, body) in cases {
       let problem = rejection(exactly: family, body)
       #expect(problem?.code == .invalidProtocolDescription, "\(family) \(body)")
     }
-    let without = rejection(exactly: .xboxXID, #""rawUSB": true, "recordSections": ["rumble"]"#)
-    #expect(without?.description.contains("reads the session keys rumble") == true)
+    let without = rejection(exactly: .sonyDualShock4, #""recordSections": ["rumble"]"#)
+    #expect(without?.description.contains("reads the session keys startup") == true)
   }
 
   private static let hidReport = #""report": {"kind": "Output", "id": 1, "length": 4}"#
@@ -458,7 +467,7 @@ struct ProtocolDescriptionTests {
   @Test
   func decodesStartupWritesOfBothFormats() throws {
     let hid = try decode(
-      family: .sonyDualSense,
+      family: .sonyDualShock4,
       startup(
         hidWrite(
           #""phase": "Startup", "delayMilliseconds": 5, "variants": ["USB"]"#
@@ -489,7 +498,7 @@ struct ProtocolDescriptionTests {
     ]
   )
   func rejectsAMalformedHIDStartupWrite(field: String) {
-    let problem = rejection(family: .sonyDualSense, startup(hidWrite(field)))
+    let problem = rejection(family: .sonyDualShock4, startup(hidWrite(field)))
     #expect(problem?.code == .invalidProtocolDescription, "\(field)")
   }
 
@@ -508,16 +517,16 @@ struct ProtocolDescriptionTests {
   @Test
   func rejectsStartupWritesMixingBothFormats() {
     let body = startup(hidWrite("") + #", {"bytes": "01"}"#)
-    #expect(rejection(family: .sonyDualSense, body)?.code == .invalidProtocolDescription)
+    #expect(rejection(family: .sonyDualShock4, body)?.code == .invalidProtocolDescription)
   }
 
   @Test
   func rejectsAStartupWriteNamingWhatTheFamilyLacks() {
-    let variant = rejection(family: .sonyDualSense, startup(hidWrite(#""variants": ["Wired"]"#)))
+    let variant = rejection(family: .sonyDualShock4, startup(hidWrite(#""variants": ["Wired"]"#)))
     #expect(variant?.code == .unknownProtocolVariant)
     let layout = #""when": {"parameter": "layout", "is": ["Pro"]}"#
     #expect(
-      rejection(family: .sonyDualSense, startup(hidWrite(layout)))?.code
+      rejection(family: .sonyDualShock4, startup(hidWrite(layout)))?.code
         == .invalidProtocolDescription
     )
     let value = #""when": {"parameter": "layout", "is": ["Triangle"]}"#
@@ -891,7 +900,8 @@ struct ProtocolDescriptionTests {
     func problem(_ members: String) -> ProtocolDescriptionProblem? {
       let json = """
         {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "ProtocolDescription",
-         "family": "XboxGIP", \(members) "endpoints": {"in": 130, "out": 2}, "rawUSB": true,
+         "family": "XboxGIP", \(members) "sessionKeys": ["startup", "keepAlive"],
+         "endpoints": {"in": 130, "out": 2}, "rawUSB": true,
          "defaults": {"session": {"handshakeAttempts": 3, "announceResendLimit": 8,
          "namedPackets": [
           {"id": "XboxGIP/power-on", "bytes": "05 20 00 01 00", "sessionByte": 2}
@@ -1009,11 +1019,11 @@ enum ProtocolDescriptionFixture {
   }
 
   /// The `sessionKeys` member, with a trailing comma, that the bundled description of `family`
-  /// states; empty for a family that takes every general session key.
+  /// states; empty for a family that reads none.
   static func sessionKeyMembers(of family: PhysicalProtocolID) -> String {
-    let keys = family.generalSessionFields
-    guard keys != ProtocolDescription.Document.Session.generalKeys else { return "" }
-    return "\"sessionKeys\": [\(keys.sorted().map { "\"\($0)\"" }.joined(separator: ", "))], "
+    let keys = family.generalSessionFields.map(\.rawValue).sorted()
+    guard !keys.isEmpty else { return "" }
+    return "\"sessionKeys\": [\(keys.map { "\"\($0)\"" }.joined(separator: ", "))], "
   }
 
   private static func withSessionLimits(family: PhysicalProtocolID, _ body: String) -> String {

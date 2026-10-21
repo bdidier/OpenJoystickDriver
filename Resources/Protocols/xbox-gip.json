@@ -9,6 +9,7 @@
   },
   "rawUSB": true,
   "recordSections": ["keepAlive"],
+  "sessionKeys": ["startup", "keepAlive"],
   "interfaceSignatures": [
     {
       "variant": "USB",
