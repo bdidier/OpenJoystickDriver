@@ -40,6 +40,7 @@ final class VirtualOutputTransitionProbe: VirtualOutputDispatching,
   private let lock = NSLock()
   private var closeCount = 0
   private var activations: [[LogicalControllerID]] = []
+  private var finishedActivations = 0
 
   init(activationGate: VirtualOutputTransitionGate? = nil, failsActivation: Bool = false) {
     self.activationGate = activationGate
@@ -48,6 +49,8 @@ final class VirtualOutputTransitionProbe: VirtualOutputDispatching,
 
   var closeCountValue: Int { lock.withLock { closeCount } }
   var activationValues: [[LogicalControllerID]] { lock.withLock { activations } }
+  /// Activations that left the gate, whether they then succeeded or failed.
+  var finishedActivationCount: Int { lock.withLock { finishedActivations } }
   var suppressOutput = false
   var status: VirtualOutputBackendStatus { .backend("probe") }
   var lastRumbleStatus: String? { nil }
@@ -55,6 +58,7 @@ final class VirtualOutputTransitionProbe: VirtualOutputDispatching,
   func activate(for identifiers: [LogicalControllerID]) async throws {
     lock.withLock { activations.append(identifiers) }
     await activationGate?.wait()
+    lock.withLock { finishedActivations += 1 }
     if failsActivation { throw ActivationFailure() }
   }
 

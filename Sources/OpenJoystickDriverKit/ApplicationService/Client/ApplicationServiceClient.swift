@@ -26,6 +26,8 @@ public final class ApplicationServiceClient: @unchecked Sendable {
   let stateLock = NSLock()
   let socketPath: String
   var connected = false
+  /// The probes of the local server that found no answer, across all `connect` calls.
+  var unansweredProbes = 0
 
   public init() { socketPath = LocalServiceRPCTransport.defaultSocketPath }
 

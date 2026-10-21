@@ -456,7 +456,9 @@ struct EndpointServerTests {
       #expect(Date().timeIntervalSince(start) < 2)
       // A slot freed by a closed client is served at once, behind the idle ones.
       clients.removeLast()
-      try await Task.sleep(nanoseconds: 200_000_000)
+      await waitUntil("the service sees the closed client") {
+        server.connectionCount == EndpointServer.maximumConnections - 1
+      }
       let replacement = try await EndpointTestClient.subscribed(to: server.socketPath)
       #expect(Date().timeIntervalSince(start) < 3)
       _ = (clients, replacement)

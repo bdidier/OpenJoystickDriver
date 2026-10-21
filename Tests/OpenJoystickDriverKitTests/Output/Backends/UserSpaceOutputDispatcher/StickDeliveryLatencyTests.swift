@@ -525,11 +525,12 @@ struct StickDeliveryLatencyTests {
   func eventBatchesEndAWaitingConsumer() async {
     let finished = DeviceManager.EventBatches<Int>()
     let waiting = Task { await finished.next() }
-    await Task.yield()
+    await waitUntil("the consumer waits for events") { finished.hasWaitingConsumer }
     finished.finish()
 
     let cancelled = DeviceManager.EventBatches<Int>()
     let cancelledWait = Task { await cancelled.next() }
+    await waitUntil("the second consumer waits for events") { cancelled.hasWaitingConsumer }
     cancelledWait.cancel()
 
     #expect(await waiting.value == nil)

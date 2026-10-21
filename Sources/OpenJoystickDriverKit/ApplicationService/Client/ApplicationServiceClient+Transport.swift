@@ -31,6 +31,7 @@ extension ApplicationServiceClient {
         stateLock.withLock { connected = true }
         return true
       }
+      stateLock.withLock { unansweredProbes += 1 }
       if Date() >= deadline { return false }
       try await Task.sleep(nanoseconds: 100_000_000)
     }

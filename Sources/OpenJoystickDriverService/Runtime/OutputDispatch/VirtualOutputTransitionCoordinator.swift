@@ -60,6 +60,8 @@ final class VirtualOutputTransitionCancellation: Sendable {
 actor VirtualOutputTransitionCoordinator {
   private var tail: Task<Void, Never>?
   private let cancellation = VirtualOutputTransitionCancellation()
+  /// Operations accepted since creation, counted when queued, before they start.
+  private(set) var queuedOperationCount = 0
 
   func enqueue(_ operation: @escaping @Sendable () async -> Bool) async -> Bool {
     await enqueueResult(operation) ?? false
@@ -70,6 +72,7 @@ actor VirtualOutputTransitionCoordinator {
     _ operation: @escaping @Sendable () async -> Value
   ) async -> Value? {
     guard !cancellation.isStopped else { return nil }
+    queuedOperationCount += 1
     let previous = tail
     let cancellation = self.cancellation
     let next = Task<Value?, Never> {

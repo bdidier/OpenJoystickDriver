@@ -133,6 +133,9 @@ extension DeviceManager {
       }
     }
 
+    /// Whether a consumer is suspended in `next()` with nothing to take.
+    var hasWaitingConsumer: Bool { state.withLock { $0.waiter != nil } }
+
     /// Adds `event` after every pending one; ignored once finished.
     func append(_ event: Element) {
       let waiter = state.withLock { state -> CheckedContinuation<[Element]?, Never>? in

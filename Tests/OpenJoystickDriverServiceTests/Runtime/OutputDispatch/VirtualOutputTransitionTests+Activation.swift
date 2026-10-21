@@ -225,7 +225,9 @@ extension VirtualOutputTransitionTests {
     #expect(server.userSpaceStatus.isError)
 
     await gate.open()
-    await Task.yield()
+    await waitUntil("the timed-out activation leaves the gate") {
+      factory.values().first?.finishedActivationCount == 1
+    }
     #expect(server.userSpaceDispatcher == nil)
     #expect(factory.values().count == 1)
     await fixture.tearDown()
@@ -242,12 +244,16 @@ extension VirtualOutputTransitionTests {
       identifiers: [first, LogicalControllerID(vendorID: 3, productID: 4)]
     )
     let server = fixture.server
+    let coordinator = server.virtualOutputTransitionCoordinator
+    let queuedBefore = await coordinator.queuedOperationCount
     let activation = Task { await server.activateVirtualOutputBackendForCurrentDevices() }
     await factory.waitForCount(1)
     // A later queued operation takes the queue's tail, so stopping cannot cancel the activation
     // and only the server's stopped state ends it.
     let reset = Task { await server.resetSettings() }
-    try await Task.sleep(nanoseconds: 50_000_000)
+    await waitUntil("the reset is queued behind the activation") {
+      await coordinator.queuedOperationCount >= queuedBefore + 2
+    }
 
     let stop = Task { await server.stop() }
     await waitUntil("the server is stopped") { server.isVirtualOutputServerStopped() }

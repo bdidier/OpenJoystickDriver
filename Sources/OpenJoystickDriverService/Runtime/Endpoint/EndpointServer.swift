@@ -63,6 +63,8 @@ final class EndpointServer: @unchecked Sendable {
   var pendingWebRequests = 0
   /// Every accepted connection, including those still in the handshake.
   var connections: [ObjectIdentifier: EndpointConnection] = [:]
+  /// The number of accepted connections that have not finished, including those in the handshake.
+  var connectionCount: Int { lock.withLock { connections.count } }
   var refusals = AccessRefusalLog()
   var stream = EndpointStream()
 

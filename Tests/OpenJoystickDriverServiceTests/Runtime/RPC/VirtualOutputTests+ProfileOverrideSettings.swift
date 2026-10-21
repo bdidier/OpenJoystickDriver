@@ -13,6 +13,8 @@ extension VirtualOutputTests {
     let resetFinished = CompletionFlag()
 
     let server = fixture.server
+    let coordinator = server.virtualOutputTransitionCoordinator
+    let queuedBefore = await coordinator.queuedOperationCount
     let set = Task {
       await server.changeVirtualHIDProfileOverride(
         .set("SDLCompatible"),
@@ -25,7 +27,9 @@ extension VirtualOutputTests {
       resetFinished.mark()
       return reset
     }
-    try await Task.sleep(nanoseconds: 50_000_000)
+    await waitUntil("the reset is queued behind the override change") {
+      await coordinator.queuedOperationCount >= queuedBefore + 2
+    }
 
     #expect(!resetFinished.isMarked)
     #expect(fixture.store.override(vendorID: 1, productID: 2) == .sdlCompatible)
@@ -60,9 +64,9 @@ extension VirtualOutputTests {
       return reset
     }
     await gate.waitForEntry()
-    try await Task.sleep(nanoseconds: 1_000_000_000)
+    // One second is under the 2 s stage timeout, so only the per-controller timeout can end it.
+    await waitUntil("the reset times out the retarget", deadline: 1) { resetFinished.isMarked }
 
-    #expect(resetFinished.isMarked)
     await gate.release()
     #expect(await reset.value == false)
     #expect(fixture.store.files.isEmpty)
@@ -107,9 +111,12 @@ extension VirtualOutputTests {
       }
     }
     await blocker.waitForEntry()
+    let queuedBeforeRelease = await coordinator.queuedOperationCount
 
     await gate.release()
-    try await Task.sleep(nanoseconds: 200_000_000)
+    await waitUntil("the late reselect is queued behind the blocker") {
+      await coordinator.queuedOperationCount > queuedBeforeRelease
+    }
     #expect(fixture.log.built().map(\.profile) == [.sdlCompatible, .generic])
 
     await blocker.release()

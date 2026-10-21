@@ -1,5 +1,6 @@
 import Darwin
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
@@ -36,7 +37,9 @@ struct LocalServiceRPCCancellationTests {
   func cancellingConnectStopsRetryingAndLeavesTheClientDisconnected() async throws {
     let client = ApplicationServiceClient(socketPath: temporarySocketPath())
     let task = Task { await client.connect(timeoutSeconds: 30) }
-    try await Task.sleep(nanoseconds: 300_000_000)
+    await waitUntil("the client has probed twice without an answer") {
+      client.stateLock.withLock { client.unansweredProbes } >= 2
+    }
 
     let cancellationStart = ContinuousClock.now
     task.cancel()

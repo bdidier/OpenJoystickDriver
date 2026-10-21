@@ -31,7 +31,16 @@ actor ReceiverSlotProvider: USBTransportProvider {
   private(set) var configuringInterfaces: [UInt8] = []
   /// Open interfaces a SET_CONFIGURATION terminated.
   private(set) var terminatedInterfaces: [UInt8] = []
-  private var currentConfiguration: UInt8?
+  private var currentConfiguration: UInt8? {
+    didSet {
+      guard currentConfiguration != nil else { return }
+      let waiting = configurationWaiters
+      configurationWaiters.removeAll()
+      for waiter in waiting { waiter.finish() }
+    }
+  }
+  /// Opens waiting for the device to be configured, resumed when a configuration is set.
+  private var configurationWaiters: [AsyncStream<Void>.Continuation] = []
   private var openInterfaces: Set<UInt8> = []
 
   /// `sessions` maps an interface number to the session its first open returns.
@@ -84,12 +93,20 @@ actor ReceiverSlotProvider: USBTransportProvider {
       terminatedInterfaces += openInterfaces.subtracting([interface]).sorted()
       openInterfaces.removeAll()
     }
-    while currentConfiguration == nil { try await Task.sleep(for: .milliseconds(1)) }
+    try await waitUntilConfigured()
     guard let session = isReopen ? reopened[interface] : sessions[interface] else {
       throw USBTransportError.notFound
     }
     openInterfaces.insert(interface)
     return session
+  }
+
+  private func waitUntilConfigured() async throws {
+    guard currentConfiguration == nil else { return }
+    let (stream, continuation) = AsyncStream<Void>.makeStream()
+    configurationWaiters.append(continuation)
+    for await _ in stream {}
+    try Task.checkCancellation()
   }
 
   /// Registry facts before configuration carry no interfaces; after it, the descriptor's.
