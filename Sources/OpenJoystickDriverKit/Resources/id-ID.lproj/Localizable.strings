@@ -529,8 +529,8 @@
 "banner.access.detail" = "macOS belum mengizinkan semua yang dibutuhkan OpenJoystickDriver untuk membaca pengontrol dan memublikasikannya ke game.";
 "banner.liveUpdates.title" = "Pembaruan langsung tidak tersedia";
 "banner.liveUpdates.detail.closed" = "Layanan menutup koneksi. Sebagai gantinya, OpenJoystickDriver memeriksa perubahan pengontrol setiap detik.";
-"banner.liveUpdates.detail.timeout" = "Layanan tidak menjawab tepat waktu. Sebagai gantinya, OpenJoystickDriver memeriksa perubahan pengontrol setiap detik.";
-"banner.liveUpdates.detail.other" = "Pembaruan langsung dari layanan tidak berfungsi. Sebagai gantinya, OpenJoystickDriver memeriksa perubahan pengontrol setiap detik.";
+"banner.liveUpdates.detail.timeout" = "Layanan tidak menjawab tepat waktu. Sebagai gantinya, OpenJoystickDriver memeriksa perubahan pengontrol secara berkala.";
+"banner.liveUpdates.detail.other" = "Pembaruan langsung dari layanan tidak berfungsi. Sebagai gantinya, OpenJoystickDriver memeriksa perubahan pengontrol secara berkala.";
 "cli.login.uninstall_action" = "Copot";
 "console.all" = "Semua";
 "console.empty" = "Tidak ada entri log.";

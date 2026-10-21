@@ -529,8 +529,8 @@
 "banner.access.detail" = "macOS, OpenJoystickDriver’ın kontrolcüleri okumak ve oyunlara sunmak için ihtiyaç duyduğu her şeye izin vermedi.";
 "banner.liveUpdates.title" = "Canlı güncellemeler kullanılamıyor";
 "banner.liveUpdates.detail.closed" = "Hizmet bağlantıyı kapattı. OpenJoystickDriver bunun yerine kontrolcü değişikliklerini her saniye denetler.";
-"banner.liveUpdates.detail.timeout" = "Hizmet zamanında yanıt vermedi. OpenJoystickDriver bunun yerine kontrolcü değişikliklerini her saniye denetler.";
-"banner.liveUpdates.detail.other" = "Hizmetten canlı güncellemeler çalışmıyor. OpenJoystickDriver bunun yerine kontrolcü değişikliklerini her saniye denetler.";
+"banner.liveUpdates.detail.timeout" = "Hizmet zamanında yanıt vermedi. OpenJoystickDriver bunun yerine kontrolcü değişikliklerini düzenli aralıklarla denetler.";
+"banner.liveUpdates.detail.other" = "Hizmetten canlı güncellemeler çalışmıyor. OpenJoystickDriver bunun yerine kontrolcü değişikliklerini düzenli aralıklarla denetler.";
 "cli.login.uninstall_action" = "Kaldır";
 "console.all" = "Tümü";
 "console.empty" = "Günlük kayıtları yok.";

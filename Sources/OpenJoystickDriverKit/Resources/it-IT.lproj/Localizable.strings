@@ -528,9 +528,9 @@
 "banner.access.title" = "Autorizzazione necessaria";
 "banner.access.detail" = "macOS non ha consentito tutto ciò che OpenJoystickDriver richiede per leggere i controller e pubblicarli nei giochi.";
 "banner.liveUpdates.title" = "Aggiornamenti in tempo reale non disponibili";
-"banner.liveUpdates.detail.closed" = "Il servizio ha chiuso la connessione. Invece, OpenJoystickDriver controlla le modifiche ai controller ogni secondo.";
-"banner.liveUpdates.detail.timeout" = "Il servizio non ha risposto in tempo. Invece, OpenJoystickDriver controlla le modifiche ai controller ogni secondo.";
-"banner.liveUpdates.detail.other" = "Gli aggiornamenti in tempo reale del servizio non funzionano. Invece, OpenJoystickDriver controlla le modifiche ai controller ogni secondo.";
+"banner.liveUpdates.detail.closed" = "Il servizio ha chiuso la connessione. OpenJoystickDriver controlla invece le modifiche ai controller ogni secondo.";
+"banner.liveUpdates.detail.timeout" = "Il servizio non ha risposto in tempo. OpenJoystickDriver controlla invece le modifiche ai controller periodicamente.";
+"banner.liveUpdates.detail.other" = "Gli aggiornamenti in tempo reale del servizio non funzionano. OpenJoystickDriver controlla invece le modifiche ai controller periodicamente.";
 "cli.login.uninstall_action" = "Disinstalla";
 "console.all" = "Tutti";
 "console.empty" = "Nessuna voce di registro.";

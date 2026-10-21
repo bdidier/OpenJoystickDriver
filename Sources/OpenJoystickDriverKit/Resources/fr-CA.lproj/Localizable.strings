@@ -529,8 +529,8 @@
 "banner.access.detail" = "macOS n’a pas autorisé tout ce dont OpenJoystickDriver a besoin pour lire les manettes et les publier dans les jeux.";
 "banner.liveUpdates.title" = "Mises à jour en direct indisponibles";
 "banner.liveUpdates.detail.closed" = "Le service a fermé la connexion. À la place, OpenJoystickDriver recherche les changements de manettes toutes les secondes.";
-"banner.liveUpdates.detail.timeout" = "Le service n’a pas répondu à temps. À la place, OpenJoystickDriver recherche les changements de manettes toutes les secondes.";
-"banner.liveUpdates.detail.other" = "Les mises à jour en direct du service ne fonctionnent pas. À la place, OpenJoystickDriver recherche les changements de manettes toutes les secondes.";
+"banner.liveUpdates.detail.timeout" = "Le service n’a pas répondu à temps. À la place, OpenJoystickDriver recherche les changements de manettes périodiquement.";
+"banner.liveUpdates.detail.other" = "Les mises à jour en direct du service ne fonctionnent pas. À la place, OpenJoystickDriver recherche les changements de manettes périodiquement.";
 "cli.login.uninstall_action" = "Désinstaller";
 "console.all" = "Tout";
 "console.empty" = "Aucune entrée de journal.";

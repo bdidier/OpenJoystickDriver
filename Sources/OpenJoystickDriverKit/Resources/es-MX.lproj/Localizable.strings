@@ -529,8 +529,8 @@
 "banner.access.detail" = "macOS no ha permitido todo lo que OpenJoystickDriver necesita para leer los controles y publicarlos en los juegos.";
 "banner.liveUpdates.title" = "Actualizaciones en vivo no disponibles";
 "banner.liveUpdates.detail.closed" = "El servicio cerró la conexión. En su lugar, OpenJoystickDriver revisa los cambios en los controles cada segundo.";
-"banner.liveUpdates.detail.timeout" = "El servicio no respondió a tiempo. En su lugar, OpenJoystickDriver revisa los cambios en los controles cada segundo.";
-"banner.liveUpdates.detail.other" = "Las actualizaciones en vivo del servicio no funcionan. En su lugar, OpenJoystickDriver revisa los cambios en los controles cada segundo.";
+"banner.liveUpdates.detail.timeout" = "El servicio no respondió a tiempo. En su lugar, OpenJoystickDriver revisa los cambios en los controles periódicamente.";
+"banner.liveUpdates.detail.other" = "Las actualizaciones en vivo del servicio no funcionan. En su lugar, OpenJoystickDriver revisa los cambios en los controles periódicamente.";
 "cli.login.uninstall_action" = "Desinstalar";
 "console.all" = "Todo";
 "console.empty" = "No hay entradas de registro.";

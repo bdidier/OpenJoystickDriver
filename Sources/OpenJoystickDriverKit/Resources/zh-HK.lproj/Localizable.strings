@@ -529,8 +529,8 @@
 "banner.access.detail" = "macOS 尚未授予 OpenJoystickDriver 讀取控制器並將其發佈給遊戲所需的全部權限。";
 "banner.liveUpdates.title" = "即時更新無法使用";
 "banner.liveUpdates.detail.closed" = "服務已關閉連線。OpenJoystickDriver 改為每秒檢查一次控制器變更。";
-"banner.liveUpdates.detail.timeout" = "服務未及時回應。OpenJoystickDriver 改為每秒檢查一次控制器變更。";
-"banner.liveUpdates.detail.other" = "來自服務的即時更新無法使用。OpenJoystickDriver 改為每秒檢查一次控制器變更。";
+"banner.liveUpdates.detail.timeout" = "服務未及時回應。OpenJoystickDriver 改為定期檢查控制器變更。";
+"banner.liveUpdates.detail.other" = "來自服務的即時更新無法使用。OpenJoystickDriver 改為定期檢查控制器變更。";
 "cli.login.uninstall_action" = "解除安裝";
 "console.all" = "全部";
 "console.empty" = "沒有日誌項目。";
@@ -1948,15 +1948,15 @@
 "controllers.publication.reason.suppressed" = "輸出已暫停";
 "controllers.publication.reason.noInputYet" = "正在等待第一次輸入";
 /* Publication state with its reason or failure, for example "Not published (Waiting for the first input)". %1$@ is the state and %2$@ the reason. */
-"controllers.publication.withReason" = "%1$@ (%2$@)";
+"controllers.publication.withReason" = "%1$@（%2$@）";
 "controllers.publication.failedSend" = "最近一次傳送失敗：%@";
 /* Serving route with why it publishes nothing, for example "Output off (No virtual profile fits it)". %1$@ is the route and %2$@ the reason. */
-"controllers.serving.withReason" = "%1$@ (%2$@)";
+"controllers.serving.withReason" = "%1$@（%2$@）";
 /* Why a controller's input health is failing. */
 "controllers.inputHealth.reason.missingReports" = "沒有收到報告";
 "controllers.inputHealth.reason.freshnessNotAdvancing" = "報告沒有更新";
 /* Input health state with its failure reason, for example "Stale (No reports arriving)". %1$@ is the state and %2$@ the reason. */
-"controllers.inputHealth.withReason" = "%1$@ (%2$@)";
+"controllers.inputHealth.withReason" = "%1$@（%2$@）";
 /* How a controller was discovered. */
 "controllers.discovery.hid" = "HID";
 "controllers.discovery.rawUSB" = "原始 USB";

@@ -529,8 +529,8 @@
 "banner.access.detail" = "macOS разрешила не всё, что нужно OpenJoystickDriver, чтобы считывать контроллеры и публиковать их для игр.";
 "banner.liveUpdates.title" = "Обновления в реальном времени недоступны";
 "banner.liveUpdates.detail.closed" = "Служба закрыла соединение. Вместо этого OpenJoystickDriver проверяет изменения контроллеров каждую секунду.";
-"banner.liveUpdates.detail.timeout" = "Служба не ответила вовремя. Вместо этого OpenJoystickDriver проверяет изменения контроллеров каждую секунду.";
-"banner.liveUpdates.detail.other" = "Обновления в реальном времени от службы не работают. Вместо этого OpenJoystickDriver проверяет изменения контроллеров каждую секунду.";
+"banner.liveUpdates.detail.timeout" = "Служба не ответила вовремя. Вместо этого OpenJoystickDriver проверяет изменения контроллеров периодически.";
+"banner.liveUpdates.detail.other" = "Обновления в реальном времени от службы не работают. Вместо этого OpenJoystickDriver проверяет изменения контроллеров периодически.";
 "cli.login.uninstall_action" = "Удалить";
 "console.all" = "Все";
 "console.empty" = "Нет записей журнала.";

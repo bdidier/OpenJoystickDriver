@@ -529,8 +529,8 @@
 "banner.access.detail" = "macOSは、OpenJoystickDriverがコントローラを読み取り、ゲームに公開するために必要な権限をすべては許可していません。";
 "banner.liveUpdates.title" = "ライブ更新を利用できません";
 "banner.liveUpdates.detail.closed" = "サービスが接続を閉じました。OpenJoystickDriverは代わりに1秒ごとにコントローラの変更を確認します。";
-"banner.liveUpdates.detail.timeout" = "サービスが時間内に応答しませんでした。OpenJoystickDriverは代わりに1秒ごとにコントローラの変更を確認します。";
-"banner.liveUpdates.detail.other" = "サービスからのライブ更新が機能していません。OpenJoystickDriverは代わりに1秒ごとにコントローラの変更を確認します。";
+"banner.liveUpdates.detail.timeout" = "サービスが時間内に応答しませんでした。OpenJoystickDriverは代わりに定期的にコントローラの変更を確認します。";
+"banner.liveUpdates.detail.other" = "サービスからのライブ更新が機能していません。OpenJoystickDriverは代わりに定期的にコントローラの変更を確認します。";
 "cli.login.uninstall_action" = "アンインストール";
 "console.all" = "すべて";
 "console.empty" = "ログエントリはありません。";

@@ -529,8 +529,8 @@
 "banner.access.detail" = "لم يسمح macOS بكل ما يحتاجه OpenJoystickDriver لقراءة وحدات التحكم ونشرها للألعاب.";
 "banner.liveUpdates.title" = "التحديثات الفورية غير متاحة";
 "banner.liveUpdates.detail.closed" = "أغلقت الخدمة الاتصال. يتحقق OpenJoystickDriver من تغييرات وحدات التحكم كل ثانية بدلًا من ذلك.";
-"banner.liveUpdates.detail.timeout" = "لم تستجب الخدمة في الوقت المناسب. يتحقق OpenJoystickDriver من تغييرات وحدات التحكم كل ثانية بدلًا من ذلك.";
-"banner.liveUpdates.detail.other" = "لا تعمل التحديثات الفورية من الخدمة. يتحقق OpenJoystickDriver من تغييرات وحدات التحكم كل ثانية بدلًا من ذلك.";
+"banner.liveUpdates.detail.timeout" = "لم تستجب الخدمة في الوقت المناسب. يتحقق OpenJoystickDriver من تغييرات وحدات التحكم بشكل دوري بدلًا من ذلك.";
+"banner.liveUpdates.detail.other" = "لا تعمل التحديثات الفورية من الخدمة. يتحقق OpenJoystickDriver من تغييرات وحدات التحكم بشكل دوري بدلًا من ذلك.";
 "cli.login.uninstall_action" = "إلغاء التثبيت";
 "console.all" = "الكل";
 "console.empty" = "لا توجد إدخالات في السجل.";

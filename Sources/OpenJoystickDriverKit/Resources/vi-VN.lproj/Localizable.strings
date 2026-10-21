@@ -529,8 +529,8 @@
 "banner.access.detail" = "macOS chưa cho phép mọi thứ OpenJoystickDriver cần để đọc các bộ điều khiển và cung cấp chúng cho trò chơi.";
 "banner.liveUpdates.title" = "Không có cập nhật trực tiếp";
 "banner.liveUpdates.detail.closed" = "Dịch vụ đã đóng kết nối. Thay vào đó, OpenJoystickDriver kiểm tra thay đổi của bộ điều khiển mỗi giây.";
-"banner.liveUpdates.detail.timeout" = "Dịch vụ không phản hồi kịp thời. Thay vào đó, OpenJoystickDriver kiểm tra thay đổi của bộ điều khiển mỗi giây.";
-"banner.liveUpdates.detail.other" = "Cập nhật trực tiếp từ dịch vụ không hoạt động. Thay vào đó, OpenJoystickDriver kiểm tra thay đổi của bộ điều khiển mỗi giây.";
+"banner.liveUpdates.detail.timeout" = "Dịch vụ không phản hồi kịp thời. Thay vào đó, OpenJoystickDriver kiểm tra thay đổi của bộ điều khiển định kỳ.";
+"banner.liveUpdates.detail.other" = "Cập nhật trực tiếp từ dịch vụ không hoạt động. Thay vào đó, OpenJoystickDriver kiểm tra thay đổi của bộ điều khiển định kỳ.";
 "cli.login.uninstall_action" = "Gỡ cài đặt";
 "console.all" = "Tất cả";
 "console.empty" = "Không có mục nhật ký.";

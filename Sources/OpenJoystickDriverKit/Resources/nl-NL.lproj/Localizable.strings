@@ -529,8 +529,8 @@
 "banner.access.detail" = "macOS heeft niet alles toegestaan wat OpenJoystickDriver nodig heeft om controllers uit te lezen en voor games beschikbaar te maken.";
 "banner.liveUpdates.title" = "Live-updates niet beschikbaar";
 "banner.liveUpdates.detail.closed" = "De service heeft de verbinding gesloten. OpenJoystickDriver controleert in plaats daarvan elke seconde op wijzigingen aan controllers.";
-"banner.liveUpdates.detail.timeout" = "De service heeft niet op tijd geantwoord. OpenJoystickDriver controleert in plaats daarvan elke seconde op wijzigingen aan controllers.";
-"banner.liveUpdates.detail.other" = "Live-updates van de service werken niet. OpenJoystickDriver controleert in plaats daarvan elke seconde op wijzigingen aan controllers.";
+"banner.liveUpdates.detail.timeout" = "De service heeft niet op tijd geantwoord. OpenJoystickDriver controleert in plaats daarvan regelmatig op wijzigingen aan controllers.";
+"banner.liveUpdates.detail.other" = "Live-updates van de service werken niet. OpenJoystickDriver controleert in plaats daarvan regelmatig op wijzigingen aan controllers.";
 "cli.login.uninstall_action" = "Verwijder installatie";
 "console.all" = "Alles";
 "console.empty" = "Geen logboekitems.";
