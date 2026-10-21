@@ -29,9 +29,7 @@ public struct OrderedJSONEncoder {
   /// A `Double` or `Float` that is not finite throws, as JSON cannot hold it. A value that writes
   /// nothing encodes to an empty object.
   public func encode(_ value: some Encodable) throws -> OrderedJSON {
-    let node = Node()
-    try value.encode(to: Writer(node: node, codingPath: []))
-    return node.resolved()
+    try OrderedJSONEncoder.node(value, at: []).resolved()
   }
 
   /// The value being built at one place of the document.
@@ -129,8 +127,34 @@ public struct OrderedJSONEncoder {
     at codingPath: [any CodingKey]
   ) throws -> Node {
     let node = Node()
-    try value.encode(to: Writer(node: node, codingPath: codingPath))
+    if let json = try foundationValue(value, at: codingPath) {
+      node.value = .leaf(json)
+    } else {
+      try value.encode(to: Writer(node: node, codingPath: codingPath))
+    }
     return node
+  }
+
+  /// The JSON that `JSONEncoder` writes for a `Data`, a `Decimal` or a `URL`, whose own
+  /// `encode(to:)` writes another shape: `Data` as base64 text, `Decimal` as a number and `URL` as
+  /// its text. Any other value is nil.
+  private static func foundationValue(
+    _ value: some Encodable,
+    at codingPath: [any CodingKey]
+  ) throws -> OrderedJSON? {
+    switch value {
+    case let data as Data: return .string(data.base64EncodedString())
+    case let url as URL: return .string(url.absoluteString)
+    case let decimal as Decimal:
+      guard decimal.isFinite else {
+        throw EncodingError.invalidValue(
+          decimal,
+          .init(codingPath: codingPath, debugDescription: "JSON cannot hold \(decimal)")
+        )
+      }
+      return .number(decimal.description)
+    default: return nil
+    }
   }
 
   private static func leaf(_ json: OrderedJSON) -> Node {
@@ -314,7 +338,7 @@ public struct OrderedJSONEncoder {
     func encode(_ value: UInt32) throws { set(OrderedJSONEncoder.number(value)) }
     func encode(_ value: UInt64) throws { set(OrderedJSONEncoder.number(value)) }
     func encode<Value: Encodable>(_ value: Value) throws {
-      try value.encode(to: Writer(node: node, codingPath: codingPath))
+      node.value = try OrderedJSONEncoder.node(value, at: codingPath).value
     }
   }
 }
