@@ -224,7 +224,7 @@
       alert.messageText = title
       alert.informativeText = message
       alert.addButton(withTitle: OJDLocalized.string("common.ok"))
-      alert.runModal()
+      alert.runActivatingApp()
     }
 
     private func confirmDisconnectWireless(_ device: ApplicationServiceDeviceDescription) {
@@ -236,8 +236,9 @@
         device.name
       )
       alert.addButton(withTitle: OJDLocalized.string("controllers.disconnectWirelessConfirm"))
+        .hasDestructiveAction = true
       alert.addButton(withTitle: OJDLocalized.string("common.cancel"))
-      guard alert.runModal() == .alertFirstButtonReturn else { return }
+      guard alert.runActivatingApp() == .alertFirstButtonReturn else { return }
       Task { @MainActor in await viewModel.disconnectWirelessController(device) }
     }
 

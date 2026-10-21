@@ -133,8 +133,9 @@
         device.name
       )
       alert.addButton(withTitle: OJDLocalized.string("controllers.disconnectWirelessConfirm"))
+        .hasDestructiveAction = true
       alert.addButton(withTitle: OJDLocalized.string("common.cancel"))
-      guard alert.runModal() == .alertFirstButtonReturn else { return }
+      guard alert.runActivatingApp() == .alertFirstButtonReturn else { return }
       runControllerAction(sessionToken) { device in
         await self.viewModel.disconnectWirelessController(device)
       }
@@ -156,7 +157,7 @@
         alert.informativeText = OJDLocalized.string("profiles.emptyActivationMessage")
         alert.addButton(withTitle: OJDLocalized.string("common.setActive"))
         alert.addButton(withTitle: OJDLocalized.string("common.cancel"))
-        return alert.runModal() == .alertFirstButtonReturn
+        return alert.runActivatingApp() == .alertFirstButtonReturn
       }
     }
 
@@ -183,7 +184,7 @@
       alert.messageText = OJDLocalized.string("menuBar.actionFailedTitle")
       alert.informativeText = message
       alert.addButton(withTitle: OJDLocalized.string("common.ok"))
-      alert.runModal()
+      alert.runActivatingApp()
     }
 
     func menuImage(symbol: String) -> NSImage? {

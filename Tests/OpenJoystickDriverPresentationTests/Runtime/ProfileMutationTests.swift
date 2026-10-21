@@ -72,6 +72,23 @@ struct ProfileMutationTests {
   }
 
   @Test
+  func aConfirmedActivationOfAnEmptyProfileReachesTheGatewayWithTheAllowance() async {
+    let profile = makeProfile(name: "Empty")
+    let gateway = GatewayStub(snapshotPayload: snapshot(profiles: [profile]))
+    let library = await MainActor.run {
+      ProfileLibraryModel(runtime: RuntimeViewModel(gateway: gateway))
+    }
+
+    _ = await library.activateRemappingProfile(
+      id: profile.id,
+      allowEmpty: true,
+      request: RuntimeMutationRequest(operation: .activate(profileID: profile.id))
+    )
+
+    #expect(await gateway.activationAllowEmpty == [true])
+  }
+
+  @Test
   func deleteCallsGatewayAndImmediatelyPublishesTheReturnedProfileList() async {
     let deleted = makeProfile(name: "Delete Me")
     let retained = makeProfile(name: "Keep Me")

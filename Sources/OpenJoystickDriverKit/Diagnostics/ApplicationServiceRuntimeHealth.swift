@@ -11,7 +11,7 @@ public enum RuntimeMemoryTrend: String, Codable, Sendable {
   case growthObserved
 }
 
-public enum RuntimeSoakVerdict: String, Codable, Sendable {
+public enum RuntimeSoakVerdict: String, Codable, CaseIterable, Sendable {
   case insufficientData
   case stable
   case memoryGrowthObserved
@@ -272,14 +272,23 @@ public enum RuntimeHealthSamplingError: LocalizedError, Sendable {
   case noSamples
 
   public var errorDescription: String? {
+    let localization = Localization()
     switch self {
     case .processUnavailable(let pid):
-      return "Could not read runtime information for application service process \(pid)."
+      return localization.formatted("cli.diagnose.soak.error.process_unavailable", arguments: [pid])
     case .invalidConfiguration:
-      return "Runtime sampling requires 1...86400 seconds and a 100...60000 ms interval."
+      return localization.formatted(
+        "cli.diagnose.soak.error.invalid_configuration",
+        arguments: [
+          ApplicationServiceRuntimeHealthSampler.secondsRange.lowerBound,
+          ApplicationServiceRuntimeHealthSampler.secondsRange.upperBound,
+          ApplicationServiceRuntimeHealthSampler.intervalMillisecondsRange.lowerBound,
+          ApplicationServiceRuntimeHealthSampler.intervalMillisecondsRange.upperBound,
+        ]
+      )
     case .tooManySamples(let count):
-      return "Runtime sampling would collect \(count) samples; increase the interval."
-    case .noSamples: return "No application service runtime samples were collected."
+      return localization.formatted("cli.diagnose.soak.error.too_many_samples", arguments: [count])
+    case .noSamples: return localization.string("cli.diagnose.soak.error.no_samples")
     }
   }
 }

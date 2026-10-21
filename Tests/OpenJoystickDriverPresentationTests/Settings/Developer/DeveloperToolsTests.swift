@@ -23,6 +23,34 @@ struct DeveloperToolsTests {
     #expect(model.loadState == .idle)
   }
 
+  @Test(.timeLimit(.minutes(1)))
+  @MainActor
+  func closingCancelsARunningSoakTest() async {
+    let probe = SoakSamplerProbe()
+    let model = DeveloperToolsViewModel(
+      gateway: GatewayStub(),
+      soakSource: SoakTestModel.Source(
+        snapshot: {
+          DiagnoseServiceSnapshot(
+            availability: .running,
+            status: nil,
+            virtualDiagnostics: nil,
+            frameTimings: nil
+          )
+        },
+        processIdentifier: { 4_242 },
+        sample: probe.sample
+      )
+    )
+
+    model.soakTest.start()
+    await probe.waitUntilSampling()
+    model.close()
+    await probe.waitUntilCancelled()
+
+    #expect(model.soakTest.state == .idle)
+  }
+
   @Test
   @MainActor
   func showingAdvancedWithDeveloperToolsOnLoadsTheDiagnostics() async throws {

@@ -71,11 +71,12 @@
 
     init(
       gateway: any ApplicationServiceGateway,
+      soakSource: SoakTestModel.Source? = nil,
       pollIntervalNanoseconds: UInt64 = 50_000_000,
       sleep: @escaping Sleep = { try await Task.sleep(nanoseconds: $0) }
     ) {
       self.gateway = gateway
-      soakTest = SoakTestModel(source: .service(gateway: gateway))
+      soakTest = SoakTestModel(source: soakSource ?? .service(gateway: gateway))
       self.pollIntervalNanoseconds = pollIntervalNanoseconds
       self.sleep = sleep
     }
@@ -168,9 +169,10 @@
       if !isCapturing { captureState = .idle }
     }
 
-    /// Stops capture and any running read. A read cancelled before it finished leaves `.idle`,
-    /// which means the diagnostics are not loaded.
+    /// Stops capture, any running read and a running soak test. A read cancelled before it
+    /// finished leaves `.idle`, which means the diagnostics are not loaded.
     func close() {
+      soakTest.cancel()
       captureState = .idle
       if loadState == .loading { loadState = .idle }
       replaceOperation { model, generation in

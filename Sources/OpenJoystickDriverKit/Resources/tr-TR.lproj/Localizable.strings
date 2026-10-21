@@ -428,8 +428,8 @@
 "developer.soakFootprintLimit" = "Bellek Ayak İzi Sınırı (MiB)";
 "developer.soakLimitHint" = "0 değeri sınırı kapatır.";
 "developer.soakStart" = "Testi Çalıştır";
-"developer.soakRunning" = "Servis Örnekleniyor…";
-"developer.soakNotANumber" = "%@: Tam sayı girin.";
+"developer.soakRunning" = "Servis örnekleniyor…";
+"developer.soakNotANumber" = "%@: tam sayı girin.";
 "developer.soakOutOfRange" = "%@: %lld ile %lld arasında bir değer girin.";
 "developer.soakTooManySamples" = "Bu çalıştırma %lld örnek gerektirir. Örnekleme aralığını artırın.";
 "inputTest.aButton" = "A Düğmesi";
@@ -766,7 +766,8 @@
 "profiles.physical.startPosition" = "Direnç Başlangıcı";
 "profiles.physical.strength" = "Direnç Gücü";
 
-"profiles.clearInputs" = "Tüm Girişleri Temizle";
+"profiles.clearInputs" = "Tüm Girişleri Temizle…";
+"profiles.clearInputsConfirm" = "Tümünü Temizle";
 "profiles.clearInputsMessage" = "Bu işlem, bu profildeki tüm atamaları ve giriş işlemeyi kaldırır.";
 "profiles.clearInputsTitle" = "Tüm girişler temizlensin mi?";
 "profiles.removeAllAssignments" = "Tüm Atamaları Kaldır…";
@@ -949,8 +950,18 @@
 "cli.diagnose.skip.service_failed" = "servis yanıt vermedi";
 "cli.diagnose.skip.service_stopped" = "servis çalışmıyor";
 "cli.diagnose.soak" = "Ayrıca servisin belleğini, dosya tanımlayıcılarını ve CPU kullanımını bu süre boyunca örnekler (1-86400).";
+"cli.diagnose.soak.error.invalid_configuration" = "Örnekleme %1$lld...%2$lld saniye süre ve %3$lld...%4$lld ms örnekleme aralığı gerektirir.";
+"cli.diagnose.soak.error.no_samples" = "Servis hiç çalışma zamanı örneği üretmedi.";
+"cli.diagnose.soak.error.process_unavailable" = "%d numaralı servis işleminin çalışma zamanı bilgileri okunamadı.";
+"cli.diagnose.soak.error.too_many_samples" = "Örnekleme %lld örnek gerektirir. Örnekleme aralığını artırın.";
 "cli.diagnose.soak.not_requested" = "istenmedi; --soak SECONDS kullanın";
 "cli.diagnose.soak.progress" = "Servisten %@ boyunca örnek alınıyor...";
+"cli.diagnose.soak.verdict.footprint_limit" = "Bellek ayak izi sınırı aşıldı: yerleşik boyut %1$.1f MiB, bellek ayak izi %2$.1f MiB, dosya tanımlayıcıları %3$lld, CPU %4$.1f%%, süre %5$.0f sn";
+"cli.diagnose.soak.verdict.insufficient_data" = "Yeterli veri yok: yerleşik boyut %1$.1f MiB, bellek ayak izi %2$.1f MiB, dosya tanımlayıcıları %3$lld, CPU %4$.1f%%, süre %5$.0f sn";
+"cli.diagnose.soak.verdict.memory_growth" = "Bellek artışı gözlendi: yerleşik boyut %1$.1f MiB, bellek ayak izi %2$.1f MiB, dosya tanımlayıcıları %3$lld, CPU %4$.1f%%, süre %5$.0f sn";
+"cli.diagnose.soak.verdict.resident_limit" = "Yerleşik boyut sınırı aşıldı: yerleşik boyut %1$.1f MiB, bellek ayak izi %2$.1f MiB, dosya tanımlayıcıları %3$lld, CPU %4$.1f%%, süre %5$.0f sn";
+"cli.diagnose.soak.verdict.resource_growth" = "Kaynak artışı gözlendi: yerleşik boyut %1$.1f MiB, bellek ayak izi %2$.1f MiB, dosya tanımlayıcıları %3$lld, CPU %4$.1f%%, süre %5$.0f sn";
+"cli.diagnose.soak.verdict.stable" = "Kararlı: yerleşik boyut %1$.1f MiB, bellek ayak izi %2$.1f MiB, dosya tanımlayıcıları %3$lld, CPU %4$.1f%%, süre %5$.0f sn";
 "cli.diagnose.soak_range" = "--soak 1 ile 86400 saniye arasında olmalıdır.";
 "cli.diagnose.usb.failed" = "USB taraması başarısız oldu: %@. OpenJoystickDriver’a Giriş İzleme izni verin.";
 "cli.diagnose.usb.ok" = "Görünen üreticiye özgü USB kontrolcüleri: %lld";

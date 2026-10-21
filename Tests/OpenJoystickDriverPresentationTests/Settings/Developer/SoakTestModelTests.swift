@@ -255,18 +255,67 @@ struct SoakTestModelTests {
     #expect(recorder.processIDs.isEmpty)
   }
 
-  @Test
-  func stoppingARunShowsTheEntryAgainWithoutAResult() async {
-    let model = Self.model { _, _ in
-      try await Task.sleep(nanoseconds: 60_000_000_000)
-      throw CancellationError()
-    }
+  @Test(.timeLimit(.minutes(1)))
+  func stoppingARunCancelsTheSamplerAndShowsTheEntryAgain() async {
+    let probe = SoakSamplerProbe()
+    let model = Self.model(sample: probe.sample)
 
     model.start()
+    await probe.waitUntilSampling()
     #expect(model.isRunning)
     model.cancel()
-    try? await Task.sleep(nanoseconds: 50_000_000)
+    await probe.waitUntilCancelled()
 
     #expect(model.state == .idle)
+  }
+
+  @Test
+  func stoppingWithoutARunLeavesAResultInPlace() async throws {
+    let summary = try Self.summary(residentBytes: 50 * 1_048_576)
+    let model = Self.model { _, _ in summary }
+    await finish(model)
+
+    model.cancel()
+
+    guard case .finished = model.state else {
+      Issue.record("Expected the result to stay")
+      return
+    }
+  }
+}
+
+/// A soak sampler that suspends until its task is cancelled, and reports when it started and when
+/// it saw the cancellation.
+final class SoakSamplerProbe: @unchecked Sendable {
+  private let sampling: AsyncStream<Void>
+  private let samplingContinuation: AsyncStream<Void>.Continuation
+  private let cancelled: AsyncStream<Void>
+  private let cancelledContinuation: AsyncStream<Void>.Continuation
+
+  init() {
+    (sampling, samplingContinuation) = AsyncStream.makeStream()
+    (cancelled, cancelledContinuation) = AsyncStream.makeStream()
+  }
+
+  var sample: @Sendable (Int32, SoakTestSettings) async throws -> RuntimeHealthSummary {
+    { [self] _, _ in
+      try await withTaskCancellationHandler {
+        samplingContinuation.yield()
+        try await Task.sleep(nanoseconds: UInt64.max / 2)
+        throw CancellationError()
+      } onCancel: {
+        cancelledContinuation.yield()
+      }
+    }
+  }
+
+  func waitUntilSampling() async {
+    var iterator = sampling.makeAsyncIterator()
+    _ = await iterator.next()
+  }
+
+  func waitUntilCancelled() async {
+    var iterator = cancelled.makeAsyncIterator()
+    _ = await iterator.next()
   }
 }

@@ -427,11 +427,11 @@
 "developer.soakResidentLimit" = "Limiet voor resident geheugen (MiB)";
 "developer.soakFootprintLimit" = "Limiet voor geheugenvoetafdruk (MiB)";
 "developer.soakLimitHint" = "Bij een limiet van 0 staat die uit.";
-"developer.soakStart" = "Voer test uit";
+"developer.soakStart" = "Start test";
 "developer.soakRunning" = "Service wordt gemeten…";
 "developer.soakNotANumber" = "%@: voer een geheel getal in.";
 "developer.soakOutOfRange" = "%@: voer een waarde tussen %lld en %lld in.";
-"developer.soakTooManySamples" = "Deze run zou %lld metingen vereisen. Verhoog het meetinterval.";
+"developer.soakTooManySamples" = "Deze meting zou %lld metingen vereisen. Verhoog het meetinterval.";
 "inputTest.aButton" = "Knop A";
 "inputTest.aCross" = "A / Kruis";
 "inputTest.additionalButtons" = "Extra knoppen";
@@ -766,9 +766,10 @@
 "profiles.physical.startPosition" = "Start van weerstand";
 "profiles.physical.strength" = "Weerstandssterkte";
 
-"profiles.clearInputs" = "Verwijder alle ingangen";
+"profiles.clearInputs" = "Verwijder alle invoer…";
+"profiles.clearInputsConfirm" = "Verwijder alles";
 "profiles.clearInputsMessage" = "Hierdoor worden alle opdrachten en invoerverwerking van dit profiel verwijderd.";
-"profiles.clearInputsTitle" = "Alle ingangen verwijderen?";
+"profiles.clearInputsTitle" = "Alle invoer verwijderen?";
 "profiles.removeAllAssignments" = "Verwijder alle toewijzingen…";
 "profiles.removeAllAssignmentsTitle" = "Alle toewijzingen verwijderen?";
 "profiles.removeAllAssignmentsMessage" = "Hierdoor worden alle toewijzingen, akkoorden, sequenties en lagen van dit profiel verwijderd. De instellingen voor sticks, triggers, aanraking en beweging blijven behouden.";
@@ -949,8 +950,18 @@
 "cli.diagnose.skip.service_failed" = "service antwoordde niet";
 "cli.diagnose.skip.service_stopped" = "service draait niet";
 "cli.diagnose.soak" = "Bemonstert ook zo lang het geheugen, de bestandsdescriptors en de CPU van de service (1-86400).";
+"cli.diagnose.soak.error.invalid_configuration" = "Meten vereist %1$lld...%2$lld seconden en een meetinterval van %3$lld...%4$lld ms.";
+"cli.diagnose.soak.error.no_samples" = "De service heeft geen runtimemetingen opgeleverd.";
+"cli.diagnose.soak.error.process_unavailable" = "De runtimegegevens van het serviceproces %d konden niet worden gelezen.";
+"cli.diagnose.soak.error.too_many_samples" = "Meten zou %lld metingen vereisen. Verhoog het meetinterval.";
 "cli.diagnose.soak.not_requested" = "niet gevraagd; gebruik --soak SECONDS";
 "cli.diagnose.soak.progress" = "De service wordt gedurende %@ bemonsterd...";
+"cli.diagnose.soak.verdict.footprint_limit" = "Limiet voor geheugenvoetafdruk overschreden: resident geheugen %1$.1f MiB, geheugenvoetafdruk %2$.1f MiB, bestandsbeschrijvers %3$lld, cpu %4$.1f%% gedurende %5$.0f s";
+"cli.diagnose.soak.verdict.insufficient_data" = "Onvoldoende gegevens: resident geheugen %1$.1f MiB, geheugenvoetafdruk %2$.1f MiB, bestandsbeschrijvers %3$lld, cpu %4$.1f%% gedurende %5$.0f s";
+"cli.diagnose.soak.verdict.memory_growth" = "Geheugengroei waargenomen: resident geheugen %1$.1f MiB, geheugenvoetafdruk %2$.1f MiB, bestandsbeschrijvers %3$lld, cpu %4$.1f%% gedurende %5$.0f s";
+"cli.diagnose.soak.verdict.resident_limit" = "Limiet voor resident geheugen overschreden: resident geheugen %1$.1f MiB, geheugenvoetafdruk %2$.1f MiB, bestandsbeschrijvers %3$lld, cpu %4$.1f%% gedurende %5$.0f s";
+"cli.diagnose.soak.verdict.resource_growth" = "Groei van middelen waargenomen: resident geheugen %1$.1f MiB, geheugenvoetafdruk %2$.1f MiB, bestandsbeschrijvers %3$lld, cpu %4$.1f%% gedurende %5$.0f s";
+"cli.diagnose.soak.verdict.stable" = "Stabiel: resident geheugen %1$.1f MiB, geheugenvoetafdruk %2$.1f MiB, bestandsbeschrijvers %3$lld, cpu %4$.1f%% gedurende %5$.0f s";
 "cli.diagnose.soak_range" = "--soak moet tussen 1 en 86400 seconden liggen.";
 "cli.diagnose.usb.failed" = "USB-scan mislukt: %@. Geef OpenJoystickDriver toegang tot ‘Invoermonitoring’.";
 "cli.diagnose.usb.ok" = "Zichtbare fabrikantspecifieke USB-controllers: %lld";

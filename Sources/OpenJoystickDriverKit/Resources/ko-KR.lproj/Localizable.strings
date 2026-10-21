@@ -766,7 +766,8 @@
 "profiles.physical.startPosition" = "저항 시작 위치";
 "profiles.physical.strength" = "저항 세기";
 
-"profiles.clearInputs" = "모든 입력 지우기";
+"profiles.clearInputs" = "모든 입력 지우기…";
+"profiles.clearInputsConfirm" = "모두 지우기";
 "profiles.clearInputsMessage" = "이 프로파일에서 모든 할당과 입력 처리가 제거됩니다.";
 "profiles.clearInputsTitle" = "모든 입력을 지울까요?";
 "profiles.removeAllAssignments" = "모든 할당 제거…";
@@ -949,8 +950,18 @@
 "cli.diagnose.skip.service_failed" = "서비스가 응답하지 않았습니다";
 "cli.diagnose.skip.service_stopped" = "서비스가 실행 중이 아닙니다";
 "cli.diagnose.soak" = "이 시간 동안 서비스의 메모리, 파일 디스크립터, CPU도 샘플링합니다 (1-86400).";
+"cli.diagnose.soak.error.invalid_configuration" = "샘플링에는 %1$lld...%2$lld초의 시간과 %3$lld...%4$lld ms의 샘플링 간격이 필요합니다.";
+"cli.diagnose.soak.error.no_samples" = "서비스에서 런타임 샘플을 수집하지 못했습니다.";
+"cli.diagnose.soak.error.process_unavailable" = "서비스 프로세스 %d의 런타임 정보를 읽을 수 없습니다.";
+"cli.diagnose.soak.error.too_many_samples" = "샘플링에서 샘플 %lld개가 필요합니다. 샘플링 간격을 늘리세요.";
 "cli.diagnose.soak.not_requested" = "요청되지 않음. --soak SECONDS를 사용하십시오";
 "cli.diagnose.soak.progress" = "서비스를 %@ 동안 샘플링하는 중...";
+"cli.diagnose.soak.verdict.footprint_limit" = "풋프린트 제한 초과: 상주 크기 %1$.1f MiB, 풋프린트 %2$.1f MiB, 파일 디스크립터 %3$lld, CPU %4$.1f%% (%5$.0f초 동안)";
+"cli.diagnose.soak.verdict.insufficient_data" = "데이터 부족: 상주 크기 %1$.1f MiB, 풋프린트 %2$.1f MiB, 파일 디스크립터 %3$lld, CPU %4$.1f%% (%5$.0f초 동안)";
+"cli.diagnose.soak.verdict.memory_growth" = "메모리 증가 감지됨: 상주 크기 %1$.1f MiB, 풋프린트 %2$.1f MiB, 파일 디스크립터 %3$lld, CPU %4$.1f%% (%5$.0f초 동안)";
+"cli.diagnose.soak.verdict.resident_limit" = "상주 크기 제한 초과: 상주 크기 %1$.1f MiB, 풋프린트 %2$.1f MiB, 파일 디스크립터 %3$lld, CPU %4$.1f%% (%5$.0f초 동안)";
+"cli.diagnose.soak.verdict.resource_growth" = "리소스 증가 감지됨: 상주 크기 %1$.1f MiB, 풋프린트 %2$.1f MiB, 파일 디스크립터 %3$lld, CPU %4$.1f%% (%5$.0f초 동안)";
+"cli.diagnose.soak.verdict.stable" = "안정: 상주 크기 %1$.1f MiB, 풋프린트 %2$.1f MiB, 파일 디스크립터 %3$lld, CPU %4$.1f%% (%5$.0f초 동안)";
 "cli.diagnose.soak_range" = "--soak은 1초에서 86400초 사이여야 합니다.";
 "cli.diagnose.usb.failed" = "USB 검색에 실패했습니다: %@. OpenJoystickDriver에 입력 모니터링을 허용하십시오.";
 "cli.diagnose.usb.ok" = "보이는 공급업체 전용 USB 컨트롤러: %lld개";

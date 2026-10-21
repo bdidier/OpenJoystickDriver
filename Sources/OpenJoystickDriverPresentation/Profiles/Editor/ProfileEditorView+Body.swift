@@ -196,7 +196,7 @@
               )
             ),
             primaryButton: .destructive(
-              Text(OJDLocalized.string("profiles.clearInputs"))
+              Text(OJDLocalized.string("profiles.clearInputsConfirm"))
             ) { clearInputs() },
             secondaryButton: .cancel { self.confirmation = nil }
           )

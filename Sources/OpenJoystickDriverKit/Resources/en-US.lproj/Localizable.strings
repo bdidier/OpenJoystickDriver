@@ -766,7 +766,8 @@
 "profiles.physical.startPosition" = "Resistance start";
 "profiles.physical.strength" = "Resistance strength";
 
-"profiles.clearInputs" = "Clear all inputs";
+"profiles.clearInputs" = "Clear All Inputs...";
+"profiles.clearInputsConfirm" = "Clear All";
 "profiles.clearInputsMessage" = "This removes all assignments and input processing from this profile.";
 "profiles.clearInputsTitle" = "Clear all inputs?";
 "profiles.removeAllAssignments" = "Remove All Assignments...";
@@ -776,7 +777,7 @@
 "profiles.emptyActivationMessage" = "This profile suppresses all controller input.";
 "profiles.emptyActivationTitle" = "Activate profile with no controller input?";
 "profiles.emptyInputWarning" = "This profile suppresses all controller input.";
-"profiles.restoreDefaultInput" = "Restore default input";
+"profiles.restoreDefaultInput" = "Restore Default Input";
 "common.reset" = "Reset";
 "profiles.useControllerDefaultColor" = "Use controller default";
 "profiles.damagedProfile" = "Damaged profile";
@@ -949,8 +950,18 @@
 "cli.diagnose.skip.service_failed" = "service did not answer";
 "cli.diagnose.skip.service_stopped" = "service not running";
 "cli.diagnose.soak" = "Also sample the service's memory, file descriptors, and CPU for this long (1-86400).";
+"cli.diagnose.soak.error.invalid_configuration" = "Runtime sampling needs %1$lld...%2$lld seconds and a sample interval of %3$lld...%4$lld ms.";
+"cli.diagnose.soak.error.no_samples" = "The service produced no runtime samples.";
+"cli.diagnose.soak.error.process_unavailable" = "Could not read runtime information for service process %d.";
+"cli.diagnose.soak.error.too_many_samples" = "Runtime sampling would take %lld samples. Raise the sample interval.";
 "cli.diagnose.soak.not_requested" = "not requested; use --soak SECONDS";
 "cli.diagnose.soak.progress" = "Sampling the service for %@...";
+"cli.diagnose.soak.verdict.footprint_limit" = "Footprint limit exceeded: resident size %1$.1f MiB, footprint %2$.1f MiB, file descriptors %3$lld, CPU %4$.1f%% over %5$.0f s";
+"cli.diagnose.soak.verdict.insufficient_data" = "Not enough data: resident size %1$.1f MiB, footprint %2$.1f MiB, file descriptors %3$lld, CPU %4$.1f%% over %5$.0f s";
+"cli.diagnose.soak.verdict.memory_growth" = "Memory growth observed: resident size %1$.1f MiB, footprint %2$.1f MiB, file descriptors %3$lld, CPU %4$.1f%% over %5$.0f s";
+"cli.diagnose.soak.verdict.resident_limit" = "Resident size limit exceeded: resident size %1$.1f MiB, footprint %2$.1f MiB, file descriptors %3$lld, CPU %4$.1f%% over %5$.0f s";
+"cli.diagnose.soak.verdict.resource_growth" = "Resource growth observed: resident size %1$.1f MiB, footprint %2$.1f MiB, file descriptors %3$lld, CPU %4$.1f%% over %5$.0f s";
+"cli.diagnose.soak.verdict.stable" = "Stable: resident size %1$.1f MiB, footprint %2$.1f MiB, file descriptors %3$lld, CPU %4$.1f%% over %5$.0f s";
 "cli.diagnose.soak_range" = "--soak must be between 1 and 86400 seconds.";
 "cli.diagnose.usb.failed" = "USB scan failed: %@. Grant Input Monitoring to OpenJoystickDriver.";
 "cli.diagnose.usb.ok" = "Vendor-specific USB controllers visible: %lld";

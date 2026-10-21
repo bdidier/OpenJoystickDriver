@@ -12,11 +12,7 @@
           OJDLocalized.string("profiles.virtualOutput"),
           selection: Binding(
             get: { policy.virtualGamepad },
-            set: { value in
-              onChange(
-                RemappingOutputPolicy(virtualGamepad: value, physicalInput: policy.physicalInput)
-              )
-            }
+            set: { value in onChange(Self.policy(selecting: value, from: policy)) }
           )
         ) {
           Text(OJDLocalized.string("profiles.virtualDisabled")).tag(
@@ -50,5 +46,19 @@
       }
     }
 
+    /// The policy after the virtual output changes. The exclusive toggle applies only while the
+    /// virtual output is disabled; with any other virtual output it is disabled and shows
+    /// exclusive input as on, because a virtual output always takes exclusive input. Any other
+    /// virtual output therefore returns the physical input to `ojd profile create`'s default,
+    /// shared, so an earlier choice that the toggle does not show is not kept.
+    static func policy(
+      selecting virtualGamepad: RemappingVirtualGamepadPolicy,
+      from policy: RemappingOutputPolicy
+    ) -> RemappingOutputPolicy {
+      RemappingOutputPolicy(
+        virtualGamepad: virtualGamepad,
+        physicalInput: virtualGamepad == .disabled ? policy.physicalInput : .shared
+      )
+    }
   }
 #endif

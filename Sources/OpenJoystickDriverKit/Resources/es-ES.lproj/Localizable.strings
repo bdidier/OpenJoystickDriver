@@ -766,9 +766,10 @@
 "profiles.physical.startPosition" = "Inicio de resistencia";
 "profiles.physical.strength" = "Fuerza de resistencia";
 
-"profiles.clearInputs" = "Eliminar todas las entradas";
+"profiles.clearInputs" = "Eliminar todas las entradas…";
+"profiles.clearInputsConfirm" = "Eliminar todo";
 "profiles.clearInputsMessage" = "Esto elimina todas las asignaciones y el procesamiento de entradas de este perfil.";
-"profiles.clearInputsTitle" = "¿Borrar todas las entradas?";
+"profiles.clearInputsTitle" = "¿Eliminar todas las entradas?";
 "profiles.removeAllAssignments" = "Quitar todas las asignaciones…";
 "profiles.removeAllAssignmentsTitle" = "¿Quitar todas las asignaciones?";
 "profiles.removeAllAssignmentsMessage" = "Esto quita de este perfil todas las asignaciones, acordes, secuencias y capas. Los ajustes de palancas, gatillos, táctil y movimiento se conservan.";
@@ -949,8 +950,18 @@
 "cli.diagnose.skip.service_failed" = "el servicio no respondió";
 "cli.diagnose.skip.service_stopped" = "el servicio no se está ejecutando";
 "cli.diagnose.soak" = "Muestrea también la memoria, los descriptores de archivo y la CPU del servicio durante este tiempo (1-86400).";
+"cli.diagnose.soak.error.invalid_configuration" = "El muestreo requiere %1$lld...%2$lld segundos y un intervalo de muestreo de %3$lld...%4$lld ms.";
+"cli.diagnose.soak.error.no_samples" = "El servicio no produjo muestras de tiempo de ejecución.";
+"cli.diagnose.soak.error.process_unavailable" = "No se pudo leer la información de tiempo de ejecución del proceso del servicio %d.";
+"cli.diagnose.soak.error.too_many_samples" = "El muestreo tomaría %lld muestras. Aumente el intervalo de muestreo.";
 "cli.diagnose.soak.not_requested" = "no solicitado; usa --soak SEGUNDOS";
 "cli.diagnose.soak.progress" = "Muestreando el servicio durante %@…";
+"cli.diagnose.soak.verdict.footprint_limit" = "Se superó el límite de huella de memoria: tamaño residente %1$.1f MiB, huella de memoria %2$.1f MiB, descriptores de archivo %3$lld, CPU %4$.1f %% durante %5$.0f s";
+"cli.diagnose.soak.verdict.insufficient_data" = "Datos insuficientes: tamaño residente %1$.1f MiB, huella de memoria %2$.1f MiB, descriptores de archivo %3$lld, CPU %4$.1f %% durante %5$.0f s";
+"cli.diagnose.soak.verdict.memory_growth" = "Crecimiento de memoria observado: tamaño residente %1$.1f MiB, huella de memoria %2$.1f MiB, descriptores de archivo %3$lld, CPU %4$.1f %% durante %5$.0f s";
+"cli.diagnose.soak.verdict.resident_limit" = "Se superó el límite de tamaño residente: tamaño residente %1$.1f MiB, huella de memoria %2$.1f MiB, descriptores de archivo %3$lld, CPU %4$.1f %% durante %5$.0f s";
+"cli.diagnose.soak.verdict.resource_growth" = "Crecimiento de recursos observado: tamaño residente %1$.1f MiB, huella de memoria %2$.1f MiB, descriptores de archivo %3$lld, CPU %4$.1f %% durante %5$.0f s";
+"cli.diagnose.soak.verdict.stable" = "Estable: tamaño residente %1$.1f MiB, huella de memoria %2$.1f MiB, descriptores de archivo %3$lld, CPU %4$.1f %% durante %5$.0f s";
 "cli.diagnose.soak_range" = "--soak debe estar entre 1 y 86400 segundos.";
 "cli.diagnose.usb.failed" = "Falló la búsqueda USB: %@. Concede Monitorización de entradas a OpenJoystickDriver.";
 "cli.diagnose.usb.ok" = "Controladores USB específicos de fabricante visibles: %lld";

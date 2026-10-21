@@ -766,7 +766,8 @@
 "profiles.physical.startPosition" = "Début de résistance";
 "profiles.physical.strength" = "Force de résistance";
 
-"profiles.clearInputs" = "Effacer toutes les entrées";
+"profiles.clearInputs" = "Effacer toutes les entrées…";
+"profiles.clearInputsConfirm" = "Tout effacer";
 "profiles.clearInputsMessage" = "Cela supprime toutes les affectations et le traitement des entrées de ce profil.";
 "profiles.clearInputsTitle" = "Effacer toutes les entrées ?";
 "profiles.removeAllAssignments" = "Retirer toutes les attributions…";
@@ -949,8 +950,18 @@
 "cli.diagnose.skip.service_failed" = "le service n’a pas répondu";
 "cli.diagnose.skip.service_stopped" = "service arrêté";
 "cli.diagnose.soak" = "Échantillonne aussi la mémoire, les descripteurs de fichier et le CPU du service pendant cette durée (1-86400).";
+"cli.diagnose.soak.error.invalid_configuration" = "L’échantillonnage requiert %1$lld...%2$lld secondes et un intervalle d’échantillonnage de %3$lld...%4$lld ms.";
+"cli.diagnose.soak.error.no_samples" = "Le service n’a produit aucun échantillon d’exécution.";
+"cli.diagnose.soak.error.process_unavailable" = "Impossible de lire les informations d’exécution du processus du service %d.";
+"cli.diagnose.soak.error.too_many_samples" = "L’échantillonnage prélèverait %lld échantillons. Augmentez l’intervalle d’échantillonnage.";
 "cli.diagnose.soak.not_requested" = "non demandé ; utilisez --soak SECONDS";
 "cli.diagnose.soak.progress" = "Échantillonnage du service pendant %@…";
+"cli.diagnose.soak.verdict.footprint_limit" = "Limite d’empreinte mémoire dépassée : taille résidente %1$.1f MiB, empreinte mémoire %2$.1f MiB, descripteurs de fichier %3$lld, processeur %4$.1f %% sur %5$.0f s";
+"cli.diagnose.soak.verdict.insufficient_data" = "Données insuffisantes : taille résidente %1$.1f MiB, empreinte mémoire %2$.1f MiB, descripteurs de fichier %3$lld, processeur %4$.1f %% sur %5$.0f s";
+"cli.diagnose.soak.verdict.memory_growth" = "Croissance de la mémoire observée : taille résidente %1$.1f MiB, empreinte mémoire %2$.1f MiB, descripteurs de fichier %3$lld, processeur %4$.1f %% sur %5$.0f s";
+"cli.diagnose.soak.verdict.resident_limit" = "Limite de taille résidente dépassée : taille résidente %1$.1f MiB, empreinte mémoire %2$.1f MiB, descripteurs de fichier %3$lld, processeur %4$.1f %% sur %5$.0f s";
+"cli.diagnose.soak.verdict.resource_growth" = "Croissance des ressources observée : taille résidente %1$.1f MiB, empreinte mémoire %2$.1f MiB, descripteurs de fichier %3$lld, processeur %4$.1f %% sur %5$.0f s";
+"cli.diagnose.soak.verdict.stable" = "Stable : taille résidente %1$.1f MiB, empreinte mémoire %2$.1f MiB, descripteurs de fichier %3$lld, processeur %4$.1f %% sur %5$.0f s";
 "cli.diagnose.soak_range" = "--soak doit être compris entre 1 et 86400 secondes.";
 "cli.diagnose.usb.failed" = "L’analyse USB a échoué : %@. Accordez la surveillance des entrées à OpenJoystickDriver.";
 "cli.diagnose.usb.ok" = "Contrôleurs USB propriétaires visibles : %lld";

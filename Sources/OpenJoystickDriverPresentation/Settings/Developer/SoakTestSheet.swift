@@ -44,6 +44,13 @@
       }.padding(20).frame(width: 440)
     }
 
+    /// Closes the sheet after a result; Done and Escape both end here.
+    private func dismissFinishedResult() {
+      guard case .finished = model.state else { return }
+      model.reset()
+      presentationMode.wrappedValue.dismiss()
+    }
+
     @ViewBuilder
     private var content: some View {
       switch model.state {
@@ -99,16 +106,24 @@
       switch model.state {
       case .idle:
         Button(OJDLocalized.string("common.cancel")) { presentationMode.wrappedValue.dismiss() }
+          .keyboardShortcut(.cancelAction)
         Button(OJDLocalized.string("developer.soakStart")) { model.start() }
           .keyboardShortcut(.defaultAction).disabled(model.problem != nil)
       case .running:
         Button(OJDLocalized.string("common.stop")) { model.cancel() }
+          .keyboardShortcut(.cancelAction)
       case .finished:
-        Button(OJDLocalized.string("developer.soakStart")) { model.reset() }
-        Button(OJDLocalized.string("common.done")) {
+        Button(OJDLocalized.string("developer.soakStart")) {
           model.reset()
-          presentationMode.wrappedValue.dismiss()
-        }.keyboardShortcut(.defaultAction)
+          model.start()
+        }
+        Button(OJDLocalized.string("common.done")) { dismissFinishedResult() }
+          .keyboardShortcut(.defaultAction)
+        // Escape works without a focused control; the button is for the shortcut only.
+        Button("") { dismissFinishedResult() }.keyboardShortcut(.cancelAction).frame(
+          width: 0,
+          height: 0
+        ).opacity(0).accessibilityHidden(true)
       }
     }
   }

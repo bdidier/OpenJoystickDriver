@@ -58,9 +58,9 @@
     var menuActions: [ProfileEditorMenuAction] {
       var actions: [ProfileEditorMenuAction] = []
       if draft.profile.suppressesAllControllerInput { actions.append(.restoreDefaultInput) }
-      let profile = draft.profile
-      if !(profile.bindings.isEmpty && profile.chords.isEmpty && profile.sequences.isEmpty
-        && profile.layers.isEmpty)
+      let draftProfile = draft.profile
+      if !(draftProfile.bindings.isEmpty && draftProfile.chords.isEmpty
+        && draftProfile.sequences.isEmpty && draftProfile.layers.isEmpty)
       {
         actions.append(.removeAllAssignments)
       }

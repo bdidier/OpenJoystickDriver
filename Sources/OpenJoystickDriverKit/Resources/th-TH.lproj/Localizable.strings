@@ -425,7 +425,7 @@
 "developer.soakDuration" = "ระยะเวลา (วินาที)";
 "developer.soakInterval" = "ช่วงห่างการสุ่มตัวอย่าง (ms)";
 "developer.soakResidentLimit" = "ขีดจำกัดขนาดที่อยู่ในหน่วยความจำ (MiB)";
-"developer.soakFootprintLimit" = "ขีดจำกัดการใช้หน่วยความจำจริง (MiB)";
+"developer.soakFootprintLimit" = "ขีดจำกัดฟุตพริ้นต์ (MiB)";
 "developer.soakLimitHint" = "ขีดจำกัด 0 หมายถึงปิด";
 "developer.soakStart" = "เรียกใช้การทดสอบ";
 "developer.soakRunning" = "กำลังสุ่มตัวอย่างบริการ…";
@@ -766,7 +766,8 @@
 "profiles.physical.startPosition" = "จุดเริ่มแรงต้าน";
 "profiles.physical.strength" = "ความแรงของแรงต้าน";
 
-"profiles.clearInputs" = "ล้างอินพุตทั้งหมด";
+"profiles.clearInputs" = "ล้างอินพุตทั้งหมด…";
+"profiles.clearInputsConfirm" = "ล้างทั้งหมด";
 "profiles.clearInputsMessage" = "การดำเนินการนี้จะเอาการกำหนดและการประมวลผลอินพุตทั้งหมดออกจากโปรไฟล์นี้";
 "profiles.clearInputsTitle" = "ล้างอินพุตทั้งหมดหรือไม่";
 "profiles.removeAllAssignments" = "เอาการกำหนดทั้งหมดออก…";
@@ -823,7 +824,7 @@
 "cli.option.quiet" = "ไม่พิมพ์ข้อความสำเร็จไปยัง stderr";
 "cli.option.timeout" = "จำนวนวินาทีที่รอแต่ละคำขอของบริการ (ค่าเริ่มต้น: %g) หรือรอให้คำสั่ง “service”, “virtual set” และ “virtual reset” เสร็จสิ้น (ค่าเริ่มต้น: %g)";
 "cli.root.abstract" = "กำหนดค่าและตรวจสอบ OpenJoystickDriver ไดรเวอร์เกมแพดสำหรับ macOS";
-"cli.root.discussion" = "เริ่มที่นี่:\n  ojd status             ตรวจสอบบริการ ส่วนขยาย และสิทธิ์\n  ojd diagnose           รันการตรวจสอบทั้งหมดและรายงานสิ่งที่ผิดปกติ\n  ojd controller list    แสดงรายการคอนโทรลเลอร์ที่เชื่อมต่อ\n\nตัวอย่าง:\n  # พิมพ์อินพุตของคอนโทรลเลอร์หนึ่งตัวเมื่อมีการเปลี่ยนแปลง\n  ojd controller watch 045E:028E\n  # แสดงรายการคอนโทรลเลอร์ที่เชื่อมต่อเป็น JSON\n  ojd --json controller list\n\nสภาพแวดล้อม (แฟล็กมีผลเหนือตัวแปร):\n  OJD_NO_INPUT=1         เหมือน --no-input\n  OJD_TIMEOUT=SECONDS    เหมือน --timeout\n  OJD_COLOR=WHEN         auto, always (มีสีแม้นอกเทอร์มินัล) หรือ never\n\nการเติมคำสั่งอัตโนมัติของเชลล์:\n  ojd --generate-completion-script zsh|bash|fish\n\nรหัสออก:\n  0    สำเร็จ\n  1    คำสั่งล้มเหลว\n  64   ข้อผิดพลาดการใช้งาน\n  69   บริการไม่ได้ทำงานอยู่ เริ่มด้วย “ojd service start”\n  77   ไม่มีสิทธิ์ของ macOS\n  127  บิลด์จากรีพอสิทอรีส่งคำสั่งต่อไปยังแอปที่ติดตั้งไว้ไม่ได้\n  130  ถูกขัดจังหวะ";
+"cli.root.discussion" = "เริ่มที่นี่:\n  ojd status             ตรวจสอบบริการ ส่วนขยาย และสิทธิ์\n  ojd diagnose           เรียกใช้การตรวจสอบทั้งหมดและรายงานสิ่งที่ผิดปกติ\n  ojd controller list    แสดงรายการคอนโทรลเลอร์ที่เชื่อมต่อ\n\nตัวอย่าง:\n  # พิมพ์อินพุตของคอนโทรลเลอร์หนึ่งตัวเมื่อมีการเปลี่ยนแปลง\n  ojd controller watch 045E:028E\n  # แสดงรายการคอนโทรลเลอร์ที่เชื่อมต่อเป็น JSON\n  ojd --json controller list\n\nสภาพแวดล้อม (แฟล็กมีผลเหนือตัวแปร):\n  OJD_NO_INPUT=1         เหมือน --no-input\n  OJD_TIMEOUT=SECONDS    เหมือน --timeout\n  OJD_COLOR=WHEN         auto, always (มีสีแม้นอกเทอร์มินัล) หรือ never\n\nการเติมคำสั่งอัตโนมัติของเชลล์:\n  ojd --generate-completion-script zsh|bash|fish\n\nรหัสออก:\n  0    สำเร็จ\n  1    คำสั่งล้มเหลว\n  64   ข้อผิดพลาดการใช้งาน\n  69   บริการไม่ได้ทำงานอยู่ เริ่มด้วย “ojd service start”\n  77   ไม่มีสิทธิ์ของ macOS\n  127  บิลด์จากรีพอสิทอรีส่งคำสั่งต่อไปยังแอปที่ติดตั้งไว้ไม่ได้\n  130  ถูกขัดจังหวะ";
 "cli.help.global_options" = "ทุกคำสั่งรับตัวเลือกส่วนกลางด้วย “ojd --help” จะแสดงรายการตัวเลือกเหล่านั้น";
 "cli.error.env_timeout" = "OJD_TIMEOUT ต้องเป็นจำนวนวินาทีที่มากกว่า 0";
 "cli.error.env_color" = "OJD_COLOR ต้องเป็น auto, always หรือ never";
@@ -874,7 +875,7 @@
 "cli.access.enable.success" = "เอนด์พอยต์รับฟังที่ %@";
 "cli.access.grant.abstract" = "อนุญาตให้โปรแกรมที่ลงนามหรือโทเค็นใหม่ใช้เอนด์พอยต์";
 "cli.access.grant.ad_hoc" = "%@ ลงนามแบบ ad-hoc หรือไม่ได้ลงนาม โปรแกรมภายในเครื่องใดๆ จึงอ้างลายเซ็นของมันได้ ลงนามด้วยใบรับรอง Developer ID หรือ Apple Development แล้วจึงให้สิทธิ์";
-"cli.access.grant.platform_warning" = "Apple ลงนามโปรแกรมนี้ หากโปรแกรมรันสคริปต์ เช่น python3 หรือ osascript สคริปต์ทุกตัวที่รันจะได้รับสิทธิ์นี้";
+"cli.access.grant.platform_warning" = "Apple ลงนามโปรแกรมนี้ หากโปรแกรมเรียกใช้สคริปต์ เช่น python3 หรือ osascript สคริปต์ทุกตัวที่เรียกใช้จะได้รับสิทธิ์นี้";
 "cli.access.grant.client_or_token" = "ระบุ CLIENT หรือ --token NAME อย่างใดอย่างหนึ่ง";
 "cli.access.grant.confirm" = "อนุญาตให้ %@ ที่ลงนามโดย %@ ใช้เอนด์พอยต์ด้วย %@ หรือไม่";
 "cli.access.grant.control_warning" = "ขอบเขต control ให้โปรแกรมกดปุ่มบนเกมแพดเสมือนได้ ซึ่งเกมและแอพจะถือเป็นอินพุตของคุณ";
@@ -948,9 +949,19 @@
 "cli.diagnose.service.stopped" = "ไม่ได้ทำงานอยู่ เริ่มด้วย “ojd service start”";
 "cli.diagnose.skip.service_failed" = "บริการไม่ตอบสนอง";
 "cli.diagnose.skip.service_stopped" = "บริการไม่ได้ทำงานอยู่";
-"cli.diagnose.soak" = "สุ่มตัวอย่างหน่วยความจำ ตัวอธิบายไฟล์ และ CPU ของบริการตามระยะเวลานี้ด้วย (1-86400)";
+"cli.diagnose.soak" = "สุ่มตัวอย่างหน่วยความจำ ตัวบอกไฟล์ และ CPU ของบริการตามระยะเวลานี้ด้วย (1-86400)";
+"cli.diagnose.soak.error.invalid_configuration" = "การสุ่มตัวอย่างต้องใช้เวลา %1$lld...%2$lld วินาที และช่วงห่างการสุ่มตัวอย่าง %3$lld...%4$lld ms";
+"cli.diagnose.soak.error.no_samples" = "บริการไม่ได้สร้างตัวอย่างรันไทม์ใดเลย";
+"cli.diagnose.soak.error.process_unavailable" = "อ่านข้อมูลรันไทม์ของกระบวนการบริการ %d ไม่ได้";
+"cli.diagnose.soak.error.too_many_samples" = "การสุ่มตัวอย่างจะต้องใช้ %lld ตัวอย่าง เพิ่มช่วงห่างการสุ่มตัวอย่าง";
 "cli.diagnose.soak.not_requested" = "ไม่ได้ขอ ใช้ --soak SECONDS";
 "cli.diagnose.soak.progress" = "กำลังสุ่มตัวอย่างบริการเป็นเวลา %@…";
+"cli.diagnose.soak.verdict.footprint_limit" = "เกินขีดจำกัดฟุตพริ้นต์: ขนาดที่อยู่ในหน่วยความจำ %1$.1f MiB, ฟุตพริ้นต์ %2$.1f MiB, ตัวบอกไฟล์ %3$lld, CPU %4$.1f%% ใน %5$.0f วินาที";
+"cli.diagnose.soak.verdict.insufficient_data" = "ข้อมูลไม่เพียงพอ: ขนาดที่อยู่ในหน่วยความจำ %1$.1f MiB, ฟุตพริ้นต์ %2$.1f MiB, ตัวบอกไฟล์ %3$lld, CPU %4$.1f%% ใน %5$.0f วินาที";
+"cli.diagnose.soak.verdict.memory_growth" = "ตรวจพบการใช้หน่วยความจำเพิ่มขึ้น: ขนาดที่อยู่ในหน่วยความจำ %1$.1f MiB, ฟุตพริ้นต์ %2$.1f MiB, ตัวบอกไฟล์ %3$lld, CPU %4$.1f%% ใน %5$.0f วินาที";
+"cli.diagnose.soak.verdict.resident_limit" = "เกินขีดจำกัดขนาดที่อยู่ในหน่วยความจำ: ขนาดที่อยู่ในหน่วยความจำ %1$.1f MiB, ฟุตพริ้นต์ %2$.1f MiB, ตัวบอกไฟล์ %3$lld, CPU %4$.1f%% ใน %5$.0f วินาที";
+"cli.diagnose.soak.verdict.resource_growth" = "ตรวจพบการใช้ทรัพยากรเพิ่มขึ้น: ขนาดที่อยู่ในหน่วยความจำ %1$.1f MiB, ฟุตพริ้นต์ %2$.1f MiB, ตัวบอกไฟล์ %3$lld, CPU %4$.1f%% ใน %5$.0f วินาที";
+"cli.diagnose.soak.verdict.stable" = "เสถียร: ขนาดที่อยู่ในหน่วยความจำ %1$.1f MiB, ฟุตพริ้นต์ %2$.1f MiB, ตัวบอกไฟล์ %3$lld, CPU %4$.1f%% ใน %5$.0f วินาที";
 "cli.diagnose.soak_range" = "--soak ต้องอยู่ระหว่าง 1 ถึง 86400 วินาที";
 "cli.diagnose.usb.failed" = "การสแกน USB ล้มเหลว: %@ ให้สิทธิ์การตรวจสอบสัญญาณเข้าแก่ OpenJoystickDriver";
 "cli.diagnose.usb.ok" = "คอนโทรลเลอร์ USB เฉพาะผู้จำหน่ายที่มองเห็น: %lld";
@@ -1304,7 +1315,7 @@
 "cli.record.test.parse_failed" = "ตัวแยกวิเคราะห์ของ %@ ปฏิเสธแพ็กเก็ตที่ได้รับลำดับที่ %lld ของ %@";
 "error.E2022" = "สถานะที่ตัวแยกวิเคราะห์ของระเบียนสร้างจากรายงานที่บันทึกไว้ต่างจากสถานะที่คาดไว้ ให้อ่านช่องที่คำสั่งแสดง";
 "error.E2023" = "คอนโทรลเลอร์นี้ไม่สามารถรับมาดูแลหรือคืนได้ เพราะตระกูลโปรโตคอลใช้ USB แบบดิบ หรือ macOS ไม่ดูแลแบบเนทีฟ ข้อความจะระบุเหตุผล";
-"error.E2024" = "ไม่มีไคลเอนต์หรือโทเค็นของ endpoint ที่มี ID นี้ รัน ojd access เพื่อดูรายการ ID แล้วใช้ ID ใดก็ได้";
+"error.E2024" = "ไม่มีไคลเอนต์หรือโทเค็นของ endpoint ที่มี ID นี้ เรียกใช้ ojd access เพื่อดูรายการ ID แล้วใช้ ID ใดก็ได้";
 "error.E2025" = "ไม่สามารถให้สิทธิ์แก่ไคลเอนต์ที่มีลายเซ็นชนิดนี้ได้ เพราะโปรแกรมในเครื่องใดก็อ้างลายเซ็นนั้นได้";
 "error.E2026" = "เลือกขอบเขตที่จะให้อย่างน้อยหนึ่งรายการ";
 "error.E2027" = "บริการกำลังหยุด เริ่มบริการ แล้วลองอีกครั้ง";
