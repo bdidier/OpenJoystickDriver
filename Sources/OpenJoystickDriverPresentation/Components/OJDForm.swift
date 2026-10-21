@@ -41,7 +41,7 @@
     }
   }
 
-  /// A label and its value as one form row. A missing value shows the hyphen of ``OJDValue``.
+  /// A label and its value as one form row. A missing value shows the "None" of ``OJDValue``.
   struct OJDLabeledValue: View {
     let label: String
     let value: OJDValue

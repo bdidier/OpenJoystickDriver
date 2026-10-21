@@ -16,7 +16,7 @@ struct SerialNumberVisibility: Equatable {
     let value: OJDValue
     let isRevealed: Bool
 
-    /// A missing serial number has nothing to hide, so it shows the hyphen and no eye button.
+    /// A missing serial number has nothing to hide, so it shows "None" and no eye button.
     var canToggle: Bool { value != .none }
 
     var isObscured: Bool { canToggle && !isRevealed }

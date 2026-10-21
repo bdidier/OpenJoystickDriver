@@ -2,13 +2,12 @@ import Foundation
 import OpenJoystickDriverKit
 
 /// How a value field shows a value. A field that applies to the controller but has no value
-/// (unknown, missing or not applicable) shows a single hyphen; VoiceOver reads a localized word
-/// for it. A field that can never apply to the controller is hidden by its screen instead.
+/// (unknown, missing or not applicable) shows the localized word "None"; VoiceOver reads a
+/// localized "No value" for it. A field that can never apply to the controller is hidden by its
+/// screen instead.
 enum OJDValue: Equatable, Sendable {
   case text(String)
   case none
-
-  static let hyphen = "-"
 
   /// The value, or ``none`` when it is nil or empty.
   init(_ value: String?) {
@@ -24,7 +23,7 @@ enum OJDValue: Equatable, Sendable {
   var displayText: String {
     switch self {
     case .text(let value): return value
-    case .none: return Self.hyphen
+    case .none: return OJDLocalized.string("common.none")
     }
   }
 
@@ -53,8 +52,8 @@ extension OJDValue {
       ? .none : .text(String(format: "%04X:%04X", vendorID, productID))
   }
 
-  /// The value for a sentence that VoiceOver or a sentence template reads: the localized word
-  /// for a missing value instead of the hyphen.
+  /// The value for a sentence that VoiceOver or a sentence template reads: the spoken
+  /// word for a missing value.
   var spokenText: String {
     switch self {
     case .text(let value): return value

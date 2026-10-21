@@ -108,8 +108,8 @@ struct MainWindowProblemTests {
 
   @Test
   func anEmptyOrMissingValueShowsAHyphen() {
-    #expect(OJDValue(nil).displayText == "-")
-    #expect(OJDValue("").displayText == "-")
+    #expect(OJDValue(nil).displayText == OJDLocalized.string("common.none"))
+    #expect(OJDValue("").displayText == OJDLocalized.string("common.none"))
     #expect(OJDValue(nil).accessibilityKey == "a11y.value.none")
     #expect(OJDValue("Xbox One").displayText == "Xbox One")
     #expect(OJDValue("Xbox One").accessibilityKey == nil)
@@ -158,6 +158,6 @@ struct MainWindowProblemTests {
     let presentation = SerialNumberVisibility().presentation(of: .none)
     #expect(!presentation.canToggle)
     #expect(!presentation.isObscured)
-    #expect(presentation.displayText == "-")
+    #expect(presentation.displayText == OJDLocalized.string("common.none"))
   }
 }
