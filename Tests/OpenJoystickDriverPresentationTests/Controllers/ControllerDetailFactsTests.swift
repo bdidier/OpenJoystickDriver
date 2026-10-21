@@ -222,6 +222,15 @@ struct ControllerDetailFactsTests {
   }
 
   @Test
+  func closingAWirelessLinkAsksForConfirmationNamingTheController() {
+    let confirmation = WirelessDisconnectConfirmation(controllerName: "Pad A")
+    #expect(confirmation.title != "controllers.disconnectWirelessConfirmTitle")
+    #expect(confirmation.message.contains("Pad A"))
+    #expect(confirmation.confirmTitle != "controllers.disconnectWirelessConfirm")
+    #expect(!confirmation.confirmTitle.isEmpty)
+  }
+
+  @Test
   func everyWirelessDisconnectFailureHasLocalizedText() {
     for failure in [
       WirelessControllerDisconnectFailure.notFound, .notBluetooth, .bluetoothLEUnsupported,

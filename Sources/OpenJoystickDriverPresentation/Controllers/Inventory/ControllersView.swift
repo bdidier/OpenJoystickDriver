@@ -137,13 +137,13 @@
     }
 
     private var wirelessDisconnectAlert: Alert {
-      let name = wirelessDisconnectCandidate?.name ?? ""
+      let confirmation = WirelessDisconnectConfirmation(
+        controllerName: wirelessDisconnectCandidate?.name ?? ""
+      )
       return Alert(
-        title: Text(OJDLocalized.string("controllers.disconnectWirelessConfirmTitle")),
-        message: Text(OJDLocalized.formatted("controllers.disconnectWirelessConfirmMessage", name)),
-        primaryButton: .destructive(
-          Text(OJDLocalized.string("controllers.disconnectWirelessConfirm"))
-        ) {
+        title: Text(confirmation.title),
+        message: Text(confirmation.message),
+        primaryButton: .destructive(Text(confirmation.confirmTitle)) {
           guard let device = wirelessDisconnectCandidate else { return }
           Task { @MainActor in await viewModel.disconnectWirelessController(device) }
         },

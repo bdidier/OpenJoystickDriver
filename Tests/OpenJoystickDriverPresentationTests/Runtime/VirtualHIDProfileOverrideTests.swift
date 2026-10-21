@@ -341,10 +341,7 @@ struct VirtualHIDProfileOverrideTests {
       protocolBinding: ProtocolBindingID(.sonySixaxis, variant: .usb),
       ownership: .systemGamepad
     )
-    pad.publication = ApplicationServicePublicationStatus(
-      state: .published,
-      target: .sdlCompatible
-    )
+    pad.publication = ApplicationServicePublicationStatus.published(target: .sdlCompatible)
 
     #expect(pad.publishedVirtualProfile == nil)
     #expect(!pad.presentedIdentity.publishesVirtualDevice)
