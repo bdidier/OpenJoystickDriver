@@ -71,11 +71,10 @@
 "settings.updateChecking" = "Checking...";
 "settings.updates" = "Updates";
 "settings.viewUpdate" = "View Update";
-"controllers.refreshAccessibility" = "Refresh controllers";
 "controllers.unavailable" = "Controllers unavailable";
 "controllers.loadError" = "Could not load controllers";
 "controllers.emptyTitle" = "No controller connected";
-"controllers.emptyMessage" = "Connect a controller, then choose Refresh.";
+"controllers.emptyMessage" = "Connect a controller.";
 "controllers.battery" = "Battery";
 "controllers.serial.show" = "Show serial number";
 "controllers.serial.hide" = "Hide serial number";

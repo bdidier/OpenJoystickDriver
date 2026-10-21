@@ -69,11 +69,10 @@
 "settings.updateChecking" = "Memeriksa…";
 "settings.updates" = "Pembaruan";
 "settings.viewUpdate" = "Lihat Pembaruan";
-"controllers.refreshAccessibility" = "Segarkan pengontrol";
 "controllers.unavailable" = "Pengontrol tidak tersedia";
 "controllers.loadError" = "Tidak dapat memuat pengontrol";
 "controllers.emptyTitle" = "Tidak ada pengontrol yang terhubung";
-"controllers.emptyMessage" = "Hubungkan pengontrol, lalu pilih Segarkan.";
+"controllers.emptyMessage" = "Hubungkan pengontrol.";
 "controllers.battery" = "Baterai";
 "controllers.serial.show" = "Tampilkan nomor seri";
 "controllers.serial.hide" = "Sembunyikan nomor seri";

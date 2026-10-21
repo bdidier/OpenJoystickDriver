@@ -69,11 +69,10 @@
 "settings.updateChecking" = "กำลังตรวจสอบ…";
 "settings.updates" = "รายการอัพเดท";
 "settings.viewUpdate" = "ดูรายการอัพเดท";
-"controllers.refreshAccessibility" = "ดึงข้อมูลคอนโทรลเลอร์ใหม่";
 "controllers.unavailable" = "คอนโทรลเลอร์ไม่พร้อมใช้งาน";
 "controllers.loadError" = "ไม่สามารถโหลดคอนโทรลเลอร์ได้";
 "controllers.emptyTitle" = "ไม่มีคอนโทรลเลอร์ที่เชื่อมต่อ";
-"controllers.emptyMessage" = "เชื่อมต่อคอนโทรลเลอร์ แล้วเลือกดึงข้อมูลใหม่";
+"controllers.emptyMessage" = "เชื่อมต่อคอนโทรลเลอร์";
 "controllers.battery" = "แบตเตอรี่";
 "controllers.serial.show" = "แสดงเลขประจำเครื่อง";
 "controllers.serial.hide" = "ซ่อนเลขประจำเครื่อง";

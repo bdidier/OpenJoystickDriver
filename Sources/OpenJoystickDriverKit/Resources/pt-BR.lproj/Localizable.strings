@@ -69,11 +69,10 @@
 "settings.updateChecking" = "Verificando…";
 "settings.updates" = "Atualizações";
 "settings.viewUpdate" = "Ver Atualização";
-"controllers.refreshAccessibility" = "Atualizar Controles";
 "controllers.unavailable" = "Controles Indisponíveis";
 "controllers.loadError" = "Não foi possível carregar os controles";
 "controllers.emptyTitle" = "Nenhum Controle Conectado";
-"controllers.emptyMessage" = "Conecte um controle e depois escolha Atualizar.";
+"controllers.emptyMessage" = "Conecte um controle.";
 "controllers.battery" = "Bateria";
 "controllers.serial.show" = "Mostrar número de série";
 "controllers.serial.hide" = "Ocultar número de série";

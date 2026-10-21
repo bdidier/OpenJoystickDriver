@@ -69,11 +69,10 @@
 "settings.updateChecking" = "Buscando…";
 "settings.updates" = "Actualizaciones";
 "settings.viewUpdate" = "Ver actualización";
-"controllers.refreshAccessibility" = "Actualizar mandos";
 "controllers.unavailable" = "Mandos no disponibles";
 "controllers.loadError" = "No se han podido cargar los mandos";
 "controllers.emptyTitle" = "Ningún mando conectado";
-"controllers.emptyMessage" = "Conecta un mando y, a continuación, elige Actualizar.";
+"controllers.emptyMessage" = "Conecta un mando.";
 "controllers.battery" = "Batería";
 "controllers.serial.show" = "Mostrar número de serie";
 "controllers.serial.hide" = "Ocultar número de serie";

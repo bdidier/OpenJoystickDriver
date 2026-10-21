@@ -69,11 +69,10 @@
 "settings.updateChecking" = "Vérification…";
 "settings.updates" = "Mises à jour";
 "settings.viewUpdate" = "Voir la mise à jour";
-"controllers.refreshAccessibility" = "Actualiser les manettes";
 "controllers.unavailable" = "Manettes indisponibles";
 "controllers.loadError" = "Impossible de charger les manettes";
 "controllers.emptyTitle" = "Aucune manette connectée";
-"controllers.emptyMessage" = "Connectez une manette, puis choisissez « Actualiser ».";
+"controllers.emptyMessage" = "Connectez une manette.";
 "controllers.battery" = "Batterie";
 "controllers.serial.show" = "Afficher le numéro de série";
 "controllers.serial.hide" = "Masquer le numéro de série";

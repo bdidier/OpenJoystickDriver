@@ -69,11 +69,10 @@
 "settings.updateChecking" = "確認中…";
 "settings.updates" = "アップデート";
 "settings.viewUpdate" = "アップデートを表示";
-"controllers.refreshAccessibility" = "コントローラを更新";
 "controllers.unavailable" = "コントローラを利用できません";
 "controllers.loadError" = "コントローラを読み込めませんでした";
 "controllers.emptyTitle" = "コントローラ未接続";
-"controllers.emptyMessage" = "コントローラを接続してから「更新」を選択してください。";
+"controllers.emptyMessage" = "コントローラを接続してください。";
 "controllers.battery" = "バッテリー";
 "controllers.serial.show" = "シリアル番号を表示";
 "controllers.serial.hide" = "シリアル番号を非表示";

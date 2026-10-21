@@ -69,11 +69,10 @@
 "settings.updateChecking" = "확인 중…";
 "settings.updates" = "업데이트";
 "settings.viewUpdate" = "업데이트 보기";
-"controllers.refreshAccessibility" = "컨트롤러 새로 고침";
 "controllers.unavailable" = "컨트롤러를 사용할 수 없음";
 "controllers.loadError" = "컨트롤러를 로드할 수 없음";
 "controllers.emptyTitle" = "연결된 컨트롤러 없음";
-"controllers.emptyMessage" = "컨트롤러를 연결한 다음 “새로 고침”을 선택하십시오.";
+"controllers.emptyMessage" = "컨트롤러를 연결하십시오.";
 "controllers.battery" = "배터리";
 "controllers.serial.show" = "일련 번호 보기";
 "controllers.serial.hide" = "일련 번호 가리기";

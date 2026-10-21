@@ -5,7 +5,6 @@
 
   /// An area action shown in the main window's toolbar while its area is selected.
   enum MainWindowToolbarAction: String, CaseIterable {
-    case refreshControllers
     case newProfile
     case importProfile
     case validateProfileFile
@@ -40,7 +39,6 @@
 
     var symbolName: String {
       switch self {
-      case .refreshControllers: return "arrow.clockwise"
       case .newProfile: return "plus"
       case .importProfile: return "square.and.arrow.down"
       case .validateProfileFile: return "checkmark.seal"
@@ -67,7 +65,6 @@
     /// Localization key of the item's label.
     var labelKey: String {
       switch self {
-      case .refreshControllers: return "common.refresh"
       case .newProfile: return "profiles.new"
       case .importProfile: return "profiles.import"
       case .validateProfileFile: return "profiles.validateFile"
@@ -94,7 +91,6 @@
     /// Localization key of the item's tooltip and accessibility description.
     var descriptionKey: String {
       switch self {
-      case .refreshControllers: return "controllers.refreshAccessibility"
       case .newProfile: return "profiles.new"
       case .importProfile: return "profiles.import"
       case .validateProfileFile: return "profiles.validateFile"
@@ -143,7 +139,7 @@
       case .duplicateProfile:
         return state.hasSelection && !state.isBlocked && !state.hasUnsavedChanges
       case .deleteProfile: return state.hasSelection && !state.isBlocked
-      case .refreshControllers, .installLibraryItem, .grantProgram, .createToken,
+      case .installLibraryItem, .grantProgram, .createToken,
         .validateLibraryItem, .testLibraryRecord, .removeLibraryItem, .searchLibrary:
         return true
       case .activityMode, .activityFilter, .activitySearch, .copyActivityLog, .saveActivityLog,
@@ -157,7 +153,7 @@
     /// The toolbar actions of the area, in order. Activity's depend on which of its views is shown.
     func toolbarActions(activityMode: ActivityMode) -> [MainWindowToolbarAction] {
       switch self {
-      case .controllers: return [.refreshControllers]
+      case .controllers: return []
       case .profiles:
         return [
           .newProfile, .importProfile, .validateProfileFile, .duplicateProfile, .exportProfile,

@@ -69,11 +69,10 @@
 "settings.updateChecking" = "Đang kiểm tra…";
 "settings.updates" = "Bản cập nhật";
 "settings.viewUpdate" = "Xem bản cập nhật";
-"controllers.refreshAccessibility" = "Làm mới bộ điều khiển";
 "controllers.unavailable" = "Bộ điều khiển không khả dụng";
 "controllers.loadError" = "Không thể tải bộ điều khiển";
 "controllers.emptyTitle" = "Chưa kết nối bộ điều khiển";
-"controllers.emptyMessage" = "Kết nối bộ điều khiển, sau đó chọn Làm mới.";
+"controllers.emptyMessage" = "Kết nối bộ điều khiển.";
 "controllers.battery" = "Pin";
 "controllers.serial.show" = "Hiện số sê-ri";
 "controllers.serial.hide" = "Ẩn số sê-ri";

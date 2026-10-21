@@ -69,11 +69,10 @@
 "settings.updateChecking" = "Controleren…";
 "settings.updates" = "Updates";
 "settings.viewUpdate" = "Bekijk update";
-"controllers.refreshAccessibility" = "Vernieuw controllers";
 "controllers.unavailable" = "Controllers niet beschikbaar";
 "controllers.loadError" = "Controllers konden niet worden geladen";
 "controllers.emptyTitle" = "Geen controller aangesloten";
-"controllers.emptyMessage" = "Sluit een controller aan en kies daarna “Vernieuwen”.";
+"controllers.emptyMessage" = "Sluit een controller aan.";
 "controllers.battery" = "Batterij";
 "controllers.serial.show" = "Toon serienummer";
 "controllers.serial.hide" = "Verberg serienummer";
