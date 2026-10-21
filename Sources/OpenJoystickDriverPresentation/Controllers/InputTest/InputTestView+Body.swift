@@ -112,12 +112,14 @@
       ).ojdAccessibilityValue(statusLabel)
     }
 
-    private var publishedProfile: VirtualDeviceProfile {
-      model.device?.publishedVirtualProfile ?? .generic
+    /// The glyphs of the identity the Controllers list shows for this controller; the generic
+    /// glyphs when no controller is selected.
+    private var presentation: VirtualIdentityPresentation {
+      model.device?.publishedIdentityPresentation ?? .generic
     }
 
     var liveInput: some View {
-      InputTestLiveInputView(liveState: model.liveState, publishedProfile: publishedProfile)
+      InputTestLiveInputView(liveState: model.liveState, presentation: presentation)
         .frame(maxWidth: .infinity, alignment: .topLeading)
     }
 

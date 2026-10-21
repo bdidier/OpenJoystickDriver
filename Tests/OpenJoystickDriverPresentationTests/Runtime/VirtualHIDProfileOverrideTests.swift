@@ -286,6 +286,25 @@ struct VirtualHIDProfileOverrideTests {
   }
 
   @Test
+  func automaticLiveProfileIsThePublishedIdentityInEveryPlace() {
+    var pad = Self.device(
+      profile: ApplicationServiceVirtualHIDProfileStatus(
+        profile: .generic,
+        source: .automatic,
+        override: nil,
+        unavailable: false
+      )
+    )
+    pad.publication = ApplicationServicePublicationStatus(state: .published, target: .generic)
+
+    let label = VirtualHIDProfileID.generic.identity.publishedUSBIdentityLabel
+    #expect(pad.publishedIdentityLabel == label)
+    #expect(pad.publishedIdentityLabel != RuntimePresentation.noVirtualHIDProfileLabel)
+    #expect(ControllerDetailFacts.persona(pad) == .text(label))
+    #expect(pad.publishedIdentityPresentation == VirtualHIDProfileID.generic.identity.presentation)
+  }
+
+  @Test
   func unpublishedControllerShowsItsPhysicalFamilyIcon() {
     var sixaxis = ApplicationServiceDeviceDescription(
       name: "Test Pad",
