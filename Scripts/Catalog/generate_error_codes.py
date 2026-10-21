@@ -33,8 +33,8 @@ CATALOG = Path("Resources/ErrorCodes.json")
 CATALOG_SCHEMA = Path("Resources/Schemas/error-codes.schema.json")
 ENDPOINT_SCHEMA = Path("Resources/Schemas/endpoint.schema.json")
 WIKI_PAGE = Path("wiki/Error-Codes.md")
-TEMPLATE = Path(
-    "Sources/OpenJoystickDriverKit/Resources/Localization/Localizable.template.strings"
+ENGLISH_STRINGS = Path(
+    "Sources/OpenJoystickDriverKit/Resources/en-US.lproj/Localizable.strings"
 )
 BEGIN = "<!-- BEGIN GENERATED: error-codes -->"
 END = "<!-- END GENERATED: error-codes -->"
@@ -128,7 +128,7 @@ def check_invariants(entries: list[Entry]) -> None:
 
 def english_strings(root: Path) -> dict[str, str]:
     strings: dict[str, str] = {}
-    for line in (root / TEMPLATE).read_text(encoding="utf-8").splitlines():
+    for line in (root / ENGLISH_STRINGS).read_text(encoding="utf-8").splitlines():
         match = STRING_LINE.match(line)
         if match:
             strings[match.group(1)] = STRING_ESCAPE.sub(
@@ -140,7 +140,7 @@ def english_strings(root: Path) -> dict[str, str]:
 def meaning(entry: Entry, strings: dict[str, str]) -> str:
     key = f"error.{entry['code']}"
     if key not in strings:
-        raise ErrorCodeError(f"{TEMPLATE.name} has no key {key}")
+        raise ErrorCodeError(f"{ENGLISH_STRINGS.name} has no key {key}")
     text = strings[key].replace("|", "\\|")
     if "exitCode" in entry:
         text += f" Exit code {entry['exitCode']}."

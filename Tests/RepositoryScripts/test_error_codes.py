@@ -16,7 +16,7 @@ COPIED = (
     errors.CATALOG_SCHEMA,
     errors.ENDPOINT_SCHEMA,
     errors.WIKI_PAGE,
-    errors.TEMPLATE,
+    errors.ENGLISH_STRINGS,
 )
 
 
@@ -176,9 +176,9 @@ class ErrorCodeTests(unittest.TestCase):
             entry(new_remapping, "Remapping", "otherWire", wire="other_wire")
         )
         self.write_catalog(root, sorted(catalog, key=lambda item: item["code"]))
-        template = root / errors.TEMPLATE
-        template.write_text(
-            template.read_text(encoding="utf-8")
+        english = root / errors.ENGLISH_STRINGS
+        english.write_text(
+            english.read_text(encoding="utf-8")
             + f'"error.{new_endpoint}" = "A new code. Fix it.";\n'
             + f'"error.{new_cli}" = "Wrong usage. Read the help.";\n'
             + f'"error.{new_remapping}" = "Other wire. Fix it.";\n',
@@ -209,7 +209,7 @@ class ErrorCodeTests(unittest.TestCase):
 
     def test_escapes_in_the_english_text_are_decoded(self) -> None:
         root = self.copy_repository()
-        (root / errors.TEMPLATE).write_text(
+        (root / errors.ENGLISH_STRINGS).write_text(
             '"error.E1001" = "Run \\"ojd\\" in C:\\\\x.\\tNext.";\n', encoding="utf-8"
         )
         self.assertEqual(
@@ -238,11 +238,11 @@ class ErrorCodeTests(unittest.TestCase):
     def test_an_active_code_without_english_text_is_refused(self) -> None:
         root = self.copy_repository()
         self.write_catalog(root, [entry("E1001", "Endpoint", "a")])
-        template = root / errors.TEMPLATE
-        template.write_text(
+        english = root / errors.ENGLISH_STRINGS
+        english.write_text(
             "".join(
                 line
-                for line in template.read_text(encoding="utf-8").splitlines(
+                for line in english.read_text(encoding="utf-8").splitlines(
                     keepends=True
                 )
                 if not line.startswith('"error.E1001"')

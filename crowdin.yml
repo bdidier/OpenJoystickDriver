@@ -1,0 +1,57 @@
+# Crowdin project configuration. The source language is en-US; the other 20 locales are
+# translation targets. C.lproj is a copy of the English source and is not translated.
+# Credentials come from the environment variables named below.
+project_id_env: CROWDIN_PROJECT_ID
+api_token_env: CROWDIN_PERSONAL_TOKEN
+base_path: .
+preserve_hierarchy: true
+
+files:
+  - source: /Sources/OpenJoystickDriverKit/Resources/en-US.lproj/*.strings
+    translation: /Sources/OpenJoystickDriverKit/Resources/%osx_locale%.lproj/%original_file_name%
+    languages_mapping:
+      osx_locale:
+        ar: ar-SA
+        de: de-DE
+        es-ES: es-ES
+        es-MX: es-MX
+        fr: fr-FR
+        fr-CA: fr-CA
+        hi: hi-IN
+        id: id-ID
+        it: it-IT
+        ja: ja-JP
+        ko: ko-KR
+        nl: nl-NL
+        pt-BR: pt-BR
+        ru: ru-RU
+        th: th-TH
+        tr: tr-TR
+        vi: vi-VN
+        zh-CN: zh-CN
+        zh-HK: zh-HK
+        zh-TW: zh-TW
+  - source: /Sources/OpenJoystickDriverKit/Resources/en-US.lproj/*.stringsdict
+    translation: /Sources/OpenJoystickDriverKit/Resources/%osx_locale%.lproj/%original_file_name%
+    languages_mapping:
+      osx_locale:
+        ar: ar-SA
+        de: de-DE
+        es-ES: es-ES
+        es-MX: es-MX
+        fr: fr-FR
+        fr-CA: fr-CA
+        hi: hi-IN
+        id: id-ID
+        it: it-IT
+        ja: ja-JP
+        ko: ko-KR
+        nl: nl-NL
+        pt-BR: pt-BR
+        ru: ru-RU
+        th: th-TH
+        tr: tr-TR
+        vi: vi-VN
+        zh-CN: zh-CN
+        zh-HK: zh-HK
+        zh-TW: zh-TW
