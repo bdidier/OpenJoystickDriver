@@ -3,8 +3,7 @@ from __future__ import annotations
 import unittest
 from typing import Any
 
-from Tests.RepositoryScripts import schema_rejections
-from Tests.RepositoryScripts.schema_rejections import RecordValidator
+from Tests.RepositoryScripts.record_validator import RecordValidator
 from Tests.RepositoryScripts.test_controller_schema import (
     DUALSENSE,
     GIP,
@@ -15,11 +14,6 @@ from Tests.RepositoryScripts.test_controller_schema import (
 from Tests.RepositoryScripts.test_controller_schema import (
     record as base_record,
 )
-
-
-def setUpModule() -> None:
-    schema_rejections.enforce_controller_rejections()
-
 
 HID_REPORT = {"kind": "Output", "id": 1, "length": 4}
 

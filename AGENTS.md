@@ -9,7 +9,7 @@
 - Never hand-edit `Sources/OpenJoystickDriverKit/Resources/Controllers/` or `.build/driverkit/generated/`: run `./Scripts/ojd catalog regenerate --write` / `./Scripts/ojd driverkit generate`.
 - Review every translation you add or change against `LOCALIZATION.md` (Meaning, Punctuation) before committing, and fix what fails; passing `LocalizationTests` is not a review.
 - After changing `Resources/ErrorCodes.json`, run `./Scripts/ojd errors regenerate --write`.
-- After adding or changing a Python test that rejects a controller record or protocol description, run `./Scripts/ojd fixtures regenerate schema-rejections --write` and review the diff.
+- A controller record or protocol description that Swift rejects gets a case (`name`, `code`, `document`, `fileName` for descriptions) in `Tests/OpenJoystickDriverKitTests/Protocol/Catalog/SchemaRejections/`; add `"schema": true` only when the JSON Schema alone rejects it.
 - No SVGs, no secrets. Confirm destructive writes and publication first.
 - Swift is canonical. Python tooling calls Swift or reads what Swift generates; it does not re-implement Swift logic. Fix code/spec gaps and any Python copy of Swift logic now; add larger fixes as tasks in the active change.
 - Checks: write all code for a task, build once, test the changed area, run `just check` once; rerun only failures. No polling loops. `just check-fast` lints Swift but skips the Swift build and tests. `./Scripts/ojd repair swiftpm-module-cache` only for module-cache mismatches.
