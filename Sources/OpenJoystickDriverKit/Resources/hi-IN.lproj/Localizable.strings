@@ -1319,7 +1319,6 @@
 "cli.record.draft.next" = "रिकॉर्ड को फ़ाइल में सहेजें, हर नियंत्रण जाँचें, फिर “ojd record validate FILE” चलाएँ।";
 "cli.record.draft.no_layout" = "%@ का कोई भी नियंत्रण उसके HID रिपोर्ट डिस्क्रिप्टर से पढ़ा नहीं जा सका, और उसका बंडल किया गया रिकॉर्ड पहले से उसका परिवार बताता है। “ojd record show %@” वह रिकॉर्ड दिखाता है।";
 "cli.record.draft.started" = "%@ (%@) के हर नियंत्रण को दबाएँ, और हर स्टिक व ट्रिगर को घुमाएँ।";
-"cli.record.draft.unwritableNumber" = "--json संख्या %1$@ को %2$@ पर उसका मान बदले बिना नहीं लिख सकता। रिकॉर्ड का टेक्स्ट देखने के लिए “ojd record draft” को --json के बिना चलाएँ।";
 "cli.record.error.unreadable" = "%@ नहीं पढ़ा जा सकता: %@";
 "cli.record.file" = "एक रिकॉर्ड फ़ाइल, या - (मानक इनपुट से रिकॉर्ड पढ़ने के लिए)।";
 "cli.record.identity" = "कंट्रोलर मॉडल, VVVV:PPPP रूप में।";
@@ -1342,7 +1341,6 @@
 "cli.record.remove.success" = "%@ हटा दिया गया।";
 "cli.record.show.abstract" = "एक कंट्रोलर मॉडल का प्रभावी रिकॉर्ड और हर हिस्से की परत दिखाएँ।";
 "cli.record.show.not_found" = "%@ के लिए कोई कंट्रोलर रिकॉर्ड नहीं है। “ojd record list” हर रिकॉर्ड दिखाता है।";
-"cli.record.show.unwritableNumber" = "--json संख्या %1$@ को %2$@ पर उसका मान बदले बिना नहीं लिख सकता। रिकॉर्ड का टेक्स्ट देखने के लिए “ojd record show” को --json के बिना चलाएँ।";
 "cli.record.skipped" = "%@ छोड़ा गया: %@";
 "cli.record.test.abstract" = "कैप्चर की गई रिपोर्टों को रिकॉर्ड के पार्सर से दोबारा चलाएँ और पार्स की गई स्थिति की तुलना करें।";
 "cli.record.test.capture_invalid" = "%@ पैकेट कैप्चर नहीं है: %@";
@@ -1370,11 +1368,10 @@
 "error.E2033" = "प्रोग्राम शुरू नहीं किया जा सका। जाँचें कि उसका पाथ किसी एक्ज़ीक्यूटेबल फ़ाइल या ऐप को दर्शाता है और आपको उसे चलाने की अनुमति है।";
 "error.E2034" = "सेवा ने अनुरोध स्वीकार करना बंद कर दिया है। OpenJoystickDriver को बंद करके दोबारा खोलें, फिर दोबारा कोशिश करें।";
 "error.E2035" = "वह फ़ाइल उपयोग नहीं की जा सकती जिसमें दर्ज है कि अनुरोध श्रोता क्यों रुका। फ़ाइल हटाएँ, फिर OpenJoystickDriver को दोबारा खोलें।";
-"error.E2036" = "--json आउटपुट रिकॉर्ड की किसी संख्या को उसका मान बदले बिना नहीं लिख सकता। रिकॉर्ड का टेक्स्ट देखने के लिए कमांड को --json के बिना चलाएँ।";
-/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
-"error.E2037" = "किसी भी OpenJoystickDriver ऐप ने परीक्षण सूचना का समय पर उत्तर नहीं दिया। जाँचें कि ऐप चल रहा है, फिर दोबारा कोशिश करें।";
-/* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
-"error.E2038" = "OpenJoystickDriver के लिए सूचनाएँ अनुमत नहीं हैं। सिस्टम की सूचना सेटिंग्स में उन्हें अनुमति दें, फिर दोबारा कोशिश करें।";
+/* Error E2036, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
+"error.E2036" = "किसी भी OpenJoystickDriver ऐप ने परीक्षण सूचना का समय पर उत्तर नहीं दिया। जाँचें कि ऐप चल रहा है, फिर दोबारा कोशिश करें।";
+/* Error E2037, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
+"error.E2037" = "OpenJoystickDriver के लिए सूचनाएँ अनुमत नहीं हैं। सिस्टम की सूचना सेटिंग्स में उन्हें अनुमति दें, फिर दोबारा कोशिश करें।";
 "cli.record.usb_not_claimed" = "यह परिवार रॉ USB इस्तेमाल करता है, और USB एक्सटेंशन इस कंट्रोलर को क्लेम नहीं कर सकता, क्योंकि उसकी प्रोडक्ट सूची पर Apple के हस्ताक्षर हैं। OJD उस तक केवल सीधे USB एक्सेस से पहुँचता है, जब macOS अनुमति देता है।";
 "cli.record.usb_only_switch2" = "केवल USB: कंट्रोलर को Bluetooth LE से कनेक्ट करने के लिए इस Switch 2 रिकॉर्ड में bluetoothLE.vibrationCharacteristic जोड़ें।";
 "cli.record.validate.abstract" = "इंस्टॉल किए बिना कंट्रोलर रिकॉर्ड जाँचें।";

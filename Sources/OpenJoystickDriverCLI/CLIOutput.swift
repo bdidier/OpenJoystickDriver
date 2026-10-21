@@ -25,33 +25,34 @@ enum CLIOutput {
   @TaskLocal
   static var kind = ""
 
-  /// Prints `value` as sorted, pretty-printed JSON on stdout, with `apiVersion` and `kind`.
+  /// Prints `value` as a JSON document on stdout, with `apiVersion` and `kind`, laid out by
+  /// ``OrderedJSON/formatted()`` like the bundled record files.
+  ///
+  /// The members of the envelope and of a Swift value are sorted by name. An embedded
+  /// ``OrderedJSON`` keeps its member order and the text of its numbers.
   ///
   /// `kind` replaces the running command's kind for a command whose output kind depends on its
   /// options.
   static func json(_ value: some Encodable, kind: String? = nil) throws {
-    let encoder = JSONEncoder()
-    encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
-    let data = try encoder.encode(CLIDocument(kind: kind ?? self.kind, value: value))
-    stdout(String(bytes: data, encoding: .utf8) ?? "")
+    let document = try OrderedJSONEncoder().encode(
+      CLIDocument(kind: kind ?? self.kind, value: value)
+    )
+    stdout(document.formatted(), terminator: "")
   }
 
-  /// Prints `value` as one line of sorted JSON on stdout, with `apiVersion` and `kind`, for a
-  /// `--json` stream.
+  /// Prints `value` as one line of JSON on stdout, with `apiVersion` and `kind`, for a `--json`
+  /// stream. Members are sorted by name.
   static func jsonLine(_ value: some Encodable, kind: String? = nil) throws {
-    let encoder = JSONEncoder()
-    encoder.outputFormatting = [.sortedKeys, .withoutEscapingSlashes]
-    let data = try encoder.encode(CLIDocument(kind: kind ?? self.kind, value: value))
-    stdout(String(bytes: data, encoding: .utf8) ?? "")
+    let document = try OrderedJSONEncoder().encode(
+      CLIDocument(kind: kind ?? self.kind, value: value)
+    )
+    stdout(document.compact())
   }
 
-  /// Prints `value` as one line of sorted JSON on stdout, without `apiVersion` and `kind`, such as
-  /// a watch line `{type, object}`.
+  /// Prints `value` as one line of JSON on stdout, without `apiVersion` and `kind`, such as a
+  /// watch line `{type, object}`. Members are sorted by name.
   static func jsonLineWithoutEnvelope(_ value: some Encodable) throws {
-    let encoder = JSONEncoder()
-    encoder.outputFormatting = [.sortedKeys, .withoutEscapingSlashes]
-    let data = try encoder.encode(value)
-    stdout(String(bytes: data, encoding: .utf8) ?? "")
+    stdout(try OrderedJSONEncoder().encode(value).compact())
   }
 
   /// Prints one tab-separated record per row on stdout, for `--plain`. A tab or a newline character

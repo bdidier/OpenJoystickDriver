@@ -119,8 +119,7 @@ struct RecordDraftCommand: AsyncParsableCommand {
     let changed = draft.changedBytes
     switch CLIContext.current.format {
     case .json:
-      try RecordJSONOutput.print(
-        message: { CLILocalized.format("cli.record.draft.unwritableNumber", $0, $1) },
+      try CLIOutput.json(
         Result(
           identity: device.identity,
           name: device.name,

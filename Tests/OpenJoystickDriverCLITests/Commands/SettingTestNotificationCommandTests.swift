@@ -121,7 +121,7 @@ struct SettingTestNotificationCommandTests {
   }
 
   @Test
-  func noAnswerFailsWithE2037() async throws {
+  func noAnswerFailsWithE2036() async throws {
     let socketPath = temporarySocketPath()
     let server = try serve(outcome: .noAnswer, socketPath: socketPath)
     defer { server.stop() }
@@ -132,7 +132,7 @@ struct SettingTestNotificationCommandTests {
     #expect(human.code == 69)
     #expect(
       human.standardError
-        == CLIFailure(.noApplicationAnswered, CLILocalized.text("error.E2037")).line + "\n"
+        == CLIFailure(.noApplicationAnswered, CLILocalized.text("error.E2036")).line + "\n"
     )
     #expect(human.standardOutput.isEmpty)
     #expect(json.code == 69)
@@ -140,7 +140,7 @@ struct SettingTestNotificationCommandTests {
   }
 
   @Test
-  func deniedNotificationsFailWithE2038AndExit77() async throws {
+  func deniedNotificationsFailWithE2037AndExit77() async throws {
     let socketPath = temporarySocketPath()
     let server = try serve(outcome: .denied, socketPath: socketPath)
     defer { server.stop() }
@@ -150,7 +150,7 @@ struct SettingTestNotificationCommandTests {
     #expect(result.code == 77)
     #expect(
       result.standardError
-        == CLIFailure(.notificationsDenied, CLILocalized.text("error.E2038")).line + "\n"
+        == CLIFailure(.notificationsDenied, CLILocalized.text("error.E2037")).line + "\n"
     )
     #expect(result.standardOutput.isEmpty)
   }

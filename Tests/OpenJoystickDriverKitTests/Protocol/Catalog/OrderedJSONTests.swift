@@ -324,33 +324,61 @@ struct OrderedJSONTests {
   }
 
   @Test
-  func encodingKeepsMembersAndNumberValues() throws {
-    let value = try OrderedJSON.parse(
+  func theEncoderKeepsAnEmbeddedValueAsItIsAndSortsTheRest() throws {
+    struct Output: Encodable {
+      let zebra: Int
+      let apple: [String]
+      let record: OrderedJSON
+      let ratio: Double
+      let whole: Double
+      let nothing: Int?
+      let flag: Bool
+    }
+    let record = try OrderedJSON.parse(
       Data(
-        #"{"z": 1.0, "a": 1e3, "m": [18446744073709551615, -0, 0.25], "s": "x", "n": null}"#.utf8
+        #"{"z": 1.0, "a": 1e3, "m": [18446744073709551615, -0, 100.50], "s": "x", "n": null}"#.utf8
       )
     )
-    let encoder = JSONEncoder()
-    encoder.outputFormatting = .sortedKeys
-    let encoded = String(bytes: try encoder.encode(value), encoding: .utf8)
-    #expect(encoded == #"{"a":1000,"m":[18446744073709551615,0,0.25],"n":null,"s":"x","z":1}"#)
+    let output = Output(
+      zebra: 3,
+      apple: ["b", "a/b"],
+      record: record,
+      ratio: 0.25,
+      whole: 5,
+      nothing: nil,
+      flag: true
+    )
+    let encoded = try OrderedJSONEncoder().encode(output)
+    #expect(
+      encoded.compact()
+        == #"{"apple":["b","a/b"],"flag":true,"ratio":0.25,"record":"#
+        + #"{"z":1.0,"a":1e3,"m":[18446744073709551615,-0,100.50],"s":"x","n":null},"#
+        + #""whole":5,"zebra":3}"#
+    )
   }
 
-  @Test(arguments: [
-    "1e400", "123456789012345678901234567890123456789012", "1e-400", "-1e-400",
-    "1.23456789012345678901", "0.10000000000000000001",
-  ])
-  func aNumberNoEncodableTypeHoldsThrows(_ text: String) {
-    #expect(throws: EncodingError.self) { try JSONEncoder().encode(OrderedJSON.number(text)) }
+  @Test
+  func theEncoderWritesAnArrayOfEmbeddedValuesAndAnEmptyValueAsAnEmptyObject() throws {
+    struct Empty: Encodable {}
+    let list = try OrderedJSONEncoder().encode([OrderedJSON.number("1e400"), .string("x")])
+    #expect(list == .array([.number("1e400"), .string("x")]))
+    #expect(try OrderedJSONEncoder().encode(Empty()) == .object([]))
   }
 
-  @Test(arguments: [
-    ("0.1", "0.1"), ("1.5", "1.5"), ("-2e3", "-2000"), ("0", "0"), ("0.0", "0"),
-    ("0e-400", "0"), ("2.5E-3", "0.0025"), ("1e22", "1e+22"),
-  ])
-  func anOrdinaryNumberEncodesWithItsValue(_ text: String, _ written: String) throws {
-    let encoded = try JSONEncoder().encode([OrderedJSON.number(text)])
-    #expect(String(bytes: encoded, encoding: .utf8) == "[\(written)]")
+  @Test(arguments: [Double.infinity, -Double.infinity, Double.nan])
+  func theEncoderRefusesANumberJSONCannotHold(_ value: Double) {
+    #expect(throws: EncodingError.self) { try OrderedJSONEncoder().encode([value]) }
+  }
+
+  @Test
+  func anotherEncoderRefusesAnOrderedValue() {
+    #expect(throws: EncodingError.self) { try JSONEncoder().encode(OrderedJSON.number("1e3")) }
+  }
+
+  @Test
+  func compactWritesOneLineWithoutSpaces() throws {
+    let value = try OrderedJSON.parse(Data(#"{"b": [1, {"c": "d\"e"}], "a": {}, "f": []}"#.utf8))
+    #expect(value.compact() == #"{"b":[1,{"c":"d\"e"}],"a":{},"f":[]}"#)
   }
 
   @Test

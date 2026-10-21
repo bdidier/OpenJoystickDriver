@@ -270,17 +270,11 @@
     {
       "code": "E2036",
       "domain": "CLI",
-      "name": "unwritableJSONNumber",
-      "exitCode": 1
-    },
-    {
-      "code": "E2037",
-      "domain": "CLI",
       "name": "noApplicationAnswered",
       "exitCode": 69
     },
     {
-      "code": "E2038",
+      "code": "E2037",
       "domain": "CLI",
       "name": "notificationsDenied",
       "exitCode": 77
