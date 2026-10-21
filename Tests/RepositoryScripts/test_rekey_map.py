@@ -148,7 +148,6 @@ class RekeyMapTests(unittest.TestCase):
             "common.status": "term.status",
             "status.ready": "status.ready",
             "keyboard.escape": "term.key.escape",
-            "controller.xboxOne": "term.controllerModel.xboxOne",
             "settings.startAtLogin": "ui.settings.general.startAtLogin",
             "settingsPane.advanced.title": "ui.settings.advanced.title",
             "cli.controller.list.abstract": "cli.controller.list.abstract",

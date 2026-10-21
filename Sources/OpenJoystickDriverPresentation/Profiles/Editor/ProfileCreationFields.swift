@@ -1,29 +1,6 @@
 import Foundation
 import OpenJoystickDriverKit
 
-extension PhysicalProtocolID {
-  /// The label of the protocol family, shared by every variant of it.
-  var familyLabel: String {
-    switch self {
-    case .xboxXID: OJDLocalized.string("controller.xboxOriginal")
-    case .xboxXUSB: OJDLocalized.string("controller.xbox360")
-    case .xboxGIP: OJDLocalized.string("controller.xboxOne")
-    case .sonySixaxis: OJDLocalized.string("controller.dualShock3")
-    case .sonyDualShock4: OJDLocalized.string("controller.dualShock4")
-    case .sonyDualSense: OJDLocalized.string("controller.dualSense")
-    case .valveSteamController, .valveSteamTriton, .valveSteamDeck:
-      OJDLocalized.string("controller.steamController")
-    case .nintendoSwitch1, .nintendoSwitch2, .nintendoSwitchInputOnly:
-      OJDLocalized.string("controller.switchPro")
-    case .vendorFlydigi: OJDLocalized.string("controller.flydigi")
-    case .vendorPS3ThirdParty: "Third-party PS3"
-    case .vendorNVIDIAShield: "NVIDIA SHIELD"
-    case .vendorGameSir: "GameSir"
-    case .hidDescriptor, .hidReportLayout: OJDLocalized.string("controller.genericHID")
-    }
-  }
-}
-
 /// A controller a new profile can target: a connected controller, or a controller model that is
 /// not connected. `ojd profile create --controller` accepts both.
 struct ProfileControllerChoice: Equatable, Identifiable {
@@ -31,7 +8,8 @@ struct ProfileControllerChoice: Equatable, Identifiable {
   enum Group: Equatable {
     case connected
     case profiles
-    /// A catalog model, under the label of its protocol family.
+    /// A catalog model, under the display name of its protocol family. Each family is its own
+    /// section, so a Steam Deck model is not listed under the Steam Controller.
     case family(String)
   }
 
@@ -40,8 +18,8 @@ struct ProfileControllerChoice: Equatable, Identifiable {
   let name: String?
   let vendorID: UInt16
   let productID: UInt16
-  /// The label of the model's protocol family, when the catalog has the model.
-  let familyLabel: String?
+  /// The display name of the model's protocol family, when the catalog has the model.
+  let familyName: String?
   let group: Group
 
   var model: ControllerModelID { ControllerModelID(vendorID: vendorID, productID: productID) }
@@ -52,12 +30,12 @@ struct ProfileControllerChoice: Equatable, Identifiable {
     if let name = OJDValue.reported(name).textOrNil { return name }
     let identifiers = OJDValue.usbIdentifier(vendorID: vendorID, productID: productID).displayText
     if case .family = group { return identifiers }
-    return familyLabel.map { "\($0) · \(identifiers)" } ?? identifiers
+    return familyName.map { "\($0) · \(identifiers)" } ?? identifiers
   }
 
   /// The connected controllers, then the models that none of them has: first those of `profiles`,
-  /// then those of `catalog`, which maps each catalog model to its family label. Models are
-  /// ordered by vendor and product; catalog models by family label first.
+  /// then those of `catalog`, which maps each catalog model to its family's display name. Models
+  /// are ordered by vendor and product; catalog models by family name first.
   static func choices(
     devices: [ApplicationServiceDeviceDescription],
     profiles: [RemappingProfile],
@@ -69,7 +47,7 @@ struct ProfileControllerChoice: Equatable, Identifiable {
         name: $0.name,
         vendorID: $0.vendorID,
         productID: $0.productID,
-        familyLabel: catalog[ControllerModelID(vendorID: $0.vendorID, productID: $0.productID)],
+        familyName: catalog[ControllerModelID(vendorID: $0.vendorID, productID: $0.productID)],
         group: .connected
       )
     }
@@ -82,7 +60,7 @@ struct ProfileControllerChoice: Equatable, Identifiable {
           name: nil,
           vendorID: model.vendorID,
           productID: model.productID,
-          familyLabel: catalog[model],
+          familyName: catalog[model],
           group: group(catalog[model])
         )
       }
@@ -94,8 +72,8 @@ struct ProfileControllerChoice: Equatable, Identifiable {
     ) { _ in .profiles }
     let families = models(Array(catalog.keys)) { .family($0 ?? "") }
     let ordered = families.sorted { left, right in
-      let leftFamily = left.familyLabel ?? ""
-      let rightFamily = right.familyLabel ?? ""
+      let leftFamily = left.familyName ?? ""
+      let rightFamily = right.familyName ?? ""
       if leftFamily != rightFamily {
         return leftFamily.localizedStandardCompare(rightFamily) == .orderedAscending
       }

@@ -90,7 +90,7 @@
     private func recordSections(_ detail: LibraryRecordDetail) -> some View {
       Section {
         OJDLabeledValue(OJDLocalized.string("library.field.identity"), detail.item.identity)
-        OJDLabeledValue(OJDLocalized.string("library.field.family"), detail.item.family)
+        OJDLabeledValue(OJDLocalized.string("library.field.family"), detail.item.family.displayName)
         OJDLabeledValue(
           OJDLocalized.string("library.field.source"),
           detail.item.layer.libraryTitle

@@ -9,7 +9,7 @@ final class FakeLibraryStore: LibraryStore, @unchecked Sendable {
   var mods: [LibraryModItem] = []
   var recordCheck = LibraryRecordCheck(
     identity: "045E:028E",
-    family: "Xbox One (GIP)",
+    family: .xboxGIP,
     operation: .add,
     fileName: "045e-028e.json",
     replaces: false
@@ -233,7 +233,7 @@ struct LibraryViewModelTests {
     let store = FakeLibraryStore()
     let item = LibraryRecordItem(
       model: ControllerModelID(vendorID: 0x045E, productID: 0x028E),
-      family: "Xbox One (GIP)",
+      family: .xboxGIP,
       layer: .user,
       file: nil
     )
@@ -261,8 +261,11 @@ struct LibraryViewModelTests {
   @Test
   func onlyUserRecordsAreRemovable() {
     let model = ControllerModelID(vendorID: 1, productID: 2)
-    #expect(LibraryRecordItem(model: model, family: "", layer: .user, file: nil).isRemovable)
-    #expect(!LibraryRecordItem(model: model, family: "", layer: .package, file: nil).isRemovable)
+    func item(_ layer: ControllerRecordLayer) -> LibraryRecordItem {
+      LibraryRecordItem(model: model, family: .xboxGIP, layer: layer, file: nil)
+    }
+    #expect(item(.user).isRemovable)
+    #expect(!item(.package).isRemovable)
   }
 
   @Test

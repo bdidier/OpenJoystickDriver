@@ -2,7 +2,6 @@
   "apiVersion": "openjoystickdriver/v1alpha1",
   "kind": "ProtocolDescription",
   "family": "XboxXID",
-  "name": "Xbox (XID)",
   "variants": ["Gamepad"],
   "storesVariant": true,
   "endpoints": {

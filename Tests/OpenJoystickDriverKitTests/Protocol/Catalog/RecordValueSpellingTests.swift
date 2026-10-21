@@ -54,14 +54,6 @@ struct RecordValueSpellingTests {
     #expect(CommandLineName.collisions(in: PhysicalProtocolID.self).isEmpty)
   }
 
-  @Test
-  func everyFamilyHasADistinctDisplayName() {
-    let names = PhysicalProtocolID.allCases.map(\.name)
-    #expect(Set(names).count == names.count)
-    #expect(PhysicalProtocolID.sonyDualShock4.name == "Sony DualShock 4")
-    #expect(PhysicalProtocolID.xboxGIP.name == "Xbox One (GIP)")
-  }
-
   // MARK: - Records
 
   /// A record template with one `VALUE` slot: it decodes with the current spelling and fails with

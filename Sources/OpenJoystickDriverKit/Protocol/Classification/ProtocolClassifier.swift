@@ -83,10 +83,23 @@ public enum PhysicalProtocolID: String, CaseIterable, Codable, Sendable {
 
   /// The stem of this family's description file in `Resources/Protocols`: the command-line
   /// spelling of the family, which is also the family's token in `ojd` output and arguments.
-  public var descriptionFileStem: String { CommandLineName.kebab(rawValue) }
+  public var descriptionFileStem: String { commandLineName }
 
-  /// The family's name as the app shows it to a person, from its description.
-  public var name: String { protocolDescription.name }
+  /// The family's token in `ojd` output and arguments.
+  public var commandLineName: String { CommandLineName.kebab(rawValue) }
+
+  /// The catalog key of the family's display name. Its last segment is the family token in
+  /// lowerCamelCase (`sony-dual-shock4` is `sonyDualShock4`), the shape catalog key segments take.
+  public var displayNameKey: String { "term.protocolFamily.\(keySegment)" }
+
+  /// The family's name as the app shows it to a person, in the preferred language.
+  public var displayName: String { Localization().string(displayNameKey) }
+
+  private var keySegment: String {
+    commandLineName.split(separator: "-").enumerated().map { index, word in
+      index == 0 ? String(word) : word.prefix(1).uppercased() + word.dropFirst()
+    }.joined()
+  }
 
   /// Implemented variants, as the family's description lists them. An empty list means the family
   /// has one contract.

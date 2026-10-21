@@ -2,7 +2,6 @@
   "apiVersion": "openjoystickdriver/v1alpha1",
   "kind": "ProtocolDescription",
   "family": "NintendoSwitch1",
-  "name": "Nintendo Switch",
   "variants": ["USB", "BluetoothClassic"],
   "endpoints": {
     "in": 130,

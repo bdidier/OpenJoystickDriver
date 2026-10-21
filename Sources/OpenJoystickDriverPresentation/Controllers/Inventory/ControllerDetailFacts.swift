@@ -33,7 +33,11 @@ enum ControllerDetailFacts {
     let always = [
       fact(.publication, "cli.controller.show.label.publication", publication(device)),
       fact(.serving, "controllers.serving.label", .text(servingText(device))),
-      fact(.controllerProtocol, "common.protocol", .text(device.protocolBinding.displayLabel)),
+      fact(
+        .controllerProtocol,
+        "common.protocol",
+        .text(device.protocolBinding.protocolID.displayName)
+      ),
       fact(.serialNumber, "common.serialNumber", serialNumber(device)),
       fact(.inputHealth, "cli.controller.show.label.input", .text(inputHealthText(device))),
     ]

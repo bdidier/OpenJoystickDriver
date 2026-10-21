@@ -64,7 +64,6 @@ def xusb_description() -> dict[str, Any]:
     return {
         **header("ProtocolDescription"),
         "family": "XboxXUSB",
-        "name": "Xbox 360 (XUSB)",
         "variants": ["Wired", "Receiver"],
         "storesVariant": True,
         "endpoints": {"in": 129, "out": 1},
@@ -82,12 +81,10 @@ def xusb_description() -> dict[str, Any]:
 
 
 def with_variant_facts(document: dict[str, Any]) -> dict[str, Any]:
-    """The document with its family's `name`, its `variants` and `storesVariant` when it states
-    neither, and its `sessionKeys` when it states none, so a test that varies something else need not repeat
+    """The document with its family's `variants` and `storesVariant` when it states neither, and
+    its `sessionKeys` when it states none, so a test that varies something else need not repeat
     them."""
     facts = protocol_descriptions.bundled().get(str(document.get("family")), {})
-    if "name" not in document and "name" in facts:
-        document = {"name": facts["name"], **document}
     if "sessionKeys" not in document and "sessionKeys" in facts:
         document = {"sessionKeys": facts["sessionKeys"], **document}
     if "variants" in document or "storesVariant" in document:
@@ -172,23 +169,6 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                     document[member] = value
                 code = "E5001" if member == "apiVersion" else "E5002"
                 self.assert_rejected(document, code=code)
-
-    def test_rejects_a_missing_or_empty_name(self) -> None:
-        for name in (None, ""):
-            with self.subTest(name=name):
-                document = xusb_description()
-                if name is None:
-                    del document["name"]
-                else:
-                    document["name"] = name
-                path = self.root / "xbox-xusb.json"
-                path.write_text(json.dumps(document), encoding="utf-8")
-                with self.assertRaisesRegex(
-                    validate_schemas.ValidationError, r"^E5002: "
-                ):
-                    validate_schemas.validate_protocol_descriptions(
-                        self.schema, self.registry, [path]
-                    )
 
     def test_rejects_an_unknown_family(self) -> None:
         document = xusb_description()

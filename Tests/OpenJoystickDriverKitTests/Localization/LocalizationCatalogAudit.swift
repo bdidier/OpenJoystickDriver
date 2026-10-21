@@ -4,11 +4,15 @@ import Foundation
 
 enum LocalizationCatalogAudit {
   static let nonLinguisticSourceIdenticalKeys: Set<String> = [
-    "app.name", "controller.dualSense", "controller.dualShock3", "controller.dualShock4",
-    "controller.flydigi", "controller.genericHID", "controller.originalXbox",
-    "controller.standardHID", "controller.steamController", "controller.switchPro",
-    "controller.switchProController", "controller.xbox360", "controller.xbox360Wireless",
-    "controller.xbox360WirelessDeveloper", "controller.xboxOne", "controller.xboxOriginal",
+    "app.name",
+    // Protocol family names that are brand and product names, the same in every language.
+    "term.protocolFamily.nintendoSwitch1", "term.protocolFamily.nintendoSwitch2",
+    "term.protocolFamily.sonyDualSense", "term.protocolFamily.sonyDualShock4",
+    "term.protocolFamily.sonySixaxis", "term.protocolFamily.valveSteamController",
+    "term.protocolFamily.valveSteamDeck", "term.protocolFamily.valveSteamTriton",
+    "term.protocolFamily.vendorFlydigi", "term.protocolFamily.vendorGameSir",
+    "term.protocolFamily.vendorNvidiaShield", "term.protocolFamily.xboxGip",
+    "term.protocolFamily.xboxXid", "term.protocolFamily.xboxXusb",
     "controllers.usbIdentifier", "controllers.discovery.hid", "developer.hid", "developer.usbID",
     "inputTest.yTriangle",
     "mapping.buttonNorth", "mapping.dpadDirection", "menu.projectPage", "profiles.sectionDpad",

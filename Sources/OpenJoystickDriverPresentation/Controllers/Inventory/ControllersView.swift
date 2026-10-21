@@ -98,7 +98,7 @@
             }
             VStack(alignment: .leading, spacing: 2) {
               Text(device.name).lineLimit(1)
-              Text(device.protocolBinding.displayLabel).font(.caption).foregroundColor(
+              Text(device.protocolBinding.protocolID.displayName).font(.caption).foregroundColor(
                 Color(NSColor.secondaryLabelColor)
               ).lineLimit(1)
             }
@@ -106,7 +106,7 @@
           }.padding(.vertical, 4).tag(device.sessionToken.rawValue).ojdAccessibilityLabel(
             device.name
           )
-          .ojdAccessibilityValue(device.protocolBinding.displayLabel)
+          .ojdAccessibilityValue(device.protocolBinding.protocolID.displayName)
           .contextMenu { sessionCommands(for: device) }
         }
       }.listStyle(InsetListStyle()).alert(item: $wirelessDisconnectRequest) { request in
@@ -231,33 +231,6 @@
         blue: (isDark ? 11.0 : 16.0) / 255.0,
         alpha: 1
       )
-    }
-  }
-
-  extension ProtocolBindingID {
-    /// Family label; transport variants share their family's label.
-    var displayLabel: String {
-      switch protocolID {
-      case .xboxXID: OJDLocalized.string("controller.xboxOriginal")
-      case .xboxXUSB where variant == .receiver:
-        OJDLocalized.string("controller.xbox360Wireless")
-      case .xboxXUSB: OJDLocalized.string("controller.xbox360")
-      case .xboxGIP: OJDLocalized.string("controller.xboxOne")
-      case .sonySixaxis: OJDLocalized.string("controller.dualShock3")
-      case .sonyDualShock4: OJDLocalized.string("controller.dualShock4")
-      case .sonyDualSense: OJDLocalized.string("controller.dualSense")
-      case .valveSteamController, .valveSteamTriton, .valveSteamDeck:
-        OJDLocalized.string("controller.steamController")
-      case .nintendoSwitch1, .nintendoSwitch2, .nintendoSwitchInputOnly:
-        OJDLocalized.string("controller.switchPro")
-      case .vendorFlydigi: OJDLocalized.string("controller.flydigi")
-      case .vendorPS3ThirdParty: "Third-party PS3"
-      case .vendorNVIDIAShield: "NVIDIA SHIELD"
-      case .vendorGameSir where variant == .usb: "GameSir G7 Pro USB"
-      case .vendorGameSir: "GameSir enhanced HID"
-      case .hidDescriptor, .hidReportLayout:
-        OJDLocalized.string("controller.genericHID")
-      }
     }
   }
 

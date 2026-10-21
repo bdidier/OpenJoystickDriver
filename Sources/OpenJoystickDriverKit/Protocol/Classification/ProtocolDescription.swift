@@ -117,8 +117,6 @@ struct ProtocolDescription: Sendable {
   static let kind = "ProtocolDescription"
 
   let family: PhysicalProtocolID
-  /// The family's name as the app shows it to a person.
-  let name: String
   /// The family's implemented variants; empty when it has one contract.
   let variants: [PhysicalProtocolVariantID]
   /// Whether catalog records store the family's variant; otherwise classification derives it from
@@ -401,7 +399,6 @@ struct ProtocolDescription: Sendable {
     )
     let description = Self(
       family: protocolID,
-      name: document.name,
       variants: document.variants,
       storesVariant: document.storesVariant,
       endpoints: document.endpoints,

@@ -223,7 +223,7 @@ A `tuning` in a `ControllerPatch` merges per value into the bundled `tuning`: a 
 
 ### Family Defaults Live In Protocol Descriptions
 
-A family's default timings and control set are data in `Resources/Protocols/<file stem>.json`, not Swift constants. [`protocol-description.schema.json`](../Resources/Schemas/protocol-description.schema.json) defines the file, and it holds these members. `name` is the family's name as the Library shows it; a description without one is refused.
+A family's default timings and control set are data in `Resources/Protocols/<file stem>.json`, not Swift constants. [`protocol-description.schema.json`](../Resources/Schemas/protocol-description.schema.json) defines the file, and it holds these members:
 
 - `endpoints`: the USB endpoint addresses the driver uses.
 - `rawUSB`: `true`, or the variants that talk raw USB.

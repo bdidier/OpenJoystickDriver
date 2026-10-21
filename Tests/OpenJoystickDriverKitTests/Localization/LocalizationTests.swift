@@ -239,4 +239,31 @@ struct LocalizationTests {
     )
     #expect(area == "Area: Endpoint")
   }
+
+  @Test
+  func everyProtocolFamilyHasOneDisplayNameKey() {
+    let sourceKeys = LocalizationCatalogAudit.keys(for: Localization.sourceLocalization)
+    let familyKeys = Set(PhysicalProtocolID.allCases.map(\.displayNameKey))
+    #expect(familyKeys.count == PhysicalProtocolID.allCases.count)
+    #expect(familyKeys.isSubset(of: sourceKeys), "\(familyKeys.subtracting(sourceKeys).sorted())")
+    let catalogFamilyKeys = sourceKeys.filter { $0.hasPrefix("term.protocolFamily.") }
+    #expect(
+      catalogFamilyKeys == familyKeys,
+      "\(catalogFamilyKeys.subtracting(familyKeys).sorted())"
+    )
+    #expect(
+      PhysicalProtocolID.sonyDualShock4.displayNameKey == "term.protocolFamily.sonyDualShock4"
+    )
+    #expect(
+      PhysicalProtocolID.vendorPS3ThirdParty.displayNameKey
+        == "term.protocolFamily.vendorPs3ThirdParty"
+    )
+
+    let english = Localization(preferredLanguages: ["en-US"])
+    let names = PhysicalProtocolID.allCases.map { english.string($0.displayNameKey) }
+    #expect(Set(names).count == names.count)
+    #expect(
+      english.string(PhysicalProtocolID.sonyDualShock4.displayNameKey) == "Sony DualShock 4"
+    )
+  }
 }

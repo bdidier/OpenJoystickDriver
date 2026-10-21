@@ -110,7 +110,7 @@
       Task { @MainActor in
         let (labels, unreadable) = await Task.detached {
           let set = ControllerRecordSet.load(userDirectory: ControllerRecordSet.userDirectory)
-          return (set.records.mapValues { $0.protocolID.familyLabel }, set.problems.count)
+          return (set.records.mapValues { $0.protocolID.displayName }, set.problems.count)
         }.value
         catalogModels = labels
         unreadableRecordFiles = unreadable

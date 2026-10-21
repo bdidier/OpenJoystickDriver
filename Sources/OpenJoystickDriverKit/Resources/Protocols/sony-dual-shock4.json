@@ -2,7 +2,6 @@
   "apiVersion": "openjoystickdriver/v1alpha1",
   "kind": "ProtocolDescription",
   "family": "SonyDualShock4",
-  "name": "Sony DualShock 4",
   "variants": ["USB", "BluetoothClassic"],
   "endpoints": {
     "in": 130,

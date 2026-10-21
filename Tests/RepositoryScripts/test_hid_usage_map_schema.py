@@ -170,7 +170,6 @@ class HIDUsageMapDescriptionSchemaTests(unittest.TestCase):
         document = {
             **header("ProtocolDescription"),
             "family": "HIDDescriptor",
-            "name": "HID descriptor",
             "endpoints": {"in": 130, "out": 2},
             "recordSections": ["hidUsageMap"],
             "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
@@ -246,7 +245,6 @@ class HIDUsageMapDescriptionSchemaTests(unittest.TestCase):
         document = {
             **header("ProtocolDescription"),
             "family": "SonyDualSense",
-            "name": "Sony DualSense",
             "defaults": {"input": usage_map(BUTTON)},
         }
         path = self.root / "sony-dual-sense.json"

@@ -364,21 +364,42 @@
 "cli.transport_extension.completed" = "Richiesta di estensione di sistema terminata con risultato %@.";
 "cli.transport_extension.failed" = "Richiesta di estensione di sistema non riuscita: %@ code=%d %@";
 "cli.transport_extension.replacing" = "Sostituzione di %@ v%@ con v%@.";
-"controller.dualSense" = "DualSense";
-"controller.dualShock3" = "DualShock 3";
-"controller.dualShock4" = "DualShock 4";
-"controller.flydigi" = "Flydigi";
-"controller.genericHID" = "HID generico";
-"controller.originalXbox" = "Xbox originale";
-"controller.standardHID" = "HID standard";
-"controller.steamController" = "Steam Controller";
-"controller.switchPro" = "Switch Pro";
-"controller.switchProController" = "Switch Pro Controller";
-"controller.xbox360" = "Xbox 360";
-"controller.xbox360Wireless" = "Xbox 360 wireless";
-"controller.xbox360WirelessDeveloper" = "Xbox 360 Wireless";
-"controller.xboxOne" = "Xbox One";
-"controller.xboxOriginal" = "Xbox (originale)";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: a HID controller that OJD reads through its HID report descriptor. Keep HID as written. */
+"term.protocolFamily.hidDescriptor" = "Descrittore HID";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: a HID controller whose input report bytes its record lays out. Keep HID as written. */
+"term.protocolFamily.hidReportLayout" = "Struttura del rapporto HID";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.nintendoSwitch1" = "Nintendo Switch";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.nintendoSwitch2" = "Nintendo Switch 2";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: a wired Switch controller that sends input reports and takes no commands. Keep Nintendo Switch as written. */
+"term.protocolFamily.nintendoSwitchInputOnly" = "Nintendo Switch (solo input)";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.sonyDualSense" = "Sony DualSense";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.sonyDualShock4" = "Sony DualShock 4";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.sonySixaxis" = "Sony Sixaxis";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.valveSteamController" = "Valve Steam Controller";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.valveSteamDeck" = "Valve Steam Deck";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.valveSteamTriton" = "Valve Steam Controller (2026)";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.vendorFlydigi" = "Flydigi";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.vendorGameSir" = "GameSir";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.vendorNvidiaShield" = "NVIDIA SHIELD";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker: controllers from other makers that use the PS3 controller protocol. Keep PS3 as written. */
+"term.protocolFamily.vendorPs3ThirdParty" = "PS3 di terze parti";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.xboxGip" = "Xbox One (GIP)";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.xboxXid" = "Xbox (XID)";
+/* Name of a protocol family, shown as a controller's protocol in Controllers, the Library, Developer settings and the New Profile controller picker. A brand and product name: keep it as written. */
+"term.protocolFamily.xboxXusb" = "Xbox 360 (XUSB)";
 "developer.buttons" = "Pulsanti";
 "developer.capturing" = "Acquisizione in corso";
 "developer.connection" = "Connessione";

@@ -2,7 +2,6 @@
   "apiVersion": "openjoystickdriver/v1alpha1",
   "kind": "ProtocolDescription",
   "family": "ValveSteamController",
-  "name": "Valve Steam Controller",
   "variants": ["Wired", "Dongle", "BluetoothLE"],
   "storesVariant": true,
   "endpoints": {

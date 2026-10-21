@@ -17,10 +17,10 @@ The strings keep changing until the tree is quiet, so regenerate right before th
 Without `--write` the script fails when the file differs from what the current en-US catalog and
 the rules below produce. The rules:
 
-- A key maps to the namespace of its screen or role (`AREA_PREFIXES`, `common`, `controller`,
-  `keyboard`, `settings`, `cli`, `error`), and every segment becomes lowerCamelCase. The menu
-  bar extra (`menuBar`) maps to `ui.extra`, and the main menu (`mainMenu.<menu>.<item>`) to
-  `ui.menu.<menu>.<item>`.
+- A key maps to the namespace of its screen or role (`AREA_PREFIXES`, `common`, `keyboard`,
+  `settings`, `cli`, `error`), and every segment becomes lowerCamelCase. The menu bar extra
+  (`menuBar`) maps to `ui.extra`, and the main menu (`mainMenu.<menu>.<item>`) to
+  `ui.menu.<menu>.<item>`. A key already in `term.` keeps its name.
 - A `cli` key becomes `cli.<group>.<command>.<leaf>` when `<command>` is a command of the group in
   the command tree under `Sources/OpenJoystickDriverCLI` (`commandName:` values, grouped by the
   directory under `Commands`). Every other key of the group becomes `cli.<group>.group.<leaf>`,
@@ -75,7 +75,6 @@ AREA_PREFIXES: dict[str, tuple[str, ...]] = {
     "controllers": ("ui", "controllers"),
     "area": ("ui", "sidebar"),
     "app": ("term", "app"),
-    "controller": ("term", "controllerModel"),
     "notifications": ("notify",),
     "a11y": ("a11y",),
     "status": ("status",),
@@ -257,6 +256,8 @@ def new_segments(old: str, tree: dict[str, frozenset[str]]) -> list[str]:
     parts = old.split(".")
     top = parts[0]
     rest = parts[1:]
+    if top == "term":
+        return parts
     if top == "cli":
         return cli_key(rest, tree)
     if top in ("settings", "settingsPane"):

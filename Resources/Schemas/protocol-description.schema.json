@@ -4,7 +4,7 @@
   "$comment": "Each family's variants and whether records store the variant are its `variants` and `storesVariant`, the one source Swift and the Python tools read; its interface signatures, rawUSB list and defaults.variants name only those variants, and a family with none has no interface signatures, which a schema cannot say and the validators check. The parameter names of each family are those its driver declares in ProtocolParameters. The family facts a driver reads live here and nowhere in code: its default endpoints, whether it is reached through raw USB (for every variant, or only the listed ones), the record sections whose layouts it reads, the tuning keys it reads beyond stickDeadzone (none for a raw-USB variant), its button labels, and what OJD still sends when macOS serves the controller. defaults holds the sections a record layers over, limited to what the family reads: input is a byte layout where recordSections lists input and a HID usage map where it lists hidUsageMap, sessionKeys lists the startup and keepAlive session keys the driver reads, a rumble template, flat or per variant, needs the matching recordSections entry, HID startup writes need a family that is not always raw USB, raw-USB startup writes (bytes, endpoint, timeoutMilliseconds, delayMilliseconds, sessionByte, toleratesRejection) carry the packets a raw-USB driver sends, each startup write is limited by variants and by a when rule on an enumeration parameter the description declares and whose values it lists, which a schema cannot say and the validators check, and each defaults.tuning key must be stickDeadzone or in tuningKeys, which a schema cannot say and the validators check.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["apiVersion", "kind", "family", "name", "endpoints"],
+  "required": ["apiVersion", "kind", "family", "endpoints"],
   "properties": {
     "apiVersion": {
       "const": "openjoystickdriver/v1alpha1"
@@ -14,11 +14,6 @@
     },
     "family": {
       "$ref": "controller.schema.json#/$defs/protocol/properties/family"
-    },
-    "name": {
-      "description": "The family's name as the app shows it to a person: the brand and product, which are not translated.",
-      "type": "string",
-      "minLength": 1
     },
     "variants": {
       "description": "The implemented variants of the family; absent when it has one contract. Interface signatures, rawUSB and defaults.variants name only these.",

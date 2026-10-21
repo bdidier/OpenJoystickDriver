@@ -14,7 +14,7 @@ struct LibraryListingTests {
     _ layer: ControllerRecordLayer
   )
     -> LibraryRecordItem
-  { LibraryRecordItem(model: model, family: "Xbox One (GIP)", layer: layer, file: nil) }
+  { LibraryRecordItem(model: model, family: .xboxGIP, layer: layer, file: nil) }
 
   private func detail(_ item: LibraryRecordItem) -> LibraryRecordDetail {
     LibraryRecordDetail(
@@ -157,13 +157,15 @@ struct LibraryListingTests {
   }
 
   @Test
-  func searchMatchesVendorProductFamilyAndModNameIgnoringCase() {
+  func searchMatchesVendorProductFamilyNameFamilyTokenAndModNameIgnoringCase() {
     let (model, _) = loadedModel()
 
     model.searchText = "1234:0001"
     #expect(model.visibleRecords.map(\.model) == [userModel])
     #expect(model.visibleMods.isEmpty)
-    model.searchText = "XBOX one"
+    model.searchText = PhysicalProtocolID.xboxGIP.displayName.uppercased()
+    #expect(model.visibleRecords.count == 1)
+    model.searchText = "XBOX-gip"
     #expect(model.visibleRecords.count == 1)
     model.searchText = "ARC"
     #expect(model.visibleRecords.isEmpty)
