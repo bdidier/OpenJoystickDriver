@@ -114,7 +114,7 @@ class HIDUsageMapRecordSchemaTests(unittest.TestCase):
 
     def test_a_byte_layout_belongs_to_report_layout_only(self) -> None:
         layout = {
-            "report": {"length": 1},
+            "report": {"length": {"atLeast": 1}},
             "buttons": [{"control": "South", "byte": 0, "mask": 1}],
         }
         self.assertTrue(self.validator.is_valid(record(layout, "HIDReportLayout")))

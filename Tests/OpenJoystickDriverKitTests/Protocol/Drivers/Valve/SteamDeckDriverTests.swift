@@ -34,6 +34,8 @@ private enum DeckReport {
 
 @Suite
 struct SteamDeckDriverTests {
+  static let family = PhysicalProtocolID.valveSteamDeck
+  static let model = ControllerModelID(vendorID: 0x28DE, productID: 0x1205)
 
   @Test
   func steamDeckRowBindsValveSteamDeckAndBuildsTheDeckDriver() throws {

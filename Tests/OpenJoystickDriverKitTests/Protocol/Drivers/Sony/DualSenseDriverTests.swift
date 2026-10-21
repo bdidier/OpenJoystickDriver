@@ -5,6 +5,9 @@ import Testing
 @testable import OpenJoystickDriverKit
 
 struct DualSenseDriverTests {
+  static let family = PhysicalProtocolID.sonyDualSense
+  static let model = ControllerModelID(vendorID: 0x054C, productID: 0x0CE6)
+
   @Test
   func testDualSenseUSBReportParsesPrimaryControls() throws {
     let model = ControllerModelID(vendorID: 1356, productID: 3302)

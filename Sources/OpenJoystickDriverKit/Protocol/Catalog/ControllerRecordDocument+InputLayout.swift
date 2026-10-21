@@ -23,6 +23,7 @@ extension ControllerRecordDocument {
         layout = try ControllerInputLayout(
           reportID: report.reportID,
           minimumLength: report.length,
+          requiresExactLength: report.requiresExactLength,
           buttons: buttons?.map { ($0.control, $0.field) } ?? [],
           axes: axes?.map(\.axis) ?? [],
           hat: hat?.map(\.source) ?? [],
@@ -38,14 +39,45 @@ extension ControllerRecordDocument {
     }
   }
 
+  /// An input report's `length`: exactly one of `atLeast` and `exactly`.
+  struct LengthRule: Decodable {
+    let length: Int
+    let isExact: Bool
+
+    init(from decoder: any Decoder) throws {
+      let container = try decoder.container(keyedBy: DocumentKey.self)
+      try container.rejectUnknown(allowed: ["atLeast", "exactly"])
+      let atLeast = try container.decodeOptional(Int.self, for: "atLeast")
+      let exactly = try container.decodeOptional(Int.self, for: "exactly")
+      switch (atLeast, exactly) {
+      case (let value?, nil):
+        length = value
+        isExact = false
+      case (nil, let value?):
+        length = value
+        isExact = true
+      default:
+        throw DecodingError.dataCorrupted(
+          .init(
+            codingPath: decoder.codingPath,
+            debugDescription: "length names exactly one of atLeast and exactly"
+          )
+        )
+      }
+    }
+  }
+
   struct InputReport: Decodable {
     let reportID: UInt8?
     let length: Int
+    let requiresExactLength: Bool
 
     init(from decoder: any Decoder) throws {
       let container = try decoder.container(keyedBy: DocumentKey.self)
       try container.rejectUnknown(allowed: ["id", "length"])
-      length = try container.decode(Int.self, for: "length")
+      let rule = try container.decode(LengthRule.self, for: "length")
+      length = rule.length
+      requiresExactLength = rule.isExact
       guard let id = try container.decodeOptional(Int.self, for: "id") else {
         reportID = nil
         return

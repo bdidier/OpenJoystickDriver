@@ -80,4 +80,8 @@ func makeDS4BluetoothReport(
   return Data(report)
 }
 
-struct DualShock4DriverTests {}
+// swiftlint:disable:next convenience_type
+struct DualShock4DriverTests {
+  static let family = PhysicalProtocolID.sonyDualShock4
+  static let model = ControllerModelID(vendorID: 0x054C, productID: 0x09CC)
+}

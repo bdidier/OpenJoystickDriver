@@ -74,7 +74,7 @@ struct DescribedRumbleBytesTests {
 
   @Test(arguments: rumbleBytes)
   func xidRumbleWritesWholeByteIntensitiesAsRepeatedBytes(motors: (left: UInt8, right: UInt8)) {
-    let packet = XIDDriver(outEndpoint: 0x07)
+    let packet = xidDriver(outEndpoint: 0x07)
       .rumblePlan(left: motors.left, right: motors.right, lt: 9, rt: 9).onlyPacket
     #expect(
       packet
@@ -92,7 +92,7 @@ struct DescribedRumbleBytesTests {
       lowFrequency: UnipolarValue(0x1234),
       highFrequency: UnipolarValue(0xFEDC)
     )
-    let plan = try? XIDDriver().encode(.setRumble(intensities, duration: .held))
+    let plan = try? xidDriver().encode(.setRumble(intensities, duration: .held))
     #expect(plan.onlyPacket.bytes == [0x00, 0x06, 0x12, 0x34, 0xFE, 0xDC])
   }
 
@@ -104,7 +104,7 @@ struct DescribedRumbleBytesTests {
       bytes: [0x00, 0x04, 0x00, 0x00],
       motors: [.lowFrequency: .init(byte: 2), .highFrequency: .init(byte: 3)]
     )
-    let driver = XIDDriver(outEndpoint: 0x07, rumbleTemplate: template)
+    let driver = xidDriver(outEndpoint: 0x07, rumbleTemplate: template)
     #expect(
       driver.rumblePlan(left: 0x40, right: 0x20, lt: 0, rt: 0).onlyPacket.bytes == [
         0x00, 0x04, 0x40, 0x20,

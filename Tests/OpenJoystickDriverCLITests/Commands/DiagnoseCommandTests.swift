@@ -94,7 +94,7 @@ struct DiagnoseCommandTests {
       await StatusCommand.$extensionProbe.withValue(extensionStatus) {
         await DiagnoseCommand.$usbProbe.withValue(usb) {
           await DiagnoseCommand.$gameControllerAudit.withValue(Self.noAudit) {
-            await CLIRun.run(["diagnose"] + arguments + ["--timeout", "5"])
+            await CLIRun.run(["diagnose"] + arguments + testServerTimeout)
           }
         }
       }

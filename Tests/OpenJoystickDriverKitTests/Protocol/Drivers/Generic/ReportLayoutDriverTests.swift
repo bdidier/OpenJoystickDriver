@@ -37,6 +37,8 @@ func inputLayout(_ json: String) throws -> ControllerInputLayout {
 
 @Suite
 struct ReportLayoutDriverTests {
+  static let family = PhysicalProtocolID.hidReportLayout
+  static let model = ControllerModelID(vendorID: 0x2563, productID: 0x0575)
 
   // MARK: - Catalog rows
 
@@ -176,7 +178,7 @@ struct ReportLayoutDriverTests {
   func reportWithAnotherIDIsIgnored() throws {
     let driver = ReportLayoutDriver(
       layout: try inputLayout(
-        #"{"report": {"id": 5, "length": 2}, "#
+        #"{"report": {"id": 5, "length": {"atLeast": 2}}, "#
           + #""buttons": [{"control": "South", "byte": 1, "mask": 1}]}"#
       )
     )
@@ -190,7 +192,7 @@ struct ReportLayoutDriverTests {
   func axesScaleTheirRangeAroundItsMiddle() throws {
     let layout = try inputLayout(
       """
-      {"report": {"length": 4}, "axes": [
+      {"report": {"length": {"atLeast": 4}}, "axes": [
         {"control": "LeftStickX", "byte": 0, "bits": 16, "signed": true},
         {"control": "LeftStickY", "byte": 2, "inverted": true},
         {"control": "RightStickX", "byte": 3, "min": 0, "max": 200}
@@ -213,7 +215,8 @@ struct ReportLayoutDriverTests {
   @Test
   func triggerButtonReadsAsFullyPulled() throws {
     let layout = try inputLayout(
-      #"{"report": {"length": 2}, "leftTrigger": {"byte": 0, "button": {"byte": 1, "mask": 4}}}"#
+      #"{"report": {"length": {"atLeast": 2}}, "#
+        + #""leftTrigger": {"byte": 0, "button": {"byte": 1, "mask": 4}}}"#
     )
     let trigger = try #require(layout.leftTrigger)
     #expect(trigger.value(in: [0x00, 0x04]) == UnipolarValue(normalized: 1))

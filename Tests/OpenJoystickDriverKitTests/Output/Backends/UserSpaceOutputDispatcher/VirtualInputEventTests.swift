@@ -141,7 +141,7 @@ struct VirtualInputEventTests {
     packet[1] = 20
     packet[2] = 10
     var state = VirtualGamepadState()
-    let parser = XIDDriver()
+    let parser = xidDriver()
     apply(try parser.parseReport(Data(packet)), to: &state)
     #expect(try xboxOneSReport(state)[13] == 0x04)
     packet[2] = 0

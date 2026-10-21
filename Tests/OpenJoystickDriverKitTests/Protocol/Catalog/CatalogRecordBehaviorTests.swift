@@ -129,7 +129,7 @@ struct CatalogRecordBehaviorTests {
     // HORIPAD for Nintendo Switch and PowerA Wired Controller Plus (SDL SwitchInputOnlyController).
     for (vendorID, productID) in [(UInt16(0x0F0D), UInt16(0x00C1)), (0x20D6, 0xA711)] {
       let model = ControllerModelID(vendorID: vendorID, productID: productID)
-      #expect(try catalogParser(model) is SwitchInputOnlyDriver, "\(model)")
+      #expect(try catalogParser(model) is ReportLayoutDriver, "\(model)")
     }
   }
 

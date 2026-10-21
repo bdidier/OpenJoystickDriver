@@ -70,7 +70,7 @@ final class FakeService: @unchecked Sendable {
 
   func run(_ arguments: [String]) async -> CLIRun {
     await ServiceConnection.$socketPath.withValue(socketPath) {
-      await CLIRun.run(arguments + ["--timeout", "5"])
+      await CLIRun.run(arguments + testServerTimeout)
     }
   }
 

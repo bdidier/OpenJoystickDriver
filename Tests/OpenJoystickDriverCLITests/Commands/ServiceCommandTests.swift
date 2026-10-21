@@ -141,8 +141,8 @@ struct ServiceCommandTests {
     try server.start()
     defer { server.stop() }
 
-    let jsonRun = await runStatus(["--json", "--timeout", "5"], socketPath: socketPath)
-    let plainRun = await runStatus(["--plain", "--timeout", "5"], socketPath: socketPath)
+    let jsonRun = await runStatus(["--json"] + testServerTimeout, socketPath: socketPath)
+    let plainRun = await runStatus(["--plain"] + testServerTimeout, socketPath: socketPath)
 
     #expect(jsonRun.code == 0, "\(jsonRun.standardError)")
     let json = try jsonRun.json()

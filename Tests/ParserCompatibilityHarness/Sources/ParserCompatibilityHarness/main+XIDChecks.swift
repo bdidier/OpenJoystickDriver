@@ -8,7 +8,7 @@ func runXIDInputChecks() throws {
     "Original Xbox pad should bind XID"
   )
 
-  let parser = XIDDriver()
+  let parser = xidDriver()
   _ = try parse(parser, makeXIDReport())
   let analog = try parse(parser, makeXIDReport(analogA: 0xFF))
   require(
@@ -18,6 +18,16 @@ func runXIDInputChecks() throws {
   let digital = try parse(parser, makeXIDReport(digital: 0x11))
   require(digital?.pressed.contains(.start) == true, "XID digital start should parse")
   require(digital?.hat == .north, "XID digital d-pad north should parse")
+}
+
+func xidDriver() -> ReportLayoutDriver {
+  ReportLayoutDriver(
+    describedBy: .xboxXID,
+    variant: .gamepad,
+    rumbleTemplate: nil,
+    outEndpoint: 0x02,
+    tuning: nil
+  )
 }
 
 func makeXIDReport(digital: UInt8 = 0, analogA: UInt8 = 0) -> Data {

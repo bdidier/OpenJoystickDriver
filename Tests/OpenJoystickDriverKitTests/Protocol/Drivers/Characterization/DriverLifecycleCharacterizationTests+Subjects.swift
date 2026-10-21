@@ -176,6 +176,12 @@ extension DriverLifecycleCharacterizationTests {
 
   /// Catalog rows outside ``subjects``. Only the output capability sweep uses them, so the
   /// transcripts over ``subjects`` stay unchanged.
+  static let switchInputOnly = Subject(
+    model: model(0x0F0D, 0x00C1),
+    host: .usb,
+    protocolID: .nintendoSwitchInputOnly,
+    variant: .usb
+  )
   static let tritonWired = Subject(
     model: model(0x28DE, 0x1302),
     host: .usb,

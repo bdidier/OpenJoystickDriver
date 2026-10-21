@@ -7,7 +7,8 @@ import Testing
 @Suite
 struct ProtocolDescriptionTests {
   private static let minimalInput =
-    #"{"report": {"length": 1}, "buttons": [{"control": "South", "byte": 0, "mask": 1}]}"#
+    #"{"report": {"length": {"atLeast": 1}}, "#
+    + #""buttons": [{"control": "South", "byte": 0, "mask": 1}]}"#
   private static let rumbleTemplate =
     #"{"report": {"kind": "Output", "id": 1, "length": 4}, "lowFrequency": {"byte": 1}}"#
   private static let startupWrite =

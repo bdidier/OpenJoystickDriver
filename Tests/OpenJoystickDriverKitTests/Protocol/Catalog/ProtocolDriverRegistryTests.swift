@@ -394,12 +394,16 @@ struct ProtocolDriverRegistryTests {
     return binding
   }
 
+  /// Whether `driver` is the parser of family `id`. A family whose description holds the input
+  /// layout is decoded by a `ReportLayoutDriver` that reads that layout and advertises the
+  /// description's controls.
   static func driver(_ driver: any PhysicalProtocolDriver, belongsTo id: PhysicalProtocolID) -> Bool
   {
     switch id {
     case .hidDescriptor: driver is HIDDescriptorDriver
     case .hidReportLayout: driver is ReportLayoutDriver
-    case .xboxXID: driver is XIDDriver
+    case .xboxXID, .nintendoSwitchInputOnly, .vendorFlydigi:
+      decodesTheDescribedLayout(driver, of: id)
     case .xboxXUSB: driver is XUSBDriver
     case .xboxGIP: driver is GIPDriver
     case .sonySixaxis: driver is SixaxisDriver
@@ -407,14 +411,22 @@ struct ProtocolDriverRegistryTests {
     case .sonyDualSense: driver is DualSenseDriver
     case .nintendoSwitch1: driver is Switch1Driver
     case .nintendoSwitch2: driver is Switch2Driver
-    case .nintendoSwitchInputOnly: driver is SwitchInputOnlyDriver
     case .valveSteamController: driver is SteamControllerDriver
     case .valveSteamTriton: driver is SteamTritonDriver
     case .valveSteamDeck: driver is SteamDeckDriver
-    case .vendorFlydigi: driver is FlydigiDriver
     case .vendorPS3ThirdParty: driver is PS3ThirdPartyDriver
     case .vendorGameSir: driver is GameSirDriver
     case .vendorNVIDIAShield: driver is NVIDIAShieldDriver
     }
+  }
+
+  private static func decodesTheDescribedLayout(
+    _ driver: any PhysicalProtocolDriver,
+    of family: PhysicalProtocolID
+  ) -> Bool {
+    guard let layoutDriver = driver as? ReportLayoutDriver,
+      let described = family.protocolDescription.inputLayout
+    else { return false }
+    return layoutDriver.layout == described && layoutDriver.capabilities == family.describedControls
   }
 }

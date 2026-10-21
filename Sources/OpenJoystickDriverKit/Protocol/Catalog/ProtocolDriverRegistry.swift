@@ -198,11 +198,13 @@ public final class ProtocolDriverRegistry: Sendable {
       // Only a record carries a layout; a family profile has nothing to decode with.
       guard let layout = record.inputLayout else { return .failure(.noProtocolMatch) }
       return .success(ReportLayoutDriver(layout: layout, rumbleTemplate: record.rumbleTemplate))
-    case .xboxXID:
+    case .xboxXID, .nintendoSwitchInputOnly, .vendorFlydigi:
       return .success(
-        XIDDriver(
-          outEndpoint: transportProfile.outputEndpoint,
+        ReportLayoutDriver(
+          describedBy: protocolID,
+          variant: variant,
           rumbleTemplate: record.rumbleTemplate,
+          outEndpoint: transportProfile.outputEndpoint,
           tuning: tuning
         )
       )
@@ -282,7 +284,6 @@ public final class ProtocolDriverRegistry: Sendable {
           usbStartupWrites: record.usbStartupWrites
         )
       )
-    case .nintendoSwitchInputOnly: return .success(SwitchInputOnlyDriver())
     case .nintendoSwitch1:
       let layout: NintendoControllerLayout =
         switch record.parameters.layout {
@@ -307,7 +308,6 @@ public final class ProtocolDriverRegistry: Sendable {
           isBluetooth: variant == .bluetoothLE
         )
       )
-    case .vendorFlydigi: return .success(FlydigiDriver())
     case .vendorPS3ThirdParty:
       return .success(
         PS3ThirdPartyDriver(

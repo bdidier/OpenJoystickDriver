@@ -8103,6 +8103,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["input"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "controls": {
           "base": "Xbox",
@@ -8110,6 +8111,110 @@
           "digitalTriggers": ["LeftTrigger", "RightTrigger"]
         },
         "defaults": {
+          "input": {
+            "report": {
+              "length": {
+                "atLeast": 7
+              }
+            },
+            "buttons": [
+              {
+                "control": "West",
+                "byte": 0,
+                "mask": 1
+              },
+              {
+                "control": "South",
+                "byte": 0,
+                "mask": 2
+              },
+              {
+                "control": "East",
+                "byte": 0,
+                "mask": 4
+              },
+              {
+                "control": "North",
+                "byte": 0,
+                "mask": 8
+              },
+              {
+                "control": "LeftShoulder",
+                "byte": 0,
+                "mask": 16
+              },
+              {
+                "control": "RightShoulder",
+                "byte": 0,
+                "mask": 32
+              },
+              {
+                "control": "LeftTrigger",
+                "byte": 0,
+                "mask": 64
+              },
+              {
+                "control": "RightTrigger",
+                "byte": 0,
+                "mask": 128
+              },
+              {
+                "control": "Back",
+                "byte": 1,
+                "mask": 1
+              },
+              {
+                "control": "Start",
+                "byte": 1,
+                "mask": 2
+              },
+              {
+                "control": "LeftStickClick",
+                "byte": 1,
+                "mask": 4
+              },
+              {
+                "control": "RightStickClick",
+                "byte": 1,
+                "mask": 8
+              },
+              {
+                "control": "Guide",
+                "byte": 1,
+                "mask": 16
+              },
+              {
+                "control": "Capture",
+                "byte": 1,
+                "mask": 32
+              }
+            ],
+            "axes": [
+              {
+                "control": "LeftStickX",
+                "byte": 3
+              },
+              {
+                "control": "LeftStickY",
+                "byte": 4
+              },
+              {
+                "control": "RightStickX",
+                "byte": 5
+              },
+              {
+                "control": "RightStickY",
+                "byte": 6
+              }
+            ],
+            "hat": [
+              {
+                "encoding": "EightWay",
+                "byte": 2,
+                "mask": 255
+              }
+            ]
+          },
           "tuning": {
             "frameQueueCapacity": 0
           }
@@ -8131,6 +8236,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["input"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "controls": {
           "base": "Xbox",
@@ -8138,6 +8244,110 @@
           "digitalTriggers": ["LeftTrigger", "RightTrigger"]
         },
         "defaults": {
+          "input": {
+            "report": {
+              "length": {
+                "atLeast": 7
+              }
+            },
+            "buttons": [
+              {
+                "control": "West",
+                "byte": 0,
+                "mask": 1
+              },
+              {
+                "control": "South",
+                "byte": 0,
+                "mask": 2
+              },
+              {
+                "control": "East",
+                "byte": 0,
+                "mask": 4
+              },
+              {
+                "control": "North",
+                "byte": 0,
+                "mask": 8
+              },
+              {
+                "control": "LeftShoulder",
+                "byte": 0,
+                "mask": 16
+              },
+              {
+                "control": "RightShoulder",
+                "byte": 0,
+                "mask": 32
+              },
+              {
+                "control": "LeftTrigger",
+                "byte": 0,
+                "mask": 64
+              },
+              {
+                "control": "RightTrigger",
+                "byte": 0,
+                "mask": 128
+              },
+              {
+                "control": "Back",
+                "byte": 1,
+                "mask": 1
+              },
+              {
+                "control": "Start",
+                "byte": 1,
+                "mask": 2
+              },
+              {
+                "control": "LeftStickClick",
+                "byte": 1,
+                "mask": 4
+              },
+              {
+                "control": "RightStickClick",
+                "byte": 1,
+                "mask": 8
+              },
+              {
+                "control": "Guide",
+                "byte": 1,
+                "mask": 16
+              },
+              {
+                "control": "Capture",
+                "byte": 1,
+                "mask": 32
+              }
+            ],
+            "axes": [
+              {
+                "control": "LeftStickX",
+                "byte": 3
+              },
+              {
+                "control": "LeftStickY",
+                "byte": 4
+              },
+              {
+                "control": "RightStickX",
+                "byte": 5
+              },
+              {
+                "control": "RightStickY",
+                "byte": 6
+              }
+            ],
+            "hat": [
+              {
+                "encoding": "EightWay",
+                "byte": 2,
+                "mask": 255
+              }
+            ]
+          },
           "tuning": {
             "frameQueueCapacity": 1025
           }
@@ -8159,6 +8369,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["input"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "controls": {
           "base": "Xbox",
@@ -8166,6 +8377,110 @@
           "digitalTriggers": ["LeftTrigger", "RightTrigger"]
         },
         "defaults": {
+          "input": {
+            "report": {
+              "length": {
+                "atLeast": 7
+              }
+            },
+            "buttons": [
+              {
+                "control": "West",
+                "byte": 0,
+                "mask": 1
+              },
+              {
+                "control": "South",
+                "byte": 0,
+                "mask": 2
+              },
+              {
+                "control": "East",
+                "byte": 0,
+                "mask": 4
+              },
+              {
+                "control": "North",
+                "byte": 0,
+                "mask": 8
+              },
+              {
+                "control": "LeftShoulder",
+                "byte": 0,
+                "mask": 16
+              },
+              {
+                "control": "RightShoulder",
+                "byte": 0,
+                "mask": 32
+              },
+              {
+                "control": "LeftTrigger",
+                "byte": 0,
+                "mask": 64
+              },
+              {
+                "control": "RightTrigger",
+                "byte": 0,
+                "mask": 128
+              },
+              {
+                "control": "Back",
+                "byte": 1,
+                "mask": 1
+              },
+              {
+                "control": "Start",
+                "byte": 1,
+                "mask": 2
+              },
+              {
+                "control": "LeftStickClick",
+                "byte": 1,
+                "mask": 4
+              },
+              {
+                "control": "RightStickClick",
+                "byte": 1,
+                "mask": 8
+              },
+              {
+                "control": "Guide",
+                "byte": 1,
+                "mask": 16
+              },
+              {
+                "control": "Capture",
+                "byte": 1,
+                "mask": 32
+              }
+            ],
+            "axes": [
+              {
+                "control": "LeftStickX",
+                "byte": 3
+              },
+              {
+                "control": "LeftStickY",
+                "byte": 4
+              },
+              {
+                "control": "RightStickX",
+                "byte": 5
+              },
+              {
+                "control": "RightStickY",
+                "byte": 6
+              }
+            ],
+            "hat": [
+              {
+                "encoding": "EightWay",
+                "byte": 2,
+                "mask": 255
+              }
+            ]
+          },
           "tuning": {
             "frameQueueCapacity": 1.5
           }
@@ -8187,6 +8502,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["input"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "controls": {
           "base": "Xbox",
@@ -8194,6 +8510,110 @@
           "digitalTriggers": ["LeftTrigger", "RightTrigger"]
         },
         "defaults": {
+          "input": {
+            "report": {
+              "length": {
+                "atLeast": 7
+              }
+            },
+            "buttons": [
+              {
+                "control": "West",
+                "byte": 0,
+                "mask": 1
+              },
+              {
+                "control": "South",
+                "byte": 0,
+                "mask": 2
+              },
+              {
+                "control": "East",
+                "byte": 0,
+                "mask": 4
+              },
+              {
+                "control": "North",
+                "byte": 0,
+                "mask": 8
+              },
+              {
+                "control": "LeftShoulder",
+                "byte": 0,
+                "mask": 16
+              },
+              {
+                "control": "RightShoulder",
+                "byte": 0,
+                "mask": 32
+              },
+              {
+                "control": "LeftTrigger",
+                "byte": 0,
+                "mask": 64
+              },
+              {
+                "control": "RightTrigger",
+                "byte": 0,
+                "mask": 128
+              },
+              {
+                "control": "Back",
+                "byte": 1,
+                "mask": 1
+              },
+              {
+                "control": "Start",
+                "byte": 1,
+                "mask": 2
+              },
+              {
+                "control": "LeftStickClick",
+                "byte": 1,
+                "mask": 4
+              },
+              {
+                "control": "RightStickClick",
+                "byte": 1,
+                "mask": 8
+              },
+              {
+                "control": "Guide",
+                "byte": 1,
+                "mask": 16
+              },
+              {
+                "control": "Capture",
+                "byte": 1,
+                "mask": 32
+              }
+            ],
+            "axes": [
+              {
+                "control": "LeftStickX",
+                "byte": 3
+              },
+              {
+                "control": "LeftStickY",
+                "byte": 4
+              },
+              {
+                "control": "RightStickX",
+                "byte": 5
+              },
+              {
+                "control": "RightStickY",
+                "byte": 6
+              }
+            ],
+            "hat": [
+              {
+                "encoding": "EightWay",
+                "byte": 2,
+                "mask": 255
+              }
+            ]
+          },
           "tuning": {
             "frameQueueCapacity": "64"
           }
@@ -11458,6 +11878,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["input"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "controls": {
           "base": "Xbox",
@@ -11465,6 +11886,142 @@
           "digitalTriggers": ["LeftTrigger", "RightTrigger"]
         },
         "defaults": {
+          "input": {
+            "report": {
+              "id": 1,
+              "length": {
+                "exactly": 15
+              }
+            },
+            "buttons": [
+              {
+                "control": "South",
+                "byte": 9,
+                "mask": 16
+              },
+              {
+                "control": "East",
+                "byte": 9,
+                "mask": 32
+              },
+              {
+                "control": "West",
+                "byte": 9,
+                "mask": 64
+              },
+              {
+                "control": "North",
+                "byte": 9,
+                "mask": 128
+              },
+              {
+                "control": "LeftShoulder",
+                "byte": 10,
+                "mask": 1
+              },
+              {
+                "control": "RightShoulder",
+                "byte": 10,
+                "mask": 2
+              },
+              {
+                "control": "LeftTrigger",
+                "byte": 10,
+                "mask": 4
+              },
+              {
+                "control": "RightTrigger",
+                "byte": 10,
+                "mask": 8
+              },
+              {
+                "control": "Back",
+                "byte": 10,
+                "mask": 16
+              },
+              {
+                "control": "Start",
+                "byte": 10,
+                "mask": 32
+              },
+              {
+                "control": "LeftStickClick",
+                "byte": 10,
+                "mask": 64
+              },
+              {
+                "control": "RightStickClick",
+                "byte": 10,
+                "mask": 128
+              },
+              {
+                "control": "Guide",
+                "byte": 12,
+                "mask": 128
+              }
+            ],
+            "axes": [
+              {
+                "control": "LeftStickX",
+                "byte": 1,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              },
+              {
+                "control": "LeftStickY",
+                "byte": 2,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              },
+              {
+                "control": "RightStickX",
+                "byte": 3,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              },
+              {
+                "control": "RightStickY",
+                "byte": 4,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              }
+            ],
+            "hat": [
+              {
+                "encoding": "Table",
+                "byte": 9,
+                "mask": 15,
+                "values": {
+                  "1": "North",
+                  "2": "NorthEast",
+                  "3": "East",
+                  "4": "SouthEast",
+                  "5": "South",
+                  "6": "SouthWest",
+                  "7": "West",
+                  "8": "NorthWest"
+                }
+              }
+            ],
+            "leftTrigger": {
+              "byte": 13
+            },
+            "rightTrigger": {
+              "byte": 14
+            }
+          },
           "tuning": {
             "frameQueueCapacity": 0
           }
@@ -11485,6 +12042,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["input"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "controls": {
           "base": "Xbox",
@@ -11492,6 +12050,142 @@
           "digitalTriggers": ["LeftTrigger", "RightTrigger"]
         },
         "defaults": {
+          "input": {
+            "report": {
+              "id": 1,
+              "length": {
+                "exactly": 15
+              }
+            },
+            "buttons": [
+              {
+                "control": "South",
+                "byte": 9,
+                "mask": 16
+              },
+              {
+                "control": "East",
+                "byte": 9,
+                "mask": 32
+              },
+              {
+                "control": "West",
+                "byte": 9,
+                "mask": 64
+              },
+              {
+                "control": "North",
+                "byte": 9,
+                "mask": 128
+              },
+              {
+                "control": "LeftShoulder",
+                "byte": 10,
+                "mask": 1
+              },
+              {
+                "control": "RightShoulder",
+                "byte": 10,
+                "mask": 2
+              },
+              {
+                "control": "LeftTrigger",
+                "byte": 10,
+                "mask": 4
+              },
+              {
+                "control": "RightTrigger",
+                "byte": 10,
+                "mask": 8
+              },
+              {
+                "control": "Back",
+                "byte": 10,
+                "mask": 16
+              },
+              {
+                "control": "Start",
+                "byte": 10,
+                "mask": 32
+              },
+              {
+                "control": "LeftStickClick",
+                "byte": 10,
+                "mask": 64
+              },
+              {
+                "control": "RightStickClick",
+                "byte": 10,
+                "mask": 128
+              },
+              {
+                "control": "Guide",
+                "byte": 12,
+                "mask": 128
+              }
+            ],
+            "axes": [
+              {
+                "control": "LeftStickX",
+                "byte": 1,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              },
+              {
+                "control": "LeftStickY",
+                "byte": 2,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              },
+              {
+                "control": "RightStickX",
+                "byte": 3,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              },
+              {
+                "control": "RightStickY",
+                "byte": 4,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              }
+            ],
+            "hat": [
+              {
+                "encoding": "Table",
+                "byte": 9,
+                "mask": 15,
+                "values": {
+                  "1": "North",
+                  "2": "NorthEast",
+                  "3": "East",
+                  "4": "SouthEast",
+                  "5": "South",
+                  "6": "SouthWest",
+                  "7": "West",
+                  "8": "NorthWest"
+                }
+              }
+            ],
+            "leftTrigger": {
+              "byte": 13
+            },
+            "rightTrigger": {
+              "byte": 14
+            }
+          },
           "tuning": {
             "frameQueueCapacity": 1025
           }
@@ -11512,6 +12206,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["input"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "controls": {
           "base": "Xbox",
@@ -11519,6 +12214,142 @@
           "digitalTriggers": ["LeftTrigger", "RightTrigger"]
         },
         "defaults": {
+          "input": {
+            "report": {
+              "id": 1,
+              "length": {
+                "exactly": 15
+              }
+            },
+            "buttons": [
+              {
+                "control": "South",
+                "byte": 9,
+                "mask": 16
+              },
+              {
+                "control": "East",
+                "byte": 9,
+                "mask": 32
+              },
+              {
+                "control": "West",
+                "byte": 9,
+                "mask": 64
+              },
+              {
+                "control": "North",
+                "byte": 9,
+                "mask": 128
+              },
+              {
+                "control": "LeftShoulder",
+                "byte": 10,
+                "mask": 1
+              },
+              {
+                "control": "RightShoulder",
+                "byte": 10,
+                "mask": 2
+              },
+              {
+                "control": "LeftTrigger",
+                "byte": 10,
+                "mask": 4
+              },
+              {
+                "control": "RightTrigger",
+                "byte": 10,
+                "mask": 8
+              },
+              {
+                "control": "Back",
+                "byte": 10,
+                "mask": 16
+              },
+              {
+                "control": "Start",
+                "byte": 10,
+                "mask": 32
+              },
+              {
+                "control": "LeftStickClick",
+                "byte": 10,
+                "mask": 64
+              },
+              {
+                "control": "RightStickClick",
+                "byte": 10,
+                "mask": 128
+              },
+              {
+                "control": "Guide",
+                "byte": 12,
+                "mask": 128
+              }
+            ],
+            "axes": [
+              {
+                "control": "LeftStickX",
+                "byte": 1,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              },
+              {
+                "control": "LeftStickY",
+                "byte": 2,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              },
+              {
+                "control": "RightStickX",
+                "byte": 3,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              },
+              {
+                "control": "RightStickY",
+                "byte": 4,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              }
+            ],
+            "hat": [
+              {
+                "encoding": "Table",
+                "byte": 9,
+                "mask": 15,
+                "values": {
+                  "1": "North",
+                  "2": "NorthEast",
+                  "3": "East",
+                  "4": "SouthEast",
+                  "5": "South",
+                  "6": "SouthWest",
+                  "7": "West",
+                  "8": "NorthWest"
+                }
+              }
+            ],
+            "leftTrigger": {
+              "byte": 13
+            },
+            "rightTrigger": {
+              "byte": 14
+            }
+          },
           "tuning": {
             "frameQueueCapacity": 1.5
           }
@@ -11539,6 +12370,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["input"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "controls": {
           "base": "Xbox",
@@ -11546,6 +12378,142 @@
           "digitalTriggers": ["LeftTrigger", "RightTrigger"]
         },
         "defaults": {
+          "input": {
+            "report": {
+              "id": 1,
+              "length": {
+                "exactly": 15
+              }
+            },
+            "buttons": [
+              {
+                "control": "South",
+                "byte": 9,
+                "mask": 16
+              },
+              {
+                "control": "East",
+                "byte": 9,
+                "mask": 32
+              },
+              {
+                "control": "West",
+                "byte": 9,
+                "mask": 64
+              },
+              {
+                "control": "North",
+                "byte": 9,
+                "mask": 128
+              },
+              {
+                "control": "LeftShoulder",
+                "byte": 10,
+                "mask": 1
+              },
+              {
+                "control": "RightShoulder",
+                "byte": 10,
+                "mask": 2
+              },
+              {
+                "control": "LeftTrigger",
+                "byte": 10,
+                "mask": 4
+              },
+              {
+                "control": "RightTrigger",
+                "byte": 10,
+                "mask": 8
+              },
+              {
+                "control": "Back",
+                "byte": 10,
+                "mask": 16
+              },
+              {
+                "control": "Start",
+                "byte": 10,
+                "mask": 32
+              },
+              {
+                "control": "LeftStickClick",
+                "byte": 10,
+                "mask": 64
+              },
+              {
+                "control": "RightStickClick",
+                "byte": 10,
+                "mask": 128
+              },
+              {
+                "control": "Guide",
+                "byte": 12,
+                "mask": 128
+              }
+            ],
+            "axes": [
+              {
+                "control": "LeftStickX",
+                "byte": 1,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              },
+              {
+                "control": "LeftStickY",
+                "byte": 2,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              },
+              {
+                "control": "RightStickX",
+                "byte": 3,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              },
+              {
+                "control": "RightStickY",
+                "byte": 4,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              }
+            ],
+            "hat": [
+              {
+                "encoding": "Table",
+                "byte": 9,
+                "mask": 15,
+                "values": {
+                  "1": "North",
+                  "2": "NorthEast",
+                  "3": "East",
+                  "4": "SouthEast",
+                  "5": "South",
+                  "6": "SouthWest",
+                  "7": "West",
+                  "8": "NorthWest"
+                }
+              }
+            ],
+            "leftTrigger": {
+              "byte": 13
+            },
+            "rightTrigger": {
+              "byte": 14
+            }
+          },
           "tuning": {
             "frameQueueCapacity": "64"
           }
@@ -12938,7 +13906,9 @@
           },
           "input": {
             "report": {
-              "length": 20
+              "length": {
+                "atLeast": 20
+              }
             },
             "buttons": [
               {
@@ -13113,7 +14083,9 @@
           },
           "input": {
             "report": {
-              "length": 20
+              "length": {
+                "atLeast": 20
+              }
             },
             "buttons": [
               {
@@ -13288,7 +14260,9 @@
           },
           "input": {
             "report": {
-              "length": 20
+              "length": {
+                "atLeast": 20
+              }
             },
             "buttons": [
               {
@@ -13463,7 +14437,9 @@
           },
           "input": {
             "report": {
-              "length": 20
+              "length": {
+                "atLeast": 20
+              }
             },
             "buttons": [
               {
@@ -14043,7 +15019,9 @@
         "defaults": {
           "input": {
             "report": {
-              "length": 1
+              "length": {
+                "atLeast": 1
+              }
             },
             "buttons": [
               {
@@ -16244,9 +17222,9 @@
       }
     },
     {
-      "name": "rejects defaults a driver does not read: family=HIDDescriptor, defaults={'input': {'report': {'length': 1}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}]}}",
+      "name": "rejects defaults a driver does not read: family=HIDDescriptor, defaults={'input': {'report': {'length': {'atLeast': 1}}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}]}}",
       "code": "E5002",
-      "python": "E5002: hid-descriptor.json at defaults: False schema does not allow {'report': {'length': 1}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}]}",
+      "python": "E5002: hid-descriptor.json at defaults: False schema does not allow {'report': {'length': {'atLeast': 1}}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}]}",
       "swift": "E5002: hid-descriptor.json: an input layout applies only to a family that reads one",
       "fileName": "hid-descriptor.json",
       "document": {
@@ -16260,7 +17238,9 @@
         "defaults": {
           "input": {
             "report": {
-              "length": 1
+              "length": {
+                "atLeast": 1
+              }
             },
             "buttons": [
               {
@@ -16274,9 +17254,9 @@
       }
     },
     {
-      "name": "rejects defaults a driver does not read: family=XboxXUSB, defaults={'input': {'report': {'length': 1}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}]}}",
+      "name": "rejects defaults a driver does not read: family=XboxXUSB, defaults={'input': {'report': {'length': {'atLeast': 1}}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}]}}",
       "code": "E5002",
-      "python": "E5002: xbox-xusb.json at defaults: False schema does not allow {'report': {'length': 1}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}]}",
+      "python": "E5002: xbox-xusb.json at defaults: False schema does not allow {'report': {'length': {'atLeast': 1}}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}]}",
       "swift": "E5002: xbox-xusb.json: an input layout applies only to a family that reads one",
       "fileName": "xbox-xusb.json",
       "document": {
@@ -16294,7 +17274,9 @@
         "defaults": {
           "input": {
             "report": {
-              "length": 1
+              "length": {
+                "atLeast": 1
+              }
             },
             "buttons": [
               {
@@ -16311,9 +17293,9 @@
       }
     },
     {
-      "name": "rejects defaults a driver does not read: family=XboxXID, defaults={'input': {'report': {'length': 4}, 'axes': [{'control': 'LeftStickX', 'byte': 0, 'symmetric': True}]}}",
+      "name": "rejects defaults a driver does not read: family=XboxXID, defaults={'input': {'report': {'length': {'atLeast': 4}}, 'axes': [{'control': 'LeftStickX', 'byte': 0, 'symmetric': True}]}}",
       "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.input: {'report': {'length': 4}, 'axes': [{'control': 'LeftStickX', 'byte': 0, 'symmetric': True}]} is not valid under any of the given schemas",
+      "python": "E5002: xbox-xid.json at defaults.input: {'report': {'length': {'atLeast': 4}}, 'axes': [{'control': 'LeftStickX', 'byte': 0, 'symmetric': True}]} is not valid under any of the given schemas",
       "swift": "E5002: xbox-xid.json: description.defaults.input: a symmetric axis is signed with min below 0 below max",
       "fileName": "xbox-xid.json",
       "document": {
@@ -16331,7 +17313,9 @@
         "defaults": {
           "input": {
             "report": {
-              "length": 4
+              "length": {
+                "atLeast": 4
+              }
             },
             "axes": [
               {
@@ -16345,9 +17329,9 @@
       }
     },
     {
-      "name": "rejects defaults a driver does not read: family=XboxXID, defaults={'input': {'report': {'length': 4}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {}}]}}",
+      "name": "rejects defaults a driver does not read: family=XboxXID, defaults={'input': {'report': {'length': {'atLeast': 4}}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {}}]}}",
       "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.input: {'report': {'length': 4}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {}}]} is not valid under any of the given schemas",
+      "python": "E5002: xbox-xid.json at defaults.input: {'report': {'length': {'atLeast': 4}}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {}}]} is not valid under any of the given schemas",
       "swift": "E5002: xbox-xid.json: description.defaults.input: a table hat names directions for values its mask holds, and no neutral entry",
       "fileName": "xbox-xid.json",
       "document": {
@@ -16365,7 +17349,9 @@
         "defaults": {
           "input": {
             "report": {
-              "length": 4
+              "length": {
+                "atLeast": 4
+              }
             },
             "hat": [
               {
@@ -16380,9 +17366,9 @@
       }
     },
     {
-      "name": "rejects defaults a driver does not read: family=XboxXID, defaults={'input': {'report': {'length': 4}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {'01': 'North'}}]}}",
+      "name": "rejects defaults a driver does not read: family=XboxXID, defaults={'input': {'report': {'length': {'atLeast': 4}}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {'01': 'North'}}]}}",
       "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.input: {'report': {'length': 4}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {'01': 'North'}}]} is not valid under any of the given schemas",
+      "python": "E5002: xbox-xid.json at defaults.input: {'report': {'length': {'atLeast': 4}}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {'01': 'North'}}]} is not valid under any of the given schemas",
       "swift": "E5002: xbox-xid.json: description.defaults.input.hat.[0]: values map decimal numbers to non-neutral direction names",
       "fileName": "xbox-xid.json",
       "document": {
@@ -16400,7 +17386,9 @@
         "defaults": {
           "input": {
             "report": {
-              "length": 4
+              "length": {
+                "atLeast": 4
+              }
             },
             "hat": [
               {
@@ -16417,9 +17405,9 @@
       }
     },
     {
-      "name": "rejects defaults a driver does not read: family=XboxXID, defaults={'input': {'report': {'length': 4}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {'1': 'Neutral'}}]}}",
+      "name": "rejects defaults a driver does not read: family=XboxXID, defaults={'input': {'report': {'length': {'atLeast': 4}}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {'1': 'Neutral'}}]}}",
       "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.input: {'report': {'length': 4}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {'1': 'Neutral'}}]} is not valid under any of the given schemas",
+      "python": "E5002: xbox-xid.json at defaults.input: {'report': {'length': {'atLeast': 4}}, 'hat': [{'encoding': 'Table', 'byte': 2, 'mask': 15, 'values': {'1': 'Neutral'}}]} is not valid under any of the given schemas",
       "swift": "E5002: xbox-xid.json: description.defaults.input.hat.[0]: values map decimal numbers to non-neutral direction names",
       "fileName": "xbox-xid.json",
       "document": {
@@ -16437,7 +17425,9 @@
         "defaults": {
           "input": {
             "report": {
-              "length": 4
+              "length": {
+                "atLeast": 4
+              }
             },
             "hat": [
               {
@@ -16904,6 +17894,135 @@
                   "length": 4
                 },
                 "bytes": "01 02 03"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects malformed input lengths: integer",
+      "code": "E5002",
+      "python": "E5002: hid-report-layout.json at defaults.input: {'report': {'length': 4}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}]} is not valid under any of the given schemas",
+      "swift": "E5002: hid-report-layout.json: description.defaults.input.report.length: Expected to decode Dictionary<String, Any> but found number instead.",
+      "fileName": "hid-report-layout.json",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "HIDReportLayout",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "recordSections": ["input", "rumble"],
+        "defaults": {
+          "input": {
+            "report": {
+              "length": 4
+            },
+            "buttons": [
+              {
+                "control": "South",
+                "byte": 0,
+                "mask": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects malformed input lengths: both bounds",
+      "code": "E5002",
+      "python": "E5002: hid-report-layout.json at defaults.input: {'report': {'length': {'atLeast': 4, 'exactly': 4}}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}]} is not valid under any of the given schemas",
+      "swift": "E5002: hid-report-layout.json: description.defaults.input.report.length: length names exactly one of atLeast and exactly",
+      "fileName": "hid-report-layout.json",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "HIDReportLayout",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "recordSections": ["input", "rumble"],
+        "defaults": {
+          "input": {
+            "report": {
+              "length": {
+                "atLeast": 4,
+                "exactly": 4
+              }
+            },
+            "buttons": [
+              {
+                "control": "South",
+                "byte": 0,
+                "mask": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects malformed input lengths: empty object",
+      "code": "E5002",
+      "python": "E5002: hid-report-layout.json at defaults.input: {'report': {'length': {}}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}]} is not valid under any of the given schemas",
+      "swift": "E5002: hid-report-layout.json: description.defaults.input.report.length: length names exactly one of atLeast and exactly",
+      "fileName": "hid-report-layout.json",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "HIDReportLayout",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "recordSections": ["input", "rumble"],
+        "defaults": {
+          "input": {
+            "report": {
+              "length": {}
+            },
+            "buttons": [
+              {
+                "control": "South",
+                "byte": 0,
+                "mask": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects malformed input lengths: zero exact",
+      "code": "E5002",
+      "python": "E5002: hid-report-layout.json at defaults.input: {'report': {'length': {'exactly': 0}}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}]} is not valid under any of the given schemas",
+      "swift": "E5002: hid-report-layout.json: description.defaults.input: an input report is 1...64 bytes long, with its ID byte",
+      "fileName": "hid-report-layout.json",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "HIDReportLayout",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "recordSections": ["input", "rumble"],
+        "defaults": {
+          "input": {
+            "report": {
+              "length": {
+                "exactly": 0
+              }
+            },
+            "buttons": [
+              {
+                "control": "South",
+                "byte": 0,
+                "mask": 1
               }
             ]
           }

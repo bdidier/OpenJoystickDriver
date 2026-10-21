@@ -660,9 +660,33 @@
               "maximum": 255
             },
             "length": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 64
+              "description": "atLeast decodes every report of at least that many bytes; exactly decodes only reports of that length. With an id, the length counts the id byte.",
+              "oneOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["atLeast"],
+                  "properties": {
+                    "atLeast": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 64
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["exactly"],
+                  "properties": {
+                    "exactly": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 64
+                    }
+                  }
+                }
+              ]
             }
           }
         },

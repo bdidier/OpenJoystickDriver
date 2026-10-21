@@ -37,12 +37,16 @@ private func makeXIDReport(
   return Data(r)
 }
 
-struct XIDDriverTests {
+struct XboxXIDParserTests {
+  static let family = PhysicalProtocolID.xboxXID
+  static let model = ControllerModelID(vendorID: 0x045E, productID: 0x0202)
+
   @Test
   func rumbleUsesXIDBigEndianFullRangeMotorsAndCatalogEndpoint() throws {
-    let parser = XIDDriver(outEndpoint: 0x07)
+    let parser = xidDriver(outEndpoint: 0x07)
     let catalogParser = try #require(
-      try catalogParser(ControllerModelID(vendorID: 0x045E, productID: 0x0202)) as? XIDDriver
+      try catalogParser(ControllerModelID(vendorID: 0x045E, productID: 0x0202))
+        as? ReportLayoutDriver
     )
 
     #expect(parser.outputCapabilities.rumbleMotors == [.lowFrequency, .highFrequency])
@@ -74,7 +78,7 @@ struct XIDDriverTests {
       .neutral, .north, .south, .neutral, .west, .northWest, .southWest, .neutral, .east,
       .northEast, .southEast, .neutral, .neutral, .neutral, .neutral, .neutral,
     ]
-    let parser = XIDDriver()
+    let parser = xidDriver()
     _ = try parser.parseReport(makeXIDReport(digital: mask == 1 ? 2 : 1))
     let events = try parser.parseReport(makeXIDReport(digital: mask))
     #expect(events?.state.hat == directions[Int(mask)])
@@ -82,12 +86,12 @@ struct XIDDriverTests {
 
   @Test
   func shortReportIsIgnored() throws {
-    #expect(try XIDDriver().parseReport(Data([0x00, 0x14, 0x00])) == nil)
+    #expect(try xidDriver().parseReport(Data([0x00, 0x14, 0x00])) == nil)
   }
 
   @Test
   func analogABecomesDigitalPress() throws {
-    let parser = XIDDriver()
+    let parser = xidDriver()
     _ = try parser.parseReport(makeXIDReport())
     let events = try parser.parseReport(makeXIDReport(analogA: 0xFF))
     #expect(events.contains(.press(.south)))
@@ -95,7 +99,7 @@ struct XIDDriverTests {
 
   @Test
   func digitalStartAndDpadMatchLinuxXpad() throws {
-    let parser = XIDDriver()
+    let parser = xidDriver()
     _ = try parser.parseReport(makeXIDReport())
     let events = try parser.parseReport(makeXIDReport(digital: 0x11))
     #expect(events.contains(.press(.start)))
@@ -104,7 +108,7 @@ struct XIDDriverTests {
 
   @Test
   func analogTriggersAndBlackWhiteShoulders() throws {
-    let parser = XIDDriver()
+    let parser = xidDriver()
     _ = try parser.parseReport(makeXIDReport())
     let events = try parser.parseReport(makeXIDReport(black: 0x80, white: 0x40, lt: 128, rt: 255))
     #expect(events.contains(.press(.leftShoulder)))
@@ -115,7 +119,7 @@ struct XIDDriverTests {
 
   @Test
   func analogZeroReleasesFaceButton() throws {
-    let parser = XIDDriver()
+    let parser = xidDriver()
     _ = try parser.parseReport(makeXIDReport(analogY: 0x20))
     let events = try parser.parseReport(makeXIDReport(analogY: 0))
     #expect(events.contains(.release(.north)))

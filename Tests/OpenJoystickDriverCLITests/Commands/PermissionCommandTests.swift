@@ -79,7 +79,7 @@ struct PermissionCommandTests {
       await StatusCommand.$extensionProbe.withValue(Self.inactiveExtension) {
         await PermissionListCommand.$localSnapshot.withValue(Self.deniedLocally) {
           await PermissionListCommand.$localPostEventAccess.withValue(Self.notAuthorizedLocally) {
-            await CLIRun.run(arguments + ["--timeout", "5"])
+            await CLIRun.run(arguments + testServerTimeout)
           }
         }
       }

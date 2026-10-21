@@ -100,6 +100,8 @@ public struct ControllerInputLayout: Equatable, Sendable {
   public let reportID: UInt8?
   /// Shorter reports are ignored. With a report ID, the length counts the ID byte.
   public let minimumLength: Int
+  /// Whether a report longer than `minimumLength` is ignored too.
+  public let requiresExactLength: Bool
   public let buttons: [Button]
   public let axes: [Axis]
   public let hat: [HatSource]
@@ -111,6 +113,7 @@ public struct ControllerInputLayout: Equatable, Sendable {
   init(
     reportID: UInt8?,
     minimumLength: Int,
+    requiresExactLength: Bool,
     buttons: [(Control, ReportBitField)],
     axes: [Axis],
     hat: [HatSource],
@@ -219,6 +222,7 @@ public struct ControllerInputLayout: Equatable, Sendable {
     }
     self.reportID = reportID
     self.minimumLength = minimumLength
+    self.requiresExactLength = requiresExactLength
     self.buttons = grouped
     self.axes = axes
     self.hat = hat

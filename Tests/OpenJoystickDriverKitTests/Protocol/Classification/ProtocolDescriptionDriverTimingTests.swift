@@ -126,9 +126,9 @@ struct ProtocolDescriptionDriverTimingTests {
 
   @Test
   func xidReadsTheTransferTimeout() {
-    #expect(XIDDriver().usbTimeoutMilliseconds == 2_000)
-    let tuned = XIDDriver(tuning: .init(usbTransferTimeoutMilliseconds: 750))
-    #expect(tuned.usbTimeoutMilliseconds == 750)
+    let plain = try? xidDriver().encode(.stopRumble)
+    #expect(plain.onlyPacket.timeoutMilliseconds == 2_000)
+    let tuned = xidDriver(tuning: .init(usbTransferTimeoutMilliseconds: 750))
     let plan = try? tuned.encode(.stopRumble)
     #expect(plan.onlyPacket.timeoutMilliseconds == 750)
   }

@@ -3,7 +3,7 @@ import Testing
 
 @testable import OpenJoystickDriverKit
 
-/// The record text format: the bundled files are the reference, byte for byte.
+/// The record text format: the record, patch and sample files are the reference, byte for byte.
 struct OrderedJSONTests {
   private static let repository = URL(fileURLWithPath: #filePath)
     .deletingLastPathComponent()  // Catalog
@@ -22,10 +22,11 @@ struct OrderedJSONTests {
   }
 
   @Test
-  func everyBundledRecordFileRoundTripsByteForByte() throws {
+  func everyRecordFileRoundTripsByteForByte() throws {
     var checked = 0
     for directory in [
-      "Resources/Controllers", "Sources/OpenJoystickDriverKit/Resources/Controllers",
+      "Resources/Controllers", "Resources/ControllerPatches",
+      "Sources/OpenJoystickDriverKit/Resources/Controllers", "docs/sdk/sample/Controllers",
     ] {
       for url in try Self.recordFiles(under: directory) {
         let data = try Data(contentsOf: url)

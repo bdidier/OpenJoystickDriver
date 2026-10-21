@@ -779,7 +779,7 @@ USB_WRITE = {"bytes": "05 20 00 01 00"}
 
 REPORT_LAYOUT = {"family": "HIDReportLayout"}
 BUTTON = {"control": "South", "byte": 1, "mask": 1}
-LAYOUT = {"report": {"length": 2}, "buttons": [BUTTON]}
+LAYOUT = {"report": {"length": {"atLeast": 2}}, "buttons": [BUTTON]}
 
 
 class InputLayoutTests(unittest.TestCase):
@@ -792,7 +792,7 @@ class InputLayoutTests(unittest.TestCase):
             "symmetric axis without a range": record(
                 REPORT_LAYOUT,
                 input={
-                    "report": {"length": 2},
+                    "report": {"length": {"atLeast": 2}},
                     "axes": [
                         {
                             "control": "LeftStickX",
@@ -807,7 +807,7 @@ class InputLayoutTests(unittest.TestCase):
             "every section": record(
                 REPORT_LAYOUT,
                 input={
-                    "report": {"id": 1, "length": 8},
+                    "report": {"id": 1, "length": {"atLeast": 8}},
                     "buttons": [BUTTON],
                     "axes": [
                         {
@@ -846,6 +846,10 @@ class InputLayoutTests(unittest.TestCase):
                     "rightTrigger": {"button": {"byte": 1, "mask": 2}},
                 },
             ),
+            "exact length": record(
+                REPORT_LAYOUT,
+                input={**LAYOUT, "report": {"length": {"exactly": 2}}},
+            ),
             "layout with rumble": record(
                 REPORT_LAYOUT, input=LAYOUT, session={"rumble": GP100_RUMBLE}
             ),
@@ -862,12 +866,29 @@ class InputLayoutTests(unittest.TestCase):
             "missing input": record(REPORT_LAYOUT),
             "input on another family": record(THIRD_PARTY, input=LAYOUT),
             "report ID 0": record(
-                REPORT_LAYOUT, input={**LAYOUT, "report": {"id": 0, "length": 2}}
+                REPORT_LAYOUT,
+                input={**LAYOUT, "report": {"id": 0, "length": {"atLeast": 2}}},
             ),
             "long report": record(
-                REPORT_LAYOUT, input={**LAYOUT, "report": {"length": 65}}
+                REPORT_LAYOUT, input={**LAYOUT, "report": {"length": {"atLeast": 65}}}
             ),
-            "report only": record(REPORT_LAYOUT, input={"report": {"length": 2}}),
+            "report only": record(
+                REPORT_LAYOUT, input={"report": {"length": {"atLeast": 2}}}
+            ),
+            "integer length": record(
+                REPORT_LAYOUT, input={**LAYOUT, "report": {"length": 2}}
+            ),
+            "length with both bounds": record(
+                REPORT_LAYOUT,
+                input={**LAYOUT, "report": {"length": {"atLeast": 2, "exactly": 2}}},
+            ),
+            "empty length": record(
+                REPORT_LAYOUT, input={**LAYOUT, "report": {"length": {}}}
+            ),
+            "zero exact length": record(
+                REPORT_LAYOUT,
+                input={**LAYOUT, "report": {"length": {"exactly": 0}}},
+            ),
             "empty buttons": record(REPORT_LAYOUT, input={**LAYOUT, "buttons": []}),
             "zero mask": record(
                 REPORT_LAYOUT, input={**LAYOUT, "buttons": [{**BUTTON, "mask": 0}]}

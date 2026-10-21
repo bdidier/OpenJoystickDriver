@@ -23,6 +23,31 @@ Codec and concurrency tests cover these contracts. They do not establish signed 
 
 Build with SwiftPM; neither Xcode.app nor disabling SIP is required.
 
+## Protocol Coverage
+
+Every physical protocol family has a description in `Resources/Protocols/` and a driver. The description holds the facts a table can state: endpoints, variants, controls, tuning keys, record sections, session writes and rumble templates. The driver decodes input and builds the output that follows state. Every family has a parser test, and `ProtocolParserCoverageTests` fails when a family has no suite in its list.
+
+| Family | Described | Stays coded, and why | Parser test suite |
+| --- | --- | --- | --- |
+| `HIDDescriptor` | Usage map (`defaults.input`), tuning keys | The driver reads the device's own HID report descriptor to find the elements, which only the device can state. | `HIDDescriptorDriverTests` |
+| `HIDReportLayout` | Sections, tuning keys | The interpreter of the layout; the byte layout is a record's `input`. | `ReportLayoutDriverTests` |
+| `XboxXID` | Byte layout (`defaults.input`), rumble template (`defaults.session.rumble`) | Nothing: `ReportLayoutDriver` decodes the layout and sends the raw-USB rumble template to the interface's output endpoint within `usbTransferTimeoutMs`. | `XboxXIDParserTests` |
+| `XboxXUSB` | Startup, rumble templates (`defaults.variants.*.session.rumble`), receiver inquiry limit | Input decoding follows the report type and length byte, and the receiver tracks which controllers are connected; the player-indicator packet (`XUSBDriver.ledPacket`) holds the requested pattern. | `XUSBDriverTests` |
+| `XboxGIP` | Startup, keep-alive, named packets, handshake limits | GIP authentication (`GIP/Auth.swift`), the packet sequencer, frame reassembly and input decoding follow the exchange with the device. | `GIPDriverTests` |
+| `SonySixaxis` | Variants, controls, tuning keys, `macOSOwnedOutput` | Input decoding skips a report whose byte 1 is `0xFF` (`SixaxisDriver.parse`); startup feature reads (see below); the output report follows the requested LEDs and rumble. | `SixaxisDriverTests` |
+| `SonyDualShock4` | Startup, parameters, `macOSOwnedOutput` | Touch and motion decoding follows calibration data and sample timestamps; the output report carries the requested colour and rumble; Bluetooth CRC32 (`SonyBluetoothCRC32`). | `DualShock4DriverTests` |
+| `SonyDualSense` | Variants, parameters, controls | Touch and motion decoding follows calibration data and sample timestamps; the output report carries the requested colour, triggers and rumble; Bluetooth CRC32. | `DualSenseDriverTests` |
+| `NintendoSwitch1` | Subcommand requests, rumble template, startup | Input decoding, the subcommand header and the calibration replies (see below). | `Switch1DriverTests` |
+| `NintendoSwitch2` | Command channel, startup, keep-alive period | Input decoding, flash calibration, the rumble keep-alive (see below). | `Switch2DriverTests` |
+| `NintendoSwitchInputOnly` | Byte layout (`defaults.input`), variants, controls | Nothing: `ReportLayoutDriver` decodes the layout; the pads take no output. | `SwitchInputOnlyParserTests` |
+| `ValveSteamController` | Activation and deactivation writes, write transports | Touch and motion decoding and the wireless receiver state follow the report stream; the held-rumble pulse train (see below). | `SteamControllerDriverTests` |
+| `ValveSteamTriton` | Activation, deactivation, keep-alive | Touch and motion decoding follow sample timestamps and the logical controller's connection state; the rumble resend (see below). | `SteamTritonDriverTests` |
+| `ValveSteamDeck` | Activation, deactivation, keep-alive | Touch and motion decoding follow the state report header; the rumble report holds the requested motor values. | `SteamDeckDriverTests` |
+| `VendorFlydigi` | Byte layout (`defaults.input`, report ID 1, exactly 15 bytes), controls, tuning keys | Nothing: `ReportLayoutDriver` decodes the layout; the pad takes no output. | `FlydigiParserTests` |
+| `VendorPS3ThirdParty` | Parameters; a record may carry a rumble template (`recordSections`), the description has none | Input decoding picks the 19-byte or the compact layout by report length and runs only after the feature reply carries SDL's marker (see below). | `PS3ThirdPartyDriverTests` |
+| `VendorGameSir` | Startup, keep-alive, rumble, parameters | Input decoding follows the protocol's readiness reports; the lighting and G7 command packets carry a sequence number and the requested colours or values. | `GameSirDriverTests` |
+| `VendorNVIDIAShield` | Rumble template, parameters | Input decoding picks the v103 or v104 layout by report length and report ID. | `NVIDIAShieldDriverTests` |
+
 ## Coded Behavior
 
 Protocol bytes and timings live in the family descriptions under `Resources/Protocols/`. What stays in a driver follows driver or rumble state, so no fixed bytes or fixed interval can describe it. This list names each such behavior and why it is code; it grows as more of a driver moves into its description.
