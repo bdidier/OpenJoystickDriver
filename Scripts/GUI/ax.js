@@ -7,7 +7,7 @@
 //   app-state                  "main=true|false settings=<tab>|none"
 //   current-sidebar            label of the selected sidebar row of the main window
 //   select-sidebar <label>     selects that sidebar row
-//   open-main-window <app>     opens the app bundle and waits for the main window
+//   wait-main-window           waits for the main window to appear
 //   open-settings <tab>        opens Settings from the app menu and selects the tab
 //   window-bounds main|settings   "x y width height"
 //   close-window main|settings    presses the close button
