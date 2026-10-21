@@ -146,7 +146,12 @@ struct ControllerRecordDraftTests {
     )
     #expect(text.hasPrefix("{\n  \"apiVersion\": \"\(OpenJoystickDriverAPI.version)\",\n"))
     #expect(text.contains("\n  \"vendorID\": 4660,\n  \"productID\": 22136,\n"))
-    #expect(text.contains("\"report\": {\n      \"id\": 1,\n      \"length\": 6\n    }"))
+    #expect(
+      text.contains(
+        "\"report\": {\n      \"id\": 1,\n      \"length\": {\n"
+          + "        \"atLeast\": 6\n      }\n    }"
+      )
+    )
     #expect(text.contains("{\n      \"id\": \"default\",\n      \"protocol\": {\n"))
   }
 }
