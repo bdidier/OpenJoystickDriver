@@ -528,9 +528,9 @@
 "banner.access.title" = "Permissão necessária";
 "banner.access.detail" = "O macOS não permitiu tudo o que o OpenJoystickDriver precisa para ler os controles e publicá-los nos jogos.";
 "banner.liveUpdates.title" = "Atualizações em tempo real indisponíveis";
-"banner.liveUpdates.detail.closed" = "O serviço fechou a conexão. O OpenJoystickDriver verifica alterações nos controles a cada segundo.";
-"banner.liveUpdates.detail.timeout" = "O serviço não respondeu a tempo. O OpenJoystickDriver verifica alterações nos controles a cada segundo.";
-"banner.liveUpdates.detail.other" = "As atualizações em tempo real do serviço não estão funcionando. O OpenJoystickDriver verifica alterações nos controles a cada segundo.";
+"banner.liveUpdates.detail.closed" = "O serviço fechou a conexão. Em vez disso, o OpenJoystickDriver verifica alterações nos controles a cada segundo.";
+"banner.liveUpdates.detail.timeout" = "O serviço não respondeu a tempo. Em vez disso, o OpenJoystickDriver verifica alterações nos controles a cada segundo.";
+"banner.liveUpdates.detail.other" = "As atualizações em tempo real do serviço não estão funcionando. Em vez disso, o OpenJoystickDriver verifica alterações nos controles a cada segundo.";
 "cli.login.uninstall_action" = "Desinstalar";
 "console.all" = "Todos";
 "console.empty" = "Não há entradas de registro.";
@@ -796,11 +796,8 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "Suspenso";
-"controllers.suspendedSummary" = "A entrada e a saída do OpenJoystickDriver ficam pausadas até você retomar.";
-"controllers.disconnectSummary" = "Pausa a entrada, os efeitos físicos e a saída virtual do OpenJoystickDriver.";
 "error.controllerSessionChangeRejected" = "Não foi possível alterar a sessão do controle.";
 
-"controllers.disconnectWirelessSummary" = "Interrompe esta conexão Bluetooth sem afetar outros controles.";
 "controllers.disconnectWirelessConfirmTitle" = "Desconectar controle sem fio?";
 "controllers.disconnectWirelessConfirmMessage" = "%@ permanecerá desconectado até você conectá-lo novamente de forma manual.";
 "controllers.disconnectWirelessConfirm" = "Desconectar";
@@ -1942,6 +1939,7 @@
 "cli.setting.reset.confirm" = "Mover o arquivo de ajustes para a Lixeira e voltar cada ajuste ao valor padrão?";
 "cli.setting.reset.success" = "%@ foi movido para a Lixeira.";
 "cli.setting.reset.none" = "Não há arquivo de ajustes em %@.";
+/* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "A saída virtual está desativada";
 "controllers.publication.reason.systemGamepad" = "O macOS a trata como gamepad";
 "controllers.publication.reason.nativeHIDPassThrough" = "O macOS trata a entrada diretamente";
@@ -1950,12 +1948,20 @@
 "controllers.publication.reason.noVirtualProfile" = "Nenhum perfil virtual se encaixa";
 "controllers.publication.reason.suppressed" = "Saída pausada";
 "controllers.publication.reason.noInputYet" = "Aguardando a primeira entrada";
+/* Publication state with its reason or failure, for example "Not published (Waiting for the first input)". %1$@ is the state and %2$@ the reason. */
 "controllers.publication.withReason" = "%1$@ (%2$@)";
 "controllers.publication.failedSend" = "O último envio falhou: %@";
+/* Serving route with why it publishes nothing, for example "Output off (No virtual profile fits it)". %1$@ is the route and %2$@ the reason. */
+"controllers.serving.withReason" = "%1$@ (%2$@)";
+/* Why a controller's input health is failing. */
 "controllers.inputHealth.reason.missingReports" = "Nenhum relatório chegando";
 "controllers.inputHealth.reason.freshnessNotAdvancing" = "Os relatórios não avançam";
+/* Input health state with its failure reason, for example "Stale (No reports arriving)". %1$@ is the state and %2$@ the reason. */
+"controllers.inputHealth.withReason" = "%1$@ (%2$@)";
+/* How a controller was discovered. */
 "controllers.discovery.hid" = "HID";
 "controllers.discovery.rawUSB" = "USB bruto";
+/* Who holds the physical controller. */
 "controllers.physicalOwnership.exclusiveHID" = "HID exclusivo";
 "controllers.physicalOwnership.exclusiveRawUSB" = "USB bruto exclusivo";
 "controllers.physicalOwnership.extensionOwnedUSB" = "Extensão USB";
@@ -1963,13 +1969,16 @@
 "controllers.physicalOwnership.systemGamepad" = "Gamepad do sistema";
 "controllers.physicalOwnership.upstreamVirtualDevice" = "Dispositivo virtual de origem";
 "controllers.physicalOwnership.unknown" = "Desconhecido";
+/* Result of acquiring HID input. */
 "controllers.hidInputOwnership.unknown" = "Desconhecido";
 "controllers.hidInputOwnership.exclusive" = "Exclusivo";
 "controllers.hidInputOwnership.shared" = "Compartilhado";
 "controllers.hidInputOwnership.accessDenied" = "Acesso negado";
 "controllers.hidInputOwnership.ownedByAnotherClient" = "Em uso por outro app";
 "controllers.hidInputOwnership.acquisitionFailed" = "Falha na aquisição";
+/* Ownership summary: %1$@ is the discovery route, %2$@ the owner and %3$@ the HID input result. */
 "controllers.ownership.value" = "Descoberto via %1$@. Proprietário: %2$@. Entrada HID: %3$@.";
+/* Why closing a controller's Bluetooth link failed. */
 "controllers.disconnectWireless.failure.notFound" = "O controle não está mais conectado";
 "controllers.disconnectWireless.failure.notBluetooth" = "O controle não está conectado por Bluetooth";
 "controllers.disconnectWireless.failure.bluetoothLEUnsupported" = "Controles Bluetooth LE não podem ser desconectados daqui";

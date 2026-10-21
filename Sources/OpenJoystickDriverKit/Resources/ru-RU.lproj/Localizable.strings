@@ -796,11 +796,8 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "Приостановлено";
-"controllers.suspendedSummary" = "Ввод и вывод OpenJoystickDriver приостановлены до возобновления.";
-"controllers.disconnectSummary" = "Приостановить ввод, физические эффекты и виртуальный вывод OpenJoystickDriver.";
 "error.controllerSessionChangeRejected" = "Не удалось изменить сеанс контроллера.";
 
-"controllers.disconnectWirelessSummary" = "Разорвать это соединение Bluetooth, не затрагивая другие контроллеры.";
 "controllers.disconnectWirelessConfirmTitle" = "Отключить беспроводной контроллер?";
 "controllers.disconnectWirelessConfirmMessage" = "%@ останется отключённым, пока вы не подключите его снова вручную.";
 "controllers.disconnectWirelessConfirm" = "Отключить";
@@ -1941,6 +1938,7 @@
 "cli.setting.reset.confirm" = "Переместить файл настроек в Корзину и вернуть все настройки к значениям по умолчанию?";
 "cli.setting.reset.success" = "%@ перемещён в Корзину.";
 "cli.setting.reset.none" = "Файла настроек по пути %@ нет.";
+/* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "Виртуальный вывод выключен";
 "controllers.publication.reason.systemGamepad" = "macOS обрабатывает его как геймпад";
 "controllers.publication.reason.nativeHIDPassThrough" = "macOS обрабатывает его ввод напрямую";
@@ -1949,12 +1947,20 @@
 "controllers.publication.reason.noVirtualProfile" = "Подходящего виртуального профиля нет";
 "controllers.publication.reason.suppressed" = "Вывод приостановлен";
 "controllers.publication.reason.noInputYet" = "Ожидание первого ввода";
+/* Publication state with its reason or failure, for example "Not published (Waiting for the first input)". %1$@ is the state and %2$@ the reason. */
 "controllers.publication.withReason" = "%1$@ (%2$@)";
 "controllers.publication.failedSend" = "Последняя отправка не удалась: %@";
+/* Serving route with why it publishes nothing, for example "Output off (No virtual profile fits it)". %1$@ is the route and %2$@ the reason. */
+"controllers.serving.withReason" = "%1$@ (%2$@)";
+/* Why a controller's input health is failing. */
 "controllers.inputHealth.reason.missingReports" = "Отчёты не поступают";
 "controllers.inputHealth.reason.freshnessNotAdvancing" = "Отчёты не обновляются";
+/* Input health state with its failure reason, for example "Stale (No reports arriving)". %1$@ is the state and %2$@ the reason. */
+"controllers.inputHealth.withReason" = "%1$@ (%2$@)";
+/* How a controller was discovered. */
 "controllers.discovery.hid" = "HID";
 "controllers.discovery.rawUSB" = "Прямой USB";
+/* Who holds the physical controller. */
 "controllers.physicalOwnership.exclusiveHID" = "Монопольный HID";
 "controllers.physicalOwnership.exclusiveRawUSB" = "Монопольный прямой USB";
 "controllers.physicalOwnership.extensionOwnedUSB" = "Расширение USB";
@@ -1962,13 +1968,16 @@
 "controllers.physicalOwnership.systemGamepad" = "Системный геймпад";
 "controllers.physicalOwnership.upstreamVirtualDevice" = "Вышестоящее виртуальное устройство";
 "controllers.physicalOwnership.unknown" = "Неизвестно";
+/* Result of acquiring HID input. */
 "controllers.hidInputOwnership.unknown" = "Неизвестно";
 "controllers.hidInputOwnership.exclusive" = "Монопольный";
 "controllers.hidInputOwnership.shared" = "Общий";
 "controllers.hidInputOwnership.accessDenied" = "Доступ запрещён";
 "controllers.hidInputOwnership.ownedByAnotherClient" = "Занят другим приложением";
 "controllers.hidInputOwnership.acquisitionFailed" = "Не удалось захватить";
+/* Ownership summary: %1$@ is the discovery route, %2$@ the owner and %3$@ the HID input result. */
 "controllers.ownership.value" = "Обнаружен через %1$@. Владелец: %2$@. Ввод HID: %3$@.";
+/* Why closing a controller's Bluetooth link failed. */
 "controllers.disconnectWireless.failure.notFound" = "Контроллер больше не подключён";
 "controllers.disconnectWireless.failure.notBluetooth" = "Контроллер подключён не по Bluetooth";
 "controllers.disconnectWireless.failure.bluetoothLEUnsupported" = "Контроллеры Bluetooth LE нельзя отключить отсюда";

@@ -796,11 +796,8 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "ถูกระงับ";
-"controllers.suspendedSummary" = "อินพุตและเอาต์พุตของ OpenJoystickDriver หยุดชั่วคราวจนกว่าคุณจะทำต่อ";
-"controllers.disconnectSummary" = "หยุดอินพุต เอฟเฟ็กต์ทางกายภาพ และเอาต์พุตเสมือนของ OpenJoystickDriver ชั่วคราว";
 "error.controllerSessionChangeRejected" = "ไม่สามารถเปลี่ยนเซสชั่นของคอนโทรลเลอร์ได้";
 
-"controllers.disconnectWirelessSummary" = "หยุดการเชื่อมต่อบลูทูธนี้โดยไม่กระทบกับคอนโทรลเลอร์อื่น";
 "controllers.disconnectWirelessConfirmTitle" = "เลิกเชื่อมต่อคอนโทรลเลอร์ไร้สายหรือไม่";
 "controllers.disconnectWirelessConfirmMessage" = "%@ จะยังคงเลิกเชื่อมต่อจนกว่าคุณจะเชื่อมต่ออีกครั้งด้วยตนเอง";
 "controllers.disconnectWirelessConfirm" = "เลิกเชื่อมต่อ";
@@ -1941,6 +1938,7 @@
 "cli.setting.reset.confirm" = "ย้ายไฟล์การตั้งค่าไปที่ถังขยะและคืนทุกการตั้งค่าเป็นค่าเริ่มต้นหรือไม่";
 "cli.setting.reset.success" = "ย้าย %@ ไปที่ถังขยะแล้ว";
 "cli.setting.reset.none" = "ไม่มีไฟล์การตั้งค่าที่ %@";
+/* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "เอาต์พุตเสมือนปิดอยู่";
 "controllers.publication.reason.systemGamepad" = "macOS จัดการเป็นเกมแพด";
 "controllers.publication.reason.nativeHIDPassThrough" = "macOS จัดการอินพุตโดยตรง";
@@ -1949,12 +1947,20 @@
 "controllers.publication.reason.noVirtualProfile" = "ไม่มีโปรไฟล์เสมือนที่เหมาะสม";
 "controllers.publication.reason.suppressed" = "เอาต์พุตถูกหยุดชั่วคราว";
 "controllers.publication.reason.noInputYet" = "กำลังรออินพุตแรก";
+/* Publication state with its reason or failure, for example "Not published (Waiting for the first input)". %1$@ is the state and %2$@ the reason. */
 "controllers.publication.withReason" = "%1$@ (%2$@)";
 "controllers.publication.failedSend" = "การส่งครั้งล่าสุดล้มเหลว: %@";
+/* Serving route with why it publishes nothing, for example "Output off (No virtual profile fits it)". %1$@ is the route and %2$@ the reason. */
+"controllers.serving.withReason" = "%1$@ (%2$@)";
+/* Why a controller's input health is failing. */
 "controllers.inputHealth.reason.missingReports" = "ไม่มีรายงานเข้ามา";
 "controllers.inputHealth.reason.freshnessNotAdvancing" = "รายงานไม่อัปเดต";
+/* Input health state with its failure reason, for example "Stale (No reports arriving)". %1$@ is the state and %2$@ the reason. */
+"controllers.inputHealth.withReason" = "%1$@ (%2$@)";
+/* How a controller was discovered. */
 "controllers.discovery.hid" = "HID";
 "controllers.discovery.rawUSB" = "USB ดิบ";
+/* Who holds the physical controller. */
 "controllers.physicalOwnership.exclusiveHID" = "HID แบบเฉพาะ";
 "controllers.physicalOwnership.exclusiveRawUSB" = "USB ดิบแบบเฉพาะ";
 "controllers.physicalOwnership.extensionOwnedUSB" = "ส่วนขยาย USB";
@@ -1962,13 +1968,16 @@
 "controllers.physicalOwnership.systemGamepad" = "เกมแพดของระบบ";
 "controllers.physicalOwnership.upstreamVirtualDevice" = "อุปกรณ์เสมือนต้นทาง";
 "controllers.physicalOwnership.unknown" = "ไม่ทราบ";
+/* Result of acquiring HID input. */
 "controllers.hidInputOwnership.unknown" = "ไม่ทราบ";
 "controllers.hidInputOwnership.exclusive" = "เฉพาะ";
 "controllers.hidInputOwnership.shared" = "ใช้ร่วมกัน";
 "controllers.hidInputOwnership.accessDenied" = "ปฏิเสธการเข้าถึง";
 "controllers.hidInputOwnership.ownedByAnotherClient" = "ถูกแอปอื่นครอบครอง";
 "controllers.hidInputOwnership.acquisitionFailed" = "การเข้าครอบครองล้มเหลว";
+/* Ownership summary: %1$@ is the discovery route, %2$@ the owner and %3$@ the HID input result. */
 "controllers.ownership.value" = "พบผ่าน %1$@ เจ้าของ: %2$@ อินพุต HID: %3$@";
+/* Why closing a controller's Bluetooth link failed. */
 "controllers.disconnectWireless.failure.notFound" = "คอนโทรลเลอร์ไม่ได้เชื่อมต่ออยู่อีกต่อไป";
 "controllers.disconnectWireless.failure.notBluetooth" = "คอนโทรลเลอร์ไม่ได้เชื่อมต่อผ่านบลูทูธ";
 "controllers.disconnectWireless.failure.bluetoothLEUnsupported" = "ไม่สามารถตัดการเชื่อมต่อคอนโทรลเลอร์ Bluetooth LE จากที่นี่ได้";

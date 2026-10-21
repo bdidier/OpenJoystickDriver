@@ -796,11 +796,8 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "Suspended";
-"controllers.suspendedSummary" = "Input and OpenJoystickDriver output are paused until you resume.";
-"controllers.disconnectSummary" = "Pause input, physical effects, and OpenJoystickDriver virtual output.";
 "error.controllerSessionChangeRejected" = "The controller session could not be changed.";
 
-"controllers.disconnectWirelessSummary" = "Stop this Bluetooth connection without affecting other controllers.";
 "controllers.disconnectWirelessConfirmTitle" = "Disconnect Wireless Controller?";
 "controllers.disconnectWirelessConfirmMessage" = "%@ will stay disconnected until you connect it again manually.";
 "controllers.disconnectWirelessConfirm" = "Disconnect";
@@ -1942,6 +1939,7 @@
 "cli.setting.reset.confirm" = "Move the settings file to the Trash and return every setting to its default?";
 "cli.setting.reset.success" = "Moved %@ to the Trash.";
 "cli.setting.reset.none" = "There is no settings file at %@.";
+/* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "Virtual output is off";
 "controllers.publication.reason.systemGamepad" = "macOS serves it as a gamepad";
 "controllers.publication.reason.nativeHIDPassThrough" = "macOS handles its input directly";
@@ -1950,12 +1948,20 @@
 "controllers.publication.reason.noVirtualProfile" = "No virtual profile fits it";
 "controllers.publication.reason.suppressed" = "Output paused";
 "controllers.publication.reason.noInputYet" = "Waiting for the first input";
+/* Publication state with its reason or failure, for example "Not published (Waiting for the first input)". %1$@ is the state and %2$@ the reason. */
 "controllers.publication.withReason" = "%1$@ (%2$@)";
 "controllers.publication.failedSend" = "The last send failed: %@";
+/* Serving route with why it publishes nothing, for example "Output off (No virtual profile fits it)". %1$@ is the route and %2$@ the reason. */
+"controllers.serving.withReason" = "%1$@ (%2$@)";
+/* Why a controller's input health is failing. */
 "controllers.inputHealth.reason.missingReports" = "No reports arriving";
 "controllers.inputHealth.reason.freshnessNotAdvancing" = "Reports not advancing";
+/* Input health state with its failure reason, for example "Stale (No reports arriving)". %1$@ is the state and %2$@ the reason. */
+"controllers.inputHealth.withReason" = "%1$@ (%2$@)";
+/* How a controller was discovered. */
 "controllers.discovery.hid" = "HID";
 "controllers.discovery.rawUSB" = "Raw USB";
+/* Who holds the physical controller. */
 "controllers.physicalOwnership.exclusiveHID" = "Exclusive HID";
 "controllers.physicalOwnership.exclusiveRawUSB" = "Exclusive raw USB";
 "controllers.physicalOwnership.extensionOwnedUSB" = "USB extension";
@@ -1963,13 +1969,16 @@
 "controllers.physicalOwnership.systemGamepad" = "System gamepad";
 "controllers.physicalOwnership.upstreamVirtualDevice" = "Upstream virtual device";
 "controllers.physicalOwnership.unknown" = "Unknown";
+/* Result of acquiring HID input. */
 "controllers.hidInputOwnership.unknown" = "Unknown";
 "controllers.hidInputOwnership.exclusive" = "Exclusive";
 "controllers.hidInputOwnership.shared" = "Shared";
 "controllers.hidInputOwnership.accessDenied" = "Access denied";
 "controllers.hidInputOwnership.ownedByAnotherClient" = "Owned by another app";
 "controllers.hidInputOwnership.acquisitionFailed" = "Acquisition failed";
+/* Ownership summary: %1$@ is the discovery route, %2$@ the owner and %3$@ the HID input result. */
 "controllers.ownership.value" = "Discovered through %1$@. Owner: %2$@. HID input: %3$@.";
+/* Why closing a controller's Bluetooth link failed. */
 "controllers.disconnectWireless.failure.notFound" = "The controller is no longer connected";
 "controllers.disconnectWireless.failure.notBluetooth" = "The controller is not connected by Bluetooth";
 "controllers.disconnectWireless.failure.bluetoothLEUnsupported" = "Bluetooth LE controllers cannot be disconnected from here";

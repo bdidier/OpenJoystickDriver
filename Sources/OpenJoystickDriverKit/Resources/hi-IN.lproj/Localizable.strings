@@ -796,11 +796,8 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "निलंबित";
-"controllers.suspendedSummary" = "फिर से शुरू करने तक इनपुट और OpenJoystickDriver आउटपुट रुके रहेंगे।";
-"controllers.disconnectSummary" = "इनपुट, फ़िज़िकल इफ़ेक्ट और OpenJoystickDriver का वर्चुअल आउटपुट रोकें।";
 "error.controllerSessionChangeRejected" = "कंट्रोलर सत्र बदला नहीं जा सका।";
 
-"controllers.disconnectWirelessSummary" = "अन्य कंट्रोलर को प्रभावित किए बिना इस Bluetooth कनेक्शन को बंद करें।";
 "controllers.disconnectWirelessConfirmTitle" = "वायरलेस कंट्रोलर डिस्कनेक्ट करें?";
 "controllers.disconnectWirelessConfirmMessage" = "जब तक आप इसे मैन्युअल रूप से दोबारा कनेक्ट नहीं करते, %@ डिस्कनेक्ट रहेगा।";
 "controllers.disconnectWirelessConfirm" = "डिस्कनेक्ट करें";
@@ -1941,6 +1938,7 @@
 "cli.setting.reset.confirm" = "क्या सेटिंग्स फ़ाइल को ट्रैश में भेजना है और हर सेटिंग को डिफ़ॉल्ट पर लौटाना है?";
 "cli.setting.reset.success" = "%@ को ट्रैश में भेज दिया गया।";
 "cli.setting.reset.none" = "%@ पर कोई सेटिंग्स फ़ाइल नहीं है।";
+/* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "वर्चुअल आउटपुट बंद है";
 "controllers.publication.reason.systemGamepad" = "macOS इसे गेमपैड के रूप में संभालता है";
 "controllers.publication.reason.nativeHIDPassThrough" = "macOS इसके इनपुट को सीधे संभालता है";
@@ -1949,12 +1947,20 @@
 "controllers.publication.reason.noVirtualProfile" = "कोई वर्चुअल प्रोफ़ाइल इसके अनुरूप नहीं है";
 "controllers.publication.reason.suppressed" = "आउटपुट रुका हुआ है";
 "controllers.publication.reason.noInputYet" = "पहले इनपुट की प्रतीक्षा है";
+/* Publication state with its reason or failure, for example "Not published (Waiting for the first input)". %1$@ is the state and %2$@ the reason. */
 "controllers.publication.withReason" = "%1$@ (%2$@)";
 "controllers.publication.failedSend" = "पिछला भेजना विफल रहा: %@";
+/* Serving route with why it publishes nothing, for example "Output off (No virtual profile fits it)". %1$@ is the route and %2$@ the reason. */
+"controllers.serving.withReason" = "%1$@ (%2$@)";
+/* Why a controller's input health is failing. */
 "controllers.inputHealth.reason.missingReports" = "कोई रिपोर्ट नहीं आ रही";
 "controllers.inputHealth.reason.freshnessNotAdvancing" = "रिपोर्ट आगे नहीं बढ़ रही";
+/* Input health state with its failure reason, for example "Stale (No reports arriving)". %1$@ is the state and %2$@ the reason. */
+"controllers.inputHealth.withReason" = "%1$@ (%2$@)";
+/* How a controller was discovered. */
 "controllers.discovery.hid" = "HID";
 "controllers.discovery.rawUSB" = "रॉ USB";
+/* Who holds the physical controller. */
 "controllers.physicalOwnership.exclusiveHID" = "विशेष HID";
 "controllers.physicalOwnership.exclusiveRawUSB" = "विशेष रॉ USB";
 "controllers.physicalOwnership.extensionOwnedUSB" = "USB एक्सटेंशन";
@@ -1962,13 +1968,16 @@
 "controllers.physicalOwnership.systemGamepad" = "सिस्टम गेमपैड";
 "controllers.physicalOwnership.upstreamVirtualDevice" = "अपस्ट्रीम वर्चुअल डिवाइस";
 "controllers.physicalOwnership.unknown" = "अज्ञात";
+/* Result of acquiring HID input. */
 "controllers.hidInputOwnership.unknown" = "अज्ञात";
 "controllers.hidInputOwnership.exclusive" = "विशेष";
 "controllers.hidInputOwnership.shared" = "साझा";
 "controllers.hidInputOwnership.accessDenied" = "एक्सेस अस्वीकृत";
 "controllers.hidInputOwnership.ownedByAnotherClient" = "किसी दूसरे ऐप के पास है";
 "controllers.hidInputOwnership.acquisitionFailed" = "अधिग्रहण विफल";
+/* Ownership summary: %1$@ is the discovery route, %2$@ the owner and %3$@ the HID input result. */
 "controllers.ownership.value" = "%1$@ से खोजा गया। स्वामी: %2$@। HID इनपुट: %3$@।";
+/* Why closing a controller's Bluetooth link failed. */
 "controllers.disconnectWireless.failure.notFound" = "कंट्रोलर अब कनेक्ट नहीं है";
 "controllers.disconnectWireless.failure.notBluetooth" = "कंट्रोलर ब्लूटूथ से कनेक्ट नहीं है";
 "controllers.disconnectWireless.failure.bluetoothLEUnsupported" = "Bluetooth LE कंट्रोलर को यहाँ से डिस्कनेक्ट नहीं किया जा सकता";

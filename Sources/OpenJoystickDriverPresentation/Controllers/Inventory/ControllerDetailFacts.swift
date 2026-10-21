@@ -156,7 +156,7 @@ enum ControllerDetailFacts {
       return device.servingRouteLabel
     }
     return OJDLocalized.formatted(
-      "controllers.publication.withReason",
+      "controllers.serving.withReason",
       device.servingRouteLabel,
       OJDLocalized.string(ControllerDetailLabels.servingReasonKey(reason))
     )
@@ -167,7 +167,7 @@ enum ControllerDetailFacts {
     let state = OJDLocalized.string(inputHealthKey(device.inputHealth.state))
     guard let reason = device.inputHealth.failureReason else { return state }
     return OJDLocalized.formatted(
-      "controllers.publication.withReason",
+      "controllers.inputHealth.withReason",
       state,
       OJDLocalized.string(ControllerDetailLabels.inputHealthReasonKey(reason))
     )

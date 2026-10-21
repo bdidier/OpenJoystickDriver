@@ -528,9 +528,9 @@
 "banner.access.title" = "Cần cấp quyền";
 "banner.access.detail" = "macOS chưa cho phép mọi thứ OpenJoystickDriver cần để đọc các bộ điều khiển và cung cấp chúng cho trò chơi.";
 "banner.liveUpdates.title" = "Không có cập nhật trực tiếp";
-"banner.liveUpdates.detail.closed" = "Dịch vụ đã đóng kết nối. OpenJoystickDriver kiểm tra thay đổi của bộ điều khiển mỗi giây.";
-"banner.liveUpdates.detail.timeout" = "Dịch vụ không phản hồi kịp thời. OpenJoystickDriver kiểm tra thay đổi của bộ điều khiển mỗi giây.";
-"banner.liveUpdates.detail.other" = "Cập nhật trực tiếp từ dịch vụ không hoạt động. OpenJoystickDriver kiểm tra thay đổi của bộ điều khiển mỗi giây.";
+"banner.liveUpdates.detail.closed" = "Dịch vụ đã đóng kết nối. Thay vào đó, OpenJoystickDriver kiểm tra thay đổi của bộ điều khiển mỗi giây.";
+"banner.liveUpdates.detail.timeout" = "Dịch vụ không phản hồi kịp thời. Thay vào đó, OpenJoystickDriver kiểm tra thay đổi của bộ điều khiển mỗi giây.";
+"banner.liveUpdates.detail.other" = "Cập nhật trực tiếp từ dịch vụ không hoạt động. Thay vào đó, OpenJoystickDriver kiểm tra thay đổi của bộ điều khiển mỗi giây.";
 "cli.login.uninstall_action" = "Gỡ cài đặt";
 "console.all" = "Tất cả";
 "console.empty" = "Không có mục nhật ký.";
@@ -796,11 +796,8 @@
 
 /* Controller session lifecycle */
 "controllers.suspended" = "Đã tạm ngưng";
-"controllers.suspendedSummary" = "Đầu vào và đầu ra của OpenJoystickDriver bị tạm dừng cho đến khi bạn tiếp tục.";
-"controllers.disconnectSummary" = "Tạm dừng đầu vào, hiệu ứng vật lý và đầu ra ảo của OpenJoystickDriver.";
 "error.controllerSessionChangeRejected" = "Không thể thay đổi phiên của bộ điều khiển.";
 
-"controllers.disconnectWirelessSummary" = "Dừng kết nối Bluetooth này mà không ảnh hưởng đến các bộ điều khiển khác.";
 "controllers.disconnectWirelessConfirmTitle" = "Ngắt kết nối bộ điều khiển không dây?";
 "controllers.disconnectWirelessConfirmMessage" = "%@ sẽ vẫn bị ngắt kết nối cho đến khi bạn tự kết nối lại.";
 "controllers.disconnectWirelessConfirm" = "Ngắt kết nối";
@@ -1941,6 +1938,7 @@
 "cli.setting.reset.confirm" = "Chuyển tệp cài đặt vào Thùng rác và đưa mọi cài đặt về mặc định?";
 "cli.setting.reset.success" = "Đã chuyển %@ vào Thùng rác.";
 "cli.setting.reset.none" = "Không có tệp cài đặt tại %@.";
+/* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "Đầu ra ảo đang tắt";
 "controllers.publication.reason.systemGamepad" = "macOS xử lý nó như tay cầm chơi game";
 "controllers.publication.reason.nativeHIDPassThrough" = "macOS xử lý trực tiếp đầu vào của nó";
@@ -1949,12 +1947,20 @@
 "controllers.publication.reason.noVirtualProfile" = "Không có hồ sơ ảo phù hợp";
 "controllers.publication.reason.suppressed" = "Đầu ra đã tạm dừng";
 "controllers.publication.reason.noInputYet" = "Đang chờ đầu vào đầu tiên";
+/* Publication state with its reason or failure, for example "Not published (Waiting for the first input)". %1$@ is the state and %2$@ the reason. */
 "controllers.publication.withReason" = "%1$@ (%2$@)";
 "controllers.publication.failedSend" = "Lần gửi gần nhất không thành công: %@";
+/* Serving route with why it publishes nothing, for example "Output off (No virtual profile fits it)". %1$@ is the route and %2$@ the reason. */
+"controllers.serving.withReason" = "%1$@ (%2$@)";
+/* Why a controller's input health is failing. */
 "controllers.inputHealth.reason.missingReports" = "Không có báo cáo nào đến";
 "controllers.inputHealth.reason.freshnessNotAdvancing" = "Báo cáo không được cập nhật";
+/* Input health state with its failure reason, for example "Stale (No reports arriving)". %1$@ is the state and %2$@ the reason. */
+"controllers.inputHealth.withReason" = "%1$@ (%2$@)";
+/* How a controller was discovered. */
 "controllers.discovery.hid" = "HID";
 "controllers.discovery.rawUSB" = "USB thô";
+/* Who holds the physical controller. */
 "controllers.physicalOwnership.exclusiveHID" = "HID độc quyền";
 "controllers.physicalOwnership.exclusiveRawUSB" = "USB thô độc quyền";
 "controllers.physicalOwnership.extensionOwnedUSB" = "Tiện ích mở rộng USB";
@@ -1962,13 +1968,16 @@
 "controllers.physicalOwnership.systemGamepad" = "Tay cầm hệ thống";
 "controllers.physicalOwnership.upstreamVirtualDevice" = "Thiết bị ảo ngược dòng";
 "controllers.physicalOwnership.unknown" = "Không rõ";
+/* Result of acquiring HID input. */
 "controllers.hidInputOwnership.unknown" = "Không rõ";
 "controllers.hidInputOwnership.exclusive" = "Độc quyền";
 "controllers.hidInputOwnership.shared" = "Chia sẻ";
 "controllers.hidInputOwnership.accessDenied" = "Quyền truy cập bị từ chối";
 "controllers.hidInputOwnership.ownedByAnotherClient" = "Thuộc về ứng dụng khác";
 "controllers.hidInputOwnership.acquisitionFailed" = "Không chiếm được quyền";
+/* Ownership summary: %1$@ is the discovery route, %2$@ the owner and %3$@ the HID input result. */
 "controllers.ownership.value" = "Phát hiện qua %1$@. Chủ sở hữu: %2$@. Đầu vào HID: %3$@.";
+/* Why closing a controller's Bluetooth link failed. */
 "controllers.disconnectWireless.failure.notFound" = "Bộ điều khiển không còn được kết nối";
 "controllers.disconnectWireless.failure.notBluetooth" = "Bộ điều khiển không kết nối bằng Bluetooth";
 "controllers.disconnectWireless.failure.bluetoothLEUnsupported" = "Không thể ngắt kết nối bộ điều khiển Bluetooth LE từ đây";
