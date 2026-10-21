@@ -243,12 +243,6 @@ struct ProtocolDescription: Sendable {
         "\(fileName): \(document.family) is not a family"
       )
     }
-    guard let protocolID, family == protocolID else {
-      throw ProtocolDescriptionProblem(
-        .protocolDescriptionFamilyMismatch,
-        "\(fileName): file name must be \(family.descriptionFileStem).json"
-      )
-    }
     var seenSignatures: Set<String> = []
     for signature in document.interfaceSignatures {
       let identity = [
@@ -263,13 +257,21 @@ struct ProtocolDescription: Sendable {
       }
     }
     let unreadParameters = Set(document.parameters.keys).subtracting(
-      ProtocolParameters.readable(by: protocolID)
+      ProtocolParameters.readable(by: family)
     )
     guard unreadParameters.isEmpty else {
       throw ProtocolDescriptionProblem(
         .invalidProtocolDescription,
-        "\(fileName): \(protocolID.rawValue) reads no parameter(s) "
+        "\(fileName): \(family.rawValue) reads no parameter(s) "
           + unreadParameters.sorted().joined(separator: ", ")
+      )
+    }
+    // The file name is checked after the document's own rules, as the Python validator checks
+    // it after the schema.
+    guard let protocolID, family == protocolID else {
+      throw ProtocolDescriptionProblem(
+        .protocolDescriptionFamilyMismatch,
+        "\(fileName): file name must be \(family.descriptionFileStem).json"
       )
     }
     var signatures: [ProtocolInterfaceSignature] = []

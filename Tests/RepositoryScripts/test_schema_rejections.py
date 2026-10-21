@@ -3,13 +3,14 @@ Swift reads every file in full, so no rejected document lacks a Swift counterpar
 
 from __future__ import annotations
 
+import ast
 import json
 import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from Scripts.Catalog import validate_profiles
+from Scripts.Catalog import generate_schema_rejections, validate_profiles
 from Scripts.Quality import validate_schemas
 from Tests.RepositoryScripts import schema_rejections
 
@@ -106,6 +107,122 @@ class SchemaRejectionFileTests(unittest.TestCase):
             module = f"Tests.RepositoryScripts.{path.stem}"
             if rejects and path.stem != "test_schema_rejections":
                 self.assertIn(module, schema_rejections.MODULES, path.name)
+
+    def test_a_case_that_swift_accepts_leaves_the_files_unchanged(self) -> None:
+        built = {
+            "controller": [
+                {"name": "first", "code": "E5007", "python": "p", "document": {}}
+            ],
+            "protocol-description": [
+                {"name": "second", "code": "E5002", "python": "p", "document": {}}
+            ],
+        }
+        messages = {"controller": {"first": "m"}, "protocol-description": {}}
+        with tempfile.TemporaryDirectory() as directory:
+            fixtures = Path(directory)
+            held = {
+                "controller": '{"cases": []}\n',
+                "protocol-description": '{"cases": [1]}\n',
+            }
+            for kind, text in held.items():
+                (fixtures / f"{kind}.json").write_text(text, encoding="utf-8")
+            with (
+                patch.object(schema_rejections, "FIXTURES", fixtures),
+                patch.object(
+                    generate_schema_rejections, "formatted", lambda _path, text: text
+                ),
+                patch.object(
+                    generate_schema_rejections,
+                    "record_swift_messages",
+                    return_value=messages,
+                ),
+                self.assertRaisesRegex(
+                    generate_schema_rejections.RejectionError,
+                    r"protocol-description case 'second'",
+                ),
+            ):
+                generate_schema_rejections.write(built)
+            for kind, text in held.items():
+                self.assertEqual(
+                    (fixtures / f"{kind}.json").read_text(encoding="utf-8"), text
+                )
+
+    def test_hooked_modules_reject_through_the_record_validator_or_a_hooked_call(
+        self,
+    ) -> None:
+        hooks = {"check_record", "validate_modes", "validate_initialization"}
+        for module in schema_rejections.MODULES:
+            path = REPOSITORY / (module.replace(".", "/") + ".py")
+            tree = ast.parse(path.read_text(encoding="utf-8"))
+            for owner in ast.walk(tree):
+                if not isinstance(owner, ast.ClassDef):
+                    continue
+                raw = self.raw_schemas(owner)
+                for function in owner.body:
+                    if not isinstance(function, ast.FunctionDef):
+                        continue
+                    calls = [n for n in ast.walk(function) if isinstance(n, ast.Call)]
+                    hooked = any(
+                        isinstance(call.func, ast.Attribute) and call.func.attr in hooks
+                        for call in calls
+                    )
+                    for line in self.raw_negatives(function, calls, raw):
+                        self.assertTrue(
+                            hooked,
+                            f"{path.name}:{line} rejects through the raw schema, which the "
+                            "shared files cannot see; use RecordValidator or call a "
+                            "validate_profiles check",
+                        )
+
+    @staticmethod
+    def raw_schemas(owner: ast.ClassDef) -> set[str]:
+        """The `self.` attributes of `owner` that hold the bare JSON Schema validator."""
+        names = set()
+        for node in ast.walk(owner):
+            if (
+                isinstance(node, ast.Assign)
+                and isinstance(node.value, ast.Call)
+                and ast.unparse(node.value.func) == "validate_profiles.validator"
+            ):
+                names.update(ast.unparse(target) for target in node.targets)
+        return names
+
+    @staticmethod
+    def raw_negatives(
+        function: ast.FunctionDef, calls: list[ast.Call], raw: set[str]
+    ) -> list[int]:
+        """Lines where the function treats the bare validator's verdict as a rejection."""
+        local = {
+            ast.unparse(target)
+            for node in ast.walk(function)
+            if isinstance(node, ast.Assign)
+            and isinstance(node.value, ast.Call)
+            and ast.unparse(node.value.func) == "validate_profiles.validator"
+            for target in node.targets
+        }
+        names = raw | local
+
+        def on_raw(call: ast.Call, attribute: str) -> bool:
+            func = call.func
+            return (
+                isinstance(func, ast.Attribute)
+                and func.attr == attribute
+                and ast.unparse(func.value) in names
+            )
+
+        lines = [call.lineno for call in calls if on_raw(call, "iter_errors")]
+        for call in calls:
+            if (
+                isinstance(call.func, ast.Attribute)
+                and call.func.attr == "assertFalse"
+                and any(
+                    isinstance(inner, ast.Call) and on_raw(inner, "is_valid")
+                    for argument in call.args
+                    for inner in ast.walk(argument)
+                )
+            ):
+                lines.append(call.lineno)
+        return lines
 
     def test_the_swift_tests_read_every_file_and_compare_codes_and_messages(
         self,

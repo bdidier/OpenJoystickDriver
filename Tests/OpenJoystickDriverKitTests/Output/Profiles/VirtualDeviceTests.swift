@@ -74,4 +74,14 @@ struct VirtualDeviceTests {
       try VirtualDevice.decode(Data(document.utf8))
     }
   }
+
+  @Test
+  func aProblemWithAVirtualDeviceCarriesNoErrorCode() {
+    let document = "{\(Self.header),\"persona\":\"NotAPersona\"}"
+    let problem = #expect(throws: ControllerRecordProblem.self) {
+      try VirtualDevice.decode(Data(document.utf8))
+    }
+    #expect(problem?.code == nil)
+    #expect(problem.flatMap { ControllerRecordSet.problemCode($0) } == nil)
+  }
 }

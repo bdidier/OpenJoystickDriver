@@ -47,7 +47,7 @@ class PatchError(ValueError):
     E5001 leads its message, as `DocumentHeaderProblem.description` does.
     """
 
-    def __init__(self, message: str, code: str = INVALID_CONTROLLER_RECORD) -> None:
+    def __init__(self, message: str, code: str) -> None:
         super().__init__(
             f"{code}: {message}" if code == UNSUPPORTED_API_VERSION else message
         )
@@ -133,7 +133,7 @@ def selector_rank(selector: dict[str, Any]) -> int:
     keys = set(selector)
     if keys == {"all"}:
         if selector["all"] is not True:
-            raise PatchError("selector.all must be true")
+            raise PatchError("selector.all must be true", INVALID_CONTROLLER_RECORD)
         return RANK_ALL
     if keys == {"vendorID", "productID"}:
         vendor_id, product_id = (
@@ -146,14 +146,23 @@ def selector_rank(selector: dict[str, Any]) -> int:
             or not 1 <= vendor_id <= 0xFFFF
             or not 0 <= product_id <= 0xFFFF
         ):
-            raise PatchError("vendorID must be 1...65535 and productID 0...65535")
+            raise PatchError(
+                "vendorID must be 1...65535 and productID 0...65535",
+                INVALID_CONTROLLER_RECORD,
+            )
         return RANK_IDENTITY
     if keys == {"model"}:
         model = selector["model"]
         if not isinstance(model, str) or not MODEL_PATTERN.match(model):
-            raise PatchError("selector.model must be vvvv-pppp in lowercase hex")
+            raise PatchError(
+                "selector.model must be vvvv-pppp in lowercase hex",
+                INVALID_CONTROLLER_RECORD,
+            )
         return RANK_MODEL
-    raise PatchError("selector must be all, model, or vendorID with productID")
+    raise PatchError(
+        "selector must be all, model, or vendorID with productID",
+        INVALID_CONTROLLER_RECORD,
+    )
 
 
 def parse_patch(document: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -174,9 +183,14 @@ def parse_patch(document: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any
             UNSUPPORTED_API_VERSION,
         )
     if "kind" not in document:
-        raise PatchError(f"no kind found; expected {PATCH_KIND}")
+        raise PatchError(
+            f"no kind found; expected {PATCH_KIND}", INVALID_CONTROLLER_RECORD
+        )
     if document["kind"] != PATCH_KIND:
-        raise PatchError(f"expected {PATCH_KIND}, found {document['kind']}")
+        raise PatchError(
+            f"expected {PATCH_KIND}, found {document['kind']}",
+            INVALID_CONTROLLER_RECORD,
+        )
     selector, patch = document.get("selector"), document.get("patch")
     if (
         set(document) != {"apiVersion", "kind", "selector", "patch"}
@@ -184,15 +198,17 @@ def parse_patch(document: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any
         or not isinstance(patch, dict)
     ):
         raise PatchError(
-            "the file must hold exactly apiVersion, kind, selector, and patch"
+            "the file must hold exactly apiVersion, kind, selector, and patch",
+            INVALID_CONTROLLER_RECORD,
         )
     rank = selector_rank(selector)
     if not patch or not set(patch) <= SECTIONS:
         raise PatchError(
-            "patch must hold modes, usb, bluetoothLE, server, route, input, or tuning"
+            "patch must hold modes, usb, bluetoothLE, server, route, input, or tuning",
+            INVALID_CONTROLLER_RECORD,
         )
     if rank == RANK_ALL and set(patch) != {"tuning"}:
-        raise PatchError("an all patch may set only tuning")
+        raise PatchError("an all patch may set only tuning", INVALID_CONTROLLER_RECORD)
     return selector, patch
 
 

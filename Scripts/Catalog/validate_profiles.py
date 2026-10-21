@@ -33,16 +33,16 @@ INVALID_CONTROLLER_RECORD = "E5007"
 
 
 class ValidationError(Exception):
-    """A rule a record or catalog breaks; `code` is the catalog code of an invalid record."""
+    """A rule a record or catalog breaks; `code` is its catalog code and leads the message."""
 
-    def __init__(self, message: str, code: str | None = None) -> None:
-        super().__init__(message)
+    def __init__(self, message: str, code: str) -> None:
+        super().__init__(f"{code}: {message}")
         self.code = code
 
 
 def require(condition: bool, message: str) -> None:
     if not condition:
-        raise ValidationError(message)
+        raise ValidationError(message, INVALID_CONTROLLER_RECORD)
 
 
 def description_of(family: str) -> dict[str, Any]:
@@ -335,7 +335,9 @@ def load_object(path: pathlib.Path) -> dict[str, Any]:
     try:
         value = json.loads(path.read_text())
     except json.JSONDecodeError as error:
-        raise ValidationError(f"{path}: invalid JSON: {error}") from error
+        raise ValidationError(
+            f"{path}: invalid JSON: {error}", INVALID_CONTROLLER_RECORD
+        ) from error
     require(isinstance(value, dict), f"{path}: root must be an object")
     return value
 
@@ -363,14 +365,7 @@ def check_record(
     A failure names its catalog code: E5001 when `apiVersion` is missing or not the supported
     one, E5007 for every other rule.
     """
-    try:
-        check_record_rules(path, record, schema_validator)
-    except ValidationError as error:
-        if error.code is not None:
-            raise
-        raise ValidationError(
-            f"{INVALID_CONTROLLER_RECORD}: {error}", INVALID_CONTROLLER_RECORD
-        ) from error
+    check_record_rules(path, record, schema_validator)
 
 
 def check_record_rules(
@@ -388,10 +383,12 @@ def check_record_rules(
         )
         if versioned:
             raise ValidationError(
-                f"{UNSUPPORTED_API_VERSION}: {path}{suffix}: {error.message}",
+                f"{path}{suffix}: {error.message}",
                 UNSUPPORTED_API_VERSION,
             ) from error
-        raise ValidationError(f"{path}{suffix}: {error.message}") from error
+        raise ValidationError(
+            f"{path}{suffix}: {error.message}", INVALID_CONTROLLER_RECORD
+        ) from error
 
     # JSON Schema cannot express disjoint arrays; the runtime decoder rejects overlap too.
     capabilities = record.get("capabilities", {})

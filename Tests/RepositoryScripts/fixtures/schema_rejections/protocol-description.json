@@ -372,6 +372,66 @@
       }
     },
     {
+      "name": "a document rule is reported before the file name: a duplicate signature",
+      "code": "E5002",
+      "python": "E5002: xbox-gip.json at interfaceSignatures: [{'variant': 'Wired', 'interfaceClass': 255, 'interfaceSubclass': 93, 'interfaceProtocol': 1}, {'variant': 'Wired', 'interfaceClass': 255, 'interfaceSubclass': 93, 'interfaceProtocol': 1}] has non-unique elements",
+      "swift": "E5002: xbox-gip.json: interfaceSignatures names Wired/255/93/1/ twice",
+      "fileName": "xbox-gip.json",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXUSB",
+        "variants": ["Wired", "Receiver"],
+        "storesVariant": true,
+        "endpoints": {
+          "in": 129,
+          "out": 1
+        },
+        "rawUSB": true,
+        "interfaceSignatures": [
+          {
+            "variant": "Wired",
+            "interfaceClass": 255,
+            "interfaceSubclass": 93,
+            "interfaceProtocol": 1
+          },
+          {
+            "variant": "Wired",
+            "interfaceClass": 255,
+            "interfaceSubclass": 93,
+            "interfaceProtocol": 1
+          }
+        ],
+        "defaults": {
+          "session": {
+            "receiverInquiryResendLimit": 8
+          }
+        }
+      }
+    },
+    {
+      "name": "a document rule is reported before the file name: a parameter the family does not read",
+      "code": "E5002",
+      "python": "E5002: xbox-gip.json at parameters: 'layout' is not one of ['maker', 'unprobedSensors', 'unprobedTouchpad', 'forcedVibration', 'role']",
+      "swift": "E5002: xbox-gip.json: SonyDualSense reads no parameter(s) layout",
+      "fileName": "xbox-gip.json",
+      "document": {
+        "variants": ["USB", "BluetoothClassic"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "SonyDualSense",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "parameters": {
+          "layout": {
+            "type": "Flag"
+          }
+        }
+      }
+    },
+    {
       "name": "activation transport is only one the driver reads: family=ValveSteamController, key=activation, transport=BluetoothClassic",
       "code": "E5002",
       "python": "E5002: valve-steam-controller.json at defaults.session.activation.0.transport: 'BluetoothClassic' is not one of ['USB', 'BluetoothLE']",

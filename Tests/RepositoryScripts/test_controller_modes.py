@@ -546,6 +546,7 @@ class SessionTests(unittest.TestCase):
 
     def setUp(self) -> None:
         self.schema = validate_profiles.validator()
+        self.records = RecordValidator()
 
     @staticmethod
     def read(request: int, **fields: Any) -> dict[str, Any]:
@@ -580,7 +581,7 @@ class SessionTests(unittest.TestCase):
         for text in ("0x1a 2b", "1a 2b", "1A  2B", "1A2B", " 1A", "1A ", "1A\n", ""):
             with self.subTest(text):
                 document = self.document("XboxXUSB", {"startup": [{"bytes": text}]})
-                self.assertFalse(self.schema.is_valid(document))
+                self.assertFalse(self.records.is_valid(document))
         accepted = self.document("XboxXUSB", {"startup": [{"bytes": "1A 2B"}]})
         self.assertTrue(self.schema.is_valid(accepted))
 
@@ -601,7 +602,7 @@ class SessionTests(unittest.TestCase):
         }
         for name, (family, session) in rejected.items():
             with self.subTest(name):
-                self.assertFalse(self.schema.is_valid(self.document(family, session)))
+                self.assertFalse(self.records.is_valid(self.document(family, session)))
 
     def test_validator_rejects_control_transfers_that_disagree_with_themselves(
         self,

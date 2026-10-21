@@ -110,8 +110,6 @@ public struct ValidatedControllerRecord: Sendable {
   }
 }
 
-/// Why a user controller record is invalid, in words for the person who wrote it.
-///
 /// Why a controller record, patch or related document is invalid. A problem about a controller
 /// record or patch carries ``ErrorCode/invalidControllerRecord``; one about another document,
 /// such as a virtual device, carries no code. ``description`` leaves the code out.

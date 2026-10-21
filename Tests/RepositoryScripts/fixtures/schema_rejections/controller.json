@@ -1886,6 +1886,394 @@
       }
     },
     {
+      "name": "byte format is uppercase hex pairs with single spaces: 0x1a 2b",
+      "code": "E5007",
+      "python": "E5007: record.json at modes.0.session.startup.0: {'bytes': '0x1a 2b'} is not valid under any of the given schemas",
+      "swift": "record.modes.[0].session.startup.[0]: startup bytes are uppercase hex pairs separated by single spaces",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXUSB",
+              "variant": "Wired"
+            },
+            "session": {
+              "startup": [
+                {
+                  "bytes": "0x1a 2b"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "byte format is uppercase hex pairs with single spaces: 1a 2b",
+      "code": "E5007",
+      "python": "E5007: record.json at modes.0.session.startup.0: {'bytes': '1a 2b'} is not valid under any of the given schemas",
+      "swift": "record.modes.[0].session.startup.[0]: startup bytes are uppercase hex pairs separated by single spaces",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXUSB",
+              "variant": "Wired"
+            },
+            "session": {
+              "startup": [
+                {
+                  "bytes": "1a 2b"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "byte format is uppercase hex pairs with single spaces: 1A  2B",
+      "code": "E5007",
+      "python": "E5007: record.json at modes.0.session.startup.0: {'bytes': '1A  2B'} is not valid under any of the given schemas",
+      "swift": "record.modes.[0].session.startup.[0]: startup bytes are uppercase hex pairs separated by single spaces",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXUSB",
+              "variant": "Wired"
+            },
+            "session": {
+              "startup": [
+                {
+                  "bytes": "1A  2B"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "byte format is uppercase hex pairs with single spaces: 1A2B",
+      "code": "E5007",
+      "python": "E5007: record.json at modes.0.session.startup.0: {'bytes': '1A2B'} is not valid under any of the given schemas",
+      "swift": "record.modes.[0].session.startup.[0]: startup bytes are uppercase hex pairs separated by single spaces",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXUSB",
+              "variant": "Wired"
+            },
+            "session": {
+              "startup": [
+                {
+                  "bytes": "1A2B"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "byte format is uppercase hex pairs with single spaces: 1A",
+      "code": "E5007",
+      "python": "E5007: record.json at modes.0.session.startup.0: {'bytes': ' 1A'} is not valid under any of the given schemas",
+      "swift": "record.modes.[0].session.startup.[0]: startup bytes are uppercase hex pairs separated by single spaces",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXUSB",
+              "variant": "Wired"
+            },
+            "session": {
+              "startup": [
+                {
+                  "bytes": " 1A"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "byte format is uppercase hex pairs with single spaces: 1A (2)",
+      "code": "E5007",
+      "python": "E5007: record.json at modes.0.session.startup.0: {'bytes': '1A '} is not valid under any of the given schemas",
+      "swift": "record.modes.[0].session.startup.[0]: startup bytes are uppercase hex pairs separated by single spaces",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXUSB",
+              "variant": "Wired"
+            },
+            "session": {
+              "startup": [
+                {
+                  "bytes": "1A "
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "byte format is uppercase hex pairs with single spaces: 1A (3)",
+      "code": "E5007",
+      "python": "E5007: record.json at modes.0.session.startup.0: {'bytes': '1A\\n'} is not valid under any of the given schemas",
+      "swift": "record.modes.[0].session.startup.[0]: startup bytes are uppercase hex pairs separated by single spaces",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXUSB",
+              "variant": "Wired"
+            },
+            "session": {
+              "startup": [
+                {
+                  "bytes": "1A\n"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "byte format is uppercase hex pairs with single spaces",
+      "code": "E5007",
+      "python": "E5007: record.json at modes.0.session.startup.0: {'bytes': ''} is not valid under any of the given schemas",
+      "swift": "record.modes.[0].session.startup.[0]: startup bytes are uppercase hex pairs separated by single spaces",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXUSB",
+              "variant": "Wired"
+            },
+            "session": {
+              "startup": [
+                {
+                  "bytes": ""
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects sessions a mode cannot run: control on a HID mode",
+      "code": "E5007",
+      "python": "E5007: record.json at modes.0.session: False schema does not allow [{'bmRequestType': 192, 'bRequest': 1, 'wValue': 0, 'wIndex': 0, 'wLength': 8, 'match': {'manufacturer': 'SHANWAN'}}, {'bmRequestType': 192, 'bRequest': 2, 'wValue': 0, 'wIndex': 0, 'wLength': 8, 'match': {'manufacturer': 'SHANWAN'}}, {'bmRequestType': 192, 'bRequest': 3, 'wValue': 0, 'wIndex': 0, 'wLength': 8, 'match': {'manufacturer': 'SHANWAN'}}]",
+      "swift": "record.modes: session control applies only to raw-USB modes",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "session": {
+              "control": [
+                {
+                  "bmRequestType": 192,
+                  "bRequest": 1,
+                  "wValue": 0,
+                  "wIndex": 0,
+                  "wLength": 8,
+                  "match": {
+                    "manufacturer": "SHANWAN"
+                  }
+                },
+                {
+                  "bmRequestType": 192,
+                  "bRequest": 2,
+                  "wValue": 0,
+                  "wIndex": 0,
+                  "wLength": 8,
+                  "match": {
+                    "manufacturer": "SHANWAN"
+                  }
+                },
+                {
+                  "bmRequestType": 192,
+                  "bRequest": 3,
+                  "wValue": 0,
+                  "wIndex": 0,
+                  "wLength": 8,
+                  "match": {
+                    "manufacturer": "SHANWAN"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects sessions a mode cannot run: settle on a HID mode",
+      "code": "E5007",
+      "python": "E5007: record.json at modes.0.session: False schema does not allow 200",
+      "swift": "record.modes: session settleMilliseconds applies only to raw-USB modes",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "session": {
+              "settleMilliseconds": 200
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects sessions a mode cannot run: shutdown on a HID mode",
+      "code": "E5007",
+      "python": "E5007: record.json at modes.0.session: False schema does not allow [{'bytes': '01 02'}]",
+      "swift": "record.modes: session shutdown applies only to raw-USB modes",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "session": {
+              "shutdown": [
+                {
+                  "bytes": "01 02"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects sessions a mode cannot run: keep-alive on a HID mode",
+      "code": "E5007",
+      "python": "E5007: record.json at modes.0.session: False schema does not allow {'intervalMilliseconds': 100, 'writes': [{'bytes': '01 02'}]}",
+      "swift": "record.modes: session keepAlive applies only to raw-USB modes",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "session": {
+              "keepAlive": {
+                "intervalMilliseconds": 100,
+                "writes": [
+                  {
+                    "bytes": "01 02"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects sessions a mode cannot run: keep-alive on a family that declares one",
+      "code": "E5007",
+      "python": "E5007: record.json at modes.0.session: False schema does not allow {'intervalMilliseconds': 100, 'writes': [{'bytes': '01 02'}]}",
+      "swift": "record.modes: a session keepAlive needs a raw-USB family whose description declares none",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            },
+            "session": {
+              "keepAlive": {
+                "intervalMilliseconds": 100,
+                "writes": [
+                  {
+                    "bytes": "01 02"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
       "name": "validator rejects control transfers that disagree with themselves: data count differs from wLength",
       "code": "E5007",
       "python": "E5007: record.json: control transfer data has 2 bytes, but wLength is 3",

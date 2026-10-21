@@ -198,6 +198,52 @@ def record_swift_messages() -> dict[str, dict[str, str]]:
         return json.loads(target.read_text(encoding="utf-8"))
 
 
+def swift_message(messages: dict[str, dict[str, str]], kind: str, name: str) -> str:
+    """The Swift message recorded for the case `name`, or a `RejectionError` naming it."""
+    try:
+        return messages[kind][name]
+    except KeyError:
+        raise RejectionError(
+            f"Swift recorded no message for the {kind} case '{name}': it accepts the document "
+            "that Python rejects, so the decoders diverge"
+        ) from None
+
+
+def write(built: dict[str, list[dict[str, Any]]]) -> None:
+    """Writes the files with the Swift messages. Swift reads the files to record its messages, so
+    they are written first and restored to what they held when the recording fails or lacks a
+    case."""
+    paths = {kind: schema_rejections.FIXTURES / f"{kind}.json" for kind in built}
+    before = {
+        kind: path.read_bytes() if path.is_file() else None
+        for kind, path in paths.items()
+    }
+    try:
+        for kind, cases in built.items():
+            paths[kind].write_text(
+                formatted(paths[kind], render(cases)), encoding="utf-8"
+            )
+        messages = record_swift_messages()
+        complete = {
+            kind: [
+                order({**case, "swift": swift_message(messages, kind, case["name"])})
+                for case in cases
+            ]
+            for kind, cases in built.items()
+        }
+        for kind, cases in complete.items():
+            paths[kind].write_text(
+                formatted(paths[kind], render(cases)), encoding="utf-8"
+            )
+    except BaseException:
+        for kind, content in before.items():
+            if content is None:
+                paths[kind].unlink(missing_ok=True)
+            else:
+                paths[kind].write_bytes(content)
+        raise
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     action = parser.add_mutually_exclusive_group(required=True)
@@ -207,18 +253,7 @@ def main() -> int:
     try:
         built = build()
         if arguments.write:
-            for kind, cases in built.items():
-                path = schema_rejections.FIXTURES / f"{kind}.json"
-                path.write_text(formatted(path, render(cases)), encoding="utf-8")
-            messages = record_swift_messages()
-            for kind, cases in built.items():
-                path = schema_rejections.FIXTURES / f"{kind}.json"
-                for case in cases:
-                    case["swift"] = messages[kind][case["name"]]
-                path.write_text(
-                    formatted(path, render([order(case) for case in cases])),
-                    encoding="utf-8",
-                )
+            write(built)
             print("Generated the schema rejection files.")
             return 0
         stale = False

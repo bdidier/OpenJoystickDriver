@@ -204,12 +204,14 @@ struct ControllerRecordProbePlanTests {
       )
     }
     #expect(unsupportedVersion?.errorDescription?.hasPrefix("E5001: ") == true)
-    #expect(throws: ControllerRecordProbeError.self) {
+    let noKind = #expect(throws: ControllerRecordProbeError.self) {
       try ControllerRecordProbePlan(data: try recordData(kind: nil))
     }
-    #expect(throws: ControllerRecordProbeError.self) {
+    #expect(noKind?.errorDescription?.hasPrefix("Invalid controller record: ") == true)
+    let wrongKind = #expect(throws: ControllerRecordProbeError.self) {
       try ControllerRecordProbePlan(data: try recordData(kind: "NotAKind"))
     }
+    #expect(wrongKind?.errorDescription?.hasPrefix("Invalid controller record: ") == true)
   }
 
   @Test
