@@ -651,6 +651,8 @@ class ProtocolCopyTests(unittest.TestCase):
             ("OUTPUT_DIR", root / "Kit" / "Controllers"),
             ("PROTOCOL_DIR", self.authored),
             ("PROTOCOL_OUTPUT_DIR", self.bundled),
+            ("VIRTUAL_DEVICE_DIR", root / "Resources" / "VirtualDevices"),
+            ("VIRTUAL_DEVICE_OUTPUT_DIR", root / "Kit" / "VirtualDevices"),
         ):
             patcher = patch.object(catalog, name, value)
             patcher.start()
