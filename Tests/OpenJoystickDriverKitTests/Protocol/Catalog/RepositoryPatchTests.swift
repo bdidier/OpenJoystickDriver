@@ -1,0 +1,191 @@
+import Foundation
+import Testing
+
+@testable import OpenJoystickDriverKit
+
+/// The members of the records that ``RepositoryValidation/applyPatches(records:patches:output:)``
+/// writes, and the patch files it accepts.
+@Suite
+struct RepositoryPatchTests {
+  private static func scratch(_ body: (URL) throws -> Void) throws {
+    let directory = FileManager.default.temporaryDirectory
+      .appendingPathComponent("RepositoryValidationTests-\(UUID().uuidString)", isDirectory: true)
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: directory) }
+    try body(directory)
+  }
+
+  private static func write(_ text: String, to url: URL) throws {
+    try FileManager.default.createDirectory(
+      at: url.deletingLastPathComponent(),
+      withIntermediateDirectories: true
+    )
+    try Data(text.utf8).write(to: url)
+  }
+
+  // MARK: patches write members in the order of the record, then of the patches
+
+  private static let record = """
+    {
+      "apiVersion": "openjoystickdriver/v1alpha1",
+      "kind": "Controller",
+      "vendorID": 1234,
+      "productID": 5678,
+      "usb": {
+        "interface": 0,
+        "endpoints": [1, 2, 3],
+        "nested": {
+          "m": 1
+        }
+      },
+      "tuning": {
+        "stickDeadzone": 0.1
+      }
+    }
+
+    """
+
+  private static let patch = """
+    {
+      "apiVersion": "openjoystickdriver/v1alpha1",
+      "kind": "ControllerPatch",
+      "selector": {"vendorID": 1234, "productID": 5678},
+      "patch": {
+        "server": "ojd",
+        "usb": {
+          "zeta": 1,
+          "endpoints": [9, 8, 7, 6],
+          "nested": {"z": 3, "a": 2},
+          "alpha": {"y": 1, "x": 2}
+        },
+        "tuning": {"frameQueueCapacity": 4, "stickDeadzone": 0.2}
+      }
+    }
+    """
+
+  private static let secondPatch = """
+    {
+      "apiVersion": "openjoystickdriver/v1alpha1",
+      "kind": "ControllerPatch",
+      "selector": {"model": "04d2-162e"},
+      "patch": {
+        "usb": {"zeta": null, "beta": true, "alpha": {"w": 0}},
+        "route": "ojd"
+      }
+    }
+    """
+
+  @Test
+  func patchesAddMembersInPatchOrderAfterTheRecordsMembers() throws {
+    try Self.scratch { directory in
+      try Self.write(
+        Self.record,
+        to: directory.appendingPathComponent("records/04d2/04d2-162e.json")
+      )
+      try Self.write(
+        Self.patch,
+        to: directory.appendingPathComponent("patches/04d2/04d2-162e.patch.json")
+      )
+      try Self.write(
+        Self.secondPatch,
+        to: directory.appendingPathComponent("patches/model-04d2-162e.patch.json")
+      )
+      let output = directory.appendingPathComponent("out")
+      let problems = RepositoryValidation.applyPatches(
+        records: directory.appendingPathComponent("records"),
+        patches: directory.appendingPathComponent("patches"),
+        output: output
+      )
+      #expect(problems.isEmpty, "\(problems)")
+      let written = try String(
+        contentsOf: output.appendingPathComponent("04d2/04d2-162e.json"),
+        encoding: .utf8
+      )
+      // The record's members keep their places; the first patch's new members follow in its
+      // order, then the second patch's; the array the first patch replaces has its items; a
+      // member the second patch deletes is gone.
+      #expect(
+        written == """
+          {
+            "apiVersion": "openjoystickdriver/v1alpha1",
+            "kind": "Controller",
+            "vendorID": 1234,
+            "productID": 5678,
+            "usb": {
+              "interface": 0,
+              "endpoints": [9, 8, 7, 6],
+              "nested": {
+                "m": 1,
+                "z": 3,
+                "a": 2
+              },
+              "alpha": {
+                "y": 1,
+                "x": 2,
+                "w": 0
+              },
+              "beta": true
+            },
+            "tuning": {
+              "stickDeadzone": 0.2,
+              "frameQueueCapacity": 4
+            },
+            "server": "ojd",
+            "route": "ojd"
+          }
+
+          """
+      )
+    }
+  }
+
+  @Test
+  func aPatchFileInADeeperDirectoryIsRefused() throws {
+    try Self.scratch { directory in
+      try Self.write(
+        Self.record,
+        to: directory.appendingPathComponent("records/04d2/04d2-162e.json")
+      )
+      try Self.write(
+        Self.patch,
+        to: directory.appendingPathComponent("patches/04d2/deeper/04d2-162e.patch.json")
+      )
+      let problems = RepositoryValidation.applyPatches(
+        records: directory.appendingPathComponent("records"),
+        patches: directory.appendingPathComponent("patches"),
+        output: directory.appendingPathComponent("out")
+      )
+      #expect(problems.map(\.message).contains("the patch path must be 04d2/04d2-162e.patch.json"))
+      #expect(problems.allSatisfy { $0.code == .invalidControllerRecord })
+    }
+  }
+
+  @Test
+  func aPatchThatWritesTheSameNumberAnotherWayChangesNothing() throws {
+    try Self.scratch { directory in
+      try Self.write(
+        Self.record,
+        to: directory.appendingPathComponent("records/04d2/04d2-162e.json")
+      )
+      let patch = """
+        {
+          "apiVersion": "openjoystickdriver/v1alpha1",
+          "kind": "ControllerPatch",
+          "selector": {"vendorID": 1234, "productID": 5678},
+          "patch": {"usb": {"interface": 0.0}}
+        }
+        """
+      try Self.write(
+        patch,
+        to: directory.appendingPathComponent("patches/04d2/04d2-162e.patch.json")
+      )
+      let problems = RepositoryValidation.applyPatches(
+        records: directory.appendingPathComponent("records"),
+        patches: directory.appendingPathComponent("patches"),
+        output: directory.appendingPathComponent("out")
+      )
+      let model = ControllerModelID(vendorID: 1234, productID: 5678)
+      #expect(problems.map(\.message) == ["the patch changes nothing in \(model)"])
+    }
+  }
+}

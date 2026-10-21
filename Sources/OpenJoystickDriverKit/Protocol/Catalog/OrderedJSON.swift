@@ -90,8 +90,7 @@ public indirect enum OrderedJSON: Equatable, Sendable {
   ///
   /// The controller schema's property order is not a guide: Kit does not bundle the schemas. So a
   /// ``ControllerRecordDraft``, guided by ``recordKeys`` at the top level only, sorts every nested
-  /// object, and a patch merge, guided by the upstream record at every depth, sorts only the
-  /// members the patch adds.
+  /// object, and a patch merge, guided by ``merging(patch:)`` at every depth, sorts no member.
   public init(foundation value: Any, order: Self? = nil) throws {
     switch value {
     case let dictionary as [String: Any]:
@@ -139,6 +138,35 @@ public indirect enum OrderedJSON: Equatable, Sendable {
     default:
       throw Problem(reason: .notAJSONValue("\(type(of: value)) is not a JSON value"), offset: nil)
     }
+  }
+
+  /// The order of the record that this order describes after the merge patch `patch` is applied,
+  /// for use as the `order` of ``init(foundation:order:)``.
+  ///
+  /// It follows RFC 7396 as the merge itself does. Where both are objects, the members stay in
+  /// this order, a member the patch sets takes the order of its merged value, a member the patch
+  /// sets to `null` is gone, and the members this order lacks come after, in the patch's order.
+  /// An array, a scalar, and an object over a value that is not an object take the patch's order.
+  func merging(patch: Self) -> Self {
+    guard case .object(let patchMembers) = patch else { return patch }
+    var members: [Member] = []
+    if case .object(let own) = self { members = own }
+    for member in patchMembers {
+      let index = members.firstIndex { $0.key == member.key }
+      if case .null = member.value {
+        if let index { members.remove(at: index) }
+      } else if let index {
+        members[index] = Member(
+          key: member.key,
+          value: members[index].value.merging(patch: member.value)
+        )
+      } else {
+        members.append(
+          Member(key: member.key, value: Self.object([]).merging(patch: member.value))
+        )
+      }
+    }
+    return .object(members)
   }
 
   /// Whether the JSON number `text` has the value of `number`.
