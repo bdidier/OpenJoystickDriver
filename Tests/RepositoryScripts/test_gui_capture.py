@@ -353,6 +353,44 @@ class GuiCaptureTests(unittest.TestCase):
             ["ok", "absent", "absent", "transient", "transient", "error", "error"],
         )
 
+    @unittest.skipUnless(
+        shutil.which("osascript"), "osascript is not installed: ax.js needs JXA"
+    )
+    def test_wait_for_handles_transient_and_fatal_errors(self) -> None:
+        harness = (
+            "ObjC.import('Foundation');"
+            f"const path = {json.dumps(str(capture.GUI_DIR / 'ax.js'))};"
+            "const source = $.NSString.stringWithContentsOfFileEncodingError("
+            "path, $.NSUTF8StringEncoding, null).js;"
+            "const waitFor = new Function('delay', source + '; return waitFor;')("
+            "() => {});"
+            "const failing = (code) => { const e = new Error('read failed');"
+            " e.axCode = code; return e; };"
+            "const outcome = (condition) => { try {"
+            " return 'value ' + waitFor(condition, 'thing did not appear');"
+            " } catch (e) { return 'error ' + e.message; } };"
+            "let calls = 0;"
+            "const recovers = outcome(() => { if (calls++ === 0) throw failing(-25204);"
+            " return 'ready'; });"
+            "let fatalCalls = 0;"
+            "const fatal = outcome(() => { fatalCalls++; throw failing(-25211); });"
+            "const never = outcome(() => { throw failing(-25204); });"
+            "JSON.stringify({recovers, fatal, fatalCalls, never})"
+        )
+        result = subprocess.run(
+            ["osascript", "-l", "JavaScript", "-e", harness],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        reported = json.loads(result.stdout)
+        self.assertEqual(reported["recovers"], "value ready")
+        self.assertEqual(reported["fatal"], "error read failed")
+        self.assertEqual(reported["fatalCalls"], 1)
+        self.assertIn("thing did not appear", reported["never"])
+        self.assertIn("last AXError -25204", reported["never"])
+
     def test_capture_probes_after_finding_the_app_and_before_any_gui_call(
         self,
     ) -> None:

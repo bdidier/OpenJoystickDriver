@@ -55,7 +55,8 @@ function classifyAxCode(code) {
 
 function read(element, name) {
 	const result = readCode(element, name);
-	if (classifyAxCode(result.code) === "error" || classifyAxCode(result.code) === "transient") {
+	const kind = classifyAxCode(result.code);
+	if (kind === "error" || kind === "transient") {
 		const error = new Error("reading " + name + " failed with AXError " + result.code);
 		error.axCode = result.code;
 		throw error;
