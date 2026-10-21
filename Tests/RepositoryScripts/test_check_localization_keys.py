@@ -3,6 +3,7 @@ from __future__ import annotations
 import contextlib
 import io
 import plistlib
+import re
 import tempfile
 import unittest
 from pathlib import Path
@@ -11,6 +12,7 @@ from unittest import mock
 from Scripts.Quality import check_localization_keys as guard
 
 KEYS = {"common.ok", "error.one", "error.two"}
+ERROR_PATTERN = {"error.\\(rawValue)": re.compile(r"error\.E\d{4}")}
 
 
 class KeyArgumentTests(unittest.TestCase):
@@ -448,6 +450,148 @@ class GateTests(unittest.TestCase):
     def test_the_repository_passes_with_the_gates_it_has(self) -> None:
         with contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(guard.main([]), 0)
+
+
+class WriteGatedKeysTests(unittest.TestCase):
+    def update(
+        self,
+        violating: dict[str, set[str]],
+        gated: dict[str, set[str]],
+        keys: set[str],
+        additions: list[tuple[str, str]] | None = None,
+        patterns: dict[str, re.Pattern[str]] | None = None,
+    ) -> tuple[dict[str, list[str]], list[str]]:
+        found = {
+            rule: [
+                guard.RuleProblem(key, f"{key}: {rule}")
+                for key in violating.get(rule, ())
+            ]
+            for rule in guard.GATED_RULES
+        }
+        with (
+            mock.patch.object(guard, "rule_problems", return_value=found),
+            mock.patch.object(
+                guard,
+                "gated_keys",
+                return_value={
+                    rule: gated.get(rule, set()) for rule in guard.GATED_RULES
+                },
+            ),
+            mock.patch.object(guard, "catalog_keys", return_value=keys),
+            mock.patch.object(
+                guard,
+                "key_readers",
+                return_value=(
+                    set(),
+                    ERROR_PATTERN if patterns is None else patterns,
+                ),
+            ),
+        ):
+            return guard.update_gated_keys(Path("."), additions)
+
+    def test_a_new_violation_is_refused_with_its_key_and_rule(self) -> None:
+        _, refused = self.update(
+            {"comment": {"old.key", "new.key"}},
+            {"comment": {"old.key"}},
+            {"old.key", "new.key"},
+        )
+        self.assertEqual(len(refused), 1)
+        self.assertIn("'new.key'", refused[0])
+        self.assertIn("comment", refused[0])
+
+    def test_refused_update_writes_nothing(self) -> None:
+        with tempfile.TemporaryDirectory() as scratch:
+            root = Path(scratch)
+            path = root / guard.GATED_KEYS_PATH
+            path.parent.mkdir(parents=True)
+            path.write_text("unchanged")
+            with mock.patch.object(
+                guard, "update_gated_keys", return_value=({}, ["refused"])
+            ):
+                self.assertEqual(guard.write_gated_keys(root), ["refused"])
+            self.assertEqual(path.read_text(), "unchanged")
+
+    def test_stale_and_missing_entries_are_removed(self) -> None:
+        data, refused = self.update(
+            {"comment": {"kept.key"}},
+            {"comment": {"kept.key", "fixed.key", "gone.key"}, "osWord": {"fixed.key"}},
+            {"kept.key", "fixed.key"},
+        )
+        self.assertEqual(refused, [])
+        self.assertEqual(data["comment"], ["kept.key"])
+        self.assertEqual(data["osWord"], [])
+
+    def test_gate_adds_a_namespace_key_of_a_fully_gated_family(self) -> None:
+        data, refused = self.update(
+            {"namespace": {"error.E0001", "error.E0002"}},
+            {"namespace": {"error.E0001"}},
+            {"error.E0001", "error.E0002"},
+            [("error.E0002", "namespace")],
+        )
+        self.assertEqual(refused, [])
+        self.assertEqual(data["namespace"], ["error.E0001", "error.E0002"])
+
+    def test_gate_adds_several_keys_of_one_family(self) -> None:
+        _, refused = self.update(
+            {"namespace": {"error.E0001", "error.E0002"}},
+            {},
+            {"error.E0001", "error.E0002"},
+            [("error.E0001", "namespace"), ("error.E0002", "namespace")],
+        )
+        self.assertEqual(refused, [])
+
+    def test_gate_names_only_the_pairs_it_is_given(self) -> None:
+        _, refused = self.update(
+            {"namespace": {"error.E0002"}, "comment": {"error.E0002"}},
+            {},
+            {"error.E0002"},
+            [("error.E0002", "namespace")],
+        )
+        self.assertEqual(len(refused), 1)
+        self.assertIn("comment", refused[0])
+
+    def test_gate_refuses_every_rule_but_namespace(self) -> None:
+        for rule in ("comment", "osWord", "specifier", "pluralCount"):
+            _, refused = self.update(
+                {rule: {"error.E0002"}}, {}, {"error.E0002"}, [("error.E0002", rule)]
+            )
+            self.assertIn("only namespace can be gated", refused[0], rule)
+
+    def test_gate_refuses_a_key_outside_every_family(self) -> None:
+        _, refused = self.update(
+            {"namespace": {"plain.key"}},
+            {},
+            {"plain.key"},
+            [("plain.key", "namespace")],
+        )
+        self.assertIn("read by no pattern", refused[0])
+
+    def test_gate_refuses_a_family_with_an_ungated_member(self) -> None:
+        _, refused = self.update(
+            {"namespace": {"error.E0002"}},
+            {},
+            {"error.E0001", "error.E0002"},
+            [("error.E0002", "namespace")],
+        )
+        self.assertIn("'error.E0001'", refused[0])
+
+    def test_gate_refuses_a_key_without_the_violation(self) -> None:
+        _, refused = self.update(
+            {}, {}, {"error.E0002"}, [("error.E0002", "namespace")]
+        )
+        self.assertIn("violates no namespace rule", refused[0])
+
+    def test_arguments_pair_each_gate_with_a_key_and_a_rule(self) -> None:
+        parse = guard.parse_gate_arguments
+        self.assertEqual(parse(["--write-gated-keys"]), [])
+        self.assertEqual(
+            parse(
+                ["--write-gated-keys", "--gate", "a", "namespace", "--gate", "b", "x"]
+            ),
+            [("a", "namespace"), ("b", "x")],
+        )
+        self.assertIsNone(parse(["--gate", "a", "namespace"]))
+        self.assertIsNone(parse(["--write-gated-keys", "--gate", "a"]))
 
 
 class RepositoryTests(unittest.TestCase):

@@ -1229,7 +1229,7 @@
 "cli.virtual.feed.abstract" = "Cung cấp một tay cầm ảo do đầu vào chuẩn điều khiển.";
 "cli.virtual.feed.discussion" = "Đọc một đối tượng JSON mỗi dòng: “buttons” và “dpad” liệt kê các thành phần được nhấn, như South và up, và “axes” ánh xạ tên trục, như LeftStickX, tới giá trị. Thành phần bị thiếu ở trạng thái trung tính. Các cần chạy từ -1 đến 1 với Y hướng xuống; các cò chạy từ 0 đến 1. Các khung được phát theo thứ tự, mỗi khung ít nhất 8 ms; “holdMilliseconds” giữ một khung lâu hơn, tối đa 60000. In mỗi lệnh đầu ra mà trò chơi gửi đến tay cầm, như rung, thành một đối tượng JSON mỗi dòng. Dừng khi mọi khung đã phát xong sau khi đầu vào kết thúc.";
 "cli.virtual.feed.error.closed" = "Dịch vụ đã đóng tay cầm ảo. Hãy kiểm tra bằng “ojd status”.";
-"cli.virtual.feed.error.close_interrupted" = "Việc đóng tay cầm ảo đã bị gián đoạn. Hãy kiểm tra bằng “ojd status”.";
+"cli.virtual.feed.error.closeInterrupted" = "Việc đóng tay cầm ảo đã bị gián đoạn. Hãy kiểm tra bằng “ojd status”.";
 "cli.virtual.feed.error.frame" = "Dòng %@ không phải là khung hợp lệ. “ojd virtual feed --help” hiển thị định dạng.";
 "cli.virtual.feed.profile" = "Cấu hình tay cầm ảo để cung cấp.";
 "cli.virtual.feed.started" = "Đang cung cấp tay cầm ảo %@. Hãy ghi các khung vào đầu vào chuẩn; kết thúc đầu vào hoặc nhấn Control-C để dừng.";

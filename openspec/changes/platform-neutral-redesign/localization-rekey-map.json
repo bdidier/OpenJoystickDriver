@@ -819,7 +819,7 @@
     "cli.virtual.export_mapping.profile": "cli.virtual.exportMapping.profile",
     "cli.virtual.feed.abstract": "cli.virtual.feed.abstract",
     "cli.virtual.feed.discussion": "cli.virtual.feed.discussion",
-    "cli.virtual.feed.error.close_interrupted": "cli.virtual.feed.errorCloseInterrupted",
+    "cli.virtual.feed.error.closeInterrupted": "cli.virtual.feed.errorCloseInterrupted",
     "cli.virtual.feed.error.closed": "cli.virtual.feed.errorClosed",
     "cli.virtual.feed.error.frame": "cli.virtual.feed.errorFrame",
     "cli.virtual.feed.error.plain": "cli.virtual.feed.errorPlain",

@@ -1229,7 +1229,7 @@
 "cli.virtual.feed.abstract" = "Een virtueel gamepad publiceren dat door stdin wordt aangestuurd.";
 "cli.virtual.feed.discussion" = "Leest één JSON-object per regel: ‘buttons’ en ‘dpad’ geven de ingedrukte bedieningselementen weer, zoals South en up, en ‘axes’ koppelt namen van assen, zoals LeftStickX, aan waarden. Ontbrekende bedieningselementen blijven neutraal. Sticks lopen van -1 tot 1 met Y omlaag; triggers lopen van 0 tot 1. Frames worden op volgorde afgespeeld, elk minstens 8 ms; ‘holdMilliseconds’ houdt een frame langer vast, tot 60000. Drukt elk uitvoercommando dat games naar de gamepad sturen, zoals trillen, af als één JSON-object per regel. Stopt wanneer elk frame is afgespeeld nadat de invoer is geëindigd.";
 "cli.virtual.feed.error.closed" = "De service heeft het virtuele gamepad gesloten. Controleer dit met ‘ojd status’.";
-"cli.virtual.feed.error.close_interrupted" = "Het sluiten van het virtuele gamepad is onderbroken. Controleer dit met ‘ojd status’.";
+"cli.virtual.feed.error.closeInterrupted" = "Het sluiten van het virtuele gamepad is onderbroken. Controleer dit met ‘ojd status’.";
 "cli.virtual.feed.error.frame" = "Regel %@ is geen geldig frame. ‘ojd virtual feed --help’ toont het formaat.";
 "cli.virtual.feed.profile" = "Het profiel van het virtuele gamepad dat moet worden gepubliceerd.";
 "cli.virtual.feed.started" = "Een virtueel gamepad (%@) wordt gepubliceerd. Schrijf frames naar stdin; beëindig de invoer of druk op Control-C om te stoppen.";
