@@ -17,7 +17,7 @@
         )
       case .activityFilter: return makeFilterItem(for: action)
       case .activitySearch: return makeSearchItem(for: action)
-      case .refreshControllers, .newProfile, .importProfile, .validateProfileFile,
+      case .newProfile, .importProfile, .validateProfileFile,
         .duplicateProfile, .exportProfile, .deleteProfile, .installLibraryItem, .grantProgram,
         .createToken, .validateLibraryItem, .testLibraryRecord, .removeLibraryItem,
         .searchLibrary, .copyActivityLog, .saveActivityLog, .showActivityLogInFinder,

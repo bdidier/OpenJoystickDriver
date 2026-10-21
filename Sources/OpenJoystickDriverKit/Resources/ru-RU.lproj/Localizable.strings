@@ -69,11 +69,10 @@
 "settings.updateChecking" = "Проверка…";
 "settings.updates" = "Обновления";
 "settings.viewUpdate" = "Показать обновление";
-"controllers.refreshAccessibility" = "Обновить контроллеры";
 "controllers.unavailable" = "Контроллеры недоступны";
 "controllers.loadError" = "Не удалось загрузить контроллеры";
 "controllers.emptyTitle" = "Контроллер не подключён";
-"controllers.emptyMessage" = "Подключите контроллер, затем выберите «Обновить».";
+"controllers.emptyMessage" = "Подключите контроллер.";
 "controllers.battery" = "Аккумулятор";
 "controllers.serial.show" = "Показать серийный номер";
 "controllers.serial.hide" = "Скрыть серийный номер";

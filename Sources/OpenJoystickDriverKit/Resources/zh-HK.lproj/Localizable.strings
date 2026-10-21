@@ -69,11 +69,10 @@
 "settings.updateChecking" = "正在檢查…";
 "settings.updates" = "更新";
 "settings.viewUpdate" = "檢視更新";
-"controllers.refreshAccessibility" = "重新整理控制器";
 "controllers.unavailable" = "無法使用控制器";
 "controllers.loadError" = "無法載入控制器";
 "controllers.emptyTitle" = "未連接控制器";
-"controllers.emptyMessage" = "連接控制器，然後選擇「重新整理」。";
+"controllers.emptyMessage" = "連接控制器。";
 "controllers.battery" = "電池";
 "controllers.serial.show" = "顯示序號";
 "controllers.serial.hide" = "隱藏序號";

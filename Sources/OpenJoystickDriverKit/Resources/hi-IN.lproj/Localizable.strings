@@ -69,11 +69,10 @@
 "settings.updateChecking" = "जाँच हो रही है…";
 "settings.updates" = "अपडेट";
 "settings.viewUpdate" = "अपडेट देखें";
-"controllers.refreshAccessibility" = "कंट्रोलर रीफ़्रेश करें";
 "controllers.unavailable" = "कंट्रोलर उपलब्ध नहीं";
 "controllers.loadError" = "कंट्रोलर लोड नहीं हो सके";
 "controllers.emptyTitle" = "कोई कंट्रोलर कनेक्ट नहीं है";
-"controllers.emptyMessage" = "कंट्रोलर कनेक्ट करें, फिर “रीफ़्रेश करें” चुनें।";
+"controllers.emptyMessage" = "कंट्रोलर कनेक्ट करें।";
 "controllers.battery" = "बैटरी";
 "controllers.serial.show" = "सीरियल नंबर दिखाएँ";
 "controllers.serial.hide" = "सीरियल नंबर छिपाएँ";

@@ -30,6 +30,8 @@ public final class ApplicationServiceServer: @unchecked Sendable {
   let virtualHIDProfileOverrides: VirtualHIDProfileOverrideStore
   let userSpaceDispatcherFactory: UserSpaceDispatcherFactory
   let virtualFeeds: VirtualFeedRegistry
+  /// Counts controller attach, detach and state changes for `waitForControllerInventoryChange`.
+  let inventoryChanges = ControllerInventoryChanges()
   /// Guards `userSpaceDispatcher`, `userSpaceEnabled`, `userSpaceStatus`, `userSpaceCloseSlot`,
   /// and `virtualOutputServerStopped`.
   let userSpaceLock = NSLock()

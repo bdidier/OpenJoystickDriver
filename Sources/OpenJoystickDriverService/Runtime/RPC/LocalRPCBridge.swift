@@ -134,6 +134,16 @@ extension ApplicationServiceServer {
     case .getFrameTimings:
       _ = try decode(LocalServiceRPCEmptyArguments.self)
       return try send(await getFrameTimings())
+    case .waitForControllerInventoryChange:
+      let value = try decode(LocalServiceRPCInventoryChangeArguments.self)
+      return try send(
+        ControllerInventoryChangePayload(
+          generation: await inventoryChanges.wait(
+            after: value.after,
+            holdSeconds: ControllerInventoryChangePayload.holdSeconds
+          )
+        )
+      )
     case .setVirtualHIDProfileOverride:
       let value = try decode(LocalServiceRPCVirtualHIDProfileOverrideArguments.self)
       return try send(

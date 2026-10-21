@@ -69,11 +69,10 @@
 "settings.updateChecking" = "جارٍ التحقق…";
 "settings.updates" = "التحديثات";
 "settings.viewUpdate" = "عرض التحديث";
-"controllers.refreshAccessibility" = "تحديث وحدات التحكم";
 "controllers.unavailable" = "وحدات التحكم غير متوفرة";
 "controllers.loadError" = "تعذر تحميل وحدات التحكم";
 "controllers.emptyTitle" = "لا توجد وحدة تحكم متصلة";
-"controllers.emptyMessage" = "وصّل وحدة تحكم، ثم اختر تحديث.";
+"controllers.emptyMessage" = "وصّل وحدة تحكم.";
 "controllers.battery" = "البطارية";
 "controllers.serial.show" = "إظهار الرقم التسلسلي";
 "controllers.serial.hide" = "إخفاء الرقم التسلسلي";

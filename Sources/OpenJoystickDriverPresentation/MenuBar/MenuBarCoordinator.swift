@@ -25,6 +25,7 @@
     let menuBarViewModel: MenuBarViewModel
     let supportReport: SupportReportModel
     let gateway: any ApplicationServiceGateway & InputTestDeviceGateway
+    let gatewayChangeSource: any ControllerChangeSource
 
     var statusItem: NSStatusItem?
     var statusMenu: NSMenu?
@@ -41,8 +42,7 @@
     var showInMenuBarObservation: AnyCancellable?
     var showInDockObservation: AnyCancellable?
     var inputTestWindowController: InputTestWindowController?
-    var liveStatusTimer: Timer?
-    var controllerInventoryObserver: NSObjectProtocol?
+    var controllerLiveUpdates: ControllerLiveUpdates?
     let notificationMonitor = RuntimeNotificationMonitor()
     let notificationPresenter = RuntimeNotificationCenterDelegate()
     let termination = MenuBarTermination()
@@ -56,6 +56,7 @@
     ) {
       self.stopRuntime = stopRuntime
       self.gateway = gateway
+      self.gatewayChangeSource = gateway
       self.viewModel = RuntimeViewModel(
         gateway: gateway,
         systemExtensionSetup: SystemExtensionSetupCoordinator(client: systemExtensionSetup)

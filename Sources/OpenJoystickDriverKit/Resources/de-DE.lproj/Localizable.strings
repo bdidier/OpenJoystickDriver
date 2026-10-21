@@ -69,11 +69,10 @@
 "settings.updateChecking" = "Wird geprüft…";
 "settings.updates" = "Updates";
 "settings.viewUpdate" = "Update anzeigen";
-"controllers.refreshAccessibility" = "Controller aktualisieren";
 "controllers.unavailable" = "Controller nicht verfügbar";
 "controllers.loadError" = "Controller konnten nicht geladen werden";
 "controllers.emptyTitle" = "Kein Controller verbunden";
-"controllers.emptyMessage" = "Verbinde einen Controller und wähle dann „Aktualisieren“.";
+"controllers.emptyMessage" = "Verbinde einen Controller.";
 "controllers.battery" = "Batterie";
 "controllers.serial.show" = "Seriennummer einblenden";
 "controllers.serial.hide" = "Seriennummer ausblenden";

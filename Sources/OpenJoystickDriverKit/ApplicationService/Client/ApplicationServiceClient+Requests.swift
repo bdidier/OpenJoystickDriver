@@ -122,6 +122,20 @@ extension ApplicationServiceClient {
     )
   }
 
+  /// Waits until the controller inventory differs from generation `after`, or the service's hold
+  /// time passes with no change, and returns the service's current generation. A nil `after`
+  /// returns the current generation at once.
+  public func waitForControllerInventoryChange(
+    after: UInt64?
+  ) async throws -> ControllerInventoryChangePayload {
+    try await call(
+      .waitForControllerInventoryChange,
+      LocalServiceRPCInventoryChangeArguments(after: after),
+      timeoutSeconds: ControllerInventoryChangePayload.holdSeconds
+        + applicationServiceDefaultReplyTimeoutSeconds
+    )
+  }
+
   public func getFrameTimings() async throws -> ApplicationServiceFrameTimingsPayload {
     let data: Data = try await call(.getFrameTimings, LocalServiceRPCEmptyArguments())
     guard

@@ -348,7 +348,6 @@
         isEnabled(action)
       else { return }
       switch action {
-      case .refreshControllers: screens.controllers.refresh()
       case .newProfile: screens.profiles.beginCreatingProfile()
       case .importProfile: screens.profiles.chooseProfileToImport()
       case .validateProfileFile: screens.profiles.validateProfileFile()
@@ -391,7 +390,6 @@
 
     func isEnabled(_ action: MainWindowToolbarAction) -> Bool {
       switch action {
-      case .refreshControllers: return !screens.runtime.isScopedRefreshInFlight
       case .newProfile, .importProfile, .validateProfileFile, .duplicateProfile, .exportProfile,
         .deleteProfile:
         return action.isEnabled(profile: profileToolbarState)

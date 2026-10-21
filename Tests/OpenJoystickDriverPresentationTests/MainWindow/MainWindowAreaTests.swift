@@ -61,7 +61,7 @@ struct MainWindowAreaTests {
 
   @Test
   func eachAreaShowsItsOwnActionsAfterTheFixedItems() {
-    #expect(MainWindowArea.controllers.toolbarActions(activityMode: .log) == [.refreshControllers])
+    #expect(MainWindowArea.controllers.toolbarActions(activityMode: .log).isEmpty)
     let profileActions: [MainWindowToolbarAction] = [
       .newProfile, .importProfile, .validateProfileFile, .duplicateProfile, .exportProfile,
       .deleteProfile,
