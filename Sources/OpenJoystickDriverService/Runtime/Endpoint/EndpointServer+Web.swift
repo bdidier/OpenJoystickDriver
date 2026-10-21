@@ -26,7 +26,8 @@ extension EndpointServer {
       guard requested == 0 || AccessWebSettings.ports.contains(requested) else {
         throw AccessGrantStoreError.portUnavailable(requested)
       }
-      let keepsListener = webListener.map { requested == 0 || requested == $0.port } ?? false
+      let keepsListener =
+        port != 0 && (webListener.map { requested == 0 || requested == $0.port } ?? false)
       let listener = keepsListener ? nil : try openWebListener(port: requested)
       file.web = AccessWebSettings(enabled: true, port: listener?.port ?? webListener?.port ?? 0)
       do { try store.save(file) } catch {

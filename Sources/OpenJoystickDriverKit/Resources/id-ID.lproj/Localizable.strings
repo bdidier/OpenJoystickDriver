@@ -1609,7 +1609,7 @@
 "a11y.access.dismissError" = "Tutup kesalahan";
 "a11y.access.tryAgain" = "Baca pengaturan akses lagi";
 "a11y.access.restart" = "Mulai ulang app agar izin baru berlaku";
-"a11y.access.webPort" = "Port WebSocket; biarkan kosong untuk mempertahankan port tersimpan atau agar sistem memilihkan satu";
+"a11y.access.webPort" = "Port WebSocket; biarkan kosong untuk mempertahankan port tersimpan. Sistem hanya memilih port jika belum ada yang tersimpan atau Otomatis dipilih";
 "a11y.access.grantProgram" = "Beri akses ke program yang Anda pilih";
 "a11y.access.grantRefused" = "Beri akses ke %@";
 "a11y.access.revokeGrant" = "Cabut akses %@";

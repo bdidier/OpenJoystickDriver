@@ -34,11 +34,13 @@ struct DeveloperToolsTests {
       launchAtLogin: LaunchAtLoginStub(isEnabled: false),
       notificationAuthorization: NotificationAuthorizationStub(state: .denied)
     )
+    let sandbox = try CommandLineToolSandbox()
+    defer { sandbox.remove() }
     let controller = SettingsWindowController(
       gateway: gateway,
       runtime: RuntimeViewModel(gateway: gateway),
       preferences: preferences,
-      commandLineTool: CommandLineToolModel()
+      commandLineTool: sandbox.model()
     ) { _ in }
 
     controller.showSettings(pane: .advanced)

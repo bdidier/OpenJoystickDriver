@@ -1609,7 +1609,7 @@
 "a11y.access.dismissError" = "Hatayı kapat";
 "a11y.access.tryAgain" = "Erişim ayarlarını yeniden oku";
 "a11y.access.restart" = "Yeni izinlerin geçerli olması için uygulamayı yeniden başlat";
-"a11y.access.webPort" = "WebSocket bağlantı noktası; kayıtlı bağlantı noktasını korumak veya sistemin seçmesi için boş bırakın";
+"a11y.access.webPort" = "WebSocket bağlantı noktası; kayıtlı bağlantı noktasını korumak için boş bırakın. Sistem yalnızca kayıtlı bağlantı noktası yoksa veya Otomatik seçilirse bir bağlantı noktası seçer";
 "a11y.access.grantProgram" = "Seçtiğiniz programa erişim ver";
 "a11y.access.grantRefused" = "Şuna erişim ver: %@";
 "a11y.access.revokeGrant" = "Şunun erişimini geri çek: %@";

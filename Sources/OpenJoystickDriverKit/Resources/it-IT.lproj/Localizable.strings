@@ -1720,7 +1720,7 @@
 "a11y.access.dismissError" = "Ignora l’errore";
 "a11y.access.tryAgain" = "Leggi di nuovo le impostazioni di accesso";
 "a11y.access.restart" = "Riavvia l’app per applicare i nuovi permessi";
-"a11y.access.webPort" = "Porta del WebSocket; lascia vuoto per mantenere la porta salvata o far scegliere una porta al sistema";
+"a11y.access.webPort" = "Porta del WebSocket; lascia vuoto per mantenere la porta salvata. Il sistema sceglie una porta solo se non ne è salvata nessuna o se è scelto Automatico";
 "a11y.access.grantProgram" = "Concedi l’accesso a un programma che scegli";
 "a11y.access.grantRefused" = "Concedi l’accesso a %@";
 "a11y.access.revokeGrant" = "Revoca l’accesso di %@";

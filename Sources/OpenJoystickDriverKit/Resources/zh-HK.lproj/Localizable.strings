@@ -1609,7 +1609,7 @@
 "a11y.access.dismissError" = "關閉錯誤";
 "a11y.access.tryAgain" = "重新讀取取用權限設定";
 "a11y.access.restart" = "重新啟動 App 以套用新權限";
-"a11y.access.webPort" = "WebSocket 連接埠；留空則保留已儲存的連接埠，或由系統選擇連接埠";
+"a11y.access.webPort" = "WebSocket 連接埠；留空則保留已儲存的連接埠。僅在沒有已儲存的連接埠或選擇了自動時，系統才會選擇連接埠";
 "a11y.access.grantProgram" = "向您選擇的程式授予取用權限";
 "a11y.access.grantRefused" = "向 %@ 授予取用權限";
 "a11y.access.revokeGrant" = "撤銷 %@ 的取用權限";

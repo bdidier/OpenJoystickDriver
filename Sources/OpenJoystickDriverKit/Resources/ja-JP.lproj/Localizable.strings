@@ -1609,7 +1609,7 @@
 "a11y.access.dismissError" = "エラーを閉じる";
 "a11y.access.tryAgain" = "アクセス設定をもう一度読み込む";
 "a11y.access.restart" = "新しい権限を反映するためにAppを再起動";
-"a11y.access.webPort" = "WebSocketのポート。空のままにすると、保存済みのポートを保持するか、システムが選んだポートを使います";
+"a11y.access.webPort" = "WebSocketのポート。空のままにすると保存済みのポートを保持します。システムがポートを選ぶのは、保存済みのポートがない場合か、自動を選んだ場合だけです";
 "a11y.access.grantProgram" = "選択したプログラムにアクセスを許可";
 "a11y.access.grantRefused" = "%@にアクセスを許可";
 "a11y.access.revokeGrant" = "%@のアクセスを取り消す";

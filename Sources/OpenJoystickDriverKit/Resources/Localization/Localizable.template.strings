@@ -1723,7 +1723,7 @@
 "a11y.access.dismissError" = "Dismiss the error";
 "a11y.access.tryAgain" = "Read the access settings again";
 "a11y.access.restart" = "Restart the app so the new permissions apply";
-"a11y.access.webPort" = "WebSocket port; leave empty to keep the saved port, or to let the system pick one";
+"a11y.access.webPort" = "WebSocket port; leave empty to keep the saved port. The system picks a port only when none is saved or Automatic is chosen";
 "a11y.access.grantProgram" = "Grant access to a program that you choose";
 "a11y.access.grantRefused" = "Grant access to %@";
 "a11y.access.revokeGrant" = "Revoke the access of %@";

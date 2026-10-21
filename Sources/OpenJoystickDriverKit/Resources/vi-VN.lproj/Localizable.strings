@@ -1609,7 +1609,7 @@
 "a11y.access.dismissError" = "Bỏ qua lỗi";
 "a11y.access.tryAgain" = "Đọc lại cài đặt quyền truy cập";
 "a11y.access.restart" = "Khởi động lại ứng dụng để áp dụng quyền mới";
-"a11y.access.webPort" = "Cổng WebSocket; để trống để giữ cổng đã lưu hoặc để hệ thống chọn một cổng";
+"a11y.access.webPort" = "Cổng WebSocket; để trống để giữ cổng đã lưu. Hệ thống chỉ chọn cổng khi chưa lưu cổng nào hoặc khi chọn Tự động";
 "a11y.access.grantProgram" = "Cấp quyền truy cập cho chương trình bạn chọn";
 "a11y.access.grantRefused" = "Cấp quyền truy cập cho %@";
 "a11y.access.revokeGrant" = "Thu hồi quyền truy cập của %@";

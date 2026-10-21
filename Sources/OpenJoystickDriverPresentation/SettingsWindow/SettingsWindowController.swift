@@ -49,6 +49,10 @@
     let developerTools: DeveloperToolsViewModel
     private let preferences: SettingsPreferencesModel
     private let commandLineTool: CommandLineToolModel
+    /// Whether the app left the foreground after the window last read the pane state, so that
+    /// coming back reads it once; showing the window reads it and clears this, so the activation
+    /// that follows a show reads nothing more.
+    private var refreshOnActivation = false
     private var isShown = false
     private var developerToolsAreRunning = false
     private weak var toolbar: NSToolbar?
@@ -105,7 +109,8 @@
       // The window height follows the pane through `paneChanged`, capped to the screen. The
       // hosting view sits in a container that positions it by autoresizing and has no
       // constraints, so on every macOS version the content's ideal height cannot become the
-      // window's minimum size; macOS 13 and later also stop the hosting view from sizing itself.
+      // window's minimum size (on macOS 12, which has no `sizingOptions`, this container is the
+      // only guard); macOS 13 and later also stop the hosting view from sizing itself.
       if #available(macOS 13, *) { hostingView.sizingOptions = [] }
       let container = NSView(
         frame: NSRect(x: 0, y: 0, width: SettingsWindowPane.contentWidth, height: 0)
@@ -132,8 +137,14 @@
         developerTools.objectWillChange.sink { [weak self] _ in self?.fitting?.schedule() },
         commandLineTool.objectWillChange.sink { [weak self] _ in self?.fitting?.schedule() },
         runtime.objectWillChange.sink { [weak self] _ in self?.fitting?.schedule() },
+        NotificationCenter.default.publisher(for: NSApplication.didResignActiveNotification)
+          .sink { [weak self] _ in self?.refreshOnActivation = true },
         NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)
-          .sink { [weak self] _ in self?.refreshPaneState() },
+          .sink { [weak self] _ in
+            guard self?.refreshOnActivation == true else { return }
+            self?.refreshOnActivation = false
+            self?.refreshPaneState()
+          },
         NotificationCenter.default.publisher(
           for: NSApplication.didChangeScreenParametersNotification
         ).sink { [weak self] _ in self?.paneChanged(animated: false) },
@@ -151,6 +162,7 @@
       isShown = true
       syncDeveloperTools()
       refreshPaneState()
+      refreshOnActivation = false
       visibilityChanged(true)
       window?.makeKeyAndOrderFront(nil)
       NSApplication.shared.activate(ignoringOtherApps: true)

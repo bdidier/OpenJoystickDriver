@@ -5,12 +5,39 @@ import Testing
 
 @testable import OpenJoystickDriverPresentation
 
+/// A command-line tool link in a temporary folder, so no test reads or changes the system link.
+struct CommandLineToolSandbox {
+  let root = FileManager.default.temporaryDirectory.appendingPathComponent(
+    "CommandLineToolSandbox.\(UUID().uuidString)"
+  )
+  let link: CommandLineToolLink
+
+  init() throws {
+    let executable = root.appendingPathComponent("App/OpenJoystickDriver")
+    try FileManager.default.createDirectory(
+      at: executable.deletingLastPathComponent(),
+      withIntermediateDirectories: true
+    )
+    try Data().write(to: executable)
+    link = CommandLineToolLink(
+      linkURL: root.appendingPathComponent("bin/ojd"),
+      executableURL: executable
+    ) { _ in }
+  }
+
+  @MainActor
+  func model() -> CommandLineToolModel { CommandLineToolModel(link: link) }
+
+  func remove() { try? FileManager.default.removeItem(at: root) }
+}
+
 @Suite
 @MainActor
 struct SettingsWindowControllerTests {
   private func controller(
     gateway: GatewayStub,
-    developerTools: Bool = true
+    developerTools: Bool = true,
+    commandLineTool: CommandLineToolModel
   ) throws -> (SettingsWindowController, SettingsPreferencesModel) {
     let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     try settings.set(.developerTools, to: developerTools)
@@ -23,7 +50,7 @@ struct SettingsWindowControllerTests {
       gateway: gateway,
       runtime: RuntimeViewModel(gateway: gateway),
       preferences: preferences,
-      commandLineTool: CommandLineToolModel()
+      commandLineTool: commandLineTool
     ) { _ in }
     return (controller, preferences)
   }
@@ -47,7 +74,9 @@ struct SettingsWindowControllerTests {
   @Test
   func closingTheWindowDuringTheReadLeavesTheDiagnosticsNotLoaded() async throws {
     let gateway = await gatedGateway()
-    let (controller, _) = try controller(gateway: gateway)
+    let sandbox = try CommandLineToolSandbox()
+    defer { sandbox.remove() }
+    let (controller, _) = try controller(gateway: gateway, commandLineTool: sandbox.model())
     await startRead(controller, gateway)
 
     controller.close()
@@ -59,7 +88,9 @@ struct SettingsWindowControllerTests {
   @Test
   func switchingPaneDuringTheReadLeavesTheDiagnosticsNotLoaded() async throws {
     let gateway = await gatedGateway()
-    let (controller, _) = try controller(gateway: gateway)
+    let sandbox = try CommandLineToolSandbox()
+    defer { sandbox.remove() }
+    let (controller, _) = try controller(gateway: gateway, commandLineTool: sandbox.model())
     await startRead(controller, gateway)
 
     controller.showSettings(pane: .general)
@@ -71,7 +102,12 @@ struct SettingsWindowControllerTests {
   @Test
   func turningDeveloperToolsOffDuringTheReadLeavesTheDiagnosticsNotLoaded() async throws {
     let gateway = await gatedGateway()
-    let (controller, preferences) = try controller(gateway: gateway)
+    let sandbox = try CommandLineToolSandbox()
+    defer { sandbox.remove() }
+    let (controller, preferences) = try controller(
+      gateway: gateway,
+      commandLineTool: sandbox.model()
+    )
     await startRead(controller, gateway)
 
     preferences.setDeveloperToolsEnabled(false)
@@ -83,33 +119,11 @@ struct SettingsWindowControllerTests {
 
   @Test
   func theCommandLineToolLinkIsReadWhenAdvancedIsShownNotWhenTheControllerIsMade() throws {
-    let root = FileManager.default.temporaryDirectory.appendingPathComponent(
-      "SettingsWindowControllerTests.\(UUID().uuidString)"
-    )
-    defer { try? FileManager.default.removeItem(at: root) }
-    let executable = root.appendingPathComponent("App/OpenJoystickDriver")
-    try FileManager.default.createDirectory(
-      at: executable.deletingLastPathComponent(),
-      withIntermediateDirectories: true
-    )
-    try Data().write(to: executable)
-    let link = CommandLineToolLink(
-      linkURL: root.appendingPathComponent("bin/ojd"),
-      executableURL: executable
-    ) { _ in }
-    let model = CommandLineToolModel(link: link)
-    let gateway = GatewayStub()
-    let controller = SettingsWindowController(
-      gateway: gateway,
-      runtime: RuntimeViewModel(gateway: gateway),
-      preferences: SettingsPreferencesModel(
-        settings: SettingsStore(directory: RootedDataDirectory.temporary()),
-        launchAtLogin: LaunchAtLoginStub(isEnabled: false),
-        notificationAuthorization: NotificationAuthorizationStub(state: .denied)
-      ),
-      commandLineTool: model
-    ) { _ in }
-    try link.install()
+    let sandbox = try CommandLineToolSandbox()
+    defer { sandbox.remove() }
+    let model = sandbox.model()
+    let (controller, _) = try controller(gateway: GatewayStub(), commandLineTool: model)
+    try sandbox.link.install()
     #expect(model.status.state == .missing)
 
     controller.showSettings(pane: .advanced)
