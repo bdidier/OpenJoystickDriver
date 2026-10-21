@@ -523,10 +523,6 @@
 "setup.uninstallDetail" = "تتوقف وحدات تحكم Xbox USB عن العمل إلى أن يُثبَّت برنامج التشغيل مرة أخرى.";
 "setup.repairDriver" = "إصلاح برنامج تشغيل Xbox USB";
 "banner.service.title" = "لا يستطيع OpenJoystickDriver الوصول إلى خدمته";
-"banner.service.start" = "بدء الخدمة";
-"banner.service.startFailed" = "تعذّر على OpenJoystickDriver بدء خدمته.";
-"banner.service.noBundle" = "هذه النسخة من OpenJoystickDriver ليست داخل تطبيق، لذلك لا يمكنها بدء الخدمة.";
-"banner.service.notReady" = "بدأت الخدمة لكنها لم تقبل الطلبات في الوقت المناسب.";
 "banner.access.title" = "الإذن مطلوب";
 "banner.access.detail" = "لم يسمح macOS بكل ما يحتاجه OpenJoystickDriver لقراءة وحدات التحكم ونشرها للألعاب.";
 "cli.login.uninstall_action" = "إلغاء التثبيت";
@@ -1521,6 +1517,7 @@
 "access.choose" = "اختيار";
 "access.endpoint" = "نقطة النهاية المحلية";
 "access.socket" = "المقبس: %@";
+"access.socket.copy" = "نسخ مسار المقبس";
 "access.enable" = "تشغيل";
 "access.enable.title" = "هل تريد تشغيل نقطة النهاية المحلية؟";
 "access.enable.message" = "يمكن للبرامج التي تمنحها الوصول بعد ذلك قراءة حالة وحدات التحكم، وتغييرها إذا كان لديها نطاق التحكم.";
@@ -1585,10 +1582,6 @@
 "a11y.access.dismissError" = "تجاهل الخطأ";
 "a11y.access.tryAgain" = "قراءة إعدادات الوصول مرة أخرى";
 "a11y.access.restart" = "أعد تشغيل التطبيق لتسري الأذونات الجديدة";
-"a11y.access.enableEndpoint" = "تشغيل نقطة النهاية المحلية";
-"a11y.access.disableEndpoint" = "إيقاف نقطة النهاية المحلية";
-"a11y.access.enableWeb" = "تشغيل WebSocket";
-"a11y.access.disableWeb" = "إيقاف WebSocket";
 "a11y.access.webPort" = "منفذ WebSocket؛ اتركه فارغًا لاستخدام المنفذ المحفوظ";
 "a11y.access.grantProgram" = "منح الوصول لبرنامج تختاره";
 "a11y.access.grantRefused" = "منح الوصول لـ %@";

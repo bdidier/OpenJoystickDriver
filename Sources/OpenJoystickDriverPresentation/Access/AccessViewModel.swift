@@ -30,13 +30,9 @@ enum AccessPending: Identifiable, Equatable {
   case enableWeb(port: Int?)
   case grantClient(AccessClientCandidate)
   case grantToken(name: String, origins: [String])
-  /// `scopes` nil removes the whole grant; otherwise only the named scopes.
-  case revokeGrant(id: String, name: String, scopes: [EndpointScope]?)
-  case revokeToken(id: String, name: String, scopes: [EndpointScope]?)
-
-  private static func scopeKey(_ scopes: [EndpointScope]?) -> String {
-    scopes.map { $0.map(\.rawValue).joined(separator: "+") } ?? "all"
-  }
+  /// `scope` nil removes the whole grant; otherwise only that scope.
+  case revokeGrant(id: String, name: String, scope: EndpointScope?)
+  case revokeToken(id: String, name: String, scope: EndpointScope?)
 
   var id: String {
     switch self {
@@ -44,8 +40,8 @@ enum AccessPending: Identifiable, Equatable {
     case .enableWeb: "enableWeb"
     case .grantClient(let candidate): "grantClient.\(candidate.id)"
     case .grantToken(let name, _): "grantToken.\(name)"
-    case .revokeGrant(let id, _, let scopes): "revokeGrant.\(id).\(Self.scopeKey(scopes))"
-    case .revokeToken(let id, _, let scopes): "revokeToken.\(id).\(Self.scopeKey(scopes))"
+    case .revokeGrant(let id, _, let scope): "revokeGrant.\(id).\(scope?.rawValue ?? "all")"
+    case .revokeToken(let id, _, let scope): "revokeToken.\(id).\(scope?.rawValue ?? "all")"
     }
   }
 }
@@ -237,12 +233,12 @@ final class AccessViewModel: ObservableObject {
 
   /// Asks to revoke `scope` of the grant, or the whole grant when `scope` is nil.
   func requestRevoke(_ grant: AccessGrantSummary, scope: EndpointScope? = nil) {
-    sheet = .confirm(.revokeGrant(id: grant.id, name: grant.identifier, scopes: scope.map { [$0] }))
+    sheet = .confirm(.revokeGrant(id: grant.id, name: grant.identifier, scope: scope))
   }
 
   /// Asks to revoke `scope` of the token, or the whole token when `scope` is nil.
   func requestRevoke(_ token: AccessTokenSummary, scope: EndpointScope? = nil) {
-    sheet = .confirm(.revokeToken(id: token.id, name: token.name, scopes: scope.map { [$0] }))
+    sheet = .confirm(.revokeToken(id: token.id, name: token.name, scope: scope))
   }
 
   func cancelSheet() { sheet = nil }
@@ -267,9 +263,9 @@ final class AccessViewModel: ObservableObject {
         sheet = .issuedToken(AccessIssuedToken(name: result.grant.name, token: result.token))
         return try await service.status()
       }
-    case .revokeGrant(let id, _, let scopes), .revokeToken(let id, _, let scopes):
+    case .revokeGrant(let id, _, let scope), .revokeToken(let id, _, let scope):
       await apply {
-        _ = try await service.revoke(id: id, scopes: scopes)
+        _ = try await service.revoke(id: id, scopes: scope.map { [$0] })
         return try await service.status()
       }
     }
@@ -341,10 +337,10 @@ final class AccessViewModel: ObservableObject {
         confirmTitle: OJDLocalized.string("access.grant"),
         isDestructive: false
       )
-    case .revokeGrant(_, let name, let scopes?):
-      return partialRevoke(title: "access.revoke.title", name: name, scopes: scopes)
-    case .revokeToken(_, let name, let scopes?):
-      return partialRevoke(title: "access.revokeToken.title", name: name, scopes: scopes)
+    case .revokeGrant(_, let name, let scope?):
+      return partialRevoke(title: "access.revoke.title", name: name, scope: scope)
+    case .revokeToken(_, let name, let scope?):
+      return partialRevoke(title: "access.revokeToken.title", name: name, scope: scope)
     case .revokeGrant(_, let name, nil):
       return AccessConfirmation(
         title: OJDLocalized.formatted("access.revoke.title", name),
@@ -365,14 +361,14 @@ final class AccessViewModel: ObservableObject {
   private func partialRevoke(
     title: String,
     name: String,
-    scopes: [EndpointScope]
+    scope: EndpointScope
   )
     -> AccessConfirmation
   {
     AccessConfirmation(
       title: OJDLocalized.formatted(title, name),
       lines: [
-        OJDLocalized.formatted("access.revokeScope.message", AccessPresentation.scopes(scopes))
+        OJDLocalized.formatted("access.revokeScope.message", AccessPresentation.scope(scope))
       ],
       confirmTitle: OJDLocalized.string("access.revoke"),
       isDestructive: true

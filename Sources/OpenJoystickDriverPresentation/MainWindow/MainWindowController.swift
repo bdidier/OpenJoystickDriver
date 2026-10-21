@@ -114,6 +114,7 @@
         runtime.$remappingState.map { _ in () }.eraseToAnyPublisher(),
         screens.library.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
         screens.profiles.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
+        screens.access.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
         navigation.objectWillChange.map { _ in () }.eraseToAnyPublisher()
       ).receive(on: DispatchQueue.main).sink { [weak self] in
         self?.window?.toolbar?.validateVisibleItems()

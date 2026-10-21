@@ -254,7 +254,7 @@ struct AccessViewModelTests {
   func revokingAsksThenRevokesById() async {
     let service = FakeAccessService()
     let model = AccessViewModel(service: service)
-    let pending = AccessPending.revokeToken(id: "token:tool", name: "tool", scopes: nil)
+    let pending = AccessPending.revokeToken(id: "token:tool", name: "tool", scope: nil)
 
     model.requestRevoke(
       AccessTokenSummary(name: "tool", origins: [], scopes: [.read], grantTime: "")
@@ -281,7 +281,7 @@ struct AccessViewModelTests {
     let pending = AccessPending.revokeGrant(
       id: grant.id,
       name: grant.identifier,
-      scopes: [.control]
+      scope: .control
     )
 
     model.requestRevoke(grant, scope: .control)
@@ -303,8 +303,8 @@ struct AccessViewModelTests {
 
   @Test
   func theWholeAndThePartialRevokeOfOneGrantAreDistinctSheets() {
-    let whole = AccessPending.revokeGrant(id: "g", name: "g", scopes: nil)
-    let partial = AccessPending.revokeGrant(id: "g", name: "g", scopes: [.read])
+    let whole = AccessPending.revokeGrant(id: "g", name: "g", scope: nil)
+    let partial = AccessPending.revokeGrant(id: "g", name: "g", scope: .read)
     #expect(whole.id != partial.id)
   }
 

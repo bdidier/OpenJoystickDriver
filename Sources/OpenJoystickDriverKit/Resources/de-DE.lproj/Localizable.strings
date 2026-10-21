@@ -523,10 +523,6 @@
 "setup.uninstallDetail" = "Xbox-USB-Controller funktionieren nicht mehr, bis der Treiber erneut installiert wird.";
 "setup.repairDriver" = "Xbox-USB-Treiber reparieren";
 "banner.service.title" = "OpenJoystickDriver kann seinen Dienst nicht erreichen";
-"banner.service.start" = "Dienst starten";
-"banner.service.startFailed" = "OpenJoystickDriver konnte seinen Dienst nicht starten.";
-"banner.service.noBundle" = "Diese Kopie von OpenJoystickDriver liegt nicht in einer App und kann den Dienst deshalb nicht starten.";
-"banner.service.notReady" = "Der Dienst wurde gestartet, hat aber nicht rechtzeitig Anfragen angenommen.";
 "banner.access.title" = "Berechtigung erforderlich";
 "banner.access.detail" = "macOS hat nicht alles erlaubt, was OpenJoystickDriver benötigt, um Controller auszulesen und für Spiele bereitzustellen.";
 "cli.login.uninstall_action" = "Deinstallieren";
@@ -1632,6 +1628,7 @@
 "access.choose" = "Auswählen";
 "access.endpoint" = "Lokaler Endpunkt";
 "access.socket" = "Socket: %@";
+"access.socket.copy" = "Socket-Pfad kopieren";
 "access.enable" = "Einschalten";
 "access.enable.title" = "Lokalen Endpunkt einschalten?";
 "access.enable.message" = "Programme, denen du Zugriff erteilst, können dann den Controller-Status lesen und ihn mit dem Bereich control ändern.";
@@ -1696,10 +1693,6 @@
 "a11y.access.dismissError" = "Fehler schließen";
 "a11y.access.tryAgain" = "Die Zugriffseinstellungen erneut lesen";
 "a11y.access.restart" = "Die App neu starten, damit die neuen Berechtigungen gelten";
-"a11y.access.enableEndpoint" = "Den lokalen Endpunkt einschalten";
-"a11y.access.disableEndpoint" = "Den lokalen Endpunkt ausschalten";
-"a11y.access.enableWeb" = "Den WebSocket einschalten";
-"a11y.access.disableWeb" = "Den WebSocket ausschalten";
 "a11y.access.webPort" = "WebSocket-Port; leer lassen für den gespeicherten Port";
 "a11y.access.grantProgram" = "Einem Programm, das du auswählst, Zugriff erteilen";
 "a11y.access.grantRefused" = "%@ Zugriff erteilen";

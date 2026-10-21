@@ -523,10 +523,6 @@
 "setup.uninstallDetail" = "Pengontrol USB Xbox berhenti berfungsi sampai driver diinstal ulang.";
 "setup.repairDriver" = "Perbaiki Driver USB Xbox";
 "banner.service.title" = "OpenJoystickDriver tidak dapat terhubung ke layanannya";
-"banner.service.start" = "Mulai Layanan";
-"banner.service.startFailed" = "OpenJoystickDriver tidak dapat memulai layanannya.";
-"banner.service.noBundle" = "Salinan OpenJoystickDriver ini tidak berada di dalam app, jadi tidak dapat memulai layanan.";
-"banner.service.notReady" = "Layanan sudah dimulai, tetapi tidak menerima permintaan tepat waktu.";
 "banner.access.title" = "Izin diperlukan";
 "banner.access.detail" = "macOS belum mengizinkan semua yang dibutuhkan OpenJoystickDriver untuk membaca pengontrol dan memublikasikannya ke game.";
 "cli.login.uninstall_action" = "Copot";
@@ -1521,6 +1517,7 @@
 "access.choose" = "Pilih";
 "access.endpoint" = "Titik akhir lokal";
 "access.socket" = "Soket: %@";
+"access.socket.copy" = "Salin Jalur Soket";
 "access.enable" = "Nyalakan";
 "access.enable.title" = "Nyalakan titik akhir lokal?";
 "access.enable.message" = "Program yang Anda beri akses kemudian dapat membaca status pengontrol dan, dengan cakupan Kontrol, mengubahnya.";
@@ -1585,10 +1582,6 @@
 "a11y.access.dismissError" = "Tutup kesalahan";
 "a11y.access.tryAgain" = "Baca pengaturan akses lagi";
 "a11y.access.restart" = "Mulai ulang app agar izin baru berlaku";
-"a11y.access.enableEndpoint" = "Nyalakan titik akhir lokal";
-"a11y.access.disableEndpoint" = "Matikan titik akhir lokal";
-"a11y.access.enableWeb" = "Nyalakan WebSocket";
-"a11y.access.disableWeb" = "Matikan WebSocket";
 "a11y.access.webPort" = "Port WebSocket; biarkan kosong untuk port tersimpan";
 "a11y.access.grantProgram" = "Beri akses ke program yang Anda pilih";
 "a11y.access.grantRefused" = "Beri akses ke %@";

@@ -523,10 +523,6 @@
 "setup.uninstallDetail" = "ड्राइवर फिर से इंस्टॉल होने तक Xbox USB कंट्रोलर काम करना बंद कर देते हैं।";
 "setup.repairDriver" = "Xbox USB ड्राइवर ठीक करें";
 "banner.service.title" = "OpenJoystickDriver अपनी सेवा तक नहीं पहुँच पा रहा है";
-"banner.service.start" = "सेवा शुरू करें";
-"banner.service.startFailed" = "OpenJoystickDriver अपनी सेवा शुरू नहीं कर सका।";
-"banner.service.noBundle" = "OpenJoystickDriver की यह प्रति किसी ऐप के भीतर नहीं है, इसलिए यह सेवा शुरू नहीं कर सकती।";
-"banner.service.notReady" = "सेवा शुरू हुई, पर समय पर अनुरोध स्वीकार नहीं कर सकी।";
 "banner.access.title" = "अनुमति आवश्यक है";
 "banner.access.detail" = "OpenJoystickDriver को कंट्रोलर पढ़ने और उन्हें गेम में प्रकाशित करने के लिए जो कुछ चाहिए, macOS ने उसकी पूरी अनुमति नहीं दी है।";
 "cli.login.uninstall_action" = "अनइंस्टॉल करें";
@@ -1521,6 +1517,7 @@
 "access.choose" = "चुनें";
 "access.endpoint" = "स्थानीय एंडपॉइंट";
 "access.socket" = "सॉकेट: %@";
+"access.socket.copy" = "सॉकेट पथ कॉपी करें";
 "access.enable" = "चालू करें";
 "access.enable.title" = "स्थानीय एंडपॉइंट चालू करें?";
 "access.enable.message" = "जिन प्रोग्राम को आप ऐक्सेस देते हैं वे फिर कंट्रोलर की स्थिति पढ़ सकते हैं और कंट्रोल स्कोप होने पर उसे बदल भी सकते हैं।";
@@ -1585,10 +1582,6 @@
 "a11y.access.dismissError" = "त्रुटि ख़ारिज करें";
 "a11y.access.tryAgain" = "ऐक्सेस सेटिंग्स फिर से पढ़ें";
 "a11y.access.restart" = "नई अनुमतियाँ लागू करने के लिए ऐप फिर से शुरू करें";
-"a11y.access.enableEndpoint" = "स्थानीय एंडपॉइंट चालू करें";
-"a11y.access.disableEndpoint" = "स्थानीय एंडपॉइंट बंद करें";
-"a11y.access.enableWeb" = "WebSocket चालू करें";
-"a11y.access.disableWeb" = "WebSocket बंद करें";
 "a11y.access.webPort" = "WebSocket पोर्ट; सहेजे गए पोर्ट के लिए खाली छोड़ें";
 "a11y.access.grantProgram" = "आपके चुने प्रोग्राम को ऐक्सेस दें";
 "a11y.access.grantRefused" = "%@ को ऐक्सेस दें";

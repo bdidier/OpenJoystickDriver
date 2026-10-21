@@ -523,10 +523,6 @@
 "setup.uninstallDetail" = "Các bộ điều khiển Xbox USB ngừng hoạt động cho đến khi trình điều khiển được cài đặt lại.";
 "setup.repairDriver" = "Sửa chữa trình điều khiển Xbox USB";
 "banner.service.title" = "OpenJoystickDriver không thể kết nối với dịch vụ của nó";
-"banner.service.start" = "Khởi động dịch vụ";
-"banner.service.startFailed" = "OpenJoystickDriver không thể khởi động dịch vụ của nó.";
-"banner.service.noBundle" = "Bản sao OpenJoystickDriver này không nằm trong một ứng dụng nên không thể khởi động dịch vụ.";
-"banner.service.notReady" = "Dịch vụ đã khởi động nhưng không nhận yêu cầu kịp thời.";
 "banner.access.title" = "Cần cấp quyền";
 "banner.access.detail" = "macOS chưa cho phép mọi thứ OpenJoystickDriver cần để đọc các bộ điều khiển và cung cấp chúng cho trò chơi.";
 "cli.login.uninstall_action" = "Gỡ cài đặt";
@@ -1521,6 +1517,7 @@
 "access.choose" = "Chọn";
 "access.endpoint" = "Điểm cuối cục bộ";
 "access.socket" = "Socket cục bộ: %@";
+"access.socket.copy" = "Sao chép đường dẫn socket";
 "access.enable" = "Bật";
 "access.enable.title" = "Bật điểm cuối cục bộ?";
 "access.enable.message" = "Các chương trình mà bạn cấp quyền truy cập sau đó có thể đọc trạng thái bộ điều khiển và, nếu có phạm vi điều khiển, thay đổi trạng thái đó.";
@@ -1585,10 +1582,6 @@
 "a11y.access.dismissError" = "Bỏ qua lỗi";
 "a11y.access.tryAgain" = "Đọc lại cài đặt quyền truy cập";
 "a11y.access.restart" = "Khởi động lại ứng dụng để áp dụng quyền mới";
-"a11y.access.enableEndpoint" = "Bật điểm cuối cục bộ";
-"a11y.access.disableEndpoint" = "Tắt điểm cuối cục bộ";
-"a11y.access.enableWeb" = "Bật WebSocket";
-"a11y.access.disableWeb" = "Tắt WebSocket";
 "a11y.access.webPort" = "Cổng WebSocket; để trống để dùng cổng đã lưu";
 "a11y.access.grantProgram" = "Cấp quyền truy cập cho chương trình bạn chọn";
 "a11y.access.grantRefused" = "Cấp quyền truy cập cho %@";

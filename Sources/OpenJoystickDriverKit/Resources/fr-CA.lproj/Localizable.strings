@@ -523,10 +523,6 @@
 "setup.uninstallDetail" = "Les manettes USB Xbox cessent de fonctionner tant que le pilote n’est pas réinstallé.";
 "setup.repairDriver" = "Réparer le pilote USB Xbox";
 "banner.service.title" = "OpenJoystickDriver ne peut pas joindre son service";
-"banner.service.start" = "Démarrer le service";
-"banner.service.startFailed" = "OpenJoystickDriver n’a pas pu démarrer son service.";
-"banner.service.noBundle" = "Cette copie d’OpenJoystickDriver n’est pas dans une app, elle ne peut donc pas démarrer le service.";
-"banner.service.notReady" = "Le service a démarré, mais n’a pas accepté de requêtes à temps.";
 "banner.access.title" = "Autorisation requise";
 "banner.access.detail" = "macOS n’a pas autorisé tout ce dont OpenJoystickDriver a besoin pour lire les manettes et les publier dans les jeux.";
 "cli.login.uninstall_action" = "Désinstaller";
@@ -1632,6 +1628,7 @@
 "access.choose" = "Choisir";
 "access.endpoint" = "Point d’accès local";
 "access.socket" = "Socket : %@";
+"access.socket.copy" = "Copier le chemin du socket";
 "access.enable" = "Activer";
 "access.enable.title" = "Activer le point d’accès local?";
 "access.enable.message" = "Les programmes auxquels vous accordez l’accès peuvent alors lire l’état des manettes et, avec la portée control, le modifier.";
@@ -1696,10 +1693,6 @@
 "a11y.access.dismissError" = "Fermer l’erreur";
 "a11y.access.tryAgain" = "Relire les réglages d’accès";
 "a11y.access.restart" = "Redémarrer l’app pour appliquer les nouvelles autorisations";
-"a11y.access.enableEndpoint" = "Activer le point d’accès local";
-"a11y.access.disableEndpoint" = "Désactiver le point d’accès local";
-"a11y.access.enableWeb" = "Activer le WebSocket";
-"a11y.access.disableWeb" = "Désactiver le WebSocket";
 "a11y.access.webPort" = "Port du WebSocket; laissez vide pour utiliser le port enregistré";
 "a11y.access.grantProgram" = "Accorder l’accès à un programme que vous choisissez";
 "a11y.access.grantRefused" = "Accorder l’accès à %@";

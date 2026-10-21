@@ -525,10 +525,6 @@
 "setup.uninstallDetail" = "Xbox USB controllers stop working until the driver is installed again.";
 "setup.repairDriver" = "Repair Xbox USB Driver";
 "banner.service.title" = "OpenJoystickDriver cannot reach its service";
-"banner.service.start" = "Start Service";
-"banner.service.startFailed" = "OpenJoystickDriver could not start its service.";
-"banner.service.noBundle" = "This copy of OpenJoystickDriver is not inside an app, so it cannot start the service.";
-"banner.service.notReady" = "The service started but did not accept requests in time.";
 "banner.access.title" = "Permission needed";
 "banner.access.detail" = "macOS has not allowed everything OpenJoystickDriver needs to read controllers and publish them to games.";
 
@@ -1635,6 +1631,7 @@
 "access.choose" = "Choose";
 "access.endpoint" = "Local endpoint";
 "access.socket" = "Socket: %@";
+"access.socket.copy" = "Copy Socket Path";
 "access.enable" = "Turn On";
 "access.enable.title" = "Turn on the local endpoint?";
 "access.enable.message" = "Programs that you grant access can then read controller state and, with the control scope, change it.";
@@ -1699,10 +1696,6 @@
 "a11y.access.dismissError" = "Dismiss the error";
 "a11y.access.tryAgain" = "Read the access settings again";
 "a11y.access.restart" = "Restart the app so the new permissions apply";
-"a11y.access.enableEndpoint" = "Turn on the local endpoint";
-"a11y.access.disableEndpoint" = "Turn off the local endpoint";
-"a11y.access.enableWeb" = "Turn on the WebSocket";
-"a11y.access.disableWeb" = "Turn off the WebSocket";
 "a11y.access.webPort" = "WebSocket port; leave empty for the saved port";
 "a11y.access.grantProgram" = "Grant access to a program that you choose";
 "a11y.access.grantRefused" = "Grant access to %@";

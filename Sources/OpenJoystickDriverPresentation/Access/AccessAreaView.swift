@@ -147,11 +147,8 @@
             }
           )
         ).disabled(model.busy).help(OJDLocalized.formatted("access.socket", status.socketPath))
-          .ojdAccessibilityLabel(
-            OJDLocalized.string(
-              status.enabled ? "a11y.access.disableEndpoint" : "a11y.access.enableEndpoint"
-            )
-          )
+          .contextMenu { copySocketPathButton(status) }
+        if status.enabled { copySocketPathButton(status) }
         Toggle(
           OJDLocalized.string("access.web"),
           isOn: Binding(
@@ -163,11 +160,6 @@
         ).disabled(model.busy).help(
           OJDLocalized.formatted("access.web.pages", status.web.pagesPath)
         )
-        .ojdAccessibilityLabel(
-          OJDLocalized.string(
-            status.web.enabled ? "a11y.access.disableWeb" : "a11y.access.enableWeb"
-          )
-        )
         if status.web.enabled {
           Text(AccessPresentation.web(status.web)).font(.caption).foregroundColor(
             Color(NSColor.secondaryLabelColor)
@@ -177,6 +169,13 @@
             .ojdAccessibilityLabel(OJDLocalized.string("a11y.access.webPort"))
         }
       }
+    }
+
+    private func copySocketPathButton(_ status: AccessStatusPayload) -> some View {
+      Button(OJDLocalized.string("access.socket.copy")) {
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(status.socketPath, forType: .string)
+      }.ojdAccessibilityLabel(OJDLocalized.string("access.socket.copy"))
     }
   }
 

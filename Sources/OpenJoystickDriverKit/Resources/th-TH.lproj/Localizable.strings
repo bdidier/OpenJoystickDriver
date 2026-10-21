@@ -523,10 +523,6 @@
 "setup.uninstallDetail" = "คอนโทรลเลอร์ Xbox USB จะหยุดทำงานจนกว่าจะติดตั้งไดรเวอร์อีกครั้ง";
 "setup.repairDriver" = "ซ่อมแซมไดรเวอร์ Xbox USB";
 "banner.service.title" = "OpenJoystickDriver ไม่สามารถเชื่อมต่อกับบริการของตนได้";
-"banner.service.start" = "เริ่มบริการ";
-"banner.service.startFailed" = "OpenJoystickDriver ไม่สามารถเริ่มบริการของตนได้";
-"banner.service.noBundle" = "สำเนา OpenJoystickDriver นี้ไม่ได้อยู่ในแอป จึงไม่สามารถเริ่มบริการได้";
-"banner.service.notReady" = "บริการเริ่มทำงานแล้วแต่ไม่รับคำขอภายในเวลาที่กำหนด";
 "banner.access.title" = "ต้องมีสิทธิ์";
 "banner.access.detail" = "macOS ยังไม่ได้อนุญาตทั้งหมดที่ OpenJoystickDriver ต้องใช้ในการอ่านคอนโทรลเลอร์และเผยแพร่ไปยังเกม";
 "cli.login.uninstall_action" = "ถอนการติดตั้ง";
@@ -1521,6 +1517,7 @@
 "access.choose" = "เลือก";
 "access.endpoint" = "ปลายทางภายในเครื่อง";
 "access.socket" = "ซ็อกเก็ต: %@";
+"access.socket.copy" = "คัดลอกพาธซ็อกเก็ต";
 "access.enable" = "เปิด";
 "access.enable.title" = "เปิดปลายทางภายในเครื่องหรือไม่";
 "access.enable.message" = "โปรแกรมที่คุณให้สิทธิ์การเข้าถึงจะอ่านสถานะคอนโทรลเลอร์ได้ และเปลี่ยนสถานะได้หากมีขอบเขตควบคุม";
@@ -1585,10 +1582,6 @@
 "a11y.access.dismissError" = "ปิดข้อผิดพลาดทิ้ง";
 "a11y.access.tryAgain" = "อ่านการตั้งค่าการเข้าถึงอีกครั้ง";
 "a11y.access.restart" = "รีสตาร์ตแอปเพื่อให้สิทธิ์ใหม่มีผล";
-"a11y.access.enableEndpoint" = "เปิดปลายทางภายในเครื่อง";
-"a11y.access.disableEndpoint" = "ปิดปลายทางภายในเครื่อง";
-"a11y.access.enableWeb" = "เปิด WebSocket";
-"a11y.access.disableWeb" = "ปิด WebSocket";
 "a11y.access.webPort" = "พอร์ต WebSocket เว้นว่างไว้เพื่อใช้พอร์ตที่บันทึกไว้";
 "a11y.access.grantProgram" = "ให้สิทธิ์การเข้าถึงแก่โปรแกรมที่คุณเลือก";
 "a11y.access.grantRefused" = "ให้สิทธิ์การเข้าถึงแก่ %@";

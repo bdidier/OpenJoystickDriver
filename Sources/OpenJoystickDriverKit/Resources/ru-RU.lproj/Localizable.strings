@@ -523,10 +523,6 @@
 "setup.uninstallDetail" = "USB-контроллеры Xbox перестают работать, пока драйвер не будет установлен снова.";
 "setup.repairDriver" = "Восстановить USB-драйвер Xbox";
 "banner.service.title" = "OpenJoystickDriver не может связаться со своей службой";
-"banner.service.start" = "Запустить службу";
-"banner.service.startFailed" = "OpenJoystickDriver не удалось запустить свою службу.";
-"banner.service.noBundle" = "Эта копия OpenJoystickDriver находится не внутри приложения, поэтому не может запустить службу.";
-"banner.service.notReady" = "Служба запущена, но не приняла запросы вовремя.";
 "banner.access.title" = "Требуется разрешение";
 "banner.access.detail" = "macOS разрешила не всё, что нужно OpenJoystickDriver, чтобы считывать контроллеры и публиковать их для игр.";
 "cli.login.uninstall_action" = "Удалить";
@@ -1521,6 +1517,7 @@
 "access.choose" = "Выбрать";
 "access.endpoint" = "Локальная конечная точка";
 "access.socket" = "Сокет: %@";
+"access.socket.copy" = "Скопировать путь к сокету";
 "access.enable" = "Включить";
 "access.enable.title" = "Включить локальную конечную точку?";
 "access.enable.message" = "Программы, которым вы предоставите доступ, смогут читать состояние контроллеров и, при наличии области «Управление», изменять его.";
@@ -1585,10 +1582,6 @@
 "a11y.access.dismissError" = "Закрыть ошибку";
 "a11y.access.tryAgain" = "Прочитать настройки доступа снова";
 "a11y.access.restart" = "Перезапустить приложение, чтобы применить новые разрешения";
-"a11y.access.enableEndpoint" = "Включить локальную конечную точку";
-"a11y.access.disableEndpoint" = "Выключить локальную конечную точку";
-"a11y.access.enableWeb" = "Включить WebSocket";
-"a11y.access.disableWeb" = "Выключить WebSocket";
 "a11y.access.webPort" = "Порт WebSocket; оставьте пустым, чтобы использовать сохранённый порт";
 "a11y.access.grantProgram" = "Предоставить доступ выбранной программе";
 "a11y.access.grantRefused" = "Предоставить доступ «%@»";

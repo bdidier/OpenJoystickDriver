@@ -523,10 +523,6 @@
 "setup.uninstallDetail" = "在重新安装驱动程序之前，Xbox USB 控制器将无法工作。";
 "setup.repairDriver" = "修复 Xbox USB 驱动程序";
 "banner.service.title" = "OpenJoystickDriver 无法连接其服务";
-"banner.service.start" = "启动服务";
-"banner.service.startFailed" = "OpenJoystickDriver 无法启动其服务。";
-"banner.service.noBundle" = "此 OpenJoystickDriver 副本不在 App 内，因此无法启动服务。";
-"banner.service.notReady" = "服务已启动，但未及时接受请求。";
 "banner.access.title" = "需要权限";
 "banner.access.detail" = "macOS 尚未授予 OpenJoystickDriver 读取控制器并将其发布给游戏所需的全部权限。";
 "cli.login.uninstall_action" = "卸载";
@@ -1521,6 +1517,7 @@
 "access.choose" = "选取";
 "access.endpoint" = "本地端点";
 "access.socket" = "套接字：%@";
+"access.socket.copy" = "拷贝套接字路径";
 "access.enable" = "打开";
 "access.enable.title" = "要打开本地端点吗？";
 "access.enable.message" = "你授予访问权限的程序随后可以读取控制器状态，若具有控制范围，还可以更改状态。";
@@ -1585,10 +1582,6 @@
 "a11y.access.dismissError" = "关闭错误";
 "a11y.access.tryAgain" = "重新读取访问设置";
 "a11y.access.restart" = "重新启动 App 以应用新权限";
-"a11y.access.enableEndpoint" = "打开本地端点";
-"a11y.access.disableEndpoint" = "关闭本地端点";
-"a11y.access.enableWeb" = "打开 WebSocket";
-"a11y.access.disableWeb" = "关闭 WebSocket";
 "a11y.access.webPort" = "WebSocket 端口；留空则使用已存储的端口";
 "a11y.access.grantProgram" = "向你选取的程序授予访问权限";
 "a11y.access.grantRefused" = "向 %@ 授予访问权限";

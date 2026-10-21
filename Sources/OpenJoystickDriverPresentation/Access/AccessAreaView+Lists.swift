@@ -87,13 +87,15 @@
           row(
             title: token.name.map { OJDLocalized.formatted("access.token.named", $0) }
               ?? OJDLocalized.string("access.token.unknown"),
-            detail: OJDLocalized.formatted(
-              "access.detail.triple",
-              AccessPresentation.transport(token.transport),
-              AccessPresentation.scopes(token.scopes),
-              token.reason
-            ),
-            help: token.origin
+            detail: [
+              OJDLocalized.formatted(
+                "access.detail.triple",
+                AccessPresentation.transport(token.transport),
+                AccessPresentation.scopes(token.scopes),
+                token.reason
+              ), token.origin,
+            ].compactMap { $0 }.joined(separator: " · "),
+            help: nil
           ) {}
         }
       }
@@ -127,10 +129,11 @@
         VStack(alignment: .leading, spacing: 2) {
           Text(title)
           Text(detail).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
-        }.textSelection(.enabled)
+        }.textSelection(.enabled).accessibilityElement(children: .combine)
+          .ojdAccessibilityLabel(title).ojdAccessibilityValue(detail)
         Spacer(minLength: 8)
         trailing()
-      }.help(help ?? "").ojdAccessibilityLabel(title).ojdAccessibilityValue(detail)
+      }.help(help ?? "")
     }
 
     /// Revoke for a grant or token: a button for the whole grant, or a menu of the whole grant

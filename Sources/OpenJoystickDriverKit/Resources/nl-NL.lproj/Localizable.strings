@@ -523,10 +523,6 @@
 "setup.uninstallDetail" = "Xbox-USB-controllers werken niet meer totdat het stuurprogramma opnieuw is geïnstalleerd.";
 "setup.repairDriver" = "Herstel Xbox-USB-stuurprogramma";
 "banner.service.title" = "OpenJoystickDriver kan zijn service niet bereiken";
-"banner.service.start" = "Start service";
-"banner.service.startFailed" = "OpenJoystickDriver kan zijn service niet starten.";
-"banner.service.noBundle" = "Deze kopie van OpenJoystickDriver staat niet in een app en kan de service daarom niet starten.";
-"banner.service.notReady" = "De service is gestart, maar heeft niet op tijd verzoeken geaccepteerd.";
 "banner.access.title" = "Toestemming vereist";
 "banner.access.detail" = "macOS heeft niet alles toegestaan wat OpenJoystickDriver nodig heeft om controllers uit te lezen en voor games beschikbaar te maken.";
 "cli.login.uninstall_action" = "Verwijder installatie";
@@ -1632,6 +1628,7 @@
 "access.choose" = "Kies";
 "access.endpoint" = "Lokaal eindpunt";
 "access.socket" = "Lokale socket: %@";
+"access.socket.copy" = "Kopieer socketpad";
 "access.enable" = "Zet aan";
 "access.enable.title" = "Het lokale eindpunt aanzetten?";
 "access.enable.message" = "Programma’s waaraan je toegang verleent, kunnen dan de controllerstatus lezen en deze met het bereik Besturen wijzigen.";
@@ -1696,10 +1693,6 @@
 "a11y.access.dismissError" = "Sluit de fout";
 "a11y.access.tryAgain" = "Lees de toegangsinstellingen opnieuw";
 "a11y.access.restart" = "Start de app opnieuw op zodat de nieuwe toestemmingen gelden";
-"a11y.access.enableEndpoint" = "Zet het lokale eindpunt aan";
-"a11y.access.disableEndpoint" = "Zet het lokale eindpunt uit";
-"a11y.access.enableWeb" = "Zet de WebSocket aan";
-"a11y.access.disableWeb" = "Zet de WebSocket uit";
 "a11y.access.webPort" = "WebSocket-poort; laat leeg voor de bewaarde poort";
 "a11y.access.grantProgram" = "Verleen toegang aan een programma dat je kiest";
 "a11y.access.grantRefused" = "Verleen toegang aan %@";
