@@ -253,6 +253,33 @@ struct OJDRepositoryToolTests {
     }
   }
 
+  @Test
+  func aSecondFileThatNamesAFamilyIsAProblem() throws {
+    try Self.scratch { directory in
+      let source = Self.kitResources.appendingPathComponent("Protocols")
+      for name in try FileManager.default.contentsOfDirectory(atPath: source.path) {
+        try FileManager.default.copyItem(
+          at: source.appendingPathComponent(name),
+          to: directory.appendingPathComponent(name)
+        )
+      }
+      let nested = directory.appendingPathComponent("zz", isDirectory: true)
+      try FileManager.default.createDirectory(at: nested, withIntermediateDirectories: true)
+      let name = "xbox-xusb.json"
+      try FileManager.default.copyItem(
+        at: directory.appendingPathComponent(name),
+        to: nested.appendingPathComponent(name)
+      )
+      let result = try Self.run(["validate", "descriptions", directory.path])
+      let problem = try #require(try result.problems().first)
+      #expect(result.status == 1)
+      #expect(try result.problems().count == 1)
+      #expect(problem["code"] as? String == ErrorCode.invalidProtocolDescription.rawValue)
+      #expect((problem["file"] as? String)?.hasSuffix("/zz/\(name)") == true)
+      #expect((problem["message"] as? String)?.hasSuffix("/\(name)") == true)
+    }
+  }
+
   // MARK: profiles and personas
 
   private static let profile = #"""

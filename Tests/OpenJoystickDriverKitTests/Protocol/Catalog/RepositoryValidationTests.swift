@@ -150,6 +150,34 @@ struct RepositoryValidationTests {
     }
   }
 
+  @Test
+  func aSecondFileThatNamesAFamilyIsReportedAndNotLoaded() throws {
+    try Self.scratch { directory in
+      for name in try FileManager.default.contentsOfDirectory(atPath: Self.protocols.path) {
+        try FileManager.default.copyItem(
+          at: Self.protocols.appendingPathComponent(name),
+          to: directory.appendingPathComponent(name)
+        )
+      }
+      let first = directory.appendingPathComponent("xbox-gip.json")
+      let second = directory.appendingPathComponent("zz/xbox-gip.json")
+      try Self.write(try String(contentsOf: first, encoding: .utf8), to: second)
+      let problems = RepositoryValidation.descriptions(in: directory)
+      #expect(problems.count == 1)
+      #expect(problems.first?.file.hasSuffix("/zz/xbox-gip.json") == true)
+      #expect(problems.first?.code == .invalidProtocolDescription)
+      #expect(problems.first?.message.hasSuffix("/xbox-gip.json") == true)
+      #expect(problems.first?.message.contains("/zz/") == false)
+      // Files of one name are taken in path order: the file under the directory itself is
+      // kept. The URLs' order does not decide which file is kept.
+      let urls = try FileManager.default.subpathsOfDirectory(atPath: directory.path)
+        .filter { $0.hasSuffix(".json") }.reversed()
+        .map { directory.appendingPathComponent($0) }
+      let catalog = ProtocolDescription.loadCatalog(Array(urls), missing: directory.path)
+      #expect(catalog.problems.map(\.file).map { $0.hasSuffix("/zz/xbox-gip.json") } == [true])
+    }
+  }
+
   // MARK: the bundled failure keeps the code
 
   @Test
