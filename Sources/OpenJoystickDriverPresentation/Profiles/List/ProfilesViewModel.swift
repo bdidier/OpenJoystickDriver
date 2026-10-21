@@ -10,6 +10,8 @@
       try RemappingProfileFileStore.load(from: url)
     }
 
+    func read(from url: URL) throws -> Data { try Data(contentsOf: url) }
+
     func write(_ profile: RemappingProfile, to url: URL) throws {
       try RemappingProfileFileStore.write(profile, to: url)
     }
@@ -31,6 +33,12 @@
     var profileActionError: String?
     @Published
     var pairingProfile: RemappingProfile?
+    /// The profile whose copy the Duplicate sheet is naming.
+    @Published
+    var duplicatingProfile: RemappingProfile?
+    /// The result of the last Validate Profile File check, shown until dismissed.
+    @Published
+    var fileValidation: ProfileFileValidation?
     /// A profile read from a file the person chose, waiting for the Profiles screen to import it
     /// through the editor's discard and mutation checks.
     @Published
@@ -76,6 +84,36 @@
       Task { @MainActor in
         do {
           chosenImportProfile = try await documents.load(from: url)
+          profileActionError = nil
+        } catch { profileActionError = RuntimePresentation.userFacingError(error) }
+      }
+    }
+
+    /// The controller models the New Profile sheet offers beyond the connected controllers and the
+    /// models of existing profiles: every model of the catalog, read when the sheet opens.
+    private(set) var catalogModels: [ControllerModelID] = []
+
+    /// Opens the New Profile sheet.
+    func beginCreatingProfile() {
+      catalogModels = Array(
+        ControllerRecordSet.load(userDirectory: ControllerRecordSet.userDirectory).records.keys
+      )
+      isCreatingProfile = true
+    }
+
+    /// Asks for a profile file and checks it without adding it to the library.
+    func validateProfileFile() {
+      let panel = NSOpenPanel()
+      panel.allowsMultipleSelection = false
+      panel.canChooseDirectories = false
+      panel.canChooseFiles = true
+      panel.title = OJDLocalized.string("profiles.validateFile")
+      panel.allowedContentTypes = [.json]
+      guard panel.runModal() == .OK, let url = panel.url else { return }
+      Task { @MainActor in
+        do {
+          let data = try await documents.read(from: url)
+          fileValidation = ProfileFileValidation.check(data, fileName: url.lastPathComponent)
           profileActionError = nil
         } catch { profileActionError = RuntimePresentation.userFacingError(error) }
       }

@@ -235,6 +235,10 @@
 "profiles.holdDuration" = "Thời lượng giữ";
 "profiles.identifierHint" = "Dùng mã định danh dạng thập phân hoặc thập lục phân có tiền tố 0x.";
 "profiles.import" = "Nhập cấu hình";
+"profiles.validateFile" = "Xác thực tệp cấu hình";
+"profiles.validTitle" = "Cấu hình hợp lệ";
+"profiles.invalidTitle" = "Cấu hình không hợp lệ";
+"profiles.validMessage" = "%1$@ (%2$@). Áp dụng cho: %3$@.";
 "profiles.invalidIdentifiers" = "Nhập mã nhà cung cấp và mã sản phẩm 16 bit hợp lệ.";
 "profiles.layerName" = "Tên lớp";
 "profiles.layers" = "Lớp";

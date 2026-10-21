@@ -235,6 +235,10 @@
 "profiles.holdDuration" = "Durata della pressione";
 "profiles.identifierHint" = "Usa identificatori decimali o esadecimali con prefisso 0x.";
 "profiles.import" = "Importa profilo";
+"profiles.validateFile" = "Convalida file del profilo";
+"profiles.validTitle" = "Profilo valido";
+"profiles.invalidTitle" = "Profilo non valido";
+"profiles.validMessage" = "%1$@ (%2$@). Si applica a: %3$@.";
 "profiles.invalidIdentifiers" = "Inserisci identificatori validi a 16 bit per fornitore e prodotto.";
 "profiles.layerName" = "Nome del livello";
 "profiles.layers" = "Livelli";

@@ -235,6 +235,10 @@
 "profiles.holdDuration" = "Durasi tahan";
 "profiles.identifierHint" = "Gunakan pengenal desimal atau heksadesimal berawalan 0x.";
 "profiles.import" = "Impor profil";
+"profiles.validateFile" = "Validasi file profil";
+"profiles.validTitle" = "Profil valid";
+"profiles.invalidTitle" = "Profil tidak valid";
+"profiles.validMessage" = "%1$@ (%2$@). Berlaku untuk: %3$@.";
 "profiles.invalidIdentifiers" = "Masukkan pengenal vendor dan produk 16-bit yang valid.";
 "profiles.layerName" = "Nama lapisan";
 "profiles.layers" = "Lapisan";

@@ -196,6 +196,7 @@
 
     private var selectedProfile: RemappingProfile? {
       guard case .available(let snapshot) = screens.runtime.remappingState,
+        screens.profiles.selectedRecoveryIssueID == nil,
         let selectedID = screens.profiles.selectedProfileID
       else { return nil }
       return snapshot.profiles.first { $0.id == selectedID }
@@ -299,8 +300,14 @@
       else { return }
       switch action {
       case .refreshControllers: screens.controllers.refresh()
-      case .newProfile: screens.profiles.isCreatingProfile = true
+      case .newProfile: screens.profiles.beginCreatingProfile()
       case .importProfile: screens.profiles.chooseProfileToImport()
+      case .validateProfileFile: screens.profiles.validateProfileFile()
+      case .duplicateProfile: screens.profiles.duplicatingProfile = selectedProfile
+      case .exportProfile:
+        if let selectedProfile { screens.profiles.exportProfile(selectedProfile) }
+      case .deleteProfile:
+        if let selectedProfile { screens.profiles.activeAlert = .delete(selectedProfile.id) }
       case .installLibraryItem: installRecordOrMod()
       }
     }
@@ -310,6 +317,11 @@
       case .refreshControllers: return !screens.runtime.isScopedRefreshInFlight
       case .newProfile, .importProfile:
         return !screens.profiles.isActionBlocked(library: screens.library, runtime: screens.runtime)
+      case .validateProfileFile: return true
+      case .exportProfile: return selectedProfile != nil
+      case .duplicateProfile, .deleteProfile:
+        return selectedProfile != nil
+          && !screens.profiles.isActionBlocked(library: screens.library, runtime: screens.runtime)
       case .installLibraryItem: return true
       }
     }

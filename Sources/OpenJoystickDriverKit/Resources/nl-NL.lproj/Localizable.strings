@@ -235,6 +235,10 @@
 "profiles.holdDuration" = "Duur van vasthouden";
 "profiles.identifierHint" = "Gebruik decimale of hexadecimale identificaties met het voorvoegsel 0x.";
 "profiles.import" = "Importeer profiel";
+"profiles.validateFile" = "Controleer profielbestand";
+"profiles.validTitle" = "Geldig profiel";
+"profiles.invalidTitle" = "Ongeldig profiel";
+"profiles.validMessage" = "%1$@ (%2$@). Geldt voor: %3$@.";
 "profiles.invalidIdentifiers" = "Voer geldige 16-bits leveranciers- en productidentificaties in.";
 "profiles.layerName" = "Naam van de laag";
 "profiles.layers" = "Lagen";

@@ -235,6 +235,10 @@
 "profiles.holdDuration" = "مدة الإبقاء";
 "profiles.identifierHint" = "استخدم معرّفات عشرية أو سداسية عشرية بالبادئة 0x.";
 "profiles.import" = "استيراد ملف التعريف";
+"profiles.validateFile" = "التحقق من صحة ملف التعريف";
+"profiles.validTitle" = "ملف تعريف صالح";
+"profiles.invalidTitle" = "ملف تعريف غير صالح";
+"profiles.validMessage" = "%1$@ (%2$@). ينطبق على: %3$@.";
 "profiles.invalidIdentifiers" = "أدخل معرّفَي مورّد ومنتج صالحين بطول 16 بت.";
 "profiles.layerName" = "اسم الطبقة";
 "profiles.layers" = "الطبقات";

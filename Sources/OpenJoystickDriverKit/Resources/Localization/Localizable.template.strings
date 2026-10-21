@@ -237,6 +237,10 @@
 "profiles.holdDuration" = "Hold duration";
 "profiles.identifierHint" = "Use decimal or 0x-prefixed hexadecimal identifiers.";
 "profiles.import" = "Import profile";
+"profiles.validateFile" = "Validate profile file";
+"profiles.validTitle" = "Valid profile";
+"profiles.invalidTitle" = "Invalid profile";
+"profiles.validMessage" = "%1$@ (%2$@). Applies to: %3$@.";
 "profiles.invalidIdentifiers" = "Enter valid 16-bit vendor and product identifiers.";
 "profiles.layerName" = "Layer name";
 "profiles.layers" = "Layers";

@@ -235,6 +235,10 @@
 "profiles.holdDuration" = "Bekleme Süresi";
 "profiles.identifierHint" = "Ondalık veya 0x ile başlayan onaltılık tanımlayıcılar kullan.";
 "profiles.import" = "Profili İçe Aktar";
+"profiles.validateFile" = "Profil Dosyasını Doğrula";
+"profiles.validTitle" = "Geçerli Profil";
+"profiles.invalidTitle" = "Geçersiz Profil";
+"profiles.validMessage" = "%1$@ (%2$@). Şuna uygulanır: %3$@.";
 "profiles.invalidIdentifiers" = "Geçerli 16 bitlik satıcı ve ürün kimlikleri gir.";
 "profiles.layerName" = "Katman Adı";
 "profiles.layers" = "Katmanlar";

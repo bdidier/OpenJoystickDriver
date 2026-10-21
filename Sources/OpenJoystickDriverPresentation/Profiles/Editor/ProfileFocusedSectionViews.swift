@@ -135,6 +135,10 @@
           removeButton { removeLayer(layer.id) }
         }
       ) {
+        if layer.bindings.isEmpty {
+          Text(OJDLocalized.string("profiles.noAssignments"))
+            .foregroundColor(Color(NSColor.secondaryLabelColor))
+        }
         ForEach(layer.bindings) { binding in
           HStack {
             Text(RuntimePresentation.sourceLabel(binding.source))

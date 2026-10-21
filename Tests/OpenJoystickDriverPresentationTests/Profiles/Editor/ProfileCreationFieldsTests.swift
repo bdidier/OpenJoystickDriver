@@ -25,63 +25,182 @@ struct ProfileCreationFieldsTests {
     )
   }
 
-  private static let pads = [
-    device("Pad A", token: "a", vendorID: 0x0001, productID: 0x0002),
-    device("Pad B", token: "b", vendorID: 0x0003, productID: 0x0004),
-  ]
+  private static let padA = device("Pad A", token: "a", vendorID: 0x0001, productID: 0x0002)
+  private static let padB = device("Pad B", token: "b", vendorID: 0x0003, productID: 0x0004)
 
-  private static let tokenA = pads[0].sessionToken.rawValue
-  private static let tokenB = pads[1].sessionToken.rawValue
+  private static func context(
+    devices: [ApplicationServiceDeviceDescription],
+    profiles: [RemappingProfile] = [],
+    catalog: [ControllerModelID] = []
+  ) -> ProfileCreationContext {
+    ProfileCreationContext(
+      choices: ProfileControllerChoice.choices(
+        devices: devices,
+        profiles: profiles,
+        catalog: catalog
+      ),
+      profiles: profiles
+    )
+  }
 
-  @Test
-  func theFirstControllerIsChosenAndNamesTheProfile() {
-    let fields = ProfileCreationFields.initial(devices: Self.pads)
-    #expect(fields.deviceToken == Self.tokenA)
-    #expect(fields.name == "Pad A")
-    #expect(fields.proposedProfile(devices: Self.pads)?.device.vendorID == 0x0001)
+  private static func profile(named name: String, vendorID: UInt16 = 9) -> RemappingProfile {
+    RemappingProfile(
+      name: name,
+      device: RemappingDeviceScope(vendorID: vendorID, productID: 7),
+      applicationScope: .global,
+      bindings: []
+    )
   }
 
   @Test
-  func withoutControllersNothingIsProposed() {
-    let fields = ProfileCreationFields.initial(devices: [])
-    #expect(fields.deviceToken == nil)
-    #expect(fields.name.isEmpty)
-    #expect(fields.proposedProfile(devices: []) == nil)
+  func theFirstControllerIsChosenAndNamesTheProfile() {
+    let context = Self.context(devices: [Self.padA, Self.padB])
+    let fields = ProfileCreationFields()
+    #expect(fields.controller(in: context)?.id == Self.padA.sessionToken.rawValue)
+    #expect(fields.name(in: context) == "Pad A")
+    #expect(fields.proposedProfile(in: context)?.device.vendorID == 0x0001)
+  }
+
+  @Test
+  func withNothingToChooseNothingIsProposed() {
+    let context = Self.context(devices: [])
+    let fields = ProfileCreationFields()
+    #expect(fields.controller(in: context) == nil)
+    #expect(fields.name(in: context).isEmpty)
+    #expect(fields.proposedProfile(in: context) == nil)
   }
 
   @Test
   func anUntouchedNameFollowsTheChosenController() {
-    var fields = ProfileCreationFields.initial(devices: Self.pads)
-    fields.selectDevice(Self.tokenB, in: Self.pads)
-    #expect(fields.name == "Pad B")
-    let profile = fields.proposedProfile(devices: Self.pads)
-    #expect(profile?.device == RemappingDeviceScope(vendorID: 0x0003, productID: 0x0004))
+    let context = Self.context(devices: [Self.padA, Self.padB])
+    var fields = ProfileCreationFields()
+    fields.selectedControllerID = Self.padB.sessionToken.rawValue
+    #expect(fields.name(in: context) == "Pad B")
+    #expect(
+      fields.proposedProfile(in: context)?.device
+        == RemappingDeviceScope(vendorID: 0x0003, productID: 0x0004)
+    )
   }
 
   @Test
   func anEditedNameStaysWhenAnotherControllerIsChosen() {
-    var fields = ProfileCreationFields.initial(devices: Self.pads)
-    fields.name = "Racing"
-    fields.selectDevice(Self.tokenB, in: Self.pads)
-    #expect(fields.name == "Racing")
-    #expect(fields.deviceToken == Self.tokenB)
+    let context = Self.context(devices: [Self.padA, Self.padB])
+    var fields = ProfileCreationFields()
+    fields.editedName = "Racing"
+    fields.selectedControllerID = Self.padB.sessionToken.rawValue
+    #expect(fields.name(in: context) == "Racing")
+  }
+
+  @Test
+  func aChosenControllerThatWentAwayIsReplacedByTheFirstAndTheNameFollows() {
+    var fields = ProfileCreationFields()
+    fields.selectedControllerID = Self.padB.sessionToken.rawValue
+    let gone = Self.context(devices: [Self.padA])
+    #expect(fields.controller(in: gone)?.id == Self.padA.sessionToken.rawValue)
+    #expect(fields.name(in: gone) == "Pad A")
+    #expect(fields.proposedProfile(in: gone) != nil)
+  }
+
+  @Test
+  func aControllerThatArrivesAfterTheSheetOpenedIsChosenWithItsName() {
+    let fields = ProfileCreationFields()
+    #expect(fields.proposedProfile(in: Self.context(devices: [])) == nil)
+    let arrived = Self.context(devices: [Self.padB])
+    #expect(fields.name(in: arrived) == "Pad B")
+    #expect(fields.proposedProfile(in: arrived) != nil)
   }
 
   @Test
   func aBlankNameProposesNoProfile() {
-    var fields = ProfileCreationFields.initial(devices: Self.pads)
-    fields.name = "  "
-    #expect(fields.proposedProfile(devices: Self.pads) == nil)
+    var fields = ProfileCreationFields()
+    fields.editedName = "  "
+    #expect(fields.proposedProfile(in: Self.context(devices: [Self.padA])) == nil)
+  }
+
+  @Test
+  func connectedControllersComeFirstThenProfileModelsThenCatalogModels() {
+    let choices = ProfileControllerChoice.choices(
+      devices: [Self.padA],
+      profiles: [Self.profile(named: "Old", vendorID: 0x0001), Self.profile(named: "Other")],
+      catalog: [
+        ControllerModelID(vendorID: 9, productID: 7),
+        ControllerModelID(vendorID: 0x0A, productID: 1),
+        ControllerModelID(vendorID: 0x0001, productID: 0x0002),
+      ]
+    )
+    #expect(choices.map(\.label) == ["Pad A", "0001:0007", "0009:0007", "000A:0001"])
+    #expect(choices.map { $0.name == nil } == [false, true, true, true])
+  }
+
+  @Test
+  func aProfileCanTargetAModelThatIsNotConnected() {
+    let context = Self.context(
+      devices: [],
+      catalog: [ControllerModelID(vendorID: 0x054C, productID: 0x0CE6)]
+    )
+    var fields = ProfileCreationFields()
+    fields.editedName = "Offline"
+    let profile = fields.proposedProfile(in: context)
+    #expect(profile?.device == RemappingDeviceScope(vendorID: 0x054C, productID: 0x0CE6))
+  }
+
+  @Test
+  func theDefaultNameGetsANumberWhenTaken() {
+    let context = Self.context(
+      devices: [Self.padA],
+      profiles: [Self.profile(named: "pad a"), Self.profile(named: "Pad A 2")]
+    )
+    let fields = ProfileCreationFields()
+    #expect(fields.name(in: context) == "Pad A 3")
+    #expect(fields.proposedProfile(in: context) != nil)
+  }
+
+  @Test
+  func aTypedNameThatIsTakenProposesNoProfile() {
+    let context = Self.context(devices: [Self.padA], profiles: [Self.profile(named: "Racing")])
+    var fields = ProfileCreationFields()
+    fields.editedName = " RACING "
+    #expect(fields.isNameTaken(in: context))
+    #expect(fields.proposedProfile(in: context) == nil)
+  }
+
+  @Test
+  func theOutputPolicyStartsAsTheCLIStartsAndIsKept() {
+    let context = Self.context(devices: [Self.padA])
+    var fields = ProfileCreationFields()
+    #expect(
+      fields.proposedProfile(in: context)?.outputPolicy
+        == RemappingOutputPolicy(virtualGamepad: .passthrough, physicalInput: .shared)
+    )
+    fields.outputPolicy = RemappingOutputPolicy(virtualGamepad: .mapped, physicalInput: .exclusive)
+    #expect(
+      fields.proposedProfile(in: context)?.outputPolicy
+        == RemappingOutputPolicy(virtualGamepad: .mapped, physicalInput: .exclusive)
+    )
+  }
+
+  @Test
+  func anApplicationTargetNeedsAnAppID() {
+    let context = Self.context(devices: [Self.padA])
+    var fields = ProfileCreationFields()
+    fields.scopeKind = .application
+    fields.appID = ""
+    #expect(fields.proposedProfile(in: context) == nil)
+    fields.appID = "com.apple.Safari"
+    #expect(
+      fields.proposedProfile(in: context)?.applicationScope
+        == .application(appID: "com.apple.Safari")
+    )
   }
 
   @Test
   func validationIsHiddenUntilAFieldIsEdited() {
-    let initial = ProfileCreationFields.initial(devices: [])
-    #expect(!initial.showsValidation(comparedTo: initial, isValid: false))
+    let untouched = ProfileCreationFields()
+    #expect(!untouched.showsValidation(isValid: false))
 
-    var edited = initial
-    edited.name = "Racing"
-    #expect(edited.showsValidation(comparedTo: initial, isValid: false))
-    #expect(!edited.showsValidation(comparedTo: initial, isValid: true))
+    var edited = untouched
+    edited.editedName = "Racing"
+    #expect(edited.showsValidation(isValid: false))
+    #expect(!edited.showsValidation(isValid: true))
   }
 }

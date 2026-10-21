@@ -148,10 +148,4 @@
     }
   }
 
-  enum ProfileNameValidation {
-    static func trimmedName(_ name: String) -> String {
-      name.trimmingCharacters(in: .whitespacesAndNewlines)
-    }
-  }
-
 #endif

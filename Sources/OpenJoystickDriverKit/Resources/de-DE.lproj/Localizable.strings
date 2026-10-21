@@ -235,6 +235,10 @@
 "profiles.holdDuration" = "Haltedauer";
 "profiles.identifierHint" = "Verwende dezimale oder mit 0x beginnende hexadezimale Kennungen.";
 "profiles.import" = "Profil importieren";
+"profiles.validateFile" = "Profildatei prüfen";
+"profiles.validTitle" = "Gültiges Profil";
+"profiles.invalidTitle" = "Ungültiges Profil";
+"profiles.validMessage" = "%1$@ (%2$@). Gilt für: %3$@.";
 "profiles.invalidIdentifiers" = "Gib gültige 16-Bit-Hersteller- und Produktkennungen ein.";
 "profiles.layerName" = "Ebenenname";
 "profiles.layers" = "Ebenen";

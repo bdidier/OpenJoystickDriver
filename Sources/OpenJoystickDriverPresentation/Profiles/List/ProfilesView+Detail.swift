@@ -51,8 +51,6 @@
             isEditingBlocked: profileEditorTransition.isEditingBlocked
               || profileLibraryNeedsRecovery,
             selectedSection: $screen.selectedEditorSection,
-            onDelete: { activeAlert = .delete(selectedProfile.id) },
-            onExport: { exportProfile($0) },
             onEditingStateChanged: { setEditorDirty($0) },
             onMutationStarted: { beginProfileMutation($0) },
             onMutationResult: { handleProfileMutationResult($0) }
@@ -94,6 +92,8 @@
         Section(header: Text(presentation.titleWithCode)) {
           Text(presentation.message).foregroundColor(Color(NSColor.secondaryLabelColor))
             .fixedSize(horizontal: false, vertical: true)
+            .ojdAccessibilityLabel(presentation.title)
+            .ojdAccessibilityValue(presentation.accessibilityValue)
           Button(
             OJDLocalized.string(
               issue.kind == .damagedProfile
@@ -105,8 +105,7 @@
               ? .deleteDamagedProfile(issue.id) : .resetLibrary(issue.id)
           }.disabled(library.profileRecoveryInFlight)
         }
-      }.ojdGroupedForm().ojdAccessibilityLabel(presentation.title)
-        .ojdAccessibilityValue(presentation.accessibilityValue)
+      }.ojdGroupedForm()
     }
 
     @ViewBuilder
@@ -161,9 +160,11 @@
           description: Text(OJDLocalized.string("profiles.createMessage"))
         )
       } else {
-        Text(OJDLocalized.string("profiles.createMessage"))
-          .foregroundColor(Color(NSColor.secondaryLabelColor))
-          .frame(maxWidth: .infinity, maxHeight: .infinity)
+        VStack(spacing: 4) {
+          Text(OJDLocalized.string("profiles.none")).font(.headline)
+          Text(OJDLocalized.string("profiles.createMessage"))
+            .foregroundColor(Color(NSColor.secondaryLabelColor))
+        }.frame(maxWidth: .infinity, maxHeight: .infinity)
       }
     }
 

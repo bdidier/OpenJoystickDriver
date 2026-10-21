@@ -235,6 +235,10 @@
 "profiles.holdDuration" = "Duração de Retenção";
 "profiles.identifierHint" = "Use identificadores decimais ou hexadecimais com prefixo 0x.";
 "profiles.import" = "Importar Perfil";
+"profiles.validateFile" = "Validar Arquivo de Perfil";
+"profiles.validTitle" = "Perfil Válido";
+"profiles.invalidTitle" = "Perfil Inválido";
+"profiles.validMessage" = "%1$@ (%2$@). Aplica-se a: %3$@.";
 "profiles.invalidIdentifiers" = "Digite identificadores de fornecedor e de produto válidos de 16 bits.";
 "profiles.layerName" = "Nome da Camada";
 "profiles.layers" = "Camadas";

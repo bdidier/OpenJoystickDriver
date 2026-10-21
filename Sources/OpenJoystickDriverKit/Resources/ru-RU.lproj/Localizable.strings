@@ -235,6 +235,10 @@
 "profiles.holdDuration" = "Длительность удержания";
 "profiles.identifierHint" = "Используйте десятичные идентификаторы или шестнадцатеричные с префиксом 0x.";
 "profiles.import" = "Импортировать профиль";
+"profiles.validateFile" = "Проверить файл профиля";
+"profiles.validTitle" = "Допустимый профиль";
+"profiles.invalidTitle" = "Недопустимый профиль";
+"profiles.validMessage" = "%1$@ (%2$@). Применяется к: %3$@.";
 "profiles.invalidIdentifiers" = "Введите допустимые 16-битные идентификаторы производителя и продукта.";
 "profiles.layerName" = "Имя слоя";
 "profiles.layers" = "Слои";

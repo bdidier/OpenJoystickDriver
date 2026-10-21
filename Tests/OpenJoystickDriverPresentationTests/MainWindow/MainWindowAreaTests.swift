@@ -60,16 +60,17 @@ struct MainWindowAreaTests {
   @Test
   func eachAreaShowsItsOwnActionsAfterTheFixedItems() {
     #expect(MainWindowArea.controllers.toolbarActions == [.refreshControllers])
-    #expect(MainWindowArea.profiles.toolbarActions == [.newProfile, .importProfile])
+    let profileActions: [MainWindowToolbarAction] = [
+      .newProfile, .importProfile, .validateProfileFile, .duplicateProfile, .exportProfile,
+      .deleteProfile,
+    ]
+    #expect(MainWindowArea.profiles.toolbarActions == profileActions)
     #expect(MainWindowArea.library.toolbarActions == [.installLibraryItem])
     #expect(MainWindowArea.access.toolbarActions.isEmpty)
     #expect(MainWindowArea.activity.toolbarActions.isEmpty)
     #expect(
       MainWindowToolbarLayout.items(for: .profiles)
-        == MainWindowToolbarLayout.fixedItems + [
-          MainWindowToolbarAction.newProfile.identifier,
-          MainWindowToolbarAction.importProfile.identifier,
-        ]
+        == MainWindowToolbarLayout.fixedItems + profileActions.map(\.identifier)
     )
   }
 

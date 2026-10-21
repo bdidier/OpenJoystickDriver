@@ -1,8 +1,31 @@
+import Foundation
 import OpenJoystickDriverKit
 
-func duplicatedProfile(_ source: RemappingProfile) -> RemappingProfile {
-  RemappingProfile(
-    name: OJDLocalized.formatted("profiles.copyName", source.name),
+enum ProfileNameValidation {
+  static func trimmedName(_ name: String) -> String {
+    name.trimmingCharacters(in: .whitespacesAndNewlines)
+  }
+}
+
+/// What the Duplicate sheet starts with: the source's name followed by the copy marker, made free
+/// of the names `profiles` already have.
+func defaultDuplicateName(of source: RemappingProfile, in profiles: [RemappingProfile]) -> String {
+  ProfileNaming.availableName(
+    OJDLocalized.formatted("profiles.copyName", source.name),
+    in: profiles
+  )
+}
+
+/// A new profile with `source`'s content under `name`, or nil when the name is taken among
+/// `profiles` or the copy is not a valid profile.
+func duplicatedProfile(
+  _ source: RemappingProfile,
+  named name: String,
+  in profiles: [RemappingProfile]
+) -> RemappingProfile? {
+  guard !ProfileNaming.isTaken(name, in: profiles) else { return nil }
+  let copy = RemappingProfile(
+    name: ProfileNameValidation.trimmedName(name),
     device: source.device,
     applicationScope: source.applicationScope,
     outputPolicy: source.outputPolicy,
@@ -18,4 +41,5 @@ func duplicatedProfile(_ source: RemappingProfile) -> RemappingProfile {
     sequences: source.sequences,
     layers: source.layers
   )
+  return (try? copy.validate()) == nil ? nil : copy
 }

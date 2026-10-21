@@ -235,6 +235,10 @@
 "profiles.holdDuration" = "दबाए रखने की अवधि";
 "profiles.identifierHint" = "दशमलव या 0x से शुरू होने वाले हेक्साडेसिमल पहचानकर्ता का उपयोग करें।";
 "profiles.import" = "प्रोफ़ाइल इंपोर्ट करें";
+"profiles.validateFile" = "प्रोफ़ाइल फ़ाइल जाँचें";
+"profiles.validTitle" = "मान्य प्रोफ़ाइल";
+"profiles.invalidTitle" = "अमान्य प्रोफ़ाइल";
+"profiles.validMessage" = "%1$@ (%2$@). इन पर लागू: %3$@.";
 "profiles.invalidIdentifiers" = "वैध 16-बिट विक्रेता और उत्पाद पहचानकर्ता दर्ज करें।";
 "profiles.layerName" = "परत का नाम";
 "profiles.layers" = "परतें";

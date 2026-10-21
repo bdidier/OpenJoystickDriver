@@ -78,8 +78,19 @@
         EmptyView().sheet(isPresented: $screen.isCreatingProfile) {
           ProfileNameSheet(
             title: OJDLocalized.string("profiles.new"),
-            devices: connectedDevices
-          ) { name, device, scope in createProfile(named: name, for: device, scope: scope) }
+            context: ProfileCreationContext(
+              choices: ProfileControllerChoice.choices(
+                devices: connectedDevices,
+                profiles: profiles,
+                catalog: screen.catalogModels
+              ),
+              profiles: profiles
+            )
+          ) { createProfile($0) }
+        }
+      ).background(
+        EmptyView().sheet(item: $screen.duplicatingProfile) { source in
+          ProfileDuplicateSheet(source: source, profiles: profiles) { createProfile($0) }
         }
       ).background(
         EmptyView().sheet(item: $screen.pairingProfile) { profile in
@@ -92,6 +103,14 @@
               )
             }
           }
+        }
+      ).background(
+        EmptyView().alert(item: $screen.fileValidation) { validation in
+          Alert(
+            title: Text(validation.title),
+            message: Text(validation.message),
+            dismissButton: .default(Text(OJDLocalized.string("common.dismiss")))
+          )
         }
       ).alert(item: $screen.activeAlert) { alert in
         switch alert {
@@ -268,9 +287,10 @@
             }
             VStack(alignment: .leading, spacing: 2) {
               Text(profile.name).lineLimit(1)
-              Text(assignmentCountLabel(profile.bindings.count)).font(.caption).foregroundColor(
-                Color(NSColor.secondaryLabelColor)
-              )
+              Text(
+                ProfileScopeCaption.text(for: profile.applicationScope)
+                  ?? assignmentCountLabel(profile.bindings.count)
+              ).font(.caption).foregroundColor(Color(NSColor.secondaryLabelColor))
             }
             Spacer(minLength: 0)
           }.padding(.vertical, 4).tag(ProfileListSelection.profile(profile.id))
@@ -279,6 +299,7 @@
             )
         }
         ForEach(currentSnapshot?.profileIssues ?? []) { issue in
+          let presentation = ProfileIssuePresentation(issue)
           HStack(spacing: 8) {
             OJDListGlyphSlot {
               OJDSystemSymbol(
@@ -293,14 +314,14 @@
               )
             }
             VStack(alignment: .leading, spacing: 2) {
-              Text(ProfileIssuePresentation(issue).title).lineLimit(1)
-              Text(ProfileIssuePresentation(issue).code).font(.caption).foregroundColor(
+              Text(presentation.title).lineLimit(1)
+              Text(presentation.code).font(.caption).foregroundColor(
                 Color(NSColor.secondaryLabelColor)
               )
             }
             Spacer(minLength: 0)
           }.padding(.vertical, 4).tag(ProfileListSelection.issue(issue.id)).ojdAccessibilityValue(
-            ProfileIssuePresentation(issue).accessibilityValue
+            presentation.accessibilityValue
           )
         }
       }.listStyle(InsetListStyle()).disabled(isMutationActive || library.profileRecoveryInFlight)

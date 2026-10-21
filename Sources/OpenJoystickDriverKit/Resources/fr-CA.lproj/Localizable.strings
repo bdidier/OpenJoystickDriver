@@ -235,6 +235,10 @@
 "profiles.holdDuration" = "Durée du maintien";
 "profiles.identifierHint" = "Utilisez des identifiants décimaux ou hexadécimaux préfixés par 0x.";
 "profiles.import" = "Importer un profil";
+"profiles.validateFile" = "Valider le fichier de profil";
+"profiles.validTitle" = "Profil valide";
+"profiles.invalidTitle" = "Profil non valide";
+"profiles.validMessage" = "%1$@ (%2$@). S’applique à : %3$@.";
 "profiles.invalidIdentifiers" = "Saisissez des identifiants fabricant et produit 16 bits valides.";
 "profiles.layerName" = "Nom de la couche";
 "profiles.layers" = "Couches";

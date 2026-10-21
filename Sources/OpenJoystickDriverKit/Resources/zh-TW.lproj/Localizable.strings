@@ -235,6 +235,10 @@
 "profiles.holdDuration" = "按住時間";
 "profiles.identifierHint" = "使用十進位或以 0x 開頭的十六進位識別碼。";
 "profiles.import" = "匯入設定檔";
+"profiles.validateFile" = "驗證設定檔";
+"profiles.validTitle" = "有效的設定檔";
+"profiles.invalidTitle" = "無效的設定檔";
+"profiles.validMessage" = "%1$@（%2$@）。適用於：%3$@";
 "profiles.invalidIdentifiers" = "請輸入有效的 16 位元供應商和產品識別碼。";
 "profiles.layerName" = "層名稱";
 "profiles.layers" = "層";

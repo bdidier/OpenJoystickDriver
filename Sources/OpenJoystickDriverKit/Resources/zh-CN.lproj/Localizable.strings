@@ -235,6 +235,10 @@
 "profiles.holdDuration" = "按住时长";
 "profiles.identifierHint" = "使用十进制或以 0x 开头的十六进制标识符。";
 "profiles.import" = "导入配置文件";
+"profiles.validateFile" = "验证配置文件";
+"profiles.validTitle" = "有效的配置文件";
+"profiles.invalidTitle" = "无效的配置文件";
+"profiles.validMessage" = "%1$@（%2$@）。适用于：%3$@";
 "profiles.invalidIdentifiers" = "请输入有效的 16 位供应商和产品标识符。";
 "profiles.layerName" = "层名称";
 "profiles.layers" = "层";

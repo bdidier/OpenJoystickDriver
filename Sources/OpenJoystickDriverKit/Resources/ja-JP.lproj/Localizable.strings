@@ -235,6 +235,10 @@
 "profiles.holdDuration" = "押し続ける時間";
 "profiles.identifierHint" = "10進数、または 0x で始まる16進数の識別子を使用します。";
 "profiles.import" = "プロファイルを読み込む";
+"profiles.validateFile" = "プロファイルファイルを検証";
+"profiles.validTitle" = "有効なプロファイル";
+"profiles.invalidTitle" = "無効なプロファイル";
+"profiles.validMessage" = "%1$@(%2$@)。適用先: %3$@";
 "profiles.invalidIdentifiers" = "16ビットの有効なベンダーIDと製品IDを入力してください。";
 "profiles.layerName" = "レイヤー名";
 "profiles.layers" = "レイヤー";

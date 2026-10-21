@@ -8,6 +8,10 @@
     case refreshControllers
     case newProfile
     case importProfile
+    case validateProfileFile
+    case duplicateProfile
+    case exportProfile
+    case deleteProfile
     case installLibraryItem
 
     var identifier: NSToolbarItem.Identifier {
@@ -26,6 +30,10 @@
       case .refreshControllers: return "arrow.clockwise"
       case .newProfile: return "plus"
       case .importProfile: return "square.and.arrow.down"
+      case .validateProfileFile: return "checkmark.seal"
+      case .duplicateProfile: return "plus.square.on.square"
+      case .exportProfile: return "square.and.arrow.up"
+      case .deleteProfile: return "trash"
       case .installLibraryItem: return "square.and.arrow.down.on.square"
       }
     }
@@ -36,6 +44,10 @@
       case .refreshControllers: return "common.refresh"
       case .newProfile: return "profiles.new"
       case .importProfile: return "profiles.import"
+      case .validateProfileFile: return "profiles.validateFile"
+      case .duplicateProfile: return "common.duplicate"
+      case .exportProfile: return "profiles.export"
+      case .deleteProfile: return "common.delete"
       case .installLibraryItem: return "library.install"
       }
     }
@@ -46,6 +58,10 @@
       case .refreshControllers: return "controllers.refreshAccessibility"
       case .newProfile: return "profiles.new"
       case .importProfile: return "profiles.import"
+      case .validateProfileFile: return "profiles.validateFile"
+      case .duplicateProfile: return "common.duplicate"
+      case .exportProfile: return "profiles.export"
+      case .deleteProfile: return "common.delete"
       case .installLibraryItem: return "mainMenu.file.installRecordOrMod"
       }
     }
@@ -56,7 +72,11 @@
     var toolbarActions: [MainWindowToolbarAction] {
       switch self {
       case .controllers: return [.refreshControllers]
-      case .profiles: return [.newProfile, .importProfile]
+      case .profiles:
+        return [
+          .newProfile, .importProfile, .validateProfileFile, .duplicateProfile, .exportProfile,
+          .deleteProfile,
+        ]
       case .library: return [.installLibraryItem]
       case .access, .activity: return []
       }

@@ -96,9 +96,6 @@
           )
         }
         HStack(spacing: 10) {
-          OJDDestructiveButton(action: onDelete) {
-            Text(OJDLocalized.string("common.delete"))
-          }.disabled(isMutationActive)
           Spacer(minLength: 8)
           saveStatusView
           Button(OJDLocalized.string("common.save")) { save() }.disabled(
