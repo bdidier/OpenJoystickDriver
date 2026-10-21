@@ -1324,6 +1324,7 @@
 "error.E2032" = "โทเค็นที่มี origin ไม่สามารถมีขอบเขต control ได้ เพราะหน้าเว็บต้องไม่ควบคุมเกมแพดเสมือน ให้ control กับโทเค็นที่ไม่มี origin";
 "error.E2033" = "เริ่มโปรแกรมไม่ได้ ตรวจสอบว่าพาธของโปรแกรมชี้ไปยังไฟล์ปฏิบัติการหรือแอป และคุณมีสิทธิ์เรียกใช้";
 "error.E2034" = "บริการหยุดรับคำขอแล้ว ปิด OpenJoystickDriver แล้วเปิดใหม่ จากนั้นลองอีกครั้ง";
+"error.E2035" = "ไม่สามารถใช้ไฟล์ที่บันทึกสาเหตุที่ตัวรับคำขอหยุดทำงานได้ ลบไฟล์นั้น แล้วเปิด OpenJoystickDriver ใหม่";
 "cli.record.usb_not_claimed" = "กลุ่มนี้ใช้ USB ดิบ และส่วนขยาย USB ครอบครองคอนโทรลเลอร์นี้ไม่ได้ เพราะรายการผลิตภัณฑ์ลงนามโดย Apple OJD เข้าถึงได้ผ่านการเข้าถึง USB โดยตรงเท่านั้น เมื่อ macOS อนุญาต";
 "cli.record.usb_only_switch2" = "USB เท่านั้น: เพิ่ม bluetoothLE.vibrationCharacteristic ในระเบียน Switch 2 นี้เพื่อเชื่อมต่อคอนโทรลเลอร์ผ่าน Bluetooth LE";
 "cli.record.validate.abstract" = "ตรวจสอบระเบียนคอนโทรลเลอร์โดยไม่ติดตั้ง";
@@ -1985,3 +1986,26 @@
 "controllers.disconnectWireless.failure.missingAddress" = "ไม่ทราบที่อยู่บลูทูธของคอนโทรลเลอร์";
 "controllers.disconnectWireless.failure.disconnectFailed" = "บลูทูธไม่ได้ตัดการเชื่อมต่อคอนโทรลเลอร์";
 "controllers.disconnectWireless.failure.timedOut" = "หมดเวลาในการตัดการเชื่อมต่อ";
+
+/* Status line of a service that cannot be reached because its request listener stopped. %1$@ is the error code, %2$@ its explanation, %3$@ the error number of the failed call, %4$@ the time it stopped. */
+"status.listenerFailure.detail" = "%1$@: %2$@ (หมายเลขข้อผิดพลาด %3$@, %4$@)";
+/* Reason the listener failure file cannot be used: its size exceeds what the service writes. Fills the reason in the error E2035 message. */
+"status.listenerFailure.tooLarge" = "ไฟล์ใหญ่เกินไป";
+/* Row label in the ojd status table that gives why the stopped service's request listener stopped. */
+"cli.status.listenerFailure.label" = "ตัวรับคำขอ";
+/* Label of the button in the problem banner that starts the service's stopped request listener again. */
+"status.listenerFailure.restart" = "เริ่มตัวรับคำขอใหม่";
+/* Status line when restarting the request listener failed. %@ is the error number of the failed call. */
+"status.listenerFailure.restartFailed" = "เริ่มตัวรับคำขอใหม่ไม่สำเร็จ (หมายเลขข้อผิดพลาด %@) ปิด OpenJoystickDriver แล้วเปิดใหม่";
+/* Status line of a service that is not running when its last request listener stopped with an error. %@ is the error code with its explanation, the error number and the time. */
+"status.listenerFailure.earlier" = "บริการไม่ได้ทำงานอยู่ ตัวรับคำขอครั้งล่าสุดหยุดทำงาน: %@";
+/* Status line when the request listener cannot be restarted because the service is stopping or has not started. */
+"status.listenerFailure.restartUnavailable" = "บริการกำลังหยุดหรือยังไม่เริ่ม จึงเริ่มตัวรับคำขอใหม่ไม่ได้";
+/* Status line when restarting the request listener failed for a reason that is not an error number. %@ is the reason. */
+"status.listenerFailure.restartFailedReason" = "เริ่มตัวรับคำขอใหม่ไม่สำเร็จ: %@ ปิด OpenJoystickDriver แล้วเปิดใหม่";
+/* Reason the listener failure file cannot be used: it is not a regular file. Fills the reason in the error E2035 message. */
+"status.listenerFailure.notRegularFile" = "ไฟล์นี้ไม่ใช่ไฟล์ปกติ";
+/* Reason the listener failure file cannot be used: another user owns it, so ojd must run as that user. Fills the reason in the error E2035 message. */
+"status.listenerFailure.otherUser" = "บันทึกนี้เป็นของผู้ใช้อื่น ให้เรียกใช้ ojd ในฐานะผู้ใช้นั้น";
+/* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
+"status.listenerFailure.processCheckFailed" = "ตรวจสอบไม่ได้ว่ากระบวนการของบริการกำลังทำงานอยู่หรือไม่: %1$@ (หมายเลขข้อผิดพลาด %2$@)";

@@ -1,10 +1,13 @@
 import Foundation
+import OpenJoystickDriverKit
 
 /// Something that stops controllers from working, shown in the main window's problem banner
 /// while it lasts. A healthy app has none, and the banner is then absent.
 enum MainWindowProblem: Equatable, Sendable, Identifiable {
   /// The application service did not answer; the message says why.
   case serviceUnavailable(String)
+  /// The service's request listener stopped; the message gives its code and error number.
+  case listenerStopped(String)
   /// The Xbox USB driver extension is not active.
   case driver(SystemExtensionSetupState)
   /// macOS has not granted a permission the service needs.
@@ -15,7 +18,7 @@ enum MainWindowProblem: Equatable, Sendable, Identifiable {
 
   var id: String {
     switch self {
-    case .serviceUnavailable: return "service"
+    case .serviceUnavailable, .listenerStopped: return "service"
     case .driver: return "driver"
     case .accessMissing: return "access"
     case .liveUpdatesPolling: return "liveUpdates"
@@ -24,7 +27,7 @@ enum MainWindowProblem: Equatable, Sendable, Identifiable {
 
   var titleKey: String {
     switch self {
-    case .serviceUnavailable: return "banner.service.title"
+    case .serviceUnavailable, .listenerStopped: return "banner.service.title"
     case .driver: return "setup.driverTitle"
     case .accessMissing: return "banner.access.title"
     case .liveUpdatesPolling: return "banner.liveUpdates.title"
@@ -34,7 +37,7 @@ enum MainWindowProblem: Equatable, Sendable, Identifiable {
   /// Localization key of the detail, or nil when the detail is the service's own message.
   var detailKey: String? {
     switch self {
-    case .serviceUnavailable: return nil
+    case .serviceUnavailable, .listenerStopped: return nil
     case .liveUpdatesPolling(let failure): return failure.detailKey
     case .driver(let state):
       switch state {
@@ -52,6 +55,7 @@ enum MainWindowProblem: Equatable, Sendable, Identifiable {
   var action: MainWindowProblemAction? {
     switch self {
     case .serviceUnavailable: return .retryService
+    case .listenerStopped: return .restartListener
     case .driver(let state):
       switch state {
       case .awaitingApproval: return .openDriverApproval
@@ -68,7 +72,7 @@ enum MainWindowProblem: Equatable, Sendable, Identifiable {
   /// Problems that stop every controller are failures; the rest need the user's attention.
   var isFailure: Bool {
     switch self {
-    case .serviceUnavailable: return true
+    case .serviceUnavailable, .listenerStopped: return true
     case .driver(let state): return state == .missingEmbedded || state == .invalid
     case .accessMissing, .liveUpdatesPolling: return false
     }
@@ -80,12 +84,15 @@ enum MainWindowProblem: Equatable, Sendable, Identifiable {
     permissions: RuntimePermissionLoadState,
     status: RuntimeStatusState,
     driver: SystemExtensionSetupState,
-    liveUpdatesFallbackReason: ControllerLiveUpdateFailure?
+    liveUpdatesFallbackReason: ControllerLiveUpdateFailure?,
+    listenerFailure: ServiceListenerFailure?
   ) -> [Self] {
     var problems: [Self] = []
     switch status {
     case .unavailable(let message), .error(let message):
-      problems.append(.serviceUnavailable(message))
+      problems.append(
+        listenerFailure == nil ? .serviceUnavailable(message) : .listenerStopped(message)
+      )
     case .loading, .available: break
     }
     switch driver {
@@ -104,6 +111,7 @@ enum MainWindowProblem: Equatable, Sendable, Identifiable {
 
 enum MainWindowProblemAction: Equatable, Sendable {
   case retryService
+  case restartListener
   case openDriverApproval
   case repairDriver
   case showAccess
@@ -111,6 +119,7 @@ enum MainWindowProblemAction: Equatable, Sendable {
   var titleKey: String {
     switch self {
     case .retryService: return "common.tryAgain"
+    case .restartListener: return "status.listenerFailure.restart"
     case .openDriverApproval: return "setup.openSystemSettings"
     case .repairDriver: return "setup.repairDriver"
     case .showAccess: return "menuBar.grantAccess"

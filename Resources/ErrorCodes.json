@@ -262,6 +262,12 @@
       "exitCode": 69
     },
     {
+      "code": "E2035",
+      "domain": "CLI",
+      "name": "damagedListenerFailureRecord",
+      "exitCode": 1
+    },
+    {
       "code": "E3001",
       "domain": "Remapping",
       "name": "controllerUnavailable",

@@ -1324,6 +1324,7 @@
 "error.E2032" = "オリジンを持つトークンには control スコープを付けられません。ページが仮想ゲームパッドを操作してはならないためです。オリジンのないトークンに control を許可してください。";
 "error.E2033" = "プログラムを起動できませんでした。パスが実行可能ファイルまたは App を指していること、実行する権限があることを確認してください。";
 "error.E2034" = "サービスがリクエストを受け付けなくなりました。OpenJoystickDriverを終了して開き直してから、もう一度お試しください。";
+"error.E2035" = "リクエストの待ち受けが停止した理由を記録したファイルは使用できません。ファイルを削除してから、OpenJoystickDriverを開き直してください。";
 "cli.record.usb_not_claimed" = "このファミリーは生の USB を使用しますが、製品リストが Apple によって署名されているため、USB 機能拡張はこのコントローラを占有できません。OJD は、macOS が許可する場合にのみ、直接 USB アクセスでこのコントローラに接続します。";
 "cli.record.usb_only_switch2" = "USB のみ。コントローラを Bluetooth LE で接続するには、この Switch 2 レコードに bluetoothLE.vibrationCharacteristic を追加してください。";
 "cli.record.validate.abstract" = "コントローラのレコードをインストールせずに確認します。";
@@ -1985,3 +1986,26 @@
 "controllers.disconnectWireless.failure.missingAddress" = "コントローラのBluetoothアドレスが不明です";
 "controllers.disconnectWireless.failure.disconnectFailed" = "Bluetoothがコントローラを切断しませんでした";
 "controllers.disconnectWireless.failure.timedOut" = "切断がタイムアウトしました";
+
+/* Status line of a service that cannot be reached because its request listener stopped. %1$@ is the error code, %2$@ its explanation, %3$@ the error number of the failed call, %4$@ the time it stopped. */
+"status.listenerFailure.detail" = "%1$@：%2$@（エラー番号 %3$@、%4$@）";
+/* Reason the listener failure file cannot be used: its size exceeds what the service writes. Fills the reason in the error E2035 message. */
+"status.listenerFailure.tooLarge" = "ファイルが大きすぎます";
+/* Row label in the ojd status table that gives why the stopped service's request listener stopped. */
+"cli.status.listenerFailure.label" = "リクエストの待ち受け";
+/* Label of the button in the problem banner that starts the service's stopped request listener again. */
+"status.listenerFailure.restart" = "待ち受けを再開";
+/* Status line when restarting the request listener failed. %@ is the error number of the failed call. */
+"status.listenerFailure.restartFailed" = "リクエストの待ち受けを再開できませんでした（エラー番号 %@）。OpenJoystickDriverを終了して開き直してください。";
+/* Status line of a service that is not running when its last request listener stopped with an error. %@ is the error code with its explanation, the error number and the time. */
+"status.listenerFailure.earlier" = "サービスは実行されていません。最後のリクエストの待ち受けが停止しました：%@";
+/* Status line when the request listener cannot be restarted because the service is stopping or has not started. */
+"status.listenerFailure.restartUnavailable" = "サービスが停止中か、まだ開始されていないため、リクエストの待ち受けを再開できません。";
+/* Status line when restarting the request listener failed for a reason that is not an error number. %@ is the reason. */
+"status.listenerFailure.restartFailedReason" = "リクエストの待ち受けを再開できませんでした：%@。OpenJoystickDriverを終了して開き直してください。";
+/* Reason the listener failure file cannot be used: it is not a regular file. Fills the reason in the error E2035 message. */
+"status.listenerFailure.notRegularFile" = "ファイルが通常のファイルではありません";
+/* Reason the listener failure file cannot be used: another user owns it, so ojd must run as that user. Fills the reason in the error E2035 message. */
+"status.listenerFailure.otherUser" = "記録は別のユーザのものです。そのユーザとしてojdを実行してください";
+/* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
+"status.listenerFailure.processCheckFailed" = "サービスのプロセスが実行中か確認できませんでした：%1$@（エラー番号 %2$@）";

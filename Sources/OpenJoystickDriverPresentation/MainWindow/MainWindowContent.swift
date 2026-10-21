@@ -109,7 +109,8 @@
             permissions: runtime.permissionState,
             status: runtime.statusState,
             driver: runtime.systemExtensionSetupState,
-            liveUpdatesFallbackReason: runtime.liveUpdatesFallbackReason
+            liveUpdatesFallbackReason: runtime.liveUpdatesFallbackReason,
+            listenerFailure: runtime.listenerFailure
           ),
           perform: perform
         )
@@ -177,6 +178,7 @@
     private func perform(_ action: MainWindowProblemAction) {
       switch action {
       case .retryService: Task { @MainActor in await runtime.refresh() }
+      case .restartListener: Task { @MainActor in await runtime.restartListener() }
       case .openDriverApproval: driverApprovalFailed = !SystemExtensionApproval.openSystemSettings()
       case .repairDriver: Task { @MainActor in await runtime.repairSystemExtension() }
       case .showAccess: navigation.requestArea(.access)

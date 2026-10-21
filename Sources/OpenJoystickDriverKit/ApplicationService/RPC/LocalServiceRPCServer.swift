@@ -16,6 +16,10 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
   /// True when `stop()` ran while `starting`; `start()` stops the server it finished.
   private var stopRequested = false
 
+  /// Told after every change of the listener's failure: the failure when the accept loop ends
+  /// on a fatal error, nil when a start clears it. The service sets it before `start()`.
+  package var listenerFailureChanged: (@Sendable (ServiceListenerFailure?) -> Void)?
+
   // The five hooks below belong to tests; set them before `start()`.
   /// Runs inside `start()` after the sockets are listening and before the server publishes them.
   package var beforeListenerPublished: (@Sendable () -> Void)?
@@ -29,6 +33,8 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
   /// Receives the accept loop's reports; they go to standard output.
   package var report: @Sendable (String) -> Void = { print($0) }
   private static let name = "LocalServiceRPCServer"
+  /// The process that runs the server, written into every listener failure record.
+  private let process = ServiceListenerFailure.ProcessIdentity.current
 
   /// One started server's sockets. The accept loop closes `socket` and `wakeRead`. Whoever clears
   /// `listener` closes `wakeWrite`: `stop()`, or the loop when it ends on its own. The loop sees
@@ -105,6 +111,7 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
       stateLock.withLock {
         listener = started
         starting = false
+        clearListenerFailure()
       }
       BlockingWork.detachThread(name: "com.openjoystickdriver.rpc.accept") { [weak self] in
         self?.acceptConnections(started)
@@ -116,10 +123,12 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
     }
   }
 
-  /// Stops the server. A call while `start()` still sets up the sockets takes effect as soon as
-  /// that call returns.
+  /// Stops the server and deletes the record of a listener failure, also when the listener
+  /// already stopped on its own: an orderly stop leaves nothing for `ojd` to report. A call while
+  /// `start()` still sets up the sockets takes effect as soon as that call returns.
   public func stop() {
     stateLock.withLock {
+      deleteListenerFailureRecord()
       guard let stopped = listener else {
         if starting { stopRequested = true }
         return
@@ -134,22 +143,33 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
 
   /// Ends the server when the loop stops on its own: the loop owns `wakeWrite` then, unless
   /// `stop()` already took the listener.
-  private func release(_ ended: Listener) {
+  /// Returns whether the loop ended the server, as opposed to `stop()` having done so. A fatal
+  /// `failure` is recorded under the same lock, so a start that follows clears the record after it
+  /// was written and a late write never replaces that clear.
+  private func release(_ ended: Listener, failure: Int32?) -> Bool {
     stateLock.withLock {
-      guard listener?.id == ended.id else { return }
+      guard listener?.id == ended.id else { return false }
       listener = nil
       Darwin.close(ended.wakeWrite)
       unlink(socketPath)
+      if let failure { recordListenerFailure(errno: failure) }
+      return true
     }
   }
 
+  /// Runs the loop. A loop that ends on a fatal error records why in a file beside the socket and
+  /// in `listenerFailureChanged`, because the RPC socket cannot carry the reason once it is gone.
+  /// The process keeps running.
   private func acceptConnections(_ listener: Listener) {
-    defer {
-      release(listener)
-      Darwin.close(listener.socket)
-      Darwin.close(listener.wakeRead)
-      acceptLoopDidExit?()
-    }
+    let failure = acceptUntilEnd(listener)
+    _ = release(listener, failure: failure)
+    Darwin.close(listener.socket)
+    Darwin.close(listener.wakeRead)
+    acceptLoopDidExit?()
+  }
+
+  /// Accepts connections until the server stops, and returns the error number of a fatal error.
+  private func acceptUntilEnd(_ listener: Listener) -> Int32? {
     while true {
       var events = [
         pollfd(fd: listener.socket, events: Int16(POLLIN), revents: 0),
@@ -157,18 +177,19 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
       ]
       let ready = poll(&events, 2, -1)
       if ready < 0 {
-        if errno == EINTR { continue }
-        report(endMessage(errno))
-        return
+        let code = errno
+        if code == EINTR { continue }
+        report(endMessage(code))
+        return code
       }
-      if events[1].revents != 0 { return }
+      if events[1].revents != 0 { return nil }
       guard events[0].revents & Int16(POLLIN) != 0 else {
         report(endMessage(EIO))
-        return
+        return EIO
       }
       let connection = acceptConnection(listener.socket)
       guard connection >= 0 else {
-        let goesOn = AcceptFailure.continuesAfter(
+        let next = AcceptFailure.continuation(
           errno: errno,
           server: Self.name,
           wake: listener.wakeRead,
@@ -176,8 +197,11 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
           ended: .requestListenerStopped,
           report: report
         )
-        if goesOn { continue }
-        return
+        switch next {
+        case .goOn: continue
+        case .stopped: return nil
+        case .ended(let code): return code
+        }
       }
       BlockingWork.detach(label: "com.openjoystickdriver.rpc.connection") { [weak self] in
         guard let self else {
@@ -186,6 +210,36 @@ public final class LocalServiceRPCServer: @unchecked Sendable {
         }
         self.handleConnection(connection)
       }
+    }
+  }
+
+  private func recordListenerFailure(errno code: Int32) {
+    let failure = ServiceListenerFailure(
+      errorNumber: code,
+      time: Date(),
+      process: process
+    )
+    defer { listenerFailureChanged?(failure) }
+    do { try failure.write(socketPath: socketPath) } catch {
+      report(
+        "[\(Self.name)] Could not record why the request listener stopped in "
+          + "\(ServiceListenerFailure.path(forSocket: socketPath)): \(error.localizedDescription)"
+      )
+    }
+  }
+
+  /// A listener that starts deletes the record of the last failure. Runs under `stateLock`.
+  private func clearListenerFailure() {
+    deleteListenerFailureRecord()
+    listenerFailureChanged?(nil)
+  }
+
+  private func deleteListenerFailureRecord() {
+    do { try ServiceListenerFailure.clear(socketPath: socketPath) } catch {
+      report(
+        "[\(Self.name)] Could not delete the record of the last listener failure: "
+          + error.localizedDescription
+      )
     }
   }
 

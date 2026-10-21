@@ -22,6 +22,7 @@ KINDS = {
     "access-grants": "AccessGrants",
     "protocol-description": "ProtocolDescription",
     "settings": "Settings",
+    "service-listener-failure": "ServiceListenerFailure",
 }
 
 

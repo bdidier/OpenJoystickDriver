@@ -25,6 +25,7 @@
 - `profile.schema.json`: the remapping profile file that `ojd profile export` writes and `ojd profile import` reads. Cross-field rules stay in the strict decoder, and a test keeps the schema enums equal to the Swift cases.
 - `access-grants.schema.json`: the `AccessGrants.json` file in which the service keeps whether the endpoint is on and which signed clients may use it. Only the service writes it, through `ojd access`.
 - `settings.schema.json`: the `Settings.json` file, the user file that `ojd setting set` and the app write. Every setting is optional in the file; a setting it leaves out takes its built-in default.
+- `service-listener-failure.schema.json`: the file beside the service's RPC socket (the socket path plus `.failure.json`) that the service writes when its request listener stops on a fatal error (code `E2034`, the error number and the time). A successful listener start and an orderly stop delete it, and its `pid` and start time let readers report the failure only while that exact process runs. `ojd status` and `ojd diagnose` read it while the service cannot be reached.
 - `endpoint.schema.json`: the JSON lines that a granted client and the service exchange on the endpoint socket. The stream lines are the `ojd controller watch --all` events from `cli-output.schema.json`.
 - `error-codes.schema.json`: the authored catalog `Resources/ErrorCodes.json`, which gives every E#### error code its domain and name. `./Scripts/ojd errors regenerate` copies the endpoint codes into `endpoint.schema.json` and the table into `wiki/Error-Codes.md`.
 - `crosswalk.schema.json`: the authored table `Resources/Vocabulary/crosswalk.json`, which maps each control id to its W3C, SDL, evdev, HID and Apple names and records the source of each column. It describes the shape of that file only; no schema accepts or maps a name in it.
@@ -44,6 +45,7 @@ Each artifact class has one current contract, a flat `<kind>.schema.json` here. 
 | `crosswalk.schema.json` | `Crosswalk` |
 | `access-grants.schema.json` | `AccessGrants` |
 | `settings.schema.json` | `Settings` |
+| `service-listener-failure.schema.json` | `ServiceListenerFailure` |
 | `report.schema.json` | `SupportDiagnostic`, on the `data` payload; the CloudEvents envelope has none |
 
 `cli-output.schema.json` and `endpoint.schema.json` give each message its own `kind` and share the `apiVersion`.

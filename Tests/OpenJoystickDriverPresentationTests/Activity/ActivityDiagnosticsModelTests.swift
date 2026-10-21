@@ -77,7 +77,8 @@ struct ActivityDiagnosticsModelTests {
       availability: .stopped,
       status: nil,
       virtualDiagnostics: nil,
-      frameTimings: nil
+      frameTimings: nil,
+      listenerFailure: .absent
     )
     let checks = DiagnosticsService.checks(
       snapshot: snapshot,

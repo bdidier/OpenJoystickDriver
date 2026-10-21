@@ -128,6 +128,8 @@ package enum LocalServiceRPCError: Error, Equatable, LocalizedError, Sendable {
   case peerRejected
   case remote(String)
   case serviceClosedConnection
+  /// The service is stopping, so the server cannot start again.
+  case stopping
   case timeout
 
   package var errorDescription: String? {
@@ -141,6 +143,7 @@ package enum LocalServiceRPCError: Error, Equatable, LocalizedError, Sendable {
         + "/Applications/OpenJoystickDriver.app, or install and relaunch a matching signed build."
     case .remote(let message): return message
     case .serviceClosedConnection: return "The main application closed the connection."
+    case .stopping: return "The main application is stopping."
     case .timeout: return "Main application RPC timed out."
     }
   }

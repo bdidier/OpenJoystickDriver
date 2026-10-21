@@ -1324,6 +1324,7 @@
 "error.E2032" = "Un token con origini non può avere l’ambito control, perché una pagina non deve mai pilotare un gamepad virtuale. Concedi control a un token senza origini.";
 "error.E2033" = "Il programma non può essere avviato. Controlla che il suo percorso indichi un file eseguibile o un'app e che tu possa eseguirlo.";
 "error.E2034" = "Il servizio non accetta più richieste. Chiudi OpenJoystickDriver, riaprilo e riprova.";
+"error.E2035" = "Il file che registra perché l’ascolto delle richieste si è fermato non è utilizzabile. Elimina il file, poi riapri OpenJoystickDriver.";
 "cli.record.usb_not_claimed" = "La famiglia usa USB grezzo e l’estensione USB non può acquisire questo controller, perché il suo elenco di prodotti è firmato da Apple. OJD lo raggiunge solo tramite accesso USB diretto, quando macOS lo consente.";
 "cli.record.usb_only_switch2" = "Solo USB: aggiungi bluetoothLE.vibrationCharacteristic a questo record Switch 2 per collegare il controller tramite Bluetooth LE.";
 "cli.record.validate.abstract" = "Controlla un record del controller senza installarlo.";
@@ -1986,3 +1987,26 @@
 "controllers.disconnectWireless.failure.missingAddress" = "L’indirizzo Bluetooth del controller è sconosciuto";
 "controllers.disconnectWireless.failure.disconnectFailed" = "Il Bluetooth non ha scollegato il controller";
 "controllers.disconnectWireless.failure.timedOut" = "Scollegamento scaduto";
+
+/* Status line of a service that cannot be reached because its request listener stopped. %1$@ is the error code, %2$@ its explanation, %3$@ the error number of the failed call, %4$@ the time it stopped. */
+"status.listenerFailure.detail" = "%1$@: %2$@ (numero di errore %3$@, %4$@)";
+/* Reason the listener failure file cannot be used: its size exceeds what the service writes. Fills the reason in the error E2035 message. */
+"status.listenerFailure.tooLarge" = "il file è troppo grande";
+/* Row label in the ojd status table that gives why the stopped service's request listener stopped. */
+"cli.status.listenerFailure.label" = "Ascolto delle richieste";
+/* Label of the button in the problem banner that starts the service's stopped request listener again. */
+"status.listenerFailure.restart" = "Riavvia l’ascolto";
+/* Status line when restarting the request listener failed. %@ is the error number of the failed call. */
+"status.listenerFailure.restartFailed" = "L’ascolto delle richieste non è ripartito (numero di errore %@). Chiudi OpenJoystickDriver e riaprilo.";
+/* Status line of a service that is not running when its last request listener stopped with an error. %@ is the error code with its explanation, the error number and the time. */
+"status.listenerFailure.earlier" = "Il servizio non è in esecuzione. Il suo ultimo ascolto delle richieste si è fermato: %@";
+/* Status line when the request listener cannot be restarted because the service is stopping or has not started. */
+"status.listenerFailure.restartUnavailable" = "Il servizio si sta arrestando o non è ancora avviato, quindi l’ascolto delle richieste non può ripartire.";
+/* Status line when restarting the request listener failed for a reason that is not an error number. %@ is the reason. */
+"status.listenerFailure.restartFailedReason" = "L’ascolto delle richieste non è ripartito: %@. Chiudi OpenJoystickDriver e riaprilo.";
+/* Reason the listener failure file cannot be used: it is not a regular file. Fills the reason in the error E2035 message. */
+"status.listenerFailure.notRegularFile" = "il file non è un file normale";
+/* Reason the listener failure file cannot be used: another user owns it, so ojd must run as that user. Fills the reason in the error E2035 message. */
+"status.listenerFailure.otherUser" = "il record appartiene a un altro utente; esegui ojd come quell’utente";
+/* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
+"status.listenerFailure.processCheckFailed" = "impossibile verificare se il processo del servizio è in esecuzione: %1$@ (numero di errore %2$@)";

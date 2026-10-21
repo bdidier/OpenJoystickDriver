@@ -82,7 +82,7 @@ For contributors: an `ojd` built from the repository hands each command to the i
 
 Most commands send requests to the OpenJoystickDriver service, which runs inside the app. No command starts the service by itself. Start it with `ojd service start`, and stop it with `ojd service stop`.
 
-A command that needs the service exits with code 69 when the service is not running. `ojd status` works without the service and reports it as stopped.
+A command that needs the service exits with code 69 when the service is not running. `ojd status` works without the service and reports it as stopped. It exits with 69 (`E2034`) while the service runs with a stopped request listener, and with 1 (`E2035`) when the record of that cannot be used; see [status](Command-Reference.md#status).
 
 ## Configuration
 

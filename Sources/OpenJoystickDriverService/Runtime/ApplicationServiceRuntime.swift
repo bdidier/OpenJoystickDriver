@@ -70,6 +70,9 @@ package final class ApplicationServiceRuntime {
     self.remappingProfileLibrary = remappingProfileLibrary
   }
 
+  /// Whether the request listener runs, and how to start it again; the app shows its failure.
+  package var listenerState: ServiceListenerState { applicationServiceServer.listenerState }
+
   /// The service state that the app's Shortcuts actions read.
   package var automationService: any AutomationService { applicationServiceServer }
 

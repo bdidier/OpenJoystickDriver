@@ -31,7 +31,8 @@ struct MainWindowProblemTests {
         permissions: permissions(.granted),
         status: status(inputRead: .granted),
         driver: .active,
-        liveUpdatesFallbackReason: nil
+        liveUpdatesFallbackReason: nil,
+        listenerFailure: nil
       ).isEmpty
     )
     #expect(
@@ -39,7 +40,8 @@ struct MainWindowProblemTests {
         permissions: .loading,
         status: .loading,
         driver: .checking,
-        liveUpdatesFallbackReason: nil
+        liveUpdatesFallbackReason: nil,
+        listenerFailure: nil
       ).isEmpty
     )
   }
@@ -61,7 +63,8 @@ struct MainWindowProblemTests {
         permissions: reading,
         status: payload,
         driver: .active,
-        liveUpdatesFallbackReason: nil
+        liveUpdatesFallbackReason: nil,
+        listenerFailure: nil
       )
       #expect(problems.contains(.accessMissing) == isMissing, "\(reading)")
     }
@@ -70,7 +73,8 @@ struct MainWindowProblemTests {
         permissions: permissions(.granted),
         status: status(inputRead: .denied),
         driver: .active,
-        liveUpdatesFallbackReason: nil
+        liveUpdatesFallbackReason: nil,
+        listenerFailure: nil
       ).contains(.accessMissing)
     )
   }
@@ -82,7 +86,8 @@ struct MainWindowProblemTests {
         permissions: .unavailable,
         status: .unavailable("down"),
         driver: .awaitingApproval,
-        liveUpdatesFallbackReason: nil
+        liveUpdatesFallbackReason: nil,
+        listenerFailure: nil
       )
         == [.serviceUnavailable("down"), .driver(.awaitingApproval)]
     )
@@ -91,7 +96,8 @@ struct MainWindowProblemTests {
         permissions: permissions(.denied),
         status: status(inputRead: .denied),
         driver: .failed,
-        liveUpdatesFallbackReason: nil
+        liveUpdatesFallbackReason: nil,
+        listenerFailure: nil
       )
         == [.driver(.failed), .accessMissing]
     )
@@ -121,7 +127,8 @@ struct MainWindowProblemTests {
       permissions: permissions(.granted),
       status: status(inputRead: .granted),
       driver: .active,
-      liveUpdatesFallbackReason: .timeout
+      liveUpdatesFallbackReason: .timeout,
+      listenerFailure: nil
     )
     #expect(problems == [.liveUpdatesPolling(.timeout)])
     #expect(problems.first?.isFailure == false)

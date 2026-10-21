@@ -105,7 +105,8 @@ struct SoakTestModelTests {
       availability: availability,
       status: nil,
       virtualDiagnostics: nil,
-      frameTimings: nil
+      frameTimings: nil,
+      listenerFailure: .absent
     )
   }
 

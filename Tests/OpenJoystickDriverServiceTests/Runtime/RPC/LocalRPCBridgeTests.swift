@@ -211,6 +211,32 @@ struct LocalRPCBridgeTests {
     "Unknown RPC method: \(name)"
   }
 
+  @Test
+  func aListenerRestartAfterStopBeginsRefusesAsStopping() async throws {
+    let socketPath = "/tmp/com.openjoystickdriver.test.\(UUID().uuidString).rpc"
+    try await withServer { server in
+      let listener = LocalServiceRPCServer(
+        socketPath: socketPath,
+        authentication: { _ in true },
+        handler: { _, completion in
+          completion(LocalServiceRPCResponse(result: nil, error: nil))
+        }
+      )
+      server.rpcServerLock.withLock { server.rpcServer = listener }
+      try listener.start()
+      defer { listener.stop() }
+
+      // While the service runs, a listener that already runs is reported as such.
+      #expect(throws: LocalServiceRPCError.alreadyRunning) {
+        try server.restartListener(of: listener)
+      }
+      await server.stop()
+      #expect(throws: LocalServiceRPCError.stopping) {
+        try server.restartListener(of: listener)
+      }
+    }
+  }
+
   private func handle(
     _ server: ApplicationServiceServer,
     method: String,

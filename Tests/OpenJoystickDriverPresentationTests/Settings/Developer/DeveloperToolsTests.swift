@@ -35,7 +35,8 @@ struct DeveloperToolsTests {
             availability: .running,
             status: nil,
             virtualDiagnostics: nil,
-            frameTimings: nil
+            frameTimings: nil,
+            listenerFailure: .absent
           )
         },
         processIdentifier: { 4_242 },

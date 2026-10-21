@@ -12,7 +12,8 @@ struct ActivityCheckKindTests {
       availability: .stopped,
       status: nil,
       virtualDiagnostics: nil,
-      frameTimings: nil
+      frameTimings: nil,
+      listenerFailure: .absent
     )
     return Set(
       DiagnosticsService.checks(

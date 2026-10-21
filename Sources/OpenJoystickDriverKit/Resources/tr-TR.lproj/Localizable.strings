@@ -1324,6 +1324,7 @@
 "error.E2032" = "Kaynakları olan bir belirteç control kapsamına sahip olamaz, çünkü bir sayfa asla sanal bir oyun kumandasını sürmemelidir. control kapsamını kaynağı olmayan bir belirtece verin.";
 "error.E2033" = "Program başlatılamadı. Yolunun yürütülebilir bir dosyayı veya uygulamayı gösterdiğini ve çalıştırma izniniz olduğunu kontrol edin.";
 "error.E2034" = "Servis istekleri kabul etmeyi durdurdu. OpenJoystickDriver’ı kapatıp yeniden açın, sonra yeniden deneyin.";
+"error.E2035" = "İstek dinleyicisinin neden durduğunu kaydeden dosya kullanılamıyor. Dosyayı silin, sonra OpenJoystickDriver’ı yeniden açın.";
 "cli.record.usb_not_claimed" = "Bu aile ham USB kullanır ve ürün listesi Apple tarafından imzalandığı için USB uzantısı bu kontrolcüyü sahiplenemez. OJD ona yalnızca macOS izin verdiğinde doğrudan USB erişimiyle ulaşır.";
 "cli.record.usb_only_switch2" = "Yalnızca USB: Kontrolcüyü Bluetooth LE üzerinden bağlamak için bu Switch 2 kaydına bluetoothLE.vibrationCharacteristic ekleyin.";
 "cli.record.validate.abstract" = "Bir kontrolcü kaydını yüklemeden denetler.";
@@ -1985,3 +1986,26 @@
 "controllers.disconnectWireless.failure.missingAddress" = "Kontrolcünün Bluetooth adresi bilinmiyor";
 "controllers.disconnectWireless.failure.disconnectFailed" = "Bluetooth kontrolcünün bağlantısını kesmedi";
 "controllers.disconnectWireless.failure.timedOut" = "Bağlantıyı kesme zaman aşımına uğradı";
+
+/* Status line of a service that cannot be reached because its request listener stopped. %1$@ is the error code, %2$@ its explanation, %3$@ the error number of the failed call, %4$@ the time it stopped. */
+"status.listenerFailure.detail" = "%1$@: %2$@ (hata numarası %3$@, %4$@)";
+/* Reason the listener failure file cannot be used: its size exceeds what the service writes. Fills the reason in the error E2035 message. */
+"status.listenerFailure.tooLarge" = "dosya çok büyük";
+/* Row label in the ojd status table that gives why the stopped service's request listener stopped. */
+"cli.status.listenerFailure.label" = "İstek dinleyicisi";
+/* Label of the button in the problem banner that starts the service's stopped request listener again. */
+"status.listenerFailure.restart" = "Dinleyiciyi yeniden başlat";
+/* Status line when restarting the request listener failed. %@ is the error number of the failed call. */
+"status.listenerFailure.restartFailed" = "İstek dinleyicisi yeniden başlatılamadı (hata numarası %@). OpenJoystickDriver’ı kapatıp yeniden açın.";
+/* Status line of a service that is not running when its last request listener stopped with an error. %@ is the error code with its explanation, the error number and the time. */
+"status.listenerFailure.earlier" = "Servis çalışmıyor. Son istek dinleyicisi durdu: %@";
+/* Status line when the request listener cannot be restarted because the service is stopping or has not started. */
+"status.listenerFailure.restartUnavailable" = "Servis duruyor veya henüz başlamadı, bu yüzden istek dinleyicisi yeniden başlatılamaz.";
+/* Status line when restarting the request listener failed for a reason that is not an error number. %@ is the reason. */
+"status.listenerFailure.restartFailedReason" = "İstek dinleyicisi yeniden başlatılamadı: %@. OpenJoystickDriver’ı kapatıp yeniden açın.";
+/* Reason the listener failure file cannot be used: it is not a regular file. Fills the reason in the error E2035 message. */
+"status.listenerFailure.notRegularFile" = "dosya normal bir dosya değil";
+/* Reason the listener failure file cannot be used: another user owns it, so ojd must run as that user. Fills the reason in the error E2035 message. */
+"status.listenerFailure.otherUser" = "kayıt başka bir kullanıcıya ait; ojd’yi o kullanıcı olarak çalıştırın";
+/* Reason the listener failure file cannot be used: the system would not say whether the process that wrote it runs. %1$@ is the system's reason, %2$@ the error number. Fills the reason in the error E2035 message. */
+"status.listenerFailure.processCheckFailed" = "servis işleminin çalışıp çalışmadığı denetlenemedi: %1$@ (hata numarası %2$@)";

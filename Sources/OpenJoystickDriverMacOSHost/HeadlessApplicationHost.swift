@@ -55,7 +55,8 @@ final class HeadlessApplicationHost {
       presentation = MenuBarCoordinator(
         stopRuntime: { [runtime] in await runtime.stop() },
         gateway: ApplicationServiceClientGateway(),
-        systemExtensionSetup: DefaultSystemExtensionSetupClient()
+        systemExtensionSetup: DefaultSystemExtensionSetupClient(),
+        listenerState: runtime.listenerState
       )
       guard let presentation else { dispatchMain() }
       presentation.run()
