@@ -268,10 +268,16 @@ public final class ProtocolDriverRegistry: Sendable {
         case .joyConRight: .rightJoyCon
         case .pro, nil: .pro
         }
+      let link: Switch2Link
+      switch variant {
+      case .usb: link = .usb
+      case .bluetoothLE: link = .bluetoothLE
+      default: return .failure(.unsupportedProtocolVariant)
+      }
       return .success(
         Switch2Driver(
           layout: layout,
-          link: variant == .usb ? .usb : .bluetoothLE,
+          link: link,
           tuning: tuning,
           usbStartupWrites: record.usbStartupWrites
         )

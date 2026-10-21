@@ -100,7 +100,7 @@ extension ProtocolClassifierTests {
   }
 
   @Test
-  func protocolDescriptionSchemaAdmitsExactlyEachFamilysVariants() throws {
+  func protocolDescriptionSchemaAdmitsEveryVariantName() throws {
     let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
       .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
       .deletingLastPathComponent()
@@ -114,29 +114,6 @@ extension ProtocolClassifierTests {
     let signature = definitions?["interfaceSignature"] as? [String: Any]
     let variant = (signature?["properties"] as? [String: Any])?["variant"] as? [String: Any]
     #expect(variant?["enum"] as? [String] == PhysicalProtocolVariantID.allCases.map(\.rawValue))
-
-    var rules: [String: Any] = [:]
-    for rule in try #require(schema["allOf"] as? [[String: Any]]) {
-      let condition = (rule["if"] as? [String: Any])?["properties"] as? [String: Any]
-      // The generic rules (record sections, raw USB) name no family.
-      guard let family = (condition?["family"] as? [String: Any])?["const"] as? String else {
-        continue
-      }
-      let then = (rule["then"] as? [String: Any])?["properties"] as? [String: Any]
-      rules[family] = then?["interfaceSignatures"]
-    }
-    #expect(Set(rules.keys) == Set(PhysicalProtocolID.allCases.map(\.rawValue)))
-    for protocolID in PhysicalProtocolID.allCases {
-      if protocolID.variants.isEmpty {
-        // A family with no variants has no signatures to list: the schema forbids the field.
-        #expect(rules[protocolID.rawValue] as? Bool == false, "\(protocolID.rawValue)")
-      } else {
-        let signatures = rules[protocolID.rawValue] as? [String: Any]
-        let items = (signatures?["items"] as? [String: Any])?["properties"] as? [String: Any]
-        let allowed = (items?["variant"] as? [String: Any])?["enum"] as? [String]
-        #expect(allowed == protocolID.variants.map(\.rawValue), "\(protocolID.rawValue)")
-      }
-    }
   }
 
   // MARK: - Helpers
@@ -155,6 +132,7 @@ extension ProtocolClassifierTests {
         "apiVersion": "\(apiVersion)",
         "kind": "\(kind)",
         "family": "\(family)",
+        \(PhysicalProtocolID(rawValue: family).map(ProtocolDescriptionFixture.variantMembers) ?? "")
         "endpoints": {"in": 130, "out": 2},
         "defaults": {"session": {"handshakeAttempts": 3, "announceResendLimit": 8}},
         "interfaceSignatures": [

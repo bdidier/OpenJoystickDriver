@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://xsyetopz.github.io/OpenJoystickDriver/schemas/v1alpha1/protocol-description.schema.json",
-  "$comment": "Each family's variants are PhysicalProtocolID.variants in Swift; a family with none has no interface signatures. The parameter names of each family are those its driver declares in ProtocolParameters. The family facts a driver reads live here and nowhere in code: its default endpoints, whether it is reached through raw USB (for every variant, or only the listed ones), the record sections whose layouts it reads, the tuning keys it reads beyond stickDeadzone (none for a raw-USB variant), its button labels, and what OJD still sends when macOS serves the controller. defaults holds the sections a record layers over, limited to what the family reads: input applies to HIDReportLayout and XboxXID as a byte layout and to HIDDescriptor as a HID usage map, a rumble template, flat or per variant, needs the matching recordSections entry, HID startup writes need a family that is not always raw USB, raw-USB startup writes (bytes, endpoint, timeoutMilliseconds, delayMilliseconds, sessionByte, toleratesRejection) carry the packets a raw-USB driver sends, each startup write is limited by variants and by a when rule on an enumeration parameter the description declares and whose values it lists, which a schema cannot say and the validators check, and each defaults.tuning key must be stickDeadzone or in tuningKeys, which a schema cannot say and the validators check.",
+  "$comment": "Each family's variants and whether records store the variant are its `variants` and `storesVariant`, the one source Swift and the Python tools read; its interface signatures, rawUSB list and defaults.variants name only those variants, and a family with none has no interface signatures, which a schema cannot say and the validators check. The parameter names of each family are those its driver declares in ProtocolParameters. The family facts a driver reads live here and nowhere in code: its default endpoints, whether it is reached through raw USB (for every variant, or only the listed ones), the record sections whose layouts it reads, the tuning keys it reads beyond stickDeadzone (none for a raw-USB variant), its button labels, and what OJD still sends when macOS serves the controller. defaults holds the sections a record layers over, limited to what the family reads: input applies to HIDReportLayout and XboxXID as a byte layout and to HIDDescriptor as a HID usage map, a rumble template, flat or per variant, needs the matching recordSections entry, HID startup writes need a family that is not always raw USB, raw-USB startup writes (bytes, endpoint, timeoutMilliseconds, delayMilliseconds, sessionByte, toleratesRejection) carry the packets a raw-USB driver sends, each startup write is limited by variants and by a when rule on an enumeration parameter the description declares and whose values it lists, which a schema cannot say and the validators check, and each defaults.tuning key must be stickDeadzone or in tuningKeys, which a schema cannot say and the validators check.",
   "type": "object",
   "additionalProperties": false,
   "required": ["apiVersion", "kind", "family", "endpoints"],
@@ -14,6 +14,19 @@
     },
     "family": {
       "$ref": "controller.schema.json#/$defs/protocol/properties/family"
+    },
+    "variants": {
+      "description": "The implemented variants of the family; absent when it has one contract. Interface signatures, rawUSB and defaults.variants name only these.",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/interfaceSignature/properties/variant"
+      }
+    },
+    "storesVariant": {
+      "description": "Whether catalog records store the variant; otherwise classification derives it from the observed transport.",
+      "const": true
     },
     "endpoints": {
       "$ref": "controller.schema.json#/$defs/usbOverride/properties/endpoints"
@@ -128,7 +141,6 @@
           },
           "defaults": {
             "properties": {
-              "variants": false,
               "input": {
                 "$ref": "#/$defs/hidDescriptorInput"
               },
@@ -146,7 +158,6 @@
               }
             }
           },
-          "interfaceSignatures": false,
           "parameters": false
         }
       }
@@ -171,7 +182,6 @@
           },
           "defaults": {
             "properties": {
-              "variants": false,
               "input": {
                 "$ref": "controller.schema.json#/$defs/input"
               },
@@ -184,7 +194,6 @@
               }
             }
           },
-          "interfaceSignatures": false,
           "parameters": false
         }
       }
@@ -200,25 +209,8 @@
       },
       "then": {
         "properties": {
-          "rawUSB": {
-            "anyOf": [
-              {
-                "const": true
-              },
-              {
-                "items": {
-                  "enum": ["Gamepad"]
-                }
-              }
-            ]
-          },
           "defaults": {
             "properties": {
-              "variants": {
-                "propertyNames": {
-                  "enum": ["Gamepad"]
-                }
-              },
               "input": {
                 "$ref": "controller.schema.json#/$defs/input"
               },
@@ -234,15 +226,6 @@
                   "hidStartupRecoveryRounds": false,
                   "hidStartupIntervalMs": false,
                   "minimumHIDOutputIntervalMs": false
-                }
-              }
-            }
-          },
-          "interfaceSignatures": {
-            "items": {
-              "properties": {
-                "variant": {
-                  "enum": ["Gamepad"]
                 }
               }
             }
@@ -263,37 +246,11 @@
       "then": {
         "required": ["defaults"],
         "properties": {
-          "rawUSB": {
-            "anyOf": [
-              {
-                "const": true
-              },
-              {
-                "items": {
-                  "enum": ["Wired", "Receiver"]
-                }
-              }
-            ]
-          },
           "defaults": {
             "required": ["session"],
             "properties": {
               "session": {
                 "required": ["receiverInquiryResendLimit"]
-              },
-              "variants": {
-                "propertyNames": {
-                  "enum": ["Wired", "Receiver"]
-                }
-              }
-            }
-          },
-          "interfaceSignatures": {
-            "items": {
-              "properties": {
-                "variant": {
-                  "enum": ["Wired", "Receiver"]
-                }
               }
             }
           },
@@ -313,37 +270,11 @@
       "then": {
         "required": ["defaults"],
         "properties": {
-          "rawUSB": {
-            "anyOf": [
-              {
-                "const": true
-              },
-              {
-                "items": {
-                  "enum": ["USB"]
-                }
-              }
-            ]
-          },
           "defaults": {
             "required": ["session"],
             "properties": {
               "session": {
                 "required": ["handshakeAttempts", "announceResendLimit"]
-              },
-              "variants": {
-                "propertyNames": {
-                  "enum": ["USB"]
-                }
-              }
-            }
-          },
-          "interfaceSignatures": {
-            "items": {
-              "properties": {
-                "variant": {
-                  "enum": ["USB"]
-                }
               }
             }
           },
@@ -366,36 +297,6 @@
       },
       "then": {
         "properties": {
-          "rawUSB": {
-            "anyOf": [
-              {
-                "const": true
-              },
-              {
-                "items": {
-                  "enum": ["USB", "BluetoothClassic"]
-                }
-              }
-            ]
-          },
-          "defaults": {
-            "properties": {
-              "variants": {
-                "propertyNames": {
-                  "enum": ["USB", "BluetoothClassic"]
-                }
-              }
-            }
-          },
-          "interfaceSignatures": {
-            "items": {
-              "properties": {
-                "variant": {
-                  "enum": ["USB", "BluetoothClassic"]
-                }
-              }
-            }
-          },
           "parameters": false
         }
       }
@@ -411,36 +312,6 @@
       },
       "then": {
         "properties": {
-          "rawUSB": {
-            "anyOf": [
-              {
-                "const": true
-              },
-              {
-                "items": {
-                  "enum": ["USB", "BluetoothClassic"]
-                }
-              }
-            ]
-          },
-          "defaults": {
-            "properties": {
-              "variants": {
-                "propertyNames": {
-                  "enum": ["USB", "BluetoothClassic"]
-                }
-              }
-            }
-          },
-          "interfaceSignatures": {
-            "items": {
-              "properties": {
-                "variant": {
-                  "enum": ["USB", "BluetoothClassic"]
-                }
-              }
-            }
-          },
           "parameters": {
             "propertyNames": {
               "enum": ["motionCalibration", "role", "motionScale"]
@@ -460,36 +331,6 @@
       },
       "then": {
         "properties": {
-          "rawUSB": {
-            "anyOf": [
-              {
-                "const": true
-              },
-              {
-                "items": {
-                  "enum": ["USB", "BluetoothClassic"]
-                }
-              }
-            ]
-          },
-          "defaults": {
-            "properties": {
-              "variants": {
-                "propertyNames": {
-                  "enum": ["USB", "BluetoothClassic"]
-                }
-              }
-            }
-          },
-          "interfaceSignatures": {
-            "items": {
-              "properties": {
-                "variant": {
-                  "enum": ["USB", "BluetoothClassic"]
-                }
-              }
-            }
-          },
           "parameters": {
             "propertyNames": {
               "enum": [
@@ -516,37 +357,11 @@
       "then": {
         "required": ["defaults"],
         "properties": {
-          "rawUSB": {
-            "anyOf": [
-              {
-                "const": true
-              },
-              {
-                "items": {
-                  "enum": ["USB", "BluetoothClassic"]
-                }
-              }
-            ]
-          },
           "defaults": {
             "required": ["session"],
             "properties": {
               "session": {
                 "required": ["subcommands"]
-              },
-              "variants": {
-                "propertyNames": {
-                  "enum": ["USB", "BluetoothClassic"]
-                }
-              }
-            }
-          },
-          "interfaceSignatures": {
-            "items": {
-              "properties": {
-                "variant": {
-                  "enum": ["USB", "BluetoothClassic"]
-                }
               }
             }
           },
@@ -570,37 +385,11 @@
       "then": {
         "required": ["defaults"],
         "properties": {
-          "rawUSB": {
-            "anyOf": [
-              {
-                "const": true
-              },
-              {
-                "items": {
-                  "enum": ["USB", "BluetoothLE"]
-                }
-              }
-            ]
-          },
           "defaults": {
             "required": ["session"],
             "properties": {
               "session": {
                 "required": ["commandChannel", "trailingStopPackets"]
-              },
-              "variants": {
-                "propertyNames": {
-                  "enum": ["USB", "BluetoothLE"]
-                }
-              }
-            }
-          },
-          "interfaceSignatures": {
-            "items": {
-              "properties": {
-                "variant": {
-                  "enum": ["USB", "BluetoothLE"]
-                }
               }
             }
           },
@@ -623,36 +412,6 @@
       },
       "then": {
         "properties": {
-          "rawUSB": {
-            "anyOf": [
-              {
-                "const": true
-              },
-              {
-                "items": {
-                  "enum": ["USB", "BluetoothClassic"]
-                }
-              }
-            ]
-          },
-          "defaults": {
-            "properties": {
-              "variants": {
-                "propertyNames": {
-                  "enum": ["USB", "BluetoothClassic"]
-                }
-              }
-            }
-          },
-          "interfaceSignatures": {
-            "items": {
-              "properties": {
-                "variant": {
-                  "enum": ["USB", "BluetoothClassic"]
-                }
-              }
-            }
-          },
           "parameters": false
         }
       }
@@ -669,18 +428,6 @@
       "then": {
         "required": ["defaults"],
         "properties": {
-          "rawUSB": {
-            "anyOf": [
-              {
-                "const": true
-              },
-              {
-                "items": {
-                  "enum": ["Wired", "Dongle", "BluetoothLE"]
-                }
-              }
-            ]
-          },
           "defaults": {
             "required": ["session"],
             "properties": {
@@ -705,20 +452,6 @@
                       }
                     }
                   }
-                }
-              },
-              "variants": {
-                "propertyNames": {
-                  "enum": ["Wired", "Dongle", "BluetoothLE"]
-                }
-              }
-            }
-          },
-          "interfaceSignatures": {
-            "items": {
-              "properties": {
-                "variant": {
-                  "enum": ["Wired", "Dongle", "BluetoothLE"]
                 }
               }
             }
@@ -739,18 +472,6 @@
       "then": {
         "required": ["defaults"],
         "properties": {
-          "rawUSB": {
-            "anyOf": [
-              {
-                "const": true
-              },
-              {
-                "items": {
-                  "enum": ["Wired", "Dongle", "BluetoothLE"]
-                }
-              }
-            ]
-          },
           "defaults": {
             "required": ["session"],
             "properties": {
@@ -771,20 +492,6 @@
                       }
                     }
                   }
-                }
-              },
-              "variants": {
-                "propertyNames": {
-                  "enum": ["Wired", "Dongle", "BluetoothLE"]
-                }
-              }
-            }
-          },
-          "interfaceSignatures": {
-            "items": {
-              "properties": {
-                "variant": {
-                  "enum": ["Wired", "Dongle", "BluetoothLE"]
                 }
               }
             }
@@ -833,11 +540,9 @@
                     }
                   }
                 }
-              },
-              "variants": false
+              }
             }
           },
-          "interfaceSignatures": false,
           "parameters": false
         }
       }
@@ -860,12 +565,6 @@
               }
             ]
           },
-          "defaults": {
-            "properties": {
-              "variants": false
-            }
-          },
-          "interfaceSignatures": false,
           "parameters": false
         }
       }
@@ -888,12 +587,6 @@
               }
             ]
           },
-          "defaults": {
-            "properties": {
-              "variants": false
-            }
-          },
-          "interfaceSignatures": false,
           "parameters": {
             "propertyNames": {
               "enum": ["hatSource"]
@@ -913,36 +606,6 @@
       },
       "then": {
         "properties": {
-          "rawUSB": {
-            "anyOf": [
-              {
-                "const": true
-              },
-              {
-                "items": {
-                  "enum": ["USB", "EnhancedHID"]
-                }
-              }
-            ]
-          },
-          "defaults": {
-            "properties": {
-              "variants": {
-                "propertyNames": {
-                  "enum": ["USB", "EnhancedHID"]
-                }
-              }
-            }
-          },
-          "interfaceSignatures": {
-            "items": {
-              "properties": {
-                "variant": {
-                  "enum": ["USB", "EnhancedHID"]
-                }
-              }
-            }
-          },
           "parameters": {
             "propertyNames": {
               "enum": ["innerGrips", "lightingMemory"]
@@ -969,12 +632,6 @@
               }
             ]
           },
-          "defaults": {
-            "properties": {
-              "variants": false
-            }
-          },
-          "interfaceSignatures": false,
           "parameters": {
             "propertyNames": {
               "enum": ["reportRevision"]
@@ -2116,5 +1773,8 @@
         }
       }
     }
+  },
+  "dependentRequired": {
+    "storesVariant": ["variants"]
   }
 }

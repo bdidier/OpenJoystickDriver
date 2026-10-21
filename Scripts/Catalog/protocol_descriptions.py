@@ -87,15 +87,53 @@ def record_capabilities_permit(
     return present_ok and (not rumble_absent or rules.get("rumbleAbsent", False))
 
 
-def semantic_violations(
-    description: dict[str, Any], variants: list[str]
-) -> list[tuple[str, str]]:
+def family_variants(description: dict[str, Any]) -> list[str]:
+    """The variants of the family, as its description lists them; none when it has one contract.
+
+    `ProtocolDescription.variants` in Swift is the same list.
+    """
+    return list(description.get("variants", ()))
+
+
+def stores_variant(description: dict[str, Any]) -> bool:
+    """Whether catalog records store the family's variant.
+
+    `ProtocolDescription.storesVariant` in Swift is the same fact.
+    """
+    return description.get("storesVariant", False)
+
+
+def stored_variant_problem(family: str, variant: str | None) -> str | None:
+    """Why `variant` is not what a record of `family` stores, or None.
+
+    A record stores a variant exactly when the family's description says records do, and it is
+    one of the family's `variants`.
+    """
+    description = bundled().get(family)
+    if description is None:
+        return f"{family} has no description"
+    if stores_variant(description) != (variant is not None) or (
+        variant is not None and variant not in family_variants(description)
+    ):
+        return f"variant must be a stored variant of family {family}"
+    return None
+
+
+def semantic_violations(description: dict[str, Any]) -> list[tuple[str, str]]:
     """What a schema cannot say about one description, as `ProtocolDescription` rejects in Swift.
 
-    `variants` are the family's variants, which the schema holds per family. Each violation
-    is the error code and the message.
+    The family's variants are the description's own `variants`. Each violation is the error code
+    and the message.
     """
-    found: list[tuple[str, str]] = []
+    variants = family_variants(description)
+    found: list[tuple[str, str]] = [
+        (
+            "E5004",
+            f"interfaceSignatures names {signature['variant']}, which the family does not have",
+        )
+        for signature in description.get("interfaceSignatures", ())
+        if signature["variant"] not in variants
+    ]
     raw = description.get("rawUSB")
     if isinstance(raw, list):
         found += [

@@ -2,6 +2,8 @@
   "apiVersion": "openjoystickdriver/v1alpha1",
   "kind": "ProtocolDescription",
   "family": "XboxXID",
+  "variants": ["Gamepad"],
+  "storesVariant": true,
   "endpoints": {
     "in": 129,
     "out": 2

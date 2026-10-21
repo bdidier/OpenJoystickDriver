@@ -233,6 +233,17 @@ def validate_transport_sections(path: pathlib.Path, record: dict[str, Any]) -> N
         )
 
 
+def validate_protocol_variants(path: pathlib.Path, record: dict[str, Any]) -> None:
+    """Every mode stores a variant exactly when its family's description says records do, and it
+    is one of the family's `variants`, as `ProtocolInfo` in Swift."""
+    for mode in record["modes"]:
+        protocol = mode["protocol"]
+        problem = protocol_descriptions.stored_variant_problem(
+            protocol["family"], protocol.get("variant")
+        )
+        require(problem is None, f"{path}: {problem}")
+
+
 def validate_tuning_scope(path: pathlib.Path, record: dict[str, Any]) -> None:
     """Each `tuning` key is read by the driver of every mode, as `validateTuning` in Swift."""
     for key in record.get("tuning", {}):
@@ -260,6 +271,7 @@ def validate_modes(path: pathlib.Path, record: dict[str, Any]) -> None:
         f"{path}: modes need exactly one mode with the id default: {identifiers}",
     )
     has_layout = "report" in record.get("input", {})
+    validate_protocol_variants(path, record)
     validate_transport_sections(path, record)
     validate_tuning_scope(path, record)
     for mode in modes:
@@ -333,16 +345,12 @@ def validator() -> Any:
     return Draft202012Validator(schema, registry=schema_registry())
 
 
-def validate_record(
-    path: pathlib.Path,
-    *,
-    enforce_path: bool = True,
-    schema_validator: Any | None = None,
-) -> tuple[int, int, str]:
-    record = load_object(path)
-    active_validator = schema_validator or validator()
+def check_record(
+    path: pathlib.Path, record: dict[str, Any], schema_validator: Any
+) -> None:
+    """Checks one record against the schema and every rule the schema cannot state."""
     try:
-        active_validator.validate(record)
+        schema_validator.validate(record)
     except JSONSchemaValidationError as error:
         location = ".".join(str(component) for component in error.absolute_path)
         suffix = f" at {location}" if location else ""
@@ -361,12 +369,23 @@ def validate_record(
         problem = usage_map_problem(usage_map)
         require(problem is None, f"{path}: hidUsageMap: {problem}")
 
-    # JSON Schema cannot express unique mode IDs, probe bytes that fit the read length, or the
-    # record-level rules each mode obeys; the runtime decoder rejects all of them too.
+    # JSON Schema cannot express unique mode IDs, probe bytes that fit the read length, the
+    # variants and tuning keys a family reads, or the record-level rules each mode obeys; the
+    # runtime decoder rejects all of them too.
     validate_modes(path, record)
 
     # JSON Schema cannot see the description's named packets either.
     validate_initialization(path, record)
+
+
+def validate_record(
+    path: pathlib.Path,
+    *,
+    enforce_path: bool = True,
+    schema_validator: Any | None = None,
+) -> tuple[int, int, str]:
+    record = load_object(path)
+    check_record(path, record, schema_validator or validator())
 
     vendor_id = record["vendorID"]
     product_id = record["productID"]

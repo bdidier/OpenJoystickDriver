@@ -12,6 +12,7 @@ import sys
 from dataclasses import dataclass
 from typing import Any
 
+from Scripts.Catalog import protocol_descriptions
 from Scripts.Catalog.catalog_rules import load_rules
 from Scripts.Catalog.schema_header import KINDS, header
 
@@ -287,6 +288,9 @@ def build_profile(
         for control in controls
     ]
 
+    problem = protocol_descriptions.stored_variant_problem(family, variant)
+    if problem is not None:
+        raise GenerationError(problem)
     protocol: dict[str, Any] = {"family": family}
     if variant is not None:
         protocol["variant"] = variant

@@ -259,17 +259,12 @@ struct ControllerRecordDocumentTests {
 
     let branches = try #require(protocolSchema["allOf"] as? [[String: Any]])
     var declaredParameters: Set<String> = []
-    var familiesWithVariants: [PhysicalProtocolID] = []
     for branch in branches {
       for name in Self.familyNames(branch) {
         guard let family = PhysicalProtocolID(rawValue: name),
           let then = branch["then"] as? [String: Any],
           let thenProperties = then["properties"] as? [String: Any]
         else { continue }
-        if let variants = Self.enumValues(thenProperties["variant"]) {
-          #expect(variants == family.variants.map(\.rawValue), "\(name)")
-          familiesWithVariants.append(family)
-        }
         if let parameters = thenProperties["parameters"] as? [String: Any] {
           let schemas = parameters["properties"] as? [String: Any] ?? [:]
           #expect(Set(schemas.keys) == ProtocolParameters.declared(by: family), "\(name)")
@@ -285,7 +280,6 @@ struct ControllerRecordDocumentTests {
         }
       }
     }
-    #expect(familiesWithVariants == PhysicalProtocolID.allCases.filter(\.storesVariant))
     #expect(declaredParameters == ProtocolParameters.names)
   }
 

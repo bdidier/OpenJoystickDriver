@@ -54,6 +54,8 @@ def xusb_description() -> dict[str, Any]:
     return {
         **header("ProtocolDescription"),
         "family": "XboxXUSB",
+        "variants": ["Wired", "Receiver"],
+        "storesVariant": True,
         "endpoints": {"in": 129, "out": 1},
         "rawUSB": True,
         "interfaceSignatures": [
@@ -65,6 +67,18 @@ def xusb_description() -> dict[str, Any]:
             }
         ],
         "defaults": {"session": dict(SESSION_LIMITS["XboxXUSB"])},
+    }
+
+
+def with_variant_facts(document: dict[str, Any]) -> dict[str, Any]:
+    """The document with its family's `variants` and `storesVariant` when it states neither, so a
+    test that varies something else need not repeat them."""
+    facts = protocol_descriptions.bundled().get(str(document.get("family")), {})
+    if "variants" in document or "storesVariant" in document:
+        return document
+    return {
+        **{key: facts[key] for key in ("variants", "storesVariant") if key in facts},
+        **document,
     }
 
 
@@ -90,6 +104,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         self.addCleanup(root_patch.stop)
 
     def check(self, document: dict[str, Any], name: str | None = None) -> None:
+        document = with_variant_facts(document)
         path = self.root / (
             name
             or f"{
@@ -208,22 +223,18 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         ]
 
     def family_variants(self) -> dict[str, list[str]]:
-        """Each family's admitted variants; the Swift tests keep these equal to `variants`."""
-        families: dict[str, list[str]] = {}
-        for rule in self.family_rules():
-            family = rule["if"]["properties"]["family"]["const"]
-            signatures = rule["then"]["properties"]["interfaceSignatures"]
-            families[family] = (
-                signatures["items"]["properties"]["variant"]["enum"]
-                if signatures is not False
-                else []
-            )
-        return families
+        """Each family's variants, as its bundled description lists them."""
+        return {
+            family: protocol_descriptions.family_variants(description)
+            for family, description in protocol_descriptions.bundled().items()
+        }
 
     def described(self, family: str, variant: str) -> dict[str, Any]:
         document = xusb_description()
         document["family"] = family
         document["interfaceSignatures"][0]["variant"] = variant
+        document.pop("variants")
+        document.pop("storesVariant")
         document.pop("defaults")
         if family == "NintendoSwitch1":
             document["defaults"] = {"session": {"subcommands": self.subcommands()}}
@@ -233,7 +244,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             document["defaults"] = {"session": dict(VALVE_SESSION)}
         return document
 
-    def test_every_family_has_a_variant_rule(self) -> None:
+    def test_every_family_lists_its_variants(self) -> None:
         families = self.family_variants()
         controller: Any = self.documents["controller.schema.json"]
         self.assertEqual(
@@ -243,16 +254,48 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         self.assertEqual(families["SonyDualShock4"], ["USB", "BluetoothClassic"])
         self.assertEqual(families["HIDDescriptor"], [])
 
-    def test_variant_lookup_fails_for_an_unknown_family(self) -> None:
-        with self.assertRaisesRegex(KeyError, "xbox.unknown"):
-            validate_schemas.family_variants(self.schema, "xbox.unknown")
+    def test_stored_variants_are_a_family_fact(self) -> None:
+        stores = {
+            family
+            for family, description in protocol_descriptions.bundled().items()
+            if protocol_descriptions.stores_variant(description)
+        }
         self.assertEqual(
-            validate_schemas.family_variants(self.schema, "HIDDescriptor"), []
+            stores,
+            {
+                "XboxXID",
+                "XboxXUSB",
+                "ValveSteamController",
+                "ValveSteamTriton",
+                "VendorGameSir",
+            },
         )
-        self.assertEqual(
-            validate_schemas.family_variants(self.schema, "SonyDualShock4"),
-            ["USB", "BluetoothClassic"],
+        self.assertIsNone(
+            protocol_descriptions.stored_variant_problem("XboxXUSB", "Wired")
         )
+        for family, variant in (
+            ("XboxXUSB", None),
+            ("XboxXUSB", "USB"),
+            ("XboxGIP", "USB"),
+            ("HIDDescriptor", "USB"),
+        ):
+            with self.subTest(family=family, variant=variant):
+                self.assertRegex(
+                    protocol_descriptions.stored_variant_problem(family, variant) or "",
+                    "stored variant",
+                )
+
+    def test_rejects_stores_variant_without_variants(self) -> None:
+        document = xusb_description()
+        document.pop("variants")
+        self.assert_rejected(document)
+
+    def test_rejects_an_unknown_or_repeated_variant_list(self) -> None:
+        for variants in (["Wired", "Wired"], ["usb"], []):
+            with self.subTest(variants=variants):
+                document = xusb_description()
+                document["variants"] = variants
+                self.assert_rejected(document)
 
     def test_each_family_accepts_only_its_own_variants(self) -> None:
         every = self.schema["$defs"]["interfaceSignature"]["properties"]["variant"][
@@ -1419,7 +1462,7 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 self.assertIn(
                     ("E5002", f"a rumble resendIntervalMilliseconds {message}"),
                     protocol_descriptions.semantic_violations(
-                        document, ["USB", "EnhancedHID"]
+                        with_variant_facts(document)
                     ),
                 )
 

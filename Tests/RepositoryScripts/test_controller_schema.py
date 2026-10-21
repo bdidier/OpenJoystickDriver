@@ -8,6 +8,21 @@ from Scripts.Catalog import validate_profiles
 from Scripts.Catalog.schema_header import header
 
 
+class RecordValidator:
+    """The schema plus every rule it cannot state, which the description-driven rules
+    (variants, tuning scope, capability deltas) need."""
+
+    def __init__(self) -> None:
+        self.schema = validate_profiles.validator()
+
+    def is_valid(self, document: dict[str, Any]) -> bool:
+        try:
+            validate_profiles.check_record(Path("record.json"), document, self.schema)
+        except validate_profiles.ValidationError:
+            return False
+        return True
+
+
 def zeros(count: int) -> str:
     return " ".join(["00"] * count)
 
@@ -46,7 +61,7 @@ def schema_clauses(node: Any) -> Any:
 
 class ControllerSchemaTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.validator = validate_profiles.validator()
+        self.validator = RecordValidator()
 
     def test_accepts_current_vocabulary(self) -> None:
         current = {
@@ -907,10 +922,10 @@ DUALSENSE_MODEL_PARAMETERS = (
 
 
 class SwiftParityTests(unittest.TestCase):
-    """Rules `ControllerRecordDocument` enforces, which the schema must state too."""
+    """Rules `ControllerRecordDocument` enforces, which the schema or `check_record` states."""
 
     def setUp(self) -> None:
-        self.validator = validate_profiles.validator()
+        self.validator = RecordValidator()
 
     def check(self, accepted: dict[str, Any], rejected: dict[str, Any]) -> None:
         for name, document in accepted.items():

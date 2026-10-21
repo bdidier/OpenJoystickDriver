@@ -16,7 +16,7 @@ import urllib.error
 import urllib.request
 from typing import Any
 
-from Scripts.Catalog import controller_patch
+from Scripts.Catalog import controller_patch, protocol_descriptions
 from Scripts.Catalog.catalog_rules import load_rules, parse_id, parse_identity
 from Scripts.Catalog.schema_header import KINDS, header
 from Scripts.Catalog.xpad_io import json_text, run_gh
@@ -104,6 +104,18 @@ def parse_defines(source: str) -> dict[str, int]:
     }
 
 
+def stores_variant(family: str) -> bool:
+    """Whether the description of `family` says records store its variant."""
+    return protocol_descriptions.stores_variant(protocol_descriptions.bundled()[family])
+
+
+def require_stored_variant(family: str, variant: str | None) -> None:
+    """Fails when `variant` is not what a record of `family` stores."""
+    problem = protocol_descriptions.stored_variant_problem(family, variant)
+    if problem is not None:
+        raise CatalogError(problem)
+
+
 def build_hid_records(sources: dict[str, str]) -> list[dict[str, Any]]:
     defines = parse_defines(sources["hid_ids"])
     records: list[dict[str, Any]] = []
@@ -133,6 +145,7 @@ def build_hid_records(sources: dict[str, str]) -> list[dict[str, Any]]:
             product_id = defines[product_macro]
         except KeyError as error:
             raise CatalogError(f"missing Linux HID ID definition: {error}") from error
+        require_stored_variant(family, variant)
         protocol: dict[str, Any] = {"family": family}
         if variant is not None:
             protocol["variant"] = variant
@@ -230,8 +243,6 @@ SWITCH_2_IDENTITIES = frozenset(
     parse_identity(text) for text in _SDL_RULES["switch2Identities"]
 )
 SWITCH_2_FAMILY = "NintendoSwitch2"
-# Families whose SDL rows take their stored variant from STEAM_VARIANTS.
-STEAM_VARIANT_FAMILIES = frozenset({"ValveSteamController", "ValveSteamTriton"})
 
 # Identities that get no record: (identity) -> (expected SDL type, skip reason). Each entry
 # must still be listed with that type at the pinned commit and must not already be catalogued.
@@ -392,10 +403,11 @@ def build_sdl_records(
                 reason if reason == INTERFACE_SIGNATURE_BUCKET else f"excluded:{reason}"
             )
             continue
-        if family in STEAM_VARIANT_FAMILIES:
+        if variant is None and stores_variant(family):
             if key not in STEAM_VARIANTS:
-                raise CatalogError(f"Steam row {key} has no STEAM_VARIANTS entry")
+                raise CatalogError(f"{family} row {key} has no STEAM_VARIANTS entry")
             variant = STEAM_VARIANTS[key]
+        require_stored_variant(family, variant)
         protocol: dict[str, Any] = {"family": family}
         if variant is not None:
             protocol["variant"] = variant

@@ -2,6 +2,7 @@
   "apiVersion": "openjoystickdriver/v1alpha1",
   "kind": "ProtocolDescription",
   "family": "XboxGIP",
+  "variants": ["USB"],
   "endpoints": {
     "in": 130,
     "out": 2

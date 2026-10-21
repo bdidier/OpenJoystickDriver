@@ -2,6 +2,8 @@
   "apiVersion": "openjoystickdriver/v1alpha1",
   "kind": "ProtocolDescription",
   "family": "ValveSteamTriton",
+  "variants": ["Wired", "Dongle", "BluetoothLE"],
+  "storesVariant": true,
   "endpoints": {
     "in": 130,
     "out": 2

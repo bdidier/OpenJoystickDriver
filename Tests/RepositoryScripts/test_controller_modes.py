@@ -663,8 +663,13 @@ class EveryModeConditionalTests(unittest.TestCase):
             **fields,
         )
 
-    def assert_rejected(self, document: dict[str, Any], message: str) -> None:
-        self.assertFalse(validate_profiles.validator().is_valid(document))
+    def assert_rejected(
+        self, document: dict[str, Any], message: str, *, by_schema: bool = True
+    ) -> None:
+        """The schema rejects the document too, unless `by_schema` is false: a rule that reads a
+        family's description is not the schema's."""
+        if by_schema:
+            self.assertFalse(validate_profiles.validator().is_valid(document))
         with self.assertRaises(validate_profiles.ValidationError) as caught:
             validate_profiles.validate_modes(Path("record.json"), document)
         self.assertIn(message, str(caught.exception))
@@ -710,6 +715,7 @@ class EveryModeConditionalTests(unittest.TestCase):
                 tuning={"inputLivenessTimeoutMs": 500},
             ),
             "inputLivenessTimeoutMs is not read by the SonySixaxis driver",
+            by_schema=False,
         )
 
     def test_bluetooth_le_needs_every_mode_switch_2(self) -> None:

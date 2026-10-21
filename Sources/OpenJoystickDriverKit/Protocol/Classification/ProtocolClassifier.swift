@@ -58,23 +58,9 @@ public enum PhysicalProtocolID: String, CaseIterable, Codable, Sendable {
     }
   }
 
-  /// Implemented variants. An empty list means the family has one contract.
-  public var variants: [PhysicalProtocolVariantID] {
-    switch self {
-    case .hidDescriptor, .hidReportLayout, .vendorFlydigi, .vendorPS3ThirdParty,
-      .vendorNVIDIAShield, .valveSteamDeck:
-      []
-    case .xboxXID: [.gamepad]
-    case .xboxXUSB: [.wired, .receiver]
-    case .xboxGIP: [.usb]
-    case .sonySixaxis, .sonyDualShock4, .sonyDualSense: [.usb, .bluetoothClassic]
-    case .nintendoSwitch1, .nintendoSwitchInputOnly: [.usb, .bluetoothClassic]
-    // Bluetooth LE is the Switch 2 GATT link.
-    case .nintendoSwitch2: [.usb, .bluetoothLE]
-    case .valveSteamController, .valveSteamTriton: [.wired, .dongle, .bluetoothLE]
-    case .vendorGameSir: [.usb, .enhancedHID]
-    }
-  }
+  /// Implemented variants, as the family's description lists them. An empty list means the family
+  /// has one contract.
+  public var variants: [PhysicalProtocolVariantID] { protocolDescription.variants }
 
   /// Whether rows of this family, with this stored variant, are reached through raw USB.
   public func usesRawUSB(storedVariant: PhysicalProtocolVariantID?) -> Bool {
@@ -114,17 +100,10 @@ public enum PhysicalProtocolID: String, CaseIterable, Codable, Sendable {
     return description.recordSections.contains(.input) && description.inputLayout == nil
   }
 
-  /// Whether catalog records store this family's variant; otherwise the family has one
-  /// contract or classification derives the variant from the observed transport.
-  public var storesVariant: Bool {
-    switch self {
-    case .xboxXID, .xboxXUSB, .valveSteamController, .valveSteamTriton, .vendorGameSir: true
-    case .hidDescriptor, .hidReportLayout, .xboxGIP, .sonySixaxis, .sonyDualShock4,
-      .sonyDualSense, .nintendoSwitch1, .nintendoSwitch2, .nintendoSwitchInputOnly,
-      .valveSteamDeck, .vendorFlydigi, .vendorPS3ThirdParty, .vendorNVIDIAShield:
-      false
-    }
-  }
+  /// Whether catalog records store this family's variant, as the family's description says;
+  /// otherwise the family has one contract or classification derives the variant from the
+  /// observed transport.
+  public var storesVariant: Bool { protocolDescription.storesVariant }
 }
 
 /// Protocol variants. Transport variants are derived from the observed transport;

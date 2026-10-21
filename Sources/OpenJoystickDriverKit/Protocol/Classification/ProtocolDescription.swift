@@ -61,6 +61,11 @@ struct ProtocolDescription: Sendable {
   static let kind = "ProtocolDescription"
 
   let family: PhysicalProtocolID
+  /// The family's implemented variants; empty when it has one contract.
+  let variants: [PhysicalProtocolVariantID]
+  /// Whether catalog records store the family's variant; otherwise classification derives it from
+  /// the observed transport.
+  let storesVariant: Bool
   let endpoints: Endpoints
   let rawUSB: RawUSB
   let recordSections: Set<RecordSection>
@@ -216,7 +221,7 @@ struct ProtocolDescription: Sendable {
     var signatures: [ProtocolInterfaceSignature] = []
     for signature in document.interfaceSignatures {
       guard let variant = PhysicalProtocolVariantID(rawValue: signature.variant),
-        protocolID.variants.contains(variant)
+        document.variants.contains(variant)
       else {
         throw ProtocolDescriptionProblem(
           .unknownProtocolVariant,
@@ -242,7 +247,7 @@ struct ProtocolDescription: Sendable {
       var variants: Set<PhysicalProtocolVariantID> = []
       for name in names {
         guard let variant = PhysicalProtocolVariantID(rawValue: name),
-          protocolID.variants.contains(variant)
+          document.variants.contains(variant)
         else {
           throw ProtocolDescriptionProblem(
             .unknownProtocolVariant,
@@ -256,7 +261,7 @@ struct ProtocolDescription: Sendable {
     func variant(named name: String) throws(ProtocolDescriptionProblem) -> PhysicalProtocolVariantID
     {
       guard let variant = PhysicalProtocolVariantID(rawValue: name),
-        protocolID.variants.contains(variant)
+        document.variants.contains(variant)
       else {
         throw ProtocolDescriptionProblem(
           .unknownProtocolVariant,
@@ -280,6 +285,8 @@ struct ProtocolDescription: Sendable {
     )
     let description = Self(
       family: protocolID,
+      variants: document.variants,
+      storesVariant: document.storesVariant,
       endpoints: document.endpoints,
       rawUSB: rawUSB,
       recordSections: document.recordSections,
@@ -367,7 +374,7 @@ struct ProtocolDescription: Sendable {
     _ condition: StartupWriteCondition,
     fileName: String
   ) -> ProtocolDescriptionProblem? {
-    for variant in condition.variants ?? [] where !family.variants.contains(variant) {
+    for variant in condition.variants ?? [] where !variants.contains(variant) {
       return ProtocolDescriptionProblem(
         .unknownProtocolVariant,
         "\(fileName): \(family.rawValue) has no variant \(variant.rawValue)"
@@ -515,7 +522,7 @@ struct ProtocolDescription: Sendable {
       "a raw-USB variant's rumble template is a usb packet, and a HID variant's is a HID report"
     if let rumbleTemplate {
       let flatVariants: [PhysicalProtocolVariantID?] =
-        family.variants.isEmpty ? [nil] : family.variants.map(Optional.some)
+        variants.isEmpty ? [nil] : variants.map(Optional.some)
       for variant in flatVariants where variant.map({ variantRumble[$0] == nil }) ?? true {
         if (rumbleTemplate.report == nil) != rawUSB.applies(to: variant) { return mismatch }
       }

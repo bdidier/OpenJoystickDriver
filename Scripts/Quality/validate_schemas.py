@@ -7,7 +7,6 @@ import sys
 import tempfile
 from collections.abc import Callable
 from pathlib import Path
-from typing import Any
 
 from ..Catalog import protocol_descriptions
 from ..Catalog.schema_header import (
@@ -194,8 +193,10 @@ UNKNOWN_PROTOCOL_VARIANT = "E5004"
 def protocol_description_code(error: ValidationError) -> str:
     """The catalog code for a schema failure.
 
-    E5001 when apiVersion is missing or not the supported one, E5004 when a variant is not the
-    family's, and E5002 for every other invalid field.
+    E5001 when apiVersion is missing or not the supported one, E5004 when a signature, `rawUSB`
+    or `defaults.variants` variant name is not one any family has, and E5002 for every other invalid
+    field, including a bad name in the top-level `variants` list. A known variant the family lacks
+    is E5004 too, which `semantic_violations` reports.
     """
     path = list(error.absolute_path)
     missing_version = (
@@ -203,18 +204,9 @@ def protocol_description_code(error: ValidationError) -> str:
     )
     if path == ["apiVersion"] or missing_version:
         return UNSUPPORTED_API_VERSION
-    # The schema forbids the signature list of a family with no variants with a false schema, and
-    # jsonschema reports that failure on the list itself, without a path.
-    forbidden_list = (
-        error.validator is None
-        and isinstance(error.instance, list)
-        and all(isinstance(item, dict) and "variant" in item for item in error.instance)
-    )
-    # The per-family rules also bound the raw-USB variants and the variants that carry default
-    # tuning; jsonschema reports the first on the list and the second on `defaults.variants`.
+    # jsonschema reports a bad name in `rawUSB` on the list and in `defaults.variants` on the map.
     names_variant = (
         (path[:1] == ["interfaceSignatures"] and path[-1:] == ["variant"])
-        or forbidden_list
         or path == ["rawUSB"]
         or (
             path == ["defaults", "variants"]
@@ -299,31 +291,8 @@ def validate_protocol_descriptions(
         # The schema cannot say that a default tuning key is one the family reads, or that a
         # raw-USB variant is the family's.
         assert isinstance(document, dict)
-        for code, message in protocol_descriptions.semantic_violations(
-            document, family_variants(schema, str(family))
-        ):
+        for code, message in protocol_descriptions.semantic_violations(document):
             raise ValidationError(f"{code}: {path.relative_to(ROOT)}: {message}")
-
-
-def family_variants(schema: dict[str, Any], family: str) -> list[str]:
-    """The variants of `family`, which the description schema holds per family.
-
-    Raises `KeyError` for a family the schema has no rule for, so a family added to the
-    controller schema without a description rule fails here instead of reading as having none.
-    """
-    rules = {
-        rule["if"]["properties"]["family"]["const"]: rule["then"]["properties"][
-            "defaults"
-        ]["properties"]["variants"]
-        for rule in schema["allOf"]
-        if "const" in rule.get("if", {}).get("properties", {}).get("family", {})
-    }
-    if family not in rules:
-        raise KeyError(f"protocol-description.schema.json has no rule for {family}")
-    variants = rules[family]
-    if isinstance(variants, bool):
-        return []
-    return list(variants["propertyNames"]["enum"])
 
 
 def swift_binary_path() -> Path:

@@ -843,6 +843,75 @@ struct ProtocolDescriptionTests {
     #expect(rejection(family: .hidDescriptor, signature)?.code == .unknownProtocolVariant)
   }
 
+  /// `variants` lists unique, known names and `storesVariant` is `true` and needs `variants`;
+  /// each family's lists are the bundled ones, which `PhysicalProtocolID` reads.
+  @Test(
+    arguments: [
+      #""variants": []"#, #""variants": ["USB", "USB"]"#, #""variants": ["usb"]"#,
+      #""storesVariant": true"#, #""variants": ["USB"], "storesVariant": false"#,
+    ]
+  )
+  func refusesMalformedVariantFacts(member: String) {
+    func problem(_ members: String) -> ProtocolDescriptionProblem? {
+      let json = """
+        {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "ProtocolDescription",
+         "family": "XboxGIP", \(members) "endpoints": {"in": 130, "out": 2}, "rawUSB": true,
+         "defaults": {"session": {"handshakeAttempts": 3, "announceResendLimit": 8}}}
+        """
+      do {
+        _ = try ProtocolDescription.decode(
+          Data(json.utf8),
+          protocolID: .xboxGIP,
+          fileName: "xbox-gip.json"
+        )
+        return nil
+      } catch { return error }
+    }
+    #expect(problem(#""variants": ["USB"],"#) == nil)
+    #expect(problem("\(member),")?.code == .invalidProtocolDescription, "\(member)")
+  }
+
+  @Test
+  func theFamilyReadsItsVariantsFromItsDescription() throws {
+    for protocolID in PhysicalProtocolID.allCases {
+      let description = try #require(ProtocolDescription.bundled[protocolID])
+      #expect(protocolID.variants == description.variants, "\(protocolID.rawValue)")
+      #expect(protocolID.storesVariant == description.storesVariant, "\(protocolID.rawValue)")
+      #expect(!protocolID.storesVariant || !protocolID.variants.isEmpty, "\(protocolID.rawValue)")
+    }
+    #expect(PhysicalProtocolID.xboxXUSB.variants == [.wired, .receiver])
+    #expect(PhysicalProtocolID.xboxXUSB.storesVariant)
+    #expect(PhysicalProtocolID.hidDescriptor.variants.isEmpty)
+    #expect(!PhysicalProtocolID.sonyDualSense.storesVariant)
+  }
+
+  /// The drivers branch on these variants, so a description that adds, drops or reorders one must
+  /// change this table together with the driver that handles it.
+  @Test
+  func everyFamilysVariantsAreThoseItsDriverHandles() {
+    let expected: [PhysicalProtocolID: (variants: [PhysicalProtocolVariantID], stores: Bool)] = [
+      .hidDescriptor: ([], false), .hidReportLayout: ([], false),
+      .xboxXID: ([.gamepad], true), .xboxXUSB: ([.wired, .receiver], true),
+      .xboxGIP: ([.usb], false),
+      .sonySixaxis: ([.usb, .bluetoothClassic], false),
+      .sonyDualShock4: ([.usb, .bluetoothClassic], false),
+      .sonyDualSense: ([.usb, .bluetoothClassic], false),
+      .nintendoSwitch1: ([.usb, .bluetoothClassic], false),
+      .nintendoSwitch2: ([.usb, .bluetoothLE], false),
+      .nintendoSwitchInputOnly: ([.usb, .bluetoothClassic], false),
+      .valveSteamController: ([.wired, .dongle, .bluetoothLE], true),
+      .valveSteamTriton: ([.wired, .dongle, .bluetoothLE], true),
+      .valveSteamDeck: ([], false), .vendorFlydigi: ([], false),
+      .vendorPS3ThirdParty: ([], false), .vendorGameSir: ([.usb, .enhancedHID], true),
+      .vendorNVIDIAShield: ([], false),
+    ]
+    #expect(Set(expected.keys) == Set(PhysicalProtocolID.allCases))
+    for (protocolID, facts) in expected {
+      #expect(protocolID.variants == facts.variants, "\(protocolID.rawValue)")
+      #expect(protocolID.storesVariant == facts.stores, "\(protocolID.rawValue)")
+    }
+  }
+
   @Test
   func everyRejectionCarriesACatalogCode() {
     let problem = rejection(family: .xboxGIP, #""interfaceSignatures": []"#)
@@ -877,13 +946,25 @@ enum ProtocolDescriptionFixture {
   ) throws(ProtocolDescriptionProblem) -> ProtocolDescription {
     let json = """
       {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "ProtocolDescription",
-       "family": "\(family.rawValue)", "endpoints": {"in": 130, "out": 2}, \(body)}
+       "family": "\(family.rawValue)", \(variantMembers(of: family))
+       "endpoints": {"in": 130, "out": 2}, \(body)}
       """
     return try ProtocolDescription.decode(
       Data(json.utf8),
       protocolID: family,
       fileName: "\(family.descriptionFileStem).json"
     )
+  }
+
+  /// The `variants` and `storesVariant` members, with a trailing comma, that the bundled
+  /// description of `family` states; empty for a family with one contract.
+  static func variantMembers(of family: PhysicalProtocolID) -> String {
+    guard let bundled = ProtocolDescription.bundled[family], !bundled.variants.isEmpty else {
+      return ""
+    }
+    let names = bundled.variants.map { "\"\($0.rawValue)\"" }.joined(separator: ", ")
+    return "\"variants\": [\(names)], "
+      + (bundled.storesVariant ? "\"storesVariant\": true, " : "")
   }
 
   private static func withSessionLimits(family: PhysicalProtocolID, _ body: String) -> String {
