@@ -28,8 +28,11 @@ enum ServiceConnection {
   /// Connects to a running service for a command that sends many requests, such as a stream.
   ///
   /// The caller disconnects the client and bounds each request with `withDeadline`.
-  static func open() async throws -> ApplicationServiceClient {
-    let client = ApplicationServiceClient(socketPath: socketPath)
+  ///
+  /// `client` is the connection to try; tests pass one whose probes they count.
+  static func open(
+    client: ApplicationServiceClient = ApplicationServiceClient(socketPath: socketPath)
+  ) async throws -> ApplicationServiceClient {
     await client.connect(timeoutSeconds: 0)
     guard client.isConnected else { throw CLIFailure.serviceUnavailable }
     return client

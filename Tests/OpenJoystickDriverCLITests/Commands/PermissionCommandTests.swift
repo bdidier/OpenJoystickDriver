@@ -5,7 +5,7 @@ import Testing
 
 @testable import OpenJoystickDriverCLI
 
-@Suite(.serialized)
+@Suite(.serialized, .removingTemporarySockets)
 struct PermissionCommandTests {
   private static let inactiveExtension: @Sendable () -> ExtensionStatus = {
     ExtensionStatus(bundle: .present, registration: .absent)

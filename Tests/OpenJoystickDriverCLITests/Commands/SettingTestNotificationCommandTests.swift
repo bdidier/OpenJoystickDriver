@@ -5,7 +5,7 @@ import Testing
 
 @testable import OpenJoystickDriverCLI
 
-@Suite(.serialized)
+@Suite(.serialized, .removingTemporarySockets)
 struct SettingTestNotificationCommandTests {
   /// A service that answers `sendTestNotification` with `outcome` after `answerDelay` and records
   /// its methods.

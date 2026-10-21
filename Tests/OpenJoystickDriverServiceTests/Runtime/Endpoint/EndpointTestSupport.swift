@@ -222,6 +222,8 @@ final class EndpointWebTestClient: @unchecked Sendable {
 
   /// The nonce of the challenge, once `readChallenge` read it.
   private(set) var nonce = ""
+  /// True once the service ended the connection, as opposed to a read that timed out.
+  private(set) var peerClosed = false
   static let key = "dGhlIHNhbXBsZSBub25jZQ=="
 
   private let descriptor: Int32
@@ -417,11 +419,25 @@ final class EndpointWebTestClient: @unchecked Sendable {
 
   private func receive() async -> Bool {
     let descriptor = descriptor
-    let chunk = await offPool { () -> [UInt8] in
+    let (chunk, ended, failure) = await offPool { () -> ([UInt8], Bool, Int32?) in
       var chunk = [UInt8](repeating: 0, count: 65_536)
-      let count = recv(descriptor, &chunk, chunk.count, 0)
-      return count > 0 ? Array(chunk[0..<count]) : []
+      var count: Int
+      repeat { count = recv(descriptor, &chunk, chunk.count, 0) } while count < 0 && errno == EINTR
+      if count > 0 { return (Array(chunk[0..<count]), false, nil) }
+      // End of stream or a reset is a hang-up. The 5-second read timeout leaves the connection
+      // open; any other errno is a failure of the test.
+      if count == 0 { return ([], true, nil) }
+      let code = errno
+      switch code {
+      case ECONNRESET: return ([], true, nil)
+      case EAGAIN, EWOULDBLOCK: return ([], false, nil)
+      default: return ([], false, code)
+      }
     }
+    if let failure {
+      Issue.record("recv failed: \(String(cString: strerror(failure))) (errno \(failure))")
+    }
+    if ended { peerClosed = true }
     guard !chunk.isEmpty else { return false }
     buffer.append(contentsOf: chunk)
     return true

@@ -5,6 +5,7 @@ import Testing
 
 @testable import OpenJoystickDriverCLI
 
+@Suite(.removingTemporarySockets)
 struct ConfigCommandTests {
   /// A directory that holds `Controllers/` and its `all.patch.json` for one test.
   private final class Root {

@@ -10,7 +10,7 @@ private func waitForSemaphore(
   timeout: DispatchTime
 ) -> DispatchTimeoutResult { semaphore.wait(timeout: timeout) }
 
-@Suite(.serialized, .timeLimit(.minutes(2)))
+@Suite(.serialized, .timeLimit(.minutes(2)), .removingTemporarySockets)
 struct LocalServiceRPCTests {
   @Test
   func roundTripUsesPrivateSocketAndBoundedJSONFrame() async throws {
@@ -541,9 +541,6 @@ struct LocalServiceRPCTests {
     LocalServiceRPCError.connectionFailed(code).localizedDescription
   }
 
-  private func temporarySocketPath() -> String {
-    "/tmp/com.openjoystickdriver.test.\(UUID().uuidString).rpc"
-  }
 }
 
 private final class PeerRecorder: @unchecked Sendable {

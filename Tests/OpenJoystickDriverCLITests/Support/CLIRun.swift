@@ -154,8 +154,6 @@ enum CLICommandTree {
   }
 }
 
-func temporarySocketPath() -> String { "/tmp/com.openjoystickdriver.test.\(UUID().uuidString).rpc" }
-
 /// The `--timeout` of a command that talks to an in-process test server.
 ///
 /// The server answers within milliseconds, but this target runs hundreds of test cases at once on

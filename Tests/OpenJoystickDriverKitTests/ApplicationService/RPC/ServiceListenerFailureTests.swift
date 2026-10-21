@@ -1,14 +1,12 @@
 import Darwin
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
 
+@Suite(.removingTemporarySockets)
 struct ServiceListenerFailureTests {
-  private func socketPath() -> String {
-    "/tmp/com.openjoystickdriver.test.\(UUID().uuidString).rpc"
-  }
-
   private func plant(_ text: String, socketPath: String) throws -> String {
     let path = ServiceListenerFailure.path(forSocket: socketPath)
     try Data(text.utf8).write(to: URL(fileURLWithPath: path))
@@ -23,7 +21,7 @@ struct ServiceListenerFailureTests {
 
   @Test
   func theFileRoundTripsAndNamesTheCodeTheErrnoAndTheTime() throws {
-    let path = socketPath()
+    let path = temporarySocketPath()
     let failure = ServiceListenerFailure(
       errorNumber: EMFILE,
       time: Date(timeIntervalSince1970: 1_800_000_000.7),
@@ -48,7 +46,7 @@ struct ServiceListenerFailureTests {
 
   @Test
   func aMissingFileIsAbsentAndClearingItIsNotAnError() throws {
-    let path = socketPath()
+    let path = temporarySocketPath()
 
     #expect(ServiceListenerFailure.read(socketPath: path) == .absent)
     try ServiceListenerFailure.clear(socketPath: path)
@@ -80,7 +78,7 @@ struct ServiceListenerFailureTests {
       """,
     ]
     for text in cases {
-      let socket = socketPath()
+      let socket = temporarySocketPath()
       let path = try plant(text, socketPath: socket)
       defer { try? FileManager.default.removeItem(atPath: path) }
 
@@ -93,10 +91,10 @@ struct ServiceListenerFailureTests {
 
   @Test
   func aFileThatIsTooLargeOrNotARegularFileIsAProblem() throws {
-    let large = socketPath()
+    let large = temporarySocketPath()
     let largePath = try plant(String(repeating: " ", count: 5000), socketPath: large)
     defer { try? FileManager.default.removeItem(atPath: largePath) }
-    let target = socketPath()
+    let target = temporarySocketPath()
     let linkPath = ServiceListenerFailure.path(forSocket: target)
     try FileManager.default.createSymbolicLink(atPath: linkPath, withDestinationPath: largePath)
     defer { try? FileManager.default.removeItem(atPath: linkPath) }
@@ -116,7 +114,7 @@ struct ServiceListenerFailureTests {
 
   @Test
   func aReusedIdentifierWithAnotherStartTimeIsNotTheWritingProcess() throws {
-    let path = socketPath()
+    let path = temporarySocketPath()
     let now = ServiceListenerFailure.ProcessIdentity.current
     #expect(ServiceListenerFailure.ProcessIdentity.lookup(now.identifier) == .running(now))
     let reused = ServiceListenerFailure(
@@ -140,7 +138,7 @@ struct ServiceListenerFailureTests {
 
   @Test
   func theFailureIsCurrentOnlyWhileTheWritingProcessRuns() throws {
-    let path = socketPath()
+    let path = temporarySocketPath()
     let time = Date(timeIntervalSince1970: 1_800_000_000)
     let running = ServiceListenerFailure(
       errorNumber: EBADF,
@@ -168,7 +166,7 @@ struct ServiceListenerFailureTests {
 
   @Test
   func aFailedUnlinkThrowsItsOwnErrorWithTheErrno() throws {
-    let socket = socketPath()
+    let socket = temporarySocketPath()
     let path = ServiceListenerFailure.path(forSocket: socket)
     // A folder with a file in it cannot be unlinked.
     try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true)
@@ -188,7 +186,7 @@ struct ServiceListenerFailureTests {
 
   @Test
   func aRecordOfAnotherUserHasItsOwnProblem() throws {
-    let socket = socketPath()
+    let socket = temporarySocketPath()
     try ServiceListenerFailure(
       errorNumber: EBADF,
       time: Date(timeIntervalSince1970: 1_800_000_000),
@@ -227,7 +225,7 @@ struct ServiceListenerFailureTests {
 
   @Test
   func aLookupThatFailsForAnotherReasonIsReportedNotGuessed() throws {
-    let socket = socketPath()
+    let socket = temporarySocketPath()
     let failure = ServiceListenerFailure(
       errorNumber: EBADF,
       time: Date(timeIntervalSince1970: 1_800_000_000),

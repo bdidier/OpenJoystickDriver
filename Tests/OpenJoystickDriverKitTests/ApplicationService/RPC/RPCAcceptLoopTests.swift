@@ -34,11 +34,11 @@ private final class Changes: @unchecked Sendable {
   var all: [ServiceListenerFailure?] { lock.withLock { values } }
 }
 
-@Suite(.serialized)
+@Suite(.serialized, .removingTemporarySockets)
 struct RPCAcceptLoopTests {
   private func makeServer(
     generation: Int = 0,
-    socketPath: String = "/tmp/com.openjoystickdriver.test.\(UUID().uuidString).rpc"
+    socketPath: String = temporarySocketPath()
   ) -> LocalServiceRPCServer {
     LocalServiceRPCServer(
       socketPath: socketPath,

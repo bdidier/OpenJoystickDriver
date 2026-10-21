@@ -5,7 +5,7 @@ import Testing
 @testable import OpenJoystickDriverKit
 @testable import OpenJoystickDriverService
 
-@Suite(.serialized, .timeLimit(.minutes(2)))
+@Suite(.serialized, .timeLimit(.minutes(2)), .removingTemporarySockets)
 struct LocalRPCBridgeTests {
   private static let controllerMethodNames: Set = [
     "getStatus", "requestRequiredAccess", "requestAccess", "getControllerState", "getPacketLog",
@@ -87,7 +87,7 @@ struct LocalRPCBridgeTests {
   @Test
   func remappingFailureArrivesAtTheClientAsTheTypedError() async throws {
     try await withServer { server in
-      let socketPath = "/tmp/com.openjoystickdriver.bridge.\(UUID().uuidString).rpc"
+      let socketPath = unregisteredSocketPath()
       let rpcServer = LocalServiceRPCServer(
         socketPath: socketPath,
         authentication: { _ in true },
@@ -108,7 +108,7 @@ struct LocalRPCBridgeTests {
   @Test
   func aStatusNotificationReachesAWaitingClientWithinOneSecond() async throws {
     try await withServer { server in
-      let socketPath = "/tmp/com.openjoystickdriver.bridge.\(UUID().uuidString).rpc"
+      let socketPath = unregisteredSocketPath()
       let rpcServer = LocalServiceRPCServer(
         socketPath: socketPath,
         authentication: { _ in true },
@@ -134,7 +134,7 @@ struct LocalRPCBridgeTests {
   @Test
   func sendTestNotificationEndsWithTheAppsReport() async throws {
     try await withServer { server in
-      let socketPath = "/tmp/com.openjoystickdriver.bridge.\(UUID().uuidString).rpc"
+      let socketPath = unregisteredSocketPath()
       let rpcServer = LocalServiceRPCServer(
         socketPath: socketPath,
         authentication: { _ in true },
@@ -166,7 +166,7 @@ struct LocalRPCBridgeTests {
   @Test
   func aClientThatClosesDuringAHeldWaitLeavesTheHeldCountAndMissesTheAnnouncement() async throws {
     try await withServer { server in
-      let socketPath = "/tmp/com.openjoystickdriver.bridge.\(UUID().uuidString).rpc"
+      let socketPath = unregisteredSocketPath()
       let rpcServer = LocalServiceRPCServer(
         socketPath: socketPath,
         authentication: { _ in true },
@@ -214,7 +214,7 @@ struct LocalRPCBridgeTests {
   @Test
   func aClientThatClosesASendTestNotificationRequestWithdrawsIt() async throws {
     try await withServer { server in
-      let socketPath = "/tmp/com.openjoystickdriver.bridge.\(UUID().uuidString).rpc"
+      let socketPath = unregisteredSocketPath()
       let rpcServer = LocalServiceRPCServer(
         socketPath: socketPath,
         authentication: { _ in true },
@@ -351,7 +351,7 @@ struct LocalRPCBridgeTests {
 
   @Test
   func aListenerRestartAfterStopBeginsRefusesAsStopping() async throws {
-    let socketPath = "/tmp/com.openjoystickdriver.test.\(UUID().uuidString).rpc"
+    let socketPath = temporarySocketPath()
     try await withServer { server in
       let listener = LocalServiceRPCServer(
         socketPath: socketPath,

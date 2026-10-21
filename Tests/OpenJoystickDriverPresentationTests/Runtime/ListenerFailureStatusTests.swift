@@ -6,7 +6,7 @@ import Testing
 
 @testable import OpenJoystickDriverPresentation
 
-@Suite(.serialized)
+@Suite(.serialized, .removingTemporarySockets)
 struct ListenerFailureStatusTests {
   private let failure = ServiceListenerFailure(
     errorNumber: EBADF,
@@ -59,7 +59,7 @@ struct ListenerFailureStatusTests {
 
   @Test
   func aRealServerThatStopsAcceptingShowsE2034InTheModelAndTheBanner() async throws {
-    let socketPath = "/tmp/com.openjoystickdriver.test.\(UUID().uuidString).rpc"
+    let socketPath = temporarySocketPath()
     let statusResult = try JSONEncoder().encode(
       try JSONEncoder().encode(
         ApplicationServiceStatusPayload(
