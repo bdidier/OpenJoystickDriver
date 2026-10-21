@@ -1,10 +1,29 @@
 import Foundation
+import OpenJoystickDriverTestSupport
 import Testing
 
 @testable import OpenJoystickDriverKit
 
 @Suite("Application service lifecycle")
 struct LifecycleTests {
+  @Test("login registration is skipped while the settings file is rejected")
+  func loginRegistrationDoesNotProceedOnAnUnreadableSettingsFile() throws {
+    let root = RootedDataDirectory.temporary()
+    let store = SettingsStore(directory: root)
+    try FileManager.default.createDirectory(
+      at: store.folderURL,
+      withIntermediateDirectories: true
+    )
+    try Data(
+      (#"{"apiVersion": "\#(OpenJoystickDriverAPI.version)", "kind": "Settings", "#
+        + #""showInMenuBar": false}"#).utf8
+    ).write(to: store.userFileURL)
+
+    #expect(throws: SettingsStoreError.storedNoVisibleEntryPoint(file: store.userFileURL.path)) {
+      try ApplicationServiceManager.installByDefaultIfNeeded(settings: store)
+    }
+  }
+
   @Test("main app executable owns runtime")
   func applicationExecutableURL() {
     let url = ApplicationServiceManager.applicationExecutableURL(

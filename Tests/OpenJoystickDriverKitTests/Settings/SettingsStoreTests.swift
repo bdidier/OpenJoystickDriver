@@ -176,7 +176,7 @@ struct SettingsStoreTests {
     do {
       _ = try store.load()
       Issue.record("the file was accepted")
-    } catch let SettingsStoreError.unsupported(problem) {
+    } catch let SettingsStoreError.unsupported(_, problem) {
       #expect(problem.code == .unsupportedAPIVersion)
       #expect(problem.description.hasPrefix("E5001: "))
       #expect(problem.description.contains(store.userFileURL.path))
@@ -193,7 +193,7 @@ struct SettingsStoreTests {
     do {
       _ = try store.load()
       Issue.record("the file was accepted")
-    } catch let SettingsStoreError.unsupported(problem) {
+    } catch let SettingsStoreError.unsupported(_, problem) {
       #expect(problem.code == nil)
       #expect(problem.description.contains("expected Settings, found Profile"))
     }
@@ -212,5 +212,75 @@ struct SettingsStoreTests {
       _ = try store.load()
     }
     #expect(throws: SettingsStoreError.self) { try store.set(.developerTools, to: true) }
+  }
+
+  /// A store whose Trash is a folder in the test's own root.
+  private var trashingStore: (store: SettingsStore, trash: URL) {
+    let trash = root.url(for: .applicationData).appendingPathComponent("Trash")
+    let store = SettingsStore(directory: root) { url in
+      try FileManager.default.createDirectory(at: trash, withIntermediateDirectories: true)
+      try FileManager.default.moveItem(
+        at: url,
+        to: trash.appendingPathComponent(url.lastPathComponent)
+      )
+    }
+    return (store, trash)
+  }
+
+  @Test
+  func moveToTrashMakesARejectedFileUsableAgain() throws {
+    try write(header(#", "showInMenuBar": false"#), to: .applicationData)
+    let (store, trash) = trashingStore
+    #expect(throws: SettingsStoreError.self) { try store.load() }
+
+    #expect(try store.moveToTrash())
+
+    #expect(!FileManager.default.fileExists(atPath: store.userFileURL.path))
+    #expect(
+      FileManager.default.fileExists(
+        atPath: trash.appendingPathComponent(SettingsStore.fileName).path
+      )
+    )
+    #expect(
+      try store.value(of: .showInMenuBar) == ApplicationSettingKey.showInMenuBar.defaultValue
+    )
+    try store.set(.developerTools, to: true)
+    #expect(try store.value(of: .developerTools))
+  }
+
+  @Test
+  func moveToTrashWithoutAFileMovesNothing() throws {
+    let (store, trash) = trashingStore
+
+    #expect(try !store.moveToTrash())
+    #expect(!FileManager.default.fileExists(atPath: trash.path))
+  }
+
+  @Test
+  func aFileThatCannotBeTrashedIsReportedNotIgnored() throws {
+    try write(header(#", "showInMenuBar": false"#), to: .applicationData)
+    let store = SettingsStore(directory: root) { _ in throw CocoaError(.fileWriteNoPermission) }
+
+    #expect(throws: SettingsStoreError.cannotReset(file: store.userFileURL.path)) {
+      try store.moveToTrash()
+    }
+    #expect(FileManager.default.fileExists(atPath: store.userFileURL.path))
+  }
+
+  @Test
+  func everyErrorIsLocalizedAndNamesTheRecovery() throws {
+    let file = "/tmp/Settings.json"
+    let errors: [SettingsStoreError] = [
+      .damaged(file: file), .unwritable(file: file), .cannotReset(file: file),
+      .storedNoVisibleEntryPoint(file: file), .noVisibleEntryPoint,
+    ]
+    for error in errors {
+      let text = try #require(error.errorDescription)
+      #expect(!text.hasPrefix("settings.error."), "\(error) renders its raw key")
+      #expect(error.file == (error == .noVisibleEntryPoint ? nil : file))
+    }
+    for error in errors where error.fileIsUnusable {
+      #expect(try #require(error.errorDescription).contains("ojd setting reset"))
+    }
   }
 }

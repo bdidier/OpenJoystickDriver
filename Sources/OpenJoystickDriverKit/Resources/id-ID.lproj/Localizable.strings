@@ -1888,3 +1888,17 @@
 "controllers.captureDurationInvalid" = "Masukkan jumlah detik di atas 0.";
 "controllers.fileSaved" = "%@ disimpan.";
 "controllers.virtual.currentScope" = "Cakupan penimpaan saat ini: %@";
+"settings.error.damaged" = "File pengaturan %@ rusak. Perbaiki, atau pindahkan ke Tong Sampah dengan `ojd setting reset`.";
+"settings.error.unsupported" = "File pengaturan %@ tidak didukung. Tulis ulang file untuk apiVersion yang didukung, atau pindahkan ke Tong Sampah dengan `ojd setting reset`.";
+"settings.error.unwritable" = "File pengaturan %@ tidak dapat ditulis.";
+"settings.error.cannotReset" = "File pengaturan %@ tidak dapat dipindahkan ke Tong Sampah.";
+"settings.error.storedNoVisibleEntryPoint" = "File pengaturan %@ menonaktifkan “Tampilkan di bar menu” dan “Tampilkan di Dock”, sehingga app tidak memiliki titik masuk yang terlihat. Perbaiki, atau pindahkan ke Tong Sampah dengan `ojd setting reset`.";
+"settings.error.noVisibleEntryPoint" = "“Tampilkan di bar menu” dan “Tampilkan di Dock” tidak dapat dinonaktifkan bersamaan: app tidak akan memiliki titik masuk yang terlihat.";
+"settings.unreadable.title" = "Pengaturan tidak dapat dibaca";
+"settings.unreadable.resetSettings" = "Atur Ulang Pengaturan";
+"settings.unreadable.showInFinder" = "Tampilkan di Finder";
+"cli.setting.reset.abstract" = "Pindahkan file pengaturan ke Tong Sampah.";
+"cli.setting.reset.discussion" = "Memindahkan Settings.json ke Tong Sampah sehingga setiap pengaturan kembali ke nilai default. Gunakan saat file rusak atau ditolak.";
+"cli.setting.reset.confirm" = "Pindahkan file pengaturan ke Tong Sampah dan kembalikan setiap pengaturan ke nilai default?";
+"cli.setting.reset.success" = "%@ dipindahkan ke Tong Sampah.";
+"cli.setting.reset.none" = "Tidak ada file pengaturan di %@.";

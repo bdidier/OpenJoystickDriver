@@ -1888,3 +1888,17 @@
 "controllers.captureDurationInvalid" = "Введите число секунд больше 0.";
 "controllers.fileSaved" = "%@ сохранён.";
 "controllers.virtual.currentScope" = "Область текущего переопределения: %@";
+"settings.error.damaged" = "Файл настроек %@ повреждён. Исправьте его или переместите в Корзину командой `ojd setting reset`.";
+"settings.error.unsupported" = "Файл настроек %@ не поддерживается. Перепишите файл для поддерживаемой версии apiVersion или переместите его в Корзину командой `ojd setting reset`.";
+"settings.error.unwritable" = "Не удаётся записать файл настроек %@.";
+"settings.error.cannotReset" = "Не удаётся переместить файл настроек %@ в Корзину.";
+"settings.error.storedNoVisibleEntryPoint" = "Файл настроек %@ отключает и «Показывать в строке меню», и «Показывать в Dock», поэтому у приложения не было бы видимой точки входа. Исправьте его или переместите в Корзину командой `ojd setting reset`.";
+"settings.error.noVisibleEntryPoint" = "«Показывать в строке меню» и «Показывать в Dock» нельзя отключить одновременно: у приложения не было бы видимой точки входа.";
+"settings.unreadable.title" = "Не удаётся прочитать настройки";
+"settings.unreadable.resetSettings" = "Сбросить настройки";
+"settings.unreadable.showInFinder" = "Показать в Finder";
+"cli.setting.reset.abstract" = "Перемещает файл настроек в Корзину.";
+"cli.setting.reset.discussion" = "Перемещает Settings.json в Корзину, и все настройки возвращаются к значениям по умолчанию. Используйте, если файл повреждён или отклонён.";
+"cli.setting.reset.confirm" = "Переместить файл настроек в Корзину и вернуть все настройки к значениям по умолчанию?";
+"cli.setting.reset.success" = "%@ перемещён в Корзину.";
+"cli.setting.reset.none" = "Файла настроек по пути %@ нет.";

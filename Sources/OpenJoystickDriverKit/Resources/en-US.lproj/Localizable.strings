@@ -1889,3 +1889,17 @@
 "controllers.captureDurationInvalid" = "Enter a number of seconds above 0.";
 "controllers.fileSaved" = "Saved %@.";
 "controllers.virtual.currentScope" = "Current override scope: %@";
+"settings.error.damaged" = "The settings file %@ is damaged. Fix it, or move it to the Trash with `ojd setting reset`.";
+"settings.error.unsupported" = "The settings file %@ is not supported. Rewrite the file for the supported apiVersion, or move it to the Trash with `ojd setting reset`.";
+"settings.error.unwritable" = "The settings file %@ cannot be written.";
+"settings.error.cannotReset" = "The settings file %@ cannot be moved to the Trash.";
+"settings.error.storedNoVisibleEntryPoint" = "The settings file %@ turns off both Show in menu bar and Show in Dock, so the app would have no visible entry point. Fix it, or move it to the Trash with `ojd setting reset`.";
+"settings.error.noVisibleEntryPoint" = "Show in menu bar and Show in Dock cannot both be off: the app would have no visible entry point.";
+"settings.unreadable.title" = "Settings can't be read";
+"settings.unreadable.resetSettings" = "Reset Settings";
+"settings.unreadable.showInFinder" = "Show in Finder";
+"cli.setting.reset.abstract" = "Move the settings file to the Trash.";
+"cli.setting.reset.discussion" = "Moves Settings.json to the Trash so every setting returns to its default. Use it when the file is damaged or rejected.";
+"cli.setting.reset.confirm" = "Move the settings file to the Trash and return every setting to its default?";
+"cli.setting.reset.success" = "Moved %@ to the Trash.";
+"cli.setting.reset.none" = "There is no settings file at %@.";

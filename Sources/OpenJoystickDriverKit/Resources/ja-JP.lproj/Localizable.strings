@@ -1888,3 +1888,17 @@
 "controllers.captureDurationInvalid" = "0より大きい秒数を入力してください。";
 "controllers.fileSaved" = "%@を保存しました。";
 "controllers.virtual.currentScope" = "現在の上書きの適用範囲：%@";
+"settings.error.damaged" = "設定ファイル %@ が破損しています。修正するか、`ojd setting reset` でゴミ箱に移動してください。";
+"settings.error.unsupported" = "設定ファイル %@ はサポートされていません。サポートされている apiVersion に合わせてファイルを書き直すか、`ojd setting reset` でゴミ箱に移動してください。";
+"settings.error.unwritable" = "設定ファイル %@ に書き込めません。";
+"settings.error.cannotReset" = "設定ファイル %@ をゴミ箱に移動できません。";
+"settings.error.storedNoVisibleEntryPoint" = "設定ファイル %@ は「メニューバーに表示」と「Dockに表示」の両方をオフにしているため、アプリを開くための表示がなくなります。修正するか、`ojd setting reset` でゴミ箱に移動してください。";
+"settings.error.noVisibleEntryPoint" = "「メニューバーに表示」と「Dockに表示」を両方オフにすることはできません。アプリを開くための表示がなくなります。";
+"settings.unreadable.title" = "設定を読み込めません";
+"settings.unreadable.resetSettings" = "設定をリセット";
+"settings.unreadable.showInFinder" = "Finderに表示";
+"cli.setting.reset.abstract" = "設定ファイルをゴミ箱に移動します。";
+"cli.setting.reset.discussion" = "Settings.jsonをゴミ箱に移動し、すべての設定をデフォルト値に戻します。ファイルが破損しているか受け付けられない場合に使います。";
+"cli.setting.reset.confirm" = "設定ファイルをゴミ箱に移動して、すべての設定をデフォルト値に戻しますか？";
+"cli.setting.reset.success" = "%@ をゴミ箱に移動しました。";
+"cli.setting.reset.none" = "%@ に設定ファイルはありません。";

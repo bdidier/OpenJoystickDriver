@@ -144,7 +144,7 @@ struct NotificationTests {
 
   @Test
   @MainActor
-  func aDamagedSettingsFileFallsBackToTheBuiltInDefaults() throws {
+  func aDamagedSettingsFileDeliversNoNotification() throws {
     let settings = SettingsStore(directory: RootedDataDirectory.temporary())
     try settings.set(.notifyControllerConnected, to: true)
     try Data("not json".utf8).write(to: settings.userFileURL)
@@ -155,7 +155,7 @@ struct NotificationTests {
     monitor.observe(
       RuntimeNotificationSnapshot(controllers: ["new": "New Controller"], activeProfiles: [:])
     )
-    // Notifications default to off; the damaged file does not turn one on.
+    // The stored choice to notify cannot be read, so nothing is delivered.
     #expect(delivery.messages.isEmpty)
     #expect(throws: SettingsStoreError.self) { try settings.load() }
   }

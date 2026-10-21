@@ -1889,3 +1889,17 @@
 "controllers.captureDurationInvalid" = "Digite um número de segundos maior que 0.";
 "controllers.fileSaved" = "%@ foi salvo.";
 "controllers.virtual.currentScope" = "Escopo da substituição atual: %@";
+"settings.error.damaged" = "O arquivo de ajustes %@ está danificado. Corrija-o ou mova-o para a Lixeira com `ojd setting reset`.";
+"settings.error.unsupported" = "O arquivo de ajustes %@ não é compatível. Reescreva o arquivo para a apiVersion compatível ou mova-o para a Lixeira com `ojd setting reset`.";
+"settings.error.unwritable" = "Não é possível gravar o arquivo de ajustes %@.";
+"settings.error.cannotReset" = "Não é possível mover o arquivo de ajustes %@ para a Lixeira.";
+"settings.error.storedNoVisibleEntryPoint" = "O arquivo de ajustes %@ desativa “Mostrar na barra de menus” e “Mostrar no Dock”, então o app não teria nenhum ponto de entrada visível. Corrija-o ou mova-o para a Lixeira com `ojd setting reset`.";
+"settings.error.noVisibleEntryPoint" = "“Mostrar na barra de menus” e “Mostrar no Dock” não podem ficar desativados ao mesmo tempo: o app não teria nenhum ponto de entrada visível.";
+"settings.unreadable.title" = "Não é possível ler os ajustes";
+"settings.unreadable.resetSettings" = "Redefinir ajustes";
+"settings.unreadable.showInFinder" = "Mostrar no Finder";
+"cli.setting.reset.abstract" = "Move o arquivo de ajustes para a Lixeira.";
+"cli.setting.reset.discussion" = "Move Settings.json para a Lixeira, e cada ajuste volta ao valor padrão. Use quando o arquivo estiver danificado ou for rejeitado.";
+"cli.setting.reset.confirm" = "Mover o arquivo de ajustes para a Lixeira e voltar cada ajuste ao valor padrão?";
+"cli.setting.reset.success" = "%@ foi movido para a Lixeira.";
+"cli.setting.reset.none" = "Não há arquivo de ajustes em %@.";

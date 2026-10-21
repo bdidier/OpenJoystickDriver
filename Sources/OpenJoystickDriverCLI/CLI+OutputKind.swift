@@ -59,6 +59,7 @@ extension CLI {
       (ProfileValidateCommand.self, "ProfileValidation"),
       (ProfileDeleteCommand.self, "Status"),
       (ProfileRecoverCommand.self, "Status"),
+      (SettingResetCommand.self, "Status"),
       (RecordShowCommand.self, "ControllerRecord"),
       (RecordInstallCommand.self, "ControllerRecord"),
       (RecordListCommand.self, "ControllerRecordList"),

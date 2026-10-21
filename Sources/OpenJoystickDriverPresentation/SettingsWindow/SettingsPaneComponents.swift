@@ -39,7 +39,9 @@
     var preferences: SettingsPreferencesModel
 
     var body: some View {
-      if let errorMessage = preferences.errorMessage {
+      if let errorMessage = preferences.errorMessage
+        ?? preferences.settingsFileError?.localizedDescription
+      {
         Section {
           HStack(alignment: .firstTextBaseline, spacing: 8) {
             OJDSystemSymbol(
@@ -53,7 +55,17 @@
                 preferences.openNotificationSettings()
               }
             }
-            Button(OJDLocalized.string("common.dismiss")) { preferences.dismissError() }
+            if preferences.settingsFileError != nil {
+              Button(OJDLocalized.string("settings.unreadable.showInFinder")) {
+                preferences.showSettingsFileInFinder()
+              }
+              Button(OJDLocalized.string("settings.unreadable.resetSettings")) {
+                preferences.resetSettings()
+              }
+            }
+            if preferences.settingsFileError == nil {
+              Button(OJDLocalized.string("common.dismiss")) { preferences.dismissError() }
+            }
           }
         }
       }

@@ -1832,7 +1832,7 @@
 "settings.latestRelease" = "최신 릴리스: %@";
 "settingsPane.general.showInDock" = "Dock에 표시";
 "settingsPane.general.showInDockDescription" = "OpenJoystickDriver 아이콘을 항상 Dock에 표시합니다. 끄면 창이 열려 있는 동안에만 표시됩니다.";
-"settingsPane.general.entryPointRequired" = "“메뉴 막대에 표시”와 “Dock에 표시” 중 하나 이상을 켜 두세요.";
+"settingsPane.general.entryPointRequired" = "‘메뉴 막대에 표시’와 ‘Dock에 표시’ 중 하나 이상을 켜 두세요.";
 "cli.setting.show_in_dock" = "OpenJoystickDriver 아이콘을 항상 Dock에 표시합니다. 끄면 창이 열려 있는 동안에만 표시됩니다.";
 "activity.mode.log" = "로그";
 "activity.mode.diagnostics" = "진단";
@@ -1888,3 +1888,17 @@
 "controllers.captureDurationInvalid" = "0보다 큰 초 수를 입력하십시오.";
 "controllers.fileSaved" = "%@을(를) 저장했습니다.";
 "controllers.virtual.currentScope" = "현재 재정의의 적용 범위: %@";
+"settings.error.damaged" = "설정 파일 %@이(가) 손상되었습니다. 수정하거나 `ojd setting reset`을 실행해 휴지통으로 이동하세요.";
+"settings.error.unsupported" = "설정 파일 %@은(는) 지원되지 않습니다. 지원되는 apiVersion에 맞게 파일을 다시 작성하거나 `ojd setting reset`을 실행해 휴지통으로 이동하세요.";
+"settings.error.unwritable" = "설정 파일 %@에 쓸 수 없습니다.";
+"settings.error.cannotReset" = "설정 파일 %@을(를) 휴지통으로 이동할 수 없습니다.";
+"settings.error.storedNoVisibleEntryPoint" = "설정 파일 %@은(는) ‘메뉴 막대에 표시’와 ‘Dock에 표시’를 모두 꺼서 앱에 보이는 진입점이 없게 됩니다. 수정하거나 `ojd setting reset`을 실행해 휴지통으로 이동하세요.";
+"settings.error.noVisibleEntryPoint" = "‘메뉴 막대에 표시’와 ‘Dock에 표시’를 둘 다 끌 수 없습니다. 앱에 보이는 진입점이 없게 됩니다.";
+"settings.unreadable.title" = "설정을 읽을 수 없습니다";
+"settings.unreadable.resetSettings" = "설정 재설정";
+"settings.unreadable.showInFinder" = "Finder에서 보기";
+"cli.setting.reset.abstract" = "설정 파일을 휴지통으로 이동합니다.";
+"cli.setting.reset.discussion" = "Settings.json을 휴지통으로 이동해 모든 설정을 기본값으로 되돌립니다. 파일이 손상되었거나 거부될 때 사용하세요.";
+"cli.setting.reset.confirm" = "설정 파일을 휴지통으로 이동하고 모든 설정을 기본값으로 되돌릴까요?";
+"cli.setting.reset.success" = "%@을(를) 휴지통으로 이동했습니다.";
+"cli.setting.reset.none" = "%@에 설정 파일이 없습니다.";

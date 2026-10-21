@@ -11,7 +11,10 @@ struct SettingCommand: AsyncParsableCommand {
     discussion: CLILocalized.text(
       "cli.setting.discussion"
     ),
-    subcommands: [SettingListCommand.self, SettingGetCommand.self, SettingSetCommand.self]
+    subcommands: [
+      SettingListCommand.self, SettingGetCommand.self, SettingSetCommand.self,
+      SettingResetCommand.self,
+    ]
   )
 
   @OptionGroup(visibility: GlobalOptions.subcommandVisibility)
@@ -230,6 +233,57 @@ struct SettingSetCommand: AsyncParsableCommand {
             String(requested)
           )
         )
+      }
+    }
+  }
+}
+
+/// Moves `Settings.json` to the Trash, so every setting returns to its default. It works on the
+/// file itself, so it also fixes a file the service rejects and needs no running service.
+struct SettingResetCommand: AsyncParsableCommand {
+  static let configuration = CommandConfiguration(
+    commandName: "reset",
+    abstract: CLILocalized.text("cli.setting.reset.abstract"),
+    discussion: CLILocalized.text("cli.setting.reset.discussion")
+  )
+
+  /// The settings file the command moves; tests point it at a temporary folder.
+  @TaskLocal
+  static var store = SettingsStore()
+
+  /// The `--json` result. `moved` is false when there was no file.
+  struct Result: Encodable, Equatable {
+    let file: String
+    let moved: Bool
+  }
+
+  @Flag(
+    name: [.short, .long],
+    help: ArgumentHelp(CLILocalized.text("cli.option.force"))
+  )
+  var force = false
+
+  @OptionGroup(visibility: GlobalOptions.subcommandVisibility)
+  var global: GlobalOptions
+
+  func run() async throws {
+    try await global.run {
+      let store = Self.store
+      let file = store.userFileURL.path
+      var moved = false
+      if FileManager.default.fileExists(atPath: file) {
+        try CLITerminal.confirm(CLILocalized.text("cli.setting.reset.confirm"), force: force)
+        moved = try store.moveToTrash()
+      }
+      switch CLIContext.current.format {
+      case .json: try CLIOutput.json(CLIStatus(details: Result(file: file, moved: moved)))
+      case .plain: CLIOutput.plain([[file, String(moved)]])
+      case .human:
+        if moved {
+          CLIOutput.success(CLILocalized.format("cli.setting.reset.success", file))
+        } else {
+          CLIOutput.stdout(CLILocalized.format("cli.setting.reset.none", file))
+        }
       }
     }
   }

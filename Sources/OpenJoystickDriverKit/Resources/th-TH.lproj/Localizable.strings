@@ -1888,3 +1888,17 @@
 "controllers.captureDurationInvalid" = "ป้อนจำนวนวินาทีที่มากกว่า 0";
 "controllers.fileSaved" = "บันทึก %@ แล้ว";
 "controllers.virtual.currentScope" = "ขอบเขตของการแทนที่ปัจจุบัน: %@";
+"settings.error.damaged" = "ไฟล์การตั้งค่า %@ เสียหาย แก้ไขไฟล์ หรือย้ายไปที่ถังขยะด้วย `ojd setting reset`";
+"settings.error.unsupported" = "ไฟล์การตั้งค่า %@ ไม่รองรับ เขียนไฟล์ใหม่ให้ตรงกับ apiVersion ที่รองรับ หรือย้ายไปที่ถังขยะด้วย `ojd setting reset`";
+"settings.error.unwritable" = "ไม่สามารถเขียนไฟล์การตั้งค่า %@ ได้";
+"settings.error.cannotReset" = "ไม่สามารถย้ายไฟล์การตั้งค่า %@ ไปที่ถังขยะได้";
+"settings.error.storedNoVisibleEntryPoint" = "ไฟล์การตั้งค่า %@ ปิดทั้ง “แสดงในแถบเมนู” และ “แสดงใน Dock” แอปจึงไม่มีจุดเข้าใช้งานที่มองเห็นได้ แก้ไขไฟล์ หรือย้ายไปที่ถังขยะด้วย `ojd setting reset`";
+"settings.error.noVisibleEntryPoint" = "ไม่สามารถปิดทั้ง “แสดงในแถบเมนู” และ “แสดงใน Dock” พร้อมกันได้ เพราะแอปจะไม่มีจุดเข้าใช้งานที่มองเห็นได้";
+"settings.unreadable.title" = "ไม่สามารถอ่านการตั้งค่าได้";
+"settings.unreadable.resetSettings" = "รีเซ็ตการตั้งค่า";
+"settings.unreadable.showInFinder" = "แสดงใน Finder";
+"cli.setting.reset.abstract" = "ย้ายไฟล์การตั้งค่าไปที่ถังขยะ";
+"cli.setting.reset.discussion" = "ย้าย Settings.json ไปที่ถังขยะเพื่อให้ทุกการตั้งค่ากลับเป็นค่าเริ่มต้น ใช้เมื่อไฟล์เสียหายหรือถูกปฏิเสธ";
+"cli.setting.reset.confirm" = "ย้ายไฟล์การตั้งค่าไปที่ถังขยะและคืนทุกการตั้งค่าเป็นค่าเริ่มต้นหรือไม่";
+"cli.setting.reset.success" = "ย้าย %@ ไปที่ถังขยะแล้ว";
+"cli.setting.reset.none" = "ไม่มีไฟล์การตั้งค่าที่ %@";

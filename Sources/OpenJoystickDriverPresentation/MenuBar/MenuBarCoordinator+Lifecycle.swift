@@ -32,21 +32,70 @@
         queue: .main
       ) { [weak self] _ in Task { @MainActor [weak self] in self?.refreshLiveStatus() } }
       Task { @MainActor in await viewModel.startSystemExtensionSetup() }
-      LaunchUpdateCheck(
-        isEnabled: { [preferences] in preferences.checkUpdatesAutomatically },
-        check: { [preferences] in preferences.checkForUpdates(announcingAvailableUpdate: true) }
-      ).run()
+      preferences.settingsRecovered = { [weak self] in
+        guard let self else { return }
+        SettingsRecoveryFollowUp(
+          updateCheck: self.launchUpdateCheck,
+          registerLogin: Self.registerLoginIfNeeded
+        ).run()
+      }
+      if case .skippedSettingsUnreadable(let error) = launchUpdateCheck.run() {
+        SettingsSkipLog.write(
+          feature: "the launch update check",
+          file: error.file ?? "",
+          error: error
+        )
+      }
       showInDockObservation = preferences.$showInDock.removeDuplicates().sink {
         [weak self] shown in self?.dockIcon.showsAlways = shown
       }
-      showInMenuBarObservation = preferences.$showInMenuBar.removeDuplicates().sink {
-        [weak self] shown in self?.applyShowInMenuBar(shown)
-      }
+      showInMenuBarObservation = Publishers.CombineLatest(
+        preferences.$showInMenuBar,
+        preferences.$settingsFileError
+      ).map { SettingsFileStartup.statusItemIsShown(showInMenuBar: $0, settingsError: $1) }
+        .removeDuplicates().sink { [weak self] shown in self?.applyShowInMenuBar(shown) }
+      Task { @MainActor in self.offerSettingsRecovery() }
       // The service sends no controller attach or detach notification to the app, so this poll is
       // the only source of live controller changes.
       liveStatusTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
         guard let self else { return }
         Task { @MainActor in self.refreshLiveStatus() }
+      }
+    }
+
+    private var launchUpdateCheck: LaunchUpdateCheck {
+      LaunchUpdateCheck(
+        settingsError: { [preferences] in preferences.settingsFileError },
+        isEnabled: { [preferences] in preferences.checkUpdatesAutomatically },
+        check: { [preferences] in preferences.checkForUpdates(announcingAvailableUpdate: true) }
+      )
+    }
+
+    /// Registers the login item unless the user opted out; only an installed app has one.
+    private static func registerLoginIfNeeded() throws {
+      guard Bundle.main.bundleURL.pathExtension == "app" else { return }
+      try ApplicationServiceManager.installByDefaultIfNeeded()
+    }
+
+    /// Asks what to do about a settings file that cannot be used, and asks again while a reset
+    /// leaves it unusable.
+    func offerSettingsRecovery() {
+      guard
+        case .offerRecovery(let error) = SettingsFileStartup.decide(
+          settingsError: preferences.settingsFileError
+        )
+      else { return }
+      NSApplication.shared.activate(ignoringOtherApps: true)
+      let reason = preferences.errorMessage ?? error.localizedDescription
+      switch SettingsUnreadableChoice(
+        response: SettingsUnreadableAlert.make(reason: reason).runModal()
+      )
+      {
+      case .showInFinder: preferences.showSettingsFileInFinder()
+      case .resetSettings:
+        preferences.resetSettings()
+        offerSettingsRecovery()
+      case .quit: NSApplication.shared.terminate(nil)
       }
     }
 

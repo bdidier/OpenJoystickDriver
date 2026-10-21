@@ -1889,3 +1889,17 @@
 "controllers.captureDurationInvalid" = "Gib eine Anzahl Sekunden über 0 ein.";
 "controllers.fileSaved" = "%@ wurde gesichert.";
 "controllers.virtual.currentScope" = "Bereich der aktuellen Überschreibung: %@";
+"settings.error.damaged" = "Die Einstellungsdatei %@ ist beschädigt. Repariere sie oder lege sie mit `ojd setting reset` in den Papierkorb.";
+"settings.error.unsupported" = "Die Einstellungsdatei %@ wird nicht unterstützt. Schreibe die Datei für die unterstützte apiVersion neu oder lege sie mit `ojd setting reset` in den Papierkorb.";
+"settings.error.unwritable" = "In die Einstellungsdatei %@ kann nicht geschrieben werden.";
+"settings.error.cannotReset" = "Die Einstellungsdatei %@ kann nicht in den Papierkorb gelegt werden.";
+"settings.error.storedNoVisibleEntryPoint" = "Die Einstellungsdatei %@ schaltet „In der Menüleiste anzeigen“ und „Im Dock anzeigen“ aus, sodass die App keinen sichtbaren Einstiegspunkt hätte. Repariere sie oder lege sie mit `ojd setting reset` in den Papierkorb.";
+"settings.error.noVisibleEntryPoint" = "„In der Menüleiste anzeigen“ und „Im Dock anzeigen“ können nicht beide ausgeschaltet sein: Die App hätte keinen sichtbaren Einstiegspunkt.";
+"settings.unreadable.title" = "Einstellungen können nicht gelesen werden";
+"settings.unreadable.resetSettings" = "Einstellungen zurücksetzen";
+"settings.unreadable.showInFinder" = "Im Finder anzeigen";
+"cli.setting.reset.abstract" = "Legt die Einstellungsdatei in den Papierkorb.";
+"cli.setting.reset.discussion" = "Legt Settings.json in den Papierkorb, sodass alle Einstellungen auf ihre Standardwerte zurückgehen. Verwende es, wenn die Datei beschädigt ist oder abgelehnt wird.";
+"cli.setting.reset.confirm" = "Die Einstellungsdatei in den Papierkorb legen und alle Einstellungen auf die Standardwerte zurücksetzen?";
+"cli.setting.reset.success" = "%@ wurde in den Papierkorb gelegt.";
+"cli.setting.reset.none" = "Unter %@ gibt es keine Einstellungsdatei.";

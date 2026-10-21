@@ -8,7 +8,7 @@ struct LaunchUpdateCheckTests {
   @MainActor
   func enabledSettingChecksOnce() {
     var checks = 0
-    LaunchUpdateCheck(isEnabled: { true }, check: { checks += 1 }).run()
+    LaunchUpdateCheck(settingsError: { nil }, isEnabled: { true }, check: { checks += 1 }).run()
     #expect(checks == 1)
   }
 
@@ -16,7 +16,7 @@ struct LaunchUpdateCheckTests {
   @MainActor
   func disabledSettingDoesNotCheck() {
     var checks = 0
-    LaunchUpdateCheck(isEnabled: { false }, check: { checks += 1 }).run()
+    LaunchUpdateCheck(settingsError: { nil }, isEnabled: { false }, check: { checks += 1 }).run()
     #expect(checks == 0)
   }
 }

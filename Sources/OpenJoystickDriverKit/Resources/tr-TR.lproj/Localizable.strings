@@ -1888,3 +1888,17 @@
 "controllers.captureDurationInvalid" = "0’dan büyük bir saniye sayısı girin.";
 "controllers.fileSaved" = "%@ kaydedildi.";
 "controllers.virtual.currentScope" = "Geçerli geçersiz kılmanın kapsamı: %@";
+"settings.error.damaged" = "%@ ayar dosyası hasarlı. Dosyayı düzeltin ya da `ojd setting reset` ile Çöp Sepeti’ne taşıyın.";
+"settings.error.unsupported" = "%@ ayar dosyası desteklenmiyor. Dosyayı desteklenen apiVersion için yeniden yazın ya da `ojd setting reset` ile Çöp Sepeti’ne taşıyın.";
+"settings.error.unwritable" = "%@ ayar dosyasına yazılamıyor.";
+"settings.error.cannotReset" = "%@ ayar dosyası Çöp Sepeti’ne taşınamıyor.";
+"settings.error.storedNoVisibleEntryPoint" = "%@ ayar dosyası hem “Menü çubuğunda göster” hem de “Dock’te göster” seçeneğini kapatıyor; bu yüzden uygulamanın görünür bir giriş noktası olmazdı. Dosyayı düzeltin ya da `ojd setting reset` ile Çöp Sepeti’ne taşıyın.";
+"settings.error.noVisibleEntryPoint" = "“Menü çubuğunda göster” ve “Dock’te göster” birlikte kapalı olamaz: uygulamanın görünür bir giriş noktası olmazdı.";
+"settings.unreadable.title" = "Ayarlar okunamıyor";
+"settings.unreadable.resetSettings" = "Ayarları Sıfırla";
+"settings.unreadable.showInFinder" = "Finder’da Göster";
+"cli.setting.reset.abstract" = "Ayar dosyasını Çöp Sepeti’ne taşır.";
+"cli.setting.reset.discussion" = "Settings.json dosyasını Çöp Sepeti’ne taşır; böylece her ayar varsayılan değerine döner. Dosya hasarlıysa veya reddediliyorsa kullanın.";
+"cli.setting.reset.confirm" = "Ayar dosyası Çöp Sepeti’ne taşınsın ve her ayar varsayılan değerine döndürülsün mü?";
+"cli.setting.reset.success" = "%@ Çöp Sepeti’ne taşındı.";
+"cli.setting.reset.none" = "%@ konumunda ayar dosyası yok.";

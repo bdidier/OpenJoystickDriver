@@ -1889,3 +1889,17 @@
 "controllers.captureDurationInvalid" = "Inserisci un numero di secondi maggiore di 0.";
 "controllers.fileSaved" = "%@ è stato salvato.";
 "controllers.virtual.currentScope" = "Ambito della sostituzione attuale: %@";
+"settings.error.damaged" = "Il file delle impostazioni %@ è danneggiato. Correggilo oppure spostalo nel Cestino con `ojd setting reset`.";
+"settings.error.unsupported" = "Il file delle impostazioni %@ non è supportato. Riscrivi il file per l’apiVersion supportata oppure spostalo nel Cestino con `ojd setting reset`.";
+"settings.error.unwritable" = "Impossibile scrivere il file delle impostazioni %@.";
+"settings.error.cannotReset" = "Impossibile spostare nel Cestino il file delle impostazioni %@.";
+"settings.error.storedNoVisibleEntryPoint" = "Il file delle impostazioni %@ disattiva sia «Mostra nella barra dei menu» sia «Mostra nel Dock», quindi l’app non avrebbe alcun punto di accesso visibile. Correggilo oppure spostalo nel Cestino con `ojd setting reset`.";
+"settings.error.noVisibleEntryPoint" = "«Mostra nella barra dei menu» e «Mostra nel Dock» non possono essere disattivati entrambi: l’app non avrebbe alcun punto di accesso visibile.";
+"settings.unreadable.title" = "Impossibile leggere le impostazioni";
+"settings.unreadable.resetSettings" = "Ripristina impostazioni";
+"settings.unreadable.showInFinder" = "Mostra nel Finder";
+"cli.setting.reset.abstract" = "Sposta il file delle impostazioni nel Cestino.";
+"cli.setting.reset.discussion" = "Sposta Settings.json nel Cestino, così ogni impostazione torna al valore predefinito. Usalo quando il file è danneggiato o rifiutato.";
+"cli.setting.reset.confirm" = "Spostare il file delle impostazioni nel Cestino e riportare ogni impostazione al valore predefinito?";
+"cli.setting.reset.success" = "%@ è stato spostato nel Cestino.";
+"cli.setting.reset.none" = "Non c’è alcun file delle impostazioni in %@.";
