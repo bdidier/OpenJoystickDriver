@@ -1371,7 +1371,6 @@
 "error.E2034" = "서비스가 더 이상 요청을 받지 않습니다. OpenJoystickDriver를 종료했다가 다시 열고 다시 시도하세요.";
 "error.E2035" = "요청 수신기가 중지된 이유를 기록한 파일을 사용할 수 없습니다. 파일을 삭제한 다음 OpenJoystickDriver를 다시 여세요.";
 "error.E2036" = "--json 출력에서는 레코드의 숫자를 값 그대로 쓸 수 없습니다. 레코드 텍스트를 보려면 --json 없이 명령을 실행하세요.";
-/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app is waiting for service events, so a test notification would reach nobody. */
 /* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2037" = "제때 테스트 알림에 응답한 OpenJoystickDriver 앱이 없습니다. 앱이 실행 중인지 확인하고 다시 시도하세요.";
 /* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */

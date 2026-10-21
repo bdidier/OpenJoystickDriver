@@ -1371,7 +1371,6 @@
 "error.E2034" = "服務已停止接受要求。請結束並重新開啟 OpenJoystickDriver，然後重試。";
 "error.E2035" = "無法使用記錄要求監聽停止原因的檔案。請刪除該檔案，然後重新開啟 OpenJoystickDriver。";
 "error.E2036" = "--json 輸出無法在不改變數值的情況下寫出記錄中的某個數字。請不加 --json 執行指令，以查看記錄文字。";
-/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app is waiting for service events, so a test notification would reach nobody. */
 /* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2037" = "沒有 OpenJoystickDriver App 及時回應測試通知。請確認 App 正在執行，然後重試。";
 /* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */

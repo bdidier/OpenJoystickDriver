@@ -1371,7 +1371,6 @@
 "error.E2034" = "توقفت الخدمة عن قبول الطلبات. أغلق OpenJoystickDriver ثم افتحه من جديد، ثم حاول مرة أخرى.";
 "error.E2035" = "لا يمكن استخدام الملف الذي يسجّل سبب توقف مستمع الطلبات. احذف الملف ثم افتح OpenJoystickDriver من جديد.";
 "error.E2036" = "لا يمكن لمخرجات --json كتابة رقم من السجل دون تغيير قيمته. شغّل الأمر دون --json لعرض نص السجل.";
-/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app is waiting for service events, so a test notification would reach nobody. */
 /* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2037" = "لم يرد أي تطبيق OpenJoystickDriver على الإشعار التجريبي في الوقت المناسب. تأكد من أن التطبيق قيد التشغيل ثم حاول مرة أخرى.";
 /* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */

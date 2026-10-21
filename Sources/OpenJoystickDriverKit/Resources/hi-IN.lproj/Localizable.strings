@@ -1371,7 +1371,6 @@
 "error.E2034" = "सेवा ने अनुरोध स्वीकार करना बंद कर दिया है। OpenJoystickDriver को बंद करके दोबारा खोलें, फिर दोबारा कोशिश करें।";
 "error.E2035" = "वह फ़ाइल उपयोग नहीं की जा सकती जिसमें दर्ज है कि अनुरोध श्रोता क्यों रुका। फ़ाइल हटाएँ, फिर OpenJoystickDriver को दोबारा खोलें।";
 "error.E2036" = "--json आउटपुट रिकॉर्ड की किसी संख्या को उसका मान बदले बिना नहीं लिख सकता। रिकॉर्ड का टेक्स्ट देखने के लिए कमांड को --json के बिना चलाएँ।";
-/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app is waiting for service events, so a test notification would reach nobody. */
 /* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2037" = "किसी भी OpenJoystickDriver ऐप ने परीक्षण सूचना का समय पर उत्तर नहीं दिया। जाँचें कि ऐप चल रहा है, फिर दोबारा कोशिश करें।";
 /* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */

@@ -1371,7 +1371,6 @@
 "error.E2034" = "Служба перестала принимать запросы. Закройте OpenJoystickDriver, откройте его снова и повторите попытку.";
 "error.E2035" = "Файл, в котором записано, почему остановился приём запросов, использовать нельзя. Удалите файл и снова откройте OpenJoystickDriver.";
 "error.E2036" = "Вывод --json не может записать число из записи, не изменив его значение. Выполните команду без --json, чтобы увидеть текст записи.";
-/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app is waiting for service events, so a test notification would reach nobody. */
 /* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2037" = "Ни одно приложение OpenJoystickDriver не ответило на тестовое уведомление вовремя. Убедитесь, что приложение запущено, и повторите попытку.";
 /* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */

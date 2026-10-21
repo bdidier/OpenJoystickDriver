@@ -1593,7 +1593,6 @@
 "error.E2035" = "The file that records why the request listener stopped cannot be used. Delete the file, then open OpenJoystickDriver again.";
 /* Error E2036, shown in the CLI when --json output cannot write a number of a record without changing its value. */
 "error.E2036" = "The --json output cannot write a number of the record without changing its value. Run the command without --json to see the record text.";
-/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app is waiting for service events, so a test notification would reach nobody. */
 /* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2037" = "No OpenJoystickDriver app answered the test notification in time. Check that the app is running, then try again.";
 /* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */

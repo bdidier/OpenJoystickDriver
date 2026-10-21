@@ -1371,7 +1371,6 @@
 "error.E2034" = "サービスがリクエストを受け付けなくなりました。OpenJoystickDriverを終了して開き直してから、もう一度お試しください。";
 "error.E2035" = "リクエストの待ち受けが停止した理由を記録したファイルは使用できません。ファイルを削除してから、OpenJoystickDriverを開き直してください。";
 "error.E2036" = "--json の出力では、レコードに含まれる数値をその値のまま書き出せません。レコードのテキストを確認するには、--json を付けずにコマンドを実行してください。";
-/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app is waiting for service events, so a test notification would reach nobody. */
 /* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2037" = "テスト通知に時間内に応答したOpenJoystickDriverアプリがありません。アプリが実行中か確認してから、もう一度お試しください。";
 /* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */

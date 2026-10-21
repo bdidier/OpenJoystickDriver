@@ -1371,7 +1371,6 @@
 "error.E2034" = "Dịch vụ đã ngừng nhận yêu cầu. Hãy thoát OpenJoystickDriver, mở lại, rồi thử lại.";
 "error.E2035" = "Không dùng được tệp ghi lại lý do trình lắng nghe yêu cầu dừng. Hãy xóa tệp, rồi mở lại OpenJoystickDriver.";
 "error.E2036" = "Đầu ra --json không thể ghi một số trong bản ghi mà không thay đổi giá trị của nó. Hãy chạy lệnh mà không có --json để xem văn bản của bản ghi.";
-/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app is waiting for service events, so a test notification would reach nobody. */
 /* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2037" = "Không có ứng dụng OpenJoystickDriver nào trả lời thông báo thử kịp lúc. Hãy kiểm tra ứng dụng đang chạy, rồi thử lại.";
 /* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */

@@ -1371,7 +1371,6 @@
 "error.E2034" = "บริการหยุดรับคำขอแล้ว ปิด OpenJoystickDriver แล้วเปิดใหม่ จากนั้นลองอีกครั้ง";
 "error.E2035" = "ไม่สามารถใช้ไฟล์ที่บันทึกสาเหตุที่ตัวรับคำขอหยุดทำงานได้ ลบไฟล์นั้น แล้วเปิด OpenJoystickDriver ใหม่";
 "error.E2036" = "เอาต์พุตของ --json เขียนตัวเลขในระเบียนโดยไม่เปลี่ยนค่าไม่ได้ เรียกใช้คำสั่งโดยไม่ใส่ --json เพื่อดูข้อความของระเบียน";
-/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app is waiting for service events, so a test notification would reach nobody. */
 /* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2037" = "ไม่มีแอป OpenJoystickDriver ตอบกลับการแจ้งเตือนทดสอบทันเวลา ตรวจสอบว่าแอปกำลังทำงานอยู่ แล้วลองอีกครั้ง";
 /* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */

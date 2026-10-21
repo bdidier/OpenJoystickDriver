@@ -1371,7 +1371,6 @@
 "error.E2034" = "Il servizio non accetta più richieste. Chiudi OpenJoystickDriver, riaprilo e riprova.";
 "error.E2035" = "Il file che registra perché l’ascolto delle richieste si è fermato non è utilizzabile. Elimina il file, poi riapri OpenJoystickDriver.";
 "error.E2036" = "L’output di --json non può scrivere un numero del record senza cambiarne il valore. Esegui il comando senza --json per vedere il testo del record.";
-/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app is waiting for service events, so a test notification would reach nobody. */
 /* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2037" = "Nessuna app OpenJoystickDriver ha risposto in tempo alla notifica di prova. Verifica che l’app sia in esecuzione e riprova.";
 /* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */

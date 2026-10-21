@@ -1371,7 +1371,6 @@
 "error.E2034" = "O serviço parou de aceitar solicitações. Feche o OpenJoystickDriver, abra-o novamente e tente de novo.";
 "error.E2035" = "O arquivo que registra por que a escuta de solicitações parou não pode ser usado. Exclua o arquivo e abra o OpenJoystickDriver novamente.";
 "error.E2036" = "A saída de --json não consegue escrever um número do registro sem alterar seu valor. Execute o comando sem --json para ver o texto do registro.";
-/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app is waiting for service events, so a test notification would reach nobody. */
 /* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2037" = "Nenhum app OpenJoystickDriver respondeu a tempo à notificação de teste. Verifique se o app está em execução e tente de novo.";
 /* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */

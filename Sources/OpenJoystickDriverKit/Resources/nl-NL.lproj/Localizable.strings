@@ -1371,7 +1371,6 @@
 "error.E2034" = "De service accepteert geen verzoeken meer. Sluit OpenJoystickDriver af, open het opnieuw en probeer het opnieuw.";
 "error.E2035" = "Het bestand dat vastlegt waarom de verzoeklistener is gestopt, kan niet worden gebruikt. Verwijder het bestand en open OpenJoystickDriver daarna opnieuw.";
 "error.E2036" = "De uitvoer van --json kan een getal van het record niet schrijven zonder de waarde te veranderen. Voer de opdracht uit zonder --json om de tekst van het record te zien.";
-/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app is waiting for service events, so a test notification would reach nobody. */
 /* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2037" = "Geen enkele OpenJoystickDriver-app heeft op tijd op de testmelding geantwoord. Controleer of de app draait en probeer het opnieuw.";
 /* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */

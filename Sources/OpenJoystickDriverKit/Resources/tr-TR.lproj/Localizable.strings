@@ -1371,7 +1371,6 @@
 "error.E2034" = "Servis istekleri kabul etmeyi durdurdu. OpenJoystickDriver’ı kapatıp yeniden açın, sonra yeniden deneyin.";
 "error.E2035" = "İstek dinleyicisinin neden durduğunu kaydeden dosya kullanılamıyor. Dosyayı silin, sonra OpenJoystickDriver’ı yeniden açın.";
 "error.E2036" = "--json çıktısı, kayıttaki bir sayıyı değerini değiştirmeden yazamaz. Kaydın metnini görmek için komutu --json olmadan çalıştırın.";
-/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app is waiting for service events, so a test notification would reach nobody. */
 /* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2037" = "Hiçbir OpenJoystickDriver uygulaması test bildirimine zamanında yanıt vermedi. Uygulamanın çalıştığından emin olun, sonra yeniden deneyin.";
 /* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */

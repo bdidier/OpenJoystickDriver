@@ -1371,7 +1371,6 @@
 "error.E2034" = "Der Dienst nimmt keine Anfragen mehr an. Beende OpenJoystickDriver, öffne es erneut und versuche es dann noch einmal.";
 "error.E2035" = "Die Datei, die festhält, warum die Anfrageannahme beendet wurde, lässt sich nicht verwenden. Lösche die Datei und öffne OpenJoystickDriver dann erneut.";
 "error.E2036" = "Die Ausgabe mit --json kann eine Zahl des Eintrags nicht schreiben, ohne ihren Wert zu ändern. Führe den Befehl ohne --json aus, um den Text des Eintrags zu sehen.";
-/* Error E2037, shown by ojd and the app when no OpenJoystickDriver app is waiting for service events, so a test notification would reach nobody. */
 /* Error E2037, shown by ojd and the app when no OpenJoystickDriver app took the test notification or reported on it before the deadline. */
 "error.E2037" = "Keine OpenJoystickDriver-App hat rechtzeitig auf die Testmitteilung geantwortet. Prüfe, ob die App läuft, und versuche es dann noch einmal.";
 /* Error E2038, shown by ojd and the app when notifications are not allowed for the app, so the test notification could not be shown. */
