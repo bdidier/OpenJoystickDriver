@@ -24,6 +24,109 @@ struct ServingPolicyCallersTests {
     #expect((reason == nil) == route.publishesVirtualDevice, "\(fixture.name)")
   }
 
+  /// The reason each situation gives for publishing nothing; nil for the routes that publish a
+  /// persona, which include the extension-owned route.
+  private static let expectedReasons:
+    [String: ApplicationServicePublicationStatus.NotPublishedReason?] = [
+      "native gamepad": .systemGamepad,
+      "native HID": .nativeHIDPassThrough,
+      "native claimed by OJD": nil,
+      "seized HID": nil,
+      "seized HID with override": nil,
+      "raw USB claimed by OJD": nil,
+      "extension owned": nil,
+      "upstream virtual": .upstreamVirtualDevice,
+      "output off": .outputDisabled,
+    ]
+
+  @Test(arguments: ServingFixture.all)
+  func theServiceNamesTheReasonEachRouteGives(_ fixture: ServingFixture) throws {
+    let expected = try #require(Self.expectedReasons[fixture.name], "\(fixture.name)")
+    let reason = ApplicationServiceServer.notPublishedReason(
+      of: fixture.route,
+      observation: fixture.observation
+    )
+    #expect(reason == expected, "\(fixture.name)")
+  }
+
+  @Test
+  func everyFixtureHasAnExpectedReason() {
+    #expect(Set(ServingFixture.all.map(\.name)) == Set(Self.expectedReasons.keys))
+  }
+
+  /// A device whose route publishes, with the session and the controls varied.
+  private static func device(
+    session: ControllerSessionState,
+    controls: Set<Control>
+  ) -> ApplicationServiceDeviceDescription {
+    ApplicationServiceDeviceDescription(
+      name: "pad",
+      vendorID: 0x3537,
+      productID: 0x100B,
+      protocolBinding: ProtocolBindingID(.hidDescriptor),
+      connection: "USB",
+      discoverySource: .hid,
+      physicalOwnership: .exclusiveHID,
+      serialNumber: nil,
+      bindingResult: .hidDescriptorFixture,
+      capabilities: ControllerCapabilities(controls: controls),
+      sessionState: session,
+      sessionToken: .fixture("reason-fixture")
+    )
+  }
+
+  @MainActor
+  @Test
+  func theServiceReportsTheReasonTheSessionAndTheProfileGive() async throws {
+    let published = LogicalControllerID(vendorID: 0x3537, productID: 0x100B)
+    let server = try await VirtualOutputTests().profileOverrideServer(
+      [published],
+      outputEnabled: true
+    )
+    defer { Task { await server.tearDown() } }
+    // A controller the dispatcher has not published, so the service decides the reason itself.
+    let id = LogicalControllerID(vendorID: 0x3537, productID: 0x2222)
+
+    let suspended = Self.device(session: .suspended, controls: Control.xboxLayout)
+    let described = server.server.describingVirtualHIDProfiles([(id, suspended)])
+    #expect(described.first?.publication?.reason == .sessionSuspended)
+
+    // The extension owns the USB link and OJD still publishes the persona, so the controller
+    // waits for input like any other.
+    let extensionOwned = try #require(ServingFixture.all.first { $0.name == "extension owned" })
+    #expect(
+      server.server.describingVirtualHIDProfiles([(id, extensionOwned.device)]).first?
+        .publication?.reason == .noInputYet
+    )
+
+    let active = Self.device(session: .active, controls: Control.xboxLayout)
+    let automatic = server.server.automaticUserSpaceDispatcher()
+    #expect(
+      ApplicationServiceServer.publication(
+        of: active,
+        identifier: id,
+        automatic: automatic,
+        unavailable: true
+      ).reason == .noVirtualProfile
+    )
+    #expect(
+      ApplicationServiceServer.publication(
+        of: active,
+        identifier: id,
+        automatic: automatic,
+        unavailable: false
+      ).reason == .noInputYet
+    )
+    #expect(
+      ApplicationServiceServer.publication(
+        of: active,
+        identifier: id,
+        automatic: nil,
+        unavailable: false
+      ).reason == .outputDisabled
+    )
+  }
+
   /// What one caller says about a controller: the persona it shows and whether it offers the
   /// server choice.
   private struct Answer: Equatable {

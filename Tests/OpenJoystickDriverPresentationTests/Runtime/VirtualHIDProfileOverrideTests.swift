@@ -270,10 +270,7 @@ struct VirtualHIDProfileOverrideTests {
         unavailable: false
       )
     )
-    xbox.publication = ApplicationServicePublicationStatus(
-      state: .published,
-      target: .sdlCompatible
-    )
+    xbox.publication = ApplicationServicePublicationStatus.published(target: .sdlCompatible)
     #expect(xbox.publishedIdentityLabel.contains("045E:02FD"))
     #expect(xbox.publishedIdentityPresentation.glyphFamily == .xbox)
 
@@ -295,7 +292,7 @@ struct VirtualHIDProfileOverrideTests {
         unavailable: false
       )
     )
-    pad.publication = ApplicationServicePublicationStatus(state: .published, target: .generic)
+    pad.publication = ApplicationServicePublicationStatus.published(target: .generic)
 
     let label = VirtualHIDProfileID.generic.identity.publishedUSBIdentityLabel
     #expect(pad.publishedIdentityLabel == label)
@@ -324,10 +321,7 @@ struct VirtualHIDProfileOverrideTests {
       override: nil,
       unavailable: false
     )
-    sixaxis.publication = ApplicationServicePublicationStatus(
-      state: .notPublished,
-      reason: .systemGamepad
-    )
+    sixaxis.publication = ApplicationServicePublicationStatus.notPublished(.systemGamepad)
 
     #expect(sixaxis.publishedIdentityPresentation == .playstation)
     #expect(sixaxis.publishedIdentityPresentation.glyphFamily != .xbox)
@@ -343,9 +337,9 @@ struct VirtualHIDProfileOverrideTests {
     )
     let cases: [(ApplicationServicePublicationStatus?, published: Bool)] = [
       (nil, false),
-      (ApplicationServicePublicationStatus(state: .notPublished, reason: .noInputYet), false),
-      (ApplicationServicePublicationStatus(state: .failed, failure: "send failed"), false),
-      (ApplicationServicePublicationStatus(state: .published, target: .sdlCompatible), true),
+      (ApplicationServicePublicationStatus.notPublished(.noInputYet), false),
+      (ApplicationServicePublicationStatus.failed("send failed"), false),
+      (ApplicationServicePublicationStatus.published(target: .sdlCompatible), true),
     ]
     for (publication, published) in cases {
       for ownership in ControllerOwnershipObservation.allCases {

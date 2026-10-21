@@ -21,10 +21,7 @@ struct ServingRouteLabelTests {
   private static func device(_ fixture: ServingFixture) -> ApplicationServiceDeviceDescription {
     var device = fixture.device
     if !fixture.outputEnabled {
-      device.publication = ApplicationServicePublicationStatus(
-        state: .notPublished,
-        reason: .outputDisabled
-      )
+      device.publication = ApplicationServicePublicationStatus.notPublished(.outputDisabled)
     }
     return device
   }

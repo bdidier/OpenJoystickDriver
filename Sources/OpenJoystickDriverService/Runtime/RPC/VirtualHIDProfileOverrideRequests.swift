@@ -307,8 +307,9 @@ extension ApplicationServiceServer {
     }
   }
 
-  /// The publication reason a route gives for publishing nothing; nil when the route leaves
-  /// publication to the session and profile checks.
+  /// The publication reason a route gives for publishing nothing; nil when the route publishes a
+  /// persona (`virtualHID`, and `extensionOwned`, whose extension owns the USB link while OJD
+  /// publishes the virtual device) and publication is left to the session and profile checks.
   static func notPublishedReason(
     of route: ServingRoute,
     observation: ControllerOwnershipObservation
@@ -323,14 +324,14 @@ extension ApplicationServiceServer {
   }
 
   /// Whether a virtual device publishes `device`, with the first reason it does not.
-  private static func publication(
+  static func publication(
     of device: ApplicationServiceDeviceDescription,
     identifier: LogicalControllerID,
     automatic: AutomaticUserSpaceOutputDispatcher?,
     unavailable: Bool
   ) -> ApplicationServicePublicationStatus {
     let notPublished = { (reason: ApplicationServicePublicationStatus.NotPublishedReason) in
-      ApplicationServicePublicationStatus(state: .notPublished, reason: reason)
+      ApplicationServicePublicationStatus.notPublished(reason)
     }
     guard let automatic else { return notPublished(.outputDisabled) }
     let recorded = automatic.publicationStatus(for: identifier)
