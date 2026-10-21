@@ -116,14 +116,13 @@ extension ControllerRecord {
   public var document: Data { Data(text.utf8) }
 }
 
-/// Why a controller record, patch or related document is invalid. A problem about a controller
-/// record or patch carries ``ErrorCode/invalidControllerRecord``; one about another document,
-/// such as a virtual device, carries no code. ``description`` leaves the code out.
+/// Why a controller record, patch or related document, such as a virtual device, is invalid. It
+/// carries ``ErrorCode/invalidControllerRecord``. ``description`` leaves the code out.
 public struct ControllerRecordProblem: Error, Equatable, Sendable, CustomStringConvertible {
   public let description: String
-  public let code: ErrorCode?
+  public let code: ErrorCode
 
-  init(code: ErrorCode?, _ description: String) {
+  init(code: ErrorCode, _ description: String) {
     self.code = code
     self.description = description
   }
@@ -190,19 +189,38 @@ public struct ControllerRecordSet: Sendable {
   /// The bundled records, decoded once per process.
   private static func loadBundled() throws -> Self {
     let urls = (Bundle.module.urls(forResourcesWithExtension: "json", subdirectory: nil) ?? [])
-      .filter { isRecordFileName($0.lastPathComponent) }.sorted {
-        $0.lastPathComponent < $1.lastPathComponent
-      }
+      .filter { isRecordFileName($0.lastPathComponent) }
     guard !urls.isEmpty else {
       throw ControllerRecordProblem(code: .invalidControllerRecord, "controller catalog is empty")
     }
+    let catalog = loadCatalog(urls)
+    if let problem = catalog.problems.first { throw bundledFailure(problem) }
+    return Self(records: catalog.records, userFiles: [])
+  }
+
+  /// The failure that a bundled record with `problem` raises: the file, then the problem's code
+  /// and reason.
+  static func bundledFailure(_ problem: RepositoryProblem) -> ControllerRecordProblem {
+    ControllerRecordProblem(
+      code: .invalidControllerRecord,
+      "\(problem.file): \(problem.code.rawValue): \(problem.message)"
+    )
+  }
+
+  /// The records of the Controller files `urls` in file-name order, and a problem for each file
+  /// that is not a valid record of the catalog: one that fails the record rules, whose file name
+  /// is not its record's ``fileName(for:)``, or whose identity an earlier file holds. The
+  /// bundled catalog and ``RepositoryValidation/records(in:)`` load through this check.
+  static func loadCatalog(
+    _ urls: [URL]
+  ) -> (records: [ControllerModelID: ControllerRecord], problems: [RepositoryProblem]) {
     var records: [ControllerModelID: ControllerRecord] = [:]
-    for url in urls {
+    var problems: [RepositoryProblem] = []
+    for url in urls.sorted(by: { $0.lastPathComponent < $1.lastPathComponent }) {
       do {
-        let data = try Data(contentsOf: url)
+        let data = try RepositoryProblem.read(url)
         try requireUTF8(data)
-        guard let document = try JSONSerialization.jsonObject(with: data) as? [String: Any]
-        else { throw ControllerRecordProblem(code: .invalidControllerRecord, "not a JSON object") }
+        let document = try jsonObject(data)
         let layers = Dictionary(
           uniqueKeysWithValues: fieldNames(of: document).map { ($0, ControllerRecordLayer.bundled) }
         )
@@ -221,13 +239,10 @@ public struct ControllerRecordSet: Sendable {
         }
         records[record.model] = record
       } catch {
-        throw ControllerRecordProblem(
-          code: .invalidControllerRecord,
-          "\(url.path): \(problemDescription(error, document: "record"))"
-        )
+        problems.append(RepositoryProblem(file: url.path, error: error, document: "record"))
       }
     }
-    return Self(records: records, userFiles: [])
+    return (records, problems)
   }
 
   private static func isRecordFileName(_ name: String) -> Bool {
@@ -240,7 +255,10 @@ public struct ControllerRecordSet: Sendable {
   static func decode(
     _ record: [String: Any]
   ) throws -> (model: ControllerModelID, document: ControllerRecordDocument) {
-    let data = try JSONSerialization.data(withJSONObject: record)
+    let data: Data
+    do { data = try JSONSerialization.data(withJSONObject: record) } catch {
+      throw ControllerRecordProblem(code: .invalidControllerRecord, error.localizedDescription)
+    }
     let document = try JSONDecoder().decode(ControllerRecordDocument.self, from: data)
     guard let vendorID = UInt16(exactly: document.vendorID),
       let productID = UInt16(exactly: document.productID)
@@ -260,6 +278,19 @@ public struct ControllerRecordSet: Sendable {
     do { return try OrderedJSON.parse(data) } catch {
       throw ControllerRecordProblem(code: .invalidControllerRecord, "\(error)")
     }
+  }
+
+  /// The JSON object in `data`, which is plain UTF-8. Text that is not JSON, and JSON that is not
+  /// an object, are `invalidControllerRecord`.
+  static func jsonObject(_ data: Data) throws -> [String: Any] {
+    let value: Any
+    do { value = try JSONSerialization.jsonObject(with: data) } catch {
+      throw ControllerRecordProblem(code: .invalidControllerRecord, error.localizedDescription)
+    }
+    guard let document = value as? [String: Any] else {
+      throw ControllerRecordProblem(code: .invalidControllerRecord, "not a JSON object")
+    }
+    return document
   }
 
   /// Refuses `data` unless it is plain UTF-8, with the problem ``ordered(_:)`` gives, before a
@@ -314,13 +345,14 @@ public struct ControllerRecordSet: Sendable {
   }
 
   /// The error code of a record that is refused: ``ErrorCode/unsupportedAPIVersion`` for its
-  /// `apiVersion`, and ``ErrorCode/invalidControllerRecord`` for any other failed rule. Nil when
+  /// `apiVersion`, and ``ErrorCode/invalidControllerRecord`` for any other failed rule, including
+  /// a record whose values ``OrderedJSON`` cannot write. Nil when
   /// `error` is not about the record's content, such as a file that cannot be read.
   public static func problemCode(_ error: any Error) -> ErrorCode? {
     switch error {
     case let problem as DocumentHeaderProblem: problem.code ?? .invalidControllerRecord
     case let problem as ControllerRecordProblem: problem.code
-    case is DecodingError: .invalidControllerRecord
+    case is DecodingError, is OrderedJSON.Problem: .invalidControllerRecord
     default: nil
     }
   }

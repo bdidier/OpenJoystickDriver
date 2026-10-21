@@ -228,25 +228,75 @@ struct ProtocolDescription: Sendable {
   }()
 
   private static func loadBundled() throws -> [PhysicalProtocolID: Self] {
+    let urls = PhysicalProtocolID.allCases.compactMap {
+      Bundle.module.url(forResource: $0.descriptionFileStem, withExtension: "json")
+    }
+    let catalog = loadCatalog(urls, missing: "the bundle")
+    if let problem = catalog.problems.first {
+      throw ProtocolDescriptionProblem(problem.code, problem.message)
+    }
+    return catalog.descriptions
+  }
+
+  /// The descriptions of the files `urls`, and a problem for each file that is not a valid
+  /// description and for each family that has no file; `source` names where the files are, in
+  /// the problem of a missing one. The problems come in family order, a missing file at its
+  /// family's place, then those of the files that name no family in file-name order. Files of one
+  /// name are taken in path order, and each after the first that names a family is a problem
+  /// naming both files and is not loaded. A file that cannot be read is
+  /// ``ErrorCode/fileAccessFailed``. The bundled descriptions and
+  /// ``RepositoryValidation/descriptions(in:)`` load through this check.
+  static func loadCatalog(
+    _ urls: [URL],
+    missing source: String
+  ) -> (descriptions: [PhysicalProtocolID: Self], problems: [RepositoryProblem]) {
     var descriptions: [PhysicalProtocolID: Self] = [:]
+    var problems: [RepositoryProblem] = []
+    var owners: [PhysicalProtocolID: URL] = [:]
+    func load(_ url: URL) {
+      let data: Data
+      do { data = try RepositoryProblem.read(url) } catch {
+        problems.append(error)
+        return
+      }
+      do {
+        let description = try decode(data, fileName: url.lastPathComponent)
+        if let owner = owners[description.family] {
+          problems.append(
+            RepositoryProblem(
+              file: url.path,
+              code: .invalidProtocolDescription,
+              message: "\(description.family) is already described by \(owner.path)"
+            )
+          )
+          return
+        }
+        owners[description.family] = url
+        descriptions[description.family] = description
+      } catch {
+        problems.append(RepositoryProblem(file: url.path, code: error.code, message: error.detail))
+      }
+    }
+    let byName = urls.sorted {
+      ($0.lastPathComponent, $0.path) < ($1.lastPathComponent, $1.path)
+    }
     for protocolID in PhysicalProtocolID.allCases {
-      guard
-        let url = Bundle.module.url(
-          forResource: protocolID.descriptionFileStem,
-          withExtension: "json"
-        )
-      else {
-        throw ProtocolDescriptionProblem(
-          .invalidProtocolDescription,
-          "\(protocolID.descriptionFileStem).json is missing from the bundle"
+      let name = "\(protocolID.descriptionFileStem).json"
+      let files = byName.filter { $0.lastPathComponent == name }
+      if files.isEmpty {
+        problems.append(
+          RepositoryProblem(
+            file: name,
+            code: .invalidProtocolDescription,
+            message: "\(name) is missing from \(source)"
+          )
         )
       }
-      descriptions[protocolID] = try decode(
-        Data(contentsOf: url),
-        fileName: url.lastPathComponent
-      )
+      files.forEach(load)
     }
-    return descriptions
+    let names = Set(PhysicalProtocolID.allCases.map { "\($0.descriptionFileStem).json" })
+    byName.filter { !names.contains($0.lastPathComponent) }.forEach(load)
+    return (descriptions, problems)
   }
 
   /// Decodes one description from the file `fileName`, whose stem names the family it holds; the

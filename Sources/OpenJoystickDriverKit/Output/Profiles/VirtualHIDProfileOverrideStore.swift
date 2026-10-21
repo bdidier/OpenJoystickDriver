@@ -235,7 +235,7 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
           if let first = loaded.personas[model] {
             let owner = first.fromPackage ? "package file " : "user file "
             throw ControllerRecordProblem(
-              code: nil,
+              code: .invalidControllerRecord,
               "same match as \(owner)\(first.url.lastPathComponent)"
             )
           }
@@ -269,7 +269,10 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
       do {
         let (model, persona) = try Self.parse(Data(contentsOf: url))
         if let first = loaded.personas[model] {
-          throw ControllerRecordProblem(code: nil, "same match as \(first.url.lastPathComponent)")
+          throw ControllerRecordProblem(
+            code: .invalidControllerRecord,
+            "same match as \(first.url.lastPathComponent)"
+          )
         }
         loaded.personas[model] = Found(persona: persona, url: url)
         loaded.files.append(VirtualPersonaFile(url: url, problem: nil))
@@ -289,7 +292,7 @@ public struct VirtualHIDProfileOverrideStore: Sendable {
   static func parse(_ data: Data) throws -> (Model, VirtualPersona) {
     let device = try VirtualDevice.decode(data, source: .unnamed, requiresMatch: true)
     guard let model = device.match else {
-      throw ControllerRecordProblem(code: nil, "the file must hold match")
+      throw ControllerRecordProblem(code: .invalidControllerRecord, "the file must hold match")
     }
     let identity = device.identity.map { identity in
       VirtualPersona.Identity(

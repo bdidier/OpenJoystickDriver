@@ -41,7 +41,7 @@ struct VirtualHIDProfileOverrideStoreTests {
     + #""manufacturer":"Acme"}"#
 
   @Test
-  func aPersonaSelectionWithoutMatchIsRefusedWithoutAnErrorCode() {
+  func aPersonaSelectionWithoutMatchIsAnInvalidControllerRecord() {
     let document =
       #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"\#(Store.kind)","#
       + #""persona":"Generic"}"#
@@ -49,8 +49,8 @@ struct VirtualHIDProfileOverrideStoreTests {
       try Store.parse(Data(document.utf8))
     }
     #expect(problem?.description == "the file must hold match")
-    #expect(problem?.code == nil)
-    #expect(problem.flatMap { ControllerRecordSet.problemCode($0) } == nil)
+    #expect(problem?.code == .invalidControllerRecord)
+    #expect(problem.flatMap { ControllerRecordSet.problemCode($0) } == .invalidControllerRecord)
   }
 
   @Test

@@ -21,7 +21,9 @@ extension VirtualDevice {
   ) throws -> Self {
     guard let object = try? JSONSerialization.jsonObject(with: data),
       let document = object as? [String: Any]
-    else { throw ControllerRecordProblem(code: nil, "the file is not a JSON object") }
+    else {
+      throw ControllerRecordProblem(code: .invalidControllerRecord, "the file is not a JSON object")
+    }
     if let problem = OpenJoystickDriverAPI.headerProblem(
       apiVersion: document["apiVersion"],
       kind: document["kind"],
@@ -40,25 +42,25 @@ extension VirtualDevice {
     ]
     guard Set(document.keys).isSubset(of: allowed) else {
       throw ControllerRecordProblem(
-        code: nil,
+        code: .invalidControllerRecord,
         "the file must hold only \(allowed.sorted().joined(separator: ", "))"
       )
     }
     guard let persona = (document["persona"] as? String).flatMap(VirtualHIDProfileID.init)
     else {
       throw ControllerRecordProblem(
-        code: nil,
+        code: .invalidControllerRecord,
         "persona must be \(VirtualHIDProfileID.allCases.map(\.rawValue).joined(separator: " or "))"
       )
     }
     if requiresMatch, document["match"] == nil {
-      throw ControllerRecordProblem(code: nil, "the file must hold match")
+      throw ControllerRecordProblem(code: .invalidControllerRecord, "the file must hold match")
     }
     let match = try document["match"].map(Self.match)
     let layout = try document["layout"].map { value in
       guard let layout = (value as? String).flatMap(VirtualDeviceLayout.init) else {
         throw ControllerRecordProblem(
-          code: nil,
+          code: .invalidControllerRecord,
           "layout must be OJDGenericGamepad or XboxOneSBluetooth"
         )
       }
@@ -66,20 +68,29 @@ extension VirtualDevice {
     }
     let transport = try document["transport"].map { value in
       guard let transport = value as? String, ["USB", "Bluetooth"].contains(transport) else {
-        throw ControllerRecordProblem(code: nil, "transport must be USB or Bluetooth")
+        throw ControllerRecordProblem(
+          code: .invalidControllerRecord,
+          "transport must be USB or Bluetooth"
+        )
       }
       return transport
     }
     let labels = try document["labels"].map { value in
       guard let labels = (value as? String).flatMap(VirtualIdentityGlyphFamily.init) else {
-        throw ControllerRecordProblem(code: nil, "labels must be Xbox or Generic")
+        throw ControllerRecordProblem(
+          code: .invalidControllerRecord,
+          "labels must be Xbox or Generic"
+        )
       }
       return labels
     }
     let worksWithDefaultSDLHints = try document["worksWithDefaultSDLHints"].map { value in
       // swiftlint:disable:next legacy_objc_type
       guard let number = value as? NSNumber, CFGetTypeID(number) == CFBooleanGetTypeID() else {
-        throw ControllerRecordProblem(code: nil, "worksWithDefaultSDLHints must be true or false")
+        throw ControllerRecordProblem(
+          code: .invalidControllerRecord,
+          "worksWithDefaultSDLHints must be true or false"
+        )
       }
       return number.boolValue
     }
@@ -87,7 +98,7 @@ extension VirtualDevice {
     if match != nil {
       guard layout == nil, transport == nil, worksWithDefaultSDLHints == nil else {
         throw ControllerRecordProblem(
-          code: nil,
+          code: .invalidControllerRecord,
           "a file with match selects a persona and holds no layout, transport, or "
             + "worksWithDefaultSDLHints"
         )
@@ -97,7 +108,7 @@ extension VirtualDevice {
         let identity, identity.versionNumber != nil
       else {
         throw ControllerRecordProblem(
-          code: nil,
+          code: .invalidControllerRecord,
           "a persona definition must hold layout, transport, labels, worksWithDefaultSDLHints, "
             + "and identity with version"
         )
@@ -123,7 +134,7 @@ extension VirtualDevice {
     )
     let unit = match["unit"] as? String
     if match["unit"] != nil, unit.flatMap(ControllerPortKey.init(rawValue:)) == nil {
-      throw ControllerRecordProblem(code: nil, "match.unit is not a unit ID")
+      throw ControllerRecordProblem(code: .invalidControllerRecord, "match.unit is not a unit ID")
     }
     return VirtualHIDProfileOverrideStore.Model(
       vendorID: try id(match["vendorID"], "match.vendorID", from: 1),
@@ -141,7 +152,10 @@ extension VirtualDevice {
     )
     func text(_ key: String) throws -> String {
       guard let value = fields[key] as? String, !value.isEmpty else {
-        throw ControllerRecordProblem(code: nil, "identity.\(key) must be a nonempty string")
+        throw ControllerRecordProblem(
+          code: .invalidControllerRecord,
+          "identity.\(key) must be a nonempty string"
+        )
       }
       return value
     }
@@ -166,7 +180,7 @@ extension VirtualDevice {
       required.isSubset(of: Set(object.keys))
     else {
       throw ControllerRecordProblem(
-        code: nil,
+        code: .invalidControllerRecord,
         "\(name) must hold \(required.union(optional).sorted().joined(separator: ", "))"
       )
     }
@@ -178,7 +192,12 @@ extension VirtualDevice {
     guard let number = value as? NSNumber, CFGetTypeID(number) != CFBooleanGetTypeID(),
       let integer = Int(exactly: number.doubleValue), integer >= minimum,
       let id = UInt16(exactly: integer)
-    else { throw ControllerRecordProblem(code: nil, "\(name) must be \(minimum)...65535") }
+    else {
+      throw ControllerRecordProblem(
+        code: .invalidControllerRecord,
+        "\(name) must be \(minimum)...65535"
+      )
+    }
     return id
   }
 }

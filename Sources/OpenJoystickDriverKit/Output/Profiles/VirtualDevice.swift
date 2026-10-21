@@ -50,7 +50,12 @@ struct VirtualDevice: Equatable, Sendable {
     var devices: [VirtualHIDProfileID: Self] = [:]
     for persona in VirtualHIDProfileID.allCases {
       guard let url = Bundle.module.url(forResource: persona.bundledFileName, withExtension: "json")
-      else { throw ControllerRecordProblem(code: nil, "no record for \(persona.rawValue)") }
+      else {
+        throw ControllerRecordProblem(
+          code: .invalidControllerRecord,
+          "no record for \(persona.rawValue)"
+        )
+      }
       let device = try decode(
         Data(contentsOf: url),
         source: .file(url.lastPathComponent),
@@ -58,7 +63,7 @@ struct VirtualDevice: Equatable, Sendable {
       )
       guard device.match == nil, device.persona == persona else {
         throw ControllerRecordProblem(
-          code: nil,
+          code: .invalidControllerRecord,
           "\(url.lastPathComponent) must define \(persona.rawValue)"
         )
       }

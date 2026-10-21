@@ -14,6 +14,7 @@ OpenJoystickDriver splits the package into SwiftPM targets whose dependencies en
 | `OpenJoystickDriverMacOSHost` | macOS host adapter: `MacOSPlatformHost` conformance and the headless application host |
 | `OpenJoystickDriver` | executable: main, host installation, App Intents, bundle resources |
 | `DriverKitGenerator` | build-time generated native-project entry point |
+| `OJDRepositoryTool` | development executable that checks controller records, protocol descriptions, profiles and personas and applies built-in patches; not shipped |
 | `OpenJoystickDriverHIDTool` | internal hardware investigation executable |
 | `OpenJoystickDriverGameControllerProbe` | isolated GameController visibility probe |
 
@@ -30,6 +31,7 @@ Presentation              -> Kit
 MacOSHost                 -> Kit, USB, Service, Presentation
 OpenJoystickDriver        -> Kit, Service, CLI, Presentation, MacOSHost
 DriverKitGenerator        -> USB
+OJDRepositoryTool         -> Kit
 HIDTool                   -> Kit, USB
 GameControllerProbe       -> Kit
 ```
