@@ -1853,6 +1853,7 @@
 "error.E5004" = "Bir protokol açıklaması, ailesinde olmayan bir varyant listeliyor. Ailenin varyantlarından birini kullanın.";
 "error.E5005" = "AccessGrants.json erişim dosyası hasarlı. Dosyayı düzeltin veya silin, sonra erişimi yeniden verin.";
 "error.E5006" = "Cihaz Kimliklerinin anahtar dosyası PortKeyInstallation.key okunamıyor veya boyutu 32 bayt değil. Dosyayı bir yedekten geri yükleyin. Bunun yerine silerseniz OpenJoystickDriver yeni bir anahtar oluşturur ve tüm Cihaz Kimlikleri değişir.";
+"error.E5007" = "Bir kontrolcü kaydı geçersiz. Dosyayı controller şemasına göre denetleyin ve iletinin belirttiği alanı düzeltin.";
 "error.withCode" ="%@ (%@)";
 "cli.update.check.ahead" = "OpenJoystickDriver %1$@, yayımlanan en son sürümden (%2$@) daha yeni.";
 "settings.updateAhead" = "En son sürümden daha yeni";

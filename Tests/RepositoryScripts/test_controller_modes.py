@@ -8,6 +8,13 @@ from typing import Any, ClassVar
 
 from Scripts.Catalog import validate_profiles
 from Scripts.Catalog.schema_header import header
+from Tests.RepositoryScripts import schema_rejections
+from Tests.RepositoryScripts.schema_rejections import RecordValidator
+
+
+def setUpModule() -> None:
+    schema_rejections.enforce_controller_rejections()
+
 
 SIXAXIS = {"family": "SonySixaxis"}
 ANSWERS = {"report": 239, "length": 64, "expect": "Answers"}
@@ -47,6 +54,7 @@ def record(**fields: Any) -> dict[str, Any]:
 class ControllerModeSchemaTests(unittest.TestCase):
     def setUp(self) -> None:
         self.validator = validate_profiles.validator()
+        self.records = RecordValidator()
 
     def test_accepts_modes_selected_by_each_probe_expectation(self) -> None:
         document = record(
@@ -298,7 +306,7 @@ class ControllerModeSchemaTests(unittest.TestCase):
         }
         for name, document in rejected.items():
             with self.subTest(name):
-                self.assertFalse(self.validator.is_valid(document))
+                self.assertFalse(self.records.is_valid(document))
 
     def test_validator_rejects_duplicate_ids_and_overflowing_bytes(self) -> None:
         overflowing = {
@@ -669,7 +677,7 @@ class EveryModeConditionalTests(unittest.TestCase):
         """The schema rejects the document too, unless `by_schema` is false: a rule that reads a
         family's description is not the schema's."""
         if by_schema:
-            self.assertFalse(validate_profiles.validator().is_valid(document))
+            self.assertFalse(RecordValidator().is_valid(document))
         with self.assertRaises(validate_profiles.ValidationError) as caught:
             validate_profiles.validate_modes(Path("record.json"), document)
         self.assertIn(message, str(caught.exception))

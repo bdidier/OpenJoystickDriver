@@ -494,6 +494,11 @@
       "code": "E5006",
       "domain": "Document",
       "name": "damagedPortKey"
+    },
+    {
+      "code": "E5007",
+      "domain": "Document",
+      "name": "invalidControllerRecord"
     }
   ]
 }

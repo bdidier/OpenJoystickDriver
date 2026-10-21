@@ -1,0 +1,7107 @@
+{
+  "cases": [
+    {
+      "name": "validator rejects a packet the description lacks: action=XboxGIP/missing",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP",
+              "initialization": ["XboxGIP/missing"]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "validator rejects overlapping capabilities",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonyDualSense"
+            }
+          }
+        ],
+        "capabilities": {
+          "absent": ["LeftPaddle1"],
+          "present": ["LeftPaddle1", "RightPaddle1", "Auxiliary1", "Auxiliary2"]
+        }
+      }
+    },
+    {
+      "name": "rejects protocol default endpoints: XboxGIP",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ],
+        "usb": {
+          "endpoints": {
+            "in": 130,
+            "out": 2
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects protocol default endpoints: XboxXUSB",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXUSB",
+              "variant": "Wired"
+            }
+          }
+        ],
+        "usb": {
+          "endpoints": {
+            "in": 129,
+            "out": 1
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects protocol default endpoints: XboxXID",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXID",
+              "variant": "Gamepad"
+            }
+          }
+        ],
+        "usb": {
+          "endpoints": {
+            "in": 129,
+            "out": 2
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects protocol default endpoints: VendorGameSir",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorGameSir",
+              "variant": "USB"
+            }
+          }
+        ],
+        "usb": {
+          "endpoints": {
+            "in": 130,
+            "out": 2
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: unknown field",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ],
+        "notAField": "USB"
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: unknown variant",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP",
+              "variant": "notAVariant"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: unknown Steam parameter",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "ValveSteamController",
+              "variant": "Wired",
+              "parameters": {
+                "notAParameter": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: unknown family",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "xbox.adaptive-joystick"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: binding string as family",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXUSB:Wired"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: missing stored variant",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXUSB"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: transport variant stored",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonyDualSense",
+              "variant": "USB"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: variant of another family",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXUSB",
+              "variant": "Dongle"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: usb block on HID family",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonyDualSense"
+            }
+          }
+        ],
+        "usb": {
+          "configuration": "SetConfiguration1BeforeClaim"
+        }
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: usb block on GameSir enhanced HID",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorGameSir",
+              "variant": "EnhancedHID",
+              "parameters": {
+                "innerGrips": true
+              }
+            }
+          }
+        ],
+        "usb": {
+          "configuration": "SetConfiguration1BeforeClaim"
+        }
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: GameSir enhanced HID without a model parameter",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorGameSir",
+              "variant": "EnhancedHID"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: GameSir enhanced HID with both model parameters",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorGameSir",
+              "variant": "EnhancedHID",
+              "parameters": {
+                "innerGrips": true,
+                "lightingMemory": "ProfileSlots"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: GameSir vendor USB inner grips",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorGameSir",
+              "variant": "USB",
+              "parameters": {
+                "innerGrips": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: GameSir vendor USB lighting slots",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorGameSir",
+              "variant": "USB",
+              "parameters": {
+                "lightingMemory": "ProfileSlots"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: unknown parameter",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP",
+              "parameters": {
+                "sticksToNull": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: wrong-family parameter",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP",
+              "parameters": {
+                "innerGrips": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: unknown quirks array",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP",
+              "quirks": ["share-offset"]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: unknown DS4 parameter",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonyDualShock4",
+              "parameters": {
+                "gyro": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: empty parameters",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP",
+              "parameters": {}
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: wrong parameter type",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP",
+              "parameters": {
+                "shareButton": {
+                  "fromEnd": "26"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: out-of-range share offset",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP",
+              "parameters": {
+                "shareButton": {
+                  "fromEnd": 0
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: unknown enum value",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "NintendoSwitch1",
+              "parameters": {
+                "layout": "joy-con-left"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: false flag",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorGameSir",
+              "variant": "EnhancedHID",
+              "parameters": {
+                "innerGrips": false
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: usb interface",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ],
+        "usb": {
+          "interface": 1
+        }
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: startupPackets",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP",
+              "startupPackets": ["XboxGIP/power-on"]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: camelCase action",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP",
+              "initialization": ["powerOn"]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: XUSB initialization",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXUSB",
+              "variant": "Wired",
+              "initialization": ["XboxGIP/power-on"]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: both Joy-Con sides",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "NintendoSwitch1",
+              "parameters": {
+                "layout": ["JoyConLeft", "JoyConRight"]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: GameCube on Switch 1",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "NintendoSwitch1",
+              "parameters": {
+                "layout": "GameCube"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: Switch 2 with two layouts",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "NintendoSwitch2",
+              "parameters": {
+                "layout": ["GameCube", "JoyConLeft"]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: Switch input-only with a parameter",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "NintendoSwitchInputOnly",
+              "parameters": {
+                "layout": "GameCube"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: Steam Deck with a parameter",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "ValveSteamDeck",
+              "parameters": {
+                "lizardMode": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: Steam Deck with a variant",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "ValveSteamDeck",
+              "variant": "Wired"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: Steam Triton without a variant",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "ValveSteamTriton"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: Steam Triton with a parameter",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "ValveSteamTriton",
+              "variant": "Wired",
+              "parameters": {
+                "lizardMode": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: Switch 2 with a variant",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "NintendoSwitch2",
+              "variant": "BluetoothLE"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: Switch 1 with an unknown parameter",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "NintendoSwitch1",
+              "parameters": {
+                "notAParameter": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: Bluetooth-only with a layout",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "NintendoSwitch1",
+              "parameters": {
+                "usbProtocol": "ChargingOnly",
+                "layout": "JoyConLeft"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: XUSB rumble absence",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXUSB",
+              "variant": "Wired"
+            }
+          }
+        ],
+        "capabilities": {
+          "rumble": "Absent"
+        }
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: unknown control",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ],
+        "capabilities": {
+          "absent": ["leftTrigger"]
+        }
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: empty capabilities",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ],
+        "capabilities": {}
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: present on GIP",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ],
+        "capabilities": {
+          "present": ["LeftPaddle1"]
+        }
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: partial Edge controls",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonyDualSense"
+            }
+          }
+        ],
+        "capabilities": {
+          "present": ["LeftPaddle1", "Auxiliary1"]
+        }
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: XboxGIP unknown parameter",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP",
+              "parameters": {
+                "notAParameter": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: XboxXUSB unknown parameter",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXUSB",
+              "variant": "Wired",
+              "parameters": {
+                "notAParameter": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: XboxXID unknown parameter",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXID",
+              "variant": "Gamepad",
+              "parameters": {
+                "notAParameter": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: SonyDualSense unknown parameter",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonyDualSense",
+              "parameters": {
+                "notAParameter": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects unknown vocabulary: unknown GameSir variant",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorGameSir",
+              "variant": "notAVariant"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid report layouts: missing input",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDReportLayout"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid report layouts: input on another family",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorPS3ThirdParty"
+            }
+          }
+        ],
+        "input": {
+          "report": {
+            "length": 2
+          },
+          "buttons": [
+            {
+              "control": "South",
+              "byte": 1,
+              "mask": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "rejects invalid report layouts: report ID 0",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDReportLayout"
+            }
+          }
+        ],
+        "input": {
+          "report": {
+            "id": 0,
+            "length": 2
+          },
+          "buttons": [
+            {
+              "control": "South",
+              "byte": 1,
+              "mask": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "rejects invalid report layouts: long report",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDReportLayout"
+            }
+          }
+        ],
+        "input": {
+          "report": {
+            "length": 65
+          },
+          "buttons": [
+            {
+              "control": "South",
+              "byte": 1,
+              "mask": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "rejects invalid report layouts: report only",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDReportLayout"
+            }
+          }
+        ],
+        "input": {
+          "report": {
+            "length": 2
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects invalid report layouts: empty buttons",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDReportLayout"
+            }
+          }
+        ],
+        "input": {
+          "report": {
+            "length": 2
+          },
+          "buttons": []
+        }
+      }
+    },
+    {
+      "name": "rejects invalid report layouts: zero mask",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDReportLayout"
+            }
+          }
+        ],
+        "input": {
+          "report": {
+            "length": 2
+          },
+          "buttons": [
+            {
+              "control": "South",
+              "byte": 1,
+              "mask": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "rejects invalid report layouts: dpad button",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDReportLayout"
+            }
+          }
+        ],
+        "input": {
+          "report": {
+            "length": 2
+          },
+          "buttons": [
+            {
+              "control": "DpadUp",
+              "byte": 1,
+              "mask": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "rejects invalid report layouts: 12-bit axis",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDReportLayout"
+            }
+          }
+        ],
+        "input": {
+          "report": {
+            "length": 2
+          },
+          "buttons": [
+            {
+              "control": "South",
+              "byte": 1,
+              "mask": 1
+            }
+          ],
+          "axes": [
+            {
+              "control": "LeftStickX",
+              "byte": 1,
+              "bits": 12
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "rejects invalid report layouts: 4-way hat",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDReportLayout"
+            }
+          }
+        ],
+        "input": {
+          "report": {
+            "length": 2
+          },
+          "buttons": [
+            {
+              "control": "South",
+              "byte": 1,
+              "mask": 1
+            }
+          ],
+          "hat": [
+            {
+              "encoding": "4-way",
+              "byte": 1,
+              "mask": 15
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "rejects invalid report layouts: unsigned symmetric axis",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDReportLayout"
+            }
+          }
+        ],
+        "input": {
+          "report": {
+            "length": 2
+          },
+          "buttons": [
+            {
+              "control": "South",
+              "byte": 1,
+              "mask": 1
+            }
+          ],
+          "axes": [
+            {
+              "control": "LeftStickX",
+              "byte": 1,
+              "symmetric": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "rejects invalid report layouts: table hat without values",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDReportLayout"
+            }
+          }
+        ],
+        "input": {
+          "report": {
+            "length": 2
+          },
+          "buttons": [
+            {
+              "control": "South",
+              "byte": 1,
+              "mask": 1
+            }
+          ],
+          "hat": [
+            {
+              "encoding": "Table",
+              "byte": 1,
+              "mask": 15,
+              "values": {}
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "rejects invalid report layouts: table hat neutral entry",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDReportLayout"
+            }
+          }
+        ],
+        "input": {
+          "report": {
+            "length": 2
+          },
+          "buttons": [
+            {
+              "control": "South",
+              "byte": 1,
+              "mask": 1
+            }
+          ],
+          "hat": [
+            {
+              "encoding": "Table",
+              "byte": 1,
+              "mask": 15,
+              "values": {
+                "0": "Neutral"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "rejects invalid report layouts: empty trigger",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDReportLayout"
+            }
+          }
+        ],
+        "input": {
+          "report": {
+            "length": 2
+          },
+          "buttons": [
+            {
+              "control": "South",
+              "byte": 1,
+              "mask": 1
+            }
+          ],
+          "leftTrigger": {}
+        }
+      }
+    },
+    {
+      "name": "rejects invalid report layouts: unknown section",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDReportLayout"
+            }
+          }
+        ],
+        "input": {
+          "report": {
+            "length": 2
+          },
+          "buttons": [
+            {
+              "control": "South",
+              "byte": 1,
+              "mask": 1
+            }
+          ],
+          "touchpad": {}
+        }
+      }
+    },
+    {
+      "name": "rejects invalid report layouts: dpad pressure elsewhere",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonyDualSense",
+              "parameters": {
+                "hatSource": "DpadPressure"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects a resend interval that a keep alive would retime: session keepAlive",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXUSB",
+              "variant": "Wired"
+            },
+            "session": {
+              "rumble": {
+                "report": {
+                  "kind": "USB",
+                  "length": 8
+                },
+                "lowFrequency": {
+                  "byte": 3
+                },
+                "resendIntervalMilliseconds": 100
+              },
+              "keepAlive": {
+                "intervalMilliseconds": 500
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects a resend interval that a keep alive would retime: family keepAlive",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorGameSir",
+              "variant": "EnhancedHID"
+            },
+            "session": {
+              "rumble": {
+                "report": {
+                  "kind": "Output",
+                  "id": 2,
+                  "length": 8
+                },
+                "lowFrequency": {
+                  "byte": 3
+                },
+                "highFrequency": {
+                  "byte": 2
+                },
+                "resendIntervalMilliseconds": 100
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid ownership and session: unknown ownership",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorPS3ThirdParty"
+            }
+          }
+        ],
+        "server": "native"
+      }
+    },
+    {
+      "name": "rejects invalid ownership and session: GIP ownership",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ],
+        "server": "OJD"
+      }
+    },
+    {
+      "name": "rejects invalid ownership and session: XUSB ownership",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXUSB",
+              "variant": "Wired"
+            }
+          }
+        ],
+        "server": "System"
+      }
+    },
+    {
+      "name": "rejects invalid ownership and session: GameSir USB ownership",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorGameSir",
+              "variant": "USB"
+            }
+          }
+        ],
+        "server": "OJD"
+      }
+    },
+    {
+      "name": "rejects invalid ownership and session: template on DualSense",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonyDualSense"
+            },
+            "session": {
+              "rumble": {
+                "report": {
+                  "kind": "Output",
+                  "id": 2,
+                  "length": 8
+                },
+                "lowFrequency": {
+                  "byte": 3
+                },
+                "highFrequency": {
+                  "byte": 2
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid ownership and session: keep-alive in a record",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorPS3ThirdParty"
+            },
+            "session": {
+              "keepAlive": {
+                "intervalMilliseconds": 500
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid ownership and session: input report",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorPS3ThirdParty"
+            },
+            "session": {
+              "rumble": {
+                "report": {
+                  "kind": "input",
+                  "id": 2,
+                  "length": 8
+                },
+                "lowFrequency": {
+                  "byte": 3
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid ownership and session: no motor",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorPS3ThirdParty"
+            },
+            "session": {
+              "rumble": {
+                "report": {
+                  "kind": "Output",
+                  "id": 2,
+                  "length": 8
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid ownership and session: haptic motor",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorPS3ThirdParty"
+            },
+            "session": {
+              "rumble": {
+                "report": {
+                  "kind": "Output",
+                  "id": 2,
+                  "length": 8
+                },
+                "leftHaptic": {
+                  "byte": 3
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid ownership and session: unknown template",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorPS3ThirdParty"
+            },
+            "session": {
+              "rumble": {
+                "report": {
+                  "kind": "Output",
+                  "id": 2,
+                  "length": 8
+                },
+                "lowFrequency": {
+                  "byte": 3
+                },
+                "highFrequency": {
+                  "byte": 2
+                }
+              },
+              "lighting": {}
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid ownership and session: empty session",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorPS3ThirdParty"
+            },
+            "session": {}
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects malformed template bytes encodings counter and resend: unknown encoding",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorPS3ThirdParty"
+            },
+            "session": {
+              "rumble": {
+                "report": {
+                  "kind": "Output",
+                  "id": 2,
+                  "length": 8
+                },
+                "lowFrequency": {
+                  "byte": 3,
+                  "encoding": "Float"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects malformed template bytes encodings counter and resend: lowercase bytes",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorPS3ThirdParty"
+            },
+            "session": {
+              "rumble": {
+                "report": {
+                  "kind": "Output",
+                  "id": 2,
+                  "length": 8
+                },
+                "lowFrequency": {
+                  "byte": 3
+                },
+                "bytes": "02 0a 00 00 00 00 00 00"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects malformed template bytes encodings counter and resend: resend of zero",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorPS3ThirdParty"
+            },
+            "session": {
+              "rumble": {
+                "report": {
+                  "kind": "Output",
+                  "id": 2,
+                  "length": 8
+                },
+                "lowFrequency": {
+                  "byte": 3
+                },
+                "resendIntervalMilliseconds": 0
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects malformed template bytes encodings counter and resend: usb packet with an id",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorPS3ThirdParty"
+            },
+            "session": {
+              "rumble": {
+                "report": {
+                  "kind": "USB",
+                  "id": 2,
+                  "length": 8
+                },
+                "lowFrequency": {
+                  "byte": 3
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects malformed template bytes encodings counter and resend: usb packet of 65 bytes",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorPS3ThirdParty"
+            },
+            "session": {
+              "rumble": {
+                "report": {
+                  "kind": "USB",
+                  "length": 65
+                },
+                "lowFrequency": {
+                  "byte": 3
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "route extension owned applies only to raw usb families: unknown route",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ],
+        "route": "System"
+      }
+    },
+    {
+      "name": "route extension owned applies only to raw usb families: DualSense route",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonyDualSense"
+            }
+          }
+        ],
+        "route": "ExtensionOwned"
+      }
+    },
+    {
+      "name": "route extension owned applies only to raw usb families: third-party route",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorPS3ThirdParty"
+            }
+          }
+        ],
+        "route": "ExtensionOwned"
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: empty list",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "session": {
+              "startup": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: too many",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "session": {
+              "startup": [
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic"
+                },
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic"
+                },
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic"
+                },
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic"
+                },
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic"
+                },
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic"
+                },
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic"
+                },
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic"
+                },
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic"
+                },
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic"
+                },
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic"
+                },
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic"
+                },
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic"
+                },
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic"
+                },
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic"
+                },
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic"
+                },
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: input report",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "session": {
+              "startup": [
+                {
+                  "report": {
+                    "kind": "input",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: byte above 255",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "session": {
+              "startup": [
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "100",
+                  "transport": "BluetoothClassic"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: no bytes",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "session": {
+              "startup": [
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "",
+                  "transport": "BluetoothClassic"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: long delay",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "session": {
+              "startup": [
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic",
+                  "delayMilliseconds": 1001
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: radio transport",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "session": {
+              "startup": [
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "ProprietaryRadioReceiver"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: unknown key",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "session": {
+              "startup": [
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic",
+                  "repeat": 2
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: GIP",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            },
+            "session": {
+              "startup": [
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: XUSB",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXUSB",
+              "variant": "Wired"
+            },
+            "session": {
+              "startup": [
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: GameSir USB",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorGameSir",
+              "variant": "USB"
+            },
+            "session": {
+              "startup": [
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: rumble on Sixaxis",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "session": {
+              "rumble": {
+                "report": {
+                  "kind": "Output",
+                  "id": 2,
+                  "length": 8
+                },
+                "lowFrequency": {
+                  "byte": 3
+                },
+                "highFrequency": {
+                  "byte": 2
+                }
+              },
+              "startup": [
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: unknown phase",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "session": {
+              "startup": [
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic",
+                  "phase": "later"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: CRC seed above 255",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "session": {
+              "startup": [
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic",
+                  "crc32Seed": 256
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: CRC without room",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonyDualShock4"
+            },
+            "session": {
+              "startup": [
+                {
+                  "report": {
+                    "kind": "Output",
+                    "id": 1,
+                    "length": 4
+                  },
+                  "bytes": "01 02 03",
+                  "crc32Seed": 1
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: report above 128 bytes",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "session": {
+              "startup": [
+                {
+                  "report": {
+                    "kind": "Output",
+                    "id": 1,
+                    "length": 129
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: family-only variants",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "session": {
+              "startup": [
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic",
+                  "variants": ["USB"]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: family-only condition",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "session": {
+              "startup": [
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic",
+                  "when": {
+                    "parameter": "role",
+                    "is": ["A"]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: packet endpoint 0",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            },
+            "session": {
+              "startup": [
+                {
+                  "bytes": "05 20 00 01 00",
+                  "endpoint": 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: packet endpoint 128",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            },
+            "session": {
+              "startup": [
+                {
+                  "bytes": "05 20 00 01 00",
+                  "endpoint": 128
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: packet timeout 0",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            },
+            "session": {
+              "startup": [
+                {
+                  "bytes": "05 20 00 01 00",
+                  "timeoutMilliseconds": 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: packet timeout above 60000",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            },
+            "session": {
+              "startup": [
+                {
+                  "bytes": "05 20 00 01 00",
+                  "timeoutMilliseconds": 60001
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: packet delay above 1000",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            },
+            "session": {
+              "startup": [
+                {
+                  "bytes": "05 20 00 01 00",
+                  "delayMilliseconds": 1001
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: packet session byte above 63",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            },
+            "session": {
+              "startup": [
+                {
+                  "bytes": "05 20 00 01 00",
+                  "sessionByte": 64
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: packet above 64 bytes",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            },
+            "session": {
+              "startup": [
+                {
+                  "bytes": "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: packet with a condition",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            },
+            "session": {
+              "startup": [
+                {
+                  "bytes": "05 20 00 01 00",
+                  "variants": ["USB"]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: packet on a HID family",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "session": {
+              "startup": [
+                {
+                  "bytes": "05 20 00 01 00"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: packet on XID",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXID"
+            },
+            "session": {
+              "startup": [
+                {
+                  "bytes": "05 20 00 01 00"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: packet with an initialization list",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP",
+              "initialization": ["XboxGIP/power-on"]
+            },
+            "session": {
+              "startup": [
+                {
+                  "bytes": "05 20 00 01 00"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid startup writes: packet mixed with a report",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            },
+            "session": {
+              "startup": [
+                {
+                  "bytes": "05 20 00 01 00"
+                },
+                {
+                  "report": {
+                    "kind": "Feature",
+                    "id": 244,
+                    "length": 5
+                  },
+                  "bytes": "42 03 00 00",
+                  "transport": "BluetoothClassic"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "dualsense third party maker: rejects unprobedSensors without a maker",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 5426,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonyDualSense",
+              "parameters": {
+                "unprobedSensors": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "dualsense third party maker: rejects unprobedTouchpad without a maker",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 5426,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonyDualSense",
+              "parameters": {
+                "unprobedTouchpad": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "dualsense third party maker: rejects forcedVibration without a maker",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 5426,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonyDualSense",
+              "parameters": {
+                "forcedVibration": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "dualsense third party maker: rejects role without a maker",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 5426,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonyDualSense",
+              "parameters": {
+                "role": "Receiver"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "dualshock4 role and motion scale are exclusive: rejects role with scale",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonyDualShock4",
+              "parameters": {
+                "role": "WirelessAdapter",
+                "motionScale": "StrikePad"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "family timings are limited to their families: rejects lizard resend on GIP",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ],
+        "tuning": {
+          "lizardResendTicks": 75
+        }
+      }
+    },
+    {
+      "name": "family timings are limited to their families: rejects command timeout on GIP",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ],
+        "tuning": {
+          "usbCommandTimeoutMs": 1000
+        }
+      }
+    },
+    {
+      "name": "family timings are limited to their families: rejects presence resend on DualSense",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonyDualSense"
+            }
+          }
+        ],
+        "tuning": {
+          "presenceResendReports": 4
+        }
+      }
+    },
+    {
+      "name": "family timings are limited to their families: rejects disconnect delay on GIP",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ],
+        "tuning": {
+          "adapterDisconnectDelayMs": 500
+        }
+      }
+    },
+    {
+      "name": "family timings are limited to their families: rejects handshake pacing on XUSB",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXUSB",
+              "variant": "Wired"
+            }
+          }
+        ],
+        "tuning": {
+          "usbStartupIntervalMs": 50,
+          "usbStartupRetryDelayMs": 1000
+        }
+      }
+    },
+    {
+      "name": "family timings are limited to their families: rejects transfer timeout on DualSense",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonyDualSense"
+            }
+          }
+        ],
+        "tuning": {
+          "usbTransferTimeoutMs": 2000
+        }
+      }
+    },
+    {
+      "name": "family timings are limited to their families: rejects transfer timeout on XUSB below range",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXUSB",
+              "variant": "Wired"
+            }
+          }
+        ],
+        "tuning": {
+          "usbTransferTimeoutMs": 0
+        }
+      }
+    },
+    {
+      "name": "family timings are limited to their families: rejects transfer timeout on XUSB above range",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXUSB",
+              "variant": "Wired"
+            }
+          }
+        ],
+        "tuning": {
+          "usbTransferTimeoutMs": 60001
+        }
+      }
+    },
+    {
+      "name": "family timings are limited to their families: rejects unknown tuning key on GIP",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ],
+        "tuning": {
+          "zephyrQuill": 5
+        }
+      }
+    },
+    {
+      "name": "family timings are limited to their families: rejects unknown tuning key on XUSB",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXUSB",
+              "variant": "Wired"
+            }
+          }
+        ],
+        "tuning": {
+          "zephyrQuill": 5
+        }
+      }
+    },
+    {
+      "name": "family timings are limited to their families: rejects transfer timeout below range",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ],
+        "tuning": {
+          "usbTransferTimeoutMs": 0
+        }
+      }
+    },
+    {
+      "name": "family timings are limited to their families: rejects retry delay below range",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ],
+        "tuning": {
+          "usbStartupRetryDelayMs": 0
+        }
+      }
+    },
+    {
+      "name": "family timings are limited to their families: rejects presence resend above range",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ],
+        "tuning": {
+          "presenceResendReports": 1001
+        }
+      }
+    },
+    {
+      "name": "steam triton requires a variant: rejects triton unknown variant",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "ValveSteamTriton",
+              "variant": "USB"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "switch layouts are one value: rejects JoyConLeft JoyConRight",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "NintendoSwitch2",
+              "parameters": {
+                "layout": ["JoyConLeft", "JoyConRight"]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "switch layouts are one value: rejects JoyConRight GameCube",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "NintendoSwitch2",
+              "parameters": {
+                "layout": ["JoyConRight", "GameCube"]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "tuning is limited to its families: rejects interval on GIP",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ],
+        "tuning": {
+          "notATuningKey": 500
+        }
+      }
+    },
+    {
+      "name": "tuning is limited to its families: rejects interval on GameSir USB",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorGameSir",
+              "variant": "USB"
+            }
+          }
+        ],
+        "tuning": {
+          "notATuningKey": 500
+        }
+      }
+    },
+    {
+      "name": "tuning is limited to its families: rejects interval on DualSense",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonyDualSense"
+            }
+          }
+        ],
+        "tuning": {
+          "notATuningKey": 500
+        }
+      }
+    },
+    {
+      "name": "tuning is limited to its families: rejects interval on XUSB",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXUSB",
+              "variant": "Wired"
+            }
+          }
+        ],
+        "tuning": {
+          "notATuningKey": 500
+        }
+      }
+    },
+    {
+      "name": "tuning is limited to its families: rejects empty frame queue",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ],
+        "tuning": {
+          "frameQueueCapacity": 0
+        }
+      }
+    },
+    {
+      "name": "tuning is limited to its families: rejects oversized frame queue",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ],
+        "tuning": {
+          "frameQueueCapacity": 1025
+        }
+      }
+    },
+    {
+      "name": "tuning is limited to its families: rejects fractional frame queue",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ],
+        "tuning": {
+          "frameQueueCapacity": 1.5
+        }
+      }
+    },
+    {
+      "name": "tuning is limited to its families: rejects liveness on DualSense",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonyDualSense"
+            }
+          }
+        ],
+        "tuning": {
+          "inputLivenessTimeoutMs": 500
+        }
+      }
+    },
+    {
+      "name": "tuning is limited to its families: rejects liveness on GIP",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ],
+        "tuning": {
+          "inputLivenessTimeoutMs": 500
+        }
+      }
+    },
+    {
+      "name": "tuning is limited to its families: rejects recovery interval on DualSense",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonyDualSense"
+            }
+          }
+        ],
+        "tuning": {
+          "hidStartupRecoveryIntervalMs": 100
+        }
+      }
+    },
+    {
+      "name": "tuning is limited to its families: rejects recovery rounds on DualShock 4",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonyDualShock4"
+            }
+          }
+        ],
+        "tuning": {
+          "hidStartupRecoveryRounds": 2
+        }
+      }
+    },
+    {
+      "name": "tuning is limited to its families: rejects recovery on Switch 2",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "NintendoSwitch2",
+              "parameters": {
+                "layout": "GameCube"
+              }
+            }
+          }
+        ],
+        "tuning": {
+          "hidStartupRecoveryIntervalMs": 100,
+          "hidStartupRecoveryRounds": 2
+        }
+      }
+    },
+    {
+      "name": "tuning is limited to its families: rejects recovery on Switch input-only",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "NintendoSwitchInputOnly"
+            }
+          }
+        ],
+        "tuning": {
+          "hidStartupRecoveryIntervalMs": 100,
+          "hidStartupRecoveryRounds": 2
+        }
+      }
+    },
+    {
+      "name": "tuning is limited to its families: rejects startup interval on GIP",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ],
+        "tuning": {
+          "hidStartupIntervalMs": 10
+        }
+      }
+    },
+    {
+      "name": "tuning is limited to its families: rejects output interval on XUSB",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXUSB",
+              "variant": "Wired"
+            }
+          }
+        ],
+        "tuning": {
+          "minimumHIDOutputIntervalMs": 8
+        }
+      }
+    },
+    {
+      "name": "tuning is limited to its families: rejects startup interval on XID",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXID",
+              "variant": "Gamepad"
+            }
+          }
+        ],
+        "tuning": {
+          "hidStartupIntervalMs": 10
+        }
+      }
+    },
+    {
+      "name": "tuning is limited to its families: rejects output interval on GameSir USB",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorGameSir",
+              "variant": "USB"
+            }
+          }
+        ],
+        "tuning": {
+          "minimumHIDOutputIntervalMs": 8
+        }
+      }
+    },
+    {
+      "name": "rejects a rumble template the driver ignores",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorNVIDIAShield"
+            },
+            "session": {
+              "rumble": {
+                "report": {
+                  "kind": "Output",
+                  "id": 1,
+                  "length": 7
+                },
+                "lowFrequency": {
+                  "byte": 2
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects a rumble template the driver ignores (2)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorGameSir",
+              "variant": "USB"
+            },
+            "session": {
+              "rumble": {
+                "report": {
+                  "kind": "USB",
+                  "length": 6
+                },
+                "lowFrequency": {
+                  "byte": 2
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects malformed template bytes encodings counter and resend",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorPS3ThirdParty"
+            },
+            "session": {
+              "rumble": {
+                "report": {
+                  "kind": "Output",
+                  "id": 2,
+                  "length": 8
+                },
+                "lowFrequency": {
+                  "byte": 3
+                },
+                "bytes": "02 00"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects malformed template bytes encodings counter and resend (2)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorPS3ThirdParty"
+            },
+            "session": {
+              "rumble": {
+                "report": {
+                  "kind": "Output",
+                  "id": 2,
+                  "length": 8
+                },
+                "lowFrequency": {
+                  "byte": 3
+                },
+                "bytes": "03 00 00 00 00 00 00 00"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects malformed template bytes encodings counter and resend (3)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorPS3ThirdParty"
+            },
+            "session": {
+              "rumble": {
+                "report": {
+                  "kind": "Output",
+                  "id": 2,
+                  "length": 8
+                },
+                "lowFrequency": {
+                  "byte": 3
+                },
+                "counter": {
+                  "byte": 3
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects malformed template bytes encodings counter and resend (4)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorPS3ThirdParty"
+            },
+            "session": {
+              "rumble": {
+                "report": {
+                  "kind": "Output",
+                  "id": 2,
+                  "length": 8
+                },
+                "lowFrequency": {
+                  "byte": 3
+                },
+                "counter": {
+                  "byte": 0
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects malformed template bytes encodings counter and resend (5)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorPS3ThirdParty"
+            },
+            "session": {
+              "rumble": {
+                "report": {
+                  "kind": "Output",
+                  "id": 2,
+                  "length": 8
+                },
+                "lowFrequency": {
+                  "byte": 7,
+                  "encoding": "UInt16BigEndian"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects malformed template bytes encodings counter and resend (6)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorPS3ThirdParty"
+            },
+            "session": {
+              "rumble": {
+                "report": {
+                  "kind": "Output",
+                  "id": 2,
+                  "length": 8
+                },
+                "lowFrequency": {
+                  "byte": 3,
+                  "encoding": "UInt16BigEndian"
+                },
+                "highFrequency": {
+                  "byte": 4,
+                  "encoding": "UInt16BigEndian"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects malformed template bytes encodings counter and resend (7)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorPS3ThirdParty"
+            },
+            "session": {
+              "rumble": {
+                "report": {
+                  "kind": "USB",
+                  "length": 8
+                },
+                "lowFrequency": {
+                  "byte": 3
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "validator rejects what the schema cannot express",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            }
+          }
+        ],
+        "input": {
+          "hidUsageMap": {
+            "usages": [
+              {
+                "kind": "Axis",
+                "page": 1,
+                "usage": 48,
+                "control": "LeftStickX"
+              },
+              {
+                "kind": "Axis",
+                "page": 1,
+                "usage": 48,
+                "control": "LeftStickY"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "validator rejects what the schema cannot express (2)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            }
+          }
+        ],
+        "input": {
+          "hidUsageMap": {
+            "usages": [
+              {
+                "kind": "Axis",
+                "page": 1,
+                "usage": 48,
+                "control": "LeftStickX",
+                "range": {
+                  "min": 5,
+                  "max": 5
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "validator rejects what the schema cannot express (3)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            }
+          }
+        ],
+        "input": {
+          "hidUsageMap": {
+            "usages": [
+              {
+                "kind": "Axis",
+                "page": 1,
+                "usage": 48,
+                "control": "LeftStickX",
+                "range": {
+                  "min": 9,
+                  "max": 3
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "single mode records get the same per mode checks",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDReportLayout"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "single mode records get the same per mode checks (2)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          }
+        ],
+        "input": {
+          "report": {
+            "length": 8
+          },
+          "buttons": [
+            {
+              "control": "South",
+              "byte": 0,
+              "mask": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "single mode records get the same per mode checks (3)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            },
+            "session": {
+              "rumble": {
+                "report": {
+                  "kind": "Output",
+                  "id": 2,
+                  "length": 8
+                },
+                "lowFrequency": {
+                  "byte": 3
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "single mode records get the same per mode checks (4)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            },
+            "session": {
+              "rumble": {
+                "report": {
+                  "kind": "Output",
+                  "id": 2,
+                  "length": 8
+                },
+                "lowFrequency": {
+                  "byte": 3
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "validator rejects duplicate ids and overflowing bytes",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "a",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "probes": [
+                {
+                  "report": 239,
+                  "length": 64,
+                  "expect": "Answers"
+                }
+              ]
+            }
+          },
+          {
+            "id": "a",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "probes": [
+                {
+                  "report": 239,
+                  "length": 64,
+                  "expect": "Answers"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "validator rejects duplicate ids and overflowing bytes (2)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "a",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "probes": [
+                {
+                  "report": 239,
+                  "length": 64,
+                  "expect": "Answers"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "validator rejects duplicate ids and overflowing bytes (3)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "validator rejects duplicate ids and overflowing bytes (4)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "link": "USB"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "validator rejects duplicate ids and overflowing bytes (5)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "bcdDevice": {
+                "min": 5,
+                "max": 4
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "validator rejects duplicate ids and overflowing bytes (6)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "link": "USB"
+            },
+            "interface": {
+              "first": 2,
+              "last": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "validator rejects duplicate ids and overflowing bytes (7)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "a",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "probes": [
+                {
+                  "report": 1,
+                  "length": 3,
+                  "expect": "Bytes",
+                  "offset": 2,
+                  "bytes": "03 04"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "validator rejects modes that break record level rules",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDReportLayout"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "probes": [
+                {
+                  "report": 239,
+                  "length": 64,
+                  "expect": "Answers"
+                }
+              ]
+            }
+          }
+        ],
+        "input": {
+          "report": {
+            "length": 8
+          },
+          "buttons": [
+            {
+              "control": "South",
+              "byte": 0,
+              "mask": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "validator rejects modes that break record level rules (2)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "HIDReportLayout"
+            },
+            "match": {
+              "probes": [
+                {
+                  "report": 239,
+                  "length": 64,
+                  "expect": "Answers"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "validator rejects modes that break record level rules (3)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorPS3ThirdParty"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "HIDDescriptor"
+            },
+            "match": {
+              "probes": [
+                {
+                  "report": 239,
+                  "length": 64,
+                  "expect": "Answers"
+                }
+              ]
+            },
+            "session": {
+              "rumble": {
+                "report": {
+                  "kind": "Output",
+                  "id": 2,
+                  "length": 8
+                },
+                "lowFrequency": {
+                  "byte": 3
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "validator rejects modes that break record level rules (4)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonyDualSense"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "probes": [
+                {
+                  "report": 239,
+                  "length": 64,
+                  "expect": "Answers"
+                }
+              ]
+            }
+          }
+        ],
+        "capabilities": {
+          "present": ["Auxiliary1", "Auxiliary2", "LeftPaddle1", "RightPaddle1"]
+        }
+      }
+    },
+    {
+      "name": "bluetooth le needs every mode switch 2",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "NintendoSwitch2"
+            }
+          },
+          {
+            "id": "second",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "probes": [
+                {
+                  "report": 239,
+                  "length": 64,
+                  "expect": "Answers"
+                }
+              ]
+            }
+          }
+        ],
+        "bluetoothLE": {
+          "vibrationCharacteristic": "00000000-0000-0000-0000-000000000000"
+        }
+      }
+    },
+    {
+      "name": "hid usage map needs every mode hid descriptor",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            }
+          },
+          {
+            "id": "second",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "probes": [
+                {
+                  "report": 239,
+                  "length": 64,
+                  "expect": "Answers"
+                }
+              ]
+            }
+          }
+        ],
+        "input": {
+          "hidUsageMap": {
+            "usages": [
+              {
+                "kind": "Button",
+                "page": 9,
+                "usage": 1,
+                "control": "South"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "route needs every mode raw usb",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          },
+          {
+            "id": "second",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "probes": [
+                {
+                  "report": 239,
+                  "length": 64,
+                  "expect": "Answers"
+                }
+              ]
+            }
+          }
+        ],
+        "route": "ExtensionOwned"
+      }
+    },
+    {
+      "name": "server needs every mode hid",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "second",
+            "protocol": {
+              "family": "XboxGIP"
+            },
+            "match": {
+              "link": "USB"
+            }
+          }
+        ],
+        "server": "OJD"
+      }
+    },
+    {
+      "name": "session follows the protocol of its own mode",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          },
+          {
+            "id": "second",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "probes": [
+                {
+                  "report": 239,
+                  "length": 64,
+                  "expect": "Answers"
+                }
+              ]
+            },
+            "session": {
+              "settleMilliseconds": 200
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "tuning keys are read by every mode",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonyDualShock4"
+            }
+          },
+          {
+            "id": "second",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "probes": [
+                {
+                  "report": 239,
+                  "length": 64,
+                  "expect": "Answers"
+                }
+              ]
+            }
+          }
+        ],
+        "tuning": {
+          "inputLivenessTimeoutMs": 500
+        }
+      }
+    },
+    {
+      "name": "usb endpoints differ from every mode default",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          },
+          {
+            "id": "second",
+            "protocol": {
+              "family": "XboxXUSB",
+              "variant": "Wired"
+            },
+            "match": {
+              "link": "USB"
+            }
+          }
+        ],
+        "usb": {
+          "endpoints": {
+            "in": 129,
+            "out": 1
+          }
+        }
+      }
+    },
+    {
+      "name": "usb needs every mode raw usb",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          },
+          {
+            "id": "second",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "probes": [
+                {
+                  "report": 239,
+                  "length": 64,
+                  "expect": "Answers"
+                }
+              ]
+            }
+          }
+        ],
+        "usb": {
+          "configuration": "SetConfiguration1BeforeClaim"
+        }
+      }
+    },
+    {
+      "name": "endpoints are accepted on raw usb and refused on hid",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "a",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "interfaceSignature": {
+                "interfaceClass": 255,
+                "interfaceSubclass": 71,
+                "interfaceProtocol": 208,
+                "endpoints": [
+                  {
+                    "direction": "In",
+                    "transferType": "Interrupt"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects what a raw usb mode cannot carry",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          },
+          {
+            "id": "a",
+            "protocol": {
+              "family": "XboxGIP"
+            },
+            "match": {
+              "link": "USB"
+            },
+            "interface": {
+              "first": 0,
+              "last": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "validator rejects control transfers that disagree with themselves",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXUSB",
+              "variant": "Wired"
+            },
+            "session": {
+              "control": [
+                {
+                  "bmRequestType": 64,
+                  "bRequest": 1,
+                  "wValue": 0,
+                  "wIndex": 0,
+                  "wLength": 3,
+                  "data": "01 02"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "validator rejects control transfers that disagree with themselves (2)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxXUSB",
+              "variant": "Wired"
+            },
+            "session": {
+              "control": [
+                {
+                  "bmRequestType": 192,
+                  "bRequest": 1,
+                  "wValue": 0,
+                  "wIndex": 0,
+                  "wLength": 8,
+                  "match": {
+                    "bcdDevice": {
+                      "min": 5,
+                      "max": 4
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects a missing or foreign header",
+      "code": "E5001",
+      "document": {
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects a missing or foreign header (2)",
+      "code": "E5001",
+      "document": {
+        "apiVersion": "unsupported.example/v9",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects a missing or foreign header (3)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects a missing or foreign header (4)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ControllerPatch",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "XboxGIP"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "accepts template bytes encodings counter and resend",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1118,
+        "productID": 746,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "VendorPS3ThirdParty"
+            },
+            "session": {
+              "rumble": {
+                "report": {
+                  "kind": "USB",
+                  "length": 8
+                },
+                "lowFrequency": {
+                  "byte": 3,
+                  "encoding": "SwitchHDRumble"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": []
+      }
+    },
+    {
+      "name": "rejects invalid modes (2)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "probes": [
+                {
+                  "report": 239,
+                  "length": 64,
+                  "expect": "Answers"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (3)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "XInput",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "probes": [
+                {
+                  "report": 239,
+                  "length": 64,
+                  "expect": "Answers"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (4)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "abc\n",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "probes": [
+                {
+                  "report": 239,
+                  "length": 64,
+                  "expect": "Answers"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (5)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "probes": [
+                {
+                  "report": 1,
+                  "length": 8,
+                  "expect": "Bytes",
+                  "offset": 0,
+                  "bytes": "AB\n"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (6)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "probes": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (7)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (8)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {}
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (9)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "link": "serial"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (10)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "bcdDevice": {
+                "min": 0,
+                "max": 65536
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (11)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "manufacturer": ""
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (12)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "interfaceSignature": {
+                "interfaceSubclass": 1
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (13)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "interfaceSignature": {
+                "interfaceClass": 255,
+                "interfaceSubclass": 93,
+                "interfaceProtocol": 1,
+                "endpoints": []
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (14)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "interfaceSignature": {
+                "interfaceClass": 255,
+                "interfaceSubclass": 93,
+                "interfaceProtocol": 1,
+                "endpoints": [{}]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (15)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "interfaceSignature": {
+                "interfaceClass": 255,
+                "interfaceSubclass": 93,
+                "interfaceProtocol": 1,
+                "endpoints": [
+                  {
+                    "direction": "both"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (16)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "interfaceSignature": {
+                "interfaceClass": 255,
+                "interfaceSubclass": 93,
+                "interfaceProtocol": 1,
+                "endpoints": [
+                  {
+                    "transferType": "unknown"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (17)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "interfaceSignature": {
+                "interfaceClass": 255,
+                "interfaceSubclass": 93,
+                "interfaceProtocol": 1,
+                "endpoints": [
+                  {
+                    "address": 256
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (18)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "interfaceSignature": {
+                "interfaceClass": 255,
+                "interfaceSubclass": 93,
+                "interfaceProtocol": 1,
+                "endpoints": [
+                  {
+                    "maxPacketSize": 65536
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (19)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "interfaceSignature": {
+                "interfaceClass": 255,
+                "interfaceSubclass": 93,
+                "interfaceProtocol": 1,
+                "endpoints": [
+                  {
+                    "interval": 1
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (20)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "interfaceSignature": {
+                "interfaceClass": 255,
+                "interfaceSubclass": 93,
+                "interfaceProtocol": 1,
+                "endpoints": [
+                  {
+                    "direction": "In",
+                    "transferType": "Interrupt"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (21)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "link": "USB"
+            },
+            "session": {
+              "startup": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (22)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "link": "USB"
+            },
+            "keepAlive": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (23)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "probes": [
+                {
+                  "report": 239,
+                  "length": 64,
+                  "expect": "Answers"
+                }
+              ],
+              "serialNumber": "1"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (24)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "probes": [
+                {
+                  "report": 239,
+                  "length": 64,
+                  "expect": "Answers",
+                  "write": "01"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (25)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "probes": [
+                {
+                  "report": 239,
+                  "length": 64,
+                  "expect": "a"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (26)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "probes": [
+                {
+                  "report": 1,
+                  "length": 8,
+                  "expect": "Bytes"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (27)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "probes": [
+                {
+                  "report": 239,
+                  "length": 64,
+                  "expect": "Answers",
+                  "offset": 0,
+                  "bytes": "01"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (28)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "probes": [
+                {
+                  "report": 1,
+                  "length": 8,
+                  "expect": "Bytes",
+                  "offset": 0,
+                  "bytes": "ab"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (29)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "probes": [
+                {
+                  "report": 1,
+                  "length": 8,
+                  "expect": "Bytes",
+                  "offset": 0,
+                  "bytes": "A"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid modes (30)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 1356,
+        "productID": 616,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonySixaxis"
+            }
+          },
+          {
+            "id": "x",
+            "protocol": {
+              "family": "SonySixaxis"
+            },
+            "match": {
+              "probes": [
+                {
+                  "report": 256,
+                  "length": 64,
+                  "expect": "Answers"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "a byte layout belongs to report layout only",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            }
+          }
+        ],
+        "input": {
+          "report": {
+            "length": 1
+          },
+          "buttons": [
+            {
+              "control": "South",
+              "byte": 0,
+              "mask": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "a byte layout belongs to report layout only (2)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDReportLayout"
+            }
+          }
+        ],
+        "input": {
+          "hidUsageMap": {
+            "usages": [
+              {
+                "kind": "Button",
+                "page": 9,
+                "usage": 1,
+                "control": "South"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "a usage map belongs to hid descriptor only",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "SonyDualShock4"
+            }
+          }
+        ],
+        "input": {
+          "hidUsageMap": {
+            "usages": [
+              {
+                "kind": "Button",
+                "page": 9,
+                "usage": 1,
+                "control": "South"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "hid descriptor declares no parameters",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor",
+              "parameters": {
+                "usageLayout": "Wr007"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "rejects invalid usages",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            }
+          }
+        ],
+        "input": {
+          "hidUsageMap": {
+            "usages": []
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects invalid usages (2)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            }
+          }
+        ],
+        "input": {
+          "hidUsageMap": {
+            "usages": [
+              {
+                "kind": "Button",
+                "page": 9,
+                "usage": 1,
+                "control": "LeftStickX"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects invalid usages (3)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            }
+          }
+        ],
+        "input": {
+          "hidUsageMap": {
+            "usages": [
+              {
+                "kind": "Button",
+                "page": 9,
+                "usage": 1,
+                "control": "DpadUp"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects invalid usages (4)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            }
+          }
+        ],
+        "input": {
+          "hidUsageMap": {
+            "usages": [
+              {
+                "kind": "Axis",
+                "page": 1,
+                "usage": 48,
+                "control": "South"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects invalid usages (5)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            }
+          }
+        ],
+        "input": {
+          "hidUsageMap": {
+            "usages": [
+              {
+                "kind": "Axis",
+                "page": 1,
+                "usage": 48,
+                "control": "DpadUp"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects invalid usages (6)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            }
+          }
+        ],
+        "input": {
+          "hidUsageMap": {
+            "usages": [
+              {
+                "kind": "Hat",
+                "page": 1,
+                "usage": 57,
+                "control": "South"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects invalid usages (7)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            }
+          }
+        ],
+        "input": {
+          "hidUsageMap": {
+            "usages": [
+              {
+                "kind": "Hat",
+                "page": 1,
+                "usage": 57,
+                "range": {
+                  "min": 2,
+                  "max": 9
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects invalid usages (8)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            }
+          }
+        ],
+        "input": {
+          "hidUsageMap": {
+            "usages": [
+              {
+                "kind": "Hat",
+                "page": 1,
+                "usage": 57,
+                "deadZone": 0.1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects invalid usages (9)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            }
+          }
+        ],
+        "input": {
+          "hidUsageMap": {
+            "usages": [
+              {
+                "kind": "Button",
+                "page": 9,
+                "usage": 1,
+                "control": "South",
+                "deadZone": 0.1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects invalid usages (10)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            }
+          }
+        ],
+        "input": {
+          "hidUsageMap": {
+            "usages": [
+              {
+                "kind": "Axis",
+                "page": 1,
+                "usage": 48,
+                "control": "LeftStickX",
+                "deadZone": 0
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects invalid usages (11)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            }
+          }
+        ],
+        "input": {
+          "hidUsageMap": {
+            "usages": [
+              {
+                "kind": "Axis",
+                "page": 1,
+                "usage": 48,
+                "control": "LeftStickX",
+                "deadZone": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects invalid usages (12)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            }
+          }
+        ],
+        "input": {
+          "hidUsageMap": {
+            "usages": [
+              {
+                "kind": "Axis",
+                "page": 1,
+                "usage": 48,
+                "control": "LeftStickX",
+                "deadZone": -0.1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects invalid usages (13)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            }
+          }
+        ],
+        "input": {
+          "hidUsageMap": {
+            "usages": [
+              {
+                "kind": "Axis",
+                "page": 1,
+                "usage": 48,
+                "control": "LeftStickX",
+                "range": {
+                  "min": 0
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects invalid usages (14)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            }
+          }
+        ],
+        "input": {
+          "hidUsageMap": {
+            "usages": [
+              {
+                "kind": "Axis",
+                "page": 1,
+                "usage": 48,
+                "control": "LeftStickX",
+                "range": {
+                  "min": 0,
+                  "max": 2147483648
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects invalid usages (15)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            }
+          }
+        ],
+        "input": {
+          "hidUsageMap": {
+            "usages": [
+              {
+                "kind": "slider",
+                "page": 1,
+                "usage": 48,
+                "control": "LeftStickX"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects invalid usages (16)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            }
+          }
+        ],
+        "input": {
+          "hidUsageMap": {
+            "usages": [
+              {
+                "kind": "Button",
+                "page": 9,
+                "usage": 1,
+                "control": "South",
+                "extra": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects invalid usages (17)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            }
+          }
+        ],
+        "input": {
+          "hidUsageMap": {
+            "usages": [
+              {
+                "kind": "Button",
+                "page": 0,
+                "usage": 1,
+                "control": "South"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects invalid usages (18)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            }
+          }
+        ],
+        "input": {
+          "hidUsageMap": {
+            "usages": [
+              {
+                "kind": "Button",
+                "page": 9,
+                "usage": 65536,
+                "control": "South"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects invalid usages (19)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            }
+          }
+        ],
+        "input": {
+          "hidUsageMap": {
+            "usages": [
+              {
+                "kind": "Button",
+                "page": 9,
+                "usage": 1,
+                "control": "South"
+              }
+            ],
+            "reportID": 0
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects invalid usages (20)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            }
+          }
+        ],
+        "input": {
+          "hidUsageMap": {
+            "usages": [
+              {
+                "kind": "Button",
+                "page": 9,
+                "usage": 1,
+                "control": "South"
+              }
+            ],
+            "reportID": 256
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects invalid usages (21)",
+      "code": "E5007",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "Controller",
+        "vendorID": 65534,
+        "productID": 1,
+        "modes": [
+          {
+            "id": "default",
+            "protocol": {
+              "family": "HIDDescriptor"
+            }
+          }
+        ],
+        "input": {
+          "descriptorShapes": [
+            {
+              "present": [
+                {
+                  "page": 1,
+                  "usage": 50
+                }
+              ],
+              "hidUsageMap": {
+                "usages": [
+                  {
+                    "kind": "Button",
+                    "page": 9,
+                    "usage": 1,
+                    "control": "South"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

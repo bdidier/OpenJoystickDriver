@@ -12,6 +12,11 @@ from unittest.mock import patch
 from Scripts.Catalog import protocol_descriptions
 from Scripts.Catalog.schema_header import header
 from Scripts.Quality import validate_schemas
+from Tests.RepositoryScripts import schema_rejections
+
+
+def setUpModule() -> None:
+    schema_rejections.enforce_description_rejections()
 
 
 def zeros(count: int) -> str:

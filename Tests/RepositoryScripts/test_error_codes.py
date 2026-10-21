@@ -81,6 +81,7 @@ class ErrorCodeTests(unittest.TestCase):
                 ("E5004", "unknownProtocolVariant"),
                 ("E5005", "damagedAccessGrants"),
                 ("E5006", "damagedPortKey"),
+                ("E5007", "invalidControllerRecord"),
             ],
         )
         with self.assertRaisesRegex(errors.ErrorCodeError, "E4001 is in the Document"):

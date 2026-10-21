@@ -26,8 +26,18 @@ RECORD_DIR = ROOT / "Sources" / "OpenJoystickDriverKit" / "Resources" / "Control
 SCHEMA_PATH = ROOT / "Resources" / "Schemas" / "controller.schema.json"
 
 
+# The catalog codes of a record that is not valid, as `ControllerRecordSet.problemCode` reports
+# them in Swift.
+UNSUPPORTED_API_VERSION = "E5001"
+INVALID_CONTROLLER_RECORD = "E5007"
+
+
 class ValidationError(Exception):
-    pass
+    """A rule a record or catalog breaks; `code` is the catalog code of an invalid record."""
+
+    def __init__(self, message: str, code: str | None = None) -> None:
+        super().__init__(message)
+        self.code = code
 
 
 def require(condition: bool, message: str) -> None:
@@ -348,12 +358,39 @@ def validator() -> Any:
 def check_record(
     path: pathlib.Path, record: dict[str, Any], schema_validator: Any
 ) -> None:
-    """Checks one record against the schema and every rule the schema cannot state."""
+    """Checks one record against the schema and every rule the schema cannot state.
+
+    A failure names its catalog code: E5001 when `apiVersion` is missing or not the supported
+    one, E5007 for every other rule.
+    """
+    try:
+        check_record_rules(path, record, schema_validator)
+    except ValidationError as error:
+        if error.code is not None:
+            raise
+        raise ValidationError(
+            f"{INVALID_CONTROLLER_RECORD}: {error}", INVALID_CONTROLLER_RECORD
+        ) from error
+
+
+def check_record_rules(
+    path: pathlib.Path, record: dict[str, Any], schema_validator: Any
+) -> None:
     try:
         schema_validator.validate(record)
     except JSONSchemaValidationError as error:
         location = ".".join(str(component) for component in error.absolute_path)
         suffix = f" at {location}" if location else ""
+        versioned = list(error.absolute_path) == ["apiVersion"] or (
+            error.validator == "required"
+            and not error.absolute_path
+            and "'apiVersion'" in error.message
+        )
+        if versioned:
+            raise ValidationError(
+                f"{UNSUPPORTED_API_VERSION}: {path}{suffix}: {error.message}",
+                UNSUPPORTED_API_VERSION,
+            ) from error
         raise ValidationError(f"{path}{suffix}: {error.message}") from error
 
     # JSON Schema cannot express disjoint arrays; the runtime decoder rejects overlap too.

@@ -111,10 +111,17 @@ public struct ValidatedControllerRecord: Sendable {
 }
 
 /// Why a user controller record is invalid, in words for the person who wrote it.
+///
+/// A problem carries ``ErrorCode/invalidControllerRecord``, except one in the shape of a
+/// ControllerPatch file, which has no code; ``description`` leaves the code out.
 public struct ControllerRecordProblem: Error, Equatable, Sendable, CustomStringConvertible {
   public let description: String
+  public let code: ErrorCode?
 
-  init(_ description: String) { self.description = description }
+  init(code: ErrorCode? = .invalidControllerRecord, _ description: String) {
+    self.code = code
+    self.description = description
+  }
 }
 
 /// The bundled controller catalog with the user's controller records applied.
@@ -266,10 +273,17 @@ public struct ControllerRecordSet: Sendable {
     return integer
   }
 
-  /// The error code of a document that is refused for its `apiVersion`, or nil when `error` has
-  /// none.
+  /// The error code of a record that is refused: ``ErrorCode/unsupportedAPIVersion`` for its
+  /// `apiVersion`, and ``ErrorCode/invalidControllerRecord`` for any other failed rule. Nil when
+  /// `error` is not about the record's content, such as a file that cannot be read, and for a
+  /// document of another kind with a wrong `kind`.
   public static func problemCode(_ error: any Error) -> ErrorCode? {
-    (error as? DocumentHeaderProblem)?.code
+    switch error {
+    case let problem as DocumentHeaderProblem: problem.code
+    case let problem as ControllerRecordProblem: problem.code
+    case is DecodingError: .invalidControllerRecord
+    default: nil
+    }
   }
 
   /// A one-line reason for a decoding or file error, with the JSON path of the field.

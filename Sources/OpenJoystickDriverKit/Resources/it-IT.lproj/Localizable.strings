@@ -1580,6 +1580,7 @@
 "error.E5004" = "Una descrizione di protocollo elenca una variante che la sua famiglia non ha. Usa una delle varianti della famiglia.";
 "error.E5005" = "Il file di accesso AccessGrants.json è danneggiato. Correggi il file o eliminalo, poi concedi di nuovo l’accesso.";
 "error.E5006" = "Il file della chiave degli ID unità, PortKeyInstallation.key, non può essere letto o non è di 32 byte. Ripristina il file da un backup. Se invece lo elimini, OpenJoystickDriver crea una nuova chiave e ogni ID unità cambia.";
+"error.E5007" = "Un record del controller non è valido. Controlla il file con lo schema controller e correggi il campo indicato dal messaggio.";
 "error.withCode" ="%@ (%@)";
 
 /* Main window, status item, main menu, settings window, library and access. */

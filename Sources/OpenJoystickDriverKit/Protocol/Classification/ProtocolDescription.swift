@@ -194,6 +194,28 @@ struct ProtocolDescription: Sendable {
     protocolID: PhysicalProtocolID,
     fileName: String
   ) throws(ProtocolDescriptionProblem) -> Self {
+    try decode(data, expectedFamily: protocolID, fileName: fileName)
+  }
+
+  /// Decodes one description from the file `fileName`, whose stem names the family it holds. A
+  /// stem that no family has is E5003, after the document itself is checked.
+  static func decode(
+    _ data: Data,
+    fileName: String
+  ) throws(ProtocolDescriptionProblem) -> Self {
+    let stem = URL(fileURLWithPath: fileName).deletingPathExtension().lastPathComponent
+    return try decode(
+      data,
+      expectedFamily: PhysicalProtocolID.allCases.first { $0.descriptionFileStem == stem },
+      fileName: fileName
+    )
+  }
+
+  private static func decode(
+    _ data: Data,
+    expectedFamily protocolID: PhysicalProtocolID?,
+    fileName: String
+  ) throws(ProtocolDescriptionProblem) -> Self {
     let document: Document
     do {
       let decoder = JSONDecoder()
@@ -212,10 +234,39 @@ struct ProtocolDescription: Sendable {
         "\(fileName): \(problem.message)"
       )
     }
-    guard document.family == protocolID.rawValue else {
+    guard PhysicalProtocolID(rawValue: document.family) != nil else {
+      throw ProtocolDescriptionProblem(
+        .invalidProtocolDescription,
+        "\(fileName): \(document.family) is not a family"
+      )
+    }
+    guard let protocolID, document.family == protocolID.rawValue else {
       throw ProtocolDescriptionProblem(
         .protocolDescriptionFamilyMismatch,
-        "\(fileName): family must be \(protocolID.rawValue)"
+        "\(fileName): family must be \(protocolID?.rawValue ?? "named by the file name")"
+      )
+    }
+    var seenSignatures: Set<String> = []
+    for signature in document.interfaceSignatures {
+      let identity = [
+        signature.variant, "\(signature.interfaceClass)", "\(signature.interfaceSubclass)",
+        "\(signature.interfaceProtocol)", signature.interfaceNumber.map(String.init) ?? "",
+      ].joined(separator: "/")
+      guard seenSignatures.insert(identity).inserted else {
+        throw ProtocolDescriptionProblem(
+          .invalidProtocolDescription,
+          "\(fileName): interfaceSignatures names \(identity) twice"
+        )
+      }
+    }
+    let unreadParameters = Set(document.parameters.keys).subtracting(
+      ProtocolParameters.readable(by: protocolID)
+    )
+    guard unreadParameters.isEmpty else {
+      throw ProtocolDescriptionProblem(
+        .invalidProtocolDescription,
+        "\(fileName): \(protocolID.rawValue) reads no parameter(s) "
+          + unreadParameters.sorted().joined(separator: ", ")
       )
     }
     var signatures: [ProtocolInterfaceSignature] = []

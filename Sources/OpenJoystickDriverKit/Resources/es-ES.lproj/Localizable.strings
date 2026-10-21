@@ -1580,6 +1580,7 @@
 "error.E5004" = "Una descripción de protocolo enumera una variante que su familia no tiene. Usa una de las variantes de la familia.";
 "error.E5005" = "El archivo de acceso AccessGrants.json está dañado. Corrige el archivo o elimínalo y concede el acceso de nuevo.";
 "error.E5006" = "No se puede leer el archivo de clave de los ID de unidad, PortKeyInstallation.key, o no tiene 32 bytes. Restaura el archivo desde una copia de seguridad. Si lo eliminas, OpenJoystickDriver crea una clave nueva y cambian todos los ID de unidad.";
+"error.E5007" = "Un registro del mando no es válido. Comprueba el archivo con el esquema controller y corrige el campo que nombra el mensaje.";
 "error.withCode" ="%@ (%@)";
 
 /* Main window, status item, main menu, settings window, library and access. */
