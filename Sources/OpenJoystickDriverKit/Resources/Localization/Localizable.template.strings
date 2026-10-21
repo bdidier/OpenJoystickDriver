@@ -1832,6 +1832,7 @@
 "menuBar.profileConflict" = "The profile changed before this action ran. Try again.";
 "a11y.menuBar.statusItem" = "OpenJoystickDriver status";
 "a11y.mainWindow.sidebar" = "Areas";
+"a11y.capture.touchSwipeDistance" = "Minimum swipe distance";
 "access.detail.pair" = "%1$@ · %2$@";
 "access.detail.triple" = "%1$@ · %2$@ · %3$@";
 "access.grant.noPath" = "OpenJoystickDriver could not read the executable of %@, so it cannot grant it access.";

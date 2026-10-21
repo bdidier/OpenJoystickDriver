@@ -2,7 +2,13 @@ import Foundation
 import Testing
 
 /// Lists the controls in the app sources that VoiceOver cannot name. The list must stay empty.
-/// The sources under `controllersAreaFollowUp` are not scanned yet.
+///
+/// The audit is a text scan, so it cannot see:
+/// - custom `NSView` controls that draw themselves or handle mouse events,
+/// - views made tappable with `onTapGesture` instead of a control,
+/// - label strings that are empty at run time,
+/// - controls passed as generic parameters, except inside `InputTestSliderRow`, whose initializer
+///   requires the label.
 @Suite
 struct AccessibilityAuditTests {
   private static let repository = URL(fileURLWithPath: #filePath)
@@ -14,24 +20,6 @@ struct AccessibilityAuditTests {
   private static let scannedDirectories = [
     "Sources/OpenJoystickDriverPresentation", "Sources/OpenJoystickDriver",
   ]
-
-  /// Paths under the Controllers area that are not scanned: 20.4 follow-up after Controllers
-  /// merge. Each entry is a path prefix below `Sources/OpenJoystickDriverPresentation/`.
-  private static let controllersAreaFollowUp = [
-    "Controllers/Inventory/",
-    "MainWindow/MainWindowToolbar.swift",
-    "MainWindow/MainWindowController.swift",
-    "MainWindow/MainWindowController+ActivityToolbar.swift",
-    "Runtime/ControllerLiveUpdates",
-    "MenuBar/",
-  ]
-
-  private static func isFollowUp(_ path: String) -> Bool {
-    let prefix = "Sources/OpenJoystickDriverPresentation/"
-    guard path.hasPrefix(prefix) else { return false }
-    let relative = String(path.dropFirst(prefix.count))
-    return controllersAreaFollowUp.contains { relative.hasPrefix($0) }
-  }
 
   private static func swiftFiles() throws -> [String] {
     try scannedDirectories.flatMap { directory -> [String] in
@@ -46,7 +34,7 @@ struct AccessibilityAuditTests {
   }
 
   private static func findings() throws -> [UnlabeledControl] {
-    try swiftFiles().filter { !isFollowUp($0) }.flatMap { path -> [UnlabeledControl] in
+    try swiftFiles().flatMap { path -> [UnlabeledControl] in
       let source = try String(
         contentsOf: repository.appendingPathComponent(path),
         encoding: .utf8
@@ -67,15 +55,6 @@ struct AccessibilityAuditTests {
   @Test
   func theAuditCoversTheAppSources() throws {
     #expect(try Self.swiftFiles().count > 100)
-  }
-
-  @Test
-  func everyFollowUpEntryNamesExistingSources() throws {
-    let files = try Self.swiftFiles().filter(Self.isFollowUp)
-    for entry in Self.controllersAreaFollowUp {
-      let prefix = "Sources/OpenJoystickDriverPresentation/" + entry
-      #expect(files.contains { $0.hasPrefix(prefix) }, "No source matches \(entry)")
-    }
   }
 
   @Test
@@ -152,6 +131,91 @@ struct AccessibilityAuditTests {
     let source = """
       // Button(action: {}) { Image(systemName: "gear") }
       let text = "\\(Button("x") { Image(systemName: "gear") })"
+      """
+    #expect(AccessibilityAudit.audit(source: source, path: "V.swift").isEmpty)
+  }
+
+  @Test
+  func aCastOrTypeTestIsNotAControl() {
+    let source = """
+      if let search = item as? NSSearchToolbarItem {}
+      if let search = item as! NSSearchToolbarItem {}
+      let isSearch = item is NSSearchToolbarItem
+      let cast = item as NSToolbarItem
+      """
+    #expect(AccessibilityAudit.audit(source: source, path: "V.swift").isEmpty)
+  }
+
+  @Test
+  func aLabelInsideAClosureDoesNotNameTheControl() {
+    let source = """
+      struct V: View {
+        var body: some View {
+          Slider(value: $value, in: 0...1).overlay { Text("x").accessibilityLabel("y") }
+          Button { } label: { Image(systemName: "gear") }.overlay { Text("x") }
+        }
+      }
+      """
+    #expect(AccessibilityAudit.audit(source: source, path: "V.swift").map(\.line) == [3, 4])
+  }
+
+  @Test
+  func anEmptyLabelDoesNotNameTheControl() {
+    let source = """
+      struct V: View {
+        var body: some View {
+          Slider(value: $value, in: 0...1).accessibilityLabel("")
+          Slider(value: $value, in: 0...1).ojdAccessibilityLabel(Text(verbatim: ""))
+          Button { } label: { Text(verbatim: "") }
+          Button { } label: { Text("") }
+        }
+      }
+      """
+    #expect(AccessibilityAudit.audit(source: source, path: "V.swift").map(\.line) == [3, 4, 5, 6])
+  }
+
+  @Test
+  func anImageInAPickerOptionNeedsItsOwnName() {
+    let source = """
+      struct V: View {
+        var body: some View {
+          Picker("Mode", selection: $mode) { Image(systemName: "gear").tag(1) }
+          Picker("Mode", selection: $mode) {
+            Image(systemName: "gear").accessibilityLabel("Gear").tag(1)
+          }
+        }
+      }
+      """
+    #expect(AccessibilityAudit.audit(source: source, path: "V.swift").map(\.line) == [3])
+  }
+
+  @Test
+  func anAppKitControlNeedsItsOwnLabelCall() {
+    let source = """
+      func make() {
+        let first = NSPopUpButton(frame: .zero, pullsDown: false)
+        let second = NSPopUpButton(frame: .zero, pullsDown: false)
+        second.setAccessibilityLabel("Second")
+        let item = NSToolbarItem(itemIdentifier: id)
+        let other = NSToolbarItem(itemIdentifier: id)
+        other.label = "Other"
+        let tied = NSPopUpButton(frame: .zero, pullsDown: false)
+        tied.setAccessibilityTitleUIElement(title)
+      }
+      """
+    #expect(AccessibilityAudit.audit(source: source, path: "V.swift").map(\.line) == [2, 5])
+  }
+
+  @Test
+  func aSliderInTheLabelingRowIsNamedByTheRow() {
+    let source = """
+      struct V: View {
+        var body: some View {
+          InputTestSliderRow(title: "A", valueText: "1", accessibilityLabel: "A") {
+            Slider(value: $value, in: 0...1)
+          }
+        }
+      }
       """
     #expect(AccessibilityAudit.audit(source: source, path: "V.swift").isEmpty)
   }

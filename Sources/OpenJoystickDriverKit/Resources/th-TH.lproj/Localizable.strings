@@ -1718,6 +1718,7 @@
 "menuBar.profileConflict" = "โปรไฟล์เปลี่ยนไปก่อนที่การดำเนินการนี้จะทำงาน โปรดลองอีกครั้ง";
 "a11y.menuBar.statusItem" = "สถานะของ OpenJoystickDriver";
 "a11y.mainWindow.sidebar" = "ส่วนต่างๆ";
+"a11y.capture.touchSwipeDistance" = "ระยะปัดขั้นต่ำ";
 "access.detail.pair" = "%1$@ · %2$@";
 "access.detail.triple" = "%1$@ · %2$@ · %3$@";
 "access.grant.noPath" = "OpenJoystickDriver อ่านไฟล์ปฏิบัติการของ %@ ไม่ได้ จึงให้สิทธิ์เข้าถึงไม่ได้";

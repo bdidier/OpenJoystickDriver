@@ -38,15 +38,25 @@ enum AccessibilityAudit {
     "NSComboBox", "NSSearchField", "NSToolbarItem", "NSSearchToolbarItem", "NSImageView",
   ]
 
-  /// Source text that proves an AppKit control has an accessible name.
-  static let appKitNameMarkers = [
-    "setAccessibilityLabel(", ".label = ", "accessibilityDescription: description",
-    "accessibilityDescription: item.", "accessibilityDescription: OJDLocalized",
-  ]
+  /// Toolbar item classes whose `label` is the accessible name.
+  static let toolbarItems: Set<String> = ["NSToolbarItem", "NSSearchToolbarItem"]
+
+  /// A view whose initializer requires an accessibility label for the control in its closure,
+  /// so a control inside it needs no modifier of its own.
+  static let labelingWrapper = "InputTestSliderRow"
+
+  /// Controls whose unlabeled trailing closure is content, not a label.
+  static let contentClosureControls: Set<String> = ["Picker", "Menu"]
 
   private struct Closure {
     let label: String?
     let text: String
+    let range: Range<Int>
+  }
+
+  private struct Modifier {
+    let name: String
+    let arguments: String
   }
 
   private struct Extent {
@@ -54,8 +64,9 @@ enum AccessibilityAudit {
     let start: Int
     let end: Int
     let arguments: String?
+    let argumentsRange: Range<Int>?
     let closures: [Closure]
-    let text: String
+    let modifiers: [Modifier]
   }
 
   static func audit(source: String, path: String) -> [UnlabeledControl] {
@@ -78,8 +89,10 @@ enum AccessibilityAudit {
       let name = text(bytes[index..<end])
       let tracked =
         titledControls.contains(name) || imageKinds.contains(name) || appKitControls.contains(name)
-        || name == "Label"
-      if tracked, opensExpression(bytes, at: end), !isDeclaration(bytes, before: index) {
+        || name == "Label" || name == labelingWrapper
+      if tracked, opensExpression(bytes, at: end), !isDeclaration(bytes, before: index),
+        !followsCast(bytes, before: index)
+      {
         extents.append(extent(name: name, bytes: bytes, start: index, afterName: end))
       }
       index = end
@@ -95,9 +108,16 @@ enum AccessibilityAudit {
 
   private static func unnamedKind(_ item: Extent, within all: [Extent], bytes: [UInt8]) -> String? {
     let name = item.name
-    if name == "Label" { return nil }
+    if name == "Label" || name == labelingWrapper { return nil }
+    if !imageKinds.contains(name), !appKitControls.contains(name),
+      all.contains(where: {
+        $0.name == labelingWrapper && $0.closures.contains { $0.range.contains(item.start) }
+      })
+    {
+      return nil
+    }
     if appKitControls.contains(name) { return appKitUnnamed(item, bytes: bytes) }
-    if hasAccessibilityName(item.text) { return nil }
+    if hasAccessibilityName(item.modifiers) { return nil }
     if name == "OJDSystemSymbol" {
       // The symbol view names itself from its fallback text and hides itself for a `nil`
       // fallback. A literal fallback is a glyph stand-in such as "->" that VoiceOver would read.
@@ -106,7 +126,7 @@ enum AccessibilityAudit {
     }
     if imageKinds.contains(name) {
       if item.arguments?.hasPrefix("decorative") == true { return nil }
-      let enclosed = all.contains { $0.start < item.start && item.end <= $0.end }
+      let enclosed = all.contains { isInsideLabel(item, of: $0) }
       return enclosed ? nil : "\(name) without an accessibility label or hidden trait"
     }
     if let first = item.arguments, titleArgument(first) { return nil }
@@ -122,22 +142,60 @@ enum AccessibilityAudit {
     return "\(name) without a title or accessibility label"
   }
 
+  /// An image inside another control's arguments or label closures is part of that control. The
+  /// content closure of a `Picker` or `Menu` and modifier closures are not.
+  private static func isInsideLabel(_ image: Extent, of other: Extent) -> Bool {
+    guard other.start < image.start, image.end <= other.end else { return false }
+    if let range = other.argumentsRange, range.contains(image.start) { return true }
+    return other.closures.contains { closure in
+      guard closure.range.contains(image.start) else { return false }
+      return closure.label != nil || !contentClosureControls.contains(other.name)
+    }
+  }
+
   private static func appKitUnnamed(_ item: Extent, bytes: [UInt8]) -> String? {
-    if item.name == "NSButton", let first = item.arguments,
+    if item.name == "NSButton",
+      let first = item.arguments?.trimmingCharacters(in: .whitespacesAndNewlines),
       first.hasPrefix("title:") || first.hasPrefix("checkboxWithTitle:")
         || first.hasPrefix("radioButtonWithTitle:")
     {
       return nil
     }
+    guard let variable = assignedVariable(bytes, before: item.start) else {
+      return "\(item.name) without a variable to carry an accessibility label"
+    }
     let scope = enclosingFunction(bytes, at: item.start)
-    let text = text(bytes[scope])
-    let named = appKitNameMarkers.contains { text.contains($0) }
-    return named ? nil : "\(item.name) without an accessibility label"
+    let scoped = text(bytes[scope])
+    var markers = [
+      "\(variable).setAccessibilityLabel(", "\(variable).setAccessibilityTitleUIElement(",
+      "\(variable).accessibilityLabel =",
+    ]
+    if toolbarItems.contains(item.name) { markers.append("\(variable).label =") }
+    if item.name == "NSSearchToolbarItem" {
+      markers.append("\(variable).searchField.setAccessibilityLabel(")
+    }
+    let named = markers.contains { scoped.contains($0) }
+    return named ? nil : "\(item.name) \(variable) without an accessibility label"
   }
 
-  private static func hasAccessibilityName(_ text: String) -> Bool {
-    text.contains("ccessibilityLabel(") || text.contains("accessibilityHidden(true)")
-      || text.contains("ojdSymbolAccessibility(")
+  /// The name of the `let` or `var` whose initializer starts the expression at `index`.
+  private static func assignedVariable(_ bytes: [UInt8], before index: Int) -> String? {
+    let window = text(bytes[max(0, index - 300)..<index])
+    guard let match = window.matches(of: /\b(?:let|var)\s+(\w+)/).last,
+      window[match.range.upperBound...].contains("=")
+    else { return nil }
+    return String(match.1)
+  }
+
+  private static func hasAccessibilityName(_ modifiers: [Modifier]) -> Bool {
+    modifiers.contains { modifier in
+      let compact = modifier.arguments.filter { !$0.isWhitespace }
+      if modifier.name.hasSuffix("ccessibilityLabel") {
+        return !["", "\"\"", "Text(\"\")", "Text(verbatim:\"\")"].contains(compact)
+      }
+      if modifier.name == "accessibilityHidden" { return compact == "true" }
+      return modifier.name == "ojdSymbolAccessibility"
+    }
   }
 
   /// A first argument without an argument label is the title; `""` is no title.
@@ -152,8 +210,13 @@ enum AccessibilityAudit {
     return true
   }
 
+  /// A label closure names a control when it holds a `Text` or `Label` with content.
   private static func namesControl(_ closure: String) -> Bool {
-    closure.contains("Text(") || closure.contains("Label(") || closure.contains("Text {")
+    var compact = closure.filter { !$0.isWhitespace }
+    for empty in ["Text(\"\")", "Text(verbatim:\"\")"] {
+      compact = compact.replacingOccurrences(of: empty, with: "")
+    }
+    return compact.contains("Text(") || compact.contains("Label(") || compact.contains("Text{")
   }
 
   // MARK: Extent parsing
@@ -161,7 +224,10 @@ enum AccessibilityAudit {
   private static func extent(name: String, bytes: [UInt8], start: Int, afterName: Int) -> Extent {
     var position = afterName
     var arguments: String?
+    var argumentsRange: Range<Int>?
     var closures: [Closure] = []
+    var modifiers: [Modifier] = []
+    var inModifiers = false
     var lastWasClosure = false
     var first = true
     while position < bytes.count {
@@ -171,7 +237,10 @@ enum AccessibilityAudit {
       let character = bytes[next]
       if character == UInt8(ascii: "("), next == position {
         let close = matchClose(bytes, open: next)
-        if first { arguments = text(bytes[(next + 1)..<close]) }
+        if first {
+          arguments = text(bytes[(next + 1)..<close])
+          argumentsRange = (next + 1)..<close
+        }
         position = close + 1
         first = false
         lastWasClosure = false
@@ -180,9 +249,15 @@ enum AccessibilityAudit {
       first = false
       if character == UInt8(ascii: "{") {
         let close = matchClose(bytes, open: next)
-        closures.append(
-          Closure(label: nil, text: text(bytes[(next + 1)..<close]))
-        )
+        if !inModifiers {
+          closures.append(
+            Closure(
+              label: nil,
+              text: text(bytes[(next + 1)..<close]),
+              range: (next + 1)..<close
+            )
+          )
+        }
         position = close + 1
         lastWasClosure = true
         continue
@@ -191,11 +266,21 @@ enum AccessibilityAudit {
       {
         var end = next + 1
         while end < bytes.count, isIdentifierPart(bytes[end]) { end += 1 }
+        let modifierName = text(bytes[(next + 1)..<end])
+        var modifierArguments = ""
         position = end
+        if end < bytes.count, bytes[end] == UInt8(ascii: "(") {
+          let close = matchClose(bytes, open: end)
+          modifierArguments = text(bytes[(end + 1)..<close])
+          position = close + 1
+        }
+        modifiers.append(Modifier(name: modifierName, arguments: modifierArguments))
+        inModifiers = true
         lastWasClosure = false
         continue
       }
-      if lastWasClosure, isIdentifierStart(character), let labeled = labeledClosure(bytes, at: next)
+      if lastWasClosure, !inModifiers, isIdentifierStart(character),
+        let labeled = labeledClosure(bytes, at: next)
       {
         closures.append(labeled.closure)
         position = labeled.end
@@ -203,14 +288,14 @@ enum AccessibilityAudit {
       }
       break
     }
-    let text = text(bytes[start..<min(position, bytes.count)])
     return Extent(
       name: name,
       start: start,
       end: position,
       arguments: arguments,
+      argumentsRange: argumentsRange,
       closures: closures,
-      text: text
+      modifiers: modifiers
     )
   }
 
@@ -228,7 +313,7 @@ enum AccessibilityAudit {
     let close = matchClose(bytes, open: brace)
     let label = text(bytes[index..<end])
     let text = text(bytes[(brace + 1)..<close])
-    return (Closure(label: label, text: text), close + 1)
+    return (Closure(label: label, text: text, range: (brace + 1)..<close), close + 1)
   }
 
   /// A call `(` or a trailing closure `{` on the same line follows the name.
@@ -239,13 +324,30 @@ enum AccessibilityAudit {
     return bytes[index] == UInt8(ascii: "(") || bytes[next] == UInt8(ascii: "{")
   }
 
+  /// A name after `as`, `as?`, `as!`, `is` or `->` is a type, not a call.
+  private static func followsCast(_ bytes: [UInt8], before index: Int) -> Bool {
+    var end = index
+    while end > 0, bytes[end - 1] == 32 { end -= 1 }
+    if end > 1, bytes[end - 1] == UInt8(ascii: ">"), bytes[end - 2] == UInt8(ascii: "-") {
+      return true
+    }
+    if end > 0, bytes[end - 1] == UInt8(ascii: "?") || bytes[end - 1] == UInt8(ascii: "!") {
+      end -= 1
+    }
+    var start = end
+    while start > 0, isIdentifierPart(bytes[start - 1]) { start -= 1 }
+    return ["as", "is"].contains(text(bytes[start..<end]))
+  }
+
   /// `func`, `struct`, `class`, `enum` and `case` lines declare a name rather than call it.
   private static func isDeclaration(_ bytes: [UInt8], before index: Int) -> Bool {
     var start = index
     while start > 0, bytes[start - 1] != 10 { start -= 1 }
     let prefix = text(bytes[start..<index])
       .trimmingCharacters(in: .whitespaces)
-    return ["func", "struct", "class", "enum", "case"].contains { prefix.hasSuffix($0) }
+    return ["func", "struct", "class", "enum", "case", "extension"].contains {
+      prefix.hasSuffix($0)
+    }
   }
 
   /// The byte range of the innermost function body that contains `index`, else the whole file.

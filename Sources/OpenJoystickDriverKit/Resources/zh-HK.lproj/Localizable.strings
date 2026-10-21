@@ -1718,6 +1718,7 @@
 "menuBar.profileConflict" = "此操作執行前，設定檔發生了變更。請重試。";
 "a11y.menuBar.statusItem" = "OpenJoystickDriver 狀態";
 "a11y.mainWindow.sidebar" = "區域";
+"a11y.capture.touchSwipeDistance" = "最小滑動距離";
 "access.detail.pair" = "%1$@ · %2$@";
 "access.detail.triple" = "%1$@ · %2$@ · %3$@";
 "access.grant.noPath" = "OpenJoystickDriver 無法讀取 %@ 的可執行檔，因此無法授予其取用權限。";

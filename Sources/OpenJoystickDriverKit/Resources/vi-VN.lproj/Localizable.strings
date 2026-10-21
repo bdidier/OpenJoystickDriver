@@ -1718,6 +1718,7 @@
 "menuBar.profileConflict" = "Cấu hình đã thay đổi trước khi hành động này chạy. Hãy thử lại.";
 "a11y.menuBar.statusItem" = "Trạng thái OpenJoystickDriver";
 "a11y.mainWindow.sidebar" = "Khu vực";
+"a11y.capture.touchSwipeDistance" = "Khoảng cách vuốt tối thiểu";
 "access.detail.pair" = "%1$@ · %2$@";
 "access.detail.triple" = "%1$@ · %2$@ · %3$@";
 "access.grant.noPath" = "OpenJoystickDriver không đọc được tệp thực thi của %@ nên không thể cấp quyền truy cập cho nó.";

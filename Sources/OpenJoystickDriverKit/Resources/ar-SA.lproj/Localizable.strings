@@ -1718,6 +1718,7 @@
 "menuBar.profileConflict" = "تغيّر ملف التعريف قبل تنفيذ هذا الإجراء. حاول مرة أخرى.";
 "a11y.menuBar.statusItem" = "حالة OpenJoystickDriver";
 "a11y.mainWindow.sidebar" = "الأقسام";
+"a11y.capture.touchSwipeDistance" = "الحد الأدنى لمسافة السحب";
 "access.detail.pair" = "%1$@‏ · %2$@‏";
 "access.detail.triple" = "%1$@‏ · %2$@‏ · %3$@‏";
 "access.grant.noPath" = "تعذّرت على OpenJoystickDriver قراءة الملف التنفيذي لـ %@، لذا لا يمكنه منحه حق الوصول.";
