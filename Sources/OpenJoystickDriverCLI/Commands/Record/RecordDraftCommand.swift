@@ -27,7 +27,7 @@ struct RecordDraftCommand: AsyncParsableCommand {
     let report: Report?
     let capturedReports: Int
     let changedBytes: [ControllerRecordDraft.ChangedByte]
-    let record: RecordJSON
+    let record: OrderedJSON
   }
 
   /// Reads the report descriptor of a connected controller model; tests replace it.
@@ -119,7 +119,8 @@ struct RecordDraftCommand: AsyncParsableCommand {
     let changed = draft.changedBytes
     switch CLIContext.current.format {
     case .json:
-      try CLIOutput.json(
+      try RecordJSONOutput.print(
+        message: { CLILocalized.format("cli.record.draft.unwritableNumber", $0, $1) },
         Result(
           identity: device.identity,
           name: device.name,
@@ -130,13 +131,13 @@ struct RecordDraftCommand: AsyncParsableCommand {
           },
           capturedReports: draft.capturedReports,
           changedBytes: changed,
-          record: try RecordJSON(data: draft.document)
+          record: try OrderedJSON.parse(draft.document)
         )
       )
     case .plain:
       CLIOutput.plain(changed.map { [$0.byte, $0.minimum, $0.maximum].map(String.init) })
     case .human:
-      CLIOutput.stdout(String(bytes: draft.document, encoding: .utf8) ?? "")
+      CLIOutput.stdout(draft.text, terminator: "")
       CLIOutput.success(
         CLILocalized.format(
           "cli.record.draft.captured",

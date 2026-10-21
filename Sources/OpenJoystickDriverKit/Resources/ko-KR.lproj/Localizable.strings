@@ -1313,6 +1313,7 @@
 "cli.record.draft.next" = "레코드를 파일로 저장하고 각 컨트롤을 확인한 다음 ‘ojd record validate FILE’을 실행하세요.";
 "cli.record.draft.no_layout" = "%@의 HID 리포트 디스크립터에서 읽을 수 있는 컨트롤이 없고, 번들 레코드가 이미 프로토콜 계열을 지정합니다. ‘ojd record show %@’로 해당 레코드를 확인할 수 있습니다.";
 "cli.record.draft.started" = "%@(%@)의 모든 컨트롤을 누르고 각 스틱과 트리거를 움직이세요.";
+"cli.record.draft.unwritableNumber" = "--json에서는 숫자 %1$@의 값을 %2$@ 위치에 그대로 쓸 수 없습니다. 레코드 텍스트를 보려면 --json 없이 ‘ojd record draft’를 실행하세요.";
 "cli.record.error.unreadable" = "%@을(를) 읽을 수 없습니다: %@";
 "cli.record.file" = "레코드 파일 또는 stdin에서 레코드를 읽으려면 -를 사용합니다.";
 "cli.record.identity" = "VVVV:PPPP 형식의 컨트롤러 모델입니다.";
@@ -1335,6 +1336,7 @@
 "cli.record.remove.success" = "%@을(를) 삭제했습니다.";
 "cli.record.show.abstract" = "컨트롤러 모델 하나의 유효 레코드와 각 부분의 레이어를 표시합니다.";
 "cli.record.show.not_found" = "%@에 대한 컨트롤러 레코드가 없습니다. ‘ojd record list’로 모든 레코드를 확인할 수 있습니다.";
+"cli.record.show.unwritableNumber" = "--json에서는 숫자 %1$@의 값을 %2$@ 위치에 그대로 쓸 수 없습니다. 레코드 텍스트를 보려면 --json 없이 ‘ojd record show’를 실행하세요.";
 "cli.record.skipped" = "%@ 건너뜀: %@";
 "cli.record.test.abstract" = "캡처한 리포트를 레코드의 파서로 재생하고 파싱된 상태를 비교합니다.";
 "cli.record.test.capture_invalid" = "%@은(는) 패킷 캡처가 아닙니다: %@";
@@ -1362,6 +1364,7 @@
 "error.E2033" = "프로그램을 시작할 수 없습니다. 경로가 실행 파일 또는 앱을 가리키는지, 실행할 권한이 있는지 확인하세요.";
 "error.E2034" = "서비스가 더 이상 요청을 받지 않습니다. OpenJoystickDriver를 종료했다가 다시 열고 다시 시도하세요.";
 "error.E2035" = "요청 수신기가 중지된 이유를 기록한 파일을 사용할 수 없습니다. 파일을 삭제한 다음 OpenJoystickDriver를 다시 여세요.";
+"error.E2036" = "--json 출력에서는 레코드의 숫자를 값 그대로 쓸 수 없습니다. 레코드 텍스트를 보려면 --json 없이 명령을 실행하세요.";
 "cli.record.usb_not_claimed" = "이 제품군은 원시 USB를 사용하며, 제품 목록이 Apple에서 서명되어 있으므로 USB 확장 프로그램이 이 컨트롤러를 점유할 수 없습니다. OJD는 macOS가 허용하는 경우에만 직접 USB 접근으로 이 컨트롤러에 도달합니다.";
 "cli.record.usb_only_switch2" = "USB 전용: 컨트롤러를 Bluetooth LE로 연결하려면 이 Switch 2 레코드에 bluetoothLE.vibrationCharacteristic을 추가하십시오.";
 "cli.record.validate.abstract" = "컨트롤러 레코드를 설치하지 않고 확인합니다.";
@@ -1579,6 +1582,10 @@
 "a11y.library.dismissError" = "오류 닫기";
 "a11y.library.dismissNotice" = "메시지 닫기";
 "a11y.library.cancel" = "취소하고 라이브러리를 그대로 유지";
+/* VoiceOver label for the hexadecimal reading shown after the vendorID and productID lines of a record in the Library. %1$@ is the member name, vendorID or productID, which stays as written; %2$@ is the value in hexadecimal, such as 0x353D. */
+"a11y.library.recordHexadecimal" = "%1$@, 16진수 %2$@";
+/* Shown in the Record section of a record in the Library when the record text cannot be read for display. %@ is the controller identity, such as 045E:028E. */
+"ui.library.recordUnreadable" = "%@ 레코드의 텍스트를 읽을 수 없으므로 표시할 수 없습니다.";
 "access.details" = "세부사항";
 "access.dismiss" = "닫기";
 "access.tryAgain" = "다시 시도";

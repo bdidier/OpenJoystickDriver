@@ -1313,6 +1313,7 @@
 "cli.record.draft.next" = "Guarda el registro en un archivo, comprueba cada control y luego ejecuta “ojd record validate FILE”.";
 "cli.record.draft.no_layout" = "No se pudo leer ningún control de %@ a partir de su descriptor de informes HID, y su registro incluido ya indica su familia. “ojd record show %@” muestra ese registro.";
 "cli.record.draft.started" = "Presiona cada control de %@ (%@) y mueve cada palanca y cada gatillo.";
+"cli.record.draft.unwritableNumber" = "--json no puede escribir el número %1$@ en %2$@ sin cambiar su valor. Ejecuta “ojd record draft” sin --json para ver el texto del registro.";
 "cli.record.error.unreadable" = "No se puede leer %@: %@";
 "cli.record.file" = "Un archivo de registro, o - para leer el registro desde la entrada estándar.";
 "cli.record.identity" = "El modelo de control, como VVVV:PPPP.";
@@ -1335,6 +1336,7 @@
 "cli.record.remove.success" = "Eliminación de %@ completada.";
 "cli.record.show.abstract" = "Muestra el registro efectivo de un modelo de control y la capa de cada parte.";
 "cli.record.show.not_found" = "No hay registro de control para %@. “ojd record list” muestra todos los registros.";
+"cli.record.show.unwritableNumber" = "--json no puede escribir el número %1$@ en %2$@ sin cambiar su valor. Ejecuta “ojd record show” sin --json para ver el texto del registro.";
 "cli.record.skipped" = "Omitido %@: %@";
 "cli.record.test.abstract" = "Reproducir reportes capturados con el analizador de un registro y comparar el estado analizado.";
 "cli.record.test.capture_invalid" = "%@ no es una captura de paquetes: %@";
@@ -1362,6 +1364,7 @@
 "error.E2033" = "No se pudo iniciar el programa. Comprueba que su ruta indique un archivo ejecutable o una app y que tengas permiso para ejecutarlo.";
 "error.E2034" = "El servicio dejó de aceptar solicitudes. Cierra OpenJoystickDriver, ábrelo de nuevo y vuelve a intentarlo.";
 "error.E2035" = "No se puede usar el archivo que registra por qué se detuvo la escucha de solicitudes. Elimina el archivo y abre OpenJoystickDriver de nuevo.";
+"error.E2036" = "La salida de --json no puede escribir un número del registro sin cambiar su valor. Ejecuta el comando sin --json para ver el texto del registro.";
 "cli.record.usb_not_claimed" = "La familia usa USB sin procesar, y la extensión USB no puede reclamar este control, porque su lista de productos está firmada por Apple. OJD solo llega a él mediante acceso USB directo, cuando macOS lo permite.";
 "cli.record.usb_only_switch2" = "Solo USB: agrega bluetoothLE.vibrationCharacteristic a este registro de Switch 2 para conectar el control por Bluetooth LE.";
 "cli.record.validate.abstract" = "Comprueba un registro de control sin instalarlo.";
@@ -1691,6 +1694,10 @@
 "a11y.library.dismissError" = "Cerrar el error";
 "a11y.library.dismissNotice" = "Cerrar el mensaje";
 "a11y.library.cancel" = "Cancelar y dejar la biblioteca como está";
+/* VoiceOver label for the hexadecimal reading shown after the vendorID and productID lines of a record in the Library. %1$@ is the member name, vendorID or productID, which stays as written; %2$@ is the value in hexadecimal, such as 0x353D. */
+"a11y.library.recordHexadecimal" = "%1$@, valor hexadecimal %2$@";
+/* Shown in the Record section of a record in the Library when the record text cannot be read for display. %@ is the controller identity, such as 045E:028E. */
+"ui.library.recordUnreadable" = "El texto del registro %@ no se puede leer, así que no se puede mostrar.";
 "access.details" = "Detalles";
 "access.dismiss" = "Cerrar";
 "access.tryAgain" = "Volver a intentarlo";

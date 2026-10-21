@@ -120,4 +120,31 @@ struct ControllerRecordDraftTests {
       ) == nil
     )
   }
+
+  /// The draft is in the record file format: the header members in file order, then the other
+  /// members sorted, and every nested object sorted, since only the top level has a guide.
+  @Test
+  func theDraftIsInTheRecordFileFormat() throws {
+    let draft = try #require(
+      ControllerRecordDraft(
+        model: Self.unbundled,
+        bundled: false,
+        descriptor: Self.descriptor,
+        reports: Self.reports
+      )
+    )
+    let text = draft.text
+    #expect(try OrderedJSON.parse(draft.document).formatted() == text)
+    guard case .object(let members) = try OrderedJSON.parse(draft.document) else {
+      Issue.record("the draft is not an object")
+      return
+    }
+    #expect(
+      members.map(\.key) == ["apiVersion", "kind", "vendorID", "productID", "modes", "input"]
+    )
+    #expect(text.hasPrefix("{\n  \"apiVersion\": \"\(OpenJoystickDriverAPI.version)\",\n"))
+    #expect(text.contains("\n  \"vendorID\": 4660,\n  \"productID\": 22136,\n"))
+    #expect(text.contains("\"report\": {\n      \"id\": 1,\n      \"length\": 6\n    }"))
+    #expect(text.contains("{\n      \"id\": \"default\",\n      \"protocol\": {\n"))
+  }
 }

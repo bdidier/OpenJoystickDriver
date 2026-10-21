@@ -49,16 +49,19 @@ public struct ControllerDefaults: Equatable, Sendable {
     }
   }
 
-  /// The patch and the range-checked `tuning` of an `all` patch document.
+  /// The patch and the range-checked `tuning` of an `all` patch document. Like every patch, it
+  /// refuses text that is not plain UTF-8 and an object that names a member twice.
   static func validate(
     _ data: Data,
     file: String? = nil
   ) throws -> (patch: ControllerPatch, tuning: ControllerTuning) {
+    try ControllerRecordSet.requireUTF8(data)
     guard let object = try? JSONSerialization.jsonObject(with: data),
       let document = object as? [String: Any]
     else {
       throw ControllerRecordProblem(code: .invalidControllerRecord, "the file is not a JSON object")
     }
+    _ = try ControllerRecordSet.ordered(data)
     let patch = try ControllerPatch.parse(document, file: file)
     guard patch.selector == .all else {
       throw ControllerRecordProblem(

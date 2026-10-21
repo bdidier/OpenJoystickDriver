@@ -71,8 +71,8 @@ struct LibraryRecordDetail: Equatable {
   /// Whether the signed USB extension claims the controller; nil for a family without raw USB.
   let claimedByUSBExtension: Bool?
   let fields: [LibraryRecordField]
-  /// The effective record as JSON text; nil when it is not UTF-8.
-  let document: String?
+  /// The effective record as colored JSON text.
+  let record: LibraryRecordDocument
 }
 
 /// The outcome of replaying a capture through a record's parser.
@@ -197,7 +197,7 @@ final class DirectoryLibraryStore: LibraryStore {
       fields: record.fieldLayers.sorted { $0.key < $1.key }.map {
         LibraryRecordField(name: $0.key, layer: $0.value)
       },
-      document: String(bytes: record.document, encoding: .utf8)
+      record: LibraryRecordDocument(document: record.text)
     )
   }
 

@@ -25,7 +25,7 @@ struct SchemaRejectionTests {
   private static func controllerRefusal(_ document: [String: Any]) -> (code: String?, text: String)?
   {
     do {
-      _ = try ControllerRecordSet.makeRecord(document, layers: [:])
+      _ = try ControllerRecordSet.makeRecord(document, order: nil, layers: [:])
       return nil
     } catch {
       return (

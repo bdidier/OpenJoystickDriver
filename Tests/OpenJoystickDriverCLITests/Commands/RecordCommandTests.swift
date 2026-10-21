@@ -110,6 +110,7 @@ struct RecordCommandTests {
     let list = await run(["list", "--plain"], in: directory)
     let show = await run(["show", "366c:0005", "--json"], in: directory)
     let plainShow = await run(["show", "366C:0005", "--plain"], in: directory)
+    let humanShow = await run(["show", "366C:0005"], in: directory)
 
     #expect(install.code == 0, "\(install.standardError)")
     #expect(try install.json()["replaced"] as? Bool == false)
@@ -130,6 +131,13 @@ struct RecordCommandTests {
     let record = try #require(shown["record"] as? [String: Any])
     #expect((record["tuning"] as? [String: Double])?["stickDeadzone"] == 0.08)
     #expect(plainShow.standardOutput == "modes\tbundled\ntuning\tuser\n")
+    let document = try #require(
+      ControllerRecordSet.load(userDirectory: directory.url).records[
+        ControllerModelID(vendorID: 0x366C, productID: 0x0005)
+      ]?.text
+    )
+    #expect(humanShow.standardOutput.hasSuffix("\n\n" + document))
+    #expect(humanShow.standardOutput.hasSuffix("  }\n}\n"))
   }
 
   @Test
@@ -280,5 +288,57 @@ struct RecordCommandTests {
     }
     #expect(result.code == 1)
     #expect(result.standardError.contains("ojd record show 045E:028E"))
+  }
+
+  /// An installed patch can carry `0.08000000000000000001`, which the schema bounds allow and
+  /// no `Double` holds, so `record show --json` fails with E2036 while the plain and human
+  /// output show the record text as written. A record draft is built from integers and the
+  /// bundled record, so no input reaches E2036 through `record draft`; the test below covers its
+  /// message directly.
+  @Test
+  func showJSONOfARecordWithAnUnwritableNumberFailsWithItsPlace() async throws {
+    let directory = Directory()
+    let number = "0.08000000000000000001"
+    let text = try #require(String(bytes: Self.patch, encoding: .utf8))
+    let patch = Data(text.replacingOccurrences(of: "0.08", with: number).utf8)
+    let install = await run(["install", "-", "--json"], in: directory, stdin: patch)
+    let json = await run(["show", "366c:0005", "--json"], in: directory)
+    let human = await run(["show", "366c:0005"], in: directory)
+
+    #expect(install.code == 0, "\(install.standardError)")
+    #expect(json.code == CLIExitCode(for: .unwritableJSONNumber).rawValue)
+    #expect(json.standardOutput.isEmpty)
+    #expect(
+      json.standardError.contains(
+        "error[E2036]: --json cannot write the number \(number) at record.tuning.stickDeadzone "
+          + "without changing its value. Run 'ojd record show' without --json"
+      )
+    )
+    #expect(human.code == 0, "\(human.standardError)")
+    #expect(human.standardOutput.contains(number))
+  }
+
+  /// A record number that `--json` cannot write without changing its value fails the command
+  /// with E2036 and names the number and its place in the document, for `record show` and
+  /// `record draft`.
+  @Test(arguments: ["cli.record.show.unwritableNumber", "cli.record.draft.unwritableNumber"])
+  func aRecordNumberThatJSONCannotHoldFailsWithItsPlace(_ key: String) {
+    struct Output: Encodable { let record: OrderedJSON }
+    let scale = OrderedJSON.object([OrderedJSON.Member(key: "scale", value: .number("1e400"))])
+    let record = OrderedJSON.object([OrderedJSON.Member(key: "modes", value: .array([scale]))])
+    let failure = #expect(throws: CLIFailure.self) {
+      try RecordJSONOutput.print(
+        message: { CLILocalized.format(key, $0, $1) },
+        Output(record: record)
+      )
+    }
+    #expect(failure?.id == .unwritableJSONNumber)
+    #expect(failure?.code == CLIExitCode(for: .unwritableJSONNumber))
+    #expect(
+      failure?.line
+        == "error[E2036]: --json cannot write the number 1e400 at record.modes.0.scale without "
+        + "changing its value. Run 'ojd record \(key.contains("show") ? "show" : "draft")' "
+        + "without --json to see the record text."
+    )
   }
 }

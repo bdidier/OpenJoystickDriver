@@ -27,8 +27,11 @@ public struct ControllerRecordDraft: Sendable {
   /// The number of reports captured with the chosen ID and at least the chosen length.
   public let capturedReports: Int
   public let changedBytes: [ChangedByte]
-  /// The record document, as `ojd record install` reads it.
-  public let document: Data
+  /// The record document in the record file text of ``OrderedJSON/formatted()``, as
+  /// `ojd record install` reads it.
+  public let text: String
+  /// ``text`` as UTF-8.
+  public var document: Data { Data(text.utf8) }
 
   /// Builds the draft for `model`. `reports` are the captured input reports as macOS
   /// delivered them, with the report ID in byte 0 of a numbered report.
@@ -92,12 +95,9 @@ public struct ControllerRecordDraft: Sendable {
       body = fields
     }
     guard
-      let document = try? JSONSerialization.data(
-        withJSONObject: body,
-        options: [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
-      )
+      let text = try? OrderedJSON(foundation: body, order: .recordKeys).formatted()
     else { return nil }
-    self.document = document
+    self.text = text
   }
 
   /// The `modes` of the bundled record of `model`, as written in its document.

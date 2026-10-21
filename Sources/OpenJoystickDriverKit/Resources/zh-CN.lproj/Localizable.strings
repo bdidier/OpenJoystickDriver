@@ -1313,6 +1313,7 @@
 "cli.record.draft.next" = "将记录存储到文件，检查每个控件，然后运行“ojd record validate FILE”。";
 "cli.record.draft.no_layout" = "无法从 %@ 的 HID 报告描述符中读取任何控件，而且其内置记录已指定协议系列。“ojd record show %@”会显示该记录。";
 "cli.record.draft.started" = "按下 %@（%@）上的每个控件，并移动每个摇杆和扳机。";
+"cli.record.draft.unwritableNumber" = "--json 无法在不改变数值的情况下写出数字 %1$@（位于 %2$@）。请不带 --json 运行“ojd record draft”，以查看记录文本。";
 "cli.record.error.unreadable" = "无法读取 %@：%@";
 "cli.record.file" = "记录文件，或用 - 从 stdin 读取记录。";
 "cli.record.identity" = "控制器型号，格式为 VVVV:PPPP。";
@@ -1335,6 +1336,7 @@
 "cli.record.remove.success" = "已删除 %@。";
 "cli.record.show.abstract" = "显示某一控制器型号的生效记录及各部分所属的层。";
 "cli.record.show.not_found" = "没有 %@ 的控制器记录。“ojd record list”会显示所有记录。";
+"cli.record.show.unwritableNumber" = "--json 无法在不改变数值的情况下写出数字 %1$@（位于 %2$@）。请不带 --json 运行“ojd record show”，以查看记录文本。";
 "cli.record.skipped" = "已跳过 %@：%@";
 "cli.record.test.abstract" = "用记录的解析器重放已捕获的报告，并比较解析出的状态。";
 "cli.record.test.capture_invalid" = "%@ 不是数据包捕获文件：%@";
@@ -1362,6 +1364,7 @@
 "error.E2033" = "无法启动程序。请检查其路径指向可执行文件或 App，并且你有权运行它。";
 "error.E2034" = "服务已停止接受请求。请退出并重新打开 OpenJoystickDriver，然后重试。";
 "error.E2035" = "无法使用记录请求监听停止原因的文件。请删除该文件，然后重新打开 OpenJoystickDriver。";
+"error.E2036" = "--json 输出无法在不改变数值的情况下写出记录中的某个数字。请不带 --json 运行命令，以查看记录文本。";
 "cli.record.usb_not_claimed" = "该系列使用原始 USB，USB 扩展无法接管此控制器，因为其产品列表由 Apple 签名。只有在 macOS 允许时，OJD 才能通过直接 USB 访问使用它。";
 "cli.record.usb_only_switch2" = "仅限 USB：要通过低功耗蓝牙连接控制器，请将 bluetoothLE.vibrationCharacteristic 添加到此 Switch 2 记录。";
 "cli.record.validate.abstract" = "检查控制器记录，但不安装。";
@@ -1579,6 +1582,10 @@
 "a11y.library.dismissError" = "关闭错误";
 "a11y.library.dismissNotice" = "关闭消息";
 "a11y.library.cancel" = "取消并保持资源库不变";
+/* VoiceOver label for the hexadecimal reading shown after the vendorID and productID lines of a record in the Library. %1$@ is the member name, vendorID or productID, which stays as written; %2$@ is the value in hexadecimal, such as 0x353D. */
+"a11y.library.recordHexadecimal" = "%1$@，十六进制 %2$@";
+/* Shown in the Record section of a record in the Library when the record text cannot be read for display. %@ is the controller identity, such as 045E:028E. */
+"ui.library.recordUnreadable" = "无法读取记录 %@ 的文本，因此无法显示。";
 "access.details" = "详细信息";
 "access.dismiss" = "忽略";
 "access.tryAgain" = "重试";

@@ -114,8 +114,18 @@
         }
       }
       Section(header: Text(OJDLocalized.string("cli.controller.show.label.record"))) {
-        OJDValueText(detail.document).font(.system(.body, design: .monospaced))
-          .textSelection(.enabled)
+        recordDocument(detail)
+      }
+    }
+
+    @ViewBuilder
+    private func recordDocument(_ detail: LibraryRecordDetail) -> some View {
+      switch detail.record {
+      case .text(let text):
+        LibraryRecordTextView(text: text)
+      case .unreadable:
+        Text(OJDLocalized.formatted("ui.library.recordUnreadable", detail.item.identity))
+          .foregroundColor(Color(SemanticTone.failure.color))
       }
     }
 

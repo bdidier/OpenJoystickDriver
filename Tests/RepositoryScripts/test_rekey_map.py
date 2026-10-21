@@ -147,6 +147,7 @@ class RekeyMapTests(unittest.TestCase):
             "common.ok": "action.ok",
             "common.status": "term.status",
             "term.protocolFamily.xboxGip": "term.protocolFamily.xboxGip",
+            "ui.library.recordUnreadable": "ui.library.recordUnreadable",
             "status.ready": "status.ready",
             "keyboard.escape": "term.key.escape",
             "settings.startAtLogin": "ui.settings.general.startAtLogin",

@@ -95,7 +95,7 @@ struct RecordShowCommand: AsyncParsableCommand {
     let transport: RecordTransport
     let transportClaim: RecordTransportClaim?
     let fields: [String: String]
-    let record: RecordJSON
+    let record: OrderedJSON
   }
 
   @Argument(
@@ -125,7 +125,8 @@ struct RecordShowCommand: AsyncParsableCommand {
       let fields = record.fieldLayers.mapValues(\.rawValue)
       switch CLIContext.current.format {
       case .json:
-        try CLIOutput.json(
+        try RecordJSONOutput.print(
+          message: { CLILocalized.format("cli.record.show.unwritableNumber", $0, $1) },
           Result(
             identity: model.description,
             family: record.family,
@@ -134,7 +135,7 @@ struct RecordShowCommand: AsyncParsableCommand {
             transport: RecordTransport(record),
             transportClaim: RecordTransportClaim(record),
             fields: fields,
-            record: try RecordJSON(data: record.document)
+            record: try OrderedJSON.parse(record.document)
           )
         )
       case .plain:
@@ -156,7 +157,7 @@ struct RecordShowCommand: AsyncParsableCommand {
           )
         }
         CLIOutput.stdout("")
-        CLIOutput.stdout(String(bytes: record.document, encoding: .utf8) ?? "")
+        CLIOutput.stdout(record.text, terminator: "")
       }
     }
   }

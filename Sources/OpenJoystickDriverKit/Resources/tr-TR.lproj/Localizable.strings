@@ -1313,6 +1313,7 @@
 "cli.record.draft.next" = "Kaydı bir dosyaya kaydedin, her kontrolü denetleyin, ardından “ojd record validate FILE” komutunu çalıştırın.";
 "cli.record.draft.no_layout" = "%@ için HID rapor tanımlayıcısından hiçbir kontrol okunamadı ve paketle gelen kayıt ailesini zaten belirtiyor. “ojd record show %@” o kaydı gösterir.";
 "cli.record.draft.started" = "%@ (%@) üzerindeki her kontrole basın ve her çubuğu ve tetiği hareket ettirin.";
+"cli.record.draft.unwritableNumber" = "--json, %1$@ sayısını %2$@ konumuna değerini değiştirmeden yazamaz. Kaydın metnini görmek için “ojd record draft” komutunu --json olmadan çalıştırın.";
 "cli.record.error.unreadable" = "%@ okunamıyor: %@";
 "cli.record.file" = "Bir kayıt dosyası veya kaydı stdin’den okumak için -.";
 "cli.record.identity" = "Kontrolcü modeli, VVVV:PPPP biçiminde.";
@@ -1335,6 +1336,7 @@
 "cli.record.remove.success" = "%@ silindi.";
 "cli.record.show.abstract" = "Bir kontrolcü modelinin etkin kaydını ve her bölümün katmanını gösterir.";
 "cli.record.show.not_found" = "%@ için kontrolcü kaydı yok. “ojd record list” tüm kayıtları gösterir.";
+"cli.record.show.unwritableNumber" = "--json, %1$@ sayısını %2$@ konumuna değerini değiştirmeden yazamaz. Kaydın metnini görmek için “ojd record show” komutunu --json olmadan çalıştırın.";
 "cli.record.skipped" = "%@ atlandı: %@";
 "cli.record.test.abstract" = "Yakalanan raporları bir kaydın ayrıştırıcısından geçirir ve ayrıştırılan durumu karşılaştırır.";
 "cli.record.test.capture_invalid" = "%@ bir paket yakalaması değil: %@";
@@ -1362,6 +1364,7 @@
 "error.E2033" = "Program başlatılamadı. Yolunun yürütülebilir bir dosyayı veya uygulamayı gösterdiğini ve çalıştırma izniniz olduğunu kontrol edin.";
 "error.E2034" = "Servis istekleri kabul etmeyi durdurdu. OpenJoystickDriver’ı kapatıp yeniden açın, sonra yeniden deneyin.";
 "error.E2035" = "İstek dinleyicisinin neden durduğunu kaydeden dosya kullanılamıyor. Dosyayı silin, sonra OpenJoystickDriver’ı yeniden açın.";
+"error.E2036" = "--json çıktısı, kayıttaki bir sayıyı değerini değiştirmeden yazamaz. Kaydın metnini görmek için komutu --json olmadan çalıştırın.";
 "cli.record.usb_not_claimed" = "Bu aile ham USB kullanır ve ürün listesi Apple tarafından imzalandığı için USB uzantısı bu kontrolcüyü sahiplenemez. OJD ona yalnızca macOS izin verdiğinde doğrudan USB erişimiyle ulaşır.";
 "cli.record.usb_only_switch2" = "Yalnızca USB: Kontrolcüyü Bluetooth LE üzerinden bağlamak için bu Switch 2 kaydına bluetoothLE.vibrationCharacteristic ekleyin.";
 "cli.record.validate.abstract" = "Bir kontrolcü kaydını yüklemeden denetler.";
@@ -1579,6 +1582,10 @@
 "a11y.library.dismissError" = "Hatayı kapat";
 "a11y.library.dismissNotice" = "Mesajı kapat";
 "a11y.library.cancel" = "Vazgeç ve kitaplığı olduğu gibi bırak";
+/* VoiceOver label for the hexadecimal reading shown after the vendorID and productID lines of a record in the Library. %1$@ is the member name, vendorID or productID, which stays as written; %2$@ is the value in hexadecimal, such as 0x353D. */
+"a11y.library.recordHexadecimal" = "%1$@, onaltılık %2$@";
+/* Shown in the Record section of a record in the Library when the record text cannot be read for display. %@ is the controller identity, such as 045E:028E. */
+"ui.library.recordUnreadable" = "%@ kaydının metni okunamıyor, bu yüzden gösterilemiyor.";
 "access.details" = "Ayrıntılar";
 "access.dismiss" = "Kapat";
 "access.tryAgain" = "Yeniden Dene";

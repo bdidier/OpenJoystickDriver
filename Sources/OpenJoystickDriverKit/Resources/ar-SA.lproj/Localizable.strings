@@ -1313,6 +1313,7 @@
 "cli.record.draft.next" = "احفظ السجل في ملف، وافحص كل عنصر تحكم، ثم شغّل «ojd record validate FILE».";
 "cli.record.draft.no_layout" = "تعذّرت قراءة أي عنصر تحكم في %@ من واصف تقرير HID الخاص به، كما أن سجله المضمّن يحدد عائلته بالفعل. يعرض «ojd record show %@» ذلك السجل.";
 "cli.record.draft.started" = "اضغط على كل عنصر تحكم في %@ (%@)، وحرّك كل عصا ومحفّز.";
+"cli.record.draft.unwritableNumber" = "لا يمكن لخيار --json كتابة الرقم %1$@ في %2$@ دون تغيير قيمته. شغّل «ojd record draft» دون --json لعرض نص السجل.";
 "cli.record.error.unreadable" = "تعذّرت قراءة %@: %@";
 "cli.record.file" = "ملف سجل، أو - لقراءة السجل من stdin.";
 "cli.record.identity" = "طراز وحدة التحكم، بصيغة VVVV:PPPP.";
@@ -1335,6 +1336,7 @@
 "cli.record.remove.success" = "تم حذف %@.";
 "cli.record.show.abstract" = "اعرض السجل الفعلي لطراز واحد من وحدات التحكم وطبقة كل جزء.";
 "cli.record.show.not_found" = "لا يوجد سجل وحدة تحكم لـ %@. يعرض «ojd record list» كل السجلات.";
+"cli.record.show.unwritableNumber" = "لا يمكن لخيار --json كتابة الرقم %1$@ في %2$@ دون تغيير قيمته. شغّل «ojd record show» دون --json لعرض نص السجل.";
 "cli.record.skipped" = "تم تخطي %@: %@";
 "cli.record.test.abstract" = "إعادة تشغيل التقارير الملتقطة عبر محلل سجل ومقارنة الحالة المحلَّلة.";
 "cli.record.test.capture_invalid" = "%@ ليس التقاط حزم: %@";
@@ -1362,6 +1364,7 @@
 "error.E2033" = "تعذر بدء البرنامج. تحقق من أن مساره يشير إلى ملف تنفيذي أو تطبيق، ومن أنك مخوّل بتشغيله.";
 "error.E2034" = "توقفت الخدمة عن قبول الطلبات. أغلق OpenJoystickDriver ثم افتحه من جديد، ثم حاول مرة أخرى.";
 "error.E2035" = "لا يمكن استخدام الملف الذي يسجّل سبب توقف مستمع الطلبات. احذف الملف ثم افتح OpenJoystickDriver من جديد.";
+"error.E2036" = "لا يمكن لمخرجات --json كتابة رقم من السجل دون تغيير قيمته. شغّل الأمر دون --json لعرض نص السجل.";
 "cli.record.usb_not_claimed" = "تستخدم العائلة USB الخام، ولا يمكن لامتداد USB الاستحواذ على وحدة التحكم هذه لأن قائمة منتجاته موقّعة من Apple. لا يصل OJD إليها إلا عبر الوصول المباشر إلى USB، عندما يسمح macOS بذلك.";
 "cli.record.usb_only_switch2" = "USB فقط: أضف bluetoothLE.vibrationCharacteristic إلى سجل Switch 2 هذا لتوصيل وحدة التحكم عبر Bluetooth LE.";
 "cli.record.validate.abstract" = "افحص سجل وحدة تحكم دون تثبيته.";
@@ -1579,6 +1582,10 @@
 "a11y.library.dismissError" = "تجاهل الخطأ";
 "a11y.library.dismissNotice" = "تجاهل الرسالة";
 "a11y.library.cancel" = "إلغاء وإبقاء المكتبة كما هي";
+/* VoiceOver label for the hexadecimal reading shown after the vendorID and productID lines of a record in the Library. %1$@ is the member name, vendorID or productID, which stays as written; %2$@ is the value in hexadecimal, such as 0x353D. */
+"a11y.library.recordHexadecimal" = "%1$@، سداسي عشري %2$@";
+/* Shown in the Record section of a record in the Library when the record text cannot be read for display. %@ is the controller identity, such as 045E:028E. */
+"ui.library.recordUnreadable" = "لا يمكن قراءة نص سجل %@، ولذلك لا يمكن عرضه.";
 "access.details" = "التفاصيل";
 "access.dismiss" = "تجاهل";
 "access.tryAgain" = "حاول مرة أخرى";

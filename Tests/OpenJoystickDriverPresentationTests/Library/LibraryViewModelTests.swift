@@ -240,7 +240,7 @@ struct LibraryViewModelTests {
       notes: [],
       claimedByUSBExtension: nil,
       fields: [],
-      document: nil
+      record: LibraryRecordDocument(document: "{}\n")
     )
     let model = makeModel(store)
     model.reload()

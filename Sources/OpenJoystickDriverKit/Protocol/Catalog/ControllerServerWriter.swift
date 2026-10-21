@@ -63,10 +63,10 @@ public enum ControllerServerWriter {
     }
     let data: Data
     do {
-      data = try JSONSerialization.data(
-        withJSONObject: document,
-        options: [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
-      )
+      data = try OrderedJSON(
+        foundation: document,
+        order: try existing.map { try ControllerRecordSet.ordered($0) } ?? .recordKeys
+      ).formattedData()
       _ = try ControllerRecordSet.validate(data, file: file, packages: packages)
     } catch {
       throw .invalidResult(ControllerRecordSet.problemDescription(error, document: "record"))

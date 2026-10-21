@@ -426,4 +426,94 @@ struct ControllerRecordSetTests {
   func activatingTheSameRecordsChangesNothing() {
     #expect(ControllerRecordSet.bundled.activate().isEmpty)
   }
+
+  /// The text of a Controller file and of a ControllerPatch file of the bundled `XboxGIP`
+  /// record, which the encoding and repeated-name checks below change.
+  private static let controllerText = """
+    {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "Controller",
+     "vendorID": 4660, "productID": 43981,
+     "modes": [{"id": "default", "protocol": {"family": "HIDDescriptor"}}]}
+    """
+  private static let patchText = """
+    {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "ControllerPatch",
+     "selector": {"vendorID": 13932, "productID": 5},
+     "patch": {"tuning": {"stickDeadzone": 0.08}}}
+    """
+
+  private static func utf16(_ text: String) -> Data {
+    Data(text.utf16.flatMap { [UInt8($0 & 0xFF), UInt8($0 >> 8)] })
+  }
+
+  /// Both file kinds refuse a byte order mark, UTF-16 text and a member named twice, with the
+  /// same words and `invalidControllerRecord`, though `JSONSerialization` reads all three.
+  @Test(arguments: [controllerText, patchText])
+  func textThatIsNotPlainUTF8OrNamesAMemberTwiceIsRefusedByName(_ text: String) throws {
+    #expect(try Self.record(Data(text.utf8)).model.vendorID != 0)
+    let cases: [(Data, String)] = [
+      (
+        Data([0xEF, 0xBB, 0xBF]) + Data(text.utf8),
+        "JSON text, byte 0: the text starts with a byte order mark; save the file as UTF-8 "
+          + "without one"
+      ),
+      (
+        Data([0xFF, 0xFE]) + Self.utf16(text),
+        "JSON text, byte 0: the text is UTF-16 or UTF-32; save the file as UTF-8"
+      ),
+      (
+        Self.utf16(text),
+        "JSON text, byte 1: the text is UTF-16 or UTF-32; save the file as UTF-8"
+      ),
+      (
+        Data(
+          text.replacingOccurrences(of: "\"kind\"", with: "\"apiVersion\": \"x\", \"kind\"").utf8
+        ),
+        #"JSON text, byte 46: the member "apiVersion" appears twice in one object"#
+      ),
+    ]
+    for (data, words) in cases {
+      #expect(try JSONSerialization.jsonObject(with: data) is [String: Any])
+      #expect(Self.problem(data) == words)
+      #expect(Self.problemCode(data) == .invalidControllerRecord)
+    }
+  }
+
+  /// The merged record keeps the member order of the bundled record at every depth, whatever
+  /// order the patch uses, and sorts the members the patch adds after them.
+  @Test
+  func aPatchMergeKeepsTheOrderOfTheBundledRecord() throws {
+    let record = try Self.record(
+      Data(
+        """
+        {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "ControllerPatch",
+         "selector": {"vendorID": 13932, "productID": 5},
+         "patch": {"tuning": {"stickDeadzone": 0.08},
+                   "modes": [{"protocol": {"keepAlive": false, "family": "XboxGIP"},
+                              "id": "default"}]}}
+        """.utf8
+      )
+    )
+    #expect(
+      record.text == """
+        {
+          "apiVersion": "\(OpenJoystickDriverAPI.version)",
+          "kind": "Controller",
+          "vendorID": 13932,
+          "productID": 5,
+          "modes": [
+            {
+              "id": "default",
+              "protocol": {
+                "family": "XboxGIP",
+                "keepAlive": false
+              }
+            }
+          ],
+          "tuning": {
+            "stickDeadzone": 0.08
+          }
+        }
+
+        """
+    )
+  }
 }
