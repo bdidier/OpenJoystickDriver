@@ -91,7 +91,7 @@ extension EndpointServer {
 
   // MARK: - Private
 
-  /// Ends when the listener is closed or replaced; a new listener can reuse the descriptor's
+  /// Ends when the listener is closed or replaced; a later listener can reuse the descriptor's
   /// number, so the generation, not the number, tells them apart.
   private func acceptWebConnections(_ listener: (descriptor: Int32, port: Int), generation: Int) {
     while lock.withLock({ webGeneration == generation }) {
@@ -102,8 +102,8 @@ extension EndpointServer {
         guard Self.pause(after: Self.acceptFailure(errno)) else { return }
         continue
       }
-      // The listener closed after the check, and its number may now be a new listener's; the
-      // connection is dropped and the loop ends, so it never serves the new one.
+      // The listener closed after the check, and its number may belong to a later listener; the
+      // connection is dropped and the loop ends, so it never serves the later one.
       guard lock.withLock({ webGeneration == generation }) else {
         Darwin.close(accepted)
         return

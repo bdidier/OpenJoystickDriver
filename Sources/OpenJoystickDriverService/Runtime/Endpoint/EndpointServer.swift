@@ -42,16 +42,22 @@ final class EndpointServer: @unchecked Sendable {
   let streamDelivered: (@Sendable (ControllerSessionToken, UInt64) async -> Void)?
   let lock = NSLock()
   private var listeningDescriptor: Int32 = -1
+  /// Changes each time the socket starts or stops listening; ends the earlier listener's loop.
+  private var socketGeneration = 0
+  private var runningSocketAcceptLoops = 0
   var webDescriptor: Int32 = -1
   /// The port `webDescriptor` listens on.
   var webPort = 0
-  /// Changes each time the WebSocket starts or stops listening; ends the old accept loop.
+  /// Changes each time the WebSocket starts or stops listening; ends the earlier listener's loop.
   var webGeneration = 0
   var pendingWebRequests = 0
   /// Every accepted connection, including those still in the handshake.
   var connections: [ObjectIdentifier: EndpointConnection] = [:]
   /// The number of accepted connections that have not finished, including those in the handshake.
   var connectionCount: Int { lock.withLock { connections.count } }
+  /// The number of socket accept loops that have not returned, including stale ones that a
+  /// closed listener is still waking.
+  var socketAcceptLoopCount: Int { lock.withLock { runningSocketAcceptLoops } }
   var refusals = AccessRefusalLog()
   var stream = EndpointStream()
 
@@ -252,23 +258,27 @@ final class EndpointServer: @unchecked Sendable {
       throw error
     }
     listeningDescriptor = descriptor
+    socketGeneration += 1
+    let generation = socketGeneration
+    runningSocketAcceptLoops += 1
     // The accept loops and the handshake timers run on threads of their own (`detachThread`),
     // never on a constrained pool thread of Grand Central Dispatch: those threads are limited,
     // and a saturated pool would delay accepts and handshake timeouts. Each connection runs on a
     // serial queue of its own (`detach`), which starts at once even when the pool is saturated.
     // A stale web listener's loop, which may stay blocked, holds only its own thread and never
-    // holds up a new one.
+    // holds up a later one.
     BlockingWork.detachThread(name: "com.openjoystickdriver.endpoint.accept") { [weak self] in
-      self?.acceptConnections(descriptor)
+      self?.acceptConnections(descriptor, generation: generation)
     }
   }
 
   /// Call with `lock` held.
   private func stopListening() {
     guard listeningDescriptor >= 0 else { return }
-    shutdown(listeningDescriptor, SHUT_RDWR)
+    // Only close wakes a blocked accept; shutdown fails on a listening socket.
     Darwin.close(listeningDescriptor)
     listeningDescriptor = -1
+    socketGeneration += 1
     unlink(socketPath)
   }
 
@@ -282,12 +292,23 @@ final class EndpointServer: @unchecked Sendable {
     guard unlink(socketPath) == 0 else { throw LocalServiceRPCError.connectionFailed(errno) }
   }
 
-  private func acceptConnections(_ descriptor: Int32) {
-    while lock.withLock({ listeningDescriptor == descriptor }) {
+  /// Ends when the listener is closed or replaced; a later listener can reuse the descriptor's
+  /// number, so the generation, not the number, tells them apart.
+  private func acceptConnections(_ descriptor: Int32, generation: Int) {
+    defer { lock.withLock { runningSocketAcceptLoops -= 1 } }
+    while lock.withLock({ socketGeneration == generation }) {
       let accepted = Darwin.accept(descriptor, nil, nil)
       guard accepted >= 0 else {
+        // Closing the listener fails a blocked accept with ECONNABORTED; the generation check
+        // then ends the loop. Running out of descriptors or memory is retried after a pause.
         guard Self.pause(after: Self.acceptFailure(errno)) else { return }
         continue
+      }
+      // The listener closed after the check, and its number may belong to a later listener; the
+      // connection is dropped and the loop ends, so it never serves the later one.
+      guard lock.withLock({ socketGeneration == generation }) else {
+        Darwin.close(accepted)
+        return
       }
       var noSignal: Int32 = 1
       setsockopt(accepted, SOL_SOCKET, SO_NOSIGPIPE, &noSignal, socklen_t(MemoryLayout<Int32>.size))

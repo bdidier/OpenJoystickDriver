@@ -49,6 +49,24 @@ struct EndpointServerTests {
     }
   }
 
+  @Test
+  func aDisableAndEnableCycleLeavesOneAcceptLoop() async throws {
+    try await withEndpointServer { server, _ in
+      try server.grant(Self.tool, path: "/Tool", scopes: [.read])
+      for _ in 0..<5 {
+        try server.setEnabled(true)
+        try server.setEnabled(false)
+      }
+      try server.setEnabled(true)
+
+      await waitUntil("the stale accept loops end") { server.socketAcceptLoopCount == 1 }
+      let client = try await EndpointTestClient(path: server.socketPath)
+      await client.send(clientLine("Hello", #","scopes":["Read"]"#))
+      #expect(try await client.readObject()["kind"] as? String == "Welcome")
+      #expect(server.socketAcceptLoopCount == 1)
+    }
+  }
+
   @Test(arguments: [#"["read"]"#, #"["control"]"#])
   func aScopeInTheEarlierSpellingIsRefused(scopes: String) async throws {
     try await withEndpointServer { server, _ in
