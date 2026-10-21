@@ -97,7 +97,11 @@ def with_variant_facts(document: dict[str, Any]) -> dict[str, Any]:
 FAMILY_FACTS: dict[str, dict[str, Any]] = {
     "HIDReportLayout": {"recordSections": ["input", "rumble"]},
     "XboxGIP": {"rawUSB": True},
-    "XboxXID": {"rawUSB": True, "recordSections": ["input", "rumble"]},
+    "XboxXID": {
+        "rawUSB": True,
+        "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
+    },
     "XboxXUSB": {"rawUSB": True},
 }
 
@@ -243,6 +247,8 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
         document.pop("variants")
         document.pop("storesVariant")
         document.pop("defaults")
+        if "sessionKeys" in FAMILY_FACTS.get(family, {}):
+            document["sessionKeys"] = FAMILY_FACTS[family]["sessionKeys"]
         if family == "NintendoSwitch1":
             document["defaults"] = {"session": {"subcommands": self.subcommands()}}
         elif family in SESSION_LIMITS:
@@ -1631,6 +1637,61 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
             ),
             code="E5002",
         )
+
+    def test_session_keys_are_the_ones_the_driver_reads(self) -> None:
+        usb_rumble = {"session": {"rumble": self.usb_rumble_template()}}
+        without = self.with_body("XboxXID", defaults=usb_rumble)
+        del without["sessionKeys"]
+        self.assert_rejected(without)
+        self.assert_rejected(
+            self.with_body(
+                "XboxXID", sessionKeys=["rumble", "keepAlive"], defaults=usb_rumble
+            )
+        )
+        self.assert_rejected(
+            self.with_body("XboxXID", sessionKeys=["rumble", "startup"])
+        )
+        self.assert_rejected(
+            self.with_body("XboxXID", sessionKeys=["rumble", "rumble"])
+        )
+        self.assert_rejected(self.with_body("XboxXID", sessionKeys=["subcommands"]))
+        self.assert_rejected(self.with_body("SonyDualShock4", sessionKeys=["startup"]))
+
+    def test_input_shape_follows_the_record_sections(self) -> None:
+        usage_map = {
+            "hidUsageMap": {
+                "usages": [
+                    {"kind": "Button", "page": 9, "usage": 1, "control": "South"}
+                ]
+            }
+        }
+        layout = {
+            "report": {"length": 1},
+            "buttons": [{"control": "South", "byte": 0, "mask": 1}],
+        }
+        self.assert_rejected(self.with_body("XboxXID", defaults={"input": usage_map}))
+        self.assert_rejected(
+            self.with_body("HIDReportLayout", defaults={"input": usage_map})
+        )
+        self.assert_rejected(
+            self.with_body(
+                "HIDDescriptor",
+                recordSections=["hidUsageMap"],
+                defaults={"input": layout},
+            )
+        )
+
+    def test_rejects_tuning_keys_a_hid_family_driver_does_not_read(self) -> None:
+        for family, tuning in (
+            ("HIDDescriptor", {"inputLivenessTimeoutMs": 5}),
+            ("HIDReportLayout", {"hidStartupRecoveryRounds": 2}),
+            ("XboxXID", {"hidStartupIntervalMs": 5}),
+            ("XboxXID", {"minimumHIDOutputIntervalMs": 5}),
+        ):
+            with self.subTest(family=family, tuning=tuning):
+                self.assert_rejected(
+                    self.with_body(family, defaults={"tuning": tuning})
+                )
 
     def test_rejects_variant_defaults_the_family_does_not_have(self) -> None:
         self.assert_rejected(

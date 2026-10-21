@@ -276,24 +276,30 @@ FIELD_NAME_ENUMS: list[tuple[str, str, Any]] = [
     ),
     (
         "protocol-description",
-        "/allOf/3/if/not/anyOf/0/properties/recordSections/contains/const",
+        "/allOf/2/if/not/anyOf/0/properties/recordSections/contains/const",
         RECORD,
     ),
     (
         "protocol-description",
-        "/allOf/3/if/not/anyOf/1/properties/recordSections/contains/const",
+        "/allOf/2/if/not/anyOf/1/properties/recordSections/contains/const",
         HID_INPUT,
     ),
     (
         "protocol-description",
-        "/allOf/4/if/not/properties/recordSections/contains/const",
+        "/allOf/3/if/not/properties/recordSections/contains/const",
         SESSION,
     ),
     (
         "protocol-description",
-        "/allOf/2/then/properties/defaults/properties/session/propertyNames/const",
-        SESSION,
+        "/allOf/0/if/properties/recordSections/contains/const",
+        RECORD,
     ),
+    (
+        "protocol-description",
+        "/allOf/1/if/properties/recordSections/contains/const",
+        HID_INPUT,
+    ),
+    ("protocol-description", "/properties/sessionKeys/items/enum", SESSION),
     (
         "protocol-description",
         "/$defs/startupWhen/properties/parameter/enum",

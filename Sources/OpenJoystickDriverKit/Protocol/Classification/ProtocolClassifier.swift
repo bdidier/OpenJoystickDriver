@@ -48,6 +48,15 @@ public enum PhysicalProtocolID: String, CaseIterable, Codable, Sendable {
     }
   }
 
+  /// The general `defaults.session` keys this family's driver reads; its description lists
+  /// exactly these as `sessionKeys`, or none when it takes all of them.
+  var generalSessionFields: Set<String> {
+    switch self {
+    case .xboxXID: ["rumble"]
+    default: ProtocolDescription.Document.Session.generalKeys
+    }
+  }
+
   /// The parameter names this family's driver reads. Loading refuses a description that declares
   /// others, and the bundled descriptions declare exactly these, as a test checks.
   var readParameters: Set<String> {

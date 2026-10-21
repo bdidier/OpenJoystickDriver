@@ -14,7 +14,7 @@ struct ProtocolDescriptionTests {
     #"{"startup": [{"report": {"kind": "Output", "id": 1, "length": 4}, "bytes": "01 02 03"}]}"#
 
   /// Decodes a description of `family` whose body after the header is `body`, with the family's
-  /// session counts added to any the body leaves unstated.
+  /// session counts and `sessionKeys` added to any the body leaves unstated.
   private func decode(
     family: PhysicalProtocolID,
     _ body: String
@@ -337,6 +337,7 @@ struct ProtocolDescriptionTests {
     let description = try #require(ProtocolDescription.bundled[family])
     #expect(Set(description.parameters.keys) == family.readParameters, "\(family.rawValue)")
     #expect(description.presentSessionFields == family.sessionFields, "\(family.rawValue)")
+    #expect(description.sessionKeys == family.generalSessionFields, "\(family.rawValue)")
   }
 
   /// The general session keys are the schema's list, which Python reads.
@@ -405,8 +406,8 @@ struct ProtocolDescriptionTests {
     }
   }
 
-  /// The schema limits XboxXID's `defaults.session` to the rumble template; Swift refuses the
-  /// same startup packets and keep-alive.
+  /// XboxXID's `sessionKeys` list only `rumble`, so its `defaults.session` refuses startup
+  /// packets and a keep-alive.
   @Test
   func anXIDSessionHoldsOnlyARumbleTemplate() {
     let session = [
@@ -419,8 +420,29 @@ struct ProtocolDescriptionTests {
         #""rawUSB": true, "recordSections": ["rumble"], "defaults": {"session": {\#(member)}}"#
       )
       #expect(problem?.code == .invalidProtocolDescription, "\(member)")
-      #expect(problem?.description.contains("holds only a rumble template") == true, "\(member)")
+      #expect(
+        problem?.description.contains("which sessionKeys does not list") == true,
+        "\(member)"
+      )
     }
+  }
+
+  /// A description lists the general session keys its driver reads, no other.
+  @Test
+  func sessionKeysAreTheOnesTheDriverReads() {
+    let cases: [(PhysicalProtocolID, String)] = [
+      (.xboxXID, #""rawUSB": true, "sessionKeys": ["rumble", "keepAlive"]"#),
+      (.xboxXID, #""rawUSB": true, "sessionKeys": ["rumble", "rumble"]"#),
+      (.xboxXID, #""rawUSB": true, "sessionKeys": ["subcommands"]"#),
+      (.xboxXID, #""rawUSB": true, "sessionKeys": []"#),
+      (.sonyDualShock4, #""sessionKeys": ["startup"]"#),
+    ]
+    for (family, body) in cases {
+      let problem = rejection(exactly: family, body)
+      #expect(problem?.code == .invalidProtocolDescription, "\(family) \(body)")
+    }
+    let without = rejection(exactly: .xboxXID, #""rawUSB": true, "recordSections": ["rumble"]"#)
+    #expect(without?.description.contains("reads the session keys rumble") == true)
   }
 
   private static let hidReport = #""report": {"kind": "Output", "id": 1, "length": 4}"#
@@ -950,12 +972,13 @@ enum ProtocolDescriptionFixture {
   ]
 
   /// Decodes a description of `family` whose body after the header is `body`, with the family's
-  /// session counts added to any the body leaves unstated.
+  /// session counts and `sessionKeys` added to any the body leaves unstated.
   static func decode(
     family: PhysicalProtocolID,
     _ body: String
   ) throws(ProtocolDescriptionProblem) -> ProtocolDescription {
-    try decodeExactly(family: family, withSessionLimits(family: family, body))
+    let keys = body.contains("\"sessionKeys\"") ? "" : sessionKeyMembers(of: family)
+    return try decodeExactly(family: family, keys + withSessionLimits(family: family, body))
   }
 
   /// Decodes a description of `family` whose body after the header is exactly `body`.
@@ -983,6 +1006,14 @@ enum ProtocolDescriptionFixture {
     let names = bundled.variants.map { "\"\($0.rawValue)\"" }.joined(separator: ", ")
     return "\"variants\": [\(names)], "
       + (bundled.storesVariant ? "\"storesVariant\": true, " : "")
+  }
+
+  /// The `sessionKeys` member, with a trailing comma, that the bundled description of `family`
+  /// states; empty for a family that takes every general session key.
+  static func sessionKeyMembers(of family: PhysicalProtocolID) -> String {
+    let keys = family.generalSessionFields
+    guard keys != ProtocolDescription.Document.Session.generalKeys else { return "" }
+    return "\"sessionKeys\": [\(keys.sorted().map { "\"\($0)\"" }.joined(separator: ", "))], "
   }
 
   private static func withSessionLimits(family: PhysicalProtocolID, _ body: String) -> String {

@@ -422,7 +422,7 @@
     {
       "name": "a family specific session field of another family is refused: family=XboxXID, key=subcommands",
       "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
+      "python": "E5002: xbox-xid.json: defaults.session.subcommands: XboxXID does not read it",
       "swift": "E5002: xbox-xid.json: XboxXID does not read subcommands",
       "fileName": "xbox-xid.json",
       "document": {
@@ -437,6 +437,7 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "subcommands": {
@@ -592,7 +593,7 @@
     {
       "name": "a family specific session field of another family is refused: family=XboxXID, key=namedPackets",
       "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
+      "python": "E5002: xbox-xid.json: defaults.session.namedPackets: XboxGIP/power-on must start with XboxXID/",
       "swift": "E5002: xbox-xid.json: XboxXID does not read namedPackets",
       "fileName": "xbox-xid.json",
       "document": {
@@ -607,6 +608,7 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "namedPackets": [
@@ -710,7 +712,7 @@
     {
       "name": "a family specific session field of another family is refused: family=XboxXID, key=handshakeAttempts",
       "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
+      "python": "E5002: xbox-xid.json: defaults.session.handshakeAttempts: XboxXID does not read it",
       "swift": "E5002: xbox-xid.json: XboxXID does not read handshakeAttempts",
       "fileName": "xbox-xid.json",
       "document": {
@@ -725,6 +727,7 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "handshakeAttempts": 3
@@ -804,7 +807,7 @@
     {
       "name": "a family specific session field of another family is refused: family=XboxXID, key=announceResendLimit",
       "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
+      "python": "E5002: xbox-xid.json: defaults.session.announceResendLimit: XboxXID does not read it",
       "swift": "E5002: xbox-xid.json: XboxXID does not read announceResendLimit",
       "fileName": "xbox-xid.json",
       "document": {
@@ -819,6 +822,7 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "announceResendLimit": 8
@@ -898,7 +902,7 @@
     {
       "name": "a family specific session field of another family is refused: family=XboxXID, key=receiverInquiryResendLimit",
       "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
+      "python": "E5002: xbox-xid.json: defaults.session.receiverInquiryResendLimit: XboxXID does not read it",
       "swift": "E5002: xbox-xid.json: XboxXID does not read receiverInquiryResendLimit",
       "fileName": "xbox-xid.json",
       "document": {
@@ -913,6 +917,7 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "receiverInquiryResendLimit": 8
@@ -999,7 +1004,7 @@
     {
       "name": "a family specific session field of another family is refused: family=XboxXID, key=commandChannel",
       "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
+      "python": "E5002: xbox-xid.json: defaults.session.commandChannel: XboxXID does not read it",
       "swift": "E5002: xbox-xid.json: XboxXID does not read commandChannel",
       "fileName": "xbox-xid.json",
       "document": {
@@ -1014,6 +1019,7 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "commandChannel": {
@@ -1117,7 +1123,7 @@
     {
       "name": "a family specific session field of another family is refused: family=XboxXID, key=trailingStopPackets",
       "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
+      "python": "E5002: xbox-xid.json: defaults.session.trailingStopPackets: XboxXID does not read it",
       "swift": "E5002: xbox-xid.json: XboxXID does not read trailingStopPackets",
       "fileName": "xbox-xid.json",
       "document": {
@@ -1132,6 +1138,7 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "trailingStopPackets": 2
@@ -1211,7 +1218,7 @@
     {
       "name": "a family specific session field of another family is refused: family=XboxXID, key=activation",
       "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
+      "python": "E5002: xbox-xid.json: defaults.session.activation: XboxXID does not read it",
       "swift": "E5002: xbox-xid.json: XboxXID does not read activation",
       "fileName": "xbox-xid.json",
       "document": {
@@ -1226,6 +1233,7 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "activation": [
@@ -1341,7 +1349,7 @@
     {
       "name": "a family specific session field of another family is refused: family=XboxXID, key=deactivation",
       "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
+      "python": "E5002: xbox-xid.json: defaults.session.deactivation: XboxXID does not read it",
       "swift": "E5002: xbox-xid.json: XboxXID does not read deactivation",
       "fileName": "xbox-xid.json",
       "document": {
@@ -1356,6 +1364,7 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "deactivation": [
@@ -6223,7 +6232,8 @@
             "interfaceSubclass": 93,
             "interfaceProtocol": 1
           }
-        ]
+        ],
+        "sessionKeys": ["rumble"]
       }
     },
     {
@@ -6250,7 +6260,8 @@
             "interfaceSubclass": 93,
             "interfaceProtocol": 1
           }
-        ]
+        ],
+        "sessionKeys": ["rumble"]
       }
     },
     {
@@ -6277,7 +6288,8 @@
             "interfaceSubclass": 93,
             "interfaceProtocol": 1
           }
-        ]
+        ],
+        "sessionKeys": ["rumble"]
       }
     },
     {
@@ -6304,7 +6316,8 @@
             "interfaceSubclass": 93,
             "interfaceProtocol": 1
           }
-        ]
+        ],
+        "sessionKeys": ["rumble"]
       }
     },
     {
@@ -6331,7 +6344,8 @@
             "interfaceSubclass": 93,
             "interfaceProtocol": 1
           }
-        ]
+        ],
+        "sessionKeys": ["rumble"]
       }
     },
     {
@@ -6358,7 +6372,8 @@
             "interfaceSubclass": 93,
             "interfaceProtocol": 1
           }
-        ]
+        ],
+        "sessionKeys": ["rumble"]
       }
     },
     {
@@ -6385,7 +6400,8 @@
             "interfaceSubclass": 93,
             "interfaceProtocol": 1
           }
-        ]
+        ],
+        "sessionKeys": ["rumble"]
       }
     },
     {
@@ -12822,6 +12838,7 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
         "interfaceSignatures": [
           {
             "variant": "Gamepad",
@@ -12997,6 +13014,7 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
         "interfaceSignatures": [
           {
             "variant": "Gamepad",
@@ -13172,6 +13190,7 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
         "interfaceSignatures": [
           {
             "variant": "Gamepad",
@@ -13347,6 +13366,7 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
         "interfaceSignatures": [
           {
             "variant": "Gamepad",
@@ -13872,6 +13892,103 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    {
+      "name": "input shape follows the record sections",
+      "code": "E5002",
+      "python": "E5002: xbox-xid.json at defaults.input: Additional properties are not allowed ('hidUsageMap' was unexpected)",
+      "swift": "E5002: xbox-xid.json: a HID usage map applies only to a family that reads one",
+      "fileName": "xbox-xid.json",
+      "document": {
+        "variants": ["Gamepad"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXID",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
+        "defaults": {
+          "input": {
+            "hidUsageMap": {
+              "usages": [
+                {
+                  "kind": "Button",
+                  "page": 9,
+                  "usage": 1,
+                  "control": "South"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "input shape follows the record sections (2)",
+      "code": "E5002",
+      "python": "E5002: hid-report-layout.json at defaults.input: Additional properties are not allowed ('hidUsageMap' was unexpected)",
+      "swift": "E5002: hid-report-layout.json: a HID usage map applies only to a family that reads one",
+      "fileName": "hid-report-layout.json",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "HIDReportLayout",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "recordSections": ["input", "rumble"],
+        "defaults": {
+          "input": {
+            "hidUsageMap": {
+              "usages": [
+                {
+                  "kind": "Button",
+                  "page": 9,
+                  "usage": 1,
+                  "control": "South"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "input shape follows the record sections (3)",
+      "code": "E5002",
+      "python": "E5002: hid-descriptor.json at defaults.input: Additional properties are not allowed ('buttons', 'report' were unexpected)",
+      "swift": "E5002: hid-descriptor.json: an input layout applies only to a family that reads one",
+      "fileName": "hid-descriptor.json",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "HIDDescriptor",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "recordSections": ["hidUsageMap"],
+        "defaults": {
+          "input": {
+            "report": {
+              "length": 1
+            },
+            "buttons": [
+              {
+                "control": "South",
+                "byte": 0,
+                "mask": 1
+              }
+            ]
           }
         }
       }
@@ -14553,8 +14670,8 @@
     {
       "name": "rejects a keep alive the family cannot run",
       "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
-      "swift": "E5002: xbox-xid.json: XboxXID's session holds only a rumble template",
+      "python": "E5002: xbox-xid.json: defaults.session sets keepAlive, which sessionKeys does not list",
+      "swift": "E5002: xbox-xid.json: defaults.session sets keepAlive, which sessionKeys does not list",
       "fileName": "xbox-xid.json",
       "document": {
         "variants": ["Gamepad"],
@@ -14568,6 +14685,7 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "keepAlive": {
@@ -15048,6 +15166,7 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
         "parameters": {
           "layout": {
             "type": "Flag"
@@ -16048,7 +16167,7 @@
     {
       "name": "rejects defaults a driver does not read: family=HIDDescriptor, defaults={'input': {'report': {'length': 1}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}]}}",
       "code": "E5002",
-      "python": "E5002: hid-descriptor.json at defaults.input: Additional properties are not allowed ('buttons', 'report' were unexpected)",
+      "python": "E5002: hid-descriptor.json at defaults: False schema does not allow {'report': {'length': 1}, 'buttons': [{'control': 'South', 'byte': 0, 'mask': 1}]}",
       "swift": "E5002: hid-descriptor.json: an input layout applies only to a family that reads one",
       "fileName": "hid-descriptor.json",
       "document": {
@@ -16129,6 +16248,7 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
         "defaults": {
           "input": {
             "report": {
@@ -16163,6 +16283,7 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
         "defaults": {
           "input": {
             "report": {
@@ -16198,6 +16319,7 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
         "defaults": {
           "input": {
             "report": {
@@ -16235,6 +16357,7 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
         "defaults": {
           "input": {
             "report": {
@@ -16257,7 +16380,7 @@
     {
       "name": "rejects defaults a driver does not read: family=XboxXID, defaults={'session': {'startup': [{'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03'}]}}",
       "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
+      "python": "E5002: xbox-xid.json at defaults.session.startup.0: {'report': {'kind': 'Output', 'id': 1, 'length': 4}, 'bytes': '01 02 03'} should not be valid under {'required': ['report']}",
       "swift": "E5002: xbox-xid.json: HID startup writes apply only to HID controllers",
       "fileName": "xbox-xid.json",
       "document": {
@@ -16272,6 +16395,7 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "startup": [
@@ -16606,6 +16730,7 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
         "controls": {
           "base": "xbox"
         }
@@ -21999,6 +22124,101 @@
       }
     },
     {
+      "name": "rejects tuning keys a hid family driver does not read: family=HIDDescriptor, tuning={'inputLivenessTimeoutMs': 5}",
+      "code": "E5002",
+      "python": "E5002: hid-descriptor.json: defaults.tuning: inputLivenessTimeoutMs not read by the driver",
+      "swift": "E5002: hid-descriptor.json: inputLivenessTimeoutMs is not read by the HIDDescriptor driver",
+      "fileName": "hid-descriptor.json",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "HIDDescriptor",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "defaults": {
+          "tuning": {
+            "inputLivenessTimeoutMs": 5
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects tuning keys a hid family driver does not read: family=HIDReportLayout, tuning={'hidStartupRecoveryRounds': 2}",
+      "code": "E5002",
+      "python": "E5002: hid-report-layout.json: defaults.tuning: hidStartupRecoveryRounds not read by the driver",
+      "swift": "E5002: hid-report-layout.json: hidStartupRecoveryRounds is not read by the HIDReportLayout driver",
+      "fileName": "hid-report-layout.json",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "HIDReportLayout",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "recordSections": ["input", "rumble"],
+        "defaults": {
+          "tuning": {
+            "hidStartupRecoveryRounds": 2
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects tuning keys a hid family driver does not read: family=XboxXID, tuning={'hidStartupIntervalMs': 5}",
+      "code": "E5002",
+      "python": "E5002: xbox-xid.json: defaults.tuning: hidStartupIntervalMs not read by the driver",
+      "swift": "E5002: xbox-xid.json: hidStartupIntervalMs is not read by the XboxXID driver",
+      "fileName": "xbox-xid.json",
+      "document": {
+        "variants": ["Gamepad"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXID",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
+        "defaults": {
+          "tuning": {
+            "hidStartupIntervalMs": 5
+          }
+        }
+      }
+    },
+    {
+      "name": "rejects tuning keys a hid family driver does not read: family=XboxXID, tuning={'minimumHIDOutputIntervalMs': 5}",
+      "code": "E5002",
+      "python": "E5002: xbox-xid.json: defaults.tuning: minimumHIDOutputIntervalMs not read by the driver",
+      "swift": "E5002: xbox-xid.json: minimumHIDOutputIntervalMs is not read by the XboxXID driver",
+      "fileName": "xbox-xid.json",
+      "document": {
+        "variants": ["Gamepad"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXID",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
+        "defaults": {
+          "tuning": {
+            "minimumHIDOutputIntervalMs": 5
+          }
+        }
+      }
+    },
+    {
       "name": "rejects unknown fields",
       "code": "E5002",
       "python": "E5002: xbox-xusb.json: Additional properties are not allowed ('vendorID' was unexpected)",
@@ -22148,6 +22368,166 @@
             }
           }
         }
+      }
+    },
+    {
+      "name": "session keys are the ones the driver reads",
+      "code": "E5002",
+      "python": "E5002: xbox-xid.json: XboxXID reads the session keys rumble",
+      "swift": "E5002: xbox-xid.json: XboxXID reads the session keys rumble",
+      "fileName": "xbox-xid.json",
+      "document": {
+        "variants": ["Gamepad"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXID",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "recordSections": ["input", "rumble"],
+        "defaults": {
+          "session": {
+            "rumble": {
+              "report": {
+                "kind": "USB",
+                "length": 8
+              },
+              "bytes": "00 08 00 00 00 00 00 00",
+              "lowFrequency": {
+                "byte": 3,
+                "encoding": "UInt16BigEndian"
+              },
+              "counter": {
+                "byte": 7
+              },
+              "resendIntervalMilliseconds": 100
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "session keys are the ones the driver reads (2)",
+      "code": "E5002",
+      "python": "E5002: xbox-xid.json: XboxXID reads the session keys rumble",
+      "swift": "E5002: xbox-xid.json: XboxXID reads the session keys rumble",
+      "fileName": "xbox-xid.json",
+      "document": {
+        "variants": ["Gamepad"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXID",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble", "keepAlive"],
+        "defaults": {
+          "session": {
+            "rumble": {
+              "report": {
+                "kind": "USB",
+                "length": 8
+              },
+              "bytes": "00 08 00 00 00 00 00 00",
+              "lowFrequency": {
+                "byte": 3,
+                "encoding": "UInt16BigEndian"
+              },
+              "counter": {
+                "byte": 7
+              },
+              "resendIntervalMilliseconds": 100
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "session keys are the ones the driver reads (3)",
+      "code": "E5002",
+      "python": "E5002: xbox-xid.json: XboxXID reads the session keys rumble",
+      "swift": "E5002: xbox-xid.json: XboxXID reads the session keys rumble",
+      "fileName": "xbox-xid.json",
+      "document": {
+        "variants": ["Gamepad"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXID",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble", "startup"]
+      }
+    },
+    {
+      "name": "session keys are the ones the driver reads (4)",
+      "code": "E5002",
+      "python": "E5002: xbox-xid.json at sessionKeys: ['rumble', 'rumble'] has non-unique elements",
+      "swift": "E5002: xbox-xid.json: description.sessionKeys: sessionKeys lists unique names of startup, rumble, keepAlive",
+      "fileName": "xbox-xid.json",
+      "document": {
+        "variants": ["Gamepad"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXID",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble", "rumble"]
+      }
+    },
+    {
+      "name": "session keys are the ones the driver reads (5)",
+      "code": "E5002",
+      "python": "E5002: xbox-xid.json at sessionKeys.0: 'subcommands' is not one of ['startup', 'rumble', 'keepAlive']",
+      "swift": "E5002: xbox-xid.json: description.sessionKeys: sessionKeys lists unique names of startup, rumble, keepAlive",
+      "fileName": "xbox-xid.json",
+      "document": {
+        "variants": ["Gamepad"],
+        "storesVariant": true,
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "XboxXID",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "rawUSB": true,
+        "recordSections": ["input", "rumble"],
+        "sessionKeys": ["subcommands"]
+      }
+    },
+    {
+      "name": "session keys are the ones the driver reads (6)",
+      "code": "E5002",
+      "python": "E5002: sony-dualshock4.json: SonyDualShock4 reads the session keys keepAlive, rumble, startup",
+      "swift": "E5002: sony-dualshock4.json: SonyDualShock4 reads the session keys keepAlive, rumble, startup",
+      "fileName": "sony-dualshock4.json",
+      "document": {
+        "variants": ["USB", "BluetoothClassic"],
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "SonyDualShock4",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "sessionKeys": ["startup"]
       }
     },
     {
@@ -22398,6 +22778,7 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "rumble": {
@@ -22417,8 +22798,8 @@
     {
       "name": "xid session carries only a usb rumble template: startup beside the template",
       "code": "E5002",
-      "python": "E5002: xbox-xid.json at defaults.session: 'rumble' was expected",
-      "swift": "E5002: xbox-xid.json: XboxXID's session holds only a rumble template",
+      "python": "E5002: xbox-xid.json: defaults.session sets startup, which sessionKeys does not list",
+      "swift": "E5002: xbox-xid.json: defaults.session sets startup, which sessionKeys does not list",
       "fileName": "xbox-xid.json",
       "document": {
         "variants": ["Gamepad"],
@@ -22432,6 +22813,7 @@
         },
         "rawUSB": true,
         "recordSections": ["input", "rumble"],
+        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "rumble": {
@@ -22476,6 +22858,7 @@
         },
         "rawUSB": true,
         "recordSections": ["input"],
+        "sessionKeys": ["rumble"],
         "defaults": {
           "session": {
             "rumble": {

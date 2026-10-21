@@ -117,6 +117,8 @@ struct ProtocolDescription: Sendable {
   let endpoints: Endpoints
   let rawUSB: RawUSB
   let recordSections: Set<RecordSection>
+  /// The general `defaults.session` keys the description may set; all of them when it lists none.
+  let sessionKeys: Set<String>
   /// The `tuning` keys the family reads beyond `stickDeadzone` and `frameQueueCapacity` through
   /// IOHID; none when every variant is raw USB.
   let tuningKeys: Set<ControllerTuning.Key>
@@ -394,6 +396,7 @@ struct ProtocolDescription: Sendable {
       endpoints: document.endpoints,
       rawUSB: rawUSB,
       recordSections: document.recordSections,
+      sessionKeys: document.sessionKeys,
       tuningKeys: document.tuningKeys,
       rawUSBTuningKeys: document.rawUSBTuningKeys,
       macOSOwnedOutput: document.macOSOwnedOutput,

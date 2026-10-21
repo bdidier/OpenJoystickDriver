@@ -10,6 +10,7 @@
   },
   "rawUSB": true,
   "recordSections": ["input", "rumble"],
+  "sessionKeys": ["rumble"],
   "interfaceSignatures": [
     {
       "variant": "Gamepad",
