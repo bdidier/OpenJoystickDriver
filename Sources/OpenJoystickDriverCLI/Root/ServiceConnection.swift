@@ -42,13 +42,11 @@ enum ServiceConnection {
     seconds: Double,
     _ operation: @escaping @Sendable () async throws -> T
   ) async throws -> T {
-    let outcome = await withTimeout(seconds: seconds) { () async -> Result<T, any Error> in
-      do { return .success(try await operation()) } catch { return .failure(error) }
-    }
-    switch outcome {
-    case .success(let value): return value
-    case .failure(let error): throw failure(for: error)
-    case nil: throw CLIFailure.timedOut(seconds: seconds)
+    do { return try await withTimeout(seconds: seconds, operation) } catch let error as TimeoutError
+    {
+      throw CLIFailure.timedOut(seconds: error.seconds)
+    } catch {
+      throw failure(for: error)
     }
   }
 

@@ -178,25 +178,32 @@ final class VirtualFeedRegistry: @unchecked Sendable {
     }
     // A hung activation must not hold the caller, which may block a connection thread.
     let identifier = session.identifier
-    let activation = await withTimeout(seconds: activationTimeout) {
-      () async -> Result<Void, any Error> in
-      do { return .success(try await device.activate(controller: identifier)) } catch {
-        return .failure(error)
+    let activationFailure: VirtualFeedError?
+    do {
+      try await withTimeout(seconds: activationTimeout) {
+        try await device.activate(controller: identifier)
       }
+      activationFailure = nil
+    } catch is TimeoutError {
+      activationFailure = .activationFailed(
+        "it took longer than \(activationTimeout.formatted()) seconds"
+      )
+    } catch is CancellationError {
+      activationFailure = nil
+      if lock.withLock({ sessions.removeValue(forKey: token) }) != nil {
+        Task { await device.close() }
+      }
+      throw CancellationError()
+    } catch {
+      activationFailure = .activationFailed(String(describing: error))
     }
-    guard case .success = activation else {
+    if let activationFailure {
       // The slot frees at once; closing waits for the activation, which may still hang, so the
       // caller does not wait for it.
       if lock.withLock({ sessions.removeValue(forKey: token) }) != nil {
         Task { await device.close() }
       }
-      if Task.isCancelled { throw CancellationError() }
-      if case .failure(let error) = activation {
-        throw VirtualFeedError.activationFailed(String(describing: error))
-      }
-      throw VirtualFeedError.activationFailed(
-        "it took longer than \(activationTimeout.formatted()) seconds"
-      )
+      throw activationFailure
     }
     let watching = lock.withLock { () -> Bool in
       guard sessions[token] === session else { return false }

@@ -51,7 +51,14 @@ struct VirtualFeedCommand: AsyncParsableCommand {
         try await client.openVirtualFeed(profile: name).token
       }
       let close: @Sendable () async -> Void = {
-        _ = await withTimeout(seconds: timeout) { try await client.closeVirtualFeed(token: token) }
+        do {
+          _ = try await ServiceConnection.withDeadline(seconds: timeout) {
+            try await client.closeVirtualFeed(token: token)
+          }
+        } catch {
+          // The command's own outcome stands; a failed close is still reported.
+          CLIOutput.stderr((error as? CLIFailure)?.line ?? error.localizedDescription)
+        }
       }
       try await withCLIShutdownCleanup(close) {
         if CLIContext.current.format == .human {
