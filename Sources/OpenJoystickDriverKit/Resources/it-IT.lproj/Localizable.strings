@@ -1073,10 +1073,10 @@
 "cli.controller.capture.no_packets" = "Nessun pacchetto ricevuto.";
 "cli.controller.capture.started" = "Acquisizione dei pacchetti da %@ (%@). Premi i pulsanti del controller.";
 "cli.controller.capture.warning" = "Il contenuto dei pacchetti varia in base al controller. Controllalo prima di condividerlo.";
-"cli.controller.disconnect.abstract" = "Disconnette un controller Bluetooth.";
-"cli.controller.disconnect.discussion" = "Chiude la connessione Bluetooth. Il controller resta associato e si ricollega quando lo riaccendi. Attende almeno 6 secondi la conferma del Bluetooth.";
+"cli.controller.disconnect.abstract" = "Disconnette un controller Bluetooth classico.";
+"cli.controller.disconnect.discussion" = "Chiude la connessione Bluetooth classica. Il controller resta associato e si ricollega quando lo riaccendi. Attende almeno 6 secondi la conferma del Bluetooth. Il servizio non può disconnettere un controller Bluetooth Low Energy. Spegnilo o disconnettilo in Impostazioni di Sistema > Bluetooth.";
 "cli.controller.disconnect.done" = "%@ disconnesso.";
-"cli.controller.disconnect.bluetooth_le" = "%@ è collegato tramite Bluetooth Low Energy e il servizio non può disconnetterlo. Spegni il controller o disconnettilo in Impostazioni di Sistema › Bluetooth.";
+"cli.controller.disconnect.bluetooth_le" = "%@ è collegato tramite Bluetooth Low Energy e il servizio non può disconnetterlo. Spegni il controller o disconnettilo in Impostazioni di Sistema > Bluetooth.";
 "cli.controller.disconnect.failed" = "Disconnessione Bluetooth non riuscita durante %@: %@.";
 "cli.controller.disconnect.not_bluetooth" = "%@ non è collegato tramite Bluetooth. Scollegalo per disconnetterlo.";
 "cli.controller.discussion" = "CONTROLLER è un ID di «ojd controller list» oppure VVVV:PPPP (ID esadecimale di fornitore e prodotto) quando lo ha un solo controller collegato. Ogni comando del controller richiede il servizio.";

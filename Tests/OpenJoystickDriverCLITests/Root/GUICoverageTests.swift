@@ -4,9 +4,9 @@ import Testing
 
 @testable import OpenJoystickDriverCLI
 
-/// Tasks 17.5 and 20.3e: every command has a GUI place in the D10 matrix (`GUICoverageMatrix`), and
-/// every CLI leaf and behavior-changing option names the GUI symbol that performs it, or is
-/// CLI-only (D10), or is pending its 20.3 task (`GUICoverageEntries`).
+/// Every command has a GUI place in the D10 matrix (`GUICoverageMatrix`), and every CLI leaf and
+/// behavior-changing option names the GUI symbol that performs it or is CLI-only (D10), per
+/// `GUICoverageEntries`.
 struct GUICoverageTests {
   @Test
   func everyCommandOfTheRealTreeHasAGUIPlace() {
@@ -90,7 +90,7 @@ struct GUICoverageTests {
     #expect(GUISources.text.contains("MainWindowProblemBanner"))
     var missing: [String] = []
     for entry in GUICoverageEntries.entries {
-      guard case .symbol(let symbol) = entry.disposition else { continue }
+      let symbol = entry.symbol
       if !GUISources.isDeclaredAndReferenced(symbol) { missing.append("\(entry.key): \(symbol)") }
     }
     #expect(missing.isEmpty, "GUI symbols that do not exist: \(missing)")
@@ -99,6 +99,10 @@ struct GUICoverageTests {
   @Test
   func aSymbolTheGUIDoesNotDeclareIsReported() {
     #expect(!GUISources.isDeclaredAndReferenced("noSuchGUISymbolAnywhere"))
+    #expect(
+      GUISources.strippingCommentsAndStrings("// a\nlet b = \"c \\(d) e\" /* f */")
+        == "\nlet b = d "
+    )
     #expect(GUISources.isDeclaredAndReferenced("MainWindowProblemBanner"))
   }
 
@@ -113,34 +117,30 @@ struct GUICoverageTests {
     let start = try #require(design.range(of: "### D10"))
     let end = try #require(design.range(of: "### D11"))
     let section = String(design[start.lowerBound..<end.lowerBound])
-    for item in GUICoverageEntries.cliOnly {
-      let name = item.option ?? (item.command ?? []).joined(separator: " ")
-      #expect(section.contains("`\(name)`"), "D10 does not name \(name)")
-    }
-  }
-
-  /// Pending entries are the work queue of 20.3a to 20.3d. Each cites an unticked task, so ticking
-  /// a task requires emptying its entries, and the test reports what is left.
-  @Test
-  func pendingEntriesCiteUntickedTasksAndAreReported() throws {
-    let tasks = try String(
-      contentsOf: GUISources.root.appendingPathComponent(
-        "openspec/changes/platform-neutral-redesign/tasks.md"
-      ),
-      encoding: .utf8
+    let listStart = try #require(section.range(of: "are listed as CLI-only:"))
+    let listEnd = try #require(section.range(of: "`GUICoverageEntries` lists exactly these"))
+    let list = String(section[listStart.upperBound..<listEnd.lowerBound])
+    let named = Set(
+      try #require(try? NSRegularExpression(pattern: "`([^`]+)`")).matches(
+        in: list,
+        range: NSRange(list.startIndex..., in: list)
+      ).compactMap { Range($0.range(at: 1), in: list).map { String(list[$0]) } }
     )
-    var pending: [String] = []
-    for entry in GUICoverageEntries.entries {
-      guard case .pending(let task, let gap) = entry.disposition else { continue }
-      #expect(
-        tasks.contains("- [ ] \(task) "),
-        "\(entry.key) cites \(task), which is not an unticked task"
-      )
-      pending.append("\(task) \(entry.key): \(gap)")
-    }
-    for line in pending.sorted() {
-      Issue.record(Comment(rawValue: "GUI pending " + line), severity: .warning)
-    }
+    // An option of one command is named together with that command.
+    let expected = Set(
+      GUICoverageEntries.cliOnly.flatMap { item -> [String] in
+        let command = (item.command ?? []).joined(separator: " ")
+        guard let option = item.option else { return [command] }
+        return item.command == nil ? [option] : [option, command]
+      }
+    )
+    #expect(
+      named == expected,
+      """
+      D10 lacks \(expected.subtracting(named).sorted()); \
+      D10 names more: \(named.subtracting(expected).sorted())
+      """
+    )
   }
 
   @Test

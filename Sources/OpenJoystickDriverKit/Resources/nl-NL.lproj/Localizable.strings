@@ -1073,10 +1073,10 @@
 "cli.controller.capture.no_packets" = "Geen pakketten ontvangen.";
 "cli.controller.capture.started" = "Pakketten van %@ (%@) worden vastgelegd. Druk op knoppen van de controller.";
 "cli.controller.capture.warning" = "De inhoud van pakketten verschilt per controller. Controleer ze voordat je ze deelt.";
-"cli.controller.disconnect.abstract" = "Een Bluetooth-controller loskoppelen.";
-"cli.controller.disconnect.discussion" = "Sluit de Bluetooth-verbinding. De controller blijft gekoppeld en maakt opnieuw verbinding als je hem weer aanzet. Wacht minstens 6 seconden op bevestiging van Bluetooth.";
+"cli.controller.disconnect.abstract" = "Een klassieke Bluetooth-controller loskoppelen.";
+"cli.controller.disconnect.discussion" = "Sluit de klassieke Bluetooth-verbinding. De controller blijft gekoppeld en maakt opnieuw verbinding als je hem weer aanzet. Wacht minstens 6 seconden op bevestiging van Bluetooth. De service kan een Bluetooth Low Energy-controller niet loskoppelen. Zet hem uit of verbreek de verbinding in Systeeminstellingen > Bluetooth.";
 "cli.controller.disconnect.done" = "%@ losgekoppeld.";
-"cli.controller.disconnect.bluetooth_le" = "%@ is via Bluetooth Low Energy verbonden en de service kan de verbinding niet verbreken. Zet de controller uit of verbreek de verbinding in Systeeminstellingen › Bluetooth.";
+"cli.controller.disconnect.bluetooth_le" = "%@ is via Bluetooth Low Energy verbonden en de service kan de verbinding niet verbreken. Zet de controller uit of verbreek de verbinding in Systeeminstellingen > Bluetooth.";
 "cli.controller.disconnect.failed" = "Bluetooth-loskoppeling mislukt tijdens %@: %@.";
 "cli.controller.disconnect.not_bluetooth" = "%@ is niet via Bluetooth verbonden. Trek de kabel eruit om hem los te koppelen.";
 "cli.controller.discussion" = "CONTROLLER is een ID uit ‘ojd controller list’ of VVVV:PPPP (hexadecimale leveranciers- en product-ID) als precies één aangesloten controller die heeft. Elk controllercommando heeft de service nodig.";

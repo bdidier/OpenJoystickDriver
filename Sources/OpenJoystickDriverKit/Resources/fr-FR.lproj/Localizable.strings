@@ -1073,10 +1073,10 @@
 "cli.controller.capture.no_packets" = "Aucun paquet reçu.";
 "cli.controller.capture.started" = "Capture des paquets de %@ (%@). Appuyez sur les boutons de la manette.";
 "cli.controller.capture.warning" = "Le contenu des paquets varie selon la manette. Vérifiez-le avant de le partager.";
-"cli.controller.disconnect.abstract" = "Déconnecter une manette Bluetooth.";
-"cli.controller.disconnect.discussion" = "Ferme la connexion Bluetooth. La manette reste jumelée et se reconnecte quand vous la rallumez. Attend au moins 6 secondes la confirmation de Bluetooth.";
+"cli.controller.disconnect.abstract" = "Déconnecter une manette Bluetooth classique.";
+"cli.controller.disconnect.discussion" = "Ferme la connexion Bluetooth classique. La manette reste jumelée et se reconnecte quand vous la rallumez. Attend au moins 6 secondes la confirmation de Bluetooth. Le service ne peut pas déconnecter une manette Bluetooth Low Energy. Éteignez-la ou déconnectez-la dans Réglages Système > Bluetooth.";
 "cli.controller.disconnect.done" = "%@ déconnectée.";
-"cli.controller.disconnect.bluetooth_le" = "%@ est connectée en Bluetooth Low Energy, et le service ne peut pas la déconnecter. Éteignez la manette ou déconnectez-la dans Réglages Système › Bluetooth.";
+"cli.controller.disconnect.bluetooth_le" = "%@ est connectée en Bluetooth Low Energy, et le service ne peut pas la déconnecter. Éteignez la manette ou déconnectez-la dans Réglages Système > Bluetooth.";
 "cli.controller.disconnect.failed" = "La déconnexion Bluetooth a échoué pendant %@ : %@.";
 "cli.controller.disconnect.not_bluetooth" = "%@ n’est pas connectée en Bluetooth. Débranchez-la pour la déconnecter.";
 "cli.controller.discussion" = "CONTROLLER est un identifiant issu de « ojd controller list », ou VVVV:PPPP (identifiants hexadécimaux du fabricant et du produit) quand une seule manette connectée le porte. Chaque commande de manette nécessite le service.";

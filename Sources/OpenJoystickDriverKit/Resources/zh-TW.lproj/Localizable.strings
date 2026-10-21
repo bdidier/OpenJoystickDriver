@@ -1073,10 +1073,10 @@
 "cli.controller.capture.no_packets" = "未收到任何封包。";
 "cli.controller.capture.started" = "正在擷取 %@ (%@) 的封包。請按下控制器按鈕。";
 "cli.controller.capture.warning" = "封包內容會因控制器而異。分享前請先檢查。";
-"cli.controller.disconnect.abstract" = "中斷 Bluetooth 控制器的連線。";
-"cli.controller.disconnect.discussion" = "關閉 Bluetooth 連線。控制器仍保持配對，下次開機時會重新連線。至少等待 6 秒，讓 Bluetooth 確認。";
+"cli.controller.disconnect.abstract" = "中斷傳統 Bluetooth 控制器的連線。";
+"cli.controller.disconnect.discussion" = "關閉傳統 Bluetooth 連線。控制器仍保持配對，下次開機時會重新連線。至少等待 6 秒，讓 Bluetooth 確認。服務無法中斷 Bluetooth Low Energy 控制器的連線。請關閉控制器，或在系統設定 > Bluetooth 中中斷連線。";
 "cli.controller.disconnect.done" = "已中斷 %@ 的連線。";
-"cli.controller.disconnect.bluetooth_le" = "%@ 透過 Bluetooth Low Energy 連接，服務無法將其中斷連線。請關閉控制器，或在系統設定 › Bluetooth 中中斷連線。";
+"cli.controller.disconnect.bluetooth_le" = "%@ 透過 Bluetooth Low Energy 連接，服務無法將其中斷連線。請關閉控制器，或在系統設定 > Bluetooth 中中斷連線。";
 "cli.controller.disconnect.failed" = "在 %@ 期間中斷 Bluetooth 連線失敗：%@。";
 "cli.controller.disconnect.not_bluetooth" = "%@ 不是透過 Bluetooth 連接。請拔除連接線以中斷連線。";
 "cli.controller.discussion" = "CONTROLLER 是 「ojd controller list」 中的 ID，或 VVVV:PPPP（十六進位的供應商 ID 與產品 ID），前提是只有一個已連接的控制器符合。所有控制器指令都需要服務。";

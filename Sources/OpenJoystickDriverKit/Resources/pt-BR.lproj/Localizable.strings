@@ -1073,10 +1073,10 @@
 "cli.controller.capture.no_packets" = "Nenhum pacote recebido.";
 "cli.controller.capture.started" = "Capturando pacotes de %@ (%@). Pressione botões do controle.";
 "cli.controller.capture.warning" = "O conteúdo dos pacotes varia conforme o controle. Confira-o antes de compartilhar.";
-"cli.controller.disconnect.abstract" = "Desconectar um controle Bluetooth.";
-"cli.controller.disconnect.discussion" = "Encerra a conexão Bluetooth. O controle continua pareado e reconecta quando você o liga de novo. Aguarda pelo menos 6 segundos pela confirmação do Bluetooth.";
+"cli.controller.disconnect.abstract" = "Desconectar um controle Bluetooth clássico.";
+"cli.controller.disconnect.discussion" = "Encerra a conexão Bluetooth clássica. O controle continua pareado e reconecta quando você o liga de novo. Aguarda pelo menos 6 segundos pela confirmação do Bluetooth. O serviço não pode desconectar um controle Bluetooth Low Energy. Desligue-o ou desconecte-o em Ajustes do Sistema > Bluetooth.";
 "cli.controller.disconnect.done" = "%@ desconectado.";
-"cli.controller.disconnect.bluetooth_le" = "%@ está conectado por Bluetooth Low Energy e o serviço não pode desconectá-lo. Desligue o controle ou desconecte-o em Ajustes do Sistema › Bluetooth.";
+"cli.controller.disconnect.bluetooth_le" = "%@ está conectado por Bluetooth Low Energy e o serviço não pode desconectá-lo. Desligue o controle ou desconecte-o em Ajustes do Sistema > Bluetooth.";
 "cli.controller.disconnect.failed" = "Falha ao desconectar via Bluetooth durante %@: %@.";
 "cli.controller.disconnect.not_bluetooth" = "%@ não está conectado por Bluetooth. Desconecte o cabo para desconectá-lo.";
 "cli.controller.discussion" = "CONTROLLER é um ID de “ojd controller list”, ou VVVV:PPPP (ID hexadecimal do fabricante e do produto) quando apenas um controle conectado o tem. Todo comando de controle precisa do serviço.";

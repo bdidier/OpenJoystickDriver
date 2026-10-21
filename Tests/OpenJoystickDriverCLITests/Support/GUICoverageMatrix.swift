@@ -29,7 +29,7 @@ struct GUIField: Equatable {
 }
 
 enum GUICoverageMatrix {
-  /// Fields the GUI shows by name. Task 24.5: the serving route and persona of
+  /// Fields the GUI shows by name: the serving route and persona of
   /// `ojd controller show`.
   static let fields: [GUIField] = [
     GUIField(
