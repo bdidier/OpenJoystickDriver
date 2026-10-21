@@ -3,23 +3,15 @@ import Foundation
 
 @testable import OpenJoystickDriverCLI
 
-/// What performs one CLI item in the GUI, or why none does.
-enum GUIDisposition: Equatable {
-  /// A declaration in the GUI sources that performs the item. `GUISources` checks that it is
-  /// declared and referenced.
-  case symbol(String)
-  /// The GUI place is not built yet. `task` is the tasks.md item that builds it, which the test
-  /// requires to be unticked, so ticking the task forces this entry out.
-  case pending(task: String, gap: String)
-}
-
 /// One CLI leaf (`option == nil`) or one behavior-changing option of a leaf, with its GUI place.
 struct GUICoverageEntry: Equatable {
   /// The command path, such as `["controller", "rumble"]`.
   let command: [String]
   /// The long option, such as `--duration`; nil for the leaf itself.
   let option: String?
-  let disposition: GUIDisposition
+  /// A declaration in the GUI sources that performs the item. `GUISources` checks that it is
+  /// declared and used outside its declaration.
+  let symbol: String
 
   var key: String {
     ([command.joined(separator: " ")] + (option.map { [$0] } ?? [])).joined(separator: " ")
@@ -77,9 +69,17 @@ enum GUICoverageEntries {
         reason: "scripting option of a stream a window shows continuously"
       )
     }
-    + ["--json", "--plain", "--quiet", "--no-color", "--no-input", "--timeout"].map {
+    + ["--json", "--plain", "--quiet", "--no-color", "--no-input"].map {
       CLIOnlyItem(command: nil, option: $0, reason: "output-only option")
     }
+    + [
+      CLIOnlyItem(
+        command: nil,
+        option: "--timeout",
+        reason:
+          "bounds how long a terminal command waits for the service; a window has no command to wait on"
+      )
+    ]
     + ["--force", "--dry-run"].map {
       CLIOnlyItem(
         command: nil,
@@ -252,7 +252,7 @@ enum GUICoverageEntries {
     GUICoverageEntry(
       command: path.split(separator: " ").map(String.init),
       option: nil,
-      disposition: .symbol(symbol)
+      symbol: symbol
     )
   }
 
@@ -266,22 +266,7 @@ enum GUICoverageEntries {
     GUICoverageEntry(
       command: path.split(separator: " ").map(String.init),
       option: option,
-      disposition: .symbol(symbol)
-    )
-  }
-
-  private static func pending(
-    _ path: String,
-    _ option: String,
-    _ task: String,
-    _ gap: String
-  )
-    -> GUICoverageEntry
-  {
-    GUICoverageEntry(
-      command: path.split(separator: " ").map(String.init),
-      option: option,
-      disposition: .pending(task: task, gap: gap)
+      symbol: symbol
     )
   }
 }
@@ -295,43 +280,159 @@ enum GUISources {
 
   static let directories = ["Sources/OpenJoystickDriverPresentation", "Sources/OpenJoystickDriver"]
 
-  /// Every GUI Swift file's text, joined.
+  struct ReadError: Error, CustomStringConvertible {
+    let description: String
+  }
+
+  /// Every GUI Swift file's code, joined, with comments and string literals removed. A missing
+  /// directory or an unreadable file stops the test run.
   static let text: String = {
+    do {
+      return try readCode()
+    } catch {
+      fatalError("GUI sources unreadable: \(error)")
+    }
+  }()
+
+  static func readCode() throws -> String {
     var parts: [String] = []
     for directory in directories {
       let url = root.appendingPathComponent(directory)
+      var isDirectory: ObjCBool = false
+      guard FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory),
+        isDirectory.boolValue
+      else { throw ReadError(description: "missing directory \(url.path)") }
+      var failure: Error?
       guard
         let files = FileManager.default.enumerator(
           at: url,
-          includingPropertiesForKeys: nil
+          includingPropertiesForKeys: nil,
+          errorHandler: { _, error in
+            failure = error
+            return false
+          }
         )
-      else { continue }
+      else { throw ReadError(description: "cannot enumerate \(url.path)") }
+      var found = 0
       for case let file as URL in files where file.pathExtension == "swift" {
-        if let contents = try? String(contentsOf: file, encoding: .utf8) { parts.append(contents) }
+        parts.append(strippingCommentsAndStrings(try String(contentsOf: file, encoding: .utf8)))
+        found += 1
       }
+      if let failure { throw failure }
+      if found == 0 { throw ReadError(description: "no Swift files in \(url.path)") }
     }
     return parts.joined(separator: "\n")
-  }()
+  }
 
-  /// Whether `symbol` is declared in the GUI sources and used somewhere else there.
+  /// Whether `symbol` is declared in the GUI sources and used outside its declarations.
   static func isDeclaredAndReferenced(_ symbol: String) -> Bool {
     let name = NSRegularExpression.escapedPattern(for: symbol)
     let declaration =
-      "\\b(func|case|var|let|struct|class|enum|actor|protocol)\\s+\(name)\\b"
-    return count(of: declaration) >= 1 && count(of: "\\b\(name)\\b") >= 2
+      "\\b(func|case|var|let|struct|class|enum|actor|protocol|typealias)\\s+\(name)\\b"
+    let declarations = count(of: declaration)
+    return declarations >= 1 && count(of: "\\b\(name)\\b") > declarations
   }
 
   private static func count(of pattern: String) -> Int {
-    guard let expression = try? NSRegularExpression(pattern: pattern) else { return 0 }
+    guard let expression = try? NSRegularExpression(pattern: pattern) else {
+      fatalError("invalid pattern \(pattern)")
+    }
     return expression.numberOfMatches(
       in: text,
       range: NSRange(text.startIndex..., in: text)
     )
   }
+
+  /// Swift source without line comments, nested block comments or string literal text. The code
+  /// inside string interpolations stays, because it runs.
+  static func strippingCommentsAndStrings(_ source: String) -> String {
+    let chars = Array(source)
+    var output = ""
+    var index = 0
+    /// One open string literal: its closing quote count and `#` count, and the paren depth of an
+    /// open interpolation (0 while in text).
+    struct Literal {
+      let quotes: Int
+      let hashes: Int
+      var depth = 0
+    }
+    var literals: [Literal] = []
+
+    func matches(_ text: String, at position: Int) -> Bool {
+      let target = Array(text)
+      return position + target.count <= chars.count
+        && Array(chars[position..<position + target.count]) == target
+    }
+
+    while index < chars.count {
+      if var literal = literals.last, literal.depth == 0 {
+        let hashes = String(repeating: "#", count: literal.hashes)
+        let close = String(repeating: "\"", count: literal.quotes) + hashes
+        if matches(close, at: index) {
+          literals.removeLast()
+          index += close.count
+        } else if matches("\\" + hashes + "(", at: index) {
+          literal.depth = 1
+          literals[literals.count - 1] = literal
+          index += 2 + literal.hashes
+        } else if chars[index] == "\\", literal.hashes == 0 {
+          index += 2
+        } else {
+          index += 1
+        }
+        continue
+      }
+      if matches("//", at: index) {
+        while index < chars.count, chars[index] != "\n" { index += 1 }
+      } else if matches("/*", at: index) {
+        var depth = 0
+        repeat {
+          if matches("/*", at: index) {
+            depth += 1
+            index += 2
+          } else if matches("*/", at: index) {
+            depth -= 1
+            index += 2
+          } else {
+            index += 1
+          }
+        } while depth > 0 && index < chars.count
+      } else if chars[index] == "#" || chars[index] == "\"" {
+        var hashes = 0
+        var position = index
+        while position < chars.count, chars[position] == "#" {
+          hashes += 1
+          position += 1
+        }
+        guard position < chars.count, chars[position] == "\"" else {
+          output.append(chars[index])
+          index += 1
+          continue
+        }
+        let quotes = matches("\"\"\"", at: position) ? 3 : 1
+        literals.append(Literal(quotes: quotes, hashes: hashes))
+        index = position + quotes
+      } else {
+        if var literal = literals.last {
+          if chars[index] == "(" { literal.depth += 1 }
+          if chars[index] == ")" { literal.depth -= 1 }
+          literals[literals.count - 1] = literal
+          if literal.depth == 0 {
+            index += 1
+            continue
+          }
+        }
+        output.append(chars[index])
+        index += 1
+      }
+    }
+    return output
+  }
 }
 
-/// The CLI surface read from the real command tree: leaves and the long names of their options and
-/// flags, positional operands excluded.
+/// The CLI surface read from the real command tree: leaves and their options and flags, hidden ones
+/// included, named by the long name or, where there is none, the short one. Positional operands are
+/// excluded.
 struct CLISurfaceItem: Hashable {
   let command: [String]
   let option: String?
@@ -341,7 +442,19 @@ struct CLISurfaceItem: Hashable {
   }
 }
 
-enum SurfaceError: Error { case noRoot }
+enum SurfaceError: Error, CustomStringConvertible {
+  case noRoot
+  case unnamedCommand(path: [String])
+  case unnamedOption(command: [String])
+
+  var description: String {
+    switch self {
+    case .noRoot: "the help dump has no root command"
+    case .unnamedCommand(let path): "a subcommand of \(path) has no name"
+    case .unnamedOption(let command): "an option of \(command) has neither a long nor a short name"
+    }
+  }
+}
 
 enum CLISurface {
   static func items() throws -> [CLISurfaceItem] {
@@ -349,7 +462,7 @@ enum CLISurface {
     let document = try JSONSerialization.jsonObject(with: data) as? [String: Any]
     guard let root = document?["command"] as? [String: Any] else { throw SurfaceError.noRoot }
     var items: [CLISurfaceItem] = []
-    collect(root, path: [], into: &items)
+    try collect(root, path: [], into: &items)
     return items
   }
 
@@ -357,19 +470,28 @@ enum CLISurface {
     _ command: [String: Any],
     path: [String],
     into items: inout [CLISurfaceItem]
-  ) {
+  ) throws {
     let subcommands = command["subcommands"] as? [[String: Any]] ?? []
     if subcommands.isEmpty { items.append(CLISurfaceItem(command: path, option: nil)) }
     for argument in command["arguments"] as? [[String: Any]] ?? [] {
-      guard argument["kind"] as? String != "positional",
-        argument["shouldDisplay"] as? Bool ?? true,
-        let names = argument["names"] as? [[String: Any]],
-        let long = names.first(where: { $0["kind"] as? String == "long" })?["name"] as? String
-      else { continue }
-      items.append(CLISurfaceItem(command: path, option: "--\(long)"))
+      if argument["kind"] as? String == "positional" { continue }
+      let names = argument["names"] as? [[String: Any]] ?? []
+      func name(_ kind: String) -> String? {
+        names.first { $0["kind"] as? String == kind }?["name"] as? String
+      }
+      if let long = name("long") {
+        items.append(CLISurfaceItem(command: path, option: "--\(long)"))
+      } else if let short = name("short") {
+        items.append(CLISurfaceItem(command: path, option: "-\(short)"))
+      } else {
+        throw SurfaceError.unnamedOption(command: path)
+      }
     }
     for subcommand in subcommands {
-      collect(subcommand, path: path + [subcommand["commandName"] as? String ?? ""], into: &items)
+      guard let name = subcommand["commandName"] as? String else {
+        throw SurfaceError.unnamedCommand(path: path)
+      }
+      try collect(subcommand, path: path + [name], into: &items)
     }
   }
 }

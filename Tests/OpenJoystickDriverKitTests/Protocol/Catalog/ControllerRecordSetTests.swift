@@ -289,6 +289,25 @@ struct ControllerRecordSetTests {
     )
   }
 
+  @Test
+  func aUserPatchWithTheSupportedAPIVersionLoadsWithoutProblems() throws {
+    let directory = MacOSDataDirectory().url(for: .temporary).appendingPathComponent(
+      "ojd-supported-patch-\(UUID().uuidString)",
+      isDirectory: true
+    )
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: directory) }
+    let document =
+      #"{"apiVersion":"\#(OpenJoystickDriverAPI.version)","kind":"ControllerPatch","#
+      + #""selector":{"vendorID":13932,"productID":5},"patch":{}}"#
+    try Data(document.utf8).write(to: directory.appendingPathComponent("366c-0005.patch.json"))
+
+    let set = ControllerRecordSet.load(userDirectory: directory)
+
+    #expect(set.problems.isEmpty)
+    #expect(set.userFiles.map(\.url.lastPathComponent) == ["366c-0005.patch.json"])
+  }
+
   @Test(arguments: [
     #"{"kind":"ControllerPatch","selector":{"vendorID":13932,"productID":5},"patch":{}}"#,
     #"{"apiVersion":"unsupported.example/v9","kind":"ControllerPatch","#

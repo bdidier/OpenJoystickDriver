@@ -10,6 +10,13 @@ struct MenuBarSummaryTests {
     let menuBar = MenuBarViewModel(runtime: runtime)
 
     #expect(menuBar.summarySemanticState == .loading)
-    #expect(menuBar.summaryTitle.split(separator: "·").count == 3)
+    let title = menuBar.summaryTitle
+    for part in [
+      OJDLocalized.string("status.starting"),
+      RuntimePresentation.deviceCountLabel(0),
+      OJDLocalized.string("status.noActiveProfile"),
+    ] {
+      #expect(title.contains(part), "the summary \(title) lacks \(part)")
+    }
   }
 }
