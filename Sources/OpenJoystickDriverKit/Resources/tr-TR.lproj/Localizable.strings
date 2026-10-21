@@ -2067,6 +2067,6 @@
 /* Abstract of the ojd setting test-notification command, in the command help. */
 "cli.setting.testNotification.abstract" = "Uygulamada bir test bildirimi gösterir.";
 /* Discussion of the ojd setting test-notification command, in the command help. */
-"cli.setting.testNotification.discussion" = "Servisten, açık OpenJoystickDriver uygulamasına bir test bildirimi duyurmasını ister ve uygulamanın bildirimi göstermesini bekler. Bildirimler reddedilmişse, teslim başarısız olursa veya hiçbir uygulama zamanında yanıt vermezse adlandırılmış bir hatayla başarısız olur. --timeout burada varsayılan olarak 38 saniyedir.";
+"cli.setting.testNotification.discussion" = "Servisten, açık OpenJoystickDriver uygulamasına bir test bildirimi duyurmasını ister ve uygulamanın bildirimi göstermesini bekler. Bildirimler reddedilmişse, teslim başarısız olursa veya hiçbir uygulama zamanında yanıt vermezse adlandırılmış bir hatayla başarısız olur. --timeout burada varsayılan olarak %@ saniyedir.";
 /* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
 "cli.setting.testNotification.success" = "Uygulama test bildirimini gösterdi.";

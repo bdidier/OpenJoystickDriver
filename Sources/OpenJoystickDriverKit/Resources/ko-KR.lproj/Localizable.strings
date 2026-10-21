@@ -2067,6 +2067,6 @@
 /* Abstract of the ojd setting test-notification command, in the command help. */
 "cli.setting.testNotification.abstract" = "앱에 테스트 알림을 표시합니다.";
 /* Discussion of the ojd setting test-notification command, in the command help. */
-"cli.setting.testNotification.discussion" = "서비스에 열려 있는 OpenJoystickDriver 앱으로 테스트 알림을 알리도록 요청하고 앱이 알림을 표시할 때까지 기다립니다. 알림이 거부되었거나 전달에 실패했거나 제때 응답하는 앱이 없으면 이름이 있는 오류로 실패합니다. 여기서 --timeout의 기본값은 38초입니다.";
+"cli.setting.testNotification.discussion" = "서비스에 열려 있는 OpenJoystickDriver 앱으로 테스트 알림을 알리도록 요청하고 앱이 알림을 표시할 때까지 기다립니다. 알림이 거부되었거나 전달에 실패했거나 제때 응답하는 앱이 없으면 이름이 있는 오류로 실패합니다. 여기서 --timeout의 기본값은 %@초입니다.";
 /* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
 "cli.setting.testNotification.success" = "앱이 테스트 알림을 표시했습니다.";

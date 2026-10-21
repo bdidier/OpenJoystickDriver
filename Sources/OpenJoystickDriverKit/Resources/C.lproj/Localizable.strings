@@ -2068,6 +2068,6 @@
 /* Abstract of the ojd setting test-notification command, in the command help. */
 "cli.setting.testNotification.abstract" = "Show a test notification in the app.";
 /* Discussion of the ojd setting test-notification command, in the command help. */
-"cli.setting.testNotification.discussion" = "Asks the service to announce a test notification to the open OpenJoystickDriver app and waits for the app to show it. Fails with a named error when notifications are denied, the delivery fails or no app answers in time. --timeout defaults to 38 seconds here.";
+"cli.setting.testNotification.discussion" = "Asks the service to announce a test notification to the open OpenJoystickDriver app and waits for the app to show it. Fails with a named error when notifications are denied, the delivery fails or no app answers in time. Default --timeout here, in seconds: %@.";
 /* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
 "cli.setting.testNotification.success" = "The app showed the test notification.";

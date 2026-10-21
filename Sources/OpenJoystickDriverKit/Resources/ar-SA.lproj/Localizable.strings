@@ -2067,6 +2067,6 @@
 /* Abstract of the ojd setting test-notification command, in the command help. */
 "cli.setting.testNotification.abstract" = "اعرض إشعارًا تجريبيًا في التطبيق.";
 /* Discussion of the ojd setting test-notification command, in the command help. */
-"cli.setting.testNotification.discussion" = "تطلب من الخدمة إعلان إشعار تجريبي إلى تطبيق OpenJoystickDriver المفتوح وتنتظر أن يعرضه التطبيق. تفشل بخطأ مسمى عند رفض الإشعارات أو فشل التسليم أو عدم رد أي تطبيق في الوقت المناسب. القيمة الافتراضية لـ --timeout هنا هي 38 ثانية.";
+"cli.setting.testNotification.discussion" = "تطلب من الخدمة إعلان إشعار تجريبي إلى تطبيق OpenJoystickDriver المفتوح وتنتظر أن يعرضه التطبيق. تفشل بخطأ مسمى عند رفض الإشعارات أو فشل التسليم أو عدم رد أي تطبيق في الوقت المناسب. القيمة الافتراضية لـ --timeout هنا، بالثواني: %@.";
 /* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
 "cli.setting.testNotification.success" = "عرض التطبيق الإشعار التجريبي.";

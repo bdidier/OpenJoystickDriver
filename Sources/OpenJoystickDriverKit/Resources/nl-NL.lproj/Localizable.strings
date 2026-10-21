@@ -2068,6 +2068,6 @@
 /* Abstract of the ojd setting test-notification command, in the command help. */
 "cli.setting.testNotification.abstract" = "Toont een testmelding in de app.";
 /* Discussion of the ojd setting test-notification command, in the command help. */
-"cli.setting.testNotification.discussion" = "Vraagt de service om een testmelding door te geven aan de geopende OpenJoystickDriver-app en wacht tot de app de melding toont. Mislukt met een benoemde fout als meldingen zijn geweigerd, de aflevering mislukt of geen enkele app op tijd antwoordt. --timeout staat hier standaard op 38 seconden.";
+"cli.setting.testNotification.discussion" = "Vraagt de service om een testmelding door te geven aan de geopende OpenJoystickDriver-app en wacht tot de app de melding toont. Mislukt met een benoemde fout als meldingen zijn geweigerd, de aflevering mislukt of geen enkele app op tijd antwoordt. Standaardwaarde van --timeout hier, in seconden: %@.";
 /* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
 "cli.setting.testNotification.success" = "De app heeft de testmelding getoond.";

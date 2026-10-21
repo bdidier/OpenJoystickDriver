@@ -300,7 +300,10 @@ struct SettingTestNotificationCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "test-notification",
     abstract: CLILocalized.text("cli.setting.testNotification.abstract"),
-    discussion: CLILocalized.text("cli.setting.testNotification.discussion")
+    discussion: CLILocalized.format(
+      "cli.setting.testNotification.discussion",
+      String(format: "%g", ServiceTimeouts.testNotification)
+    )
   )
 
   /// The `--json` result.

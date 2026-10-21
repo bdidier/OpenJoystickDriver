@@ -2067,6 +2067,6 @@
 /* Abstract of the ojd setting test-notification command, in the command help. */
 "cli.setting.testNotification.abstract" = "Hiển thị một thông báo thử trong ứng dụng.";
 /* Discussion of the ojd setting test-notification command, in the command help. */
-"cli.setting.testNotification.discussion" = "Yêu cầu dịch vụ báo một thông báo thử tới ứng dụng OpenJoystickDriver đang mở và chờ ứng dụng hiển thị. Lệnh thất bại với một lỗi có tên khi thông báo bị từ chối, việc gửi thất bại hoặc không có ứng dụng nào trả lời kịp lúc. Ở đây --timeout mặc định là 38 giây.";
+"cli.setting.testNotification.discussion" = "Yêu cầu dịch vụ báo một thông báo thử tới ứng dụng OpenJoystickDriver đang mở và chờ ứng dụng hiển thị. Lệnh thất bại với một lỗi có tên khi thông báo bị từ chối, việc gửi thất bại hoặc không có ứng dụng nào trả lời kịp lúc. Ở đây --timeout mặc định là %@ giây.";
 /* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
 "cli.setting.testNotification.success" = "Ứng dụng đã hiển thị thông báo thử.";

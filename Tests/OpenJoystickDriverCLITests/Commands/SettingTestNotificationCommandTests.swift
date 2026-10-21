@@ -60,6 +60,44 @@ struct SettingTestNotificationCommandTests {
     )
   }
 
+  /// The seconds as the help and the wiki write them.
+  private static func seconds(_ value: Double) -> String { String(format: "%g", value) }
+
+  @Test
+  func theHelpNamesTheDefaultDeadlineFromServiceTimeouts() {
+    let discussion = SettingTestNotificationCommand.configuration.discussion
+
+    #expect(discussion.contains(Self.seconds(ServiceTimeouts.testNotification)))
+    #expect(!discussion.contains("%@"))
+  }
+
+  @Test
+  func theWikiNamesTheDeadlinesFromServiceTimeouts() throws {
+    let repository = URL(fileURLWithPath: #filePath)
+      .deletingLastPathComponent().deletingLastPathComponent()
+      .deletingLastPathComponent().deletingLastPathComponent()
+    let page = try String(
+      contentsOf: repository.appendingPathComponent("wiki/Command-Reference.md"),
+      encoding: .utf8
+    )
+    let pickup = Self.seconds(TestNotificationDeadlines.pickupSeconds)
+    let answer = Self.seconds(TestNotificationDeadlines.answerSeconds)
+    let reply = Self.seconds(
+      ServiceTimeouts.testNotification - TestNotificationDeadlines.pickupSeconds
+        - TestNotificationDeadlines.answerSeconds
+    )
+    let total = Self.seconds(ServiceTimeouts.testNotification)
+
+    #expect(page.contains("no app taking it within \(pickup) seconds"))
+    #expect(page.contains("not reporting within \(answer) seconds"))
+    #expect(
+      page.contains(
+        "waits up to \(total) seconds for the service's answer, the \(pickup) and the \(answer) "
+          + "plus \(reply) for the reply"
+      )
+    )
+  }
+
   @Test
   func aShownNotificationSucceedsInEachFormat() async throws {
     let socketPath = temporarySocketPath()

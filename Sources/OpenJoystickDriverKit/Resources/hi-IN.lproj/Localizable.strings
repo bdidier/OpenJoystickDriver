@@ -2067,6 +2067,6 @@
 /* Abstract of the ojd setting test-notification command, in the command help. */
 "cli.setting.testNotification.abstract" = "ऐप में एक परीक्षण सूचना दिखाएँ।";
 /* Discussion of the ojd setting test-notification command, in the command help. */
-"cli.setting.testNotification.discussion" = "सेवा से कहता है कि वह खुले OpenJoystickDriver ऐप को परीक्षण सूचना की घोषणा करे और ऐप के उसे दिखाने की प्रतीक्षा करता है। सूचनाएँ अस्वीकृत होने, डिलीवरी विफल होने या किसी ऐप के समय पर उत्तर न देने पर नामित त्रुटि के साथ विफल होता है। यहाँ --timeout का डिफ़ॉल्ट 38 सेकंड है।";
+"cli.setting.testNotification.discussion" = "सेवा से कहता है कि वह खुले OpenJoystickDriver ऐप को परीक्षण सूचना की घोषणा करे और ऐप के उसे दिखाने की प्रतीक्षा करता है। सूचनाएँ अस्वीकृत होने, डिलीवरी विफल होने या किसी ऐप के समय पर उत्तर न देने पर नामित त्रुटि के साथ विफल होता है। यहाँ --timeout का डिफ़ॉल्ट %@ सेकंड है।";
 /* Printed by ojd setting test-notification after the app reported that it showed the test notification. */
 "cli.setting.testNotification.success" = "ऐप ने परीक्षण सूचना दिखाई।";
