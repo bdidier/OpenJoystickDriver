@@ -143,7 +143,7 @@ struct UpdateCheckerTests {
     let reference = Task { try await session.data(from: stalledURL) }
     _ = await started.next()
     reference.cancel()
-    let cancelledDescription = await reference.result.failureDescription
+    let cancelledDescription = failureDescription(of: await reference.result)
 
     let checker = try Self.checker(path: "/stalled")
     let check = Task { await checker.check(currentVersion: "1.0.0") }
@@ -175,11 +175,9 @@ struct UpdateCheckerTests {
   }
 }
 
-extension Result {
-  fileprivate var failureDescription: String? {
-    if case .failure(let error) = self { return error.localizedDescription }
-    return nil
-  }
+private func failureDescription<Success>(of result: Result<Success, any Error>) -> String? {
+  if case .failure(let error) = result { return error.localizedDescription }
+  return nil
 }
 
 private final class UpdateURLProtocolStub: URLProtocol, @unchecked Sendable {
