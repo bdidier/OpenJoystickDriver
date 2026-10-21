@@ -6,10 +6,14 @@ import Testing
 struct CommandLineValueSpellingTests {
   @Test
   func permissionIDsAreUpperCamelCaseInJSONAndKebabCaseOnTheCommandLine() {
-    #expect(PermissionID.allCases.map(\.rawValue) == ["InputRead", "InputInject", "USBTransport"])
+    #expect(
+      PermissionID.allCases.map(\.rawValue) == [
+        "InputRead", "InputInject", "USBTransport", "PostEvent",
+      ]
+    )
     #expect(
       PermissionID.allCases.map(\.commandLineName) == [
-        "input-read", "input-inject", "usb-transport",
+        "input-read", "input-inject", "usb-transport", "post-event",
       ]
     )
     #expect(CommandLineName.collisions(in: PermissionID.self).isEmpty)
