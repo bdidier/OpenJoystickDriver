@@ -19,6 +19,7 @@ ObjC.import("CoreGraphics");
 ObjC.bindFunction("AXUIElementCreateApplication", ["id", ["int"]]);
 ObjC.bindFunction("AXUIElementCopyAttributeValue", ["int", ["id", "id", "id *"]]);
 ObjC.bindFunction("AXUIElementSetAttributeValue", ["int", ["id", "id", "id"]]);
+ObjC.bindFunction("AXUIElementSetMessagingTimeout", ["int", ["id", "float"]]);
 ObjC.bindFunction("AXUIElementPerformAction", ["int", ["id", "id"]]);
 
 const AX_NOT_TRUSTED = -25211;
@@ -28,11 +29,39 @@ const SETTINGS_TABS = ["General", "Notifications", "Advanced"];
 const POLL_STEPS = 50;
 const POLL_SECONDS = 0.1;
 const SETTLE_SECONDS = 0.5;
+// AXError codes that mean the element holds no such attribute.
+const AX_ATTRIBUTE_ABSENT = [-25205, -25212];
+// AXError codes that mean the state is not settled yet: -25204 the app is busy, -25202 a
+// window was torn down between two reads. Waits treat them as "not yet".
+const AX_TRANSIENT = [-25204, -25202];
+// An app that does not answer blocks an AX call for the default timeout of about 6 s,
+// which would overrun the readiness deadline of capture.py; the probe gives up sooner.
+const PROBE_MESSAGING_TIMEOUT_SECONDS = 1;
 
-function read(element, name) {
+function readCode(element, name) {
 	const out = Ref();
 	const code = $.AXUIElementCopyAttributeValue(element, name, out);
 	return { code, value: code === 0 ? out[0] : null };
+}
+
+// "ok" for 0, "absent" for a missing attribute, "transient" for a state that can settle,
+// "error" for everything else.
+function classifyAxCode(code) {
+	if (code === 0) return "ok";
+	if (AX_ATTRIBUTE_ABSENT.includes(code)) return "absent";
+	if (AX_TRANSIENT.includes(code)) return "transient";
+	return "error";
+}
+
+function read(element, name) {
+	const result = readCode(element, name);
+	const kind = classifyAxCode(result.code);
+	if (kind === "error" || kind === "transient") {
+		const error = new Error("reading " + name + " failed with AXError " + result.code);
+		error.axCode = result.code;
+		throw error;
+	}
+	return result;
 }
 
 function attribute(element, name) {
@@ -112,13 +141,24 @@ function pair(element, name, first, second) {
 	return [Math.round(Number(found[1])), Math.round(Number(found[2]))];
 }
 
-function waitFor(condition) {
+// Polls for the condition. A transient AXError counts as "not yet" because the app
+// settles after a launch or a click; it is kept and named when the steps run out.
+// Any other error ends the wait at once.
+function waitFor(condition, what) {
+	let last = null;
 	for (let step = 0; step < POLL_STEPS; step++) {
-		const result = condition();
-		if (result) return result;
+		try {
+			const result = condition();
+			if (result) return result;
+		} catch (error) {
+			if (error.axCode === undefined || classifyAxCode(error.axCode) !== "transient") throw error;
+			last = error.axCode;
+		}
 		delay(POLL_SECONDS);
 	}
-	return null;
+	throw new Error(
+		what + " within " + POLL_STEPS * POLL_SECONDS + " s" + (last === null ? "" : " (last AXError " + last + ")"),
+	);
 }
 
 function run(argv) {
@@ -134,7 +174,10 @@ function run(argv) {
 	const pid = Number(pidText);
 	if (command === "probe") {
 		if (!$.AXIsProcessTrusted()) return String(AX_NOT_TRUSTED);
-		return String(read($.AXUIElementCreateApplication(pid), "AXRole").code);
+		const probed = $.AXUIElementCreateApplication(pid);
+		const timeout = $.AXUIElementSetMessagingTimeout(probed, PROBE_MESSAGING_TIMEOUT_SECONDS);
+		if (timeout !== 0) throw new Error("setting the probe timeout failed with AXError " + timeout);
+		return String(readCode(probed, "AXRole").code);
 	}
 	const app = $.AXUIElementCreateApplication(pid);
 	switch (command) {
@@ -157,14 +200,12 @@ function run(argv) {
 			if (!row) throw new Error("no sidebar item named " + argument);
 			const code = $.AXUIElementSetAttributeValue(row, "AXSelected", AX_TRUE);
 			if (code !== 0) throw new Error("selecting " + argument + " failed with AXError " + code);
-			if (!waitFor(() => attribute(row, "AXSelected") === true)) {
-				throw new Error("sidebar item " + argument + " did not become selected");
-			}
+			waitFor(() => attribute(row, "AXSelected") === true, "sidebar item " + argument + " did not become selected");
 			delay(SETTLE_SECONDS);
 			return "";
 		}
 		case "wait-main-window":
-			if (!waitFor(() => windows(app).some(isMain))) throw new Error("main window did not appear");
+			waitFor(() => windows(app).some(isMain), "main window did not appear");
 			return "";
 		case "open-settings": {
 			const front = $.AXUIElementSetAttributeValue(app, "AXFrontmost", AX_TRUE);
@@ -175,8 +216,8 @@ function run(argv) {
 			const entry = menu && children(menu, "AXMenuItem").find((item) => label(item) === "Settings...");
 			if (!entry) throw new Error("the app menu has no Settings... item");
 			press(entry);
-			const window = waitFor(() => windows(app).find(isSettings));
-			const tab = window && children(children(window, "AXToolbar")[0], "AXButton").find((button) => label(button) === argument);
+			const window = waitFor(() => windows(app).find(isSettings), "Settings window did not appear");
+			const tab = children(children(window, "AXToolbar")[0], "AXButton").find((button) => label(button) === argument);
 			if (!tab) throw new Error("no Settings window with a tab named " + argument);
 			press(tab);
 			delay(SETTLE_SECONDS);

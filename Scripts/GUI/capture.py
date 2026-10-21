@@ -4,9 +4,12 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
 import subprocess
 import sys
+import time
+from collections.abc import Callable
 from datetime import datetime
 from pathlib import Path
 
@@ -20,6 +23,12 @@ SETTINGS_PANES = ("General", "Notifications", "Advanced")
 BOUNDS_TOLERANCE = 2.0
 ACCESSIBILITY_GRANTED = "0"
 ACCESSIBILITY_NOT_TRUSTED = "-25211"
+ACCESSIBILITY_CANNOT_COMPLETE = "-25204"
+# AXError -25204 is the app not answering Accessibility requests yet. No signal reports
+# that the app answers: finished launching does not imply it, and an AXObserver needs an
+# element that answers. Readiness is therefore polled, bounded by this deadline.
+APP_READY_TIMEOUT_SECONDS = 15.0
+APP_READY_POLL_SECONDS = 0.25
 
 
 class CaptureError(Exception):
@@ -39,7 +48,22 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     choice.add_argument(
         "--all", action="store_true", help="every sidebar area and settings pane"
     )
-    return parser.parse_args(argv)
+    parser.add_argument(
+        "--ready-timeout",
+        type=float,
+        default=APP_READY_TIMEOUT_SECONDS,
+        metavar="SECONDS",
+        help=(
+            "longest wait for the app to answer Accessibility requests "
+            f"(default {APP_READY_TIMEOUT_SECONDS:g})"
+        ),
+    )
+    args = parser.parse_args(argv)
+    if not math.isfinite(args.ready_timeout) or args.ready_timeout <= 0:
+        parser.error(
+            "--ready-timeout must be a finite number of seconds greater than zero"
+        )
+    return args
 
 
 def run(command: list[str]) -> str:
@@ -109,18 +133,38 @@ def not_trusted_message(code: str) -> str:
     )
 
 
-def require_accessibility(pid: int) -> None:
-    """Reads the app role through the Accessibility API and names each failure."""
-    code = ax("probe", pid)
-    if code == ACCESSIBILITY_GRANTED:
-        return
-    if code == ACCESSIBILITY_NOT_TRUSTED:
-        raise CaptureError(not_trusted_message(code))
-    raise CaptureError(
-        f"Accessibility call to {PROCESS} failed (AXError {code}) although the "
-        "host app is trusted: the app may not be responding, or the command is "
-        "not running in a logged-in GUI session"
-    )
+def require_accessibility(
+    pid: int,
+    timeout: float = APP_READY_TIMEOUT_SECONDS,
+    clock: Callable[[], float] = time.monotonic,
+    sleep: Callable[[float], None] = time.sleep,
+) -> None:
+    """Reads the app role through the Accessibility API and names each failure.
+
+    AXError -25204 means the app does not answer yet, so only that code is waited on,
+    until `timeout` seconds have passed on `clock`. Every other code fails at once.
+    """
+    deadline = clock() + timeout
+    while True:
+        code = ax("probe", pid)
+        if code == ACCESSIBILITY_GRANTED:
+            return
+        if code == ACCESSIBILITY_NOT_TRUSTED:
+            raise CaptureError(not_trusted_message(code))
+        if code != ACCESSIBILITY_CANNOT_COMPLETE:
+            raise CaptureError(
+                f"Accessibility call to {PROCESS} failed (AXError {code}) although "
+                "the host app is trusted: the app may not be responding, or the "
+                "command is not running in a logged-in GUI session"
+            )
+        if clock() >= deadline:
+            raise CaptureError(
+                f"{PROCESS} did not answer Accessibility requests within "
+                f"{timeout:g} s (last AXError {code}): wait for the app to "
+                "finish launching and run the capture again, or raise "
+                "--ready-timeout"
+            )
+        sleep(min(APP_READY_POLL_SECONDS, max(0.0, deadline - clock())))
 
 
 def window_id(pid: int, kind: str) -> int:
@@ -215,7 +259,7 @@ def restore(steps: list[tuple[str, tuple[str, ...]]]) -> list[str]:
 def capture(args: argparse.Namespace) -> int:
     pid = process_id()
     require_unlocked_console_session()
-    require_accessibility(pid)
+    require_accessibility(pid, args.ready_timeout)
     require_english_ui()
     areas = AREAS if args.all else (args.area,) if args.area else ()
     panes = (
