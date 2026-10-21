@@ -23,12 +23,13 @@
     MenuProfileMutating
   {
     let navigation: MainWindowNavigationModel
-    private let screens: MainWindowScreens
+    let screens: MainWindowScreens
     private let visibilityChanged: @MainActor (Bool) -> Void
     private let splitViewController = NSSplitViewController()
     private let listItem: NSSplitViewItem
     private var areaObservation: AnyCancellable?
     private var toolbarEnablementObservation: AnyCancellable?
+    private var activityModeObservation: AnyCancellable?
     private var summaryObservation: AnyCancellable?
     private var isEnforcingMinimumSize = false
 
@@ -41,14 +42,40 @@
       persistence: any MainWindowAreaPersistence = UserDefaultsMainWindowAreaPersistence()
     ) {
       self.visibilityChanged = visibilityChanged
-      navigation = MainWindowNavigationModel(persistence: persistence)
+      let navigation = MainWindowNavigationModel(persistence: persistence)
+      self.navigation = navigation
       screens = MainWindowScreens(
         runtime: runtime,
         supportReport: supportReport,
         controllers: ControllersViewModel(runtime: runtime),
         library: ProfileLibraryModel(runtime: runtime),
         profiles: ProfilesViewModel(),
-        console: ConsoleViewModel(),
+        activity: ActivityModel(
+          log: ActivityLogModel(),
+          diagnostics: ActivityDiagnosticsModel {
+            await ActivityDiagnosticsChecks.run(gateway: supportReport.gateway)
+          }
+        ) { fix in
+          switch fix {
+          case .requestInputRead:
+            PermissionAccessActions.requestControllerAccess(
+              viewModel: runtime,
+              requirement: .inputRead
+            )
+          case .requestInputInject:
+            PermissionAccessActions.requestControllerAccess(
+              viewModel: runtime,
+              requirement: .inputInject
+            )
+          case .approveDriver:
+            if !SystemExtensionApproval.openSystemSettings() {
+              return OJDLocalized.string("setup.openSystemSettingsFailed")
+            }
+          case .showLibrary: _ = navigation.requestArea(.library)
+          }
+          return nil
+        },
+        errorCodeExplainer: ErrorCodeExplainerModel(),
         libraryArea: LibraryViewModel(),
         access: AccessViewModel(),
         restartApplication: restartApplication,
@@ -116,13 +143,20 @@
         screens.libraryArea.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
         screens.profiles.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
         screens.access.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
+        screens.activity.log.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
+        screens.activity.diagnostics.objectWillChange.map { _ in () }.eraseToAnyPublisher(),
         navigation.objectWillChange.map { _ in () }.eraseToAnyPublisher()
       ).receive(on: DispatchQueue.main).sink { [weak self] in
         self?.window?.toolbar?.validateVisibleItems()
       }
-      summaryObservation = runtime.$statusState.sink { [weak self] status in
+      activityModeObservation = screens.activity.$mode.receive(on: DispatchQueue.main).sink {
+        [weak self] _ in
         guard let self else { return }
-        window.subtitle = MainWindowSummary.text(for: navigation.selectedArea, status: status)
+        showToolbarActions(of: navigation.selectedArea)
+        updateLogFollowing()
+      }
+      summaryObservation = runtime.$statusState.sink { [weak window] status in
+        window?.subtitle = MainWindowSummary.text(for: navigation.selectedArea, status: status)
       }
     }
 
@@ -143,6 +177,11 @@
       }
       screens.controllers.select(sessionToken: id)
       present()
+    }
+
+    func showErrorCodeExplainer() {
+      present()
+      screens.errorCodeExplainer.isPresented = true
     }
 
     var selectedControllerID: String? {
@@ -221,11 +260,13 @@
       visibilityChanged(true)
       window.makeKeyAndOrderFront(nil)
       NSApplication.shared.activate(ignoringOtherApps: true)
+      updateLogFollowing()
     }
 
     func windowShouldClose(_ sender: NSWindow) -> Bool {
       // Hiding keeps the selected area, the screens' state and the window geometry.
       sender.orderOut(nil)
+      updateLogFollowing()
       visibilityChanged(false)
       return false
     }
@@ -236,6 +277,10 @@
         minimumSize: MainWindowSizingPolicy.minimumFrameSize(for: sender)
       )
     }
+
+    func windowDidMiniaturize(_ notification: Notification) { updateLogFollowing() }
+
+    func windowDidDeminiaturize(_ notification: Notification) { updateLogFollowing() }
 
     func windowDidResize(_ notification: Notification) {
       guard !isEnforcingMinimumSize, let window = notification.object as? NSWindow else { return }
@@ -279,6 +324,7 @@
     private func reflect(area: MainWindowArea) {
       listItem.isCollapsed = !area.hasListColumn
       showToolbarActions(of: area)
+      updateLogFollowing()
       window?.title = area.title
       window?.subtitle = MainWindowSummary.text(for: area, status: screens.runtime.statusState)
     }
@@ -290,7 +336,8 @@
       guard let toolbar = window?.toolbar else { return }
       let fixedCount = MainWindowToolbarLayout.fixedItems.count
       while toolbar.items.count > fixedCount { toolbar.removeItem(at: toolbar.items.count - 1) }
-      for (offset, action) in area.toolbarActions.enumerated() {
+      let actions = area.toolbarActions(activityMode: screens.activity.mode)
+      for (offset, action) in actions.enumerated() {
         toolbar.insertItem(withItemIdentifier: action.identifier, at: fixedCount + offset)
       }
     }
@@ -328,6 +375,12 @@
         }
       case .removeLibraryItem: screens.libraryArea.requestRemoveSelection()
       case .searchLibrary: break
+      case .copyActivityLog: screens.activity.log.copyVisible()
+      case .saveActivityLog: saveActivityLog()
+      case .showActivityLogInFinder: showActivityLogInFinder()
+      case .runDiagnostics: Task { await screens.activity.diagnostics.run() }
+      case .activityMode, .activityFilter, .activitySearch:
+        preconditionFailure("\(action) has its own control action")
       }
     }
 
@@ -342,10 +395,14 @@
       case .newProfile, .importProfile, .validateProfileFile, .duplicateProfile, .exportProfile,
         .deleteProfile:
         return action.isEnabled(profile: profileToolbarState)
-      case .installLibraryItem, .validateLibraryItem, .searchLibrary: return true
+      case .installLibraryItem, .validateLibraryItem, .searchLibrary, .saveActivityLog,
+        .showActivityLogInFinder, .activityMode, .activityFilter, .activitySearch:
+        return true
       case .grantProgram, .createToken: return screens.access.status != nil && !screens.access.busy
       case .testLibraryRecord: return screens.libraryArea.canTestSelection
       case .removeLibraryItem: return screens.libraryArea.canRemoveSelection
+      case .copyActivityLog: return !screens.activity.log.rows.isEmpty
+      case .runDiagnostics: return !screens.activity.diagnostics.isRunning
       }
     }
 
@@ -381,7 +438,10 @@
     }
 
     func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-      MainWindowToolbarLayout.items(for: navigation.selectedArea)
+      MainWindowToolbarLayout.items(
+        for: navigation.selectedArea,
+        activityMode: screens.activity.mode
+      )
     }
 
     func toolbarSelectableItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
@@ -401,6 +461,7 @@
         )
       }
       guard let action = MainWindowToolbarAction(identifier: itemIdentifier) else { return nil }
+      if let item = makeActivityControlItem(for: action) { return item }
       let item = MainWindowToolbarLayout.makeItem(for: action)
       if let search = item as? NSSearchToolbarItem {
         search.searchField.stringValue = screens.libraryArea.searchText

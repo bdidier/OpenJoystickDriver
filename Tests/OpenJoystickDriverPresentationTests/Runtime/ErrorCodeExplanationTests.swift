@@ -7,10 +7,20 @@ struct ErrorCodeExplanationTests {
   @Test
   func aCodeMapsToTheExplanationOjdExplainPrints() throws {
     let code = try #require(ErrorCode(rawValue: "E3029"))
-    #expect(
-      ErrorCodeExplanation.lookup("E3029")
-        == .explained(code: "E3029", explanation: code.localizedExplanation)
-    )
+    #expect(ErrorCodeExplanation.lookup("E3029") == .explained(code.facts))
+    #expect(code.facts.explanation == code.localizedExplanation)
+  }
+
+  @Test
+  func factsCarryTheAreaExitStatusAndWireValueOjdExplainPrints() {
+    let cli = ErrorCode.serviceUnavailable.facts
+    #expect(cli.exitCode == 69)
+    #expect(cli.wire == nil)
+    let endpoint = ErrorCode.notGranted.facts
+    #expect(endpoint.exitCode == nil && endpoint.wire == nil)
+    let remapping = ErrorCode.remappingUnexpected.facts
+    #expect(remapping.exitCode == nil)
+    #expect(remapping.wire != nil)
   }
 
   @Test

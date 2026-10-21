@@ -25,7 +25,7 @@ struct LogExportCommand: AsyncParsableCommand {
       valueName: "count"
     )
   )
-  var lines = 2000
+  var lines = ApplicationServiceLogService.defaultExportLines
 
   @Flag(
     name: [.short, .long],
@@ -76,8 +76,8 @@ struct LogExportCommand: AsyncParsableCommand {
           )
         )
       }
-      let text = ApplicationServiceLogService.redactingHome(
-        LogShowCommand.humanText(snapshots),
+      let text = ApplicationServiceLogService.exportText(
+        snapshots,
         home: MacOSDataDirectory().url(for: .home).path
       )
       do {

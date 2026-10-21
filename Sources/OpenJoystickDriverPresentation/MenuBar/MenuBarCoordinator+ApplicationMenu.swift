@@ -144,7 +144,7 @@
         }
         deactivateProfiles(of: device)
       case .showActivityLog: mainWindow?.showMainWindow(area: .activity)
-      case .explainErrorCode: mainWindow?.showMainWindow(area: .activity)
+      case .explainErrorCode: mainWindow?.showErrorCodeExplainer()
       case .copySupportReport: copySupportReportWithFeedback()
       case .reportProblem: open(urlString: StatusItemModel.problemReport)
       case .openProjectWebsite: openProjectPage(nil)

@@ -59,6 +59,8 @@ enum MainWindowColumn {
 @MainActor
 public protocol MainWindowPresenting: AnyObject {
   func showMainWindow(area: MainWindowArea?)
+  /// Shows the Explain Error Code sheet over the main window, in the area it is in.
+  func showErrorCodeExplainer()
   /// Opens Controllers with the controller selected, for "Show in Window".
   func showController(id: String)
   /// The session token of the controller selected in the Controllers area, if one is connected.

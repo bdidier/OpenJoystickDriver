@@ -112,7 +112,7 @@ struct LogShowCommand: AsyncParsableCommand {
         return
       }
       if format == .human, environment.isTerminal(), let pager = Self.pagerCommand() {
-        try environment.page(pager, Self.humanText(snapshots))
+        try environment.page(pager, ApplicationServiceLogService.humanText(snapshots))
         return
       }
       try Self.printSnapshots(snapshots, format: format, jsonLines: false)
@@ -150,25 +150,8 @@ struct LogShowCommand: AsyncParsableCommand {
           snapshot.lines.map { [CommandLineName.kebab(snapshot.stream.rawValue), $0] }
         }
       )
-    case .human: CLIOutput.stdout(humanText(snapshots), terminator: "")
+    case .human: CLIOutput.stdout(ApplicationServiceLogService.humanText(snapshots), terminator: "")
     }
-  }
-
-  static func humanText(_ snapshots: [ApplicationServiceLogSnapshot]) -> String {
-    var text = ""
-    for snapshot in snapshots {
-      text += "== \(CommandLineName.kebab(snapshot.stream.rawValue)): \(snapshot.path) ==\n"
-      if !snapshot.exists {
-        text += CLILocalized.text("cli.log.show.missing") + "\n"
-      } else if snapshot.lines.isEmpty {
-        text += CLILocalized.text("cli.log.show.empty") + "\n"
-      }
-      if snapshot.truncated {
-        text += CLILocalized.text("cli.log.show.truncated") + "\n"
-      }
-      for line in snapshot.lines { text += line + "\n" }
-    }
-    return text
   }
 
   private static func stream(

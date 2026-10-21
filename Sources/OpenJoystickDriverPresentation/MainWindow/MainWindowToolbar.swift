@@ -19,6 +19,13 @@
     case testLibraryRecord
     case removeLibraryItem
     case searchLibrary
+    case activityMode
+    case activityFilter
+    case activitySearch
+    case copyActivityLog
+    case saveActivityLog
+    case showActivityLogInFinder
+    case runDiagnostics
 
     var identifier: NSToolbarItem.Identifier {
       NSToolbarItem.Identifier("OpenJoystickDriver.MainWindowToolbar.\(rawValue)")
@@ -47,6 +54,13 @@
       case .testLibraryRecord: return "play.circle"
       case .removeLibraryItem: return "trash"
       case .searchLibrary: return "magnifyingglass"
+      case .activityMode: return "list.bullet.rectangle"
+      case .activityFilter: return "line.3.horizontal.decrease.circle"
+      case .activitySearch: return "magnifyingglass"
+      case .copyActivityLog: return "doc.on.doc"
+      case .saveActivityLog: return "square.and.arrow.down"
+      case .showActivityLogInFinder: return "folder"
+      case .runDiagnostics: return "stethoscope"
       }
     }
 
@@ -67,6 +81,13 @@
       case .testLibraryRecord: return "library.testRecord"
       case .removeLibraryItem: return "library.remove"
       case .searchLibrary: return "library.search"
+      case .activityMode: return "area.activity.title"
+      case .activityFilter: return "activity.filter"
+      case .activitySearch: return "activity.search"
+      case .copyActivityLog: return "common.copyAll"
+      case .saveActivityLog: return "mainMenu.file.saveActivityLog"
+      case .showActivityLogInFinder: return "activity.showInFinder"
+      case .runDiagnostics: return "activity.runChecks"
       }
     }
 
@@ -87,6 +108,13 @@
       case .testLibraryRecord: return "library.testRecord"
       case .removeLibraryItem: return "library.remove"
       case .searchLibrary: return "library.search"
+      case .activityMode: return "area.activity.title"
+      case .activityFilter: return "activity.filter"
+      case .activitySearch: return "activity.search"
+      case .copyActivityLog: return "common.copyAll"
+      case .saveActivityLog: return "mainMenu.file.saveActivityLog"
+      case .showActivityLogInFinder: return "activity.showInFinder"
+      case .runDiagnostics: return "activity.runChecks"
       }
     }
   }
@@ -118,13 +146,16 @@
       case .refreshControllers, .installLibraryItem, .grantProgram, .createToken,
         .validateLibraryItem, .testLibraryRecord, .removeLibraryItem, .searchLibrary:
         return true
+      case .activityMode, .activityFilter, .activitySearch, .copyActivityLog, .saveActivityLog,
+        .showActivityLogInFinder, .runDiagnostics:
+        return true
       }
     }
   }
 
   extension MainWindowArea {
-    /// The toolbar actions of the area, in order. Activity keeps its actions in its content.
-    var toolbarActions: [MainWindowToolbarAction] {
+    /// The toolbar actions of the area, in order. Activity's depend on which of its views is shown.
+    func toolbarActions(activityMode: ActivityMode) -> [MainWindowToolbarAction] {
       switch self {
       case .controllers: return [.refreshControllers]
       case .profiles:
@@ -138,7 +169,15 @@
           .searchLibrary,
         ]
       case .access: return [.grantProgram, .createToken]
-      case .activity: return []
+      case .activity:
+        switch activityMode {
+        case .log:
+          return [
+            .activityMode, .activityFilter, .activitySearch, .copyActivityLog,
+            .saveActivityLog, .showActivityLogInFinder,
+          ]
+        case .diagnostics: return [.activityMode, .runDiagnostics]
+        }
       }
     }
   }
@@ -153,8 +192,11 @@
       .toggleSidebar, .sidebarTrackingSeparator, .flexibleSpace,
     ]
 
-    static func items(for area: MainWindowArea) -> [NSToolbarItem.Identifier] {
-      fixedItems + area.toolbarActions.map(\.identifier)
+    static func items(
+      for area: MainWindowArea,
+      activityMode: ActivityMode
+    ) -> [NSToolbarItem.Identifier] {
+      fixedItems + area.toolbarActions(activityMode: activityMode).map(\.identifier)
     }
 
     static var allowedItems: [NSToolbarItem.Identifier] {

@@ -52,29 +52,30 @@ struct MainWindowAreaTests {
     )
     for area in MainWindowArea.allCases {
       #expect(
-        MainWindowToolbarLayout.items(for: area).starts(with: MainWindowToolbarLayout.fixedItems)
+        MainWindowToolbarLayout.items(for: area, activityMode: .log).starts(
+          with: MainWindowToolbarLayout.fixedItems
+        )
       )
     }
   }
 
   @Test
   func eachAreaShowsItsOwnActionsAfterTheFixedItems() {
-    #expect(MainWindowArea.controllers.toolbarActions == [.refreshControllers])
+    #expect(MainWindowArea.controllers.toolbarActions(activityMode: .log) == [.refreshControllers])
     let profileActions: [MainWindowToolbarAction] = [
       .newProfile, .importProfile, .validateProfileFile, .duplicateProfile, .exportProfile,
       .deleteProfile,
     ]
-    #expect(MainWindowArea.profiles.toolbarActions == profileActions)
+    #expect(MainWindowArea.profiles.toolbarActions(activityMode: .log) == profileActions)
     #expect(
-      MainWindowArea.library.toolbarActions == [
+      MainWindowArea.library.toolbarActions(activityMode: .log) == [
         .installLibraryItem, .validateLibraryItem, .testLibraryRecord, .removeLibraryItem,
         .searchLibrary,
       ]
     )
-    #expect(MainWindowArea.access.toolbarActions == [.grantProgram, .createToken])
-    #expect(MainWindowArea.activity.toolbarActions.isEmpty)
+    #expect(MainWindowArea.access.toolbarActions(activityMode: .log) == [.grantProgram, .createToken])
     #expect(
-      MainWindowToolbarLayout.items(for: .profiles)
+      MainWindowToolbarLayout.items(for: .profiles, activityMode: .log)
         == MainWindowToolbarLayout.fixedItems + profileActions.map(\.identifier)
     )
   }
@@ -109,6 +110,28 @@ struct MainWindowAreaTests {
     #expect(MainWindowToolbarAction.duplicateProfile.needsSavedProfile)
     #expect(MainWindowToolbarAction.exportProfile.needsSavedProfile)
     #expect(!MainWindowToolbarAction.deleteProfile.needsSavedProfile)
+  }
+
+  @Test
+  func activityActionsFollowTheViewItShows() {
+    #expect(
+      MainWindowArea.activity.toolbarActions(activityMode: .log) == [
+        .activityMode, .activityFilter, .activitySearch, .copyActivityLog,
+        .saveActivityLog, .showActivityLogInFinder,
+      ]
+    )
+    #expect(
+      MainWindowArea.activity.toolbarActions(activityMode: .diagnostics) == [
+        .activityMode, .runDiagnostics,
+      ]
+    )
+    #expect(
+      MainWindowToolbarLayout.items(for: .activity, activityMode: .diagnostics)
+        == MainWindowToolbarLayout.fixedItems + [
+          MainWindowToolbarAction.activityMode.identifier,
+          MainWindowToolbarAction.runDiagnostics.identifier,
+        ]
+    )
   }
 
   @Test

@@ -42,7 +42,8 @@ enum LocalizationCatalogAudit {
       "keyboard.return", "keyboard.shift", "keyboard.tab",
     ],
     "de-DE": [
-      "library.field.version", "mainMenu.controller",
+      "library.field.version", "mainMenu.controller", "activity.filter",
+      "activity.column.details",
       "access.details", "library.details",
       "access.token.name", "access.web.port", "access.web.enable.port", "access.socket",
       "access.transport.socket", "access.token.issued.title", "access.token.named",
@@ -60,14 +61,17 @@ enum LocalizationCatalogAudit {
     "es-ES": spanishTerms.union(["mainMenu.window.zoom"]),
     "es-MX": spanishTerms.union(["mainMenu.window.zoom"]),
     "fr-CA": frenchTerms.union(["developer.packetColumnDirection"]).union([
+      "activity.column.message",
       "mainMenu.app.services", "mainMenu.window.zoom", "settingsPane.notifications.title",
     ]),
     "fr-FR": frenchTerms.union([
+      "activity.column.message",
       "mainMenu.app.services", "mainMenu.window.zoom", "settingsPane.notifications.title",
     ]),
     "hi-IN": ["keyboard.escape", "keyboard.return"],
     "id-ID": [
       "library.layer.driver", "access.token.issued.title", "access.token.named",
+      "activity.filter", "activity.mode.log",
       "access.web.port", "access.web.enable.port", "mainMenu.window.zoom",
       "cli.controller.show.label.input", "cli.explain.area", "cli.explain.area.endpoint",
       "common.status", "console.output", "console.stream", "developer.packetColumnData",
@@ -99,7 +103,8 @@ enum LocalizationCatalogAudit {
       "keyboard.alt", "keyboard.return", "keyboard.shift",
     ],
     "nl-NL": [
-      "library.field.transport", "access.details", "library.details",
+      "library.field.transport", "access.details", "library.details", "activity.filter",
+      "activity.column.details",
       "access.token.issued.title", "access.token.named", "access.tokens", "library.mods",
       "mainMenu.window.zoom",
       "area.controllers.title", "menuBar.controllers",
@@ -121,6 +126,7 @@ enum LocalizationCatalogAudit {
       "shortcuts.controller.type", "shortcuts.parameter.controller",
     ],
     "pt-BR": [
+      "activity.mode.log",
       "access.token.issued.title", "access.token.named",
       "access.tokens", "library.mods",
       "mainMenu.window.zoom",

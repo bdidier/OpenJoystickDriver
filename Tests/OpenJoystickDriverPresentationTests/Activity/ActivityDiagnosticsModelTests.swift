@@ -1,0 +1,97 @@
+import Foundation
+import OpenJoystickDriverKit
+import Testing
+
+@testable import OpenJoystickDriverPresentation
+
+@Suite
+struct ActivityCheckRowTests {
+  @Test
+  func eachStatusMapsToItsLabelAndSymbol() {
+    let rows = [
+      ActivityCheckRow(DiagnoseCheck("service", .pass, "running 1.0")),
+      ActivityCheckRow(DiagnoseCheck("usb-access", .warn, "USB scan failed")),
+      ActivityCheckRow(DiagnoseCheck("input-read", .fail, "denied; grant it")),
+      ActivityCheckRow(DiagnoseCheck("virtual-device", .skip, "service not running")),
+    ]
+
+    #expect(
+      rows.map(\.statusKey) == [
+        "activity.status.pass", "activity.status.warn", "common.failed", "activity.status.skip",
+      ]
+    )
+    #expect(Set(rows.map(\.symbolName)).count == 4)
+  }
+
+  @Test
+  func aRowKeepsTheCheckIdAndItsFixText() {
+    let row = ActivityCheckRow(
+      DiagnoseCheck("input-read", .fail, "denied; grant it with 'ojd permission request'")
+    )
+
+    #expect(row.id == "input-read")
+    #expect(row.detail == "denied; grant it with 'ojd permission request'")
+  }
+}
+
+@Suite
+@MainActor
+struct ActivityDiagnosticsModelTests {
+  @Test
+  func runPublishesOneRowPerCheckInOrder() async {
+    let model = ActivityDiagnosticsModel {
+      [DiagnoseCheck("service", .pass, "running"), DiagnoseCheck("usb-access", .warn, "none")]
+    }
+    #expect(model.state == .idle)
+
+    await model.run()
+
+    #expect(
+      model.state
+        == .finished([
+          ActivityCheckRow(DiagnoseCheck("service", .pass, "running")),
+          ActivityCheckRow(DiagnoseCheck("usb-access", .warn, "none")),
+        ])
+    )
+    #expect(!model.isRunning)
+  }
+
+  @Test
+  func runIfNeededRunsOnlyBeforeTheFirstResult() async {
+    let runs = Locked(0)
+    let model = ActivityDiagnosticsModel {
+      runs.withLock { $0 += 1 }
+      return []
+    }
+
+    await model.runIfNeeded()
+    await model.runIfNeeded()
+    await model.run()
+
+    #expect(runs.withLock { $0 } == 2)
+  }
+
+  @Test
+  func theCheckComposerKeepsTheReportOrderOfTheCommand() {
+    let snapshot = DiagnoseServiceSnapshot(
+      availability: .stopped,
+      status: nil,
+      virtualDiagnostics: nil,
+      frameTimings: nil
+    )
+    let checks = DiagnosticsService.checks(
+      snapshot: snapshot,
+      extensionStatus: ExtensionStatus(bundle: .present, registration: .active("record")),
+      records: ControllerRecordSet.bundled,
+      personas: [],
+      usb: .success(2)
+    )
+
+    #expect(
+      checks.map(\.id) == [
+        "transport-extension-bundle", "transport-extension-registration", "service", "input-read",
+        "input-inject", "virtual-device", "controller-records", "config-files", "usb-access",
+      ]
+    )
+  }
+}

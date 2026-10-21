@@ -37,7 +37,9 @@ struct LogCommandTests {
       },
       follow: { stream, _ in
         AsyncStream { continuation in
-          for text in followed { continuation.yield(LogLine(stream: stream, text: text)) }
+          for text in followed {
+            continuation.yield(ApplicationServiceLogLine(stream: stream, text: text))
+          }
           continuation.finish()
         }
       },

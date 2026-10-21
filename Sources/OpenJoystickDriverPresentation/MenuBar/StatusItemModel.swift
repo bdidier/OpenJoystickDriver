@@ -15,6 +15,8 @@ enum StatusItemAction: Equatable {
   /// Opens the main window on the area it last showed.
   case openWindow
   case showSettings
+  /// Shows the Explain Error Code sheet.
+  case explainErrorCode
   case openProjectWebsite
   case openProblemReport
   case quit
@@ -278,7 +280,7 @@ enum StatusItemModel {
       StatusItemEntry(
         id: "help.explainErrorCode",
         title: .key("menuBar.explainErrorCode"),
-        action: .showArea(.activity)
+        action: .explainErrorCode
       ),
       StatusItemEntry(
         id: "help.reportProblem",

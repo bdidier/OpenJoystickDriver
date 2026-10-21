@@ -244,12 +244,12 @@ struct LibraryListingTests {
 
   @Test
   func theLibraryToolbarEndsWithSearch() {
-    #expect(MainWindowArea.library.toolbarActions.last == .searchLibrary)
+    #expect(MainWindowArea.library.toolbarActions(activityMode: .log).last == .searchLibrary)
   }
 
   @Test
   func theLibraryToolbarLabelsResolve() {
-    for action in MainWindowArea.library.toolbarActions {
+    for action in MainWindowArea.library.toolbarActions(activityMode: .log) {
       #expect(OJDLocalized.string(action.labelKey) != action.labelKey)
       #expect(OJDLocalized.string(action.descriptionKey) != action.descriptionKey)
     }
