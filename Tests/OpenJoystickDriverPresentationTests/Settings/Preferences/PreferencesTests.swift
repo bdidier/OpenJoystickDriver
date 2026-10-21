@@ -208,6 +208,15 @@ struct PreferencesTests {
   }
 
   @Test
+  func anAuthorizationRequestWithoutANotificationCenterCarriesTheNamedText() {
+    let (state, description) =
+      SystemNotificationAuthorizationController.requestResultWithoutNotificationCenter
+
+    #expect(state == .denied)
+    #expect(description == OJDLocalized.string("ui.settings.notifications.noNotificationCenter"))
+  }
+
+  @Test
   @MainActor
   func aFailedDeliveryIsReportedAsFailedNotShown() async {
     let requester = TestNotificationRequestStub()

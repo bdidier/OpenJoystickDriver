@@ -54,9 +54,17 @@
       return Self.state(for: await center.notificationSettings().authorizationStatus)
     }
 
+    /// The request result outside an app bundle: denied, with the named text for the missing
+    /// notification center.
+    static var requestResultWithoutNotificationCenter:
+      (RuntimeNotificationAuthorizationState, String?)
+    {
+      (.denied, RuntimeNotificationDeliveryError.noNotificationCenter.localizedDescription)
+    }
+
     func request() async -> (RuntimeNotificationAuthorizationState, String?) {
       guard let center = bundledNotificationCenter else {
-        return (.denied, "Notifications require the OpenJoystickDriver app bundle.")
+        return Self.requestResultWithoutNotificationCenter
       }
       do {
         let authorized = try await center.requestAuthorization(options: [.alert, .sound])
