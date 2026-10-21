@@ -24,7 +24,7 @@ struct SettingsFileRecoveryTests {
     }
   }
 
-  /// The file earlier builds wrote when only the menu bar item was turned off.
+  /// A file that turns Show in menu bar off and leaves Show in Dock at its default, off.
   private func writeRejectedFile() throws {
     try FileManager.default.createDirectory(
       at: store.folderURL,
@@ -215,16 +215,91 @@ struct SettingsFileRecoveryTests {
   @Test
   @MainActor
   func notificationsAreNotDeliveredWhileTheSettingsFileCannotBeRead() throws {
-    try writeRejectedFile()
+    try store.set(.notifyControllerConnected, to: true)
     let delivery = RecoveryDeliverySpy()
     let monitor = RuntimeNotificationMonitor(settings: store, delivery: delivery)
-
     monitor.observe(RuntimeNotificationSnapshot(controllers: [:], activeProfiles: [:]))
-    monitor.observe(
-      RuntimeNotificationSnapshot(controllers: ["a": "Pad"], activeProfiles: [:])
-    )
+    monitor.observe(RuntimeNotificationSnapshot(controllers: ["a": "Pad"], activeProfiles: [:]))
+    // With the choice stored and the file readable, the connection is delivered.
+    #expect(delivery.total == 1)
 
-    #expect(delivery.total == 0)
+    try store.set(.showInDock, to: true)
+    let url = store.userFileURL
+    var document = try #require(
+      try JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any]
+    )
+    document["showInDock"] = false
+    document["showInMenuBar"] = false
+    try JSONSerialization.data(withJSONObject: document).write(to: url)
+    #expect(throws: SettingsStoreError.self) { try store.load() }
+    monitor.observe(RuntimeNotificationSnapshot(controllers: [:], activeProfiles: [:]))
+    monitor.observe(RuntimeNotificationSnapshot(controllers: ["b": "Pad 2"], activeProfiles: [:]))
+
+    #expect(delivery.total == 1)
+  }
+
+  @Test
+  @MainActor
+  func theErrorStaysWithItsButtonsUntilTheFileIsUsable() throws {
+    try writeRejectedFile()
+    let model = makeModel()
+
+    model.dismissError()
+
+    #expect(model.errorMessage != nil)
+    #expect(model.settingsFileError != nil)
+  }
+
+  @Test
+  @MainActor
+  func aResetRunsTheWorkThatWaitedForTheFile() throws {
+    try writeRejectedFile()
+    let model = makeModel()
+    var recovered = 0
+    model.settingsRecovered = { recovered += 1 }
+
+    model.resetSettings()
+
+    #expect(recovered == 1)
+  }
+
+  @Test
+  @MainActor
+  func aFailedResetRunsNothing() throws {
+    try writeRejectedFile()
+    let failing = SettingsStore(directory: root) { _ in throw CocoaError(.fileWriteNoPermission) }
+    let model = SettingsPreferencesModel(
+      settings: failing,
+      launchAtLogin: RecoveryLaunchAtLoginStub(),
+      notificationAuthorization: RecoveryAuthorizationStub()
+    )
+    var recovered = 0
+    model.settingsRecovered = { recovered += 1 }
+
+    model.resetSettings()
+
+    #expect(recovered == 0)
+  }
+
+  @Test
+  @MainActor
+  func theFollowUpRunsTheUpdateCheckAndTheLoginRegistration() {
+    var checks = 0
+    var registrations = 0
+    let register: () throws -> Void = { registrations += 1 }
+
+    let followUp = SettingsRecoveryFollowUp(
+      updateCheck: LaunchUpdateCheck(
+        settingsError: { nil },
+        isEnabled: { true },
+        check: { checks += 1 }
+      ),
+      registerLogin: register
+    )
+    followUp.run()
+
+    #expect(checks == 1)
+    #expect(registrations == 1)
   }
 }
 

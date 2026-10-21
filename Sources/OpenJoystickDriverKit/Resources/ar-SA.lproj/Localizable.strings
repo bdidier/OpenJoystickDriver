@@ -1828,7 +1828,7 @@
 "settingsPane.general.entryPointRequired" = "أبقِ واحدًا على الأقل من «إظهار في شريط القوائم» و«إظهار في Dock» قيد التشغيل.";
 "cli.setting.show_in_dock" = "إظهار أيقونة OpenJoystickDriver في Dock دائمًا؛ عند إيقافه، تظهر الأيقونة فقط أثناء فتح نافذة.";
 "settings.error.damaged" = "ملف الإعدادات %@ تالف. أصلحه أو انقله إلى سلة المهملات باستخدام `ojd setting reset`.";
-"settings.error.unsupported" = "%@ أعد كتابة الملف وفق apiVersion المدعوم، أو انقله إلى سلة المهملات باستخدام `ojd setting reset`.";
+"settings.error.unsupported" = "ملف الإعدادات %@ غير مدعوم. أعد كتابة الملف وفق apiVersion المدعوم، أو انقله إلى سلة المهملات باستخدام `ojd setting reset`.";
 "settings.error.unwritable" = "تعذّرت الكتابة في ملف الإعدادات %@.";
 "settings.error.cannotReset" = "تعذّر نقل ملف الإعدادات %@ إلى سلة المهملات.";
 "settings.error.storedNoVisibleEntryPoint" = "ملف الإعدادات %@ يوقف كلاً من «إظهار في شريط القوائم» و«إظهار في Dock»، لذلك لن يكون للتطبيق نقطة دخول مرئية. أصلحه أو انقله إلى سلة المهملات باستخدام `ojd setting reset`.";

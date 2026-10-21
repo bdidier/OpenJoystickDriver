@@ -1828,7 +1828,7 @@
 "settingsPane.general.entryPointRequired" = "เปิด “แสดงในแถบเมนู” หรือ “แสดงใน Dock” ไว้อย่างน้อยหนึ่งรายการ";
 "cli.setting.show_in_dock" = "แสดงไอคอน OpenJoystickDriver ใน Dock เสมอ เมื่อปิด ไอคอนจะแสดงเฉพาะขณะที่มีหน้าต่างเปิดอยู่";
 "settings.error.damaged" = "ไฟล์การตั้งค่า %@ เสียหาย แก้ไขไฟล์ หรือย้ายไปที่ถังขยะด้วย `ojd setting reset`";
-"settings.error.unsupported" = "%@ เขียนไฟล์ใหม่ให้ตรงกับ apiVersion ที่รองรับ หรือย้ายไปที่ถังขยะด้วย `ojd setting reset`";
+"settings.error.unsupported" = "ไฟล์การตั้งค่า %@ ไม่รองรับ เขียนไฟล์ใหม่ให้ตรงกับ apiVersion ที่รองรับ หรือย้ายไปที่ถังขยะด้วย `ojd setting reset`";
 "settings.error.unwritable" = "ไม่สามารถเขียนไฟล์การตั้งค่า %@ ได้";
 "settings.error.cannotReset" = "ไม่สามารถย้ายไฟล์การตั้งค่า %@ ไปที่ถังขยะได้";
 "settings.error.storedNoVisibleEntryPoint" = "ไฟล์การตั้งค่า %@ ปิดทั้ง “แสดงในแถบเมนู” และ “แสดงใน Dock” แอปจึงไม่มีจุดเข้าใช้งานที่มองเห็นได้ แก้ไขไฟล์ หรือย้ายไปที่ถังขยะด้วย `ojd setting reset`";

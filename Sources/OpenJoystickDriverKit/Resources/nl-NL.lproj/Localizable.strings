@@ -1829,7 +1829,7 @@
 "settingsPane.general.entryPointRequired" = "Laat minstens een van “Toon in menubalk” en “Toon in Dock” ingeschakeld.";
 "cli.setting.show_in_dock" = "Toon het OpenJoystickDriver-symbool altijd in het Dock; als dit uit staat, verschijnt het alleen zolang een venster open is.";
 "settings.error.damaged" = "Het instellingenbestand %@ is beschadigd. Herstel het, of zet het met `ojd setting reset` in de Prullenmand.";
-"settings.error.unsupported" = "%@ Schrijf het bestand opnieuw voor de ondersteunde apiVersion, of zet het met `ojd setting reset` in de Prullenmand.";
+"settings.error.unsupported" = "Het instellingenbestand %@ wordt niet ondersteund. Schrijf het bestand opnieuw voor de ondersteunde apiVersion, of zet het met `ojd setting reset` in de Prullenmand.";
 "settings.error.unwritable" = "Het instellingenbestand %@ kan niet worden geschreven.";
 "settings.error.cannotReset" = "Het instellingenbestand %@ kan niet naar de Prullenmand worden verplaatst.";
 "settings.error.storedNoVisibleEntryPoint" = "Het instellingenbestand %@ schakelt zowel ‘Toon in menubalk’ als ‘Toon in Dock’ uit, waardoor de app geen zichtbaar ingangspunt zou hebben. Herstel het, of zet het met `ojd setting reset` in de Prullenmand.";

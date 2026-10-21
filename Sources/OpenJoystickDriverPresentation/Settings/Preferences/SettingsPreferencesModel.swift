@@ -49,6 +49,10 @@
 
     let launchAtLoginIsAvailable: Bool
 
+    /// Called when a read finds the settings file usable again after an error, so the work that
+    /// was skipped while it could not be read can run.
+    var settingsRecovered: (@MainActor () -> Void)?
+
     private let settings: SettingsStore
     private var watcher: SettingsWatcher?
     private let launchAtLogin: any LaunchAtLoginControlling
@@ -106,7 +110,8 @@
         report(error)
         return
       }
-      if settingsFileError != nil {
+      let recovered = settingsFileError != nil
+      if recovered {
         settingsFileError = nil
         errorMessage = nil
       }
@@ -121,6 +126,7 @@
       checkUpdatesAutomatically = value(.updatesCheckAutomatically)
       includePrereleaseUpdates = value(.updatesIncludePrereleases)
       developerToolsEnabled = value(.developerTools)
+      if recovered { settingsRecovered?() }
     }
 
     func setStartAtLogin(_ enabled: Bool) {
@@ -224,7 +230,12 @@
 
     func openNotificationSettings() { notificationAuthorizationController.openSystemSettings() }
 
-    func dismissError() { errorMessage = nil }
+    /// Hides the error. An error about the settings file stays while the file cannot be used,
+    /// because the buttons that fix it are part of it.
+    func dismissError() {
+      guard settingsFileError == nil else { return }
+      errorMessage = nil
+    }
 
     func refreshNotificationAuthorization() {
       notificationAuthorizationReads += 1

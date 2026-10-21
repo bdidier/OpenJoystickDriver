@@ -1832,7 +1832,7 @@
 "settingsPane.general.entryPointRequired" = "Keep at least one of Show in menu bar and Show in Dock on.";
 "cli.setting.show_in_dock" = "Always show the OpenJoystickDriver icon in the Dock; when off, it shows only while a window is open.";
 "settings.error.damaged" = "The settings file %@ is damaged. Fix it, or move it to the Trash with `ojd setting reset`.";
-"settings.error.unsupported" = "%@ Rewrite the file for the supported apiVersion, or move it to the Trash with `ojd setting reset`.";
+"settings.error.unsupported" = "The settings file %@ is not supported. Rewrite the file for the supported apiVersion, or move it to the Trash with `ojd setting reset`.";
 "settings.error.unwritable" = "The settings file %@ cannot be written.";
 "settings.error.cannotReset" = "The settings file %@ cannot be moved to the Trash.";
 "settings.error.storedNoVisibleEntryPoint" = "The settings file %@ turns off both Show in menu bar and Show in Dock, so the app would have no visible entry point. Fix it, or move it to the Trash with `ojd setting reset`.";

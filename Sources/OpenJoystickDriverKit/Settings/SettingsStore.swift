@@ -38,8 +38,9 @@ public enum SettingsStoreError: Error, Equatable, LocalizedError, Sendable {
     switch self {
     case .damaged(let file):
       Self.localization.formatted("settings.error.damaged", arguments: [file])
-    case .unsupported(_, let problem):
-      Self.localization.formatted("settings.error.unsupported", arguments: [problem.description])
+    case .unsupported(let file, let problem):
+      Self.localization.formatted("settings.error.unsupported", arguments: [file])
+        + "\n" + problem.description
     case .unwritable(let file):
       Self.localization.formatted("settings.error.unwritable", arguments: [file])
     case .cannotReset(let file):
@@ -142,11 +143,12 @@ public struct SettingsStore: Sendable {
   @discardableResult
   public func moveToTrash() throws -> Bool {
     let url = userFileURL
-    guard FileManager.default.fileExists(atPath: url.path) else { return false }
-    try locked {
+    guard FileManager.default.fileExists(atPath: folderURL.path) else { return false }
+    return try locked {
+      guard FileManager.default.fileExists(atPath: url.path) else { return false }
       do { try trash(url) } catch { throw SettingsStoreError.cannotReset(file: url.path) }
+      return true
     }
-    return true
   }
 
   /// Runs `body` while holding the advisory lock on the sidecar file in the settings folder.

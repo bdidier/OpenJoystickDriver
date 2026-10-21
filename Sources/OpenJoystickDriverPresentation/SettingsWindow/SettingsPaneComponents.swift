@@ -30,7 +30,9 @@
     var preferences: SettingsPreferencesModel
 
     var body: some View {
-      if let errorMessage = preferences.errorMessage {
+      if let errorMessage = preferences.errorMessage
+        ?? preferences.settingsFileError?.localizedDescription
+      {
         Section {
           HStack(alignment: .firstTextBaseline, spacing: 8) {
             OJDSystemSymbol(
@@ -52,7 +54,9 @@
                 preferences.resetSettings()
               }
             }
-            Button(OJDLocalized.string("common.dismiss")) { preferences.dismissError() }
+            if preferences.settingsFileError == nil {
+              Button(OJDLocalized.string("common.dismiss")) { preferences.dismissError() }
+            }
           }
         }
       }

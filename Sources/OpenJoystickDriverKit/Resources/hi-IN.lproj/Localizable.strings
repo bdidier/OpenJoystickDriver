@@ -1828,7 +1828,7 @@
 "settingsPane.general.entryPointRequired" = "“मेनू बार में दिखाएँ” और “डॉक में दिखाएँ” में से कम से कम एक चालू रखें।";
 "cli.setting.show_in_dock" = "OpenJoystickDriver आइकन को हमेशा डॉक में दिखाएँ; बंद होने पर यह केवल तब दिखता है जब कोई विंडो खुली हो।";
 "settings.error.damaged" = "सेटिंग्स फ़ाइल %@ क्षतिग्रस्त है। इसे ठीक करें, या `ojd setting reset` से इसे ट्रैश में भेजें।";
-"settings.error.unsupported" = "%@ फ़ाइल को समर्थित apiVersion के लिए दोबारा लिखें, या `ojd setting reset` से इसे ट्रैश में भेजें।";
+"settings.error.unsupported" = "सेटिंग्स फ़ाइल %@ समर्थित नहीं है। फ़ाइल को समर्थित apiVersion के लिए दोबारा लिखें, या `ojd setting reset` से इसे ट्रैश में भेजें।";
 "settings.error.unwritable" = "सेटिंग्स फ़ाइल %@ में लिखा नहीं जा सकता।";
 "settings.error.cannotReset" = "सेटिंग्स फ़ाइल %@ को ट्रैश में नहीं भेजा जा सकता।";
 "settings.error.storedNoVisibleEntryPoint" = "सेटिंग्स फ़ाइल %@ “मेनू बार में दिखाएँ” और “डॉक में दिखाएँ” दोनों को बंद करती है, इसलिए ऐप का कोई दिखने वाला प्रवेश बिंदु नहीं रहेगा। इसे ठीक करें, या `ojd setting reset` से इसे ट्रैश में भेजें।";

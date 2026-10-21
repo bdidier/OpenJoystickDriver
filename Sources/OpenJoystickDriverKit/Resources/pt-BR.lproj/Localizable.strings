@@ -1829,7 +1829,7 @@
 "settingsPane.general.entryPointRequired" = "Mantenha ativada pelo menos uma das opções “Mostrar na barra de menus” e “Mostrar no Dock”.";
 "cli.setting.show_in_dock" = "Mostrar sempre o ícone do OpenJoystickDriver no Dock; se desativado, ele aparece apenas enquanto houver uma janela aberta.";
 "settings.error.damaged" = "O arquivo de ajustes %@ está danificado. Corrija-o ou mova-o para a Lixeira com `ojd setting reset`.";
-"settings.error.unsupported" = "%@ Reescreva o arquivo para a apiVersion compatível ou mova-o para a Lixeira com `ojd setting reset`.";
+"settings.error.unsupported" = "O arquivo de ajustes %@ não é compatível. Reescreva o arquivo para a apiVersion compatível ou mova-o para a Lixeira com `ojd setting reset`.";
 "settings.error.unwritable" = "Não é possível gravar o arquivo de ajustes %@.";
 "settings.error.cannotReset" = "Não é possível mover o arquivo de ajustes %@ para a Lixeira.";
 "settings.error.storedNoVisibleEntryPoint" = "O arquivo de ajustes %@ desativa “Mostrar na barra de menus” e “Mostrar no Dock”, então o app não teria nenhum ponto de entrada visível. Corrija-o ou mova-o para a Lixeira com `ojd setting reset`.";

@@ -1829,7 +1829,7 @@
 "settingsPane.general.entryPointRequired" = "Mindestens eine der Optionen „In der Menüleiste anzeigen“ und „Im Dock anzeigen“ muss eingeschaltet bleiben.";
 "cli.setting.show_in_dock" = "Das Symbol von OpenJoystickDriver immer im Dock anzeigen; ist die Option aus, erscheint es nur, solange ein Fenster geöffnet ist.";
 "settings.error.damaged" = "Die Einstellungsdatei %@ ist beschädigt. Repariere sie oder lege sie mit `ojd setting reset` in den Papierkorb.";
-"settings.error.unsupported" = "%@ Schreibe die Datei für die unterstützte apiVersion neu oder lege sie mit `ojd setting reset` in den Papierkorb.";
+"settings.error.unsupported" = "Die Einstellungsdatei %@ wird nicht unterstützt. Schreibe die Datei für die unterstützte apiVersion neu oder lege sie mit `ojd setting reset` in den Papierkorb.";
 "settings.error.unwritable" = "In die Einstellungsdatei %@ kann nicht geschrieben werden.";
 "settings.error.cannotReset" = "Die Einstellungsdatei %@ kann nicht in den Papierkorb gelegt werden.";
 "settings.error.storedNoVisibleEntryPoint" = "Die Einstellungsdatei %@ schaltet „In der Menüleiste anzeigen“ und „Im Dock anzeigen“ aus, sodass die App keinen sichtbaren Einstiegspunkt hätte. Repariere sie oder lege sie mit `ojd setting reset` in den Papierkorb.";

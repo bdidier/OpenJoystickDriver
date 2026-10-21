@@ -1828,7 +1828,7 @@
 "settingsPane.general.entryPointRequired" = "Оставьте включённым хотя бы один из параметров «Показывать в строке меню» и «Показывать в Dock».";
 "cli.setting.show_in_dock" = "Всегда показывать значок OpenJoystickDriver в Dock; если выключено, значок виден только пока открыто окно.";
 "settings.error.damaged" = "Файл настроек %@ повреждён. Исправьте его или переместите в Корзину командой `ojd setting reset`.";
-"settings.error.unsupported" = "%@ Перепишите файл для поддерживаемой версии apiVersion или переместите его в Корзину командой `ojd setting reset`.";
+"settings.error.unsupported" = "Файл настроек %@ не поддерживается. Перепишите файл для поддерживаемой версии apiVersion или переместите его в Корзину командой `ojd setting reset`.";
 "settings.error.unwritable" = "Не удаётся записать файл настроек %@.";
 "settings.error.cannotReset" = "Не удаётся переместить файл настроек %@ в Корзину.";
 "settings.error.storedNoVisibleEntryPoint" = "Файл настроек %@ отключает и «Показывать в строке меню», и «Показывать в Dock», поэтому у приложения не было бы видимой точки входа. Исправьте его или переместите в Корзину командой `ojd setting reset`.";

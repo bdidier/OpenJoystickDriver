@@ -1828,7 +1828,7 @@
 "settingsPane.general.entryPointRequired" = "「在選單列中顯示」與「在 Dock 中顯示」至少要保持開啟一個。";
 "cli.setting.show_in_dock" = "一律在 Dock 中顯示 OpenJoystickDriver 圖像；關閉後，只會在有視窗開啟時顯示。";
 "settings.error.damaged" = "設定值檔案 %@ 已損毀。請修復它，或用 `ojd setting reset` 將其移到垃圾桶。";
-"settings.error.unsupported" = "%@ 請依支援的 apiVersion 重寫該檔案，或用 `ojd setting reset` 將其移到垃圾桶。";
+"settings.error.unsupported" = "設定值檔案 %@ 不受支援。請依支援的 apiVersion 重寫該檔案，或用 `ojd setting reset` 將其移到垃圾桶。";
 "settings.error.unwritable" = "無法寫入設定值檔案 %@。";
 "settings.error.cannotReset" = "無法將設定值檔案 %@ 移到垃圾桶。";
 "settings.error.storedNoVisibleEntryPoint" = "設定值檔案 %@ 同時關閉了「在選單列中顯示」和「在 Dock 中顯示」，App 將沒有可見的入口。請修復它，或用 `ojd setting reset` 將其移到垃圾桶。";

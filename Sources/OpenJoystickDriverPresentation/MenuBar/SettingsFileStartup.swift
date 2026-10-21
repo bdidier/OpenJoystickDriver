@@ -22,6 +22,24 @@
     }
   }
 
+  /// The work that waits for a usable settings file, run again when a reset or a repair makes the
+  /// file usable: the update check, if enabled, and the login registration, unless the user opted
+  /// out.
+  @MainActor
+  struct SettingsRecoveryFollowUp {
+    let updateCheck: LaunchUpdateCheck
+    let registerLogin: () throws -> Void
+
+    func run() {
+      updateCheck.run()
+      do { try registerLogin() } catch {
+        FileHandle.standardError.write(
+          Data("[Settings] Login registration unavailable: \(error.localizedDescription)\n".utf8)
+        )
+      }
+    }
+  }
+
   /// The button the user pressed in the alert for an unreadable settings file.
   enum SettingsUnreadableChoice: Equatable {
     case showInFinder

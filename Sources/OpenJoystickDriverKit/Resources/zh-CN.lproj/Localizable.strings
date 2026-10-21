@@ -1828,7 +1828,7 @@
 "settingsPane.general.entryPointRequired" = "“在菜单栏中显示”和“在程序坞中显示”至少要保持开启一个。";
 "cli.setting.show_in_dock" = "始终在程序坞中显示 OpenJoystickDriver 图标；关闭后，仅在有窗口打开时显示。";
 "settings.error.damaged" = "设置文件 %@ 已损坏。请修复它，或用 `ojd setting reset` 将其移到废纸篓。";
-"settings.error.unsupported" = "%@ 请按受支持的 apiVersion 重写该文件，或用 `ojd setting reset` 将其移到废纸篓。";
+"settings.error.unsupported" = "设置文件 %@ 不受支持。请按受支持的 apiVersion 重写该文件，或用 `ojd setting reset` 将其移到废纸篓。";
 "settings.error.unwritable" = "无法写入设置文件 %@。";
 "settings.error.cannotReset" = "无法将设置文件 %@ 移到废纸篓。";
 "settings.error.storedNoVisibleEntryPoint" = "设置文件 %@ 同时关闭了“在菜单栏中显示”和“在程序坞中显示”，App 将没有可见的入口。请修复它，或用 `ojd setting reset` 将其移到废纸篓。";

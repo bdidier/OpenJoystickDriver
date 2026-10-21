@@ -32,12 +32,14 @@
         queue: .main
       ) { [weak self] _ in Task { @MainActor [weak self] in self?.refreshLiveStatus() } }
       Task { @MainActor in await viewModel.startSystemExtensionSetup() }
-      let updateCheck = LaunchUpdateCheck(
-        settingsError: { [preferences] in preferences.settingsFileError },
-        isEnabled: { [preferences] in preferences.checkUpdatesAutomatically },
-        check: { [preferences] in preferences.checkForUpdates(announcingAvailableUpdate: true) }
-      ).run()
-      if case .skippedSettingsUnreadable(let error) = updateCheck {
+      preferences.settingsRecovered = { [weak self] in
+        guard let self else { return }
+        SettingsRecoveryFollowUp(
+          updateCheck: self.launchUpdateCheck,
+          registerLogin: Self.registerLoginIfNeeded
+        ).run()
+      }
+      if case .skippedSettingsUnreadable(let error) = launchUpdateCheck.run() {
         SettingsSkipLog.write(
           feature: "the launch update check",
           file: error.file ?? "",
@@ -59,6 +61,20 @@
         guard let self else { return }
         Task { @MainActor in self.refreshLiveStatus() }
       }
+    }
+
+    private var launchUpdateCheck: LaunchUpdateCheck {
+      LaunchUpdateCheck(
+        settingsError: { [preferences] in preferences.settingsFileError },
+        isEnabled: { [preferences] in preferences.checkUpdatesAutomatically },
+        check: { [preferences] in preferences.checkForUpdates(announcingAvailableUpdate: true) }
+      )
+    }
+
+    /// Registers the login item unless the user opted out; only an installed app has one.
+    private static func registerLoginIfNeeded() throws {
+      guard Bundle.main.bundleURL.pathExtension == "app" else { return }
+      try ApplicationServiceManager.installByDefaultIfNeeded()
     }
 
     /// Asks what to do about a settings file that cannot be used, and asks again while a reset
