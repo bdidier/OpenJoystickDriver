@@ -78,10 +78,6 @@ COMMAND_HELP = """Commands:
   catalog regenerate --write Rebuild the runtime catalog from pinned sources and overrides
   errors regenerate --check   Verify the error code schema enum and wiki table against the catalog
   errors regenerate --write   Rebuild the error code schema enum and wiki table from the catalog
-  fixtures regenerate schema-rejections --check
-                              Verify the shared schema rejection files against the Python schema tests
-  fixtures regenerate schema-rejections --write
-                              Rebuild the shared schema rejection files, recording the Swift messages
   vocabulary regenerate --check   Verify the wiki control crosswalk table against crosswalk.json
   vocabulary regenerate --write   Rebuild the wiki control crosswalk table from crosswalk.json
   check profiles              Check canonical controller records
@@ -319,17 +315,6 @@ def dispatch(argv: list[str]) -> int:
                 die(f"Unknown: errors {sub} (expected: regenerate)")
             exec_target(
                 "Catalog/generate_error_codes.py", tail, python=True, schema_python=True
-            )
-        case "fixtures":
-            if rest[:2] != ["regenerate", "schema-rejections"]:
-                die(
-                    f"Unknown: fixtures {' '.join(rest)} (expected: regenerate schema-rejections)"
-                )
-            exec_target(
-                "Catalog/generate_schema_rejections.py",
-                rest[2:],
-                python=True,
-                schema_python=True,
             )
         case "vocabulary":
             sub, tail = (rest[0], rest[1:]) if rest else ("", [])

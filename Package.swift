@@ -143,6 +143,7 @@ let package = Package(
         "ProtocolPacketFixtures",
       ],
       path: "Tests/OpenJoystickDriverKitTests",
+      resources: [.copy("Protocol/Catalog/SchemaRejections")],
       swiftSettings: [.unsafeFlags(["-target", testTargetTriple])],
       linkerSettings: [.unsafeFlags(["-target", testTargetTriple])]
     ),

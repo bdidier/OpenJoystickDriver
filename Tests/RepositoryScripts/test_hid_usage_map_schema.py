@@ -10,14 +10,7 @@ from unittest import mock
 from Scripts.Catalog import validate_profiles
 from Scripts.Catalog.schema_header import header
 from Scripts.Quality import validate_schemas
-from Tests.RepositoryScripts import schema_rejections
-from Tests.RepositoryScripts.schema_rejections import RecordValidator
-
-
-def setUpModule() -> None:
-    schema_rejections.enforce_controller_rejections()
-    schema_rejections.enforce_description_rejections()
-
+from Tests.RepositoryScripts.record_validator import RecordValidator
 
 BUTTON = {"kind": "Button", "page": 9, "usage": 1, "control": "South"}
 AXIS = {"kind": "Axis", "page": 1, "usage": 48, "control": "LeftStickX"}

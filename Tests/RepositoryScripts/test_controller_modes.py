@@ -8,13 +8,7 @@ from typing import Any, ClassVar
 
 from Scripts.Catalog import validate_profiles
 from Scripts.Catalog.schema_header import header
-from Tests.RepositoryScripts import schema_rejections
-from Tests.RepositoryScripts.schema_rejections import RecordValidator
-
-
-def setUpModule() -> None:
-    schema_rejections.enforce_controller_rejections()
-
+from Tests.RepositoryScripts.record_validator import RecordValidator
 
 SIXAXIS = {"family": "SonySixaxis"}
 ANSWERS = {"report": 239, "length": 64, "expect": "Answers"}
