@@ -5,24 +5,10 @@
   struct MotionCalibrationControls: View {
     @ObservedObject
     var model: MotionCalibrationViewModel
-    let embedded: Bool
 
-    init(model: MotionCalibrationViewModel, embedded: Bool = false) {
-      self.model = model
-      self.embedded = embedded
-    }
-
-    @ViewBuilder
+    /// Loads the calibration status of the selected controller when it changes.
     var body: some View {
-      if embedded {
-        content
-      } else {
-        GroupBox {
-          content
-        } label: {
-          Text(OJDLocalized.string("motion.calibration.title"))
-        }
-      }
+      content.task(id: model.selector) { await model.refresh() }
     }
 
     private var content: some View {
@@ -70,12 +56,6 @@
           )
         }
         HStack {
-          Button(OJDLocalized.string("common.refresh")) {
-            Task { await model.refresh() }
-          }
-          if model.isBusy { ProgressView() }
-        }
-        HStack {
           Button(OJDLocalized.string("motion.calibration.start")) {
             Task { await model.perform(.start) }
           }.disabled(model.status?.hasMotionBaseline != true || model.status?.isCollecting == true)
@@ -85,6 +65,7 @@
           Button(OJDLocalized.string("common.reset")) {
             Task { await model.perform(.reset) }
           }.disabled(model.status == nil)
+          if model.isBusy { ProgressView().controlSize(.small) }
         }
       }.disabled(model.selector == nil || model.isBusy)
     }

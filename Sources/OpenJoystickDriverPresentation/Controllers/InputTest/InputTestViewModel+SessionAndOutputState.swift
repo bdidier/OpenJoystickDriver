@@ -71,6 +71,18 @@
       device?.physicalOutputCapabilities ?? .none
     }
 
+    /// The sections shown for the selected controller: Motion calibration needs a gyroscope and
+    /// Lighting needs a lighting feature; Rumble states when the controller has no motor.
+    var visibleSections: [InputTestSection] {
+      InputTestSection.allCases.filter { section in
+        switch section {
+        case .liveInput, .rumble: true
+        case .motion: device?.capabilities.motion == true
+        case .lighting: !capabilities.lightingFeatures.isEmpty
+        }
+      }
+    }
+
     var latestInput: ControllerState { liveState.snapshot }
 
     var isSampling: Bool { samplingTask != nil }

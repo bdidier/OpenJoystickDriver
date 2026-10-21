@@ -15,6 +15,8 @@
     var confirmsWirelessDisconnect = false
     @State
     var serialVisibility = SerialNumberVisibility()
+    @State
+    var showsAdvanced = false
   }
 
 #endif

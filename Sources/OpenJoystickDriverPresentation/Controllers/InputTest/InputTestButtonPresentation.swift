@@ -18,6 +18,17 @@
       Control.allCases.filter { state.pressed.contains($0) && !drawnControls.contains($0) }
     }
 
+    /// The symbol of one D-pad direction: a triangle pointing that way, so no two directions
+    /// share a glyph.
+    static func dpadSymbol(_ direction: RemappingDpadDirection) -> String {
+      switch direction {
+      case .up: "arrowtriangle.up.fill"
+      case .down: "arrowtriangle.down.fill"
+      case .left: "arrowtriangle.left.fill"
+      case .right: "arrowtriangle.right.fill"
+      }
+    }
+
     /// The remapping source name of `control`.
     static func localizedTitle(for control: Control) -> String {
       RuntimePresentation.sourceLabel(.button(control))

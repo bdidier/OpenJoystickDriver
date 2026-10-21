@@ -14,16 +14,16 @@
         profileAccessibilityValue,
         device.protocolBinding.displayLabel,
         OJDValue.reported(device.protocolBinding.rawValue).spokenText,
-        serialVisibility.presentation(of: serialNumberValue).spokenText,
-        usbIdentifierValue.spokenText,
+        serialVisibility.presentation(of: ControllerDetailFacts.serialNumber(device)).spokenText,
+        ControllerDetailFacts.usbIdentifier(device).spokenText,
         OJDValue.endpoint(device.inputEndpoint).spokenText,
         OJDValue.endpoint(device.outputEndpoint).spokenText
       )
       let battery = OJDLocalized.formatted(
         "controllers.batteryAccessibilityDetails",
-        batteryValue.spokenText,
-        chargingStateValue.spokenText,
-        cableStateValue.spokenText
+        ControllerDetailFacts.battery(device).spokenText,
+        ControllerDetailFacts.chargingState(device).spokenText,
+        ControllerDetailFacts.cableState(device).spokenText
       )
       return "\(details) \(battery)"
     }

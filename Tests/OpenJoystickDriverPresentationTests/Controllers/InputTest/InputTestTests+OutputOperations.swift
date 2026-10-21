@@ -235,6 +235,7 @@ extension InputTestTests {
 
   func makeInputTestDevice(
     capabilities: PhysicalControllerOutputCapabilities = .dualMainRumble,
+    hasMotion: Bool = false,
     sessionToken: String = "input-device",
     connection: String = "USB",
     discoverySource: DeviceDiscoverySource = .rawUSB
@@ -249,6 +250,7 @@ extension InputTestTests {
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
       physicalOutputCapabilities: capabilities,
+      capabilities: ControllerCapabilities(controls: [], motion: hasMotion),
       sessionToken: .fixture(sessionToken)
     )
   }

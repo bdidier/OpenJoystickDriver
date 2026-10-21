@@ -86,7 +86,7 @@ struct LocalizationTests {
     let keys = LocalizationCatalogAudit.keys(for: Localization.sourceLocalization)
     for required in [
       "cli.root.abstract", "cli.error.service_unavailable", "cli.service.start.abstract",
-      "cli.status.label.controllers", "inputTest.controls", "inputTest.additionalButtons",
+      "cli.status.label.controllers", "inputTest.additionalButtons",
       "virtualProfile.title", "setup.openSystemSettings", "controllers.battery",
       "controllers.chargingState", "controllers.cableState", "controllers.discharging",
       "controllers.charging", "controllers.batteryFull", "controllers.batteryAccessibilityDetails",

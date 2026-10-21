@@ -4,28 +4,12 @@
   import OpenJoystickDriverKit
   import SwiftUI
 
+  /// The sections of the Input Test form, in display order.
   enum InputTestSection: Int, CaseIterable, Equatable {
     case liveInput
-    case axes
     case motion
     case rumble
     case lighting
-  }
-
-  enum InputTestLayoutPolicy {
-    enum WidthClass: Equatable {
-      case compact
-      case regular
-      case wide
-    }
-
-    static let sectionOrder = InputTestSection.allCases
-
-    static func widthClass(for width: CGFloat) -> WidthClass {
-      if width < 780 { return .compact }
-      if width < 1_060 { return .regular }
-      return .wide
-    }
   }
 
   struct InputTestView: View {
