@@ -22,6 +22,8 @@ ObjC.bindFunction("AXUIElementSetAttributeValue", ["int", ["id", "id", "id"]]);
 ObjC.bindFunction("AXUIElementPerformAction", ["int", ["id", "id"]]);
 
 const AX_NOT_TRUSTED = -25211;
+// $.kCFBooleanTrue is a pointer to the constant, which AX rejects as a value (AXError -25201); a boxed NSNumber bool bridges to a CFBoolean.
+const AX_TRUE = $.NSNumber.numberWithBool(true);
 const SETTINGS_TABS = ["General", "Notifications", "Advanced"];
 const POLL_STEPS = 50;
 const POLL_SECONDS = 0.1;
@@ -101,7 +103,7 @@ function rowLabel(row) {
 
 function pair(element, name, first, second) {
 	const { value } = read(element, name);
-	const found = value && String(value.description).match(
+	const found = value && ObjC.unwrap(value.description).match(
 		new RegExp(first + ":(-?[0-9.]+) " + second + ":(-?[0-9.]+)"),
 	);
 	if (!found) throw new Error("the window reports no " + name);
@@ -149,7 +151,7 @@ function run(argv) {
 		case "select-sidebar": {
 			const row = sidebar(app).find((candidate) => rowLabel(candidate) === argument);
 			if (!row) throw new Error("no sidebar item named " + argument);
-			const code = $.AXUIElementSetAttributeValue(row, "AXSelected", $.kCFBooleanTrue);
+			const code = $.AXUIElementSetAttributeValue(row, "AXSelected", AX_TRUE);
 			if (code !== 0) throw new Error("selecting " + argument + " failed with AXError " + code);
 			delay(SETTLE_SECONDS);
 			return "";
@@ -158,7 +160,7 @@ function run(argv) {
 			if (!waitFor(() => windows(app).some(isMain))) throw new Error("main window did not appear");
 			return "";
 		case "open-settings": {
-			$.AXUIElementSetAttributeValue(app, "AXFrontmost", $.kCFBooleanTrue);
+			$.AXUIElementSetAttributeValue(app, "AXFrontmost", AX_TRUE);
 			const menuBar = children(app, "AXMenuBar")[0];
 			const appMenu = menuBar && children(menuBar, "AXMenuBarItem").find((item) => label(item) === "OpenJoystickDriver");
 			const menu = appMenu && children(appMenu, "AXMenu")[0];
