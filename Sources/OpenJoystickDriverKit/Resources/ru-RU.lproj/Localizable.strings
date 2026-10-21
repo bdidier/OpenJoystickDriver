@@ -586,6 +586,10 @@
 "notifications.profileSwitchedBody" = "%@ → %@";
 "notifications.testBody" = "OpenJoystickDriver может уведомлять о действиях контроллера и профиля.";
 "notifications.testTitle" = "Уведомления готовы";
+/* Shown in the Notifications settings pane and by the app's test notification report when the app runs outside an app bundle and has no notification center. */
+"ui.settings.notifications.noNotificationCenter" = "Уведомления недоступны, потому что OpenJoystickDriver запущен не из пакета приложения. Откройте приложение OpenJoystickDriver и повторите попытку.";
+/* Shown in the Notifications settings pane when the ojd request that asked for the test notification ended before the app's report on it arrived. */
+"ui.settings.notifications.testReportLost" = "Запрос ojd завершился раньше, чем пришёл отчёт о тестовом уведомлении.";
 "profiles.virtualOutput" = "Виртуальный геймпад";
 "profiles.virtualDisabled" = "Выключено";
 "profiles.virtualMapped" = "Только назначенные элементы управления";

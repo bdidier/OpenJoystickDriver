@@ -586,6 +586,10 @@
 "notifications.profileSwitchedBody" = "%@ → %@";
 "notifications.testBody" = "OpenJoystickDriver có thể thông báo cho bạn về hoạt động của bộ điều khiển và cấu hình.";
 "notifications.testTitle" = "Thông báo đã sẵn sàng";
+/* Shown in the Notifications settings pane and by the app's test notification report when the app runs outside an app bundle and has no notification center. */
+"ui.settings.notifications.noNotificationCenter" = "Thông báo không khả dụng vì OpenJoystickDriver không chạy từ gói ứng dụng của nó. Hãy mở ứng dụng OpenJoystickDriver, rồi thử lại.";
+/* Shown in the Notifications settings pane when the ojd request that asked for the test notification ended before the app's report on it arrived. */
+"ui.settings.notifications.testReportLost" = "Yêu cầu ojd kết thúc trước khi báo cáo về thông báo thử đến nơi.";
 "profiles.virtualOutput" = "Tay cầm ảo";
 "profiles.virtualDisabled" = "Bị vô hiệu";
 "profiles.virtualMapped" = "Chỉ các thành phần đã ánh xạ";

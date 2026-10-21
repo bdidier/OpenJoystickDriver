@@ -173,6 +173,82 @@ struct PreferencesTests {
 
   @Test
   @MainActor
+  func aDeliveryTheSystemRejectsIsAFailedOutcomeWithTheSystemsReason() async {
+    struct Rejected: LocalizedError { var errorDescription: String? { "the system rejected it" } }
+    let delivery = PreferencesNotificationDeliverySpy()
+    delivery.failure = Rejected()
+    let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
+      settings: SettingsStore(directory: RootedDataDirectory.temporary()),
+      launchAtLogin: LaunchAtLoginStub(isEnabled: false),
+      notificationAuthorization: NotificationAuthorizationStub(state: .allowed),
+      notificationDelivery: delivery
+    )
+
+    #expect(await model.showTestNotification() == .failed("the system rejected it"))
+  }
+
+  @Test
+  @MainActor
+  func aMissingNotificationCenterIsAFailedOutcomeWithItsNamedText() async {
+    let delivery = PreferencesNotificationDeliverySpy()
+    delivery.failure = RuntimeNotificationDeliveryError.noNotificationCenter
+    let model = SettingsPreferencesModel(
+      testNotifications: TestNotificationRequestStub(),
+      settings: SettingsStore(directory: RootedDataDirectory.temporary()),
+      launchAtLogin: LaunchAtLoginStub(isEnabled: false),
+      notificationAuthorization: NotificationAuthorizationStub(state: .allowed),
+      notificationDelivery: delivery
+    )
+
+    #expect(
+      await model.showTestNotification()
+        == .failed(OJDLocalized.string("ui.settings.notifications.noNotificationCenter"))
+    )
+  }
+
+  @Test
+  @MainActor
+  func aFailedDeliveryIsReportedAsFailedNotShown() async {
+    let requester = TestNotificationRequestStub()
+    let delivery = PreferencesNotificationDeliverySpy()
+    delivery.failure = RuntimeNotificationDeliveryError.noNotificationCenter
+    let model = SettingsPreferencesModel(
+      testNotifications: requester,
+      settings: SettingsStore(directory: RootedDataDirectory.temporary()),
+      launchAtLogin: LaunchAtLoginStub(isEnabled: false),
+      notificationAuthorization: NotificationAuthorizationStub(state: .allowed),
+      notificationDelivery: delivery
+    )
+
+    model.answerTestNotification(UUID())
+    await waitUntil("requester.reported.count == 1") { requester.reported.count == 1 }
+
+    #expect(
+      requester.reported[0].1
+        == .failed(OJDLocalized.string("ui.settings.notifications.noNotificationCenter"))
+    )
+  }
+
+  @Test
+  @MainActor
+  func aReportTheServiceNoLongerWaitsForShowsTheLostReportMessage() async {
+    let requester = TestNotificationRequestStub(reportAccepted: false)
+    let model = SettingsPreferencesModel(
+      testNotifications: requester,
+      settings: SettingsStore(directory: RootedDataDirectory.temporary()),
+      launchAtLogin: LaunchAtLoginStub(isEnabled: false),
+      notificationAuthorization: NotificationAuthorizationStub(state: .allowed)
+    )
+
+    model.answerTestNotification(UUID())
+    await waitUntil("the lost report message") { model.errorMessage != nil }
+
+    #expect(model.errorMessage == OJDLocalized.string("ui.settings.notifications.testReportLost"))
+  }
+
+  @Test
+  @MainActor
   func answeringWithDeniedPermissionReportsDenied() async {
     let requester = TestNotificationRequestStub()
     let model = SettingsPreferencesModel(
@@ -393,10 +469,17 @@ final class TestNotificationRequestStub: TestNotificationRequesting, @unchecked 
   private var reports: [(UUID, TestNotificationOutcome)] = []
   private var outcome: TestNotificationOutcome
   private let failure: (any Error)?
+  /// What `reportTestNotification` returns: false when the service no longer waits for the report.
+  private let reportAccepted: Bool
 
-  init(outcome: TestNotificationOutcome = .shown, failure: (any Error)? = nil) {
+  init(
+    outcome: TestNotificationOutcome = .shown,
+    failure: (any Error)? = nil,
+    reportAccepted: Bool = true
+  ) {
     self.outcome = outcome
     self.failure = failure
+    self.reportAccepted = reportAccepted
   }
 
   func setOutcome(_ next: TestNotificationOutcome) { lock.withLock { outcome = next } }
@@ -418,7 +501,7 @@ final class TestNotificationRequestStub: TestNotificationRequesting, @unchecked 
     await Task.yield()
     lock.withLock { reports.append((announcement, outcome)) }
     if let failure { throw failure }
-    return true
+    return reportAccepted
   }
 }
 
@@ -475,10 +558,22 @@ private actor UpdateCheckerStub: ApplicationUpdateChecking {
 private final class PreferencesNotificationDeliverySpy: RuntimeNotificationDelivering {
   private(set) var deliveryCount = 0
   private(set) var lastSound: Bool?
+  /// What `deliverAwaitingSystem` throws, or nil to accept the notification.
+  var failure: (any Error)?
 
   func deliver(title: String, body: String, sound: Bool) {
     deliveryCount += 1
     lastSound = sound
+  }
+
+  nonisolated(nonsending) func deliverAwaitingSystem(
+    title: String,
+    body: String,
+    sound: Bool
+  ) async throws {
+    await Task.yield()
+    if let failure { throw failure }
+    deliver(title: title, body: body, sound: sound)
   }
 }
 

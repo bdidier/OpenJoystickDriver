@@ -586,6 +586,10 @@
 "notifications.profileSwitchedBody" = "%@ → %@";
 "notifications.testBody" = "OpenJoystickDriver สามารถแจ้งเตือนคุณเกี่ยวกับกิจกรรมของคอนโทรลเลอร์และโปรไฟล์ได้";
 "notifications.testTitle" = "การแจ้งเตือนพร้อมใช้งาน";
+/* Shown in the Notifications settings pane and by the app's test notification report when the app runs outside an app bundle and has no notification center. */
+"ui.settings.notifications.noNotificationCenter" = "ไม่สามารถใช้การแจ้งเตือนได้ เพราะ OpenJoystickDriver ไม่ได้ทำงานจากบันเดิลแอป เปิดแอป OpenJoystickDriver แล้วลองอีกครั้ง";
+/* Shown in the Notifications settings pane when the ojd request that asked for the test notification ended before the app's report on it arrived. */
+"ui.settings.notifications.testReportLost" = "คำขอ ojd สิ้นสุดลงก่อนที่รายงานเกี่ยวกับการแจ้งเตือนทดสอบจะมาถึง";
 "profiles.virtualOutput" = "เกมแพดเสมือน";
 "profiles.virtualDisabled" = "ปิดใช้งาน";
 "profiles.virtualMapped" = "เฉพาะตัวควบคุมที่แมปแล้ว";

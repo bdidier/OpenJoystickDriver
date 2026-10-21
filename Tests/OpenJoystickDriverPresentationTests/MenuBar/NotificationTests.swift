@@ -196,4 +196,12 @@ private final class NotificationDeliverySpy: RuntimeNotificationDelivering {
   private(set) var messages: [(title: String, body: String, sound: Bool)] = []
 
   func deliver(title: String, body: String, sound: Bool) { messages.append((title, body, sound)) }
+  nonisolated(nonsending) func deliverAwaitingSystem(
+    title: String,
+    body: String,
+    sound: Bool
+  ) async throws {
+    await Task.yield()
+    messages.append((title, body, sound))
+  }
 }

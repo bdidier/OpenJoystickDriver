@@ -586,6 +586,10 @@
 "notifications.profileSwitchedBody" = "%@ → %@";
 "notifications.testBody" = "OpenJoystickDriver는 컨트롤러 및 프로파일 활동에 대해 알려줄 수 있습니다.";
 "notifications.testTitle" = "알림이 준비되었습니다";
+/* Shown in the Notifications settings pane and by the app's test notification report when the app runs outside an app bundle and has no notification center. */
+"ui.settings.notifications.noNotificationCenter" = "OpenJoystickDriver가 앱 번들에서 실행되고 있지 않아 알림을 사용할 수 없습니다. OpenJoystickDriver 앱을 연 다음 다시 시도하세요.";
+/* Shown in the Notifications settings pane when the ojd request that asked for the test notification ended before the app's report on it arrived. */
+"ui.settings.notifications.testReportLost" = "테스트 알림에 대한 보고가 도착하기 전에 ojd 요청이 종료되었습니다.";
 "profiles.virtualOutput" = "가상 게임패드";
 "profiles.virtualDisabled" = "비활성화됨";
 "profiles.virtualMapped" = "매핑된 컨트롤만";

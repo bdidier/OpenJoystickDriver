@@ -310,6 +310,14 @@ private final class RecoveryDeliverySpy: RuntimeNotificationDelivering {
   private(set) var total = 0
 
   func deliver(title: String, body: String, sound: Bool) { total += 1 }
+  nonisolated(nonsending) func deliverAwaitingSystem(
+    title: String,
+    body: String,
+    sound: Bool
+  ) async throws {
+    await Task.yield()
+    total += 1
+  }
 }
 
 private final class RecoveryLaunchAtLoginStub: LaunchAtLoginControlling {

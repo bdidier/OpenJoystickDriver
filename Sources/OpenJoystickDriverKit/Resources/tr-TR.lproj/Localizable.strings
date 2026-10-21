@@ -586,6 +586,10 @@
 "notifications.profileSwitchedBody" = "%@ → %@";
 "notifications.testBody" = "OpenJoystickDriver, kontrolcü ve profil etkinliği hakkında bildirim verebilir.";
 "notifications.testTitle" = "Bildirimler Hazır";
+/* Shown in the Notifications settings pane and by the app's test notification report when the app runs outside an app bundle and has no notification center. */
+"ui.settings.notifications.noNotificationCenter" = "Bildirimler kullanılamıyor çünkü OpenJoystickDriver uygulama paketinden çalışmıyor. OpenJoystickDriver uygulamasını açın, sonra yeniden deneyin.";
+/* Shown in the Notifications settings pane when the ojd request that asked for the test notification ended before the app's report on it arrived. */
+"ui.settings.notifications.testReportLost" = "ojd isteği, test bildirimine ilişkin rapor gelmeden önce sona erdi.";
 "profiles.virtualOutput" = "Sanal Oyun Kontrolcüsü";
 "profiles.virtualDisabled" = "Devre Dışı";
 "profiles.virtualMapped" = "Yalnızca Atanmış Denetimler";

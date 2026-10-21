@@ -586,6 +586,10 @@
 "notifications.profileSwitchedBody" = "%@ → %@";
 "notifications.testBody" = "OpenJoystickDriver kan je informeren over controller- en profielactiviteit.";
 "notifications.testTitle" = "Meldingen zijn gereed";
+/* Shown in the Notifications settings pane and by the app's test notification report when the app runs outside an app bundle and has no notification center. */
+"ui.settings.notifications.noNotificationCenter" = "Meldingen zijn niet beschikbaar omdat OpenJoystickDriver niet vanuit zijn app-bundel draait. Open de OpenJoystickDriver-app en probeer het opnieuw.";
+/* Shown in the Notifications settings pane when the ojd request that asked for the test notification ended before the app's report on it arrived. */
+"ui.settings.notifications.testReportLost" = "Het ojd-verzoek eindigde voordat het rapport over de testmelding binnenkwam.";
 "profiles.virtualOutput" = "Virtuele gamepad";
 "profiles.virtualDisabled" = "Uitgeschakeld";
 "profiles.virtualMapped" = "Alleen toegewezen besturingen";

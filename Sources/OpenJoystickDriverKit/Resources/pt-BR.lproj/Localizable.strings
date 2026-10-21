@@ -586,6 +586,10 @@
 "notifications.profileSwitchedBody" = "%@ → %@";
 "notifications.testBody" = "O OpenJoystickDriver pode notificar você sobre a atividade de controles e perfis.";
 "notifications.testTitle" = "As Notificações Estão Prontas";
+/* Shown in the Notifications settings pane and by the app's test notification report when the app runs outside an app bundle and has no notification center. */
+"ui.settings.notifications.noNotificationCenter" = "As notificações não estão disponíveis porque o OpenJoystickDriver não está sendo executado a partir do pacote do app. Abra o app OpenJoystickDriver e tente de novo.";
+/* Shown in the Notifications settings pane when the ojd request that asked for the test notification ended before the app's report on it arrived. */
+"ui.settings.notifications.testReportLost" = "A solicitação do ojd terminou antes de o relatório sobre a notificação de teste chegar.";
 "profiles.virtualOutput" = "Controle Virtual";
 "profiles.virtualDisabled" = "Desativado";
 "profiles.virtualMapped" = "Apenas Comandos Remapeados";

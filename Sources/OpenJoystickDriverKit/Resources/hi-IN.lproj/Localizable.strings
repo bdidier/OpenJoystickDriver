@@ -586,6 +586,10 @@
 "notifications.profileSwitchedBody" = "%@ → %@";
 "notifications.testBody" = "OpenJoystickDriver आपको कंट्रोलर और प्रोफ़ाइल गतिविधि के बारे में सूचित कर सकता है।";
 "notifications.testTitle" = "सूचनाएँ तैयार हैं";
+/* Shown in the Notifications settings pane and by the app's test notification report when the app runs outside an app bundle and has no notification center. */
+"ui.settings.notifications.noNotificationCenter" = "सूचनाएँ उपलब्ध नहीं हैं, क्योंकि OpenJoystickDriver अपने ऐप बंडल से नहीं चल रहा है। OpenJoystickDriver ऐप खोलें, फिर दोबारा कोशिश करें।";
+/* Shown in the Notifications settings pane when the ojd request that asked for the test notification ended before the app's report on it arrived. */
+"ui.settings.notifications.testReportLost" = "परीक्षण सूचना की रिपोर्ट आने से पहले ही ojd का अनुरोध समाप्त हो गया।";
 "profiles.virtualOutput" = "वर्चुअल गेमपैड";
 "profiles.virtualDisabled" = "अक्षम";
 "profiles.virtualMapped" = "केवल रीमैप किए गए नियंत्रण";

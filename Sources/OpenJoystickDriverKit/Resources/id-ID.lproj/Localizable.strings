@@ -586,6 +586,10 @@
 "notifications.profileSwitchedBody" = "%@ → %@";
 "notifications.testBody" = "OpenJoystickDriver dapat memberi tahu Anda tentang aktivitas pengontrol dan profil.";
 "notifications.testTitle" = "Pemberitahuan siap";
+/* Shown in the Notifications settings pane and by the app's test notification report when the app runs outside an app bundle and has no notification center. */
+"ui.settings.notifications.noNotificationCenter" = "Pemberitahuan tidak tersedia karena OpenJoystickDriver tidak berjalan dari bundel app-nya. Buka app OpenJoystickDriver, lalu coba lagi.";
+/* Shown in the Notifications settings pane when the ojd request that asked for the test notification ended before the app's report on it arrived. */
+"ui.settings.notifications.testReportLost" = "Permintaan ojd berakhir sebelum laporan tentang pemberitahuan tes tiba.";
 "profiles.virtualOutput" = "Gamepad virtual";
 "profiles.virtualDisabled" = "Dinonaktifkan";
 "profiles.virtualMapped" = "Hanya kontrol yang dipetakan";

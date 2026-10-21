@@ -586,6 +586,10 @@
 "notifications.profileSwitchedBody" = "%@ → %@";
 "notifications.testBody" = "OpenJoystickDriver 可以就控制器和設定檔活動向您傳送通知。";
 "notifications.testTitle" = "通知已就緒";
+/* Shown in the Notifications settings pane and by the app's test notification report when the app runs outside an app bundle and has no notification center. */
+"ui.settings.notifications.noNotificationCenter" = "通知無法使用，因為 OpenJoystickDriver 不是從其 App 套件執行的。請開啟 OpenJoystickDriver App，然後重試。";
+/* Shown in the Notifications settings pane when the ojd request that asked for the test notification ended before the app's report on it arrived. */
+"ui.settings.notifications.testReportLost" = "ojd 要求在測試通知的報告送達之前已結束。";
 "profiles.virtualOutput" = "虛擬遊戲控制器";
 "profiles.virtualDisabled" = "已停用";
 "profiles.virtualMapped" = "僅重新對應的控制項";

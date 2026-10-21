@@ -207,20 +207,27 @@
       }
     }
 
-    /// Shows the test notification the service announced and reports how it ended. A report the
-    /// service cannot take shows in `errorMessage`.
+    /// Shows the test notification the service announced and reports how it ended. A report that
+    /// fails shows its error in `errorMessage`; a report the service no longer waits for, because
+    /// the `ojd` request ended first, shows `ui.settings.notifications.testReportLost`.
     func answerTestNotification(_ announcement: UUID) {
       Task { @MainActor [weak self, testNotifications] in
         guard let self else { return }
         let outcome = await self.showTestNotification()
         do {
-          _ = try await testNotifications.reportTestNotification(announcement, outcome: outcome)
+          let accepted = try await testNotifications.reportTestNotification(
+            announcement,
+            outcome: outcome
+          )
+          if !accepted {
+            self.errorMessage = OJDLocalized.string("ui.settings.notifications.testReportLost")
+          }
         } catch { self.report(error) }
       }
     }
 
     /// Delivers the test notification, asking the system for permission first when it is not
-    /// decided.
+    /// decided. A delivery the system rejects, or one with no notification center, is `failed`.
     func showTestNotification() async -> TestNotificationOutcome {
       notificationAuthorizationReads += 1
       var state = await notificationAuthorizationController.state()
@@ -233,11 +240,13 @@
         if let errorDescription { return .failed(errorDescription) }
       }
       guard state == .allowed else { return .denied }
-      notificationDelivery.deliver(
-        title: OJDLocalized.string("notifications.testTitle"),
-        body: OJDLocalized.string("notifications.testBody"),
-        sound: notificationSounds
-      )
+      do {
+        try await notificationDelivery.deliverAwaitingSystem(
+          title: OJDLocalized.string("notifications.testTitle"),
+          body: OJDLocalized.string("notifications.testBody"),
+          sound: notificationSounds
+        )
+      } catch { return .failed(error.localizedDescription) }
       refreshNotificationAuthorization()
       return .shown
     }

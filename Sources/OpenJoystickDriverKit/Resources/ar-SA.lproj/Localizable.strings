@@ -586,6 +586,10 @@
 "notifications.profileSwitchedBody" = "%@ → %@";
 "notifications.testBody" = "يمكن لـ OpenJoystickDriver إعلامك بنشاط وحدة التحكم وملف التعريف.";
 "notifications.testTitle" = "الإشعارات جاهزة";
+/* Shown in the Notifications settings pane and by the app's test notification report when the app runs outside an app bundle and has no notification center. */
+"ui.settings.notifications.noNotificationCenter" = "الإشعارات غير متاحة لأن OpenJoystickDriver لا يعمل من حزمة تطبيقه. افتح تطبيق OpenJoystickDriver ثم حاول مرة أخرى.";
+/* Shown in the Notifications settings pane when the ojd request that asked for the test notification ended before the app's report on it arrived. */
+"ui.settings.notifications.testReportLost" = "انتهى طلب ojd قبل وصول تقرير الإشعار التجريبي.";
 "profiles.virtualOutput" = "وحدة تحكم افتراضية";
 "profiles.virtualDisabled" = "معطّل";
 "profiles.virtualMapped" = "عناصر التحكم المعاد تعيينها فقط";
