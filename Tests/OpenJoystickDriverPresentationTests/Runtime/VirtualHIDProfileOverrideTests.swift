@@ -25,6 +25,8 @@ struct VirtualHIDProfileOverrideTests {
       physicalOwnership: ownership,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
+      recordServer: .system,
+      recordAccessRoute: .system,
       sessionToken: .fixture(sessionToken)
     )
     device.virtualHIDProfile = profile
@@ -313,6 +315,8 @@ struct VirtualHIDProfileOverrideTests {
       physicalOwnership: .systemGamepad,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
+      recordServer: .system,
+      recordAccessRoute: .system,
       sessionToken: .fixture("session-native")
     )
     sixaxis.virtualHIDProfile = ApplicationServiceVirtualHIDProfileStatus(

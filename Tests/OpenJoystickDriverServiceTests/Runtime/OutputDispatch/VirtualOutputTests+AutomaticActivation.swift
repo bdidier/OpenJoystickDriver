@@ -29,6 +29,8 @@ extension VirtualOutputTests {
       discoverySource: .rawUSB,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
+      recordServer: .system,
+      recordAccessRoute: .system,
       portKey: id.testPortKey
     )
   }
@@ -46,6 +48,8 @@ extension VirtualOutputTests {
       discoverySource: .rawUSB,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
+      recordServer: .system,
+      recordAccessRoute: .system,
       capabilities: ControllerCapabilities(controls: Control.xboxLayout)
     )
   }

@@ -173,7 +173,9 @@ extension VirtualOutputTests {
       discoverySource: .hid,
       physicalOwnership: ownership,
       serialNumber: nil,
-      bindingResult: .hidDescriptorFixture
+      bindingResult: .hidDescriptorFixture,
+      recordServer: .system,
+      recordAccessRoute: .system
     )
 
     let described = fixture.server.describingVirtualHIDProfiles([

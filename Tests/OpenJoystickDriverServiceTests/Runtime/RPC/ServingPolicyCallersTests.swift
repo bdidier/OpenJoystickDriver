@@ -69,6 +69,8 @@ struct ServingPolicyCallersTests {
       physicalOwnership: .exclusiveHID,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
+      recordServer: .system,
+      recordAccessRoute: .system,
       capabilities: ControllerCapabilities(controls: controls),
       sessionState: session,
       sessionToken: .fixture("reason-fixture")

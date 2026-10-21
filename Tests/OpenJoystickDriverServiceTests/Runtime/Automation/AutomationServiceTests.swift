@@ -90,6 +90,8 @@ struct AutomationServiceTests {
       discoverySource: .rawUSB,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
+      recordServer: .system,
+      recordAccessRoute: .system,
       connectionState: ControllerConnectionState(
         transport: .usb,
         backend: .usbExtension,

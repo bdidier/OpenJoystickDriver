@@ -196,6 +196,8 @@ struct StatusTests {
       discoverySource: .rawUSB,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
+      recordServer: .system,
+      recordAccessRoute: .system,
       sessionToken: .fixture("ds4-bluetooth")
     )
     await gateway.setStatusPayload(
@@ -350,6 +352,8 @@ struct StatusTests {
       discoverySource: .rawUSB,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
+      recordServer: .system,
+      recordAccessRoute: .system,
       sessionToken: .fixture(sessionToken)
     )
   }

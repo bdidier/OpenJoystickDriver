@@ -106,6 +106,8 @@ struct SupportDiagnosticsTests {
       discoverySource: .rawUSB,
       serialNumber: "private-serial",
       bindingResult: .hidDescriptorFixture,
+      recordServer: .system,
+      recordAccessRoute: .system,
       sessionToken: .fixture("device-report")
     )
     let diagnostics = ApplicationServiceVirtualDeviceDiagnosticsPayload(

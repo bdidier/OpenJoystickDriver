@@ -51,6 +51,8 @@ extension ApplicationServiceDeviceDescription {
       bindingResult: .hidDescriptorFixture,
       physicalOutputCapabilities: outputs,
       physicalOutputOwner: physicalOutputOwner,
+      recordServer: .system,
+      recordAccessRoute: .system,
       tuning: tuning,
       connectionState: power.map {
         ControllerConnectionState(transport: .usb, backend: .hid, isConnected: true, power: $0)

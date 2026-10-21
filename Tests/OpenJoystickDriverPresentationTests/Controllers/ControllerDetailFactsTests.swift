@@ -24,6 +24,8 @@ struct ControllerDetailFactsTests {
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
       physicalOutputCapabilities: output,
+      recordServer: .system,
+      recordAccessRoute: .system,
       capabilities: ControllerCapabilities(controls: [], motion: motion),
       connectionState: power.map {
         ControllerConnectionState(transport: nil, backend: .hid, isConnected: true, power: $0)

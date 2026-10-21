@@ -42,6 +42,8 @@ struct SupportReportTests {
           physicalOutputCapabilities: PhysicalControllerOutputCapabilities(rumbleMotors: [
             .lowFrequency, .highFrequency, .leftTrigger, .rightTrigger,
           ]),
+          recordServer: .system,
+          recordAccessRoute: .system,
           connectionState: ControllerConnectionState(
             transport: .usb,
             backend: .usbExtension,

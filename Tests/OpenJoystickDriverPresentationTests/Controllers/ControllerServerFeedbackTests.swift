@@ -21,6 +21,7 @@ struct ControllerServerFeedbackTests {
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
       recordServer: recordServer,
+      recordAccessRoute: .system,
       sessionToken: .fixture("device-feedback")
     )
   }

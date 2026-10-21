@@ -17,7 +17,9 @@ struct PhysicalOutputValidationPlanTests {
       physicalOutputCapabilities: PhysicalControllerOutputCapabilities(
         rumbleMotors: [.lowFrequency, .highFrequency, .leftTrigger, .rightTrigger],
         lightingFeatures: [.playerIndicator, .programmableColor, .programmableBrightness]
-      )
+      ),
+      recordServer: .system,
+      recordAccessRoute: .system
     )
     let plan = PhysicalOutputValidationPlan(device: device)
     #expect(

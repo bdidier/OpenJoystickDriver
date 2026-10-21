@@ -105,7 +105,9 @@ struct SupportReportBindingTests {
       connection: "USB",
       discoverySource: .rawUSB,
       serialNumber: secretSerial,
-      bindingResult: result
+      bindingResult: result,
+      recordServer: .system,
+      recordAccessRoute: .system
     )
     let data = try report(connected: [connected]).encodedJSON()
     let json = try #require(String(data: data, encoding: .utf8))
@@ -254,7 +256,9 @@ struct SupportReportBindingTests {
       connection: "USB",
       discoverySource: .rawUSB,
       serialNumber: nil,
-      bindingResult: result
+      bindingResult: result,
+      recordServer: .system,
+      recordAccessRoute: .system
     )
   }
 

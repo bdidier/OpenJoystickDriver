@@ -21,6 +21,8 @@ struct ProfileCreationFieldsTests {
       discoverySource: .rawUSB,
       serialNumber: nil,
       bindingResult: .hidDescriptorFixture,
+      recordServer: .system,
+      recordAccessRoute: .system,
       sessionToken: .fixture(token)
     )
   }
