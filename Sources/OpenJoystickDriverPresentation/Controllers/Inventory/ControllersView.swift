@@ -12,6 +12,8 @@
     private var screen: ControllersViewModel
     let column: MainWindowColumn
     let openInputTest: @MainActor (ApplicationServiceDeviceDescription) -> Void
+    @State
+    private var wirelessDisconnectCandidate: ApplicationServiceDeviceDescription?
 
     init(
       screen: ControllersViewModel,
@@ -105,8 +107,48 @@
             device.name
           )
           .ojdAccessibilityValue(device.protocolBinding.displayLabel)
+          .contextMenu { sessionCommands(for: device) }
         }
-      }.listStyle(InsetListStyle())
+      }.listStyle(InsetListStyle()).alert(
+        isPresented: Binding(
+          get: { wirelessDisconnectCandidate != nil },
+          set: { if !$0 { wirelessDisconnectCandidate = nil } }
+        )
+      ) { wirelessDisconnectAlert }
+    }
+
+    /// The Controller menu's session commands for one controller.
+    @ViewBuilder
+    private func sessionCommands(for device: ApplicationServiceDeviceDescription) -> some View {
+      if device.sessionState == .suspended {
+        Button(OJDLocalized.string("mainMenu.controller.resume")) {
+          Task { @MainActor in await viewModel.resumeController(device) }
+        }
+      } else {
+        Button(OJDLocalized.string("mainMenu.controller.suspend")) {
+          Task { @MainActor in await viewModel.suspendController(device) }
+        }
+      }
+      if device.supportsWirelessDisconnect {
+        Button(OJDLocalized.string("mainMenu.controller.disconnectWirelessLink")) {
+          wirelessDisconnectCandidate = device
+        }
+      }
+    }
+
+    private var wirelessDisconnectAlert: Alert {
+      let name = wirelessDisconnectCandidate?.name ?? ""
+      return Alert(
+        title: Text(OJDLocalized.string("controllers.disconnectWirelessConfirmTitle")),
+        message: Text(OJDLocalized.formatted("controllers.disconnectWirelessConfirmMessage", name)),
+        primaryButton: .destructive(
+          Text(OJDLocalized.string("controllers.disconnectWirelessConfirm"))
+        ) {
+          guard let device = wirelessDisconnectCandidate else { return }
+          Task { @MainActor in await viewModel.disconnectWirelessController(device) }
+        },
+        secondaryButton: .cancel()
+      )
     }
 
     private var selectedDeviceIdentifier: Binding<String?> {

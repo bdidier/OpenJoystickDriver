@@ -13,8 +13,11 @@
         if showsSessionState {
           Section {
             if device.sessionState == .suspended {
-              Text(OJDLocalized.string("controllers.suspended"))
-                .foregroundColor(Color(NSColor.secondaryLabelColor))
+              OJDLabeledRow(OJDLocalized.string("controllers.suspended")) {
+                Button(OJDLocalized.string("mainMenu.controller.resume")) {
+                  Task { @MainActor in await viewModel.resumeController(device) }
+                }
+              }
             }
             if let failure = viewModel.controllerActionFailures[device.sessionToken.rawValue] {
               controllerActionFailure(failure)
