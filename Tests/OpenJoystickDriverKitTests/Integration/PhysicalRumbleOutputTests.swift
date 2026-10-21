@@ -9,7 +9,7 @@ struct PhysicalRumbleOutputTests {
   func testSourceBackedParsersExposeExactOutputCapabilities() {
     let gip = GIPDriver()
     let xbox360 = XUSBDriver()
-    let xid = XIDDriver()
+    let xid = xidDriver()
     let ds4 = DualShock4Driver()
     let dualSense = DualSenseDriver()
     let ds3 = SixaxisDriver()

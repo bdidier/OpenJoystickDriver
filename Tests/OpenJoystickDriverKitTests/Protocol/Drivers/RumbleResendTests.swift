@@ -40,7 +40,7 @@ struct RumbleResendTests {
 
   @Test
   func xidResendsTheLastReportWhileAMotorRunsThenStops() throws {
-    let driver = XIDDriver(rumbleTemplate: try Self.usbTemplate(resend: 40))
+    let driver = xidDriver(rumbleTemplate: try Self.usbTemplate(resend: 40))
     #expect(driver.sessionPlan.usbKeepAliveIntervalNanoseconds == 40_000_000)
     #expect(driver.keepAliveWrites().isEmpty)
     let sent = try driver.encode(.setRumble(Self.running, duration: .held)).writes
@@ -53,7 +53,7 @@ struct RumbleResendTests {
 
   @Test
   func aZeroSetRumbleStopsTheResends() throws {
-    let driver = XIDDriver(rumbleTemplate: try Self.usbTemplate(resend: 40))
+    let driver = xidDriver(rumbleTemplate: try Self.usbTemplate(resend: 40))
     _ = try driver.encode(.setRumble(Self.running, duration: .held))
     _ = try driver.encode(.setRumble(.off, duration: .held))
     #expect(driver.keepAliveWrites().isEmpty)
@@ -61,7 +61,7 @@ struct RumbleResendTests {
 
   @Test
   func aNewSessionStopsTheResends() throws {
-    let driver = XIDDriver(rumbleTemplate: try Self.usbTemplate(resend: 40))
+    let driver = xidDriver(rumbleTemplate: try Self.usbTemplate(resend: 40))
     _ = try driver.encode(.setRumble(Self.running, duration: .held))
     driver.resetProtocolState()
     #expect(driver.keepAliveWrites().isEmpty)
@@ -69,7 +69,7 @@ struct RumbleResendTests {
 
   @Test
   func withoutAResendIntervalThereIsNoKeepAlive() throws {
-    let driver = XIDDriver(rumbleTemplate: try Self.usbTemplate(resend: nil))
+    let driver = xidDriver(rumbleTemplate: try Self.usbTemplate(resend: nil))
     _ = try driver.encode(.setRumble(Self.running, duration: .held))
     #expect(driver.sessionPlan.usbKeepAliveIntervalNanoseconds == nil)
     #expect(driver.keepAliveWrites().isEmpty)

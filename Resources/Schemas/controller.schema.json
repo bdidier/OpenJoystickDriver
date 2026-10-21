@@ -663,6 +663,10 @@
               "type": "integer",
               "minimum": 1,
               "maximum": 64
+            },
+            "exactLength": {
+              "description": "true accepts only reports of exactly length bytes; absent accepts longer reports too.",
+              "const": true
             }
           }
         },

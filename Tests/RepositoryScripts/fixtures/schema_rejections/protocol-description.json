@@ -8103,6 +8103,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["input"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "controls": {
           "base": "Xbox",
@@ -8110,6 +8111,108 @@
           "digitalTriggers": ["LeftTrigger", "RightTrigger"]
         },
         "defaults": {
+          "input": {
+            "report": {
+              "length": 7
+            },
+            "buttons": [
+              {
+                "control": "West",
+                "byte": 0,
+                "mask": 1
+              },
+              {
+                "control": "South",
+                "byte": 0,
+                "mask": 2
+              },
+              {
+                "control": "East",
+                "byte": 0,
+                "mask": 4
+              },
+              {
+                "control": "North",
+                "byte": 0,
+                "mask": 8
+              },
+              {
+                "control": "LeftShoulder",
+                "byte": 0,
+                "mask": 16
+              },
+              {
+                "control": "RightShoulder",
+                "byte": 0,
+                "mask": 32
+              },
+              {
+                "control": "LeftTrigger",
+                "byte": 0,
+                "mask": 64
+              },
+              {
+                "control": "RightTrigger",
+                "byte": 0,
+                "mask": 128
+              },
+              {
+                "control": "Back",
+                "byte": 1,
+                "mask": 1
+              },
+              {
+                "control": "Start",
+                "byte": 1,
+                "mask": 2
+              },
+              {
+                "control": "LeftStickClick",
+                "byte": 1,
+                "mask": 4
+              },
+              {
+                "control": "RightStickClick",
+                "byte": 1,
+                "mask": 8
+              },
+              {
+                "control": "Guide",
+                "byte": 1,
+                "mask": 16
+              },
+              {
+                "control": "Capture",
+                "byte": 1,
+                "mask": 32
+              }
+            ],
+            "axes": [
+              {
+                "control": "LeftStickX",
+                "byte": 3
+              },
+              {
+                "control": "LeftStickY",
+                "byte": 4
+              },
+              {
+                "control": "RightStickX",
+                "byte": 5
+              },
+              {
+                "control": "RightStickY",
+                "byte": 6
+              }
+            ],
+            "hat": [
+              {
+                "encoding": "EightWay",
+                "byte": 2,
+                "mask": 255
+              }
+            ]
+          },
           "tuning": {
             "frameQueueCapacity": 0
           }
@@ -8131,6 +8234,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["input"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "controls": {
           "base": "Xbox",
@@ -8138,6 +8242,108 @@
           "digitalTriggers": ["LeftTrigger", "RightTrigger"]
         },
         "defaults": {
+          "input": {
+            "report": {
+              "length": 7
+            },
+            "buttons": [
+              {
+                "control": "West",
+                "byte": 0,
+                "mask": 1
+              },
+              {
+                "control": "South",
+                "byte": 0,
+                "mask": 2
+              },
+              {
+                "control": "East",
+                "byte": 0,
+                "mask": 4
+              },
+              {
+                "control": "North",
+                "byte": 0,
+                "mask": 8
+              },
+              {
+                "control": "LeftShoulder",
+                "byte": 0,
+                "mask": 16
+              },
+              {
+                "control": "RightShoulder",
+                "byte": 0,
+                "mask": 32
+              },
+              {
+                "control": "LeftTrigger",
+                "byte": 0,
+                "mask": 64
+              },
+              {
+                "control": "RightTrigger",
+                "byte": 0,
+                "mask": 128
+              },
+              {
+                "control": "Back",
+                "byte": 1,
+                "mask": 1
+              },
+              {
+                "control": "Start",
+                "byte": 1,
+                "mask": 2
+              },
+              {
+                "control": "LeftStickClick",
+                "byte": 1,
+                "mask": 4
+              },
+              {
+                "control": "RightStickClick",
+                "byte": 1,
+                "mask": 8
+              },
+              {
+                "control": "Guide",
+                "byte": 1,
+                "mask": 16
+              },
+              {
+                "control": "Capture",
+                "byte": 1,
+                "mask": 32
+              }
+            ],
+            "axes": [
+              {
+                "control": "LeftStickX",
+                "byte": 3
+              },
+              {
+                "control": "LeftStickY",
+                "byte": 4
+              },
+              {
+                "control": "RightStickX",
+                "byte": 5
+              },
+              {
+                "control": "RightStickY",
+                "byte": 6
+              }
+            ],
+            "hat": [
+              {
+                "encoding": "EightWay",
+                "byte": 2,
+                "mask": 255
+              }
+            ]
+          },
           "tuning": {
             "frameQueueCapacity": 1025
           }
@@ -8159,6 +8365,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["input"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "controls": {
           "base": "Xbox",
@@ -8166,6 +8373,108 @@
           "digitalTriggers": ["LeftTrigger", "RightTrigger"]
         },
         "defaults": {
+          "input": {
+            "report": {
+              "length": 7
+            },
+            "buttons": [
+              {
+                "control": "West",
+                "byte": 0,
+                "mask": 1
+              },
+              {
+                "control": "South",
+                "byte": 0,
+                "mask": 2
+              },
+              {
+                "control": "East",
+                "byte": 0,
+                "mask": 4
+              },
+              {
+                "control": "North",
+                "byte": 0,
+                "mask": 8
+              },
+              {
+                "control": "LeftShoulder",
+                "byte": 0,
+                "mask": 16
+              },
+              {
+                "control": "RightShoulder",
+                "byte": 0,
+                "mask": 32
+              },
+              {
+                "control": "LeftTrigger",
+                "byte": 0,
+                "mask": 64
+              },
+              {
+                "control": "RightTrigger",
+                "byte": 0,
+                "mask": 128
+              },
+              {
+                "control": "Back",
+                "byte": 1,
+                "mask": 1
+              },
+              {
+                "control": "Start",
+                "byte": 1,
+                "mask": 2
+              },
+              {
+                "control": "LeftStickClick",
+                "byte": 1,
+                "mask": 4
+              },
+              {
+                "control": "RightStickClick",
+                "byte": 1,
+                "mask": 8
+              },
+              {
+                "control": "Guide",
+                "byte": 1,
+                "mask": 16
+              },
+              {
+                "control": "Capture",
+                "byte": 1,
+                "mask": 32
+              }
+            ],
+            "axes": [
+              {
+                "control": "LeftStickX",
+                "byte": 3
+              },
+              {
+                "control": "LeftStickY",
+                "byte": 4
+              },
+              {
+                "control": "RightStickX",
+                "byte": 5
+              },
+              {
+                "control": "RightStickY",
+                "byte": 6
+              }
+            ],
+            "hat": [
+              {
+                "encoding": "EightWay",
+                "byte": 2,
+                "mask": 255
+              }
+            ]
+          },
           "tuning": {
             "frameQueueCapacity": 1.5
           }
@@ -8187,6 +8496,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["input"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "controls": {
           "base": "Xbox",
@@ -8194,6 +8504,108 @@
           "digitalTriggers": ["LeftTrigger", "RightTrigger"]
         },
         "defaults": {
+          "input": {
+            "report": {
+              "length": 7
+            },
+            "buttons": [
+              {
+                "control": "West",
+                "byte": 0,
+                "mask": 1
+              },
+              {
+                "control": "South",
+                "byte": 0,
+                "mask": 2
+              },
+              {
+                "control": "East",
+                "byte": 0,
+                "mask": 4
+              },
+              {
+                "control": "North",
+                "byte": 0,
+                "mask": 8
+              },
+              {
+                "control": "LeftShoulder",
+                "byte": 0,
+                "mask": 16
+              },
+              {
+                "control": "RightShoulder",
+                "byte": 0,
+                "mask": 32
+              },
+              {
+                "control": "LeftTrigger",
+                "byte": 0,
+                "mask": 64
+              },
+              {
+                "control": "RightTrigger",
+                "byte": 0,
+                "mask": 128
+              },
+              {
+                "control": "Back",
+                "byte": 1,
+                "mask": 1
+              },
+              {
+                "control": "Start",
+                "byte": 1,
+                "mask": 2
+              },
+              {
+                "control": "LeftStickClick",
+                "byte": 1,
+                "mask": 4
+              },
+              {
+                "control": "RightStickClick",
+                "byte": 1,
+                "mask": 8
+              },
+              {
+                "control": "Guide",
+                "byte": 1,
+                "mask": 16
+              },
+              {
+                "control": "Capture",
+                "byte": 1,
+                "mask": 32
+              }
+            ],
+            "axes": [
+              {
+                "control": "LeftStickX",
+                "byte": 3
+              },
+              {
+                "control": "LeftStickY",
+                "byte": 4
+              },
+              {
+                "control": "RightStickX",
+                "byte": 5
+              },
+              {
+                "control": "RightStickY",
+                "byte": 6
+              }
+            ],
+            "hat": [
+              {
+                "encoding": "EightWay",
+                "byte": 2,
+                "mask": 255
+              }
+            ]
+          },
           "tuning": {
             "frameQueueCapacity": "64"
           }
@@ -11458,6 +11870,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["input"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "controls": {
           "base": "Xbox",
@@ -11465,6 +11878,141 @@
           "digitalTriggers": ["LeftTrigger", "RightTrigger"]
         },
         "defaults": {
+          "input": {
+            "report": {
+              "id": 1,
+              "length": 15,
+              "exactLength": true
+            },
+            "buttons": [
+              {
+                "control": "South",
+                "byte": 9,
+                "mask": 16
+              },
+              {
+                "control": "East",
+                "byte": 9,
+                "mask": 32
+              },
+              {
+                "control": "West",
+                "byte": 9,
+                "mask": 64
+              },
+              {
+                "control": "North",
+                "byte": 9,
+                "mask": 128
+              },
+              {
+                "control": "LeftShoulder",
+                "byte": 10,
+                "mask": 1
+              },
+              {
+                "control": "RightShoulder",
+                "byte": 10,
+                "mask": 2
+              },
+              {
+                "control": "LeftTrigger",
+                "byte": 10,
+                "mask": 4
+              },
+              {
+                "control": "RightTrigger",
+                "byte": 10,
+                "mask": 8
+              },
+              {
+                "control": "Back",
+                "byte": 10,
+                "mask": 16
+              },
+              {
+                "control": "Start",
+                "byte": 10,
+                "mask": 32
+              },
+              {
+                "control": "LeftStickClick",
+                "byte": 10,
+                "mask": 64
+              },
+              {
+                "control": "RightStickClick",
+                "byte": 10,
+                "mask": 128
+              },
+              {
+                "control": "Guide",
+                "byte": 12,
+                "mask": 128
+              }
+            ],
+            "axes": [
+              {
+                "control": "LeftStickX",
+                "byte": 1,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              },
+              {
+                "control": "LeftStickY",
+                "byte": 2,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              },
+              {
+                "control": "RightStickX",
+                "byte": 3,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              },
+              {
+                "control": "RightStickY",
+                "byte": 4,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              }
+            ],
+            "hat": [
+              {
+                "encoding": "Table",
+                "byte": 9,
+                "mask": 15,
+                "values": {
+                  "1": "North",
+                  "2": "NorthEast",
+                  "3": "East",
+                  "4": "SouthEast",
+                  "5": "South",
+                  "6": "SouthWest",
+                  "7": "West",
+                  "8": "NorthWest"
+                }
+              }
+            ],
+            "leftTrigger": {
+              "byte": 13
+            },
+            "rightTrigger": {
+              "byte": 14
+            }
+          },
           "tuning": {
             "frameQueueCapacity": 0
           }
@@ -11485,6 +12033,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["input"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "controls": {
           "base": "Xbox",
@@ -11492,6 +12041,141 @@
           "digitalTriggers": ["LeftTrigger", "RightTrigger"]
         },
         "defaults": {
+          "input": {
+            "report": {
+              "id": 1,
+              "length": 15,
+              "exactLength": true
+            },
+            "buttons": [
+              {
+                "control": "South",
+                "byte": 9,
+                "mask": 16
+              },
+              {
+                "control": "East",
+                "byte": 9,
+                "mask": 32
+              },
+              {
+                "control": "West",
+                "byte": 9,
+                "mask": 64
+              },
+              {
+                "control": "North",
+                "byte": 9,
+                "mask": 128
+              },
+              {
+                "control": "LeftShoulder",
+                "byte": 10,
+                "mask": 1
+              },
+              {
+                "control": "RightShoulder",
+                "byte": 10,
+                "mask": 2
+              },
+              {
+                "control": "LeftTrigger",
+                "byte": 10,
+                "mask": 4
+              },
+              {
+                "control": "RightTrigger",
+                "byte": 10,
+                "mask": 8
+              },
+              {
+                "control": "Back",
+                "byte": 10,
+                "mask": 16
+              },
+              {
+                "control": "Start",
+                "byte": 10,
+                "mask": 32
+              },
+              {
+                "control": "LeftStickClick",
+                "byte": 10,
+                "mask": 64
+              },
+              {
+                "control": "RightStickClick",
+                "byte": 10,
+                "mask": 128
+              },
+              {
+                "control": "Guide",
+                "byte": 12,
+                "mask": 128
+              }
+            ],
+            "axes": [
+              {
+                "control": "LeftStickX",
+                "byte": 1,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              },
+              {
+                "control": "LeftStickY",
+                "byte": 2,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              },
+              {
+                "control": "RightStickX",
+                "byte": 3,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              },
+              {
+                "control": "RightStickY",
+                "byte": 4,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              }
+            ],
+            "hat": [
+              {
+                "encoding": "Table",
+                "byte": 9,
+                "mask": 15,
+                "values": {
+                  "1": "North",
+                  "2": "NorthEast",
+                  "3": "East",
+                  "4": "SouthEast",
+                  "5": "South",
+                  "6": "SouthWest",
+                  "7": "West",
+                  "8": "NorthWest"
+                }
+              }
+            ],
+            "leftTrigger": {
+              "byte": 13
+            },
+            "rightTrigger": {
+              "byte": 14
+            }
+          },
           "tuning": {
             "frameQueueCapacity": 1025
           }
@@ -11512,6 +12196,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["input"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "controls": {
           "base": "Xbox",
@@ -11519,6 +12204,141 @@
           "digitalTriggers": ["LeftTrigger", "RightTrigger"]
         },
         "defaults": {
+          "input": {
+            "report": {
+              "id": 1,
+              "length": 15,
+              "exactLength": true
+            },
+            "buttons": [
+              {
+                "control": "South",
+                "byte": 9,
+                "mask": 16
+              },
+              {
+                "control": "East",
+                "byte": 9,
+                "mask": 32
+              },
+              {
+                "control": "West",
+                "byte": 9,
+                "mask": 64
+              },
+              {
+                "control": "North",
+                "byte": 9,
+                "mask": 128
+              },
+              {
+                "control": "LeftShoulder",
+                "byte": 10,
+                "mask": 1
+              },
+              {
+                "control": "RightShoulder",
+                "byte": 10,
+                "mask": 2
+              },
+              {
+                "control": "LeftTrigger",
+                "byte": 10,
+                "mask": 4
+              },
+              {
+                "control": "RightTrigger",
+                "byte": 10,
+                "mask": 8
+              },
+              {
+                "control": "Back",
+                "byte": 10,
+                "mask": 16
+              },
+              {
+                "control": "Start",
+                "byte": 10,
+                "mask": 32
+              },
+              {
+                "control": "LeftStickClick",
+                "byte": 10,
+                "mask": 64
+              },
+              {
+                "control": "RightStickClick",
+                "byte": 10,
+                "mask": 128
+              },
+              {
+                "control": "Guide",
+                "byte": 12,
+                "mask": 128
+              }
+            ],
+            "axes": [
+              {
+                "control": "LeftStickX",
+                "byte": 1,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              },
+              {
+                "control": "LeftStickY",
+                "byte": 2,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              },
+              {
+                "control": "RightStickX",
+                "byte": 3,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              },
+              {
+                "control": "RightStickY",
+                "byte": 4,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              }
+            ],
+            "hat": [
+              {
+                "encoding": "Table",
+                "byte": 9,
+                "mask": 15,
+                "values": {
+                  "1": "North",
+                  "2": "NorthEast",
+                  "3": "East",
+                  "4": "SouthEast",
+                  "5": "South",
+                  "6": "SouthWest",
+                  "7": "West",
+                  "8": "NorthWest"
+                }
+              }
+            ],
+            "leftTrigger": {
+              "byte": 13
+            },
+            "rightTrigger": {
+              "byte": 14
+            }
+          },
           "tuning": {
             "frameQueueCapacity": 1.5
           }
@@ -11539,6 +12359,7 @@
           "in": 130,
           "out": 2
         },
+        "recordSections": ["input"],
         "tuningKeys": ["hidStartupIntervalMs", "minimumHIDOutputIntervalMs"],
         "controls": {
           "base": "Xbox",
@@ -11546,6 +12367,141 @@
           "digitalTriggers": ["LeftTrigger", "RightTrigger"]
         },
         "defaults": {
+          "input": {
+            "report": {
+              "id": 1,
+              "length": 15,
+              "exactLength": true
+            },
+            "buttons": [
+              {
+                "control": "South",
+                "byte": 9,
+                "mask": 16
+              },
+              {
+                "control": "East",
+                "byte": 9,
+                "mask": 32
+              },
+              {
+                "control": "West",
+                "byte": 9,
+                "mask": 64
+              },
+              {
+                "control": "North",
+                "byte": 9,
+                "mask": 128
+              },
+              {
+                "control": "LeftShoulder",
+                "byte": 10,
+                "mask": 1
+              },
+              {
+                "control": "RightShoulder",
+                "byte": 10,
+                "mask": 2
+              },
+              {
+                "control": "LeftTrigger",
+                "byte": 10,
+                "mask": 4
+              },
+              {
+                "control": "RightTrigger",
+                "byte": 10,
+                "mask": 8
+              },
+              {
+                "control": "Back",
+                "byte": 10,
+                "mask": 16
+              },
+              {
+                "control": "Start",
+                "byte": 10,
+                "mask": 32
+              },
+              {
+                "control": "LeftStickClick",
+                "byte": 10,
+                "mask": 64
+              },
+              {
+                "control": "RightStickClick",
+                "byte": 10,
+                "mask": 128
+              },
+              {
+                "control": "Guide",
+                "byte": 12,
+                "mask": 128
+              }
+            ],
+            "axes": [
+              {
+                "control": "LeftStickX",
+                "byte": 1,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              },
+              {
+                "control": "LeftStickY",
+                "byte": 2,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              },
+              {
+                "control": "RightStickX",
+                "byte": 3,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              },
+              {
+                "control": "RightStickY",
+                "byte": 4,
+                "bits": 8,
+                "signed": true,
+                "min": -128,
+                "max": 127,
+                "symmetric": true
+              }
+            ],
+            "hat": [
+              {
+                "encoding": "Table",
+                "byte": 9,
+                "mask": 15,
+                "values": {
+                  "1": "North",
+                  "2": "NorthEast",
+                  "3": "East",
+                  "4": "SouthEast",
+                  "5": "South",
+                  "6": "SouthWest",
+                  "7": "West",
+                  "8": "NorthWest"
+                }
+              }
+            ],
+            "leftTrigger": {
+              "byte": 13
+            },
+            "rightTrigger": {
+              "byte": 14
+            }
+          },
           "tuning": {
             "frameQueueCapacity": "64"
           }
@@ -13956,6 +14912,105 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    {
+      "name": "input report length is exact only when it says so: exact=False",
+      "code": "E5002",
+      "python": "E5002: vendor-flydigi.json at defaults.input: {'report': {'id': 1, 'length': 15, 'exactLength': False}, 'buttons': [{'control': 'South', 'byte': 1, 'mask': 1}]} is not valid under any of the given schemas",
+      "swift": "E5002: vendor-flydigi.json: description.defaults.input.report: exactLength is true, or absent for a report that may be longer",
+      "fileName": "vendor-flydigi.json",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "VendorFlydigi",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "recordSections": ["input"],
+        "defaults": {
+          "input": {
+            "report": {
+              "id": 1,
+              "length": 15,
+              "exactLength": false
+            },
+            "buttons": [
+              {
+                "control": "South",
+                "byte": 1,
+                "mask": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "input report length is exact only when it says so: exact=1",
+      "code": "E5002",
+      "python": "E5002: vendor-flydigi.json at defaults.input: {'report': {'id': 1, 'length': 15, 'exactLength': 1}, 'buttons': [{'control': 'South', 'byte': 1, 'mask': 1}]} is not valid under any of the given schemas",
+      "swift": "E5002: vendor-flydigi.json: description.defaults.input.report.exactLength: Expected to decode Bool but found number instead.",
+      "fileName": "vendor-flydigi.json",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "VendorFlydigi",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "recordSections": ["input"],
+        "defaults": {
+          "input": {
+            "report": {
+              "id": 1,
+              "length": 15,
+              "exactLength": 1
+            },
+            "buttons": [
+              {
+                "control": "South",
+                "byte": 1,
+                "mask": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "input report length is exact only when it says so: exact=true",
+      "code": "E5002",
+      "python": "E5002: vendor-flydigi.json at defaults.input: {'report': {'id': 1, 'length': 15, 'exactLength': 'true'}, 'buttons': [{'control': 'South', 'byte': 1, 'mask': 1}]} is not valid under any of the given schemas",
+      "swift": "E5002: vendor-flydigi.json: description.defaults.input.report.exactLength: Expected to decode Bool but found a string instead.",
+      "fileName": "vendor-flydigi.json",
+      "document": {
+        "apiVersion": "openjoystickdriver/v1alpha1",
+        "kind": "ProtocolDescription",
+        "family": "VendorFlydigi",
+        "endpoints": {
+          "in": 130,
+          "out": 2
+        },
+        "recordSections": ["input"],
+        "defaults": {
+          "input": {
+            "report": {
+              "id": 1,
+              "length": 15,
+              "exactLength": "true"
+            },
+            "buttons": [
+              {
+                "control": "South",
+                "byte": 1,
+                "mask": 1
+              }
+            ]
           }
         }
       }

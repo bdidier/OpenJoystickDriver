@@ -24,13 +24,13 @@ struct SwitchInputOnlyDriverTests {
     for model in models {
       let record = try #require(ProtocolDriverRegistry().record(for: model), "\(model)")
       #expect(record.physicalProtocolID == .nintendoSwitchInputOnly, "\(model)")
-      #expect(try catalogParser(model) is SwitchInputOnlyDriver, "\(model)")
+      #expect(try catalogParser(model) is ReportLayoutDriver, "\(model)")
     }
   }
 
   @Test
   func restingReportIsNeutral() throws {
-    #expect(try SwitchInputOnlyDriver().parseReport(InputOnlyReport.with())?.state == .neutral)
+    #expect(try switchInputOnlyDriver().parseReport(InputOnlyReport.with())?.state == .neutral)
   }
 
   @Test
@@ -43,7 +43,7 @@ struct SwitchInputOnlyDriverTests {
       (1, 0x20, .capture),
     ]
     for (offset, mask, control) in controls {
-      let driver = SwitchInputOnlyDriver()
+      let driver = switchInputOnlyDriver()
       #expect(
         try driver.parseReport(InputOnlyReport.with([offset: mask])).contains(.press(control)),
         "\(control)"
@@ -58,11 +58,11 @@ struct SwitchInputOnlyDriverTests {
       .north, .northEast, .east, .southEast, .south, .southWest, .west, .northWest,
     ]
     for (value, direction) in directions.enumerated() {
-      let event = try SwitchInputOnlyDriver().parseReport(InputOnlyReport.with([2: UInt8(value)]))
+      let event = try switchInputOnlyDriver().parseReport(InputOnlyReport.with([2: UInt8(value)]))
       #expect(event?.state.hat == direction)
     }
     for value: UInt8 in [0x08, 0x0F, 0xFF] {
-      let event = try SwitchInputOnlyDriver().parseReport(InputOnlyReport.with([2: value]))
+      let event = try switchInputOnlyDriver().parseReport(InputOnlyReport.with([2: value]))
       #expect(event?.state.hat == .neutral)
     }
   }
@@ -70,7 +70,7 @@ struct SwitchInputOnlyDriverTests {
   @Test
   func decodesSticksWithUpAndLeftLow() throws {
     let event = try #require(
-      try SwitchInputOnlyDriver().parseReport(
+      try switchInputOnlyDriver().parseReport(
         InputOnlyReport.with([3: 0x00, 4: 0xFF, 5: 0xFF, 6: 0x00])
       )
     )
@@ -80,6 +80,6 @@ struct SwitchInputOnlyDriverTests {
 
   @Test
   func ignoresShortReports() throws {
-    #expect(try SwitchInputOnlyDriver().parseReport(Data([0, 0, 8, 0x80, 0x80, 0x80])) == nil)
+    #expect(try switchInputOnlyDriver().parseReport(Data([0, 0, 8, 0x80, 0x80, 0x80])) == nil)
   }
 }

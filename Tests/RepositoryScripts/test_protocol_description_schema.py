@@ -101,6 +101,7 @@ FAMILY_FACTS: dict[str, dict[str, Any]] = {
     "XboxGIP": {"rawUSB": True},
     "XboxXID": {"rawUSB": True, "recordSections": ["input", "rumble"]},
     "XboxXUSB": {"rawUSB": True},
+    "VendorFlydigi": {"recordSections": ["input"]},
 }
 
 
@@ -468,6 +469,24 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                 },
             )
         )
+
+    def test_input_report_length_is_exact_only_when_it_says_so(self) -> None:
+        def flydigi(report: dict[str, Any]) -> dict[str, Any]:
+            return self.with_body(
+                "VendorFlydigi",
+                defaults={
+                    "input": {
+                        "report": report,
+                        "buttons": [{"control": "South", "byte": 1, "mask": 1}],
+                    }
+                },
+            )
+
+        self.check(flydigi({"id": 1, "length": 15}))
+        self.check(flydigi({"id": 1, "length": 15, "exactLength": True}))
+        for exact in (False, 1, "true"):
+            with self.subTest(exact=exact):
+                self.assert_rejected(flydigi({"id": 1, "length": 15, "exactLength": exact}))
 
     def test_rejects_a_bad_parameter_declaration(self) -> None:
         for declaration in (

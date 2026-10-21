@@ -40,7 +40,7 @@ struct InterfaceSignatureBindingTests {
       claimed: try descriptorClaim(for: binding, interfaceClass, subclass, interfaceProtocol)
     ).get()
     switch binding.protocolID {
-    case .xboxXID: #expect(driver is XIDDriver)
+    case .xboxXID: #expect(driver is ReportLayoutDriver)
     case .xboxXUSB: #expect(driver is XUSBDriver)
     default: #expect(driver is GIPDriver)
     }

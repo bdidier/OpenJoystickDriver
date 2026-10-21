@@ -23,6 +23,7 @@ extension ControllerRecordDocument {
         layout = try ControllerInputLayout(
           reportID: report.reportID,
           minimumLength: report.length,
+          requiresExactLength: report.requiresExactLength,
           buttons: buttons?.map { ($0.control, $0.field) } ?? [],
           axes: axes?.map(\.axis) ?? [],
           hat: hat?.map(\.source) ?? [],
@@ -41,11 +42,23 @@ extension ControllerRecordDocument {
   struct InputReport: Decodable {
     let reportID: UInt8?
     let length: Int
+    let requiresExactLength: Bool
 
     init(from decoder: any Decoder) throws {
       let container = try decoder.container(keyedBy: DocumentKey.self)
-      try container.rejectUnknown(allowed: ["id", "length"])
+      try container.rejectUnknown(allowed: ["id", "length", "exactLength"])
       length = try container.decode(Int.self, for: "length")
+      switch try container.decodeOptional(Bool.self, for: "exactLength") {
+      case nil: requiresExactLength = false
+      case true?: requiresExactLength = true
+      case false?:
+        throw DecodingError.dataCorrupted(
+          .init(
+            codingPath: decoder.codingPath,
+            debugDescription: "exactLength is true, or absent for a report that may be longer"
+          )
+        )
+      }
       guard let id = try container.decodeOptional(Int.self, for: "id") else {
         reportID = nil
         return

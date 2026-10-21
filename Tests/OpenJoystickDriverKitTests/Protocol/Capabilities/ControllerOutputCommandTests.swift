@@ -79,10 +79,10 @@ struct ControllerOutputCommandTests {
   @Test
   func driversWithoutAnOutputThrowUnsupportedCapability() {
     #expect(throws: ControllerOutputError.unsupportedCapability(.rgb)) {
-      try XIDDriver().encode(.setRGB(ControllerColor(red: 1, green: 2, blue: 3)))
+      try xidDriver().encode(.setRGB(ControllerColor(red: 1, green: 2, blue: 3)))
     }
     #expect(throws: ControllerOutputError.unsupportedCapability(.rumble(.lowFrequency))) {
-      try FlydigiDriver().encode(.stopRumble)
+      try flydigiDriver().encode(.stopRumble)
     }
     #expect(throws: ControllerOutputError.unsupportedCapability(.lightBrightness)) {
       try DualSenseDriver().encode(.setLightBrightness(.max))
