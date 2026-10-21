@@ -63,6 +63,12 @@ final class EndpointServer: @unchecked Sendable {
   /// Called by each accept loop after its generation check and before it waits for a connection;
   /// tests hold a loop there to let the listener change under it.
   let beforeAcceptWait: (@Sendable (AccessTransport, Int) -> Void)?
+  /// Tests replace the listeners' `accept` to fail it.
+  let acceptCall: @Sendable (Int32) -> Int32
+  /// Milliseconds an accept loop waits after running out of descriptors or memory.
+  let resourceWaitMilliseconds: Int32
+  /// Receives the accept loops' reports; they go to standard output.
+  let report: @Sendable (String) -> Void
   var refusals = AccessRefusalLog()
   var stream = EndpointStream()
 
@@ -74,9 +80,15 @@ final class EndpointServer: @unchecked Sendable {
     feeds: VirtualFeedRegistry? = nil,
     identify: @escaping Identify = EndpointClient.identify,
     streamDelivered: (@Sendable (ControllerSessionToken, UInt64) async -> Void)? = nil,
-    beforeAcceptWait: (@Sendable (AccessTransport, Int) -> Void)? = nil
+    beforeAcceptWait: (@Sendable (AccessTransport, Int) -> Void)? = nil,
+    acceptCall: @escaping @Sendable (Int32) -> Int32 = { Darwin.accept($0, nil, nil) },
+    resourceWaitMilliseconds: Int32 = AcceptFailure.resourceWaitMilliseconds,
+    report: @escaping @Sendable (String) -> Void = { print($0) }
   ) {
     self.beforeAcceptWait = beforeAcceptWait
+    self.acceptCall = acceptCall
+    self.resourceWaitMilliseconds = resourceWaitMilliseconds
+    self.report = report
     self.socketPath = socketPath
     self.store = store
     self.source = source
@@ -265,7 +277,8 @@ final class EndpointServer: @unchecked Sendable {
       throw error
     }
     let socketListener: AcceptListener
-    do { socketListener = try AcceptListener(listening: descriptor) } catch {
+    do { socketListener = try AcceptListener(listening: descriptor, acceptCall: acceptCall) } catch
+    {
       unlink(socketPath)
       throw error
     }
@@ -328,8 +341,21 @@ final class EndpointServer: @unchecked Sendable {
       }
       guard let accepted = listener.accept() else {
         // EAGAIN: the pending connection was dropped between poll and accept; wait again.
-        // Running out of descriptors or memory is retried after a pause.
-        guard Self.pause(after: Self.acceptFailure(errno)) else { return }
+        // Running out of descriptors or memory is reported and retried after a wait that
+        // `stop` ends.
+        let code = errno
+        // A stop wakes the loop and replaces the socket under the descriptor, so the failure
+        // that follows is the stop, not a fault.
+        guard lock.withLock({ socketGeneration == generation }) else { return }
+        guard
+          AcceptFailure.continuesAfter(
+            errno: code,
+            server: "EndpointServer",
+            wake: listener.wakeRead,
+            waitMilliseconds: resourceWaitMilliseconds,
+            report: report
+          )
+        else { return }
         continue
       }
       guard lock.withLock({ socketGeneration == generation }) else {
@@ -345,38 +371,6 @@ final class EndpointServer: @unchecked Sendable {
         }
         self.serve(EndpointConnection(descriptor: accepted))
       }
-    }
-  }
-
-  // MARK: - Accept failures
-
-  enum AcceptFailure: Equatable {
-    /// An interrupted or aborted accept, or none waiting; wait again at once.
-    case retry
-    /// The process or system is out of descriptors or memory; accept again after a pause.
-    case backOff
-    /// The listener is closed or broken.
-    case stop
-  }
-
-  static let acceptBackOffMicroseconds: useconds_t = 100_000
-
-  static func acceptFailure(_ code: Int32) -> AcceptFailure {
-    switch code {
-    case EINTR, ECONNABORTED, EAGAIN: .retry
-    case EMFILE, ENFILE, ENOBUFS, ENOMEM: .backOff
-    default: .stop
-    }
-  }
-
-  /// Waits out a back-off; false when the loop should end.
-  static func pause(after failure: AcceptFailure) -> Bool {
-    switch failure {
-    case .retry: return true
-    case .backOff:
-      usleep(acceptBackOffMicroseconds)
-      return true
-    case .stop: return false
     }
   }
 }

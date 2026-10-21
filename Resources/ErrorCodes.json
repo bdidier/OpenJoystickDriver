@@ -256,6 +256,12 @@
       "exitCode": 1
     },
     {
+      "code": "E2034",
+      "domain": "CLI",
+      "name": "requestListenerStopped",
+      "exitCode": 69
+    },
+    {
       "code": "E3001",
       "domain": "Remapping",
       "name": "controllerUnavailable",

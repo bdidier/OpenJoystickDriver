@@ -9,6 +9,8 @@ final class FakeFeedDevice: VirtualFeedDevice, @unchecked Sendable {
   let output: UserSpaceOutputDispatcher.OutputCommandHandler
   let failsActivation: Bool
   let hangsActivation: Bool
+  /// Activation throws a `CancellationError` although the calling task is not cancelled.
+  let cancelsActivation: Bool
   /// Reads the registry clock, which stamps each send.
   let now: @Sendable () -> TimeInterval
   /// Runs inside every send with the number of sends before it, standing in for a slow device.
@@ -34,6 +36,7 @@ final class FakeFeedDevice: VirtualFeedDevice, @unchecked Sendable {
     output: @escaping UserSpaceOutputDispatcher.OutputCommandHandler,
     failsActivation: Bool,
     hangsActivation: Bool,
+    cancelsActivation: Bool,
     now: @escaping @Sendable () -> TimeInterval
   ) {
     self.now = now
@@ -41,6 +44,7 @@ final class FakeFeedDevice: VirtualFeedDevice, @unchecked Sendable {
     self.output = output
     self.failsActivation = failsActivation
     self.hangsActivation = hangsActivation
+    self.cancelsActivation = cancelsActivation
   }
 
   var activated: LogicalControllerID? { lock.withLock { activatedValue } }
@@ -54,6 +58,7 @@ final class FakeFeedDevice: VirtualFeedDevice, @unchecked Sendable {
       await waitForRelease()
       return
     }
+    if cancelsActivation { throw CancellationError() }
     if failsActivation { throw UserSpaceOutputDispatcher.CreationError.createFailed }
     lock.withLock { activatedValue = identifier }
   }
@@ -107,6 +112,7 @@ final class FakeFeedFactory: @unchecked Sendable {
   private var devicesValue: [FakeFeedDevice] = []
   var failsActivation = false
   var hangsActivation = false
+  var cancelsActivation = false
 
   var devices: [FakeFeedDevice] { lock.withLock { devicesValue } }
 
@@ -126,6 +132,7 @@ final class FakeFeedFactory: @unchecked Sendable {
             output: output,
             failsActivation: self.failsActivation,
             hangsActivation: self.hangsActivation,
+            cancelsActivation: self.cancelsActivation,
             now: clock.now
           )
           self.devicesValue.append(device)

@@ -1229,6 +1229,7 @@
 "cli.virtual.feed.abstract" = "Publikasikan gamepad virtual yang digerakkan oleh input standar.";
 "cli.virtual.feed.discussion" = "Membaca satu objek JSON per baris: “buttons” dan “dpad” mencantumkan kontrol yang ditekan, seperti South dan up, dan “axes” memetakan nama sumbu, seperti LeftStickX, ke nilai. Kontrol yang tidak ada dianggap netral. Stik berkisar dari -1 sampai 1 dengan Y ke bawah; pemicu berkisar dari 0 sampai 1. Frame diputar berurutan, masing-masing minimal 8 ms; “holdMilliseconds” menahan frame lebih lama, hingga 60000. Mencetak setiap perintah output yang dikirim game ke gamepad, seperti getaran, sebagai satu objek JSON per baris. Berhenti setelah semua frame diputar dan input berakhir.";
 "cli.virtual.feed.error.closed" = "Layanan menutup gamepad virtual. Periksa dengan “ojd status”.";
+"cli.virtual.feed.error.close_interrupted" = "Penutupan gamepad virtual terhenti. Periksa dengan “ojd status”.";
 "cli.virtual.feed.error.frame" = "Baris %@ bukan frame yang valid. “ojd virtual feed --help” menampilkan formatnya.";
 "cli.virtual.feed.profile" = "Profil gamepad virtual yang dipublikasikan.";
 "cli.virtual.feed.started" = "Mempublikasikan gamepad virtual %@. Tulis frame di input standar; akhiri input atau tekan Control-C untuk berhenti.";
@@ -1322,6 +1323,7 @@
 "error.E2031" = "Port ini di 127.0.0.1 sedang dipakai atau tidak dapat dibuka. Pilih port lain dengan --port.";
 "error.E2032" = "Token dengan origin tidak boleh punya cakupan control, karena halaman tidak boleh menggerakkan gamepad virtual. Berikan control ke token tanpa origin.";
 "error.E2033" = "Program tidak dapat dimulai. Periksa bahwa jalurnya menunjuk berkas yang dapat dieksekusi atau sebuah app, dan Anda boleh menjalankannya.";
+"error.E2034" = "Layanan berhenti menerima permintaan. Tutup OpenJoystickDriver, buka lagi, lalu coba lagi.";
 "cli.record.usb_not_claimed" = "Famili ini menggunakan USB mentah, dan ekstensi USB tidak dapat mengklaim pengontrol ini, karena daftar produknya ditandatangani Apple. OJD hanya menjangkaunya melalui akses USB langsung, jika macOS mengizinkan.";
 "cli.record.usb_only_switch2" = "Hanya USB: tambahkan bluetoothLE.vibrationCharacteristic ke catatan Switch 2 ini untuk menghubungkan pengontrol melalui Bluetooth LE.";
 "cli.record.validate.abstract" = "Periksa catatan pengontrol tanpa menginstalnya.";

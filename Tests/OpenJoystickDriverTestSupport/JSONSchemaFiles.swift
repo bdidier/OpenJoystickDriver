@@ -12,7 +12,28 @@ package enum JSONSchemaFiles {
     .deletingLastPathComponent()
     .appendingPathComponent("Resources/Schemas", isDirectory: true)
 
+  /// The parsed schema documents; each file is read and parsed once per process.
+  private final class DocumentCache: @unchecked Sendable {
+    private let lock = NSLock()
+    private var documents: [String: [String: Any]] = [:]
+
+    func document(named name: String, load: () throws -> [String: Any]) throws -> [String: Any] {
+      lock.lock()
+      defer { lock.unlock() }
+      if let cached = documents[name] { return cached }
+      let loaded = try load()
+      documents[name] = loaded
+      return loaded
+    }
+  }
+
+  private static let cache = DocumentCache()
+
   package static func document(named name: String) throws -> [String: Any] {
+    try cache.document(named: name) { try read(name) }
+  }
+
+  private static func read(_ name: String) throws -> [String: Any] {
     let data = try Data(contentsOf: directory.appendingPathComponent(name))
     guard let object = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
       throw SchemaError("\(name) is not a JSON object")

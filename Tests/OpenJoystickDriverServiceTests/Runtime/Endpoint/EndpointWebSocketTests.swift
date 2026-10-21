@@ -552,17 +552,17 @@ struct EndpointWebSocketTests {
 
   @Test(arguments: [EMFILE, ENFILE, ENOBUFS, ENOMEM])
   func anAcceptFailureFromResourceExhaustionIsRetried(code: Int32) {
-    #expect(EndpointServer.acceptFailure(code) == .backOff)
+    #expect(AcceptFailure(errno: code) == .waitForResources)
   }
 
   @Test(arguments: [EINTR, ECONNABORTED, EAGAIN])
   func anInterruptedAcceptIsRetriedAtOnce(code: Int32) {
-    #expect(EndpointServer.acceptFailure(code) == .retry)
+    #expect(AcceptFailure(errno: code) == .retry)
   }
 
   @Test(arguments: [EBADF, EINVAL, ENOTSOCK])
   func anAcceptFailureOnAClosedListenerEndsTheLoop(code: Int32) {
-    #expect(EndpointServer.acceptFailure(code) == .stop)
+    #expect(AcceptFailure(errno: code) == .fatal)
   }
 
   // MARK: - Connection cap

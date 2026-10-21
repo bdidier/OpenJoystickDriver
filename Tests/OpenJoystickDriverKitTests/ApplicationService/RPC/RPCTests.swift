@@ -121,6 +121,36 @@ struct LocalServiceRPCTests {
   }
 
   @Test
+  func eachRestartedServerAnswersOnItsOwnAndAStoppedServerAnswersNothing() async throws {
+    var stopped: [String] = []
+    for generation in 0..<20 {
+      let socketPath = temporarySocketPath()
+      let server = LocalServiceRPCServer(
+        socketPath: socketPath,
+        authentication: { _ in true },
+        handler: { _, completion in
+          completion(
+            LocalServiceRPCResponse(result: try? JSONEncoder().encode(generation), error: nil)
+          )
+        }
+      )
+      try server.start()
+      let answer: Int = try await LocalServiceRPCClient.call(
+        method: "generation",
+        arguments: "",
+        timeoutSeconds: 10,
+        socketPath: socketPath
+      )
+      #expect(answer == generation)
+      server.stop()
+      stopped.append(socketPath)
+    }
+    for socketPath in stopped {
+      #expect(LocalServiceRPCClient.serverProcessIdentifier(socketPath: socketPath) == nil)
+    }
+  }
+
+  @Test
   func oversizedFrameIsRejectedBeforeWrite() throws {
     let descriptor = socket(AF_UNIX, SOCK_STREAM, 0)
     try #require(descriptor >= 0)

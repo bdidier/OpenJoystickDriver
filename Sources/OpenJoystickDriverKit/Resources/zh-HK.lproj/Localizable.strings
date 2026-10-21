@@ -1228,7 +1228,8 @@
 "cli.virtual.export_mapping.profile" = "要輸出的虛擬遊戲控制器設定檔。省略則輸出所有設定檔。";
 "cli.virtual.feed.abstract" = "發布由 stdin 驅動的虛擬遊戲控制器。";
 "cli.virtual.feed.discussion" = "每行讀取一個 JSON 物件：「buttons」 和 「dpad」 列出被按下的控制項，例如 South 和 up；「axes」 將軸名稱（例如 LeftStickX）對應到數值。缺少的控制項保持中立。搖桿範圍為 -1 到 1，Y 軸向下；扳機範圍為 0 到 1。影格依序播放，每個影格至少持續 8 ms；「holdMilliseconds」 可讓影格維持更久，最長 60000。將遊戲傳送給遊戲控制器的每個輸出指令（例如震動）以每行一個 JSON 物件的形式輸出。輸入結束且所有影格播放完畢後停止。";
-"cli.virtual.feed.error.closed" = "服務已關閉虛擬遊戲控制器。請用 「ojd status」 檢查。";
+"cli.virtual.feed.error.closed" = "服務已關閉虛擬遊戲控制器。請用「ojd status」檢查。";
+"cli.virtual.feed.error.close_interrupted" = "關閉虛擬遊戲控制器的操作被中斷。請用「ojd status」檢查。";
 "cli.virtual.feed.error.frame" = "第 %@ 行不是有效的影格。「ojd virtual feed --help」 會顯示格式。";
 "cli.virtual.feed.profile" = "要發布的虛擬遊戲控制器設定檔。";
 "cli.virtual.feed.started" = "正在發布 %@ 虛擬遊戲控制器。請將影格寫入 stdin；結束輸入或按 Control-C 即可停止。";
@@ -1322,6 +1323,7 @@
 "error.E2031" = "127.0.0.1 上的這個連接埠已被佔用或無法開啟。請用 --port 選擇另一個。";
 "error.E2032" = "帶有來源的權杖不能擁有 control 範圍，因為網頁絕不能操控虛擬遊戲手掣。請把 control 授予不帶來源的權杖。";
 "error.E2033" = "無法啟動程式。請檢查其路徑指向可執行檔或 App，並且你有權執行它。";
+"error.E2034" = "服務已停止接受要求。請結束並重新打開 OpenJoystickDriver，然後重試。";
 "cli.record.usb_not_claimed" = "此系列使用原始 USB，USB 延伸功能無法接管此控制器，因為其產品清單由 Apple 簽署。只有在 macOS 允許時，OJD 才能透過直接 USB 存取使用它。";
 "cli.record.usb_only_switch2" = "僅限 USB：如要透過低功耗藍牙連接控制器，請將 bluetoothLE.vibrationCharacteristic 加入此 Switch 2 記錄。";
 "cli.record.validate.abstract" = "檢查控制器記錄，但不安裝。";

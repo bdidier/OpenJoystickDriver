@@ -49,6 +49,7 @@ struct StandardInputTests {
     ]
     try await Self.withStandardInputFromNull {
       for arguments in gated {
+        await Task.yield()
         let result = await RecordStore.$directory.withValue(directory) {
           await service.run(arguments)
         }
@@ -64,6 +65,7 @@ struct StandardInputTests {
       let records = try FileManager.default.contentsOfDirectory(atPath: directory.path)
       #expect(records == ["366c-0005.patch.json"])
       for arguments in leaves {
+        await Task.yield()
         let result = await RecordStore.$directory.withValue(directory) {
           await service.run(arguments)
         }

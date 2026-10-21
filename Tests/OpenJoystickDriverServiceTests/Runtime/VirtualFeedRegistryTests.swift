@@ -410,6 +410,21 @@ struct VirtualFeedRegistryTests {
   }
 
   @Test
+  func aCancellationThrownByTheActivationFailsItInsteadOfCancellingTheOpen() async throws {
+    let factory = FakeFeedFactory()
+    factory.cancelsActivation = true
+    let registry = factory.registry()
+
+    await #expect(throws: VirtualFeedError.self) {
+      try await registry.open(profile: "Generic")
+    }
+    #expect(registry.openFeedCount == 0)
+    await waitUntil("factory.devices.first?.closeCount == 1") {
+      factory.devices.first?.closeCount == 1
+    }
+  }
+
+  @Test
   func stoppingClosesEveryFeedAndRefusesNewOnes() async throws {
     let factory = FakeFeedFactory()
     let registry = factory.registry()

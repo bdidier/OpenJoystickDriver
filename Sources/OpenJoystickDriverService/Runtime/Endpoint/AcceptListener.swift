@@ -12,8 +12,11 @@ import OpenJoystickDriverKit
 final class AcceptListener: @unchecked Sendable {
   let descriptor: Int32
   let port: Int
-  private let wakeRead: Int32
+  /// The read end of the wake pipe; it hangs up when `wake` runs.
+  let wakeRead: Int32
   private let wakeWrite: Int32
+  /// Takes one connection from `descriptor`, as `accept` does; tests replace it to fail the call.
+  private let acceptCall: @Sendable (Int32) -> Int32
   private let lock = NSLock()
   private var placeholder: Int32
   private var wakeWriteOpen = true
@@ -29,7 +32,11 @@ final class AcceptListener: @unchecked Sendable {
   }
 
   /// Takes over `descriptor`, which must be listening, and closes it when this throws.
-  init(listening descriptor: Int32, port: Int = 0) throws {
+  init(
+    listening descriptor: Int32,
+    port: Int = 0,
+    acceptCall: @escaping @Sendable (Int32) -> Int32 = { Darwin.accept($0, nil, nil) }
+  ) throws {
     var opened: [Int32] = []
     do {
       let flags = fcntl(descriptor, F_GETFL)
@@ -54,6 +61,7 @@ final class AcceptListener: @unchecked Sendable {
     }
     self.descriptor = descriptor
     self.port = port
+    self.acceptCall = acceptCall
     self.wakeRead = opened[0]
     self.wakeWrite = opened[1]
     self.placeholder = opened[2]
@@ -111,7 +119,7 @@ final class AcceptListener: @unchecked Sendable {
 
   /// Accepts one connection as a blocking descriptor; nil when none was taken (`errno` says why).
   func accept() -> Int32? {
-    let accepted = Darwin.accept(descriptor, nil, nil)
+    let accepted = acceptCall(descriptor)
     guard accepted >= 0 else { return nil }
     // A connection accepted from a nonblocking listener is nonblocking too.
     let flags = fcntl(accepted, F_GETFL)

@@ -1229,6 +1229,7 @@
 "cli.virtual.feed.abstract" = "stdin ile yönetilen sanal bir oyun kontrolcüsü yayımlar.";
 "cli.virtual.feed.discussion" = "Her satırda bir JSON nesnesi okur: “buttons” ve “dpad” basılan denetimleri listeler, örneğin South ve up; “axes” ise eksen adlarını, örneğin LeftStickX, değerlerle eşler. Eksik denetimler nötrdür. Çubuklar -1 ile 1 arasında değişir, Y aşağı yöndedir; tetikler 0 ile 1 arasında değişir. Kareler sırayla oynatılır, her biri en az 8 ms sürer; “holdMilliseconds” bir kareyi daha uzun tutar, en fazla 60000. Oyunların sanal oyun kontrolcüsüne gönderdiği her çıkış komutunu, örneğin titreşimi, satır başına bir JSON nesnesi olarak yazdırır. Girdi bittikten sonra tüm kareler oynatıldığında durur.";
 "cli.virtual.feed.error.closed" = "Servis sanal oyun kontrolcüsünü kapattı. “ojd status” ile kontrol edin.";
+"cli.virtual.feed.error.close_interrupted" = "Sanal oyun kontrolcüsünün kapatılması yarıda kesildi. “ojd status” ile kontrol edin.";
 "cli.virtual.feed.error.frame" = "%@. satır geçerli bir kare değil. “ojd virtual feed --help” biçimi gösterir.";
 "cli.virtual.feed.profile" = "Yayımlanacak sanal oyun kontrolcüsünün profili.";
 "cli.virtual.feed.started" = "Sanal bir oyun kontrolcüsü (%@) yayımlanıyor. Kareleri stdin’e yazın; durdurmak için girdiyi bitirin veya Control-C tuşlarına basın.";
@@ -1322,6 +1323,7 @@
 "error.E2031" = "127.0.0.1 üzerindeki bu bağlantı noktası kullanımda veya açılamıyor. --port ile başka birini seçin.";
 "error.E2032" = "Kaynakları olan bir belirteç control kapsamına sahip olamaz, çünkü bir sayfa asla sanal bir oyun kumandasını sürmemelidir. control kapsamını kaynağı olmayan bir belirtece verin.";
 "error.E2033" = "Program başlatılamadı. Yolunun yürütülebilir bir dosyayı veya uygulamayı gösterdiğini ve çalıştırma izniniz olduğunu kontrol edin.";
+"error.E2034" = "Servis istekleri kabul etmeyi durdurdu. OpenJoystickDriver’ı kapatıp yeniden açın, sonra yeniden deneyin.";
 "cli.record.usb_not_claimed" = "Bu aile ham USB kullanır ve ürün listesi Apple tarafından imzalandığı için USB uzantısı bu kontrolcüyü sahiplenemez. OJD ona yalnızca macOS izin verdiğinde doğrudan USB erişimiyle ulaşır.";
 "cli.record.usb_only_switch2" = "Yalnızca USB: Kontrolcüyü Bluetooth LE üzerinden bağlamak için bu Switch 2 kaydına bluetoothLE.vibrationCharacteristic ekleyin.";
 "cli.record.validate.abstract" = "Bir kontrolcü kaydını yüklemeden denetler.";

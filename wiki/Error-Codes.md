@@ -69,6 +69,7 @@ The table is generated from the code catalog and the English text of OJD. The ta
 | E2031 | Command line | This port on 127.0.0.1 is in use or cannot be opened. Choose another with --port. Exit code 64. |
 | E2032 | Command line | A token with origins cannot have the control scope, because a page must never drive a virtual gamepad. Grant control to a token without origins. Exit code 64. |
 | E2033 | Command line | The program could not be started. Check that its path names an executable file or an app, and that you may run it. Exit code 1. |
+| E2034 | Command line | The service stopped accepting requests. Quit and reopen OpenJoystickDriver, then try again. Exit code 69. |
 | E3001 | Remapping | The controller is not connected or not ready for remapping. Reconnect it and try again. Wire value `controller_unavailable`. |
 | E3002 | Remapping | The selected Joy-Cons could not be paired. Refresh the connected controllers and try again. Wire value `joy_con_pair_unavailable`. |
 | E3003 | Remapping | The controller does not report motion data. Choose a controller with motion sensors, or leave motion options off. Wire value `motion_unavailable`. |

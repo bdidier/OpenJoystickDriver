@@ -51,6 +51,7 @@ struct CommandTreeTests {
   @Test(arguments: [[]] + CLICommandTree.paths())
   func helpPrintsUsageOnStandardOutputAndExitsZero(path: [String]) async {
     for flag in ["--help", "-h"] {
+      await Task.yield()
       let result = await CLIRun.run(path + [flag])
       #expect(result.code == 0, "\(path) \(flag)")
       #expect(result.standardOutput.contains("USAGE: ojd"), "\(path) \(flag)")
@@ -119,10 +120,12 @@ struct CommandTreeTests {
   }
 
   @Test(arguments: CLICommandTree.leafPaths)
-  func globalOptionsReachTheLeafBeforeAndAfterTheSubcommand(path: [String]) throws {
+  func globalOptionsReachTheLeafBeforeAndAfterTheSubcommand(path: [String]) async throws {
     let flags = ["--json", "--quiet", "--no-color", "--no-input", "--timeout", "2.5"]
     let leaf = path + CLICommandTree.sampleOperands(for: path)
     for arguments in [flags + leaf, leaf + flags] {
+      // Parsing is CPU-bound; yielding keeps the shared pool free for deadline-bound tests.
+      await Task.yield()
       let command = try OJDCommand.parseAsRoot(arguments)
       let global = try #require(CLICommandTree.globalOptions(of: command), "\(arguments)")
       let context = try global.context(environment: [:])
