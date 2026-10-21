@@ -65,12 +65,9 @@ The command searches supported local profile locations, installs discovered prof
 ```bash
 ./Scripts/ojd signing audit
 ./Scripts/ojd signing configure
-./Scripts/ojd signing doctor
 ```
 
-A profile embeds every certificate it was generated for. `configure` and `doctor` choose a Keychain identity (with its private key) whose SHA1 is embedded in both the host and the DriverKit profile of the same kind. When several qualify, `configure` prints the choice: the lowest SHA1. When none qualifies, it fails and lists each profile's embedded SHA1s next to the Keychain SHA1s; it never writes an identity that the Keychain cannot sign with. `signing profile-info` lists every embedded certificate, and `signing import-embedded` imports all of them.
-
-The doctor fails closed if the DEXT profile is missing while the host can use it, a required entitlement is absent, the USB entitlement has the wrong shape, or forbidden entitlements are present.
+A profile embeds every certificate it was generated for. `configure` chooses a Keychain identity (with its private key) whose SHA1 is embedded in both the host and the DriverKit profile of the same kind. When several qualify, `configure` prints the choice: the lowest SHA1. When none qualifies, it fails and lists each profile's embedded SHA1s next to the Keychain SHA1s; it never writes an identity that the Keychain cannot sign with. `signing profile-info` lists every embedded certificate, and `signing import-embedded` imports all of them.
 
 ## Developer ID / Distribution
 
@@ -101,7 +98,7 @@ Do not change the provisioning profile to silence an entitlement mismatch. Kevin
 
 ```bash
 ./Scripts/ojd check driverkit
-./Scripts/ojd signing doctor
+./Scripts/ojd signing audit
 codesign -d --entitlements - --xml /path/to/OpenJoystickDriver.app
 extensions=/path/to/OpenJoystickDriver.app/Contents/Library/SystemExtensions
 codesign -d --entitlements - --xml "$extensions/com.openjoystickdriver.XboxUSBDevice.dext"

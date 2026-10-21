@@ -1,21 +1,9 @@
-"""Fail when a localization key used in Swift code is missing from the en-US catalog.
+"""Fail when a localization key and the en-US catalog disagree.
 
-English text lives only in `Sources/OpenJoystickDriverKit/Resources/en-US.lproj`. Call sites pass a key
-and nothing else, so a key that is absent from that catalog would render as the raw key.
-
-The scan reads the first argument of `OJDLocalized.*`, `CLILocalized.*`, `LocalizedStringResource(`,
-and `Localization().*` / `localization.*` calls. A literal key must exist exactly. A ternary of
-literals must have both keys. A key built from a literal prefix, such as `"error.\\(rawValue)"` or
-`"profiles.stick." + key`, must have at least one catalog key with that prefix. Other dynamic keys
-cannot be checked and are listed.
-
-The scan also fails on a catalog key that no Swift source under `Sources` reads. A key is read
-when its literal is any string literal of those files, so keys held in tables, enum properties and
-`.key(...)` wrappers count. A string literal with an interpolation after a literal prefix, such as
-`"error.\\(rawValue)"` or `"area.\\(rawValue).title"`, reads every key it matches, each
-interpolation standing for one key segment (no dot). A literal prefix ending in `.` or `_`, such as
-`"profiles.stick." + key`, reads every key with that prefix. `KEPT_WITHOUT_READER` names each key
-kept without a reader and why. The scan prints every pattern that reads keys, with the key count.
+A key read by `OJDLocalized.*`, `CLILocalized.*`, `LocalizedStringResource(` or
+`Localization().*` must exist in `Sources/OpenJoystickDriverKit/Resources/en-US.lproj`; a key built
+from a literal prefix needs at least one catalog key with that prefix. A catalog key that no Swift
+source under `Sources` reads also fails, unless `KEPT_WITHOUT_READER` names it and says why.
 """
 
 from __future__ import annotations

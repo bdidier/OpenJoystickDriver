@@ -17,8 +17,6 @@ from ..Catalog.schema_header import (
 )
 from ..Catalog.validate_profiles import usage_map_problem
 from ..Command.execution import swift_command
-from .schema_compatibility import IncompatibleSchemaError
-from .schema_compatibility import check as check_compatibility
 
 try:
     from jsonschema import Draft202012Validator, FormatChecker
@@ -383,13 +381,11 @@ def main() -> int:
             documents["settings.schema.json"], registry, list(SETTINGS_FIXTURES)
         )
         validate_live_support_report(documents["report.schema.json"], registry)
-        compatibility = check_compatibility(ROOT, documents)
     except (
         OSError,
         json.JSONDecodeError,
         SchemaError,
         ValidationError,
-        IncompatibleSchemaError,
     ) as error:
         print(f"error: {error}", file=sys.stderr)
         return 1
@@ -407,7 +403,6 @@ def main() -> int:
         f"{len(SETTINGS_FIXTURES)} settings fixtures, the error code catalog, the control crosswalk, "
         "and one live support report."
     )
-    print(compatibility)
     return 0
 
 

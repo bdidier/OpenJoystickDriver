@@ -6,7 +6,6 @@ Requirement names below are those of the old change (`REQ-n ...`).
 
 ## driverkit-signing
 
-- REQ-25 Signing matches the regenerated profiles: MODIFIED. Add that the doctor also checks the DEXT match list against the seven granted `transport.usb` IDs. New text: "`./Scripts/ojd signing doctor` MUST pass with the regenerated host profiles, and MUST fail when the generated extension match list holds an ID outside the Apple `transport.usb` grant (`045E:02D1`, `02DD`, `02E3`, `02EA`, `0B00`, `0B0A`, `0B12`)."
 - REQ-26 A host profile that grants more user-client IDs is accepted: unchanged.
 
 ## mod-localization

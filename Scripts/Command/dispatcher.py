@@ -46,14 +46,11 @@ COMMAND_HELP = """Commands:
                               Package and install the release app locally
   release notarize <command> Run release notarization operations
 
-  env audit                   Validate the single-file env contract without printing values
-  docs export-external-issues Refresh archived GitHub issue and pull-request evidence
   docs build-wiki <dir>       Convert wiki/ into GitHub wiki pages in an empty directory
   docs publish-wiki [--dry-run] Publish wiki/ to the GitHub wiki (--dry-run shows the diff only)
   github ensure-auth          Install and authenticate GitHub CLI when needed
   signing install-profiles    Copy profiles from ~/Documents/Profiles into MobileDevice
   signing configure            Generate .env.dev + .env.release from Keychain + profiles
-  signing doctor               Diagnose common cert/profile mismatch errors (safe output)
   signing audit [paths...]     Audit profiles without leaking identifiers
   signing cert-info <cer>      Show safe-ish .cer info (Team ID = Subject OU)
   signing profile-info <pp>    Show safe-ish profile embedded cert info
@@ -79,7 +76,6 @@ COMMAND_HELP = """Commands:
   repair swiftpm-module-cache Clean SwiftPM build products after toolchain/target changes
   catalog regenerate --check Verify the runtime catalog against pinned sources and overrides
   catalog regenerate --write Rebuild the runtime catalog from pinned sources and overrides
-  catalog xpad [options]      Generate review-only records from a pinned Linux xpad.c
   errors regenerate --check   Verify the error code schema enum and wiki table against the catalog
   errors regenerate --write   Rebuild the error code schema enum and wiki table from the catalog
   vocabulary regenerate --check   Verify the wiki control crosswalk table against crosswalk.json
@@ -90,7 +86,7 @@ COMMAND_HELP = """Commands:
   check tools                 Build the SDL gamepad probe and test the WebRTC bridge package
   test parsers-macos14        Run focused parser regressions without Swift Testing
   snapshots check             Diff the tree against the equivalence snapshots, per record
-  snapshots write             Rewrite the equivalence snapshots from the tree
+  snapshots write             Rewrite the equivalence snapshots from the tree (review the diff)
 
   hooks install|validate      Install or validate repository Git hooks
   setup                       Install required command runner and hooks
@@ -99,7 +95,6 @@ Examples:
   ./Scripts/ojd signing install-profiles
   ./Scripts/ojd signing configure
   ./Scripts/ojd diagnose record /tmp/controller.json --validate-only
-  ./Scripts/ojd catalog xpad --github-ref master --output-dir /tmp/ojd-xpad
   ./Scripts/ojd build install-fast dev
   ./Scripts/ojd release bump-version 0.1.0-rc.2
 
@@ -262,10 +257,6 @@ def dispatch(argv: list[str]) -> int:
                 die(f"Unknown: driverkit {sub} (expected: generate)")
             require("driverkit generate", tail, maximum=1)
             exec_target("Build/driverkit.sh", [sub, *tail])
-        case "env":
-            if rest != ["audit"]:
-                die(f"Unknown: env {rest[0] if rest else ''} (expected: audit)")
-            exec_target("Quality/env_audit.py", [], python=True)
         case "docs":
             sub, tail = (rest[0], rest[1:]) if rest else ("", [])
             if sub == "build-wiki":
@@ -273,12 +264,7 @@ def dispatch(argv: list[str]) -> int:
                 exec_target("Documentation/wiki/build.py", tail, python=True)
             if sub == "publish-wiki":
                 exec_target("Documentation/wiki/publish.py", tail, python=True)
-            if rest != ["export-external-issues"]:
-                die(
-                    f"Unknown: docs {sub} "
-                    "(expected: export-external-issues | build-wiki | publish-wiki)"
-                )
-            exec_target("Documentation/issues/export.py", [], python=True)
+            die(f"Unknown: docs {sub} (expected: build-wiki | publish-wiki)")
         case "github":
             if rest != ["ensure-auth"]:
                 die(
@@ -294,31 +280,30 @@ def dispatch(argv: list[str]) -> int:
             if sub in {
                 "install-profiles",
                 "configure",
-                "doctor",
                 "audit",
                 "cert-info",
                 "profile-info",
                 "import-embedded",
                 "ci-release-setup",
             }:
-                if sub in {"configure", "doctor", "ci-release-setup"}:
+                if sub in {"configure", "ci-release-setup"}:
                     require(f"signing {sub}", tail, count=0)
                 if sub == "install-profiles":
                     require(f"signing {sub}", tail, maximum=1)
                 exec_target("Signing/signing.sh", [sub, *tail])
             die(
-                f"Unknown: signing {sub} (expected: install-profiles | configure | doctor | audit | cert-info | profile-info | import-embedded | ci-release-setup | export-github-secrets)"
+                f"Unknown: signing {sub} (expected: install-profiles | configure | audit | cert-info | profile-info | import-embedded | ci-release-setup | export-github-secrets)"
             )
         case "catalog":
             sub, tail = (rest[0], rest[1:]) if rest else ("", [])
-            if sub not in {"regenerate", "xpad"}:
-                die(f"Unknown: catalog {sub} (expected: regenerate | xpad)")
-            target = (
-                "Catalog/generate_controller_catalog.py"
-                if sub == "regenerate"
-                else "Catalog/generate_xpad_records.py"
+            if sub != "regenerate":
+                die(f"Unknown: catalog {sub} (expected: regenerate)")
+            exec_target(
+                "Catalog/generate_controller_catalog.py",
+                tail,
+                python=True,
+                schema_python=True,
             )
-            exec_target(target, tail, python=True, schema_python=sub == "regenerate")
         case "errors":
             sub, tail = (rest[0], rest[1:]) if rest else ("", [])
             if sub != "regenerate":

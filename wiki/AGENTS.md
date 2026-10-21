@@ -9,4 +9,3 @@
 - Procedures: numbered, one action per step, UI labels in bold.
 - Ground claims in source, tests or hardware evidence; otherwise write "not verified". Hardware observations go in `docs/testing/`.
 - No schemas, evidence dumps or generated matrices, except the generated blocks of `Error-Codes.md` (`./Scripts/ojd errors regenerate --write`) and `Controller-Records.md` (`./Scripts/ojd vocabulary regenerate --write`); edit those only via their sources.
-- Never link `docs/external/` (local, gitignored); cite upstream URLs.

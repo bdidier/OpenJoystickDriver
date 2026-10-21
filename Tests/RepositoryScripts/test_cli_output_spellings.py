@@ -1,7 +1,7 @@
+import re
 import unittest
 from typing import Any
 
-from Scripts.Catalog.command_line_name import kebab
 from Scripts.Quality import validate_schemas
 
 SCHEMA = "cli-output.schema.json"
@@ -145,6 +145,10 @@ def lower_first(value: str) -> str:
     return value[0].lower() + value[1:]
 
 
+def hyphenated(value: str) -> str:
+    return re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "-", value).lower()
+
+
 class CliOutputSpellingTests(unittest.TestCase):
     def setUp(self) -> None:
         documents = validate_schemas.validate_schema_documents()
@@ -237,9 +241,11 @@ class CliOutputSpellingTests(unittest.TestCase):
             for value in values:
                 with self.subTest(pointer=pointer, value=value):
                     self.assertTrue(self.accepts(pointer, value))
-                    for refused in {lower_first(value), kebab(value), value.lower()} - {
-                        value
-                    }:
+                    for refused in {
+                        lower_first(value),
+                        hyphenated(value),
+                        value.lower(),
+                    } - {value}:
                         self.assertFalse(self.accepts(pointer, refused), refused)
 
     def test_the_reset_detail_takes_All(self) -> None:

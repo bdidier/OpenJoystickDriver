@@ -26,7 +26,6 @@ Usage:
   ./Scripts/ojd signing install-profiles [~/Documents/Profiles]
   ./Scripts/ojd signing ci-release-setup
   ./Scripts/ojd signing configure
-  ./Scripts/ojd signing doctor
   ./Scripts/ojd signing audit [paths...]
   ./Scripts/ojd signing cert-info [--full] <cert.cer>
   ./Scripts/ojd signing profile-info [--full] <profile1.provisionprofile> [profile2...]
@@ -414,10 +413,6 @@ PY
   echo "  security find-identity -v -p codesigning"
 )
 
-cmd_doctor() {
-  exec /usr/bin/env python3 "$SCRIPT_DIR/doctor.py"
-}
-
 case "$cmd" in
   install-profiles) cmd_install_profiles "${1:-}"; exit 0 ;;
   ci-release-setup) cmd_ci_release_setup; exit 0 ;;
@@ -425,7 +420,6 @@ case "$cmd" in
   cert-info) cmd_cert_info "$@"; exit 0 ;;
   profile-info) cmd_profile_info "$@"; exit 0 ;;
   import-embedded) cmd_import_embedded "$@"; exit 0 ;;
-  doctor) cmd_doctor; exit 0 ;;
   configure) ;; # continue into original implementation
   *) die "Unknown signing command: $cmd" ;;
 esac

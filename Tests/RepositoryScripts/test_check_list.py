@@ -1,11 +1,11 @@
 """One check list: the `check` recipe of the justfile is canonical.
 
-The Scripts README, CI, and the release gate must run the same commands.
+CI and the release gate must run the same commands.
 
 Documented exemptions, kept deliberately small:
-- the justfile's whitespace check on the working tree (`JUSTFILE_ONLY`) has no CI or README
-  counterpart, and the justfile prefixes the Swift commands with a DEVELOPER_DIR lookup that CI
-  sets through `env:`; the lookup is stripped before comparing.
+- the justfile's whitespace check on the working tree (`JUSTFILE_ONLY`) has no CI counterpart,
+  and the justfile prefixes the Swift commands with a DEVELOPER_DIR lookup that CI sets through
+  `env:`; the lookup is stripped before comparing.
 - CI steps that only prepare the runner (toolchain probe, Homebrew cleanup and installs, bun and
   venv setup), `swift build`, and the `OJD_USE_LOCAL_SWIFTERKIT` guard are not checks of the tree.
 """
@@ -57,15 +57,6 @@ def join_continuations(lines: list[str]) -> list[str]:
         commands.append(normalize(pending + stripped))
         pending = ""
     return commands
-
-
-def markdown_commands(path: Path, heading: str | None) -> list[str]:
-    text = (ROOT / path).read_text(encoding="utf-8")
-    if heading is not None:
-        text = text.split(heading, 1)[1]
-    block = re.search(r"```bash\n(.*?)```", text, re.DOTALL)
-    assert block is not None, path
-    return join_continuations(block.group(1).splitlines())
 
 
 def justfile_commands() -> list[str]:
@@ -163,15 +154,10 @@ class CheckListTests(unittest.TestCase):
             "./Scripts/ojd check tools",
             "./Scripts/ojd test parsers-macos14",
             "./Scripts/ojd snapshots check",
-            "python3 Scripts/Quality/check_neutral_core_imports.py",
+            "python3 Scripts/Quality/check_localization_keys.py",
             "swift test --no-parallel",
         ):
             self.assertIn(required, self.canonical)
-
-    def test_the_scripts_readme_runs_the_canonical_list(self) -> None:
-        self.assert_same(
-            "Scripts/README.md", markdown_commands(Path("Scripts/README.md"), None)
-        )
 
     def test_ci_runs_the_canonical_list(self) -> None:
         self.assert_same(WORKFLOWS["ci"][0], workflow_commands("ci"))

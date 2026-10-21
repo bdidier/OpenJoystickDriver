@@ -187,8 +187,7 @@ verify_profile_cert() (
     echo "  identity: $identity"
     echo ""
     echo "Repair:"
-    echo "  1) Run: ./Scripts/ojd signing doctor"
-    echo "  2) Unlock the login keychain and check: security find-identity -v -p codesigning"
+    echo "  1) Unlock the login keychain and check: security find-identity -v -p codesigning"
     echo ""
     return 1
   fi
@@ -202,10 +201,9 @@ verify_profile_cert() (
     echo "  keychain_identity_sha1: $keychain_sha1"
     echo ""
     echo "Repair:"
-    echo "  1) Run: ./Scripts/ojd signing doctor"
-    echo "  2) Regenerate the provisioning profile selecting the certificate you have locally."
-    echo "  3) Reinstall profiles: ./Scripts/ojd signing install-profiles"
-    echo "  4) Re-generate env:     ./Scripts/ojd signing configure"
+    echo "  1) Regenerate the provisioning profile selecting the certificate you have locally."
+    echo "  2) Reinstall profiles: ./Scripts/ojd signing install-profiles"
+    echo "  3) Re-generate env:     ./Scripts/ojd signing configure"
     echo ""
     return 1
   fi
