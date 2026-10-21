@@ -174,6 +174,16 @@ struct LibraryRecordTextTests {
   }
 
   @Test
+  func anAppearanceMatchingNoneOfTheFourGetsTheLightShade() {
+    #expect(JSONSyntaxKind.shadeIndex(matching: nil) == JSONSyntaxKind.lightShadeIndex)
+    #expect(JSONSyntaxKind.appearances[JSONSyntaxKind.lightShadeIndex] == .aqua)
+    for (index, name) in JSONSyntaxKind.appearances.enumerated() {
+      #expect(JSONSyntaxKind.shadeIndex(matching: name) == index)
+    }
+    #expect(JSONSyntaxKind.shadeIndex(matching: .darkAqua) == 1)
+  }
+
+  @Test
   func everyKindHasAColorAndPunctuationRecedes() throws {
     for index in JSONSyntaxKind.appearances.indices {
       let shades = Self.coloredKinds.compactMap { $0.shades?[index] }

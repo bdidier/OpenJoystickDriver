@@ -26,16 +26,24 @@
       }
     }
 
+    /// The index in ``appearances`` of the shade for the appearance that
+    /// `NSAppearance.bestMatch(from:)` found. It finds none for an appearance that is neither
+    /// light, dark nor either with increased contrast, and that appearance gets the light shade
+    /// (index 0, `.aqua`), because the system's default appearance is light.
+    static func shadeIndex(matching name: NSAppearance.Name?) -> Int {
+      name.flatMap(appearances.firstIndex(of:)) ?? lightShadeIndex
+    }
+
+    /// The shade of an appearance that matches none of ``appearances``.
+    static let lightShadeIndex = 0
+
     /// A color that follows light and dark appearance and the increased contrast setting, with
     /// the shade of the best match among ``appearances``; an appearance that matches none of
-    /// them gets the light shade.
+    /// them gets the light shade (``lightShadeIndex``).
     var color: NSColor {
       guard let shades else { return .labelColor }
       return NSColor(name: "OpenJoystickDriver.record.\(self)") { appearance in
-        let index =
-          appearance.bestMatch(from: Self.appearances).flatMap(Self.appearances.firstIndex(of:))
-          ?? 0
-        return Self.color(shades[index])
+        Self.color(shades[Self.shadeIndex(matching: appearance.bestMatch(from: Self.appearances))])
       }
     }
 
