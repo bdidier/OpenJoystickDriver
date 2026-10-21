@@ -317,7 +317,9 @@ class SharedIdentityTests(unittest.TestCase):
         profile = {"DeveloperCertificates": [b"one", b"two"]}
         self.assertEqual(len(profile_certs.certificate_sha1_list(profile)), 2)
 
-    def test_certificate_sha1_list_fails_on_a_certificate_that_is_not_data(self) -> None:
+    def test_certificate_sha1_list_fails_on_a_certificate_that_is_not_data(
+        self,
+    ) -> None:
         profile = {"DeveloperCertificates": [b"one", "two"]}
         with self.assertRaisesRegex(TypeError, r"DeveloperCertificates\[1\] is str"):
             profile_certs.certificate_sha1_list(profile)
