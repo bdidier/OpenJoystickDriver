@@ -1826,7 +1826,7 @@
 "settings.latestRelease" = "Dernière version : %@";
 "settingsPane.general.showInDock" = "Afficher dans le Dock";
 "settingsPane.general.showInDockDescription" = "Toujours afficher l’icône d’OpenJoystickDriver dans le Dock. Si l’option est désactivée, l’icône n’apparaît que lorsqu’une fenêtre est ouverte.";
-"settingsPane.general.entryPointRequired" = "Laissez au moins une des options « Afficher dans la barre des menus » et « Afficher dans le Dock » activée.";
+"settingsPane.general.entryPointRequired" = "Laissez au moins une des options « Afficher dans la barre des menus » et « Afficher dans le Dock » activée.";
 "cli.setting.show_in_dock" = "Toujours afficher l’icône d’OpenJoystickDriver dans le Dock; si l’option est désactivée, l’icône n’apparaît que lorsqu’une fenêtre est ouverte.";
 "settings.error.damaged" = "Le fichier de réglages %@ est endommagé. Corrigez-le ou placez-le dans la corbeille avec `ojd setting reset`.";
 "settings.error.unsupported" = "Le fichier de réglages %@ n’est pas pris en charge. Réécrivez le fichier pour l’apiVersion prise en charge ou placez-le dans la corbeille avec `ojd setting reset`.";

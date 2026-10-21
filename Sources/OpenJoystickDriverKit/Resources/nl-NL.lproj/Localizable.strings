@@ -1826,7 +1826,7 @@
 "settings.latestRelease" = "Nieuwste release: %@";
 "settingsPane.general.showInDock" = "Toon in Dock";
 "settingsPane.general.showInDockDescription" = "Toont het OpenJoystickDriver-symbool altijd in het Dock. Als dit uit staat, verschijnt het alleen zolang een venster open is.";
-"settingsPane.general.entryPointRequired" = "Laat minstens een van “Toon in menubalk” en “Toon in Dock” ingeschakeld.";
+"settingsPane.general.entryPointRequired" = "Laat minstens een van ‘Toon in menubalk’ en ‘Toon in Dock’ ingeschakeld.";
 "cli.setting.show_in_dock" = "Toon het OpenJoystickDriver-symbool altijd in het Dock; als dit uit staat, verschijnt het alleen zolang een venster open is.";
 "settings.error.damaged" = "Het instellingenbestand %@ is beschadigd. Herstel het, of zet het met `ojd setting reset` in de Prullenmand.";
 "settings.error.unsupported" = "Het instellingenbestand %@ wordt niet ondersteund. Schrijf het bestand opnieuw voor de ondersteunde apiVersion, of zet het met `ojd setting reset` in de Prullenmand.";

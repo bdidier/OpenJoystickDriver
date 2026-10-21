@@ -1835,7 +1835,7 @@
 "settings.error.noVisibleEntryPoint" = "「メニューバーに表示」と「Dockに表示」を両方オフにすることはできません。アプリを開くための表示がなくなります。";
 "settings.unreadable.title" = "設定を読み込めません";
 "settings.unreadable.resetSettings" = "設定をリセット";
-"settings.unreadable.showInFinder" = "Finderで表示";
+"settings.unreadable.showInFinder" = "Finderに表示";
 "cli.setting.reset.abstract" = "設定ファイルをゴミ箱に移動します。";
 "cli.setting.reset.discussion" = "Settings.jsonをゴミ箱に移動し、すべての設定をデフォルト値に戻します。ファイルが破損しているか受け付けられない場合に使います。";
 "cli.setting.reset.confirm" = "設定ファイルをゴミ箱に移動して、すべての設定をデフォルト値に戻しますか？";
