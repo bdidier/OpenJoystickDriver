@@ -130,6 +130,7 @@ extension ProtocolClassifierTests {
         "apiVersion": "\(apiVersion)",
         "kind": "\(kind)",
         "family": "\(family)",
+        "name": "Test family",
         \(PhysicalProtocolID(rawValue: family).map(ProtocolDescriptionFixture.variantMembers) ?? "")
         \(keys)
         "endpoints": {"in": 130, "out": 2},

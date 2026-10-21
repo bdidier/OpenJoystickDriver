@@ -23,7 +23,8 @@ struct SubcommandDescriptionTests {
   ) throws(ProtocolDescriptionProblem) -> ProtocolDescription {
     let json = """
       {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "ProtocolDescription",
-       "family": "\(family.rawValue)", \(ProtocolDescriptionFixture.variantMembers(of: family))
+       "family": "\(family.rawValue)", "name": "Test family",
+       \(ProtocolDescriptionFixture.variantMembers(of: family))
        \(ProtocolDescriptionFixture.sessionKeyMembers(of: family))
        "endpoints": {"in": 130, "out": 2}, \(body)}
       """

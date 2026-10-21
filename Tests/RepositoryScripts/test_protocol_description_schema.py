@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import copy
 import json
-import re
 import tempfile
 import unittest
 from pathlib import Path
@@ -184,7 +183,9 @@ class ProtocolDescriptionSchemaTests(unittest.TestCase):
                     document["name"] = name
                 path = self.root / "xbox-xusb.json"
                 path.write_text(json.dumps(document), encoding="utf-8")
-                with self.assertRaisesRegex(validate_schemas.ValidationError, r"^E5002: "):
+                with self.assertRaisesRegex(
+                    validate_schemas.ValidationError, r"^E5002: "
+                ):
                     validate_schemas.validate_protocol_descriptions(
                         self.schema, self.registry, [path]
                     )

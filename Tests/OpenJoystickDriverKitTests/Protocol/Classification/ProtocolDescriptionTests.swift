@@ -13,6 +13,19 @@ struct ProtocolDescriptionTests {
   private static let startupWrite =
     #"{"startup": [{"report": {"kind": "Output", "id": 1, "length": 4}, "bytes": "01 02 03"}]}"#
 
+  @Test(arguments: ["", #""name": "","#])
+  func aDescriptionWithoutAUsableNameIsRefused(member: String) {
+    let json = """
+      {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "ProtocolDescription",
+       "family": "XboxXID", \(member) "variants": ["Gamepad"], "storesVariant": true,
+       "endpoints": {"in": 130, "out": 2}}
+      """
+    let problem = #expect(throws: ProtocolDescriptionProblem.self) {
+      try ProtocolDescription.decode(Data(json.utf8), fileName: "xbox-xid.json")
+    }
+    #expect(problem?.code == .invalidProtocolDescription)
+  }
+
   /// Decodes a description of `family` whose body after the header is `body`, with the family's
   /// session counts and `sessionKeys` added to any the body leaves unstated.
   private func decode(
@@ -900,7 +913,8 @@ struct ProtocolDescriptionTests {
     func problem(_ members: String) -> ProtocolDescriptionProblem? {
       let json = """
         {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "ProtocolDescription",
-         "family": "XboxGIP", \(members) "sessionKeys": ["startup", "keepAlive"],
+         "family": "XboxGIP", "name": "Test family", \(members)
+         "sessionKeys": ["startup", "keepAlive"],
          "endpoints": {"in": 130, "out": 2}, "rawUSB": true,
          "defaults": {"session": {"handshakeAttempts": 3, "announceResendLimit": 8,
          "namedPackets": [
@@ -998,7 +1012,8 @@ enum ProtocolDescriptionFixture {
   ) throws(ProtocolDescriptionProblem) -> ProtocolDescription {
     let json = """
       {"apiVersion": "\(OpenJoystickDriverAPI.version)", "kind": "ProtocolDescription",
-       "family": "\(family.rawValue)", \(variantMembers(of: family))
+       "family": "\(family.rawValue)", "name": "Test family",
+       \(variantMembers(of: family))
        "endpoints": {"in": 130, "out": 2}, \(body)}
       """
     return try ProtocolDescription.decode(
