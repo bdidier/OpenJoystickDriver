@@ -226,6 +226,24 @@ struct ControllerCommandTests {
   }
 
   @Test
+  func disconnectOfABluetoothLEControllerNamesTheLimitAndTheManualRoute() async throws {
+    let service = try FakeService(devices: [
+      ApplicationServiceDeviceDescription.fixture(id: "pad-1")
+    ]) { method, _ in
+      method == .disconnectWirelessController
+        ? doubleEncoded(
+          WirelessControllerDisconnectResult(state: .active, failure: .bluetoothLEUnsupported)
+        )
+        : nil
+    }
+    let result = await service.run(["controller", "disconnect", token("pad-1")])
+    #expect(result.code == 1)
+    #expect(result.standardOutput.isEmpty)
+    #expect(result.standardError.contains("Bluetooth Low Energy"))
+    #expect(result.standardError.contains("System Settings"))
+  }
+
+  @Test
   func showPrintsTheControllerReport() async throws {
     let service = try FakeService(devices: [
       ApplicationServiceDeviceDescription.fixture(id: "pad-1")

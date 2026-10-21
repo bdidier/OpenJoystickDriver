@@ -1060,6 +1060,7 @@
 "cli.controller.disconnect.abstract" = "Disconnect a Bluetooth controller.";
 "cli.controller.disconnect.discussion" = "Closes the Bluetooth connection. The controller stays paired and reconnects when you turn it on again. Waits at least 6 seconds for Bluetooth to confirm.";
 "cli.controller.disconnect.done" = "Disconnected %@.";
+"cli.controller.disconnect.bluetooth_le" = "%@ is connected over Bluetooth Low Energy, which the service cannot disconnect. Turn the controller off or disconnect it in System Settings › Bluetooth.";
 "cli.controller.disconnect.failed" = "Bluetooth disconnect failed during %@: %@.";
 "cli.controller.disconnect.not_bluetooth" = "%@ is not connected over Bluetooth. Unplug it to disconnect it.";
 "cli.controller.discussion" = "CONTROLLER is an ID from 'ojd controller list', or VVVV:PPPP (hex vendor and product ID) when exactly one connected controller has it. Every controller command needs the service.";

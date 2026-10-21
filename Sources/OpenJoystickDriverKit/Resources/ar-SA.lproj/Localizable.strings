@@ -1060,6 +1060,7 @@
 "cli.controller.disconnect.abstract" = "افصل وحدة تحكم Bluetooth.";
 "cli.controller.disconnect.discussion" = "يغلق اتصال Bluetooth. تبقى وحدة التحكم مقترنة وتعيد الاتصال عند تشغيلها مرة أخرى. ينتظر 6 ثوانٍ على الأقل حتى يؤكد Bluetooth.";
 "cli.controller.disconnect.done" = "تم فصل %@.";
+"cli.controller.disconnect.bluetooth_le" = "%@ متصلة عبر Bluetooth Low Energy، ولا تستطيع الخدمة فصلها. أوقف تشغيل وحدة التحكم أو افصلها في إعدادات النظام ‹ Bluetooth.";
 "cli.controller.disconnect.failed" = "فشل فصل Bluetooth أثناء %@: %@.";
 "cli.controller.disconnect.not_bluetooth" = "%@ غير متصلة عبر Bluetooth. افصل الكابل لفصلها.";
 "cli.controller.discussion" = "CONTROLLER هو معرّف من «ojd controller list» أو VVVV:PPPP (معرّف المورّد والمنتج بالنظام الست عشري) عندما تحمله وحدة تحكم متصلة واحدة فقط. تحتاج كل أوامر وحدة التحكم إلى الخدمة.";

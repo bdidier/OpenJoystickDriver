@@ -213,7 +213,7 @@ struct ControllerSessionTests {
 
     #expect(device.connectionState?.transport == .bluetoothLE)
     #expect(result.state == .active)
-    #expect(result.failure == .notBluetooth)
+    #expect(result.failure == .bluetoothLEUnsupported)
     #expect(probe.calls.isEmpty)
     await manager.stop()
   }

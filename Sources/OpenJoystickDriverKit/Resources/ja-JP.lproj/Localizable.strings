@@ -1060,6 +1060,7 @@
 "cli.controller.disconnect.abstract" = "Bluetooth コントローラを切断します。";
 "cli.controller.disconnect.discussion" = "Bluetooth 接続を閉じます。コントローラはペアリングされたままで、再び電源を入れると再接続します。Bluetooth の確認を最低 6 秒待ちます。";
 "cli.controller.disconnect.done" = "%@ を切断しました。";
+"cli.controller.disconnect.bluetooth_le" = "%@ は Bluetooth Low Energy で接続されており、サービスから切断できません。コントローラの電源を切るか、システム設定 › Bluetooth で切断してください。";
 "cli.controller.disconnect.failed" = "%@ の Bluetooth 切断中に失敗しました: %@。";
 "cli.controller.disconnect.not_bluetooth" = "%@ は Bluetooth で接続されていません。切断するにはケーブルを抜いてください。";
 "cli.controller.discussion" = "CONTROLLER には「ojd controller list」で表示される ID、または接続中のコントローラの中で 1 台だけが持つ VVVV:PPPP (16進のベンダー ID とプロダクト ID) を指定します。すべてのコントローラコマンドにはサービスが必要です。";

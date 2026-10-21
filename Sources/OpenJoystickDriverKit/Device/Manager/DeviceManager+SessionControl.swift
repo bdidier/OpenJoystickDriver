@@ -84,10 +84,14 @@ extension DeviceManager {
       let identifier = connectedIdentifier(for: controller),
       let pipeline = pipelines[identifier], let info = deviceInfos[identifier]
     else { return WirelessControllerDisconnectResult(state: .active, failure: .notFound) }
-    guard await pipeline.currentConnectionState()?.transport == .bluetoothClassic else {
+    // CoreBluetooth cancels only connections the calling app holds, and IOBluetooth closes only
+    // classic baseband links, so a system-connected Bluetooth LE HID link has no supported
+    // disconnect path.
+    let transport = await pipeline.currentConnectionState()?.transport
+    guard transport == .bluetoothClassic else {
       return WirelessControllerDisconnectResult(
         state: await pipeline.controllerSessionState(),
-        failure: .notBluetooth
+        failure: transport == .bluetoothLE ? .bluetoothLEUnsupported : .notBluetooth
       )
     }
     guard let address = Self.bluetoothAddress(from: info.serialNumber),
