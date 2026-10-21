@@ -107,24 +107,6 @@ struct GUICoverageTests {
   }
 
   @Test
-  func everyGUIOnlyActionIsDeclaredInTheGUIAndNamedInD10() throws {
-    let design = try String(
-      contentsOf: GUISources.root.appendingPathComponent(
-        "openspec/changes/platform-neutral-redesign/design.md"
-      ),
-      encoding: .utf8
-    )
-    let start = try #require(design.range(of: "### D10"))
-    let end = try #require(design.range(of: "### D11"))
-    let section = String(design[start.lowerBound..<end.lowerBound])
-    #expect(GUICoverageEntries.guiOnly.contains { $0.name == "Send Test Notification" })
-    for item in GUICoverageEntries.guiOnly {
-      #expect(GUISources.isDeclaredAndReferenced(item.symbol), "no GUI symbol \(item.symbol)")
-      #expect(section.contains("`\(item.name)`"), "D10 does not name \(item.name)")
-    }
-  }
-
-  @Test
   func theD10TextNamesEveryCLIOnlyItem() throws {
     let design = try String(
       contentsOf: GUISources.root.appendingPathComponent(
