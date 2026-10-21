@@ -124,22 +124,20 @@ extension ApplicationServiceClient {
 
   /// Waits until the service's status differs from revision `after`, or the service's hold time
   /// passes with no change, and returns the service's current revision. A nil `after` returns
-  /// the current revision at once. When the service closes the connection during a wait, the
-  /// wait throws ``LocalServiceRPCError/serviceClosedConnection``: the first reply proved the
-  /// service accepts this process.
+  /// the current revision at once. When the service closes the connection without a reply during
+  /// a wait, the wait throws ``LocalServiceRPCError/serviceClosedConnection``: the first reply
+  /// proved the service accepts this process. A reply that rejects this process still throws
+  /// ``LocalServiceRPCError/peerRejected``.
   public func waitForServiceStatusChange(
     after: ServiceStatusRevision?
   ) async throws -> ServiceStatusRevision {
-    do {
-      return try await call(
-        .waitForServiceStatusChange,
-        LocalServiceRPCStatusChangeArguments(after: after),
-        timeoutSeconds: ServiceStatusRevision.holdSeconds
-          + applicationServiceDefaultReplyTimeoutSeconds
-      )
-    } catch LocalServiceRPCError.peerRejected where after != nil {
-      throw LocalServiceRPCError.serviceClosedConnection
-    }
+    try await call(
+      .waitForServiceStatusChange,
+      LocalServiceRPCStatusChangeArguments(after: after),
+      timeoutSeconds: ServiceStatusRevision.holdSeconds
+        + applicationServiceDefaultReplyTimeoutSeconds,
+      closedWithoutReply: after == nil ? .peerRejected : .serviceClosedConnection
+    )
   }
 
   public func getFrameTimings() async throws -> ApplicationServiceFrameTimingsPayload {

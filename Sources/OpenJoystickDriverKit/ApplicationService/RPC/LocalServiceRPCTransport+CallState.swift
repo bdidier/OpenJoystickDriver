@@ -63,6 +63,7 @@ extension LocalServiceRPCClient {
     arguments: Arguments,
     timeoutSeconds: TimeInterval,
     socketPath: String = LocalServiceRPCTransport.defaultSocketPath,
+    closedWithoutReply: LocalServiceRPCError = .peerRejected,
     as type: Value.Type = Value.self
   ) async throws -> Value {
     let requestData = try JSONEncoder().encode(
@@ -75,7 +76,8 @@ extension LocalServiceRPCClient {
           requestData,
           state: state,
           timeoutSeconds: timeoutSeconds,
-          socketPath: socketPath
+          socketPath: socketPath,
+          closedWithoutReply: closedWithoutReply
         )
       }
     } onCancel: {
@@ -94,7 +96,8 @@ extension LocalServiceRPCClient {
     _ requestData: Data,
     state: CallState,
     timeoutSeconds: TimeInterval,
-    socketPath: String
+    socketPath: String,
+    closedWithoutReply: LocalServiceRPCError
   ) throws -> Data {
     guard !state.isCancelled else { throw CancellationError() }
     let descriptor: Int32
@@ -117,10 +120,10 @@ extension LocalServiceRPCClient {
         try LocalServiceRPCTransport.sendFrame(requestData, to: descriptor)
       } catch LocalServiceRPCError.connectionFailed(let code)
         where code == EPIPE || code == ECONNRESET
-      { throw LocalServiceRPCError.peerRejected }
+      { throw closedWithoutReply }
       let responseData = try LocalServiceRPCTransport.receiveFrame(
         from: descriptor,
-        closedBeforeFrameError: .peerRejected
+        closedBeforeFrameError: closedWithoutReply
       )
       guard !state.isCancelled else { throw CancellationError() }
       return responseData

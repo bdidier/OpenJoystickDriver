@@ -317,6 +317,44 @@ struct LocalServiceRPCTests {
     releaseHeldRequest.signal()
   }
 
+  @Test
+  func heldStatusWaitReportsAnEndOfStreamAsTheServiceClosingTheConnection() async throws {
+    let socketPath = temporarySocketPath()
+    let listener = try ClosingSocketListener(path: socketPath)
+    defer { listener.stop() }
+    let client = ApplicationServiceClient(socketPath: socketPath)
+    await client.connect(timeoutSeconds: 2)
+
+    await #expect(throws: LocalServiceRPCError.serviceClosedConnection) {
+      _ = try await client.waitForServiceStatusChange(
+        after: ServiceStatusRevision(instance: UUID(), generation: 1)
+      )
+    }
+    await #expect(throws: LocalServiceRPCError.peerRejected) {
+      _ = try await client.waitForServiceStatusChange(after: nil)
+    }
+  }
+
+  @Test
+  func heldStatusWaitReportsARejectingReplyAsAPeerRejection() async throws {
+    let socketPath = temporarySocketPath()
+    let server = LocalServiceRPCServer(
+      socketPath: socketPath,
+      authentication: { _ in false },
+      handler: { _, completion in completion(LocalServiceRPCResponse(result: Data(), error: nil)) }
+    )
+    try server.start()
+    defer { server.stop() }
+    let client = ApplicationServiceClient(socketPath: socketPath)
+    await client.connect(timeoutSeconds: 2)
+
+    await #expect(throws: LocalServiceRPCError.peerRejected) {
+      _ = try await client.waitForServiceStatusChange(
+        after: ServiceStatusRevision(instance: UUID(), generation: 1)
+      )
+    }
+  }
+
   private func temporarySocketPath() -> String {
     "/tmp/com.openjoystickdriver.test.\(UUID().uuidString).rpc"
   }
@@ -329,4 +367,42 @@ private final class PeerRecorder: @unchecked Sendable {
   var last: LocalSocketPeer? { lock.withLock { peers.last } }
 
   func record(_ peer: LocalSocketPeer) { lock.withLock { peers.append(peer) } }
+}
+
+/// Accepts every connection and closes it without sending a frame.
+private final class ClosingSocketListener: @unchecked Sendable {
+  private let descriptor: Int32
+  private let path: String
+
+  init(path: String) throws {
+    self.path = path
+    descriptor = socket(AF_UNIX, SOCK_STREAM, 0)
+    try #require(descriptor >= 0)
+    var address = sockaddr_un()
+    address.sun_family = sa_family_t(AF_UNIX)
+    withUnsafeMutableBytes(of: &address.sun_path) { buffer in
+      _ = path.withCString { strncpy(buffer.baseAddress!, $0, buffer.count - 1) }
+    }
+    let bound = withUnsafePointer(to: &address) {
+      $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {
+        bind(descriptor, $0, socklen_t(MemoryLayout<sockaddr_un>.size))
+      }
+    }
+    try #require(bound == 0)
+    try #require(listen(descriptor, 8) == 0)
+    let listening = descriptor
+    Thread.detachNewThread {
+      while true {
+        let connection = accept(listening, nil, nil)
+        if connection < 0 { return }
+        Darwin.close(connection)
+      }
+    }
+  }
+
+  func stop() {
+    shutdown(descriptor, SHUT_RDWR)
+    Darwin.close(descriptor)
+    unlink(path)
+  }
 }
