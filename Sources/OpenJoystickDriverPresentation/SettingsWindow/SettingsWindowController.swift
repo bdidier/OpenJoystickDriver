@@ -80,7 +80,7 @@
         )
       }
       self.makeContent = makeContent
-      let window = NSWindow(
+      let window = SettingsWindow(
         contentRect: NSRect(
           x: 0,
           y: 0,

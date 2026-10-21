@@ -4,7 +4,7 @@
   import SwiftUI
 
   /// The strip under the toolbar that lists what stops controllers from working. It exists
-  /// only while ``MainWindowProblem/current(status:driver:)`` returns problems.
+  /// only while ``MainWindowProblem/current(permissions:status:driver:)`` returns problems.
   struct MainWindowProblemBanner: View {
     let problems: [MainWindowProblem]
     let perform: @MainActor (MainWindowProblemAction) -> Void

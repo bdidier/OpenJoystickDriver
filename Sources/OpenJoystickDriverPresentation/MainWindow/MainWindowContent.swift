@@ -105,6 +105,7 @@
       VStack(spacing: 0) {
         MainWindowProblemBanner(
           problems: MainWindowProblem.current(
+            permissions: runtime.permissionState,
             status: runtime.statusState,
             driver: runtime.systemExtensionSetupState
           ),

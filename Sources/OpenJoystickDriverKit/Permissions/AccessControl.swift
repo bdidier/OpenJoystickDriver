@@ -1,3 +1,4 @@
+import CoreGraphics
 import Foundation
 import IOKit
 import IOKit.hid
@@ -59,6 +60,12 @@ public actor PermissionManager {
   /// IOHIDUserDevice creation is authorized through the post-event TCC service.
   nonisolated public static func currentInputInjectAccessState() -> AccessState {
     accessState(for: kIOHIDRequestTypePostEvent)
+  }
+
+  /// Whether this process may post keyboard and pointer events. CoreGraphics reports only
+  /// whether access is granted, so a false answer is `notAuthorized`, not a denial.
+  nonisolated public static func currentPostEventAccessState() -> RemappingPostEventAccessState {
+    CGPreflightPostEventAccess() ? .granted : .notAuthorized
   }
 
   nonisolated private static func accessState(for requestType: IOHIDRequestType) -> AccessState {
@@ -194,5 +201,12 @@ public struct OJDPermissionRequirement: Sendable, Equatable {
     requested: true
   )
 
-  public static let inventory = [inputRead, inputInject, usbTransport]
+  public static let postEvent = Self(
+    name: "Post event",
+    owner: "OpenJoystickDriver service",
+    purpose: "Send remapped keyboard, pointer, and scroll events",
+    requested: true
+  )
+
+  public static let inventory = [inputRead, inputInject, usbTransport, postEvent]
 }

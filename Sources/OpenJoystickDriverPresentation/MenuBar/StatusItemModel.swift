@@ -36,7 +36,8 @@ struct StatusItemEntry: Equatable {
   let action: StatusItemAction?
   let submenu: [Self]?
   let isSeparator: Bool
-  /// SF Symbol shown next to the title, if any.
+  /// SF Symbol shown next to the title, if any. Only the status line has one: the HIG gives every
+  /// item of a group an icon or none, and the other groups have none.
   let symbolName: String?
 
   init(
@@ -115,8 +116,7 @@ enum StatusItemModel {
         StatusItemEntry(
           id: "grantAccess",
           title: .key("menuBar.grantAccess"),
-          action: .showArea(.access),
-          symbolName: "lock.shield"
+          action: .showArea(.access)
         )
       ] : []
     return [
@@ -169,14 +169,13 @@ enum StatusItemModel {
       ),
       StatusItemEntry(
         id: "settings",
-        title: .key("menuBar.settings"),
-        action: .showSettings,
-        symbolName: "gearshape"
+        title: .key("mainMenu.app.settings"),
+        action: .showSettings
       ),
       .separator("separator.window"),
       StatusItemEntry(id: "help", title: .key("menuBar.help"), submenu: helpSubmenu()),
       .separator("separator.help"),
-      StatusItemEntry(id: "quit", title: .key("menuBar.quit"), action: .quit, symbolName: "power"),
+      StatusItemEntry(id: "quit", title: .key("mainMenu.app.quit"), action: .quit),
     ]
   }
 
@@ -243,8 +242,7 @@ enum StatusItemModel {
         id: "\(prefix).disconnectWireless",
         title: .key("menuBar.disconnectWireless"),
         isEnabled: controller.isWireless,
-        action: controller.isWireless ? .disconnectWireless(sessionToken: controller.id) : nil,
-        symbolName: "antenna.radiowaves.left.and.right.slash"
+        action: controller.isWireless ? .disconnectWireless(sessionToken: controller.id) : nil
       ),
       StatusItemEntry(
         id: "\(prefix).showInWindow",

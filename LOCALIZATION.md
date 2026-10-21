@@ -56,7 +56,7 @@ Read every value back against `en-US` before you ship it.
 
 1. Copy the template key shape into the target `.lproj` pair.
 2. Translate values. Keep keys, placeholders (`%@`, `%d`, `%#@count@`), and runtime identifiers (names, VID/PID, paths).
-3. One key per label. Follow Apple's capitalization and verb form for the language. Native ellipsis when the action opens another surface.
+3. One key per label. Follow Apple's capitalization and verb form for the language. Native ellipsis only when the command needs more input before it completes (Apple's menu rule); an item that only opens a window or a submenu has none.
 4. RTL: check mixed-direction names and paths.
 
 Capability messages describe the controller or active protocol, not a permanent profile error. Compact symbol actions still require localized text because that text is used for older-system fallbacks, tooltips, and accessibility labels.

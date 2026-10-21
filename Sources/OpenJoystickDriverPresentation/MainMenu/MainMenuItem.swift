@@ -24,6 +24,7 @@ enum MainMenuAction: Hashable, Sendable {
   case importProfile
   case exportProfile
   case installRecordOrMod
+  case close
   case saveSupportReport
   case saveActivityLog
 
@@ -32,9 +33,11 @@ enum MainMenuAction: Hashable, Sendable {
   case cut
   case copy
   case paste
+  case delete
   case selectAll
 
   case showArea(MainWindowArea)
+  case toggleToolbar
   case toggleSidebar
   case toggleFullScreen
 
@@ -161,6 +164,7 @@ struct MainMenuState: Equatable, Sendable {
   var hasMainWindow = false
   var hasSettingsWindow = false
   var isFullScreen = false
+  var isToolbarVisible = false
   var isSidebarVisible = true
 
   /// The controller the Controller and Profile menus act on: the one selected in the Controllers

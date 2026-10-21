@@ -70,6 +70,7 @@ enum MainWindowProblem: Equatable, Sendable, Identifiable {
   /// The problems of the current state, most blocking first: without the service nothing else
   /// can be read, and without the driver Xbox USB controllers cannot connect.
   static func current(
+    permissions: RuntimePermissionLoadState,
     status: RuntimeStatusState,
     driver: SystemExtensionSetupState
   ) -> [Self] {
@@ -85,7 +86,7 @@ enum MainWindowProblem: Equatable, Sendable, Identifiable {
       .invalid:
       problems.append(.driver(driver))
     }
-    if case .available(let presentation) = status, presentation.needsAccess {
+    if AccessReadiness.hasMissingPermission(permissionState: permissions, statusState: status) {
       problems.append(.accessMissing)
     }
     return problems
@@ -105,13 +106,5 @@ enum MainWindowProblemAction: Equatable, Sendable {
     case .repairDriver: return "setup.repairDriver"
     case .showAccess: return "menuBar.grantAccess"
     }
-  }
-}
-
-extension RuntimeStatusPresentation {
-  /// Whether a permission the service needs is missing.
-  var needsAccess: Bool {
-    let needsPostEventAccess = requiresPostEventAccess == true && postEventAccess != .granted
-    return !permissions.isReady || needsPostEventAccess
   }
 }

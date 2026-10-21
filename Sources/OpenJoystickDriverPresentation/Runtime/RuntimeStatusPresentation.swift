@@ -133,21 +133,6 @@ struct RuntimeStatusPresentation: Sendable, Equatable {
   }
 }
 
-extension RemappingProfile {
-  var hasOutputMappings: Bool {
-    if gyroOutput.mode != .disabled || !stickMappings.isEmpty || !touchMappings.isEmpty
-      || motionTuning.steering != nil
-      || layers.contains(where: { $0.motionTuning?.steering != nil })
-    {
-      return true
-    }
-    if !bindings.isEmpty || !chords.isEmpty || !sequences.isEmpty { return true }
-    return layers.contains { layer in
-      !layer.bindings.isEmpty || !layer.chords.isEmpty || !layer.sequences.isEmpty
-    }
-  }
-}
-
 enum RuntimeStatusState: Sendable, Equatable {
   case loading
   case available(RuntimeStatusPresentation)

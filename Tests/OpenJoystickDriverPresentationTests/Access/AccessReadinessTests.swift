@@ -121,6 +121,26 @@ struct AccessReadinessTests {
     )
   }
 
+  private func status(
+    postEvent: RemappingPostEventAccessState?,
+    requiresPostEvent: Bool?,
+    inputRead: PermissionManager.AccessState = .granted
+  ) -> RuntimeStatusState {
+    .available(
+      RuntimeStatusPresentation(
+        payload: ApplicationServiceStatusPayload(
+          inputRead: inputRead,
+          inputInject: .granted,
+          connectedDevices: [],
+          userSpaceVirtualDeviceEnabled: true,
+          userSpaceVirtualDeviceStatus: .backend("ready")
+        ),
+        postEventAccess: postEvent,
+        requiresPostEventAccess: requiresPostEvent
+      )
+    )
+  }
+
   @Test
   func aCheckingPermissionHasNoButton() {
     let value = readiness(permissions: .loading)
@@ -156,6 +176,120 @@ struct AccessReadinessTests {
     #expect(
       readiness(permissions: .loading).rows.map { $0.kind }
         == [AccessPermissionRow.Kind.inputRead, .inputInject, .postEvent, .notification]
+    )
+  }
+
+  @Test
+  func noPermissionIsMissingWhenAllAreGrantedOrNothingWasRead() {
+    let granted = RuntimePermissionLoadState.available(
+      RuntimePermissionSummary(inputRead: .granted, inputInject: .granted)
+    )
+    #expect(
+      !AccessReadiness.hasMissingPermission(
+        permissionState: granted,
+        statusState: status(postEvent: .granted, requiresPostEvent: true)
+      )
+    )
+    #expect(
+      !AccessReadiness.hasMissingPermission(
+        permissionState: granted,
+        statusState: status(postEvent: nil, requiresPostEvent: false)
+      )
+    )
+    #expect(
+      !AccessReadiness.hasMissingPermission(permissionState: .unavailable, statusState: .loading)
+    )
+    #expect(!AccessReadiness.hasMissingPermission(permissionState: .loading, statusState: .loading))
+    #expect(
+      !AccessReadiness.hasMissingPermission(
+        permissionState: .unavailable,
+        statusState: .unavailable("down")
+      )
+    )
+  }
+
+  @Test
+  func theAppsOwnPermissionReadingDecidesOverTheStatusPayload() {
+    let granted = RuntimePermissionLoadState.available(
+      RuntimePermissionSummary(inputRead: .granted, inputInject: .granted)
+    )
+    #expect(
+      !AccessReadiness.hasMissingPermission(
+        permissionState: granted,
+        statusState: status(postEvent: .granted, requiresPostEvent: false, inputRead: .denied)
+      )
+    )
+  }
+
+  @Test
+  func aDeniedUnknownOrUnauthorizedPermissionIsMissing() {
+    func summary(
+      _ read: RuntimePermissionState,
+      _ inject: RuntimePermissionState
+    )
+      -> RuntimePermissionLoadState
+    {
+      .available(RuntimePermissionSummary(inputRead: read, inputInject: inject))
+    }
+    #expect(
+      AccessReadiness.hasMissingPermission(
+        permissionState: summary(.denied, .granted),
+        statusState: .loading
+      )
+    )
+    #expect(
+      AccessReadiness.hasMissingPermission(
+        permissionState: summary(.granted, .unknown),
+        statusState: .loading
+      )
+    )
+    #expect(
+      AccessReadiness.hasMissingPermission(
+        permissionState: summary(.granted, .granted),
+        statusState: status(postEvent: .notAuthorized, requiresPostEvent: true)
+      )
+    )
+  }
+
+  @Test
+  func permissionsBeingReadOrRequestedAreCheckingNotMissing() {
+    let placeholder = status(postEvent: nil, requiresPostEvent: false, inputRead: .unknown)
+    for state in [RuntimePermissionLoadState.requesting, .loading] {
+      #expect(
+        !AccessReadiness.hasMissingPermission(permissionState: state, statusState: placeholder)
+      )
+    }
+    #expect(
+      !AccessReadiness.hasMissingPermission(permissionState: .unavailable, statusState: .loading)
+    )
+  }
+
+  @Test
+  func aFailedPermissionReadIsMissingBecauseTheAccessAreaSaysNeedsAttention() {
+    let placeholder = status(postEvent: nil, requiresPostEvent: false, inputRead: .unknown)
+    #expect(
+      AccessReadiness.hasMissingPermission(
+        permissionState: .error("failed"),
+        statusState: placeholder
+      )
+    )
+    let value = readiness(permissions: .error("failed"))
+    #expect(value.inputRead.tone == .caution)
+  }
+
+  @Test
+  func theStatusReadingDecidesWhileTheAppHasNotReadPermissions() {
+    #expect(
+      AccessReadiness.hasMissingPermission(
+        permissionState: .unavailable,
+        statusState: status(postEvent: nil, requiresPostEvent: false, inputRead: .denied)
+      )
+    )
+    #expect(
+      !AccessReadiness.hasMissingPermission(
+        permissionState: .unavailable,
+        statusState: status(postEvent: nil, requiresPostEvent: false, inputRead: .granted)
+      )
     )
   }
 }

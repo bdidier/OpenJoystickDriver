@@ -44,6 +44,7 @@
       state.hasSettingsWindow = settingsWindow != nil
       if let window = NSApplication.shared.keyWindow {
         state.isFullScreen = window.styleMask.contains(.fullScreen)
+        state.isToolbarVisible = window.toolbar?.isVisible == true
         if let split = window.contentViewController as? NSSplitViewController,
           let sidebar = split.splitViewItems.first(where: { $0.behavior == .sidebar })
         {
@@ -147,7 +148,8 @@
       case .copySupportReport: copySupportReportWithFeedback()
       case .reportProblem: open(urlString: StatusItemModel.problemReport)
       case .openProjectWebsite: openProjectPage(nil)
-      case .services, .hide, .hideOthers, .showAll, .undo, .redo, .cut, .copy, .paste, .selectAll,
+      case .services, .hide, .hideOthers, .showAll, .undo, .redo, .cut, .copy, .paste, .delete,
+        .selectAll, .close, .toggleToolbar,
         .toggleSidebar, .toggleFullScreen, .minimize, .zoom, .bringAllToFront:
         // Sent down the responder chain by the menu item; the renderer never routes these here.
         preconditionFailure("\(action) is a responder-chain action")

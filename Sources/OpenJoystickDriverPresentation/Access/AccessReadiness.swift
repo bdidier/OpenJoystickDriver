@@ -126,6 +126,36 @@ struct AccessReadiness {
     return status.requiresPostEventAccess == false
   }
 
+  /// Whether Post Event access must still be requested: the active profile requires it and the
+  /// service has not reported it granted.
+  static func postEventAccessNeedsRequest(in status: RuntimeStatusPresentation) -> Bool {
+    status.requiresPostEventAccess == true && status.postEventAccess != .granted
+  }
+
+  /// Whether a permission the service needs is missing: one of the Input Read, Input Inject and
+  /// Post Event cards reads Needs attention. The rule is the cards' own, so the status item, the
+  /// problem banner and the Access area agree:
+  /// - Permissions being read or requested, or not read yet, show Checking and are not missing.
+  /// - A permission denied or never requested is missing.
+  /// - Post Event access counts only when the active profile requires it and it is not
+  ///   authorized.
+  /// - A failed permission read shows Needs attention, so the user can retry by granting.
+  /// A notification setting never counts.
+  static func hasMissingPermission(
+    permissionState: RuntimePermissionLoadState,
+    statusState: RuntimeStatusState
+  ) -> Bool {
+    let readiness = Self(
+      permissionState: permissionState,
+      statusState: statusState,
+      notificationState: .checking,
+      notificationSettings: .authorizationOnly(.checking)
+    )
+    return [readiness.inputRead, readiness.inputInject, readiness.postEvent].contains {
+      $0.tone == .caution
+    }
+  }
+
   /// The four values in row order, for the accessibility value of the group.
   var summaryValue: String {
     [inputRead.value, inputInject.value, postEvent.value, notification.value].joined(
@@ -140,10 +170,17 @@ struct AccessReadiness {
     return permissionSummary.inputRead != .granted || permissionSummary.inputInject != .granted
   }
 
+  /// The permissions as read: the app's own reading, or the service status when the app has not
+  /// read them. While a read or request is running, or after it failed, the status holds a
+  /// placeholder, so there is no reading.
   private var permissionSummary: RuntimePermissionSummary? {
-    if case .available(let permissions) = permissionState { return permissions }
-    if case .available(let status) = statusState { return status.permissions }
-    return nil
+    switch permissionState {
+    case .available(let permissions): return permissions
+    case .unavailable:
+      if case .available(let status) = statusState { return status.permissions }
+      return nil
+    case .loading, .requesting, .error: return nil
+    }
   }
 
   private func permissionStatus(for state: RuntimePermissionState?) -> AccessReadinessStatus {
@@ -152,8 +189,8 @@ struct AccessReadiness {
     case .denied, .unknown: return Self.needsAttention
     case nil:
       switch permissionState {
-      case .loading, .requesting: return Self.checking(isActionable: true)
-      case .available, .unavailable, .error: return Self.needsAttention
+      case .loading, .requesting, .unavailable: return Self.checking(isActionable: true)
+      case .available, .error: return Self.needsAttention
       }
     }
   }

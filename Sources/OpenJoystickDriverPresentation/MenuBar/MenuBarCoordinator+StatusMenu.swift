@@ -46,7 +46,8 @@
       if entry.isSeparator { return .separator() }
       let title: String
       switch entry.title {
-      case .key(let key): title = OJDLocalized.string(key)
+      case .key(let key):
+        title = MainMenuRenderer.title(key, appName: OJDLocalized.string("app.name"))
       case .verbatim(let text): title = text
       }
       let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
