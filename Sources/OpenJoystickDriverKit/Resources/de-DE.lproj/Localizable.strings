@@ -354,11 +354,9 @@
 "common.stop" = "Stopp";
 "error.supportReportSave" = "Der Supportbericht konnte nicht gesichert werden. Wähle eine andere Datei und versuche es erneut.";
 "error.logsSave" = "Die Protokolle konnten nicht gesichert werden. Wähle eine andere Datei und versuche es erneut.";
-"error.noControllerInput" = "Noch keine Controller-Eingabe verfügbar.";
 "error.noDetectedControl" = "Keine neue Controller-Steuerung erkannt.";
 "error.actionInProgress" = "Eine andere Profilaktion läuft bereits.";
 "error.profileLibraryCorrupt" = "Die Liste aktiver Profile ist beschädigt und konnte nicht geladen werden.";
-"error.selectedAssignmentMissing" = "Die ausgewählte Zuweisung ist nicht mehr verfügbar.";
 "capture.listeningButton" = "Lauschen…";
 "error.reviewAssignmentsBeforeSave" = "Prüfe die Zuweisungen, bevor du dieses Profil sicherst.";
 "error.selectedProfileItemMissing" = "Das ausgewählte Profilelement ist nicht mehr verfügbar.";
@@ -1941,8 +1939,8 @@
 "cli.setting.reset.none" = "Unter %@ gibt es keine Einstellungsdatei.";
 /* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "Virtuelle Ausgabe ist aus";
-"controllers.publication.reason.systemGamepad" = "macOS stellt ihn als Gamepad bereit";
-"controllers.publication.reason.nativeHIDPassThrough" = "macOS verarbeitet die Eingaben direkt";
+"controllers.publication.reason.systemGamepad" = "Das System stellt ihn als Gamepad bereit";
+"controllers.publication.reason.nativeHIDPassThrough" = "Das System verarbeitet die Eingaben direkt";
 "controllers.publication.reason.upstreamVirtualDevice" = "Ein anderes virtuelles Gerät vertritt ihn bereits";
 "controllers.publication.reason.sessionSuspended" = "Sitzung angehalten";
 "controllers.publication.reason.noVirtualProfile" = "Kein virtuelles Profil passt zu ihm";

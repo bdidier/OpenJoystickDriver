@@ -57,15 +57,15 @@ struct ErrorCodeTests {
   }
 
   @Test
-  func everyCodeHasAnExplanationInTheTemplate() throws {
-    let template = try String(
+  func everyCodeHasAnExplanationInTheEnglishCatalog() throws {
+    let english = try String(
       contentsOf: repositoryResource(
-        "Sources/OpenJoystickDriverKit/Resources/Localization/Localizable.template.strings"
+        "Sources/OpenJoystickDriverKit/Resources/en-US.lproj/Localizable.strings"
       ),
       encoding: .utf8
     )
     for code in ErrorCode.allCases {
-      #expect(template.contains("\"error.\(code.rawValue)\" = "), "\(code.rawValue)")
+      #expect(english.contains("\"error.\(code.rawValue)\" = "), "\(code.rawValue)")
     }
   }
 

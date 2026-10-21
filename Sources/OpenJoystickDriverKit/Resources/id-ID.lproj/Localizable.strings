@@ -354,11 +354,9 @@
 "common.stop" = "Hentikan";
 "error.supportReportSave" = "Laporan dukungan tidak dapat disimpan. Pilih file lain dan coba lagi.";
 "error.logsSave" = "Log tidak dapat disimpan. Pilih file lain dan coba lagi.";
-"error.noControllerInput" = "Belum ada input pengontrol yang tersedia.";
 "error.noDetectedControl" = "Tidak ada kontrol pengontrol baru yang terdeteksi.";
 "error.actionInProgress" = "Tindakan profil lain sedang berlangsung.";
 "error.profileLibraryCorrupt" = "Daftar profil aktif rusak dan tidak dapat dimuat.";
-"error.selectedAssignmentMissing" = "Penetapan yang dipilih tidak lagi tersedia.";
 "capture.listeningButton" = "Mendengarkan…";
 "error.reviewAssignmentsBeforeSave" = "Periksa penetapan sebelum menyimpan profil ini.";
 "error.selectedProfileItemMissing" = "Item profil yang dipilih tidak lagi tersedia.";
@@ -1940,8 +1938,8 @@
 "cli.setting.reset.none" = "Tidak ada file pengaturan di %@.";
 /* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "Output virtual mati";
-"controllers.publication.reason.systemGamepad" = "macOS melayaninya sebagai gamepad";
-"controllers.publication.reason.nativeHIDPassThrough" = "macOS menangani inputnya secara langsung";
+"controllers.publication.reason.systemGamepad" = "Sistem melayaninya sebagai gamepad";
+"controllers.publication.reason.nativeHIDPassThrough" = "Sistem menangani inputnya secara langsung";
 "controllers.publication.reason.upstreamVirtualDevice" = "Perangkat virtual lain sudah mewakilinya";
 "controllers.publication.reason.sessionSuspended" = "Sesi ditangguhkan";
 "controllers.publication.reason.noVirtualProfile" = "Tidak ada profil virtual yang cocok";

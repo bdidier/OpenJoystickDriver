@@ -354,11 +354,9 @@
 "common.stop" = "Parar";
 "error.supportReportSave" = "Não foi possível salvar o relatório de suporte. Escolha outro arquivo e tente novamente.";
 "error.logsSave" = "Não foi possível salvar os registros. Escolha outro arquivo e tente novamente.";
-"error.noControllerInput" = "Ainda não há entrada de controle disponível.";
 "error.noDetectedControl" = "Nenhum comando de controle novo foi detectado.";
 "error.actionInProgress" = "Outra ação de perfil já está em andamento.";
 "error.profileLibraryCorrupt" = "A lista de perfis ativos está danificada e não pôde ser carregada.";
-"error.selectedAssignmentMissing" = "A atribuição selecionada não está mais disponível.";
 "capture.listeningButton" = "Ouvindo…";
 "error.reviewAssignmentsBeforeSave" = "Revise as atribuições antes de salvar este perfil.";
 "error.selectedProfileItemMissing" = "O item de perfil selecionado não está mais disponível.";
@@ -1941,8 +1939,8 @@
 "cli.setting.reset.none" = "Não há arquivo de ajustes em %@.";
 /* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "A saída virtual está desativada";
-"controllers.publication.reason.systemGamepad" = "O macOS a trata como gamepad";
-"controllers.publication.reason.nativeHIDPassThrough" = "O macOS trata a entrada diretamente";
+"controllers.publication.reason.systemGamepad" = "O sistema a trata como gamepad";
+"controllers.publication.reason.nativeHIDPassThrough" = "O sistema trata a entrada diretamente";
 "controllers.publication.reason.upstreamVirtualDevice" = "Outro dispositivo virtual já o representa";
 "controllers.publication.reason.sessionSuspended" = "Sessão suspensa";
 "controllers.publication.reason.noVirtualProfile" = "Nenhum perfil virtual se encaixa";

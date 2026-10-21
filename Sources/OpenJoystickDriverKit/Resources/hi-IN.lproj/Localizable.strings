@@ -354,11 +354,9 @@
 "common.stop" = "रोकें";
 "error.supportReportSave" = "सपोर्ट रिपोर्ट सहेजी नहीं जा सकी। कोई अन्य फ़ाइल चुनें और फिर कोशिश करें।";
 "error.logsSave" = "लॉग सहेजे नहीं जा सके। कोई अन्य फ़ाइल चुनें और फिर कोशिश करें।";
-"error.noControllerInput" = "अभी कोई कंट्रोलर इनपुट उपलब्ध नहीं है।";
 "error.noDetectedControl" = "कोई नया कंट्रोलर नियंत्रण नहीं पहचाना गया।";
 "error.actionInProgress" = "कोई अन्य प्रोफ़ाइल कार्रवाई पहले से चल रही है।";
 "error.profileLibraryCorrupt" = "सक्रिय प्रोफ़ाइल सूची क्षतिग्रस्त है और लोड नहीं की जा सकी।";
-"error.selectedAssignmentMissing" = "चयनित असाइनमेंट अब उपलब्ध नहीं है।";
 "capture.listeningButton" = "सुना जा रहा है…";
 "error.reviewAssignmentsBeforeSave" = "इस प्रोफ़ाइल को सहेजने से पहले असाइनमेंट की समीक्षा करें।";
 "error.selectedProfileItemMissing" = "चयनित प्रोफ़ाइल आइटम अब उपलब्ध नहीं है।";
@@ -1940,8 +1938,8 @@
 "cli.setting.reset.none" = "%@ पर कोई सेटिंग्स फ़ाइल नहीं है।";
 /* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "वर्चुअल आउटपुट बंद है";
-"controllers.publication.reason.systemGamepad" = "macOS इसे गेमपैड के रूप में संभालता है";
-"controllers.publication.reason.nativeHIDPassThrough" = "macOS इसके इनपुट को सीधे संभालता है";
+"controllers.publication.reason.systemGamepad" = "सिस्टम इसे गेमपैड के रूप में संभालता है";
+"controllers.publication.reason.nativeHIDPassThrough" = "सिस्टम इसके इनपुट को सीधे संभालता है";
 "controllers.publication.reason.upstreamVirtualDevice" = "कोई दूसरा वर्चुअल डिवाइस पहले से इसका प्रतिनिधित्व करता है";
 "controllers.publication.reason.sessionSuspended" = "सत्र निलंबित है";
 "controllers.publication.reason.noVirtualProfile" = "कोई वर्चुअल प्रोफ़ाइल इसके अनुरूप नहीं है";

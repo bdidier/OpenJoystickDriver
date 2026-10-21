@@ -1,0 +1,20 @@
+{
+  "C": ["one", "other"],
+  "ar": ["zero", "one", "two", "few", "many", "other"],
+  "de": ["one", "other"],
+  "en": ["one", "other"],
+  "es": ["one", "many", "other"],
+  "fr": ["one", "many", "other"],
+  "hi": ["one", "other"],
+  "id": ["other"],
+  "it": ["one", "many", "other"],
+  "ja": ["other"],
+  "ko": ["other"],
+  "nl": ["one", "other"],
+  "pt": ["one", "many", "other"],
+  "ru": ["one", "few", "many", "other"],
+  "th": ["other"],
+  "tr": ["one", "other"],
+  "vi": ["other"],
+  "zh": ["other"]
+}

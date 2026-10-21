@@ -354,11 +354,9 @@
 "common.stop" = "หยุด";
 "error.supportReportSave" = "ไม่สามารถบันทึกรายงานการสนับสนุนได้ เลือกไฟล์อื่นแล้วลองอีกครั้ง";
 "error.logsSave" = "ไม่สามารถบันทึกบันทึกการใช้งานได้ เลือกไฟล์อื่นแล้วลองอีกครั้ง";
-"error.noControllerInput" = "ยังไม่มีอินพุตของคอนโทรลเลอร์";
 "error.noDetectedControl" = "ไม่พบตัวควบคุมของคอนโทรลเลอร์ใหม่";
 "error.actionInProgress" = "กำลังดำเนินการโปรไฟล์อื่นอยู่แล้ว";
 "error.profileLibraryCorrupt" = "รายการโปรไฟล์ที่ใช้งานอยู่เสียหายและไม่สามารถโหลดได้";
-"error.selectedAssignmentMissing" = "การกำหนดที่เลือกไม่พร้อมใช้งานอีกต่อไป";
 "capture.listeningButton" = "กำลังรับฟัง…";
 "error.reviewAssignmentsBeforeSave" = "ตรวจสอบการกำหนดก่อนบันทึกโปรไฟล์นี้";
 "error.selectedProfileItemMissing" = "รายการโปรไฟล์ที่เลือกไม่พร้อมใช้งานอีกต่อไป";
@@ -1940,8 +1938,8 @@
 "cli.setting.reset.none" = "ไม่มีไฟล์การตั้งค่าที่ %@";
 /* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "เอาต์พุตเสมือนปิดอยู่";
-"controllers.publication.reason.systemGamepad" = "macOS จัดการเป็นเกมแพด";
-"controllers.publication.reason.nativeHIDPassThrough" = "macOS จัดการอินพุตโดยตรง";
+"controllers.publication.reason.systemGamepad" = "ระบบจัดการเป็นเกมแพด";
+"controllers.publication.reason.nativeHIDPassThrough" = "ระบบจัดการอินพุตโดยตรง";
 "controllers.publication.reason.upstreamVirtualDevice" = "มีอุปกรณ์เสมือนอื่นแทนอยู่แล้ว";
 "controllers.publication.reason.sessionSuspended" = "เซสชันถูกระงับ";
 "controllers.publication.reason.noVirtualProfile" = "ไม่มีโปรไฟล์เสมือนที่เหมาะสม";

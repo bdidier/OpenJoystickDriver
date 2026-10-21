@@ -354,11 +354,9 @@
 "common.stop" = "Durdur";
 "error.supportReportSave" = "Destek raporu kaydedilemedi. Başka bir dosya seç ve yeniden dene.";
 "error.logsSave" = "Günlükler kaydedilemedi. Başka bir dosya seç ve yeniden dene.";
-"error.noControllerInput" = "Henüz kullanılabilir kontrolcü girişi yok.";
 "error.noDetectedControl" = "Yeni bir kontrolcü denetimi algılanmadı.";
 "error.actionInProgress" = "Başka bir profil eylemi zaten sürüyor.";
 "error.profileLibraryCorrupt" = "Etkin profil listesi hasarlı ve yüklenemedi.";
-"error.selectedAssignmentMissing" = "Seçilen atama artık kullanılamıyor.";
 "capture.listeningButton" = "Dinleniyor…";
 "error.reviewAssignmentsBeforeSave" = "Bu profili kaydetmeden önce atamaları gözden geçir.";
 "error.selectedProfileItemMissing" = "Seçilen profil öğesi artık kullanılamıyor.";
@@ -1940,8 +1938,8 @@
 "cli.setting.reset.none" = "%@ konumunda ayar dosyası yok.";
 /* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "Sanal çıkış kapalı";
-"controllers.publication.reason.systemGamepad" = "macOS bunu oyun kumandası olarak yönetiyor";
-"controllers.publication.reason.nativeHIDPassThrough" = "macOS girdisini doğrudan işliyor";
+"controllers.publication.reason.systemGamepad" = "Sistem bunu oyun kumandası olarak yönetiyor";
+"controllers.publication.reason.nativeHIDPassThrough" = "Sistem girdisini doğrudan işliyor";
 "controllers.publication.reason.upstreamVirtualDevice" = "Başka bir sanal aygıt onu zaten temsil ediyor";
 "controllers.publication.reason.sessionSuspended" = "Oturum askıya alındı";
 "controllers.publication.reason.noVirtualProfile" = "Uygun sanal profil yok";

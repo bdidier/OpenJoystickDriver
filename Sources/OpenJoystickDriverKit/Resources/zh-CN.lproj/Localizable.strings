@@ -354,11 +354,9 @@
 "common.stop" = "停止";
 "error.supportReportSave" = "无法存储支持报告。请选择其他文件后重试。";
 "error.logsSave" = "无法存储日志。请选择其他文件后重试。";
-"error.noControllerInput" = "尚无可用的控制器输入。";
 "error.noDetectedControl" = "未检测到新的控制器控件。";
 "error.actionInProgress" = "另一项配置文件操作已在进行中。";
 "error.profileLibraryCorrupt" = "活动配置文件列表已损坏，无法载入。";
-"error.selectedAssignmentMissing" = "所选映射已不可用。";
 "capture.listeningButton" = "正在侦听…";
 "error.reviewAssignmentsBeforeSave" = "存储此配置文件前请先检查映射。";
 "error.selectedProfileItemMissing" = "所选配置文件项目已不可用。";
@@ -1940,8 +1938,8 @@
 "cli.setting.reset.none" = "%@ 处没有设置文件。";
 /* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "虚拟输出已关闭";
-"controllers.publication.reason.systemGamepad" = "macOS 将其作为游戏手柄处理";
-"controllers.publication.reason.nativeHIDPassThrough" = "macOS 直接处理其输入";
+"controllers.publication.reason.systemGamepad" = "系统将其作为游戏手柄处理";
+"controllers.publication.reason.nativeHIDPassThrough" = "系统直接处理其输入";
 "controllers.publication.reason.upstreamVirtualDevice" = "已有其他虚拟设备代表它";
 "controllers.publication.reason.sessionSuspended" = "会话已暂停";
 "controllers.publication.reason.noVirtualProfile" = "没有适合的虚拟配置文件";

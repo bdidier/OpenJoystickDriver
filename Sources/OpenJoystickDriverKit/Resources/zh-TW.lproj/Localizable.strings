@@ -354,11 +354,9 @@
 "common.stop" = "停止";
 "error.supportReportSave" = "無法儲存支援報告。請選擇其他檔案後再試一次。";
 "error.logsSave" = "無法儲存記錄。請選擇其他檔案後再試一次。";
-"error.noControllerInput" = "尚無可用的控制器輸入。";
 "error.noDetectedControl" = "未偵測到新的控制器控制項。";
 "error.actionInProgress" = "另一項設定檔動作已在進行中。";
 "error.profileLibraryCorrupt" = "使用中的設定檔清單已損壞，無法載入。";
-"error.selectedAssignmentMissing" = "所選的對應已無法使用。";
 "capture.listeningButton" = "正在聆聽…";
 "error.reviewAssignmentsBeforeSave" = "儲存此設定檔前請先檢查對應。";
 "error.selectedProfileItemMissing" = "所選的設定檔項目已無法使用。";
@@ -1940,8 +1938,8 @@
 "cli.setting.reset.none" = "%@ 沒有設定值檔案。";
 /* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "虛擬輸出已關閉";
-"controllers.publication.reason.systemGamepad" = "macOS 將其視為遊戲手把處理";
-"controllers.publication.reason.nativeHIDPassThrough" = "macOS 直接處理其輸入";
+"controllers.publication.reason.systemGamepad" = "系統將其視為遊戲手把處理";
+"controllers.publication.reason.nativeHIDPassThrough" = "系統直接處理其輸入";
 "controllers.publication.reason.upstreamVirtualDevice" = "已有其他虛擬裝置代表它";
 "controllers.publication.reason.sessionSuspended" = "工作階段已暫停";
 "controllers.publication.reason.noVirtualProfile" = "沒有適合的虛擬設定檔";

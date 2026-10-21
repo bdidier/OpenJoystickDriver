@@ -354,11 +354,9 @@
 "common.stop" = "Dừng";
 "error.supportReportSave" = "Không thể lưu báo cáo hỗ trợ. Hãy chọn tệp khác rồi thử lại.";
 "error.logsSave" = "Không thể lưu nhật ký. Hãy chọn tệp khác rồi thử lại.";
-"error.noControllerInput" = "Chưa có đầu vào bộ điều khiển nào.";
 "error.noDetectedControl" = "Không phát hiện thành phần mới nào của bộ điều khiển.";
 "error.actionInProgress" = "Một thao tác cấu hình khác đang được thực hiện.";
 "error.profileLibraryCorrupt" = "Danh sách cấu hình đang hoạt động bị hỏng và không thể tải.";
-"error.selectedAssignmentMissing" = "Phép gán đã chọn không còn khả dụng.";
 "capture.listeningButton" = "Đang lắng nghe…";
 "error.reviewAssignmentsBeforeSave" = "Hãy xem lại các phép gán trước khi lưu cấu hình này.";
 "error.selectedProfileItemMissing" = "Mục cấu hình đã chọn không còn khả dụng.";
@@ -1940,8 +1938,8 @@
 "cli.setting.reset.none" = "Không có tệp cài đặt tại %@.";
 /* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "Đầu ra ảo đang tắt";
-"controllers.publication.reason.systemGamepad" = "macOS xử lý nó như tay cầm chơi game";
-"controllers.publication.reason.nativeHIDPassThrough" = "macOS xử lý trực tiếp đầu vào của nó";
+"controllers.publication.reason.systemGamepad" = "Hệ thống xử lý nó như tay cầm chơi game";
+"controllers.publication.reason.nativeHIDPassThrough" = "Hệ thống xử lý trực tiếp đầu vào của nó";
 "controllers.publication.reason.upstreamVirtualDevice" = "Một thiết bị ảo khác đã đại diện cho nó";
 "controllers.publication.reason.sessionSuspended" = "Phiên đã tạm dừng";
 "controllers.publication.reason.noVirtualProfile" = "Không có hồ sơ ảo phù hợp";

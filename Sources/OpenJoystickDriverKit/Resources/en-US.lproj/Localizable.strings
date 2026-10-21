@@ -354,11 +354,9 @@
 "common.stop" = "Stop";
 "error.supportReportSave" = "The support report couldn't be saved. Choose another file and try again.";
 "error.logsSave" = "The logs couldn't be saved. Choose another file and try again.";
-"error.noControllerInput" = "No controller input is available yet.";
 "error.noDetectedControl" = "No new controller control was detected.";
 "error.actionInProgress" = "Another profile action is already in progress.";
 "error.profileLibraryCorrupt" = "The active profile list is damaged and could not be loaded.";
-"error.selectedAssignmentMissing" = "The selected assignment is no longer available.";
 "capture.listeningButton" = "Listening...";
 "error.reviewAssignmentsBeforeSave" = "Review the assignments before saving this profile.";
 "error.selectedProfileItemMissing" = "The selected profile item is no longer available.";
@@ -1941,8 +1939,8 @@
 "cli.setting.reset.none" = "There is no settings file at %@.";
 /* Why a controller is not published as a virtual device, and a failed send. */
 "controllers.publication.reason.outputDisabled" = "Virtual output is off";
-"controllers.publication.reason.systemGamepad" = "macOS serves it as a gamepad";
-"controllers.publication.reason.nativeHIDPassThrough" = "macOS handles its input directly";
+"controllers.publication.reason.systemGamepad" = "The system serves it as a gamepad";
+"controllers.publication.reason.nativeHIDPassThrough" = "The system handles its input directly";
 "controllers.publication.reason.upstreamVirtualDevice" = "Another virtual device already represents it";
 "controllers.publication.reason.sessionSuspended" = "Session suspended";
 "controllers.publication.reason.noVirtualProfile" = "No virtual profile fits it";

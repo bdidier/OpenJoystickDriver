@@ -96,26 +96,25 @@ struct LocalizationTests {
   }
 
   @Test
-  func pluralResourcesExposeNativeLocaleCategories() {
-    let expectedCategories: Set<String> = ["zero", "one", "two", "few", "many", "other"]
-    let sourceCategories = LocalizationCatalogAudit.pluralCategories(
-      for: Localization.sourceLocalization
+  func pluralResourcesCarryTheCategoriesEachLanguageNeeds() throws {
+    let root = URL(fileURLWithPath: #filePath)
+      .deletingLastPathComponent()  // Localization
+      .deletingLastPathComponent()  // OpenJoystickDriverKitTests
+      .deletingLastPathComponent()  // Tests
+      .deletingLastPathComponent()  // repository root
+    let data = try Data(
+      contentsOf: root.appendingPathComponent("Resources/Localization/PluralCategories.json")
     )
-    #expect(sourceCategories["status.controllerConnected"] == expectedCategories)
-    #expect(sourceCategories["profiles.assignments"] == expectedCategories)
-    #expect(sourceCategories["debug.outputDevices"] == expectedCategories)
-    #expect(
-      LocalizationCatalogAudit.pluralCategories(for: "ar-SA")["status.controllerConnected"]
-        == expectedCategories
-    )
-    #expect(
-      LocalizationCatalogAudit.pluralCategories(for: "ja-JP")["profiles.assignments"]
-        == expectedCategories
-    )
-    #expect(
-      LocalizationCatalogAudit.pluralCategories(for: "ru-RU")["profiles.assignments"]
-        == expectedCategories
-    )
+    let needed = try JSONDecoder().decode([String: Set<String>].self, from: data)
+    for locale in Localization.availableLocalizations() {
+      let language = String(locale.split(separator: "-")[0])
+      let required = try #require(needed[language], "no plural categories for \(language)")
+      let categories = LocalizationCatalogAudit.pluralCategories(for: locale)
+      #expect(!categories.isEmpty)
+      for (key, present) in categories {
+        #expect(required.isSubset(of: present), "\(locale) \(key)")
+      }
+    }
 
     let resolver = Localization(preferredLanguages: ["en-US"])
     #expect(
