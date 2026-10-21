@@ -1729,6 +1729,7 @@
 "menuBar.profileConflict" = "इस कार्रवाई के चलने से पहले प्रोफ़ाइल बदल गई। फिर कोशिश करें।";
 "a11y.menuBar.statusItem" = "OpenJoystickDriver की स्थिति";
 "a11y.mainWindow.sidebar" = "क्षेत्र";
+"a11y.capture.touchSwipeDistance" = "न्यूनतम स्वाइप दूरी";
 "access.detail.pair" = "%1$@ · %2$@";
 "access.detail.triple" = "%1$@ · %2$@ · %3$@";
 "access.grant.noPath" = "OpenJoystickDriver %@ की निष्पादन योग्य फ़ाइल नहीं पढ़ सका, इसलिए वह उसे ऐक्सेस नहीं दे सकता।";

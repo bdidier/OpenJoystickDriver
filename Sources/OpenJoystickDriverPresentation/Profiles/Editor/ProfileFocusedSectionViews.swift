@@ -26,7 +26,7 @@
                     separator: " + "
                   )
                 )
-                OJDSystemSymbol(name: "arrow.right", fallback: "->")
+                OJDSystemSymbol(name: "arrow.right", fallback: "->").accessibilityHidden(true)
                 KeyboardDestinationLabel(destination: chord.destination)
                 Spacer()
                 removeButton { removeChord(chord.id) }
@@ -51,7 +51,7 @@
                 Text(String(format: "(%.0f ms)", sequence.windowMs)).foregroundColor(
                   Color(NSColor.secondaryLabelColor)
                 )
-                OJDSystemSymbol(name: "arrow.right", fallback: "->")
+                OJDSystemSymbol(name: "arrow.right", fallback: "->").accessibilityHidden(true)
                 KeyboardDestinationLabel(destination: sequence.destination)
                 Spacer()
                 removeButton { removeSequence(sequence.id) }
@@ -142,7 +142,7 @@
         ForEach(layer.bindings) { binding in
           HStack {
             Text(RuntimePresentation.sourceLabel(binding.source))
-            OJDSystemSymbol(name: "arrow.right", fallback: "->")
+            OJDSystemSymbol(name: "arrow.right", fallback: "->").accessibilityHidden(true)
             KeyboardDestinationLabel(destination: binding.destination)
             Spacer()
             if binding.axisTuning != nil {

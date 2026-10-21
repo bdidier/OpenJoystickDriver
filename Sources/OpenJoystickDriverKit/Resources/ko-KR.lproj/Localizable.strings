@@ -1729,6 +1729,7 @@
 "menuBar.profileConflict" = "이 작업이 실행되기 전에 프로파일이 변경되었습니다. 다시 시도하세요.";
 "a11y.menuBar.statusItem" = "OpenJoystickDriver 상태";
 "a11y.mainWindow.sidebar" = "영역";
+"a11y.capture.touchSwipeDistance" = "최소 스와이프 거리";
 "access.detail.pair" = "%1$@ · %2$@";
 "access.detail.triple" = "%1$@ · %2$@ · %3$@";
 "access.grant.noPath" = "OpenJoystickDriver가 %@의 실행 파일을 읽을 수 없어 접근 권한을 부여할 수 없습니다.";

@@ -104,7 +104,7 @@
         OJDSystemSymbol(
           name: symbol,
           fallback: OJDLocalized.string("common.status")
-        )
+        ).accessibilityHidden(true)
         Text(text)
       }.accessibilityElement(children: .combine)
     }

@@ -1729,6 +1729,7 @@
 "menuBar.profileConflict" = "この操作の実行前にプロファイルが変更されました。もう一度お試しください。";
 "a11y.menuBar.statusItem" = "OpenJoystickDriverのステータス";
 "a11y.mainWindow.sidebar" = "セクション";
+"a11y.capture.touchSwipeDistance" = "最小スワイプ距離";
 "access.detail.pair" = "%1$@ · %2$@";
 "access.detail.triple" = "%1$@ · %2$@ · %3$@";
 "access.grant.noPath" = "OpenJoystickDriverが%@の実行ファイルを読み取れなかったため、アクセスを許可できません。";

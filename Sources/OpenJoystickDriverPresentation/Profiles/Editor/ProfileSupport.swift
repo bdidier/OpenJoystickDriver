@@ -12,7 +12,7 @@
       HStack(alignment: .top, spacing: 10) {
         OJDSystemSymbol(name: "exclamationmark.triangle", fallback: "!").foregroundColor(
           Color(NSColor.systemRed)
-        )
+        ).accessibilityHidden(true)
         VStack(alignment: .leading, spacing: 4) {
           Text(
             OJDLocalized.string(

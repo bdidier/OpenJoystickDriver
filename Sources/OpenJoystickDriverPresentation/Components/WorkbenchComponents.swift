@@ -6,7 +6,8 @@
 
   // SF Symbol via NSImage(systemSymbolName:), else fallback text. Pass a nil fallback for a
   // decorative glyph whose meaning is already printed beside it: fallback text in a glyph-sized
-  // frame wraps into a column.
+  // frame wraps into a column. The symbol's accessibility label is the fallback text; a nil
+  // fallback hides the symbol from VoiceOver.
   struct OJDSystemSymbol: View {
     let name: String
     let fallback: String?
@@ -31,9 +32,9 @@
       ) {
       case .symbol(let resolvedName):
         if resolvedName == name, let preferredImage {
-          Image(nsImage: preferredImage)
+          Image(nsImage: preferredImage).ojdSymbolAccessibility(fallback)
         } else if let fallbackImage {
-          Image(nsImage: fallbackImage)
+          Image(nsImage: fallbackImage).ojdSymbolAccessibility(fallback)
         }
       case .text: if let fallback { Text(fallback).font(.caption) }
       }
@@ -82,6 +83,11 @@
 
   extension View {
     func ojdAccessibilityLabel(_ label: String) -> some View { accessibilityLabel(Text(label)) }
+
+    @ViewBuilder
+    func ojdSymbolAccessibility(_ label: String?) -> some View {
+      if let label { accessibilityLabel(Text(label)) } else { accessibilityHidden(true) }
+    }
 
     func ojdAccessibilityValue(_ value: String) -> some View { accessibilityValue(Text(value)) }
 

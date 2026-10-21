@@ -1729,6 +1729,7 @@
 "menuBar.profileConflict" = "Profil berubah sebelum tindakan ini berjalan. Coba lagi.";
 "a11y.menuBar.statusItem" = "Status OpenJoystickDriver";
 "a11y.mainWindow.sidebar" = "Bagian";
+"a11y.capture.touchSwipeDistance" = "Jarak gesek minimum";
 "access.detail.pair" = "%1$@ · %2$@";
 "access.detail.triple" = "%1$@ · %2$@ · %3$@";
 "access.grant.noPath" = "OpenJoystickDriver tidak dapat membaca berkas yang dapat dijalankan milik %@, sehingga tidak dapat memberinya akses.";

@@ -25,7 +25,11 @@
           isOn: Binding(get: { value.wrappedValue > 0 }, set: { value.wrappedValue = $0 ? 255 : 0 })
         )
       } else {
-        InputTestSliderRow(title: title, valueText: "\(Int(value.wrappedValue.rounded()))") {
+        InputTestSliderRow(
+          title: title,
+          valueText: "\(Int(value.wrappedValue.rounded()))",
+          accessibilityLabel: title
+        ) {
           Slider(value: value, in: 0...255)
         }
       }
@@ -34,21 +38,30 @@
 
   /// A slider on one form row: the title leads, the slider fills the trailing column and the
   /// value follows in a fixed-width monospaced-digit column so every slider ends at the same edge.
+  /// The row names the slider with `accessibilityLabel` and gives it `valueText` as its value.
   struct InputTestSliderRow<Control: View>: View {
     let title: String
     let valueText: String
+    let accessibilityLabel: String
     let control: Control
 
-    init(title: String, valueText: String, @ViewBuilder control: () -> Control) {
+    init(
+      title: String,
+      valueText: String,
+      accessibilityLabel: String,
+      @ViewBuilder control: () -> Control
+    ) {
       self.title = title
       self.valueText = valueText
+      self.accessibilityLabel = accessibilityLabel
       self.control = control()
     }
 
     var body: some View {
       OJDLabeledRow(title) {
         HStack(spacing: 8) {
-          control.labelsHidden().ojdAccessibilityLabel(title)
+          control.labelsHidden().ojdAccessibilityLabel(accessibilityLabel)
+            .ojdAccessibilityValue(valueText)
           Text(valueText)
             .font(.system(.body).monospacedDigit())
             .foregroundColor(Color(NSColor.secondaryLabelColor))
@@ -133,7 +146,8 @@
             valueText: OJDLocalized.formatted(
               "inputTest.durationValue",
               Int(model.rumbleDurationMilliseconds)
-            )
+            ),
+            accessibilityLabel: OJDLocalized.string("inputTest.duration")
           ) {
             Slider(
               value: rumbleDurationBinding,
@@ -173,6 +187,7 @@
               Text("3").tag(PhysicalPlayerIndicator.player3)
               Text("4").tag(PhysicalPlayerIndicator.player4)
             }.pickerStyle(.segmented).labelsHidden()
+              .ojdAccessibilityLabel(OJDLocalized.string("inputTest.playerIndicator"))
             Button(OJDLocalized.string("common.apply")) { model.applyPlayerIndicator() }
           }
         }
@@ -195,6 +210,8 @@
             }
             HStack {
               Slider(value: brightnessBinding, in: 0...255)
+                .ojdAccessibilityLabel(OJDLocalized.string("inputTest.brightness"))
+                .ojdAccessibilityValue("\(Int(model.brightness.rounded()))")
               Button(OJDLocalized.string("common.apply")) { model.applyBrightness() }
             }
           }

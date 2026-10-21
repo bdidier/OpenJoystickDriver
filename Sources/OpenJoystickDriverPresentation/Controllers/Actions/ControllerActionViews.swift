@@ -175,6 +175,7 @@
           Text(OJDLocalized.string("controllers.captureDuration"))
           TextField("", text: $durationText).frame(width: 80).multilineTextAlignment(.trailing)
             .disabled(isCapturing)
+            .ojdAccessibilityLabel(OJDLocalized.string("controllers.captureDuration"))
         }
         if seconds == nil {
           ControllerNoticeText(

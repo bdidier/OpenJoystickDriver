@@ -150,7 +150,10 @@
               }
             ),
             in: RemappingTouchSwipeSource.minimumDistanceRange
-          )
+          ).ojdAccessibilityLabel(OJDLocalized.string("a11y.capture.touchSwipeDistance"))
+            .ojdAccessibilityValue(
+              swipe.minimumDistance.formatted(.percent.precision(.fractionLength(0)))
+            )
         }.padding(.leading, 8)
       case .button, .dpad, .axis, .axisDirection, .triggerStage, .motionLean, .touchContact:
         EmptyView()
